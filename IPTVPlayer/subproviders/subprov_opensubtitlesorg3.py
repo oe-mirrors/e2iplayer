@@ -13,9 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -208,7 +206,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
 
         subFormats = self.getSupportedFormats(all=True)
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             for item in data:
                 link = item.get('SubDownloadLink', '')
                 if self.cm.isValidUrl(link) and item.get('SubFormat', '') in subFormats and link.endswith('.gz'):

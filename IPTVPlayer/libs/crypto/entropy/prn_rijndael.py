@@ -51,7 +51,7 @@ class PRN_Rijndael:
     def getSomeBytes(self):
         """ Psuedo random bytes are generated 16 bytes at a time.
             The state is updated by applying Rijndael using the Cipher
-            Key. The first 128 bits of the state are output as a �pseudorandom number�.
+            Key. The first 128 bits of the state are output as a pseudorandom number.
         """
         self.__state = self.__algorithm.encrypt(self.__state)
         return self.__state[:16]

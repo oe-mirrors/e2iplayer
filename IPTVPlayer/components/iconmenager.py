@@ -3,7 +3,6 @@
 ###################################################
 # LOCAL import
 ###################################################
-
 from .asynccall import AsyncMethod
 from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
@@ -249,7 +248,9 @@ class IconMenager:
         else:
             self.checkSpace -= 1
         file_path = "%s%s" % (path, filename)
+
         params = {} #{'maintype': 'image'}
+
         if config.plugins.iptvplayer.allowedcoverformats.value != 'all':
             subtypes = config.plugins.iptvplayer.allowedcoverformats.value.split(',')
             #params['subtypes'] = subtypes

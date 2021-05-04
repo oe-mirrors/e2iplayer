@@ -17,9 +17,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from datetime import timedelta
 import time
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 import unicodedata
 import base64
 try:
@@ -91,6 +89,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
                 printDBG('my_session [%s], phpbb3_session[%s]' % (checkSession, session))
                 if checkSession != session:
                     sts, data = self.cm.getPage(url, params, post_data)
+
         return sts, data
 
     def fillCacheFilters(self):
@@ -182,7 +181,6 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         for key in ['movie_type', 'episode_type', 'fps', 'flags']:
             if cItem.get(key, '') != '':
                 baseUrl += '&' + key + '=' + cItem[key]
-
         url = self.getFullUrl(baseUrl)
         sts, data = self.getPage(url)
         if not sts:

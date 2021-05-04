@@ -2,8 +2,6 @@
 ###################################################
 # LOCAL import
 ###################################################
-
-
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import E2iPlayerWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget

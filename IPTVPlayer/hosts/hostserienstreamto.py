@@ -19,6 +19,7 @@ from binascii import hexlify
 from hashlib import md5
 from copy import deepcopy
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
+from functools import cmp_to_key
 ###################################################
 
 
@@ -53,7 +54,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://serien.sx/'
+    return 'https://serien.pro/'
 
 
 class SerienStreamTo(CBaseHostClass, CaptchaHelper):
@@ -67,8 +68,8 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL = 'https://serien.sx/'
-        self.DEFAULT_ICON_URL = 'https://serienstream.sx/public/img/facebook.jpg'
+        self.MAIN_URL = 'https://serien.pro/'
+        self.DEFAULT_ICON_URL = 'https://serien.pro/public/img/facebook.jpg'
 
         self.MAIN_CAT_TAB = [{'category': 'all_series', 'title': 'Alle Serien', 'url': self.getFullUrl('/serien-alphabet')},
                              {'category': 'list_abc', 'title': _('A-Z'), 'url': self.MAIN_URL},
@@ -375,7 +376,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 if len(urlTab):
                     self.cacheLinks[cItem['url']] = urlTab
 
-            urlTab = sorted(urlTab, cmp=compare)
+            urlTab = sorted(urlTab, key=cmp_to_key(compare))
         else:
             urlTab = self.up.getVideoLinkExt(cItem['url'])
         return urlTab

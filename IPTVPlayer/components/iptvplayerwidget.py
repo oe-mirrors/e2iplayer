@@ -6,7 +6,6 @@
 #
 #
 
-
 from time import sleep as time_sleep
 from os import remove as os_remove, path as os_path
 from urllib.parse import quote as urllib_quote

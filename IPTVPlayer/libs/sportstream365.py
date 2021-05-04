@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 from datetime import datetime, timedelta
+from functools import cmp_to_key
 ############################################
 
 ###################################################
@@ -176,7 +177,7 @@ class SportStream365Api(CBaseHostClass):
                         return parseInt(x['FirstGameId']) - parseInt(y['FirstGameId'])
 
                 data = json_loads(data['arguments'][0])['Value']
-                data.sort(cmp=cmp) #key = lambda item: (parseInt(item['SportId']), item['Liga'], parseInt(item['FirstGameId']))
+                data.sort(key=cmp_to_key(cmp)) #key = lambda item: (parseInt(item['SportId']), item['Liga'], parseInt(item['FirstGameId']))
                 printDBG(data)
                 for item in data:
                     if None == item.get('VI'):

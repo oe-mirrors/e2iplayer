@@ -181,7 +181,7 @@ class IPTVSubtitlesHandler:
             filePath = self._getCacheFileName(orgFilePath)
             try:
                 with codecs.open(filePath, 'r', encoding, 'replace') as fp:
-                    self.subAtoms = json.loads(fp.read())
+                    self.subAtoms = byteify(json.loads(fp.read()))
                 if len(self.subAtoms):
                     sts = True
                     printDBG("IPTVSubtitlesHandler._loadFromCache orgFilePath[%s] --> cacheFile[%s]" % (orgFilePath, filePath))

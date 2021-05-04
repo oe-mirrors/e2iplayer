@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.request, urllib.parse, urllib.error
 try:
     import json
 except Exception:
@@ -262,7 +260,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             return
 
         try:
-            data = json.loads(data)
+            data = byteify(json.loads(data))
             for item in data:
                 subId = str(item['napisid'])
                 title = self.cm.ph.getDataBeetwenMarkers(item['table'], '<h6', '</h6>')[1]

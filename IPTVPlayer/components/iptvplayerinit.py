@@ -3,7 +3,6 @@
 ###################################################
 # LOCAL import
 ###################################################
-
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, DownloadFile, eConnectCallback
 ###################################################
 # FOREIGN import

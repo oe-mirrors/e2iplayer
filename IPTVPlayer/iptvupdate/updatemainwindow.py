@@ -35,11 +35,23 @@ from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Tools.BoundFunction import boundFunction
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+from functools import cmp_to_key
 
 try:
     import json
 except Exception:
     import simplejson as json
+
+try:
+    cmp
+except NameError:
+    def cmp(x, y):
+        if x < y:
+            return -1
+        elif x > y:
+            return 1
+        else:
+            return 0
 
 from os import path as os_path, remove as os_remove, listdir as os_listdir
 ###################################################
@@ -835,7 +847,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             self.serverIconsHash = serverIconsHash
             if 0 < len(serversList):
                 options = []
-                self.serversList.sort(cmp=ServerComparator, reverse=True)
+                self.serversList.sort(key=cmp_to_key(ServerComparator), reverse=True)
                 for idx in range(len(serversList)):
                     server = serversList[idx]
                     if not config.plugins.iptvplayer.hiddenAllVersionInUpdate.value:

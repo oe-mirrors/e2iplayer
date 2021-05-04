@@ -13,7 +13,6 @@
 ###################################################
 # FOREIGN import
 ###################################################
-
 from Components.config import config
 from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS, SCOPE_CONFIG
 from enigma import eConsoleAppContainer
@@ -21,12 +20,7 @@ from Components.Language import language
 from time import sleep as time_sleep, time
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
-import urllib.request
-import urllib.parse
-import urllib.error
-import urllib.request
-import urllib.error
-import urllib.parse
+import urllib.request, urllib.parse, urllib.error
 import traceback
 import re
 import sys
