@@ -167,7 +167,7 @@ class AsyncCall(object):
             if self.finished == False:
                 if self.Thread.isAlive():
                     self._kill()
-                    self.Thread._stop()
+                    self.Thread.join(timeout=1)
 #                    self.Thread._Thread__stop()
                 bRet = True
 

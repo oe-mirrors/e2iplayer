@@ -232,7 +232,6 @@ class ConfigHostsMenu(ConfigBaseWidget):
         hostsAliases = GetHostsAliases()
         for hostName in sortedList:
             try:
-                optionEntry = None
                 ConfObj = eval('config.plugins.iptvplayer.host' + hostName)
                 self.list.append(getConfigListEntry("%s" % hostsAliases.get('host' + hostName, hostName), ConfObj))
                 if hostName in ['ipla']:
