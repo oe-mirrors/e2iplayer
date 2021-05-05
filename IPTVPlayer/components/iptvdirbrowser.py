@@ -27,6 +27,7 @@ from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Tools.BoundFunction import boundFunction
 from os import path as os_path, chmod as os_chmod
+import six
 ###################################################
 
 
@@ -199,6 +200,7 @@ class IPTVDirectorySelectorWidget(Screen):
             self.tmpData = ''
 
     def refreshNewData(self, data):
+        data = six.ensure_str(data)
         self.tmpData += data
         newItems = self.tmpData.split('\n')
         if self.tmpData.endswith('\n'):
