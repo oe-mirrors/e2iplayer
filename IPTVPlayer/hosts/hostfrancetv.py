@@ -15,7 +15,8 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 ###################################################
 # FOREIGN import
 ###################################################
-import time, sys
+import time
+import sys
 import urllib
 from datetime import date, datetime, timedelta
 from Components.config import config, ConfigText, getConfigListEntry, ConfigYesNo
@@ -23,15 +24,16 @@ import re
 ###################################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Screens.MessageBox import MessageBox
 
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.francetv_skip_geoblocked = ConfigYesNo(default = True)
+config.plugins.iptvplayer.francetv_skip_geoblocked = ConfigYesNo(default=True)
 #config.plugins.iptvplayer.francetv_use_x_forwarded_for = ConfigYesNo(default = False)
+
 
 def GetConfigList():
     optionList = []
@@ -45,6 +47,7 @@ def GetConfigList():
 def gettytul():
     return 'https://www.france.tv/'
 
+
 class FranceTv(CBaseHostClass):
 
     def __init__(self):
@@ -55,26 +58,27 @@ class FranceTv(CBaseHostClass):
         self.API_URL = 'http://api-front.yatta.francetv.fr'
         self.CHANNEL_URL = self.API_URL + '/standard/publish/channels'
         self.LIVE_URL = self.API_URL + '/standard/edito/directs'
-        self.CATEGORIES_URL = self.API_URL +'/standard/publish/categories'
+        self.CATEGORIES_URL = self.API_URL + '/standard/publish/categories'
         self.PROGRAM_URL = self.API_URL + '/standard/publish/taxonomies'
         self.VIDEO_API_URL = 'http://sivideo.webservices.francetelevisions.fr/tools/getInfosOeuvre/v2/'
         self.GEOLOCATION_API_URL = 'http://geo.francetv.fr/ws/edgescape.json'
         self.VIDEO_TOKEN_URL = 'http://hdfauthftv-a.akamaihd.net/esi/TA'
         self.DEFAULT_ICON_URL = 'https://eige.europa.eu/sites/default/files/styles/eige_large/public/images/17.png?itok=Z_FsnSYD'
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        self.defaultParams = {'header':self.HTTP_HEADER}
-        
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        self.defaultParams = {'header': self.HTTP_HEADER}
+
+    def getPage(self, baseUrl, addParams={}, post_data=None):
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
-    def readDate(self,timestamp):
+    def readDate(self, timestamp):
         # This regex removes all colons and all
         # dashes EXCEPT for the dash indicating + or - utc offset for the timezone
         conformed_timestamp = re.sub(r"[:]|([-](?!((\d{2}[:]\d{2})|(\d{4}))$))", '', timestamp)
 
         # Split on the offset to remove it. Use a capture group to keep the delimiter
-        split_timestamp = re.split(r"[+|-]",conformed_timestamp)
+        split_timestamp = re.split(r"[+|-]", conformed_timestamp)
         main_timestamp = split_timestamp[0]
         if len(split_timestamp) == 3:
             sign = split_timestamp[1]
@@ -84,24 +88,24 @@ class FranceTv(CBaseHostClass):
             offset = None
 
         # Generate the datetime object without the offset at UTC time
-        output_datetime = datetime.strptime(main_timestamp , "%Y%m%dT%H%M%S" )
+        output_datetime = datetime.strptime(main_timestamp, "%Y%m%dT%H%M%S")
         if offset:
             # Create timedelta based on offset
-            offset_delta = datetime.timedelta(hours=int(sign+offset[:-2]), minutes=int(sign+offset[-2:]))
+            offset_delta = datetime.timedelta(hours=int(sign + offset[:-2]), minutes=int(sign + offset[-2:]))
             # Offset datetime with timedelta
             output_datetime = output_datetime + offset_delta
-    
+
         return output_datetime
-    
+
     def parseMediaData(self, media_data):
-        
+
         result = {}
-        
+
         if not media_data:
             return result
 
         for pattern in media_data.get('patterns') or []:
-            if pattern.get('type') in ('hero','carre') and 'w:400' in pattern.get('urls') or {}:
+            if pattern.get('type') in ('hero', 'carre') and 'w:400' in pattern.get('urls') or {}:
                 thumb_file = pattern['urls'].get('w:400')
                 if thumb_file:
                     result['thumb'] = self.MAIN_URL + thumb_file
@@ -112,7 +116,7 @@ class FranceTv(CBaseHostClass):
 
         return result
 
-    def parseTopicData(self, data, artwork = True):
+    def parseTopicData(self, data, artwork=True):
         metadata = {}
         info = {}
         art = {}
@@ -138,7 +142,6 @@ class FranceTv(CBaseHostClass):
 
         return result
 
-    
     def parseVideoData(self, data, live=False):
         metadata = {}
         info = {}
@@ -172,7 +175,7 @@ class FranceTv(CBaseHostClass):
                     metadata['mpaa'] = media_data.get('rating_csa')
                 if not live:
                     info['duration'] = media_data.get('duration')
-                    
+
                 begin_date = media_data.get('begin_date')
                 if begin_date:
                     begin_date = self.readDate(begin_date)
@@ -218,12 +221,12 @@ class FranceTv(CBaseHostClass):
             info['title'] = program_title
 
         return (metadata, info, art)
-    
+
     def listLive(self, cItem):
         printDBG("FranceTv.listLive")
-        
+
         results = []
-        sts, data = self.getPage (self.LIVE_URL)
+        sts, data = self.getPage(self.LIVE_URL)
         if not sts:
             return results
 
@@ -232,41 +235,41 @@ class FranceTv(CBaseHostClass):
             if 'collection' in channel:
                 item = channel['collection'][0]
                 r = self.parseVideoData(item, live=True)
-                printDBG(str(r))        
+                printDBG(str(r))
                 url = self.VIDEO_API_URL + "?idDiffusion=%video_id%"
                 url = url.replace("%video_id%", r[0]['video_id'])
 
                 if r[2] != {}:
-                    params={'title' : r[0]['channel_name'], 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'url': url, 'category': 'live'}
+                    params = {'title': r[0]['channel_name'], 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'url': url, 'category': 'live'}
                 else:
-                    params={'title' : r[0]['channel_name'], 'desc': r[1]['plot'], 'url': url, 'category': 'live'}
+                    params = {'title': r[0]['channel_name'], 'desc': r[1]['plot'], 'url': url, 'category': 'live'}
                 printDBG(str(params))
                 self.addVideo(params)
-    
+
     def listChannels(self, cItem):
         printDBG("FranceTv.listChannels")
-        
+
         sts, data = self.getPage(self.CHANNEL_URL)
-        
+
         if not sts:
-            return 
+            return
         data = json_loads(data)
-        
+
         for item in data.get('result') or []:
             r = self.parseTopicData(item, True)
-            printDBG(str(r))        
-            
+            printDBG(str(r))
+
             if r[2] != {}:
-                params={'title' : r[1]['title'], 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'id': r[0]['id'], 'category': 'ch_item'}
+                params = {'title': r[1]['title'], 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'id': r[0]['id'], 'category': 'ch_item'}
             else:
-                params={'title' : r[1]['title'], 'desc': r[1]['plot'], 'id': r[0]['id'], 'category': 'ch_item'}
+                params = {'title': r[1]['title'], 'desc': r[1]['plot'], 'id': r[0]['id'], 'category': 'ch_item'}
             self.addDir(params)
 
-    def listItems(self,cItem):
+    def listItems(self, cItem):
         printDBG("FranceTv.listItems")
-        
+
         if cItem['category'] == 'ch_item':
-            url = self.CHANNEL_URL + "/%channel%/categories".replace('%channel%', cItem['id'] )
+            url = self.CHANNEL_URL + "/%channel%/categories".replace('%channel%', cItem['id'])
             next_cat = 'cat_ch_item'
             next_all = 'ch_all'
             parent_id = cItem['id']
@@ -276,97 +279,97 @@ class FranceTv(CBaseHostClass):
             next_all = 'cat_all'
             parent_id = ''
         else:
-            return 
-        
-        sts, data = self.getPage(url)
-        
-        if not sts: 
             return
-        
+
+        sts, data = self.getPage(url)
+
+        if not sts:
+            return
+
         data = json_loads(data)
-        
+
         if cItem['category'] == 'ch_item':
-            self.addDir({'title' : _('All videos'), 'icon': cItem['icon'], 'desc': cItem['desc'] , 'id': cItem['id'], 'category': next_all})
-            self.addDir({'title' : _('All programs'), 'icon': cItem['icon'], 'desc': cItem['desc'] , 'id': cItem['id'], 'category': 'ch_show' })
-        
+            self.addDir({'title': _('All videos'), 'icon': cItem['icon'], 'desc': cItem['desc'], 'id': cItem['id'], 'category': next_all})
+            self.addDir({'title': _('All programs'), 'icon': cItem['icon'], 'desc': cItem['desc'], 'id': cItem['id'], 'category': 'ch_show'})
+
         for item in data.get('result') or []:
-            r = self.parseTopicData(item, artwork = True)
-            printDBG(str(r))        
+            r = self.parseTopicData(item, artwork=True)
+            printDBG(str(r))
             if r[2] != {}:
-                params={'title' : r[1]['title'], 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'id': r[0]['id'], 'category': next_cat, 'parent_id': parent_id}
+                params = {'title': r[1]['title'], 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'id': r[0]['id'], 'category': next_cat, 'parent_id': parent_id}
             else:
-                params={'title' : r[1]['title'], 'desc': r[1]['plot'], 'id': r[0]['id'], 'category': next_cat , 'parent_id': parent_id}
+                params = {'title': r[1]['title'], 'desc': r[1]['plot'], 'id': r[0]['id'], 'category': next_cat, 'parent_id': parent_id}
             self.addDir(params)
 
     def listSubitems(self, cItem):
         printDBG("FranceTv.listSubitems")
-        
+
         results = []
-        url = self.CATEGORIES_URL +  "/%cat%".replace('%cat%', cItem['id'] )
+        url = self.CATEGORIES_URL + "/%cat%".replace('%cat%', cItem['id'])
 
         sts, data = self.getPage(url)
-        
-        if not sts: 
+
+        if not sts:
             return
-        
+
         data = json_loads(data)
 
-        self.addDir({'title' : _('All shows'), 'desc': cItem['desc'] , 'id': cItem['id'], 'category': 'cat_subitem'})
-        self.addDir({'title' : _('All videos'), 'desc': cItem['desc'] , 'id': cItem['id'], 'category': 'cat_all'})
-        
+        self.addDir({'title': _('All shows'), 'desc': cItem['desc'], 'id': cItem['id'], 'category': 'cat_subitem'})
+        self.addDir({'title': _('All videos'), 'desc': cItem['desc'], 'id': cItem['id'], 'category': 'cat_all'})
+
         for item in data.get('sub') or []:
             r = self.parseTopicData(item, True)
-            printDBG(str(r))        
+            printDBG(str(r))
             if r[2] != {}:
-                params={'title' : r[1]['title'], 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'id': r[0]['id'], 'category': 'cat_subitem'}
+                params = {'title': r[1]['title'], 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'id': r[0]['id'], 'category': 'cat_subitem'}
             else:
-                params={'title' : r[1]['title'], 'desc': r[1]['plot'], 'id': r[0]['id'], 'category': 'cat_subitem'}
+                params = {'title': r[1]['title'], 'desc': r[1]['plot'], 'id': r[0]['id'], 'category': 'cat_subitem'}
             self.addDir(params)
-    
+
     def listShows(self, cItem):
-        
+
         letter = ''
-        
+
         if cItem['category'] == 'ch_show_letter':
             letter = cItem['name']
             url = self.CHANNEL_URL + '/{0}/programs'.format(cItem['id'])
         elif cItem['category'] == 'cat_subitem':
             url = self.CATEGORIES_URL + '/{0}/programs'.format(cItem['id'])
-            self.addDir({'title' : _('All videos'), 'desc': cItem['desc'] , 'id': cItem['id'], 'category': 'cat_all'})
+            self.addDir({'title': _('All videos'), 'desc': cItem['desc'], 'id': cItem['id'], 'category': 'cat_all'})
 
         elif cItem['category'] == 'cat_ch_item':
             url = self.CATEGORIES_URL + "/{0}/programs/{1}".format(cItem['id'], cItem['parent_id'])
         else:
-            return 
+            return
 
         url = url + '?sort=title&filter=with-no-vod,only-visible'
-        
+
         sts, data = self.getPage(url)
-        
+
         if not sts:
-            return 
+            return
 
         data = json_loads(data)
-        
+
         for item in data.get('result') or []:
             r = self.parseTopicData(item, True)
-            
+
             title = r[1]['title']
-            if (len(letter)>0 and ((letter == title[:1]) or (letter == '0-9' and title[:1].isdigit()))) or (letter == ''):
-            
-                printDBG(str(r))        
+            if (len(letter) > 0 and ((letter == title[:1]) or (letter == '0-9' and title[:1].isdigit()))) or (letter == ''):
+
+                printDBG(str(r))
 
                 if r[2] != {}:
-                    params={'title' : title, 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'id': r[0]['id'], 'category': 'show'}
+                    params = {'title': title, 'desc': r[1]['plot'], 'icon': r[2]['thumb'], 'id': r[0]['id'], 'category': 'show'}
                 else:
-                    params={'title' : title, 'desc': r[1]['plot'], 'id': r[0]['id'], 'category': 'show'}
+                    params = {'title': title, 'desc': r[1]['plot'], 'id': r[0]['id'], 'category': 'show'}
                 self.addDir(params)
-           
+
     def listVideos(self, cItem):
         printDBG("FranceTv.listVideos")
-        
+
         results = []
-        
+
         #if cItem['category'] == 'cat_subitem':
         #    url = self.CATEGORIES_URL + "/%cat%/contents?sort=begin_date:desc&size=15&page={0}&filter=with-no-vod,only-visible".format(page).replace('%cat%', cItem['id'])
         if cItem['category'] == 'show':
@@ -394,137 +397,133 @@ class FranceTv(CBaseHostClass):
             url = self.CATEGORIES_URL + "/%cat%/contents?sort=begin_date:desc&size=15&page={0}&filter=with-no-vod,only-visible".format(page).replace('%cat%', cItem['id'])
             next_cat = 'cat_all_next'
         else:
-            return 
+            return
 
         sts, data = self.getPage(url)
-        
+
         if not sts:
             return results
 
         data = json_loads(data)
-        
+
         for item in data.get('result') or []:
             r = self.parseVideoData(item)
-            printDBG(str(r))        
+            printDBG(str(r))
             url = self.VIDEO_API_URL + "?idDiffusion=%video_id%"
             url = url.replace("%video_id%", r[0]['video_id'])
-            
-            duration = timedelta(seconds = r[1]['duration'])
-            desc =  _('Duration: {0}').format(str(duration)) +  ' | ' + _('Added: {0}').format(r[1]['date']) 
+
+            duration = timedelta(seconds=r[1]['duration'])
+            desc = _('Duration: {0}').format(str(duration)) + ' | ' + _('Added: {0}').format(r[1]['date'])
 
             if r[1]['plot'] != None:
-                desc = desc + '\n' + r[1]['plot'] 
-            
+                desc = desc + '\n' + r[1]['plot']
+
             if r[2] != {}:
-                params={'title' : r[1]['title'], 'desc': desc , 'icon': r[2]['thumb'], 'url': url, 'category': 'video'}
+                params = {'title': r[1]['title'], 'desc': desc, 'icon': r[2]['thumb'], 'url': url, 'category': 'video'}
             else:
-                params={'title' : r[1]['title'], 'desc': desc,  'url': url, 'category': 'video'}
+                params = {'title': r[1]['title'], 'desc': desc, 'url': url, 'category': 'video'}
             self.addVideo(params)
 
-        
         if data.get('cursor'):
             if data['cursor'].get('next'):
-                self.addMore({'category':  next_cat , 'title': _('Next page'), 'page': (page + 1) , 'id' : cItem['id']})
+                self.addMore({'category': next_cat, 'title': _('Next page'), 'page': (page + 1), 'id': cItem['id']})
 
-
-    def listAZ(self,cItem):
+    def listAZ(self, cItem):
         printDBG("FranceTv.listAZ")
 
         if cItem['category'] == 'ch_show':
             next_cat = 'ch_show_letter'
-            
+
         # 0-9
-        self.addDir(MergeDicts(cItem, {'category': next_cat, 'title': "0-9" , 'name': "0-9" } ))              
-        
+        self.addDir(MergeDicts(cItem, {'category': next_cat, 'title': "0-9", 'name': "0-9"}))
+
         #a-z
         for i in range(26):
-            self.addDir(MergeDicts(cItem, {'category': next_cat, 'title': chr(ord('A')+i) , 'name': chr(ord('A')+i)} ))              
-            
-        
-        
+            self.addDir(MergeDicts(cItem, {'category': next_cat, 'title': chr(ord('A') + i), 'name': chr(ord('A') + i)}))
+
     def listMainMenu(self, cItem):
         printDBG("FranceTv.listMainMenu")
-        MAIN_CAT_TAB = [{'category':'channels', 'title': _('Channels')},
-                        {'category':'categories', 'title': _('Categories')},
-                        {'category':'live', 'title': _('Live')}]  
-        self.listsTab(MAIN_CAT_TAB, cItem)  
-        
+        MAIN_CAT_TAB = [{'category': 'channels', 'title': _('Channels')},
+                        {'category': 'categories', 'title': _('Categories')},
+                        {'category': 'live', 'title': _('Live')}]
+        self.listsTab(MAIN_CAT_TAB, cItem)
+
     def getLinksForVideo(self, cItem):
         printDBG("FranceTv.getLinksForVideo [%s]" % cItem)
-        
+
         linksTab = []
-        
-        if cItem['category'] in ('video','live'):
+
+        if cItem['category'] in ('video', 'live'):
             sts, data = self.getPage(cItem['url'])
-            
-            if not sts: 
+
+            if not sts:
                 return
-            
+
             data = json_loads(data)
-            
-            v_links=[]
-            v_geoblock_links=[]    
-            
+
+            v_links = []
+            v_geoblock_links = []
+
             for v in data['videos']:
-                # check video format 
+                # check video format
                 video_format = v.get('format')
-                if video_format in ("hls_v1_os","hls_v5_os","hls"):
+                if video_format in ("hls_v1_os", "hls_v5_os", "hls"):
                     # check georestricted streams
                     countries = v.get('geoblocage')
                     if countries:
                         geoblock = True
                     else:
                         geoblock = False
-                    
-                    printDBG("url: %s, video format: %s" % (v.get('url',''),video_format))
+
+                    printDBG("url: %s, video format: %s" % (v.get('url', ''), video_format))
                     # check times
                     now = time.time()
                     for interval in v.get('plages_ouverture') or []:
-                        if ((interval.get('debut') or 0) <= now ) and (now <= (interval.get('fin') or sys.maxsize)):
-                            video_url = self.VIDEO_TOKEN_URL + '?' + urllib.urlencode({'json':'0', 'url': v.get('url')})
+                        if ((interval.get('debut') or 0) <= now) and (now <= (interval.get('fin') or sys.maxsize)):
+                            video_url = self.VIDEO_TOKEN_URL + '?' + urllib.urlencode({'json': '0', 'url': v.get('url')})
                             sts, data = self.getPage(video_url)
-                            if not sts: 
+                            if not sts:
                                 continue
 
                             real_url = data
                             if geoblock:
-                                v_geoblock_links.append({'url' : v.get('url'), 'real_url': real_url, 'geoblock' : geoblock})
+                                v_geoblock_links.append({'url': v.get('url'), 'real_url': real_url, 'geoblock': geoblock})
                             else:
-                                v_links.append({'url' : v.get('url'), 'real_url': real_url, 'geoblock' : geoblock})
-                
-                if len(v_links)>0:
-                    for v in v_links: 
+                                v_links.append({'url': v.get('url'), 'real_url': real_url, 'geoblock': geoblock})
+
+                if len(v_links) > 0:
+                    for v in v_links:
                         #printDBG(str(v))
-                        linksTab.extend(getDirectM3U8Playlist(v['real_url'], checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
-                elif len(v_geoblock_links)>0:
-                    if config.plugins.iptvplayer.francetv_skip_geoblocked == True :
-                        msg = _('There are some geoblocked links. If you want to use them, change option in the host configuration, available under blue button.' )
-                        self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout = 5)
+                        linksTab.extend(getDirectM3U8Playlist(v['real_url'], checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+                elif len(v_geoblock_links) > 0:
+                    if config.plugins.iptvplayer.francetv_skip_geoblocked == True:
+                        msg = _('There are some geoblocked links. If you want to use them, change option in the host configuration, available under blue button.')
+                        self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=5)
                     else:
-                        for v in v_geoblock_links:            
+                        for v in v_geoblock_links:
                             #printDBG(str(v))
-                            linksTab.extend(getDirectM3U8Playlist(v['real_url'] , checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))  
-        
+                            linksTab.extend(getDirectM3U8Playlist(v['real_url'], checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
         return linksTab
-        
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         self.informAboutGeoBlockingIfNeeded('FR')
-        
-        name     = self.currItem.get("name", '')
+
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
-        
-        printDBG( "handleService: |||| name[%s], category[%s] " % (name, category) )
+        mode = self.currItem.get("mode", '')
+
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
-        
+
         #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'live':
             self.listLive(self.currItem)
         elif category == 'channels':
@@ -535,17 +534,17 @@ class FranceTv(CBaseHostClass):
             self.listSubitems(self.currItem)
         elif category in ('ch_show', 'cat_show'):
             self.listAZ(self.currItem)
-        elif category in  ('ch_show_letter', 'cat_ch_item', 'cat_subitem', 'cat_show'):
+        elif category in ('ch_show_letter', 'cat_ch_item', 'cat_subitem', 'cat_show'):
             self.listShows(self.currItem)
         elif category in ('ch_all', 'ch_all_next', 'show', 'show_next', 'cat_all', 'cat_all_next'):
             self.listVideos(self.currItem)
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, FranceTv(), True, [])
-    

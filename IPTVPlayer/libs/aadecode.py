@@ -2,6 +2,7 @@
 
 import re
 
+
 def decode(text):
     text = re.sub(r"\s+|/\*.*?\*/", "", text)
     data = text.split("+(ﾟДﾟ)[ﾟoﾟ]")[1]
@@ -22,15 +23,18 @@ def decode(text):
             .replace("(+", "(")
         char = re.sub(r'\((\d)\)', r'\1', char)
 
-        c = "";
+        c = ""
         subchar = ""
         for v in char:
             c += v
             try:
-                x = c; subchar += str(eval(x)); c = ""
+                x = c
+                subchar += str(eval(x))
+                c = ""
             except:
                 pass
-        if subchar != '': txt += subchar + "|"
+        if subchar != '':
+            txt += subchar + "|"
     txt = txt[:-1].replace('+', '')
 
     txt_result = "".join([chr(int(n, 8)) for n in txt.split('|')])

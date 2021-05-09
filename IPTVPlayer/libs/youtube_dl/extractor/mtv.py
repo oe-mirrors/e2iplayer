@@ -1,19 +1,24 @@
 # -*- coding: utf-8 -*-
 
-import urllib, urllib2, re
+import urllib
+import urllib2
+import re
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import *
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.jsinterp import JSInterpreter
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.base import InfoExtractor
 
-try: import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
+
 
 class MTVServicesInfoExtractor(InfoExtractor):
     _MOBILE_TEMPLATE = None
     _LANG = None
-    
+
     def __init__(self):
         InfoExtractor.__init__(self)
         self.cm.HOST = 'python-urllib/2.7'
@@ -44,7 +49,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
 
     def _extract_mobile_video_formats(self, mtvn_id):
         webpage_url = self._MOBILE_TEMPLATE % mtvn_id
-        webpage = self._download_webpage(webpage_url, mtvn_id, params={'header':{'User-Agent':'curl/7'}})
+        webpage = self._download_webpage(webpage_url, mtvn_id, params={'header': {'User-Agent': 'curl/7'}})
         metrics_url = unescapeHTML(self._search_regex(r'<a href="(http://metrics.+?)"', webpage, 'url'))
         req = HEADRequest(metrics_url)
         response = self._request_webpage(req, mtvn_id, 'Resolving url')
@@ -63,19 +68,19 @@ class MTVServicesInfoExtractor(InfoExtractor):
         formats = []
         data = mdoc[mdoc.find('<rendition'):mdoc.rfind('</rendition>')]
         data = mdoc.split('</rendition>')
-        
+
         for rendition in data:
             try:
                 rtmp_video_url = self.xmlGetText(rendition, 'src')
                 if rtmp_video_url.endswith('siteunavail.png'):
                     continue
                 params = {}
-                params['type']    = self.xmlGetArg(rendition, 'type')
-                if 'video/' not in params['type']: 
+                params['type'] = self.xmlGetArg(rendition, 'type')
+                if 'video/' not in params['type']:
                     continue
-                params['url']     = self._transform_rtmp_url(rtmp_video_url)
-                params['width']   = self.xmlGetArg(rendition, 'width')
-                params['height']  = self.xmlGetArg(rendition, 'height')
+                params['url'] = self._transform_rtmp_url(rtmp_video_url)
+                params['width'] = self.xmlGetArg(rendition, 'width')
+                params['height'] = self.xmlGetArg(rendition, 'height')
                 params['bitrate'] = self.xmlGetArg(rendition, 'bitrate')
                 formats.append(params)
             except Exception:
@@ -104,18 +109,19 @@ class MTVServicesInfoExtractor(InfoExtractor):
             mediagen_url += '&acceptMethods=fms'
 
         sts, mediagen_doc = self.cm.getPage(mediagen_url)
-        if not sts: return None
+        if not sts:
+            return None
 
         # This a short id that's used in the webpage urls
         mtvn_id = None
         mtvn_id_node = self.xmlGetText(itemdoc, 'media:category scheme="urn:mtvn:id"')
         if mtvn_id_node != '':
             mtvn_id = mtvn_id_node
-        
-        formats   = self._extract_video_formats(mediagen_doc, mtvn_id)
+
+        formats = self._extract_video_formats(mediagen_doc, mtvn_id)
         #subtitles = self._extract_subtitles(mediagen_doc, mtvn_id)
         #thumbnail = self._get_thumbnail_url(uri, itemdoc)
-        return {'formats':formats}
+        return {'formats': formats}
 
     def _get_videos_info(self, uri):
         video_id = self._id_from_uri(uri)
@@ -126,7 +132,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
             info_url += 'lang=%s&' % self._LANG
         info_url += data
         sts, data = self.cm.getPage(info_url)
-        
+
         data = data[data.find('<item>'):]
         data = data.split('</item>')
         urlTabs = []
@@ -156,6 +162,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
 
         videos_info = self._get_videos_info(mgid)
         return videos_info
+
 
 class MTVServicesEmbeddedIE(MTVServicesInfoExtractor):
     IE_NAME = 'mtvservices:embedded'
@@ -210,7 +217,8 @@ class MTVIggyIE(MTVServicesInfoExtractor):
     IE_NAME = 'mtviggy.com'
     _VALID_URL = r'https?://www\.mtviggy\.com/videos/.+'
     _FEED_URL = 'http://all.mtvworldverticals.com/feed-xml/'
-    
+
+
 class GametrailersIE(MTVServicesInfoExtractor):
     _VALID_URL = r'http://www\.gametrailers\.com/(?P<type>videos|reviews|full-episodes)/(?P<id>.*?)/(?P<title>.*)'
     _FEED_URL = 'http://www.gametrailers.com/feeds/mrss'

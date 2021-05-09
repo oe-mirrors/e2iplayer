@@ -12,13 +12,19 @@ import SimpleHTTPServer
 
 import signal
 import os
+
+
 def signal_handler(sig, frame):
     os.kill(os.getpid(), signal.SIGTERM)
+
+
 signal.signal(signal.SIGINT, signal_handler)
+
 
 def printExc(msg=''):
     msg = 'EXCEPTION: \n%s' % traceback.format_exc()
     print(msg)
+
 
 def getPage(url, params={}, post_data=None):
     sts = False
@@ -43,16 +49,21 @@ def getPage(url, params={}, post_data=None):
         printExc()
     return sts, data
 
-HTTP_HEADER = {'Connection':'keep-alive', 'return_data':False}
+
+HTTP_HEADER = {'Connection': 'keep-alive', 'return_data': False}
+
+
 class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
         try:
             global HTTP_HEADER
             url = self.path
-            
-            if url.startswith('/https/'): url = 'https://' + url[7:]
-            elif url.startswith('/http/'): url = 'http://' + url[6:]
-            
+
+            if url.startswith('/https/'):
+                url = 'https://' + url[7:]
+            elif url.startswith('/http/'):
+                url = 'http://' + url[6:]
+
             sts, resp = getPage(url, HTTP_HEADER)
             if sts:
                 self.send_response(200)
@@ -63,32 +74,33 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 self.end_headers()
         except KeyboardInterrupt:
             self.server._BaseServer__shutdown_request = True
-            
+
     def log_request(self, code='-', size='-'):
         pass
 
     def log_error(self, format, *args):
         pass
 
+
 if __name__ == "__main__":
     if len(sys.argv) < 5:
         print('libsPath, userAgent, refererUrl and m3u8Url are needed', file=sys.stderr)
         sys.exit(1)
-    
+
     try:
-        port       = int(sys.argv[1])
-        libsPath   = sys.argv[2]
-        userAgent  = sys.argv[3]
+        port = int(sys.argv[1])
+        libsPath = sys.argv[2]
+        userAgent = sys.argv[3]
         refererUrl = sys.argv[4]
-        m3u8Url    = sys.argv[5]
-        
+        m3u8Url = sys.argv[5]
+
         sys.path.insert(1, libsPath)
         from keepalive import HTTPHandler
-        keepalive_handler = HTTPHandler()    
-        opener = urllib2.build_opener(keepalive_handler)    
-        urllib2.install_opener(opener)    
-        
-        HTTP_HEADER.update({'User-Agent':userAgent, 'Referer':refererUrl})
+        keepalive_handler = HTTPHandler()
+        opener = urllib2.build_opener(keepalive_handler)
+        urllib2.install_opener(opener)
+
+        HTTP_HEADER.update({'User-Agent': userAgent, 'Referer': refererUrl})
         SocketServer.TCPServer.allow_reuse_address = True
         httpd = SocketServer.TCPServer(('127.0.0.1', port), Proxy)
         port = httpd.server_address[1]
@@ -100,4 +112,3 @@ if __name__ == "__main__":
         httpd.socket.close()
         httpd.server_close()
     sys.exit(0)
-

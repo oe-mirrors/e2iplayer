@@ -13,28 +13,30 @@
 
     ALso ... currently just IV .... in test ..
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 """
 
-from crypto.cipher.icedoll import  Icedoll
-from crypto.errors      import IntegrityCheckError
+from crypto.cipher.icedoll import Icedoll
+from crypto.errors import IntegrityCheckError
 from random import Random  # should change to crypto.random!!!
+
 
 class Trolldoll(Icedoll):
     """ Trolldoll encryption algorithm
         based on Icedoll, which is based on Rijndael
         Trolldoll adds an 'IV' and integrity checking to Icedoll
     """
-    def __init__(self,key=None,keySize=32,blockSize=32,tapRound=6,extraRounds=6,micSize=16,ivSize=16):
+
+    def __init__(self, key=None, keySize=32, blockSize=32, tapRound=6, extraRounds=6, micSize=16, ivSize=16):
         """  """
-        Icedoll.__init__(self,key=None,keySize=32,blockSize=32,tapRound=6,extraRounds=6)
-        self.name    = 'TROLLDOLL'
+        Icedoll.__init__(self, key=None, keySize=32, blockSize=32, tapRound=6, extraRounds=6)
+        self.name = 'TROLLDOLL'
         self.micSize = micSize
-        self.ivSize  = ivSize
-        self.r       = Random()            # for IV generation
+        self.ivSize = ivSize
+        self.r = Random()            # for IV generation
         import time
-        newSeed = time.ctime()+str(self.r)    # seed with instance location
+        newSeed = time.ctime() + str(self.r)    # seed with instance location
         self.r.seed(newSeed)                  # to make unique
         self.reset()
 
@@ -43,15 +45,15 @@ class Trolldoll(Icedoll):
         self.hasIV = None
 
     def _makeIV(self):
-        return self.ivSize*'a'
+        return self.ivSize * 'a'
 
     def _makeIC(self):
         """ Make the integrity check """
-        return self.micSize*chr(0x00)
+        return self.micSize * chr(0x00)
 
-    def _verifyIC(self,integrityCheck):
+    def _verifyIC(self, integrityCheck):
         """ Verify the integrity check """
-        if self.micSize*chr(0x00) == integrityCheck :
+        if self.micSize * chr(0x00) == integrityCheck:
             return 1  # matches
         else:
             return 0  # fails
@@ -77,9 +79,7 @@ class Trolldoll(Icedoll):
             plainText = plainText[self.ivSize:] # remove the IV
             self.hasIV = 1
         if more == None:    # on last call to encrypt append integrity check
-            if not(self._verifyIC(plainText[-self.micSize:])) :
+            if not(self._verifyIC(plainText[-self.micSize:])):
                 raise IntegrityCheckError, 'Trolldoll MIC Failure, bad key or modified data'
             plainText = plainText[:-self.micSize]  # trim off the integrity check
         return plainText
-
-

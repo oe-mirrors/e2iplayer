@@ -9,10 +9,13 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 # FOREIGN import
 ###################################################
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 e2icjson = None
 ############################################
+
 
 def loads(input, noneReplacement=None, baseTypesAsString=False, utf8=True):
     global e2icjson
@@ -36,6 +39,7 @@ def loads(input, noneReplacement=None, baseTypesAsString=False, utf8=True):
             out = byteify(out, noneReplacement, baseTypesAsString)
 
     return out
+
 
 def dumps(input, *args, **kwargs):
     return json.dumps(input, *args, **kwargs)

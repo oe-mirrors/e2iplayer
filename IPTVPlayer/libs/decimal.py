@@ -148,6 +148,7 @@ ROUND_05UP = 'ROUND_05UP'
 
 # Errors
 
+
 class DecimalException(ArithmeticError):
     """Base exception class.
 
@@ -167,6 +168,7 @@ class DecimalException(ArithmeticError):
     To define a new exception, it should be sufficient to have it derive
     from DecimalException.
     """
+
     def handle(self, context, *args):
         pass
 
@@ -182,6 +184,7 @@ class Clamped(DecimalException):
     this latter case, the exponent is reduced to fit and the corresponding
     number of zero digits are appended to the coefficient ("fold-down").
     """
+
 
 class InvalidOperation(DecimalException):
     """An invalid operation was performed.
@@ -206,11 +209,13 @@ class InvalidOperation(DecimalException):
     also a quiet NaN, but with the original sign, and an optional
     diagnostic information.
     """
+
     def handle(self, context, *args):
         if args:
             ans = _dec_from_triple(args[0]._sign, args[0]._int, 'n', True)
             return ans._fix_nan(context)
         return NaN
+
 
 class ConversionSyntax(InvalidOperation):
     """Trying to convert badly formed string.
@@ -219,8 +224,10 @@ class ConversionSyntax(InvalidOperation):
     converted to a number and it does not conform to the numeric string
     syntax.  The result is [0,qNaN].
     """
+
     def handle(self, context, *args):
         return NaN
+
 
 class DivisionByZero(DecimalException, ZeroDivisionError):
     """Division by 0.
@@ -238,6 +245,7 @@ class DivisionByZero(DecimalException, ZeroDivisionError):
     def handle(self, context, sign, *args):
         return Infsign[sign]
 
+
 class DivisionImpossible(InvalidOperation):
     """Cannot perform the division adequately.
 
@@ -248,6 +256,7 @@ class DivisionImpossible(InvalidOperation):
 
     def handle(self, context, *args):
         return NaN
+
 
 class DivisionUndefined(InvalidOperation, ZeroDivisionError):
     """Undefined result of division.
@@ -260,6 +269,7 @@ class DivisionUndefined(InvalidOperation, ZeroDivisionError):
     def handle(self, context, *args):
         return NaN
 
+
 class Inexact(DecimalException):
     """Had to round, losing information.
 
@@ -271,6 +281,7 @@ class Inexact(DecimalException):
     The inexact signal may be tested (or trapped) to determine if a given
     operation (or sequence of operations) was inexact.
     """
+
 
 class InvalidContext(InvalidOperation):
     """Invalid context.  Unknown rounding, for example.
@@ -286,6 +297,7 @@ class InvalidContext(InvalidOperation):
     def handle(self, context, *args):
         return NaN
 
+
 class Rounded(DecimalException):
     """Number got rounded (not  necessarily changed during rounding).
 
@@ -298,6 +310,7 @@ class Rounded(DecimalException):
     operation (or sequence of operations) caused a loss of precision.
     """
 
+
 class Subnormal(DecimalException):
     """Exponent < Emin before rounding.
 
@@ -308,6 +321,7 @@ class Subnormal(DecimalException):
     The subnormal signal may be tested (or trapped) to determine if a given
     or operation (or sequence of operations) yielded a subnormal result.
     """
+
 
 class Overflow(Inexact, Rounded):
     """Numerical overflow.
@@ -338,13 +352,13 @@ class Overflow(Inexact, Rounded):
         if sign == 0:
             if context.rounding == ROUND_CEILING:
                 return Infsign[sign]
-            return _dec_from_triple(sign, '9'*context.prec,
-                            context.Emax-context.prec+1)
+            return _dec_from_triple(sign, '9' * context.prec,
+                            context.Emax - context.prec + 1)
         if sign == 1:
             if context.rounding == ROUND_FLOOR:
                 return Infsign[sign]
-            return _dec_from_triple(sign, '9'*context.prec,
-                             context.Emax-context.prec+1)
+            return _dec_from_triple(sign, '9' * context.prec,
+                             context.Emax - context.prec + 1)
 
 
 class Underflow(Inexact, Rounded, Subnormal):
@@ -362,15 +376,16 @@ class Underflow(Inexact, Rounded, Subnormal):
     In all cases, Inexact, Rounded, and Subnormal will also be raised.
     """
 
+
 # List of public traps and flags
 _signals = [Clamped, DivisionByZero, Inexact, Overflow, Rounded,
            Underflow, InvalidOperation, Subnormal]
 
 # Map conditions (per the spec) to signals
-_condition_map = {ConversionSyntax:InvalidOperation,
-                  DivisionImpossible:InvalidOperation,
-                  DivisionUndefined:InvalidOperation,
-                  InvalidContext:InvalidOperation}
+_condition_map = {ConversionSyntax: InvalidOperation,
+                  DivisionImpossible: InvalidOperation,
+                  DivisionUndefined: InvalidOperation,
+                  InvalidContext: InvalidOperation}
 
 ##### Context Functions ##################################################
 
@@ -385,6 +400,7 @@ try:
 except ImportError:
     # Python was compiled without threads; create a mock object instead
     import sys
+
     class MockThreading(object):
         def local(self, sys=sys):
             return sys.modules[__name__]
@@ -451,6 +467,7 @@ else:
 
     del threading, local        # Don't contaminate the namespace
 
+
 def localcontext(ctx=None):
     """Return a context manager for a copy of the supplied context
 
@@ -491,7 +508,8 @@ def localcontext(ctx=None):
     >>> print getcontext().prec
     28
     """
-    if ctx is None: ctx = getcontext()
+    if ctx is None:
+        ctx = getcontext()
     return _ContextManager(ctx)
 
 
@@ -500,7 +518,7 @@ def localcontext(ctx=None):
 class Decimal(object):
     """Floating point class for decimal arithmetic."""
 
-    __slots__ = ('_exp','_int','_sign', '_is_special')
+    __slots__ = ('_exp', '_int', '_sign', '_is_special')
     # Generally, the value of the Decimal instance is given by
     #  (-1)**_sign * _int * 10**_exp
     # Special values are signified by _is_special == True
@@ -549,7 +567,7 @@ class Decimal(object):
                 fracpart = m.group('frac')
                 exp = int(m.group('exp') or '0')
                 if fracpart is not None:
-                    self._int = str((intpart+fracpart).lstrip('0') or '0')
+                    self._int = str((intpart + fracpart).lstrip('0') or '0')
                     self._exp = exp - len(fracpart)
                 else:
                     self._int = str(intpart.lstrip('0') or '0')
@@ -572,7 +590,7 @@ class Decimal(object):
             return self
 
         # From an integer
-        if isinstance(value, (int,long)):
+        if isinstance(value, (int, long)):
             if value >= 0:
                 self._sign = 0
             else:
@@ -584,10 +602,10 @@ class Decimal(object):
 
         # From another decimal
         if isinstance(value, Decimal):
-            self._exp  = value._exp
+            self._exp = value._exp
             self._sign = value._sign
-            self._int  = value._int
-            self._is_special  = value._is_special
+            self._int = value._int
+            self._is_special = value._is_special
             return self
 
         # From an internal working value
@@ -599,13 +617,13 @@ class Decimal(object):
             return self
 
         # tuple/list conversion (possibly from as_tuple())
-        if isinstance(value, (list,tuple)):
+        if isinstance(value, (list, tuple)):
             if len(value) != 3:
                 raise ValueError('Invalid tuple size in creation of Decimal '
                                  'from list or tuple.  The list or tuple '
                                  'should have exactly three elements.')
             # process sign.  The isinstance test rejects floats
-            if not (isinstance(value[0], (int, long)) and value[0] in (0,1)):
+            if not (isinstance(value[0], (int, long)) and value[0] in (0, 1)):
                 raise ValueError("Invalid sign.  The first value in the tuple "
                                  "should be an integer; either 0 for a "
                                  "positive number or 1 for a negative number.")
@@ -748,8 +766,8 @@ class Decimal(object):
         self_adjusted = self.adjusted()
         other_adjusted = other.adjusted()
         if self_adjusted == other_adjusted:
-            self_padded = self._int + '0'*(self._exp - other._exp)
-            other_padded = other._int + '0'*(other._exp - self._exp)
+            self_padded = self._int + '0' * (self._exp - other._exp)
+            other_padded = other._int + '0' * (other._exp - self._exp)
             return cmp(self_padded, other_padded) * (-1)**self._sign
         elif self_adjusted > other_adjusted:
             return (-1)**self._sign
@@ -800,13 +818,13 @@ class Decimal(object):
             return 0
         if self._isinteger():
             op = _WorkRep(self.to_integral_value())
-            return hash((-1)**op.sign*op.int*10**op.exp)
+            return hash((-1)**op.sign * op.int * 10**op.exp)
         # The value of a nonzero nonspecial Decimal instance is
         # faithfully represented by the triple consisting of its sign,
         # its adjusted exponent, and its coefficient with trailing
         # zeros removed.
         return hash((self._sign,
-                     self._exp+len(self._int),
+                     self._exp + len(self._int),
                      self._int.rstrip('0')))
 
     def as_tuple(self):
@@ -857,9 +875,9 @@ class Decimal(object):
 
         if dotplace <= 0:
             intpart = '0'
-            fracpart = '.' + '0'*(-dotplace) + self._int
+            fracpart = '.' + '0' * (-dotplace) + self._int
         elif dotplace >= len(self._int):
-            intpart = self._int+'0'*(dotplace-len(self._int))
+            intpart = self._int + '0' * (dotplace - len(self._int))
             fracpart = ''
         else:
             intpart = self._int[:dotplace]
@@ -869,7 +887,7 @@ class Decimal(object):
         else:
             if context is None:
                 context = getcontext()
-            exp = ['e', 'E'][context.capitals] + "%+d" % (leftdigits-dotplace)
+            exp = ['e', 'E'][context.capitals] + "%+d" % (leftdigits - dotplace)
 
         return sign + intpart + fracpart + exp
 
@@ -984,12 +1002,12 @@ class Decimal(object):
             ans = ans._fix(context)
             return ans
         if not self:
-            exp = max(exp, other._exp - context.prec-1)
+            exp = max(exp, other._exp - context.prec - 1)
             ans = other._rescale(exp, context.rounding)
             ans = ans._fix(context)
             return ans
         if not other:
-            exp = max(exp, self._exp - context.prec-1)
+            exp = max(exp, self._exp - context.prec - 1)
             ans = self._rescale(exp, context.rounding)
             ans = ans._fix(context)
             return ans
@@ -1350,7 +1368,7 @@ class Decimal(object):
         # remainder is r*10**ideal_exponent; other is +/-op2.int *
         # 10**ideal_exponent.   Apply correction to ensure that
         # abs(remainder) <= abs(other)/2
-        if 2*r + (q&1) > op2.int:
+        if 2 * r + (q & 1) > op2.int:
             r -= op2.int
             q += 1
 
@@ -1360,7 +1378,7 @@ class Decimal(object):
         # result has same sign as self unless r is negative
         sign = self._sign
         if r < 0:
-            sign = 1-sign
+            sign = 1 - sign
             r = -r
 
         ans = _dec_from_triple(sign, str(r), ideal_exponent)
@@ -1415,9 +1433,9 @@ class Decimal(object):
                 raise OverflowError("Cannot convert infinity to long")
         s = (-1)**self._sign
         if self._exp >= 0:
-            return s*int(self._int)*10**self._exp
+            return s * int(self._int) * 10**self._exp
         else:
-            return s*int(self._int[:self._exp] or '0')
+            return s * int(self._int[:self._exp] or '0')
 
     def __long__(self):
         """Converts to a long.
@@ -1434,7 +1452,7 @@ class Decimal(object):
         # precision-1 if _clamp=1.
         max_payload_len = context.prec - context._clamp
         if len(payload) > max_payload_len:
-            payload = payload[len(payload)-max_payload_len:].lstrip('0')
+            payload = payload[len(payload) - max_payload_len:].lstrip('0')
             return _dec_from_triple(self._sign, payload, self._exp, True)
         return Decimal(self)
 
@@ -1487,13 +1505,13 @@ class Decimal(object):
             context._raise_error(Rounded)
             digits = len(self._int) + self._exp - exp_min
             if digits < 0:
-                self = _dec_from_triple(self._sign, '1', exp_min-1)
+                self = _dec_from_triple(self._sign, '1', exp_min - 1)
                 digits = 0
             this_function = getattr(self, self._pick_rounding_function[context.rounding])
             changed = this_function(digits)
             coeff = self._int[:digits] or '0'
             if changed == 1:
-                coeff = str(int(coeff)+1)
+                coeff = str(int(coeff) + 1)
             ans = _dec_from_triple(self._sign, coeff, exp_min)
 
             if changed:
@@ -1503,12 +1521,12 @@ class Decimal(object):
                     if not ans:
                         # raise Clamped on underflow to 0
                         context._raise_error(Clamped)
-                elif len(ans._int) == context.prec+1:
+                elif len(ans._int) == context.prec + 1:
                     # we get here only if rescaling rounds the
                     # cofficient up to exactly 10**context.prec
                     if ans._exp < Etop:
                         ans = _dec_from_triple(ans._sign,
-                                                   ans._int[:-1], ans._exp+1)
+                                                   ans._int[:-1], ans._exp + 1)
                     else:
                         # Inexact and Rounded have already been raised
                         ans = context._raise_error(Overflow, 'above Emax',
@@ -1518,7 +1536,7 @@ class Decimal(object):
         # fold down if _clamp == 1 and self has too few digits
         if context._clamp == 1 and self._exp > Etop:
             context._raise_error(Clamped)
-            self_padded = self._int + '0'*(self._exp - Etop)
+            self_padded = self._int + '0' * (self._exp - Etop)
             return _dec_from_triple(self._sign, self_padded, Etop)
 
         # here self was representable to begin with; return unchanged
@@ -1566,7 +1584,7 @@ class Decimal(object):
     def _round_half_even(self, prec):
         """Round 5 to even, rest to nearest."""
         if _exact_half(self._int, prec) and \
-                (prec == 0 or self._int[prec-1] in '02468'):
+                (prec == 0 or self._int[prec - 1] in '02468'):
             return -1
         else:
             return self._round_half_up(prec)
@@ -1587,7 +1605,7 @@ class Decimal(object):
 
     def _round_05up(self, prec):
         """Round down unless digit prec-1 is 0 or 5."""
-        if prec and self._int[prec-1] not in '05':
+        if prec and self._int[prec - 1] not in '05':
             return self._round_down(prec)
         else:
             return -self._round_down(prec)
@@ -1795,53 +1813,53 @@ class Decimal(object):
         # required to be an integer
         if xc == 1:
             if ye >= 0:
-                exponent = xe*yc*10**ye
+                exponent = xe * yc * 10**ye
             else:
-                exponent, remainder = divmod(xe*yc, 10**-ye)
+                exponent, remainder = divmod(xe * yc, 10**-ye)
                 if remainder:
                     return None
             if y.sign == 1:
                 exponent = -exponent
             # if other is a nonnegative integer, use ideal exponent
             if other._isinteger() and other._sign == 0:
-                ideal_exponent = self._exp*int(other)
-                zeros = min(exponent-ideal_exponent, p-1)
+                ideal_exponent = self._exp * int(other)
+                zeros = min(exponent - ideal_exponent, p - 1)
             else:
                 zeros = 0
-            return _dec_from_triple(0, '1' + '0'*zeros, exponent-zeros)
+            return _dec_from_triple(0, '1' + '0' * zeros, exponent - zeros)
 
         # case where y is negative: xc must be either a power
         # of 2 or a power of 5.
         if y.sign == 1:
             last_digit = xc % 10
-            if last_digit in (2,4,6,8):
+            if last_digit in (2, 4, 6, 8):
                 # quick test for power of 2
                 if xc & -xc != xc:
                     return None
                 # now xc is a power of 2; e is its exponent
-                e = _nbits(xc)-1
+                e = _nbits(xc) - 1
                 # find e*y and xe*y; both must be integers
                 if ye >= 0:
-                    y_as_int = yc*10**ye
-                    e = e*y_as_int
-                    xe = xe*y_as_int
+                    y_as_int = yc * 10**ye
+                    e = e * y_as_int
+                    xe = xe * y_as_int
                 else:
                     ten_pow = 10**-ye
-                    e, remainder = divmod(e*yc, ten_pow)
+                    e, remainder = divmod(e * yc, ten_pow)
                     if remainder:
                         return None
-                    xe, remainder = divmod(xe*yc, ten_pow)
+                    xe, remainder = divmod(xe * yc, ten_pow)
                     if remainder:
                         return None
 
-                if e*65 >= p*93: # 93/65 > log(10)/log(5)
+                if e * 65 >= p * 93: # 93/65 > log(10)/log(5)
                     return None
                 xc = 5**e
 
             elif last_digit == 5:
                 # e >= log_5(xc) if xc is a power of 5; we have
                 # equality all the way up to xc=5**2658
-                e = _nbits(xc)*28//65
+                e = _nbits(xc) * 28 // 65
                 xc, remainder = divmod(5**e, xc)
                 if remainder:
                     return None
@@ -1849,18 +1867,18 @@ class Decimal(object):
                     xc //= 5
                     e -= 1
                 if ye >= 0:
-                    y_as_integer = yc*10**ye
-                    e = e*y_as_integer
-                    xe = xe*y_as_integer
+                    y_as_integer = yc * 10**ye
+                    e = e * y_as_integer
+                    xe = xe * y_as_integer
                 else:
                     ten_pow = 10**-ye
-                    e, remainder = divmod(e*yc, ten_pow)
+                    e, remainder = divmod(e * yc, ten_pow)
                     if remainder:
                         return None
-                    xe, remainder = divmod(xe*yc, ten_pow)
+                    xe, remainder = divmod(xe * yc, ten_pow)
                     if remainder:
                         return None
-                if e*3 >= p*10: # 10/3 > log(10)/log(2)
+                if e * 3 >= p * 10: # 10/3 > log(10)/log(2)
                     return None
                 xc = 2**e
             else:
@@ -1868,17 +1886,17 @@ class Decimal(object):
 
             if xc >= 10**p:
                 return None
-            xe = -e-xe
+            xe = -e - xe
             return _dec_from_triple(0, str(xc), xe)
 
         # now y is positive; find m and n such that y = m/n
         if ye >= 0:
-            m, n = yc*10**ye, 1
+            m, n = yc * 10**ye, 1
         else:
-            if xe != 0 and len(str(abs(yc*xe))) <= -ye:
+            if xe != 0 and len(str(abs(yc * xe))) <= -ye:
                 return None
             xc_bits = _nbits(xc)
-            if xc != 1 and len(str(abs(yc)*xc_bits)) <= -ye:
+            if xc != 1 and len(str(abs(yc) * xc_bits)) <= -ye:
                 return None
             m, n = yc, 10**(-ye)
             while m % 2 == n % 2 == 0:
@@ -1899,13 +1917,13 @@ class Decimal(object):
                 return None
 
             # compute nth root of xc using Newton's method
-            a = 1L << -(-_nbits(xc)//n) # initial estimate
+            a = 1L << -(-_nbits(xc) // n) # initial estimate
             while True:
-                q, r = divmod(xc, a**(n-1))
+                q, r = divmod(xc, a**(n - 1))
                 if a <= q:
                     break
                 else:
-                    a = (a*(n-1) + q)//n
+                    a = (a * (n - 1) + q) // n
             if not (a == q and r == 0):
                 return None
             xc = a
@@ -1915,7 +1933,7 @@ class Decimal(object):
 
         # if m > p*100//_log10_lb(xc) then m > p/log10(xc), hence xc**m >
         # 10**p and the result is not representable.
-        if xc > 1 and m > p*100//_log10_lb(xc):
+        if xc > 1 and m > p * 100 // _log10_lb(xc):
             return None
         xc = xc**m
         xe *= m
@@ -1927,11 +1945,11 @@ class Decimal(object):
         # exponent, if necessary
         str_xc = str(xc)
         if other._isinteger() and other._sign == 0:
-            ideal_exponent = self._exp*int(other)
-            zeros = min(xe-ideal_exponent, p-len(str_xc))
+            ideal_exponent = self._exp * int(other)
+            zeros = min(xe - ideal_exponent, p - len(str_xc))
         else:
             zeros = 0
-        return _dec_from_triple(0, str_xc+'0'*zeros, xe-zeros)
+        return _dec_from_triple(0, str_xc + '0' * zeros, xe - zeros)
 
     def __pow__(self, other, modulo=None, context=None):
         """Return self ** other [ % modulo].
@@ -2025,15 +2043,15 @@ class Decimal(object):
                     multiplier = int(other)
 
                 exp = self._exp * multiplier
-                if exp < 1-context.prec:
-                    exp = 1-context.prec
+                if exp < 1 - context.prec:
+                    exp = 1 - context.prec
                     context._raise_error(Rounded)
             else:
                 context._raise_error(Inexact)
                 context._raise_error(Rounded)
-                exp = 1-context.prec
+                exp = 1 - context.prec
 
-            return _dec_from_triple(result_sign, '1'+'0'*-exp, exp)
+            return _dec_from_triple(result_sign, '1' + '0' * -exp, exp)
 
         # compute adjusted exponent of self
         self_adj = self.adjusted()
@@ -2060,13 +2078,13 @@ class Decimal(object):
             # self > 1 and other +ve, or self < 1 and other -ve
             # possibility of overflow
             if bound >= len(str(context.Emax)):
-                ans = _dec_from_triple(result_sign, '1', context.Emax+1)
+                ans = _dec_from_triple(result_sign, '1', context.Emax + 1)
         else:
             # self > 1 and other -ve, or self < 1 and other +ve
             # possibility of underflow to 0
             Etiny = context.Etiny()
             if bound >= len(str(-Etiny)):
-                ans = _dec_from_triple(result_sign, '1', Etiny-1)
+                ans = _dec_from_triple(result_sign, '1', Etiny - 1)
 
         # try for an exact result with precision +1
         if ans is None:
@@ -2088,8 +2106,8 @@ class Decimal(object):
             # then increase precision until result is unambiguously roundable
             extra = 3
             while True:
-                coeff, exp = _dpower(xc, xe, yc, ye, p+extra)
-                if coeff % (5*10**(len(str(coeff))-p-1)):
+                coeff, exp = _dpower(xc, xe, yc, ye, p + extra)
+                if coeff % (5 * 10**(len(str(coeff)) - p - 1)):
                     break
                 extra += 3
 
@@ -2104,9 +2122,9 @@ class Decimal(object):
             context._raise_error(Inexact)
             # pad with zeros up to length context.prec+1 if necessary
             if len(ans._int) <= context.prec:
-                expdiff = context.prec+1 - len(ans._int)
-                ans = _dec_from_triple(ans._sign, ans._int+'0'*expdiff,
-                                       ans._exp-expdiff)
+                expdiff = context.prec + 1 - len(ans._int)
+                ans = _dec_from_triple(ans._sign, ans._int + '0' * expdiff,
+                                       ans._exp - expdiff)
             if ans.adjusted() < context.Emin:
                 context._raise_error(Underflow)
 
@@ -2142,7 +2160,7 @@ class Decimal(object):
         exp_max = [context.Emax, context.Etop()][context._clamp]
         end = len(dup._int)
         exp = dup._exp
-        while dup._int[end-1] == '0' and exp < exp_max:
+        while dup._int[end - 1] == '0' and exp < exp_max:
             exp += 1
             end -= 1
         return _dec_from_triple(dup._sign, dup._int[:end], exp)
@@ -2251,19 +2269,19 @@ class Decimal(object):
         if self._exp >= exp:
             # pad answer with zeros if necessary
             return _dec_from_triple(self._sign,
-                                        self._int + '0'*(self._exp - exp), exp)
+                                        self._int + '0' * (self._exp - exp), exp)
 
         # too many digits; round and lose data.  If self.adjusted() <
         # exp-1, replace self by 10**(exp-1) before rounding
         digits = len(self._int) + self._exp - exp
         if digits < 0:
-            self = _dec_from_triple(self._sign, '1', exp-1)
+            self = _dec_from_triple(self._sign, '1', exp - 1)
             digits = 0
         this_function = getattr(self, self._pick_rounding_function[rounding])
         changed = this_function(digits)
         coeff = self._int[:digits] or '0'
         if changed == 1:
-            coeff = str(int(coeff)+1)
+            coeff = str(int(coeff) + 1)
         return _dec_from_triple(self._sign, coeff, exp)
 
     def to_integral_exact(self, rounding=None, context=None):
@@ -2355,7 +2373,7 @@ class Decimal(object):
         # correctly and raise the appropriate flags.
 
         # use an extra digit of precision
-        prec = context.prec+1
+        prec = context.prec + 1
 
         # write argument in the form c*100**e where e = self._exp//2
         # is the 'ideal' exponent, to be used if the square root is
@@ -2368,10 +2386,10 @@ class Decimal(object):
             l = (len(self._int) >> 1) + 1
         else:
             c = op.int
-            l = len(self._int)+1 >> 1
+            l = len(self._int) + 1 >> 1
 
         # rescale so that c has exactly prec base 100 'digits'
-        shift = prec-l
+        shift = prec - l
         if shift >= 0:
             c *= 100**shift
             exact = True
@@ -2383,12 +2401,12 @@ class Decimal(object):
         # find n = floor(sqrt(c)) using Newton's method
         n = 10**prec
         while True:
-            q = c//n
+            q = c // n
             if n <= q:
                 break
             else:
                 n = n + q >> 1
-        exact = exact and n*n == c
+        exact = exact and n * n == c
 
         if exact:
             # result is exact; rescale to use ideal exponent e
@@ -2496,13 +2514,13 @@ class Decimal(object):
         if self._exp >= 0:
             return True
         rest = self._int[self._exp:]
-        return rest == '0'*len(rest)
+        return rest == '0' * len(rest)
 
     def _iseven(self):
         """Returns True if self is even.  Assumes self is an integer."""
         if not self or self._exp > 0:
             return True
-        return self._int[-1+self._exp] in '02468'
+        return self._int[-1 + self._exp] in '02468'
 
     def adjusted(self):
         """Return the adjusted exponent of self"""
@@ -2612,7 +2630,6 @@ class Decimal(object):
                 return Dec_p1
         return Dec_0
 
-
     def compare_total_mag(self, other):
         """Compares self to other using abstract repr., ignoring sign.
 
@@ -2673,18 +2690,18 @@ class Decimal(object):
         # the default context.  For smaller exponent the result is
         # indistinguishable from 1 at the given precision, while for
         # larger exponent the result either overflows or underflows.
-        if self._sign == 0 and adj > len(str((context.Emax+1)*3)):
+        if self._sign == 0 and adj > len(str((context.Emax + 1) * 3)):
             # overflow
-            ans = _dec_from_triple(0, '1', context.Emax+1)
-        elif self._sign == 1 and adj > len(str((-context.Etiny()+1)*3)):
+            ans = _dec_from_triple(0, '1', context.Emax + 1)
+        elif self._sign == 1 and adj > len(str((-context.Etiny() + 1) * 3)):
             # underflow to 0
-            ans = _dec_from_triple(0, '1', context.Etiny()-1)
+            ans = _dec_from_triple(0, '1', context.Etiny() - 1)
         elif self._sign == 0 and adj < -p:
             # p+1 digits; final round will raise correct flags
-            ans = _dec_from_triple(0, '1' + '0'*(p-1) + '1', -p)
-        elif self._sign == 1 and adj < -p-1:
+            ans = _dec_from_triple(0, '1' + '0' * (p - 1) + '1', -p)
+        elif self._sign == 1 and adj < -p - 1:
             # p+1 digits; final round will raise correct flags
-            ans = _dec_from_triple(0, '9'*(p+1), -p-1)
+            ans = _dec_from_triple(0, '9' * (p + 1), -p - 1)
         # general case
         else:
             op = _WorkRep(self)
@@ -2697,8 +2714,8 @@ class Decimal(object):
             # roundable result
             extra = 3
             while True:
-                coeff, exp = _dexp(c, e, p+extra)
-                if coeff % (5*10**(len(str(coeff))-p-1)):
+                coeff, exp = _dexp(c, e, p + extra)
+                if coeff % (5 * 10**(len(str(coeff)) - p - 1)):
                     break
                 extra += 3
 
@@ -2779,20 +2796,19 @@ class Decimal(object):
         adj = self._exp + len(self._int) - 1
         if adj >= 1:
             # argument >= 10; we use 23/10 = 2.3 as a lower bound for ln(10)
-            return len(str(adj*23//10)) - 1
+            return len(str(adj * 23 // 10)) - 1
         if adj <= -2:
             # argument <= 0.1
-            return len(str((-1-adj)*23//10)) - 1
+            return len(str((-1 - adj) * 23 // 10)) - 1
         op = _WorkRep(self)
         c, e = op.int, op.exp
         if adj == 0:
             # 1 < self < 10
-            num = str(c-10**-e)
+            num = str(c - 10**-e)
             den = str(c)
             return len(num) - len(den) - (num < den)
         # adj == -1, 0.1 <= self < 1
         return e + len(str(10**-e - c)) - 1
-
 
     def ln(self, context=None):
         """Returns the natural (base e) logarithm of self."""
@@ -2833,10 +2849,10 @@ class Decimal(object):
         while True:
             coeff = _dlog(c, e, places)
             # assert len(str(abs(coeff)))-p >= 1
-            if coeff % (5*10**(len(str(abs(coeff)))-p-1)):
+            if coeff % (5 * 10**(len(str(abs(coeff))) - p - 1)):
                 break
             places += 3
-        ans = _dec_from_triple(int(coeff<0), str(abs(coeff)), -places)
+        ans = _dec_from_triple(int(coeff < 0), str(abs(coeff)), -places)
 
         context = context._shallow_copy()
         rounding = context._set_rounding(ROUND_HALF_EVEN)
@@ -2859,19 +2875,19 @@ class Decimal(object):
         adj = self._exp + len(self._int) - 1
         if adj >= 1:
             # self >= 10
-            return len(str(adj))-1
+            return len(str(adj)) - 1
         if adj <= -2:
             # self < 0.1
-            return len(str(-1-adj))-1
+            return len(str(-1 - adj)) - 1
         op = _WorkRep(self)
         c, e = op.int, op.exp
         if adj == 0:
             # 1 < self < 10
-            num = str(c-10**-e)
-            den = str(231*c)
+            num = str(c - 10**-e)
+            den = str(231 * c)
             return len(num) - len(den) - (num < den) + 2
         # adj == -1, 0.1 <= self < 1
-        num = str(10**-e-c)
+        num = str(10**-e - c)
         return len(num) + e - (num < "231") - 1
 
     def log10(self, context=None):
@@ -2899,7 +2915,7 @@ class Decimal(object):
                                         'log10 of a negative value')
 
         # log10(10**n) = n
-        if self._int[0] == '1' and self._int[1:] == '0'*(len(self._int) - 1):
+        if self._int[0] == '1' and self._int[1:] == '0' * (len(self._int) - 1):
             # answer may need rounding
             ans = Decimal(self._exp + len(self._int) - 1)
         else:
@@ -2910,14 +2926,14 @@ class Decimal(object):
 
             # correctly rounded result: repeatedly increase precision
             # until result is unambiguously roundable
-            places = p-self._log10_exp_bound()+2
+            places = p - self._log10_exp_bound() + 2
             while True:
                 coeff = _dlog10(c, e, places)
                 # assert len(str(abs(coeff)))-p >= 1
-                if coeff % (5*10**(len(str(abs(coeff)))-p-1)):
+                if coeff % (5 * 10**(len(str(abs(coeff))) - p - 1)):
                     break
                 places += 3
-            ans = _dec_from_triple(int(coeff<0), str(abs(coeff)), -places)
+            ans = _dec_from_triple(int(coeff < 0), str(abs(coeff)), -places)
 
         context = context._shallow_copy()
         rounding = context._set_rounding(ROUND_HALF_EVEN)
@@ -2971,12 +2987,12 @@ class Decimal(object):
     def _fill_logical(self, context, opa, opb):
         dif = context.prec - len(opa)
         if dif > 0:
-            opa = '0'*dif + opa
+            opa = '0' * dif + opa
         elif dif < 0:
             opa = opa[-context.prec:]
         dif = context.prec - len(opb)
         if dif > 0:
-            opb = '0'*dif + opb
+            opb = '0' * dif + opb
         elif dif < 0:
             opb = opb[-context.prec:]
         return opa, opb
@@ -2992,14 +3008,14 @@ class Decimal(object):
         (opa, opb) = self._fill_logical(context, self._int, other._int)
 
         # make the operation, and clean starting zeroes
-        result = "".join([str(int(a)&int(b)) for a,b in zip(opa,opb)])
+        result = "".join([str(int(a) & int(b)) for a, b in zip(opa, opb)])
         return _dec_from_triple(0, result.lstrip('0') or '0', 0)
 
     def logical_invert(self, context=None):
         """Invert all its digits."""
         if context is None:
             context = getcontext()
-        return self.logical_xor(_dec_from_triple(0,'1'*context.prec,0),
+        return self.logical_xor(_dec_from_triple(0, '1' * context.prec, 0),
                                 context)
 
     def logical_or(self, other, context=None):
@@ -3013,7 +3029,7 @@ class Decimal(object):
         (opa, opb) = self._fill_logical(context, self._int, other._int)
 
         # make the operation, and clean starting zeroes
-        result = "".join(str(int(a)|int(b)) for a,b in zip(opa,opb))
+        result = "".join(str(int(a) | int(b)) for a, b in zip(opa, opb))
         return _dec_from_triple(0, result.lstrip('0') or '0', 0)
 
     def logical_xor(self, other, context=None):
@@ -3027,7 +3043,7 @@ class Decimal(object):
         (opa, opb) = self._fill_logical(context, self._int, other._int)
 
         # make the operation, and clean starting zeroes
-        result = "".join(str(int(a)^int(b)) for a,b in zip(opa,opb))
+        result = "".join(str(int(a) ^ int(b)) for a, b in zip(opa, opb))
         return _dec_from_triple(0, result.lstrip('0') or '0', 0)
 
     def max_mag(self, other, context=None):
@@ -3102,7 +3118,7 @@ class Decimal(object):
         if self._isinfinity() == -1:
             return negInf
         if self._isinfinity() == 1:
-            return _dec_from_triple(0, '9'*context.prec, context.Etop())
+            return _dec_from_triple(0, '9' * context.prec, context.Etop())
 
         context = context.copy()
         context._set_rounding(ROUND_FLOOR)
@@ -3110,7 +3126,7 @@ class Decimal(object):
         new_self = self._fix(context)
         if new_self != self:
             return new_self
-        return self.__sub__(_dec_from_triple(0, '1', context.Etiny()-1),
+        return self.__sub__(_dec_from_triple(0, '1', context.Etiny() - 1),
                             context)
 
     def next_plus(self, context=None):
@@ -3125,7 +3141,7 @@ class Decimal(object):
         if self._isinfinity() == 1:
             return Inf
         if self._isinfinity() == -1:
-            return _dec_from_triple(1, '9'*context.prec, context.Etop())
+            return _dec_from_triple(1, '9' * context.prec, context.Etop())
 
         context = context.copy()
         context._set_rounding(ROUND_CEILING)
@@ -3133,7 +3149,7 @@ class Decimal(object):
         new_self = self._fix(context)
         if new_self != self:
             return new_self
-        return self.__add__(_dec_from_triple(0, '1', context.Etiny()-1),
+        return self.__add__(_dec_from_triple(0, '1', context.Etiny() - 1),
                             context)
 
     def next_toward(self, other, context=None):
@@ -3250,14 +3266,14 @@ class Decimal(object):
         rotdig = self._int
         topad = context.prec - len(rotdig)
         if topad:
-            rotdig = '0'*topad + rotdig
+            rotdig = '0' * topad + rotdig
 
         # let's rotate!
         rotated = rotdig[torot:] + rotdig[:torot]
         return _dec_from_triple(self._sign,
                                 rotated.lstrip('0') or '0', self._exp)
 
-    def scaleb (self, other, context=None):
+    def scaleb(self, other, context=None):
         """Returns self operand after adding the second value to its exp."""
         if context is None:
             context = getcontext()
@@ -3269,7 +3285,7 @@ class Decimal(object):
         if other._exp != 0:
             return context._raise_error(InvalidOperation)
         liminf = -2 * (context.Emax + context.prec)
-        limsup =  2 * (context.Emax + context.prec)
+        limsup = 2 * (context.Emax + context.prec)
         if not (liminf <= int(other) <= limsup):
             return context._raise_error(InvalidOperation)
 
@@ -3304,13 +3320,13 @@ class Decimal(object):
         rotdig = self._int
         topad = context.prec - len(rotdig)
         if topad:
-            rotdig = '0'*topad + rotdig
+            rotdig = '0' * topad + rotdig
 
         # let's shift!
         if torot < 0:
             rotated = rotdig[:torot]
         else:
-            rotated = rotdig + '0'*torot
+            rotated = rotdig + '0' * torot
             rotated = rotated[-context.prec:]
 
         return _dec_from_triple(self._sign,
@@ -3329,6 +3345,7 @@ class Decimal(object):
         if type(self) == Decimal:
             return self     # My components are also immutable
         return self.__class__(str(self))
+
 
 def _dec_from_triple(sign, coefficient, exponent, special=False):
     """Create a decimal instance directly, without any validation,
@@ -3360,20 +3377,25 @@ for name in rounding_functions:
 
 del name, val, globalname, rounding_functions
 
+
 class _ContextManager(object):
     """Context manager class to support localcontext().
 
       Sets a copy of the supplied context in __enter__() and restores
       the previous decimal context in __exit__()
     """
+
     def __init__(self, new_context):
         self.new_context = new_context.copy()
+
     def __enter__(self):
         self.saved_context = getcontext()
         setcontext(self.new_context)
         return self.new_context
+
     def __exit__(self, t, v, tb):
         setcontext(self.saved_context)
+
 
 class Context(object):
     """Contains the context for a Decimal instance.
@@ -3404,10 +3426,10 @@ class Context(object):
         if _ignored_flags is None:
             _ignored_flags = []
         if not isinstance(flags, dict):
-            flags = dict([(s,s in flags) for s in _signals])
+            flags = dict([(s, s in flags) for s in _signals])
             del s
         if traps is not None and not isinstance(traps, dict):
-            traps = dict([(s,s in traps) for s in _signals])
+            traps = dict([(s, s in traps) for s in _signals])
             del s
         for name, val in locals().items():
             if val is None:
@@ -3448,7 +3470,7 @@ class Context(object):
         return nc
     __copy__ = copy
 
-    def _raise_error(self, condition, explanation = None, *args):
+    def _raise_error(self, condition, explanation=None, *args):
         """Handles an error
 
         If the flag is in _ignored_flags, returns the default response.
@@ -3483,7 +3505,7 @@ class Context(object):
 
     def _regard_flags(self, *flags):
         """Stop ignoring the flags, if they are raised"""
-        if flags and isinstance(flags[0], (tuple,list)):
+        if flags and isinstance(flags[0], (tuple, list)):
             flags = flags[0]
         for flag in flags:
             self._ignored_flags.remove(flag)
@@ -3517,7 +3539,7 @@ class Context(object):
         This will make it round up for that operation.
         """
         rounding = self.rounding
-        self.rounding= type
+        self.rounding = type
         return rounding
 
     def create_decimal(self, num='0'):
@@ -4062,7 +4084,7 @@ class Context(object):
         """
         return a.logical_xor(b, context=self)
 
-    def max(self, a,b):
+    def max(self, a, b):
         """max compares two values numerically and returns the maximum.
 
         If either operand is a NaN then the general rules apply.
@@ -4086,7 +4108,7 @@ class Context(object):
         """Compares the values numerically with their sign ignored."""
         return a.max_mag(b, context=self)
 
-    def min(self, a,b):
+    def min(self, a, b):
         """min compares two values numerically and returns the minimum.
 
         If either operand is a NaN then the general rules apply.
@@ -4510,7 +4532,7 @@ class Context(object):
         """
         return a.same_quantum(b)
 
-    def scaleb (self, a, b):
+    def scaleb(self, a, b):
         """Returns the first operand after adding the second value its exp.
 
         >>> ExtendedContext.scaleb(Decimal('7.50'), Decimal('-2'))
@@ -4520,7 +4542,7 @@ class Context(object):
         >>> ExtendedContext.scaleb(Decimal('7.50'), Decimal('3'))
         Decimal("7.50E+3")
         """
-        return a.scaleb (b, context=self)
+        return a.scaleb(b, context=self)
 
     def shift(self, a, b):
         """Returns a shifted copy of a, b times.
@@ -4660,8 +4682,9 @@ class Context(object):
     # the method name changed, but we provide also the old one, for compatibility
     to_integral = to_integral_value
 
+
 class _WorkRep(object):
-    __slots__ = ('sign','int','exp')
+    __slots__ = ('sign', 'int', 'exp')
     # sign: 0 or 1
     # int:  int or long
     # exp:  None, int, or string
@@ -4687,8 +4710,7 @@ class _WorkRep(object):
     __str__ = __repr__
 
 
-
-def _normalize(op1, op2, prec = 0):
+def _normalize(op1, op2, prec=0):
     """Normalizes op1, op2 to have the same exp and length of coefficient.
 
     Done during addition.
@@ -4723,7 +4745,9 @@ def _normalize(op1, op2, prec = 0):
 # The correction being in the function definition is for speed, and
 # the whole function is not resolved with math.log because of avoiding
 # the use of floats.
-def _nbits(n, correction = {
+
+
+def _nbits(n, correction={
         '0': 4, '1': 3, '2': 2, '3': 2,
         '4': 1, '5': 1, '6': 1, '7': 1,
         '8': 0, '9': 0, 'a': 0, 'b': 0,
@@ -4734,7 +4758,8 @@ def _nbits(n, correction = {
     if n < 0:
         raise ValueError("The argument to _nbits should be nonnegative.")
     hex_n = "%x" % n
-    return 4*len(hex_n) - correction[hex_n[0]]
+    return 4 * len(hex_n) - correction[hex_n[0]]
+
 
 def _sqrt_nearest(n, a):
     """Closest integer to the square root of the positive integer n.  a is
@@ -4746,10 +4771,11 @@ def _sqrt_nearest(n, a):
     if n <= 0 or a <= 0:
         raise ValueError("Both arguments to _sqrt_nearest should be positive.")
 
-    b=0
+    b = 0
     while a != b:
-        b, a = a, a--n//a>>1
+        b, a = a, a - -n // a >> 1
     return a
+
 
 def _rshift_nearest(x, shift):
     """Given an integer x and a nonnegative integer shift, return closest
@@ -4757,7 +4783,8 @@ def _rshift_nearest(x, shift):
 
     """
     b, q = 1L << shift, x >> shift
-    return q + (2*(x & (b-1)) + (q&1) > b)
+    return q + (2 * (x & (b - 1)) + (q & 1) > b)
+
 
 def _div_nearest(a, b):
     """Closest integer to a/b, a and b positive integers; rounds to even
@@ -4765,9 +4792,10 @@ def _div_nearest(a, b):
 
     """
     q, r = divmod(a, b)
-    return q + (2*r + (q&1) > b)
+    return q + (2 * r + (q & 1) > b)
 
-def _ilog(x, M, L = 8):
+
+def _ilog(x, M, L=8):
     """Integer approximation to M*log(x/M), with absolute error boundable
     in terms only of x/M.
 
@@ -4797,23 +4825,24 @@ def _ilog(x, M, L = 8):
     # is actually an integer approximation to 2**R*y*M, where R is the
     # number of reductions performed so far.
 
-    y = x-M
+    y = x - M
     # argument reduction; R = number of reductions performed
     R = 0
-    while (R <= L and long(abs(y)) << L-R >= M or
-           R > L and abs(y) >> R-L >= M):
-        y = _div_nearest(long(M*y) << 1,
-                         M + _sqrt_nearest(M*(M+_rshift_nearest(y, R)), M))
+    while (R <= L and long(abs(y)) << L - R >= M or
+           R > L and abs(y) >> R - L >= M):
+        y = _div_nearest(long(M * y) << 1,
+                         M + _sqrt_nearest(M * (M + _rshift_nearest(y, R)), M))
         R += 1
 
     # Taylor series with T terms
-    T = -int(-10*len(str(M))//(3*L))
+    T = -int(-10 * len(str(M)) // (3 * L))
     yshift = _rshift_nearest(y, R)
     w = _div_nearest(M, T)
-    for k in xrange(T-1, 0, -1):
-        w = _div_nearest(M, k) - _div_nearest(yshift*w, M)
+    for k in xrange(T - 1, 0, -1):
+        w = _div_nearest(M, k) - _div_nearest(yshift * w, M)
 
-    return _div_nearest(w*y, M)
+    return _div_nearest(w * y, M)
+
 
 def _dlog10(c, e, p):
     """Given integers c, e and p with c > 0, p >= 0, compute an integer
@@ -4829,11 +4858,11 @@ def _dlog10(c, e, p):
     #   f <= 0 and 0.1 <= d <= 1.
     # Thus for c*10**e close to 1, f = 0
     l = len(str(c))
-    f = e+l - (e+l >= 1)
+    f = e + l - (e + l >= 1)
 
     if p > 0:
         M = 10**p
-        k = e+p-f
+        k = e + p - f
         if k >= 0:
             c *= 10**k
         else:
@@ -4841,13 +4870,14 @@ def _dlog10(c, e, p):
 
         log_d = _ilog(c, M) # error < 5 + 22 = 27
         log_10 = _log10_digits(p) # error < 1
-        log_d = _div_nearest(log_d*M, log_10)
-        log_tenpower = f*M # exact
+        log_d = _div_nearest(log_d * M, log_10)
+        log_tenpower = f * M # exact
     else:
         log_d = 0  # error < 2.31
         log_tenpower = div_nearest(f, 10**-p) # error < 0.5
 
-    return _div_nearest(log_tenpower+log_d, 100)
+    return _div_nearest(log_tenpower + log_d, 100)
+
 
 def _dlog(c, e, p):
     """Given integers c, e and p with c > 0, compute an integer
@@ -4862,11 +4892,11 @@ def _dlog(c, e, p):
     # or f <= 0 and 0.1 <= d <= 1.  Then we can compute 10**p * log(c*10**e)
     # as 10**p * log(d) + 10**p*f * log(10).
     l = len(str(c))
-    f = e+l - (e+l >= 1)
+    f = e + l - (e + l >= 1)
 
     # compute approximation to 10**p*log(d), with error < 27
     if p > 0:
-        k = e+p-f
+        k = e + p - f
         if k >= 0:
             c *= 10**k
         else:
@@ -4880,11 +4910,11 @@ def _dlog(c, e, p):
 
     # compute approximation to f*10**p*log(10), with error < 11.
     if f:
-        extra = len(str(abs(f)))-1
+        extra = len(str(abs(f))) - 1
         if p + extra >= 0:
             # error in f * _log10_digits(p+extra) < |f| * 1 = |f|
             # after division, error < |f|/10**extra + 0.5 < 10 + 0.5 < 11
-            f_log_ten = _div_nearest(f*_log10_digits(p+extra), 10**extra)
+            f_log_ten = _div_nearest(f * _log10_digits(p + extra), 10**extra)
         else:
             f_log_ten = 0
     else:
@@ -4893,10 +4923,12 @@ def _dlog(c, e, p):
     # error in sum < 11+27 = 38; error after division < 0.38 + 0.5 < 1
     return _div_nearest(f_log_ten + log_d, 100)
 
+
 class _Log10Memoize(object):
     """Class to compute, store, and allow retrieval of, digits of the
     constant log(10) = 2.302585....  This constant is needed by
     Decimal.ln, Decimal.log10, Decimal.exp and Decimal.__pow__."""
+
     def __init__(self):
         self.digits = "23025850929940456840179914546843642076011014886"
 
@@ -4918,17 +4950,19 @@ class _Log10Memoize(object):
             extra = 3
             while True:
                 # compute p+extra digits, correct to within 1ulp
-                M = 10**(p+extra+2)
-                digits = str(_div_nearest(_ilog(10*M, M), 100))
-                if digits[-extra:] != '0'*extra:
+                M = 10**(p + extra + 2)
+                digits = str(_div_nearest(_ilog(10 * M, M), 100))
+                if digits[-extra:] != '0' * extra:
                     break
                 extra += 3
             # keep all reliable digits so far; remove trailing zeros
             # and next nonzero digit
             self.digits = digits.rstrip('0')[:-1]
-        return int(self.digits[:p+1])
+        return int(self.digits[:p + 1])
+
 
 _log10_digits = _Log10Memoize().getdigits
+
 
 def _iexp(x, M, L=8):
     """Given integers x and M, M > 0, such that x/M is small in absolute
@@ -4951,21 +4985,22 @@ def _iexp(x, M, L=8):
     # expm1(z/2**(R-1)), ... , exp(z/2), exp(z).
 
     # Find R such that x/2**R/M <= 2**-L
-    R = _nbits((long(x)<<L)//M)
+    R = _nbits((long(x) << L) // M)
 
     # Taylor series.  (2**L)**T > M
-    T = -int(-10*len(str(M))//(3*L))
+    T = -int(-10 * len(str(M)) // (3 * L))
     y = _div_nearest(x, T)
-    Mshift = long(M)<<R
-    for i in xrange(T-1, 0, -1):
-        y = _div_nearest(x*(Mshift + y), Mshift * i)
+    Mshift = long(M) << R
+    for i in xrange(T - 1, 0, -1):
+        y = _div_nearest(x * (Mshift + y), Mshift * i)
 
     # Expansion
-    for k in xrange(R-1, -1, -1):
-        Mshift = long(M)<<(k+2)
-        y = _div_nearest(y*(y+Mshift), Mshift)
+    for k in xrange(R - 1, -1, -1):
+        Mshift = long(M) << (k + 2)
+        y = _div_nearest(y * (y + Mshift), Mshift)
 
-    return M+y
+    return M + y
+
 
 def _dexp(c, e, p):
     """Compute an approximation to exp(c*10**e), with p decimal places of
@@ -4990,11 +5025,11 @@ def _dexp(c, e, p):
 
     # compute quotient c*10**e/(log(10)) = c*10**(e+q)/(log(10)*10**q),
     # rounding down
-    shift = e+q
+    shift = e + q
     if shift >= 0:
-        cshift = c*10**shift
+        cshift = c * 10**shift
     else:
-        cshift = c//10**-shift
+        cshift = c // 10**-shift
     quot, rem = divmod(cshift, _log10_digits(q))
 
     # reduce remainder back to original precision
@@ -5002,6 +5037,7 @@ def _dexp(c, e, p):
 
     # error in result of _iexp < 120;  error after division < 0.62
     return _div_nearest(_iexp(rem, 10**p), 1000), quot - p + 3
+
 
 def _dpower(xc, xe, yc, ye, p):
     """Given integers xc, xe, yc and ye representing Decimals x = xc*10**xe and
@@ -5022,39 +5058,41 @@ def _dpower(xc, xe, yc, ye, p):
     b = len(str(abs(yc))) + ye
 
     # log(x) = lxc*10**(-p-b-1), to p+b+1 places after the decimal point
-    lxc = _dlog(xc, xe, p+b+1)
+    lxc = _dlog(xc, xe, p + b + 1)
 
     # compute product y*log(x) = yc*lxc*10**(-p-b-1+ye) = pc*10**(-p-1)
-    shift = ye-b
+    shift = ye - b
     if shift >= 0:
-        pc = lxc*yc*10**shift
+        pc = lxc * yc * 10**shift
     else:
-        pc = _div_nearest(lxc*yc, 10**-shift)
+        pc = _div_nearest(lxc * yc, 10**-shift)
 
     if pc == 0:
         # we prefer a result that isn't exactly 1; this makes it
         # easier to compute a correctly rounded result in __pow__
         if ((len(str(xc)) + xe >= 1) == (yc > 0)): # if x**y > 1:
-            coeff, exp = 10**(p-1)+1, 1-p
+            coeff, exp = 10**(p - 1) + 1, 1 - p
         else:
-            coeff, exp = 10**p-1, -p
+            coeff, exp = 10**p - 1, -p
     else:
-        coeff, exp = _dexp(pc, -(p+1), p+1)
+        coeff, exp = _dexp(pc, -(p + 1), p + 1)
         coeff = _div_nearest(coeff, 10)
         exp += 1
 
     return coeff, exp
 
-def _log10_lb(c, correction = {
+
+def _log10_lb(c, correction={
         '1': 100, '2': 70, '3': 53, '4': 40, '5': 31,
         '6': 23, '7': 16, '8': 10, '9': 5}):
     """Compute a lower bound for 100*log10(c) for a positive integer c."""
     if c <= 0:
         raise ValueError("The argument to _log10_lb should be nonnegative.")
     str_c = str(c)
-    return 100*len(str_c) - correction[str_c[0]]
+    return 100 * len(str_c) - correction[str_c[0]]
 
 ##### Helper Functions ####################################################
+
 
 def _convert_other(other, raiseit=False):
     """Convert other to Decimal.
@@ -5073,6 +5111,7 @@ def _convert_other(other, raiseit=False):
 
 # The default context prototype used by Context()
 # Is mutable, so that new contexts can have different default values
+
 
 DefaultContext = Context(
         prec=28, rounding=ROUND_HALF_EVEN,
@@ -5158,7 +5197,7 @@ Dec_n1 = Decimal(-1)
 Infsign = (Inf, negInf)
 
 
-
 if __name__ == '__main__':
-    import doctest, sys
+    import doctest
+    import sys
     doctest.testmod(sys.modules[__name__])

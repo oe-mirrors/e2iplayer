@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import sys
+
+
 def printDBG(strDat):
     print("%s" % strDat)
     #print("%s" % strDat, file=sys.stderr)
+
 
 def decrypt_file(file, key):
     from crypto.cipher.aes import AES
@@ -20,11 +23,11 @@ def decrypt_file(file, key):
         while True:
             for enc in [True, False]:
                 if enc:
-                    chunk = data[offset:offset+len(key)]
+                    chunk = data[offset:offset + len(key)]
                     offset += len(key)
                 else:
-                    chunk = data[offset:offset+len(key)*1000]
-                    offset += len(key)*1000
+                    chunk = data[offset:offset + len(key) * 1000]
+                    offset += len(key) * 1000
 
                 if len(chunk) == len(key):
                     chunk = cipher.decrypt(chunk)
@@ -33,6 +36,7 @@ def decrypt_file(file, key):
             if not chunk:
                 break
     f.close()
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:
@@ -48,4 +52,3 @@ if __name__ == "__main__":
     sys.path.insert(1, libsPath)
     decrypt_file(file, key)
     sys.exit(0)
-

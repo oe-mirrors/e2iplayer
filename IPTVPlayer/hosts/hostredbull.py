@@ -18,11 +18,12 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 import re
 import time
 import urllib
-from datetime import  timedelta
+from datetime import timedelta
 ###################################################
 ###################################################
 # Config options for HOST
 ###################################################
+
 
 def GetConfigList():
     optionList = []
@@ -33,26 +34,27 @@ def GetConfigList():
 def gettytul():
     return 'http://redbull.tv/'
 
+
 class Redbull(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'redbull.tv', 'cookie':'redbull.tv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'redbull.tv', 'cookie': 'redbull.tv.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER}
-        self.REDBULL_API = "https://appletv.redbull.tv/" 
-        self.MAIN_URL   = 'http://redbull.tv/'
+        self.defaultParams = {'header': self.HTTP_HEADER}
+        self.REDBULL_API = "https://appletv.redbull.tv/"
+        self.MAIN_URL = 'http://redbull.tv/'
         self.DEFAULT_ICON_URL = 'https://img.redbull.com/images/e_trim:10:transparent/c_limit,w_600/q_auto,f_png/redbullcom/2016/06/22/1331802019605_2/red-bull-tv-logo'
 
     def listMain(self, cItem, nextCategory):
         printDBG("Redbull.listMain")
 
-        MAIN_CAT_TAB = [{'category':'explore_item',         'title': _('Discover'),  'url':self.REDBULL_API + "products/discover"       },
-                         {'category':'explore_item',          'title': _('TV'),      'url':self.REDBULL_API + "products/tv"             },
-                         {'category':'explore_item',         'title': _('Channels'), 'url':self.REDBULL_API + "products/channels"       },
-                         {'category':'explore_item',          'title': _('Calendar'),'url':self.REDBULL_API + "products/calendar"       },
-                         {'category':'search',             'title': _('Search'), 'search_item':True,},
-                         {'category':'search_history',     'title': _('Search history'),            } 
+        MAIN_CAT_TAB = [{'category': 'explore_item', 'title': _('Discover'), 'url': self.REDBULL_API + "products/discover"},
+                         {'category': 'explore_item', 'title': _('TV'), 'url': self.REDBULL_API + "products/tv"},
+                         {'category': 'explore_item', 'title': _('Channels'), 'url': self.REDBULL_API + "products/channels"},
+                         {'category': 'explore_item', 'title': _('Calendar'), 'url': self.REDBULL_API + "products/calendar"},
+                         {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                         {'category': 'search_history', 'title': _('Search history'), }
                         ]
 
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -65,7 +67,7 @@ class Redbull(CBaseHostClass):
         sTitle = self.cleanHtmlStr(tmp[0])
         if sTitle.lower() in ('linki',): #'kategorie'
             return
-        sIcon = self.getFullUrl( ph.search(section, ph.IMAGE_SRC_URI_RE)[1] )
+        sIcon = self.getFullUrl(ph.search(section, ph.IMAGE_SRC_URI_RE)[1])
 
         subItems = []
         uniques = set()
@@ -77,8 +79,9 @@ class Redbull(CBaseHostClass):
                 if iframe in uniques:
                     continue
                 uniques.add(iframe)
-                if not title: title = sTitle
-                subItems.append(MergeDicts(cItem, {'category':nextCategory, 'title':title, 'url':iframe}))
+                if not title:
+                    title = sTitle
+                subItems.append(MergeDicts(cItem, {'category': nextCategory, 'title': title, 'url': iframe}))
 
         iframes = ph.IFRAME_SRC_URI_RE.findall(section)
         if iframes:
@@ -87,26 +90,27 @@ class Redbull(CBaseHostClass):
                 if iframe in uniques:
                     continue
                 uniques.add(iframe)
-                subItems.append(MergeDicts(cItem, {'category':nextCategory, 'title':sTitle, 'url':iframe}))
+                subItems.append(MergeDicts(cItem, {'category': nextCategory, 'title': sTitle, 'url': iframe}))
         section = ph.findall(section, ('<a', '>', ph.check(ph.any, ('articles.php', 'readarticle.php'))), '</a>')
         for item in section:
-            url = self.getFullUrl( ph.search(item, ph.A_HREF_URI_RE)[1] )
-            icon = self.getFullUrl( ph.search(item, self.reImgObj)[1] )
+            url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
+            icon = self.getFullUrl(ph.search(item, self.reImgObj)[1])
             title = self.cleanHtmlStr(item)
-            if not title: 
+            if not title:
                 title = icon.rsplit('/', 1)[-1].rsplit('.', 1)[0]
                 #title = self.titlesMap.get(title, title.upper())
-            subItems.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon}))
+            subItems.append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon}))
 
         if len(subItems) > 1:
-            self.addDir(MergeDicts(cItem, {'category':'sub_items', 'title':sTitle, 'icon':sIcon, 'sub_items':subItems}))
+            self.addDir(MergeDicts(cItem, {'category': 'sub_items', 'title': sTitle, 'icon': sIcon, 'sub_items': subItems}))
         elif len(subItems) == 1:
             params = subItems[0]
-            params.update({'title':sTitle})
+            params.update({'title': sTitle})
             self.addDir(params)
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
     def getFullUrl(self, url, currUrl=None):
@@ -120,15 +124,17 @@ class Redbull(CBaseHostClass):
         printDBG("Redbull.exploreItem")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         printDBG("hostredbull.exploreItem.data2 |%s|" % data)
 
-        if '<mediaURL>' in data: 
+        if '<mediaURL>' in data:
             icon = self.getFullIconUrl(ph.search(data, '''src720=['"]([^'^"]+?)['"]''')[0])
             url = self.getFullUrl(ph.search(data, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(ph.search(data, '''<label2>([^>]+?)</label2>''')[0])
-            if not title: title = self.cleanHtmlStr(ph.search(data, '''<title>([^>]+?)</title>''')[0])
-            params = {'title':title, 'icon':icon, 'desc':'', 'url':cItem['url']}
+            if not title:
+                title = self.cleanHtmlStr(ph.search(data, '''<title>([^>]+?)</title>''')[0])
+            params = {'title': title, 'icon': icon, 'desc': '', 'url': cItem['url']}
             self.addVideo(params)
 
         data2 = ph.findall(data, '<sixteenByNinePoster', '</sixteenByNinePoster>')
@@ -136,15 +142,17 @@ class Redbull(CBaseHostClass):
             icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
             url = self.getFullUrl(ph.search(item, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(ph.search(item, '''<label2>([^>]+?)</label2>''')[0])
-            if not title: title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
-            if not title: title = self.cleanHtmlStr(ph.search(item, '''accessibilityLabel=['"]([^'^"]+?)['"]''')[0])
+            if not title:
+                title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
+            if not title:
+                title = self.cleanHtmlStr(ph.search(item, '''accessibilityLabel=['"]([^'^"]+?)['"]''')[0])
             time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
             if 'page_stream' in url:
-                params = {'title':title, 'icon':icon, 'desc':'', 'url':url}
+                params = {'title': title, 'icon': icon, 'desc': '', 'url': url}
                 self.addVideo(params)
             else:
                 params = dict(cItem)
-                params.update({'good_for_fav':True, 'category':'explore_item', 'title':title, 'url':url, 'desc':url, 'icon':icon})
+                params.update({'good_for_fav': True, 'category': 'explore_item', 'title': title, 'url': url, 'desc': url, 'icon': icon})
                 self.addDir(params)
 
         data2 = ph.findall(data, '<showcasePoster', '</showcasePoster>')
@@ -152,7 +160,7 @@ class Redbull(CBaseHostClass):
             icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
             url = self.getFullUrl(ph.search(item, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(ph.search(item, '''Label=['"]([^'^"]+?)['"]''')[0])
-            params = {'title':title, 'icon':icon, 'desc':'', 'url':url}
+            params = {'title': title, 'icon': icon, 'desc': '', 'url': url}
             self.addVideo(params)
 
         data2 = ph.findall(data, '<twoLine', '</twoLine')
@@ -160,9 +168,10 @@ class Redbull(CBaseHostClass):
             icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
             url = self.getFullUrl(ph.search(item, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(ph.search(item, '''<label2>([^>]+?)</label2>''')[0])
-            if not title: title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
+            if not title:
+                title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
             time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
-            params = {'title':title, 'icon':icon, 'desc':'['+time+']', 'url':url}
+            params = {'title': title, 'icon': icon, 'desc': '[' + time + ']', 'url': url}
             self.addVideo(params)
 
         data2 = ph.findall(data, '<moviePoster', '</moviePoster>')
@@ -170,15 +179,16 @@ class Redbull(CBaseHostClass):
             icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
             url = self.getFullUrl(ph.search(item, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(ph.search(item, '''<label2>([^>]+?)</label2>''')[0])
-            if not title: title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
+            if not title:
+                title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
             time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
-            params = {'title':title, 'icon':icon, 'desc':'['+time+']', 'url':url}
+            params = {'title': title, 'icon': icon, 'desc': '[' + time + ']', 'url': url}
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
 
         url = self.REDBULL_API + "search?q=%s" % urllib.quote_plus(searchPattern)
-        cItem = MergeDicts(cItem, {'category':'list_search', 'url':url})
+        cItem = MergeDicts(cItem, {'category': 'list_search', 'url': url})
         self.listSearchItems(cItem)
 
     def listSearchItems(self, cItem):
@@ -186,7 +196,8 @@ class Redbull(CBaseHostClass):
         page = cItem.get('page', 1)
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
         printDBG("hostredbull.listSearchItems |%s|" % data)
 
@@ -195,55 +206,58 @@ class Redbull(CBaseHostClass):
             icon = self.getFullIconUrl(ph.search(item, '''src720=['"]([^'^"]+?)['"]''')[0])
             url = self.getFullUrl(ph.search(item, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(ph.search(item, '''<label2>([^>]+?)</label2>''')[0])
-            if not title: title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
-            if not title: title = self.cleanHtmlStr(ph.search(item, '''<label>([^>]+?)</label>''')[0])
-            if not title: title = self.cleanHtmlStr(ph.search(item, '''Label=['"]([^'^"]+?)['"]''')[0])
+            if not title:
+                title = self.cleanHtmlStr(ph.search(item, '''<title>([^>]+?)</title>''')[0])
+            if not title:
+                title = self.cleanHtmlStr(ph.search(item, '''<label>([^>]+?)</label>''')[0])
+            if not title:
+                title = self.cleanHtmlStr(ph.search(item, '''Label=['"]([^'^"]+?)['"]''')[0])
             time = self.cleanHtmlStr(ph.search(item, '''Duration: ([^'^"]+?)<''')[0])
-            params = {'title':title, 'icon':icon, 'desc':'['+time+']', 'url':url}
+            params = {'title': title, 'icon': icon, 'desc': '[' + time + ']', 'url': url}
             self.addVideo(params)
-
 
     def getLinksForVideo(self, cItem):
         urlsTab = []
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         printDBG("hostredbull.getLinksForVideo.data |%s|" % data)
         videoUrl = ph.search(data, '''<mediaURL>([^"]+?)<''')[0]
         if videoUrl:
             tmp = getDirectM3U8Playlist(videoUrl, checkExt=True, checkContent=True)
             for item in tmp:
                 name = '%sx%s  , bitrate: %s' % (item['width'], item['height'], item['bitrate'])
-                urlsTab.append({'name':name, 'url':item['url'], 'need_resolve':0, 'bitrate':item['bitrate'], 'original':''})
+                urlsTab.append({'name': name, 'url': item['url'], 'need_resolve': 0, 'bitrate': item['bitrate'], 'original': ''})
             urlsTab.sort(key=lambda x: x['bitrate'], reverse=True)
             return urlsTab
-        else: 
+        else:
             url = self.getFullUrl(ph.search(data, '''onPlay="loadPage\(['"]([^'^"]+?)['"]''')[0])
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             printDBG("hostredbull.getLinksForVideo.data |%s|" % data)
             videoUrl = ph.search(data, '''<mediaURL>([^"]+?)<''')[0]
             tmp = getDirectM3U8Playlist(videoUrl, checkExt=True, checkContent=True)
             for item in tmp:
                 name = '%sx%s  , bitrate: %s' % (item['width'], item['height'], item['bitrate'])
-                urlsTab.append({'name':name, 'url':item['url'], 'need_resolve':0, 'bitrate':item['bitrate'], 'original':''})
+                urlsTab.append({'name': name, 'url': item['url'], 'need_resolve': 0, 'bitrate': item['bitrate'], 'original': ''})
             urlsTab.sort(key=lambda x: x['bitrate'], reverse=True)
             return urlsTab
 
-
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'}, 'explore_item')
+            self.listMain({'name': 'category', 'type': 'category'}, 'explore_item')
 
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
@@ -256,18 +270,18 @@ class Redbull(CBaseHostClass):
             self.listSearchItems(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Redbull(), True, [])
-

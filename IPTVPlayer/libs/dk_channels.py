@@ -20,44 +20,46 @@
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 import copy
 
+
 class TV2RChannel():
     QUALITIES = [2000, 1000, 300]
-    CHANNELS = [{'title':'TV2 Fyn',        'type':'fynskemedier.dk', 'id':'tv2fyn'},
-                {'title':'TV2 Lorry',      'type':'fynskemedier.dk', 'id':'tv2lorry'},
-                {'title':'TV2 Syd',        'type':'fynskemedier.dk', 'id':'tvsyd'},
-                {'title':'TV2 Midtvest',   'type':'direct',          'id':'rtmp://live.tvmidtvest.dk/tvmv/live live=1'},
-                {'title':'TV2 Nor',        'type':'fynskemedier.dk', 'id':'tv2nord-plus'},
-                {'title':'TV2 East',       'type':'direct',          'id':'http://tv2east.live-s.cdn.bitgravity.com/cdn-live-c1/_definst_/tv2east/live/feed01/playlist.m3u8'},
+    CHANNELS = [{'title': 'TV2 Fyn', 'type': 'fynskemedier.dk', 'id': 'tv2fyn'},
+                {'title': 'TV2 Lorry', 'type': 'fynskemedier.dk', 'id': 'tv2lorry'},
+                {'title': 'TV2 Syd', 'type': 'fynskemedier.dk', 'id': 'tvsyd'},
+                {'title': 'TV2 Midtvest', 'type': 'direct', 'id': 'rtmp://live.tvmidtvest.dk/tvmv/live live=1'},
+                {'title': 'TV2 Nor', 'type': 'fynskemedier.dk', 'id': 'tv2nord-plus'},
+                {'title': 'TV2 East', 'type': 'direct', 'id': 'http://tv2east.live-s.cdn.bitgravity.com/cdn-live-c1/_definst_/tv2east/live/feed01/playlist.m3u8'},
                 #{'title':'TV2 OJ',        'type':'fynskemedier.dk', 'id':'tv2oj'},
-                {'title':'TV Folketinget', 'type':'direct',          'id':'rtmp://ftflash.arkena.dk/webtvftlivefl/ playpath=mp4:live.mp4 pageUrl=http://www.ft.dk/webTV/TV_kanalen_folketinget.aspx live=1'},
+                {'title': 'TV Folketinget', 'type': 'direct', 'id': 'rtmp://ftflash.arkena.dk/webtvftlivefl/ playpath=mp4:live.mp4 pageUrl=http://www.ft.dk/webTV/TV_kanalen_folketinget.aspx live=1'},
                 #{'title':'Kanalsport DK', 'type':'direct',          'id':'http://lswb-de-08.servers.octoshape.net:1935/live/kanalsport_1000k/playlist.m3u8'},
                 ]
 
-                
     def __init__(self):
         self.cm = common()
-        
+
     def getChannels(self):
-        return copy.deepcopy( self.CHANNELS )
-        
+        return copy.deepcopy(self.CHANNELS)
+
     def __getFynskemedierIP(self):
         for attempt in range(0, 2):
             sts, data = self.cm.getPage('http://livestream.fynskemedier.dk/loadbalancer')
-            if not sts: continue
+            if not sts:
+                continue
             return data[9:]
         return None
-        
+
     def getLinksForChannel(self, channelData):
-        links = [] 
+        links = []
         if 'fynskemedier.dk' == channelData['type']:
             ip = self.__getFynskemedierIP()
-            if None == ip: return links
+            if None == ip:
+                return links
             for qual in self.QUALITIES:
                 url = 'rtmp://{0}:1935/live/_definst_/{1}_{2} live=1'.format(ip, channelData['id'], qual)
                 name = 'livestream.fynskemedier.dk [{0}]'.format(qual)
-                links.append({'name':name, 'url':url})
+                links.append({'name': name, 'url': url})
         elif 'direct' == channelData['type']:
-                 links.append({'name':'direct link', 'url':channelData['id']})
+                 links.append({'name': 'direct link', 'url': channelData['id']})
         return links
 
 # TV2 OJ

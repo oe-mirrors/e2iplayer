@@ -10,18 +10,20 @@ import re
 NO_DEFAULT = None
 compiled_regex_type = type(re.compile(''))
 
+
 class InfoExtractor():
-    
+
     def __init__(self):
         self.cm = common()
-    
+
     def _download_webpage(self, url, a=None, note='', errnote='', fatal=True, params={}, data=None):
         sts, data = self.cm.getPage(url, params, data)
         return data
-            
+
     def _download_json(self, url, video_id, note='', errnote='', fatal=True, params={}):
         sts, data = self.cm.getPage(url, params)
-        if not sts: return None
+        if not sts:
+            return None
         if fatal:
             data = json_loads(data)
         else:
@@ -31,18 +33,19 @@ class InfoExtractor():
                 printExc()
                 data = None
         return data
-        
+
     def xmlGetArg(self, data, name):
         return self.cm.ph.getDataBeetwenMarkers(data, '%s="' % name, '"', False)[1]
-        
+
     def xmlGetText(self, data, name, withMarkers=False):
         return self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<%s[^>]*?>' % name), re.compile('</%s>' % name), withMarkers)[1]
-        
+
     def xmlGetAllNodes(self, data, name):
         nodes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<' + name, '</%s>' % name)
-        if 0 == len(nodes): nodes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<' + name, '/>')
+        if 0 == len(nodes):
+            nodes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<' + name, '/>')
         return nodes
-        
+
     def _search_regex(self, pattern, string, name, default=NO_DEFAULT, fatal=True, flags=0, group=None):
         """
         Perform a regex search on the given string, using a single or a list of
@@ -72,7 +75,7 @@ class InfoExtractor():
             raise RegexNotFoundError('Unable to extract %s' % _name)
         else:
             return None
-            
+
     def _extract_m3u8_formats(self, m3u8_url, *args, **kwargs):
         formats = []
         tmpTab = getDirectM3U8Playlist(m3u8_url, False)
@@ -80,4 +83,3 @@ class InfoExtractor():
             tmp['format_id'] = tmp['name']
             formats.append(tmp)
         return formats
-    

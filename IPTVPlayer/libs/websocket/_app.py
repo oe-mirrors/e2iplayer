@@ -42,6 +42,7 @@ class WebSocketApp(object):
     Higher level of APIs are provided.
     The interface is like JavaScript WebSocket object.
     """
+
     def __init__(self, url, header=[],
                  on_open=None, on_message=None, on_error=None,
                  on_close=None, on_ping=None, on_pong=None,
@@ -241,7 +242,7 @@ class WebSocketApp(object):
                 return []
 
         if data and len(data) >= 2:
-            code = 256*ord(data[0:1][0]) + ord(data[1:2][0])
+            code = 256 * ord(data[0:1][0]) + ord(data[1:2][0])
             reason = data[2:].decode('utf-8')
             return [code, reason]
 

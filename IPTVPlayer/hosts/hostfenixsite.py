@@ -23,18 +23,19 @@ import re
 def gettytul():
     return 'http://fenixsite.co/'
 
+
 class Fenixsite(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'fenixsite.co', 'cookie':'fenixsite.co.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'fenixsite.co', 'cookie': 'fenixsite.co.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'http://www.fenixsite.co/'
+        self.MAIN_URL = 'http://www.fenixsite.co/'
         self.DEFAULT_ICON_URL = 'https://i.pinimg.com/originals/67/70/a3/6770a3fa9bdcc1bd33770106cd70fb22.png'
 
-        self.cacheFilters  = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.cacheLinks = {}
 
@@ -46,7 +47,8 @@ class Fenixsite(CBaseHostClass):
     def listMain(self, cItem, nextCategory):
         printDBG("Fenixsite.listMain")
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = ph.find(data, ('<ul', '>', 'navbar'), '</ul>')[1]
@@ -55,27 +57,28 @@ class Fenixsite(CBaseHostClass):
             url = ph.getattr(item, 'href')
             if '/strani_filmovi/' in url or '/strane_serije/' in url:
                 title = self.cleanHtmlStr(item)
-                self.addDir(MergeDicts(cItem, {'category':nextCategory, 'url':self.getFullUrl(url), 'title':title}))
+                self.addDir(MergeDicts(cItem, {'category': nextCategory, 'url': self.getFullUrl(url), 'title': title}))
 
-        MAIN_CAT_TAB = [{'category':nextCategory,     'title': 'Anime',           'url':self.getFullUrl('/load/anime_serije/95')},
-                        {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category': nextCategory, 'title': 'Anime', 'url': self.getFullUrl('/load/anime_serije/95')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):
         printDBG("Fenixsite.listCategories")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = ph.find(data, ('<div', '>', 'owl-box'), '</table>')[1]
         data = ph.findall(data, ('<a', '>'), '</td>', flags=ph.START_S)
-        
+
         itemsList = []
         for idx in range(1, len(data), 2):
-            url = self.getFullUrl(ph.getattr(data[idx-1], 'href'))
+            url = self.getFullUrl(ph.getattr(data[idx - 1], 'href'))
             title = self.cleanHtmlStr(data[idx])
-            itemsList.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':title}))
+            itemsList.append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'url': url, 'title': title}))
 
         if '/strane_serije/' in cItem['url']:
             subItems = {}
@@ -90,25 +93,27 @@ class Fenixsite(CBaseHostClass):
                 subItems[letter].append(item)
 
             for letter in letters:
-                self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'category':'sub_items', 'sub_items':subItems[letter], 'title':'%s [%d]' % (letter.encode('utf-8'), len(subItems[letter]))}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'sub_items': subItems[letter], 'title': '%s [%d]' % (letter.encode('utf-8'), len(subItems[letter]))}))
         else:
-            self.currList.append(MergeDicts(cItem, {'title':_('--All--'), 'category':nextCategory}))
+            self.currList.append(MergeDicts(cItem, {'title': _('--All--'), 'category': nextCategory}))
             self.currList.extend(itemsList)
 
     def listSort(self, cItem, nextCategory):
         printDBG("Fenixsite.listSort")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
-        directionsTitle = {1:'\xe2\x86\x91', 0:'\xe2\x86\x93'}
+        directionsTitle = {1: '\xe2\x86\x91', 0: '\xe2\x86\x93'}
         data = ph.find(data, ('<span', '>', 'sortBlock'), '</span>')[1]
         data = ph.findall(data, ('<a', '>'), '</a>', flags=ph.START_S)
 
         items = [[], []]
         for idx in range(1, len(data), 2):
-            item = ph.find(data[idx-1], 'ssorts(', ')', flags=0)[1].split(',')
-            if len(item) != 3: continue 
+            item = ph.find(data[idx - 1], 'ssorts(', ')', flags=0)[1].split(',')
+            if len(item) != 3:
+                continue
             title = self.cleanHtmlStr(data[idx])
             url = self.getFullUrl(item[1].strip()[1:-1])
             try:
@@ -116,7 +121,7 @@ class Fenixsite(CBaseHostClass):
                 sort = sort + 1 if sort % 2 else sort
                 for i in range(2):
                     sort -= i
-                    items[i].append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'url':url, 'title':'%s %s' % (directionsTitle[i], title), 'f_sort':sort}))
+                    items[i].append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'url': url, 'title': '%s %s' % (directionsTitle[i], title), 'f_sort': sort}))
             except Exception:
                 printExc()
         self.currList = items[0]
@@ -134,7 +139,8 @@ class Fenixsite(CBaseHostClass):
             url += '-%s-%s' % (page, cItem['f_sort'])
 
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         mainDesc = self.cleanHtmlStr(ph.find(data, ('<div', '>', 'shortstory-news'), '</div>', flags=0)[1].split('</h1>', 1)[-1])
@@ -146,27 +152,29 @@ class Fenixsite(CBaseHostClass):
         reIcon = re.compile(r'''<img[^>]+?src=(['"])([^>]*?\.(?:jpe?g|png|gif)(?:\?[^\1]*?)?)(?:\1)''', re.I)
         data = ph.findall(data, ('<div', '>', 'entry'), '</ul>')
         for item in data:
-            url = self.getFullUrl( ph.search(item, ph.A_HREF_URI_RE)[1] )
-            icon = self.getFullIconUrl( ph.search(item, reIcon)[1] )
+            url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
+            icon = self.getFullIconUrl(ph.search(item, reIcon)[1])
             title = self.cleanHtmlStr(ph.find(item, ('<h', '>'), '</h', flags=0)[1])
 
             desc = []
-            tmp = [ph.find(item, ('<i', '>', 'eye'), '</span', flags=0)[1], ph.find(item, ('<i', '>', 'comments'), '</span', flags=0)[1], ph.find(item, ('<i', '>', 'comments'), '</span', flags=0)[1] ]
+            tmp = [ph.find(item, ('<i', '>', 'eye'), '</span', flags=0)[1], ph.find(item, ('<i', '>', 'comments'), '</span', flags=0)[1], ph.find(item, ('<i', '>', 'comments'), '</span', flags=0)[1]]
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t: desc.append(t)
+                if t:
+                    desc.append(t)
             tmp = ph.find(item, ('<ul', '>', 'title'))[1]
             desc.append(ph.getattr(tmp, 'title').replace('/', ' (') + ')')
-            self.addVideo({'good_for_fav':True, 'title':title, 'url':url, 'icon':icon, 'desc':' | '.join(desc) + '[/br]' + mainDesc})
+            self.addVideo({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': ' | '.join(desc) + '[/br]' + mainDesc})
 
         if nextPage:
-            self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1}))
 
     def listSearchResult(self, cItem, searchPattern, searchType):
 
         url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.quote(searchPattern))
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         try:
@@ -174,7 +182,7 @@ class Fenixsite(CBaseHostClass):
             for key in data['result']:
                 subItems = self._listItems(cItem, 'explore_item', data['result'][key])
                 if subItems:
-                    self.addDir(MergeDicts(cItem, {'title':key.title(), 'category':'sub_items', 'sub_items':subItems}))
+                    self.addDir(MergeDicts(cItem, {'title': key.title(), 'category': 'sub_items', 'sub_items': subItems}))
         except Exception:
             printExc()
 
@@ -182,15 +190,17 @@ class Fenixsite(CBaseHostClass):
             self.currList = self.currList[0]['sub_items']
 
     def getLinksForVideo(self, cItem):
-    
+
         linksTab = self.cacheLinks.get(cItem['url'], [])
-        if linksTab: return linksTab
+        if linksTab:
+            return linksTab
 
         linksTab = []
         subTrack = ''
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return []
+        if not sts:
+            return []
         self.setMainUrl(self.cm.meta['url'])
         cUrl = self.cm.meta['url']
 
@@ -227,23 +237,24 @@ class Fenixsite(CBaseHostClass):
         for item in tmp:
             key = ph.search(item, ph.A_HREF_URI_RE)[1]
             title = self.cleanHtmlStr(item)
-            if not key: continue
+            if not key:
+                continue
             titlesMap[key] = title
 
         data = ph.find(data, ('<div', '>', 'tab-content'), ('<div', '>', 'fstory'), flags=0)[1]
         data = ph.rfindall(data, '</div>', ('<div', '>', 'tab-pane'), flags=ph.END_S)
         for idx in xrange(1, len(data), 2):
-            id = ph.getattr(data[idx-1], 'id')
+            id = ph.getattr(data[idx - 1], 'id')
             item = data[idx]
             title = titlesMap.get('#%s' % id, '')
             url = ph.search(item, ph.IFRAME_SRC_URI_RE)[1]
             if url:
-                linksTab.append({'name':'%s | %s' % (title, self.up.getDomain(url)), 'url':self.getFullUrl(url), 'need_resolve':1})
+                linksTab.append({'name': '%s | %s' % (title, self.up.getDomain(url)), 'url': self.getFullUrl(url), 'need_resolve': 1})
             elif 'gkpluginsphp' in item:
                 idx1 = item.find('{')
                 idx2 = item.rfind('}')
-                if idx1 >=0 and idx2 >= 0:
-                    ret = js_execute( 'print(JSON.stringify(%s));' % item[idx1:idx2+1] )
+                if idx1 >= 0 and idx2 >= 0:
+                    ret = js_execute('print(JSON.stringify(%s));' % item[idx1:idx2 + 1])
                     if ret['sts'] and 0 == ret['code']:
                         try:
                             item = json_loads(ret['data'])
@@ -251,18 +262,19 @@ class Fenixsite(CBaseHostClass):
                                 subTrack = self.getFullUrl(item['subtitle'])
                             for it in item['gklist']:
                                 if it['link']:
-                                    linksTab.append({'name':'%s | %s | %s' % (title, it['title'], self.up.getDomain(it['link'])), 'url':self.getFullUrl(it['link']), 'need_resolve':1})
+                                    linksTab.append({'name': '%s | %s | %s' % (title, it['title'], self.up.getDomain(it['link'])), 'url': self.getFullUrl(it['link']), 'need_resolve': 1})
                         except Exception:
                             printExc()
 
         if len(linksTab):
             if subTrack:
-                subTrack = [{'title':_('Default'), 'url':subTrack, 'lang':'default', 'format':'vtt'}]
+                subTrack = [{'title': _('Default'), 'url': subTrack, 'lang': 'default', 'format': 'vtt'}]
                 for item in linksTab:
-                    item['url'] = strwithmeta(item['url'], {'Referer':cUrl, 'external_sub_tracks':subTrack})
+                    item['url'] = strwithmeta(item['url'], {'Referer': cUrl, 'external_sub_tracks': subTrack})
             self.cacheLinks[cItem['url']] = linksTab
 
-        if trailerUrl: linksTab.append({'name':_('Trailer'), 'url':trailerUrl, 'need_resolve':1})
+        if trailerUrl:
+            linksTab.append({'name': _('Trailer'), 'url': trailerUrl, 'need_resolve': 1})
 
         return linksTab
 
@@ -282,7 +294,7 @@ class Fenixsite(CBaseHostClass):
             subTracks = meta.get('external_sub_tracks')
             if subTracks:
                 for item in linksTab:
-                    item['url'] = strwithmeta(item['url'], MergeDicts(meta, {'external_sub_tracks':subTracks + strwithmeta(item['url']).meta.get('external_sub_tracks', [])}) )
+                    item['url'] = strwithmeta(item['url'], MergeDicts(meta, {'external_sub_tracks': subTracks + strwithmeta(item['url']).meta.get('external_sub_tracks', [])}))
         return linksTab
 
     def getArticleContent(self, cItem, data=None):
@@ -291,7 +303,8 @@ class Fenixsite(CBaseHostClass):
 
         if not data:
             sts, data = self.getPage(cItem['url'])
-            if not sts: return []
+            if not sts:
+                return []
             self.setMainUrl(self.cm.meta['url'])
 
         tmp = ph.find(data, ('<div', '>', 'fullstory'), '</div>', flags=0)[1]
@@ -305,9 +318,10 @@ class Fenixsite(CBaseHostClass):
 
         for item in data:
             key = self.cleanHtmlStr(ph.find(item, ('<div', '>', 'title'), '</div>', flags=0)[1])
-            if 'Pomoc' in key or 'Prijavi' in key: continue
+            if 'Pomoc' in key or 'Prijavi' in key:
+                continue
             if 'imdbRatingPlugin' in item:
-                url ='http://p.media-imdb.com/static-content/documents/v1/title/{0}/ratings%3Fjsonp=imdb.rating.run:imdb.api.title.ratings/data.json?u={1}&s={2}'.format(ph.getattr(item, 'data-title'), ph.getattr(item, 'data-user'), ph.getattr(item, 'data-style'))
+                url = 'http://p.media-imdb.com/static-content/documents/v1/title/{0}/ratings%3Fjsonp=imdb.rating.run:imdb.api.title.ratings/data.json?u={1}&s={2}'.format(ph.getattr(item, 'data-title'), ph.getattr(item, 'data-user'), ph.getattr(item, 'data-style'))
                 try:
                     sts, tmp = self.getPage(url)
                     printDBG(">>" + tmp.strip()[16:-1])
@@ -316,29 +330,32 @@ class Fenixsite(CBaseHostClass):
                 except Exception:
                     printExc()
                     continue
-            else: 
+            else:
                 value = self.cleanHtmlStr(ph.find(item, ('<div', '>', 'text'), '</div>', flags=0)[1].rsplit('</ul>', 1)[-1])
             itemsList.append((key, value))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc = cItem.get('desc', '')
-        
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc = cItem.get('desc', '')
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
+
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'}, 'list_categories')
+            self.listMain({'name': 'category', 'type': 'category'}, 'list_categories')
 
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')
@@ -358,15 +375,16 @@ class Fenixsite(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
     def __init__(self):

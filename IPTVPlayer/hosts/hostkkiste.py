@@ -22,10 +22,11 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.kkiste_proxy = ConfigSelection(default = "None", choices = [("None",     _("None")),
-                                                                                           ("proxy_1",  _("Alternative proxy server (1)")),
-                                                                                           ("proxy_2",  _("Alternative proxy server (2)"))])
-config.plugins.iptvplayer.kkiste_alt_domain = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.kkiste_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                           ("proxy_1", _("Alternative proxy server (1)")),
+                                                                                           ("proxy_2", _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.kkiste_alt_domain = ConfigText(default="", fixed_size=False)
+
 
 def GetConfigList():
     optionList = []
@@ -35,16 +36,18 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://kinokiste.me/' #'https://kkiste.ag/'
+
 
 class KKisteAG(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'kkiste.ag', 'cookie':'kkiste.ag.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'kkiste.ag', 'cookie': 'kkiste.ag.cookie'})
         self.reIMG = re.compile(r'''<img[^>]+?src=(['"])([^>]*?)(?:\1)''', re.I)
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items':{'approve_search':'yes'}}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items': {'approve_search': 'yes'}}
 
         self.DEFAULT_ICON_URL = 'https://tarnkappe.info/wp-content/uploads/kkiste-logo.jpg'
 
@@ -57,27 +60,32 @@ class KKisteAG(CBaseHostClass):
         self.cacheLinks = {}
 
     def getMainUrl(self):
-        if not self.MAIN_URL: self.selectDomain()
+        if not self.MAIN_URL:
+            self.selectDomain()
         return self.MAIN_URL if self.MAIN_URL else self.DEFAULT_MAIN_URL
 
-    def getPage(self, url, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+    def getPage(self, url, addParams={}, post_data=None):
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
 
         proxy = config.plugins.iptvplayer.kkiste_proxy.value
         if proxy != 'None':
-            if proxy == 'proxy_1': proxy = config.plugins.iptvplayer.alternative_proxy1.value
-            else: proxy = config.plugins.iptvplayer.alternative_proxy2.value
+            if proxy == 'proxy_1':
+                proxy = config.plugins.iptvplayer.alternative_proxy1.value
+            else:
+                proxy = config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
-            addParams.update({'http_proxy':proxy})
+            addParams.update({'http_proxy': proxy})
 
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.HTTP_HEADER['User-Agent']}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.HTTP_HEADER['User-Agent']}
         return self.cm.getPageCFProtection(url, addParams, post_data)
 
     def selectDomain(self):
         domains = list(self.domains)
         domain = config.plugins.iptvplayer.kkiste_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
-            if domain[-1] != '/': domain += '/'
+            if domain[-1] != '/':
+                domain += '/'
             domains.insert(0, domain)
 
         for domain in domains:
@@ -91,7 +99,8 @@ class KKisteAG(CBaseHostClass):
         self.cacheFilters = {}
 
         sts, data = self.getPage(self.getFullUrl('/featured'))
-        if not sts: return
+        if not sts:
+            return
         data = re.sub("<!--[\s\S]*?-->", "", data)
 
         if 'myFilter()' in data:
@@ -104,48 +113,50 @@ class KKisteAG(CBaseHostClass):
                 subItems = []
                 section = ph.findall(section, ('<a', '>'), '</a>', flags=ph.START_S)
                 for idx in range(1, len(section), 2):
-                    url = ph.search(section[idx-1], ph.A)[1]
+                    url = ph.search(section[idx - 1], ph.A)[1]
                     title = ph.clean_html(section[idx])
                     if url == '#':
                         continue
                     else:
-                        subItems.append(MergeDicts(cItem, {'category':nextCategory, 'title':title, 'url':self.getFullUrl(url)}))
+                        subItems.append(MergeDicts(cItem, {'category': nextCategory, 'title': title, 'url': self.getFullUrl(url)}))
 
                 if subItems and sTitle:
-                    self.addDir(MergeDicts(cItem, {'category':'sub_items', 'title':sTitle, 'sub_items':subItems}))
+                    self.addDir(MergeDicts(cItem, {'category': 'sub_items', 'title': sTitle, 'sub_items': subItems}))
                     sTitle = ''
                 else:
                     self.currList.extend(subItems)
 
-                if url == '#': sTitle = title
+                if url == '#':
+                    sTitle = title
 
             # filter
-            filtersMap = {'Sortieren nach':'order_by', 'Auflösung':'res', 'Yahr':'year', 'Genres':'genre'}
+            filtersMap = {'Sortieren nach': 'order_by', 'Auflösung': 'res', 'Yahr': 'year', 'Genres': 'genre'}
             tmp = ph.find(data, ('<div', '>', 'tag_cloud'), ('<div', '>', 'loop-'), flags=0)[1]
             tmp = ph.rfindall(tmp, '</div>', ('<h3', '</h3>'), flags=ph.END_S)
             for idx in range(1, len(tmp), 2):
-                sTitle = ph.clean_html(tmp[idx-1])
+                sTitle = ph.clean_html(tmp[idx - 1])
                 key = filtersMap.get(sTitle, '')
-                if not key: continue
+                if not key:
+                    continue
                 self.cacheFilters[key] = []
                 filters = []
                 items = ph.findall(tmp[idx], ('<a', '>'), '</a>', flags=ph.START_S)
                 for i in range(1, len(items), 2):
-                    value = ph.search(ph.getattr(items[i-1], 'href'), '%s=([^&]+)' % key)[0]
-                    self.cacheFilters[key].append({'f_%s' % key:value, 'title':ph.clean_html(items[i])})
+                    value = ph.search(ph.getattr(items[i - 1], 'href'), '%s=([^&]+)' % key)[0]
+                    self.cacheFilters[key].append({'f_%s' % key: value, 'title': ph.clean_html(items[i])})
 
                 if self.cacheFilters[key]:
-                    self.cacheFilters[key].insert(0, {'title':_('All')})
+                    self.cacheFilters[key].insert(0, {'title': _('All')})
                     self.cacheFiltersKeys.append(key)
 
             if len(self.cacheFiltersKeys):
-                self.addDir(MergeDicts(cItem, {'category':'list_filters', 'title':'FILTER', 'f_idx':0}))
+                self.addDir(MergeDicts(cItem, {'category': 'list_filters', 'title': 'FILTER', 'f_idx': 0}))
         else:
             pass
             # ToDo
 
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listFilters(self, cItem, nextCategory):
@@ -153,12 +164,13 @@ class KKisteAG(CBaseHostClass):
         cItem = dict(cItem)
 
         f_idx = cItem.get('f_idx', 0)
-        if f_idx >= len(self.cacheFiltersKeys): return
+        if f_idx >= len(self.cacheFiltersKeys):
+            return
 
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
 
@@ -175,41 +187,46 @@ class KKisteAG(CBaseHostClass):
             query = {}
             for key in self.cacheFiltersKeys:
                 val = cItem.get('f_' + key)
-                if not val: continue
+                if not val:
+                    continue
                 query[key] = val
             url = self.getFullUrl('?c=movie&m=filter&' + urllib.urlencode(query))
         else:
             url = cItem['url']
 
         sts, data = self.getPage(url)
-        if not sts: return
-        
+        if not sts:
+            return
+
         if page == 1 and 'f_idx' not in cItem:
             tmp = ph.find(data, 'function load_contents', '}')[1]
             url = self.getFullUrl(ph.search(tmp, '''['"]([^'^"]*m=[^'^"]*?)['"]''')[0])
             if url:
-                self.listItems2(MergeDicts(cItem, {'url':url, 'category':'list_items2'}))
+                self.listItems2(MergeDicts(cItem, {'url': url, 'category': 'list_items2'}))
                 return
         nextPage = ph.find(data, ('<div', '>', 'pag-nav'), '</div>', flags=0)[1]
         nextPage = self.getFullUrl(ph.clean_html(ph.search(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*?%s\s*?<''' % (page + 1))[0]))
 
         data = ph.find(data, ('<div', '>', 'loop-content'), ('<div', '>', 'loop-nav'))[1]
         self.doListItems(cItem, data)
-        if nextPage: self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'url':nextPage, 'page':page + 1}))
+        if nextPage:
+            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': page + 1}))
 
     def listItems2(self, cItem):
         printDBG("KKisteAG.listItems2")
         page = cItem.get('page', 1)
-        sts, data = self.getPage(cItem['url'], post_data={'page':page})
-        if not sts: return
+        sts, data = self.getPage(cItem['url'], post_data={'page': page})
+        if not sts:
+            return
         self.doListItems(cItem, data)
-        if len(self.currList): self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'page':page + 1}))
+        if len(self.currList):
+            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Next page'), 'page': page + 1}))
 
     def doListItems(self, cItem, data):
         data = ph.rfindall(data, '</div>', ('<div', '>', 'post-'))
         for item in data:
-            url = self.getFullUrl( ph.search(item, ph.A)[1] )
-            icon = self.getFullIconUrl( ph.search(item, self.reIMG)[1] )
+            url = self.getFullUrl(ph.search(item, ph.A)[1])
+            icon = self.getFullIconUrl(ph.search(item, self.reIMG)[1])
             title = ph.clean_html(ph.find(item, ('<h2', '>'), '</h2>', flags=0)[1])
 
             desc = []
@@ -217,28 +234,32 @@ class KKisteAG(CBaseHostClass):
             tmp = ph.findall(tmp, ('<span', '>'), '</span>', flags=0)
             for t in tmp:
                 t = ph.clean_html(t)
-                if t: desc.append(t)
+                if t:
+                    desc.append(t)
 
             desc = [' | '.join(desc)]
             desc.append(ph.clean_html(ph.find(item, ('<p', '>'), '</p>', flags=0)[1]))
 
             desc.append(ph.clean_html(ph.find(item, ('<div', '>', 'desc'), '</div>', flags=0)[1]))
-            self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'prev_url':url, 'category':'explore_item', 'title':title, 'url':url, 'icon':icon, 'desc':'[/br]'.join(desc)}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'prev_url': url, 'category': 'explore_item', 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)}))
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         url = self.getFullUrl('?c=movie&m=filter&keyword=' + urllib.quote_plus(searchPattern))
-        self.listItems({'name':'category', 'category':'list_items', 'url':url})
+        self.listItems({'name': 'category', 'category': 'list_items', 'url': url})
 
     def exploreItem(self, cItem):
         printDBG("KKisteAG.exploreItem")
 
         sts, mainData = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
 
         url = self.getFullUrl(ph.search(mainData, ph.IFRAME)[1])
-        if not url: return
+        if not url:
+            return
 
         if 'season=' in url:
             sts, data = self.getPage(url + '&referrer=link')
@@ -248,11 +269,12 @@ class KKisteAG(CBaseHostClass):
                 data = ph.findall(data, ('<span', '>'), '</span>')
                 for item in data:
                     title = ph.clean_html(ph.getattr(item, 'title'))
-                    if not title: title = ph.clean_html(item)
+                    if not title:
+                        title = ph.clean_html(item)
                     url = self.getFullUrl(ph.search(item, ph.A)[1])
-                    self.addVideo(MergeDicts(cItem, {'title':'%s: %s' % (cItem['title'], title), 'url':url}))
+                    self.addVideo(MergeDicts(cItem, {'title': '%s: %s' % (cItem['title'], title), 'url': url}))
         else:
-            self.addVideo(MergeDicts(cItem, {'url':url}))
+            self.addVideo(MergeDicts(cItem, {'url': url}))
 
     def joinLink(self, params):
         tab = []
@@ -262,7 +284,7 @@ class KKisteAG(CBaseHostClass):
 
     def getFunctionCode(self, data, marker):
         funData = ''
-        start = data.find(marker) 
+        start = data.find(marker)
         idx = data.find('{', start) + 1
         num = 1
         while idx < len(data):
@@ -271,23 +293,26 @@ class KKisteAG(CBaseHostClass):
             elif data[idx] == '}':
                 num -= 1
             if num == 0:
-                funData = data[start:idx+1]
+                funData = data[start:idx + 1]
                 break
             idx += 1
         return funData
 
     def getLinksForVideo(self, cItem):
         linksTab = self.cacheLinks.get(cItem['url'], [])
-        if linksTab: return linksTab
+        if linksTab:
+            return linksTab
 
         url_data = cItem['url'].split('?', 1)
-        if len(url_data) != 2: return []
+        if len(url_data) != 2:
+            return []
 
         query = {}
         url_data[1] = url_data[1].split('&')
         for item in url_data[1]:
             item = item.split('=', 1)
-            if len(item) != 2: continue
+            if len(item) != 2:
+                continue
             query[item[0]] = item[1]
         url_data[1] = query
 
@@ -312,19 +337,21 @@ class KKisteAG(CBaseHostClass):
                     for item in data:
                         tmp = ph.find(item, 'show_player(', ')', flags=0)[1].replace('\\"', '"').replace("\\'", "'")
                         url = self.getFullUrl(ph.search(item, '''['"]((?:https?:)?//[^'^"]+?)['"]''')[0])
-                        if not url: url = ph.search(item, ph.A)[1]
+                        if not url:
+                            url = ph.search(item, ph.A)[1]
                         if url:
                             name = []
                             item = ph.findall(item, ('<span', '>'), '</span>', flags=0)
                             for t in item:
                                 t = ph.clean_html(t)
-                                if t: name.append(t)
-                            linksTab.append({'name':' | '.join(name), 'url':url, 'need_resolve':1})
+                                if t:
+                                    name.append(t)
+                            linksTab.append({'name': ' | '.join(name), 'url': url, 'need_resolve': 1})
 
         url_data[1]['server'] = '1'
         url_data[1]['referrer'] = 'link'
         url = self.joinLink(url_data)
-        linksTab.insert(0, {'name':'Server 1', 'url':url, 'need_resolve':1})
+        linksTab.insert(0, {'name': 'Server 1', 'url': url, 'need_resolve': 1})
 
         if len(linksTab):
             self.cacheLinks[cItem['url']] = linksTab
@@ -345,20 +372,23 @@ class KKisteAG(CBaseHostClass):
             return self.up.getVideoLinkExt(videoUrl)
 
         params = dict(self.defaultParams)
-        params['header'] = MergeDicts(params['header'], {'Referer':self.getMainUrl()})
+        params['header'] = MergeDicts(params['header'], {'Referer': self.getMainUrl()})
         videoLinks = []
 
         sts, data = self.getPage(videoUrl, params)
-        if not sts: return videoLinks
+        if not sts:
+            return videoLinks
         tmp = ph.find(data, ('<video', '>'), '</video>', flags=0)[1]
         tmp = ph.findall(tmp, '<source', '>', flags=0)
         for item in tmp:
             url = self.getFullUrl(ph.getattr(item, 'src'))
             type = ph.getattr(item, 'type')
             label = ph.getattr(item, 'data-res')
-            if not label: label = ph.getattr(item, 'label')
-            if not label: label = type
-            videoLinks.append({'url':strwithmeta(url, {'Cookie':'approve=1;'}), 'name':label})
+            if not label:
+                label = ph.getattr(item, 'label')
+            if not label:
+                label = type
+            videoLinks.append({'url': strwithmeta(url, {'Cookie': 'approve=1;'}), 'name': label})
         if not videoLinks:
             tmp = ph.find(data, 'show_player(', ')', flags=0)[1].replace('\\"', '"').replace("\\'", "'")
             url = self.getFullUrl(ph.search(tmp, '''['"]((?:https?:)?//[^'^"]+?)['"]''')[0])
@@ -374,7 +404,8 @@ class KKisteAG(CBaseHostClass):
         if not data:
             url = cItem.get('prev_url', cItem['url'])
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
             data = re.sub("<!--[\s\S]*?-->", "", data)
 
         data = ph.find(data, ('<div', '>', 'content'), '<style', flags=0)[1]
@@ -388,27 +419,31 @@ class KKisteAG(CBaseHostClass):
             item = item.split(':', 1)
             label = ph.clean_html(item[0])
             value = ph.clean_html(item[-1])
-            if label and value: itemsList.append((label + ':', value))
+            if label and value:
+                itemsList.append((label + ':', value))
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc = cItem.get('desc', '')
-        
-        return [{'title':ph.clean_html( title ), 'text': ph.clean_html( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':{'custom_items_list':itemsList}}]
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc = cItem.get('desc', '')
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+        return [{'title': ph.clean_html(title), 'text': ph.clean_html(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
+
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'}, 'list_items')
+            self.listMain({'name': 'category', 'type': 'category'}, 'list_items')
 
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
@@ -427,14 +462,15 @@ class KKisteAG(CBaseHostClass):
 
     #SEARCH
         elif category == 'search':
-            self.listSearchResult(MergeDicts(self.currItem, {'search_item':False, 'name':'category'}), searchPattern, searchType)
+            self.listSearchResult(MergeDicts(self.currItem, {'search_item': False, 'name': 'category'}), searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
     def __init__(self):
