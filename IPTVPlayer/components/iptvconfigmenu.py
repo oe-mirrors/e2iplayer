@@ -341,20 +341,20 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry("Auto start method", config.plugins.iptvplayer.plugin_autostart_method))
             list.append(getConfigListEntry("Prefer hlsld for playlist with alt. media", config.plugins.iptvplayer.prefer_hlsdl_for_pls_with_alt_media))
 
-        list.append(getConfigListEntry(_("Auto check for plugin update"), config.plugins.iptvplayer.autoCheckForUpdate))
-        list.append(getConfigListEntry(_("The preferred update server"), config.plugins.iptvplayer.preferredupdateserver))
-        if config.plugins.iptvplayer.preferredupdateserver.value == '2':
-            list.append(getConfigListEntry(_("Select GitLab repository owner"), config.plugins.iptvplayer.gitlab_repo))
-            list.append(getConfigListEntry(_("Update"), config.plugins.iptvplayer.fakeUpdate))
+        #list.append(getConfigListEntry(_("Auto check for plugin update"), config.plugins.iptvplayer.autoCheckForUpdate))
+        #list.append(getConfigListEntry(_("The preferred update server"), config.plugins.iptvplayer.preferredupdateserver))
+        #if config.plugins.iptvplayer.preferredupdateserver.value == '2':
+        #    list.append(getConfigListEntry(_("Select GitLab repository owner"), config.plugins.iptvplayer.gitlab_repo))
+        #    list.append(getConfigListEntry(_("Update"), config.plugins.iptvplayer.fakeUpdate))
 
-        if config.plugins.iptvplayer.preferredupdateserver.value == '3':
-            list.append(getConfigListEntry(_("%s login") % 'E2iPlayer', config.plugins.iptvplayer.iptvplayer_login))
-            list.append(getConfigListEntry(_("%s password") % 'E2iPlayer', config.plugins.iptvplayer.iptvplayer_password))
-            list.append(getConfigListEntry(_("Update"), config.plugins.iptvplayer.fakeUpdate))
+        #if config.plugins.iptvplayer.preferredupdateserver.value == '3':
+        #    list.append(getConfigListEntry(_("%s login") % 'E2iPlayer', config.plugins.iptvplayer.iptvplayer_login))
+        #    list.append(getConfigListEntry(_("%s password") % 'E2iPlayer', config.plugins.iptvplayer.iptvplayer_password))
+        #    list.append(getConfigListEntry(_("Update"), config.plugins.iptvplayer.fakeUpdate))
 
-        list.append(getConfigListEntry(_("Allow downgrade"), config.plugins.iptvplayer.downgradePossible))
-        list.append(getConfigListEntry(_("Update packet type"), config.plugins.iptvplayer.possibleUpdateType))
-        list.append(getConfigListEntry(_("Show update icon in service selection menu"), config.plugins.iptvplayer.AktualizacjaWmenu))
+        #list.append(getConfigListEntry(_("Allow downgrade"), config.plugins.iptvplayer.downgradePossible))
+        #list.append(getConfigListEntry(_("Update packet type"), config.plugins.iptvplayer.possibleUpdateType))
+        #list.append(getConfigListEntry(_("Show update icon in service selection menu"), config.plugins.iptvplayer.AktualizacjaWmenu))
 
         list.append(getConfigListEntry(_("Virtual Keyboard type"), config.plugins.iptvplayer.osk_type))
         if config.plugins.iptvplayer.osk_type.value == 'own':

@@ -1148,6 +1148,7 @@ class E2iPlayerWidget(Screen):
         self.askUpdateAvailable(self.selectHost)
 
     def __requestCheckUpdate(self):
+        return
         lastVerUrl = GetUpdateServerUri('lastversion.php')
         if config.plugins.iptvplayer.autoCheckForUpdate.value:
             self.checkUpdateTimer.start(self.checkUpdateTimer_interval, True)
@@ -1164,6 +1165,7 @@ class E2iPlayerWidget(Screen):
             self.lastPluginVersion = lastversion
 
     def askUpdateAvailable(self, NoUpdateCallback):
+        NoUpdateCallback()
         printDBG(">> askUpdateAvailable")
         if config.plugins.iptvplayer.autoCheckForUpdate.value \
             and 0 < GetVersionNum(self.lastPluginVersion) \
@@ -1214,8 +1216,8 @@ class E2iPlayerWidget(Screen):
         self.displayGroupsList.append((_('All'), 'all'))
         self.displayGroupsList.append((_("Configuration"), "config"))
 
-        if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
-            self.displayGroupsList.append((_("Update"), "update"))
+        #if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
+        #    self.displayGroupsList.append((_("Update"), "update"))
 
         self.newDisplayGroupsList = []
         self.session.openWithCallback(self.selectGroupCallback, PlayerSelectorWidget, inList=self.displayGroupsList, outList=self.newDisplayGroupsList, numOfLockedItems=self.getNumOfSpecialItems(self.displayGroupsList), groupName='selectgroup')
@@ -1362,8 +1364,8 @@ class E2iPlayerWidget(Screen):
         if len(brokenHostList) > 0:
             errorMessage = _("Following host are broken or additional python modules are needed.") + '\n' + '\n'.join(brokenHostList)
 
-        if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
-            self.displayHostsList.append((_("Update"), "update"))
+        #if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
+        #    self.displayHostsList.append((_("Update"), "update"))
 
         if "" != errorMessage and True == self.showHostsErrorMessage:
             self.showHostsErrorMessage = False

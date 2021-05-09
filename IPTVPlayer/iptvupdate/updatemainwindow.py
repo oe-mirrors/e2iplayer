@@ -266,7 +266,7 @@ class IUpdateObjectInterface():
 
 
 class UpdateMainAppImpl(IUpdateObjectInterface):
-    VERSION_PATTERN = 'IPTV_VERSION="([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)"'
+    VERSION_PATTERN = 'IPTV_VERSION\s?=\s?"([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)"'
 
     def __init__(self, session, allowTheSameVersion=False):
         printDBG("UpdateMainAppImpl.__init__ -------------------------------")
