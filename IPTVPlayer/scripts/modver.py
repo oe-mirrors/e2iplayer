@@ -2,9 +2,11 @@
 
 import sys
 
+
 def printDBG(strDat):
     print("%s" % strDat)
     #print("%s" % strDat, file=sys.stderr)
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:
@@ -24,4 +26,3 @@ if __name__ == "__main__":
     except Exception as e:
         printDBG(e)
     sys.exit(1)
-

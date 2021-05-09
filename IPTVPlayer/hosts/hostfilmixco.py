@@ -19,7 +19,7 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
 ###################################################
-# E2 GUI COMMPONENTS 
+# E2 GUI COMMPONENTS
 ###################################################
 from Screens.MessageBox import MessageBox
 ###################################################
@@ -27,9 +27,10 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.filmixco_alt_domain = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.filmixco_login     = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.filmixco_password  = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.filmixco_alt_domain = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmixco_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filmixco_password = ConfigText(default="", fixed_size=False)
+
 
 def GetConfigList():
     optionList = []
@@ -43,25 +44,26 @@ def GetConfigList():
 def gettytul():
     return 'https://filmix.co/'
 
+
 class FilmixCO(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filmix.co', 'cookie':'filmix.co.cookie'})
-        
+        CBaseHostClass.__init__(self, {'history': 'filmix.co', 'cookie': 'filmix.co.cookie'})
+
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
 
         self.MAIN_URL = 'https://filmix.co/'
         self.DEFAULT_ICON_URL = 'http://www.userlogos.org/files/logos/jumpordie/filmix.png'
 
-        self.defaultParams = {'with_metadata':True, 'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = []
         self.domainSelected = False
 
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
 
     def getUtf8Str(self, st):
@@ -76,24 +78,28 @@ class FilmixCO(CBaseHostClass):
             printExc()
         return ''
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+    def getPage(self, baseUrl, addParams={}, post_data=None):
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def selectDomain(self):
-        if self.domainSelected: return 
+        if self.domainSelected:
+            return
         self.domainSelected = True
         domains = ['http://filmix.cc/films', 'https://filmix.co/films']
         domain = config.plugins.iptvplayer.filmixco_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
-            if domain[-1] != '/': domain += '/'
+            if domain[-1] != '/':
+                domain += '/'
             domains.insert(0, domain + 'films')
 
         sts = False
         for domain in domains:
             sts, data = self.getPage(domain)
-            if not sts: continue
+            if not sts:
+                continue
             if '/films' in data:
                 self.setMainUrl(data.meta['url'])
                 break
@@ -109,53 +115,54 @@ class FilmixCO(CBaseHostClass):
             tmp = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'filter-category'),)
             for item in tmp:
                 scope = self.cm.ph.getSearchGroups(item, '''\sdata\-scope=['"]([^'^"]+?)['"]''')[0]
-                type  = self.cm.ph.getSearchGroups(item, '''\sdata\-type=['"]([^'^"]+?)['"]''')[0]
+                type = self.cm.ph.getSearchGroups(item, '''\sdata\-type=['"]([^'^"]+?)['"]''')[0]
                 if type != '':
                     # need separate request, https://filmix.co/engine/ajax/get_filter.php, to get value of filters
-                    self.cacheFilters.append({'scope':scope, 'type':type})
+                    self.cacheFilters.append({'scope': scope, 'type': type})
                 else:
                     values = []
                     item = re.compile('''<(?:div|span)([^>]+?data\-scope=['"]%s['"][^>]*?)>([^>]+?)<''' % scope).findall(data)
                     for it in item:
                         title = self.cleanHtmlStr(it[1])
                         value = self.cm.ph.getSearchGroups(it[0], '''\sdata\-value=['"]([^'^"]+?)['"]''')[0]
-                        if value == '': continue
-                        values.append({'title':title, ('f_%s' % scope):value})
+                        if value == '':
+                            continue
+                        values.append({'title': title, ('f_%s' % scope): value})
                     if len(values):
-                        self.cacheFilters.append({'scope':scope, 'values':values})
-       
-        MAIN_CAT_TAB = [{'category':'top250',          'title':'ТОП 250', 'url':self.getFullUrl('/top250') },
-                        {'category':'filters',         'title': _('Filters')},
-                        {'category':'search',          'title': _('Search'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Search history')} ]
+                        self.cacheFilters.append({'scope': scope, 'values': values})
+
+        MAIN_CAT_TAB = [{'category': 'top250', 'title': 'ТОП 250', 'url': self.getFullUrl('/top250')},
+                        {'category': 'filters', 'title': _('Filters')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
-        
+
     def top250Type(self, cItem, nextCategory):
         printDBG("FilmixCO.listMainMenu")
-        
+
         for item in [('Фильмы', ''), ('Сериалы', 's'), ('Мультфильмы', 'm')]:
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':item[0], 'url':cItem['url'] + item[1]})
+            params.update({'category': nextCategory, 'title': item[0], 'url': cItem['url'] + item[1]})
             self.addDir(params)
-    
+
     def listTop250(self, cItem, nextCategory):
         printDBG("FilmixCO.listTop250")
-        
+
         for item in [('Топ 250 filmix.me', ''), ('Топ 250 Кинопоиск', '/kp'), ('Топ 250 IMDB', '/imdb')]:
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':item[0], 'url':cItem['url'] + item[1]})
+            params.update({'category': nextCategory, 'title': item[0], 'url': cItem['url'] + item[1]})
             self.addDir(params)
-            
+
     def listTop250Sort(self, cItem, nextCategory):
         printDBG("FilmixCO.listTop250Sort")
-        
+
         asc = '\xe2\x86\x91 '
         desc = '\xe2\x86\x93 '
         for item in [(desc + 'По убыванию', ''), (asc + 'По возрастанию', '/sup'), (desc + 'По годам', '/ydown'), (asc + 'По годам', '/yup')]:
             params = dict(cItem)
-            params.update({'category':nextCategory, 'title':item[0], 'url':cItem['url'] + item[1]})
+            params.update({'category': nextCategory, 'title': item[0], 'url': cItem['url'] + item[1]})
             self.addDir(params)
-        
+
     def getFilterUrl(self, cItem):
         linkComp = []
         for item in self.cacheFilters:
@@ -164,7 +171,7 @@ class FilmixCO(CBaseHostClass):
                 linkComp.append('%s%s' % (item['scope'], cItem[key]))
         linkComp.append('dd') # no premium
         return self.getFullUrl('/filters/' + '-'.join(linkComp))
-        
+
     def listFilters(self, cItem, nextCategory):
         printDBG("FilmixCO.listFilters")
         idx = cItem.get('f_idx', 0)
@@ -175,40 +182,43 @@ class FilmixCO(CBaseHostClass):
                 values = []
                 if 'rating' == filter['type']:
                     for i in range(9, 0, -1):
-                        values.append({'title':'%s-%s'% (str(i).zfill(2), str(i+1).zfill(2)), ('f_%s' % filter['scope']):'%s%s' % (str(i).zfill(2), str(i+1).zfill(2))})
+                        values.append({'title': '%s-%s' % (str(i).zfill(2), str(i + 1).zfill(2)), ('f_%s' % filter['scope']): '%s%s' % (str(i).zfill(2), str(i + 1).zfill(2))})
                     if len(values):
-                        values.insert(0, {'title':_('--Any--')})
+                        values.insert(0, {'title': _('--Any--')})
                 else:
                     url = self.getFullUrl('/engine/ajax/get_filter.php')
                     urlParams = dict(self.defaultParams)
                     urlParams['header'] = dict(self.AJAX_HEADER)
                     urlParams['Referer'] = self.getMainUrl()
-                    sts, data = self.getPage(url, urlParams, {'scope':'cat', 'type':filter['type']})
-                    if not sts: return
+                    sts, data = self.getPage(url, urlParams, {'scope': 'cat', 'type': filter['type']})
+                    if not sts:
+                        return
                     try:
                         printDBG(data)
                         data = json_loads('[%s]' % data.replace('":"', '","')[1:-1])
                         for i in range(0, len(data), 2):
-                            title = self.cleanHtmlStr(data[i+1])
+                            title = self.cleanHtmlStr(data[i + 1])
                             value = data[i]
-                            if value.startswith('f'): value = value[1:]
-                            values.append({'title':title, ('f_%s' % filter['scope']):value})
+                            if value.startswith('f'):
+                                value = value[1:]
+                            values.append({'title': title, ('f_%s' % filter['scope']): value})
                         if len(values):
-                            if 'years' == filter['type']: values.reverse()
-                            values.insert(0, {'title':_('--Any--')})
+                            if 'years' == filter['type']:
+                                values.reverse()
+                            values.insert(0, {'title': _('--Any--')})
                             filter['values'] = values
                     except Exception:
                         printExc()
             elif 'values' in filter:
                 values = filter['values']
-            
+
             cItem = dict(cItem)
             idx += 1
             if idx < len(self.cacheFilters):
                 cItem['f_idx'] = idx
             else:
                 cItem['category'] = nextCategory
-            
+
             for item in values:
                 params = dict(cItem)
                 params.update(item)
@@ -216,13 +226,14 @@ class FilmixCO(CBaseHostClass):
                 self.addDir(params)
         else:
             printExc("Should not happen")
-    
+
     def listSort(self, cItem, nextCategory):
         printDBG("FilmixCO.listSort")
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
-        
+        if not sts:
+            return
+
         cItem = dict(cItem)
         cItem['url'] = data.meta['url']
 
@@ -245,15 +256,17 @@ class FilmixCO(CBaseHostClass):
                 desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(it, '''title=['"]([^'^"]+?)['"]''')[0])
 
                 postData = dict(basePostData)
-                postData.update({'dledirection':direction, 'dlenewssortby':sortOrderBy})
+                postData.update({'dledirection': direction, 'dlenewssortby': sortOrderBy})
 
-                if 'asc' == direction: title = '\xe2\x86\x91 ' + baseTitle
-                elif 'desc' == direction: title = '\xe2\x86\x93 ' + baseTitle
+                if 'asc' == direction:
+                    title = '\xe2\x86\x91 ' + baseTitle
+                elif 'desc' == direction:
+                    title = '\xe2\x86\x93 ' + baseTitle
 
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'title':title, 'desc':desc, 'post_data':postData})
+                params.update({'category': nextCategory, 'title': title, 'desc': desc, 'post_data': postData})
                 self.addDir(params)
-        
+
     def listItems(self, cItem, nextCategory):
         printDBG("FilmixCO.listItems")
         page = cItem.get('page', 1)
@@ -263,97 +276,105 @@ class FilmixCO(CBaseHostClass):
         if '/ajax/' in cItem['url']:
             urlParams['header'] = dict(self.AJAX_HEADER)
             urlParams['Referer'] = self.getMainUrl()
-        
+
         sts, data = self.getPage(cItem['url'], urlParams, postData)
-        if not sts: return
+        if not sts:
+            return
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'navigation'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s</a>''' % (page + 1))[0]
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'itemtype'), ('</article', '>'), False)
         for item in data:
-            icon = self.getFullIconUrl( self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0] )
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
 
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'name-block'), ('</div', '>'))[1]
-            url = self.getFullUrl( self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0] )
-            title = self.cleanHtmlStr( self.cm.ph.getDataBeetwenMarkers(tmp, '<h2', '</h2>')[1] )
-            titleOrg = self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'origin-name'), ('</div', '>'))[1] )
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<h2', '</h2>')[1])
+            titleOrg = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'origin-name'), ('</div', '>'))[1])
             if titleOrg != '':
-                if title == '': title = titleOrg
-                else: title += ' / %s' % titleOrg
+                if title == '':
+                    title = titleOrg
+                else:
+                    title += ' / %s' % titleOrg
 
             desc = []
             tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ('<div', '>', '"item'), ('</div', '>'))
             tmp.append(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
             for t in tmp:
                 t = self.cleanHtmlStr(t)
-                if t != '': desc.append(t.replace(' , ', ', '))
+                if t != '':
+                    desc.append(t.replace(' , ', ', '))
 
             if url != '':
                 params = dict(cItem)
-                params.update({'category':nextCategory, 'good_for_fav': True, 'title':title, 'url':url, 'desc':'[/br]'.join(desc), 'icon':icon})
+                params.update({'category': nextCategory, 'good_for_fav': True, 'title': title, 'url': url, 'desc': '[/br]'.join(desc), 'icon': icon})
                 self.addDir(params)
 
         if nextPage != '':
             params = dict(cItem)
             params.pop('post_data', None)
             params.pop('desc', None)
-            params.update({'title':_("Next page"), 'url':nextPage, 'page':page+1})
+            params.update({'title': _("Next page"), 'url': nextPage, 'page': page + 1})
             self.addDir(params)
-            
+
     def exploreItem(self, cItem, nextCategory):
         printDBG("FilmixCO.exploreItem")
-        
+
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
-        
+
         trailerVideo = self.getUtf8Str(self.cm.ph.getSearchGroups(data, '''trailerVideoLink5\s*?=\s*?['"]#([^'^"]+?)['"]''')[0])
         if self.cm.isValidUrl(trailerVideo):
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'trailer-wrap'), ('</div', '>'), False)[1])
             params = dict(cItem)
-            params.update({'good_for_fav':False, 'url':trailerVideo, 'title':title + ' ' + cItem['title']})
+            params.update({'good_for_fav': False, 'url': trailerVideo, 'title': title + ' ' + cItem['title']})
             self.addVideo(params)
-        
+
         postId = self.cm.ph.getSearchGroups(data, '''data\-player=['"]([^"^']+?)['"]''')[0]
-        
+
         url = self.getFullUrl('/api/movies/player_data')
         urlParams = dict(self.defaultParams)
         urlParams['header'] = dict(self.AJAX_HEADER)
         urlParams['Referer'] = cUrl
-        sts, data = self.getPage(url, urlParams, {'post_id':postId, 'showfull':'true'})
-        if not sts: return
-        
+        sts, data = self.getPage(url, urlParams, {'post_id': postId, 'showfull': 'true'})
+        if not sts:
+            return
+
         try:
             data = json_loads(data)
             printDBG(">>>\n%s\n" % data)
             data = data['message']['translations']['html5']
             for key in data:
                 url = self.getUtf8Str(data[key][1:])
-                if not self.cm.isValidUrl(url): continue
+                if not self.cm.isValidUrl(url):
+                    continue
                 title = self.cleanHtmlStr(key)
                 if url.split('?', 1)[-1].lower().endswith('.txt'):
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title, 'p_url':cUrl, 'p_title':cItem['title'], 'post_id':postId})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'url': url, 'title': title, 'p_url': cUrl, 'p_title': cItem['title'], 'post_id': postId})
                     self.addDir(params)
                 else:
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'url':url, 'title':title + ' ' + cItem['title']})
+                    params.update({'good_for_fav': False, 'url': url, 'title': title + ' ' + cItem['title']})
                     self.addVideo(params)
         except Exception:
             printExc()
-        
+
     def listPlaylists(self, cItem, nextCategory):
         printDBG("FilmixCO.listPlaylists")
         urlParams = dict(self.defaultParams)
         urlParams['header'] = dict(self.AJAX_HEADER)
         urlParams['Referer'] = cItem.get('p_url', self.getMainUrl())
-        
+
         baseTitle = cItem['p_title']
         sts, data = self.getPage(cItem['url'], urlParams)
-        if not sts: return
-        
+        if not sts:
+            return
+
         try:
             data = self.getUtf8Str(data[1:])
             data = json_loads(data)
@@ -361,28 +382,29 @@ class FilmixCO(CBaseHostClass):
                 subItems = []
                 for item in playlistItem['playlist']:
                     url = item['file']
-                    if not self.cm.isValidUrl(url): continue
+                    if not self.cm.isValidUrl(url):
+                        continue
                     title = self.cleanHtmlStr(item['comment'])
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'type':'video', 'url':url, 'title':baseTitle + ' ' + title})
+                    params.update({'good_for_fav': False, 'type': 'video', 'url': url, 'title': baseTitle + ' ' + title})
                     subItems.append(params)
-                
+
                 if len(subItems):
                     title = self.cleanHtmlStr(playlistItem['comment'])
                     params = dict(cItem)
-                    params.update({'good_for_fav':False, 'category':nextCategory, 'url':url, 'title':title, 'sub_items':subItems})
+                    params.update({'good_for_fav': False, 'category': nextCategory, 'url': url, 'title': title, 'sub_items': subItems})
                     self.addDir(params)
         except Exception:
             printExc()
-        
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmixCO.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         #searchPattern = 'Шрэк Третий'
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/engine/ajax/sphinx_search.php')
-        cItem['post_data'] = {'scf':'fx', 'story':searchPattern, 'search_start':'0', 'do':'search', 'subaction':'search', 'years_ot':'1902', 'years_do':'3000', 'kpi_ot':'1', 'kpi_do':'10', 'imdb_ot':'1', 'imdb_do':'10', 'sort_name':'', 'undefined':'asc', 'sort_date':'', 'sort_favorite':'', 'simple':'1'}
+        cItem['post_data'] = {'scf': 'fx', 'story': searchPattern, 'search_start': '0', 'do': 'search', 'subaction': 'search', 'years_ot': '1902', 'years_do': '3000', 'kpi_ot': '1', 'kpi_do': '10', 'imdb_ot': '1', 'imdb_do': '10', 'sort_name': '', 'undefined': 'asc', 'sort_date': '', 'sort_favorite': '', 'simple': '1'}
         self.listItems(cItem, 'explore_item')
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("FilmixCO.getLinksForVideo [%s]" % cItem)
         self.tryTologin()
@@ -395,12 +417,13 @@ class FilmixCO(CBaseHostClass):
         try:
             for item in qualities:
                 item = item.strip()
-                if item != '': urlTab.append({'name':item, 'url':baseUrl % item, 'need_resolve':0})
+                if item != '':
+                    urlTab.append({'name': item, 'url': baseUrl % item, 'need_resolve': 0})
         except Exception:
             printExc()
-        
+
         return urlTab
-        
+
     def getVideoLinks(self, videoUrl):
         printDBG("FilmixCO.getVideoLinks [%s]" % videoUrl)
         urlTab = []
@@ -418,7 +441,8 @@ class FilmixCO(CBaseHostClass):
             self.password = config.plugins.iptvplayer.filmixco_password.value
 
             sts, data = self.getPage(self.getMainUrl())
-            if sts: self.setMainUrl(self.cm.meta['url'])
+            if sts:
+                self.setMainUrl(self.cm.meta['url'])
 
             freshSession = False
             if sts and 'action=logout' in data:
@@ -436,7 +460,7 @@ class FilmixCO(CBaseHostClass):
             rm(loginCookie)
             rm(self.COOKIE_FILE)
             if freshSession:
-                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session':True}))
+                sts, data = self.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {'use_new_session': True}))
 
             self.loggedIn = False
             if '' == self.login.strip() or '' == self.password.strip():
@@ -445,14 +469,15 @@ class FilmixCO(CBaseHostClass):
             msgTab = [_('Login failed.')]
             if sts:
                 actionUrl = self.getFullUrl('/engine/ajax/user_auth.php')
-                post_data = {'login_name':self.login, 'login_password':self.password, 'login_not_save':'1', 'login':'submit'}
+                post_data = {'login_name': self.login, 'login_password': self.password, 'login_not_save': '1', 'login': 'submit'}
 
                 httpParams = dict(self.defaultParams)
-                httpParams['header'] = MergeDicts(httpParams['header'], {'Referer':self.cm.meta['url'], 'Accept':'*/*', 'X-Requested-With':'XMLHttpRequest', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'})
+                httpParams['header'] = MergeDicts(httpParams['header'], {'Referer': self.cm.meta['url'], 'Accept': '*/*', 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
 
                 sts, data = self.getPage(actionUrl, httpParams, post_data)
                 printDBG(data)
-                if sts: msgTab.append(ph.clean_html(data))
+                if sts:
+                    msgTab.append(ph.clean_html(data))
                 sts, data = self.getPage(self.getMainUrl())
 
             if sts and 'action=logout' in data:
@@ -460,7 +485,7 @@ class FilmixCO(CBaseHostClass):
                 self.loggedIn = True
             else:
                 printDBG(data)
-                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
+                self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
 
             if self.loggedIn:
@@ -469,26 +494,26 @@ class FilmixCO(CBaseHostClass):
 
         return self.loggedIn
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
 
-        printDBG( "handleService: || name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.tryTologin()
 
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)
-        
+
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
-            
+            self.listMainMenu({'name': 'category'})
+
         elif category == 'top250':
             self.top250Type(self.currItem, 'list_top250')
         elif category == 'list_top250':
@@ -510,17 +535,18 @@ class FilmixCO(CBaseHostClass):
     #SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, FilmixCO(), True, favouriteTypes=[]) 
+        CHostBase.__init__(self, FilmixCO(), True, favouriteTypes=[])

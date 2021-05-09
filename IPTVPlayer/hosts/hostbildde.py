@@ -12,10 +12,12 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 
 DEFAULT_ICON = 'https://bilder.bild.de/fotos/bild-logo-35166394/Bild/45.bild.png'
 
+
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Pin protection for plugin")+" :", config.plugins.iptvplayer.Bildde_pin))
+    optionList.append(getConfigListEntry(_("Pin protection for plugin") + " :", config.plugins.iptvplayer.Bildde_pin))
     return optionList
+
 
 def gettytul():
     return 'https://www.bild.de'
@@ -25,7 +27,7 @@ class Bildde(CBaseHostClass):
 
     def __init__(self):
 
-        CBaseHostClass.__init__(self, {'history':'bild.de', 'cookie':'bild.de.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'bild.de', 'cookie': 'bild.de.cookie'})
 
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'}
@@ -60,7 +62,7 @@ class Bildde(CBaseHostClass):
 
             if 'news' in sub:
                 if 'Videos' in h2:
-                    pagination = self.cm.ph.getDataBeetwenMarkers(section, ('<div','class="pag"', '>'), '</div>', False)[1]
+                    pagination = self.cm.ph.getDataBeetwenMarkers(section, ('<div', 'class="pag"', '>'), '</div>', False)[1]
                     pages = self.cm.ph.getAllItemsBeetwenMarkers(pagination, ('<li', '>'), '</li>', False)
                     for page in pages:
                         href = self.getFullUrl(self.cm.ph.getSearchGroups(page, 'data-ajax-href="([^"]+?)"')[0])
@@ -96,7 +98,7 @@ class Bildde(CBaseHostClass):
                 a = self.cm.ph.getDataBeetwenMarkers(div, '<a', '</a>', True)[1]
                 if 'playerIcon' in a:
                     printDBG("bildde.listItems [a] %s" % a)
-                    img = self.cm.ph.getDataBeetwenMarkers(a, '<img',  '/>', False)[1]
+                    img = self.cm.ph.getDataBeetwenMarkers(a, '<img', '/>', False)[1]
                     icon = self.cm.ph.getSearchGroups(img, 'src="([^"]+?.(jpg|png))"')[0]
                     href = self.getFullUrl(self.cm.ph.getSearchGroups(a, 'href="([^"]+?)"')[0])
                     title = self.cm.ph.getSearchGroups(a, 'data-tb-title="([^"]+?)"')[0]
@@ -113,9 +115,9 @@ class Bildde(CBaseHostClass):
         data = self.getPage(url)
         if not data:
             return
-        meta = self.cm.ph.getDataBeetwenMarkers(data, ('<meta', 'roperty="og:video:url"'),  '/>', False)[1]
+        meta = self.cm.ph.getDataBeetwenMarkers(data, ('<meta', 'roperty="og:video:url"'), '/>', False)[1]
         if not meta:
-            meta = self.cm.ph.getDataBeetwenMarkers(data, ('<meta', 'roperty="og:video:secure_ur"'),  '/>', False)[1]
+            meta = self.cm.ph.getDataBeetwenMarkers(data, ('<meta', 'roperty="og:video:secure_ur"'), '/>', False)[1]
 
         link = self.cm.ph.getSearchGroups(meta, 'content="([^"]+?)"')[0]
 
@@ -129,11 +131,11 @@ class Bildde(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
 
-        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
 
         self.currList = []
 
@@ -148,6 +150,7 @@ class Bildde(CBaseHostClass):
             printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

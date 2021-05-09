@@ -79,12 +79,12 @@ class M3U8(object):
 
     simple_attributes = (
         # obj attribute      # parser attribute
-        ('is_variant',       'is_variant'),
-        ('is_endlist',       'is_endlist'),
-        ('target_duration',  'targetduration'),
-        ('media_sequence',   'media_sequence'),
-        ('version',          'version'),
-        ('allow_cache',      'allow_cache'),
+        ('is_variant', 'is_variant'),
+        ('is_endlist', 'is_endlist'),
+        ('target_duration', 'targetduration'),
+        ('media_sequence', 'media_sequence'),
+        ('version', 'version'),
+        ('allow_cache', 'allow_cache'),
         )
 
     def __init__(self, content=None, base_path=None, base_uri=None):
@@ -98,8 +98,8 @@ class M3U8(object):
 
     def _initialize_attributes(self):
         self.key = Key(base_uri=self.base_uri, **self.data['key']) if 'key' in self.data else None
-        self.segments = SegmentList([ Segment(base_uri=self.base_uri, **params)
-                                      for params in self.data.get('segments', []) ])
+        self.segments = SegmentList([Segment(base_uri=self.base_uri, **params)
+                                      for params in self.data.get('segments', [])])
 
         for attr, param in self.simple_attributes:
             setattr(self, attr, self.data.get(param))
@@ -109,8 +109,8 @@ class M3U8(object):
             self.files.append(self.key.uri)
         self.files.extend(self.segments.uri)
 
-        self.playlists = PlaylistList([ Playlist(base_uri=self.base_uri, **playlist)
-                                        for playlist in self.data.get('playlists', []) ])
+        self.playlists = PlaylistList([Playlist(base_uri=self.base_uri, **playlist)
+                                        for playlist in self.data.get('playlists', [])])
 
     def __unicode__(self):
         return self.dumps()
@@ -188,6 +188,7 @@ class M3U8(object):
             if error.errno != errno.EEXIST:
                 raise
 
+
 class BasePathMixin(object):
 
     @property
@@ -198,14 +199,16 @@ class BasePathMixin(object):
             if self.base_uri is None:
                 raise ValueError('There can not be `absolute_uri` with no `base_uri` set')
             uri = _urijoin(self.base_uri, self.uri)
-        
+
         # ugly workaround to be fixed
         proxyUri = 'englandproxy.co.uk'
         if proxyUri in self.base_uri and proxyUri not in uri:
-            try: uri = 'http://www.englandproxy.co.uk/' + uri[uri.find('://')+3:]
-            except Exception: pass
+            try:
+                uri = 'http://www.englandproxy.co.uk/' + uri[uri.find('://') + 3:]
+            except Exception:
+                pass
         return uri
-            
+
     @property
     def base_path(self):
         return os.path.dirname(self.uri)
@@ -215,6 +218,7 @@ class BasePathMixin(object):
         if not self.base_path:
             self.uri = "%s/%s" % (newbase_path, self.uri)
         self.uri = self.uri.replace(self.base_path, newbase_path)
+
 
 class GroupedBasePathMixin(object):
 
@@ -230,6 +234,7 @@ class GroupedBasePathMixin(object):
 
     base_path = property(None, _set_base_path)
 
+
 class Segment(BasePathMixin):
     '''
     A video segment from a M3U8 playlist
@@ -242,7 +247,7 @@ class Segment(BasePathMixin):
 
     `duration`
       duration attribute from EXTINF paramter
-    
+
     `date`
       program date from EXT-X-PROGRAM-DATE-TIME paramter
 
@@ -280,6 +285,7 @@ class SegmentList(list, GroupedBasePathMixin):
     def uri(self):
         return [seg.uri for seg in self]
 
+
 class Key(BasePathMixin):
     '''
     Key used to encrypt the segments in a m3u8 playlist (EXT-X-KEY)
@@ -297,6 +303,7 @@ class Key(BasePathMixin):
       initialization vector. a string representing a hexadecimal number. ex.: 0X12A
 
     '''
+
     def __init__(self, method, uri, base_uri, iv=None):
         self.method = method
         self.uri = uri
@@ -313,6 +320,7 @@ class Key(BasePathMixin):
 
         return '#EXT-X-KEY:' + ','.join(output)
 
+
 class AudioStream(BasePathMixin):
     def __init__(self, uri, name, language, base_uri):
 
@@ -324,7 +332,8 @@ class AudioStream(BasePathMixin):
     def __str__(self):
         # ToDO
         return ''
-        
+
+
 class Playlist(BasePathMixin):
     '''
     Playlist object representing a link to a variant M3U8 with a specific bitrate.
@@ -333,8 +342,9 @@ class Playlist(BasePathMixin):
 
     More info: http://tools.ietf.org/html/draft-pantos-http-live-streaming-07#section-3.3.10
     '''
+
     def __init__(self, uri, stream_info, alt_audio_streams, base_uri):
-    
+
         self.uri = uri
         self.base_uri = base_uri
 
@@ -352,8 +362,8 @@ class Playlist(BasePathMixin):
                                       program_id=stream_info.get('program_id'),
                                       resolution=resolution_pair,
                                       codecs=stream_info.get('codecs'))
-        self.alt_audio_streams = [ AudioStream(base_uri=self.base_uri, uri=alt_audio_stream.get('uri'), name=alt_audio_stream.get('name'), language=alt_audio_stream.get('language'))
-                                    for alt_audio_stream in alt_audio_streams ]
+        self.alt_audio_streams = [AudioStream(base_uri=self.base_uri, uri=alt_audio_stream.get('uri'), name=alt_audio_stream.get('name'), language=alt_audio_stream.get('language'))
+                                    for alt_audio_stream in alt_audio_streams]
 
     def __str__(self):
         stream_inf = []
@@ -368,7 +378,9 @@ class Playlist(BasePathMixin):
             stream_inf.append('CODECS=' + quoted(self.stream_info.codecs))
         return '#EXT-X-STREAM-INF:' + ','.join(stream_inf) + '\n' + self.uri
 
+
 StreamInfo = namedtuple('StreamInfo', ['bandwidth', 'program_id', 'resolution', 'codecs'])
+
 
 class PlaylistList(list, GroupedBasePathMixin):
 
@@ -378,10 +390,12 @@ class PlaylistList(list, GroupedBasePathMixin):
 
 
 def denormalize_attribute(attribute):
-    return attribute.replace('_','-').upper()
+    return attribute.replace('_', '-').upper()
+
 
 def quoted(string):
     return '"%s"' % string
+
 
 def _urijoin(base_uri, path):
     if parser.is_url(path):
@@ -389,16 +403,17 @@ def _urijoin(base_uri, path):
     elif parser.is_url(base_uri):
         if path.startswith('/'):
             return urlparse.urljoin(base_uri, path)
-        
+
         parsed_url = urlparse.urlparse(base_uri)
         prefix = parsed_url.scheme + '://' + parsed_url.netloc
         new_path = os.path.normpath(parsed_url.path + '/' + path)
         full_uri = urlparse.urljoin(prefix, new_path.strip('/'))
-        if not parser.is_url(full_uri): 
+        if not parser.is_url(full_uri):
             full_uri = urlparse.urljoin(prefix, '/' + new_path.strip('/'))
         return full_uri
     else:
         return os.path.normpath(os.path.join(base_uri, path.strip('/')))
+
 
 def int_or_float_to_string(number):
     return str(int(number)) if number == math.floor(number) else str(number)

@@ -9,13 +9,13 @@
     Note !!!! auto IV uses python default random :-(
     should not be 'too bad' (tm) for this cbc applicaiton
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 """
 from ..cipher.base import BlockCipher, padWithPadLen, noPadding
-from ..errors      import EncryptError
-from ..common      import xor
-from random        import Random  # should change to crypto.random!!!
+from ..errors import EncryptError
+from ..common import xor
+from random import Random  # should change to crypto.random!!!
 
 
 class CBC(BlockCipher):
@@ -23,18 +23,19 @@ class CBC(BlockCipher):
         algorithms.  The initialization (IV) is automatic if set to None.  Padding
         is also automatic based on the Pad class used to initialize the algorithm
     """
-    def __init__(self, blockCipherInstance, padding = padWithPadLen()):
+
+    def __init__(self, blockCipherInstance, padding=padWithPadLen()):
         """ CBC algorithms are created by initializing with a BlockCipher instance """
         self.baseCipher = blockCipherInstance
-        self.name       = self.baseCipher.name + '_CBC'
-        self.blockSize  = self.baseCipher.blockSize
-        self.keySize    = self.baseCipher.keySize
-        self.padding    = padding
+        self.name = self.baseCipher.name + '_CBC'
+        self.blockSize = self.baseCipher.blockSize
+        self.keySize = self.baseCipher.keySize
+        self.padding = padding
         self.baseCipher.padding = noPadding()   # baseCipher should NOT pad!!
-        self.r          = Random()            # for IV generation, currently uses
+        self.r = Random()            # for IV generation, currently uses
                                               # mediocre standard distro version     <----------------
         import time
-        newSeed = time.ctime()+str(self.r)    # seed with instance location
+        newSeed = time.ctime() + str(self.r)    # seed with instance location
         self.r.seed(newSeed)                  # to make unique
         self.reset()
 
@@ -57,9 +58,9 @@ class CBC(BlockCipher):
         if self.encryptBlockCount == 0:
             self.iv = iv
         else:
-            assert(iv==None), 'IV used only on first call to encrypt'
+            assert(iv == None), 'IV used only on first call to encrypt'
 
-        return BlockCipher.encrypt(self,plainText, more=more)
+        return BlockCipher.encrypt(self, plainText, more=more)
 
     def decrypt(self, cipherText, iv=None, more=None):
         """ CBC decryption - overloads baseCipher to allow optional explicit IV
@@ -68,7 +69,7 @@ class CBC(BlockCipher):
         if self.decryptBlockCount == 0:
             self.iv = iv
         else:
-            assert(iv==None), 'IV used only on first call to decrypt'
+            assert(iv == None), 'IV used only on first call to decrypt'
 
         return BlockCipher.decrypt(self, cipherText, more=more)
 
@@ -82,12 +83,12 @@ class CBC(BlockCipher):
                 self.prior_encr_CT_block = self.iv
                 auto_IV = self.prior_encr_CT_block    # prepend IV if it's automatic
             else:                       # application provided IV
-                assert(len(self.iv) == self.blockSize ),'IV must be same length as block'
+                assert(len(self.iv) == self.blockSize), 'IV must be same length as block'
                 self.prior_encr_CT_block = self.iv
         """ encrypt the prior CT XORed with the PT """
-        ct = self.baseCipher.encryptBlock( xor(self.prior_encr_CT_block, plainTextBlock) )
+        ct = self.baseCipher.encryptBlock(xor(self.prior_encr_CT_block, plainTextBlock))
         self.prior_encr_CT_block = ct
-        return auto_IV+ct
+        return auto_IV + ct
 
     def decryptBlock(self, encryptedBlock):
         """ Decrypt a single block """
@@ -97,14 +98,13 @@ class CBC(BlockCipher):
                 self.prior_CT_block = encryptedBlock
                 return ''
             else:
-                assert(len(self.iv)==self.blockSize),"Bad IV size on CBC decryption"
+                assert(len(self.iv) == self.blockSize), "Bad IV size on CBC decryption"
                 self.prior_CT_block = self.iv
 
         dct = self.baseCipher.decryptBlock(encryptedBlock)
         """ XOR the prior decrypted CT with the prior CT """
-        dct_XOR_priorCT = xor( self.prior_CT_block, dct )
+        dct_XOR_priorCT = xor(self.prior_CT_block, dct)
 
         self.prior_CT_block = encryptedBlock
 
         return dct_XOR_priorCT
-

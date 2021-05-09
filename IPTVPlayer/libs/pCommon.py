@@ -16,28 +16,37 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 import urllib
 import urllib2
 import base64
-try: import ssl
-except Exception: pass
+try:
+    import ssl
+except Exception:
+    pass
 import re
 import time
 import cookielib
 import unicodedata
-try: import pycurl
-except Exception: pass
 try:
-    try: from cStringIO import StringIO
-    except Exception: from StringIO import StringIO 
+    import pycurl
+except Exception:
+    pass
+try:
+    try:
+        from cStringIO import StringIO
+    except Exception:
+        from StringIO import StringIO
     import gzip
-except Exception: pass
+except Exception:
+    pass
 from urlparse import urljoin, urlparse, urlunparse, parse_qs, parse_qsl
 from binascii import hexlify
 import os
 ###################################################
 
+
 def DecodeGzipped(data):
     buf = StringIO(data)
     f = gzip.GzipFile(fileobj=buf)
     return f.read()
+
 
 def EncodeGzipped(data):
     f = StringIO()
@@ -47,6 +56,7 @@ def EncodeGzipped(data):
     encoded = f.getvalue()
     f.close()
     return encoded
+
 
 class NoRedirection(urllib2.HTTPRedirectHandler):
     def http_error_302(self, req, fp, code, msg, headers):
@@ -59,17 +69,18 @@ class NoRedirection(urllib2.HTTPRedirectHandler):
     http_error_303 = http_error_302
     http_error_307 = http_error_302
 
+
 class MultipartPostHandler(urllib2.BaseHandler):
     handler_order = urllib2.HTTPHandler.handler_order - 10
 
     def http_request(self, request):
         data = request.get_data()
         if data is not None and type(data) != str:
-            content_type, data = self.encode_multipart_formdata( data )
+            content_type, data = self.encode_multipart_formdata(data)
             request.add_unredirected_header('Content-Type', content_type)
             request.add_data(data)
         return request
-        
+
     def encode_multipart_formdata(self, fields):
         LIMIT = '-----------------------------14312495924498'
         CRLF = '\r\n'
@@ -84,19 +95,21 @@ class MultipartPostHandler(urllib2.BaseHandler):
         body = CRLF.join(L)
         content_type = 'multipart/form-data; boundary=%s' % LIMIT
         return content_type, body
-    
+
     https_request = http_request
+
 
 class CParsingHelper:
     @staticmethod
     def listToDir(cList, idx):
-        cTree = {'dat':''}
-        deep = 0 
-        while (idx+1) < len(cList):
+        cTree = {'dat': ''}
+        deep = 0
+        while (idx + 1) < len(cList):
             if cList[idx].startswith('<ul') or cList[idx].startswith('<li'):
                 deep += 1
-                nTree, idx, nDeep = CParsingHelper.listToDir(cList, idx+1)
-                if 'list' not in cTree: cTree['list'] = []
+                nTree, idx, nDeep = CParsingHelper.listToDir(cList, idx + 1)
+                if 'list' not in cTree:
+                    cTree['list'] = []
                 cTree['list'].append(nTree)
                 deep += nDeep
             elif cList[idx].startswith('</ul>') or cList[idx].startswith('</li>'):
@@ -116,51 +129,63 @@ class CParsingHelper:
     @staticmethod
     def getDataBeetwenReMarkers(data, pattern1, pattern2, withMarkers=True):
         match1 = pattern1.search(data)
-        if None == match1 or -1 == match1.start(0): return False, ''
+        if None == match1 or -1 == match1.start(0):
+            return False, ''
         match2 = pattern2.search(data[match1.end(0):])
-        if None == match2 or -1 == match2.start(0): return False, ''
-        
+        if None == match2 or -1 == match2.start(0):
+            return False, ''
+
         if withMarkers:
-            return True, data[match1.start(0): (match1.end(0) + match2.end(0)) ]
+            return True, data[match1.start(0): (match1.end(0) + match2.end(0))]
         else:
-            return True, data[match1.end(0): (match1.end(0) + match2.start(0)) ]
+            return True, data[match1.end(0): (match1.end(0) + match2.start(0))]
 
     @staticmethod
     def getDataBeetwenMarkers(data, marker1, marker2, withMarkers=True, caseSensitive=True):
         flags = 0
-        if withMarkers: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withMarkers:
+            flags |= ph.START_E | ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.find(data, marker1, marker2, flags)
 
     @staticmethod
     def getAllItemsBeetwenMarkers(data, marker1, marker2, withMarkers=True, caseSensitive=True):
         flags = 0
-        if withMarkers: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withMarkers:
+            flags |= ph.START_E | ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.findall(data, marker1, marker2, flags)
 
     @staticmethod
     def rgetAllItemsBeetwenMarkers(data, marker1, marker2, withMarkers=True, caseSensitive=True):
         flags = 0
-        if withMarkers: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withMarkers:
+            flags |= ph.START_E | ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.rfindall(data, marker1, marker2, flags)
 
     @staticmethod
     def rgetDataBeetwenMarkers2(data, marker1, marker2, withMarkers=True, caseSensitive=True):
         flags = 0
-        if withMarkers: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withMarkers:
+            flags |= ph.START_E | ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.rfind(data, marker1, marker2, flags)
 
     @staticmethod
-    def rgetDataBeetwenMarkers(data, marker1, marker2, withMarkers = True):
+    def rgetDataBeetwenMarkers(data, marker1, marker2, withMarkers=True):
         # this methods is not working as expected, but is is used in many places
         # so I will leave at it is, please use rgetDataBeetwenMarkers2
         idx1 = data.rfind(marker1)
-        if -1 == idx1: return False, ''
+        if -1 == idx1:
+            return False, ''
         idx2 = data.rfind(marker2, idx1 + len(marker1))
-        if -1 == idx2: return False, ''
+        if -1 == idx2:
+            return False, ''
         if withMarkers:
             idx2 = idx2 + len(marker2)
         else:
@@ -170,56 +195,66 @@ class CParsingHelper:
     @staticmethod
     def getDataBeetwenNodes(data, node1, node2, withNodes=True, caseSensitive=True):
         flags = 0
-        if withNodes: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withNodes:
+            flags |= ph.START_E | ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.find(data, node1, node2, flags)
 
     @staticmethod
     def getAllItemsBeetwenNodes(data, node1, node2, withNodes=True, numNodes=-1, caseSensitive=True):
         flags = 0
-        if withNodes: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withNodes:
+            flags |= ph.START_E | ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.findall(data, node1, node2, flags, limits=numNodes)
 
     @staticmethod
     def rgetDataBeetwenNodes(data, node1, node2, withNodes=True, caseSensitive=True):
         flags = 0
-        if withNodes: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withNodes:
+            flags |= ph.START_E | ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.rfind(data, node1, node2, flags)
-        
+
     @staticmethod
     def rgetAllItemsBeetwenNodes(data, node1, node2, withNodes=True, numNodes=-1, caseSensitive=True):
         flags = 0
-        if withNodes: flags |= ph.START_E|ph.END_E
-        if not caseSensitive: flags |= ph.IGNORECASE
+        if withNodes:
+            flags |= ph.START_E | ph.END_E
+        if not caseSensitive:
+            flags |= ph.IGNORECASE
         return ph.rfindall(data, node1, node2, flags, limits=numNodes)
 
-    # this method is useful only for developers 
+    # this method is useful only for developers
     # to dump page code to the file
     @staticmethod
-    def writeToFile(file, data, mode = "w"):
+    def writeToFile(file, data, mode="w"):
         #helper to see html returned by ajax
         file_path = file
         text_file = open(file_path, mode)
         text_file.write(data)
         text_file.close()
-    
+
     @staticmethod
     def getNormalizeStr(txt, idx=None):
-        POLISH_CHARACTERS = {u'ą':u'a', u'ć':u'c', u'ę':u'ę', u'ł':u'l', u'ń':u'n', u'ó':u'o', u'ś':u's', u'ż':u'z', u'ź':u'z',
-                             u'Ą':u'A', u'Ć':u'C', u'Ę':u'E', u'Ł':u'L', u'Ń':u'N', u'Ó':u'O', u'Ś':u'S', u'Ż':u'Z', u'Ź':u'Z',
-                             u'á':u'a', u'é':u'e', u'í':u'i', u'ñ':u'n', u'ó':u'o', u'ú':u'u', u'ü':u'u',
-                             u'Á':u'A', u'É':u'E', u'Í':u'I', u'Ñ':u'N', u'Ó':u'O', u'Ú':u'U', u'Ü':u'U',
+        POLISH_CHARACTERS = {u'ą': u'a', u'ć': u'c', u'ę': u'ę', u'ł': u'l', u'ń': u'n', u'ó': u'o', u'ś': u's', u'ż': u'z', u'ź': u'z',
+                             u'Ą': u'A', u'Ć': u'C', u'Ę': u'E', u'Ł': u'L', u'Ń': u'N', u'Ó': u'O', u'Ś': u'S', u'Ż': u'Z', u'Ź': u'Z',
+                             u'á': u'a', u'é': u'e', u'í': u'i', u'ñ': u'n', u'ó': u'o', u'ú': u'u', u'ü': u'u',
+                             u'Á': u'A', u'É': u'E', u'Í': u'I', u'Ñ': u'N', u'Ó': u'O', u'Ú': u'U', u'Ü': u'U',
                             }
         txt = txt.decode('utf-8')
-        if None != idx: txt = txt[idx]
+        if None != idx:
+            txt = txt[idx]
         nrmtxt = unicodedata.normalize('NFC', txt)
         ret_str = []
         for item in nrmtxt:
             if ord(item) > 128:
                 item = POLISH_CHARACTERS.get(item)
-                if item: ret_str.append(item)
+                if item:
+                    ret_str.append(item)
             else: # pure ASCII character
                 ret_str.append(item)
         return ''.join(ret_str).encode('utf-8')
@@ -228,28 +263,32 @@ class CParsingHelper:
     def isalpha(txt, idx=None):
         return CParsingHelper.getNormalizeStr(txt, idx).isalpha()
 
-    @staticmethod 
+    @staticmethod
     def cleanHtmlStr(str):
         return ph.clean_html(str)
 
+
 class common:
-    HOST   = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
+    HOST = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
     HEADER = None
     ph = CParsingHelper
-    
+
     @staticmethod
     def getDefaultHeader(browser='firefox'):
-        if browser == 'firefox': ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0'
-        elif browser == 'iphone_3_0': ua = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16'
-        else: ua = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
-        
-        HTTP_HEADER = { 'User-Agent':ua,
-                        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                        'Accept-Encoding':'gzip, deflate',
-                        'DNT':1 
+        if browser == 'firefox':
+            ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0'
+        elif browser == 'iphone_3_0':
+            ua = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16'
+        else:
+            ua = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
+
+        HTTP_HEADER = {'User-Agent': ua,
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                        'Accept-Encoding': 'gzip, deflate',
+                        'DNT': 1
                       }
         return dict(HTTP_HEADER)
-    
+
     @staticmethod
     def getParamsFromUrlWithMeta(url, baseHeaderOutParams=None):
         from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -258,8 +297,10 @@ class common:
         tmpParams = {}
         postData = None
         if isinstance(url, strwithmeta):
-            if None != baseHeaderOutParams: tmpParams['header'] = baseHeaderOutParams
-            else: tmpParams['header'] = {}
+            if None != baseHeaderOutParams:
+                tmpParams['header'] = baseHeaderOutParams
+            else:
+                tmpParams['header'] = {}
             for key in url.meta:
                 if key in HANDLED_HTTP_HEADER_PARAMS:
                     tmpParams['header'][key] = url.meta[key]
@@ -270,19 +311,20 @@ class common:
             if 'iptv_http_proxy' in url.meta:
                 outParams['http_proxy'] = url.meta['iptv_http_proxy']
         return outParams, postData
-        
+
     @staticmethod
     def getBaseUrl(url, domainOnly=False):
-        parsed_uri = urlparse( url )
+        parsed_uri = urlparse(url)
         if domainOnly:
             domain = '{uri.netloc}'.format(uri=parsed_uri)
         else:
             domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
         return domain
-        
+
     @staticmethod
     def getFullUrl(url, mainUrl='http://fake/'):
-        if not url: return ''
+        if not url:
+            return ''
         if url.startswith('./'):
             url = url[1:]
 
@@ -299,7 +341,7 @@ class common:
             url = mainUrl + url[1:]
         elif 0 < len(url) and '://' not in url:
             if currUrl == mainUrl:
-                url =  mainUrl + url
+                url = mainUrl + url
             else:
                 url = urljoin(currUrl, url)
         return url
@@ -324,23 +366,23 @@ class common:
         _process(_query, query, '')
         return _query
 
-    def __init__(self, proxyURL= '', useProxy = False, useMozillaCookieJar=True):
+    def __init__(self, proxyURL='', useProxy=False, useMozillaCookieJar=True):
         self.proxyURL = proxyURL
         self.useProxy = useProxy
         self.geolocation = {}
         self.meta = {} # metadata from previus request
-        
+
         self.curlSession = None
         self.pyCurlAvailable = None
         if not useMozillaCookieJar:
             raise Exception("You should stop use parameter useMozillaCookieJar it change nothing, because from only MozillaCookieJar can be used")
-    
+
     def reportHttpsError(self, type, url, msg):
         domain = self.getBaseUrl(url, True)
         messages = []
         messages.append(_('HTTPS connection error "%s"\n') % msg)
         messages.append(_('It looks like your current configuration do not allow to connect to the https://%s/.\n') % domain)
-        
+
         if type == 'verify' and IsHttpsCertValidationEnabled():
             messages.append(_('You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem.'))
         else:
@@ -348,7 +390,7 @@ class common:
             try:
                 verInfo = pycurl.version_info()
                 printDBG("usePyCurl VERSION: %s" % [verInfo])
-                if verInfo[4] & (1<<7) and verInfo[1].startswith('7.6') and verInfo[5] == 'wolfSSL/3.15.3':
+                if verInfo[4] & (1 << 7) and verInfo[1].startswith('7.6') and verInfo[5] == 'wolfSSL/3.15.3':
                     pyCurlInstalled = True
             except Exception:
                 printExc()
@@ -360,7 +402,7 @@ class common:
             else:
                 messages.append(_('You can install PyCurl package from %s to fix this problem.') % 'http://www.iptvplayer.gitlab.io/')
         GetIPTVNotify().push('\n'.join(messages), 'error', 40, type + domain, 40)
-    
+
     def usePyCurl(self):
         bRet = False
         if UsePyCurl():
@@ -373,7 +415,7 @@ class common:
                     # #define CURL_VERSION_ASYNCHDNS    (1<<7)
                     # we need to have ASYNC DNS to be able "cancel"
                     # request
-                    if verInfo[4] & (1<<7):
+                    if verInfo[4] & (1 << 7):
                         self.pyCurlAvailable = True
                     else:
                         self.pyCurlAvailable = False
@@ -382,7 +424,7 @@ class common:
                     printExc()
             bRet = self.pyCurlAvailable
         return bRet
-        
+
     def getCountryCode(self, lower=True):
         if 'countryCode' not in self.geolocation:
             sts, data = self.getPage('http://ip-api.com/json')
@@ -392,7 +434,7 @@ class common:
                 except Exception:
                     printExc()
         return self.geolocation.get('countryCode', '').lower()
-        
+
     def _pyCurlLoadCookie(self, cookiefile, ignoreDiscard=True, ignoreExpires=False):
         cj = cookielib.MozillaCookieJar()
         f = open(cookiefile)
@@ -401,18 +443,19 @@ class common:
         for idx in range(len(lines)):
             lineNeedFix = False
             fields = lines[idx].split('\t')
-            if len(fields) < 5: continue
+            if len(fields) < 5:
+                continue
             if fields[0].startswith('#HttpOnly_'):
                 fields[0] = fields[0][10:]
                 lineNeedFix = True
             if fields[4] == '0':
                 fields[4] = ''
                 lineNeedFix = True
-            if lineNeedFix: 
+            if lineNeedFix:
                 lines[idx] = '\t'.join(fields)
         cj._really_load(StringIO(''.join(lines)), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
         return cj
-        
+
     def clearCookie(self, cookiefile, leaveNames=[], removeNames=None, ignoreDiscard=True, ignoreExpires=False):
         try:
             toRemove = []
@@ -420,22 +463,22 @@ class common:
                 cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
             else:
                 cj = cookielib.MozillaCookieJar()
-            cj.load(cookiefile, ignore_discard = ignoreDiscard)
+            cj.load(cookiefile, ignore_discard=ignoreDiscard)
             for cookie in cj:
                 if cookie.name not in leaveNames and (None == removeNames or cookie.name in removeNames):
                     toRemove.append(cookie)
             for cookie in toRemove:
                 cj.clear(cookie.domain, cookie.path, cookie.name)
-            cj.save(cookiefile, ignore_discard = ignoreDiscard)
+            cj.save(cookiefile, ignore_discard=ignoreDiscard)
         except Exception:
             printExc()
             return False
         return True
-        
+
     def getCookieItem(self, cookiefile, item):
         cookiesDict = self.getCookieItems(cookiefile)
         return cookiesDict.get(item, '')
-        
+
     def getCookie(self, cookiefile, ignoreDiscard=True, ignoreExpires=False):
         cj = None
         try:
@@ -443,7 +486,7 @@ class common:
                 cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
             else:
                 cj = cookielib.MozillaCookieJar()
-                cj.load(cookiefile, ignore_discard = ignoreDiscard)
+                cj.load(cookiefile, ignore_discard=ignoreDiscard)
         except Exception:
             printExc()
         return cj
@@ -458,21 +501,21 @@ class common:
             printExc()
         return cookiesDict
 
-    def addCookieItem(self, cookiefile, cookieDict,ignoreDiscard=True, ignoreExpires=False):
+    def addCookieItem(self, cookiefile, cookieDict, ignoreDiscard=True, ignoreExpires=False):
         printDBG("pCommon.addCookieItem %s to file '%s'" % (json_dumps(cookieDict), cookiefile))
-        
+
         cj = None
         # create a Cookie object from cookieDict
-        cookieName = cookieDict.get('name','')
-        cookieValue = cookieDict.get('value','')
-        cookiePort = cookieDict.get('port',None)
-        domainParts = cookieDict.get('domain','').split('/')
+        cookieName = cookieDict.get('name', '')
+        cookieValue = cookieDict.get('value', '')
+        cookiePort = cookieDict.get('port', None)
+        domainParts = cookieDict.get('domain', '').split('/')
         while len(domainParts) and ('http' in domainParts[0] or len(domainParts[0]) == 0):
             del(domainParts[0])
-        
-        cookiePath = cookieDict.get('path','/')
-        cookieExpires = cookieDict.get('expires',None)
-        
+
+        cookiePath = cookieDict.get('path', '/')
+        cookieExpires = cookieDict.get('expires', None)
+
         if cookiePort == None:
             cookiePortSpecified = False
         else:
@@ -488,75 +531,76 @@ class common:
                 cookieDomainDot = True
             else:
                 cookieDomainDot = False
-        
+
         if not (cookieName and cookieValue):
             printDBG("cookie not valid : %s " % json_dumps(cookieDict))
             return
-        
-        try:    
-            c = cookielib.Cookie(version=0, name=cookieName, value=cookieValue, port=cookiePort, port_specified=cookiePortSpecified, domain=cookieDomain, domain_specified=cookieDomainSpecified, domain_initial_dot=cookieDomainDot, path=cookiePath, path_specified=True, secure=False, expires=cookieExpires, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False) 
-            
+
+        try:
+            c = cookielib.Cookie(version=0, name=cookieName, value=cookieValue, port=cookiePort, port_specified=cookiePortSpecified, domain=cookieDomain, domain_specified=cookieDomainSpecified, domain_initial_dot=cookieDomainDot, path=cookiePath, path_specified=True, secure=False, expires=cookieExpires, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
+
         except:
             printExc()
             return
-            
+
         try:
             # load cookies from cookiefile
             if self.usePyCurl():
                 cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
             else:
                 cj = cookielib.MozillaCookieJar()
-                cj.load(cookiefile, ignore_discard = ignoreDiscard)
-            
+                cj.load(cookiefile, ignore_discard=ignoreDiscard)
+
             #add new cookie
             cj.set_cookie(c)
-        
+
             # save in cookiefile
             #if self.usePyCurl():
             #    cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
             #else:
-            cj.save(cookiefile, ignore_discard = ignoreDiscard)
+            cj.save(cookiefile, ignore_discard=ignoreDiscard)
         except Exception:
             printExc()
-        
-        
-        
+
     def getCookieHeader(self, cookiefile, allowedNames=[], unquote=True, ignoreDiscard=True, ignoreExpires=False):
         ret = ''
         try:
             cookiesDict = self.getCookieItems(cookiefile, ignoreDiscard, ignoreExpires)
             for name in cookiesDict:
-                if 0 < len(allowedNames) and name not in allowedNames: continue
+                if 0 < len(allowedNames) and name not in allowedNames:
+                    continue
                 value = cookiesDict[name]
-                if unquote: value = urllib.unquote(value)
+                if unquote:
+                    value = urllib.unquote(value)
                 ret += '%s=%s; ' % (name, value)
         except Exception:
             printExc()
         return ret
 
-    def _getPageWithPyCurl(self, url, params = {}, post_data = None):
+    def _getPageWithPyCurl(self, url, params={}, post_data=None):
         if IsMainThread():
             msg1 = _('It is not allowed to call getURLRequestData from main thread.')
             msg2 = _('You should never perform block I/O operations in the __init__.')
             GetIPTVNotify().push('\s'.join([msg1, msg2]), 'error', 40)
             raise Exception("Wrong usage!")
-        
+
         # by default we will work in return_data mode
         if 'return_data' not in params:
             params['return_data'] = True
-        
+
         self.meta = {}
         metadata = self.meta
         out_data = None
         sts = False
-        
+
         buffer = StringIO()
         checkFromFirstBytes = params.get('check_first_bytes', [])
         fileHandler = None
         firstAttempt = [True]
         maxDataSize = params.get('max_data_size', -1)
-        
+
         responseHeaders = {}
+
         def _headerFunction(headerLine):
             if ':' not in headerLine:
                 if 0 == maxDataSize:
@@ -575,7 +619,7 @@ class common:
 
             name = name.lower()
             responseHeaders[name] = value
-            
+
         def _breakConnection(toWriteData):
             buffer.write(toWriteData)
             if maxDataSize <= buffer.tell():
@@ -590,7 +634,7 @@ class common:
                     params['check_maintype'] != responseHeaders.get('content-type', '').split('/', 1)[0]:
                     printDBG('wrong maintype: %s' % responseHeaders.get('content-type', ''))
                     return 0
-                
+
                 if 'check_subtypes' in params:
                     contentSubType = responseHeaders.get('content-type', '').split('/', 1)[-1]
                     try:
@@ -605,8 +649,8 @@ class common:
                     except Exception:
                         printExc()
                         return 0 # wrong params?
- 
-            # if we should check start body data 
+
+            # if we should check start body data
             if len(checkFromFirstBytes):
                 buffer.write(toWriteData)
                 toWriteData = None
@@ -625,30 +669,30 @@ class common:
                 if not valid:
                     printDBG('wrong body: %s' % hexlify(value))
                     return 0
-            
+
             if fileHandler != None and 0 == len(checkFromFirstBytes):
                 # all check were done so, we can start write data to file
                 try:
                     if fileHandler.tell() == 0 and buffer.tell() > 0:
                         fileHandler.write(buffer.getvalue())
-                    
+
                     if toWriteData != None:
                         fileHandler.write(toWriteData)
                 except Exception:
                     printExc()
                     return 0 # wrong file handle
-                
-            if  toWriteData != None and params['return_data']:
+
+            if toWriteData != None and params['return_data']:
                 buffer.write(toWriteData)
-            
+
         def _terminateFunction(download_t, download_d, upload_t, upload_d):
             if IsThreadTerminated():
                 printDBG(">> _terminateFunction")
                 return True # anything else then None will cause pycurl perform cancel
-        
+
         try:
             timeout = params.get('timeout', None)
-            
+
             if 'host' in params:
                 host = params['host']
             else:
@@ -659,20 +703,20 @@ class common:
             elif None != self.HEADER:
                 headers = self.HEADER
             else:
-                headers = { 'User-Agent' : host }
-                
+                headers = {'User-Agent': host}
+
             if 'User-Agent' not in headers:
                 headers['User-Agent'] = host
-            
+
             printDBG('pCommon - getPageWithPyCurl() -> params: ' + str(params))
-            printDBG('pCommon - getPageWithPyCurl() -> headers: ' + str(headers)) 
-            
+            printDBG('pCommon - getPageWithPyCurl() -> headers: ' + str(headers))
+
             if 'save_to_file' in params:
                 fileHandler = file(params['save_to_file'], "wb")
-            
+
             # we can not kill thread when we are in any function of pycurl
             SetThreadKillable(False)
-            
+
             if None == self.curlSession:
                 curlSession = pycurl.Curl()
             elif params.get('use_new_session', False):
@@ -685,60 +729,64 @@ class common:
                 curlSession = self.curlSession
                 self.curlSession = None
                 curlSession.reset()
-            
+
             if params.get('use_fresh_connect', False):
-                curlSession.setopt(pycurl.FRESH_CONNECT, 1);
-            
+                curlSession.setopt(pycurl.FRESH_CONNECT, 1)
+
             customHeaders = []
             for key in headers:
                 lKey = key.lower()
-                if lKey == 'user-agent': curlSession.setopt(pycurl.USERAGENT, headers[key])
-                elif lKey == 'cookie': curlSession.setopt(pycurl.COOKIE, headers[key])
-                elif lKey == 'referer': curlSession.setopt(pycurl.REFERER, headers[key])
-                else: customHeaders.append('%s: %s' % (key, headers[key]))
+                if lKey == 'user-agent':
+                    curlSession.setopt(pycurl.USERAGENT, headers[key])
+                elif lKey == 'cookie':
+                    curlSession.setopt(pycurl.COOKIE, headers[key])
+                elif lKey == 'referer':
+                    curlSession.setopt(pycurl.REFERER, headers[key])
+                else:
+                    customHeaders.append('%s: %s' % (key, headers[key]))
             if len(customHeaders):
                 curlSession.setopt(pycurl.HTTPHEADER, customHeaders)
-            
+
             curlSession.setopt(pycurl.ACCEPT_ENCODING, "") # enable all supported built-in compressions
             if None != params.get('ssl_protocol', None):
                 sslProtoVer = self.getPyCurlSSLProtocolVersion(params['ssl_protocol'])
                 if None != sslProtoVer:
                     curlSession.setopt(pycurl.SSLVERSION, sslProtoVer)
-            
+
             if 'use_cookie' not in params and 'cookiefile' in params and ('load_cookie' in params or 'save_cookie' in params):
                 params['use_cookie'] = True
-                
+
             if params.get('use_cookie', False):
                 cookiesStr = ''
                 for cookieKey in params.get('cookie_items', {}).keys():
                     printDBG("cookie_item[%s=%s]" % (cookieKey, params['cookie_items'][cookieKey]))
                     cookiesStr += '%s=%s; ' % (cookieKey, params['cookie_items'][cookieKey])
-                
+
                 if cookiesStr != '':
                     curlSession.setopt(pycurl.COOKIE, cookiesStr) #'Set-Cookie: foo=baar') #
-            
+
                 if params.get('load_cookie', False):
                     curlSession.setopt(pycurl.COOKIEFILE, params.get('cookiefile', ''))
-                
+
                 if params.get('save_cookie', False):
                     curlSession.setopt(pycurl.COOKIEJAR, params.get('cookiefile', ''))
-                    
+
             if timeout != None:
                 curlSession.setopt(pycurl.CONNECTTIMEOUT, timeout) # in seconds - connection timeout
                 curlSession.setopt(pycurl.LOW_SPEED_TIME, timeout) # in seconds
                 curlSession.setopt(pycurl.LOW_SPEED_LIMIT, 10) # in bytes
                 # set maximum time the request is allowed to take
                 #curlSession.setopt(pycurl.TIMEOUT, 300) # in seconds
-            
+
             if not params.get('no_redirection', False):
                 curlSession.setopt(pycurl.FOLLOWLOCATION, 1)
                 curlSession.setopt(pycurl.UNRESTRICTED_AUTH, 1)
                 curlSession.setopt(pycurl.MAXREDIRS, 5)
-            
-            # debug 
+
+            # debug
             #curlSession.setopt(pycurl.VERBOSE, 1)
             #curlSession.setopt(pycurl.DEBUGFUNCTION, debug_fun)
-            
+
             if not IsHttpsCertValidationEnabled():
                 curlSession.setopt(pycurl.SSL_VERIFYHOST, 0)
                 curlSession.setopt(pycurl.SSL_VERIFYPEER, 0)
@@ -747,7 +795,7 @@ class common:
             else:
                 curlSession.setopt(pycurl.CAINFO, "/etc/ssl/certs/ca-certificates.crt")
                 curlSession.setopt(pycurl.PROXY_CAINFO, "/etc/ssl/certs/ca-certificates.crt")
-            
+
             #proxy support
             if self.useProxy:
                 http_proxy = self.proxyURL
@@ -759,15 +807,15 @@ class common:
             if '' != http_proxy:
                 printDBG('getPageWithPyCurl USE PROXY')
                 curlSession.setopt(pycurl.PROXY, http_proxy)
-            
+
             pageUrl = url
             proxy_gateway = params.get('proxy_gateway', '')
             if proxy_gateway != '':
                 pageUrl = proxy_gateway.format(urllib.quote_plus(pageUrl, ''))
             printDBG("pageUrl: [%s]" % pageUrl)
-            
+
             curlSession.setopt(pycurl.URL, pageUrl)
-            
+
             if None != post_data:
                 printDBG('pCommon - getPageWithPyCurl() -> post data: ' + str(post_data))
                 if params.get('raw_post_data', False):
@@ -782,9 +830,12 @@ class common:
 
             curlSession.setopt(pycurl.HEADERFUNCTION, _headerFunction)
 
-            if fileHandler: curlSession.setopt(pycurl.WRITEFUNCTION, _bodyFunction)
-            elif maxDataSize >= 0: curlSession.setopt(pycurl.WRITEFUNCTION, _breakConnection)
-            else: curlSession.setopt(pycurl.WRITEDATA, buffer)
+            if fileHandler:
+                curlSession.setopt(pycurl.WRITEFUNCTION, _bodyFunction)
+            elif maxDataSize >= 0:
+                curlSession.setopt(pycurl.WRITEFUNCTION, _breakConnection)
+            else:
+                curlSession.setopt(pycurl.WRITEDATA, buffer)
 
             curlSession.setopt(pycurl.NOPROGRESS, False)
             curlSession.setopt(pycurl.PROGRESSFUNCTION, _terminateFunction)
@@ -799,33 +850,34 @@ class common:
                     except pycurl.error as e:
                         if e[0] != pycurl.E_WRITE_ERROR:
                             raise e
-                        else: printExc()
+                        else:
+                            printExc()
                 else:
                     curlSession.perform()
-                
+
                 metadata['url'] = curlSession.getinfo(pycurl.EFFECTIVE_URL)
                 metadata['status_code'] = curlSession.getinfo(pycurl.HTTP_CODE)
                 metadata['size_download'] = curlSession.getinfo(pycurl.SIZE_DOWNLOAD)
-                
+
                 # reset will cause lost all cookies, so we force to saved them in the file
                 if params.get('use_cookie', False) and params.get('save_cookie', False):
-                    curlSession.setopt(pycurl.COOKIELIST , 'FLUSH')
-                    curlSession.setopt(pycurl.COOKIELIST , 'ALL')
-                
+                    curlSession.setopt(pycurl.COOKIELIST, 'FLUSH')
+                    curlSession.setopt(pycurl.COOKIELIST, 'ALL')
+
                 curlSession.reset()
                 # to be re-used in next request
-                self.curlSession = curlSession 
-                
+                self.curlSession = curlSession
+
                 # we should not use pycurl anymore
                 SetThreadKillable(True)
-                
+
                 self.fillHeaderItems(metadata, responseHeaders, collectAllHeaders=params.get('collect_all_headers'))
-                
+
                 if params['return_data']:
                     out_data = buffer.getvalue()
                 else:
                     out_data = ""
-                
+
                 out_data, metadata = self.handleCharset(params, out_data, metadata)
                 if metadata['status_code'] != 200:
                     ignoreCodeRanges = params.get('ignore_http_code_ranges', [(404, 404), (500, 500)])
@@ -836,14 +888,14 @@ class common:
                 else:
                     sts = True
                     if metadata['content-type'] == 'image/webp':
-                        new_name = params['save_to_file'].replace(".jpg",".webp")
+                        new_name = params['save_to_file'].replace(".jpg", ".webp")
                         printDBG("Change extension of webp image: %s" % new_name)
                         try:
                             os.rename(params['save_to_file'], new_name)
                             self.convertWebp(new_name)
                         except:
                             pass
-                            
+
             if fileHandler:
                 fileHandler.close()
         except pycurl.error as e:
@@ -851,24 +903,24 @@ class common:
             printExc()
         except Exception:
             printExc()
-        
+
         SetThreadKillable(True)
-        
+
         printDBG('pCommon - getPageWithPyCurl() return -> \nsts: %s\nmetadata: %s\n' % (sts, metadata))
         if params.get('with_metadata', False):
             out_data = strwithmeta(out_data, metadata)
-        
+
         return sts, out_data
-    
-    def getPageWithPyCurl(self, url, params = {}, post_data = None):
-        # some error can be caused because of session reuse 
+
+    def getPageWithPyCurl(self, url, params={}, post_data=None):
+        # some error can be caused because of session reuse
         # if we use old curlSession and fail we should
         # re-try with fresh curlSession
         if self.curlSession != None:
             sessionReused = True
         else:
             sessionReused = False
-        
+
         sts, data = False, None
         try:
             maxTries = 3
@@ -888,11 +940,11 @@ class common:
                         params['ssl_protocol'] = 'TLSv1_2'
                         continue
                 break
-            
+
             if not sts and 'pycurl_error' in self.meta:
                 if self.meta['pycurl_error'][0] == pycurl.E_SSL_CONNECT_ERROR:
                     self.reportHttpsError('other', url, self.meta['pycurl_error'][1])
-                elif self.meta['pycurl_error'][0] in [pycurl.E_SSL_CACERT, pycurl.E_SSL_ISSUER_ERROR, \
+                elif self.meta['pycurl_error'][0] in [pycurl.E_SSL_CACERT, pycurl.E_SSL_ISSUER_ERROR,
                                                       pycurl.E_SSL_PEER_CERTIFICATE, pycurl.E_SSL_CACERT_BADFILE]:
                     self.reportHttpsError('verify', url, self.meta['pycurl_error'][1])
                 elif self.meta['pycurl_error'][0] == pycurl.E_SSL_INVALIDCERTSTATUS:
@@ -904,41 +956,41 @@ class common:
     def fillHeaderItems(self, metadata, responseHeaders, camelCase=False, collectAllHeaders=False):
 
         returnKeys = ['content-type', 'content-disposition', 'content-length', 'location']
-        
-        if camelCase: 
+
+        if camelCase:
             sourceKeys = ['Content-Type', 'Content-Disposition', 'Content-Length', 'Location']
-        else: 
+        else:
             sourceKeys = returnKeys
-        
+
         for idx in range(len(returnKeys)):
             if sourceKeys[idx] in responseHeaders:
                 metadata[returnKeys[idx]] = responseHeaders[sourceKeys[idx]]
                 #printDBG(sourceKeys[idx] + " ---->  " + responseHeaders[sourceKeys[idx]])
-                
+
         #printDBG(str(responseHeaders))
-        
+
         if collectAllHeaders:
             if "Access-Control-Allow-Headers" in responseHeaders:
                 acah = responseHeaders["Access-Control-Allow-Headers"]
-                acah_keys= acah.split(',')
-                
+                acah_keys = acah.split(',')
+
                 for key in acah_keys:
                     key = key.strip()
                     if key in responseHeaders:
-                        metadata[key.lower()]=responseHeaders[key]
+                        metadata[key.lower()] = responseHeaders[key]
                         #printDBG(key + " ---->  " + responseHeaders[key])
 
             for header, value in responseHeaders.iteritems():
                 metadata[header.lower()] = responseHeaders[header]
                 #printDBG(header + " ---->  " + value)
 
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         ''' wraps getURLRequestData '''
-        
+
         # if curl should be used and can be used
         if addParams.get('return_data', True) and self.usePyCurl():
             return self.getPageWithPyCurl(url, addParams, post_data)
-        
+
         try:
             addParams['url'] = url
             if 'return_data' not in addParams:
@@ -956,11 +1008,11 @@ class common:
                     metadata['url'] = e.fp.geturl()
                     metadata['status_code'] = e.code
                     self.fillHeaderItems(metadata, e.fp.info(), True, collectAllHeaders=addParams.get('collect_all_headers'))
-                    
+
                     data = e.fp.read(addParams.get('max_data_size', -1))
                     if e.fp.info().get('Content-Encoding', '') == 'gzip':
                         data = DecodeGzipped(data)
-                    
+
                     data, metadata = self.handleCharset(addParams, data, metadata)
                     response = strwithmeta(data, metadata)
                     e.fp.close()
@@ -968,13 +1020,13 @@ class common:
                 printExc()
         except urllib2.URLError, e:
             printExc()
-            errorMsg = str(e) 
+            errorMsg = str(e)
             if 'ssl_protocol' not in addParams and 'TLSV1_ALERT_PROTOCOL_VERSION' in errorMsg:
                     try:
                         newParams = dict(addParams)
                         newParams['ssl_protocol'] = 'TLSv1_2'
                         return self.getPage(url, newParams, post_data)
-                    except Exception: 
+                    except Exception:
                         pass
             if 'VERSION' in errorMsg:
                 self.reportHttpsError('version', url, errorMsg)
@@ -982,42 +1034,42 @@ class common:
                 self.reportHttpsError('verify', url, errorMsg)
             elif 'SSL' in errorMsg or 'unknown url type: https' in errorMsg: #GET_SERVER_HELLO
                 self.reportHttpsError('other', url, errorMsg)
-            
+
             response = None
             status = False
-                
+
         except Exception:
             printExc()
             response = None
             status = False
-        
+
         if addParams['return_data'] and status and not isinstance(response, basestring):
             status = False
-            
+
         return (status, response)
-    
+
     def getPageCFProtection(self, baseUrl, params={}, post_data=None):
         cfParams = params.get('cloudflare_params', {})
-        
+
         def _getFullUrl(url, baseUrl):
             if 'full_url_handle' in cfParams:
                 return cfParams['full_url_handle'](url)
             return self.getFullUrl(url, baseUrl)
-        
+
         def _getFullUrl2(url, baseUrl):
             if 'full_url_handle2' in cfParams:
                 return cfParams['full_url_handle2'](url)
             return url
-        
+
         r = ""
         url = baseUrl
-        header = {'Referer':url, 'User-Agent':cfParams.get('User-Agent', ''), 'Accept-Encoding':'text'}
+        header = {'Referer': url, 'User-Agent': cfParams.get('User-Agent', ''), 'Accept-Encoding': 'text'}
         header.update(params.get('header', {}))
-        params.update({'with_metadata':True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': cfParams.get('cookie_file', ''), 'header':header})
+        params.update({'with_metadata': True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': cfParams.get('cookie_file', ''), 'header': header})
         sts, data = self.getPage(url, params, post_data)
-        
+
         #printDBG("Cloudflare Url: %s" % data.meta["url"])
-        
+
         current = 0
         while current < 3:
             #if True:
@@ -1032,59 +1084,60 @@ class common:
                     #printDBG("------------------")
                     #printDBG(verData)
                     #printDBG("------------------")
-                    if 'sitekey' not in verData and 'challenge' not in verData: break
-                    
+                    if 'sitekey' not in verData and 'challenge' not in verData:
+                        break
+
                     #printDBG(">>")
                     #printDBG(verData)
                     #printDBG("<<")
-                    
+
                     sitekey = self.ph.getSearchGroups(verData, 'data-sitekey="([^"]+?)"')[0]
                     id = self.ph.getSearchGroups(verData, 'data-ray="([^"]+?)"')[0]
-                    
+
                     if sitekey != '':
                         if self.ph.getSearchGroups(verData, 'data-sitekey="([^"]+?)"')[0]:
                             printDBG("*************** CloudFlare prompts hCaptcha *************")
-                            
-                            challenge_form = re.findall("(<form class=\"challenge-form\".*?</form>)",verData, re.S)
+
+                            challenge_form = re.findall("(<form class=\"challenge-form\".*?</form>)", verData, re.S)
                             if not challenge_form:
                                 continue
-                            
+
                             challenge_form = challenge_form[0]
-                            
+
                             from Plugins.Extensions.IPTVPlayer.libs.hcaptcha import UnCaptchahCaptcha
-                            hcaptcha = UnCaptchahCaptcha(lang=GetDefaultLang(), params = params)
-                            
-                            token = hcaptcha.processCaptcha(challenge_form, domain , GetDefaultLang(), params)
-                            
-                            if token == '': 
+                            hcaptcha = UnCaptchahCaptcha(lang=GetDefaultLang(), params=params)
+
+                            token = hcaptcha.processCaptcha(challenge_form, domain, GetDefaultLang(), params)
+
+                            if token == '':
                                 return False, None
-                            
+
                             action = re.findall('action="([^"]+?)"', challenge_form)[0]
                             key = re.findall('data-sitekey="([^"]+?)"', challenge_form)[0]
                             dataray = re.findall('data-ray="([^"]+?)"', challenge_form)[0]
                             scriptUrl = re.findall('<script.*src="([^"]+?)"', challenge_form)[0]
-                            
+
                             post_data2 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', challenge_form))
                             post_data2['id'] = dataray
                             post_data2['h-captcha-response'] = token
                             post_data2['g-recaptcha-response'] = token
                             #if post_data2.get("r","") == "":
                             #    post_data2["r"] = r
-                                
+
                             printDBG("--------------- post data after captcha ------------")
                             printDBG(json_dumps(post_data2))
-                            
+
                             url = _getFullUrl(action, domain)
-                        
-                            params2 = { 
-                                'use_cookie': True, 
+
+                            params2 = {
+                                'use_cookie': True,
                                 'load_cookie': True,
                                 'save_cookie': True,
-                                'raw_post_data': True, 
-                                'return_data': True, 
+                                'raw_post_data': True,
+                                'return_data': True,
                                 'cookiefile': params['cloudflare_params']['cookie_file']
                             }
-                            
+
                             params2['header'] = {
                                 'Referer': baseUrl,
                                 'Accept': 'text/html',
@@ -1092,41 +1145,45 @@ class common:
                                 'Content-Type': 'application/x-www-form-urlencoded',
                                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36'
                             }
-                            
-                            post_data2= json_dumps(post_data2)
-                            
+
+                            post_data2 = json_dumps(post_data2)
+
                         else:
                             printDBG("*************** CloudFlare prompts reCaptcha *************")
-                                
+
                             from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
-                        
+
                             recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
                             recaptcha.HTTP_HEADER['Referer'] = baseUrl
-                            if '' != cfParams.get('User-Agent', ''): recaptcha.HTTP_HEADER['User-Agent'] = cfParams['User-Agent']
-                        
+                            if '' != cfParams.get('User-Agent', ''):
+                                recaptcha.HTTP_HEADER['User-Agent'] = cfParams['User-Agent']
+
                             token = recaptcha.processCaptcha(sitekey)
-                        
-                            if token == '': 
+
+                            if token == '':
                                 return False, None
-                        
+
                             sts, tmp = self.ph.getDataBeetwenMarkers(verData, '<form', '</form>', caseSensitive=False)
-                            if not sts: return False, None
+                            if not sts:
+                                return False, None
 
                             url = self.ph.getSearchGroups(tmp, 'action="([^"]+?)"')[0]
-                            if url != '': url = _getFullUrl( url, domain )
-                            else: url = data.meta['url']
+                            if url != '':
+                                url = _getFullUrl(url, domain)
+                            else:
+                                url = data.meta['url']
                             actionType = self.ph.getSearchGroups(tmp, 'method="([^"]+?)"', 1, True)[0].lower()
                             post_data2 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', tmp))
                             #post_data2['id'] = id
-                        
+
                             if '' != token:
                                 post_data2['g-recaptcha-response'] = token
                             else:
                                 continue
                             params2 = dict(params)
-                            params2['header']= dict(params['header'])
+                            params2['header'] = dict(params['header'])
                             params2['header']['Referer'] = baseUrl
-                            
+
                             if actionType == 'get':
                                 if '?' in url:
                                     url += '&'
@@ -1134,20 +1191,20 @@ class common:
                                     url += '?'
                                 url += urllib.urlencode(post_data2)
                                 post_data2 = None
-                            
+
                         sts, data = self.getPage(url, params2, post_data2)
                         printDBG("+++++++++++++")
                         printDBG(sts)
                         printDBG("-------------")
                         printDBG(data)
                         printDBG("++++++++++++++")
-                    
+
                     else:
                         printDBG("*************** CloudFlare: Searching javascript code *************")
 
                         dat = ""
                         challengeType = 0
-                        
+
                         datas = ph.findall(verData, ('<script', '>'), '</script>', flags=0)
                         for item in datas:
                             if 'setTimeout' in item and 'submit()' in item:
@@ -1155,20 +1212,20 @@ class common:
                                 challengeType = 1
                                 break
                             elif 'window._cf_chl_opt' in item:
-                                dat = item 
+                                dat = item
                                 challengeType = 2
                                 break
-                                
+
                         if challengeType == 0:
                             GetIPTVNotify().push(_("New javascript not yet supported!"), 'info', 5)
-                             
+
                             sts, data = self.getPage(url, params, post_data)
-                            
+
                         elif challengeType == 2:
                             #new javascript challenge
                             printDBG("Challenge type 2")
                             #GetIPTVNotify().push(_("New javascript not yet supported!"), 'info', 5)
-                            
+
                             # read data in input
                             '''
                                 window._cf_chl_opt={
@@ -1187,21 +1244,20 @@ class common:
                                 }
                                 window._cf_chl_enter = function(){window._cf_chl_opt.p=1};
                             '''
-                            
+
                             data_input = re.findall("(window._cf_chl_opt=\{.*?\};)", data, re.S)
                             if data_input:
                                 data_input = data_input[0]
                                 printDBG("-------------- data_input---------------")
                                 printDBG(data_input)
-                                
+
                                 jsch_url = re.findall("cpo.src\s?=\s?\"([^\"]+?)\"", data, re.S)
                                 if jsch_url:
                                     jsch_url = urljoin(domain, jsch_url[0])
                                     printDBG(jsch_url)
-                                    
+
                                     sts, jsCode = self.getPage(jsch_url, params)
 
-                                    
                                     printDBG("-------------  jsCode  -----------")
                                     printDBG("----------------------------------")
                                     printDBG(jsCode)
@@ -1221,33 +1277,33 @@ class common:
                                     printDBG("----- 1st duktape - only strings-----")
                                     printDBG(jsCode1)
                                     printDBG("----------------------------------")
-                                    
+
                                     js_params = [{'code': jsCode1}]
-                                    ret = js_execute_ext( js_params )
+                                    ret = js_execute_ext(js_params)
 
                                     if ret['data']:
                                         words = []
                                         for w in ret['data'].split('\n'):
                                             words.append(w)
-                                    
+
                                         # replace strings in jsCode
                                         for i in range(len(words)):
                                             if codeType == 1:
-                                                jsCode = re.sub("d\('" + hex(i) +"'\)" , "'" + words[i] +"'", jsCode)
+                                                jsCode = re.sub("d\('" + hex(i) + "'\)", "'" + words[i] + "'", jsCode)
                                             elif codeType == 2:
-                                                jsCode = re.sub("b\('" + hex(i) +"'\)" , "'" + words[i] +"'", jsCode)
+                                                jsCode = re.sub("b\('" + hex(i) + "'\)", "'" + words[i] + "'", jsCode)
 
                                     # first mod
                                     if codeType == 1:
-                                        jsCode = re.sub( "([fg])=function\(h,i\)\{.*?\},([fg])\(function\(h", "PIPPO1=function(h,i){ },PIPPO1(function(h", jsCode)
+                                        jsCode = re.sub("([fg])=function\(h,i\)\{.*?\},([fg])\(function\(h", "PIPPO1=function(h,i){ },PIPPO1(function(h", jsCode)
                                     elif codeType == 2:
-                                        jsCode = re.sub( "([defgh])=function\s[defgh]\(i\)\{.*?\},([defgh])\(function\(i", "PIPPO1 = function(i){window['_cf_chl_enter']()}, PIPPO1(function(i", jsCode)
+                                        jsCode = re.sub("([defgh])=function\s[defgh]\(i\)\{.*?\},([defgh])\(function\(i", "PIPPO1 = function(i){window['_cf_chl_enter']()}, PIPPO1(function(i", jsCode)
 
-                                    jsCode = jsCode.replace("c=this||self,","c=window,")
+                                    jsCode = jsCode.replace("c=this||self,", "c=window,")
                                     jsCode = jsCode.replace("new c[('XMLHttpRequest')]()", "window['XMLHttpRequest']")
-                                    
-                                    js_params = [{'path' : GetJSScriptFile('cf_new_max.byte')}]
-                                    
+
+                                    js_params = [{'path': GetJSScriptFile('cf_new_max.byte')}]
+
                                     finale = '''
                                     LZString = window['LZString'];
                                     window['JSON'] = JSON;
@@ -1257,60 +1313,59 @@ class common:
                                     '''
 
                                     # second execution of duktape
-                                    code = data_input + '\n\n' + jsCode + '\n' +finale
-                                    
+                                    code = data_input + '\n\n' + jsCode + '\n' + finale
+
                                     printDBG("------ 1st duktape - all code ----")
                                     printDBG("----------------------------------")
                                     printDBG(code)
                                     printDBG("----------------------------------")
-                                    
-                                    
+
                                     js_params.append({'code': code})
-                                    ret = js_execute_ext( js_params )
+                                    ret = js_execute_ext(js_params)
                                     # we hope it contains post data
-                                    
+
                                     try:
                                         jsonPostData = json_loads(ret['data'])
                                         postUrl = self.getFullUrl(jsonPostData["url"], baseUrl)
                                         header = jsonPostData["header"]
 
                                         params2 = dict(params)
-                                        params2['header']= dict(params['header'])
+                                        params2['header'] = dict(params['header'])
                                         params2['header'].update(jsonPostData["header"])
-                                        params2['header'].update({'Accept':'*/*'})
-                                        #header['Accept'] = '*/*' 
-                                        #header['Accept-Encoding'] = 'gzip' 
+                                        params2['header'].update({'Accept': '*/*'})
+                                        #header['Accept'] = '*/*'
+                                        #header['Accept-Encoding'] = 'gzip'
 
-                                        postData = dict(parse_qsl(jsonPostData["post_data"].replace(" ","+")))
-                                        
+                                        postData = dict(parse_qsl(jsonPostData["post_data"].replace(" ", "+")))
+
                                         cookie = jsonPostData['cookie']
                                         printDBG(cookie)
                                         c2 = cookie.split(";")
                                         c = c2[0].split("=")
-                                        self.addCookieItem(params['cookiefile'], {'name':c[0],'value':c[1],'domain':domain})
+                                        self.addCookieItem(params['cookiefile'], {'name': c[0], 'value': c[1], 'domain': domain})
                                         printDBG("new cookie: " + str(c))
-                                        
+
                                         sts, responseText = self.getPage(postUrl, params2, post_data=postData)
-                                        
+
                                         if sts:
                                             string2 = responseText.encode('unicode-escape')
 
                                             # insert responseTextin code and re-execute duktape
-                                            code = "window['XMLHttpRequest']['responseText']=\"" + string2 + "\";\nshowPost=false;\n" + code   
+                                            code = "window['XMLHttpRequest']['responseText']=\"" + string2 + "\";\nshowPost=false;\n" + code
                                             if codeType == 2:
-                                                functionLetter= re.findall("([defgh]+?)=function\([ij]\)\{", code)
+                                                functionLetter = re.findall("([defgh]+?)=function\([ij]\)\{", code)
                                                 if functionLetter:
-                                                    code = code.replace("}()\n", "\nstr = " + functionLetter[0] +"(window['XMLHttpRequest']['responseText']);\nconsole.log(str);\n}()\n")
+                                                    code = code.replace("}()\n", "\nstr = " + functionLetter[0] + "(window['XMLHttpRequest']['responseText']);\nconsole.log(str);\n}()\n")
                                                 else:
                                                     printDBG("function name letter not found!")
-                                                    
+
                                             printDBG("----- code 2nd duktape ---with responseText from POST---")
                                             printDBG(code)
                                             printDBG("----------------------------------------------------")
 
-                                            js_params = [{'path' : GetJSScriptFile('cf_new_max.byte')}]
+                                            js_params = [{'path': GetJSScriptFile('cf_new_max.byte')}]
                                             js_params.append({'code': code})
-                                            ret = js_execute_ext( js_params )
+                                            ret = js_execute_ext(js_params)
 
                                             if ret['data']:
                                                 jsCode2 = ret['data'].encode('unicode-escape')
@@ -1323,52 +1378,51 @@ class common:
                                                 jsCode2 = re.sub("const\s?\{(.*?)\}\s?=\s?([a-z0-9\(\)]+?)", r"const \2 = {\1}", jsCode2, flags=re.S)
                                                 jsCode2 = jsCode2.replace("window._=function(){};", "window._=function(){};\nn_ = window['_'];\n")
                                                 # third execution of duktape
-                                                
-                                                code = data_input + '\n' + jsCode + '\n'+ jsCode2 + '\n' 
+
+                                                code = data_input + '\n' + jsCode + '\n' + jsCode2 + '\n'
                                                 printDBG("--------  code 3rd duktape - with new code from POST ---")
                                                 printDBG(code)
                                                 printDBG("----------------------------------------")
 
-                                                js_params = [{'path' : GetJSScriptFile('cf_new_max.byte')}]
+                                                js_params = [{'path': GetJSScriptFile('cf_new_max.byte')}]
                                                 js_params.append({'code': code})
-                                                ret = js_execute_ext( js_params )
-                                    
+                                                ret = js_execute_ext(js_params)
+
                                                 printDBG(ret['data'])
-                                                
+
                                     except:
                                         printExc()
                                         printDBG(ret['data'])
-                            
+
                             # retry to load challenge
                             sts, data = self.getPage(url, params, post_data)
-                                    
+
                         else:
-                            
+
                             # old javascript challenge
-                            
-                            # uncomment to solve 
+
+                            # uncomment to solve
                             #break
-                            
+
                             decoded = ''
-                            
+
                             #first part of code
-                            js_params = [{'path' : GetJSScriptFile('cf_max.byte')}]
+                            js_params = [{'path': GetJSScriptFile('cf_max.byte')}]
                             #particular div element
                             #tmp = ph.findall(verData, ('<div', '>', 'id'), '</div>', flags=ph.START_S)
-                            
-                            
-                            code2=''
+
+                            code2 = ''
                             numChildren = 5
                             #<div style="display:none;visibility:hidden;">
-                            
+
                             divs = re.findall("<div.*?id=\"([^\"]+)\">(.*?)</div>", data)
                             for t in divs:
                                 name_id = t[0]
-                                if len(name_id)>=8 and len(name_id)<=12:
+                                if len(name_id) >= 8 and len(name_id) <= 12:
                                     numChildren = numChildren + 1
                                     value_id = t[1]
-                                    code2 = code2 + "\ndocument.children.push ( new element('', '%s', 'div')); document.children[%d].innerHTML ='%s';" % (name_id, numChildren,value_id)
-                                                                    
+                                    code2 = code2 + "\ndocument.children.push ( new element('', '%s', 'div')); document.children[%d].innerHTML ='%s';" % (name_id, numChildren, value_id)
+
                             printDBG("--------------- code 2 ------------------")
                             printDBG(code2)
                             printDBG("-----------------------------------------")
@@ -1379,116 +1433,113 @@ class common:
                             #dat = dat.replace('(function(){\n\n    var a = function() {try{return !!window.addEventListener} catch(e) {return !1} },\n    b = function(b, c) {a() ? document.addEventListener("DOMContentLoaded", b, c) : document.attachEvent("onreadystatechange", b)};\n    b(function()','function pippo()')
                             pattern = re.compile("\(function\(\)\{.*?b\(function\(\)", re.S)
                             dat = re.sub(pattern, "function pippo()", dat)
-                            
+
                             if 'return  f.submit();' in dat:
-                                dat = dat.replace('return  f.submit();','print(a.value); return (a.value);')
+                                dat = dat.replace('return  f.submit();', 'print(a.value); return (a.value);')
                             else:
-                                dat = dat.replace('f.submit()','print(a.value);')
-                            dat = dat.replace('setTimeout(function(){','')
-                            
+                                dat = dat.replace('f.submit()', 'print(a.value);')
+                            dat = dat.replace('setTimeout(function(){', '')
+
                             #var cookiesEnabled=(navigator.cookieEnabled)? true : false;
                             #var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';
-                            dat = dat.replace("var cookiesEnabled=(navigator.cookieEnabled)? true : false;","")
-                            dat = dat.replace("var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';","")
-                            
-                            pattern2= re.compile("\},4000\);.*?\)\(\)",re .S)
-                            dat = re.sub(pattern2,'}', dat)
-                            
-                            
+                            dat = dat.replace("var cookiesEnabled=(navigator.cookieEnabled)? true : false;", "")
+                            dat = dat.replace("var cookieSupportInfix=cookiesEnabled?'/nocookie':'/cookie';", "")
+
+                            pattern2 = re.compile("\},4000\);.*?\)\(\)", re .S)
+                            dat = re.sub(pattern2, '}', dat)
+
                             #new version
                             #t = document.createElement('div');
                             #t.innerHTML="<a href='/'>x</a>";
                             #t = t.firstChild.href;r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);
-                            dat = dat.replace("r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);","r = t.match(/https?:\/\//)[0];")
+                            dat = dat.replace("r = (setInterval(function(){}, 100),t.match(/https?:\/\//)[0]);", "r = t.match(/https?:\/\//)[0];")
                             #old version
                             if 'cpo' in dat:
-                                dat = dat.replace("t = document.createElement('div');\n        cpo = {};\n        t.innerHTML=\"<a href='/'>x</a>\";\n        cpo.src = \"/cdn-cgi/challenge-platform/orchestrate/jsch/v1\";\n        t = t.firstChild.href;",'t="%domain%";').replace('%domain%',domain)
+                                dat = dat.replace("t = document.createElement('div');\n        cpo = {};\n        t.innerHTML=\"<a href='/'>x</a>\";\n        cpo.src = \"/cdn-cgi/challenge-platform/orchestrate/jsch/v1\";\n        t = t.firstChild.href;", 't="%domain%";').replace('%domain%', domain)
                             else:
-                                dat = dat.replace("t = document.createElement('div');\n        t.innerHTML=\"<a href='/'>x</a>\";\n        t = t.firstChild.href;",'t="%domain%";').replace('%domain%',domain)
-                            
-                            
-                            
-                            pattern3 = re.compile("var a = document.*?appendChild\(.*?\);",re.S)
+                                dat = dat.replace("t = document.createElement('div');\n        t.innerHTML=\"<a href='/'>x</a>\";\n        t = t.firstChild.href;", 't="%domain%";').replace('%domain%', domain)
+
+                            pattern3 = re.compile("var a = document.*?appendChild\(.*?\);", re.S)
                             dat = re.sub(pattern3, "", dat)
-                            
+
                             printDBG("-------------- dat dopo le sostituzioni----------------------")
                             printDBG(dat)
                             printDBG("-----------------------------------------")
-                            
+
                             js_params.append({'code': "%s\n%s\n\npippo(); " % (code2, dat)})
-                            ret = js_execute_ext( js_params )
+                            ret = js_execute_ext(js_params)
                             printDBG(ret)
-                            
-                            formTag = self.ph.getDataBeetwenNodes(verData, ('<form','>', 'challenge'), ('</form','>'))[1]
+
+                            formTag = self.ph.getDataBeetwenNodes(verData, ('<form', '>', 'challenge'), ('</form', '>'))[1]
                             formTag = re.sub("<!--.*?-->", "<!-- -->", formTag)
 
                             printDBG("--------challenge form-----------")
                             printDBG(formTag)
                             printDBG("--------challenge form-----------")
-                            
+
                             get_data_1 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', formTag))
-                            
+
                             get_data_2 = dict(re.findall(r'<input[^>]*value="([^"]*)"[^>]*name="([^"]*)"[^>]*>', formTag))
 
                             printDBG("get_data_1: %s" % str(get_data_1))
                             printDBG("get_data_2: %s" % str(get_data_2))
 
-                            get_data={}
-                            
+                            get_data = {}
+
                             for xx in get_data_1:
-                                if not get_data.get(xx,''):
+                                if not get_data.get(xx, ''):
                                     get_data[xx] = get_data_1[xx]
-                                        
+
                             #get_data.update(get_data_1)
-                            
+
                             for xx in get_data_2:
-                                if not get_data.get(get_data_2[xx],''):
+                                if not get_data.get(get_data_2[xx], ''):
                                     get_data[get_data_2[xx]] = xx
-                                    
+
                             #get_data.update(get_data_2_swap)
                             #get_data['cf_ch_verify']='plat'
-                            
-                            get_data['jschl_answer'] = ret['data'].replace('\n','')
-                            
-                            verUrl =  _getFullUrl( ph.getattr(verData, 'action'), domain)
-                            
-                            #unescape html code of & 
-                            verUrl = verUrl.replace("&amp;",'&')
-                            
+
+                            get_data['jschl_answer'] = ret['data'].replace('\n', '')
+
+                            verUrl = _getFullUrl(ph.getattr(verData, 'action'), domain)
+
+                            #unescape html code of &
+                            verUrl = verUrl.replace("&amp;", '&')
+
                             postDataCF = {}
                             for key in get_data:
                                 #postDataCF[key] = urllib.quote(get_data[key])
                                 postDataCF[key] = get_data[key]
                                 if key == "r":
                                     r = get_data[key]
-                                    
+
                             printDBG("CF verification url: %s" % verUrl)
                             printDBG("CF post data: %s" % str(postDataCF))
-                            
+
                             params2 = dict(params)
                             params2['load_cookie'] = True
                             params2['save_cookie'] = True
                             params2['header'] = dict(params.get('header', {}))
-                            params2['header'].update({'Referer':url, 'User-Agent':cfParams.get('User-Agent', ''), 'Accept': 'text/html,application/xhtml+xml,application/xml','Accept-Encoding':'gzip', 'Content-Type':'application/x-www-form-urlencoded'})
-                            if params2.get('raw_post_data',False):
+                            params2['header'].update({'Referer': url, 'User-Agent': cfParams.get('User-Agent', ''), 'Accept': 'text/html,application/xhtml+xml,application/xml', 'Accept-Encoding': 'gzip', 'Content-Type': 'application/x-www-form-urlencoded'})
+                            if params2.get('raw_post_data', False):
                                 params2.pop('raw_post_data')
-                            
+
                             printDBG("Time spent: [%s]" % (time.time() - start_time))
                             if current == 1:
-                                GetIPTVSleep().Sleep(4 -(time.time() - start_time))
+                                GetIPTVSleep().Sleep(4 - (time.time() - start_time))
                             else:
                                 GetIPTVSleep().Sleep(4)
                             printDBG("Time spent: [%s]" % (time.time() - start_time))
                             printDBG("Timeout: [%s]" % 4000)
-                        
+
                             sts, data = self.getPage(verUrl, params2, postDataCF)
-  
+
                     #printDBG("Cloudflare Url: %s" % data.meta["url"])
 
                     #printDBG("--------- cf verification server answer -------")
                     #printDBG(data)
                     #printDBG(" ----------------------------------------------")
-                        
+
                 except Exception:
                     printExc()
                     break
@@ -1496,41 +1547,41 @@ class common:
                 break
         return sts, data
 
-    def convertWebp(self,file_path, png = False):
+    def convertWebp(self, file_path, png=False):
         printDBG("PCommon.convertWebp %s" % file_path)
-        
-        output_path = file_path.replace('.webp','.jpg')
-        png_path = file_path.replace('.webp','.png')
+
+        output_path = file_path.replace('.webp', '.jpg')
+        png_path = file_path.replace('.webp', '.png')
         if IsExecutable('ffmpeg'):
             if png:
-                command = "ffmpeg -i %s %s && test -e %s && rm %s && mv %s %s" % (file_path, png_path, png_path, file_path, png_path , output_path) 
+                command = "ffmpeg -i %s %s && test -e %s && rm %s && mv %s %s" % (file_path, png_path, png_path, file_path, png_path, output_path)
             else:
-                command = "ffmpeg -i %s %s && test -e %s && rm %s " % (file_path, output_path, output_path, file_path) 
-            
+                command = "ffmpeg -i %s %s && test -e %s && rm %s " % (file_path, output_path, output_path, file_path)
+
             printDBG("Send command %s" % command)
             self.cmd = iptv_system(command)
-            
-    def saveWebFileWithPyCurl(self, file_path, url, add_params = {}, post_data = None):
+
+    def saveWebFileWithPyCurl(self, file_path, url, add_params={}, post_data=None):
         bRet = False
         downDataSize = 0
-        
+
         add_params['with_metadata'] = True
         add_params['save_to_file'] = file_path
         if 'maintype' in add_params:
             add_params['check_maintype'] = add_params.pop('maintype')
         if 'subtypes' in add_params:
             add_params['check_subtypes'] = add_params.pop('subtypes')
-        
+
         sts, data = self.getPageWithPyCurl(url, add_params, post_data)
         if sts:
             downDataSize = data.meta['size_download']
         else:
             rm(file_path)
         return {'sts': sts, 'fsize': downDataSize}
-            
-    def saveWebFile(self, file_path, url, addParams = {}, post_data = None):
+
+    def saveWebFile(self, file_path, url, addParams={}, post_data=None):
         addParams = dict(addParams)
-        
+
         outParams, postData = self.getParamsFromUrlWithMeta(url)
         addParams.update(outParams)
         if 'header' not in addParams and 'host' not in addParams:
@@ -1538,11 +1589,11 @@ class common:
             header = {'User-Agent': host, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
             addParams['header'] = header
         addParams['return_data'] = False
-        
+
         # if curl should and can be used
         if self.usePyCurl():
             return self.saveWebFileWithPyCurl(file_path, url, addParams, post_data)
-    
+
         bRet = False
         downDataSize = 0
         dictRet = {}
@@ -1554,53 +1605,53 @@ class common:
                 contentLength = int(meta.getheaders("Content-Length")[0])
             else:
                 contentLength = None
-            
+
             checkFromFirstBytes = addParams.get('check_first_bytes', [])
-            
+
             OK = True
             if 'maintype' in addParams and addParams['maintype'] != downHandler.headers.maintype:
                 printDBG("common.getFile wrong maintype! requested[%r], retrieved[%r]" % (addParams['maintype'], downHandler.headers.maintype))
                 if 0 == len(checkFromFirstBytes):
                     downHandler.close()
                 OK = False
-            
+
             if OK and 'subtypes' in addParams:
                 OK = False
                 for item in addParams['subtypes']:
                     if item == downHandler.headers.subtype:
                         OK = True
                         break
-            
+
             if OK or len(checkFromFirstBytes):
                 blockSize = addParams.get('block_size', 8192)
                 fileHandler = None
                 while True:
                     buffer = downHandler.read(blockSize)
-                    
+
                     if len(checkFromFirstBytes):
                         OK = False
                         for item in checkFromFirstBytes:
                             if buffer.startswith(item):
 
                                 # change extension of file
-                                if item in ['\xFF\xD8','\xFF\xD9']: 
+                                if item in ['\xFF\xD8', '\xFF\xD9']:
                                     printDBG("SaveWebFile. It's a jpeg")
-                                elif item == '\x89\x50\x4E\x47': 
+                                elif item == '\x89\x50\x4E\x47':
                                     printDBG("SaveWebFile. It's a png")
                                     #file_path = file_path.replace('.jpg','.png')
-                                elif item in ['GIF87a','GIF89a']: 
+                                elif item in ['GIF87a', 'GIF89a']:
                                     printDBG("SaveWebFile. It's a gif")
                                     #file_path = file_path.replace('.jpg','.gif')
                                 elif item == 'RI':
                                     printDBG("SaveWebFile. It's a webp")
-                                    file_path = file_path.replace('.jpg','.webp')
+                                    file_path = file_path.replace('.jpg', '.webp')
                                 OK = True
                                 break
                         if not OK:
                             break
                         else:
                             checkFromFirstBytes = []
-                    
+
                     if not buffer:
                         break
                     downDataSize += len(buffer)
@@ -1616,19 +1667,19 @@ class common:
                         bRet = True
                 elif downDataSize > 0:
                     bRet = True
-                
+
                 # decode webp to jpeg
                 if file_path.endswith(".webp"):
                     if addParams.get('webp_convert_to_png', False):
-                        self.convertWebp(file_path, png = True)
+                        self.convertWebp(file_path, png=True)
                     else:
                         self.convertWebp(file_path)
-                         
+
         except Exception:
             printExc("common.getFile download file exception")
-        dictRet.update( {'sts': bRet, 'fsize': downDataSize} )
+        dictRet.update({'sts': bRet, 'fsize': downDataSize})
         return dictRet
-        
+
     def getUrllibSSLProtocolVersion(self, protocolName):
         if not isinstance(protocolName, basestring):
             GetIPTVNotify().push('getUrllibSSLProtocolVersion error. Please report this problem to iptvplayere2@gmail.com', 'error', 40)
@@ -1638,7 +1689,7 @@ class common:
         elif protocolName == 'TLSv1_1':
             return ssl.PROTOCOL_TLSv1_1
         return None
-        
+
     def getPyCurlSSLProtocolVersion(self, protocolName):
         if not isinstance(protocolName, basestring):
             GetIPTVNotify().push('getPyCurlSSLProtocolVersion error. Please report this problem to iptvplayere2@gmail.com', 'error', 40)
@@ -1648,12 +1699,12 @@ class common:
         elif protocolName == 'TLSv1_1':
             return pycurl.SSLVERSION_TLSv1_1
         return None
-    
-    def getURLRequestData(self, params = {}, post_data = None):
-        
+
+    def getURLRequestData(self, params={}, post_data=None):
+
         def urlOpen(req, customOpeners, timeout):
             if len(customOpeners) > 0:
-                opener = urllib2.build_opener( *customOpeners )
+                opener = urllib2.build_opener(*customOpeners)
                 if timeout != None:
                     response = opener.open(req, timeout=timeout)
                 else:
@@ -1664,26 +1715,26 @@ class common:
                 else:
                     response = urllib2.urlopen(req)
             return response
-        
+
         if IsMainThread():
             msg1 = _('It is not allowed to call getURLRequestData from main thread.')
             msg2 = _('You should never perform block I/O operations in the __init__.')
             GetIPTVNotify().push('\s'.join([msg1, msg2]), 'error', 40)
             raise Exception("Wrong usage!")
-            
+
         if 'max_data_size' in params and not params.get('return_data', False):
             raise Exception("return_data == False is not accepted with max_data_size.\nPlease also note that return_data == False is deprecated and not supported with PyCurl HTTP backend!")
-        
+
         cj = cookielib.MozillaCookieJar()
         response = None
-        req      = None
+        req = None
         out_data = None
-        opener   = None
+        opener = None
         self.meta = {}
         metadata = self.meta
-        
+
         timeout = params.get('timeout', None)
-        
+
         if 'host' in params:
             host = params['host']
         else:
@@ -1694,23 +1745,23 @@ class common:
         elif None != self.HEADER:
             headers = self.HEADER
         else:
-            headers = { 'User-Agent' : host }
-            
+            headers = {'User-Agent': host}
+
         if 'User-Agent' not in headers:
             headers['User-Agent'] = host
-        
+
         printDBG('pCommon - getURLRequestData() -> params: ' + str(params))
-        printDBG('pCommon - getURLRequestData() -> headers: ' + str(headers)) 
+        printDBG('pCommon - getURLRequestData() -> headers: ' + str(headers))
 
         customOpeners = []
         #cookie support
         if 'use_cookie' not in params and 'cookiefile' in params and ('load_cookie' in params or 'save_cookie' in params):
-            params['use_cookie'] = True 
-        
+            params['use_cookie'] = True
+
         if params.get('use_cookie', False):
             if params.get('load_cookie', False):
                 try:
-                    cj.load(params['cookiefile'], ignore_discard = True)
+                    cj.load(params['cookiefile'], ignore_discard=True)
                 except IOError:
                     printDBG('Cookie file [%s] not exists' % params['cookiefile'])
                 except Exception:
@@ -1722,30 +1773,31 @@ class common:
                     cj.set_cookie(cookieItem)
             except Exception:
                 printExc()
-            customOpeners.append( urllib2.HTTPCookieProcessor(cj) )
-            
+            customOpeners.append(urllib2.HTTPCookieProcessor(cj))
+
         if params.get('no_redirection', False):
-            customOpeners.append( NoRedirection() )
-        
+            customOpeners.append(NoRedirection())
+
         if None != params.get('ssl_protocol', None):
             sslProtoVer = self.getUrllibSSLProtocolVersion(params['ssl_protocol'])
         else:
             sslProtoVer = None
-        # debug 
+        # debug
         #customOpeners.append(urllib2.HTTPSHandler(debuglevel=1))
         #customOpeners.append(urllib2.HTTPHandler(debuglevel=1))
         if not IsHttpsCertValidationEnabled():
             try:
                 if sslProtoVer != None:
-                    ctx = ssl._create_unverified_context( sslProtoVer )
+                    ctx = ssl._create_unverified_context(sslProtoVer)
                 else:
                     ctx = ssl._create_unverified_context()
                 customOpeners.append(urllib2.HTTPSHandler(context=ctx))
-            except Exception: pass
+            except Exception:
+                pass
         elif sslProtoVer != None:
-            ctx = ssl.SSLContext( sslProtoVer )
+            ctx = ssl.SSLContext(sslProtoVer)
             customOpeners.append(urllib2.HTTPSHandler(context=ctx))
-        
+
         #proxy support
         if self.useProxy:
             http_proxy = self.proxyURL
@@ -1756,9 +1808,9 @@ class common:
             http_proxy = params['http_proxy']
         if '' != http_proxy:
             printDBG('getURLRequestData USE PROXY')
-            customOpeners.append( urllib2.ProxyHandler({"http":http_proxy}) )
-            customOpeners.append( urllib2.ProxyHandler({"https":http_proxy}) )
-        
+            customOpeners.append(urllib2.ProxyHandler({"http": http_proxy}))
+            customOpeners.append(urllib2.ProxyHandler({"https": http_proxy}))
+
         pageUrl = params['url']
         proxy_gateway = params.get('proxy_gateway', '')
         if proxy_gateway != '':
@@ -1770,7 +1822,7 @@ class common:
             if params.get('raw_post_data', False):
                 dataPost = post_data
             elif params.get('multipart_post_data', False):
-                customOpeners.append( MultipartPostHandler() )
+                customOpeners.append(MultipartPostHandler())
                 dataPost = post_data
             else:
                 dataPost = urllib.urlencode(post_data)
@@ -1786,12 +1838,13 @@ class common:
                 response = urlOpen(req, customOpeners, timeout)
                 if response.info().get('Content-Encoding') == 'gzip':
                     gzip_encoding = True
-                try: 
+                try:
                     metadata['url'] = response.geturl()
                     metadata['status_code'] = response.getcode()
                     self.fillHeaderItems(metadata, response.info(), True, collectAllHeaders=params.get('collect_all_headers'))
-                except Exception: pass
-                
+                except Exception:
+                    pass
+
                 data = response.read(params.get('max_data_size', -1))
                 response.close()
             except urllib2.HTTPError, e:
@@ -1802,15 +1855,16 @@ class common:
                     if e.code >= ignoreCodeRange[0] and e.code <= ignoreCodeRange[1]:
                         ignoreCode = True
                         break
-                
+
                 if ignoreCode:
                     printDBG('!!!!!!!! %s: getURLRequestData - handled' % e.code)
                     if e.fp.info().get('Content-Encoding', '') == 'gzip':
                         gzip_encoding = True
-                    try: 
+                    try:
                         metadata['url'] = e.fp.geturl()
                         self.fillHeaderItems(metadata, e.fp.info(), True, collectAllHeaders=params.get('collect_all_headers'))
-                    except Exception: pass
+                    except Exception:
+                        pass
                     data = e.fp.read(params.get('max_data_size', -1))
                     #e.msg
                     #e.headers
@@ -1818,7 +1872,7 @@ class common:
                     if params.get('use_cookie', False):
                         new_cookie = e.fp.info().get('Set-Cookie', '')
                         printDBG("> new_cookie[%s]" % new_cookie)
-                        cj.save(params['cookiefile'], ignore_discard = True)
+                        cj.save(params['cookiefile'], ignore_discard=True)
                     raise e
                 else:
                     if e.code in [300, 302, 303, 307] and params.get('use_cookie', False) and params.get('save_cookie', False):
@@ -1826,7 +1880,7 @@ class common:
                         printDBG("> new_cookie[%s]" % new_cookie)
                         #for cookieKey in params.get('cookie_items', {}).keys():
                         #    cj.clear('', '/', cookieKey)
-                        cj.save(params['cookiefile'], ignore_discard = True)
+                        cj.save(params['cookiefile'], ignore_discard=True)
                     raise e
             try:
                 if gzip_encoding:
@@ -1836,32 +1890,32 @@ class common:
                     out_data = data
             except Exception as e:
                 printExc()
-                if params.get('max_data_size', -1) == -1: 
+                if params.get('max_data_size', -1) == -1:
                     msg1 = _("Critical Error – Content-Encoding gzip cannot be handled!")
                     msg2 = _("Last error:\n%s" % str(e))
                     GetIPTVNotify().push('%s\n\n%s' % (msg1, msg2), 'error', 20)
                 out_data = data
- 
+
         if params.get('use_cookie', False) and params.get('save_cookie', False):
             try:
-                cj.save(params['cookiefile'], ignore_discard = True)
+                cj.save(params['cookiefile'], ignore_discard=True)
             except Exception as e:
                 printExc()
                 raise e
-        
+
         out_data, metadata = self.handleCharset(params, out_data, metadata)
         if params.get('with_metadata', False) and params.get('return_data', False):
             out_data = strwithmeta(out_data, metadata)
-        
-        return out_data 
-        
+
+        return out_data
+
     def handleCharset(self, params, data, metadata):
         try:
-            if params.get('return_data', False) and params.get('convert_charset', True) :
+            if params.get('return_data', False) and params.get('convert_charset', True):
                 encoding = ''
                 if 'content-type' in metadata:
                     encoding = self.ph.getSearchGroups(metadata['content-type'], '''charset=([A-Za-z0-9\-]+)''', 1, True)[0].strip().upper()
-                
+
                 if encoding == '' and params.get('search_charset', False):
                     encoding = self.ph.getSearchGroups(data, '''(<meta[^>]+?Content-Type[^>]+?>)''', ignoreCase=True)[0]
                     encoding = self.ph.getSearchGroups(encoding, '''charset=([A-Za-z0-9\-]+)''', 1, True)[0].strip().upper()
@@ -1886,8 +1940,10 @@ class common:
             for parti, part in enumerate(parts):
                 newPart = part
                 try:
-                    if parti == 1: newPart = part.encode('idna')
-                    else: newPart = self.urlEncodeNonAscii(part.encode('utf-8'))
+                    if parti == 1:
+                        newPart = part.encode('idna')
+                    else:
+                        newPart = self.urlEncodeNonAscii(part.encode('utf-8'))
                 except Exception:
                     printExc()
                 encodedParts.append(newPart)
@@ -1896,8 +1952,8 @@ class common:
             printExc()
         return iri
 
-    def makeABCList(self, tab = ['0 - 9']):
+    def makeABCList(self, tab=['0 - 9']):
         strTab = list(tab)
-        for i in range(65,91):
-            strTab.append(str(unichr(i)))    
+        for i in range(65, 91):
+            strTab.append(str(unichr(i)))
         return strTab

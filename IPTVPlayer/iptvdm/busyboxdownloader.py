@@ -23,63 +23,64 @@ from enigma import eConsoleAppContainer
 ###################################################
 
 ###################################################
-# One instance of this class can be used only for 
+# One instance of this class can be used only for
 # one download
 ###################################################
+
+
 class BuxyboxWgetDownloader(WgetDownloader):
-                     
+
     def __init__(self):
         printDBG('BuxyboxWgetDownloader.__init__ ----------------------------------')
         WgetDownloader.__init__(self)
         self.iptv_sys = None
-        
+
     def __del__(self):
         printDBG("BuxyboxWgetDownloader.__del__ ----------------------------------")
-        
+
     def getName(self):
         return "busybox wget"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system( "wget 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun) )
-        
+        self.iptv_sys = iptv_system("wget 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
+
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
-        sts    = True
+        sts = True
         if 'Usage: wget' not in data:
-            sts    = False
+            sts = False
             reason = data
         self.iptv_sys = None
         callBackFun(sts, reason)
-    
-    def start(self, url, filePath, params = {}, info_from=None, retries=0):
+
+    def start(self, url, filePath, params={}, info_from=None, retries=0):
         '''
             Owervrite start from BaseDownloader
         '''
-        self.url              = url
-        self.filePath         = filePath
+        self.url = url
+        self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension    = '' # should be implemented in future
-        
+        self.fileExtension = '' # should be implemented in future
+
         self.outData = ''
         self.contentType = 'unknown'
         if None == info_from:
             info_from = WgetDownloader.INFO.FROM_FILE
-        self.infoFrom    = info_from
-        
+        self.infoFrom = info_from
+
         cmd = 'wget ' + '"' + self.url + '" -O "' + self.filePath + '" > /dev/null'
         printDBG("Download cmd[%s]" % cmd)
-        
+
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
-        self.console.execute( E2PrioFix( cmd ) )
+        self.console.execute(E2PrioFix(cmd))
 
         self.wgetStatus = self.WGET_STS.CONNECTING
-        self.status     = DMHelper.STS.DOWNLOADING
-        
+        self.status = DMHelper.STS.DOWNLOADING
+
         self.onStart()
         return BaseDownloader.CODE_OK
 
-                        
     def _terminate(self):
         printDBG("BuxyboxWgetDownloader._terminate")
         if None != self.iptv_sys:
@@ -95,13 +96,13 @@ class BuxyboxWgetDownloader(WgetDownloader):
 
     def _cmdFinished(self, code, terminated=False):
         printDBG("BuxyboxWgetDownloader._cmdFinished code[%r] terminated[%r]" % (code, terminated))
-        
+
         # break circular references
         self.console_appClosed_conn = None
         self.console = None
-    
+
         self.wgetStatus = self.WGET_STS.ENDED
-        
+
         # When finished updateStatistic based on file sie on disk
         BaseDownloader.updateStatistic(self)
 
@@ -115,6 +116,3 @@ class BuxyboxWgetDownloader(WgetDownloader):
             self.status = DMHelper.STS.DOWNLOADED
         if not terminated:
             self.onFinish()
-        
-        
-        

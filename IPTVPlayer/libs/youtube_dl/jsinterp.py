@@ -248,7 +248,7 @@ class JSInterpreter(object):
         if func_m is None:
             raise ExtractorError('Could not find JS function %r' % funcname)
         argnames = func_m.group('args').split(',')
-        
+
         printDBG("====================================================")
         printDBG('def %s(%s)\n%s' % (funcname, func_m.group('args'), func_m.group('code')))
         printDBG("====================================================")

@@ -35,17 +35,19 @@ from ._ssl_compat import *
 
 __all__ = ["proxy_info", "connect", "read_headers"]
 
+
 class proxy_info(object):
     def __init__(self, **options):
         self.host = options.get("http_proxy_host", None)
         if self.host:
             self.port = options.get("http_proxy_port", 0)
-            self.auth =  options.get("http_proxy_auth", None)
+            self.auth = options.get("http_proxy_auth", None)
             self.no_proxy = options.get("http_no_proxy", None)
         else:
             self.port = 0
             self.auth = None
             self.no_proxy = None
+
 
 def connect(url, options, proxy, socket):
     hostname, port, resource, is_secure = parse_url(url)
@@ -139,8 +141,8 @@ def _wrap_sni_socket(sock, sslopt, hostname, check_hostname):
         context.check_hostname = check_hostname
     if 'ciphers' in sslopt:
         context.set_ciphers(sslopt['ciphers'])
-    if 'cert_chain' in sslopt :
-        certfile,keyfile,password = sslopt['cert_chain']
+    if 'cert_chain' in sslopt:
+        certfile, keyfile, password = sslopt['cert_chain']
         context.load_cert_chain(certfile, keyfile, password)
 
     return context.wrap_socket(
@@ -154,7 +156,7 @@ def _wrap_sni_socket(sock, sslopt, hostname, check_hostname):
 def _ssl_socket(sock, user_sslopt, hostname):
     sslopt = dict(cert_reqs=ssl.CERT_REQUIRED)
     sslopt.update(user_sslopt)
-    
+
     certPath = os.path.join(
         os.path.dirname(__file__), "cacert.pem")
     if os.path.isfile(certPath) and user_sslopt.get('ca_certs', None) == None:
@@ -171,6 +173,7 @@ def _ssl_socket(sock, user_sslopt, hostname):
         match_hostname(sock.getpeercert(), hostname)
 
     return sock
+
 
 def _tunnel(sock, host, port, auth):
     debug("Connecting proxy...")
@@ -195,8 +198,9 @@ def _tunnel(sock, host, port, auth):
     if status != 200:
         raise WebSocketProxyException(
             "failed CONNECT via proxy status: %r" % status)
-    
+
     return sock
+
 
 def read_headers(sock):
     status = None

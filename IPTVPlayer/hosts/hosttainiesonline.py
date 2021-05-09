@@ -17,6 +17,7 @@ config.plugins.iptvplayer.movieshdco_sortby = ConfigSelection(default='date', ch
  ('rate', _('Top rated')),
  ('random', _('Random'))])
 
+
 def GetConfigList():
     optionList = []
     return optionList
@@ -77,7 +78,7 @@ class tainiesonline(CBaseHostClass):
         data = data.replace('&nbsp', ' ')
         return CBaseHostClass.cleanHtmlStr(data)
 
-    def listsTab(self, tab, cItem, type = 'dir'):
+    def listsTab(self, tab, cItem, type='dir'):
         printDBG('tainiesonline.listsTab')
         for item in tab:
             params = dict(cItem)
@@ -95,17 +96,17 @@ class tainiesonline(CBaseHostClass):
         if not sts:
             return
         moviesTab = [{'title': '2020',
-          'url':('https://tainiesonline.pro/katigoria/tainiesonline/2020')},
+          'url': ('https://tainiesonline.pro/katigoria/tainiesonline/2020')},
          {'title': '2019',
-          'url':('https://tainiesonline.pro/katigoria/tainiesonline/2019')},
+          'url': ('https://tainiesonline.pro/katigoria/tainiesonline/2019')},
          {'title': '2018',
-          'url':('https://tainiesonline.pro/katigoria/tainiesonline/2018')},
+          'url': ('https://tainiesonline.pro/katigoria/tainiesonline/2018')},
          {'title': '2017',
-          'url':('https://tainiesonline.pro/katigoria/tainiesonline/2017')},
+          'url': ('https://tainiesonline.pro/katigoria/tainiesonline/2017')},
          {'title': '2016',
-          'url':('https://tainiesonline.pro/katigoria/2016')},
+          'url': ('https://tainiesonline.pro/katigoria/2016')},
          {'title': '2013-2015',
-          'url':('https://tainiesonline.peo/katigoria/new-good')},
+          'url': ('https://tainiesonline.peo/katigoria/new-good')},
          {'title': '\xce\x95\xce\xbb\xce\xbb\xce\xb7\xce\xbd\xce\xb9\xce\xba\xce\xad\xcf\x82 \xce\xa4\xce\xb1\xce\xb9\xce\xbd\xce\xaf\xce\xb5\xcf\x82',
           'url': self._getFullUrl('category/\xce\xb5\xce\xbb\xce\xbb-\xcf\x84\xce\xb1\xce\xb9\xce\xbd\xce\xaf\xce\xb5\xcf\x82/')}]
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '>\xce\xa4\xce\xb1\xce\xb9\xce\xbd\xce\xb9\xce\xb5\xcf\x82<', '</ul>', False)[1]
@@ -134,7 +135,7 @@ class tainiesonline(CBaseHostClass):
         cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get('movies', []), cItem)
 
-    def listItems(self, cItem, nextCategory = 'explore_item'):
+    def listItems(self, cItem, nextCategory='explore_item'):
         printDBG('tainiesonline.listItems')
         page = cItem.get('page', 1)
         url = cItem['url']
@@ -420,7 +421,7 @@ class tainiesonline(CBaseHostClass):
         self.addDir(params)
         return True
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get('name', '')

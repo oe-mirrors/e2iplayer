@@ -18,30 +18,31 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 import re
 import time
 import urllib
-from datetime import  timedelta
+from datetime import timedelta
 ###################################################
 
-config.plugins.iptvplayer.christusvincit_preferred_bitrate = ConfigSelection(default = "99999999", choices = [("0",      _("the lowest")),
-                                                                                                    ("360000",  "360000"),
-                                                                                                    ("590000",  "590000"),
-                                                                                                    ("820000",  "820000"),
+config.plugins.iptvplayer.christusvincit_preferred_bitrate = ConfigSelection(default="99999999", choices=[("0", _("the lowest")),
+                                                                                                    ("360000", "360000"),
+                                                                                                    ("590000", "590000"),
+                                                                                                    ("820000", "820000"),
                                                                                                     ("1250000", "1250000"),
                                                                                                     ("1750000", "1750000"),
                                                                                                     ("2850000", "2850000"),
                                                                                                     ("5420000", "5420000"),
                                                                                                     ("6500000", "6500000"),
                                                                                                     ("9100000", "9100000"),
-                                                                                                    ("99999999",_("the highest")),
+                                                                                                    ("99999999", _("the highest")),
                                                                                                     ])
-config.plugins.iptvplayer.christusvincit_use_preferred_bitrate = ConfigYesNo(default = True)
+config.plugins.iptvplayer.christusvincit_use_preferred_bitrate = ConfigYesNo(default=True)
 
 ###################################################
 # Config options for HOST
 ###################################################
 
+
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry("Preferred video bitrate",     config.plugins.iptvplayer.christusvincit_preferred_bitrate))
+    optionList.append(getConfigListEntry("Preferred video bitrate", config.plugins.iptvplayer.christusvincit_preferred_bitrate))
     optionList.append(getConfigListEntry("Use preferred video bitrate", config.plugins.iptvplayer.christusvincit_use_preferred_bitrate))
     return optionList
 ###################################################
@@ -50,15 +51,16 @@ def GetConfigList():
 def gettytul():
     return 'http://christusvincit-tv.pl/'
 
+
 class Christusvincit(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'christusvincit-tv.pl', 'cookie':'christusvincit-tv.pl.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'christusvincit-tv.pl', 'cookie': 'christusvincit-tv.pl.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER}
+        self.defaultParams = {'header': self.HTTP_HEADER}
 
-        self.MAIN_URL   = 'http://christusvincit-tv.pl/'
+        self.MAIN_URL = 'http://christusvincit-tv.pl/'
         self.DEFAULT_ICON_URL = 'http://christusvincit-tv.pl/images/christusbg.jpg'
         self.reImgObj = re.compile(r'''<img[^>]+?src=(['"])([^>]*?)(?:\1)''', re.I)
         self.titlesMap = {'wspolodkupicielka': 'Współodkupicielka i Pośredniczka Wszelkich Łask',
@@ -265,13 +267,14 @@ class Christusvincit(CBaseHostClass):
                           'odpust2012': 'Odpust Parafialny 2012',
                           'pielgrzymki_550x120': 'Pielgrzymki Odbijamy Europ\xc4\x99',
                           'chrystuskrol2018': 'Uroczysto\xc5\x9b\xc4\x87 Jezusa Chrystusa Kr\xc3\xb3la Polski 2018',
-                          'podmianka': 'Podmianka - Atrapa Ko\xc5\x9bcio\xc5\x82a',}
+                          'podmianka': 'Podmianka - Atrapa Ko\xc5\x9bcio\xc5\x82a', }
 
     def listMain(self, cItem, nextCategory):
         printDBG("Christusvincit.listMain")
 
         sts, data = self.getPage(self.getMainUrl())
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = re.sub("<!--[\s\S]*?-->", "", data)
@@ -287,8 +290,8 @@ class Christusvincit(CBaseHostClass):
             if "na żywo" in item['title']:
                 if rtmpUrl:
                     try:
-                        rtmpUrl = strwithmeta(rtmpUrl, {'iptv_proto':'rtmp', 'iptv_livestream':True})
-                        params = {'title':'%s [RTMP]' % item['title'], 'url':rtmpUrl, 'type':'video'}
+                        rtmpUrl = strwithmeta(rtmpUrl, {'iptv_proto': 'rtmp', 'iptv_livestream': True})
+                        params = {'title': '%s [RTMP]' % item['title'], 'url': rtmpUrl, 'type': 'video'}
                         if 'sub_items' in item:
                             item['sub_items'].append(params)
                         else:
@@ -299,8 +302,8 @@ class Christusvincit(CBaseHostClass):
             else:
                 self.currList.append(item)
 
-        MAIN_CAT_TAB = [{'category':'search',         'title': _('Search'),       'search_item':True},
-                        {'category':'search_history', 'title': _('Search history'),                 }]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def handleSection(self, cItem, nextCategory, section):
@@ -311,7 +314,7 @@ class Christusvincit(CBaseHostClass):
         sTitle = self.cleanHtmlStr(tmp[0])
         if sTitle.lower() in ('linki',): #'kategorie'
             return
-        sIcon = self.getFullUrl( ph.search(section, ph.IMAGE_SRC_URI_RE)[1] )
+        sIcon = self.getFullUrl(ph.search(section, ph.IMAGE_SRC_URI_RE)[1])
 
         subItems = []
         uniques = set()
@@ -323,8 +326,9 @@ class Christusvincit(CBaseHostClass):
                 if iframe in uniques:
                     continue
                 uniques.add(iframe)
-                if not title: title = sTitle
-                subItems.append(MergeDicts(cItem, {'category':nextCategory, 'title':title, 'url':iframe}))
+                if not title:
+                    title = sTitle
+                subItems.append(MergeDicts(cItem, {'category': nextCategory, 'title': title, 'url': iframe}))
 
         iframes = ph.IFRAME_SRC_URI_RE.findall(section)
         if iframes:
@@ -333,26 +337,27 @@ class Christusvincit(CBaseHostClass):
                 if iframe in uniques:
                     continue
                 uniques.add(iframe)
-                subItems.append(MergeDicts(cItem, {'category':nextCategory, 'title':sTitle, 'url':iframe}))
+                subItems.append(MergeDicts(cItem, {'category': nextCategory, 'title': sTitle, 'url': iframe}))
         section = ph.findall(section, ('<a', '>', ph.check(ph.any, ('articles.php', 'readarticle.php'))), '</a>')
         for item in section:
-            url = self.getFullUrl( ph.search(item, ph.A_HREF_URI_RE)[1] )
-            icon = self.getFullUrl( ph.search(item, self.reImgObj)[1] )
+            url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
+            icon = self.getFullUrl(ph.search(item, self.reImgObj)[1])
             title = self.cleanHtmlStr(item)
-            if not title: 
+            if not title:
                 title = icon.rsplit('/', 1)[-1].rsplit('.', 1)[0]
                 title = self.titlesMap.get(title, title.upper())
-            subItems.append(MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'url':url, 'icon':icon}))
+            subItems.append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon}))
 
         if len(subItems) > 1:
-            self.addDir(MergeDicts(cItem, {'category':'sub_items', 'title':sTitle, 'icon':sIcon, 'sub_items':subItems}))
+            self.addDir(MergeDicts(cItem, {'category': 'sub_items', 'title': sTitle, 'icon': sIcon, 'sub_items': subItems}))
         elif len(subItems) == 1:
             params = subItems[0]
-            params.update({'title':sTitle})
+            params.update({'title': sTitle})
             self.addDir(params)
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
     def getFullUrl(self, url, currUrl=None):
@@ -373,13 +378,14 @@ class Christusvincit(CBaseHostClass):
 
             if 'articles.php' in cUrl:
                 iframe = ph.search(data, ph.IFRAME_SRC_URI_RE)[1]
-                if not iframe: 
+                if not iframe:
                     iframe = ph.find(data, ('<script', '>', 'embedIframeJs'))[1]
                     iframe = ph.getattr(iframe, 'src')
 
                 if iframe and '?' in iframe:
                     sts, tmp = self.getPage(self.getFullUrl(iframe.replace('?', '?iframeembed=true&')))
-                    if not sts: return
+                    if not sts:
+                        return
                     playerConfig = ph.find(tmp, '{"playerConfig"', '};')[1][:-1]
                 else:
                     sections = ph.find(data, '<noscript', 'scapmain-left')[1]
@@ -393,25 +399,28 @@ class Christusvincit(CBaseHostClass):
                 try:
                     playerConfig = json_loads(playerConfig)
                     playlistResult = playerConfig.get('playlistResult', {})
-                    if not playlistResult: playlistResult['0'] = {'items':[playerConfig['entryResult']['meta']]}
+                    if not playlistResult:
+                        playlistResult['0'] = {'items': [playerConfig['entryResult']['meta']]}
                     for key, section in playlistResult.iteritems():
                         for item in section['items']:
                             icon = self.getFullUrl(item['thumbnailUrl'])
                             title = item['name']
                             desc = '%s | %s' % (str(timedelta(seconds=item['duration'])), item['description'])
-                            params = {'title':title, 'icon':icon, 'desc':desc, 'f_id':item['id']}
-                            if item.get('hlsStreamUrl'): params['url'] = item['hlsStreamUrl']
+                            params = {'title': title, 'icon': icon, 'desc': desc, 'f_id': item['id']}
+                            if item.get('hlsStreamUrl'):
+                                params['url'] = item['hlsStreamUrl']
                             self.addVideo(params)
                 except Exception:
                     printExc()
 
         rtmpItem = dict(cItem).pop('rtmp_item', None)
-        if rtmpItem: self.addVideo(rtmpItem)
+        if rtmpItem:
+            self.addVideo(rtmpItem)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
 
         url = self.getFullUrl('/search.php?stext=%s&search=Szukaj&method=AND&stype=articles&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50' % urllib.quote_plus(searchPattern))
-        cItem = MergeDicts(cItem, {'category':'list_search', 'url':url})
+        cItem = MergeDicts(cItem, {'category': 'list_search', 'url': url})
         self.listSearchItems(cItem)
 
     def listSearchItems(self, cItem):
@@ -419,33 +428,35 @@ class Christusvincit(CBaseHostClass):
         page = cItem.get('page', 1)
 
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         data = ph.find(data, 'search_result', '</table>', flags=0)[1]
         data = re.compile('''<div[^>]+?pagenav[^>]*?>''').split(data, 1)
-        if len(data) == 2: 
-            nextPage = ph.find(data[-1], ('<a', '>%s<' % (page+1)))[1]
+        if len(data) == 2:
+            nextPage = ph.find(data[-1], ('<a', '>%s<' % (page + 1)))[1]
             nextPage = self.getFullUrl(ph.getattr(nextPage, 'href'))
-        else: nextPage = ''
+        else:
+            nextPage = ''
 
         data = ph.findall(data[0], ('<a', '>', ph.check(ph.any, ('articles.php', 'readarticle.php'))), '</span>')
         for item in data:
-            url = self.getFullUrl( ph.search(item, ph.A_HREF_URI_RE)[1] )
-            icon = self.getFullUrl( ph.search(item, self.reImgObj)[1] )
+            url = self.getFullUrl(ph.search(item, ph.A_HREF_URI_RE)[1])
+            icon = self.getFullUrl(ph.search(item, self.reImgObj)[1])
             item = item.split('</a>', 1)
             title = self.cleanHtmlStr(item[0])
             desc = self.cleanHtmlStr(item[-1])
 
-            self.addDir(MergeDicts(cItem, {'good_for_fav':True, 'category':'explore_item', 'title':title, 'url':url, 'icon':icon, 'desc':desc}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': True, 'category': 'explore_item', 'title': title, 'url': url, 'icon': icon, 'desc': desc}))
         if nextPage:
-            self.addDir(MergeDicts(cItem, {'good_for_fav':False, 'title':_('Next page'), 'page':page+1, 'url':nextPage}))
+            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'title': _('Next page'), 'page': page + 1, 'url': nextPage}))
 
     def getLinksForVideo(self, cItem):
         urlsTab = []
 
         if 'url' in cItem and cItem['url'].startswith('rtmp://'):
-            urlsTab = [{'name':'rtmp', 'url':cItem['url'], 'need_resolve':0}]
+            urlsTab = [{'name': 'rtmp', 'url': cItem['url'], 'need_resolve':0}]
         elif 'url' in cItem:
             urlsTab = getDirectM3U8Playlist(cItem['url'])
         else:
@@ -453,17 +464,19 @@ class Christusvincit(CBaseHostClass):
             url += cItem['f_id']
             url += '&3:ks=%7B1%3Aresult%3Aks%7D&3:contextDataParams:referrer=http%3A%2F%2Fmediaserwer3.christusvincit-tv.pl&3:contextDataParams:objectType=KalturaEntryContextDataParams&3:contextDataParams:flavorTags=all&3:contextDataParams:streamerType=auto&3:service=baseentry&3:entryId=%7B2%3Aresult%3Aobjects%3A0%3Aid%7D&3:action=getContextData&4:ks=%7B1%3Aresult%3Aks%7D&4:service=metadata_metadata&4:action=list&4:version=-1&4:filter:metadataObjectTypeEqual=1&4:filter:orderBy=%2BcreatedAt&4:filter:objectIdEqual=%7B2%3Aresult%3Aobjects%3A0%3Aid%7D&4:pager:pageSize=1&5:ks=%7B1%3Aresult%3Aks%7D&5:service=cuepoint_cuepoint&5:action=list&5:filter:objectType=KalturaCuePointFilter&5:filter:orderBy=%2BstartTime&5:filter:statusEqual=1&5:filter:entryIdEqual=%7B2%3Aresult%3Aobjects%3A0%3Aid%7D&kalsig=404d9c08e114ce91328cd739e5151b80'
             sts, data = self.getPage(url)
-            if not sts: return []
+            if not sts:
+                return []
 
             try:
                 data = json_loads(data)
                 baseUrl = data[1]['objects'][0]['dataUrl']
                 for item in data[2]['flavorAssets']:
-                    if item['fileExt'] != 'mp4' or not item['isWeb']: continue
+                    if item['fileExt'] != 'mp4' or not item['isWeb']:
+                        continue
                     item['bitrate'] *= 1024
-                    name = '%sx%s %s, bitrate: %s' % (item['width'], item['height'], formatBytes(item['size']*1024), item['bitrate'])
+                    name = '%sx%s %s, bitrate: %s' % (item['width'], item['height'], formatBytes(item['size'] * 1024), item['bitrate'])
                     url = baseUrl.replace('/format/', '/flavorId/%s/format/' % item['id'])
-                    urlsTab.append({'name':name, 'url':url, 'need_resolve':0, 'bitrate':item['bitrate'], 'original':item['isOriginal']})
+                    urlsTab.append({'name': name, 'url': url, 'need_resolve': 0, 'bitrate': item['bitrate'], 'original': item['isOriginal']})
                 urlsTab.sort(key=lambda x: x['bitrate'], reverse=True)
             except Exception:
                 printExc()
@@ -474,19 +487,19 @@ class Christusvincit(CBaseHostClass):
                 urlsTab = [urlsTab[0]]
         return urlsTab
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU
         if name == None:
-            self.listMain({'name':'category', 'type':'category'}, 'explore_item')
+            self.listMain({'name': 'category', 'type': 'category'}, 'explore_item')
 
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
@@ -499,18 +512,18 @@ class Christusvincit(CBaseHostClass):
             self.listSearchItems(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
     #HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Christusvincit(), True, [])
-
