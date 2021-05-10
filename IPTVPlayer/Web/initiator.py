@@ -24,13 +24,13 @@ IPTVwebRoot.putChild(b"search", searchPage())
 # registration for old webinterface
 if os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/WebInterface/web/external.xml')):
 	try:
-		addExternalChild(("e2iplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion, True))
+		addExternalChild(("iptvplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion, True))
 	except Exception:
-		addExternalChild(("e2iplayer", IPTVwebRoot))
+		addExternalChild(("iptvplayer", IPTVwebRoot))
 # registration for openwebif
 elif os.path.exists(resolveFilename(SCOPE_PLUGINS, 'Extensions/OpenWebif/pluginshook.src')):
 	try:
-		addExternalChild(("e2iplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion, True))
+		addExternalChild(("iptvplayer", IPTVwebRoot, "E2iPlayer", settings.WebInterfaceVersion, True))
 	except Exception:
 		print("[E2iPlayer] exception registering Web interface in NATIVE mode")
 else:

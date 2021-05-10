@@ -138,7 +138,6 @@ class PlayerSelectorWidget(Screen):
             skin = """
             <screen name="IPTVPlayerPlayerSelectorWidget" position="center,center" title="E2iPlayer %s" size="%d,%d">
             <widget name="statustext" position="0,0" zPosition="1" size="%d,50" font="Regular;36" halign="center" valign="center" transparent="1"/>
-			<widget name="IptvVersion" position="40,0" zPosition="1" size="250,50" font="Regular;36" halign="center" valign="center" transparent="1"/>
             <widget name="marker" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="menu" zPosition="3" position="%d,10" size="70,30" transparent="1" alphatest="blend" />
@@ -157,7 +156,6 @@ class PlayerSelectorWidget(Screen):
             skin = """
             <screen name="IPTVPlayerPlayerSelectorWidget" position="center,center" title="E2iPlayer %s" size="%d,%d">
             <widget name="statustext" position="0,0" zPosition="1" size="%d,50" font="Regular;26" halign="center" valign="center" transparent="1"/>
-			<widget name="IptvVersion" position="50,0" zPosition="1" size="250,50" font="Regular;36" halign="center" valign="center" transparent="1"/>
             <widget name="marker" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="menu" zPosition="3" position="%d,10" size="70,30" transparent="1" alphatest="blend" />
@@ -221,8 +219,6 @@ class PlayerSelectorWidget(Screen):
 
         self["marker"] = Cover3()
         self["page_marker"] = Cover3()
-        version = GetIPTVPlayerVersion()
-        self['IptvVersion'] = Label(version)
         self["menu"] = Cover3()
 
 
