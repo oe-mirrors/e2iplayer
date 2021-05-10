@@ -45,7 +45,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools_FreeSpace, \
-                                                          mkdirs as iptvtools_mkdirs, GetIPTVPlayerVerstion, GetVersionNum, \
+                                                          mkdirs as iptvtools_mkdirs, GetIPTVPlayerVersion, GetVersionNum, \
                                                           printDBG, printExc, iptv_system, GetHostsList, IsHostEnabled, \
                                                           eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, GetExtensionsDir, \
                                                           SortHostsList, GetHostsOrderList, CSearchHistoryHelper, IsExecutable, \
@@ -80,7 +80,7 @@ gDownloadManager = None
 
 
 class E2iPlayerWidget(Screen):
-    IPTV_VERSION = GetIPTVPlayerVerstion()
+    IPTV_VERSION = GetIPTVPlayerVersion()
     screenwidth = getDesktop(0).size().width()
     if screenwidth and screenwidth == 1920:
         skin = """
@@ -1141,7 +1141,7 @@ class E2iPlayerWidget(Screen):
     def onStart(self):
         self.onShow.remove(self.onStart)
         #self.onLayoutFinish.remove(self.onStart)
-        self.setTitle('E2iPlayer ' + GetIPTVPlayerVerstion())
+        self.setTitle('E2iPlayer ' + GetIPTVPlayerVersion())
         self.loadSpinner()
         self.hideSpinner()
         self.checkBlacklistedImage()
@@ -1170,10 +1170,10 @@ class E2iPlayerWidget(Screen):
         printDBG(">> askUpdateAvailable")
         if config.plugins.iptvplayer.autoCheckForUpdate.value \
             and 0 < GetVersionNum(self.lastPluginVersion) \
-            and GetVersionNum(self.lastPluginVersion) > GetVersionNum(GetIPTVPlayerVerstion()) \
+            and GetVersionNum(self.lastPluginVersion) > GetVersionNum(GetIPTVPlayerVersion()) \
             and self.lastPluginVersion != config.plugins.iptvplayer.updateLastCheckedVersion.value:
 
-            message = _('There is a new version available do you want to update? \nYour version [%s], latest version on server [%s]') % (GetIPTVPlayerVerstion(), self.lastPluginVersion)
+            message = _('There is a new version available do you want to update? \nYour version [%s], latest version on server [%s]') % (GetIPTVPlayerVersion(), self.lastPluginVersion)
             config.plugins.iptvplayer.updateLastCheckedVersion.value = self.lastPluginVersion
             config.plugins.iptvplayer.updateLastCheckedVersion.save()
             configfile.save()

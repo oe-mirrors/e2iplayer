@@ -3,8 +3,8 @@
 #  Player Selector
 #
 #  $Id$
-#
-#
+#  Page Punkte weiter ausseinander - 132
+#  Version dazu gebaut , skin 14 , 227-229
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap, HelpableActionMap
 from enigma import ePoint, getDesktop
@@ -15,7 +15,7 @@ from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVerstion, GetIconDir, GetAvailableIconSize
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetAvailableIconSize
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
 
@@ -127,7 +127,7 @@ class PlayerSelectorWidget(Screen):
         self.calcDisplayVariables()
 
         # pagination
-        self.pageItemSize = 16
+        self.pageItemSize = 56
         self.pageItemStartX = (offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth - self.numOfPages * self.pageItemSize) // 2
         if screenwidth and screenwidth == 1920:
             self.pageItemStartY = 60
@@ -138,11 +138,12 @@ class PlayerSelectorWidget(Screen):
             skin = """
             <screen name="IPTVPlayerPlayerSelectorWidget" position="center,center" title="E2iPlayer %s" size="%d,%d">
             <widget name="statustext" position="0,0" zPosition="1" size="%d,50" font="Regular;36" halign="center" valign="center" transparent="1"/>
+			<widget name="IptvVersion" position="40,0" zPosition="1" size="250,50" font="Regular;36" halign="center" valign="center" transparent="1"/>
             <widget name="marker" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="menu" zPosition="3" position="%d,10" size="70,30" transparent="1" alphatest="blend" />
             """ % (
-              GetIPTVPlayerVerstion(),
+              GetIPTVPlayerVersion(),
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth,  # width of window
               offsetCoverY + tmpY * numOfRow + offsetCoverX - disHeight, # height of window
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth,  # width of status line
@@ -156,11 +157,12 @@ class PlayerSelectorWidget(Screen):
             skin = """
             <screen name="IPTVPlayerPlayerSelectorWidget" position="center,center" title="E2iPlayer %s" size="%d,%d">
             <widget name="statustext" position="0,0" zPosition="1" size="%d,50" font="Regular;26" halign="center" valign="center" transparent="1"/>
+			<widget name="IptvVersion" position="50,0" zPosition="1" size="250,50" font="Regular;36" halign="center" valign="center" transparent="1"/>
             <widget name="marker" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="menu" zPosition="3" position="%d,10" size="70,30" transparent="1" alphatest="blend" />
             """ % (
-              GetIPTVPlayerVerstion(),
+              GetIPTVPlayerVersion(),
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth,  # width of window
               offsetCoverY + tmpY * numOfRow + offsetCoverX - disHeight, # height of window
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth,  # width of status line
@@ -219,7 +221,10 @@ class PlayerSelectorWidget(Screen):
 
         self["marker"] = Cover3()
         self["page_marker"] = Cover3()
+        version = GetIPTVPlayerVersion()
+        self['IptvVersion'] = Label(version)
         self["menu"] = Cover3()
+
 
         for y in range(1, self.numOfRow + 1):
             for x in range(1, self.numOfCol + 1):
@@ -232,6 +237,8 @@ class PlayerSelectorWidget(Screen):
         self.visible = True
         self.reorderingMode = False
         self.reorderingItemSelected = False
+
+	
 
     def __del__(self):
         printDBG("PlayerSelectorWidget.__del__ --------------------------")

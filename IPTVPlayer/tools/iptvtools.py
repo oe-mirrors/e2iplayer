@@ -1446,7 +1446,7 @@ def printExc(msg=''):
     printDBG("===============================================")
 
 
-def GetIPTVPlayerVerstion():
+def GetIPTVPlayerVersion():
     try:
         from Plugins.Extensions.IPTVPlayer.version import IPTV_VERSION
     except Exception:
