@@ -586,7 +586,7 @@ class PlusDEDE(CBaseHostClass):
                 header = dict(self.HTTP_HEADER)
                 header['Accept'] = 'image/png,image/*;q=0.8,*/*;q=0.5'
                 params = dict(self.defaultParams)
-                params.update({'maintype': 'image', 'subtypes': ['jpeg', 'png'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47'], 'header': header})
+                params.update({'maintype': 'image', 'subtypes': ['jpeg', 'png'], 'check_first_bytes': [b'\xFF\xD8', b'\xFF\xD9', b'\x89\x50\x4E\x47'], 'header': header})
                 filePath = GetTmpDir('.iptvplayer_captcha.jpg')
                 ret = self.cm.saveWebFile(filePath, imgUrl.replace('&amp;', '&'), params)
                 if not ret.get('sts'):

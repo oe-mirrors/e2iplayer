@@ -101,7 +101,7 @@ class UnCaptchahCaptcha:
         for t in hCaptcha['tasklist']:
             printDBG("------------> task: url \"%s\" - key \"%s\"" % (t["datapoint_uri"], t["task_key"]))
 
-            img_params = {'maintype': 'image', 'subtypes': ['jpeg'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9']}
+            img_params = {'maintype': 'image', 'subtypes': ['jpeg'], 'check_first_bytes': [b'\xFF\xD8', b'\xFF\xD9']}
             filePath = GetTmpDir('.iptvplayer_hcaptcha_%d.jpg' % n_img)
             n_img = n_img + 1
             ret = self.cm.saveWebFile(filePath, t["datapoint_uri"], img_params)

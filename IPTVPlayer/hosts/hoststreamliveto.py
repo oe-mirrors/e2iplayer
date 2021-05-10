@@ -316,7 +316,7 @@ class StreamLiveTo(CBaseHostClass):
 
         imgUrl = 'http://www.google.com/recaptcha/api/image?c=' + challenge
         #return
-        params = {'maintype': 'image', 'subtypes': ['jpeg'], 'check_first_bytes': ['\xFF\xD8', '\xFF\xD9']}
+        params = {'maintype': 'image', 'subtypes': ['jpeg'], 'check_first_bytes': [b'\xFF\xD8', b'\xFF\xD9']}
         filePath = GetTmpDir('.iptvplayer_captcha.jpg')
         ret = self.cm.saveWebFile(filePath, imgUrl, params)
         if not ret.get('sts'):

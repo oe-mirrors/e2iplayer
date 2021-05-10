@@ -388,7 +388,7 @@ class FiliserTv(CBaseHostClass):
             printDBG(imgUrlTab)
 
             errorOccurred = False
-            params = {'maintype': 'image', 'subtypes': ['png'], 'check_first_bytes': ['\x89\x50\x4E\x47']}
+            params = {'maintype': 'image', 'subtypes': ['png'], 'check_first_bytes': [b'\x89\x50\x4E\x47']}
             for idx in range(len(imgUrlTab)):
                 imgUrl = imgUrlTab[idx]
                 filePath = GetTmpDir('.iptvplayer_captcha_%s.png' % idx)

@@ -256,16 +256,16 @@ class IconMenager:
             #params['subtypes'] = subtypes
             params['check_first_bytes'] = []
             if 'jpeg' in subtypes:
-                params['check_first_bytes'].extend(['\xFF\xD8', '\xFF\xD9'])
+                params['check_first_bytes'].extend([b'\xFF\xD8', b'\xFF\xD9'])
             if 'png' in subtypes:
-                params['check_first_bytes'].append('\x89\x50\x4E\x47')
+                params['check_first_bytes'].append(b'\x89\x50\x4E\x47')
             if 'gif' in subtypes:
-                params['check_first_bytes'].extend(['GIF87a', 'GIF89a'])
+                params['check_first_bytes'].extend([b'GIF87a', b'GIF89a'])
             # formato webp	'RI'
             if 'webp' in subtypes:
-                params['check_first_bytes'].extend(['RI'])
+                params['check_first_bytes'].extend([b'RI'])
         else:
-            params['check_first_bytes'] = ['\xFF\xD8', '\xFF\xD9', '\x89\x50\x4E\x47', 'GIF87a', 'GIF89a', 'RI']
+            params['check_first_bytes'] = [b'\xFF\xD8', b'\xFF\xD9', b'\x89\x50\x4E\x47', b'GIF87a', b'GIF89a', b'RI']
 
         if img_url.endswith('|cf'):
             img_url = img_url[:-3]

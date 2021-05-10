@@ -1166,6 +1166,7 @@ class E2iPlayerWidget(Screen):
 
     def askUpdateAvailable(self, NoUpdateCallback):
         NoUpdateCallback()
+        return
         printDBG(">> askUpdateAvailable")
         if config.plugins.iptvplayer.autoCheckForUpdate.value \
             and 0 < GetVersionNum(self.lastPluginVersion) \
