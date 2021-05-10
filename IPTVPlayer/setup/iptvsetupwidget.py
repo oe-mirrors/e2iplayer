@@ -7,7 +7,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVerstion, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, IPTVPlayerNeedInit
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.setup.iptvsetupimpl import IPTVSetupImpl
@@ -28,7 +28,7 @@ from Tools.LoadPixmap import LoadPixmap
 
 
 class IPTVSetupMainWidget(Screen):
-    IPTV_VERSION = GetIPTVPlayerVerstion()
+    IPTV_VERSION = GetIPTVPlayerVersion()
     skin = """
     <screen position="center,center" size="600,300" title="E2iPlayer setup version %s">
             <widget name="sub_title"    position="10,10" zPosition="2" size="580,90"   valign="center" halign="center" font="Regular;24" transparent="1" foregroundColor="white" />

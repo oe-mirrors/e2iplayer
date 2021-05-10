@@ -6,7 +6,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, IsValidFileName, \
                                                           GetTmpDir, GetSubtitlesDir, GetIconDir, GetSkinsDir, \
-                                                          GetIPTVPlayerVerstion, eConnectCallback, GetPluginDir, \
+                                                          GetIPTVPlayerVersion, eConnectCallback, GetPluginDir, \
                                                           iptv_system, IsSubtitlesParserExtensionCanBeUsed
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -50,7 +50,7 @@ import Plugins.Extensions.IPTVPlayer.components.asynccall as asynccall
 
 
 class IPTVSubDownloaderWidget(Screen):
-    IPTV_VERSION = GetIPTVPlayerVerstion()
+    IPTV_VERSION = GetIPTVPlayerVersion()
     screenwidth = getDesktop(0).size().width()
     if screenwidth and screenwidth == 1920:
         skin = """

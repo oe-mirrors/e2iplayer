@@ -8,7 +8,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, mkdirs, rmtree, FreeSpace, formatBytes, iptv_system, \
-                                                                   GetIPTVDMImgDir, GetIPTVPlayerVerstion, GetShortPythonVersion, GetTmpDir, \
+                                                                   GetIPTVDMImgDir, GetIPTVPlayerVersion, GetShortPythonVersion, GetTmpDir, \
                                                                    GetHostsList, GetEnabledHostsList, WriteTextFile, IsExecutable, GetUpdateServerUri, \
                                                                    GetIconsHash, SetIconsHash, GetGraphicsHash, SetGraphicsHash, rm, GetPyScriptCmd
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum
@@ -372,7 +372,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         return _("IPTVPlayer - update")
 
     def getSubTitle(self):
-        return _("Currently you have version [%s].") % GetIPTVPlayerVerstion()
+        return _("Currently you have version [%s].") % GetIPTVPlayerVersion()
 
     def finalize(self, success=True, errorMsg=""):
         if success:
@@ -773,9 +773,9 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             #printDBG("ServerComparator val1[%d], val2[%d]" % (val1, val2))
             return cmp(val1, val2)
         try:
-            currVerNum = int(GetIPTVPlayerVerstion().replace('.', ''))
+            currVerNum = int(GetIPTVPlayerVersion().replace('.', ''))
         except Exception:
-            printDBG('Version of the current instalation [%s]' % GetIPTVPlayerVerstion())
+            printDBG('Version of the current instalation [%s]' % GetIPTVPlayerVersion())
             currVerNum = 0
         pythonVer = GetShortPythonVersion()
 
