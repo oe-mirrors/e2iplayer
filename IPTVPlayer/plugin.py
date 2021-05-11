@@ -5,8 +5,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import E2iPlayerWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, IPTVPlayerNeedInit
-from Plugins.Extensions.IPTVPlayer.setup.iptvsetupwidget import IPTVSetupMainWidget
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import IsExecutable, IsWebInterfaceModuleAvailable
 ###################################################
 
@@ -135,16 +134,7 @@ def doRunMain(session):
 
 
 def runMain(session, nextFunction=doRunMain):
-    wgetpath = IsExecutable(config.plugins.iptvplayer.wgetpath.value)
-    rtmpdumppath = IsExecutable(config.plugins.iptvplayer.rtmpdumppath.value)
-    f4mdumppath = IsExecutable(config.plugins.iptvplayer.f4mdumppath.value)
-    platform = config.plugins.iptvplayer.plarform.value
-    if platform in ["auto", "unknown"] or not wgetpath or not rtmpdumppath or not f4mdumppath:
-        session.openWithCallback(boundFunction(nextFunction, session), IPTVSetupMainWidget)
-    elif IPTVPlayerNeedInit():
-        session.openWithCallback(boundFunction(nextFunction, session), IPTVSetupMainWidget, True)
-    else:
-        nextFunction(session)
+    nextFunction(session)
 
 
 def pinCallback(session, callbackFun, pin=None):
