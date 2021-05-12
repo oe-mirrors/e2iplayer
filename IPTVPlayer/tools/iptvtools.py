@@ -55,13 +55,6 @@ def GetUpdateServerUri(file='', serverNum=None):
     return uri
 
 
-def GetResourcesServerUri(file='', serverNum=None):
-    serverKey = GetServerKey(serverNum)
-    uri = 'http://iptvplayer.vline.pl/resources/' + file
-    printDBG("GetResourcesServerUri -> %s" % uri)
-    return uri
-
-
 def UsePyCurl():
     return config.plugins.iptvplayer.usepycurl.value
 
@@ -353,17 +346,6 @@ def GetPyScriptCmd(name):
 def GetJSScriptFile(file):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/jsscripts/') + file
 
-
-def GetUchardetPath():
-    return config.plugins.iptvplayer.uchardetpath.value
-
-
-def GetCmdwrapPath():
-    return config.plugins.iptvplayer.cmdwrappath.value
-
-
-def GetDukPath():
-    return config.plugins.iptvplayer.dukpath.value
 
 
 gE2iPlayerTempCookieDir = None

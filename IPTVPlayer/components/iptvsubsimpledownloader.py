@@ -143,7 +143,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             self["console"].setText(_("Download failed.\nStatus[%s]") % status)
         else:
             self["console"].setText(_('Subtitles downloaded successfully. [%s], conversion to UTF-8.') % self.downloader.getFullFileName())
-            cmd = '%s "%s"' % (config.plugins.iptvplayer.uchardetpath.value, self.downloader.getFullFileName())
+            cmd = '/usr/bin/uchardet "%s"' % self.downloader.getFullFileName()
             printDBG("cmd[%s]" % cmd)
             self.workconsole = iptv_system(cmd, self.convertSubtitles)
 

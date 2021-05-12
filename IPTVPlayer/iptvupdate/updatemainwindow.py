@@ -404,7 +404,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         self.list.append(self.__getStepDesc(title=_("Obtaining server list."), execFunction=self.stepGetServerLists))
         self.list.append(self.__getStepDesc(title=_("Downloading an update packet."), execFunction=self.stepGetArchive))
         self.list.append(self.__getStepDesc(title=_("Extracting an update packet."), execFunction=self.stepUnpackArchive))
-        self.list.append(self.__getStepDesc(title=_("Copy post installed binaries."), execFunction=self.stepCopyPostInatalledBinaries, breakable=True, ignoreError=True))
+        #self.list.append(self.__getStepDesc(title=_("Copy post installed binaries."), execFunction=self.stepCopyPostInatalledBinaries, breakable=True, ignoreError=True))
         self.list.append(self.__getStepDesc(title=_("Executing user scripts."), execFunction=self.stepExecuteUserScripts))
         self.list.append(self.__getStepDesc(title=_("Checking version."), execFunction=self.stepCheckFiles))
         self.list.append(self.__getStepDesc(title=_("Removing unnecessary files."), execFunction=self.stepRemoveUnnecessaryFiles, breakable=True, ignoreError=True))
@@ -611,43 +611,6 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         printDBG('UpdateMainAppImpl.stepCopyOnlyIcons cmd[%s]' % cmd)
         self.cmd = iptv_system(cmd, self.__copyOldCmdFinished)
 
-    def stepCopyPostInatalledBinaries(self, init=True, code=0, msg=''):
-        # get users scripts
-        if init:
-            self.copyBinariesCmdList = []
-            if fileExists("%s/libs/iptvsubparser/_subparser.so" % os_path.join(self.ExtensionPath, 'IPTVPlayer')):
-                self.copyBinariesCmdList.append('cp -f "%s/libs/iptvsubparser/_subparser.so" "%s/libs/iptvsubparser/_subparser.so"  2>&1 ' % (os_path.join(self.ExtensionPath, 'IPTVPlayer'), os_path.join(self.ExtensionTmpPath, 'IPTVPlayer')))
-
-            if fileExists("%s/libs/e2icjson/e2icjson.so" % os_path.join(self.ExtensionPath, 'IPTVPlayer')):
-                self.copyBinariesCmdList.append('cp -f "%s/libs/e2icjson/e2icjson.so" "%s/libs/e2icjson/e2icjson.so"  2>&1 ' % (os_path.join(self.ExtensionPath, 'IPTVPlayer'), os_path.join(self.ExtensionTmpPath, 'IPTVPlayer')))
-
-            binPath = "%s/bin/" % (os_path.join(self.ExtensionPath, 'IPTVPlayer'))
-            binariesTab = [('exteplayer3', config.plugins.iptvplayer.exteplayer3path.value),
-                           ('gstplayer', config.plugins.iptvplayer.gstplayerpath.value),
-                           ('wget', config.plugins.iptvplayer.wgetpath.value),
-                           ('hlsdl', config.plugins.iptvplayer.hlsdlpath.value),
-                           ('cmdwrap', config.plugins.iptvplayer.cmdwrappath.value),
-                           ('duk', config.plugins.iptvplayer.dukpath.value),
-                           ('f4mdump', config.plugins.iptvplayer.f4mdumppath.value),
-                           ('uchardet', config.plugins.iptvplayer.uchardetpath.value)]
-            for binItem in binariesTab:
-                if binPath in binItem[1]:
-                    self.copyBinariesCmdList.append('cp -f "%s/%s" "%s/bin/"  2>&1 ' % (binPath, binItem[0], os_path.join(self.ExtensionTmpPath, 'IPTVPlayer')))
-
-            if 0 < len(self.copyBinariesCmdList):
-                self.copyBinariesMsg = ''
-            else:
-                self.copyBinariesMsg = _("Nothing to do here.")
-
-        self.copyBinariesMsg += msg
-        if 0 != code:
-            self.stepFinished(-1, _("Problem with copy binary.\n") + self.copyBinariesMsg)
-        elif 0 < len(self.copyBinariesCmdList):
-            cmd = self.copyBinariesCmdList.pop()
-            self.cmd = iptv_system(cmd, self.__copyBinariesCmdFinished)
-        else:
-            self.stepFinished(0, _("Completed.\n") + self.copyBinariesMsg)
-
     def stepExecuteUserScripts(self, init=True, code=0, msg=''):
         # get users scripts
         if init:
@@ -684,7 +647,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         cmd = ''
         try:
             url = "http://iptvplayer.vline.pl/check.php?ver=%s&type=%s" % (self.serversList[self.currServIdx]['version'], self.serversList[self.currServIdx]['pyver'])
-            cmd = '%s "%s" -t 1 -T 10 -O - > /dev/null 2>&1; ' % (config.plugins.iptvplayer.wgetpath.value, url)
+            cmd = '/usr/bin/wget "%s" -t 1 -T 10 -O - > /dev/null 2>&1; ' % url
         except Exception:
             printExc()
 

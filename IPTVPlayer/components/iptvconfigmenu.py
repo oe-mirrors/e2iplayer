@@ -41,14 +41,6 @@ config.plugins.iptvplayer = ConfigSubsection()
 from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayer
 
 config.plugins.iptvplayer.exteplayer3path = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.gstplayerpath = ConfigText(default="/usr/bin/gstplayer", fixed_size=False)
-config.plugins.iptvplayer.wgetpath = ConfigText(default="wget", fixed_size=False)
-config.plugins.iptvplayer.hlsdlpath = ConfigText(default="/usr/bin/hlsdl", fixed_size=False)
-config.plugins.iptvplayer.cmdwrappath = ConfigText(default="/usr/bin/cmdwrap", fixed_size=False)
-config.plugins.iptvplayer.dukpath = ConfigText(default="/usr/bin/duk", fixed_size=False)
-config.plugins.iptvplayer.rtmpdumppath = ConfigText(default="/usr/bin/rtmpdump", fixed_size=False)
-config.plugins.iptvplayer.f4mdumppath = ConfigText(default="/usr/bin/f4mdump", fixed_size=False)
-config.plugins.iptvplayer.uchardetpath = ConfigText(default="/usr/bin/uchardet", fixed_size=False)
 config.plugins.iptvplayer.set_curr_title = ConfigYesNo(default=False)
 config.plugins.iptvplayer.curr_title_file = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.plarform = ConfigSelection(default="auto", choices=[("auto", "auto"), ("mipsel", _("mipsel")), ("sh4", _("sh4")), ("i686", _("i686")), ("armv7", _("armv7")), ("armv5t", _("armv5t")), ("unknown", _("unknown"))])
@@ -327,14 +319,6 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry(_("The default aspect ratio for the external player"), config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio))
 
             list.append(getConfigListEntry("exteplayer3path", config.plugins.iptvplayer.exteplayer3path))
-            #list.append(getConfigListEntry("gstplayerpath", config.plugins.iptvplayer.gstplayerpath))
-            #list.append(getConfigListEntry("wgetpath", config.plugins.iptvplayer.wgetpath))
-            #list.append(getConfigListEntry("rtmpdumppath", config.plugins.iptvplayer.rtmpdumppath))
-            #list.append(getConfigListEntry("hlsdlpath", config.plugins.iptvplayer.hlsdlpath))
-            #list.append(getConfigListEntry("cmdwrappath", config.plugins.iptvplayer.cmdwrappath))
-            #list.append(getConfigListEntry("dukpath", config.plugins.iptvplayer.dukpath))
-            #list.append(getConfigListEntry("f4mdumppath", config.plugins.iptvplayer.f4mdumppath))
-            #list.append(getConfigListEntry("uchardetpath", config.plugins.iptvplayer.uchardetpath))
             list.append(getConfigListEntry("MIPS Floating Point Architecture", config.plugins.iptvplayer.plarformfpuabi))
             list.append(getConfigListEntry("E2iPlayer auto start at Enigma2 start", config.plugins.iptvplayer.plugin_autostart))
             list.append(getConfigListEntry("Auto start method", config.plugins.iptvplayer.plugin_autostart_method))
@@ -709,7 +693,7 @@ def GetMoviePlayer(buffering=False, useAlternativePlayer=False):
     availablePlayers = []
     if config.plugins.iptvplayer.plarform.value in ['sh4', 'mipsel', 'armv7', 'armv5t'] and IsExecutable(config.plugins.iptvplayer.exteplayer3path.value):
         availablePlayers.append('exteplayer')
-    if IsExecutable(config.plugins.iptvplayer.gstplayerpath.value): #config.plugins.iptvplayer.plarform.value in ['sh4', 'mipsel', 'i686'] and
+    if IsExecutable('/usr/bin/gstplayer'):
         availablePlayers.append('extgstplayer')
     availablePlayers.append('mini')
     availablePlayers.append('standard')

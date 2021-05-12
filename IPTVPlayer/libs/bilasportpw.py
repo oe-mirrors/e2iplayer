@@ -4,7 +4,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetCookieDir, GetPyScriptCmd, MergeDicts, GetDukPath, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetCookieDir, GetPyScriptCmd, MergeDicts, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, hex_md5
@@ -174,7 +174,7 @@ class BilaSportPwApi(CBaseHostClass):
         if len(keyUrl):
             keyUrl = keyUrl.pop()
             proto = keyUrl.split('://', 1)[0]
-            pyCmd = GetPyScriptCmd('livesports') + ' "%s" "%s" "%s" "%s" "%s" "%s" "%s" ' % (config.plugins.iptvplayer.bilasportpw_port.value, videoUrl, baseUrl, scriptUrl, self.HTTP_HEADER['User-Agent'], self.COOKIE_FILE, GetDukPath())
+            pyCmd = GetPyScriptCmd('livesports') + ' "%s" "%s" "%s" "%s" "%s" "%s" "%s" ' % (config.plugins.iptvplayer.bilasportpw_port.value, videoUrl, baseUrl, scriptUrl, self.HTTP_HEADER['User-Agent'], self.COOKIE_FILE, "/usr/bin/duk")
             meta = {'iptv_proto': 'em3u8'}
             meta['iptv_m3u8_key_uri_replace_old'] = '%s://' % proto
             meta['iptv_m3u8_key_uri_replace_new'] = 'http://127.0.0.1:{0}/{1}/'.format(config.plugins.iptvplayer.bilasportpw_port.value, proto)

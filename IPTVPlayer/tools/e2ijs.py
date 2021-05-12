@@ -2,7 +2,7 @@
 #
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify
 from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDukPath, CreateTmpFile, rm, getDebugMode, GetJSCacheDir, \
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, CreateTmpFile, rm, getDebugMode, GetJSCacheDir, \
                                                           ReadTextFile, WriteTextFile
 
 from Tools.Directories import fileExists
@@ -18,7 +18,7 @@ DUKTAPE_VER = '226'
 def duktape_execute(cmd_params):
     ret = {'sts': False, 'code': -12, 'data': ''}
     noDuk = False
-    cmd = GetDukPath()
+    cmd = "/usr/bin/duk"
     if cmd != '':
         cmd += ' ' + cmd_params + ' 2> /dev/null'
         printDBG("duktape_execute cmd[%s]" % cmd)

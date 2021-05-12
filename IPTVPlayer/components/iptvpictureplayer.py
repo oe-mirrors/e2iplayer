@@ -52,7 +52,7 @@ class IPTVSimpleAudioPlayer():
         self.uri = uri
         self.playMode = mode
 
-        gstplayerPath = config.plugins.iptvplayer.gstplayerpath.value
+        gstplayerPath = '/usr/bin/gstplayer'
         #'export GST_DEBUG="*:6" &&' +
         cmd = gstplayerPath + ' "%s"' % self.uri
         if "://" in self.uri:
@@ -218,7 +218,7 @@ class IPTVPicturePlayerWidget(Screen):
         self.refreshCount = 0
         self.refreshing = False
 
-        if len(self.audioUrl) and len(config.plugins.iptvplayer.gstplayerpath.value):
+        if len(self.audioUrl):
             self.audioPlayer = IPTVSimpleAudioPlayer()
         else:
             self.audioPlayer = None

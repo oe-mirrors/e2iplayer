@@ -92,15 +92,15 @@ class DMHelper:
 
     @staticmethod
     def GET_WGET_PATH():
-        return config.plugins.iptvplayer.wgetpath.value
+        return '/usr/bin/wget'
 
     @staticmethod
     def GET_F4M_PATH():
-        return config.plugins.iptvplayer.f4mdumppath.value
+        return '/usr/bin/f4mdump'
 
     @staticmethod
     def GET_HLSDL_PATH():
-        return config.plugins.iptvplayer.hlsdlpath.value
+        return '/usr/bin/hlsdl'
 
     @staticmethod
     def GET_FFMPEG_PATH():
@@ -111,7 +111,7 @@ class DMHelper:
 
     @staticmethod
     def GET_RTMPDUMP_PATH():
-        return config.plugins.iptvplayer.rtmpdumppath.value
+        return '/usr/bin/rtmpdump'
 
     @staticmethod
     def getDownloaderType(url):

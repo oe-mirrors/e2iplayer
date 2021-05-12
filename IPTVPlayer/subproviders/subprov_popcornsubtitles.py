@@ -129,7 +129,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
             rm(tmpFile)
 
         # detect encoding
-        cmd = '%s "%s"' % (config.plugins.iptvplayer.uchardetpath.value, tmpFile)
+        cmd = '/usr/bin/uchardet "%s"' % tmpFile
         ret = self.iptv_execute(cmd)
         if ret['sts'] and 0 == ret['code']:
             encoding = MapUcharEncoding(ret['data'])

@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrappe
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSearchHistoryHelper, GetCookieDir, printDBG, printExc, GetTmpDir, GetSubtitlesDir, \
-                                                          MapUcharEncoding, GetPolishSubEncoding, GetUchardetPath, GetDefaultLang, \
+                                                          MapUcharEncoding, GetPolishSubEncoding, GetDefaultLang, \
                                                           rm, rmtree, mkdirs
 from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandler
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
@@ -601,7 +601,7 @@ class CBaseSubProviderClass:
         printDBG('CBaseSubProviderClass.converFileToUtf8 inFile[%s] outFile[%s]' % (inFile, outFile))
         # detect encoding
         encoding = ''
-        cmd = '%s "%s"' % (GetUchardetPath(), inFile)
+        cmd = '/usr/bin/uchardet "%s"' % inFile
         ret = self.iptv_execute(cmd)
         if ret['sts'] and 0 == ret['code']:
             encoding = MapUcharEncoding(ret['data'])

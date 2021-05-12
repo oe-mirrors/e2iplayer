@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, E2PrioFix, rm, GetCmdwrapPath, WriteTextFile, GetNice, getDebugMode
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, E2PrioFix, rm, WriteTextFile, GetNice, getDebugMode
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -133,7 +133,7 @@ class FFMPEGDownloader(BaseDownloader):
         rm(self.fileCmdPath)
         WriteTextFile(self.fileCmdPath, '|'.join(cmdTab))
 
-        cmd = GetCmdwrapPath() + (' "%s" "|" %s ' % (self.fileCmdPath, GetNice() + 2))
+        cmd = '/usr/bin/cmdwrap' + (' "%s" "|" %s ' % (self.fileCmdPath, GetNice() + 2))
 
         printDBG("FFMPEGDownloader::start cmd[%s]" % cmd)
 
