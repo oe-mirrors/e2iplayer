@@ -465,7 +465,7 @@ def GetE2iPlayerRootfsDir(file=''):
 
 
 def GetE2iPlayerVKLayoutDir(file=''):
-    return GetE2iPlayerRootfsDir('etc/vk/' + file)
+    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/vk/') + file
 
 
 def CreateTmpFile(filename, data=''):

@@ -15,13 +15,11 @@ from Components.Label import Label
 from Components.Input import Input
 from Components.config import config, configfile
 from Screens.MessageBox import MessageBox
-from Screens.ChoiceBox import ChoiceBox
 
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, mkdirs, GetDefaultLang, GetIconDir, GetE2iPlayerVKLayoutDir, GetResourcesServerUri
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, mkdirs, GetDefaultLang, GetIconDir, GetE2iPlayerVKLayoutDir
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVListComponentBase
-from Plugins.Extensions.IPTVPlayer.components.e2isimpledownloader import SingleFileDownloaderWidget
 
 
 class E2iInput(Input):
@@ -611,7 +609,7 @@ class E2iVirtualKeyBoard(Screen):
             return ret
         return 0
 
-    def loadKeyboardLayout(self, vkLayoutId, allowDownload=True):
+    def loadKeyboardLayout(self, vkLayoutId, allowDownload=False):
         printDBG("loadKeyboardLayout vkLayoutId: %s" % vkLayoutId)
         errorMsg = ''
         askForDowanload = 0
@@ -643,16 +641,6 @@ class E2iVirtualKeyBoard(Screen):
                 errorMsg = _('"%s" Virtual Keyboard layout not available.') % vkLayoutItem[0]
                 askForDowanload = 1
 
-            if errorMsg != '':
-                if askForDowanload and allowDownload:
-                    if askForDowanload == 1:
-                        errorMsg += '\n' + _('Do you want to download "%s" Virtual Keyboard layout now?') % vkLayoutItem[0]
-                    else:
-                        errorMsg += '\n' + _('Do you want to try to re-download "%s" Virtual Keyboard layout?') % vkLayoutItem[0]
-                    self.session.openWithCallback(boundFunction(self.askForVKLayoutDownload, vkLayoutId), MessageBox, text=errorMsg, type=MessageBox.TYPE_YESNO)
-                else:
-                    self.session.open(MessageBox, text=errorMsg, type=MessageBox.TYPE_ERROR)
-
     def setVKLayout(self, layout=None):
         if layout != None:
             self.currentVKLayout = layout
@@ -661,20 +649,6 @@ class E2iVirtualKeyBoard(Screen):
         self['_56'].show()
         self.updateSuggestions()
 
-    def askForVKLayoutDownload(self, vkLayoutId, ret=None):
-        if ret:
-            file = '%s.kle' % vkLayoutId
-            path = GetE2iPlayerVKLayoutDir()
-            mkdirs(path)
-            self.session.openWithCallback(boundFunction(self.vkLayoutDownloadCallback, vkLayoutId), SingleFileDownloaderWidget, GetResourcesServerUri('vk/' + file), path + file)
-        else:
-            self.setVKLayout()
-
-    def vkLayoutDownloadCallback(self, vkLayoutId, ret=None):
-        if ret:
-            self.loadKeyboardLayout(vkLayoutId, False)
-        else:
-            self.setVKLayout()
 
     def updateSpecialKey(self, keysidTab, state):
         if state:
