@@ -135,6 +135,7 @@ class PlayerSelectorWidget(Screen):
             self.pageItemStartY = 40
 
         if screenwidth and screenwidth == 1920:
+			# wenn einer die version einbauen will <widget name="IptvVersion" position="40,0" zPosition="1" size="250,50" font="Regular;36" halign="center" valign="center" transparent="1"/>
             skin = """
             <screen name="IPTVPlayerPlayerSelectorWidget" position="center,center" title="E2iPlayer %s" size="%d,%d">
             <widget name="statustext" position="0,0" zPosition="1" size="%d,50" font="Regular;36" halign="center" valign="center" transparent="1"/>
@@ -219,6 +220,7 @@ class PlayerSelectorWidget(Screen):
 
         self["marker"] = Cover3()
         self["page_marker"] = Cover3()
+        self['IptvVersion'] = Label(GetIPTVPlayerVersion())
         self["menu"] = Cover3()
 
 
