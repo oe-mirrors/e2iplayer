@@ -27,13 +27,9 @@ try:
     import pycurl
 except Exception:
     pass
-try:
-    try:
-        from io import StringIO
-    except Exception:
-        from io import StringIO
-except Exception:
-    pass
+
+from io import BytesIO, StringIO
+
 import gzip
 from urllib.parse import urljoin, urlparse, urlunparse
 from binascii import hexlify
@@ -389,17 +385,17 @@ class common:
             try:
                 verInfo = pycurl.version_info()
                 printDBG("usePyCurl VERSION: %s" % [verInfo])
-                if verInfo[4] & (1 << 7) and verInfo[1].startswith('7.6') and verInfo[5] == 'wolfSSL/3.15.3':
+                if verInfo[1].startswith('7.'): # and 'wolfSSL' in verInfo[5]:
                     pyCurlInstalled = True
             except Exception:
                 printExc()
             if pyCurlInstalled:
                 if not UsePyCurl():
                     messages.append(_('You can enable PyCurl in the E2iPlayer configuration to fix this problem.'))
-                else:
-                    messages.append(_('Please report this problem to the developer %s.') % 'iptvplayere2@gmail.com')
+                #else:
+                #    messages.append(_('Please report this problem to the developer %s.') % 'iptvplayere2@gmail.com')
             else:
-                messages.append(_('You can install PyCurl package from %s to fix this problem.') % 'http://www.iptvplayer.gitlab.io/')
+                messages.append(_('You can install PyCurl package with TLS 1.3 support from the feed to fix this problem.'))
         GetIPTVNotify().push('\n'.join(messages), 'error', 40, type + domain, 40)
 
     def usePyCurl(self):
@@ -414,7 +410,7 @@ class common:
                     # #define CURL_VERSION_ASYNCHDNS    (1<<7)
                     # we need to have ASYNC DNS to be able "cancel"
                     # request
-                    if verInfo[4] & (1 << 7):
+                    if verInfo[1].startswith('7.'): # and 'wolfSSL' in verInfo[5]:
                         self.pyCurlAvailable = True
                     else:
                         self.pyCurlAvailable = False
@@ -592,7 +588,7 @@ class common:
         out_data = None
         sts = False
 
-        buffer = StringIO()
+        buffer = BytesIO()
         checkFromFirstBytes = params.get('check_first_bytes', [])
         fileHandler = None
         firstAttempt = [True]
@@ -601,6 +597,7 @@ class common:
         responseHeaders = {}
 
         def _headerFunction(headerLine):
+            headerLine = six.ensure_str(headerLine)
             if ':' not in headerLine:
                 if 0 == maxDataSize:
                     if headerLine in ['\r\n', '\n']:
@@ -898,7 +895,9 @@ class common:
             if fileHandler:
                 fileHandler.close()
         except pycurl.error as e:
-            metadata['pycurl_error'] = (e[0], str(e[1]))
+            print('pycurl.error 903')
+            print(e)
+#            metadata['pycurl_error'] (e[0], str(e[1]))
             printExc()
         except Exception:
             printExc()
