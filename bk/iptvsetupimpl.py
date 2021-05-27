@@ -308,9 +308,9 @@ class IPTVSetupImpl:
         self.workingObj.start()
 
     def getOpensslVersionFinished(self, stsTab, dataTab):
-        printDBG("IPTVSetupImpl.getOpensslVersionFinished")
+        printDBG("IPTVSetupImpl.getOpensslVersionFinished len(stsTab): %d stsTab[-1]: %s data: %s" % (len(stsTab), stsTab[-1], dataTab[-1]))
         if len(stsTab) > 0 and True == stsTab[-1]:
-            for ver in ['0.9.8', '1.0.0', '1.0.2']:
+            for ver in ['0.9.8', '1.0.0', '1.0.2', '1.1']:
                 if ver in dataTab[-1]:
                     self.openSSLVersion = '.' + ver
                     break
@@ -324,9 +324,9 @@ class IPTVSetupImpl:
             self.getGstreamerVer()
 
     def setOpenSSLVersion(self, ret=None):
-        printDBG('Check opennSSL version')
+        printDBG('Check openSSL version')
         self.setInfo(_("Detection of the OpenSSL version."), _("OpenSSL lib is needed by wget and rtmpdump utilities."))
-        for ver in ['.0.9.8', '.1.0.0', '.1.0.2']:
+        for ver in ['.0.9.8', '.1.0.0', '.1.0.2', '.1.1']:
             libsslExist = False
             libcryptoExist = False
             libSSLPath = ''
