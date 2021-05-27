@@ -515,6 +515,7 @@ class urlparser:
                        'streamtape.to': self.pp.parserSTREAMTAPE,
                        'streamz.cc': self.pp.parserSTREAMZ,
                        'streamz.vg': self.pp.parserSTREAMZ,
+                       'streamzz.to': self.pp.parserSTREAMZZ,
                        'streamwire.net': self.pp.parserONLYSTREAM,
                        'superfastvideos.xyz': self.pp.parserTXNEWSNETWORK,
                        'superfilm.pl': self.pp.parserSUPERFILMPL,
@@ -653,6 +654,7 @@ class urlparser:
                        'vshare.io': self.pp.parserVSHAREIO,
                        'vsports.pt': self.pp.parserSAPOPT,
                        'vup.to': self.pp.parserONLYSTREAM,
+                       'vupload.com': self.pp.parserONLYSTREAM,
                        'waaw.tv': self.pp.parserNETUTV,
                        'waaw.to': self.pp.parserNETUTV,
                        'wat.tv': self.pp.parserWATTV,
@@ -14879,7 +14881,9 @@ class pageParser(CaptchaHelper):
             'use_cookie': True,
             'load_cookie': True,
             'save_cookie': True,
-            'cookiefile': GetCookieDir("dood.cookie")
+            'cookiefile': GetCookieDir("dood.cookie"),
+            'max_data_size': 0,
+            'no_redirection': True
         }
 
         urlsTab = []
@@ -14888,11 +14892,16 @@ class pageParser(CaptchaHelper):
             baseUrl = baseUrl.replace('/d/', '/e/')
 
         sts, data = self.cm.getPage(baseUrl, httpParams)
+        url = self.cm.meta.get('location', '')
+        if url != '':
+            baseUrl = url
+        del httpParams['max_data_size']
+        del httpParams['no_redirection']
+        sts, data = self.cm.getPage(baseUrl, httpParams)
 
 #        if sts:
 #            printDBG("-----------------------")
 #            printDBG(data)
-#            printDBG("-----------------------")
 #            printDBG("-----------------------")
 
         subTracks = []
@@ -15341,13 +15350,18 @@ class pageParser(CaptchaHelper):
     def parserNINJASTREAMTO(self, baseUrl):
         printDBG("parserNINJASTREAMTO baseUrl [%s]" % baseUrl)
 
+        COOKIE_FILE = GetCookieDir('ninjastream.cookie')
         httpParams = {
             'header': {
                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
                 'Accept': '*/*',
                 'Accept-Encoding': 'gzip',
                 'Referer': baseUrl.meta.get('Referer', baseUrl)
-            }
+            },
+            'use_cookie': True,
+            'load_cookie': True,
+            'save_cookie': True,
+            'cookiefile': COOKIE_FILE
         }
 
         urlsTab = []
@@ -15358,12 +15372,16 @@ class pageParser(CaptchaHelper):
             if not r:
                 r = self.cm.ph.getSearchGroups(data, r'v-bind:[n|s]*file="([^"]+?)"')[0].replace('&quot;', '"')
             printDBG("parserNINJASTREAMTO r [%s]" % r)
+            httpParams['header']['X-Requested-With'] = 'XMLHttpRequest'
+            httpParams['header']['x-csrf-token'] = self.cm.ph.getSearchGroups(data, '''<[^>]+?csrf-token[^>]+?content=['"]([^'^"]+?)['"]''')[0]
+            httpParams['header']['x-xsrf-token'] = self.cm.getCookieItem(COOKIE_FILE, 'XSRF-TOKEN')
             if r:
                 data = json_loads(r)
-                hash = data.get('hash')
-                host = "".join([chr(ord(i) ^ ord(str(idx % 2 + 1))) for idx, i in enumerate(data.get('host'))])
-                url = '%s%s/index.m3u8' % (host, hash)
-                urlsTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
+                sts, data = self.cm.getPage('https://ninjastream.to/api/video/get', httpParams, {'id': data.get('hashid')})
+                if sts:
+                    data = json_loads(data)
+                    url = data['result']['playlist']
+                    urlsTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
 
         return urlsTab
 
@@ -15523,5 +15541,40 @@ class pageParser(CaptchaHelper):
         if self.cm.isValidUrl(url):
             url = strwithmeta(url, {'Origin': "https://" + urlparser.getDomain(baseUrl), 'Referer': baseUrl})
             urlTab.append({'name': 'mp4', 'url': url})
+
+        return urlTab
+
+    def parserSTREAMZZ(self, baseUrl):
+        printDBG("parserSTREAMZZ baseUrl[%r]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return False
+
+        urlTab = []
+        if "eval(function(p,a,c,k,e,d)" in data:
+            printDBG('Host resolveUrl packed')
+            scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data, re.S)
+            for packed in scripts:
+                data2 = packed
+                printDBG('Host pack: [%s]' % data2)
+                try:
+                    data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                    printDBG('OK unpack: [%s]' % data)
+                except Exception:
+                    pass
+                name = self.cm.ph.getSearchGroups(data, '''var\s([^=]+?)=''', ignoreCase=True)[0]
+                name = name + ' - ' + self.cm.ph.getSearchGroups(data, '''type:['"]([^"^']+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.dll)["']''', ignoreCase=True)[0]
+                urlParams['max_data_size'] = 0
+                urlParams['no_redirection'] = True
+                sts, data = self.cm.getPage(url, urlParams)
+                if sts:
+                    url = self.cm.meta.get('location', '')
+                    urlTab.append({'name': name, 'url': url})
 
         return urlTab
