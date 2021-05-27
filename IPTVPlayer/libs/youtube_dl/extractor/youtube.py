@@ -525,7 +525,7 @@ class YoutubeIE(object):
             url = 'http://www.youtube.com/watch?v=%s&' % video_id
             isGoogleDoc = False
             videoKey = 'video_id'
-            videoInfoBase = 'https://www.youtube.com/get_video_info?video_id=%s&' % video_id
+            videoInfoBase = 'https://www.youtube.com/get_video_info?html5=1&video_id=%s&' % video_id
             #videoInfoparams = {}
             videoInfoparams = {'header': {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36'}}
 

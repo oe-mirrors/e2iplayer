@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###################################################
 # LOCAL import
 ###################################################
@@ -21,7 +21,7 @@ except Exception:
 
 
 def gettytul():
-    return 'https://myfreemp3.vip/'
+    return 'https://my-free-mp3.net/'
 
 
 class MyFreeMp3(CBaseHostClass):
@@ -29,8 +29,8 @@ class MyFreeMp3(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'my-free-mp3.net', 'cookie': 'my-free-mp3.net.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL = 'https://myfreemp3.vip/'
-        self.DEFAULT_ICON_URL = 'https://myfreemp3cc.com/img/myfreemp3.png'
+        self.MAIN_URL = 'https://my-free-mp3.net/'
+        self.DEFAULT_ICON_URL = 'https://my-free-mp3.net/img/logo.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
@@ -41,7 +41,7 @@ class MyFreeMp3(CBaseHostClass):
                              {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')},
                             ]
-        self.streamUrl = 'http://s.mp3-music-downloads.com/'
+        self.streamUrl = 'https://play.idmp3s.com/'
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
