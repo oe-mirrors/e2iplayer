@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 #
 import urllib
-try:    import json
-except Exception: import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 
+
 class SuggestionsProvider:
 
     def __init__(self):
         self.cm = common()
-        
+
     def getName(self):
         return _("IMDb Suggestions")
 
@@ -24,10 +27,10 @@ class SuggestionsProvider:
             sts, data = self.cm.getPage(url)
             if sts:
                 retList = []
-                data = data[data.find('(')+1:data.rfind(')')]
+                data = data[data.find('(') + 1:data.rfind(')')]
                 printDBG(data)
                 data = json.loads(data)['d']
                 for item in data:
                     retList.append(item['l'].encode('utf-8'))
-                return retList 
+                return retList
         return None

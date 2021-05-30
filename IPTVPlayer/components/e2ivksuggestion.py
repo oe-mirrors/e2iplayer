@@ -9,10 +9,11 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eC
 
 from enigma import eTimer
 
+
 class AutocompleteSearch:
 
     def __init__(self, provider, historyList=[]):
-        printDBG( "AS.__init__" )
+        printDBG("AS.__init__")
 
         self.lock = threading.Lock()
         self.event = threading.Event()
@@ -39,10 +40,10 @@ class AutocompleteSearch:
                 printExc()
 
     def __del__(self):
-        printDBG( "AS.__del__")
+        printDBG("AS.__del__")
 
     def term(self):
-        printDBG( "AS._terminate")
+        printDBG("AS._terminate")
         self.stop()
         self.provider = None
 
@@ -65,7 +66,7 @@ class AutocompleteSearch:
                 last = self.requestStamp == self.lastStamp
                 self.run = False
                 self.event.set()
-            
+
             if last:
                 # give a chance to finish in the normal way
                 time.sleep(0.01)
@@ -75,7 +76,7 @@ class AutocompleteSearch:
     def set(self, txt, locale):
         if self.workThread != None:
             with self.lock:
-                self.requestParams = {'text':str(txt), 'locale':locale}
+                self.requestParams = {'text': str(txt), 'locale': locale}
                 self.requestStamp += 1
                 self.event.set()
                 stamp = int(self.requestStamp)
@@ -146,4 +147,3 @@ class AutocompleteSearch:
 
         if retStamp != -1 and self.callback:
             self.callback(retList, retStamp)
-

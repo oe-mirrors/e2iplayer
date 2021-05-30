@@ -20,71 +20,73 @@ from os import rename as os_rename
 ###################################################
 
 ###################################################
-# One instance of this class can be used only for 
+# One instance of this class can be used only for
 # one download
 ###################################################
+
+
 class BaseDownloader:
     # errors code
     CODE_OK = 0
     CODE_NOT_DOWNLOADING = 1 # user what terminate not started downloading
     CODE_WRONG_LINK = 2      # wrong link
-    
+
     # posible fileds
-    DOWNLOAD_PARAMS = { 'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
-                        'Cookie':''
+    DOWNLOAD_PARAMS = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+                        'Cookie': ''
                       }
 
     def __init__(self):
         self.status = DMHelper.STS.WAITING
-        self.tries  = DMHelper.DOWNLOAD_TYPE.INITIAL
+        self.tries = DMHelper.DOWNLOAD_TYPE.INITIAL
         self.subscribersFor_Finish = []
-        self.subscribersFor_Start  = []
-        
+        self.subscribersFor_Start = []
+
         self.remoteFileSize = -1
-        self.localFileSize  = -1
-        self.downloadSpeed  = -1
-        
+        self.localFileSize = -1
+        self.downloadSpeed = -1
+
         self.downloaderParams = {}
         self.url = ''
         self.filePath = ''
         self.fileExtension = ''
-        
+
         # temporary data to calculate download speed
         self.lastUpadateTime = None
         self.prevLocalFileSize = 0
-        
+
     def getName(self):
         return "Base"
-        
+
     def getMimeType(self):
         return None
 
     def getStatus(self):
         return self.status
-        
+
     def getLastError(self):
         return None, ''
-    
+
     def isDownloading(self):
         if DMHelper.STS.DOWNLOADING == self.status:
             return True
         return False
 
     def isWorkingCorrectly(self, callBackFun):
-        ''' Check if this downloader has all needed components 
-            and can be used for download, this method can be 
+        ''' Check if this downloader has all needed components
+            and can be used for download, this method can be
             called only from main thread
-        ''' 
-        sts    = False
+        '''
+        sts = False
         reason = 'This is base class. Download cannot be done with it.'
         callBackFun(sts, reason)
-        
+
     def isLiveStream(self):
-        # True - if it downloading live stream, 
-        # False - if it downloading vod, 
+        # True - if it downloading live stream,
+        # False - if it downloading vod,
         # None - no information
         return None
-    
+
     def hasDurationInfo(self):
         return False
 
@@ -106,18 +108,18 @@ class BaseDownloader:
     def getUrl(self):
         return self.url
 
-    def start(self, url, filePath, params = {}):
-        self.url              = url
-        self.filePath         = filePath
+    def start(self, url, filePath, params={}):
+        self.url = url
+        self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension    = '' # should be implemented in future
-        
-        sts,remoteInfo = DMHelper.getRemoteContentInfoByUrllib(url, params)
+        self.fileExtension = '' # should be implemented in future
+
+        sts, remoteInfo = DMHelper.getRemoteContentInfoByUrllib(url, params)
         if False == sts:
             return BaseDownloader.CODE_WRONG_LINK
         else:
             self.remoteFileSize = int(remoteInfo.get('Content-Length', '-1'))
-        
+
         sts = self._start()
         if sts == BaseDownloader.CODE_OK:
             self.onStart()
@@ -132,7 +134,7 @@ class BaseDownloader:
         if sts == BaseDownloader.CODE_OK:
             self.onFinish()
         return sts
-        
+
     def updateStatistic(self):
         self.localFileSize = DMHelper.getFileSize(self.filePath)
         self._updateStatistic()
@@ -151,7 +153,7 @@ class BaseDownloader:
         else:
             self.lastUpadateTime = newTime
             self.prevLocalFileSize = self.localFileSize
- 
+
     def getRemoteFileSize(self):
         return self.remoteFileSize
 
@@ -161,8 +163,8 @@ class BaseDownloader:
         return self.localFileSize
 
     def getDownloadSpeed(self):
-        return self.downloadSpeed 
-        
+        return self.downloadSpeed
+
     def getPlayableFileSize(self):
         return self.getLocalFileSize()
 

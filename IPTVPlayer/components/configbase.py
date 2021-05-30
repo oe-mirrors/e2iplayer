@@ -29,14 +29,16 @@ from Components.config import config, ConfigDirectory, ConfigText, ConfigPasswor
 from Components.ConfigList import ConfigListScreen
 from Tools.BoundFunction import boundFunction
 ###################################################
-COLORS_DEFINITONS = [("#000000", _("black")), ("#C0C0C0", _("silver")), ("#808080", _("gray")), ("#FFFFFF", _("white")), ("#800000", _("maroon")), ("#FF0000", _("red")), ("#800080", _("purple")), ("#FF00FF", _("fuchsia")), \
+COLORS_DEFINITONS = [("#000000", _("black")), ("#C0C0C0", _("silver")), ("#808080", _("gray")), ("#FFFFFF", _("white")), ("#800000", _("maroon")), ("#FF0000", _("red")), ("#800080", _("purple")), ("#FF00FF", _("fuchsia")),
                      ("#008000", _("green")), ("#00FF00", _("lime")), ("#808000", _("olive")), ("#FFFF00", _("yellow")), ("#000080", _("navy")), ("#0000FF", _("blue")), ("#008080", _("teal")), ("#00FFFF", _("aqua"))]
+
 
 class ConfigIPTVFileSelection(ConfigDirectory):
     def __init__(self, ignoreCase=True, fileMatch=None, default="", visible_width=60):
         self.fileMatch = fileMatch
         self.ignoreCase = ignoreCase
         ConfigDirectory.__init__(self, default, visible_width)
+
 
 class ConfigBaseWidget(Screen, ConfigListScreen):
     screenwidth = getDesktop(0).size().width()
@@ -52,61 +54,61 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         width = 620
         height = 440
         font = 22
-    
+
     skin = """
         <screen position="center,center" size="%d,%d" title="" >
             <widget name="config"    position="10,50" size="%d,%s" zPosition="1" transparent="1" scrollbarMode="showOnDemand" enableWrapAround="1" />
             <widget name="key_red"   position="10,10" zPosition="2" size="%d,35" valign="center" halign="left"   font="Regular;%d" transparent="1" foregroundColor="red" />
             <widget name="key_ok"    position="10,10" zPosition="2" size="%d,35" valign="center" halign="center" font="Regular;%d" transparent="1" foregroundColor="white" />
             <widget name="key_green" position="10,10" zPosition="2" size="%d,35" valign="center" halign="right"  font="Regular;%d" transparent="1" foregroundColor="green" />
-            
+
             <widget name="key_blue"    position="0,0" zPosition="2" size="%d,35" valign="center" halign="right"  font="Regular;%d" transparent="1" foregroundColor="green" />
             <widget name="key_yellow"  position="0,0" zPosition="2" size="%d,35" valign="center" halign="right"  font="Regular;%d" transparent="1" foregroundColor="green" />
-        </screen>""" % (width, height, 
-                        width-20, height-80, 
-                        width-20, font,
-                        width-20, font,
-                        width-20, font,
-                        width-20, font,
-                        width-20, font)
+        </screen>""" % (width, height,
+                        width - 20, height - 80,
+                        width - 20, font,
+                        width - 20, font,
+                        width - 20, font,
+                        width - 20, font,
+                        width - 20, font)
 
     def __init__(self, session):
         printDBG("ConfigBaseWidget.__init__ -------------------------------")
         Screen.__init__(self, session)
-        
-        self.onChangedEntry = [ ]
-        self.list = [ ]
-        ConfigListScreen.__init__(self, self.list, session = session, on_change = self.changedEntry)
+
+        self.onChangedEntry = []
+        self.list = []
+        ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
         self.setup_title = (_("E2iPlayer - settings"))
 
         self["key_green"] = Label(_("Save"))
         self["key_ok"] = Label(_(" "))
         self["key_red"] = Label(_("Cancel"))
-        
+
         self["key_blue"] = Label()
         self["key_yellow"] = Label()
         self["key_blue"].hide()
         self["key_yellow"].hide()
-        
+
         self["actions"] = ActionMap(["SetupActions", "ColorActions", "WizardActions", "ListboxActions", "IPTVPlayerListActions"],
             {
                 "cancel": self.keyExit,
-                "green" : self.keySave,
-                "ok"    : self.keyOK,
-                "red"   : self.keyCancel,
+                "green": self.keySave,
+                "ok": self.keyOK,
+                "red": self.keyCancel,
                 "yellow": self.keyYellow,
-                "blue"  : self.keyBlue,
-                "menu"  : self.keyMenu,
-                
-                "up"      : self.keyUp,
-                "down"    : self.keyDown,
-                "moveUp"  : self.keyUp,
+                "blue": self.keyBlue,
+                "menu": self.keyMenu,
+
+                "up": self.keyUp,
+                "down": self.keyDown,
+                "moveUp": self.keyUp,
                 "moveDown": self.keyDown,
-                "moveTop" : self.keyHome,
-                "moveEnd" : self.keyEnd,
-                "home"    : self.keyHome,
-                "end"     : self.keyEnd,
-                "pageUp"  : self.keyPageUp,
+                "moveTop": self.keyHome,
+                "moveEnd": self.keyEnd,
+                "home": self.keyHome,
+                "end": self.keyEnd,
+                "pageUp": self.keyPageUp,
                 "pageDown": self.keyPageDown
             }, -2)
 
@@ -152,7 +154,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         else:
             labelText = labelText % "  "
         self["key_ok"].setText(_(labelText))
-        
+
     def isOkActive(self):
         if self["config"].getCurrent() is not None:
             currItem = self["config"].getCurrent()[1]
@@ -165,7 +167,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
                     pass
                 return True
         return False
-        
+
     def isSelectableActive(self):
         if self["config"].getCurrent() is not None:
             currItem = self["config"].getCurrent()[1]
@@ -176,7 +178,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
     def runSetup(self):
         self["config"].list = self.list
         self["config"].setList(self.list)
-        
+
     def isChanged(self):
         bChanged = False
         for x in self["config"].list:
@@ -185,74 +187,78 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
                 break
         printDBG("ConfigMenu.isChanged bChanged[%r]" % bChanged)
         return bChanged
-    
+
     def getMessageAfterSave(self):
         return ''
-        
+
     def getMessageBeforeClose(self):
         return ''
-    
+
     def askForSave(self, callbackYesFun, callBackNoFun):
-        self.session.openWithCallback(boundFunction(self.saveOrCancelChanges, callbackYesFun, callBackNoFun), MessageBox, text=_('Save changes?'), type = MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(boundFunction(self.saveOrCancelChanges, callbackYesFun, callBackNoFun), MessageBox, text=_('Save changes?'), type=MessageBox.TYPE_YESNO)
         return
-        
+
     def saveOrCancelChanges(self, callbackFun=None, failCallBackFun=None, answer=None):
         if answer:
             self.save()
-            if callbackFun: callbackFun()
+            if callbackFun:
+                callbackFun()
         else:
             self.cancel()
-            if failCallBackFun: failCallBackFun()
+            if failCallBackFun:
+                failCallBackFun()
 
     def keySave(self):
         self.saveAndClose()
-        
+
     def saveOrCancel(self, operation="save"):
         for x in self["config"].list:
             if "save" == operation:
                 x[1].save()
             else:
-                x[1].cancel()  
+                x[1].cancel()
         if "save" == operation:
             configfile.save()
-    
+
     def save(self):
         self.saveOrCancel("save")
-            
+
     def cancel(self):
         self.saveOrCancel("cancel")
         self.runSetup()
-        
+
     def saveAndClose(self):
         self.save()
         self.performCloseWithMessage(True)
-        
+
     def performCloseWithMessage(self, afterSave=True):
         if afterSave:
             message = self.getMessageAfterSave()
-        else: message = self.getMessageBeforeClose()
+        else:
+            message = self.getMessageBeforeClose()
         if message == '':
             self.close()
         else:
-            self.session.openWithCallback(self.closeAfterMessage, MessageBox, text = message, type = MessageBox.TYPE_INFO)
-            
+            self.session.openWithCallback(self.closeAfterMessage, MessageBox, text=message, type=MessageBox.TYPE_INFO)
+
     def closeAfterMessage(self, arg=None):
         self.close()
-        
+
     def cancelAndClose(self):
         self.cancel()
         self.performCloseWithMessage()
-      
+
     def keyOK(self):
-        if not self.isOkEnabled: 
+        if not self.isOkEnabled:
             return
 
         curIndex = self["config"].getCurrentIndex()
         currItem = self["config"].list[curIndex][1]
-        
+
         if isinstance(currItem, ConfigIPTVFileSelection):
             def SetFilePathCallBack(curIndex, newPath):
-                if None != newPath: self["config"].list[curIndex][1].value = newPath
+                if None != newPath:
+                    self["config"].list[curIndex][1].value = newPath
             try:
                 if None != currItem.fileMatch:
                     if currItem.ignoreCase:
@@ -264,19 +270,21 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             except Exception:
                 printExc()
                 return
-            self.session.openWithCallback(boundFunction(SetFilePathCallBack, curIndex), IPTVFileSelectorWidget, currItem.value,  _('Select the file'), fileMatch)
+            self.session.openWithCallback(boundFunction(SetFilePathCallBack, curIndex), IPTVFileSelectorWidget, currItem.value, _('Select the file'), fileMatch)
             return
-        
+
         elif isinstance(currItem, ConfigDirectory):
             def SetDirPathCallBack(curIndex, newPath):
-                if None != newPath: self["config"].list[curIndex][1].value = newPath
-            self.session.openWithCallback(boundFunction(SetDirPathCallBack, curIndex), IPTVDirectorySelectorWidget, currDir=currItem.value,  title=_('Select the directory'))
+                if None != newPath:
+                    self["config"].list[curIndex][1].value = newPath
+            self.session.openWithCallback(boundFunction(SetDirPathCallBack, curIndex), IPTVDirectorySelectorWidget, currDir=currItem.value, title=_('Select the directory'))
             return
         elif isinstance(currItem, ConfigText):
             def VirtualKeyBoardCallBack(curIndex, newTxt):
-                if isinstance(newTxt, basestring): self["config"].list[curIndex][1].value = newTxt
+                if isinstance(newTxt, basestring):
+                    self["config"].list[curIndex][1].value = newTxt
             try:
-                # we need hide NumericalTextInputHelpDialog before 
+                # we need hide NumericalTextInputHelpDialog before
                 self["config"].list[curIndex][1].help_window.hide()
             except Exception:
                 printExc()
@@ -290,10 +298,10 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             self.askForSave(self.saveAndClose, self.cancelAndClose)
         else:
             self.performCloseWithMessage()
-        
+
     def keyCancel(self):
         self.cancelAndClose()
-        
+
     def keyYellow(self):
         self.hiddenOptionsSecretCode += "y"
         self.runSetup()
@@ -303,47 +311,47 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self.hiddenOptionsSecretCode += "b"
         self.runSetup()
         self.keyPageDown()
-        
+
     def keyMenu(self):
         pass
-        
+
     def keyUp(self):
         if self["config"].instance is not None:
             self["config"].instance.moveSelection(self["config"].instance.moveUp)
-        
+
     def keyDown(self):
         if self["config"].instance is not None:
             self["config"].instance.moveSelection(self["config"].instance.moveDown)
-            
+
     def keyPageUp(self):
         if self["config"].instance is not None:
             self["config"].instance.moveSelection(self["config"].instance.pageUp)
-    
+
     def keyPageDown(self):
         if self["config"].instance is not None:
             self["config"].instance.moveSelection(self["config"].instance.pageDown)
-        
+
     def keyHome(self):
         pass
-    
+
     def keyEnd(self):
         pass
-    
+
     def keyLeft(self):
         ConfigListScreen.keyLeft(self)
-        
+
     def keyRight(self):
         ConfigListScreen.keyRight(self)
 
     def getSubOptionsList(self):
         tab = []
         return tab
-        
+
     def changeSubOptions(self):
         if self["config"].getCurrent()[1] in self.getSubOptionsList():
-            self.runSetup()       
+            self.runSetup()
 
     def changedEntry(self):
         self.changeSubOptions()
-        for x in self.onChangedEntry: x() 
-
+        for x in self.onChangedEntry:
+            x()

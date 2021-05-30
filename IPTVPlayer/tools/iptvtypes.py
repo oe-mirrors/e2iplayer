@@ -8,7 +8,7 @@ def enum(**enums):
 
 # If meta data exists the at least "iptv_proto" MUST by added to them
 #   "iptv_proto":           "m3u8" | "f4m" | "mpd" | "rtmp" | "https" | "http" | "rtsp" | "merge"
-#   "iptv_format":          "mp4" | "ts" | "flv" | "wmv" 
+#   "iptv_format":          "mp4" | "ts" | "flv" | "wmv"
 #   "iptv_urlwithlimit":    True | False
 #   "iptv_livestream":      True | False
 #   "iptv_bitrate":         number
@@ -21,16 +21,16 @@ def enum(**enums):
 #   "iptv_m3u8_key_uri_replace_new" allow to replace part of AES key uri - new
 #   "iptv_proxy_gateway"    "http... link"
 #   "iptv_refresh_cmd"      "refresh cmd line needed for some streams to keep playing"
-#   "iptv_wget_continue"    True | False - default False 
+#   "iptv_wget_continue"    True | False - default False
 #   "iptv_wget_timeout"     in second, default 30s when iptv_wget_continue == True
 #   "iptv_wget_waitretry"   in second, default 1s when iptv_wget_continue == True
 #   "iptv_audio_rep_idx"    audio representation index in mpd
 #   "iptv_video_rep_idx"    video representation index in mpd
 
-# Force buffering settings, generally this field should 
-# be used only to materials that we know that they do 
+# Force buffering settings, generally this field should
+# be used only to materials that we know that they do
 # not work without buffering, or vice versa
-#   "iptv_buffering":       "required" | "forbidden" 
+#   "iptv_buffering":       "required" | "forbidden"
 
 #   "Host": http header field
 #   "User-Agent": http header field
@@ -41,8 +41,10 @@ def enum(**enums):
 #   "Orgin": http header field
 #   "Origin": http header field
 #   "X-Forwarded-For": http header field
+
+
 class strwithmeta(str):
-    def __new__(cls,value,meta={}):
+    def __new__(cls, value, meta={}):
         obj = str.__new__(cls, value)
         obj.meta = {}
         if isinstance(value, strwithmeta):

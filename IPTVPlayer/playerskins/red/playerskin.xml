@@ -1,0 +1,26 @@
+<screen name="IPTVExtMoviePlayer"    position="center,center" size="%d,%d" flags="wfNoBorder" backgroundColor="#FFFFFFFF" >
+                    <widget name="pleaseWait"         noWrap="1" position="center,30"        size="500,40"    zPosition="3" transparent="1" foregroundColor="#999999"   backgroundColor="transparent" font="Regular;25" halign="center"  valign="center"/>
+                    
+                    <widget name="logoIcon"           position="1180,85"        size="160,40"    zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="playbackInfoBaner"  position="0,0"           size="1280,177"  zPosition="2" pixmap="%s" />
+                    <widget name="progressBar"        position="27,39"        size="1225,6"     zPosition="5" pixmap="%s" transparent="1" borderWidth="1" borderColor="#3d3d3d" />
+                    <widget name="bufferingCBar"      position="27,40"        size="1225,4"     zPosition="4" pixmap="%s" transparent="1" borderWidth="1" borderColor="#3d3d3d" />
+                    <widget name="bufferingBar"       position="27,39"        size="1225,6"     zPosition="3" pixmap="%s" borderWidth="1" borderColor="#3d3d3d" />
+                    <widget name="statusIcon"         position="600,78"        size="80,80"     zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="loopIcon"           position="45,90"       size="40,40"     zPosition="4"             transparent="1" alphatest="blend" />
+                    
+                    <widget name="goToSeekPointer"    position="94,41"          size="150,60"  zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
+                    <widget name="goToSeekLabel"      noWrap="1" position="94,43"         size="150,40"   zPosition="9" transparent="1" foregroundColor="white"     backgroundColor="#000000" font="Regular;22" halign="center" valign="center"/>
+                    <widget name="infoBarTitle"       noWrap="1" position="28,1"        size="1225,37"   zPosition="3" transparent="1" foregroundColor="#ff0a0a"     backgroundColor="#000000" font="Regular;29" halign="center" valign="center"/>
+                    <widget name="currTimeLabel"      noWrap="1" position="40,46"       size="200,40"   zPosition="3" transparent="1" foregroundColor="#ffe0e0"   backgroundColor="#251f1f1f" font="Regular;21" halign="left"   valign="top"/>
+                    <widget name="lengthTimeLabel"    noWrap="1" position="540,44"       size="200,40"   zPosition="3" transparent="1" foregroundColor="#999999"   backgroundColor="#251f1f1f" font="Regular;22" halign="center" valign="top"/>
+                    <widget name="remainedLabel"      noWrap="1" position="1040,46"       size="200,40"   zPosition="3" transparent="1" foregroundColor="#ffe0e0"   backgroundColor="#251f1f1f" font="Regular;21" halign="right"  valign="top"/>
+                    <widget name="videoInfo"          noWrap="1" position="725,140"        size="500,30"   zPosition="3" transparent="1" foregroundColor="#ff0f0f"   backgroundColor="#251f1f1f" font="Regular;20" halign="right"  valign="top"/>
+                    
+                    %s
+                    
+                    <widget name="subSynchroIcon"     position="0,0"           size="180,66"  zPosition="4" transparent="1" alphatest="blend" />
+                    <widget name="subSynchroLabel"    position="1,3"           size="135,50"  zPosition="5" transparent="1" foregroundColor="white"      backgroundColor="transparent" font="Regular;24" halign="center"  valign="center"/>
+                    
+                    %s
+</screen>

@@ -11,9 +11,9 @@
 #   Lesser General Public License for more details.
 #
 #   You should have received a copy of the GNU Lesser General Public
-#   License along with this library; if not, write to the 
-#      Free Software Foundation, Inc., 
-#      59 Temple Place, Suite 330, 
+#   License along with this library; if not, write to the
+#      Free Software Foundation, Inc.,
+#      59 Temple Place, Suite 330,
 #      Boston, MA  02111-1307  USA
 
 # This file was part of urlgrabber, a high-level cross-protocol url-grabber
@@ -27,7 +27,7 @@
 >>> keepalive_handler = HTTPHandler()
 >>> opener = urllib2.build_opener(keepalive_handler)
 >>> urllib2.install_opener(opener)
->>> 
+>>>
 >>> fo = urllib2.urlopen('http://www.python.org')
 
 If a connection to a given host is requested, and all of the existing
@@ -112,14 +112,18 @@ import thread
 DEBUG = None
 
 import sys
-if sys.version_info < (2, 4): HANDLE_ERRORS = 1
-else: HANDLE_ERRORS = 0
-    
+if sys.version_info < (2, 4):
+    HANDLE_ERRORS = 1
+else:
+    HANDLE_ERRORS = 0
+
+
 class ConnectionManager:
     """
     The connection manager must be able to:
       * keep track of all existing
       """
+
     def __init__(self):
         self._lock = thread.allocate_lock()
         self._hostmap = {} # map hosts to a list of connections
@@ -129,7 +133,8 @@ class ConnectionManager:
     def add(self, host, connection, ready):
         self._lock.acquire()
         try:
-            if not self._hostmap.has_key(host): self._hostmap[host] = []
+            if not self._hostmap.has_key(host):
+                self._hostmap[host] = []
             self._hostmap[host].append(connection)
             self._connmap[connection] = host
             self._readymap[connection] = ready
@@ -147,14 +152,17 @@ class ConnectionManager:
                 del self._connmap[connection]
                 del self._readymap[connection]
                 self._hostmap[host].remove(connection)
-                if not self._hostmap[host]: del self._hostmap[host]
+                if not self._hostmap[host]:
+                    del self._hostmap[host]
         finally:
             self._lock.release()
 
     def set_ready(self, connection, ready):
-        try: self._readymap[connection] = ready
-        except KeyError: pass
-        
+        try:
+            self._readymap[connection] = ready
+        except KeyError:
+            pass
+
     def get_ready_conn(self, host):
         conn = None
         self._lock.acquire()
@@ -175,10 +183,11 @@ class ConnectionManager:
         else:
             return dict(self._hostmap)
 
+
 class KeepAliveHandler:
     def __init__(self):
         self._cm = ConnectionManager()
-        
+
     #### Connection Management
     def open_connections(self):
         """return a list of connected hosts and the number of connections
@@ -192,23 +201,24 @@ class KeepAliveHandler:
         for h in self._cm.get_all(host):
             self._cm.remove(h)
             h.close()
-        
+
     def close_all(self):
         """close all open connections"""
         for host, conns in self._cm.get_all().items():
             for h in conns:
                 self._cm.remove(h)
                 h.close()
-        
+
     def _request_closed(self, request, host, connection):
         """tells us that this request is now closed and the the
         connection is ready for another request"""
         self._cm.set_ready(connection, 1)
 
     def _remove_connection(self, host, connection, close=0):
-        if close: connection.close()
+        if close:
+            connection.close()
         self._cm.remove(connection)
-        
+
     #### Transaction Execution
     def do_open(self, req):
         host = req.host
@@ -222,7 +232,8 @@ class KeepAliveHandler:
 
                 # if this response is non-None, then it worked and we're
                 # done.  Break out, skipping the else block.
-                if r: break
+                if r:
+                    break
 
                 # connection is bad - possibly closed by server
                 # discard it and ask for the next free connection
@@ -232,19 +243,22 @@ class KeepAliveHandler:
             else:
                 # no (working) free connections were found.  Create a new one.
                 h = self._get_connection(host)
-                if DEBUG: DEBUG.info("creating new connection to %s (%d)",
+                if DEBUG:
+                    DEBUG.info("creating new connection to %s (%d)",
                                      host, id(h))
                 self._cm.add(host, h, 0)
                 self._start_transaction(h, req)
                 r = h.getresponse()
         except (socket.error, httplib.HTTPException), err:
             raise urllib2.URLError(err)
-            
-        if DEBUG: DEBUG.info("STATUS: %s, %s", r.status, r.reason)
+
+        if DEBUG:
+            DEBUG.info("STATUS: %s, %s", r.status, r.reason)
 
         # if not a persistent connection, don't try to reuse it
         if r.will_close:
-            if DEBUG: DEBUG.info('server will close connection, discarding')
+            if DEBUG:
+                DEBUG.info('server will close connection, discarding')
             self._cm.remove(h)
 
         r._handler = self
@@ -254,7 +268,7 @@ class KeepAliveHandler:
         r.code = r.status
         r.headers = r.msg
         r.msg = r.reason
-        
+
         if r.status == 200 or not HANDLE_ERRORS:
             return r
         else:
@@ -285,22 +299,25 @@ class KeepAliveHandler:
             # same exception was raised, etc.  The tradeoff is
             # that it's now possible this call will raise
             # a DIFFERENT exception
-            if DEBUG: DEBUG.error("unexpected exception - closing " + \
+            if DEBUG:
+                DEBUG.error("unexpected exception - closing " +
                                   "connection to %s (%d)", host, id(h))
             self._cm.remove(h)
             h.close()
             raise
-                    
+
         if r is None or r.version == 9:
             # httplib falls back to assuming HTTP 0.9 if it gets a
             # bad header back.  This is most likely to happen if
             # the socket has been closed by the server since we
             # last used the connection.
-            if DEBUG: DEBUG.info("failed to re-use connection to %s (%d)",
+            if DEBUG:
+                DEBUG.info("failed to re-use connection to %s (%d)",
                                  host, id(h))
             r = None
         else:
-            if DEBUG: DEBUG.info("re-using connection to %s (%d)", host, id(h))
+            if DEBUG:
+                DEBUG.info("re-using connection to %s (%d)", host, id(h))
 
         return r
 
@@ -336,6 +353,7 @@ class KeepAliveHandler:
     def _get_connection(self, host):
         return NotImplementedError
 
+
 class HTTPHandler(KeepAliveHandler, urllib2.HTTPHandler):
     def __init__(self):
         KeepAliveHandler.__init__(self)
@@ -345,6 +363,7 @@ class HTTPHandler(KeepAliveHandler, urllib2.HTTPHandler):
 
     def _get_connection(self, host):
         return HTTPConnection(host)
+
 
 class HTTPSHandler(KeepAliveHandler, urllib2.HTTPSHandler):
     def __init__(self, ssl_factory=None):
@@ -356,14 +375,17 @@ class HTTPSHandler(KeepAliveHandler, urllib2.HTTPSHandler):
             except ImportError:
                 pass
         self._ssl_factory = ssl_factory
-    
+
     def https_open(self, req):
         return self.do_open(req)
 
     def _get_connection(self, host):
-        try: return self._ssl_factory.get_https_connection(host)
-        except AttributeError: return HTTPSConnection(host)
-        
+        try:
+            return self._ssl_factory.get_https_connection(host)
+        except AttributeError:
+            return HTTPSConnection(host)
+
+
 class HTTPResponse(httplib.HTTPResponse):
     # we need to subclass HTTPResponse in order to
     # 1) add readline() and readlines() methods
@@ -382,7 +404,6 @@ class HTTPResponse(httplib.HTTPResponse):
     # although read() never adds to the buffer.
     # Both readline and readlines have been stolen with almost no
     # modification from socket.py
-    
 
     def __init__(self, sock, debuglevel=0, strict=0, method=None):
         if method: # the httplib in python 2.3 uses the method arg
@@ -411,7 +432,7 @@ class HTTPResponse(httplib.HTTPResponse):
     def close_connection(self):
         self._handler._remove_connection(self._host, self._connection, close=1)
         self.close()
-        
+
     def info(self):
         return self.headers
 
@@ -439,22 +460,28 @@ class HTTPResponse(httplib.HTTPResponse):
         i = self._rbuf.find('\n')
         while i < 0 and not (0 < limit <= len(self._rbuf)):
             new = self._raw_read(self._rbufsize)
-            if not new: break
+            if not new:
+                break
             i = new.find('\n')
-            if i >= 0: i = i + len(self._rbuf)
+            if i >= 0:
+                i = i + len(self._rbuf)
             self._rbuf = self._rbuf + new
-        if i < 0: i = len(self._rbuf)
-        else: i = i+1
-        if 0 <= limit < len(self._rbuf): i = limit
+        if i < 0:
+            i = len(self._rbuf)
+        else:
+            i = i + 1
+        if 0 <= limit < len(self._rbuf):
+            i = limit
         data, self._rbuf = self._rbuf[:i], self._rbuf[i:]
         return data
 
-    def readlines(self, sizehint = 0):
+    def readlines(self, sizehint=0):
         total = 0
         list = []
         while 1:
             line = self.readline()
-            if not line: break
+            if not line:
+                break
             list.append(line)
             total += len(line)
             if sizehint and total >= sizehint:
@@ -465,6 +492,7 @@ class HTTPResponse(httplib.HTTPResponse):
 class HTTPConnection(httplib.HTTPConnection):
     # use the modified response class
     response_class = HTTPResponse
+
 
 class HTTPSConnection(httplib.HTTPSConnection):
     response_class = HTTPResponse

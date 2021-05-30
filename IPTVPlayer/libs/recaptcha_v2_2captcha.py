@@ -18,6 +18,7 @@ import urllib
 from Components.config import config
 ###################################################
 
+
 class UnCaptchaReCaptcha:
     def __init__(self, lang='en'):
         self.cm = common()
@@ -28,15 +29,20 @@ class UnCaptchaReCaptcha:
         return self.MAIN_URL
 
     def getFullUrl(self, url, mainUrl=None):
-        if mainUrl == None: mainUrl = self.getMainUrl()
+        if mainUrl == None:
+            mainUrl = self.getMainUrl()
         return self.cm.getFullUrl(url, mainUrl)
 
-    def processCaptcha(self, sitekey, referer=''):
+    def processCaptcha(self, sitekey, referer='', invisible=False):
         sleepObj = None
         token = ''
         errorMsgTab = []
         apiKey = config.plugins.iptvplayer.api_key_2captcha.value
-        apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=userrecaptcha&invisible=1&googlekey=' + sitekey + '&json=1&pageurl=' + urllib.quote(referer)
+        if invisible:
+            apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=userrecaptcha&invisible=1&googlekey=' + sitekey + '&json=1&pageurl=' + urllib.quote(referer)
+        else:
+            apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=userrecaptcha&googlekey=' + sitekey + '&json=1&pageurl=' + urllib.quote(referer)
+
         try:
             token = ''
             sts, data = self.cm.getPage(apiUrl)
@@ -56,19 +62,23 @@ class UnCaptchaReCaptcha:
                         elif timeout > 10:
                             timeout = 5
                         time.sleep(timeout)
-                        
+
                         apiUrl = self.getFullUrl('/res.php?key=') + apiKey + '&action=get&json=1&id=' + captchaid
                         sts, data = self.cm.getPage(apiUrl)
                         if not sts:
                             continue
                             # maybe simple continue here ?
                             errorMsgTab.append(_('Network failed %s.') % '2')
-                            break 
+                            break
                         else:
                             printDBG('API DATA:\n%s\n' % data)
                             data = json_loads(data, '', True)
                             if data['status'] == '1' and data['request'] != '':
                                 token = data['request']
+                                break
+                            if data["request"] == "ERROR_CAPTCHA_UNSOLVABLE":
+                                token = ""
+                                errorMsgTab.append(_("Message from 2Captcha: %s") % data['request'])
                                 break
                         if sleepObj.getTimeout() == 0:
                             errorMsgTab.append(_('%s timeout.') % self.getMainUrl())
@@ -83,7 +93,7 @@ class UnCaptchaReCaptcha:
 
         if sleepObj != None:
             sleepObj.Reset()
-        
+
         if token == '':
-            self.sessionEx.waitForFinishOpen(MessageBox, (_('Resolving reCaptcha with %s failed!\n\n') % self.getMainUrl()) + '\n'.join(errorMsgTab), type = MessageBox.TYPE_ERROR, timeout = 10)
+            self.sessionEx.waitForFinishOpen(MessageBox, (_('Resolving reCaptcha with %s failed!\n\n') % self.getMainUrl()) + '\n'.join(errorMsgTab), type=MessageBox.TYPE_ERROR, timeout=10)
         return token
