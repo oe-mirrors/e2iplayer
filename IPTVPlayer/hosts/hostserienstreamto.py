@@ -55,7 +55,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://serien.pro/'
+    return 'https://serien.fun/'
 
 
 class SerienStreamTo(CBaseHostClass, CaptchaHelper):
@@ -69,8 +69,8 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL = 'https://serien.pro/'
-        self.DEFAULT_ICON_URL = 'https://serien.pro/public/img/facebook.jpg'
+        self.MAIN_URL = gettytul()
+        self.DEFAULT_ICON_URL = gettytul() + '/public/img/facebook.jpg'
 
         self.MAIN_CAT_TAB = [{'category': 'all_series', 'title': 'Alle Serien', 'url': self.getFullUrl('/serien-alphabet')},
                              {'category': 'list_abc', 'title': _('A-Z'), 'url': self.MAIN_URL},
@@ -155,10 +155,9 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             for item in data:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                letter = title.decode('utf-8')[0].upper()
+                letter = title[0].upper()
                 if not letter.isalpha():
                     letter = '#'
-                letter = letter.encode('utf-8')
                 if letter not in self.allCache['letters_list']:
                     self.allCache['letters_list'].append(letter)
                     self.allCache['letters_keys'][letter] = []
