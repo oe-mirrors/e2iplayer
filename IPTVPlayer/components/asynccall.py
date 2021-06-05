@@ -96,7 +96,7 @@ class AsyncCall(object):
         return self.finished
 
     def isAlive(self):
-        return None != self.Thread and self.Thread.isAlive()
+        return None != self.Thread and self.Thread.is_alive()
 
     def _kill(self):
         bRet = False
@@ -165,7 +165,7 @@ class AsyncCall(object):
 
             self.Callback = None
             if self.finished == False:
-                if self.Thread.isAlive():
+                if self.Thread.is_alive():
                     self._kill()
                     self.Thread.join(timeout=1)
 #                    self.Thread._Thread__stop()
@@ -344,7 +344,7 @@ class iptv_execute(object):
             printExc()
             terminated = False
 
-        if not terminated and self.Thread.isAlive():
+        if not terminated and self.Thread.is_alive():
             try:
                 self.Thread._iptvplayer_ext['iptv_execute'] = self
             except Exception:

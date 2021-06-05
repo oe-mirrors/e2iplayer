@@ -186,7 +186,7 @@ def stopRunningThread(name):
 	for myThread in threading.enumerate():
 		#print 'isThreadRunning>running threads:' , i.name
 		if name == myThread.name:
-			if (myThread.isAlive()):
+			if (myThread.is_alive()):
 				myThread.terminate()
 	time.sleep(0.2) #time for thread to close
 	return isThreadRunning(name)
