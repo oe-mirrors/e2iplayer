@@ -500,7 +500,7 @@ class M3U8Downloader(BaseDownloader):
 
         '''
         if None != self.updateThread:
-            if self.updateThread.Thread.isAlive():
+            if self.updateThread.Thread.is_alive():
                 # give some time for update thread to finish
                 sleep(self.MIN_REFRESH_DELAY)
                 printDBG('m3u8 downloader killing update thread')

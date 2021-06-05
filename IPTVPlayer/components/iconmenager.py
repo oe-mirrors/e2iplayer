@@ -85,13 +85,13 @@ class IconMenager:
     def stopWorkThread(self):
         self.lockDQ.acquire()
 
-        if self.workThread != None and self.workThread.Thread.isAlive():
+        if self.workThread != None and self.workThread.Thread.is_alive():
             self.stopThread = True
 
         self.lockDQ.release()
 
     def runWorkThread(self):
-        if self.workThread == None or not self.workThread.Thread.isAlive():
+        if self.workThread == None or not self.workThread.Thread.is_alive():
             self.workThread = AsyncMethod(self.processDQ)()
 
     def clearDQueue(self):
