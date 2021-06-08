@@ -55,7 +55,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://serien.fun/'
+    return 'https://serien.wtf/'
 
 
 class SerienStreamTo(CBaseHostClass, CaptchaHelper):
@@ -645,8 +645,66 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
+    def getArticleContent(self, cItem):
+        printDBG("SerienStreamTo.getArticleContent [%s]" % cItem)
+        retTab = []
+
+        sts, data = self.getPage(cItem.get('url', ''))
+        if not sts:
+            return retTab
+
+        retTab = []
+        itemsList = []
+        icons = []
+        title = ''
+        desc = ''
+
+        sts, data = self.getPage(cItem.get('url'))
+        if not sts:
+            return []
+        cUrl = self.cm.meta['url']
+        self.setMainUrl(cUrl)
+
+        if cItem.get('type') == 'video':
+            tmp = ph.find(data, ('<div', '>', 'containsSeason'), '</script>', flags=0)[1]
+            s = ph.clean_html(ph.getattr(ph.find(tmp, ('<meta', '>', 'seasonNumber'))[1], 'content'))
+            e = ph.clean_html(ph.getattr(ph.find(tmp, ('<meta', '>', 'episode'))[1], 'content'))
+            title = ph.clean_html(ph.find(tmp, ('<h2', '>'), '</h2>', flags=0)[1])
+            if s and e and title:
+                title = 's%se%s %s' % (s.zfill(2), e.zfill(2), title)
+            desc = ph.clean_html(ph.find(tmp, ('<p', '>'), '</p>', flags=0)[1])
+
+        data = ph.find(data, ('<section', '>'), '</section>', flags=0)[1]
+
+        data = ph.findall(data, ('<strong', '</strong>'), '</ul', flags=ph.START_S)
+        for idx in range(1, len(data), 2):
+            label = ph.clean_html(data[idx - 1])
+            if len(label) < 3:
+                continue
+            value = []
+            tmp = ph.findall(data[idx], ('<li', '>'), '</li>', flags=0)
+            for it in tmp:
+                it = ph.clean_html(it)
+                if it:
+                    value.append(it)
+
+            if label and value:
+                itemsList.append((label, ', '.join(value)))
+
+        if not title:
+            title = cItem['title']
+        if not icons:
+            icons.append({'title': '', 'url': cItem.get('icon', self.DEFAULT_ICON_URL)})
+        if not desc:
+            desc = cItem.get('desc', '')
+
+        return [{'title': ph.clean_html(title), 'text': ph.clean_html(desc), 'images': icons, 'other_info': {'custom_items_list': itemsList}}]
+
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, SerienStreamTo(), True, [])
+
+    def withArticleContent(self, cItem):
+        return cItem.get('type') == 'video'

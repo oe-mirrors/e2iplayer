@@ -20,7 +20,9 @@
 #
 # https://docs.google.com/document/d/1_rs5BXklnLqGS6g6eAjevVHsPafv4PXDCi_dAM2b7G0/edit?pli=1
 #
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import re
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 

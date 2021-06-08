@@ -18,7 +18,9 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import re
 import uuid
 import time

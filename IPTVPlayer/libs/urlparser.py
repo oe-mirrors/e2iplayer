@@ -51,7 +51,9 @@ from Screens.MessageBox import MessageBox
 ###################################################
 import re
 import time
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import string
 import codecs
 import base64

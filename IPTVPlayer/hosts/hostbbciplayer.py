@@ -17,7 +17,9 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.bbc import BBCCoUkI
 # FOREIGN import
 ###################################################
 import re
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 try:
     import json
 except Exception:

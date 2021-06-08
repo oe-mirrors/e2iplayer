@@ -649,7 +649,6 @@ class E2iVirtualKeyBoard(Screen):
         self['_56'].show()
         self.updateSuggestions()
 
-
     def updateSpecialKey(self, keysidTab, state):
         if state:
             color = self.colors['selected']

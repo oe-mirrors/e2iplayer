@@ -130,9 +130,9 @@ class DMHelper:
     @staticmethod
     def makeUnikalFileName(fileName, withTmpFileName=True, addDateToFileName=False):
         baseName = os.path.basename(fileName).replace('\\', '')
-        
+
         printDBG("DMHelper::makeUnikalFileName(%s, %s, %s) baseName: %s" % (fileName, withTmpFileName, addDateToFileName, baseName))
-        
+
         if not addDateToFileName:
             tries = 10
             for idx in range(tries):

@@ -20,7 +20,9 @@ from Screens.MessageBox import MessageBox
 ###################################################
 
 import re
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 
 
 class BeinmatchApi(CBaseHostClass):

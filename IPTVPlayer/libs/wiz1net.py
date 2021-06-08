@@ -11,6 +11,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 
 import re
 
+
 class Wiz1NetApi(CBaseHostClass):
 
     def __init__(self):

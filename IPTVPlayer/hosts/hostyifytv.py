@@ -18,7 +18,9 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import base64
 from binascii import unhexlify
 from Components.config import config, ConfigSelection, getConfigListEntry

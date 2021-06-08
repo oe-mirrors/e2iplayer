@@ -1620,7 +1620,7 @@ class IPTVExtMoviePlayer(Screen):
 
         if None == data or self.isClosing:
             return
-        data = data.decode('utf-8','strict').replace('"ifd"','(ifd)')
+        data = data.decode('utf-8', 'strict').replace('"ifd"', '(ifd)')
         if None == self.playerBinaryInfo['version']:
             self.playerBinaryInfo['data'] += data
         data = self.responseData + data

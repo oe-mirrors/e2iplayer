@@ -20,7 +20,9 @@ try:
 except Exception:
     import simplejson as json
 import re
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 from Components.config import config, ConfigDirectory, getConfigListEntry
 ###################################################
 

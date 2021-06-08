@@ -12,7 +12,9 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 try:
     import json
 except Exception:

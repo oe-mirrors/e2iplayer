@@ -33,7 +33,9 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Components.config import config, ConfigYesNo, ConfigSelection, getConfigListEntry
 from time import time
 from os import path as os_path
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import re
 
 try:

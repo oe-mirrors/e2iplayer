@@ -20,7 +20,9 @@ from Components.Language import language
 from time import sleep as time_sleep, time
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import traceback
 import re
 import sys
@@ -345,7 +347,6 @@ def GetPyScriptCmd(name):
 
 def GetJSScriptFile(file):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/jsscripts/') + file
-
 
 
 gE2iPlayerTempCookieDir = None

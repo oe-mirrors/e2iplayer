@@ -13,7 +13,9 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigText, getConfigListEntry
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 try:
     import json
 except Exception:

@@ -15,7 +15,9 @@ from Plugins.Extensions.IPTVPlayer.libs.crypto.keyedHash.evp import EVP_BytesToK
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 try:
     import json
 except Exception:

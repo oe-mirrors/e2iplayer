@@ -13,7 +13,9 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import base64
 try:
     import ssl
@@ -1934,7 +1936,7 @@ class common:
                         data = data.decode('utf-8', 'ignore')
         except Exception:
             printExc()
-            
+
         return data, metadata
 
     def urlEncodeNonAscii(self, b):

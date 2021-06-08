@@ -223,7 +223,6 @@ class PlayerSelectorWidget(Screen):
         self['IptvVersion'] = Label(GetIPTVPlayerVersion())
         self["menu"] = Cover3()
 
-
         for y in range(1, self.numOfRow + 1):
             for x in range(1, self.numOfCol + 1):
                 strIndex = "cover_%s%s" % (x, y)
@@ -235,8 +234,6 @@ class PlayerSelectorWidget(Screen):
         self.visible = True
         self.reorderingMode = False
         self.reorderingItemSelected = False
-
-	
 
     def __del__(self):
         printDBG("PlayerSelectorWidget.__del__ --------------------------")
