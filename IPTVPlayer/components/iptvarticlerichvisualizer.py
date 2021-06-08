@@ -103,7 +103,7 @@ class IPTVArticleRichVisualizer(Screen):
         except Exception:
             printExc()
 
-        self.richDesc['pages_count'] = self.richDesc['items_count'] / self.MAX_RICH_DESC_ROW_NUM
+        self.richDesc['pages_count'] = self.richDesc['items_count'] // self.MAX_RICH_DESC_ROW_NUM
         if self.richDesc['items_count'] % self.MAX_RICH_DESC_ROW_NUM > 0:
             self.richDesc['pages_count'] += 1
         if self.richDesc['items_count'] < self.MAX_RICH_DESC_ROW_NUM:
