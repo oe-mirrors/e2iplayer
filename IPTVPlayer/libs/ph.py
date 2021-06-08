@@ -293,7 +293,7 @@ def clean_html(string):
         except Exception:
             printExc()
 
-    if STRIP_HTML_TAGS_C and type(' ') != type(string):
+    if STRIP_HTML_TAGS_C: # and type(' ') != type(string):
         return STRIP_HTML_TAGS_C.strip_html_tags(string)
 
     string = string.replace('<', ' <')
