@@ -494,12 +494,6 @@ def GetIconDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/') + file
 
 
-def GetBinDir(file='', platform=None):
-    if None == platform:
-        platform = config.plugins.iptvplayer.plarform.value
-    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/') + platform + '/' + file
-
-
 def GetPluginDir(file=''):
     return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/') + file
 
