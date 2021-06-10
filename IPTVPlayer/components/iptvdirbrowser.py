@@ -145,12 +145,7 @@ class IPTVDirectorySelectorWidget(Screen):
         return self.currList[currSelIndex]
 
     def prepareCmd(self):
-        lsdirPath = GetBinDir("lsdir")
-        try:
-            os_chmod(lsdirPath, 0o777)
-        except Exception:
-            printExc()
-        cmd = '%s "%s" dl d' % (lsdirPath, self.currDir)
+        cmd = '%s "%s" dl d' % ("/usr/bin/lsdir", self.currDir)
         return cmd
 
     def doAction(self, action):
@@ -336,12 +331,7 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
         self.fileMatch = fileMatch
 
     def prepareCmd(self):
-        lsdirPath = GetBinDir("lsdir")
-        try:
-            os_chmod(lsdirPath, 0o777)
-        except Exception:
-            printExc()
-        cmd = '%s "%s" drl dr' % (lsdirPath, self.currDir)
+        cmd = '%s "%s" drl dr' % ("/usr/bin/lsdir", self.currDir)
         return cmd
 
     def doRefreshNewData(self, newItems):

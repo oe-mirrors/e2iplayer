@@ -95,11 +95,6 @@ class LocalMedia(CBaseHostClass):
         return ext.lower()
 
     def prepareCmd(self, path, start, end):
-        lsdirPath = GetBinDir("lsdir")
-        try:
-            os_chmod(lsdirPath, 0o777)
-        except Exception:
-            printExc()
         if config.plugins.iptvplayer.local_showhiddensdir.value:
             dWildcards = '[^.]*|.[^.]*|..[^.]*'
         else:
@@ -117,7 +112,7 @@ class LocalMedia(CBaseHostClass):
                 insensitiveExt += '[%s%s]' % (l.upper(), l.lower())
             wilcard += '.' + insensitiveExt
             fWildcards.append(wilcard)
-        cmd = '%s "%s" rdl rd %d %d "%s" "%s"' % (lsdirPath, path, start, end, '|'.join(fWildcards), dWildcards)
+        cmd = '%s "%s" rdl rd %d %d "%s" "%s"' % ("/usr/bin/lsdir", path, start, end, '|'.join(fWildcards), dWildcards)
         if config.plugins.iptvplayer.local_showfilesize.value:
             cmd += " 1 "
         return cmd

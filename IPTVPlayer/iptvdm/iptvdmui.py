@@ -237,12 +237,7 @@ class IPTVDMWidget(Screen):
             self.underRefreshing = True
             self.tmpList = []
             self.tmpData = ''
-            lsdirPath = GetBinDir("lsdir")
-            try:
-                os_chmod(lsdirPath, 0o777)
-            except Exception:
-                printExc()
-            cmd = '%s "%s" rl r' % (lsdirPath, config.plugins.iptvplayer.NaszaSciezka.value)
+            cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", config.plugins.iptvplayer.NaszaSciezka.value)
             printDBG("cmd[%s]" % cmd)
             self.console.execute(E2PrioFix(cmd))
 
