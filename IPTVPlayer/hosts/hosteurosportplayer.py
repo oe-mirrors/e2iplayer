@@ -18,9 +18,11 @@ from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaH
 ###################################################
 import time
 import urllib
+import re
 from datetime import datetime, timedelta
 import operator
-from Components.config import config, ConfigText, getConfigListEntry
+from Components.config import config, ConfigText, getConfigListEntry, ConfigSelection, ConfigYesNo
+
 ###################################################
 
 ###################################################
@@ -28,12 +30,37 @@ from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 config.plugins.iptvplayer.eurosportplayer_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.eurosportplayer_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.eurosportplayer_showauto = ConfigYesNo(default=True)
+config.plugins.iptvplayer.eurosportplayer_showambient = ConfigYesNo(default=True)
+eurosportLanguages = [
+    ("all", _("All")), 
+    ("Ambient Sound", _("Ambient Sound")), 
+    ("Danish", _("Danish")), 
+    ("Dutch", _("Dutch")), 
+    ("English", _("English")), 
+    ("Finnish", _("Finnish")), 
+    ("French", _("French")), 
+    ("German", _("German")), 
+    ("Hungarian", _("Hungarian")), 
+    ("Italian", _("Italian")), 
+    ("Norwegian", _("Norwegian")), 
+    ("Polish", _("Polish")), 
+    ("Spanish", _("Spanish")), 
+    ("Swedish", _("Swedish"))
+]
+config.plugins.iptvplayer.eurosportplayer_showlanguage = ConfigSelection(default="all", choices=eurosportLanguages)
+config.plugins.iptvplayer.eurosportplayer_minres = ConfigSelection(default="0", choices=[("0","0"),("720","720p"),("1080","1080p")])
 
 
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.eurosportplayer_login))
     optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.eurosportplayer_password))
+    optionList.append(getConfigListEntry(_("show automatic resolution option") + ":", config.plugins.iptvplayer.eurosportplayer_showauto))
+    optionList.append(getConfigListEntry(_("show streams with ambiental sound") + ":", config.plugins.iptvplayer.eurosportplayer_showambient))
+    optionList.append(getConfigListEntry(_("preferred language") + ":", config.plugins.iptvplayer.eurosportplayer_showlanguage))
+    optionList.append(getConfigListEntry(_("show streams only with min resolution") + ":", config.plugins.iptvplayer.eurosportplayer_minres))
+
     return optionList
 ###################################################
 
@@ -704,8 +731,45 @@ class EuroSportPlayer(CBaseHostClass):
 
             if 'hls' in s:
                 link_url = strwithmeta(s['hls']['url'], {'User-Agent': self.USER_AGENT, 'Referer': video_page_url})
-                linksTab.append({'name': 'auto hls', 'url': link_url})
-                linksTab.extend(getDirectM3U8Playlist(link_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+                if config.plugins.iptvplayer.eurosportplayer_showauto and config.plugins.iptvplayer.eurosportplayer_showauto.value:  
+                    linksTab.append({'name': 'auto hls', 'url': link_url})
+                
+                list_of_links = getDirectM3U8Playlist(link_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
+                
+                # select links with preferred audio language  
+                list_of_links2 = []
+                ambient_links=[]
+                
+                for l in list_of_links:
+                    m = re.findall("res:[ ][0-9]{2,4}x([0-9]{2,4})", l["name"])
+                    if m:
+                        #printDBG(str(l)) 
+                        #printDBG("resolution: %s" % int(m[0]))
+                        
+                        if (not config.plugins.iptvplayer.eurosportplayer_minres) or int(m[0]) >= int(config.plugins.iptvplayer.eurosportplayer_minres.value):  
+                        
+                            if config.plugins.iptvplayer.eurosportplayer_showlanguage and config.plugins.iptvplayer.eurosportplayer_showlanguage.value: 
+
+                                if config.plugins.iptvplayer.eurosportplayer_showlanguage.value == "all" or config.plugins.iptvplayer.eurosportplayer_showlanguage.value in l["name"]:
+                                    list_of_links2.append(l)
+
+                            else:
+                                list_of_links2.append(l)
+                                
+                            if 'Ambient' in l["name"]:
+                                ambient_links.append(l)
+
+                    else:
+                        list_of_links2.append(l)
+                    
+                linksTab.extend(list_of_links2)
+            
+                if config.plugins.iptvplayer.eurosportplayer_showambient and config.plugins.iptvplayer.eurosportplayer_showambient.value:
+                    linksTab.extend(ambient_links)
+          
+                if (not list_of_links2) and (not ambient_links):
+                    linksTab.extend(list_of_links)
+                    
             #if 'dash' in s:
             #    link_url = strwithmeta(s['dash']['url'], {'User-Agent': self.USER_AGENT, 'Referer' : video_page_url})
             #    linksTab.append({'name':'dash', 'url': link_url})
