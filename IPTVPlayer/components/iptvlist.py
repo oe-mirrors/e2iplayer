@@ -98,7 +98,9 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         try:
             self.font = skin.fonts["iptvlistitem"]
         except Exception:
-            if self.screenwidth and self.screenwidth == 1920:
+            if self.screenwidth and self.screenwidth >= 3200:
+                self.font = ("Regular", 45, 55, 0)
+            elif self.screenwidth and self.screenwidth == 1920:
                 self.font = ("Regular", 28, 40, 0)
             else:
                 self.font = ("Regular", 18, 35, 0)
