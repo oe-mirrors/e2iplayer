@@ -739,6 +739,7 @@ class EuroSportPlayer(CBaseHostClass):
                 # select links with preferred audio language  
                 list_of_links2 = []
                 ambient_links=[]
+                other_lang_links=[]
                 
                 for l in list_of_links:
                     m = re.findall("res:[ ][0-9]{2,4}x([0-9]{2,4})", l["name"])
@@ -752,23 +753,30 @@ class EuroSportPlayer(CBaseHostClass):
 
                                 if config.plugins.iptvplayer.eurosportplayer_showlanguage.value == "all" or config.plugins.iptvplayer.eurosportplayer_showlanguage.value in l["name"]:
                                     list_of_links2.append(l)
-
+                                
+                                else:
+                                    if 'Ambient' in l["name"]:
+                                        ambient_links.append(l)
+                                    else:
+                                        other_lang_links.append(l)
                             else:
                                 list_of_links2.append(l)
                                 
-                            if 'Ambient' in l["name"]:
-                                ambient_links.append(l)
 
                     else:
                         list_of_links2.append(l)
                     
                 linksTab.extend(list_of_links2)
-            
-                if config.plugins.iptvplayer.eurosportplayer_showambient and config.plugins.iptvplayer.eurosportplayer_showambient.value:
+
+                if not linksTab:
+                    linksTab.extend(other_lang_links)
                     linksTab.extend(ambient_links)
+
+                elif config.plugins.iptvplayer.eurosportplayer_showambient and config.plugins.iptvplayer.eurosportplayer_showambient.value:
+                    linksTab.extend(ambient_links)
+
+            
           
-                if (not list_of_links2) and (not ambient_links):
-                    linksTab.extend(list_of_links)
                     
             #if 'dash' in s:
             #    link_url = strwithmeta(s['dash']['url'], {'User-Agent': self.USER_AGENT, 'Referer' : video_page_url})
