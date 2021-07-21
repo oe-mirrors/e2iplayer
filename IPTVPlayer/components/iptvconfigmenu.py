@@ -11,7 +11,7 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSkinsList, GetHostsList, GetEnabledHostsList, \
                                                           IsHostEnabled, IsExecutable, CFakeMoviePlayerOption, GetAvailableIconSize, \
                                                           IsWebInterfaceModuleAvailable, SetIconsHash, SetGraphicsHash
-from Plugins.Extensions.IPTVPlayer.iptvupdate.updatemainwindow import IPTVUpdateWindow, UpdateMainAppImpl
+#from Plugins.Extensions.IPTVPlayer.iptvupdate.updatemainwindow import IPTVUpdateWindow, UpdateMainAppImpl
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, IPTVPlayerNeedInit
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget, COLORS_DEFINITONS
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostsMenu
@@ -513,20 +513,20 @@ class ConfigMenu(ConfigBaseWidget):
 
     def keyUpdate(self):
         printDBG("ConfigMenu.keyUpdate")
-        if self.isChanged():
-            self.askForSave(self.doUpdate, self.doUpdate)
-        else:
-            self.doUpdate()
+#        if self.isChanged():
+#            self.askForSave(self.doUpdate, self.doUpdate)
+#        else:
+#            self.doUpdate()
 
-    def doUpdate(self, forced=False):
-        printDBG("ConfigMenu.doUpdate")
-        if not forced:
-            self.session.open(IPTVUpdateWindow, UpdateMainAppImpl(self.session))
-        else:
-            self.session.openWithCallback(self.closeAfterUpdate, IPTVUpdateWindow, UpdateMainAppImpl(self.session, allowTheSameVersion=True))
+#    def doUpdate(self, forced=False):
+#        printDBG("ConfigMenu.doUpdate")
+#        if not forced:
+#            self.session.open(IPTVUpdateWindow, UpdateMainAppImpl(self.session))
+#        else:
+#            self.session.openWithCallback(self.closeAfterUpdate, IPTVUpdateWindow, UpdateMainAppImpl(self.session, allowTheSameVersion=True))
 
-    def closeAfterUpdate(self, arg1=None, arg2=None):
-        self.close()
+#    def closeAfterUpdate(self, arg1=None, arg2=None):
+#        self.close()
 
     def save(self):
         ConfigBaseWidget.save(self)
@@ -584,7 +584,8 @@ class ConfigMenu(ConfigBaseWidget):
 
     def closeAfterMessage(self, arg=None):
         if arg:
-            self.doUpdate(True)
+#            self.doUpdate(True)
+            self.close()
         else:
             self.close()
 
