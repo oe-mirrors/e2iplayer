@@ -1169,9 +1169,9 @@ class IPTVExtMoviePlayer(Screen):
                     lH = lineHeight #textSize[1] + self.subConfig['font_size'] / 2
                     self[subLabel].instance.resize(eSize(lW, lH))
                     if not subOnTopHack:
-                        self[subLabel].instance.move(ePoint((desktopW - lW) / 2, desktopH - y - lH))
+                        self[subLabel].instance.move(ePoint(int((desktopW - lW) / 2), desktopH - y - lH))
                     else:
-                        self[subLabel].instance.move(ePoint((desktopW - lW) / 2, y))
+                        self[subLabel].instance.move(ePoint(int((desktopW - lW) / 2), y))
                     y += lH + self.subConfig['line_spacing']
                     self[subLabel].show()
                 except Exception:

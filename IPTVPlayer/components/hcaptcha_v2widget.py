@@ -184,8 +184,8 @@ class UnCaptchahCaptchaWidget(Screen):
         if self.updateAccpetButton():
             return
         # calculate position of image
-        x = self.offsetCoverX + self.markerWidth * self.currX
-        y = self.offsetCoverY + self.markerHeight * self.currY
+        x = int(self.offsetCoverX + self.markerWidth * self.currX)
+        y = int(self.offsetCoverY + self.markerHeight * self.currY)
         self["marker"].instance.move(ePoint(x, y))
         return
 

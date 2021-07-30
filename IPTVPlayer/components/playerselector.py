@@ -364,7 +364,7 @@ class PlayerSelectorWidget(Screen):
                     self[strIndex].hide()
         x = self.pageItemStartX + self.currPage * self.pageItemSize
         y = self.pageItemStartY
-        self["page_marker"].instance.move(ePoint(x, y))
+        self["page_marker"].instance.move(ePoint(int(x), y))
 
     def setIdx(self, selIdx):
         if selIdx > self.numOfItems:
@@ -430,7 +430,7 @@ class PlayerSelectorWidget(Screen):
 
         #x =  30 + self.dispX * 180
         #y = 130 + self.dispY * 125
-        self["marker"].instance.move(ePoint(x, y))
+        self["marker"].instance.move(ePoint(int(x), int(y)))
         self["statustext"].setText(self.currList[new_idx][0])
         return
 

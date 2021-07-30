@@ -352,7 +352,7 @@ class IPTVArticleRichVisualizer(Screen):
 
             x = self.richDesc['page_item_start_x'] + page * self.richDesc['page_item_size']
             y = self.richDesc['page_item_start_y']
-            self["page_marker"].instance.move(ePoint(x, y))
+            self["page_marker"].instance.move(ePoint(int(x), y))
 
     def nextRichDescPage(self):
         page = self.richDesc['page']
