@@ -489,7 +489,7 @@ class E2iVirtualKeyBoard(Screen):
                 else:
                     break
             if maxKeyX - minKeyX > 2:
-                self.colIdx = (maxKeyX + minKeyX) / 2
+                self.colIdx = int((maxKeyX + minKeyX) / 2)
 
         self.currentKeyId = self.KEYIDMAP[self.rowIdx][self.colIdx]
         self.moveKeyMarker(oldKeyId, self.currentKeyId)
