@@ -438,8 +438,8 @@ class E2iVirtualKeyBoard(Screen):
         self['_57'].setText('Ctrl')
         self['_58'].setText('Alt')
         self['_60'].setText('Alt')
-        self['_61'].setText('\\u2190')
-        self['_62'].setText('\\u2192')
+        self['_61'].setText('\u2190')
+        self['_62'].setText('\u2192')
 
     def handleArrowKey(self, dx=0, dy=0):
         oldKeyId = self.KEYIDMAP[self.rowIdx][self.colIdx]
@@ -898,7 +898,7 @@ class E2iVirtualKeyBoard(Screen):
                 if self.currentKeyId in self.RIGHT_KEYS:
                     self.handleArrowKey(1, 0)
         elif self.focus == self.FOCUS_KEYBOARD:
-            if self.currentKeyId in self.RIGHT_KEYS or (self.currentKeyId == 0 and self['text'].currPos == len(self['text'].Text)):
+            if self.currentKeyId in self.RIGHT_KEYS or (self.currentKeyId == 0 and self['text'].currPos == len(self['text'].textU)):
                 if self.isSuggestionVisible:
                     self.switchToSuggestions()
                     return
@@ -970,7 +970,7 @@ class E2iVirtualKeyBoard(Screen):
         for letter in text:
             try:
                 self["text"].insertChar(letter, self["text"].currPos, False, True)
-                self["text"].innerright()
+                self["text"].innerRight()
                 self["text"].update()
             except Exception:
                 printExc()
@@ -986,7 +986,7 @@ class E2iVirtualKeyBoard(Screen):
 
     def updateSuggestions(self):
         if self.isAutocompleteEnabled:
-            if not self["text"].Text:
+            if not self["text"].textU:
                 self.setSuggestionVisible(False)
                 self['right_list'].setList([])
                 #self.autocomplete.stop()
@@ -997,7 +997,7 @@ class E2iVirtualKeyBoard(Screen):
     def setSuggestions(self, list, stamp):
         # we would not want to modify list when user
         # is under selection item from it
-        if self.focus != self.FOCUS_SUGGESTIONS and self["text"].Text:
+        if self.focus != self.FOCUS_SUGGESTIONS and self["text"].textU:
             if list:
                 self['right_list'].setList([(x,) for x in list])
             self.setSuggestionVisible(True if list else False)
