@@ -1667,13 +1667,19 @@ class pageParser(CaptchaHelper):
         self.cm.clearCookie(COOKIE_FILE, removeNames=['vToken'])
 
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        defaultParams = {
-            'header': HTTP_HEADER,
-            'use_cookie': True,
-            'load_cookie': True,
-            'save_cookie': True,
-            'cookiefile': COOKIE_FILE
-        }
+        defaultParams = {'header': HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIE_FILE}
+
+        def getPage(url, params={}, post_data=None):
+            sts, data = False, None
+            sts, data = self.cm.getPage(url, defaultParams, post_data)
+            tries = 0
+            while tries < 3:
+                tries += 1
+                if 429 == self.cm.meta['status_code']:
+                    GetIPTVSleep().Sleep(int(61))
+                    sts, data = self.cm.getPage(url, defaultParams, post_data)
+            return sts, data
+
 
         def _decorateUrl(baseUrl, host, referer):
             #add cookies

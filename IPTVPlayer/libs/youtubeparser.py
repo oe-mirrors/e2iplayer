@@ -30,11 +30,11 @@ from Components.config import config, ConfigSelection, ConfigYesNo
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.ytformat = ConfigSelection(default="mp4", choices=[("flv, mp4", "flv, mp4"), ("flv", "flv"), ("mp4", "mp4")])
-config.plugins.iptvplayer.ytDefaultformat = ConfigSelection(default="720", choices=[("0", _("the worst")), ("144", "144p"), ("240", "240p"), ("360", "360p"), ("720", "720p"), ("1080", "1080p"), ("9999", _("the best"))])
+config.plugins.iptvplayer.ytDefaultformat = ConfigSelection(default="720", choices=[("0", _("the worst")), ("144", "144p"), ("240", "240p"), ("360", "360p"), ("720", "720p"), ("1080", "1080p"), ("1440", "1440p"), ("2160", "2160p"), ("9999", _("the best"))])
 config.plugins.iptvplayer.ytUseDF = ConfigYesNo(default=True)
 config.plugins.iptvplayer.ytAgeGate = ConfigYesNo(default=False)
 config.plugins.iptvplayer.ytShowDash = ConfigSelection(default="auto", choices=[("auto", _("Auto")), ("true", _("Yes")), ("false", _("No"))])
-config.plugins.iptvplayer.ytSortBy = ConfigSelection(default="", choices=[("", _("Relevance")), ("video_date_uploaded", _("Upload date")), ("video_view_count", _("View count")), ("video_avg_rating", _("Rating"))])
+config.plugins.iptvplayer.ytSortBy = ConfigSelection(default="A", choices=[("A", _("Relevance")), ("I", _("Upload date")), ("M", _("View count")), ("E", _("Rating"))])
 
 
 class YouTubeParser():
@@ -256,8 +256,8 @@ class YouTubeParser():
                 i = i + 1
 
             if hq or (not config.plugins.iptvplayer.allowedcoverformats.value) or config.plugins.iptvplayer.allowedcoverformats.value != 'all':
-                if 'hqdefault' in url:
-                    url = url.replace('hqdefault', 'hq720')
+#                if 'hqdefault' in url:
+#                    url = url.replace('hqdefault', 'hq720')
                 if '?' in url:
                     url = url.split('?')[0]
         except Exception:
@@ -649,7 +649,7 @@ class YouTubeParser():
     # SEARCH PARSER
     ########################################################
     #def getVideosFromSearch(self, pattern, page='1'):
-    def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy='', url=''):
+    def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy='A', url=''):
         printDBG('YouTubeParser.getSearchResult pattern[%s], searchType[%s], page[%s]' % (pattern, searchType, page))
         currList = []
 
@@ -663,7 +663,14 @@ class YouTubeParser():
 
             if url:
                 # next page search
-                sts, data = self.cm.getPage(url, self.http_params, self.postdata)
+                url = strwithmeta(url)
+                if 'post_data' in url.meta:
+                    http_params = dict(self.http_params)
+                    http_params['header']['Content-Type'] = 'application/json'
+                    http_params['raw_post_data'] = True
+                    sts, data = self.cm.getPage(url, http_params, url.meta['post_data'])
+                else:
+                    sts, data = self.cm.getPage(url, self.http_params, self.postdata)
 
                 if sts:
                     response = json_loads(data)
@@ -673,11 +680,14 @@ class YouTubeParser():
                 # url = 'http://www.youtube.com/results?search_query=%s&filters=%s&search_sort=%s' % (pattern, searchType, sortBy)
                 url = 'https://www.youtube.com/results?search_query=' + pattern + '&sp='
                 if searchType == 'video':
-                    url += 'EgIQAQ%253D%253D'
+#                    url += 'EgIQAQ%253D%253D'
+                    url += 'CA%sSAhAB' % sortBy
                 if searchType == 'channel':
-                    url += 'EgIQAg%253D%253D'
+#                    url += 'EgIQAg%253D%253D'
+                    url += 'CA%sSAhAC' % sortBy
                 if searchType == 'playlist':
-                    url += 'EgIQAw%253D%253D'
+#                    url += 'EgIQAw%253D%253D'
+                    url += 'CA%sSAhAD' % sortBy
                 if searchType == 'live':
                     url += 'EgJAAQ%253D%253D'
 
@@ -694,9 +704,9 @@ class YouTubeParser():
             if not sts:
                 return []
 
-            #printDBG("--------------------")
-            #printDBG(json_dumps(response))
-            #printDBG("--------------------")
+#            printDBG("-------- response ------------")
+#            printDBG(json_dumps(response))
+#            printDBG("------------------------------")
 
             # search videos
             r2 = list(self.findKeys(response, 'videoRenderer'))
@@ -747,9 +757,9 @@ class YouTubeParser():
 
             if nP:
                 nextPage = nP[0]
-                #printDBG("-------------------------------------------------")
-                #printDBG(json_dumps(nextPage))
-                #printDBG("-------------------------------------------------")
+#                printDBG("-------------- nextPage -------------------------")
+#                printDBG(json_dumps(nextPage))
+#                printDBG("-------------------------------------------------")
 
                 ctoken = nextPage["continuation"]
                 itct = nextPage["clickTrackingParams"]
@@ -773,7 +783,12 @@ class YouTubeParser():
                 itct = nextPage["clickTrackingParams"]
                 label = _("Next Page")
 
-                urlNextPage = self.updateQueryUrl(url, {'pbj': '1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct})
+                urlNextPage = "https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+                post_data = {'context': {'client': {'clientName': 'WEB', 'clientVersion': '2.20201021.03.00', }}, }
+                post_data['continuation'] = ctoken
+                post_data['context']['clickTracking'] = {'clickTrackingParams': itct}
+                post_data = json_dumps(post_data).encode('utf-8')
+                urlNextPage = strwithmeta(urlNextPage, {'post_data': post_data})
                 params = {'type': 'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
                 printDBG(str(params))
                 currList.append(params)
@@ -789,23 +804,26 @@ class YouTubeParser():
     def getVideosApiPlayList(self, url, category, page, cItem):
         printDBG('YouTubeParser.getVideosApiPlayList url[%s]' % url)
         playlistID = self.cm.ph.getSearchGroups(url + '&', 'list=([^&]+?)&')[0]
-        baseUrl = 'https://www.youtube.com/list_ajax?style=json&action_get_list=1&list=%s' % playlistID
+        baseUrl = 'https://www.youtube.com/playlist?list=%s' % playlistID
 
         currList = []
         if baseUrl != '':
             sts, data = self.cm.getPage(baseUrl, self.http_params)
+            data = self.cm.ph.getDataBeetwenMarkers(data, "var ytInitialData =", "};", False)[1]
             try:
-                data = json_loads(data)['video']
+                data = json_loads(data + '}')['contents']
+                data = data['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['playlistVideoListRenderer']['contents']
                 for item in data:
-                    url = 'http://www.youtube.com/watch?v=' + item['encrypted_id']
-                    title = item['title']
-                    img = item['thumbnail']
-                    time = item['length_seconds']
+                    item = item.get('playlistVideoRenderer')
+                    url = 'http://www.youtube.com/watch?v=' + item['videoId']
+                    title = item['title']['runs'][0]['text']
+                    img = self.getThumbnailUrl(item)
+                    time = item['lengthSeconds']
                     if '' != time:
                         time = str(timedelta(seconds=int(time)))
                     if time.startswith("0:"):
                         time = time[2:]
-                    desc = item['description']
+                    desc = item['title']['accessibility']['accessibilityData']['label']
                     params = {'type': 'video', 'category': 'video', 'title': title, 'url': url, 'icon': img, 'time': time, 'desc': desc}
                     currList.append(params)
             except Exception:
