@@ -128,8 +128,19 @@ class YouTubeParser():
                 else:
                      int(ph.search(x['format'], reNum)[0])
 
-            dashAudioLists = sorted(dashAudioLists, key=_key, reverse=True)
-            dashVideoLists = sorted(dashVideoLists, key=_key, reverse=True)
+# why so complicated ?
+#            dashAudioLists = sorted(dashAudioLists, key=_key, reverse=True)
+#            dashVideoLists = sorted(dashVideoLists, key=_key, reverse=True)
+
+            try:
+               dashAudioLists = sorted(dashAudioLists, key=lambda d: d['format'], reverse=True)
+            except:
+                pass
+            try:
+               dashVideoLists = sorted(dashVideoLists, key=lambda d: d['format'], reverse=True)
+            except:
+                pass
+
 
         for item in list:
             printDBG(">>>>>>>>>>>>>>>>>>>>>")
