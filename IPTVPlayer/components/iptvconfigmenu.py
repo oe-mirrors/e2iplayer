@@ -11,7 +11,6 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSkinsList, GetHostsList, GetEnabledHostsList, \
                                                           IsHostEnabled, IsExecutable, CFakeMoviePlayerOption, GetAvailableIconSize, \
                                                           IsWebInterfaceModuleAvailable, SetIconsHash, SetGraphicsHash
-#from Plugins.Extensions.IPTVPlayer.iptvupdate.updatemainwindow import IPTVUpdateWindow, UpdateMainAppImpl
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, IPTVPlayerNeedInit
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget, COLORS_DEFINITONS
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostsMenu
@@ -253,34 +252,6 @@ def GetListOfHostsNames():
     return gListOfHostsNames
 
 
-def IsUpdateNeededForHostsChangesCommit(enabledHostsListOld, enabledHostsList=None, hostsFromFolder=None):
-    if enabledHostsList == None:
-        enabledHostsList = GetEnabledHostsList()
-    if hostsFromFolder == None:
-        hostsFromFolder = GetHostsList(fromList=False, fromHostFolder=True)
-
-    bRet = False
-    if config.plugins.iptvplayer.remove_diabled_hosts.value and enabledHostsList != enabledHostsListOld:
-        hostsFromList = GetHostsList(fromList=True, fromHostFolder=False)
-        diffDisabledHostsList = set(enabledHostsListOld).difference(set(enabledHostsList))
-        diffList = set(enabledHostsList).symmetric_difference(set(enabledHostsListOld))
-        for hostItem in diffList:
-            if hostItem in hostsFromList:
-                if hostItem in diffDisabledHostsList:
-                    if hostItem in hostsFromFolder:
-                        # standard host has been disabled but it is still in folder
-                        bRet = True
-                        break
-                else:
-                    if hostItem not in hostsFromFolder:
-                        # standard host has been enabled but it is not in folder
-                        bRet = True
-                        break
-    if bRet:
-        SetGraphicsHash("")
-        SetIconsHash("")
-    return bRet
-
 ###################################################
 
 
@@ -512,20 +483,6 @@ class ConfigMenu(ConfigBaseWidget):
 
     def keyUpdate(self):
         printDBG("ConfigMenu.keyUpdate")
-#        if self.isChanged():
-#            self.askForSave(self.doUpdate, self.doUpdate)
-#        else:
-#            self.doUpdate()
-
-#    def doUpdate(self, forced=False):
-#        printDBG("ConfigMenu.doUpdate")
-#        if not forced:
-#            self.session.open(IPTVUpdateWindow, UpdateMainAppImpl(self.session))
-#        else:
-#            self.session.openWithCallback(self.closeAfterUpdate, IPTVUpdateWindow, UpdateMainAppImpl(self.session, allowTheSameVersion=True))
-
-#    def closeAfterUpdate(self, arg1=None, arg2=None):
-#        self.close()
 
     def save(self):
         ConfigBaseWidget.save(self)
@@ -538,49 +495,9 @@ class ConfigMenu(ConfigBaseWidget):
 
     def getMessageBeforeClose(self, afterSave):
         return ''
-        needPluginUpdate = False
-        if afterSave and config.plugins.iptvplayer.ListaGraficzna.value and 0 == GetAvailableIconSize(False):
-            needPluginUpdate = True
-        else:
-            enabledHostsList = GetEnabledHostsList()
-            hostsFromFolder = GetHostsList(fromList=False, fromHostFolder=True)
-            if self.remove_diabled_hostsOld != config.plugins.iptvplayer.remove_diabled_hosts.value:
-                if config.plugins.iptvplayer.remove_diabled_hosts.value:
-                    for folderItem in hostsFromFolder:
-                        if folderItem in enabledHostsList:
-                            continue
-                        else:
-                            # there is host file which is not enabled,
-                            # so we need perform update to remove it
-                            needPluginUpdate = True
-                            break
-                else:
-                    hostsFromList = GetHostsList(fromList=True, fromHostFolder=False)
-                    if not set(hostsFromList).issubset(set(hostsFromFolder)):
-                        # there is missing hosts files, we need updated does not matter
-                        # if these hosts are enabled or disabled
-                        needPluginUpdate = True
-            elif IsUpdateNeededForHostsChangesCommit(self.enabledHostsListOld, enabledHostsList, hostsFromFolder):
-                needPluginUpdate = True
-
-        if needPluginUpdate:
-            SetGraphicsHash("")
-            SetIconsHash("")
-
-        if not needPluginUpdate and config.plugins.iptvplayer.IPTVWebIterface.value != IsWebInterfaceModuleAvailable(True):
-            needPluginUpdate = True
-
-        if needPluginUpdate:
-            return _('Some changes will be applied only after plugin update.\nDo you want to perform update now?')
-        else:
-            return ''
 
     def performCloseWithMessage(self, afterSave=True):
-        message = self.getMessageBeforeClose(afterSave)
-        if message == '':
-            self.close()
-        else:
-            self.session.openWithCallback(self.closeAfterMessage, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
+        self.close()
 
     def closeAfterMessage(self, arg=None):
         if arg:

@@ -33,7 +33,7 @@ from enigma import getDesktop, eTimer
 ####################################################
 #                   IPTV components
 ####################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer, GetListOfHostsNames, IsUpdateNeededForHostsChangesCommit
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer, GetListOfHostsNames
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostMenu, ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.configgroups import ConfigGroupsMenu
 
@@ -57,7 +57,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvbuffui import E2iPlayerBufferingWidget
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
-#from Plugins.Extensions.IPTVPlayer.iptvupdate.updatemainwindow import IPTVUpdateWindow, UpdateMainAppImpl
 
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVPlayerLastHostError, GetIPTVNotify, GetIPTVSleep
 
@@ -220,10 +219,6 @@ class E2iPlayerWidget(Screen):
         # Check for plugin update
         self.lastPluginVersion = ''
         self.checkUpdateConsole = None
-        self.checkUpdateTimer = eTimer()
-        self.checkUpdateTimer_conn = eConnectCallback(self.checkUpdateTimer.timeout, self.__requestCheckUpdate)
-        self.checkUpdateTimer_interval = 1000 * 60 * 60 * 2 # 2h
-        self.__requestCheckUpdate()
 
         self.spinnerPixmap = [LoadPixmap(GetIconDir('radio_button_on.png')), LoadPixmap(GetIconDir('radio_button_off.png'))]
         self.useAlternativePlayer = False
@@ -391,8 +386,6 @@ class E2iPlayerWidget(Screen):
             self.iconMenager.setUpdateCallBack(None)
             self.iconMenager.clearDQueue()
             self.iconMenager = None
-        self.checkUpdateTimer_conn = None
-        self.checkUpdateTimer = None
         self.mainTimer_conn = None
         self.mainTimer = None
         self.decodeCoverTimer_conn = None
@@ -926,7 +919,7 @@ class E2iPlayerWidget(Screen):
                 #There is no prev categories, so exit
                 #self.close()
                 if self.group == None:
-                    self.askUpdateAvailable(self.selectHost)
+                    self.selectHost()
                 else:
                     self.selectHostFromGroup()
         else:
@@ -1144,24 +1137,7 @@ class E2iPlayerWidget(Screen):
         self.loadSpinner()
         self.hideSpinner()
         self.checkBlacklistedImage()
-        self.askUpdateAvailable(self.selectHost)
-
-    def __requestCheckUpdate(self):
-        return
-        lastVerUrl = GetUpdateServerUri('lastversion.php')
-        if config.plugins.iptvplayer.autoCheckForUpdate.value:
-            self.checkUpdateTimer.start(self.checkUpdateTimer_interval, True)
-            if IsExecutable(DMHelper.GET_WGET_PATH()):
-                cmd = '%s "%s" -O - 2> /dev/null ' % (DMHelper.GET_WGET_PATH(), lastVerUrl)
-                if None != self.checkUpdateConsole:
-                    self.checkUpdateConsole.terminate()
-                printDBG("__requestCheckUpdate cmd[%r]" % cmd)
-                self.checkUpdateConsole = iptv_system(cmd, self.__checkUpdateCmdFinished)
-
-    def __checkUpdateCmdFinished(self, status, lastversion):
-        printDBG("__checkUpdateCmdFinished  status[%r] lastversion[%r]" % (status, lastversion))
-        if 0 == status and 50000000 < GetVersionNum(lastversion):
-            self.lastPluginVersion = lastversion
+        self.selectHost()
 
     def askUpdateAvailable(self, NoUpdateCallback):
         NoUpdateCallback()
@@ -1179,15 +1155,6 @@ class E2iPlayerWidget(Screen):
             self.session.openWithCallback(boundFunction(self.answerUpdateAvailable, NoUpdateCallback), MessageBox, text=message, type=MessageBox.TYPE_YESNO)
             return
         NoUpdateCallback()
-
-#    def answerUpdateAvailable(self, NoUpdateCallback, ret):
-#        try:
-#            if ret:
-#                self.session.openWithCallback(NoUpdateCallback, IPTVUpdateWindow, UpdateMainAppImpl(self.session), True)
-#            else:
-#                NoUpdateCallback()
-#        except Exception:
-#            printExc()
 
     def selectHost(self, arg1=None):
         printDBG(">> selectHost")
@@ -1232,19 +1199,6 @@ class E2iPlayerWidget(Screen):
                 groupList.append(self.newDisplayGroupsList[idx][1])
             self.groupObj.setGroupList(groupList)
 
-        checkUpdate = True
-        try:
-            if 0 < len(ret) and ret[1] == "update":
-                checkUpdate = False
-        except Exception:
-            pass
-        if checkUpdate:
-            self.askUpdateAvailable(boundFunction(self.selectGroupCallback2, ret))
-        else:
-            self.selectGroupCallback2(ret)
-
-    def selectGroupCallback2(self, ret):
-        printDBG(">> selectGroupCallback2")
         self.selectItemCallback(ret, 'selectgroup')
 
     def selectHostFromGroup(self):
@@ -1441,7 +1395,6 @@ class E2iPlayerWidget(Screen):
                 self.close()
                 return
             elif ret[1] == "update":
-#                self.session.openWithCallback(self.selectHost, IPTVUpdateWindow, UpdateMainAppImpl(self.session))
                 return
             elif ret[1] == "IPTVDM":
                 if type in ['selecthost', 'selectgroup']:
@@ -1480,26 +1433,13 @@ class E2iPlayerWidget(Screen):
         self.session.openWithCallback(self.configHostsCallback, ConfigHostsMenu, GetListOfHostsNames())
 
     def configHostsCallback(self, arg1=None):
-        if IsUpdateNeededForHostsChangesCommit(self.enabledHostsListOld):
-#            message = _('Some changes will be applied only after plugin update.\nDo you want to perform update now?')
-#            self.session.openWithCallback(self.askForUpdateCallback, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
-            self.selectHost()
-        elif self.group != None:
+        if self.group != None:
             self.selectHostFromGroup()
         else:
             self.selectHost()
 
     def runConfigGroupsMenu(self):
         self.session.openWithCallback(self.selectHost, ConfigGroupsMenu)
-
-#    def askForUpdateCallback(self, arg1=None):
-#        if arg1:
-#            self.selectHost()
-#            self.session.openWithCallback(self.selectHost, IPTVUpdateWindow, UpdateMainAppImpl(self.session, allowTheSameVersion=True))
-#        elif self.group != None:
-#            self.selectHostFromGroup()
-#        else:
-#            self.selectHost()
 
     def runConfig(self):
         self.session.openWithCallback(self.configCallback, ConfigMenu)
