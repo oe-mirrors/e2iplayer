@@ -537,6 +537,7 @@ class ConfigMenu(ConfigBaseWidget):
             IPTVPlayerNeedInit(True)
 
     def getMessageBeforeClose(self, afterSave):
+        return ''
         needPluginUpdate = False
         if afterSave and config.plugins.iptvplayer.ListaGraficzna.value and 0 == GetAvailableIconSize(False):
             needPluginUpdate = True
