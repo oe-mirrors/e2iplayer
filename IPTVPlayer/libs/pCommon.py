@@ -242,7 +242,8 @@ class CParsingHelper:
                              'á': 'a', 'é': 'e', 'í': 'i', 'ñ': 'n', 'ó': 'o', 'ú': 'u', 'ü': 'u',
                              'Á': 'A', 'É': 'E', 'Í': 'I', 'Ñ': 'N', 'Ó': 'O', 'Ú': 'U', 'Ü': 'U',
                             }
-        txt = txt.decode('utf-8')
+        if isinstance(txt,bytes):
+            txt = txt.decode('utf-8')
         if None != idx:
             txt = txt[idx]
         nrmtxt = unicodedata.normalize('NFC', txt)
@@ -254,7 +255,10 @@ class CParsingHelper:
                     ret_str.append(item)
             else: # pure ASCII character
                 ret_str.append(item)
-        return ''.join(ret_str).encode('utf-8')
+        if six.PY2:
+            return ''.join(ret_str).encode('utf-8')
+        else:
+            return ''.join(ret_str)
 
     @staticmethod
     def isalpha(txt, idx=None):
