@@ -117,7 +117,7 @@ class urlparser:
             try:
                 params = parse_qs(baseParams)
                 printDBG("PARAMS FROM URL [%s]" % params)
-                for key in list(params.keys()):
+                for key in params.keys():
                     if key not in KEYS_TAB:
                         continue
                     if not overwrite and key in baseUrl.meta:
@@ -686,7 +686,10 @@ class urlparser:
                        'yukons.net': self.pp.parserYUKONS,
                        'zalaa.com': self.pp.parserZALAACOM,
                        'zerocast.tv': self.pp.parserZEROCASTTV,
-                       'zstream.to': self.pp.parserZSTREAMTO
+                       'zstream.to': self.pp.parserZSTREAMTO,
+                       # 'videovard.sx': self.pp.parserVIDEOVARDSX,
+                       'streamcrypt.net': self.pp.parserSTREAMCRYPTNET,
+                       'evoload.io': self.pp.parserEVOLOADIO
         }
         return
 
@@ -15584,5 +15587,49 @@ class pageParser(CaptchaHelper):
                 if sts:
                     url = self.cm.meta.get('location', '')
                     urlTab.append({'name': name, 'url': url})
+
+        return urlTab
+    def parserSTREAMCRYPTNET(self, baseUrl):
+        printDBG("parserSTREAMCRYPTNET baseUrl[%s]" % baseUrl)
+
+        sts, data = self.cm.getPage(baseUrl, {'header':{'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}, 'use_cookie':1, 'save_cookie':1,'load_cookie':1, 'cookiefile': GetCookieDir("streamcrypt.cookie"), 'with_metadata':1})
+        #if not sts:
+        #    return []
+
+        red_url = self.cm.meta['url']
+        printDBG('redirect to url: %s' % red_url)
+
+        if red_url == baseUrl:
+            red_url = re.findall("URL=([^\"]+)",data)[0]
+
+        return urlparser().getVideoLinkExt(red_url)
+
+    def parserEVOLOADIO(self, baseUrl):
+        printDBG("parserEVOLOADIO baseUrl[%s]" % baseUrl)
+        urlTab = []
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        urlParams = {'header': HTTP_HEADER}
+
+        media_id = self.cm.ph.getSearchGroups(baseUrl + '/', '(?:e|f|v)[/-]([A-Za-z0-9]+)[^A-Za-z0-9]')[0]
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return False
+
+        passe = re.search('<div id="captcha_pass" value="(.+?)"></div>', data).group(1)
+        sts, crsv = self.cm.getPage('https://csrv.evosrv.com/captcha?m412548', urlParams)
+        if not sts:
+            return False
+
+        post_data = {"code": media_id, "csrv_token": crsv, "pass": passe, "token": "ok"}
+        sts, data = self.cm.getPage('https://evoload.io/SecurePlayer', urlParams, post_data)
+        if not sts:
+            return False
+
+        r = json_loads(data).get('stream')
+        if r:
+            surl = r.get('backup') if r.get('backup') else r.get('src')
+            if surl:
+                params = {'name': 'mp4', 'url': surl}
+                urlTab.append(params)
 
         return urlTab
