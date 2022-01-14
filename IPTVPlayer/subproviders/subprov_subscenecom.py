@@ -185,8 +185,6 @@ class SubsceneComProvider(CBaseSubProviderClass):
 
         url = self.getFullUrl('/subtitles/searchbytitle')
 
-        #urllib.quote_plus()
-
         header = self._getHeader(cItem['lang_id'])
         sts, data = self.cm.getPage(url, {'header': header}, {'query': self.params['confirmed_title'], 'l': ''})
         if not sts:

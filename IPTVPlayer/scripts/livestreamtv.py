@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import urllib.request
-import urllib.error
-import urllib.parse
+from urllib.request import Request, urlopen
 import sys
 import traceback
 import time
@@ -37,12 +35,12 @@ def getPage(url, params={}):
     printDBG('url [%s]' % url)
     sts = False
     try:
-        req = urllib.request.Request(url)
+        req = Request(url)
         if 'Referer' in params:
             req.add_header('Referer', params['Referer'])
         if 'User-Agent' in params:
             req.add_header('User-Agent', params['User-Agent'])
-        resp = urllib.request.urlopen(req)
+        resp = urlopen(req)
         data = resp.read()
         sts = True
     except Exception:

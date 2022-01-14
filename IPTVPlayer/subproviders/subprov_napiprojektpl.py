@@ -20,9 +20,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 from datetime import timedelta
 import time
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+import urllib.parse import quote_plus, quote
 import unicodedata
 import base64
 try:
@@ -113,7 +111,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
 
     def getMoviesList(self, cItem, nextCategoryMovie):
         printDBG("NapiProjektProvider.getMoviesList")
-        title = urllib.parse.quote_plus(self.params['confirmed_title'])
+        title = quote_plus(self.params['confirmed_title'])
         url = self.getFullUrl('/ajax/search_catalog.php')
 
         post_data = {'queryString': title, 'queryKind': cItem.get('kind', 0), 'queryYear': '', 'associate': ''}
@@ -164,7 +162,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         urlPattern = self.cm.ph.getDataBeetwenMarkers(tmp, 'window.location.href=', ';', False)[1].replace("'", "").replace('"', '').strip()
         urlPattern = urlPattern.split('tytul=')
         if 2 == len(urlPattern):
-            urlPattern = urlPattern[0] + 'tytul=' + urllib.parse.quote(urlPattern[1])
+            urlPattern = urlPattern[0] + 'tytul=' + quote(urlPattern[1])
         else:
             urlPattern = ''
 

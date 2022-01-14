@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-import urllib.request
-import urllib.parse
-import urllib.error
+from urllib.parse import quote
 try:
     import json
 except Exception:
@@ -22,7 +20,7 @@ class SuggestionsProvider:
         return _("Filmstarts Suggestions")
 
     def getSuggestions(self, text, locale):
-        url = 'http://essearch.allocine.net/de/autocomplete?q=' + urllib.parse.quote(text)
+        url = 'http://essearch.allocine.net/de/autocomplete?q=' + quote(text)
         sts, data = self.cm.getPage(url)
         if sts:
             retList = []

@@ -56,12 +56,12 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
     def __init__(self):
         CBaseHostClass.__init__(self)
         self.MAIN_URL = 'https://pilot.wp.pl/'
-        self.API_BASE_URL = 'https://api-pilot.wp.pl/'
+        self.API_BASE_URL = 'https://pilot.wp.pl/api/'
         self.STATIC_BASE_URL = 'https://static-pilot.wp.pl/'
 
         self.DEFAULT_ICON_URL = 'http://satkurier.pl/uploads/53612.jpg'
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
+        self.USER_AGENT = 'ExoMedia 4.3.0 (43000) / Android 8.0.0 / foster_e'
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'application/json', 'x-version': 'pl.videostar|3.53.0-gms|Android|26|foster_e', 'content-type': 'application/json; charset=UTF-8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
 
@@ -90,53 +90,11 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
     def doLogin(self, login, password):
         printDBG("VideoStarApi.doLogin")
 
-        logged = False
+        loginUrl = self.getFullUrl('/login')
+        post_data = '{"login":"%s","password":"%s","device":"android_tv"}' % (login, password)
+        actionUrl = self.getFullUrl('v1/user_auth/login?device_type=android_tv', 'api')
 
         httpParams = dict(self.defaultParams)
-        actionUrl = self.getFullUrl('v1/user', 'api')
-        sts, data = self.cm.getPage(actionUrl, httpParams)
-        printDBG(">>> user >>>")
-        printDBG(data)
-        printDBG("<<<")
-        if sts:
-            try:
-                data = json_loads(data, '', True)
-                if '' != data['data']['token']:
-                    self.userToken = data['data']['token']
-                    return True, ''
-            except Exception:
-                printExc()
-
-        loginUrl = self.getFullUrl('/login')
-        errMessage = _("Get page \"%s\" error.")
-
-        sts, data = self.cm.getPage(loginUrl, self.defaultParams)
-        if not sts:
-            return False, (errMessage % loginUrl)
-
-#        sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
-#        if not sts: return False, ""
-
-        link = self.cm.ph.getSearchGroups(data, '''<link as="script" rel="preload" href=['"](\/gatsby\-statics\/app\-[^'^"]+?)['"]''')[0]
-        sts, data = self.cm.getPage(self.getFullUrl(link), self.defaultParams)
-        if not sts:
-            return False, (errMessage % loginUrl)
-
-        if login != 'guest':
-            sitekey = self.cm.ph.getSearchGroups(data, '''GRECAPTCHA_SITEKEY.*?['"]([^'^"]+?)['"]''')[0]
-            if sitekey != '':
-                token, errorMsgTab = self.processCaptcha(sitekey, loginUrl)
-                if token == '':
-                    return False, errorMsgTab
-            else:
-                return False, errorMsgTab
-            post_data = '{"login":"%s","password":"%s","g-recaptcha-response":"%s","permanent":"1","device":"web"}' % (login, password, token)
-        else:
-            post_data = '{"login":"%s","password":"%s","permanent":"1","device":"web"}' % (login, password)
-
-        actionUrl = self.getFullUrl('v1/user_auth/login', 'api')
-
-        httpParams['header'] = dict(httpParams['header'])
         httpParams['header']['Referer'] = loginUrl
         httpParams['raw_post_data'] = True
         sts, data = self.cm.getPage(actionUrl, httpParams, post_data)
@@ -181,13 +139,14 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                 self.sessionEx.open(MessageBox, '%s\nProblem z zalogowanie użytkownika "%s". Sprawdź dane do logowania w konfiguracji hosta.' % (msg, login), type=MessageBox.TYPE_INFO, timeout=10)
                 self.loggedIn = False
         else:
-            self.doLogin('guest', 'guest')
+#            self.doLogin('guest', 'guest')
+            self.loggedIn = False
 
         self.cacheChannelList = []
         channelsTab = []
 
         if self.loggedIn:
-            url = self.getFullUrl('v1/channels/list?device=web', 'api')
+            url = self.getFullUrl('v1/channels/list?device=android_tv', 'api')
         else:
             url = self.getFullUrl('/static/guest/channels/list/web.json', 'static')
 
@@ -246,15 +205,15 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
             tries += 1
             try:
                 if self.loggedIn:
-                    url = 'v1/channel/%s?format_id=%s&device_type=web' % (vidItem['id'], formatId)
+                    url = 'v1/channel/%s?format_id=%s&device_type=android_tv' % (vidItem['id'], formatId)
                 else:
-                    url = 'v1/guest/channel/%s?format_id=%s&device_type=web' % (vidItem['id'], formatId)
+                    url = 'v1/guest/channel/%s?format_id=%s&device_type=android_tv' % (vidItem['id'], formatId)
                 url = self.getFullUrl(url, 'api')
                 sts, data = self.cm.getPage(url, self.defaultParams)
                 printDBG(data)
                 if not sts and not self.loggedIn and tries == 1:
                     rm(self.COOKIE_FILE)
-                    self.doLogin('guest', 'guest')
+#                    self.doLogin('guest', 'guest')
                     sts, data = self.cm.getPage(self.getFullUrl('/static/guest/channels/list/web.json', 'static'), self.defaultParams)
                     if sts:
                         continue

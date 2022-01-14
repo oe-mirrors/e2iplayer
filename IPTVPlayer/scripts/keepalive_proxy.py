@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-import urllib.request
-import urllib.parse
-import urllib.error
+from urllib.request import Request, urlopen, build_opener, install_opener
 import sys
 import time
 import traceback
-import urllib.parse
 import socketserver
-import http.server
+from http.server import SimpleHTTPRequestHandler
 
 import signal
 import os
@@ -32,14 +29,14 @@ def getPage(url, params={}, post_data=None):
     data = None
     return_data = params.get('return_data', True)
     try:
-        req = urllib.request.Request(url, post_data, params)
+        req = Request(url, post_data, params)
         if 'Referer' in params:
             req.add_header('Referer', params['Referer'])
         if 'User-Agent' in params:
             req.add_header('User-Agent', params['User-Agent'])
         if 'Connection' in params:
             req.add_header('Connection', params['Connection'])
-        resp = urllib.request.urlopen(req)
+        resp = urlopen(req)
         if return_data:
             data = resp.read()
             resp.close()
@@ -54,7 +51,7 @@ def getPage(url, params={}, post_data=None):
 HTTP_HEADER = {'Connection': 'keep-alive', 'return_data': False}
 
 
-class Proxy(http.server.SimpleHTTPRequestHandler):
+class Proxy(SimpleHTTPRequestHandler):
     def do_GET(self):
         try:
             global HTTP_HEADER

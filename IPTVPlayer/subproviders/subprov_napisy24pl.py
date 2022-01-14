@@ -14,9 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
-import urllib.parse
-import urllib.error
+from urllib.parse import quote_plus, unquote_plus
 try:
     import json
 except Exception:
@@ -133,7 +131,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
     def getMoviesList(self, cItem, nextCategoryMovie):
         printDBG("Napisy24plProvider.getMoviesList")
         page = cItem.get('page', 1)
-        title = urllib.parse.quote_plus(self.params['confirmed_title'])
+        title = quote_plus(self.params['confirmed_title'])
         url = self.getFullUrl('szukaj?page={0}&lang=0&search={1}&typ=0'.format(page, title))
 
         sts, data = self.getPage(url)
@@ -155,7 +153,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                     url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
                     if title == '':
-                        title = self.cleanHtmlStr(urllib.parse.unquote_plus(url.split('/')[-1]).title())
+                        title = self.cleanHtmlStr(unquote_plus(url.split('/')[-1]).title())
                     desc = item.split('</h2>')[-1]
 
                     params = dict(cItem)

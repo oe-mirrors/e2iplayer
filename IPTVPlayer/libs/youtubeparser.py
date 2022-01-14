@@ -33,6 +33,7 @@ config.plugins.iptvplayer.ytformat = ConfigSelection(default="mp4", choices=[("f
 config.plugins.iptvplayer.ytDefaultformat = ConfigSelection(default="720", choices=[("0", _("the worst")), ("144", "144p"), ("240", "240p"), ("360", "360p"), ("720", "720p"), ("1080", "1080p"), ("1440", "1440p"), ("2160", "2160p"), ("9999", _("the best"))])
 config.plugins.iptvplayer.ytUseDF = ConfigYesNo(default=True)
 config.plugins.iptvplayer.ytAgeGate = ConfigYesNo(default=False)
+config.plugins.iptvplayer.ytVP9 = ConfigYesNo(default=False)
 config.plugins.iptvplayer.ytShowDash = ConfigSelection(default="auto", choices=[("auto", _("Auto")), ("true", _("Yes")), ("false", _("No"))])
 config.plugins.iptvplayer.ytSortBy = ConfigSelection(default="A", choices=[("A", _("Relevance")), ("I", _("Upload date")), ("M", _("View count")), ("E", _("Rating"))])
 
@@ -65,6 +66,14 @@ class YouTubeParser():
             return False
 
     @staticmethod
+    def isVP9Allowed():
+        value = config.plugins.iptvplayer.ytVP9.value
+        printDBG("1. ALLOW VP9: >> %s" % value)
+        value = YouTubeParser.isDashAllowed() and value
+        printDBG("2. ALLOW VP9: >> %s" % value)
+        return value
+
+    @staticmethod
     def isAgeGateAllowed():
         value = config.plugins.iptvplayer.ytAgeGate.value
         printDBG("ALLOW Age-Gate bypass: >> %s" % value)
@@ -78,7 +87,7 @@ class YouTubeParser():
                 self.sessionToken = token
                 self.postdata = {"session_token": token}
 
-    def getDirectLinks(self, url, formats='flv, mp4', dash=True, dashSepareteList=False, allowAgeGate=None):
+    def getDirectLinks(self, url, formats='flv, mp4', dash=True, dashSepareteList=False, allowVP9=None, allowAgeGate=None):
         printDBG('YouTubeParser.getDirectLinks')
         list = []
         try:
@@ -90,7 +99,7 @@ class YouTubeParser():
                         videoId = self.cm.ph.getSearchGroups(data, '''['"]REDIRECT_TO_VIDEO['"]\s*\,\s*['"]([^'^"]+?)['"]''')[0]
                     if videoId != '':
                         url = 'https://www.youtube.com/watch?v=' + videoId
-            list = YoutubeIE()._real_extract(url, allowAgeGate=allowAgeGate)
+            list = YoutubeIE()._real_extract(url, allowVP9=allowVP9, allowAgeGate=allowAgeGate)
         except Exception:
             printExc()
             if dashSepareteList:
@@ -128,23 +137,12 @@ class YouTubeParser():
                 else:
                      int(ph.search(x['format'], reNum)[0])
 
-# why so complicated ?
-#            dashAudioLists = sorted(dashAudioLists, key=_key, reverse=True)
-#            dashVideoLists = sorted(dashVideoLists, key=_key, reverse=True)
-
-            try:
-               dashAudioLists = sorted(dashAudioLists, key=lambda d: d['format'], reverse=True)
-            except:
-                pass
-            try:
-               dashVideoLists = sorted(dashVideoLists, key=lambda d: d['format'], reverse=True)
-            except:
-                pass
-
+            dashAudioLists = sorted(dashAudioLists, key=_key, reverse=True)
+            dashVideoLists = sorted(dashVideoLists, key=_key, reverse=True)
 
         for item in list:
             printDBG(">>>>>>>>>>>>>>>>>>>>>")
-            printDBG(item)
+            printDBG(str(item))
             printDBG("<<<<<<<<<<<<<<<<<<<<<")
             if -1 < formats.find(item['ext']):
                 if 'yes' == item['m3u8']:

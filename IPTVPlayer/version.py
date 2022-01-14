@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
-#YYYY.MM.DD.DAY_RELEASE maxbambi REPO + zanmario REPRO
+#YYYY.MM.DD.DAY_RELEASE
 IPTV_VERSION = "2022.01.10.02"
