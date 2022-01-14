@@ -36,7 +36,7 @@ class FilmPalastTo(CBaseHostClass):
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.DEFAULT_ICON_URL = 'https://www.free4fisher.de/wp-content/uploads/2017/02/filmpalast-Fanart.png'
+        #self.DEFAULT_ICON_URL = 'https://www.free4fisher.de/wp-content/uploads/2017/02/filmpalast-Fanart.png'
         self.MAIN_URL = None
         self.cacheSeries = {}
         self.cacheSeasons = {}
@@ -391,8 +391,8 @@ class FilmPalastTo(CBaseHostClass):
             title = cItem['title']
         if desc == '':
             desc = cItem.get('desc', '')
-        if icon == '':
-            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        #if icon == '':
+        #    icon = cItem.get('icon', self.DEFAULT_ICON_URL)
 
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
 

@@ -87,6 +87,7 @@ def GetMoviePlayerName(player):
 def ConfigPlayer(player):
     return (player, GetMoviePlayerName(player))
 
+
 config.plugins.iptvplayer.NaszPlayer = ConfigSelection(default="auto", choices=[ConfigPlayer("auto"), ConfigPlayer("mini"), ConfigPlayer('extgstplayer'), ConfigPlayer("standard")])
 
 # without buffering mode

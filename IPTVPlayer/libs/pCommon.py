@@ -242,7 +242,7 @@ class CParsingHelper:
                              'á': 'a', 'é': 'e', 'í': 'i', 'ñ': 'n', 'ó': 'o', 'ú': 'u', 'ü': 'u',
                              'Á': 'A', 'É': 'E', 'Í': 'I', 'Ñ': 'N', 'Ó': 'O', 'Ú': 'U', 'Ü': 'U',
                             }
-        if isinstance(txt,bytes):
+        if isinstance(txt, bytes):
             txt = txt.decode('utf-8')
         if None != idx:
             txt = txt[idx]
@@ -842,7 +842,7 @@ class common:
         except pycurl.error as e:
             print('pycurl.error 903')
             print(e)
-            metadata['pycurl_error'] (e[0], str(e[1]))
+            metadata['pycurl_error'](e[0], str(e[1]))
             printExc()
         except Exception:
             printExc()

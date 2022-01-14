@@ -80,7 +80,7 @@ class WkylinewebcamsComApi:
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return list
-        
+
         tab = []
         statesPart = self.cm.ph.getDataBeetwenMarkers(data, 'class="dropdown-menu mega-dropdown-menu"', '<div class="collapse navbar')[1]
         stateData = statesPart.split('class="continent')
@@ -92,14 +92,14 @@ class WkylinewebcamsComApi:
                 titletext = self.cm.ph.getSearchGroups(item, '''html">([^"]+?)$''', 1, True)[0]
                 title = "%s: %s" % (continent.capitalize(), self.cleanHtmlStr(titletext))
                 if url != '' and title != '':
-                   tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'}) #explore_item            
+                   tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'}) #explore_item
 
-        tab = sorted(tab, key = lambda x:x, reverse=True)
+        tab = sorted(tab, key=lambda x: x, reverse=True)
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            list.insert(0, params)    
-        
+            list.insert(0, params)
+
         tab = []
         data = self.cm.ph.getDataBeetwenMarkers(data, 'cat"><div class="container-fluid">', '</li>')[1]
         catData = data.split('</a>')
@@ -108,17 +108,17 @@ class WkylinewebcamsComApi:
            title = self.cleanHtmlStr("Category: " + self.cm.ph.getSearchGroups(item, '''class="tcam">([^<]+?)<''', 1, True)[0])
            if url != '' and title != '':
                tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'}) #explore_item
-                           
+
         for item in tab[::-1]:
             params = dict(cItem)
             params.update(item)
-            list.insert(0, params)    
-        
+            list.insert(0, params)
+
         for idx in range(2):
             if idx >= len(data):
                 continue
             catData = data[idx]
-            catData = catData.split('</a>')     
+            catData = catData.split('</a>')
             if url != '' and title != '':
                     tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'}) #explore_item
             if len(catData) < 2:
@@ -171,7 +171,7 @@ class WkylinewebcamsComApi:
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return list
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data,'</h1><hr>', '<div class="footer">')
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '</h1><hr>', '<div class="footer">')
         if data:
             data = self.cm.ph.getAllItemsBeetwenMarkers(data[0], '<a ', '</a>')
             for item in data:
@@ -243,7 +243,7 @@ class WkylinewebcamsComApi:
                 urlsTab = getDirectM3U8Playlist(url)
                 return urlsTab
             elif url.startswith('livee.m3u8'):
-                url = 'https://hd-auth.skylinewebcams.com/'+ url.replace('livee','live')
+                url = 'https://hd-auth.skylinewebcams.com/' + url.replace('livee', 'live')
                 urlsTab = getDirectM3U8Playlist(url)
                 return urlsTab
         else:

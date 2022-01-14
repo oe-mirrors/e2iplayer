@@ -34,23 +34,23 @@ config.plugins.iptvplayer.eurosportplayer_password = ConfigText(default="", fixe
 config.plugins.iptvplayer.eurosportplayer_showauto = ConfigYesNo(default=True)
 config.plugins.iptvplayer.eurosportplayer_showambient = ConfigYesNo(default=True)
 eurosportLanguages = [
-    ("all", _("All")), 
-    ("Ambient Sound", _("Ambient Sound")), 
-    ("Danish", _("Danish")), 
-    ("Dutch", _("Dutch")), 
-    ("English", _("English")), 
-    ("Finnish", _("Finnish")), 
-    ("French", _("French")), 
-    ("German", _("German")), 
-    ("Hungarian", _("Hungarian")), 
-    ("Italian", _("Italian")), 
-    ("Norwegian", _("Norwegian")), 
-    ("Polish", _("Polish")), 
-    ("Spanish", _("Spanish")), 
+    ("all", _("All")),
+    ("Ambient Sound", _("Ambient Sound")),
+    ("Danish", _("Danish")),
+    ("Dutch", _("Dutch")),
+    ("English", _("English")),
+    ("Finnish", _("Finnish")),
+    ("French", _("French")),
+    ("German", _("German")),
+    ("Hungarian", _("Hungarian")),
+    ("Italian", _("Italian")),
+    ("Norwegian", _("Norwegian")),
+    ("Polish", _("Polish")),
+    ("Spanish", _("Spanish")),
     ("Swedish", _("Swedish"))
 ]
 config.plugins.iptvplayer.eurosportplayer_showlanguage = ConfigSelection(default="all", choices=eurosportLanguages)
-config.plugins.iptvplayer.eurosportplayer_minres = ConfigSelection(default="0", choices=[("0","0"),("720","720p"),("1080","1080p")])
+config.plugins.iptvplayer.eurosportplayer_minres = ConfigSelection(default="0", choices=[("0", "0"), ("720", "720p"), ("1080", "1080p")])
 
 
 def GetConfigList():
@@ -165,6 +165,7 @@ class EuroSportPlayer(CBaseHostClass):
         else:
             td = d2 - d1
         return (td.seconds + td.days * 24 * 3600) / div
+
     def addItemInDB(self, item):
         itemType = item['type']
         itemId = item['id']
@@ -445,6 +446,7 @@ class EuroSportPlayer(CBaseHostClass):
 
         except Exception:
             printExc()
+
     def listDays(self, cItem, nextCategory):
         printDBG("EuroSportPlayer.listDays [%s]" % cItem)
         NOW = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
@@ -483,7 +485,7 @@ class EuroSportPlayer(CBaseHostClass):
         printDBG("EuroSportPlayer.listSchedule [%s]" % cItem)
 
         try:
-            
+
             httpHeader = {
                 'User-Agent': self.USER_AGENT,
                 'accept': '*/*',
@@ -501,7 +503,6 @@ class EuroSportPlayer(CBaseHostClass):
                 return
 
             data = json_loads(data)
-            
 
             for item in data['included']:
                 self.addItemInDB(item)
@@ -518,25 +519,24 @@ class EuroSportPlayer(CBaseHostClass):
                     if params:
                         self.addVideo(params)
 
-
-            try: 
+            try:
                 total_pages = data['meta']["itemsTotalPages"]
-                printDBG('Total pages: %s' % total_pages )
-            except: 
+                printDBG('Total pages: %s' % total_pages)
+            except:
                 total_pages = 1
-            
+
             try:
                 current_page = data['meta']["itemsCurrentPage"]
                 printDBG('Current page: %s' % current_page)
             except:
                 current_page = 1
-            
+
             while current_page < total_pages:
-                
+
                 current_page = current_page + 1
                 url = self.SCHEDULE_COLLECTION_URL.replace('{%id%}', cItem['schedule_id']).replace('{%filter%}', cItem['filter'])
                 url = url + "&page[items.number]={}".format(current_page)
-                
+
                 sts, data = self.getPage(url, {'header': httpHeader, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE})
                 if sts:
 
@@ -556,7 +556,6 @@ class EuroSportPlayer(CBaseHostClass):
                             params = self.addVideoFromData(videoData, label_format='schedule', future=True)
                             if params:
                                 self.addVideo(params)
-
 
         except Exception:
             printExc()
@@ -766,29 +765,29 @@ class EuroSportPlayer(CBaseHostClass):
 
             if 'hls' in s:
                 link_url = strwithmeta(s['hls']['url'], {'User-Agent': self.USER_AGENT, 'Referer': video_page_url})
-                if config.plugins.iptvplayer.eurosportplayer_showauto and config.plugins.iptvplayer.eurosportplayer_showauto.value:  
+                if config.plugins.iptvplayer.eurosportplayer_showauto and config.plugins.iptvplayer.eurosportplayer_showauto.value:
                     linksTab.append({'name': 'auto hls', 'url': link_url})
-                
+
                 list_of_links = getDirectM3U8Playlist(link_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
-                
-                # select links with preferred audio language  
+
+                # select links with preferred audio language
                 list_of_links2 = []
-                ambient_links=[]
-                other_lang_links=[]
-                
+                ambient_links = []
+                other_lang_links = []
+
                 for l in list_of_links:
                     m = re.findall("res:[ ][0-9]{2,4}x([0-9]{2,4})", l["name"])
                     if m:
-                        #printDBG(str(l)) 
+                        #printDBG(str(l))
                         #printDBG("resolution: %s" % int(m[0]))
-                        
-                        if (not config.plugins.iptvplayer.eurosportplayer_minres) or int(m[0]) >= int(config.plugins.iptvplayer.eurosportplayer_minres.value):  
-                        
-                            if config.plugins.iptvplayer.eurosportplayer_showlanguage and config.plugins.iptvplayer.eurosportplayer_showlanguage.value: 
+
+                        if (not config.plugins.iptvplayer.eurosportplayer_minres) or int(m[0]) >= int(config.plugins.iptvplayer.eurosportplayer_minres.value):
+
+                            if config.plugins.iptvplayer.eurosportplayer_showlanguage and config.plugins.iptvplayer.eurosportplayer_showlanguage.value:
 
                                 if config.plugins.iptvplayer.eurosportplayer_showlanguage.value == "all" or config.plugins.iptvplayer.eurosportplayer_showlanguage.value in l["name"]:
                                     list_of_links2.append(l)
-                                
+
                                 else:
                                     if 'Ambient' in l["name"]:
                                         ambient_links.append(l)
@@ -796,11 +795,10 @@ class EuroSportPlayer(CBaseHostClass):
                                         other_lang_links.append(l)
                             else:
                                 list_of_links2.append(l)
-                                
 
                     else:
                         list_of_links2.append(l)
-                    
+
                 linksTab.extend(list_of_links2)
 
                 if not linksTab:
@@ -810,9 +808,6 @@ class EuroSportPlayer(CBaseHostClass):
                 elif config.plugins.iptvplayer.eurosportplayer_showambient and config.plugins.iptvplayer.eurosportplayer_showambient.value:
                     linksTab.extend(ambient_links)
 
-            
-          
-                    
             #if 'dash' in s:
             #    link_url = strwithmeta(s['dash']['url'], {'User-Agent': self.USER_AGENT, 'Referer' : video_page_url})
             #    linksTab.append({'name':'dash', 'url': link_url})

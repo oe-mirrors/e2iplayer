@@ -50,7 +50,6 @@ class IPTVUpdateList(IPTVListComponentBase):
             elif DESKTOP_WIDTH >= 1280:
                 self.fonts[1] = ("Regular", 26, 50, 0)
 
-
         self.l.setFont(0, gFont(self.fonts[0][0], self.fonts[0][1]))
         self.l.setFont(1, gFont(self.fonts[1][0], self.fonts[1][1]))
 
