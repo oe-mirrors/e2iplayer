@@ -21,7 +21,6 @@ import time
 import zlib
 import http.cookiejar
 import urllib.parse
-import urllib.error
 import base64
 from hashlib import sha1
 from Components.config import config, ConfigText, getConfigListEntry

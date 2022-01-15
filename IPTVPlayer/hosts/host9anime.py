@@ -18,7 +18,6 @@ from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 from binascii import hexlify, unhexlify
 from hashlib import md5
 ###################################################

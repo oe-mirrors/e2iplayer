@@ -19,7 +19,6 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 from datetime import datetime, timedelta, date
 import re
 import urllib.parse
-import urllib.error
 import time
 ###################################################
 

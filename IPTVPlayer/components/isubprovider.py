@@ -18,7 +18,6 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, Ret
 
 import re
 import urllib.parse
-import urllib.error
 from os import listdir as os_listdir, path as os_path
 
 

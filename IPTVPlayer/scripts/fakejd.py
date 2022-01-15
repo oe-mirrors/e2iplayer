@@ -5,7 +5,7 @@ import hmac
 import time
 from urllib.request import HTTPSHandler, Request, build_opener
 import urllib.parse
-import urllib.error
+from urllib.error import HTTPError
 import base64
 import sys
 import traceback
@@ -78,7 +78,7 @@ def getPage(url, headers={}, post_data=None):
         response = opener.open(req)
         data = response.read()
         sts = response.getcode()
-    except urllib.error.HTTPError as e:
+    except HTTPError as e:
         global LAST_HTTP_ERROR_CODE
         global LAST_HTTP_ERROR_DATA
         LAST_HTTP_ERROR_CODE = e.code

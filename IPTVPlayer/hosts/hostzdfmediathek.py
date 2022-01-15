@@ -17,7 +17,6 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 from datetime import datetime, timedelta
 import re
 import urllib.parse
-import urllib.error
 import time
 from functools import cmp_to_key
 ###################################################

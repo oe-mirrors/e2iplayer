@@ -16,7 +16,6 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 import base64
 try:
     import json

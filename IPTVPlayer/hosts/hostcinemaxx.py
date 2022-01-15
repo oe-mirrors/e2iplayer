@@ -17,7 +17,6 @@ from Plugins.Extensions.IPTVPlayer.libs.hdgocc import HdgoccParser
 # FOREIGN import
 ###################################################
 import urllib.parse
-import urllib.error
 import re
 import time
 import math

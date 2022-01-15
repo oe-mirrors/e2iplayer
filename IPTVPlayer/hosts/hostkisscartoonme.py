@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import urllib.parse
-import urllib.error
 try:
     import json
 except Exception:

@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 import base64
 try:
     import json

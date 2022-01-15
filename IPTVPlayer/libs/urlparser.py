@@ -47,7 +47,6 @@ from Screens.MessageBox import MessageBox
 import re
 import time
 import urllib.parse
-import urllib.error
 import string
 import codecs
 import base64

@@ -18,7 +18,6 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 import codecs
 from urllib.parse import urlparse, urlunparse, parse_qsl
 from datetime import timedelta

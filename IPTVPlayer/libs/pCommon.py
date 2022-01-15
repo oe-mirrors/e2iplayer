@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 ###################################################
 from urllib.request import urlopen, build_opener, HTTPRedirectHandler, addinfourl, HTTPHandler, HTTPSHandler, BaseHandler, HTTPCookieProcessor, ProxyHandler, Request
 import urllib.parse
-import urllib.error
+from urllib.error import URLError, HTTPError
 import base64
 try:
     import ssl
@@ -932,7 +932,7 @@ class common:
                 addParams['return_data'] = True
             response = self.getURLRequestData(addParams, post_data)
             status = True
-        except urllib.error.HTTPError as e:
+        except HTTPError as e:
             try:
                 printExc()
                 status = False
@@ -953,7 +953,7 @@ class common:
                     e.fp.close()
             except Exception:
                 printExc()
-        except urllib.error.URLError as e:
+        except URLError as e:
             printExc()
             errorMsg = str(e)
             if 'ssl_protocol' not in addParams and 'TLSV1_ALERT_PROTOCOL_VERSION' in errorMsg:
@@ -1413,7 +1413,7 @@ class common:
                 else:
                     data = response.read(max)
                 response.close()
-            except urllib.error.HTTPError as e:
+            except HTTPError as e:
                 ignoreCodeRanges = params.get('ignore_http_code_ranges', [(404, 404), (500, 500)])
                 ignoreCode = False
                 metadata['status_code'] = e.code

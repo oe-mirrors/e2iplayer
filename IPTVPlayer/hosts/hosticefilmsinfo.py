@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 import random
 try:
     import json

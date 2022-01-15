@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMu
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 try:
     import json
 except Exception:

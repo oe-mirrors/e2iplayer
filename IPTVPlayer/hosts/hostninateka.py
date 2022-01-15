@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 try:
     import json
 except Exception:

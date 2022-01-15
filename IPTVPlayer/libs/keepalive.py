@@ -105,7 +105,7 @@ EXTRA ATTRIBUTES AND METHODS
 # $Id: keepalive.py,v 1.17 2006/12/08 00:14:16 mstenner Exp $
 
 from urllib.request import HTTPHandler, HTTPSHandler
-import urllib.error
+from urllib.error import URLError
 import http.client
 import socket
 import _thread
@@ -224,7 +224,7 @@ class KeepAliveHandler:
     def do_open(self, req):
         host = req.host
         if not host:
-            raise urllib.error.URLError('no host given')
+            raise URLError('no host given')
 
         try:
             h = self._cm.get_ready_conn(host)
@@ -251,7 +251,7 @@ class KeepAliveHandler:
                 self._start_transaction(h, req)
                 r = h.getresponse()
         except (socket.error, http.client.HTTPException) as err:
-            raise urllib.error.URLError(err)
+            raise URLError(err)
 
         if DEBUG:
             DEBUG.info("STATUS: %s, %s", r.status, r.reason)
@@ -341,7 +341,7 @@ class KeepAliveHandler:
                 else:
                     h.putrequest('GET', req.get_selector())
         except (socket.error, http.client.HTTPException) as err:
-            raise urllib.error.URLError(err)
+            raise URLError(err)
 
         for args in self.parent.addheaders:
             h.putheader(*args)

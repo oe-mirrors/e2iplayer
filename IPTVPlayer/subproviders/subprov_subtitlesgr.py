@@ -18,7 +18,6 @@ from datetime import timedelta
 import time
 import re
 import urllib.parse
-import urllib.error
 import unicodedata
 import base64
 try:

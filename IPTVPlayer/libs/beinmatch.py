@@ -21,7 +21,6 @@ from Screens.MessageBox import MessageBox
 
 import re
 import urllib.parse
-import urllib.error
 
 
 class BeinmatchApi(CBaseHostClass):

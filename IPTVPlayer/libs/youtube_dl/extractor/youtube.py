@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import urllib.parse
-import urllib.error
 import re
 import time
 from urllib.parse import urlparse, urlunparse, unquote as _unquote

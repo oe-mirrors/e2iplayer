@@ -16,7 +16,6 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 from datetime import timedelta
 from urllib.parse import urljoin
 ###################################################

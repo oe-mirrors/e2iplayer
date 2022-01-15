@@ -16,7 +16,6 @@ from binascii import hexlify
 from hashlib import md5
 import re
 import urllib.parse
-import urllib.error
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 

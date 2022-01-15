@@ -16,7 +16,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 from datetime import datetime, tzinfo, timedelta
 ###################################################
 

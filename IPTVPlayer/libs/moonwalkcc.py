@@ -19,7 +19,6 @@ import re
 import base64
 import copy
 import urllib.parse
-import urllib.error
 from binascii import unhexlify
 from urllib.parse import urlparse, parse_qsl
 from Components.config import config, ConfigSelection, ConfigYesNo

@@ -22,7 +22,7 @@
 #
 from urllib.request import urlopen, Request
 import urllib.parse
-import urllib.error
+from urllib.error import HTTPError
 import re
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 
@@ -64,7 +64,7 @@ class YouSeeApi(object):
             u = urlopen(r)
             data = u.read()
             u.close()
-        except urllib.error.HTTPError as error:
+        except HTTPError as error:
             data = error.read()
         except Exception as ex:
             raise YouSeeApiException(ex)

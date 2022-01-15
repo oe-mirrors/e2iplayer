@@ -15,7 +15,6 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 import base64
 try:
     import json

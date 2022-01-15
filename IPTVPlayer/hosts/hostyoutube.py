@@ -21,7 +21,6 @@ except Exception:
     import simplejson as json
 import re
 import urllib.parse
-import urllib.error
 from Components.config import config, ConfigDirectory, getConfigListEntry
 ###################################################
 

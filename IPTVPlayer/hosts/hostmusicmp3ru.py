@@ -15,7 +15,6 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 try:
     import json
 except Exception:

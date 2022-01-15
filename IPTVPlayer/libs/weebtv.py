@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 import urllib.parse
-import urllib.error
 ############################################
 
 ###################################################

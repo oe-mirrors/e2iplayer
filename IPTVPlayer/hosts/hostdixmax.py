@@ -18,7 +18,6 @@ from Plugins.Extensions.IPTVPlayer.libs.demjson import decode as demjson_loads
 from binascii import hexlify
 from hashlib import md5
 import urllib.parse
-import urllib.error
 import re
 from datetime import datetime
 from Components.config import config, ConfigText, getConfigListEntry

@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 import time
 import urllib.parse
-import urllib.error
 import random
 try:
     import json

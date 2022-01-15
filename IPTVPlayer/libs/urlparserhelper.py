@@ -16,7 +16,6 @@ import time
 import string
 import codecs
 import urllib.parse
-import urllib.error
 import six
 try:
     from urllib.parse import urlsplit, urlunsplit, urljoin

@@ -34,7 +34,6 @@ from Components.config import config, ConfigYesNo, ConfigSelection, getConfigLis
 from time import time
 from os import path as os_path
 import urllib.parse
-import urllib.error
 import re
 
 try:

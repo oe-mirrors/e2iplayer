@@ -52,7 +52,6 @@ from Plugins.Extensions.IPTVPlayer.libs.wizjatv import WizjaTvApi, GetConfigList
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 from urllib.parse import urlsplit, urlunsplit
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 ############################################

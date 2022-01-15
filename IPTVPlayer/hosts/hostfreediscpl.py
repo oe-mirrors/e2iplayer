@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 from copy import deepcopy
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################

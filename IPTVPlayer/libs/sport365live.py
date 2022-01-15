@@ -21,7 +21,6 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 import random
 import base64
 from time import time

@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 try:
     import json
 except Exception:

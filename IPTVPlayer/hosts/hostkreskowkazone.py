@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 import urllib.parse
-import urllib.error
 from hashlib import md5
 try:
     import json

@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 import time
 import re
 import urllib.parse
-import urllib.error
 try:
     import json
 except Exception:

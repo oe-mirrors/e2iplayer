@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 # FOREIGN import
 ###################################################
 import urllib.parse
-import urllib.error
 from datetime import datetime, date, timedelta
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 ###################################################

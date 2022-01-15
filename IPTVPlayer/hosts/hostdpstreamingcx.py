@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import datetime
 import re
-import urllib.error
 import urllib.parse
 try:
     import json

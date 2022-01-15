@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 # FOREIGN import
 ###################################################
 import urllib.parse
-import urllib.error
 try:
     import json
 except Exception:

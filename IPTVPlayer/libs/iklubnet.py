@@ -16,7 +16,6 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 from Components.config import config, ConfigYesNo, getConfigListEntry
 import re
 import urllib.parse
-import urllib.error
 try:
     import json
 except Exception:

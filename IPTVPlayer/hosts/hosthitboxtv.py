@@ -15,7 +15,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 ###################################################
 from Components.config import config, ConfigSelection
 import urllib.parse
-import urllib.error
 try:
     import simplejson as json
 except Exception:

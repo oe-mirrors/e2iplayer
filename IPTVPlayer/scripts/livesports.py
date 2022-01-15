@@ -2,7 +2,7 @@
 
 
 from urllib.request import HTTPCookieProcessor, HTTPSHandler, Request, build_opener
-import urllib.error
+from urllib.error import HTTPError
 import sys
 import traceback
 import base64
@@ -91,7 +91,7 @@ def getPage(url, params={}):
         resp = opener.open(req)
         data = resp.read()
         sts = True
-    except urllib.error.HTTPError as e:
+    except HTTPError as e:
         data = e
     except Exception:
         printExc()

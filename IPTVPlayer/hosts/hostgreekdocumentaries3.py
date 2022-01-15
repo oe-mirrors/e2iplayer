@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 ###################################################
 import re
 import urllib.parse
-import urllib.error
 try:
     import json
 except Exception:

@@ -15,7 +15,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 from Components.config import config, ConfigText, getConfigListEntry
 import urllib.parse
-import urllib.error
 from hashlib import md5
 try:
     import simplejson as json

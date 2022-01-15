@@ -20,7 +20,6 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 import urllib.parse
 import re
 import urllib.parse
-import urllib.error
 ###################################################
 
 ###################################################

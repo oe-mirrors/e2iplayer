@@ -21,7 +21,6 @@ from time import sleep as time_sleep, time
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 import urllib.parse
-import urllib.error
 import traceback
 import re
 import sys

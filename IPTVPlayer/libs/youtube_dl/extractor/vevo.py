@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import urllib.error
 import urllib.parse
 import re
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import *

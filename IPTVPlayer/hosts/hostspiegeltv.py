@@ -18,7 +18,6 @@ import time
 import re
 import hashlib
 import urllib.parse
-import urllib.error
 import random
 from datetime import datetime
 ###################################################
