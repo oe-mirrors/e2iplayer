@@ -17,7 +17,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from datetime import timedelta
 import time
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 import unicodedata

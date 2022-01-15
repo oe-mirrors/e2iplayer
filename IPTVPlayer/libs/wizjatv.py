@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigText, getConfigListEntry
-import urllib.request
 import urllib.parse
 import urllib.error
 try:

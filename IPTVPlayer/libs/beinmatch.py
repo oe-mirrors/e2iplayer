@@ -20,7 +20,6 @@ from Screens.MessageBox import MessageBox
 ###################################################
 
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 

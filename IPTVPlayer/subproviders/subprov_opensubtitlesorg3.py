@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 try:

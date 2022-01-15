@@ -20,7 +20,7 @@
 #
 # https://docs.google.com/document/d/1_rs5BXklnLqGS6g6eAjevVHsPafv4PXDCi_dAM2b7G0/edit?pli=1
 #
-import urllib.request
+from urllib.request import urlopen, Request
 import urllib.parse
 import urllib.error
 import re
@@ -57,11 +57,11 @@ class YouSeeApi(object):
         url += '/format/json'
 
         try:
-            r = urllib.request.Request(url, headers={'X-API-KEY': API_KEY})
+            r = Request(url, headers={'X-API-KEY': API_KEY})
             if method == METHOD_POST and params:
                 print("POST data: %s" % urllib.parse.urlencode(params))
                 r.add_data(urllib.parse.urlencode(params))
-            u = urllib.request.urlopen(r)
+            u = urlopen(r)
             data = u.read()
             u.close()
         except urllib.error.HTTPError as error:

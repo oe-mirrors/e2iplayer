@@ -46,7 +46,6 @@ from Screens.MessageBox import MessageBox
 ###################################################
 import re
 import time
-import urllib.request
 import urllib.parse
 import urllib.error
 import string

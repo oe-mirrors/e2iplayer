@@ -20,7 +20,6 @@ from Components.Language import language
 from time import sleep as time_sleep, time
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
-import urllib.request
 import urllib.parse
 import urllib.error
 import traceback
@@ -1013,7 +1012,7 @@ def GetFileSize(filepath):
 def DownloadFile(url, filePath):
     printDBG('DownloadFile [%s] from [%s]' % (filePath, url))
     try:
-        downloadFile = urllib.request.urlopen(url)
+        downloadFile = urlopen(url)
         output = open(filePath, 'wb')
         output.write(downloadFile.read())
         output.close()

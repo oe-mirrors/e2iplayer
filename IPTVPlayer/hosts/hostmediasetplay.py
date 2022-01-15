@@ -18,8 +18,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
-import urllib.parse
+from urllib.request import urlopen
 import urllib.error
 import re
 import uuid
@@ -130,7 +129,7 @@ class MediasetPlay(CBaseHostClass):
                     url = item['publicUrls'][0]
                     if 'mpegurl' in item['format'].lower():
                         f = 'HLS/M3U8'
-                        req = urllib.request.urlopen(url)
+                        req = urlopen(url)
                         videoUrl = req.geturl()
 
                         linksTab.append({'name': f, 'url': videoUrl})
@@ -144,13 +143,13 @@ class MediasetPlay(CBaseHostClass):
                 return
 
             url = json_loads(data)['entries'][0]['media'][0]['publicUrl']
-            req = urllib.request.urlopen(url)
+            req = urlopen(url)
             videoUrl = req.geturl()
 
             linksTab.append({'name': 'link', 'url': videoUrl})
 
         elif cItem['category'] == 'program_video':
-            req = urllib.request.urlopen(cItem["url"])
+            req = urlopen(cItem["url"])
             videoUrl = req.geturl()
 
             linksTab.append({'name': 'link', 'url': videoUrl})

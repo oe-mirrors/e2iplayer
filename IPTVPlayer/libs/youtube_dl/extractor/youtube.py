@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import urllib.request
 import urllib.parse
 import urllib.error
 import re

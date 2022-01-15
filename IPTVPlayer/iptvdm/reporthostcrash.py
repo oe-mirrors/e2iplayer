@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import urllib.request
-import urllib.error
-import urllib.parse
+from urllib.request import urlopen, Request
+from urllib.parse import urlencode
 import sys
 
 
 def ReportCrash(url, except_msg):
-    request = urllib.request.Request(url, data=urllib.parse.urlencode({'except': except_msg}))
-    data = urllib.request.urlopen(request).read()
+    request = Request(url, data=urlencode({'except': except_msg}))
+    data = urlopen(request).read()
     print(data)
 
 

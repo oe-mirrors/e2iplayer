@@ -15,7 +15,6 @@ import re
 import time
 import string
 import codecs
-import urllib.request
 import urllib.parse
 import urllib.error
 import six

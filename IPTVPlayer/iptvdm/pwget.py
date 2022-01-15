@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import urllib.request
-import urllib.parse
-import urllib.error
+from urllib.request import urlopen, urlretrieve
 import sys
 import traceback
 
@@ -24,7 +22,7 @@ def formatExceptionInfo(maxTBlevel=1):
 
 def CheckVer(params):
     url = "http://iptvplayer.vline.pl/check.php?" + params
-    f = urllib.request.urlopen(url)
+    f = urlopen(url)
     data = f.read()
     print("CheckVer [%s]\n" % data)
     f.close()
@@ -32,7 +30,7 @@ def CheckVer(params):
 
 def download(url, file):
     try:
-        (tmpfile, headers) = urllib.request.urlretrieve(url, file)
+        (tmpfile, headers) = urlretrieve(url, file)
         return 0, str(headers)
     except Exception:
         return 2, str(formatExceptionInfo())

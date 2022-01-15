@@ -21,7 +21,6 @@ from Components.Language import language
 #### system imports
 import os
 from twisted.web import resource, http, util
-import urllib.request
 import urllib.parse
 import urllib.error
 import importlib

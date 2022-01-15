@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
+from urllib.request import urlopen, build_opener, HTTPRedirectHandler, addinfourl, HTTPHandler, HTTPSHandler, BaseHandler, HTTPCookieProcessor, ProxyHandler, Request
 import urllib.parse
 import urllib.error
 import base64
@@ -55,9 +55,9 @@ def EncodeGzipped(data):
     return encoded
 
 
-class NoRedirection(urllib.request.HTTPRedirectHandler):
+class NoRedirection(HTTPRedirectHandler):
     def http_error_302(self, req, fp, code, msg, headers):
-        infourl = urllib.request.addinfourl(fp, headers, req.get_full_url())
+        infourl = addinfourl(fp, headers, req.get_full_url())
         infourl.status = code
         infourl.code = code
         return infourl
@@ -67,8 +67,8 @@ class NoRedirection(urllib.request.HTTPRedirectHandler):
     http_error_307 = http_error_302
 
 
-class MultipartPostHandler(urllib.request.BaseHandler):
-    handler_order = urllib.request.HTTPHandler.handler_order - 10
+class MultipartPostHandler(BaseHandler):
+    handler_order = HTTPHandler.handler_order - 10
 
     def http_request(self, request):
         data = request.get_data()
@@ -1266,16 +1266,16 @@ class common:
 
         def urlOpen(req, customOpeners, timeout):
             if len(customOpeners) > 0:
-                opener = urllib.request.build_opener(*customOpeners)
+                opener = build_opener(*customOpeners)
                 if timeout != None:
                     response = opener.open(req, timeout=timeout)
                 else:
                     response = opener.open(req)
             else:
                 if timeout != None:
-                    response = urllib.request.urlopen(req, timeout=timeout)
+                    response = urlopen(req, timeout=timeout)
                 else:
-                    response = urllib.request.urlopen(req)
+                    response = urlopen(req)
             return response
 
         if IsMainThread():
@@ -1335,7 +1335,7 @@ class common:
                     cj.set_cookie(cookieItem)
             except Exception:
                 printExc()
-            customOpeners.append(urllib.request.HTTPCookieProcessor(cj))
+            customOpeners.append(HTTPCookieProcessor(cj))
 
         if params.get('no_redirection', False):
             customOpeners.append(NoRedirection())
@@ -1353,12 +1353,12 @@ class common:
                     ctx = ssl._create_unverified_context(sslProtoVer)
                 else:
                     ctx = ssl._create_unverified_context()
-                customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
+                customOpeners.append(HTTPSHandler(context=ctx))
             except Exception:
                 pass
         elif sslProtoVer != None:
             ctx = ssl.SSLContext(sslProtoVer)
-            customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
+            customOpeners.append(HTTPSHandler(context=ctx))
 
         #proxy support
         if self.useProxy:
@@ -1370,8 +1370,8 @@ class common:
             http_proxy = params['http_proxy']
         if '' != http_proxy:
             printDBG('getURLRequestData USE PROXY')
-            customOpeners.append(urllib.request.ProxyHandler({"http": http_proxy}))
-            customOpeners.append(urllib.request.ProxyHandler({"https": http_proxy}))
+            customOpeners.append(ProxyHandler({"http": http_proxy}))
+            customOpeners.append(ProxyHandler({"https": http_proxy}))
 
         pageUrl = params['url']
         proxy_gateway = params.get('proxy_gateway', '')
@@ -1388,9 +1388,9 @@ class common:
                 dataPost = post_data
             else:
                 dataPost = urllib.parse.urlencode(post_data).encode()
-            req = urllib.request.Request(pageUrl, dataPost, headers)
+            req = Request(pageUrl, dataPost, headers)
         else:
-            req = urllib.request.Request(pageUrl, None, headers)
+            req = Request(pageUrl, None, headers)
 
         if not params.get('return_data', False):
             out_data = urlOpen(req, customOpeners, timeout)
