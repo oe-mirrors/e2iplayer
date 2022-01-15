@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 # FOREIGN import
 ###################################################
 from datetime import timedelta
-import urllib.request
 import urllib.parse
 import urllib.error
 import time

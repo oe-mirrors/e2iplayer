@@ -104,9 +104,8 @@ EXTRA ATTRIBUTES AND METHODS
 
 # $Id: keepalive.py,v 1.17 2006/12/08 00:14:16 mstenner Exp $
 
-import urllib.request
+from urllib.request import HTTPHandler, HTTPSHandler
 import urllib.error
-import urllib.parse
 import http.client
 import socket
 import _thread
@@ -356,7 +355,7 @@ class KeepAliveHandler:
         return NotImplementedError
 
 
-class HTTPHandler(KeepAliveHandler, urllib.request.HTTPHandler):
+class HTTPHandler(KeepAliveHandler, HTTPHandler):
     def __init__(self):
         KeepAliveHandler.__init__(self)
 
@@ -367,7 +366,7 @@ class HTTPHandler(KeepAliveHandler, urllib.request.HTTPHandler):
         return HTTPConnection(host)
 
 
-class HTTPSHandler(KeepAliveHandler, urllib.request.HTTPSHandler):
+class HTTPSHandler(KeepAliveHandler, HTTPSHandler):
     def __init__(self, ssl_factory=None):
         KeepAliveHandler.__init__(self)
         if not ssl_factory:

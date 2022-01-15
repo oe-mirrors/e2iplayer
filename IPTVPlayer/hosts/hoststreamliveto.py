@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMu
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 try:

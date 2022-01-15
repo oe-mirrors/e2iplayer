@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigText, getConfigListEntry
-import urllib.request
 import urllib.parse
 import urllib.error
 from hashlib import md5

@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import time
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 from urllib.parse import urlparse

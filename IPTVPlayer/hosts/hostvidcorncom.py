@@ -15,7 +15,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from binascii import hexlify
 from hashlib import md5
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 from Components.config import config, ConfigText, getConfigListEntry

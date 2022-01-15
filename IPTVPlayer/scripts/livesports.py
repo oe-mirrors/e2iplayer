@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 
-import urllib.request
+from urllib.request import HTTPCookieProcessor, HTTPSHandler, Request, build_opener
 import urllib.error
-import urllib.parse
 import sys
 import traceback
 import base64
@@ -65,7 +64,7 @@ def getPage(url, params={}):
 
     try:
         ctx = ssl._create_unverified_context(params['ssl_protocol']) if params.get('ssl_protocol', None) != None else ssl._create_unverified_context()
-        customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
+        customOpeners.append(HTTPSHandler(context=ctx))
     except Exception:
         pass
 
@@ -76,19 +75,19 @@ def getPage(url, params={}):
                 cj.load(params['cookiefile'], ignore_discard=True)
             except IOError:
                 pass
-        customOpeners.append(urllib.request.HTTPCookieProcessor(cj))
+        customOpeners.append(HTTPCookieProcessor(cj))
 
     sts = False
     data = None
     try:
-        req = urllib.request.Request(url)
+        req = Request(url)
         for key in ('Referer', 'User-Agent', 'Origin', 'Accept-Encoding', 'Accept'):
             if key in params:
                 req.add_header(key, params[key])
         printDBG("++++HEADERS START++++")
         printDBG(req.headers)
         printDBG("++++HEADERS END++++")
-        opener = urllib.request.build_opener(*customOpeners)
+        opener = build_opener(*customOpeners)
         resp = opener.open(req)
         data = resp.read()
         sts = True

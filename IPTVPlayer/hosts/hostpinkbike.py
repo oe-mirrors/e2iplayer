@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 ###################################################
 from Components.config import config, ConfigSelection
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 try:

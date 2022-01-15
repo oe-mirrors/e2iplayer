@@ -3,7 +3,7 @@ import socket
 import hashlib
 import hmac
 import time
-import urllib.request
+from urllib.request import HTTPSHandler, Request, build_opener
 import urllib.parse
 import urllib.error
 import base64
@@ -59,14 +59,14 @@ def getPage(url, headers={}, post_data=None):
 
     try:
         ctx = ssl._create_unverified_context()
-        customOpeners.append(urllib.request.HTTPSHandler(context=ctx))
+        customOpeners.append(HTTPSHandler(context=ctx))
     except Exception:
         pass
 
     sts = 0
     data = ''
     try:
-        req = urllib.request.Request(url)
+        req = Request(url)
         for key in headers:
             req.add_header(key, headers[key])
 
@@ -74,7 +74,7 @@ def getPage(url, headers={}, post_data=None):
         printDBG(req.headers)
         printDBG("++++HEADERS END++++")
 
-        opener = urllib.request.build_opener(*customOpeners)
+        opener = build_opener(*customOpeners)
         response = opener.open(req)
         data = response.read()
         sts = response.getcode()

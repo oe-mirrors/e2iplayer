@@ -16,7 +16,6 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 from binascii import hexlify

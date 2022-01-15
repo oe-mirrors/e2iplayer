@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
 import urllib.parse
 import urllib.error
 try:

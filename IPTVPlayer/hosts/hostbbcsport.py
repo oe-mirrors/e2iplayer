@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.bbc import BBCCoUkI
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
 import urllib.parse
 import urllib.error
 from datetime import datetime, timedelta

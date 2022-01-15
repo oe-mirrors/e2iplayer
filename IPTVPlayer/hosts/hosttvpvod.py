@@ -18,7 +18,6 @@ from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaH
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 from datetime import datetime, timedelta, date
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 import time

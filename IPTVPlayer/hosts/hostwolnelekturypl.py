@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 ###################################################
 import datetime
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 try:

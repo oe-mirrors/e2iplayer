@@ -16,7 +16,6 @@ from Plugins.Extensions.IPTVPlayer.libs.hdgocc import HdgoccParser
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.request
 import urllib.parse
 import urllib.error
 import re

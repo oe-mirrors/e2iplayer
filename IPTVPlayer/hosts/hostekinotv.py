@@ -23,7 +23,6 @@ from Screens.MessageBox import MessageBox
 ###################################################
 import base64
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry

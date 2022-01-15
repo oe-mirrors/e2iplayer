@@ -20,7 +20,6 @@ import datetime
 import time
 import zlib
 import http.cookiejar
-import urllib.request
 import urllib.parse
 import urllib.error
 import base64

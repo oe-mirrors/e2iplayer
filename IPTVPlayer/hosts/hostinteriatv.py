@@ -11,7 +11,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 # FOREIGN import
 ###################################################
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 ###################################################

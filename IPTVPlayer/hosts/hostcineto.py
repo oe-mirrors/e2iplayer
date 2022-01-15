@@ -19,7 +19,6 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 ###################################################
 import urllib.parse
 import re
-import urllib.request
 import urllib.parse
 import urllib.error
 ###################################################

@@ -95,8 +95,8 @@ if __name__ == "__main__":
         sys.path.insert(1, libsPath)
         from keepalive import HTTPHandler
         keepalive_handler = HTTPHandler()
-        opener = urllib.request.build_opener(keepalive_handler)
-        urllib.request.install_opener(opener)
+        opener = build_opener(keepalive_handler)
+        install_opener(opener)
 
         HTTP_HEADER.update({'User-Agent': userAgent, 'Referer': refererUrl})
         socketserver.TCPServer.allow_reuse_address = True
