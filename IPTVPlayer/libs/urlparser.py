@@ -669,6 +669,8 @@ class urlparser:
                        'videovard.sx': self.pp.parserVIDEOVARDSX,
                        'streamcrypt.net': self.pp.parserSTREAMCRYPTNET,
                        'evoload.io': self.pp.parserEVOLOADIO,
+                       'vtube.to': self.pp.parserONLYSTREAMTV,
+                       'tubeload.co': self.pp.parserTUBELOADCO,
                     }
         return
 
@@ -15018,5 +15020,57 @@ class pageParser(CaptchaHelper):
             if surl:
                 params = {'name': 'mp4', 'url': surl}
                 urlTab.append(params)
+
+        return urlTab
+
+    def parserTUBELOADCO(self, baseUrl):
+        printDBG("parserTUBELOADCO baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        domain = urlparser.getDomain(baseUrl, False)
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return []
+
+        jsUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''src=\s?['"]([^'^"]+?main\.min\.js)['"]''')[0], baseUrl)
+        sts, jsdata = self.cm.getPage(jsUrl, urlParams)
+        if not sts:
+            return []
+
+        if 'function(h,u,n,t,e,r)' in jsdata:
+            ff = re.findall('function\(h,u,n,t,e,r\).*?}\((".+?)\)\)', jsdata, re.DOTALL)[0]
+            ff = ff.replace('"', '')
+            h, u, n, t, e, r = ff.split(',')
+            jsdata = dehunt(h, int(u), n, int(t), int(e), int(r))
+#        printDBG("parserTUBELOADCO jsdata[%s]" % jsdata)
+        jscode = self.cm.ph.getSearchGroups(jsdata, '''var\s[^=]+?=\s?([^;]+?);''', ignoreCase=True)[0]
+        jsvar = self.cm.ph.getSearchGroups(jscode, '''([^.]+?)\.replace''', ignoreCase=True)[0]
+        printDBG("parserTUBELOADCO jscode[%s]  jsvar[%s]" % (jscode, jsvar))
+
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
+        script = ''
+        for item in data:
+            if 'function(h,u,n,t,e,r)' in item:
+                ff = re.findall('function\(h,u,n,t,e,r\).*?}\((".+?)\)\)', item, re.DOTALL)[0]
+                ff = ff.replace('"', '')
+                h, u, n, t, e, r = ff.split(',')
+                script = dehunt(h, int(u), n, int(t), int(e), int(r))
+                if jsvar in script:
+                    break
+#        printDBG("parserTUBELOADCO script[%s]" % script)
+
+        jscode = script + '\n' + jsdata
+        jscode = jscode.replace('atob', 'base64.b64decode')
+        decode = ''
+        vars = re.compile('var\s(.*?=[^{]+?;)').findall(jscode)
+        exec('\n'.join(vars))
+
+        urlTab = []
+        if decode:
+            urlTab.append({'name': 'mp4', 'url': strwithmeta(decode, {'Referer': baseUrl})})
 
         return urlTab
