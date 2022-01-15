@@ -11,7 +11,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 import re
 import urllib.request
 import urllib.parse

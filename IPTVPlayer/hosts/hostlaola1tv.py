@@ -263,7 +263,7 @@ class Laola1TV(CBaseHostClass):
             searchLive = ''
 
         page = cItem.get('page', 1)
-        url = 'http://search-api.laola1.at/?callback=ret&q=%s&p=%d&i=laola1tv-2015-int&include=[]&_=%s' % (urllib.quote_plus(searchPattern), page, str(time.time()))
+        url = 'http://search-api.laola1.at/?callback=ret&q=%s&p=%d&i=laola1tv-2015-int&include=[]&_=%s' % (urllib.parse.quote_plus(searchPattern), page, str(time.time()))
         sts, data = self.getPage(url)
         if not sts:
             return

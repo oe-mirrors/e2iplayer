@@ -23,7 +23,6 @@ from Screens.MessageBox import MessageBox
 ###################################################
 import base64
 import re
-import urllib.parse
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -273,7 +272,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         if not sts:
             return
 #        if not 'search' in self.cm.meta['url']:
-#            url = 'https://ekino-tv.pl/se/search?q=' + urllib.quote_plus(searchPattern)
+#            url = 'https://ekino-tv.pl/se/search?q=' + urllib.parse.quote_plus(searchPattern)
 #            sts, data = self.getPage(url)
 #            if not sts: return
         printDBG("EkinoTv.listSearchResult data[%s]" % data)

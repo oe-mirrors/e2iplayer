@@ -70,7 +70,7 @@ class FilmovizijaStudio(CBaseHostClass):
         params.update({'header': HTTP_HEADER})
 
         if self.isNeedProxy() and 'filmovizija.' in url:
-            proxy = 'https://www.sslgate.co.uk/index.php?q={0}&hl=2e1'.format(urllib.quote(url, ''))
+            proxy = 'https://www.sslgate.co.uk/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
             params['header']['Referer'] = proxy
             params['header']['Cookie'] = 'flags=2e1;'
             url = proxy
@@ -82,7 +82,7 @@ class FilmovizijaStudio(CBaseHostClass):
     def _getIconUrl(self, url):
         url = self._getFullUrl(url)
         if 'filmovizija.' in url and self.isNeedProxy():
-            proxy = 'https://www.sslgate.co.uk/index.php?q={0}&hl=2e1'.format(urllib.quote(url, ''))
+            proxy = 'https://www.sslgate.co.uk/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
             params = {}
             params['User-Agent'] = self.HEADER['User-Agent'],
             params['Referer'] = proxy
@@ -472,7 +472,7 @@ class FilmovizijaStudio(CBaseHostClass):
             baseUrl = self.SER_SEARCH_URL
 
         if 'page=' not in cItem.get('url', ''):
-            cItem['url'] = baseUrl + urllib.quote(searchPattern)
+            cItem['url'] = baseUrl + urllib.parse.quote(searchPattern)
         self.listItems(cItem)
 
     def getArticleContent(self, cItem):

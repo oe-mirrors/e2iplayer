@@ -83,7 +83,7 @@ class Raiplay(CBaseHostClass):
             url = self.MAIN_URL + url
 
         url = url.replace(" ", "%20")
-        #url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        #url = urllib.parse.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
 
         # fix old format of url for json
         if url.endswith(".html?json"):

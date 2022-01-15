@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 import urllib.request
 import urllib.parse
 import urllib.error

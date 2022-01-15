@@ -23,9 +23,6 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import base64
-import urllib.request
-import urllib.error
-import urllib.parse
 try:
     import simplejson
 except:
@@ -4477,7 +4474,7 @@ class Host:
                 varfname = re.compile('var file_name="(.*?)"').findall(unpacked)
                 varjdtk = re.compile('var jdtk="(.*?)"').findall(unpacked)
                 if varhost and varfname and varjdtk:
-                    videoUrl = 'https://' + varhost[0] + '/' + varfname[0] + '?token=' + varjdtk[0] # +'|User-Agent='+urllib.quote(UA)+'&Referer='+link
+                    videoUrl = 'https://' + varhost[0] + '/' + varfname[0] + '?token=' + varjdtk[0] # +'|User-Agent='+urllib.parse.quote(UA)+'&Referer='+link
                 videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': link, 'User-Agent': self.USER_AGENT})
                 tmp = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
                 for item in tmp:

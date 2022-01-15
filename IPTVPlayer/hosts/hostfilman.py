@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
 import urlparse
 import re
-import urllib
+import urllib.parse
 import base64
 try:
     import json
@@ -212,7 +212,7 @@ class Filman(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Filman.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = self.getFullUrl('/wyszukiwarka?phrase=%s') % urllib.quote_plus(searchPattern)
+        url = self.getFullUrl('/wyszukiwarka?phrase=%s') % urllib.parse.quote_plus(searchPattern)
         params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params)
 

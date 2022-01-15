@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 import time
 import re
 import hashlib

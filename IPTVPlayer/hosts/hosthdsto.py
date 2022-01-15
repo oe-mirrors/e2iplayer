@@ -94,7 +94,7 @@ class HDSTo(CBaseHostClass):
         proxy = config.plugins.iptvplayer.hdsto_proxy.value
         if proxy == 'webproxy':
             addParams = dict(addParams)
-            proxy = 'http://n-guyot.fr/exit/browse.php?u={0}&b=4'.format(urllib.quote(baseUrl, ''))
+            proxy = 'http://n-guyot.fr/exit/browse.php?u={0}&b=4'.format(urllib.parse.quote(baseUrl, ''))
             addParams['header']['Referer'] = proxy + '&f=norefer'
             baseUrl = proxy
         elif proxy != 'None':
@@ -352,10 +352,10 @@ class HDSTo(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         self.tryTologin()
 
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
         cItem['category'] = 'list_items'
-        cItem['url'] = self.getFullUrl('/search.php?q=') + urllib.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/search.php?q=') + urllib.parse.quote_plus(searchPattern)
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return

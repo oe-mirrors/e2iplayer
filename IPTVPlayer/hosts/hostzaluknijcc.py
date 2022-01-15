@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 import re
 import urllib.request
 import urllib.parse

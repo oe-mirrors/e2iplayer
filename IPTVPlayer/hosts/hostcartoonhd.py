@@ -459,7 +459,7 @@ class CartoonHD(CBaseHostClass):
         if 'class="play"' in data and 'id="updateSources"' not in data:
             requestLinks.append('ajax/embeds.php')
 
-        #httpParams['header']['Cookie'] = '%s=%s; PHPSESSID=%s; flixy=%s;'% (elid, urllib.quote(encElid), getCookieItem('PHPSESSID'), getCookieItem('flixy'))
+        #httpParams['header']['Cookie'] = '%s=%s; PHPSESSID=%s; flixy=%s;'% (elid, urllib.parse.quote(encElid), getCookieItem('PHPSESSID'), getCookieItem('flixy'))
         for url in requestLinks:
             post_data = {'action': type, 'idEl': elid, 'token': tor, 'elid': urllib.parse.quote(encElid), 'nopop': ''}
             sts, data = self.cm.getPage(url, httpParams, post_data)

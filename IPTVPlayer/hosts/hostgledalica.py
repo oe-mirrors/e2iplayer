@@ -12,9 +12,8 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 # FOREIGN import
 ###################################################
-import urlparse
 import re
-import urllib
+import urllib.parse
 try:
     import json
 except Exception:
@@ -372,7 +371,7 @@ class Gledalica(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Gledalica.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = self.getFullUrl('/search.php?keywords=%s&btn=Search') % urllib.quote_plus(searchPattern)
+        url = self.getFullUrl('/search.php?keywords=%s&btn=Search') % urllib.parse.quote_plus(searchPattern)
         params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params, 'sort')
 

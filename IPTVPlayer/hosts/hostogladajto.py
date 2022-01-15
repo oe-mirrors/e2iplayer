@@ -12,7 +12,6 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 import re
 import urllib.request
 import urllib.parse

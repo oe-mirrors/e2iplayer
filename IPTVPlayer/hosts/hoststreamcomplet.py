@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.parse
 import base64
 try:
     import json
@@ -102,7 +102,7 @@ class StreamComplet(CBaseHostClass):
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib.parse.quote_plus(searchPattern)
         cItem = dict(cItem)
         cItem['url'] = self.SRCH_URL + searchPattern
         self.listItems(cItem)

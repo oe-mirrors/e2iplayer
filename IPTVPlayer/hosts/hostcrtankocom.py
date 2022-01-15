@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 # FOREIGN import
 ###################################################
 import re
-import urllib
+import urllib.parse
 try:
     import json
 except Exception:
@@ -267,7 +267,7 @@ class CrtankoCom(CBaseHostClass):
         printDBG("CrtankoCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.SEARCH_URL
-        cItem['search'] = urllib.quote(searchPattern)
+        cItem['search'] = urllib.parse.quote(searchPattern)
         self.listItems(cItem)
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
