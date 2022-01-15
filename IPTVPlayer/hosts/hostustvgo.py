@@ -201,13 +201,12 @@ class ustvgo(CBaseHostClass):
             return
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
-        post_data = self.cm.ph.getSearchGroups(data, '''\?([^"^']+?)['"]''')[0]
-        params = dict(self.defaultParams)
-        params['raw_post_data'] = True
-        sts, data = self.getPage(self.getFullUrl('/data.php'), params, post_data)
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^"^']+?)['"]''')[0])
+        sts, data = self.getPage(url)
         if not sts:
             return
 
+        data = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shls_src=['"]([^"^']+?)['"]''')[0])
         url = strwithmeta(data, {'User-Agent': self.USER_AGENT, 'Origin': self.MAIN_URL, 'Referer': cItem['url']})
         return getDirectM3U8Playlist(url)
 
