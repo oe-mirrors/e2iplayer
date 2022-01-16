@@ -302,7 +302,7 @@ class CBaseSubProviderClass:
             if currUrl == None or not self.cm.isValidUrl(currUrl):
                 url = mainUrl + url
             else:
-                url = urljoin(currUrl, url)
+                url = urllib.parse.urljoin(currUrl, url)
         return url
 
     def handleService(self, index, refresh=0):
