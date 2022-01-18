@@ -253,7 +253,7 @@ class Movs4uCOM(CBaseHostClass):
         cItem['url'] = self.getFullUrl('/?s=' + urllib.parse.quote_plus(searchPattern))
         self.listItems(cItem, 'explore_item')
 
-    def getLinksForVideo(self, cItem):
+	def getLinksForVideo(self, cItem):
 		printDBG("Movs4uCOM.getLinksForVideo [%s]" % cItem)
 		retTab = []
 		if 1 == self.up.checkHostSupport(cItem.get('url', '')):
@@ -270,7 +270,7 @@ class Movs4uCOM(CBaseHostClass):
 			retTab.append({'name': titre1 + ' ' + '\c0000????(' + srv + ')', 'url': data_url, 'need_resolve': 1})
 		return retTab
 
-    def getVideoLinks(self, videoUrl):
+	def getVideoLinks(self, videoUrl):
 		printDBG("Movs4uCOM.getVideoLinks [%s]" % videoUrl)
 		videoUrl = strwithmeta(videoUrl)
 		urlTab = []
