@@ -228,8 +228,8 @@ class Movs4uCOM(CBaseHostClass):
         if '/tvshows/' in cItem['url']:
             _data = re.findall("class='imagen'.*?src='(.*?)'.*?numerando'>(.*?)<.*?episodiotitle.*?href='(.*?)'>(.*?)<", data, re.S)
             for (img_, num, url_, titre) in _data:
-				params = {'name': 'categories', 'category': 'video', 'url': url_, 'title': '\c0000????' + num + ' \c00??????: ' + titre, 'icon': img_}
-				self.addVideo(params)
+                params = {'name': 'categories', 'category': 'video', 'url': url_, 'title': '\c0000????' + num + ' \c00??????: ' + titre, 'icon': img_}
+                self.addVideo(params)
         else:
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title': mainTitle, 'icon': mainIcon, 'desc': mainDesc})
