@@ -253,44 +253,44 @@ class Movs4uCOM(CBaseHostClass):
         cItem['url'] = self.getFullUrl('/?s=' + urllib.parse.quote_plus(searchPattern))
         self.listItems(cItem, 'explore_item')
 
-	def getLinksForVideo(self, cItem):
-		printDBG("Movs4uCOM.getLinksForVideo [%s]" % cItem)
-		retTab = []
-		if 1 == self.up.checkHostSupport(cItem.get('url', '')):
-			videoUrl = cItem['url'].replace('youtu.be/', 'youtube.com/watch?v=')
-			return self.up.getVideoLinkExt(videoUrl)
-		cacheTab = self.cacheLinks.get(cItem['url'], [])
-		if len(cacheTab):
-			return cacheTab
-		currUrl = cItem['url']
-		sts, data = self.getPage(currUrl)
-		_data = re.findall("data-url='(.*?)'.*?title'>(.*?)<.*?server'>(.*?)<", data, re.S)
-		for (data_url, titre1, srv) in _data:
-			titre1 = titre1.replace('ÃÂ³ÃÂÃÂ±ÃÂÃÂ± ÃÂÃÂ´ÃÂ§ÃÂÃÂ¯ÃÂ© ÃÂ±ÃÂÃÂ', 'Server:')
-			retTab.append({'name': titre1 + ' ' + '\c0000????(' + srv + ')', 'url': data_url, 'need_resolve': 1})
-		return retTab
+        def getLinksForVideo(self, cItem):
+            printDBG("Movs4uCOM.getLinksForVideo [%s]" % cItem)
+            retTab = []
+            if 1 == self.up.checkHostSupport(cItem.get('url', '')):
+                videoUrl = cItem['url'].replace('youtu.be/', 'youtube.com/watch?v=')
+                return self.up.getVideoLinkExt(videoUrl)
+            cacheTab = self.cacheLinks.get(cItem['url'], [])
+            if len(cacheTab):
+                return cacheTab
+            currUrl = cItem['url']
+            sts, data = self.getPage(currUrl)
+            _data = re.findall("data-url='(.*?)'.*?title'>(.*?)<.*?server'>(.*?)<", data, re.S)
+            for (data_url, titre1, srv) in _data:
+                titre1 = titre1.replace('ÃÂ³ÃÂÃÂ±ÃÂÃÂ± ÃÂÃÂ´ÃÂ§ÃÂÃÂ¯ÃÂ© ÃÂ±ÃÂÃÂ', 'Server:')
+                retTab.append({'name': titre1 + ' ' + '\c0000????(' + srv + ')', 'url': data_url, 'need_resolve': 1})
+            return retTab
 
-	def getVideoLinks(self, videoUrl):
-		printDBG("Movs4uCOM.getVideoLinks [%s]" % videoUrl)
-		videoUrl = strwithmeta(videoUrl)
-		urlTab = []
-		orginUrl = str(videoUrl)
+        def getVideoLinks(self, videoUrl):
+            printDBG("Movs4uCOM.getVideoLinks [%s]" % videoUrl)
+            videoUrl = strwithmeta(videoUrl)
+            urlTab = []
+            orginUrl = str(videoUrl)
 
-		sts, data = self.getPage(videoUrl)
-		_data2 = re.findall('<iframe.*?src="(.*?)"', data, re.S)
-		if _data2:
-			printDBG('_data2[0]=' + _data2[0])
-			videoUrl = _data2[0]
-			if 'gdriveplayer' in videoUrl:
-				_data3 = re.findall('link=(.*?)&', videoUrl, re.S)
-				if _data3:
-					printDBG('_data3[0]=' + _data3[0])
-					videoUrl = _data3[0]
+            sts, data = self.getPage(videoUrl)
+            _data2 = re.findall('<iframe.*?src="(.*?)"', data, re.S)
+            if _data2:
+                printDBG('_data2[0]=' + _data2[0])
+                videoUrl = _data2[0]
+                if 'gdriveplayer' in videoUrl:
+                    _data3 = re.findall('link=(.*?)&', videoUrl, re.S)
+                    if _data3:
+                        printDBG('_data3[0]=' + _data3[0])
+                        videoUrl = _data3[0]
 
-		if self.cm.isValidUrl(videoUrl):
-			urlTab = self.up.getVideoLinkExt(videoUrl)
+            if self.cm.isValidUrl(videoUrl):
+                urlTab = self.up.getVideoLinkExt(videoUrl)
 
-		return urlTab
+            return urlTab
 
     def getFavouriteData(self, cItem):
         printDBG('Movs4uCOM.getFavouriteData')
