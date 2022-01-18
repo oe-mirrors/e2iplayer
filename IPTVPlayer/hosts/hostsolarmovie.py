@@ -104,7 +104,7 @@ class SolarMovie(CBaseHostClass):
         domain = config.plugins.iptvplayer.solarmovie_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
             if domain[-1] != '/':
-				domain += '/'
+                domain += '/'
             domains.insert(0, domain)
 
         urlParams = dict(self.defaultParams)
