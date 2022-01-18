@@ -20,7 +20,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 from datetime import timedelta
 import time
 import re
-import urllib.parse import quote_plus, quote
+from urllib.parse import quote_plus, quote
 import unicodedata
 import base64
 try:
