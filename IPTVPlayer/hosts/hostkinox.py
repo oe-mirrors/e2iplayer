@@ -63,7 +63,7 @@ class Kinox(CBaseHostClass):
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items': {'ListMode': 'cover', 'CinemaMode': 'cover'}}
 
     def selectDomain(self):
-        domains = ['https://kinox.to/', 'https://kinox.tv/', 'http://kinox.ag/', 'http://kinox.me/', 'https://kinox.am/', 'http://kinox.nu/', 'http://kinox.pe/', 'http://kinox.sg/']
+        domains = ['https://kinoz.to/', 'https://kinox.bz/', 'http://kinox.ag/', 'http://kinox.me/', 'https://kinox.am/', 'http://kinox.nu/', 'http://kinox.pe/', 'http://kinox.sg/', 'http://kinox.to/', 'http://kinox.tv/']
         domain = config.plugins.iptvplayer.kinox_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
             if domain[-1] != '/':

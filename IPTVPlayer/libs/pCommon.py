@@ -1513,7 +1513,9 @@ class common:
 
     def iriToUri(self, iri):
         try:
-            parts = urlparse(iri.decode('utf-8'))
+            if isinstance(iri, bytes):
+                iri.decode('utf-8')
+            parts = urlparse(iri)
             encodedParts = []
             for parti, part in enumerate(parts):
                 newPart = part
