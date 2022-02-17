@@ -2814,27 +2814,8 @@ class Host:
                 Url = 'https://gitlab.com/maxbambi/e2iplayer'
             else:
                 Url = 'http://www.e2iplayer.gitlab.io/update2/log.txt'
-            if 'mosz_nowy' in url:
-                valTab.append(CDisplayListItem('!!!  DUK  !!!', '', CDisplayListItem.TYPE_CATEGORY, [''], 'Duk', '', None))
             if Url != 'http://www.e2iplayer.gitlab.io/update2/log.txt':
                 valTab.append(CDisplayListItem('!!!  Download & Install & Restart E2  !!!', 'UWAGA! Klikasz na własne ryzyko, opcja nie była do końca testowana', CDisplayListItem.TYPE_CATEGORY, [Url], 'Download', 'https://image.freepik.com/darmowe-ikony/chmura-ze-strza%C5%82k%C4%85-skierowan%C4%85-w-do%C5%82-interfejs-symbol-ios-7_318-38595.jpg', None))
-            return valTab
-
-        if 'Duk' == name:
-            if IsExecutable('wget'):
-                path = config.plugins.iptvplayer.dukpath.value
-                if path == '':
-                    path = GetPluginDir('/bin/duk')
-                serwer_url = 'http://iptvplayer.vline.pl/resources/bin/{0}/duk'.format(config.plugins.iptvplayer.plarform.value)
-                cmd = 'wget "%s" -O "%s" && chmod 777 "%s" ' % (serwer_url, path, path)
-                printDBG("cmd = %s" % cmd)
-                try:
-                    iptv_system(cmd)
-                except Exception as e:
-                    printExc()
-                    msg = _("Last error:\n%s" % str(e))
-                    GetIPTVNotify().push('%s' % msg, 'error', 20)
-                valTab.append(CDisplayListItem('Update DUK.', 'DUK', CDisplayListItem.TYPE_CATEGORY, [''], '', '', None))
             return valTab
 
         if 'lubelska' == name:
