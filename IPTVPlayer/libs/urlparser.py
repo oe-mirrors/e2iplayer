@@ -641,6 +641,7 @@ class urlparser:
                        'showsport.xyz': self.pp.parserSHOWSPORTXYZ,
                        'assia.org': self.pp.parserASSIAORG,
                        'assia2.com': self.pp.parserASSIAORG,
+                       'assia4.com': self.pp.parserASSIAORG,
                        'freefeds.click': self.pp.parserASSIAORG,
                        'castfree.me': self.pp.parserASSIAORG,
                        'cricplay2.xyz': self.pp.parserASSIAORG,
