@@ -20,6 +20,7 @@ try:
 except Exception:
     import json
 from binascii import hexlify
+from six import PY3
 from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
 
@@ -211,6 +212,8 @@ class IPTVHost(CHostBase):
             hashAlg = MD5()
             hashData = ('%s_%s' % (str(displayItem.name), str(displayItem.type)))
             hashData = hexlify(hashAlg(hashData))
+            if PY3:
+                hashData = hashData.decode()
             return (hostName, hashData)
         return ret
 
