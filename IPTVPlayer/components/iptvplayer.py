@@ -169,7 +169,9 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
             self.hideTimer.stop()
         except Exception:
             printExc(customMoviePlayer._doClose)
-        self.close(sts, self.lastPosition)
+        position, length = self.getPosition()
+#        self.close(sts, self.lastPosition)
+        self.close(sts, position, length)
 
     def __evEOF(self):
         printDBG("evEOF=%d" % iPlayableService.evEOF)
