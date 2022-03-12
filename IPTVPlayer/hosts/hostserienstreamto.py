@@ -34,6 +34,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
+DEFAULTHOST = "http://190.115.18.20/"
 config.plugins.iptvplayer.serienstreamto_langpreference = ConfigSelection(default="de,de_sub,en", choices=[("de,de_sub,en", "de,sub,en"),
                                                                                                                ("de,en,de_sub", "de,en,sub"),
                                                                                                                ("de_sub,de,en", "sub,de,en"),
@@ -42,6 +43,7 @@ config.plugins.iptvplayer.serienstreamto_langpreference = ConfigSelection(defaul
                                                                                                                ("en,de,de_sub", "en,de,sub")])
 config.plugins.iptvplayer.serienstreamto_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.serienstreamto_host = ConfigText(default=DEFAULTHOST, fixed_size=False)
 
 
 def GetConfigList():
@@ -50,12 +52,13 @@ def GetConfigList():
 
     optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.serienstreamto_login))
     optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.serienstreamto_password))
+    optionList.append(getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_host))
     return optionList
 ###################################################
 
 
 def gettytul():
-    return 'https://serien.wtf/'
+    return config.plugins.iptvplayer.serienstreamto_host.value
 
 
 class SerienStreamTo(CBaseHostClass, CaptchaHelper):
