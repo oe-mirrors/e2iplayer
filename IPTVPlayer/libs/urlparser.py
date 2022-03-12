@@ -676,6 +676,7 @@ class urlparser:
                        'evoload.io': self.pp.parserEVOLOADIO,
                        'vtube.to': self.pp.parserONLYSTREAMTV,
                        'tubeload.co': self.pp.parserTUBELOADCO,
+                       'castfree.me': self.pp.parserCASTFREEME,
                     }
         return
 
@@ -14648,7 +14649,7 @@ class pageParser(CaptchaHelper):
             c2 = hexlify(x.encode('utf8')).decode('utf8')
             x = '{0}||{1}||{2}||streamsb'.format(makeid(12), c2, makeid(12))
             c3 = hexlify(x.encode('utf8')).decode('utf8')
-            return 'https://{0}/sources40/{1}/{2}'.format(urlparser.getDomain(baseUrl), c1, c3)
+            return 'https://{0}/sources41/{1}/{2}'.format(urlparser.getDomain(baseUrl), c1, c3)
 
         eurl = get_embedurl(media_id)
         urlParams['header']['watchsb'] = 'streamsb'
@@ -15080,5 +15081,30 @@ class pageParser(CaptchaHelper):
         urlTab = []
         if decode:
             urlTab.append({'name': 'mp4', 'url': strwithmeta(decode, {'Referer': baseUrl})})
+
+        return urlTab
+
+    def parserCASTFREEME(self, baseUrl):
+        printDBG("parserCASTFREEME baseUrl[%r]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return False
+        cUrl = self.cm.meta['url']
+
+        url = eval(re.findall('return\((\[.+?\])', data)[0])
+        url = ''.join(url).replace('\/', '/')
+
+        urlTab = []
+        if 'm3u' in url:
+            url = strwithmeta(url, {'Origin': "https://" + urlparser.getDomain(baseUrl), 'Referer': baseUrl})
+            urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+        else:
+            url = strwithmeta(url, {'Origin': "https://" + urlparser.getDomain(baseUrl), 'Referer': baseUrl})
+            urlTab.append({'name': 'mp4', 'url': url})
 
         return urlTab

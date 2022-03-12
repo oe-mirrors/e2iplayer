@@ -55,7 +55,6 @@ hostfilmativa
 hostfilmehdnet
 hostfilmeonlineto
 hostfilmezz
-hostfilmixco
 hostfilmovizijastudio
 hostfilmpalast
 hostfilmpertutti
@@ -71,10 +70,8 @@ hostgledalica
 hostgovodtv
 hostgreekdocumentaries3
 hostguardaserie
-hosthd1080online
 hosthdfilmetv
 hosthdfull
-hosthdkinomir
 hosthdpopcornscom
 hosthdseanspl
 hosthdsto
@@ -88,8 +85,6 @@ hostitvcom
 hostjoemonsterorg
 hostkabarety
 hostkijknl
-hostkinogo
-hostkinotan
 hostkinox
 hostkissanimeto
 hostkisscartoonme
@@ -107,7 +102,6 @@ hostmeczykipl
 hostmediasetplay
 hostmediayou
 hostmooviecc
-hostmovie4kto
 hostmovienightws
 hostmovierulzsx
 hostmovizlandcom
@@ -150,7 +144,6 @@ hostshahiidanimenet
 hostshoutcast
 hostskstream
 hostsolarmovie
-hostsovdub
 hostspiegeltv
 hostsportdeutschland
 hostspryciarze
@@ -164,7 +157,6 @@ hosttantifilmorg
 hostted
 hosttfarjocom
 hostthewatchseriesto
-hosttreetv
 hosttvgrypl
 hosttvjworg
 hosttvn24
