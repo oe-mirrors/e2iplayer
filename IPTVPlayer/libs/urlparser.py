@@ -13909,7 +13909,9 @@ class pageParser(CaptchaHelper):
 
         urlTabs = []
 
-        if sts:
+        code = self.cm.meta['status_code']
+        
+        if sts and code != 404:
 #            printDBG("---------")
 #            printDBG(data)
 #            printDBG("---------")
