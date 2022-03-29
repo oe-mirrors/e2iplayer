@@ -144,7 +144,7 @@ class IPTVRadioButtonList(IPTVMainNavigatorList):
     def buildEntry(self, item):
         width = self.l.getItemSize().width()
         height = self.l.getItemSize().height()
-        pixmap_y = (height - 16) / 2
+        pixmap_y = (height - 16) // 2
         res = [None]
         if None == item.type:
             res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 0, width - 5, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.name))
