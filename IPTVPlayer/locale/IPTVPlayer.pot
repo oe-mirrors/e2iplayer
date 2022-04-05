@@ -1700,7 +1700,7 @@ msgstr ""
 msgid ""
 "\n"
 "You can also report problem here: \n"
-" https://gitlab.com/maxbambi/e2iplayer/issues"
+" https://gitlab.com/zadmario/e2iplayer/issues"
 msgstr ""
 
 #: ../components/iptvplayerwidget.py:610

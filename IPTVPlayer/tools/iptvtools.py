@@ -30,29 +30,8 @@ import codecs
 import datetime
 from functools import cmp_to_key
 
-SERVER_DOMAINS = {'vline': 'http://iptvplayer.vline.pl/', 'gitlab': 'http://zadmario.gitlab.io/', 'private': 'http://www.e2iplayer.gitlab.io/'}
-SERVER_UPDATE_PATH = {'vline': 'download/update2/', 'gitlab': 'update2/', 'private': 'update2/'}
-
-
-def GetServerKey(serverNum=None):
-    if serverNum == None:
-        serverNum = config.plugins.iptvplayer.preferredupdateserver.value
-
-    if serverNum == '3':
-        serverKey = 'private'
-    elif serverNum == '2':
-        serverKey = 'gitlab'
-    else:
-        serverKey = 'vline'
-
-    return serverKey
-
-
-def GetUpdateServerUri(file='', serverNum=None):
-    serverKey = GetServerKey(serverNum)
-    uri = SERVER_DOMAINS[serverKey] + SERVER_UPDATE_PATH[serverKey] + file
-    printDBG("GetUpdateServerUri -> %s" % uri)
-    return uri
+#SERVER_DOMAINS = {'vline': 'http://iptvplayer.vline.pl/', 'gitlab': 'http://zadmario.gitlab.io/', 'private': 'http://www.e2iplayer.gitlab.io/'}
+#SERVER_UPDATE_PATH = {'vline': 'download/update2/', 'gitlab': 'update2/', 'private': 'update2/'}
 
 
 def UsePyCurl():

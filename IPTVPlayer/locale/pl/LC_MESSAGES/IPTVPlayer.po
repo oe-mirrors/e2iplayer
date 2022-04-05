@@ -121,11 +121,11 @@ msgstr ""
 msgid ""
 "\n"
 "You can also report problem here: \n"
-" https://gitlab.com/maxbambi/e2iplayer/issues"
+" https://gitlab.com/zadmario/e2iplayer/issues"
 msgstr ""
 "\n"
 "Możesz również zgłosić problem tutaj: \n"
-"https://gitlab.com/maxbambi/e2iplayer/issues"
+"https://gitlab.com/zadmario/e2iplayer/issues"
 
 #: ../components/iptvsubdownloader.py:372
 msgid ""
