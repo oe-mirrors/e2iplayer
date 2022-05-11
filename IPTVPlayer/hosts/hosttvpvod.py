@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 ###################################################
 # LOCAL import
@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, printDBG,
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
+from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 ###################################################
 
 ###################################################
@@ -91,6 +91,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     {'category': 'vods_list_cats', 'title': 'Katalog', 'url': MAIN_VOD_URL},
                     {'category': 'vods_explore_item', 'title': 'Perły Archiwów', 'url': MAIN_VOD_URL + 'sub-category/archiwalne,1649991'},
                     {'category': 'digi_menu', 'title': 'Rekonstrukcja cyfrowa TVP', 'url': 'https://cyfrowa.tvp.pl/'},
+
                     #{'category':'vods_list_items1',    'title':'Polecamy',                  'url':MAIN_VOD_URL},
                     #{'category':'vods_sub_categories', 'title':'Polecane',                  'marker':'Polecane'},
                     #{'category':'vods_sub_categories', 'title':'VOD',                       'marker':'VOD'},
@@ -714,12 +715,12 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         asset_id = str(cItem.get('object_id', ''))
         url = self._getFullUrl(cItem.get('url', ''))
 
-        if 'tvpstream.tvp.pl' in url:
+        if 'tvpstream.tvp.pl' in url or '/sess/' in url:
             sts, data = self.cm.getPage(url)
             if not sts:
                 return []
 
-            hlsUrl = self.cm.ph.getSearchGroups(data, '''['"](http[^'^"]*?\.m3u8[^'^"]*?)['"]''')[0]
+            hlsUrl = self.cm.ph.getSearchGroups(data, '''['"](http[^'^"]*?\.m3u8[^'^"]*?)['"]''')[0].replace('\/', '/')
             if '' != hlsUrl:
                 videoTab = getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=False)
                 if 1 < len(videoTab):
@@ -784,7 +785,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 def _getVideoLink(data, FORMATS):
                     videoTab = []
                     for item in data['formats']:
-                        if item['mimeType'] in list(FORMATS.keys()):
+                        if item['mimeType'] in FORMATS.keys():
                             formatType = FORMATS[item['mimeType']]
                             format = self.REAL_FORMATS.get(formatType, '')
                             name = self.getFormatFromBitrate(str(item['totalBitrate'])) + '\t ' + formatType
@@ -840,7 +841,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 if len(hlsTab) > 0 and 1 == len(mp4Tab) and mp4Tab[0]['id'] != '':
                     for item in hlsTab:
                         res = '%sx%s' % (item['width'], item['height'])
-                        for key in list(formatMap.keys()):
+                        for key in formatMap.keys():
                             if key == mp4Tab[0]['id']:
                                 continue
                             if formatMap[key][0] != res:

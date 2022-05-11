@@ -4,6 +4,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2_9kw import UnCaptchaReCaptcha as UnCaptchaReCaptcha_9kw
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2_2captcha import UnCaptchaReCaptcha as UnCaptchaReCaptcha_2captcha
+from Plugins.Extensions.IPTVPlayer.libs.recaptcha_mye2i import UnCaptchaReCaptcha as UnCaptchaReCaptcha_mye2i
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2_myjd import UnCaptchaReCaptcha as UnCaptchaReCaptcha_myjd
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha as UnCaptchaReCaptcha_fallback
 
@@ -13,7 +14,7 @@ from Components.config import config
 
 class CaptchaHelper():
 
-    def processCaptcha(self, sitekey, refUrl, bypassCaptchaService=None, userAgent=None, baseErrMsgTab=None, beQuaiet=False):
+    def processCaptcha(self, sitekey, refUrl, bypassCaptchaService=None, userAgent=None, baseErrMsgTab=None, beQuaiet=False, captchaType=''):
         if isinstance(baseErrMsgTab, list):
             errorMsgTab = list(baseErrMsgTab)
         else:
@@ -45,11 +46,13 @@ class CaptchaHelper():
                 recaptcha = UnCaptchaReCaptcha_9kw()
             elif bypassCaptchaService == '2captcha.com':
                 recaptcha = UnCaptchaReCaptcha_2captcha()
+            elif bypassCaptchaService == 'mye2i':
+                recaptcha = UnCaptchaReCaptcha_mye2i()
             elif config.plugins.iptvplayer.myjd_login.value != '' and config.plugins.iptvplayer.myjd_password.value != '':
                 recaptcha = UnCaptchaReCaptcha_myjd()
 
             if recaptcha != None:
-                token = recaptcha.processCaptcha(sitekey, refUrl)
+                token = recaptcha.processCaptcha(sitekey, refUrl, captchaType)
             else:
                 errorMsgTab.append(_('Please visit %s to learn how to redirect this task to the external device.') % 'http://zadmario.gitlab.io/captcha.html')
                 if not beQuaiet:

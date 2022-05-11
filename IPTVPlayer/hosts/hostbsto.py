@@ -4,9 +4,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-#from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
-
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, rm, GetPluginDir, GetCacheSubDir, ReadTextFile, WriteTextFile
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
@@ -34,9 +32,9 @@ from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, 
 config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.bsto_linkcache = ConfigYesNo(default=True)
-config.plugins.iptvplayer.bsto_bypassrecaptcha = ConfigSelection(default="", choices=[("", _("None")),
-                                                                                          ("9kw.eu", "https://9kw.eu/"),
-                                                                                          ("2captcha.com", "http://2captcha.com/")])
+config.plugins.iptvplayer.bsto_bypassrecaptcha = ConfigSelection(default="None", choices=[("None", _("None")),
+                                                                                              ("9kw.eu", "https://9kw.eu/"),
+                                                                                              ("2captcha.com", "http://2captcha.com/")])
 
 
 def GetConfigList():
@@ -130,22 +128,17 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             return
 
         descData = self.cm.ph.getDataBeetwenMarkers(data, '<div id="sp_left">', '<script', False)[1]
-        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<p', '</p>')[1])
-
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(descData, '<p ', '</p>')[1])
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(descData, '''src=['"]([^'^"]+?)['"]''')[0])
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="seasons">', '</ul>')[1]
 
+        data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="seasons full">', '</ul>')[1]
         seasonLabel = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<strong>', '</strong>', False)[1])
-        printDBG(seasonLabel)
-
-        items = ph.findall(data, ('<li', '>'), '</li>')
-
-        for item in items:
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li>', '</li>', False)
+        for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav': False, 'category': nextCategory, 'title': '%s %s' % (seasonLabel, title), 's_num': title, 'series_title': cItem['title'], 'url': url, 'icon': icon, 'desc': desc})
-            printDBG(str(params))
             self.addDir(params)
 
     def listEpisodes(self, cItem):
@@ -158,10 +151,9 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             return
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table class="episodes">', '</table>')[1]
-        items = ph.findall(data, ('<tr', '>'), '</tr>')
-
-        for item in items:
-            item = ph.findall(item, ('<td', '>'), '</td>')
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr>', '</tr>', False)
+        for item in data:
+            item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
             if len(item) < 3:
                 continue
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item[0], '''href=['"]([^'^"]+?)['"]''')[0])
@@ -186,7 +178,6 @@ class BSTO(CBaseHostClass, CaptchaHelper):
             if len(self.cacheLinks[key]):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'title': title, 'url': url, 'links_key': key})
-                printDBG("--->" + str(params))
                 self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -280,67 +271,67 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         if not sts:
             return []
 
-        #printDBG("---------------------------")
-        #printDBG(data)
-        #printDBG("---------------------------")
-
         errorMsgTab = []
 
-        # LID
-        #<div class="hoster-player" data-lid="4778534">
-        # token
-        #<meta name="security_token" content="edfafd7a9fa9a7d005f88c96" />
-        # ticket <- token from recaptcha
-        # recaptcha sitekey
-        #series.init (1, 1, '6LeiZSYUAAAAAI3JZXrRnrsBzAdrZ40PmD57v_fs')
+        baseUrl = self.cm.ph.getSearchGroups(data, '''href=['"][^'^"]*?(/out/[^'^"]+?)['"]''')[0]
+        url = self.getFullUrl(baseUrl)
+        prevUrl = url
 
-        lid = self.cm.ph.getSearchGroups(data, "data-lid=['\"]([^'^\"]+?)['\"]")[0]
-        printDBG("Data LID : %s " % lid)
+        linkId = self.cm.ph.getSearchGroups(url, '''/out/([0-9]+)''')[0]
+        hostUrl = BSTO.LINKS_CACHE.get(linkId, '')
+        if hostUrl == '' and config.plugins.iptvplayer.bsto_linkcache.value:
+            hostUrl = ReadTextFile(GetCacheSubDir('bs.to', linkId))[1]
 
-        token = self.cm.ph.getSearchGroups(data, "<meta.*security_token.*content=\"(.*?)\"")[0]
-        printDBG("Security token : %s " % token)
-
-        if not lid or not token:
-            return []
-
-        sitekey = self.cm.ph.getSearchGroups(data, "'([0-9a-zA-Z_]{38,}?)'\)")[0]
-
-        if sitekey != '':
-            ticket, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], bypassCaptchaService=config.plugins.iptvplayer.bsto_bypassrecaptcha.value)
-            if not ticket:
-                SetIPTVPlayerLastHostError(errorMsgTab)
+        if hostUrl == '':
+            sts, data = self.cm.getPage(prevUrl, self.defaultParams)
+            if not sts:
                 return []
+            url = data.meta['url']
 
-        printDBG("ticket: %s" % ticket)
+            if url == prevUrl:
+                query = {}
+                tmp = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>'), ('</form', '>'), False)[1]
+                tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<input', '>', False)
+                for item in tmp:
+                    name = self.cm.ph.getSearchGroups(item, '''name=['"]([^'^"]+?)['"]''')[0]
+                    value = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
+                    if name != '':
+                        query[name] = value
 
-        # post data
-        postData = {'token': token, 'LID': lid, 'ticket': ticket}
-        ajaxUrl = self.MAIN_URL + "ajax/embed.php"
-        ajaxParams = self.defaultParams
-        ajaxParams['header'] = self.AJAX_HEADER
-        ajaxParams['header']['Referer'] = videoUrl
+                sitekey = self.cm.ph.getSearchGroups(data, '''['"]sitekey['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0]
+                if sitekey != '' and 'bitte das Captcha' in data:
+                    token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], config.plugins.iptvplayer.bsto_bypassrecaptcha.value)
+                    if token != '':
+                        sts, data = self.cm.getPage(url + '?t=%s&s=%s' % (token, query.get('s', '')), self.defaultParams)
+                        if not sts:
+                            return []
+                        url = data.meta['url']
 
-        sts, ajaxData = self.cm.getPage(ajaxUrl, ajaxParams, post_data=postData)
-        if not sts:
-            return []
+            if 1 != self.up.checkHostSupport(url):
+                url = baseUrl.replace('/out/', '/watch/')[1:]
 
-        printDBG("----------- ajax data ----------")
-        printDBG(ajaxData)
-        printDBG("--------------------------------")
-        # {"success":true,"link":"https:\/\/vivo.sx\/2eaf981402","embed":"0"}
+                hostUrl = ''
+                try:
+                    sts, data = self.cm.getPage(self.getFullUrl('/api/' + url), self.getHeaders(url))
+                    if not sts:
+                        return []
 
-        jsonData = json_loads(ajaxData)
+			        data = json_loads(ajaxData)
+                    printDBG(data)
 
-        hostUrl = jsonData.get('link', '')
+                    hostUrl = data['fullurl']
+                except Exception:
+                    printExc()
+            else:
+                hostUrl = url
 
-        if hostUrl:
-            if 1 != self.up.checkHostSupport(hostUrl):
-                SetIPTVPlayerLastHostError('\n'.join(errorMsgTab))
-            elif self.cm.isValidUrl(hostUrl):
-                BSTO.LINKS_CACHE[lid] = hostUrl
-                if config.plugins.iptvplayer.bsto_linkcache.value:
-                    WriteTextFile(GetCacheSubDir('bs.to', lid), hostUrl)
-                urlTab = self.up.getVideoLinkExt(hostUrl)
+        if 1 != self.up.checkHostSupport(hostUrl):
+            SetIPTVPlayerLastHostError('\n'.join(errorMsgTab))
+        elif self.cm.isValidUrl(hostUrl):
+            BSTO.LINKS_CACHE[linkId] = hostUrl
+            if config.plugins.iptvplayer.bsto_linkcache.value:
+                WriteTextFile(GetCacheSubDir('bs.to', linkId), hostUrl)
+            urlTab = self.up.getVideoLinkExt(hostUrl)
 
         return urlTab
 

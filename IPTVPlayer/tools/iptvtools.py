@@ -29,6 +29,7 @@ import stat
 import codecs
 import datetime
 from functools import cmp_to_key
+import socket
 
 #SERVER_DOMAINS = {'vline': 'http://iptvplayer.vline.pl/', 'gitlab': 'http://zadmario.gitlab.io/', 'private': 'http://www.e2iplayer.gitlab.io/'}
 #SERVER_UPDATE_PATH = {'vline': 'download/update2/', 'gitlab': 'update2/', 'private': 'update2/'}
@@ -1725,9 +1726,26 @@ def ReadGnuMIPSABIFP(elfFileName):
         printExc()
     return Val_HAS_MIPS_ABI_FLAGS, Val_GNU_MIPS_ABI_FP
 
-
 def MergeDicts(*dict_args):
     result = {}
     for dictionary in dict_args:
         result.update(dictionary)
     return result
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    try:
+        s.connect(('8.8.8.8', 80))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
+def is_port_in_use(pIP, pPORT):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    res = sock.connect_ex((pIP, pPORT))
+    sock.close()
+    return res == 0

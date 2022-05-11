@@ -25,7 +25,7 @@ class UnCaptchaReCaptcha:
         self.sessionEx = MainSessionWrapper()
         self.COOKIE_FILE = GetCookieDir('google.cookie')
 
-    def processCaptcha(self, key, referer=None):
+    def processCaptcha(self, key, referer=None, captchaType=''):
         post_data = None
         token = ''
         iteration = 0

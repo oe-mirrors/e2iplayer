@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
-from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2helper import CaptchaHelper
+from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, rm, GetCookieDir, ReadTextFile, WriteTextFile
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -61,7 +61,7 @@ class cda(CBaseHostClass, CaptchaHelper):
 
         self.MAIN_URL = 'https://www.cda.pl/'
         self.SEARCH_URL = self.getFullUrl('video/show/%s/p%d?s=%s')
-        self.DEFAULT_ICON_URL = 'https://scdn.2cda.pl/v001/img/logotypyv2/prasa/WI3L7077.jpg'
+        self.DEFAULT_ICON_URL = 'http://www.download.net.pl/upload/NewsSeptember2015/CDA-Filmy/cdalogo.jpg'
 
         self.MAIN_TAB = [{'category': 'video', 'title': 'Filmy wideo', 'url': ''},
                          {'category': 'premium', 'title': 'CDA Premium', 'url': self.getFullUrl('premium')},
@@ -220,8 +220,12 @@ class cda(CBaseHostClass, CaptchaHelper):
             desc = self.cleanHtmlStr(item.replace('<br />', '[/br]').replace('</a>', '[/br]'))
 
             params = dict(cItem)
-            params.update({'title': title, 'url': url, 'icon': icon, 'desc': desc})
-            self.addVideo(params)
+            if '/video' in url:
+                params.update({'title': title, 'url': url, 'icon': icon, 'desc': desc})
+                self.addVideo(params)
+            elif '/folder/' in url:
+                params.update({'title': title, 'url': url, 'icon': icon, 'desc': desc, 'name': 'dir', 'category': 'list_folder_items'})
+                self.addDir(params)
 
         if nextPage:
             params = dict(cItem)
@@ -259,7 +263,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                 page = cItem.get('page', 1)
                 nextPage = ph.find(data, ('<span', '>', 'next-wrapper'), '</span>', flags=0)[1]
                 if not nextPage:
-                    nextPage = ph.find(data, ('<a', '>', 'btn-large'))[1]
+                    nextPage = ph.find(data, ('<a', '>', 'btn-large '))[1]
                 nextPage = self.getFullUrl(ph.clean_html(ph.getattr(nextPage, 'href')), self.cm.meta['url'])
             else:
                 nextPage = url if 'Następna strona' in data else ''
@@ -407,6 +411,9 @@ class cda(CBaseHostClass, CaptchaHelper):
         if not sts:
             return
 
+        nextPage = ph.find(data, ('<a', '>', 'btn-primary '))[1]
+        nextPage = self.getFullUrl(ph.clean_html(ph.getattr(nextPage, 'href')), self.cm.meta['url'])
+
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'list-when-small'), ('</div', '>'))
         for item in data:
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'link-title'), ('</a', '>'))[1]
@@ -421,6 +428,9 @@ class cda(CBaseHostClass, CaptchaHelper):
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
             self.addVideo(params)
+
+        if nextPage:
+            self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'url': nextPage, 'title': 'Następna strona'}))
 
     def getLinksForVideo(self, cItem):
         self.tryTologin()
