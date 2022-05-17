@@ -316,7 +316,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                     if not sts:
                         return []
 
-			        data = json_loads(ajaxData)
+			data = json_loads(ajaxData)
                     printDBG(data)
 
                     hostUrl = data['fullurl']
