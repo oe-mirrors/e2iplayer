@@ -222,7 +222,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3>', '</h3>', withMarkers=False)[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
@@ -244,7 +244,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             return
 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="seriesContentBox"', '<div class="series-add')[1]
-        icon = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''src=['"]([^'^"]+?)['"]''')[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''data-src=['"]([^'^"]+?)['"]''')[0])
         if '' == icon:
             icon = cItem.get('series_title', '')
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tmp, '''description=['"]([^'^"]+?)['"]''')[0])
