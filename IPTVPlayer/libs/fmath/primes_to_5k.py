@@ -1,4 +1,3 @@
-# -*- coding: iso-8859-1 -*-
 """ fmath.primes_to_5k
 
     All of the prime numbers below 5000

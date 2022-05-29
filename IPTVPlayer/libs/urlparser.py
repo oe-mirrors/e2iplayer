@@ -647,6 +647,7 @@ class urlparser:
                        'cricplay2.xyz': self.pp.parserASSIAORG,
                        'givemenbastreams.com': self.pp.parserASSIAORG,
                        'mazystreams.xyz': self.pp.parserASSIAORG,
+                       'assia22.com': self.pp.parserASSIAORG,
                        'embedstream.me': self.pp.parserEMBEDSTREAMME,
                        'daddylive.me': self.pp.parserDADDYLIVE,
                        'daddylive.club': self.pp.parserDADDYLIVE,
@@ -681,6 +682,10 @@ class urlparser:
                        'tubeload.co': self.pp.parserTUBELOADCO,
                        'castfree.me': self.pp.parserCASTFREEME,
                        'noob4cast.com': self.pp.parserCASTFREEME,
+                       'embedo.co': self.pp.parserHIGHLOADTO,
+                       'hlsplayer.org': self.pp.parserHLSPLAYER,
+                       'starlive.xyz': self.pp.parserSTARLIVEXYZ,
+                       'jokerswidget.org': self.pp.parserJOKERSWIDGETORG,
                     }
         return
 
@@ -8609,7 +8614,6 @@ class pageParser(CaptchaHelper):
             sts, data = self.cm.getPage(url2)
 
             if sts:
-                #printDBG(data)
                 response = json_loads(data)
                 if response.get("message", '') == "Success":
                     code = response["data"]["sources"]
@@ -14960,6 +14964,7 @@ class pageParser(CaptchaHelper):
                 a71[1] = a73[1]
             return re.sub('[012567]', replacer, bytes2str(unpad(blocks2bytes(a74))))
 
+
         sts, data = self.cm.getPage('https://%s/api/make/hash/%s' % (domain, video_id), urlParams)
         if not sts:
             return False
@@ -15112,5 +15117,133 @@ class pageParser(CaptchaHelper):
         else:
             url = strwithmeta(url, {'Origin': "https://" + urlparser.getDomain(baseUrl), 'Referer': baseUrl})
             urlTab.append({'name': 'mp4', 'url': url})
+
+        return urlTab
+
+    def parserHLSPLAYER(self, baseUrl):
+        printDBG("parserHLSPLAYER baseUrl[%r]" % baseUrl)
+
+        url = baseUrl.split('url=')[-1]
+        url = urllib.parse.unquote(url)
+
+        urlTab = []
+        url = strwithmeta(url, {'Origin': "https://" + urlparser.getDomain(baseUrl), 'Referer': baseUrl})
+        urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
+        return urlTab
+
+    def parserSTARLIVEXYZ(self, baseUrl):
+        printDBG("parserSTARLIVEXYZ baseUrl[%r]" % baseUrl)
+
+        baseUrl = strwithmeta(baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        HTTP_HEADER['Referer'] = baseUrl.meta.get('Referer', baseUrl)
+        urlParams = {'header': HTTP_HEADER}
+
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return False
+        cUrl = self.cm.meta['url']
+        domain = urlparser.getDomain(cUrl)
+
+        url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
+        if url.startswith('//'):
+            url = 'http:' + url
+        HTTP_HEADER['Referer'] = cUrl
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(url, urlParams)
+        if not sts:
+            return False
+
+        _url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
+        if _url:
+            if _url.startswith('//'):
+                _url = 'http:' + _url
+            HTTP_HEADER['Referer'] = url
+            urlParams = {'header': HTTP_HEADER}
+            sts, data = self.cm.getPage(_url, urlParams)
+            if not sts:
+                return False
+        else:
+            _url = url
+
+        urlTab = []
+
+        if "eval(function(p,a,c,k,e,d)" in data:
+            printDBG('Host resolveUrl packed')
+            scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data, re.S)
+            for packed in scripts:
+                data2 = packed
+                printDBG('Host pack: [%s]' % data2)
+                try:
+                    data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                    printDBG('OK unpack: [%s]' % data)
+                except Exception:
+                    pass
+
+                url = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+                if url != '':
+                    url = strwithmeta(url, {'Origin': "https://" + urlparser.getDomain(baseUrl), 'Referer': _url})
+                    urlTab.append({'name': 'mp4', 'url': url})
+                hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+                if hlsUrl != '':
+                    hlsUrl = strwithmeta(hlsUrl, {'Origin': "https://" + urlparser.getDomain(baseUrl), 'Referer': _url})
+                    urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
+        return urlTab
+
+    def parserJOKERSWIDGETORG(self, baseUrl):
+        printDBG("parserJOKERSWIDGETORG baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return []
+
+        tmp = self.cm.ph.getDataBeetwenNodes(data, ('<body', '>'), ('<div', '>'), False)[1]
+        jscode = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<script', '>'), ('</script', '>'), False)
+        jscode = '\n'.join(jscode)
+        jscode = 'var document={}; document.write=function(txt){print(txt);};' + jscode
+        url = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
+        sts, data = self.cm.getPage(url, urlParams)
+        if not sts:
+            return []
+        jscode = jscode + data
+
+        ret = js_execute(jscode)
+        if ret['sts'] and 0 == ret['code']:
+            tmp = ret['data'].strip()
+        url = self.cm.ph.getSearchGroups(tmp, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
+        HTTP_HEADER['Referer'] = baseUrl
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(url, urlParams)
+        if not sts:
+            return []
+
+        HTTP_HEADER['Referer'] = url
+        urlParams = {'header': HTTP_HEADER}
+        tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'player'), ('</iframe', '>'), False)[1]
+        url = self.cm.ph.getSearchGroups(tmp, '''<iframe[^>]+?src=([^\s]+?)\s''', 1, True)[0]
+        sts, data = self.cm.getPage(url, urlParams)
+        if not sts:
+            return []
+
+        HTTP_HEADER['Referer'] = url
+        urlParams = {'header': HTTP_HEADER}
+        _url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=([^\s]+?)\s''', 1, True)[0]
+        url = self.cm.getFullUrl(_url, url)
+        sts, data = self.cm.getPage(url, urlParams)
+        if not sts:
+            return []
+
+        urlTab = []
+        videoUrl = self.cm.ph.getSearchGroups(data, '''source:\s?['"]([^"^']+?)['"]''')[0]
+        videoUrl = strwithmeta(videoUrl, {'Referer': url})
+        if videoUrl != '':
+            urlTab.extend(getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999))
 
         return urlTab

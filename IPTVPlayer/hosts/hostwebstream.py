@@ -1218,7 +1218,7 @@ class HasBahCa(CBaseHostClass):
         printDBG("StrumykTvLink url[%r]" % url)
         urlsTab = []
 
-        if 'm3u8' in url:
+        if 'm3u8' in url and 'hlsplayer' not in url:
             urlsTab = getDirectM3U8Playlist(url, False)
         else:
             urlsTab.extend(self.up.getVideoLinkExt(url))
