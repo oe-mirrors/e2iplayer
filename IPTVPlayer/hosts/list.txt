@@ -9,7 +9,6 @@ hostaltadefinizione01
 hostandrijaiandjelka
 hostanimeodcinki
 hostappletrailers
-hostarconaitvme
 hostardmediathek
 hostartetv
 hostbajeczkiorg
@@ -21,15 +20,11 @@ hostcdapl
 hostchomikuj
 hostchristusvincit
 hostcimaclubcom
-hostcinemaxx
 hostcinemay
 hostcineto
 hostclassiccinemaonline
-hostcrtankocom
 hostdailymotion
 hostdancetrippin
-hostdardarkomcom
-hostdarshowcom
 hostddl
 hostdel
 hostdixmax
@@ -90,7 +85,6 @@ hostkissanimeto
 hostkisscartoonme
 hostkkiste
 hostkreskoweczki
-hostkreskowkazone
 hostlaola1tv
 hostlibrestream
 hostliveleak
