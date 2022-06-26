@@ -20,7 +20,7 @@ from Tools.BoundFunction import boundFunction
 from Components.config import config
 from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS
 ###################################################
-
+import os
 ####################################################
 # Wywołanie wtyczki w roznych miejscach
 ####################################################
@@ -130,6 +130,9 @@ class pluginAutostart(Screen):
 
 
 def doRunMain(session):
+    for DBGfile in ['/hdd/iptv.dbg','/tmp/iptv.dbg','/home/root/logs/iptv.dbg']:
+        if os.path.exists(DBGfile):
+            os.remove(DBGfile)
     session.open(E2iPlayerWidget)
 
 

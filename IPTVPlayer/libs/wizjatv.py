@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigText, getConfigListEntry
-import urllib.parse
+from urllib.parse import unquote
 try:
     import json
 except Exception:
@@ -161,7 +161,7 @@ class WizjaTvApi(CBaseHostClass):
                     if not sts:
                         break
                     printDBG(tmp)
-                    videoUrl = urllib.parse.unquote(self.cm.ph.getSearchGroups(tmp, '''['"]?src['"]?\s*:\s*['"](rtmp[^'^"]+?)['"]''')[0])
+                    videoUrl = unquote(self.cm.ph.getSearchGroups(tmp, '''['"]?src['"]?\s*:\s*['"](rtmp[^'^"]+?)['"]''')[0])
                     killUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''<a[^>]+?href=["']([^'^"]*?killme\.php[^'^"]*?)''')[0])
                     if videoUrl != '':
                         urlTab = self.cm.ph.getSearchGroups(videoUrl, '''rtmp://([^/]+?)/([^/]+?)/([^/]+?)\?(.+?)&streamType''', 4)

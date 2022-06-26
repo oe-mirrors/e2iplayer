@@ -173,8 +173,8 @@ class Vizjer(CBaseHostClass):
             if url == '':
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?poster[^"^']+?)['"]''')[0])
-            title = unescapeHTML(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0]).encode('UTF-8')
-            desc = unescapeHTML(self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0]).encode('UTF-8')
+            title = unescapeHTML(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
+            desc = unescapeHTML(self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0])
             if desc == '':
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'description'), ('</div', '>'), False)[1])
 #            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'quality-version'), ('</div', '>'), False)[1])

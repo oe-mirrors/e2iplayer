@@ -8,6 +8,8 @@ from Plugins.Extensions.IPTVPlayer.libs.recaptcha_mye2i import UnCaptchaReCaptch
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2_myjd import UnCaptchaReCaptcha as UnCaptchaReCaptcha_myjd
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha as UnCaptchaReCaptcha_fallback
 
+from Plugins.Extensions.IPTVPlayer.libs.hcaptcha_2captcha import UnCaptchahCaptcha as UnCaptchahCaptcha_2captcha
+
 from Screens.MessageBox import MessageBox
 from Components.config import config
 
@@ -45,7 +47,10 @@ class CaptchaHelper():
             if bypassCaptchaService == '9kw.eu':
                 recaptcha = UnCaptchaReCaptcha_9kw()
             elif bypassCaptchaService == '2captcha.com':
-                recaptcha = UnCaptchaReCaptcha_2captcha()
+                if captchaType == 'h1':
+                    recaptcha = UnCaptchahCaptcha_2captcha()
+                else:
+                    recaptcha = UnCaptchaReCaptcha_2captcha()
             elif bypassCaptchaService == 'mye2i':
                 recaptcha = UnCaptchaReCaptcha_mye2i()
             elif config.plugins.iptvplayer.myjd_login.value != '' and config.plugins.iptvplayer.myjd_password.value != '':

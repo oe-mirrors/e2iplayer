@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
-import urllib.parse
+from urllib.parse import urlencode
 from datetime import datetime, timedelta
 ############################################
 
@@ -81,7 +81,7 @@ class UstvnowApi:
 
     def _getChannelsNames(self):
         printDBG("UstvnowApi._getChannelsNames")
-        url = 'http://m.ustvnow.com/gtv/1/live/listchannels?%s' % urllib.parse.urlencode({'token': self.token})
+        url = 'http://m.ustvnow.com/gtv/1/live/listchannels?%s' % urlencode({'token': self.token})
         sts, data = self.cm.getPage(url)
         if not sts:
             return []
@@ -198,7 +198,7 @@ class UstvnowApi:
 
     def getPasskey(self):
 
-        url = 'http://m.ustvnow.com/gtv/1/live/viewdvrlist?%s' % urllib.parse.urlencode({'token': self.token})
+        url = 'http://m.ustvnow.com/gtv/1/live/viewdvrlist?%s' % urlencode({'token': self.token})
         sts, data = self.cm.getPage(url)
         if not sts:
             return ''

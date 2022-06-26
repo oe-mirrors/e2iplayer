@@ -15,12 +15,8 @@ import re
 import time
 import string
 import codecs
-import urllib.parse
 import six
-try:
-    from urllib.parse import urlsplit, urlunsplit, urljoin
-except Exception:
-    printExc()
+from urllib.parse import unquote, urljoin
 ###################################################
 try:
     from hashlib import md5
@@ -47,7 +43,7 @@ def int2base(x, base):
     digits = []
     while x:
         digits.append(digs[x % base])
-        x /= base
+        x = x // base # // pushes PY3 to use int arithmetic
     if sign < 0:
         digits.append('-')
     digits.reverse()
@@ -259,7 +255,7 @@ def unpackJS(data, decryptionFun, addCode=''):
     except Exception:
         printExc('unpackJS compile algo code EXCEPTION')
         return ''
-    vGlobals = {"__builtins__": None, 'string': string, 'decodeURIComponent': urllib.parse.unquote, 'unescape': urllib.parse.unquote}
+    vGlobals = {"__builtins__": None, 'string': string, 'decodeURIComponent': unquote, 'unescape': unquote}
     vLocals = {'paramsTouple': None}
 
     try:

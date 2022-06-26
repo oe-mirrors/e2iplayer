@@ -278,7 +278,8 @@ def IsWebInterfaceModuleAvailable(chekInit=False):
         file = '__init__'
     else:
         file = 'initiator'
-    if (fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.py' % file))):
+    if (fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.py' % file)) or
+        fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.pyc' % file))):
         return True
     else:
         return False
@@ -340,8 +341,8 @@ def ClearTmpCookieDir():
     global gE2iPlayerTempCookieDir
     if gE2iPlayerTempCookieDir != None:
         try:
-            for file in os.listdir(gE2iPlayerTempCookieDir):
-                rm(gE2iPlayerTempCookieDir + '/' + file)
+            for fileName in os.listdir(gE2iPlayerTempCookieDir):
+                rm(os.path.join(gE2iPlayerTempCookieDir, fileName))
         except Exception:
             printExc()
 
@@ -359,7 +360,7 @@ def TestTmpCookieDir():
 def GetCookieDir(file='', forceFromConfig=False):
     global gE2iPlayerTempCookieDir
     if gE2iPlayerTempCookieDir == None or forceFromConfig:
-        cookieDir = config.plugins.iptvplayer.SciezkaCache.value + '/cookies/'
+        cookieDir = os.path.join(config.plugins.iptvplayer.SciezkaCache.value , 'cookies/')
     else:
         cookieDir = gE2iPlayerTempCookieDir
     try:
@@ -384,8 +385,8 @@ def ClearTmpJSCacheDir():
     global gE2iPlayerTempJSCache
     if gE2iPlayerTempJSCache != None:
         try:
-            for file in os.listdir(gE2iPlayerTempJSCache):
-                rm(gE2iPlayerTempJSCache + '/' + file)
+            for fileName in os.listdir(gE2iPlayerTempJSCache): #file is native p2 function renamed for clarity
+                rm(os.path.join(gE2iPlayerTempJSCache, fileName))
         except Exception:
             printExc()
     gE2iPlayerTempJSCache = None
@@ -399,10 +400,10 @@ def TestTmpJSCacheDir():
         f.write("test")
 
 
-def GetJSCacheDir(file='', forceFromConfig=False):
+def GetJSCacheDir(fileName='', forceFromConfig=False):
     global gE2iPlayerTempJSCache
     if gE2iPlayerTempJSCache == None or forceFromConfig:
-        cookieDir = config.plugins.iptvplayer.SciezkaCache.value + '/JSCache/'
+        cookieDir = os.path.join(config.plugins.iptvplayer.SciezkaCache.value, 'JSCache/')
     else:
         cookieDir = gE2iPlayerTempJSCache
     try:
@@ -410,23 +411,23 @@ def GetJSCacheDir(file='', forceFromConfig=False):
             mkdirs(cookieDir)
     except Exception:
         printExc()
-    return cookieDir + file
+    return os.path.join(cookieDir, fileName)
 ##############################
 
 
-def GetTmpDir(file=''):
+def GetTmpDir(fileName=''):
     path = config.plugins.iptvplayer.NaszaTMP.value
     path = path.replace('//', '/')
     mkdirs(path)
-    return path + '/' + file
+    return os.path.join(path , fileName)
 
 
-def GetE2iPlayerRootfsDir(file=''):
-    return '/iptvplayer_rootfs/' + file
+def GetE2iPlayerRootfsDir(fileName=''):
+    return os.path.join('/iptvplayer_rootfs', fileName)
 
 
-def GetE2iPlayerVKLayoutDir(file=''):
-    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/vk/') + file
+def GetE2iPlayerVKLayoutDir(fileName=''):
+    return os.path.join(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/vk/'), fileName)
 
 
 def CreateTmpFile(filename, data=''):
@@ -441,51 +442,50 @@ def CreateTmpFile(filename, data=''):
     return sts, filePath
 
 
-def GetCacheSubDir(dir, file=''):
-    path = config.plugins.iptvplayer.SciezkaCache.value + "/" + dir
-    path = path.replace('//', '/')
+def GetCacheSubDir(dirName, fileName=''):
+    path = os.path.join(config.plugins.iptvplayer.SciezkaCache.value, dirName)
     mkdirs(path)
-    return path + '/' + file
+    return os.path.join(path, fileName)
 
 
-def GetSearchHistoryDir(file=''):
-    return GetCacheSubDir('SearchHistory', file)
+def GetSearchHistoryDir(fileName=''):
+    return GetCacheSubDir('SearchHistory', fileName)
 
 
-def GetFavouritesDir(file=''):
-    return GetCacheSubDir('IPTVFavourites', file)
+def GetFavouritesDir(fileName=''):
+    return GetCacheSubDir('IPTVFavourites', fileName)
 
 
-def GetSubtitlesDir(file=''):
-    return GetCacheSubDir('Subtitles', file)
+def GetSubtitlesDir(fileName=''):
+    return GetCacheSubDir('Subtitles', fileName)
 
 
-def GetMovieMetaDataDir(file=''):
-    return GetCacheSubDir('MovieMetaData', file)
+def GetMovieMetaDataDir(fileName=''):
+    return GetCacheSubDir('MovieMetaData', fileName)
 
 
-def GetIPTVDMImgDir(file=''):
-    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/') + file
+def GetIPTVDMImgDir(fileName=''):
+    return os.path.join(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/'), fileName)
 
 
-def GetIconDir(file=''):
-    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/') + file
+def GetIconDir(fileName=''):
+    return os.path.join(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/'), fileName)
 
 
-def GetPluginDir(file=''):
-    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/') + file
+def GetPluginDir(fileName=''):
+    return os.path.join(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/'), fileName)
 
 
-def GetExtensionsDir(file=''):
-    return resolveFilename(SCOPE_PLUGINS, 'Extensions/') + file
+def GetExtensionsDir(fileName=''):
+    return os.path.join(resolveFilename(SCOPE_PLUGINS, 'Extensions/') , fileName)
 
 
 def GetSkinsDir(path=''):
-    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/skins/') + path
+    return os.path.join(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/skins/'), path)
 
 
 def GetPlayerSkinDir(path=''):
-    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/playerskins/') + path
+    return os.path.join(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/playerskins/'), path)
 
 
 def GetConfigDir(path=''):
@@ -634,10 +634,14 @@ def printDBG(DBGtxt):
         return
     elif DBG == 'console':
         print(DBGtxt)
-    elif DBG == 'debugfile':
+    else:
+        if DBG == 'debugfile':
+            DBGfile = '/hdd/iptv.dbg' #backward compatibility
+        else:
+            DBGfile = DBG
         try:
-            f = open('/hdd/iptv.dbg', 'a')
-            f.write(DBGtxt + '\n')
+            f = open(DBGfile, 'a')
+            f.write(str(DBGtxt) + '\n')
             f.close
         except Exception:
             print("======================EXC printDBG======================")
@@ -645,8 +649,8 @@ def printDBG(DBGtxt):
             print("========================================================")
             try:
                 msg = '%s' % traceback.format_exc()
-                f = open('/tmp/iptv.dbg', 'a')
-                f.write(DBGtxt + '\n')
+                f = open(DBGfile, 'a')
+                f.write(str(DBGtxt) + '\n')
                 f.close
             except Exception:
                 print("======================EXC printDBG======================")
@@ -659,7 +663,7 @@ def printDBG(DBGtxt):
 #####################################################
 g_cacheHostsFromList = None
 g_cacheHostsFromFolder = None
-
+g_cachePluginFolder = None
 
 def __isHostNameValid(hostName):
     BLOCKED_MARKER = '_blocked_'
@@ -668,18 +672,19 @@ def __isHostNameValid(hostName):
     return False
 
 
-def __getHostsPath(file=''):
-    return resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/hosts/' + file)
+def __getHostsPath(fileName=''):
+    return os.path.join(resolveFilename(SCOPE_PLUGINS), 'Extensions/IPTVPlayer/hosts/', fileName)
 
 
 def GetHostsFromList(useCache=True):
     global g_cacheHostsFromList
-    if useCache and g_cacheHostsFromList != None:
+    if useCache and g_cacheHostsFromList != None and len(g_cacheHostsFromList) > 0:
+        printDBG('iptvtools.GetHostsFromList returns cached list (%s)' % str(g_cacheHostsFromList))
         return list(g_cacheHostsFromList)
 
     lhosts = []
     try:
-        sts, data = ReadTextFile(__getHostsPath('/list.txt'))
+        sts, data = ReadTextFile(__getHostsPath('list.txt'))
         if sts:
             data = data.split('\n')
             for item in data:
@@ -690,18 +695,21 @@ def GetHostsFromList(useCache=True):
     except Exception:
         printExc()
 
-    g_cacheHostsFromList = list(lhosts)
+    g_cacheHostsFromList = lhosts
+    printDBG(str(g_cacheHostsFromList))
     return lhosts
 
 
 def GetHostsFromFolder(useCache=True):
     global g_cacheHostsFromFolder
-    if useCache and g_cacheHostsFromFolder != None:
+    if useCache and g_cacheHostsFromFolder != None and len(g_cacheHostsFromFolder) > 0:
+        printDBG('iptvtools.GetHostsFromFolder returns cached list (%s)' % str(g_cacheHostsFromFolder))
         return g_cacheHostsFromFolder
 
     lhosts = []
     try:
         fileList = os.listdir(__getHostsPath())
+        printDBG('\t len(fileList)=%s'% len(fileList))
         for wholeFileName in fileList:
             # separate file name and file extension
             fileName, fileExt = os.path.splitext(wholeFileName)
@@ -710,26 +718,26 @@ def GetHostsFromFolder(useCache=True):
                 if fileName[4:] not in lhosts:
                     lhosts.append(fileName[4:])
                     printDBG('getHostsList add host with fileName: "%s"' % fileName[4:])
-        printDBG('getHostsList end')
+        printDBG('iptvtools.getHostsList end')
         lhosts.sort()
     except Exception:
-        printDBG('GetHostsList EXCEPTION')
+        printDBG('iptvtools.GetHostsList EXCEPTION')
 
-    g_cacheHostsFromFolder = list(lhosts)
+    g_cacheHostsFromFolder = lhosts
     return lhosts
 
 
 def GetHostsList(fromList=True, fromHostFolder=True, useCache=True):
-    printDBG('getHostsList begin')
-
     lhosts = []
     if fromHostFolder:
+        printDBG('iptvtools.getHostsList(fromHostFolder)')
         lhosts = GetHostsFromFolder(useCache)
 
     # when new option to remove not enabled host is enabled
     # on list should be also host which are not normally in
     # the folder, so we will read first predefined list
     if fromList:
+        printDBG('iptvtools.getHostsList(fromList)')
         tmp = GetHostsFromList(useCache)
         for host in tmp:
             if host not in lhosts:
@@ -743,7 +751,7 @@ def GetHostsAliases():
     ret = {}
     try:
         HOST_PATH = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/hosts/')
-        sts, data = ReadTextFile(HOST_PATH + '/aliases.txt')
+        sts, data = ReadTextFile(os.path.join(HOST_PATH, 'aliases.txt'))
         if sts:
             data = json_loads(data)
             if isinstance(data, dict):
@@ -927,7 +935,8 @@ def mkdirs(newdir, raiseException=False):
 
 def rm(fullname):
     try:
-        os.remove(fullname)
+        if os.path.isdir(fullname):
+            remove(fullname)
         return True
     except Exception:
         printExc()
@@ -1356,6 +1365,8 @@ class CMoviePlayerPerHost():
         try:
             if {} == self.activePlayer and os.path.isfile(self.filePath):
                 os.remove(self.filePath)
+            elif self.activePlayer.get('buffering', None) == None:
+                printDBG('WARNING: buffering NOT set')
             else:
                 data = {}
                 data['buffering'] = self.activePlayer['buffering']
@@ -1392,14 +1403,26 @@ def byteify(input, noneReplacement=None, baseTypesAsString=False):
     return input
 
 
-def printExc(msg=''):
+def printExc(msg='', WarnOnly = False):
     printDBG("===============================================")
-    printDBG("                   EXCEPTION                   ")
+    if WarnOnly or msg.startswith('WARNING'):
+        printDBG("                    WARNING                    ")
+        msg = ''
+    else:
+        printDBG("                   EXCEPTION                   ")
     printDBG("===============================================")
-    msg = msg + ': \n%s' % traceback.format_exc()
+    exc_formatted = traceback.format_exc()
+    if msg == '' or msg == 'WARNING':
+        msg = '\n%s' % exc_formatted
+    else:
+        msg = msg + ': \n%s' % exc_formatted
     printDBG(msg)
     printDBG("===============================================")
-
+    try:
+        retMSG = exc_formatted.splitlines()[-1]
+    except Exception:
+        pass
+    return retMSG #returns the error description to possibly use in main code. E.g. inform about failed login
 
 def GetIPTVPlayerVersion():
     try:
@@ -1422,6 +1445,8 @@ def GetShortPythonVersion():
 
 
 def GetVersionNum(ver):
+    if ver == '':
+        return 0
     try:
         if None == re.match("[0-9]+\.[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]", ver):
             raise Exception("Wrong version!")

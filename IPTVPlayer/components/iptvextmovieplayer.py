@@ -48,6 +48,7 @@ from Tools.LoadPixmap import LoadPixmap
 from Tools.BoundFunction import boundFunction
 from Tools.Directories import fileExists
 from skin import parseColor, parseFont
+from six import ensure_str
 
 from datetime import timedelta
 try:
@@ -1389,7 +1390,7 @@ class IPTVExtMoviePlayer(Screen):
 
     def saveLastPlaybackTime(self):
         lastPosition = self.playback.get('ConfirmedCTime', 0)
-        if config.plugins.iptvplayer.remember_last_position.value and lastPosition > 0:
+        if config.plugins.iptvplayer.remember_last_position.value and lastPosition > 0 and self.playback['Length'] > (config.plugins.iptvplayer.remember_last_position_time.value * 60):
             self.metaHandler.setLastPosition(lastPosition)
 
     def loadLastPlaybackTime(self):
@@ -1594,7 +1595,7 @@ class IPTVExtMoviePlayer(Screen):
                         params['progressive'] = False
 
                 except Exception:
-                    printExc()
+                    printExc(WarnOnly = True)
                 try:
                     DAR = float(obj.get('an', 1) * params['width']) / float(obj.get('ad', 1) * params['height'])
                     aTab = []
@@ -1632,8 +1633,10 @@ class IPTVExtMoviePlayer(Screen):
         if truncated:
             self.responseData = data[-1]
             del data[-1]
+        msgText = ''
+        msgType = MessageBox.TYPE_INFO
         for item in data:
-            #printDBG(item)
+            #printDBG('item= %s' % item)
             if item.startswith('{'):
                 try:
                     obj = json_loads(item.strip())
@@ -1715,10 +1718,19 @@ class IPTVExtMoviePlayer(Screen):
                     self.playerBinaryInfo['version'] = obj['version']
                 elif "EPLAYER3_EXTENDED" == key:
                     self.playerBinaryInfo['version'] = obj['version']
-                elif "GST_ERROR" == key or "FF_ERROR" == key:
-                    self.showMessage('%s\ncode:%s' % (obj['msg'].encode('utf-8'), obj['code']), MessageBox.TYPE_ERROR, None)
+                elif "GST_ERROR" == key:
+                    printDBG('GST_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code']))
+                    msgType = MessageBox.TYPE_ERROR
+                    msgText += 'GST_ERROR: %s (code %s)\n' % (ensure_str(obj['msg']), obj['code'])
+                    if ensure_str(obj['msg']) == "No URI handler implemented for 'ifd'.":
+                        msgText += _('Try to change extplayer or disable IFD in GSTplayer configuration')
+                elif "FF_ERROR" == key:
+                    printDBG('FF_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code']))
+                    msgType = MessageBox.TYPE_ERROR
+                    msgText += 'FF_ERROR: %s, code %s\n' % (ensure_str(obj['msg']), obj['code'])
                 elif "GST_MISSING_PLUGIN" == key:
-                    self.showMessage(obj['msg'].encode('utf-8'), MessageBox.TYPE_INFO, None)
+                    printDBG('GST_MISSING_PLUGIN: %s\n' % ensure_str(obj['msg']))
+                    msgText += 'GST_MISSING_PLUGIN: %s\n' % ensure_str(obj['msg'])
 
                 # {u'PLAYBACK_INFO':
                 # {u'isSeeking': False,
@@ -1737,6 +1749,8 @@ class IPTVExtMoviePlayer(Screen):
                 # u'Speed': 1,
                 # u'isSubtitle': False,
                 # u'isDvbSubtitle': False}}
+        if msgText != '':
+            self.showMessage(msgText, msgType, None)
 
     def onDownloadFinished(self, sts):
         printDBG("IPTVExtMoviePlayer.onDownloadFinished sts[%s]" % sts)
@@ -1991,7 +2005,8 @@ class IPTVExtMoviePlayer(Screen):
 
             # active audio track
             audioTrackIdx = self.metaHandler.getAudioTrackIdx()
-            cmd += ' %d ' % audioTrackIdx
+            if config.plugins.iptvplayer.GSTplayer_no_IFD.value == False:
+                cmd += ' %d ' % audioTrackIdx
 
             # file download timeout
             if None != self.downloader and self.downloader.isDownloading():

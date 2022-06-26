@@ -156,7 +156,7 @@ class DMHelper:
         # date and time (with second)
         # is sufficient to provide a unique name
         from time import gmtime, strftime
-        date = strftime("%Y-%m-%d_%H.%M.%S_", gmtime())
+        date = strftime("%Y-%m-%d_%H.%M.%S_", gmtime()).replace(':', '.')
 
         newFileName = os.path.dirname(fileName) + os.sep + date + baseName
         if withTmpFileName:

@@ -314,7 +314,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
 
         def _findHostingLinks(data, linkTab, premium):
             if premium:
-                jscode = [base64.b64decode('''dmFyIGRvY3VtZW50PXt9LHdpbmRvdz10aGlzLGVsZW1lbnQ9ZnVuY3Rpb24obil7dGhpcy5odG1sPWZ1bmN0aW9uKG4pe3ByaW50KG4pfSx0aGlzLmhpZGU9ZnVuY3Rpb24oKXt9fSwkPWZ1bmN0aW9uKG4pe3JldHVybiBuZXcgZWxlbWVudChuKX07''')]
+                jscode = [base64.b64decode('''dmFyIGRvY3VtZW50PXt9LHdpbmRvdz10aGlzLGVsZW1lbnQ9ZnVuY3Rpb24obil7dGhpcy5odG1sPWZ1bmN0aW9uKG4pe3ByaW50KG4pfSx0aGlzLmhpZGU9ZnVuY3Rpb24oKXt9LHRoaXMuZmluZD1mdW5jdGlvbigpe3JldHVybntlbXB0eTpmdW5jdGlvbigpe30sc2hvdzpmdW5jdGlvbigpe319fX0sJD1mdW5jdGlvbihuKXtyZXR1cm4gbmV3IGVsZW1lbnQobil9Ow==''')]
                 tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
                 for item in tmp:
                     if 'function ShowPlayer(' in item:

@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify, GetIPTVSleep
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsHttpsCertValidationEnabled, byteify, GetDefaultLang, rm, UsePyCurl, GetJSScriptFile, IsExecutable, iptv_system
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsHttpsCertValidationEnabled, GetDefaultLang, rm, UsePyCurl, GetJSScriptFile
 from Plugins.Extensions.IPTVPlayer.components.asynccall import IsMainThread, IsThreadTerminated, SetThreadKillable
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute_ext
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -16,11 +16,11 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 from urllib.request import urlopen, build_opener, HTTPRedirectHandler, addinfourl, HTTPHandler, HTTPSHandler, BaseHandler, HTTPCookieProcessor, ProxyHandler, Request
 import urllib.parse
 from urllib.error import URLError, HTTPError
-import base64
 try:
     import ssl
 except Exception:
     pass
+import os
 import re
 import time
 import http.cookiejar
@@ -255,10 +255,7 @@ class CParsingHelper:
                     ret_str.append(item)
             else: # pure ASCII character
                 ret_str.append(item)
-        if six.PY2:
-            return ''.join(ret_str).encode('utf-8')
-        else:
-            return ''.join(ret_str)
+        return ''.join(ret_str)
 
     @staticmethod
     def isalpha(txt, idx=None):
@@ -398,8 +395,6 @@ class common:
             if pyCurlInstalled:
                 if not UsePyCurl():
                     messages.append(_('You can enable PyCurl in the E2iPlayer configuration to fix this problem.'))
-                #else:
-                #    messages.append(_('Please report this problem to the developer %s.') % 'iptvplayere2@gmail.com')
             else:
                 messages.append(_('You can install PyCurl package with TLS 1.3 support from the feed to fix this problem.'))
         GetIPTVNotify().push('\n'.join(messages), 'error', 40, type + domain, 40)
@@ -1265,6 +1260,7 @@ class common:
     def getURLRequestData(self, params={}, post_data=None):
 
         def urlOpen(req, customOpeners, timeout):
+            req = six.ensure_binary(req)
             if len(customOpeners) > 0:
                 opener = build_opener(*customOpeners)
                 if timeout != None:
@@ -1509,7 +1505,7 @@ class common:
         return data, metadata
 
     def urlEncodeNonAscii(self, b):
-        return re.sub('[\x80-\xFF]', lambda c: '%%%02x' % ord(c.group(0)), b)
+        return re.sub(b'[\x80-\xFF]', lambda c: '%%%02x' % ord(c.group(0)), b)
 
     def iriToUri(self, iri):
         try:
@@ -1526,7 +1522,7 @@ class common:
                         newPart = self.urlEncodeNonAscii(part.encode('utf-8'))
                 except Exception:
                     printExc()
-                encodedParts.append(newPart)
+                encodedParts.append(six.ensure_str(newPart))
             return urlunparse(encodedParts)
         except Exception:
             printExc()

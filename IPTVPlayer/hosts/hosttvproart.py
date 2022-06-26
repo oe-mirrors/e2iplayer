@@ -76,11 +76,11 @@ class TVProart(CBaseHostClass):
             if data['status'] != '200':
                 return
             for item in data['content']:
-                icon = self.getFullUrl(item['thumb'].encode('utf-8'))
+                icon = self.getFullUrl(item['thumb'])
                 item = item['data']
-                url = self.API_URL + 'video?id={0}&slug={1}'.format(str(item['id']), item['slug'].encode('utf-8'))
-                title = item['title'].encode('utf-8')
-                date = item['date'].encode('utf-8')
+                url = self.API_URL + 'video?id={0}&slug={1}'.format(str(item['id']), item['slug'])
+                title = item['title']
+                date = item['date']
                 if date not in title:
                     title += ' [%s]' % date
                 params = {'title': title, 'url': url, 'icon': icon, 'desc': date}

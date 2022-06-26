@@ -18,9 +18,8 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 import re
 import base64
 import copy
-import urllib.parse
 from binascii import unhexlify
-from urllib.parse import urlparse, parse_qsl
+from urllib.parse import urlparse, parse_qsl, urlencode
 from Components.config import config, ConfigSelection, ConfigYesNo
 ###################################################
 
@@ -265,7 +264,7 @@ class MoonwalkParser():
                 if item[0] in ['"', "'"]:
                     item = item[1:-1]
                 query['season'] = item
-                seasonsTab.append({'title': _('Season') + ' ' + item, 'id': int(item), 'url': '%s?%s' % (baseUrl, urllib.parse.urlencode(query))})
+                seasonsTab.append({'title': _('Season') + ' ' + item, 'id': int(item), 'url': '%s?%s' % (baseUrl, urlencode(query))})
             seasonsTab.sort(key=lambda item: item['id'])
         except Exception:
             printExc()
@@ -298,7 +297,7 @@ class MoonwalkParser():
                 for item in episodeData:
                     item = item.strip()
                     query['episode'] = item
-                    url = '%s?%s' % (baseUrl, urllib.parse.urlencode(query))
+                    url = '%s?%s' % (baseUrl, urlencode(query))
 
                     episodesTab.append({'title': _('Episode') + ' ' + item, 'id': int(item), 'url': strwithmeta(url, {'host_name': 'moonwalk.cc'})})
 
@@ -310,7 +309,7 @@ class MoonwalkParser():
                     if item[0] in ['"', "'"]:
                         item = item[1:-1]
                     query['episode'] = item
-                    url = '%s?%s' % (baseUrl, urllib.parse.urlencode(query))
+                    url = '%s?%s' % (baseUrl, urlencode(query))
                     episodesTab.append({'title': _('Episode') + ' ' + item, 'id': int(item), 'url': strwithmeta(url, {'host_name': 'moonwalk.cc'})})
             episodesTab.sort(key=lambda item: item['id'])
         except Exception:

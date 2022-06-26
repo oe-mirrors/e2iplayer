@@ -232,10 +232,10 @@ class ConfigHostsMenu(ConfigBaseWidget):
         hostsAliases = GetHostsAliases()
         for hostName in sortedList:
             try:
-                ConfObj = eval('config.plugins.iptvplayer.host' + hostName)
-                self.list.append(getConfigListEntry("%s" % hostsAliases.get('host' + hostName, hostName), ConfObj))
+                optionEntry = eval('config.plugins.iptvplayer.host' + hostName)
+                self.list.append(getConfigListEntry("%s" % hostsAliases.get('host' + hostName, hostName), optionEntry))
                 if hostName in ['ipla']:
-                    self.privacePoliceWorningList.append(ConfObj)
+                    self.privacePoliceWorningList.append(optionEntry)
                 self.hostsConfigsAvailableList.append(True)
                 self.listOfHostsNames.append(hostName)
             except Exception:
