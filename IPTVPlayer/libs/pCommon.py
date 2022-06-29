@@ -1260,7 +1260,6 @@ class common:
     def getURLRequestData(self, params={}, post_data=None):
 
         def urlOpen(req, customOpeners, timeout):
-            req = six.ensure_binary(req)
             if len(customOpeners) > 0:
                 opener = build_opener(*customOpeners)
                 if timeout != None:
