@@ -426,7 +426,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 if sitekey == '':
                     sitekey = self.cm.ph.getSearchGroups(data, '''['"]?sitekey['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
                 if sitekey != '':
-                    token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], captchaType="h1")
+                    token, errorMsgTab = self.processCaptcha(sitekey, self.MAIN_URL, captchaType="h1")
                     if token != '':
                         vUrl = self.getFullUrl('/watch/verify.php')
                         urlParams['header']['Referer'] = baseUrl

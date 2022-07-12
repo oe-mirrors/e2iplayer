@@ -155,7 +155,7 @@ config.plugins.iptvplayer.opensuborg_password = ConfigText(default="", fixed_siz
 config.plugins.iptvplayer.napisy24pl_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.napisy24pl_password = ConfigText(default="", fixed_size=False)
 
-config.plugins.iptvplayer.debugprint = ConfigSelection(default="", choices=[("", _("no")), ("console", _("yes, to console")), 
+config.plugins.iptvplayer.debugprint = ConfigSelection(default="", choices=[("", _("no")), ("console", _("yes, to console")),
                                                                             ("debugfile", _("yes, to file /hdd/iptv.dbg")),
                                                                             ("/tmp/iptv.dbg", _("yes, to file /tmp/iptv.dbg")),
                                                                             ("/home/root/logs/iptv.dbg", _("yes, to file /home/root/logs/iptv.dbg")),

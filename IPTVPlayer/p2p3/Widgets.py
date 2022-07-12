@@ -8,7 +8,8 @@ def getWidgetText(widgetPointer):
             return(widgetPointer.textU)
         except Exception:
             return(widgetPointer.text)
-            
+
+
 def innerWidgetTextRight(widgetPointer):
     try:
         return(widgetPointer.innerright())

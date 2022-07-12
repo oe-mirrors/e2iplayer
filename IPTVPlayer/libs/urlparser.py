@@ -222,7 +222,7 @@ class urlparser:
                        'coolcast.eu': self.pp.parserCOOLCASTEU,
                        'crichd.tv': self.pp.parserCRICHDTV,
                        'cricplay2.xyz': self.pp.parserASSIAORG,
-                       'cryptodialynews.com':   self.pp.parserTXNEWSNETWORK,
+                       'cryptodialynews.com': self.pp.parserTXNEWSNETWORK,
                        #d
                        'daaidaij.com': self.pp.parserMOONWALKCC,
                        'daclips.in': self.pp.parserFASTVIDEOIN,
@@ -279,6 +279,8 @@ class urlparser:
                        'filecloud.io': self.pp.parserFILECLOUDIO,
                        'filefactory.com': self.pp.parserFILEFACTORYCOM,
                        'filehoot.com': self.pp.parserFILEHOOT,
+                       'filemoon.to': self.pp.parserFILEMOON,
+                       'filemoon.sx': self.pp.parserFILEMOON,
                        'filenuke.com': self.pp.parserFILENUKE,
                        'fileone.tv': self.pp.parserFILEONETV,
                        'filepup.net': self.pp.parserFILEPUPNET,
@@ -487,6 +489,8 @@ class urlparser:
                        'sbplay.org': self.pp.parserSTREAMSB,
                        'sbplay1.com': self.pp.parserSTREAMSB,
                        'sbplay2.com': self.pp.parserSTREAMSB,
+                       'sbthe.com': self.pp.parserSTREAMSB,
+                       'sbufull.com': self.pp.parserSTREAMSB,
                        'sbvideo.net': self.pp.parserSTREAMSB,
                        'scs.pl': self.pp.parserSCS,
                        'sendvid.com': self.pp.parserSENDVIDCOM,
@@ -501,6 +505,9 @@ class urlparser:
                        'sharing-box.cloud': self.pp.parserSHAREVIDEOPL,
                        'shidurlive.com': self.pp.parserSHIDURLIVECOM,
                        'showsport.xyz': self.pp.parserSHOWSPORTXYZ,
+                       'slmaxed.com': self.pp.parserSTREAMLARE,
+                       'slwatch.cog': self.pp.parserSTREAMLARE,
+                       'sltube.org': self.pp.parserSTREAMLARE,
                        'sockshare.com': self.pp.parserSOCKSHARE,
                        'sonline.pro': self.pp.parserXSTREAMCDNCOM,
                        'sostart.org': self.pp.parserSOSTARTORG,
@@ -529,6 +536,7 @@ class urlparser:
                        'streamin.to': self.pp.parserSTREAMINTO,
                        'streamix.cloud': self.pp.parserSTREAMIXCLOUD,
                        'streamja.com': self.pp.parserSTREAMJACOM,
+                       'streamlare.com': self.pp.parserSTREAMLARE,
                        'streamlive.to': self.pp.paserSTREAMLIVETO,
                        'streamo.tv': self.pp.parserIITV,
                        'streamp1ay.me': self.pp.parserSTREAMPLAYTO,
@@ -2177,7 +2185,7 @@ class pageParser(CaptchaHelper):
                 #        'url': subtitle_url,
                 #    } for subtitle_url in subtitle.get('urls', [])]
 
-                for quality, media_list in list(metadata['qualities'].items()):
+                for quality, media_list in metadata['qualities'].items():
                     for m in media_list:
                         media_url = m.get('url')
                         media_type = m.get('type')
@@ -13951,7 +13959,7 @@ class pageParser(CaptchaHelper):
         urlTabs = []
 
         code = self.cm.meta['status_code']
-        
+
         if sts and code != 404:
 #            printDBG("---------")
 #            printDBG(data)
@@ -14664,7 +14672,7 @@ class pageParser(CaptchaHelper):
 
         url = self.cm.ph.getDataBeetwenMarkers(script, 'var %s="' % jsvar, '";', False)[1]
         url = eval(jscode.replace(jsvar, 'url'))
-        url = domain + base64.b64decode(url)
+        url = domain + base64.b64decode(url).decode()
         urlTab = []
         if url != domain:
             urlTab.append({'name': 'mp4', 'url': strwithmeta(url, {'Referer': baseUrl})})
@@ -14997,7 +15005,6 @@ class pageParser(CaptchaHelper):
                 a71[1] = a73[1]
             return re.sub('[012567]', replacer, bytes2str(unpad(blocks2bytes(a74))))
 
-
         sts, data = self.cm.getPage('https://%s/api/make/hash/%s' % (domain, video_id), urlParams)
         if not sts:
             return False
@@ -15278,5 +15285,308 @@ class pageParser(CaptchaHelper):
         videoUrl = strwithmeta(videoUrl, {'Referer': url})
         if videoUrl != '':
             urlTab.extend(getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999))
+
+        return urlTab
+
+    def parserSTREAMLARE(self, baseUrl):
+        printDBG("parserSTREAMLARE baseUrl[%s]" % baseUrl)
+        urlTab = []
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        urlParams = {'header': HTTP_HEADER}
+
+        media_id = self.cm.ph.getSearchGroups(baseUrl + '/', '(?:e|v)[/-]([A-Za-z0-9]+)[^A-Za-z0-9]')[0]
+        api_surl = 'https://{0}/api/video/stream/get'.format(urlparser.getDomain(baseUrl))
+        post_data = {'id': media_id}
+        sts, data = self.cm.getPage(api_surl, urlParams, post_data)
+        if not sts:
+            return False
+
+        data = data.replace('\\/', '/')
+        data = data.split('type')
+        for item in data:
+            videoUrl = self.cm.ph.getSearchGroups(item, '''file['"]:\s?['"]([^"^']+?)['"]''')[0]
+            videoUrl = strwithmeta(videoUrl, {'Referer': baseUrl})
+            name = self.cm.ph.getSearchGroups(item, '''label['"]:\s?['"]([^"^']+?)['"]''')[0]
+            if videoUrl:
+                params = {'name': name, 'url': videoUrl}
+                urlTab.append(params)
+
+        return urlTab
+
+    def parserFILEMOON(self, baseUrl):
+        printDBG("parserFILEMOON baseUrl[%s]" % baseUrl)
+
+        def tear_decode(data_file, data_seed):
+
+            def replacer(match):
+                chars = {
+                    '0': '5',
+                    '1': '6',
+                    '2': '7',
+                    '5': '0',
+                    '6': '1',
+                    '7': '2'
+                }
+                return chars[match.group(0)]
+
+            def str2bytes(a16):
+                a21 = []
+                for i in a16:
+                    a21.append(ord(i))
+                return a21
+
+            def bytes2str(a10):
+                a13 = 0
+                a14 = len(a10)
+                a15 = ''
+                while True:
+                    if a13 >= a14:
+                        break
+                    a15 += chr(255 & a10[a13])
+                    a13 += 1
+                return a15
+
+            def digest_pad(a36):
+                a41 = []
+                a39 = 0
+                a40 = len(a36)
+                a43 = 15 - (a40 % 16)
+                a41.append(a43)
+                while a39 < a40:
+                    a41.append(a36[a39])
+                    a39 += 1
+                a45 = a43
+                while a45 > 0:
+                    a41.append(0)
+                    a45 -= 1
+                return a41
+
+            def blocks2bytes(a29):
+                a34 = []
+                a33 = 0
+                a32 = len(a29)
+                while a33 < a32:
+                    a34 += [255 & rshift(int(a29[a33]), 24)]
+                    a34 += [255 & rshift(int(a29[a33]), 16)]
+                    a34 += [255 & rshift(int(a29[a33]), 8)]
+                    a34 += [255 & a29[a33]]
+                    a33 += 1
+                return a34
+
+            def bytes2blocks(a22):
+                a27 = []
+                a28 = 0
+                a26 = 0
+                a25 = len(a22)
+                while True:
+                    a27.append(((255 & a22[a26]) << 24) & 0xFFFFFFFF)
+                    a26 += 1
+                    if a26 >= a25:
+                        break
+                    a27[a28] |= ((255 & a22[a26]) << 16 & 0xFFFFFFFF)
+                    a26 += 1
+                    if a26 >= a25:
+                        break
+                    a27[a28] |= ((255 & a22[a26]) << 8 & 0xFFFFFFFF)
+                    a26 += 1
+                    if a26 >= a25:
+                        break
+                    a27[a28] |= (255 & a22[a26])
+                    a26 += 1
+                    if a26 >= a25:
+                        break
+                    a28 += 1
+                return a27
+
+            def xor_blocks(a76, a77):
+                return [a76[0] ^ a77[0], a76[1] ^ a77[1]]
+
+            def unpad(a46):
+                a49 = 0
+                a52 = []
+                a53 = (7 & a46[a49])
+                a49 += 1
+                a51 = (len(a46) - a53)
+                while a49 < a51:
+                    a52 += [a46[a49]]
+                    a49 += 1
+                return a52
+
+            def rshift(a, b):
+                return (a % 0x100000000) >> b
+
+            def tea_code(a79, a80):
+                a85 = a79[0]
+                a83 = a79[1]
+                a87 = 0
+
+                for a86 in range(32):
+                    a85 += int((((int(a83) << 4) ^ rshift(int(a83), 5)) + a83) ^ (a87 + a80[(a87 & 3)]))
+                    a85 = int(a85 | 0)
+                    a87 = int(a87) - int(1640531527)
+                    a83 += int(
+                        (((int(a85) << 4) ^ rshift(int(a85), 5)) + a85) ^ (a87 + a80[(rshift(a87, 11) & 3)]))
+                    a83 = int(a83 | 0)
+                return [a85, a83]
+
+            def binarydigest(a55):
+                a63 = [1633837924, 1650680933, 1667523942, 1684366951]
+                a62 = [1633837924, 1650680933]
+                a61 = a62
+                a66 = [0, 0]
+                a68 = [0, 0]
+                a59 = bytes2blocks(digest_pad(str2bytes(a55)))
+                a65 = 0
+                a67 = len(a59)
+                while a65 < a67:
+                    a66[0] = a59[a65]
+                    a65 += 1
+                    a66[1] = a59[a65]
+                    a65 += 1
+                    a68[0] = a59[a65]
+                    a65 += 1
+                    a68[1] = a59[a65]
+                    a65 += 1
+                    a62 = tea_code(xor_blocks(a66, a62), a63)
+                    a61 = tea_code(xor_blocks(a68, a61), a63)
+                    a64 = a62[0]
+                    a62[0] = a62[1]
+                    a62[1] = a61[0]
+                    a61[0] = a61[1]
+                    a61[1] = a64
+
+                return [a62[0], a62[1], a61[0], a61[1]]
+
+            def ascii2bytes(a99):
+                a2b = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9, 'K': 10,
+                       'L': 11, 'M': 12, 'N': 13, 'O': 14, 'P': 15, 'Q': 16, 'R': 17, 'S': 18, 'T': 19, 'U': 20,
+                       'V': 21, 'W': 22, 'X': 23, 'Y': 24, 'Z': 25, 'a': 26, 'b': 27, 'c': 28, 'd': 29, 'e': 30,
+                       'f': 31, 'g': 32, 'h': 33, 'i': 34, 'j': 35, 'k': 36, 'l': 37, 'm': 38, 'n': 39, 'o': 40,
+                       'p': 41, 'q': 42, 'r': 43, 's': 44, 't': 45, 'u': 46, 'v': 47, 'w': 48, 'x': 49, 'y': 50,
+                       'z': 51, '0': 52, '1': 53, '2': 54, '3': 55, '4': 56, '5': 57, '6': 58, '7': 59, '8': 60,
+                       '9': 61, '-': 62, '_': 63}
+                a6 = -1
+                a7 = len(a99)
+                a9 = 0
+                a8 = []
+
+                while True:
+                    while True:
+                        a6 += 1
+                        if a6 >= a7:
+                            return a8
+                        if a99[a6] in a2b.keys():
+                            break
+                    a8.insert(a9, int(int(a2b[a99[a6]]) << 2))
+                    while True:
+                        a6 += 1
+                        if a6 >= a7:
+                            return a8
+                        if a99[a6] in a2b.keys():
+                            break
+                    a3 = a2b[a99[a6]]
+                    a8[a9] |= rshift(int(a3), 4)
+                    a9 += 1
+                    a3 = (15 & a3)
+                    if (a3 == 0) and (a6 == (a7 - 1)):
+                        return a8
+                    a8.insert(a9, int(a3) << 4)
+                    while True:
+                        a6 += 1
+                        if a6 >= a7:
+                            return a8
+                        if a99[a6] in a2b.keys():
+                            break
+                    a3 = a2b[a99[a6]]
+                    a8[a9] |= rshift(int(a3), 2)
+                    a9 += 1
+                    a3 = (3 & a3)
+                    if (a3 == 0) and (a6 == (a7 - 1)):
+                        return a8
+                    a8.insert(a9, int(a3) << 6)
+                    while True:
+                        a6 += 1
+                        if a6 >= a7:
+                            return a8
+                        if a99[a6] in a2b.keys():
+                            break
+                    a8[a9] |= a2b[a99[a6]]
+                    a9 += 1
+
+                return a8
+
+            def ascii2binary(a0):
+                return bytes2blocks(ascii2bytes(a0))
+
+            def tea_decode(a90, a91):
+                a95 = a90[0]
+                a96 = a90[1]
+                a97 = int(-957401312)
+                for a98 in range(32):
+                    a96 = int(a96) - ((((int(a95) << 4) ^ rshift(int(a95), 5)) + a95) ^ (
+                        a97 + a91[(rshift(int(a97), 11) & 3)]))
+                    a96 = int(a96 | 0)
+                    a97 = int(a97) + 1640531527
+                    a97 = int(a97 | 0)
+                    a95 = int(a95) - int(
+                        (((int(a96) << 4) ^ rshift(int(a96), 5)) + a96) ^ (a97 + a91[(a97 & 3)]))
+                    a95 = int(a95 | 0)
+                return [a95, a96]
+
+            data_seed = re.sub('[012567]', replacer, data_seed)
+            new_data_seed = binarydigest(data_seed)
+            new_data_file = ascii2binary(data_file)
+            a69 = 0
+            a70 = len(new_data_file)
+            a71 = [1633837924, 1650680933]
+            a73 = [0, 0]
+            a74 = []
+            while a69 < a70:
+                a73[0] = new_data_file[a69]
+                a69 += 1
+                a73[1] = new_data_file[a69]
+                a69 += 1
+                a72 = xor_blocks(a71, tea_decode(a73, new_data_seed))
+                a74 += a72
+                a71[0] = a73[0]
+                a71[1] = a73[1]
+            return re.sub('[012567]', replacer, bytes2str(unpad(blocks2bytes(a74))))
+
+        urlTab = []
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return []
+
+        if "eval(function(p,a,c,k,e,d)" in data:
+            printDBG('Host resolveUrl packed')
+            scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data, re.S)
+            for packed in scripts:
+                data2 = packed
+                printDBG('Host pack: [%s]' % data2)
+                try:
+                    data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                    printDBG('OK unpack: [%s]' % data)
+                except Exception:
+                    pass
+
+        r = re.search(r'''b:\s*'([^']+)',\s*file_code:\s*'([^']+)',\s*hash:\s*'([^']+)''', data)
+        if r:
+            url = 'https://{0}/dl'.format(urlparser.getDomain(baseUrl))
+            post_data = {'b': r.group(1), 'file_code': r.group(2), 'hash': r.group(3)}
+            sts, data = self.cm.getPage(url, urlParams, post_data)
+            if not sts:
+                return []
+            data = data.replace(self.cm.ph.getDataBeetwenMarkers(data, 'tracks":[', ']', False)[1], '')
+            vfile = self.cm.ph.getSearchGroups(data, '''file['"]:\s?['"]([^"^']+?)['"]''')[0]
+            seed = self.cm.ph.getSearchGroups(data, '''seed['"]:\s?['"]([^"^']+?)['"]''')[0]
+            hlsUrl = tear_decode(vfile, seed)
+            if hlsUrl != '':
+                hlsUrl = strwithmeta(hlsUrl, {'Origin': "https://" + urlparser.getDomain(baseUrl), 'Referer': baseUrl})
+                urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
 
         return urlTab

@@ -130,7 +130,7 @@ class pluginAutostart(Screen):
 
 
 def doRunMain(session):
-    for DBGfile in ['/hdd/iptv.dbg','/tmp/iptv.dbg','/home/root/logs/iptv.dbg']:
+    for DBGfile in ['/hdd/iptv.dbg', '/tmp/iptv.dbg', '/home/root/logs/iptv.dbg']:
         if os.path.exists(DBGfile):
             os.remove(DBGfile)
     session.open(E2iPlayerWidget)

@@ -360,7 +360,7 @@ def TestTmpCookieDir():
 def GetCookieDir(file='', forceFromConfig=False):
     global gE2iPlayerTempCookieDir
     if gE2iPlayerTempCookieDir == None or forceFromConfig:
-        cookieDir = os.path.join(config.plugins.iptvplayer.SciezkaCache.value , 'cookies/')
+        cookieDir = os.path.join(config.plugins.iptvplayer.SciezkaCache.value, 'cookies/')
     else:
         cookieDir = gE2iPlayerTempCookieDir
     try:
@@ -419,7 +419,7 @@ def GetTmpDir(fileName=''):
     path = config.plugins.iptvplayer.NaszaTMP.value
     path = path.replace('//', '/')
     mkdirs(path)
-    return os.path.join(path , fileName)
+    return os.path.join(path, fileName)
 
 
 def GetE2iPlayerRootfsDir(fileName=''):
@@ -477,7 +477,7 @@ def GetPluginDir(fileName=''):
 
 
 def GetExtensionsDir(fileName=''):
-    return os.path.join(resolveFilename(SCOPE_PLUGINS, 'Extensions/') , fileName)
+    return os.path.join(resolveFilename(SCOPE_PLUGINS, 'Extensions/'), fileName)
 
 
 def GetSkinsDir(path=''):
@@ -665,6 +665,7 @@ g_cacheHostsFromList = None
 g_cacheHostsFromFolder = None
 g_cachePluginFolder = None
 
+
 def __isHostNameValid(hostName):
     BLOCKED_MARKER = '_blocked_'
     if len(hostName) > 4 and BLOCKED_MARKER not in hostName and hostName.startswith("host"):
@@ -709,7 +710,7 @@ def GetHostsFromFolder(useCache=True):
     lhosts = []
     try:
         fileList = os.listdir(__getHostsPath())
-        printDBG('\t len(fileList)=%s'% len(fileList))
+        printDBG('\t len(fileList)=%s' % len(fileList))
         for wholeFileName in fileList:
             # separate file name and file extension
             fileName, fileExt = os.path.splitext(wholeFileName)
@@ -1403,7 +1404,7 @@ def byteify(input, noneReplacement=None, baseTypesAsString=False):
     return input
 
 
-def printExc(msg='', WarnOnly = False):
+def printExc(msg='', WarnOnly=False):
     printDBG("===============================================")
     if WarnOnly or msg.startswith('WARNING'):
         printDBG("                    WARNING                    ")
@@ -1423,6 +1424,7 @@ def printExc(msg='', WarnOnly = False):
     except Exception:
         pass
     return retMSG #returns the error description to possibly use in main code. E.g. inform about failed login
+
 
 def GetIPTVPlayerVersion():
     try:
@@ -1751,11 +1753,13 @@ def ReadGnuMIPSABIFP(elfFileName):
         printExc()
     return Val_HAS_MIPS_ABI_FLAGS, Val_GNU_MIPS_ABI_FP
 
+
 def MergeDicts(*dict_args):
     result = {}
     for dictionary in dict_args:
         result.update(dictionary)
     return result
+
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -1768,6 +1772,7 @@ def get_ip():
     finally:
         s.close()
     return IP
+
 
 def is_port_in_use(pIP, pPORT):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

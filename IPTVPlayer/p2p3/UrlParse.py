@@ -3,7 +3,7 @@
 # just change:
 #   from urlparse import
 # to:
-#   from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import 
+#   from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import
 #
 
 from urllib.parse import urljoin, urlparse, urlunparse, urlsplit, urlunsplit, parse_qs, parse_qsl
