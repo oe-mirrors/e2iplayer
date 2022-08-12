@@ -176,6 +176,7 @@ class urlparser:
                        'assia2.com': self.pp.parserASSIAORG,
                        'assia22.com': self.pp.parserASSIAORG,
                        'assia23.com': self.pp.parserASSIAORG,
+                       'assia24.com': self.pp.parserASSIAORG,
                        'assia4.com': self.pp.parserASSIAORG,
                        'auroravid.to': self.pp.parserAURORAVIDTO,
                        #b

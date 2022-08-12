@@ -480,6 +480,8 @@ if __name__ == "__main__":
 
     libsPath = sys.argv[1]
     sys.path.insert(1, libsPath)
+    if sys.version_info[0] >= 3: #PY3
+        sys.path.append('/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/libs/crypto/cipher')
     from crypto.cipher.aes_cbc import AES_CBC
 
     APP_KEY = "JD_api_39100"

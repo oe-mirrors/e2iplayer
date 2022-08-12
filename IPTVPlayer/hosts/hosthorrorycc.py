@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###################################################
 # LOCAL import
 ###################################################
@@ -8,13 +8,13 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import base64
 try:
     import json
@@ -24,16 +24,16 @@ except Exception:
 
 
 def gettytul():
-    return 'https://filman.cc/'
+    return 'https://horrory.cc/'
 
 
-class Filman(CBaseHostClass):
+class Horrorycc(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'Filman.online', 'cookie': 'Filman.online.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'horrory.cc', 'cookie': 'horrory.cc.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL = 'https://filman.cc/'
-        self.DEFAULT_ICON_URL = 'https://filman.cc/public/dist/images/logo.png'
+        self.MAIN_URL = 'https://horrory.cc/'
+        self.DEFAULT_ICON_URL = 'https://horrory.cc/public/dist/images/logo1.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
@@ -52,7 +52,7 @@ class Filman(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urllib.parse.urljoin(baseUrl, url)
+                return urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
@@ -61,14 +61,15 @@ class Filman(CBaseHostClass):
             self.MAIN_URL = self.cm.getBaseUrl(url)
 
     def listMainMenu(self, cItem):
-        printDBG("Filman.listMainMenu")
+        printDBG("Horrorycc.listMainMenu")
 
         MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Movies'), 'url': self.getFullUrl('/filmy-online-pl/')},
-                        {'category': 'list_items', 'title': _('Children'), 'url': self.getFullUrl('/dla-dzieci-pl/')},
-                        {'category': 'list_sort', 'title': _('Series'), 'url': self.getFullUrl('/seriale-online-pl/')},
-#                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
-                        {'category': 'list_cats', 'title': _('Movies genres'), 'url': self.getFullUrl('/filmy-online-pl/')},
-#                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
+#                        {'category': 'list_items', 'title': _('Movies') + ' ENG', 'url': self.getFullUrl('/quality/filmy-w-wersji-eng/')},
+#                        {'category': 'list_items', 'title': _('Children'), 'url': self.getFullUrl('/genre/anime-bajki/')},
+                        {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('/seriale-online-pl/')},
+                        {'category': 'list_years', 'title': _('Filter By Year'), 'url': self.getFullUrl('/filmy-online-pl/')},
+                        {'category': 'list_cats',  'title': _('Movies genres'), 'url': self.getFullUrl('/filmy-online-pl/')},
+#                        {'category':'list_az',        'title': _('Alphabetically'),    'url':self.MAIN_URL},
                         {'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history')}, ]
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -91,16 +92,16 @@ class Filman(CBaseHostClass):
 #        if not sts: return
 
         # fill cats
-        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="filter-category"', '</ul>', False)[1]
+        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="filter-tag"', '</ul>', False)[1]
         dat = re.compile('<li[^>]+?data-id="([^"]+?)".*?<a[^>]*?>(.+?)</a>').findall(dat)
         for item in dat:
-            self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': cItem['url'] + 'category:%s/' % item[0]})
+            self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': cItem['url'] + 'tag:%s/' % item[0]})
 
         # fill years
-#        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="dropdown-menu year-dropdown"', '</ul>', False)[1]
-#        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(dat)
-#        for item in dat:
-#            self.cacheMovieFilters['years'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
+        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="filter-year"', '</ul>', False)[1]
+        dat = re.compile('<li[^>]+?data-id="([^"]+?)".*?<a[^>]*?>(.+?)</a>').findall(dat)
+        for item in dat:
+            self.cacheMovieFilters['years'].append({'title': self.cleanHtmlStr(item[1]), 'url': cItem['url'] + 'year:%s/' % item[0]})
 
         # fill az
 #        dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class=starting-letter>', '</ul>', False)[1]
@@ -110,7 +111,7 @@ class Filman(CBaseHostClass):
 
     ###################################################
     def listMovieFilters(self, cItem, category):
-        printDBG("Filman.listMovieFilters")
+        printDBG("Horrorycc.listMovieFilters")
 
         filter = cItem['category'].split('_')[-1]
         self._fillMovieFilters(cItem)
@@ -120,7 +121,7 @@ class Filman(CBaseHostClass):
             self.listsTab(filterTab, cItem, category)
 
     def listsTab(self, tab, cItem, category=None):
-        printDBG("Filman.listsTab")
+        printDBG("Horrorycc.listsTab")
         for item in tab:
             params = dict(cItem)
             if None != category:
@@ -129,55 +130,44 @@ class Filman(CBaseHostClass):
             self.addDir(params)
 
     def listItems(self, cItem):
-        printDBG("Filman.listItems %s" % cItem)
+        printDBG("Horrorycc.listItems %s" % cItem)
         page = cItem.get('page', 1)
 
         url = cItem['url']
         sort = cItem.get('sort', '')
         if sort not in url:
             url = url + sort
-
         if page > 1:
-            if '?' in url:
-                url += '&'
-            else:
-                url += '?'
-            url = url + 'page={0}'.format(page)
-
+            url = url + '/?page={0}'.format(page)
         sts, data = self.getPage(url)
         if not sts:
             return
         self.setMainUrl(data.meta['url'])
 
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'pagination'), ('</u', '>'))[1]
+        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'pagination'), ('</ul', '>'))[1]
         if '' != self.cm.ph.getSearchGroups(nextPage, 'page=(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
 
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<div id="wrapper">',) , ('<!-- Footer: -->',))[1] # exclude header and footer
 
-        if 'phrase=' in cItem['url']:
-            data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'data-title='), ('</a', '>'))
+        if 'wyszukiwarka?phrase=' in cItem['url']:
+            data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'clearfix item'), ('</a', '>'))
         else:
-            data = data.split('<div class="poster">')[1:]
+            data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'item-list'), ('<div', '>', 'text-center'))[1]
+            data = data.split('<div class="poster">')
 
         for item in data:
-#            printDBG("Filman.listItems item %s" % item)
+#            printDBG("Horrorycc.listItems item %s" % item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?poster[^"^']+?)['"]''')[0])
-            title = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0].replace('&quot;', '"'.replace('&amp;', '&'))
-            desc = self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0]
-            if desc == '':
-                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'description'), ('</div', '>'), False)[1])
-            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'quality-version'), ('</div', '>'), False)[1])
-            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'film_year'), ('</div', '>'), False)[1])
-            if year != '':
-                desc = _('Year: ') + year + ' - ' + _('Quality:') + ' ' + quality + '[/br]' + desc
-            if 'serial-online' in url:
-                params = {'good_for_fav': True, 'category': 'list_series', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
+            icon = self.cm.ph.getDataBeetwenNodes(item, ('<img', '>', 'alt'), ('</a', '>'))[1]
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''src=['"]([^"^']+?)['"]''')[0])
+            title = ensure_str(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
+            desc = ensure_str(self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0])
+            if '/serial-online/' in url:
+                params = {'good_for_fav': True, 'category': 'list_seasons', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addDir(params)
             else:
                 params = {'good_for_fav': True, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
@@ -188,38 +178,45 @@ class Filman(CBaseHostClass):
             params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
-    def listSeries(self, cItem):
-        printDBG("Filman.listSeries %s" % cItem)
+    def listSeriesSeasons(self, cItem, nextCategory):
+        printDBG("Horrorycc.listSeriesSeasons")
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        self.setMainUrl(data.meta['url'])
+        serieDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'description'), ('</p', '>'))[1])
+        data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'episode-list'), ('<div', '>'))[1]
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>'), ('</ul', '>'))
 
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'episode-list'), ('<hr', '>'))[1]
-        #data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'active'), ('</ul', '>'))
-        data = data.split('<span')
-        for sitem in data:
-#            printDBG("Filman.listSeries sitem %s" % sitem)
-            season = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(sitem, ('<span', '>'), ('</span', '>'))[1])
-            tmp = self.cm.ph.getAllItemsBeetwenNodes(sitem, ('<li', '>'), ('</li', '>'))
-            for item in tmp:
-#                printDBG("Filman.listSeries item %s" % item)
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-                if url == '':
-                    continue
-#                title = season + ' - ' + self.cleanHtmlStr(item)
+        for sItem in data:
+            sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(sItem, ('<span', '>'), ('</span', '>'))[1])
+            if not sTitle:
+                continue
+            sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<a', '</a>')
+            tabItems = []
+            for item in sItem:
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                params = {'good_for_fav': True, 'url': url, 'title': title, 'icon': cItem['icon']}
-                self.addVideo(params)
+                tabItems.append({'title': '%s' % title, 'url': url, 'icon': cItem['icon'], 'desc': ''})
+            if len(tabItems):
+                params = dict(cItem)
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'episodes': tabItems, 'icon': cItem['icon'], 'desc': serieDesc})
+                self.addDir(params)
+
+    def listSeriesEpisodes(self, cItem):
+        printDBG("Horrorycc.listSeriesEpisodes [%s]" % cItem)
+        episodes = cItem.get('episodes', [])
+        cItem = dict(cItem)
+        for item in episodes:
+            self.addVideo(item)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("Filman.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = self.getFullUrl('/wyszukiwarka?phrase=%s') % urllib.parse.quote_plus(searchPattern)
+        printDBG("Horrorycc.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
+        url = self.getFullUrl('/wyszukiwarka?phrase=%s') % urllib_quote_plus(searchPattern)
         params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params)
 
     def getLinksForVideo(self, cItem):
-        printDBG("Filman.getLinksForVideo [%s]" % cItem)
+        printDBG("Horrorycc.getLinksForVideo [%s]" % cItem)
 
         cacheKey = cItem['url']
         cacheTab = self.cacheLinks.get(cacheKey, [])
@@ -262,7 +259,7 @@ class Filman(CBaseHostClass):
         return retTab
 
     def getVideoLinks(self, baseUrl):
-        printDBG("Filman.getVideoLinks [%s]" % baseUrl)
+        printDBG("Horrorycc.getVideoLinks [%s]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
         urlTab = []
 
@@ -278,10 +275,10 @@ class Filman(CBaseHostClass):
         return self.up.getVideoLinkExt(baseUrl)
 
     def getArticleContent(self, cItem):
-        printDBG("Filman.getArticleContent [%s]" % cItem)
+        printDBG("Horrorycc.getArticleContent [%s]" % cItem)
         itemsList = []
 
-        sts, data = self.cm.getPage(cItem['url'])
+        sts, data = self.getPage(cItem['url'])
         if not sts:
             return []
 
@@ -294,7 +291,7 @@ class Filman(CBaseHostClass):
 #        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(title, '''this\.src=['"]([^"^']+?)['"]''', 1, True)[0])
         desc = self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'description'), ('</p', '>'))[1]
 #        itemsList.append((_('Duration'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<dt>Czas trwania:</dt>', '</dd>', False)[1])))
-#        itemsList.append((_('Genres'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<ul class="genres">', '</ul>', True)[1])))
+        itemsList.append((_('Genres'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<ul class="categories">', '</ul>', True)[1]).replace('Kategoria:', '')))
 
         if title == '':
             title = cItem['title']
@@ -327,13 +324,15 @@ class Filman(CBaseHostClass):
         elif 'list_years' == category:
             self.listMovieFilters(self.currItem, 'list_sort')
         elif 'list_az' == category:
-            self.listMovieFilters(self.currItem, 'list_sort')
+            self.listMovieFilters(self.currItem, 'list_items')
         elif 'list_sort' == category:
             self.listMovieFilters(self.currItem, 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem)
-        elif category == 'list_series':
-            self.listSeries(self.currItem)
+        elif category == 'list_seasons':
+            self.listSeriesSeasons(self.currItem, 'list_episodes')
+        elif category == 'list_episodes':
+            self.listSeriesEpisodes(self.currItem)
 
     #SEARCH
         elif category in ["search", "search_next_page"]:
@@ -352,7 +351,7 @@ class Filman(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, Filman(), True, [])
+        CHostBase.__init__(self, Horrorycc(), True, [])
 
     def withArticleContent(self, cItem):
         return True
