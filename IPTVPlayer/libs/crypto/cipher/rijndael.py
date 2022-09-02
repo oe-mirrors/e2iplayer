@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 """ crypto.cipher.rijndael
 
     Rijndael encryption algorithm
@@ -27,8 +27,8 @@ class Rijndael(BlockCipher):
         self.blockSize = blockSize  # blockSize is in bytes
         self.padding = padding    # change default to noPadding() to get normal ECB behavior
 
-        assert(keySize % 4 == 0 and keySize / 4 in NrTable[4]), 'key size must be 16,20,24,29 or 32 bytes'
-        assert(blockSize % 4 == 0 and blockSize / 4 in NrTable), 'block size must be 16,20,24,29 or 32 bytes'
+        assert(keySize % 4 == 0 and (keySize / 4) in NrTable[4]), 'key size must be 16,20,24,29 or 32 bytes'
+        assert(blockSize % 4 == 0 and (blockSize / 4) in NrTable), 'block size must be 16,20,24,29 or 32 bytes'
 
         self.Nb = self.blockSize / 4          # Nb is number of columns of 32 bit words
         self.Nk = keySize / 4                 # Nk is the key length in 32-bit words

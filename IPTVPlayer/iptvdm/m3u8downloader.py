@@ -350,7 +350,7 @@ class M3U8Downloader(BaseDownloader):
                 return
 
             if self.WGET_STS.CONNECTING == self.wgetStatus:
-                self.outData += data
+                self.outData += data.decode(encoding='utf-8', errors='strict')
                 lines = self.outData.replace('\r', '\n').split('\n')
                 for idx in range(len(lines)):
                     if lines[idx].startswith('Length:'):

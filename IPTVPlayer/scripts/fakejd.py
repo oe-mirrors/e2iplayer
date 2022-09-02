@@ -235,7 +235,7 @@ class Myjdapi:
     def request_api(self, path, http_method="GET", params=None, action=None):
         data = None
         if not self.is_connected() and path != "/my/connect":
-            raise MYJDException
+            raise(MYJDException("No connection established\n"))
         if http_method == "GET":
             query = [path + "?"]
             for param in params:
@@ -278,7 +278,7 @@ class Myjdapi:
             msg += "\n"
             if data is not None:
                 msg += "DATA:\n" + data
-            raise MYJDException
+            raise(MYJDException(msg))
         if action is None:
             if not self._server_encryption_token:
                 response = self._decrypt(self._login_secret, encrypted_response_text)
@@ -488,7 +488,10 @@ if __name__ == "__main__":
     LOGIN = sys.argv[2]
     PASSWORD = sys.argv[3]
     JDNAME = "IPTVPlayer@" + sys.argv[4]
-    CAPTCHA_DATA = json.loads(base64.b64decode(sys.argv[5]))
+    CAPTCHA_DATA = base64.b64decode(sys.argv[5])
+    if isinstance(CAPTCHA_DATA, bytes):
+        CAPTCHA_DATA = CAPTCHA_DATA.decode('utf-8', 'ignore')
+    CAPTCHA_DATA = json.loads(CAPTCHA_DATA)
     CAPTCHA_DATA['id'] = int(time.time() * 1000)
 
     hash = hashlib.sha256()

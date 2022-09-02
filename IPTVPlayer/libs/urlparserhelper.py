@@ -42,7 +42,7 @@ def int2base(x, base):
     x *= sign
     digits = []
     while x:
-        digits.append(digs[x % base])
+        digits.append(digs[int(x) % base])
         x = x // base # // pushes PY3 to use int arithmetic
     if sign < 0:
         digits.append('-')
