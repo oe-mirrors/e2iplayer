@@ -7,7 +7,7 @@
     match FIPS specification for readability.  It is not implemented
     for performance.
 
-    Copyright © (c) 2002 by Paul A. Lambert
+    Copyright (c) 2002 by Paul A. Lambert
     Read LICENSE.txt for license information.
 
     2002-06-01
@@ -32,7 +32,7 @@ class Rijndael(BlockCipher):
 
         self.Nb = self.blockSize / 4          # Nb is number of columns of 32 bit words
         self.Nk = keySize / 4                 # Nk is the key length in 32-bit words
-        self.Nr = NrTable[self.Nb][self.Nk] # The number of rounds (Nr) is a function of
+        self.Nr = NrTable[self.Nb][self.Nk]  # The number of rounds (Nr) is a function of
                                             # the block (Nb) and key (Nk) sizes.
         if key != None:
             self.setKey(key)
@@ -47,7 +47,7 @@ class Rijndael(BlockCipher):
         """ Encrypt a block, plainTextBlock must be a array of bytes [Nb by 4] """
         self.state = self._toBlock(plainTextBlock)
         AddRoundKey(self, self.__expandedKey[0:self.Nb])
-        for round in range(1, self.Nr):          #for round = 1 step 1 to Nr–1
+        for round in range(1, self.Nr):          #for round = 1 step 1 to Nrï¿½1
             SubBytes(self)
             ShiftRows(self)
             MixColumns(self)
@@ -100,7 +100,7 @@ NrTable = {4: {4: 10, 5: 11, 6: 12, 7: 13, 8: 14},
 
 def keyExpansion(algInstance, keyString):
     """ Expand a string of size keySize into a larger array """
-    Nk, Nb, Nr = algInstance.Nk, algInstance.Nb, algInstance.Nr # for readability
+    Nk, Nb, Nr = algInstance.Nk, algInstance.Nb, algInstance.Nr  # for readability
     key = [ord(byte) for byte in keyString]  # convert string to list
     w = [[key[4 * i], key[4 * i + 1], key[4 * i + 2], key[4 * i + 3]] for i in range(Nk)]
     for i in range(Nk, Nb * (Nr + 1)):
