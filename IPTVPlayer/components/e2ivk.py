@@ -970,7 +970,7 @@ class E2iVirtualKeyBoard(Screen):
         for letter in text:
             try:
                 self["text"].insertChar(letter, self["text"].currPos, False, True)
-                self["text"].innerRight()
+                innerWidgetTextRight(self["text"])
                 self["text"].update()
             except Exception:
                 printExc()
