@@ -13,6 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -118,7 +119,7 @@ class YouTubeParser():
                 elif item['ext'] in ('mp4v', 'webmv'):
                     dashVideoLists.append(item)
                 elif 'mpd' == item['ext']:
-                    tmpList = getMPDLinksWithMeta(item['url'], checkExt=False)
+                    tmpList = getMPDLinksWithMeta(ensure_str(item['url']), checkExt=False)
                     printDBG(tmpList)
                     for idx in range(len(tmpList)):
                         tmpList[idx]['format'] = "%sx%s" % (tmpList[idx].get('height', 0), tmpList[idx].get('width', 0))
@@ -146,20 +147,20 @@ class YouTubeParser():
                     if format != None:
                         item['format'] = format.group(1) + "x"
                         item['ext'] = item['ext'] + "_M3U8"
-                        item['url'] = decorateUrl(item['url'], {"iptv_proto": "m3u8"})
+                        item['url'] = decorateUrl(ensure_str(item['url']), {"iptv_proto": "m3u8"})
                         retHLSList.append(item)
                 else:
                     format = re.search('([0-9]+?x[0-9]+?$)', item['format'])
                     if format != None:
                         item['format'] = format.group(1)
-                        item['url'] = decorateUrl(item['url'])
+                        item['url'] = decorateUrl(ensure_str(item['url']))
                         retList.append(item)
 
         if len(dashAudioLists):
             # use best audio
             for item in dashVideoLists:
                 item = dict(item)
-                item["url"] = decorateUrl("merge://audio_url|video_url", {'audio_url': dashAudioLists[0]['url'], 'video_url': item['url']})
+                item["url"] = decorateUrl("merge://audio_url|video_url", {'audio_url': dashAudioLists[0]['url'], 'video_url': ensure_str(item['url'])})
                 dashList.append(item)
 
         # try to get hls format with alternative method
@@ -257,7 +258,7 @@ class YouTubeParser():
                 img = thumbJson[i]
                 width = img['width']
                 if width < maxWidth:
-                    url = img['url']
+                    url = ensure_str(img['url'])
                 i = i + 1
 
             if hq or (not config.plugins.iptvplayer.allowedcoverformats.value) or config.plugins.iptvplayer.allowedcoverformats.value != 'all':
@@ -334,7 +335,7 @@ class YouTubeParser():
             except:
                 pass
 
-            return {'type': 'video', 'category': 'video', 'title': title, 'url': url, 'icon': icon, 'time': time, 'desc': desc}
+            return {'type': 'video', 'category': 'video', 'title': title, 'url': ensure_str(url), 'icon': icon, 'time': time, 'desc': desc}
         else:
             return {}
 
@@ -352,7 +353,7 @@ class YouTubeParser():
             except:
                 desc = ""
 
-            return {'type': 'category', 'category': 'channel', 'title': title, 'url': url, 'icon': icon, 'time': '', 'desc': desc}
+            return {'type': 'category', 'category': 'channel', 'title': title, 'url': ensure_str(url), 'icon': icon, 'time': '', 'desc': desc}
 
         else:
             return {}
@@ -372,7 +373,7 @@ class YouTubeParser():
                 desc = desc + "\n" + by
             except:
                 pass
-            return {'type': 'category', 'category': 'playlist', 'title': title, 'url': url, 'icon': icon, 'time': '', 'desc': desc}
+            return {'type': 'category', 'category': 'playlist', 'title': title, 'url': ensure_str(url), 'icon': icon, 'time': '', 'desc': desc}
         else:
             return {}
 
@@ -394,9 +395,9 @@ class YouTubeParser():
                     return {}
 
             if '/channel/' in url:
-                return {'type': 'category', 'category': 'channel', 'title': title, 'url': url, 'icon': icon, 'time': '', 'desc': ''}
+                return {'type': 'category', 'category': 'channel', 'title': title, 'url': ensure_str(url), 'icon': icon, 'time': '', 'desc': ''}
             else:
-                return {'type': 'feed', 'category': cat, 'title': title, 'url': url, 'icon': icon, 'time': '', 'desc': ''}
+                return {'type': 'feed', 'category': cat, 'title': title, 'url': ensure_str(url), 'icon': icon, 'time': '', 'desc': ''}
 
         except:
             printExc()
@@ -641,7 +642,7 @@ class YouTubeParser():
                     post_data['context']['clickTracking'] = {'clickTrackingParams': ctit}
                     post_data = json_dumps(post_data).encode('utf-8')
                     urlNextPage = strwithmeta(urlNextPage, {'post_data': post_data})
-                    params = {'type': 'more', 'category': category, 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
+                    params = {'type': 'more', 'category': category, 'title': label, 'page': str(int(page) + 1), 'url': ensure_str(urlNextPage)}
                     printDBG(str(params))
                     currList.append(params)
 
@@ -774,7 +775,7 @@ class YouTubeParser():
                     label = _("Next Page")
 
                 urlNextPage = self.updateQueryUrl(url, {'pbj': '1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct})
-                params = {'type': 'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
+                params = {'type': 'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': ensure_str(urlNextPage)}
                 printDBG(str(params))
                 currList.append(params)
 
@@ -794,7 +795,7 @@ class YouTubeParser():
                 post_data['context']['clickTracking'] = {'clickTrackingParams': itct}
                 post_data = json_dumps(post_data).encode('utf-8')
                 urlNextPage = strwithmeta(urlNextPage, {'post_data': post_data})
-                params = {'type': 'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': urlNextPage}
+                params = {'type': 'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': ensure_str(urlNextPage)}
                 printDBG(str(params))
                 currList.append(params)
 
@@ -829,7 +830,7 @@ class YouTubeParser():
                     if time.startswith("0:"):
                         time = time[2:]
                     desc = item['title']['accessibility']['accessibilityData']['label']
-                    params = {'type': 'video', 'category': 'video', 'title': title, 'url': url, 'icon': img, 'time': time, 'desc': desc}
+                    params = {'type': 'video', 'category': 'video', 'title': title, 'url': ensure_str(url), 'icon': img, 'time': time, 'desc': desc}
                     currList.append(params)
             except Exception:
                 printExc()

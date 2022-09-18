@@ -1373,6 +1373,9 @@ class common:
         if proxy_gateway != '':
             pageUrl = proxy_gateway.format(urllib.parse.quote_plus(pageUrl, ''))
         printDBG("pageUrl: [%s]" % pageUrl)
+        if '","' in pageUrl: # points incorrectly formatted dict or list
+            pageUrl = pageUrl.split('"',1)[0] #" is incorrect char for url, shouldn't be there so removing it and everything after it
+            printDBG("CORRECTED pageUrl: [%s]" % pageUrl)
 
         if None != post_data:
             printDBG('pCommon - getURLRequestData() -> post data: ' + str(post_data))

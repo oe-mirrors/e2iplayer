@@ -15,6 +15,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute_ext, is_js_cached
 
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
 class CYTSignAlgoExtractor:
     # MAX RECURSION Depth for security
@@ -593,7 +594,7 @@ class YoutubeIE(object):
                 if 'url' in url_data:
                     url_item = {'url': url_data['url']}
                 else:
-                    cipher = url_data.get('cipher', '') + url_data.get('signatureCipher', '')
+                    cipher = ensure_str(url_data.get('cipher', '')) + ensure_str(url_data.get('signatureCipher', ''))
                     printDBG(cipher)
 
                     cipher = cipher.split('&')
