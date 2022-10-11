@@ -155,7 +155,7 @@ class Filman(CBaseHostClass):
         else:
             nextPage = False
 
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<div id="wrapper">',) , ('<!-- Footer: -->',))[1] # exclude header and footer
+        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'wrapper') , ('<footer', '>'))[1] # exclude header and footer
 
         if 'phrase=' in cItem['url']:
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'data-title='), ('</a', '>'))

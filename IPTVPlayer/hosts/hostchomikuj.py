@@ -105,7 +105,7 @@ class Chomikuj(CBaseHostClass):
             data = ''
         if addToken:
             token = "wzrwYua$.DSe8suk!`'2"
-            token = md5(url + data + token).hexdigest()
+            token = md5(ensure_binary(url + data + token)).hexdigest()
             addParams['header']['Token'] = token
         if 'ApiKey' in self.loginData:
             addParams['header']['Api-Key'] = self.loginData['ApiKey']

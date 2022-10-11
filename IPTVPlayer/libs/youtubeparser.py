@@ -281,13 +281,14 @@ class YouTubeParser():
             except:
                 title = videoJson['title']['simpleText']
 
+            title = ensure_str(title)
             badges = []
-            bb = videoJson.get("badges", [])
-            for b in bb:
+            videoBadges = videoJson.get("badges", [])
+            for videoBadge in videoBadges:
                 try:
-                    bLabel = b["metadataBadgeRenderer"]["label"]
-                    badges.append(bLabel.upper())
-                except:
+                    badgeLabel = ensure_str(videoBadge["metadataBadgeRenderer"]["label"])
+                    badges.append(badgeLabel.upper())
+                except Exception:
                     pass
 
             if badges:
@@ -299,21 +300,21 @@ class YouTubeParser():
             try:
                 duration = videoJson["lengthText"]["simpleText"]
                 if duration:
-                    desc.append(_("Duration: %s") % duration)
+                    desc.append(_("Duration: %s") % ensure_str(duration))
             except:
                 pass
 
             try:
                 views = videoJson["viewCountText"]["simpleText"]
                 if views:
-                    desc.append(views)
+                    desc.append(ensure_str(views))
             except:
                 pass
 
             try:
                 time = videoJson["publishedTimeText"]["simpleText"]
                 if time:
-                    desc.append(time)
+                    desc.append(ensure_str(time))
             except:
                 time = ''
 
@@ -324,14 +325,15 @@ class YouTubeParser():
                     owner = videoJson["longBylineText"]["runs"][0]["text"]
                 except:
                     owner = ""
-
+            owner = ensure_str(owner)
+            
             if desc:
                 desc = " | ".join(desc) + "\n" + owner
             else:
                 desc = owner
 
             try:
-                desc = desc + "\n" + videoJson["descriptionSnippet"]["runs"][0]["text"]
+                desc = desc + "\n" + ensure_str(videoJson["descriptionSnippet"]["runs"][0]["text"])
             except:
                 pass
 
@@ -704,8 +706,17 @@ class YouTubeParser():
                     data2 = self.cm.ph.getDataBeetwenMarkers(data, "window[\"ytInitialData\"] =", "};", False)[1]
                     if len(data2) == 0:
                         data2 = self.cm.ph.getDataBeetwenMarkers(data, "var ytInitialData =", "};", False)[1]
-
-                    response = json_loads(data2 + "}")
+                    
+                    data2 = ensure_str(data2.strip()) #just cleaning and ensuring we're working with string
+                    #json simple schema verification and correction
+                    jsonStarts = data2.count('{')
+                    jsonEnds = data2.count('}')
+                    printDBG('youtuberparser.YouTubeParser().getSearchResult correcting json string by adding "}" %s time(s) at the end' % (jsonStarts - jsonEnds))
+                    while jsonEnds < jsonStarts:
+                        data2 = data2 + '}'
+                        jsonEnds += 1
+                    #open("/tmp/data2.txt", "w").write(data2)
+                    response = json_loads(data2)
 
             if not sts:
                 return []
@@ -717,8 +728,9 @@ class YouTubeParser():
             # search videos
             r2 = list(self.findKeys(response, 'videoRenderer'))
 
-            printDBG("---------------------")
-            printDBG(json_dumps(r2))
+            printDBG("---------Returned DICT ------------")
+            for item in r2:
+                printDBG(str(item))
             printDBG("---------------------")
 
             for item in r2:
