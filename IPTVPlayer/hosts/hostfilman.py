@@ -6,10 +6,15 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
 
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+###################################################
+# E2 GUI COMMPONENTS
+###################################################
+from Screens.MessageBox import MessageBox
 ###################################################
 # FOREIGN import
 ###################################################
@@ -20,17 +25,30 @@ try:
     import json
 except Exception:
     import simplejson as json
+from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
 ###################################################
 
+###################################################
+# Config options for HOST
+###################################################
+config.plugins.iptvplayer.filman_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filman_password = ConfigText(default="", fixed_size=False)
+
+def GetConfigList():
+    optionList = []
+    optionList.append(getConfigListEntry("Filman login:", config.plugins.iptvplayer.filman_login))
+    optionList.append(getConfigListEntry("Filman hasło:", config.plugins.iptvplayer.filman_password))
+    return optionList
+###################################################
 
 def gettytul():
     return 'https://filman.cc/'
 
 
-class Filman(CBaseHostClass):
+class Filman(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'Filman.online', 'cookie': 'Filman.online.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'Filman.online', 'cookie': 'filman.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://filman.cc/'
         self.DEFAULT_ICON_URL = 'https://filman.cc/public/dist/images/logo.png'
@@ -41,6 +59,11 @@ class Filman(CBaseHostClass):
         self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
         self.cacheLinks = {}
         self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+
+        self.loggedIn = None
+        self.login = ''
+        self.password = ''
+        self.loginMessage = ''
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
@@ -214,7 +237,7 @@ class Filman(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Filman.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = self.getFullUrl('/wyszukiwarka?phrase=%s') % urllib.parse.quote_plus(searchPattern)
+        url = self.getFullUrl('/item?phrase=%s') % urllib.parse.quote_plus(searchPattern)
         params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params)
 
@@ -305,8 +328,64 @@ class Filman(CBaseHostClass):
 
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
+    def tryTologin(self):
+        printDBG('tryTologin start')
+
+        if None == self.loggedIn or self.login != config.plugins.iptvplayer.filman_login.value or\
+            self.password != config.plugins.iptvplayer.filman_password.value:
+
+            sts, data = self.getPage(self.getFullUrl('/logowanie'))
+            if not sts:
+                return False
+
+            if sts and '/wylogowanie' not in data:
+                self.login = config.plugins.iptvplayer.filman_login.value
+                self.password = config.plugins.iptvplayer.filman_password.value
+
+                #rm(self.COOKIE_FILE)
+                self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
+
+                self.loggedIn = False
+
+                if '' == self.login.strip() or '' == self.password.strip():
+                    return False
+
+                cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID'])
+                printDBG('tryTologin cookieHeader [%s]' % cookieHeader)
+
+                post_data = {'login': self.login, 'password': self.password, 'remember': 'on', 'submit': ''}
+
+                httpParams = dict(self.defaultParams)
+                httpParams['header'] = dict(httpParams['header'])
+                httpParams['header']['Referer'] = self.getFullUrl('/logowanie')
+                httpParams['header']['Cookie'] = cookieHeader
+
+                if 'data-sitekey' in data:
+                    sitekey = self.cm.ph.getSearchGroups(data, 'data\-sitekey="([^"]+?)"')[0]
+
+                if sitekey != '':
+                    token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
+                    if token != '':
+                        post_data['g-recaptcha-response'] = token
+
+                sts, data = self.cm.getPage(self.getFullUrl('/logowanie'), httpParams, post_data)
+                sts, data = self.getPage(self.getFullUrl('/logowanie'))
+
+            if sts and '/wylogowanie' in data:
+                self.loggedIn = True
+            else:
+                if sts:
+                    message = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'alert'), ('</div', '>'))[1])
+                else:
+                    message = ''
+                self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + message, type=MessageBox.TYPE_ERROR, timeout=10)
+                printDBG('tryTologin failed')
+        return self.loggedIn
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
+
+        self.tryTologin()
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
@@ -320,7 +399,7 @@ class Filman(CBaseHostClass):
 
     #MAIN MENU
         if name == None and category == '':
-            rm(self.COOKIE_FILE)
+#            rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
         elif 'list_cats' == category:
             self.listMovieFilters(self.currItem, 'list_sort')
