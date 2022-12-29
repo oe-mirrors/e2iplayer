@@ -7,12 +7,11 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote 
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
@@ -51,7 +50,7 @@ class JoeMonster(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'joemonster.org', 'cookie': 'joemonster.cookie'})
 
-        self.DEFAULT_ICON_URL = 'https://www.wykop.pl/cdn/c3201142/comment_9zW8PMFygvZKj5pcy3ZW8Q6OfePZ4JpW,w400.jpg'
+        self.DEFAULT_ICON_URL = 'https://joemonster.org/images/logo/jm-logo-1450873307.png'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
@@ -169,8 +168,8 @@ class JoeMonster(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))
             for item in tmp:
                 url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
-                if 'joe.pl' in url:
-                    url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '[\?&]v=([^&]+?)&')[0])
+                if 'embed.html' in url:
+                    url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', '[\?&]v=([^&]+?)&')[0])
                 urlTab.append({'name': 'name', 'url': self.getFullUrl(url), 'need_resolve': 1})
 
         return urlTab

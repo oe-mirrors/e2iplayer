@@ -1,7 +1,6 @@
 host123movieshd
 host3player
 host3sktv
-host7tvde
 host9anime
 hostakoam
 hostaltadefinizione
@@ -53,7 +52,6 @@ hostfilmezz
 hostfilmowoclub
 hostfilmovizijastudio
 hostfilmpalast
-hostfilmpertutti
 hostfilmstreamhdit
 hostfilmstreamvkcom
 hostfilmynadzis
@@ -63,17 +61,14 @@ hostfullmatchtvcom
 hostgamatocom
 hostgamatotvme
 hostgledalica
-hostgovodtv
 hostgreekdocumentaries3
 hostguardaserie
 hosthdfilmetv
 hosthdfull
 hosthdpopcornscom
 hosthdseanspl
-hosthdsto
 hosthdstreams
 hosthoofootcom
-hosthorrorycc
 hosticefilmsinfo
 hostinteriatv
 hostipla
@@ -83,13 +78,10 @@ hostjoemonsterorg
 hostkabarety
 hostkijknl
 hostkinox
-hostkissanimeto
 hostkisscartoonme
 hostkkiste
-hostkreskoweczki
 hostlaola1tv
 hostlibrestream
-hostliveleak
 hostlocalmedia
 hostlosmovies
 hostluxveritatis
@@ -101,7 +93,6 @@ hostmooviecc
 hostmovienightws
 hostmovierulzsx
 hostmovizlandcom
-hostmovs4ucom
 hostmozicsillag
 hostmrpiracy
 hostmusicbox
@@ -113,7 +104,6 @@ hostninateka
 hostnuteczki
 hostofficialfilmillimite
 hostogladajto
-hostoipeirates
 hostokgoals
 hostororotv
 hostorthobulletscom
@@ -123,6 +113,7 @@ hostpinkbike
 hostplanetstreamingcom
 hostplaypuls
 hostplayrtsiw
+hostplayzcc
 hostplusdede
 hostputlockertvto
 hostquesttvcouk
@@ -167,7 +158,6 @@ hosturllist
 hostustreamtv
 hostustvgo
 hostvevo
-hostvidcorncom
 hostvimeo
 hostvizjerpl
 hostvodpl

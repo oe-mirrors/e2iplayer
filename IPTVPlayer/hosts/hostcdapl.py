@@ -16,7 +16,8 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 import re
-import urllib.parse
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from binascii import hexlify
 from hashlib import md5
 ###################################################
@@ -241,7 +242,7 @@ class cda(CBaseHostClass, CaptchaHelper):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("cda.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchsort = config.plugins.iptvplayer.cda_searchsort.value
-        url = self.SEARCH_URL % (urllib.parse.quote_plus(searchPattern), 1, searchsort)
+        url = self.SEARCH_URL % (urllib_quote_plus(searchPattern), 1, searchsort)
         if searchType and searchType != 'all':
             url += '&duration=' + searchType
             sts, data = self.getPage(url)
@@ -456,8 +457,8 @@ class cda(CBaseHostClass, CaptchaHelper):
             self.password != config.plugins.iptvplayer.cda_password.value:
 
             loginCookie = GetCookieDir('cda.pl.login')
-            self.login = config.plugins.iptvplayer.cda_login.value
-            self.password = config.plugins.iptvplayer.cda_password.value
+            self.login = ensure_str(config.plugins.iptvplayer.cda_login.value)
+            self.password = ensure_str(config.plugins.iptvplayer.cda_password.value)
 
             sts, data = self.getPage(self.getMainUrl(), self.defaultParams)
             if sts:

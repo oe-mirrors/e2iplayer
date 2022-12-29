@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 """ crypto.cipher.base
 
 
@@ -14,6 +14,7 @@
 """
 from ..errors import DecryptNotBlockAlignedError
 from ..keyedHash.pbkdf2 import pbkdf2
+from ..common import getOrdForVal
 
 
 class BlockCipher:
@@ -28,11 +29,11 @@ class BlockCipher:
 
     def resetEncrypt(self):
         self.encryptBlockCount = 0
-        self.bytesToEncrypt = ''
+        self.bytesToEncrypt = b''
 
     def resetDecrypt(self):
         self.decryptBlockCount = 0
-        self.bytesToDecrypt = ''
+        self.bytesToDecrypt = b''
 
     def setPassphrase(self, passphrase):
         """ Use pbkdf2 to hash passphrase into a key """
@@ -64,8 +65,11 @@ class BlockCipher:
 
     def decrypt(self, cipherText, more=None):
         """ Decrypt a string and return a string """
-        self.bytesToDecrypt += cipherText  # append to any bytes from prior decrypt
-
+        try:
+            self.bytesToDecrypt += cipherText  # append to any bytes from prior decrypt
+        except Exception: # most likely py3 would go there
+            self.bytesToDecrypt += cipherText.encode('utf-8', 'ignore')  # append to any bytes from prior decrypt
+        
         numBlocks, numExtraBytes = divmod(len(self.bytesToDecrypt), self.blockSize)
         if more == None:  # no more calls to decrypt, should have all the data
             if numExtraBytes != 0:
@@ -121,7 +125,7 @@ class padWithPadLen(Pad):
         """ Remove padding from a binary string """
         if not(0 < len(paddedBinaryString)):
             raise DecryptNotBlockAlignedError('Expected More Data')
-        return paddedBinaryString[:-ord(paddedBinaryString[-1])]
+        return paddedBinaryString[:- getOrdForVal(paddedBinaryString[-1])]
 
 
 class noPadding(Pad):

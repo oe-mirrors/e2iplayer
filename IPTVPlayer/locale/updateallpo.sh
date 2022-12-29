@@ -3,7 +3,7 @@
 #  
 # Pre-requisite:
 # The following tools must be installed on your system and accessible from path
-# gawk, find, xgettext, sed, python, msguniq, msgmerge, msgattrib, msgfmt, msginit
+# gawk, find, xgettext, gsed, python, msguniq, msgmerge, msgattrib, msgfmt, msginit
 #
 # Run this script from within the locale folder.
 #
@@ -21,7 +21,7 @@ languages=($(ls -d ./*/ | sed 's/\/$//g; s/.*\///g'))
 #
 
 printf "Creating temporary file $Plugin-py.pot\n"
-find .. -name "*.py" -exec xgettext --no-wrap -L Python --from-code=UTF-8 -kpgettext:1c,2 --add-comments="TRANSLATORS:" -d $Plugin -o $Plugin-py.pot {} \+
+find .. -name "*.py" -exec xgettext --no-wrap -L Python --from-code=UTF-8 -kpgettext:1c,2 --add-comments="TRANSLATORS:" -d $Plugin -s -o $Plugin-py.pot {} \+
 sed --in-place $Plugin-py.pot --expression=s/CHARSET/UTF-8/
 printf "Creating temporary file $Plugin-xml.pot\n"
 find .. -name "*.xml" -exec python xml2po.py {} \+ > $Plugin-xml.pot
@@ -33,7 +33,7 @@ for lang in "${languages[@]}" ; do
 	if [ -f $lang$FilePath$Plugin.po ]; then 
 		printf "Updating existing translation file %s.po\n" $lang
 		msgmerge --backup=none --no-wrap -s -U $lang$FilePath$Plugin.po $Plugin.pot && touch $lang$FilePath$Plugin.po
-		#msgattrib --no-wrap --no-obsolete $lang$FilePath$Plugin.po -o $lang$FilePath$Plugin.po
+		msgattrib --no-wrap --no-obsolete $lang$FilePath$Plugin.po -o $lang$FilePath$Plugin.po
 		msgfmt -o $lang$FilePath$Plugin.mo $lang$FilePath$Plugin.po
 	else
 		if [ ! -d $lang$FilePath ]; then

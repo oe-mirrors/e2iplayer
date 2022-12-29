@@ -10,12 +10,11 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 ###################################################
 
 
@@ -88,7 +87,7 @@ class BajeczkiOrg(CBaseHostClass):
             if url == '':
                 continue
 #            icon = self.getFullUrl( ph.search(item, ph.IMAGE_SRC_URI_RE)[1] )
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''', ignoreCase=True)[0])
             item = item.split('</h2>', 1)
             title = ph.clean_html(item[0])
 
@@ -189,10 +188,38 @@ class BajeczkiOrg(CBaseHostClass):
         return urlTab
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("FilmeHD.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
+        printDBG("BajeczkiOrg.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem.update({'category': 'list_items', 'url': self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)})
+        cItem.update({'category': 'list_items', 'url': self.getFullUrl('/?s=') + urllib_quote_plus(searchPattern)})
         self.listItems(cItem)
+
+    def getArticleContent(self, cItem):
+        printDBG("BajeczkiOrg.getArticleContent [%s]" % cItem)
+        itemsList = []
+
+        sts, data = self.getPage(cItem['url'])
+        if not sts:
+            return []
+
+        title = cItem['title']
+        icon = cItem.get('icon', '')
+        desc = cItem.get('desc', '')
+
+#        title = self.cm.ph.getDataBeetwenMarkers(data, '<title>', '</title>', True)[1]
+#        if title.endswith('Online</title>'): title = title.replace('Online', '')
+#        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(title, '''this\.src=['"]([^"^']+?)['"]''', 1, True)[0])
+        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'entry-content'), ('</div', '>'))[1])
+#        itemsList.append((_('Duration'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<dt>Czas trwania:</dt>', '</dd>', False)[1])))
+        itemsList.append((_('Genres'), self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'entry-tags'), ('</div', '>'))[1])))
+
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon = cItem.get('icon', '')
+        if desc == '':
+            desc = cItem.get('desc', '')
+
+        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': {'custom_items_list': itemsList}}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -231,3 +258,6 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, BajeczkiOrg(), True, [])
+
+    def withArticleContent(self, cItem):
+        return True

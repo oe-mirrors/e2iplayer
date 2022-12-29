@@ -86,7 +86,7 @@ class YouTubeParser():
 
     def getDirectLinks(self, url, formats='flv, mp4', dash=True, dashSepareteList=False, allowVP9=None, allowAgeGate=None):
         printDBG('YouTubeParser.getDirectLinks')
-        list = []
+        linksList = []
         try:
             if self.cm.isValidUrl(url) and '/channel/' in url and url.endswith('/live'):
                 sts, data = self.cm.getPage(url)
@@ -96,7 +96,7 @@ class YouTubeParser():
                         videoId = self.cm.ph.getSearchGroups(data, '''['"]REDIRECT_TO_VIDEO['"]\s*\,\s*['"]([^'^"]+?)['"]''')[0]
                     if videoId != '':
                         url = 'https://www.youtube.com/watch?v=' + videoId
-            list = YoutubeIE()._real_extract(url, allowVP9=allowVP9, allowAgeGate=allowAgeGate)
+            linksList = YoutubeIE()._real_extract(url, allowVP9=allowVP9, allowAgeGate=allowAgeGate)
         except Exception:
             printExc()
             if dashSepareteList:
@@ -113,7 +113,7 @@ class YouTubeParser():
         dashVideoLists = []
         if dash:
             # separete audio and video links
-            for item in list:
+            for item in linksList:
                 if 'mp4a' == item['ext']:
                     dashAudioLists.append(item)
                 elif item['ext'] in ('mp4v', 'webmv'):
@@ -130,14 +130,14 @@ class YouTubeParser():
 
             def _key(x):
                 if x['format'].startswith('>'):
-                     int(x['format'][1:-1])
+                    return int(x['format'][1:-1])
                 else:
-                     int(ph.search(x['format'], reNum)[0])
+                    return int(ph.search(x['format'], reNum)[0])
 
             dashAudioLists = sorted(dashAudioLists, key=_key, reverse=True)
             dashVideoLists = sorted(dashVideoLists, key=_key, reverse=True)
 
-        for item in list:
+        for item in linksList:
             printDBG(">>>>>>>>>>>>>>>>>>>>>")
             printDBG(str(item))
             printDBG("<<<<<<<<<<<<<<<<<<<<<")
@@ -603,7 +603,6 @@ class YouTubeParser():
                     response = json_loads(data2 + "}")
 
                     r1 = response['contents']['twoColumnBrowseResultsRenderer']['tabs']
-
                     r2 = {}
                     for tab in r1:
                         try:
@@ -615,14 +614,15 @@ class YouTubeParser():
                         if r2:
                             break
 
-                    r3 = r2['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents']
-                    r4 = r3[0]['gridRenderer'].get('items', '')
+                    r4 = r2['richGridRenderer']['contents']
 
                 nextPage = ''
                 for r5 in r4:
-                    videoJson = r5.get("gridVideoRenderer", "")
+                    videoJson = r5.get("richItemRenderer", "")
                     nP = r5.get('continuationItemRenderer', '')
                     if videoJson:
+                        videoJson = videoJson.get("content", {})
+                        videoJson = videoJson.get("videoRenderer", "")
                         params = self.getVideoData(videoJson)
                         if params:
                             printDBG(str(params))

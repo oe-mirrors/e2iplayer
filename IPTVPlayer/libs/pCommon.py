@@ -918,7 +918,7 @@ class common:
         ''' wraps getURLRequestData '''
 
         # if curl should be used and can be used
-        if addParams.get('return_data', True) and self.usePyCurl():
+        if addParams.get('return_data', True) and not addParams.get('CFProtection', False) and self.usePyCurl():
             return self.getPageWithPyCurl(url, addParams, post_data)
 
         try:
@@ -979,153 +979,41 @@ class common:
         return (status, response)
 
     def getPageCFProtection(self, baseUrl, params={}, post_data=None):
-        cfParams = params.get('cloudflare_params', {})
-
-        def _getFullUrl(url, baseUrl):
-            if 'full_url_handle' in cfParams:
-                return cfParams['full_url_handle'](url)
-            return self.getFullUrl(url, baseUrl)
-
-        def _getFullUrl2(url, baseUrl):
-            if 'full_url_handle2' in cfParams:
-                return cfParams['full_url_handle2'](url)
-            return url
-
-        url = baseUrl
-        header = {'Referer': url, 'User-Agent': cfParams.get('User-Agent', ''), 'Accept-Encoding': 'text'}
+        cf_user = params.get('User-Agent', '')
+        header = {'Referer': baseUrl, 'User-Agent': cf_user, 'Accept-Encoding': 'text'}
         header.update(params.get('header', {}))
-        params.update({'with_metadata': True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': cfParams.get('cookie_file', ''), 'header': header})
-        sts, data = self.getPage(url, params, post_data)
+        params.update({'with_metadata': True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': params.get('cookiefile', ''), 'header': header})
+        params.update({'CFProtection': True})
+        start_time = time.time()
+        sts, data = self.getPage(baseUrl, params, post_data)
 
-        current = 0
-        while current < 5:
-            #if True:
-            if not sts and None != data:
-                start_time = time.time()
-                current += 1
-                doRefresh = False
-                try:
-                    domain = self.getBaseUrl(data.meta['url'])
-                    verData = data
-                    printDBG("------------------")
-                    printDBG(verData)
-                    printDBG("------------------")
-                    if 'sitekey' not in verData and 'challenge' not in verData:
-                        break
+        if not sts and None != data:
+            from Plugins.Extensions.IPTVPlayer.libs.recaptcha_mye2i import UnCaptchaReCaptcha
+            recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
+            token = recaptcha.processCaptcha(start_time, baseUrl, captchaType='CF')
+            if token != '':
+                r = json_loads(base64.b64decode(token))
+                printDBG('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+                printDBG(r)
+                printDBG('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+                if cf_user != r.get('user_agent', ''):
+                    cf_user = r.get('user_agent', '')
+                    config.plugins.iptvplayer.cloudflare_user = ConfigText(default="", fixed_size=False)
+                    config.plugins.iptvplayer.cloudflare_user.value = cf_user
+                    config.plugins.iptvplayer.cloudflare_user.save()
+                    configfile.save()
+                params['header']['User-Agent'] = cf_user
 
-                    printDBG(">>")
-                    printDBG(verData)
-                    printDBG("<<")
+                cookies = r.get('cookie', '')
+                params['cookie_items'] = {'cf_clearance': cookies['value']}
+                sts, data = self.getPage(baseUrl, params, post_data)
+                if not sts:
+                    printDBG('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+                    printDBG(data)
+                    printDBG('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
 
-                    sitekey = self.ph.getSearchGroups(verData, 'data-sitekey="([^"]+?)"')[0]
-                    id = self.ph.getSearchGroups(verData, 'data-ray="([^"]+?)"')[0]
-                    if sitekey != '':
-                        from Plugins.Extensions.IPTVPlayer.libs.hcaptcha_2captcha import UnCaptchahCaptcha
-                        # google captcha
-                        recaptcha = UnCaptchahCaptcha(lang=GetDefaultLang())
-#                        recaptcha.HTTP_HEADER['Referer'] = baseUrl
-#                        if '' != cfParams.get('User-Agent', ''): recaptcha.HTTP_HEADER['User-Agent'] = cfParams['User-Agent']
-                        token = recaptcha.processCaptcha(sitekey, domain)
-                        if token == '':
-                            return False, None
+        data = strwithmeta(data, {'cf_user': cf_user})
 
-                        sts, tmp = self.ph.getDataBeetwenMarkers(verData, '<form', '</form>', caseSensitive=False)
-                        if not sts:
-                            return False, None
-
-                        url = self.ph.getSearchGroups(tmp, 'action="([^"]+?)"')[0]
-                        if url != '':
-                            url = _getFullUrl(url, domain)
-                        else:
-                            url = data.meta['url']
-                        actionType = self.ph.getSearchGroups(tmp, 'method="([^"]+?)"', 1, True)[0].lower()
-#                        post_data2 = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', tmp))
-                        post_data2 = {}
-                        verData = re.findall(r'(<input[^>]*)>', re.sub("<!--.*?-->", "<!-- -->", verData))
-                        for item in verData:
-                            name = self.ph.getSearchGroups(item, '''\sname=['"]([^'^"]+?)['"]''')[0]
-                            value = self.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
-                            post_data2[name] = value
-                        #post_data2['id'] = id
-                        if '' != token:
-                            post_data2['h-captcha-response'] = token
-                        else:
-                            continue
-                        params2 = dict(params)
-                        params2['header'] = dict(params['header'])
-                        params2['header']['Referer'] = baseUrl
-                        if actionType == 'get':
-                            if '?' in url:
-                                url += '&'
-                            else:
-                                url += '?'
-                            url += urllib.parse.urlencode(post_data2)
-                            post_data2 = None
-
-                        sts, data = self.getPage(url, params2, post_data2)
-                        printDBG("+++++++++++++")
-                        printDBG(sts)
-                        printDBG("-------------")
-                        printDBG(data)
-                        printDBG("++++++++++++++")
-                    else:
-                        dat = ph.findall(verData, ('<script', '>'), '</script>', flags=0)
-                        for item in dat:
-                            if 'setTimeout' in item and 'submit()' in item:
-                                dat = item
-                                break
-                        decoded = ''
-                        elemsText = {}
-                        tmp = re.findall("<div.*?id=\"([^\"]+)\">(.*?)</div>", verData)
-                        for item in tmp:
-                            if item[0] and re.search(r'\w+\d', item[0]):
-                                elemsText[item[0]] = item[1]
-
-                        js_params = [{'path': GetJSScriptFile('cf.byte')}]
-                        try:
-                            dat = dat.replace(dat[dat.index('var isIE'):dat.index('setTimeout')], '')
-                        except Exception:
-                            printExc()
-                        js_params.append({'code': "function setInterval(func, delay) { return 1 };var navigator={cookieEnabled:1}; var ELEMS_TEXT = %s; var location = {hash:''}; var iptv_domain='%s';\n%s\niptv_fun();" % (json_dumps(elemsText), domain, dat)})
-                        ret = js_execute_ext(js_params)
-                        decoded = json_loads(ret['data'].strip())
-
-                        verData = ph.find(verData, ('<form', '>', 'id="challenge-form"'), '</form>')[1]
-                        printDBG(">>")
-                        printDBG(verData)
-                        printDBG("<<")
-                        verUrl = _getFullUrl(ph.getattr(verData, 'action'), domain)
-                        get_data = {}
-                        verData = re.findall(r'(<input[^>]*)>', re.sub("<!--.*?-->", "<!-- -->", verData))
-                        for item in verData:
-                            name = self.ph.getSearchGroups(item, '''\sname=['"]([^'^"]+?)['"]''')[0]
-                            value = self.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
-                            get_data[name] = value
-#                        get_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', verData))
-                        get_data['jschl_answer'] = decoded['answer']
-                        post_data = 'r=%s&jschl_vc=%s&pass=%s&jschl_answer=%s' % (urllib.parse.quote(get_data['r'], safe=''), urllib.parse.quote(get_data['jschl_vc'], safe=''), urllib.parse.quote(get_data['pass'], safe=''), get_data['jschl_answer'])
-                        verUrl = _getFullUrl2(verUrl, domain).replace('&amp;', '&')
-                        params2 = dict(params)
-                        params2['load_cookie'] = True
-                        params2['save_cookie'] = True
-                        params2['header'] = dict(params.get('header', {}))
-                        params2['header'].update({'Referer': url, 'User-Agent': cfParams.get('User-Agent', ''), 'Accept-Encoding': 'text'})
-                        params2['raw_post_data'] = True
-                        if 'Accept-Encoding' not in params2:
-                            params2['Accept-Encoding'] = '*'
-                        printDBG("Time spent: [%s]" % (time.time() - start_time))
-                        if current == 1:
-                            GetIPTVSleep().Sleep(0.2 + (decoded['timeout'] / 1000.0) - (time.time() - start_time))
-                        else:
-                            GetIPTVSleep().Sleep((decoded['timeout'] / 1000.0))
-                        printDBG("Time spent: [%s]" % (time.time() - start_time))
-                        printDBG("Timeout: [%s]" % decoded['timeout'])
-                        sts, data = self.getPage(verUrl, params2, post_data)
-                except Exception:
-                    printExc()
-                    break
-            else:
-                break
         return sts, data
 
     def saveWebFileWithPyCurl(self, file_path, url, add_params={}, post_data=None):

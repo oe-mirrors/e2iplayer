@@ -14,7 +14,12 @@ class UnCaptchaReCaptcha:
 
     def processCaptcha(self, sitekey, referer='', captchaType=''):
         answer = ''
-        retArg = self.sessionEx.waitForFinishOpen(UnCaptchaReCaptchaMyE2iWidget, title=_("My E2i reCAPTCHA solution"), sitekey=sitekey, referer=referer, captchaType=captchaType)
+        if captchaType == 'CF':
+            title = _("MyE2i Cloudflare solution")
+        else:
+            title = _("MyE2i reCAPTCHA solution")
+        retArg = self.sessionEx.waitForFinishOpen(UnCaptchaReCaptchaMyE2iWidget, title=title, sitekey=sitekey, referer=referer, captchaType=captchaType)
+        
         if retArg is not None and len(retArg) and retArg[0]:
             answer = retArg[0]
         return answer

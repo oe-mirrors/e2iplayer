@@ -2173,7 +2173,7 @@ msgid "Newest Videos"
 msgstr "Neueste Videos"
 
 msgid "News"
-msgstr "Nachrichten"
+msgstr "Neuigkeiten"
 
 msgid "News Feed"
 msgstr "News Feed"

@@ -10,6 +10,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
 class SuggestionsProvider:
 
@@ -20,15 +21,16 @@ class SuggestionsProvider:
         return _("Filmweb Suggestions")
 
     def getSuggestions(self, text, locale):
-        url = 'http://www.filmweb.pl/search/live?q=' + quote(text)
+        url = 'https://www.filmweb.pl/api/v1/live/search?query=' + quote(text)
         sts, data = self.cm.getPage(url)
-        if sts and data.startswith("f\\c"):
+        if sts:
             retList = []
-            data = data.split("\\af")
+#            printDBG(data)
+            data = json.loads(data)['searchHits']
             for item in data:
-                item = item.split('\\c')
-                retList.append(item[4])
-                if item[4] != item[3]:
-                    retList.append(item[3])
+                if item.get('matchedName', '') == '':
+                    retList.append(ensure_str(item['matchedTitle']))
+                else:
+                    retList.append(ensure_str(item['matchedName']))
             return retList
         return None

@@ -111,8 +111,11 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
             line = line.strip()
             if line == '':
                 continue
+            line = re.findall("{.*}", line)
+            if len(line) == 0:
+                continue
             try:
-                line = json.loads(re.findall("{.*}", line)[0])
+                line = json.loads(line[0])
                 if line['type'] == 'captcha_result':
                     self.result = line['data']
                     # timeout timer
@@ -133,7 +136,7 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
                         self["console"].setText(_("Error code: %s\nError message: %s") % (line['code'], line['data']))
                     self.errorCodeSet = True
             except Exception:
-                printExc()
+                printExc('Current line |%s|' % str(line))
         self.workconsole['stderr'] = data
 
     def _scriptStdoutAvail(self, data):

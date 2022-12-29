@@ -15,6 +15,7 @@
 
 
 from .base import BlockCipher, padWithPadLen, noPadding
+from ..common import getOrdForVal
 
 
 class Rijndael(BlockCipher):
@@ -30,9 +31,9 @@ class Rijndael(BlockCipher):
         assert(keySize % 4 == 0 and (keySize / 4) in NrTable[4]), 'key size must be 16,20,24,29 or 32 bytes'
         assert(blockSize % 4 == 0 and (blockSize / 4) in NrTable), 'block size must be 16,20,24,29 or 32 bytes'
 
-        self.Nb = self.blockSize / 4          # Nb is number of columns of 32 bit words
-        self.Nk = keySize / 4                 # Nk is the key length in 32-bit words
-        self.Nr = NrTable[self.Nb][self.Nk]  # The number of rounds (Nr) is a function of
+        self.Nb = int(self.blockSize / 4)   # Nb is number of columns of 32 bit words
+        self.Nk = int(keySize / 4)          # Nk is the key length in 32-bit words
+        self.Nr = NrTable[self.Nb][self.Nk] # The number of rounds (Nr) is a function of
                                             # the block (Nb) and key (Nk) sizes.
         if key != None:
             self.setKey(key)
@@ -74,7 +75,7 @@ class Rijndael(BlockCipher):
     def _toBlock(self, bs):
         """ Convert binary string to array of bytes, state[col][row]"""
         assert (len(bs) == 4 * self.Nb), 'Rijndarl blocks must be of size blockSize'
-        return [[ord(bs[4 * i]), ord(bs[4 * i + 1]), ord(bs[4 * i + 2]), ord(bs[4 * i + 3])] for i in range(self.Nb)]
+        return ([[getOrdForVal(bs[4 * i]), getOrdForVal(bs[4 * i + 1]), getOrdForVal(bs[4 * i + 2]), getOrdForVal(bs[4 * i + 3])] for i in range(self.Nb)])
 
     def _toBString(self, block):
         """ Convert block (array of bytes) to binary string """
@@ -100,15 +101,16 @@ NrTable = {4: {4: 10, 5: 11, 6: 12, 7: 13, 8: 14},
 
 def keyExpansion(algInstance, keyString):
     """ Expand a string of size keySize into a larger array """
-    Nk, Nb, Nr = algInstance.Nk, algInstance.Nb, algInstance.Nr  # for readability
-    key = [ord(byte) for byte in keyString]  # convert string to list
+    Nk, Nb, Nr = algInstance.Nk, algInstance.Nb, algInstance.Nr # for readability
+    key = [getOrdForVal(byte) for byte in keyString]  # convert string to list
+
     w = [[key[4 * i], key[4 * i + 1], key[4 * i + 2], key[4 * i + 3]] for i in range(Nk)]
     for i in range(Nk, Nb * (Nr + 1)):
         temp = w[i - 1]        # a four byte column
         if (i % Nk) == 0:
             temp = temp[1:] + [temp[0]]  # RotWord(temp)
             temp = [Sbox[byte] for byte in temp]
-            temp[0] ^= Rcon[i / Nk]
+            temp[0] ^= Rcon[int(i / Nk)]
         elif Nk > 6 and i % Nk == 4:
             temp = [Sbox[byte] for byte in temp]  # SubWord(temp)
         w.append([w[i - Nk][byte] ^ temp[byte] for byte in range(4)])

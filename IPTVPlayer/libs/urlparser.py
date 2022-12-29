@@ -423,6 +423,7 @@ class urlparser:
                        'ntv.ru': self.pp.parserNTVRU,
                        'nxload.com': self.pp.parserNXLOADCOM,
                        #o
+                       'odysee.com': self.pp.parserODYSEECOM,
                        'ok.ru': self.pp.parserOKRU,
 #                       'oload.cloud':          self.pp.parserOPENLOADIO    ,
 #                       'oload.co':             self.pp.parserOPENLOADIO    ,
@@ -433,6 +434,7 @@ class urlparser:
 #                       'oload.tv':             self.pp.parserOPENLOADIO    ,
                        'onet.pl': self.pp.parserONETTV,
                        'onet.tv': self.pp.parserONETTV,
+                       'onlinez.pl': self.pp.parserJAWCLOUDCO,
                        'onlystream.tv': self.pp.parserONLYSTREAMTV,
                        'openlive.org': self.pp.parserOPENLIVEORG,
 #                       'openload.co':          self.pp.parserOPENLOADIO    ,
@@ -478,7 +480,9 @@ class urlparser:
                        'rapidvideo.ws': self.pp.parserRAPIDVIDEOWS,
                        'raptu.com': self.pp.parserRAPTUCOM,
                        'realvid.net': self.pp.parserFASTVIDEOIN,
+                       'redload.co': self.pp.parserTUBELOADCO,
                        'rockfile.co': self.pp.parserROCKFILECO,
+                       'room905.com': self.pp.parserONLYSTREAMTV,
                        'rumble.com': self.pp.parserRUMBLECOM,
                        'rutube.ru': self.pp.parserRUTUBE,
                        #s
@@ -547,6 +551,7 @@ class urlparser:
                        'streamplay.to': self.pp.parserSTREAMPLAYTO,
                        'streamsb.net': self.pp.parserSTREAMSB,
                        'streamtape.com': self.pp.parserSTREAMTAPE,
+                       'streamvid.net': self.pp.parserONLYSTREAMTV,
                        'streamwire.net': self.pp.parserONLYSTREAMTV,
                        'streamzz.to': self.pp.parserSTREAMZZ,
                        'superfastvideos.xyz': self.pp.parserTXNEWSNETWORK,
@@ -1826,9 +1831,9 @@ class pageParser(CaptchaHelper):
                     return ''
 
             jsdata = self.jscode.get('data', '')
-            jscode = self.cm.ph.getSearchGroups(jsdata, '''var\s([a-z]+?,[a-z]+?,[a-z]+?,.*?);''')[0]
+            jscode = self.cm.ph.getSearchGroups(jsdata, '''var\s([a-zA-Z]+?,[a-zA-Z]+?,[a-zA-Z]+?,[a-zA-Z]+?,[a-zA-Z]+?,.*?);''')[0]
             tmp = jscode.split(',')
-            jscode = self.cm.ph.getSearchGroups(jsdata, '''(var\s[a-z]+?,[a-z]+?,[a-z]+?,.*?;)''')[0]
+            jscode = self.cm.ph.getSearchGroups(jsdata, '''(var\s[a-zA-Z]+?,[a-zA-Z]+?,[a-zA-Z]+?,[a-zA-Z]+?,[a-zA-Z]+?,.*?;)''')[0]
             for item in tmp:
                 jscode += self.cm.ph.getSearchGroups(jsdata, '(%s=function\(.*?};)' % item)[0]
             jscode += "file = '%s';" % dat
@@ -5798,49 +5803,6 @@ class pageParser(CaptchaHelper):
                 vidTab.append({'name': 'vidfile.net ' + res, 'url': strwithmeta(url, {'Referer': baseUrl, 'User-Agent': HTTP_HEADER['User-Agent']})}) #'Cookie':cookieHeader,
         vidTab.reverse()
         return vidTab
-
-    def parserMP4UPLOAD(self, baseUrl):
-        printDBG("parserMP4UPLOAD baseUrl[%s]" % baseUrl)
-        baseUrl = strwithmeta(baseUrl)
-        referer = baseUrl.meta.get('Referer', baseUrl)
-
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        if referer != '':
-            HTTP_HEADER['Referer'] = referer
-        paramsUrl = {'header': HTTP_HEADER}
-        videoUrls = []
-
-        sts, data = self.cm.getPage(baseUrl, paramsUrl)
-
-        cUrl = self.cm.getBaseUrl(self.cm.meta['url'])
-        domain = urlparser.getDomain(cUrl)
-
-        jscode = [self.jscode['jwplayer']]
-        printDBG(jscode)
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
-        for item in tmp:
-            if 'eval(' in item and 'setup' in item:
-                jscode.append(item)
-        urlTab = []
-        jscode = '\n'.join(jscode)
-        ret = js_execute(jscode)
-        #if ret['sts'] and 0 == ret['code']:
-        data = json_loads(ret['data'])
-        if 'sources' in data:
-            data = data['sources']
-        else:
-            data = [data]
-        for item in data:
-            url = item['file']
-            type = item.get('type', url.rsplit('.', 1)[-1].split('?', 1)[0]).lower()
-            label = item.get('label', domain)
-            if 'mp4' not in type:
-                continue
-            if url == '':
-                continue
-            url = urlparser.decorateUrl(self.cm.getFullUrl(url, cUrl), {'Referer': baseUrl, 'User-Agent': HTTP_HEADER['User-Agent']})
-            urlTab.append({'name': '{0} {1}'.format(domain, label), 'url': url})
-        return urlTab
 
     def parserYUKONS(self, baseUrl):
         printDBG("parserYUKONS url[%s]" % baseUrl)
@@ -15632,5 +15594,25 @@ class pageParser(CaptchaHelper):
         videoUrl = strwithmeta(videoUrl, {'Origin': "https://" + urlparser.getDomain(url), 'Referer': url})
         if videoUrl != '':
             urlTab.extend(getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999))
+
+        return urlTab
+
+    def parserODYSEECOM(self, baseUrl):
+        printDBG("parserODYSEECOM baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return []
+
+        urlTab = []
+        url = self.cm.ph.getSearchGroups(data, '''contentUrl['"]:\s?['"]([^"^']+?)['"]''')[0]
+        url = strwithmeta(url, {'Origin': urlparser.getDomain(baseUrl, False), 'Referer': baseUrl})
+        if url != '':
+            urlTab.append({'name': 'mp4', 'url': url})
 
         return urlTab

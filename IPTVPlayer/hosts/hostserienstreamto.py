@@ -427,13 +427,26 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 printDBG(data)
                 printDBG("+++++++++++")
                 if sts and 'google.com/recaptcha/' in data and 'sitekey' in data:
-                    message = _('Link protected with google recaptcha v2.')
-                    if True != self.loggedIn:
-                        message += '\n' + _('Please fill your login and password in the host configuration (available under blue button) and try again.')
+                    token = ''
+                    sitekey = re.findall("'sitekey': '(.*?)'", data)
+                    printDBG("Sitekey: %s" % sitekey)
+                    if sitekey:
+                        (token, errorMsgTab) = CaptchaHelper.processCaptcha(self, sitekey[0], videoUrl)
+                        printDBG("Captcha Token: %s" % token)
+
+                    if token:
+                        videoUrl = videoUrl + '?token=' + token
+                        sts, data = self.getPage(videoUrl)
+                        if sts:
+                            videoUrl = self.cm.meta['url']
                     else:
-                        message += '\n' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<small', '</small>')[1])
-                        message += '\n' + _('Please retry later.')
-                    SetIPTVPlayerLastHostError(message)
+                        message = _('Link protected with google recaptcha v2.')
+                        if True != self.loggedIn:
+                            message += '\n' + _('Please fill your login and password in the host configuration (available under blue button) and try again.')
+                        else:
+                            message += '\n' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<small', '</small>')[1])
+                            message += '\n' + _('Please retry later.')
+                        SetIPTVPlayerLastHostError(message)
 
             if 1 == self.up.checkHostSupport(videoUrl):
                 urlTab = self.up.getVideoLinkExt(videoUrl)

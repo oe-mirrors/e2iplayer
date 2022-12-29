@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ###################################################
 # LOCAL import
 ###################################################
@@ -9,18 +9,18 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import base64
 try:
     import json
 except Exception:
     import simplejson as json
+from Components.config import config, ConfigText
 ###################################################
 
 
@@ -31,8 +31,9 @@ def gettytul():
 class Vizjer(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'Vizjer.pl', 'cookie': 'Vizjer.pl.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
+        CBaseHostClass.__init__(self, {'history': 'vizjer.pl', 'cookie': 'vizjer.pl.cookie'})
+        config.plugins.iptvplayer.cloudflare_user = ConfigText(default='Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', fixed_size=False)
+        self.USER_AGENT = config.plugins.iptvplayer.cloudflare_user.value
         self.MAIN_URL = 'https://vizjer.pl/'
 #        self.DEFAULT_ICON_URL = 'https://vizjer.pl/public/dist/images/logo.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
@@ -46,15 +47,12 @@ class Vizjer(CBaseHostClass):
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
+        origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
-        sts, data = self.cm.getPage(baseUrl, addParams, post_data)
-        if not sts:
-            sts, data = self.cm.getPage('https://check.ddos-guard.net/check.js', addParams)
-            if sts:
-                jsurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src = ['"]([^"^']+?)['"]''')[0])
-                sts, data = self.cm.getPage(jsurl, addParams)
-                if sts:
-                    sts, data = self.cm.getPage(baseUrl, addParams, post_data)
+
+        sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        if data.meta.get('cf_user', self.USER_AGENT) != self.USER_AGENT:
+            self.__init__()
         return sts, data
 
     def getFullIconUrl(self, url):
@@ -143,6 +141,8 @@ class Vizjer(CBaseHostClass):
         url = cItem['url']
         sort = cItem.get('sort', '')
         if sort not in url:
+            if not sort.endswith('/'):
+                sort = sort + '/'
             url = url + sort
 
         if '?' in url:
@@ -174,8 +174,8 @@ class Vizjer(CBaseHostClass):
             if url == '':
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?poster[^"^']+?)['"]''')[0])
-            title = unescapeHTML(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
-            desc = unescapeHTML(self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0])
+            title = ensure_str(unescapeHTML(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0]))
+            desc = ensure_str(unescapeHTML(self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0]))
             if desc == '':
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'description'), ('</div', '>'), False)[1])
 #            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'quality-version'), ('</div', '>'), False)[1])
@@ -227,7 +227,8 @@ class Vizjer(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Vizjer.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = self.getFullUrl('/wyszukaj?phrase=%s') % urllib.parse.quote_plus(searchPattern)
+        url = self.getFullUrl('/wyszukiwanie?phrase=%s') % urllib_quote_plus(searchPattern)
+        #url = self.getFullUrl('/wyszukaj?phrase=%s') % urllib_quote_plus(searchPattern)
         params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params)
 
@@ -333,7 +334,7 @@ class Vizjer(CBaseHostClass):
 
     #MAIN MENU
         if name == None and category == '':
-            rm(self.COOKIE_FILE)
+#            rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
         elif 'list_cats' == category:
             self.listMovieFilters(self.currItem, 'list_sort')

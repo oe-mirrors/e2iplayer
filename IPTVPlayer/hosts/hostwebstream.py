@@ -173,7 +173,7 @@ class HasBahCa(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3'}
     MAIN_GROUPED_TAB = [{'alias_id': 'weeb.tv', 'name': 'weeb.tv', 'title': 'http://weeb.tv/', 'url': '', 'icon': 'http://xmtvplayer.com/wp-content/uploads/2014/07/weebtv.png'},
                         {'alias_id': 'videostar.pl', 'name': 'videostar.pl', 'title': 'https://pilot.wp.pl/', 'url': '', 'icon': 'http://satkurier.pl/uploads/53612.jpg'},
-                        {'alias_id': 'internetowa.ws', 'name': 'internetowa.ws', 'title': 'https://internetowa.ws/', 'url': '', 'icon': 'https://internetowa.ws/img/internetowa-logo-new-3.png'}, \
+#                        {'alias_id': 'internetowa.ws', 'name': 'internetowa.ws', 'title': 'https://internetowa.ws/', 'url': '', 'icon': 'https://internetowa.ws/img/internetowa-logo-new-3.png'}, \
 #                        {'alias_id':'firstonetv.net',          'name': 'firstonetv.net',      'title': 'https://firstonetv.net/',           'url': '',                                                                   'icon': 'https://www.firstonetv.net/images/logo.png'}, \
                         {'alias_id': 'prognoza.pogody.tv', 'name': 'prognoza.pogody.tv', 'title': 'http://pogody.tv/', 'url': 'http://prognoza.pogody.tv', 'icon': 'http://pogody.pl/images/pogodytv.png'}, \
                         {'alias_id': 'meteo.pl', 'name': 'meteo.pl', 'title': 'http://meteo.pl/', 'url': 'http://meteo.pl/', 'icon': 'http://www.meteo.pl/img/napis_glowny_pl_2.png'}, \
@@ -197,7 +197,7 @@ class HasBahCa(CBaseHostClass):
                         {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://www.djing.com/newimages/content/c01.jpg'}, \
                         {'alias_id': 'live_stream_tv', 'name': 'live-stream.tv', 'title': 'http://live-stream.tv/', 'url': 'http://www.live-stream.tv/', 'icon': 'http://www.live-stream.tv/images/lstv-logo.png'}, \
 #                        {'alias_id': 'edem_tv', 'name': 'edem.tv', 'title': 'https://edem.tv/', 'url': 'https://edem.tv/', 'icon': 'https://edem.tv/public/images/logo_edem.png'}, \
-                        {'alias_id': 'goldvod.tv', 'name': 'goldvod.tv', 'title': 'http://goldvod.tv/', 'url': '', 'icon': 'http://goldvod.tv/assets/images/logo.png'}, \
+#                        {'alias_id': 'goldvod.tv', 'name': 'goldvod.tv', 'title': 'http://goldvod.tv/', 'url': '', 'icon': 'http://goldvod.tv/assets/images/logo.png'}, \
                         {'alias_id': 'livemass.net', 'name': 'livemass.net', 'title': 'http://livemass.net/', 'url': 'http://www.livemass.net/', 'icon': 'http://s3.amazonaws.com/livemass/warrington/images/warrington/iconclr.png'}, \
 #                        {'alias_id':'wizja.tv',                'name': 'wizja.tv',            'title': 'http://wizja.tv/',                  'url': 'http://wizja.tv/',                                                   'icon': 'http://wizja.tv/logo.png'}, \
                         {'alias_id': 'crackstreams.net', 'name': 'crackstreams.net', 'title': 'http://crackstreams.net/', 'url': 'http://crackstreams.net/', 'icon': ''}, \

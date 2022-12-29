@@ -36,12 +36,10 @@ class MeteoPLApi(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self)
-        self.MAIN_URL = 'http://www.meteo.pl/'
-        self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
-        self.COOKIE_FILE = GetCookieDir('iklubnet.cookie')
-
-        self.http_params = {}
-        self.http_params.update({'save_cookie': True, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
+        self.MAIN_URL = 'https://www.meteo.pl/'
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True}
 
     def getPage(self, url, params={}, post_data=None):
         sts, data = self.cm.getPage(url, params, post_data)
@@ -85,7 +83,9 @@ class MeteoPLApi(CBaseHostClass):
             elif 'name' == cat:
                 post_data = {'name': cItem['meteo_name']}
             if post_data != None:
-                sts, data = self.getPage(cItem['url'], post_data=post_data)
+                addParams = dict(self.defaultParams)
+                addParams['header']['Content-Type'] = 'application/x-www-form-urlencoded'
+                sts, data = self.getPage(cItem['url'], addParams, post_data)
                 if not sts:
                     return []
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>', withMarkers=True, caseSensitive=False)
