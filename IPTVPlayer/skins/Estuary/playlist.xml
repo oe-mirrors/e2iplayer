@@ -1,0 +1,22 @@
+<screen position="center,center" size="1920,1081" title="E2iPlayer" flags="wfBorder">
+
+  <widget source="global.CurrentTime" render="Label" position="1573,14" size="120,32" font="Regular; 30" backgroundColor="background" transparent="1" foregroundColor="#bbff" halign="center" zPosition="1" valign="center">
+    <convert type="ClockToText">Default</convert>
+  </widget>
+  <widget source="global.CurrentTime" render="Label" position="1520,54" size="172,26" font="Regular; 20" backgroundColor="background" foregroundColor="#bbff" transparent="1" zPosition="1" halign="right">
+    <convert type="ClockToText">Format:%a %d.%m.%Y</convert>
+  </widget>
+  <widget name="headertext" position="28,20" zPosition="1" size="1544,64" font="Regular; 48" transparent="1" valign="center" backgroundColor="#191919" foregroundColor="#fff000" halign="left" />
+  <widget name="statustext" position="250,832" size="1260,35" font="Regular;27" halign="center" valign="center" backgroundColor="FNCMainPodlogaColor" transparent="1" />
+  <widget name="list" position="561,148" zPosition="0" size="804,848" itemHeight="44" enableWrapAround="3" scrollbarMode="showOnDemand"   selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/Estuary-icons/selbutton.png" transparent="1" />
+  <widget name="console" position="30,131" size="509,816" zPosition="1" font="Regular;33" backgroundcolor="FNCMainPodlogaColor" transparent="1" halign="left" valign="center" />
+  <widget name="spinner" zPosition="3" position="825,540" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_1" zPosition="2" position="825,540" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_2" zPosition="2" position="857,540" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_3" zPosition="2" position="841,540" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_4" zPosition="2" position="873,540" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="cover" zPosition="2" position="1447,243" size="387,560" alphatest="blend" borderWidth="8" borderColor="white" />
+  <widget name="playerlogo" zPosition="4" position="1547,137" size="120,40" alphatest="blend" />
+  <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/Estuary-icons/back-iptv4.png" position="0,0" size="1920,1081" zPosition="-1" alphatest="on" transparent="0" />
+  <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/Estuary-icons/cover.png" position="1022,62" size="384,544" alphatest="blend" transparent="1" zPosition="4" />
+</screen>

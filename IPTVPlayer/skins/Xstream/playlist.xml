@@ -1,0 +1,21 @@
+<screen position="center,center" size="1920,1080" title="E2iPlayer" flags="wfBorder">
+
+  <widget source="global.CurrentTime" render="Label" position="1022,134" size="120,32" font="Regular; 28" backgroundColor="background" transparent="1" foregroundColor="#FFFFFF" halign="center" zPosition="1" valign="center">
+    <convert type="ClockToText">Default</convert>
+  </widget>
+  <widget source="global.CurrentTime" render="Label" position="570,134" size="272,32" font="Regular; 28" backgroundColor="background" foregroundColor="#FFFFFF" transparent="1" zPosition="1" halign="right">
+    <convert type="ClockToText">Format:%a %d.%m.%Y</convert>
+	
+  </widget>
+  <widget name="headertext" position="600,8" zPosition="1" size="1544,64" font="Regular; 35" transparent="1" valign="center" backgroundColor="#bbff" foregroundColor="#bbff" halign="left" />
+  <widget name="list" position="13,290" size="470,769" scrollbarMode="showOnDemand" enableWrapAround="1" transparent="1" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/Xstream-ICONS/selbutton.png" />  
+  <widget name="console" position="980,330" size="900,1050" zPosition="1" font="Regular;36"  transparent="1"  />
+  <widget name="spinner" zPosition="3" position="925,200" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_1" zPosition="2" position="925,200" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_2" zPosition="2" position="957,200" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_3" zPosition="2" position="941,200" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_4" zPosition="2" position="973,200" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="cover" zPosition="2" position="540,310" size="420,583" alphatest="blend"  />
+  <widget name="playerlogo" zPosition="1" position="890,90" size="120,120" transparent="1"  alphatest="blend" />
+  <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/Xstream-ICONS/back-iptv4.png" position="0,0" size="1920,1080" zPosition="-1" alphatest="on" transparent="0" />
+</screen>

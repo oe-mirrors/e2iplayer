@@ -1,0 +1,21 @@
+<screen position="center,center" size="1920,1080" title="E2iPlayer" flags="wfBorder">
+
+  <widget source="global.CurrentTime" render="Label" position="1573,14" size="120,32" font="Regular; 30" backgroundColor="background" transparent="1" foregroundColor="#bbff" halign="center" zPosition="1" valign="center">
+    <convert type="ClockToText">Default</convert>
+  </widget>
+  <widget source="global.CurrentTime" render="Label" position="1520,52" size="172,28" font="Regular; 20" backgroundColor="background" foregroundColor="#bbff" transparent="1" zPosition="1" halign="right">
+    <convert type="ClockToText">Format:%a %d.%m.%Y</convert>
+  </widget>
+  <widget name="headertext" position="28,20" zPosition="1" size="1544,64" font="Regular; 35" transparent="1" valign="center" backgroundColor="#bbff" foregroundColor="#bbff" halign="left" />
+  <widget name="statustext" position="225,832" size="1260,35" font="Regular;25" halign="left" valign="center"  transparent="1" />
+  <widget name="list" position="77,100" zPosition="0" size="804,848" itemHeight="35" enableWrapAround="5" scrollbarMode="showOnDemand"   selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/ViXBMC-icons/selbutton.png" transparent="1" />
+  <widget name="console" position="1000,500" size="609,950" zPosition="1" font="Regular;30"  transparent="1"  />
+  <widget name="spinner" zPosition="2" position="225,740" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_1" zPosition="2" position="225,740" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_2" zPosition="2" position="257,740" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_3" zPosition="2" position="241,740" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="spinner_4" zPosition="2" position="273,740" size="16,16" transparent="1" alphatest="blend" />
+  <widget name="cover" zPosition="1" position="1100,90" size="600,400" alphatest="blend"  />
+  <widget name="playerlogo" zPosition="1" position="1720,700" size="120,60" alphatest="blend" />
+  <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/ViXBMC-icons/back-iptv4.png" position="0,0" size="1920,1080" zPosition="-1" alphatest="on" transparent="0" />
+</screen>

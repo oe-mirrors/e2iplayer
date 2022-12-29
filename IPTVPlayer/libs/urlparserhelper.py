@@ -32,7 +32,7 @@ except Exception:
 
 
 def int2base(x, base):
-    digs = string.digits + string.lowercase
+    digs = string.digits + string.ascii_lowercase
     if x < 0:
         sign = -1
     elif x == 0:

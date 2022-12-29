@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-from urllib.parse import quote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 try:
     import json
 except Exception:
@@ -20,7 +20,7 @@ class SuggestionsProvider:
         return _("Filmstarts Suggestions")
 
     def getSuggestions(self, text, locale):
-        url = 'http://essearch.allocine.net/de/autocomplete?q=' + quote(text)
+        url = 'http://essearch.allocine.net/de/autocomplete?q=' + urllib_quote(text)
         sts, data = self.cm.getPage(url)
         if sts:
             retList = []
