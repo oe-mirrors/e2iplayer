@@ -12,13 +12,14 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 from datetime import datetime, timedelta, date
 import re
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 import time
 ###################################################
 
@@ -142,7 +143,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def _getPage(self, url, addParams={}, post_data=None):
 
         try:
-            import httplib
+            if isPY2():
+                import httplib
+            else:
+                import http.client as httplib
 
             def patch_http_response_read(func):
                 def inner(*args):

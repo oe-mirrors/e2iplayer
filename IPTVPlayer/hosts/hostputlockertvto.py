@@ -9,12 +9,12 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import base64
 from binascii import hexlify, unhexlify
 from hashlib import md5
@@ -227,7 +227,7 @@ class PutlockerTvTo(CBaseHostClass):
 
         if page > 1:
             query['page'] = page
-        query = urllib.parse.urlencode(query)
+        query = urllib_urlencode(query)
         if '?' in url:
             url += '&' + query
         else:
@@ -295,7 +295,7 @@ class PutlockerTvTo(CBaseHostClass):
         id = self.cm.ph.getSearchGroups(id, '''data-id=['"]([^'^"]+?)['"]''')[0]
         getParams = {'ts': timestamp}
         getParams = self._updateParams(getParams)
-        url = self.getFullUrl('/ajax/film/servers/{0}?'.format(id) + urllib.parse.urlencode(getParams))
+        url = self.getFullUrl('/ajax/film/servers/{0}?'.format(id) + urllib_urlencode(getParams))
 
         sts, data = self.getPage(url, params)
         if not sts:
@@ -346,7 +346,7 @@ class PutlockerTvTo(CBaseHostClass):
         def derive_key_and_iv(password, key_length, iv_length):
             d = d_i = ''
             while len(d) < key_length + iv_length:
-                d_i = md5(d_i + password).digest()
+                d_i = md5(ensure_binary(d_i + password)).digest()
                 d += d_i
             return d[:key_length], d[key_length:key_length + iv_length]
         bs = 16
@@ -389,7 +389,7 @@ class PutlockerTvTo(CBaseHostClass):
         urlTab = []
 
         # mark requested link as used one
-        if len(list(self.cacheLinks.keys())):
+        if len(self.cacheLinks.keys()):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
@@ -420,7 +420,7 @@ class PutlockerTvTo(CBaseHostClass):
 
         getParams = {'ts': timestamp, 'id': videoUrl.meta.get('id', ''), 'Q': '1'}
         getParams = self._updateParams(getParams)
-        url = self.getFullUrl('/ajax/film/update-views?' + urllib.parse.urlencode(getParams))
+        url = self.getFullUrl('/ajax/film/update-views?' + urllib_urlencode(getParams))
         sts, data = self.getPage(url, params)
         if not sts:
             return []
@@ -430,7 +430,7 @@ class PutlockerTvTo(CBaseHostClass):
         getParams = {'ts': timestamp, 'id': videoUrl.meta.get('id', ''), 'server': videoUrl.meta.get('server_id', ''), 'update': '0'}
         getParams = self._updateParams(getParams)
 
-        url = self.getFullUrl('/ajax/episode/info?' + urllib.parse.urlencode(getParams))
+        url = self.getFullUrl('/ajax/episode/info?' + urllib_urlencode(getParams))
         sts, data = self.getPage(url, params)
         if not sts:
             return []
@@ -456,7 +456,7 @@ class PutlockerTvTo(CBaseHostClass):
                     url += '&'
                 else:
                     url += '?'
-                url += urllib.parse.urlencode(query)
+                url += urllib_urlencode(query)
                 sts, data = self.getPage(url, params)
                 if not sts:
                     return []
@@ -510,7 +510,7 @@ class PutlockerTvTo(CBaseHostClass):
 
         getParams = {'ts': timestamp}
         getParams = self._updateParams(getParams)
-        url = self.getFullUrl('/ajax/film/tooltip/' + id + '?' + urllib.parse.urlencode(getParams))
+        url = self.getFullUrl('/ajax/film/tooltip/' + id + '?' + urllib_urlencode(getParams))
         sts, data = self.getPage(url, params)
         if not sts:
             return []

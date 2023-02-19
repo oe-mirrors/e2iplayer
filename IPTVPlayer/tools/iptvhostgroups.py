@@ -78,7 +78,7 @@ class IPTVHostsGroups:
         self.PREDEFINED_HOSTS['science'] = ['questtvcouk', 'dailymotion', 'ustreamtv', 'dokumentalnenet', 'orthobulletscom', 'vumedicom']
 
         self.PREDEFINED_HOSTS['polish'] = ['youtube', 'webstream', 'efilmytv', 'ekinotv', 'cdapl', 'vizjerpl', 'zaluknijcc', 'filman', 'hdseanspl', 'ogladajto', 'filmynadzis', 'tvpvod', 'playzcc', 'ipla', 'vodpl',
-                                                     'filmowoclub', 'freediscpl', 'ekstraklasatv', 'bajeczkiorg', 'animeodcinki', 'playpuls', 'meczykipl', 'eskago',
+                                                     'kinomoc', 'filmowoclub', 'freediscpl', 'ekstraklasatv', 'bajeczkiorg', 'animeodcinki', 'playpuls', 'meczykipl', 'eskago',
                                                      'tvjworg', 'artetv', 'dailymotion', 'vimeo', 'kabarety', 'twitchtv', 'tvgrypl', 'chomikuj', 'fighttube', 'spryciarze', 'wgrane', 'wolnelekturypl', 'tvn24', 'ninateka',
                                                      'maxtvgo', 'wpolscepl', 'wrealu24tv', 'wptv', 'interiatv', 'dokumentalnenet', 'serialeco', 'radiostacja', 'nuteczki', 'luxveritatis', 'tvproart', 'tvrepublika',
                                                      'christusvincit', 'joemonsterorg']

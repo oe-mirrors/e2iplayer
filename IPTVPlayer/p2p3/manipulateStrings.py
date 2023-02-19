@@ -12,7 +12,13 @@ def strDecode(text,  setErrors = 'strict'):
     if isPY2():
         retVal = text
     else: #PY3
-        retVal = text.decode(encoding='utf-8', errors=setErrors)
+        if isinstance(text, str):
+            retVal = text
+        else:
+            try:
+                retVal = text.decode(encoding='utf-8', errors=setErrors)
+            except Exception:
+                retVal = text.decode(encoding='utf-8', errors='ignore')
     return retVal
 
 def iterDictItems(myDict):

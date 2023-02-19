@@ -8,7 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.libs.teledunet import TeledunetParser
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
@@ -42,13 +42,14 @@ from Plugins.Extensions.IPTVPlayer.libs.beinmatch import BeinmatchApi
 from Plugins.Extensions.IPTVPlayer.libs.wiz1net import Wiz1NetApi
 from Plugins.Extensions.IPTVPlayer.libs.wiziwig1 import Wiziwig1Api
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlsplit, urlunsplit
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
-from urllib.parse import urlsplit, urlunsplit
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 ############################################
 
@@ -255,7 +256,7 @@ class HasBahCa(CBaseHostClass):
 
         if False and 'hasbahcaiptv.com' in url:
             printDBG(url)
-            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e5'.format(urllib.parse.quote_plus(url))
+            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e5'.format(urllib_quote_plus(url))
             params['header']['Referer'] = proxy
             url = proxy
         return self.cm.getPage(url, params, post_data)
@@ -264,7 +265,7 @@ class HasBahCa(CBaseHostClass):
         v = item.get(key, None)
         if None == v:
             return default
-        return clean_html('%s' % v).encode('utf-8')
+        return ensure_str(clean_html(u'%s' % v))
 
     def addItem(self, params):
         self.currList.append(params)
@@ -296,7 +297,7 @@ class HasBahCa(CBaseHostClass):
     def listHasBahCa(self, item):
         url = item.get('url', '')
         if 'proxy-german.de' in url:
-            url = urllib.parse.unquote(url.split('?q=')[-1])
+            url = urllib_unquote(url.split('?q=')[-1])
 
         printDBG("listHasBahCa url[%s]" % url)
         BASE_URL = 'http://hasbahcaiptv.com/'
@@ -386,7 +387,7 @@ class HasBahCa(CBaseHostClass):
                 icon = item.get('logo_uri', '')
         except Exception:
             printExc()
-        return icon.encode('utf-8')
+        return ensure_str(icon)
 
     def __setFilmOn(self):
         if None == self.filmOnApi:
@@ -402,8 +403,8 @@ class HasBahCa(CBaseHostClass):
         for item in tmpList:
             try:
                 params = {'name': 'filmon_channels',
-                           'title': item['title'].encode('utf-8'),
-                           'desc': item['description'].encode('utf-8'),
+                           'title': ensure_str(item['title']),
+                           'desc': ensure_str(item['description']),
                            'group_id': item['group_id'],
                            'icon': self.__getFilmOnIconUrl(item)
                            }
@@ -417,9 +418,9 @@ class HasBahCa(CBaseHostClass):
         for item in tmpList:
             try:
                 params = {'name': 'filmon_channel',
-                           'title': item['title'].encode('utf-8'),
+                           'title': ensure_str(item['title']),
                            'url': item['id'],
-                           'desc': item['group'].encode('utf-8'),
+                           'desc': ensure_str(item['group']),
                            'seekable': item['seekable'],
                            'icon': self.__getFilmOnIconUrl(item)
                            }
@@ -434,7 +435,7 @@ class HasBahCa(CBaseHostClass):
         listURL = strwithmeta(listURL)
         meta = listURL.meta
         if 'proxy-german.de' in listURL:
-            listURL = urllib.parse.unquote(listURL.split('?q=')[-1])
+            listURL = urllib_unquote(listURL.split('?q=')[-1])
 
         listURL = strwithmeta(listURL, meta)
         if 'cookiefile' in listURL.meta:
@@ -1113,7 +1114,7 @@ class HasBahCa(CBaseHostClass):
         _url = self.cm.ph.getSearchGroups(data, '''source:\swindow.atob\(['"]([^"^']+?)['"]''')[0]
         if _url != '':
             import base64
-            return [{'name': 'others', 'url': urllib.parse.unquote(base64.b64decode(_url))}]
+            return [{'name': 'others', 'url': urllib_unquote(base64.b64decode(_url))}]
         else:
             _url = self.cm.ph.getSearchGroups(data, '''source:\s['"]([^"^']+?)['"]''')[0]
             return [{'name': 'others', 'url': _url}]
@@ -1153,14 +1154,37 @@ class HasBahCa(CBaseHostClass):
         data = CParsingHelper.getDataBeetwenNodes(data, ('<table', '>', 'ramowka'), ('</table', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<td', '>'), ('</td', '>'))
         for item in data:
-            params = {'name': "strumyk_tv"}
             linkVideo = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
             if len(linkVideo) and not linkVideo.startswith('http'):
                 linkVideo = 'http://strims.top' + linkVideo
+            if linkVideo.endswith('/'):
+                params = {'name': "strumyk_cat"}
+            else:
+                params = {'name': "strumyk_tv"}
             params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
 #            params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
             params['title'] = self.cleanHtmlStr(item)
             self.addDir(params)
+
+    def getStrumykTvDirCat(self, url):
+        printDBG("getStrumykTvDirCat start")
+        sts, data = self.cm.getPage(url)
+        if not sts:
+            return
+        data = CParsingHelper.getDataBeetwenNodes(data, ('<table', '>', '-table'), ('</table', '>'))[1]
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<tr', '>'), ('</tr', '>'))
+        for item in data:
+            params = {'name': "strumyk_tv"}
+            params['title'] = self.cleanHtmlStr(item)
+            linkVideo = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
+            if len(linkVideo):
+                if not linkVideo.startswith('http'):
+                    linkVideo = 'http://strims.top' + linkVideo
+                params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
+#                params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
+                self.addDir(params)
+            else:
+                self.addMarker(params)
 
     def getStrumykTvDir(self, url):
         printDBG("StrumykTvDir start")
@@ -1171,7 +1195,7 @@ class HasBahCa(CBaseHostClass):
         tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'src'), ('<script', '>'))[1]
         if not tmp:
             tmp = CParsingHelper.getDataBeetwenNodes(data, ('<noscript', '>'), ('<script', '>'))[1]
-        printDBG("StrumykTvDir data [%s]" % tmp)
+        #printDBG("StrumykTvDir data [%s]" % tmp)
         data = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<a', '>'), ('</a', '>'))
         if not data:
             linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
@@ -1186,6 +1210,8 @@ class HasBahCa(CBaseHostClass):
             _url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
             if _url.startswith('?'):
                 _url = url + _url
+            if not _url.startswith('http'):
+                _url = 'http://strims.top' + _url
             sts, data = self.cm.getPage(_url)
             if sts:
                 tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
@@ -1194,16 +1220,23 @@ class HasBahCa(CBaseHostClass):
                     linkVideo = linkVideo.strip(' \n\t\r')
                 else:
                     tmp = self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0]
-                    tmp = urllib.unquote(tmp)
+                    tmp = urllib_unquote(tmp)
                     linkVideo = self.cm.ph.getSearchGroups(tmp, '''['"]*(http[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
                 if len(linkVideo) and linkVideo.startswith('//'):
                     linkVideo = 'http:' + linkVideo
                 if len(linkVideo) and not linkVideo.startswith('http'):
                     linkVideo = 'http://strims.top' + linkVideo
-                    sts, tmp = self.cm.getPage(linkVideo)
-                    tmp = CParsingHelper.getDataBeetwenNodes(tmp, ('<iframe', '>', 'src'), ('</iframe', '>'))[1]
-                    linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
-                    linkVideo = linkVideo.strip(' \n\t\r')
+                    sts, data = self.cm.getPage(linkVideo)
+                    tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'src'), ('</iframe', '>'))[1]
+                    if len(tmp):
+                        linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
+                        linkVideo = linkVideo.strip(' \n\t\r')
+                    else:
+                        tmp = self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0]
+                        tmp = urllib_unquote(tmp)
+                        linkVideo = self.cm.ph.getSearchGroups(tmp, '''['"]*(http[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
+                        if '' == linkVideo:
+                            linkVideo = self.cm.ph.getSearchGroups(tmp, '''['"]*(http[^'^"]+?\.mpd[^'^"]*?)['"]''')[0].replace('\\', '')
                     if len(linkVideo) and linkVideo.startswith('//'):
                         linkVideo = 'http:' + linkVideo
                 linkVideo = linkVideo.replace('https://href.li/', '')
@@ -1220,6 +1253,8 @@ class HasBahCa(CBaseHostClass):
 
         if 'm3u8' in url and 'hlsplayer' not in url:
             urlsTab = getDirectM3U8Playlist(url, False)
+        elif 'mpd' in url:
+            urlsTab = getMPDLinksWithMeta(url, False)
         else:
             urlsTab.extend(self.up.getVideoLinkExt(url))
         return urlsTab
@@ -1315,6 +1350,8 @@ class HasBahCa(CBaseHostClass):
             self.getStrumykTvList(url)
         elif name == 'strumyk_tv':
             self.getStrumykTvDir(url)
+        elif name == 'strumyk_cat':
+            self.getStrumykTvDirCat(url)
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
@@ -1427,7 +1464,7 @@ class IPTVHost(CHostBase):
                     if '84.114.88.26' == url.meta.get('X-Forwarded-For', ''):
                         url.meta['iptv_m3u8_custom_base_link'] = '' + url
                         url.meta['iptv_proxy_gateway'] = 'http://webproxy.at/surf/printer.php?u={0}&b=192&f=norefer'
-                        url.meta['Referer'] = url.meta['iptv_proxy_gateway'].format(urllib.parse.quote_plus(url))
+                        url.meta['Referer'] = url.meta['iptv_proxy_gateway'].format(urllib_quote_plus(url))
                         meta = url.meta
                         tmpList = getDirectM3U8Playlist(url, checkExt=False)
                         if 1 == len(tmpList):

@@ -12,7 +12,8 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # E2 GUI COMMPONENTS
 ###################################################
@@ -22,7 +23,6 @@ from Screens.MessageBox import MessageBox
 ###################################################
 import base64
 import re
-import urllib.parse
 from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
 ###################################################
 
@@ -59,7 +59,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         self.DEFAULT_ICON_URL = 'https://img.cda.pl/obr/oryginalne/c53be9b25636d46fabbb0ec78abe75c8.png'
         self.FILMS_CAT_URL = self.getFullUrl('/movie/cat/')
 
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
+        config.plugins.iptvplayer.cloudflare_user = ConfigText(default='Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', fixed_size=False)
+        self.USER_AGENT = config.plugins.iptvplayer.cloudflare_user.value
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
 
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items': {'prch': 'true'}}
@@ -90,13 +91,10 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
 
-        def _getFullUrl(url):
-            if self.cm.isValidUrl(url):
-                return url
-            else:
-                return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        if data.meta.get('cf_user', self.USER_AGENT) != self.USER_AGENT:
+            self.__init__()
+        return sts, data
 
     def getFullIconUrl(self, url):
         url = CBaseHostClass.getFullIconUrl(self, url.strip())
@@ -264,12 +262,12 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         printDBG("EkinoTv.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchPattern = searchPattern.replace(' ', '+')
 
-        url = 'https://ekino-tv.pl/search/qf/?q=' + urllib.parse.quote_plus(searchPattern)
+        url = 'https://ekino-tv.pl/search/qf/?q=' + urllib_quote_plus(searchPattern)
         sts, data = self.getPage(url)
         if not sts:
             return
 #        if not 'search' in self.cm.meta['url']:
-#            url = 'https://ekino-tv.pl/se/search?q=' + urllib.parse.quote_plus(searchPattern)
+#            url = 'https://ekino-tv.pl/se/search?q=' + urllib_quote_plus(searchPattern)
 #            sts, data = self.getPage(url)
 #            if not sts: return
         printDBG("EkinoTv.listSearchResult data[%s]" % data)
@@ -504,7 +502,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 self.password = config.plugins.iptvplayer.ekinotv_password.value
 
                 #rm(self.COOKIE_FILE)
-                self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
+                #self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
 
                 self.loggedIn = False
 
@@ -515,8 +513,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 if not sts:
                     return False
 
-                cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID'])
-                printDBG('tryTologin cookieHeader [%s]' % cookieHeader)
+#                cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID'])
+#                printDBG('tryTologin cookieHeader [%s]' % cookieHeader)
 
                 sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'login'), ('</form', '>'))
                 if not sts:
@@ -534,7 +532,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 httpParams = dict(self.defaultParams)
                 httpParams['header'] = dict(httpParams['header'])
                 httpParams['header']['Referer'] = self.getMainUrl()
-                httpParams['header']['Cookie'] = cookieHeader
+#                httpParams['header']['Cookie'] = cookieHeader
 
                 if 'data-sitekey' in data:
                     sitekey = self.cm.ph.getSearchGroups(data, 'data\-sitekey="([^"]+?)"')[0]
@@ -544,7 +542,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                     if token != '':
                         post_data['g-recaptcha-response'] = token
 
-                sts, data = self.cm.getPage(actionUrl, httpParams, post_data)
+                sts, data = self.getPage(actionUrl, httpParams, post_data)
 
             if sts and 'user/logout' in data:
                 self.loggedIn = True

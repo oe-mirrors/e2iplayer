@@ -12,13 +12,11 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 from Components.config import config, ConfigText, getConfigListEntry
 
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
-from urllib.parse import quote_plus
 import re
-
 ###################################################
 
 ###################################################
@@ -44,11 +42,11 @@ class FilmyNaDzis(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'filmynadzis.pl', 'cookie': 'filmynadzis.pl.cookie'})
-        self.filmWebEpgMap = {}
+        config.plugins.iptvplayer.cloudflare_user = ConfigText(default='Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', fixed_size=False)
+        self.USER_AGENT = config.plugins.iptvplayer.cloudflare_user.value
         self.MAIN_URL = 'https://filmynadzis.pl/'
-
         self.DEFAULT_ICON_URL = 'https://filmynadzis.pl/wp-content/uploads/2016/07/logo2.png'
-        self.HTTP_HEADER = self.cm.getDefaultHeader('chrome')
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         #{'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()})
         self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': ' XMLHttpRequest', 'Accept': '*/*'})
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -63,12 +61,16 @@ class FilmyNaDzis(CBaseHostClass):
         header = self.AJAX_HEADER if forAjax else self.HTTP_HEADER
         return MergeDicts(self.defaultParams, {'header': header})
 
-    def getPage(self, baseUrl, params={}, post_data=None):
-        if not params:
-            params = self.defaultParams
-        #params['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent': self.HTTP_HEADER['User-Agent']}
+    def getPage(self, baseUrl, addParams={}, post_data=None):
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
+        origBaseUrl = baseUrl
+        baseUrl = self.cm.iriToUri(baseUrl)
 
-        return self.cm.getPage(baseUrl, params, post_data)
+        sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        if data.meta.get('cf_user', self.USER_AGENT) != self.USER_AGENT:
+            self.__init__()
+        return sts, data
 
     def tryToLogin(self):
         printDBG('FilmyNaDzis.tryTologin start')
@@ -93,7 +95,7 @@ class FilmyNaDzis(CBaseHostClass):
         if not self.loggedIn:
             # try to login
             postData = {'ihcaction': 'login', 'log': self.login, 'pwd': self.password}
-            sts, data = self.cm.getPage(self.MAIN_URL, self.defaultParams, post_data=postData)
+            sts, data = self.getPage(self.MAIN_URL, self.defaultParams, post_data=postData)
 
             if sts:
                 responseUrl = self.cm.meta['url']
