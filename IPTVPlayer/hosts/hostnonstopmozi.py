@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ###################################################
-# 2021-07-08 - modified NonstopMozi
+# 2023-02-15 - modified NonstopMozi
 ###################################################
-HOST_VERSION = "1.2"
+HOST_VERSION = "1.3"
 ###################################################
 # LOCAL import
 ###################################################
@@ -178,7 +178,7 @@ class NonstopMozi(CBaseHostClass):
             sts, dat = self.cm.getPage(url)
             if not sts:
                 return
-            url = self.cm.ph.getDataBeetwenMarkers(dat, "<script>window.location.href = '", "';</script>", False)[1]
+            url = self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)['"].target''', 1, True)[0]
             title = self.cm.ph.getDataBeetwenMarkers(data, "<h1 style='font-size:35px; font-weight: bold; padding-bottom:15px; color:black; text-shadow: 0 5px 5px rgb(255,255,255);'>", "</h1><b", False)[1] + " - " + self.cm.ph.getDataBeetwenMarkers(url, "https://", "/", False)[1]
             desc = "IMDB pontszám: " + self.cm.ph.getDataBeetwenMarkers(data, "</a><strong>", "</strong>", False)[1] + "/10" + "  " + self.cm.ph.getDataBeetwenMarkers(data, "<h4 style='font-size:20px; font-weight: bold; color:black; text-shadow: 2px 2px 3px #FFFFFF;'><p style='font-size: 110%;' itemprop='description'>", "</p>			</h4>", False)[1]
             params = {'title':title, 'url':url, 'icon':cItem['icon'], 'desc':desc}

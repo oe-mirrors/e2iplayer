@@ -188,6 +188,7 @@ hostwatchwrestlinguno
 hostwebhuplayer
 hostwebstream
 hostwgrane
+hostwofvideo
 hostwolnelekturypl
 hostworldfree4u
 hostwpolscepl

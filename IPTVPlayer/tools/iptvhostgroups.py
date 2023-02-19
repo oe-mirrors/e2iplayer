@@ -63,7 +63,7 @@ class IPTVHostsGroups:
                                                      'movienightws', 'yifytv', 'hdpopcornscom', 'losmovies', 'playzcc',
                                                      'solarmovie', 'mythewatchseries', 'thewatchseriesto', 'classiccinemaonline', 'seriesonline', 'vumooch', 'movizlandcom',
                                                      'cinemay', 'icefilmsinfo', 'egybest', 'dpstreamingcx', 'librestream', 'streamcomplet', 'skstream', 'filmstreamvkcom',
-                                                     'filmpalast', 'hdstreams', 'serienstreamto', 'bsto', 'hdfilmetv', 'cineto', 'mozicsillag', 'filmezz', 'rtlmost', 'gamatocom', 'xrysoise', 'gamatotvme', 'mooviecc', 'mrpiracy',
+                                                     'filmpalast', 'hdstreams', 'serienstreamto', 'bsto', 'hdfilmetv', 'cineto', 'mozicsillag', 'wofvideo', 'filmezz', 'rtlmost', 'gamatocom', 'xrysoise', 'gamatotvme', 'mooviecc', 'mrpiracy',
                                                      'filmativa', 'filmovizijastudio', 'filma24hdcom', 'serijeonline', 'kinox', 'szenestreamz', 'cartoonhd', 'worldfree4u', 'tantifilmorg', 'forjatn', 'serialeco', 'faselhdcom',
                                                      'yesmoviesto', 'movierulzsx', 'planetstreamingcom', 'filmeonlineto', 'tainieskaiseirestv', '3sktv', 'cimaclubcom', 'gledalica',
                                                      'tfarjocom', 'filmaoncom', 'filmstreamhdit', 'altadefinizione', 'streaminghdfun', 'putlockertvto', 'akoam', 'filmehdnet', 'andrijaiandjelka',
