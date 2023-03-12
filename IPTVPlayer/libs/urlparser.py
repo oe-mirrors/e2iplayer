@@ -66,7 +66,7 @@ from xml.etree import cElementTree
 from random import random, randint, randrange, choice as random_choice
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, urlunparse, parse_qs
 from binascii import hexlify, unhexlify, a2b_hex
-from hashlib import md5, sha256
+from hashlib import md5, sha256, sha512
 from Components.config import config
 
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.mtv import GametrailersIE
@@ -181,6 +181,7 @@ class urlparser:
                        'aparat.com': self.pp.parserAPARATCOM,
                        'api.video.mail.ru': self.pp.parserVIDEOMAIL,
                        'archive.org': self.pp.parserARCHIVEORG,
+                       'ashortl.ink': self.pp.parserVIDMOLYME,
                        'assia.org': self.pp.parserASSIAORG,
                        'assia2.com': self.pp.parserASSIAORG,
                        'assia22.com': self.pp.parserASSIAORG,
@@ -732,6 +733,7 @@ class urlparser:
                        'wholecloud.net': self.pp.parserWHOLECLOUD,
                        'widestream.io': self.pp.parserWIDESTREAMIO,
                        'wiiz.tv': self.pp.parserWIIZTV,
+                       'wikisport.click': self.pp.parserWIKISPORTCLICK,
                        'wolfstream.tv': self.pp.parserCLIPWATCHINGCOM,
 #                       'woof.tube': self.pp.parserVERYSTREAM,
                        'wrzuta.pl': self.pp.parserWRZUTA,
@@ -12669,9 +12671,9 @@ class pageParser(CaptchaHelper):
         if 'embed' not in baseUrl:
             video_id = self.cm.ph.getSearchGroups(baseUrl + '/', '/([A-Za-z0-9]{12})[/.]')[0]
             printDBG("parserVIDSTODOME video_id[%s]" % video_id)
-            url = 'https://vidtodo.com/embed-{0}.html'.format(video_id)
+            baseUrl = 'https://vidtodo.com/embed-{0}.html'.format(video_id)
 
-        return self.parserONLYSTREAMTV(strwithmeta(url, {'Referer': baseUrl}))
+        return self.parserONLYSTREAMTV(strwithmeta(baseUrl, {'Referer': baseUrl}))
 
     def parserCLOUDVIDEOTV(self, baseUrl):
         printDBG("parserCLOUDVIDEOTV baseUrl[%r]" % baseUrl)
@@ -14382,7 +14384,7 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(url, urlParams)
         if not sts:
             return []
-        printDBG("parserEMBEDSTREAMME data[%s]" % data)
+        printDBG("parserDADDYLIVE data[%s]" % data)
         urlTab = []
         data = self.cm.ph.getDataBeetwenMarkers(data, 'Clappr.Player', ('</script', '>'), False)[1]
         url = self.cm.ph.getSearchGroups(data, '''source:\s?['"]([^"^']+?)['"]''')[0]
@@ -14976,6 +14978,7 @@ class pageParser(CaptchaHelper):
                 a71[0] = a73[0]
                 a71[1] = a73[1]
             return re.sub('[012567]', replacer, bytes2str(unpad(blocks2bytes(a74))))
+
 
         sts, data = self.cm.getPage('https://%s/api/make/hash/%s' % (domain, video_id), urlParams)
         if not sts:
@@ -15689,10 +15692,11 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
         if not sts:
             return False
+        cUrl = self.cm.meta['url']
 
         urlTab = []
         url = self.cm.ph.getSearchGroups(data, '''sources[^'^"]*?['"]([^'^"]+?)['"]''')[0]
-        url = strwithmeta(url, {'Origin': urlparser.getDomain(baseUrl, False), 'Referer': baseUrl})
+        url = strwithmeta(url, {'Origin': urlparser.getDomain(cUrl, False), 'Referer': cUrl})
         if url != '':
             urlTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
 
@@ -15729,5 +15733,52 @@ class pageParser(CaptchaHelper):
         url = urlparser.decorateUrl(url, {'iptv_proto': 'm3u8', 'User-Agent': urlParams['header']['User-Agent'], 'Referer': cUrl, 'Origin': urlparser.getDomain(cUrl, False)})
         if url != '':
             urlTab.extend(getDirectM3U8Playlist(url, cookieParams={'header': urlParams['header']}))
+
+        return urlTab
+
+    def parserWIKISPORTCLICK(self, baseUrl):
+        printDBG("parserWIKISPORTCLICK baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return []
+
+        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
+        tmp = '\n'.join(tmp)
+
+        scriptUrl = self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^'^"]+?wiki\.js[^'^"]*?)['"]''')[0]
+        if scriptUrl.startswith('//'):
+            scriptUrl = 'https:' + scriptUrl
+        sts, data = self.cm.getPage(scriptUrl, urlParams)
+        if not sts:
+            return []
+
+        if data != '' and tmp != '':
+            jscode = base64.b64decode('''dmFyIG5hdmlnYXRvcj17dXNlckFnZW50OiJkZXNrdG9wIn07d2luZG93PXRoaXM7ZG9jdW1lbnQ9e307ZG9jdW1lbnQud3JpdGU9ZnVuY3Rpb24oKXtwcmludChhcmd1bWVudHNbMF0pO307YXRvYj1mdW5jdGlvbihlKXtlLmxlbmd0aCU0PT0zJiYoZSs9Ij0iKSxlLmxlbmd0aCU0PT0yJiYoZSs9Ij09IiksZT1EdWt0YXBlLmRlYygiYmFzZTY0IixlKSxkZWNUZXh0PSIiO2Zvcih2YXIgdD0wO3Q8ZS5ieXRlTGVuZ3RoO3QrKylkZWNUZXh0Kz1TdHJpbmcuZnJvbUNoYXJDb2RlKGVbdF0pO3JldHVybiBkZWNUZXh0fTs=''')
+            jscode += tmp
+            jscode += data
+            ret = js_execute(jscode)
+            if ret['sts'] and 0 == ret['code']:
+                tmp = ret['data'].strip()
+
+        tmpUrl = self.cm.ph.getSearchGroups(tmp, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
+        HTTP_HEADER['Referer'] = baseUrl
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(tmpUrl, urlParams)
+        if not sts:
+            return []
+
+        data = eval(re.findall('return\((\[.+?\])', data)[0])
+        data = ''.join(data).replace('\/', '/')
+
+        urlTab = []
+        if 'm3u8' in data:
+            hlsUrl = strwithmeta(data, {'Origin': urlparser.getDomain(tmpUrl, False), 'Referer': tmpUrl})
+            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
 
         return urlTab

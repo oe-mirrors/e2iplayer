@@ -334,7 +334,7 @@ class Kinomoc(CBaseHostClass):
     #MAIN MENU
         if name == None and category == '':
             rm(self.COOKIE_FILE)
-            webState, MSG, ERR = checkWebSiteStatus(self.MAIN_URL, self.HTTP_HEADER, 2)
+            webState, MSG, ERR = checkWebSiteStatus(self.MAIN_URL, self.HTTP_HEADER, 5)
             if webState:
                 self.listMainMenu({'name': 'category'})
             else:

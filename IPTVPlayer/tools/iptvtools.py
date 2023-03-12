@@ -631,7 +631,7 @@ def getDebugMode():
     return DBG
 
 
-def printDBG(DBGtxt):
+def printDBG(DBGtxt, writeMode = 'a'):
     DBG = getDebugMode()
     if DBG == '':
         return
@@ -643,7 +643,7 @@ def printDBG(DBGtxt):
         else:
             DBGfile = DBG
         try:
-            f = open(DBGfile, 'a')
+            f = open(DBGfile, writeMode)
             f.write(str(DBGtxt) + '\n')
             f.close
         except Exception:
@@ -652,7 +652,7 @@ def printDBG(DBGtxt):
             print("========================================================")
             try:
                 msg = '%s' % traceback.format_exc()
-                f = open(DBGfile, 'a')
+                f = open(DBGfile, writeMode)
                 f.write(str(DBGtxt) + '\n')
                 f.close
             except Exception:
@@ -1805,7 +1805,10 @@ def readCFG(cfgName, defVal = ''):
         if os.path.exists(myPath):
             cfgPath = os.path.join(myPath,cfgName)
             if os.path.exists(cfgPath):
-                return open(cfgPath, 'r').readline().strip()
+                retVal = open(cfgPath, 'r').readline().strip()
+                if retVal == 'True': retVal = True
+                elif retVal == 'False': retVal = False
+                return retVal
             else:
                 with open('/etc/enigma2/settings', 'r') as f:
                     for line in f:
