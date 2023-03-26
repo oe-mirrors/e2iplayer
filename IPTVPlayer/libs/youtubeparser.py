@@ -396,7 +396,7 @@ class YouTubeParser():
                     printExc()
                     return {}
 
-            if '/channel/' in url:
+            if '/channel/' in url or '/@' in url:
                 return {'type': 'category', 'category': 'channel', 'title': title, 'url': ensure_str(url), 'icon': icon, 'time': '', 'desc': ''}
             else:
                 return {'type': 'feed', 'category': cat, 'title': title, 'url': ensure_str(url), 'icon': icon, 'time': '', 'desc': ''}
