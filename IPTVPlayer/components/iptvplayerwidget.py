@@ -331,8 +331,8 @@ class E2iPlayerWidget(Screen):
         except Exception as e:
             SetTmpCookieDir()
             SetTmpJSCacheDir()
-            msg1 = _("Critical Error – cookie can't be saved!")
-            msg2 = _("Last error:\n%s" % str(e))
+            msg1 = _("Critical Error - cookie can't be saved!")
+            msg2 = _("Last error:\n%s") % str(e)
             msg3 = _("Please make sure that the folder for cache data (set in the configuration) is writable.")
             GetIPTVNotify().push('%s\n\n%s\n\n%s' % (msg1, msg2, msg3), 'error', 20)
 
@@ -1566,6 +1566,9 @@ class E2iPlayerWidget(Screen):
                 lastErrorMsg = GetIPTVPlayerLastHostError()
                 if '' != lastErrorMsg:
                     message += "\n" + _('Last error: "%s"') % lastErrorMsg
+                lastExcMSG =  getExcMSG(True)
+                if lastExcMSG != '':
+                    message += "\n" + _("Last Exception error: '%s'") % lastExcMSG
                 self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO, timeout=10)
             return
         elif 1 == numOfLinks or self.autoPlaySeqStarted:
@@ -2076,10 +2079,10 @@ class E2iPlayerWidget(Screen):
                 disMessage += ret.message
             lastErrorMsg = GetIPTVPlayerLastHostError()
             if lastErrorMsg != '':
-                disMessage += "\n" + _('Last error: "%s"' % lastErrorMsg)
+                disMessage += "\n" + _('Last error: "%s"') % lastErrorMsg
             lastExcMSG =  getExcMSG(True)
             if lastExcMSG != '':
-                disMessage += "\n" + _('Last Exception error: "%s"' % lastExcMSG)
+                disMessage += "\n" + _('Last Exception error: "%s"') % lastExcMSG
 
             self.setStatusTex(disMessage)
             self["list"].hide()

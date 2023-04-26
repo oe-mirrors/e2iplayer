@@ -249,8 +249,8 @@ class urlparser:
                        'divxstage.eu': self.pp.parserDIVXSTAGE,
                        'divxstage.to': self.pp.parserDIVXSTAGE,
                        'donevideo.com': self.pp.parserLIMEVIDEO,
-                       'dood.re': self.pp.parserDOOD,
-                       'dood.wf': self.pp.parserDOOD,
+                       #'dood.re': self.pp.parserDOOD,
+                       #'dood.wf': self.pp.parserDOOD,
                        'dood.cx': self.pp.parserDOOD,
                        'dood.la': self.pp.parserDOOD,
                        'dood.pm': self.pp.parserDOOD,
@@ -294,8 +294,8 @@ class urlparser:
                        'filecloud.io': self.pp.parserFILECLOUDIO,
                        'filefactory.com': self.pp.parserFILEFACTORYCOM,
                        'filehoot.com': self.pp.parserFILEHOOT,
-                       'filemoon.to': self.pp.parserONLYSTREAMTV,
-                       'filemoon.sx': self.pp.parserONLYSTREAMTV,
+                       'filemoon.to': self.pp.parserFILEMOONSX,
+                       'filemoon.sx': self.pp.parserFILEMOONSX,
                        'filenuke.com': self.pp.parserFILENUKE,
                        'fileone.tv': self.pp.parserFILEONETV,
                        'filepup.net': self.pp.parserFILEPUPNET,
@@ -329,6 +329,8 @@ class urlparser:
                        'gounlimited.to': self.pp.parserGOUNLIMITEDTO,
                        'govid.me': self.pp.parserGOVIDME,
                        'govod.tv': self.pp.parserWIIZTV,
+                       'guccihide.com': self.pp.parserONLYSTREAMTV,
+                       'guerrillaforfight.com': self.pp.parserONLYSTREAMTV,
                        #h
                        'harpy.tv': self.pp.parserHARPYTV,
                        'haxhits.com': self.pp.parserHAXHITSCOM,
@@ -718,6 +720,7 @@ class urlparser:
                        'vshare.eu': self.pp.parserVSHAREEU,
                        'vshare.io': self.pp.parserVSHAREIO,
                        'vsports.pt': self.pp.parserVSPORTSPT,
+                       'vtbe.net': self.pp.parserONLYSTREAMTV,
                        'vtube.to': self.pp.parserONLYSTREAMTV,
                        'vup.to': self.pp.parserONLYSTREAMTV,
                        #w
@@ -744,6 +747,7 @@ class urlparser:
                        #x
                        'xage.pl': self.pp.parserXAGEPL,
                        'xstreamcdn.com': self.pp.parserXSTREAMCDNCOM,
+                       'xvideoshare.live': self.pp.parserVIDEOBIN,
                        'xvidstage.com': self.pp.parserXVIDSTAGECOM,
                        #y
                        'yocast.tv': self.pp.parserYOCASTTV,
@@ -9760,8 +9764,8 @@ class pageParser(CaptchaHelper):
             urlTab.extend(getDirectM3U8Playlist(hlsUrl))
         return urlTab
 
-    def parseBROADCAST(self, baseUrl):
-        printDBG("parseBROADCAST baseUrl[%r]" % baseUrl)
+    def parserBROADCAST(self, baseUrl):
+        printDBG("parserBROADCAST baseUrl[%r]" % baseUrl)
         baseUrl = urlparser.decorateParamsFromUrl(baseUrl)
         Referer = baseUrl.meta.get('Referer', '')
         HTTP_HEADER = {'User-Agent': "Mozilla/5.0", 'Referer': Referer}
@@ -10423,8 +10427,8 @@ class pageParser(CaptchaHelper):
 
         printDBG(data)
 
-    def parseMETAUA(self, baseUrl):
-        printDBG("parseMETAUA baseUrl[%s]" % baseUrl)
+    def parserMETAUA(self, baseUrl):
+        printDBG("parserMETAUA baseUrl[%s]" % baseUrl)
         HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', #'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0',
                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
         sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER})
@@ -10464,8 +10468,8 @@ class pageParser(CaptchaHelper):
             return vidTab
         return False
 
-    def parseNETUTV(self, url):
-        printDBG("parseNETUTV url[%s]" % url)
+    def parserNETUTV(self, url):
+        printDBG("parserNETUTV url[%s]" % url)
         if 'hqq.none' in urlparser.getDomain(url):
             url = strwithmeta(url.replace('hqq.none', 'hqq.watch'), strwithmeta(url).meta)
 
@@ -13367,17 +13371,16 @@ class pageParser(CaptchaHelper):
 
         if "eval(function(p,a,c,k,e,d)" in data:
             printDBG('Host resolveUrl packed')
-            packed = re.compile('>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
-            if packed:
-                data2 = packed[-1]
-            else:
-                return ''
-            printDBG('Host pack: [%s]' % data2)
-            try:
-                data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
-                printDBG('OK unpack: [%s]' % data)
-            except Exception:
-                pass
+            scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data, re.S)
+            data = ''
+            for packed in scripts:
+                data2 = packed
+                printDBG('Host pack: [%s]' % data2)
+                try:
+                    data += unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                    printDBG('OK unpack: [%s]' % data)
+                except Exception:
+                    pass
 
         urlTab = self._findLinks(data, meta={'Referer': baseUrl})
         if 0 == len(urlTab):
@@ -14676,7 +14679,7 @@ class pageParser(CaptchaHelper):
             x = '{0}||{1}||{2}||streamsb'.format(makeid(12), c2, makeid(12))
             c3 = hexlify(x.encode('utf8')).decode('utf8')
 #            return 'https://{0}/sources43/{1}/{2}'.format(urlparser.getDomain(baseUrl), c1, c3)
-            return 'https://{0}/sources50/{1}'.format(urlparser.getDomain(baseUrl), c1)
+            return 'https://{0}/sources16/{1}'.format(urlparser.getDomain(baseUrl), c1)
 
         eurl = get_embedurl(media_id)
         urlParams['header']['watchsb'] = 'sbstream'
@@ -15699,6 +15702,13 @@ class pageParser(CaptchaHelper):
 
         urlTab = []
         url = self.cm.ph.getSearchGroups(data, '''sources[^'^"]*?['"]([^'^"]+?)['"]''')[0]
+        if url == '':
+            url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]*?src=["'](http[^"^']+?)["']''', 1, True)[0]
+            sts, data = self.cm.getPage(url, {'header': HTTP_HEADER})
+            if not sts:
+                return False
+            cUrl = self.cm.meta['url']
+            url = self.cm.ph.getSearchGroups(data, '''sources[^'^"]*?['"]([^'^"]+?)['"]''')[0]
         url = strwithmeta(url, {'Origin': urlparser.getDomain(cUrl, False), 'Referer': cUrl})
         if url != '':
             urlTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
@@ -15732,6 +15742,8 @@ class pageParser(CaptchaHelper):
             data += decryptor.feed()
 
         url = self.cm.ph.getSearchGroups(data, '''source[^'^"]*?['"]([^'^"]+?)['"]''')[0]
+        if url == '':
+            url = self.cm.ph.getSearchGroups(data, '''file[^'^"]*?['"]([^'^"]+?)['"]''')[0]
         urlTab = []
         url = urlparser.decorateUrl(url, {'iptv_proto': 'm3u8', 'User-Agent': urlParams['header']['User-Agent'], 'Referer': cUrl, 'Origin': urlparser.getDomain(cUrl, False)})
         if url != '':
@@ -15751,33 +15763,36 @@ class pageParser(CaptchaHelper):
         if not sts:
             return []
 
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
-        tmp = '\n'.join(tmp)
-
-        scriptUrl = self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^'^"]+?wiki\.js[^'^"]*?)['"]''')[0]
-        if scriptUrl.startswith('//'):
-            scriptUrl = 'https:' + scriptUrl
-        sts, data = self.cm.getPage(scriptUrl, urlParams)
-        if not sts:
-            return []
-
-        if data != '' and tmp != '':
-            jscode = base64.b64decode('''dmFyIG5hdmlnYXRvcj17dXNlckFnZW50OiJkZXNrdG9wIn07d2luZG93PXRoaXM7ZG9jdW1lbnQ9e307ZG9jdW1lbnQud3JpdGU9ZnVuY3Rpb24oKXtwcmludChhcmd1bWVudHNbMF0pO307YXRvYj1mdW5jdGlvbihlKXtlLmxlbmd0aCU0PT0zJiYoZSs9Ij0iKSxlLmxlbmd0aCU0PT0yJiYoZSs9Ij09IiksZT1EdWt0YXBlLmRlYygiYmFzZTY0IixlKSxkZWNUZXh0PSIiO2Zvcih2YXIgdD0wO3Q8ZS5ieXRlTGVuZ3RoO3QrKylkZWNUZXh0Kz1TdHJpbmcuZnJvbUNoYXJDb2RlKGVbdF0pO3JldHVybiBkZWNUZXh0fTs=''')
-            jscode += tmp
-            jscode += data
-            ret = js_execute(jscode)
-            if ret['sts'] and 0 == ret['code']:
-                tmp = ret['data'].strip()
-
-        tmpUrl = self.cm.ph.getSearchGroups(tmp, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
+        tmpUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
         HTTP_HEADER['Referer'] = baseUrl
         urlParams = {'header': HTTP_HEADER}
-        sts, data = self.cm.getPage(tmpUrl, urlParams)
-        if not sts:
-            return []
-
-        data = eval(re.findall('return\((\[.+?\])', data)[0])
-        data = ''.join(data).replace('\/', '/')
+        if tmpUrl == '':
+            tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
+            tmp = '\n'.join(tmp)
+            scriptUrl = self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^'^"]+?wiki\.js[^'^"]*?)['"]''')[0]
+            if scriptUrl.startswith('//'):
+                scriptUrl = 'https:' + scriptUrl
+            sts, data = self.cm.getPage(scriptUrl, urlParams)
+            if not sts:
+                return []
+            if data != '' and tmp != '':
+                jscode = base64.b64decode('''dmFyIG5hdmlnYXRvcj17dXNlckFnZW50OiJkZXNrdG9wIn07d2luZG93PXRoaXM7ZG9jdW1lbnQ9e307ZG9jdW1lbnQud3JpdGU9ZnVuY3Rpb24oKXtwcmludChhcmd1bWVudHNbMF0pO307YXRvYj1mdW5jdGlvbihlKXtlLmxlbmd0aCU0PT0zJiYoZSs9Ij0iKSxlLmxlbmd0aCU0PT0yJiYoZSs9Ij09IiksZT1EdWt0YXBlLmRlYygiYmFzZTY0IixlKSxkZWNUZXh0PSIiO2Zvcih2YXIgdD0wO3Q8ZS5ieXRlTGVuZ3RoO3QrKylkZWNUZXh0Kz1TdHJpbmcuZnJvbUNoYXJDb2RlKGVbdF0pO3JldHVybiBkZWNUZXh0fTs=''')
+                jscode += tmp
+                jscode += data
+                ret = js_execute(jscode)
+                if ret['sts'] and 0 == ret['code']:
+                    tmp = ret['data'].strip()
+            tmpUrl = self.cm.ph.getSearchGroups(tmp, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
+            sts, data = self.cm.getPage(tmpUrl, urlParams)
+            if not sts:
+                return []
+            data = eval(re.findall('return\((\[.+?\])', data)[0])
+            data = ''.join(data).replace('\/', '/')
+        else:
+            sts, data = self.cm.getPage(tmpUrl, urlParams)
+            if not sts:
+                return []
+            data = self.cm.ph.getSearchGroups(data, '''source[^'^"]*?['"]([^'^"]+?)['"]''')[0]
 
         urlTab = []
         if 'm3u8' in data:
@@ -15785,3 +15800,8 @@ class pageParser(CaptchaHelper):
             urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
 
         return urlTab
+
+    def parserFILEMOONSX(self, baseUrl):
+        printDBG("parserFILEMOONSX baseUrl[%s]" % baseUrl)
+
+        return self.parserONLYSTREAMTV(strwithmeta(baseUrl.replace('/d/', '/e/'), baseUrl.meta))
