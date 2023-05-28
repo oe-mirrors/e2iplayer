@@ -189,6 +189,18 @@ class Youtube(CBaseHostClass):
            url = "https://www.youtube.com/feed/trending?bp=4gIKGgh0cmFpbGVycw%3D%3D"
            params = {'category': 'feeds_video', 'title': title, 'url': url}
            self.addDir(params)
+           title = _("Live")
+           url = "https://www.youtube.com/channel/UC4R8DWoMoI7CAwX8_LjQHig"
+           params = {'category': 'feeds_video', 'title': title, 'url': url}
+           self.addDir(params)
+           title = _("News")
+           url = "https://www.youtube.com/channel/UCYfdidRxbB8Qhf0Nx7ioOYw"
+           params = {'category': 'feeds_video', 'title': title, 'url': url}
+           self.addDir(params)
+           title = _("Sport")
+           url = "https://www.youtube.com/channel/UCEgdi0XIXXZ-qJOFPf4JSKw"
+           params = {'category': 'feeds_video', 'title': title, 'url': url}
+           self.addDir(params)
 
     def listSubItems(self, cItem):
         printDBG("Youtube.listSubItems")

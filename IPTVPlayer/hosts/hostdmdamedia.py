@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# Blindspot - 2022.05.30. 
+# Blindspot - 2023.05.14. 
 ###################################################
-HOST_VERSION = "2.0"
+HOST_VERSION = "2.1"
 ###################################################
 # LOCAL import
 ###################################################
@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.hosts import hosturllist as urllist
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote, urllib_quote_plus
 ###################################################
 
 ###################################################
@@ -150,7 +151,7 @@ class Dmdamedia(CBaseHostClass):
     
     def listItems(self, cItem):
         printDBG('Dmdamedia.listItems')
-        url = cItem['url']
+        url = cItem['url'][0:cItem['url'].index('=')+1] + urllib_quote_plus(cItem['url'][cItem['url'].index('=')+1:])
         page = cItem['page']     
         params = False     
         sts, data = self.getPage(url)                
@@ -364,6 +365,7 @@ class Dmdamedia(CBaseHostClass):
         sts, data = self.getPage(url)           
         if not sts:
             return
+        searchPattern = urllib_quote_plus(searchPattern)
         found = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="wrap">', "</a></div>")
         point = searchPattern.split()
         for p in point:

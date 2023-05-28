@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# 2023.02.14. WhiteWolf
+# 2023.04.07. WhiteWolf
 ###################################################
-HOST_VERSION = "1.3"
+HOST_VERSION = "1.4"
 ###################################################
 # LOCAL import
 ###################################################
@@ -98,7 +98,7 @@ class WOFvideo(CBaseHostClass):
                 sts, data = self.getPage(url)
                 predesc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="description">', '/p', False)[1]
                 desc = desc + "\n" + self.cm.ph.getDataBeetwenMarkers(predesc, '<p>', '<', False)[1]
-                url = self.cm.ph.getDataBeetwenMarkers(data, 'target="_blank" rel="noopener" href="', '"', False)[1]
+                url = self.cm.ph.getDataBeetwenMarkers(data, 'maxbutton-b1" target="_blank" rel="noopener" href="', '"', False)[1]
                 if url:
                     sts, data = self.getPage(url)
                     url = self.cm.ph.getDataBeetwenMarkers(data, "<iframe src='", "'", False)[1]

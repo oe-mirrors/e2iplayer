@@ -7,7 +7,6 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
-from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -174,8 +173,8 @@ class Vizjer(CBaseHostClass):
             if url == '':
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?poster[^"^']+?)['"]''')[0])
-            title = ensure_str(unescapeHTML(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0]))
-            desc = ensure_str(unescapeHTML(self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0]))
+            title = ensure_str(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
+            desc = ensure_str(self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0])
             if desc == '':
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'description'), ('</div', '>'), False)[1])
 #            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'quality-version'), ('</div', '>'), False)[1])

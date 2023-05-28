@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# 2022.05.16. Blindspot
+# 2023.04.07. Blindspot
 ###################################################
-HOST_VERSION = "1.4"
+HOST_VERSION = "1.5"
 ###################################################
 # LOCAL import
 ###################################################
@@ -24,14 +24,14 @@ import datetime
 import urllib
 ###################################################
 def gettytul():
-    return 'https://www.onlinefilmvilag2.eu/' 
+    return 'https://onlinefilmvilag2.eu/' 
 
 class FilmVilag(CBaseHostClass):
  
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'filmvilag', 'cookie':'filmvilag.cookie'})
-        self.MAIN_URL = 'https://www.onlinefilmvilag2.eu/'
-        self.DEFAULT_ICON_URL = "https://www.onlinefilmvilag2.eu/img/portrait.1.1586208455.jpeg"
+        self.MAIN_URL = 'https://onlinefilmvilag2.eu/'
+        self.DEFAULT_ICON_URL = "https://onlinefilmvilag2.eu/img/portrait.1.1668130502.jpeg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
@@ -42,11 +42,12 @@ class FilmVilag(CBaseHostClass):
     
     def getLinksForVideo(self, cItem):
         printDBG("FilmVilag.getLinksForVideo")
-        if "https://www.onlinefilmvilag2.eu" in cItem['url']:
+        if "https://onlinefilmvilag2.eu" in cItem['url']:
             sts, data = self.getPage(cItem['url'])                        
             if not sts:
                 return
-            url = self.cm.ph.getDataBeetwenMarkers(data,'height="315" src="','" width', False) [1]
+            url = self.cm.ph.getDataBeetwenMarkers(data,'<p><iframe','</iframe>', False) [1]
+            url = self.cm.ph.getDataBeetwenMarkers(url,'" src="','"', False) [1]
             if "https:" not in url:
                 url = "https:" + url
         else:
@@ -159,7 +160,7 @@ class FilmVilag(CBaseHostClass):
 	
     def listFilters(self, cItem):
         printDBG('FilmVilag.listFilters')
-        utl = 'https://www.onlinefilmvilag2.eu/'               
+        utl = 'https://onlinefilmvilag2.eu/'               
         sts, data = self.getPage(utl)                    
         if not sts:
             return

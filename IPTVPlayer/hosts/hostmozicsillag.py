@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ###################################################
-# 2023-01-15 by Blindspot
+# 2023-05-26 by Blindspot
 ###################################################
-HOST_VERSION = "2.1"
+HOST_VERSION = "2.2"
 ###################################################
 # LOCAL import
 ###################################################
@@ -141,7 +141,7 @@ class MoziCsillag(CBaseHostClass):
             host = self.cm.ph.getDataBeetwenMarkers(urls, 'title="', '</div>', False)[1]
             host = self.cm.ph.getDataBeetwenMarkers(host, '">', '</a>', False)[1]
             url =  self.cm.ph.getDataBeetwenMarkers(urls, '</span></div>', 'onclick="', False)[1]
-            url = 'https://filmbirodalmak.com/' + self.cm.ph.getDataBeetwenMarkers(url, '<a href="', '"', False)[1]
+            url = 'https://filmek-online.com/' + self.cm.ph.getDataBeetwenMarkers(url, '<a href="', '"', False)[1]
             title = cItem['title'] + " - " + host
             params = {'title':title, 'icon': cItem['icon'] , 'url': url, 'desc': desc}
             self.addVideo(params)
@@ -150,7 +150,7 @@ class MoziCsillag(CBaseHostClass):
                host = self.cm.ph.getDataBeetwenMarkers(i, 'title="', '</div>', False)[1]
                host = self.cm.ph.getDataBeetwenMarkers(host, '">', '</a>', False)[1]
                url =  self.cm.ph.getDataBeetwenMarkers(i, '</span></div>', 'onclick="', False)[1]
-               url = 'https://filmbirodalmak.com/' + self.cm.ph.getDataBeetwenMarkers(url, '<a href="', '"', False)[1]
+               url = 'https://filmek-online.com/' + self.cm.ph.getDataBeetwenMarkers(url, '<a href="', '"', False)[1]
                title = cItem['title'] + " - " + host
                params = {'title':title, 'icon': cItem['icon'] , 'url': url, 'desc': desc}
                self.addVideo(params)
@@ -187,7 +187,7 @@ class MoziCsillag(CBaseHostClass):
                 host = self.cm.ph.getDataBeetwenMarkers(urls, "title='", '</div>', False)[1]
                 host = self.cm.ph.getDataBeetwenMarkers(host, "'>", '</a>', False)[1]
                 url =  self.cm.ph.getDataBeetwenMarkers(urls, '</span></div>', "onclick='", False)[1]
-                url = 'https://filmbirodalmak.com/' + self.cm.ph.getDataBeetwenMarkers(url, "<a href='", "'", False)[1]
+                url = 'https://filmek-online.com/' + self.cm.ph.getDataBeetwenMarkers(url, "<a href='", "'", False)[1]
                 title = cItem['title'] + " - " + host
                 params = {'title':title, 'icon': cItem['icon'] , 'url': url, 'desc': cItem['desc']}
                 self.addVideo(params)
@@ -196,7 +196,7 @@ class MoziCsillag(CBaseHostClass):
                    host = self.cm.ph.getDataBeetwenMarkers(i, "title='", '</div>', False)[1]
                    host = self.cm.ph.getDataBeetwenMarkers(host, "'>", '</a>', False)[1]
                    url =  self.cm.ph.getDataBeetwenMarkers(i, '</span></div>', "onclick='", False)[1]
-                   url = 'https://filmbirodalmak.com/' + self.cm.ph.getDataBeetwenMarkers(url, "<a href='", "'", False)[1]
+                   url = 'https://filmek-online.com/' + self.cm.ph.getDataBeetwenMarkers(url, "<a href='", "'", False)[1]
                    title = cItem['title'] + " - " + host
                    params = {'title':title, 'icon': cItem['icon'] , 'url': url, 'desc': cItem['desc']}
                    self.addVideo(params)
@@ -208,7 +208,7 @@ class MoziCsillag(CBaseHostClass):
                host = self.cm.ph.getDataBeetwenMarkers(urls, "title='", '</div>', False)[1]
                host = self.cm.ph.getDataBeetwenMarkers(host, "'>", '</a>', False)[1]
                url =  self.cm.ph.getDataBeetwenMarkers(urls, '</span></div>', "onclick='", False)[1]
-               url = 'https://filmbirodalmak.com/' + self.cm.ph.getDataBeetwenMarkers(url, "<a href='", "'", False)[1]
+               url = 'https://filmek-online.com/' + self.cm.ph.getDataBeetwenMarkers(url, "<a href='", "'", False)[1]
                title = cItem['title'] + " - " + host
                params = {'title':title, 'icon': cItem['icon'] , 'url': url, 'desc': cItem['desc']}
                self.addVideo(params)
@@ -217,7 +217,7 @@ class MoziCsillag(CBaseHostClass):
                   host = self.cm.ph.getDataBeetwenMarkers(i, "title='", '</div>', False)[1]
                   host = self.cm.ph.getDataBeetwenMarkers(host, "'>", '</a>', False)[1]
                   url =  self.cm.ph.getDataBeetwenMarkers(i, '</span></div>', "onclick='", False)[1]
-                  url = 'https://filmbirodalmak.com/' + self.cm.ph.getDataBeetwenMarkers(url, "<a href='", "'", False)[1]
+                  url = 'https://filmek-online.com/' + self.cm.ph.getDataBeetwenMarkers(url, "<a href='", "'", False)[1]
                   title = cItem['title'] + " - " + host
                   params = {'title':title, 'icon': cItem['icon'] , 'url': url, 'desc': cItem['desc']}
                   self.addVideo(params)
