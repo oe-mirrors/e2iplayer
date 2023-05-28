@@ -12,12 +12,12 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode, urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 from binascii import hexlify, unhexlify
 from hashlib import md5
 ###################################################
@@ -150,7 +150,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
             if key in cItem:
                 query[baseKey] = cItem[key]
 
-        query = urllib.parse.urlencode(query)
+        query = urllib_urlencode(query)
         if '?' in url:
             url += '&' + query
         else:
@@ -231,7 +231,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
                 getParams['gresponse'] = token
 
         url = self.getFullUrl('/ajax/film/servers/{0}'.format(id))
-        url = self._getUrl(jsCode, url, urllib.parse.urlencode(getParams), timestamp)
+        url = self._getUrl(jsCode, url, urllib_urlencode(getParams), timestamp)
 
         sts, data = self.getPage(url, params)
         if not sts:
@@ -309,7 +309,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("AnimeTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('search?keyword=' + urllib.parse.quote_plus(searchPattern))
+        cItem['url'] = self.getFullUrl('search?keyword=' + urllib_quote_plus(searchPattern))
         self.listItems(cItem, 'explore_item')
 
     def getLinksForVideo(self, cItem):
@@ -321,7 +321,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         def derive_key_and_iv(password, key_length, iv_length):
             d = d_i = ''
             while len(d) < key_length + iv_length:
-                d_i = md5(d_i + password).digest()
+                d_i = md5(ensure_binary(d_i + password)).digest()
                 d += d_i
             return d[:key_length], d[key_length:key_length + iv_length]
         bs = 16
@@ -429,14 +429,14 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         if False:
             getParams = {'id': videoUrl.meta.get('id', ''), 'Q': '1'}
             url = self.getFullUrl('/ajax/film/update-views')
-            url = self._getUrl(jsCode, url, urllib.parse.urlencode(getParams), timestamp)
+            url = self._getUrl(jsCode, url, urllib_urlencode(getParams), timestamp)
             sts, data = self.getPage(url, params)
             if not sts:
                 return []
 
         getParams = {'id': videoUrl.meta.get('id', ''), 'random': '0'}
         url = self.getFullUrl('/ajax/episode/info')
-        url = self._getUrl(jsCode, url, urllib.parse.urlencode(getParams), timestamp)
+        url = self._getUrl(jsCode, url, urllib_urlencode(getParams), timestamp)
         sts, data = self.getPage(url, params)
         if not sts:
             return []
@@ -460,7 +460,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
                 printDBG(data)
                 printDBG("---")
                 if domain in data['grabber']:
-                    url = self._getUrl(jsCode, data['grabber'], urllib.parse.urlencode(dict(data['params'])), timestamp) + '&mobile=0'
+                    url = self._getUrl(jsCode, data['grabber'], urllib_urlencode(dict(data['params'])), timestamp) + '&mobile=0'
                 sts, data = self.getPage(url, params)
                 if not sts:
                     return []
@@ -514,7 +514,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
 
         getParams = {'ts': timestamp}
         #getParams = self._updateParams(getParams)
-        url = self.getFullUrl('/ajax/film/tooltip/' + id + '?' + urllib.parse.urlencode(getParams))
+        url = self.getFullUrl('/ajax/film/tooltip/' + id + '?' + urllib_urlencode(getParams))
         sts, data = self.getPage(url, params)
         if not sts:
             return []

@@ -8,7 +8,7 @@
         <widget render="Label" source="key_yellow" position="589,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
         <widget render="Label" source="key_blue"   position="836,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
         <widget name="headertext" position="5,47" zPosition="1" size="1080,23" font="Regular;20" transparent="1" backgroundColor="#00000000" />
-        <widget name="statustext" position="453,240" zPosition="1" size="537,90" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
+        <widget name="statustext" position="453,240" zPosition="1" size="537,120" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
         <widget name="list" position="372,100" zPosition="2" size="693,425" scrollbarMode="showOnDemand" enableWrapAround="1" transparent="1" backgroundColor="#00000000" />
         <widget name="console" position="5,385" zPosition="1" size="360,140" font="Regular;20" transparent="1" backgroundColor="#00000000" />
         <widget name="cover" zPosition="2" position="5,100" size="360,270" alphatest="blend" />     

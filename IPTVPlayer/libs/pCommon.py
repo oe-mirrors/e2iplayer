@@ -5,12 +5,24 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify, GetIPTVSleep
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsHttpsCertValidationEnabled, GetDefaultLang, rm, UsePyCurl, GetJSScriptFile
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsHttpsCertValidationEnabled, byteify, GetDefaultLang, rm, UsePyCurl, GetJSScriptFile
 from Plugins.Extensions.IPTVPlayer.components.asynccall import IsMainThread, IsThreadTerminated, SetThreadKillable
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute_ext
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, strDecode, iterDictItems, ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin, urlparse, urlunparse
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+import http.cookiejar as cookielib
+from io import BytesIO
+basestring = str
+unichr = chr
+from Components.config import config, ConfigText, configfile
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_addinfourl, urllib_unquote, urllib_quote_plus, urllib_urlencode, urllib_quote, \
+                                                      urllib2_HTTPRedirectHandler, urllib2_BaseHandler, urllib2_HTTPHandler, urllib2_HTTPError, \
+                                                      urllib2_URLError, urllib2_build_opener, urllib2_urlopen, urllib2_HTTPCookieProcessor, \
+                                                      urllib2_HTTPSHandler, urllib2_ProxyHandler, urllib2_Request
 # FOREIGN import
 ###################################################
 from urllib.request import urlopen, build_opener, HTTPRedirectHandler, addinfourl, HTTPHandler, HTTPSHandler, BaseHandler, HTTPCookieProcessor, ProxyHandler, Request
@@ -30,7 +42,7 @@ try:
 except Exception:
     pass
 
-from io import BytesIO, StringIO
+from io import StringIO
 
 import gzip
 from urllib.parse import urljoin, urlparse, urlunparse
@@ -40,13 +52,13 @@ import six
 
 
 def DecodeGzipped(data):
-    buf = StringIO(data)
+    buf = BytesIO(data)
     f = gzip.GzipFile(fileobj=buf)
     return f.read()
 
 
 def EncodeGzipped(data):
-    f = StringIO()
+    f = BytesIO()
     gzf = gzip.GzipFile(mode="wb", fileobj=f, compresslevel=1)
     gzf.write(data)
     gzf.close()
@@ -449,7 +461,7 @@ class common:
                 lineNeedFix = True
             if lineNeedFix:
                 lines[idx] = '\t'.join(fields)
-        cj._really_load(StringIO(''.join(lines)), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
+        cj._really_load(BytesIO(''.join(lines)), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
         return cj
 
     def clearCookie(self, cookiefile, leaveNames=[], removeNames=None, ignoreDiscard=True, ignoreExpires=False):
@@ -458,7 +470,7 @@ class common:
             if self.usePyCurl():
                 cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
             else:
-                cj = http.cookiejar.MozillaCookieJar()
+                cj = cookielib.MozillaCookieJar()
             cj.load(cookiefile, ignore_discard=ignoreDiscard)
             for cookie in cj:
                 if cookie.name not in leaveNames and (None == removeNames or cookie.name in removeNames):
@@ -481,7 +493,7 @@ class common:
             if self.usePyCurl():
                 cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
             else:
-                cj = http.cookiejar.MozillaCookieJar()
+                cj = cookielib.MozillaCookieJar()
                 cj.load(cookiefile, ignore_discard=ignoreDiscard)
         except Exception:
             printExc()
@@ -523,12 +535,15 @@ class common:
         if 'return_data' not in params:
             params['return_data'] = True
 
+        if 'save_to_file' in params: # some cleaning
+            params['save_to_file'] = params['save_to_file'].replace('//', '/')
+
         self.meta = {}
         metadata = self.meta
         out_data = None
         sts = False
 
-        buffer = BytesIO()
+        CurrBuffer = BytesIO()
         checkFromFirstBytes = params.get('check_first_bytes', [])
         fileHandler = None
         firstAttempt = [True]
@@ -557,8 +572,8 @@ class common:
             responseHeaders[name] = value
 
         def _breakConnection(toWriteData):
-            buffer.write(toWriteData)
-            if maxDataSize <= buffer.tell():
+            CurrBuffer.write(toWriteData)
+            if maxDataSize <= CurrBuffer.tell():
                 return 0
 
         def _bodyFunction(toWriteData):
@@ -588,10 +603,10 @@ class common:
 
             # if we should check start body data
             if len(checkFromFirstBytes):
-                buffer.write(toWriteData)
+                CurrBuffer.write(toWriteData)
                 toWriteData = None
                 valid = False
-                value = buffer.getvalue()
+                value = ensure_binary(CurrBuffer.getvalue())
                 for toCheck in checkFromFirstBytes:
                     if len(toCheck) <= len(value):
                         if value.startswith(toCheck):
@@ -609,8 +624,8 @@ class common:
             if fileHandler != None and 0 == len(checkFromFirstBytes):
                 # all check were done so, we can start write data to file
                 try:
-                    if fileHandler.tell() == 0 and buffer.tell() > 0:
-                        fileHandler.write(buffer.getvalue())
+                    if fileHandler.tell() == 0 and CurrBuffer.tell() > 0:
+                        fileHandler.write(ensure_binary(CurrBuffer.getvalue()))
 
                     if toWriteData != None:
                         fileHandler.write(toWriteData)
@@ -619,7 +634,7 @@ class common:
                     return 0 # wrong file handle
 
             if toWriteData != None and params['return_data']:
-                buffer.write(toWriteData)
+                CurrBuffer.write(toWriteData)
 
         def _terminateFunction(download_t, download_d, upload_t, upload_d):
             if IsThreadTerminated():
@@ -747,7 +762,7 @@ class common:
             pageUrl = url
             proxy_gateway = params.get('proxy_gateway', '')
             if proxy_gateway != '':
-                pageUrl = proxy_gateway.format(urllib.parse.quote_plus(pageUrl, ''))
+                pageUrl = proxy_gateway.format(urllib_quote_plus(pageUrl, ''))
             printDBG("pageUrl: [%s]" % pageUrl)
 
             curlSession.setopt(pycurl.URL, pageUrl)
@@ -762,16 +777,19 @@ class common:
                     curlSession.setopt(pycurl.HTTPPOST, post_data)
                     #curlSession.setopt(pycurl.CUSTOMREQUEST, "PUT")
                 else:
-                    curlSession.setopt(pycurl.POSTFIELDS, urllib.parse.urlencode(post_data))
+                    curlSession.setopt(pycurl.POSTFIELDS, urllib_urlencode(post_data))
 
             curlSession.setopt(pycurl.HEADERFUNCTION, _headerFunction)
 
             if fileHandler:
+                printDBG('pCommon - getPageWithPyCurl() -> fileHandler exists, pycurl.WRITEFUNCTION = _bodyFunction')
                 curlSession.setopt(pycurl.WRITEFUNCTION, _bodyFunction)
             elif maxDataSize >= 0:
+                printDBG('pCommon - getPageWithPyCurl() -> fileHandler exists, pycurl.WRITEFUNCTION = _breakConnection')
                 curlSession.setopt(pycurl.WRITEFUNCTION, _breakConnection)
             else:
-                curlSession.setopt(pycurl.WRITEDATA, buffer)
+                printDBG('pCommon - getPageWithPyCurl() -> pycurl.WRITEDATA to CurrBuffer')
+                curlSession.setopt(pycurl.WRITEDATA, CurrBuffer)
 
             curlSession.setopt(pycurl.NOPROGRESS, False)
             curlSession.setopt(pycurl.PROGRESSFUNCTION, _terminateFunction)
@@ -810,7 +828,7 @@ class common:
                 self.fillHeaderItems(metadata, responseHeaders, collectAllHeaders=params.get('collect_all_headers'))
 
                 if params['return_data']:
-                    out_data = buffer.getvalue()
+                    out_data = ensure_str(CurrBuffer.getvalue())
                 else:
                     out_data = ""
 
@@ -835,9 +853,10 @@ class common:
             if fileHandler:
                 fileHandler.close()
         except pycurl.error as e:
-            print('pycurl.error 903')
-            print(e)
-            metadata['pycurl_error'](e[0], str(e[1]))
+            try:
+                metadata['pycurl_error'] = (e[0], str(e[1]))
+            except Exception:
+                metadata['pycurl_error'] = (e.args[0], e.args[1]) # it seems pycurl in p3 has different structure
             printExc()
         except Exception:
             printExc()
@@ -1192,12 +1211,13 @@ class common:
                 blockSize = addParams.get('block_size', 8192)
                 fileHandler = None
                 while True:
-                    buffer = downHandler.read(blockSize)
+                    CurrBuffer = downHandler.read(blockSize)
+
                     if len(checkFromFirstBytes):
                         OK = False
                         for item in checkFromFirstBytes:
                             bitem = six.ensure_binary(item)
-                            if buffer.startswith(bitem):
+                            if CurrBuffer.startswith(bitem):
                                 # change extension of file
                                 if bitem in [b'\xFF\xD8', b'\xFF\xD9']:
                                     printDBG("SaveWebFile. It's a jpeg")
@@ -1217,13 +1237,13 @@ class common:
                         else:
                             checkFromFirstBytes = []
 
-                    if not buffer:
+                    if not CurrBuffer:
                         break
-                    downDataSize += len(buffer)
-                    if len(buffer):
+                    downDataSize += len(CurrBuffer)
+                    if len(CurrBuffer):
                         if fileHandler == None:
                             fileHandler = open(file_path, "wb")
-                        fileHandler.write(buffer)
+                        fileHandler.write(CurrBuffer)
                 if fileHandler != None:
                     fileHandler.close()
                 downHandler.close()

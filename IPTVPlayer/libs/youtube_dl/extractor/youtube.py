@@ -488,26 +488,33 @@ class YoutubeIE(object):
             videoInfoparams = {'cookiefile': COOKIE_FILE, 'use_cookie': True, 'load_cookie': False, 'save_cookie': True}
             sts, video_webpage = self.cm.getPage(url)
         else:
-            url = 'https://www.youtube.com/youtubei/v1/player?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8'
-            isGoogleDoc = False
-            videoKey = 'video_id'
-            videoInfoparams = {}
-            http_params = {'header': {'Content-Type': 'application/json', 'Origin': 'https://www.youtube.com', 'X-YouTube-Client-Name': '3', 'X-YouTube-Client-Version': '16.20'}}
-            http_params['raw_post_data'] = True
-            post_data = "{'videoId': '%s', 'context': {'client': {'hl': 'en', 'clientVersion': '16.20', 'clientName': 'ANDROID'}}}" % video_id
-            sts, video_webpage = self.cm.getPage(url, http_params, post_data)
-            if sts:
-                if allowAgeGate and 'LOGIN_REQUIRED' in video_webpage:
-                    post_data = "{'videoId': '%s', 'thirdParty': 'https://google.com', 'context': {'client': {'hl': 'en', 'clientScreen': 'EMBED', 'clientVersion': '16.20', 'clientName': 'ANDROID'}}}" % video_id
-                    sts, video_webpage = self.cm.getPage(url, http_params, post_data)
-                player_response = json_loads(video_webpage)
-            else:
-                url = 'http://www.youtube.com/watch?v=%s&bpctr=9999999999&has_verified=1&' % video_id
-                sts, video_webpage = self.cm.getPage(url)
+            tries = 0
+            while tries < 3:
+                tries += 1
+                url = 'https://www.youtube.com/youtubei/v1/player?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8'
+                isGoogleDoc = False
+                videoKey = 'video_id'
+                videoInfoparams = {}
+                http_params = {'header': {'User-Agent': 'com.google.android.youtube/17.31.35 (Linux; U; Android 12)', 'Content-Type': 'application/json', 'Origin': 'https://www.youtube.com', 'X-YouTube-Client-Name': '3', 'X-YouTube-Client-Version': '17.31.35'}}
+                http_params['raw_post_data'] = True
+                post_data = "{'videoId': '%s', 'params': '8AEB', 'context': {'client': {'hl': 'en', 'clientVersion': '17.31.35', 'clientName': 'ANDROID', 'androidSdkVersion': 31, 'osName': 'Android', 'osVersion': '12',}}}" % video_id
+                sts, video_webpage = self.cm.getPage(url, http_params, post_data)
                 if sts:
-                    player_response = self._extract_yt_initial_variable(
-                        video_webpage, self._YT_INITIAL_PLAYER_RESPONSE_RE,
-                        video_id, 'initial player response')
+                    if allowAgeGate and 'LOGIN_REQUIRED' in video_webpage:
+                        http_params['header']['X-YouTube-Client-Name'] = '85'
+                        post_data = "{'videoId': '%s', 'thirdParty': 'https://www.youtube.com/', 'context': {'client': {'clientName': 'TVHTML5_SIMPLY_EMBEDDED_PLAYER', 'clientVersion': '2.0', 'clientScreen': 'EMBED'}}}" % video_id
+                        sts, video_webpage = self.cm.getPage(url, http_params, post_data)
+                    player_response = json_loads(video_webpage)
+                else:
+                    url = 'http://www.youtube.com/watch?v=%s&bpctr=9999999999&has_verified=1&' % video_id
+                    sts, video_webpage = self.cm.getPage(url)
+                    if sts:
+                        player_response = self._extract_yt_initial_variable(
+                            video_webpage, self._YT_INITIAL_PLAYER_RESPONSE_RE,
+                            video_id, 'initial player response')
+                printDBG("_real_extract tries %s" % tries)
+                if player_response['playabilityStatus']['status'] == 'OK':
+                    break
 
         if not sts:
             raise ExtractorError('Unable to download video webpage')
@@ -515,12 +522,9 @@ class YoutubeIE(object):
         if not player_response:
             raise ExtractorError('Unable to get player response')
 
-        video_info = player_response['videoDetails']
+        video_info = player_response.get('videoDetails', {})
         # subtitles
-        if 'lengthSeconds' not in video_info:
-            video_duration = ''
-        else:
-            video_duration = video_info['lengthSeconds']
+        video_duration = video_info.get('lengthSeconds', '')
 
         url_map = {}
         video_url_list = {}
@@ -575,7 +579,7 @@ class YoutubeIE(object):
         except Exception:
             printExc()
 
-        if video_info.get('isLive') and not video_url_list:
+        if video_info.get('isLive', True) and not video_url_list: #j00zek needs verification if default value should be True or False, for now assuming yes
             is_m3u8 = 'yes'
             manifest_url = _unquote(player_response['streamingData']['hlsManifestUrl'], None)
             url_map = self._extract_from_m3u8(manifest_url, video_id)

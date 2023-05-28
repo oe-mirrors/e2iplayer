@@ -52,7 +52,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools
                                                           CMoviePlayerPerHost, GetFavouritesDir, CFakeMoviePlayerOption, GetAvailableIconSize, \
                                                           GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, TestTmpCookieDir, TestTmpJSCacheDir,\
                                                           ClearTmpCookieDir, ClearTmpJSCacheDir, SetTmpCookieDir, SetTmpJSCacheDir,\
-                                                          GetEnabledHostsList, SaveHostsOrderList, GetHostsAliases, formatBytes
+                                                          GetEnabledHostsList, SaveHostsOrderList, GetHostsAliases, formatBytes, getExcMSG
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvbuffui import E2iPlayerBufferingWidget
@@ -92,7 +92,7 @@ class E2iPlayerWidget(Screen):
                             <widget name="key_green_ext" position="425,9" size="300,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget render="Label" source="key_blue" position="740,9" size="140,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget name="headertext" position="15,55" zPosition="1" size="1080,30" font="Regular;30" transparent="1" backgroundColor="#00000000" />
-                            <widget name="statustext" position="15,148" zPosition="1" size="985,90" font="Regular;30" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
+                            <widget name="statustext" position="15,148" zPosition="1" size="985,120" font="Regular;30" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
                             <widget name="list" position="5,115" zPosition="2" size="860,690" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" backgroundColor="#00000000" />
                             <widget name="console" position="1020,310" zPosition="1" size="500,630" font="Regular;26" transparent="1" backgroundColor="#00000000" />
                             <widget name="cover" zPosition="2" position="1020,80" size="244,280" alphatest="blend" />
@@ -117,7 +117,7 @@ class E2iPlayerWidget(Screen):
                             <widget render="Label" source="key_yellow" position="589,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget render="Label" source="key_blue"   position="836,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget name="headertext" position="5,47" zPosition="1" size="1080,23" font="Regular;20" transparent="1" backgroundColor="#00000000" />
-                            <widget name="statustext" position="5,140" zPosition="1" size="985,90" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
+                            <widget name="statustext" position="5,140" zPosition="1" size="985,120" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
                             <widget name="list" position="5,100" zPosition="2" size="1080,280" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" backgroundColor="#00000000" />
                             <widget name="console" position="165,430" zPosition="1" size="935,140" font="Regular;20" transparent="1" backgroundColor="#00000000" />
                             <widget name="cover" zPosition="2" position="5,400" size="122,140" alphatest="blend" />
@@ -331,8 +331,8 @@ class E2iPlayerWidget(Screen):
         except Exception as e:
             SetTmpCookieDir()
             SetTmpJSCacheDir()
-            msg1 = _("Critical Error – cookie can't be saved!")
-            msg2 = _("Last error:\n%s" % str(e))
+            msg1 = _("Critical Error - cookie can't be saved!")
+            msg2 = _("Last error:\n%s") % str(e)
             msg3 = _("Please make sure that the folder for cache data (set in the configuration) is writable.")
             GetIPTVNotify().push('%s\n\n%s\n\n%s' % (msg1, msg2, msg3), 'error', 20)
 
@@ -1566,6 +1566,9 @@ class E2iPlayerWidget(Screen):
                 lastErrorMsg = GetIPTVPlayerLastHostError()
                 if '' != lastErrorMsg:
                     message += "\n" + _('Last error: "%s"') % lastErrorMsg
+                lastExcMSG =  getExcMSG(True)
+                if lastExcMSG != '':
+                    message += "\n" + _("Last Exception error: '%s'") % lastExcMSG
                 self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO, timeout=10)
             return
         elif 1 == numOfLinks or self.autoPlaySeqStarted:
@@ -2076,7 +2079,10 @@ class E2iPlayerWidget(Screen):
                 disMessage += ret.message
             lastErrorMsg = GetIPTVPlayerLastHostError()
             if lastErrorMsg != '':
-                disMessage += "\n" + _('Last error: "%s"' % lastErrorMsg)
+                disMessage += "\n" + _('Last error: "%s"') % lastErrorMsg
+            lastExcMSG =  getExcMSG(True)
+            if lastExcMSG != '':
+                disMessage += "\n" + _('Last Exception error: "%s"') % lastExcMSG
 
             self.setStatusTex(disMessage)
             self["list"].hide()

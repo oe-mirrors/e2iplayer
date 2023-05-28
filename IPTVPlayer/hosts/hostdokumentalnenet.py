@@ -6,12 +6,12 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
@@ -56,19 +56,11 @@ class DokumentalneNET(CBaseHostClass):
     def getFullUrl(self, url):
         return CBaseHostClass.getFullUrl(self, url).replace('&#038;', '&')
 
-    def getPage(self, baseUrl, addParams={}, post_data=None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        origBaseUrl = baseUrl
-        baseUrl = self.cm.iriToUri(baseUrl)
-
-        def _getFullUrl(url):
-            if self.cm.isValidUrl(url):
-                return url
-            else:
-                return urllib.parse.urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        baseUrl = self.cm.iriToUri(url)
+        return self.cm.getPage(baseUrl, addParams, post_data)
 
     def listCategories(self, cItem, nextCategory):
         printDBG("KinoPodAniolemPL.listCategories [%s]" % cItem)
@@ -152,7 +144,7 @@ class DokumentalneNET(CBaseHostClass):
         printDBG("DokumentalneNET.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         if 1 == cItem.get('page', 1):
-            cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
+            cItem['url'] = self.getFullUrl('/?s=') + urllib_quote_plus(searchPattern)
         self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):

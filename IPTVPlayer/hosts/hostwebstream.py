@@ -8,7 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.libs.teledunet import TeledunetParser
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
@@ -18,37 +18,25 @@ from Plugins.Extensions.IPTVPlayer.libs.webcamera import WebCameraApi
 from Plugins.Extensions.IPTVPlayer.libs.bilasportpw import BilaSportPwApi, GetConfigList as BilaSportPw_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.canlitvliveio import CanlitvliveIoApi
 from Plugins.Extensions.IPTVPlayer.libs.weebtv import WeebTvApi, GetConfigList as WeebTv_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.wagasworld import WagasWorldApi, GetConfigList as WagasWorld_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.ustvnow import UstvnowApi, GetConfigList as Ustvnow_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.meteopl import MeteoPLApi, GetConfigList as MeteoPL_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.edemtv import EdemTvApi, GetConfigList as EdemTv_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.livestreamtv import LiveStreamTvApi
 from Plugins.Extensions.IPTVPlayer.libs.skylinewebcamscom import WkylinewebcamsComApi, GetConfigList as WkylinewebcamsCom_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.livespottingtv import LivespottingTvApi
-from Plugins.Extensions.IPTVPlayer.libs.goldvodtv import GoldVodTVApi, GetConfigList as GoldVodTV_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.showsporttvcom import ShowsportTVApi
 from Plugins.Extensions.IPTVPlayer.libs.sport365live import Sport365LiveApi
-from Plugins.Extensions.IPTVPlayer.libs.livemassnet import LivemassNetApi
-from Plugins.Extensions.IPTVPlayer.libs.livetvhdnet import LivetvhdNetApi
 from Plugins.Extensions.IPTVPlayer.libs.karwantv import KarwanTvApi
-from Plugins.Extensions.IPTVPlayer.libs.wizjatv import WizjaTvApi, GetConfigList as WizjaTV_GetConfigList
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.djingcom import DjingComApi
-from Plugins.Extensions.IPTVPlayer.libs.sportstream365 import SportStream365Api, GetConfigList as SportStream365_GetConfigList
 from Plugins.Extensions.IPTVPlayer.libs.mlbstreamtv import MLBStreamTVApi, GetConfigList as MLBStreamTV_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.internetowa import InternetowaApi, GetConfigList as Internetowa_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.firstonetvnet import FirstOneTvApi, GetConfigList as FirstOneTv_GetConfigList
-from Plugins.Extensions.IPTVPlayer.libs.beinmatch import BeinmatchApi
-from Plugins.Extensions.IPTVPlayer.libs.wiz1net import Wiz1NetApi
 from Plugins.Extensions.IPTVPlayer.libs.wiziwig1 import Wiziwig1Api
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlsplit, urlunsplit
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
-from urllib.parse import urlsplit, urlunsplit
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 ############################################
 
@@ -76,12 +64,6 @@ def GetConfigList():
     except Exception:
         printExc()
 
-    optionList.append(getConfigListEntry("----------------internetowa.ws------------------", config.plugins.iptvplayer.fake_separator))
-    try:
-        optionList.extend(Internetowa_GetConfigList())
-    except Exception:
-        printExc()
-
     optionList.append(getConfigListEntry("------------------meteo.pl------------------", config.plugins.iptvplayer.fake_separator))
     try:
         optionList.extend(MeteoPL_GetConfigList())
@@ -106,12 +88,6 @@ def GetConfigList():
     except Exception:
         printExc()
 
-    optionList.append(getConfigListEntry("-------------------edem.tv------------------", config.plugins.iptvplayer.fake_separator))
-    try:
-        optionList.extend(EdemTv_GetConfigList())
-    except Exception:
-        printExc()
-
     optionList.append(getConfigListEntry("-------------SkyLineWebCams.com-------------", config.plugins.iptvplayer.fake_separator))
     try:
         optionList.extend(WkylinewebcamsCom_GetConfigList())
@@ -122,41 +98,15 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Turn off buffering for http://prognoza.pogody.tv/"), config.plugins.iptvplayer.weatherbymatzgprohibitbuffering))
     optionList.append(getConfigListEntry(_("Use Polish proxy for http://prognoza.pogody.tv/"), config.plugins.iptvplayer.weather_useproxy))
 
-    optionList.append(getConfigListEntry("----------------GoldVod.TV------------------", config.plugins.iptvplayer.fake_separator))
-    try:
-        optionList.extend(GoldVodTV_GetConfigList())
-    except Exception:
-        printExc()
-
-#    optionList.append(getConfigListEntry("-----------------Wizja.TV------------------", config.plugins.iptvplayer.fake_separator))
-#    try:    optionList.extend( WizjaTV_GetConfigList() )
-#    except Exception: printExc()
-
-#    optionList.append(getConfigListEntry("--------------wagasworld.com---------------", config.plugins.iptvplayer.fake_separator))
-#    try:    optionList.extend( WagasWorld_GetConfigList() )
-#    except Exception: printExc()
-
     optionList.append(getConfigListEntry("----------------bilasport.pw-------------------", config.plugins.iptvplayer.fake_separator))
     try:
         optionList.extend(BilaSportPw_GetConfigList())
     except Exception:
         printExc()
 
-    optionList.append(getConfigListEntry("--------------sportstream365.com---------------", config.plugins.iptvplayer.fake_separator))
-    try:
-        optionList.extend(SportStream365_GetConfigList())
-    except Exception:
-        printExc()
-
     optionList.append(getConfigListEntry("-----------------mlbstream.tv------------------", config.plugins.iptvplayer.fake_separator))
     try:
         optionList.extend(MLBStreamTV_GetConfigList())
-    except Exception:
-        printExc()
-
-    optionList.append(getConfigListEntry("----------------firstonetv.net------------------", config.plugins.iptvplayer.fake_separator))
-    try:
-        optionList.extend(FirstOneTv_GetConfigList())
     except Exception:
         printExc()
 
@@ -173,8 +123,6 @@ class HasBahCa(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3'}
     MAIN_GROUPED_TAB = [{'alias_id': 'weeb.tv', 'name': 'weeb.tv', 'title': 'http://weeb.tv/', 'url': '', 'icon': 'http://xmtvplayer.com/wp-content/uploads/2014/07/weebtv.png'},
                         {'alias_id': 'videostar.pl', 'name': 'videostar.pl', 'title': 'https://pilot.wp.pl/', 'url': '', 'icon': 'http://satkurier.pl/uploads/53612.jpg'},
-#                        {'alias_id': 'internetowa.ws', 'name': 'internetowa.ws', 'title': 'https://internetowa.ws/', 'url': '', 'icon': 'https://internetowa.ws/img/internetowa-logo-new-3.png'}, \
-#                        {'alias_id':'firstonetv.net',          'name': 'firstonetv.net',      'title': 'https://firstonetv.net/',           'url': '',                                                                   'icon': 'https://www.firstonetv.net/images/logo.png'}, \
                         {'alias_id': 'prognoza.pogody.tv', 'name': 'prognoza.pogody.tv', 'title': 'http://pogody.tv/', 'url': 'http://prognoza.pogody.tv', 'icon': 'http://pogody.pl/images/pogodytv.png'}, \
                         {'alias_id': 'meteo.pl', 'name': 'meteo.pl', 'title': 'http://meteo.pl/', 'url': 'http://meteo.pl/', 'icon': 'http://www.meteo.pl/img/napis_glowny_pl_2.png'}, \
                         {'alias_id': 'webcamera.pl', 'name': 'webcamera.pl', 'title': 'https://webcamera.pl/', 'url': 'https://www.webcamera.pl/', 'icon': 'http://static.webcamera.pl/webcamera/img/loader-min.png'}, \
@@ -182,25 +130,13 @@ class HasBahCa(CBaseHostClass):
                         {'alias_id': 'livespotting.tv', 'name': 'livespotting.tv', 'title': 'http://livespotting.tv/', 'url': 'http://livespotting.tv/', 'icon': 'https://livespotting.com/static/images/apple-touch-icon.png'},\
                         {'alias_id': 'filmon.com', 'name': 'filmon_groups', 'title': 'http://filmon.com/', 'url': 'http://www.filmon.com/', 'icon': 'http://static.filmon.com/theme/img/filmon_tv_logo_white.png'}, \
                         {'alias_id': 'ustvnow.com', 'name': 'ustvnow', 'title': 'https://ustvnow.com/', 'url': 'https://www.ustvnow.com/', 'icon': 'http://2.bp.blogspot.com/-SVJ4uZ2-zPc/UBAZGxREYRI/AAAAAAAAAKo/lpbo8OFLISU/s1600/ustvnow.png'}, \
-                        {'alias_id': 'showsport-tv.com', 'name': 'showsport-tv.com', 'title': 'http://showsport-tv.com/', 'url': 'http://showsport-tv.com/', 'icon': 'http://showsport-tv.com/images/sstv-logo.png'}, \
                         {'alias_id': 'sport365.live', 'name': 'sport365.live', 'title': 'http://sport365.live/', 'url': 'http://www.sport365.live/', 'icon': 'http://s1.medianetworkinternational.com/images/icons/48x48px.png'}, \
-#                        {'alias_id': 'sportstream365.com', 'name': 'sportstream365.com', 'title': 'http://sportstream365.com/', 'url': 'http://sportstream365.com/', 'icon': 'http://sportstream365.com/img/logo.png'}, \
                         {'alias_id': 'bilasport.com', 'name': 'bilasport.com', 'title': 'http://bilasport.com/', 'url': '', 'icon': 'https://projects.fivethirtyeight.com/2016-mlb-predictions/images/logos.png'}, \
                         {'alias_id': 'mlbstream.tv', 'name': 'mlbstream.tv', 'title': 'http://mlbstream.tv/ && http://nhlstream.tv/', 'url': '', 'icon': 'http://mlbstream.tv/wp-content/uploads/2018/03/mlb-network-291x300.png'}, \
-#                        {'alias_id':'livetvhd.net',            'name': 'livetvhd.net',        'title': 'https://livetvhd.net/',             'url': 'https://livetvhd.net/',                                              'icon': 'https://livetvhd.net/images/logo.png'}, \
                         {'alias_id': 'karwan.tv', 'name': 'karwan.tv', 'title': 'http://karwan.tv/', 'url': 'http://karwan.tv/', 'icon': 'http://karwan.tv//logo/karwan-tv/karwan-tv-1.png'}, \
                         {'alias_id': 'canlitvlive.io', 'name': 'canlitvlive.io', 'title': 'http://canlitvlive.io/', 'url': 'http://www.canlitvlive.io/', 'icon': 'http://www.canlitvlive.io/images/footer_simge.png'}, \
-                        {'alias_id': 'beinmatch.com', 'name': 'beinmatch.com', 'title': 'http://beinmatch.com/', 'url': '', 'icon': 'http://www.beinmatch.com/assets/images/bim/logo.png'}, \
-#                        {'alias_id': 'wiz1.net', 'name': 'wiz1.net', 'title': 'http://wiz1.net/', 'url': '', 'icon': 'http://i.imgur.com/yBX7fZA.jpg'}, \
                         {'alias_id': 'wiziwig1.eu', 'name': 'wiziwig1.eu', 'title': 'http://wiziwig1.eu/', 'url': '', 'icon': 'http://i.imgur.com/yBX7fZA.jpg'},\
-#                        {'alias_id':'wagasworld',              'name': 'wagasworld.com',      'title': 'http://wagasworld.com/',            'url': 'http://www.wagasworld.com/channels.php',                             'icon': 'http://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Flag_of_Germany.svg/1000px-Flag_of_Germany.svg.png'}, \
                         {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://www.djing.com/newimages/content/c01.jpg'}, \
-                        {'alias_id': 'live_stream_tv', 'name': 'live-stream.tv', 'title': 'http://live-stream.tv/', 'url': 'http://www.live-stream.tv/', 'icon': 'http://www.live-stream.tv/images/lstv-logo.png'}, \
-#                        {'alias_id': 'edem_tv', 'name': 'edem.tv', 'title': 'https://edem.tv/', 'url': 'https://edem.tv/', 'icon': 'https://edem.tv/public/images/logo_edem.png'}, \
-#                        {'alias_id': 'goldvod.tv', 'name': 'goldvod.tv', 'title': 'http://goldvod.tv/', 'url': '', 'icon': 'http://goldvod.tv/assets/images/logo.png'}, \
-                        {'alias_id': 'livemass.net', 'name': 'livemass.net', 'title': 'http://livemass.net/', 'url': 'http://www.livemass.net/', 'icon': 'http://s3.amazonaws.com/livemass/warrington/images/warrington/iconclr.png'}, \
-#                        {'alias_id':'wizja.tv',                'name': 'wizja.tv',            'title': 'http://wizja.tv/',                  'url': 'http://wizja.tv/',                                                   'icon': 'http://wizja.tv/logo.png'}, \
-                        {'alias_id': 'crackstreams.net', 'name': 'crackstreams.net', 'title': 'http://crackstreams.net/', 'url': 'http://crackstreams.net/', 'icon': ''}, \
                         {'alias_id': 'nhl66.ir', 'name': 'nhl66.ir', 'title': 'https://nhl66.ir', 'url': 'https://api.nhl66.ir/api/sport/schedule', 'icon': 'https://nhl66.ir/cassets/logo.png'}, \
                         {'alias_id': 'strims.top', 'name': 'strims.top', 'title': 'http://strims.top/', 'url': 'http://strims.top/', 'icon': ''}, \
                        ]
@@ -219,30 +155,17 @@ class HasBahCa(CBaseHostClass):
         self.filmOnApi = None
         self.videoStarApi = None
         self.webCameraApi = None
-        self.wagasWorldApi = None
         self.ustvnowApi = None
-        self.livetvhdNetApi = None
         self.meteoPLApi = None
-        self.liveStreamTvApi = None
-        self.livemassNetApi = None
-        self.goldvodTvApi = None
-        self.showsportTvApi = None
         self.sport365LiveApi = None
-        self.edemTvApi = None
         self.wkylinewebcamsComApi = None
         self.livespottingTvApi = None
         self.karwanTvApi = None
-        self.wizjaTvApi = None
         self.bilaSportPwApi = None
         self.canlitvliveIoApi = None
         self.weebTvApi = None
         self.djingComApi = None
-        self.sportStream365Api = None
         self.MLBStreamTVApi = None
-        self.InternetowaApi = None
-        self.FirstOneTvApi = None
-        self.BeinmatchApi = None
-        self.Wiz1NetApi = None
         self.Wiziwig1Api = None
 
         self.hasbahcaiptv = {}
@@ -255,7 +178,7 @@ class HasBahCa(CBaseHostClass):
 
         if False and 'hasbahcaiptv.com' in url:
             printDBG(url)
-            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e5'.format(urllib.parse.quote_plus(url))
+            proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e5'.format(urllib_quote_plus(url))
             params['header']['Referer'] = proxy
             url = proxy
         return self.cm.getPage(url, params, post_data)
@@ -264,7 +187,7 @@ class HasBahCa(CBaseHostClass):
         v = item.get(key, None)
         if None == v:
             return default
-        return clean_html('%s' % v).encode('utf-8')
+        return ensure_str(clean_html(u'%s' % v))
 
     def addItem(self, params):
         self.currList.append(params)
@@ -296,7 +219,7 @@ class HasBahCa(CBaseHostClass):
     def listHasBahCa(self, item):
         url = item.get('url', '')
         if 'proxy-german.de' in url:
-            url = urllib.parse.unquote(url.split('?q=')[-1])
+            url = urllib_unquote(url.split('?q=')[-1])
 
         printDBG("listHasBahCa url[%s]" % url)
         BASE_URL = 'http://hasbahcaiptv.com/'
@@ -386,7 +309,7 @@ class HasBahCa(CBaseHostClass):
                 icon = item.get('logo_uri', '')
         except Exception:
             printExc()
-        return icon.encode('utf-8')
+        return ensure_str(icon)
 
     def __setFilmOn(self):
         if None == self.filmOnApi:
@@ -402,8 +325,8 @@ class HasBahCa(CBaseHostClass):
         for item in tmpList:
             try:
                 params = {'name': 'filmon_channels',
-                           'title': item['title'].encode('utf-8'),
-                           'desc': item['description'].encode('utf-8'),
+                           'title': ensure_str(item['title']),
+                           'desc': ensure_str(item['description']),
                            'group_id': item['group_id'],
                            'icon': self.__getFilmOnIconUrl(item)
                            }
@@ -417,9 +340,9 @@ class HasBahCa(CBaseHostClass):
         for item in tmpList:
             try:
                 params = {'name': 'filmon_channel',
-                           'title': item['title'].encode('utf-8'),
+                           'title': ensure_str(item['title']),
                            'url': item['id'],
-                           'desc': item['group'].encode('utf-8'),
+                           'desc': ensure_str(item['group']),
                            'seekable': item['seekable'],
                            'icon': self.__getFilmOnIconUrl(item)
                            }
@@ -434,7 +357,7 @@ class HasBahCa(CBaseHostClass):
         listURL = strwithmeta(listURL)
         meta = listURL.meta
         if 'proxy-german.de' in listURL:
-            listURL = urllib.parse.unquote(listURL.split('?q=')[-1])
+            listURL = urllib_unquote(listURL.split('?q=')[-1])
 
         listURL = strwithmeta(listURL, meta)
         if 'cookiefile' in listURL.meta:
@@ -494,24 +417,6 @@ class HasBahCa(CBaseHostClass):
                     else:
                         self.addVideo(params)
                     title = ''
-
-    def getWagasWorldList(self, cItem):
-        if None == self.wagasWorldApi:
-            self.wagasWorldApi = WagasWorldApi()
-
-        tmpList = self.wagasWorldApi.getChannelsList(cItem)
-        for item in tmpList:
-            params = dict(item)
-            params.update({'name': 'wagasworld.com'})
-            if 'video' == item['type']:
-                self.addVideo(params)
-            elif 'more' == item['type']:
-                self.addMore(params)
-            else:
-                self.addDir(params)
-
-    def getWagasWorldLink(self, cItem):
-        return self.wagasWorldApi.getVideoLink(cItem)
 
     def getOthersList(self, cItem):
         sts, data = self.cm.getPage("http://www.elevensports.pl/")
@@ -596,26 +501,6 @@ class HasBahCa(CBaseHostClass):
     #############################################################
 
     #############################################################
-    def getSportStream365List(self, cItem):
-        printDBG("getSportStream365List start")
-        if None == self.sportStream365Api:
-            self.sportStream365Api = SportStream365Api()
-        tmpList = self.sportStream365Api.getList(cItem)
-        for item in tmpList:
-            if 'video' == item['type']:
-                self.addVideo(item)
-            elif 'audio' == item['type']:
-                self.addAudio(item)
-            else:
-                self.addDir(item)
-
-    def getSportStream365Link(self, cItem):
-        printDBG("sportStream365Link start")
-        urlsTab = self.sportStream365Api.getVideoLink(cItem)
-        return urlsTab
-    #############################################################
-
-    #############################################################
     def getMLBStreamTVList(self, cItem):
         printDBG("getMLBStreamTVList start")
         if None == self.MLBStreamTVApi:
@@ -637,90 +522,6 @@ class HasBahCa(CBaseHostClass):
     def getMLBStreamResolvedLink(self, url):
         printDBG("getMLBStreamResolvedLink start")
         return self.MLBStreamTVApi.getResolvedVideoLink(url)
-    #############################################################
-
-    #############################################################
-    def getInternetowaList(self, cItem):
-        printDBG("getInternetowaList start")
-        if None == self.InternetowaApi:
-            self.InternetowaApi = InternetowaApi()
-        tmpList = self.InternetowaApi.getList(cItem)
-        for item in tmpList:
-            if 'video' == item['type']:
-                self.addVideo(item)
-            elif 'audio' == item['type']:
-                self.addAudio(item)
-            else:
-                self.addDir(item)
-
-    def getInternetowaLink(self, cItem):
-        printDBG("getInternetowaLink start")
-        urlsTab = self.InternetowaApi.getVideoLink(cItem)
-        return urlsTab
-    #############################################################
-
-    #############################################################
-    def getFirstOneTvList(self, cItem):
-        printDBG("getFirstOneTvList start")
-        if None == self.FirstOneTvApi:
-            self.FirstOneTvApi = FirstOneTvApi()
-        tmpList = self.FirstOneTvApi.getList(cItem)
-        for item in tmpList:
-            if 'video' == item['type']:
-                self.addVideo(item)
-            elif 'audio' == item['type']:
-                self.addAudio(item)
-            else:
-                self.addDir(item)
-
-    def getFirstOneTvLink(self, cItem):
-        printDBG("getFirstOneTvLink start")
-        urlsTab = self.FirstOneTvApi.getVideoLink(cItem)
-        return urlsTab
-
-    def getFirstOneTvdLink(self, url):
-        printDBG("getFirstOneTvdLink start")
-        return self.FirstOneTvApi.getResolvedVideoLink(url)
-    #############################################################
-
-    #############################################################
-    def getBeinmatchList(self, cItem):
-        printDBG("getBeinmatchList start")
-        if None == self.BeinmatchApi:
-            self.BeinmatchApi = BeinmatchApi()
-        tmpList = self.BeinmatchApi.getList(cItem)
-        for item in tmpList:
-            if 'video' == item['type']:
-                self.addVideo(item)
-            elif 'audio' == item['type']:
-                self.addAudio(item)
-            else:
-                self.addDir(item)
-
-    def getBeinmatchLink(self, cItem):
-        printDBG("getBeinmatchLink start")
-        urlsTab = self.BeinmatchApi.getVideoLink(cItem)
-        return urlsTab
-    #############################################################
-
-    #############################################################
-    def getWiz1NetList(self, cItem):
-        printDBG("getWiz1NetList start")
-        if None == self.Wiz1NetApi:
-            self.Wiz1NetApi = Wiz1NetApi()
-        tmpList = self.Wiz1NetApi.getList(cItem)
-        for item in tmpList:
-            if 'video' == item['type']:
-                self.addVideo(item)
-            elif 'audio' == item['type']:
-                self.addAudio(item)
-            else:
-                self.addDir(item)
-
-    def getWiz1NetLink(self, cItem):
-        printDBG("getWiz1NetLink start")
-        urlsTab = self.Wiz1NetApi.getVideoLink(cItem)
-        return urlsTab
     #############################################################
 
     #############################################################
@@ -758,22 +559,6 @@ class HasBahCa(CBaseHostClass):
         return urlsTab
     #############################################################
 
-    def geLivetvhdNetList(self, cItem):
-        printDBG("geLivetvhdNetList start")
-        if None == self.livetvhdNetApi:
-            self.livetvhdNetApi = LivetvhdNetApi()
-        tmpList = self.livetvhdNetApi.getList(cItem)
-        for item in tmpList:
-            if 'video' == item['type']:
-                self.addVideo(item)
-            else:
-                self.addDir(item)
-
-    def getLivetvhdNetLink(self, cItem):
-        printDBG("getLivetvhdNetLink start")
-        urlsTab = self.livetvhdNetApi.getVideoLink(cItem)
-        return urlsTab
-
     def getKarwanTvList(self, cItem):
         printDBG("getKarwanTvList start")
         if None == self.karwanTvApi:
@@ -790,24 +575,6 @@ class HasBahCa(CBaseHostClass):
     def getKarwanTvLink(self, cItem):
         printDBG("getKarwanTvLink start")
         urlsTab = self.karwanTvApi.getVideoLink(cItem)
-        return urlsTab
-
-    def getWizjaTvList(self, cItem):
-        printDBG("getWizjaTvList start")
-        if None == self.wizjaTvApi:
-            self.wizjaTvApi = WizjaTvApi()
-        tmpList = self.wizjaTvApi.getList(cItem)
-        for item in tmpList:
-            if 'video' == item['type']:
-                self.addVideo(item)
-            elif 'audio' == item['type']:
-                self.addAudio(item)
-            else:
-                self.addDir(item)
-
-    def getWizjaTvLink(self, cItem):
-        printDBG("getWizjaTvLink start")
-        urlsTab = self.wizjaTvApi.getVideoLink(cItem)
         return urlsTab
 
     ########################################################
@@ -885,22 +652,6 @@ class HasBahCa(CBaseHostClass):
         urlsTab = self.meteoPLApi.getVideoLink(cItem)
         return urlsTab
 
-    def getEdemTvList(self, cItem):
-        printDBG("getEdemTvList start")
-        if None == self.edemTvApi:
-            self.edemTvApi = EdemTvApi()
-        tmpList = self.edemTvApi.getChannelsList(cItem)
-        for item in tmpList:
-            if 'video' == item['type']:
-                self.addVideo(item)
-            else:
-                self.addDir(item)
-
-    def getEdemTvLink(self, cItem):
-        printDBG("getEdemTvLink start")
-        urlsTab = self.edemTvApi.getVideoLink(cItem)
-        return urlsTab
-
     def getWkylinewebcamsComList(self, cItem):
         printDBG("getWkylinewebcamsComList start")
         if None == self.wkylinewebcamsComApi:
@@ -924,68 +675,6 @@ class HasBahCa(CBaseHostClass):
         tmpList = self.livespottingTvApi.getChannelsList(cItem)
         for item in tmpList:
             self.addVideo(item)
-
-    def getLiveStreamTvList(self, cItem):
-        printDBG("getLiveStreamTvList start")
-        if None == self.liveStreamTvApi:
-            self.liveStreamTvApi = LiveStreamTvApi()
-        tmpList = self.liveStreamTvApi.getChannelsList(cItem)
-        for item in tmpList:
-            self.addVideo(item)
-
-    def getLiveStreamTvLink(self, cItem):
-        printDBG("getLiveStreamTvLink start")
-        urlsTab = self.liveStreamTvApi.getVideoLink(cItem)
-        return urlsTab
-
-    def getLivemassNetList(self, cItem):
-        printDBG("getLivemassNetList start")
-        if None == self.livemassNetApi:
-            self.livemassNetApi = LivemassNetApi()
-        tmpList = self.livemassNetApi.getList(cItem)
-        for item in tmpList:
-            if item['type'] == 'video':
-                self.addVideo(item)
-            elif item['type'] == 'marker':
-                self.addMarker(item)
-            else:
-                self.addDir(item)
-
-    def getLivemassNetLink(self, cItem):
-        printDBG("getLivemassNetLink start")
-        urlsTab = self.livemassNetApi.getVideoLink(cItem)
-        return urlsTab
-
-    def getGoldVodTvList(self, cItem):
-        printDBG("getGoldVodTvList start")
-        if None == self.goldvodTvApi:
-            self.goldvodTvApi = GoldVodTVApi()
-        tmpList = self.goldvodTvApi.getChannelsList(cItem)
-        for item in tmpList:
-            self.addVideo(item)
-
-    def getGoldVodTvLink(self, cItem):
-        printDBG("getGoldVodTvLink start")
-        urlsTab = self.goldvodTvApi.getVideoLink(cItem)
-        return urlsTab
-
-    def getShowsportTvList(self, cItem):
-        printDBG("getShowsportTvList start")
-        if None == self.showsportTvApi:
-            self.showsportTvApi = ShowsportTVApi()
-        tmpList = self.showsportTvApi.getChannelsList(cItem)
-        for item in tmpList:
-            if 'video' == item.get('type', ''):
-                self.addVideo(item)
-            elif 'marker' == item.get('type', ''):
-                self.addMarker(item)
-            else:
-                self.addDir(item)
-
-    def getShowsportTvLink(self, cItem):
-        printDBG("getShowsportTvLink start")
-        urlsTab = self.showsportTvApi.getVideoLink(cItem)
-        return urlsTab
 
     def getSport365LiveList(self, cItem):
         printDBG("getSport365LiveList start")
@@ -1044,82 +733,6 @@ class HasBahCa(CBaseHostClass):
         url = self.up.decorateUrl(url, urlMeta)
         return [{'name': 'prognoza.pogody.tv', 'url': url}]
 
-    def getCrackstreamsGroups(self, url):
-        printDBG("crackstreamsGroups start")
-        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items': {'challenge': 'BitMitigate.com'}})
-#        sts,data = self.cm.getPage(url)
-        if not sts:
-            return
-        data = CParsingHelper.getDataBeetwenNodes(data, ('<div', '>', 'collapse navbar-collapse'), ('</div', '>'))[1]
-        data = data.split('</a>')
-        if len(data):
-            del data[-1]
-        for item in data:
-            title = self.cleanHtmlStr(item)
-            url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
-            if len(url) and not url.startswith('http'):
-                url = 'http://crackstreams.net/' + url
-            try:
-                params = {'name': 'crackstreams_streams',
-                           'url': url,
-                           'title': title,
-                           }
-                self.addDir(params)
-            except Exception:
-                printExc()
-
-    def getCrackstreamsList(self, url):
-        printDBG("crackstreamsList start")
-        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items': {'challenge': 'BitMitigate.com'}})
-#        sts,data = self.cm.getPage(url)
-        if not sts:
-            return
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'btn btn-default'), ('</a', '>'))
-        for item in data:
-            params = {'name': "crackstreams.net"}
-            params['url'] = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
-            params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
-            params['title'] = self.cleanHtmlStr(CParsingHelper.getDataBeetwenNodes(item, ('<h4', '>'), ('</div', '>'))[1])
-            if len(params['icon']) and not params['icon'].startswith('http'):
-                params['icon'] = 'http://crackstreams.net/' + params['icon']
-            if len(params['url']) and not params['url'].startswith('http'):
-                params['url'] = 'http://crackstreams.net/' + params['url']
-            self.addVideo(params)
-
-    def getCrackstreamsLink(self, url):
-        printDBG("crackstreamsLink url[%r]" % url)
-        sts, data = self.getPage(url, {'use_cookie': True, 'cookie_items': {'challenge': 'BitMitigate.com'}})
-#        sts,data = self.cm.getPage(url)
-        if not sts:
-            return []
-        data = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
-        _url = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''')[0]
-        if len(_url) and not _url.startswith('http'):
-            _url = url + _url
-        if 'youtube' in _url:
-            urlsTab = self.up.getVideoLinkExt(_url)
-            return urlsTab
-        sts, data = self.cm.getPage(_url)
-        if not sts:
-            return []
-        data = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
-        _url = self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+?)['"]''')[0]
-        if len(_url) and not _url.startswith('http'):
-            _url = url + _url
-        sts, data = self.cm.getPage(_url)
-        if not sts:
-            return []
-        printDBG("crackstreamsLink data[%r]" % data)
-        _url = self.cm.ph.getSearchGroups(data, '''source:\swindow.atob\(['"]([^"^']+?)['"]''')[0]
-        if _url != '':
-            import base64
-            return [{'name': 'others', 'url': urllib.parse.unquote(base64.b64decode(_url))}]
-        else:
-            _url = self.cm.ph.getSearchGroups(data, '''source:\s['"]([^"^']+?)['"]''')[0]
-            return [{'name': 'others', 'url': _url}]
-        if '///' in _url:
-            return []
-
     def getNhl66List(self, url):
         printDBG("nhl66List start")
         sts, data = self.cm.getPage(url)
@@ -1153,14 +766,37 @@ class HasBahCa(CBaseHostClass):
         data = CParsingHelper.getDataBeetwenNodes(data, ('<table', '>', 'ramowka'), ('</table', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<td', '>'), ('</td', '>'))
         for item in data:
-            params = {'name': "strumyk_tv"}
             linkVideo = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
             if len(linkVideo) and not linkVideo.startswith('http'):
                 linkVideo = 'http://strims.top' + linkVideo
+            if linkVideo.endswith('/') and 'class="f1' not in item:
+                params = {'name': "strumyk_cat"}
+            else:
+                params = {'name': "strumyk_tv"}
             params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
 #            params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
             params['title'] = self.cleanHtmlStr(item)
             self.addDir(params)
+
+    def getStrumykTvDirCat(self, url):
+        printDBG("getStrumykTvDirCat start")
+        sts, data = self.cm.getPage(url)
+        if not sts:
+            return
+        data = CParsingHelper.getDataBeetwenNodes(data, ('<table', '>', '-table'), ('</table', '>'))[1]
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<tr', '>'), ('</tr', '>'))
+        for item in data:
+            params = {'name': "strumyk_tv"}
+            params['title'] = self.cleanHtmlStr(item)
+            linkVideo = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
+            if len(linkVideo):
+                if not linkVideo.startswith('http'):
+                    linkVideo = 'http://strims.top' + linkVideo
+                params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
+#                params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
+                self.addDir(params)
+            else:
+                self.addMarker(params)
 
     def getStrumykTvDir(self, url):
         printDBG("StrumykTvDir start")
@@ -1171,11 +807,16 @@ class HasBahCa(CBaseHostClass):
         tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'src'), ('<script', '>'))[1]
         if not tmp:
             tmp = CParsingHelper.getDataBeetwenNodes(data, ('<noscript', '>'), ('<script', '>'))[1]
-        printDBG("StrumykTvDir data [%s]" % tmp)
         data = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<a', '>'), ('</a', '>'))
         if not data:
             linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
             linkVideo = linkVideo.strip(' \n\t\r')
+            if linkVideo.startswith('/live/'):
+                sts, tmp = self.cm.getPage('http://strims.top' + linkVideo)
+                if not sts:
+                    return []
+                linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
+                linkVideo = linkVideo.strip(' \n\t\r')
             if len(linkVideo):
                 params = {'name': "strims.top"}
                 params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
@@ -1184,8 +825,12 @@ class HasBahCa(CBaseHostClass):
 
         for item in data:
             _url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
+            if '?' in url:
+                url = url.split('?', 1)[0]
             if _url.startswith('?'):
                 _url = url + _url
+            if not _url.startswith('http'):
+                _url = 'http://strims.top' + _url
             sts, data = self.cm.getPage(_url)
             if sts:
                 tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
@@ -1194,16 +839,23 @@ class HasBahCa(CBaseHostClass):
                     linkVideo = linkVideo.strip(' \n\t\r')
                 else:
                     tmp = self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0]
-                    tmp = urllib.unquote(tmp)
+                    tmp = urllib_unquote(tmp)
                     linkVideo = self.cm.ph.getSearchGroups(tmp, '''['"]*(http[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
                 if len(linkVideo) and linkVideo.startswith('//'):
                     linkVideo = 'http:' + linkVideo
                 if len(linkVideo) and not linkVideo.startswith('http'):
                     linkVideo = 'http://strims.top' + linkVideo
-                    sts, tmp = self.cm.getPage(linkVideo)
-                    tmp = CParsingHelper.getDataBeetwenNodes(tmp, ('<iframe', '>', 'src'), ('</iframe', '>'))[1]
-                    linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
-                    linkVideo = linkVideo.strip(' \n\t\r')
+                    sts, data = self.cm.getPage(linkVideo)
+                    tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'src'), ('</iframe', '>'))[1]
+                    if len(tmp):
+                        linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
+                        linkVideo = linkVideo.strip(' \n\t\r')
+                    else:
+                        tmp = self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0]
+                        tmp = urllib_unquote(tmp)
+                        linkVideo = self.cm.ph.getSearchGroups(tmp, '''['"]*(http[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
+                        if '' == linkVideo:
+                            linkVideo = self.cm.ph.getSearchGroups(tmp, '''['"]*(http[^'^"]+?\.mpd[^'^"]*?)['"]''')[0].replace('\\', '')
                     if len(linkVideo) and linkVideo.startswith('//'):
                         linkVideo = 'http:' + linkVideo
                 linkVideo = linkVideo.replace('https://href.li/', '')
@@ -1212,6 +864,7 @@ class HasBahCa(CBaseHostClass):
                 params = {'name': "strims.top"}
                 params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
                 params['title'] = self.cleanHtmlStr(item) + ' - ' + self.up.getDomain(linkVideo)
+                printDBG("StrumykTvDir params [%s]" % params)
                 self.addVideo(params)
 
     def getStrumykTvLink(self, url):
@@ -1220,6 +873,8 @@ class HasBahCa(CBaseHostClass):
 
         if 'm3u8' in url and 'hlsplayer' not in url:
             urlsTab = getDirectM3U8Playlist(url, False)
+        elif 'mpd' in url:
+            urlsTab = getMPDLinksWithMeta(url, False)
         else:
             urlsTab.extend(self.up.getVideoLinkExt(url))
         return urlsTab
@@ -1245,12 +900,6 @@ class HasBahCa(CBaseHostClass):
             self.m3uList(url)
         elif name == "prognoza.pogody.tv":
             self.prognozaPogodyList(url)
-        elif name == 'livemass.net':
-            self.getLivemassNetList(self.currItem)
-        elif name == "goldvod.tv":
-            self.getGoldVodTvList(url)
-        elif name == "showsport-tv.com":
-            self.getShowsportTvList(self.currItem)
         elif name == "sport365.live":
             self.getSport365LiveList(self.currItem)
         elif name == "videostar.pl":
@@ -1263,24 +912,14 @@ class HasBahCa(CBaseHostClass):
             self.getDjingComList(self.currItem)
         elif name == 'ustvnow':
             self.getUstvnowList(self.currItem)
-        elif name == 'livetvhd.net':
-            self.geLivetvhdNetList(self.currItem)
         elif name == 'karwan.tv':
             self.getKarwanTvList(self.currItem)
-        elif name == 'wizja.tv':
-            self.getWizjaTvList(self.currItem)
         elif name == 'meteo.pl':
             self.getMeteoPLList(self.currItem)
-        elif name == 'edem.tv':
-            self.getEdemTvList(self.currItem)
         elif name == 'skylinewebcams.com':
             self.getWkylinewebcamsComList(self.currItem)
         elif name == 'livespotting.tv':
             self.getLivespottingTvList(self.currItem)
-        elif name == 'live-stream.tv':
-            self.getLiveStreamTvList(self.currItem)
-        elif name == "wagasworld.com":
-            self.getWagasWorldList(self.currItem)
         elif name == 'weeb.tv':
             self.getWeebTvList(url)
         elif name == "webcamera.pl":
@@ -1291,30 +930,18 @@ class HasBahCa(CBaseHostClass):
             self.getFilmOnChannels()
         elif name == 'others':
             self.getOthersList(self.currItem)
-        elif name == 'sportstream365.com':
-            self.getSportStream365List(self.currItem)
         elif name == 'mlbstream.tv':
             self.getMLBStreamTVList(self.currItem)
-        elif name == 'internetowa.ws':
-            self.getInternetowaList(self.currItem)
-        elif name == 'firstonetv.net':
-            self.getFirstOneTvList(self.currItem)
-        elif name == 'beinmatch.com':
-            self.getBeinmatchList(self.currItem)
-        elif name == 'wiz1.net':
-            self.getWiz1NetList(self.currItem)
         elif name == 'wiziwig1.eu':
             self.getWiziwig1List(self.currItem)
-        elif name == "crackstreams_streams":
-            self.getCrackstreamsList(url)
-        elif name == 'crackstreams.net':
-            self.getCrackstreamsGroups(url)
         elif name == 'nhl66.ir':
             self.getNhl66List(url)
         elif name == 'strims.top':
             self.getStrumykTvList(url)
         elif name == 'strumyk_tv':
             self.getStrumykTvDir(url)
+        elif name == 'strumyk_cat':
+            self.getStrumykTvDirCat(url)
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
@@ -1349,16 +976,8 @@ class IPTVHost(CHostBase):
             new_url = TeledunetParser().get_rtmp_params(url)
             if 0 < len(url):
                 retlist.append(CUrlItem("Własny link", new_url))
-        elif url.startswith('http://goldvod.tv/'):
-            urlList = self.host.getGoldVodTvLink(cItem)
-        elif name == 'livemass.net':
-            urlList = self.host.getLivemassNetLink(cItem)
-        elif name == "showsport-tv.com":
-            urlList = self.host.getShowsportTvLink(cItem)
         elif name == "sport365.live":
             urlList = self.host.getSport365LiveLink(cItem)
-        elif name == 'wagasworld.com':
-            urlList = self.host.getWagasWorldLink(cItem)
         elif name == 'others':
             urlList = self.host.getOthersLinks(cItem)
         elif 'weeb.tv' in name:
@@ -1367,8 +986,6 @@ class IPTVHost(CHostBase):
             urlList = self.host.getFilmOnLink(channelID=url)
         elif name == "videostar.pl":
             urlList = self.host.getVideostarLink(cItem)
-        elif name == "sportstream365.com":
-            urlList = self.host.getSportStream365Link(cItem)
         elif name == 'bilasport.com':
             urlList = self.host.getBilaSportPwLink(cItem)
         elif name == 'canlitvlive.io':
@@ -1377,38 +994,20 @@ class IPTVHost(CHostBase):
             urlList = self.host.getDjingComLink(cItem)
         elif name == 'ustvnow':
             urlList = self.host.getUstvnowLink(cItem)
-        elif name == 'livetvhd.net':
-            urlList = self.host.getLivetvhdNetLink(cItem)
         elif name == 'karwan.tv':
             urlList = self.host.getKarwanTvLink(cItem)
-        elif name == 'wizja.tv':
-            urlList = self.host.getWizjaTvLink(cItem)
         elif name == 'meteo.pl':
             urlList = self.host.getMeteoPLLink(cItem)
-        elif name == 'edem.tv':
-            urlList = self.host.getEdemTvLink(cItem)
         elif name == 'skylinewebcams.com':
             urlList = self.host.getWkylinewebcamsComLink(cItem)
-        elif name == 'live-stream.tv':
-            urlList = self.host.getLiveStreamTvLink(cItem)
         elif name == "webcamera.pl":
             urlList = self.host.getWebCameraLink(cItem)
         elif name == "prognoza.pogody.tv":
             urlList = self.host.prognozaPogodyLink(url)
         elif name == "mlbstream.tv":
             urlList = self.host.getMLBStreamTVLink(cItem)
-        elif name == "internetowa.ws":
-            urlList = self.host.getInternetowaLink(cItem)
-        elif name == "firstonetv.net":
-            urlList = self.host.getFirstOneTvLink(cItem)
-        elif name == "beinmatch.com":
-            urlList = self.host.getBeinmatchLink(cItem)
-        elif name == "wiz1.net":
-            urlList = self.host.getWiz1NetLink(cItem)
         elif name == "wiziwig1.eu":
             urlList = self.host.getWiziwig1Link(cItem)
-        elif name == "crackstreams.net":
-            urlList = self.host.getCrackstreamsLink(url)
         elif name == "strims.top":
             urlList = self.host.getStrumykTvLink(url)
 
@@ -1427,7 +1026,7 @@ class IPTVHost(CHostBase):
                     if '84.114.88.26' == url.meta.get('X-Forwarded-For', ''):
                         url.meta['iptv_m3u8_custom_base_link'] = '' + url
                         url.meta['iptv_proxy_gateway'] = 'http://webproxy.at/surf/printer.php?u={0}&b=192&f=norefer'
-                        url.meta['Referer'] = url.meta['iptv_proxy_gateway'].format(urllib.parse.quote_plus(url))
+                        url.meta['Referer'] = url.meta['iptv_proxy_gateway'].format(urllib_quote_plus(url))
                         meta = url.meta
                         tmpList = getDirectM3U8Playlist(url, checkExt=False)
                         if 1 == len(tmpList):
@@ -1465,8 +1064,6 @@ class IPTVHost(CHostBase):
             urlList = self.host.getBilaSportPwResolvedLink(url)
         elif name == 'mlbstream.tv':
             urlList = self.host.getMLBStreamResolvedLink(url)
-        elif name == 'firstonetv.net':
-            urlList = self.host.getFirstOneTvdLink(url)
 
         if isinstance(urlList, list):
             for item in urlList:

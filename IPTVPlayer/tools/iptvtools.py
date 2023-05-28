@@ -8,6 +8,9 @@
 ###################################################
 # LOCAL import
 ###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib2_urlopen, urllib2_Request, urllib2_URLError, urllib2_HTTPError
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode, iterDictItems, ensure_str
 ###################################################
 
 ###################################################
@@ -628,7 +631,7 @@ def getDebugMode():
     return DBG
 
 
-def printDBG(DBGtxt):
+def printDBG(DBGtxt, writeMode = 'a'):
     DBG = getDebugMode()
     if DBG == '':
         return
@@ -640,7 +643,7 @@ def printDBG(DBGtxt):
         else:
             DBGfile = DBG
         try:
-            f = open(DBGfile, 'a')
+            f = open(DBGfile, writeMode)
             f.write(str(DBGtxt) + '\n')
             f.close
         except Exception:
@@ -649,7 +652,7 @@ def printDBG(DBGtxt):
             print("========================================================")
             try:
                 msg = '%s' % traceback.format_exc()
-                f = open(DBGfile, 'a')
+                f = open(DBGfile, writeMode)
                 f.write(str(DBGtxt) + '\n')
                 f.close
             except Exception:
@@ -936,7 +939,7 @@ def mkdirs(newdir, raiseException=False):
 
 def rm(fullname):
     try:
-        if os.path.isdir(fullname):
+        if os.path.exists(fullname):
             remove(fullname)
         return True
     except Exception:
@@ -1305,7 +1308,11 @@ def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
         ret = ret.decode(encoding='utf-8', errors='strict')
         sts = True
     except Exception:
-        printExc()
+        if 'SearchHistory/' in filePath:
+            printExc('WARNING')
+        else:
+            printExc()
+          
     return sts, ret
 
 
@@ -1403,8 +1410,21 @@ def byteify(input, noneReplacement=None, baseTypesAsString=False):
 #    else:
     return input
 
+LASTExcMSG = ''
+
+def clearExcMSG():
+    global LASTExcMSG
+    LASTExcMSG = ''
+
+def getExcMSG(clearExcMSG = True):
+    global LASTExcMSG
+    retMSG = LASTExcMSG
+    if clearExcMSG:
+        LASTExcMSG = ''
+    return retMSG
 
 def printExc(msg='', WarnOnly=False):
+    global LASTExcMSG
     printDBG("===============================================")
     if WarnOnly or msg.startswith('WARNING'):
         printDBG("                    WARNING                    ")
@@ -1422,7 +1442,8 @@ def printExc(msg='', WarnOnly=False):
     try:
         retMSG = exc_formatted.splitlines()[-1]
     except Exception:
-        pass
+        retMSG = ''
+    LASTExcMSG = retMSG
     return retMSG #returns the error description to possibly use in main code. E.g. inform about failed login
 
 
@@ -1608,16 +1629,16 @@ def SetE2VideoMode(value):
 
 def ReadUint16(tmp, le=True):
     if le:
-        return ord(tmp[1]) << 8 | ord(tmp[0])
+        return tmp[1] << 8 | tmp[0]
     else:
-        return ord(tmp[0]) << 8 | ord(tmp[1])
+        return tmp[0] << 8 | tmp[1]
 
 
 def ReadUint32(tmp, le=True):
     if le:
-        return ord(tmp[3]) << 24 | ord(tmp[2]) << 16 | ord(tmp[1]) << 8 | ord(tmp[0])
+        return tmp[3] << 24 | tmp[2] << 16 | tmp[1] << 8 | tmp[0]
     else:
-        return ord(tmp[0]) << 24 | ord(tmp[1]) << 16 | ord(tmp[2]) << 8 | ord(tmp[3])
+        return tmp[0] << 24 | tmp[1] << 16 | tmp[2] << 8 | tmp[3]
 
 
 def ReadGnuMIPSABIFP(elfFileName):
@@ -1641,7 +1662,7 @@ def ReadGnuMIPSABIFP(elfFileName):
         byte = 0
 
         while start < end:
-            byte = ord(data[start])
+            byte = data[start]
             numRead += 1
 
             result |= (byte & 0x7f) << shift
@@ -1720,7 +1741,7 @@ def ReadGnuMIPSABIFP(elfFileName):
                                 if attrLen < 6:
                                     sectionLen = 0
                                     break
-                                tag = ord(contents[p])
+                                tag = contents[p]
                                 p += 1
                                 size = ReadUint32(contents[p:])
                                 if size > attrLen:
@@ -1779,3 +1800,45 @@ def is_port_in_use(pIP, pPORT):
     res = sock.connect_ex((pIP, pPORT))
     sock.close()
     return res == 0
+def readCFG(cfgName, defVal = ''):
+    for myPath in ['/etc/enigma2/IPTVplayer_defaults/', '/hdd/IPTVplayer_defaults/']:
+        if os.path.exists(myPath):
+            cfgPath = os.path.join(myPath,cfgName)
+            if os.path.exists(cfgPath):
+                retVal = open(cfgPath, 'r').readline().strip()
+                if retVal == 'True': retVal = True
+                elif retVal == 'False': retVal = False
+                return retVal
+            else:
+                with open('/etc/enigma2/settings', 'r') as f:
+                    for line in f:
+                        line = line.strip()
+                        if line.startswith('config.plugins.iptvplayer.%s=' % cfgName):
+                            defVal = line.split('=')[1]
+                            open(cfgPath, 'w').write(defVal)
+    return defVal
+
+def checkWebSiteStatus(URL, HEADERS = None, TIMEOUT = 1):
+    global LASTExcMSG
+    if HEADERS is None:
+        HEADERS = { 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:88.0) Gecko/20100101 Firefox/88.0',
+                        'Accept-Charset': 'utf-8',
+                        'Content-Type': 'text/html; charset=utf-8'
+                      }
+    req = urllib2_Request(URL, headers=HEADERS)
+    try:
+        response = urllib2_urlopen(req, timeout=TIMEOUT)
+    except urllib2_HTTPError as e:
+        LASTExcMSG = str(e)
+        return (False, "Website returned error", str(e.code))
+    except urllib2_URLError as e:
+        LASTExcMSG = str(e)
+        return (False, 'Website NOT available', str(e.reason))
+    except socket.timeout as e:
+        LASTExcMSG = str(e)
+        return (False, 'Website overloaded and dont respond timely', str('Timeout %ss' % TIMEOUT))
+    except Exception as e:
+        LASTExcMSG = str(e)
+        return (False, 'EXCEPTION', str(e))
+    else:
+        return (True, '', None)

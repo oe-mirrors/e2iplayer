@@ -1,4 +1,5 @@
 {
+	"hostkinomoc": "https://kinomoc.com/",
 	"hosthorrorycc": "https://horrory.cc/",
 	"hostplayzcc": "https://playz.cc/",
 	"hostfilmowoclub": "https://filmowo.club/",

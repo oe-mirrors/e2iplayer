@@ -94,7 +94,7 @@ class WkylinewebcamsComApi:
                 if url != '' and title != '':
                    tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'}) #explore_item
 
-        tab = sorted(tab, key=lambda x: x, reverse=True)
+        tab = sorted(tab, key = lambda x:x['title'], reverse=True)
         for item in tab:
             params = dict(cItem)
             params.update(item)

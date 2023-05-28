@@ -5,14 +5,14 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, RemoveDisallowedFilenameChars, GetSubtitlesDir, rm
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
@@ -68,7 +68,7 @@ class OpenSubtitles(CBaseSubProviderClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urllib.parse.urljoin(baseUrl, url)
+                return urljoin(baseUrl, url)
 
         addParams['cloudflare_params'] = {'domain': self.cm.getBaseUrl(baseUrl, domainOnly=True), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -86,7 +86,7 @@ class OpenSubtitles(CBaseSubProviderClass):
 
         login = config.plugins.iptvplayer.opensuborg_login.value
         passwd = config.plugins.iptvplayer.opensuborg_password.value
-        currentHash = hex_md5('\n\n--\n\n'.join((login, passwd)))
+        currentHash = md5(ensure_binary('\n\n--\n\n'.join((login, passwd)))).hexdigest()
         cokieFile = self.COOKIE_FILE + '.hash'
         try:
             with open(cokieFile, 'r') as f:
@@ -191,7 +191,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         url = cItem.get('url', '')
         if url == '':
             query = {'id': 8, 'action': 'search', 'SubSumCD': '', 'Genre': '', 'MovieByteSize': '', 'MovieLanguage': '', 'MovieImdbRatingSign': '1', 'MovieImdbRating': '', 'MovieCountry': '', 'MovieYearSign': '1', 'MovieYear': '', 'MovieFPS': '', 'SubFormat': '', 'SubAddDate': '', 'Uploader': '', 'IDUser': '', 'Translator': '', 'IMDBID': '', 'MovieHash': '', 'IDMovie': ''}
-            keywords = urllib.parse.quote_plus(self.params['confirmed_title'])
+            keywords = urllib_quote_plus(self.params['confirmed_title'])
             subLanguageID = cItem.get('sub_language_id', '')
             searchOnlyTVSeries = cItem.get('search_only_tv_series', '')
             searchOnlyMovies = cItem.get('search_only_movies', '')
@@ -221,7 +221,7 @@ class OpenSubtitles(CBaseSubProviderClass):
                 searchURL = self.searchURL
             else:
                 searchURL = '/search2'
-            url = self.getFullUrl(searchURL) + '?' + urllib.parse.urlencode(query)
+            url = self.getFullUrl(searchURL) + '?' + urllib_urlencode(query)
         else:
             url = cItem['url']
 

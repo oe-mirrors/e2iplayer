@@ -10,18 +10,17 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
                                                           MapUcharEncoding, GetPolishSubEncoding, rmtree, mkdirs
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 from datetime import timedelta
 import time
 import re
-import urllib.parse
 import unicodedata
 import base64
 try:
-    from urllib.parse import urlsplit, urlunsplit
+    from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlsplit, urlunsplit
 except Exception:
     printExc()
 from os import listdir as os_listdir, path as os_path
@@ -31,9 +30,9 @@ except Exception:
     import simplejson as json
 try:
     try:
-        from io import StringIO
+        from cStringIO import StringIO
     except Exception:
-        from io import StringIO
+        from StringIO import StringIO
     import gzip
 except Exception:
     pass
@@ -82,14 +81,13 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         if sts and params.get('use_cookie', True) and params.get('load_cookie', True) and params.get('save_cookie', True):
             session = self.cm.ph.getSearchGroups(data, '''var\s+phpbb3_session\s+=\s+['"]([^'^"]+?)['"]''')
             tmp = urlsplit(url)
-            checkUrl = self.getFullUrl('/forum/app.php/track?path=') + tmp.path + urllib.parse.quote('?' + tmp.query)
+            checkUrl = self.getFullUrl('/forum/app.php/track?path=') + tmp.path + urllib_quote('?' + tmp.query)
             checkSts, checkData = self.cm.getPage(checkUrl, params, post_data)
             if checkSts:
                 checkSession = self.cm.ph.getSearchGroups(checkData, '''var\s+my_session\s+=\s+['"]([^'^"]+?)['"]''')
                 printDBG('my_session [%s], phpbb3_session[%s]' % (checkSession, session))
                 if checkSession != session:
                     sts, data = self.cm.getPage(url, params, post_data)
-
         return sts, data
 
     def fillCacheFilters(self):
@@ -162,7 +160,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
     def listSubItems(self, cItem, nextCategory):
         printDBG("PodnapisiNetProvider.listSubItems")
 
-        keywords = urllib.parse.quote_plus(self.params['confirmed_title'])
+        keywords = urllib_quote_plus(self.params['confirmed_title'])
         year = cItem.get('year', '')
         language = cItem.get('language', '')
         season = None
@@ -181,8 +179,9 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         for key in ['movie_type', 'episode_type', 'fps', 'flags']:
             if cItem.get(key, '') != '':
                 baseUrl += '&' + key + '=' + cItem[key]
+
         url = self.getFullUrl(baseUrl)
-        sts, data = self.getPage(url)
+        sts, data = self.cm.getPage(url)
         if not sts:
             return
 

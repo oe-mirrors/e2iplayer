@@ -5,20 +5,21 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, printDBG, printExc, MergeDicts
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, printDBG, printExc, MergeDicts, readCFG
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 from datetime import datetime, timedelta, date
 import re
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 import time
 ###################################################
 
@@ -29,8 +30,8 @@ import time
 from Screens.MessageBox import MessageBox
 ###################################################
 config.plugins.iptvplayer.tvpvod_premium = ConfigYesNo(default=False)
-config.plugins.iptvplayer.tvpvod_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.tvpvod_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.tvpvod_login = ConfigText(default=readCFG('tvpvod_login',""), fixed_size=False)
+config.plugins.iptvplayer.tvpvod_password = ConfigText(default=readCFG('tvpvod_password',""), fixed_size=False)
 
 config.plugins.iptvplayer.tvpVodProxyEnable = ConfigYesNo(default=False)
 config.plugins.iptvplayer.tvpVodDefaultformat = ConfigSelection(default="590000", choices=[("360000", "320x180"),
@@ -142,7 +143,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
     def _getPage(self, url, addParams={}, post_data=None):
 
         try:
-            import httplib
+            if isPY2():
+                import httplib
+            else:
+                import http.client as httplib
 
             def patch_http_response_read(func):
                 def inner(*args):

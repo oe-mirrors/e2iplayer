@@ -5,8 +5,13 @@ from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, CreateTmpFile, rm, getDebugMode, GetJSCacheDir, \
                                                           ReadTextFile, WriteTextFile
 
+########################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+########################################################
 from Tools.Directories import fileExists
 
+from binascii import hexlify
 from hashlib import md5
 import time
 import _thread
@@ -75,7 +80,7 @@ def js_execute_ext(items, params={}):
                         sts, code = ReadTextFile(path)
                         if not sts:
                             raise Exception('Faile to read file "%s"!' % path)
-                    hash = md5(six.ensure_binary(code)).hexdigest()
+                    hash = hexlify(md5(ensure_binary(code)).digest())
                 byteFileName = GetJSCacheDir(name + '.byte')
                 metaFileName = GetJSCacheDir(name + '.meta')
                 if fileExists(byteFileName):

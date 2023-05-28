@@ -4,7 +4,11 @@ import re
 import six
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html as yt_clean_html
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printExc
-
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+if not isPY2():
+    basestring = str
+######################################################
 # flags:
 NONE = 0
 START_E = 1
@@ -55,13 +59,27 @@ def getattr(data, attrmame, flags=0):
 
 def search(data, pattern, flags=0, limits=-1):
     tab = []
-    if isinstance(pattern, str):
+    if isinstance(pattern, basestring):
         reObj = re.compile(pattern, re.IGNORECASE if flags & IGNORECASE else 0)
     else:
         reObj = pattern
     if limits == -1:
         limits = reObj.groups
-    match = reObj.search(data)
+    if isPY2():
+        match = reObj.search(data)
+    else: #PY3 compares only data with the same type
+        if type(pattern) == type(data):
+            match = reObj.search(data)
+        elif isinstance(pattern, basestring):
+            match = reObj.search(ensure_str(data))
+        elif isinstance(pattern, bytes):
+            match = reObj.search(ensure_binary(data))
+        else:
+            try: # just blind try
+                match = reObj.search(data)
+            except Exception:
+                printExc('EXCEPTION: unknown types: type(pattern)=%s vs type(data)=%s' % (str(type(pattern)),str(type(data))))
+
     for idx in range(limits):
         try:
             value = match.group(idx + 1)
@@ -92,14 +110,13 @@ def none(tab, data, start, end):
 
 
 def check(arg1, arg2=None):
-    if arg2 == None and isinstance(arg1, str):
+    if arg2 == None and isinstance(arg1, basestring):
         return lambda data, ldata, s, e: ldata.find(arg1, s, e) != -1
 
     return lambda data, ldata, s, e: arg1(arg2, ldata, s, e)
 
 
 def findall(data, start, end=('',), flags=START_E | END_E, limits=-1):
-
     start = start if isinstance(start, tuple) or isinstance(start, list) else (start,)
     end = end if isinstance(end, tuple) or isinstance(end, list) else (end,)
 
@@ -111,12 +128,12 @@ def findall(data, start, end=('',), flags=START_E | END_E, limits=-1):
     n1S = start[0]
     n1E = start[1] if len(start) > 1 else ''
     match1P = start[2] if len(start) > 2 else None
-    match1P = check(match1P) if isinstance(match1P, str) else match1P
+    match1P = check(match1P) if isinstance(match1P, basestring) else match1P
 
     n2S = end[0]
     n2E = end[1] if len(end) > 1 else ''
     match2P = end[2] if len(end) > 2 else None
-    match2P = check(match2P) if isinstance(match2P, str) else match2P
+    match2P = check(match2P) if isinstance(match2P, basestring) else match2P
 
     lastIdx = 0
     search = 1
@@ -179,7 +196,6 @@ def findall(data, start, end=('',), flags=START_E | END_E, limits=-1):
 
 
 def rfindall(data, start, end=('',), flags=START_E | END_E, limits=-1):
-
     start = start if isinstance(start, tuple) or isinstance(start, list) else (start,)
     end = end if isinstance(end, tuple) or isinstance(end, list) else (end,)
 
@@ -191,12 +207,12 @@ def rfindall(data, start, end=('',), flags=START_E | END_E, limits=-1):
     n1S = start[0]
     n1E = start[1] if len(start) > 1 else ''
     match1P = start[2] if len(start) > 2 else None
-    match1P = check(match1P) if isinstance(match1P, str) else match1P
+    match1P = check(match1P) if isinstance(match1P, basestring) else match1P
 
     n2S = end[0]
     n2E = end[1] if len(end) > 1 else ''
     match2P = end[2] if len(end) > 2 else None
-    match2P = check(match2P) if isinstance(match2P, str) else match2P
+    match2P = check(match2P) if isinstance(match2P, basestring) else match2P
 
     lastIdx = len(data)
     search = 1
@@ -291,7 +307,7 @@ def clean_html(string):
             if 'strip_html_tags' in dir(p):
                 STRIP_HTML_TAGS_C = p
         except Exception:
-            printExc()
+            printExc('WARNING')
 
     if STRIP_HTML_TAGS_C: # and type(' ') != type(string):
         return STRIP_HTML_TAGS_C.strip_html_tags(string)

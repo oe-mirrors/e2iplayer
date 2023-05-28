@@ -84,6 +84,7 @@ hostitvcom
 hostjoemonsterorg
 hostkabarety
 hostkijknl
+hostkinomoc
 hostkinox
 hostkisscartoonme
 hostkkiste
@@ -187,6 +188,7 @@ hostwatchwrestlinguno
 hostwebhuplayer
 hostwebstream
 hostwgrane
+hostwofvideo
 hostwolnelekturypl
 hostworldfree4u
 hostwpolscepl

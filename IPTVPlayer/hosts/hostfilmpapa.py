@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# 2022.02.15. 
+# 2023.02.14. 
 ###################################################
-HOST_VERSION = "1.1"
+HOST_VERSION = "1.2"
 ###################################################
 # LOCAL import
 ###################################################
@@ -46,11 +46,9 @@ class FilmPapa(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])                        
         if not sts:
             return
-        url = self.cm.ph.getDataBeetwenMarkers(data,'<div id="cn-content" class="autosize-container"><p><iframe width="560" height="315" src="','" frameborder="0" allow="autoplay" allowfullscreen></iframe></p>', False) [1]
-        if not url:
-            url = self.cm.ph.getDataBeetwenMarkers(data,' preload="metadata" controls="controls"><source type="video/mp4" src="','" /><a href="', False) [1]
-        if "https:" not in url:
-            url = "https:" + url
+        url = self.cm.ph.getSearchGroups(data, '''iframe.src=['"]([^"^']+?)['"]''', 1, True)[0]
+        #if "https:" not in url:
+		    #url = "https:" + url
         videoUrls = []
         uri = urlparser.decorateParamsFromUrl(url)
         protocol = uri.meta.get('iptv_proto', '')

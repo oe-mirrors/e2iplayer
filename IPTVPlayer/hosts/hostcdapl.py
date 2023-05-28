@@ -10,14 +10,13 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Me
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 import re
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from binascii import hexlify
 from hashlib import md5
 ###################################################
@@ -467,7 +466,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             freshSession = False
             if sts and '/logout' in data:
                 printDBG("Check hash")
-                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
+                hash = hexlify(md5(ensure_binary('%s@***@%s' % (self.login, self.password))).digest() )
                 prevHash = ReadTextFile(loginCookie)[1].strip()
 
                 printDBG("$hash[%s] $prevHash[%s]" % (hash, prevHash))
@@ -532,7 +531,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                 break
 
             if self.loggedIn:
-                hash = hexlify(md5('%s@***@%s' % (self.login, self.password)).digest())
+                hash = hexlify(md5(ensure_binary('%s@***@%s' % (self.login, self.password))).digest())
                 WriteTextFile(loginCookie, hash)
 
         return self.loggedIn

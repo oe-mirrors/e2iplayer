@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-import re
-import json
-import base64
+#
 
 ###################################################
 # LOCAL import
@@ -19,6 +16,14 @@ from Screens.Screen import Screen
 from Components.Label import Label
 from Components.ActionMap import ActionMap
 
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
+
+try:
+    import json
+except Exception:
+    import simplejson as json
+import re
+import base64
 ###################################################
 
 
@@ -154,7 +159,7 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
     def startExecution(self):
         captcha = {'siteKey': self.sitekey, 'sameOrigin': True, 'siteUrl': self.referer, 'contextUrl': '/'.join(self.referer.split('/')[:3]), 'boundToDomain': True, 'stoken': None, 'captchaType': self.captchaType}
         try:
-            captcha = base64.b64encode(json.dumps(captcha).encode()).decode()
+            captcha = ensure_str(base64.b64encode(ensure_binary(json.dumps(captcha))))
         except Exception:
             printExc()
 
@@ -168,7 +173,7 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
 
         cmd = GetPyScriptCmd('mye2iserver') + ' "%s" "%s" "%s"' % (captcha, self.ip_address, self.port)
 
-        self["console"].setText(('Please Open site:\n\n{0}:{1}'.format(self.ip_address, self.port)))
+        self["console"].setText(_('Please Open site:\nhttp://{0}:{1}\nin a web browser with the MyE2i extension installed').format(self.ip_address, self.port))
 
         self.workconsole['console'] = eConsoleAppContainer()
         self.workconsole['close_conn'] = eConnectCallback(self.workconsole['console'].appClosed, self._scriptClosed)

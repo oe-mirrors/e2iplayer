@@ -456,7 +456,7 @@ class CBaseSubProviderClass:
         if data == None:
             return None
         ext = fileName.rsplit('.', 1)[-1].lower()
-        printDBG("fileName[%s] ext[%s]" % (fileName, ext))
+        printDBG("isubprovider.py downloadAndUnpack fileName='%s' ext='%s'" % (fileName, ext))
         if ext not in ['zip', 'rar']:
             SetIPTVPlayerLastHostError(_('Unknown file extension "%s".') % ext)
             return None
@@ -473,10 +473,10 @@ class CBaseSubProviderClass:
             tmpDIR = GetTmpDir(self.TMP_DIR_NAME)
 
         printDBG(">>")
-        printDBG(fileName)
-        printDBG(tmpFile)
-        printDBG(tmpArchFile)
-        printDBG(tmpDIR)
+        printDBG("\t isubprovider.py downloadAndUnpack fileName = '%s'" % fileName)
+        printDBG("\t isubprovider.py downloadAndUnpack tmpFile = '%s'" % tmpFile)
+        printDBG("\t isubprovider.py downloadAndUnpack tmpArchFile = '%s'" % tmpArchFile)
+        printDBG("\t isubprovider.py downloadAndUnpack tmpDIR = '%s'" % tmpDIR)
         printDBG(">>")
 
         if not self.writeFile(tmpArchFile, data):
@@ -488,7 +488,7 @@ class CBaseSubProviderClass:
         return tmpDIR
 
     def downloadFileData(self, url, params={}, post_data=None):
-        printDBG('CBaseSubProviderClass.downloadFileData url[%s]' % url)
+        printDBG('isubprovider.py CBaseSubProviderClass.downloadFileData url[%s]' % url)
         urlParams = dict(params)
         urlParams['max_data_size'] = self.getMaxFileSize()
 
@@ -508,9 +508,9 @@ class CBaseSubProviderClass:
         return None, ''
 
     def writeFile(self, filePath, data):
-        printDBG('CBaseSubProviderClass.writeFile path[%s]' % filePath)
+        printDBG("isubprovider.py CBaseSubProviderClass.writeFile path='%s'" % filePath)
         try:
-            with open(filePath, 'w') as f:
+            with open(filePath, 'wb') as f:
                 f.write(data)
             return True
         except Exception:
@@ -551,7 +551,7 @@ class CBaseSubProviderClass:
         return True
 
     def unpackArchive(self, tmpFile, tmpDIR):
-        printDBG('CBaseSubProviderClass.unpackArchive tmpFile[%s], tmpDIR[%s]' % (tmpFile, tmpDIR))
+        printDBG("isubprovider.py CBaseSubProviderClass.unpackArchive tmpFile='%s', tmpDIR='%s'" % (tmpFile, tmpDIR))
         rmtree(tmpDIR, ignore_errors=True)
         if not mkdirs(tmpDIR):
             SetIPTVPlayerLastHostError(_('Failed to create directory "%s".') % tmpDIR)
