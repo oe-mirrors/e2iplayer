@@ -5,7 +5,7 @@ from Screens.InfoBarGenerics import InfoBarSeek, InfoBarAudioSelection, InfoBarN
 from Screens.HelpMenu import HelpableScreen
 from Components.ActionMap import HelpableActionMap
 from Components.config import config
-from Components.AVSwitch import eAVSwitch
+from Components.AVSwitch import iAVSwitch
 from Screens.ChoiceBox import ChoiceBox
 from Components.ServiceEventTracker import ServiceEventTracker
 from enigma import iPlayableService, eTimer
@@ -72,7 +72,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
                 length = r[1]
             r = seek.getPlayPosition()
             if not r[0]:
-                time = r[1] #float(float(r[1]) / float(90000))
+                time = r[1]  # float(float(r[1]) / float(90000))
         return time, length
 
     def doSeekRelative(self, pts):
@@ -102,7 +102,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
                 return
             self.waitForSeekToLastPosition = 0
             if self.bugEOFworkaround == 0 or position == 0 or self.seekstate != self.SEEK_STATE_PLAY:
-                return #== self.SEEK_STATE_PAUSE: return
+                return  # == self.SEEK_STATE_PAUSE: return
             self.lastPosition = position
         except Exception:
             printExc()
@@ -119,17 +119,16 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
 
     def aspectChange(self):
         printDBG("Aspect Ratio [%r]" % self.aspectratiomode)
-        if self.aspectratiomode == "1": #letterbox
-            eAVSwitch.getInstance().setAspectRatio(0)
+        if self.aspectratiomode == "1":  # letterbox
+            iAVSwitch.setAspectRatio(0)
             self.aspectratiomode = "2"
-            return
-        elif self.aspectratiomode == "2": #nonlinear
+        elif self.aspectratiomode == "2":  # nonlinear
             self.aspectratiomode = "3"
-        elif self.aspectratiomode == "3": #nonlinear
-            eAVSwitch.getInstance().setAspectRatio(2)
+        elif self.aspectratiomode == "3":  # nonlinear
+            iAVSwitch.setAspectRatio(2)
             self.aspectratiomode = "4"
-        elif self.aspectratiomode == "4": #panscan
-            eAVSwitch.getInstance().setAspectRatio(3)
+        elif self.aspectratiomode == "4":  # panscan
+            iAVSwitch.setAspectRatio(3)
             self.aspectratiomode = "1"
 
     def pauseBeforeClose(self):
