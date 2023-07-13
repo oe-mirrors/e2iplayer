@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ###################################################
-# 2022-10-19 - UPDATEHOSTS - WhiteWolf
+# 2022-11-03 - UPDATEHOSTS - Blindspot
 ###################################################
-HOST_VERSION = "5.0"
+HOST_VERSION = "5.1"
 ###################################################
 # LOCAL import
 ###################################################
@@ -59,7 +59,7 @@ class UPDATEHOSTS(CBaseHostClass):
         self.addDir(telepit)
     
     def getchanges(self):
-        sts, data = self.cm.getPage('https://raw.githubusercontent.com/Blindspot76/e2iPlayer-Python3/master/IPTVPlayer/changes.txt', self.defaultParams)
+        sts, data = self.cm.getPage('https://raw.githubusercontent.com/Blindspot76/e2iPlayer/master/IPTVPlayer/changes.txt', self.defaultParams)
         f = open(self.changespath, "w")
         f.write(data)
         f.close()
@@ -75,9 +75,9 @@ class UPDATEHOSTS(CBaseHostClass):
         f.close()
     
     def getremoteversion(self):
-        sts, data = self.cm.getPage('https://github.com/Blindspot76/e2iPlayer-Python3/blob/master/IPTVPlayer/version.py', self.defaultParams)
-        version = self.cm.ph.getDataBeetwenMarkers(data, 'IPTV_VERSION', '</td>', False)[1]
-        version = self.cm.ph.getDataBeetwenMarkers(version, '&quot;', '&quot;', False)[1]
+        sts, data = self.cm.getPage('https://github.com/Blindspot76/e2iPlayer/blob/master/IPTVPlayer/version.py', self.defaultParams)
+        version = self.cm.ph.getDataBeetwenMarkers(data, 'IPTV_VERSION=', '\n', False)[1]
+        version = self.cm.ph.getDataBeetwenMarkers(version, '\"', '\\"', False)[1]
         printDBG(version)
         return version
     
@@ -107,12 +107,12 @@ class UPDATEHOSTS(CBaseHostClass):
         return version
     
     def _update(self, command):
-        url = 'https://github.com/Blindspot76/e2iPlayer-Python3/archive/master.zip'
+        url = 'https://github.com/Blindspot76/e2iPlayer/archive/master.zip'
         dir = "/tmp/cache/"
         mkdirs(dir)
         fname = 'master.zip'
         destination = dir + fname
-        destination_unpack = "/tmp/cache/e2iPlayer-Python3-master/IPTVPlayer/*"
+        destination_unpack = "/tmp/cache/e2iPlayer-master/IPTVPlayer/*"
         unzip_command = ['unzip', '-q', '-o', destination, '-d', dir]
         if self.download(url, destination):
             if self._mycall(unzip_command) == 0:

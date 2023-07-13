@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 ###################################################
-# 2022-08-31 - Web HU Player
+# 2023-07-08 - Web HU Player
 ###################################################
-HOST_VERSION = "4.0"
+HOST_VERSION = "4.1"
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, RetHost, CUrlItem
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetLogoDir, GetIPTVPlayerVersion, rm, rmtree, mkdirs, DownloadFile, GetFileSize, GetConfigDir, Which, MergeDicts
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetLogoDir, rm, rmtree, mkdirs, DownloadFile, GetFileSize, GetConfigDir, Which, MergeDicts
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -151,7 +151,7 @@ class webhuplayer(CBaseHostClass):
     def check(self):
         if os.path.isdir(self.path_webh):
             sts, data = self.cm.getPage('https://github.com/e2iplayerhosts/webmedia3/blob/master/README.md', self.defaultParams)
-            version = self.cm.ph.getDataBeetwenMarkers(data, 'Version: ', '</p>', False)[1]
+            version = self.cm.ph.getDataBeetwenMarkers(data, 'Version: ', "\u003", False)[1]
             printDBG(version)
             local = self.getversion()
             if version != local:
