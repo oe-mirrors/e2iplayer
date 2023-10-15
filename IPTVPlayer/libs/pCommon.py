@@ -949,6 +949,8 @@ class common:
         except HTTPError as e:
             try:
                 printExc()
+                if e.code == 308:
+                    return self.getPage(e.fp.info().get('Location', ''), addParams, post_data)
                 status = False
                 response = e
                 if addParams.get('return_data', False):

@@ -358,6 +358,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 httpParams['header']['Referer'] = self.getFullUrl('/logowanie')
                 #httpParams['header']['Cookie'] = cookieHeader
 
+                sitekey = ''
                 if 'data-sitekey' in data:
                     sitekey = self.cm.ph.getSearchGroups(data, 'data\-sitekey="([^"]+?)"')[0]
 

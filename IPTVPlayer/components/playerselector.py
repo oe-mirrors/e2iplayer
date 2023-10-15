@@ -127,7 +127,7 @@ class PlayerSelectorWidget(Screen):
         self.calcDisplayVariables()
 
         # pagination
-        self.pageItemSize = 56
+        self.pageItemSize = 16
         self.pageItemStartX = int((offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth - self.numOfPages * self.pageItemSize) / 2)
         if screenwidth and screenwidth == 1920:
             self.pageItemStartY = 60
@@ -137,7 +137,7 @@ class PlayerSelectorWidget(Screen):
         if screenwidth and screenwidth == 1920:
 			# wenn einer die version einbauen will <widget name="IptvVersion" position="40,0" zPosition="1" size="250,50" font="Regular;36" halign="center" valign="center" transparent="1"/>
             skin = """
-            <screen name="IPTVPlayerPlayerSelectorWidget" position="center,center" title="E2iPlayer %s" size="%d,%d">
+            <screen name="PlayerSelectorWidget" position="center,center" title="E2iPlayer %s" size="%d,%d">
             <widget name="statustext" position="0,0" zPosition="1" size="%d,50" font="Regular;36" halign="center" valign="center" transparent="1"/>
             <widget name="marker" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
@@ -155,7 +155,7 @@ class PlayerSelectorWidget(Screen):
               )
         else:
             skin = """
-            <screen name="IPTVPlayerPlayerSelectorWidget" position="center,center" title="E2iPlayer %s" size="%d,%d">
+            <screen name="PlayerSelectorWidget" position="center,center" title="E2iPlayer %s" size="%d,%d">
             <widget name="statustext" position="0,0" zPosition="1" size="%d,50" font="Regular;26" halign="center" valign="center" transparent="1"/>
             <widget name="marker" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
             <widget name="page_marker" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />
@@ -340,7 +340,7 @@ class PlayerSelectorWidget(Screen):
         self.dispY = 0
 
     def updateIconsList(self, rangeList):
-        idx = self.currPage * (self.numOfCol * self.numOfRow)
+        idx = int(self.currPage * (self.numOfCol * self.numOfRow))
         for y in range(1, self.numOfRow + 1):
             for x in range(1, self.numOfCol + 1):
                 if idx >= rangeList[0] and idx <= rangeList[1]:
@@ -350,7 +350,7 @@ class PlayerSelectorWidget(Screen):
                 idx += 1
 
     def updateIcons(self):
-        idx = self.currPage * (self.numOfCol * self.numOfRow)
+        idx = int(self.currPage * (self.numOfCol * self.numOfRow))
         for y in range(1, self.numOfRow + 1):
             for x in range(1, self.numOfCol + 1):
                 strIndex = "cover_%s%s" % (x, y)
@@ -407,7 +407,7 @@ class PlayerSelectorWidget(Screen):
         return
 
     def moveMarker(self, prev_idx=0):
-        new_idx = self.currLine * self.numOfCol + self.dispX
+        new_idx = int(self.currLine * self.numOfCol + self.dispX)
 
         if self.reorderingItemSelected:
             if prev_idx != new_idx:
@@ -425,12 +425,12 @@ class PlayerSelectorWidget(Screen):
         imgPosY = self.offsetCoverY + (self.coverHeight + self.disHeight) * self.dispY
 
         # calculate postion of marker for current image
-        x = imgPosX - (self.markerWidth - self.coverWidth) / 2
-        y = imgPosY - (self.markerHeight - self.coverHeight) / 2
+        x = int(imgPosX - (self.markerWidth - self.coverWidth) / 2)
+        y = int(imgPosY - (self.markerHeight - self.coverHeight) / 2)
 
         #x =  30 + self.dispX * 180
         #y = 130 + self.dispY * 125
-        self["marker"].instance.move(ePoint(int(x), int(y)))
+        self["marker"].instance.move(ePoint(x, y))
         self["statustext"].setText(self.currList[new_idx][0])
         return
 
@@ -455,7 +455,7 @@ class PlayerSelectorWidget(Screen):
                 self.reorderingItemSelected = True
             return
 
-        idx = self.currLine * self.numOfCol + self.dispX
+        idx = int(self.currLine * self.numOfCol + self.dispX)
         PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
 
         if idx < self.numOfItems:

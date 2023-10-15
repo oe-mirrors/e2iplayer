@@ -169,7 +169,8 @@ class Kinomoc(CBaseHostClass):
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(desc, ('<div', '>', 'title'), ('</div', '>'), False)[1]).replace(',Online za darmo', '')
             desc = self.cleanHtmlStr(desc)
-            if 'icon-voicer' in item:
+            category = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'category'), ('</div', '>'), False)[1])
+            if 'Serial' in category:
                 params = {'good_for_fav': True, 'category': 'list_seasons', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addDir(params)
             else:

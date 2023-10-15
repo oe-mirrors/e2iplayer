@@ -6,6 +6,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
@@ -20,16 +21,16 @@ except Exception:
 
 
 def gettytul():
-    return 'https://my-free-mp3.net/'
+    return 'https://free-mp3-download.net/'
 
 
-class MyFreeMp3(CBaseHostClass):
+class MyFreeMp3(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'my-free-mp3.net', 'cookie': 'my-free-mp3.net.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL = 'https://my-free-mp3.net/'
-        self.DEFAULT_ICON_URL = 'https://my-free-mp3.net/img/logo.png'
+        self.MAIN_URL = 'https://free-mp3-download.net/'
+        self.DEFAULT_ICON_URL = 'https://free-mp3-download.net/img/logo.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
@@ -40,21 +41,11 @@ class MyFreeMp3(CBaseHostClass):
                              {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history')},
                             ]
-        self.streamUrl = 'https://play.idmp3s.com/'
 
-    def getPage(self, baseUrl, addParams={}, post_data=None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        origBaseUrl = baseUrl
-        baseUrl = self.cm.iriToUri(baseUrl)
-
-        def _getFullUrl(url):
-            if self.cm.isValidUrl(url):
-                return url
-            else:
-                return urljoin(baseUrl, url)
-        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        return self.cm.getPage(url, addParams, post_data)
 
     def listMainMenu(self, cItem):
         printDBG("MyFreeMp3.listMainMenu")
@@ -67,40 +58,19 @@ class MyFreeMp3(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        #
-        tmp = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^'^"]+?)['"]''')[0])
+        tmp = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^'^"]+?app\.min\.js(?:\?[^'^"]*?)?)['"]''')[0])
         sts, tmp = self.getPage(tmp)
-        if sts:
-            tmp = self.cm.ph.getSearchGroups(tmp, '''['"]([^'^"]*?/newtab[^'^"]+?)['"]''')[0]
-            if tmp != '':
-                self.streamUrl = self.getFullUrl(tmp)
-            if not self.streamUrl.endswith('/'):
-                self.streamUrl += '/'
-            self.streamUrl = self.cm.getBaseUrl(self.streamUrl)
-
-        url = self.getFullUrl('/api/search.php?callback=jQuery2130550300194200308_1532280982151')
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<select', '>', 'sort'), ('</select', '>'), False)[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<option', '</option>')
-        for item in data:
-            sort = self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0]
-            params = dict(cItem)
-            params.update({'category': 'list_items', 'url': url})
-            params['post_data'] = {'q': searchPattern} #'sort':'2', 'count':'300', 'performer_only':'0'
-            if sort == '':
-                params['title'] = _('Default')
-            else:
-                params['title'] = self.cleanHtmlStr(item)
-                params['post_data'].update({'sort': sort})
-            self.addDir(params)
+        printDBG("MyFreeMp3.listSearchResult tmp[%s]" % tmp)
+        url = self.cm.ph.getSearchGroups(tmp, '''['"]([^'^"]*?/search[^'^"]+?)['"]''')[0]
+        url = url + searchPattern
+        params = dict(cItem)
+        params.update({'category': 'list_items', 'url': url})
+        self.listItems(params)
 
     def listItems(self, cItem):
         printDBG("MyFreeMp3.listItems")
-        page = cItem.get('page', 0)
 
-        post_data = dict(cItem['post_data'])
-        post_data['page'] = page
-
-        sts, data = self.getPage(cItem['url'], post_data=post_data)
+        sts, data = self.getPage(cItem['url'])
         if not sts:
             return
 
@@ -113,29 +83,22 @@ class MyFreeMp3(CBaseHostClass):
         try:
             data = byteify(json.loads(data), '')
             printDBG(data)
-            for item in data['response']:
+            next_page = data.get('next', '')
+            for item in data['data']:
                 try:
-                    title = '%s - %s' % (self.cleanHtmlStr(item.get('artist', '')), self.cleanHtmlStr(item.get('title', '')))
+                    title = '%s - %s' % (self.cleanHtmlStr(item['artist']['name']), self.cleanHtmlStr(item.get('title', '')))
                     desc = str(timedelta(seconds=item['duration']))
                     if desc.startswith('0:'):
                         desc = desc[2:]
                     icon = ''
                     try:
                         desc += ' | ' + item['album']['title']
-                        icons = []
-                        for key in item['album']['thumb']:
-                            val = item['album']['thumb'][key]
-                            if not self.cm.isValidUrl(str(val)):
-                                continue
-                            key = int(key.split('_')[-1])
-                            icons.append((key, val))
-                        icons.sort(reverse=True)
-                        icon = icons[0][1]
+                        icon = item['album']['cover']
                     except Exception:
                         pass
                         #printExc()
                     params = dict(cItem)
-                    params.update({'good_for_fav': True, 'title': title, 'desc': desc, 'icon': icon, 'priv_data': item})
+                    params.update({'good_for_fav': True, 'title': title, 'desc': desc, 'icon': icon, 'id': item.get('id', '')})
                     self.addAudio(params)
                 except Exception:
                     printExc()
@@ -143,39 +106,37 @@ class MyFreeMp3(CBaseHostClass):
             printExc()
 
         if len(self.currList):
-            params = dict(cItem)
-            params.update({'post_data': post_data, 'page': page + 1, 'title': _('Next page')})
-            self.addDir(params)
+            if next_page != '':
+                params = dict(cItem)
+                params.update({'url': next_page, 'title': _('Next page')})
+                self.addDir(params)
 
     def getLinksForVideo(self, cItem):
         printDBG("MyFreeMp3.getLinksForVideo [%s]" % cItem)
 
-        map = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvxyz123'
-
-        def encode(input):
-            length = len(map)
-            encoded = ""
-            if input == 0:
-                return map[0]
-            if input < 0:
-                input *= -1
-                encoded += "-"
-            while input > 0:
-                val = input % length
-                input = input / length
-                encoded += map[val]
-            return encoded
-
         try:
-            item = cItem['priv_data']
-            if 'aid' in item:
-                id = item['aid']
-            else:
-                id = item['id']
+            id = cItem['id']
 
-            url = self.streamUrl + 'stream/%s:%s' % (encode(item['owner_id']), encode(id))
-            #url  = 'http://streams.my-free-mp3.net/stream/%s:%s' % (encode(item['owner_id']), encode(item['aid']))
-            return [{'name': 'direct', 'url': strwithmeta(url, {'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl()})}]
+            url = self.getFullUrl('/download.php?id=%s' % id)
+            sts, data = self.getPage(url)
+            sitekey = ''
+            if 'data-sitekey' in data:
+                sitekey = self.cm.ph.getSearchGroups(data, 'data\-sitekey="([^"]+?)"')[0]
+
+            token = ''
+            if sitekey != '':
+                token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
+                if token != '':
+                    printDBG("MyFreeMp3.getLinksForVideo token[%s]" % token)
+
+            params = dict(self.defaultParams)
+            params['raw_post_data'] = True
+            params['header']['Referer'] = url
+            post_data = '{"i":%s,"f":"mp3-320","h":"%s"}' % (id, token)
+            sts, data = self.getPage(self.getFullUrl('/dl.php?'), params, post_data)
+            printDBG("MyFreeMp3.getLinksForVideo post[%s]" % data)
+            if '.mp3' in data:
+                return [{'name': 'direct', 'url': strwithmeta(data.replace(' ', '%20'), {'User-Agent': self.USER_AGENT, 'Referer': url}), 'need_resolve': 0}]
         except Exception:
             printExc()
 

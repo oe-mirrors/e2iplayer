@@ -674,6 +674,9 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             if not sts:
                 return []
 
+            if '"drm":' in data:
+                SetIPTVPlayerLastHostError(_("Video with DRM protection."))
+
             if config.plugins.iptvplayer.tvpVodPreferedformat.value == 'm3u8':
                 hlsUrl = self.cm.ph.getSearchGroups(data, '''['"](http[^'^"]*?\.m3u8[^'^"]*?)['"]''')[0].replace('\/', '/')
                 if '' != hlsUrl:

@@ -1190,7 +1190,7 @@ class IPTVExtMoviePlayer(Screen):
                 if 0 < totalDuration and 0 < downloadDuration:
                     self.playback['BufferFill'] = (downloadDuration * 100000) / totalDuration
                     self['bufferingBar'].value = self.playback['BufferFill']
-                    if self.playback['Length'] < totalDuration:
+                    if self.playback['Length'] is not None and self.playback['Length'] < totalDuration:
                         self.setPlaybackLength(totalDuration)
                         self.clipLength = totalDuration
                 return
@@ -1244,97 +1244,101 @@ class IPTVExtMoviePlayer(Screen):
         self['lengthTimeLabel'].setText(str(timedelta(seconds=newLength)))
 
     def playbackUpdateInfo(self, stsObj):
-        # workaround for missing playback length info for under muxing MKV
-        if self.playback['Length'] > 0 and self.downloader != None and self.downloader.getName() == 'ffmpeg':
-            stsObj['Length'] = self.playback['Length']
+        #fix TypeError: '>' not supported between instances of 'NoneType' and 'int' 
+        try:
+            # workaround for missing playback length info for under muxing MKV
+            if self.playback['Length'] > 0 and self.downloader != None and self.downloader.getName() == 'ffmpeg':
+                stsObj['Length'] = self.playback['Length']
 
-        for key, val in stsObj.items():
-            if 'Length' == key:
-                if 0 > val:
-                    printDBG('IPTVExtMoviePlayer.playbackUpdateInfo Length[%d] - live stream?' % val)
-                    val = 0
-                    self.playback['IsLive'] = True
-                else:
-                    self.playback['IsLive'] = False
-                if 0 < val:
-                    # restore last position
-                    if 10 < self.lastPosition and self.lastPosition < (self.playback['Length'] - 10):
-                        self.updateBufferFill()
-                        if self.playback['BufferFill'] > 0:
-                            max = self.playback['Length'] * self.playback['BufferFill'] / 100000
-                            if max > self.playback['Length']:
+            for key, val in stsObj.items():
+                if 'Length' == key:
+                    if 0 > val:
+                        printDBG('IPTVExtMoviePlayer.playbackUpdateInfo Length[%d] - live stream?' % val)
+                        val = 0
+                        self.playback['IsLive'] = True
+                    else:
+                        self.playback['IsLive'] = False
+                    if 0 < val:
+                        # restore last position
+                        if 10 < self.lastPosition and self.lastPosition < (self.playback['Length'] - 10):
+                            self.updateBufferFill()
+                            if self.playback['BufferFill'] > 0:
+                                max = self.playback['Length'] * self.playback['BufferFill'] / 100000
+                                if max > self.playback['Length']:
+                                    max = self.playback['Length']
+                            else:
                                 max = self.playback['Length']
-                        else:
-                            max = self.playback['Length']
 
-                        if self.lastPosition <= max:
+                            if self.lastPosition <= max:
+                                self.showPlaybackInfoBar()
+                                self.extPlayerCmddDispatcher.doGoToSeek(str(self.lastPosition - 5))
+                                self.lastPosition = 0
+                        tmpLength = self.playback['BufferCTime']
+                        if self.playback['CurrentTime'] > tmpLength:
+                            tmpLength = self.playback['CurrentTime']
+                        if val > tmpLength:
+                            tmpLength = val
+                            self.clipLength = val
+                        if self.playback['Length'] is not None and self.playback['Length'] < tmpLength:
+                            if None == self.downloader or not self.downloader.hasDurationInfo():
+                                self.setPlaybackLength(tmpLength)
+                        self.playback['LengthFromPlayerReceived'] = True
+                elif 'CurrentTime' == key:
+                    if self.playback['Length'] is not None and self.playback['Length'] < val and val > self.playback['BufferCTime']:
+                        self.setPlaybackLength(val)
+                    self['progressBar'].value = val
+                    prevCTime = self.playback['CurrentTime']
+                    self.playback['CurrentTime'] = stsObj['CurrentTime']
+                    if 0 < self.playback['CurrentTime']:
+                        self.playback['StartGoToSeekTime'] = self.playback['CurrentTime']
+                        diff = self.playback['CurrentTime'] - prevCTime
+                        if diff > 0 and diff < 3: # CurrentTime in seconds
+                            self.playback['ConfirmedCTime'] = self.playback['CurrentTime']
+                    self['currTimeLabel'].setText(str(timedelta(seconds=self.playback['CurrentTime'])))
+                    self['remainedLabel'].setText('-' + str(timedelta(seconds=self.playback['Length'] - self.playback['CurrentTime'])))
+                    self['pleaseWait'].hide()
+                elif 'BufferCTime' == key:
+                    if self.playback['Length'] is not None and self.playback['Length'] < val:
+                        self.setPlaybackLength(val)
+                    self.playback['BufferCTime'] = val
+                    self['bufferingCBar'].value = val
+                elif 'Status' == key:
+                    curSts = self.playback['Status']
+                    if self.playback['Status'] != val[0]:
+                        if 'Play' == val[0]:
                             self.showPlaybackInfoBar()
-                            self.extPlayerCmddDispatcher.doGoToSeek(str(self.lastPosition - 5))
-                            self.lastPosition = 0
-                    tmpLength = self.playback['BufferCTime']
-                    if self.playback['CurrentTime'] > tmpLength:
-                        tmpLength = self.playback['CurrentTime']
-                    if val > tmpLength:
-                        tmpLength = val
-                        self.clipLength = val
-                    if self.playback['Length'] < tmpLength:
-                        if None == self.downloader or not self.downloader.hasDurationInfo():
-                            self.setPlaybackLength(tmpLength)
-                    self.playback['LengthFromPlayerReceived'] = True
-            elif 'CurrentTime' == key:
-                if self.playback['Length'] < val and val > self.playback['BufferCTime']:
-                    self.setPlaybackLength(val)
-                self['progressBar'].value = val
-                prevCTime = self.playback['CurrentTime']
-                self.playback['CurrentTime'] = stsObj['CurrentTime']
-                if 0 < self.playback['CurrentTime']:
-                    self.playback['StartGoToSeekTime'] = self.playback['CurrentTime']
-                    diff = self.playback['CurrentTime'] - prevCTime
-                    if diff > 0 and diff < 3: # CurrentTime in seconds
-                        self.playback['ConfirmedCTime'] = self.playback['CurrentTime']
-                self['currTimeLabel'].setText(str(timedelta(seconds=self.playback['CurrentTime'])))
-                self['remainedLabel'].setText('-' + str(timedelta(seconds=self.playback['Length'] - self.playback['CurrentTime'])))
-                self['pleaseWait'].hide()
-            elif 'BufferCTime' == key:
-                if self.playback['Length'] < val:
-                    self.setPlaybackLength(val)
-                self.playback['BufferCTime'] = val
-                self['bufferingCBar'].value = val
-            elif 'Status' == key:
-                curSts = self.playback['Status']
-                if self.playback['Status'] != val[0]:
-                    if 'Play' == val[0]:
+                        elif val[0] in ['Pause', 'FastForward', 'SlowMotion']:
+                            self.showPlaybackInfoBar(blocked=True)
+                        self.playback['Status'] = val[0]
+                        self['statusIcon'].setPixmap(self.playback['statusIcons'].get(val[0], None))
+                elif 'IsLoop' == key:
+                    if self.playback['IsLoop'] != val:
+                        self.playback['IsLoop'] = val
+                        icon = 'Off'
+                        if val:
+                            icon = 'On'
+                        self['loopIcon'].setPixmap(self.playback['loopIcons'].get(icon, None))
                         self.showPlaybackInfoBar()
-                    elif val[0] in ['Pause', 'FastForward', 'SlowMotion']:
-                        self.showPlaybackInfoBar(blocked=True)
-                    self.playback['Status'] = val[0]
-                    self['statusIcon'].setPixmap(self.playback['statusIcons'].get(val[0], None))
-            elif 'IsLoop' == key:
-                if self.playback['IsLoop'] != val:
-                    self.playback['IsLoop'] = val
-                    icon = 'Off'
-                    if val:
-                        icon = 'On'
-                    self['loopIcon'].setPixmap(self.playback['loopIcons'].get(icon, None))
-                    self.showPlaybackInfoBar()
 
-            elif 'VideoTrack' == key:
-                self.playback[key] = val
-                codec = val['encode'].split('/')[-1]
-                text = "%s %sx%s" % (codec, val['width'], val['height'])
-                if val['progressive']:
-                    text += 'p'
-                elif False == val['progressive']:
-                    text += 'i'
-                fps = val['frame_rate']
-                if fps == floor(fps):
-                    fps = int(fps)
-                text += ', %sfps' % fps
-                text += ', %s' % val['aspect_ratio'].replace('_', ':')
-                self['videoInfo'].setText(text)
-            else:
-                self.playback[key] = val
-                printDBG(">>> playback[%s] = %s" % (key, val))
+                elif 'VideoTrack' == key:
+                    self.playback[key] = val
+                    codec = val['encode'].split('/')[-1]
+                    text = "%s %sx%s" % (codec, val['width'], val['height'])
+                    if val['progressive']:
+                        text += 'p'
+                    elif False == val['progressive']:
+                        text += 'i'
+                    fps = val['frame_rate']
+                    if fps == floor(fps):
+                        fps = int(fps)
+                    text += ', %sfps' % fps
+                    text += ', %s' % val['aspect_ratio'].replace('_', ':')
+                    self['videoInfo'].setText(text)
+                else:
+                    self.playback[key] = val
+                    printDBG(">>> playback[%s] = %s" % (key, val))
+        except Exception:
+            printExc(WarnOnly = True)
 
     def doGoToSeek(self):
         self.playback['GoToSeekTimer'].stop()

@@ -497,7 +497,7 @@ class YoutubeIE(object):
                 videoInfoparams = {}
                 http_params = {'header': {'User-Agent': 'com.google.android.youtube/17.31.35 (Linux; U; Android 12)', 'Content-Type': 'application/json', 'Origin': 'https://www.youtube.com', 'X-YouTube-Client-Name': '3', 'X-YouTube-Client-Version': '17.31.35'}}
                 http_params['raw_post_data'] = True
-                post_data = "{'videoId': '%s', 'params': '8AEB', 'context': {'client': {'hl': 'en', 'clientVersion': '17.31.35', 'clientName': 'ANDROID', 'androidSdkVersion': 31, 'osName': 'Android', 'osVersion': '12',}}}" % video_id
+                post_data = "{'videoId': '%s', 'params': 'CgIQBg', 'context': {'client': {'hl': 'en', 'clientVersion': '17.31.35', 'clientName': 'ANDROID', 'androidSdkVersion': 31, 'osName': 'Android', 'osVersion': '12',}}}" % video_id
                 sts, video_webpage = self.cm.getPage(url, http_params, post_data)
                 if sts:
                     if allowAgeGate and 'LOGIN_REQUIRED' in video_webpage:
