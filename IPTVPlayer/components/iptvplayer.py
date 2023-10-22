@@ -1,6 +1,12 @@
 from Screens.Screen import Screen
-from Screens.InfoBarGenerics import InfoBarSeek, InfoBarAspectSelection, InfoBarAudioSelection, InfoBarNotifications, InfoBarSubtitleSupport, InfoBarShowHide
+from Screens.InfoBarGenerics import InfoBarSeek, InfoBarAudioSelection, InfoBarNotifications, InfoBarSubtitleSupport, InfoBarShowHide
 
+try:
+    from Screens.InfoBarGenerics import InfoBarAspectSelection
+except ImportError:
+    class InfoBarAspectSelection:
+    	def __init__(self):
+            pass
 
 from Screens.HelpMenu import HelpableScreen
 from Components.ActionMap import HelpableActionMap
