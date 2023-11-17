@@ -8,7 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
 ###################################################
 # FOREIGN import
 ###################################################
@@ -104,7 +104,7 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
             self["console"].setText(_("JDownloader script execution failed.\nError code: %s\n") % (code))
 
     def _scriptStderrAvail(self, data):
-        self.workconsole['stderr'] += data
+        self.workconsole['stderr'] += ensure_str(data)
         self.workconsole['stderr'] = self.workconsole['stderr'].split('\n')
         if data.endswith('\n'):
             data = ''

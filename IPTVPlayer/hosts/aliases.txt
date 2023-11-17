@@ -7,7 +7,6 @@
 	"hostzaluknijcc": "https://zaluknij.cc/",
 	"hostmediayou": "https://mediayou.net/",
 	"hostfilman": "https://filman.cc/",
-	"hostfilmynadzis": "https://filmynadzis.pl/",
 	"hostgovodtv": "https://govod.tv/",
 	"hostogladajto": "https://ogladaj.to/",
 	"hostvizjerpl": "https://vizjer.pl/",

@@ -60,7 +60,6 @@ hostfilmstreamhdit
 hostfilmstreamvkcom
 hostfilmtar
 hostfilmvilag
-hostfilmynadzis
 hostforjatn
 hostfreediscpl
 hostfullmatchtvcom
