@@ -29,7 +29,7 @@ class HoofootCom(CBaseHostClass):
     AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
 
     MAIN_URL = 'https://hoofoot.com/'
-    DEFAULT_ICON_URL = "https://icdn.2cda.pl/g/286737_84647866641171280461.jpg"
+    DEFAULT_ICON_URL = "http://th.hoofoot.com/pics/default.jpg"
 
     MAIN_CAT_TAB = [{'category': 'list_cats', 'title': _('Main'), 'url': MAIN_URL, },
                     {'category': 'list_cats2', 'title': _('Popular'), 'url': MAIN_URL, },
@@ -200,7 +200,7 @@ class HoofootCom(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<table>', '<tr>'), ('<div id="port"', '>'))
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-            if '' == url:
+            if 'match' not in url:
                 continue
             icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"^>]+?\.jpg)['"]''')[0]
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
@@ -232,7 +232,7 @@ class HoofootCom(CBaseHostClass):
             return urlTab
 
         tmpTab = []
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, 'Alternatives', '</div>', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, 'descruta', '</div>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a ', '</a>')
         n_link = 0
         for item in tmp:
@@ -263,6 +263,8 @@ class HoofootCom(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, 'id="player"', '</div>', False)[1]
         videoUrl = self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?)['"]''')[0]
+        if videoUrl == '':
+            videoUrl = self.cm.ph.getSearchGroups(data, '''src=['"]([^'^"]+?)['"]''')[0]
 
         printDBG(videoUrl)
         if videoUrl.startswith('//'):

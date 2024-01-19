@@ -418,19 +418,19 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 break
 
             printDBG(">>>\n%s\n<<<" % data)
-            if 'hcaptcha' in data:
-                SetIPTVPlayerLastHostError(_('Link protected with hCaptcha.'))
+            if '#gcaptcha' in data:
+                SetIPTVPlayerLastHostError(_('Link protected with CF Turnstile .'))
                 sitekey = self.cm.ph.getSearchGroups(data, 'data-sitekey="([^"]+?)"')[0]
                 if sitekey == '':
                     sitekey = self.cm.ph.getSearchGroups(data, '''['"]?sitekey['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
                 if sitekey != '':
-                    token, errorMsgTab = self.processCaptcha(sitekey, self.MAIN_URL, captchaType="h1")
+                    token, errorMsgTab = self.processCaptcha(sitekey, self.MAIN_URL, captchaType="cf_re")
                     if token != '':
                         vUrl = self.getFullUrl('/watch/verify.php')
                         urlParams['header']['Referer'] = baseUrl
                         sts, data = self.getPage(vUrl, urlParams, {'verify': token})
                     else:
-                        SetIPTVPlayerLastHostError(_('Link protected with hCaptcha.'))
+                        SetIPTVPlayerLastHostError(_('Link protected with CF Turnstile .'))
                         return []
                         break
 

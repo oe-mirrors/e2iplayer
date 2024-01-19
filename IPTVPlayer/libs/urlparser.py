@@ -272,6 +272,7 @@ class urlparser:
                        'easyvid.org': self.pp.parserEASYVIDORG,
                        'easyvideo.me': self.pp.parserEASYVIDEOME,
                        'ebd.cda.pl': self.pp.parserCDA,
+                       'edwardarriveoften.com': self.pp.parserMATCHATONLINE,
                        'ekstraklasa.tv': self.pp.parserEKSTRAKLASATV,
                        'emb.aliez.tv': self.pp.parserALIEZ,
                        'embed.mystream.to': self.pp.parserMSTREAMICU,
@@ -280,6 +281,7 @@ class urlparser:
                        'embedsb.com': self.pp.parserSTREAMSB,
                        'embedstream.me': self.pp.parserEMBEDSTREAMME,
                        'embeducaster.com': self.pp.parserUCASTERCOM,
+                       'embedv.net': self.pp.parserVIDGUARDTO,
                        'embedwish.com': self.pp.parserONLYSTREAMTV,
                        'estream.to': self.pp.parserESTREAMTO,
                        'evoload.io': self.pp.parserEVOLOADIO,
@@ -300,7 +302,9 @@ class urlparser:
                        'filefactory.com': self.pp.parserFILEFACTORYCOM,
                        'filehoot.com': self.pp.parserFILEHOOT,
                        'filelions.live': self.pp.parserONLYSTREAMTV,
+                       'filelions.site': self.pp.parserONLYSTREAMTV,
                        'filelions.online': self.pp.parserONLYSTREAMTV,
+                       'filelions.to': self.pp.parserONLYSTREAMTV,
                        'filemoon.to': self.pp.parserFILEMOON,
                        'filemoon.sx': self.pp.parserFILEMOON,
                        'filenuke.com': self.pp.parserFILENUKE,
@@ -315,10 +319,12 @@ class urlparser:
                        'flashx.net': self.pp.parserFLASHXTV,
                        'flashx.pw': self.pp.parserFLASHXTV,
                        'flashx.tv': self.pp.parserFLASHXTV,
+                       'flaswish.com': self.pp.parserCLIPWATCHINGCOM,
                        'flix555.com': self.pp.parserFLIX555COM,
                        'forstreams.com': self.pp.parserVIUCLIPS,
                        'freedisc.pl': self.pp.parserFREEDISC,
                        'freefeds.click': self.pp.parserASSIAORG,
+                       'fslinks.org': self.pp.parserVIDGUARDTO,
                        'furher.in': self.pp.parserONLYSTREAMTV,
                        'fviplions.com': self.pp.parserONLYSTREAMTV,
                        'fxstream.biz': self.pp.parserFXSTREAMBIZ,
@@ -328,9 +334,11 @@ class urlparser:
                        'gdriveplayer.us': self.pp.parserAFLAMYZCOM,
                        'ginbig.com': self.pp.parserGINBIG,
                        'givemenbastreams.com': self.pp.parserASSIAORG,
+                       'givemereddit.eu': self.pp.parserASSIAORG,
                        'gloria.tv': self.pp.parserGLORIATV,
                        'godzlive.com': self.pp.parserCASTFREEME,
                        'gogoanime.to': self.pp.parserGOGOANIMETO,
+                       'golassiahub.com': self.pp.parserASSIAORG,
                        'goldvod.tv': self.pp.parserGOLDVODTV,
                        'goodcast.co': self.pp.parserGOODCASTCO,
                        'goodrtmp.com': self.pp.parserGOODRTMP,
@@ -400,6 +408,7 @@ class urlparser:
                        'maxupload.tv': self.pp.parserTOPUPLOAD,
                        'mazystreams.xyz': self.pp.parserASSIAORG,
                        'mcloud.to': self.pp.parserMYCLOUDTO,
+                       'mdbekjwqa.pw': self.pp.parserMIXDROP,
                        'mdy48tn97.com': self.pp.parserMIXDROP,
                        'mediafire.com': self.pp.parserMEDIAFIRECOM,
                        'mediasetplay.mediaset.it': self.pp.parserMEDIASET,
@@ -472,6 +481,7 @@ class urlparser:
                        'p2pcast.tv': self.pp.parserP2PCASTTV,
                        'partners.nettvplus.com': self.pp.parserNETTVPLUSCOM,
                        'picasaweb.google.com': self.pp.parserPICASAWEB,
+                       'planetfastidious.net': self.pp.parserONLYSTREAMTV,
                        'playbb.me': self.pp.parserEASYVIDEOME,
                        'played.to': self.pp.parserPLAYEDTO,
                        'playedto.me': self.pp.parserPLAYEDTO,
@@ -649,6 +659,7 @@ class urlparser:
                        'ustream.tv': self.pp.parserUSTREAMTV,
                        'ustreamix.com': self.pp.parserUSTREAMIXCOM,
                        #v
+                       'v6embed.xyz': self.pp.parserVIDGUARDTO,
                        'vcstream.to': self.pp.parserVCSTREAMTO,
                        'veehd.com': self.pp.parserVEEHDCOM,
                        'vembed.net': self.pp.parserVIDGUARDTO,
@@ -738,6 +749,7 @@ class urlparser:
                        'vsports.pt': self.pp.parserVSPORTSPT,
                        'vtbe.net': self.pp.parserONLYSTREAMTV,
                        'vtbe.to': self.pp.parserONLYSTREAMTV,
+                       'vtplay.net': self.pp.parserONLYSTREAMTV,
                        'vtube.network': self.pp.parserONLYSTREAMTV,
                        'vtube.to': self.pp.parserONLYSTREAMTV,
                        'vup.to': self.pp.parserONLYSTREAMTV,
@@ -15855,19 +15867,28 @@ class pageParser(CaptchaHelper):
         cUrl = self.cm.meta['url']
 
         urlTab = []
-        r = re.search(r'<script\s*src="(/assets/videojs/ad/[^"]+)', data)
+        r = re.search(r'eval\("window\.ADBLOCKER\s*=\s*false;\\n(.+?);"\);</script', data)
         if r:
-            HTTP_HEADER['Referer'] = baseUrl
-            urlParams = {'header': HTTP_HEADER}
-            sts, data = self.cm.getPage(self.cm.getFullUrl(r.group(1), self.cm.getBaseUrl(baseUrl)), urlParams)
-            if not sts:
-                return []
-            aa_decoded = aadecode.decode(data, alt=True)
-            sources = json_loads(aa_decoded[11:]).get('stream')
-            sources = [(x.get('Label'), x.get('URL')) for x in sources]
-            for item in sources:
-                url = strwithmeta(sig_decode(item[1]), {'Origin': urlparser.getDomain(baseUrl, False), 'Referer': cUrl})
-                urlTab.append({'name': item[0], 'url': url})
+            r = r.group(1).replace('\\u002b', '+')
+            r = r.replace('\\u0027', "'")
+            r = r.replace('\\u0022', '"')
+            r = r.replace('\\/', '/')
+            r = r.replace('\\\\', '\\')
+            r = r.replace('\\"', '"')
+            aa_decoded = aadecode.decode(r, alt=True)
+            stream_url = json_loads(aa_decoded[11:]).get('stream')
+            if stream_url:
+                if isinstance(stream_url, list):
+                    sources = [(x.get('Label'), x.get('URL')) for x in stream_url]
+                    for item in sources:
+                        url = item[1]
+                        if not url.startswith('https://'):
+                            url = re.sub(':/*', '://', url)
+                        url = strwithmeta(sig_decode(url), {'Origin': urlparser.getDomain(baseUrl, False), 'Referer': cUrl})
+                        urlTab.append({'name': item[0], 'url': url})
+                else:
+                    url = strwithmeta(sig_decode(stream_url), {'Origin': urlparser.getDomain(baseUrl, False), 'Referer': cUrl})
+                    urlTab.append({'name': 'mp4', 'url': url})
 
         return urlTab
 

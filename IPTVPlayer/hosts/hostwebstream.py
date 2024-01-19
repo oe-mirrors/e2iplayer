@@ -138,7 +138,7 @@ class HasBahCa(CBaseHostClass):
                         {'alias_id': 'wiziwig1.eu', 'name': 'wiziwig1.eu', 'title': 'http://wiziwig1.eu/', 'url': '', 'icon': 'http://i.imgur.com/yBX7fZA.jpg'},\
                         {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://www.djing.com/newimages/content/c01.jpg'}, \
                         {'alias_id': 'nhl66.ir', 'name': 'nhl66.ir', 'title': 'https://nhl66.ir', 'url': 'https://api.nhl66.ir/api/sport/schedule', 'icon': 'https://nhl66.ir/cassets/logo.png'}, \
-                        {'alias_id': 'strims.top', 'name': 'strims.top', 'title': 'http://strims.top/', 'url': 'http://strims.top/', 'icon': ''}, \
+                        {'alias_id': 'strims.in', 'name': 'strims.in', 'title': 'http://strims.in/', 'url': 'http://strims.in/', 'icon': ''}, \
                        ]
 
     def __init__(self):

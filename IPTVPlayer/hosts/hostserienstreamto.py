@@ -34,7 +34,7 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-DEFAULTHOST = "http://190.115.18.20/"
+DEFAULTHOST = "http://186.2.175.5/"
 config.plugins.iptvplayer.serienstreamto_langpreference = ConfigSelection(default="de,de_sub,en", choices=[("de,de_sub,en", "de,sub,en"),
                                                                                                                ("de,en,de_sub", "de,en,sub"),
                                                                                                                ("de_sub,de,en", "sub,de,en"),
