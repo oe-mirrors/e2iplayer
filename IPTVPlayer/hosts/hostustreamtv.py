@@ -6,18 +6,21 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, RetHost, CUrlItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, byteify
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import copy
 import re
-import urllib.parse
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -165,9 +168,9 @@ class UstreamTV(CBaseHostClass):
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.parse.quote_plus(searchPattern)
+        searchPattern = urllib_quote_plus(searchPattern)
         cItem = dict(cItem)
-        cItem['q'] = urllib.parse.quote_plus(searchPattern)
+        cItem['q'] = urllib_quote_plus(searchPattern)
         cItem['filters'] = {}
         self.listFilters(cItem, 'category', 'filter_type')
 

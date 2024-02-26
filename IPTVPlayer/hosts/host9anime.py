@@ -22,6 +22,10 @@ from binascii import hexlify, unhexlify
 from hashlib import md5
 ###################################################
 
+def GetConfigList():
+    optionList = []
+    return optionList
+
 
 def gettytul():
     return 'https://9anime.to/'

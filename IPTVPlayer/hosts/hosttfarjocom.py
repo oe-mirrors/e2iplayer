@@ -7,7 +7,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -17,6 +17,10 @@ try:
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -320,7 +324,7 @@ class TfarjoCom(CBaseHostClass):
         urlTab = []
 
         # mark requested link as used one
-        if len(list(self.cacheLinks.keys())):
+        if len(self.cacheLinks.keys()):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if baseUrl in self.cacheLinks[key][idx]['url']:
@@ -383,7 +387,7 @@ class TfarjoCom(CBaseHostClass):
             val = self.cleanHtmlStr(item[-1]).replace(' ,', ',')
             if val == '' or val.lower() == 'n/a':
                 continue
-            key = self.cleanHtmlStr(item[0]).decode('utf-8').lower().encode('utf-8')
+            key = ensure_str(self.cleanHtmlStr(item[0]))
             if key not in keysMap:
                 continue
             otherInfo[keysMap[key]] = val

@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -64,15 +64,15 @@ class SportDeutschland(CBaseHostClass):
         v = item.get(key, None)
         if None == v:
             return default
-        return clean_html('%s' % v).encode('utf-8')
+        return ensure_str(clean_html(u'%s' % v))
 
     def _getJItemNum(self, item, key, default=0):
         v = item.get(key, None)
         if None != v:
             try:
-                NumberTypes = (int, int, float, complex)
+                NumberTypes = (int, long, float, complex)
             except NameError:
-                NumberTypes = (int, int, float)
+                NumberTypes = (int, long, float)
 
             if isinstance(v, NumberTypes):
                 return v
@@ -106,7 +106,7 @@ class SportDeutschland(CBaseHostClass):
             icon = self._getJItemStr(item, 'image')
             try:
                 if icon == '':
-                    icon = ('%s' % item['images'][0]).encode('utf-8')
+                    icon = ensure_str((u'%s' % item['images'][0]))
             except Exception:
                 pass
             params = {'name': 'category', 'title': self._getJItemStr(item, 'title'), 'category': 'category', 'icon': icon, 'permalink': self._getJItemStr(item, 'permalink'), 'uuid': self._getJItemStr(item, 'uuid'), 'page': 1}
@@ -129,7 +129,7 @@ class SportDeutschland(CBaseHostClass):
             icon = self._getJItemStr(item, 'image')
             try:
                 if icon == '':
-                    icon = ('%s' % item['images'][0]).encode('utf-8')
+                    icon = ensure_str((u'%s' % item['images'][0]))
             except Exception:
                 pass
 

@@ -9,12 +9,11 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import base64
 from Components.config import config, ConfigSelection, getConfigListEntry
 ###################################################
@@ -82,7 +81,7 @@ class TheWatchseriesTo(CBaseHostClass):
         params.update({'header': HTTP_HEADER})
 
         if self.isNeedProxy() and ('thewatchseries.to' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
-            proxy = 'http:/securefor.com/browse.php?u={0}&b=4'.format(urllib.parse.quote(url, ''))
+            proxy = 'http:/securefor.com/browse.php?u={0}&b=4'.format(urllib_quote(url, ''))
             params['header']['Referer'] = proxy + '&f=norefer'
             params['header']['Cookie'] = 'flags=2e5;'
             url = proxy
@@ -94,7 +93,7 @@ class TheWatchseriesTo(CBaseHostClass):
     def getIconUrl(self, url):
         url = self.getFullUrl(url)
         if self.isNeedProxy() and ('thewatchseries.to' in url or 'watch-series.to' in url or 'the-watch-series.to' in url or self.DOMAIN in url):
-            proxy = 'http://securefor.com/browse.php?u={0}&b=4&f=norefer'.format(urllib.parse.quote(url, ''))
+            proxy = 'http://securefor.com/browse.php?u={0}&b=4&f=norefer'.format(urllib_quote(url, ''))
             params = {}
             params['User-Agent'] = self.HEADER['User-Agent'],
             params['Referer'] = proxy
@@ -104,7 +103,7 @@ class TheWatchseriesTo(CBaseHostClass):
 
     def getFullUrl(self, url):
         if self.isNeedProxy() and ('securefor.com' in url or '/browse.php' in url):
-            url2 = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '''\?u=(http[^&]+?)&''')[0]).replace('&amp;', '&')
+            url2 = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', '''\?u=(http[^&]+?)&''')[0]).replace('&amp;', '&')
             printDBG("[%s] --> [%s]" % (url, url2))
             url = url2
         return CBaseHostClass.getFullUrl(self, url)
@@ -275,7 +274,7 @@ class TheWatchseriesTo(CBaseHostClass):
             tmp = ph.findall(item, '<a', '</a>')
             for it in tmp:
                 if self.isNeedProxy():
-                    url = urllib.parse.unquote(ph.search(it, '''href=['"][^'^"]*?%3Fr%3D([^'^"^&]+?)['"&]''')[0])
+                    url = urllib_unquote(ph.search(it, '''href=['"][^'^"]*?%3Fr%3D([^'^"^&]+?)['"&]''')[0])
                 else:
                     url = ph.search(it, '''href=['"][^'^"]*?\?r=([^'^"]+?)['"]''')[0]
                 if url == '':
@@ -311,7 +310,7 @@ class TheWatchseriesTo(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TheWatchseriesTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.SEARCH_URL + urllib.parse.quote(searchPattern)
+        cItem['url'] = self.SEARCH_URL + urllib_quote(searchPattern)
         self.listItems(cItem, 'list_seasons')
 
     def getFavouriteData(self, cItem):

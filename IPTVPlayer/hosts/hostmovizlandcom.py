@@ -7,16 +7,19 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -213,7 +216,7 @@ class MovizlandCom(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("MovizlandCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.SEARCH_URL + urllib.parse.quote_plus(searchPattern)
+        cItem['url'] = self.SEARCH_URL + urllib_quote_plus(searchPattern)
         self.listItems(cItem)
 
     def getFavouriteData(self, cItem):

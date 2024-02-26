@@ -6,11 +6,10 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, rm, CSelOneLink
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 try:
     import json
 except Exception:
@@ -234,7 +233,7 @@ class WpTV(CBaseHostClass):
         cItem = dict(cItem)
         page = cItem.get('page', 1)
         if page == 1:
-            cItem['url'] = self.getFullUrl('/query,%s,szukaj.html?' % urllib.parse.quote(searchPattern))
+            cItem['url'] = self.getFullUrl('/query,%s,szukaj.html?' % urllib_quote(searchPattern))
         self.listEpisodes(cItem)
 
     def getLinksForVideo(self, cItem):

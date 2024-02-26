@@ -7,12 +7,11 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
@@ -295,7 +294,7 @@ class XrysoiSE(CBaseHostClass):
         printDBG("XrysoiSE.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.MAIN_URL
-        cItem['url_suffix'] = self.SEARCH_SUFFIX + urllib.parse.quote_plus(searchPattern)
+        cItem['url_suffix'] = self.SEARCH_SUFFIX + urllib_quote_plus(searchPattern)
         cItem['mode'] = 'search'
         self.listItems(cItem)
 

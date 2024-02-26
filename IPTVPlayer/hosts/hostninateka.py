@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 try:
     import json
 except Exception:
@@ -211,7 +211,7 @@ class Ninateka(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        self.getVideosList(self.SEARCH_URL + urllib.parse.quote_plus(searchPattern))
+        self.getVideosList(self.SEARCH_URL + urllib_quote_plus(searchPattern))
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')

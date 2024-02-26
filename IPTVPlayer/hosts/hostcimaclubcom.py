@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 try:
     import json
 except Exception:
@@ -334,7 +334,7 @@ class CimaClubCom(CBaseHostClass):
         cItem = dict(cItem)
         if 1 == cItem.get('page', 1):
             cItem['category'] = 'list_items'
-            cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
+            cItem['url'] = self.getFullUrl('/?s=') + urllib_quote_plus(searchPattern)
         self.listItems(cItem, 'explore_item')
 
     def getLinksForVideo(self, cItem):

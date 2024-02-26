@@ -7,13 +7,16 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -271,7 +274,7 @@ class DancetrippinTV(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("DancetrippinTV.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search.cfm?q=') + urllib.parse.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/search.cfm?q=') + urllib_quote_plus(searchPattern)
         self.fillItems(cItem, 'list_filters', 'list_items')
 
     def getLinksForVideo(self, cItem):

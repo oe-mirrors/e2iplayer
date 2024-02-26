@@ -9,12 +9,12 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
 
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin, parse_qs
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
@@ -426,7 +426,7 @@ class SVTPlaySE(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("SVTPlaySE.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
 
-        baseUrl = self.getFullUrl('sok?q=' + urllib.parse.quote_plus(searchPattern))
+        baseUrl = self.getFullUrl('sok?q=' + urllib_quote_plus(searchPattern))
         cItem = dict(cItem)
         cItem['url'] = baseUrl
         self.explorePage(cItem, 'list_tab_items')
@@ -495,8 +495,8 @@ class SVTPlaySE(CBaseHostClass):
                 vidTab = []
                 # item = strwithmeta(item, {'X-Forwarded-For':'83.172.75.170'})
                 try:
-                    tmp = urllib.parse.urlparse(item)
-                    tmp = urllib.parse.parse_qs(tmp.query)['alt'][0]
+                    tmp = urlparse(item)
+                    tmp = parse_qs(tmp.query)['alt'][0]
                     vidTab = getDirectM3U8Playlist(tmp, False, checkContent=True)
                 except Exception:
                     printExc()

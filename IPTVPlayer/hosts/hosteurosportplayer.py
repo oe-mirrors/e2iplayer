@@ -4,25 +4,21 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, NextDay, PrevDay, MergeDicts
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, NextDay, PrevDay
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
-
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
 import time
-import urllib.parse
-import re
 from datetime import datetime, timedelta
 import operator
-from Components.config import config, ConfigText, getConfigListEntry, ConfigSelection, ConfigYesNo
-
+from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
 ###################################################
@@ -30,37 +26,12 @@ from Components.config import config, ConfigText, getConfigListEntry, ConfigSele
 ###################################################
 config.plugins.iptvplayer.eurosportplayer_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.eurosportplayer_password = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.eurosportplayer_showauto = ConfigYesNo(default=True)
-config.plugins.iptvplayer.eurosportplayer_showambient = ConfigYesNo(default=True)
-eurosportLanguages = [
-    ("all", _("All")),
-    ("Ambient Sound", _("Ambient Sound")),
-    ("Danish", _("Danish")),
-    ("Dutch", _("Dutch")),
-    ("English", _("English")),
-    ("Finnish", _("Finnish")),
-    ("French", _("French")),
-    ("German", _("German")),
-    ("Hungarian", _("Hungarian")),
-    ("Italian", _("Italian")),
-    ("Norwegian", _("Norwegian")),
-    ("Polish", _("Polish")),
-    ("Spanish", _("Spanish")),
-    ("Swedish", _("Swedish"))
-]
-config.plugins.iptvplayer.eurosportplayer_showlanguage = ConfigSelection(default="all", choices=eurosportLanguages)
-config.plugins.iptvplayer.eurosportplayer_minres = ConfigSelection(default="0", choices=[("0", "0"), ("720", "720p"), ("1080", "1080p")])
 
 
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.eurosportplayer_login))
     optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.eurosportplayer_password))
-    optionList.append(getConfigListEntry(_("show automatic resolution option") + ":", config.plugins.iptvplayer.eurosportplayer_showauto))
-    optionList.append(getConfigListEntry(_("show streams with ambiental sound") + ":", config.plugins.iptvplayer.eurosportplayer_showambient))
-    optionList.append(getConfigListEntry(_("preferred language") + ":", config.plugins.iptvplayer.eurosportplayer_showlanguage))
-    optionList.append(getConfigListEntry(_("show streams only with min resolution") + ":", config.plugins.iptvplayer.eurosportplayer_minres))
-
     return optionList
 ###################################################
 
@@ -73,7 +44,7 @@ class EuroSportPlayer(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'eurosportplayer.com', 'cookie': 'eurosportplayer.com.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
         self.MAIN_URL = 'https://www.eurosportplayer.com/'
         self.LOGIN_URL = 'https://auth.eurosportplayer.com/login?flow=login'
 
@@ -84,12 +55,11 @@ class EuroSportPlayer(CBaseHostClass):
         self.MENUBAR_URL = self.API_URL + "cms/collections/web-menubar?include=default"
         self.SCHEDULE_URL = self.API_URL + "cms/routes/schedule?include=default"
         self.SCHEDULE_COLLECTION_URL = self.API_URL + 'cms/collections/{%id%}?include=default&{%filter%}'
-        self.PLAYBACK_URL = self.API_URL + 'playback/v2/videoPlaybackInfo/{%video_id%}?usePreAuth=true'
+        self.PLAYBACK_URL = self.API_URL + '/playback/v2/videoPlaybackInfo/{%video_id%}?usePreAuth=true'
 
         self.DEFAULT_ICON_URL = 'http://mirrors.kodi.tv/addons/leia/plugin.video.eurosportplayer/resources/icon.png'
 
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl(), 'X-disco-client': 'WEB:UNKNOWN:esplayer:prod', 'x-disco-params': 'realm=eurosport,,'}
-
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl(), 'X-disco-client': 'WEB:UNKNOWN:esp-web:prod'}
         self.defaultParams = {'header': {'User-Agent': self.USER_AGENT}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.recaptcha_sitekey = "6LfvErIUAAAAABlpqACnxRiUhqhX4p14sPxx_sKf"
@@ -235,14 +205,13 @@ class EuroSportPlayer(CBaseHostClass):
         params = {}
         video_id = videoData['id']
         item_data = videoData['attributes']
-        printDBG("Eurosport.addVideoFromData - video_id: %s" % video_id)
-        #printDBG(json_dumps(item_data))
+        printDBG(json_dumps(item_data))
 
         if 'broadcastType' in item_data:
-            printDBG("broadcast: %s, %s , %s" % (item_data['name'], item_data['videoType'], item_data['broadcastType']))
+            #printDBG(" %s, %s , %s" % (item_data['name'], item_data['videoType'], item_data['broadcastType'] ))
             bt = item_data['broadcastType']
         else:
-            printDBG("video: %s, %s " % (item_data['name'], item_data['videoType']))
+            #printDBG(" %s, %s , %s" % (item_data['name'], item_data['videoType'], '' ))
             bt = item_data['videoType']
 
         if (not OnlyLive) or (item_data['videoType'] == 'LIVE'):
@@ -309,9 +278,8 @@ class EuroSportPlayer(CBaseHostClass):
                 url = self.getFullPath(item_data['path'], 'video')
 
                 params = {'title': title, 'desc': desc, 'url': url, 'icon': icon, 'video_id': video_id, 'schedule_date': scheduleDate, 'route_id': route_id}
-                #printDBG(str(params))
+                printDBG(str(params))
 
-        #printDBG("-----------------------------------")
         return params
 
     def listSportFilters(self, cItem, nextCategory):
@@ -337,10 +305,12 @@ class EuroSportPlayer(CBaseHostClass):
                         printDBG("-----------------------")
                 else:
                     self.addItemInDB(item)
+
             for item in menuData['data']:
                 #printDBG(json_dumps(self.espCollectionItems[item['id']]))
                 node_id = self.espCollectionItems[item['id']]['relationships']['taxonomyNode']['data']['id']
                 node = self.espTaxonomyNodes[node_id]
+
                 #printDBG(json_dumps(node))
                 iconData = self.espImages[node['relationships']['images']['data'][0]['id']]
                 #printDBG(json_dumps(iconData))
@@ -362,19 +332,7 @@ class EuroSportPlayer(CBaseHostClass):
         printDBG("EuroSportPlayer.listVodTypesFilters [%s]" % cItem)
         try:
             url = cItem['url'] + '?include=default'
-
-            httpHeader = {
-                'User-Agent': self.USER_AGENT,
-                'accept': '*/*',
-                'accept-encoding': 'gzip',
-                'origin': 'https://www.eurosportplayer.com',
-                'Referer': 'https://www.eurosportplayer.com',
-                'x-disco-client': 'WEB:UNKNOWN:esplayer:prod',
-                'x-disco-params': 'realm=eurosport,,'
-            }
-
-            sts, data = self.getPage(url, {'header': httpHeader, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE})
-
+            sts, data = self.getPage(url)
             if not sts:
                 return
 
@@ -407,19 +365,7 @@ class EuroSportPlayer(CBaseHostClass):
         try:
 
             url = "https://eu3-prod-direct.eurosportplayer.com/cms/routes/home?include=default"
-
-            httpHeader = {
-                'User-Agent': self.USER_AGENT,
-                'accept': '*/*',
-                'accept-encoding': 'gzip',
-                'origin': 'https://www.eurosportplayer.com',
-                'Referer': 'https://www.eurosportplayer.com',
-                'x-disco-client': 'WEB:UNKNOWN:esplayer:prod',
-                'x-disco-params': 'realm=eurosport,,'
-            }
-
-            sts, data = self.getPage(url, {'header': httpHeader, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE})
-
+            sts, data = self.getPage(url, {'header': {'User-Agent': self.USER_AGENT}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE})
             if not sts:
                 return
 
@@ -461,6 +407,7 @@ class EuroSportPlayer(CBaseHostClass):
                 return
 
             data = json_loads(data)
+
             for item in data['included']:
                 if item['type'] == 'collection':
                     if item['attributes']['name'] == 'schedule':
@@ -484,20 +431,8 @@ class EuroSportPlayer(CBaseHostClass):
         printDBG("EuroSportPlayer.listSchedule [%s]" % cItem)
 
         try:
-
-            httpHeader = {
-                'User-Agent': self.USER_AGENT,
-                'accept': '*/*',
-                'accept-encoding': 'gzip',
-                'origin': 'https://www.eurosportplayer.com',
-                'Referer': 'https://www.eurosportplayer.com',
-                'x-disco-client': 'WEB:UNKNOWN:esplayer:prod',
-                'x-disco-params': 'realm=eurosport,,'
-            }
-
             url = self.SCHEDULE_COLLECTION_URL.replace('{%id%}', cItem['schedule_id']).replace('{%filter%}', cItem['filter'])
-
-            sts, data = self.getPage(url, {'header': httpHeader, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE})
+            sts, data = self.getPage(url)
             if not sts:
                 return
 
@@ -513,48 +448,10 @@ class EuroSportPlayer(CBaseHostClass):
                     #printDBG(json_dumps(c))
                     video_id = c['relationships']['video']['data']['id']
                     videoData = self.espVideos[video_id]
-                    #printDBG(json_dumps(videoData))
+                    printDBG(json_dumps(videoData))
                     params = self.addVideoFromData(videoData, label_format='schedule', future=True)
                     if params:
                         self.addVideo(params)
-
-            try:
-                total_pages = data['meta']["itemsTotalPages"]
-                printDBG('Total pages: %s' % total_pages)
-            except:
-                total_pages = 1
-
-            try:
-                current_page = data['meta']["itemsCurrentPage"]
-                printDBG('Current page: %s' % current_page)
-            except:
-                current_page = 1
-
-            while current_page < total_pages:
-
-                current_page = current_page + 1
-                url = self.SCHEDULE_COLLECTION_URL.replace('{%id%}', cItem['schedule_id']).replace('{%filter%}', cItem['filter'])
-                url = url + "&page[items.number]={}".format(current_page)
-
-                sts, data = self.getPage(url, {'header': httpHeader, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE})
-                if sts:
-
-                    data = json_loads(data)
-
-                    for item in data['included']:
-                        self.addItemInDB(item)
-
-                    for item in data['data']['relationships']['items']['data']:
-                        item_id = item['id']
-                        if item['type'] == 'collectionItem':
-                            c = self.espCollectionItems[item_id]
-                            #printDBG(json_dumps(c))
-                            video_id = c['relationships']['video']['data']['id']
-                            videoData = self.espVideos[video_id]
-                            #printDBG(json_dumps(videoData))
-                            params = self.addVideoFromData(videoData, label_format='schedule', future=True)
-                            if params:
-                                self.addVideo(params)
 
         except Exception:
             printExc()
@@ -565,7 +462,7 @@ class EuroSportPlayer(CBaseHostClass):
             '''
             page = cItem.get('page', 1)
             variables = {"index":"eurosport_global","preferredLanguages":["pl","en"],"uiLang":"pl","mediaRights":["GeoMediaRight"],"page":page,"pageSize":20,"q":cItem['f_query'],"type":["Video","Airing","EventPage"],"include_images":True}
-            url = self.serverApiData['server_path']['search'] + '/persisted/query/core/sitesearch?variables=' + urllib.parse.quote(json_dumps(variables, separators=(',', ':')))
+            url = self.serverApiData['server_path']['search'] + '/persisted/query/core/sitesearch?variables=' + urllib_quote(json_dumps(variables, separators=(',', ':')))
 
             sts, data = self.getJSPage(url)
             if not sts: return
@@ -601,6 +498,7 @@ class EuroSportPlayer(CBaseHostClass):
                 printDBG("Ok, connected as username: %s " % data['data']['attributes']['username'])
                 printDBG("Last Login %s" % data['data']['attributes']['lastLoginTime'])
                 printDBG("---------------------------------------------------------------------")
+
                 if config.plugins.iptvplayer.eurosportplayer_login.value != data['data']['attributes']['username']:
                     GetIPTVNotify().push(_("Username in settings is different from %s" % data['data']['attributes']['username']) + "\n" + _("Login needed"), 'error', 10)
                     self.tryTologin()
@@ -696,6 +594,7 @@ class EuroSportPlayer(CBaseHostClass):
                   } ]
                 }
                 '''
+
                 if not sts and '401' in str(data):
                     msg = _('Login failed. Invalid email or password.')
                     GetIPTVNotify().push(msg, 'error', 10)
@@ -721,6 +620,7 @@ class EuroSportPlayer(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("EuroSportPlayer.getLinksForVideo [%s]" % cItem)
         self.checkLogin()
+
         linksTab = []
         try:
             printDBG(str(cItem))
@@ -764,49 +664,8 @@ class EuroSportPlayer(CBaseHostClass):
 
             if 'hls' in s:
                 link_url = strwithmeta(s['hls']['url'], {'User-Agent': self.USER_AGENT, 'Referer': video_page_url})
-                if config.plugins.iptvplayer.eurosportplayer_showauto and config.plugins.iptvplayer.eurosportplayer_showauto.value:
-                    linksTab.append({'name': 'auto hls', 'url': link_url})
-
-                list_of_links = getDirectM3U8Playlist(link_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
-
-                # select links with preferred audio language
-                list_of_links2 = []
-                ambient_links = []
-                other_lang_links = []
-
-                for l in list_of_links:
-                    m = re.findall("res:[ ][0-9]{2,4}x([0-9]{2,4})", l["name"])
-                    if m:
-                        #printDBG(str(l))
-                        #printDBG("resolution: %s" % int(m[0]))
-
-                        if (not config.plugins.iptvplayer.eurosportplayer_minres) or int(m[0]) >= int(config.plugins.iptvplayer.eurosportplayer_minres.value):
-
-                            if config.plugins.iptvplayer.eurosportplayer_showlanguage and config.plugins.iptvplayer.eurosportplayer_showlanguage.value:
-
-                                if config.plugins.iptvplayer.eurosportplayer_showlanguage.value == "all" or config.plugins.iptvplayer.eurosportplayer_showlanguage.value in l["name"]:
-                                    list_of_links2.append(l)
-
-                                else:
-                                    if 'Ambient' in l["name"]:
-                                        ambient_links.append(l)
-                                    else:
-                                        other_lang_links.append(l)
-                            else:
-                                list_of_links2.append(l)
-
-                    else:
-                        list_of_links2.append(l)
-
-                linksTab.extend(list_of_links2)
-
-                if not linksTab:
-                    linksTab.extend(other_lang_links)
-                    linksTab.extend(ambient_links)
-
-                elif config.plugins.iptvplayer.eurosportplayer_showambient and config.plugins.iptvplayer.eurosportplayer_showambient.value:
-                    linksTab.extend(ambient_links)
-
+                linksTab.append({'name': 'auto hls', 'url': link_url})
+                linksTab.extend(getDirectM3U8Playlist(link_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
             #if 'dash' in s:
             #    link_url = strwithmeta(s['dash']['url'], {'User-Agent': self.USER_AGENT, 'Referer' : video_page_url})
             #    linksTab.append({'name':'dash', 'url': link_url})
@@ -846,11 +705,13 @@ class EuroSportPlayer(CBaseHostClass):
             self.listDays(self.currItem, 'list_schedule')
         elif category == 'list_schedule':
             self.listSchedule(self.currItem)
+
         # VOD
         elif category == 'vod_sport_filters':
             self.listSportFilters(self.currItem, 'list_vod_items')
         elif category == 'list_vod_items':
             self.listVodItems(self.currItem)
+
         #SEARCH
         elif category == 'list_search_items':
             self.listSearchItems(self.currItem)
@@ -858,6 +719,7 @@ class EuroSportPlayer(CBaseHostClass):
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
+
         #HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))

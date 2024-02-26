@@ -7,18 +7,21 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 import re
-import urllib.parse
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -57,7 +60,7 @@ class OroroTV(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urllib.parse.urljoin(baseUrl, url)
+                return urljoin(baseUrl, url)
 
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -148,7 +151,7 @@ class OroroTV(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("OroroTV.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
 
-        url = self.getFullUrl('/api/frontend/search?query=') + urllib.parse.quote_plus(searchPattern)
+        url = self.getFullUrl('/api/frontend/search?query=') + urllib_quote_plus(searchPattern)
 
         sts, data = self.getPage(url)
         if not sts:

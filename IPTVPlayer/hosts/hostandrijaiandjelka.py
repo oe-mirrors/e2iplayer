@@ -17,6 +17,10 @@ from binascii import hexlify
 from hashlib import md5
 ###################################################
 
+def GetConfigList():
+    optionList = []
+    return optionList
+
 
 def gettytul():
     return 'https://andrija-i-andjelka.com/'

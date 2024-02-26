@@ -6,19 +6,23 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
     import simplejson as json
 from Components.config import config
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -340,13 +344,17 @@ class OurmatchNet(CBaseHostClass):
             except Exception:
                 printExc()
         elif videoUrl.startswith('http'):
+            if self.up.checkHostSupport(videoUrl) != 1:
+                video_id = ph.search(videoUrl, r'''https?://.*([a-zA-Z0-9]{10})''')[0]
+                if video_id != '':
+                    videoUrl = 'https://viuclips.net/&force_parserVIUCLIPS[%s]' % videoUrl
             urlTab.extend(self.up.getVideoLinkExt(videoUrl))
         return urlTab
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("OurmatchNet.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem.update({'url': self.MAIN_URL, 's': urllib.parse.quote(searchPattern)})
+        cItem.update({'url': self.MAIN_URL, 's': urllib_quote(searchPattern)})
         self.listItems(cItem)
 
     def getFavouriteData(self, cItem):

@@ -16,7 +16,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import time
 import datetime
 import random
@@ -63,7 +62,7 @@ class Ekstraklasa(CBaseHostClass):
         self.AUTH_URL = "https://core.oz.com/oauth2/token"
         #self.CHANNELS_JSON_URL = 'https://core.oz.com/channels'
 
-        self.DEFAULT_ICON_URL = "https://ekstraklasa.org/img/ESA_LOGO_1_etv_transparent_white.png"
+        self.DEFAULT_ICON_URL = "https://d3pwgdagcpl4mv.cloudfront.net/oz/image/upload/f_auto,fl_progressive,w_300/v1565967880/gbtbw0hwdthy72jknsct.png"
 
         #self.HEADER = {'User-Agent':self.USER_AGENT, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
         #self.AJAX_HEADER = dict(self.HEADER)

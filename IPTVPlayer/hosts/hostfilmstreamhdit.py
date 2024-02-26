@@ -7,17 +7,20 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -30,15 +33,12 @@ class FilmStreamHD(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'filmstreamhd.it', 'cookie': 'filmstreamhd.it.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'http://filmstreamhd.it/'
-        self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/uploads/2018/12/logonuovoHD.png')
+        self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/uploads/2018/09/logonuovoHD.png')
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Home'), 'url': self.getMainUrl()},
-                             {'category': 'genres', 'title': _('Film Archive'), 'url': self.getFullUrl('/film-archive')},
-                            #{'category':'list_items',     'title': _('4k Resolution'),     'url':self.getFullUrl('/film-4k/')},
-                            #{'category':'list_items',     'title': _('Series'),            'url':self.getFullUrl('/category/serietv/')},
-                             {'category': 'list_items', 'title': _('Netflix'), 'url': self.getFullUrl('/category/netflix/')},
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('HOME'), 'url': self.getMainUrl()},
+                             {'category': 'genres', 'title': _('FILM ARCHIVE'), 'url': self.getFullUrl('/film-archivio')},
                              {'category': 'search', 'title': _('Search'), 'search_item': True},
                              {'category': 'search_history', 'title': _('Search history'), }
                             ]
@@ -92,61 +92,49 @@ class FilmStreamHD(CBaseHostClass):
             return
         self.setMainUrl(data.meta['url'])
 
-        #printDBG(data)
+        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'loadnavi'), ('</a', '>'))[1]
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^"^']+?)['"]''')[0])
 
-        #next page
-        #<a href="https://www.filmstreamhd.it/page/2/" >Il prossimo &raquo;</a>
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<a href=['"]([^"^']+?)['"] >Il prossimo''')[0])
+        data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('<div', '>', 'preview'), ('<div', '>', 'clear'))
+        for dataItem in data:
+            dataItem = self.cm.ph.rgetAllItemsBeetwenNodes(dataItem, ('</div', '>'), ('<div', '>', 'preview'))
+            for item in dataItem:
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'movie-title'), ('</span', '>'), False)[1])
 
-        #movies = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('<div', '>', 'movie-preview-content'), "</div>\n\t</div>")
-        movies = re.findall("<div class=\"movie-preview-content\">(.*?)</div>\n\t</div>", data, re.S)
+                desc = []
+                tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'movie-release'), ('</span', '>'), False)[1])
+                if tmp != '':
+                    desc.append(tmp)
+                tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'icon-hd'), ('</span', '>'), False)[1])
+                if tmp != '':
+                    desc.append(tmp)
+                tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-info'), ('</div', '>'), False)[1])
+                if tmp != '':
+                    desc.append(tmp)
+                desc = [' | '.join(desc)]
 
-        for item in movies:
-            #printDBG("-------------- movie ----------------")
-            #printDBG(item)
-            #printDBG("-------------------------------------")
+                tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-cast'), ('</div', '>'), False)[1])
+                if tmp != '':
+                    desc.append(tmp)
 
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'movie-title'), ('</span', '>'), False)[1])
+                tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-excerpt'), ('</div', '>'), False)[1])
+                if tmp != '':
+                    desc.append(tmp)
 
-            desc = []
-
-            tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'movie-release'), ('</span', '>'), False)[1])
-            if tmp != '':
-                desc.append(tmp)
-
-            tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'icon-hd'), ('</span', '>'), False)[1])
-            if tmp != '':
-                desc.append(tmp)
-
-            tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-info'), ('</div', '>'), False)[1])
-            if tmp != '':
-                desc.append(tmp)
-
-            desc = [' | '.join(desc)]
-
-            tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-cast'), ('</div', '>'), False)[1])
-            if tmp != '':
-                desc.append(tmp)
-
-            tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-excerpt'), ('</div', '>'), False)[1])
-            if tmp != '':
-                desc.append(tmp)
-
-            params = dict(cItem)
-            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
-            printDBG(str(params))
-            self.addVideo(params)
+                params = dict(cItem)
+                params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(desc)})
+                self.addVideo(params)
 
         if nextPage:
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage, 'page': cItem.get('page', 1) + 1})
-            self.addMore(params)
+            self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/?s=') + urllib_quote_plus(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem)
 
@@ -233,7 +221,7 @@ class FilmStreamHD(CBaseHostClass):
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'genres':
-            self.listCategories(self.currItem, 'release', '>Generi<', True)
+            self.listCategories(self.currItem, 'release', '>Genere<', True)
         elif category == 'release':
             self.listCategories(self.currItem, 'sort', '>Anno<', True)
         elif category == 'sort':

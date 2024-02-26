@@ -15,12 +15,16 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ens
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -191,10 +195,10 @@ class AnimeOdcinkiPL(CBaseHostClass):
         for key in self.filtersTab:
             iKey = 'f_' + key
             if iKey in cItem:
-                getParams.append('%s=%s' % (urllib.parse.quote(key), urllib.parse.quote(cItem[iKey])))
+                getParams.append('%s=%s' % (urllib_quote(key), urllib_quote(cItem[iKey])))
 
         if 'f_search' in cItem:
-            getParams.append('s=%s' % (urllib.parse.quote_plus(cItem['f_search'])))
+            getParams.append('s=%s' % (urllib_quote_plus(cItem['f_search'])))
 
         baseUrl = cItem['url']
         if page > 1:

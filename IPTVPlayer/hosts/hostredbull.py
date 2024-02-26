@@ -11,13 +11,12 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
 import time
-import urllib.parse
 from datetime import timedelta
 ###################################################
 ###################################################
@@ -44,7 +43,7 @@ class Redbull(CBaseHostClass):
         self.defaultParams = {'header': self.HTTP_HEADER}
         self.REDBULL_API = "https://appletv.redbull.tv/"
         self.MAIN_URL = 'http://redbull.tv/'
-        self.DEFAULT_ICON_URL = 'https://img.redbull.com/images/e_trim:10:transparent/c_limit,w_600/q_auto,f_png/redbullcom/2016/06/22/1331802019605_2/red-bull-tv-logo'
+        self.DEFAULT_ICON_URL = 'https://www.redbull.com/v3/resources/images/appicon/android-chrome-192.png'
 
     def listMain(self, cItem, nextCategory):
         printDBG("Redbull.listMain")
@@ -187,7 +186,7 @@ class Redbull(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
 
-        url = self.REDBULL_API + "search?q=%s" % urllib.parse.quote_plus(searchPattern)
+        url = self.REDBULL_API + "search?q=%s" % urllib_quote_plus(searchPattern)
         cItem = MergeDicts(cItem, {'category': 'list_search', 'url': url})
         self.listSearchItems(cItem)
 

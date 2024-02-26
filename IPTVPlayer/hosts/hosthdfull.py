@@ -507,7 +507,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             return linksTab
         cUrl = self.cm.meta['url']
 
-        #printDBG(data)
+        printDBG(data)
 
         linksTab = self._getLinks(cUrl, data)
 

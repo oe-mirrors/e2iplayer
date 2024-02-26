@@ -8,29 +8,32 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
-    return 'http://filmehd.se/'
+    return 'http://filmehd.net/'
 
 
 class FilmeHD(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'filmehd.se', 'cookie': 'filmehd.se.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'filmehd.net', 'cookie': 'filmehd.net.cookie'})
 
-        self.DEFAULT_ICON_URL = 'https://filmehd.se/wp-content/themes/filmehd/assets/apple-touch-icon.png'
+        self.DEFAULT_ICON_URL = 'https://i.ytimg.com/vi/BqUtWIyijtY/hqdefault.jpg'
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.MAIN_URL = 'http://filmehd.se/'
+        self.MAIN_URL = 'http://filmehd.net/'
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
@@ -44,10 +47,10 @@ class FilmeHD(CBaseHostClass):
         return self.cm.getPage(url, addParams, post_data)
 
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': 'TOATE FILMELE', 'url': self.getFullUrl('/page/1')},
-                        {'category': 'list_categories', 'title': 'GEN FILM', 'url': self.getFullUrl('/filme-online')},
-                        {'category': 'list_old', 'title': 'CINEMATECĂ', 'url': self.getFullUrl('/filme-vechi')},
-                        {'category': 'list_years', 'title': 'FILME DUPA AN', 'url': self.getFullUrl('/filme-online')},
+        url = self.getFullUrl('/page/1')
+        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': 'TOATE FILMELE', 'url': url},
+                        {'category': 'list_categories', 'title': 'GEN FILM', 'url': url},
+                        {'category': 'list_years', 'title': 'FILME DUPA AN', 'url': url},
                         {'category': 'list_sort', 'title': 'SERIALE', 'url': self.getFullUrl('/seriale')},
                         {'category': 'search', 'title': _('Search'), 'search_item': True, },
                         {'category': 'search_history', 'title': _('Search history'), }]
@@ -134,7 +137,7 @@ class FilmeHD(CBaseHostClass):
         if nextPage and len(self.currList) > 0:
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': _("Next page"), 'url': nextPage, 'page': page + 1})
-            self.addMore(params)
+            self.addDir(params)
 
     def exploreItem(self, cItem):
         printDBG("FilmeHD.exploreItem")
@@ -153,58 +156,72 @@ class FilmeHD(CBaseHostClass):
             params.update({'good_for_fav': False, 'title': '%s : %s' % (cItem['title'], title), 'url': url})
             self.addVideo(params)
 
+        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'banner-top-mobile'), ('<div', '>', 'comments-loader'), False)[1]
+        data = re.compile('''(<div[^>]+?tabpanel[^>]+?>)''').split(data)
+
         titlesTab = []
+        self.cacheLinks = {}
         serverNameDict = {}
+        if len(data) > 1:
+            # episodes mode
+            tmp = self.cm.ph.getAllItemsBeetwenMarkers(data[0], '<a', '</a>')
+            for item in tmp:
+                tabId = self.cm.ph.getSearchGroups(item, '''href=['"]\#([^'^"]+?)['"]''')[0]
+                title = self.cleanHtmlStr(item)
+                serverNameDict[tabId] = title
 
-        parts = re.findall("(<div[^>]+?tabpanel[^>]+?>)", data)
-        links = re.findall("<div.*?data-thumbnail=\"(.*?)\" data-src=\"(.*?)\".*?\"lazyframe-([^a-zA-Z-]+)-modal\".*?>", data)
+            for idx in range(2, len(data), 2):
+                tabId = self.cm.ph.getSearchGroups(data[idx - 1], '''id=['"]([^'^"]+?)['"]''')[0]
+                playersData = data[idx].split('<center')
+                if len(playersData):
+                    del playersData[0]
+                for item in playersData:
+                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '>', '<', False)[1])
+                    url = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'lazyload'), ('</div', '>'))[1]
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''data\-src=['"]([^'^"]+?)['"]''')[0])
+                    if url == '':
+                        continue
+                    if title not in titlesTab:
+                        titlesTab.append(title)
+                        self.cacheLinks[title] = []
+                    url = strwithmeta(url, {'Referer': cItem['url']})
+                    name = serverNameDict.get(tabId, 'Player %s' % (len(self.cacheLinks[title]) + 1))
+                    self.cacheLinks[title].append({'name': name, 'url': url, 'need_resolve': 1})
 
-        if len(parts) <= 1:
+            baseTitle = re.compile('''\s+?\–\s+?Sezonul\s+?[0-9]+?$''', re.I).split(cItem['title'])[0]
+            for item in titlesTab:
+                if 'sezonul' in item.lower() and baseTitle != '':
+                    title = baseTitle
+                else:
+                    title = cItem['title']
+                params = dict(cItem)
+                params.update({'good_for_fav': False, 'title': '%s : %s' % (title, item), 'links_key': item})
+                self.addVideo(params)
+        else:
             # movie mode
             linksKey = cItem['url']
             self.cacheLinks[linksKey] = []
-
-            for l in links:
-                url = self.getFullUrl(l[1])
-                name = _("Player") + " %s" % l[2]
+            playersData = data[0].split('<center')
+            if len(playersData):
+                del playersData[0]
+            for item in playersData:
+                name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '>', '<', False)[1])
+                url = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'lazyload'), ('</div', '>'))[1]
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''data\-src=['"]([^'^"]+?)['"]''')[0])
+                if url == '':
+                    continue
                 url = strwithmeta(url, {'Referer': cItem['url']})
-                params = {'name': name, 'url': url, 'need_resolve': 1}
-                printDBG(str(params))
-                self.cacheLinks[linksKey].append(params)
+                self.cacheLinks[linksKey].append({'name': name, 'url': url, 'need_resolve': 1})
 
             if len(self.cacheLinks[linksKey]):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'links_key': linksKey})
                 self.addVideo(params)
 
-        else:
-            # episodes mode
-            num_parts = len(parts)
-            num_links = len(links)
-            num_episodes = int(num_links / num_parts)
-            printDBG("parts : %s, links : %s episodes: %s" % (num_parts, num_links, num_episodes))
-            for ep in range(0, num_episodes):
-                linksKey = cItem['url'] + ("|ep_%s" % ep)
-                self.cacheLinks[linksKey] = []
-                title = cItem['title'] + " - " + _("Episode") + (" %s " % (ep + 1))
-                for j in range(0, num_parts):
-                    l = links[ep + j * num_episodes]
-                    name = _("Episode") + (" %s - " % (ep + 1)) + _("Player") + (" %s " % (j + 1))
-                    url = self.getFullUrl(l[1])
-                    url = strwithmeta(url, {'Referer': cItem['url']})
-                    params = {'name': name, 'url': url, 'need_resolve': 1}
-                    printDBG(str(params))
-                    self.cacheLinks[linksKey].append(params)
-
-                if len(self.cacheLinks[linksKey]):
-                    params = dict(cItem)
-                    params.update({'good_for_fav': False, 'title': title, 'links_key': linksKey})
-                    self.addVideo(params)
-
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmeHD.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/?s=') + urllib_quote_plus(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem, 'explore_item')
 
@@ -223,7 +240,7 @@ class FilmeHD(CBaseHostClass):
         urlTab = []
 
         # mark requested link as used one
-        if len(list(self.cacheLinks.keys())):
+        if len(self.cacheLinks.keys()):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
@@ -357,7 +374,7 @@ class FilmeHD(CBaseHostClass):
             self.listCategories(self.currItem, 'list_sort', 'labelledby')
         elif category == 'list_sort':
             self.listSort(self.currItem, 'list_items', 'explore_item')
-        elif category == 'list_items' or category == 'list_old':
+        elif category == 'list_items':
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem)

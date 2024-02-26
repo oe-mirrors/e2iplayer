@@ -14,8 +14,8 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 import time
 import re
-import urllib.parse
-from urllib.parse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote, urllib_quote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
 ###################################################
 
@@ -43,7 +43,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://cartoonhd.app/'
+    return 'https://cartoonhd.care/'
 
 
 class CartoonHD(CBaseHostClass):
@@ -53,7 +53,7 @@ class CartoonHD(CBaseHostClass):
         self.cacheFilters = {}
         self.cacheLinks = {}
         self.loggedIn = None
-        self.DEFAULT_ICON_URL = 'https://cartoonhd.app/templates/cartoonhd/assets/images/logochd.png'
+        self.DEFAULT_ICON_URL = 'https://cartoonhd.care/templates/cartoonhd/assets/images/logochd.png'
 
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -65,7 +65,7 @@ class CartoonHD(CBaseHostClass):
         self.SEARCH_URL = None
 
     def selectDomain(self):
-        domain = 'https://cartoonhd.app/'
+        domain = 'https://cartoonhd.care/'
         params = dict(self.defaultParams)
         params['max_data_size'] = False
         self.cm.getPage(domain, params)
@@ -405,7 +405,6 @@ class CartoonHD(CBaseHostClass):
                 continue
             jsUrl = self.getFullUrl(item)
 
-        printDBG("jsUrl: %s" % jsUrl)
         if not self.cm.isValidUrl(jsUrl):
             printDBG(">>>>>>\n%s\n" % data)
             return []
@@ -419,10 +418,10 @@ class CartoonHD(CBaseHostClass):
         if jsUrl == '':
             return []
 
-        baseurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\s+?baseurl\s*=\s*['"]([^'^"]+?)['"]''')[0])
+        baseurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''var\s+?baseurl\s*=\s*['"]([^'^"]+?)['"]''')[0])
         printDBG("baseurl [%s]" % baseurl)
         if not self.cm.isValidUrl(baseurl):
-            baseurl = self.cm.getBaseUrl(cItem['url'])
+            return []
 
         tor = self._getToken(data)
         elid = self.cm.ph.getSearchGroups(data, '''elid[\s]*=[\s]['"]([^"^']+?)['"]''')[0]
@@ -451,15 +450,15 @@ class CartoonHD(CBaseHostClass):
         httpParams['header'] = {'Referer': cItem['url'], 'User-Agent': self.cm.HOST, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
         encElid = gettt()
         __utmx = getCookieItem('__utmx')
-        httpParams['header']['Authorization'] = 'Bearer ' + urllib.parse.unquote(__utmx)
+        httpParams['header']['Authorization'] = 'Bearer ' + urllib_unquote(__utmx)
 
         requestLinks = [urljoin(baseurl, jsUrl)]
         if 'class="play"' in data and 'id="updateSources"' not in data:
             requestLinks.append('ajax/embeds.php')
 
-        #httpParams['header']['Cookie'] = '%s=%s; PHPSESSID=%s; flixy=%s;'% (elid, urllib.parse.quote(encElid), getCookieItem('PHPSESSID'), getCookieItem('flixy'))
+        #httpParams['header']['Cookie'] = '%s=%s; PHPSESSID=%s; flixy=%s;'% (elid, urllib_quote(encElid), getCookieItem('PHPSESSID'), getCookieItem('flixy'))
         for url in requestLinks:
-            post_data = {'action': type, 'idEl': elid, 'token': tor, 'elid': urllib.parse.quote(encElid), 'nopop': ''}
+            post_data = {'action': type, 'idEl': elid, 'token': tor, 'elid': urllib_quote(encElid), 'nopop': ''}
             sts, data = self.cm.getPage(url, httpParams, post_data)
             if not sts:
                 continue

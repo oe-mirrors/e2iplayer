@@ -7,12 +7,11 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
@@ -225,7 +224,7 @@ class FilmstreamvkCom(CBaseHostClass):
         printDBG("FilmstreamvkCom.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         self.selectDomain()
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote(searchPattern)
+        cItem['url'] = self.getFullUrl('/?s=') + urllib_quote(searchPattern)
         self.listItems(cItem, 'episodes')
 
     def _getBaseVideoLink(self, wholeData):

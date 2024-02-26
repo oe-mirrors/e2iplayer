@@ -9,14 +9,16 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
 # FOREIGN import
 ###################################################
-import re
-import urllib.parse
-from urllib.parse import urljoin
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -34,7 +36,7 @@ class FilmPalastTo(CBaseHostClass):
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        #self.DEFAULT_ICON_URL = 'https://www.free4fisher.de/wp-content/uploads/2017/02/filmpalast-Fanart.png'
+        self.DEFAULT_ICON_URL = 'https://filmpalast.to/themes/downloadarchive/images/logo.png'
         self.MAIN_URL = None
         self.cacheSeries = {}
         self.cacheSeasons = {}
@@ -247,7 +249,7 @@ class FilmPalastTo(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmPalastTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search/title/%s' % urllib.parse.quote(searchPattern))
+        cItem['url'] = self.getFullUrl('/search/title/%s' % urllib_quote(searchPattern))
         self.listItems(cItem, 'explore_item')
 
     def getLinksForVideo(self, cItem):
@@ -262,8 +264,8 @@ class FilmPalastTo(CBaseHostClass):
         if not sts:
             return []
 
-        items = ph.findall(data, ('<ul', '>', 'currentStreamLinks'), '</ul>', flags=0)
-        for item in items:
+        data = ph.findall(data, ('<ul', '>', 'currentStreamLinks'), '</ul>', flags=0)
+        for item in data:
             printDBG("FilmPalastTo.getLinksForVideo item [%s]" % item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             title = ph.clean_html(ph.find(item, ('<p', '>'), '</p>', flags=0)[1])
@@ -389,8 +391,8 @@ class FilmPalastTo(CBaseHostClass):
             title = cItem['title']
         if desc == '':
             desc = cItem.get('desc', '')
-        #if icon == '':
-        #    icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if icon == '':
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
 
         return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
 

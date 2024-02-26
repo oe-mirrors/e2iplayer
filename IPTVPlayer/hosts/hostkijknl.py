@@ -7,18 +7,21 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, PrevDay, CSelOneLink, byteify
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import datetime
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -132,7 +135,7 @@ class KijkNL(CBaseHostClass):
         urlparams = dict(self.defaultParams)
         urlparams['header'] = dict(urlparams['header'])
         urlparams['cookie_items'] = {'OPTOUTMULTI': '0:0%7Cc5:0%7Cc1:0%7Cc4:0%7Cc3:0%7Cc2:0'} #{'OPTOUTMULTI':'0:0|c5:0|c1:0|c4:0|c3:0|c2:0'}
-        urlparams['header']['Referer'] = 'http://consent.kijk.nl/?url=' + urllib.parse.quote('http://www.kijk.nl/')
+        urlparams['header']['Referer'] = 'http://consent.kijk.nl/?url=' + urllib_quote('http://www.kijk.nl/')
 
         sts, data = self.getPage(cItem['url'], urlparams)
         if not sts:
@@ -252,7 +255,7 @@ class KijkNL(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("KijkNL.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.tmpUrl + ('v1/default/searchresultsgrouped?search=%s' % urllib.parse.quote(searchPattern))
+        cItem['url'] = self.tmpUrl + ('v1/default/searchresultsgrouped?search=%s' % urllib_quote(searchPattern))
         self.listItems(cItem, 'list_components')
 
     def getLinksForVideo(self, cItem):

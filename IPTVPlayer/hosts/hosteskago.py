@@ -18,6 +18,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 import re
 ###################################################
 
+def GetConfigList():
+    optionList = []
+    return optionList
+
 
 def gettytul():
     return 'http://www.eskago.pl/'

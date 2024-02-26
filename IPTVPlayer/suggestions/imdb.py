@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# seems not used  to DELETE import urllib
 try:
     import json
 except Exception:
@@ -8,6 +9,8 @@ except Exception:
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
 
 class SuggestionsProvider:
@@ -30,6 +33,6 @@ class SuggestionsProvider:
                 printDBG(data)
                 data = json.loads(data)['d']
                 for item in data:
-                    retList.append(item['l'].encode('utf-8'))
+                    retList.append(ensure_str(item['l']))
                 return retList
         return None

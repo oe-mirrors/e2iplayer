@@ -8,14 +8,13 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_urlencode
 ###################################################
 # FOREIGN import
 ###################################################
 import datetime
 import time
 import re
-import urllib.parse
 try:
     import json
 except Exception:
@@ -263,7 +262,7 @@ class Laola1TV(CBaseHostClass):
             searchLive = ''
 
         page = cItem.get('page', 1)
-        url = 'http://search-api.laola1.at/?callback=ret&q=%s&p=%d&i=laola1tv-2015-int&include=[]&_=%s' % (urllib.parse.quote_plus(searchPattern), page, str(time.time()))
+        url = 'http://search-api.laola1.at/?callback=ret&q=%s&p=%d&i=laola1tv-2015-int&include=[]&_=%s' % (urllib_quote_plus(searchPattern), page, str(time.time()))
         sts, data = self.getPage(url)
         if not sts:
             return
@@ -323,7 +322,7 @@ class Laola1TV(CBaseHostClass):
         vidUrl = self.cm.ph.getSearchGroups(data, '\configUrl\s*:\s*"([^"]*?)"')[0]
         if vidUrl.startswith('//'):
             vidUrl = 'http:' + vidUrl
-        vidUrl += '?' + urllib.parse.urlencode(getParams)
+        vidUrl += '?' + urllib_urlencode(getParams)
         vidUrl = self._getFullUrl(vidUrl, baseUrl)
 
         sts, data = self.getPage(vidUrl)

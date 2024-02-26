@@ -20,7 +20,8 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, CSelOneLink, GetLogoDir, byteify
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -33,7 +34,6 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Components.config import config, ConfigYesNo, ConfigSelection, getConfigListEntry
 from time import time
 from os import path as os_path
-import urllib.parse
 import re
 
 try:
@@ -81,10 +81,7 @@ class Ipla(CBaseHostClass):
     def getStr(self, v, default=''):
         if None == v:
             return default
-        elif type(v) == type(''):
-            return v.encode('utf-8')
-        elif type(v) == type(''):
-            return v
+        return ensure_str(v)
 
     def __getAttribs(self, data):
         re_compile = re.compile('([^= ]+?)="([^"]+?)"')
@@ -180,6 +177,9 @@ class Ipla(CBaseHostClass):
         try:
             data = None
             if "0" == config.plugins.iptvplayer.iplacachexml.value:
+                return
+            elif not os_path.exists(self.cacheFilePath):
+                printDBG("INFO: %s does NOT exist. No cached data read." % self.cacheFilePath)
                 return
             from ast import literal_eval
             with open(self.cacheFilePath, 'r') as f:
@@ -331,7 +331,7 @@ class Ipla(CBaseHostClass):
             self.getCategories(catId, refresh)
     #WYSZUKAJ
         elif category == 'Wyszukaj':
-            pattern = urllib.parse.quote_plus(searchPattern)
+            pattern = urllib_quote_plus(searchPattern)
             self.getVideosList(Ipla.SEARCH_URL + pattern)
     #HISTORIA WYSZUKIWANIA
         elif category == "search_history":

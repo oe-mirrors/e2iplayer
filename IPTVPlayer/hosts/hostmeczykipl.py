@@ -9,13 +9,16 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -71,7 +74,7 @@ class MeczykiPL(CBaseHostClass):
         cat = cItem.get('f_cat', '0')
 
         query = {'category': cat, 'page': page}
-        url = baseUrl + '?' + urllib.parse.urlencode(query)
+        url = baseUrl + '?' + urllib_urlencode(query)
 
         sts, data = self.getPage(url)
         if not sts:
@@ -100,13 +103,13 @@ class MeczykiPL(CBaseHostClass):
             return
 
         query['page'] = page + 1
-        url = baseUrl + '?' + urllib.parse.urlencode(query)
+        url = baseUrl + '?' + urllib_urlencode(query)
         sts, data = self.getPage(url)
         if not sts:
             return
 
         try:
-            if len(list(json_loads(data)['shortcuts'].keys())):
+            if len(json_loads(data)['shortcuts'].keys()):
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'title': _('Next page'), 'page': page + 1})
                 self.addDir(params)
@@ -141,7 +144,11 @@ class MeczykiPL(CBaseHostClass):
             if not self.cm.isValidUrl(url):
                 continue
             if 'playwire.com' not in url and self.up.checkHostSupport(url) != 1:
-                continue
+                video_id = ph.search(url, r'''https?://.*([a-zA-Z0-9]{10})''')[0]
+                if video_id != '':
+                    url = 'https://viuclips.net/&force_parserVIUCLIPS[%s]' % url
+                else:
+                    continue
             title = cItem['title']
             desc = ''
             if len(titles) > idx:

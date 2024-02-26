@@ -7,12 +7,11 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, rm
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote, urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import base64
 try:
     import json
@@ -266,7 +265,7 @@ class NGolosCOM(CBaseHostClass):
                 self.addVideo(params)
 
         return
-        data = re.sub('''unescape\(["']([^"^']+?)['"]\)''', lambda m: urllib.parse.unquote(m.group(1)), data)
+        data = re.sub('''unescape\(["']([^"^']+?)['"]\)''', lambda m: urllib_unquote(m.group(1)), data)
 
         titles = []
         titles2 = []
@@ -325,7 +324,7 @@ class NGolosCOM(CBaseHostClass):
         cItem = dict(cItem)
         page = cItem.get('page', 1)
         if page == 1:
-            cItem['url'] = self.SEARCH_URL + urllib.parse.quote_plus(searchPattern)
+            cItem['url'] = self.SEARCH_URL + urllib_quote_plus(searchPattern)
         self.listItems(cItem, 'explore_item')
 
     def getLinksForVideo(self, cItem):

@@ -9,13 +9,16 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -277,13 +280,13 @@ class LuxVeritatisPL(CBaseHostClass):
         if searchType == 'radio':
             self.MAIN_URL = self.MAIN_URL_R
             cItem['category'] = 'list_radio_items'
-            cItem['url'] = self.getFullUrl('/?s=') + urllib.parse.quote_plus(searchPattern)
+            cItem['url'] = self.getFullUrl('/?s=') + urllib_quote_plus(searchPattern)
             cItem['icon'] = self.ICON_URL_R
             self.listRadioItems(cItem, 'explore_radio_item')
         elif searchType == 'tv':
             self.MAIN_URL = self.MAIN_URL_T
             cItem['category'] = 'list_tv_trwam_items'
-            cItem['url'] = self.getFullUrl('/filmy?Filter.Query=') + urllib.parse.quote_plus(searchPattern)
+            cItem['url'] = self.getFullUrl('/filmy?Filter.Query=') + urllib_quote_plus(searchPattern)
             cItem['icon'] = self.ICON_URL_T
             self.listTVTrwamItems(cItem)
 

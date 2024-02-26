@@ -7,13 +7,12 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection
 import re
-import urllib.parse
 try:
     import simplejson as json
 except Exception:
@@ -155,7 +154,7 @@ class Pinkbike(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Pinkbike.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        searchPattern = urllib.parse.quote_plus(searchPattern)
+        searchPattern = urllib_quote_plus(searchPattern)
         item = dict(cItem)
         item['category'] = 'list_videos'
         item['url'] = Pinkbike.VID_SRCH_URL + searchPattern

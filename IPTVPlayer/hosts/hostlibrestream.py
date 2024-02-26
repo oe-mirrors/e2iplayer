@@ -6,13 +6,16 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -201,7 +204,7 @@ class LibreStream(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         searchPattern = searchPattern
-        searchPattern = urllib.parse.quote_plus(searchPattern)
+        searchPattern = urllib_quote_plus(searchPattern)
         cItem = dict(cItem)
         cItem['url'] = self.SEARCH_URL + searchPattern + '&search_start=%s' % cItem.get('page', 1)
         #cItem['category'] = 'list_items'

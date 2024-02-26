@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 import time
 import re
-import urllib.parse
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 try:
     import json
 except Exception:
@@ -34,6 +34,10 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Use proxy server:"), config.plugins.iptvplayer.akoam_proxy))
     return optionList
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -197,7 +201,7 @@ class AkoAm(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("AkoAm.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
 
-        url = self.getFullUrl('/search/') + urllib.parse.quote(searchPattern)
+        url = self.getFullUrl('/search/') + urllib_quote(searchPattern)
         cItem = dict(cItem)
         cItem.update({'url': url, 'category': 'list_items'})
         self.listItems(cItem, 'explore_item')
@@ -339,7 +343,7 @@ class AkoAm(CBaseHostClass):
                 if 'golink' in data:
                     data = data['golink']
                     printDBG(data)
-                    data = urllib.parse.unquote(data)
+                    data = urllib_unquote(data)
                     data = byteify(json.loads(data))
                     printDBG(data)
                     baseUrl = data['route']

@@ -1425,12 +1425,20 @@ def getExcMSG(clearExcMSG = True):
 
 def printExc(msg='', WarnOnly=False):
     global LASTExcMSG
+    isWarning = False
     printDBG("===============================================")
-    if WarnOnly or msg.startswith('WARNING'):
-        printDBG("                    WARNING                    ")
-        msg = ''
+    if WarnOnly:
+        printDBG("                    WARNING")
+        isWarning = True
+    elif msg.startswith('WARNING'):
+        printDBG("                    WARNING")
+        msg = msg[7:]
+        isWarning = True
+    elif msg.startswith('EXCEPTION'):
+        printDBG("                    EXCEPTION")
+        msg = msg[9:]
     else:
-        printDBG("                   EXCEPTION                   ")
+        printDBG("                   EXCEPTION")
     printDBG("===============================================")
     exc_formatted = traceback.format_exc()
     if msg == '' or msg == 'WARNING':
@@ -1443,7 +1451,8 @@ def printExc(msg='', WarnOnly=False):
         retMSG = exc_formatted.splitlines()[-1]
     except Exception:
         retMSG = ''
-    LASTExcMSG = retMSG
+    if not isWarning:
+        LASTExcMSG = retMSG
     return retMSG #returns the error description to possibly use in main code. E.g. inform about failed login
 
 
@@ -1503,9 +1512,10 @@ def IsSubtitlesParserExtensionCanBeUsed():
         if config.plugins.iptvplayer.useSubtitlesParserExtension.value:
             from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser as subparser
             if '' != subparser.version():
+                printDBG('Subtitles Parser Extension available')
                 return True
     except Exception:
-        printExc()
+        printExc('WARNING - Subtitles Parser Extension NOT available')
     return False
 
 
@@ -1800,6 +1810,14 @@ def is_port_in_use(pIP, pPORT):
     res = sock.connect_ex((pIP, pPORT))
     sock.close()
     return res == 0
+
+def hasCDM():
+    try:
+        from pywidevinecdm.checkCDMvalidity import testDevice
+        return testDevice()
+    except Exception:
+        return False
+
 def readCFG(cfgName, defVal = ''):
     for myPath in ['/etc/enigma2/IPTVplayer_defaults/', '/hdd/IPTVplayer_defaults/']:
         if os.path.exists(myPath):

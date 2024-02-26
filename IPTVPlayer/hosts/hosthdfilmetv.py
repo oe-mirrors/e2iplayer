@@ -10,12 +10,11 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_urlencode
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import base64
 try:
     import json
@@ -23,6 +22,10 @@ except Exception:
     import simplejson as json
 from copy import deepcopy
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -194,7 +197,7 @@ class HDFilmeTV(CBaseHostClass):
         else:
             query = {'page': page, 'category': cItem['genre'], 'country': cItem['country'], 'sort': cItem['sort'], 'sort_type': cItem['sort_type']}
 
-        url += "?" + urllib.parse.urlencode(query)
+        url += "?" + urllib_urlencode(query)
         sts, data = self.getPageCF(url, params, post_data={'load': 'full-page'})
         #printDBG(data)
         if not sts:
@@ -443,7 +446,7 @@ class HDFilmeTV(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("HDFilmeTV.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['search_pattern'] = urllib.parse.quote(searchPattern)
+        cItem['search_pattern'] = urllib_quote(searchPattern)
         cItem['url'] = self.SEARCH_URL
         self.listItems(cItem, 'explore_item')
 

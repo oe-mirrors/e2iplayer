@@ -8,11 +8,11 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import unpackJSPlayerParams, VIDEOMEGA_decryptPlayerParams
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 import random
 try:
     import json
@@ -37,6 +37,10 @@ def GetConfigList():
         optionList.append(getConfigListEntry(_("Alternative domain:"), config.plugins.iptvplayer.skstream_alt_domain))
     return optionList
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -92,7 +96,7 @@ class SKStream(CBaseHostClass):
         try:
             url.encode('ascii')
         except Exception:
-            url = urllib.parse.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
+            url = urllib_quote(url, safe="/:&?%@[]()*$!+-=|<>;")
         url = url.replace(' ', '%20')
         return url
 
@@ -258,7 +262,7 @@ class SKStream(CBaseHostClass):
         page = cItem.get('page', 1)
 
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('recherche?s=%s' % urllib.parse.quote_plus(searchPattern))
+        cItem['url'] = self.getFullUrl('recherche?s=%s' % urllib_quote_plus(searchPattern))
         self.listItems(cItem, 'explore_item')
 
     def getLinksForVideo(self, cItem):
@@ -315,7 +319,7 @@ class SKStream(CBaseHostClass):
         urlTab = []
 
         # mark requested link as used one
-        if len(list(self.cacheLinks.keys())):
+        if len(self.cacheLinks.keys()):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

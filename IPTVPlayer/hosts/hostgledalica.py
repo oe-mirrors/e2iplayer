@@ -8,17 +8,22 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -54,7 +59,7 @@ class Gledalica(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urlparse.urljoin(baseUrl, url)
+                return urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
@@ -347,7 +352,7 @@ class Gledalica(CBaseHostClass):
                 if title == '':
                     continue
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-                letter = title.decode('utf-8')[0].upper().encode('utf-8')
+                letter = ensure_str(title.decode('utf-8')[0]).upper()
                 if not letter.isalpha():
                     letter = '#'
 
@@ -371,7 +376,7 @@ class Gledalica(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Gledalica.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = self.getFullUrl('/search.php?keywords=%s&btn=Search') % urllib.parse.quote_plus(searchPattern)
+        url = self.getFullUrl('/search.php?keywords=%s&btn=Search') % urllib_quote_plus(searchPattern)
         params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params, 'sort')
 
@@ -470,7 +475,7 @@ class Gledalica(CBaseHostClass):
             val = self.cleanHtmlStr(tmp[idx])
             if val == '' or val.lower() == 'n/a':
                 continue
-            key = self.cleanHtmlStr(tmp[idx - 1]).decode('utf-8').lower().encode('utf-8')
+            key = ensure_str(self.cleanHtmlStr(tmp[idx - 1])).lower()
             if key not in keysMap:
                 continue
             otherInfo[keysMap[key]] = val

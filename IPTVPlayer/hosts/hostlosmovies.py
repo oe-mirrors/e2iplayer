@@ -6,14 +6,13 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import base64
 try:
     import json
@@ -39,7 +38,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://losmovies.xyz'
+    return 'http://losmovies.cx/'
 
 
 class LosMovies(CBaseHostClass):
@@ -48,26 +47,26 @@ class LosMovies(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'LosMovies.tv', 'cookie': 'LosMovies.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.DEFAULT_ICON_URL = 'http://losmovies.xyz/images/losmovies_logo.png'
+        self.DEFAULT_ICON_URL = 'https://superrepo.org/static/images/icons/original/xplugin.video.losmovies.png.pagespeed.ic.JtaWsQ6YWz.jpg'
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.MAIN_URL = 'http://losmovies.xyz'
+        self.MAIN_URL = 'http://losmovies.cx/'
         self.cacheEpisodes = {}
         self.cacheLinks = {}
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_CAT_TAB = [{'category': 'list_cats', 'mode': 'movie', 'title': 'Movies', 'url': self.getMainUrl()},
-                             {'category': 'list_cats', 'mode': 'serie', 'title': 'Popular TV Shows', 'url': self.getFullUrl('/watch-popular-tv-shows')},
-                             {'category': 'list_top_cats', 'mode': 'movie', 'title': 'Top Movie Lists', 'url': self.getFullUrl('/top-movie-lists')},
+                             {'category': 'list_cats', 'mode': 'serie', 'title': 'TV Shows', 'url': self.getFullUrl('watch-popular-tv-shows')},
+                             {'category': 'list_top_cats', 'mode': 'movie', 'title': 'Top Movie Lists', 'url': self.getFullUrl('top-movie-lists')},
 
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
                              {'category': 'search_history', 'title': _('Search history'), }
                             ]
 
         self.MAIN_SUB_CATS_TAB = [{'category': 'list_abc', 'title': 'Alphabetically', },
-                                  {'category': 'list_categories', 'title': 'Genres', 'url': self.getFullUrl('/movie-genres')},
-                                  {'category': 'list_categories', 'title': 'Countries', 'url': self.getFullUrl('/countries')},
+                                  {'category': 'list_categories', 'title': 'Genres', 'url': self.getFullUrl('movie-genres')},
+                                  {'category': 'list_categories', 'title': 'Countries', 'url': self.getFullUrl('countries')},
                                  ]
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -88,7 +87,7 @@ class LosMovies(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urllib.parse.urljoin(baseUrl, url)
+                return urljoin(baseUrl, url)
 
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.HEADER['User-Agent']}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -132,7 +131,7 @@ class LosMovies(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="centerContainer">', '<footer>')[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, '<h1 class="centerHeader">', '<footer>')[1]
         data = data.split('showEntityTeaser ')
         if len(data):
             del data[0]
@@ -182,16 +181,7 @@ class LosMovies(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = re.findall('src="([^"]+?)"', item)
-            #self.getFullUrl( self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0] )
-            if icon:
-                if len(icon) > 1:
-                    icon = self.getFullUrl(icon[1])
-                else:
-                    icon = self.getFullUrl(icon[0])
-            else:
-                icon = ''
-
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             desc = self.cleanHtmlStr(item)
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1])
             if title == '':
@@ -228,11 +218,11 @@ class LosMovies(CBaseHostClass):
         seasonsData = self.cm.ph.getAllItemsBeetwenMarkers(seasonsData, '<a ', '</a>', withMarkers=True)
         for item in seasonsData:
             seasonTitle = self.cleanHtmlStr(item)
-            seasonKey = self.cm.ph.getSearchGroups(item, '''href=['"]#tabs-([^'^"]+?)['"]''')[0]
+            seasonKey = self.cm.ph.getSearchGroups(item, '''href=['"]#tabs\-([^'^"]+?)['"]''')[0]
             seasonsTitlesTab[seasonKey] = seasonTitle
 
-        marker = '<div id="movie-'
-        data = self.cm.ph.getDataBeetwenMarkers(data, marker, '<div class="aPlaceHolder aPlaceHolder Top', False)[1]
+        marker = '<div id="tabs-'
+        data = self.cm.ph.getDataBeetwenMarkers(data, marker, '<div class="adsPlaceHolder', False)[1]
         data = data.split(marker)
         for sItem in data:
             seasonKey = self.cm.ph.getSearchGroups(sItem, '''([0-9]+?)['"]''')[0]
@@ -240,7 +230,7 @@ class LosMovies(CBaseHostClass):
             episodesData = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<h3', '</tbody>', True)
             for eItem in episodesData:
                 eTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(eItem, '<h3', '</h3>', True)[1])
-                eFakeUrl = '#season%s_%s' % (seasonKey, urllib.parse.quote(eTitle))
+                eFakeUrl = '#season%s_%s' % (seasonKey, urllib_quote(eTitle))
                 linksTab = self.getLinksForVideo(cItem, eItem)
                 if len(linksTab):
                     self.cacheLinks[eFakeUrl] = linksTab
@@ -264,7 +254,7 @@ class LosMovies(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("LosMovies.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('search?type=movies&q=') + urllib.parse.quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('search?type=movies&q=') + urllib_quote_plus(searchPattern)
         self.listItems(cItem, 'list_seasons')
 
     def getLinksForVideo(self, cItem, eItem=None):
@@ -283,103 +273,12 @@ class LosMovies(CBaseHostClass):
         else:
             data = eItem
 
-        #printDBG("------------- html code ------------")
-        #printDBG(data)
-        #printDBG("-------------------------")
-
-        # find javascript functions that decode video codes.
-        # Example:
-        # <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        #   function dec_Embed2_1_2(str) { ....
-        # </script>
-
-        scripts = self.cm.ph.getAllItemsBeetwenMarkers(data, ('<script', '>'), '</script>', False)
-        swap_script = ""
-
-        for scr in scripts:
-            if ('Vidsrc' in scr) or ('Movietv1' in scr) or ('Files123' in scr):
-                # code found
-                swap_script = scr
-                printDBG("--------- swap functions -----------")
-                printDBG(swap_script)
-                #m = re.findall("(?P<Files123>[a-z0-9_]+123[a-z0-9_]+)\(|(?P<Movietv>[a-z0-9_]+movietv[a-z0-9_]+)\(|(?P<VidSrc>[a-z0-9_]+vidsrc[a-z0-9_]+)\(", scr, re.I)
-
-                # part to populate with all needed functions
-                fFiles123 = self.cm.ph.getSearchGroups(data, "([a-z0-9_]+123[a-z0-9_]+?)\(", ignoreCase=True)[0]
-                fMovietv = self.cm.ph.getSearchGroups(data, "([a-z0-9_]+movietv[a-z0-9_]+?)\(", ignoreCase=True)[0]
-                fVidSrc = self.cm.ph.getSearchGroups(data, "([a-z0-9_]+vidsrc[a-z0-9_]+?)\(", ignoreCase=True)[0]
-
-                printDBG("Functions found: %s %s %s" % (fFiles123, fMovietv, fVidSrc))
-
-                break
-
         linksData = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr class="linkTr"', '</tr>', True)
-
         for item in linksData:
-            #printDBG("******************")
-            #printDBG(item)
-            #printDBG("******************")
-
-            url = ""
-
-            # find fake url, url format and url code
-            #<td class="linkHidden linkHiddenUrl" data-width="700" data-height="460" data-season="1" data-serie="2">https://vidlox.me/embed-ql0pdr0uzbv7.html</td>
-            #<td class="linkHidden linkHiddenFormat">https://vidlox.me/embed-%s.html</td>
-            #<td class="linkHidden linkHiddenCode">ql0pdr0uzbv7</td>
-            #
-            #   <td class="linkHidden linkHiddenVideoBlock">
-            #   <input type="radio" name="video_11248313" value="1" id="video_11248313_1" class="star"  />
-            #    </td>
-
-            linkHiddenUrl = self.cm.ph.getDataBeetwenMarkers(item, ('<td', '>', 'linkHiddenUrl'), '</td>', False)[1]
-            linkHiddenFormat = self.cm.ph.getDataBeetwenMarkers(item, ('<td', '>', 'linkHiddenFormat'), '</td>', False)[1]
-            linkHiddenCode = self.cm.ph.getDataBeetwenMarkers(item, ('<td', '>', 'linkHiddenCode'), '</td>', False)[1]
-
-            if len(linkHiddenFormat) > 0 and len(linkHiddenCode) > 0:
-                linkHiddenVideoBlock = self.cm.ph.getDataBeetwenMarkers(item, ('<td', '>', 'linkHiddenVideoBlock'), '</td>', False)[1]
-                functionName = self.cm.ph.getSearchGroups(linkHiddenVideoBlock, "video_([0-9]+?)[_\"]")[0]
-
-                if functionName:
-                    functionName = "dec_" + functionName
-                else:
-                    if 'vidsrc' in linkHiddenFormat:
-                        functionName = fVidSrc
-                    elif 'movietv' in linkHiddenFormat:
-                        functionName = fMovietv
-                    elif '123' in linkHiddenFormat:
-                        functionName = fFiles123
-
-            if functionName:
-
-                # execute javascript to swap video code
-                js_code = scr + '\n console.log(' + functionName + '("' + linkHiddenCode + '"));'
-
-                ret = js_execute(js_code)
-                if ret['sts'] and 0 == ret['code']:
-                    true_videocode = ret['data'].replace("\n", "")
-                    url = linkHiddenFormat % true_videocode
-                    printDBG("***************************************************")
-                    printDBG("Used function name : '%s'" % functionName)
-                    printDBG("video code '%s' has become '%s'" % (linkHiddenCode, true_videocode))
-                    printDBG("decoded url: %s" % url)
-                    printDBG("***************************************************")
-            else:
-                printDBG("***************************************************")
-                printDBG("Url %s hasn't an own function" % linkHiddenUrl)
-                printDBG("***************************************************")
-
-            if not url:
-                printDBG("***************************************************")
-                printDBG("no decoded... using probably the fake url")
-                printDBG("***************************************************")
-
-                url = linkHiddenUrl
-
+            url = self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<td[^>]+?linkHiddenUrl[^>]+?>'), re.compile('</td>'), False)[1].strip()
             if not self.cm.isValidUrl(url):
                 continue
-
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>', True)
-
             nameTab = []
             nIdx = 0
             for nItem in tmp:
@@ -391,13 +290,7 @@ class LosMovies(CBaseHostClass):
                 nItem = self.cleanHtmlStr(nItem)
                 if nItem == 'None':
                     continue
-
-                # if url, paste the decoded one
-                if nItem.startswith("http"):
-                    nItem = url
-
                 nameTab.append(nItem)
-
             name = ' | '.join(nameTab)
             urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
 
@@ -435,7 +328,7 @@ class LosMovies(CBaseHostClass):
         urlTab = []
 
         # mark requested link as used one
-        if len(list(self.cacheLinks.keys())):
+        if len(self.cacheLinks.keys()):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
@@ -594,7 +487,6 @@ class LosMovies(CBaseHostClass):
         if name == None:
             self.cacheLinks = {}
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-
         elif category == 'list_cats':
             self.listCats(self.currItem, 'list_items')
         elif category == 'list_abc':

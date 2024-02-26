@@ -96,9 +96,11 @@ class IPTVChoiceBoxWidget(Screen):
         self["list"].connectSelChanged(self.onSelectionChanged)
 
     def key_ok(self):
+        printDBG('IPTVChoiceBoxWidget.key_ok() getSelectedItem() = "%s"' % self.getSelectedItem() )
         self.close(self.getSelectedItem())
 
     def key_cancel(self):
+        printDBG('IPTVChoiceBoxWidget.key_cancel()' )
         self.close(None)
 
     def onSelectionChanged(self):

@@ -9,11 +9,10 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 try:
     import json
 except Exception:
@@ -454,7 +453,7 @@ class PlayRTSIW(CBaseHostClass):
 
         self.setMainUrl(self.URL_MAP[searchType.lower()])
         self.DEFAULT_ICON_URL = self.SEARCH_ICON_URL
-        pattern = urllib.parse.quote(searchPattern)
+        pattern = urllib_quote(searchPattern)
 
         baseUrl = 'search?searchQuery={0}&numberOf'.format(pattern)
         for type in ['tv', 'radio']:

@@ -6,21 +6,24 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, RetHost, CUrlItem, ArticleContent
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
 
+def GetConfigList():
+    optionList = []
+    return optionList
+
 
 def gettytul():
-    return 'http://greekdocumentaries2.blogspot.com/'
+    return 'http://greekdocumentaries2.blogspot.gr/'
 
 
 class GreekDocumentaries3(CBaseHostClass):
@@ -28,15 +31,15 @@ class GreekDocumentaries3(CBaseHostClass):
     AJAX_HEADER = dict(HEADER)
     AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
 
-    MAIN_URL = 'http://greekdocumentaries2.blogspot.com/'
+    MAIN_URL = 'http://greekdocumentaries2.blogspot.gr/'
     SEARCH_URL = MAIN_URL + '/search?sitesearch=http%3A%2F%2Fjohny-jossbanget.blogspot.com&q='
     DEFAULT_ICON = "http://3.bp.blogspot.com/-s80VMsgUq0w/VsYj0rd4nrI/AAAAAAAAAAw/y-ix9jhy1Gg/s1600-r/%25CF%2586%25CE%25BF%25CF%2584%25CE%25BF%2Bblog%2BHeader.png"
 
     MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Recent'), 'url': MAIN_URL, 'icon': DEFAULT_ICON},
-                    {'category': 'list_items', 'title': _('Recommended'), 'url': MAIN_URL + 'search/label/%CE%A0%CE%A1%CE%9F%CE%A4%CE%95%CE%99%CE%9D%CE%9F%CE%9C%CE%95%CE%9D%CE%91', 'icon': DEFAULT_ICON},
-                    {'category': 'list_items', 'title': _('TV series'), 'url': MAIN_URL + 'search/label/TV-Series', 'icon': DEFAULT_ICON},
                     {'category': 'categories', 'title': _('Categories'), 'url': MAIN_URL, 'icon': DEFAULT_ICON, 'filter': 'categories'},
-                    {'category': 'categories', 'title': _('History'), 'url': MAIN_URL, 'icon': DEFAULT_ICON, 'filter': 'history'},
+                    {'category': 'categories', 'title': _('Programs'), 'url': MAIN_URL, 'icon': DEFAULT_ICON, 'filter': 'programs'},
+                    {'category': 'categories', 'title': _('Labels'), 'url': MAIN_URL, 'icon': DEFAULT_ICON, 'filter': 'labels'},
+                    {'category': 'list_items', 'title': _('TV series'), 'url': MAIN_URL + 'search/label/TV-Series', 'icon': DEFAULT_ICON},
                     {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': DEFAULT_ICON},
                     {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON}]
 
@@ -87,13 +90,11 @@ class GreekDocumentaries3(CBaseHostClass):
         if not sts:
             return
 
-        for cat in [('categories', 'ΚΑΤΗΓΟΡΙΕΣ', '</ul>'),
-                     ('history', ">TV-Series</a></li>", '>Follow Us<')]:
+        for cat in [('labels', 'list-label-widget-content', '</ul>'),
+                     ('categories', 'ΚΑΤΗΓΟΡΙΕΣ', 'ΠΑΡΑΓΩΓΗΣ'),
+                     ('programs', 'ΠΑΡΑΓΩΓΗΣ', '</ul>')]:
             self.cacheFilters[cat[0]] = []
             tmp = self.cm.ph.getDataBeetwenMarkers(data, cat[1], cat[2], False)[1]
-            # printDBG('=============================================================')
-            # printDBG(tmp)
-            # printDBG('=============================================================')
             tmp = re.compile('''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''').findall(tmp)
             for item in tmp:
                 self.cacheFilters[cat[0]].append({'title': self.cleanHtmlStr(item[1]), 'url': item[0]})
@@ -126,7 +127,7 @@ class GreekDocumentaries3(CBaseHostClass):
         nextPageUrl = self.cm.ph.getSearchGroups(nextPageUrl, '<a[^<]+?href=\'([^"]+?)\'')[0]
 
         m1 = "<div class='post bar hentry'>"
-        data = self.cm.ph.getDataBeetwenMarkers(data, m1, "<div class='blog-pager'", False)[1]
+        data = self.cm.ph.getDataBeetwenMarkers(data, m1, "<span id='home-link'>", False)[1]
         data = data.split(m1)
         for item in data:
             tmp = self.cm.ph.getSearchGroups(item, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>([^<]+?)<''', 2)
@@ -221,7 +222,7 @@ class GreekDocumentaries3(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("GreekDocumentaries3.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.SEARCH_URL + urllib.parse.quote(searchPattern)
+        cItem['url'] = self.SEARCH_URL + urllib_quote(searchPattern)
         self.listItems(cItem)
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):

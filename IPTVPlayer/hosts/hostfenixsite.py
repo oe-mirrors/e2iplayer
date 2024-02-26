@@ -11,28 +11,32 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 import re
 ###################################################
 
+def GetConfigList():
+    optionList = []
+    return optionList
+
 
 def gettytul():
-    return 'http://fenixsite.co/'
+    return 'http://fenixsite.com/'
 
 
 class Fenixsite(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'fenixsite.co', 'cookie': 'fenixsite.co.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'fenixsite.com', 'cookie': 'fenixsite.com.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL = 'http://www.fenixsite.co/'
+        self.MAIN_URL = 'http://www.fenixsite.com/'
         self.DEFAULT_ICON_URL = 'https://i.pinimg.com/originals/67/70/a3/6770a3fa9bdcc1bd33770106cd70fb22.png'
 
         self.cacheFilters = {}
@@ -86,14 +90,15 @@ class Fenixsite(CBaseHostClass):
             for item in itemsList:
                 letter = item['title'].decode('utf-8')[0].upper()
                 if letter.isnumeric():
-                    letter = '#'
+                    letter = u'#'
                 if letter not in subItems:
                     subItems[letter] = []
                     letters.append(letter)
                 subItems[letter].append(item)
 
+            self.addDir(MergeDicts(cItem, {'title': _('--All--'), 'category': nextCategory}))
             for letter in letters:
-                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'sub_items': subItems[letter], 'title': '%s [%d]' % (letter.encode('utf-8'), len(subItems[letter]))}))
+                self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'category': 'sub_items', 'sub_items': subItems[letter], 'title': '%s [%d]' % (ensure_str(letter), len(subItems[letter]))}))
         else:
             self.currList.append(MergeDicts(cItem, {'title': _('--All--'), 'category': nextCategory}))
             self.currList.extend(itemsList)
@@ -171,7 +176,7 @@ class Fenixsite(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
 
-        url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.parse.quote(searchPattern))
+        url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib_quote(searchPattern))
         sts, data = self.getPage(url)
         if not sts:
             return
@@ -217,7 +222,7 @@ class Fenixsite(CBaseHostClass):
                     if it.startswith('"') or it.startswith("'"):
                         apiLink += it[1:-1]
                     elif 'key' in it:
-                        apiLink += urllib.parse.quote_plus(key)
+                        apiLink += urllib_quote_plus(key)
                     elif 'count' in it:
                         apiLink += '1'
                 apiLink = self.getFullUrl(apiLink)
@@ -243,7 +248,7 @@ class Fenixsite(CBaseHostClass):
 
         data = ph.find(data, ('<div', '>', 'tab-content'), ('<div', '>', 'fstory'), flags=0)[1]
         data = ph.rfindall(data, '</div>', ('<div', '>', 'tab-pane'), flags=ph.END_S)
-        for idx in range(1, len(data), 2):
+        for idx in xrange(1, len(data), 2):
             id = ph.getattr(data[idx - 1], 'id')
             item = data[idx]
             title = titlesMap.get('#%s' % id, '')
@@ -281,7 +286,7 @@ class Fenixsite(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("Fenixsite.getVideoLinks [%s]" % videoUrl)
         # mark requested link as used one
-        if len(list(self.cacheLinks.keys())):
+        if len(self.cacheLinks.keys()):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

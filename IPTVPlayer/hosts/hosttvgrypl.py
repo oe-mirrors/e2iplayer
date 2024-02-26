@@ -22,15 +22,15 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.tvgrypl_default_quality = ConfigSelection(default="SD", choices=[("MOB", "MOB: niska"), ("SD", "SD: standardowa"), ("HD", "HD: wysoka")]) #, ("FHD", "FHD: bardzo wysoka")
-config.plugins.iptvplayer.tvgrypl_use_dq = ConfigYesNo(default=True)
+#config.plugins.iptvplayer.tvgrypl_default_quality = ConfigSelection(default="SD", choices=[("MOB", "MOB: niska"), ("SD", "SD: standardowa"), ("HD", "HD: wysoka")]) #, ("FHD", "FHD: bardzo wysoka")
+#config.plugins.iptvplayer.tvgrypl_use_dq = ConfigYesNo(default=True)
 config.plugins.iptvplayer.tvgrypl_date_of_birth = ConfigText(default="2017-01-31", fixed_size=False)
 
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry("Domyślna jakość wideo:", config.plugins.iptvplayer.tvgrypl_default_quality))
-    optionList.append(getConfigListEntry("Używaj domyślnej jakości wideo:", config.plugins.iptvplayer.tvgrypl_use_dq))
+#    optionList.append(getConfigListEntry("Domyślna jakość wideo:", config.plugins.iptvplayer.tvgrypl_default_quality))
+#    optionList.append(getConfigListEntry("Używaj domyślnej jakości wideo:", config.plugins.iptvplayer.tvgrypl_use_dq))
     optionList.append(getConfigListEntry("Wprowadź datę urodzenia [RRRRR-MM-DD]:", config.plugins.iptvplayer.tvgrypl_date_of_birth))
     return optionList
 ###################################################
@@ -155,30 +155,29 @@ class TvGryPL(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("TvGryPL.getLinksForVideo [%s]" % cItem)
         allLinksTab = []
-        urlTab = []
 
         rm(self.COOKIE_FILE)
+        urlParams = dict(self.defaultParams)
+        urlParams['header'] = dict(self.AJAX_HEADER)
+        urlParams['header']['Referer'] = cItem['url']
+        sts, data = self.getPage('https://tvgry.pl/ajax/vptype.asp', urlParams, {'TYPE': 'Y'})
 
         sts, data = self.getPage(cItem['url'], self.defaultParams) #{'use_cookie':True, 'cookie_items':{'agegate':1}})
         if not sts:
-            return urlTab
+            return []
 
         ageMarker = '<div class="player-AGEGATE">'
         if ageMarker in data:
             tmp = self.cm.ph.getSearchGroups(config.plugins.iptvplayer.tvgrypl_date_of_birth.value, '''([0-9]{4})[-]?([0-9][0-9]?)[-]?([0-9][0-9]?)''', 3)
             printDBG(">>>>>YEAR[%s] MONTH[%s] DAY[%s]" % (tmp[0], tmp[1], tmp[2]))
             if '' != tmp[0] and '' != tmp[1] and '' != tmp[2]:
-                urlParams = dict(self.defaultParams)
-                urlParams['header'] = dict(self.AJAX_HEADER)
-                urlParams['header']['Referer'] = cItem['url']
-
                 sts, data = self.getPage('https://tvgry.pl/ajax/agegate.asp', urlParams, {'day': int(tmp[2]), 'month': int(tmp[1]), 'year': int(tmp[0])})
                 if not sts:
                     return []
 
                 sts, data = self.getPage(cItem['url'], self.defaultParams)
                 if not sts:
-                    return urlTab
+                    return []
 
                 if ageMarker in data:
                     SetIPTVPlayerLastHostError("Twój wiek nie został poprawnie zweryfikowany przez serwis http://tvgry.pl/.\nSprawdź ustawioną datę urodzenia w konfiguracji hosta.")
@@ -188,57 +187,11 @@ class TvGryPL(CBaseHostClass):
         url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
         if self.cm.isValidUrl(url):
             allLinksTab = self.up.getVideoLinkExt(url)
+        video_id = self.cm.ph.getSearchGroups(data, '''<script[^>]+?data-video=['"]([^"^']+?)['"]''', 1, True)[0]
+        if video_id:
+            allLinksTab = self.up.getVideoLinkExt('https://www.dailymotion.com/video/%s' % video_id)
 
-        urlIDS = []
-        urlTemplate = ''
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'sources:', ']')[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '{', '}')
-        for item in data:
-            url = self.cm.ph.getSearchGroups(item, '''['"]?file['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
-            name = self.cm.ph.getSearchGroups(item, '''['"]?label['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
-            if self.cm.isValidUrl(url):
-                id = self.cm.ph.getSearchGroups(url, '''(/[0-9]+_)[0-9]+''')[0]
-                if id != '' and id not in urlIDS:
-                    urlIDS.append(id)
-                    if urlTemplate == '':
-                        urlTemplate = url.replace(id, '{0}')
-
-                q = ""
-                if '/500_' in url or "Mobile" in url:
-                    q = 'MOB'
-                elif '/750_' in url or "SD" in url:
-                    q = 'SD'
-                elif '/1280_' in url or "720p" in url:
-                    q = 'HD'
-                if q != '':
-                    urlTab.append({'name': name, 'url': strwithmeta(url, {"Range": "bytes=0-"}), 'q': q, 'need_resolve': 0})
-
-        if urlTemplate != '':
-            params = dict(self.defaultParams)
-            params['header'] = dict(params['header'])
-            params['header']['Range'] = "bytes=0-"
-            params['max_data_size'] = 0
-            params['header'].pop('Accept', None)
-            for item in [('/500_', 'MOB'), ('/750_', 'SD'), ('/1280_', 'HD')]:
-                if item[0] in urlIDS:
-                    continue
-                url = urlTemplate.format(item[0])
-                sts = self.cm.getPage(url, params)[0]
-                if sts and 'mp4' in self.cm.meta.get('content-type', '').lower():
-                    urlTab.append({'name': item[1], 'url': strwithmeta(url, {"Range": "bytes=0-"}), 'q': item[1], 'need_resolve': 0})
-
-        if 1 < len(urlTab):
-            map = {'MOB': 0, 'SD': 1, 'HD': 2, 'FHD': 3}
-            oneLink = CSelOneLink(urlTab, lambda x: map[x['q']], map[config.plugins.iptvplayer.tvgrypl_default_quality.value])
-            if config.plugins.iptvplayer.tvgrypl_use_dq.value:
-                urlTab = oneLink.getOneLink()
-            else:
-                urlTab = oneLink.getSortedLinks()
-
-        if 0 == len(urlTab):
-            return allLinksTab
-
-        return urlTab
+        return allLinksTab
 
     def getFavouriteData(self, cItem):
         printDBG('TvGryPL.getFavouriteData')

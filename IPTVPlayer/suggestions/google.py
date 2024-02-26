@@ -10,6 +10,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang
 
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
 class SuggestionsProvider:
 
@@ -27,7 +28,7 @@ class SuggestionsProvider:
         if sts:
             retList = []
             for item in json.loads(data)[1]:
-                retList.append(str(item))
+                retList.append(ensure_str(item))
 
             return retList
         return None

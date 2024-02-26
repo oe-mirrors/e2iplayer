@@ -13,8 +13,12 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 # FOREIGN import
 ###################################################
 import re
-from urllib.parse import urlparse, urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():

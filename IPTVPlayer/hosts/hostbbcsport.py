@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.bbc import BBCCoUkI
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from datetime import datetime, timedelta
 try:
     import json
@@ -471,7 +471,7 @@ class BBCSport(CBaseHostClass):
             self.setMainUrl(cUrl)
 
             try:
-                url = self.sessionUrl + '?ptrt=' + urllib.parse.quote(cUrl.split('?', 1)[0]) + '&userOrigin=sport&context=sport'
+                url = self.sessionUrl + '?ptrt=' + urllib_quote(cUrl.split('?', 1)[0]) + '&userOrigin=sport&context=sport'
                 sts, data = self.getPage(url)
                 if not sts:
                     msg = _(netErrorMsg) + _('\nError[2].')

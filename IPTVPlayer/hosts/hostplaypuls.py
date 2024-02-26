@@ -8,13 +8,13 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSelOneLink, printDBG, printExc, byteify
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import iterDictItems
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 import re
-import urllib.parse
 import random
 try:
     import simplejson as json
@@ -239,7 +239,7 @@ class Playpuls(CBaseHostClass):
                 source3Data = byteify(json.loads(source3Data))
                 if 'sources' in source3Data:
                     source3Data = source3Data['sources']
-                for key, val in source3Data.items():
+                for key, val in iterDictItems(source3Data):
                     if val != '':
                         key = key.replace('src', '')
                         sources.append({'quality': key, 'src': '/play/%s' % val})
@@ -272,7 +272,7 @@ class Playpuls(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Playpuls.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.SEARCH_URL + urllib.parse.quote_plus(searchPattern)
+        cItem['url'] = self.SEARCH_URL + urllib_quote_plus(searchPattern)
         self.listCategory(cItem, True)
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):

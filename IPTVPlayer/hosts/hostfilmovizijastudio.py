@@ -8,17 +8,20 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 import Plugins.Extensions.IPTVPlayer.libs.urlparser as urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -70,7 +73,7 @@ class FilmovizijaStudio(CBaseHostClass):
         params.update({'header': HTTP_HEADER})
 
         if self.isNeedProxy() and 'filmovizija.' in url:
-            proxy = 'https://www.sslgate.co.uk/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
+            proxy = 'https://www.sslgate.co.uk/index.php?q={0}&hl=2e1'.format(urllib_quote(url, ''))
             params['header']['Referer'] = proxy
             params['header']['Cookie'] = 'flags=2e1;'
             url = proxy
@@ -82,7 +85,7 @@ class FilmovizijaStudio(CBaseHostClass):
     def _getIconUrl(self, url):
         url = self._getFullUrl(url)
         if 'filmovizija.' in url and self.isNeedProxy():
-            proxy = 'https://www.sslgate.co.uk/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
+            proxy = 'https://www.sslgate.co.uk/index.php?q={0}&hl=2e1'.format(urllib_quote(url, ''))
             params = {}
             params['User-Agent'] = self.HEADER['User-Agent'],
             params['Referer'] = proxy
@@ -92,7 +95,7 @@ class FilmovizijaStudio(CBaseHostClass):
 
     def _getFullUrl(self, url):
         if 'sslgate.co.uk' in url:
-            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '''\?q=(http[^&]+?)&''')[0])
+            url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', '''\?q=(http[^&]+?)&''')[0])
         if url.startswith('//'):
             url = 'http:' + url
         elif url.startswith('/'):
@@ -472,7 +475,7 @@ class FilmovizijaStudio(CBaseHostClass):
             baseUrl = self.SER_SEARCH_URL
 
         if 'page=' not in cItem.get('url', ''):
-            cItem['url'] = baseUrl + urllib.parse.quote(searchPattern)
+            cItem['url'] = baseUrl + urllib_quote(searchPattern)
         self.listItems(cItem)
 
     def getArticleContent(self, cItem):

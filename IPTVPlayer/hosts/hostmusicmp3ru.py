@@ -9,17 +9,20 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -244,7 +247,7 @@ class MusicMp3Ru(CBaseHostClass):
         printDBG("MusicMp3Ru.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
 
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search.html?text=%s&all=%s' % (urllib.parse.quote(searchPattern), searchType))
+        cItem['url'] = self.getFullUrl('/search.html?text=%s&all=%s' % (urllib_quote(searchPattern), searchType))
         if searchType == 'songs':
             self.listSongsItems(cItem)
         elif searchType == 'albums':

@@ -6,12 +6,13 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 ###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+###################################################
 
-###################################################
-# FOREIGN import
-###################################################
-import urllib.parse
-###################################################
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -50,7 +51,7 @@ class OtakuFR(CBaseHostClass):
         try:
             url.encode('ascii')
         except Exception:
-            url = urllib.parse.quote(url, safe="/:&?%@[]()*$!+-=|<>;")
+            url = urllib_quote(url, safe="/:&?%@[]()*$!+-=|<>;")
         url = url.replace(' ', '%20')
         return url
 

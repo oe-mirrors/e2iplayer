@@ -7,11 +7,10 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, rm, MergeDicts
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 import base64
 try:
     import json
@@ -288,7 +287,7 @@ class VUMEDI(CBaseHostClass):
         self.tryTologin()
 
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search/?q=') + urllib.parse.quote(searchPattern)
+        cItem['url'] = self.getFullUrl('/search/?q=') + urllib_quote(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem)
 

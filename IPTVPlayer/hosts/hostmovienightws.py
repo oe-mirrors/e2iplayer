@@ -6,17 +6,20 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
     import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -190,9 +193,9 @@ class MoviesNight(CBaseHostClass):
         self.listsTab(self.episodesCache.get(seasonKey, []), cItem, 'video')
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        searchPattern = urllib.parse.quote_plus(searchPattern)
+        searchPattern = urllib_quote_plus(searchPattern)
         cItem = dict(cItem)
-        cItem['url'] = self.SRCH_URL + urllib.parse.quote_plus(searchPattern)
+        cItem['url'] = self.SRCH_URL + urllib_quote_plus(searchPattern)
         self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):

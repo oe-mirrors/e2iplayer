@@ -5,17 +5,17 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, byteify
-
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 # FOREIGN import
 ###################################################
 import re
 import copy
-try:
-    import json
-except Exception:
-    import simplejson as json
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -52,14 +52,9 @@ class Spryciarze(CBaseHostClass):
         if not sts:
             return
 
-        # clear punks
-        printDBG('Before clear')
-        pos = data.find('<div class="content_prawo">')
-        if pos > -1:
-            data = data[:pos]
-        printDBG('After clear')
+        data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'py-5 bg-light-v2'), '<div class="widget">')[1]
 
-        catTab = data.split('<div class="box_kategorie_item_head">')
+        catTab = data.split('<div class="card-header bg-light">')
         # free memory
         data = ''
         if len(catTab) > 0:
@@ -68,17 +63,17 @@ class Spryciarze(CBaseHostClass):
         printDBG('catTab len %d' % len(catTab))
 
         for i in range(len(catTab)):
-            subTab = catTab[i].split('<div class="box_kategorie_item_lista">')
+            subTab = catTab[i].split('<div class="card-body">')
             # Free memory
             catTab[i] = ''
 
             if 2 == len(subTab):
                 # Get Main category data
-                pattern = '<div class="box_kategorie_item_head_ico (.+?)"></div>.+?<a href="(.+?)" class="box_kategorie_item_head_tytul">(.+?)</a>.+?<div class="box_kategorie_item_head_ilosc">\(([0-9]+?)\)</div>.+?<div class="box_kategorie_item_head_bottom">'
+                pattern = '<h4>.+?<a href="(.+?)">\r\n(.+?)\r\n.+?<small>\(([0-9]+?)\)</small>'
                 match = re.compile(pattern, re.DOTALL).findall(subTab[0])
 
                 if len(match) == 1:
-                    catItem = {'type': 'main', 'url': match[0][1], 'name': match[0][2], 'ilosc': match[0][3], 'subCatList': []}
+                    catItem = {'type': 'main', 'url': match[0][0], 'name': " ".join(match[0][1].split()), 'ilosc': match[0][2], 'subCatList': []}
                     self.currList.append(catItem)
 
                 else:
@@ -104,14 +99,9 @@ class Spryciarze(CBaseHostClass):
         if not sts:
             return
 
-        # clear punks
-        printDBG('Before clear')
-        pos = data.find('<div class="content_prawo">')
-        if pos > -1:
-            data = data[:pos]
-        printDBG('After clear')
+        data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'py-5 bg-light-v2'), '<div class="widget">')[1]
 
-        catTab = data.split('<div class="box_kategorie_item_head">')
+        catTab = data.split('<div class="card-header bg-light">')
         # free memory
         data = ''
         if len(catTab) > 0:
@@ -120,22 +110,20 @@ class Spryciarze(CBaseHostClass):
         printDBG('catTab len %d' % len(catTab))
 
         for i in range(len(catTab)):
-            subTab = catTab[i].split('<div class="box_kategorie_item_lista">')
+            subTab = catTab[i].split('<div class="card-body">')
             # Free memory
             catTab[i] = ''
-
             if 2 == len(subTab):
                 # Get Main category data
-                pattern = '<div class="box_kategorie_item_head_ico (.+?)"></div>.+?<a href="(.+?)" class="box_kategorie_item_head_tytul">(.+?)</a>.+?<div class="box_kategorie_item_head_ilosc">\(([0-9]+?)\)</div>.+?<div class="box_kategorie_item_head_bottom">'
+                pattern = '<h4>.+?<a href="(.+?)">\r\n\s+?(.+?)\r\n.+?<small>\(([0-9]+?)\)</small>'
                 match = re.compile(pattern, re.DOTALL).findall(subTab[0])
 
                 if len(match) == 1:
-                    catItem = {'type': 'sub', 'url': match[0][1], 'name': match[0][2], 'ilosc': match[0][3], 'subCatList': []}
+                    catItem = {'type': 'sub', 'url': match[0][0], 'name': " ".join(match[0][1].split()), 'ilosc': match[0][2], 'subCatList': []}
 
                     #Get sub-categories data
-                    pattern = '<a href="(.+?)"[^>]*?>(.+?)<span> \(([0-9]+?)\)</span></a>'
+                    pattern = '<a.+?href="(.+?)"[^>]*?>(.+?)\r\n.+?<small>\(([0-9]+?)\)</small>.+?</a>'
                     match = re.compile(pattern, re.DOTALL).findall(subTab[1])
-
                     for j in range(len(match)):
                         subItem = {'type': 'subSub', 'url': match[j][0], 'name': match[j][1], 'ilosc': match[j][2]}
                         catItem['subCatList'].append(subItem)
@@ -201,13 +189,13 @@ class Spryciarze(CBaseHostClass):
         printDBG('Spryciarze.getSearchResut')
         self.currList = []
 
-        SEARCH_URL = self.MAIN_URL + 'szukaj/' + pattern + '/page:1/sort:score?sq=' + pattern
+        SEARCH_URL = self.MAIN_URL + 'szukaj/' + pattern + '/film/page:1/sort:ocena'
 
         sts, data = self.cm.getPage(SEARCH_URL)
         if not sts:
             return
 
-        match = re.compile('<h3>Wideoporadniki \(([0-9]+?)\)</h3>').findall(data)
+        match = re.compile('Wideoporadniki \(([0-9]+?)\)').findall(data)
         if 0 == len(match):
             return
 
@@ -220,7 +208,7 @@ class Spryciarze(CBaseHostClass):
         for i in range(pageNum):
             tmpItem = {}
             tmpItem['type'] = 'subSubPage'
-            tmpItem['url'] = self.MAIN_URL + 'szukaj/' + pattern + ('/page:%d' % (i + 1)) + '/sort:score?sq=' + pattern
+            tmpItem['url'] = self.MAIN_URL + 'szukaj/' + pattern + ('/film/page:%d' % (i + 1)) + '/sort:ocena'
             tmpItem['name'] = 'Strona %d' % (i + 1)
 
             if (i + 1) < pageNum:
@@ -244,24 +232,17 @@ class Spryciarze(CBaseHostClass):
         if not sts:
             return
 
-        # clear punks
-        pos = data.find('<div class="content_prawo">')
-        if pos > -1:
-            data = data[pos:]
-        tab = data.split('<div class="box_film">')
-        data = '' # free memory
-        if len(tab) > 0:
-            del tab[0]
+        tab = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'col-md-6 col-lg-6 col-xl-4 mb-4'), ('</div', '>'))
 
         printDBG('getVideoList tab_len %d' % len(tab))
 
-        searchItems = [{'keys': ['url'], 'req': False, 'pattern': '<a href="([^"]+?)" class="film_minicont">'},
-                        {'keys': ['ico'], 'req': False, 'pattern': '<span class="film_mini"><img src="([^"]+?)"'},
-                        {'keys': ['odslony'], 'req': False, 'pattern': '<span><span class="film_odslony"></span>.+?: <span>([0-9]+?)</span></span>'},
-                        {'keys': ['odslony'], 'req': False, 'pattern': '<span><span class="film_odslony"></span>.+?: <span>([0-9]+?)</span></span>'},
-                        {'keys': ['data', 'godzina'], 'req': False, 'pattern': '<span><span class="film_data"></span>dodane: <span>([0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]) ([0-9][0-9]:[0-9][0-9])</span></span>'},
-                        {'keys': ['opis'], 'req': False, 'pattern': '<p class="film_opis">([^<]+?)</p>'},
-                        {'keys': ['url', 'name'], 'req': True, 'pattern': '<a href="([^"]+?)" class="film_tytul">([^<]+?)</a>'},
+        searchItems = [{'keys': ['url'], 'req': False, 'pattern': '<a href="([^"]+?)"'},
+                        {'keys': ['ico'], 'req': False, 'pattern': '<img src="([^"]+?)"'},
+#                        {'keys': ['odslony'], 'req': False, 'pattern': '<span><span class="film_odslony"></span>.+?: <span>([0-9]+?)</span></span>'},
+#                        {'keys': ['odslony'], 'req': False, 'pattern': '<span><span class="film_odslony"></span>.+?: <span>([0-9]+?)</span></span>'},
+#                        {'keys': ['data', 'godzina'], 'req': False, 'pattern': '<span><span class="film_data"></span>dodane: <span>([0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]) ([0-9][0-9]:[0-9][0-9])</span></span>'},
+#                        {'keys': ['opis'], 'req': False, 'pattern': '<p class="film_opis">([^<]+?)</p>'},
+                        {'keys': ['url', 'name'], 'req': True, 'pattern': '<a href="([^"]+?)".+?class="h6">([^<]+?)</a>'},
                        ]
 
         for i in range(len(tab)):
@@ -270,7 +251,7 @@ class Spryciarze(CBaseHostClass):
 
             ignore = False
             for it in searchItems:
-                match = re.compile(it['pattern'], re.DOTALL).findall(tab[i])
+                match = re.compile(it['pattern'], re.DOTALL).findall(tab[i].replace('&quot;', ''))
 
                 if 1 != len(match):
                     printDBG('Brak ' + it['keys'][0])
@@ -335,10 +316,15 @@ class Spryciarze(CBaseHostClass):
                 sts, player = self.cm.getPage(player, {'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
                 if not sts:
                     break
-                player = self.cm.ph.getSearchGroups(player, 'var data[^=]*?=[^\{]*?(\{[^;]+?);')[0]
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(player, '''<iframe[^>]+?src=['"]([^"^']*?)['"]''', 1, True)[0])
+                if 1 == self.up.checkHostSupport(url):
+                    linkstTab = self.up.getVideoLinkExt(url)
+                player = self.cm.ph.getSearchGroups(player.replace('&quot;', ''), 'const data[^=]*?=[^\{]*?(\{[^;]+?);')[0]
                 try:
+#                    printDBG(player)
+                    player = player[:player.find('"relatedMovies"')].replace('}],', '}]}')
                     printDBG(player)
-                    player = byteify(json.loads(player))
+                    player = byteify(json_loads(player))
                     player = player['mediaFiles']
                     for item in player:
                         if 'mp4' in item['type']:

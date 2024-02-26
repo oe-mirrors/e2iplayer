@@ -23,6 +23,10 @@ import base64
 from Screens.MessageBox import MessageBox
 ###################################################
 
+def GetConfigList():
+    optionList = []
+    return optionList
+
 
 def gettytul():
     return 'https://kinomoc.com/'

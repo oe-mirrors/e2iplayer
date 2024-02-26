@@ -7,12 +7,12 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, GetTmpDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 from copy import deepcopy
 try:
     import json
@@ -25,6 +25,10 @@ except Exception:
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 ###################################################
+
+def GetConfigList():
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -71,7 +75,7 @@ class MoovieCC(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urllib.parse.urljoin(baseUrl, url)
+                return urljoin(baseUrl, url)
 
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -330,7 +334,7 @@ class MoovieCC(CBaseHostClass):
             printDBG("MoovieCC.exploreItem - missing link for sources")
             return
 
-        tmp = urllib.parse.unquote(sourcesLink)
+        tmp = urllib_unquote(sourcesLink)
         tmp = self.cm.ph.getSearchGroups(tmp[1:], '''(https?://.+)''')[0]
         if tmp != '':
             sourcesLink = tmp
@@ -353,7 +357,7 @@ class MoovieCC(CBaseHostClass):
             for item in data:
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 if url != '' and not self.cm.isValidUrl(url):
-                    url = urllib.parse.urljoin(sourcesLink, url)
+                    url = urljoin(sourcesLink, url)
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'prev_title': mainTitle, 'url': url, 'prev_url': cItem['url'], 'prev_desc': cItem.get('desc', ''), 'icon': icon, 'desc': desc})
@@ -416,7 +420,7 @@ class MoovieCC(CBaseHostClass):
         urlTab = []
 
         # mark requested link as used one
-        if len(list(self.cacheLinks.keys())):
+        if len(self.cacheLinks.keys()):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:
@@ -454,7 +458,7 @@ class MoovieCC(CBaseHostClass):
                     if imgUrl != '' and not imgUrl.startswith('/'):
                         imgUrl = '/' + imgUrl
                     if imgUrl.startswith('/'):
-                        imgUrl = urllib.parse.urljoin(videoUrl, imgUrl)
+                        imgUrl = urljoin(videoUrl, imgUrl)
 
                     printDBG("img URL [%s]" % imgUrl)
 
@@ -462,7 +466,7 @@ class MoovieCC(CBaseHostClass):
                     if actionUrl != '':
                         actionUrl = '/' + actionUrl
                     if actionUrl.startswith('/'):
-                        actionUrl = urllib.parse.urljoin(videoUrl, actionUrl)
+                        actionUrl = urljoin(videoUrl, actionUrl)
                     elif actionUrl == '':
                         actionUrl = videoUrl
 

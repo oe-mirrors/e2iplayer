@@ -8,12 +8,14 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, by
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+if not isPY2():
+    basestring = str
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import random
 from datetime import datetime, timedelta
 try:
@@ -258,16 +260,16 @@ class RTBFBE(CBaseHostClass):
         newData = ''
         if isinstance(obj, list):
             for idx in range(len(obj)):
-                newData += self.serParams(obj[idx], data + urllib.parse.quote('[%d]' % idx))
+                newData += self.serParams(obj[idx], data + urllib_quote('[%d]' % idx))
         elif isinstance(obj, dict):
             for key in obj:
-                newData += self.serParams(obj[key], data + urllib.parse.quote('[%s]' % key))
+                newData += self.serParams(obj[key], data + urllib_quote('[%s]' % key))
         elif obj == True:
             newData += data + '=true&'
         elif obj == False:
             newData += data + '=false&'
         else:
-            newData += data + '=%s&' % urllib.parse.quote(str(obj))
+            newData += data + '=%s&' % urllib_quote(str(obj))
         return newData
 
     def listSections(self, cItem, nextCategory1, nextCategory2):
@@ -431,7 +433,7 @@ class RTBFBE(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("RTBFBE.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        params = {'name': 'category', 'type': 'category', 'default_media_type': searchType, 'url': self.getFullUrl('/auvio/recherche?q=%s&type=%s') % (urllib.parse.quote_plus(searchPattern), searchType)}
+        params = {'name': 'category', 'type': 'category', 'default_media_type': searchType, 'url': self.getFullUrl('/auvio/recherche?q=%s&type=%s') % (urllib_quote_plus(searchPattern), searchType)}
         self.listSections(params, 'list_sub_items', 'sections')
 
     def getUserGeoLoc(self):
@@ -517,7 +519,7 @@ class RTBFBE(CBaseHostClass):
 
             # SUBTITLES
             for item in data['tracks']:
-                if isinstance(item, str):
+                if isinstance(item, basestring):
                     item = data['tracks'][item]
                 subtitleUrl = item['url']
                 if not self.cm.isValidUrl(subtitleUrl):
@@ -553,7 +555,7 @@ class RTBFBE(CBaseHostClass):
         self.tryTologin()
 
         # mark requested link as used one
-        if len(list(self.cacheLinks.keys())):
+        if len(self.cacheLinks.keys()):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

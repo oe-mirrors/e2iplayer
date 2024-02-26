@@ -9,11 +9,11 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 from datetime import datetime, date, timedelta
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 ###################################################
@@ -81,7 +81,7 @@ class TVNowDE(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urllib.parse.urljoin(baseUrl, url)
+                return urljoin(baseUrl, url)
 
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -257,7 +257,7 @@ class TVNowDE(CBaseHostClass):
         page = cItem.get('page', 1)
         genre = cItem.get('f_genre', '')
 
-        url = self.getFullUrl('/formats/genre/{0}?fields=*&filter=%7B%22station%22:%22none%22%7D&maxPerPage=500&order=NameLong+asc&page={1}'.format(urllib.parse.quote(genre), page))
+        url = self.getFullUrl('/formats/genre/{0}?fields=*&filter=%7B%22station%22:%22none%22%7D&maxPerPage=500&order=NameLong+asc&page={1}'.format(urllib_quote(genre), page))
 
         sts, data = self.getPage(url)
         if not sts:
@@ -407,7 +407,7 @@ class TVNowDE(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TVNowDE.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/?s=' + urllib.parse.quote_plus(searchPattern))
+        cItem['url'] = self.getFullUrl('/?s=' + urllib_quote_plus(searchPattern))
         self.listItems(cItem, 'explore_item')
 
     def getLinksForVideo(self, cItem):
@@ -473,7 +473,7 @@ class TVNowDE(CBaseHostClass):
         orginUrl = str(videoUrl)
 
         # mark requested link as used one
-        if len(list(self.cacheLinks.keys())):
+        if len(self.cacheLinks.keys()):
             for key in self.cacheLinks:
                 for idx in range(len(self.cacheLinks[key])):
                     if videoUrl in self.cacheLinks[key][idx]['url']:

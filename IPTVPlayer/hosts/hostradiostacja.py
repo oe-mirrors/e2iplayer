@@ -13,6 +13,10 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 import random
 ###################################################
 
+def GetConfigList():
+    optionList = []
+    return optionList
+
 
 def gettytul():
     return 'http://radiostacja.pl/'
