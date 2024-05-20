@@ -22,6 +22,7 @@ except Exception:
 from Components.config import config, ConfigText
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList
@@ -37,9 +38,9 @@ class Vizjer(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'vizjer.pl', 'cookie': 'vizjer.pl.cookie'})
         config.plugins.iptvplayer.cloudflare_user = ConfigText(default='Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', fixed_size=False)
         self.USER_AGENT = config.plugins.iptvplayer.cloudflare_user.value
-        self.MAIN_URL = 'https://vizjer.pl/'
+        self.MAIN_URL = None
 #        self.DEFAULT_ICON_URL = 'https://vizjer.pl/public/dist/images/logo.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
 
@@ -69,8 +70,29 @@ class Vizjer(CBaseHostClass):
         if self.cm.isValidUrl(url):
             self.MAIN_URL = self.cm.getBaseUrl(url)
 
+    def selectDomain(self):
+        domains = ['https://vizjer.pl/', 'https://vizjer.com/']
+
+        for domain in domains:
+            sts, data = self.getPage(domain)
+            if sts:
+                if 'Vizjer.pl' in data:
+                    self.setMainUrl(self.cm.meta['url'])
+                    break
+                else:
+                    continue
+
+            if self.MAIN_URL != None:
+                break
+
+        if self.MAIN_URL == None:
+            self.MAIN_URL = domains[0]
+
     def listMainMenu(self, cItem):
         printDBG("Vizjer.listMainMenu")
+
+        if self.MAIN_URL == None:
+            self.selectDomain()
 
         MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Movies'), 'url': self.getFullUrl('/filmy-online/')},
                         {'category': 'list_items', 'title': _('Children'), 'url': self.getFullUrl('/dla-dzieci/')},

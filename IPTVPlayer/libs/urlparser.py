@@ -51,7 +51,7 @@ if not isPY2():
     xrange = range
     from functools import cmp_to_key
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote, urllib_quote_plus, urllib_urlencode, urllib_quote
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
 ###################################################
 # FOREIGN import
 ###################################################
@@ -234,12 +234,16 @@ class urlparser:
                        'cloudyfiles.me': self.pp.parserUPLOAD,
                        'cloudyfiles.org': self.pp.parserUPLOAD,
                        'cloudyvideos.com': self.pp.parserCLOUDYVIDEOS,
+                       'compensationcoincide.net': self.pp.parserONLYSTREAMTV,
                        'content.peteava.ro': self.pp.parserPETEAVA,
                        'coolcast.eu': self.pp.parserCOOLCASTEU,
+                       'coolrea.link': self.pp.parserSPORTSONLINETO,
                        'crichd.tv': self.pp.parserCRICHDTV,
                        'cricplay2.xyz': self.pp.parserASSIAORG,
                        'cryptodialynews.com': self.pp.parserTXNEWSNETWORK,
                        #d
+                       'd000d.com': self.pp.parserDOOD,
+                       'd0000d.com': self.pp.parserDOOD,
                        'daaidaij.com': self.pp.parserMOONWALKCC,
                        'daclips.in': self.pp.parserFASTVIDEOIN,
                        'daddylive.club': self.pp.parserDADDYLIVE,
@@ -325,6 +329,7 @@ class urlparser:
                        'freedisc.pl': self.pp.parserFREEDISC,
                        'freefeds.click': self.pp.parserASSIAORG,
                        'fslinks.org': self.pp.parserVIDGUARDTO,
+                       'fullassia.com': self.pp.parserASSIAORG,
                        'furher.in': self.pp.parserONLYSTREAMTV,
                        'fviplions.com': self.pp.parserONLYSTREAMTV,
                        'fxstream.biz': self.pp.parserFXSTREAMBIZ,
@@ -404,6 +409,7 @@ class urlparser:
                        'lookhd.xyz': self.pp.parserTXNEWSNETWORK,
                        'louishide.com': self.pp.parserONLYSTREAMTV,
                        'lulustream.com': self.pp.parserONLYSTREAMTV,
+                       'luluvdo.com': self.pp.parserRUBYSTMCOM,
                        'lylxan.com': self.pp.parserONLYSTREAMTV,
                        #m
                        'mastarti.com': self.pp.parserMOONWALKCC,
@@ -522,6 +528,7 @@ class urlparser:
                        'redload.co': self.pp.parserTUBELOADCO,
                        'rockfile.co': self.pp.parserROCKFILECO,
                        'room905.com': self.pp.parserONLYSTREAMTV,
+                       'rubystm.com': self.pp.parserRUBYSTMCOM,
                        'rumble.com': self.pp.parserRUMBLECOM,
                        'rutube.ru': self.pp.parserRUTUBE,
                        #s
@@ -561,8 +568,10 @@ class urlparser:
                        'sostart.org': self.pp.parserSOSTARTORG,
                        'sostart.pw': self.pp.parserSOSTARTPW,
                        'soundcloud.com': self.pp.parserSOUNDCLOUDCOM,
+                       'speci4leagle.com': self.pp.parserCASTFREEME,
                        'speedvid.net': self.pp.parserSPEEDVIDNET,
                        'speedvideo.net': self.pp.parserSPEEDVICEONET,
+                       'sportsonline.si': self.pp.parserSPORTSONLINETO,
                        'sportsonline.to': self.pp.parserSPORTSONLINETO,
                        'sportstream365.com': self.pp.parserSPORTSTREAM365,
                        'sprocked.com': self.pp.parserSPROCKED,
@@ -675,6 +684,7 @@ class urlparser:
                        'veuclipstoday.tk': self.pp.parserVIUCLIPS,
                        'vev.io': self.pp.parserTHEVIDEOME,
                        'vevo.com': self.pp.parserVEVO,
+                       'vectorx.top': self.pp.parserCHILLXTOP,
                        'vgembed.com': self.pp.parserVIDGUARDTO,
                        'vgfplay.com': self.pp.parserVIDGUARDTO,
                        'vid-guard.com': self.pp.parserVIDGUARDTO,
@@ -14750,7 +14760,7 @@ class pageParser(CaptchaHelper):
             return False
         cUrl = self.cm.meta['url']
 
-        _url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
+        _url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"](http[^"^']+?)['"]''', 1, True)[0]
         HTTP_HEADER['Referer'] = cUrl
         urlParams = {'header': HTTP_HEADER}
         sts, data = self.cm.getPage(_url, urlParams)
@@ -15773,27 +15783,49 @@ class pageParser(CaptchaHelper):
             return []
         cUrl = self.cm.meta['url']
 
-        edata = self.cm.ph.getSearchGroups(data, '''MasterJS\s*=\s*['"]([^'^"]+?)['"]''')[0]
+        def cryptoJS_AES_decrypt(encrypted, password, salt):
+            def derive_key_and_iv(password, salt, key_length, iv_length):
+                d = d_i = b''
+                while len(d) < key_length + iv_length:
+                    d_i = md5(d_i + password + salt).digest()
+                    d += d_i
+                return d[:key_length], d[key_length:key_length + iv_length]
+            bs = 16
+            key, iv = derive_key_and_iv(ensure_binary(password), ensure_binary(salt), 32, 16)
+            cipher = AES_CBC(key=key, keySize=32)
+            return cipher.decrypt(encrypted, iv)
+
+#        key = '\x61\x37\x69\x67\x62\x70\x49\x41\x70\x61\x6a\x44\x79\x4e\x65'
+        key = '\x48\x26\x35\x2b\x54\x78\x5f\x6e\x51\x63\x64\x4b\x7b\x55\x2c\x2e'
+        edata = re.search("JScripts\s*=\s*'([^']+)", data)
         if edata:
-            edata = base64.b64decode(edata)
-            edata = json_loads(edata)
-            key = '\x34\x56\x71\x45\x33\x23\x4e\x37\x7a\x74\x26\x48\x45\x50\x5e\x61'
-            ct = edata.get('ciphertext', False)
-            salt = codecs.decode(edata.get('salt'), 'hex')
-            iv = codecs.decode(edata.get('iv'), 'hex')
-            secret = pbkdf2.PBKDF2(key, salt, 999, sha512).read(32)
-            decryptor = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(secret, iv))
-            data = decryptor.feed(base64.b64decode(ct))
-            data += decryptor.feed()
+            edata = json_loads(edata.group(1))
+            ciphertext = base64.b64decode(edata.get('ct', False))
+            iv = a2b_hex(edata.get('iv'))
+            salt = a2b_hex(edata.get('s'))
+            data = cryptoJS_AES_decrypt(ciphertext, key, salt).replace('\\t', '').replace('\\n', '').replace('\\', '')
             #printDBG("parserCHILLXTOP data[%s]" % data)
+
+        data = self.cm.ph.getSearchGroups(data, '''new\sPlayerjs\(((.+?}))\)''')[0]
+        subTracks = []
+        srtUrl = self.cm.ph.getSearchGroups(data, '''\ssubtitle[^'^"]*?['"]([^'^"]+?)['"]''')[0]
+        if srtUrl != '':
+            printDBG("parserCHILLXTOP srtUrl[%s]" % srtUrl)
+            srtLabel = self.cm.ph.getSearchGroups(srtUrl, '''\[(.+?)\]''')[0]
+            srtUrl = srtUrl.replace('[%s]' % srtLabel, '')
+            if srtLabel == '':
+                srtLabel = 'UNK'
+            params = {'title': srtLabel, 'url': srtUrl, 'lang': srtLabel.lower()[:3], 'format': srtUrl[-3:]}
+            subTracks.append(params)
 
         url = self.cm.ph.getSearchGroups(data, '''source[^'^"]*?['"]([^'^"]+?)['"]''')[0]
         if url == '':
             url = self.cm.ph.getSearchGroups(data, '''file[^'^"]*?['"]([^'^"]+?)['"]''')[0]
         urlTab = []
-        url = urlparser.decorateUrl(url, {'iptv_proto': 'm3u8', 'User-Agent': urlParams['header']['User-Agent'], 'Referer': cUrl, 'Origin': urlparser.getDomain(cUrl, False)})
+#        url = urlparser.decorateUrl(url, {'iptv_proto': 'm3u8', 'external_sub_tracks': subTracks, 'User-Agent': urlParams['header']['User-Agent'], 'Referer': cUrl, 'Origin': urlparser.getDomain(cUrl, False)})
+        url = urlparser.decorateUrl(url, {'iptv_proto': 'm3u8', 'external_sub_tracks': subTracks, 'User-Agent': urlParams['header']['User-Agent'], 'Referer': cUrl, 'Origin': urlparser.getDomain(cUrl, False)})
         if url != '':
-            urlTab.extend(getDirectM3U8Playlist(url, cookieParams={'header': urlParams['header']}))
+            urlTab.extend(getDirectM3U8Playlist(url))
 
         return urlTab
 
@@ -15989,22 +16021,54 @@ class pageParser(CaptchaHelper):
         if not sts:
             return False
 
-        r = re.search(r"let\s[^']*'([^']+)", data)
+        r = re.search(r'''['"]?hls['"]?\s*?:\s*?['"]([^'^"]+?)['"]''', data)
         if r:
-            r = ensure_str(base64.b64decode(r.group(1)))
-            if r.startswith('}'):
-                data = ''
-                for item in reversed(range(len(r))):
-                    data += r[item]
-                r = data
-            r = json_loads(r)
-            hlsUrl = r.get('file')
+            hlsUrl = ensure_str(base64.b64decode(r.group(1)))
             if hlsUrl.startswith('//'):
                 hlsUrl = 'http:' + hlsUrl
             if self.cm.isValidUrl(hlsUrl):
                 params = {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'Origin': urlparser.getDomain(baseUrl, False)}
                 hlsUrl = urlparser.decorateUrl(hlsUrl, params)
                 return getDirectM3U8Playlist(hlsUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        if self.cm.isValidUrl(hlsUrl):
+            params = {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'Origin': urlparser.getDomain(baseUrl, False)}
+            hlsUrl = urlparser.decorateUrl(hlsUrl, params)
+            return getDirectM3U8Playlist(hlsUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
 
         return False
 
+    def parserRUBYSTMCOM(self, baseUrl):
+        printDBG("parserRUBYSTMCOM baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        HTTP_HEADER['Referer'] = baseUrl
+        HTTP_HEADER['Origin'] = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER['Accept-Language'] = 'en-US,en;q=0.5'
+        urlParams = {'header': HTTP_HEADER}
+
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return False
+
+        if "eval(function(p,a,c,k,e,d)" in data:
+            printDBG('Host resolveUrl packed')
+            scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data, re.S)
+            data = ''
+            for packed in scripts:
+                data2 = packed
+                printDBG('Host pack: [%s]' % data2)
+                try:
+                    data += unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                    printDBG('OK unpack: [%s]' % data)
+                except Exception:
+                    pass
+
+        urlTab = []
+        data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''jwplayer\([^\)]+?player[^\)]+?\)\.setup'''), re.compile(';'))[1]
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        if hlsUrl != '':
+            hlsUrl = strwithmeta(hlsUrl, HTTP_HEADER)
+            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
+        return urlTab

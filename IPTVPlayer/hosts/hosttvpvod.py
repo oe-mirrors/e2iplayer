@@ -40,6 +40,7 @@ config.plugins.iptvplayer.tvpVodDefaultformat = ConfigSelection(default="590000"
                                                                                                ("1250000", "640x360"),
                                                                                                ("1750000", "800x450"),
                                                                                                ("2850000", "960x540"),
+                                                                                               ("3032000", "1024x576"),
                                                                                                ("5420000", "1280x720"),
                                                                                                ("6500000", "1600x900"),
                                                                                                ("9100000", "1920x1080")])
@@ -634,7 +635,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         if asset_id == '':
             asset_id = self.cm.ph.getSearchGroups(data, 'class="playerContainer"[^>]+?data-id="([0-9]+?)"')[0]
         if '' == asset_id:
-            asset_id = self.cm.ph.getSearchGroups(data, 'data\-video-\id="([0-9]+?)"')[0]
+            asset_id = self.cm.ph.getSearchGroups(data, 'data\-video\-id="([0-9]+?)"')[0]
         if '' == asset_id:
             asset_id = self.cm.ph.getSearchGroups(data, "object_id:'([0-9]+?)'")[0]
         if '' == asset_id:
@@ -651,15 +652,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         videoTab = []
 
         def __getLinkQuality(itemLink):
-            if 'width' in itemLink and 'height' in itemLink:
-                bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink['width'], itemLink['height']))
-                if bitrate != 0:
-                    return bitrate
-            else:
-                try:
-                    return int(itemLink['bitrate'])
-                except Exception:
-                    return int(itemLink['bandwitch'])
+            bitrate = int(itemLink.get('bitrate',itemLink.get('bandwitch',0)))
+            if bitrate == 0:
+                bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink.get('width',0), itemLink.get('height',0)))
+            return bitrate
 
         if 'stream.tvp.pl' in url:
             sts, data = self.cm.getPage(url)
@@ -690,6 +686,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
 
             if '"drm":' in data:
                 SetIPTVPlayerLastHostError(_("Video with DRM protection."))
+                return []
 
             if config.plugins.iptvplayer.tvpVodPreferedformat.value == 'm3u8':
                 hlsUrl = self.cm.ph.getSearchGroups(data, '''['"](http[^'^"]*?\.m3u8[^'^"]*?)['"]''')[0].replace('\/', '/')

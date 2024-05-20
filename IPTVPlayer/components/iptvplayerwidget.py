@@ -89,7 +89,7 @@ class E2iPlayerWidget(Screen):
                             <ePixmap position="700,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
                             <widget render="Label" source="key_red" position="45,9" size="140,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget render="Label" source="key_yellow" position="220,9" size="180,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-                            <widget name="key_green_ext" position="425,9" size="300,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+                            <widget name="key_green" position="425,9" size="300,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget render="Label" source="key_blue" position="740,9" size="140,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget name="headertext" position="15,55" zPosition="1" size="1080,30" font="Regular;30" transparent="1" backgroundColor="#00000000" />
                             <widget name="statustext" position="15,148" zPosition="1" size="985,120" font="Regular;30" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
@@ -113,7 +113,7 @@ class E2iPlayerWidget(Screen):
                             <ePixmap position="554,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
                             <ePixmap position="801,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
                             <widget render="Label" source="key_red"    position="65,9"  size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-                            <widget name="key_green_ext"  position="322,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+                            <widget name="key_green"  position="322,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget render="Label" source="key_yellow" position="589,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget render="Label" source="key_blue"   position="836,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget name="headertext" position="5,47" zPosition="1" size="1080,23" font="Regular;20" transparent="1" backgroundColor="#00000000" />
@@ -169,8 +169,7 @@ class E2iPlayerWidget(Screen):
             self.session.nav.stopService()
 
         self["key_red"] = StaticText(_("Exit"))
-        #self["key_green"]  = StaticText(_("Download"))
-        self["key_green_ext"] = Label(_("Download"))
+        self["key_green"] = Label(_("Download"))
 
         self["key_yellow"] = StaticText(_("Refresh"))
         self["key_blue"] = StaticText(_("More"))
@@ -361,9 +360,9 @@ class E2iPlayerWidget(Screen):
 
         try:
             if self.downloadable:
-                self["key_green_ext"].instance.setForegroundColor(self.colorEnabled)
+                self["key_green"].instance.setForegroundColor(self.colorEnabled)
             else:
-                self["key_green_ext"].instance.setForegroundColor(self.colorDisabled)
+                self["key_green"].instance.setForegroundColor(self.colorDisabled)
         except Exception:
             printExc()
 

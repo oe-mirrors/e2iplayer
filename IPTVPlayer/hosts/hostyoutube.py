@@ -231,7 +231,7 @@ class Youtube(CBaseHostClass):
             else:
                 self.currList = self.ytp.getVideosFromChannelList(url, category, page, cItem)
         elif "playlist" == category:
-            self.currList = self.ytp.getVideosFromPlaylist(url, category, page, cItem)
+            self.currList = self.ytp.getVideosApiPlayList(url, category, page, cItem)
         elif "traylist" == category:
             self.currList = self.ytp.getVideosFromTraylist(url, category, page, cItem)
         else:

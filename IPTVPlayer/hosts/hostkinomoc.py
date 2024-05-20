@@ -23,6 +23,7 @@ import base64
 from Screens.MessageBox import MessageBox
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList
@@ -65,7 +66,7 @@ class Kinomoc(CBaseHostClass):
 #                       {'category': 'list_items', 'title': _('Children'), 'url': self.getFullUrl('/genre/anime-bajki/')},
                         {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('/serials/')},
 #                       {'category': 'list_years', 'title': _('Filter By Year'), 'url': self.getFullUrl('/filmy-online-pl/')},
-                        {'category': 'list_cats',  'title': _('Movies genres'), 'url': self.getFullUrl('/filmy/')},
+#                        {'category': 'list_cats', 'title': _('Movies genres'), 'url': self.getFullUrl('/filmy/')},
 #                       {'category':'list_az',        'title': _('Alphabetically'),    'url':self.MAIN_URL},
                         {'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history')}, ]
@@ -148,33 +149,28 @@ class Kinomoc(CBaseHostClass):
             return
         self.setMainUrl(data.meta['url'])
 
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'navigation'), ('</div', '>'))[1]
+        nextPage = self.cm.ph.getDataBeetwenNodes(data, '<div class="pagination__pages">', '</a></div>')[1]
         if '' != self.cm.ph.getSearchGroups(nextPage, '>(%s)<' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
 
-        if '?story=' in cItem['url']:
-            data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'movie-box'), ('</article', '>'))
-        else:
-            data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'movie-box m-info'), ('</article', '>'))
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'js-show-info'), ('</ul', '>'))
 
         for item in data:
 #            printDBG("Kinomoc.listItems item %s" % item)
             item = item.replace(',Online za darmo', '')
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'movie-details'), ('</a', '>'), False)[1]
+            if tmp == '':
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+            else:
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0])
-            tmp = ' [' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'icon-hd'), ('</span', '>'), False)[1]) + ']'
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'name'), ('</div', '>'), False)[1]) + tmp
-            desc = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'dtinfo right'), ('</article', '>'), False)[1]
-            desc = '[/br]'.join(desc.split('</div>'))
-            if title == '':
-                title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(desc, ('<div', '>', 'title'), ('</div', '>'), False)[1]).replace(',Online za darmo', '')
-            desc = self.cleanHtmlStr(desc)
-            category = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'category'), ('</div', '>'), False)[1])
-            if 'Serial' in category:
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>'), ('</a', '>'), False)[1])
+            desc = ''
+            if 'Serial' in item:
                 params = {'good_for_fav': True, 'category': 'list_seasons', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addDir(params)
             else:
@@ -202,6 +198,8 @@ class Kinomoc(CBaseHostClass):
         data = data.get('response', '')
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'playlists-lists'), ('</div', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<li', '>'), ('</li', '>'))
+        if len(tmp) == 0:
+            tmp = ['<li data-id="%s">Sezon</li>' % self.cm.ph.getSearchGroups(data, '''\sdata-id=['"]([^'^"]+?)['"]''')[0]]
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'playlists-videos'), ('</div', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>'), ('</li', '>'))
@@ -256,19 +254,11 @@ class Kinomoc(CBaseHostClass):
         if not sts:
             return []
 
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'film-content'), ('</div', '>'))
+        playerUrl = self.cm.ph.getDataBeetwenNodes(data, ('<iframe', '>'), ('</iframe', '>'))[1]
+        playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(playerUrl, '''src=['"]([^"^']+?)['"]''')[0])
 
-        for item in tmp:
-            id = self.cm.ph.getSearchGroups(item, '''id=['"]([^"^']+?)['"]''')[0]
-            playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
-            tmp =  self.cm.ph.getDataBeetwenNodes(data, ('<li', '>', id), ('</li', '>'))[1]
-            name = self.cleanHtmlStr(tmp)
-            if playerUrl == '' or name == '':
-                continue
-            if 'active' in tmp:
-                retTab.insert(0, {'name': name, 'url': strwithmeta(playerUrl, {'Referer': url}), 'need_resolve': 1})
-            else:
-                retTab.append({'name': name, 'url': strwithmeta(playerUrl, {'Referer': url}), 'need_resolve': 1})
+        if playerUrl != '':
+            retTab.append({'name': self.up.getDomain(playerUrl), 'url': strwithmeta(playerUrl, {'Referer': url}), 'need_resolve': 1})
 
         if len(retTab) < 1:
             retTab.append({'name': self.up.getDomain(url), 'url': strwithmeta(url, {'Referer': url}), 'need_resolve': 1})

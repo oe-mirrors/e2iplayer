@@ -181,14 +181,13 @@ class Dailymotion(CBaseHostClass):
             if not sts:
                 return ''
 
-            data = re.compile('''return h.*;var r=['"]([^"^']+?)['"],o=['"]([^"^']+?)['"].*,v=.*__API_ENDPOINT__[^"^']+?['"]([^"^']+?)['"].*,h=.*__AUTH_ENDPOINT__[^"^']+?['"]([^"^']+?)['"]''').findall(data)
+            data = re.compile('''return m.*;var r=['"]([^"^']+?)['"],o=['"]([^"^']+?)['"].*,_=.*__API_ENDPOINT__[^"^']+?['"]([^"^']+?)['"].*,m=.*__AUTH_ENDPOINT__[^"^']+?['"]([^"^']+?)['"]''').findall(data)
             for item in data:
                 self.authData['auth_url'] = item[3]
                 self.authData['url'] = item[2]
                 self.authData['client_secret'] = item[1]
                 self.authData['client_id'] = item[0]
             self.authData['grant_type'] = 'client_credentials'
-
 
         if self.authData.get('expires', 0) < int(time.time()):
             params = dict(self.defaultParams)
