@@ -33,7 +33,8 @@ class Zerioncc(CBaseHostClass, CaptchaHelper):
         CBaseHostClass.__init__(self, {'history': 'zerion.cc', 'cookie': 'zerion.cc.cookie'})
         config.plugins.iptvplayer.cloudflare_user = ConfigText(default='Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', fixed_size=False)
         self.USER_AGENT = config.plugins.iptvplayer.cloudflare_user.value
-        self.MAIN_URL = 'https://zerion.cc/'
+        self.MAIN_URL = 'https://zeriun.cc/'
+        self.MAIN_API_URL = 'https://zeriun.cc/api/series/get-embed'
         self.DEFAULT_ICON_URL = 'https://zerion.cc/assets/img/logo.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
@@ -272,7 +273,7 @@ class Zerioncc(CBaseHostClass, CaptchaHelper):
                 name = self.cleanHtmlStr(item).replace('Oglądaj', '') + '[%s]' % lang
                 post_data = {'id': data_id}
                 params['header']['X-CSRF-Token'] = csrfToken
-                sts, data = self.getPage('https://zerion.cc/api/series/get-embed', params, post_data)
+                sts, data = self.getPage(self.MAIN_API_URL, params, post_data)
                 printDBG("Zerioncc.getLinksForVideo data[%s]" % data)
                 if not sts:
                     continue
@@ -280,9 +281,9 @@ class Zerioncc(CBaseHostClass, CaptchaHelper):
                     token, errorMsgTab = self.processCaptcha(sithc, cUrl, captchaType="cf_re")
                     if token != '':
                         post_data_cf = {'hres': token}
-                        sts, data = self.getPage('https://zerion.cc/api/link/validate-captcha', params, post_data_cf)
+                        sts, data = self.getPage('https://zeriun.cc/api/link/validate-captcha', params, post_data_cf)
                         printDBG("Zerioncc.getLinksForVideo data cf[%s]" % data)
-                        sts, data = self.getPage('https://zerion.cc/api/series/get-embed', params, post_data)
+                        sts, data = self.getPage(self.MAIN_API_URL, params, post_data)
                         printDBG("Zerioncc.getLinksForVideo data[%s]" % data)
 
                 playerUrl = self.cm.ph.getSearchGroups(data, '''['"]url['"]:['"]([^"^']+?)['"]''')[0]

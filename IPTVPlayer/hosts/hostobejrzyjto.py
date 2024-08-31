@@ -154,7 +154,10 @@ class Obejrzyjto(CBaseHostClass):
         if page > 1:
             url = url + '&page={0}'.format(page)
 
-        sts, data = self.getPage(url)
+        urlParams = dict(self.defaultParams)
+        sts, data = self.getPage(self.MAIN_URL, urlParams)
+        urlParams['header']['x-xsrf-token'] = self.cm.getCookieItem(self.COOKIE_FILE, 'XSRF-TOKEN').replace('%3D', '=')
+        sts, data = self.getPage(url, urlParams)
         if not sts:
             return
         self.setMainUrl(data.meta['url'])
@@ -173,8 +176,8 @@ class Obejrzyjto(CBaseHostClass):
 
         for item in data:
 #            printDBG("Obejrzyjto.listItems item %s" % item)
-            if item.get('type', '') == '':
-                continue
+#            if item.get('type', '') == '':
+#                continue
             try:
                 if item['is_series']:
                     video_id = item['primary_video']['title_id']
@@ -185,8 +188,8 @@ class Obejrzyjto(CBaseHostClass):
                 sts, data = self.getPage(url)
                 if not sts:
                     continue
-                data = json_loads(data)['title']
                 try:
+                    data = json_loads(data)['title']
                     video_id = data['primary_video']['id']
                 except Exception:
                     continue

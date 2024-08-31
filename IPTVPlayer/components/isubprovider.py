@@ -15,6 +15,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandl
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, strEncode
 
 import re
 import urllib.parse
@@ -511,7 +512,7 @@ class CBaseSubProviderClass:
         printDBG("isubprovider.py CBaseSubProviderClass.writeFile path='%s'" % filePath)
         try:
             with open(filePath, 'wb') as f:
-                f.write(data)
+                f.write(strEncode(data)) #p3 needs bytes, for p2 no oncoding
             return True
         except Exception:
             printExc()

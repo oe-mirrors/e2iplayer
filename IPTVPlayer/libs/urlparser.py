@@ -459,6 +459,7 @@ class urlparser:
                        'netu.tv': self.pp.parserNETUTV,
                        'newassia.com': self.pp.parserASSIAORG,
                        'newtvassia.com': self.pp.parserASSIAORG,
+                       'nflinsider.net': self.pp.parserVIDEOHOUSE,
                        'ninjastream.to': self.pp.parserNINJASTREAMTO,
                        'nonlimit.pl': self.pp.parserIITV,
                        'noob4cast.com': self.pp.parserCASTFREEME,
@@ -608,6 +609,7 @@ class urlparser:
                        'streamvid.net': self.pp.parserONLYSTREAMTV,
                        'streamwire.net': self.pp.parserONLYSTREAMTV,
                        'streamzz.to': self.pp.parserSTREAMZZ,
+                       'strwish.com': self.pp.parserONLYSTREAMTV,
                        'superfastvideos.xyz': self.pp.parserTXNEWSNETWORK,
                        'superfilm.pl': self.pp.parserSUPERFILMPL,
                        'supergoodtvlive.com': self.pp.parserTXNEWSNETWORK,
@@ -615,6 +617,7 @@ class urlparser:
                        'suprafiles.org': self.pp.parserUPLOAD,
                        'suspents.info': self.pp.parserFASTVIDEOIN,
                        'svetacdn.in': self.pp.parserSVETACDNIN,
+                       'swdyu.com': self.pp.parserONLYSTREAMTV,
                        'swirownia.com.usrfiles.com': self.pp.parserSWIROWNIA,
                        #t
                        'talbol.net': self.pp.parserTXNEWSNETWORK,
@@ -15796,7 +15799,8 @@ class pageParser(CaptchaHelper):
             return cipher.decrypt(encrypted, iv)
 
 #        key = '\x61\x37\x69\x67\x62\x70\x49\x41\x70\x61\x6a\x44\x79\x4e\x65'
-        key = '\x48\x26\x35\x2b\x54\x78\x5f\x6e\x51\x63\x64\x4b\x7b\x55\x2c\x2e'
+#        key = '\x48\x26\x35\x2b\x54\x78\x5f\x6e\x51\x63\x64\x4b\x7b\x55\x2c\x2e'
+        key = '\x4b\x42\x33\x63\x31\x6c\x67\x54\x78\x36\x63\x48\x4c\x33\x57'
         edata = re.search("JScripts\s*=\s*'([^']+)", data)
         if edata:
             edata = json_loads(edata.group(1))
@@ -16022,6 +16026,13 @@ class pageParser(CaptchaHelper):
             return False
 
         r = re.search(r'''['"]?hls['"]?\s*?:\s*?['"]([^'^"]+?)['"]''', data)
+        if not r:
+            url = ph.search(data, '''window.location.href\s*=\s*['"]([^"^']+?)['"]''')[0]
+            sts, data = self.cm.getPage(url)
+            if not sts:
+                return False
+            r = re.search(r'''['"]?hls['"]?\s*?:\s*?['"]([^'^"]+?)['"]''', data)
+
         if r:
             hlsUrl = ensure_str(base64.b64decode(r.group(1)))
             if hlsUrl.startswith('//'):
@@ -16030,6 +16041,7 @@ class pageParser(CaptchaHelper):
                 params = {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'Origin': urlparser.getDomain(baseUrl, False)}
                 hlsUrl = urlparser.decorateUrl(hlsUrl, params)
                 return getDirectM3U8Playlist(hlsUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
+
         hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
         if self.cm.isValidUrl(hlsUrl):
             params = {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'Origin': urlparser.getDomain(baseUrl, False)}
