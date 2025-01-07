@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
+
 class SuggestionsProvider:
 
     def __init__(self, forYouyube=False):

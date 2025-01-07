@@ -30,8 +30,8 @@ import time
 from Screens.MessageBox import MessageBox
 ###################################################
 config.plugins.iptvplayer.tvpvod_premium = ConfigYesNo(default=False)
-config.plugins.iptvplayer.tvpvod_login = ConfigText(default=readCFG('tvpvod_login',""), fixed_size=False)
-config.plugins.iptvplayer.tvpvod_password = ConfigText(default=readCFG('tvpvod_password',""), fixed_size=False)
+config.plugins.iptvplayer.tvpvod_login = ConfigText(default=readCFG('tvpvod_login', ""), fixed_size=False)
+config.plugins.iptvplayer.tvpvod_password = ConfigText(default=readCFG('tvpvod_password', ""), fixed_size=False)
 
 config.plugins.iptvplayer.tvpVodProxyEnable = ConfigYesNo(default=False)
 config.plugins.iptvplayer.tvpVodDefaultformat = ConfigSelection(default="590000", choices=[("360000", "320x180"),
@@ -317,11 +317,11 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 icon = self.cm.ph.getSearchGroups(json_dumps(item.get('image_logo', '')), '''['"](http[^'^"]+?\.jpg)['"]''')[0]
                 if icon == '':
                     icon = self.cm.ph.getSearchGroups(json_dumps(item.get('image_logo', '')), '''['"](http[^'^"]+?\.png)['"]''')[0]
-                icon = icon.format(width = '300', height = '0')
+                icon = icon.format(width='300', height='0')
 #                printDBG("TvpVod.listTVP3Streams icon [%s]" % icon)
                 title = item.get('title', '').replace('EPG - ', '')
                 params = dict(cItem)
-                params.update({'title': title, 'url': 'https://stream.tvp.pl/sess/TVPlayer2/embed.php?ID=%s' % video_id, 'icon': icon, 'desc': desc})
+                params.update({'title': title, 'url': 'https://api.tvp.pl/tokenizer/token/%s' % video_id, 'icon': icon, 'desc': desc})
                 self.addVideo(params)
 
     def listTVPSportStreams(self, cItem, nextCategory):
@@ -391,10 +391,11 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 title = str(item['title'])
                 desc = self.cleanHtmlStr(str(item['lead']))
                 asset_id = str(item['asset_id'])
-                asset_id = str(item['video_id'])
+                video_id = str(item['video_id'])
                 icon = self.getImageUrl(item)
                 desc = item['release_date_hour'] + ' - ' + item['broadcast_end_date_hour'] + '[/br]' + desc
-                self.addVideo({'title': title, 'url': '', 'object_id': asset_id, 'icon': icon, 'desc': desc})
+#                self.addVideo({'title': title, 'url': '', 'object_id': asset_id, 'icon': icon, 'desc': desc})
+                self.addVideo({'title': title, 'url': 'https://api.tvp.pl/tokenizer/token/%s' % video_id, 'icon': icon, 'desc': desc})
             printDBG(data)
         except Exception:
             printExc()
@@ -657,7 +658,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink.get('width',0), itemLink.get('height',0)))
             return bitrate
 
-        if 'stream.tvp.pl' in url:
+        if 'api.tvp.pl' in url:
             sts, data = self.cm.getPage(url)
             if not sts:
                 return []

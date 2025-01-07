@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
+
 class SuggestionsProvider:
 
     def __init__(self):
@@ -28,9 +29,9 @@ class SuggestionsProvider:
 #            printDBG(data)
             data = json.loads(data)['searchHits']
             for item in data:
-                if item.get('matchedName', '') == '':
-                    retList.append(ensure_str(item['matchedTitle']))
-                else:
+                if item.get('matchedName', '') != '':
                     retList.append(ensure_str(item['matchedName']))
+                elif item.get('matchedTitle', '') != '':
+                    retList.append(ensure_str(item['matchedTitle']))
             return retList
         return None

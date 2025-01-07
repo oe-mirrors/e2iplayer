@@ -20,11 +20,14 @@ try:
     import json
 except Exception:
     import simplejson as json
+from Components.config import config, ConfigText
 ###################################################
+
 
 def GetConfigList():
     optionList = []
     return optionList
+
 
 def gettytul():
     return 'https://zaluknij.cc/'
@@ -34,9 +37,10 @@ class Zaluknij(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'zaluknij.cc', 'cookie': 'zaluknij.cc.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL = 'https://zaluknij.xyz/'
-        self.DEFAULT_ICON_URL = 'https://zaluknij.xyz/public/dist/images/logozaluknijcccc.png'
+        config.plugins.iptvplayer.cloudflare_user = ConfigText(default='Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', fixed_size=False)
+        self.USER_AGENT = config.plugins.iptvplayer.cloudflare_user.value
+        self.MAIN_URL = 'https://zaluknij.cc/'
+        self.DEFAULT_ICON_URL = 'https://zaluknij.cc/public/dist/images/logozaluknijcccc.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
@@ -45,11 +49,23 @@ class Zaluknij(CBaseHostClass):
         self.cacheLinks = {}
         self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-    def getPage(self, url, addParams={}, post_data=None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        baseUrl = self.cm.iriToUri(url)
-        return self.cm.getPage(baseUrl, addParams, post_data)
+        origBaseUrl = baseUrl
+        baseUrl = self.cm.iriToUri(baseUrl)
+
+        sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        if data.meta.get('cf_user', self.USER_AGENT) != self.USER_AGENT:
+            self.__init__()
+        return sts, data
+
+    def getFullIconUrl(self, url):
+        url = CBaseHostClass.getFullIconUrl(self, url.strip())
+        if url == '':
+            return ''
+        cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['cf_clearance'])
+        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
 
     def setMainUrl(self, url):
         if self.cm.isValidUrl(url):
@@ -63,7 +79,7 @@ class Zaluknij(CBaseHostClass):
 #                        {'category': 'list_items', 'title': _('Children'), 'url': self.getFullUrl('/genre/anime-bajki/')},
                         {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('/series/index/')},
                         {'category': 'list_years', 'title': _('Filter By Year'), 'url': self.getFullUrl('/filmy-online/')},
-                        {'category': 'list_cats',  'title': _('Movies genres'), 'url': self.getFullUrl('/filmy-online/')},
+                        {'category': 'list_cats', 'title': _('Movies genres'), 'url': self.getFullUrl('/filmy-online/')},
 #                        {'category':'list_az',        'title': _('Alphabetically'),    'url':self.MAIN_URL},
                         {'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history')}, ]
@@ -144,7 +160,6 @@ class Zaluknij(CBaseHostClass):
             nextPage = True
         else:
             nextPage = False
-
 
         if 'wyszukiwarka?phrase=' in cItem['url']:
             data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'advanced-search'), ('<footer', '>'))[1]

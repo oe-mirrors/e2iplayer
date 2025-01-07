@@ -55,7 +55,7 @@ class ZDFmediathek(CBaseHostClass):
     AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'})
 
     MAIN_URL = 'https://www.zdf.de/'
-    MAIN_API_URL = 'https://zdf-cdn.live.cellular.de/'
+    MAIN_API_URL = 'https://zdf-prod-futura.zdf.de/'
     ZDF_API_URL = 'https://api.zdf.de/'
     DOCUMENT_API_URL = MAIN_API_URL + 'mediathekV2/document/%s'
     BROADSCAST_MISSED_API_URL = MAIN_API_URL + 'mediathekV2/broadcast-missed/%s'

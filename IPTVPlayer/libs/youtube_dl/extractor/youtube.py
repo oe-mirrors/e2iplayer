@@ -495,14 +495,14 @@ class YoutubeIE(object):
             tries = 0
             while tries < 3:
                 tries += 1
-                url = 'https://www.youtube.com/youtubei/v1/player?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8'
+                url = 'https://www.youtube.com/youtubei/v1/player?prettyPrint=false'
                 isGoogleDoc = False
                 videoKey = 'video_id'
                 videoInfoparams = {}
 
-                http_params = {'header': {'User-Agent': 'com.google.android.youtube/1.9 (Linux; U; Android 13; en_US; sdk_gphone64_x86_64 Build/UPB4.230623.005) gzip', 'Content-Type': 'application/json', 'Origin': 'https://www.youtube.com', 'X-YouTube-Client-Name': '3', 'X-YouTube-Client-Version': '1.9'}}
+                http_params = {'header': {'User-Agent': 'com.google.android.youtube/19.29.37 (Linux; U; Android 11) gzip', 'Content-Type': 'application/json', 'Origin': 'https://www.youtube.com', 'X-YouTube-Client-Name': '3', 'X-YouTube-Client-Version': '19.29.37'}}
                 http_params['raw_post_data'] = True
-                post_data = "{'videoId': '%s', 'params': '2AMB', 'context': {'client': {'hl': '%s', 'clientVersion': '1.9', 'clientName': 'ANDROID_TESTSUITE', 'androidSdkVersion': 33, 'osName': 'Android', 'osVersion': '13',}}}" % (video_id, GetDefaultLang())
+                post_data = "{'videoId': '%s', 'params': 'Q0FFU0FnZ0M=', 'context': {'client': {'hl': '%s', 'clientVersion': '19.29.37', 'clientName': 'ANDROID', 'androidSdkVersion': 30, 'osName': 'Android', 'osVersion': '11',}}}" % (video_id, GetDefaultLang())
                 sts, video_webpage = self.cm.getPage(url, http_params, post_data)
                 if sts:
                     if allowAgeGate and 'LOGIN_REQUIRED' in video_webpage:

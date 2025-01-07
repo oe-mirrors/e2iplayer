@@ -209,7 +209,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         sts, data = self.getPage(cItem['url'])
         if sts:
             data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="serialsmenu">', '</ul>', False)[1]
-            data = re.compile('<a[^"]+?href="([^"]+?)"[^>]*?><span class="name">([^<]+?)</span><span class="count">([^<]+?)<').findall(data)
+            data = data.replace('\n','').replace('</li>','</li>\n') #j00zek: item in single line for regex
+            data = re.compile('<a[^"]+?href="([^"]+?)"[^>]*?><span class="name">([^<]+?)<\/span><span[ ]*class="count">([^<]+?)<').findall(data)
             for item in data:
                 params = dict(cItem)
                 params.update({'category': category, 'title': '%s (%s)' % (item[1], item[2]), 'url': self.getFullUrl(item[0])})
@@ -476,7 +477,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             printDBG("#################################################################")
 
         if self.cm.isValidUrl(url):
-            urlTab = self.up.getVideoLinkExt(url)
+            urlTab = self.up.getVideoLinkExt(strwithmeta(url, {'Referer': baseUrl}))
         return urlTab
 
     def getLinksForFavourite(self, favData):
