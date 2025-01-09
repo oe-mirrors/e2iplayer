@@ -15607,6 +15607,13 @@ class pageParser(CaptchaHelper):
         if not sts:
             return []
 
+        if 'file_code' not in data:
+            url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
+            if url != '':
+                sts, data = self.cm.getPage(url, urlParams)
+                if not sts:
+                    return []
+
         if "eval(function(p,a,c,k,e,d)" in data:
             printDBG('Host resolveUrl packed')
             scripts = re.findall(r"(eval\s?\(function\(p,a,c,k,e,d.*?)</script>", data, re.S)
@@ -16089,5 +16096,172 @@ class pageParser(CaptchaHelper):
         if hlsUrl != '':
             hlsUrl = strwithmeta(hlsUrl, HTTP_HEADER)
             urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+
+        return urlTab
+
+    def parserSTREAMSILKCOM(self, baseUrl):
+        printDBG("parserSTREAMSILKCOM baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return []
+
+        if 'function(h,u,n,t,e,r)' in data:
+            ff = re.findall('function\(h,u,n,t,e,r\).*?}\((".+?)\)\)', data, re.DOTALL)[0]
+            ff = ff.replace('"', '')
+            h, u, n, t, e, r = ff.split(',')
+            data = dehunt(h, int(u), n, int(t), int(e), int(r))
+
+#        printDBG("parserSTREAMSILKCOM data[%s]" % data)
+        urlTab = []
+        url = self.cm.ph.getSearchGroups(data, '''urlPlay\s*=\s*"\s*([^"^\s]+)''')[0]
+        url = strwithmeta(url, {'Origin': urlparser.getDomain(baseUrl, False), 'Referer': baseUrl})
+        if url != '':
+            if 'm3u8' in url:
+                urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
+            else:
+                urlTab.append({'name': 'mp4', 'url': url})
+
+        return urlTab
+
+    def parserVEEVTO(self, baseUrl):
+        printDBG("parserVEEVTO baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        HTTP_HEADER['Referer'] = baseUrl
+        HTTP_HEADER['Origin'] = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER['Accept-Language'] = 'en-US,en;q=0.5'
+        urlParams = {'header': HTTP_HEADER}
+
+        def veev_decode(etext):
+            result = []
+            lut = {}
+            n = 256
+            c = etext[0]
+            result.append(c)
+            for char in etext[1:]:
+                code = ord(char)
+                nc = char if code < 128 else lut.get(code, c + c[0])
+                result.append(nc)
+                lut[n] = c + nc[0]
+                n += 1
+                c = nc
+
+            return ''.join(result)
+
+        def js_int(x):
+            return int(x) if x.isdigit() else 0
+
+        def build_array(encoded_string):
+            d = []
+            c = list(encoded_string)
+            count = js_int(c.pop(0))
+            while count:
+                current_array = []
+                for _ in range(count):
+                    current_array.insert(0, js_int(c.pop(0)))
+                d.append(current_array)
+                count = js_int(c.pop(0))
+
+            return d
+
+        def decode_url(etext, tarray):
+            ds = etext
+            for t in tarray:
+                if t == 1:
+                    ds = ds[::-1]
+                ds = unhexlify(ds).decode('utf8')
+                ds = ds.replace('dXRmOA==', '')
+
+            return ds
+
+        urlTab = []
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return False
+        media_id = self.cm.ph.getSearchGroups(baseUrl + '/', '(?:e|d)[/-]([A-Za-z0-9]+)[^A-Za-z0-9]')[0]
+        items = re.findall(r'''[\.\s]fc\s*[:=]\s*['"]([^'"]+)''', data)
+        if items:
+            for f in items[::-1]:
+                ch = veev_decode(ensure_binary(f).decode('utf8'))
+                if ch != f:
+                    params = {
+                        'op': 'player_api',
+                        'cmd': 'gi',
+                        'file_code': media_id,
+                        'ch': ch,
+                        'ie': 1
+                    }
+                    durl = self.cm.getFullUrl('/dl', baseUrl) + '?' + urllib_urlencode(params)
+                    sts, jresp = self.cm.getPage(durl, urlParams)
+                    if not sts:
+                        return False
+                    jresp = json_loads(jresp).get('file')
+                    if jresp and jresp.get('file_status') == 'OK':
+                        str_url = decode_url(veev_decode(ensure_binary(jresp.get('dv')[0].get('s')).decode('utf8')), build_array(ch)[0])
+                        if str_url != '':
+                            str_url = strwithmeta(str_url, HTTP_HEADER)
+                            urlTab.append({'name': 'mp4', 'url': str_url})
+                            return urlTab
+
+        return False
+
+    def parserBOOSTERADXONLINE(self, baseUrl):
+        printDBG("parserBOOSTERADXONLINE baseUrl[%s]" % baseUrl)
+
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return []
+        cUrl = self.cm.meta['url']
+
+        def cryptoJS_AES_decrypt(encrypted, password, salt):
+            def derive_key_and_iv(password, salt, key_length, iv_length):
+                d = d_i = b''
+                while len(d) < key_length + iv_length:
+                    d_i = md5(d_i + password + salt).digest()
+                    d += d_i
+                return d[:key_length], d[key_length:key_length + iv_length]
+            bs = 16
+            key, iv = derive_key_and_iv(ensure_binary(password), ensure_binary(salt), 32, 16)
+            cipher = AES_CBC(key=key, keySize=32)
+            return cipher.decrypt(encrypted, iv)
+
+        key = '1FHuaQhhcsKgpTRB'
+        edata = re.search("const\sContents\s*=\s*'([^']+)", data)
+        if edata:
+            edata = json_loads(edata.group(1))
+            ciphertext = base64.b64decode(edata.get('ct', False))
+            iv = a2b_hex(edata.get('iv'))
+            salt = a2b_hex(edata.get('s'))
+            data = cryptoJS_AES_decrypt(ciphertext, key, salt).replace('\\t', '').replace('\\n', '').replace('\\', '')
+#            printDBG("parserBOOSTERADXONLINE data[%s]" % data)
+
+        subTracks = []
+        srtUrl = self.cm.ph.getSearchGroups(data, '''tracks:\s?\[(.+?)\]''')[0]
+        if srtUrl != '':
+            printDBG("parserBOOSTERADXONLINE srtUrl[%s]" % srtUrl)
+            srtLabel = self.cm.ph.getSearchGroups(srtUrl, '''label['"]:\s?['"]([^"^']+?)['"]''')[0]
+            srtUrl = self.cm.ph.getSearchGroups(srtUrl, '''["'](https?://[^'^"]+?\.srt)["']''', ignoreCase=True)[0]
+            srtUrl = strwithmeta(srtUrl, {'Referer': cUrl})
+            if srtLabel == '':
+                srtLabel = 'UNK'
+            params = {'title': srtLabel, 'url': srtUrl, 'lang': srtLabel.lower()[:3], 'format': srtUrl[-3:]}
+            subTracks.append(params)
+
+        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+        urlTab = []
+        hlsUrl = urlparser.decorateUrl(hlsUrl, {'iptv_proto': 'm3u8', 'external_sub_tracks': subTracks, 'User-Agent': urlParams['header']['User-Agent'], 'Referer': cUrl, 'Origin': urlparser.getDomain(cUrl, False)})
+        if hlsUrl != '':
+            urlTab.extend(getDirectM3U8Playlist(hlsUrl))
 
         return urlTab

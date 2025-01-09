@@ -84,11 +84,11 @@ class Filman(CBaseHostClass, CaptchaHelper):
     def listMainMenu(self, cItem):
         printDBG("Filman.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Movies'), 'url': self.getFullUrl('/filmy-online-pl/')},
+        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Movies'), 'url': self.getFullUrl('/filmy/')},
                         {'category': 'list_items', 'title': _('Children'), 'url': self.getFullUrl('/dla-dzieci-pl/')},
-                        {'category': 'list_sort', 'title': _('Series'), 'url': self.getFullUrl('/seriale-online-pl/')},
+                        {'category': 'list_sort', 'title': _('Series'), 'url': self.getFullUrl('/seriale/')},
 #                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
-                        {'category': 'list_cats', 'title': _('Movies genres'), 'url': self.getFullUrl('/filmy-online-pl/')},
+                        {'category': 'list_cats', 'title': _('Movies genres'), 'url': self.getFullUrl('/filmy/')},
 #                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
                         {'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history')}, ]
@@ -176,7 +176,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
         else:
             nextPage = False
 
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'wrapper') , ('<footer', '>'))[1] # exclude header and footer
+        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'wrapper'), ('<footer', '>'))[1] # exclude header and footer
 
         if 'phrase=' in cItem['url']:
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'data-title='), ('</a', '>'))
@@ -197,7 +197,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
             year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'film_year'), ('</div', '>'), False)[1])
             if year != '':
                 desc = _('Year: ') + year + ' - ' + _('Quality:') + ' ' + quality + '[/br]' + desc
-            if 'serial-online' in url:
+            if '/s/' in url:
                 params = {'good_for_fav': True, 'category': 'list_series', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addDir(params)
             else:
