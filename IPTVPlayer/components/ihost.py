@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 from Components.config import config
 from skin import parseColor
 
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from urllib.parse import urljoin
 
 
@@ -30,7 +31,7 @@ class CUrlItem:
         else:
             self.url = str(url)
 
-        self.urlNeedsResolve = urlNeedsResolve #  additional request to host is needed to resolv this url (url is not direct link)
+        self.urlNeedsResolve = urlNeedsResolve  # additional request to host is needed to resolv this url (url is not direct link)
 ## class CDisplayListItem
 # define attribiutes for item of diplay list
 # communicate display layer with host
@@ -105,7 +106,7 @@ class CDisplayListItem:
         self.textColor = str(textColor)
 
         # used only for TYPE_VIDEO item
-        self.urlItems = urlItems # url to VIDEO
+        self.urlItems = urlItems  # url to VIDEO
         # links are not available the separate request is needed to get links
         self.urlSeparateRequest = urlSeparateRequest
         # used only for TYPE_SEARCH item
@@ -506,7 +507,7 @@ class CHostBase(IHost):
         return RetHost(RetHost.OK, value=convList)
 
     def getPrevList(self, refresh=0):
-        if(len(self.listOfprevList) > 0):
+        if (len(self.listOfprevList) > 0):
             hostList = self.listOfprevList.pop()
             hostCurrItem = self.listOfprevItems.pop()
             self.host.setCurrList(hostList)
@@ -684,19 +685,23 @@ class CBaseHostClass:
                 return
         except Exception:
             self.isGeoBlockingChecked = False
-        sts, data = self.cm.getPage('https://dcinfos.abtasty.com/geolocAndWeather.php')
+        sts, data = self.cm.getPage('http://ip-api.com/json/')
         if not sts:
             return
         try:
-            data = data.strip()
+            data = ensure_str(data.strip())
             try:
                 data = json_loads(data[1:-1], '', True)
             except Exception:
                 data = json_loads(data)
-            mycountry = data.get('country', '')
-            if mycountry != country:
+            try:
+                data['country'] = data.get('countryCode', 'N/A')  # to avoid exceptions when something went wrong
+            except Exception:
+                printDBG(str(data))
+                data = {"country": "N/A"}
+            if data['country'] != country:
                 message = _('%s uses "geo-blocking" measures to prevent you from accessing the services from abroad.\n Host country: %s, your country: %s')
-                GetIPTVNotify().push(message % (self.getMainUrl(), country, mycountry), 'info', 5)
+                GetIPTVNotify().push(message % (self.getMainUrl(), country, data['country']), 'info', 5)
             self.isGeoBlockingChecked = True
         except Exception:
             printExc()
@@ -885,7 +890,7 @@ class CBaseHostClass:
                 self.currItem = {"name": None}
             else:
                 self.currItem = self.currList[index]
-        if 2 == refresh: # refresh for more items
+        if 2 == refresh:  # refresh for more items
             printDBG(">> endHandleService index[%s]" % index)
             # remove item more and store items before and after item more
             self.beforeMoreItemList = self.currList[0:index]
@@ -897,7 +902,7 @@ class CBaseHostClass:
                 self.currItem = self.currList[index]
 
     def endHandleService(self, index, refresh):
-        if 2 == refresh: # refresh for more items
+        if 2 == refresh:  # refresh for more items
             currList = self.currList
             self.currList = self.beforeMoreItemList
             for item in currList:
