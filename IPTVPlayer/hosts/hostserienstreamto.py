@@ -159,13 +159,13 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 letter = title.decode('utf-8')[0].upper()
-                if not letter.isalpha():
-                    letter = '#'
+                letter = letter if letter.isalpha() else '#'
                 letter = ensure_str(letter)
                 if letter not in self.allCache['letters_list']:
                     self.allCache['letters_list'].append(letter)
                     self.allCache['letters_keys'][letter] = []
                 self.allCache['letters_keys'][letter].append({'url': url, 'title': title})
+            self.allCache['letters_list'].sort()
 
         for letter in self.allCache['letters_list']:
             params = dict(cItem)

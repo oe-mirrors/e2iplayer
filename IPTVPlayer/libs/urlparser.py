@@ -16049,15 +16049,12 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl)
         if not sts:
             return False
-
-        r = re.search(r'''['"]?hls['"]?\s*?:\s*?['"]([^'^"]+?)['"]''', data)
-        if not r:
+        if 'const currentUrl' in data:
             url = ph.search(data, '''window.location.href\s*=\s*['"]([^"^']+?)['"]''')[0]
             sts, data = self.cm.getPage(url)
             if not sts:
                 return False
-            r = re.search(r'''['"]?hls['"]?\s*?:\s*?['"]([^'^"]+?)['"]''', data)
-
+        r = re.search(r'''['"]?hls['"]?\s*?:\s*?['"]([^'^"]+?)['"]''', data)
         if r:
             hlsUrl = ensure_str(base64.b64decode(r.group(1)))
             if hlsUrl.startswith('//'):
@@ -16066,13 +16063,13 @@ class pageParser(CaptchaHelper):
                 params = {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'Origin': urlparser.getDomain(baseUrl, False)}
                 hlsUrl = urlparser.decorateUrl(hlsUrl, params)
                 return getDirectM3U8Playlist(hlsUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
-
-        hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
-        if self.cm.isValidUrl(hlsUrl):
-            params = {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'Origin': urlparser.getDomain(baseUrl, False)}
-            hlsUrl = urlparser.decorateUrl(hlsUrl, params)
-            return getDirectM3U8Playlist(hlsUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
-
+        else:
+            r = re.search(r"(?:let|var)\s*(?:wc0|[0-9a-f]+)\s*=\s*'([^']+)", data)
+            if r:
+                r = ensure_str(json_loads(base64.b64decode(r.group(1))[::-1]))
+                mp4Url = r.get('file', r.get('direct_access_url', r.get('source')))
+                if self.cm.isValidUrl(mp4Url):
+                    return [{'name': 'mp4', 'url': mp4Url}]
         return False
 
     def parserRUBYSTMCOM(self, baseUrl):
