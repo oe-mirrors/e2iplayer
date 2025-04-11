@@ -544,6 +544,7 @@ class urlparser:
                        's2watch.link': self.pp.parserGOUNLIMITEDTO,
                        'samaup.cc': self.pp.parserUPLOAD,
                        'sawlive.tv': self.pp.parserSAWLIVETV,
+                       'savefiles.com': self.pp.parserONLYSTREAMTV,
                        'sbchill.com': self.pp.parserSTREAMSB,
                        'sbembed.com': self.pp.parserSTREAMSB,
                        'sbembed1.com': self.pp.parserSTREAMSB,
@@ -572,6 +573,7 @@ class urlparser:
                        'slmaxed.com': self.pp.parserSTREAMLARE,
                        'slwatch.cog': self.pp.parserSTREAMLARE,
                        'sltube.org': self.pp.parserSTREAMLARE,
+                       'smoothpre.com': self.pp.parserONLYSTREAMTV,
                        'sockshare.com': self.pp.parserSOCKSHARE,
                        'sonline.pro': self.pp.parserXSTREAMCDNCOM,
                        'sostart.org': self.pp.parserSOSTARTORG,
@@ -624,6 +626,7 @@ class urlparser:
                        'superfilm.pl': self.pp.parserSUPERFILMPL,
                        'supergoodtvlive.com': self.pp.parserTXNEWSNETWORK,
                        'supervideo.tv': self.pp.parserONLYSTREAMTV,
+                       'supervideo.cc': self.pp.parserONLYSTREAMTV,
                        'suprafiles.org': self.pp.parserUPLOAD,
                        'suspents.info': self.pp.parserFASTVIDEOIN,
                        'svetacdn.in': self.pp.parserSVETACDNIN,
@@ -748,6 +751,7 @@ class urlparser:
                        'vidoza.co': self.pp.parserVIDOZANET,
                        'vidoza.net': self.pp.parserVIDOZANET,
                        'vidoza.org': self.pp.parserVIDOZANET,
+                       'videzz.net': self.pp.parserVIDOZANET,
                        'vidshare.tv': self.pp.parserVIDSHARETV,
                        'vidspace.io': self.pp.parserVIDEOSPACE,
                        'vidspot.net': self.pp.parserVIDSPOT,
@@ -16045,6 +16049,32 @@ class pageParser(CaptchaHelper):
         return urlsTab
 
     def parserVOESX(self, baseUrl):
+        def voe_decode(ct):
+            lut = [r"#X", r"%Q", r"\*ABC", r"~Z", r"\?\?", r"!@", r"\^&"]
+            txt = ''
+            for i in ct:
+                if isinstance(i, int):
+                    x = i
+                else:
+                    x = ord(i)
+                if 65 <= x <= 90:
+                    x = (x - 52) % 26 + 65
+                elif 97 <= x <= 122:
+                    x = (x - 84) % 26 + 97
+                txt += chr(x)
+            for i in lut:
+                txt = re.sub(i, '_', txt)
+            txt = "".join(txt.split("_"))
+            ct = base64.b64decode(txt)
+            txt = ''
+            for i in ct:
+                if isinstance(i, int):
+                    txt += chr(i - 3)
+                else:
+                    txt += chr(ord(i) - 3)
+            txt = base64.b64decode(txt[::-1])
+            return json_loads(txt)
+
         printDBG("parserVOESX baseUrl[%r]" % baseUrl)
         sts, data = self.cm.getPage(baseUrl)
         if not sts:
@@ -16064,9 +16094,9 @@ class pageParser(CaptchaHelper):
                 hlsUrl = urlparser.decorateUrl(hlsUrl, params)
                 return getDirectM3U8Playlist(hlsUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
         else:
-            r = re.search(r"(?:let|var)\s*(?:wc0|[0-9a-f]+)\s*=\s*'([^']+)", data)
+            r = re.search(r'\w+="([^"]+)";function', data)
             if r:
-                r = ensure_str(json_loads(base64.b64decode(r.group(1))[::-1]))
+                r = voe_decode(ensure_str(r.group(1)))
                 mp4Url = r.get('file', r.get('direct_access_url', r.get('source')))
                 if self.cm.isValidUrl(mp4Url):
                     return [{'name': 'mp4', 'url': mp4Url}]
