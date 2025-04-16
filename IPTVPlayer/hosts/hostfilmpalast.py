@@ -17,12 +17,11 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
 
 def GetConfigList():
-    optionList = []
-    return optionList
+    return []
 
 
 def gettytul():
-    return 'http://filmpalast.to/'
+    return 'https://filmpalast.to/'
 
 
 class FilmPalastTo(CBaseHostClass):
@@ -238,6 +237,8 @@ class FilmPalastTo(CBaseHostClass):
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<a', '</a>')
             for it in item:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(it, '''href=['"]([^'^"]+?)['"]''')[0])
+                if not url:
+                    continue
                 title = self.cleanHtmlStr(it)
                 if seasonId not in self.cacheSeasons:
                     self.cacheSeasons[seasonId] = []

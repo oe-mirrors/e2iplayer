@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
 
 ###################################################
 # LOCAL import
@@ -16050,30 +16049,22 @@ class pageParser(CaptchaHelper):
 
     def parserVOESX(self, baseUrl):
         def voe_decode(ct):
-            lut = [r"#X", r"%Q", r"\*ABC", r"~Z", r"\?\?", r"!@", r"\^&"]
-            txt = ''
-            for i in ct:
-                if isinstance(i, int):
-                    x = i
-                else:
-                    x = ord(i)
-                if 65 <= x <= 90:
-                    x = (x - 52) % 26 + 65
-                elif 97 <= x <= 122:
-                    x = (x - 84) % 26 + 97
-                txt += chr(x)
-            for i in lut:
-                txt = re.sub(i, '_', txt)
+            import base64
+            txt = ''.join(chr((ord(i) - 52) % 26 + 65) if 65 <= ord(i) <= 90 else chr((ord(i) - 84) % 26 + 97) if 97 <= ord(i) <= 122 else i for i in ct)
+            lut = [r"#&", r"%?", r"\*~", r"~@", r"\^\^", r"!!", r"@$"]
+            for pattern in lut:
+                txt = re.sub(pattern, "_", txt)
             txt = "".join(txt.split("_"))
-            ct = base64.b64decode(txt)
-            txt = ''
-            for i in ct:
-                if isinstance(i, int):
-                    txt += chr(i - 3)
-                else:
-                    txt += chr(ord(i) - 3)
-            txt = base64.b64decode(txt[::-1])
-            return json_loads(txt)
+
+            def fix_b64_padding(s):
+                return s + '=' * (-len(s) % 4)
+            try:
+                step1 = base64.b64decode(fix_b64_padding(txt)).decode()
+                step2 = ''.join(chr(ord(c) - 3) for c in step1)
+                final = base64.b64decode(fix_b64_padding(step2[::-1])).decode()
+                return json_loads(final)
+            except Exception as e:
+                return ""
 
         printDBG("parserVOESX baseUrl[%r]" % baseUrl)
         sts, data = self.cm.getPage(baseUrl)
@@ -16097,9 +16088,10 @@ class pageParser(CaptchaHelper):
             r = re.search(r'\w+="([^"]+)";function', data)
             if r:
                 r = voe_decode(ensure_str(r.group(1)))
-                mp4Url = r.get('file', r.get('direct_access_url', r.get('source')))
-                if self.cm.isValidUrl(mp4Url):
-                    return [{'name': 'mp4', 'url': mp4Url}]
+                if r:
+                    mp4Url = r.get('file', r.get('direct_access_url', r.get('source')))
+                    if self.cm.isValidUrl(mp4Url):
+                        return [{'name': 'mp4', 'url': mp4Url}]
         return False
 
     def parserRUBYSTMCOM(self, baseUrl):
@@ -16222,8 +16214,8 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return False
-        media_id = self.cm.ph.getSearchGroups(baseUrl + '/', '(?:e|d)[/-]([A-Za-z0-9]+)[^A-Za-z0-9]')[0]
-        items = re.findall(r'''[\.\s]fc\s*[:=]\s*['"]([^'"]+)''', data)
+        media_id = baseUrl.split('/')[-1]
+        items = re.findall(r'''[\.\s'](?:fc|_vvto\[[^\]]*)(?:['\]]*)?\s*[:=]\s*['"]([^'"]+)''', data)
         if items:
             for f in items[::-1]:
                 ch = veev_decode(ensure_binary(f).decode('utf8'))
