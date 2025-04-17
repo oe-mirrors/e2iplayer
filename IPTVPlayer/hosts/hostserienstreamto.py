@@ -158,7 +158,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             for item in data:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
-                letter = title.decode('utf-8')[0].upper()
+                letter = title[0].upper()
                 letter = letter if letter.isalpha() else '#'
                 letter = ensure_str(letter)
                 if letter not in self.allCache['letters_list']:
@@ -364,7 +364,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<img ', '>')
                 for item in tmp:
                     key = self.cm.ph.getSearchGroups(item, '''data-lang-key=['"]([^'^"]+?)['"]''')[0]
-                    title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0] #self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0].split('/')[-1].repace('.png', '')
+                    title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]  # self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0].split('/')[-1].repace('.png', '')
                     langMap[key] = title
 
                 data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="changeLanguageBox"', '</ul>')[1]

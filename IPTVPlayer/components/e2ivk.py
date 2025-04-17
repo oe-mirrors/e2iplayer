@@ -97,7 +97,7 @@ class E2iVKSelectionList(IPTVListComponentBase):
                 else:
                     sel_key = 'off'
                 y = (height - 16) / 2
-                res.append((eListboxPythonMultiContent.TYPE_TEXT, 20, 0, width - 20, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item['val'][0])) #, item.get('color')
+                res.append((eListboxPythonMultiContent.TYPE_TEXT, 20, 0, width - 20, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item['val'][0]))  # , item.get('color')
                 res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, y, 16, 16, self.dictPIX.get(sel_key, None)))
             else:
                 res.append((eListboxPythonMultiContent.TYPE_TEXT, 4, 0, width - 4, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item))
@@ -187,7 +187,7 @@ class E2iVirtualKeyBoard(Screen):
 
         for i in range(0, 15):
             _addButton(i + 1, x + bw * i, y + 10 + bh * 1, bw, bh, 1)
-        _addPixmapWidget('b', x + bw * 14 + (bw - 32) / 2, y + 10 + bh * 1 + (bh - 20) / 2, 32, 20, 3) # backspace icon
+        _addPixmapWidget('b', x + bw * 14 + (bw - 32) / 2, y + 10 + bh * 1 + (bh - 20) / 2, 32, 20, 3)  # backspace icon
 
         _addButton(16, x, y + 10 + bh * 2, bw * 2, bh, 1)
         for i in range(0, 14):
@@ -203,7 +203,7 @@ class E2iVirtualKeyBoard(Screen):
             _addButton(i + 44, x + bw * (i + 2), y + 10 + bh * 4, bw, bh, 1)
         _addButton(55, x + bw * 13, y + 10 + bh * 4, bw * 2, bh, 1)
 
-        _addPixmapWidget('l', x + 10, y + 10 + bh * 5 + 14, 26, 26, 3) # language icon
+        _addPixmapWidget('l', x + 10, y + 10 + bh * 5 + 14, 26, 26, 3)  # language icon
         _addButton(56, x, y + 10 + bh * 5, bw * 2, bh, 1)
         _addButton(57, x + bw * 2, y + 10 + bh * 5, bw, bh, 1)
         _addButton(58, x + bw * 3, y + 10 + bh * 5, bw, bh, 1)
@@ -447,7 +447,7 @@ class E2iVirtualKeyBoard(Screen):
         if dx != 0 and keyID == 0:
             return
 
-        if dx != 0: # left/right
+        if dx != 0:  # left/right
             colIdx = self.colIdx
             while True:
                 colIdx += dx
@@ -458,7 +458,7 @@ class E2iVirtualKeyBoard(Screen):
                 if keyID != self.KEYIDMAP[self.rowIdx][colIdx]:
                     self.colIdx = colIdx
                     break
-        elif dy != 0: # up/down
+        elif dy != 0:  # up/down
             rowIdx = self.rowIdx
             while True:
                 rowIdx += dy
@@ -522,29 +522,29 @@ class E2iVirtualKeyBoard(Screen):
             else:
                 self.close(None)
             return
-        elif keyid == 15: # Backspace
+        elif keyid == 15:  # Backspace
             self["text"].deleteBackward()
             self.textUpdated()
             return
-        elif keyid == 29: # Delete
+        elif keyid == 29:  # Delete
             self["text"].delete()
             self.textUpdated()
             return
-        elif keyid == 16: # Clear
+        elif keyid == 16:  # Clear
             self["text"].deleteAllChars()
             self["text"].update()
             self.textUpdated()
             return
-        elif keyid == 56: # Language
+        elif keyid == 56:  # Language
             self.switchToLanguageSelection()
             return
-        elif keyid == 61: # Left
+        elif keyid == 61:  # Left
             self["text"].left()
             return
-        elif keyid == 62: # Right
+        elif keyid == 62:  # Right
             self["text"].right()
             return
-        elif keyid == 42: # Enter
+        elif keyid == 42:  # Enter
             try:
                 # make sure that Input component return valid UTF-8 data
                 text = self["text"].getText()
@@ -558,12 +558,12 @@ class E2iVirtualKeyBoard(Screen):
             self.updateKeysLabels()
             self.updateSpecialKey([30], self.specialKeyState & self.SK_CAPSLOCK)
             return
-        elif keyid in [43, 55]: # Shift
+        elif keyid in [43, 55]:  # Shift
             self.specialKeyState ^= self.SK_SHIFT
             self.updateKeysLabels()
             self.updateSpecialKey([43, 55], self.specialKeyState & self.SK_SHIFT)
             return
-        elif keyid in [58, 60]: # ALT
+        elif keyid in [58, 60]:  # ALT
             self.specialKeyState ^= self.SK_ALT
             self.updateKeysLabels()
             self.updateSpecialKey([58, 60], self.specialKeyState & self.SK_ALT)
@@ -898,7 +898,7 @@ class E2iVirtualKeyBoard(Screen):
                 if self.currentKeyId in self.RIGHT_KEYS:
                     self.handleArrowKey(1, 0)
         elif self.focus == self.FOCUS_KEYBOARD:
-            if self.currentKeyId in self.RIGHT_KEYS or (self.currentKeyId == 0 and self['text'].currPos == len(self['text'].textU)):
+            if self.currentKeyId in self.RIGHT_KEYS or (self.currentKeyId == 0 and self['text'].currPos == len(self['text'].text)):
                 if self.isSuggestionVisible:
                     self.switchToSuggestions()
                     return
@@ -986,7 +986,7 @@ class E2iVirtualKeyBoard(Screen):
 
     def updateSuggestions(self):
         if self.isAutocompleteEnabled:
-            if not self["text"].textU:
+            if not self["text"].text:
                 self.setSuggestionVisible(False)
                 self['right_list'].setList([])
                 #self.autocomplete.stop()
@@ -997,7 +997,7 @@ class E2iVirtualKeyBoard(Screen):
     def setSuggestions(self, list, stamp):
         # we would not want to modify list when user
         # is under selection item from it
-        if self.focus != self.FOCUS_SUGGESTIONS and self["text"].textU:
+        if self.focus != self.FOCUS_SUGGESTIONS and self["text"].text:
             if list:
                 self['right_list'].setList([(x,) for x in list])
             self.setSuggestionVisible(True if list else False)

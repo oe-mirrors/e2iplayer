@@ -2,16 +2,16 @@
 
 def getWidgetText(widgetPointer):
     try:
-        return(widgetPointer.Text)
+        return (widgetPointer.Text)
     except Exception:
         try:
-            return(widgetPointer.textU)
+            return (widgetPointer.textU)
         except Exception:
-            return(widgetPointer.text)
+            return (widgetPointer.text)
 
 
 def innerWidgetTextRight(widgetPointer):
     try:
-        return(widgetPointer.innerright())
+        return (widgetPointer.innerright())
     except Exception:
-        return(widgetPointer.innerRight())
+        return (widgetPointer.innerRight())
