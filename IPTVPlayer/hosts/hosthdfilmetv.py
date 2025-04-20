@@ -86,11 +86,11 @@ class HDFilmeTV(CBaseHostClass):
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta name="description" content="([^"]+)')[0])
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li id="serie', '</ul>')
-
         for item in data:
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, """"><a href="#">([^<]+)""")[0])
+            episode = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '><a href="#">([^<]+)')[0])
+            title = cItem['title'] + " - " + episode
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title': title.replace(' stream', ''), 'link': url, 'icon': icon, 'desc': desc})
+            params.update({'good_for_fav': True, 'title': title, 'link': url, 'icon': icon, 'desc': desc, 'episode': episode})
             self.addVideo(params)
 
     def listGenres(self, cItem):
@@ -119,8 +119,8 @@ class HDFilmeTV(CBaseHostClass):
         sts, data = self.getPage(cItem['link'], self.defaultParams)
         if not sts:
             return []
-        if "pisode" in cItem['title']:
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, cItem['title'], '</ul>')[0]
+        if cItem.get('episode'):
+            data = self.cm.ph.getAllItemsBeetwenMarkers(data, cItem.get('episode'), '</ul>')[0]
         data = re.compile('link="([^"]+)', re.DOTALL).findall(data)
 
         for url in data:
