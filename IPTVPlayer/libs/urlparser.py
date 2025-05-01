@@ -243,6 +243,7 @@ class urlparser:
                        'content.peteava.ro': self.pp.parserPETEAVA,
                        'coolcast.eu': self.pp.parserCOOLCASTEU,
                        'coolrea.link': self.pp.parserSPORTSONLINETO,
+                       'csst.online': self.pp.parserSST,                       
                        'crichd.tv': self.pp.parserCRICHDTV,
                        'cricplay2.xyz': self.pp.parserASSIAORG,
                        'cryptodialynews.com': self.pp.parserTXNEWSNETWORK,
@@ -335,6 +336,7 @@ class urlparser:
                        'freedisc.pl': self.pp.parserFREEDISC,
                        'freefeds.click': self.pp.parserASSIAORG,
                        'fslinks.org': self.pp.parserVIDGUARDTO,
+                       'fsst.online': self.pp.parserSST,
                        'fullassia.com': self.pp.parserASSIAORG,
                        'furher.in': self.pp.parserGOUNLIMITEDTO,
                        'fviplions.com': self.pp.parserONLYSTREAMTV,
@@ -397,6 +399,10 @@ class urlparser:
                        'kabab.lima-city.de': self.pp.parserKABABLIMA,
                        'kingfiles.net': self.pp.parserKINGFILESNET,
                        'kingvid.tv': self.pp.parserKINGVIDTV,
+                       'kinoger.be': self.pp.parserVIDHIDE,
+                       'kinoger.pw': self.pp.parserVEEVTO,
+                       'kinoger.re': self.pp.parserSBS,
+                       'kinoger.ru': self.pp.parserVAST,
                        'krakenfiles.com': self.pp.parserKRAKENFILESCOM,
                        #l
                        'leton.tv': self.pp.parserDOTSTREAMTV,
@@ -437,7 +443,11 @@ class urlparser:
                        'mirrorace.com': self.pp.parserMIRRORACE,
                        'mixdrop.club': self.pp.parserMIXDROP,
                        'mixdrop.co': self.pp.parserMIXDROP,
+                       'mixdrop.ps': self.pp.parserMIXDROP,                       
                        'moevideo.net': self.pp.parserPLAYEREPLAY,
+                       'moflix-stream.click': self.pp.parserVIDHIDE,
+                       'moflix-stream.fans': self.pp.parserVAST,
+                       'moflix.upns.xyz': self.pp.parserSBS,
                        'moonwalk.cc': self.pp.parserMOONWALKCC,
                        'moshahda.net': self.pp.parseMOSHAHDANET,
                        'movdivx.com': self.pp.parserMODIVXCOM,
@@ -542,8 +552,8 @@ class urlparser:
                        #s
                        's2watch.link': self.pp.parserGOUNLIMITEDTO,
                        'samaup.cc': self.pp.parserUPLOAD,
-                       'sawlive.tv': self.pp.parserSAWLIVETV,
                        'savefiles.com': self.pp.parserONLYSTREAMTV,
+                       'sawlive.tv': self.pp.parserSAWLIVETV,
                        'sbchill.com': self.pp.parserSTREAMSB,
                        'sbembed.com': self.pp.parserSTREAMSB,
                        'sbembed1.com': self.pp.parserSTREAMSB,
@@ -572,7 +582,6 @@ class urlparser:
                        'slmaxed.com': self.pp.parserSTREAMLARE,
                        'slwatch.cog': self.pp.parserSTREAMLARE,
                        'sltube.org': self.pp.parserSTREAMLARE,
-                       'smoothpre.com': self.pp.parserONLYSTREAMTV,
                        'sockshare.com': self.pp.parserSOCKSHARE,
                        'sonline.pro': self.pp.parserXSTREAMCDNCOM,
                        'sostart.org': self.pp.parserSOSTARTORG,
@@ -590,6 +599,7 @@ class urlparser:
                        'ssh101.com': self.pp.parserSSH101COM,
                        'st.dwn.so': self.pp.parserDWN,
                        'starlive.xyz': self.pp.parserSTARLIVEXYZ,
+                       'smoothpre.com': self.pp.parserONLYSTREAMTV,
                        'stopbot.tk': self.pp.parserSTOPBOTTK,
                        'stream.moe': self.pp.parserSTREAMMOE,
                        'stream4k.to': self.pp.parserSTREAM4KTO,
@@ -617,6 +627,7 @@ class urlparser:
                        'streamtape.com': self.pp.parserSTREAMTAPE,
                        'streamtape.to': self.pp.parserSTREAMTAPE,
                        'streamtp3.com': self.pp.parserONLYSTREAMTV,
+                       'streamup.ws': self.pp.parserSTREAMUP,
                        'streamvid.net': self.pp.parserONLYSTREAMTV,
                        'streamwire.net': self.pp.parserONLYSTREAMTV,
                        'streamzz.to': self.pp.parserSTREAMZZ,
@@ -16086,13 +16097,23 @@ class pageParser(CaptchaHelper):
                 return getDirectM3U8Playlist(hlsUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
         else:
             r = re.search(r'\w+="([^"]+)";function', data)
+            urlTab = []
             if r:
                 r = voe_decode(ensure_str(r.group(1)))
                 if r:
-                    mp4Url = r.get('file', r.get('direct_access_url', r.get('source')))
-                    if self.cm.isValidUrl(mp4Url):
-                        return [{'name': 'mp4', 'url': mp4Url}]
-        return False
+                    subtitles = [{'title': '', 'lang': x.get('label'), 'url': 'https://{0}{1}'.format(baseUrl.split("/")[2], x.get('file'))} for x in r.get('captions') if x.get('kind') == 'captions']
+                    key_list = ['source', 'file', 'direct_access_url']
+                    for key in key_list:
+                        if key in r:
+                            url = r[key]
+                            if '.m3u8' in url:
+                                params = {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'Origin': urlparser.getDomain(baseUrl, False), 'external_sub_tracks': subtitles}
+                                url = urlparser.decorateUrl(url, params)
+                                urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
+                            else:
+                                urlTab.append({'name': 'MP4', 'url': url})
+            return urlTab
+
 
     def parserRUBYSTMCOM(self, baseUrl):
         printDBG("parserRUBYSTMCOM baseUrl[%s]" % baseUrl)
@@ -16214,7 +16235,6 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return False
-        media_id = baseUrl.split('/')[-1]
         items = re.findall(r'''[\.\s'](?:fc|_vvto\[[^\]]*)(?:['\]]*)?\s*[:=]\s*['"]([^'"]+)''', data)
         if items:
             for f in items[::-1]:
@@ -16223,7 +16243,7 @@ class pageParser(CaptchaHelper):
                     params = {
                         'op': 'player_api',
                         'cmd': 'gi',
-                        'file_code': media_id,
+                        'file_code': baseUrl.split('/')[-1],
                         'ch': ch,
                         'ie': 1
                     }
@@ -16329,4 +16349,195 @@ class pageParser(CaptchaHelper):
         if hlsUrl != '':
             urlTab.extend(getDirectM3U8Playlist(hlsUrl))
 
+        return urlTab
+
+    def parserVAST(self, base_url):
+        printDBG("parserVAST baseUrl[%s]" % base_url)
+        host = base_url.split("/")[2]
+        import os
+        import requests
+
+        def get_nonce():
+            random_float = random()
+            x = base36_encode(int(str(random_float).split('.')[1]))
+            z = base36_encode(int(time.time() * 1000))
+            return x + z
+
+        def base36_encode(num):
+            chars = '0123456789abcdefghijklmnopqrstuvwxyz'
+            if num == 0:
+                return '0'
+            result = ''
+            while num > 0:
+                num, i = divmod(num, 36)
+                result = chars[i] + result
+            return result
+
+        def mod_exp(base, exp, mod):  # Thx yogesh-hacker
+            base = int(base)
+            exp = int(exp)
+            mod = int(mod)
+            result = 1
+
+            while exp > 0:
+                if exp & 1:
+                    result = (result * base) % mod
+                base = (base * base) % mod
+                exp >>= 1
+            return result
+
+        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0"
+        headers = {"Referer": "https://%s" % host, "User-Agent": user_agent}
+        session = requests.Session()
+        session.headers.update(headers)
+        response = session.get(base_url).text
+        match = re.search(r"(?:const|let|var|window\.\w+)\s+\w*\s*=\s*'(.*?)'", response)
+        if not match:
+            return
+        encrypted_data = match.group(1)
+        dh_modulus = int("0xFFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7EDEE386BFB5A899FA5AE9F24117C4B1FE649286651ECE45B3DC2007CB8A163BF0598DA48361C55D39A69163FA8FD24CF5F83655D23DCA3AD961C62F356208552BB9ED529077096966D670C354E4ABC9804F1746C08CA237327FFFFFFFFFFFFFFFF", 16)
+        generator = 2
+        random_bytes_hex = hexlify(os.urandom(32))
+        client_private_key = int(random_bytes_hex, 16) % dh_modulus
+        client_public_key = mod_exp(generator, client_private_key, dh_modulus)
+        data = {"nonce": get_nonce(), "client_public": str(client_public_key)}
+        response = session.post("https://%s/api-2/prepair-token.php" % host, json=data).json()
+        pre_token = response['pre_token']
+        csrf_token = response['csrf_token']
+        server_public = response['server_public']
+        initial_nonce = get_nonce()
+        data = {"nonce": initial_nonce, "pre_token": pre_token, "csrf_token": csrf_token}
+        response = session.post("https://%s/api-2/create-token.php" % host, json=data).json()
+        access_token = response['token']
+        data = {"token": access_token,
+                "initial_nonce": initial_nonce,
+                "nonce": get_nonce(),
+                "csrf_token": csrf_token,
+                "pre_token": pre_token,
+                "encrypted_data": encrypted_data}
+        response = session.post("https://%s/api-2/last-process.php" % host, json=data).json()
+        shared_secret = mod_exp(server_public, client_private_key, dh_modulus)
+        derived_key = sha256(str(shared_secret).encode()).digest()
+        encrypted_data = base64.b64decode(response['encrypted_result'])
+        iv = base64.b64decode(response['iv'])
+        temp_iv = base64.b64decode(response['temp_iv'])
+        encrypted_symmetric_key = base64.b64decode(response['encrypted_symmetric_key'])
+        decryptor = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(derived_key, temp_iv))
+        actual_aes_key = decryptor.feed(encrypted_symmetric_key)
+        actual_aes_key += decryptor.feed()
+        decryptor = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(actual_aes_key, iv))
+        decrypted_payload = decryptor.feed(encrypted_data)
+        decrypted_payload += decryptor.feed()
+        decrypted_data = decrypted_payload.decode("utf-8")
+        url = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_data)
+        if not url:
+            return []
+        sub_tracks = []
+        sub = re.findall(r'file":"([^"]+)","label":"([^"]+)","kind', decrypted_data)
+        if sub:
+            sub_tracks = [{'title': '', 'url': url, 'lang': q} for url, q in sub]
+        urlTab = []
+        url = urlparser.decorateUrl(url.group(1), {'iptv_proto': 'm3u8', 'User-Agent': user_agent, 'Referer': 'https://%s/' % host, 'Origin': 'https://%s' % host, 'external_sub_tracks': sub_tracks})
+        if url != '':
+            urlTab.extend(getDirectM3U8Playlist(url))
+        return urlTab
+
+    def parserSST(self, url):
+        printDBG("parserSST baseUrl[%s]" % url)
+        sts, data = self.cm.getPage(url)
+        if not sts:
+            return []
+        urlTab = []
+        url = re.search('file:"([^"]+)', data)
+        if url:
+            url = url.group(1)
+            if '[' in url:
+                urls = re.findall(r'\[(\d+p)\](https?://[^\s,]+)', url)
+                urlTab.extend({'name': quality, 'url': url} for quality, url in urls)
+            else:
+                urlTab.append({'name': '360p', 'url': url})
+        return urlTab
+
+    def parserVIDHIDE(self, baseUrl):
+        printDBG("parserVIDHIDE baseUrl[%r]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        if referer:
+            HTTP_HEADER['Referer'] = referer
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return False
+        if "eval(function(p,a,c,k,e,d)" in data:
+            printDBG('Host resolveUrl packed')
+            packed = re.compile(r'>eval\(function\(p,a,c,k,e,d\)(.+?)</script>', re.DOTALL).findall(data)
+            if packed:
+                data2 = packed[-1]
+            else:
+                return ''
+            printDBG('Host pack: [%s]' % data2)
+            try:
+                data = unpackJSPlayerParams(data2, TEAMCASTPL_decryptPlayerParams, 0, True, True)
+                printDBG('OK unpack: [%s]' % data)
+            except Exception:
+                pass
+        urlTab = []
+        hls = re.search(r'hls\d+":"(http[^"]+)', data)
+        if hls:
+            sub_tracks = []
+            sub = re.findall(r'file:"([^"]+)",label:"([^"]+)",kind', data)
+            if sub:
+                sub_tracks = [{'title': '', 'url': url, 'lang': q} for url, q in sub]
+            url = urlparser.decorateUrl(hls.group(1), {'iptv_proto': 'm3u8', 'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': baseUrl, 'external_sub_tracks': sub_tracks})
+            urlTab.extend(getDirectM3U8Playlist(url))
+        return urlTab
+
+    def parserSBS(self, baseUrl):
+        printDBG("parserSBS baseUrl[%s]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        referer = baseUrl.meta.get('Referer')
+        HTTP_HEADER['Referer'] = 'https://%s/' % baseUrl.split("/")[2]
+        urlParams = {'header': HTTP_HEADER}
+        if '#' in baseUrl and referer:
+            host = referer.split("/")[2]
+            url, id = baseUrl.split('#')
+            baseUrl = '%sapi/v1/video?id=%s&w=1904&h=969&r=%s' % (url, id, host)
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return []
+        data = unhexlify(data[:-1])
+        decrypter = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(b'\x6b\x69\x65\x6d\x74\x69\x65\x6e\x6d\x75\x61\x39\x31\x31\x63\x61', b'\x31\x32\x33\x34\x35\x36\x37\x38\x39\x30\x6f\x69\x75\x79\x74\x72'))
+        data = decrypter.feed(data)
+        data += decrypter.feed()
+        data = data.decode('utf-8')
+        data = json_loads(data)
+        hls = data.get('source')
+        urlTab = []
+        if hls:
+            hls = urlparser.decorateUrl(hls, {'iptv_proto': 'm3u8', 'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': 'https://%s/' % url, 'Origin': 'https://%s' % url})
+            urlTab.extend(getDirectM3U8Playlist(hls))
+        return urlTab
+
+    def parserSTREAMUP(self, baseUrl):
+        printDBG("parserSTREAMUP baseUrl[%s]" % baseUrl)
+        host = baseUrl.split("/")[2]
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        HTTP_HEADER['Referer'] = 'https://%s/' % host
+        urlParams = {'header': HTTP_HEADER}
+        id = baseUrl.split('/')[-1]
+        url = "https://bestwish.lol/data.php?filecode=%s" % id
+        sts, data = self.cm.getPage(url, urlParams)
+        if not sts:
+            return []
+        data = json_loads(data)
+        hls = data.get('streaming_url')
+        urlTab = []
+        if hls:
+            sub_tracks = []
+            sts, data = self.cm.getPage("https://bestwish.lol/e/add.php?filecode=%s" % id, urlParams)
+            if sts:
+                data = json_loads(data)
+                sub_tracks = [{'title': '', 'lang': x.get('language'), 'url': x.get('file_path')} for x in data]
+            hls = urlparser.decorateUrl(hls, {'iptv_proto': 'm3u8', 'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': 'https://%s/' % host, 'Origin': 'https://%s' % host, 'external_sub_tracks': sub_tracks})
+            urlTab.extend(getDirectM3U8Playlist(hls))
         return urlTab
