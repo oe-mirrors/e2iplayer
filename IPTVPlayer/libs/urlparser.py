@@ -241,7 +241,7 @@ class urlparser:
                        'content.peteava.ro': self.pp.parserPETEAVA,
                        'coolcast.eu': self.pp.parserCOOLCASTEU,
                        'coolrea.link': self.pp.parserSPORTSONLINETO,
-                       'csst.online': self.pp.parserSST,                       
+                       'csst.online': self.pp.parserSST,
                        'crichd.tv': self.pp.parserCRICHDTV,
                        'cricplay2.xyz': self.pp.parserASSIAORG,
                        'cryptodialynews.com': self.pp.parserTXNEWSNETWORK,
@@ -261,6 +261,7 @@ class urlparser:
                        'divxstage.eu': self.pp.parserDIVXSTAGE,
                        'divxstage.to': self.pp.parserDIVXSTAGE,
                        'donevideo.com': self.pp.parserLIMEVIDEO,
+                       'do7go.com': self.pp.parserDOOD,
                        'dood.cx': self.pp.parserDOOD,
                        'dood.la': self.pp.parserDOOD,
                        'dood.pm': self.pp.parserDOOD,
@@ -441,7 +442,7 @@ class urlparser:
                        'mirrorace.com': self.pp.parserMIRRORACE,
                        'mixdrop.club': self.pp.parserMIXDROP,
                        'mixdrop.co': self.pp.parserMIXDROP,
-                       'mixdrop.ps': self.pp.parserMIXDROP,                       
+                       'mixdrop.ps': self.pp.parserMIXDROP,
                        'moevideo.net': self.pp.parserPLAYEREPLAY,
                        'moflix-stream.click': self.pp.parserVIDHIDE,
                        'moflix-stream.fans': self.pp.parserVAST,
@@ -15897,7 +15898,6 @@ class pageParser(CaptchaHelper):
                             else:
                                 urlTab.append({'name': 'MP4', 'url': url})
             return urlTab
-
 
     def parserRUBYSTMCOM(self, baseUrl):
         printDBG("parserRUBYSTMCOM baseUrl[%s]" % baseUrl)
