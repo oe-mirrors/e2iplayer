@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, E2PrioFix, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -89,7 +89,7 @@ class MergeDownloader(BaseDownloader):
 
     def start(self, url, filePath, params={}):
         self.downloaderParams = params
-        self.fileExtension = '' # should be implemented in future
+        self.fileExtension = ''  # should be implemented in future
         self.url = url
         self.filePath = filePath
 
@@ -127,7 +127,8 @@ class MergeDownloader(BaseDownloader):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        self.console.execute(E2PrioFix(cmd))
+        self.console.setNice(GetNice() + 2)
+        self.console.execute(cmd)
 
         self.status = DMHelper.STS.DOWNLOADING
 
@@ -142,7 +143,8 @@ class MergeDownloader(BaseDownloader):
         printDBG("doStartPostProcess cmd[%s]" % cmd)
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
-        self.console.execute(E2PrioFix(cmd))
+        self.console.setNice(GetNice() + 2)
+        self.console.execute(cmd)
 
     def _dataAvail(self, data):
         if None == data:
@@ -168,7 +170,7 @@ class MergeDownloader(BaseDownloader):
             self.iptv_sys = None
         if self.status in [DMHelper.STS.DOWNLOADING, DMHelper.STS.POSTPROCESSING]:
             if self.console:
-                self.console.sendCtrlC() # kill # produce zombies
+                self.console.sendCtrlC()  # kill # produce zombies
                 self._cmdFinished(-1, True)
                 return BaseDownloader.CODE_OK
         return BaseDownloader.CODE_NOT_DOWNLOADING

@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, E2PrioFix, rm, WriteTextFile, GetNice, getDebugMode
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, rm, WriteTextFile, GetNice, getDebugMode
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -84,7 +84,7 @@ class FFMPEGDownloader(BaseDownloader):
         self.url = url
         self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension = '' # should be implemented in future
+        self.fileExtension = ''  # should be implemented in future
         self.outData = ''
         self.contentType = 'unknown'
 
@@ -107,7 +107,7 @@ class FFMPEGDownloader(BaseDownloader):
             url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmpUri, True)
             headers = []
             for key in httpParams:
-                if key == 'Range': #Range is always used by ffmpeg
+                if key == 'Range':  # Range is always used by ffmpeg
                     continue
                 elif key == 'User-Agent':
                     cmdTab.extend(['-user-agent', httpParams[key]])
@@ -185,8 +185,8 @@ class FFMPEGDownloader(BaseDownloader):
 
         data = data.split('\r')
         if data[-1].endswith('\r'):
-            self.outData = '' # data not truncated
-        else: # data truncated
+            self.outData = ''  # data not truncated
+        else:  # data truncated
             self.outData = data[-1]
             del data[-1]
 
@@ -227,7 +227,7 @@ class FFMPEGDownloader(BaseDownloader):
         if DMHelper.STS.DOWNLOADING == self.status:
             if self.console:
                 #self.console.sendCtrlC()
-                self.console.sendCtrlC() # kill # produce zombies
+                self.console.sendCtrlC()  # kill # produce zombies
                 self._cmdFinished(-1, True)
                 return BaseDownloader.CODE_OK
         return BaseDownloader.CODE_NOT_DOWNLOADING

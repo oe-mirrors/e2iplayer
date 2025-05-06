@@ -4,7 +4,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, E2PrioFix, GetPyScriptCmd, getDebugMode, get_ip, is_port_in_use
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, GetNice, GetPyScriptCmd, getDebugMode, get_ip, is_port_in_use
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ###################################################
 
@@ -36,8 +36,8 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
         self.referer = referer
         self.captchaType = captchaType
 
-        sz_w = 504 #getDesktop(0).size().width() - 190
-        sz_h = 300 #getDesktop(0).size().height() - 195
+        sz_w = 504  # getDesktop(0).size().width() - 190
+        sz_h = 300  # getDesktop(0).size().height() - 195
         if sz_h < 500:
             sz_h += 4
         self.skin = """
@@ -52,7 +52,7 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
                 sz_w, sz_h,                # size
                 GetIconDir('red' + '.png'),
                 sz_w - 135,                # size title
-                (sz_h - 160) / 2, sz_w - 20, # console
+                (sz_h - 160) / 2, sz_w - 20,  # console
                 )
 
         self.onShown.append(self.onStart)
@@ -179,7 +179,7 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
         self.workconsole['close_conn'] = eConnectCallback(self.workconsole['console'].appClosed, self._scriptClosed)
         self.workconsole['stderr_conn'] = eConnectCallback(self.workconsole['console'].stderrAvail, self._scriptStderrAvail)
         self.workconsole['stdout_conn'] = eConnectCallback(self.workconsole['console'].stdoutAvail, self._scriptStdoutAvail)
-        self.workconsole["console"].execute(E2PrioFix(cmd, 0))
+        self.workconsole["console"].execute(cmd)
         printDBG(">>> EXEC CMD [%s]" % cmd)
 
     def onStart(self):

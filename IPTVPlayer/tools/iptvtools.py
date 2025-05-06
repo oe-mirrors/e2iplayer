@@ -109,11 +109,12 @@ def GetNice(pid=None):
     return nice
 
 
-def E2PrioFix(cmd, factor=2):
-    if '/duk' not in cmd: ## and config.plugins.iptvplayer.plarform.value in ('mipsel', 'armv7', 'armv5t'):
-        return 'nice -n %d %s' % (GetNice() + factor, cmd)
-    else:
-        return cmd
+#def E2PrioFix(cmd, factor=2):
+#    return cmd
+#    if '/duk' not in cmd:  # and config.plugins.iptvplayer.plarform.value in ('mipsel', 'armv7', 'armv5t'):
+#        return 'nice -n %d %s' % (GetNice() + factor, cmd)
+#    else:
+#        return cmd
 
 
 def GetDefaultLang(full=False):
@@ -238,7 +239,8 @@ class iptv_system:
             self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
             self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self._dataAvail)
             self.outData = ""
-        self.console.execute(E2PrioFix(cmd))
+        self.console.setNice(GetNice() + 2)
+        self.console.execute(cmd)
 
     def terminate(self, doCallBackFun=False):
         self.kill(doCallBackFun)
@@ -388,7 +390,7 @@ def ClearTmpJSCacheDir():
     global gE2iPlayerTempJSCache
     if gE2iPlayerTempJSCache != None:
         try:
-            for fileName in os.listdir(gE2iPlayerTempJSCache): #file is native p2 function renamed for clarity
+            for fileName in os.listdir(gE2iPlayerTempJSCache):  # file is native p2 function renamed for clarity
                 rm(os.path.join(gE2iPlayerTempJSCache, fileName))
         except Exception:
             printExc()
@@ -631,7 +633,7 @@ def getDebugMode():
     return DBG
 
 
-def printDBG(DBGtxt, writeMode = 'a'):
+def printDBG(DBGtxt, writeMode='a'):
     DBG = getDebugMode()
     if DBG == '':
         return
@@ -639,7 +641,7 @@ def printDBG(DBGtxt, writeMode = 'a'):
         print(DBGtxt)
     else:
         if DBG == 'debugfile':
-            DBGfile = '/hdd/iptv.dbg' #backward compatibility
+            DBGfile = '/hdd/iptv.dbg'  # backward compatibility
         else:
             DBGfile = DBG
         try:
@@ -851,7 +853,7 @@ def IsHostEnabled(hostName):
 def FreeSpace(katalog, requiredSpace, unitDiv=1024 * 1024):
     try:
         s = os.statvfs(katalog)
-        freeSpace = s.f_bfree * s.f_frsize # all free space
+        freeSpace = s.f_bfree * s.f_frsize  # all free space
         if 512 > (freeSpace / (1024 * 1024)):
             freeSpace = s.f_bavail * s.f_frsize
         freeSpace = freeSpace / unitDiv
@@ -1132,7 +1134,7 @@ def RemoveOldDirsIcons(path, deltaInDays='7'):
         iconsDirs = GetIconsDirs(path)
         for item in iconsDirs:
             currDir = os.path.join(path, item)
-            delta = GetCreateIconsDirDeltaDateInDays(currDir) # we will check only directory date
+            delta = GetCreateIconsDirDeltaDateInDays(currDir)  # we will check only directory date
             if delta >= 0 and deltaInDays >= 0 and delta >= deltaInDays:
                 RemoveIconsDirByPath(currDir)
     except Exception:
@@ -1312,7 +1314,7 @@ def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
             printExc('WARNING')
         else:
             printExc()
-          
+
     return sts, ret
 
 
@@ -1341,7 +1343,7 @@ class CFakeMoviePlayerOption():
 class CMoviePlayerPerHost():
     def __init__(self, hostName):
         self.filePath = GetCacheSubDir('MoviePlayer', hostName + '.json')
-        self.activePlayer = {} # {buffering:True/False, 'player':''}
+        self.activePlayer = {}  # {buffering:True/False, 'player':''}
         self.load()
 
     def __del__(self):
@@ -1410,18 +1412,22 @@ def byteify(input, noneReplacement=None, baseTypesAsString=False):
 #    else:
     return input
 
+
 LASTExcMSG = ''
+
 
 def clearExcMSG():
     global LASTExcMSG
     LASTExcMSG = ''
 
-def getExcMSG(clearExcMSG = True):
+
+def getExcMSG(clearExcMSG=True):
     global LASTExcMSG
     retMSG = LASTExcMSG
     if clearExcMSG:
         LASTExcMSG = ''
     return retMSG
+
 
 def printExc(msg='', WarnOnly=False):
     global LASTExcMSG
@@ -1453,7 +1459,7 @@ def printExc(msg='', WarnOnly=False):
         retMSG = ''
     if not isWarning:
         LASTExcMSG = retMSG
-    return retMSG #returns the error description to possibly use in main code. E.g. inform about failed login
+    return retMSG  # returns the error description to possibly use in main code. E.g. inform about failed login
 
 
 def GetIPTVPlayerVersion():
@@ -1764,7 +1770,7 @@ def ReadGnuMIPSABIFP(elfFileName):
                                 end = p + size - 1
                                 p += 4
 
-                                if tag == 1 and attrName == "gnu": #File Attributes
+                                if tag == 1 and attrName == "gnu":  # File Attributes
                                     while p < end:
                                         # display_gnu_attribute
                                           numRead, tag = _readLeb128(contents, p, end)
@@ -1811,6 +1817,7 @@ def is_port_in_use(pIP, pPORT):
     sock.close()
     return res == 0
 
+
 def hasCDM():
     try:
         from pywidevinecdm.checkCDMvalidity import testDevice
@@ -1818,14 +1825,17 @@ def hasCDM():
     except Exception:
         return False
 
-def readCFG(cfgName, defVal = ''):
+
+def readCFG(cfgName, defVal=''):
     for myPath in ['/etc/enigma2/IPTVplayer_defaults/', '/hdd/IPTVplayer_defaults/']:
         if os.path.exists(myPath):
-            cfgPath = os.path.join(myPath,cfgName)
+            cfgPath = os.path.join(myPath, cfgName)
             if os.path.exists(cfgPath):
                 retVal = open(cfgPath, 'r').readline().strip()
-                if retVal == 'True': retVal = True
-                elif retVal == 'False': retVal = False
+                if retVal == 'True':
+                    retVal = True
+                elif retVal == 'False':
+                    retVal = False
                 return retVal
             else:
                 with open('/etc/enigma2/settings', 'r') as f:
@@ -1836,10 +1846,11 @@ def readCFG(cfgName, defVal = ''):
                             open(cfgPath, 'w').write(defVal)
     return defVal
 
-def checkWebSiteStatus(URL, HEADERS = None, TIMEOUT = 1):
+
+def checkWebSiteStatus(URL, HEADERS=None, TIMEOUT=1):
     global LASTExcMSG
     if HEADERS is None:
-        HEADERS = { 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:88.0) Gecko/20100101 Firefox/88.0',
+        HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:88.0) Gecko/20100101 Firefox/88.0',
                         'Accept-Charset': 'utf-8',
                         'Content-Type': 'text/html; charset=utf-8'
                       }

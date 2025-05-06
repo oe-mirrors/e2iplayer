@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetIconDir, E2PrioFix
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetIconDir, GetNice
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer
@@ -58,10 +58,10 @@ class IPTVDMWidget(Screen):
          <widget name="list" position="5,100" zPosition="2" size="%d,%d" scrollbarMode="showOnDemand" transparent="0"  backgroundColor="#00000000" enableWrapAround="1" />
          <widget name="titel" position="5,47" zPosition="1" size="%d,23" font="Regular;20" transparent="1"  backgroundColor="#00000000"/>
         </screen>""" % (_("%s download manager") % "E2iPlayer",
-            sz_w, sz_h, # size
+            sz_w, sz_h,  # size
             GetIconDir('red.png'), GetIconDir('green.png'), GetIconDir('yellow.png'), GetIconDir('blue.png'),
-            sz_w - 10, sz_h - 20, # size list
-            sz_w - 135, # size titel
+            sz_w - 10, sz_h - 20,  # size list
+            sz_w - 135,  # size titel
             )
         # <widget render="Label" source="key_yellow" position="220,9" size="180,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
         # <widget render="Label" source="key_blue" position="630,9" size="140,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
@@ -153,7 +153,7 @@ class IPTVDMWidget(Screen):
             if 4 > len(params):
                 continue
             if item.startswith('.'):
-                continue # do not list hidden items
+                continue  # do not list hidden items
             if len(params[0]) > 3 and params[0].lower()[-4:] in ['.flv', '.mp4']:
                 fileName = os_path.join(config.plugins.iptvplayer.NaszaSciezka.value, params[0])
                 skip = False
@@ -240,7 +240,8 @@ class IPTVDMWidget(Screen):
             self.tmpData = ''
             cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", config.plugins.iptvplayer.NaszaSciezka.value)
             printDBG("cmd[%s]" % cmd)
-            self.console.execute(E2PrioFix(cmd))
+            self.console.setNice(GetNice() + 2)
+            self.console.execute(cmd)
 
         self.localMode = True
         self.reloadList(True)

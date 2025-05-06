@@ -57,7 +57,7 @@ class YouTubeParser():
         printDBG("ALLOW DASH: >> %s" % value)
         if value == "true" and IsExecutable('ffmpeg'):
             return True
-        elif value == "auto" and IsExecutable('ffmpeg') and IsExecutable(config.plugins.iptvplayer.exteplayer3path.value):
+        elif value == "auto" and IsExecutable('ffmpeg') and IsExecutable("/usr/bin/exteplayer3"):  # config.plugins.iptvplayer.exteplayer3path.value):
             return True
         else:
             return False
@@ -326,7 +326,7 @@ class YouTubeParser():
                 except:
                     owner = ""
             owner = ensure_str(owner)
-            
+
             if desc:
                 desc = " | ".join(desc) + "\n" + owner
             else:
@@ -706,8 +706,8 @@ class YouTubeParser():
                     data2 = self.cm.ph.getDataBeetwenMarkers(data, "window[\"ytInitialData\"] =", "};", False)[1]
                     if len(data2) == 0:
                         data2 = self.cm.ph.getDataBeetwenMarkers(data, "var ytInitialData =", "};", False)[1]
-                    
-                    data2 = ensure_str(data2.strip()) #just cleaning and ensuring we're working with string
+
+                    data2 = ensure_str(data2.strip())  # just cleaning and ensuring we're working with string
                     #json simple schema verification and correction
                     jsonStarts = data2.count('{')
                     jsonEnds = data2.count('}')

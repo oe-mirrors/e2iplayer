@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, E2PrioFix
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -75,7 +75,7 @@ class HLSDownloader(BaseDownloader):
         self.url = url
         self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension = '' # should be implemented in future
+        self.fileExtension = ''  # should be implemented in future
         self.outData = ''
         self.contentType = 'unknown'
 
@@ -106,7 +106,8 @@ class HLSDownloader(BaseDownloader):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        self.console.execute(E2PrioFix(cmd))
+        self.console.setNice(GetNice() + 2)
+        self.console.execute(cmd)
 
         self.status = DMHelper.STS.DOWNLOADING
 
@@ -157,7 +158,7 @@ class HLSDownloader(BaseDownloader):
             self.iptv_sys = None
         if DMHelper.STS.DOWNLOADING == self.status:
             if self.console:
-                self.console.sendCtrlC() # kill # produce zombies
+                self.console.sendCtrlC()  # kill # produce zombies
                 self._cmdFinished(-1, True)
                 return BaseDownloader.CODE_OK
         return BaseDownloader.CODE_NOT_DOWNLOADING

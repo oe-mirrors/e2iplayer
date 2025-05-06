@@ -10,7 +10,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, mkdir, IsValidFileName, eConnectCallback, E2PrioFix
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, mkdir, IsValidFileName, eConnectCallback, GetNice
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 ###################################################
 
@@ -188,8 +188,8 @@ class IPTVDirectorySelectorWidget(Screen):
             self.currList = []
             self.tmpList.sort(key=lambda x: x.name.lower())
             self.currList = self.tmpList
-            if('/' != self.currDir):
-                self.currList.insert(0, CListItem(name='..', fullDir='', type='dir')) # add back item
+            if ('/' != self.currDir):
+                self.currList.insert(0, CListItem(name='..', fullDir='', type='dir'))  # add back item
             self["list"].setList([(x,) for x in self.currList])
             self.tmpList = []
             self.tmpData = ''
@@ -209,7 +209,7 @@ class IPTVDirectorySelectorWidget(Screen):
         for item in newItems:
             params = item.split('//')
             if item.startswith('.'):
-                continue # do not list hidden items
+                continue  # do not list hidden items
             #printDBG(params)
             if 4 == len(params):
                 #if '0' == params[2]: type = 'dir'
@@ -242,7 +242,8 @@ class IPTVDirectorySelectorWidget(Screen):
         self.tmpData = ''
         cmd = self.prepareCmd()
         printDBG("IPTVDirectorySelectorWidget.requestRefresh cmd[%s]" % cmd)
-        self.console.execute(E2PrioFix(cmd))
+        self.console.setNice(GetNice() + 2)
+        self.console.execute(cmd)
 
     def requestNewDir(self):
         if self.underClosing:
@@ -338,7 +339,7 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
         for item in newItems:
             params = item.split('//')
             if item.startswith('.'):
-                continue # do not list hidden items
+                continue  # do not list hidden items
             #printDBG(params)
             if 4 == len(params):
                 if 'd' == params[1]:

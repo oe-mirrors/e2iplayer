@@ -17,7 +17,7 @@ import json
 ############################################
 
 
-def loads(input, noneReplacement=None, baseTypesAsString=False, utf8=True):
+def loads(inputString, noneReplacement=None, baseTypesAsString=False, utf8=True):
 #    global e2icjson
 #    e2icjson = False
 #    if e2icjson == None:
@@ -40,5 +40,5 @@ def loads(input, noneReplacement=None, baseTypesAsString=False, utf8=True):
 #    return out
 
 
-def dumps(input, *args, **kwargs):
-    return json.dumps(input, *args, **kwargs)
+def dumps(inputString, *args, **kwargs):
+    return json.dumps(inputString, *args, **kwargs)

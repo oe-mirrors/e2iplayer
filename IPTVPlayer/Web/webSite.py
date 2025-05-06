@@ -29,7 +29,7 @@ import importlib
 
 def reloadScripts():
     #### Reload scripts if new version of source exists ####
-    webPath = GetPluginDir(file='/Web/')
+    webPath = GetPluginDir(fileName='/Web/')
     if os.path.exists(os.path.join(webPath, "webParts.py")):
         if os.path.exists(os.path.join(webPath, "webParts.pyo")):
             if (int(os.path.getmtime(os.path.join(webPath, "webParts.pyo"))) <
@@ -201,7 +201,7 @@ class searchPage(resource.Resource):
         html = '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER(extraMeta)
         html += webParts.Body().SearchPageContent(MenuStatusMSG, ShowCancelButton)
-        return html
+        return html.encode()
 
 
 #######################################################
@@ -446,7 +446,7 @@ class downloaderPage(resource.Resource):
                 files.sort(key=lambda x: x.lower())
                 for item in files:
                     if item.startswith('.'):
-                        continue # do not list hidden items
+                        continue  # do not list hidden items
                     if item[-4:].lower() not in ['.flv', '.mp4']:
                         continue
                     fileName = os.path.join(config.plugins.iptvplayer.NaszaSciezka.value, item)

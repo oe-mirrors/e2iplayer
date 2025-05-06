@@ -53,8 +53,8 @@ config.plugins.iptvplayer.hostsListType = ConfigSelection(default="G", choices=[
 config.plugins.iptvplayer.showinMainMenu = ConfigYesNo(default=False)
 config.plugins.iptvplayer.ListaGraficzna = ConfigYesNo(default=True)
 config.plugins.iptvplayer.group_hosts = ConfigYesNo(default=True)
-config.plugins.iptvplayer.NaszaSciezka = ConfigDirectory(default="/hdd/movie/") #, fixed_size = False)
-config.plugins.iptvplayer.bufferingPath = ConfigDirectory(default=config.plugins.iptvplayer.NaszaSciezka.value) #, fixed_size = False)
+config.plugins.iptvplayer.NaszaSciezka = ConfigDirectory(default="/hdd/movie/")  # , fixed_size = False)
+config.plugins.iptvplayer.bufferingPath = ConfigDirectory(default=config.plugins.iptvplayer.NaszaSciezka.value)  # , fixed_size = False)
 config.plugins.iptvplayer.buforowanie = ConfigYesNo(default=False)
 config.plugins.iptvplayer.buforowanie_m3u8 = ConfigYesNo(default=True)
 config.plugins.iptvplayer.buforowanie_rtmp = ConfigYesNo(default=False)
@@ -136,8 +136,8 @@ config.plugins.iptvplayer.alternativeARMV5TMoviePlayer = ConfigSelection(default
 
 # end with buffering mode players
 
-config.plugins.iptvplayer.SciezkaCache = ConfigDirectory(default="/hdd/IPTVCache/") #, fixed_size = False)
-config.plugins.iptvplayer.NaszaTMP = ConfigDirectory(default="/tmp/") #, fixed_size = False)
+config.plugins.iptvplayer.SciezkaCache = ConfigDirectory(default="/hdd/IPTVCache/")  # , fixed_size = False)
+config.plugins.iptvplayer.NaszaTMP = ConfigDirectory(default="/tmp/")  # , fixed_size = False)
 config.plugins.iptvplayer.ZablokujWMV = ConfigYesNo(default=True)
 
 config.plugins.iptvplayer.vkcom_login = ConfigText(default="", fixed_size=False)
@@ -292,7 +292,7 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
             list.append(getConfigListEntry(_("The default aspect ratio for the external player"), config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio))
 
-            list.append(getConfigListEntry("exteplayer3path", config.plugins.iptvplayer.exteplayer3path))
+            # list.append(getConfigListEntry("exteplayer3path", config.plugins.iptvplayer.exteplayer3path))
             list.append(getConfigListEntry("MIPS Floating Point Architecture", config.plugins.iptvplayer.plarformfpuabi))
             list.append(getConfigListEntry("E2iPlayer auto start at Enigma2 start", config.plugins.iptvplayer.plugin_autostart))
             list.append(getConfigListEntry("Auto start method", config.plugins.iptvplayer.plugin_autostart_method))
@@ -598,7 +598,7 @@ def GetMoviePlayer(buffering=False, useAlternativePlayer=False):
     # select movie player
 
     availablePlayers = []
-    if config.plugins.iptvplayer.plarform.value in ['sh4', 'mipsel', 'armv7', 'armv5t'] and IsExecutable(config.plugins.iptvplayer.exteplayer3path.value):
+    if IsExecutable("/usr/bin/exteplayer3"):  # config.plugins.iptvplayer.exteplayer3path.value):
         availablePlayers.append('exteplayer')
     if IsExecutable('/usr/bin/gstplayer'):
         availablePlayers.append('extgstplayer')

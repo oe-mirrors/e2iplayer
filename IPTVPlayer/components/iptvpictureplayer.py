@@ -10,7 +10,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.cover import SimpleAnimatedCover, Cover
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, E2PrioFix
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, GetNice
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
@@ -36,9 +36,9 @@ class IPTVSimpleAudioPlayer():
     def __init__(self):
         additionalParams = {}
         self.gstAdditionalParams = {'buffer-duration': 2}
-        self.gstAdditionalParams['download-buffer-path'] = additionalParams.get('download-buffer-path', '') # File template to store temporary files in, should contain directory and XXXXXX
-        self.gstAdditionalParams['ring-buffer-max-size'] = additionalParams.get('ring-buffer-max-size', 0) # in MB
-        self.gstAdditionalParams['buffer-duration'] = additionalParams.get('buffer-duration', -1) # in s
+        self.gstAdditionalParams['download-buffer-path'] = additionalParams.get('download-buffer-path', '')  # File template to store temporary files in, should contain directory and XXXXXX
+        self.gstAdditionalParams['ring-buffer-max-size'] = additionalParams.get('ring-buffer-max-size', 0)  # in MB
+        self.gstAdditionalParams['buffer-duration'] = additionalParams.get('buffer-duration', -1)  # in s
         self.gstAdditionalParams['buffer-size'] = additionalParams.get('buffer-size', 0)
 
         self.uri = ""
@@ -75,7 +75,8 @@ class IPTVSimpleAudioPlayer():
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._playerFinished)
         printDBG("IPTVSimpleAudioPlayer.start cmd[%s]" % cmd)
-        self.console.execute(E2PrioFix(cmd))
+        self.console.setNice(GetNice() + 2)
+        self.console.execute(cmd)
         self.stopped = False
 
     def _playerFinished(self, code):
@@ -95,7 +96,7 @@ class IPTVSimpleAudioPlayer():
         self.isClosing = True
         if None != self.console:
             self.stop()
-            time.sleep(1) # YES I know this is bad, but for now must be enough ;) Some, day I will fix this
+            time.sleep(1)  # YES I know this is bad, but for now must be enough ;) Some, day I will fix this
             self.console.sendCtrlC()
             self.console_appClosed_conn = None
             self.console = None
@@ -149,9 +150,9 @@ class IPTVPicturePlayerWidget(Screen):
          <widget name="icon"       size="%d,%d"   position="%d,%d"  zPosition="4" transparent="1" alphatest="on" />
          <widget name="picture"    size="%d,%d"   position="%d,%d"  zPosition="6" transparent="1" alphatest="on" />
         </screen>""" % (sz_w, sz_h,         # screen
-                        s_w, s_h, s_x, s_y, # status
-                        c_w, c_h, c_x, c_y, # console
-                        i_w, i_h, i_x, i_y, # icon
+                        s_w, s_h, s_x, s_y,  # status
+                        c_w, c_h, c_x, c_y,  # console
+                        i_w, i_h, i_x, i_y,  # icon
                         p_w, p_h, p_x, p_y  # picture
                       )
 
@@ -202,10 +203,10 @@ class IPTVPicturePlayerWidget(Screen):
         if self.addParams['seq_mode']:
             self.canAutoClose = True
             self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.closeAfterTimeout)
-            self.mainTimerInterval = 1000 * 10 #10s
+            self.mainTimerInterval = 1000 * 10  # 10s
         else:
             self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.updateDisplay)
-            self.mainTimerInterval = 100 # by default 0,1s
+            self.mainTimerInterval = 100  # by default 0,1s
         # download
         self.downloader = DownloaderCreator(self.url)
 
@@ -273,7 +274,7 @@ class IPTVPicturePlayerWidget(Screen):
 
     def _doStart(self, force=False):
         if self.addParams['seq_mode']:
-            self.mainTimer.start(self.mainTimerInterval, True) #single shot
+            self.mainTimer.start(self.mainTimerInterval, True)  # single shot
             return
         if self.autoRefresh or force:
             self.refreshing = True

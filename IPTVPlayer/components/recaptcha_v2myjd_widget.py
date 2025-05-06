@@ -4,7 +4,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, byteify, E2PrioFix, GetPyScriptCmd, getDebugMode, GetPluginDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, byteify, GetPyScriptCmd, getDebugMode, GetPluginDir
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 ###################################################
@@ -38,8 +38,8 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
         self.sitekey = sitekey
         self.referer = referer
 
-        sz_w = 504 #getDesktop(0).size().width() - 190
-        sz_h = 300 #getDesktop(0).size().height() - 195
+        sz_w = 504  # getDesktop(0).size().width() - 190
+        sz_h = 300  # getDesktop(0).size().height() - 195
         if sz_h < 500:
             sz_h += 4
         self.skin = """
@@ -54,7 +54,7 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
                 sz_w, sz_h,                # size
                 GetIconDir('red' + '.png'),
                 sz_w - 135,                # size title
-                (sz_h - 160) / 2, sz_w - 20, # console
+                (sz_h - 160) / 2, sz_w - 20,  # console
                 )
 
         self.onShown.append(self.onStart)
@@ -173,7 +173,7 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
         self.workconsole['close_conn'] = eConnectCallback(self.workconsole['console'].appClosed, self._scriptClosed)
         self.workconsole['stderr_conn'] = eConnectCallback(self.workconsole['console'].stderrAvail, self._scriptStderrAvail)
         self.workconsole['stdout_conn'] = eConnectCallback(self.workconsole['console'].stdoutAvail, self._scriptStdoutAvail)
-        self.workconsole["console"].execute(E2PrioFix(cmd, 0))
+        self.workconsole["console"].execute(cmd)
         printDBG(">>> EXEC CMD [%s]" % cmd)
 
     def onStart(self):
