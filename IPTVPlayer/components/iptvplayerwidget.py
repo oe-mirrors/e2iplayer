@@ -50,8 +50,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools
                                                           eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, GetExtensionsDir, \
                                                           SortHostsList, GetHostsOrderList, CSearchHistoryHelper, IsExecutable, \
                                                           CMoviePlayerPerHost, GetFavouritesDir, CFakeMoviePlayerOption, GetAvailableIconSize, \
-                                                          GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, TestTmpCookieDir, TestTmpJSCacheDir,\
-                                                          ClearTmpCookieDir, ClearTmpJSCacheDir, SetTmpCookieDir, SetTmpJSCacheDir,\
+                                                          GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, TestTmpCookieDir, TestTmpJSCacheDir, \
+                                                          ClearTmpCookieDir, ClearTmpJSCacheDir, SetTmpCookieDir, SetTmpJSCacheDir, \
                                                           GetEnabledHostsList, SaveHostsOrderList, GetHostsAliases, formatBytes, getExcMSG
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -162,7 +162,7 @@ class E2iPlayerWidget(Screen):
                 printExc("Skin read error: " + path)
 
         Screen.__init__(self, session)
-        self.recorderMode = False #j00zek
+        self.recorderMode = False  # j00zek
 
         self.currentService = self.session.nav.getCurrentlyPlayingServiceReference()
         if config.plugins.iptvplayer.disable_live.value:
@@ -353,7 +353,7 @@ class E2iPlayerWidget(Screen):
             if self["list"].visible:
                 item = self.getSelItem()
                 self.downloadable = self.isDownloadableType(item.type)
-                if self.downloadable and item.urlItems[0].url.startswith('file://'): # workaround for LocalMedia
+                if self.downloadable and item.urlItems[0].url.startswith('file://'):  # workaround for LocalMedia
                     self.downloadable = False
         except Exception:
             printExc()
@@ -617,7 +617,7 @@ class E2iPlayerWidget(Screen):
 
         try:
             host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + self.hostName, globals(), locals(), ['GetConfigList'], 0)
-            if(len(host.GetConfigList()) > 0):
+            if (len(host.GetConfigList()) > 0):
                 options.append((_("Configure host"), "HostConfig"))
         except Exception:
             printExc()
@@ -699,7 +699,7 @@ class E2iPlayerWidget(Screen):
     def blue_pressed_next(self, ret):
         TextMSG = ''
         if ret:
-            if ret[1] == "info": #information about plugin
+            if ret[1] == "info":  # information about plugin
                 TextMSG = _("Lead programmer: ") + "\n\t- samsamsam\n"
                 TextMSG += _("E-mail: ") + "\n\t- iptvplayere2@gmail.com\n"
                 TextMSG += _("www: ") + "\n\t- http://iptvplayer.vline.pl/" + '\n\t- http://www.iptvplayer.gitlab.io/\n'
@@ -799,7 +799,7 @@ class E2iPlayerWidget(Screen):
                 self.session.openWithCallback(self.loadHost, MessageBox, _("Item %s removed!") % self['list'].currentSelection.name, type=MessageBox.TYPE_INFO, timeout=5)
 
     def editFavouritesCallback(self, ret=False):
-        if ret and 'favourites' == self.hostName: # we must reload host
+        if ret and 'favourites' == self.hostName:  # we must reload host
             self.loadHost()
 
     def setActiveMoviePlayer(self, ret):
@@ -1046,7 +1046,7 @@ class E2iPlayerWidget(Screen):
     def checkDirPin(self, callbackFun, arg1, arg2, arg3, pinCode, pin=None):
         if pin != None:
             if 4 != len(pinCode):
-                pinCode = config.plugins.iptvplayer.pin.value # use default pin code if custom has wrong length
+                pinCode = config.plugins.iptvplayer.pin.value  # use default pin code if custom has wrong length
             if pin == pinCode:
                 callbackFun(arg1, arg2, arg3)
             else:
@@ -1065,7 +1065,7 @@ class E2iPlayerWidget(Screen):
         if ret.status != RetHost.OK or 0 == len(ret.value):
             item = self.currList[self.currSelIndex]
             if len(item.description):
-                artItem = ArticleContent(title=item.name, text=item.description, images=[{'title': 'Fot.', 'url': item.iconimage}]) #richDescParams={"alternate_title":"***alternate_title", "year":"year", "rating":"rating",  "duration":"duration",  "genre":"genre",  "director":"director",  "actors":"actors",  "awards":"awards"}
+                artItem = ArticleContent(title=item.name, text=item.description, images=[{'title': 'Fot.', 'url': item.iconimage}])  # richDescParams={"alternate_title":"***alternate_title", "year":"year", "rating":"rating",  "duration":"duration",  "genre":"genre",  "director":"director",  "actors":"actors",  "awards":"awards"}
         else:
             artItem = ret.value[0]
         if None != artItem:
@@ -1099,7 +1099,7 @@ class E2iPlayerWidget(Screen):
         if ret.status == RetHost.OK and isinstance(ret.value, list):
             for item in ret.value:
                 if isinstance(item, CUrlItem):
-                    item.urlNeedsResolve = 0 # protection from recursion
+                    item.urlNeedsResolve = 0  # protection from recursion
                     linkList.append(item)
                 elif isinstance(item, str):
                     linkList.append(CUrlItem(item, item, 0))
@@ -1136,25 +1136,25 @@ class E2iPlayerWidget(Screen):
         self.setTitle('E2iPlayer ' + GetIPTVPlayerVersion())
         self.loadSpinner()
         self.hideSpinner()
-        self.checkBlacklistedImage()
+#        self.checkBlacklistedImage()
         self.selectHost()
 
     def askUpdateAvailable(self, NoUpdateCallback):
         NoUpdateCallback()
-        return
-        printDBG(">> askUpdateAvailable")
-        if config.plugins.iptvplayer.autoCheckForUpdate.value \
-            and 0 < GetVersionNum(self.lastPluginVersion) \
-            and GetVersionNum(self.lastPluginVersion) > GetVersionNum(GetIPTVPlayerVersion()) \
-            and self.lastPluginVersion != config.plugins.iptvplayer.updateLastCheckedVersion.value:
+#        return
+#        printDBG(">> askUpdateAvailable")
+#        if config.plugins.iptvplayer.autoCheckForUpdate.value \
+#            and 0 < GetVersionNum(self.lastPluginVersion) \
+#            and GetVersionNum(self.lastPluginVersion) > GetVersionNum(GetIPTVPlayerVersion()) \
+#            and self.lastPluginVersion != config.plugins.iptvplayer.updateLastCheckedVersion.value:
 
-            message = _('There is a new version available do you want to update? \nYour version [%s], latest version on server [%s]') % (GetIPTVPlayerVersion(), self.lastPluginVersion)
-            config.plugins.iptvplayer.updateLastCheckedVersion.value = self.lastPluginVersion
-            config.plugins.iptvplayer.updateLastCheckedVersion.save()
-            configfile.save()
-            self.session.openWithCallback(boundFunction(self.answerUpdateAvailable, NoUpdateCallback), MessageBox, text=message, type=MessageBox.TYPE_YESNO)
-            return
-        NoUpdateCallback()
+#            message = _('There is a new version available do you want to update? \nYour version [%s], latest version on server [%s]') % (GetIPTVPlayerVersion(), self.lastPluginVersion)
+#            config.plugins.iptvplayer.updateLastCheckedVersion.value = self.lastPluginVersion
+#            config.plugins.iptvplayer.updateLastCheckedVersion.save()
+#            configfile.save()
+#            self.session.openWithCallback(boundFunction(self.answerUpdateAvailable, NoUpdateCallback), MessageBox, text=message, type=MessageBox.TYPE_YESNO)
+#            return
+#        NoUpdateCallback()
 
     def selectHost(self, arg1=None):
         printDBG(">> selectHost")
@@ -1489,7 +1489,7 @@ class E2iPlayerWidget(Screen):
         try:
             protectedByPin = self.host.isProtectedByPinCode()
         except Exception:
-            protected = False # should never happen
+            protected = False  # should never happen
 
         if protectedByPin:
             from .iptvpin import IPTVPinWidget
@@ -1565,7 +1565,7 @@ class E2iPlayerWidget(Screen):
                 lastErrorMsg = GetIPTVPlayerLastHostError()
                 if '' != lastErrorMsg:
                     message += "\n" + _('Last error: "%s"') % lastErrorMsg
-                lastExcMSG =  getExcMSG(True)
+                lastExcMSG = getExcMSG(True)
                 if lastExcMSG != '':
                     message += "\n" + _("Last Exception error: '%s'") % lastExcMSG
                 self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO, timeout=10)
@@ -1573,7 +1573,7 @@ class E2iPlayerWidget(Screen):
         elif 1 == numOfLinks or self.autoPlaySeqStarted:
             #call manualy selectLinksCallback - start VIDEO without links selection
             arg = []
-            arg.append(" ") #name of item - not displayed so empty
+            arg.append(" ")  # name of item - not displayed so empty
             arg.append(links[0].url)
             arg.append(links[0].urlNeedsResolve)
             self.selectLinksCallback(arg)
@@ -1612,7 +1612,7 @@ class E2iPlayerWidget(Screen):
                 # so we skip forcing buffering for such links. at now this is temporary
                 # solution we need to add separate filed iptv_extraheaders_need!
                 if url.startswith("http") and self.getMoviePlayer(False, False).value in ['extgstplayer', 'exteplayer']:
-                    pass # skip forcing buffering
+                    pass  # skip forcing buffering
                 else:
                     return True
             elif "forbidden" == url.meta['iptv_buffering']:
@@ -1624,7 +1624,7 @@ class E2iPlayerWidget(Screen):
         protocol = url.meta.get('iptv_proto', '')
         protocol = url.meta.get('iptv_proto', '')
         if protocol in ['f4m', 'uds']:
-            return True # supported only in buffering mode
+            return True  # supported only in buffering mode
         elif protocol in ['http', 'https']:
             return config.plugins.iptvplayer.buforowanie.value
         elif 'rtmp' == protocol:
@@ -1660,9 +1660,9 @@ class E2iPlayerWidget(Screen):
                 fileExtension = '.flv'
             else:
                 if type == CDisplayListItem.TYPE_VIDEO:
-                    fileExtension = '.mp4' # default video extension
+                    fileExtension = '.mp4'  # default video extension
                 else:
-                    fileExtension = '.mp3' # default audio extension
+                    fileExtension = '.mp3'  # default audio extension
         return fileExtension
 
     def getMoviePlayer(self, buffering=False, useAlternativePlayer=False):
@@ -1726,7 +1726,7 @@ class E2iPlayerWidget(Screen):
                     errorTab.append(_("Directory \"%s\" does not exists.") % destinationPath)
                     errorTab.append(_("Please set valid %s in the %s configuration.") % (_("downloads location") if recorderMode else _("buffering location"), 'E2iPlayer'))
                 else:
-                    requiredSpace = 3 * 512 * 1024 * 1024 # 1,5 GB
+                    requiredSpace = 3 * 512 * 1024 * 1024  # 1,5 GB
                     availableSpace = iptvtools_FreeSpace(destinationPath, requiredSpace=None, unitDiv=1)
                     if requiredSpace > availableSpace:
                         errorTab.append(_("There is no enough free space in the folder \"%s\".") % destinationPath)
@@ -1762,15 +1762,12 @@ class E2iPlayerWidget(Screen):
             else:
                 self.prevVideoMode = GetE2VideoMode()
                 printDBG("Current video mode [%s]" % self.prevVideoMode)
-                gstAdditionalParams = {'defaul_videomode': self.prevVideoMode, 'host_name': self.hostName, 'external_sub_tracks': url.meta.get('external_sub_tracks', []), 'iptv_refresh_cmd': url.meta.get('iptv_refresh_cmd', '')} #default_player_videooptions
+                gstAdditionalParams = {'defaul_videomode': self.prevVideoMode, 'host_name': self.hostName, 'external_sub_tracks': url.meta.get('external_sub_tracks', []), 'iptv_refresh_cmd': url.meta.get('iptv_refresh_cmd', '')}  # default_player_videooptions
                 if self.currItem.type == CDisplayListItem.TYPE_AUDIO:
                     gstAdditionalParams['show_iframe'] = config.plugins.iptvplayer.show_iframe.value
                     gstAdditionalParams['iframe_file_start'] = config.plugins.iptvplayer.iframe_file.value
                     gstAdditionalParams['iframe_file_end'] = config.plugins.iptvplayer.clear_iframe_file.value
-                    if 'sh4' == config.plugins.iptvplayer.plarform.value:
-                        gstAdditionalParams['iframe_continue'] = True
-                    else:
-                        gstAdditionalParams['iframe_continue'] = False
+                    gstAdditionalParams['iframe_continue'] = False
 
                 self.writeCurrentTitleToFile(titleOfMovie)
                 if isBufferingMode:
@@ -1789,16 +1786,10 @@ class E2iPlayerWidget(Screen):
                             playerVal = 'gstplayer'
                             gstAdditionalParams['download-buffer-path'] = ''
                             gstAdditionalParams['ring-buffer-max-size'] = 0
-                            if 'sh4' == config.plugins.iptvplayer.plarform.value: # use default value, due to small amount of RAM
-                                #use the default value, due to small amount of RAM
-                                #in the future it will be configurable
-                                gstAdditionalParams['buffer-duration'] = -1
-                                gstAdditionalParams['buffer-size'] = 0
-                            else:
-                                gstAdditionalParams['buffer-duration'] = 18000 # 300min
-                                gstAdditionalParams['buffer-size'] = 10240 # 10MB
+                            gstAdditionalParams['buffer-duration'] = 18000  # 300min
+                            gstAdditionalParams['buffer-size'] = 10240  # 10MB
                         else:
-                            assert("exteplayer" == player.value)
+                            assert ("exteplayer" == player.value)
                             playerVal = 'eplayer'
                         self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, url, titleOfMovie, None, playerVal, gstAdditionalParams)
         else:
@@ -1864,7 +1855,7 @@ class E2iPlayerWidget(Screen):
                 if self.isPlayableType(selItem.type) and selItem.itemIdx > -1 and len(self.currList) > selItem.itemIdx:
                     currSelIndex = selItem.itemIdx
 
-            dots = ""#_("...............")
+            dots = ""  # _("...............")
             IDS_DOWNLOADING = _("Downloading") + dots
             IDS_LOADING = _("Loading") + dots
             IDS_REFRESHING = _("Refreshing") + dots
@@ -2079,7 +2070,7 @@ class E2iPlayerWidget(Screen):
             lastErrorMsg = GetIPTVPlayerLastHostError()
             if lastErrorMsg != '':
                 disMessage += "\n" + _('Last error: "%s"') % lastErrorMsg
-            lastExcMSG =  getExcMSG(True)
+            lastExcMSG = getExcMSG(True)
             if lastExcMSG != '':
                 disMessage += "\n" + _('Last Exception error: "%s"') % lastExcMSG
 
@@ -2198,7 +2189,7 @@ class E2iPlayerWidget(Screen):
                     printExc()
                     item = None
                 if None != item:
-                    currSelIndex = item.itemIdx #self["list"].getCurrentIndex()
+                    currSelIndex = item.itemIdx  # self["list"].getCurrentIndex()
                 else:
                     currSelIndex = -1
                 hRet = self.host.getCustomActions(currSelIndex)

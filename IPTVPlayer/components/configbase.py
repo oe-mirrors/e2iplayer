@@ -312,8 +312,12 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self.runSetup()
         self.keyPageDown()
 
-    def keyMenu(self):
-        pass
+    def keyMenu(self):  # hide/unhide hidden options
+        if self.hiddenOptionsSecretCode == "ybybyybb":
+            self.hiddenOptionsSecretCode = ""
+        else:
+            self.hiddenOptionsSecretCode = "ybybyybb"
+        self.runSetup()
 
     def keyUp(self):
         if self["config"].instance is not None:

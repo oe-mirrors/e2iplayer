@@ -274,7 +274,7 @@ class logsPage(resource.Resource):
             html += webParts.IncludeHEADER(extraMeta)
             html += webParts.Body().logsPageContent(MenuStatusMSG, htmlError, DBGFileName, DBGFileContent)
             html += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Debug file does not exist - nothing to download')
-            return html
+            return html.encode()
         elif command[0] == "downloadLog":
             req.responseHeaders.setRawHeaders('content-disposition', ['attachment; filename="iptv_dbg.txt"'])
             with open(DBGFileName, 'r') as f:

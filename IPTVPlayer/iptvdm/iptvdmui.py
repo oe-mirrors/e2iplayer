@@ -330,10 +330,7 @@ class IPTVDMWidget(Screen):
                         additionalParams['show_iframe'] = config.plugins.iptvplayer.show_iframe.value
                         additionalParams['iframe_file_start'] = config.plugins.iptvplayer.iframe_file.value
                         additionalParams['iframe_file_end'] = config.plugins.iptvplayer.clear_iframe_file.value
-                        if 'sh4' == config.plugins.iptvplayer.plarform.value:
-                            additionalParams['iframe_continue'] = True
-                        else:
-                            additionalParams['iframe_continue'] = False
+                        additionalParams['iframe_continue'] = False
 
                     if "exteplayer" == player:
                         self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, item.fileName, title, None, 'eplayer', additionalParams)
