@@ -27,7 +27,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVFileSele
 from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayerBase, ConfigExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import iterDictItems, iterDictKeys, ensure_str
+#from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
 
 ###################################################
@@ -48,7 +49,6 @@ from Tools.LoadPixmap import LoadPixmap
 from Tools.BoundFunction import boundFunction
 from Tools.Directories import fileExists
 from skin import parseColor, parseFont
-from six import ensure_str
 
 from datetime import timedelta
 try:
@@ -60,6 +60,8 @@ from os import chmod as os_chmod, path as os_path
 import re
 import time
 import socket
+import json
+
 ###################################################
 
 
@@ -309,11 +311,11 @@ class IPTVExtMoviePlayer(Screen):
                 response = settingsFile.read()
                 settingsFile.close()
 
-                #printDBG("---------------------------------------")
-                #printDBG(response)
-                #printDBG("---------------------------------------")
+                # printDBG("---------------------------------------")
+                # printDBG(response)
+                # printDBG("---------------------------------------")
 
-                return json_loads(response)
+                return json.loads(response)
 
             return {}
         except:
@@ -1627,7 +1629,9 @@ class IPTVExtMoviePlayer(Screen):
 
         if None == data or self.isClosing:
             return
-        data = data.decode('utf-8', 'strict').replace('"ifd"', '(ifd)')
+        data = ensure_str(data)
+        data = data.replace('"ifd"', "'ifd'")
+        # data = data.decode('utf-8', 'strict').replace('"ifd"', '(ifd)')
         if None == self.playerBinaryInfo['version']:
             self.playerBinaryInfo['data'] += data
         data = self.responseData + data
@@ -1648,7 +1652,7 @@ class IPTVExtMoviePlayer(Screen):
                 item = item[:-1]
             if item.startswith('{'):
                 try:
-                    obj = json_loads(item.strip())
+                    obj = json.loads(item)
                     #printDBG("Status object [%r]" % obj)
                     key = list(obj.keys())[0]
                     obj = obj[key]
