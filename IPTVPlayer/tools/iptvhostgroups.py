@@ -155,9 +155,9 @@ class IPTVHostsGroups:
         if groupName in self.CACHE_HOSTS:
             return self.CACHE_HOSTS[groupName]
 
-        if self.hostListFromFolder == None:
+        if self.hostListFromFolder is None:
             self.hostListFromFolder = GetHostsList(fromList=False, fromHostFolder=True)
-        if self.hostListFromList == None:
+        if self.hostListFromList is None:
             self.hostListFromList = GetHostsList(fromList=True, fromHostFolder=False)
 
         groupFile = self._getGroupFile(groupName)
@@ -239,7 +239,7 @@ class IPTVHostsGroups:
 
     def getGroupsList(self):
         printDBG("IPTVHostsGroups.getGroupsList")
-        if self.CACHE_GROUPS != None:
+        if self.CACHE_GROUPS is not None:
             return self.CACHE_GROUPS
         self._loadGroups()
         groups = list(self.LOADED_GROUPS)

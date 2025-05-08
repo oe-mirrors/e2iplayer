@@ -69,7 +69,7 @@ class VUMEDI(CBaseHostClass):
         return self.cm.getPage(baseUrl, addParams, post_data)
 
     def getFullUrl(self, url, baseUrl=None):
-        if not self.cm.isValidUrl(url) and baseUrl != None:
+        if not self.cm.isValidUrl(url) and baseUrl is not None:
             if url.startswith('/'):
                 baseUrl = self.cm.getBaseUrl(baseUrl)
             else:
@@ -347,7 +347,7 @@ class VUMEDI(CBaseHostClass):
 
     def tryTologin(self):
         printDBG('tryTologin start')
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.vumedicom_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.vumedicom_login.value or\
             self.password != config.plugins.iptvplayer.vumedicom_password.value:
 
             self.login = config.plugins.iptvplayer.vumedicom_login.value
@@ -416,7 +416,7 @@ class VUMEDI(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'list_spec':
             self.listSpecialities(self.currItem, 'list_cats')

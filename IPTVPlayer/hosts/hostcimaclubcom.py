@@ -77,7 +77,7 @@ class CimaClubCom(CBaseHostClass):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         proxy = self.getProxy()
-        if proxy != None:
+        if proxy is not None:
             addParams = MergeDicts(addParams, {'http_proxy': proxy})
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -87,7 +87,7 @@ class CimaClubCom(CBaseHostClass):
         if url == '':
             return url
         proxy = self.getProxy()
-        if proxy != None:
+        if proxy is not None:
             url = strwithmeta(url, {'iptv_http_proxy': proxy})
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance', '__cfduid'])
         url = strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.HTTP_HEADER['User-Agent']})
@@ -490,7 +490,7 @@ class CimaClubCom(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_sub_main':
             self.listSubMenu(self.currItem, 'list_items')

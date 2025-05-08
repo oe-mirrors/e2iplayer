@@ -63,13 +63,13 @@ def getPage(url, params={}):
     customOpeners = []
 
     try:
-        ctx = ssl._create_unverified_context(params['ssl_protocol']) if params.get('ssl_protocol', None) != None else ssl._create_unverified_context()
+        ctx = ssl._create_unverified_context(params['ssl_protocol']) if params.get('ssl_protocol', None) is not None else ssl._create_unverified_context()
         customOpeners.append(HTTPSHandler(context=ctx))
     except Exception:
         pass
 
     if params.get('cookiefile'):
-        if cj == None:
+        if cj is None:
             cj = http.cookiejar.MozillaCookieJar()
             try:
                 cj.load(params['cookiefile'], ignore_discard=True)
@@ -116,7 +116,7 @@ def getPageCF(url, params={}):
     if not sts and data and data.code == 503:
         current = 0
         try:
-            while current < 5 and not sts and None != data:
+            while current < 5 and not sts and None is not data:
                 start_time = time.time()
                 current += 1
                 e = data

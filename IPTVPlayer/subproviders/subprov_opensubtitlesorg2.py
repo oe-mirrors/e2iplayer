@@ -203,9 +203,9 @@ class OpenSubtitles(CBaseSubProviderClass):
                 season = None
                 episode = None
 
-            if season == None:
+            if season is None:
                 season = ''
-            if episode == None:
+            if episode is None:
                 episode = ''
 
             query['MovieName'] = keywords
@@ -248,7 +248,7 @@ class OpenSubtitles(CBaseSubProviderClass):
 
     def listSearchItems(self, cItem, nextCategory, data=None):
         printDBG("OpenSubtitles.listSearchItems")
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -280,7 +280,7 @@ class OpenSubtitles(CBaseSubProviderClass):
 
     def listDownloadItems(self, cItem, nextCategory, data=None):
         printDBG("OpenSubtitles.listDownloadItems")
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -324,7 +324,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         printDBG("OpenSubtitles.listSeasonsItems")
         self.episodesCache = {}
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -416,7 +416,7 @@ class OpenSubtitles(CBaseSubProviderClass):
 
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(downloadUrl, urlParams)
-        if None == tmpDIR:
+        if None is tmpDIR:
             return
 
         cItem = dict(cItem)
@@ -483,7 +483,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.initSubProvider(self.currItem)
             if len(self.languages):
                 self.listSearchTypes(self.currItem, 'list_languages')

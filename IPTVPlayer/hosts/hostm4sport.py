@@ -456,7 +456,7 @@ class m4sport(CBaseHostClass):
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         self.currList = []
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_main':
             self.listMainItems(self.currItem)

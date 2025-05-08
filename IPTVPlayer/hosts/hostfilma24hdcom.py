@@ -258,7 +258,7 @@ class Filma24hdCom(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #MOVIES
         elif category == 'movies':

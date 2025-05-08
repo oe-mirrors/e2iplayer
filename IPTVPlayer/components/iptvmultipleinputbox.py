@@ -234,7 +234,7 @@ class IPTVMultipleInputBox(Screen):
             else:
                 self["marker"].hide()
         try:
-            if None != prevIdx:
+            if None is not prevIdx:
                 if prevIdx < len(self.list):
                     self["border_%d" % prevIdx].hide()
             else:
@@ -286,7 +286,7 @@ class IPTVMultipleInputBox(Screen):
     def keySave(self):
         retList = []
         for idx in range(len(self.list)):
-            if None != self.list[idx]['validator']:
+            if None is not self.list[idx]['validator']:
                 sts, msg = self.list[idx]['validator'](self["input_%d" % idx].getText())
                 if not sts:
                     self.session.open(MessageBox, msg, type=MessageBox.TYPE_ERROR)

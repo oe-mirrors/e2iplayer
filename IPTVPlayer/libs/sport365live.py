@@ -276,7 +276,7 @@ class Sport365LiveApi:
         self.refreshAdvert()
 
         category = cItem.get('priv_cat', None)
-        if None == category:
+        if None is category:
             return self.getMainCategories(cItem)
         elif 'streams_links' == category:
             return self.getStreamsLinks(cItem)

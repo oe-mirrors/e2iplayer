@@ -217,7 +217,7 @@ class E2iPlayerBufferingWidget(Screen):
         # if we do not have information if it is live try to figure out from other sources
         if self.downloader:
             tmp = self.downloader.isLiveStream()
-            if None != tmp:
+            if None is not tmp:
                 return tmp
         if self.url.startswith('rtmp'):
             return True
@@ -348,7 +348,7 @@ class E2iPlayerBufferingWidget(Screen):
         else:
             playerAdditionalParams['file-download-timeout'] = 10000  # 10s
         playerAdditionalParams['file-download-live'] = self._isInLiveMode()
-        playerAdditionalParams['download_manager_available'] = self.downloadManager != None
+        playerAdditionalParams['download_manager_available'] = self.downloadManager is not None
         if "mini" == player:
             self.session.openWithCallback(self.leaveMoviePlayer, IPTVMiniMoviePlayer, self.filePath, self.movieTitle, self.lastPosition, 4)
         elif "exteplayer" == player:
@@ -380,7 +380,7 @@ class E2iPlayerBufferingWidget(Screen):
             self['rec_button'].hide()
 
     def updateOKButton(self):
-        if self.canRunMoviePlayer and False is self.checkMOOVAtom and (self.isMOOVAtomAtTheBeginning == None or self.moovAtomStatus == self.MOOV_STS.DOWNLOADED):
+        if self.canRunMoviePlayer and False is self.checkMOOVAtom and (self.isMOOVAtomAtTheBeginning is None or self.moovAtomStatus == self.MOOV_STS.DOWNLOADED):
             self['ok_button'].show()
         else:
             self['rec_button'].hide()
@@ -407,7 +407,7 @@ class E2iPlayerBufferingWidget(Screen):
 
             if remoteSize > self.maxMOOVAtomSize and \
                self.downloader.getName() == "wget" and \
-               (self.clouldBeMP4 or (None != self.downloader.getMimeType() and
+               (self.clouldBeMP4 or (None is not self.downloader.getMimeType() and
                'mp4' in self.downloader.getMimeType())):
                 # check moov atom position
                 # if it is located at the begining of MP4 file
@@ -444,7 +444,7 @@ class E2iPlayerBufferingWidget(Screen):
                 except Exception:
                     printExc()
 
-        if None != self.downloader and self.downloader.hasDurationInfo() \
+        if None is not self.downloader and self.downloader.hasDurationInfo() \
            and self.downloader.getTotalFileDuration() > 0:
             totalDuration = self.downloader.getTotalFileDuration()
             downloadDuration = self.downloader.getDownloadedFileDuration()
@@ -583,7 +583,7 @@ class E2iPlayerBufferingWidget(Screen):
             #messageTab = [_("Error occurs during download. \nStatus[%s], tmpBuffSize[%r], canRunMoviePlayer[%r]") % (self.downloader.getStatus(), tmpBuffSize, self.canRunMoviePlayer)]
             messageTab = [_("Error occurs during download.")]
             errorCode, errorDesc = self.downloader.getLastError()
-            if errorCode != None:
+            if errorCode is not None:
                 messageTab.append(_('%s returned %s: %s') % (self.downloader.getName(), errorCode, _(errorDesc)))
             self.session.openWithCallback(self.iptvDoClose, MessageBox, '\n'.join(messageTab), type=MessageBox.TYPE_ERROR, timeout=10)
             self.canRunMoviePlayer = False

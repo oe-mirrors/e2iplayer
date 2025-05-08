@@ -471,7 +471,7 @@ class PlayerSelectorWidget(Screen):
         printDBG(">> PlayerSelectorWidget.keyMenu")
         options = []
         selItem = self.getSelectedItem()
-        if self.groupObj != None and selItem != None and len(self.groupObj.getGroupsWithoutHost(selItem[1])):
+        if self.groupObj is not None and selItem is not None and len(self.groupObj.getGroupsWithoutHost(selItem[1])):
             options.append((_("Add host %s to group") % selItem[0], "ADD_HOST_TO_GROUP"))
 
         if not self.reorderingMode and self.numOfItems - self.numOfLockedItems > 0:

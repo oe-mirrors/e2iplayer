@@ -282,7 +282,7 @@ class Kabarety(CBaseHostClass):
 
     def getLinksForFavourite(self, fav_data):
         printDBG('Kabarety.getLinksForFavourite')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         links = []
         try:
@@ -294,7 +294,7 @@ class Kabarety(CBaseHostClass):
 
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('Kabarety.setInitListFromFavouriteItem')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         try:
             params = byteify(json.loads(fav_data))
@@ -317,7 +317,7 @@ class Kabarety(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.cacheLinks = {}
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_popular':

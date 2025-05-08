@@ -132,7 +132,7 @@ class SeriesOnlineIO(CBaseHostClass):
                 confirmedDomain = True
                 break
 
-        if confirmedDomain == None:
+        if confirmedDomain is None:
             self.MAIN_URL = domains[0]
 
         self.SEARCH_URL = self.MAIN_URL + 'movie/search'
@@ -275,7 +275,7 @@ class SeriesOnlineIO(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("SeriesOnlineIO.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
 
         url = self.SEARCH_URL + '/' + urllib_quote_plus(searchPattern).replace('+', '-')
@@ -487,7 +487,7 @@ class SeriesOnlineIO(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -499,7 +499,7 @@ class SeriesOnlineIO(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.fillCacheFilters()
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category.startswith('list_filter_'):

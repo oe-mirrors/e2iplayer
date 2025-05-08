@@ -146,7 +146,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
         printDBG("Filman.listsTab")
         for item in tab:
             params = dict(cItem)
-            if None != category:
+            if None is not category:
                 params['category'] = category
             params.update(item)
             self.addDir(params)
@@ -331,7 +331,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.filman_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.filman_login.value or\
             self.password != config.plugins.iptvplayer.filman_password.value:
 
             sts, data = self.getPage(self.getFullUrl('/logowanie'))
@@ -399,7 +399,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
         self.currList = []
 
     #MAIN MENU
-        if name == None and category == '':
+        if name is None and category == '':
 #            rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
         elif 'list_cats' == category:

@@ -642,7 +642,7 @@ class PlayRTSIW(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'type', 'portal')
         elif category == 'type':
             self.listType(self.currItem)

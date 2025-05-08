@@ -282,7 +282,7 @@ class BBCSport(CBaseHostClass):
     def listItems(self, cItem, nextCategory, data=None):
         printDBG("BBCSport.listItems")
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -445,7 +445,7 @@ class BBCSport(CBaseHostClass):
                 self.loggedIn = False
             return False
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.bbc_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.bbc_login.value or\
             self.password != config.plugins.iptvplayer.bbc_password.value:
 
             self.login = config.plugins.iptvplayer.bbc_login.value
@@ -588,7 +588,7 @@ class BBCSport(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'sub_menu', 'all_items')
         elif category == 'all_items':
             self.listAllItems(self.currItem, 'sub_menu')

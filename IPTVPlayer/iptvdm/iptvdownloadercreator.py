@@ -33,7 +33,7 @@ from Components.config import config
 
 
 def IsUrlDownloadable(url):
-    if None != DownloaderCreator(url):
+    if None is not DownloaderCreator(url):
         return True
     else:
         return False

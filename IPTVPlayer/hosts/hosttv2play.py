@@ -167,7 +167,7 @@ class TV2Play(CBaseHostClass):
             return
         data = json_loads(data)
         if "seasonNumbers" in data and len(data["seasonNumbers"]) > 0:
-            if "seo" in data and "description" in data["seo"] and data["seo"]["description"] != None:
+            if "seo" in data and "description" in data["seo"] and data["seo"]["description"] is not None:
                 plot = unquote(data["seo"]["description"])
             else:
                 plot = ""
@@ -228,7 +228,7 @@ class TV2Play(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
 
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem)

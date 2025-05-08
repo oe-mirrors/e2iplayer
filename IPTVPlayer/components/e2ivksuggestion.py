@@ -47,7 +47,7 @@ class AutocompleteSearch:
         self.provider = None
 
     def start(self, callback):
-        if self.workThread == None:
+        if self.workThread is None:
             self.workThread = AsyncMethod(self._process)(self.provider)
             self.callback = callback
             self.timer_conn = eConnectCallback(self.timer.timeout, self._poll)
@@ -55,7 +55,7 @@ class AutocompleteSearch:
         return False
 
     def stop(self):
-        if self.workThread != None:
+        if self.workThread is not None:
             self.timer.stop()
             self.timer_conn = None
             self.callback = None
@@ -73,7 +73,7 @@ class AutocompleteSearch:
             self.workThread = None
 
     def set(self, txt, locale):
-        if self.workThread != None:
+        if self.workThread is not None:
             with self.lock:
                 self.requestParams = {'text': str(txt), 'locale': locale}
                 self.requestStamp += 1

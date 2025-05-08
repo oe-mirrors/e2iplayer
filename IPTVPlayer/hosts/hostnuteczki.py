@@ -405,7 +405,7 @@ class NuteczkiEU(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.nuteczki_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.nuteczki_login.value or\
             self.password != config.plugins.iptvplayer.nuteczki_password.value:
 
             self.login = config.plugins.iptvplayer.nuteczki_login.value
@@ -458,7 +458,7 @@ class NuteczkiEU(CBaseHostClass):
         self.currItem.pop('good_for_fav', None)
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
 
         elif category == 'categories':

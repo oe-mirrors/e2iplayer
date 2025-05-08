@@ -86,7 +86,7 @@ class UKTVPlay(CBaseHostClass):
         try:
             url = self.tmpUrl % cItem['url']
 
-            if data == None:
+            if data is None:
                 sts, data = self.getPage(url)
                 if not sts:
                     return
@@ -122,7 +122,7 @@ class UKTVPlay(CBaseHostClass):
 
     def listItems(self, cItem, nextCategory, data=None):
         try:
-            if data == None:
+            if data is None:
                 url = self.tmpUrl % cItem['url']
                 sts, data = self.getPage(url)
                 if not sts:
@@ -284,7 +284,7 @@ class UKTVPlay(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem, 'list_seasons')

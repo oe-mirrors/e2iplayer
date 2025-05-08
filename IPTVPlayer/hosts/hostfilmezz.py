@@ -421,7 +421,7 @@ class FilmezzEU(CBaseHostClass):
 
     def getLinksForFavourite(self, fav_data):
         printDBG('FilmezzEU.getLinksForFavourite')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         links = []
         try:
@@ -433,7 +433,7 @@ class FilmezzEU(CBaseHostClass):
 
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('FilmezzEU.setInitListFromFavouriteItem')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         try:
             params = byteify(json.loads(fav_data))
@@ -536,7 +536,7 @@ class FilmezzEU(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.filmezzeu_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.filmezzeu_login.value or\
             self.password != config.plugins.iptvplayer.filmezzeu_password.value:
             self.loggedIn = self.tryTologin()
 
@@ -550,7 +550,7 @@ class FilmezzEU(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.cacheLinks = {}
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':

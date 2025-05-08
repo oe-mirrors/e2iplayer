@@ -87,11 +87,11 @@ class PrijevodiOnline(CBaseSubProviderClass):
                 continue
             params = dict(cItem)
             params.update({'category': nextCategory, 'title': title, 'url': url})
-            if promItem == None and self.params['confirmed_title'].title().startswith(title.upper()):
+            if promItem is None and self.params['confirmed_title'].title().startswith(title.upper()):
                 promItem = params
             else:
                 self.addDir(params)
-        if promItem != None:
+        if promItem is not None:
             self.addDir(promItem, False)
 
     def listSeries(self, cItem, nextCategory):
@@ -337,7 +337,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
 
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(url, urlParams)
-        if None == tmpDIR:
+        if None is tmpDIR:
             return
 
         cItem = dict(cItem)
@@ -404,7 +404,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.initSubProvider()
             self.listSearchTypes(self.currItem, 'list_abc')
         elif category == 'list_abc':

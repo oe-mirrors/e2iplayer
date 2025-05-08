@@ -89,7 +89,7 @@ class TVNowDE(CBaseHostClass):
 
     def getStr(self, item, key):
         value = item.get(key, None)
-        if value == None:
+        if value is None:
             value = ''
         elif type('') == type(value):
             return value
@@ -505,7 +505,7 @@ class TVNowDE(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'channels':
             self.listChannelsCats(self.currItem, 'list_video_items')

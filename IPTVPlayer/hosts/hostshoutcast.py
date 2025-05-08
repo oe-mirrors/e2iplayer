@@ -187,7 +187,7 @@ class ShoutcastCom(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'genres':
             self.listGenres(self.currItem, 'list_sub_genres')

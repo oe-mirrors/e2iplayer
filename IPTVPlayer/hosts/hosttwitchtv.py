@@ -32,7 +32,7 @@ def gettytul():
 
 def jstr(item, key, default=''):
     v = item.get(key, default)
-    if None == v:
+    if None is v:
         return default
     else:
         return ensure_str(v)
@@ -584,7 +584,7 @@ class Twitch(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
 
         elif category == 'browse':

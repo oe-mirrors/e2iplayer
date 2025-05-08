@@ -99,11 +99,11 @@ class YesMovies(CBaseHostClass):
                 self.setMainUrl(self.cm.meta['url'])
                 break
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.MAIN_URL = 'https://yesmovies.to/'
 
     def listMainMenu(self, cItem):
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             return
         MAIN_CAT_TAB = [{'category': 'list_filter_genre', 'title': 'Movies', 'url': self.getFullUrl('movie/filter/movie')},
                         {'category': 'list_filter_genre', 'title': 'TV-Series', 'url': self.getFullUrl('movie/filter/series')},
@@ -506,7 +506,7 @@ class YesMovies(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -518,7 +518,7 @@ class YesMovies(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.fillCacheFilters()
             self.listMainMenu({'name': 'category'})
         elif category.startswith('list_filter_'):

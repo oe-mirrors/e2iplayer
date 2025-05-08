@@ -70,14 +70,14 @@ class HDSTo(CBaseHostClass):
         self.membersOnly = [_('Page accessible to logged in members only.'), _('You can try to use proxy as workaround, check options under blue button.')]
 
     def getRealUrl(self, url):
-        if config.plugins.iptvplayer.hdsto_proxy.value == 'webproxy' and url != None and 'browse.php?u=' in url:
+        if config.plugins.iptvplayer.hdsto_proxy.value == 'webproxy' and url is not None and 'browse.php?u=' in url:
             url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', r'''\?u=(http[^&]+?)&''')[0])
         return url
 
     def getFullUrl(self, url, baseUrl=None):
         url = self.getRealUrl(url)
         baseUrl = self.getRealUrl(baseUrl)
-        if not self.cm.isValidUrl(url) and baseUrl != None:
+        if not self.cm.isValidUrl(url) and baseUrl is not None:
             if url.startswith('/'):
                 baseUrl = self.cm.getBaseUrl(baseUrl)
             else:
@@ -482,7 +482,7 @@ class HDSTo(CBaseHostClass):
         retTab = []
 
         url = cItem.get('prev_url', cItem['url'])
-        if data == None:
+        if data is None:
             self.tryTologin()
             sts, data = self.getPage(url)
             if not sts:
@@ -523,7 +523,7 @@ class HDSTo(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.hdsto_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.hdsto_login.value or\
             self.password != config.plugins.iptvplayer.hdsto_password.value:
 
             self.login = config.plugins.iptvplayer.hdsto_login.value
@@ -576,7 +576,7 @@ class HDSTo(CBaseHostClass):
         self.tryTologin()
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
         elif category == 'cat_items':
             self.listCatItems(self.currItem, 'list_items')

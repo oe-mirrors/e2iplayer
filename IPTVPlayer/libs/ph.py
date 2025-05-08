@@ -110,7 +110,7 @@ def none(tab, data, start, end):
 
 
 def check(arg1, arg2=None):
-    if arg2 == None and isinstance(arg1, basestring):
+    if arg2 is None and isinstance(arg1, basestring):
         return lambda data, ldata, s, e: ldata.find(arg1, s, e) != -1
 
     return lambda data, ldata, s, e: arg1(arg2, ldata, s, e)
@@ -300,7 +300,7 @@ STRIP_HTML_TAGS_C = None
 def clean_html(string):
     global STRIP_HTML_TAGS_C
     string = six.ensure_str(string)
-    if None == STRIP_HTML_TAGS_C:
+    if None is STRIP_HTML_TAGS_C:
         STRIP_HTML_TAGS_C = False
         try:
             from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser as p

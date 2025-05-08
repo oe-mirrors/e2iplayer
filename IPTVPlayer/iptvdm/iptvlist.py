@@ -68,7 +68,7 @@ class IPTVDownloadManagerList(IPTVListComponentBase):
         for key in self.dictPIX:
             try:
                 pixFile = self.ICONS_FILESNAMES.get(key, None)
-                if None != pixFile:
+                if None is not pixFile:
                     self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
             except Exception:
                 printExc()

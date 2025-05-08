@@ -369,7 +369,7 @@ class ArteTV(CBaseHostClass):
         self.currList = []
 
         #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_lang')
         elif category == 'list_lang':
             self.listLang(self.currItem, 'category')

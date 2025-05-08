@@ -64,7 +64,7 @@ class FilmovizijaStudio(CBaseHostClass):
         self.cacheFilters = {'movies': [], 'top_movies': [], 'series': [], 'new_movies': [], 'new_episodes': []}
 
     def isNeedProxy(self):
-        if self.needProxy == None:
+        if self.needProxy is None:
             sts, data = self.cm.getPage(self.MAIN_URL)
             self.needProxy = not sts
         return self.needProxy
@@ -79,7 +79,7 @@ class FilmovizijaStudio(CBaseHostClass):
             params['header']['Cookie'] = 'flags=2e1;'
             url = proxy
         sts, data = self.cm.getPage(url, params, post_data)
-        if sts and None == data:
+        if sts and None is data:
             sts = False
         return sts, data
 
@@ -530,7 +530,7 @@ class FilmovizijaStudio(CBaseHostClass):
         self.cacheLinks = {}
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
             self.listCategories(self.currItem, 'list_items')

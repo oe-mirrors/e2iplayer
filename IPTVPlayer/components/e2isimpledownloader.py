@@ -84,7 +84,7 @@ class SingleFileDownloaderWidget(Screen):
         self.cleanDownloader()
 
     def cleanDownloader(self):
-        if self.downloader != None:
+        if self.downloader is not None:
             self.downloader.unsubscribeFor_Finish(self.downloadFinished)
             self.downloader.terminate()
         self.downloader = None
@@ -147,7 +147,7 @@ class SingleFileDownloaderWidget(Screen):
         self.startDownload()
 
     def keyExit(self):
-        if self.downloader != None and self.downloader.isDownloading():
+        if self.downloader is not None and self.downloader.isDownloading():
             self.downloader.terminate()
         else:
             self.close(None)

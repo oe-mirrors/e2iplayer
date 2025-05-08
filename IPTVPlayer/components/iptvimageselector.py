@@ -45,7 +45,7 @@ class IPTVImagesSelectionList(IPTVListComponentBase):
         for key in self.dictPIX:
             try:
                 pixFile = self.ICONS_FILESNAMES.get(key, None)
-                if None != pixFile:
+                if None is not pixFile:
                     self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
             except Exception:
                 printExc()
@@ -64,7 +64,7 @@ class IPTVImagesSelectionList(IPTVListComponentBase):
             x = (width - item['width']) / 2
             y = (height - item['height']) / 2
             res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, x, y, item['width'], item['height'], item['pixmap']))
-            if item['id'] != None:
+            if item['id'] is not None:
                 if item['selected']:
                     sel_key = 'on'
                 else:
@@ -78,27 +78,27 @@ class IPTVImagesSelectionList(IPTVListComponentBase):
 class IPTVMultipleImageSelectorWidget(Screen):
 
     def __prepareSkin(self):
-        if None == self.iptv_width:
+        if None is self.iptv_width:
             self.iptv_width = getDesktop(0).size().width()
-        if None == self.iptv_height:
+        if None is self.iptv_height:
             self.iptv_height = getDesktop(0).size().height()
-        if self.iptv_title == None:
+        if self.iptv_title is None:
             self.iptv_title = _('Select pictures')
 
-        if self.iptv_message != None and self.iptv_message_height == None:
+        if self.iptv_message is not None and self.iptv_message_height is None:
             self.iptv_message_height = self.iptv_height / 10
-        if self.iptv_accep_label != None and self.iptv_accep_height == None:
+        if self.iptv_accep_label is not None and self.iptv_accep_height is None:
             self.iptv_accep_height = self.iptv_height / 20
 
         y = 0
         skin = ['<screen position="center,center" title="%s" size="%d,%d">' % (self.iptv_title, self.iptv_width, self.iptv_height)]
-        if self.iptv_message != None:
+        if self.iptv_message is not None:
             skin.append('<widget name="message" position="10,10" zPosition="1" size="%d,%d" valign="center" halign="center" font="Regular;22"  transparent="1"  backgroundColor="#00000000"/>' % (self.iptv_width - 20, self.iptv_message_height))
             y += 10 + self.iptv_message_height
 
         list_width = self.iptv_image_width + 40
         list_height = (self.iptv_height - y) - 20
-        if self.iptv_accep_label != None:
+        if self.iptv_accep_label is not None:
             list_height -= self.iptv_accep_height + 10
 
         x = (self.iptv_width - (10 * (self.iptv_col_num + 1) + list_width * self.iptv_col_num)) / 2
@@ -112,7 +112,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
             x += 10 + list_width
         y += list_height + 10
 
-        if self.iptv_accep_label != None:
+        if self.iptv_accep_label is not None:
             skin.append('<widget name="accept_button"  position="10,%d"  zPosition="1" size="%d,%d"  valign="center" halign="center" font="Regular;22" foregroundColor="#00FFFFFF" backgroundColor="#320F0F0F" />' % (y, self.iptv_width - 20, self.iptv_accep_height))
         skin.append('</screen>')
         skin = '\n'.join(skin)
@@ -158,7 +158,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
 
         # create controls
         self["title"] = Label(self.iptv_title)
-        if self.iptv_message != None:
+        if self.iptv_message is not None:
             self["message"] = Label(str(self.iptv_message))
 
         for idx in range(self.iptv_col_num):
@@ -205,7 +205,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
         self.decodedCallBack()
 
     def decodedCallBack(self, picInfo=None):
-        if self.iptv_images_data != None:
+        if self.iptv_images_data is not None:
             self.picload_conn = None
             self.iptv_images_data.append(self.picload.getData())
         else:
@@ -251,7 +251,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
             try:
                 item = self["col_%d" % self.column_index]
                 itemContent = item.l.getCurrentSelection()[0]
-                if itemContent['id'] == None:  # do not allow to select empty cell
+                if itemContent['id'] is None:  # do not allow to select empty cell
                     return
                 if itemContent['selected']:
                     self.iptv_num_sel_items -= 1
@@ -263,12 +263,12 @@ class IPTVMultipleImageSelectorWidget(Screen):
             except Exception:
                 printExc()
 
-            if self.iptv_num_sel_items != None and self.iptv_num_sel_items >= self.iptv_max_sel_items:
+            if self.iptv_num_sel_items is not None and self.iptv_num_sel_items >= self.iptv_max_sel_items:
                 maxItemsSelected = True
             else:
                 return
 
-        if self.iptv_accep_label != None or maxItemsSelected:
+        if self.iptv_accep_label is not None or maxItemsSelected:
             ret = []
             for y in range(self.iptv_row_num):
                 for x in range(self.iptv_col_num):
@@ -286,7 +286,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
         pass
 
     def setMarker(self, prevIdx=None):
-        if self.iptv_accep_label != None:
+        if self.iptv_accep_label is not None:
             if self.row_index == self.iptv_row_num:
                 self['accept_button'].instance.setForegroundColor(parseColor("#000000"))
                 self['accept_button'].instance.setBackgroundColor(parseColor("#32CD32"))
@@ -319,7 +319,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
     def key_up(self):
         prev_row_index = self.row_index
         if self.row_index == 0:
-            if self.iptv_accep_label != None:
+            if self.iptv_accep_label is not None:
                 self.row_index = self.iptv_row_num
             else:
                 self.row_index = self.iptv_row_num - 1
@@ -341,7 +341,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
     def key_down(self):
         prev_row_index = self.row_index
         if self.row_index + 1 == self.iptv_row_num:
-            if self.iptv_accep_label != None:
+            if self.iptv_accep_label is not None:
                 self.row_index = self.iptv_row_num
             else:
                 self.row_index = 0

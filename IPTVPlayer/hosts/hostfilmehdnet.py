@@ -106,7 +106,7 @@ class FilmeHD(CBaseHostClass):
         printDBG("FilmeHD.listItems")
         page = cItem.get('page', 1)
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -280,7 +280,7 @@ class FilmeHD(CBaseHostClass):
         printDBG("SolarMovie.getArticleContent [%s]" % cItem)
         retTab = []
 
-        if data == None:
+        if data is None:
             url = strwithmeta(cItem['url']).meta.get('Referer', cItem['url'])
             sts, data = self.getPage(url)
             if not sts:
@@ -367,7 +367,7 @@ class FilmeHD(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_sort', '-categorys')

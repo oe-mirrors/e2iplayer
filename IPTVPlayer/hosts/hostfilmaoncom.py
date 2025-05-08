@@ -450,7 +450,7 @@ class FilmaonCom(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None and category == '':
+        if name is None and category == '':
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'}, 'sub_items', 'list_items')
         elif category == 'list_items':

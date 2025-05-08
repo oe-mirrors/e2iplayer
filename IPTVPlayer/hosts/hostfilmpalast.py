@@ -402,7 +402,7 @@ class FilmPalastTo(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -414,7 +414,7 @@ class FilmPalastTo(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'movies' == category:
             self.listsTab(self.MOVIES_CAT_TAB, self.currItem)

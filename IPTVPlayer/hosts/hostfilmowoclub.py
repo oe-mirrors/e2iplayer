@@ -122,7 +122,7 @@ class Filmowoclub(CBaseHostClass):
         printDBG("Filmowoclub.listsTab")
         for item in tab:
             params = dict(cItem)
-            if None != category:
+            if None is not category:
                 params['category'] = category
             params.update(item)
             self.addDir(params)
@@ -334,7 +334,7 @@ class Filmowoclub(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None and category == '':
+        if name is None and category == '':
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
         elif 'list_cats' == category:

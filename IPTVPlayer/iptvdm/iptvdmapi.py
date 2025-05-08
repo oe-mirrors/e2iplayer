@@ -79,7 +79,7 @@ class IPTVDMApi():
 
     def stopDownloadItem(self, downloadIdx):
         listUDIdx = self.findIdxInQueueUD(downloadIdx)
-        if -1 < listUDIdx and None != self.queueUD[listUDIdx].downloader:
+        if -1 < listUDIdx and None is not self.queueUD[listUDIdx].downloader:
             self.queueUD[listUDIdx].downloader.terminate()
             # give some time to finish
             sleep(1)

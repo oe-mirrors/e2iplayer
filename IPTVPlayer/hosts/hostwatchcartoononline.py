@@ -334,7 +334,7 @@ class WatchCartoonOnline(CBaseHostClass):
         self.currItem.pop('good_for_fav', None)
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'list_abc':
             self.listABC(self.currItem, 'sub_items')

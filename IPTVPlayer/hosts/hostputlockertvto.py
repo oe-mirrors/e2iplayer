@@ -129,14 +129,14 @@ class PutlockerTvTo(CBaseHostClass):
                 self.MAIN_URL = self.cm.getBaseUrl(data.meta['url'])
                 break
 
-            if self.MAIN_URL != None:
+            if self.MAIN_URL is not None:
                 break
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.MAIN_URL = domains[0]
 
     def listMainMenu(self, cItem):
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             return
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Featured', 'url': self.getFullUrl('/featured')},
                         {'category': 'list_filters', 'title': 'Movies', 'url': self.getFullUrl('/movies'), 'f_type[]': 'movie'},
@@ -358,7 +358,7 @@ class PutlockerTvTo(CBaseHostClass):
             return cipher.encrypt(encrypted, iv)
 
     def _updateParams(self, params):
-        if self._myFun == None:
+        if self._myFun is None:
             try:
                 if False:
                     tmp = 'base64_code'
@@ -572,7 +572,7 @@ class PutlockerTvTo(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -584,7 +584,7 @@ class PutlockerTvTo(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')

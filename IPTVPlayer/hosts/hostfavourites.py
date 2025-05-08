@@ -106,7 +106,7 @@ class Favourites(CBaseHostClass):
             item = data[idx]
             addFun = typesMap.get(item.type, None)
             params = {'name': 'item', 'title': item.name, 'host': item.hostName, 'icon': item.iconimage, 'desc': item.description, 'group_id': cItem['group_id'], 'item_idx': idx}
-            if None != addFun:
+            if None is not addFun:
                 addFun(params)
 
     def getLinksForVideo(self, cItem):
@@ -155,7 +155,7 @@ class Favourites(CBaseHostClass):
         self.currList = []
 
         self.guestMode = False
-        if None == name:
+        if None is name:
             self.host = None
             self.hostName = None
             self.listGroups('list_favourites')
@@ -222,7 +222,7 @@ class IPTVHost(CHostBase):
 
     def isItemWatched(self, index, displayItem):
         ret = self.getItemHashData(index, displayItem)
-        if ret != None:
+        if ret is not None:
             return fileExists(GetFavouritesDir('IPTVWatched/%s/.%s.iptvhash' % ret))
         else:
             return False
@@ -239,7 +239,7 @@ class IPTVHost(CHostBase):
         return ret
 
     def _createViewedFile(self, hashData):
-        if hashData != None and mkdirs(GetFavouritesDir('IPTVWatched') + ('/%s/' % hashData[0])):
+        if hashData is not None and mkdirs(GetFavouritesDir('IPTVWatched') + ('/%s/' % hashData[0])):
             flagFilePath = GetFavouritesDir('IPTVWatched/%s/.%s.iptvhash' % hashData)
             if touch(flagFilePath):
                 return True
@@ -349,7 +349,7 @@ class IPTVHost(CHostBase):
         return ret
 
     def getCurrentList(self, refresh=0):
-        if refresh == 1 and self.refreshAfterWatchedFlagChange and self.cachedRet != None:
+        if refresh == 1 and self.refreshAfterWatchedFlagChange and self.cachedRet is not None:
             ret = self.cachedRet
         else:
             ret = RetHost(RetHost.ERROR, value=[])

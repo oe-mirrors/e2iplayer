@@ -104,13 +104,13 @@ class EgyBest(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, marker + '''="([^"]+?)"''')[0].split('/')[-1]
                 title = self.cleanHtmlStr(item)
                 if value == '':
-                    if allTitle == None:
+                    if allTitle is None:
                         allTitle = title
                     continue
                 self.cacheFilters[key].append({'title': title.title(), key: value})
 
             if len(self.cacheFilters[key]):
-                if allTitle != None:
+                if allTitle is not None:
                     self.cacheFilters[key].insert(0, {'title': _('All')})
                 self.cacheFiltersKeys.append(key)
 
@@ -413,7 +413,7 @@ class EgyBest(CBaseHostClass):
 
         otherInfo = {}
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return []
@@ -466,7 +466,7 @@ class EgyBest(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.egybest_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.egybest_login.value or\
             self.password != config.plugins.iptvplayer.egybest_password.value:
 
             self.login = config.plugins.iptvplayer.egybest_login.value
@@ -529,7 +529,7 @@ class EgyBest(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')

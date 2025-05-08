@@ -112,7 +112,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                             elif 'double' == tagName:
                                 text = float(text)
                             elif 'member' == tagName:
-                                if name != None:
+                                if name is not None:
                                     obj[name] = value
                                     name = None
                                     value = None
@@ -157,7 +157,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
 
     def _checkStatus(self, data, idx=None):
         try:
-            if None == idx:
+            if None is idx:
                 for idx in range(len(data)):
                     if 'status' in data[idx]:
                         item = data[idx]
@@ -197,7 +197,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         lang = GetDefaultLang()
         params = [login, hex_md5(password), lang, self.USER_AGENT]
         sts, data = self._rpcMethodCall("LogIn", params)
-        if sts and (None == data or 0 == len(data)):
+        if sts and (None is data or 0 == len(data)):
             sts = False
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> data[%s]" % data)
         if not sts:
@@ -228,7 +228,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
                             list.append(params)
                         else:
                             defaultLanguageItem = params
-                if None != defaultLanguageItem:
+                if None is not defaultLanguageItem:
                     list.insert(0, defaultLanguageItem)
                 return list
             except Exception:
@@ -411,7 +411,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             rm(self.COOKIE_FILE)
             login = config.plugins.iptvplayer.opensuborg_login.value
             password = config.plugins.iptvplayer.opensuborg_password.value

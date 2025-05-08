@@ -297,7 +297,7 @@ class ITV(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'channels':
             self.listSubCategory(self.currItem, 'explore_channel')

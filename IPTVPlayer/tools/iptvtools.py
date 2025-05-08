@@ -96,7 +96,7 @@ def PrevDay(dt):
 
 def GetNice(pid=None):
     nice = 0
-    if None == pid:
+    if None is pid:
         pid = 'self'
     filePath = '/proc/%s/stat' % pid
     try:
@@ -235,7 +235,7 @@ class iptv_system:
         self.cmd = cmd
 
         self.console = eConsoleAppContainer()
-        if None != self.callBackFun:
+        if None is not self.callBackFun:
             self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
             self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self._dataAvail)
             self.outData = ""
@@ -246,8 +246,8 @@ class iptv_system:
         self.kill(doCallBackFun)
 
     def kill(self, doCallBackFun=False):
-        if None != self.console:
-            if None != self.callBackFun:
+        if None is not self.console:
+            if None is not self.callBackFun:
                 self.console_appClosed_conn = None
                 self.console_stdoutAvail_conn = None
             else:
@@ -259,7 +259,7 @@ class iptv_system:
                 self.callBackFun = None
 
     def _dataAvail(self, data):
-        if None != data:
+        if None is not data:
             self.outData += data.decode(encoding='utf-8', errors='strict')
 
     def _cmdFinished(self, code):
@@ -344,7 +344,7 @@ def SetTmpCookieDir():
 
 def ClearTmpCookieDir():
     global gE2iPlayerTempCookieDir
-    if gE2iPlayerTempCookieDir != None:
+    if gE2iPlayerTempCookieDir is not None:
         try:
             for fileName in os.listdir(gE2iPlayerTempCookieDir):
                 rm(os.path.join(gE2iPlayerTempCookieDir, fileName))
@@ -364,7 +364,7 @@ def TestTmpCookieDir():
 
 def GetCookieDir(file='', forceFromConfig=False):
     global gE2iPlayerTempCookieDir
-    if gE2iPlayerTempCookieDir == None or forceFromConfig:
+    if gE2iPlayerTempCookieDir is None or forceFromConfig:
         cookieDir = os.path.join(config.plugins.iptvplayer.SciezkaCache.value, 'cookies/')
     else:
         cookieDir = gE2iPlayerTempCookieDir
@@ -388,7 +388,7 @@ def SetTmpJSCacheDir():
 
 def ClearTmpJSCacheDir():
     global gE2iPlayerTempJSCache
-    if gE2iPlayerTempJSCache != None:
+    if gE2iPlayerTempJSCache is not None:
         try:
             for fileName in os.listdir(gE2iPlayerTempJSCache):  # file is native p2 function renamed for clarity
                 rm(os.path.join(gE2iPlayerTempJSCache, fileName))
@@ -407,7 +407,7 @@ def TestTmpJSCacheDir():
 
 def GetJSCacheDir(fileName='', forceFromConfig=False):
     global gE2iPlayerTempJSCache
-    if gE2iPlayerTempJSCache == None or forceFromConfig:
+    if gE2iPlayerTempJSCache is None or forceFromConfig:
         cookieDir = os.path.join(config.plugins.iptvplayer.SciezkaCache.value, 'JSCache/')
     else:
         cookieDir = gE2iPlayerTempJSCache
@@ -571,7 +571,7 @@ class CSelOneLink():
         printDBG('getSortedLinks defaultFirst[%r]' % defaultFirst)
         sortList = self.listOfLinks[::-1]
         sortList.sort(key=cmp_to_key(self._cmpLinks))
-        if len(self.listOfLinks) < 2 or None == self.maxRes:
+        if len(self.listOfLinks) < 2 or None is self.maxRes:
             return self.listOfLinks
 
         if defaultFirst:
@@ -684,7 +684,7 @@ def __getHostsPath(fileName=''):
 
 def GetHostsFromList(useCache=True):
     global g_cacheHostsFromList
-    if useCache and g_cacheHostsFromList != None and len(g_cacheHostsFromList) > 0:
+    if useCache and g_cacheHostsFromList is not None and len(g_cacheHostsFromList) > 0:
         printDBG('iptvtools.GetHostsFromList returns cached list (%s)' % str(g_cacheHostsFromList))
         return list(g_cacheHostsFromList)
 
@@ -708,7 +708,7 @@ def GetHostsFromList(useCache=True):
 
 def GetHostsFromFolder(useCache=True):
     global g_cacheHostsFromFolder
-    if useCache and g_cacheHostsFromFolder != None and len(g_cacheHostsFromFolder) > 0:
+    if useCache and g_cacheHostsFromFolder is not None and len(g_cacheHostsFromFolder) > 0:
         printDBG('iptvtools.GetHostsFromFolder returns cached list (%s)' % str(g_cacheHostsFromFolder))
         return g_cacheHostsFromFolder
 
@@ -861,7 +861,7 @@ def FreeSpace(katalog, requiredSpace, unitDiv=1024 * 1024):
         printExc()
         freeSpace = -1
     printDBG("FreeSpace freeSpace[%s] requiredSpace[%s] unitDiv[%s]" % (freeSpace, requiredSpace, unitDiv))
-    if None == requiredSpace:
+    if None is requiredSpace:
         return freeSpace
     else:
         if freeSpace >= requiredSpace:
@@ -1108,7 +1108,7 @@ def GetCreationIconsDirTime(fullPath):
 def GetCreateIconsDirDeltaDateInDays(fullPath):
     ret = -1
     createTime = GetCreationIconsDirTime(fullPath)
-    if None != createTime:
+    if None is not createTime:
         try:
             currTime = datetime.datetime.now()
             modTime = datetime.datetime.fromtimestamp(createTime)
@@ -1267,7 +1267,7 @@ class CSearchHistoryHelper():
             if config.plugins.iptvplayer.search_history_size.value > 0:
                 file = codecs.open(self.PATH_FILE, 'a', 'utf-8', 'replace')
                 value = itemValue
-                if None != itemType:
+                if None is not itemType:
                     value = value + self.TYPE_SEP + itemType
                 value = value if type('') == type(value) else value.decode('utf-8', 'replace')
                 file.write(value + '\n')
@@ -1375,7 +1375,7 @@ class CMoviePlayerPerHost():
         try:
             if {} == self.activePlayer and os.path.isfile(self.filePath):
                 os.remove(self.filePath)
-            elif self.activePlayer.get('buffering', None) == None:
+            elif self.activePlayer.get('buffering', None) is None:
                 printDBG('WARNING: buffering NOT set')
             else:
                 data = {}
@@ -1486,7 +1486,7 @@ def GetVersionNum(ver):
     if ver == '':
         return 0
     try:
-        if None == re.match(r"[0-9]+\.[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]", ver):
+        if None is re.match(r"[0-9]+\.[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]", ver):
             raise Exception("Wrong version!")
         return int(ver.replace('.', ''))
     except Exception:
@@ -1496,7 +1496,7 @@ def GetVersionNum(ver):
 
 def IsFPUAvailable():
     try:
-        if None == IsFPUAvailable.available:
+        if None is IsFPUAvailable.available:
             with open('/proc/cpuinfo', 'r') as f:
                 data = f.read().strip().upper()
             if ' FPU ' in data:

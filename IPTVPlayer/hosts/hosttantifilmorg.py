@@ -481,7 +481,7 @@ class TantiFilmOrg(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             if TantiFilmOrg.REMOVE_COOKIE:
                 TantiFilmOrg.REMOVE_COOKIE = False
                 rm(self.COOKIE_FILE)

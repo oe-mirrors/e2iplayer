@@ -367,7 +367,7 @@ class VODPL(CBaseHostClass):
 
     def getLinksForFavourite(self, fav_data):
         printDBG('VODPL.getLinksForFavourite')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         links = []
         try:
@@ -379,7 +379,7 @@ class VODPL(CBaseHostClass):
 
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('VODPL.setInitListFromFavouriteItem')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         try:
             params = byteify(json.loads(fav_data))
@@ -448,7 +448,7 @@ class VODPL(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')

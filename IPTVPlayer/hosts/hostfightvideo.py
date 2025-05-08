@@ -279,7 +279,7 @@ class FightVideo(CBaseHostClass):
 
     def getLinksForFavourite(self, fav_data):
         printDBG('FightVideo.getLinksForFavourite')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         links = []
         try:
@@ -291,7 +291,7 @@ class FightVideo(CBaseHostClass):
 
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('FightVideo.setInitListFromFavouriteItem')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         try:
             params = byteify(json.loads(fav_data))
@@ -314,7 +314,7 @@ class FightVideo(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             cItem = dict(self.currItem)
             cItem['category'] = 'list_filters'
             self.listFilters(cItem, 'list_items')

@@ -414,7 +414,7 @@ class C3player(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'sub_items':
             self.listSubItems(self.currItem)

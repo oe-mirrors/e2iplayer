@@ -237,7 +237,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
 
     def getHeaders(self, url):
         headers = {}
-        if self._getHeaders == None:
+        if self._getHeaders is None:
             try:
                 import hmac
                 tmp = '89aac45129123590486772c958b0efc9074993ad1ffddc7fecfec3755806ca1d51a76813a3fbf891ee09081e10ea4f74681823b1443295b8b4ee2f14d8f209194fe5db528cbbf29117101f346dc7b4dd1474dff6face052de50948157720f1fd9d162c4068f329ca732336edd335ae93e29d3515f32b9c1963255b979da52f52bede1bfa1f505581bd8a92a4d43ce162ebe4efe19303d3a3b141305610bfe8257fa70af3c548003c3b5a216e2e5204566e2bf8fb2471468c016a74fcdbaa3926ad203810d120c5997014717abb01e7036bea34a336384d25bd3d7807d7f4e8efe3ee2393044dddca3b6e48d364b61135e1b71582b81578d394946c18f2a8e2c40a07c6ecd6bcce821876bfd0ca302aa33aef190ad5bcd2dd11caf38c7bf651d4dc96d34abd5781744a75a09cebb88933bbee4ab9d753f746e7da84e0fadf1cffe902ec710f91ba973d6b333eb52680f0497571ba1e6f20946f05956f73b901e482ba8cf7c74c6359608ab00f6aade9a203aa038e4d64a6036417063b2b11e4101bb9305699f0704a0378836fae0b1f5709c2cc79ff57aaa9f4da32c5827c5cbfedcc3ee9e82a23384c0c623e22e05935f236bbc374a304347414083c4ca10d19ec7a9d1ce5c2d9b9d37145df37d61c623a0930b991eea514a0565dac2226022a0cda6d6e77e41b5da5ad3a809f8d4fc31061b7fa040189f24f1c4fea3e908020335174e2dd66e59d2a6cd60e1781dafcfb770dcd77c605613795d6b7a9625f02bfed25661350f77cb54250c01cbf1a5707c394b10efeea54bb075d6cbb0f10e93c9744674c7f107ea892d947a2c57214ec6a68004508d5be2c203cabbd4fe247fcdabd5aaf816270b6b6c43fbe10d4e5f1ad1579ab25dcb9460672aa43fca504403f3e2d3422f7d8fec33439c73bd4336320e3cdb14dee681fb17313e36ee3792769ce192cb688f5a00bee4fc566eb859172b7993b70ce1222a55c9e94d5bae32de1525c8bbb86b54fa27215fa0d21f8'
@@ -250,7 +250,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                 self._getHeaders = vLocals['_getHeaders']
             except Exception:
                 printExc()
-        if self._getHeaders != None:
+        if self._getHeaders is not None:
             try:
                 headers = self._getHeaders(url)
             except Exception:
@@ -387,7 +387,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -399,7 +399,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_genres':
             self.listGenres(self.currItem, 'list_items')

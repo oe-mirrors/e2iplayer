@@ -298,7 +298,7 @@ class ClassicCinemaOnline(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_movies_cats':
             self.listMoviesCats(self.currItem, 'list_items')

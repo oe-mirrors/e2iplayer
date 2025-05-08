@@ -383,7 +383,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -395,7 +395,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_items')

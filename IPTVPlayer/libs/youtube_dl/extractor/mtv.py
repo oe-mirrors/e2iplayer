@@ -137,7 +137,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
         urlTabs = []
         for item in data:
             params = self._get_video_info(item)
-            if None != params:
+            if None is not params:
                 urlTabs.append(params)
         return urlTabs
 

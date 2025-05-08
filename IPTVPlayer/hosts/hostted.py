@@ -223,7 +223,7 @@ class TED(CBaseHostClass):
                         promotItem = params
                     else:
                         self.cacheTalksLanguages.append(params)
-                if promotItem != None:
+                if promotItem is not None:
                     self.cacheTalksLanguages.insert(0, promotItem)
             except Exception:
                 printExc()
@@ -505,7 +505,7 @@ class TED(CBaseHostClass):
 
             tmp = playerData['talks'][0]['player_talks'][0]
             rtmpTab = tmp['resources'].get('rtmp', [])
-            if rtmpTab == None:
+            if rtmpTab is None:
                 rtmpTab = []
             for item in rtmpTab:
                 url = item.get('file', '')
@@ -515,7 +515,7 @@ class TED(CBaseHostClass):
                 _addLinkItem(urlTab, item, url)
 
             h264Tab = tmp['resources'].get('h264', [])
-            if h264Tab == None:
+            if h264Tab is None:
                 h264Tab = []
             for item in h264Tab:
                 _addLinkItem(urlTab, item, item['file'])
@@ -525,10 +525,10 @@ class TED(CBaseHostClass):
                 baseMp4Url = urlTab[-1]['url']
                 baseBitrate = ph.search(baseMp4Url, reObj)[0]
                 hlsItem = tmp['resources'].get('hls', {})
-                if hlsItem == None:
+                if hlsItem is None:
                     hlsItem = {}
                 url = hlsItem.get('stream', '')
-                if url == None:
+                if url is None:
                     url = ''
 
                 tmp = getDirectM3U8Playlist(self.cm.getFullUrl(url, self.cm.meta['url']), checkExt=False)
@@ -566,7 +566,7 @@ class TED(CBaseHostClass):
                 else:
                     subTracks.append(params)
 
-            if promotItem != None:
+            if promotItem is not None:
                 subTracks.insert(0, promotItem)
 
             if len(subTracks):
@@ -586,7 +586,7 @@ class TED(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -598,7 +598,7 @@ class TED(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
 
     # TALKS

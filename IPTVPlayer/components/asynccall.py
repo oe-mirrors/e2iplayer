@@ -26,7 +26,7 @@ def IsMainThread():
 
 def SetMainThreadId(mainThreadId=None):
     global gMainThreadId
-    if mainThreadId == None:
+    if mainThreadId is None:
         gMainThreadId = threading.current_thread()
     else:
         gMainThreadId = mainThreadId
@@ -96,11 +96,11 @@ class AsyncCall(object):
         return self.finished
 
     def isAlive(self):
-        return None != self.Thread and self.Thread.is_alive()
+        return None is not self.Thread and self.Thread.is_alive()
 
     def _kill(self):
         bRet = False
-        if None != self.Thread:
+        if None is not self.Thread:
             try:
                 thread_id = None
                 # do we have it cached?
@@ -114,7 +114,7 @@ class AsyncCall(object):
                 for tid, tobj in list(threading._active.items()):
                     if tobj is self.Thread:
                         thread_id = tid
-                if None != thread_id:
+                if None is not thread_id:
                     res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), ctypes.py_object(SystemExit))
                     if res == 0:
                         printDBG("AsyncCall._kill *** invalid thread id")
@@ -156,7 +156,7 @@ class AsyncCall(object):
         self.mainLock.acquire()
 
         if self.Thread:
-            if self.Thread._iptvplayer_ext['iptv_execute'] != None:
+            if self.Thread._iptvplayer_ext['iptv_execute'] is not None:
                 try:
                     self.Thread._iptvplayer_ext['iptv_execute'].terminate()
                     self.Thread._iptvplayer_ext['iptv_execute'] = None
@@ -500,7 +500,7 @@ class CFunctionProxyQueue:
             if QueueIsEmpty:
                 return
 
-            if isinstance(item, CPQItemCallBack) and None != self.procFun:
+            if isinstance(item, CPQItemCallBack) and None is not self.procFun:
                 self.procFun(item)
             elif isinstance(item, CPQItemDelegate) and hasattr(item.callFnc, '__call__') and hasattr(item.retFnc, '__call__'):
                 item.retFnc(item.callFnc(self.session, *item.args, **item.kwargs))

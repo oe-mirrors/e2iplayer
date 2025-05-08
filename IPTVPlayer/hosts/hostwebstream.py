@@ -185,7 +185,7 @@ class HasBahCa(CBaseHostClass):
 
     def _getJItemStr(self, item, key, default=''):
         v = item.get(key, None)
-        if None == v:
+        if None is v:
             return default
         return ensure_str(clean_html(u'%s' % v))
 
@@ -312,7 +312,7 @@ class HasBahCa(CBaseHostClass):
         return ensure_str(icon)
 
     def __setFilmOn(self):
-        if None == self.filmOnApi:
+        if None is self.filmOnApi:
             self.filmOnApi = FilmOnComApi()
 
     def getFilmOnLink(self, channelID):
@@ -445,7 +445,7 @@ class HasBahCa(CBaseHostClass):
 
     def getWeebTvList(self, url):
         printDBG('getWeebTvList start')
-        if None == self.weebTvApi:
+        if None is self.weebTvApi:
             self.weebTvApi = WeebTvApi()
         if '' == url:
             tmpList = self.weebTvApi.getCategoriesList()
@@ -465,7 +465,7 @@ class HasBahCa(CBaseHostClass):
 
     def getWebCamera(self, cItem):
         printDBG("getWebCamera start cItem[%s]" % cItem)
-        if None == self.webCameraApi:
+        if None is self.webCameraApi:
             self.webCameraApi = WebCameraApi()
         tmpList = self.webCameraApi.getList(cItem)
         for item in tmpList:
@@ -483,7 +483,7 @@ class HasBahCa(CBaseHostClass):
     #############################################################
     def getVideostarList(self, cItem):
         printDBG("getVideostarList start")
-        if None == self.videoStarApi:
+        if None is self.videoStarApi:
             self.videoStarApi = VideoStarApi()
         tmpList = self.videoStarApi.getList(cItem)
         for item in tmpList:
@@ -503,7 +503,7 @@ class HasBahCa(CBaseHostClass):
     #############################################################
     def getMLBStreamTVList(self, cItem):
         printDBG("getMLBStreamTVList start")
-        if None == self.MLBStreamTVApi:
+        if None is self.MLBStreamTVApi:
             self.MLBStreamTVApi = MLBStreamTVApi()
         tmpList = self.MLBStreamTVApi.getList(cItem)
         for item in tmpList:
@@ -527,7 +527,7 @@ class HasBahCa(CBaseHostClass):
     #############################################################
     def getWiziwig1List(self, cItem):
         printDBG("getWiziwig1List start")
-        if None == self.Wiziwig1Api:
+        if None is self.Wiziwig1Api:
             self.Wiziwig1Api = Wiziwig1Api()
         tmpList = self.Wiziwig1Api.getList(cItem)
         for item in tmpList:
@@ -547,7 +547,7 @@ class HasBahCa(CBaseHostClass):
     #############################################################
     def getUstvnowList(self, cItem):
         printDBG("getUstvnowList start")
-        if None == self.ustvnowApi:
+        if None is self.ustvnowApi:
             self.ustvnowApi = UstvnowApi()
         tmpList = self.ustvnowApi.getChannelsList(cItem)
         for item in tmpList:
@@ -561,7 +561,7 @@ class HasBahCa(CBaseHostClass):
 
     def getKarwanTvList(self, cItem):
         printDBG("getKarwanTvList start")
-        if None == self.karwanTvApi:
+        if None is self.karwanTvApi:
             self.karwanTvApi = KarwanTvApi()
         tmpList = self.karwanTvApi.getList(cItem)
         for item in tmpList:
@@ -580,7 +580,7 @@ class HasBahCa(CBaseHostClass):
     ########################################################
     def getBilaSportPwList(self, cItem):
         printDBG("getBilaSportPwList start")
-        if None == self.bilaSportPwApi:
+        if None is self.bilaSportPwApi:
             self.bilaSportPwApi = BilaSportPwApi()
         tmpList = self.bilaSportPwApi.getList(cItem)
         for item in tmpList:
@@ -605,7 +605,7 @@ class HasBahCa(CBaseHostClass):
     ########################################################
     def getCanlitvliveIoList(self, cItem):
         printDBG("getCanlitvliveIoList start")
-        if None == self.canlitvliveIoApi:
+        if None is self.canlitvliveIoApi:
             self.canlitvliveIoApi = CanlitvliveIoApi()
         tmpList = self.canlitvliveIoApi.getList(cItem)
         for item in tmpList:
@@ -623,7 +623,7 @@ class HasBahCa(CBaseHostClass):
 
     def getDjingComList(self, cItem):
         printDBG("getDjingComList start")
-        if None == self.djingComApi:
+        if None is self.djingComApi:
             self.djingComApi = DjingComApi()
         tmpList = self.djingComApi.getList(cItem)
         for item in tmpList:
@@ -641,7 +641,7 @@ class HasBahCa(CBaseHostClass):
 
     def getMeteoPLList(self, cItem):
         printDBG("getMeteoPLApiList start")
-        if None == self.meteoPLApi:
+        if None is self.meteoPLApi:
             self.meteoPLApi = MeteoPLApi()
         tmpList = self.meteoPLApi.getList(cItem)
         for item in tmpList:
@@ -654,7 +654,7 @@ class HasBahCa(CBaseHostClass):
 
     def getWkylinewebcamsComList(self, cItem):
         printDBG("getWkylinewebcamsComList start")
-        if None == self.wkylinewebcamsComApi:
+        if None is self.wkylinewebcamsComApi:
             self.wkylinewebcamsComApi = WkylinewebcamsComApi()
         tmpList = self.wkylinewebcamsComApi.getChannelsList(cItem)
         for item in tmpList:
@@ -670,7 +670,7 @@ class HasBahCa(CBaseHostClass):
 
     def getLivespottingTvList(self, cItem):
         printDBG("getLivespottingTvList start")
-        if None == self.livespottingTvApi:
+        if None is self.livespottingTvApi:
             self.livespottingTvApi = LivespottingTvApi()
         tmpList = self.livespottingTvApi.getChannelsList(cItem)
         for item in tmpList:
@@ -678,7 +678,7 @@ class HasBahCa(CBaseHostClass):
 
     def getSport365LiveList(self, cItem):
         printDBG("getSport365LiveList start")
-        if None == self.sport365LiveApi:
+        if None is self.sport365LiveApi:
             self.sport365LiveApi = Sport365LiveApi()
         tmpList = self.sport365LiveApi.getChannelsList(cItem)
         for item in tmpList:
@@ -895,7 +895,7 @@ class HasBahCa(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsMainMenu(self.MAIN_GROUPED_TAB)
         elif name == "HasBahCa":
             self.listHasBahCa(self.currItem)

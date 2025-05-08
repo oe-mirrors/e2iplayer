@@ -189,7 +189,7 @@ class ArticleContent:
         self.images = images
         self.trailers = trailers
         self.richDescParams = richDescParams
-        if None == visualizer:
+        if None is visualizer:
             self.visualizer = ArticleContent.VISUALIZER_DEFAULT
         else:
             self.visualizer = visualizer
@@ -376,7 +376,7 @@ class CHostBase(IHost):
         if listLen <= Index or Index < 0:
             printDBG("ERROR isValidIndex - current list is to short len: %d, Index: %d" % (listLen, Index))
             return False
-        if None != validTypes and self.converItem(self.host.currList[Index]).type not in validTypes:
+        if None is not validTypes and self.converItem(self.host.currList[Index]).type not in validTypes:
             printDBG("ERROR isValidIndex - current item has wrong type")
             return False
         return True
@@ -394,7 +394,7 @@ class CHostBase(IHost):
         if not self.withArticleContent(cItem):
             return RetHost(retCode, value=retlist)
         hList = self.host.getArticleContent(cItem)
-        if None == hList:
+        if None is hList:
             return RetHost(retCode, value=retlist)
         for item in hList:
             title = item.get('title', '')
@@ -442,7 +442,7 @@ class CHostBase(IHost):
 
         cItem = self.host.currList[Index]
         data = self.host.getFavouriteData(cItem)
-        if None != data:
+        if None is not data:
             favItem = CFavItem(data=data)
             favItem.fromDisplayListItem(self.converItem(cItem))
 
@@ -565,7 +565,7 @@ class CHostBase(IHost):
         hostList = []
         for cItem in cList:
             hostItem = self.converItem(cItem)
-            if None != hostItem:
+            if None is not hostItem:
                 hostList.append(hostItem)
         return hostList
     # end convertList
@@ -580,7 +580,7 @@ class CHostBase(IHost):
         return self.host.getDefaulIcon(cItem)
 
     def getFullIconUrl(self, url, currUrl=None):
-        if currUrl != None:
+        if currUrl is not None:
             return self.host.getFullIconUrl(url, currUrl)
         else:
             return self.host.getFullIconUrl(url)
@@ -737,17 +737,17 @@ class CBaseHostClass:
         return False
 
     def getFullUrl(self, url, currUrl=None):
-        if currUrl == None or not self.cm.isValidUrl(currUrl):
+        if currUrl is None or not self.cm.isValidUrl(currUrl):
             try:
                 currUrl = self.getMainUrl()
             except Exception:
                 currUrl = None
-            if currUrl == None or not self.cm.isValidUrl(currUrl):
+            if currUrl is None or not self.cm.isValidUrl(currUrl):
                 currUrl = 'http://fake/'
         return self.cm.getFullUrl(url, currUrl)
 
     def getFullIconUrl(self, url, currUrl=None):
-        if currUrl != None:
+        if currUrl is not None:
             return self.getFullUrl(url, currUrl)
         else:
             return self.getFullUrl(url)
@@ -851,7 +851,7 @@ class CBaseHostClass:
 
     def getLinksForFavourite(self, fav_data):
         try:
-            if self.MAIN_URL == None:
+            if self.MAIN_URL is None:
                 self.selectDomain()
         except Exception:
             printExc()
@@ -865,7 +865,7 @@ class CBaseHostClass:
 
     def setInitListFromFavouriteItem(self, fav_data):
         try:
-            if self.MAIN_URL == None:
+            if self.MAIN_URL is None:
                 self.selectDomain()
         except Exception:
             printExc()

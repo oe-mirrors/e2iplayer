@@ -225,7 +225,7 @@ class JoeMonster(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_poczekalnia':
             self.listPoczekalnia(self.currItem)

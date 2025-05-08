@@ -222,7 +222,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                     self.cacheSeasons[season].append(eParams)
                 else:
                     promEpisodeItem = eParams
-            if None != promEpisodeItem:
+            if None is not promEpisodeItem:
                 self.cacheSeasons[season].insert(0, promEpisodeItem)
 
             params = {'season': season, 'serie_title': titleN24, 'imdbid': imdbid}
@@ -231,7 +231,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             else:
                 tab.append(params)
 
-        if None != promItem:
+        if None is not promItem:
             tab.insert(0, promItem)
 
         for item in tab:
@@ -402,7 +402,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.initSubProvider(self.currItem)
             self.getMoviesList({'name': 'category', 'category': 'get_movies_list'}, 'get_seasons')
         elif category == 'get_movies_list':

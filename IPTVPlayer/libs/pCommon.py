@@ -139,10 +139,10 @@ class CParsingHelper:
     @staticmethod
     def getDataBeetwenReMarkers(data, pattern1, pattern2, withMarkers=True):
         match1 = pattern1.search(data)
-        if None == match1 or -1 == match1.start(0):
+        if None is match1 or -1 == match1.start(0):
             return False, ''
         match2 = pattern2.search(data[match1.end(0):])
-        if None == match2 or -1 == match2.start(0):
+        if None is match2 or -1 == match2.start(0):
             return False, ''
 
         if withMarkers:
@@ -257,7 +257,7 @@ class CParsingHelper:
                             }
         if isinstance(txt, bytes):
             txt = txt.decode('utf-8')
-        if None != idx:
+        if None is not idx:
             txt = txt[idx]
         nrmtxt = unicodedata.normalize('NFC', txt)
         ret_str = []
@@ -308,7 +308,7 @@ class common:
         tmpParams = {}
         postData = None
         if isinstance(url, strwithmeta):
-            if None != baseHeaderOutParams:
+            if None is not baseHeaderOutParams:
                 tmpParams['header'] = baseHeaderOutParams
             else:
                 tmpParams['header'] = {}
@@ -415,7 +415,7 @@ class common:
     def usePyCurl(self):
         bRet = False
         if UsePyCurl():
-            if self.pyCurlAvailable == None:
+            if self.pyCurlAvailable is None:
                 try:
                     #import pycurl as pycurl
                     #test = pycurl.SSLVERSION_TLSv1_3
@@ -474,7 +474,7 @@ class common:
                 cj = cookielib.MozillaCookieJar()
             cj.load(cookiefile, ignore_discard=ignoreDiscard)
             for cookie in cj:
-                if cookie.name not in leaveNames and (None == removeNames or cookie.name in removeNames):
+                if cookie.name not in leaveNames and (None is removeNames or cookie.name in removeNames):
                     toRemove.append(cookie)
             for cookie in toRemove:
                 cj.clear(cookie.domain, cookie.path, cookie.name)
@@ -622,19 +622,19 @@ class common:
                     printDBG('wrong body: %s' % hexlify(value))
                     return 0
 
-            if fileHandler != None and 0 == len(checkFromFirstBytes):
+            if fileHandler is not None and 0 == len(checkFromFirstBytes):
                 # all check were done so, we can start write data to file
                 try:
                     if fileHandler.tell() == 0 and CurrBuffer.tell() > 0:
                         fileHandler.write(ensure_binary(CurrBuffer.getvalue()))
 
-                    if toWriteData != None:
+                    if toWriteData is not None:
                         fileHandler.write(toWriteData)
                 except Exception:
                     printExc()
                     return 0  # wrong file handle
 
-            if toWriteData != None and params['return_data']:
+            if toWriteData is not None and params['return_data']:
                 CurrBuffer.write(toWriteData)
 
         def _terminateFunction(download_t, download_d, upload_t, upload_d):
@@ -652,7 +652,7 @@ class common:
 
             if 'header' in params:
                 headers = params['header']
-            elif None != self.HEADER:
+            elif None is not self.HEADER:
                 headers = self.HEADER
             else:
                 headers = {'User-Agent': host}
@@ -669,7 +669,7 @@ class common:
             # we can not kill thread when we are in any function of pycurl
             SetThreadKillable(False)
 
-            if None == self.curlSession:
+            if None is self.curlSession:
                 curlSession = pycurl.Curl()
             elif params.get('use_new_session', False):
                 curlSession = self.curlSession
@@ -700,9 +700,9 @@ class common:
                 curlSession.setopt(pycurl.HTTPHEADER, customHeaders)
 
             curlSession.setopt(pycurl.ACCEPT_ENCODING, "")  # enable all supported built-in compressions
-            if None != params.get('ssl_protocol', None):
+            if None is not params.get('ssl_protocol', None):
                 sslProtoVer = self.getPyCurlSSLProtocolVersion(params['ssl_protocol'])
-                if None != sslProtoVer:
+                if None is not sslProtoVer:
                     curlSession.setopt(pycurl.SSLVERSION, sslProtoVer)
 
             if 'use_cookie' not in params and 'cookiefile' in params and ('load_cookie' in params or 'save_cookie' in params):
@@ -723,7 +723,7 @@ class common:
                 if params.get('save_cookie', False):
                     curlSession.setopt(pycurl.COOKIEJAR, params.get('cookiefile', ''))
 
-            if timeout != None:
+            if timeout is not None:
                 curlSession.setopt(pycurl.CONNECTTIMEOUT, timeout)  # in seconds - connection timeout
                 curlSession.setopt(pycurl.LOW_SPEED_TIME, timeout)  # in seconds
                 curlSession.setopt(pycurl.LOW_SPEED_LIMIT, 10)  # in bytes
@@ -768,7 +768,7 @@ class common:
 
             curlSession.setopt(pycurl.URL, pageUrl)
 
-            if None != post_data:
+            if None is not post_data:
                 printDBG('pCommon - getPageWithPyCurl() -> post data: ' + str(post_data))
                 if params.get('raw_post_data', False):
                     curlSession.setopt(pycurl.POSTFIELDS, post_data)
@@ -874,7 +874,7 @@ class common:
         # some error can be caused because of session reuse
         # if we use old curlSession and fail we should
         # re-try with fresh curlSession
-        if self.curlSession != None:
+        if self.curlSession is not None:
             sessionReused = True
         else:
             sessionReused = False
@@ -1022,7 +1022,7 @@ class common:
         current = 0
         while current < 5:
             #if True:
-            if not sts and None != data:
+            if not sts and None is not data:
                 start_time = time.time()
                 current += 1
                 doRefresh = False
@@ -1244,13 +1244,13 @@ class common:
                         break
                     downDataSize += len(CurrBuffer)
                     if len(CurrBuffer):
-                        if fileHandler == None:
+                        if fileHandler is None:
                             fileHandler = open(file_path, "wb")
                         fileHandler.write(CurrBuffer)
-                if fileHandler != None:
+                if fileHandler is not None:
                     fileHandler.close()
                 downHandler.close()
-                if None != contentLength:
+                if None is not contentLength:
                     if contentLength == downDataSize:
                         bRet = True
                 elif downDataSize > 0:
@@ -1285,12 +1285,12 @@ class common:
         def urlOpen(req, customOpeners, timeout):
             if len(customOpeners) > 0:
                 opener = build_opener(*customOpeners)
-                if timeout != None:
+                if timeout is not None:
                     response = opener.open(req, timeout=timeout)
                 else:
                     response = opener.open(req)
             else:
-                if timeout != None:
+                if timeout is not None:
                     response = urlopen(req, timeout=timeout)
                 else:
                     response = urlopen(req)
@@ -1322,7 +1322,7 @@ class common:
 
         if 'header' in params:
             headers = params['header']
-        elif None != self.HEADER:
+        elif None is not self.HEADER:
             headers = self.HEADER
         else:
             headers = {'User-Agent': host}
@@ -1358,7 +1358,7 @@ class common:
         if params.get('no_redirection', False):
             customOpeners.append(NoRedirection())
 
-        if None != params.get('ssl_protocol', None):
+        if None is not params.get('ssl_protocol', None):
             sslProtoVer = self.getUrllibSSLProtocolVersion(params['ssl_protocol'])
         else:
             sslProtoVer = None
@@ -1367,14 +1367,14 @@ class common:
         #customOpeners.append(urllib2.HTTPHandler(debuglevel=1))
         if not IsHttpsCertValidationEnabled():
             try:
-                if sslProtoVer != None:
+                if sslProtoVer is not None:
                     ctx = ssl._create_unverified_context(sslProtoVer)
                 else:
                     ctx = ssl._create_unverified_context()
                 customOpeners.append(HTTPSHandler(context=ctx))
             except Exception:
                 pass
-        elif sslProtoVer != None:
+        elif sslProtoVer is not None:
             ctx = ssl.SSLContext(sslProtoVer)
             customOpeners.append(HTTPSHandler(context=ctx))
 
@@ -1400,7 +1400,7 @@ class common:
             pageUrl = pageUrl.split('"', 1)[0]  # " is incorrect char for url, shouldn't be there so removing it and everything after it
             printDBG("CORRECTED pageUrl: [%s]" % pageUrl)
 
-        if None != post_data:
+        if None is not post_data:
             printDBG('pCommon - getURLRequestData() -> post data: ' + str(post_data))
             if params.get('raw_post_data', False):
                 dataPost = post_data

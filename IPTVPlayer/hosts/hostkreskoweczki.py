@@ -52,7 +52,7 @@ class KreskoweczkiPL(CBaseHostClass):
             params.update({'header': HTTP_HEADER})
 
         sts, data = self.cm.getPage(url, params, post_data)
-        if sts and None == data:
+        if sts and None is data:
             sts = False
         if sts and 'Duze obciazenie!' in data:
             SetIPTVPlayerLastHostError(self.cleanHtmlStr(data))
@@ -274,7 +274,7 @@ class KreskoweczkiPL(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_abc':
             self.listABC(self.currItem, 'list_items')

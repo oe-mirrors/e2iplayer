@@ -110,7 +110,7 @@ class ZDFmediathek(CBaseHostClass):
             #params['header']['Cookie'] = 'flags=2e5;'
             url = proxy
         sts, data = self.cm.getPage(url, params, post_data)
-        if sts and None == data:
+        if sts and None is data:
             sts = False
         if sts and 'Duze obciazenie!' in data:
             SetIPTVPlayerLastHostError(self.cleanHtmlStr(data))
@@ -538,7 +538,7 @@ class ZDFmediathek(CBaseHostClass):
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'kinder' == category:
             self.listsTab(self.KINDER_TAB, self.currItem)

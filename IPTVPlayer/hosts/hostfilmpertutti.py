@@ -254,7 +254,7 @@ class FilmPertutti(CBaseHostClass):
         itemsList = []
 
         url = cItem.get('prev_url', cItem['url'])
-        if data == None:
+        if data is None:
             sts, data = self.getPage(url)
             if not sts:
                 data = ''
@@ -299,7 +299,7 @@ class FilmPertutti(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
         elif category == 'list_cats':
             self.listCategories(self.currItem, 'list_items')

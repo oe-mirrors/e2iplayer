@@ -105,7 +105,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
 
     def __onClose(self):
         self["list"].disconnectSelChanged(self.onSelectionChanged)
-        if None != self.workconsole:
+        if None is not self.workconsole:
             self.workconsole.kill()
         self.workconsole = None
         self.cleanDownloader()
@@ -113,7 +113,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
     def cleanDownloader(self):
         self.downloadedSubFilePath = ""
         self.currItem = {}
-        if self.downloader != None:
+        if self.downloader is not None:
             self.downloader.unsubscribeFor_Finish(self.downloadFinished)
             self.downloader.terminate()
         self.downloader = None
@@ -247,7 +247,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
 
     def keyExit(self):
         if False is self.listMode:
-            if self.downloader != None and self.downloader.isDownloading():
+            if self.downloader is not None and self.downloader.isDownloading():
                 self.downloader.terminate()
             else:
                 tmpList = self.params.get('sub_list', [])
@@ -262,7 +262,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         if False is self.listMode:
             return
         idx, item = self.getSelectedItem()
-        if None != item:
+        if None is not item:
             self.startDownload(item.privateData)
 
     def keyRed(self):
@@ -289,7 +289,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         try:
             if self["list"].visible:
                 sel = self["list"].l.getCurrentSelection()[0]
-                if None != sel:
+                if None is not sel:
                     return idx, sel
         except Exception:
             printExc()

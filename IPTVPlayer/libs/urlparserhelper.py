@@ -429,7 +429,7 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
                     item['url'] = decorateUrl(playlist.absolute_uri, meta)
 
                 item['bitrate'] = playlist.stream_info.bandwidth
-                if None != playlist.stream_info.resolution:
+                if None is not playlist.stream_info.resolution:
                     item['with'] = playlist.stream_info.resolution[0]
                     item['heigth'] = playlist.stream_info.resolution[1]
                 else:

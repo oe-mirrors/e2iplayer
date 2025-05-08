@@ -147,7 +147,7 @@ class MergeDownloader(BaseDownloader):
         self.console.execute(cmd)
 
     def _dataAvail(self, data):
-        if None == data:
+        if None is data:
             return
         self.outData += data.decode(encoding='utf-8', errors='strict')
         if 'Saving to:' in self.outData:
@@ -165,7 +165,7 @@ class MergeDownloader(BaseDownloader):
 
     def _terminate(self):
         printDBG("MergeDownloader._terminate")
-        if None != self.iptv_sys:
+        if None is not self.iptv_sys:
             self.iptv_sys.kill()
             self.iptv_sys = None
         if self.status in [DMHelper.STS.DOWNLOADING, DMHelper.STS.POSTPROCESSING]:
@@ -179,7 +179,7 @@ class MergeDownloader(BaseDownloader):
         printDBG("MergeDownloader._cmdFinished code[%r] terminated[%r]" % (code, terminated))
 
         # break circular references
-        if None != self.console:
+        if None is not self.console:
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
             self.console = None

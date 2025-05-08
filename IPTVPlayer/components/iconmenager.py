@@ -86,13 +86,13 @@ class IconMenager:
     def stopWorkThread(self):
         self.lockDQ.acquire()
 
-        if self.workThread != None and self.workThread.Thread.is_alive():
+        if self.workThread is not None and self.workThread.Thread.is_alive():
             self.stopThread = True
 
         self.lockDQ.release()
 
     def runWorkThread(self):
-        if self.workThread == None or not self.workThread.Thread.is_alive():
+        if self.workThread is None or not self.workThread.Thread.is_alive():
             self.workThread = AsyncMethod(self.processDQ)()
 
     def clearDQueue(self):
@@ -147,7 +147,7 @@ class IconMenager:
         ret = False
         #without locking. Is it safety?
         self.lockAA.acquire()
-        if None != self.queueAA.get(file, None):
+        if None is not self.queueAA.get(file, None):
             ret = True
         self.lockAA.release()
 

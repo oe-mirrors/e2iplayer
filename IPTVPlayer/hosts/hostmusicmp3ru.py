@@ -327,7 +327,7 @@ class MusicMp3Ru(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'sub_menu')
         elif category == 'sub_menu':
             self.listSubMenu(self.currItem)

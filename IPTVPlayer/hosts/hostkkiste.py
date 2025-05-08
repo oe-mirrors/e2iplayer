@@ -170,13 +170,13 @@ class KKisteAG(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.menu()
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'list_items' == category:
             self.listItems(self.currItem, 'video')

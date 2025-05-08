@@ -860,10 +860,10 @@ class urlparser:
         return hostName
 
     def getParser(self, url, host=None):
-        if None == host:
+        if None is host:
             host = self.getHostName(url)
         parser = self.hostMap.get(host, None)
-        if None == parser:
+        if None is parser:
             host2 = host[host.find('.') + 1:]
             printDBG('urlparser.getParser II try host[%s]->host2[%s]' % (host, host2))
             parser = self.hostMap.get(host2, None)
@@ -881,7 +881,7 @@ class urlparser:
 
         ret = 0
         parser = self.getParser(url, host)
-        if None != parser:
+        if None is not parser:
             return 1
         elif self.isHostsNotSupported(host):
             return -1
@@ -920,7 +920,7 @@ class urlparser:
             url = self.decorateParamsFromUrl(url)
             nUrl = ''
             parser = self.getParser(url)
-            if None != parser:
+            if None is not parser:
                 nUrl = parser(url)
             else:
                 host = self.getHostName(url)
@@ -948,7 +948,7 @@ class urlparser:
         num = 0
         while True:
             num += 1
-            if None == data:
+            if None is data:
                 url = strwithmeta(url)
                 HTTP_HEADER = dict(pageParser.HTTP_HEADER)
                 HTTP_HEADER['Referer'] = url.meta.get('Referer', url)
@@ -1321,7 +1321,7 @@ class pageParser(CaptchaHelper):
         return sts, data
 
     def getYTParser(self):
-        if self.ytParser == None:
+        if self.ytParser is None:
             try:
                 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
                 self.ytParser = YouTubeParser()
@@ -1331,7 +1331,7 @@ class pageParser(CaptchaHelper):
         return self.ytParser
 
     def getVevoIE(self):
-        if self.vevoIE == None:
+        if self.vevoIE is None:
             try:
                 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.vevo import VevoIE
                 self.vevoIE = VevoIE()
@@ -1341,7 +1341,7 @@ class pageParser(CaptchaHelper):
         return self.vevoIE
 
     def getBBCIE(self):
-        if self.bbcIE == None:
+        if self.bbcIE is None:
             try:
                 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.bbc import BBCCoUkIE
                 self.bbcIE = BBCCoUkIE()
@@ -1351,7 +1351,7 @@ class pageParser(CaptchaHelper):
         return self.bbcIE
 
     def getMoonwalkParser(self):
-        if self.moonwalkParser == None:
+        if self.moonwalkParser is None:
             try:
                 from Plugins.Extensions.IPTVPlayer.libs.moonwalkcc import MoonwalkParser
                 self.moonwalkParser = MoonwalkParser()
@@ -1516,7 +1516,7 @@ class pageParser(CaptchaHelper):
             if errMarker in data:
                 SetIPTVPlayerLastHostError(errMarker)
 
-        if _preProcessing != None:
+        if _preProcessing is not None:
             data = _preProcessing(data)
         printDBG("Data: " + data)
 
@@ -1556,7 +1556,7 @@ class pageParser(CaptchaHelper):
                 if tmpData == '':
                     tmpData = unpackJSPlayerParams(data2, VIDUPME_decryptPlayerParams, 0)
 
-                if None != tmpData:
+                if None is not tmpData:
                     data = data + tmpData
 
         printDBG("-*-*-*-*-*-*-*-*-*-*-*-*-*-\nData: %s\n-*-*-*-*-*-*-*-*-*-*-*-*-*-\n" % data)
@@ -1618,7 +1618,7 @@ class pageParser(CaptchaHelper):
                 videoTab.extend(getMPDLinksWithMeta(url, False))
 
             filekey = re.search('flashvars.filekey="([^"]+?)";', data)
-            if None == filekey:
+            if None is filekey:
                 filekey = re.search("flashvars.filekey=([^;]+?);", data)
                 filekey = re.search('var {0}="([^"]+?)";'.format(filekey.group(1)), data)
             filekey = filekey.group(1)
@@ -1677,7 +1677,7 @@ class pageParser(CaptchaHelper):
                                 if '' != sleep_time:
                                     GetIPTVSleep().Sleep(int(sleep_time))
                             except Exception:
-                                if sleep_time != None:
+                                if sleep_time is not None:
                                     GetIPTVSleep().Sleep(sleep_time)
                                 printExc()
                         HTTP_HEADER['Referer'] = url
@@ -1690,7 +1690,7 @@ class pageParser(CaptchaHelper):
                                     data = tmpItem + data
                                 except Exception:
                                     printExc()
-                    if None != customLinksFinder:
+                    if None is not customLinksFinder:
                         linkList = customLinksFinder(data)
                     if 0 == len(linkList):
                         linkList = self._findLinks(data, serverName)
@@ -2463,9 +2463,9 @@ class pageParser(CaptchaHelper):
                 del movieUrls[idx]
                 break
         movieUrls = movieUrls[::-1]
-        if None != defaultItem:
+        if None is not defaultItem:
             movieUrls.insert(0, defaultItem)
-        if None != cacheItem:
+        if None is not cacheItem:
             movieUrls.insert(0, cacheItem)
         return movieUrls
 
@@ -3027,7 +3027,7 @@ class pageParser(CaptchaHelper):
             return False
         # unpack and decode params from JS player script code
         tmp = unpackJSPlayerParams(tmp, VIDUPME_decryptPlayerParams)
-        if tmp != None:
+        if tmp is not None:
             data = tmp + data
         printDBG(tmp)
         subData = CParsingHelper.getDataBeetwenMarkers(data, "captions", '}')[1]
@@ -3267,7 +3267,7 @@ class pageParser(CaptchaHelper):
                         defaultItem = formatItem
                     else:
                         formatsTab.append(formatItem)
-            if None != defaultItem:
+            if None is not defaultItem:
                 formatsTab.insert(0, defaultItem)
             if 0 == len(formatsTab):
                 return False
@@ -3350,7 +3350,7 @@ class pageParser(CaptchaHelper):
             except Exception:
                 return 0
 
-        if None != self.getYTParser():
+        if None is not self.getYTParser():
             try:
                 formats = config.plugins.iptvplayer.ytformat.value
                 height = config.plugins.iptvplayer.ytDefaultformat.value
@@ -4391,9 +4391,9 @@ class pageParser(CaptchaHelper):
         embeded = urlParams.get('embeded', ["false"])[0].lower() in boolTab
         inskin = urlParams.get('inskin', ["false"])[0].lower() in boolTab
 
-        if None == key:
+        if None is key:
             return False
-        if None == login:
+        if None is login:
             login = getShardUserFromKey(key)
         if embeded:
             pltype = "eb"
@@ -4453,7 +4453,7 @@ class pageParser(CaptchaHelper):
 
         titlesMap = {0: 'SD', 1: 'HD'}
         for item in qualities:
-            if data2 == None:
+            if data2 is None:
                 sts, data2 = self.cm.getPage(item['url'], params)
                 if not sts:
                     data2 = None
@@ -4945,7 +4945,7 @@ class pageParser(CaptchaHelper):
         tmp = self.cm.ph.getDataBeetwenMarkers(tmp, ">eval(", '</script>')[1]
         # unpack and decode params from JS player script code
         tmp = unpackJSPlayerParams(tmp, VIDUPME_decryptPlayerParams)
-        if tmp != None:
+        if tmp is not None:
             data = tmp + data
         # printDBG(data)
         # get direct link to file from params
@@ -9140,7 +9140,7 @@ class pageParser(CaptchaHelper):
                 data = data['result']['0']['formats']['wideo']
                 for type in data:
                     for vidItem in data[type]:
-                        if None != vidItem.get('drm_key', None):
+                        if None is not vidItem.get('drm_key', None):
                             continue
                         vidUrl = vidItem.get('url', '')
                         if '' == vidUrl:
@@ -9149,9 +9149,9 @@ class pageParser(CaptchaHelper):
                             tmpTab = getDirectM3U8Playlist(vidUrl)
                             for tmp in tmpTab:
                                 videoUrls.append({'name': 'ONET type:%s :%s' % (type, tmp.get('bitrate', '0')), 'url': tmp['url']})
-                        elif None != vidItem.get('video_bitrate', None):
+                        elif None is not vidItem.get('video_bitrate', None):
                             videoUrls.append({'name': 'ONET type:%s :%s' % (type, vidItem.get('video_bitrate', '0')), 'url': vidUrl})
-                        elif None != vidItem.get('audio_bitrate', None):
+                        elif None is not vidItem.get('audio_bitrate', None):
                             videoUrls.append({'name': 'ONET type:%s :%s' % (type, vidItem.get('audio_bitrate', '0')), 'url': vidUrl})
             except Exception:
                 printExc()
@@ -12029,7 +12029,7 @@ class pageParser(CaptchaHelper):
 
     def parserSPORTSTREAM365(self, baseUrl):
         printDBG("parserSPORTSTREAM365 baseUrl[%r]" % baseUrl)
-        if self.sportStream365ServIP == None:
+        if self.sportStream365ServIP is None:
             retry = False
         else:
             retry = True
@@ -12056,7 +12056,7 @@ class pageParser(CaptchaHelper):
         if 'Referer' not in HTTP_HEADER:
             HTTP_HEADER['Referer'] = cUrl
         mainUrl = self.cm.getBaseUrl(cUrl)
-        if None == self.sportStream365ServIP:
+        if None is self.sportStream365ServIP:
             url = self.cm.getFullUrl('/cinema', mainUrl)
             sts, data = self.cm.getPage(url, MergeDicts(defaultParams, {'raw_post_data': True}), post_data='')
             if not sts:

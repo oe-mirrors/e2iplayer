@@ -54,7 +54,7 @@ class BlockCipher:
         else:
             self.bytesToEncrypt = ''
 
-        if more == None:   # no more data expected from caller
+        if more is None:   # no more data expected from caller
             finalBytes = self.padding.addPad(self.bytesToEncrypt, self.blockSize)
             if len(finalBytes) > 0:
                 ctBlock = self.encryptBlock(finalBytes)
@@ -71,12 +71,12 @@ class BlockCipher:
             self.bytesToDecrypt += cipherText.encode('utf-8', 'ignore')  # append to any bytes from prior decrypt
 
         numBlocks, numExtraBytes = divmod(len(self.bytesToDecrypt), self.blockSize)
-        if more == None:  # no more calls to decrypt, should have all the data
+        if more is None:  # no more calls to decrypt, should have all the data
             if numExtraBytes != 0:
                 raise DecryptNotBlockAlignedError('Data not block aligned on decrypt')
 
         # hold back some bytes in case last decrypt has zero len
-        if (more != None) and (numExtraBytes == 0) and (numBlocks > 0):
+        if (more is not None) and (numExtraBytes == 0) and (numBlocks > 0):
             numBlocks -= 1
             numExtraBytes = self.blockSize
 
@@ -92,7 +92,7 @@ class BlockCipher:
         else:
             self.bytesToEncrypt = ''
 
-        if more == None:         # last decrypt remove padding
+        if more is None:         # last decrypt remove padding
             plainText = self.padding.removePad(plainText, self.blockSize)
             self.resetDecrypt()
         return plainText

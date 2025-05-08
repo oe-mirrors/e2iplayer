@@ -79,7 +79,7 @@ class Ipla(CBaseHostClass):
         self.cm.HEADER = {'User-Agent': self.HOST, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
 
     def getStr(self, v, default=''):
-        if None == v:
+        if None is v:
             return default
         return ensure_str(v)
 
@@ -207,13 +207,13 @@ class Ipla(CBaseHostClass):
                 data = ''
             return data
 
-        if None == self.categoryXMLTree or refresh:
+        if None is self.categoryXMLTree or refresh:
             try:
                 bFromCache = True
                 data = None
                 if not refresh:
                     data = self.__readCategoryCache()
-                if None == data:
+                if None is data:
                     bFromCache = False
                     data = _fromUrl()
                 self.categoryXMLTree = self.__simpleCategoryParser(data)
@@ -324,7 +324,7 @@ class Ipla(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if category == None:
+        if category is None:
             self.listsMainMenu(refresh)
     #GET SUB CATEGORY
         elif category == 'category':

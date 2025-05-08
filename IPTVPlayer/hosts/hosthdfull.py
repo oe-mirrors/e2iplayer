@@ -80,7 +80,7 @@ class SuggestionsProvider:
 
 def jstr(item, key, default=''):
     v = item.get(key, default)
-    if None == v:
+    if None is v:
         return default
     else:
         return ensure_str(v)
@@ -544,7 +544,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         retTab = []
 
         url = cItem.get('prev_url', cItem['url'])
-        if data == None:
+        if data is None:
             self.tryTologin()
             sts, data = self.getPage(url)
             if not sts:
@@ -589,7 +589,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.hdfull_login.value or \
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.hdfull_login.value or \
             self.password != config.plugins.iptvplayer.hdfull_password.value:
 
             self.cm.clearCookie(self.COOKIE_FILE, removeNames=['language'])
@@ -668,7 +668,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         self.tryTologin()
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
 
         elif category in ['list_sort_series', 'list_sort_movies']:

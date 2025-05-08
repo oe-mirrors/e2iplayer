@@ -84,7 +84,7 @@ class AkoAm(CBaseHostClass):
             baseUrl = self.cm.iriToUri(baseUrl)
 
             proxy = self.getProxy()
-            if proxy != None:
+            if proxy is not None:
                 addParams = MergeDicts(addParams, {'http_proxy': proxy})
             addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
             sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -100,7 +100,7 @@ class AkoAm(CBaseHostClass):
         if url == '':
             return url
         proxy = self.getProxy()
-        if proxy != None:
+        if proxy is not None:
             url = strwithmeta(url, {'iptv_http_proxy': proxy})
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance', '__cfduid'])
         url = strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.HTTP_HEADER['User-Agent']})
@@ -167,7 +167,7 @@ class AkoAm(CBaseHostClass):
         printDBG("InteriaTv.listItems")
         page = cItem.get('page', 1)
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -463,7 +463,7 @@ class AkoAm(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None and category == '':
+        if name is None and category == '':
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'}, 'sub_menu')
         elif category == 'sub_menu':

@@ -69,7 +69,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
     def _getStr(self, item, key, default=''):
         if key not in item:
             val = default
-        if item[key] == None:
+        if item[key] is None:
             val = default
         val = str(item[key])
         return self._(val)
@@ -497,7 +497,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_genres':
             self.listGenres(self.currItem, 'list_rating')

@@ -128,7 +128,7 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
 
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(url, urlParams)
-        if None == tmpDIR:
+        if None is tmpDIR:
             return
 
         cItem = dict(cItem)
@@ -183,7 +183,7 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listSubItems(self.currItem, 'list_subtitles')
         elif category == 'list_subtitles':
             self.getSubtitlesList(self.currItem)

@@ -264,7 +264,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
 
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(url, urlParams)
-        if None == tmpDIR:
+        if None is tmpDIR:
             return
 
         cItem = dict(cItem)
@@ -319,7 +319,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.getMoviesTitles({'name': 'category'}, 'get_type')
         elif category == 'get_type':
             # take actions depending on the type

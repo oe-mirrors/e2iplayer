@@ -561,7 +561,7 @@ class MindigTVHU(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_tvChannels':
             self.listTVChannels(self.currItem)

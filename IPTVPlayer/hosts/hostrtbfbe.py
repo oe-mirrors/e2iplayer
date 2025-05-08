@@ -113,7 +113,7 @@ class RTBFBE(CBaseHostClass):
 
     def getPartnerKey(self, data=None):
         if '' in [self.csrfToken, self.partnerKey]:
-            if data == None:
+            if data is None:
                 sts, data = self.getPage(self.getMainUrl())
                 if not sts:
                     return ''
@@ -704,7 +704,7 @@ class RTBFBE(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'sub_menu')
     #LIVE
         elif category == 'live_categories':

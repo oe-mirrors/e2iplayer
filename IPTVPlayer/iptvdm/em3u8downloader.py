@@ -77,7 +77,7 @@ class EM3U8Downloader(M3U8Downloader):
             self.onFinish()
 
     def _updateEM3U8DataAvail(self, data):
-        if None != data and 0 < len(data):
+        if None is not data and 0 < len(data):
             self.EM3U8ListData += data
             if self.EM3U8ListData.endswith('\n'):
                 printDBG(self.EM3U8ListData)

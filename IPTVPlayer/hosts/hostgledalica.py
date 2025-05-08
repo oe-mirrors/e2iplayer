@@ -214,7 +214,7 @@ class Gledalica(CBaseHostClass):
     def listItems(self, cItem, nextCategory, data=None):
         printDBG("Gledalica.listItems [%s]" % cItem)
         page = cItem.get('page', 1)
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -502,7 +502,7 @@ class Gledalica(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None and category == '':
+        if name is None and category == '':
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
         elif category == 'topvideos':

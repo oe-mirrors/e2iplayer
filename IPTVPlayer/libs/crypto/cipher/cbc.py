@@ -58,7 +58,7 @@ class CBC(BlockCipher):
         if self.encryptBlockCount == 0:
             self.iv = iv
         else:
-            assert (iv == None), 'IV used only on first call to encrypt'
+            assert (iv is None), 'IV used only on first call to encrypt'
 
         return BlockCipher.encrypt(self, plainText, more=more)
 
@@ -69,7 +69,7 @@ class CBC(BlockCipher):
         if self.decryptBlockCount == 0:
             self.iv = iv
         else:
-            assert (iv == None), 'IV used only on first call to decrypt'
+            assert (iv is None), 'IV used only on first call to decrypt'
 
         return BlockCipher.decrypt(self, cipherText, more=more)
 
@@ -77,7 +77,7 @@ class CBC(BlockCipher):
         """ CBC block encryption, IV is set with 'encrypt' """
         auto_IV = ''
         if self.encryptBlockCount == 0:
-            if self.iv == None:
+            if self.iv is None:
                 # generate IV and use
                 self.iv = ''.join([chr(self.r.randrange(256)) for i in range(self.blockSize)])
                 self.prior_encr_CT_block = self.iv
@@ -94,7 +94,7 @@ class CBC(BlockCipher):
         """ Decrypt a single block """
 
         if self.decryptBlockCount == 0:   # first call, process IV
-            if self.iv == None:    # auto decrypt IV?
+            if self.iv is None:    # auto decrypt IV?
                 self.prior_CT_block = encryptedBlock
                 return ''
             else:

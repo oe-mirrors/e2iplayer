@@ -252,7 +252,7 @@ class OipeiratesOnline(CBaseHostClass):
             mode = 'collect_item'
             spTab = [re.compile('<b>'), re.compile(r'<div[\s]+class="separator"[\s]+style="text-align\:[\s]+center;">'), re.compile(r'<div[\s]+style="text-align\:[\s]+center;">')]
             for sp in spTab:
-                if None != sp.search(linksData):
+                if None is not sp.search(linksData):
                     break
 
             collectionItems = sp.split(linksData)
@@ -389,7 +389,7 @@ class OipeiratesOnline(CBaseHostClass):
         retTab = []
         otherInfo = {}
 
-        if data == None:
+        if data is None:
             url = cItem.get('prev_url', cItem['url'])
             sts, data = self.getPage(url)
             if not sts:
@@ -423,7 +423,7 @@ class OipeiratesOnline(CBaseHostClass):
         self.currItem.pop('good_for_fav', None)
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_main_items':
             self.listMainItems(self.currItem, 'list_items')

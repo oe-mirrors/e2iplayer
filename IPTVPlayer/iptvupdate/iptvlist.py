@@ -81,7 +81,7 @@ class IPTVUpdateList(IPTVListComponentBase):
         res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, self.fonts[1][2], width - 70, self.fonts[0][2], 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.get('info', '')))
 
         idx = item.get('icon', None)
-        if None != idx and idx < len(self.iconsPixList):
+        if None is not idx and idx < len(self.iconsPixList):
             iconPix = self.iconsPixList[idx]
         else:
             iconPix = None

@@ -213,7 +213,7 @@ class WkylinewebcamsComApi:
         cat = cItem.get('cat', None)
         lang = config.plugins.iptvplayer.skylinewebcams_lang.value
         self.lang = lang
-        if None == cat:
+        if None is cat:
             cItem = dict(cItem)
             cItem['url'] = self.MAIN_URL + lang + '.html'
             return self.getMainMenu(cItem)

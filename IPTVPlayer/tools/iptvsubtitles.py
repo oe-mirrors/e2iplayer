@@ -59,7 +59,7 @@ class IPTVSubtitlesHandler:
             tc = tc[1:]
 
         match = self.TIMECODE_RE.match(tc)
-        hh, mm, ss, ms = [0 if x == None else int(x) for x in match.groups()]
+        hh, mm, ss, ms = [0 if x is None else int(x) for x in match.groups()]
         return ((hh * 3600 + mm * 60 + ss) * 1000 + ms) * sign
 
     def _srtTc2ms(self, time):
@@ -124,7 +124,7 @@ class IPTVSubtitlesHandler:
 
         for s in mplData:
             tmp = reObj.search(s)
-            if None != tmp:
+            if None is not tmp:
                 subAtoms.append({'start': self._mplTc2ms(tmp.group(1)), 'end': self._mplTc2ms(tmp.group(2)), 'text': self._mplClearText(tmp.group(3))})
         return subAtoms
 

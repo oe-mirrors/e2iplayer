@@ -59,7 +59,7 @@ class FilmOnComApi:
 
     def initSession(self, force=False):
         printDBG('FilmOnComApi.initSession force[%r]' % force)
-        if force or None == self.session_key:
+        if force or None is self.session_key:
             self.session_key = None
             data = FilmOnComApi.MAINURL + '/api/init?' + FilmOnComApi.BASE_INIT_PARAMS + '&' + FilmOnComApi.STREAMING_PROTOCOLS[self.streamprotocol]
             sts, data = self.cm.getPage(data)
@@ -72,7 +72,7 @@ class FilmOnComApi:
                 except Exception:
                     printExc()
                 self._login()
-        return (None != self.session_key)
+        return (None is not self.session_key)
 
     def getUrlForChannel(self, channelID):
         printDBG('FilmOnComApi.getGroupList channelID[%r]' % channelID)
@@ -170,7 +170,7 @@ class FilmOnComApi:
 
     def _login(self):
         printDBG('FilmOnComApi.__login sessionKey[%s]' % str(self.session_key))
-        if self.PREMIUM and None != self.session_key:
+        if self.PREMIUM and None is not self.session_key:
             postData = {}
             postData['login'] = self.LOGIN
             postData['password'] = hex_md5(self.PASSWORD)

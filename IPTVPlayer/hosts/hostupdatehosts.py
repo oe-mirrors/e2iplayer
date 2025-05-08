@@ -185,7 +185,7 @@ class UPDATEHOSTS(CBaseHostClass):
             category = self.currItem.get("category", '')
             url = self.currItem.get("url", '')
             self.currList = []
-            if name == None:
+            if name is None:
                 self.main_menu({'name': 'category'})
             elif url == "changes":
                 self.getchanges()

@@ -68,11 +68,11 @@ class YoutubeComProvider(CBaseSubProviderClass):
         promotedItem = None
         for item in tab:
             params = dict(item)
-            if None == promotedItem and defaultLang == params['lang']:
+            if None is promotedItem and defaultLang == params['lang']:
                 promotedItem = params
             else:
                 self.addSubtitle(params)
-        if None != promotedItem:
+        if None is not promotedItem:
             self.addSubtitle(promotedItem, False)
 
     def _getFileName(self, title, lang, subId, ytid):
@@ -129,7 +129,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.getSubtitles({'name': 'category', })
 
         CBaseSubProviderClass.endHandleService(self, index, refresh)

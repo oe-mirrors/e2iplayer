@@ -76,13 +76,13 @@ class ForjaTN(CBaseHostClass):
                 title = self.cm.ph.rgetDataBeetwenMarkers2(item, '</%s>' % itemMarker, '>', False)[1]
                 title = self.cleanHtmlStr(title)
                 if value == '':
-                    if allTitle == None:
+                    if allTitle is None:
                         allTitle = title
                     continue
                 self.cacheFilters[key].append({'title': title.title(), key: value})
 
             if len(self.cacheFilters[key]):
-                if allTitle != None:
+                if allTitle is not None:
                     self.cacheFilters[key].insert(0, {'title': allTitle, key: ''})
                 self.cacheFiltersKeys.append(key)
 
@@ -330,7 +330,7 @@ class ForjaTN(CBaseHostClass):
 
         otherInfo = {}
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem.get('prev_url', cItem['url']))
             if not sts:
                 return []
@@ -386,7 +386,7 @@ class ForjaTN(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')

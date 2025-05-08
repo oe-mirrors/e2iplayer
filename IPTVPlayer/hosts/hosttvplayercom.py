@@ -239,7 +239,7 @@ class TVPlayer(CBaseHostClass):
                 self.getLinksForVideo({'next_try': True, 'url': self.defUrl})
                 streamUrl = 'https://live.tvplayer.com/stream.m3u8?id=%s' % post_data['id']
             else:
-                if None != data.get('drmToken'):
+                if None is not data.get('drmToken'):
                     _SetIPTVPlayerLastHostError(_('DRM protected streams are not supported.'))
                     if not config.plugins.iptvplayer.tvplayercom_drmbypass.value or cItem.get('next_try', False):
                         return []
@@ -336,7 +336,7 @@ class TVPlayer(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
         self.defUrl = self.getFullUrl('/watch/russiatoday')
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.tvplayercom_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.tvplayercom_login.value or\
             self.password != config.plugins.iptvplayer.tvplayercom_password.value:
 
             self.login = config.plugins.iptvplayer.tvplayercom_login.value
@@ -396,7 +396,7 @@ class TVPlayer(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             #self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
             cItem = dict(self.MAIN_CAT_TAB[0])
             cItem['name'] = 'category'

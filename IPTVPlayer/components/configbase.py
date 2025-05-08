@@ -257,10 +257,10 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
 
         if isinstance(currItem, ConfigIPTVFileSelection):
             def SetFilePathCallBack(curIndex, newPath):
-                if None != newPath:
+                if None is not newPath:
                     self["config"].list[curIndex][1].value = newPath
             try:
-                if None != currItem.fileMatch:
+                if None is not currItem.fileMatch:
                     if currItem.ignoreCase:
                         fileMatch = re.compile(currItem.fileMatch, re.IGNORECASE)
                     else:
@@ -275,7 +275,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
 
         elif isinstance(currItem, ConfigDirectory):
             def SetDirPathCallBack(curIndex, newPath):
-                if None != newPath:
+                if None is not newPath:
                     self["config"].list[curIndex][1].value = newPath
             self.session.openWithCallback(boundFunction(SetDirPathCallBack, curIndex), IPTVDirectorySelectorWidget, currDir=currItem.value, title=_('Select the directory'))
             return

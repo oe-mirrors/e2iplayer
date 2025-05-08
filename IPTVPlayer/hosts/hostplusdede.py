@@ -123,13 +123,13 @@ class PlusDEDE(CBaseHostClass):
                 title = self.cm.ph.rgetDataBeetwenMarkers2(item, '</%s>' % itemMarker, '>', False)[1]
                 title = self.cleanHtmlStr(title)
                 if value == '':
-                    if allTitle == None:
+                    if allTitle is None:
                         allTitle = title
                     continue
                 self.cacheFilters[key].append({'title': title.title(), key: value})
 
             if len(self.cacheFilters[key]):
-                if allTitle != None:
+                if allTitle is not None:
                     self.cacheFilters[key].insert(0, {'title': allTitle, key: ''})
                 self.cacheFiltersKeys.append(key)
 
@@ -469,7 +469,7 @@ class PlusDEDE(CBaseHostClass):
 
         otherInfo = {}
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem.get('prev_url', cItem['url']))
             if not sts:
                 return []
@@ -523,7 +523,7 @@ class PlusDEDE(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if PlusDEDE.login == None and PlusDEDE.password == None:
+        if PlusDEDE.login is None and PlusDEDE.password is None:
             if self.readLoginMarker() == self.calcLoginMarker(config.plugins.iptvplayer.plusdede_login.value, config.plugins.iptvplayer.plusdede_password.value):
                 PlusDEDE.login = config.plugins.iptvplayer.plusdede_login.value
                 PlusDEDE.password = config.plugins.iptvplayer.plusdede_password.value
@@ -667,7 +667,7 @@ class PlusDEDE(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')

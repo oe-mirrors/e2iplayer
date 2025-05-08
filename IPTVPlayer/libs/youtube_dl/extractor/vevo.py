@@ -184,7 +184,7 @@ class VevoIE(InfoExtractor):
         mobj = re.match(self._VALID_URL, url)
         video_id = mobj.group('id')
 
-        if hls == None:
+        if hls is None:
             hls = config.plugins.iptvplayer.vevo_allow_hls.value
 
         json_url = 'http://api.vevo.com/VideoService/AuthenticateVideo?isrc=%s' % video_id
@@ -253,12 +253,12 @@ class VevoIE(InfoExtractor):
         mobj = re.match(self._VALID_URL, url)
         video_id = mobj.group('id')
 
-        if hls == None:
+        if hls is None:
             hls = config.plugins.iptvplayer.vevo_allow_hls.value
 
         json_url = 'http://api.vevo.com/VideoService/AuthenticateVideo?isrc=%s' % video_id
         response = None  # self._download_json(json_url, video_id)
-        if response == None:
+        if response is None:
             video_info = {}
         else:
             video_info = response['video'] or {}

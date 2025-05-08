@@ -118,7 +118,7 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         for key in self.dictPIX:
             try:
                 pixFile = self.ICONS_FILESNAMES.get(key, None)
-                if None != pixFile:
+                if None is not pixFile:
                     self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
             except Exception:
                 printExc()
@@ -146,7 +146,7 @@ class IPTVRadioButtonList(IPTVMainNavigatorList):
         height = self.l.getItemSize().height()
         pixmap_y = (height - 16) // 2
         res = [None]
-        if None == item.type:
+        if None is item.type:
             res.append((eListboxPythonMultiContent.TYPE_TEXT, 5, 0, width - 5, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.name))
         else:
             res.append((eListboxPythonMultiContent.TYPE_TEXT, 30, 0, width - 30, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.name))

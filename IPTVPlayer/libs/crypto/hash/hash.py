@@ -20,7 +20,7 @@ class Hash:
     def hash(self, data, more=None):
         self.update(data)
         digest = self.digest()
-        if more == None:
+        if more is None:
             self.reset()  # no more data, reset
         return digest
 

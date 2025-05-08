@@ -87,7 +87,7 @@ class Ekstraklasa(CBaseHostClass):
     def TryToLogin(self):
         printDBG("Ekstraklasa.TryToLogin")
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.ekstraklasa_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.ekstraklasa_login.value or\
             self.password != config.plugins.iptvplayer.ekstraklasa_password.value:
 
             self.login = config.plugins.iptvplayer.ekstraklasa_login.value
@@ -374,7 +374,7 @@ class Ekstraklasa(CBaseHostClass):
             url = response['data']['url']
 
             playlist = getDirectM3U8Playlist(url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999)
-            if (config.plugins.iptvplayer.ekstraklasa_defaultres.value == None) or (config.plugins.iptvplayer.ekstraklasa_defaultres.value == '') or (config.plugins.iptvplayer.ekstraklasa_defaultres.value == "0"):
+            if (config.plugins.iptvplayer.ekstraklasa_defaultres.value is None) or (config.plugins.iptvplayer.ekstraklasa_defaultres.value == '') or (config.plugins.iptvplayer.ekstraklasa_defaultres.value == "0"):
                 linksTab.extend(playlist)
             else:
                 def_res = int(config.plugins.iptvplayer.ekstraklasa_defaultres.value)
@@ -403,7 +403,7 @@ class Ekstraklasa(CBaseHostClass):
         self.currList = []
 
         #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu(self.currItem)
         elif category == 'matches':
             self.listMatches(self.currItem)

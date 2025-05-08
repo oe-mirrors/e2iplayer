@@ -64,12 +64,12 @@ except ImportError:  # Python 2
                 rest = '%' + item
             # Encountered non-percent-encoded characters. Flush the current
             # pct_sequence.
-            string += pct_sequence if encoding == None else pct_sequence.decode(encoding, errors)
+            string += pct_sequence if encoding is None else pct_sequence.decode(encoding, errors)
             string += rest
             pct_sequence = b''
         if pct_sequence:
             # Flush the final pct_sequence
-            string += pct_sequence if encoding == None else pct_sequence.decode(encoding, errors)
+            string += pct_sequence if encoding is None else pct_sequence.decode(encoding, errors)
         return string
 
     def _parse_qsl(qs, keep_blank_values=False, strict_parsing=False,

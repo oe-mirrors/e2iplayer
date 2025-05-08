@@ -180,7 +180,7 @@ class M3U8Downloader(BaseDownloader):
         printDBG("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
 
     def _updateM3U8DataAvail(self, data):
-        if None != data and 0 < len(data):
+        if None is not data and 0 < len(data):
             self.M3U8ListData += data
 
     def mergeFragmentsListWithChecking_OLD(self, newFragments, media_sequence=-1):
@@ -301,7 +301,7 @@ class M3U8Downloader(BaseDownloader):
         ##############################################################################
         self.downloadType = self.DOWNLOAD_TYPE.SEGMENT
 
-        if None != self.console:
+        if None is not self.console:
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
         #self.console = eConsoleAppContainer()
@@ -326,7 +326,7 @@ class M3U8Downloader(BaseDownloader):
             self.tries += 1
             currentFragment = self.fragmentList[self.currentFragment]
 
-        if None != currentFragment:
+        if None is not currentFragment:
             self.wgetStatus = self.WGET_STS.CONNECTING
             cmd = DMHelper.getBaseWgetCmd(self.downloaderParams) + (' --tries=1 --timeout=%d ' % self._getTimeout()) + '"' + currentFragment + '" -O - >> "' + self.filePath + '"'
             printDBG("Download cmd[%s]" % cmd)
@@ -347,7 +347,7 @@ class M3U8Downloader(BaseDownloader):
         ##############################################################################
 
     def _dataAvail(self, data):
-        if None != data:
+        if None is not data:
             self.outData += data.decode(encoding='utf-8', errors='strict')
             if self.DOWNLOAD_TYPE.M3U8 == self.downloadType:
                 return
@@ -368,7 +368,7 @@ class M3U8Downloader(BaseDownloader):
 
     def _terminate(self):
         printDBG("M3U8Downloader._terminate")
-        if None != self.iptv_sys:
+        if None is not self.iptv_sys:
             self.iptv_sys.kill()
             self.iptv_sys = None
         if DMHelper.STS.DOWNLOADING == self.status:
@@ -418,7 +418,7 @@ class M3U8Downloader(BaseDownloader):
                                     currentDuration = 0
                                     maxFragDuration = m3u8Obj.target_duration
                                     for seg in reversed(m3u8Obj.segments):
-                                        if None != seg.duration:
+                                        if None is not seg.duration:
                                             currentDuration += seg.duration
                                         else:
                                             currentDuration += maxFragDuration

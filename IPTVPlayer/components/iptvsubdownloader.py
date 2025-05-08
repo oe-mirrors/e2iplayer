@@ -164,7 +164,7 @@ class IPTVSubDownloaderWidget(Screen):
         #################################################################
 
         # register function in main Queue
-        if None == asynccall.gMainFunctionsQueueTab[1]:
+        if None is asynccall.gMainFunctionsQueueTab[1]:
             asynccall.gMainFunctionsQueueTab[1] = asynccall.CFunctionProxyQueue(self.session)
         asynccall.gMainFunctionsQueueTab[1].clearQueue()
         asynccall.gMainFunctionsQueueTab[1].setProcFun(self.doProcessProxyQueueItem)
@@ -342,7 +342,7 @@ class IPTVSubDownloaderWidget(Screen):
             printExc()
 
     def showSpinner(self):
-        if None != self.spinnerTimer:
+        if None is not self.spinnerTimer:
             self._setSpinnerVisibility(True)
             self.spinnerTimer.start(self.spinnerTimer_interval, True)
 
@@ -363,7 +363,7 @@ class IPTVSubDownloaderWidget(Screen):
 
     def updateSpinner(self):
         try:
-            if self.spinnerEnabled and None != self.workThread:
+            if self.spinnerEnabled and None is not self.workThread:
                 if self.workThread.isAlive():
                     if "spinner" in self:
                         x, y = self["spinner"].getPosition()
@@ -371,7 +371,7 @@ class IPTVSubDownloaderWidget(Screen):
                         if x > self["spinner_4"].getPosition()[0]:
                             x = self["spinner_1"].getPosition()[0]
                         self["spinner"].setPosition(x, y)
-                    if None != self.spinnerTimer:
+                    if None is not self.spinnerTimer:
                         self.spinnerTimer.start(self.spinnerTimer_interval, True)
                         return
                 elif not self.workThread.isFinished():
@@ -402,14 +402,14 @@ class IPTVSubDownloaderWidget(Screen):
             printExc()
 
     def processProxyQueue(self):
-        if None != self.mainTimer:
+        if None is not self.mainTimer:
             asynccall.gMainFunctionsQueueTab[1].processQueue()
             self.mainTimer.start(self.mainTimer_interval, True)
         return
 
     def doProcessProxyQueueItem(self, item):
         try:
-            if None == item.retValue[0] or self.workThread == item.retValue[0]:
+            if None is item.retValue[0] or self.workThread == item.retValue[0]:
                 if isinstance(item.retValue[1], asynccall.CPQParamsWrapper):
                     getattr(self, method)(*item.retValue[1])
                 else:
@@ -681,7 +681,7 @@ class IPTVSubDownloaderWidget(Screen):
         self.changeBottomPanel()
 
     def isInWorkThread(self):
-        return None != self.workThread and (not self.workThread.isFinished() or self.workThread.isAlive())
+        return None is not self.workThread and (not self.workThread.isFinished() or self.workThread.isAlive())
 
     def getSelItem(self):
         currSelIndex = self["list"].getCurrentIndex()
@@ -700,7 +700,7 @@ class IPTVSubDownloaderWidget(Screen):
 
     def discoverInfoFromTitle(self, movieTitle=None):
         dInfo = {'movie_title': None, 'season': None, 'episode': None}
-        if movieTitle == None:
+        if movieTitle is None:
             movieTitle = self.params.get('movie_title', '')
 
         # discovered information

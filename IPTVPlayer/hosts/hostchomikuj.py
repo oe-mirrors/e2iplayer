@@ -77,7 +77,7 @@ class Chomikuj(CBaseHostClass):
             v = item.get(key, None)
         except Exception:
             v = None
-        if None == v:
+        if None is v:
             return default
         return clean_html('%s' % v).encode('utf-8')
 
@@ -86,7 +86,7 @@ class Chomikuj(CBaseHostClass):
             v = item.get(key, None)
         except Exception:
             v = None
-        if None != v:
+        if None is not v:
             try:
                 NumberTypes = (int, int, float, complex)
             except NameError:
@@ -98,7 +98,7 @@ class Chomikuj(CBaseHostClass):
 
     def requestJsonData(self, url, postData=None, addToken=True):
         addParams = {'header': dict(self.HTTP_JSON_HEADER)}
-        if None != postData:
+        if None is not postData:
             addParams['raw_post_data'] = True
             data = postData
         else:
@@ -335,9 +335,9 @@ class Chomikuj(CBaseHostClass):
                 parent = fileId.meta['priv_parent']
                 page = fileId.meta['priv_page']
 
-                if parent != None:
+                if parent is not None:
                     url = self.LIST_FOLDER_URL % (parent, page)
-                    if owner != None:
+                    if owner is not None:
                         url += '&AccountId=%s' % owner
                     sts, data = self.requestJsonData(url)
                 else:
@@ -386,7 +386,7 @@ class Chomikuj(CBaseHostClass):
         printDBG("Chomikuj.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        if None == name:
+        if None is name:
             if self.requestLoginData():
                 self.listsMainMenu()
         elif 'account' == category:

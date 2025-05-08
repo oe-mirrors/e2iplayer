@@ -28,7 +28,7 @@ class ARC4:
         self.strength = None  # depends on keySize
         self.blockSize = 1    # blockSize is in bytes
 
-        if key != None:
+        if key is not None:
             self.setKey(key)
 
     def setKey(self, key):

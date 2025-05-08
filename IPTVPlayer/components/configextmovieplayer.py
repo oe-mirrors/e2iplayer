@@ -139,7 +139,7 @@ class ConfigExtMoviePlayerBase():
 
         # fill policy 2 option
         options = [(None, _("From E2 settings"))]
-        if None != GetE2VideoPolicy('2'):
+        if None is not GetE2VideoPolicy('2'):
             tmp = GetE2VideoPolicyChoices()
             for item in tmp:
                 options.append((item, _(item)))

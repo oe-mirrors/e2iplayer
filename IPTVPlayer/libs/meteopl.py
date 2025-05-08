@@ -82,7 +82,7 @@ class MeteoPLApi(CBaseHostClass):
                 post_data = {'woj': cItem['meteo_woj'], 'litera': ''}
             elif 'name' == cat:
                 post_data = {'name': cItem['meteo_name']}
-            if post_data != None:
+            if post_data is not None:
                 addParams = dict(self.defaultParams)
                 addParams['header']['Content-Type'] = 'application/x-www-form-urlencoded'
                 sts, data = self.getPage(cItem['url'], addParams, post_data)

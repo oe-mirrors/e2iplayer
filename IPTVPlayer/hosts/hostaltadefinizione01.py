@@ -368,7 +368,7 @@ class Altadefinizione(CBaseHostClass):
         self.currItem.pop('good_for_fav', None)
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem, 'explore_item')

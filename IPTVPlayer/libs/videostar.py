@@ -221,7 +221,7 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                 if not sts:
                     break
                 data = json_loads(data)
-                if data['data'] != None:
+                if data['data'] is not None:
                     for item in data['data']['stream_channel']['streams']:
                         if formatId == '2':
                             if 'hls' in item['type']:
@@ -231,7 +231,7 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                             if 'dash' in item['type']:
                                 dashUrl = item['url'][0]  # add here random
                                 urlsTab.extend(getMPDLinksWithMeta(dashUrl, checkExt=False, cookieParams=self.defaultParams))
-                elif data['_meta'] != None:
+                elif data['_meta'] is not None:
                     info = data['_meta']['error']['info']
                     message = []
                     message.append('Oglądasz już kanał %s na urządeniu %s o adresie: %s.' % (info['channel_name'], info['device'], info['user_ip']))

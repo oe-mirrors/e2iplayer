@@ -206,7 +206,7 @@ class RadiostacjaPl(CBaseHostClass):
                         ids = item['ids']
 
             for item in self.cache[cacheKey]['stations']:
-                if ids != None and item['id'] not in ids:
+                if ids is not None and item['id'] not in ids:
                     continue
                 title = self.cleanHtmlStr(item['name'])
                 icon = item['defaultart']
@@ -263,7 +263,7 @@ class RadiostacjaPl(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
     # LIVE
         elif category == 'live':

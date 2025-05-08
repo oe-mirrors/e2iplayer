@@ -72,11 +72,11 @@ class CartoonHD(CBaseHostClass):
         if 'url' in self.cm.meta:
             self.setMainUrl(self.cm.meta['url'])
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.MAIN_URL = domain
 
     def listMainMenu(self, cItem):
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             return
         MAIN_CAT_TAB = [{'category': 'new', 'title': 'Featured', 'url': self.getMainUrl()},
                         {'category': 'list_genres', 'title': 'Movies', 'url': self.getFullUrl('/full-movies')},
@@ -324,7 +324,7 @@ class CartoonHD(CBaseHostClass):
                 else:
                     category = None
 
-                if None != category:
+                if None is not category:
                     title = item['title']
                     url = item['permalink'].replace('\\/', '/')
                     icon = item.get('image', '').replace('\\/', '/')
@@ -517,7 +517,7 @@ class CartoonHD(CBaseHostClass):
         itemsList = []
 
         url = cItem.get('prev_url', cItem['url'])
-        if data == None:
+        if data is None:
             self.tryTologin()
             sts, data = self.cm.getPage(url, self.defaultParams)
             if not sts:
@@ -620,7 +620,7 @@ class CartoonHD(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
 
-        if None == self.loggedIn:
+        if None is self.loggedIn:
             self.loggedIn = self.tryTologin()
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -632,7 +632,7 @@ class CartoonHD(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.selectDomain()
             self.listMainMenu({'name': 'category'})
         elif category == 'new':

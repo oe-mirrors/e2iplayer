@@ -255,11 +255,11 @@ class cda(CBaseHostClass, CaptchaHelper):
         self.listItems(MergeDicts(cItem, {'category': 'search_next_page'}), url, search=True)
 
     def listItems(self, cItem, url=None, page=None, search=False):
-        if url == None:
+        if url is None:
             url = cItem['url']
         sts, data = self.getPage(url)
         if sts:
-            if page == None:
+            if page is None:
                 page = cItem.get('page', 1)
                 nextPage = ph.find(data, ('<span', '>', 'next-wrapper'), '</span>', flags=0)[1]
                 if not nextPage:
@@ -452,7 +452,7 @@ class cda(CBaseHostClass, CaptchaHelper):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.cda_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.cda_login.value or\
             self.password != config.plugins.iptvplayer.cda_password.value:
 
             loginCookie = GetCookieDir('cda.pl.login')
@@ -548,7 +548,7 @@ class cda(CBaseHostClass, CaptchaHelper):
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listsTab(self.MAIN_TAB, {'name': 'category'})
         elif 'premium' == category:
             idx = self.currItem.get('f_idx', 0)

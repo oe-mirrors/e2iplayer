@@ -441,7 +441,7 @@ class DixMax(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.dixmax_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.dixmax_login.value or\
             self.password != config.plugins.iptvplayer.dixmax_password.value:
 
             loginCookie = GetCookieDir('dixmax.com.login')
@@ -517,7 +517,7 @@ class DixMax(CBaseHostClass):
         self.tryTologin()
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
 
         elif category == 'list_filters':

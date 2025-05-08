@@ -51,9 +51,9 @@ class TKIP_Mixer:
         self.ta = None
         self.setPnBytes(pnBytes)   # sets self.pnBytes and validates input
         self.upper4SequenceOctets = self.pnBytes[-4:]
-        if tk1 != None:
+        if tk1 is not None:
             self.setKey(tk1)
-        if transmitterAddress != None:
+        if transmitterAddress is not None:
             self.setTA(transmitterAddress)
 
     def setKey(self, key):
@@ -62,7 +62,7 @@ class TKIP_Mixer:
             raise Exception('Wrong key size')
         # for readability of subroutines, make tk a list of 1 octet ints
         self.tk = [ord(byte) for byte in key]
-        if self.ta != None:  # reset phase1 value
+        if self.ta is not None:  # reset phase1 value
             self.phase1Key = phase1KeyMixing(self.tk, self.ta, self.pn)
 
     def setTA(self, taBytes):
@@ -70,7 +70,7 @@ class TKIP_Mixer:
         if len(taBytes) != 6:
             raise Exception('Bad size for transmitterAddress')
         self.ta = [ord(byte) for byte in taBytes]
-        if self.tk != None:  # reset phase1 value
+        if self.tk is not None:  # reset phase1 value
             self.phase1Key = phase1KeyMixing(self.tk, self.ta, self.pn)
 
     def setPnBytes(self, pnBytes):
@@ -83,8 +83,8 @@ class TKIP_Mixer:
         """ return a new 'mixed' key (16 octets) based on
             the pn in 6 octets, also know as TSC
         """
-        assert (self.ta != None), 'No TA'
-        assert (self.tk != None), 'No TK'
+        assert (self.ta is not None), 'No TA'
+        assert (self.tk is not None), 'No TK'
         self.setPnBytes(pnBytes)
         if self.pnBytes[-4:] != self.upper4SequenceOctets:  # check if upper bits change
             # calculate phase1 key only when upper bytes change

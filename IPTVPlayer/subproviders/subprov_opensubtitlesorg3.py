@@ -129,10 +129,10 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
             else:
                 tmpList.append(params)
 
-        if None != engLanguageItem:
+        if None is not engLanguageItem:
             tmpList.insert(0, engLanguageItem)
 
-        if None != defaultLanguageItem:
+        if None is not defaultLanguageItem:
             tmpList.insert(0, defaultLanguageItem)
 
         #tmpList.insert(0, {'title':_('All'), 'search_lang':''})
@@ -322,7 +322,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.getMoviesTitles({'name': 'category'}, 'get_type')
         elif category == 'get_type':
             # take actions depending on the type

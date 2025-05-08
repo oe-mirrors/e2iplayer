@@ -402,37 +402,37 @@ class downloaderPage(resource.Resource):
             print('Received: "%s"="%s","%s","%s"' % (key, arg, arg2, arg3))
 
         if key is None or arg is None:
-            if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
+            if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
         elif key == 'cmd' and arg == 'initDM':
-            if None == Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
+            if None is Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 printDBG('============WebSite.py Initialize Download Manager============')
                 Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager = IPTVDMApi(2, int(config.plugins.iptvplayer.IPTVDMMaxDownloadItem.value))
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
         elif key == 'cmd' and arg == 'runDM':
-            if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
+            if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.runWorkThread()
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
         elif key == 'cmd' and arg == 'stopDM':
-            if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
+            if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.stopWorkThread()
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
                 extraMeta = '<meta http-equiv="refresh" content="10">'
         elif key == 'cmd' and arg == 'downloadsDM':
-            if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
+            if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
         elif key == 'watchMovie' and os.path.exists(arg):
             return util.redirectTo("/file?action=download&file=%s" % urllib.parse.quote(arg.decode('utf8', 'ignore').encode('utf-8')), req)
         elif key == 'stopDownload' and arg.isdigit():
-            if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
+            if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.stopDownloadItem(int(arg))
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
         elif key == 'downloadAgain' and arg.isdigit():
-            if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
+            if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.continueDownloadItem(int(arg))
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
         elif key == 'removeMovie' and arg.isdigit():
-            if None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
+            if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.removeDownloadItem(int(arg))
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
 
@@ -441,7 +441,7 @@ class downloaderPage(resource.Resource):
                 os.remove(arg3)
             elif arg2 == 'watchMovie' and os.path.exists(arg3):
                 return util.redirectTo("/file?action=download&file=%s" % urllib.parse.quote(arg3.decode('utf8', 'ignore').encode('utf-8')), req)
-            if os.path.exists(config.plugins.iptvplayer.NaszaSciezka.value) and None != Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
+            if os.path.exists(config.plugins.iptvplayer.NaszaSciezka.value) and None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 files = os.listdir(config.plugins.iptvplayer.NaszaSciezka.value)
                 files.sort(key=lambda x: x.lower())
                 for item in files:

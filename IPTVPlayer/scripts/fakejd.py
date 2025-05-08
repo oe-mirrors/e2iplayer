@@ -370,7 +370,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
                 returnCode = 404
                 #sys.exit(-1)
         elif data['url'] == '/captcha/list':
-            if jd.captcha_result == None:
+            if jd.captcha_result is None:
                 return_data = [{'hoster': 'iptvplayer.gitlab.io', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}]
             else:
                 return_data = []
@@ -392,7 +392,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
         elif data['url'] == '/events/listen':
             return_data = ''
             #if jd.captcha_result == None and jd.captcha_notified == False:
-            if jd.captcha_result == None:
+            if jd.captcha_result is None:
                 return_data = [{'eventid': 'NEW', 'eventData': jd.captcha_data['id'], 'publisher': 'captchas'}]
                 jd.captcha_notified = True
             #elif jd.captcha_result !=  None:
@@ -401,12 +401,12 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
                 jd.captcha_finished = True
 
         elif data['url'] == '/captcha/getCaptchaJob':
-            if jd.captcha_result == None:
+            if jd.captcha_result is None:
                 return_data = {'hoster': 'iptvplayer.gitlab.io', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}
             else:
                 return_data = None
         elif data['url'] == '/captcha/get':
-            if jd.captcha_result == None:
+            if jd.captcha_result is None:
                 updateStatus('status', "Waiting for captcha solving")
                 return_data = jd.captcha_data
             else:

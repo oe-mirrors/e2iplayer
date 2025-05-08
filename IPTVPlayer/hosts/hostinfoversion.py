@@ -118,9 +118,9 @@ class IPTVHost(IHost):
 
     def getResolvedURL(self, url):
         #printDBG( "getResolvedURL begin" )
-        if url != None and url != '':
+        if url is not None and url != '':
             ret = self.host.getResolvedURL(url)
-            if ret != None and ret != '':
+            if ret is not None and ret != '':
                #printDBG( "getResolvedURL ret: "+str(ret))
                list = []
                list.append(ret)
@@ -1258,10 +1258,10 @@ class Host:
                     Image = 'http://animallive.tv' + Image
                 valTab.append(CDisplayListItem(Title, Title, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', Url, 1)], 0, Image, None))
             Url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&')
-            if catUrl != None and Url != '':
+            if catUrl is not None and Url != '':
                 valTab.append(CDisplayListItem(catUrl, catUrl, CDisplayListItem.TYPE_CATEGORY, [Url], 'animallive-youtube', '', None))
             Url = self.cm.ph.getSearchGroups(data, r'''loadSource\(['"]([^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&')
-            if catUrl != None and Url != '':
+            if catUrl is not None and Url != '':
                 valTab.append(CDisplayListItem(catUrl, catUrl, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', Url, 0)], 0, '', None))
 
             return valTab

@@ -121,9 +121,9 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         # prepare default values for filters
         season = self.dInfo.get('season', None)
         episode = self.dInfo.get('episode', None)
-        if season != None and episode != None:
+        if season is not None and episode is not None:
             defaultType = 'tv-series'
-        elif episode != None:
+        elif episode is not None:
             defaultType = 'mini-series'
         else:
             defaultType = ''
@@ -135,11 +135,11 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             newList = []
             promotedItem = None
             for item in self.cacheFilters[defItem['key']]:
-                if None == promotedItem and defItem['val'] == item[defItem['key']]:
+                if None is promotedItem and defItem['val'] == item[defItem['key']]:
                     promotedItem = item
                 else:
                     newList.append(item)
-            if None != promotedItem:
+            if None is not promotedItem:
                 newList.insert(0, promotedItem)
                 self.cacheFilters[defItem['key']] = newList
 
@@ -170,9 +170,9 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             episode = self.dInfo.get('episode', None)
         elif 'mini-series' == cItem.get('movie_type'):
             episode = self.dInfo.get('episode', None)
-        if season == None:
+        if season is None:
             season = ''
-        if episode == None:
+        if episode is None:
             episode = ''
 
         baseUrl = "/subtitles/search/advanced?keywords=%s&year=%s&seasons=%s&episodes=%s&language=%s" % (keywords, year, season, episode, language)
@@ -236,7 +236,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
 
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(cItem['url'], urlParams)
-        if None == tmpDIR:
+        if None is tmpDIR:
             return
 
         cItem = dict(cItem)
@@ -303,7 +303,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None or category.startswith('list_filter_'):
+        if name is None or category.startswith('list_filter_'):
             filter = category.replace('list_filter_', '')
             if filter == '':
                 self.listFilters(self.currItem, 'movie_type', 'list_filter_language')

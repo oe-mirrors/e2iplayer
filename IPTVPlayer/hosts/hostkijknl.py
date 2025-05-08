@@ -86,7 +86,7 @@ class KijkNL(CBaseHostClass):
         printDBG("KijkNL.listMissed")
         dt = cItem.get('f_date', None)
         ITEMS_PER_PAGE = 15
-        if dt == None:
+        if dt is None:
             dt = datetime.date.today()
         else:
             try:
@@ -356,7 +356,7 @@ class KijkNL(CBaseHostClass):
         cItem = self.currItem
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_home':
             self.listHome(cItem)

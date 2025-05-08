@@ -380,7 +380,7 @@ class NGolosCOM(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -392,7 +392,7 @@ class NGolosCOM(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             baseItem = {'type': 'category', 'name': 'category', 'url': self.getMainUrl()}
             self.listMainMenu(baseItem, 'list_cat_items')
         elif 'list_cat_items' == category:

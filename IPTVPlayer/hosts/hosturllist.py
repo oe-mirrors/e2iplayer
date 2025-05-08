@@ -147,7 +147,7 @@ class Urllist(CBaseHostClass):
         printDBG("Urllist.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listsTab(self.MAIN_GROUPED_TAB, self.currItem)
         else:
             self.listCategory(self.currItem)

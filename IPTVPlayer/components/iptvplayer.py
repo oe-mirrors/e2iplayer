@@ -52,7 +52,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         self.bugEOFworkaround = bugEOFworkaround
 
         self.session.nav.playService(service)
-        if lastPosition != None and (lastPosition / 90000) > 10:
+        if lastPosition is not None and (lastPosition / 90000) > 10:
             self.position = 0
             self.lastPosition = lastPosition
             self.doSeekToLastPosition = True
@@ -72,7 +72,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         length = 0
         service = self.session.nav.getCurrentService()
         seek = service and service.seek()
-        if seek != None:
+        if seek is not None:
             r = seek.getLength()
             if not r[0]:
                 length = r[1]

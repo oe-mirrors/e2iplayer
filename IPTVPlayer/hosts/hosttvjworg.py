@@ -291,7 +291,7 @@ class TVJWORG(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listCategories({'name': 'category'})
         elif category == 'ondemand':
             self.listMedia(self.currItem)

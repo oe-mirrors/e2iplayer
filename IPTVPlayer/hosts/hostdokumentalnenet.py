@@ -184,7 +184,7 @@ class DokumentalneNET(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_sort')

@@ -98,7 +98,7 @@ class CSubProviderBase(ISubProvider):
         if listLen <= Index or Index < 0:
             printDBG("ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index))
             return False
-        if None != validTypes and self.converItem(self.subProvider.currList[Index]).type not in validTypes:
+        if None is not validTypes and self.converItem(self.subProvider.currList[Index]).type not in validTypes:
             printDBG("ERROR getLinksForVideo - current item has wrong type")
             return False
         return True
@@ -160,7 +160,7 @@ class CSubProviderBase(ISubProvider):
         subProviderList = []
         for cItem in cList:
             subProviderItem = self.converItem(cItem)
-            if None != subProviderItem:
+            if None is not subProviderItem:
                 subProviderList.append(subProviderItem)
         return subProviderList
     # end convertList
@@ -283,7 +283,7 @@ class CBaseSubProviderClass:
         if url.startswith('./'):
             url = url[1:]
 
-        if currUrl == None or not self.cm.isValidUrl(currUrl):
+        if currUrl is None or not self.cm.isValidUrl(currUrl):
             try:
                 mainUrl = self.getMainUrl()
             except Exception:
@@ -300,7 +300,7 @@ class CBaseSubProviderClass:
         elif url.startswith('/'):
             url = mainUrl + url[1:]
         elif 0 < len(url) and '://' not in url:
-            if currUrl == None or not self.cm.isValidUrl(currUrl):
+            if currUrl is None or not self.cm.isValidUrl(currUrl):
                 url = mainUrl + url
             else:
                 url = urllib.parse.urljoin(currUrl, url)
@@ -350,12 +350,12 @@ class CBaseSubProviderClass:
         data = self.cm.ph.getDataBeetwenMarkers(data, '<select id="bySeason"', '</select>', False)[1]
         seasons = re.compile('value="([0-9]+?)"').findall(data)
         for season in seasons:
-            if None != promSeason and season == str(promSeason):
+            if None is not promSeason and season == str(promSeason):
                 promotItem = season
             else:
                 list.append(season)
 
-        if promotItem != None:
+        if promotItem is not None:
             list.insert(0, promotItem)
 
         return True, list
@@ -380,12 +380,12 @@ class CBaseSubProviderClass:
             episode = self.cm.ph.getSearchGroups(item, 'content="([0-9]+?)"')[0]
             params = {"episode_title": episodeTitle, "episode": episode, "eimdbid": eimdbid}
 
-            if None != promEpisode and episode == str(promEpisode):
+            if None is not promEpisode and episode == str(promEpisode):
                 promotItem = params
             else:
                 list.append(params)
 
-        if promotItem != None:
+        if promotItem is not None:
             list.insert(0, promotItem)
         return True, list
 
@@ -454,7 +454,7 @@ class CBaseSubProviderClass:
 
     def downloadAndUnpack(self, url, params={}, post_data=None, unpackToSubDir=False):
         data, fileName = self.downloadFileData(url, params, post_data)
-        if data == None:
+        if data is None:
             return None
         ext = fileName.rsplit('.', 1)[-1].lower()
         printDBG("isubprovider.py downloadAndUnpack fileName='%s' ext='%s'" % (fileName, ext))
@@ -591,7 +591,7 @@ class CBaseSubProviderClass:
                     self.addSubtitle(params)
                 elif ext in archExt:
                     self.addDir(params)
-            elif dirCategory != None and os_path.isdir(filePath):
+            elif dirCategory is not None and os_path.isdir(filePath):
                 params.update({'category': dirCategory, 'path': filePath, 'title': file})
                 self.addDir(params)
             if numItems >= maxItems:

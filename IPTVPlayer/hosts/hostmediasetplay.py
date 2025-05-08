@@ -562,7 +562,7 @@ class MediasetPlay(CBaseHostClass):
         self.initApi()
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category', 'type': 'category'}, 'list_items')
 
         elif category == 'sub_items':

@@ -359,7 +359,7 @@ class LuxVeritatisPL(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
     # RADIO MARYJA
         elif category == 'radio':

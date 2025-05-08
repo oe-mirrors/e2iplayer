@@ -124,7 +124,7 @@ class SpiegelTv(CBaseHostClass):
             self.addDir(params)
 
     def _fillOneConfig(self, cItem, data=None):
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -505,7 +505,7 @@ class SpiegelTv(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_main_items':
             self.listMainItems(self.currItem, 'list_items')

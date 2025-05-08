@@ -240,7 +240,7 @@ class NonstopMozi(CBaseHostClass):
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         self.currList = []
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, title)

@@ -509,7 +509,7 @@ class EuroSportPlayer(CBaseHostClass):
         printDBG('EuroSportPlayer.tryTologin start')
         errorMsg = _('Error communicating with the server.')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.eurosportplayer_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.eurosportplayer_login.value or\
             self.password != config.plugins.iptvplayer.eurosportplayer_password.value:
 
             self.login = config.plugins.iptvplayer.eurosportplayer_login.value
@@ -693,7 +693,7 @@ class EuroSportPlayer(CBaseHostClass):
         self.currList = []
 
         #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
 
         # ON AIR

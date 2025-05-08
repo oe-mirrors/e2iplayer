@@ -64,7 +64,7 @@ class BuxyboxWgetDownloader(WgetDownloader):
 
         self.outData = ''
         self.contentType = 'unknown'
-        if None == info_from:
+        if None is info_from:
             info_from = WgetDownloader.INFO.FROM_FILE
         self.infoFrom = info_from
 
@@ -84,7 +84,7 @@ class BuxyboxWgetDownloader(WgetDownloader):
 
     def _terminate(self):
         printDBG("BuxyboxWgetDownloader._terminate")
-        if None != self.iptv_sys:
+        if None is not self.iptv_sys:
             self.iptv_sys.kill()
             self.iptv_sys = None
         if DMHelper.STS.DOWNLOADING == self.status:

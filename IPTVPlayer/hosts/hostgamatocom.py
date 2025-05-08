@@ -53,7 +53,7 @@ class GamatoMovies(CBaseHostClass):
     def getStr(self, item, key):
         if key not in item:
             return ''
-        if item[key] == None:
+        if item[key] is None:
             return ''
         return str(item[key])
 
@@ -365,7 +365,7 @@ class GamatoMovies(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category in ['movies', 'series']:
             if category == 'movies':

@@ -51,7 +51,7 @@ class Icedoll(Rijndael):
         self.Nk = keySize / 4                 # Nk is the key length in 32-bit words
         self.Nr = NrTable[self.Nb][self.Nk] + extraRounds  # <------- !!! change from Rijndael !!!
 
-        if key != None:
+        if key is not None:
             self.setKey(key)
 
     def setKey(self, key):

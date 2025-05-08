@@ -159,7 +159,7 @@ class QuesttvCoUK(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listOnDemand({'name': 'category', 'url': self.getFullUrl('/video')})
         else:
             printExc()

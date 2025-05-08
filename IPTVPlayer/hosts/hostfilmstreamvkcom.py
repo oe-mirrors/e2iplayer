@@ -77,7 +77,7 @@ class FilmstreamvkCom(CBaseHostClass):
         return url
 
     def selectDomain(self):
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             domains = ['http://filmstreamvk.club/']
             domain = config.plugins.iptvplayer.filmstreamvk_alt_domain.value.strip()
             if self.cm.isValidUrl(domain):
@@ -93,7 +93,7 @@ class FilmstreamvkCom(CBaseHostClass):
                     self.setMainUrl(self.cm.meta['url'])
                     break
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.MAIN_URL = domains[0]
 
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/themes/keremiyav4/logo/logo.png')
@@ -312,7 +312,7 @@ class FilmstreamvkCom(CBaseHostClass):
 
         self.selectDomain()
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category'})
         elif category == 'main':
             self.listMainCategories(self.currItem, 'list_items')

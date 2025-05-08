@@ -125,7 +125,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
 
     def getJItemStr(self, item, key, default=''):
         v = item.get(key, None)
-        if None == v:
+        if None is v:
             return default
         return str(v)
 
@@ -133,7 +133,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         keys = ['logo_4x3', 'image_16x9', 'image_4x3', 'image_ns954', 'image_ns644', 'image']
         iconFile = ""
         for key in keys:
-            if None != item.get(key, None):
+            if None is not item.get(key, None):
                 iconFile = self.getJItemStr(item[key][0], 'file_name')
             if len(iconFile):
                 tmp = iconFile.split('.')
@@ -182,7 +182,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 return default
 
     def _getFullUrl(self, url, baseUrl=None):
-        if None == baseUrl:
+        if None is baseUrl:
             baseUrl = TvpVod.MAIN_VOD_URL
         if 0 < len(url) and not url.startswith('http'):
             if url.startswith('//'):
@@ -844,7 +844,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         return videoTab
 
     def getLinksForFavourite(self, fav_data):
-        if None == self.loggedIn:
+        if None is self.loggedIn:
             premium = config.plugins.iptvplayer.tvpvod_premium.value
             if premium:
                 self.loggedIn, msg = self.tryTologin()
@@ -981,10 +981,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         currItem = dict(self.currItem)
         currItem.pop('good_for_fav', None)
 
-        if None != name and self.currItem.get('desc', '').startswith('Użytkownik'):
+        if None is not name and self.currItem.get('desc', '').startswith('Użytkownik'):
             currItem.pop('desc', None)
 
-        if None == name:
+        if None is name:
             self.listsTab(TvpVod.VOD_CAT_TAB, {'name': 'category', 'desc': self.loginMessage})
     # STREAMS
         elif category == 'streams':

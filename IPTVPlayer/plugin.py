@@ -66,7 +66,7 @@ def InfoBar__init__wrapper(self, *args, **kwargs):
 
 def pluginAutostartSetup(reason, **kwargs):
     global gInfoBar__init__
-    if reason == 0 and gInfoBar__init__ == None:
+    if reason == 0 and gInfoBar__init__ is None:
         from Screens.InfoBar import InfoBar
         gInfoBar__init__ = InfoBar.__init__
         InfoBar.__init__ = InfoBar__init__wrapper
@@ -141,7 +141,7 @@ def runMain(session, nextFunction=doRunMain):
 
 
 def pinCallback(session, callbackFun, pin=None):
-    if None == pin:
+    if None is pin:
         return
     if pin != config.plugins.iptvplayer.pin.value:
         session.open(MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5)

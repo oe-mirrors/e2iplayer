@@ -151,9 +151,9 @@ class IPTVHost(IHost):
 
     def getResolvedURL(self, url):
         printDBG("getResolvedURL begin")
-        if url != None and url != '':
+        if url is not None and url != '':
             ret = self.host.getResolvedURL(url)
-            if ret != None and ret != '':
+            if ret is not None and ret != '':
                printDBG("getResolvedURL ret: " + str(ret))
                list = []
                list.append(ret)
@@ -3425,7 +3425,7 @@ class Host:
         if 'PORNTREX-clips' == name:
            printDBG('Host listsItems begin name=' + name)
            catUrl = self.currList[Index].possibleTypesOfSearch
-           if catUrl == None:
+           if catUrl is None:
               self.page = 1
            else:
               self.page += 1
@@ -4197,7 +4197,7 @@ class Host:
            catUrl = self.currList[Index].possibleTypesOfSearch
            printDBG('Host listsItems cat-url: ' + str(catUrl))
            next = url
-           if catUrl == None:
+           if catUrl is None:
               self.page = 1
            else:
               self.page += 1
@@ -5556,7 +5556,7 @@ class Host:
            catUrl = self.currList[Index].possibleTypesOfSearch
            printDBG('Host listsItems cat-url: ' + str(catUrl))
            next = url
-           if catUrl == None:
+           if catUrl is None:
               self.page = 1
            else:
               self.page += 1
@@ -5616,7 +5616,7 @@ class Host:
            catUrl = self.currList[Index].possibleTypesOfSearch
            printDBG('Host listsItems cat-url: ' + str(catUrl))
            next = url
-           if catUrl == None:
+           if catUrl is None:
               self.page = 1
            else:
               self.page += 1
@@ -7253,7 +7253,7 @@ class Host:
         if 'PORNREWIND-clips' == name:
            printDBG('Host listsItems begin name=' + name)
            catUrl = self.currList[Index].possibleTypesOfSearch
-           if catUrl == None:
+           if catUrl is None:
               self.page = 1
            else:
               self.page += 1
@@ -7728,7 +7728,7 @@ class Host:
         if 'ANALDIN-clips' == name:
            printDBG('Host listsItems begin name=' + name)
            catUrl = self.currList[Index].possibleTypesOfSearch
-           if catUrl == None:
+           if catUrl is None:
               self.page = 1
            else:
               self.page += 1
@@ -9890,7 +9890,7 @@ class Host:
            catUrl = self.currList[Index].possibleTypesOfSearch
            printDBG('Katalógus: ' + str(catUrl))
            next = url
-           if catUrl == None:
+           if catUrl is None:
               self.next_page = 1
            if catUrl != 'next':
               self.next_page = 1

@@ -266,9 +266,9 @@ class DancetrippinTV(CBaseHostClass):
         fFilter = cItem.get('f_filter', None)
 
         for item in self.cacheItems:
-            if fType != None and item['type'] != fType:
+            if fType is not None and item['type'] != fType:
                 continue
-            if fFilter != None and fFilter not in item['filters']:
+            if fFilter is not None and fFilter not in item['filters']:
                 continue
             self.currList.append(item)
 
@@ -340,7 +340,7 @@ class DancetrippinTV(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'artists':
             self.listsTab(self.ARTISTS_CAT_TAB, self.currItem)

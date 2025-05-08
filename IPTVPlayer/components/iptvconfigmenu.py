@@ -535,7 +535,7 @@ class ConfigMenu(ConfigBaseWidget):
         currItem = self["config"].list[curIndex][1]
         if isinstance(currItem, ConfigDirectory):
             def SetDirPathCallBack(curIndex, newPath):
-                if None != newPath:
+                if None is not newPath:
                     self["config"].list[curIndex][1].value = newPath
             self.session.openWithCallback(boundFunction(SetDirPathCallBack, curIndex), IPTVDirectorySelectorWidget, currDir=currItem.value, title=_("Select directory"))
         elif config.plugins.iptvplayer.fakePin == currItem:
@@ -619,7 +619,7 @@ class ConfigMenu(ConfigBaseWidget):
             self.changingPinState = 'PUT_OLD_PIN'
             self.session.openWithCallback(self.changePin, IPTVPinWidget, title=_("Enter old pin"))
         else:
-            if pin == None:
+            if pin is None:
                 return
             if 'PUT_OLD_PIN' == self.changingPinState:
                 if pin == config.plugins.iptvplayer.pin.value:

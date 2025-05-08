@@ -75,7 +75,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
     def getStr(self, item, key):
         if key not in item:
             return ''
-        if item[key] == None:
+        if item[key] is None:
             return ''
         return str(item[key])
 
@@ -370,7 +370,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'new':
             self.listsTab(self.NEW_CAT_TAB, self.currItem)

@@ -84,7 +84,7 @@ class ustvgo(CBaseHostClass):
             if not sts:
                 return sts, data
 
-            if unloadUrl != None:
+            if unloadUrl is not None:
                 self.cm.getPageCFProtection(unloadUrl, urlParams)
                 unloadUrl = None
 
@@ -132,14 +132,14 @@ class ustvgo(CBaseHostClass):
                 else:
                     continue
 
-            if self.MAIN_URL != None:
+            if self.MAIN_URL is not None:
                 break
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.MAIN_URL = domains[0]
 
     def listMainMenu(self, cItem):
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Home', 'url': self.getFullUrl('/')},
                         {'category': 'list_category', 'title': 'Entertainment', 'url': self.getFullUrl('/category/entertainment/')},
@@ -214,7 +214,7 @@ class ustvgo(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
 
         name = self.currItem.get("name", '')
@@ -225,7 +225,7 @@ class ustvgo(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_category':
             self.listCategory(self.currItem)

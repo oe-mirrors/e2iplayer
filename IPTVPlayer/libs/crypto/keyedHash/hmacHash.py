@@ -40,7 +40,7 @@ class HMAC(Hash):
         self.blocksize = 1   # single octets can be hashed by padding to raw block size
         self.raw_block_size = self.H.raw_block_size
         self.digest_size = self.H.digest_size
-        if key != None:
+        if key is not None:
             self.setKey(key)
         else:
             self.keyed = None
@@ -58,18 +58,18 @@ class HMAC(Hash):
 
     def reset(self):
         self.H.reset()
-        if self.keyed == None:
+        if self.keyed is None:
             raise Exception('no key defined')
         self.H.update(self.k_xor_ipad)  # start inner hash with key xored with ipad
                                        # outer hash always called as one full pass (no updates)
 
     def update(self, data):
-        if self.keyed == None:
+        if self.keyed is None:
             raise Exception('no key defined')
         self.H.update(data)
 
     def digest(self):
-        if self.keyed == None:
+        if self.keyed is None:
             raise Exception('no key defined')
         return self.H_outer(self.k_xor_opad + self.H.digest())
 

@@ -281,7 +281,7 @@ class LibreStream(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu()
         elif category == 'cats':
             self.listCategories(self.currItem, 'show_sort')

@@ -396,7 +396,7 @@ class YoutubeIE(object):
     def _extract_id(self, url):
         video_id = ''
         mobj = re.match(self._VALID_URL, url, re.VERBOSE)
-        if mobj != None:
+        if mobj is not None:
             video_id = mobj.group(2)
 
         return video_id
@@ -412,7 +412,7 @@ class YoutubeIE(object):
 
     def _get_automatic_captions(self, video_id, webpage=None):
         sub_tracks = []
-        if None == webpage:
+        if None is webpage:
             url = 'http://www.youtube.com/watch?v=%s&hl=%s&has_verified=1' % (video_id, GetDefaultLang())
             sts, webpage = self.cm.getPage(url)
             player_response = self._extract_yt_initial_variable(

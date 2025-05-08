@@ -174,7 +174,7 @@ class LiveLeak(CBaseHostClass):
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #ITEMS TAB
         elif 'tab_items' == category:

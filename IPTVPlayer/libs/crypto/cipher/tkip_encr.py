@@ -30,22 +30,22 @@ class TKIP_encr:
 
     def __init__(self, key=None, transmitterAddress=None, keyID=None):
         """ Initialize TKIP_encr, key -> octet string for key """
-        assert (keyID == 0 or keyID == None), 'keyID should be zero in TKIP'
+        assert (keyID == 0 or keyID is None), 'keyID should be zero in TKIP'
         self.keyId = 0
         self.name = 'TKIP_encr'
         self.strength = 128
         self.encryptHeaderSize = 8        # used to skip octets on decrypt
         self.arc4 = ARC4()                # base algorithm
         self.keyMixer = TKIP_Mixer(key, transmitterAddress)
-        if key != None:                   # normally in base init, uses adjusted keySize
+        if key is not None:                   # normally in base init, uses adjusted keySize
             self.setKey(key)
-        if transmitterAddress != None:
+        if transmitterAddress is not None:
             self.setTA(transmitterAddress)
 
     def setKey(self, key, ta=None):
         """ Set key, key string is 16 octets long """
         self.keyMixer.setKey(key)
-        if ta != None:
+        if ta is not None:
             self.setTA(ta)
 
     def setTA(self, transmitterAddress):

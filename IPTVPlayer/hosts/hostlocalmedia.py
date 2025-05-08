@@ -519,7 +519,7 @@ class LocalMedia(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsMainMenu({'name': 'category', 'good_for_fav': True})
         elif category == 'm3u':
             self.listM3u(self.currItem, 'list_m3u_groups')
@@ -557,7 +557,7 @@ class IPTVHost(CHostBase):
                     self.needRefresh = ''
                     self.host.handleService(self.currIndex, 1, self.searchPattern, self.searchType)
                     convList = self.convertList(self.host.getCurrList())
-            if None == convList:
+            if None is convList:
                 convList = self.convertList(hostList)
             return RetHost(RetHost.OK, value=convList)
         else:

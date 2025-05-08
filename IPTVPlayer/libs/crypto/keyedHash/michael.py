@@ -23,7 +23,7 @@ class Michael:
         self.digest_size = 8  # MIC size of 64 bits or 8 bytes
         self.keySize = 8  # key size is 8 octets
         self.strength = 20
-        if key != None:
+        if key is not None:
             self.setKey(key)
 
     def __del__(self):

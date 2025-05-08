@@ -92,12 +92,12 @@ class PwgetDownloader(BaseDownloader):
         return BaseDownloader.CODE_OK
 
     def _dataAvail(self, data):
-        if None != data:
+        if None is not data:
             self.outData += data.decode(encoding='utf-8', errors='strict')
 
     def _terminate(self):
         printDBG("PwgetDownloader._terminate")
-        if None != self.iptv_sys:
+        if None is not self.iptv_sys:
             self.iptv_sys.kill()
             self.iptv_sys = None
         if DMHelper.STS.DOWNLOADING == self.status:

@@ -218,7 +218,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
 
     def privatePoliceWorningCallback(self, configEntry=None, arg=None):
         if not arg:
-            if configEntry != None:
+            if configEntry is not None:
                 configEntry.value = False
 
     def __preparHostsConfigs(self, listOfHostsNames):

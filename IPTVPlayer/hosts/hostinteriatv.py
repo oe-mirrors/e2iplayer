@@ -115,7 +115,7 @@ class InteriaTv(CBaseHostClass):
         printDBG("InteriaTv.listItems [%s]" % cItem)
         page = cItem.get('page', 1)
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -155,7 +155,7 @@ class InteriaTv(CBaseHostClass):
         printDBG("InteriaTv.listSearchItems [%s]" % cItem)
         page = cItem.get('page', 1)
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -269,7 +269,7 @@ class InteriaTv(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_categories', 'list_sort')
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_sort')

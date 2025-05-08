@@ -385,7 +385,7 @@ class HDPopcornsCom(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'list_items' == category:
             filtersTab = ['ofcategory', 'ofrating', 'ofquality']

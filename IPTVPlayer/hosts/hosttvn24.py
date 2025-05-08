@@ -42,7 +42,7 @@ class Tvn24(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'SeansikTV'})
 
     def getStr(self, v, default=''):
-        if None == v:
+        if None is v:
             v = default
         return ensure_str(v)
 
@@ -54,7 +54,7 @@ class Tvn24(CBaseHostClass):
     def getIconFromRelated(self, item):
         # get icon
         icon = ''
-        if None != item:
+        if None is not item:
             try:
                 icon = self.getStr(item['Main_Content_Photo']['url'])
             except Exception:
@@ -175,7 +175,7 @@ class Tvn24(CBaseHostClass):
                         subCategiories = []
                     params = {'name': 'category', 'category': currCat, 'parent_cat': category, 'title': title, 'url': url, 'icon': icon, 'plot': plot, 'page': '1', 'sub_categiories': subCategiories}
                     self.addDir(params)
-            if None != nextPage:
+            if None is not nextPage:
                 params = {'name': 'category', 'title': 'Następna strona', 'category': category, 'url': baseUrl, 'page': nextPage}
                 self.addDir(params)
         except Exception:
@@ -212,12 +212,12 @@ class Tvn24(CBaseHostClass):
 
                 # get data from related
                 item = item.get('related', None)
-                if None != item:
+                if None is not item:
                     if '' == icon:
                         icon = self.getIconFromRelated(item)
                     # get data from video url
                     videoItem = item.get('Video_Video', None)
-                    if None != videoItem:
+                    if None is not videoItem:
                         if '' == title:
                             title = self.getStr(videoItem.get('title', ''))
                         if '' == plot:
@@ -233,7 +233,7 @@ class Tvn24(CBaseHostClass):
                     else:
                         self.addArticle(params)
 
-            if None != nextPage:
+            if None is not nextPage:
                 params = {'name': 'category', 'title': 'Następna strona', 'category': 'end_cat', 'parent_cat': parent_cat, 'url': baseUrl, 'page': nextPage}
                 self.addDir(params)
         except Exception:
@@ -292,7 +292,7 @@ class Tvn24(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsMainMenu()
     #VIDEO_PLAYLIST
         elif category == 'playlist':

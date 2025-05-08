@@ -503,7 +503,7 @@ class RtlMostHU(CBaseHostClass):
         self.currList = []
         if self.tryTologin():
     #MAIN MENU
-            if name == None:
+            if name is None:
                 self.listMainMenu({'name': 'category'})
             elif category == 'list_programs':
                 self.listPrograms(self.currItem)

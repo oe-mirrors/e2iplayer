@@ -52,7 +52,7 @@ class TV2RChannel():
         links = []
         if 'fynskemedier.dk' == channelData['type']:
             ip = self.__getFynskemedierIP()
-            if None == ip:
+            if None is ip:
                 return links
             for qual in self.QUALITIES:
                 url = 'rtmp://{0}:1935/live/_definst_/{1}_{2} live=1'.format(ip, channelData['id'], qual)

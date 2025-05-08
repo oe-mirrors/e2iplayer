@@ -141,7 +141,7 @@ class IPTVPlayerInfo(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'commits':
             self.listCommits(self.currItem, 'list_items')

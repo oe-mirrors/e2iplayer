@@ -27,7 +27,7 @@ class WEP:
         self.__key = [None, None, None, None]  # four possible keys, initialize to invalid keys
         self.encryptHeaderSize = 4
         self.setCurrentKeyId(keyId)
-        if key != None:
+        if key is not None:
             self.setKey(key)
 
     def setKey(self, key, keyId=None):
@@ -35,14 +35,14 @@ class WEP:
         """
         if len(key) not in (5, 13):
             raise BadKeySizeError('Key not valid size of 5 or 13 octets')
-        if keyId != None:
+        if keyId is not None:
             self.setCurrentKeyId(keyId)
         self.__key[self.currentKeyId] = key
         self.keySize = len(key)
         self.strength = self.keySize * 8
 
     def setCurrentKeyId(self, keyId):
-        if keyId == None:
+        if keyId is None:
             self.currentKeyId = 0
         elif (0 <= keyId < 4):
             self.currentKeyId = keyId
@@ -54,9 +54,9 @@ class WEP:
             Adds WEP encryption header and crc
         """
         assert (len(iv) == 3), 'Wrong size WEP IV'
-        if keyId != None:
+        if keyId is not None:
             self.setCurrentKeyId(keyId)
-        assert (self.__key[self.currentKeyId] != None), 'Must set key for specific keyId before encryption'
+        assert (self.__key[self.currentKeyId] is not None), 'Must set key for specific keyId before encryption'
         self.arc4.setKey(iv + self.__key[self.currentKeyId])
         crc = pack('<I', crc32(plainText))
         cipherText = self.arc4.encrypt(plainText + crc)
@@ -68,7 +68,7 @@ class WEP:
         """ Decrypt a WEP packet, assumes WEP 4 byte header on packet """
         iv = cipherText[:3]
         self.currentKeyId = (ord(cipherText[3]) & 0xC0) >> 6
-        assert (self.__key[self.currentKeyId] != None), 'Must set key for specific keyId before encryption'
+        assert (self.__key[self.currentKeyId] is not None), 'Must set key for specific keyId before encryption'
         self.arc4.setKey(iv + self.__key[self.currentKeyId])
         plainText = self.arc4.decrypt(cipherText[self.encryptHeaderSize:])
         if plainText[-self.encryptHeaderSize:] == pack('<I', crc32(plainText)):  # check data integrity

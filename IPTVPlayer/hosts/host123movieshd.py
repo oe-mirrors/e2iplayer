@@ -109,10 +109,10 @@ class GoMovies(CBaseHostClass):
                 else:
                     continue
 
-            if self.MAIN_URL != None:
+            if self.MAIN_URL is not None:
                 break
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.MAIN_URL = domains[0]
 
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/wp-content/themes/assets/images/gomovies-logo-light.png')
@@ -121,7 +121,7 @@ class GoMovies(CBaseHostClass):
 
     def listMain(self, cItem):
         printDBG("GoMovies.listMain")
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         MAIN_CAT_TAB = [{'category': 'list_filter_genre', 'title': 'Movies', 'url': self.getFullUrl('/movie/filter/movies/')},
                         {'category': 'list_filter_genre', 'title': 'TV-Series', 'url': self.getFullUrl('/movie/filter/seasons/')},
@@ -278,7 +278,7 @@ class GoMovies(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("GoMovies.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('/browse-word/%s/' % urllib_quote_plus(searchPattern))
@@ -370,7 +370,7 @@ class GoMovies(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -382,7 +382,7 @@ class GoMovies(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.fillCacheFilters()
             self.listMain({'name': 'category'})
         elif category.startswith('list_filter_'):

@@ -196,7 +196,7 @@ class IPTVDMWidget(Screen):
     def __onClose(self):
         # unsubscribe callback functions and break cycles references
         self.iptvclosing = True
-        if None != self.console:
+        if None is not self.console:
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
             self.console_stdoutAvail_conn = None
@@ -281,7 +281,7 @@ class IPTVDMWidget(Screen):
 
         options = []
         item = self.getSelItem()
-        if item != None:
+        if item is not None:
             if self.localMode:
                 options.extend(play)
                 options.extend(remove)
@@ -310,7 +310,7 @@ class IPTVDMWidget(Screen):
 
     def makeActionOnDownloadItem(self, ret):
         item = self.getSelItem()
-        if None != ret and None != item:
+        if None is not ret and None is not item:
             printDBG("makeActionOnDownloadItem " + ret[1] + (" for downloadIdx[%d]" % item.downloadIdx))
             if ret[1] == "play":
                 title = item.fileName

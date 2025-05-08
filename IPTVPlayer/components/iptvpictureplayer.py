@@ -87,14 +87,14 @@ class IPTVSimpleAudioPlayer():
             self.start(self.uri, self.playMode)
 
     def stop(self):
-        if None == self.console:
+        if None is self.console:
             return
         self.stopped = True
         self.console.write("q\n")
 
     def close(self):
         self.isClosing = True
-        if None != self.console:
+        if None is not self.console:
             self.stop()
             time.sleep(1)  # YES I know this is bad, but for now must be enough ;) Some, day I will fix this
             self.console.sendCtrlC()
@@ -231,10 +231,10 @@ class IPTVPicturePlayerWidget(Screen):
 
     def __onClose(self):
         printDBG('IPTVPicturePlayerWidget.__onClose ------------------------------------')
-        if None != self.audioPlayer:
+        if None is not self.audioPlayer:
             self.audioPlayer.close()
         self.onEnd()
-        if None != self.mainTimer:
+        if None is not self.mainTimer:
             try:
                 self.mainTimer.stop()
             except Exception:
@@ -313,7 +313,7 @@ class IPTVPicturePlayerWidget(Screen):
             return
 
         if not self.autoRefresh and not self.url.startswith('file://'):
-            if None != self.audioPlayer:
+            if None is not self.audioPlayer:
                 self.audioPlayer.start(self.audioUrl)
             self.autoRefresh = True
             if not self.refreshing:
@@ -324,7 +324,7 @@ class IPTVPicturePlayerWidget(Screen):
             self.canAutoClose = False
             return
         if self.autoRefresh:
-            if None != self.audioPlayer:
+            if None is not self.audioPlayer:
                 self.audioPlayer.stop()
             self.autoRefresh = False
 
@@ -338,7 +338,7 @@ class IPTVPicturePlayerWidget(Screen):
             self.key_play()
 
     def downloaderEnd(self, status):
-        if None != self.downloader:
+        if None is not self.downloader:
             self.onEnd(False)
             if DMHelper.STS.DOWNLOADED == status:
                 self["status"].setText(_("++"))
@@ -351,7 +351,7 @@ class IPTVPicturePlayerWidget(Screen):
 
     def decodePictureEnd(self, ret={}):
         printDBG('IPTVPicturePlayerWidget.decodePictureEnd')
-        if None == ret.get('Pixmap', None):
+        if None is ret.get('Pixmap', None):
             if 0 == self.refreshCount:
                 self.session.openWithCallback(self.close, MessageBox, _("Decode file [%s] problem.") % self.filePath, type=MessageBox.TYPE_ERROR, timeout=10)
         else:

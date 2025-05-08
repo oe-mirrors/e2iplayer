@@ -435,7 +435,7 @@ class Raiplay(CBaseHostClass):
             return
 
         items = self.getLastContentByTag(tag)
-        if items == None:
+        if items is None:
             return
 
         for item in items:
@@ -482,7 +482,7 @@ class Raiplay(CBaseHostClass):
         self.currList = []
 
         #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'live_tv':
             self.listLiveTvChannels(self.currItem)

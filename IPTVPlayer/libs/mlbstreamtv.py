@@ -69,7 +69,7 @@ class MLBStreamTVApi(CBaseHostClass):
         channelsList = []
 
         category = cItem.get('priv_cat')
-        if category == None:
+        if category is None:
             tab = [{'url': 'http://mlbstream.tv/', 'icon': self.DEFAULT_ICON_URL},
                    {'url': 'http://nhlstream.tv/', 'icon': 'http://nhlstream.tv/wp-content/uploads/2018/09/nhl-logo.png'},
                    #{'url':'http://nflstream.tv/'},

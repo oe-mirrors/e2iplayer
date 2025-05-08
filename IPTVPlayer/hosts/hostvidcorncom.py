@@ -492,7 +492,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         retTab = []
 
         url = cItem.get('prev_url', cItem['url'])
-        if data == None:
+        if data is None:
             self.tryTologin()
             sts, data = self.getPage(url)
             if not sts:
@@ -551,7 +551,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.vidcorn_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.vidcorn_login.value or\
             self.password != config.plugins.iptvplayer.vidcorn_password.value:
 
             loginCookie = GetCookieDir('vidcorn.com.login')
@@ -635,7 +635,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         self.tryTologin()
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
         elif category in ['series', 'peliculas']:
             self.listFilters(self.currItem, 'list_items')

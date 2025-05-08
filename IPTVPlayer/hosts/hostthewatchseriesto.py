@@ -68,7 +68,7 @@ class TheWatchseriesTo(CBaseHostClass):
         elif val == 'never':
             return False
 
-        if self.needProxy == None:
+        if self.needProxy is None:
             sts, data = self.cm.getPage(self.MAIN_URL)
             if sts and '/series"' in data:
                 self.needProxy = False
@@ -86,7 +86,7 @@ class TheWatchseriesTo(CBaseHostClass):
             params['header']['Cookie'] = 'flags=2e5;'
             url = proxy
         sts, data = self.cm.getPage(url, params, post_data)
-        if sts and None == data:
+        if sts and None is data:
             sts = False
         return sts, data
 
@@ -331,7 +331,7 @@ class TheWatchseriesTo(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
             self.listCategories(self.currItem, 'list_series')

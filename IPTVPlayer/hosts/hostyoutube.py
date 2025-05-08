@@ -80,7 +80,7 @@ class Youtube(CBaseHostClass):
             category = 'playlist'
         elif url.split('?')[0].endswith('/playlists'):
             category = 'playlists'
-        elif None != re.search(r'/watch\?v=[^\&]+?\&list=', url):
+        elif None is not re.search(r'/watch\?v=[^\&]+?\&list=', url):
             category = 'traylist'
         elif 'user/' in url or (('channel/' in url or '/c/' in url or '/@' in url) and not url.endswith('/live')):
             category = 'channel'
@@ -300,7 +300,7 @@ class Youtube(CBaseHostClass):
         printDBG("Youtube.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listMainMenu()
         elif 'from_file' == category:
             self.listCategory(self.currItem)

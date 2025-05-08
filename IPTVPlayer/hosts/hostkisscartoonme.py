@@ -178,7 +178,7 @@ class KissCartoonMe(CBaseHostClass):
                 if tabId == tab['id']:
                     cTab = tab
                     break
-            if cTab == None:
+            if cTab is None:
                 printDBG('>>>>>>>>>>>>>>>>>> continue tabId[%s]' % tabId)
                 continue
             # check for more item
@@ -440,7 +440,7 @@ class KissCartoonMe(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'home':
             self.listHome(self.currItem, 'list_items')

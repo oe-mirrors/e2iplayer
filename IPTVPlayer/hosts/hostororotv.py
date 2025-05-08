@@ -225,7 +225,7 @@ class OroroTV(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_channels':
             self.listChannels(self.currItem, 'list_items')

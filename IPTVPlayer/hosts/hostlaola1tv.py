@@ -62,7 +62,7 @@ class Laola1TV(CBaseHostClass):
         self.mainCache = {}
 
     def _getFullUrl(self, url, baseUrl=None):
-        if baseUrl == None:
+        if baseUrl is None:
             baseUrl = self.MAIN_URL
         if url.startswith('//'):
             url = 'http:' + url
@@ -431,7 +431,7 @@ class Laola1TV(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'}, 'dir')
         elif category == 'list_cache_cat':

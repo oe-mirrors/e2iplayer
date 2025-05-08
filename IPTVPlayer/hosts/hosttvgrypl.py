@@ -226,7 +226,7 @@ class TvGryPL(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #ITEMS
         elif 'list_tabs' == category:

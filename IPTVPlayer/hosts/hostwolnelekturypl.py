@@ -262,7 +262,7 @@ class WolnelekturyPL(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listFilters({'name': 'category', 'url': self.getFullUrl('/katalog/audiobooki/')}, 'list_sub_items_1')
         elif category == 'list_sub_items_1':
             self.listSubItems(self.currItem, 'list_items')

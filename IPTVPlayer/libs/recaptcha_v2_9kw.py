@@ -29,7 +29,7 @@ class UnCaptchaReCaptcha:
         return self.MAIN_URL
 
     def getFullUrl(self, url, mainUrl=None):
-        if mainUrl == None:
+        if mainUrl is None:
             mainUrl = self.getMainUrl()
         return self.cm.getFullUrl(url, mainUrl)
 
@@ -83,7 +83,7 @@ class UnCaptchaReCaptcha:
             errorMsgTab.append(str(e))
             printExc()
 
-        if sleepObj != None:
+        if sleepObj is not None:
             sleepObj.Reset()
 
         if token == '':

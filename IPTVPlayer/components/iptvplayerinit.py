@@ -82,10 +82,10 @@ class IPTVPlayerNotification():
         return not self.__ne__(a)
 
     def __ne__(self, a):
-        if a == None:
+        if a is None:
             return True
 
-        if None != self.messageHash and None != a.messageHash:
+        if None is not self.messageHash and None is not a.messageHash:
             return self.messageHash != a.messageHash
 
         if self.title != a.title or \
@@ -121,7 +121,7 @@ class IPTVPlayerNotificationList(object):
 
     def push(self, message, type="message", timeout=5, messageHash=None, repeatMessageTimeoutSec=0):
         ret = False
-        if messageHash == None and repeatMessageTimeoutSec > 0:
+        if messageHash is None and repeatMessageTimeoutSec > 0:
             raise Exception("IPTVPlayerNotificationList.push call with repeatMessageTimeout but without messageHash")
 
         if repeatMessageTimeoutSec > 0:
@@ -132,7 +132,7 @@ class IPTVPlayerNotificationList(object):
         with self.mainLock:
             try:
                 notification = IPTVPlayerNotification('IPTVPlayer', message, type, timeout, messageHash, timestamp)
-                if messageHash != None:
+                if messageHash is not None:
                     try:
                         self.notificationsList.remove(notification)
                     except Exception:
@@ -156,7 +156,7 @@ class IPTVPlayerNotificationList(object):
                             newList.append(item)
                     self.notificationsList = newList
 
-                if notification.timestamp != None:
+                if notification.timestamp is not None:
                     timestamp = time.time()
                     self.repeatMessages = dict((k, v) for k, v in list(self.repeatMessages.items()) if v.timestamp > timestamp)
                     if notification.messageHash in self.repeatMessages:

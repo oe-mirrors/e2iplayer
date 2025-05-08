@@ -22,13 +22,13 @@ class CaptchaHelper():
         else:
             errorMsgTab = [_('Link protected with Google ReCaptcha v2')]
 
-        if userAgent == None:
+        if userAgent is None:
             try:
                 userAgent = self.USER_AGENT
             except Exception:
                 pass
 
-        if userAgent == None:
+        if userAgent is None:
             try:
                 userAgent = self.defaultParams['header']['User-Agent']
             except Exception:
@@ -36,13 +36,13 @@ class CaptchaHelper():
 
         recaptcha = UnCaptchaReCaptcha_fallback(lang=GetDefaultLang())
         recaptcha.HTTP_HEADER['Referer'] = refUrl
-        if userAgent != None:
+        if userAgent is not None:
             recaptcha.HTTP_HEADER['User-Agent'] = userAgent
         token = recaptcha.processCaptcha(sitekey)
 
         if token == '':
             recaptcha = None
-            if config.plugins.iptvplayer.captcha_bypass.value != '' and bypassCaptchaService == None:
+            if config.plugins.iptvplayer.captcha_bypass.value != '' and bypassCaptchaService is None:
                 bypassCaptchaService = config.plugins.iptvplayer.captcha_bypass.value
             if bypassCaptchaService == '9kw.eu':
                 recaptcha = UnCaptchaReCaptcha_9kw()
@@ -56,13 +56,13 @@ class CaptchaHelper():
             elif config.plugins.iptvplayer.myjd_login.value != '' and config.plugins.iptvplayer.myjd_password.value != '':
                 recaptcha = UnCaptchaReCaptcha_myjd()
 
-            if recaptcha != None:
+            if recaptcha is not None:
                 token = recaptcha.processCaptcha(sitekey, refUrl, captchaType)
             else:
                 errorMsgTab.append(_('Please visit %s to learn how to redirect this task to the external device.') % 'http://zadmario.gitlab.io/captcha.html')
                 if not beQuaiet:
                     self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(errorMsgTab), type=MessageBox.TYPE_ERROR, timeout=20)
-                if bypassCaptchaService != None:
+                if bypassCaptchaService is not None:
                     errorMsgTab.append(_(' or '))
                     errorMsgTab.append(_('You can use \"%s\" or \"%s\" services for automatic solution.') % ("http://2captcha.com/", "https://9kw.eu/", ) + ' ' + _('Go to the host configuration available under blue button.'))
         return token, errorMsgTab

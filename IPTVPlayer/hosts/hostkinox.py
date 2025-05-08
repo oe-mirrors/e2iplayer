@@ -83,10 +83,10 @@ class Kinox(CBaseHostClass):
                         continue
                 break
 
-            if confirmedDomain != None:
+            if confirmedDomain is not None:
                 break
 
-        if confirmedDomain == None:
+        if confirmedDomain is None:
             self.MAIN_URL = 'https://kinox.to/'
 
         self.MAIN_CAT_TAB = [{'category': 'news', 'title': _('News'), 'url': self.getMainUrl()},
@@ -305,7 +305,7 @@ class Kinox(CBaseHostClass):
         printDBG("Kinox.listsSubCategories [%s]" % cItem)
 
         subIdx = cItem.get('sub_idx')
-        if subIdx == None:
+        if subIdx is None:
             return
 
         if subIdx >= len(self.cacheSubCategories):
@@ -646,7 +646,7 @@ class Kinox(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.selectDomain()
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         if category == 'news':

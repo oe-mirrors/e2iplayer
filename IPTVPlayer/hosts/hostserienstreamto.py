@@ -495,7 +495,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.serienstreamto_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.serienstreamto_login.value or\
             self.password != config.plugins.iptvplayer.serienstreamto_password.value:
 
             loginCookie = GetCookieDir('s.to.login')
@@ -616,7 +616,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         self.tryTologin()
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'all_series' == category:
             self.listsTab(self.ALL_SERIES_TAB, {'name': 'category'})

@@ -114,7 +114,7 @@ class F4mDownloader(BaseDownloader):
         return BaseDownloader.CODE_OK
 
     def _dataAvail(self, data):
-        if None == data:
+        if None is data:
             return
         data = self.outData + data.decode(encoding='utf-8', errors='strict')
         if '\n' != data[-1]:
@@ -140,7 +140,7 @@ class F4mDownloader(BaseDownloader):
 
     def _terminate(self):
         printDBG("F4mDownloader._terminate")
-        if None != self.iptv_sys:
+        if None is not self.iptv_sys:
             self.iptv_sys.kill()
             self.iptv_sys = None
         if DMHelper.STS.DOWNLOADING == self.status:
@@ -154,7 +154,7 @@ class F4mDownloader(BaseDownloader):
         printDBG("F4mDownloader._cmdFinished code[%r] terminated[%r]" % (code, terminated))
 
         # break circular references
-        if None != self.console:
+        if None is not self.console:
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
             self.console = None

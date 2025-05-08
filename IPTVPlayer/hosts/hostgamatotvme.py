@@ -224,7 +224,7 @@ class GamatoTV(CBaseHostClass):
         mainDesc = '[/br]'.join(mainDesc)
 
         # trailer
-        if trailer != None:
+        if trailer is not None:
             title = '%s - %s' % (cItem['title'], _('TRAILER'))
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': title, 'url': trailer['url'], 'desc': trailer['name']})
@@ -491,7 +491,7 @@ class GamatoTV(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category', 'url': self.getFullUrl('groups')}, 'list_sort_filters', 'list_items', 'list_filters')
         elif category == 'list_sort_filters':
             self.listSortFilters(self.currItem, 'list_items')

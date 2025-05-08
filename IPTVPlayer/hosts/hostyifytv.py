@@ -117,7 +117,7 @@ class YifyTV(CBaseHostClass):
             if not sts:
                 return sts, data
 
-            if unloadUrl != None:
+            if unloadUrl is not None:
                 self.cm.getPageCFProtection(unloadUrl, urlParams)
                 unloadUrl = None
 
@@ -581,7 +581,7 @@ class YifyTV(CBaseHostClass):
         self.cacheLinks = {}
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_popular':
             self.listsTab(self.POPULAR_TAB, self.currItem)

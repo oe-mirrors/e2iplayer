@@ -62,13 +62,13 @@ class SportDeutschland(CBaseHostClass):
 
     def _getJItemStr(self, item, key, default=''):
         v = item.get(key, None)
-        if None == v:
+        if None is v:
             return default
         return ensure_str(clean_html(u'%s' % v))
 
     def _getJItemNum(self, item, key, default=0):
         v = item.get(key, None)
-        if None != v:
+        if None is not v:
             try:
                 NumberTypes = (int, long, float, complex)
             except NameError:
@@ -156,7 +156,7 @@ class SportDeutschland(CBaseHostClass):
                 params['url'] = ''
 
             if '' != params['url'] or '' != params['player']:
-                if None != item.get('duration', None) or item.get('live', False):
+                if None is not item.get('duration', None) or item.get('live', False):
                     self.addVideo(params)
                 else:
                     self.addArticle(params)
@@ -225,7 +225,7 @@ class SportDeutschland(CBaseHostClass):
         printDBG("SportDeutschland.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'categories' == category:
             self.listCategories(self.currItem)

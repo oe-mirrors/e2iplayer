@@ -226,7 +226,7 @@ class Spryciarze(CBaseHostClass):
         printDBG('Spryciarze.getVideoList')
         self.currList = []
 
-        if None == url or 0 == len(url):
+        if None is url or 0 == len(url):
             return
 
         sts, data = self.cm.getPage(url)
@@ -284,7 +284,7 @@ class Spryciarze(CBaseHostClass):
         printDBG('Spryciarze.getVideoLinks: ' + url)
 
         linkstTab = []
-        if None == url or 0 == len(url):
+        if None is url or 0 == len(url):
             return linkstTab
 
         post_data = None
@@ -371,7 +371,7 @@ class Spryciarze(CBaseHostClass):
                 printDBG("|||||||||||||||||||||||||||||||||||| %s " % item['type'])
 
     #MAIN MENU
-        if self.type == None:
+        if self.type is None:
             self.getMainCategory()
     #SUB CATEGORY
         elif self.type == 'main':
@@ -470,7 +470,7 @@ class IPTVHost(IHost):
 
         retlist = []
 
-        if None != selItem and 'url' in selItem and 1 < len(selItem['url']):
+        if None is not selItem and 'url' in selItem and 1 < len(selItem['url']):
             tmpList = self.host.getVideoLinks(selItem['url'])
 
             for item in tmpList:

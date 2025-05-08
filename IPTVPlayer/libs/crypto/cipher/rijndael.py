@@ -35,7 +35,7 @@ class Rijndael(BlockCipher):
         self.Nk = int(keySize / 4)          # Nk is the key length in 32-bit words
         self.Nr = NrTable[self.Nb][self.Nk]  # The number of rounds (Nr) is a function of
                                             # the block (Nb) and key (Nk) sizes.
-        if key != None:
+        if key is not None:
             self.setKey(key)
 
     def setKey(self, key):

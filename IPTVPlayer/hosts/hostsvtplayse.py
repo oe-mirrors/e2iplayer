@@ -96,11 +96,11 @@ class SVTPlaySE(CBaseHostClass):
     def getIcon(self, item):
         try:
             url = item.get('poster', '')
-            if url == '' or url == None:
+            if url == '' or url is None:
                 url = item.get('thumbnail', '')
-            if url == '' or url == None:
+            if url == '' or url is None:
                 url = item.get('thumbnailImage', '')
-            if url != None and url != '':
+            if url is not None and url != '':
                 url = url.replace('{format}', 'medium')
         except Exception:
             printExc()
@@ -250,7 +250,7 @@ class SVTPlaySE(CBaseHostClass):
                 title = self.cleanHtmlStr(item.get('programTitle', ''))
                 url = self.getFullUrl(item['contentUrl'])
                 desc = item.get('description', '')
-                if desc == None:
+                if desc is None:
                     desc = ''
                 else:
                     self.cleanHtmlStr(desc)
@@ -440,7 +440,7 @@ class SVTPlaySE(CBaseHostClass):
 
         subtitlesTab = []
 
-        if hlsUrl == None or dashUrl == None:
+        if hlsUrl is None or dashUrl is None:
             if 'api' not in self.up.getDomain(cItem['url']):
                 url = self.getFullUrl(cItem['url'])
                 sts, data = self.cm.getPage(url, self.defaultParams)
@@ -461,7 +461,7 @@ class SVTPlaySE(CBaseHostClass):
                 data = byteify(json.loads(data))
 
                 videoItem = data.get('video', None)
-                if videoItem == None:
+                if videoItem is None:
                     videoItem = data
                 for item in videoItem['videoReferences']:
                     if self.cm.isValidUrl(item['url']):
@@ -569,7 +569,7 @@ class SVTPlaySE(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category', 'url': self.MAIN_URL}, 'list_items')
         elif 'live_streams' == category:
             self.listLive(self.currItem)

@@ -26,7 +26,7 @@ class IPTVInputBoxWidget(InputBox):
         InputBox.__init__(self, session, title, windowTitle, useableChars, **kwargs)
         width = 300
         height = 260
-        if None != size:
+        if None is not size:
             width = size[0]
             height = size[1]
         if 'size' not in icon:

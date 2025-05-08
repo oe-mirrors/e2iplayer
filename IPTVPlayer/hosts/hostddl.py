@@ -59,14 +59,14 @@ class DDLMe(CBaseHostClass):
         self.cacheSort = []
 
     def getRealUrl(self, url):
-        if config.plugins.iptvplayer.ddlme_proxy.value == 'webproxy' and url != None and 'browse.php?u=' in url:
+        if config.plugins.iptvplayer.ddlme_proxy.value == 'webproxy' and url is not None and 'browse.php?u=' in url:
             url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', r'''\?u=(http[^&]+?)&''')[0])
         return url
 
     def getFullUrl(self, url, baseUrl=None):
         url = self.getRealUrl(url)
         baseUrl = self.getRealUrl(baseUrl)
-        if not self.cm.isValidUrl(url) and baseUrl != None:
+        if not self.cm.isValidUrl(url) and baseUrl is not None:
             if url.startswith('/'):
                 baseUrl = self.cm.getBaseUrl(baseUrl)
             else:
@@ -518,7 +518,7 @@ class DDLMe(CBaseHostClass):
         retTab = []
 
         url = cItem.get('prev_url', cItem['url'])
-        if data == None:
+        if data is None:
             sts, data = self.getPage(url)
             if not sts:
                 data = ''
@@ -623,7 +623,7 @@ class DDLMe(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
 
         elif category == 'release_tab':

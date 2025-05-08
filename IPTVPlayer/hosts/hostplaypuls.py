@@ -107,7 +107,7 @@ class Playpuls(CBaseHostClass):
                 data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="view-content">', '</section>', False)[1]
         else:
             data = cItem['data']
-        if None != data:
+        if None is not data:
             self._listItems(data)
 
     def _listItems(self, data):
@@ -283,7 +283,7 @@ class Playpuls(CBaseHostClass):
         printDBG("Playpuls.handleService: ---------> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listsMainMenu()
         elif 'menu' == category:
             self.listCategory(self.currItem)

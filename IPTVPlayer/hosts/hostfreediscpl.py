@@ -387,7 +387,7 @@ class FreeDiscPL(CBaseHostClass):
                 if tmpId in self.treeCache[userId][key]:
                     parentId = self.treeCache[userId][key][tmpId]['parent_id']
                     break
-            if parentId == None:
+            if parentId is None:
                 return
 
             item = None
@@ -397,7 +397,7 @@ class FreeDiscPL(CBaseHostClass):
                 if tmpId in self.treeCache[userId][key]:
                     item = self.treeCache[userId][key][tmpId]
                     break
-            if item == None:
+            if item is None:
                 return
 
             if item['id'] not in ['0', dirId, cItem.get('f_prev_dir_id', '')]:
@@ -434,7 +434,7 @@ class FreeDiscPL(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
         errMsg = []
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.freediscpl_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.freediscpl_login.value or\
             self.password != config.plugins.iptvplayer.freediscpl_password.value:
 
             self.login = config.plugins.iptvplayer.freediscpl_login.value
@@ -499,7 +499,7 @@ class FreeDiscPL(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
             cItem = dict(self.currItem)

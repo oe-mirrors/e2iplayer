@@ -481,7 +481,7 @@ class ARDmediathek(CBaseHostClass):
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'list_items' == category:
             self.listItems(self.currItem)

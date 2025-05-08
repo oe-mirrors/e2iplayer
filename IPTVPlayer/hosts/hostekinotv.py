@@ -150,7 +150,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         printDBG("EkinoTv.listsTab")
         for item in tab:
             params = dict(cItem)
-            if None != category:
+            if None is not category:
                 params['category'] = category
             params['desc'] = self.loginMessage
             params.update(item)
@@ -491,7 +491,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.ekinotv_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.ekinotv_login.value or\
             self.password != config.plugins.iptvplayer.ekinotv_password.value:
 
             sts, data = self.getPage(self.getMainUrl())
@@ -577,7 +577,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #FILMS CATEGORIES
         elif 'list_cats' == category:

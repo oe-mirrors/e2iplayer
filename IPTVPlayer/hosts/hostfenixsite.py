@@ -360,7 +360,7 @@ class Fenixsite(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category', 'type': 'category'}, 'list_categories')
 
         elif category == 'list_filters':

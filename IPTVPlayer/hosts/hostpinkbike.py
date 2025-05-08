@@ -187,7 +187,7 @@ class Pinkbike(CBaseHostClass):
         searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
 
-        if None == name:
+        if None is name:
             self.listsTab(Pinkbike.MAIN_CAT_TAB, {'name': 'category'})
         elif 'best_video_categories' == category:
             self.listBestCategories(self.currItem, 'list_videos')

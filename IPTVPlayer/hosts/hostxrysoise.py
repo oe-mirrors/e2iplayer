@@ -205,7 +205,7 @@ class XrysoiSE(CBaseHostClass):
             mode = 'collect_item'
             spTab = [re.compile('<b>'), re.compile(r'<div[\s]+class="separator"[\s]+style="text-align\:[\s]+center;">'), re.compile(r'<div[\s]+style="text-align\:[\s]+center;">')]
             for sp in spTab:
-                if None != sp.search(linksData):
+                if None is not sp.search(linksData):
                     break
 
             collectionItems = sp.split(linksData)
@@ -370,7 +370,7 @@ class XrysoiSE(CBaseHostClass):
         self.currItem.pop('good_for_fav', None)
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'movies':
             self.listMoviesCategory(self.currItem, 'list_items')

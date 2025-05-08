@@ -261,7 +261,7 @@ class LosMovies(CBaseHostClass):
         printDBG("LosMovies.getLinksForVideo [%s]" % cItem)
         urlTab = []
 
-        if eItem == None:
+        if eItem is None:
             urlTab = self.cacheLinks.get(cItem['url'], [])
             if len(urlTab):
                 return urlTab
@@ -294,7 +294,7 @@ class LosMovies(CBaseHostClass):
             name = ' | '.join(nameTab)
             urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
 
-        if eItem == None:
+        if eItem is None:
             self.cacheLinks[cItem['url']] = urlTab
         return urlTab
 
@@ -351,7 +351,7 @@ class LosMovies(CBaseHostClass):
 
         if 'onlinemovietv' in self.up.getDomain(videoUrl) and 'You are being redirected' in data:
             cookie = self.unSecure(data)
-            if cookie != None:
+            if cookie is not None:
                 params = dict(self.defaultParams)
                 params['cookie_items'] = cookie
                 sts, data = self.getPage(videoUrl, params)
@@ -449,7 +449,7 @@ class LosMovies(CBaseHostClass):
 
     def getLinksForFavourite(self, fav_data):
         printDBG('LosMovies.getLinksForFavourite')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         links = []
         try:
@@ -461,7 +461,7 @@ class LosMovies(CBaseHostClass):
 
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('LosMovies.setInitListFromFavouriteItem')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         try:
             params = byteify(json.loads(fav_data))
@@ -484,7 +484,7 @@ class LosMovies(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.cacheLinks = {}
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_cats':

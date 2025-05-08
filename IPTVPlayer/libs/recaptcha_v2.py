@@ -29,7 +29,7 @@ class UnCaptchaReCaptcha:
         post_data = None
         token = ''
         iteration = 0
-        if referer != None:
+        if referer is not None:
             self.HTTP_HEADER['Referer'] = referer
         reCaptchaUrl = 'http://www.google.com/recaptcha/api/fallback?k=%s' % (key)
         while iteration < 20:

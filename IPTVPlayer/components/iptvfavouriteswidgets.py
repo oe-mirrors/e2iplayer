@@ -88,7 +88,7 @@ class IPTVFavouritesAddItemWidget(Screen):
         self.result = False
 
         self.favItem = favItem
-        if None != favourites:
+        if None is not favourites:
             self.saveLoad = False
         else:
             self.saveLoad = True
@@ -98,7 +98,7 @@ class IPTVFavouritesAddItemWidget(Screen):
 
     def onStart(self):
         self.onShown.remove(self.onStart)
-        if None == self.favourites:
+        if None is self.favourites:
             self.favourites = IPTVFavourites(GetFavouritesDir())
             sts = self.favourites.load(groupsOnly=True)
             if not sts:
@@ -119,7 +119,7 @@ class IPTVFavouritesAddItemWidget(Screen):
 
     def addFavouriteToGroup(self, retArg):
         if retArg and 2 == len(retArg):
-            if None != retArg[1]:
+            if None is not retArg[1]:
                 sts = self.favourites.loadGroupItems(retArg[1], force=False)
                 if sts:
                     sts = self.favourites.addGroupItem(self.favItem, retArg[1])
@@ -137,7 +137,7 @@ class IPTVFavouritesAddItemWidget(Screen):
             self.iptvDoFinish()
 
     def addNewFavouriteGroup(self, group):
-        if None != group:
+        if None is not group:
             sts = True
             if self.saveLoad:
                 sts = self.favourites.save(True)
@@ -311,12 +311,12 @@ class IPTVFavouritesMainWidget(Screen):
 
     def keyOK(self):
         if self.reorderingMode:
-            if None != self.getSelectedItem():
+            if None is not self.getSelectedItem():
                 self._changeMode()
             return
         if ":groups:" == self.menu:
             sel = self.getSelectedItem()
-            if None == sel:
+            if None is sel:
                 return
 
             self.menu = sel.privateData
@@ -341,7 +341,7 @@ class IPTVFavouritesMainWidget(Screen):
         if self.duringMoving:
             return
         sel = self.getSelectedItem()
-        if None == sel:
+        if None is sel:
             return
         sts = True
         if ":groups:" == self.menu:
@@ -355,7 +355,7 @@ class IPTVFavouritesMainWidget(Screen):
         self.displayList()
 
     def keyYellow(self):
-        if None != self.getSelectedItem():
+        if None is not self.getSelectedItem():
             if self.reorderingMode:
                 self.reorderingMode = False
                 self["label_yellow"].setText(self.IDS_ENABLE_REORDERING)
@@ -373,7 +373,7 @@ class IPTVFavouritesMainWidget(Screen):
         if ":groups:" == self.menu:
             self.session.openWithCallback(self._groupAdded, IPTVFavouritesAddNewGroupWidget, self.favourites)
         else:
-            if None == self.getSelectedItem():
+            if None is self.getSelectedItem():
                 return
             if not self.loadGroupItems(self.menu):
                 return
@@ -385,7 +385,7 @@ class IPTVFavouritesMainWidget(Screen):
             self.session.openWithCallback(self._itemCloned, IPTVFavouritesAddItemWidget, favItem, self.favourites, False, [self.menu])
 
     def _groupAdded(self, group):
-        if None != group:
+        if None is not group:
             self.modified = True
             self.displayList()
             try:

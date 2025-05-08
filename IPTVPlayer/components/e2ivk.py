@@ -76,7 +76,7 @@ class E2iVKSelectionList(IPTVListComponentBase):
             for key in self.dictPIX:
                 try:
                     pixFile = self.ICONS_FILESNAMES.get(key, None)
-                    if None != pixFile:
+                    if None is not pixFile:
                         self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
                 except Exception:
                     printExc()
@@ -397,7 +397,7 @@ class E2iVirtualKeyBoard(Screen):
             vkLayoutId = self.DEFAULT_VK_LAYOUT['id']
 
         self.loadKeyboardLayout(vkLayoutId)
-        self.isAutocompleteEnabled = self.autocomplete != None
+        self.isAutocompleteEnabled = self.autocomplete is not None
         self.setText(self.startText)
 
     def setText(self, text):
@@ -642,7 +642,7 @@ class E2iVirtualKeyBoard(Screen):
                 askForDowanload = 1
 
     def setVKLayout(self, layout=None):
-        if layout != None:
+        if layout is not None:
             self.currentVKLayout = layout
         self.updateKeysLabels()
         self['_56'].setText(self.currentVKLayout['locale'].split('-', 1)[0].upper())
@@ -726,7 +726,7 @@ class E2iVirtualKeyBoard(Screen):
             listValue.append(({'sel': sel, 'val': x}, ))
 
         leftList.setList(listValue)
-        if selIdx != None:
+        if selIdx is not None:
             leftList.moveToIndex(selIdx)
         leftList.setSelectionState(True)
         leftList.show()

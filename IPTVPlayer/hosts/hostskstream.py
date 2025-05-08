@@ -102,7 +102,7 @@ class SKStream(CBaseHostClass):
         return url
 
     def selectDomain(self):
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             domains = ['https://ww1.skstream.info/']
             domain = config.plugins.iptvplayer.skstream_alt_domain.value.strip()
             if self.cm.isValidUrl(domain):
@@ -118,7 +118,7 @@ class SKStream(CBaseHostClass):
                     self.setMainUrl(self.cm.meta['url'])
                     break
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.MAIN_URL = domains[0]
 
         self.DEFAULT_ICON_URL = self.getFullIconUrl('/apple-touch-icon.png')
@@ -457,7 +457,7 @@ class SKStream(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_cats_items')

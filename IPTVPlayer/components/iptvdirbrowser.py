@@ -123,7 +123,7 @@ class IPTVDirectorySelectorWidget(Screen):
 
     def __onClose(self):
         printDBG("IPTVDirectorySelectorWidget.__onClose -----------------------------")
-        if None != self.console:
+        if None is not self.console:
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
             self.console_stdoutAvail_conn = None
@@ -178,7 +178,7 @@ class IPTVDirectorySelectorWidget(Screen):
     def refreshFinished(self, code):
         printDBG("IPTVDirectorySelectorWidget.refreshFinished")
         self.underRefreshing = False
-        if None != self.deferredAction:
+        if None is not self.deferredAction:
             deferredAction = self.deferredAction
             self.deferredAction = None
             deferredAction()
@@ -262,7 +262,7 @@ class IPTVDirectorySelectorWidget(Screen):
 
     def ok(self):
         item = self._getSelItem()
-        if None == item or '' == item.name:
+        if None is item or '' == item.name:
             return
         fullDirName = os_path.join(self.currDir, item.name)
         if '..' == item.name:
@@ -282,7 +282,7 @@ class IPTVDirectorySelectorWidget(Screen):
         self.session.openWithCallback(self.enterPatternCallBack, GetVirtualKeyboard(), title=(_("Enter name")), text="")
 
     def enterPatternCallBack(self, newDirName=None):
-        if None != self.currDir and newDirName != None:
+        if None is not self.currDir and newDirName is not None:
             sts = False
             if IsValidFileName(newDirName):
                 try:
@@ -347,7 +347,7 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
                 else:
                     type = 'file'
                     try:
-                        if None != self.fileMatch and None == self.fileMatch.match(params[0]):
+                        if None is not self.fileMatch and None is self.fileMatch.match(params[0]):
                             continue
                     except Exception:
                         printExc()
@@ -356,7 +356,7 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
 
     def ok(self):
         item = self._getSelItem()
-        if None == item or '' == item.name:
+        if None is item or '' == item.name:
             return
         fullPath = os_path.join(self.currDir, item.name)
         if item.type == 'dir':

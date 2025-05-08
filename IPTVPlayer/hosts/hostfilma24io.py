@@ -224,7 +224,7 @@ class Filma24IO(CBaseHostClass):
         retTab = []
 
         url = cItem.get('prev_url', cItem['url'])
-        if data == None:
+        if data is None:
             sts, data = self.getPage(url)
             if not sts:
                 data = ''
@@ -281,7 +281,7 @@ class Filma24IO(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
         elif category == 'sub_items':
             self.listSubItems(self.currItem)

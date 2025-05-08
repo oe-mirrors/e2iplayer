@@ -543,7 +543,7 @@ class MoovieCC(CBaseHostClass):
 
     def getLinksForFavourite(self, fav_data):
         printDBG('MoovieCC.getLinksForFavourite')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         links = []
         try:
@@ -555,7 +555,7 @@ class MoovieCC(CBaseHostClass):
 
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('MoovieCC.setInitListFromFavouriteItem')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         try:
             params = byteify(json.loads(fav_data))
@@ -636,7 +636,7 @@ class MoovieCC(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.cacheLinks = {}
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_movies':

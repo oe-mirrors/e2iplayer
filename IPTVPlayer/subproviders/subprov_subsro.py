@@ -150,7 +150,7 @@ class SubsRoProvider(CBaseSubProviderClass):
 
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(url, urlParams, unpackToSubDir=True)
-        if None == tmpDIR:
+        if None is tmpDIR:
             return
 
         cItem = dict(cItem)
@@ -213,7 +213,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.getSearchList({'name': 'category'}, 'get_subtitles')
         if category == 'list_dir':
             self.listDir(self.currItem)

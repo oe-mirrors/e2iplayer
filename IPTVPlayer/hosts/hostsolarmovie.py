@@ -78,7 +78,7 @@ class SolarMovie(CBaseHostClass):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         proxy = self.getProxy()
-        if proxy != None:
+        if proxy is not None:
             addParams = MergeDicts(addParams, {'http_proxy': proxy})
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -91,7 +91,7 @@ class SolarMovie(CBaseHostClass):
         if url == '':
             return url
         proxy = self.getProxy()
-        if proxy != None:
+        if proxy is not None:
             url = strwithmeta(url, {'iptv_http_proxy': proxy})
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance', '__cfduid'])
         url = strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.HEADER['User-Agent']})
@@ -120,10 +120,10 @@ class SolarMovie(CBaseHostClass):
                         continue
                 break
 
-            if self.MAIN_URL != None:
+            if self.MAIN_URL is not None:
                 break
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.MAIN_URL = domains[0]
 
         self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Featured movies', 'url': self.MAIN_URL + 'featured'},
@@ -336,7 +336,7 @@ class SolarMovie(CBaseHostClass):
             return cipher.encrypt(encrypted, iv)
 
     def _updateParams(self, params):
-        if self._myFun == None:
+        if self._myFun is None:
             try:
                 tmp = 'd4dc09ccf50eec3e8ff154e9aaae91d70fd5cb194964f86c2f2b4dda892d816c987cca66475b807bf875241ea891e7063f608834577df64b8a97f73fcb5598a2f7cd9aee7a7720eca337c09b1fd8808a1140579345f89aea4169d465869f1149e7e79245df09793524d95bfe8ed80b693316d6dce7c09a57c16fd29f0210ad2711f3a1fb4641bf914f7ef342fb1355211601edc691103e5c635ca2af3b8e730f18732e87348f95b806f4d976c113adbc6104b7524d5a22824fa2f694fda0e32b44bac01b78a2ff3baa2c224036bde220417074720a6965a6a835031b97fd18eaac53af1477d6e67ab66f324d9e2e3fc9051840f038336821ad2695090b6fc18589769b4fd63fa2baca4dbdec2d636b261537d3bb54c25ea3cdf591e1896486e086047ae196d93f625da5aefabed41b163297e09d4d6d39bb6336997197d76fdd829b7946e1e48a1182c633f9ad690798b17f8a01e3bb72838839779bd1e36f85857a45d09ae592435642f83d0629264a7f90f4822bb3ab51e78489659cbdcaa22ee798482edafcb948833bff410bb88c25440971f12ab54a5082d98cdf0bb6be9a9c992fac672e8ce3b4525c63d02ca3ea344ae3c150bf1c49e9b83bc7c40839d3bd9babd75860d3560ca0887a38c29eab0155c81cd6f400c1e69d05b228a84052683a5a6821d72185140aaa343fae61a9e06d2100924d4f716f752436528d2b169cd585ce0e5ca243bd6ad457cba5ba402f4706311ccaeefcce6bbccd4e65ba1e2d4318af6f1844d32c27bf871ca198c31bf6f7dcc9185357fd202f419795cb104ccb5383fafd91dd1ad97b2098f579077233c8ce07952a696babdd4e5ae913c5166c92950dc4a1457d2e77f39e4b72c044c3e248a76de4af1dcea6bafe66ea12bce34fe9d6be668f85a2f329256c312c4ec44b86ad66b32be861b916fff7ee33692be1f8a93161c1215e4c621a58427bb0a0d26bda5459f6335b982cf0725af821d6ee7d3dc12d1b3228a3fc2548646819ec8001649088e9cf042d248ef9e7'
                 tmp = self._cryptoJS_AES(unhexlify(tmp), ''.join(GetPluginDir().split('/')[-5:]))
@@ -539,7 +539,7 @@ class SolarMovie(CBaseHostClass):
 
     def getLinksForFavourite(self, fav_data):
         printDBG('SolarMovie.getLinksForFavourite')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         links = []
         try:
@@ -551,7 +551,7 @@ class SolarMovie(CBaseHostClass):
 
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('SolarMovie.setInitListFromFavouriteItem')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         try:
             params = byteify(json.loads(fav_data))
@@ -565,7 +565,7 @@ class SolarMovie(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -577,7 +577,7 @@ class SolarMovie(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')

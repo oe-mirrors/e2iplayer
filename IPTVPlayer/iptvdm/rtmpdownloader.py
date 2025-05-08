@@ -82,7 +82,7 @@ class RtmpDownloader(BaseDownloader):
         def _processItem(item, parameter, value, cmd):
             printDBG(item)
             if (item in paramsL and (parameter not in paramsRequireValue or '' != value)) or '##fake##' == item:
-                if None != parameter:
+                if None is not parameter:
                     cmd += ' --' + parameter.strip()
                     if '' != value:
                         cmd += "='%s'" % value.strip()
@@ -172,7 +172,7 @@ class RtmpDownloader(BaseDownloader):
 
     def _terminate(self):
         printDBG("WgetDownloader._terminate")
-        if None != self.iptv_sys:
+        if None is not self.iptv_sys:
             self.iptv_sys.kill()
             self.iptv_sys = None
         if DMHelper.STS.DOWNLOADING == self.status:

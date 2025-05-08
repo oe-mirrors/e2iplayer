@@ -109,7 +109,7 @@ class MaxtvGO(CBaseHostClass):
 
         try:
             data = byteify(json.loads(data))
-            if data.get('error') != None:
+            if data.get('error') is not None:
                 SetIPTVPlayerLastHostError(str(data['error']['message']))
             for item in data['data']:
                 sTitle = self.cleanHtmlStr(item['name'])
@@ -203,7 +203,7 @@ class MaxtvGO(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.maxtvgo_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.maxtvgo_login.value or\
             self.password != config.plugins.iptvplayer.maxtvgo_password.value:
 
             self.login = config.plugins.iptvplayer.maxtvgo_login.value
@@ -320,7 +320,7 @@ class MaxtvGO(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')

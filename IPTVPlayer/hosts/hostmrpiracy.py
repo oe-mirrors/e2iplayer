@@ -111,7 +111,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
 
         printDBG("DOMAN: [%s]" % domain)
 
-        if domain == None:
+        if domain is None:
             domain = 'http://v1.mrpiracy.xyz/'
 
         domain = domain.replace('http://', 'https://')
@@ -546,7 +546,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
 
     def getLinksForFavourite(self, fav_data):
         printDBG('MRPiracyGQ.getLinksForFavourite')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         links = []
         try:
@@ -558,7 +558,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
 
     def setInitListFromFavouriteItem(self, fav_data):
         printDBG('MRPiracyGQ.setInitListFromFavouriteItem')
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
         try:
             params = byteify(json.loads(fav_data))
@@ -677,7 +677,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
 
         if (self.login != config.plugins.iptvplayer.mrpiracy_login.value or
@@ -706,7 +706,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             if (config.plugins.iptvplayer.mrpiracy_login.value == '' or config.plugins.iptvplayer.mrpiracy_password.value == ''):
                 rm(self.COOKIE_FILE)
             self.cacheLinks = {}

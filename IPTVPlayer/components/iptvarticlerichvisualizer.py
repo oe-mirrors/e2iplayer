@@ -222,7 +222,7 @@ class IPTVArticleRichVisualizer(Screen):
         return self.cover['image_path']
 
     def downloaderEnd(self, status):
-        if None != self.cover['downloader']:
+        if None is not self.cover['downloader']:
             if DMHelper.STS.DOWNLOADED == status:
                 if self["cover"].decodeCover(self._getDownloadFilePath(), self.decodePictureEnd, ' '):
                     return
@@ -231,7 +231,7 @@ class IPTVArticleRichVisualizer(Screen):
         self.hideSpinner()
 
     def decodePictureEnd(self, ret={}):
-        if None == ret.get('Pixmap', None):
+        if None is ret.get('Pixmap', None):
             self.session.openWithCallback(self.close, MessageBox, _("Downloading file [%s] problem.") % self._getDownloadFilePath(), type=MessageBox.TYPE_ERROR, timeout=10)
         else:
             self["cover"].updatePixmap(ret.get('Pixmap', None), ret.get('FileName', self._getDownloadFilePath()))
@@ -268,7 +268,7 @@ class IPTVArticleRichVisualizer(Screen):
             printExc()
 
     def showSpinner(self):
-        if None != self.spinner["timer"]:
+        if None is not self.spinner["timer"]:
             self._setSpinnerVisibility(True)
             self.spinner["timer"].start(self.spinner["timer_interval"], True)
 
@@ -296,7 +296,7 @@ class IPTVArticleRichVisualizer(Screen):
                     if x > self["spinner_4"].getPosition()[0]:
                         x = self["spinner_1"].getPosition()[0]
                     self["spinner"].setPosition(x, y)
-                if None != self.spinner["timer"]:
+                if None is not self.spinner["timer"]:
                     self.spinner["timer"].start(self.spinner["timer_interval"], True)
                     return
             self.hideSpinner()

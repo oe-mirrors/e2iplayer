@@ -310,7 +310,7 @@ class Dailymotion(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
     #CATEGORIES
         elif category == 'categories':

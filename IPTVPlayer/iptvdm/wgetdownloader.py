@@ -115,7 +115,7 @@ class WgetDownloader(BaseDownloader):
 
         self.outData = ''
         self.contentType = 'unknown'
-        if None == info_from:
+        if None is info_from:
             info_from = WgetDownloader.INFO.FROM_FILE
         self.infoFrom = info_from
 
@@ -147,7 +147,7 @@ class WgetDownloader(BaseDownloader):
         return BaseDownloader.CODE_OK
 
     def _dataAvail(self, data):
-        if None != data:
+        if None is not data:
             self.outData += data.decode(encoding='utf-8', errors='strict')
             if self.infoFrom == WgetDownloader.INFO.FROM_FILE:
                 if 'Saving to:' in self.outData:
@@ -183,7 +183,7 @@ class WgetDownloader(BaseDownloader):
 
     def _terminate(self):
         printDBG("WgetDownloader._terminate")
-        if None != self.iptv_sys:
+        if None is not self.iptv_sys:
             self.iptv_sys.kill()
             self.iptv_sys = None
         if DMHelper.STS.DOWNLOADING == self.status:

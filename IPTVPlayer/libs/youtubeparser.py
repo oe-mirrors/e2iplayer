@@ -144,14 +144,14 @@ class YouTubeParser():
             if -1 < formats.find(item['ext']):
                 if 'yes' == item['m3u8']:
                     format = re.search('([0-9]+?)p$', item['format'])
-                    if format != None:
+                    if format is not None:
                         item['format'] = format.group(1) + "x"
                         item['ext'] = item['ext'] + "_M3U8"
                         item['url'] = decorateUrl(ensure_str(item['url']), {"iptv_proto": "m3u8"})
                         retHLSList.append(item)
                 else:
                     format = re.search('([0-9]+?x[0-9]+?$)', item['format'])
-                    if format != None:
+                    if format is not None:
                         item['format'] = format.group(1)
                         item['url'] = decorateUrl(ensure_str(item['url']))
                         retList.append(item)

@@ -36,7 +36,7 @@ class Cover(Pixmap):
 
     def preWidgetRemove(self, instance):
         printDBG("Cover.preWidgetRemove ---------------------------")
-        if None != self.picload_conn:
+        if None is not self.picload_conn:
             printDBG("Cover.preWidgetRemove Wife bug detected :)")
             self.picload_conn = None
         try:
@@ -92,7 +92,7 @@ class Cover(Pixmap):
     # filename  - path to image corresponding to pixelmap
     def updatePixmap(self, ptrPixmap, filename):
         printDBG("updatePixmap %s=%s" % (filename, self.currIcon["FileName"]))
-        if ptrPixmap != None:
+        if ptrPixmap is not None:
             self.instance.setPixmap(ptrPixmap)
 
     def decodeCallBack(self, picInfo=None):
@@ -102,7 +102,7 @@ class Cover(Pixmap):
         ptr = self.picload.getData()
         if '' != self.waitIcon.get('FileName', '') and self.waitIcon.get('FileName', '') != self.currIcon.get('FileName', ''):
             self.decodeCover(self.waitIcon['FileName'], self.waitIcon['CallBackFun'], self.waitIcon['Ident'])
-        elif None != self.currIcon.get("CallBackFun", None):
+        elif None is not self.currIcon.get("CallBackFun", None):
             self.currIcon["CallBackFun"]({"Changed": True, "Pixmap": ptr, "FileName": self.currIcon['FileName'], "Ident": self.currIcon["Ident"]})
     # end decodeCallBack(self, picInfo=None):
 
@@ -116,7 +116,7 @@ class Cover2(Pixmap):
 
     def preWidgetRemove(self, instance):
         printDBG("Cover2.preWidgetRemove ---------------------------")
-        if None != self.picload_conn:
+        if None is not self.picload_conn:
             printDBG("Cover2.preWidgetRemove Wife bug detected :)")
             self.picload_conn = None
         try:
@@ -131,7 +131,7 @@ class Cover2(Pixmap):
     def paintIconPixmapCB(self, picInfo=None):
         self.picload_conn = None
         ptr = self.picload.getData()
-        if ptr != None:
+        if ptr is not None:
             self.instance.setPixmap(ptr)
             self.show()
 

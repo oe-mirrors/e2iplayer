@@ -196,7 +196,7 @@ class OrthoBullets(CBaseHostClass):
 
     def tryTologin(self):
         printDBG('tryTologin start')
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.orthobulletscom_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.orthobulletscom_login.value or\
             self.password != config.plugins.iptvplayer.orthobulletscom_password.value:
 
             self.login = config.plugins.iptvplayer.orthobulletscom_login.value
@@ -281,7 +281,7 @@ class OrthoBullets(CBaseHostClass):
 
         # First Menu
 
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, self.currItem)
         elif category == 'categories':
             printDBG("handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):   Category = %s" % category)

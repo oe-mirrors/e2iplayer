@@ -290,7 +290,7 @@ class SerijeOnline(CBaseHostClass):
     def tryTologin(self):
         printDBG('tryTologin start')
 
-        if None == self.loggedIn or self.login != config.plugins.iptvplayer.serijeonline_login.value or\
+        if None is self.loggedIn or self.login != config.plugins.iptvplayer.serijeonline_login.value or\
             self.password != config.plugins.iptvplayer.serijeonline_password.value:
 
             self.login = config.plugins.iptvplayer.serijeonline_login.value
@@ -348,7 +348,7 @@ class SerijeOnline(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_sub_categories', 'list_sort')

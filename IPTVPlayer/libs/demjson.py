@@ -958,8 +958,8 @@ class utf32(codecs.CodecInfo):
 
         num_bytes = start
 
-        if endianness == None:
-            if bom_endianness == None:
+        if endianness is None:
+            if bom_endianness is None:
                 endianness = sys.byteorder.upper()[0]   # Assume platform default
             else:
                 endianness = bom_endianness
@@ -3651,7 +3651,7 @@ class JSON(object):
         """
         if hookname in self.all_hook_names:
             att = hookname + '_hook'
-            if function != None and not callable(function):
+            if function is not None and not callable(function):
                 raise ValueError("Hook %r must be None or a callable function" % hookname)
             setattr(self, att, function)
         else:

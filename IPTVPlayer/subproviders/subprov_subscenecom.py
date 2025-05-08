@@ -306,7 +306,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
 
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(url, urlParams)
-        if None == tmpDIR:
+        if None is tmpDIR:
             return
 
         cItem = dict(cItem)
@@ -369,7 +369,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.getLanguages({'name': 'category'}, 'list_search_types')
         elif category == 'list_search_types':
             self.listSearchType(self.currItem)

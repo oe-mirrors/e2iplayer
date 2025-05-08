@@ -175,7 +175,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.getSubtitles({'name': 'category', })
 
         CBaseSubProviderClass.endHandleService(self, index, refresh)

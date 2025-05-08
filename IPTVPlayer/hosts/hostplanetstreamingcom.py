@@ -96,10 +96,10 @@ class PlanetStreaming(CBaseHostClass):
                 self.MAIN_URL = self.MAIN_MOVIES_URL
                 break
 
-            if self.MAIN_URL != None:
+            if self.MAIN_URL is not None:
                 break
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.MAIN_MOVIES_URL = 'http://ww4.planet-streaming.com/'
             self.MAIN_SERIES_URL = 'http://ww4.serie-streaminghd.com/'
             self.MAIN_URL = self.MAIN_MOVIES_URL
@@ -340,7 +340,7 @@ class PlanetStreaming(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             #rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -352,7 +352,7 @@ class PlanetStreaming(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, 'list_sort_filter')

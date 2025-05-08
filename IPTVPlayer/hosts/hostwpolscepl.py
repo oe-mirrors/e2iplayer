@@ -175,12 +175,12 @@ class WPolscePL(CBaseHostClass):
                     params['good_for_fav'] = False
                     self.addArticle(params)
                 else:
-                    if item.get('is_current_live', False) and liveItem == None:
+                    if item.get('is_current_live', False) and liveItem is None:
                         liveItem = params
                     else:
                         self.addVideo(params)
 
-            if liveItem != None:
+            if liveItem is not None:
                 liveItem['type'] = 'video'
                 self.currList.insert(0, liveItem)
             else:
@@ -298,7 +298,7 @@ class WPolscePL(CBaseHostClass):
         self.currList = []
 
     #MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
