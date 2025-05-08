@@ -89,7 +89,8 @@ class m4sport(CBaseHostClass):
         
     def listMainMenu(self, cItem):
         try:
-            if self.btps != '' and self.brdr != '': self.pbtp = self.btps.strip() + ' - ' + self.brdr.strip()
+            if self.btps != '' and self.brdr != '':
+                self.pbtp = self.btps.strip() + ' - ' + self.brdr.strip()
             n_bx = self.malvadst('1', '11', 'm4_boxutca')
             if n_bx != '' and self.aid:
                 self.aid_ki = 'ID: ' + n_bx + '\n'
@@ -228,8 +229,10 @@ class m4sport(CBaseHostClass):
                 for x in range(1, mig):
                     puf = pue.format(cid,bid,str(x))
                     sts, data = self.getPage(puf, params)
-                    if not sts: return
-                    if len(data) == 0: return
+                    if not sts:
+                        return
+                    if len(data) == 0:
+                        return
                     data = json_loads(data)
                     for item in data:
                         title = item['title']
@@ -249,32 +252,42 @@ class m4sport(CBaseHostClass):
         try:
             if pu != '':
                 sts, data = self.getPage(pu)
-                if not sts: return
-                if len(data) == 0: return
+                if not sts:
+                    return
+                if len(data) == 0:
+                    return
                 tn = self.cm.ph.getDataBeetwenMarkers(data, '<h2 style="color: ;">Videók', '<div class="pagination" id="pagination', False)[1]
-                if len(tn) == 0: return
+                if len(tn) == 0:
+                    return
                 data = self.cm.ph.getAllItemsBeetwenMarkers(tn, '<div class="image-wrapper tizenhatkilenc overflow hmsLazyLoad', '<div class="typeico">')
-                if len(data) == 0: return
+                if len(data) == 0:
+                    return
                 for item in data:
                     ln += 1
                     icon = self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''')[0]
                     if icon.startswith('//'):
                         icon = 'https:' + icon
-                    if not icon.startswith('https'): continue
-                    if not self.cm.isValidUrl(icon): continue
+                    if not icon.startswith('https'):
+                        continue
+                    if not self.cm.isValidUrl(icon):
+                        continue
                     tnt = self.cm.ph.getDataBeetwenMarkers(item, '<div class="cikk-content-title', '</h1>')[1]
-                    if len(tnt) == 0: continue
+                    if len(tnt) == 0:
+                        continue
                     url = self.cm.ph.getSearchGroups(tnt, 'href=[\'"]([^"^\']+?)[\'"]')[0]
                     if url.startswith('//'):
                         url = 'https:' + url
-                    if not url.startswith('https'): continue
+                    if not url.startswith('https'):
+                        continue
                     title_tmp = self.cm.ph.getDataBeetwenMarkers(tnt, 'href="', '/a>', False)[1]
                     title = self.cm.ph.getDataBeetwenMarkers(title_tmp, '>', '<', False)[1].strip()
-                    if title == '': continue
+                    if title == '':
+                        continue
                     desc = 'A műsor tartalma:\n' + title
                     params = {'title':title, 'url':url, 'url2':url, 'desc':desc, 'icon':icon, 'md': 'egyeb'}
                     self.addVideo(params)
-                    if ln > 30: break
+                    if ln > 30:
+                        break
         except Exception:
             printExc()
 
@@ -375,12 +388,16 @@ class m4sport(CBaseHostClass):
         try:
             if i_md != '' and i_hgk != '' and i_mpu != '':
                 sts, data = self.cm.getPage(uhe, self.defaultParams, pstd)
-                if not sts: return t_s
-                if len(data) == 0: return t_s
+                if not sts:
+                    return t_s
+                if len(data) == 0:
+                    return t_s
                 data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="div_a_div', '</div>')[1]
-                if len(data) == 0: return t_s
+                if len(data) == 0:
+                    return t_s
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<input', '/>')
-                if len(data) == 0: return t_s
+                if len(data) == 0:
+                    return t_s
                 for item in data:
                     t_i = self.cm.ph.getSearchGroups(item, 'id=[\'"]([^"^\']+?)[\'"]')[0]
                     if t_i == 'vn':

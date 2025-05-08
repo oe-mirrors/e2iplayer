@@ -288,7 +288,8 @@ class Counter(object):
         for i in xrange(len(self._counter) - 1, -1, -1):
             self._counter[i] += 1
 
-            if self._counter[i] < 256: break
+            if self._counter[i] < 256:
+                break
 
             # Carry the one
             self._counter[i] = 0
@@ -420,7 +421,8 @@ class AESModeOfOperationCFB(AESSegmentModeOfOperation):
     name = "Cipher Feedback (CFB)"
 
     def __init__(self, key, iv, segment_size = 1):
-        if segment_size == 0: segment_size = 1
+        if segment_size == 0:
+            segment_size = 1
 
         if iv is None:
             self._shift_register = [ 0 ] * 16

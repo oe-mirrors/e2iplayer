@@ -40,7 +40,8 @@ def gettytul():
     return 'https://www.mindigtv.hu/'
 
 def _gh(url):
-    if not url: return ""
+    if not url:
+        return ""
     return "https://celeburdi.github.io/static/icons/"+url
 
 def _addepg(epgs,id,item):
@@ -200,11 +201,13 @@ class MindigTVHU(CBaseHostClass):
 
  
     def getFullIconUrl(self, url):
-        if not url: return self.DEFAULT_ICON_URL
+        if not url:
+            return self.DEFAULT_ICON_URL
         return url
 
     def getPage(self, url, addParams = {}, post_data = None):
-        if addParams == {}: addParams = dict(self.defaultParams)
+        if addParams == {}:
+            addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(url)
         return self.cm.getPage(baseUrl, addParams, post_data)
 
@@ -217,7 +220,8 @@ class MindigTVHU(CBaseHostClass):
             if not data or epg.get("date") != date:
                 id =  epg["id"]
                 sts, data = self.cm.getPage(self.MINDIG_EPG_URL.format( id, date ), self.mindigiParams)
-                if not sts: raise Exception("Can't get EPG page")
+                if not sts:
+                    raise Exception("Can't get EPG page")
                 data = json_loads(data)
                 data = data["data"]["channels"][id]
                 if len(data) == 0:
@@ -226,20 +230,24 @@ class MindigTVHU(CBaseHostClass):
                 if data[0]["timestamp"] > t:
                     d = d - timedelta(1)
                     sts, prevdata = self.cm.getPage(self.MINDIG_EPG_URL.format( id , d.strftime('%Y%m%d') ), self.mindigiParams)
-                    if not sts: raise Exception("Can't get EPG page")             
+                    if not sts:
+                        raise Exception("Can't get EPG page")             
                     prevdata = json_loads(data)
                     prevdata = data["data"]["channels"][id]
                     prevdata.extend(data)
                     data = prevdata
                 epg.update( {"data": data, "date": date} )
 
-            if len(data) == 0: return
+            if len(data) == 0:
+                return
             
             i=next((i for i in data if i["timestamp"] <= t and i["next_timestamp"] > t), None)
-            if not i: return
+            if not i:
+                return
             for item in epg["items"]:
                 item["desc"] = i["title"]+" "+i["time"]+"-"+i["next_time"] + "\n"+i["description"]
-        except Exception: printExc()
+        except Exception:
+            printExc()
 
     def getChannels(self):
         printDBG('MindigTVHU.getChannels')
@@ -259,7 +267,8 @@ class MindigTVHU(CBaseHostClass):
         mindigChannels = []
         try:
             sts, data = self.cm.getPage(self.MINDIG_CHANNEL_URL, self.mindigiParams)
-            if not sts: raise Exception("Can't get MinDig TV channels")
+            if not sts:
+                raise Exception("Can't get MinDig TV channels")
             mindigChannels = json_loads(data)
             for i in mindigChannels:
                 title = i['title']
@@ -278,7 +287,8 @@ class MindigTVHU(CBaseHostClass):
                 if not icon:
                     icon = i["thumbnail"]
 
-                if not i["has_live"] and not force: continue
+                if not i["has_live"] and not force:
+                    continue
 
                 params = {'good_for_fav': True, "title": title, "desc": "", "order": order }
                 if icon:
@@ -295,18 +305,22 @@ class MindigTVHU(CBaseHostClass):
                         params["epg"] = len(tvEpgs)-1
                     params["url"] = "M"+str(i['id'])
                     tvChannels.append(params)
-        except Exception: printExc()
+        except Exception:
+            printExc()
 
         # get HbbTV TV channels
         try:
             sts, data = self.cm.getPage(self.HBBTV_CHANNEL_URL, self.hbbtvParams)
-            if not sts: raise Exception("Can't get HbbTV channels")
+            if not sts:
+                raise Exception("Can't get HbbTV channels")
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'href="token', '/span>', False)
             for i in data:
                 url = self.cm.ph.getDataBeetwenMarkers(i, ':', '"', False)[1]
-                if not url: continue
+                if not url:
+                    continue
                 title = clean_html(self.cm.ph.getDataBeetwenMarkers(i, '>', '<', False)[1])
-                if not title: continue
+                if not title:
+                    continue
                 chdef = next((chdef for chdef in chdefs if chdef["title"] == title), None)
                 if chdef:
                     title = chdef.get("rename",title)
@@ -322,16 +336,19 @@ class MindigTVHU(CBaseHostClass):
                 if ch and ch["has_epg"]:
                     params["epg"]=_addepg(tvEpgs,str(ch["id"]),params)
                 tvChannels.append(params)
-        except Exception: printExc()
+        except Exception:
+            printExc()
 
         # get HbbTV HD TV channels
         try:
             sts, data = self.cm.getPage(self.HBBTV_HD_URL, self.hbbtvParams)
-            if not sts: raise Exception("Can't get HbbTV HD channels")
+            if not sts:
+                raise Exception("Can't get HbbTV HD channels")
             data = self.cm.ph.getDataBeetwenMarkers(data, "streams = ", ";", False)[1]
             data = json_loads(data)
             for k,v in data.items():
-                if k == "enabled" or  k == "fox": continue
+                if k == "enabled" or  k == "fox":
+                    continue
                 title = v.get("channel")
                 url = v.get("url")
                 if title and url and url.startswith("token:"):
@@ -351,16 +368,19 @@ class MindigTVHU(CBaseHostClass):
                     if ch and ch["has_epg"]:
                         params["epg"]=_addepg(tvEpgs,str(ch["id"]),params)
                     tvChannels.append(params)
-        except Exception: printExc()
+        except Exception:
+            printExc()
 
         # get HbbTV radio channels
         try:
             sts, data = self.cm.getPage(self.HBBTV_RADIO_URL, self.hbbtvParams)
-            if not sts: raise Exception("Can't get HbbTV radio channels")
+            if not sts:
+                raise Exception("Can't get HbbTV radio channels")
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, "videos[", ";", False)
             for i in data:
                 v = self.cm.ph.getAllItemsBeetwenMarkers(i, '"', '"', False)
-                if len(v) < 3: continue
+                if len(v) < 3:
+                    continue
                 title = v[2]
                 url = "D"+v[0]
                                
@@ -373,7 +393,8 @@ class MindigTVHU(CBaseHostClass):
                     icon = ""
                     order = 0
 
-                if next((x for x in radioChannels if x["title"] == title), None): continue
+                if next((x for x in radioChannels if x["title"] == title), None):
+                    continue
                    
                 params = {'good_for_fav': True, "title": title, "desc": "", "order": order, "url": url }
                 if icon:
@@ -382,22 +403,27 @@ class MindigTVHU(CBaseHostClass):
                 if ch and ch["has_epg"]:
                     params["epg"]=_addepg(radioEpgs,str(ch["id"]),params)
                 radioChannels.append(params)
-        except Exception: printExc()
+        except Exception:
+            printExc()
 
         # get MTVA video channels
         try:
             sts, data = self.cm.getPage(self.HBBTV_MTVA_URL, self.hbbtvParams)
-            if not sts: raise Exception("Can't get MTVA page")
+            if not sts:
+                raise Exception("Can't get MTVA page")
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<span type="link" href=', '/span>', False)
             for i in data:
                 url = self.cm.ph.getDataBeetwenMarkers(i, '"', '"', False)[1]
-                if not url or not url.startswith("http"): continue
+                if not url or not url.startswith("http"):
+                    continue
                 title = self.cm.ph.getDataBeetwenMarkers(i, '>', '<', False)[1]
-                if not title: continue
+                if not title:
+                    continue
                 params = {'good_for_fav': True, "title": title, "desc": "", "url": "D"+url }
                 videos.append(params)
                 
-        except Exception: printExc()
+        except Exception:
+            printExc()
             
         if len(tvChannels) > 0:
             tvChannels.sort(key=lambda k: (k["order"], k["title"]))
@@ -452,10 +478,12 @@ class MindigTVHU(CBaseHostClass):
                    videoUrls.append({'name':'direct link', 'url':url[1:]})
                    return videoUrls
                 sts, data = self.cm.getPage(url[1:], self.mindigiParams)
-                if not sts: return videoUrls
+                if not sts:
+                    return videoUrls
                 data = data.replace("\r\n", "\n").split("\n")
                 for i in data:
-                    if not i.startswith("http"): continue
+                    if not i.startswith("http"):
+                        continue
                     if i.endswith('.mp3'):
                         videoUrls.append({'name': "mp3", 'url':i})
                     if i.endswith('.aac'):
@@ -469,13 +497,16 @@ class MindigTVHU(CBaseHostClass):
                 cItem.pop("expires",None)
                 if url[:1] == "M":
                     sts, data = self.cm.getPage(self.MINDIG_MEDIA_URL.format( url[1:] ), self.mindigiParams)
-                    if not sts: return videoUrls
+                    if not sts:
+                        return videoUrls
                     data = json_loads(data)
                     link = data["url"]
                 elif url[:1] == "H":
                     sts, link = self.cm.getPage(self.HBBTV_MEDIA_URL.format( url[1:] ), self.hbbtvParams)
-                    if not sts: return videoUrls
-                else: return videoUrls 
+                    if not sts:
+                        return videoUrls
+                else:
+                    return videoUrls 
                 expires = int(time.time())+21600 
                 cItem["link"] = link
                 cItem["expires"] = expires
@@ -488,7 +519,8 @@ class MindigTVHU(CBaseHostClass):
                 videoUrls.extend(retTab)
             else:
                 videoUrls.append({'name':'direct link', 'url':link})
-        except Exception(): printExc()
+        except Exception():
+            printExc()
         return videoUrls
 
     def getFavouriteData(self, cItem):
@@ -500,9 +532,11 @@ class MindigTVHU(CBaseHostClass):
     def getArticleContent(self, cItem):
         printDBG("MindigTVHU.getArticleContent [%s]" % cItem)
         if cItem["type"] == "video":
-            if "epg" in cItem: self.getEpg(self.tvEpgs[cItem["epg"]])
+            if "epg" in cItem:
+                self.getEpg(self.tvEpgs[cItem["epg"]])
         elif cItem["type"] == "audio":
-            if "epg" in cItem: self.getEpg(self.radioEpgs[cItem["epg"]])
+            if "epg" in cItem:
+                self.getEpg(self.radioEpgs[cItem["epg"]])
         retTab = {'title':cItem['title'], 'text': cItem['desc'], 'images':[{'title':'', 'url':self.getFullIconUrl(cItem.get('icon'))}]}
         return [retTab]
 
@@ -510,7 +544,8 @@ class MindigTVHU(CBaseHostClass):
     def tryTologin(self):
         printDBG("MindigTVHU.tryTologin")
 
-        if not self.tvChannels: self.getChannels()
+        if not self.tvChannels:
+            self.getChannels()
 
 
     def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):

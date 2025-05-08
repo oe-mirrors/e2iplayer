@@ -85,9 +85,12 @@ class IPTVSubtitlesHandler:
             try:
                 st = srtText[idx].strip('\n \t') #remove empty leading lines
                 st = st.split('\n')
-                if len(st) < 2: continue #less than two items are for sure garbage, so let's skip
-                while st[0] ==  '': st.pop(0)
-                while not ' --> ' in st[0]: st.pop(0) #remove line numbers and other unused lines existing before time
+                if len(st) < 2:
+                    continue #less than two items are for sure garbage, so let's skip
+                while st[0] ==  '':
+                    st.pop(0)
+                while not ' --> ' in st[0]:
+                    st.pop(0) #remove line numbers and other unused lines existing before time
                 if 1: #tests only
                     printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                     printDBG(st)
