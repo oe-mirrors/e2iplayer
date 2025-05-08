@@ -149,7 +149,6 @@ class Christusvincit(CBaseHostClass):
                           'kategoria_bog_ojciec': 'B\xc3\xb3g Ojciec',
                           'kategoria_dwa_serca': 'Dwa Serca',
                           'kategoria_najdrozsza_krew': 'Najdro\xc5\xbcsza Krew Pana Jezusa',
-                          'slowodorycerzy1': 'S\xc5\x82owa do Rycerzy Chrystusa Kr\xc3\xb3la',
                           'reformalit': 'Reforma liturgiczna',
                           'dwaserca2018': 'Dwa Serca 2018',
                           'dwojgaserc2018': 'Uroczysto\xc5\x9b\xc4\x87 Dwojga Serc 29.09.2018r.',

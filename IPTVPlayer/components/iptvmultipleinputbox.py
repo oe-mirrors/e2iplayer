@@ -125,7 +125,6 @@ class IPTVMultipleInputBox(Screen):
             "right": self.keyRight,
             "up": self.keyUp,
             "down": self.keyDown,
-            "right": self.keyRight,
             "home": self.keyHome,
             "end": self.keyEnd,
             "deleteForward": self.keyDelete,

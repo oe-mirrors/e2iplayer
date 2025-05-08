@@ -471,7 +471,6 @@ class FilmeOnlineTo(CBaseHostClass):
 
                       "Genul": "genre",
                       "Actori": "actors",
-                      "Director": "director",
                       "Tara": "Country",
                       "Durata": "duration",
                       "Anul": "year",

@@ -127,7 +127,7 @@ class MusicBox(CBaseHostClass):
                     params = {'good_for_fav': True, 'name': 'Itunes_track_charts', 'title': title, 'page': url, 'icon': icon, 'desc': desc}
                     self.addDir(params)
                 elif mode == 'album':
-                    params = {'good_for_fav': True, 'good_for_fav': True, 'name': 'Itunes_album_charts', 'title': title, 'page': url, 'icon': icon, 'desc': desc}
+                    params = {'good_for_fav': True, 'name': 'Itunes_album_charts', 'title': title, 'page': url, 'icon': icon, 'desc': desc}
                     self.addDir(params)
 
     def Itunes_track_charts(self, url):

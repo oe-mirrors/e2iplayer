@@ -74,7 +74,6 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         self.SORT_MAP = {'data-dodania': 'add',
                           'data-aktualizacji': 'update',
                           'data-premiery': 'premiera',
-                          'data-premiery': 'premiera',
                           'odslony': 'views',
                           'ocena': 'rate',
                           'alfabetycznie': 'alfa', }
