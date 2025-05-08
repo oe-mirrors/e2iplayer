@@ -168,7 +168,7 @@ class PBKDF2(object):
         assert 1 <= i <= _0xffffffffL
         U = self.__prf(self.__passphrase, self.__salt + pack("!L", i))
         result = U
-        for j in xrange(2, 1+self.__iterations):
+        for j in xrange(2, 1 + self.__iterations):
             U = self.__prf(self.__passphrase, U)
             result = binxor(result, U)
         return result

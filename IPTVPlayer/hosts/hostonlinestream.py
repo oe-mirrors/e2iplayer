@@ -105,12 +105,12 @@ class OnlineStream(CBaseHostClass):
     def listMainMenu(self, cItem):   
         printDBG('OnlineStream.listMainMenu')
         page = 1
-        MAIN_CAT_TAB = [{'category':'list_items',            'title': _('Sugárzó rádiók listázása'), 'url':'https://onlinestream.live/main.cgi?search=&broad=1&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
-                        {'category':'list_items',            'title': _('Internetes rádiók listázása'), 'url':'https://onlinestream.live/main.cgi?search=&broad=0&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
-                        {'category':'list_items',            'title': _('TV-k listázása'), 'url':'https://onlinestream.live/?search=&broad=7&feat=&chtype=&server=&format=&sort=listenpeak&fp=20&p=', 'page': page},
-                        {'category':'list_items',            'title': _('Webkamerák listázása'), 'url':'https://onlinestream.live/?search=&broad=4&feat=&chtype=&server=&format=&sort=&fp=20&p=', 'page': page},
-                        {'category':'search',          'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Sugárzó rádiók listázása'), 'url':'https://onlinestream.live/main.cgi?search=&broad=1&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
+                        {'category':'list_items', 'title': _('Internetes rádiók listázása'), 'url':'https://onlinestream.live/main.cgi?search=&broad=0&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
+                        {'category':'list_items', 'title': _('TV-k listázása'), 'url':'https://onlinestream.live/?search=&broad=7&feat=&chtype=&server=&format=&sort=listenpeak&fp=20&p=', 'page': page},
+                        {'category':'list_items', 'title': _('Webkamerák listázása'), 'url':'https://onlinestream.live/?search=&broad=4&feat=&chtype=&server=&format=&sort=&fp=20&p=', 'page': page},
+                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
         
     def listItems(self, cItem):
@@ -173,7 +173,7 @@ class OnlineStream(CBaseHostClass):
             params = {'category':'list_more','title':title, 'icon': icon, 'url': url, 'desc': desc}
             self.addDir(params)
         if '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-right">' not in dat:
-            params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': cItem['url'], 'page': page+1}
+            params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': cItem['url'], 'page': page + 1}
             self.addDir(params)
     
     def exploreItems(self, cItem):
@@ -202,7 +202,7 @@ class OnlineStream(CBaseHostClass):
         for i in urllist:
             url = "https://onlinestream.live" + i
             printDBG("url " + url)
-            title = self.cm.ph.getDataBeetwenMarkers(data,  help[urllist.index(i)], '</a>', False)[1]
+            title = self.cm.ph.getDataBeetwenMarkers(data, help[urllist.index(i)], '</a>', False)[1]
             printDBG("title " + title)
             title = title.replace('&nbsp;', '')
             printDBG("title " + title)
@@ -218,7 +218,7 @@ class OnlineStream(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')

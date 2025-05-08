@@ -56,7 +56,7 @@ class Movie4K(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        nextPage = self.cm.ph.getSearchGroups(data,  'Nächste[^>]Seite">[^>]*<a[^>]href="([^"]+)')[0]
+        nextPage = self.cm.ph.getSearchGroups(data, 'Nächste[^>]Seite">[^>]*<a[^>]href="([^"]+)')[0]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article class', '</article>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])

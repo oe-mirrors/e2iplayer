@@ -94,7 +94,7 @@ class IPTVHost(IHost):
 
     def getPrevList(self, refresh=0):
         #printDBG( "getPrevList begin" )
-        if(len(self.prevList) > 0):
+        if (len(self.prevList) > 0):
             self.prevIndex.pop()
             self.currList = self.prevList.pop()
             self.host.setCurrList(self.currList)

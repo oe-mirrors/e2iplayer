@@ -63,7 +63,7 @@ class webhuplayer(CBaseHostClass):
         self.list_tart = 'webhuplayer.list'
         self.aktual = 'aktualis.stream'
         self.path_webh = config.plugins.iptvplayer.webmedia_dir.value + "/"
-        self.path_full =  normpath(self.path_webh + self.list_tart)
+        self.path_full = normpath(self.path_webh + self.list_tart)
         self.path_aktual = normpath(self.path_webh + self.aktual)
         self.defaultParams = {'header':self.HEADER, 'use_cookie': False, 'load_cookie': False, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE}
         
@@ -181,7 +181,7 @@ class webhuplayer(CBaseHostClass):
            return
         url = 'https://github.com/e2iplayerhosts/webmedia3/archive/master.zip'
         fname = 'webmedia.zip'
-        destination =  '/tmp/' + fname
+        destination = '/tmp/' + fname
         destination_dir = '/tmp' + '/webmedia3-main'
         destination_fo = '/tmp' + '/webmedia'
         fname_zip = destination_dir + '/' + fname
@@ -277,7 +277,7 @@ class webhuplayer(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         try:
             CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-            name     = self.currItem.get("name", '')
+            name = self.currItem.get("name", '')
             category = self.currItem.get("category", '')
             self.currList = []
             if name == None:

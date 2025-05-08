@@ -39,7 +39,7 @@ def main():
 
     if '-e' in optdict and '-d' in optdict:
         sys.exit("Error: Can not do both encrypt and decrypt, pick either '-e' or '-d'\n%s" % usage)
-    if not('-e' in optdict or '-d' in optdict):
+    if not ('-e' in optdict or '-d' in optdict):
         sys.exit("Error: Must select encrypt or decrypt, pick either '-e' or '-d'\n%s" % usage)
 
     # determine the passphrase from the command line or by keyboard input

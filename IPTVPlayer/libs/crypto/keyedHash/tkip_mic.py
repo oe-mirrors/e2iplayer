@@ -28,8 +28,8 @@ class TKIP_MIC(Michael):
             and uses the result in the Michael keyed hash
             to create an 8 octet MIC value
         """
-        assert(0 <= priority <= 15), 'Priority must be 4 bit value'
-        assert((len(sa) == 6) and (len(da) == 6)), 'Addresses must be 6 octets'
+        assert (0 <= priority <= 15), 'Priority must be 4 bit value'
+        assert ((len(sa) == 6) and (len(da) == 6)), 'Addresses must be 6 octets'
 
         if self.version == 'D3':
             micData = da + sa + chr(priority) + 3 * chr(0) + msduData

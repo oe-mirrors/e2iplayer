@@ -61,10 +61,10 @@ class gledajfilmDecrypter:
 		_loc4_ = self.Nk
 		while _loc4_ < self.Nb * (self.Nr + 1):
 			_loc2_ = _loc3_[_loc4_ - 1]
-			if(_loc4_ % self.Nk == 0):
+			if (_loc4_ % self.Nk == 0):
 				_loc2_ = (self.SBox[_loc2_ >> 8 & 255] | self.SBox[_loc2_ >> 16 & 255] << 8 | self.SBox[_loc2_ >> 24 & 255] << 16 | self.SBox[_loc2_ & 255] << 24) ^ self.Rcon[int(math.floor(_loc4_ / self.Nk)) - 1]
 			else:
-				if(self.Nk > 6 and _loc4_ % self.Nk == 4):
+				if (self.Nk > 6 and _loc4_ % self.Nk == 4):
 					_loc2_ = self.SBox[_loc2_ >> 24 & 255] << 24 | self.SBox[_loc2_ >> 16 & 255] << 16 | self.SBox[_loc2_ >> 8 & 255] << 8 | self.SBox[_loc2_ & 255]
 			_loc3_[_loc4_] = self.MyInt(_loc3_[_loc4_ - self.Nk] ^ _loc2_)
 			_loc4_ += 1
@@ -86,7 +86,7 @@ class gledajfilmDecrypter:
 	def strToChars(self, param1):
 		_loc2_ = []
 		_loc3_ = 0
-		while(_loc3_ < len(param1)):
+		while (_loc3_ < len(param1)):
 			_loc2_.append(ord(param1[_loc3_]))
 			_loc3_ += 1
 
@@ -95,7 +95,7 @@ class gledajfilmDecrypter:
 	def charsToStr(self, param1):
 		_loc2_ = ''
 		_loc3_ = 0
-		while(_loc3_ < len(param1)):
+		while (_loc3_ < len(param1)):
 			_loc2_ = _loc2_ + chr(param1[_loc3_])
 			_loc3_ += 1
 		return _loc2_
@@ -103,7 +103,7 @@ class gledajfilmDecrypter:
 	def packBytes(self, param1):
 		_loc2_ = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 		_loc3_ = 0
-		while(_loc3_ < len(param1)):
+		while (_loc3_ < len(param1)):
 			_loc2_[0][_loc3_ / 4] = param1[_loc3_]
 			_loc2_[1][_loc3_ / 4] = param1[_loc3_ + 1]
 			_loc2_[2][_loc3_ / 4] = param1[_loc3_ + 2]
@@ -114,7 +114,7 @@ class gledajfilmDecrypter:
 	def unpackBytes(self, param1):
 		_loc2_ = []
 		_loc3_ = 0
-		while(_loc3_ < len(param1[0])):
+		while (_loc3_ < len(param1[0])):
 			_loc2_.append(param1[0][_loc3_])
 			_loc2_.append(param1[1][_loc3_])
 			_loc2_.append(param1[2][_loc3_])
@@ -144,7 +144,7 @@ class gledajfilmDecrypter:
 	def addRoundKey(self, param1, param2):
 		_loc3_ = 0
 
-		while(_loc3_ < self.Nb):
+		while (_loc3_ < self.Nb):
 			param1[0][_loc3_] = param1[0][_loc3_] ^ param2[_loc3_] & 255
 			param1[1][_loc3_] = param1[1][_loc3_] ^ param2[_loc3_] >> 8 & 255
 			param1[2][_loc3_] = param1[2][_loc3_] ^ param2[_loc3_] >> 16 & 255
@@ -156,8 +156,8 @@ class gledajfilmDecrypter:
 		_loc5_ = False
 		_loc3_ = 1
 
-		while(_loc3_ < 4):
-			if(param2 == 'encrypt'):
+		while (_loc3_ < 4):
+			if (param2 == 'encrypt'):
 				param1[_loc3_] = self.cyclicShiftLeft(param1[_loc3_], self.shiftOffsets[self.Nb][_loc3_])
 			else:
 				param1[_loc3_] = self.cyclicShiftLeft(param1[_loc3_], self.Nb - self.shiftOffsets[self.Nb][_loc3_])
@@ -175,7 +175,7 @@ class gledajfilmDecrypter:
 		param1 = self.packBytes(param1)
 		self.InverseFinalRound(param1, param2[self.Nb * self.Nr:]) # nb*nr=42
 		_loc3_ = self.Nr - 1
-		while(_loc3_ > 0):
+		while (_loc3_ > 0):
 			self.InverseRound(param1, param2[(self.Nb * _loc3_):self.Nb * (_loc3_ + 1)])
 			_loc3_ -= 1
 
@@ -187,16 +187,16 @@ class gledajfilmDecrypter:
 	def byteSub(self, param1, param2):
 		_loc3_ = []
 		_loc5_ = 0
-		if(param2 == 'encrypt'):
+		if (param2 == 'encrypt'):
 			_loc3_ = self.SBox
 		else:
 			_loc3_ = self.SBoxInverse
 
 		_loc4_ = 0
 
-		while(_loc4_ < 4):
+		while (_loc4_ < 4):
 			_loc5_ = 0
-			while(_loc5_ < self.Nb):
+			while (_loc5_ < self.Nb):
 				param1[_loc4_][_loc5_] = _loc3_[param1[_loc4_][_loc5_]]
 				_loc5_ += 1
 			_loc4_ += 1
@@ -206,18 +206,18 @@ class gledajfilmDecrypter:
 		_loc3_ = [0, 0, 0, 0]
 		_loc5_ = 0
 
-		while(_loc5_ < self.Nb):
+		while (_loc5_ < self.Nb):
 			_loc4_ = 0
-			while(_loc4_ < 4):
+			while (_loc4_ < 4):
 
-				if(param2 == "encrypt"):
+				if (param2 == "encrypt"):
 					_loc3_[_loc4_] = self.mult_GF256(param1[_loc4_][_loc5_], 2) ^ self.mult_GF256(param1[(_loc4_ + 1) % 4][_loc5_], 3) ^ param1[(_loc4_ + 2) % 4][_loc5_] ^ param1[(_loc4_ + 3) % 4][_loc5_]
 				else:
 					_loc3_[_loc4_] = self.mult_GF256(param1[_loc4_][_loc5_], 14) ^ self.mult_GF256(param1[(_loc4_ + 1) % 4][_loc5_], 11) ^ self.mult_GF256(param1[(_loc4_ + 2) % 4][_loc5_], 13) ^ self.mult_GF256(param1[(_loc4_ + 3) % 4][_loc5_], 9)
 				_loc4_ += 1
 
 			_loc4_ = 0
-			while(_loc4_ < 4):
+			while (_loc4_ < 4):
 				param1[_loc4_][_loc5_] = _loc3_[_loc4_]
 				_loc4_ += 1
 
@@ -234,8 +234,8 @@ class gledajfilmDecrypter:
 		_loc3_ = 0
 		_loc4_ = 1
 
-		while(_loc4_ < 256):
-			if(param1 & _loc4_):
+		while (_loc4_ < 256):
+			if (param1 & _loc4_):
 				_loc3_ = _loc3_ ^ param2
 			_loc4_ = _loc4_ * 2
 			param2 = self.xtime(param2)
@@ -264,7 +264,7 @@ def arrNametoString(param1):
 	_loc2_ = ""
 	param1.reverse()
 	_loc3_ = 0
-	while(_loc3_ < len(param1)):
+	while (_loc3_ < len(param1)):
 		_loc2_ = _loc2_ + chr(param1[_loc3_])
 		_loc3_ += 1
 

@@ -75,9 +75,9 @@ class WOFvideo(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('Wofvideo.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_filters',            'title': _('Kategóriák')},
-                        {'category':'search',          'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Kategóriák')},
+                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
 
     def listItems(self, cItem):
@@ -157,7 +157,7 @@ class WOFvideo(CBaseHostClass):
         if "2.évad" in seasons:
             seasons = self.cm.ph.getAllItemsBeetwenMarkers(seasons, '<ul>', '</ul>', False)
             for i in seasons:
-                title = str(seasons.index(i)+1) + ".évad"
+                title = str(seasons.index(i) + 1) + ".évad"
                 params = {'category':'list_episodes','title':title, 'icon': cItem['icon'], 'url': link, 'desc': desc}
                 self.addDir(params)
         else:
@@ -184,7 +184,7 @@ class WOFvideo(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')

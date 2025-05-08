@@ -459,7 +459,7 @@ class RtlMostHU(CBaseHostClass):
             secret = cookies[1]
             hash = cookies[2]
             valid = cookies[3]
-            needLogin = needLogin or not(token.value and secret.value and hash.value
+            needLogin = needLogin or not (token.value and secret.value and hash.value
                         and sha1(self.login + self.password + token.value + secret.value).hexdigest() == hash.value)
             if not needLogin:
                 if valid.value == '1':

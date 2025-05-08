@@ -1,12 +1,12 @@
 # -*- coding: iso-8859-1 -*-
 
 def EVP_BytesToKey(md, data, salt, keyLength, ivLength, count):
-    assert(data)
-    assert(keyLength > 0)
-    assert(ivLength >= 0)
+    assert (data)
+    assert (keyLength > 0)
+    assert (ivLength >= 0)
     if salt:
-        assert(len(salt) == 8)
-    assert(count >= 1)
+        assert (len(salt) == 8)
+    assert (count >= 1)
 
     key = iv = hashed = ''
 

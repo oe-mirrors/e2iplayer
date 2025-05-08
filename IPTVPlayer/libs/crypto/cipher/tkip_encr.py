@@ -30,7 +30,7 @@ class TKIP_encr:
 
     def __init__(self, key=None, transmitterAddress=None, keyID=None):
         """ Initialize TKIP_encr, key -> octet string for key """
-        assert(keyID == 0 or keyID == None), 'keyID should be zero in TKIP'
+        assert (keyID == 0 or keyID == None), 'keyID should be zero in TKIP'
         self.keyId = 0
         self.name = 'TKIP_encr'
         self.strength = 128
@@ -56,7 +56,7 @@ class TKIP_encr:
         """ Parse the TKIP header to get iv and set KeyID
             iv is returned as octet string and is little-endian!!!
         """
-        assert(ord(cipherText[3]) & 0x20), 'extIV SHOULD be set in TKIP header'
+        assert (ord(cipherText[3]) & 0x20), 'extIV SHOULD be set in TKIP header'
         self.setCurrentKeyID = (ord(cipherText[3]) & 0xC0) >> 6
         return cipherText[:3] + cipherText[5:9] # note iv octets are little-endian!!!
 
@@ -73,7 +73,7 @@ class TKIP_encr:
         """ Encrypt a string and return a binary string
             iv is 6 octets of little-endian encoded pn
         """
-        assert(len(iv) == 6), 'TKIP bad IV size on encryption'
+        assert (len(iv) == 6), 'TKIP bad IV size on encryption'
         self.pnField = iv
         self.arc4.setKey(self._makeARC4key(iv))
         eh1 = chr((ord(iv[0]) | 0x20) & 0x7f)
@@ -84,7 +84,7 @@ class TKIP_encr:
 
     def decrypt(self, cipherText):
         """ Decrypt a WEP packet, assumes WEP 4 byte header on packet """
-        assert(ord(cipherText[3]) & 0x20), 'extIV SHOULD be set in TKIP header'
+        assert (ord(cipherText[3]) & 0x20), 'extIV SHOULD be set in TKIP header'
         self.setCurrentKeyID = (ord(cipherText[3]) & 0xC0) >> 6
         iv = cipherText[0] + cipherText[2] + cipherText[4:8]
         self.pnField = iv

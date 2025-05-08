@@ -41,13 +41,13 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.mindigohu_login    = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.mindigohu_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.mindigohu_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("e-mail")+":", config.plugins.iptvplayer.mindigohu_login))
-    optionList.append(getConfigListEntry(_("password")+":", config.plugins.iptvplayer.mindigohu_password))
+    optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.mindigohu_login))
+    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.mindigohu_password))
     return optionList
 ###################################################
 
@@ -57,7 +57,7 @@ def gettytul():
 def _gh(url):
     if not url:
         return ""
-    return "https://celeburdi.github.io/static/icons/"+url
+    return "https://celeburdi.github.io/static/icons/" + url
 
 def _addepg(epgs,id,item):
     x = next((x for x, epg in enumerate(epgs) if epg["id"] == id),None)
@@ -65,7 +65,7 @@ def _addepg(epgs,id,item):
         epgs[x]["items"].append(item)
     else:
         epgs.append({"id": id, "items": [item]})
-        x = len(epgs)-1
+        x = len(epgs) - 1
     return x
 
 def _getChannelDefs():
@@ -163,19 +163,19 @@ def _getChannelDefs():
 
 
 def _mr(url):
-    return "http://icast.connectmedia.hu/"+url
+    return "http://icast.connectmedia.hu/" + url
 
 
 def _getDirectRadios():
     return [
-        {"title": "Kossuth rádió", "url": "D" + _mr("4734/mr1.aac")+","+_mr("4736/mr1.mp3")+","+_mr("4764/mr1.ogg")},
-        {"title": "Petőfi rádió", "url": "D" + _mr("4737/mr2.aac")+","+_mr("4738/mr2.mp3")+","+_mr("4765/mr2.ogg")},
-        {"title": "Bartók rádió", "url": "D" + _mr("4739/mr3.aac")+","+_mr("4741/mr3.mp3")+","+_mr("4766/mr3.ogg")},
+        {"title": "Kossuth rádió", "url": "D" + _mr("4734/mr1.aac") + "," + _mr("4736/mr1.mp3") + "," + _mr("4764/mr1.ogg")},
+        {"title": "Petőfi rádió", "url": "D" + _mr("4737/mr2.aac") + "," + _mr("4738/mr2.mp3") + "," + _mr("4765/mr2.ogg")},
+        {"title": "Bartók rádió", "url": "D" + _mr("4739/mr3.aac") + "," + _mr("4741/mr3.mp3") + "," + _mr("4766/mr3.ogg")},
 
-        {"title": "Dankó Rádió",  "url": "D" + _mr("4747/mr7.aac")+","+_mr("4748/mr7.mp3")+","+_mr("4770/mr7.ogg")},
-        {"title": "Duna World Rádió",  "url": "D" + _mr("4760/dwr.aac")+","+_mr("4761/dwr.mp3")+","+_mr("4776/dwr.ogg")},
-        {"title": "Nemzetiségi adások", "url": "D" + _mr("4743/mr4.aac")+","+_mr("4744/mr4.mp3")+","+_mr("4768/mr4.ogg")},
-        {"title": "Parlamenti adások",  "url": "D" + _mr("4745/mr5.aac")+","+_mr("4746/mr5.mp3")+","+_mr("4769/mr5.ogg")},
+        {"title": "Dankó Rádió", "url": "D" + _mr("4747/mr7.aac") + "," + _mr("4748/mr7.mp3") + "," + _mr("4770/mr7.ogg")},
+        {"title": "Duna World Rádió", "url": "D" + _mr("4760/dwr.aac") + "," + _mr("4761/dwr.mp3") + "," + _mr("4776/dwr.ogg")},
+        {"title": "Nemzetiségi adások", "url": "D" + _mr("4743/mr4.aac") + "," + _mr("4744/mr4.mp3") + "," + _mr("4768/mr4.ogg")},
+        {"title": "Parlamenti adások", "url": "D" + _mr("4745/mr5.aac") + "," + _mr("4746/mr5.mp3") + "," + _mr("4769/mr5.ogg")},
 
         {"title": "Radio Swiss Classic (fr)", "url": "D" + _mr("4786/live.mp3")},
         {"title": "Radio Swiss Classic (ger)", "url": "D" + _mr("4785/live.mp3")},
@@ -311,50 +311,50 @@ class MindiGoHU(CBaseHostClass):
         self.API_HEADER = dict(self.HEADER)
         self.API_HEADER.update({'x-application-id': zlib.decompress(base64.b64decode(
             "eJxLzcuzzMzNTck1LKssNa8sLUjJy85MTUnOMC3PTc80SQYAz6EMcw=="))})
-        self.EXTEND_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.EXTEND_URL = self.API_URL + zlib.decompress(base64.b64decode(
             "eJzTTyzI1C8z1C8tTi3SL04tLs7Mz9NPrShJzUsBAIaKChg="))
-        self.LOGIN_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.LOGIN_URL = self.API_URL + zlib.decompress(base64.b64decode(
             "eJzTTyzI1C8z0i8tTi3Sz8lPz8wDADovBnc="))
-        self.LIVE_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.LIVE_URL = self.API_URL + zlib.decompress(base64.b64decode(
             "eJzTTyzI1C8z0k/OSMzLS80p1s/JLEsFAE9mB5s="))
-        self.STREAM_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.STREAM_URL = self.API_URL + zlib.decompress(base64.b64decode(
             "eJzTTyzI1C8z0i8uKUpNzC3Wz8ksS7VPzs8rSc0ric9Msa2uVctJzEsvTUxPtc0oVSupLADSOcUA"
             "POsU2Q=="))
-        self.BRANDS_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.BRANDS_URL = self.API_URL + zlib.decompress(base64.b64decode(
             "eJzTTyzI1C8z0k8qSsxLKQYAIrQE6g=="))
-        self.GENRES_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.GENRES_URL = self.API_URL + zlib.decompress(base64.b64decode(
             "eJzTTyzI1C8z0k9PzStKtc9ILI5Pzs8rSc0rsS0pKk0FAKY8C1M="))
-        self.VIDEOS_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.VIDEOS_URL = self.API_URL + zlib.decompress(base64.b64decode(
             "eJzTTyzI1C8z0i/LTEnNL7bPLEnNjS9ILYovSExPtTU0AgCyogsq"))
-        self.VOD_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.VOD_URL = self.API_URL + zlib.decompress(base64.b64decode(
             "eJzTTyzI1C8z0i8uKUpNzC3WL8tPsU/OzytJzSuJz0yxra5Vg/FKKgtSbcsyU1Lz1cDMjJxiAMi9"
             "F4Q="))
-        self.LIVEINFO_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.LIVEINFO_URL = self.API_URL + zlib.decompress(base64.b64decode(
             "eJzTTyzI1C8z0k/OSMzLS80p1gcAM34F6w=="))
-        self.VODINFO_URL = self.API_URL+zlib.decompress(base64.b64decode(
+        self.VODINFO_URL = self.API_URL + zlib.decompress(base64.b64decode(
             "eJzTTyzI1C8z0i/LTEnNL9YHACgvBSk="))
         self.HBBTV_URL = zlib.decompress(base64.b64decode(
             "eJzLKCkpsNLXz0hKKinTTSzWS87Py0tNLslNTclM1Mso1QcAwhsLwg=="))
-        self.HBBTV_MEDIA_URL = self.HBBTV_URL+zlib.decompress(base64.b64decode(
+        self.HBBTV_MEDIA_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
             "eJxLzNBPTy0pLilKTcwtLcrRK8gosM9Msa2uBQB/MAnP"))
-        self.HBBTV_CHANNEL_URL = self.HBBTV_URL+zlib.decompress(base64.b64decode(
+        self.HBBTV_CHANNEL_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
             "eJxLzNDPSSzNS85ILdIHAB1SBHo="))
-        self.HBBTV_HD_URL = self.HBBTV_URL+zlib.decompress(base64.b64decode(
+        self.HBBTV_HD_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
             "eJxLzNDPyU+Pz0jRz8xLSa3QK8goAABGSAcj"))
-        self.HBBTV_RADIO_URL = self.HBBTV_URL+zlib.decompress(base64.b64decode(
+        self.HBBTV_RADIO_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
             "eJxLzNAvSkzJzNfPzEtJrdAryCgAAD8uBsU="))
-        self.HBBTV_MTVA_URL = self.HBBTV_URL+zlib.decompress(base64.b64decode(
+        self.HBBTV_MTVA_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
             "eJzLLSlL1M9JLM1Lzkgt0s/MS0mt0CvIKAAAbGkI9w=="))
         self.MTVA_CHANNEL_URL = zlib.decompress(base64.b64decode(
             "eJzLKCkpKLbS1y/ISaxMLdLLTU3JTMzOyczO1ssohQrmpZbDpAsyCuzLMlNS820BYd8Vcw=="))
 
         self.M3_URL = zlib.decompress(base64.b64decode(
             "eJzLKCkpKLbS108sSs7ILCvN1cstKUvUyyjVzzUGAI6qCes="))
-        self.M3_PROGRAM_URL = self.M3_URL+zlib.decompress(base64.b64decode(
+        self.M3_PROGRAM_URL = self.M3_URL + zlib.decompress(base64.b64decode(
             "eJzTLyjKTy9KzAUADYgDKA=="))
-        self.M3_DAILYPROGRAM_URL = self.M3_URL+zlib.decompress(base64.b64decode(
+        self.M3_DAILYPROGRAM_URL = self.M3_URL + zlib.decompress(base64.b64decode(
             "eJzTT0nMzKnULSjKTy9KzAUAJqwFaA=="))
-        self.M3_OPEN_URL = self.M3_URL+zlib.decompress(base64.b64decode(
+        self.M3_OPEN_URL = self.M3_URL + zlib.decompress(base64.b64decode(
             "eJzTT08t0c0vSM2zT87PyUlNLsnMz7MFAFVWB/c="))
         self.M3_IMAGE_URL = zlib.decompress(base64.b64decode(
             "eJzLKCkpKLbS108sSs7ILCvN1cstKUvUyyjVz8xNTE8t1s811gcA7PIMvw=="))
@@ -453,15 +453,15 @@ class MindiGoHU(CBaseHostClass):
                     continue
 
                 if selres:
-                    url = "R"+i["id"]
+                    url = "R" + i["id"]
                 else:
-                    url = "M"+i["id"]
+                    url = "M" + i["id"]
 
-                epg_id = "E"+i["id"]
+                epg_id = "E" + i["id"]
 
                 params = {'good_for_fav': True, "title": title, "desc": "", "order": order, "url": url, "epg_id": epg_id, "epg_prov_id": "mindigo"}
                 if icon:
-                    params['icon']= icon
+                    params['icon'] = icon
 
                 _addepg(tvEpgs,i["id"],params)
                 tvChannels.append(params)
@@ -491,12 +491,12 @@ class MindiGoHU(CBaseHostClass):
                 else:
                     icon = ""
                     order = 0
-                params = {'good_for_fav': True, "title": title + " (HbbTV)", "desc": "", "order": order, "url": "H"+url}
+                params = {'good_for_fav': True, "title": title + " (HbbTV)", "desc": "", "order": order, "url": "H" + url}
                 if icon:
-                    params['icon']= icon
+                    params['icon'] = icon
                 ch = next((ch for ch in mindigChannels if ch["name"].strip() == title), None)
                 if ch:
-                    epg_id = "E"+ch["id"]
+                    epg_id = "E" + ch["id"]
                     params.update({"epg_id": epg_id, "epg_prov_id": "mindigo"})
                     _addepg(tvEpgs,ch["id"],params)
                 tvChannels.append(params)
@@ -511,12 +511,12 @@ class MindiGoHU(CBaseHostClass):
             data = self.cm.ph.getDataBeetwenMarkers(data, "streams = ", ";", False)[1]
             data = json_loads(data)
             for k,v in data.items():
-                if k == "enabled" or  k == "fox":
+                if k == "enabled" or k == "fox":
                     continue
                 title = v.get("channel")
                 url = v.get("url")
                 if title and url and url.startswith("token:"):
-                    url = "H"+url[6:]
+                    url = "H" + url[6:]
                     chdef = next((chdef for chdef in chdefs if chdef["title"] == title), None)
                     if chdef:
                         title = chdef.get("rename",title)
@@ -529,10 +529,10 @@ class MindiGoHU(CBaseHostClass):
                         order = 0
                     params = {'good_for_fav': True, "title": title + " (HbbTV)", "desc": "", "order": order, "url": url}
                     if icon:
-                        params['icon']= icon
+                        params['icon'] = icon
                     ch = next((ch for ch in mindigChannels if ch["name"].strip() == title), None)
                     if ch:
-                        epg_id = "E"+ch["id"]
+                        epg_id = "E" + ch["id"]
                         params.update({"epg_id": epg_id, "epg_prov_id": "mindigo"})
                         _addepg(tvEpgs,ch["id"],params)
                     tvChannels.append(params)
@@ -543,7 +543,7 @@ class MindiGoHU(CBaseHostClass):
         # get MTVA TV channels
         for i in _getMTVATVs():
             title = i["title"]
-            url = "K"+i["url"]
+            url = "K" + i["url"]
             chdef = next((chdef for chdef in chdefs if chdef["title"] == title), None)
             if chdef:
                 title = chdef.get("rename",title)
@@ -556,10 +556,10 @@ class MindiGoHU(CBaseHostClass):
                 order = 0
             params = {'good_for_fav': True, "title": title + " (MTVA)", "desc": "", "order": order, "url": url}
             if icon:
-                params['icon']= icon
+                params['icon'] = icon
             ch = next((ch for ch in mindigChannels if ch["name"].strip() == title), None)
             if ch:
-                epg_id = "E"+ch["id"]
+                epg_id = "E" + ch["id"]
                 params.update({"epg_id": epg_id, "epg_prov_id": "mindigo"})
                 _addepg(tvEpgs,ch["id"],params)
             tvChannels.append(params)
@@ -567,7 +567,7 @@ class MindiGoHU(CBaseHostClass):
         # get Youtube TV channels
         for i in _getYTTVs():
             title = i["title"]
-            url = "Y"+i["url"]
+            url = "Y" + i["url"]
             chdef = next((chdef for chdef in chdefs if chdef["title"] == title), None)
             if chdef:
                 title = chdef.get("rename",title)
@@ -580,16 +580,16 @@ class MindiGoHU(CBaseHostClass):
                 order = 0
             params = {'good_for_fav': True, "title": title + " (YT)", "desc": "", "order": order, "url": url}
             if icon:
-                params['icon']= icon
+                params['icon'] = icon
             ch = next((ch for ch in mindigChannels if ch["name"].strip() == title), None)
             if ch:
-                epg_id = "E"+ch["id"]
+                epg_id = "E" + ch["id"]
                 params.update({"epg_id": epg_id, "epg_prov_id": "mindigo"})
                 _addepg(tvEpgs,ch["id"],params)
             tvChannels.append(params)
 
         # add nava m3
-        params = {'good_for_fav': True, "title": "M3 (MTVA)", "desc": "", "order": 2, "url": "m"+"m3", "icon": _gh("m3.jpg")}
+        params = {'good_for_fav': True, "title": "M3 (MTVA)", "desc": "", "order": 2, "url": "m" + "m3", "icon": _gh("m3.jpg")}
         tvChannels.append(params)
 
         # get direct radio
@@ -614,10 +614,10 @@ class MindiGoHU(CBaseHostClass):
 
             params = {'good_for_fav': True, "title": title, "desc": "", "order": order, "url": url}
             if icon:
-                params['icon']= icon
+                params['icon'] = icon
             ch = next((ch for ch in mindigChannels if ch["name"].strip() == title), None)
             if ch:
-                params.update({"epg_id": "E"+ch["id"], "epg_prov_id": "mindigo"})
+                params.update({"epg_id": "E" + ch["id"], "epg_prov_id": "mindigo"})
                 _addepg(radioEpgs,ch["id"],params)
             elif epg_id:
                 params.update({"epg_id": epg_id, "epg_prov_id": chdef["epg_prov_id"]})
@@ -626,11 +626,11 @@ class MindiGoHU(CBaseHostClass):
 
         if len(tvChannels) > 0:
             tvChannels.sort(key=lambda k: (k["order"], k["title"]))
-            self.tvChannels=tvChannels
+            self.tvChannels = tvChannels
 
         if len(radioChannels) > 0:
             radioChannels.sort(key=lambda k: (k["order"], k["title"]))
-            self.radioChannels=radioChannels
+            self.radioChannels = radioChannels
 
         self.tvEpgs = tvEpgs
         self.radioEpgs = radioEpgs
@@ -670,11 +670,11 @@ class MindiGoHU(CBaseHostClass):
 
         MAIN_CAT_TAB = [{"category":"list_tvChannels", "title": _("TV channels")},
                         {"category":"list_radioChannels", "title": _("Radio stations")},
-                        {"category":"list_brands", "title": "MindiGo "+_("Videos")},
-                        {"category":"list_mtvavideos", "title": "MTVA "+ _("Videos")},
-                        {"category":"list_m3videos", "title": "M3 "+ _("Videos"), "url": "P"},
-                        {"category":"list_m3videos", "title": "M3+ "+ _("Videos"), "url": "D"},
-                        {"category":"list_mtvaarch", "title": "MTVA Archivum "+ _("Videos")}]
+                        {"category":"list_brands", "title": "MindiGo " + _("Videos")},
+                        {"category":"list_mtvavideos", "title": "MTVA " + _("Videos")},
+                        {"category":"list_m3videos", "title": "M3 " + _("Videos"), "url": "P"},
+                        {"category":"list_m3videos", "title": "M3+ " + _("Videos"), "url": "D"},
+                        {"category":"list_mtvaarch", "title": "MTVA Archivum " + _("Videos")}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listTVChannels(self, cItem):
@@ -691,7 +691,7 @@ class MindiGoHU(CBaseHostClass):
     def listBrands(self, cItem):
         printDBG("MindiGoHU.listBrands")
 
-        params=dict(cItem)
+        params = dict(cItem)
         params.update({"category":"list_genres", "title": _("All"), "url": ""})
         self.addDir(params)
 
@@ -702,8 +702,8 @@ class MindiGoHU(CBaseHostClass):
 
             data = json_loads(data)["data"]
             for i in data:
-                params=dict(cItem)
-                params.update({"category":"list_genres", "title": i["name"], "desc": i["description"], "url": "&brand="+i["id"]})
+                params = dict(cItem)
+                params.update({"category":"list_genres", "title": i["name"], "desc": i["description"], "url": "&brand=" + i["id"]})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -724,7 +724,7 @@ class MindiGoHU(CBaseHostClass):
                 title = self.cm.ph.getDataBeetwenMarkers(i, '>', '<', False)[1]
                 if not title:
                     continue
-                params = {'good_for_fav': True, "title": title, "desc": "", "url": "D"+url}
+                params = {'good_for_fav': True, "title": title, "desc": "", "url": "D" + url}
                 self.addVideo(params)
 
         except Exception:
@@ -749,7 +749,7 @@ class MindiGoHU(CBaseHostClass):
                 raise Exception("Can't get M3 program page")
             data = json_loads(data)["docs" if kind == "A" else "program"]
             for i in data:
-                url = "v"+i["id"]
+                url = "v" + i["id"]
 
                 if next((x for x in self.currList if x["url"] == url), None):
                     continue
@@ -768,47 +768,47 @@ class MindiGoHU(CBaseHostClass):
     def listMTVAArch(self, cItem):
         printDBG("MindiGoHU.listMTVAArch")
         try:
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Tévéfilmek és sorozatok"), "url": "A" + "M3-VMOpdsOpZmlsbWVrIMOpcyBzb3JvemF0b2s"})
             self.addDir(params)
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Családi filmek"), "url": "A" + "M3-Q3NhbMOhZGkgZmlsbWVr"})
             self.addDir(params)
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Kabaré, vígjáték"), "url": "A" + "M3-S2FiYXLDqSwgdsOtZ2rDoXTDqWs"})
             self.addDir(params)
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Romantikus"), "url": "A" + "M3-Um9tYW50aWt1cw"})
             self.addDir(params)
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Bűnügyi filmek és sorozatok"), "url": "A" + "M3-QsWxbsO8Z3lpIGZpbG1layDDqXMgc29yb3phdG9r"})
             self.addDir(params)
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Játék és vetélkedő"), "url": "A" + "M3-SsOhdMOpayDDqXMgdmV0w6lsa2VkxZE"})
             self.addDir(params)
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Színház"), "url": "A" + "M3-U3rDrW5ow6F6"})
             self.addDir(params)
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Ismeretterjesztő"), "url": "A" + "M3-SXNtZXJldHRlcmplc3p0xZE"})
             self.addDir(params)
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Zene"), "url": "A" + "M3-WmVuZQ"})
             self.addDir(params)
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Mesék"), "url": "A" + "M3-TWVzw6lr"})
             self.addDir(params)
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_m3videos", "title": _("Sport"), "url": "A" + "M3-U3BvcnQ"})
             self.addDir(params)
 
@@ -820,46 +820,46 @@ class MindiGoHU(CBaseHostClass):
     def listGenres(self, cItem):
         try:
             url = cItem["url"]
-            sts, data = self.getApiPage(self.GENRES_URL+url)
+            sts, data = self.getApiPage(self.GENRES_URL + url)
             if not sts:
                 raise Exception("Can't get GENRE page")
 
-            params=dict(cItem)
+            params = dict(cItem)
             params.update({"category":"list_types", "title": _("All")})
             self.addDir(params)
             data = json_loads(data)["data"]
             for i in data:
-                params=dict(cItem)
-                params.update({"category":"list_types", "title": i["title"], "url": url+"&genre="+i["id"]})
+                params = dict(cItem)
+                params.update({"category":"list_types", "title": i["title"], "url": url + "&genre=" + i["id"]})
                 self.addDir(params)
         except Exception:
             printExc()
 
     def listTypes(self, cItem):
-        params=dict(cItem)
+        params = dict(cItem)
         params.update({"category":"list_videos", "title": _("All")})
         self.addDir(params)
 
         url = cItem["url"]
 
-        params=dict(cItem)
-        params.update({"category":"list_videos", "title": _("Film"), "url": url+"&type=film"})
+        params = dict(cItem)
+        params.update({"category":"list_videos", "title": _("Film"), "url": url + "&type=film"})
         self.addDir(params)
 
-        params=dict(cItem)
-        params.update({"category":"list_videos", "title": _("Series"), "url": url+"&type=series"})
+        params = dict(cItem)
+        params.update({"category":"list_videos", "title": _("Series"), "url": url + "&type=series"})
         self.addDir(params)
 
     def listVideos(self, cItem):
-        page=cItem.get("page",0)
+        page = cItem.get("page",0)
         cItem.pop("page",None)
         url = cItem["url"]
         try:
-            url = self.VIDEOS_URL+url
+            url = self.VIDEOS_URL + url
             if page == 0:
                 url = url + "&hot_count=3&fresh_count=3"
             else:
-                url = url + "&page="+str(page+1)
+                url = url + "&page=" + str(page + 1)
             sts, data = self.getApiPage(url)
             if not sts:
                 raise Exception("Can't get GENRE page")
@@ -875,18 +875,18 @@ class MindiGoHU(CBaseHostClass):
             others = data["other"]["list"]
             videos.extend(others)
             for i in videos:
-                params=dict(cItem)
+                params = dict(cItem)
                 if "image" in i and len(i["image"]) > 0:
                     icon = i["image"][0].get("simple")
 
-                params.update({'good_for_fav': True, "title": i["title"], "url": "V"+i["id"], "epg_id": "V"+i["id"], "epg_prov_id": "mindigo"})
+                params.update({'good_for_fav': True, "title": i["title"], "url": "V" + i["id"], "epg_id": "V" + i["id"], "epg_prov_id": "mindigo"})
                 if icon:
                     params["icon"] = icon
 
                 self.addVideo(params)
-            if page*12+len(others) < count:
+            if page * 12 + len(others) < count:
                 params = dict(cItem)
-                params.update({'title':_("Next page"), 'page': page+1})
+                params.update({'title':_("Next page"), 'page': page + 1})
                 self.addDir(params)
 
         except Exception:
@@ -991,11 +991,11 @@ class MindiGoHU(CBaseHostClass):
 
                     else:
                         return []
-                    expires = int(time())+21600
+                    expires = int(time()) + 21600
                     cItem["link"] = link
                     cItem["expires"] = expires
 
-            if url[:1] in  ["R","V","K"]:
+            if url[:1] in ["R","V","K"]:
                 uri = urlparser.decorateParamsFromUrl(link)
                 protocol = uri.meta.get('iptv_proto', '')
                 printDBG("PROTOCOL [%s] " % protocol)
@@ -1098,8 +1098,8 @@ class MindiGoHU(CBaseHostClass):
             token = cookies[0]
             refresh = cookies[1]
             hash = cookies[2]
-            needLogin = needLogin or not(token.value and refresh.value and hash.value
-                        and sha1(self.login+self.password+token.value+refresh.value).hexdigest() == hash.value)
+            needLogin = needLogin or not (token.value and refresh.value and hash.value
+                        and sha1(self.login + self.password + token.value + refresh.value).hexdigest() == hash.value)
             if not needLogin:
                 printDBG("extend")
                 data = {"app_version": "1.0.21",
@@ -1126,7 +1126,7 @@ class MindiGoHU(CBaseHostClass):
                 data = json_loads(data)
             token.value = data["token"]
             refresh.value = data["refreshToken"]
-            hash.value = sha1(self.login+self.password+token.value+refresh.value).hexdigest()
+            hash.value = sha1(self.login + self.password + token.value + refresh.value).hexdigest()
             cj.save(self.COOKIE_FILE)
             self.loggedIn = True
             self.token = token.value
@@ -1143,9 +1143,9 @@ class MindiGoHU(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
 
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

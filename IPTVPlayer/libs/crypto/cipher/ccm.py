@@ -67,12 +67,12 @@ class CCM(BlockCipherWithIntegrity):
         self.baseCipher.padding = noPadding()   # baseCipher should NOT pad!!
 
         self.M = macSize        # Number of octets
-        if not((3 < self.M < 17) and (macSize % 2 == 0)):
+        if not ((3 < self.M < 17) and (macSize % 2 == 0)):
             raise InitCryptoError('CCM, M (size of auth field) is out of bounds')
 
         self.nonceSize = nonceSize
         self.L = self.baseCipher.blockSize - self.nonceSize - 1
-        if not(1 < self.L < 9):
+        if not (1 < self.L < 9):
             raise InitCryptoError('CCM, L (size of length field) is out of bounds')
         self.reset()
 

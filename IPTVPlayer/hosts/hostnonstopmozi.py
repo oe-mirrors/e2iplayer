@@ -119,7 +119,7 @@ class NonstopMozi(CBaseHostClass):
             params = {'category': 'explore_item', 'title':title, 'url':url, 'icon':icon}
             self.addDir(params)
         if nextPage:
-            params = {'category': 'list_items','title':_("Következő oldal"), 'page':page+1, 'url': lasturl}
+            params = {'category': 'list_items','title':_("Következő oldal"), 'page':page + 1, 'url': lasturl}
             self.addDir(params)
     
     def exploreItem(self, cItem):

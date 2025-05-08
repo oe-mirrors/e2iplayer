@@ -21,7 +21,7 @@ def rabin_miller(possiblePrime, aTestInteger):
     """ The Rabin-Miller algorithm to test possible primes
         taken from HAC algorithm 4.24, without the 't'
     """
-    assert(1 <= aTestInteger <= (possiblePrime - 1)), 'test integer %d out of range for %d' % (aTestInteger, possiblePrime)
+    assert (1 <= aTestInteger <= (possiblePrime - 1)), 'test integer %d out of range for %d' % (aTestInteger, possiblePrime)
     #assert( possiblePrime%2 == 1 ), 'possiblePrime must be odd'
     # calculate s and r such that (possiblePrime-1) = (2**s)*r  with r odd
     r = possiblePrime - 1

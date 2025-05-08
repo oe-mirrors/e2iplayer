@@ -74,10 +74,10 @@ class FilmTar(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('FilmTar.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_filters',            'title': _('Film Kategóriák'), 'url': 'https://filmtar.online/filmek/kategoriak'},
-                        {'category':'list_filters',            'title': _('Sorozat Kategóriák'), 'url': 'https://filmtar.online/sorozatok/kategoriak'},
-                        {'category':'search',          'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Film Kategóriák'), 'url': 'https://filmtar.online/filmek/kategoriak'},
+                        {'category':'list_filters', 'title': _('Sorozat Kategóriák'), 'url': 'https://filmtar.online/sorozatok/kategoriak'},
+                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
 
     def listItems(self, cItem):
@@ -163,7 +163,7 @@ class FilmTar(CBaseHostClass):
                 title = str(num) + "." + " epizód"
                 params = {'category':'list_links','title':title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
                 self.addDir(params)
-                num = num+1
+                num = num + 1
         else:
            title = "1.epizód"
            params = {'category':'list_links','title':title, 'icon': cItem['icon'], 'url': cItem['url'], 'desc': cItem['desc']}
@@ -194,7 +194,7 @@ class FilmTar(CBaseHostClass):
                             url = self.cm.ph.getDataBeetwenMarkers(l, 'href="', '"', False)[1]
                             params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
                             self.addVideo(params)
-                num = num+1
+                num = num + 1
         else:
            links = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie-source__header">', 'Lejátszás', False)[1]
            title = self.cm.ph.getDataBeetwenMarkers(links, '<span class="movie-source__title">', '</span>', False)[1]
@@ -228,7 +228,7 @@ class FilmTar(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')

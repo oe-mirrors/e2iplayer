@@ -75,7 +75,7 @@ class TKIP_Mixer:
 
     def setPnBytes(self, pnBytes):
         """ Set the pnBytes from the packet number (int) """
-        assert(len(pnBytes) == 6), 'pnBytes must be 6 octets'
+        assert (len(pnBytes) == 6), 'pnBytes must be 6 octets'
         self.pnBytes = pnBytes
         self.pn = [ord(byte) for byte in pnBytes] # int list for readability
 
@@ -83,8 +83,8 @@ class TKIP_Mixer:
         """ return a new 'mixed' key (16 octets) based on
             the pn in 6 octets, also know as TSC
         """
-        assert(self.ta != None), 'No TA'
-        assert(self.tk != None), 'No TK'
+        assert (self.ta != None), 'No TA'
+        assert (self.tk != None), 'No TK'
         self.setPnBytes(pnBytes)
         if self.pnBytes[-4:] != self.upper4SequenceOctets: # check if upper bits change
             # calculate phase1 key only when upper bytes change

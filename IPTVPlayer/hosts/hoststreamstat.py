@@ -71,13 +71,13 @@ class StreamStat(CBaseHostClass):
     def listMainMenu(self, cItem):   
         printDBG('StreamStat.listMainMenu')
         page = 1
-        MAIN_CAT_TAB = [{'category':'list_items',            'title': _('YP connected'), 'url':'http://streamstat.net/main.cgi?mode=yp&search=&page=1&fp=50', 'page': page},
-                        {'category':'list_items',            'title': _('Collected streams only'), 'url':'http://streamstat.net/main.cgi?mode=col&search=&page=1&fp=50', 'page': page},
-                        {'category':'list_items',            'title': _('Free IPTV list'), 'url':'http://streamstat.net/main.cgi?mode=hls&search=&page=1&fp=50', 'page': page},
-                        {'category':'list_items',            'title': _('All streams'), 'url':'http://streamstat.net/main.cgi?mode=all&search=&page=1&fp=50', 'page': page},
-                        {'category':'list_items',            'title': _('Random selection'), 'url':'http://streamstat.net/main.cgi?mode=&search=&page=1&fp=50', 'page': page},
-                        {'category':'search',          'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('YP connected'), 'url':'http://streamstat.net/main.cgi?mode=yp&search=&page=1&fp=50', 'page': page},
+                        {'category':'list_items', 'title': _('Collected streams only'), 'url':'http://streamstat.net/main.cgi?mode=col&search=&page=1&fp=50', 'page': page},
+                        {'category':'list_items', 'title': _('Free IPTV list'), 'url':'http://streamstat.net/main.cgi?mode=hls&search=&page=1&fp=50', 'page': page},
+                        {'category':'list_items', 'title': _('All streams'), 'url':'http://streamstat.net/main.cgi?mode=all&search=&page=1&fp=50', 'page': page},
+                        {'category':'list_items', 'title': _('Random selection'), 'url':'http://streamstat.net/main.cgi?mode=&search=&page=1&fp=50', 'page': page},
+                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
         
     def listItems(self, cItem):
@@ -123,7 +123,7 @@ class StreamStat(CBaseHostClass):
             else:
                self.addAudio(params)
         if '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-right"' not in dat:
-            params = {'category': 'list_items', 'title': "Next page", 'icon': None, 'url': cItem['url'], 'page': page+1}
+            params = {'category': 'list_items', 'title': "Next page", 'icon': None, 'url': cItem['url'], 'page': page + 1}
             self.addDir(params)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -131,7 +131,7 @@ class StreamStat(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')

@@ -42,7 +42,7 @@ def gettytul():
 def _gh(url):
     if not url:
         return ""
-    return "https://celeburdi.github.io/static/icons/"+url
+    return "https://celeburdi.github.io/static/icons/" + url
 
 def _addepg(epgs,id,item):
     x = next((x for x, epg in enumerate(epgs) if epg["id"] == id),None)
@@ -50,7 +50,7 @@ def _addepg(epgs,id,item):
         epgs[x]["items"].append(item)
     else:
         epgs.append({"id": id, "items": [item]})
-        x = len(epgs)-1
+        x = len(epgs) - 1
     return x
    
 def _getMindigChannelDefs():
@@ -161,24 +161,24 @@ class MindigTVHU(CBaseHostClass):
 
         self.MINDIG_URL = zlib.decompress(base64.b64decode(
             "eJzLKCkpsNLXTyzI1MvNzEvJTC8p00ssKCguSS0q1stN1S8z0jfUzyjVT87PK0nNK9EHAK6lEV8="))
-        self.MINDIG_CHANNEL_URL = self.MINDIG_URL+zlib.decompress(base64.b64decode(
+        self.MINDIG_CHANNEL_URL = self.MINDIG_URL + zlib.decompress(base64.b64decode(
             "eJxLqoxPzs8rSc0r0XfOSMzLS83RyyrOzwMAbS4JBg=="))
-        self.MINDIG_MEDIA_URL = self.MINDIG_URL+zlib.decompress(base64.b64decode(
+        self.MINDIG_MEDIA_URL = self.MINDIG_URL + zlib.decompress(base64.b64decode(
             "eJwrLilKTcwtjk+qjE/OSMzLS83Rr67Vz8gp1ssqzs8DALz9C/c="))
-        self.MINDIG_EPG_URL = self.MINDIG_URL+zlib.decompress(base64.b64decode(
+        self.MINDIG_EPG_URL = self.MINDIG_URL + zlib.decompress(base64.b64decode(
             "eJwrzsgvL45PqoxPzkjMy0vN0a+uBSK9rOL8PACamArd"))
 
         self.HBBTV_URL = zlib.decompress(base64.b64decode(
             "eJzLKCkpsNLXz0hKKinTTSzWS87Py0tNLslNTclM1Mso1QcAwhsLwg=="))
-        self.HBBTV_MEDIA_URL = self.HBBTV_URL+zlib.decompress(base64.b64decode(
+        self.HBBTV_MEDIA_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
             "eJxLzNBPTy0pLilKTcwtLcrRK8gosM9Msa2uBQB/MAnP"))
-        self.HBBTV_CHANNEL_URL = self.HBBTV_URL+zlib.decompress(base64.b64decode(
+        self.HBBTV_CHANNEL_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
             "eJxLzNDPSSzNS85ILdIHAB1SBHo="))
-        self.HBBTV_HD_URL = self.HBBTV_URL+zlib.decompress(base64.b64decode(
+        self.HBBTV_HD_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
             "eJxLzNDPyU+Pz0jRz8xLSa3QK8goAABGSAcj"))
-        self.HBBTV_RADIO_URL = self.HBBTV_URL+zlib.decompress(base64.b64decode(
+        self.HBBTV_RADIO_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
             "eJxLzNAvSkzJzNfPzEtJrdAryCgAAD8uBsU="))
-        self.HBBTV_MTVA_URL = self.HBBTV_URL+zlib.decompress(base64.b64decode(
+        self.HBBTV_MTVA_URL = self.HBBTV_URL + zlib.decompress(base64.b64decode(
             "eJzLLSlL1M9JLM1Lzkgt0s/MS0mt0CvIKAAAbGkI9w=="))
 
         self.MINDIG_HEADER = dict(self.HEADER)
@@ -218,7 +218,7 @@ class MindigTVHU(CBaseHostClass):
         date = d.strftime('%Y%m%d')
         try:
             if not data or epg.get("date") != date:
-                id =  epg["id"]
+                id = epg["id"]
                 sts, data = self.cm.getPage(self.MINDIG_EPG_URL.format(id, date), self.mindigiParams)
                 if not sts:
                     raise Exception("Can't get EPG page")
@@ -241,11 +241,11 @@ class MindigTVHU(CBaseHostClass):
             if len(data) == 0:
                 return
             
-            i=next((i for i in data if i["timestamp"] <= t and i["next_timestamp"] > t), None)
+            i = next((i for i in data if i["timestamp"] <= t and i["next_timestamp"] > t), None)
             if not i:
                 return
             for item in epg["items"]:
-                item["desc"] = i["title"]+" "+i["time"]+"-"+i["next_time"] + "\n"+i["description"]
+                item["desc"] = i["title"] + " " + i["time"] + "-" + i["next_time"] + "\n" + i["description"]
         except Exception:
             printExc()
 
@@ -292,18 +292,18 @@ class MindigTVHU(CBaseHostClass):
 
                 params = {'good_for_fav': True, "title": title, "desc": "", "order": order}
                 if icon:
-                    params['icon']= icon
+                    params['icon'] = icon
                 if i["is_radio"]:
                     if i["has_epg"]:
                         radioEpgs.append({"id": str(i["id"]), "items": [params]})
-                        params["epg"] = len(radioEpgs)-1
-                    params["url"] = "D"+ i["streams"][0]["url"]
+                        params["epg"] = len(radioEpgs) - 1
+                    params["url"] = "D" + i["streams"][0]["url"]
                     radioChannels.append(params)
                 else:
                     if i["has_epg"]:
                         tvEpgs.append({"id": str(i["id"]), "items": [params]})
-                        params["epg"] = len(tvEpgs)-1
-                    params["url"] = "M"+str(i['id'])
+                        params["epg"] = len(tvEpgs) - 1
+                    params["url"] = "M" + str(i['id'])
                     tvChannels.append(params)
         except Exception:
             printExc()
@@ -329,12 +329,12 @@ class MindigTVHU(CBaseHostClass):
                 else:
                     icon = ""
                     order = 0
-                params = {'good_for_fav': True, "title": title + " (HbbTV)", "desc": "", "order": order, "url": "H"+url}
+                params = {'good_for_fav': True, "title": title + " (HbbTV)", "desc": "", "order": order, "url": "H" + url}
                 if icon:
-                    params['icon']= icon
+                    params['icon'] = icon
                 ch = next((ch for ch in mindigChannels if ch["title"] == title), None)
                 if ch and ch["has_epg"]:
-                    params["epg"]=_addepg(tvEpgs,str(ch["id"]),params)
+                    params["epg"] = _addepg(tvEpgs,str(ch["id"]),params)
                 tvChannels.append(params)
         except Exception:
             printExc()
@@ -347,12 +347,12 @@ class MindigTVHU(CBaseHostClass):
             data = self.cm.ph.getDataBeetwenMarkers(data, "streams = ", ";", False)[1]
             data = json_loads(data)
             for k,v in data.items():
-                if k == "enabled" or  k == "fox":
+                if k == "enabled" or k == "fox":
                     continue
                 title = v.get("channel")
                 url = v.get("url")
                 if title and url and url.startswith("token:"):
-                    url = "H"+url[6:]
+                    url = "H" + url[6:]
                     chdef = next((chdef for chdef in chdefs if chdef["title"] == title), None)
                     if chdef:
                         title = chdef.get("rename",title)
@@ -363,10 +363,10 @@ class MindigTVHU(CBaseHostClass):
                         order = 0
                     params = {'good_for_fav': True, "title": title + " (HbbTV)", "desc": "", "order": order, "url": url}
                     if icon:
-                        params['icon']= icon
+                        params['icon'] = icon
                     ch = next((ch for ch in mindigChannels if ch["title"] == title), None)
                     if ch and ch["has_epg"]:
-                        params["epg"]=_addepg(tvEpgs,str(ch["id"]),params)
+                        params["epg"] = _addepg(tvEpgs,str(ch["id"]),params)
                     tvChannels.append(params)
         except Exception:
             printExc()
@@ -382,7 +382,7 @@ class MindigTVHU(CBaseHostClass):
                 if len(v) < 3:
                     continue
                 title = v[2]
-                url = "D"+v[0]
+                url = "D" + v[0]
                                
                 chdef = next((chdef for chdef in chdefs if chdef["title"] == title), None)
                 if chdef:
@@ -398,10 +398,10 @@ class MindigTVHU(CBaseHostClass):
                    
                 params = {'good_for_fav': True, "title": title, "desc": "", "order": order, "url": url}
                 if icon:
-                    params['icon']= icon
+                    params['icon'] = icon
                 ch = next((ch for ch in mindigChannels if ch["title"] == title), None)
                 if ch and ch["has_epg"]:
-                    params["epg"]=_addepg(radioEpgs,str(ch["id"]),params)
+                    params["epg"] = _addepg(radioEpgs,str(ch["id"]),params)
                 radioChannels.append(params)
         except Exception:
             printExc()
@@ -419,7 +419,7 @@ class MindigTVHU(CBaseHostClass):
                 title = self.cm.ph.getDataBeetwenMarkers(i, '>', '<', False)[1]
                 if not title:
                     continue
-                params = {'good_for_fav': True, "title": title, "desc": "", "url": "D"+url}
+                params = {'good_for_fav': True, "title": title, "desc": "", "url": "D" + url}
                 videos.append(params)
                 
         except Exception:
@@ -507,7 +507,7 @@ class MindigTVHU(CBaseHostClass):
                         return videoUrls
                 else:
                     return videoUrls 
-                expires = int(time.time())+21600 
+                expires = int(time.time()) + 21600 
                 cItem["link"] = link
                 cItem["expires"] = expires
                    
@@ -553,9 +553,9 @@ class MindigTVHU(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
+        mode = self.currItem.get("mode", '')
 
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []

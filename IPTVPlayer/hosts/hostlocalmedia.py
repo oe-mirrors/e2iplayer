@@ -544,7 +544,7 @@ class IPTVHost(CHostBase):
 
     def getPrevList(self, refresh=0):
         self.host.setCurrDir('')
-        if(len(self.listOfprevList) > 0):
+        if (len(self.listOfprevList) > 0):
             hostList = self.listOfprevList.pop()
             hostCurrItem = self.listOfprevItems.pop()
             self.host.setCurrList(hostList)

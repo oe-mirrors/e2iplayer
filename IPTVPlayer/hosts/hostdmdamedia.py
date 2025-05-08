@@ -89,11 +89,11 @@ class Dmdamedia(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('Dmdamedia.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_filters',            'title': _('Kategóriák'), 'desc':'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/'},
-                        {'category':'list_items',            'title': _('Filmek'), 'desc':'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/filmek', 'page':'1'},
-                        {'category':'list_items',            'title': _('Sorozatok'), 'desc':'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/sorozatok', 'page':'1'},
-                        {'category':'search',          'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Kategóriák'), 'desc':'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/'},
+                        {'category':'list_items', 'title': _('Filmek'), 'desc':'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/filmek', 'page':'1'},
+                        {'category':'list_items', 'title': _('Sorozatok'), 'desc':'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/sorozatok', 'page':'1'},
+                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
     
     def listFilters(self, cItem):
@@ -106,8 +106,8 @@ class Dmdamedia(CBaseHostClass):
             title = self.cm.ph.getDataBeetwenMarkers(i, '">', '<', False)[1]
             printDBG(title)
             url = self.cm.ph.getDataBeetwenMarkers(i, 'href="', '">', False)[1]
-            quot = urllib.quote(url[url.index("=")+1:-1])
-            url = url.replace(url[url.index("=")+1:-1], quot)
+            quot = urllib.quote(url[url.index("=") + 1:-1])
+            url = url.replace(url[url.index("=") + 1:-1], quot)
             params = {'category':'list_items','title':title, 'icon': None, 'url': url, 'page':'1'}
             self.addDir(params)
     
@@ -126,9 +126,9 @@ class Dmdamedia(CBaseHostClass):
                 return
         found = self.cm.ph.getAllItemsBeetwenMarkers(data,'<div class="sorozatok">','</a></div>')
         b = 0
-        num = 28*int(page)-28
+        num = 28 * int(page) - 28
         for m in found:
-            if (b < 28*int(page) or b == 28*int(page)) and (b > num or b == num):
+            if (b < 28 * int(page) or b == 28 * int(page)) and (b > num or b == num):
                 title = self.cm.ph.getDataBeetwenMarkers(m, '><h1>','</h1>', False)[1]
                 icon = self.cm.ph.getDataBeetwenMarkers(m, 'data-src="','"', False)[1]
                 if not icon:
@@ -145,14 +145,14 @@ class Dmdamedia(CBaseHostClass):
                 desc = self.cm.ph.getDataBeetwenMarkers(datas, "<p>", "</p>", False)[1]
                 params = {'category':'explore_item','title':title, 'icon': icon, 'url': newurl, 'desc': desc}
                 self.addDir(params)
-            b = b+1
+            b = b + 1
         if params:
-            if 28*int(page) < len(found) or len(found) < 28*int(page):
+            if 28 * int(page) < len(found) or len(found) < 28 * int(page):
                 if "filmek" in cItem['url']:
                     url = self.filmurl + url
                 if "sorozatok" in cItem['url']:
                     url = self.sorurl + url
-                params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': url, 'page': int(page)+1}
+                params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': url, 'page': int(page) + 1}
                 self.addDir(params)
         else:
            msg = 'A megadott kategóriában sajnos nem találtam semmit. Próbáld újra később.'
@@ -174,7 +174,7 @@ class Dmdamedia(CBaseHostClass):
                 printDBG(i)
                 title = self.cim + " - " + i.replace('?a=', '')
                 url = cItem['url'] + i
-                params = {'title': title,  'icon': icon, 'url': url, 'desc': cItem['desc']}
+                params = {'title': title, 'icon': icon, 'url': url, 'desc': cItem['desc']}
                 self.addVideo(params)
     
     def exploreItemsS(self, cItem, title, icon):
@@ -199,7 +199,7 @@ class Dmdamedia(CBaseHostClass):
                         newurl = newurl.replace("https:", "https://")
                     sts, data = self.getPage(newurl)
                     desc = self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>', False)[1]
-                    params = {'category':'explore_item', 'title': title,  'icon': icon, 'url': newurl, 'desc':desc}
+                    params = {'category':'explore_item', 'title': title, 'icon': icon, 'url': newurl, 'desc':desc}
                     self.addDir(params)
     
     def exploreItemsE(self, cItem, title, icon):
@@ -226,7 +226,7 @@ class Dmdamedia(CBaseHostClass):
             desc = self.cm.ph.getDataBeetwenMarkers(desc, '<p>', '</p>', False)[1]
             if not desc:
                 desc = cItem['desc']
-            params = {'category':'explore_item', 'title': title,  'icon': icon, 'url': newurl, 'desc': desc}
+            params = {'category':'explore_item', 'title': title, 'icon': icon, 'url': newurl, 'desc': desc}
             self.addDir(params)
 	
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -234,7 +234,7 @@ class Dmdamedia(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')

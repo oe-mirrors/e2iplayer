@@ -42,8 +42,8 @@ from .util import append_PKCS7_padding, strip_PKCS7_padding, to_bufferable
 #         stripping off padding
 #
 
-PADDING_NONE       = 'none'
-PADDING_DEFAULT    = 'default'
+PADDING_NONE = 'none'
+PADDING_DEFAULT = 'default'
 
 # @TODO: Ciphertext stealing and explicit PKCS#7
 # PADDING_CIPHERTEXT_STEALING

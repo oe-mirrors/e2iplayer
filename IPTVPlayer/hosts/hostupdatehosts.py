@@ -46,7 +46,7 @@ class UPDATEHOSTS(CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader()
         self.versionpath = normpath("/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/version.py")
         self.playerpath = normpath("/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/")
-        self.changespath = self.playerpath+"/changes.txt"
+        self.changespath = self.playerpath + "/changes.txt"
         self.defaultParams = {'header':self.HEADER, 'use_cookie': False, 'load_cookie': False, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE}
         self.DEFAULT_ICON_URL = 'http://www.figyelmeztetes.hu/updatehosts_logo.jpg'
     
@@ -87,7 +87,7 @@ class UPDATEHOSTS(CBaseHostClass):
         if version != local:
             self._update("update")
             msg = 'Jelenlegi verzió: %s %s' % (self.getversion(), "\n")
-            ret = self.sessionEx.waitForFinishOpen(MessageBox, msg+ _("A frissítés sikeres.\nA rendszer most újraindul."), type=MessageBox.TYPE_INFO, timeout=10)
+            ret = self.sessionEx.waitForFinishOpen(MessageBox, msg + _("A frissítés sikeres.\nA rendszer most újraindul."), type=MessageBox.TYPE_INFO, timeout=10)
             try:
                from enigma import quitMainloop
                quitMainloop(3) 
@@ -179,9 +179,9 @@ class UPDATEHOSTS(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         try:
             CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-            name     = self.currItem.get("name", '')
+            name = self.currItem.get("name", '')
             category = self.currItem.get("category", '')
-            url      = self.currItem.get("url", '')
+            url = self.currItem.get("url", '')
             self.currList = []
             if name == None:
                 self.main_menu({'name':'category'})
@@ -192,7 +192,7 @@ class UPDATEHOSTS(CBaseHostClass):
             elif url == "install":
                 self._update("install")
                 msg = 'Jelenlegi verzió: %s %s' % (self.getversion(), "\n")
-                ret = self.sessionEx.waitForFinishOpen(MessageBox, msg+ _("A telepítés sikeres.\nA rendszer most újraindul."), type=MessageBox.TYPE_INFO, timeout=10)
+                ret = self.sessionEx.waitForFinishOpen(MessageBox, msg + _("A telepítés sikeres.\nA rendszer most újraindul."), type=MessageBox.TYPE_INFO, timeout=10)
                 try:
                    from enigma import quitMainloop
                    quitMainloop(3) 

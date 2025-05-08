@@ -133,7 +133,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
                 addConf = False
                 try:
                     self.host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], 0)
-                    if(len(self.host.GetConfigList()) < 1):
+                    if (len(self.host.GetConfigList()) < 1):
                         printDBG('ConfigMenu host "%s" does not have additional configs' % hostName)
                     else:
                         self.session.open(ConfigHostMenu, hostName=hostName)
@@ -168,7 +168,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
             self.setOKLabel()
 
     def _moveItem(self, curIndex):
-        assert(len(self.list) == len(self.hostsConfigsAvailableList) == len(self.listOfHostsNames))
+        assert (len(self.list) == len(self.hostsConfigsAvailableList) == len(self.listOfHostsNames))
         newIndex = self["config"].getCurrentIndex()
         if 0 <= curIndex and len(self.list) > curIndex and 0 <= newIndex and len(self.list) > newIndex:
             printDBG(">>>>>>>>>>>>>>>>>>> _moveItem")

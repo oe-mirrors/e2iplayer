@@ -127,7 +127,7 @@ class CSubProviderBase(ISubProvider):
         return RetHost(RetHost.OK, value=convList)
 
     def getPrevList(self, refresh=0):
-        if(len(self.listOfprevList) > 0):
+        if (len(self.listOfprevList) > 0):
             subProviderList = self.listOfprevList.pop()
             subProviderCurrItem = self.listOfprevItems.pop()
             self.subProvider.setCurrList(subProviderList)

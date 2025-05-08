@@ -128,7 +128,7 @@ class Spryciarze(CBaseHostClass):
                         subItem = {'type': 'subSub', 'url': match[j][0], 'name': match[j][1], 'ilosc': match[j][2]}
                         catItem['subCatList'].append(subItem)
 
-                    if(len(catItem['subCatList'])):
+                    if (len(catItem['subCatList'])):
                         self.catTree.append(catItem)
                     else:
                         printDBG('getMainCategory main category ingnored because it does not have sub categories')
@@ -264,7 +264,7 @@ class Spryciarze(CBaseHostClass):
                     printDBG('Znaleziono ' + it['keys'][0])
 
                 keyNums = len(it['keys'])
-                if(keyNums > 1):
+                if (keyNums > 1):
                     for j in range(keyNums):
                         videoItem[it['keys'][j]] = match[0][j]
                 else:
@@ -430,7 +430,7 @@ class IPTVHost(IHost):
     # 1 == refresh - force to read data from
     #                server if possible
     def getPrevList(self, refresh=0):
-        if(len(self.listOfprevList) > 0):
+        if (len(self.listOfprevList) > 0):
             hostList = self.listOfprevList.pop()
             self.host.setCurrList(hostList)
             convList = self.convertList(hostList)

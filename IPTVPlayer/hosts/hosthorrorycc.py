@@ -68,7 +68,7 @@ class Horrorycc(CBaseHostClass):
 #                        {'category': 'list_items', 'title': _('Children'), 'url': self.getFullUrl('/genre/anime-bajki/')},
                         {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('/seriale-online-pl/')},
                         {'category': 'list_years', 'title': _('Filter By Year'), 'url': self.getFullUrl('/filmy-online-pl/')},
-                        {'category': 'list_cats',  'title': _('Movies genres'), 'url': self.getFullUrl('/filmy-online-pl/')},
+                        {'category': 'list_cats', 'title': _('Movies genres'), 'url': self.getFullUrl('/filmy-online-pl/')},
 #                        {'category':'list_az',        'title': _('Alphabetically'),    'url':self.MAIN_URL},
                         {'category': 'search', 'title': _('Search'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Search history')}, ]

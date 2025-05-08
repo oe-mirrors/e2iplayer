@@ -86,9 +86,9 @@ class TV2Play(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('TV2Play.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_filters',            'title': _('Műsorok'), 'page': 0},
-                        {'category':'search',          'title': _('Keresés'), 'search_item':True, 'desc': 'A kereső fejlesztés alatt áll.'},
-                        {'category':'search_history',  'title': _('Keresési előzmények'), 'desc': 'A kereső fejlesztés alatt áll.'}]
+        MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Műsorok'), 'page': 0},
+                        {'category':'search', 'title': _('Keresés'), 'search_item':True, 'desc': 'A kereső fejlesztés alatt áll.'},
+                        {'category':'search_history', 'title': _('Keresési előzmények'), 'desc': 'A kereső fejlesztés alatt áll.'}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
     
     def exploreItems(self, cItem):
@@ -102,11 +102,11 @@ class TV2Play(CBaseHostClass):
         if data["contentType"] == "channel":
             ribbons = data["ribbonIds"]
         else:
-            if "seasonNumbers" in data and len(data["seasonNumbers"])>0:
+            if "seasonNumbers" in data and len(data["seasonNumbers"]) > 0:
                 for page in data["pages"]:
                     if page["seasonNr"] == cItem['season']:
                         break
-                    index+=1
+                    index += 1
             for tab in data["pages"][index]["tabs"]:
                 if tab["tabType"] == "RIBBON":
                     ribbons += tab["ribbonIds"]
@@ -119,7 +119,7 @@ class TV2Play(CBaseHostClass):
             sts, r = self.getPage("%s/ribbons/%s" % ("https://tv2play.hu/api", ribbon))
             if r:
                 data = json_loads(r)
-                params = {'category': 'ribbons', 'title': unquote(data['title']), 'id': data['id'], 'icon': thumb if thumb!='' else None, 'desc': plot, 'page': 0}
+                params = {'category': 'ribbons', 'title': unquote(data['title']), 'id': data['id'], 'icon': thumb if thumb != '' else None, 'desc': plot, 'page': 0}
                 self.addDir(params)
     
     def apiRibbons(self, cItem):
@@ -146,15 +146,15 @@ class TV2Play(CBaseHostClass):
                     dirType = 'episodes'
                 if 'MOVIE' in card['cardType']:
                     dirType = 'movies'
-                params={'title': title, 
+                params = {'title': title, 
                             'slug': card["slug"], 
                             'icon': thumb,
                             'desc': plot}
                 self.addVideo(params) 
-        url = "%s/ribbons/%s/%d" % ("https://tv2play.hu/api", cItem['id'], int(cItem['page'])+1)
+        url = "%s/ribbons/%s/%d" % ("https://tv2play.hu/api", cItem['id'], int(cItem['page']) + 1)
         sts, r = self.getPage(url)
         if r != '':
-            params={'category': 'ribbons', 'title': 'Következő oldal', 'url': url, 'icon': None, 'id': cItem['id'], 'page': int(cItem['page'])+1}
+            params = {'category': 'ribbons', 'title': 'Következő oldal', 'url': url, 'icon': None, 'id': cItem['id'], 'page': int(cItem['page']) + 1}
             self.addDir(params)
 
     def listItems(self, cItem):
@@ -163,7 +163,7 @@ class TV2Play(CBaseHostClass):
         if not sts:
             return
         data = json_loads(data)
-        if "seasonNumbers" in data and len(data["seasonNumbers"])>0:
+        if "seasonNumbers" in data and len(data["seasonNumbers"]) > 0:
             if "seo" in data and "description" in data["seo"] and data["seo"]["description"] != None:
                 plot = unquote(data["seo"]["description"])
             else:
@@ -204,7 +204,7 @@ class TV2Play(CBaseHostClass):
                         icon = i["imageUrl"]
                     else:
                         icon = None
-                    params = {'category': 'list_items', 'title': unquote(i['title']), 'url': "https://tv2play.hu/api/search/"+i['url'], 'icon': icon, 'desc': unquote(i['lead'])}
+                    params = {'category': 'list_items', 'title': unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': unquote(i['lead'])}
                     self.addDir(params)
             except:
                pass
@@ -218,7 +218,7 @@ class TV2Play(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')

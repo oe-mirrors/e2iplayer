@@ -90,9 +90,9 @@ if __name__ == "__main__":
 
         socketserver.TCPServer.allow_reuse_address = True
         if captchaType == 'CF':
-            httpd =  socketserver.TCPServer((IP, PORT), redirect_handler_factory('%s#e2itcf_sep_c=%s' % (siteUrl, siteKey)))
+            httpd = socketserver.TCPServer((IP, PORT), redirect_handler_factory('%s#e2itcf_sep_c=%s' % (siteUrl, siteKey)))
         else:
-            httpd =  socketserver.TCPServer((IP, PORT), redirect_handler_factory('%s/#e2it?k=%s&st=%s' % (siteUrl, siteKey, captchaType)))
+            httpd = socketserver.TCPServer((IP, PORT), redirect_handler_factory('%s/#e2it?k=%s&st=%s' % (siteUrl, siteKey, captchaType)))
         print("Http Server Serving at port", PORT)
         httpd.serve_forever()
     except Exception:

@@ -87,7 +87,7 @@ class IPTVSubtitlesHandler:
                 st = st.split('\n')
                 if len(st) < 2:
                     continue #less than two items are for sure garbage, so let's skip
-                while st[0] ==  '':
+                while st[0] == '':
                     st.pop(0)
                 while not ' --> ' in st[0]:
                     st.pop(0) #remove line numbers and other unused lines existing before time
@@ -161,7 +161,7 @@ class IPTVSubtitlesHandler:
                     validAtomsIdexes.append(idx)
                 
             marker = validAtomsIdexes
-            printDBG("OpenSubOrg.getSubtitles marker[%s] prevMarker[%s] %.1fs" % (marker, prevMarker, currTimeMS/1000.0))
+            printDBG("OpenSubOrg.getSubtitles marker[%s] prevMarker[%s] %.1fs" % (marker, prevMarker, currTimeMS / 1000.0))
             if prevMarker != marker:
                 for idx in validAtomsIdexes:
                     item = self.subAtoms[idx]
@@ -378,7 +378,7 @@ class IPTVEmbeddedSubtitlesHandler:
                 validAtomsIdexes.append(idx)
 
         marker = validAtomsIdexes
-        printDBG("OpenSubOrg.getSubtitles marker[%s] prevMarker[%s] %.1fs" % (marker, prevMarker, currTimeMS/1000.0))
+        printDBG("OpenSubOrg.getSubtitles marker[%s] prevMarker[%s] %.1fs" % (marker, prevMarker, currTimeMS / 1000.0))
         if prevMarker != marker:
             for idx in validAtomsIdexes:
                 item = self.subAtoms[idx]

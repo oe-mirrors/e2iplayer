@@ -78,9 +78,9 @@ class FilmPapa(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('FilmPapa.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_items',            'title': _('Kategóriák')},
-                        {'category':'search',          'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Kategóriák')},
+                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
 
     def listItems(self, cItem):
@@ -113,7 +113,7 @@ class FilmPapa(CBaseHostClass):
             params = {'title':title, 'icon': icon, 'url': url, 'desc': desc}
             self.addVideo(params)
         if max != "There were no results found.":
-            params = {'category': 'list_filters', 'title': "Következő oldal", 'icon': None, 'url': lurl, 'page': page+1}
+            params = {'category': 'list_filters', 'title': "Következő oldal", 'icon': None, 'url': lurl, 'page': page + 1}
             self.addDir(params)
     
     def listFilters(self, cItem):
@@ -139,7 +139,7 @@ class FilmPapa(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')

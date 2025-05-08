@@ -42,5 +42,5 @@ def dot11PassPhraseToPSK(passPhrase, ssid):
 	""" The 802.11 TGi recommended pass-phrase-to-preshared-key mapping.
 		This function simply uses pbkdf2 with interations=4096 and keySize=32
 	"""
-	assert(7 < len(passPhrase) < 64), 'Passphrase must be greater than 7 or less than 64 characters'
+	assert (7 < len(passPhrase) < 64), 'Passphrase must be greater than 7 or less than 64 characters'
 	return pbkdf2(passPhrase, ssid, iterations=4096, keySize=32)

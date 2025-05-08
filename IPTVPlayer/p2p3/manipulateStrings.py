@@ -8,7 +8,7 @@
 #
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 
-def strDecode(text,  setErrors='strict'):
+def strDecode(text, setErrors='strict'):
     if isPY2():
         retVal = text
     else: #PY3
@@ -39,7 +39,7 @@ def iterDictValues(myDict):
     else: #PY3
         return myDict.values()
 
-def strEncode(text,  encoding='utf-8'):
+def strEncode(text, encoding='utf-8'):
     if isPY2():
         retVal = text
     else: #PY3
