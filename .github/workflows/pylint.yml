@@ -27,4 +27,5 @@ jobs:
 
       - name: Run Pylint
         run: |
+          cd IPTVPlayer
           pylint --exit-zero $(git ls-files '*.py')

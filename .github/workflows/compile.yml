@@ -26,4 +26,5 @@ jobs:
       - name: Build plugins, python ${{ matrix.python }}
         run: |
           pip3 install six
+          cd IPTVPlayer
           python -m compileall .

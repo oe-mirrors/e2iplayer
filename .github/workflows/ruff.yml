@@ -26,4 +26,5 @@ jobs:
 
       - name: Run Ruff
         run: |
+          cd IPTVPlayer
           ruff check .
