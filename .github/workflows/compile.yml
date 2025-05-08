@@ -1,0 +1,29 @@
+name: compile
+
+on:
+  push:
+    branches: [ python3 ]
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python: ['3.10','3.11','3.12','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Build plugins, python ${{ matrix.python }}
+        run: |
+          pip3 install six
+          python -m compileall .
