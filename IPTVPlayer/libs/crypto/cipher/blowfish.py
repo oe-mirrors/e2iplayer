@@ -1,4 +1,4 @@
-﻿#
+#
 # blowfish.py
 # Copyright (C) 2002 Michael Gilfix <mgilfix@eecs.tufts.edu>
 #

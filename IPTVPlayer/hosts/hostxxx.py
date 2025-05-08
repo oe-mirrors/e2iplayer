@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Modified by Blindspot - 2024.02.09.
 # Added new host: TEENXY
 ###################################################

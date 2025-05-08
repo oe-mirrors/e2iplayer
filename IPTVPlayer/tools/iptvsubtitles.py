@@ -1,4 +1,4 @@
-﻿###################################################
+###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSubtitlesDir, byteify, IsSubtitlesParserExtensionCanBeUsed

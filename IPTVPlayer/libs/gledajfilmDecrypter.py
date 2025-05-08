@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 # taken from: https://raw.githubusercontent.com/Joecowboy/MOVIE2K.bundle/master/Contents/Services/URL/MOVIE2K/Modules/gledajfilmDecrypter.py
 import math

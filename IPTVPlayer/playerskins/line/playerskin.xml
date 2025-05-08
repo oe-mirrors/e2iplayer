@@ -1,4 +1,4 @@
-﻿<screen name="IPTVExtMoviePlayer"    position="center,center" size="%d,%d" flags="wfNoBorder" backgroundColor="#FFFFFFFF" >
+<screen name="IPTVExtMoviePlayer"    position="center,center" size="%d,%d" flags="wfNoBorder" backgroundColor="#FFFFFFFF" >
                     <widget name="pleaseWait"         noWrap="1" position="center,30"        size="500,40"    zPosition="3" transparent="1" foregroundColor="#999999"   backgroundColor="transparent" font="Regular;25" halign="center"  valign="center"/>
                     
                     <widget name="logoIcon"           position="36,75"        size="160,40"    zPosition="4"             transparent="1" alphatest="blend" />
