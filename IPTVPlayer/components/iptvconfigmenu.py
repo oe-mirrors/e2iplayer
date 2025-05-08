@@ -355,7 +355,7 @@ class ConfigMenu(ConfigBaseWidget):
                 list.append(getConfigListEntry(_("    Remove thumbnails"), config.plugins.iptvplayer.deleteIcons))
             #list.append(getConfigListEntry("Sortować listy?", config.plugins.iptvplayer.sortuj))
             list.append(getConfigListEntry(_("Graphic services selector"), config.plugins.iptvplayer.ListaGraficzna))
-            if config.plugins.iptvplayer.ListaGraficzna.value == True:
+            if config.plugins.iptvplayer.ListaGraficzna.value is True:
                 list.append(getConfigListEntry(_("    Enable hosts groups"), config.plugins.iptvplayer.group_hosts))
                 list.append(getConfigListEntry(_("    Service icon size"), config.plugins.iptvplayer.IconsSize))
                 list.append(getConfigListEntry(_("    Number of rows"), config.plugins.iptvplayer.numOfRow))
@@ -615,7 +615,7 @@ class ConfigMenu(ConfigBaseWidget):
 
     def changePin(self, pin=None, start=False):
         # 'PUT_OLD_PIN', 'PUT_NEW_PIN', 'CONFIRM_NEW_PIN'
-        if True == start:
+        if True is start:
             self.changingPinState = 'PUT_OLD_PIN'
             self.session.openWithCallback(self.changePin, IPTVPinWidget, title=_("Enter old pin"))
         else:

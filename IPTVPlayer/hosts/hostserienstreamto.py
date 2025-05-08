@@ -441,7 +441,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                             videoUrl = self.cm.meta['url']
                     else:
                         message = _('Link protected with google recaptcha v2.')
-                        if True != self.loggedIn:
+                        if True is not self.loggedIn:
                             message += '\n' + _('Please fill your login and password in the host configuration (available under blue button) and try again.')
                         else:
                             message += '\n' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<small', '</small>')[1])

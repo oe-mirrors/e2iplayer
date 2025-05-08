@@ -63,7 +63,7 @@ class Ninateka(CBaseHostClass):
     def getMenuHTML(self):
         printDBG("getMenuHTML start")
 
-        if True == self.refresh or '' == self.menuHTML:
+        if True is self.refresh or '' == self.menuHTML:
             self.menuHTML = ''
             sts, data = self.cm.getPage(self.MAIN_URL)
             if sts:

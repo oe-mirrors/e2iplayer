@@ -930,7 +930,7 @@ class urlparser:
                     SetIPTVPlayerLastHostError(_('Hosting "%s" unknown.') % host)
 
             if isinstance(nUrl, list) or isinstance(nUrl, tuple):
-                if True == acceptsList:
+                if True is acceptsList:
                     return nUrl
                 else:
                     if len(nUrl) > 0:
@@ -11876,7 +11876,7 @@ class pageParser(CaptchaHelper):
             oHoster.setUrl(baseUrl)
             aLink = oHoster.getMediaLink()
             printDBG('aLink=' + str(aLink))
-            if (aLink[0] == True):
+            if (aLink[0] is True):
                 URL = aLink[1]
                 if '|User-Agent=' in URL:
                     URL, UA = aLink[1].split('|User-Agent=', 1)

@@ -84,7 +84,7 @@ def IncludeMENU(MenuStatusMSG='', ShowCancelButton=False):
     <a>, %s: <b>%s</b></a/>
   </div>
 """ % (_('Information'), _('Selected hosts'), _('Search'), _('Download manager'), _('Settings'), _('Logs'), _('Reset State'), _('version'), IPTV_VERSION, _('Web interface version'), settings.WebInterfaceVersion)
-	if MenuStatusMSG != '' and ShowCancelButton == True:
+	if MenuStatusMSG != '' and ShowCancelButton is True:
 		tempText += '<div class="main">%s<br></div>\n' % formSUBMITvalue([('cmd', 'stopThread')], _('Cancel'), input_text=MenuStatusMSG + '... ')
 	elif MenuStatusMSG != '':
 		tempText += '<div class="main">%s<br></div>\n' % MenuStatusMSG

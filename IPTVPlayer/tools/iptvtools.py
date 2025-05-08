@@ -1503,7 +1503,7 @@ def IsFPUAvailable():
                 IsFPUAvailable.available = True
             else:
                 IsFPUAvailable.available = False
-        if IsFPUAvailable.available == False and config.plugins.iptvplayer.plarformfpuabi.value == 'hard_float':
+        if IsFPUAvailable.available is False and config.plugins.iptvplayer.plarformfpuabi.value == 'hard_float':
             return True
     except Exception:
         printExc()

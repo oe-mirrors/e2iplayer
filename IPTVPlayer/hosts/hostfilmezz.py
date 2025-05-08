@@ -332,7 +332,7 @@ class FilmezzEU(CBaseHostClass):
 
                 if 'google.com/recaptcha/' in data and 'sitekey' in data:
                     message = _('Link protected with google recaptcha v2.')
-                    if True != self.loggedIn:
+                    if True is not self.loggedIn:
                         message += '\n' + _('Please fill your login and password in the host configuration (available under blue button) and try again.')
                     SetIPTVPlayerLastHostError(message)
                     break

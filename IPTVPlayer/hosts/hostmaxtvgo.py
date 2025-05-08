@@ -133,7 +133,7 @@ class MaxtvGO(CBaseHostClass):
         except Exception:
             printExc()
 
-            if self.loggedIn != True and 0 == len(self.currList):
+            if self.loggedIn is not True and 0 == len(self.currList):
                 msg = _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl())
                 GetIPTVNotify().push(msg, 'error', 10)
 

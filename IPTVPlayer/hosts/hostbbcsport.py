@@ -440,7 +440,7 @@ class BBCSport(CBaseHostClass):
         datErrorMsg = _('Data mismatch.')
 
         if config.plugins.iptvplayer.bbc_use_web_proxy.value:
-            if False != self.loggedIn:
+            if False is not self.loggedIn:
                 rm(self.COOKIE_FILE)
                 self.loggedIn = False
             return False

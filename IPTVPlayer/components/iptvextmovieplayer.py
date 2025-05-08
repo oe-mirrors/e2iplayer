@@ -1329,7 +1329,7 @@ class IPTVExtMoviePlayer(Screen):
                     text = "%s %sx%s" % (codec, val['width'], val['height'])
                     if val['progressive']:
                         text += 'p'
-                    elif False == val['progressive']:
+                    elif False is val['progressive']:
                         text += 'i'
                     fps = val['frame_rate']
                     if fps == floor(fps):
@@ -2018,7 +2018,7 @@ class IPTVExtMoviePlayer(Screen):
 
             # active audio track
             audioTrackIdx = self.metaHandler.getAudioTrackIdx()
-            if config.plugins.iptvplayer.GSTplayer_no_IFD.value == False:
+            if config.plugins.iptvplayer.GSTplayer_no_IFD.value is False:
                 cmd += ' %d ' % audioTrackIdx
 
             # file download timeout

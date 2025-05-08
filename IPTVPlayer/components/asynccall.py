@@ -164,7 +164,7 @@ class AsyncCall(object):
                     printExc()
 
             self.Callback = None
-            if self.finished == False:
+            if self.finished is False:
                 if self.Thread.is_alive():
                     self._kill()
                     self.Thread.join(timeout=1)

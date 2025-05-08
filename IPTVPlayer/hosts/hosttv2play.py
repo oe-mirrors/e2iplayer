@@ -51,7 +51,7 @@ class TV2Play(CBaseHostClass):
         thumb = "%s/%s" % (self.MAIN_URL, data["imageUrl"]) if "https://" not in data["imageUrl"] else data["imageUrl"]
         sts, r = self.getPage("%s/streaming-url?playerId=%s&stream=undefined" % ("https://tv2play.hu/api", playerId))
         data = json_loads(r)
-        if (data["geoBlocked"] != False):
+        if (data["geoBlocked"] is not False):
             return
         sts, r = self.getPage(data["url"])
         json_data = json_loads(r)

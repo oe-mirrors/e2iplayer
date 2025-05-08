@@ -115,7 +115,7 @@ class BaseDownloader:
         self.fileExtension = ''  # should be implemented in future
 
         sts, remoteInfo = DMHelper.getRemoteContentInfoByUrllib(url, params)
-        if False == sts:
+        if False is sts:
             return BaseDownloader.CODE_WRONG_LINK
         else:
             self.remoteFileSize = int(remoteInfo.get('Content-Length', '-1'))

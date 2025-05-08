@@ -90,14 +90,14 @@ class MusicBox(CBaseHostClass):
         if self.youtube_api_key != config.plugins.iptvplayer.api_key_youtube.value:
             apiKey = config.plugins.iptvplayer.api_key_youtube.value
             if len(apiKey) > 0 and len(apiKey) != 39:
-                if config.plugins.iptvplayer.api_key_warning.value == True:
+                if config.plugins.iptvplayer.api_key_warning.value is True:
                     msg = _("Wrong Youtube Api Key length")
                     GetIPTVNotify().push(msg, 'error', 5)
 
             self.youtube_api_key = apiKey
 
         if not self.youtube_api_key:
-            if config.plugins.iptvplayer.api_key_warning.value == True:
+            if config.plugins.iptvplayer.api_key_warning.value is True:
                 config.plugins.iptvplayer.api_key_warning.value = False
                 msg = _("Youtube searches are quicker, if you fill API key in setting menu")
                 msg = msg + "\n" + ("Search for 'how to create your own Youtube api key'")
@@ -334,7 +334,7 @@ class MusicBox(CBaseHostClass):
     def Lastfmlist(self):
         printDBG("MusicBox - last.fm list")
 
-        if False == self.usePremiumAccount:
+        if False is self.usePremiumAccount:
             self.sessionEx.waitForFinishOpen(MessageBox, 'Wpisz login do last.fm.', type=MessageBox.TYPE_INFO, timeout=10)
         else:
             url = 'http://ws.audioscrobbler.com/2.0/?method=user.getPlaylists&user=' + self.lastfm_username + '&api_key=' + audioscrobbler_api_key + '&format=json'

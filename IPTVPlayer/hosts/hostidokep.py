@@ -184,7 +184,7 @@ class Idokep(CBaseHostClass):
                     if not link:
                         backup = True
                 link = self.cm.ph.getDataBeetwenMarkers(link, 'src="', '"', False)[1]
-                if backup == True:
+                if backup is True:
                     link = self.cm.ph.getDataBeetwenMarkers(data, 'autoplay muted loop poster="', '"', False)[1]
                 if "https:" not in link and "//" in link:
                     img = "https:" + link

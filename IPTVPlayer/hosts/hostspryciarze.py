@@ -273,7 +273,7 @@ class Spryciarze(CBaseHostClass):
 
             # Clear checked part to free memory
             tab[i] = ''
-            if False == ignore:
+            if False is ignore:
                 self.currList.append(videoItem)
 
         printDBG('Spryciarze.getVideoList len(self.currList): %d' % len(self.currList))

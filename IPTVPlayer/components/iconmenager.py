@@ -190,7 +190,7 @@ class IconMenager:
             #getFirstFromDQueue
             self.lockDQ.acquire()
 
-            if False == self.stopThread:
+            if False is self.stopThread:
                 if len(self.queueDQ):
                     url = self.queueDQ.pop(0)
                 else:
@@ -226,7 +226,7 @@ class IconMenager:
     def download_img(self, img_url, filename):
         # if at start there was NOT enough space on disk
         # new icon will not be downloaded
-        if False == self.downloadNew:
+        if False is self.downloadNew:
             return False
 
         if len(self.currDownloadDir) < 4:

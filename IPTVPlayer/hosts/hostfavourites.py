@@ -250,7 +250,7 @@ class IPTVHost(CHostBase):
         retlist = []
         if self.useWatchedFlag:
             ret = self.cachedRet
-            if ret.value[Index].isWatched != True and ret.value[Index].type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]:
+            if ret.value[Index].isWatched is not True and ret.value[Index].type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]:
                 hashData = self.getItemHashData(Index, ret.value[Index])
                 if self._createViewedFile(hashData):
                     self.cachedRet.value[Index].isWatched = True

@@ -29,7 +29,7 @@ class TeledunetParser:
         # Fetch the main Teledunet website to be given a Session ID
         params = {'cookiefile': self.COOKIE_FILE, 'use_cookie': True, 'load_cookie': False, 'save_cookie': True}
         sts, data = self.cm.getPage(self.HEADER_REFERER, params)
-        if False == sts:
+        if False is sts:
             printDBG("__get_cookie_session getPage problem")
 
         url = self.TELEDUNET_TIMEPLAYER_URL % channel_name
@@ -40,7 +40,7 @@ class TeledunetParser:
 
         params = {'header': HTTP_HEADER, 'cookiefile': self.COOKIE_FILE, 'use_cookie': True, 'load_cookie': True, 'save_cookie': False}
         sts, data = self.cm.getPage(url, params)
-        if False == sts:
+        if False is sts:
             printDBG("__get_channel_time_player getPage problem")
 
         m = re.search('time_player=(.*);', data, re.M | re.I)

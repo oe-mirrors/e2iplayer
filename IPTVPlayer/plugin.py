@@ -88,7 +88,7 @@ def doPluginAutostart():
 def startIPTVfromMenu(menuid, **kwargs):
     if menuid == "system":
         return [(_("Configure %s") % 'E2iPlayer', mainSetup, "iptv_config", None)]
-    elif menuid == "mainmenu" and config.plugins.iptvplayer.showinMainMenu.value == True:
+    elif menuid == "mainmenu" and config.plugins.iptvplayer.showinMainMenu.value is True:
         return [("E2iPlayer", main, "iptv_main", None)]
     else:
         return []

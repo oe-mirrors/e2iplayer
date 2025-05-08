@@ -467,14 +467,14 @@ class FreeDiscPL(CBaseHostClass):
 
             try:
                 data = json_loads(data)
-                if data['success'] == True:
+                if data['success'] is True:
                     self.loggedIn = True
                 else:
                     errMsg = [self.cleanHtmlStr(data['response']['info'])]
             except Exception:
                 printExc()
 
-            if self.loggedIn != True:
+            if self.loggedIn is not True:
                 self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + '\n'.join(errMsg), type=MessageBox.TYPE_ERROR, timeout=10)
             return self.loggedIn
 

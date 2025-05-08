@@ -173,7 +173,7 @@ class searchPage(resource.Resource):
             stopRunningThread('doGlobalSearch')
             self.Counter = 0
             return util.redirectTo("/iptvplayer/search", req)
-        elif not isThreadRunning('doGlobalSearch') and key == 'GlobalSearch' and settings.GlobalSearchListShown == True:
+        elif not isThreadRunning('doGlobalSearch') and key == 'GlobalSearch' and settings.GlobalSearchListShown is True:
             settings.GlobalSearchListShown = False
             settings.GlobalSearchQuery = arg
             webThreads.doGlobalSearch().start()
@@ -513,7 +513,7 @@ class useHostPage(resource.Resource):
             else:
                 print("useHostPage received: '%s'='%s'" % (self.key, str(self.arg)))
 
-        if self.key is None and isActiveHostInitiated() == False:
+        if self.key is None and isActiveHostInitiated() is False:
             return util.redirectTo("/iptvplayer/hosts", req)
         elif self.key == 'cmd' and self.arg == 'hosts':
             initActiveHost(None)

@@ -3204,7 +3204,7 @@ class json_options(object, metaclass=_behaviors_metaclass):
             self._sort_keys = method
         elif method in sorting_method_aliases:  # alias
             self._sort_keys = sorting_method_aliases[method]
-        elif method == True:
+        elif method is True:
             self._sort_keys = SORT_ALPHA
         else:
             raise ValueError("Not a valid sorting method: %r" % method)
@@ -5157,7 +5157,7 @@ class JSON(object):
             # User-supplied repertoire test function
             state.escape_unicode_test = self.options.escape_unicode
         else:
-            if self.options.escape_unicode == True or not cdk or cdk.name.lower() == 'ascii':
+            if self.options.escape_unicode is True or not cdk or cdk.name.lower() == 'ascii':
                 # ASCII, ISO8859-1, or and Unknown codec -- \u escape anything not ASCII
                 state.escape_unicode_test = lambda c: ord(c) >= 0x80
             elif cdk.name == 'iso8859-1':
@@ -6209,9 +6209,9 @@ the options --allow, --warn, or --forbid ; for example:
             elif opt == '--version':
                 self.stdout.write('%s (%s) version %s (%s)\n'
                                       % (self.program_name, __name__, __version__, __date__))
-                if verbose == True:
+                if verbose is True:
                     self.stdout.write('demjson from %r\n' % (__file__,))
-                if verbose == True:
+                if verbose is True:
                     self.stdout.write('Python version: %s\n' % (sys.version.replace('\n', ' '),))
                     self.stdout.write('This python implementation supports:\n')
                     self.stdout.write('  * Max unicode: U+%X\n' % (sys.maxunicode,))

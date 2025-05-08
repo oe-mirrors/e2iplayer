@@ -264,9 +264,9 @@ class RTBFBE(CBaseHostClass):
         elif isinstance(obj, dict):
             for key in obj:
                 newData += self.serParams(obj[key], data + urllib_quote('[%s]' % key))
-        elif obj == True:
+        elif obj is True:
             newData += data + '=true&'
-        elif obj == False:
+        elif obj is False:
             newData += data + '=false&'
         else:
             newData += data + '=%s&' % urllib_quote(str(obj))

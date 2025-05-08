@@ -210,7 +210,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             self.startDownload(tmpList[0])
 
     def setListMode(self, sts=False):
-        if False == sts:
+        if False is sts:
             self['list'].hide()
             self["title"].hide()
             self.hideButtons()
@@ -246,7 +246,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         pass
 
     def keyExit(self):
-        if False == self.listMode:
+        if False is self.listMode:
             if self.downloader != None and self.downloader.isDownloading():
                 self.downloader.terminate()
             else:
@@ -259,7 +259,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             self.close(None)
 
     def keyOK(self):
-        if False == self.listMode:
+        if False is self.listMode:
             return
         idx, item = self.getSelectedItem()
         if None != item:

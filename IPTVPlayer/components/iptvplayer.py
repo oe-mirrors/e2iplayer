@@ -153,7 +153,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
 
     def leavePlayer(self, endFile=False):
         printDBG("customMoviePlayer.leavePlayer isClosing[%r], endFile[%r]" % (self.isClosing, endFile))
-        if False == self.isClosing:
+        if False is self.isClosing:
             self.pauseBeforeClose()
             if endFile:
                 self._doClose(None)
@@ -189,13 +189,13 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         self.onClose.remove(self.__onClose)
 
     def show(self):
-        if False == self.isClosing:
+        if False is self.isClosing:
             Screen.show(self)
         else:
             printExc("customMoviePlayer.show")
 
     def doShow(self):
-        if False == self.isClosing:
+        if False is self.isClosing:
             InfoBarShowHide.doShow(self)
         else:
             printExc("customMoviePlayer.doShow")

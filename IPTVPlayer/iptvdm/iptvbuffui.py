@@ -267,7 +267,7 @@ class E2iPlayerBufferingWidget(Screen):
             self.session.openWithCallback(self.confirmExitCallBack, MessageBox, text=_("Stop playing?"), type=MessageBox.TYPE_YESNO)
 
     def confirmExitCallBack(self, ret=None):
-        if ret == True:
+        if ret is True:
             self.iptvDoClose()
         elif ret == 'move':
             self.moveToDownloadManager()
@@ -380,7 +380,7 @@ class E2iPlayerBufferingWidget(Screen):
             self['rec_button'].hide()
 
     def updateOKButton(self):
-        if self.canRunMoviePlayer and False == self.checkMOOVAtom and (self.isMOOVAtomAtTheBeginning == None or self.moovAtomStatus == self.MOOV_STS.DOWNLOADED):
+        if self.canRunMoviePlayer and False is self.checkMOOVAtom and (self.isMOOVAtomAtTheBeginning == None or self.moovAtomStatus == self.MOOV_STS.DOWNLOADED):
             self['ok_button'].show()
         else:
             self['rec_button'].hide()
@@ -491,7 +491,7 @@ class E2iPlayerBufferingWidget(Screen):
         percentage = 0
         requestedBuffSize = -1
         tmpBuffSize = 0
-        if self.isMOOVAtomAtTheBeginning == True:
+        if self.isMOOVAtomAtTheBeginning is True:
             moovAtomDataSize = self.moovAtomOffset + self.moovAtomSize
             if moovAtomDataSize > localSize:
                 if self.moovAtomStatus != self.MOOV_STS.DOWNLOADING:
@@ -516,7 +516,7 @@ class E2iPlayerBufferingWidget(Screen):
                     self["addinfo"].setText("")
                     self.moovAtomStatus = self.MOOV_STS.DOWNLOADED
             handled = True
-        elif self.isMOOVAtomAtTheBeginning == False and self.moovAtomStatus not in [self.MOOV_STS.WAITING, self.MOOV_STS.ERROR, self.MOOV_STS.DOWNLOADED]:
+        elif self.isMOOVAtomAtTheBeginning is False and self.moovAtomStatus not in [self.MOOV_STS.WAITING, self.MOOV_STS.ERROR, self.MOOV_STS.DOWNLOADED]:
             # At now only exteplayer3 is able to use moov atom in separate file
             if self.activMoviePlayer == 'exteplayer' and self.moovAtomStatus == self.MOOV_STS.UNKNOWN:
                 url, downloaderParams = DMHelper.getDownloaderParamFromUrl(self.url)

@@ -62,7 +62,7 @@ class IPTVDMApi():
 
     def __del__(self):
         printDBG("IPTVDMApi.__del__ -------------------")
-        if True == self.running:
+        if True is self.running:
             self.running = False
             self.mainTimer.stop()
         self.stopAllDownloadItem()
@@ -198,7 +198,7 @@ class IPTVDMApi():
 
     def stopWorkThread(self):
         ''' Can be called only from main thread'''
-        if True == self.running:
+        if True is self.running:
             self.running = False
             self.mainTimer.stop()
 
@@ -206,7 +206,7 @@ class IPTVDMApi():
 
     def runWorkThread(self):
         ''' Can be called only from main thread'''
-        if False == self.running:
+        if False is self.running:
             self.running = True
             self.mainTimer.start(self.sleepDelay * 1000)
 
@@ -219,7 +219,7 @@ class IPTVDMApi():
         for item in self.queueDQ:
             if item.url == newItem.url:
                 exist = True
-        if False == exist:
+        if False is exist:
             self.downloadIdx += 1
             newItem.downloadIdx = self.downloadIdx
             self.queueDQ.append(newItem)
@@ -264,7 +264,7 @@ class IPTVDMApi():
         return bRet, msg
 
     def processDQ(self):
-            if False == self.running:
+            if False is self.running:
                 return
             dListChanged = False
             if len(self.queueUD) < self.MAX_DOWNLOAD_ITEM and \

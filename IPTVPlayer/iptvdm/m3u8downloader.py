@@ -317,7 +317,7 @@ class M3U8Downloader(BaseDownloader):
                 tryAgain = False
 
         currentFragment = None
-        if False == tryAgain:
+        if False is tryAgain:
             self.tries = 0
             if (self.currentFragment + 1) < len(self.fragmentList):
                 self.currentFragment += 1

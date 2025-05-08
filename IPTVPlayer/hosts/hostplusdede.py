@@ -532,10 +532,10 @@ class PlusDEDE(CBaseHostClass):
                 PlusDEDE.login = ''
                 rm(self.COOKIE_FILE)
 
-        if True != self.loggedIn or PlusDEDE.login != config.plugins.iptvplayer.plusdede_login.value or\
+        if True is not self.loggedIn or PlusDEDE.login != config.plugins.iptvplayer.plusdede_login.value or\
             PlusDEDE.password != config.plugins.iptvplayer.plusdede_password.value:
 
-            if True != self.loggedIn and PlusDEDE.login == config.plugins.iptvplayer.plusdede_login.value and\
+            if True is not self.loggedIn and PlusDEDE.login == config.plugins.iptvplayer.plusdede_login.value and\
                 PlusDEDE.password == config.plugins.iptvplayer.plusdede_password.value:
                 sts, data = self.getPage(self.getMainUrl())
                 if sts:

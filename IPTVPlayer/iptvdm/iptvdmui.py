@@ -394,7 +394,7 @@ class IPTVDMWidget(Screen):
     def reloadList(self, force=False):
         if not self.localMode:
             global gIPTVDM_listChanged
-            if True == gIPTVDM_listChanged or force:
+            if True is gIPTVDM_listChanged or force:
                 printDBG("IPTV_DM_UI reload downloads list")
                 self["list"].hide()
                 gIPTVDM_listChanged = False

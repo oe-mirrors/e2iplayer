@@ -1168,7 +1168,7 @@ class E2iPlayerWidget(Screen):
         self.currList = []
         self.currItem = CDisplayListItem()
 
-        if (config.plugins.iptvplayer.group_hosts.value == False or 0 == GetAvailableIconSize()):
+        if (config.plugins.iptvplayer.group_hosts.value is False or 0 == GetAvailableIconSize()):
             self.selectHostFromSingleList()
         else:
             self.selectGroup()
@@ -1246,7 +1246,7 @@ class E2iPlayerWidget(Screen):
         if len(brokenHostList) > 0:
             errorMessage = _("Following host are broken or additional python modules are needed.") + '\n' + '\n'.join(brokenHostList)
 
-        if "" != errorMessage and True == self.showHostsErrorMessage:
+        if "" != errorMessage and True is self.showHostsErrorMessage:
             self.showHostsErrorMessage = False
             self.session.openWithCallback(self.displayListOfHostsFromGroup, MessageBox, errorMessage, type=MessageBox.TYPE_INFO, timeout=10)
         else:
@@ -1299,7 +1299,7 @@ class E2iPlayerWidget(Screen):
 
                 # The 'http...' in host titles is annoying on regular choiceBox and impacts sorting.
                 # To simplify choiceBox usage and clearly show service is a webpage, list is build using the "<service name> (<service URL>)" schema.
-                if (config.plugins.iptvplayer.ListaGraficzna.value == False or 0 == GetAvailableIconSize()) and title[:4] == 'http':
+                if (config.plugins.iptvplayer.ListaGraficzna.value is False or 0 == GetAvailableIconSize()) and title[:4] == 'http':
                     try:
                         title = ('%s   (%s)') % ('.'.join(title.replace('://', '.').replace('www.', '').split('.')[1:-1]), title)
                     except Exception:
@@ -1321,7 +1321,7 @@ class E2iPlayerWidget(Screen):
         #if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
         #    self.displayHostsList.append((_("Update"), "update"))
 
-        if "" != errorMessage and True == self.showHostsErrorMessage:
+        if "" != errorMessage and True is self.showHostsErrorMessage:
             self.showHostsErrorMessage = False
             self.session.openWithCallback(self.displayListOfHosts, MessageBox, errorMessage, type=MessageBox.TYPE_INFO, timeout=10)
         else:
@@ -1329,7 +1329,7 @@ class E2iPlayerWidget(Screen):
         return
 
     def displayListOfHosts(self, arg=None):
-        if config.plugins.iptvplayer.ListaGraficzna.value == False or 0 == GetAvailableIconSize():
+        if config.plugins.iptvplayer.ListaGraficzna.value is False or 0 == GetAvailableIconSize():
             self.newDisplayHostsList = None
             self.session.openWithCallback(self.selectHostCallback, ChoiceBox, title=_("Select service"), list=self.displayHostsList)
         else:
@@ -1422,7 +1422,7 @@ class E2iPlayerWidget(Screen):
             return
 
         if nextFunction and prevFunction:
-            if True == protectedByPin:
+            if True is protectedByPin:
                 from .iptvpin import IPTVPinWidget
                 self.session.openWithCallback(boundFunction(self.checkPin, nextFunction, prevFunction), IPTVPinWidget, title=_("Enter pin"))
             else:

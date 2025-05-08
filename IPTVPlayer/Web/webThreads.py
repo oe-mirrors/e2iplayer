@@ -266,7 +266,7 @@ class doUseHostAction(threading.Thread):
 
 	def run(self):
 		print("doUseHostAction received: '%s'='%s'" % (self.key, str(self.arg)))
-		if self.key == 'activeHost' and isActiveHostInitiated() == False:
+		if self.key == 'activeHost' and isActiveHostInitiated() is False:
 			initActiveHost(self.arg)
 		elif self.key == 'activeHost' and self.arg != settings.activeHost['Name']:
 			initActiveHost(self.arg)
@@ -366,7 +366,7 @@ class doGlobalSearch(threading.Thread):
 		self.raise_exc(SystemExit)
 
 	def stopIfRequested(self):
-		if settings.StopThreads == True:
+		if settings.StopThreads is True:
 			self.terminate()
 
 	def run(self):
