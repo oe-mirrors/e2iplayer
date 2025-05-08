@@ -34,7 +34,7 @@ def loads(inputString, noneReplacement=None, baseTypesAsString=False, utf8=True)
         #    printDBG(">> cjson ACELERATION byteify")
         #    out = byteify(out, noneReplacement, baseTypesAsString)
 #    else:
-    return json.loads(input)
+    return json.loads(inputString)
         #if utf8 or noneReplacement != None or baseTypesAsString != False:
         #    out = byteify(out, noneReplacement, baseTypesAsString)
 #    return out

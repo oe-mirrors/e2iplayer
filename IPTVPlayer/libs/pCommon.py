@@ -25,6 +25,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_addinfourl, urllib_
                                                       urllib2_HTTPSHandler, urllib2_ProxyHandler, urllib2_Request
 # FOREIGN import
 ###################################################
+import base64
 from urllib.request import urlopen, build_opener, HTTPRedirectHandler, addinfourl, HTTPHandler, HTTPSHandler, BaseHandler, HTTPCookieProcessor, ProxyHandler, Request
 import urllib.parse
 from urllib.error import URLError, HTTPError
@@ -70,7 +71,7 @@ def EncodeGzipped(data):
 class NoRedirection(HTTPRedirectHandler):
     def http_error_302(self, req, fp, code, msg, headers):
         infourl = addinfourl(fp, headers, req.get_full_url())
-        infourl.status = code
+		#infourl.status = code
         infourl.code = code
         return infourl
     http_error_300 = http_error_302
@@ -265,7 +266,7 @@ class CParsingHelper:
                 item = POLISH_CHARACTERS.get(item)
                 if item:
                     ret_str.append(item)
-            else: # pure ASCII character
+            else:  # pure ASCII character
                 ret_str.append(item)
         return ''.join(ret_str)
 
@@ -302,7 +303,7 @@ class common:
     @staticmethod
     def getParamsFromUrlWithMeta(url, baseHeaderOutParams=None):
         from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-        HANDLED_HTTP_HEADER_PARAMS = DMHelper.HANDLED_HTTP_HEADER_PARAMS #['Host', 'User-Agent', 'Referer', 'Cookie', 'Accept',  'Range']
+        HANDLED_HTTP_HEADER_PARAMS = DMHelper.HANDLED_HTTP_HEADER_PARAMS  # ['Host', 'User-Agent', 'Referer', 'Cookie', 'Accept',  'Range']
         outParams = {}
         tmpParams = {}
         postData = None
@@ -380,7 +381,7 @@ class common:
         self.proxyURL = proxyURL
         self.useProxy = useProxy
         self.geolocation = {}
-        self.meta = {} # metadata from previus request
+        self.meta = {}  # metadata from previus request
 
         self.curlSession = None
         self.pyCurlAvailable = None
@@ -400,7 +401,7 @@ class common:
             try:
                 verInfo = pycurl.version_info()
                 printDBG("usePyCurl VERSION: %s" % [verInfo])
-                if verInfo[1].startswith('7.'): # and 'wolfSSL' in verInfo[5]:
+                if verInfo[1].startswith('7.'):  # and 'wolfSSL' in verInfo[5]:
                     pyCurlInstalled = True
             except Exception:
                 printExc()
@@ -423,7 +424,7 @@ class common:
                     # #define CURL_VERSION_ASYNCHDNS    (1<<7)
                     # we need to have ASYNC DNS to be able "cancel"
                     # request
-                    if verInfo[1].startswith('7.'): # and 'wolfSSL' in verInfo[5]:
+                    if verInfo[1].startswith('7.'):  # and 'wolfSSL' in verInfo[5]:
                         self.pyCurlAvailable = True
                     else:
                         self.pyCurlAvailable = False
@@ -535,7 +536,7 @@ class common:
         if 'return_data' not in params:
             params['return_data'] = True
 
-        if 'save_to_file' in params: # some cleaning
+        if 'save_to_file' in params:  # some cleaning
             params['save_to_file'] = params['save_to_file'].replace('//', '/')
 
         self.meta = {}
@@ -559,7 +560,7 @@ class common:
                         if 'n' not in responseHeaders:
                             return 0
                         responseHeaders.pop('n', None)
-                    elif headerLine.startswith('HTTP/') and headerLine.split(' 30', 1)[-1][0:1] in ['1', '2', '3', '7']: # new location with 301, 302, 303, 307
+                    elif headerLine.startswith('HTTP/') and headerLine.split(' 30', 1)[-1][0:1] in ['1', '2', '3', '7']:  # new location with 301, 302, 303, 307
                         responseHeaders['n'] = True
                 return
 
@@ -599,7 +600,7 @@ class common:
                             return 0
                     except Exception:
                         printExc()
-                        return 0 # wrong params?
+                        return 0  # wrong params?
 
             # if we should check start body data
             if len(checkFromFirstBytes):
@@ -631,7 +632,7 @@ class common:
                         fileHandler.write(toWriteData)
                 except Exception:
                     printExc()
-                    return 0 # wrong file handle
+                    return 0  # wrong file handle
 
             if toWriteData != None and params['return_data']:
                 CurrBuffer.write(toWriteData)
@@ -639,7 +640,7 @@ class common:
         def _terminateFunction(download_t, download_d, upload_t, upload_d):
             if IsThreadTerminated():
                 printDBG(">> _terminateFunction")
-                return True # anything else then None will cause pycurl perform cancel
+                return True  # anything else then None will cause pycurl perform cancel
 
         try:
             timeout = params.get('timeout', None)
@@ -698,7 +699,7 @@ class common:
             if len(customHeaders):
                 curlSession.setopt(pycurl.HTTPHEADER, customHeaders)
 
-            curlSession.setopt(pycurl.ACCEPT_ENCODING, "") # enable all supported built-in compressions
+            curlSession.setopt(pycurl.ACCEPT_ENCODING, "")  # enable all supported built-in compressions
             if None != params.get('ssl_protocol', None):
                 sslProtoVer = self.getPyCurlSSLProtocolVersion(params['ssl_protocol'])
                 if None != sslProtoVer:
@@ -714,7 +715,7 @@ class common:
                     cookiesStr += '%s=%s; ' % (cookieKey, params['cookie_items'][cookieKey])
 
                 if cookiesStr != '':
-                    curlSession.setopt(pycurl.COOKIE, cookiesStr) #'Set-Cookie: foo=baar') #
+                    curlSession.setopt(pycurl.COOKIE, cookiesStr)  # 'Set-Cookie: foo=baar') #
 
                 if params.get('load_cookie', False):
                     curlSession.setopt(pycurl.COOKIEFILE, params.get('cookiefile', ''))
@@ -723,9 +724,9 @@ class common:
                     curlSession.setopt(pycurl.COOKIEJAR, params.get('cookiefile', ''))
 
             if timeout != None:
-                curlSession.setopt(pycurl.CONNECTTIMEOUT, timeout) # in seconds - connection timeout
-                curlSession.setopt(pycurl.LOW_SPEED_TIME, timeout) # in seconds
-                curlSession.setopt(pycurl.LOW_SPEED_LIMIT, 10) # in bytes
+                curlSession.setopt(pycurl.CONNECTTIMEOUT, timeout)  # in seconds - connection timeout
+                curlSession.setopt(pycurl.LOW_SPEED_TIME, timeout)  # in seconds
+                curlSession.setopt(pycurl.LOW_SPEED_LIMIT, 10)  # in bytes
                 # set maximum time the request is allowed to take
                 #curlSession.setopt(pycurl.TIMEOUT, 300) # in seconds
 
@@ -856,7 +857,7 @@ class common:
             try:
                 metadata['pycurl_error'] = (e[0], str(e[1]))
             except Exception:
-                metadata['pycurl_error'] = (e.args[0], e.args[1]) # it seems pycurl in p3 has different structure
+                metadata['pycurl_error'] = (e.args[0], e.args[1])  # it seems pycurl in p3 has different structure
             printExc()
         except Exception:
             printExc()
@@ -983,7 +984,7 @@ class common:
                 self.reportHttpsError('version', url, errorMsg)
             elif 'VERIFY_FAILED' in errorMsg:
                 self.reportHttpsError('verify', url, errorMsg)
-            elif 'SSL' in errorMsg or 'unknown url type: https' in errorMsg: #GET_SERVER_HELLO
+            elif 'SSL' in errorMsg or 'unknown url type: https' in errorMsg:  # GET_SERVER_HELLO
                 self.reportHttpsError('other', url, errorMsg)
 
             response = None
@@ -1395,8 +1396,8 @@ class common:
         if proxy_gateway != '':
             pageUrl = proxy_gateway.format(urllib.parse.quote_plus(pageUrl, ''))
         printDBG("pageUrl: [%s]" % pageUrl)
-        if '","' in pageUrl: # points incorrectly formatted dict or list
-            pageUrl = pageUrl.split('"',1)[0] #" is incorrect char for url, shouldn't be there so removing it and everything after it
+        if '","' in pageUrl:  # points incorrectly formatted dict or list
+            pageUrl = pageUrl.split('"', 1)[0]  # " is incorrect char for url, shouldn't be there so removing it and everything after it
             printDBG("CORRECTED pageUrl: [%s]" % pageUrl)
 
         if None != post_data:
