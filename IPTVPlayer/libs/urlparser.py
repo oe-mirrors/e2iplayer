@@ -10081,7 +10081,7 @@ class pageParser(CaptchaHelper):
         if not sts:
             return False
 
-        if 'film' == type:
+        if 'film' == typ:
             video_id = self.cm.ph.getSearchGroups(webpage, r'href="/video/player_gen_cmedia=([0-9]+).+"')[0]
         else:
             player = self.cm.ph.getSearchGroups(webpage, r'data-player=\'([^\']+)\'>')[0]
