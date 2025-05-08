@@ -19,7 +19,17 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.ffmpegdownloader import FFMPEGDownload
 ###################################################
 # FOREIGN import
 ###################################################
-import re, urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, base64, math, hashlib, random
+import re
+import urllib.request
+import urllib.parse
+import urllib.error
+import urllib.request
+import urllib.error
+import urllib.parse
+import base64
+import math
+import hashlib
+import random
 try:
     import simplejson
 except:
