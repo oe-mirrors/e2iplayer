@@ -93,7 +93,7 @@ class YouTubeParser():
                 if sts:
                     videoId = self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop=['"]videoId['"][^>]+?content=['"]([^'^"]+?)['"]''')[0]
                     if videoId == '':
-                        videoId = self.cm.ph.getSearchGroups(data, '''['"]REDIRECT_TO_VIDEO['"]\s*\,\s*['"]([^'^"]+?)['"]''')[0]
+                        videoId = self.cm.ph.getSearchGroups(data, r'''['"]REDIRECT_TO_VIDEO['"]\s*\,\s*['"]([^'^"]+?)['"]''')[0]
                     if videoId != '':
                         url = 'https://www.youtube.com/watch?v=' + videoId
             linksList = YoutubeIE()._real_extract(url, allowVP9=allowVP9, allowAgeGate=allowAgeGate)
@@ -171,7 +171,7 @@ class YouTubeParser():
                 sts, data = self.cm.getPage(url, {'header': {'User-agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10'}})
                 if sts:
                     data = data.replace('\\"', '"').replace('\\\\\\/', '/')
-                    hlsUrl = self.cm.ph.getSearchGroups(data, '''"hlsvp"\s*:\s*"(https?://[^"]+?)"''')[0]
+                    hlsUrl = self.cm.ph.getSearchGroups(data, r'''"hlsvp"\s*:\s*"(https?://[^"]+?)"''')[0]
                     hlsUrl = json_loads('"%s"' % hlsUrl)
                     if self.cm.isValidUrl(hlsUrl):
                         hlsList = getDirectM3U8Playlist(hlsUrl)
@@ -191,7 +191,7 @@ class YouTubeParser():
                 try:
                     sts, data = self.cm.getPage(url, {'header': {'User-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'}})
                     data = data.replace('\\"', '"').replace('\\\\\\/', '/').replace('\\/', '/')
-                    dashUrl = self.cm.ph.getSearchGroups(data, '''"dashmpd"\s*:\s*"(https?://[^"]+?)"''')[0]
+                    dashUrl = self.cm.ph.getSearchGroups(data, r'''"dashmpd"\s*:\s*"(https?://[^"]+?)"''')[0]
                     dashUrl = json_loads('"%s"' % dashUrl)
                     if '?' not in dashUrl:
                         dashUrl += '?mpd_version=5'

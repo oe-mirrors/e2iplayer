@@ -538,7 +538,7 @@ class PlayRTSIW(CBaseHostClass):
             sts, data = self.cm.getPage(cItem['url'])
             if not sts:
                 return []
-            url = self.cm.ph.getSearchGroups(data, '''ATR\.stream\s*?=\s*?\{[^\}]*?['"](https?://[^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(data, r'''ATR\.stream\s*?=\s*?\{[^\}]*?['"](https?://[^'^"]+?)['"]''')[0]
             if url != '':
                 linksTab.append({'name': 'stream', 'url': url, 'need_resolve': 0})
             return linksTab

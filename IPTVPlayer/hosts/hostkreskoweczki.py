@@ -120,9 +120,9 @@ class KreskoweczkiPL(CBaseHostClass):
             if '' == self.cm.ph.getSearchGroups(item, videoMarker)[0]:
                 video = False
             # icon
-            icon = self.cm.ph.getSearchGroups(item, '''url\(\s*?['"]([^'^"]+?)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, r'''url\(\s*?['"]([^'^"]+?)['"]''')[0]
             if icon == '':
-                icon = self.cm.ph.getSearchGroups(item, '''data-bg-url=['"]([^'^"]+?\.jpe?g(:?\?[^'^"]*?)?)['"]''')[0]
+                icon = self.cm.ph.getSearchGroups(item, r'''data-bg-url=['"]([^'^"]+?\.jpe?g(:?\?[^'^"]*?)?)['"]''')[0]
             if icon == '':
                 icon = cItem.get('icon', '')
             # url

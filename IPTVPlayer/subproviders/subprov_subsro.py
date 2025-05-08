@@ -115,7 +115,7 @@ class SubsRoProvider(CBaseSubProviderClass):
                 continue
 
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', 'title'), ('</h', '>'), False)[1])
-            lang = self.cm.ph.getSearchGroups(item, 'flag\-([a-z]+?)\-big\.png')[0]
+            lang = self.cm.ph.getSearchGroups(item, r'flag\-([a-z]+?)\-big\.png')[0]
 
             descTab = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>')
@@ -143,7 +143,7 @@ class SubsRoProvider(CBaseSubProviderClass):
 
         try:
             fps = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'FPS', '</p>', False)[1])
-            fps = float(self.cm.ph.getSearchGroups(fps, '''([0-9\.]+)''')[0])
+            fps = float(self.cm.ph.getSearchGroups(fps, r'''([0-9\.]+)''')[0])
         except Exception:
             fps = 0
             printExc()

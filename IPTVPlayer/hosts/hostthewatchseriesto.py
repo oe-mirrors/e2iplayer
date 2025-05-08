@@ -103,7 +103,7 @@ class TheWatchseriesTo(CBaseHostClass):
 
     def getFullUrl(self, url):
         if self.isNeedProxy() and ('securefor.com' in url or '/browse.php' in url):
-            url2 = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', '''\?u=(http[^&]+?)&''')[0]).replace('&amp;', '&')
+            url2 = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', r'''\?u=(http[^&]+?)&''')[0]).replace('&amp;', '&')
             printDBG("[%s] --> [%s]" % (url, url2))
             url = url2
         return CBaseHostClass.getFullUrl(self, url)
@@ -225,7 +225,7 @@ class TheWatchseriesTo(CBaseHostClass):
         seasons = self.cm.ph.getAllItemsBeetwenMarkers(data, '<h2 class="lists"', '</ul>')
         for season in seasons:
             seasonName = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(season, 'itemprop="name">', '</span>', False)[1])
-            seasonNum = self.cm.ph.getSearchGroups(seasonName + '|', '''Season\s+?([0-9]+?)[^0-9]''', 1, True)[0]
+            seasonNum = self.cm.ph.getSearchGroups(seasonName + '|', r'''Season\s+?([0-9]+?)[^0-9]''', 1, True)[0]
 
             episodesTab = []
             data = self.cm.ph.getAllItemsBeetwenMarkers(season, '<li ', '</li>')
@@ -234,7 +234,7 @@ class TheWatchseriesTo(CBaseHostClass):
                     continue
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('itemprop="name"[^>]*?>'), re.compile('</span>'), False)[1])
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
-                episodeNum = self.cm.ph.getSearchGroups(title + '|', '''Episode\s+?([0-9]+?)[^0-9]''', 1, True)[0]
+                episodeNum = self.cm.ph.getSearchGroups(title + '|', r'''Episode\s+?([0-9]+?)[^0-9]''', 1, True)[0]
                 printDBG(">> e[%s] s[%s]" % (episodeNum, seasonNum))
                 if '' != episodeNum and '' != seasonNum:
                     title = 's%se%s' % (seasonNum.zfill(2), episodeNum.zfill(2)) + ' - ' + title.replace('Episode %s' % episodeNum, '')
@@ -276,7 +276,7 @@ class TheWatchseriesTo(CBaseHostClass):
                 if self.isNeedProxy():
                     url = urllib_unquote(ph.search(it, '''href=['"][^'^"]*?%3Fr%3D([^'^"^&]+?)['"&]''')[0])
                 else:
-                    url = ph.search(it, '''href=['"][^'^"]*?\?r=([^'^"]+?)['"]''')[0]
+                    url = ph.search(it, r'''href=['"][^'^"]*?\?r=([^'^"]+?)['"]''')[0]
                 if url == '':
                     continue
                 try:
@@ -286,7 +286,7 @@ class TheWatchseriesTo(CBaseHostClass):
                 break
 #            if url == '': continue
             if 'http' not in url:
-                url = self.cm.ph.getSearchGroups(item, '''['"]Delete\slink\s(http.+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(item, r'''['"]Delete\slink\s(http.+?)['"]''')[0]
             if self.up.checkHostSupport(url) != 1:
                 continue
             url = strwithmeta(self.getFullUrl(url), {'Referer': self.cm.meta['url']})

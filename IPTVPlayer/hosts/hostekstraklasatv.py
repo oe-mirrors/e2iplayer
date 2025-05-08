@@ -239,7 +239,7 @@ class Ekstraklasa(CBaseHostClass):
                             params2 = self.getVideoInfo(v_json)
 
                             if playing:
-                                params2['title'] = '\c00????00 ' + params2['title'] + ' [Live]'
+                                params2['title'] = r'\c00????00 ' + params2['title'] + ' [Live]'
                                 params2['url'] = item['_links']['streamUrl']
                                 params2['desc'] = params2['desc'] + "|" + _("Now playing")
 

@@ -215,7 +215,7 @@ class MusicBox(CBaseHostClass):
             remixed = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'remixed'), ('</span', '>'), False)[1])
             track_name = title_primary + ' ' + remixed
             artist = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'track-artists'), ('</p', '>'), False)[1])
-            icon = self.cm.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?data\-src=['"]([^'^"]+?)['"]''')[0], self.cm.meta['url'])
+            icon = self.cm.getFullUrl(self.cm.ph.getSearchGroups(item, r'''<img[^>]+?data\-src=['"]([^'^"]+?)['"]''')[0], self.cm.meta['url'])
             search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
             params = {'good_for_fav': True, 'title': track_number + '. ' + artist + '- ' + track_name, 'page': search_string, 'icon': icon}
             self.addVideo(params)
@@ -240,7 +240,7 @@ class MusicBox(CBaseHostClass):
             rank = ph.clean_html(ph.find(item, ('<span', '>', '__rank'), '</span>', flags=0)[1])
             name = ph.clean_html(ph.find(item, ('<span', '>', '__song'), '</span>', flags=0)[1])
             artist = ph.clean_html(ph.find(item, ('<span', '>', '__artist'), '</span>', flags=0)[1])
-            icon = self.cm.ph.getSearchGroups(item, "url\(['\"]([^\"^']+?)['\"]\)")[0]
+            icon = self.cm.ph.getSearchGroups(item, "url\\(['\"]([^\"^']+?)['\"]\\)")[0]
             track_name = name
             search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
 
@@ -251,7 +251,7 @@ class MusicBox(CBaseHostClass):
         # other charts
         if not tmp:
             tmp = self.cm.ph.getDataBeetwenMarkers(data, ('<main', '>'), ('</main', '>'))[1]
-            songs = re.compile('<div[^>]*?data\-has\-content[^>]*?>').split(tmp)
+            songs = re.compile(r'<div[^>]*?data\-has\-content[^>]*?>').split(tmp)
 
             for item in songs:
                 #printDBG("-------------- song ------------------")
@@ -263,7 +263,7 @@ class MusicBox(CBaseHostClass):
                     name = ph.clean_html(ph.find(item, ('<div', '>', '__title'), '</div>', flags=0)[1])
                     artist = ph.clean_html(ph.find(item, ('<div', '>', '__artist'), '</div>', flags=0)[1])
 
-                    icon = self.cm.ph.getSearchGroups(item, '\s(https?://[^\s]+?\-174x174\.jpg)\s')[0]
+                    icon = self.cm.ph.getSearchGroups(item, r'\s(https?://[^\s]+?\-174x174\.jpg)\s')[0]
 
                     track_name = name
                     search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
@@ -280,12 +280,12 @@ class MusicBox(CBaseHostClass):
             return
 
         data = ph.find(data, ('<div', '>', 'chart-number-one'), ('<div', '>', 'chart-list__expanded-header'))[1]
-        data = re.compile('<div[^>]*?data\-has\-content[^>]*?>').split(data)
+        data = re.compile(r'<div[^>]*?data\-has\-content[^>]*?>').split(data)
         for item in data:
             name = ph.clean_html(ph.find(item, ('<div', '>', '__title'), '</div>', flags=0)[1])
             artist = ph.clean_html(ph.find(item, ('<div', '>', '__artist'), '</div>', flags=0)[1])
 
-            icon = ph.search(item, '\s(https?://[^\s]+?\-174x174\.jpg)\s')[0]
+            icon = ph.search(item, r'\s(https?://[^\s]+?\-174x174\.jpg)\s')[0]
             if not icon:
                 icon = ph.getattr(item, 'data-srcset').split(' ', 1)[0]
             if not icon:

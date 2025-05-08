@@ -205,7 +205,7 @@ class Movs4uCOM(CBaseHostClass):
 
         mainDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div[^>]+?class="wp-content"[^>]*?>'), re.compile('</div>'))[1])
         mainIcon = self.cm.ph.getDataBeetwenMarkers(data, '<div class="poster"', '</div>')[1]
-        mainIcon = self.getFullIconUrl(self.cm.ph.getSearchGroups(mainIcon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        mainIcon = self.getFullIconUrl(self.cm.ph.getSearchGroups(mainIcon, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         if mainIcon == '':
             mainIcon = cItem.get('icon', '')
 
@@ -245,7 +245,7 @@ class Movs4uCOM(CBaseHostClass):
                         icon = mainIcon
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="episodiotitle"', '</a>')[1])
                     date = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<span class="date"', '</span>')[1])
-                    tmp = self.cm.ph.getSearchGroups(item, '''<div class="numerando">\s*([0-9]+)\s*\-\s*([0-9]+)\s*</div>''', 2)
+                    tmp = self.cm.ph.getSearchGroups(item, r'''<div class="numerando">\s*([0-9]+)\s*\-\s*([0-9]+)\s*</div>''', 2)
 
                     title = '%s s%se%s - %s' % (cItem['title'], tmp[0].zfill(2), tmp[1].zfill(2), title)
                     desc = []
@@ -320,7 +320,7 @@ class Movs4uCOM(CBaseHostClass):
             linksData = self.cm.ph.getDataBeetwenMarkers(data, '<div class="playex">', '<div class="control">')[1]
             currUrl = self.getFullUrl(self.cm.ph.getSearchGroups(linksData, '''<a[^>]+?href=['"]([^'^"]+?view=[^'^"]+?)['"]''')[0])
 
-            linksData = re.sub("<!--[\s\S]*?-->", "", linksData)
+            linksData = re.sub(r"<!--[\s\S]*?-->", "", linksData)
             linksData = self.cm.ph.getAllItemsBeetwenMarkers(linksData, '<iframe', '>')
             linksMap = {}
             for item in linksData:
@@ -329,7 +329,7 @@ class Movs4uCOM(CBaseHostClass):
                 linksMap[id] = url
 
             playerData = self.cm.ph.getDataBeetwenMarkers(data, '<nav class="player">', '</ul>')[1]
-            playerData = re.sub("<!--[\s\S]*?-->", "", playerData)
+            playerData = re.sub(r"<!--[\s\S]*?-->", "", playerData)
             playerData = self.cm.ph.getAllItemsBeetwenMarkers(playerData, '<li', '</li>')
 
             for item in playerData:
@@ -435,7 +435,7 @@ class Movs4uCOM(CBaseHostClass):
 
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop="name"[^>]+?content="([^"]+?)"''')[0])
         icon = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div[^>]+?class="wp-content"[^>]*?>'), re.compile('</div>'))[1])
 
         mapDesc = {'Original title': 'alternate_title', 'IMDb Rating': 'imdb_rating', 'TMDb Rating': 'tmdb_rating', 'Status': 'status',

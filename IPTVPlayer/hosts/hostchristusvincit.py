@@ -277,12 +277,12 @@ class Christusvincit(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        data = re.sub("<!--[\s\S]*?-->", "", data)
+        data = re.sub(r"<!--[\s\S]*?-->", "", data)
         sections = ph.rfindall(data, '</table>', ('<td', '>', 'capmain-left'), flags=0)
         for section in sections:
             self.handleSection(cItem, nextCategory, section)
 
-        rtmpUrl = ph.search(data, '''netConnectionUrl['"\s]*?:\s*?['"](rtmp://[^'^"]+?)['"]''')[0]
+        rtmpUrl = ph.search(data, r'''netConnectionUrl['"\s]*?:\s*?['"](rtmp://[^'^"]+?)['"]''')[0]
         # move live to the top
         prevlist = self.currList
         self.currList = []

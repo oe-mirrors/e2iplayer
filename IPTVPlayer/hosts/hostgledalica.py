@@ -221,7 +221,7 @@ class Gledalica(CBaseHostClass):
             self.setMainUrl(data.meta['url'])
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>\s*?{0}\s*?<'''.format(page + 1))[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>\s*?{0}\s*?<'''.format(page + 1))[0])
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'cbp-rfgrid'), '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>'), ('</li', '>'))
@@ -284,9 +284,9 @@ class Gledalica(CBaseHostClass):
             if 'seriesInfo(' in item:
                 jsdata = item
                 break
-        baseUrl = self.cm.ph.getSearchGroups(jsdata, '''baseUrl\s=\s['"]([^"^']+?)['"]''')[0]
-        apikey = self.cm.ph.getSearchGroups(jsdata, '''apikey\s=\s['"]([^"^']+?)['"]''')[0]
-        id = self.cm.ph.getSearchGroups(jsdata, '''id\s=\s([^"^']+?),''')[0]
+        baseUrl = self.cm.ph.getSearchGroups(jsdata, r'''baseUrl\s=\s['"]([^"^']+?)['"]''')[0]
+        apikey = self.cm.ph.getSearchGroups(jsdata, r'''apikey\s=\s['"]([^"^']+?)['"]''')[0]
+        id = self.cm.ph.getSearchGroups(jsdata, r'''id\s=\s([^"^']+?),''')[0]
         test = self.cm.ph.getAllItemsBeetwenMarkers(jsdata, '$(".openload', '\n')
         printDBG("Gledalica.listSeries test[%s]" % test)
         sts, data = self.getPage(baseUrl + id + apikey)
@@ -457,7 +457,7 @@ class Gledalica(CBaseHostClass):
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'enclosed'), ('</div', '>'))[1])
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'detail_page'), ('</table', '>'))[1]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(:?\?[^"]+?)?)"')[0], cUrl)
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(:?\?[^"]+?)?)"')[0], cUrl)
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h', '>'), ('</h', '>'))[1])
 
         keysMap = {'kategorija:': 'genre',

@@ -114,7 +114,7 @@ class PlusDEDE(CBaseHostClass):
         if not sts:
             return
 
-        data = re.sub("<!--[\s\S]*?-->", "", data)
+        data = re.sub(r"<!--[\s\S]*?-->", "", data)
 
         def addFilter(data, itemMarker, valMarker, key, allTitle=None):
             self.cacheFilters[key] = []
@@ -214,11 +214,11 @@ class PlusDEDE(CBaseHostClass):
             return
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'load-more'), ('</div', '>'))[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''data\-url=['"]([^'^"]+?)['"]''')[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''data\-url=['"]([^'^"]+?)['"]''')[0])
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'lista model'), ('<div', '>', 'media-container'))
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item.split('<button', 1)[0])
 
             desc = []
@@ -269,14 +269,14 @@ class PlusDEDE(CBaseHostClass):
             return
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'load-more'), ('</div', '>'))[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''data\-url=['"]([^'^"]+?)['"]''')[0])
-        data = re.compile('''<div[^>]+?media\-container[^>]+?>''').split(data)
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''data\-url=['"]([^'^"]+?)['"]''')[0])
+        data = re.compile(r'''<div[^>]+?media\-container[^>]+?>''').split(data)
         if len(data):
             del data[0]
-        reSeriesTitle = re.compile('^[0-9]+?x[0-9]+?\s')
+        reSeriesTitle = re.compile(r'^[0-9]+?x[0-9]+?\s')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'media-title'), ('</div', '>'), False)[1])
             year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'year'), ('</div', '>'), False)[1])
             val = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<i', '>', 'star'), ('</div', '>'), False)[1])
@@ -304,7 +304,7 @@ class PlusDEDE(CBaseHostClass):
             return
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<button', '>', 'data-youtube'), ('</button', '>'))[1]
-        url = self.cm.ph.getSearchGroups(tmp, '''data\-youtube=['"]([^'^"]+?)['"]''')[0]
+        url = self.cm.ph.getSearchGroups(tmp, r'''data\-youtube=['"]([^'^"]+?)['"]''')[0]
         if url != '':
             title = '%s - %s' % (cItem['title'], self.cleanHtmlStr(tmp))
             url = 'https://www.youtube.com/watch?v=' + url
@@ -328,7 +328,7 @@ class PlusDEDE(CBaseHostClass):
                 episodesTab = []
                 eData = self.cm.ph.getAllItemsBeetwenNodes(season, ('<a', '>', 'episode'), ('</li', '>'))
                 for item in eData:
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-href=['"]([^'^"]+?)['"]''')[0])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''data\-href=['"]([^'^"]+?)['"]''')[0])
                     if not self.cm.isValidUrl(url):
                         continue
 
@@ -357,7 +357,7 @@ class PlusDEDE(CBaseHostClass):
                     self.addDir(params)
         else:
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<button', '>', 'show-close'), ('</button', '>'))[1]
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''data\-href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, r'''data\-href=['"]([^'^"]+?)['"]''')[0])
             if self.cm.isValidUrl(url):
                 params = dict(cItem)
                 params.update({'good_for_fav': True, 'url': url, 'prev_url': cItem['url']})
@@ -412,8 +412,8 @@ class PlusDEDE(CBaseHostClass):
                 if not self.cm.isValidUrl(url):
                     printDBG("No url in link item: [%s]" % item)
                     continue
-                host = self.cm.ph.getSearchGroups(item, '''src=['"][^'^"]*?/hosts/([^'^"^\.]+?)['"\.]''')[0]
-                lang = self.cm.ph.getSearchGroups(item, '''src=['"][^'^"]*?/flags/([^'^"^\.]+?)['"\.]''')[0]
+                host = self.cm.ph.getSearchGroups(item, r'''src=['"][^'^"]*?/hosts/([^'^"^\.]+?)['"\.]''')[0]
+                lang = self.cm.ph.getSearchGroups(item, r'''src=['"][^'^"]*?/flags/([^'^"^\.]+?)['"\.]''')[0]
                 #dataV = self.cm.ph.getSearchGroups(item, '''data\-v=['"]([^'^"]+?)['"]''')[0]
                 #dataId = self.cm.ph.getSearchGroups(item, '''data\-id=['"]([^'^"]+?)['"]''')[0]
                 titleTab = [host, lang]
@@ -477,7 +477,7 @@ class PlusDEDE(CBaseHostClass):
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'plot'), ('</div', '>'), False)[1])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h1', '>', 'big-title'), ('</h1', '>'), False)[1])
         icon = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'avatar-container'), ('</div', '>'), False)[1]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
 
         otherInfo['rating'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'item-vote'), ('</div', '>'), False)[1].split('</span>', 1)[-1])
         otherInfo['released'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<strong', '</strong>', 'Fecha'), ('</div', '>'), False)[1])
@@ -491,7 +491,7 @@ class PlusDEDE(CBaseHostClass):
                 tmpTab.append(t)
         otherInfo['genres'] = ', '.join(tmpTab)
 
-        objRe = re.compile('<div[^>]+?text\-sub[^>]+?>')
+        objRe = re.compile(r'<div[^>]+?text\-sub[^>]+?>')
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'star-container'), ('</li', '>'), False)
         stars = []
         directors = []

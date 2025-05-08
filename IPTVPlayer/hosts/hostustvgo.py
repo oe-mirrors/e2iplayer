@@ -158,7 +158,7 @@ class ustvgo(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<article', '>', 'post-'), ('</article', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>'), ('</a', '>'))
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params = {'good_for_fav': True, 'title': title, 'url': url}
@@ -178,11 +178,11 @@ class ustvgo(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'post-'), ('</article', '>'))
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h2', '>'), ('</h2', '>'))[1])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\sdata-lazy-src=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\sdata-lazy-src=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon}
             self.addVideo(params)
@@ -200,12 +200,12 @@ class ustvgo(CBaseHostClass):
             return
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
-        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^"^']+?)['"]''')[0])
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''\ssrc=['"]([^"^']+?)['"]''')[0])
         sts, data = self.getPage(url)
         if not sts:
             return
 
-        data = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shls_src=['"]([^"^']+?)['"]''')[0])
+        data = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''\shls_src=['"]([^"^']+?)['"]''')[0])
         url = strwithmeta(data, {'User-Agent': self.USER_AGENT, 'Origin': self.MAIN_URL, 'Referer': cItem['url']})
         return getDirectM3U8Playlist(url)
 

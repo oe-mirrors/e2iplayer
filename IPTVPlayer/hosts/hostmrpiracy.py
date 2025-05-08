@@ -193,7 +193,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         printDBG(data)
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            key = self.cm.ph.getSearchGroups(item, '\?([^=]+?)=')[0]
+            key = self.cm.ph.getSearchGroups(item, r'\?([^=]+?)=')[0]
             self.cacheFilters['sort_by'].append({'title': self.cleanHtmlStr(item), 'sort_by': key})
 
         # add order to sort_by filter
@@ -379,7 +379,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
             return urlTab
         cUrl = self.cm.meta['url']
 
-        trailerUrl = self.cm.ph.getSearchGroups(data, '''trailer\(\s*["'](https?://youtube.com/[^"^']+?)["']''')[0]
+        trailerUrl = self.cm.ph.getSearchGroups(data, r'''trailer\(\s*["'](https?://youtube.com/[^"^']+?)["']''')[0]
 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div id="deleted">', '</center>')[1]
 
@@ -387,7 +387,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         errorMsg += ' ' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<p', '</p>')[1])
         SetIPTVPlayerLastHostError(errorMsg)
 
-        token = self.cm.ph.getSearchGroups(data, '''var\s+form_data\s*=\s*['"]([^'^"]+?)['"]''')[0]
+        token = self.cm.ph.getSearchGroups(data, r'''var\s+form_data\s*=\s*['"]([^'^"]+?)['"]''')[0]
         jscode = []
         scriptsData = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
         for item in scriptsData:
@@ -396,7 +396,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         jscode = '\n'.join(jscode)
 
         linksData = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'buttonSv'), ('</div', '>'))
-        dataObj = re.compile('''\sdata\-([^=]+?)=['"]([^'^"]+?)['"]''')
+        dataObj = re.compile(r'''\sdata\-([^=]+?)=['"]([^'^"]+?)['"]''')
         for item in linksData:
             playerData = dict(dataObj.findall(item))
             name = self.cm.ph.getSearchGroups(item, '''src=["']([^"^']+?)["']''')[0].split('/')[-1].replace('.png', '').title()
@@ -514,7 +514,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
                         urlParams['header'] = dict(urlParams['header'])
                         urlParams['header']['Referer'] = playerData['ref_url']
                         sts, data = self.getPage(url, urlParams)
-                        hostUrl = self.cm.ph.getSearchGroups(data, '''location\.href=['"]([^'^"]+?)['"]''')[0]
+                        hostUrl = self.cm.ph.getSearchGroups(data, r'''location\.href=['"]([^'^"]+?)['"]''')[0]
             except Exception:
                 printExc()
 
@@ -613,15 +613,15 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
         if year != '':
             otherInfo['year'] = year
 
-        director = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(descData, re.compile('Realizador:\s*</span>'), re.compile('</span>'), False)[1])
+        director = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(descData, re.compile(r'Realizador:\s*</span>'), re.compile('</span>'), False)[1])
         if director != '':
             otherInfo['director'] = director
 
-        creator = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(descData, re.compile('Criador:\s*</span>'), re.compile('</span>'), False)[1])
+        creator = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(descData, re.compile(r'Criador:\s*</span>'), re.compile('</span>'), False)[1])
         if creator != '':
             otherInfo['creator'] = creator
 
-        actors = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(descData, re.compile('Elenco:\s*</span>'), re.compile('</span>'), False)[1])
+        actors = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(descData, re.compile(r'Elenco:\s*</span>'), re.compile('</span>'), False)[1])
         if actors != '':
             otherInfo['actors'] = actors
 
@@ -647,7 +647,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
 
         post_data = {'email': login, 'password': passwd, 'lembrar_senha': 'lembrar'}
 
-        sitekey = self.cm.ph.getSearchGroups(data, 'fallback\?k=([^"]+?)"')[0]
+        sitekey = self.cm.ph.getSearchGroups(data, r'fallback\?k=([^"]+?)"')[0]
         if sitekey != '':
             recaptcha = UnCaptchaReCaptcha_fallback(lang=GetDefaultLang())
             recaptcha.HTTP_HEADER['Referer'] = self.getMainUrl()

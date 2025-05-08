@@ -248,7 +248,7 @@ class PutlockerTvTo(CBaseHostClass):
             data[-1] = re.compile('<div[^>]+paging[^>]+?>').split(data[-1], 1)[0]
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            tip = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-tip=['"]([^"^']+?)['"]''')[0])
+            tip = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''data\-tip=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
@@ -562,7 +562,7 @@ class PutlockerTvTo(CBaseHostClass):
             otherInfo['genre'] = tmp
 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<h1>', '</div>', False)[1]
-        tmp = self.cm.ph.getSearchGroups(tmp, '''<span[^>]*?>\s*([0-9]+?)\s*<''')[0]
+        tmp = self.cm.ph.getSearchGroups(tmp, r'''<span[^>]*?>\s*([0-9]+?)\s*<''')[0]
         if tmp != '':
             otherInfo['year'] = tmp
 

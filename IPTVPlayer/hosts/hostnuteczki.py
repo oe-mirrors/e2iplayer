@@ -138,7 +138,7 @@ class NuteczkiEU(CBaseHostClass):
 
         for item in tmp:
             title = self.cleanHtmlStr(item)
-            marker = self.cm.ph.getSearchGroups(item, '''href=['"]\#([^'^"]+?)['"]''')[0]
+            marker = self.cm.ph.getSearchGroups(item, r'''href=['"]\#([^'^"]+?)['"]''')[0]
             if marker != '':
                 mainMap[marker] = title
 
@@ -151,7 +151,7 @@ class NuteczkiEU(CBaseHostClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
             for item in tmp:
                 title = self.cleanHtmlStr(item)
-                marker = self.cm.ph.getSearchGroups(item, '''href=['"]\#([^'^"]+?)['"]''')[0]
+                marker = self.cm.ph.getSearchGroups(item, r'''href=['"]\#([^'^"]+?)['"]''')[0]
                 if marker != '':
                     subMap[marker] = title
 
@@ -167,7 +167,7 @@ class NuteczkiEU(CBaseHostClass):
                     url = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0]
                     if url == '#':
                         url = self.cm.ph.getSearchGroups(item, '''(<div[^>]+?getPlayer[^>]+?>)''')[0]
-                        url = self.cm.ph.getSearchGroups(url, '''\sid=['"]([^"^']+?)['"]''')[0]
+                        url = self.cm.ph.getSearchGroups(url, r'''\sid=['"]([^"^']+?)['"]''')[0]
                         if url != '':
                             url = '/getPlayer.php?id=' + url
                     url = self.getFullUrl(url)
@@ -282,7 +282,7 @@ class NuteczkiEU(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0]
             if url == '#':
                 url = self.cm.ph.getSearchGroups(item, '''(<div[^>]+?getPlayer[^>]+?>)''')[0]
-                url = self.cm.ph.getSearchGroups(url, '''\sid=['"]([^"^']+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(url, r'''\sid=['"]([^"^']+?)['"]''')[0]
                 if url != '':
                     url = '/getPlayer.php?id=' + url
             url = self.getFullUrl(url)
@@ -291,7 +291,7 @@ class NuteczkiEU(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'news-meta'), ('</div', '>'))[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<span', '</span>')
             for t in tmp:
-                label = self.cm.ph.getSearchGroups(t, '''fa\-([a-zA-Z]+?)\s''')[0]
+                label = self.cm.ph.getSearchGroups(t, r'''fa\-([a-zA-Z]+?)\s''')[0]
                 t = self.cleanHtmlStr(t)
                 if t != '':
                     try:
@@ -340,7 +340,7 @@ class NuteczkiEU(CBaseHostClass):
 
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'frame-fixer'), ('</div', '>'), caseSensitive=False)
         for idx in range(len(tmp)):
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[idx], '''\sdata\-url=['"]([^"^']+?)['"]''', 1, True)[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[idx], r'''\sdata\-url=['"]([^"^']+?)['"]''', 1, True)[0])
             if 1 != self.up.checkHostSupport(url):
                 jscode = []
                 jsData = self.cm.ph.getAllItemsBeetwenNodes(tmp[idx], ('<script', '>'), ('</script', '>'), caseSensitive=False)
@@ -367,7 +367,7 @@ class NuteczkiEU(CBaseHostClass):
 
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>', caseSensitive=False)
         for idx in range(len(tmp)):
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[idx], '''\ssrc=['"]([^"^']+?)['"]''', 1, True)[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[idx], r'''\ssrc=['"]([^"^']+?)['"]''', 1, True)[0])
             if url == '' or 'facebook' in url.lower():
                 continue
             name = _('Player %s') % (idx + 1)
@@ -389,7 +389,7 @@ class NuteczkiEU(CBaseHostClass):
         printDBG(data)
 
         urls = []
-        data = re.compile('''['"]([^'^"]*?/music[^'^"]+?\.mp3(?:\?[^'^"]*?)?)['"]''', re.I).findall(data)
+        data = re.compile(r'''['"]([^'^"]*?/music[^'^"]+?\.mp3(?:\?[^'^"]*?)?)['"]''', re.I).findall(data)
         for url in data:
             url = self.getFullUrl(url)
             if url == '' or url in urls:

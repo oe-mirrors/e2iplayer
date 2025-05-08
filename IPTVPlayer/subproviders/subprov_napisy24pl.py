@@ -166,7 +166,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             imdbid = self.cm.ph.getSearchGroups(item, 'data-imdb="(tt[0-9]+?)"')[0]
             subId = self.cm.ph.getSearchGroups(item, 'napisId=([0-9]+?)[^0-9]')[0]
             title = self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h3>')[1]
-            lang = self.cm.ph.getSearchGroups(item, 'flags/(..)\.png')[0]
+            lang = self.cm.ph.getSearchGroups(item, r'flags/(..)\.png')[0]
 
             descTab = []
             columnsTitles = self.cm.ph.getDataBeetwenMarkers(item, '<div class="infoColumn1">', '</div>', False)[1].split('<br>')

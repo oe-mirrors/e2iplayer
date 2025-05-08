@@ -54,7 +54,7 @@ class UnCaptchaReCaptcha:
                 token = ph.find(data, ('<div', '>', 'verification-token'), '</div>', flags=0)[1]
                 token = ph.find(data, ('<textarea', '>'), '</textarea>', flags=0)[1].strip()
                 if token == '':
-                    token = ph.search(data, '"this\.select\(\)">(.*?)</textarea>')[0]
+                    token = ph.search(data, r'"this\.select\(\)">(.*?)</textarea>')[0]
                 if token == '':
                     token = ph.find(data, ('<textarea', '>'), '</textarea>', flags=0)[1].strip()
                 if '' != token:
@@ -63,10 +63,10 @@ class UnCaptchaReCaptcha:
                     printDBG('>>>>>>>> Captcha Failed\n\n%s\n\n' % data)
                 break
 
-            cval = ph.search(data, 'name="c"\s+value="([^"]+)')[0]
+            cval = ph.search(data, r'name="c"\s+value="([^"]+)')[0]
             imgUrl = 'https://www.google.com%s' % (imgUrl.replace('&amp;', '&'))
             message = ph.clean_html(message)
-            accepLabel = ph.clean_html(ph.search(data, 'type="submit"\s+value="([^"]+)')[0])
+            accepLabel = ph.clean_html(ph.search(data, r'type="submit"\s+value="([^"]+)')[0])
 
             filePath = GetTmpDir('.iptvplayer_captcha.jpg')
             printDBG(">>>>>>>> Captcha message[%s]" % (message))

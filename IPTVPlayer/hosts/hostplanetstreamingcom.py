@@ -92,7 +92,7 @@ class PlanetStreaming(CBaseHostClass):
             if sts and '-film/' in data:
                 self.MAIN_MOVIES_URL = self.cm.getBaseUrl(strwithmeta(data).meta.get('url', domain))
                 data = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', '-series/'), ('</a', '>'))[1]
-                self.MAIN_SERIES_URL = self.cm.getBaseUrl(self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0]))
+                self.MAIN_SERIES_URL = self.cm.getBaseUrl(self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''\shref=['"]([^'^"]+?)['"]''')[0]))
                 self.MAIN_URL = self.MAIN_MOVIES_URL
                 break
 
@@ -165,7 +165,7 @@ class PlanetStreaming(CBaseHostClass):
 
         items = [[], []]
         data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'news_set_sort'), ('<input', '>'), False)[1]
-        data = re.compile('''dle_change_sort\(\s*['"]([^'^"]+?)['"]\s*,\s*['"]([^'^"]+?)['"]\s*\)[^>]*?>([^<]+?)<''').findall(data)
+        data = re.compile(r'''dle_change_sort\(\s*['"]([^'^"]+?)['"]\s*,\s*['"]([^'^"]+?)['"]\s*\)[^>]*?>([^<]+?)<''').findall(data)
         for item in data:
             for idx in range(len(items)):
                 direction = item[1].lower()
@@ -204,18 +204,18 @@ class PlanetStreaming(CBaseHostClass):
         self.MAIN_URL = self.cm.getBaseUrl(pageUrl)
 
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'class="navigation', '</div>')[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>\s*%s\s*</a>''' % (page + 1))[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>\s*%s\s*</a>''' % (page + 1))[0])
 
         reDescObj = re.compile('''<div[^>]+?fullmask[^>]+?>''')
-        reDescObj2 = re.compile('''<hr\s*/\s*>''')
+        reDescObj2 = re.compile(r'''<hr\s*/\s*>''')
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'fullstreaming'), ('<div', '>', 'clr'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'fullstreaming'))
         for item in data:
             tmp = self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1]
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, r'''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(tmp)
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
 
             desc = []
             tmp = reDescObj2.split(reDescObj.split(item)[-1])
@@ -249,7 +249,7 @@ class PlanetStreaming(CBaseHostClass):
         episodeKeys = []
         episodeLinks = {}
 
-        sNum = self.cm.ph.getSearchGroups(data.meta['url'] + ' ', '''\-saison\-([0-9]+?)[^0-9]''', 1, True)[0]
+        sNum = self.cm.ph.getSearchGroups(data.meta['url'] + ' ', r'''\-saison\-([0-9]+?)[^0-9]''', 1, True)[0]
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', '-tab'), ('<script', '>'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', '-tab'))
@@ -257,11 +257,11 @@ class PlanetStreaming(CBaseHostClass):
             langTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(langItem, '<div', '</div>')[1])
             langItem = self.cm.ph.getAllItemsBeetwenMarkers(langItem, '<a', '</a>')
             for item in langItem:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 if url == '':
                     continue
                 title = self.cleanHtmlStr(item)
-                eNum = self.cm.ph.getSearchGroups(item, '''EPS\s+?([0-9]+?)\s+?''', 1, True)[0]
+                eNum = self.cm.ph.getSearchGroups(item, r'''EPS\s+?([0-9]+?)\s+?''', 1, True)[0]
                 if eNum not in episodeKeys:
                     episodeKeys.append(eNum)
                     episodeLinks[eNum] = []
@@ -313,7 +313,7 @@ class PlanetStreaming(CBaseHostClass):
             langTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(langItem, '<div', '</div>')[1])
             langItem = self.cm.ph.getAllItemsBeetwenMarkers(langItem, '<a', '</a>')
             for item in langItem:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 if url == '':
                     continue
                 title = self.cleanHtmlStr(item)

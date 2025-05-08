@@ -920,7 +920,7 @@ class MindiGoHU(CBaseHostClass):
                 if not sts:
                     return []
                 data = self.cm.ph.getDataBeetwenMarkers(data, '"url":"', '"', False)[1]
-                data = data.replace('\/', '/').replace("HLS.smil", "nodrm.smil")
+                data = data.replace(r'\/', '/').replace("HLS.smil", "nodrm.smil")
                 uri = strwithmeta(data, {'User-Agent': self.HEADER['User-Agent']})
                 return getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
 
@@ -986,7 +986,7 @@ class MindiGoHU(CBaseHostClass):
                         if not sts:
                             return []
                         link = self.cm.ph.getDataBeetwenMarkers(link, '"file": "', '"', False)[1]
-                        link = "https:" + link.replace("\/", "/")
+                        link = "https:" + link.replace(r"\/", "/")
 
                     else:
                         return []

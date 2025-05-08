@@ -71,7 +71,7 @@ class C3player(CBaseHostClass):
         if not sts:
             return
 
-        data = re.sub("<!--[\s\S]*?-->", "", data)
+        data = re.sub(r"<!--[\s\S]*?-->", "", data)
         data = re.compile('''<div[^>]+?class=['"]live_[^>]+?>''').split(data)
         if len(data):
             del data[0]
@@ -152,9 +152,9 @@ class C3player(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'data-type'), ('</a', '>'))
         for item in data:
-            showId = self.cm.ph.getSearchGroups(item, '''data\-showID=['"]([0-9]+?)['"]''')[0]
-            dataType = self.cm.ph.getSearchGroups(item, '''data\-type=['"]([^'^"]+?)['"]''')[0]
-            videoID = self.cm.ph.getSearchGroups(item, '''data\-videoID=['"]([0-9]+?)['"]''')[0]
+            showId = self.cm.ph.getSearchGroups(item, r'''data\-showID=['"]([0-9]+?)['"]''')[0]
+            dataType = self.cm.ph.getSearchGroups(item, r'''data\-type=['"]([^'^"]+?)['"]''')[0]
+            videoID = self.cm.ph.getSearchGroups(item, r'''data\-videoID=['"]([0-9]+?)['"]''')[0]
             if '' in [showId, dataType]:
                 continue
             title = self.cleanHtmlStr(item)
@@ -188,9 +188,9 @@ class C3player(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'load_more'), ('</a', '>'))[1]
         if data != '':
-            showId = self.cm.ph.getSearchGroups(data, '''data\-showID=['"]([0-9]+?)['"]''')[0]
-            offset = self.cm.ph.getSearchGroups(data, '''data\-offset=['"]([0-9]+?)['"]''')[0]
-            id = self.cm.ph.getSearchGroups(data, '''\sid=['"]([^'^"]+?)['"]''')[0]
+            showId = self.cm.ph.getSearchGroups(data, r'''data\-showID=['"]([0-9]+?)['"]''')[0]
+            offset = self.cm.ph.getSearchGroups(data, r'''data\-offset=['"]([0-9]+?)['"]''')[0]
+            id = self.cm.ph.getSearchGroups(data, r'''\sid=['"]([^'^"]+?)['"]''')[0]
             printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [%s] [%s] [%s]" % (showId, offset, id))
             if '' not in (showId, offset, id):
                 url = self.getFullUrl('/player/assets/ajax/{0}.php?showID={1}&videoID=&offset={2}&type={3}'.format(id, showId, offset, cItem['f_data_type']))
@@ -208,7 +208,7 @@ class C3player(CBaseHostClass):
         filters = []
         filterData = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'data-pageType'), ('</a', '>'))
         for item in filterData:
-            showId = self.cm.ph.getSearchGroups(item, '''data\-showID=['"]([^'^"]+?)['"]''')[0]
+            showId = self.cm.ph.getSearchGroups(item, r'''data\-showID=['"]([^'^"]+?)['"]''')[0]
             if showId == '':
                 continue
             title = showId.upper()
@@ -218,7 +218,7 @@ class C3player(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            date = self.cm.ph.getSearchGroups(item, '''([0-9]{2}\-[0-9]{2}\-[0-9]{4})''')[0]
+            date = self.cm.ph.getSearchGroups(item, r'''([0-9]{2}\-[0-9]{2}\-[0-9]{4})''')[0]
             if date == '':
                 continue
             subItems = []
@@ -242,7 +242,7 @@ class C3player(CBaseHostClass):
 
         try:
             data = json_loads(data)['content']
-            data = re.sub("<!--[\s\S]*?-->", "", data).split('<footer', 1)[0]
+            data = re.sub(r"<!--[\s\S]*?-->", "", data).split('<footer', 1)[0]
             data = re.compile('''<div[^>]+?list_row[^>]+?>''').split(data)
             if len(data):
                 del data[0]
@@ -258,14 +258,14 @@ class C3player(CBaseHostClass):
             return
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'btn_az'), ('</section', '>'))[1]
-        data = re.sub("<!--[\s\S]*?-->", "", data)
+        data = re.sub(r"<!--[\s\S]*?-->", "", data)
 
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             if 'disabled' in item:
                 continue
-            showId = self.cm.ph.getSearchGroups(item, '''data\-showID=['"]([^'^"]+?)['"]''')[0]
-            pageType = self.cm.ph.getSearchGroups(item, '''data\-pageType=['"]([^'^"]+?)['"]''')[0]
+            showId = self.cm.ph.getSearchGroups(item, r'''data\-showID=['"]([^'^"]+?)['"]''')[0]
+            pageType = self.cm.ph.getSearchGroups(item, r'''data\-pageType=['"]([^'^"]+?)['"]''')[0]
             if pageType == '':
                 continue
 
@@ -289,7 +289,7 @@ class C3player(CBaseHostClass):
             data = json_loads(data)['content']
             data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'az_list'), ('</section', '>'))[1]
 
-            data = re.sub("<!--[\s\S]*?-->", "", data)
+            data = re.sub(r"<!--[\s\S]*?-->", "", data)
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
             for item in data:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
@@ -337,11 +337,11 @@ class C3player(CBaseHostClass):
         if not sts:
             return []
 
-        hlsUrl = self.cm.ph.getSearchGroups(data, '''['"]?file['"]?\s*?:\s*?['"](https?://[^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''')[0]
+        hlsUrl = self.cm.ph.getSearchGroups(data, r'''['"]?file['"]?\s*?:\s*?['"](https?://[^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''')[0]
         if hlsUrl != '':
             hlsLinksTab = getDirectM3U8Playlist(hlsUrl, checkExt=True, checkContent=True, sortWithMaxBitrate=999999999)
         else:
-            embedToken = self.cm.ph.getSearchGroups(data, '''['"]?embedToken['"]?\s*?:\s*?['"](https?://[^'^"]+?)['"]''')[0]
+            embedToken = self.cm.ph.getSearchGroups(data, r'''['"]?embedToken['"]?\s*?:\s*?['"](https?://[^'^"]+?)['"]''')[0]
             if embedToken == '':
                 errorMsg = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'geo_block'), ('</div', '>'))[1])
                 SetIPTVPlayerLastHostError(errorMsg)
@@ -357,7 +357,7 @@ class C3player(CBaseHostClass):
                 printDBG("+++++++++++++++++++++++++++++++++++++++")
                 printDBG(data)
                 printDBG("+++++++++++++++++++++++++++++++++++++++")
-                embedToken = self.cm.ph.getSearchGroups(data, '''['"]?embedToken['"]?\s*?:\s*?['"](https?://[^'^"]+?)['"]''')[0]
+                embedToken = self.cm.ph.getSearchGroups(data, r'''['"]?embedToken['"]?\s*?:\s*?['"](https?://[^'^"]+?)['"]''')[0]
             drmProtection = False
             if embedToken != '':
                 parsedUri = urlparse(embedToken)

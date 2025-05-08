@@ -243,7 +243,7 @@ class LocalMedia(CBaseHostClass):
             if 0 == ret['code']:
                 data = data.split('\n')
                 for line in data:
-                    item = self.cm.ph.getSearchGroups(line, '(.+?) on (.+?) type ([^ ]+?) (\([^\)]+?\))', 4)
+                    item = self.cm.ph.getSearchGroups(line, r'(.+?) on (.+?) type ([^ ]+?) (\([^\)]+?\))', 4)
                     if len(item) < 4:
                         continue
                     table.append({'device': item[0], 'node': item[1], 'filesystem': item[2], 'options': item[3]})
@@ -275,7 +275,7 @@ class LocalMedia(CBaseHostClass):
         table = self.getMountsTable(True)
         for item in table:
             if mountPoint == item['node']:
-                encoding = self.cm.ph.getSearchGroups(item['options'], 'iocharset=([^\,^\)]+?)[\,\)]')[0]
+                encoding = self.cm.ph.getSearchGroups(item['options'], r'iocharset=([^\,^\)]+?)[\,\)]')[0]
                 printDBG("mountPoint[%s] encoding[%s]" % (mountPoint, encoding))
                 break
         if encoding == '':

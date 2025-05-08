@@ -114,10 +114,10 @@ class OipeiratesOnline(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<h2', '>', 'h1'), ('<div', '>', 'cleared'))
         for item in data:
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''', 1, True)[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''', 1, True)[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'header-text'), ('</div', '>'))[1])
-            method = self.cm.ph.getSearchGroups(item, '''data\-navigateto=['"]([^'^"]+?)['"]''')[0]
-            param = self.cm.ph.getSearchGroups(item, '''data\-navigateparam=['"]([^'^"]+?)['"]''')[0]
+            method = self.cm.ph.getSearchGroups(item, r'''data\-navigateto=['"]([^'^"]+?)['"]''')[0]
+            param = self.cm.ph.getSearchGroups(item, r'''data\-navigateparam=['"]([^'^"]+?)['"]''')[0]
             url = self.getFullUrl('/%s/%s' % (method, param))
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'f_method': method, 'f_param': param})
@@ -156,14 +156,14 @@ class OipeiratesOnline(CBaseHostClass):
                 return
 
             tmp = ph.find(data, ('<div', '>', 'ajax-load-more'), '</div>')[1]
-            tmp = re.compile('''data\-([^=]+?)=['"]([^'^"]+?)['"]''').findall(tmp)
+            tmp = re.compile(r'''data\-([^=]+?)=['"]([^'^"]+?)['"]''').findall(tmp)
             for item in tmp:
                 if item[0].startswith('alm-'):
                     item[0] = item[0][4:]
                 query[item[0].replace('-', '_')] = item[1]
 
             if query:
-                tmp = ph.search(data, '''var\s+?alm_localize=\s*?(\{[^;]+?);''')[0]
+                tmp = ph.search(data, r'''var\s+?alm_localize=\s*?(\{[^;]+?);''')[0]
                 try:
                     tmp = json_loads(tmp)
                     query['alm_nonce'] = tmp['alm_nonce']
@@ -244,13 +244,13 @@ class OipeiratesOnline(CBaseHostClass):
         sts, linksData = self.cm.ph.getDataBeetwenMarkers(data, m1, 'facebok', False, False)
         if not sts:
             return
-        seasonMarkerObj = re.compile(">\s*season|>\s*σεζόν")
+        seasonMarkerObj = re.compile(r">\s*season|>\s*σεζόν")
         linksDataLower = ensure_str(linksData).lower()
 
         mode = cItem.get('mode', 'unknown')
         if '-collection' in cItem['url']:
             mode = 'collect_item'
-            spTab = [re.compile('<b>'), re.compile('<div[\s]+class="separator"[\s]+style="text-align\:[\s]+center;">'), re.compile('<div[\s]+style="text-align\:[\s]+center;">')]
+            spTab = [re.compile('<b>'), re.compile(r'<div[\s]+class="separator"[\s]+style="text-align\:[\s]+center;">'), re.compile(r'<div[\s]+style="text-align\:[\s]+center;">')]
             for sp in spTab:
                 if None != sp.search(linksData):
                     break
@@ -400,7 +400,7 @@ class OipeiratesOnline(CBaseHostClass):
         descMarker = 'ΠΕΡΙΛΗΨΗ'
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<span', '</span>', descMarker), ('<a', '>'), False)[1])
         data = self.cm.ph.getDataBeetwenNodes(data, ('<script', '>', 'oipeirates/vp'), ('<img', '>'))[1]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^'^"]+?(?:\.jpe?g|\.png)(?:\?[^'^"]*?)?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''<img[^>]+?src=['"]([^'^"]+?(?:\.jpe?g|\.png)(?:\?[^'^"]*?)?)['"]''')[0])
         t = self.cleanHtmlStr(data.split('</div>', 1)[-1])
         if t != '' and t != title:
             otherInfo['alternate_title'] = t

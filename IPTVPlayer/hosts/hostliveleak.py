@@ -106,7 +106,7 @@ class LiveLeak(CBaseHostClass):
             params['title'] = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
             if params['title'] == '':
                 params['title'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
-            params['icon'] = self.cm.ph.getSearchGroups(item, 'src="([^"]+?\.jpg[^"]*?)"')[0]
+            params['icon'] = self.cm.ph.getSearchGroups(item, r'src="([^"]+?\.jpg[^"]*?)"')[0]
             params['url'] = self.cm.ph.getSearchGroups(item, '<a[^>]+?href="([^"]+?)"')[0]
             params['desc'] = self.cleanHtmlStr(item.split('</a>', 1)[-1].replace('</p>', '[/br]'))
             if '' != params['url'] and '' != params['title']:

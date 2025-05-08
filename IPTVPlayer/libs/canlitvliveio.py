@@ -118,7 +118,7 @@ class CanlitvliveIoApi(CBaseHostClass):
                     if urlsTab:
                         return urlsTab
 
-        hlsUrl = ph.search(baseData, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', flags=ph.I)[0]
+        hlsUrl = ph.search(baseData, r'''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', flags=ph.I)[0]
         printDBG("hlsUrl||||||||||||||||| " + hlsUrl)
         if hlsUrl:
             hlsUrl = strwithmeta(hlsUrl, {'User-Agent': self.defaultParams['header']['User-Agent'], 'Referer': cItem['url']})
@@ -126,13 +126,13 @@ class CanlitvliveIoApi(CBaseHostClass):
 
         if 0 == len(urlsTab):
             data = ph.find(baseData, '.setup(', ')')[1]
-            videoUrl = ph.search(data, '''['"]?file['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''')[0]
+            videoUrl = ph.search(data, r'''['"]?file['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''')[0]
             if self.cm.isValidUrl(videoUrl):
                 videoUrl = strwithmeta(videoUrl, {'User-Agent': self.defaultParams['header']['User-Agent'], 'Referer': cItem['url']})
                 urlsTab.append({'name': 'direct', 'url': videoUrl})
 
         if 0 == len(urlsTab):
-            videoUrl = ph.search(baseData, '''['"]?streamurl['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', flags=ph.I)[0]
+            videoUrl = ph.search(baseData, r'''['"]?streamurl['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', flags=ph.I)[0]
             if self.cm.isValidUrl(videoUrl):
                 videoUrl = strwithmeta(videoUrl, {'User-Agent': self.defaultParams['header']['User-Agent'], 'Referer': cItem['url']})
                 urlsTab.append({'name': 'direct', 'url': videoUrl})

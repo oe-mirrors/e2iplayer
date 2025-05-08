@@ -118,11 +118,11 @@ class Filma24IO(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             if url == '':
                 continue
-            icon = self.cm.ph.getSearchGroups(item, '''image\:url\(([^\)]+?)\)''', 1, True)[0].strip()
+            icon = self.cm.ph.getSearchGroups(item, r'''image\:url\(([^\)]+?)\)''', 1, True)[0].strip()
             if icon[:1] in ['"', "'"]:
                 icon = icon[1:-1]
             if icon == '':
-                icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
+                icon = self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1])
 
             desc = []

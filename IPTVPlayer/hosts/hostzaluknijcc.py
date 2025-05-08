@@ -203,7 +203,7 @@ class Zaluknij(CBaseHostClass):
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<a', '</a>')
             tabItems = []
             for item in sItem:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 tabItems.append({'title': '%s' % title, 'url': url, 'icon': cItem['icon'], 'desc': ''})
             if len(tabItems):

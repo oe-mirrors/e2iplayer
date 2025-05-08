@@ -131,7 +131,7 @@ class Playz(CBaseHostClass, CaptchaHelper):
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, ('<li', '>'), ('</li', '>'))
             tabItems = []
             for item in sItem:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>'), ('</a', '>'))[1])
                 tabItems.append({'title': '%s' % title, 'url': url, 'icon': icon, 'desc': ''})

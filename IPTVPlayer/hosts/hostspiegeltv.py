@@ -114,10 +114,10 @@ class SpiegelTv(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<h2', '>', 'h1'), ('<div', '>', 'cleared'))
         for item in data:
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''', 1, True)[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''', 1, True)[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'header-text'), ('</div', '>'))[1])
-            method = self.cm.ph.getSearchGroups(item, '''data\-navigateto=['"]([^'^"]+?)['"]''')[0]
-            param = self.cm.ph.getSearchGroups(item, '''data\-navigateparam=['"]([^'^"]+?)['"]''')[0]
+            method = self.cm.ph.getSearchGroups(item, r'''data\-navigateto=['"]([^'^"]+?)['"]''')[0]
+            param = self.cm.ph.getSearchGroups(item, r'''data\-navigateparam=['"]([^'^"]+?)['"]''')[0]
             url = self.getFullUrl('/%s/%s' % (method, param))
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'f_method': method, 'f_param': param})
@@ -236,7 +236,7 @@ class SpiegelTv(CBaseHostClass):
             if sts and 'playerholder' in data:
                 data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'innercontent'), ('<span', '>', 'vtiledetails'))[1]
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]*?\ssrc=['"]([^'^"]+?)['"]''', 1, True)[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''<img[^>]*?\ssrc=['"]([^'^"]+?)['"]''', 1, True)[0])
                 if icon:
                     desc = []
                     tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2', '</h2>')[1])
@@ -281,8 +281,8 @@ class SpiegelTv(CBaseHostClass):
 
             data = self.cm.ph.getAllItemsBeetwenMarkers(data.split('</h1>', 1)[-1], '<a', '</a>')
             for item in data:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''', 1, True)[0])
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''', 1, True)[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''', 1, True)[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''', 1, True)[0])
                 title = ''
                 desc = []
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div', '</div>')

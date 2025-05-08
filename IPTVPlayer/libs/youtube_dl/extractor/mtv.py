@@ -101,7 +101,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
     def _get_video_info(self, itemdoc):
         uri = self.xmlGetText(itemdoc, 'guid')
         video_id = self._id_from_uri(uri)
-        mediagen_url = self.cm.ph.getSearchGroups(self.xmlGetText(itemdoc, 'media:group'), '<media\:content[^>]+?url="([^"]+?)"')[0]
+        mediagen_url = self.cm.ph.getSearchGroups(self.xmlGetText(itemdoc, 'media:group'), r'<media\:content[^>]+?url="([^"]+?)"')[0]
         # Remove the templates, like &device={device}
         mediagen_url = re.sub(r'&[^=]*?={.*?}(?=(&|$))', '', mediagen_url)
         if 'acceptMethods' not in mediagen_url:

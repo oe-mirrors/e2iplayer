@@ -223,7 +223,7 @@ class RadiostacjaPl(CBaseHostClass):
             if not sts:
                 return []
             data = self.cm.ph.getDataBeetwenNodes(data, ('<div ', '>', 'radioplayer'), ('<', '>'))[1]
-            url = self.cm.ph.getSearchGroups(data, '''\sdata\-src=['"](https?://[^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(data, r'''\sdata\-src=['"](https?://[^'^"]+?)['"]''')[0]
             linksTab.append({'name': 'direct', 'url': url, 'need_resolve': 0})
         elif 'rmfon.pl' in cItem['url']:
             url = 'http://www.rmfon.pl/stacje/flash_aac_%s.xml.txt' % cItem['url'].split(',')[-1]

@@ -158,7 +158,7 @@ class MergeDownloader(BaseDownloader):
                     match = re.search(" ([0-9]+?) ", lines[idx])
                     if match:
                         self.multi['remote_size'][self.currIdx] = int(match.group(1))
-                    match = re.search("(\[[^]]+?\])", lines[idx])
+                    match = re.search(r"(\[[^]]+?\])", lines[idx])
                     if match:
                         self.multi['remote_content_type'][self.currIdx] = match.group(1)
             self.outData = ''

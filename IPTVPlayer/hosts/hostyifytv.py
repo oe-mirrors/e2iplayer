@@ -159,7 +159,7 @@ class YifyTV(CBaseHostClass):
                 genres = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(genres)
                 self.filterCache['genres'] = [{'title': _('Any')}]
                 for item in genres:
-                    value = self.cm.ph.getSearchGroups(item[0], '''genre=([^'^"^\?^&]+?)$''')[0]
+                    value = self.cm.ph.getSearchGroups(item[0], r'''genre=([^'^"^\?^&]+?)$''')[0]
                     if value == '':
                         continue
                     self.filterCache['genres'].append({'title': self.cleanHtmlStr(item[1]), 'genre': value})
@@ -314,7 +314,7 @@ class YifyTV(CBaseHostClass):
         trailer = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<a[^>]+?class=['"]video'''), re.compile('''</a>'''))[1]
         trailerUrl = self.cm.ph.getSearchGroups(trailer, '''href=['"](https?://[^'^"]+?)['"]''')[0]
 
-        imdbid = self.cm.ph.getSearchGroups(data, '''var\s+imdbid\s*=\s*['"]([^'^"]+?)['"]''')[0]
+        imdbid = self.cm.ph.getSearchGroups(data, r'''var\s+imdbid\s*=\s*['"]([^'^"]+?)['"]''')[0]
 
         jscode = '$ = function(){return {ready:function(){}}};\n' + self.cm.ph.getDataBeetwenMarkers(data, 'function autoPlay()', '</script>')[1][:-9]
         try:
@@ -333,7 +333,7 @@ class YifyTV(CBaseHostClass):
         sub_tracks = []
         subLangs = self.cm.ph.getSearchGroups(data, '&sub=([^&]+?)&')[0]
         if subLangs == '':
-            tmp = re.compile("\=([^&]*?)&").findall(data)
+            tmp = re.compile(r"\=([^&]*?)&").findall(data)
             for it in tmp:
                 for e in ['PT2', 'EN', 'FR', 'ES']:
                     if e in it:
@@ -462,8 +462,8 @@ class YifyTV(CBaseHostClass):
                                 except Exception:
                                     printExc()
 
-                            g3 = self.cm.ph.getSearchGroups(data + '&', '''[&\?]g3=([^&]+?)&''')[0]
-                            emb = self.cm.ph.getSearchGroups(data + '&', '''[&\?]emb=([^&^\*]+?)[&\*]''')[0]
+                            g3 = self.cm.ph.getSearchGroups(data + '&', r'''[&\?]g3=([^&]+?)&''')[0]
+                            emb = self.cm.ph.getSearchGroups(data + '&', r'''[&\?]emb=([^&^\*]+?)[&\*]''')[0]
                             if emb != '':
                                 data = urllib_unquote(emb)
                             if g3 != '':
@@ -497,8 +497,8 @@ class YifyTV(CBaseHostClass):
 
                                 if 'sources[sourceSelected]["paramId"]' in data:
                                     data = data.replace('"+"', '').replace(' ', '')
-                                    paramSite = self.cm.ph.getSearchGroups(data, 'sources\[sourceSelected\]\["paramSite"\]="([^"]+?)"')[0]
-                                    data = self.cm.ph.getSearchGroups(data, 'sources\[sourceSelected\]\["paramId"\]="([^"]+?)"')[0]
+                                    paramSite = self.cm.ph.getSearchGroups(data, r'sources\[sourceSelected\]\["paramSite"\]="([^"]+?)"')[0]
+                                    data = self.cm.ph.getSearchGroups(data, r'sources\[sourceSelected\]\["paramId"\]="([^"]+?)"')[0]
                                     printDBG('data ------------------------- [%s]' % data)
                                     if data.startswith('enc'):
                                         encrypted = base64.b64decode(data[3:])

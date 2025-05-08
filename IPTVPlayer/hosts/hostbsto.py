@@ -298,7 +298,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
                     if name != '':
                         query[name] = value
 
-                sitekey = self.cm.ph.getSearchGroups(data, '''['"]sitekey['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0]
+                sitekey = self.cm.ph.getSearchGroups(data, r'''['"]sitekey['"]\s*?:\s*?['"]([^'^"]+?)['"]''')[0]
                 if sitekey != '' and 'bitte das Captcha' in data:
                     token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], config.plugins.iptvplayer.bsto_bypassrecaptcha.value)
                     if token != '':

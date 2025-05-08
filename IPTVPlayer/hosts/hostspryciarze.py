@@ -70,7 +70,7 @@ class Spryciarze(CBaseHostClass):
 
             if 2 == len(subTab):
                 # Get Main category data
-                pattern = '<h4>.+?<a href="(.+?)">\r\n(.+?)\r\n.+?<small>\(([0-9]+?)\)</small>'
+                pattern = '<h4>.+?<a href="(.+?)">\r\n(.+?)\r\n.+?<small>\\(([0-9]+?)\\)</small>'
                 match = re.compile(pattern, re.DOTALL).findall(subTab[0])
 
                 if len(match) == 1:
@@ -116,14 +116,14 @@ class Spryciarze(CBaseHostClass):
             catTab[i] = ''
             if 2 == len(subTab):
                 # Get Main category data
-                pattern = '<h4>.+?<a href="(.+?)">\r\n\s+?(.+?)\r\n.+?<small>\(([0-9]+?)\)</small>'
+                pattern = '<h4>.+?<a href="(.+?)">\r\n\\s+?(.+?)\r\n.+?<small>\\(([0-9]+?)\\)</small>'
                 match = re.compile(pattern, re.DOTALL).findall(subTab[0])
 
                 if len(match) == 1:
                     catItem = {'type': 'sub', 'url': match[0][0], 'name': " ".join(match[0][1].split()), 'ilosc': match[0][2], 'subCatList': []}
 
                     #Get sub-categories data
-                    pattern = '<a.+?href="(.+?)"[^>]*?>(.+?)\r\n.+?<small>\(([0-9]+?)\)</small>.+?</a>'
+                    pattern = '<a.+?href="(.+?)"[^>]*?>(.+?)\r\n.+?<small>\\(([0-9]+?)\\)</small>.+?</a>'
                     match = re.compile(pattern, re.DOTALL).findall(subTab[1])
                     for j in range(len(match)):
                         subItem = {'type': 'subSub', 'url': match[j][0], 'name': match[j][1], 'ilosc': match[j][2]}
@@ -196,7 +196,7 @@ class Spryciarze(CBaseHostClass):
         if not sts:
             return
 
-        match = re.compile('Wideoporadniki \(([0-9]+?)\)').findall(data)
+        match = re.compile(r'Wideoporadniki \(([0-9]+?)\)').findall(data)
         if 0 == len(match):
             return
 
@@ -312,7 +312,7 @@ class Spryciarze(CBaseHostClass):
                 if len(linkstTab):
                     break
 
-            player = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']*?player\.spryciarze\.pl[^"^']+?)['"]''', 1, True)[0])
+            player = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''<iframe[^>]+?src=['"]([^"^']*?player\.spryciarze\.pl[^"^']+?)['"]''', 1, True)[0])
             if '' != player:
                 sts, player = self.cm.getPage(player, {'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
                 if not sts:
@@ -320,7 +320,7 @@ class Spryciarze(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(player, '''<iframe[^>]+?src=['"]([^"^']*?)['"]''', 1, True)[0])
                 if 1 == self.up.checkHostSupport(url):
                     linkstTab = self.up.getVideoLinkExt(url)
-                player = self.cm.ph.getSearchGroups(player.replace('&quot;', ''), 'const data[^=]*?=[^\{]*?(\{[^;]+?);')[0]
+                player = self.cm.ph.getSearchGroups(player.replace('&quot;', ''), r'const data[^=]*?=[^\{]*?(\{[^;]+?);')[0]
                 try:
 #                    printDBG(player)
                     player = player[:player.find('"relatedMovies"')].replace('}],', '}]}')
@@ -333,7 +333,7 @@ class Spryciarze(CBaseHostClass):
                 except Exception:
                     printExc()
             else:
-                player = self.cm.ph.getSearchGroups(data, '(spryciarze.pl/player/[^"]+?\.swf?[^"]+?)"')[0]
+                player = self.cm.ph.getSearchGroups(data, r'(spryciarze.pl/player/[^"]+?\.swf?[^"]+?)"')[0]
                 videoID = self.cm.ph.getSearchGroups(player + '|', 'VideoID=([0-9]+?)[^0-9]')[0]
                 sts, data = self.cm.getPage(self.getFullUrl('/player/player/xml_connect.php?code=%s&ra=2' % videoID), {'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': self.COOKIE_FILE})
                 if not sts:

@@ -527,7 +527,7 @@ class SolarMovie(CBaseHostClass):
             otherInfo['genre'] = tmp
 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<h1>', '</div>', False)[1]
-        tmp = self.cm.ph.getSearchGroups(tmp, '''<span[^>]*?>\s*([0-9]+?)\s*<''')[0]
+        tmp = self.cm.ph.getSearchGroups(tmp, r'''<span[^>]*?>\s*([0-9]+?)\s*<''')[0]
         if tmp != '':
             otherInfo['year'] = tmp
 

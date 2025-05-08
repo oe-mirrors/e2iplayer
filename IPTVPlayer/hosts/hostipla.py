@@ -123,7 +123,7 @@ class Ipla(CBaseHostClass):
                         except Exception:
                             printExc()
                         urls = self._getVideoUrls(vod)
-                        sortNum = self.cm.ph.getSearchGroups(title, '''odcinek\s*?([0-9]+?)(?:^0-9|$)''', 1, True)[0]
+                        sortNum = self.cm.ph.getSearchGroups(title, r'''odcinek\s*?([0-9]+?)(?:^0-9|$)''', 1, True)[0]
                         if sortNum != '':
                             sortNum = int(sortNum)
                         params = {'category': 'video', 'sort_num': sortNum, 'title': self.cleanHtmlStr(title), 'plot': plot, 'icon': icon, 'urls': urls, 'fav_item': {'url': url, 'vod_id': val.get('id', '')}}

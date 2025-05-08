@@ -85,7 +85,7 @@ class govodtv(CBaseHostClass):
 
         # fill sort
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="fc-main-list">', '</ul>', False)[1]
-        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(re.sub('\s+', ' ', dat))
+        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(re.sub(r'\s+', ' ', dat))
         for item in dat:
             self.cacheMovieFilters['sort'].append({'title': self.cleanHtmlStr(item[1]).replace('ych', 'e'), 'url': self.getFullUrl(item[0])})
 
@@ -94,7 +94,7 @@ class govodtv(CBaseHostClass):
 
         # fill cats
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="sub-menu">', '</ul>', False)[1]
-        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(re.sub('\s+', ' ', dat))
+        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(re.sub(r'\s+', ' ', dat))
         for item in dat:
             self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
 
@@ -196,7 +196,7 @@ class govodtv(CBaseHostClass):
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<tr', '</tr>')
             tabItems = []
             for item in sItem:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata-href=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\sdata-href=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<td', '>'), ('</td', '>'), False)[1])
                 tabItems.append({'title': '%s' % title, 'url': url, 'icon': serieIcon, 'desc': ''})
             if len(tabItems):

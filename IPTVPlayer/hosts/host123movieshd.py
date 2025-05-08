@@ -143,7 +143,7 @@ class GoMovies(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'Sort by</span>', '</ul>', False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>', withMarkers=True, caseSensitive=False)
         for item in tmp:
-            value = self.cm.ph.getSearchGroups(item, '''filterMovies\(\s*?['"]([^'^"]+?)['"]''')[0]
+            value = self.cm.ph.getSearchGroups(item, r'''filterMovies\(\s*?['"]([^'^"]+?)['"]''')[0]
             self.cacheFilters['sort_by'].append({'sort_by': value, 'title': self.cleanHtmlStr(item)})
 
         for filter in [{'key': 'quality', 'marker': 'Quality</span>'},
@@ -196,7 +196,7 @@ class GoMovies(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'item'), ('</div', '>'), False)
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'data\-original="([^"]+?)"')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'data\-original="([^"]+?)"')[0])
 
             movieId = self.cm.ph.getSearchGroups(item, 'data-movie-id="([^"]+?)"')[0]
             if icon == '':
@@ -226,7 +226,7 @@ class GoMovies(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
 
         # trailer
-        trailerUrl = ph.search(data, '''trailer['"]?\s*?:\s*?['"](https?://[^'^"]+?youtube[^'^"]+?)['"]''')[0]
+        trailerUrl = ph.search(data, r'''trailer['"]?\s*?:\s*?['"](https?://[^'^"]+?youtube[^'^"]+?)['"]''')[0]
         if trailerUrl != '' and not trailerUrl.endswith('/'):
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': '%s : %s' % (cItem['title'], _('trailer')), 'url': trailerUrl})
@@ -248,12 +248,12 @@ class GoMovies(CBaseHostClass):
         data = ph.findall(data, ('<div', '>', 'server-'), ('<div', '>', 'clearfix'))
         for tmp in data:
             serverName = ph.clean_html(ph.find(tmp, '<strong', '</strong>')[1])
-            serverId = ph.search(tmp, '''server\-([0-9]+)''')[0]
+            serverId = ph.search(tmp, r'''server\-([0-9]+)''')[0]
             tmp = ph.findall(tmp, '<a', '</a>')
             for item in tmp:
                 title = ph.clean_html(item)
                 id = ph.getattr(item, 'sid')
-                playerData = ph.search(item, '''data\-([^=]+?)=['"]([^'^"]+?)['"]''')
+                playerData = ph.search(item, r'''data\-([^=]+?)=['"]([^'^"]+?)['"]''')
                 if 'https://mystream.streamango.to/' in playerData[1]:
                     playerData[1] = playerData[1].replace('https://mystream.streamango.to/', '')
                 if playerData[0] == 'strgo':

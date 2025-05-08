@@ -79,12 +79,12 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
 
         sts, data = self.cm.getPage(url, params, post_data)
         if sts and params.get('use_cookie', True) and params.get('load_cookie', True) and params.get('save_cookie', True):
-            session = self.cm.ph.getSearchGroups(data, '''var\s+phpbb3_session\s+=\s+['"]([^'^"]+?)['"]''')
+            session = self.cm.ph.getSearchGroups(data, r'''var\s+phpbb3_session\s+=\s+['"]([^'^"]+?)['"]''')
             tmp = urlsplit(url)
             checkUrl = self.getFullUrl('/forum/app.php/track?path=') + tmp.path + urllib_quote('?' + tmp.query)
             checkSts, checkData = self.cm.getPage(checkUrl, params, post_data)
             if checkSts:
-                checkSession = self.cm.ph.getSearchGroups(checkData, '''var\s+my_session\s+=\s+['"]([^'^"]+?)['"]''')
+                checkSession = self.cm.ph.getSearchGroups(checkData, r'''var\s+my_session\s+=\s+['"]([^'^"]+?)['"]''')
                 printDBG('my_session [%s], phpbb3_session[%s]' % (checkSession, session))
                 if checkSession != session:
                     sts, data = self.cm.getPage(url, params, post_data)
@@ -111,7 +111,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>', withMarkers=True, caseSensitive=False)
             allItemAdded = False
             for item in tmp:
-                value = self.cm.ph.getSearchGroups(item, '''value=["']?([^"^'^\s^>]+?)[\s"'>]''')[0].strip()
+                value = self.cm.ph.getSearchGroups(item, r'''value=["']?([^"^'^\s^>]+?)[\s"'>]''')[0].strip()
                 self.cacheFilters[filter['key']].append({filter['key']: value, 'title': self.cleanHtmlStr(item)})
                 if value == '':
                     allItemAdded = True
@@ -204,7 +204,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
             if len(item) < 1:
                 continue
             title = self.cleanHtmlStr(item[0])
-            url = self.cm.ph.getSearchGroups(item[0], '''href=["']?([^"^'^\s^>]+?)[\s"'>]''')[0].strip()
+            url = self.cm.ph.getSearchGroups(item[0], r'''href=["']?([^"^'^\s^>]+?)[\s"'>]''')[0].strip()
             descTab = []
             for idx in range(len(item)):
                 if idx >= len(rawDesc):

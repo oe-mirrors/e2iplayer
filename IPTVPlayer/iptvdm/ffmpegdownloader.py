@@ -44,11 +44,11 @@ class FFMPEGDownloader(BaseDownloader):
         self.liveStream = False
         self.headerReceived = False
         self.parseReObj = {}
-        self.parseReObj['start_time'] = re.compile('\sstart\:\s*?([0-9]+?)\.')
-        self.parseReObj['duration'] = re.compile('[\s=]([0-9]+?)\:([0-9]+?)\:([0-9]+?)\.')
-        self.parseReObj['size'] = re.compile('size=\s*?([0-9]+?)kB')
-        self.parseReObj['bitrate'] = re.compile('bitrate=\s*?([0-9]+?(?:\.[0-9]+?)?)kbits')
-        self.parseReObj['speed'] = re.compile('speed=\s*?([0-9]+?(?:\.[0-9]+?)?)x')
+        self.parseReObj['start_time'] = re.compile(r'\sstart\:\s*?([0-9]+?)\.')
+        self.parseReObj['duration'] = re.compile(r'[\s=]([0-9]+?)\:([0-9]+?)\:([0-9]+?)\.')
+        self.parseReObj['size'] = re.compile(r'size=\s*?([0-9]+?)kB')
+        self.parseReObj['bitrate'] = re.compile(r'bitrate=\s*?([0-9]+?(?:\.[0-9]+?)?)kbits')
+        self.parseReObj['speed'] = re.compile(r'speed=\s*?([0-9]+?(?:\.[0-9]+?)?)x')
 
         self.ffmpegOutputContener = 'matroska'
         self.fileCmdPath = ''

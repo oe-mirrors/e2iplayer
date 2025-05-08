@@ -230,7 +230,7 @@ class TantiFilmOrg(CBaseHostClass):
             desc = self.cleanHtmlStr(item.replace('</p>', '[/br]'))
 
             try:
-                raiting = str(int(((float(self.cm.ph.getSearchGroups(item, '''data\-rateit\-value=['"]([^'^"]+?)['"]''')[0]) * 5) / 3) * 10) / 10.0) + '/5'
+                raiting = str(int(((float(self.cm.ph.getSearchGroups(item, r'''data\-rateit\-value=['"]([^'^"]+?)['"]''')[0]) * 5) / 3) * 10) / 10.0) + '/5'
                 desc = raiting + ' | ' + desc
             except Exception:
                 pass
@@ -389,7 +389,7 @@ class TantiFilmOrg(CBaseHostClass):
                 if not self.cm.isValidUrl(url):
                     continue
                 id = self.cm.ph.getSearchGroups(item, '''id=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-                title = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<a[^>]+?href=['"]\#%s['"][^>]*?>''' % re.escape(id)), re.compile('</a>'))[1]
+                title = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'''<a[^>]+?href=['"]\#%s['"][^>]*?>''' % re.escape(id)), re.compile('</a>'))[1]
                 title = self.cleanHtmlStr(title)
                 if title == '':
                     title = self.up.getDomain(url)
@@ -440,7 +440,7 @@ class TantiFilmOrg(CBaseHostClass):
                 sts, data = self.getPage(videoUrl, addParams)
                 if sts:
                     videoUrl = data.meta['url']
-                    jscode = ['var document={},window=this;function typeOf(r){return{}.toString.call(r).match(/\s(\w+)/)[1].toLowerCase()}function jQuery(){return"function"==typeOf(arguments[0])&&arguments[0](),jQuery}jQuery.ready=jQuery,jQuery.attr=function(r,t){"src"==r&&print(t)},$=jQuery;']
+                    jscode = [r'var document={},window=this;function typeOf(r){return{}.toString.call(r).match(/\s(\w+)/)[1].toLowerCase()}function jQuery(){return"function"==typeOf(arguments[0])&&arguments[0](),jQuery}jQuery.ready=jQuery,jQuery.attr=function(r,t){"src"==r&&print(t)},$=jQuery;']
                     tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>'), ('</script', '>'), False)
                     for item in tmp:
                         jscode.append(item)

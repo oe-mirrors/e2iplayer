@@ -224,16 +224,16 @@ class Kinox(CBaseHostClass):
                 if len(item) < 6:
                     continue
 
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item[1], '''href=['"]([^'^"]+?\.html)''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item[1], r'''href=['"]([^'^"]+?\.html)''')[0])
                 if not self.cm.isValidUrl(url):
                     continue
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[1], 'title="([^"]+?)"')[0])
                 if title == '':
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item[1], "title='([^']+?)'")[0])
-                langId = self.cm.ph.getSearchGroups(item[0], '''/lng/([0-9]+?)\.png''')[0]
+                langId = self.cm.ph.getSearchGroups(item[0], r'''/lng/([0-9]+?)\.png''')[0]
                 desc = _('Language') + ': ' + langsMap.get(langId, _('Unknown')) + ' | ' + _('Rating') + ': ' + self.cleanHtmlStr(item[5])
                 desc = self.cleanHtmlStr(item[1]) + '[/br]' + desc
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item[1], '''rel=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item[1], r'''rel=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
                 self.cacheNewTab[tTitle].append({'url': url, 'title': title, 'icon': icon, 'desc': desc})
 
             if len(self.cacheNewTab[tTitle]):
@@ -279,7 +279,7 @@ class Kinox(CBaseHostClass):
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<button class="InOptBtn"', '</button>')
                 for item in data:
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
-                    langId = self.cm.ph.getSearchGroups(item, '''/lng/([0-9]+?)\.png''')[0]
+                    langId = self.cm.ph.getSearchGroups(item, r'''/lng/([0-9]+?)\.png''')[0]
                     langList.append(langId)
                     langMap[langId] = title
 
@@ -417,7 +417,7 @@ class Kinox(CBaseHostClass):
                 continue
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0])
-            langId = self.cm.ph.getSearchGroups(item, '''/lng/([0-9]+?)\.png''')[0]
+            langId = self.cm.ph.getSearchGroups(item, r'''/lng/([0-9]+?)\.png''')[0]
             desc = _('Language') + ': ' + langsMap.get(langId, _('Unknown')) + ' | ' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]*?class="Genre"[^>]*?>'), re.compile('<div class="clearboth">'))[1].replace('<div class="floatright">', '|')).replace(' , ', ', ')
             desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<div[^>]*?class="Descriptor"[^>]*?>'), re.compile('</div>'))[1])
             params = dict(cItem)
@@ -589,7 +589,7 @@ class Kinox(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<table[^>]+?class=['"]CommonModuleTable["']'''), re.compile('''</table>'''))[1]
 
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data1, '''alt=['"]([^'^"]+?)['"]''')[0])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data1, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data1, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data1, re.compile('''<div[^>]+?class="Descriptore"[^>]*?>'''), re.compile('</div>'))[1])
 
         mapDesc = {'director': 'director', 'country': 'country', 'runtime': 'duration', 'genre': 'genres', 'views': 'views'}

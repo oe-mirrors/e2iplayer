@@ -114,7 +114,7 @@ class BilaSportPwApi(CBaseHostClass):
 
         replaceTab = self.cm.ph.getDataBeetwenMarkers(data, 'prototype.open', '};', False)[1]
         printDBG(replaceTab)
-        replaceTab = re.compile('''\.replace\(['"](\s*[^'^"]+?)['"]\s*\,\s*['"]([^'^"]+?)['"]''').findall(replaceTab)
+        replaceTab = re.compile(r'''\.replace\(['"](\s*[^'^"]+?)['"]\s*\,\s*['"]([^'^"]+?)['"]''').findall(replaceTab)
         printDBG(replaceTab)
         if len(replaceTab):
             scriptUrl = '|' + base64.b64encode(json_dumps(replaceTab).encode('utf-8'))
@@ -126,7 +126,7 @@ class BilaSportPwApi(CBaseHostClass):
                 break
 
         hlsTab = []
-        hlsUrl = re.compile('''(https?://[^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''', re.IGNORECASE).findall(data)
+        hlsUrl = re.compile(r'''(https?://[^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''', re.IGNORECASE).findall(data)
         if len(hlsUrl):
             hlsUrl = hlsUrl[-1]
             hlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True, sortWithMaxBitrate=9000000)
@@ -170,7 +170,7 @@ class BilaSportPwApi(CBaseHostClass):
         if not sts or '#EXTM3U' not in data:
             return urlsTab
 
-        keyUrl = set(re.compile('''#EXT\-X\-KEY.*?URI=['"](https?://[^"]+?)['"]''').findall(data))
+        keyUrl = set(re.compile(r'''#EXT\-X\-KEY.*?URI=['"](https?://[^"]+?)['"]''').findall(data))
         if len(keyUrl):
             keyUrl = keyUrl.pop()
             proto = keyUrl.split('://', 1)[0]

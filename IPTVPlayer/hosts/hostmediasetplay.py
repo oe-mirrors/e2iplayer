@@ -164,7 +164,7 @@ class MediasetPlay(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        channelId = ph.search(data, '''/diretta/[^'^"]+?_c([^'^"]+?)['"][^>]*?>\s*?diretta\s*?<''', flags=ph.I)[0]
+        channelId = ph.search(data, r'''/diretta/[^'^"]+?_c([^'^"]+?)['"][^>]*?>\s*?diretta\s*?<''', flags=ph.I)[0]
 
         self.listCatalog(cItem, 'list_catalog_items', 'video_mixed', data)
 
@@ -478,7 +478,7 @@ class MediasetPlay(CBaseHostClass):
                 sts, data = self.getPage(cItem['url'])
                 if not sts:
                     return
-                channelId = ph.search(data, '''/diretta/[^'^"]+?_c([^'^"]+?)['"][^>]*?>\s*?diretta\s*?<''', flags=ph.I)[0]
+                channelId = ph.search(data, r'''/diretta/[^'^"]+?_c([^'^"]+?)['"][^>]*?>\s*?diretta\s*?<''', flags=ph.I)[0]
 
             url = self.API_BASE_URL + 'alive/nownext/v1.0?channelId=' + channelId
             sts, data = self.getPage(url)

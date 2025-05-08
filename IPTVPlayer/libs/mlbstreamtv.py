@@ -61,7 +61,7 @@ class MLBStreamTVApi(CBaseHostClass):
         self.offset = timedelta(seconds=seconds)
 
     def _str2date(self, txt):
-        txt = self.cm.ph.getSearchGroups(txt, '([0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+:[0-9]+)')[0]
+        txt = self.cm.ph.getSearchGroups(txt, r'([0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+:[0-9]+)')[0]
         return datetime.strptime(txt, '%Y-%m-%dT%H:%M:%S') + self.offset
 
     def getList(self, cItem):
@@ -96,7 +96,7 @@ class MLBStreamTVApi(CBaseHostClass):
                     channelsList.append({'name': 'mlbstream.tv', 'type': 'video', 'url': url, 'title': title, 'Referer': self.cm.meta['url'], 'icon': defaultIcon})
 
             sDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'entry-content'), ('</', '>'), False)[1])
-            data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s+?timezoneJSON\s*?=\s*?\['), re.compile('\];'), False)[1]
+            data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'var\s+?timezoneJSON\s*?=\s*?\['), re.compile(r'\];'), False)[1]
             try:
                 data = json_loads('[%s]' % data)
                 for sData in data:
@@ -111,10 +111,10 @@ class MLBStreamTVApi(CBaseHostClass):
                             sTitle = self.cleanHtmlStr(item)
                             continue
 
-                        date = self.cm.ph.getSearchGroups(item, '''data\-token=['"]([^'^"]+?)['"]''')[0]
+                        date = self.cm.ph.getSearchGroups(item, r'''data\-token=['"]([^'^"]+?)['"]''')[0]
                         date = datetime.fromtimestamp(int(date))
 
-                        url = self.cm.ph.getSearchGroups(item, '''\sdata\-link=['"]([^'^"]+?)['"]''')[0]
+                        url = self.cm.ph.getSearchGroups(item, r'''\sdata\-link=['"]([^'^"]+?)['"]''')[0]
 
                         item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
                         title = self.cleanHtmlStr(''.join(item[3:]))
@@ -181,14 +181,14 @@ class MLBStreamTVApi(CBaseHostClass):
         printDBG(data)
         printDBG("+++")
 
-        source = self.cm.ph.getSearchGroups(data, '''[\s\{\,]['"]?source['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
-        replace = self.cm.ph.getSearchGroups(data, '''[\s\{\,]['"]?replace['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
-        keyurl = self.cm.ph.getSearchGroups(data, '''[\s\{\,]['"]?keyurl['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
-        rewrittenUrl = self.cm.ph.getSearchGroups(data, '''\=\s*?['"]([^'^"]+?)['"]\s*?\+\s*?btoa''', 1, True)[0]
+        source = self.cm.ph.getSearchGroups(data, r'''[\s\{\,]['"]?source['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
+        replace = self.cm.ph.getSearchGroups(data, r'''[\s\{\,]['"]?replace['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
+        keyurl = self.cm.ph.getSearchGroups(data, r'''[\s\{\,]['"]?keyurl['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''', 1, True)[0]
+        rewrittenUrl = self.cm.ph.getSearchGroups(data, r'''\=\s*?['"]([^'^"]+?)['"]\s*?\+\s*?btoa''', 1, True)[0]
 
         replaceTab = self.cm.ph.getDataBeetwenMarkers(data, 'prototype.open', '};', False)[1]
         printDBG(replaceTab)
-        replaceTab = re.compile('''\.replace\(['"](\s*[^'^"]+?)['"]\s*\,\s*['"]([^'^"]+?)['"]''').findall(replaceTab)
+        replaceTab = re.compile(r'''\.replace\(['"](\s*[^'^"]+?)['"]\s*\,\s*['"]([^'^"]+?)['"]''').findall(replaceTab)
         printDBG(replaceTab)
         scriptUrl = ''
         hlsTab = getDirectM3U8Playlist(source, checkContent=True, sortWithMaxBitrate=9000000)
@@ -204,7 +204,7 @@ class MLBStreamTVApi(CBaseHostClass):
         elif rewrittenUrl != '':
             scriptUrl = '<proxy>' + rewrittenUrl
         elif '/js/nhl.js' in data:
-            scriptUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^"^']*?js/nhl\.js)['"]''', 1, True)[0], self.cm.meta['url'])
+            scriptUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''<script[^>]+?src=['"]([^"^']*?js/nhl\.js)['"]''', 1, True)[0], self.cm.meta['url'])
 
         if scriptUrl != '':
             for idx in range(len(hlsTab)):
@@ -227,7 +227,7 @@ class MLBStreamTVApi(CBaseHostClass):
             return urlsTab
 
         meta = {}
-        keyUrl = set(re.compile('''#EXT\-X\-KEY.*?URI=['"](https?://[^"]+?)['"]''').findall(data))
+        keyUrl = set(re.compile(r'''#EXT\-X\-KEY.*?URI=['"](https?://[^"]+?)['"]''').findall(data))
         if len(keyUrl):
             keyUrl = keyUrl.pop()
             proto = keyUrl.split('://', 1)[0]

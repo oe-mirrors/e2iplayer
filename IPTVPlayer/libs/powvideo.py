@@ -18,7 +18,7 @@ def swapUrl(html_data, strToSwap):
     printDBG("Powvideo swapUrl library")
 
     # get javascript code
-    m = re.search("(?P<code1>var _0x[a-e0-9]{4,6}=\[.*?)(?P<code2>Array\[.*?;\};)", html_data)
+    m = re.search(r"(?P<code1>var _0x[a-e0-9]{4,6}=\[.*?)(?P<code2>Array\[.*?;\};)", html_data)
 
     if not m:
         return strToSwap
@@ -41,7 +41,7 @@ def swapUrl(html_data, strToSwap):
         return strToSwap
 
     varName = m.group('varName')
-    strings = re.findall("(?P<varName>" + varName + ")\('(?P<varNumber>0x[a-f0-9]{1,2})','(?P<varCode>[^']+?)'\)", code2)
+    strings = re.findall("(?P<varName>" + varName + r")\('(?P<varNumber>0x[a-f0-9]{1,2})','(?P<varCode>[^']+?)'\)", code2)
 
     if strings:
 
@@ -67,15 +67,15 @@ def swapUrl(html_data, strToSwap):
 
             # make changes in code2
             for x in ss:
-                code2 = re.sub(varName + "\('" + x + "','[^']+?'\)", "'" + ss[x] + "'", code2)
+                code2 = re.sub(varName + r"\('" + x + r"','[^']+?'\)", "'" + ss[x] + "'", code2)
 
             printDBG("-------- code2 after substitutions ------ ")
             printDBG(code2)
 
-            varT = re.findall("(_0x[0-9a-z]{4,7})\[['\"]file['\"]\]", code2)
+            varT = re.findall("(_0x[0-9a-z]{4,7})\\[['\"]file['\"]\\]", code2)
             if varT:
                 code2 = code2.replace(varT[0], "t")
-                code2 = re.findall("(t\[['\"]file['\"]\].*?)return t", code2)
+                code2 = re.findall("(t\\[['\"]file['\"]\\].*?)return t", code2)
                 if code2:
                     code2 = code2[0]
                     code2 = code2.replace("eval(", "console.log(")
@@ -93,8 +93,8 @@ def swapUrl(html_data, strToSwap):
                         printDBG("-------- duktape answer ------ ")
                         printDBG(response)
 
-                        code2 = re.sub("console.log\(_0x[0-9a-f]{4,7}\);", response + "\n", code2)
-                        code2 = re.sub("\$\([^\)]+?\)", "xxx", code2)
+                        code2 = re.sub(r"console.log\(_0x[0-9a-f]{4,7}\);", response + "\n", code2)
+                        code2 = re.sub(r"\$\([^\)]+?\)", "xxx", code2)
 
                         printDBG("-------- code2 after substitutions ------ ")
                         printDBG(code2)

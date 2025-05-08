@@ -172,13 +172,13 @@ class Playpuls(CBaseHostClass):
 
         source1Data = self.cm.ph.getSearchGroups(data, "source = '([^']+?)'")[0]
         source2Data = re.compile("([MDmd][123]) = '([^']+?)'").findall(data)
-        source3Data = self.cm.ph.getSearchGroups(data, "sources[ ]*=[ ]*(\{[^;]+?);")[0]
-        source4Data = re.compile("([MDmd][123])\s*:\s*\{\s*source\s*\:\s*'([^']+?)'").findall(data)
+        source3Data = self.cm.ph.getSearchGroups(data, r"sources[ ]*=[ ]*(\{[^;]+?);")[0]
+        source4Data = re.compile(r"([MDmd][123])\s*:\s*\{\s*source\s*\:\s*'([^']+?)'").findall(data)
         quality = self.cm.ph.getSearchGroups(data, "quality = '([01])';")[0]
 
         if (source1Data + source3Data + quality) == '' and 0 == len(source2Data) and 0 == len(source4Data):
             url = 'http://playpuls.pl/sites/all/modules/vod/player.php'
-            id = self.cm.ph.getSearchGroups(data, 'id\s*=\s*([0-9]+?);')[0]
+            id = self.cm.ph.getSearchGroups(data, r'id\s*=\s*([0-9]+?);')[0]
             post_data = None  # {'id':id}
             url += '?id=%s' % id
             header['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'

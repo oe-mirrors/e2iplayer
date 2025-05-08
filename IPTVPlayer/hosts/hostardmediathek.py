@@ -253,7 +253,7 @@ class ARDmediathek(CBaseHostClass):
         if not sts:
             return
 
-        nextPage = self.cm.ph.getSearchGroups(data, '"(http[^"]+?page\.%s[^0-9][^"]*?)"' % (page + 1))[0].split('"')[0]
+        nextPage = self.cm.ph.getSearchGroups(data, r'"(http[^"]+?page\.%s[^0-9][^"]*?)"' % (page + 1))[0].split('"')[0]
 
         skipSections = []
         if '/search?' in url:

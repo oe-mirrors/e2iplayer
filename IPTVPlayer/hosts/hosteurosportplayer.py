@@ -118,7 +118,7 @@ class EuroSportPlayer(CBaseHostClass):
             printExc()
 
     def _str2date(self, txt):
-        txt = self.cm.ph.getSearchGroups(txt, '([0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+:[0-9]+)')[0]
+        txt = self.cm.ph.getSearchGroups(txt, r'([0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+:[0-9]+)')[0]
         return datetime.strptime(txt, '%Y-%m-%dT%H:%M:%S')
 
     def _gmt2local(self, txt):

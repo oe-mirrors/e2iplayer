@@ -99,7 +99,7 @@ class OkGoals(CBaseHostClass):
             return
 
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, '<div class="wpnavi">', '<div class="clear">')[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=["']([^'^"]+?)["'][^>]*?>\s*{0}\s*</a>'''.format(page + 1))[0]
+        nextPage = self.cm.ph.getSearchGroups(nextPage, r'''<a[^>]+?href=["']([^'^"]+?)["'][^>]*?>\s*{0}\s*</a>'''.format(page + 1))[0]
 
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div id="matchlistng">', '</a>', withMarkers=False)
         for item in data:
@@ -126,13 +126,13 @@ class OkGoals(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, ('<div', '>', 'matchcontainer'), '</div>', False)[1]
         tmp = tmp.split('</script>')
         for item in tmp:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''['"]([^'^"]*?//config\.playwire\.com[^'^"]+?\.json)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''['"]([^'^"]*?//config\.playwire\.com[^'^"]+?\.json)['"]''')[0])
 
             if not url:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''loadSource\(['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''loadSource\(['"]([^'^"]+?)['"]''')[0])
 
             if not url:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, "src\s?=\s?['\"]([^'^\"]+?)['\"]")[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, "src\\s?=\\s?['\"]([^'^\"]+?)['\"]")[0])
 
             if self.cm.isValidUrl(url):
                 title = cItem['title']

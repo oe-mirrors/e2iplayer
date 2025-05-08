@@ -362,7 +362,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
                 sitekey = ''
                 if 'data-sitekey' in data:
-                    sitekey = self.cm.ph.getSearchGroups(data, 'data\-sitekey="([^"]+?)"')[0]
+                    sitekey = self.cm.ph.getSearchGroups(data, r'data\-sitekey="([^"]+?)"')[0]
 
                 if sitekey != '':
                     token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])

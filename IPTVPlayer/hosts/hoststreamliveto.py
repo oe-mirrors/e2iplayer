@@ -134,7 +134,7 @@ class StreamLiveTo(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         tmpTab = []
         for item in data:
-            val = self.cm.ph.getSearchGroups(item, '''[\?&]list=([^'^"^&]+?)['"&]''')[0]
+            val = self.cm.ph.getSearchGroups(item, r'''[\?&]list=([^'^"^&]+?)['"&]''')[0]
             title = self.cleanHtmlStr(item)
             tmpTab.append({'title': title, 'f_type': val})
         if len(tmpTab) == 0:
@@ -238,7 +238,7 @@ class StreamLiveTo(CBaseHostClass):
         urlTab = []
         videoUrl = cItem['url']
         if videoUrl.startswith('http'):
-            '''
+            r'''
             httpParams = dict(self.defaultParams)
             httpParams['header'] = dict(self.HTTP_HEADER)
             httpParams['header']['Referer'] = videoUrl
@@ -294,10 +294,10 @@ class StreamLiveTo(CBaseHostClass):
         if not sts:
             SetIPTVPlayerLastHostError(_('Fail to get "%s".') % captchaUrl)
             return 0
-        challenge = self.cm.ph.getSearchGroups(data, '''challenge\s*:\s*['"]([^'^"]+?)['"]''')[0]
-        lang = self.cm.ph.getSearchGroups(data, '''lang\s*:\s*['"]([^'^"]+?)['"]''')[0]
-        server = self.cm.ph.getSearchGroups(data, '''server\s*:\s*['"]([^'^"]+?)['"]''')[0]
-        site = self.cm.ph.getSearchGroups(data, '''site\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        challenge = self.cm.ph.getSearchGroups(data, r'''challenge\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        lang = self.cm.ph.getSearchGroups(data, r'''lang\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        server = self.cm.ph.getSearchGroups(data, r'''server\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        site = self.cm.ph.getSearchGroups(data, r'''site\s*:\s*['"]([^'^"]+?)['"]''')[0]
         if '' == challenge or '' == lang or '' == server or '' == site:
             SetIPTVPlayerLastHostError(errMsg1)
             return 0

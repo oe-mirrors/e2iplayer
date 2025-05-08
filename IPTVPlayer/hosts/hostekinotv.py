@@ -118,7 +118,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
 
         # fill cats
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="movieCategories">', '</ul>', False)[1]
-        dat = re.compile('<a[^"]+?href="[^"]+?kategoria\[([0-9]+?)\][^>]*?>([^<]+?)<').findall(dat)
+        dat = re.compile(r'<a[^"]+?href="[^"]+?kategoria\[([0-9]+?)\][^>]*?>([^<]+?)<').findall(dat)
         for item in dat:
             self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'cat': item[0]})
 
@@ -210,7 +210,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
         if sts:
             data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="serialsmenu">', '</ul>', False)[1]
             data = data.replace('\n', '').replace('</li>', '</li>\n')  # j00zek: item in single line for regex
-            data = re.compile('<a[^"]+?href="([^"]+?)"[^>]*?><span class="name">([^<]+?)<\/span><span[ ]*class="count">([^<]+?)<').findall(data)
+            data = re.compile(r'<a[^"]+?href="([^"]+?)"[^>]*?><span class="name">([^<]+?)<\/span><span[ ]*class="count">([^<]+?)<').findall(data)
             for item in data:
                 params = dict(cItem)
                 params.update({'category': category, 'title': '%s (%s)' % (item[1], item[2]), 'url': self.getFullUrl(item[0])})
@@ -252,8 +252,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             sTitle = self.cm.ph.getDataBeetwenMarkers(season, '<p>', '</p>', False)[1]
             eData = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)<').findall(season)
             for eItem in eData:
-                s = self.cm.ph.getSearchGroups(eItem[0], 'season\[([0-9]+?)\]')[0]
-                e = self.cm.ph.getSearchGroups(eItem[0], 'episode\[([0-9]+?)\]')[0]
+                s = self.cm.ph.getSearchGroups(eItem[0], r'season\[([0-9]+?)\]')[0]
+                e = self.cm.ph.getSearchGroups(eItem[0], r'episode\[([0-9]+?)\]')[0]
                 title = '%s s%se%s %s' % (cItem['title'], s.zfill(2), e.zfill(2), eItem[1])
                 params = dict(cItem)
                 params.update({'title': title, 'url': self.getFullUrl(eItem[0])})
@@ -341,7 +341,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 del tmp[-1]
             for item in tmp:
                 id = self.cm.ph.getSearchGroups(item, 'id="([^"]+?)"')[0]
-                playerParams = self.cm.ph.getSearchGroups(item, '''ShowPlayer[^"^']*?['"]([^"^']+?)['"]\s*\,\s*['"]([^"^']+?)['"]''', 2)
+                playerParams = self.cm.ph.getSearchGroups(item, r'''ShowPlayer[^"^']*?['"]([^"^']+?)['"]\s*\,\s*['"]([^"^']+?)['"]''', 2)
                 url = ''
                 if premium and '' not in playerParams:
                     ret = js_execute(jscode + ('\nShowPlayer("%s","%s");' % (playerParams[0], playerParams[1])))
@@ -373,8 +373,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>'), ('</li', '>'))
             for item in data:
                 playerParams = []
-                playerParams.append(self.cm.ph.getSearchGroups(item, '''data\-vhost=['"]([^'^"]+?)['"]''')[0])
-                playerParams.append(self.cm.ph.getSearchGroups(item, '''data\-file=['"]([^'^"]+?)['"]''')[0])
+                playerParams.append(self.cm.ph.getSearchGroups(item, r'''data\-vhost=['"]([^'^"]+?)['"]''')[0])
+                playerParams.append(self.cm.ph.getSearchGroups(item, r'''data\-file=['"]([^'^"]+?)['"]''')[0])
                 if '' in playerParams:
                     continue
                 url = self.getFullUrl(baseVidUrl + '/'.join(playerParams))
@@ -423,7 +423,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 SetIPTVPlayerLastHostError(_('Link protected with CF Turnstile .'))
                 sitekey = self.cm.ph.getSearchGroups(data, 'data-sitekey="([^"]+?)"')[0]
                 if sitekey == '':
-                    sitekey = self.cm.ph.getSearchGroups(data, '''['"]?sitekey['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
+                    sitekey = self.cm.ph.getSearchGroups(data, r'''['"]?sitekey['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
                 if sitekey != '':
                     token, errorMsgTab = self.processCaptcha(sitekey, self.MAIN_URL, captchaType="cf_re")
                     if token != '':
@@ -439,10 +439,10 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             if not sts:
                 return urlTab
 
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"].+?buttonprch''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''\shref=['"]([^'^"]+?)['"].+?buttonprch''')[0])
 
             if not meta.get('is_premium', False) and url == '':
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 if self.cm.isValidUrl(url):
                     urlParams['header']['Referer'] = baseUrl
                     urlParams['ignore_http_code_ranges'] = [(403, 403)]
@@ -458,14 +458,14 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"')[0])
 
             if not self.cm.isValidUrl(url):
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''var\s+url\s*=\s*['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''var\s+url\s*=\s*['"]([^'^"]+?)['"]''')[0])
 
             if not self.cm.isValidUrl(url):
                 url = data.meta.get('url', '')
 
             if meta.get('is_premium', False):
                 data = self.cm.ph.getDataBeetwenMarkers(data, 'player.setup', '</script>', False)[1]
-                vidUrl = self.cm.ph.getSearchGroups(data, 'file:\s*?"([^"]+?)"')[0]
+                vidUrl = self.cm.ph.getSearchGroups(data, r'file:\s*?"([^"]+?)"')[0]
 #                name = self.cm.ph.getSearchGroups(data, '''\stype=['"]([^'^"]+?)['"]''')[0]
                 if self.cm.isValidUrl(vidUrl):
                     urlTab.append({'name': 'premium', 'url': vidUrl, 'need_resolve': 0})
@@ -536,7 +536,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
 #                httpParams['header']['Cookie'] = cookieHeader
 
                 if 'data-sitekey' in data:
-                    sitekey = self.cm.ph.getSearchGroups(data, 'data\-sitekey="([^"]+?)"')[0]
+                    sitekey = self.cm.ph.getSearchGroups(data, r'data\-sitekey="([^"]+?)"')[0]
 
                 if sitekey != '':
                     token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], captchaType="INVISIBLE")

@@ -257,8 +257,8 @@ class ITV(CBaseHostClass):
             if not sts:
                 return []
 
-            url = self.cm.ph.getSearchGroups(data, '''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
-            hmac = self.cm.ph.getSearchGroups(data, '''data\-video\-hmac=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(data, r'''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
+            hmac = self.cm.ph.getSearchGroups(data, r'''data\-video\-hmac=['"]([^'^"]+?)['"]''')[0]
 
             params['header'].update({'Content-Type': 'application/json', 'Accept': 'application/vnd.itv.vod.playlist.v2+json', 'Origin': self.getMainUrl(), 'Referer': cItem['url'], 'hmac': hmac})
             params['raw_post_data'] = True

@@ -296,13 +296,13 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 continue
             title = self.cleanHtmlStr(tmp[1])
             try:
-                episodeNum = str(int(self.cm.ph.getSearchGroups(item, '''episode\-([0-9]+?)[^0-9]''')[0]))
+                episodeNum = str(int(self.cm.ph.getSearchGroups(item, r'''episode\-([0-9]+?)[^0-9]''')[0]))
             except Exception:
                 episodeNum = ''
             if '' != episodeNum and '' != seasonNum:
                 title = 's%se%s' % (seasonNum.zfill(2), episodeNum.zfill(2)) + ' - ' + title
 
-            langs = re.compile('/public/img/([a-z]+?)\.png').findall(item)
+            langs = re.compile(r'/public/img/([a-z]+?)\.png').findall(item)
             desc = '[{0}]'.format(' | '.join(langs)) + '[/br]' + cItem.get('desc', '')
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title': '{0}: {1}'.format(seriesTitle, title), 'url': url, 'desc': desc})
@@ -374,7 +374,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h4>', '</h4>', withMarkers=False)[1])
                     url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]), {'base_url': cItem['url']})
                     if url == '':
-                        url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-link\-target=['"]([^'^"]+?)['"]''')[0]), {'base_url': cItem['url']})
+                        url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''data\-link\-target=['"]([^'^"]+?)['"]''')[0]), {'base_url': cItem['url']})
                     urlTab.append({'name': '[{0}] {1}'.format(langMap.get(langId, _('Unknown')), title), 'lang_id': langId, 'url': url, 'need_resolve': 1})
 
                 if len(urlTab):

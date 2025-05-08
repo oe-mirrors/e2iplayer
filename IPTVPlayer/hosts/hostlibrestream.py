@@ -78,7 +78,7 @@ class LibreStream(CBaseHostClass):
 
         # fill sort cache
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, '<form name="news_set_sort"', '<input ', False)[1]
-        tmpData = re.compile("dle_change_sort\('([^']+?)','([^']+?)'\)[^>]*?>([^<]+?)<").findall(tmpData)
+        tmpData = re.compile(r"dle_change_sort\('([^']+?)','([^']+?)'\)[^>]*?>([^<]+?)<").findall(tmpData)
         for item in tmpData:
             post_data = {'dlenewssortby': item[0], 'dledirection': item[1], 'set_new_sort': 'dle_sort_cat', 'set_direction_sort': 'dle_direction_cat'}
             params = {'title': item[2], 'post_data': post_data}
@@ -150,7 +150,7 @@ class LibreStream(CBaseHostClass):
 
         episodes = self._getLinksFromContent(data, 'id')
         title = cItem['title']
-        id = self.cm.ph.getSearchGroups(cItem['url'], '-saison-([0-9]+?)\.')[0]
+        id = self.cm.ph.getSearchGroups(cItem['url'], r'-saison-([0-9]+?)\.')[0]
 
         for item in episodes:
             params = dict(cItem)

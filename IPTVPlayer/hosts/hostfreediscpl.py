@@ -80,7 +80,7 @@ class FreeDiscPL(CBaseHostClass):
         while True:
             sts, data = self.cm.getPage(url, mainParamsUrl, post_data)
             if sts and data.meta.get('status_code', 0) in [410, 404]:
-                tmp = re.sub("<!--[\s\S]*?-->", "", data)
+                tmp = re.sub(r"<!--[\s\S]*?-->", "", data)
                 if 'sitekey' in tmp:
                     errorMsg = [_('Link protected with google recaptcha v2.')]
                     errorMsg.append(_("Please visit \"%s\" and confirm that you are human." % self.getMainUrl()))
@@ -206,7 +206,7 @@ class FreeDiscPL(CBaseHostClass):
             if len(data):
                 del data[0]
             for item in data:
-                icon = self.cm.ph.getSearchGroups(item, '''url\(['"]([^'^"]+?)['"]''')[0]
+                icon = self.cm.ph.getSearchGroups(item, r'''url\(['"]([^'^"]+?)['"]''')[0]
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
                 if url == '':
                     continue

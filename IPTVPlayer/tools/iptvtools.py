@@ -1198,7 +1198,7 @@ def remove_html_markup(s, replacement=''):
                 quote = not quote
             elif not tag:
                 out = out + c
-    return re.sub('&\w+;', ' ', out)
+    return re.sub(r'&\w+;', ' ', out)
 
 
 class CSearchHistoryHelper():
@@ -1486,7 +1486,7 @@ def GetVersionNum(ver):
     if ver == '':
         return 0
     try:
-        if None == re.match("[0-9]+\.[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]", ver):
+        if None == re.match(r"[0-9]+\.[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9]", ver):
             raise Exception("Wrong version!")
         return int(ver.replace('.', ''))
     except Exception:

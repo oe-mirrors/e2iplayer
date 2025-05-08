@@ -409,9 +409,9 @@ class CBaseSubProviderClass:
             baseTtitle = ' '.join(self.cm.ph.getAllItemsBeetwenMarkers(item, '<a ', '</a>'))
             #title = title.split('<br/>')[0]
             title = self.cleanHtmlStr(item)
-            year = self.cm.ph.getSearchGroups(item, '\((20[0-9]{2})\)')[0]
+            year = self.cm.ph.getSearchGroups(item, r'\((20[0-9]{2})\)')[0]
             if '' == year:
-                year = self.cm.ph.getSearchGroups(item, '\((20[0-9]{2})\)')[0]
+                year = self.cm.ph.getSearchGroups(item, r'\((20[0-9]{2})\)')[0]
             if title.endswith('-'):
                 title = title[:-1].strip()
             list.append({'title': title, 'base_title': self.cleanHtmlStr(baseTtitle), 'year': year, 'imdbid': imdbid})
@@ -425,7 +425,7 @@ class CBaseSubProviderClass:
         sts, data = self.cm.getPage('http://www.imdb.com/title/' + imdbid)
         if not sts:
             return False, {}
-        title = self.cm.ph.getSearchGroups(data, '''<meta property='og:title' content="([^\(^"]+?)["\(]''')[0].strip()
+        title = self.cm.ph.getSearchGroups(data, r'''<meta property='og:title' content="([^\(^"]+?)["\(]''')[0].strip()
         return True, {'title': title}
 
     def getTypeFromThemoviedb(self, imdbid, title):

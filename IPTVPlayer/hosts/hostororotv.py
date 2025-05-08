@@ -112,13 +112,13 @@ class OroroTV(CBaseHostClass):
         #if desc != '': desc + '[/br]'
         #desc += self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(tmp, ('<p', '>', 'show-desc-text'), ('</p', '>'))[1] )
 
-        sp = re.compile('''<div[^>]+?js\-watched\-mark[^>]+?>''')
+        sp = re.compile(r'''<div[^>]+?js\-watched\-mark[^>]+?>''')
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'show-content'), ('<div', '>', 'site-footer'))[1]
         data = sp.split(data)
         if len(data):
             del data[0]
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-href=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''data\-href=['"]([^'^"]+?)['"]''')[0])
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''original=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'series-card-title'), ('</a', '>'))[1])
 

@@ -96,7 +96,7 @@ class FilmovizijaStudio(CBaseHostClass):
 
     def _getFullUrl(self, url):
         if 'sslgate.co.uk' in url:
-            url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', '''\?q=(http[^&]+?)&''')[0])
+            url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', r'''\?q=(http[^&]+?)&''')[0])
         if url.startswith('//'):
             url = 'http:' + url
         elif url.startswith('/'):
@@ -242,9 +242,9 @@ class FilmovizijaStudio(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>')[1])
-            icon = self._urlWithCookie(self.cm.ph.getSearchGroups(item, '''<img[^>]+?data\-original=['"]([^"^']+?)['"]''')[0])
+            icon = self._urlWithCookie(self.cm.ph.getSearchGroups(item, r'''<img[^>]+?data\-original=['"]([^"^']+?)['"]''')[0])
             if icon == '':
-                icon = self._urlWithCookie(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(:?\?[^'^"]*?)?)['"]''')[0])
+                icon = self._urlWithCookie(self.cm.ph.getSearchGroups(item, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g(:?\?[^'^"]*?)?)['"]''')[0])
             if icon == '':
                 icon = cItem.get('icon', '')
             dUrl = self._getFullUrl(self.cm.ph.getSearchGroups(item, '''data-url=['"]([^"^']+?)['"]''')[0])
@@ -333,7 +333,7 @@ class FilmovizijaStudio(CBaseHostClass):
             return []
         self.setMainUrl(self.cm.meta['url'])
 
-        tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('id\^\="page"'), re.compile('show\(\)'))[1].split('</script>')[0]
+        tmp = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'id\^\="page"'), re.compile(r'show\(\)'))[1].split('</script>')[0]
         printDBG("======")
         printDBG(tmp)
         printDBG("======")
@@ -346,11 +346,11 @@ class FilmovizijaStudio(CBaseHostClass):
         tmp = '\n'.join(tmp2)
         printDBG(tmp)
         pageFormat = self.cm.ph.getSearchGroups(tmp, "src='(http[^']+?)'")[0]
-        tmp2 = re.compile('"\+([^+]+?)\+"').findall(pageFormat)
+        tmp2 = re.compile(r'"\+([^+]+?)\+"').findall(pageFormat)
         pageAttribs = []
         for item in tmp2:
             name = item.strip()
-            attrib = self.cm.ph.getSearchGroups(tmp, '''var %s =[^;]+?attr\(['"]([^'^"]+?)['"]''' % name)[0]
+            attrib = self.cm.ph.getSearchGroups(tmp, r'''var %s =[^;]+?attr\(['"]([^'^"]+?)['"]''' % name)[0]
             printDBG(">> name[%s] attrib[%s]" % (name, attrib))
             pageAttribs.append({'name': name, 'attrib': attrib})
 
@@ -362,7 +362,7 @@ class FilmovizijaStudio(CBaseHostClass):
             try:
                 tmp = self.cm.ph.getDataBeetwenMarkers(item, '<a ', '>')[1]
                 #tmp = re.compile('''\s(\w)=['"]([^'^"]+?)['"]''').findall(tmp)
-                tmp = re.compile('''[^a-zA-Z0-9_]([a-zA-Z0-9_]+?)\s*=\s*['"]([^'^"]+?)['"]''').findall(tmp)
+                tmp = re.compile(r'''[^a-zA-Z0-9_]([a-zA-Z0-9_]+?)\s*=\s*['"]([^'^"]+?)['"]''').findall(tmp)
 
                 attribs = {}
                 for a in tmp:
@@ -396,7 +396,7 @@ class FilmovizijaStudio(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr id="linktr">', '</tr>')
         for item in data:
             urlName = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h9', '</h9>', True)[1])
-            redirect = self.cm.ph.getSearchGroups(item, 'class="redirect"\s*id="([^"]+?)"')[0]
+            redirect = self.cm.ph.getSearchGroups(item, r'class="redirect"\s*id="([^"]+?)"')[0]
             if '' == redirect:
                 redirect = self.cm.ph.getSearchGroups(item, '''href=['"](http[^'^"]+?)['"]''')[0]
                 if 1 == self.up.checkHostSupport(redirect):
@@ -460,7 +460,7 @@ class FilmovizijaStudio(CBaseHostClass):
             if 0 == len(urlTab):
                 videoUrl = self._getFullUrl(self.cm.ph.getSearchGroups(data, '<iframe[^>]+?src="([^"]+?)"', 1, True)[0])
                 if videoUrl == '':
-                    videoUrl = self._getFullUrl(self.cm.ph.getSearchGroups(data, '\.load\(\s*?"([^"]+?)"', 1, True)[0])
+                    videoUrl = self._getFullUrl(self.cm.ph.getSearchGroups(data, r'\.load\(\s*?"([^"]+?)"', 1, True)[0])
 
         if videoUrl != '':
             urlTab.extend(self.up.getVideoLinkExt(videoUrl))
@@ -504,7 +504,7 @@ class FilmovizijaStudio(CBaseHostClass):
                   {'m1': 'fa fa-calendar', 'm2': '</span>', 'key': 'year'}, ]
 
         for item in tmpTab:
-            val = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<[^>]+?\=['"]%s["'][^>]*?>''' % item['m1']), re.compile(item['m2']), False)[1]
+            val = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'''<[^>]+?\=['"]%s["'][^>]*?>''' % item['m1']), re.compile(item['m2']), False)[1]
             val = self.cleanHtmlStr(val.replace('Actors:', ''))
             if '' != val:
                 otherInfo[item['key']] = val

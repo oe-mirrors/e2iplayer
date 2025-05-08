@@ -314,12 +314,12 @@ class Laola1TV(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="videoplayer"', '</script>')[1]
         printDBG(data)
         getParams = {}
-        getParams['videoid'] = self.cm.ph.getSearchGroups(data, '\svideoid\s*:\s*"([0-9]*?)"')[0]
-        getParams['partnerid'] = self.cm.ph.getSearchGroups(data, '\spartnerid\s*:\s*"([0-9]*?)"')[0]
-        getParams['language'] = self.cm.ph.getSearchGroups(data, '\slanguage\s*:\s*"([a-z]*?)"')[0]
-        getParams['portal'] = self.cm.ph.getSearchGroups(data, '\portalid\s*:\s*"([a-z]*?)"')[0]
+        getParams['videoid'] = self.cm.ph.getSearchGroups(data, r'\svideoid\s*:\s*"([0-9]*?)"')[0]
+        getParams['partnerid'] = self.cm.ph.getSearchGroups(data, r'\spartnerid\s*:\s*"([0-9]*?)"')[0]
+        getParams['language'] = self.cm.ph.getSearchGroups(data, r'\slanguage\s*:\s*"([a-z]*?)"')[0]
+        getParams['portal'] = self.cm.ph.getSearchGroups(data, r'\portalid\s*:\s*"([a-z]*?)"')[0]
         getParams['format'] = 'iphone'
-        vidUrl = self.cm.ph.getSearchGroups(data, '\configUrl\s*:\s*"([^"]*?)"')[0]
+        vidUrl = self.cm.ph.getSearchGroups(data, r'\configUrl\s*:\s*"([^"]*?)"')[0]
         if vidUrl.startswith('//'):
             vidUrl = 'http:' + vidUrl
         vidUrl += '?' + urllib_urlencode(getParams)

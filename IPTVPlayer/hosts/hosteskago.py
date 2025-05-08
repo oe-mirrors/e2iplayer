@@ -64,7 +64,7 @@ class EskaGo(CBaseHostClass):
         listDataTab = self.cm.ph.getDataBeetwenMarkers(data, '<div class="channel-list-box"', '<script>', False)[1]
         listDataTab = listDataTab.split('<div class="channel-list-box"')
         for listData in listDataTab:
-            listId = self.cm.ph.getSearchGroups(listData, '''channel\-list\-([^"^']+?)["']''')[0]
+            listId = self.cm.ph.getSearchGroups(listData, r'''channel\-list\-([^"^']+?)["']''')[0]
             self.cacheItems[listId] = []
 
             headMarker = '<div class="head-title">'
@@ -361,8 +361,8 @@ class EskaGo(CBaseHostClass):
                     del tmp[0]
                 for item in tmp:
                     printDBG('ITEM [%s]' % item)
-                    url = self.cm.ph.getSearchGroups(item, '''(https?://[^\s]+?)\s''')[0]
-                    name = self.cm.ph.getSearchGroups(item, '''Title[^=]*?=([^\s]+?)\s''')[0].strip()
+                    url = self.cm.ph.getSearchGroups(item, r'''(https?://[^\s]+?)\s''')[0]
+                    name = self.cm.ph.getSearchGroups(item, r'''Title[^=]*?=([^\s]+?)\s''')[0].strip()
                     urlTab.append({'name': name, 'url': url})
             else:
                 tmp1 = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script', '</script>')
@@ -370,13 +370,13 @@ class EskaGo(CBaseHostClass):
                     tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '{', '}')
                     for item in tmp:
                         if 'streamUrl' in item:
-                            streamUrl = self.cm.ph.getSearchGroups(item, '''streamUrl\s*=\s*['"](https?://[^'^"]+?)['"]''')[0]
-                            streamType = self.cm.ph.getSearchGroups(item, '''streamType\s*=\s*['"]([^'^"]+?)['"]''')[0]
+                            streamUrl = self.cm.ph.getSearchGroups(item, r'''streamUrl\s*=\s*['"](https?://[^'^"]+?)['"]''')[0]
+                            streamType = self.cm.ph.getSearchGroups(item, r'''streamType\s*=\s*['"]([^'^"]+?)['"]''')[0]
                             if 'aac' in streamType:
                                 streamUrl = streamUrl.replace('.mp3', '.aac')
                             elif 'mp3' in streamType:
                                 streamUrl = streamUrl.replace('.aac', '.mp3')
-                            streamUrl = streamUrl + self.cm.ph.getSearchGroups(data, '''value\s*=\s*['"](timestamp[^'^"]+?)['"]''')[0]
+                            streamUrl = streamUrl + self.cm.ph.getSearchGroups(data, r'''value\s*=\s*['"](timestamp[^'^"]+?)['"]''')[0]
                             urlTab.append({'name': streamType, 'url': streamUrl})
             if len(urlTab) == 0:
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<source', '>', False, False)

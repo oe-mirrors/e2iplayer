@@ -107,7 +107,7 @@ class TVPlayer(CBaseHostClass):
                 if len(id) != 2:
                     continue
                 title = self.cm.ph.getSearchGroups(it, '''data-name=['"]([^'^"]+?)['"]''')[0]
-                type = self.cm.ph.getSearchGroups(it, '''class=['"]online\s*([^'^"]+?)['"]''')[0].lower()
+                type = self.cm.ph.getSearchGroups(it, r'''class=['"]online\s*([^'^"]+?)['"]''')[0].lower()
                 self.cacheChannelsFlags[id[1]] = {'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'f_type': type}
 
     def listChannelsGenres(self, cItem, nextCategory):
@@ -196,7 +196,7 @@ class TVPlayer(CBaseHostClass):
         playerData = self.cm.ph.getSearchGroups(data, '''<div([^"^']+?class=['"]video-js[^>]+?)>''')[0]
         printDBG(playerData)
 
-        playerData = dict(re.findall('''\sdata\-(\w+?)\s*=\s*['"]([^'^"]+?)['"]''', playerData))
+        playerData = dict(re.findall(r'''\sdata\-(\w+?)\s*=\s*['"]([^'^"]+?)['"]''', playerData))
         printDBG(playerData)
 
         if 'resource' not in playerData or 'token' not in playerData:

@@ -357,7 +357,7 @@ class M3U8Downloader(BaseDownloader):
                 lines = self.outData.replace('\r', '\n').split('\n')
                 for idx in range(len(lines)):
                     if lines[idx].startswith('Length:'):
-                        match = re.search("Length: ([0-9]+?) \([^)]+?\) (\[[^]]+?\])", lines[idx])
+                        match = re.search(r"Length: ([0-9]+?) \([^)]+?\) (\[[^]]+?\])", lines[idx])
                         if match:
                             self.remoteFragmentSize = int(match.group(1))
                             self.remoteFragmentType = match.group(2)

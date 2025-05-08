@@ -96,7 +96,7 @@ class LuxVeritatisPL(CBaseHostClass):
             tabItems = []
             sectionItem = self.cm.ph.getAllItemsBeetwenMarkers(sectionItem, '<a', '</a>')
             for idx in range(len(sectionItem)):
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(sectionItem[idx], '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(sectionItem[idx], r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(sectionItem[idx])
                 if idx == 0:
                     title = '--Wszystkie--'
@@ -125,7 +125,7 @@ class LuxVeritatisPL(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<main', '</main>')[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<a', '<', '&rsaquo;'), ('/a', '>'))[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, '''\shref=['"]([^'^"]+?)['"]''')[0]
+        nextPage = self.cm.ph.getSearchGroups(nextPage, r'''\shref=['"]([^'^"]+?)['"]''')[0]
 
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
         for item in data:
@@ -134,7 +134,7 @@ class LuxVeritatisPL(CBaseHostClass):
             desc = []
             desc.append(self.cleanHtmlStr(tmp[-1]))
             desc.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'text'), ('</div', '>'))[1]))
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[0], '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[0], r'''\shref=['"]([^'^"]+?)['"]''')[0])
             if '/multimedia/' not in url:
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
@@ -167,7 +167,7 @@ class LuxVeritatisPL(CBaseHostClass):
             self.addVideo(params)
 
         addedLinks = []
-        tmp = re.compile('''['"]?soundFile['"]?\s*?:\s*?['"]([^'^"]+?\.mp3(?:\?[^'^"]*?)?)['"]''').findall(data)
+        tmp = re.compile(r'''['"]?soundFile['"]?\s*?:\s*?['"]([^'^"]+?\.mp3(?:\?[^'^"]*?)?)['"]''').findall(data)
         for url in tmp:
             if url in addedLinks:
                 continue
@@ -203,7 +203,7 @@ class LuxVeritatisPL(CBaseHostClass):
         tabItems = []
         sectionItem = self.cm.ph.getAllItemsBeetwenMarkers(sectionItem, '<a', '</a>')
         for idx in range(len(sectionItem)):
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(sectionItem[idx], '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(sectionItem[idx], r'''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(sectionItem[idx])
             if idx == 0:
                 title = '--Wszystkie--'
@@ -234,7 +234,7 @@ class LuxVeritatisPL(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
             params = dict(cItem)
             params.update({'good_for_fav': False, 'category': nextCategory, 'title': title.title(), 'url': url})
             self.addDir(params)
@@ -250,14 +250,14 @@ class LuxVeritatisPL(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<main', '</main>')[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<a', '</a>', '&rsaquo;'), ('<', '>'))[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, '''\shref=['"]([^'^"]+?)['"]''')[0]
+        nextPage = self.cm.ph.getSearchGroups(nextPage, r'''\shref=['"]([^'^"]+?)['"]''')[0]
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'movie-grid__list'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
         for item in data:
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h1', '</h1>')[1])
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
 
             desc = []
             t1 = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', '_description'), ('</', '>'))[1])
@@ -299,7 +299,7 @@ class LuxVeritatisPL(CBaseHostClass):
             sts, data = self.getPage(url)
             if not sts:
                 return
-            url = ph.search(data, '''<a[^>]+?href=['"](https?://[^>]+?\.pls(?:\?[^'^"]*?)?)['"]''')[0]
+            url = ph.search(data, r'''<a[^>]+?href=['"](https?://[^>]+?\.pls(?:\?[^'^"]*?)?)['"]''')[0]
             if url:
                 sts, tmp = self.getPage(url)
                 if sts:
@@ -312,13 +312,13 @@ class LuxVeritatisPL(CBaseHostClass):
                 sts, data = self.getPage(url)
                 if not sts:
                     return linksTab
-            url = ph.search(data, '''<a[^>]+?href=['"](https?://[^>]+?\.m3u8(?:\?[^'^"]*?)?)['"]''')[0]
+            url = ph.search(data, r'''<a[^>]+?href=['"](https?://[^>]+?\.m3u8(?:\?[^'^"]*?)?)['"]''')[0]
             linksTab.extend(getDirectM3U8Playlist(url, checkContent=True))
         elif 'tv-trwam' in url:
             sts, data = self.getPage(url)
             if not sts:
                 return
-            data = self.cm.ph.getSearchGroups(data, '''sources\s*?:\s*?(\[[^\]]+?\])''')[0]
+            data = self.cm.ph.getSearchGroups(data, r'''sources\s*?:\s*?(\[[^\]]+?\])''')[0]
             try:
                 data = json_loads(data)
                 hlsTab = []

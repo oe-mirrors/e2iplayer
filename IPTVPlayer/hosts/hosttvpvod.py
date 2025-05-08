@@ -253,7 +253,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             url = self.cm.meta.get('location', '')
             printDBG("TvpVod.location %s" % url)
             post_data = '{"auth":{"type":"SSO","value":"","app":"tvp"},"rememberMe":true}'
-            url = 'https://vod.tvp.pl/api/subscribers/sso/tvp/login?lang=pl&platform=BROWSER&code=' + self.cm.ph.getSearchGroups(url + '&', 'code=([^\?^&]+)[\?&]')[0]
+            url = 'https://vod.tvp.pl/api/subscribers/sso/tvp/login?lang=pl&platform=BROWSER&code=' + self.cm.ph.getSearchGroups(url + '&', r'code=([^\?^&]+)[\?&]')[0]
             params = dict(self.defaultParams)
             params['raw_post_data'] = True
             params['header']['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -311,12 +311,12 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         data = self.cm.ph.getSearchGroups(data, 'window.__channels =([^;]+?);')[0]
         data = json_loads(data)
         for item in data:
-            video_id = self.cm.ph.getSearchGroups(json_dumps(item.get('items', '')), '''['"]video_id['"]\s*:\s*([^,]+?),''')[0]
+            video_id = self.cm.ph.getSearchGroups(json_dumps(item.get('items', '')), r'''['"]video_id['"]\s*:\s*([^,]+?),''')[0]
             if video_id != '':
                 desc = ''
-                icon = self.cm.ph.getSearchGroups(json_dumps(item.get('image_logo', '')), '''['"](http[^'^"]+?\.jpg)['"]''')[0]
+                icon = self.cm.ph.getSearchGroups(json_dumps(item.get('image_logo', '')), r'''['"](http[^'^"]+?\.jpg)['"]''')[0]
                 if icon == '':
-                    icon = self.cm.ph.getSearchGroups(json_dumps(item.get('image_logo', '')), '''['"](http[^'^"]+?\.png)['"]''')[0]
+                    icon = self.cm.ph.getSearchGroups(json_dumps(item.get('image_logo', '')), r'''['"](http[^'^"]+?\.png)['"]''')[0]
                 icon = icon.format(width='300', height='0')
 #                printDBG("TvpVod.listTVP3Streams icon [%s]" % icon)
                 title = item.get('title', '').replace('EPG - ', '')
@@ -336,7 +336,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         for idx in range(1, len(data), 1):
             dateTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data[idx], '<span', '</span>')[1])
             subItems = []
-            tmp = re.compile('''<div[^>]+?class=['"]item(?:\s*playing)?['"][^>]*?>''').split(data[idx])
+            tmp = re.compile(r'''<div[^>]+?class=['"]item(?:\s*playing)?['"][^>]*?>''').split(data[idx])
             for i in range(1, len(tmp), 1):
                 time = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[i], ('<span', '>', 'time'), ('</span', '>'), False)[1])
                 desc = []
@@ -500,9 +500,9 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         itemsTab = []
         for item in tmp:
 #            printDBG("TvpVod.exploreApiItem item %s" % item)
-            icon = self.cm.ph.getSearchGroups(json_dumps(item.get('images', '')), '''['"]([^'^"]+?\.jpg)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(json_dumps(item.get('images', '')), r'''['"]([^'^"]+?\.jpg)['"]''')[0]
             if icon == '':
-                icon = self.cm.ph.getSearchGroups(json_dumps(item.get('images', '')), '''['"]([^'^"]+?\.png)['"]''')[0]
+                icon = self.cm.ph.getSearchGroups(json_dumps(item.get('images', '')), r'''['"]([^'^"]+?\.png)['"]''')[0]
             if icon == '':
                 icon = cItem['icon']
             if icon.startswith('//'):
@@ -629,20 +629,20 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             if sts:
                 data = tmp
 
-        asset_id = self.cm.ph.getSearchGroups(data, '''id=['"]tvplayer\-[0-9]+\-([0-9]+)''')[0]
+        asset_id = self.cm.ph.getSearchGroups(data, r'''id=['"]tvplayer\-[0-9]+\-([0-9]+)''')[0]
 
         if asset_id == '':
             asset_id = self.cm.ph.getSearchGroups(data, 'object_id=([0-9]+?)[^0-9]')[0]
         if asset_id == '':
             asset_id = self.cm.ph.getSearchGroups(data, 'class="playerContainer"[^>]+?data-id="([0-9]+?)"')[0]
         if '' == asset_id:
-            asset_id = self.cm.ph.getSearchGroups(data, 'data\-video\-id="([0-9]+?)"')[0]
+            asset_id = self.cm.ph.getSearchGroups(data, r'data\-video\-id="([0-9]+?)"')[0]
         if '' == asset_id:
             asset_id = self.cm.ph.getSearchGroups(data, "object_id:'([0-9]+?)'")[0]
         if '' == asset_id:
-            asset_id = self.cm.ph.getSearchGroups(data, 'data\-object\-id="([0-9]+?)"')[0]
+            asset_id = self.cm.ph.getSearchGroups(data, r'data\-object\-id="([0-9]+?)"')[0]
         if '' == asset_id:
-            asset_id = self.cm.ph.getSearchGroups(data, "videoID:\s*'([0-9]+?)'")[0]
+            asset_id = self.cm.ph.getSearchGroups(data, r"videoID:\s*'([0-9]+?)'")[0]
 
         return asset_id
 
@@ -663,7 +663,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             if not sts:
                 return []
 #            printDBG("TvpVod.getLinksForVideo data [%s]" % data)
-            hlsUrl = self.cm.ph.getSearchGroups(data, '''['"](http[^'^"]*?\.m3u8[^'^"]*?)['"]''')[0].replace('\/', '/')
+            hlsUrl = self.cm.ph.getSearchGroups(data, r'''['"](http[^'^"]*?\.m3u8[^'^"]*?)['"]''')[0].replace(r'\/', '/')
             if '' != hlsUrl:
                 videoTab = getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=False)
                 if 1 < len(videoTab):
@@ -690,7 +690,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 return []
 
             if config.plugins.iptvplayer.tvpVodPreferedformat.value == 'm3u8':
-                hlsUrl = self.cm.ph.getSearchGroups(data, '''['"](http[^'^"]*?\.m3u8[^'^"]*?)['"]''')[0].replace('\/', '/')
+                hlsUrl = self.cm.ph.getSearchGroups(data, r'''['"](http[^'^"]*?\.m3u8[^'^"]*?)['"]''')[0].replace(r'\/', '/')
                 if '' != hlsUrl:
                     videoTab = getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=False)
                     if 1 < len(videoTab):
@@ -701,7 +701,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     else:
                         videoTab = oneLink.getSortedLinks()
             if config.plugins.iptvplayer.tvpVodPreferedformat.value == 'mpd':
-                mpdLink = self.cm.ph.getSearchGroups(data, '''['"](http[^'^"]*?\.mpd[^'^"]*?)['"]''')[0].replace('\/', '/')
+                mpdLink = self.cm.ph.getSearchGroups(data, r'''['"](http[^'^"]*?\.mpd[^'^"]*?)['"]''')[0].replace(r'\/', '/')
                 if '' != mpdLink:
                     videoTab = getMPDLinksWithMeta(mpdLink, False, sortWithMaxBandwidth=999999999)
                     if 1 < len(videoTab):
@@ -726,7 +726,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         sts, data = self.cm.getPage('http://www.tvp.pl/shared/cdn/tokenizer_v2.php?mime_type=video%2Fmp4&object_id=' + asset_id, self.defaultParams)
         if not sts:
             return False
-        return not 'NOT_FOUND' in data
+        return 'NOT_FOUND' not in data
 
     def getVideoLink(self, asset_id):
         printDBG("getVideoLink asset_id [%s]" % asset_id)
@@ -811,7 +811,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     if item.get('mimeType', '').lower() == "application/x-mpegurl":
                         hlsTab = getDirectM3U8Playlist(item['url'])
                     elif item.get('mimeType', '').lower() == "video/mp4":
-                        id = self.cm.ph.getSearchGroups(item['url'], '''/video\-([1-9])\.mp4$''')[0]
+                        id = self.cm.ph.getSearchGroups(item['url'], r'''/video\-([1-9])\.mp4$''')[0]
                         fItem = formatMap.get(id, ('0x0', 0))
                         mp4Tab.append({'name': '%s \t mp4' % fItem[0], 'url': item['url'], 'bitrate': fItem[1], 'id': id})
 
@@ -913,7 +913,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                 title = ph.clean_html(item)
                 url = self.getFullUrl(ph.getattr(item, 'href'), cUrl)
                 if '{title},{id}' in url:
-                    url = cUrl + self.cm.ph.getSearchGroups(item, '''href=['"][^?]+?(\?[^'^"]+?)['"]''')[0]
+                    url = cUrl + self.cm.ph.getSearchGroups(item, r'''href=['"][^?]+?(\?[^'^"]+?)['"]''')[0]
                 self.addDir(MergeDicts(cItem, {'good_for_fav': False, 'allow_sort': False, 'title': title, 'url': url}))
 
             if self.currList:

@@ -60,7 +60,7 @@ class DDLMe(CBaseHostClass):
 
     def getRealUrl(self, url):
         if config.plugins.iptvplayer.ddlme_proxy.value == 'webproxy' and url != None and 'browse.php?u=' in url:
-            url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', '''\?u=(http[^&]+?)&''')[0])
+            url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', r'''\?u=(http[^&]+?)&''')[0])
         return url
 
     def getFullUrl(self, url, baseUrl=None):
@@ -151,7 +151,7 @@ class DDLMe(CBaseHostClass):
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def searchUrl(self, data):
-        url = self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=([^>\s]+?)[>\s]''')[0]
+        url = self.cm.ph.getSearchGroups(data, r'''<a[^>]+?href=([^>\s]+?)[>\s]''')[0]
         if url.startswith('"'):
             url = self.cm.ph.getSearchGroups(url, '"([^"]+?)"')[0]
         if url.startswith("'"):
@@ -299,7 +299,7 @@ class DDLMe(CBaseHostClass):
         if not sts:
             return
 
-        nextPage = self.cm.ph.getSearchGroups(data, '''<a([^>]+?fa\-arrow\-circle\-right[^>]+?)>''')[0]
+        nextPage = self.cm.ph.getSearchGroups(data, r'''<a([^>]+?fa\-arrow\-circle\-right[^>]+?)>''')[0]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^'^"]+?)['"]''')[0])
 
         cUrl = self.cm.meta['url']
@@ -334,7 +334,7 @@ class DDLMe(CBaseHostClass):
         if not sts:
             return
 
-        nextPage = self.cm.ph.getSearchGroups(data, '''<a([^>]+?fa\-arrow\-circle\-right[^>]+?)>''')[0]
+        nextPage = self.cm.ph.getSearchGroups(data, r'''<a([^>]+?fa\-arrow\-circle\-right[^>]+?)>''')[0]
         nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''href=['"]([^'^"]+?)['"]''')[0])
 
         self._listItems(cItem, nextCategory, data)
@@ -560,13 +560,13 @@ class DDLMe(CBaseHostClass):
         try:
             year = str(int(cItem['year']))
         except Exception:
-            year = self.cm.ph.getSearchGroups(title, '''\(\s*?([0-9]+?)\s*?\)$''')[0]
+            year = self.cm.ph.getSearchGroups(title, r'''\(\s*?([0-9]+?)\s*?\)$''')[0]
         if year != '':
             itemsList.append((_('Year:'), year))
 
         rating = self.cm.ph.getSearchGroups(data, '''<span([^>]+?ratingFill[^>]+?)>''')[0]
         try:
-            rating = int(self.cm.ph.getSearchGroups(rating, '''width\s*?:\s*?([0-9]+)\%''')[0]) / 10.0
+            rating = int(self.cm.ph.getSearchGroups(rating, r'''width\s*?:\s*?([0-9]+)\%''')[0]) / 10.0
             itemsList.append((_('Rating:'), str(rating)))
         except Exception:
             printExc()

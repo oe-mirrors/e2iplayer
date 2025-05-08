@@ -55,8 +55,8 @@ class MusicMp3Ru(CBaseHostClass):
     def getMoreItem(self, cUrl, data):
         moreItem = {}
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'show_more'), ('</div', '>'))[1]
-        ajaxData = clean_html(self.cm.ph.getSearchGroups(data, '''\sdata\-infiniteAjaxScroll=['"]([^'^"]+?)['"]''')[0])
-        queryData = clean_html(self.cm.ph.getSearchGroups(data, '''\sdata\-query=['"]([^'^"]+?)['"]''')[0])
+        ajaxData = clean_html(self.cm.ph.getSearchGroups(data, r'''\sdata\-infiniteAjaxScroll=['"]([^'^"]+?)['"]''')[0])
+        queryData = clean_html(self.cm.ph.getSearchGroups(data, r'''\sdata\-query=['"]([^'^"]+?)['"]''')[0])
         try:
             data = byteify(json.loads(ajaxData))
             moreItem['params'] = data
@@ -79,7 +79,7 @@ class MusicMp3Ru(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'menu_main'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0]
             type = url.split('/')[-1].split('.', 1)[0].split('_', 1)[-1]
             if type == 'genres':
                 type = 'albums'
@@ -106,7 +106,7 @@ class MusicMp3Ru(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'menu_sub'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], cUrl)
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0], cUrl)
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'good_for_fav': False, 'url': url, 'title': title, 'sub_menu_idx': subMenuIdx + 1})
@@ -123,7 +123,7 @@ class MusicMp3Ru(CBaseHostClass):
         params = dict(cItem)
         params.pop('f_more', None)
         params.pop('page', None)
-        url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
         title = self.cleanHtmlStr(item)
         params.update({'good_for_fav': True, 'category': nextCategory, 'url': url, 'title': title})
         self.addDir(params)
@@ -179,8 +179,8 @@ class MusicMp3Ru(CBaseHostClass):
             if 'album_report' not in item:
                 continue
 
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h5', '</h5>')[1])
 
             desc = []
@@ -220,14 +220,14 @@ class MusicMp3Ru(CBaseHostClass):
             return
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<table', '>', 'tracklist'), ('</table', '>'))[1]
-        basePlaybackUrl = self.cm.ph.getSearchGroups(tmp, '''\sdata\-url=['"]([^'^"]+?)['"]''')[0]
+        basePlaybackUrl = self.cm.ph.getSearchGroups(tmp, r'''\sdata\-url=['"]([^'^"]+?)['"]''')[0]
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<tbody', '</tbody>')[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<tr', '>', 'song'), ('</tr', '>'))
         for item in data:
             title = ''
-            rel = self.cm.ph.getSearchGroups(item, '''\srel=['"]([^'^"]+?)['"]''')[0]
-            id = self.cm.ph.getSearchGroups(item, '''\sid=['"]([^'^"]+?)['"]''')[0]
+            rel = self.cm.ph.getSearchGroups(item, r'''\srel=['"]([^'^"]+?)['"]''')[0]
+            id = self.cm.ph.getSearchGroups(item, r'''\sid=['"]([^'^"]+?)['"]''')[0]
             desc = []
             item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<td', '>'), ('</td', '>'))
             for it in item:
@@ -262,7 +262,7 @@ class MusicMp3Ru(CBaseHostClass):
             if len(data):
                 del data[0]
             for item in data:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
                 desc = []
                 item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<dl', '</dl>')
@@ -288,7 +288,7 @@ class MusicMp3Ru(CBaseHostClass):
             sts, data = self.getPage(self.getMainUrl())
             if not sts:
                 return []
-            scriptUrl = self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^'^"]*?/scripts\.js[^'^"]*?)['"]''')[0]
+            scriptUrl = self.cm.ph.getSearchGroups(data, r'''<script[^>]+?src=['"]([^'^"]*?/scripts\.js[^'^"]*?)['"]''')[0]
             if scriptUrl == '':
                 return []
             sts, data = self.getPage(self.getFullUrl(scriptUrl))

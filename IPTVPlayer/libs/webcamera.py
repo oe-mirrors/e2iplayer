@@ -116,9 +116,9 @@ class WebCameraApi(CBaseHostClass):
                     return []
 
                 if page == 1:
-                    tmp = self.cm.ph.getSearchGroups(data, '''(<div[^>]+?inline\-camera\-listing[^>]+?>)''')[0]
+                    tmp = self.cm.ph.getSearchGroups(data, r'''(<div[^>]+?inline\-camera\-listing[^>]+?>)''')[0]
                     printDBG(">> \"%s\"" % tmp)
-                    tmp = re.compile('''data\-([^=^'^"^\s]+?)\s*=\s*['"]([^'^"]+?)['"]''').findall(tmp)
+                    tmp = re.compile(r'''data\-([^=^'^"^\s]+?)\s*=\s*['"]([^'^"]+?)['"]''').findall(tmp)
                     cItem = dict(cItem)
                     cItem['more_params'] = {}
                     for item in tmp:
@@ -142,9 +142,9 @@ class WebCameraApi(CBaseHostClass):
                         if limiter in item:
                             title = self.cleanHtmlStr(item.split(limiter)[0])
                             desc = self.cleanHtmlStr(item.split(limiter)[-1])
-                        icon = self.cm.ph.getSearchGroups(item, """data\-src=['"]([^'^"]+?)['"]""")[0]
+                        icon = self.cm.ph.getSearchGroups(item, r"""data\-src=['"]([^'^"]+?)['"]""")[0]
                         if icon == '':
-                            icon = self.cm.ph.getSearchGroups(item, """src=['"]([^'^"]+?\.jpg[^'^"]*?)['"]""")[0]
+                            icon = self.cm.ph.getSearchGroups(item, r"""src=['"]([^'^"]+?\.jpg[^'^"]*?)['"]""")[0]
                         if 'instagramie' in title:
                             continue
                         params = dict(cItem)
@@ -207,7 +207,7 @@ class WebCameraApi(CBaseHostClass):
             for item in cTree['list']:
                 title = self.cleanHtmlStr(item['dat'])
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item['dat'], '''src=['"]([^'^"]+?\.jpe?g(:?\?[^'^"]+?)?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item['dat'], r'''src=['"]([^'^"]+?\.jpe?g(:?\?[^'^"]+?)?)['"]''')[0])
                 if '/mapa' in url:
                     break
                 elif 'list' not in item:

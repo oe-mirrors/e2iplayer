@@ -70,7 +70,7 @@ class MeteoPLApi(CBaseHostClass):
             data = self.cm.ph.getDataBeetwenMarkers(data, '<select name=woj', '</select>')[1]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'option', '<', withMarkers=True)
             for item in data:
-                cat = self.cm.ph.getSearchGroups(item, 'value=([^\s^>]+?)[\s>]')[0].replace('"', '').replace("'", "")
+                cat = self.cm.ph.getSearchGroups(item, r'value=([^\s^>]+?)[\s>]')[0].replace('"', '').replace("'", "")
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '>([^<]+?)<')[0]).strip()
                 params = dict(cItem)
                 params.update({'init_list': False, 'meteo_cat': 'woj', 'meteo_woj': cat, 'url': self.getFullUrl('um/php/gpp/next.php'), 'title': title})
@@ -110,12 +110,12 @@ class MeteoPLApi(CBaseHostClass):
         printDBG(data)
         printDBG("===================================")
 
-        fcstdate = self.cm.ph.getSearchGroups(data, '''var\s*fcstdate\s*=\s*['"]([^'^"]+?)['"]''')[0]
-        ntype = self.cm.ph.getSearchGroups(data, '''var\s*ntype\s*=\s*['"]([^'^"]+?)['"]''')[0]
-        lang = self.cm.ph.getSearchGroups(data, '''var\s*lang\s*=\s*['"]([^'^"]+?)['"]''')[0]
-        id = self.cm.ph.getSearchGroups(data, '''var\s*id\s*=\s*['"]([^'^"]+?)['"]''')[0]
-        act_x = self.cm.ph.getSearchGroups(data, '''var\s*act_x\s*=([^;]+?);''')[0].strip()
-        act_y = self.cm.ph.getSearchGroups(data, '''var\s*act_y\s*=([^;]+?);''')[0].strip()
+        fcstdate = self.cm.ph.getSearchGroups(data, r'''var\s*fcstdate\s*=\s*['"]([^'^"]+?)['"]''')[0]
+        ntype = self.cm.ph.getSearchGroups(data, r'''var\s*ntype\s*=\s*['"]([^'^"]+?)['"]''')[0]
+        lang = self.cm.ph.getSearchGroups(data, r'''var\s*lang\s*=\s*['"]([^'^"]+?)['"]''')[0]
+        id = self.cm.ph.getSearchGroups(data, r'''var\s*id\s*=\s*['"]([^'^"]+?)['"]''')[0]
+        act_x = self.cm.ph.getSearchGroups(data, r'''var\s*act_x\s*=([^;]+?);''')[0].strip()
+        act_y = self.cm.ph.getSearchGroups(data, r'''var\s*act_y\s*=([^;]+?);''')[0].strip()
         urlsTab.append({'name': 'mgram', 'url': self.getFullUrl('um/metco/mgram_pict.php?ntype=%s&fdate=%s&row=%s&col=%s&lang=%s' % (ntype, fcstdate, act_y, act_x, lang))})
 
         return urlsTab

@@ -97,7 +97,7 @@ class SerialeCO(CBaseHostClass):
             del data[0]
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'excerpt'), ('</div', '>'))[1])
 
@@ -136,13 +136,13 @@ class SerialeCO(CBaseHostClass):
 
         # function pobierz_info_o_odcinkach
         ajaxInfoData = self.cm.ph.getDataBeetwenMarkers(data, 'function pobierz_info_o_odcinkach', '});')[1]
-        ajaxInfoVarName = self.cm.ph.getSearchGroups(ajaxInfoData, '''var\s+?([A-Za-z0-9]+?)\s*?=''')[0]
+        ajaxInfoVarName = self.cm.ph.getSearchGroups(ajaxInfoData, r'''var\s+?([A-Za-z0-9]+?)\s*?=''')[0]
         ajaxInfoData = self.cm.ph.getDataBeetwenMarkers(ajaxInfoData, '$.ajax(', ').', False)[1]
         printDBG('ajaxInfoData: [%s]' % ajaxInfoData)
         printDBG('ajaxInfoVarName: [%s]' % ajaxInfoVarName)
 
         playerUrl = self.cm.ph.getDataBeetwenMarkers(data, 'function seriale_search', 'function')[1]
-        playerUrl = self.cm.ph.getSearchGroups(playerUrl, '''['"]?url['"]?\s*:\s*['"](http[^'^"]+?)['"]''')[0]
+        playerUrl = self.cm.ph.getSearchGroups(playerUrl, r'''['"]?url['"]?\s*:\s*['"](http[^'^"]+?)['"]''')[0]
         if not self.cm.isValidUrl(playerUrl):
             printDBG("No valid playerUrl")
             return
@@ -150,7 +150,7 @@ class SerialeCO(CBaseHostClass):
         self.playerData['player_url'] = playerUrl
 
         seasonUrl = self.cm.ph.getDataBeetwenMarkers(data, 'function pokaz_odcinki', 'function')[1]
-        seasonUrl = self.cm.ph.getSearchGroups(seasonUrl, '''['"]?url['"]?\s*:\s*['"](http[^'^"]+?)['"]''')[0]
+        seasonUrl = self.cm.ph.getSearchGroups(seasonUrl, r'''['"]?url['"]?\s*:\s*['"](http[^'^"]+?)['"]''')[0]
         if not self.cm.isValidUrl(seasonUrl):
             printDBG("No valid playerUrl")
             return

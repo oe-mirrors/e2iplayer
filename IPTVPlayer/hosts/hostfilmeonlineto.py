@@ -159,7 +159,7 @@ class FilmeOnlineTo(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '</li>', 'sortby'), ('</ul', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
         for item in tmp:
-            value = self.cm.ph.getSearchGroups(item, '''sortby\(\s*?['"]([^'^"]+?)['"]''')[0]
+            value = self.cm.ph.getSearchGroups(item, r'''sortby\(\s*?['"]([^'^"]+?)['"]''')[0]
             self.cacheFilters[key].append({key: value, 'title': self.cleanHtmlStr(item)})
         if len(self.cacheFilters[key]):
             self.cacheFiltersKeys.append(key)
@@ -235,7 +235,7 @@ class FilmeOnlineTo(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
-            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-original=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''data\-original=['"]([^"^']+?)['"]''')[0])
             tmp = item.split('<h2>', 1)
             title = self.cleanHtmlStr(tmp[-1])
             desc = []
@@ -249,7 +249,7 @@ class FilmeOnlineTo(CBaseHostClass):
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
-            movieId = self.cm.ph.getSearchGroups(item, '''data\-movie\-id=['"]([^"^']+?)['"]''')[0]
+            movieId = self.cm.ph.getSearchGroups(item, r'''data\-movie\-id=['"]([^"^']+?)['"]''')[0]
             params = {'good_for_fav': True, 'name': 'category', 'category': nextCategory, 'title': title, 'url': url, 'movie_id': movieId, 'desc': ' | '.join(desc), 'info_url': url, 'icon': icon}
             self.addDir(params)
 
@@ -266,7 +266,7 @@ class FilmeOnlineTo(CBaseHostClass):
         if not sts:
             return
 
-        data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?movie\s*?\=\s*?\{'), re.compile('}'))[1]
+        data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'var\s*?movie\s*?\=\s*?\{'), re.compile('}'))[1]
         ret = js_execute(data + '; print(JSON.stringify(movie));')
         try:
             printDBG(ret['data'])
@@ -298,7 +298,7 @@ class FilmeOnlineTo(CBaseHostClass):
             linksLinks = {}
             linksTiles = {}
 
-            reParamsObj = re.compile('''\s*?data\-([^\=^\s]+?)\s*?=['"]([^'^"]+?)['"]''')
+            reParamsObj = re.compile(r'''\s*?data\-([^\=^\s]+?)\s*?=['"]([^'^"]+?)['"]''')
             for serverItem in serverData:
                 sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(serverItem, '<strong', '</strong>')[1])
                 serverItem = self.cm.ph.getAllItemsBeetwenMarkers(serverItem, '<a', '</a>')
@@ -376,7 +376,7 @@ class FilmeOnlineTo(CBaseHostClass):
         if not sts:
             return
 
-        data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?movie\s*?\=\s*?\{'), re.compile('}'))[1]
+        data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'var\s*?movie\s*?\=\s*?\{'), re.compile('}'))[1]
         ret = js_execute(data + '; print(JSON.stringify(movie));')
         try:
             movieData = byteify(json.loads(ret['data']), '', True)
@@ -398,7 +398,7 @@ class FilmeOnlineTo(CBaseHostClass):
                 data = byteify(json.loads(data), '', True)
                 url = data['src'].replace('&amp;', '&')
                 urlParams = {'Referer': str(videoUrl), 'User-Agent': self.HEADER['User-Agent']}
-                subsLinks = re.compile('''c([0-9]+?)_file=(https?://[^&^$]+?\.srt)[&$]''').findall(url)
+                subsLinks = re.compile(r'''c([0-9]+?)_file=(https?://[^&^$]+?\.srt)[&$]''').findall(url)
                 subsLabels = dict(re.compile('''c([0-9]+?)_label=([^&^/]+?)[&/]''').findall(url + '&'))
                 for item in subsLinks:
                     label = subsLabels.get(item[0], 'unk')
@@ -409,7 +409,7 @@ class FilmeOnlineTo(CBaseHostClass):
                 sts, data = self.getPage(self.getFullUrl(url), urlParams)
                 if not sts:
                     return
-                data = dict(re.compile('''_([a-z]+?)\s*?=\s*['"]([^'^"]+?)['"]''').findall(data))
+                data = dict(re.compile(r'''_([a-z]+?)\s*?=\s*['"]([^'^"]+?)['"]''').findall(data))
                 url = '/ajax/msources.php?eid=%s&x=%s&y=%s&z=%s&ip=%s&mid=%s&gid=%s&lang=rum&epIndex=%s&server=NaN&so=%s&epNr=%s&srvr=NaN' % (params['id'], data['x'], data['y'], data['z'], data['ip'], movieData['id'], movieData['gid'], params['index'], params['so'], params['epNr'])
                 sts, data = self.getPage(self.getFullUrl(url), urlParams)
                 if not sts:

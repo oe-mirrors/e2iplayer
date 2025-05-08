@@ -77,7 +77,7 @@ class BBCSport(CBaseHostClass):
         self.ABBREVIATED_DAYS_NAME_TAB = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
     def _str2date(self, txt):
-        txt = self.cm.ph.getSearchGroups(txt, '([0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+:[0-9]+)')[0]
+        txt = self.cm.ph.getSearchGroups(txt, r'([0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+:[0-9]+)')[0]
         return datetime.strptime(txt, '%Y-%m-%dT%H:%M:%S')
 
     def _gmt2local(self, txt):
@@ -117,8 +117,8 @@ class BBCSport(CBaseHostClass):
         self.setMainUrl(data.meta['url'])
 
         liveguideData = self.cm.ph.getDataBeetwenNodes(data, ('<aside', '</aside>', 'liveguide'), ('<div', '</div>'))[1]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(liveguideData, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^"^']+?)?)['"]''')[0])
-        url = self.getFullUrl(self.cm.ph.getSearchGroups(liveguideData, '''\shref=['"]([^"^']+?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(liveguideData, r'''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^"^']+?)?)['"]''')[0])
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(liveguideData, r'''\shref=['"]([^"^']+?)['"]''')[0])
         if url != '':
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(liveguideData, 'alt="([^"]+?)"')[0])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(liveguideData, ('<p', '>', 'summary'), ('</p', '>'), False)[1])
@@ -131,7 +131,7 @@ class BBCSport(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             if '/my-sport' in url:
@@ -158,7 +158,7 @@ class BBCSport(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'list-item'), ('</li', '>'), False)
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
             title = self.cleanHtmlStr(item)
@@ -301,12 +301,12 @@ class BBCSport(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'has-media'), ('</article', '>'))
             for item in data:
                 tmp = self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1]
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, r'''\shref=['"]([^"^']+?)['"]''')[0])
                 if not self.cm.isValidUrl(url):
                     continue
 
                 title = self.cleanHtmlStr(tmp)
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^"^']+?)?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^"^']+?)?)['"]''')[0])
 
                 desc = []
                 tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', '_meta'), ('</div', '>'), False)[1]
@@ -410,12 +410,12 @@ class BBCSport(CBaseHostClass):
 
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'data-media-type'), ('</div', '>'))
         for item in tmp:
-            mediaType = self.cm.ph.getSearchGroups(item, '\sdata\-media\-type=["]([^"]+?)["]')[0]
-            mediaType = self.cm.ph.getSearchGroups(item, '\sdata\-content\-type=["]([^"]+?)["]')[0].lower()
-            vpid = self.cm.ph.getSearchGroups(item, '\sdata\-media\-vpid=["]([^"]+?)["]')[0]
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '\sdata\-title=["]([^"]+?)["]')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '\sdata\-image\-url=["]([^"]+?)["]')[0])
-            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '\sdata\-media\-duration=["]([^"]+?)["]')[0])
+            mediaType = self.cm.ph.getSearchGroups(item, r'\sdata\-media\-type=["]([^"]+?)["]')[0]
+            mediaType = self.cm.ph.getSearchGroups(item, r'\sdata\-content\-type=["]([^"]+?)["]')[0].lower()
+            vpid = self.cm.ph.getSearchGroups(item, r'\sdata\-media\-vpid=["]([^"]+?)["]')[0]
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'\sdata\-title=["]([^"]+?)["]')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'\sdata\-image\-url=["]([^"]+?)["]')[0])
+            duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'\sdata\-media\-duration=["]([^"]+?)["]')[0])
 
             if vpid == '':
                 continue

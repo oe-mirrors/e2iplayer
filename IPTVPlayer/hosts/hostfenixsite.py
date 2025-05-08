@@ -152,7 +152,7 @@ class Fenixsite(CBaseHostClass):
         mainDesc = self.cleanHtmlStr(ph.find(data, ('<div', '>', 'shortstory-news'), '</div>', flags=0)[1].split('</h1>', 1)[-1])
 
         tmp = ph.find(data, ('<span', '>', 'pagesBlock'), '</td>')[1]
-        tmp = ph.search(tmp, '''<a([^>]+?spages\(\s*?['"]%s['"][^>]*?)>''' % (page + 1))[0]
+        tmp = ph.search(tmp, r'''<a([^>]+?spages\(\s*?['"]%s['"][^>]*?)>''' % (page + 1))[0]
         nextPage = self.getFullUrl(ph.getattr(tmp, 'href'))
 
         reIcon = re.compile(r'''<img[^>]+?src=(['"])([^>]*?\.(?:jpe?g|png|gif)(?:\?[^\1]*?)?)(?:\1)''', re.I)
@@ -215,7 +215,7 @@ class Fenixsite(CBaseHostClass):
         tmp = ph.findall(data, ('<script', '>'), '</script>')
         for item in tmp:
             if 'getJSON' in item:
-                key = ph.search(item, '''var\s+?keys\s*?=[^;^'^"]*?['"]([^'^"]+?)['"]''')[0]
+                key = ph.search(item, r'''var\s+?keys\s*?=[^;^'^"]*?['"]([^'^"]+?)['"]''')[0]
                 item = ph.find(item, 'getJSON(', ',', flags=0)[1].split('+')
                 apiLink = ''
                 for it in item:

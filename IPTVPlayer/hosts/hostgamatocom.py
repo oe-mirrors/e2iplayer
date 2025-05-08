@@ -62,7 +62,7 @@ class GamatoMovies(CBaseHostClass):
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return
-        self.cacheFilters['token'] = self.cm.ph.getSearchGroups(data, '''token\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        self.cacheFilters['token'] = self.cm.ph.getSearchGroups(data, r'''token\s*:\s*['"]([^'^"]+?)['"]''')[0]
 
         def addFilter(data, key, addAny, titleBase):
             self.cacheFilters[key] = []
@@ -185,7 +185,7 @@ class GamatoMovies(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, 'vars.title =', '};', False)[1].strip() + '}'
 
         try:
-            trailerUrl = self.cm.ph.getSearchGroups(data, '''"trailer"\s*:\s*(['"]http[^'^"]+?['"])''')[0]
+            trailerUrl = self.cm.ph.getSearchGroups(data, r'''"trailer"\s*:\s*(['"]http[^'^"]+?['"])''')[0]
             trailerUrl = byteify(json.loads(trailerUrl))
             if self.cm.isValidUrl(trailerUrl):
                 params = dict(cItem)
@@ -237,7 +237,7 @@ class GamatoMovies(CBaseHostClass):
             sts, data = self.cm.getPage(self.MAIN_URL)
             if not sts:
                 return
-            self.cacheFilters['token'] = self.cm.ph.getSearchGroups(data, '''token\s*:\s*['"]([^'^"]+?)['"]''')[0]
+            self.cacheFilters['token'] = self.cm.ph.getSearchGroups(data, r'''token\s*:\s*['"]([^'^"]+?)['"]''')[0]
         cItem = dict(cItem)
         cItem.update({'priv_type': searchType, 'query': urllib_quote_plus(searchPattern)})
         self.listItems(cItem, 'list_seasons')
@@ -261,7 +261,7 @@ class GamatoMovies(CBaseHostClass):
         jsonData = self.cm.ph.getDataBeetwenMarkers(data, 'vars.title =', '};', False)[1].strip() + '}'
         if 'movie' == cItem['priv_type']:
             try:
-                trailerUrl = self.cm.ph.getSearchGroups(jsonData, '''"trailer"\s*:\s*(['"]http[^'^"]+?['"])''')[0]
+                trailerUrl = self.cm.ph.getSearchGroups(jsonData, r'''"trailer"\s*:\s*(['"]http[^'^"]+?['"])''')[0]
                 trailerUrl = byteify(json.loads(trailerUrl))
                 if self.cm.isValidUrl(trailerUrl):
                     urlTab.append({'name': _('Trailer'), 'url': trailerUrl, 'need_resolve': 1})

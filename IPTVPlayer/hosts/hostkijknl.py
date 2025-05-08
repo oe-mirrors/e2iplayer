@@ -295,8 +295,8 @@ class KijkNL(CBaseHostClass):
             sts, data = self.getPage(embedVideoUrl)
             try:
                 vidData = self.cm.ph.getDataBeetwenMarkers(data, '<video', '>')[1]
-                account = self.cm.ph.getSearchGroups(vidData, '''data\-account=['"]([^'^"]+?)['"]''')[0]
-                video = self.cm.ph.getSearchGroups(vidData, '''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
+                account = self.cm.ph.getSearchGroups(vidData, r'''data\-account=['"]([^'^"]+?)['"]''')[0]
+                video = self.cm.ph.getSearchGroups(vidData, r'''data\-video\-id=['"]([^'^"]+?)['"]''')[0]
 
                 if self.policyKeyCache == '':
                     data = re.compile('''<script[^>]+?src=['"]([^'^"]+?)['"]''').findall(data)
@@ -306,7 +306,7 @@ class KijkNL(CBaseHostClass):
                             continue
                         sts, script = self.getPage(url)
                         if sts:
-                            self.policyKeyCache = self.cm.ph.getSearchGroups(script, '''policyKey\s*:\s*['"]([^'^"]+?)['"]''')[0]
+                            self.policyKeyCache = self.cm.ph.getSearchGroups(script, r'''policyKey\s*:\s*['"]([^'^"]+?)['"]''')[0]
                         if self.policyKeyCache != '':
                             break
 

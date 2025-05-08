@@ -529,7 +529,7 @@ class common:
         if IsMainThread():
             msg1 = _('It is not allowed to call getURLRequestData from main thread.')
             msg2 = _('You should never perform block I/O operations in the __init__.')
-            GetIPTVNotify().push('\s'.join([msg1, msg2]), 'error', 40)
+            GetIPTVNotify().push(r'\s'.join([msg1, msg2]), 'error', 40)
             raise Exception("Wrong usage!")
 
         # by default we will work in return_data mode
@@ -1065,8 +1065,8 @@ class common:
                         post_data2 = {}
                         verData = re.findall(r'(<input[^>]*)>', re.sub("<!--.*?-->", "<!-- -->", verData))
                         for item in verData:
-                            name = self.ph.getSearchGroups(item, '''\sname=['"]([^'^"]+?)['"]''')[0]
-                            value = self.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
+                            name = self.ph.getSearchGroups(item, r'''\sname=['"]([^'^"]+?)['"]''')[0]
+                            value = self.ph.getSearchGroups(item, r'''\svalue=['"]([^'^"]+?)['"]''')[0]
                             post_data2[name] = value
                         #post_data2['id'] = id
                         if '' != token:
@@ -1120,8 +1120,8 @@ class common:
                         get_data = {}
                         verData = re.findall(r'(<input[^>]*)>', re.sub("<!--.*?-->", "<!-- -->", verData))
                         for item in verData:
-                            name = self.ph.getSearchGroups(item, '''\sname=['"]([^'^"]+?)['"]''')[0]
-                            value = self.ph.getSearchGroups(item, '''\svalue=['"]([^'^"]+?)['"]''')[0]
+                            name = self.ph.getSearchGroups(item, r'''\sname=['"]([^'^"]+?)['"]''')[0]
+                            value = self.ph.getSearchGroups(item, r'''\svalue=['"]([^'^"]+?)['"]''')[0]
                             get_data[name] = value
 #                        get_data = dict(re.findall(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', verData))
                         get_data['jschl_answer'] = decoded['answer']
@@ -1299,7 +1299,7 @@ class common:
         if IsMainThread():
             msg1 = _('It is not allowed to call getURLRequestData from main thread.')
             msg2 = _('You should never perform block I/O operations in the __init__.')
-            GetIPTVNotify().push('\s'.join([msg1, msg2]), 'error', 40)
+            GetIPTVNotify().push(r'\s'.join([msg1, msg2]), 'error', 40)
             raise Exception("Wrong usage!")
 
         if 'max_data_size' in params and not params.get('return_data', False):
@@ -1506,12 +1506,12 @@ class common:
             if params.get('return_data', False) and params.get('convert_charset', True):
                 encoding = ''
                 if 'content-type' in metadata:
-                    encoding = self.ph.getSearchGroups(metadata['content-type'], '''charset=([A-Za-z0-9\-]+)''', 1, True)[0].strip().upper()
+                    encoding = self.ph.getSearchGroups(metadata['content-type'], r'''charset=([A-Za-z0-9\-]+)''', 1, True)[0].strip().upper()
                 if encoding == '' and params.get('search_charset', False):
                     if isinstance(_data, bytes):
                         _data = data.decode('utf-8', 'ignore')
                     encoding = self.ph.getSearchGroups(_data, '''(<meta[^>]+?Content-Type[^>]+?>)''', ignoreCase=True)[0]
-                    encoding = self.ph.getSearchGroups(encoding, '''charset=([A-Za-z0-9\-]+)''', 1, True)[0].strip().upper()
+                    encoding = self.ph.getSearchGroups(encoding, r'''charset=([A-Za-z0-9\-]+)''', 1, True)[0].strip().upper()
                 if encoding not in ['', 'UTF-8']:
                     printDBG(">> encoding[%s]" % encoding)
                     try:

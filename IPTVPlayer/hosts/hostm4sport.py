@@ -371,7 +371,7 @@ class m4sport(CBaseHostClass):
                     vl = vl[1]
                 else:
                    vl = vl[0]
-                vl = vl.replace('\/', '/')
+                vl = vl.replace(r'\/', '/')
                 if vl.startswith('/'):
                     vl = 'https:' + vl
                 if not self.cm.isValidUrl(vl):

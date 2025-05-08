@@ -163,7 +163,7 @@ class OrthoBullets(CBaseHostClass):
             viddate = viddate.strip()
             vidviews = self.cm.ph.getAllItemsBeetwenNodes(videos, '<div class="dashboard-item__views">', '</div>', False)[0]
             vidviews = vidviews.strip()
-            desc = '\c00????00 Title: \c00??????%s\\n \c00????00Date: \c00??????%s\\n \c00????00Views: \c00??????%s\\n' % (title, viddate, vidviews)
+            desc = '\\c00????00 Title: \\c00??????%s\\n \\c00????00Date: \\c00??????%s\\n \\c00????00Views: \\c00??????%s\\n' % (title, viddate, vidviews)
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title': title, 'url': videourl, 'icon': imageurl, 'desc': desc})
             self.addVideo(params)

@@ -80,7 +80,7 @@ class Youtube(CBaseHostClass):
             category = 'playlist'
         elif url.split('?')[0].endswith('/playlists'):
             category = 'playlists'
-        elif None != re.search('/watch\?v=[^\&]+?\&list=', url):
+        elif None != re.search(r'/watch\?v=[^\&]+?\&list=', url):
             category = 'traylist'
         elif 'user/' in url or (('channel/' in url or '/c/' in url or '/@' in url) and not url.endswith('/live')):
             category = 'channel'
@@ -214,7 +214,7 @@ class Youtube(CBaseHostClass):
         page = cItem.get("page", '1')
 
         if "channel" == category:
-            if not ('browse' in url) and (not 'ctoken' in url):
+            if 'browse' not in url and ('ctoken' not in url):
                 if url.endswith('/videos'):
                     url = url + '?flow=list&view=0&sort=dd'
                 else:

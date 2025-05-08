@@ -109,7 +109,7 @@ class ogladajto(CBaseHostClass):
 
         # fill sort
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<div class="sorting__dropdown-list">', '</ul>', False)[1]
-        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(re.sub('\s+', ' ', dat))
+        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(re.sub(r'\s+', ' ', dat))
         for item in dat:
             self.cacheMovieFilters['sort'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
 
@@ -118,7 +118,7 @@ class ogladajto(CBaseHostClass):
 
         # fill cats
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="nav__dropdown-menu sub-menu">', '</ul>', False)[1]
-        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(re.sub('\s+', ' ', dat))
+        dat = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>(.+?)</a>').findall(re.sub(r'\s+', ' ', dat))
         for item in dat:
             self.cacheMovieFilters['cats'].append({'title': self.cleanHtmlStr(item[1]), 'url': self.getFullUrl(item[0])})
 
@@ -217,8 +217,8 @@ class ogladajto(CBaseHostClass):
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<a', '</a>')
             tabItems = []
             for item in sItem:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-                title = self.cm.ph.getSearchGroups(item, '''\salt=['"]([^'^"]+?)['"]''')[0]
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
+                title = self.cm.ph.getSearchGroups(item, r'''\salt=['"]([^'^"]+?)['"]''')[0]
                 tabItems.append({'title': '%s - %s' % (serieTitle, title), 'url': url, 'icon': serieIcon, 'desc': ''})
             if len(tabItems):
                 params = dict(cItem)

@@ -521,7 +521,7 @@ class TED(CBaseHostClass):
                 _addLinkItem(urlTab, item, item['file'])
 
             if len(h264Tab) == 1:
-                reObj = re.compile('[/\-\.]([0-9]+k)\.')
+                reObj = re.compile(r'[/\-\.]([0-9]+k)\.')
                 baseMp4Url = urlTab[-1]['url']
                 baseBitrate = ph.search(baseMp4Url, reObj)[0]
                 hlsItem = tmp['resources'].get('hls', {})

@@ -67,7 +67,7 @@ class C3skTv(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
             for item in data:
                 nextCategory = ''
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 if url == '' or 'pdep43.' in url:
                     continue
 
@@ -101,11 +101,11 @@ class C3skTv(CBaseHostClass):
         currentUrl = data.meta['url']
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</table', '>'))[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''\shref=['"]([^'^"]*?p%s\.html)['"]''' % (page + 1))[0], currentUrl)
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''\shref=['"]([^'^"]*?p%s\.html)['"]''' % (page + 1))[0], currentUrl)
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', '"article"'), ('</div', '>'))
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], currentUrl)
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0], currentUrl)
             if url == currentUrl:
                 continue
 
@@ -115,7 +115,7 @@ class C3skTv(CBaseHostClass):
                 nextCategory = 'list_thread'
             else:
                 continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0], currentUrl)
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0], currentUrl)
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
 
@@ -140,7 +140,7 @@ class C3skTv(CBaseHostClass):
         for item in data:
             if 'vbmenu_option' in item:
                 continue
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], currentUrl)
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0], currentUrl)
             if url == currentUrl:
                 continue
             #printDBG("++++++++ [%s]" % url)
@@ -151,7 +151,7 @@ class C3skTv(CBaseHostClass):
             else:
                 continue
             title = self.cleanHtmlStr(item)
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0], currentUrl)
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0], currentUrl)
 
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon})
@@ -172,7 +172,7 @@ class C3skTv(CBaseHostClass):
         for tmp in data:
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<font', '</a>')
             for item in tmp:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0], currentUrl)
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0], currentUrl)
                 printDBG(">>>>>>>>>>>>>>> " + url)
                 tmp = self.cm.getBaseUrl(url)
                 if domain in tmp and '/vid/' not in url and '/show/' not in url:
@@ -203,7 +203,7 @@ class C3skTv(CBaseHostClass):
             nameMap = {'1': "الاول", '2': "الثانى", '3': "الثالث", '4': "الرابع", '5': "الخامس", '6': "السادس", '7': "السابع", '8': "الثامن"}
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>', caseSensitive=False)
             for idx in range(len(data)):
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(data[idx], '''\ssrc=['"]([^"^']+?)['"]''', 1, True)[0], currentUrl)
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(data[idx], r'''\ssrc=['"]([^"^']+?)['"]''', 1, True)[0], currentUrl)
                 if url == '':
                     continue
                 name = str(idx + 1)
@@ -238,7 +238,7 @@ class C3skTv(CBaseHostClass):
             sts, data = self.getPage(url)
             if not sts:
                 return
-            cx = ph.search(data, '''var\s+?cx\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
+            cx = ph.search(data, r'''var\s+?cx\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
             url = 'http://cse.google.com/cse.js?cx=' + cx
             sts, data = self.getPage(url)
             if not sts:
@@ -254,7 +254,7 @@ class C3skTv(CBaseHostClass):
                 sts, tmp = self.getPage(url)
                 if not sts:
                     return
-                hash = ph.search(tmp, '''google\.search\.JSHash\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
+                hash = ph.search(tmp, r'''google\.search\.JSHash\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
 
                 baseUrl = 'https://cse.google.com/cse/element/v1?rsz=filtered_cse&num=10&hl='
                 baseUrl += lang + '&source=gcsc&gss=.tv&sig=' + hash + '&start={0}&cx=' + cx

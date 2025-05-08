@@ -125,7 +125,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'dropdown'), ('</ul', '>'), False)
         for menuData in data:
             menuData = reObj.split(menuData, 1)
-            menuUrl = self.getFullUrl(self.cm.ph.getSearchGroups(menuData[0], '''\shref=['"]([^'^"]+?)['"]''')[0])
+            menuUrl = self.getFullUrl(self.cm.ph.getSearchGroups(menuData[0], r'''\shref=['"]([^'^"]+?)['"]''')[0])
             category = menuUrl.rsplit('/')[-1]
             if category in ['tv-shows', 'series']:
                 category = 'list_sort_series'
@@ -145,7 +145,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
             for item in menuData:
                 title = self.cleanHtmlStr(item)
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 params = {'url': url, 'title': title}
                 if category:
                     params['category'] = category
@@ -205,18 +205,18 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'filter-title'), ('</div', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             self.addDir(MergeDicts(cItem, {'url': url, 'title': title, 'category': nextCategory}))
 
     def _listItems(self, cItem, nextCategory, data):
         printDBG("HDFull._listItems")
         retList = []
-        reLang = re.compile('/images/([^\.]+?)\.png')
+        reLang = re.compile(r'/images/([^\.]+?)\.png')
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'view'), ('<div', '>', 'clear'), False)[1]
         data = re.compile('''<div[^>]+?view[^>]+?>''').split(data)
         for item in data:
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
 
             tmp = self.cm.ph.getDataBeetwenMarkers(item, '<h5', '</h5>')[1]
@@ -265,7 +265,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             nextPage += '/%d' % (page + 1)
         else:
             nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'filter-title', '</div>', False)[1]
-            nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*?%s\s*?<''' % (page + 1))[0])
+            nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*?%s\s*?<''' % (page + 1))[0])
 
         self.currList.extend(self._listItems(cItem, nextCategory, data))
 
@@ -274,8 +274,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
     def _getLinks(self, cUrl, data):
         linksTab = []
-        ad = self.cm.ph.getSearchGroups(data, '''var\s+?ad\s*?=\s*?['"]([^'^"]+?)['"]''', 1, True)[0]
-        tmp = re.compile('''<script[^>]+?src=['"]([^'^"]*?(?:view|providers)[^'^"]*?\.js(?:\?[^'^"]*?)?)['"]''', re.I).findall(data)
+        ad = self.cm.ph.getSearchGroups(data, r'''var\s+?ad\s*?=\s*?['"]([^'^"]+?)['"]''', 1, True)[0]
+        tmp = re.compile(r'''<script[^>]+?src=['"]([^'^"]*?(?:view|providers)[^'^"]*?\.js(?:\?[^'^"]*?)?)['"]''', re.I).findall(data)
 
         tabJs = {}
         for item in tmp:
@@ -293,7 +293,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
                     if 'providers' == key:
                         idx1 = jsdata.find('providers')
                         idx2 = jsdata.find(';', idx1 + 9)
-                        funName = self.cm.ph.getSearchGroups(jsdata[idx2 + 1:], '''function\s+?([^\(]+?)\(''')[0]
+                        funName = self.cm.ph.getSearchGroups(jsdata[idx2 + 1:], r'''function\s+?([^\(]+?)\(''')[0]
                         tabJs[key]['code'] = 'function buildIframeEmbed(){return arguments[0];}\nbuildIframeGenericEmbed=buildIframeEmbed;\n' + jsdata[:idx2 + 1] + '; function %s(){return function(){};}' % funName
                         printDBG(">>>>")
                         printDBG(tabJs[key]['code'])
@@ -363,7 +363,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             desc.append(item[1])
         desc = ' | '.join(desc) + '[/br]' + descObj['text']
 
-        trailer = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''var\s+?trailer\s*?=\s*?['"]([^'^"]+?)['"]''', 1, True)[0], cUrl)
+        trailer = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''var\s+?trailer\s*?=\s*?['"]([^'^"]+?)['"]''', 1, True)[0], cUrl)
         if trailer:
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': '%s - %s' % (cItem['title'], _('trailer')), 'url': strwithmeta(trailer, {'Referer': cUrl}), 'desc': desc, 'prev_url': cUrl})
@@ -395,7 +395,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         cUrl = self.getFullUrl(self.cm.meta['url'])
         self.setMainUrl(cUrl)
 
-        sid = self.cm.ph.getSearchGroups(data, '''var\s+?sid\s*?=\s*?['"]([0-9]+)['"]?;''')[0]
+        sid = self.cm.ph.getSearchGroups(data, r'''var\s+?sid\s*?=\s*?['"]([0-9]+)['"]?;''')[0]
         cItem = MergeDicts(cItem, {'category': 'list_episodes2', 'url': cUrl, 'f_action': 'season', 'f_show': sid, 'f_season': cUrl.rsplit('-', 1)[-1]})
         self.listEpisodes2(cItem)
 
@@ -454,7 +454,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'lang-bar'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            lang = self.cm.ph.getSearchGroups(item, '''data\-lang=['"]([^"^']+?)['"]''')[0]
+            lang = self.cm.ph.getSearchGroups(item, r'''data\-lang=['"]([^"^']+?)['"]''')[0]
             title = self.cleanHtmlStr(item)
             self.addDir(MergeDicts(cItem, {'category': nextCategory, 'title': title, 'f_elang': lang}))
 
@@ -552,8 +552,8 @@ class HDFull(CBaseHostClass, CaptchaHelper):
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'summary-title'), ('<div', '>', 'breakaway-wrapper'), False)[1]
         title = self.cleanHtmlStr(data[:data.find('</div')])
-        icon = self.cm.ph.getSearchGroups(data, '''<img([^>]+?video\-page\-thumbnail[^>]+?)>''')[0]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
+        icon = self.cm.ph.getSearchGroups(data, r'''<img([^>]+?video\-page\-thumbnail[^>]+?)>''')[0]
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, r'''src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'description'), ('</div', '>'), False)[1].split('<br', 1)
         desc = self.cleanHtmlStr(tmp[0])

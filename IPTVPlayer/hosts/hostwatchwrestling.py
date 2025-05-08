@@ -195,8 +195,8 @@ class Watchwrestling(CBaseHostClass):
         self.listMovies(cItem, 'list_server')
 
     def _clearData(self, data):
-        data = re.sub("<!--[\s\S]*?-->", "", data)
-        data = re.sub("/\*[\s\S]*?\*/", "", data)
+        data = re.sub(r"<!--[\s\S]*?-->", "", data)
+        data = re.sub(r"/\*[\s\S]*?\*/", "", data)
         return data
 
     def getLinksForVideo(self, cItem):
@@ -214,7 +214,7 @@ class Watchwrestling(CBaseHostClass):
                 data = self._clearData(data)
                 #printDBG(data)
                 if 'eval(unescape' in data:
-                    data = urllib_unquote(self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0])
+                    data = urllib_unquote(self.cm.ph.getSearchGroups(data, r'''eval\(unescape\(['"]([^"^']+?)['"]''')[0])
                 url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]*?src=['"]([^"^']+?)['"]''', 1, True)[0]
                 if 'protect.cgi' in url:
                     Referer = cItem['url']

@@ -120,7 +120,7 @@ class FaselhdCOM(CBaseHostClass):
         printDBG(data)
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h1', '</h1>')[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
@@ -249,7 +249,7 @@ class FaselhdCOM(CBaseHostClass):
             dat = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', marker), ('<iframe', '>'))[1]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(dat, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
             if url == '':
-                url = self.cm.ph.getSearchGroups(item, '''href\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(item, r'''href\s*?=\s*?['"]([^'^"]+?)['"]''')[0]
                 tmp = url.split('embed.php?url=', 1)
                 if 2 == len(tmp):
                     url = urllib_unquote(tmp[-1])
@@ -293,7 +293,7 @@ class FaselhdCOM(CBaseHostClass):
             if not sts:
                 return []
 
-            hlsUrl = self.cm.ph.getSearchGroups(data, '''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
+            hlsUrl = self.cm.ph.getSearchGroups(data, r'''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
             printDBG("hlsUrl||||||||||||||||| " + hlsUrl)
             if hlsUrl != '':
                 hlsUrl = strwithmeta(hlsUrl, {'User-Agent': self.defaultParams['header']['User-Agent'], 'Referer': baseUrl})
@@ -301,7 +301,7 @@ class FaselhdCOM(CBaseHostClass):
 
             if 0 == len(urlTab):
                 data = self.cm.ph.getDataBeetwenMarkers(data, '.setup(', ')')[1]
-                videoUrl = self.cm.ph.getSearchGroups(data, '''['"]?file['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''')[0]
+                videoUrl = self.cm.ph.getSearchGroups(data, r'''['"]?file['"]?\s*:\s*['"](https?://[^'^"]+?)['"]''')[0]
                 if self.cm.isValidUrl(videoUrl):
                     videoUrl = strwithmeta(videoUrl, {'User-Agent': self.defaultParams['header']['User-Agent'], 'Referer': baseUrl})
                     urlTab.append({'name': 'direct', 'url': videoUrl})
@@ -330,7 +330,7 @@ class FaselhdCOM(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<header', '>'), ('<style', '>'))[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p', '</p>')[1])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
 
         keysMap = {'دولة المسلسل': 'country',
                    'حالة المسلسل': 'status',

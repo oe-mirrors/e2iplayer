@@ -119,10 +119,10 @@ class TainieskaiSeiresTv(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', '/category/'), ('</strong', '>'))
             printDBG(data)
             for item in data:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 if url == '':
                     continue
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 params = dict(cItem)
                 params.update({'good_for_fav': False, 'title': title, 'url': url, 'icon': icon})
@@ -131,14 +131,14 @@ class TainieskaiSeiresTv(CBaseHostClass):
             page = cItem.get('page', 1)
             data = self.cm.ph.getDataBeetwenMarkers(data, '<section', '</section>')[1]
             nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagenavi'), ('</div', '>'))[1]
-            nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''\shref=['"]([^"^']*?/page/%s/[^"^']*?)['"]''' % (page + 1))[0])
+            nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''\shref=['"]([^"^']*?/page/%s/[^"^']*?)['"]''' % (page + 1))[0])
 
             data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('<div', '>', 'clearfix'), ('<div', '>', 'video-item'))
             for item in data:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
                 if url == '':
                     continue
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?)['"]''')[0])
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'fa-eye'), ('</span', '>'))[1])
                 desc += '[/br]' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
@@ -159,13 +159,13 @@ class TainieskaiSeiresTv(CBaseHostClass):
                 itemsTab = []
                 section = self.cm.ph.getAllItemsBeetwenNodes(section, ('<div', '>', 'video-item'), ('</a', '>'))
                 for item in section:
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
                     if url == '':
                         continue
-                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
-                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^"^']+?)['"]''')[0])
+                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?)['"]''')[0])
+                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\stitle=['"]([^"^']+?)['"]''')[0])
                     if title == '':
-                        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^"^']+?)['"]''')[0])
+                        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\salt=['"]([^"^']+?)['"]''')[0])
                     desc = self.cleanHtmlStr(item)
                     itemsTab.append({'title': title, 'url': url, 'info_url': url, 'icon': icon, 'desc': desc})
                 if len(itemsTab):
@@ -203,7 +203,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
             self.addVideo(params)
 
         reObjSeasons = re.compile('(<strong[^>]*?>[^>]*?SEASON[^>]*?</strong>)', re.IGNORECASE)
-        seasonsData = self.cm.ph.getDataBeetwenReMarkers(data, reObjSeasons, re.compile('<div[^>]+?item\-tax\-list[^>]+?>'))[1]
+        seasonsData = self.cm.ph.getDataBeetwenReMarkers(data, reObjSeasons, re.compile(r'<div[^>]+?item\-tax\-list[^>]+?>'))[1]
         seasonsData = reObjSeasons.split(seasonsData)
         if len(seasonsData):
             del seasonsData[0]
@@ -215,19 +215,19 @@ class TainieskaiSeiresTv(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'href'), ('</a', '>'))
             for item in data:
                 name = self.cleanHtmlStr(item)
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
                 if 1 == self.up.checkHostSupport(url):
                     linksTab.append({'name': name, 'url': url, 'need_resolve': 1})
         elif 'SEASON' in self.cleanHtmlStr(seasonsData[0]).upper():
             seasonsKeys = []
             self.seasonsCache = {}
             domain = self.up.getDomain(self.getMainUrl())
-            reSeasonObj = re.compile('SEASON\s+?[0-9]+', re.IGNORECASE)
-            reEpisodeObj = re.compile('\sE[0-9]+(?:\-E?[0-9]+)?', re.IGNORECASE)
+            reSeasonObj = re.compile(r'SEASON\s+?[0-9]+', re.IGNORECASE)
+            reEpisodeObj = re.compile(r'\sE[0-9]+(?:\-E?[0-9]+)?', re.IGNORECASE)
             for idx in range(0, len(seasonsData), 2):
                 sTitle = self.cleanHtmlStr(seasonsData[idx]).replace("Ε", "E")
                 sSubTitle = self.cleanHtmlStr(reSeasonObj.sub('', sTitle))
-                seasonId = self.cleanHtmlStr(self.cm.ph.getSearchGroups(sTitle, 'SEASON\s*?([0-9]+(?:\-[0-9]+)?)', 1, True)[0])
+                seasonId = self.cleanHtmlStr(self.cm.ph.getSearchGroups(sTitle, r'SEASON\s*?([0-9]+(?:\-[0-9]+)?)', 1, True)[0])
                 printDBG("++ SEASON ID -> \"%s\" \"%s\"" % (seasonId, sSubTitle))
                 if seasonId not in seasonsKeys:
                     seasonsKeys.append(seasonId)
@@ -237,9 +237,9 @@ class TainieskaiSeiresTv(CBaseHostClass):
                 for item in tmp:
                     eTitle = ' ' + self.cleanHtmlStr(item).replace("Ε", "E")
                     eSubTitle = self.cleanHtmlStr(reEpisodeObj.sub('', eTitle))
-                    episodeId = self.cleanHtmlStr(self.cm.ph.getSearchGroups(eTitle, '\s(E[0-9]+(?:\-E?[0-9]+)?)', 1, True)[0])
+                    episodeId = self.cleanHtmlStr(self.cm.ph.getSearchGroups(eTitle, r'\s(E[0-9]+(?:\-E?[0-9]+)?)', 1, True)[0])
                     printDBG("+++++++++++++++++ EPISODE ID \"%s\"-> \"%s\"" % (eTitle, episodeId))
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
                     if url == '':
                         continue
 
@@ -277,7 +277,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(seasonsData[idx + 1], '<a', '</a>')
                 for item in tmp:
                     name = self.cleanHtmlStr(item)
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
                     linksTab.append({'name': '%s - %s' % (quality, name), 'url': url, 'need_resolve': 1})
 
         if len(linksTab):
@@ -348,7 +348,7 @@ class TainieskaiSeiresTv(CBaseHostClass):
             desc = tmp[1].split('</span>', 1)
             title = self.cleanHtmlStr(desc[0])
             desc = self.cleanHtmlStr(desc[-1])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(tmp[0], '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(tmp[0], r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
 
         if title == '':
             title = cItem['title']

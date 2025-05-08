@@ -244,13 +244,13 @@ class VODPL(CBaseHostClass):
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p class="hyphenate"', '</p>')[1])
         tmpDesc = cItem.get('desc', '') + '[/br]' + desc
         if 'serialDetail' in data:
-            seriesId = self.cm.ph.getSearchGroups(data, '''\s*['"]?series['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
+            seriesId = self.cm.ph.getSearchGroups(data, r'''\s*['"]?series['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
             data = self.cm.ph.getDataBeetwenMarkers(data, 'v_seasonListContainer', '</ul>')[1]
             seasonTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p', '</p>')[1])
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
             if len(data) and seasonTitle != '':
                 for item in data:
-                    sNum = self.cm.ph.getSearchGroups(item, '''data\-id=['"]([0-9]+?)['"]''')[0]
+                    sNum = self.cm.ph.getSearchGroups(item, r'''data\-id=['"]([0-9]+?)['"]''')[0]
                     if sNum == '':
                         continue
                     title = self.cleanHtmlStr(item)
@@ -404,7 +404,7 @@ class VODPL(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="row" id="content-tab">', '<div id="zone')[1]
 
         title = ''  # self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="f_t_b">', '</div>')[1])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>', False)[1])
 
         for item in [('Rendező(k):', 'directors'),

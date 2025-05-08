@@ -206,7 +206,7 @@ class Zerioncc(CBaseHostClass, CaptchaHelper):
             sItem = self.cm.ph.getAllItemsBeetwenNodes(sItem, ('<li', '>'), ('</li', '>'))
             tabItems = []
             for item in sItem:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 if not url:
                     continue
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h4', '>', 'title'), ('</h4', '>'))[1])
@@ -257,8 +257,8 @@ class Zerioncc(CBaseHostClass, CaptchaHelper):
 
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
-        csrfToken = self.cm.ph.getSearchGroups(data, '''var\s_csrf\s=\s['"]([^"^']+?)['"]''')[0]
-        sithc = self.cm.ph.getSearchGroups(data, '''var\ssithc\s=\s['"]([^"^']+?)['"]''')[0]
+        csrfToken = self.cm.ph.getSearchGroups(data, r'''var\s_csrf\s=\s['"]([^"^']+?)['"]''')[0]
+        sithc = self.cm.ph.getSearchGroups(data, r'''var\ssithc\s=\s['"]([^"^']+?)['"]''')[0]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<table', '>'), ('</table', '>'))
 
         for tItem in data:

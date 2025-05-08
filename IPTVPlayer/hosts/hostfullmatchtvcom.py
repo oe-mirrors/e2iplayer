@@ -59,7 +59,7 @@ class Fullmatchtv(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</a>')
             for item in data:
                 nextCategory = ''
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 if 'category' not in url:
                     url = url.replace('.com', '.com/category')
                 title = self.cleanHtmlStr(item)
@@ -82,9 +82,9 @@ class Fullmatchtv(CBaseHostClass):
 
         if page == 1:
             data = self.cm.ph.getDataBeetwenNodes(data, ('jQuery(window)', '{'), '});')[1]
-            self.categoryId = self.cm.ph.getSearchGroups(data, '''['"]category_id['"]\s*?:?\s*?([0-9]+?)[^0-9]''')[0]
+            self.categoryId = self.cm.ph.getSearchGroups(data, r'''['"]category_id['"]\s*?:?\s*?([0-9]+?)[^0-9]''')[0]
             data = self.cm.ph.getDataBeetwenNodes(data, ('else', '{'), '}')[1]
-            self.maxPage = self.cm.ph.getSearchGroups(data, '''max_num_pages\s=\s([0-9]+?);''')[0]
+            self.maxPage = self.cm.ph.getSearchGroups(data, r'''max_num_pages\s=\s([0-9]+?);''')[0]
             printDBG("fullmatchtv.listItems categoryId[%s] maxPage[%s]" % (self.categoryId, self.maxPage))
 
         post_data = {'action': 'td_ajax_loop', 'loopState[moduleId]': '1', 'loopState[currentPage]': page, 'loopState[atts][category_id]': self.categoryId}
@@ -94,11 +94,11 @@ class Fullmatchtv(CBaseHostClass):
         data = data.replace('\\', '')
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'td-module-thumb'), ('</div', '>'))
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
-            title = self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^"^']+?)['"]''')[0].replace('&#8211;', '-')
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
+            title = self.cm.ph.getSearchGroups(item, r'''\stitle=['"]([^"^']+?)['"]''')[0].replace('&#8211;', '-')
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon}
             self.addVideo(params)

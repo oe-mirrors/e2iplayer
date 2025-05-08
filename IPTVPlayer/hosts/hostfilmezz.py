@@ -328,7 +328,7 @@ class FilmezzEU(CBaseHostClass):
                     return []
 
                 if 'captcha' in data:
-                    data = re.sub("<!--[\s\S]*?-->", "", data)
+                    data = re.sub(r"<!--[\s\S]*?-->", "", data)
 
                 if 'google.com/recaptcha/' in data and 'sitekey' in data:
                     message = _('Link protected with google recaptcha v2.')
@@ -497,9 +497,9 @@ class FilmezzEU(CBaseHostClass):
 
         if altTitle != '':
             otherInfo['alternate_title'] = altTitle
-        year = self.cm.ph.getSearchGroups(cItem.get('prev_title', ''), '\(([0-9]{4})\)')[0]
+        year = self.cm.ph.getSearchGroups(cItem.get('prev_title', ''), r'\(([0-9]{4})\)')[0]
         if year == '':
-            year = self.cm.ph.getSearchGroups(cItem['title'], '\(([0-9]{4})\)')[0]
+            year = self.cm.ph.getSearchGroups(cItem['title'], r'\(([0-9]{4})\)')[0]
         if year != '':
             otherInfo['year'] = year
 

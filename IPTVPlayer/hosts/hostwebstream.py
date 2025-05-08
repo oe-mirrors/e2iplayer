@@ -387,7 +387,7 @@ class HasBahCa(CBaseHostClass):
                     if 'Lista_matzgPL' in listURL and title.startswith('TVP '):
                         continue
                     item = item.replace('rtmp://$OPT:rtmp-raw=', '')
-                    cTitle = re.sub('\[[^\]]*?\]', '', title)
+                    cTitle = re.sub(r'\[[^\]]*?\]', '', title)
                     if len(cTitle):
                         title = cTitle
                     itemUrl = self.up.decorateParamsFromUrl(item)
@@ -402,7 +402,7 @@ class HasBahCa(CBaseHostClass):
                     desc += (_("Protocol: ")) + itemUrl.meta.get('iptv_proto', '')
 
                     if 'headers=' in itemUrl:
-                        headers = self.cm.ph.getSearchGroups(itemUrl, 'headers\=(\{[^\}]+?\})')[0]
+                        headers = self.cm.ph.getSearchGroups(itemUrl, r'headers\=(\{[^\}]+?\})')[0]
                         try:
                             headers = json_loads(headers)
                             itemUrl = itemUrl.split('headers=')[0].strip()
@@ -722,7 +722,7 @@ class HasBahCa(CBaseHostClass):
         sts, data = self.cm.getPage(url, params)
         if not sts:
             return []
-        url = self.cm.ph.getSearchGroups(data, 'src="([^"]+?\.mp4[^"]*?)"')[0]
+        url = self.cm.ph.getSearchGroups(data, r'src="([^"]+?\.mp4[^"]*?)"')[0]
 
         urlMeta = {}
         if config.plugins.iptvplayer.weatherbymatzgprohibitbuffering.value:
@@ -766,7 +766,7 @@ class HasBahCa(CBaseHostClass):
         data = CParsingHelper.getDataBeetwenNodes(data, ('<table', '>', 'ramowka'), ('</table', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<td', '>'), ('</td', '>'))
         for item in data:
-            linkVideo = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
+            linkVideo = self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0]
             if len(linkVideo) and not linkVideo.startswith('http'):
                 linkVideo = self.cm.getFullUrl(linkVideo, url)
             if linkVideo.endswith('/') and 'class="f1' not in item:
@@ -791,7 +791,7 @@ class HasBahCa(CBaseHostClass):
         for item in tmp:
             params = {'name': "strumyk_tv"}
             params['title'] = self.cleanHtmlStr(item)
-            linkVideo = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
+            linkVideo = self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0]
             if len(linkVideo):
                 if not linkVideo.startswith('http'):
                     linkVideo = self.cm.getFullUrl(linkVideo, url)
@@ -827,7 +827,7 @@ class HasBahCa(CBaseHostClass):
                 self.addVideo(params)
 
         for item in data:
-            _url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0]
+            _url = self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0]
             if '?' in url:
                 url = url.split('?', 1)[0]
             if _url.startswith('?'):
@@ -841,9 +841,9 @@ class HasBahCa(CBaseHostClass):
                     linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
                     linkVideo = linkVideo.strip(' \n\t\r')
                 else:
-                    tmp = self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0]
+                    tmp = self.cm.ph.getSearchGroups(data, r'''eval\(unescape\(['"]([^"^']+?)['"]''')[0]
                     tmp = urllib_unquote(tmp)
-                    linkVideo = self.cm.ph.getSearchGroups(tmp, '''['"]*(http[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
+                    linkVideo = self.cm.ph.getSearchGroups(tmp, r'''['"]*(http[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
                 if len(linkVideo) and linkVideo.startswith('//'):
                     linkVideo = 'http:' + linkVideo
                 if len(linkVideo) and not linkVideo.startswith('http'):
@@ -854,11 +854,11 @@ class HasBahCa(CBaseHostClass):
                         linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
                         linkVideo = linkVideo.strip(' \n\t\r')
                     else:
-                        tmp = self.cm.ph.getSearchGroups(data, '''eval\(unescape\(['"]([^"^']+?)['"]''')[0]
+                        tmp = self.cm.ph.getSearchGroups(data, r'''eval\(unescape\(['"]([^"^']+?)['"]''')[0]
                         tmp = urllib_unquote(tmp)
-                        linkVideo = self.cm.ph.getSearchGroups(tmp, '''['"]*(http[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
+                        linkVideo = self.cm.ph.getSearchGroups(tmp, r'''['"]*(http[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
                         if '' == linkVideo:
-                            linkVideo = self.cm.ph.getSearchGroups(tmp, '''['"]*(http[^'^"]+?\.mpd[^'^"]*?)['"]''')[0].replace('\\', '')
+                            linkVideo = self.cm.ph.getSearchGroups(tmp, r'''['"]*(http[^'^"]+?\.mpd[^'^"]*?)['"]''')[0].replace('\\', '')
                     if len(linkVideo) and linkVideo.startswith('//'):
                         linkVideo = 'http:' + linkVideo
                 linkVideo = linkVideo.replace('https://href.li/', '')

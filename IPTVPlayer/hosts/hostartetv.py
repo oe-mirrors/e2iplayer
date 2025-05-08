@@ -162,7 +162,7 @@ class ArteTV(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', ' lang='), ('</a', '>'))
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             lang = url.split('/')[3]
 

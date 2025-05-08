@@ -107,7 +107,7 @@ class WatchCartoonOnline(CBaseHostClass):
                 self.addDir(params)
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'recent-release-main'), ('<div', '>', 'sidebar-'), False)[1]
-        tmp = re.compile('<div[^>]+?recent\-release\-main[^>]+?>').split(tmp)
+        tmp = re.compile(r'<div[^>]+?recent\-release\-main[^>]+?>').split(tmp)
         tmp.append(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sidebar-all'), ('</ul', '>'), False)[1])
         for item in tmp:
             _fillItems(item)
@@ -304,14 +304,14 @@ class WatchCartoonOnline(CBaseHostClass):
         items = self.cm.ph.getAllItemsBeetwenMarkers(data, '{', '}')
         printDBG(items)
         for item in items:
-            item = item.replace('\/', '/')
+            item = item.replace(r'\/', '/')
             if 'video/mp4' not in item.lower():
                 continue
-            type = self.cm.ph.getSearchGroups(item, '''type['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-            label = self.cm.ph.getSearchGroups(item, '''label['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+            type = self.cm.ph.getSearchGroups(item, r'''type['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+            label = self.cm.ph.getSearchGroups(item, r'''label['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
             if label == '':
-                label = self.cm.ph.getSearchGroups(item, '''format['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-            url = self.cm.ph.getSearchGroups(item, '''src['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+                label = self.cm.ph.getSearchGroups(item, r'''format['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, r'''src['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
             if url not in uniqueUrls:
                 uniqueUrls.append(url)
                 url = self.cm.getFullUrl(url, self.cm.getBaseUrl(cUrl))

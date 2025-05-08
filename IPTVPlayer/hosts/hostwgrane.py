@@ -82,7 +82,7 @@ class WgranePL(CBaseHostClass):
             del data[0]
 
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
@@ -97,10 +97,10 @@ class WgranePL(CBaseHostClass):
                 desc = '[/br]'.join(desc)
             else:
                 if title == '':
-                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^"^']+?)['"]''')[0])
+                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\stitle=['"]([^"^']+?)['"]''')[0])
                 desc = self.cleanHtmlStr(item)
             if title == '':
-                self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^"^']+?)['"]''')[0])
+                self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\salt=['"]([^"^']+?)['"]''')[0])
 
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon, 'desc': desc})
@@ -132,12 +132,12 @@ class WgranePL(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'window_title'), ('<div', '>', 'footer'), False)[1]
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pages'), ('</div', '>'), False)[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*&raquo;\s*<''')[0]
+        nextPage = self.cm.ph.getSearchGroups(nextPage, r'''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>\s*&raquo;\s*<''')[0]
 
-        descObj = re.compile('''<br\s*?/>''', re.I)
+        descObj = re.compile(r'''<br\s*?/>''', re.I)
         data = re.compile('''<div[^>]+?class=['"]list['"][^>]*?>''').split(data)
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^'^\:]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^'^\:]+?)['"]''')[0])
             if url == '':
                 continue
             if 'playlist=' in url:
@@ -150,9 +150,9 @@ class WgranePL(CBaseHostClass):
 
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'list_title'), ('</div', '>'), False)[1])
             if title == '':
-                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^"^']+?)['"]''')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\stitle=['"]([^"^']+?)['"]''')[0])
             if title == '':
-                self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^"^']+?)['"]''')[0])
+                self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\salt=['"]([^"^']+?)['"]''')[0])
 
             desc = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'list_detail'), ('</div', '>'), False)[1]
             desc = self.cleanHtmlStr(descObj.sub('[/br]', desc))

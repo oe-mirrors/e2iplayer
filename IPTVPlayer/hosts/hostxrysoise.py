@@ -203,7 +203,7 @@ class XrysoiSE(CBaseHostClass):
         episodes = []
         if '-collection' in cItem['url']:
             mode = 'collect_item'
-            spTab = [re.compile('<b>'), re.compile('<div[\s]+class="separator"[\s]+style="text-align\:[\s]+center;">'), re.compile('<div[\s]+style="text-align\:[\s]+center;">')]
+            spTab = [re.compile('<b>'), re.compile(r'<div[\s]+class="separator"[\s]+style="text-align\:[\s]+center;">'), re.compile(r'<div[\s]+style="text-align\:[\s]+center;">')]
             for sp in spTab:
                 if None != sp.search(linksData):
                     break

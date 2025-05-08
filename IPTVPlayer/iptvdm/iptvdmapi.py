@@ -424,7 +424,7 @@ class IPTVDMApi():
         return list
 
     def connectListChanged(self, fnc):
-        if not fnc in self.onlistChanged:
+        if fnc not in self.onlistChanged:
             self.onlistChanged.append(fnc)
 
     def disconnectListChanged(self, fnc):

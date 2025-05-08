@@ -112,7 +112,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'lang-selector'), ('</ul', '>'))[1]
         printDBG(">>>\n%s\n<<" % tmp)
         lang = GetDefaultLang()
-        url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, 'href="([^"]+?setlang\-%s[^"]*?)"' % lang)[0])
+        url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, r'href="([^"]+?setlang\-%s[^"]*?)"' % lang)[0])
         printDBG(">> LANG URL: " + url)
         if self.cm.isValidUrl(url):
             sts, data = self.getPage(url)
@@ -293,7 +293,7 @@ class OpenSubtitles(CBaseSubProviderClass):
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?/sub/[^"]+?)"')[0]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<td', '</td>')[1].split('<a rel="nofollow"')[0])
             imdbid = self.cm.ph.getSearchGroups(item, '''/tt([0-9]+?)[^0-9]''')[0]
-            lang = self.cm.ph.getSearchGroups(item, '''class="flag\s*([^"]+?)"''')[0]
+            lang = self.cm.ph.getSearchGroups(item, r'''class="flag\s*([^"]+?)"''')[0]
 
             descTab = []
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
@@ -409,7 +409,7 @@ class OpenSubtitles(CBaseSubProviderClass):
                 sts, data = self.getPage(url)
                 if not sts:
                     return
-                downloadUrl = self.cm.ph.getSearchGroups(data, '''URL=(https?://[^"^'^\s]+?)["'\s]''')[0]
+                downloadUrl = self.cm.ph.getSearchGroups(data, r'''URL=(https?://[^"^'^\s]+?)["'\s]''')[0]
 
         if not self.cm.isValidUrl(downloadUrl):
             return

@@ -124,7 +124,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
             del data[0]
 
         for item in data:
-            imdbid = self.cm.ph.getSearchGroups(item, 'imdb\.com/title/(tt[0-9]+?)[^0-9]')[0]
+            imdbid = self.cm.ph.getSearchGroups(item, r'imdb\.com/title/(tt[0-9]+?)[^0-9]')[0]
 
             item = item.split('<div class="movieBottom">')[0]
             subId = self.cm.ph.getSearchGroups(item, 'id="([0-9]+?)"')[0]
@@ -212,7 +212,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
             if len(tmp) != 7:
                 continue
-            subId = self.cm.ph.getSearchGroups(tmp[0], 'href="napiprojekt\:([0-9a-f]+?)"')[0]
+            subId = self.cm.ph.getSearchGroups(tmp[0], r'href="napiprojekt\:([0-9a-f]+?)"')[0]
             if '' == subId:
                 continue
             title = self.cleanHtmlStr(tmp[0])

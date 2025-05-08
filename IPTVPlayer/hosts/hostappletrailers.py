@@ -124,7 +124,7 @@ class TrailersApple(CBaseHostClass):
         cUrl = self.cm.meta['url']
         self.setMainUrl(cUrl)
 
-        filmId = self.cm.ph.getSearchGroups(data, '''FilmId\s*=\s*['"](\d+)['"]''')[0]
+        filmId = self.cm.ph.getSearchGroups(data, r'''FilmId\s*=\s*['"](\d+)['"]''')[0]
 
         sts, data = self.getPage(self.getFullUrl('/trailers/feeds/data/%s.json' % filmId))
         if not sts:

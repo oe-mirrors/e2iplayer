@@ -55,7 +55,7 @@ class KinoKiste(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        nextPage = self.cm.ph.getSearchGroups(data, '<span\s+class="swchItem">\s*<a\s+href="([^"]+)">&raquo;</a>\s*</span>')[0]
+        nextPage = self.cm.ph.getSearchGroups(data, r'<span\s+class="swchItem">\s*<a\s+href="([^"]+)">&raquo;</a>\s*</span>')[0]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<section class="fl-item', '</section>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])

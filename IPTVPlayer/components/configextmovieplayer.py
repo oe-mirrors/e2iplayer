@@ -26,8 +26,8 @@ from Components.config import config, ConfigSubsection, ConfigSelection, ConfigD
 config.plugins.iptvplayer.extplayer_summary = ConfigSelection(default="yes", choices=[('auto', _('Auto')), ('yes', _('Yes')), ('no', _('No'))])
 config.plugins.iptvplayer.use_clear_iframe = ConfigYesNo(default=False)
 config.plugins.iptvplayer.show_iframe = ConfigYesNo(default=True)
-config.plugins.iptvplayer.iframe_file = ConfigIPTVFileSelection(fileMatch="^.*\.mvi$", default="/usr/share/enigma2/radio.mvi")
-config.plugins.iptvplayer.clear_iframe_file = ConfigIPTVFileSelection(fileMatch="^.*\.mvi$", default="/usr/share/enigma2/black.mvi")
+config.plugins.iptvplayer.iframe_file = ConfigIPTVFileSelection(fileMatch=r"^.*\.mvi$", default="/usr/share/enigma2/radio.mvi")
+config.plugins.iptvplayer.clear_iframe_file = ConfigIPTVFileSelection(fileMatch=r"^.*\.mvi$", default="/usr/share/enigma2/black.mvi")
 
 config.plugins.iptvplayer.remember_last_position = ConfigYesNo(default=False)
 config.plugins.iptvplayer.remember_last_position_time = ConfigInteger(0, (0, 99))

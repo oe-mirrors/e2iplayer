@@ -218,7 +218,7 @@ class LosMovies(CBaseHostClass):
         seasonsData = self.cm.ph.getAllItemsBeetwenMarkers(seasonsData, '<a ', '</a>', withMarkers=True)
         for item in seasonsData:
             seasonTitle = self.cleanHtmlStr(item)
-            seasonKey = self.cm.ph.getSearchGroups(item, '''href=['"]#tabs\-([^'^"]+?)['"]''')[0]
+            seasonKey = self.cm.ph.getSearchGroups(item, r'''href=['"]#tabs\-([^'^"]+?)['"]''')[0]
             seasonsTitlesTab[seasonKey] = seasonTitle
 
         marker = '<div id="tabs-'
@@ -303,10 +303,10 @@ class LosMovies(CBaseHostClass):
         try:
             data = base64.b64decode(data).replace('\n', '').replace('location.reload();', '').replace('; ', '').replace(';document.cookie', '\ncookie ')
             data = data.replace('String.fromCharCode', 'chr')
-            data = re.sub('\.charAt\((\s*[0-9]+?\s*)\)', lambda x: '[%s]' % x.group(1), data)
-            data = re.sub('\.substr\(\s*([0-9]+?)\s*,\s*([0-9]+?)\s*\)', lambda x: '[%s:%s]' % (x.group(1), x.group(2)), data)
-            data = re.sub('\.substr\(\s*([0-9]+?)\s*,\s*([0-9]+?)\s*\)', lambda x: '[%s:%s]' % (x.group(1), x.group(2)), data)
-            data = re.sub('\.slice\(\s*([0-9]+?)\s*,\s*([0-9]+?)\s*\)', lambda x: '[%s:%s]' % (x.group(1), x.group(2)), data)
+            data = re.sub(r'\.charAt\((\s*[0-9]+?\s*)\)', lambda x: '[%s]' % x.group(1), data)
+            data = re.sub(r'\.substr\(\s*([0-9]+?)\s*,\s*([0-9]+?)\s*\)', lambda x: '[%s:%s]' % (x.group(1), x.group(2)), data)
+            data = re.sub(r'\.substr\(\s*([0-9]+?)\s*,\s*([0-9]+?)\s*\)', lambda x: '[%s:%s]' % (x.group(1), x.group(2)), data)
+            data = re.sub(r'\.slice\(\s*([0-9]+?)\s*,\s*([0-9]+?)\s*\)', lambda x: '[%s:%s]' % (x.group(1), x.group(2)), data)
             data = data.replace('\n', '\n\t')
             data = 'def retA():\n\t' + data
             data += '\n\treturn cookie\n'

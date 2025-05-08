@@ -70,7 +70,7 @@ class TopStreamFilm(CBaseHostClass):
                 title = self.cm.ph.getSearchGroups(item, '<strong>(.*?)</strong>')[0]
             title = title.split(" &#8211;")[0]
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'Description">([^"]+)</div>')[0])
-            dur = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'access_time">([\d]+)m')[0])
+            dur = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'access_time">([\d]+)m')[0])
             if dur:
                 desc = "Spielzeit: %sMin\n%s" % (dur, desc)
             params = dict(cItem)
@@ -95,7 +95,7 @@ class TopStreamFilm(CBaseHostClass):
             params.update({'good_for_fav': True, 'category': 'video', 'title': cItem['title'], 'link': self.getFullUrl(url), 'icon': icon, 'desc': desc})
             self.addVideo(params)
         else:
-            data = re.compile('"#season-(\d+)', re.DOTALL).findall(data[0])
+            data = re.compile(r'"#season-(\d+)', re.DOTALL).findall(data[0])
             for seasons in data:
                 title = cItem['title'] + " - Staffel " + seasons
                 params = dict(cItem)

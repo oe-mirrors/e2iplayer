@@ -117,9 +117,9 @@ class DokumentalneNET(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>', 'post-item'), ('</article', '>'))
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s'"](https?://[^'^"^\s]+?)\s*300w''')[0].strip())
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''[\s'"](https?://[^'^"^\s]+?)\s*300w''')[0].strip())
             if icon == '':
-                icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+                icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'), False)[1])
             desc = []
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'posted-on '), ('</div', '>'), False)[1]
@@ -165,7 +165,7 @@ class DokumentalneNET(CBaseHostClass):
                 retTab.append({'name': self.up.getDomain(url), 'url': url})
 
         if len(retTab) == 0:
-            tmp = re.compile('''['">\s](https?://[^'^"^<^\s]+?\.mp4)''').findall(data)
+            tmp = re.compile(r'''['">\s](https?://[^'^"^<^\s]+?\.mp4)''').findall(data)
             for url in tmp:
                 retTab.append({'name': self.up.getDomain(url), 'url': url})
 

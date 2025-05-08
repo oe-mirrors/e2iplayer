@@ -170,7 +170,7 @@ class WorldFree4u(CBaseHostClass):
                 printDBG(linksCandidates)
                 uniqueLinks = []
                 for item in linksCandidates:
-                    url = self.cm.ph.getSearchGroups(item, '''file['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+                    url = self.cm.ph.getSearchGroups(item, r'''file['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
                     if url.startswith('//'):
                         url = 'http:' + url
                     if not url.startswith('http'):
@@ -180,9 +180,9 @@ class WorldFree4u(CBaseHostClass):
                     uniqueLinks.append(url)
 
                     if 'mp4' in item:
-                        type = self.cm.ph.getSearchGroups(item, '''[\s'"]type['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-                        res = self.cm.ph.getSearchGroups(item, '''[\s'"]res['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
-                        label = self.cm.ph.getSearchGroups(item, '''[\s'"]label['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+                        type = self.cm.ph.getSearchGroups(item, r'''[\s'"]type['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+                        res = self.cm.ph.getSearchGroups(item, r'''[\s'"]res['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
+                        label = self.cm.ph.getSearchGroups(item, r'''[\s'"]label['"]?\s*[=:]\s*['"]([^"^']+?)['"]''')[0]
                         if label == '':
                             label = res
                         url = strwithmeta(url, {'Referer': cItem['url'], 'User-Agent': self.USER_AGENT})
@@ -224,7 +224,7 @@ class WorldFree4u(CBaseHostClass):
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h3>', '</h3>')[1])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]+?class=['"]desc['"][^>]*?>'''), re.compile('''</div>'''))[1])
         icon = self.cm.ph.getDataBeetwenMarkers(data, 'mvic-thumb', '>')[1]
-        icon = self.getFullUrl(self.cm.ph.getSearchGroups(icon, '''url\(\s*['"]([^'^"]+?\.jpg[^'^"]*?)['"]''', 1, True)[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(icon, r'''url\(\s*['"]([^'^"]+?\.jpg[^'^"]*?)['"]''', 1, True)[0])
 
         if title == '':
             title = cItem['title']

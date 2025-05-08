@@ -20,9 +20,9 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
 class CYTSignAlgoExtractor:
     MAX_REC_DEPTH = 5  # MAX RECURSION Depth for security
-    RE_FUNCTION_NAMES = re.compile('[ =(,]([a-zA-Z$]+?)\([a-z0-9,]*?\)')
-    RE_OBJECTS = re.compile('[ =(,;]([a-zA-Z$]+?)\.([a-zA-Z$]+?)\(')
-    RE_MAIN = re.compile('([a-zA-Z0-9$]+)\(')
+    RE_FUNCTION_NAMES = re.compile(r'[ =(,]([a-zA-Z$]+?)\([a-z0-9,]*?\)')
+    RE_OBJECTS = re.compile(r'[ =(,;]([a-zA-Z$]+?)\.([a-zA-Z$]+?)\(')
+    RE_MAIN = re.compile(r'([a-zA-Z0-9$]+)\(')
 
     def __init__(self, cm):
         self.cm = cm
@@ -429,7 +429,7 @@ class YoutubeIE(object):
             for lang in player_captions:
                 printDBG("_get_automatic_captions %s" % lang)
                 sub_url = urllib_unquote_plus(lang['baseUrl'])
-                sub_format = self.cm.ph.getSearchGroups(sub_url + '&', '[\?&]fmt=([^\?^&]+)[\?&]')[0]
+                sub_format = self.cm.ph.getSearchGroups(sub_url + '&', r'[\?&]fmt=([^\?^&]+)[\?&]')[0]
                 if sub_format != '':
                     sub_url = sub_url.replace(sub_format, 'vtt')
                 else:
@@ -484,7 +484,7 @@ class YoutubeIE(object):
 
         player_response = None
         if 'yt-video-id' == video_id:
-            video_id = self.cm.ph.getSearchGroups(url + '&', '[\?&]docid=([^\?^&]+)[\?&]')[0]
+            video_id = self.cm.ph.getSearchGroups(url + '&', r'[\?&]docid=([^\?^&]+)[\?&]')[0]
             isGoogleDoc = True
             url = url
             videoKey = 'docid'
@@ -576,7 +576,7 @@ class YoutubeIE(object):
                             url_item['url'] += '&%s={0}' % sp_item
                         else:
                             url_item['url'] += '&signature={0}'
-                    if not 'ratebypass' in url_item['url']:
+                    if 'ratebypass' not in url_item['url']:
                         url_item['url'] += '&ratebypass=yes'
 
                 url_map[str(url_data['itag'])] = url_item
@@ -607,7 +607,7 @@ class YoutubeIE(object):
             tmp = ph.find(video_webpage, ('<script', '>', 'player/base'))[1]
             playerUrl = ph.getattr(tmp, 'src')
             if not playerUrl:
-                for reObj in ['"assets"\:[^\}]+?"js"\s*:\s*"([^"]+?)"', 'src="([^"]+?)"[^>]+?name="player.*?/base"', '"jsUrl":"([^"]+?)"']:
+                for reObj in [r'"assets"\:[^\}]+?"js"\s*:\s*"([^"]+?)"', 'src="([^"]+?)"[^>]+?name="player.*?/base"', '"jsUrl":"([^"]+?)"']:
                     playerUrl = ph.search(video_webpage, reObj)[0]
                     if playerUrl:
                         break

@@ -161,7 +161,7 @@ class FilmPalastTo(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?\.jpe?g)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''src=['"]([^'^"]+?\.jpe?g)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+)['"]''')[0])
 
             # get desc
@@ -216,7 +216,7 @@ class FilmPalastTo(CBaseHostClass):
             self.addVideo(params)
             return
 
-        if '' != self.cm.ph.getSearchGroups(cItem['title'] + ' ', '''\s([Ss][0-9]+[Ee][0-9]+)\s''')[0]:
+        if '' != self.cm.ph.getSearchGroups(cItem['title'] + ' ', r'''\s([Ss][0-9]+[Ee][0-9]+)\s''')[0]:
             params = dict(cItem)
             self.addVideo(params)
 
@@ -335,7 +335,7 @@ class FilmPalastTo(CBaseHostClass):
 
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h2', '</h2>')[1])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="hidden', '</span>')[1])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''src=['"]([^"^']+\.jpe?g)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''src=['"]([^"^']+\.jpe?g)['"]''')[0])
 
         tmpTab = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'enre</p>', '</li>', False)[1]

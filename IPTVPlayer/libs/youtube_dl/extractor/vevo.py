@@ -364,7 +364,7 @@ class VevoIE(InfoExtractor):
                     source_type = self._SOURCE_TYPES.get(video_version['sourceType'])
                     renditions = self.xmlGetText(video_version['data'], 'renditions')
                     if source_type == 'http':
-                        tmp = re.compile('<rendition(\s[^>]+?)>').findall(renditions)
+                        tmp = re.compile(r'<rendition(\s[^>]+?)>').findall(renditions)
                         for rend in tmp:
                             formats.append({
                                 'url': self.xmlGetArg(rend, 'url'),
@@ -376,7 +376,7 @@ class VevoIE(InfoExtractor):
                                 'bitrate': (_int(self.xmlGetArg(rend, 'videoBitrate')) + _int(self.xmlGetArg(rend, 'audioBitrate'))) * 1000,
                             })
                     elif source_type == 'hls' and hls:
-                        tmp = re.compile('<rendition(\s[^>]+?)>').findall(renditions)
+                        tmp = re.compile(r'<rendition(\s[^>]+?)>').findall(renditions)
                         for rend in tmp:
                             tmpUrl = self.xmlGetArg(rend, 'url'),
                             formats.extend(self._extract_m3u8_formats(

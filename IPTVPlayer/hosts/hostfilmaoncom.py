@@ -110,7 +110,7 @@ class FilmaonCom(CBaseHostClass):
         self.setMainUrl(data.meta['url'])
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'pagination'), ('</div', '>'))[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>\s*?{0}\s*?<'''.format(page + 1))[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''<a[^>]+?href=['"]([^"^']+?)['"][^>]*?>\s*?{0}\s*?<'''.format(page + 1))[0])
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>'), ('</article', '>'))
         for item in data:
@@ -155,9 +155,9 @@ class FilmaonCom(CBaseHostClass):
             return
         self.setMainUrl(data.meta['url'])
 
-        reObj = re.compile('''<div[^>]+?top\-imdb\-item[^>]*>''', re.IGNORECASE)
+        reObj = re.compile(r'''<div[^>]+?top\-imdb\-item[^>]*>''', re.IGNORECASE)
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'top-imdb-list'), ('<script', '>'), False)[1]
-        data = re.compile('''<div[^>]+?top\-imdb\-list[^>]*>''', re.IGNORECASE).split(data)
+        data = re.compile(r'''<div[^>]+?top\-imdb\-list[^>]*>''', re.IGNORECASE).split(data)
         for section in data:
             sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<h3', '</h3>')[1])
             section = reObj.split(section)
@@ -333,7 +333,7 @@ class FilmaonCom(CBaseHostClass):
                 return
             printDBG(data)
             try:
-                videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''location\.href=['"]([^"^']+?)['"]''', 1, True)[0])
+                videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''location\.href=['"]([^"^']+?)['"]''', 1, True)[0])
                 urlTab = self.up.getVideoLinkExt(videoUrl)
             except Exception:
                 printExc()

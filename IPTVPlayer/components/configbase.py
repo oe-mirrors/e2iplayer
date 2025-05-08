@@ -129,7 +129,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
 
     def layoutFinished(self):
         self.setTitle(_("E2iPlayer - settings"))
-        if not self.onSelectionChanged in self["config"].onSelectionChanged:
+        if self.onSelectionChanged not in self["config"].onSelectionChanged:
             self["config"].onSelectionChanged.append(self.onSelectionChanged)
         self.runSetup()
 

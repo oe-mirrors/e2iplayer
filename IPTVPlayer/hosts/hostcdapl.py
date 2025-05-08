@@ -185,7 +185,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             sts, data = self.getPage(baseUrl, self.defaultParams)
             if not sts:
                 return
-            tmp = self.cm.ph.getSearchGroups(data, '''katalogLoadMore\([^\,]+?\,\s*"([^"]+?)"\s*,\s*"([^"]+?)"''', 2)
+            tmp = self.cm.ph.getSearchGroups(data, r'''katalogLoadMore\([^\,]+?\,\s*"([^"]+?)"\s*,\s*"([^"]+?)"''', 2)
             nextPageData = {'cat': tmp[0], 'sort': tmp[1]}
             nextPage = True
             data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="covers-container">', '<div id="loadMore">', False)[1]
@@ -248,7 +248,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             if not sts:
                 return
             if '/info/' in self.cm.meta['url']:
-                searchPattern = ph.search(self.cm.meta['url'] + '/', '/info/([^/^\?]+?)[/\?]')[0]
+                searchPattern = ph.search(self.cm.meta['url'] + '/', r'/info/([^/^\?]+?)[/\?]')[0]
                 url = self.SEARCH_URL % (searchPattern, 1, searchsort)
                 url += '&duration=' + searchType
 
@@ -326,11 +326,11 @@ class cda(CBaseHostClass, CaptchaHelper):
         if not sts:
             return
 
-        cats = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?polecani_partnerzy\s*?='), re.compile(';'), False)[1].strip()
-        counts = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?polecani_video_count\s*?='), re.compile(';'), False)[1].strip()
-        maps = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?mapping \s*?='), re.compile(';'), False)[1].strip()
+        cats = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'var\s*?polecani_partnerzy\s*?='), re.compile(';'), False)[1].strip()
+        counts = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'var\s*?polecani_video_count\s*?='), re.compile(';'), False)[1].strip()
+        maps = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'var\s*?mapping \s*?='), re.compile(';'), False)[1].strip()
         try:
-            tmp = re.compile('''"([^"]+?)"\s*?\:\s*?\[''').findall(cats)  # we use this trick to get valid order of cats
+            tmp = re.compile(r'''"([^"]+?)"\s*?\:\s*?\[''').findall(cats)  # we use this trick to get valid order of cats
             data = []
             for item in tmp:
                 data.append('"%s"' % item)
@@ -417,12 +417,12 @@ class cda(CBaseHostClass, CaptchaHelper):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'list-when-small'), ('</div', '>'))
         for item in data:
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'link-title'), ('</a', '>'))[1]
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, r'''\shref=['"]([^'^"]+?)['"]''')[0])
             if '/video/' not in url:
                 continue
-            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
             desc = [self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'time-inline'), ('<', '>'), False)[1])]
-            desc.append(self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^'^"]+?)['"]''')[0]))
+            desc.append(self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\salt=['"]([^'^"]+?)['"]''')[0]))
 
             title = self.cleanHtmlStr(tmp)
             params = dict(cItem)
@@ -504,7 +504,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                     tmp = ph.findall(data, ('<form', '>', '/login'), '</form>', flags=ph.I)
                     for item in tmp:
                         if 'data-sitekey' in item:
-                            sitekey = ph.search(item, '''data\-sitekey=['"]([^'^"]+?)['"]''')[0]
+                            sitekey = ph.search(item, r'''data\-sitekey=['"]([^'^"]+?)['"]''')[0]
                             break
 
                     if sitekey != '':

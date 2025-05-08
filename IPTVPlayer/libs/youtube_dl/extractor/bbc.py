@@ -111,7 +111,7 @@ class BBCCoUkIE(InfoExtractor):
             sts, captions = self.getPage(subUrl, self.defaultParams)
             if not sts:
                 continue
-            lang = self.cm.ph.getSearchGroups(captions, '''[\:\s]lang="([^"]+?)"''')[0]
+            lang = self.cm.ph.getSearchGroups(captions, r'''[\:\s]lang="([^"]+?)"''')[0]
             if lang == '':
                 lang = 'en'
             subtitles.append({'lang': lang, 'url': subUrl, 'ext': 'ttml'})

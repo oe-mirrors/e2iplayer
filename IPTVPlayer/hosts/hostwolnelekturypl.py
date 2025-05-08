@@ -60,18 +60,18 @@ class WolnelekturyPL(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'tabbed-filter'), ('</div', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<a', '</a>')
         for item in tmp:
-            id = self.cm.ph.getSearchGroups(item, '''\sdata\-id=['"]([^"^']+?)['"]''')[0]
+            id = self.cm.ph.getSearchGroups(item, r'''\sdata\-id=['"]([^"^']+?)['"]''')[0]
             titlesMap[id] = self.cleanHtmlStr(item)
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div ', '>', 'tab-content'), ('</ul', '>'))
         for section in data:
-            id = self.cm.ph.getSearchGroups(section, '''\sid=['"]([^"^']+?)['"]''')[0]
+            id = self.cm.ph.getSearchGroups(section, r'''\sid=['"]([^"^']+?)['"]''')[0]
             sTitle = titlesMap.get(id, id)
             itemsTab = []
             section = self.cm.ph.getAllItemsBeetwenMarkers(section, '<a', '</a>')
             for item in section:
                 title = self.cleanHtmlStr(item)
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
                 itemsTab.append({'title': title, 'url': url})
             if len(itemsTab):
                 params = dict(cItem)
@@ -119,8 +119,8 @@ class WolnelekturyPL(CBaseHostClass):
                 continue
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'title'), ('</div', '>'))[1]
             title = self.cleanHtmlStr(tmp)
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^"^']+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, r'''\shref=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?)['"]''')[0])
 
             desc = []
             tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'book-box-head'), ('</div', '>'))[1]).replace(' , ', ', ')
@@ -150,7 +150,7 @@ class WolnelekturyPL(CBaseHostClass):
                 if 'header' in item:
                     author = self.cleanHtmlStr(item)
                     continue
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
                 if url == '':
                     continue
                 if url.endswith('/'):
@@ -182,15 +182,15 @@ class WolnelekturyPL(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'jp-playlist'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
-        objReDesc = re.compile('''<div[^>]+?extra\-info[^>]+?>''')
+        objReDesc = re.compile(r'''<div[^>]+?extra\-info[^>]+?>''')
         for item in data:
 
             tmp = objReDesc.split(item)
             title = self.cleanHtmlStr(tmp[0])
             desc = self.cleanHtmlStr(tmp[1])
             urlTab = []
-            mp3Url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata\-mp3=['"]([^"^']+?)['"]''')[0])
-            oggUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata\-ogg=['"]([^"^']+?)['"]''')[0])
+            mp3Url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\sdata\-mp3=['"]([^"^']+?)['"]''')[0])
+            oggUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\sdata\-ogg=['"]([^"^']+?)['"]''')[0])
             if mp3Url != '':
                 urlTab.append({'name': 'mp3', 'url': mp3Url, 'need_resolve': 0})
             if oggUrl != '':

@@ -64,14 +64,14 @@ class Altadefinizione(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'before_widget'), ('<div', '>', 'before_widget'), False)[1]
-        tmp = re.compile('''<div[^>]+?tab\-content[^>]*?>''').split(data)
+        tmp = re.compile(r'''<div[^>]+?tab\-content[^>]*?>''').split(data)
         if len(tmp) == 2:
             tabs = []
             mainTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[0], ('<div', '>', 'widget-title'), ('</div', '>'))[1])
             tmp[0] = self.cm.ph.getAllItemsBeetwenMarkers(tmp[0], '<li', '</li>')
             for tabItem in tmp[0]:
                 tabTitle = self.cleanHtmlStr(tabItem)
-                key = self.cm.ph.getSearchGroups(tabItem, '''href=['"]\#([^"^']+?)['"]''')[0]
+                key = self.cm.ph.getSearchGroups(tabItem, r'''href=['"]\#([^"^']+?)['"]''')[0]
                 if key == '':
                     continue
                 categories = []
@@ -126,7 +126,7 @@ class Altadefinizione(CBaseHostClass):
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'page_nav'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s<''' % (page + 1))[0]
 
-        data = re.compile('''<div[^>]+?dle\-content[^>]+?>''').split(data, 1)
+        data = re.compile(r'''<div[^>]+?dle\-content[^>]+?>''').split(data, 1)
         data[-1] = re.compile('''<div[^>]+?right_bar[^>]+?>''').split(data[-1], 1)[0]
         if len(data) > 1 and page > 1:
             del data[0]
@@ -267,7 +267,7 @@ class Altadefinizione(CBaseHostClass):
 
         for item in data:
             printDBG("Altadefinizione.exploreItem item [%s]" % item)
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''data\-link=['"]([^"^']+?)['"]''', 1, True)[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''data\-link=['"]([^"^']+?)['"]''', 1, True)[0])
             if url.startswith('//'):
                 url = 'https:' + url
             if 1 == self.up.checkHostSupport(url):

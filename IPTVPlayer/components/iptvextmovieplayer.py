@@ -943,7 +943,7 @@ class IPTVExtMoviePlayer(Screen):
             except Exception:
                 printExc()
 
-        fileMatch = re.compile("^.*?(:?\.%s)$" % '|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()), re.IGNORECASE)
+        fileMatch = re.compile(r"^.*?(:?\.%s)$" % r'|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()), re.IGNORECASE)
         self.openChild(boundFunction(self.childClosed, self.openSubtitlesFromFileCallback), IPTVFileSelectorWidget, currDir, _("Select subtitles file"), fileMatch)
 
     def openSubtitlesFromFileCallback(self, filePath=None):
@@ -970,7 +970,7 @@ class IPTVExtMoviePlayer(Screen):
 
         printDBG("enableSubtitlesFromFile filePath[%s] encoding[%s]" % (filePath, encoding))
         if None != filePath:
-            lang = CParsingHelper.getSearchGroups(filePath, "_([a-z]{2})_[0-9]+?_[0-9]+?_[0-9]+?(:?\.%s)$" % '|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()))[0]
+            lang = CParsingHelper.getSearchGroups(filePath, r"_([a-z]{2})_[0-9]+?_[0-9]+?_[0-9]+?(:?\.%s)$" % r'|\.'.join(IPTVSubtitlesHandler.getSupportedFormats()))[0]
             try:
                 currDir, fileName = os_path.split(filePath)
             except Exception:

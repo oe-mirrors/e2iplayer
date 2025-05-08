@@ -154,7 +154,7 @@ class ShahiidAnime(CBaseHostClass):
         else:
             nextPage = False
 
-        splitObj = re.compile('''<div[^>]+?class=['"]online\-block['"][^>]*?>''')
+        splitObj = re.compile(r'''<div[^>]+?class=['"]online\-block['"][^>]*?>''')
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div ', '>', 'online-block'), ('<div', '>', 'clear:'), False)
         for dat in data:
             dat = splitObj.split(dat)
@@ -270,10 +270,10 @@ class ShahiidAnime(CBaseHostClass):
         for dat in data:
             dat = self.cm.ph.getAllItemsBeetwenMarkers(dat, '<li', '</li>')
             for item in dat:
-                dataId = self.cm.ph.getSearchGroups(item, '''\s=['"]([^'^"]+?)['"]''')[0]
-                dataType = self.cm.ph.getSearchGroups(item, '''\sdata\-type=['"]([^'^"]+?)['"]''')[0]
-                dataCode = self.cm.ph.getSearchGroups(item, '''\sdata\-code=['"]([^'^"]+?)['"]''')[0]
-                id = self.cm.ph.getSearchGroups(item, '''\sid=['"]([^'^"]+?)['"]''')[0]
+                dataId = self.cm.ph.getSearchGroups(item, r'''\s=['"]([^'^"]+?)['"]''')[0]
+                dataType = self.cm.ph.getSearchGroups(item, r'''\sdata\-type=['"]([^'^"]+?)['"]''')[0]
+                dataCode = self.cm.ph.getSearchGroups(item, r'''\sdata\-code=['"]([^'^"]+?)['"]''')[0]
+                id = self.cm.ph.getSearchGroups(item, r'''\sid=['"]([^'^"]+?)['"]''')[0]
                 name = self.cleanHtmlStr(item)
                 url = '%s|%s|%s|%s' % (dataId, dataType, dataCode, id)
                 retTab.append({'name': name, 'url': url, 'need_resolve': 1})

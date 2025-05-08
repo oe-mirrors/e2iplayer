@@ -156,7 +156,7 @@ class HoofootCom(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="club">', '</div>', False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a ', '</a>')
         for catItem in data:
-            ff = self.cm.ph.getSearchGroups(catItem, '''mostrar\(['"]([^'^"]+?)['"]\)''')[0]
+            ff = self.cm.ph.getSearchGroups(catItem, r'''mostrar\(['"]([^'^"]+?)['"]\)''')[0]
             if '' == ff:
                 continue
             title = titlesMap.get(ff, '')
@@ -207,7 +207,7 @@ class HoofootCom(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             if 'match' not in url:
                 continue
-            icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"^>]+?\.jpg)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, r'''src=['"]([^'^"^>]+?\.jpg)['"]''')[0]
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt=['"]([^'^"]+?)['"]''')[0])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2 ', '</h2>')[1])
@@ -245,7 +245,7 @@ class HoofootCom(CBaseHostClass):
             if 'focusd' in item:
                 url = cItem['url']
             else:
-                url = self.cm.ph.getSearchGroups(item, '''rruta\('([0-9,]+?)'\)''')[0]
+                url = self.cm.ph.getSearchGroups(item, r'''rruta\('([0-9,]+?)'\)''')[0]
             if url == '':
                 continue
             n_link += 1

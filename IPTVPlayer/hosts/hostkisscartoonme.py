@@ -160,7 +160,7 @@ class KissCartoonMe(CBaseHostClass):
 
         tabs = []
         for item in tmp:
-            tabId = self.cm.ph.getSearchGroups(item, '''showTabData\('([^']+?)'\)''')[0]
+            tabId = self.cm.ph.getSearchGroups(item, r'''showTabData\('([^']+?)'\)''')[0]
             tabTitle = self.cleanHtmlStr(item)
             tabs.append({'id': tabId, 'title': tabTitle})
 
@@ -182,7 +182,7 @@ class KissCartoonMe(CBaseHostClass):
                 printDBG('>>>>>>>>>>>>>>>>>> continue tabId[%s]' % tabId)
                 continue
             # check for more item
-            moreUrl = self.cm.ph.getSearchGroups(item, '''<a href="([^"]+?)">More\.\.\.</a>''')[0]
+            moreUrl = self.cm.ph.getSearchGroups(item, r'''<a href="([^"]+?)">More\.\.\.</a>''')[0]
             if moreUrl != '':
                 params = dict(cItem)
                 params.update({'category': category, 'title': tab['title'], 'url': self._getFullUrl(moreUrl)})

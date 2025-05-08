@@ -180,7 +180,7 @@ class EgyBest(CBaseHostClass):
         try:
             data = byteify(json.loads(data), '', True)['html']
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
-            if len(data) and '' != self.cm.ph.getSearchGroups(data[-1], '''[/\?&]page=(%s)[^0-9]''' % (page + 1))[0]:
+            if len(data) and '' != self.cm.ph.getSearchGroups(data[-1], r'''[/\?&]page=(%s)[^0-9]''' % (page + 1))[0]:
                 nextPage = True
             for item in data:
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
@@ -306,8 +306,8 @@ class EgyBest(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>', False, False)[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<source', '>', caseSensitive=False)
         for item in tmp:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
-            type = self.cm.ph.getSearchGroups(item, '''\stype=['"]([^'^"]+?)['"]''')[0].lower()
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            type = self.cm.ph.getSearchGroups(item, r'''\stype=['"]([^'^"]+?)['"]''')[0].lower()
             printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ]]]]]]]]]]]]]]]]]]]]]]]] >>>>>>>>> " + url)
             printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ]]]]]]]]]]]]]]]]]]]]]]]] >>>>>>>>> " + type)
             if url == '':
@@ -337,7 +337,7 @@ class EgyBest(CBaseHostClass):
                 url = self.cm.ph.getSearchGroups(it, '''href=['"]([^'^"]+?)['"]''')[0]
                 if url == '':
                     url = self.cm.ph.getSearchGroups(it, '''url=['"]([^'^"]+?)['"]''')[0]
-                call = self.cm.ph.getSearchGroups(it, '''data\-call=['"]([^'^"]+?)['"]''')[0]
+                call = self.cm.ph.getSearchGroups(it, r'''data\-call=['"]([^'^"]+?)['"]''')[0]
                 if url != '' and '&v=1' in url:
                     retTab.append({'name': '%s: %s' % (self.cleanHtmlStr(it), name), 'url': strwithmeta(self.getFullUrl(url), {'Referer': cItem['url']}), 'need_resolve': 1})
                 if call != '':

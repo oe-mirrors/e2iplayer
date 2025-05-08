@@ -144,7 +144,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
             return
 
         self.episodesCache['imdbid'] = self.cm.ph.getSearchGroups(data, '''/tt([0-9]+?)[^0-9]''')[0]
-        self.episodesCache['key'] = self.cm.ph.getSearchGroups(data, '''key\s*=\s*['"]([^'^"]+?)['"]''')[0]
+        self.episodesCache['key'] = self.cm.ph.getSearchGroups(data, r'''key\s*=\s*['"]([^'^"]+?)['"]''')[0]
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="epizode">', '<script', False)[1]
         data = data.split('<h3 ')
@@ -153,7 +153,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
         for sItem in data:
             sItem = '<h3 ' + sItem
             tmp = self.cm.ph.getDataBeetwenMarkers(sItem, '<h3', '</h3>')[1]
-            sNum = self.cm.ph.getSearchGroups(tmp, '''id=['"]sezona\-([0-9]+)['"]''')[0].strip()
+            sNum = self.cm.ph.getSearchGroups(tmp, r'''id=['"]sezona\-([0-9]+)['"]''')[0].strip()
             sTitle = self.cleanHtmlStr(tmp)
 
             sItem = self.cm.ph.getAllItemsBeetwenMarkers(sItem, '<div', '</ul>')
@@ -266,7 +266,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
 
                 params = dict(cItem)
                 params.update({'category': nextCategory, 'title': title, 'url': url, 'desc': desc})
-                title = re.sub('\([0-9]{4}\)', '', title).strip()
+                title = re.sub(r'\([0-9]{4}\)', '', title).strip()
                 if self.params['confirmed_title'].lower().startswith(title.lower()):
                     promItems.append(params)
                 else:
@@ -292,7 +292,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
 
                 params = dict(cItem)
                 params.update({'category': nextCategory, 'title': title, 'url': url, 'desc': ' | '.join(descTab)})
-                title = re.sub('\([0-9]{4}\)', '', title).strip()
+                title = re.sub(r'\([0-9]{4}\)', '', title).strip()
                 if self.params['confirmed_title'].lower().startswith(title.lower()):
                     promItems.append(params)
                 else:
@@ -316,7 +316,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
 
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url = self.cm.ph.getSearchGroups(item, 'href="(https?://[^"]+?\.(?:rar|zip))"')[0]
+            url = self.cm.ph.getSearchGroups(item, r'href="(https?://[^"]+?\.(?:rar|zip))"')[0]
             if not self.cm.isValidUrl(url):
                 continue
             title = urllib.parse.unquote(url.split('/')[-1])

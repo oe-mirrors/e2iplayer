@@ -61,7 +61,7 @@ class WpTV(CBaseHostClass):
         self.cacheGroups = {}
 
     def _getAttrVal(self, data, attr):
-        val = self.cm.ph.getSearchGroups(data, '[<\s][^>]*' + attr + '=([^\s^>]+?)[\s>]')[0].strip()
+        val = self.cm.ph.getSearchGroups(data, r'[<\s][^>]*' + attr + r'=([^\s^>]+?)[\s>]')[0].strip()
         if len(val) > 2:
             if val[0] in ['"', "'"]:
                 val = val[1:]
@@ -115,7 +115,7 @@ class WpTV(CBaseHostClass):
         if not sts:
             return
 
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?\,page\,%d\,[^'^"]+?)['"]''' % (page + 1))[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''href=['"]([^'^"]+?\,page\,%d\,[^'^"]+?)['"]''' % (page + 1))[0])
 
         titlesTab = []
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<section', '</section>')
@@ -201,7 +201,7 @@ class WpTV(CBaseHostClass):
         if not sts:
             return
 
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''href=['"]([^'^"]+?\,page\,%d\,[^'^"]+?)['"]''' % (page + 1))[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''href=['"]([^'^"]+?\,page\,%d\,[^'^"]+?)['"]''' % (page + 1))[0])
         mainDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<main class="main-content"', '</p>')[1])
 
         if page == 1:

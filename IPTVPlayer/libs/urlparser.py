@@ -1710,7 +1710,7 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(url, {'header': HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': COOKIEFILE})
         if not sts:
             return False
-        if not 'Continue to ' in data:
+        if 'Continue to ' not in data:
             return False
         data = re.search('name="confirm" value="([^"]+?)"', data)
         if not data:

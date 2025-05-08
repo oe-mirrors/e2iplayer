@@ -268,7 +268,7 @@ class GamatoTV(CBaseHostClass):
 
                 return
 
-            tmp = re.split('''(<img[^>]+?\.jpg[^>]+?>)''', data)
+            tmp = re.split(r'''(<img[^>]+?\.jpg[^>]+?>)''', data)
             if len(data) > 1:  # collection
                 for idx in range(1, len(tmp), 1):
                     printDBG("++++++++++++++++++++++++++++++++++++++++")
@@ -406,7 +406,7 @@ class GamatoTV(CBaseHostClass):
 
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop="name"[^>]+?content="([^"]+?)"''')[0])
         icon = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<div[^>]+?class="wp-content"[^>]*?>'), re.compile('</div>'))[1])
 
         mapDesc = {'Original title': 'alternate_title', 'IMDb Rating': 'imdb_rating', 'TMDb Rating': 'tmdb_rating', 'Status': 'status',

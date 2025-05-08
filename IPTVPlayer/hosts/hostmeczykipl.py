@@ -59,8 +59,8 @@ class MeczykiPL(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="content-box-text"', 'shortcuts-content-start')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            cat = self.cm.ph.getSearchGroups(item, '''setCategory\(\s*([0-9]+?)\s*\)''')[0]
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''url\(\s*['"]([^'^"]+?)['"]\s*\)''')[0])
+            cat = self.cm.ph.getSearchGroups(item, r'''setCategory\(\s*([0-9]+?)\s*\)''')[0]
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''url\(\s*['"]([^'^"]+?)['"]\s*\)''')[0])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
@@ -135,7 +135,7 @@ class MeczykiPL(CBaseHostClass):
             desc = self.cleanHtmlStr(item[-1])
             titles.append((title, desc))
 
-        tmp = re.compile('''['"]([^'^"]*?//config\.playwire\.com[^'^"]+?\.json)['"]''').findall(data)
+        tmp = re.compile(r'''['"]([^'^"]*?//config\.playwire\.com[^'^"]+?\.json)['"]''').findall(data)
         tmp.extend(re.compile('''<iframe[^>]+?src=['"]([^"]+?)['"]''').findall(data))
         tmp.extend(re.compile('''<a[^>]+?href=['"](https?://[^'^"]*?ekstraklasa.tv[^'^"]+?)['"]''').findall(data))
         tmp.extend(re.compile('''<a[^>]+?href=['"](https?://[^'^"]*?polsatsport.pl[^'^"]+?)['"]''').findall(data))

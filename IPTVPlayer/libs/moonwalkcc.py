@@ -99,8 +99,8 @@ class MoonwalkParser():
                     elif data[idx] == '}':
                         num += 1
                 tabVars = []
-                cData = self.cm.ph.getSearchGroups(data[endIdx:], '''\(([^\)]+?)\)''')[0].split(',')
-                vData = self.cm.ph.getSearchGroups(data[:idx].rsplit('function', 1)[-1], '''\(([^\)]+?)\)''')[0].split(',')
+                cData = self.cm.ph.getSearchGroups(data[endIdx:], r'''\(([^\)]+?)\)''')[0].split(',')
+                vData = self.cm.ph.getSearchGroups(data[:idx].rsplit('function', 1)[-1], r'''\(([^\)]+?)\)''')[0].split(',')
                 for idx in range(len(cData)):
                     tabVars.append('%s=%s;' % (vData[idx].strip(), cData[idx].strip()))
                 jscode.append('\n'.join(tabVars))
@@ -250,8 +250,8 @@ class MoonwalkParser():
             printDBG(data)
             printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-            seasonData = self.cm.ph.getSearchGroups(data, '''seasons\s*:\s*\[([^\]]+?)\]''')[0]
-            ref = self.cm.ph.getSearchGroups(data, '''ref\s*:[^'^"]*?['"]([^'^"]+?)['"]''')[0]
+            seasonData = self.cm.ph.getSearchGroups(data, r'''seasons\s*:\s*\[([^\]]+?)\]''')[0]
+            ref = self.cm.ph.getSearchGroups(data, r'''ref\s*:[^'^"]*?['"]([^'^"]+?)['"]''')[0]
             if 'ref' != '':
                 query['ref'] = ref
             query.pop('episode', None)
@@ -291,9 +291,9 @@ class MoonwalkParser():
             printDBG(data)
             printDBG("+++")
 
-            episodeData = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''episodes\s*:'''), re.compile(']]'))[1]
+            episodeData = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'''episodes\s*:'''), re.compile(']]'))[1]
             if episodeData != '':
-                episodeData = re.compile('''\[\s*[0-9]+?\s*\,\s*([0-9]+?)[^0-9]''').findall(episodeData)
+                episodeData = re.compile(r'''\[\s*[0-9]+?\s*\,\s*([0-9]+?)[^0-9]''').findall(episodeData)
                 for item in episodeData:
                     item = item.strip()
                     query['episode'] = item
@@ -302,7 +302,7 @@ class MoonwalkParser():
                     episodesTab.append({'title': _('Episode') + ' ' + item, 'id': int(item), 'url': strwithmeta(url, {'host_name': 'moonwalk.cc'})})
 
             else:
-                episodeData = self.cm.ph.getSearchGroups(data, '''episodes\s*:\s*\[([^\]]+?)\]''')[0]
+                episodeData = self.cm.ph.getSearchGroups(data, r'''episodes\s*:\s*\[([^\]]+?)\]''')[0]
                 episodeData = episodeData.split(',')
                 for item in episodeData:
                     item = item.strip()

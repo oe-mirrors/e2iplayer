@@ -56,7 +56,7 @@ class MegaKino(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        nextPage = self.cm.ph.getSearchGroups(data, 'class="pagination.*?href="([^"]+)">\D')[0]
+        nextPage = self.cm.ph.getSearchGroups(data, r'class="pagination.*?href="([^"]+)">\D')[0]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="poster grid-item', '</a>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])

@@ -202,7 +202,7 @@ class ClassicCinemaOnline(CBaseHostClass):
         if not sts:
             return []
 
-        reObj = re.compile('''['"]([^"^']+?\.mp4(:?\?[^"^']+?)?)['"]''', re.IGNORECASE)
+        reObj = re.compile(r'''['"]([^"^']+?\.mp4(:?\?[^"^']+?)?)['"]''', re.IGNORECASE)
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<center>', '</center>')
         for item in data:
             videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
@@ -211,7 +211,7 @@ class ClassicCinemaOnline(CBaseHostClass):
             if videoUrl == '':
                 videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<object[^>]+?value=['"]([^"^']+?)['"]''', 1, True)[0])
             if videoUrl.split('?', 1)[0].endswith('.swf'):
-                baseUrl = self.cm.ph.getSearchGroups(item, '''['"]?baseUrl['"]?\s*:\s*['"](https?://[^"^']+?)['"]''', 1, True)[0]
+                baseUrl = self.cm.ph.getSearchGroups(item, r'''['"]?baseUrl['"]?\s*:\s*['"](https?://[^"^']+?)['"]''', 1, True)[0]
                 item = reObj.findall(item)
                 for url in item:
                     url = url[0]
@@ -233,10 +233,10 @@ class ClassicCinemaOnline(CBaseHostClass):
         if not sts:
             return retTab
 
-        imdbId = self.cm.ph.getSearchGroups(data, 'imdb\.com/title/tt([0-9]+?)[^0-9$]')[0]
+        imdbId = self.cm.ph.getSearchGroups(data, r'imdb\.com/title/tt([0-9]+?)[^0-9$]')[0]
         if imdbId == '':
             img_url = self.cm.ph.getDataBeetwenNodes(data, ('<center>', '</center>', '<img'), ('<', '>'))[1]
-            img_url = self.getFullUrl(self.cm.ph.getSearchGroups(img_url, '<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(:?\?[^"]+?)?)"')[0])
+            img_url = self.getFullUrl(self.cm.ph.getSearchGroups(img_url, r'<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(:?\?[^"]+?)?)"')[0])
             return [{'title': cItem['title'], 'text': cItem.get('desc', ''), 'images': [{'title': '', 'url': img_url}], 'other_info': {}}]
 
         url = 'http://www.imdb.com/title/tt{0}/'.format(imdbId)
@@ -244,11 +244,11 @@ class ClassicCinemaOnline(CBaseHostClass):
         if not sts:
             return retTab
 
-        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:title['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
+        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'''<meta property=['"]?og\:title['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="summary_text"', '</div>')[1])
         if desc == '':
-            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:description['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
-        icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<meta property=['"]?og\:image['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'''<meta property=['"]?og\:description['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
+        icon = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''<meta property=['"]?og\:image['"]?[^>]+?content=['"]([^"^']+?)['"]''')[0])
 
         if title == '':
             title = cItem['title']

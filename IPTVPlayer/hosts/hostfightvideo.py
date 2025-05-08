@@ -237,7 +237,7 @@ class FightVideo(CBaseHostClass):
                         self.addVideo(params)
                         idx += 1
             else:
-                tmpVideos = re.compile('''['"](https?://video\[^'^"]+?\.mp4)['"]''').findall(item1)
+                tmpVideos = re.compile(r'''['"](https?://video\[^'^"]+?\.mp4)['"]''').findall(item1)
                 for url in tmpVideos:
                     url = url.replace(' ', '%20')
                     if url not in allUrls and self.cm.isValidUrl(url):
@@ -248,7 +248,7 @@ class FightVideo(CBaseHostClass):
                         idx += 1
 
                 tmpVideos = re.compile('''<iframe[^>]+?src=['"]([^"^']+?)['"]''').findall(item1)
-                tmpVideos.extend(re.compile('''data\-url=['"](https?://[^'^"]+?)['"]''').findall(item1))
+                tmpVideos.extend(re.compile(r'''data\-url=['"](https?://[^'^"]+?)['"]''').findall(item1))
                 for url in tmpVideos:
                     if url not in allUrls and self.cm.isValidUrl(url) and 1 == self.up.checkHostSupport(url):
                         allUrls.append(url)

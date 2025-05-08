@@ -110,7 +110,7 @@ class SerijeOnline(CBaseHostClass):
         reObjSubCats = re.compile('''<ul[^>]+?dropdown-menu[^>]+?>''')
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'nav-collapse'), ('<a', '>', '/topvideos'))[1]
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'dropdown-menu'), ('<a', '>', '/topvideos'), False)[1]
-        data = re.compile('''<li[^>]+?dropdown\-submenu[^>]+?>|</ul>''').split(data)
+        data = re.compile(r'''<li[^>]+?dropdown\-submenu[^>]+?>|</ul>''').split(data)
         for catItem in data:
             catItem = reObjSubCats.split(catItem, 1)
             subCategories = []

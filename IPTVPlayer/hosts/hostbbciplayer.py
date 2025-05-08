@@ -181,7 +181,7 @@ class BBCiPlayer(CBaseHostClass):
             if url == '':
                 continue
             title = self.cleanHtmlStr(item)
-            icon = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, r'''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
 
             params = {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullIconUrl(icon), 'desc': ''}
             if '/a-z' in url:
@@ -308,7 +308,7 @@ class BBCiPlayer(CBaseHostClass):
                 if title == '':
                     continue
 
-                icon = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
+                icon = self.cm.ph.getSearchGroups(item, r'''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
 
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>', withMarkers=True)
                 descTab = []
@@ -354,7 +354,7 @@ class BBCiPlayer(CBaseHostClass):
                     if title == '':
                         continue
 
-                    icon = self.cm.ph.getSearchGroups(item, '''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
+                    icon = self.cm.ph.getSearchGroups(item, r'''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
 
                     tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>', withMarkers=True)
                     descTab = []

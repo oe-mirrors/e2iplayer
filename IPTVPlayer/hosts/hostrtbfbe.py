@@ -117,14 +117,14 @@ class RTBFBE(CBaseHostClass):
                 sts, data = self.getPage(self.getMainUrl())
                 if not sts:
                     return ''
-            tmp = re.compile('''<script[^>]+?src=['"]([^'^"]+?_ssl\.js)['"]''').findall(data)
+            tmp = re.compile(r'''<script[^>]+?src=['"]([^'^"]+?_ssl\.js)['"]''').findall(data)
             data = ''
             for item in tmp:
                 sts, item = self.getPage(self.getFullUrl(item))
                 if sts:
                     data += item
-            self.partnerKey = self.cm.ph.getSearchGroups(data, '''partner_key\s*?:\s*?['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-            self.csrfToken = self.cm.ph.getSearchGroups(data, '''['"]?X-CSRF-Token['"]?\s*?:\s*?['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
+            self.partnerKey = self.cm.ph.getSearchGroups(data, r'''partner_key\s*?:\s*?['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
+            self.csrfToken = self.cm.ph.getSearchGroups(data, r'''['"]?X-CSRF-Token['"]?\s*?:\s*?['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
         return self.partnerKey
 
     def getPartnerToken(self):
@@ -133,7 +133,7 @@ class RTBFBE(CBaseHostClass):
             sts, data = self.getPage(url)
             if not sts:
                 return ''
-            self.partnerToken = self.cm.ph.getSearchGroups(data, '''\.m3u8\?token=([0-9A-Za-z]+?)[^0-9^A-Z^a-z]''')[0]
+            self.partnerToken = self.cm.ph.getSearchGroups(data, r'''\.m3u8\?token=([0-9A-Za-z]+?)[^0-9^A-Z^a-z]''')[0]
         return self.partnerToken
 
     def listLiveCategories(self, cItem, nextCategory):
@@ -293,7 +293,7 @@ class RTBFBE(CBaseHostClass):
         if page == 0:
             sections.append(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'autocomplete--medias'), ('</section', '>'))[1])
 
-        reObj = re.compile('\sdata\-([^=]+?)="([^"]+?)"')
+        reObj = re.compile(r'\sdata\-([^=]+?)="([^"]+?)"')
         query = []
         uuids = []
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<b', '>', 'data-uuid'), ('</b', '>'))
@@ -339,9 +339,9 @@ class RTBFBE(CBaseHostClass):
             sItems = []
             sectionItem = self.cm.ph.getAllItemsBeetwenMarkers(sectionItem, '<article', '</article>')
             for item in sectionItem:
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data\-srcset=['"]([^'^"^\s]+?)[\s'"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''data\-srcset=['"]([^'^"^\s]+?)[\s'"]''')[0])
                 if icon == '':
-                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"^\s]+?(?:\.jpe?g|\.png)(?:\?[^'^"^\s]*?)?)[\s'"]''')[0])
+                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''src=['"]([^'^"^\s]+?(?:\.jpe?g|\.png)(?:\?[^'^"^\s]*?)?)[\s'"]''')[0])
                 header = self.cm.ph.getDataBeetwenMarkers(item, '<header', '</header>')[1]
                 url = self.cm.ph.getSearchGroups(header, '''href=['"]([^'^"]+?)['"]''')[0]
                 if url == '' or url[0] in ['{', '[']:
@@ -418,12 +418,12 @@ class RTBFBE(CBaseHostClass):
         self.setMainUrl(cUrl)
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'chapter-list'), ('<div', '>', 'media-nav'))[1]
-        data = re.compile('''<li[^>]+?js\-chapter\-entry[^>]+?>''').split(data)
+        data = re.compile(r'''<li[^>]+?js\-chapter\-entry[^>]+?>''').split(data)
         for item in data:
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data\-srcset=['"]([^'^"^\s]+?)[\s'"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''data\-srcset=['"]([^'^"^\s]+?)[\s'"]''')[0])
             if icon == '':
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"^\s]+?(?:\.jpe?g|\.png)(?:\?[^'^"^\s]*?)?)[\s'"]''')[0])
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^'^"]+?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''src=['"]([^'^"^\s]+?(?:\.jpe?g|\.png)(?:\?[^'^"^\s]*?)?)[\s'"]''')[0])
+            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\stitle=['"]([^'^"]+?)['"]''')[0])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', '-subtitle'), ('</span', '>'))[1])
             if '/auvio/' not in url:
@@ -508,7 +508,7 @@ class RTBFBE(CBaseHostClass):
                         if url in tmp:
                             continue
                         tmp.append(url)
-                        name = self.cm.ph.getSearchGroups(url, '''[\-_]([0-9]+?)p\.mp4''')[0]
+                        name = self.cm.ph.getSearchGroups(url, r'''[\-_]([0-9]+?)p\.mp4''')[0]
                         if name == '':
                             name = type
                         if self.cm.isValidUrl(url):
@@ -626,7 +626,7 @@ class RTBFBE(CBaseHostClass):
         sts, data = self.getPage(self.getMainUrl())
         if sts:
             self.getPartnerKey(data)
-            self.dataKey = self.cm.ph.getSearchGroups(data, '''data\-key=['"]([^'^"]+?)['"]''')[0]
+            self.dataKey = self.cm.ph.getSearchGroups(data, r'''data\-key=['"]([^'^"]+?)['"]''')[0]
             sts, data = self.getPage(self.getFullUrl('/api/sso/screenset?set=authentication'))
         if sts:
             requestId = 'R%s' % random.randint(1000000000, 9999999999)

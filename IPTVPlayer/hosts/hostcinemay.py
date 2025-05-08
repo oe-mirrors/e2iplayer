@@ -93,7 +93,7 @@ class Cinemay(CBaseHostClass):
         else:
             nextPage = False
 
-        flagsReObj = re.compile('''/flags/(.+?)\.png''')
+        flagsReObj = re.compile(r'''/flags/(.+?)\.png''')
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<article', '</article>')
         for item in data:
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^'^"]+?)['"]''')[0])
@@ -127,7 +127,7 @@ class Cinemay(CBaseHostClass):
             self.setMainUrl(self.cm.meta['url'])
 
             data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'list-series'), ('</ul', '>'))[1]
-            data = re.compile('''<li[^>]+?class=['"]alpha\-title['"][^>]*?>''').split(data)
+            data = re.compile(r'''<li[^>]+?class=['"]alpha\-title['"][^>]*?>''').split(data)
             if len(data):
                 del data[0]
             for section in data:
@@ -136,7 +136,7 @@ class Cinemay(CBaseHostClass):
                 tabList = []
                 for item in section:
                     title = self.cleanHtmlStr(item)
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                     tabList.append({'title': title, 'url': url})
                 if len(tabList):
                     title = tabList[0]['title'][0]
@@ -245,9 +245,9 @@ class Cinemay(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script', '</script>')
         for item in data:
             if 'headers' in item:
-                id = self.cm.ph.getSearchGroups(item, '''['"]?id['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
+                id = self.cm.ph.getSearchGroups(item, r'''['"]?id['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
                 tmp = self.cm.ph.getDataBeetwenMarkers(item, 'headers', '}')[1]
-                tmp = self.cm.ph.getSearchGroups(tmp, '''\{\s*['"]?([^'^"]+?)['"]?\s*:\s*['"]([^'^"]+?)['"]''', 2)
+                tmp = self.cm.ph.getSearchGroups(tmp, r'''\{\s*['"]?([^'^"]+?)['"]?\s*:\s*['"]([^'^"]+?)['"]''', 2)
                 header[tmp[0]] = tmp[1]
 
         if id == '':
@@ -264,7 +264,7 @@ class Cinemay(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, 'linktabslink', '</ul>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            lang = self.cm.ph.getSearchGroups(item, '''/flags/(.+?)\.png''')[0]
+            lang = self.cm.ph.getSearchGroups(item, r'''/flags/(.+?)\.png''')[0]
             name = self.cleanHtmlStr(item)
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''value=['"]([^'^"]+?)['"]''')[0])
             retTab.append({'name': '[%s] %s' % (lang, name), 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})
@@ -340,7 +340,7 @@ class Cinemay(CBaseHostClass):
             return []
 
         if '/episodes/' in url:
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''[\s:]url\(\s*['"]([^'^"]+?\.jpe?g[^'^"]*?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''[\s:]url\(\s*['"]([^'^"]+?\.jpe?g[^'^"]*?)['"]''')[0])
             data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<div[^>]+?id=['"]info['"]'''), re.compile('''<div[^>]+?class=['"]box_links['"]'''))[1]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<h1'''), re.compile('</h1>'))[1])
             otherInfo['alternate_title'] = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''<h3'''), re.compile('</h3>'))[1])

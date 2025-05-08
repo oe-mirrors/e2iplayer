@@ -82,7 +82,7 @@ def ParseM3u(data):
         elif not line.startswith('#'):
             if '' != params['title']:
                 line = line.replace('rtmp://$OPT:rtmp-raw=', '')
-                cTitle = re.sub('\[[^\]]*?\]', '', params['title'])
+                cTitle = re.sub(r'\[[^\]]*?\]', '', params['title'])
                 if len(cTitle):
                     params['title'] = cTitle
                 params['uri'] = urlparser.decorateParamsFromUrl(line)

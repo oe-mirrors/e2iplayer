@@ -89,7 +89,7 @@ class JoeMonster(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'mtvLeftColumn'), ('<div', '>', 'footer'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div id', '>', 'mtv-row'))
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc'), ('</a', '>'))[1])
             time = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<time', '>', 'video-time'), ('</time', '>'))[1])
             if len(time) > 0:
@@ -97,7 +97,7 @@ class JoeMonster(CBaseHostClass):
             desc = time + self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'mtv-desc-text'), ('</div', '>'))[1])
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc}
             self.addVideo(params)
@@ -123,7 +123,7 @@ class JoeMonster(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'mtv-poczekalnia-container'), ('<br', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'mtvPoczekalniaFilm'), ('<!--', '>'))
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h2', '>'), ('</h2', '>'))[1])
             if title == "":
                 title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'movie-title-link'), ('</a', '>'))[1])
@@ -132,7 +132,7 @@ class JoeMonster(CBaseHostClass):
                 time = '[%s] ' % time
             if not self.cm.isValidUrl(url):
                 continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?)['"]''')[0])
             params = dict(cItem)
             params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': time}
             self.addVideo(params)
@@ -169,7 +169,7 @@ class JoeMonster(CBaseHostClass):
             for item in tmp:
                 url = self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0]
                 if 'embed.html' in url:
-                    url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', '[\?&]v=([^&]+?)&')[0])
+                    url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', r'[\?&]v=([^&]+?)&')[0])
                 urlTab.append({'name': 'name', 'url': self.getFullUrl(url), 'need_resolve': 1})
 
         return urlTab

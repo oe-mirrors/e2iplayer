@@ -262,7 +262,7 @@ class Kabarety(CBaseHostClass):
                 urlTab = self.up.getVideoLinkExt(self.getFullUrl(videoUrl))
 
         if 0 == len(urlTab):
-            videoId = self.cm.ph.getSearchGroups(cItem['url'], '''\.pl/([0-9]+?)_''', 1, True)[0]
+            videoId = self.cm.ph.getSearchGroups(cItem['url'], r'''\.pl/([0-9]+?)_''', 1, True)[0]
             if videoId != '':
                 HEADER = dict(self.AJAX_HEADER)
                 HEADER['Referer'] = cItem['url']

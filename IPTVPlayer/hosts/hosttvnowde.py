@@ -217,7 +217,7 @@ class TVNowDE(CBaseHostClass):
                     desc = ''
 
                 params = {'good_for_fav': True, 'orig_item': item, 'f_station': station, 'f_name': name, 'title': title, 'desc': desc}
-                if not letter in self.cacheAZ['list']:
+                if letter not in self.cacheAZ['list']:
                     self.cacheAZ['list'].append(letter)
                     self.cacheAZ['cache'][letter] = []
                 self.cacheAZ['cache'][letter].append(params)
@@ -279,7 +279,7 @@ class TVNowDE(CBaseHostClass):
                 self.addDir(params)
 
                 categoryId = self.getStr(item, 'categoryId')
-                if not categoryId in ['serie', 'film', 'news']:
+                if categoryId not in ['serie', 'film', 'news']:
                     printDBG("Unknown categoryId [%s]" % categoryId)
                     printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
                     printDBG(item)
@@ -326,7 +326,7 @@ class TVNowDE(CBaseHostClass):
                         days = (date(year + m / 12, m1, 1) - date(year, m, 1)).days
 
                         m = str(m)
-                        if not m in months:
+                        if m not in months:
                             continue
                         title = '%s/%s' % (year, m.zfill(2))
                         url = self.getFullUrl('/movies?fields=*,format,paymentPaytypes,pictures,trailers,packages&filter=%7B%22BroadcastStartDate%22:%7B%22between%22:%7B%22start%22:%22{0}-{1}-{2}+00:00:00%22,%22end%22:+%22{3}-{4}-{5}+23:59:59%22%7D%7D,+%22FormatId%22+:+{6}%7D&maxPerPage=300&order=BroadcastStartDate+desc'.format(year, m.zfill(2), '01', year, m.zfill(2), str(days).zfill(2), id))

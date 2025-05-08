@@ -52,7 +52,7 @@ class LivespottingTvApi:
                     icon = item['image']
                     desc = item['description']
                     url = str(item['sources'])
-                    url = ph.search(url, '''file['"]:\s*['"]([^"^']+?)['"]''')[0]
+                    url = ph.search(url, r'''file['"]:\s*['"]([^"^']+?)['"]''')[0]
                     list.append({'title': title, 'url': url, 'icon': icon, 'desc': desc})
                 except Exception:
                     printExc()

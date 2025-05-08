@@ -158,7 +158,7 @@ class WgetDownloader(BaseDownloader):
                             match = re.search(" ([0-9]+?) ", lines[idx])
                             if match:
                                 self.remoteFileSize = int(match.group(1))
-                            match = re.search("(\[[^]]+?\])", lines[idx])
+                            match = re.search(r"(\[[^]]+?\])", lines[idx])
                             if match:
                                 self.remoteContentType = match.group(1)
                     self.outData = ''
@@ -167,7 +167,7 @@ class WgetDownloader(BaseDownloader):
                 lines = self.outData.replace('\r', '\n').split('\n')
                 for idx in range(len(lines)):
                     if lines[idx].startswith('Length:'):
-                        match = re.search("Length: ([0-9]+?) \([^)]+?\) (\[[^]]+?\])", lines[idx])
+                        match = re.search(r"Length: ([0-9]+?) \([^)]+?\) (\[[^]]+?\])", lines[idx])
                         if match:
                             self.remoteFileSize = int(match.group(1))
                             self.remoteContentType = match.group(2)

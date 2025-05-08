@@ -71,7 +71,7 @@ class HDSTo(CBaseHostClass):
 
     def getRealUrl(self, url):
         if config.plugins.iptvplayer.hdsto_proxy.value == 'webproxy' and url != None and 'browse.php?u=' in url:
-            url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', '''\?u=(http[^&]+?)&''')[0])
+            url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', r'''\?u=(http[^&]+?)&''')[0])
         return url
 
     def getFullUrl(self, url, baseUrl=None):
@@ -158,7 +158,7 @@ class HDSTo(CBaseHostClass):
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def searchUrl(self, data):
-        url = self.cm.ph.getSearchGroups(data, '''<a[^>]+?href=([^>\s]+?)[>\s]''')[0]
+        url = self.cm.ph.getSearchGroups(data, r'''<a[^>]+?href=([^>\s]+?)[>\s]''')[0]
         if url.startswith('"'):
             url = self.cm.ph.getSearchGroups(url, '"([^"]+?)"')[0]
         if url.startswith("'"):
@@ -222,9 +222,9 @@ class HDSTo(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
             if url == '':
                 continue
-            icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
             if icon == '':
-                icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
+                icon = self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?)['"]''')[0]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h', '>'), ('</h', '>'), False)[1])
             if 'details-serie' in cItem['url']:
                 title += ' ' + self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'opacity'), ('</span', '>'), False)[1])
@@ -266,7 +266,7 @@ class HDSTo(CBaseHostClass):
         page = cItem.get('page', 1)
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'pagination'), ('</ul', '>'), False)[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)["'][^>]*?>\s*%s\s*<''' % (page + 1), 1, True)[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''<a[^>]+?href=['"]([^"^']+?)["'][^>]*?>\s*%s\s*<''' % (page + 1), 1, True)[0])
 
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul', '</ul>', 'filter-list-index'), ('</ul', '>'))
         if 0 == len(tmp):
@@ -502,7 +502,7 @@ class HDSTo(CBaseHostClass):
             val = self.cleanHtmlStr(item[-1]).replace(' , ', ', ')
             if val == '' and 'determinate' in item[-1]:
                 val = self.cm.ph.getSearchGroups(item[-1], '''<div([^>]+?determinate[^>]+?)>''')[0]
-                val = self.cm.ph.getSearchGroups(val, '''width\:\s*([0-9]+)''')[0]
+                val = self.cm.ph.getSearchGroups(val, r'''width\:\s*([0-9]+)''')[0]
                 try:
                     val = str(int(val) / 10.0)
                 except Exception:

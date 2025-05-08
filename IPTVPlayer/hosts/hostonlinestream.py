@@ -77,7 +77,7 @@ class OnlineStream(CBaseHostClass):
             url = "https://archivum.mtva.hu/api/m3/v3/stream?target=live"
             sts, data = self.cm.getPage(url)
             dat = self.cm.ph.getDataBeetwenMarkers(data, '"url":"', '","', False)[1]
-            dat = dat.replace('\/', '/').replace("HLS.smil", "nodrm.smil")
+            dat = dat.replace(r'\/', '/').replace("HLS.smil", "nodrm.smil")
         if self._isPicture(dat):
             dat = dat.replace("mjpg", "jpg")
             dat = dat.replace("video", "image")

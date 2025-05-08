@@ -69,13 +69,13 @@ class ShoutcastCom(CBaseHostClass):
             itemsTab = []
             tmp = self.cm.ph.getDataBeetwenMarkers(genreItem, '<a', '</a>')[1]
             genreTitle = self.cleanHtmlStr(tmp)
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(genreItem, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(genreItem, r'''\shref=['"]([^'^"]+?)['"]''')[0])
             itemsTab.append({'title': _('All'), 'url': url})
 
             genreItem = genreItem.split('<ul', 1)[-1]
             genreItem = self.cm.ph.getAllItemsBeetwenMarkers(genreItem, '<a', '</a>')
             for item in genreItem:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 itemsTab.append({'title': title, 'url': url})
 

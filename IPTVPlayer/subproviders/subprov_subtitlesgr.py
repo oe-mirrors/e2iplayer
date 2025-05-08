@@ -98,7 +98,7 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr on', '</tr>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=["']([^'^"]+?)['"]''')[0])
-            lang = self.cm.ph.getSearchGroups(item, '''flags/([^\.]+?)\.gif''')[0]
+            lang = self.cm.ph.getSearchGroups(item, r'''flags/([^\.]+?)\.gif''')[0]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a', '</a>')[1])
             desc = self.cleanHtmlStr(item.replace('</td>', ' | ').replace('</a>', ' | '))
             params = dict(cItem)
@@ -122,7 +122,7 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
         subId = self.cm.ph.getSearchGroups(url + '/', '''/([0-9]+?)/''')[0]
         fps = cItem.get('fps', 0)
 
-        url = self.cm.ph.getSearchGroups(data, '''href="(https?://[^"]+?getp\.php[^"]+?)"''')[0]
+        url = self.cm.ph.getSearchGroups(data, r'''href="(https?://[^"]+?getp\.php[^"]+?)"''')[0]
         if not self.cm.isValidUrl(url):
             return
 

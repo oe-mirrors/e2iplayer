@@ -86,8 +86,8 @@ class CartoonHD(CBaseHostClass):
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def _getToken(self, data):
-        torName = self.cm.ph.getSearchGroups(data, "var token[\s]*=([^;]+?);")[0].strip()
-        return self.cm.ph.getSearchGroups(data, '''var[\s]*{0}[\s]*=[\s]*['"]([^'^"]+?)['"]'''.format(torName))[0]
+        torName = self.cm.ph.getSearchGroups(data, r"var token[\s]*=([^;]+?);")[0].strip()
+        return self.cm.ph.getSearchGroups(data, r'''var[\s]*{0}[\s]*=[\s]*['"]([^'^"]+?)['"]'''.format(torName))[0]
 
     def listSortNav(self, cItem, nextCategory):
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
@@ -159,7 +159,7 @@ class CartoonHD(CBaseHostClass):
         if len(data):
             del data[-1]
         for item in data:
-            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?\.jpg[^"]*?)"')[0])
+            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'src="([^"]+?\.jpg[^"]*?)"')[0])
             desc = 'IMDb ' + self.cm.ph.getSearchGroups(item, '>([ 0-9.]+?)<')[0] + ', '
             desc += self.cleanHtmlStr(' '.join(self.cm.ph.getAllItemsBeetwenMarkers(item, '<p>', '</p>', False)))
             tmp = self.cm.ph.rgetAllItemsBeetwenMarkers(item, '</a>', '<a', True)
@@ -189,7 +189,7 @@ class CartoonHD(CBaseHostClass):
         httpParams['header'] = {'Referer': self.cm.meta['url'], 'User-Agent': self.cm.HOST, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'watch-trailer'), ('</a', '>'))[1]
-        tmp = dict(re.compile('''\sdata\-([^=]+?)=['"]([^'^"]+?)['"]''').findall(tmp))
+        tmp = dict(re.compile(r'''\sdata\-([^=]+?)=['"]([^'^"]+?)['"]''').findall(tmp))
 
         sts, tmp = self.cm.getPage(self.getFullUrl('/ajax/trailer.php'), httpParams, tmp)
         if not sts:
@@ -398,7 +398,7 @@ class CartoonHD(CBaseHostClass):
             printDBG(">> url: %s" % self.cm.meta['url'])
 
         jsUrl = ''
-        tmp = re.compile('''<script[^>]+?src=['"]([^'^"]*?videojs[^'^"^/]*?\.js(?:\?[^'^"]*?v=[0-9\.]+?)?)['"]''', re.I).findall(data)
+        tmp = re.compile(r'''<script[^>]+?src=['"]([^'^"]*?videojs[^'^"^/]*?\.js(?:\?[^'^"]*?v=[0-9\.]+?)?)['"]''', re.I).findall(data)
         printDBG("TMP JS: %s" % tmp)
         for item in tmp:
             if '.min.' in item.rsplit('/', 1)[-1]:
@@ -418,13 +418,13 @@ class CartoonHD(CBaseHostClass):
         if jsUrl == '':
             return []
 
-        baseurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''var\s+?baseurl\s*=\s*['"]([^'^"]+?)['"]''')[0])
+        baseurl = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''var\s+?baseurl\s*=\s*['"]([^'^"]+?)['"]''')[0])
         printDBG("baseurl [%s]" % baseurl)
         if not self.cm.isValidUrl(baseurl):
             return []
 
         tor = self._getToken(data)
-        elid = self.cm.ph.getSearchGroups(data, '''elid[\s]*=[\s]['"]([^"^']+?)['"]''')[0]
+        elid = self.cm.ph.getSearchGroups(data, r'''elid[\s]*=[\s]['"]([^"^']+?)['"]''')[0]
         if '' == elid:
             elid = self.cm.ph.getSearchGroups(data, 'data-id="([^"]+?)"')[0]
         if '' == elid:
@@ -553,7 +553,7 @@ class CartoonHD(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'content'), ('</section', '>'), False)[1]
         icon = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'poster'), ('</div', '>'), False)[1]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, r'''src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
 
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'desc'), ('</p', '>'), False)[1])
 

@@ -81,7 +81,7 @@ class FilmPertutti(CBaseHostClass):
         page = cItem.get('page', 1)
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'navigation'), ('</div', '>'), False)[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^"^']+?)["'][^>]*?>\s*%s\s*<''' % (page + 1), 1, True)[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''<a[^>]+?href=['"]([^"^']+?)["'][^>]*?>\s*%s\s*<''' % (page + 1), 1, True)[0])
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul', '>', 'posts'), ('</ul', '>'))
         for datItem in data:
@@ -94,9 +94,9 @@ class FilmPertutti(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
                 if url == '':
                     continue
-                icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
+                icon = self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
                 if icon == '':
-                    icon = self.cm.ph.getSearchGroups(item, '''thumbnail=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
+                    icon = self.cm.ph.getSearchGroups(item, r'''thumbnail=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0]
                 descTab = []
                 item = self.cm.ph.getAllItemsBeetwenNodes(item, ('<div', '>'), ('</div', '>'))
                 for t in item:

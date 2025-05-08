@@ -33,7 +33,7 @@ class WEP:
     def setKey(self, key, keyId=None):
         """ Set key, key string is typically 5 or 13 octets long
         """
-        if not (len(key) in (5, 13)):
+        if len(key) not in (5, 13):
             raise BadKeySizeError('Key not valid size of 5 or 13 octets')
         if keyId != None:
             self.setCurrentKeyId(keyId)

@@ -191,7 +191,7 @@ class Filmowoclub(CBaseHostClass):
 
         for sItem in tmp:
             sTitle = self.cleanHtmlStr(sItem)
-            sId = self.cm.ph.getSearchGroups(sItem, '''\sid=['"]([^'^"]+?)['"]''')[0]
+            sId = self.cm.ph.getSearchGroups(sItem, r'''\sid=['"]([^'^"]+?)['"]''')[0]
             if not sTitle:
                 continue
             sItem = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', sId), ('</a> </div> <div', '>'))[1]
@@ -200,7 +200,7 @@ class Filmowoclub(CBaseHostClass):
             sItem = self.cm.ph.getAllItemsBeetwenNodes(sItem, ('<a', '>'), ('</a', '>'))
             tabItems = []
             for item in sItem:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 tabItems.append({'title': '%s' % title, 'url': url, 'icon': cItem['icon'], 'desc': ''})
             if len(tabItems):

@@ -206,7 +206,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         for it in ['year', 'quality', 'language']:
             tmp = item.get(it, '')
             if it == 'language':
-                tmp = ', '.join(re.compile('\-([^\,]+?)\,').findall(tmp + ','))
+                tmp = ', '.join(re.compile(r'\-([^\,]+?)\,').findall(tmp + ','))
             if tmp != '':
                 descTab.append(tmp)
         desc = ' | '.join(descTab)
@@ -387,7 +387,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 if cacheKey in CineTO.LINKS_CACHE:
                     videoUrl = CineTO.LINKS_CACHE[cacheKey]
                 else:
-                    sitekey = self.cm.ph.getSearchGroups(data, '''gcaptchaSetup\s*?\(\s*?['"]([^'^"]+?)['"]''')[0]
+                    sitekey = self.cm.ph.getSearchGroups(data, r'''gcaptchaSetup\s*?\(\s*?['"]([^'^"]+?)['"]''')[0]
                     if sitekey != '':
                         token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], bypassCaptchaService=config.plugins.iptvplayer.cineto_bypassrecaptcha.value)
 

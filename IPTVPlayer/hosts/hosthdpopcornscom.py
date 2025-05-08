@@ -164,7 +164,7 @@ class HDPopcornsCom(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        nextPage = self.cm.ph.getSearchGroups(data, 'var\s+?mts_ajax_loadposts\s*=\s*([^;]+?);')[0].strip()
+        nextPage = self.cm.ph.getSearchGroups(data, r'var\s+?mts_ajax_loadposts\s*=\s*([^;]+?);')[0].strip()
         try:
             nextPage = self.getFullUrl(str(byteify(json.loads(nextPage)).get('nextLink', '')))
         except Exception:
@@ -346,10 +346,10 @@ class HDPopcornsCom(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="single_post">', '</h2>')[1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<header', '</header>')[1])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
 
         mapDesc = {'Year': 'year', 'Quality': 'quality', 'Language': 'language', 'Genre': 'genres', 'Cast:': 'cast', 'Episodes': 'episodes'}
-        tmp = re.compile('''>\s*([^\:]+?)\:(.+?)<br''').findall(data)
+        tmp = re.compile(r'''>\s*([^\:]+?)\:(.+?)<br''').findall(data)
         for item in tmp:
             key = self.cleanHtmlStr(item[0])
             key = mapDesc.get(key, '')

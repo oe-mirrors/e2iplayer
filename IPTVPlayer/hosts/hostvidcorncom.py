@@ -77,7 +77,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         for item in data:
             if 'dropdown' in item:
                 continue
-            url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0]
             category = url.rsplit('/', 1)[-1]
             if category not in ['series', 'peliculas', 'listas', 'gente']:
                 continue
@@ -104,11 +104,11 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 title = self.cleanHtmlStr(filterData[0])
                 if 'data-filter' in filterData[0]:
                     key = 'f_filter'
-                    val = self.cm.ph.getSearchGroups(filterData[0], '''data\-filter=['"]([^'^"]+?)['"]''')[0]
+                    val = self.cm.ph.getSearchGroups(filterData[0], r'''data\-filter=['"]([^'^"]+?)['"]''')[0]
                     filtersTab.append({'title': title, key: val})
                 elif 'data-order-by' in filterData[0]:
                     key = 'f_order'
-                    val = self.cm.ph.getSearchGroups(filterData[0], '''data\-order\-by=['"]([^'^"]+?)['"]''')[0]
+                    val = self.cm.ph.getSearchGroups(filterData[0], r'''data\-order\-by=['"]([^'^"]+?)['"]''')[0]
                 else:
                     continue
 
@@ -136,9 +136,9 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 continue
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''original=['"]([^"^']+?)['"]''')[0])
             if icon == '':
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'info-'), ('</div', '>'), False)[1])
-            type = self.cm.ph.getSearchGroups(item, '''data\-type=['"]([^"^']+?)['"]''')[0]
+            type = self.cm.ph.getSearchGroups(item, r'''data\-type=['"]([^"^']+?)['"]''')[0]
 
             descTab = []
             item = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'details'), ('</div', '>'), False)[1]
@@ -184,7 +184,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
         retList = []
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'data-list'), ('<div', '>', 'list-content'))
         for item in data:
-            listId = self.cm.ph.getSearchGroups(item, '''data\-list=['"]([^"^']+?)['"]''')[0]
+            listId = self.cm.ph.getSearchGroups(item, r'''data\-list=['"]([^"^']+?)['"]''')[0]
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)["']''', 1, True)[0])
@@ -283,7 +283,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             msg.append(t)
         SetIPTVPlayerLastHostError(' '.join(msg))
 
-        reObj = re.compile('<div[^>]+?link\-option\-head[^>]+?>')
+        reObj = re.compile(r'<div[^>]+?link\-option\-head[^>]+?>')
         data = reObj.split(data)
         del data[0]
 
@@ -341,7 +341,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             params.update({'good_for_fav': False, 'title': title, 'url': strwithmeta(trailer, {'Referer': cUrl}), 'desc': desc, 'prev_url': cUrl})
             self.addVideo(params)
 
-        movieId = self.cm.ph.getSearchGroups(data, '''data\-movie\-id=['"]([^"^']+?)["']''', 1, True)[0]
+        movieId = self.cm.ph.getSearchGroups(data, r'''data\-movie\-id=['"]([^"^']+?)["']''', 1, True)[0]
         if not movieId:
             return
 
@@ -361,11 +361,11 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             for seasonData in data:
                 episodes = []
                 sTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(seasonData, '<h4', '</h4>')[1])
-                sNum = self.cm.ph.getSearchGroups(seasonData, '''data\-season=['"]([^"^']+?)["']''', 1, True)[0]
+                sNum = self.cm.ph.getSearchGroups(seasonData, r'''data\-season=['"]([^"^']+?)["']''', 1, True)[0]
 
                 seasonData = self.cm.ph.getAllItemsBeetwenNodes(seasonData.split('panel-body', 1)[-1], ('<a', '>', '#temporada'), ('</a', '>'))
                 for item in seasonData:
-                    episodeId = self.cm.ph.getSearchGroups(item, '''data\-episodio=['"]([^"^']+?)["']''', 1, True)[0]
+                    episodeId = self.cm.ph.getSearchGroups(item, r'''data\-episodio=['"]([^"^']+?)["']''', 1, True)[0]
                     url = cItem['url'] + self.cm.ph.getSearchGroups(item, '''href=['"](#[^"^']+?)["']''', 1, True)[0]
 
                     tab = []
@@ -416,7 +416,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             headersTitles.append(self.cleanHtmlStr(item))
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'search-item'), ('<div', '>', 'dialog'), False)[1]
-        data = re.compile('<div[^>]+?search\-item[^>]+?>').split(data)
+        data = re.compile(r'<div[^>]+?search\-item[^>]+?>').split(data)
         for idx in range(len(data)):
             itemData = data[idx]
             if idx == 1:
@@ -499,7 +499,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 data = ''
 
         data = data.split('page-content', 1)[-1]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g(?:\?[^'^"]*?)?)['"]''')[0])
 
         tmp = data.split('titulo', 1)[-1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp, ('<h1', '>'), ('</h1', '>'), False)[1])

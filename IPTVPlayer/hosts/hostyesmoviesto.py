@@ -169,7 +169,7 @@ class YesMovies(CBaseHostClass):
             return
 
         nextPage = self.cm.ph.getDataBeetwenMarkers(data, 'pagination', '</ul>', False)[1]
-        if '' != self.cm.ph.getSearchGroups(nextPage, 'page\-(%s)[^0-9]' % (page + 1))[0]:
+        if '' != self.cm.ph.getSearchGroups(nextPage, r'page\-(%s)[^0-9]' % (page + 1))[0]:
             nextPage = True
         else:
             nextPage = False
@@ -223,12 +223,12 @@ class YesMovies(CBaseHostClass):
 
         seasonNum = self.cm.ph.getSearchGroups(cItem['url'] + '|', '''-season-([0-9]+?)[^0-9]''', 1, True)[0]
         for item in episodeKeys:
-            episodeNum = self.cm.ph.getSearchGroups(item + '|', '''Episode\s+?([0-9]+?)[^0-9]''', 1, True)[0]
+            episodeNum = self.cm.ph.getSearchGroups(item + '|', r'''Episode\s+?([0-9]+?)[^0-9]''', 1, True)[0]
             if '' != episodeNum and '' != seasonNum:
                 title = 's%se%s' % (seasonNum.zfill(2), episodeNum.zfill(2)) + ' ' + item.replace('Episode %s' % episodeNum, '')
             else:
                 title = item
-            baseTitle = re.sub('Season\s[0-9]+?[^0-9]', '', cItem['title'] + ' ')
+            baseTitle = re.sub(r'Season\s[0-9]+?[^0-9]', '', cItem['title'] + ' ')
             params = dict(cItem)
             params.update({'good_for_fav': False, 'title': self.cleanHtmlStr(baseTitle + ' ' + title), 'urls': episodeLinks[item]})
             self.addVideo(params)
@@ -291,15 +291,15 @@ class YesMovies(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
 
         for item in tmp:
-            serverId = self.cm.ph.getSearchGroups(item, '''data\-id=['"]([0-9]+?)['"]''')[0]
+            serverId = self.cm.ph.getSearchGroups(item, r'''data\-id=['"]([0-9]+?)['"]''')[0]
             serversNameMap[serverId] = self.cleanHtmlStr(item)
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<ul', '>', 'episodes'), ('</ul', '>'))
         for item in data:
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<li', '</li>')
             for eItem in tmp:
-                serverId = self.cm.ph.getSearchGroups(item, '''data\-server=['"]([0-9]+?)['"]''')[0]
-                episodeId = self.cm.ph.getSearchGroups(item, '''data\-id=['"]([0-9]+?)['"]''')[0]
+                serverId = self.cm.ph.getSearchGroups(item, r'''data\-server=['"]([0-9]+?)['"]''')[0]
+                episodeId = self.cm.ph.getSearchGroups(item, r'''data\-id=['"]([0-9]+?)['"]''')[0]
                 title = self.cleanHtmlStr(eItem)
                 serverTitle = serversNameMap.get(serverId, serverId)
                 if not forEpisodes:

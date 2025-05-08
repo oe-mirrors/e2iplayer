@@ -67,7 +67,7 @@ class ForjaTN(CBaseHostClass):
 
         printDBG("==============================================================")
 
-        data = re.sub("<!--[\s\S]*?-->", "", data)
+        data = re.sub(r"<!--[\s\S]*?-->", "", data)
 
         def addFilter(data, itemMarker, valMarker, key, allTitle=None):
             self.cacheFilters[key] = []
@@ -191,9 +191,9 @@ class ForjaTN(CBaseHostClass):
             printDBG(data)
             for item in data:
                 season = self.cm.ph.getSearchGroups(item, '''season=['"]([^'^"]+?)['"]''')[0]
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''data\-original=['"]([^'^"]+?)['"]''')[0])
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''episode\-url=['"]([^'^"]+?)['"]''')[0])
-                title = '%s - %s' % (cItem['title'], self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''episode\-name=['"]([^'^"]+?)['"]''')[0]))
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''data\-original=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''episode\-url=['"]([^'^"]+?)['"]''')[0])
+                title = '%s - %s' % (cItem['title'], self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''episode\-name=['"]([^'^"]+?)['"]''')[0]))
                 if season not in seasonsTab:
                     self.cacheEpisodes[season] = []
                     seasonsTab.append(season)
@@ -256,7 +256,7 @@ class ForjaTN(CBaseHostClass):
                 episodeId = episodeId[-1]
             episodeId = '/'.join(episodeId.split('/')[-2:])
 
-            data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('''episodes\s*='''), re.compile('''];'''), False)[1]
+            data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'''episodes\s*='''), re.compile('''];'''), False)[1]
             data = data.strip() + ']'
             ret = js_execute('print(JSON.stringify(%s));' % data)
             if ret['sts'] and 0 == ret['code']:
@@ -293,9 +293,9 @@ class ForjaTN(CBaseHostClass):
                 tmp = self.cm.ph.getDataBeetwenNodes(data, ('[', ']', '.m3u8'), (';', ' '))[1]
             tmpTab = tmp.split('},')
             for tmp in tmpTab:
-                vidType = self.cm.ph.getSearchGroups(tmp, '''type['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0].lower()
-                vidLabel = self.cm.ph.getSearchGroups(tmp, '''label['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
-                vidUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''src['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0], cUrl)
+                vidType = self.cm.ph.getSearchGroups(tmp, r'''type['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0].lower()
+                vidLabel = self.cm.ph.getSearchGroups(tmp, r'''label['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
+                vidUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, r'''src['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0], cUrl)
 
                 if not self.cm.isValidUrl(vidUrl):
                     return []
@@ -338,7 +338,7 @@ class ForjaTN(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'row desc'), ('<div', '>', 'row'), False)[1]
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<p', '</p>')[1])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h4', '</h4>')[1])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
 
         keysMap = {'runtime': 'duration',
                    'genre': 'genres',
@@ -358,7 +358,7 @@ class ForjaTN(CBaseHostClass):
                 continue
 
             if marker == 'rating':
-                value = self.cm.ph.getSearchGroups(item[1], '''stars\-([0-9\-]+?)\.png''')[0].replace('-', '.') + '/5.0'
+                value = self.cm.ph.getSearchGroups(item[1], r'''stars\-([0-9\-]+?)\.png''')[0].replace('-', '.') + '/5.0'
             else:
                 value = self.cleanHtmlStr(item[1])
 

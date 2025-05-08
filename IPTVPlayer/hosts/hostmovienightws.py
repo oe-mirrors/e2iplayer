@@ -259,7 +259,7 @@ class MoviesNight(CBaseHostClass):
 
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="post">', m2)[1]
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1', '</h1>')[1])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="dato-2"', '</p>')[1].split('</h2>')[-1])
 
         if '/episode/' in url:
@@ -272,11 +272,11 @@ class MoviesNight(CBaseHostClass):
             if tmp != '':
                 otherInfo['alternate_title'] = tmp
 
-            tmp = self.cm.ph.getSearchGroups(data, '>\s*([12][0-9]{3})\s*<')[0]
+            tmp = self.cm.ph.getSearchGroups(data, r'>\s*([12][0-9]{3})\s*<')[0]
             if tmp != '':
                 otherInfo['year'] = tmp
 
-            tmp = self.cm.ph.getSearchGroups(data, '>\s*([0-9]+\s*min)\s*<')[0]
+            tmp = self.cm.ph.getSearchGroups(data, r'>\s*([0-9]+\s*min)\s*<')[0]
             if tmp != '':
                 otherInfo['duration'] = tmp
 

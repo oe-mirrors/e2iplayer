@@ -206,7 +206,7 @@ class UnshortenIt(object):
         baseloc = r.url
 
         if "/notfound/" in r.url or \
-            "(>Link Not Found<|>The link may have been deleted by the owner|To access the content, you must complete a quick survey\.)" in r.text:
+            r"(>Link Not Found<|>The link may have been deleted by the owner|To access the content, you must complete a quick survey\.)" in r.text:
             return uri, 'Error: Link not found or requires a survey!'
 
         link = None
@@ -301,7 +301,7 @@ class UnshortenIt(object):
             adlink = re.findall("click_url =.*;", html)
 
             if len(adlink) > 0:
-                uri = re.sub('^click_url = "|"\;$', '', adlink[0])
+                uri = re.sub(r'^click_url = "|"\;$', '', adlink[0])
                 if re.search(r'http(s|)\://adfoc\.us/serve/skip/\?id\=', uri):
 
                     http_header = copy.copy(HTTP_HEADER)
@@ -322,7 +322,7 @@ class UnshortenIt(object):
             r = requests.get(uri, headers=HTTP_HEADER, timeout=self._timeout)
             html = r.text
 
-            code = re.findall('/\?click\=(.*)\."', html)
+            code = re.findall(r'/\?click\=(.*)\."', html)
 
             if len(code) > 0:
                 payload = {'click': code[0]}
@@ -385,11 +385,11 @@ class UnshortenIt(object):
 
                 headers = self.cm.ph.getDataBeetwenMarkers(headers, 'headers', '}')[1]
                 headers = re.compile('''['"]([^'^"]+?)['"]''').findall(headers)
-                salt = self.cm.ph.getSearchGroups(data, '''data\-salt="([^"]+?)"''')[0]
-                time = self.cm.ph.getSearchGroups(data, '''data\-time="([^"]+?)"''')[0]
-                action = self.cm.ph.getSearchGroups(data, '''data\-action="([^"]+?)"''')[0]
-                banner = self.cm.ph.getSearchGroups(data, '''data\-banner="([^"]+?)"''')[0]
-                component = self.cm.ph.getSearchGroups(data, '''data\-component="([^"]+?)"''')[0]
+                salt = self.cm.ph.getSearchGroups(data, r'''data\-salt="([^"]+?)"''')[0]
+                time = self.cm.ph.getSearchGroups(data, r'''data\-time="([^"]+?)"''')[0]
+                action = self.cm.ph.getSearchGroups(data, r'''data\-action="([^"]+?)"''')[0]
+                banner = self.cm.ph.getSearchGroups(data, r'''data\-banner="([^"]+?)"''')[0]
+                component = self.cm.ph.getSearchGroups(data, r'''data\-component="([^"]+?)"''')[0]
                 if tries > 1:
                     GetIPTVSleep().Sleep(int(time))
 
@@ -451,7 +451,7 @@ class UnshortenIt(object):
     def _unshorten_short24(self, uri):
         try:
             sts, data = self.cm.getPage(uri, {'header': HTTP_HEADER})
-            uri = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''window\.location\s*?=\s*?['"]([^'^"]+?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
+            uri = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, r'''window\.location\s*?=\s*?['"]([^'^"]+?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
             return uri, 'OK'
         except Exception as e:
             printExc()
@@ -465,7 +465,7 @@ class UnshortenIt(object):
             sts, data = self.cm.getPageCFProtection(uri, params)
             uri = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'push_button'), ('</a', '>'))[1]
             printDBG(uri)
-            uri = self.cm.ph.getSearchGroups(uri, '''href=([^>^\s]+?)[>\s]''')[0]
+            uri = self.cm.ph.getSearchGroups(uri, r'''href=([^>^\s]+?)[>\s]''')[0]
             if uri.startswith('"'):
                 uri = self.cm.ph.getSearchGroups(uri, '"([^"]+?)"')[0]
             elif uri.startswith("'"):

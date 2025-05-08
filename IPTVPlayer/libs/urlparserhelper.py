@@ -551,7 +551,7 @@ def getMPDLinksWithMeta(manifestUrl, checkExt=True, cookieParams={}, sortWithMax
 
     def _getNumAttrib(data, name, default=0):
         try:
-            return int(cm.ph.getSearchGroups(data, '[\s]' + name + '''=['"]([^'^"]+?)['"]''')[0])
+            return int(cm.ph.getSearchGroups(data, r'[\s]' + name + '''=['"]([^'^"]+?)['"]''')[0])
         except Exception:
             return default
 

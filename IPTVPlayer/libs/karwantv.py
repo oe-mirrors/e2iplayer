@@ -141,12 +141,12 @@ class KarwanTvApi(CBaseHostClass):
         if not sts:
             return urlsTab
 
-        hlsUrl = self.cm.ph.getSearchGroups(data, '''['"]?hls['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
+        hlsUrl = self.cm.ph.getSearchGroups(data, r'''['"]?hls['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
         if not self.cm.isValidUrl(hlsUrl) == '':
-            hlsUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
-        dashUrl = self.cm.ph.getSearchGroups(data, '''['"]?dash['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
+            hlsUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, r'''['"]([^'^"]+?\.m3u8(?:\?[^'^"]+?)?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
+        dashUrl = self.cm.ph.getSearchGroups(data, r'''['"]?dash['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
         if self.cm.isValidUrl(dashUrl):
-            dashUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, '''['"]([^'^"]+?\.mpd(?:\?[^'^"]+?)?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
+            dashUrl = self.cm.getFullUrl(self.cm.ph.getSearchGroups(data, r'''['"]([^'^"]+?\.mpd(?:\?[^'^"]+?)?)['"]''')[0], self.cm.getBaseUrl(self.cm.meta['url']))
 
         if self.cm.isValidUrl(hlsUrl):
             urlsTab.extend(getDirectM3U8Playlist(hlsUrl, checkContent=True))
@@ -162,8 +162,8 @@ class KarwanTvApi(CBaseHostClass):
                 tmp = [tmp]
             printDBG(tmp)
             for item in tmp:
-                url = self.cm.ph.getSearchGroups(item, '''['"]?file['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
-                name = self.cm.ph.getSearchGroups(item, '''['"]?title['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(item, r'''['"]?file['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
+                name = self.cm.ph.getSearchGroups(item, r'''['"]?title['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
                 printDBG(">>> url[%s]" % url)
                 printDBG(">>> name[%s]" % name)
                 if self.cm.isValidUrl(url) and url.split('?')[0].endswith('.m3u8'):

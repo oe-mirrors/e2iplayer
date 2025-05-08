@@ -3554,7 +3554,7 @@ class JSON(object):
         self._asciiencodable = \
             [32 <= c < 128
                  and chr(c) not in self._rev_escapes
-                 and not unicodedata.category(chr(c)) in ['Cc', 'Cf', 'Zl', 'Zp']
+                 and unicodedata.category(chr(c)) not in ['Cc', 'Cf', 'Zl', 'Zp']
              for c in range(0, 256)]
 
     @property

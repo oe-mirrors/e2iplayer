@@ -149,15 +149,15 @@ class StreamComplet(CBaseHostClass):
 
         # ++++++++++++++++++++
         codeData = 'def go123():\n'
-        tmp = self.cm.ph.getSearchGroups(baseData, '''document\[([^\]]+?)\[[0-9]\]\]\(([^)]+?)\)''', 2)
+        tmp = self.cm.ph.getSearchGroups(baseData, r'''document\[([^\]]+?)\[[0-9]\]\]\(([^)]+?)\)''', 2)
         mainVar = tmp[0]
-        mainVal = self.cm.ph.getSearchGroups(baseData, '''var\s+?%s\s*=\s*(\[[^\]]+?\])''' % mainVar)[0]
+        mainVal = self.cm.ph.getSearchGroups(baseData, r'''var\s+?%s\s*=\s*(\[[^\]]+?\])''' % mainVar)[0]
         mainVal = mainVal.replace('"', '\\"').replace('[\\', '[').replace('\\"]', '"]').replace(',\\"', ',"').replace('\\",', '",')
 
-        subTab = re.compile('''\+([^\+]+?)\+''').findall(tmp[1])
+        subTab = re.compile(r'''\+([^\+]+?)\+''').findall(tmp[1])
         for item in subTab:
             var = item.strip()
-            val = self.cm.ph.getSearchGroups(fullDecData, '''var\s*%s\s*=\s*(['"][^'^"]+?['"])''' % var)[0]
+            val = self.cm.ph.getSearchGroups(fullDecData, r'''var\s*%s\s*=\s*(['"][^'^"]+?['"])''' % var)[0]
             codeData += '\t%s = %s\n' % (var, val)
         codeData += '\t%s = %s\n' % (mainVar, mainVal)
         codeData += '\treturn ' + tmp[1]
@@ -168,10 +168,10 @@ class StreamComplet(CBaseHostClass):
         if codeData != '':
             return codeData
 
-        subTab = re.compile('''(['"]\s*\+[^\+]+?\+\s*['"])''').findall(fullDecData)
+        subTab = re.compile(r'''(['"]\s*\+[^\+]+?\+\s*['"])''').findall(fullDecData)
         for item in subTab:
-            var = self.cm.ph.getSearchGroups(item, '''\+([^\+]+?)\+''')[0].strip()
-            val = self.cm.ph.getSearchGroups(fullDecData, '''var\s*%s\s*=\s*['"]([^'^"]+?)['"]''' % var)[0]
+            var = self.cm.ph.getSearchGroups(item, r'''\+([^\+]+?)\+''')[0].strip()
+            val = self.cm.ph.getSearchGroups(fullDecData, r'''var\s*%s\s*=\s*['"]([^'^"]+?)['"]''' % var)[0]
             fullDecData = fullDecData.replace(item, val)
         fullData = baseData + fullDecData
         fullData = fullData.replace('\\"', '"').replace('\\/', '/')
@@ -205,7 +205,7 @@ class StreamComplet(CBaseHostClass):
                 printDBG(data)
                 printDBG("============================ end ============================")
                 tryLinksTab = re.compile('<iframe[^>]+?src="([^"]+?)"').findall(data)
-                tryLinksTab.extend(re.compile('\s(https?:[^\s]+?)\s').findall(data))
+                tryLinksTab.extend(re.compile(r'\s(https?:[^\s]+?)\s').findall(data))
                 try:
                     if enc1 != '':
                         tryLinksTab.append('http://hqq.tv/player/embed_player.php?vid=' + base64.b64decode(enc1))

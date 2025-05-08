@@ -176,7 +176,7 @@ class WkylinewebcamsComApi:
             data = self.cm.ph.getAllItemsBeetwenMarkers(data[0], '<a ', '</a>')
             for item in data:
                 url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
-                icon = self.cm.ph.getSearchGroups(item, '''"([^"]+?\.(?:jpg|webp))"''', 1, True)[0]
+                icon = self.cm.ph.getSearchGroups(item, r'''"([^"]+?\.(?:jpg|webp))"''', 1, True)[0]
                 if '' == url:
                     continue
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''', 1, True)[0])
@@ -197,7 +197,7 @@ class WkylinewebcamsComApi:
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="webcam">', '</li>')
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
-            icon = self.cm.ph.getSearchGroups(item, '''"([^"]+?\.(?:jpg|webp))"''', 1, True)[0]
+            icon = self.cm.ph.getSearchGroups(item, r'''"([^"]+?\.(?:jpg|webp))"''', 1, True)[0]
             if '' == url:
                 continue
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''', 1, True)[0])

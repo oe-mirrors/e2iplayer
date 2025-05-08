@@ -167,7 +167,7 @@ class FilmeHD(CBaseHostClass):
             # episodes mode
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(data[0], '<a', '</a>')
             for item in tmp:
-                tabId = self.cm.ph.getSearchGroups(item, '''href=['"]\#([^'^"]+?)['"]''')[0]
+                tabId = self.cm.ph.getSearchGroups(item, r'''href=['"]\#([^'^"]+?)['"]''')[0]
                 title = self.cleanHtmlStr(item)
                 serverNameDict[tabId] = title
 
@@ -179,7 +179,7 @@ class FilmeHD(CBaseHostClass):
                 for item in playersData:
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '>', '<', False)[1])
                     url = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'lazyload'), ('</div', '>'))[1]
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''data\-src=['"]([^'^"]+?)['"]''')[0])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(url, r'''data\-src=['"]([^'^"]+?)['"]''')[0])
                     if url == '':
                         continue
                     if title not in titlesTab:
@@ -189,7 +189,7 @@ class FilmeHD(CBaseHostClass):
                     name = serverNameDict.get(tabId, 'Player %s' % (len(self.cacheLinks[title]) + 1))
                     self.cacheLinks[title].append({'name': name, 'url': url, 'need_resolve': 1})
 
-            baseTitle = re.compile('''\s+?\–\s+?Sezonul\s+?[0-9]+?$''', re.I).split(cItem['title'])[0]
+            baseTitle = re.compile(r'''\s+?\–\s+?Sezonul\s+?[0-9]+?$''', re.I).split(cItem['title'])[0]
             for item in titlesTab:
                 if 'sezonul' in item.lower() and baseTitle != '':
                     title = baseTitle
@@ -208,7 +208,7 @@ class FilmeHD(CBaseHostClass):
             for item in playersData:
                 name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '>', '<', False)[1])
                 url = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'lazyload'), ('</div', '>'))[1]
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(url, '''data\-src=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(url, r'''data\-src=['"]([^'^"]+?)['"]''')[0])
                 if url == '':
                     continue
                 url = strwithmeta(url, {'Referer': cItem['url']})
@@ -259,7 +259,7 @@ class FilmeHD(CBaseHostClass):
 
         url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
         if url == '':
-            jscode = ['window=this,window.outerWidth=640,window.innerWidth=640;var document=this;document.write=function(text){var startRe=new RegExp("(<script[^>]*?>)","i").exec(text),endRe=new RegExp("(</script[^>]*?>)","i").exec(text);null!=startRe&&null!=endRe?(text=text.replace(startRe[1],""),text=text.replace(endRe[1],""),text=text.replace(/var\s+/g,"this."),print(text),eval(text)):print(text)};']
+            jscode = [r'window=this,window.outerWidth=640,window.innerWidth=640;var document=this;document.write=function(text){var startRe=new RegExp("(<script[^>]*?>)","i").exec(text),endRe=new RegExp("(</script[^>]*?>)","i").exec(text);null!=startRe&&null!=endRe?(text=text.replace(startRe[1],""),text=text.replace(endRe[1],""),text=text.replace(/var\s+/g,"this."),print(text),eval(text)):print(text)};']
             data = re.compile('''<script[^>]+?src=['"]([^'^"]+?)['"]''', re.I).findall(data)
             for item in data:
                 item = self.getFullUrl(item)

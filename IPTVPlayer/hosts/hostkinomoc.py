@@ -167,7 +167,7 @@ class Kinomoc(CBaseHostClass):
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<a', '>'), ('</a', '>'), False)[1])
             desc = ''
             if 'Serial' in item:
@@ -189,7 +189,7 @@ class Kinomoc(CBaseHostClass):
             return
         serieDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'description'), ('<div', '>', 'home'))[1])
         id = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'playlists-ajax'), ('</div', '>'))[1]
-        id = self.cm.ph.getSearchGroups(id, '''\sdata-news_id=['"]([^'^"]+?)['"]''')[0]
+        id = self.cm.ph.getSearchGroups(id, r'''\sdata-news_id=['"]([^'^"]+?)['"]''')[0]
         printDBG("Kinomoc.listSeriesSeasons id [%s]" % id)
         sts, data = self.getPage(self.getFullUrl('/engine/ajax/controller.php?mod=playlists&news_id=%s&xfield=pl') % id)
         if not sts:
@@ -199,19 +199,19 @@ class Kinomoc(CBaseHostClass):
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'playlists-lists'), ('</div', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<li', '>'), ('</li', '>'))
         if len(tmp) == 0:
-            tmp = ['<li data-id="%s">Sezon</li>' % self.cm.ph.getSearchGroups(data, '''\sdata-id=['"]([^'^"]+?)['"]''')[0]]
+            tmp = ['<li data-id="%s">Sezon</li>' % self.cm.ph.getSearchGroups(data, r'''\sdata-id=['"]([^'^"]+?)['"]''')[0]]
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'playlists-videos'), ('</div', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>'), ('</li', '>'))
 
         for sItem in tmp:
             sTitle = self.cleanHtmlStr(sItem)
-            sId = self.cm.ph.getSearchGroups(sItem, '''\sdata-id=['"]([^'^"]+?)['"]''')[0]
+            sId = self.cm.ph.getSearchGroups(sItem, r'''\sdata-id=['"]([^'^"]+?)['"]''')[0]
             tabItems = []
             for item in data:
                 if sId not in item:
                     continue
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\sdata-file=['"]([^'^"]+?)['"]''')[0])
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\sdata-file=['"]([^'^"]+?)['"]''')[0])
                 title = self.cleanHtmlStr(item)
                 tabItems.append({'title': '%s' % title, 'url': url, 'icon': cItem['icon'], 'desc': ''})
             if len(tabItems):

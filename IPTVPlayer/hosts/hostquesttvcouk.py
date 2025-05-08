@@ -98,7 +98,7 @@ class QuesttvCoUK(CBaseHostClass):
             if not sts:
                 return
 
-            videoId = self.cm.ph.getSearchGroups(data, '''data\-videoid=['"]([^'^"]+?)['"]''')[0]
+            videoId = self.cm.ph.getSearchGroups(data, r'''data\-videoid=['"]([^'^"]+?)['"]''')[0]
             if videoId == '':
                 return ''
 

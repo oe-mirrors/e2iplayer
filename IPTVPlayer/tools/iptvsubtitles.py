@@ -89,7 +89,7 @@ class IPTVSubtitlesHandler:
                     continue  # less than two items are for sure garbage, so let's skip
                 while st[0] == '':
                     st.pop(0)
-                while not ' --> ' in st[0]:
+                while ' --> ' not in st[0]:
                     st.pop(0)  # remove line numbers and other unused lines existing before time
                 if 1:  # tests only
                     printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -110,7 +110,7 @@ class IPTVSubtitlesHandler:
         for idx in range(len(text)):
             if text[idx].startswith('/'):
                 text[idx] = text[idx][1:]
-        return re.sub('\{[^}]*\}', '', '\n'.join(text))
+        return re.sub(r'\{[^}]*\}', '', '\n'.join(text))
 
     def _mplTc2ms(self, time):
         return int(time) * 100
@@ -120,7 +120,7 @@ class IPTVSubtitlesHandler:
         # Timing Precision : 100 Milliseconds (1/10th sec)
         subAtoms = []
         mplData = mplData.replace('\r\n', '\n').split('\n')
-        reObj = re.compile('^\[([0-9]+?)\]\[([0-9]+?)\](.+?)$')
+        reObj = re.compile(r'^\[([0-9]+?)\]\[([0-9]+?)\](.+?)$')
 
         for s in mplData:
             tmp = reObj.search(s)

@@ -357,7 +357,7 @@ class SKStream(CBaseHostClass):
                             printDBG(data)
                             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
                             if url == '':
-                                url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''iframe.src\s*=\s*['"]([^"^']+?)['"]''', 1, True)[0])
+                                url = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''iframe.src\s*=\s*['"]([^"^']+?)['"]''', 1, True)[0])
                             if not self.cm.isValidUrl(url):
                                 data = self.cm.ph.getDataBeetwenMarkers(data, 'sources:', '],', False)[1] + ']'
                                 data = byteify(json.loads(data))
@@ -368,7 +368,7 @@ class SKStream(CBaseHostClass):
                         else:
                             if 1 != self.up.checkHostSupport(url):
 
-                                scriptUrl = self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=['"]([^"^']*?QapTcha.jquery[^"^']*?\.js)['"]''', 1, True)[0]
+                                scriptUrl = self.cm.ph.getSearchGroups(data, r'''<script[^>]+?src=['"]([^"^']*?QapTcha.jquery[^"^']*?\.js)['"]''', 1, True)[0]
                                 if scriptUrl != '' and not self.cm.isValidUrl(scriptUrl):
                                     scriptUrl = self.getFullUrl('/dl/' + scriptUrl)
                                 if not self.cm.isValidUrl(scriptUrl):
@@ -379,7 +379,7 @@ class SKStream(CBaseHostClass):
                                 if not sts:
                                     break
 
-                                formUrl = self.cm.ph.getSearchGroups(data, '''['"]([^"^']*?QapTcha.jquery[^"^']*?\.php)['"]''', 1, True)[0]
+                                formUrl = self.cm.ph.getSearchGroups(data, r'''['"]([^"^']*?QapTcha.jquery[^"^']*?\.php)['"]''', 1, True)[0]
                                 if formUrl != '' and not self.cm.isValidUrl(formUrl):
                                     formUrl = self.getFullUrl('/dl/' + formUrl)
                                 if not self.cm.isValidUrl(formUrl):
@@ -402,7 +402,7 @@ class SKStream(CBaseHostClass):
                                     break
                                 printDBG(">>>>>>\n%s\n<<<<<<" % data)
 
-                                url = self.cm.ph.getSearchGroups(data, '''['"](https?://[^"^"]*?dl\-protect\.co[^'^"]+?)['"]''', 1, True)[0]
+                                url = self.cm.ph.getSearchGroups(data, r'''['"](https?://[^"^"]*?dl\-protect\.co[^'^"]+?)['"]''', 1, True)[0]
                                 if self.cm.isValidUrl(url):
                                     continue
                                 break

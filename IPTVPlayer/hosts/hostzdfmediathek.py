@@ -132,7 +132,7 @@ class ZDFmediathek(CBaseHostClass):
 
     def getFullUrl(self, url):
         if 'proxy-german.de' in url:
-            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', '''\?q=(http[^&]+?)&''')[0])
+            url = urllib.parse.unquote(self.cm.ph.getSearchGroups(url + '&', r'''\?q=(http[^&]+?)&''')[0])
         return CBaseHostClass.getFullUrl(self, url)
 
     def _getNum(self, v, default=0):
@@ -209,14 +209,14 @@ class ZDFmediathek(CBaseHostClass):
             for subData in data:
                 subData = re.split('<span[^>]+?circle icon[^>]+?>', subData)
                 for item in subData:
-                    tmp = self.cm.ph.getSearchGroups(item, '''(<a[^>]+?\stitle=[^>]*?>)''')[0]
+                    tmp = self.cm.ph.getSearchGroups(item, r'''(<a[^>]+?\stitle=[^>]*?>)''')[0]
                     if tmp == '':
                         continue
 
                     title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tmp, '''title=['"]([^'^"]+?)['"]''')[0])
 
                     if title.startswith('Folge'):
-                        seriesTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<span[^>]+?teaser\-cat\-brand[^>]+?>'), re.compile('</span>'), False)[1])
+                        seriesTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile(r'<span[^>]+?teaser\-cat\-brand[^>]+?>'), re.compile('</span>'), False)[1])
                         title = '%s, %s' % (seriesTitle, title)
 
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
@@ -406,7 +406,7 @@ class ZDFmediathek(CBaseHostClass):
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return []
-            id = self.cm.ph.getSearchGroups(data, '''['"]?docId['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
+            id = self.cm.ph.getSearchGroups(data, r'''['"]?docId['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
         else:
             id = cItem['id']
 

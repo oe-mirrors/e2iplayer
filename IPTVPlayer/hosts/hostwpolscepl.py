@@ -244,13 +244,13 @@ class WPolscePL(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'result__single'), ('</ul', '>'))
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
             if title == '':
-                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^'^"]+?)['"]''')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\stitle=['"]([^'^"]+?)['"]''')[0])
             if title == '':
-                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\salt=['"]([^'^"]+?)['"]''')[0])
+                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'''\salt=['"]([^'^"]+?)['"]''')[0])
 
             desc = []
             date = None
@@ -277,7 +277,7 @@ class WPolscePL(CBaseHostClass):
             return
 
         data = self.cm.ph.getDataBeetwenMarkers(data, 'PlayerManager', '}')[1]
-        videoId = self.cm.ph.getSearchGroups(data, '''['"]?videoId['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        videoId = self.cm.ph.getSearchGroups(data, r'''['"]?videoId['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
         if videoId == '':
             return
 

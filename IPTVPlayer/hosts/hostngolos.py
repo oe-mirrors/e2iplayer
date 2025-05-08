@@ -95,9 +95,9 @@ class NGolosCOM(CBaseHostClass):
         self.addMarker({})
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', '"competitions"'), ('<div', '>', 'other_settings'))[1]
-        data = re.compile('''(<div[^>]+?card\-header collapsed[^>]+?>)''').split(data)
+        data = re.compile(r'''(<div[^>]+?card\-header collapsed[^>]+?>)''').split(data)
         for idx in range(1, len(data), 2):
-            parent = self.cm.ph.getSearchGroups(data[idx], '''data\-parent=['"]([^'^"]+?)['"]''')[0]
+            parent = self.cm.ph.getSearchGroups(data[idx], r'''data\-parent=['"]([^'^"]+?)['"]''')[0]
             current = self.cm.ph.getSearchGroups(data[idx], '''href=['"](#[^'^"]+?)['"]''')[0]
 
             tmp = self.cm.ph.getDataBeetwenNodes(data[idx + 1], ('<a', '>', 'card-title'), ('</a', '>'))[1]
@@ -265,7 +265,7 @@ class NGolosCOM(CBaseHostClass):
                 self.addVideo(params)
 
         return
-        data = re.sub('''unescape\(["']([^"^']+?)['"]\)''', lambda m: urllib_unquote(m.group(1)), data)
+        data = re.sub(r'''unescape\(["']([^"^']+?)['"]\)''', lambda m: urllib_unquote(m.group(1)), data)
 
         titles = []
         titles2 = []
@@ -286,7 +286,7 @@ class NGolosCOM(CBaseHostClass):
         if len(titles2) > len(titles):
             titles = titles2
 
-        tmp = re.compile('''['"]([^'^"]*?//config\.playwire\.com[^'^"]+?\.json)['"]''').findall(data)
+        tmp = re.compile(r'''['"]([^'^"]*?//config\.playwire\.com[^'^"]+?\.json)['"]''').findall(data)
         tmp.extend(re.compile('<iframe[^>]+?src="([^"]+?)"').findall(data))
         tmp.extend(re.compile('''<a[^>]+?href=['"](https?://[^'^"]*?ekstraklasa.tv[^'^"]+?)['"]''').findall(data))
         urlsTab = []

@@ -93,7 +93,7 @@ class VevoCom(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub-menu'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             nextCategory = catsMAp.get(url.split('/')[-1], '')
             if nextCategory == '':
@@ -138,13 +138,13 @@ class VevoCom(CBaseHostClass):
             return
 
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<a', '>', 'rel="next"'), ('</a', '>'))[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, '''\shref=['"]([^'^"]+?)['"]''')[0])
+        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, r'''\shref=['"]([^'^"]+?)['"]''')[0])
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'feedV2-container'), ('</ul', '>'))[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
             titleTab = []
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'item-title'), ('<', '>'))[1])
             if title != '':
@@ -193,13 +193,13 @@ class VevoCom(CBaseHostClass):
             itemsTab = []
             containerTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(container, ('<', '>', 'container-name'), ('<', '>'))[1])
             containerDesc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(container, ('<', '>', 'container-description'), ('<', '>'))[1])
-            moreUrl = self.getFullUrl(self.cm.ph.getSearchGroups(container.split('<ul', 1)[0], '''\shref=['"]([^'^"]+?)['"]''')[0])
+            moreUrl = self.getFullUrl(self.cm.ph.getSearchGroups(container.split('<ul', 1)[0], r'''\shref=['"]([^'^"]+?)['"]''')[0])
 
             if moreUrl == '':
                 container = self.cm.ph.getAllItemsBeetwenMarkers(container, '<li', '</li>')
                 for item in container:
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0])
-                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0])
+                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
+                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0])
                     titleTab = []
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<', '>', 'item-title'), ('<', '>'))[1])
                     if title != '':
@@ -243,7 +243,7 @@ class VevoCom(CBaseHostClass):
             sts, data = self.cm.getPage(self.getMainUrl(), self.defaultParams)
             if not sts:
                 return ''
-            scriptUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<script[^>]+?src=["']([^'^"]*?/browser[^'^"]*?\.js)['"]''')[0])
+            scriptUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, r'''<script[^>]+?src=["']([^'^"]*?/browser[^'^"]*?\.js)['"]''')[0])
             sts, data = self.cm.getPage(scriptUrl, self.defaultParams)
             if not sts:
                 return ''

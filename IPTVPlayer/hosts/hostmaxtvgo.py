@@ -257,7 +257,7 @@ class MaxtvGO(CBaseHostClass):
             return []
 
         videoID = self.cm.ph.getSearchGroups(data, '''(<input[^>]+?videoID[^>]+?>)''', 1, True)[0]
-        videoID = self.cm.ph.getSearchGroups(videoID, '''\svalue=['"]([^'^"]+?)['"]''', 1, True)[0]
+        videoID = self.cm.ph.getSearchGroups(videoID, r'''\svalue=['"]([^'^"]+?)['"]''', 1, True)[0]
 
         if videoID == '':
             return []

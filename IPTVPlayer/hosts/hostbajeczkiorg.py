@@ -61,7 +61,7 @@ class BajeczkiOrg(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'category-bar'), ('</div', '>'))
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''\shref=['"]([^"^']+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0])
             if url == '':
                 continue
             item = item.split('</span>', 1)
@@ -126,7 +126,7 @@ class BajeczkiOrg(CBaseHostClass):
             return
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'entry-content'), ('<aside', '>'))[1]
-        data = re.sub("<!--[\s\S]*?-->", "", data)
+        data = re.sub(r"<!--[\s\S]*?-->", "", data)
 
         tmp = ph.find(data, '<video', '</video>', flags=ph.IGNORECASE)[1]
         tmp = ph.findall(tmp, '<source', '>', flags=ph.IGNORECASE)
@@ -163,7 +163,7 @@ class BajeczkiOrg(CBaseHostClass):
 
         if not urlTab:
             unique = set()
-            data = re.compile('''['">]\s*?(https?://[^'^"^<]*?/watch\?v=[^'^"]+?)\s*?[<'"]''').findall(data)
+            data = re.compile(r'''['">]\s*?(https?://[^'^"^<]*?/watch\?v=[^'^"]+?)\s*?[<'"]''').findall(data)
             for url in data:
                 if url not in unique:
                     urlTab.append({'name': 'Youtube', 'url': strwithmeta(url, {'Referer': cItem['url']}), 'need_resolve': 1})

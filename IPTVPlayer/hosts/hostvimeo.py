@@ -77,7 +77,7 @@ class VimeoCom(CBaseHostClass):
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def _fillApiData(self, data):
-        apiObj = re.compile('''vimeo\.config\.api\.([^\s^=]+?)\s*=\s*['"]([^'^"]+?)['"]''').findall(data)
+        apiObj = re.compile(r'''vimeo\.config\.api\.([^\s^=]+?)\s*=\s*['"]([^'^"]+?)['"]''').findall(data)
         for item in apiObj:
             key = item[0]
             val = item[1]
@@ -86,11 +86,11 @@ class VimeoCom(CBaseHostClass):
             if key != '' and val != '':
                 self.api[key] = val
 
-        data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('vimeo\.config\s*?='), re.compile('};'))[1]
-        jwt = self.cm.ph.getSearchGroups(data, '''['"]jwt['"]\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'vimeo\.config\s*?='), re.compile('};'))[1]
+        jwt = self.cm.ph.getSearchGroups(data, r'''['"]jwt['"]\s*:\s*['"]([^'^"]+?)['"]''')[0]
         if '' != jwt:
             self.api['jwt'] = jwt
-        url = self.cm.ph.getSearchGroups(data, '''['"]url['"]\s*:\s*['"]([^'^"]+?)['"]''')[0]
+        url = self.cm.ph.getSearchGroups(data, r'''['"]url['"]\s*:\s*['"]([^'^"]+?)['"]''')[0]
         if '' != url:
             self.api['url'] = 'https://%s/' % url
 
@@ -103,8 +103,8 @@ class VimeoCom(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'category category'), ('</a', '>'))
         for item in data:
-            icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0]
-            url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0]
             cat = url.split('/')
             if url.endswith('/'):
                 cat = cat[-2]
@@ -197,7 +197,7 @@ class VimeoCom(CBaseHostClass):
             return
         self._fillApiData(data)
 
-        data = self.cm.ph.getSearchGroups(data, '''"%s"\:\{"identifier"[^;]+?"sorts"\:\{([^;]+?\})\},''' % cItem.get('f_type', ''))[0]
+        data = self.cm.ph.getSearchGroups(data, r'''"%s"\:\{"identifier"[^;]+?"sorts"\:\{([^;]+?\})\},''' % cItem.get('f_type', ''))[0]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '{', '}')
         try:
             data = json_loads('[%s]' % ','.join(data))
@@ -301,7 +301,7 @@ class VimeoCom(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             title = self.cleanHtmlStr(item)
-            sort = self.cm.ph.getSearchGroups(item, '''/sort\:([^/]+?)/''')[0]
+            sort = self.cm.ph.getSearchGroups(item, r'''/sort\:([^/]+?)/''')[0]
             params = dict(cItem)
             params.pop('page', None)
             params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'f_sort': sort})
@@ -330,8 +330,8 @@ class VimeoCom(CBaseHostClass):
 
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'id="clip_'), ('</li', '>'))
         for item in data:
-            icon = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^'^"]+?)['"]''')[0]
-            url = self.cm.ph.getSearchGroups(item, '''\shref=['"]([^'^"]+?)['"]''')[0]
+            icon = self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0]
             url = url.split('/')[-1]
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'title'), ('</p', '>'))[1])
             duration = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'duration'), ('</div', '>'))[1])
@@ -342,7 +342,7 @@ class VimeoCom(CBaseHostClass):
                 if '<time' in t:
                     t = t
                 else:
-                    label = self.cm.ph.getSearchGroups(t, '''\stitle=['"]([^'^"]+?)['"]''')[0]
+                    label = self.cm.ph.getSearchGroups(t, r'''\stitle=['"]([^'^"]+?)['"]''')[0]
                     t = '%s: %s' % (label, t)
                 t = self.cleanHtmlStr(t)
                 if t != '':

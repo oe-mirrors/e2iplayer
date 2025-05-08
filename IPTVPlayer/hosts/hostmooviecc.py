@@ -119,7 +119,7 @@ class MoovieCC(CBaseHostClass):
             if not self.cm.isValidUrl(url):
                 continue
 
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?\.jpe?g[^'^"]*?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''src=['"]([^"^']+?\.jpe?g[^'^"]*?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a class="title', '</a>')[1])
             if title == '':
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''bubble=['"]([^"^']+?)['"]''')[0])
@@ -135,7 +135,7 @@ class MoovieCC(CBaseHostClass):
                     del tmp[0]
                 for t in tmp:
                     if '/flags/' in t:
-                        t = self.cm.ph.getSearchGroups(t, '''<img[^>]+?src=['"][^"^']+?/([^/]+?)\.png['"]''')[0]
+                        t = self.cm.ph.getSearchGroups(t, r'''<img[^>]+?src=['"][^"^']+?/([^/]+?)\.png['"]''')[0]
                     t = self.cleanHtmlStr(t)
                     if t != '':
                         desc.append(t)
@@ -168,15 +168,15 @@ class MoovieCC(CBaseHostClass):
                 value = self.cm.ph.getSearchGroups(item, '''value=['"]([^"^']+?)['"]''')[0]
                 inputCache[name] = value
             tmp = self.cm.ph.getDataBeetwenMarkers(data, 'function dataFromInput', '}')[1]
-            tmp = re.compile('''\[name=([^\]]+?)\]''').findall(tmp)
+            tmp = re.compile(r'''\[name=([^\]]+?)\]''').findall(tmp)
             for item in tmp:
                 cItem['filters'].append(item)
                 if item in ['sort', 'page']:
                     continue
                 cItem['f_' + item] = inputCache.get(item, '')
             tmp = self.cm.ph.getDataBeetwenMarkers(data, '$.ajax(', '});', False)[1]
-            cItem['url'] = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''['"]?url['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0])
-            cItem['f_query'] = self.cm.ph.getSearchGroups(tmp, '''['"]?data['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
+            cItem['url'] = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, r'''['"]?url['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0])
+            cItem['f_query'] = self.cm.ph.getSearchGroups(tmp, r'''['"]?data['"]?\s*:\s*['"]([^'^"]+?)['"]''')[0]
 
         # prepare query
         query = []
@@ -198,7 +198,7 @@ class MoovieCC(CBaseHostClass):
         if not sts:
             return
 
-        nextPage = self.cm.ph.getSearchGroups(data, '''pages_num\s*=\s*([0-9]+?)[^0-9]''')[0]
+        nextPage = self.cm.ph.getSearchGroups(data, r'''pages_num\s*=\s*([0-9]+?)[^0-9]''')[0]
         if nextPage != '' and int(nextPage) > 0:
             nextPage = True
         else:
@@ -237,7 +237,7 @@ class MoovieCC(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, m2)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div', '</div>')
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href\s*=\s*['"]([^'^"]+?)['"]''')[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''href\s*=\s*['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'category': nextCategory, 'title': title, 'url': url})
@@ -294,7 +294,7 @@ class MoovieCC(CBaseHostClass):
                 item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
                 for t in item:
                     if '/flags/' in t:
-                        t = self.cm.ph.getSearchGroups(t, '''<img[^>]+?src=['"][^"^']+?/([^/]+?)\.png['"]''')[0]
+                        t = self.cm.ph.getSearchGroups(t, r'''<img[^>]+?src=['"][^"^']+?/([^/]+?)\.png['"]''')[0]
                     t = self.cleanHtmlStr(t)
                     if t != '':
                         serverName.append(t)
@@ -315,7 +315,7 @@ class MoovieCC(CBaseHostClass):
 
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="plot">', '</div>')[1])
         icon = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         if icon == '':
             icon = cItem.get('icon', '')
 
@@ -383,11 +383,11 @@ class MoovieCC(CBaseHostClass):
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<article', '</article>')[1])
 
         seriesTitle = cItem.get('prev_title', '')
-        sNum = self.cm.ph.getSearchGroups(cItem['title'], '''^([0-9]+?)\.''')[0]
+        sNum = self.cm.ph.getSearchGroups(cItem['title'], r'''^([0-9]+?)\.''')[0]
 
         episodesList = self._fillLinksCache(data, '<div class="item">')
         for item in episodesList:
-            eNum = self.cm.ph.getSearchGroups(item, '''^([0-9]+?)\.''')[0]
+            eNum = self.cm.ph.getSearchGroups(item, r'''^([0-9]+?)\.''')[0]
             params = dict(cItem)
             title = seriesTitle
             if eNum != '' and sNum != '':
@@ -441,7 +441,7 @@ class MoovieCC(CBaseHostClass):
             if self.up.getDomain(self.getMainUrl()) in videoUrl or self.up.getDomain(videoUrl) == self.up.getDomain(orginUrl):
 
                 if 'captcha' in data:
-                    data = re.sub("<!--[\s\S]*?-->", "", data)
+                    data = re.sub(r"<!--[\s\S]*?-->", "", data)
 
                 if 'google.com/recaptcha/' in data and 'sitekey' in data:
                     message = _('Link protected with google recaptcha v2.')
@@ -581,7 +581,7 @@ class MoovieCC(CBaseHostClass):
 
         title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '''<meta[^>]+?itemprop="name"[^>]+?content="([^"]+?)"''')[0])
         icon = self.cm.ph.getDataBeetwenMarkers(data, '<div id="poster"', '</div>')[1]
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, r'''<img[^>]+?src=['"]([^"^']+?\.jpe?g[^"^']*?)["']''')[0])
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div id="plot"', '</div>')[1])
 
         rating = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<span class="rating_all"', '</div>')[1])

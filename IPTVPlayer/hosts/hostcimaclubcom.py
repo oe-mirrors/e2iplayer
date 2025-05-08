@@ -131,7 +131,7 @@ class CimaClubCom(CBaseHostClass):
         mapUrls = {'toprating': '/top-imdb/', 'featured': '/most-views/'}
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'data-filter'), ('</li', '>'))
         for item in tmp:
-            url = self.cm.ph.getSearchGroups(item, '''data\-filter=['"]([^'^"]+?)['"]''')[0]
+            url = self.cm.ph.getSearchGroups(item, r'''data\-filter=['"]([^'^"]+?)['"]''')[0]
             url = mapUrls.get(url, '/wp-content/themes/Cimaclub/filter/{0}.php'.format(url))
             self.cacheSubSections['sub_1'].append({'title': self.cleanHtmlStr(item), 'url': self.getFullUrl(url)})
 
@@ -250,7 +250,7 @@ class CimaClubCom(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'movie'), ('</a', '>'))
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''[\s\-]src=['"]([^'^"]+?)['"]''')[0])
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
             if title == '':
                 printDBG("ERROR: NO TITLE IN ITEM")
@@ -288,7 +288,7 @@ class CimaClubCom(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'data-season'), ('</div', '>'))
         for item in tmp:
             title = self.cleanHtmlStr(item)
-            sId = self.cm.ph.getSearchGroups(item, '''data\-season=['"]([^'^"]+?)['"]''')[0]
+            sId = self.cm.ph.getSearchGroups(item, r'''data\-season=['"]([^'^"]+?)['"]''')[0]
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             self.cacheEpisodes.append({'title': title, 'url': url, 's_id': sId})
 
@@ -302,7 +302,7 @@ class CimaClubCom(CBaseHostClass):
         baseItem = {'good_for_fav': False, 'name': 'category', 'type': 'category', 'category': nextCategory, 'icon': cItem.get('icon', '')}
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'data-filter'), ('</div', '>'))
         for item in tmp:
-            sId = self.cm.ph.getSearchGroups(item, '''data\-filter=['"]([^'^"]+?)['"]''')[0]
+            sId = self.cm.ph.getSearchGroups(item, r'''data\-filter=['"]([^'^"]+?)['"]''')[0]
             title = self.cleanHtmlStr(item)
             params = dict(baseItem)
             params.update({'title': title, 's_title': sTitle, 's_id': sId})
@@ -377,12 +377,12 @@ class CimaClubCom(CBaseHostClass):
             retTab.append({'name': self.up.getDomain(url), 'url': strwithmeta(url, {'Referer': cUrl}), 'need_resolve': 1})
 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'serversList ', '</script>')[1]
-        serwerUrl = self.cm.ph.getSearchGroups(tmp, '''['"\s]url['"]?\s*?:\s*?['"]([^"^']+?)['"]''')[0]
-        serwerQuery = self.cm.ph.getSearchGroups(tmp, '''['"\s]data['"]?\s*?:\s*?['"]([^"^']+?)['"]''')[0]
+        serwerUrl = self.cm.ph.getSearchGroups(tmp, r'''['"\s]url['"]?\s*?:\s*?['"]([^"^']+?)['"]''')[0]
+        serwerQuery = self.cm.ph.getSearchGroups(tmp, r'''['"\s]data['"]?\s*?:\s*?['"]([^"^']+?)['"]''')[0]
 
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'data-server'), ('</li', '>'))
         for item in tmp:
-            sId = self.cm.ph.getSearchGroups(item, '''data\-server=['"]([^'^"]+?)['"]''')[0]
+            sId = self.cm.ph.getSearchGroups(item, r'''data\-server=['"]([^'^"]+?)['"]''')[0]
             name = self.cleanHtmlStr(item)
             url = self.getFullUrl(serwerUrl + '?' + serwerQuery + sId)
             retTab.append({'name': name, 'url': strwithmeta(url, {'Referer': viewUrl}), 'need_resolve': 1})
@@ -438,7 +438,7 @@ class CimaClubCom(CBaseHostClass):
 
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'contentFilm'), ('</div', '>'))[1])
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h1', '>', 'entry-title'), ('</h1', '>'))[1])
-        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, '''\ssrc=['"]([^'^"]+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, r'''\ssrc=['"]([^'^"]+?(:?\.jpe?g|\.png)(:?\?[^'^"]*?)?)['"]''')[0])
 
         item = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'views'), ('</div', '>'))[1])
         if item != '':
@@ -453,9 +453,9 @@ class CimaClubCom(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'class='), ('</span', '>'))
         printDBG(data)
         for item in data:
-            marker = self.cm.ph.getSearchGroups(item, '''\sitemprop=['"]([^'^"]+?)['"]''')[0]
+            marker = self.cm.ph.getSearchGroups(item, r'''\sitemprop=['"]([^'^"]+?)['"]''')[0]
             if marker == '':
-                marker = self.cm.ph.getSearchGroups(item, '''\sclass=['"]([^'^"]+?)['"]''')[0]
+                marker = self.cm.ph.getSearchGroups(item, r'''\sclass=['"]([^'^"]+?)['"]''')[0]
             printDBG(">>> %s" % marker)
             if marker not in keysMap:
                 continue

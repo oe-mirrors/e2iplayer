@@ -234,11 +234,11 @@ class VUMEDI(CBaseHostClass):
                 continue
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<h', '>', '_title'), ('</h', '>'), False)[1]
 
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''\shref=['"]([^'^"]+?)['"]''')[0].strip())
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, r'''\shref=['"]([^'^"]+?)['"]''')[0].strip())
             if url == '':
                 continue
 
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'''\ssrc=['"]([^"^']+?\.(?:jpe?g|png)(?:\?[^'^"]*?)?)['"]''')[0])
             title = self.cleanHtmlStr(tmp)
 
             desc = [t]
@@ -303,12 +303,12 @@ class VUMEDI(CBaseHostClass):
         playerBase = 'http://player.ooyala.com/'
         # first check simple method
         baseUrl = playerBase + 'hls/player/all/%s.m3u8'
-        videoId = self.cm.ph.getSearchGroups(data, '''data\-video=['"]([^'^"]+?)['"]''')[0]
+        videoId = self.cm.ph.getSearchGroups(data, r'''data\-video=['"]([^'^"]+?)['"]''')[0]
         retTab = getDirectM3U8Playlist(baseUrl % videoId, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999)
         if 0 == len(retTab):
             data = self.cm.ph.getDataBeetwenNodes(data, ('var ', '{', 'playerParam'), ('}', ';'))[1]
-            partnerId = self.cm.ph.getSearchGroups(data, '''['"]?playerBrandingId['"]?\s*\:\s*['"]([^'^"]+?)['"]''')[0]
-            pcode = self.cm.ph.getSearchGroups(data, '''['"]?pcode['"]?\s*\:\s*['"]([^'^"]+?)['"]''')[0]
+            partnerId = self.cm.ph.getSearchGroups(data, r'''['"]?playerBrandingId['"]?\s*\:\s*['"]([^'^"]+?)['"]''')[0]
+            pcode = self.cm.ph.getSearchGroups(data, r'''['"]?pcode['"]?\s*\:\s*['"]([^'^"]+?)['"]''')[0]
 
             url = playerBase + 'player_api/v1/content_tree/embed_code/%s/%s?' % (pcode, videoId)
             sts, data = self.getPage(url)

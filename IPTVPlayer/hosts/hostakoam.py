@@ -233,7 +233,7 @@ class AkoAm(CBaseHostClass):
                 name = self.cleanHtmlStr(link)
                 if name != '':
                     nameTab.append(name)
-                hostId = self.cm.ph.getSearchGroups(link, '/files/([0-9]+?)\.')[0]
+                hostId = self.cm.ph.getSearchGroups(link, r'/files/([0-9]+?)\.')[0]
                 if hostId in hostMap:
                     nameTab.append(hostMap[hostId])
                 urlsTab.append({'name': ' '.join(nameTab), 'url': url, 'need_resolve': 1})
@@ -417,14 +417,14 @@ class AkoAm(CBaseHostClass):
                 except Exception:
                     continue
 
-        reObj = re.compile('''<[\s\\/]*?br[\s\\/]*?>''', re.I)
+        reObj = re.compile('''<[\\s\\/]*?br[\\s\\/]*?>''', re.I)
         descTabMap = {"بطولة الفيلم": "actors",
                       "ﺇﺧﺮاﺝ": "director",
                       "ﺗﺄﻟﻴﻒ": "writers",
                       "التصنيف": "categories",
                       }
         descData = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'sub_desc'), ('<div', '>', 'clear'), False)[1]
-        descData = re.compile('''<span[^>]+?color\:[^>]+?>''').split(descData)
+        descData = re.compile(r'''<span[^>]+?color\:[^>]+?>''').split(descData)
         for item in descData:
             item = item.split('</span>', 1)
             if len(item) < 2:
