@@ -150,7 +150,6 @@ class Horrorycc(CBaseHostClass):
         else:
             nextPage = False
 
-
         if 'wyszukiwarka?phrase=' in cItem['url']:
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'clearfix item'), ('</a', '>'))
         else:

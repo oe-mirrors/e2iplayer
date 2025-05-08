@@ -13,6 +13,7 @@ import re
 import copy
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList

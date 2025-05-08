@@ -71,44 +71,59 @@ except ImportError:
 
 if sys.version_info[0] == 2:
     _0xffffffffL = long(1) << 32
+
     def isunicode(s):
         return isinstance(s, unicode)
+
     def isbytes(s):
         return isinstance(s, str)
+
     def isinteger(n):
         return isinstance(n, (int, long))
+
     def b(s):
         return s
+
     def binxor(a, b):
         return "".join([chr(ord(x) ^ ord(y)) for (x, y) in zip(a, b)])
+
     def b64encode(data, chars="+/"):
         tt = string.maketrans("+/", chars)
         return data.encode('base64').replace("\n", "").translate(tt)
     from binascii import b2a_hex
 else:
     _0xffffffffL = 0xffffffff
+
     def isunicode(s):
         return isinstance(s, str)
+
     def isbytes(s):
         return isinstance(s, bytes)
+
     def isinteger(n):
         return isinstance(n, int)
+
     def callable(obj):
         return hasattr(obj, '__call__')
+
     def b(s):
        return s.encode("latin-1")
+
     def binxor(a, b):
         return bytes([x ^ y for (x, y) in zip(a, b)])
     from base64 import b64encode as _b64encode
+
     def b64encode(data, chars="+/"):
         if isunicode(chars):
             return _b64encode(data, chars.encode('utf-8')).decode('utf-8')
         else:
             return _b64encode(data, chars)
     from binascii import b2a_hex as _b2a_hex
+
     def b2a_hex(s):
         return _b2a_hex(s).decode('us-ascii')
     xrange = range
+
 
 class PBKDF2(object):
     """PBKDF2.py : PKCS#5 v2.0 Password-Based Key Derivation
@@ -223,6 +238,7 @@ class PBKDF2(object):
             del self.__buf
             self.closed = True
 
+
 def crypt(word, salt=None, iterations=None):
     """PBKDF2-based unix crypt(3) replacement.
 
@@ -277,10 +293,12 @@ def crypt(word, salt=None, iterations=None):
     rawhash = PBKDF2(word, salt, iterations).read(24)
     return salt + "$" + b64encode(rawhash, "./")
 
+
 # Add crypt as a static method of the PBKDF2 class
 # This makes it easier to do "from PBKDF2 import PBKDF2" and still use
 # crypt.
 PBKDF2.crypt = staticmethod(crypt)
+
 
 def _makesalt():
     """Return a 48-bit pseudorandom salt for crypt().

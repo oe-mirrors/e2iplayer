@@ -38,8 +38,10 @@ from datetime import datetime
 from hashlib import sha1
 ###################################################
 
+
 def gettytul():
     return 'https://nonstopmozi.com/'
+
 
 class NonstopMozi(CBaseHostClass):
  
@@ -259,6 +261,7 @@ class NonstopMozi(CBaseHostClass):
         else:
             return
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

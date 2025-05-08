@@ -31,8 +31,10 @@ from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMu
 from Screens.MessageBox import MessageBox
 ###################################################
 
+
 def gettytul():
     return 'https://dmdamedia.hu' 
+
 
 class Dmdamedia(CBaseHostClass):
  
@@ -266,7 +268,6 @@ class Dmdamedia(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
-    
     
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Dmdamedia.listSearchResult - Filmek cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))

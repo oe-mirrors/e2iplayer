@@ -27,7 +27,6 @@ class build_trans(Command):
 							raise_(Exception, "Failed to compile: " + src)
 
 
-
 class build(_build):
 	sub_commands = _build.sub_commands + [('build_trans', None)]
 

@@ -61,11 +61,14 @@ __all__ = ["AES", "AESModeOfOperationCTR", "AESModeOfOperationCBC", "AESModeOfOp
 def _compact_word(word):
     return (word[0] << 24) | (word[1] << 16) | (word[2] << 8) | word[3]
 
+
 def _string_to_bytes(text):
     return list(ord(c) for c in text)
 
+
 def _bytes_to_string(binary):
     return "".join(chr(b) for b in binary)
+
 
 def _concat_list(a, b):
     return a + b
@@ -301,6 +304,7 @@ class Counter(object):
 
 class AESBlockModeOfOperation(object):
     '''Super-class for AES modes of operation that require blocks.'''
+
     def __init__(self, key):
         self._aes = AES(key)
 
@@ -314,11 +318,11 @@ class AESBlockModeOfOperation(object):
 class AESStreamModeOfOperation(AESBlockModeOfOperation):
     '''Super-class for AES modes of operation that are stream-ciphers.'''
 
+
 class AESSegmentModeOfOperation(AESStreamModeOfOperation):
     '''Super-class for AES modes of operation that segment data.'''
 
     segment_bytes = 16
-
 
 
 class AESModeOfOperationECB(AESBlockModeOfOperation):
@@ -335,7 +339,6 @@ class AESModeOfOperationECB(AESBlockModeOfOperation):
        o https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Electronic_codebook_.28ECB.29
        o See NIST SP800-38A (http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf); section 6.1'''
 
-
     name = "Electronic Codebook (ECB)"
 
     def encrypt(self, plaintext):
@@ -351,7 +354,6 @@ class AESModeOfOperationECB(AESBlockModeOfOperation):
 
         ciphertext = _string_to_bytes(ciphertext)
         return _bytes_to_string(self._aes.decrypt(ciphertext))
-
 
 
 class AESModeOfOperationCBC(AESBlockModeOfOperation):
@@ -371,7 +373,6 @@ class AESModeOfOperationCBC(AESBlockModeOfOperation):
    Also see:
        o https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher-block_chaining_.28CBC.29
        o See NIST SP800-38A (http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf); section 6.2'''
-
 
     name = "Cipher-Block Chaining (CBC)"
 
@@ -406,7 +407,6 @@ class AESModeOfOperationCBC(AESBlockModeOfOperation):
         return _bytes_to_string(plaintext)
 
 
-
 class AESModeOfOperationCFB(AESSegmentModeOfOperation):
     '''AES Cipher Feedback Mode of Operation.
 
@@ -416,7 +416,6 @@ class AESModeOfOperationCFB(AESSegmentModeOfOperation):
     Also see:
        o https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher_feedback_.28CFB.29
        o See NIST SP800-38A (http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf); section 6.3'''
-
 
     name = "Cipher Feedback (CFB)"
 
@@ -478,7 +477,6 @@ class AESModeOfOperationCFB(AESSegmentModeOfOperation):
         return _bytes_to_string(decrypted)
 
 
-
 class AESModeOfOperationOFB(AESStreamModeOfOperation):
     '''AES Output Feedback Mode of Operation.
 
@@ -491,7 +489,6 @@ class AESModeOfOperationOFB(AESStreamModeOfOperation):
     Also see:
        o https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Output_feedback_.28OFB.29
        o See NIST SP800-38A (http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf); section 6.4'''
-
 
     name = "Output Feedback (OFB)"
 
@@ -525,7 +522,6 @@ class AESModeOfOperationOFB(AESStreamModeOfOperation):
         return self.encrypt(ciphertext)
 
 
-
 class AESModeOfOperationCTR(AESStreamModeOfOperation):
     '''AES Counter Mode of Operation.
 
@@ -551,7 +547,6 @@ class AESModeOfOperationCTR(AESStreamModeOfOperation):
        o https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29
        o See NIST SP800-38A (http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf); section 6.5
          and Appendix B for managing the initial counter'''
-
 
     name = "Counter (CTR)"
 

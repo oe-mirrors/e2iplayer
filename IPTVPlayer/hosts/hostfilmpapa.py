@@ -24,8 +24,11 @@ import datetime
 import urllib
 ###################################################
 #repo.mvshrk.xyz/plugins/
+
+
 def gettytul():
     return 'https://plusz.club' 
+
 
 class FilmPapa(CBaseHostClass):
  
@@ -165,7 +168,6 @@ class FilmPapa(CBaseHostClass):
         
         CBaseHostClass.endHandleService(self, index, refresh)
     
-    
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmPapa.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = 'https://plusz.club/?s=' + searchPattern
@@ -194,6 +196,7 @@ class FilmPapa(CBaseHostClass):
                    pass
             params = {'title': title, 'icon': icon, 'url': url, 'desc': desc}
             self.addVideo(params)
+
 
 class IPTVHost(CHostBase):
 

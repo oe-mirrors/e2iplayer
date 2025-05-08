@@ -44,6 +44,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.mindigohu_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.mindigohu_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.mindigohu_login))
@@ -51,13 +52,16 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return "https://tv.mindigo.hu"
+
 
 def _gh(url):
     if not url:
         return ""
     return "https://celeburdi.github.io/static/icons/" + url
+
 
 def _addepg(epgs, id, item):
     x = next((x for x, epg in enumerate(epgs) if epg["id"] == id), None)
@@ -67,6 +71,7 @@ def _addepg(epgs, id, item):
         epgs.append({"id": id, "items": [item]})
         x = len(epgs) - 1
     return x
+
 
 def _getChannelDefs():
     return [
@@ -187,6 +192,7 @@ def _getDirectRadios():
 
         ]
 
+
 def _getMTVATVs():
     return [
         {"title": "Duna HD", "url": "dunalive"},
@@ -296,6 +302,7 @@ class EPGProvider:
         printDBG(">> timeout: %s" % timeout)
         return timeout, ret
 
+
 class MindiGoHU(CBaseHostClass):
 
     def __init__(self):
@@ -386,8 +393,6 @@ class MindiGoHU(CBaseHostClass):
             self.epgProvider_porthu = EPGProvider_porthu()
         except:
             self.epgProvider_porthu = EPGProviderNone()
-
-
 
     def getFullIconUrl(self, url):
         if not url:
@@ -539,7 +544,6 @@ class MindiGoHU(CBaseHostClass):
         except Exception:
             printExc()
 
-
         # get MTVA TV channels
         for i in _getMTVATVs():
             title = i["title"]
@@ -635,7 +639,6 @@ class MindiGoHU(CBaseHostClass):
         self.tvEpgs = tvEpgs
         self.radioEpgs = radioEpgs
 
-
     def getEpg(self, epgs):
         if len(epgs) == 0:
             return
@@ -707,7 +710,6 @@ class MindiGoHU(CBaseHostClass):
                 self.addDir(params)
         except Exception:
             printExc()
-
 
     def listMtvaVideos(self, cItem):
         printDBG("MindiGoHU.listMtvaVideos")
@@ -815,8 +817,6 @@ class MindiGoHU(CBaseHostClass):
         except Exception:
             printExc()
 
-
-
     def listGenres(self, cItem):
         try:
             url = cItem["url"]
@@ -900,7 +900,6 @@ class MindiGoHU(CBaseHostClass):
         try:
             if url[:1] == "Y":
                 return self.up.getVideoLinkExt(url[1:])  
-            
             
             if url == "mm3" or url[:1] == "v":
                 if os.path.exists(self.COOKIE_FILE):
@@ -1175,7 +1174,6 @@ class MindiGoHU(CBaseHostClass):
             printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
-
 
     def getEPGProviderById(self, provId):
         printDBG("MindiGoHU.getEPGProviderById")

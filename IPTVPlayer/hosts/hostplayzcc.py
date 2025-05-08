@@ -29,6 +29,7 @@ except Exception:
 from Components.config import config, ConfigText, ConfigSelection, getConfigListEntry
 ###################################################
 
+
 def gettytul():
     return 'https://playz.cc/'
 

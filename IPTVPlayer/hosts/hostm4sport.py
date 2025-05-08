@@ -38,14 +38,17 @@ config.plugins.iptvplayer.m4sport_id = ConfigYesNo(default=False)
 config.plugins.iptvplayer.boxtipus = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.boxrendszer = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("m4sport_id:", config.plugins.iptvplayer.m4sport_id))
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'M4 Sport'
+
 
 class m4sport(CBaseHostClass):
 
@@ -468,6 +471,7 @@ class m4sport(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

@@ -18,6 +18,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 import re
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList

@@ -34,12 +34,14 @@ from Components.config import config, ConfigText, ConfigSelection, getConfigList
 config.plugins.iptvplayer.filman_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.filman_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Filman login:", config.plugins.iptvplayer.filman_login))
     optionList.append(getConfigListEntry("Filman hasło:", config.plugins.iptvplayer.filman_password))
     return optionList
 ###################################################
+
 
 def gettytul():
     return 'https://filman.cc/'

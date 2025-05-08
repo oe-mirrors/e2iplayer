@@ -34,8 +34,10 @@ from Screens.MessageBox import MessageBox
 ###################################################
 ###################################################
 
+
 def gettytul():
     return 'updatehosts HU'
+
 
 class UPDATEHOSTS(CBaseHostClass):
 
@@ -204,6 +206,7 @@ class UPDATEHOSTS(CBaseHostClass):
             CBaseHostClass.endHandleService(self, index, refresh)
         except Exception:
             return
+
 
 class IPTVHost(CHostBase):
 

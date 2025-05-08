@@ -39,6 +39,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.webhuplayer_dir = ConfigText(default="/hdd/webhuplayer", fixed_size=False)
 config.plugins.iptvplayer.webmedia_dir = ConfigText(default="/hdd/webmedia", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Web HU Player könyvtára:", config.plugins.iptvplayer.webhuplayer_dir))
@@ -46,8 +47,10 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'Web HU Player'
+
 
 class webhuplayer(CBaseHostClass):
 
@@ -295,6 +298,7 @@ class webhuplayer(CBaseHostClass):
             CBaseHostClass.endHandleService(self, index, refresh)
         except Exception:
             return
+
 
 class IPTVHost(CHostBase):
 

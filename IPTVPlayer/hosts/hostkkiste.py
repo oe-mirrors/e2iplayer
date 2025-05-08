@@ -7,11 +7,14 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
+
 def GetConfigList():
     return []
 
+
 def gettytul():
     return 'https://kkiste-to.me'
+
 
 class KKisteAG(CBaseHostClass):
 

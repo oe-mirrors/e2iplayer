@@ -27,8 +27,10 @@ import os
 from Screens.MessageBox import MessageBox
 ###################################################
 
+
 def gettytul():
     return 'https://onlinestream.live/' 
+
 
 class OnlineStream(CBaseHostClass):
     def __init__(self):
@@ -245,7 +247,6 @@ class OnlineStream(CBaseHostClass):
         
         CBaseHostClass.endHandleService(self, index, refresh)
     
-    
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmVilag.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchPattern = searchPattern.replace(" ", "+")
@@ -253,6 +254,7 @@ class OnlineStream(CBaseHostClass):
         cItem['url'] = url
         cItem['page'] = 1
         self.listItems(cItem)
+
 
 class IPTVHost(CHostBase):
 

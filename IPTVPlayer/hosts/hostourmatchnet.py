@@ -20,6 +20,7 @@ except Exception:
 from Components.config import config
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList

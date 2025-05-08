@@ -51,12 +51,15 @@ PADDING_DEFAULT = 'default'
 
 # ECB and CBC are block-only ciphers
 
+
 def _block_can_consume(self, size):
     if size >= 16:
         return 16
     return 0
 
 # After padding, we may have more than one block
+
+
 def _block_final_encrypt(self, data, padding=PADDING_DEFAULT):
     if padding == PADDING_DEFAULT:
         data = append_PKCS7_padding(data)
@@ -84,10 +87,10 @@ def _block_final_decrypt(self, data, padding=PADDING_DEFAULT):
 
     raise Exception('invalid padding option')
 
+
 AESBlockModeOfOperation._can_consume = _block_can_consume
 AESBlockModeOfOperation._final_encrypt = _block_final_encrypt
 AESBlockModeOfOperation._final_decrypt = _block_final_decrypt
-
 
 
 # CFB is a segment cipher
@@ -96,6 +99,8 @@ def _segment_can_consume(self, size):
     return self.segment_bytes * int(size // self.segment_bytes)
 
 # CFB can handle a non-segment-sized block at the end using the remaining cipherblock
+
+
 def _segment_final_encrypt(self, data, padding=PADDING_DEFAULT):
     if padding != PADDING_DEFAULT:
         raise Exception('invalid padding option')
@@ -105,6 +110,8 @@ def _segment_final_encrypt(self, data, padding=PADDING_DEFAULT):
     return self.encrypt(padded)[:len(data)]
 
 # CFB can handle a non-segment-sized block at the end using the remaining cipherblock
+
+
 def _segment_final_decrypt(self, data, padding=PADDING_DEFAULT):
     if padding != PADDING_DEFAULT:
         raise Exception('invalid padding option')
@@ -113,10 +120,10 @@ def _segment_final_decrypt(self, data, padding=PADDING_DEFAULT):
     padded = data + to_bufferable(faux_padding)
     return self.decrypt(padded)[:len(data)]
 
+
 AESSegmentModeOfOperation._can_consume = _segment_can_consume
 AESSegmentModeOfOperation._final_encrypt = _segment_final_encrypt
 AESSegmentModeOfOperation._final_decrypt = _segment_final_decrypt
-
 
 
 # OFB and CTR are stream ciphers
@@ -124,11 +131,13 @@ AESSegmentModeOfOperation._final_decrypt = _segment_final_decrypt
 def _stream_can_consume(self, size):
     return size
 
+
 def _stream_final_encrypt(self, data, padding=PADDING_DEFAULT):
     if padding not in [PADDING_NONE, PADDING_DEFAULT]:
         raise Exception('invalid padding option')
 
     return self.encrypt(data)
+
 
 def _stream_final_decrypt(self, data, padding=PADDING_DEFAULT):
     if padding not in [PADDING_NONE, PADDING_DEFAULT]:
@@ -136,10 +145,10 @@ def _stream_final_decrypt(self, data, padding=PADDING_DEFAULT):
 
     return self.decrypt(data)
 
+
 AESStreamModeOfOperation._can_consume = _stream_can_consume
 AESStreamModeOfOperation._final_encrypt = _stream_final_encrypt
 AESStreamModeOfOperation._final_decrypt = _stream_final_decrypt
-
 
 
 class BlockFeeder(object):
@@ -201,6 +210,7 @@ class Decrypter(BlockFeeder):
 
 # 8kb blocks
 BLOCK_SIZE = (1 << 13)
+
 
 def _feed_stream(feeder, in_stream, out_stream, block_size=BLOCK_SIZE):
     'Uses feeder to read and convert from in_stream and write to out_stream.'

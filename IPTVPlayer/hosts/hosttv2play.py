@@ -21,8 +21,11 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 import re
 from urllib.parse import unquote
 ###################################################
+
+
 def gettytul():
     return 'https://tv2play.hu/' 
+
 
 class TV2Play(CBaseHostClass):
  
@@ -180,7 +183,6 @@ class TV2Play(CBaseHostClass):
             cItem.update({'category': 'explore_items', 'season': 0})
             self.exploreItems(cItem)
         
-    
     def listFilters(self, cItem):
         printDBG('TV2Play.listFilters')
         pageoffset = cItem['page']
@@ -212,7 +214,6 @@ class TV2Play(CBaseHostClass):
             params = {'title': "Következő oldal", 'icon': None, 'page': cItem['page'], 'category': 'list_filters'}
             self.addDir(params)
         
-    
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('TV2Play.handleService start')
         
@@ -248,9 +249,9 @@ class TV2Play(CBaseHostClass):
         
         CBaseHostClass.endHandleService(self, index, refresh)
     
-    
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TV2Play.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
+
 
 class IPTVHost(CHostBase):
 

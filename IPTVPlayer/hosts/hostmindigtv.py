@@ -36,13 +36,16 @@ from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMu
 from Screens.MessageBox import MessageBox
 ###################################################
 
+
 def gettytul():
     return 'https://www.mindigtv.hu/'
+
 
 def _gh(url):
     if not url:
         return ""
     return "https://celeburdi.github.io/static/icons/" + url
+
 
 def _addepg(epgs, id, item):
     x = next((x for x, epg in enumerate(epgs) if epg["id"] == id), None)
@@ -53,6 +56,7 @@ def _addepg(epgs, id, item):
         x = len(epgs) - 1
     return x
    
+
 def _getMindigChannelDefs():
     return [
         {"title": "M1 HD", "icon": _gh("m1hd.jpg"), "group": "main"},
@@ -150,6 +154,7 @@ def _getMindigChannelDefs():
 
     ]
 
+
 class MindigTVHU(CBaseHostClass):
 
     def __init__(self):
@@ -199,7 +204,6 @@ class MindigTVHU(CBaseHostClass):
         self.tvEpgs = None
         self.radioEpgs = None
 
- 
     def getFullIconUrl(self, url):
         if not url:
             return self.DEFAULT_ICON_URL
@@ -438,7 +442,6 @@ class MindigTVHU(CBaseHostClass):
         self.tvEpgs = tvEpgs
         self.radioEpgs = radioEpgs
         
-    
     def listMainMenu(self, cItem):
         printDBG("MindigTVHU.listMainMenu")
         MAIN_CAT_TAB = [{"category": "list_tvChannels", "title": _("TV channels")},
@@ -528,7 +531,6 @@ class MindigTVHU(CBaseHostClass):
         params = {'type': cItem['type'], 'category': cItem.get('category', ''), 'title': cItem['title'], 'url': cItem['url'], 'icon': cItem['icon']}
         return json_dumps(params)
 
-
     def getArticleContent(self, cItem):
         printDBG("MindigTVHU.getArticleContent [%s]" % cItem)
         if cItem["type"] == "video":
@@ -540,13 +542,11 @@ class MindigTVHU(CBaseHostClass):
         retTab = {'title': cItem['title'], 'text': cItem['desc'], 'images': [{'title': '', 'url': self.getFullIconUrl(cItem.get('icon'))}]}
         return [retTab]
 
-
     def tryTologin(self):
         printDBG("MindigTVHU.tryTologin")
 
         if not self.tvChannels:
             self.getChannels()
-
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')

@@ -7,6 +7,7 @@
 import re
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
+
 def decode(text, alt=False):
     text = re.sub(r"\s+|/\*.*?\*/", "", ensure_str(text))
     if alt:

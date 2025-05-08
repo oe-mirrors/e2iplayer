@@ -23,8 +23,11 @@ import re
 import datetime
 import urllib
 ###################################################
+
+
 def gettytul():
     return 'https://www.idokep.hu/idojaras/Budapest' 
+
 
 class Idokep(CBaseHostClass):
  

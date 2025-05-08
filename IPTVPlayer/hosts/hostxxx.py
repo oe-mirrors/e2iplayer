@@ -64,6 +64,7 @@ config.plugins.iptvplayer.xxxzbiornik = ConfigYesNo(default=False)
 config.plugins.iptvplayer.xxx4k = ConfigYesNo(default=False)
 config.plugins.iptvplayer.yourporn = ConfigInteger(4, (1, 99))  
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Pin protection for plugin") + " :", config.plugins.iptvplayer.xxxwymagajpin))
@@ -87,8 +88,11 @@ def GetConfigList():
 ###################################################
 # Title of HOST
 ###################################################
+
+
 def gettytul():
     return 'XXX'
+
 
 class IPTVHost(IHost):
     LOGO_NAME = 'XXXlogo.png'
@@ -175,6 +179,7 @@ class IPTVHost(IHost):
     # Additional functions on class IPTVHost
     ###################################################
 
+
 class Host:
     XXXversion = "2024.02.09.1"
     XXXremote = "0.0.0.0"
@@ -252,6 +257,7 @@ class Host:
     def getPage4k(self, baseUrl, cookie_domain, cloud_domain, params={}, post_data=None):
         COOKIEFILE = os_path.join(GetCookieDir(), cookie_domain)
         self.USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0'
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
@@ -267,6 +273,7 @@ class Host:
         
         try:
             import http.client
+
             def patch_http_response_read(func):
                 def inner(*args):
                     try:
@@ -289,7 +296,6 @@ class Host:
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(baseUrl, addParams, post_data)
-
 
     def listsItems(self, Index, url, name=''):
         printDBG('Host listsItems begin')
@@ -417,7 +423,6 @@ class Host:
            valTab.append(CDisplayListItem('FAMILYPORN', 'https://familyporn.tv', CDisplayListItem.TYPE_CATEGORY, ['https://familyporn.tv/categories/'], 'familyporn', 'https://familyporn.tv/images/logo-alt.png', None))
            valTab.append(CDisplayListItem('BITPORNO', 'https://bitporno.to', CDisplayListItem.TYPE_CATEGORY, ['https://bitporno.to'], 'bitporno', 'https://bitporno.de/assets/logobt.png', None)) 
            valTab.append(CDisplayListItem('PERVCLIPS', 'https://www.pervclips.com/tube', CDisplayListItem.TYPE_CATEGORY, ['https://www.pervclips.com/tube/categories/'], 'PERVCLIPS', 'https://cdn.pervclips.com/tube/static_new/images/og-logo.jpg', None)) 
-
 
            if config.plugins.iptvplayer.xxxsortall.value:
                valTab.sort(key=lambda poz: poz.name)
@@ -871,7 +876,6 @@ class Host:
               valTab.append(CDisplayListItem('ERROR - Unzipping Error %s' % source, 'ERROR', CDisplayListItem.TYPE_CATEGORY, [''], '', '', None)) 
               return valTab
 
-
            try:
               od = '%siptv-host-xxx-master/' % (dest)
               printDBG('Innen: ' + od)
@@ -889,7 +893,6 @@ class Host:
               os_system('rm -rf %siptv-host-xxx-master-%s' % (dest, crc))
               valTab.append(CDisplayListItem('ERROR - Error in Copy', 'ERROR', CDisplayListItem.TYPE_CATEGORY, [''], '', '', None)) 
               return valTab
-
 
            ikony = GetPluginDir('icons/PlayerSelector/')
            if os_path.exists('%sXXX100' % ikony):
@@ -912,7 +915,6 @@ class Host:
                  printDBG('Actual Version: ' + aktualna)
            except:
               printDBG('HostXXX error openfile ')
-
 
            printDBG('Ideiglenes fájlok törlése')
            os_system('rm -f %s' % source)
@@ -2297,7 +2299,6 @@ class Host:
               valTab.append(CDisplayListItem('Next', 'Next', CDisplayListItem.TYPE_CATEGORY, [next], name, 'http://www.clker.com/cliparts/n/H/d/S/N/j/green-next-page-button-hi.png', None))                
            return valTab
 
-
         if 'CHATURBATE' == name:
            printDBG('Host listsItems begin name=' + name)
            self.MAIN_URL = 'https://chaturbate.com' 
@@ -3062,6 +3063,7 @@ class Host:
            sts, data = self.cm.getPage(url)
            if not sts: 
                return valTab
+
            def tryTologin():
                 self.login = config.plugins.iptvplayer.datalinkek_login.value
                 self.password = config.plugins.iptvplayer.datalinkek_password.value
@@ -3147,7 +3149,6 @@ class Host:
                     next = self.MAIN_URL + '/' + next
                 valTab.append(CDisplayListItem('Next', 'Next: ' + next, CDisplayListItem.TYPE_CATEGORY, [next], name, '', None))                
             return valTab
-
 
         if 'XXXLIST' == name:
            printDBG('Host listsItems begin name=' + name)
@@ -6185,7 +6186,6 @@ class Host:
               valTab.append(CDisplayListItem('Next', next_page, CDisplayListItem.TYPE_CATEGORY, [next_page], name, 'http://www.clker.com/cliparts/n/H/d/S/N/j/green-next-page-button-hi.png', None))                
            return valTab
 
-
         if 'MOMPORNONLY' == name:
            printDBG('Host listsItems begin name=' + name)
            self.MAIN_URL = 'https://mompornonly.com'
@@ -6947,7 +6947,6 @@ class Host:
               valTab.append(CDisplayListItem('Next', 'Page : ' + next.split('=')[-1], CDisplayListItem.TYPE_CATEGORY, [next], name, 'http://www.clker.com/cliparts/n/H/d/S/N/j/green-next-page-button-hi.png', None))            
            return valTab
         
-        
         if 'ruleporn' == name:
            printDBG('Host listsItems begin name=' + name)
            self.MAIN_URL = 'https://ruleporn.com'
@@ -7223,7 +7222,6 @@ class Host:
               valTab.append(CDisplayListItem('Next', next_page, CDisplayListItem.TYPE_CATEGORY, [next_page], name, 'http://www.clker.com/cliparts/n/H/d/S/N/j/green-next-page-button-hi.png', None))                
            return valTab
         
-
         if 'PORNREWIND' == name:
            printDBG('Host listsItems begin name=' + name)
            self.MAIN_URL = 'https://www.pornrewind.com' 
@@ -7296,7 +7294,6 @@ class Host:
                   next = 'https://www.pornrewind.com' + next
               valTab.append(CDisplayListItem('Next ', 'Page: ' + next, CDisplayListItem.TYPE_CATEGORY, [url], name, '', 'next'))
            return valTab
-
 
         if 'BALKANJIZZ' == name:
            printDBG('Host listsItems begin name=' + name)
@@ -8530,7 +8527,6 @@ class Host:
               valTab.append(CDisplayListItem('Next', next, CDisplayListItem.TYPE_CATEGORY, [next], name, 'http://www.clker.com/cliparts/n/H/d/S/N/j/green-next-page-button-hi.png', None))
            return valTab
 
-
         if 'hqporner' == name:
            printDBG('Host listsItems begin name=' + name)
            self.MAIN_URL = 'https://hqporner.com' 
@@ -8634,7 +8630,6 @@ class Host:
               valTab.append(CDisplayListItem(decodeHtml(phTitle), phUrl, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, decodeHtml(phImage), None)) 
            return valTab
         
-
         if 'spankbang' == name:
            printDBG('Host listsItems begin name=' + name)
            self.MAIN_URL = 'https://spankbang.com' 
@@ -10098,7 +10093,6 @@ class Host:
                  printExc()
            return valTab 
  
-		   
         return valTab
 
     def getLinksForVideo(self, url):
@@ -10958,7 +10952,6 @@ class Host:
            printDBG('Vege: ' + str(phUrl))
            return phUrl
         
-        
         if parser == 'http://tubepornclassic.com':
            COOKIEFILE = os_path.join(GetCookieDir(), 'tubepornclassic.cookie')
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -11497,8 +11490,8 @@ class Host:
            #printDBG( 'Ez a vege: '+videoUrl )
            return videoUrl
            
-
         # make by 12asdfg12
+
         def ssut51(str):
             str = re.sub(r'\D', '', str)
             sut = 0
@@ -12470,7 +12463,6 @@ class Host:
            #return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.HTTP_HEADER['User-Agent']})
            return videoUrl
            
-
         if parser == 'https://www.eroprofile.com':
            COOKIEFILE = os_path.join(GetCookieDir(), 'eroprofile.cookie')
            self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -13435,7 +13427,6 @@ class Host:
            printDBG('Ezt talaltam: ' + fetchurl)
            return fetchurl 
            
-
         if parser == 'https://vidlox.tv':
            parse = re.search('sources.*?"(http.*?)"', data, re.S) 
            if parse:
@@ -13596,8 +13587,6 @@ class Host:
            printDBG('Link a videóhoz: ' + videoUrl)
            return urllib.parse.unquote(videoUrl)
             
-              
-
         if parser == 'http://sexkino.to':
            videoUrl = re.findall('<iframe.*?src="(.*?)"', data, re.S)
            if videoUrl:
@@ -13606,6 +13595,8 @@ class Host:
 ############################################
 # functions for host
 ############################################
+
+
 def decodeUrl(text):
 	text = text.replace('%20', ' ')
 	text = text.replace('%21', '!')
@@ -13623,6 +13614,7 @@ def decodeUrl(text):
 	text = text.replace('%3F', '?')
 	text = text.replace('%40', '@')
 	return text
+
 
 def decodeHtml(text):
 	text = text.replace('&auml;', 'ä')
@@ -13722,6 +13714,8 @@ def decodeHtml(text):
 ############################################
 # functions for pornhub
 ############################################
+
+
 def decrypt(ciphertext, password, nBits):
     printDBG('decrypt begin ')
     blockSize = 16
@@ -13770,6 +13764,7 @@ def decrypt(ciphertext, password, nBits):
  #   plaintext = plaintext.decode("utf-8")
     return plaintext
 
+
 Sbox = [
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
     0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
@@ -13803,6 +13798,7 @@ Rcon = [
     [0x36, 0x00, 0x00, 0x00]
 ]
 
+
 def Cipher(input, w):
     printDBG('cipher begin ')
     Nb = 4
@@ -13829,12 +13825,14 @@ def Cipher(input, w):
         output[i] = state[i % 4][i // 4]
     return output
 
+
 def SubBytes(s, Nb):
     printDBG('subbytes begin ')
     for r in range(4):
         for c in range(Nb):
             s[r][c] = Sbox[s[r][c]]
     return s
+
 
 def ShiftRows(s, Nb):
     printDBG('shiftrows begin ')
@@ -13845,6 +13843,7 @@ def ShiftRows(s, Nb):
         for c in range(4):
             s[r][c] = t[c]
     return s
+
 
 def MixColumns(s, Nb):
     printDBG('mixcolumns begin ')
@@ -13860,12 +13859,14 @@ def MixColumns(s, Nb):
         s[3][c] = a[0] ^ b[0] ^ a[1] ^ a[2] ^ b[3]
     return s
 
+
 def AddRoundKey(state, w, rnd, Nb):
     printDBG('addroundkey begin ')
     for r in range(4):
         for c in range(Nb):
             state[r][c] ^= w[rnd * 4 + c][r]
     return state
+
 
 def KeyExpansion(key):
     printDBG('keyexpansion begin ')
@@ -13894,11 +13895,13 @@ def KeyExpansion(key):
             w[i][t] = w[i - Nk][t] ^ temp[t]
     return w
 
+
 def SubWord(w):
     printDBG('subword begin ')
     for i in range(4):
         w[i] = Sbox[w[i]]
     return w
+
 
 def RotWord(w):
     printDBG('rotword begin ')
@@ -13907,6 +13910,7 @@ def RotWord(w):
         w[i] = w[i + 1]
     w[3] = tmp
     return w
+
 
 def encrypt(plaintext, password, nBits):
     printDBG('encrypt begin ')
@@ -13963,6 +13967,7 @@ def encrypt(plaintext, password, nBits):
 
     return ciphertext
 
+
 def urs(a, b):
     printDBG('urs begin ')
     a &= 0xffffffff
@@ -13977,8 +13982,11 @@ def urs(a, b):
 ############################################
 # functions for eporner
 ############################################
+
+
 def calc_hash(s):
     return ''.join((encode_base_n(int(s[lb:lb + 8], 16), 36) for lb in range(0, 32, 8)))
+
 
 def encode_base_n(num, n, table=None):
     FULL_TABLE = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -13996,6 +14004,8 @@ def encode_base_n(num, n, table=None):
         ret = table[num % n] + ret
         num = num // n
     return ret
+
+
 ############################################
 # functions for myfreecam
 ############################################
@@ -14008,12 +14018,14 @@ vs_str[90] = "CAM OFF"
 vs_str[127] = "OFFLINE"
 vs_str[128] = "TRUEPVT"
 
+
 def fc_decode_json(m):
 	try:
 		m = m.replace('\r', '\\r').replace('\n', '\\n')
 		return simplejson.loads(m[m.find("{"):].decode("utf-8", "ignore"))
 	except:
 		return simplejson.loads("{\"lv\":0}")
+
 
 def read_model_data(m):
 	global CAMGIRLSERVER
@@ -14098,6 +14110,7 @@ def read_model_data(m):
 		pass
 	printDBG("%s  Video Server : %d Channel Id : %d  Model id : %d " % (buf, CAMGIRLSERVER, CAMGIRLCHANID, CAMGIRLUID))
 
+
 def myfreecam_start(url, xchat):
 	global CAMGIRL
 	global CAMGIRLSERVER
@@ -14162,6 +14175,8 @@ def myfreecam_start(url, xchat):
 		return ''
 
 # decrypt function/0/
+
+
 def decryptHash(videoUrl, licenseCode, hashRange):
     result = ''
     videoUrlPart = videoUrl.split('/')

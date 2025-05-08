@@ -23,8 +23,11 @@ import re
 import datetime
 import urllib
 ###################################################
+
+
 def gettytul():
     return 'https://filmtar.online/' 
+
 
 class FilmTar(CBaseHostClass):
  
@@ -262,7 +265,6 @@ class FilmTar(CBaseHostClass):
             printExc()
         
         CBaseHostClass.endHandleService(self, index, refresh)
-    
     
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmTar.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))

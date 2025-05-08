@@ -7,11 +7,13 @@
 """
 import sys  # required to catch PY2/PY3 and properly manage ord
 
+
 def getOrdForVal(val):
     try:
         return ord(val)  # usually py2 and py3 for strings
     except Exception:
         return val  # py3 for binaries
+
 
 def xorS(a, b):
     """ XOR two strings """

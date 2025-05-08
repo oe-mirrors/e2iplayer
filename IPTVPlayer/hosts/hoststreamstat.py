@@ -21,8 +21,10 @@ import urllib
 import os
 ###################################################
 
+
 def gettytul():
     return 'http://streamstat.net/' 
+
 
 class StreamStat(CBaseHostClass):
     def __init__(self):
@@ -156,7 +158,6 @@ class StreamStat(CBaseHostClass):
         
         CBaseHostClass.endHandleService(self, index, refresh)
     
-    
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("StreamStat.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchPattern = searchPattern.replace(" ", "+")
@@ -164,6 +165,7 @@ class StreamStat(CBaseHostClass):
         cItem['url'] = url
         cItem['page'] = 1
         self.listItems(cItem)
+
 
 class IPTVHost(CHostBase):
 

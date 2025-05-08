@@ -19,6 +19,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Screens.MessageBox import MessageBox
 ###################################################
 
+
 def GetConfigList():
     optionList = []
     return optionList

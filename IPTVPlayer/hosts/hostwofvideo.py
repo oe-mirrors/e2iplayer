@@ -16,8 +16,11 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import base64
 ###################################################
+
+
 def gettytul():
     return 'https://wofvideo.pro/' 
+
 
 class WOFvideo(CBaseHostClass):
  
@@ -219,6 +222,7 @@ class WOFvideo(CBaseHostClass):
         url = 'https://wofvideo.pro/?s=' + searchPattern.replace(" ", "+")
         cItem['url'] = url           
         self.listItems(cItem)
+
 
 class IPTVHost(CHostBase):
 
