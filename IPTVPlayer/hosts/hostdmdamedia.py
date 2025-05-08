@@ -45,7 +45,7 @@ class Dmdamedia(CBaseHostClass):
         self.filmurl = "https://dmdamedia.hu/filmek"
         self.sorurl = "https://dmdamedia.hu/sorozatok"
         
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
@@ -229,7 +229,7 @@ class Dmdamedia(CBaseHostClass):
             params = {'category':'explore_item', 'title': title,  'icon': icon, 'url': newurl, 'desc': desc}
             self.addDir(params)
 	
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Dmdamedia.handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

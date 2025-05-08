@@ -49,19 +49,19 @@ from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrappe
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.xxxwymagajpin = ConfigYesNo(default = True)
-config.plugins.iptvplayer.xxxlist = ConfigDirectory(default = "/hdd/")
-config.plugins.iptvplayer.xxxsortuj = ConfigYesNo(default = True)
-config.plugins.iptvplayer.xxxsearch = ConfigYesNo(default = False)
-config.plugins.iptvplayer.xxxsortmfc = ConfigYesNo(default = False)
-config.plugins.iptvplayer.xxxsortall = ConfigYesNo(default = True)
-config.plugins.iptvplayer.xhamstertag = ConfigYesNo(default = False)
-config.plugins.iptvplayer.chaturbate = ConfigSelection(default="", choices = [("",_("all")), ("female/",_("female")), ("couple/",_("couple")), ("trans/",_("trans")), ("male/",_("male"))])
-config.plugins.iptvplayer.cam4 = ConfigSelection(default="0", choices = [("0",_("https")), ("1",_("rtmp"))])
-config.plugins.iptvplayer.fotka = ConfigSelection(default="0", choices = [("0",_("https")), ("1",_("rtmp"))])
-config.plugins.iptvplayer.xxxupdate = ConfigYesNo(default = True)
-config.plugins.iptvplayer.xxxzbiornik = ConfigYesNo(default = False)
-config.plugins.iptvplayer.xxx4k = ConfigYesNo(default = False)
+config.plugins.iptvplayer.xxxwymagajpin = ConfigYesNo(default=True)
+config.plugins.iptvplayer.xxxlist = ConfigDirectory(default="/hdd/")
+config.plugins.iptvplayer.xxxsortuj = ConfigYesNo(default=True)
+config.plugins.iptvplayer.xxxsearch = ConfigYesNo(default=False)
+config.plugins.iptvplayer.xxxsortmfc = ConfigYesNo(default=False)
+config.plugins.iptvplayer.xxxsortall = ConfigYesNo(default=True)
+config.plugins.iptvplayer.xhamstertag = ConfigYesNo(default=False)
+config.plugins.iptvplayer.chaturbate = ConfigSelection(default="", choices=[("",_("all")), ("female/",_("female")), ("couple/",_("couple")), ("trans/",_("trans")), ("male/",_("male"))])
+config.plugins.iptvplayer.cam4 = ConfigSelection(default="0", choices=[("0",_("https")), ("1",_("rtmp"))])
+config.plugins.iptvplayer.fotka = ConfigSelection(default="0", choices=[("0",_("https")), ("1",_("rtmp"))])
+config.plugins.iptvplayer.xxxupdate = ConfigYesNo(default=True)
+config.plugins.iptvplayer.xxxzbiornik = ConfigYesNo(default=False)
+config.plugins.iptvplayer.xxx4k = ConfigYesNo(default=False)
 config.plugins.iptvplayer.yourporn = ConfigInteger(4, (1, 99))  
 
 def GetConfigList():
@@ -106,7 +106,7 @@ class IPTVHost(IHost):
         return config.plugins.iptvplayer.xxxwymagajpin.value
     
     def getLogoPath(self):  
-        return RetHost(RetHost.OK, value = [self.PATH_TO_LOGO])
+        return RetHost(RetHost.OK, value=[self.PATH_TO_LOGO])
 
     def getInitList(self):
         printDBG( "getInitList begin" )
@@ -115,35 +115,35 @@ class IPTVHost(IHost):
         self.host.setCurrList(self.currList)
         self.prevList = []
         printDBG( "getInitList end" )
-        return RetHost(RetHost.OK, value = self.currList)
+        return RetHost(RetHost.OK, value=self.currList)
 
-    def getListForItem(self, Index = 0, refresh = 0, selItem = None):
+    def getListForItem(self, Index=0, refresh=0, selItem=None):
         printDBG( "getListForItem begin" )
         self.prevIndex.append(Index)
         self.prevList.append(self.currList)
         self.currList = self.host.getListForItem(Index, refresh, selItem)
         printDBG( "getListForItem end" )
-        return RetHost(RetHost.OK, value = self.currList)
+        return RetHost(RetHost.OK, value=self.currList)
 
-    def getPrevList(self, refresh = 0):
+    def getPrevList(self, refresh=0):
         printDBG( "getPrevList begin" )
         if(len(self.prevList) > 0):
             self.prevIndex.pop()
             self.currList = self.prevList.pop()
             self.host.setCurrList(self.currList)
             printDBG( "getPrevList end OK" )
-            return RetHost(RetHost.OK, value = self.currList)
+            return RetHost(RetHost.OK, value=self.currList)
         else:
             printDBG( "getPrevList end ERROR" )
-            return RetHost(RetHost.ERROR, value = [])
+            return RetHost(RetHost.ERROR, value=[])
 
-    def getCurrentList(self, refresh = 0):
+    def getCurrentList(self, refresh=0):
         printDBG( "getCurrentList begin" )
         printDBG( "getCurrentList end" )
-        return RetHost(RetHost.OK, value = self.currList)
+        return RetHost(RetHost.OK, value=self.currList)
 
-    def getLinksForVideo(self, Index = 0, item = None):
-        return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+    def getLinksForVideo(self, Index=0, item=None):
+        return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
         
     def getResolvedURL(self, url):
         printDBG( "getResolvedURL begin" )
@@ -154,22 +154,22 @@ class IPTVHost(IHost):
                list = []
                list.append(ret)
                printDBG( "getResolvedURL end OK" )
-               return RetHost(RetHost.OK, value = list)
+               return RetHost(RetHost.OK, value=list)
             else:
                printDBG( "getResolvedURL end" )
-               return RetHost(RetHost.NOT_IMPLEMENTED, value = [])                
+               return RetHost(RetHost.NOT_IMPLEMENTED, value=[])                
         else:
             printDBG( "getResolvedURL end" )
-            return RetHost(RetHost.NOT_IMPLEMENTED, value = [])
+            return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 
-    def getSearchResults(self, pattern, searchType = None):
+    def getSearchResults(self, pattern, searchType=None):
         printDBG( "getSearchResults begin" )
         printDBG( "getSearchResults pattern: " +pattern)
         self.prevIndex.append(0)
         self.prevList.append(self.currList)
         self.currList = self.host.getSearchResults(pattern, searchType)
         printDBG( "getSearchResults end" )
-        return RetHost(RetHost.OK, value = self.currList)
+        return RetHost(RetHost.OK, value=self.currList)
 
     ###################################################
     # Additional functions on class IPTVHost
@@ -214,7 +214,7 @@ class Host:
         printDBG( 'Host getInitList end' )
         return self.currList
 
-    def getListForItem(self, Index = 0, refresh = 0, selItem = None):
+    def getListForItem(self, Index=0, refresh=0, selItem=None):
         printDBG( 'Host getListForItem begin' )
         valTab = []
         if len(self.currList[Index].urlItems) == 0:
@@ -224,7 +224,7 @@ class Host:
         printDBG( 'Host getListForItem end' )
         return self.currList
 
-    def getSearchResults(self, pattern, searchType = None):
+    def getSearchResults(self, pattern, searchType=None):
         printDBG( "Host getSearchResults begin" )
         printDBG( "Host getSearchResults pattern: " +pattern)
         valTab = []
@@ -263,7 +263,7 @@ class Host:
         params['cloudflare_params'] = {'domain':cloud_domain, 'cookie_file':COOKIEFILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, params, post_data)
 
-    def _getPage(self, url, addParams = {}, post_data = None):
+    def _getPage(self, url, addParams={}, post_data=None):
         
         try:
             import http.client
@@ -291,7 +291,7 @@ class Host:
         return self.cm.getPage(baseUrl, addParams, post_data)
 
 
-    def listsItems(self, Index, url, name = ''):
+    def listsItems(self, Index, url, name=''):
         printDBG( 'Host listsItems begin' )
         printDBG( 'Host listsItems url: '+url )
         valTab = []
@@ -921,7 +921,7 @@ class Host:
            if url:
               try:
                  msg = '\n\nActual Version: %s' % aktualna
-                 self.sessionEx.open(MessageBox, _("Update completed successfully. For the moment, the system will reboot.")+ msg, type = MessageBox.TYPE_INFO, timeout = 10)
+                 self.sessionEx.open(MessageBox, _("Update completed successfully. For the moment, the system will reboot.")+ msg, type=MessageBox.TYPE_INFO, timeout=10)
                  sleep (10)
                  from enigma import quitMainloop
                  quitMainloop(3)

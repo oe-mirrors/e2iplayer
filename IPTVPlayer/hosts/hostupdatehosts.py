@@ -87,16 +87,16 @@ class UPDATEHOSTS(CBaseHostClass):
         if version != local:
             self._update("update")
             msg = 'Jelenlegi verzió: %s %s' % (self.getversion(), "\n")
-            ret = self.sessionEx.waitForFinishOpen(MessageBox, msg+ _("A frissítés sikeres.\nA rendszer most újraindul."), type = MessageBox.TYPE_INFO, timeout = 10)
+            ret = self.sessionEx.waitForFinishOpen(MessageBox, msg+ _("A frissítés sikeres.\nA rendszer most újraindul."), type=MessageBox.TYPE_INFO, timeout=10)
             try:
                from enigma import quitMainloop
                quitMainloop(3) 
             except Exception:
                msg = 'Nem sikerült az újraindítás.\nKérlek indítsd újra manuálisan!'
-               ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type = MessageBox.TYPE_INFO, timeout = 6)
+               ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=6)
         else:
           msg = 'Nem szükséges frissítés.'
-          ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.INFO, timeout = 10 )
+          ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.INFO, timeout=10 )
     
     def getversion(self):
         data = open(self.versionpath, 'r')
@@ -121,7 +121,7 @@ class UPDATEHOSTS(CBaseHostClass):
                         pass
                     else:
                        msg = 'A frissítés sikertelen! (Másolási hiba)'
-                       self.sessionEx.waitForFinishOpen(MessageBox, msg, type = MessageBox.TYPE_ERROR, timeout = 20 )
+                       self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
                        return
                 if command == "install":
                     rmtree(self.playerpath)
@@ -130,15 +130,15 @@ class UPDATEHOSTS(CBaseHostClass):
                         pass
                     else:
                        msg = 'A frissítés sikertelen! (Másolási hiba)'
-                       self.sessionEx.waitForFinishOpen(MessageBox, msg, type = MessageBox.TYPE_ERROR, timeout = 20 )
+                       self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
                        return
             else:
                msg = 'A frissítés sikertelen! (Hiba a kicsomagolás során)'
-               self.sessionEx.waitForFinishOpen(MessageBox, msg, type = MessageBox.TYPE_ERROR, timeout = 20 )
+               self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
                return
         else:
            msg = 'A frissítés sikertelen! (Letöltési hiba, próbáld újra.)'
-           self.sessionEx.waitForFinishOpen(MessageBox, msg, type = MessageBox.TYPE_ERROR, timeout = 20 )
+           self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
            return
         rmtree(dir)
         return
@@ -176,7 +176,7 @@ class UPDATEHOSTS(CBaseHostClass):
             return False
         return sikerult
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         try:
             CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
             name     = self.currItem.get("name", '')
@@ -192,13 +192,13 @@ class UPDATEHOSTS(CBaseHostClass):
             elif url == "install":
                 self._update("install")
                 msg = 'Jelenlegi verzió: %s %s' % (self.getversion(), "\n")
-                ret = self.sessionEx.waitForFinishOpen(MessageBox, msg+ _("A telepítés sikeres.\nA rendszer most újraindul."), type = MessageBox.TYPE_INFO, timeout = 10)
+                ret = self.sessionEx.waitForFinishOpen(MessageBox, msg+ _("A telepítés sikeres.\nA rendszer most újraindul."), type=MessageBox.TYPE_INFO, timeout=10)
                 try:
                    from enigma import quitMainloop
                    quitMainloop(3) 
                 except Exception:
                    msg = 'Nem sikerült az újraindítás.\nKérlek indítsd újra manuálisan!'
-                   ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type = MessageBox.TYPE_INFO, timeout = 6)
+                   ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=6)
             else:
                 printExc()
             CBaseHostClass.endHandleService(self, index, refresh)

@@ -103,7 +103,7 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
         self["key_red"] = Label(_("Cancel"))
 
         self["header"] = Label(title)
-        self["text"] = Input(text = ensure_str(text)) #in p3 str is always unicode, ensure_str used in case it would be a bytes.
+        self["text"] = Input(text=ensure_str(text)) #in p3 str is always unicode, ensure_str used in case it would be a bytes.
         self["list"] = VirtualKeyBoardList([])
 
         self["actions"] = NumberActionMap(["OkCancelActions", "WizardActions", "ColorActions", "KeyboardInputActions", "InputBoxActions", "InputAsciiActions"],

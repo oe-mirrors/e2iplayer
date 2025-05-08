@@ -34,9 +34,9 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.m4sport_id = ConfigYesNo(default = False)
-config.plugins.iptvplayer.boxtipus = ConfigText(default = "", fixed_size = False)
-config.plugins.iptvplayer.boxrendszer = ConfigText(default = "", fixed_size = False)
+config.plugins.iptvplayer.m4sport_id = ConfigYesNo(default=False)
+config.plugins.iptvplayer.boxtipus = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.boxrendszer = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -73,7 +73,7 @@ class m4sport(CBaseHostClass):
         url = url.replace('&amp;', '&')
         return CBaseHostClass.getFullIconUrl(self, url)
         
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         
@@ -448,7 +448,7 @@ class m4sport(CBaseHostClass):
             return
         return
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')

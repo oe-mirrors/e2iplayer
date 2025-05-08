@@ -275,7 +275,7 @@ class Counter(object):
        To create a custom counter, you can usually just override the
        increment method.'''
 
-    def __init__(self, initial_value = 1):
+    def __init__(self, initial_value=1):
 
         # Convert the value into an array of bytes long
         self._counter = [ ((initial_value >> i) % 256) for i in xrange(128 - 8, -1, -8) ]
@@ -375,7 +375,7 @@ class AESModeOfOperationCBC(AESBlockModeOfOperation):
 
     name = "Cipher-Block Chaining (CBC)"
 
-    def __init__(self, key, iv = None):
+    def __init__(self, key, iv=None):
         if iv is None:
             self._last_cipherblock = [ 0 ] * 16
         elif len(iv) != 16:
@@ -420,7 +420,7 @@ class AESModeOfOperationCFB(AESSegmentModeOfOperation):
 
     name = "Cipher Feedback (CFB)"
 
-    def __init__(self, key, iv, segment_size = 1):
+    def __init__(self, key, iv, segment_size=1):
         if segment_size == 0:
             segment_size = 1
 
@@ -495,7 +495,7 @@ class AESModeOfOperationOFB(AESStreamModeOfOperation):
 
     name = "Output Feedback (OFB)"
 
-    def __init__(self, key, iv = None):
+    def __init__(self, key, iv=None):
         if iv is None:
             self._last_precipherblock = [ 0 ] * 16
         elif len(iv) != 16:
@@ -555,7 +555,7 @@ class AESModeOfOperationCTR(AESStreamModeOfOperation):
 
     name = "Counter (CTR)"
 
-    def __init__(self, key, counter = None):
+    def __init__(self, key, counter=None):
         AESBlockModeOfOperation.__init__(self, key)
 
         if counter is None:
@@ -583,9 +583,9 @@ class AESModeOfOperationCTR(AESStreamModeOfOperation):
 
 # Simple lookup table for each mode
 AESModesOfOperation = dict(
-    ctr = AESModeOfOperationCTR,
-    cbc = AESModeOfOperationCBC,
-    cfb = AESModeOfOperationCFB,
-    ecb = AESModeOfOperationECB,
-    ofb = AESModeOfOperationOFB,
+    ctr=AESModeOfOperationCTR,
+    cbc=AESModeOfOperationCBC,
+    cfb=AESModeOfOperationCFB,
+    ecb=AESModeOfOperationECB,
+    ofb=AESModeOfOperationOFB,
 )

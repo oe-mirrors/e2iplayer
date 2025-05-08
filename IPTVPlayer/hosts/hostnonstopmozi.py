@@ -54,7 +54,7 @@ class NonstopMozi(CBaseHostClass):
         self.basicurl = 'https://nonstopmozi.com/online-filmek'
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}        
     
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
@@ -230,7 +230,7 @@ class NonstopMozi(CBaseHostClass):
             params = {'category': 'explore_item', 'title':title, 'url':url, 'icon':icon}
             self.addDir(params)
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG("Nonstopmozi - handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get("name", '')

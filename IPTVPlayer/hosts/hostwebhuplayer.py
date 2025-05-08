@@ -36,8 +36,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.webhuplayer_dir = ConfigText(default = "/hdd/webhuplayer", fixed_size = False)
-config.plugins.iptvplayer.webmedia_dir = ConfigText(default = "/hdd/webmedia", fixed_size = False)
+config.plugins.iptvplayer.webhuplayer_dir = ConfigText(default="/hdd/webhuplayer", fixed_size=False)
+config.plugins.iptvplayer.webmedia_dir = ConfigText(default="/hdd/webmedia", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -193,23 +193,23 @@ class webhuplayer(CBaseHostClass):
                     if mkdirs(self.path_webh):
                         if self._copy(destination_fo + '/*', self.path_webh):
                             msg = 'Sikerült a webmedia könyvtár frissítése/telepítése!'
-                            self.sessionEx.open(MessageBox, msg, type = MessageBox.TYPE_INFO, timeout = 10 )
+                            self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=10 )
                             self.list_tartalom()
                         else:
                            msg = 'A frissítés/telepítés sikertelen! (Másolási hiba)'
-                           self.sessionEx.open(MessageBox, msg, type = MessageBox.TYPE_ERROR, timeout = 20 )
+                           self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
                     else:
                        msg = 'A frissítés/telepítés sikertelen! (A webmedia könyvtára nem hozható létre)'
-                       self.sessionEx.open(MessageBox, msg, type = MessageBox.TYPE_ERROR, timeout = 20 )
+                       self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
                 else:
                    msg = 'A frissítés/telepítés sikertelen! (Hiba a belső könyvtár kicsomagolása során)'
-                   self.sessionEx.open(MessageBox, msg, type = MessageBox.TYPE_ERROR, timeout = 20 )
+                   self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
             else:
                msg = 'A frissítés/telepítés sikertelen! (Hiba a kicsomagolás során)'
-               self.sessionEx.open(MessageBox, msg, type = MessageBox.TYPE_ERROR, timeout = 20 )
+               self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
         else:
            msg = 'A frissítés/telepítés sikertelen! (Letöltési hiba, próbáld újra.)'
-           self.sessionEx.open(MessageBox, msg, type = MessageBox.TYPE_ERROR, timeout = 20 )
+           self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
         if fileExists(destination):
             rm(destination) 
             rmtree(destination_dir, ignore_errors=True)
@@ -274,7 +274,7 @@ class webhuplayer(CBaseHostClass):
                 videoUrls.append({'name':'direct link', 'url':uri})
         return videoUrls
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         try:
             CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
             name     = self.currItem.get("name", '')

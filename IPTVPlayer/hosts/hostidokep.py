@@ -35,7 +35,7 @@ class Idokep(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
@@ -398,7 +398,7 @@ class Idokep(CBaseHostClass):
             params = {'title':i, 'icon': icon , 'url': links[names.index(i)]}
             self.addPicture(params)
     
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Idokep.handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

@@ -205,7 +205,7 @@ class MindigTVHU(CBaseHostClass):
             return self.DEFAULT_ICON_URL
         return url
 
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(url)
@@ -548,7 +548,7 @@ class MindigTVHU(CBaseHostClass):
             self.getChannels()
 
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
