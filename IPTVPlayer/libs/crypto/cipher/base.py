@@ -69,7 +69,7 @@ class BlockCipher:
             self.bytesToDecrypt += cipherText  # append to any bytes from prior decrypt
         except Exception:  # most likely py3 would go there
             self.bytesToDecrypt += cipherText.encode('utf-8', 'ignore')  # append to any bytes from prior decrypt
-        
+
         numBlocks, numExtraBytes = divmod(len(self.bytesToDecrypt), self.blockSize)
         if more == None:  # no more calls to decrypt, should have all the data
             if numExtraBytes != 0:

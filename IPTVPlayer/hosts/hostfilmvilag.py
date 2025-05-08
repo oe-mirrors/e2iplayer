@@ -6,7 +6,7 @@ HOST_VERSION = "1.5"
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass 
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -26,27 +26,27 @@ import urllib
 
 
 def gettytul():
-    return 'https://onlinefilmvilag2.eu/' 
+    return 'https://onlinefilmvilag2.eu/'
 
 
 class FilmVilag(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'filmvilag', 'cookie': 'filmvilag.cookie'})
         self.MAIN_URL = 'https://onlinefilmvilag2.eu/'
         self.DEFAULT_ICON_URL = "https://onlinefilmvilag2.eu/img/portrait.1.1668130502.jpeg"
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("FilmVilag.getLinksForVideo")
         if "https://onlinefilmvilag2.eu" in cItem['url']:
-            sts, data = self.getPage(cItem['url'])                        
+            sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
             url = self.cm.ph.getDataBeetwenMarkers(data, '<p><iframe', '</iframe>', False)[1]
@@ -60,9 +60,9 @@ class FilmVilag(CBaseHostClass):
         videoUrls = []
         uri = urlparser.decorateParamsFromUrl(url)
         protocol = uri.meta.get('iptv_proto', '')
-        
+
         printDBG("PROTOCOL [%s] " % protocol)
-        
+
         urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
             retTab = self.up.getVideoLinkExt(uri)
@@ -80,16 +80,16 @@ class FilmVilag(CBaseHostClass):
             else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
+
     def _uriIsValid(self, url):
         return '://' in url
-    
-    def listMainMenu(self, cItem):   
+
+    def listMainMenu(self, cItem):
         printDBG('FilmVilag.listMainMenu')
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Kategóriák'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
                         {'category': 'search', 'title': _('Keresés'), 'search_item': True, 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
                         {'category': 'search_history', 'title': _('Keresési előzmények'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}]
-        self.listsTab(MAIN_CAT_TAB, cItem) 
+        self.listsTab(MAIN_CAT_TAB, cItem)
 
     def getdesc(self, iurl):
         sts, data = self.getPage(iurl)
@@ -121,7 +121,7 @@ class FilmVilag(CBaseHostClass):
         return (ogdesc + "\n" + desc)
 
     def listItems(self, cItem):
-        printDBG('FilmVilag.listItems')              
+        printDBG('FilmVilag.listItems')
         sts, data = self.getPage(cItem['url'] + "." + str(cItem['page']) + "/")
         if not sts:
             return
@@ -138,7 +138,7 @@ class FilmVilag(CBaseHostClass):
         if "Következő &raquo" in data:
             params = {'category': 'list_filters', 'title': "Következő oldal", 'icon': None, 'url': lurl, 'page': page + 1}
             self.addDir(params)
-    
+
     def upp(self, item):
         item = item.upper()
         if "á" in item:
@@ -160,11 +160,11 @@ class FilmVilag(CBaseHostClass):
         if "í" in item:
             item = item.replace("í", "Í")
         return item
-	
+
     def listFilters(self, cItem):
         printDBG('FilmVilag.listFilters')
-        utl = 'https://onlinefilmvilag2.eu/'               
-        sts, data = self.getPage(utl)                    
+        utl = 'https://onlinefilmvilag2.eu/'
+        sts, data = self.getPage(utl)
         if not sts:
             return
         cat = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="">', '</li>', False)
@@ -180,10 +180,10 @@ class FilmVilag(CBaseHostClass):
                     page = 1
                     params = {'category': 'list_filters', 'title': title, 'icon': icon, 'url': url, 'page': page}
                     self.addDir(params)
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('FilmVilag.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -192,10 +192,10 @@ class FilmVilag(CBaseHostClass):
         icon = self.currItem.get("icon", '')
         url = self.currItem.get("url", '')
         desc = self.currItem.get("desc", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
-        
+
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
@@ -204,15 +204,15 @@ class FilmVilag(CBaseHostClass):
             self.listItems(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
-            self.listSearchResult(cItem, searchPattern, searchType)			
+            cItem.update({'search_item': False, 'name': 'category'})
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmVilag.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = 'http://katalogus.eoldal.hu/'
@@ -242,4 +242,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, FilmVilag(), True, [])
-    

@@ -22,14 +22,14 @@ import os
 ###################################################
 
 ###################################################
-# E2 GUI COMPONENTS 
+# E2 GUI COMPONENTS
 ###################################################
 from Screens.MessageBox import MessageBox
 ###################################################
 
 
 def gettytul():
-    return 'https://onlinestream.live/' 
+    return 'https://onlinestream.live/'
 
 
 class OnlineStream(CBaseHostClass):
@@ -37,17 +37,17 @@ class OnlineStream(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'onlinestream', 'cookie': 'onlinestream.cookie'})
         self.MAIN_URL = 'https://onlinestream.live/'
         self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/onlinestream.jpg"
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-    
+
     def _uriIsValid(self, url):
         return '://' in url
-    
+
     def _isPicture(self, url):
         def _checkExtension(url):
             return url.endswith(".jpeg") or url.endswith(".jpg") or url.endswith(".png") or url.endswith(".mjpg") or url.endswith(".cgi")
@@ -58,7 +58,7 @@ class OnlineStream(CBaseHostClass):
         if _checkExtension(url.split('?')[0]):
             return True
         return False
-    
+
     def getLinksForVideo(self, cItem):
         printDBG('OnlineStream.getLinksForVideo')
         sts, data = self.cm.getPage(cItem['url'])
@@ -103,8 +103,8 @@ class OnlineStream(CBaseHostClass):
            else:
               videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
-    def listMainMenu(self, cItem):   
+
+    def listMainMenu(self, cItem):
         printDBG('OnlineStream.listMainMenu')
         page = 1
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Sugárzó rádiók listázása'), 'url': 'https://onlinestream.live/main.cgi?search=&broad=1&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
@@ -113,10 +113,10 @@ class OnlineStream(CBaseHostClass):
                         {'category': 'list_items', 'title': _('Webkamerák listázása'), 'url': 'https://onlinestream.live/?search=&broad=4&feat=&chtype=&server=&format=&sort=&fp=20&p=', 'page': page},
                         {'category': 'search', 'title': _('Keresés'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Keresési előzmények')}]
-        self.listsTab(MAIN_CAT_TAB, cItem) 
-        
+        self.listsTab(MAIN_CAT_TAB, cItem)
+
     def listItems(self, cItem):
-        printDBG('OnlineStream.listItems')    
+        printDBG('OnlineStream.listItems')
         sts, dat = self.getPage(cItem['url'] + str(cItem['page']))
         if not sts:
             return
@@ -177,9 +177,9 @@ class OnlineStream(CBaseHostClass):
         if '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-right">' not in dat:
             params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': cItem['url'], 'page': page + 1}
             self.addDir(params)
-    
+
     def exploreItems(self, cItem):
-        printDBG('OnlineStream.exploreItems')    
+        printDBG('OnlineStream.exploreItems')
         sts, dat = self.getPage(cItem['url'])
         if not sts:
             return
@@ -214,10 +214,10 @@ class OnlineStream(CBaseHostClass):
                 self.addAudio(params)
             else:
                self.addVideo(params)
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('OnlineStream.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -226,10 +226,10 @@ class OnlineStream(CBaseHostClass):
         icon = self.currItem.get("icon", '')
         url = self.currItem.get("url", '')
         desc = self.currItem.get("desc", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
-        
+
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
@@ -238,15 +238,15 @@ class OnlineStream(CBaseHostClass):
             self.exploreItems(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
-            self.listSearchResult(cItem, searchPattern, searchType)			
+            cItem.update({'search_item': False, 'name': 'category'})
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmVilag.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchPattern = searchPattern.replace(" ", "+")
@@ -260,4 +260,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, OnlineStream(), True, [])
-    

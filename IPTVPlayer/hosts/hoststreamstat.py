@@ -23,7 +23,7 @@ import os
 
 
 def gettytul():
-    return 'http://streamstat.net/' 
+    return 'http://streamstat.net/'
 
 
 class StreamStat(CBaseHostClass):
@@ -31,17 +31,17 @@ class StreamStat(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'streamstat', 'cookie': 'streamstat.cookie'})
         self.MAIN_URL = 'http://streamstat.net/'
         self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/streamstat.jpg"
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-    
+
     def _uriIsValid(self, url):
         return '://' in url
-    
+
     def getLinksForVideo(self, cItem):
         printDBG('StreamStat.getLinksForVideo')
         sts, data = self.cm.getPage(cItem['url'])
@@ -69,8 +69,8 @@ class StreamStat(CBaseHostClass):
            else:
               videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
-    def listMainMenu(self, cItem):   
+
+    def listMainMenu(self, cItem):
         printDBG('StreamStat.listMainMenu')
         page = 1
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('YP connected'), 'url': 'http://streamstat.net/main.cgi?mode=yp&search=&page=1&fp=50', 'page': page},
@@ -80,8 +80,8 @@ class StreamStat(CBaseHostClass):
                         {'category': 'list_items', 'title': _('Random selection'), 'url': 'http://streamstat.net/main.cgi?mode=&search=&page=1&fp=50', 'page': page},
                         {'category': 'search', 'title': _('Keresés'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Keresési előzmények')}]
-        self.listsTab(MAIN_CAT_TAB, cItem) 
-        
+        self.listsTab(MAIN_CAT_TAB, cItem)
+
     def listItems(self, cItem):
         printDBG('StreamStat.listItems')
         page = self.cm.ph.getDataBeetwenMarkers(cItem['url'], 'page=', '&', False)[1]
@@ -127,10 +127,10 @@ class StreamStat(CBaseHostClass):
         if '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-right"' not in dat:
             params = {'category': 'list_items', 'title': "Next page", 'icon': None, 'url': cItem['url'], 'page': page + 1}
             self.addDir(params)
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('StreamStat.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -139,25 +139,25 @@ class StreamStat(CBaseHostClass):
         icon = self.currItem.get("icon", '')
         url = self.currItem.get("url", '')
         desc = self.currItem.get("desc", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
-        
+
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
-            self.listSearchResult(cItem, searchPattern, searchType)			
+            cItem.update({'search_item': False, 'name': 'category'})
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("StreamStat.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchPattern = searchPattern.replace(" ", "+")
@@ -171,4 +171,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, StreamStat(), True, [])
-    

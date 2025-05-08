@@ -71,25 +71,25 @@ class m4sport(CBaseHostClass):
         self.aid_ki = ''
         self.eblf = 'https://www.m4sport.hu/bajnokokligaja'
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
     def getFullIconUrl(self, url):
         url = url.replace('&amp;', '&')
         return CBaseHostClass.getFullIconUrl(self, url)
-        
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        
+
         def _getFullUrl(url):
             if self.cm.isValidUrl(url):
                 return url
             else:
                 return urllib.parse.urljoin(baseUrl, url)
-            
+
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
-        
+
     def listMainMenu(self, cItem):
         try:
             if self.btps != '' and self.brdr != '':
@@ -201,7 +201,7 @@ class m4sport(CBaseHostClass):
             self.addVideo(params)
         except Exception:
             printExc()
-            
+
     def listMainItems(self, cItem):
         try:
             tabID = cItem.get('tab_id', '')
@@ -222,7 +222,7 @@ class m4sport(CBaseHostClass):
                 self.dfml('1025', '4', 7)
         except Exception:
             printExc()
-            
+
     def dfml(self, cid='', bid='', mig=0):
         try:
             if cid != '' and bid != '' and mig > 0:
@@ -241,7 +241,7 @@ class m4sport(CBaseHostClass):
                         title = item['title']
                         date_str = item['date'][0:10].replace('.', '/').strip()
                         url = item['link']
-                        rstr = 'video/' + date_str + '/' 
+                        rstr = 'video/' + date_str + '/'
                         url2 = url.replace('videok//', rstr)
                         desc = item['date'] + '-i adás\n\nA műsor tartalma:\n' + title
                         icon = item['image']
@@ -249,7 +249,7 @@ class m4sport(CBaseHostClass):
                         self.addVideo(params)
         except Exception:
             printExc()
-            
+
     def dfbl(self, pu=''):
         ln = 0
         try:
@@ -300,7 +300,7 @@ class m4sport(CBaseHostClass):
             return
         except Exception:
             printExc()
-        
+
     def getLinksForVideo(self, cItem):
         a = 0
         url = cItem['url']
@@ -345,25 +345,25 @@ class m4sport(CBaseHostClass):
              else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-        
+
     def kvlva(self, pu, opcio):
         bu = ''
         try:
             if pu != '':
                 sts, data = self.getPage(pu)
-                if not sts: 
+                if not sts:
                     return ''
                 tn = self.cm.ph.getDataBeetwenMarkers(data, 'token":"', '","', False)[1]
                 if len(tn) == 0:
                     tn = self.cm.ph.getDataBeetwenMarkers(data, 'streamId":"', '","', False)[1]
-                    if len(tn) == 0: 
+                    if len(tn) == 0:
                         return ''
                 if not opcio:
                     tul = "https://player.mediaklikk.hu/playernew/player.php?video=" + tn
                 if opcio:
                     tul = "https://player.mediaklikk.hu/playernew/player.php?video=" + opcio + "&noflash=yes&osfamily=Android&osversion=7.0&browsername=Chrome%20Mobile&browserversion=&title=&contentid=" + opcio + "&embedded=1"
                 sts, data = self.getPage(tul)
-                if not sts: 
+                if not sts:
                     return ''
                 printDBG(data)
                 vl = self.cm.ph.getAllItemsBeetwenMarkers(data, 'file": "', '",', False)
@@ -374,14 +374,14 @@ class m4sport(CBaseHostClass):
                 vl = vl.replace('\/', '/')
                 if vl.startswith('/'):
                     vl = 'https:' + vl
-                if not self.cm.isValidUrl(vl): 
+                if not self.cm.isValidUrl(vl):
                     return ''
                 if len(vl) != '':
                     bu = vl
         except Exception:
             return ''
         return bu
-        
+
     def malvadst(self, i_md='', i_hgk='', i_mpu=''):
         uhe = 'http://www.figyelmeztetes.hu/hely/sata/vansatdb.php'
         pstd = {'md': i_md, 'hgk': i_hgk, 'mpu': i_mpu}
@@ -412,7 +412,7 @@ class m4sport(CBaseHostClass):
             return t_s
         except Exception:
             return t_s
-        
+
     def susn(self, i_md='', i_hgk='', i_mpu=''):
         uhe = 'http://www.figyelmeztetes.hu/hely/sata/vansatdb.php'
         pstd = {'md': i_md, 'hgk': i_hgk, 'mpu': i_mpu, 'hv': self.vivn, 'orv': self.porv, 'bts': self.pbtp}
@@ -422,7 +422,7 @@ class m4sport(CBaseHostClass):
             return
         except Exception:
             return
-            
+
     def gits(self):
         bv = '-'
         tt = []
@@ -441,7 +441,7 @@ class m4sport(CBaseHostClass):
             return bv
         except:
             return '-'
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         try:
             printDBG("listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -450,7 +450,7 @@ class m4sport(CBaseHostClass):
         except Exception:
             return
         return
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get("name", '')
@@ -464,7 +464,7 @@ class m4sport(CBaseHostClass):
             self.listSecondItems(self.currItem)
         elif category in ['search', 'search_next_page']:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == 'search_history':
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))

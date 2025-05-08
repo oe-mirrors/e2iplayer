@@ -69,10 +69,10 @@ class webhuplayer(CBaseHostClass):
         self.path_full = normpath(self.path_webh + self.list_tart)
         self.path_aktual = normpath(self.path_webh + self.aktual)
         self.defaultParams = {'header': self.HEADER, 'use_cookie': False, 'load_cookie': False, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE}
-        
+
     def _uriIsValid(self, url):
         return '://' in url
-    
+
     def list_tartalom(self, cItem):
         approve = self.check()
         if approve:
@@ -88,8 +88,8 @@ class webhuplayer(CBaseHostClass):
                 desc = actual[2]
                 params.append({'category': 'list_items', 'title': title, 'url': url, 'desc': desc, 'icon': None})
             data.close()
-            self.listsTab(params, cItem) 
-    
+            self.listsTab(params, cItem)
+
     def listItems(self, cItem):
         printDBG('listItems')
         printDBG(cItem)
@@ -130,7 +130,7 @@ class webhuplayer(CBaseHostClass):
                         else:
                            self.addVideo(params)
                 data.close()
-    
+
     def list_ujdonsag(self):
         data = open(self.path_aktual, 'r')
         list = data.read()
@@ -150,7 +150,7 @@ class webhuplayer(CBaseHostClass):
             else:
                self.addVideo(params)
         data.close()
-    
+
     def check(self):
         if os.path.isdir(self.path_webh):
             sts, data = self.cm.getPage('https://github.com/e2iplayerhosts/webmedia3/blob/master/README.md', self.defaultParams)
@@ -165,7 +165,7 @@ class webhuplayer(CBaseHostClass):
         else:
            self._update()
            return False
-    
+
     def getversion(self):
         data = open(self.path_aktual, 'r')
         version = data.readline()
@@ -173,7 +173,7 @@ class webhuplayer(CBaseHostClass):
         printDBG(version)
         data.close()
         return version
-    
+
     def _update(self):
         msg = 'Telepítés/frissítés szükséges. A telepítés/frissítés helye:  ' + config.plugins.iptvplayer.webmedia_dir.value.replace('/', ' / ').strip() + '\nFolytathatom?'
         msg += '\n\nHa máshova szeretnéd, akkor itt nem - utána KÉK gomb, majd az Oldal beállításai.\nOtt az adatok megadása, s utána a ZÖLD gomb (Mentés) megnyomása!'
@@ -214,10 +214,10 @@ class webhuplayer(CBaseHostClass):
            msg = 'A frissítés/telepítés sikertelen! (Letöltési hiba, próbáld újra.)'
            self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20)
         if fileExists(destination):
-            rm(destination) 
+            rm(destination)
             rmtree(destination_dir, ignore_errors=True)
-            rmtree(destination_fo, ignore_errors=True)    
-    
+            rmtree(destination_fo, ignore_errors=True)
+
     def download(self, url, destination, tries=2, delay=3):
         vissza = False
         try:
@@ -231,7 +231,7 @@ class webhuplayer(CBaseHostClass):
         except Exception:
             return False
         return vissza
-    
+
     def _mycall(self, cmd):
         command = cmd
         back_state = -1
@@ -240,7 +240,7 @@ class webhuplayer(CBaseHostClass):
         except Exception:
             return -1
         return back_state
-    
+
     def _copy(self, filename, dest_dir):
         sikerult = False
         try:
@@ -250,15 +250,15 @@ class webhuplayer(CBaseHostClass):
         except Exception:
             return False
         return sikerult
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("Webhuplayer.getLinksForVideo")
         videoUrls = []
         uri = urlparser.decorateParamsFromUrl(cItem['url'])
         protocol = uri.meta.get('iptv_proto', '')
-        
+
         printDBG("PROTOCOL [%s] " % protocol)
-        
+
         urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
             retTab = self.up.getVideoLinkExt(uri)
@@ -276,7 +276,7 @@ class webhuplayer(CBaseHostClass):
             else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         try:
             CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -289,7 +289,7 @@ class webhuplayer(CBaseHostClass):
                 self.listItems(self.currItem)
             elif category in ['search', 'search_next_page']:
                 cItem = dict(self.currItem)
-                cItem.update({'search_item': False, 'name': 'category'}) 
+                cItem.update({'search_item': False, 'name': 'category'})
                 self.listSearchResult(cItem, searchPattern, searchType)
             elif category == 'search_history':
                 self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
@@ -304,4 +304,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, webhuplayer(), True, [])
-    

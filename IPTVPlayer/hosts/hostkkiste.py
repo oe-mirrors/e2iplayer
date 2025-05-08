@@ -128,9 +128,9 @@ class KKisteAG(CBaseHostClass):
             if url.startswith('//'):
                 url = "https:" + url
             title = urlparse(url).netloc.split('.')[0]
-            if 'mdy48tn97' in title.lower(): 
+            if 'mdy48tn97' in title.lower():
                 title = title.replace('mdy48tn97', 'Mixdrop').lower()
-            
+
             linksTab.append({'name': title.capitalize(), 'url': url, 'need_resolve': 1})
         if linksTab:
             cItem['url'] = linksTab

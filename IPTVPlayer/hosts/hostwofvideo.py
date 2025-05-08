@@ -6,7 +6,7 @@ HOST_VERSION = "1.4"
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass 
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -19,26 +19,26 @@ import base64
 
 
 def gettytul():
-    return 'https://wofvideo.pro/' 
+    return 'https://wofvideo.pro/'
 
 
 class WOFvideo(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'wofvideo', 'cookie': 'wofvideo.cookie'})
         self.MAIN_URL = 'https://wofvideo.pro/'
         self.DEFAULT_ICON_URL = "https://wofvideo.pro/wp-content/uploads/2022/12/cropped-cropped-cropped-cropped-logo-light-1-1.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("Wofvideo.getLinksForVideo")
-        sts, data = self.getPage(cItem['url'])                        
+        sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         encodedurl = self.cm.ph.getDataBeetwenMarkers(data, '<li data-video-source="', ',', False)[1]
@@ -52,9 +52,9 @@ class WOFvideo(CBaseHostClass):
         videoUrls = []
         uri = urlparser.decorateParamsFromUrl(url)
         protocol = uri.meta.get('iptv_proto', '')
-        
+
         printDBG("PROTOCOL [%s] " % protocol)
-        
+
         urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
             retTab = self.up.getVideoLinkExt(uri)
@@ -72,16 +72,16 @@ class WOFvideo(CBaseHostClass):
             else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
+
     def _uriIsValid(self, url):
         return '://' in url
-    
-    def listMainMenu(self, cItem):   
+
+    def listMainMenu(self, cItem):
         printDBG('Wofvideo.listMainMenu')
         MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Kategóriák')},
                         {'category': 'search', 'title': _('Keresés'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Keresési előzmények')}]
-        self.listsTab(MAIN_CAT_TAB, cItem) 
+        self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):
         printDBG('Wofvideo.listItems')
@@ -122,10 +122,10 @@ class WOFvideo(CBaseHostClass):
             next = self.cm.ph.getSearchGroups(next, '''href=['"]([^"^']+?)['"].+NEXT''', 1, True)[0]
             params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': next}
             self.addDir(params)
-    
+
     def listFilters(self, cItem):
-        printDBG('Wofvideo.listFilters')              
-        sts, data = self.getPage(self.MAIN_URL)                    
+        printDBG('Wofvideo.listFilters')
+        sts, data = self.getPage(self.MAIN_URL)
         if not sts:
             return
         cat = self.cm.ph.getDataBeetwenMarkers(data, '<section id="categories-3"', '</section>', False)[1]
@@ -147,7 +147,7 @@ class WOFvideo(CBaseHostClass):
                 self.addDir(params)
             if stop:
                 stop = 0
-    
+
     def listSeasons(self, cItem):
         sts, data = self.getPage(cItem['url'])
         desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="description">', '/p>', False)[1]
@@ -167,7 +167,7 @@ class WOFvideo(CBaseHostClass):
            title = "1.évad"
            params = {'category': 'list_episodes', 'title': title, 'icon': cItem['icon'], 'url': link, 'desc': desc}
            self.addDir(params)
-    
+
     def listEpisodes(self, cItem):
         sts, data = self.getPage(cItem['url'])
         episodes = self.cm.ph.getDataBeetwenMarkers(data, cItem['title'], '</ul>', False)[1]
@@ -181,10 +181,10 @@ class WOFvideo(CBaseHostClass):
             title = self.cm.ph.getDataBeetwenMarkers(i, '<strong>', '</strong>', False)[1]
             params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
             self.addVideo(params)
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Wofvideo.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -192,10 +192,10 @@ class WOFvideo(CBaseHostClass):
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')
         url = self.currItem.get("url", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
-        
+
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
@@ -208,19 +208,19 @@ class WOFvideo(CBaseHostClass):
             self.listEpisodes(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
-            self.listSearchResult(cItem, searchPattern, searchType)			
+            cItem.update({'search_item': False, 'name': 'category'})
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Wofvideo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = 'https://wofvideo.pro/?s=' + searchPattern.replace(" ", "+")
-        cItem['url'] = url           
+        cItem['url'] = url
         self.listItems(cItem)
 
 
@@ -228,4 +228,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, WOFvideo(), True, [])
-    

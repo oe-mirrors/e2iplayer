@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Blindspot - 2023.08.19. 
+# Blindspot - 2023.08.19.
 ###################################################
 HOST_VERSION = "2.4"
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass 
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -25,7 +25,7 @@ import urllib
 ###################################################
 
 ###################################################
-# E2 GUI COMPONENTS 
+# E2 GUI COMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 from Screens.MessageBox import MessageBox
@@ -33,28 +33,28 @@ from Screens.MessageBox import MessageBox
 
 
 def gettytul():
-    return 'https://dmdamedia.hu' 
+    return 'https://dmdamedia.hu'
 
 
 class Dmdamedia(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'dmdamedia', 'cookie': 'dmdamedia.cookie'})
         self.MAIN_URL = 'https://dmdamedia.hu'
         self.DEFAULT_ICON_URL = "https://dmdamedia.hu/kepek/dmdamediahu.png"
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.filmurl = "https://dmdamedia.hu/filmek"
         self.sorurl = "https://dmdamedia.hu/sorozatok"
-        
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("Dmdamedia.getLinksForVideo")
-        sts, data = self.getPage(cItem['url'])        
+        sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         share = self.cm.ph.getDataBeetwenMarkers(data, '<div class="beagyazas">', '</iframe>', False)[1]
@@ -65,9 +65,9 @@ class Dmdamedia(CBaseHostClass):
         videoUrls = []
         uri = urlparser.decorateParamsFromUrl(share)
         protocol = uri.meta.get('iptv_proto', '')
-        
+
         printDBG("PROTOCOL [%s] " % protocol)
-        
+
         urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
             retTab = self.up.getVideoLinkExt(uri)
@@ -85,19 +85,19 @@ class Dmdamedia(CBaseHostClass):
             else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
+
     def _uriIsValid(self, url):
         return '://' in url
-    
-    def listMainMenu(self, cItem):   
+
+    def listMainMenu(self, cItem):
         printDBG('Dmdamedia.listMainMenu')
         MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Kategóriák'), 'desc': 'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/'},
                         {'category': 'list_items', 'title': _('Filmek'), 'desc': 'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/filmek', 'page': '1'},
                         {'category': 'list_items', 'title': _('Sorozatok'), 'desc': 'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/sorozatok', 'page': '1'},
                         {'category': 'search', 'title': _('Keresés'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Keresési előzmények')}]
-        self.listsTab(MAIN_CAT_TAB, cItem) 
-    
+        self.listsTab(MAIN_CAT_TAB, cItem)
+
     def listFilters(self, cItem):
         sts, data = self.getPage(cItem['url'])
         if not sts:
@@ -112,10 +112,10 @@ class Dmdamedia(CBaseHostClass):
             url = url.replace(url[url.index("=") + 1:-1], quot)
             params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url, 'page': '1'}
             self.addDir(params)
-    
+
     def listItems(self, cItem):
         printDBG('Dmdamedia.listItems')
-        url = cItem['url']    
+        url = cItem['url']
         page = cItem['page']
         params = False
         if 'search' in url:
@@ -123,7 +123,7 @@ class Dmdamedia(CBaseHostClass):
             if not sts:
                 return
         else:
-            sts, data = self.getPage(url)                
+            sts, data = self.getPage(url)
             if not sts:
                 return
         found = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="sorozatok">', '</a></div>')
@@ -158,8 +158,8 @@ class Dmdamedia(CBaseHostClass):
                 self.addDir(params)
         else:
            msg = 'A megadott kategóriában sajnos nem találtam semmit. Próbáld újra később.'
-           ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO)        
-    
+           ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO)
+
     def exploreItemsF(self, cItem, title, icon):
         printDBG('Dmdamedia.exploreItems - Filmek')
         self.cim = title
@@ -178,10 +178,10 @@ class Dmdamedia(CBaseHostClass):
                 url = cItem['url'] + i
                 params = {'title': title, 'icon': icon, 'url': url, 'desc': cItem['desc']}
                 self.addVideo(params)
-    
+
     def exploreItemsS(self, cItem, title, icon):
         printDBG('Dmdamedia.exploreItems - Sorozatok')
-        url = 'https://dmdamedia.hu/' 
+        url = 'https://dmdamedia.hu/'
         self.realtitle = title
         sts, data = self.getPage(cItem['url'])
         if not sts:
@@ -203,7 +203,7 @@ class Dmdamedia(CBaseHostClass):
                     desc = self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>', False)[1]
                     params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': newurl, 'desc': desc}
                     self.addDir(params)
-    
+
     def exploreItemsE(self, cItem, title, icon):
         printDBG('Dmdamedia.exploreItems - Epizódok')
         url = cItem['url']
@@ -230,10 +230,10 @@ class Dmdamedia(CBaseHostClass):
                 desc = cItem['desc']
             params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': newurl, 'desc': desc}
             self.addDir(params)
-	
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Dmdamedia.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -241,7 +241,7 @@ class Dmdamedia(CBaseHostClass):
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')
         url = self.currItem.get("url", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
         if name == None:
@@ -257,18 +257,18 @@ class Dmdamedia(CBaseHostClass):
         elif category == 'explore_item' and "rész" in title:
             self.exploreItemsF(self.currItem, title, icon)
         elif category == 'explore_item':
-            self.exploreItemsS(self.currItem, title, icon)			
+            self.exploreItemsS(self.currItem, title, icon)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
-            self.listSearchResult(cItem, searchPattern, searchType)			
+            cItem.update({'search_item': False, 'name': 'category'})
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Dmdamedia.listSearchResult - Filmek cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = 'https://dmdamedia.hu/search'
@@ -276,10 +276,9 @@ class Dmdamedia(CBaseHostClass):
         cItem['url'] = url
         cItem['page'] = '1'
         self.listItems(cItem)
-        
+
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Dmdamedia(), True, [])
-    

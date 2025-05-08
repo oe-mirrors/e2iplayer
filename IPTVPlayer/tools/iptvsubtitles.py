@@ -148,7 +148,7 @@ class IPTVSubtitlesHandler:
         subsText = []
         tmp = currTimeMS / self.CAPACITY
         tmpList = self.pailsOfAtoms.get(tmp, [])
-        
+
         if len(tmpList) == 0:
             return [], self.getSubtitlesFromSubAtoms(currTimeMS)
         else:
@@ -159,7 +159,7 @@ class IPTVSubtitlesHandler:
                 item = self.subAtoms[idx]
                 if currTimeMS >= item['start'] and currTimeMS < item['end']:
                     validAtomsIdexes.append(idx)
-                
+
             marker = validAtomsIdexes
             printDBG("OpenSubOrg.getSubtitles marker[%s] prevMarker[%s] %.1fs" % (marker, prevMarker, currTimeMS / 1000.0))
             if prevMarker != marker:
@@ -207,7 +207,7 @@ class IPTVSubtitlesHandler:
             else:
                 printDBG("IPTVSubtitlesHandler._saveToCache subtitles list empty - nothing to save")
                 removeCacheFile(orgFilePath)  # just in case we have garbage cached
-                    
+
         except Exception:
             printExc('EXCEPTION in OpenSubOrg._saveToCache')
 

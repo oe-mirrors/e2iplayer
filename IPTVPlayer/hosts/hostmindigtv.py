@@ -55,7 +55,7 @@ def _addepg(epgs, id, item):
         epgs.append({"id": id, "items": [item]})
         x = len(epgs) - 1
     return x
-   
+
 
 def _getMindigChannelDefs():
     return [
@@ -200,7 +200,7 @@ class MindigTVHU(CBaseHostClass):
         self.tvChannels = None
         self.radioChannels = None
         self.videos = None
-        
+
         self.tvEpgs = None
         self.radioEpgs = None
 
@@ -235,7 +235,7 @@ class MindigTVHU(CBaseHostClass):
                     d = d - timedelta(1)
                     sts, prevdata = self.cm.getPage(self.MINDIG_EPG_URL.format(id, d.strftime('%Y%m%d')), self.mindigiParams)
                     if not sts:
-                        raise Exception("Can't get EPG page")             
+                        raise Exception("Can't get EPG page")
                     prevdata = json_loads(data)
                     prevdata = data["data"]["channels"][id]
                     prevdata.extend(data)
@@ -244,7 +244,7 @@ class MindigTVHU(CBaseHostClass):
 
             if len(data) == 0:
                 return
-            
+
             i = next((i for i in data if i["timestamp"] <= t and i["next_timestamp"] > t), None)
             if not i:
                 return
@@ -387,7 +387,7 @@ class MindigTVHU(CBaseHostClass):
                     continue
                 title = v[2]
                 url = "D" + v[0]
-                               
+
                 chdef = next((chdef for chdef in chdefs if chdef["title"] == title), None)
                 if chdef:
                     title = chdef.get("rename", title)
@@ -399,7 +399,7 @@ class MindigTVHU(CBaseHostClass):
 
                 if next((x for x in radioChannels if x["title"] == title), None):
                     continue
-                   
+
                 params = {'good_for_fav': True, "title": title, "desc": "", "order": order, "url": url}
                 if icon:
                     params['icon'] = icon
@@ -425,10 +425,10 @@ class MindigTVHU(CBaseHostClass):
                     continue
                 params = {'good_for_fav': True, "title": title, "desc": "", "url": "D" + url}
                 videos.append(params)
-                
+
         except Exception:
             printExc()
-            
+
         if len(tvChannels) > 0:
             tvChannels.sort(key=lambda k: (k["order"], k["title"]))
             self.tvChannels.extend(tvChannels)
@@ -438,10 +438,10 @@ class MindigTVHU(CBaseHostClass):
             self.radioChannels.extend(radioChannels)
 
         self.videos = videos
-        
+
         self.tvEpgs = tvEpgs
         self.radioEpgs = radioEpgs
-        
+
     def listMainMenu(self, cItem):
         printDBG("MindigTVHU.listMainMenu")
         MAIN_CAT_TAB = [{"category": "list_tvChannels", "title": _("TV channels")},
@@ -492,7 +492,7 @@ class MindigTVHU(CBaseHostClass):
                     if i.endswith('.aac'):
                         videoUrls.append({'name': "aac", 'url': i})
                 return videoUrls
-            
+
             link = cItem.get("link")
             expires = cItem.get("expires", 0)
             if not link or expires < time.time():
@@ -509,11 +509,11 @@ class MindigTVHU(CBaseHostClass):
                     if not sts:
                         return videoUrls
                 else:
-                    return videoUrls 
-                expires = int(time.time()) + 21600 
+                    return videoUrls
+                expires = int(time.time()) + 21600
                 cItem["link"] = link
                 cItem["expires"] = expires
-                   
+
             uri = urlparser.decorateParamsFromUrl(link)
             protocol = uri.meta.get('iptv_proto', '')
             printDBG("PROTOCOL [%s] " % protocol)
@@ -564,11 +564,11 @@ class MindigTVHU(CBaseHostClass):
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_tvChannels':
-            self.listTVChannels(self.currItem) 
+            self.listTVChannels(self.currItem)
         elif category == 'list_radioChannels':
-            self.listRadioChannels(self.currItem) 
+            self.listRadioChannels(self.currItem)
         elif category == 'list_videos':
-            self.listVideos(self.currItem) 
+            self.listVideos(self.currItem)
         else:
             printExc()
 
@@ -582,4 +582,3 @@ class IPTVHost(CHostBase):
 
     def withArticleContent(self, cItem):
         return cItem['type'] == 'video' or cItem['type'] == "audio"
-

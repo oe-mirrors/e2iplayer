@@ -19,7 +19,7 @@ class UnCaptchaReCaptcha:
         else:
             title = _("MyE2i reCAPTCHA solution")
         retArg = self.sessionEx.waitForFinishOpen(UnCaptchaReCaptchaMyE2iWidget, title=title, sitekey=sitekey, referer=referer, captchaType=captchaType)
-        
+
         if retArg is not None and len(retArg) and retArg[0]:
             answer = retArg[0]
         return answer

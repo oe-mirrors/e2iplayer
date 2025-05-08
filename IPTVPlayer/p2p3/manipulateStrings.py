@@ -4,7 +4,7 @@
 # just change:
 #   from urlib import
 # to:
-#   from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import 
+#   from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import
 #
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 

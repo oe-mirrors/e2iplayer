@@ -735,11 +735,11 @@ class MindiGoHU(CBaseHostClass):
     def listM3Videos(self, cItem):
         printDBG("MindiGoHU.listM3Videos")
         # get M3 videos
-        url = cItem["url"] 
-        kind = url[:1] 
+        url = cItem["url"]
+        kind = url[:1]
 
         try:
-            if kind == "P": 
+            if kind == "P":
                 url = self.M3_PROGRAM_URL
             elif kind == "D":
                 url = self.M3_DAILYPROGRAM_URL
@@ -755,7 +755,7 @@ class MindiGoHU(CBaseHostClass):
 
                 if next((x for x in self.currList if x["url"] == url), None):
                     continue
-                
+
                 title = i["title"]
                 subtitle = i["subtitle"]
                 if subtitle:
@@ -899,8 +899,8 @@ class MindiGoHU(CBaseHostClass):
         self.tryTologin()
         try:
             if url[:1] == "Y":
-                return self.up.getVideoLinkExt(url[1:])  
-            
+                return self.up.getVideoLinkExt(url[1:])
+
             if url == "mm3" or url[:1] == "v":
                 if os.path.exists(self.COOKIE_FILE):
                     token = self.cm.getCookieItem(self.COOKIE_FILE, "MtvaArchivumToken")
@@ -912,10 +912,10 @@ class MindiGoHU(CBaseHostClass):
                         return []
                     token = self.cm.getCookieItem(self.COOKIE_FILE, "MtvaArchivumToken")
                 if url == "mm3":
-                    url = self.M3_STREAM_URL + "live" 
+                    url = self.M3_STREAM_URL + "live"
                 else:
-                    url = self.M3_STREAM_URL + url[1:] 
-     
+                    url = self.M3_STREAM_URL + url[1:]
+
                 sts, data = self.getPage(url)
                 if not sts:
                     return []
@@ -923,7 +923,7 @@ class MindiGoHU(CBaseHostClass):
                 data = data.replace('\/', '/').replace("HLS.smil", "nodrm.smil")
                 uri = strwithmeta(data, {'User-Agent': self.HEADER['User-Agent']})
                 return getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
-                
+
             if url[:1] == "D":
                 if not url.endswith(".m3u"):
                     data = url[1:].split(",")
@@ -1195,4 +1195,3 @@ class IPTVHost(CHostBase):
 ##            != 'video' and cItem['category'] not in ['list_playlist','list_episodes','list_subcategories']):
 ##            return False
 ##        return True
-

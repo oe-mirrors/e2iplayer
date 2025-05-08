@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# 2023.02.14. 
+# 2023.02.14.
 ###################################################
 HOST_VERSION = "1.2"
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass 
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -27,26 +27,26 @@ import urllib
 
 
 def gettytul():
-    return 'https://plusz.club' 
+    return 'https://plusz.club'
 
 
 class FilmPapa(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'filmpapa', 'cookie': 'filmpapa.cookie'})
         self.MAIN_URL = 'https://plusz.club'
         self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/filmpapalogo.png"
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("Filmpapa.getLinksForVideo")
-        sts, data = self.getPage(cItem['url'])                        
+        sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         url = self.cm.ph.getSearchGroups(data, '''iframe.src=['"]([^"^']+?)['"]''', 1, True)[0]
@@ -55,9 +55,9 @@ class FilmPapa(CBaseHostClass):
         videoUrls = []
         uri = urlparser.decorateParamsFromUrl(url)
         protocol = uri.meta.get('iptv_proto', '')
-        
+
         printDBG("PROTOCOL [%s] " % protocol)
-        
+
         urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
             retTab = self.up.getVideoLinkExt(uri)
@@ -75,20 +75,20 @@ class FilmPapa(CBaseHostClass):
             else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
+
     def _uriIsValid(self, url):
         return '://' in url
-    
-    def listMainMenu(self, cItem):   
+
+    def listMainMenu(self, cItem):
         printDBG('FilmPapa.listMainMenu')
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Kategóriák')},
                         {'category': 'search', 'title': _('Keresés'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Keresési előzmények')}]
-        self.listsTab(MAIN_CAT_TAB, cItem) 
+        self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):
-        printDBG('FilmPapa.listItems')              
-        sts, data = self.getPage(cItem['url'] + "page/" + str(cItem['page']))		
+        printDBG('FilmPapa.listItems')
+        sts, data = self.getPage(cItem['url'] + "page/" + str(cItem['page']))
         if not sts:
             return
         lurl = cItem['url']
@@ -118,11 +118,11 @@ class FilmPapa(CBaseHostClass):
         if max != "There were no results found.":
             params = {'category': 'list_filters', 'title': "Következő oldal", 'icon': None, 'url': lurl, 'page': page + 1}
             self.addDir(params)
-    
+
     def listFilters(self, cItem):
         printDBG('FilmPapa.listFilters')
-        url = 'https://plusz.club'               
-        sts, data = self.getPage(url)                    
+        url = 'https://plusz.club'
+        sts, data = self.getPage(url)
         if not sts:
             return
         cat = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="cat-item cat-item', '</li>')
@@ -136,10 +136,10 @@ class FilmPapa(CBaseHostClass):
             url = self.cm.ph.getDataBeetwenMarkers(c, '<a href="', '"', False)[1]
             params = {'category': 'list_filters', 'title': title, 'icon': icon, 'url': url, 'page': page}
             self.addDir(params)
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('FilmPapa.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -147,10 +147,10 @@ class FilmPapa(CBaseHostClass):
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')
         url = self.currItem.get("url", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
-        
+
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
@@ -159,20 +159,20 @@ class FilmPapa(CBaseHostClass):
             self.listItems(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
-            self.listSearchResult(cItem, searchPattern, searchType)			
+            cItem.update({'search_item': False, 'name': 'category'})
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmPapa.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = 'https://plusz.club/?s=' + searchPattern
-        cItem['url'] = url           
-        sts, data = self.getPage(cItem['url'])		
+        cItem['url'] = url
+        sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         movies = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="movie-box">', '</small></span>									</div>')
@@ -202,4 +202,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, FilmPapa(), True, [])
-    

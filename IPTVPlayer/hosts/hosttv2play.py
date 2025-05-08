@@ -6,7 +6,7 @@ HOST_VERSION = "1.0"
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass 
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -24,23 +24,23 @@ from urllib.parse import unquote
 
 
 def gettytul():
-    return 'https://tv2play.hu/' 
+    return 'https://tv2play.hu/'
 
 
 class TV2Play(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'tv2play', 'cookie': 'tv2play.cookie'})
         self.MAIN_URL = 'https://tv2play.hu/'
         self.DEFAULT_ICON_URL = "http://www.blindspot.nhely.hu/Thumbnails/tv2play.png"
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("TV2Play.getLinksForVideo")
         sts, r = self.getPage("%s/search/%s" % ("https://tv2play.hu/api", cItem['slug']))
@@ -57,15 +57,15 @@ class TV2Play(CBaseHostClass):
         json_data = json_loads(r)
         m3u_url = json_data['bitrates']['hls']
         m3u_url = re.sub('^//', 'https://', m3u_url)
-        sts, data = self.getPage(m3u_url)                        
+        sts, data = self.getPage(m3u_url)
         if not sts:
             return
         videoUrls = []
         uri = urlparser.decorateParamsFromUrl(m3u_url)
         protocol = uri.meta.get('iptv_proto', '')
-        
+
         printDBG("PROTOCOL [%s] " % protocol)
-        
+
         urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
             retTab = self.up.getVideoLinkExt(uri)
@@ -83,17 +83,17 @@ class TV2Play(CBaseHostClass):
             else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
+
     def _uriIsValid(self, url):
         return '://' in url
-    
-    def listMainMenu(self, cItem):   
+
+    def listMainMenu(self, cItem):
         printDBG('TV2Play.listMainMenu')
         MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Műsorok'), 'page': 0},
                         {'category': 'search', 'title': _('Keresés'), 'search_item': True, 'desc': 'A kereső fejlesztés alatt áll.'},
                         {'category': 'search_history', 'title': _('Keresési előzmények'), 'desc': 'A kereső fejlesztés alatt áll.'}]
-        self.listsTab(MAIN_CAT_TAB, cItem) 
-    
+        self.listsTab(MAIN_CAT_TAB, cItem)
+
     def exploreItems(self, cItem):
         printDBG('TV2Play.exploreItems')
         sts, data = self.getPage(cItem['url'])
@@ -124,7 +124,7 @@ class TV2Play(CBaseHostClass):
                 data = json_loads(r)
                 params = {'category': 'ribbons', 'title': unquote(data['title']), 'id': data['id'], 'icon': thumb if thumb != '' else None, 'desc': plot, 'page': 0}
                 self.addDir(params)
-    
+
     def apiRibbons(self, cItem):
         printDBG('TV2Play.apiRibbons')
         sts, data = self.getPage("%s/ribbons/%s/%s" % ("https://tv2play.hu/api", cItem['id'], cItem['page']))
@@ -149,11 +149,11 @@ class TV2Play(CBaseHostClass):
                     dirType = 'episodes'
                 if 'MOVIE' in card['cardType']:
                     dirType = 'movies'
-                params = {'title': title, 
-                            'slug': card["slug"], 
+                params = {'title': title,
+                            'slug': card["slug"],
                             'icon': thumb,
                             'desc': plot}
-                self.addVideo(params) 
+                self.addVideo(params)
         url = "%s/ribbons/%s/%d" % ("https://tv2play.hu/api", cItem['id'], int(cItem['page']) + 1)
         sts, r = self.getPage(url)
         if r != '':
@@ -161,8 +161,8 @@ class TV2Play(CBaseHostClass):
             self.addDir(params)
 
     def listItems(self, cItem):
-        printDBG('TV2Play.listItems')              
-        sts, data = self.getPage(cItem['url'])	
+        printDBG('TV2Play.listItems')
+        sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         data = json_loads(data)
@@ -172,23 +172,23 @@ class TV2Play(CBaseHostClass):
             else:
                 plot = ""
             for season in data["seasonNumbers"]:
-                params = {'category': 'explore_items', 
-                                'title': "%s. évad" % season, 
+                params = {'category': 'explore_items',
+                                'title': "%s. évad" % season,
                                 'url': cItem['url'],
-                                'season': season, 
-                                'icon': None, 
+                                'season': season,
+                                'icon': None,
                                 'desc': plot}
                 self.addDir(params)
         else:
             cItem.update({'category': 'explore_items', 'season': 0})
             self.exploreItems(cItem)
-        
+
     def listFilters(self, cItem):
         printDBG('TV2Play.listFilters')
         pageoffset = cItem['page']
         length = 0
         items = []
-        url = 'https://tv2-bud.gravityrd-services.com/grrec-tv2-war/JSServlet4?rd=0,TV2_W_CONTENT_LISTING,800,[*platform:web;*domain:tv2play;*currentContent:SHOW;*country:HU;*userAge:16;*pagingOffset:%d],[displayType;channel;title;itemId;duration;isExtra;ageLimit;showId;genre;availableFrom;director;isExclusive;lead;url;contentType;seriesTitle;availableUntil;showSlug;videoType;series;availableEpisode;imageUrl;totalEpisode;category;playerId;currentSeasonNumber;currentEpisodeNumber;part;isPremium]' % pageoffset               
+        url = 'https://tv2-bud.gravityrd-services.com/grrec-tv2-war/JSServlet4?rd=0,TV2_W_CONTENT_LISTING,800,[*platform:web;*domain:tv2play;*currentContent:SHOW;*country:HU;*userAge:16;*pagingOffset:%d],[displayType;channel;title;itemId;duration;isExtra;ageLimit;showId;genre;availableFrom;director;isExclusive;lead;url;contentType;seriesTitle;availableUntil;showSlug;videoType;series;availableEpisode;imageUrl;totalEpisode;category;playerId;currentSeasonNumber;currentEpisodeNumber;part;isPremium]' % pageoffset
         sts, data = self.getPage(url)
         data = re.search(r'(.*)var data = (.*)};(.*)', data, re.S)
         data = json_loads('%s}' % data.group(2))
@@ -213,10 +213,10 @@ class TV2Play(CBaseHostClass):
         if cItem['page'] != length:
             params = {'title': "Következő oldal", 'icon': None, 'page': cItem['page'], 'category': 'list_filters'}
             self.addDir(params)
-        
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('TV2Play.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -224,10 +224,10 @@ class TV2Play(CBaseHostClass):
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')
         url = self.currItem.get("url", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
-        
+
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_filters':
@@ -240,15 +240,15 @@ class TV2Play(CBaseHostClass):
             self.apiRibbons(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
-            self.listSearchResult(cItem, searchPattern, searchType)			
+            cItem.update({'search_item': False, 'name': 'category'})
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TV2Play.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
 
@@ -257,4 +257,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, TV2Play(), True, [])
-    

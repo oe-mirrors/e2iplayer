@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # 2022.07.01. Blindspot
 ###################################################
-HOST_VERSION = "1.0" 
+HOST_VERSION = "1.0"
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass 
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -26,23 +26,23 @@ import urllib
 
 
 def gettytul():
-    return 'https://filmtar.online/' 
+    return 'https://filmtar.online/'
 
 
 class FilmTar(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'filmtar', 'cookie': 'filmtar.cookie'})
         self.MAIN_URL = 'https://filmtar.online/'
         self.DEFAULT_ICON_URL = "http://www.blindspot.nhely.hu/Thumbnails/filmtar.png"
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("FilmTar.getLinksForVideo")
         videoUrls = []
@@ -51,9 +51,9 @@ class FilmTar(CBaseHostClass):
             url = urllib.unquote(url)
         uri = urlparser.decorateParamsFromUrl(url)
         protocol = uri.meta.get('iptv_proto', '')
-        
+
         printDBG("PROTOCOL [%s] " % protocol)
-        
+
         urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
             retTab = self.up.getVideoLinkExt(uri)
@@ -71,20 +71,20 @@ class FilmTar(CBaseHostClass):
             else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
+
     def _uriIsValid(self, url):
         return '://' in url
-    
-    def listMainMenu(self, cItem):   
+
+    def listMainMenu(self, cItem):
         printDBG('FilmTar.listMainMenu')
         MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Film Kategóriák'), 'url': 'https://filmtar.online/filmek/kategoriak'},
                         {'category': 'list_filters', 'title': _('Sorozat Kategóriák'), 'url': 'https://filmtar.online/sorozatok/kategoriak'},
                         {'category': 'search', 'title': _('Keresés'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Keresési előzmények')}]
-        self.listsTab(MAIN_CAT_TAB, cItem) 
+        self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):
-        printDBG('FilmTar.listItems')              
+        printDBG('FilmTar.listItems')
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
@@ -106,9 +106,9 @@ class FilmTar(CBaseHostClass):
             next = self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)['"] rel="next"''', 1, True)[0]
             params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': next}
             self.addDir(params)
-    
+
     def listFilm(self, cItem):
-        printDBG('FilmTar.listFilm')              
+        printDBG('FilmTar.listFilm')
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
@@ -130,9 +130,9 @@ class FilmTar(CBaseHostClass):
                 url = self.cm.ph.getDataBeetwenMarkers(l, 'href="', '"', False)[1]
                 params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
                 self.addVideo(params)
-    
+
     def listSeries(self, cItem):
-        printDBG('FilmTar.listSeries')              
+        printDBG('FilmTar.listSeries')
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
@@ -150,9 +150,9 @@ class FilmTar(CBaseHostClass):
             url = self.cm.ph.getDataBeetwenMarkers(i, 'href="', '"', False)[1]
             params = {'category': 'list_episodes', 'title': title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
             self.addDir(params)
-    
+
     def listEpisodes(self, cItem):
-        printDBG('FilmTar.listEpisodes')              
+        printDBG('FilmTar.listEpisodes')
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
@@ -171,7 +171,7 @@ class FilmTar(CBaseHostClass):
            title = "1.epizód"
            params = {'category': 'list_links', 'title': title, 'icon': cItem['icon'], 'url': cItem['url'], 'desc': cItem['desc']}
            self.addDir(params)
-    
+
     def listLinks(self, cItem):
         printDBG('FilmTar.listLinks')
         sts, data = self.getPage(cItem['url'])
@@ -204,9 +204,9 @@ class FilmTar(CBaseHostClass):
            url = self.cm.ph.getDataBeetwenMarkers(links, 'href="', '"', False)[1]
            params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
            self.addVideo(params)
-    
+
     def listFilters(self, cItem):
-        printDBG('FilmTar.listFilters')        
+        printDBG('FilmTar.listFilters')
         url2 = cItem['url'].replace('/kategoriak', '')
         sts, data = self.getPage(url2)
         title = "Összes " + self.cm.ph.getDataBeetwenMarkers(data, '<h1 class="section-title mb-3 mb-md-0">', '<span class="font-weight-normal pl-4">', False)[1].strip()
@@ -214,7 +214,7 @@ class FilmTar(CBaseHostClass):
         desc = self.cm.ph.getDataBeetwenMarkers(data, '<span class="font-weight-normal pl-4">', '</span>', False)[1].strip() + "\n" + "Rendezve feltöltés ideje szerint"
         params = {'category': 'list_items', 'title': title, 'icon': icon, 'url': url2, 'desc': desc}
         self.addDir(params)
-        sts, data = self.getPage(cItem['url'])                    
+        sts, data = self.getPage(cItem['url'])
         if not sts:
             return
         cat = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="col mb-4">', '</div>', False)
@@ -225,10 +225,10 @@ class FilmTar(CBaseHostClass):
                 desc = self.cm.ph.getDataBeetwenMarkers(c, '<span class="font-weight-normal opacity--7">', '</span>', False)[1]
                 params = {'category': 'list_items', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
                 self.addDir(params)
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('FilmTar.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -237,10 +237,10 @@ class FilmTar(CBaseHostClass):
         icon = self.currItem.get("icon", '')
         url = self.currItem.get("url", '')
         desc = self.currItem.get("desc", '')
-        
+
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
-        
+
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
@@ -257,15 +257,15 @@ class FilmTar(CBaseHostClass):
             self.listLinks(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
-            self.listSearchResult(cItem, searchPattern, searchType)			
+            cItem.update({'search_item': False, 'name': 'category'})
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmTar.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = 'https://filmtar.online/filmek?kulcsszo=' + searchPattern + '&miben=cim'
@@ -274,10 +274,9 @@ class FilmTar(CBaseHostClass):
         self.listItems(cItem)
         cItem['url'] = url2
         self.listItems(cItem)
-        
+
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, FilmTar(), True, [])
-    
