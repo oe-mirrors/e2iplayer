@@ -54,7 +54,7 @@ class m4sport(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0'
         self.HEADER = {'User-Agent':self.USER_AGENT, 'DNT':'1', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate, br'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://www.m4sport.hu/videok/'
         self.DEFAULT_ICON_URL = 'http://www.figyelmeztetes.hu/m4sport_logo.png'
         self.ICON_URL_ELO = 'http://www.figyelmeztetes.hu/m4sport_logo_elo.png'
@@ -150,7 +150,7 @@ class m4sport(CBaseHostClass):
                             {'category': 'list_main', 'title': 'UEFA BAJNOKOK LIGÁJA FOCI', 'tab_id': 'blfoci', 'desc': msg_blfoci, 'icon':self.ICON_URL_FOCI},
                             {'category': 'list_main', 'title': 'SPORTHÍREK', 'tab_id': 'sporthirek', 'desc': msg_sporthirek, 'icon':self.DEFAULT_ICON_URL},
                             {'category': 'list_main', 'title': 'SPORTKÖZVETÍTÉSEK', 'tab_id': 'kozvetitesek', 'desc': msg_kozvetitesek, 'icon':self.DEFAULT_ICON_URL},
-                            {'category': 'search', 'title': 'Keresés', 'search_item': True, 'tab_id': 'kereses', 'desc': msg_kereses, 'icon':self.DEFAULT_ICON_URL },
+                            {'category': 'search', 'title': 'Keresés', 'search_item': True, 'tab_id': 'kereses', 'desc': msg_kereses, 'icon':self.DEFAULT_ICON_URL},
                             {'category': 'search_history', 'title': 'Keresés az előzmények közt', 'tab_id': 'keres_elozmeny', 'desc': msg_keres_elozmeny, 'icon':self.DEFAULT_ICON_URL}
                            ]
             self.listsTab(MAIN_CAT_TAB, cItem)
@@ -454,7 +454,7 @@ class m4sport(CBaseHostClass):
         category = self.currItem.get("category", '')
         self.currList = []
         if name == None:
-            self.listMainMenu( {'name':'category'} )
+            self.listMainMenu({'name':'category'})
         elif category == 'list_main':
             self.listMainItems(self.currItem)
         elif category == 'list_second':

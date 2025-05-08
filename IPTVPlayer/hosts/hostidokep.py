@@ -49,9 +49,9 @@ class Idokep(CBaseHostClass):
         
         printDBG("PROTOCOL [%s] " % protocol)
         
-        urlSupport = self.up.checkHostSupport( uri )
+        urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt( uri )
+            retTab = self.up.getVideoLinkExt(uri)
             videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
             if protocol == 'm3u8':
@@ -172,7 +172,7 @@ class Idokep(CBaseHostClass):
                        if not sts:
                            vid = vid.replace("https://www.idokep.eu", "https://www.idokep.hu")
                 if not vid.endswith(".webm"):
-                    params = {'title':cItem['title'], 'icon': None , 'url': vid}
+                    params = {'title':cItem['title'], 'icon': None, 'url': vid}
                     self.addVideo(params)
             if cItem['picture']:
                 link = self.cm.ph.getDataBeetwenMarkers(data, '<img name', '">', False)[1]
@@ -218,7 +218,7 @@ class Idokep(CBaseHostClass):
                       if not sts:
                           vid = vid.replace("https://www.idokep.eu", "https://www.idokep.hu")
                if not vid.endswith(".webm"):
-                   params = {'title':cItem['title'], 'icon': None , 'url': vid}
+                   params = {'title':cItem['title'], 'icon': None, 'url': vid}
                    self.addVideo(params)
            if cItem['picture']:
                if cItem['title'] == "Min/max":
@@ -266,10 +266,10 @@ class Idokep(CBaseHostClass):
                 url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
                 if "https:" not in url and title == 'Magyarország':
                     url = 'https://www.idokep.eu/terkep/hu600/idokep2.jpg'
-                    params = {'title':title, 'icon': url , 'url': url}
+                    params = {'title':title, 'icon': url, 'url': url}
                     self.addPicture(params)
                 else:
-                   params = {'category':'list_items','title':title, 'icon': None , 'url': url, 'picture': picture}
+                   params = {'category':'list_items','title':title, 'icon': None, 'url': url, 'picture': picture}
                    self.addDir(params)
         elif cItem['title'] == "Hőtérkép":
             menu = self.cm.ph.getDataBeetwenMarkers(data, 'Hőtérkép</a>', '</ul>', False)[1]
@@ -283,10 +283,10 @@ class Idokep(CBaseHostClass):
                 url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
                 if "https:" not in url and title == 'Magyarország':
                     url = 'https://www.idokep.eu/terkep/hu970/hoterkep3.jpg'
-                    params = {'title':title, 'icon': url , 'url': url}
+                    params = {'title':title, 'icon': url, 'url': url}
                     self.addPicture(params)
                 else:
-                   params = {'category':'list_items','title':title, 'icon': None , 'url': url, 'picture': picture}
+                   params = {'category':'list_items','title':title, 'icon': None, 'url': url, 'picture': picture}
                    self.addDir(params)
         elif cItem['title'] == "Felhőkép":
             menu = self.cm.ph.getDataBeetwenMarkers(data, 'Felhőkép</a>', '</ul>', False)[1]
@@ -296,7 +296,7 @@ class Idokep(CBaseHostClass):
                 url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
                 if "https:" not in url:
                     url = "https://www.idokep.hu" + url
-                params = {'category':'list_items','title':title, 'icon': None , 'url': url, 'picture': picture}
+                params = {'category':'list_items','title':title, 'icon': None, 'url': url, 'picture': picture}
                 self.addDir(params)
         elif cItem['title'] == "Radar":
             menu = self.cm.ph.getDataBeetwenMarkers(data, 'Radar</a>', '</ul>', False)[1]
@@ -315,7 +315,7 @@ class Idokep(CBaseHostClass):
                     category = 'list_riaszt'
                 if "https:" not in url:
                     url = "https://www.idokep.hu" + url
-                params = {'category':category,'title':title, 'icon': None , 'url': url, 'picture': picture}
+                params = {'category':category,'title':title, 'icon': None, 'url': url, 'picture': picture}
                 picture = True
                 self.addDir(params)
         elif cItem['title'] == "Kamerák":
@@ -326,13 +326,13 @@ class Idokep(CBaseHostClass):
                 url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
                 if "https:" not in url:
                     url = "https://www.idokep.hu" + url
-                params = {'category':'list_kamera','title':title, 'icon': None , 'url': url, 'picture': picture}
+                params = {'category':'list_kamera','title':title, 'icon': None, 'url': url, 'picture': picture}
                 self.addDir(params)
         elif cItem['title'] == "Térképek":
             url = 'https://www.idokep.hu/radar/sat-hu.mp4'
             title = 'Magyarország műholdképe'
             icon = 'https://www.idokep.hu/radar/sat-hu.jpg'
-            params = {'title':title, 'icon': icon , 'url': url}
+            params = {'title':title, 'icon': icon, 'url': url}
             self.addVideo(params)
             menu = self.cm.ph.getDataBeetwenMarkers(data, 'Térképek</a>', '</ul>', False)[1]
             list = self.cm.ph.getAllItemsBeetwenMarkers(menu, '<li>', '</li>', False)
@@ -344,7 +344,7 @@ class Idokep(CBaseHostClass):
                 url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
                 if "https:" not in url:
                     url = "https://www.idokep.hu" + url
-                params = {'category':'list_items','title':title, 'icon': None , 'url': url, 'picture': picture}
+                params = {'category':'list_items','title':title, 'icon': None, 'url': url, 'picture': picture}
                 self.addDir(params)
         
     def listKamera(self, cItem):
@@ -365,7 +365,7 @@ class Idokep(CBaseHostClass):
             title = self.cm.ph.getDataBeetwenMarkers(i, '<span>', '</span>', False)[1]
             if title == "":
                 title = "Nincs elérhető cím."
-            params = {'category':'picture_camera','title':title, 'icon': icon , 'url': url}
+            params = {'category':'picture_camera','title':title, 'icon': icon, 'url': url}
             self.addDir(params)
     
     def listPics(self, cItem):
@@ -395,7 +395,7 @@ class Idokep(CBaseHostClass):
             icon = links[names.index(i)]
             if "14" in i:
                 icon = 'http://2.eumet.hu/Eumethu_logo.jpg'
-            params = {'title':i, 'icon': icon , 'url': links[names.index(i)]}
+            params = {'title':i, 'icon': icon, 'url': links[names.index(i)]}
             self.addPicture(params)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -410,7 +410,7 @@ class Idokep(CBaseHostClass):
         url = self.currItem.get("url", '')
         desc = self.currItem.get("desc", '')
         
-        printDBG( "handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon) )
+        printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
         
         if name == None:

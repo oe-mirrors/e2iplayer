@@ -193,23 +193,23 @@ class webhuplayer(CBaseHostClass):
                     if mkdirs(self.path_webh):
                         if self._copy(destination_fo + '/*', self.path_webh):
                             msg = 'Sikerült a webmedia könyvtár frissítése/telepítése!'
-                            self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=10 )
+                            self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=10)
                             self.list_tartalom()
                         else:
                            msg = 'A frissítés/telepítés sikertelen! (Másolási hiba)'
-                           self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
+                           self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20)
                     else:
                        msg = 'A frissítés/telepítés sikertelen! (A webmedia könyvtára nem hozható létre)'
-                       self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
+                       self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20)
                 else:
                    msg = 'A frissítés/telepítés sikertelen! (Hiba a belső könyvtár kicsomagolása során)'
-                   self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
+                   self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20)
             else:
                msg = 'A frissítés/telepítés sikertelen! (Hiba a kicsomagolás során)'
-               self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
+               self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20)
         else:
            msg = 'A frissítés/telepítés sikertelen! (Letöltési hiba, próbáld újra.)'
-           self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
+           self.sessionEx.open(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20)
         if fileExists(destination):
             rm(destination) 
             rmtree(destination_dir, ignore_errors=True)
@@ -256,9 +256,9 @@ class webhuplayer(CBaseHostClass):
         
         printDBG("PROTOCOL [%s] " % protocol)
         
-        urlSupport = self.up.checkHostSupport( uri )
+        urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt( uri )
+            retTab = self.up.getVideoLinkExt(uri)
             videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
             if protocol == 'm3u8':

@@ -38,10 +38,10 @@ class WOFvideo(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])                        
         if not sts:
             return
-        encodedurl = self.cm.ph.getDataBeetwenMarkers(data,'<li data-video-source="',',', False) [1]
-        url = self.cm.ph.getDataBeetwenMarkers(encodedurl,'encrypt:',"'", False) [1]
+        encodedurl = self.cm.ph.getDataBeetwenMarkers(data,'<li data-video-source="',',', False)[1]
+        url = self.cm.ph.getDataBeetwenMarkers(encodedurl,'encrypt:',"'", False)[1]
         if not url:
-            url = self.cm.ph.getDataBeetwenMarkers(encodedurl,"source:'","'", False) [1]
+            url = self.cm.ph.getDataBeetwenMarkers(encodedurl,"source:'","'", False)[1]
         else:
             url = url.encode('ascii')
             url = base64.b64decode(url)
@@ -52,9 +52,9 @@ class WOFvideo(CBaseHostClass):
         
         printDBG("PROTOCOL [%s] " % protocol)
         
-        urlSupport = self.up.checkHostSupport( uri )
+        urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt( uri )
+            retTab = self.up.getVideoLinkExt(uri)
             videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
             if protocol == 'm3u8':
@@ -106,7 +106,7 @@ class WOFvideo(CBaseHostClass):
                     url = url.replace("038;", "")
                 else:
                     stop = 1
-            params = {'category':'seasons','title':title, 'icon': icon , 'url': url, 'desc': desc}
+            params = {'category':'seasons','title':title, 'icon': icon, 'url': url, 'desc': desc}
             if not stop:
                 if 'series' in url:
                     self.addDir(params)
@@ -129,7 +129,7 @@ class WOFvideo(CBaseHostClass):
         cat = self.cm.ph.getAllItemsBeetwenMarkers(cat,'<a href=','/a>', False)
         stop = 0
         for c in cat:
-            title = self.cm.ph.getDataBeetwenMarkers(c, '">','<', False) [1]
+            title = self.cm.ph.getDataBeetwenMarkers(c, '">','<', False)[1]
             if "&amp;" in title:
                 title = title.replace("&amp;", "&")
             if "&nbsp;" in title:
@@ -138,9 +138,9 @@ class WOFvideo(CBaseHostClass):
                 stop = 1
             page = 1
             icon = None
-            url = self.cm.ph.getDataBeetwenMarkers(c, '"','">', False) [1]
+            url = self.cm.ph.getDataBeetwenMarkers(c, '"','">', False)[1]
             if not stop:
-                params = {'category':'list_items','title':title, 'icon': icon , 'url': url, 'page': page}
+                params = {'category':'list_items','title':title, 'icon': icon, 'url': url, 'page': page}
                 self.addDir(params)
             if stop:
                 stop = 0
@@ -158,11 +158,11 @@ class WOFvideo(CBaseHostClass):
             seasons = self.cm.ph.getAllItemsBeetwenMarkers(seasons, '<ul>', '</ul>', False)
             for i in seasons:
                 title = str(seasons.index(i)+1) + ".évad"
-                params = {'category':'list_episodes','title':title, 'icon': cItem['icon'] , 'url': link, 'desc': desc}
+                params = {'category':'list_episodes','title':title, 'icon': cItem['icon'], 'url': link, 'desc': desc}
                 self.addDir(params)
         else:
            title = "1.évad"
-           params = {'category':'list_episodes','title':title, 'icon': cItem['icon'] , 'url': link, 'desc': desc}
+           params = {'category':'list_episodes','title':title, 'icon': cItem['icon'], 'url': link, 'desc': desc}
            self.addDir(params)
     
     def listEpisodes(self, cItem):
@@ -176,7 +176,7 @@ class WOFvideo(CBaseHostClass):
             url = url.replace("#", "")
             url = url.replace("038;", "")
             title = self.cm.ph.getDataBeetwenMarkers(i, '<strong>', '</strong>', False)[1]
-            params = {'title':title, 'icon': cItem['icon'] , 'url': url, 'desc': cItem['desc']}
+            params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
             self.addVideo(params)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -190,7 +190,7 @@ class WOFvideo(CBaseHostClass):
         icon = self.currItem.get("icon", '')
         url = self.currItem.get("url", '')
         
-        printDBG( "handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon) )
+        printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
         
         if name == None:

@@ -43,7 +43,7 @@ class IPTVSubtitlesHandler:
         self.subAtoms = []
         self.pailsOfAtoms = {}
         self.CAPACITY = 10 * 1000 # 10s
-        printDBG("IPTVSubtitlesHandler.__init__ self.CAPACITY = %s" % self.CAPACITY )
+        printDBG("IPTVSubtitlesHandler.__init__ self.CAPACITY = %s" % self.CAPACITY)
 
     def _srtClearText(self, text):
         return re.sub('<[^>]*>', '', text)
@@ -225,7 +225,7 @@ class IPTVSubtitlesHandler:
                 self.pailsOfAtoms[tmp] = [idx]
             elif idx not in self.pailsOfAtoms[tmp]:
                 self.pailsOfAtoms[tmp].append(idx)
-        self.pailsOfAtoms = dict(sorted( self.pailsOfAtoms.items()))
+        self.pailsOfAtoms = dict(sorted(self.pailsOfAtoms.items()))
         if 1: #for tests
             with codecs.open('/tmp/pailsOfAtoms.json', 'w', 'utf-8') as fp:
                   fp.write(json.dumps(self.pailsOfAtoms))

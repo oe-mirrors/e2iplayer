@@ -96,7 +96,7 @@ class UPDATEHOSTS(CBaseHostClass):
                ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=6)
         else:
           msg = 'Nem szükséges frissítés.'
-          ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.INFO, timeout=10 )
+          ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.INFO, timeout=10)
     
     def getversion(self):
         data = open(self.versionpath, 'r')
@@ -121,7 +121,7 @@ class UPDATEHOSTS(CBaseHostClass):
                         pass
                     else:
                        msg = 'A frissítés sikertelen! (Másolási hiba)'
-                       self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
+                       self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20)
                        return
                 if command == "install":
                     rmtree(self.playerpath)
@@ -130,15 +130,15 @@ class UPDATEHOSTS(CBaseHostClass):
                         pass
                     else:
                        msg = 'A frissítés sikertelen! (Másolási hiba)'
-                       self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
+                       self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20)
                        return
             else:
                msg = 'A frissítés sikertelen! (Hiba a kicsomagolás során)'
-               self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
+               self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20)
                return
         else:
            msg = 'A frissítés sikertelen! (Letöltési hiba, próbáld újra.)'
-           self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20 )
+           self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_ERROR, timeout=20)
            return
         rmtree(dir)
         return

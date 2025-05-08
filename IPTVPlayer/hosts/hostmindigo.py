@@ -70,94 +70,94 @@ def _addepg(epgs,id,item):
 
 def _getChannelDefs():
     return [
-        {"title": "M1 HD", "icon": "m1hd.jpg", "group" : "main", "selres": True },
-        {"title": "M2 HD", "icon": "m2hd.jpg", "group" : "child", "selres": True },
-        {"title": "Duna HD", "icon": "dunahd.jpg", "group" : "main", "selres": True },
-        {"title": "M4 Sport HD", "icon": "m4sport.jpg", "group" : "sport", "selres": True },
-        {"title": "M5 HD", "icon": "m5.jpg", "group" : "main", "selres": True },
-        {"title": "Duna World", "icon": "dunaworld.jpg", "group" : "main" },
-        {"title": "Izaura TV", "icon": "izauratv.jpg", "group" : "movie", "selres": True },
-        {"title": "Zenebutik", "icon": "zenebutik.jpg", "group" : "music", "selres": True },
-        {"title": "FEM3", "icon": "fem3.jpg", "group" : "movie", "selres": True },
-        {"title": "Hír TV", "icon": "hirtv.jpg", "group" : "news", "selres": True },
-        {"title": "Balaton TV", "icon": "balatontv.jpg", "group" : "regional", "selres": True },
-        {"title": "JUCE-Smile", "icon": "smileofachild.jpg", "group" : "child", "selres": True },
-        {"title": "Fix TV", "icon": "fixtv.jpg", "group" : "regional", "selres": True },
-        {"title": "D1 TV", "icon": "d1tv.jpg", "group" : "regional", "selres": True },
-        {"title": "Bonum TV", "icon": "bonumtv.jpg", "group" : "religious", "selres": True },
-        {"title": "Heti TV", "icon": "hetitv.jpg", "group" : "regional", "selres": True },
-        {"title": "PAX TV", "icon": "paxtv.jpg", "group" : "religious", "selres": True },
-        {"title": "Film+", "icon": "filmplus-velirajeha.jpg", "group" : "movie", "selres": True },
-        {"title": "Cool", "icon": "cool-wapadedrud.jpg", "group" : "movie", "selres": True },
-        {"title": "Mozi+", "icon": "moziplus.jpg", "group" : "movie", "selres": True },
-        {"title": "AXN", "icon": "axn.jpg", "group" : "movie" },
-        {"title": "Prime", "icon": "prime.jpg", "group" : "main", "selres": True},
-        {"title": "RTL II", "icon": "rtl2-wapadedrud.jpg", "group" : "main", "selres": True },
-        {"title": "Super TV2", "icon": "supertv2.jpg", "group" : "main", "selres": True },
-        {"title": "Paramount Channel", "icon": "paramountchannel.jpg", "group" : "movie" },
-        {"title": "TV 4", "icon": "tv4-wapadedrud.jpg", "group" : "movie", "selres": True },
-        {"title": "M3", "icon": "m3.jpg", "group" : "movie" },
-        {"title": "National Geographic", "icon": "nationalgeographic.jpg", "group" : "docu" },
-        {"title": "Spiler TV", "icon": "spiler1tv.jpg", "group" : "sport", "selres": True },
-        {"title": "Sláger TV", "icon": "slagertv.jpg", "group" : "music", "selres": True},
-        {"title": "Ozone Network", "icon": "ozonetv.jpg", "group" : "docu" },
-        {"title": "Discovery Channel", "icon": "discoverychannel.jpg", "group" : "docu" },
-        {"title": "TLC", "icon": "tlc.jpg", "group" : "docu" },
-        {"title": "Viasat3", "icon": "viasat3.jpg", "group" : "movie" },
-        {"title": "Viasat6", "icon": "viasat6.jpg", "group" : "movie" },
-        {"title": "Comedy Central", "icon": "comedycentral.jpg", "group" : "movie", "selres": True },
-        {"title": "RTL+", "icon": "rtlplus.jpg", "group" : "main", "selres": True },
-        {"title": "Film 4", "icon": "film4.jpg", "group" : "movie", "selres": True },
-        {"title": "Story 4", "icon": "story4.jpg", "group" : "movie", "selres": True },
-        {"title": "FilmBox", "icon": "filmbox.jpg", "group" : "movie" },
-        {"title": "Humor+", "icon": "humorplusz.jpg", "group" : "movie", "selres": True },
-        {"title": "RTL Gold", "icon": "rtlgold.jpg", "group" : "main", "selres": True },
-        {"title": "Kiwi TV", "icon": "kiwitv.jpg", "group" : "child", "selres": True },
-        {"title": "Da Vinci TV", "icon": "davincilearning.jpg", "group" : "docu" },
-        {"title": "Nickelodeon", "icon": "nickelodeon.jpg", "group" : "child" },
-        {"title": "Cartoon Network", "icon": "cartoonnetwork.jpg", "group" : "child" },
-        {"title": "LiChi TV", "icon": "lichitv.jpg", "group" : "docu", "selres": True },
-        {"title": "Sony Max", "icon": "sonymax-wapadedrud.jpg", "group" : "movie" },
-        {"title": "Sony Movie", "icon": "sonymoviechannel-wapadedrud.jpg", "group" : "movie" },
-        {"title": "DOQ Channel", "icon": "doq.jpg", "group" : "docu", "selres": True },
-        {"title": "Galaxy 4", "icon": "galaxy4.jpg", "group" : "movie", "selres": True },
-        {"title": "NAT GEO Wild", "icon": "natgeowild.jpg", "group" : "docu" },
-        {"title": "Viasat History", "icon": "viasathistory.jpg", "group" : "docu" },
-        {"title": "Fishing&Hunting", "icon": "fishingandhunting.jpg", "group" : "sport" },
-        {"title": "FilmBox Premium", "icon": "filmboxpremium.jpg", "group" : "movie" },
-        {"title": "RTL Spike", "icon": "rtlspike.jpg", "group" : "movie" },
-        {"title": "Viasat Explore", "icon": "viasatexplore.jpg", "group" : "docu" },
-        {"title": "Viasat Nature", "icon": "viasatnature.jpg", "group" : "docu" },
-        {"title": "Epic Drama HD", "icon": "epicdrama.jpg", "group" : "movie" },
-        {"title": "Nautical HD", "icon": "nauticalchannel.jpg", "group" : "sport" },
-        {"title": "GameToon HD", "icon": "gametoon.jpg", "group" : "sport" },
-        {"title": "Class Horse", "icon": "classhorsetv.jpg", "group" : "sport" },
+        {"title": "M1 HD", "icon": "m1hd.jpg", "group": "main", "selres": True},
+        {"title": "M2 HD", "icon": "m2hd.jpg", "group": "child", "selres": True},
+        {"title": "Duna HD", "icon": "dunahd.jpg", "group": "main", "selres": True},
+        {"title": "M4 Sport HD", "icon": "m4sport.jpg", "group": "sport", "selres": True},
+        {"title": "M5 HD", "icon": "m5.jpg", "group": "main", "selres": True},
+        {"title": "Duna World", "icon": "dunaworld.jpg", "group": "main"},
+        {"title": "Izaura TV", "icon": "izauratv.jpg", "group": "movie", "selres": True},
+        {"title": "Zenebutik", "icon": "zenebutik.jpg", "group": "music", "selres": True},
+        {"title": "FEM3", "icon": "fem3.jpg", "group": "movie", "selres": True},
+        {"title": "Hír TV", "icon": "hirtv.jpg", "group": "news", "selres": True},
+        {"title": "Balaton TV", "icon": "balatontv.jpg", "group": "regional", "selres": True},
+        {"title": "JUCE-Smile", "icon": "smileofachild.jpg", "group": "child", "selres": True},
+        {"title": "Fix TV", "icon": "fixtv.jpg", "group": "regional", "selres": True},
+        {"title": "D1 TV", "icon": "d1tv.jpg", "group": "regional", "selres": True},
+        {"title": "Bonum TV", "icon": "bonumtv.jpg", "group": "religious", "selres": True},
+        {"title": "Heti TV", "icon": "hetitv.jpg", "group": "regional", "selres": True},
+        {"title": "PAX TV", "icon": "paxtv.jpg", "group": "religious", "selres": True},
+        {"title": "Film+", "icon": "filmplus-velirajeha.jpg", "group": "movie", "selres": True},
+        {"title": "Cool", "icon": "cool-wapadedrud.jpg", "group": "movie", "selres": True},
+        {"title": "Mozi+", "icon": "moziplus.jpg", "group": "movie", "selres": True},
+        {"title": "AXN", "icon": "axn.jpg", "group": "movie"},
+        {"title": "Prime", "icon": "prime.jpg", "group": "main", "selres": True},
+        {"title": "RTL II", "icon": "rtl2-wapadedrud.jpg", "group": "main", "selres": True},
+        {"title": "Super TV2", "icon": "supertv2.jpg", "group": "main", "selres": True},
+        {"title": "Paramount Channel", "icon": "paramountchannel.jpg", "group": "movie"},
+        {"title": "TV 4", "icon": "tv4-wapadedrud.jpg", "group": "movie", "selres": True},
+        {"title": "M3", "icon": "m3.jpg", "group": "movie"},
+        {"title": "National Geographic", "icon": "nationalgeographic.jpg", "group": "docu"},
+        {"title": "Spiler TV", "icon": "spiler1tv.jpg", "group": "sport", "selres": True},
+        {"title": "Sláger TV", "icon": "slagertv.jpg", "group": "music", "selres": True},
+        {"title": "Ozone Network", "icon": "ozonetv.jpg", "group": "docu"},
+        {"title": "Discovery Channel", "icon": "discoverychannel.jpg", "group": "docu"},
+        {"title": "TLC", "icon": "tlc.jpg", "group": "docu"},
+        {"title": "Viasat3", "icon": "viasat3.jpg", "group": "movie"},
+        {"title": "Viasat6", "icon": "viasat6.jpg", "group": "movie"},
+        {"title": "Comedy Central", "icon": "comedycentral.jpg", "group": "movie", "selres": True},
+        {"title": "RTL+", "icon": "rtlplus.jpg", "group": "main", "selres": True},
+        {"title": "Film 4", "icon": "film4.jpg", "group": "movie", "selres": True},
+        {"title": "Story 4", "icon": "story4.jpg", "group": "movie", "selres": True},
+        {"title": "FilmBox", "icon": "filmbox.jpg", "group": "movie"},
+        {"title": "Humor+", "icon": "humorplusz.jpg", "group": "movie", "selres": True},
+        {"title": "RTL Gold", "icon": "rtlgold.jpg", "group": "main", "selres": True},
+        {"title": "Kiwi TV", "icon": "kiwitv.jpg", "group": "child", "selres": True},
+        {"title": "Da Vinci TV", "icon": "davincilearning.jpg", "group": "docu"},
+        {"title": "Nickelodeon", "icon": "nickelodeon.jpg", "group": "child"},
+        {"title": "Cartoon Network", "icon": "cartoonnetwork.jpg", "group": "child"},
+        {"title": "LiChi TV", "icon": "lichitv.jpg", "group": "docu", "selres": True},
+        {"title": "Sony Max", "icon": "sonymax-wapadedrud.jpg", "group": "movie"},
+        {"title": "Sony Movie", "icon": "sonymoviechannel-wapadedrud.jpg", "group": "movie"},
+        {"title": "DOQ Channel", "icon": "doq.jpg", "group": "docu", "selres": True},
+        {"title": "Galaxy 4", "icon": "galaxy4.jpg", "group": "movie", "selres": True},
+        {"title": "NAT GEO Wild", "icon": "natgeowild.jpg", "group": "docu"},
+        {"title": "Viasat History", "icon": "viasathistory.jpg", "group": "docu"},
+        {"title": "Fishing&Hunting", "icon": "fishingandhunting.jpg", "group": "sport"},
+        {"title": "FilmBox Premium", "icon": "filmboxpremium.jpg", "group": "movie"},
+        {"title": "RTL Spike", "icon": "rtlspike.jpg", "group": "movie"},
+        {"title": "Viasat Explore", "icon": "viasatexplore.jpg", "group": "docu"},
+        {"title": "Viasat Nature", "icon": "viasatnature.jpg", "group": "docu"},
+        {"title": "Epic Drama HD", "icon": "epicdrama.jpg", "group": "movie"},
+        {"title": "Nautical HD", "icon": "nauticalchannel.jpg", "group": "sport"},
+        {"title": "GameToon HD", "icon": "gametoon.jpg", "group": "sport"},
+        {"title": "Class Horse", "icon": "classhorsetv.jpg", "group": "sport"},
 
-        {"title": "FixTV", "rename": "Fix TV", "icon": "fixtv.jpg", "group" : "regional" },
-        {"title": "The Fishing & Hunting Channel", "rename": "Fishing&Hunting", "icon": "fishingandhunting.jpg", "group" : "sport" },
-        {"title": "Fit HD", "icon": "fithd.jpg", "group" : "sport"},
-        {"title": "C Music TV", "icon": "cmusictv.jpg", "group" : "music" },
-        {"title": "iConcerts HD", "icon": "iconcerts.jpg", "group" : "music" },
-        {"title": "DOQ TV", "rename": "DOQ Channel", "icon": "doq.jpg", "group" : "docu" },
-        {"title": "National Geographic Wild", "rename": "NAT GEO Wild", "icon": "natgeowild.jpg", "group" : "docu" },
+        {"title": "FixTV", "rename": "Fix TV", "icon": "fixtv.jpg", "group": "regional"},
+        {"title": "The Fishing & Hunting Channel", "rename": "Fishing&Hunting", "icon": "fishingandhunting.jpg", "group": "sport"},
+        {"title": "Fit HD", "icon": "fithd.jpg", "group": "sport"},
+        {"title": "C Music TV", "icon": "cmusictv.jpg", "group": "music"},
+        {"title": "iConcerts HD", "icon": "iconcerts.jpg", "group": "music"},
+        {"title": "DOQ TV", "rename": "DOQ Channel", "icon": "doq.jpg", "group": "docu"},
+        {"title": "National Geographic Wild", "rename": "NAT GEO Wild", "icon": "natgeowild.jpg", "group": "docu"},
 
-        {"title": "Dankó Rádió", "icon": "dankoradio.jpg", "group" : "main", "epg_id": "dankoradio.hu", "epg_prov_id": "porthu" },
-        {"title": "Duna World Rádió", "icon": "dunaworldradio.jpg", "group" : "main" },
-        {"title": "Nemzetiségi adások", "icon": "nemzetisegiadasok.jpg", "group" : "main", "epg_id": "nemzetisegiadasok.hu", "epg_prov_id": "porthu" },
-        {"title": "Parlamenti adások", "icon": "parlamentiadasok.jpg", "group" : "main" },
-        {"title": "Radio Swiss Classic (fr)", "icon": "swissclassic.jpg", "group" : "music" },
-        {"title": "Radio Swiss Classic (ger)", "icon": "swissclassic.jpg", "group" : "music" },
-        {"title": "Radio Swiss Jazz", "icon": "swissjazz.jpg", "group" : "music" },
-        {"title": "Radio Swiss Pop", "icon": "swisspop.jpg", "group" : "music" },
+        {"title": "Dankó Rádió", "icon": "dankoradio.jpg", "group": "main", "epg_id": "dankoradio.hu", "epg_prov_id": "porthu"},
+        {"title": "Duna World Rádió", "icon": "dunaworldradio.jpg", "group": "main"},
+        {"title": "Nemzetiségi adások", "icon": "nemzetisegiadasok.jpg", "group": "main", "epg_id": "nemzetisegiadasok.hu", "epg_prov_id": "porthu"},
+        {"title": "Parlamenti adások", "icon": "parlamentiadasok.jpg", "group": "main"},
+        {"title": "Radio Swiss Classic (fr)", "icon": "swissclassic.jpg", "group": "music"},
+        {"title": "Radio Swiss Classic (ger)", "icon": "swissclassic.jpg", "group": "music"},
+        {"title": "Radio Swiss Jazz", "icon": "swissjazz.jpg", "group": "music"},
+        {"title": "Radio Swiss Pop", "icon": "swisspop.jpg", "group": "music"},
 
-        {"title": "Kossuth rádió", "icon": "kossuthradio.jpg", "group" : "main", "epg_id": "kossuthradio.hu", "epg_prov_id": "porthu" },
-        {"title": "Petőfi rádió", "icon": "petofiradio.jpg", "group" : "main", "epg_id": "petofiradio.hu", "epg_prov_id": "porthu" },
-        {"title": "Bartók rádió", "icon": "bartokradio.jpg", "group" : "main", "epg_id": "bartokradio.hu", "epg_prov_id": "porthu" },
-        {"title": "Manna FM", "icon": "mannafm.jpg", "group" : "regional" },
-        {"title": "River FM", "icon": "riverfm.jpg", "group" : "religious" },
+        {"title": "Kossuth rádió", "icon": "kossuthradio.jpg", "group": "main", "epg_id": "kossuthradio.hu", "epg_prov_id": "porthu"},
+        {"title": "Petőfi rádió", "icon": "petofiradio.jpg", "group": "main", "epg_id": "petofiradio.hu", "epg_prov_id": "porthu"},
+        {"title": "Bartók rádió", "icon": "bartokradio.jpg", "group": "main", "epg_id": "bartokradio.hu", "epg_prov_id": "porthu"},
+        {"title": "Manna FM", "icon": "mannafm.jpg", "group": "regional"},
+        {"title": "River FM", "icon": "riverfm.jpg", "group": "religious"},
 
-        {"title": "Euronews", "icon": "euronews.jpg", "group" : "news" },
-        {"title": "Erdély TV", "icon": "erdelytv.jpg", "group" : "regional" },
+        {"title": "Euronews", "icon": "euronews.jpg", "group": "news"},
+        {"title": "Erdély TV", "icon": "erdelytv.jpg", "group": "regional"},
 
         ]
 
@@ -168,40 +168,40 @@ def _mr(url):
 
 def _getDirectRadios():
     return [
-        {"title": "Kossuth rádió", "url": "D" + _mr("4734/mr1.aac")+","+_mr("4736/mr1.mp3")+","+_mr("4764/mr1.ogg") },
-        {"title": "Petőfi rádió", "url": "D" + _mr("4737/mr2.aac")+","+_mr("4738/mr2.mp3")+","+_mr("4765/mr2.ogg") },
-        {"title": "Bartók rádió", "url": "D" + _mr("4739/mr3.aac")+","+_mr("4741/mr3.mp3")+","+_mr("4766/mr3.ogg") },
+        {"title": "Kossuth rádió", "url": "D" + _mr("4734/mr1.aac")+","+_mr("4736/mr1.mp3")+","+_mr("4764/mr1.ogg")},
+        {"title": "Petőfi rádió", "url": "D" + _mr("4737/mr2.aac")+","+_mr("4738/mr2.mp3")+","+_mr("4765/mr2.ogg")},
+        {"title": "Bartók rádió", "url": "D" + _mr("4739/mr3.aac")+","+_mr("4741/mr3.mp3")+","+_mr("4766/mr3.ogg")},
 
-        {"title": "Dankó Rádió",  "url": "D" + _mr("4747/mr7.aac")+","+_mr("4748/mr7.mp3")+","+_mr("4770/mr7.ogg") },
-        {"title": "Duna World Rádió",  "url": "D" + _mr("4760/dwr.aac")+","+_mr("4761/dwr.mp3")+","+_mr("4776/dwr.ogg") },
-        {"title": "Nemzetiségi adások", "url": "D" + _mr("4743/mr4.aac")+","+_mr("4744/mr4.mp3")+","+_mr("4768/mr4.ogg") },
-        {"title": "Parlamenti adások",  "url": "D" + _mr("4745/mr5.aac")+","+_mr("4746/mr5.mp3")+","+_mr("4769/mr5.ogg") },
+        {"title": "Dankó Rádió",  "url": "D" + _mr("4747/mr7.aac")+","+_mr("4748/mr7.mp3")+","+_mr("4770/mr7.ogg")},
+        {"title": "Duna World Rádió",  "url": "D" + _mr("4760/dwr.aac")+","+_mr("4761/dwr.mp3")+","+_mr("4776/dwr.ogg")},
+        {"title": "Nemzetiségi adások", "url": "D" + _mr("4743/mr4.aac")+","+_mr("4744/mr4.mp3")+","+_mr("4768/mr4.ogg")},
+        {"title": "Parlamenti adások",  "url": "D" + _mr("4745/mr5.aac")+","+_mr("4746/mr5.mp3")+","+_mr("4769/mr5.ogg")},
 
-        {"title": "Radio Swiss Classic (fr)", "url": "D" + _mr("4786/live.mp3") },
-        {"title": "Radio Swiss Classic (ger)", "url": "D" + _mr("4785/live.mp3") },
-        {"title": "Radio Swiss Jazz", "url": "D" + _mr("4787/live.mp3") },
-        {"title": "Radio Swiss Pop", "url": "D" + _mr("4788/live.mp3") },
+        {"title": "Radio Swiss Classic (fr)", "url": "D" + _mr("4786/live.mp3")},
+        {"title": "Radio Swiss Classic (ger)", "url": "D" + _mr("4785/live.mp3")},
+        {"title": "Radio Swiss Jazz", "url": "D" + _mr("4787/live.mp3")},
+        {"title": "Radio Swiss Pop", "url": "D" + _mr("4788/live.mp3")},
 
-        {"title": "Manna FM", "url": "D" + _mr("4780/live.mp3") },
-        {"title": "River FM", "url": "D" + _mr("4711/live.mp3") },
+        {"title": "Manna FM", "url": "D" + _mr("4780/live.mp3")},
+        {"title": "River FM", "url": "D" + _mr("4711/live.mp3")},
 
         ]
 
 def _getMTVATVs():
     return [
-        {"title": "Duna HD", "url": "dunalive" },
-        {"title": "Duna World", "url": "dunaworldlive" },
-        {"title": "M1 HD", "url": "mtv1live" },
-        {"title": "M2 HD", "url": "mtv2live" },
-        {"title": "M4 Sport HD", "url": "mtv4live" },
-        {"title": "M5 HD", "url": "mtv5live" },
+        {"title": "Duna HD", "url": "dunalive"},
+        {"title": "Duna World", "url": "dunaworldlive"},
+        {"title": "M1 HD", "url": "mtv1live"},
+        {"title": "M2 HD", "url": "mtv2live"},
+        {"title": "M4 Sport HD", "url": "mtv4live"},
+        {"title": "M5 HD", "url": "mtv5live"},
 
         ]
 
 
 def _getYTTVs():
     return [
-        {"title": "Euronews", "url": "https://www.youtube.com/watch?v=xddy7-kDdkE" },
+        {"title": "Euronews", "url": "https://www.youtube.com/watch?v=xddy7-kDdkE"},
 #        {"title": "Erdély TV", "url": "https://www.youtube.com/channel//live" },
         ]
 
@@ -232,9 +232,9 @@ class EPGProvider:
         if item and item.get("expires",0) > timenow:
             return item
         if chId[:1] == "E":
-            sts, data = self.mg.getApiPage( self.mg.LIVEINFO_URL + chId[1:] )
+            sts, data = self.mg.getApiPage(self.mg.LIVEINFO_URL + chId[1:])
         elif chId[:1] == "V":
-            sts, data = self.mg.getApiPage( self.mg.VODINFO_URL + chId[1:] )
+            sts, data = self.mg.getApiPage(self.mg.VODINFO_URL + chId[1:])
         else:
             return None
         if not sts:
@@ -361,7 +361,7 @@ class MindiGoHU(CBaseHostClass):
         self.M3_STREAM_URL = "https://archivum.mtva.hu/api/m3/v3/stream?target="
 
         self.HBBTV_HEADER = dict(self.HEADER)
-        self.HBBTV_HEADER.update( {"User-Agent": "Mozilla/5.0 (SMART-TV; Linux; Tizen 2.3) AppleWebkit/538.1 (KHTML, like Gecko) SamsungBrowser/1.0 TV Safari/538.1"} )
+        self.HBBTV_HEADER.update({"User-Agent": "Mozilla/5.0 (SMART-TV; Linux; Tizen 2.3) AppleWebkit/538.1 (KHTML, like Gecko) SamsungBrowser/1.0 TV Safari/538.1"})
 
         self.hbbtvParams = {"header":self.HBBTV_HEADER}
 
@@ -403,7 +403,7 @@ class MindiGoHU(CBaseHostClass):
     def getApiPage(self, url):
         params = dict(self.apiParams)
         params["header"]["x-access-token"] = self.token
-        return self.cm.getPage(url , params)
+        return self.cm.getPage(url, params)
 
     def getChannels(self):
         printDBG('MindiGoHU.getChannels')
@@ -459,7 +459,7 @@ class MindiGoHU(CBaseHostClass):
 
                 epg_id = "E"+i["id"]
 
-                params = {'good_for_fav': True, "title": title, "desc": "", "order": order, "url": url, "epg_id": epg_id, "epg_prov_id": "mindigo"  }
+                params = {'good_for_fav': True, "title": title, "desc": "", "order": order, "url": url, "epg_id": epg_id, "epg_prov_id": "mindigo"}
                 if icon:
                     params['icon']= icon
 
@@ -491,13 +491,13 @@ class MindiGoHU(CBaseHostClass):
                 else:
                     icon = ""
                     order = 0
-                params = {'good_for_fav': True, "title": title + " (HbbTV)", "desc": "", "order": order, "url": "H"+url }
+                params = {'good_for_fav': True, "title": title + " (HbbTV)", "desc": "", "order": order, "url": "H"+url}
                 if icon:
                     params['icon']= icon
                 ch = next((ch for ch in mindigChannels if ch["name"].strip() == title), None)
                 if ch:
                     epg_id = "E"+ch["id"]
-                    params.update( {"epg_id": epg_id, "epg_prov_id": "mindigo"} )
+                    params.update({"epg_id": epg_id, "epg_prov_id": "mindigo"})
                     _addepg(tvEpgs,ch["id"],params)
                 tvChannels.append(params)
         except Exception:
@@ -527,13 +527,13 @@ class MindiGoHU(CBaseHostClass):
                     else:
                         icon = ""
                         order = 0
-                    params = {'good_for_fav': True, "title": title + " (HbbTV)", "desc": "", "order": order, "url": url }
+                    params = {'good_for_fav': True, "title": title + " (HbbTV)", "desc": "", "order": order, "url": url}
                     if icon:
                         params['icon']= icon
                     ch = next((ch for ch in mindigChannels if ch["name"].strip() == title), None)
                     if ch:
                         epg_id = "E"+ch["id"]
-                        params.update( {"epg_id": epg_id, "epg_prov_id": "mindigo"} )
+                        params.update({"epg_id": epg_id, "epg_prov_id": "mindigo"})
                         _addepg(tvEpgs,ch["id"],params)
                     tvChannels.append(params)
         except Exception:
@@ -554,13 +554,13 @@ class MindiGoHU(CBaseHostClass):
             else:
                 icon = ""
                 order = 0
-            params = {'good_for_fav': True, "title": title + " (MTVA)", "desc": "", "order": order, "url": url }
+            params = {'good_for_fav': True, "title": title + " (MTVA)", "desc": "", "order": order, "url": url}
             if icon:
                 params['icon']= icon
             ch = next((ch for ch in mindigChannels if ch["name"].strip() == title), None)
             if ch:
                 epg_id = "E"+ch["id"]
-                params.update( {"epg_id": epg_id, "epg_prov_id": "mindigo"} )
+                params.update({"epg_id": epg_id, "epg_prov_id": "mindigo"})
                 _addepg(tvEpgs,ch["id"],params)
             tvChannels.append(params)
 
@@ -578,18 +578,18 @@ class MindiGoHU(CBaseHostClass):
             else:
                 icon = ""
                 order = 0
-            params = {'good_for_fav': True, "title": title + " (YT)", "desc": "", "order": order, "url": url }
+            params = {'good_for_fav': True, "title": title + " (YT)", "desc": "", "order": order, "url": url}
             if icon:
                 params['icon']= icon
             ch = next((ch for ch in mindigChannels if ch["name"].strip() == title), None)
             if ch:
                 epg_id = "E"+ch["id"]
-                params.update( {"epg_id": epg_id, "epg_prov_id": "mindigo"} )
+                params.update({"epg_id": epg_id, "epg_prov_id": "mindigo"})
                 _addepg(tvEpgs,ch["id"],params)
             tvChannels.append(params)
 
         # add nava m3
-        params = {'good_for_fav': True, "title": "M3 (MTVA)", "desc": "", "order": 2, "url": "m"+"m3", "icon": _gh("m3.jpg") }
+        params = {'good_for_fav': True, "title": "M3 (MTVA)", "desc": "", "order": 2, "url": "m"+"m3", "icon": _gh("m3.jpg")}
         tvChannels.append(params)
 
         # get direct radio
@@ -612,12 +612,12 @@ class MindiGoHU(CBaseHostClass):
                 order = 0
                 epg_id = None
 
-            params = {'good_for_fav': True, "title": title, "desc": "", "order": order, "url": url }
+            params = {'good_for_fav': True, "title": title, "desc": "", "order": order, "url": url}
             if icon:
                 params['icon']= icon
             ch = next((ch for ch in mindigChannels if ch["name"].strip() == title), None)
             if ch:
-                params.update({"epg_id": "E"+ch["id"], "epg_prov_id": "mindigo" })
+                params.update({"epg_id": "E"+ch["id"], "epg_prov_id": "mindigo"})
                 _addepg(radioEpgs,ch["id"],params)
             elif epg_id:
                 params.update({"epg_id": epg_id, "epg_prov_id": chdef["epg_prov_id"]})
@@ -668,13 +668,13 @@ class MindiGoHU(CBaseHostClass):
         if not self.tryTologin():
             return
 
-        MAIN_CAT_TAB = [{"category":"list_tvChannels", "title": _("TV channels") },
-                        {"category":"list_radioChannels", "title": _("Radio stations") },
-                        {"category":"list_brands", "title": "MindiGo "+_("Videos") },
-                        {"category":"list_mtvavideos", "title": "MTVA "+ _("Videos") },
-                        {"category":"list_m3videos", "title": "M3 "+ _("Videos"), "url": "P" },
-                        {"category":"list_m3videos", "title": "M3+ "+ _("Videos"), "url": "D" },
-                        {"category":"list_mtvaarch", "title": "MTVA Archivum "+ _("Videos") } ]
+        MAIN_CAT_TAB = [{"category":"list_tvChannels", "title": _("TV channels")},
+                        {"category":"list_radioChannels", "title": _("Radio stations")},
+                        {"category":"list_brands", "title": "MindiGo "+_("Videos")},
+                        {"category":"list_mtvavideos", "title": "MTVA "+ _("Videos")},
+                        {"category":"list_m3videos", "title": "M3 "+ _("Videos"), "url": "P"},
+                        {"category":"list_m3videos", "title": "M3+ "+ _("Videos"), "url": "D"},
+                        {"category":"list_mtvaarch", "title": "MTVA Archivum "+ _("Videos")}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listTVChannels(self, cItem):
@@ -692,7 +692,7 @@ class MindiGoHU(CBaseHostClass):
         printDBG("MindiGoHU.listBrands")
 
         params=dict(cItem)
-        params.update( {"category":"list_genres", "title": _("All"), "url": "" } )
+        params.update({"category":"list_genres", "title": _("All"), "url": ""})
         self.addDir(params)
 
         try:
@@ -703,7 +703,7 @@ class MindiGoHU(CBaseHostClass):
             data = json_loads(data)["data"]
             for i in data:
                 params=dict(cItem)
-                params.update( {"category":"list_genres", "title": i["name"], "desc": i["description"], "url": "&brand="+i["id"]} )
+                params.update({"category":"list_genres", "title": i["name"], "desc": i["description"], "url": "&brand="+i["id"]})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -724,7 +724,7 @@ class MindiGoHU(CBaseHostClass):
                 title = self.cm.ph.getDataBeetwenMarkers(i, '>', '<', False)[1]
                 if not title:
                     continue
-                params = {'good_for_fav': True, "title": title, "desc": "", "url": "D"+url }
+                params = {'good_for_fav': True, "title": title, "desc": "", "url": "D"+url}
                 self.addVideo(params)
 
         except Exception:
@@ -747,7 +747,7 @@ class MindiGoHU(CBaseHostClass):
             sts, data = self.getPage(url)
             if not sts:
                 raise Exception("Can't get M3 program page")
-            data = json_loads(data)["docs" if kind == "A" else "program" ]
+            data = json_loads(data)["docs" if kind == "A" else "program"]
             for i in data:
                 url = "v"+i["id"]
 
@@ -769,47 +769,47 @@ class MindiGoHU(CBaseHostClass):
         printDBG("MindiGoHU.listMTVAArch")
         try:
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Tévéfilmek és sorozatok"), "url": "A" + "M3-VMOpdsOpZmlsbWVrIMOpcyBzb3JvemF0b2s" } )
+            params.update({"category":"list_m3videos", "title": _("Tévéfilmek és sorozatok"), "url": "A" + "M3-VMOpdsOpZmlsbWVrIMOpcyBzb3JvemF0b2s"})
             self.addDir(params)
 
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Családi filmek"), "url": "A" + "M3-Q3NhbMOhZGkgZmlsbWVr" } )
+            params.update({"category":"list_m3videos", "title": _("Családi filmek"), "url": "A" + "M3-Q3NhbMOhZGkgZmlsbWVr"})
             self.addDir(params)
 
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Kabaré, vígjáték"), "url": "A" + "M3-S2FiYXLDqSwgdsOtZ2rDoXTDqWs" } )
+            params.update({"category":"list_m3videos", "title": _("Kabaré, vígjáték"), "url": "A" + "M3-S2FiYXLDqSwgdsOtZ2rDoXTDqWs"})
             self.addDir(params)
 
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Romantikus"), "url": "A" + "M3-Um9tYW50aWt1cw" } )
+            params.update({"category":"list_m3videos", "title": _("Romantikus"), "url": "A" + "M3-Um9tYW50aWt1cw"})
             self.addDir(params)
 
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Bűnügyi filmek és sorozatok"), "url": "A" + "M3-QsWxbsO8Z3lpIGZpbG1layDDqXMgc29yb3phdG9r" } )
+            params.update({"category":"list_m3videos", "title": _("Bűnügyi filmek és sorozatok"), "url": "A" + "M3-QsWxbsO8Z3lpIGZpbG1layDDqXMgc29yb3phdG9r"})
             self.addDir(params)
 
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Játék és vetélkedő"), "url": "A" + "M3-SsOhdMOpayDDqXMgdmV0w6lsa2VkxZE" } )
+            params.update({"category":"list_m3videos", "title": _("Játék és vetélkedő"), "url": "A" + "M3-SsOhdMOpayDDqXMgdmV0w6lsa2VkxZE"})
             self.addDir(params)
 
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Színház"), "url": "A" + "M3-U3rDrW5ow6F6" } )
+            params.update({"category":"list_m3videos", "title": _("Színház"), "url": "A" + "M3-U3rDrW5ow6F6"})
             self.addDir(params)
 
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Ismeretterjesztő"), "url": "A" + "M3-SXNtZXJldHRlcmplc3p0xZE" } )
+            params.update({"category":"list_m3videos", "title": _("Ismeretterjesztő"), "url": "A" + "M3-SXNtZXJldHRlcmplc3p0xZE"})
             self.addDir(params)
 
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Zene"), "url": "A" + "M3-WmVuZQ" } )
+            params.update({"category":"list_m3videos", "title": _("Zene"), "url": "A" + "M3-WmVuZQ"})
             self.addDir(params)
 
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Mesék"), "url": "A" + "M3-TWVzw6lr" } )
+            params.update({"category":"list_m3videos", "title": _("Mesék"), "url": "A" + "M3-TWVzw6lr"})
             self.addDir(params)
 
             params=dict(cItem)
-            params.update( {"category":"list_m3videos", "title": _("Sport"), "url": "A" + "M3-U3BvcnQ" } )
+            params.update({"category":"list_m3videos", "title": _("Sport"), "url": "A" + "M3-U3BvcnQ"})
             self.addDir(params)
 
         except Exception:
@@ -825,29 +825,29 @@ class MindiGoHU(CBaseHostClass):
                 raise Exception("Can't get GENRE page")
 
             params=dict(cItem)
-            params.update( {"category":"list_types", "title": _("All") } )
+            params.update({"category":"list_types", "title": _("All")})
             self.addDir(params)
             data = json_loads(data)["data"]
             for i in data:
                 params=dict(cItem)
-                params.update( {"category":"list_types", "title": i["title"], "url": url+"&genre="+i["id"]} )
+                params.update({"category":"list_types", "title": i["title"], "url": url+"&genre="+i["id"]})
                 self.addDir(params)
         except Exception:
             printExc()
 
     def listTypes(self, cItem):
         params=dict(cItem)
-        params.update( {"category":"list_videos", "title": _("All") } )
+        params.update({"category":"list_videos", "title": _("All")})
         self.addDir(params)
 
         url = cItem["url"]
 
         params=dict(cItem)
-        params.update( {"category":"list_videos", "title": _("Film"), "url": url+"&type=film"  } )
+        params.update({"category":"list_videos", "title": _("Film"), "url": url+"&type=film"})
         self.addDir(params)
 
         params=dict(cItem)
-        params.update( {"category":"list_videos", "title": _("Series"), "url": url+"&type=series"  } )
+        params.update({"category":"list_videos", "title": _("Series"), "url": url+"&type=series"})
         self.addDir(params)
 
     def listVideos(self, cItem):
@@ -867,7 +867,7 @@ class MindiGoHU(CBaseHostClass):
             data = json_loads(data)["data"]
             if page == 0:
                 videos = data.get("fresh",[])
-                videos.extend( data.get("hot",[]))
+                videos.extend(data.get("hot",[]))
             else:
                 videos = []
 
@@ -879,7 +879,7 @@ class MindiGoHU(CBaseHostClass):
                 if "image" in i and len(i["image"]) > 0:
                     icon = i["image"][0].get("simple")
 
-                params.update({'good_for_fav': True, "title": i["title"], "url": "V"+i["id"], "epg_id": "V"+i["id"], "epg_prov_id": "mindigo" } )
+                params.update({'good_for_fav': True, "title": i["title"], "url": "V"+i["id"], "epg_id": "V"+i["id"], "epg_prov_id": "mindigo"})
                 if icon:
                     params["icon"] = icon
 
@@ -922,7 +922,7 @@ class MindiGoHU(CBaseHostClass):
                     return []
                 data = self.cm.ph.getDataBeetwenMarkers(data, '"url":"', '"', False)[1]
                 data = data.replace('\/', '/').replace("HLS.smil", "nodrm.smil")
-                uri = strwithmeta(data,{'User-Agent':self.HEADER ['User-Agent']} )
+                uri = strwithmeta(data,{'User-Agent':self.HEADER['User-Agent']})
                 return getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
                 
             if url[:1] == "D":
@@ -934,7 +934,7 @@ class MindiGoHU(CBaseHostClass):
                         return []
                     data = data.replace("\r\n", "\n").split("\n")
                 if len(data) == 1:
-                    return [{'name':'direct link', 'url': data[0]} ]
+                    return [{'name':'direct link', 'url': data[0]}]
                 for i in data:
                     if not i.startswith("http"):
                         continue
@@ -948,12 +948,12 @@ class MindiGoHU(CBaseHostClass):
                         videoUrls.append({'name': "ogg", 'url':i})
                 return videoUrls
             if url[:1] == "V":
-                sts, data = self.getApiPage(self.VOD_URL.format( url[1:] ))
+                sts, data = self.getApiPage(self.VOD_URL.format(url[1:]))
                 if not sts:
                     try:
                         data = json_loads(data)["errorMessage"]
                         if data:
-                            SetIPTVPlayerLastHostError( data )
+                            SetIPTVPlayerLastHostError(data)
                     except:
                         pass
                     return []
@@ -967,19 +967,19 @@ class MindiGoHU(CBaseHostClass):
                     cItem.pop("link",None)
                     cItem.pop("expires",None)
                     if url[:1] in ["M","R"]:
-                        sts, data = self.getApiPage(self.STREAM_URL.format( url[1:] ))
+                        sts, data = self.getApiPage(self.STREAM_URL.format(url[1:]))
                         if not sts:
                             try:
                                 data = json_loads(data)["errorMessage"]
                                 if data:
-                                    SetIPTVPlayerLastHostError( data )
+                                    SetIPTVPlayerLastHostError(data)
                             except:
                                 pass
                             return []
                         data = json_loads(data)
                         link = data["data"]["url"]
                     elif url[:1] == "H":
-                        sts, link = self.cm.getPage(self.HBBTV_MEDIA_URL.format( url[1:] ), self.hbbtvParams)
+                        sts, link = self.cm.getPage(self.HBBTV_MEDIA_URL.format(url[1:]), self.hbbtvParams)
                         if not sts:
                             return []
                     elif url[:1] == "K":
@@ -1001,7 +1001,7 @@ class MindiGoHU(CBaseHostClass):
                 printDBG("PROTOCOL [%s] " % protocol)
                 if protocol == 'm3u8':
                     return getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
-            return [{'name':'direct link', 'url': link} ]
+            return [{'name':'direct link', 'url': link}]
 
         except Exception():
             printExc()
@@ -1038,8 +1038,8 @@ class MindiGoHU(CBaseHostClass):
         desc = cItem.get("desc","")
         other_info = {}
         if "epg_id" in cItem:
-            epg_provider = self.getEPGProviderById( cItem["epg_prov_id"])
-            item = epg_provider.getEPGItem( cItem["epg_id"] )
+            epg_provider = self.getEPGProviderById(cItem["epg_prov_id"])
+            item = epg_provider.getEPGItem(cItem["epg_id"])
             if item:
                 title = item["title"]
                 if title:
@@ -1047,7 +1047,7 @@ class MindiGoHU(CBaseHostClass):
                 desc = title + item["desc"]
                 other_info = item["other_info"]
 
-        retTab = {'title':cItem['title'], 'text': desc, 'images':[{'title':'', 'url':self.getFullIconUrl(cItem.get('icon'))}] }
+        retTab = {'title':cItem['title'], 'text': desc, 'images':[{'title':'', 'url':self.getFullIconUrl(cItem.get('icon'))}]}
         if other_info:
             retTab["other_info"] = other_info
         return [retTab]
@@ -1066,7 +1066,7 @@ class MindiGoHU(CBaseHostClass):
 
         if '' == self.login.strip() or '' == self.password.strip():
             printDBG('tryTologin wrong login data')
-            self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.') % self.getMainUrl(), type=MessageBox.TYPE_ERROR, timeout=10 )
+            self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.') % self.getMainUrl(), type=MessageBox.TYPE_ERROR, timeout=10)
             return False
 
         try:
@@ -1075,7 +1075,7 @@ class MindiGoHU(CBaseHostClass):
             else:
                 cj = cookielib.MozillaCookieJar()
 
-            cookieNames = ["token", "refreshToken", "loginHash" ]
+            cookieNames = ["token", "refreshToken", "loginHash"]
             cookies = [None, None, None]
 
             for cookie in cj:
@@ -1106,7 +1106,7 @@ class MindiGoHU(CBaseHostClass):
                   "platform": "web",
                   "refreshToken": refresh.value}
 
-                sts, data = self.cm.getPage(self.EXTEND_URL, self.apiParams, data )
+                sts, data = self.cm.getPage(self.EXTEND_URL, self.apiParams, data)
                 if sts:
                     data = json_loads(data)
                 elif self.cm.meta.get('status_code') == 400:
@@ -1147,7 +1147,7 @@ class MindiGoHU(CBaseHostClass):
         category = self.currItem.get("category", '')
         mode     = self.currItem.get("mode", '')
 
-        printDBG( "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
     #MAIN MENU

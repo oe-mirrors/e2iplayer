@@ -50,9 +50,9 @@ class StreamStat(CBaseHostClass):
         dat = data[2]
         uri = urlparser.decorateParamsFromUrl(dat)
         protocol = uri.meta.get('iptv_proto', '')
-        urlSupport = self.up.checkHostSupport( uri )
+        urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
-             retTab = self.up.getVideoLinkExt( uri )
+             retTab = self.up.getVideoLinkExt(uri)
              videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
            if protocol == 'm3u8':
@@ -117,13 +117,13 @@ class StreamStat(CBaseHostClass):
             printDBG(str(desc))
             if title == "":
                 title = "Unnamed"
-            params = {'title':title, 'icon': icon , 'url': url, 'desc': desc}
+            params = {'title':title, 'icon': icon, 'url': url, 'desc': desc}
             if "HLS" in quality[web.index(i)]:
                 self.addVideo(params)
             else:
                self.addAudio(params)
         if '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-right"' not in dat:
-            params = {'category': 'list_items', 'title': "Next page", 'icon': None , 'url': cItem['url'], 'page': page+1}
+            params = {'category': 'list_items', 'title': "Next page", 'icon': None, 'url': cItem['url'], 'page': page+1}
             self.addDir(params)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -138,7 +138,7 @@ class StreamStat(CBaseHostClass):
         url = self.currItem.get("url", '')
         desc = self.currItem.get("desc", '')
         
-        printDBG( "handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon) )
+        printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
         
         if name == None:

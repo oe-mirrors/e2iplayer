@@ -92,7 +92,7 @@ class Playz(CBaseHostClass, CaptchaHelper):
         if '?s=' in cItem['url']:
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<article', '>'), ('</article', '>'))
         else:
-            data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'archive-content') , ('<footer', '>'))[1] # exclude header and footer
+            data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'archive-content'), ('<footer', '>'))[1] # exclude header and footer
             data = data.split('<div class="poster">')[1:]
 
         for item in data:

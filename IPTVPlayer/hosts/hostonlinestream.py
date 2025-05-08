@@ -63,9 +63,9 @@ class OnlineStream(CBaseHostClass):
         if not sts:
             return
         videoUrls = []
-        dat = self.cm.ph.getDataBeetwenMarkers(data, '<li><a target="_blank" href="', '">', False) [1]
+        dat = self.cm.ph.getDataBeetwenMarkers(data, '<li><a target="_blank" href="', '">', False)[1]
         if dat == "":
-            dat = self.cm.ph.getDataBeetwenMarkers(data, '<li><a href="', '">', False) [1]
+            dat = self.cm.ph.getDataBeetwenMarkers(data, '<li><a href="', '">', False)[1]
             dat = "https://onlinestream.live" + dat
             sts, data = self.cm.getPage(dat)
             if not sts:
@@ -81,9 +81,9 @@ class OnlineStream(CBaseHostClass):
             dat = dat.replace("video", "image")
         uri = urlparser.decorateParamsFromUrl(dat)
         protocol = uri.meta.get('iptv_proto', '')
-        urlSupport = self.up.checkHostSupport( uri )
+        urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
-             retTab = self.up.getVideoLinkExt( uri )
+             retTab = self.up.getVideoLinkExt(uri)
              videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
            if protocol == 'm3u8':
@@ -170,10 +170,10 @@ class OnlineStream(CBaseHostClass):
                 desc = "Jelenleg nincs elérhető információ."
             if title == "":
                 title = "Névtelen"
-            params = {'category':'list_more','title':title, 'icon': icon , 'url': url, 'desc': desc}
+            params = {'category':'list_more','title':title, 'icon': icon, 'url': url, 'desc': desc}
             self.addDir(params)
         if '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-right">' not in dat:
-            params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None , 'url': cItem['url'], 'page': page+1}
+            params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': cItem['url'], 'page': page+1}
             self.addDir(params)
     
     def exploreItems(self, cItem):
@@ -184,7 +184,7 @@ class OnlineStream(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(dat, '<div class="dropdown info_csatornalista_select">', '</a></li></ul></div></div>')[1]
         printDBG("data " + str(data))
         if '<a class="ajax_link" href="' not in str(data):
-            params = {'title': cItem['title'], 'icon': cItem['icon'] , 'url': cItem['url'], 'desc': cItem['desc'], 'type': None}
+            params = {'title': cItem['title'], 'icon': cItem['icon'], 'url': cItem['url'], 'desc': cItem['desc'], 'type': None}
             sts, data = self.cm.getPage(cItem['url'])
             type = self.cm.ph.getDataBeetwenMarkers(data, '<title>', '</title>', False)[1]
             if "Online rádió" in type:
@@ -206,7 +206,7 @@ class OnlineStream(CBaseHostClass):
             printDBG("title " + title)
             title = title.replace('&nbsp;', '')
             printDBG("title " + title)
-            params = {'title': title, 'icon': cItem['icon'] , 'url': url,'desc': cItem['desc']}
+            params = {'title': title, 'icon': cItem['icon'], 'url': url,'desc': cItem['desc']}
             type = self.cm.ph.getDataBeetwenMarkers(dat, '<title>', '</title>', False)[1]
             if "Online rádió" in type:
                 self.addAudio(params)
@@ -225,7 +225,7 @@ class OnlineStream(CBaseHostClass):
         url = self.currItem.get("url", '')
         desc = self.currItem.get("desc", '')
         
-        printDBG( "handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon) )
+        printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
         
         if name == None:

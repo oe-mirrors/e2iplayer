@@ -466,7 +466,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             freshSession = False
             if sts and '/logout' in data:
                 printDBG("Check hash")
-                hash = hexlify(md5(ensure_binary('%s@***@%s' % (self.login, self.password))).digest() )
+                hash = hexlify(md5(ensure_binary('%s@***@%s' % (self.login, self.password))).digest())
                 prevHash = ReadTextFile(loginCookie)[1].strip()
 
                 printDBG("$hash[%s] $prevHash[%s]" % (hash, prevHash))

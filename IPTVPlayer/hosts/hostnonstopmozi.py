@@ -49,7 +49,7 @@ class NonstopMozi(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0'
         self.HEADER = self.cm.getDefaultHeader()
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://nonstopmozi.com'
         self.basicurl = 'https://nonstopmozi.com/online-filmek'
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}        
@@ -65,8 +65,8 @@ class NonstopMozi(CBaseHostClass):
         return szoveg
         
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [ {'category':'list_categories', 'title': _('Filmek')}, 
-        {'category':'list_categories', 'title': _('Sorozatok') },
+        MAIN_CAT_TAB = [{'category':'list_categories', 'title': _('Filmek')}, 
+        {'category':'list_categories', 'title': _('Sorozatok')},
         {'category':'search', 'title': _('Keresés'), 'search_item':True},
         {'category':'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
@@ -195,9 +195,9 @@ class NonstopMozi(CBaseHostClass):
         
         printDBG("PROTOCOL [%s] " % protocol)
         
-        urlSupport = self.up.checkHostSupport( uri )
+        urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt( uri )
+            retTab = self.up.getVideoLinkExt(uri)
             videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
             if protocol == 'm3u8':
@@ -239,7 +239,7 @@ class NonstopMozi(CBaseHostClass):
         title = self.currItem.get("title", '')
         self.currList = []
         if name == None:
-            self.listMainMenu( {'name':'category'} )
+            self.listMainMenu({'name':'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, title)
         elif category == 'list_items':
