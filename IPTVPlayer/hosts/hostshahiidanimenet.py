@@ -136,7 +136,7 @@ class ShahiidAnime(CBaseHostClass):
         keys = list(self.cacheFiltersKeys)
         keys.append('f_s')
         for key in keys:
-            baseKey = key[2:] # "f_"
+            baseKey = key[2:]  # "f_"
             if key in cItem:
                 query[baseKey] = cItem[key]
         query = urllib_urlencode(query)

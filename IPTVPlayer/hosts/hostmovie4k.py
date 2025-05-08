@@ -64,7 +64,7 @@ class Movie4K(CBaseHostClass):
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0])
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'st-desc">([^<]+)')[0])
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title.replace(' hdfilme','').replace(' kostenlos online anschauen',''), 'link': url, 'icon': icon, 'desc': desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title.replace(' hdfilme', '').replace(' kostenlos online anschauen', ''), 'link': url, 'icon': icon, 'desc': desc})
             if 'taffel' in title or 'serie' in title:
                 params.update({'category': 'list_episodes'})
                 self.addDir(params)

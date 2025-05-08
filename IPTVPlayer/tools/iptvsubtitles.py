@@ -42,7 +42,7 @@ class IPTVSubtitlesHandler:
         printDBG("IPTVSubtitlesHandler.__init__")
         self.subAtoms = []
         self.pailsOfAtoms = {}
-        self.CAPACITY = 10 * 1000 # 10s
+        self.CAPACITY = 10 * 1000  # 10s
         printDBG("IPTVSubtitlesHandler.__init__ self.CAPACITY = %s" % self.CAPACITY)
 
     def _srtClearText(self, text):
@@ -69,29 +69,29 @@ class IPTVSubtitlesHandler:
             split_time = time.split('.')
         minor = split_time[1]
         major = split_time[0].split(':')
-        if len(major) == 2: #sometimes 00 hour missing at the begging of subs
+        if len(major) == 2:  # sometimes 00 hour missing at the begging of subs
             return (int(major[0]) * 60 + int(major[1])) * 1000 + int(minor)
         else:
             return (int(major[0]) * 3600 + int(major[1]) * 60 + int(major[2])) * 1000 + int(minor)
 
     def _srtToAtoms(self, srtText):
         subAtoms = []
-        srtText = srtText.replace('\r\n', '\n') #win EOL > linux EOL
+        srtText = srtText.replace('\r\n', '\n')  # win EOL > linux EOL
         srtText = srtText.split('\n\n')
 
         line = 0
         for idx in range(len(srtText)):
             line += 1
             try:
-                st = srtText[idx].strip('\n \t') #remove empty leading lines
+                st = srtText[idx].strip('\n \t')  # remove empty leading lines
                 st = st.split('\n')
                 if len(st) < 2:
-                    continue #less than two items are for sure garbage, so let's skip
+                    continue  # less than two items are for sure garbage, so let's skip
                 while st[0] == '':
                     st.pop(0)
                 while not ' --> ' in st[0]:
-                    st.pop(0) #remove line numbers and other unused lines existing before time
-                if 1: #tests only
+                    st.pop(0)  # remove line numbers and other unused lines existing before time
+                if 1:  # tests only
                     printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                     printDBG(st)
                     printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -139,7 +139,7 @@ class IPTVSubtitlesHandler:
         ret = '\n'.join(subsText)
         #time2 = time.time()
         #printDBG('>>>>>>>>>>getSubtitlesFromSubAtoms function took %0.3f ms' % ((time2-time1)*1000.0))
-        printDBG("OpenSubOrg.getSubtitlesFromSubAtoms(%s) returns [%s]" % (currTimeMS,ret))
+        printDBG("OpenSubOrg.getSubtitlesFromSubAtoms(%s) returns [%s]" % (currTimeMS, ret))
         return ret
 
     def getSubtitles(self, currTimeMS, prevMarker):
@@ -152,7 +152,7 @@ class IPTVSubtitlesHandler:
         if len(tmpList) == 0:
             return [], self.getSubtitlesFromSubAtoms(currTimeMS)
         else:
-            printDBG("OpenSubOrg.getSubtitles tmp = %s, len(tmpList) = %s" % (tmp,len(tmpList)))
+            printDBG("OpenSubOrg.getSubtitles tmp = %s, len(tmpList) = %s" % (tmp, len(tmpList)))
             ret = None
             validAtomsIdexes = []
             for idx in tmpList:
@@ -206,7 +206,7 @@ class IPTVSubtitlesHandler:
                 printDBG("IPTVSubtitlesHandler._saveToCache orgFilePath[%s] --> cacheFile[%s]" % (orgFilePath, filePath))
             else:
                 printDBG("IPTVSubtitlesHandler._saveToCache subtitles list empty - nothing to save")
-                removeCacheFile(orgFilePath) #just in case we have garbage cached
+                removeCacheFile(orgFilePath)  # just in case we have garbage cached
                     
         except Exception:
             printExc('EXCEPTION in OpenSubOrg._saveToCache')
@@ -226,7 +226,7 @@ class IPTVSubtitlesHandler:
             elif idx not in self.pailsOfAtoms[tmp]:
                 self.pailsOfAtoms[tmp].append(idx)
         self.pailsOfAtoms = dict(sorted(self.pailsOfAtoms.items()))
-        if 1: #for tests
+        if 1:  # for tests
             with codecs.open('/tmp/pailsOfAtoms.json', 'w', 'utf-8') as fp:
                   fp.write(json.dumps(self.pailsOfAtoms))
             with codecs.open('/tmp/subAtoms.json', 'w', 'utf-8') as fp:
@@ -281,7 +281,7 @@ class IPTVSubtitlesHandler:
                         printExc()
                     # workaround end
                     self._fillPailsOfAtoms()
-                    if 1: #for tests
+                    if 1:  # for tests
                         if saveCache and len(self.subAtoms):
                             self._saveToCache(filePath)
                     return True
@@ -332,7 +332,7 @@ class IPTVEmbeddedSubtitlesHandler:
         printDBG("IPTVEmbeddedSubtitlesHandler.__init__")
         self.subAtoms = []
         self.pailsOfAtoms = {}
-        self.CAPACITY = 10 * 1000 # 10s
+        self.CAPACITY = 10 * 1000  # 10s
 
     def _srtClearText(self, text):
         return re.sub('<[^>]*>', '', text)

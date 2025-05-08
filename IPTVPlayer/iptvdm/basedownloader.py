@@ -28,7 +28,7 @@ from os import rename as os_rename
 class BaseDownloader:
     # errors code
     CODE_OK = 0
-    CODE_NOT_DOWNLOADING = 1 # user what terminate not started downloading
+    CODE_NOT_DOWNLOADING = 1  # user what terminate not started downloading
     CODE_WRONG_LINK = 2      # wrong link
 
     # posible fileds
@@ -112,7 +112,7 @@ class BaseDownloader:
         self.url = url
         self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension = '' # should be implemented in future
+        self.fileExtension = ''  # should be implemented in future
 
         sts, remoteInfo = DMHelper.getRemoteContentInfoByUrllib(url, params)
         if False == sts:

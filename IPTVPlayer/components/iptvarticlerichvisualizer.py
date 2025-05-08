@@ -183,7 +183,7 @@ class IPTVArticleRichVisualizer(Screen):
     def onStart(self):
         self.onLayoutFinish.remove(self.onStart)
         self.loadSpinner()
-        self["page_marker"].setPixmap(self.spinner["pixmap"][0]) # the same png file is used by page_maker as spinner
+        self["page_marker"].setPixmap(self.spinner["pixmap"][0])  # the same png file is used by page_maker as spinner
         #self.setTitle(self.artItem.title)
         self["title"].setText(self.artItem.title)
         self.setText()
@@ -335,7 +335,7 @@ class IPTVArticleRichVisualizer(Screen):
                 params = self.richDesc['avalable_params'][firstIdx:]
                 for idx in range(self.richDesc['rows_count']):
                     if idx < len(params):
-                        label = _(ArticleContent.RICH_DESC_LABELS[params[idx]]) # we call _() to translate label
+                        label = _(ArticleContent.RICH_DESC_LABELS[params[idx]])  # we call _() to translate label
                         text = self.artItem.richDescParams[params[idx]]
                     else:
                         label = " "

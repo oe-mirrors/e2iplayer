@@ -22,7 +22,7 @@ import time
 ###################################################
 # Globals
 ###################################################
-gInitIPTVPlayer = True # is initialization of IPTVPlayer is needed
+gInitIPTVPlayer = True  # is initialization of IPTVPlayer is needed
 PluginLanguageDomain = "IPTVPlayer"
 PluginLanguagePath = "Extensions/IPTVPlayer/locale"
 gSetIPTVPlayerLastHostError = ""
@@ -32,8 +32,8 @@ gIPTVPlayerNotificationList = None
 
 
 def localeInit():
-    lang = language.getLanguage()[:2] # getLanguage returns e.g. "fi_FI" for "language_country"
-    os.environ["LANGUAGE"] = lang # Enigma doesn't set this (or LC_ALL, LC_MESSAGES, LANG). gettext needs it!
+    lang = language.getLanguage()[:2]  # getLanguage returns e.g. "fi_FI" for "language_country"
+    os.environ["LANGUAGE"] = lang  # Enigma doesn't set this (or LC_ALL, LC_MESSAGES, LANG). gettext needs it!
     printDBG(PluginLanguageDomain + " set language to " + lang)
     gettext.bindtextdomain(PluginLanguageDomain, resolveFilename(SCOPE_PLUGINS, PluginLanguagePath))
 
@@ -73,7 +73,7 @@ class IPTVPlayerNotification():
     def __init__(self, title, message, type, timeout, messageHash=None, timestamp=0):
         self.title = str(title)
         self.message = str(message)
-        self.type = str(type) # "info", "error", "warning"
+        self.type = str(type)  # "info", "error", "warning"
         self.timeout = int(timeout)
         self.messageHash = messageHash
         self.timestamp = timestamp

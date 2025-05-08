@@ -70,7 +70,7 @@ class BBCCoUkIE(InfoExtractor):
         InfoExtractor.__init__(self)
         self.COOKIE_FILE = GetCookieDir('bbciplayer.cookie')
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
-        self.cm.HEADER = self.HEADER # default header
+        self.cm.HEADER = self.HEADER  # default header
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
     def getFullUrl(self, url):

@@ -89,14 +89,14 @@ class E2iPlayerBufferingWidget(Screen):
          <widget name="rec_button"       position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
          <widget name="exit_button"      position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
         </screen>""" % (sz_w, sz_h,         # screen
-                        p_w, p_h, p_x, p_y, # percentage
-                        c_w, c_h, c_x, c_y, # console
-                        i_w, i_h, i_x, i_y, # icon
+                        p_w, p_h, p_x, p_y,  # percentage
+                        c_w, c_h, c_x, c_y,  # console
+                        i_w, i_h, i_x, i_y,  # icon
                         a_w, a_h, a_x, a_y,  # addinfo
 
                         b_x, b_y, GetIPTVDMImgDir("key_ok.png"),        # OK
                         b_x + 35, b_y, GetIPTVDMImgDir("key_rec.png"),  # REC
-                        b_x + 70, b_y, GetIPTVDMImgDir("key_exit.png"), # EXIT
+                        b_x + 70, b_y, GetIPTVDMImgDir("key_exit.png"),  # EXIT
                       )
 
     def __init__(self, session, url, pathForBuffering, pathForDownloading, movieTitle, activMoviePlayer, requestedBuffSize, playerAdditionalParams={}, downloadManager=None, fileExtension=''):
@@ -143,12 +143,12 @@ class E2iPlayerBufferingWidget(Screen):
         self["icon"].loadFrames(frames)
 
         self.inMoviePlayer = False
-        self.canRunMoviePlayer = False # used in function updateDisplay, so must be first initialized
+        self.canRunMoviePlayer = False  # used in function updateDisplay, so must be first initialized
         #main Timer
         self.mainTimer = eTimer()
         self.mainTimerEnabled = False
         self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.updateDisplay)
-        self.mainTimerInterval = 1000 # by default 1s
+        self.mainTimerInterval = 1000  # by default 1s
 
         self.requestedBuffSize = requestedBuffSize
         self.playerAdditionalParams = playerAdditionalParams
@@ -165,7 +165,7 @@ class E2iPlayerBufferingWidget(Screen):
         self.clouldBeMP4 = False
         self.isMOOVAtomAtTheBeginning = None
         self.checkMOOVAtom = True
-        self.maxMOOVAtomSize = 10 * 1024 * 1024 # 10 MB max moov atom size
+        self.maxMOOVAtomSize = 10 * 1024 * 1024  # 10 MB max moov atom size
         self.moovAtomOffset = 0
         self.moovAtomSize = 0
 
@@ -251,7 +251,7 @@ class E2iPlayerBufferingWidget(Screen):
             if DMHelper.STS.DOWNLOADING == self.downloader.getStatus():
                 self.lastSize = self.downloader.getLocalFileSize(True)
                 printDBG("E2iPlayerBufferingWidget.leaveMoviePlayer: movie player consume all data from buffer - still downloading")
-                self.confirmExitCallBack() # continue
+                self.confirmExitCallBack()  # continue
             else:
                 printDBG("E2iPlayerBufferingWidget.leaveMoviePlayer: movie player consume all data from buffer - downloading finished")
                 if DMHelper.STS.DOWNLOADED != self.downloader.getStatus():
@@ -308,7 +308,7 @@ class E2iPlayerBufferingWidget(Screen):
         self.iptvDoClose()
 
     def record_pressed(self):
-        if self.canRunMoviePlayer:# and self.downloader.getPlayableFileSize() > 0:
+        if self.canRunMoviePlayer:  # and self.downloader.getPlayableFileSize() > 0:
             self.canRunMoviePlayer = False
             self.setMainTimerSts(False)
             self.closeRequestedByUser = 'save_buffer'
@@ -344,9 +344,9 @@ class E2iPlayerBufferingWidget(Screen):
             playerAdditionalParams['moov_atom_info'] = {'offset': self.moovAtomOffset, 'size': self.moovAtomSize, 'file': self.moovAtomPath}
 
         if strwithmeta(self.url).meta.get('iptv_proto', '') in ['f4m', 'uds', 'm3u8']:
-            playerAdditionalParams['file-download-timeout'] = 90000 # 90s
+            playerAdditionalParams['file-download-timeout'] = 90000  # 90s
         else:
-            playerAdditionalParams['file-download-timeout'] = 10000 # 10s
+            playerAdditionalParams['file-download-timeout'] = 10000  # 10s
         playerAdditionalParams['file-download-live'] = self._isInLiveMode()
         playerAdditionalParams['download_manager_available'] = self.downloadManager != None
         if "mini" == player:
@@ -374,7 +374,7 @@ class E2iPlayerBufferingWidget(Screen):
             printDBG("setMainTimerSts status[%r] EXCEPTION" % start)
 
     def updateRecButton(self):
-        if self.canRunMoviePlayer: #and self.downloader.getPlayableFileSize() > 0:
+        if self.canRunMoviePlayer:  # and self.downloader.getPlayableFileSize() > 0:
             self['rec_button'].show()
         else:
             self['rec_button'].hide()
@@ -553,7 +553,7 @@ class E2iPlayerBufferingWidget(Screen):
                 handled = False
 
         if not handled and self.moovAtomStatus != self.MOOV_STS.WAITING:
-            tmpBuffSize = localSize - self.lastSize + 1 # simple when getLocalFileSize() returns -1
+            tmpBuffSize = localSize - self.lastSize + 1  # simple when getLocalFileSize() returns -1
             if self.downloader.getPlayableFileSize() > 0:
                 requestedBuffSize = self.requestedBuffSize
                 if tmpBuffSize > requestedBuffSize:

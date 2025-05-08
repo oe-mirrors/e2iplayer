@@ -22,7 +22,7 @@ class WEP:
     def __init__(self, key=None, keyId=None):
         """ key -> octet string for key """
         self.name = 'WEP'
-        self.strength = None # depends on keySize
+        self.strength = None  # depends on keySize
         self.arc4 = ARC4()       # base algorithm
         self.__key = [None, None, None, None]  # four possible keys, initialize to invalid keys
         self.encryptHeaderSize = 4

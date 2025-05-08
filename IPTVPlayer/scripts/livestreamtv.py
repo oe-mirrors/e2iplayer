@@ -53,7 +53,7 @@ if __name__ == "__main__":
         print('Refresh and referer urls are needed', file=sys.stderr)
         sys.exit(1)
     try:
-        timeout = 20 # 20s
+        timeout = 20  # 20s
         hlsUrl = sys.argv[1]
         refreshUrl = sys.argv[2]
         referer = sys.argv[3]

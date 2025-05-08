@@ -316,7 +316,7 @@ class Tvn24(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, Tvn24(), False) # without search history
+        CHostBase.__init__(self, Tvn24(), False)  # without search history
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('tvn24logo.png')])
@@ -362,7 +362,7 @@ class IPTVHost(CHostBase):
 
     def convertList(self, cList):
         hostList = []
-        searchTypesOptions = [] # ustawione alfabetycznie
+        searchTypesOptions = []  # ustawione alfabetycznie
         #searchTypesOptions.append(("Seriale", "seriale"))
         searchTypesOptions.append(("Filmy", "filmy"))
 

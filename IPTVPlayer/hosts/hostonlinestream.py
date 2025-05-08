@@ -32,11 +32,11 @@ def gettytul():
 
 class OnlineStream(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'onlinestream', 'cookie':'onlinestream.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'onlinestream', 'cookie': 'onlinestream.cookie'})
         self.MAIN_URL = 'https://onlinestream.live/'
         self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/onlinestream.jpg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -97,20 +97,20 @@ class OnlineStream(CBaseHostClass):
               videoUrls.extend(retTab)
            elif dat.endswith(".jpg"):
                 uri = urlparser.decorateParamsFromUrl(dat, True)
-                videoUrls.append({'name':'picture link', 'url':uri})
+                videoUrls.append({'name': 'picture link', 'url': uri})
            else:
-              videoUrls.append({'name':'direct link', 'url':uri})
+              videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def listMainMenu(self, cItem):   
         printDBG('OnlineStream.listMainMenu')
         page = 1
-        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Sugárzó rádiók listázása'), 'url':'https://onlinestream.live/main.cgi?search=&broad=1&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
-                        {'category':'list_items', 'title': _('Internetes rádiók listázása'), 'url':'https://onlinestream.live/main.cgi?search=&broad=0&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
-                        {'category':'list_items', 'title': _('TV-k listázása'), 'url':'https://onlinestream.live/?search=&broad=7&feat=&chtype=&server=&format=&sort=listenpeak&fp=20&p=', 'page': page},
-                        {'category':'list_items', 'title': _('Webkamerák listázása'), 'url':'https://onlinestream.live/?search=&broad=4&feat=&chtype=&server=&format=&sort=&fp=20&p=', 'page': page},
-                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Sugárzó rádiók listázása'), 'url': 'https://onlinestream.live/main.cgi?search=&broad=1&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
+                        {'category': 'list_items', 'title': _('Internetes rádiók listázása'), 'url': 'https://onlinestream.live/main.cgi?search=&broad=0&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
+                        {'category': 'list_items', 'title': _('TV-k listázása'), 'url': 'https://onlinestream.live/?search=&broad=7&feat=&chtype=&server=&format=&sort=listenpeak&fp=20&p=', 'page': page},
+                        {'category': 'list_items', 'title': _('Webkamerák listázása'), 'url': 'https://onlinestream.live/?search=&broad=4&feat=&chtype=&server=&format=&sort=&fp=20&p=', 'page': page},
+                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
         
     def listItems(self, cItem):
@@ -119,7 +119,7 @@ class OnlineStream(CBaseHostClass):
         if not sts:
             return
         page = cItem['page']
-        web = self.cm.ph.getDataBeetwenMarkers(dat, '>Lejátszás</th>','<span class="glyphicon glyphicon-chevron-left">', False)[1]
+        web = self.cm.ph.getDataBeetwenMarkers(dat, '>Lejátszás</th>', '<span class="glyphicon glyphicon-chevron-left">', False)[1]
         web = str(web)
         listurl = self.cm.ph.getAllItemsBeetwenMarkers(web, 'href="', '"', False)
         for i in listurl:
@@ -170,7 +170,7 @@ class OnlineStream(CBaseHostClass):
                 desc = "Jelenleg nincs elérhető információ."
             if title == "":
                 title = "Névtelen"
-            params = {'category':'list_more','title':title, 'icon': icon, 'url': url, 'desc': desc}
+            params = {'category': 'list_more', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
             self.addDir(params)
         if '<li class="disabled"><a><span class="glyphicon glyphicon-chevron-right">' not in dat:
             params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': cItem['url'], 'page': page + 1}
@@ -190,7 +190,7 @@ class OnlineStream(CBaseHostClass):
             if "Online rádió" in type:
                 self.addAudio(params)
             elif 'MJPEG' in data:
-               params.update({'desc':cItem['desc'] + "\n" + "Az OK gomb lenyomásával a kép automatikusan frissül!"})
+               params.update({'desc': cItem['desc'] + "\n" + "Az OK gomb lenyomásával a kép automatikusan frissül!"})
                self.addPicture(params)
             else:
                self.addVideo(params)
@@ -206,7 +206,7 @@ class OnlineStream(CBaseHostClass):
             printDBG("title " + title)
             title = title.replace('&nbsp;', '')
             printDBG("title " + title)
-            params = {'title': title, 'icon': cItem['icon'], 'url': url,'desc': cItem['desc']}
+            params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
             type = self.cm.ph.getDataBeetwenMarkers(dat, '<title>', '</title>', False)[1]
             if "Online rádió" in type:
                 self.addAudio(params)
@@ -229,17 +229,17 @@ class OnlineStream(CBaseHostClass):
         self.currList = []
         
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
         elif category == 'list_more':
             self.exploreItems(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)			
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

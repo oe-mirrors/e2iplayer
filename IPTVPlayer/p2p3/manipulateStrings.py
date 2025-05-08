@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 def strDecode(text, setErrors='strict'):
     if isPY2():
         retVal = text
-    else: #PY3
+    else:  # PY3
         if isinstance(text, str):
             retVal = text
         else:
@@ -30,26 +30,26 @@ def iterDictItems(myDict):
 def iterDictKeys(myDict):
     if isPY2():
         return myDict.iterkeys()
-    else: #PY3
+    else:  # PY3
         return myDict.keys()
 
 def iterDictValues(myDict):
     if isPY2():
         return myDict.itervalues()
-    else: #PY3
+    else:  # PY3
         return myDict.values()
 
 def strEncode(text, encoding='utf-8'):
     if isPY2():
         retVal = text
-    else: #PY3
+    else:  # PY3
         retVal = text.encode(encoding)
     return retVal
 
-def ensure_binary(text, encoding='utf-8', errors='strict'): #based on six library
+def ensure_binary(text, encoding='utf-8', errors='strict'):  # based on six library
     if isPY2():
         return text
-    else: #PY3
+    else:  # PY3
         if isinstance(text, bytes):
           return text
         if isinstance(text, str):
@@ -59,7 +59,7 @@ def ensure_binary(text, encoding='utf-8', errors='strict'): #based on six librar
                 return text.encode(encoding, 'ignore')
     return text
 
-def ensure_str(text, encoding='utf-8', errors='strict'): #based on six library
+def ensure_str(text, encoding='utf-8', errors='strict'):  # based on six library
     if type(text) is str:
         return text
     if isPY2():
@@ -68,10 +68,10 @@ def ensure_str(text, encoding='utf-8', errors='strict'): #based on six library
                 return text.encode(encoding, errors)
             except Exception:
                 return text.encode(encoding, 'ignore')
-    else: #PY3
+    else:  # PY3
         if isinstance(text, bytes):
             try:
                 return text.decode(encoding, errors)
             except Exception:
                 return text.decode(encoding, 'ignore')
-    return text # strwithmeta type defined in e2iplayer goes thorugh it
+    return text  # strwithmeta type defined in e2iplayer goes thorugh it

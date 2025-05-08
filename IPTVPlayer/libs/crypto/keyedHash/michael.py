@@ -32,7 +32,7 @@ class Michael:
     def setKey(self, key):
         """ setKey(key) ... key is binary string """
         assert (len(key) == self.keySize), 'Key must be 8 octets'
-        self._key = unpack('<II', key) # unpack into 2 32bit integers
+        self._key = unpack('<II', key)  # unpack into 2 32bit integers
 
     def __call__(self, data, more=None):
         return self.hash(data)

@@ -164,7 +164,7 @@ class C7tvDe(CBaseHostClass):
 
     def listMissedItems(self, cItem, nextCategory):
         printDBG("C7tvDe.listMissedItems")
-        titlesMap = {} #{'pro7':'', 'sat1':'', 'kabel1':'', 'sixx':'', 'prosiebenmaxx':'', 'sat1gold':'', 'kabel1doku':'', 'dmax':'', 'tlc':'', 'eurosport':''}
+        titlesMap = {}  # {'pro7':'', 'sat1':'', 'kabel1':'', 'sixx':'', 'prosiebenmaxx':'', 'sat1gold':'', 'kabel1doku':'', 'dmax':'', 'tlc':'', 'eurosport':''}
 
         sts, data = self.getPage(cItem['url'])
         if not sts:
@@ -233,7 +233,7 @@ class C7tvDe(CBaseHostClass):
             if sTitle:
                 title = '%s: %s' % (sTitle, title)
             params = MergeDicts(cItem, {'good_for_fav': True, 'title': title, 'url': self.getFullUrl(url), 'icon': icon, 'desc': '[/br]'.join(desc)})
-            if 'class-clip' in data[idx - 1]: # and '-clip' in url:
+            if 'class-clip' in data[idx - 1]:  # and '-clip' in url:
                 params.update({'type': 'video'})
             else:
                 params.update({'category': nextCategory})

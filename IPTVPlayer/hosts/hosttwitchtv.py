@@ -43,7 +43,7 @@ class Twitch(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'Twitch', 'cookie': 'Twitch.cookie'})
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header': self.HTTP_HEADER}#, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER}  # , 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.DEFAULT_ICON_URL = 'http://s.jtvnw.net/jtv_user_pictures/hosted_images/GlitchIcon_WhiteonPurple.png'
         self.MAIN_URL = 'https://www.twitch.tv/'

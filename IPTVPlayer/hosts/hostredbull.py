@@ -64,7 +64,7 @@ class Redbull(CBaseHostClass):
 
         tmp = section.split('</table>', 1)
         sTitle = self.cleanHtmlStr(tmp[0])
-        if sTitle.lower() in ('linki',): #'kategorie'
+        if sTitle.lower() in ('linki',):  # 'kategorie'
             return
         sIcon = self.getFullUrl(ph.search(section, ph.IMAGE_SRC_URI_RE)[1])
 

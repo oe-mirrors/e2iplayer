@@ -91,7 +91,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
         printDBG(tab)
         for item in tab:
             params = dict(cItem)
-            params.update(item) # item = {'title', 'imdbid'}
+            params.update(item)  # item = {'title', 'imdbid'}
             params.update({'category': nextCategory})
             self.addDir(params)
 
@@ -124,7 +124,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
             return
         for item in tab:
             params = dict(cItem)
-            params.update(item) # item = "episode_title", "episode", "eimdbid"
+            params.update(item)  # item = "episode_title", "episode", "eimdbid"
             title = 's{0}e{1} {2}'.format(str(season).zfill(2), str(item['episode']).zfill(2), item['episode_title'])
             params.update({'category': nextCategory, 'title': title})
             self.addDir(params)
@@ -181,13 +181,13 @@ class TitlovicomProvider(CBaseSubProviderClass):
                 year = -1
 
             if 'season' in cItem and 'episode' in cItem:
-                post_data['t'] = '2' # type
+                post_data['t'] = '2'  # type
                 post_data['g'] = -1  # year
                 post_data['s'] = cItem['season']
                 post_data['e'] = cItem['episode']
             else:
                 post_data['t'] = '0'  # type
-                post_data['g'] = year # year
+                post_data['g'] = year  # year
 
             title = self.imdbGetOrginalByTitle(cItem['imdbid'])[1].get('title', cItem['base_title'])
             post_data[searchName] = title
@@ -218,7 +218,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             if url == '':
                 continue
-            title = item.split('<h5>')[0] #self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1]
+            title = item.split('<h5>')[0]  # self.cm.ph.getDataBeetwenMarkers(item, '<h4', '</h4>')[1]
             lang = self.cm.ph.getSearchGroups(item, 'flags/([a-z]{2})')[0]
 
             # lang name
@@ -236,7 +236,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
                 descTab.append(desc)
 
             params = dict(cItem)
-            params.update({'category': nextCategory, 'url': self.getFullUrl(url), 'title': self.cleanHtmlStr(title), 'lang': lang, 'desc': self.cleanHtmlStr(item)}) #'[/br]'.join(descTab)
+            params.update({'category': nextCategory, 'url': self.getFullUrl(url), 'title': self.cleanHtmlStr(title), 'lang': lang, 'desc': self.cleanHtmlStr(item)})  # '[/br]'.join(descTab)
             params['title'] = ('[%s] ' % lang) + params['title']
             self.addDir(params)
 

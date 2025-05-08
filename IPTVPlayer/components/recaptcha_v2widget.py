@@ -39,12 +39,12 @@ class UnCaptchaReCaptchaWidget(Screen):
             self.coversSelection.append([])
             for y in range(self.numOfRow):
                 coversSkin += """<widget name="cover_%s%s" zPosition="5" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y,
-                    (self.offsetCoverX + self.markerWidth * x), # pos X image
-                    (self.offsetCoverY + self.markerHeight * y), # pos Y image
+                    (self.offsetCoverX + self.markerWidth * x),  # pos X image
+                    (self.offsetCoverY + self.markerHeight * y),  # pos Y image
                     self.markerWidth,
                     self.markerHeight
                 )
-                self.coversSelection[x].append(False) # at start no icon is selected
+                self.coversSelection[x].append(False)  # at start no icon is selected
 
         self.skin = """
         <screen position="center,center" size="%d,%d" title="%s">
@@ -58,10 +58,10 @@ class UnCaptchaReCaptchaWidget(Screen):
                windowHeight,
                title,
                windowWidth,
-               self.offsetCoverX, # puzzle x
-               self.offsetCoverY, # puzzle y
-               self.markerWidth * self.numOfCol, # puzzle image width
-               self.markerHeight * self.numOfRow, # puzzle image height
+               self.offsetCoverX,  # puzzle x
+               self.offsetCoverY,  # puzzle y
+               self.markerWidth * self.numOfCol,  # puzzle image width
+               self.markerHeight * self.numOfRow,  # puzzle image height
                self.offsetCoverX,
                self.offsetCoverY,
                self.markerWidth,

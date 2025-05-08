@@ -298,7 +298,7 @@ class Myjdapi:
 
 
 class MyjdRequestHandler(BaseHTTPRequestHandler):
-    server_version = 'IPTVPlayer HttpServer' #'AppWork GmbH HttpServer'
+    server_version = 'IPTVPlayer HttpServer'  # 'AppWork GmbH HttpServer'
 
     def log_message(self, format, *args):
         printDBG(format % args)
@@ -480,7 +480,7 @@ if __name__ == "__main__":
 
     libsPath = sys.argv[1]
     sys.path.insert(1, libsPath)
-    if sys.version_info[0] >= 3: #PY3
+    if sys.version_info[0] >= 3:  # PY3
         sys.path.append('/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/libs/crypto/cipher')
     from crypto.cipher.aes_cbc import AES_CBC
 
@@ -533,7 +533,7 @@ if __name__ == "__main__":
 
         updateStatus('status', "Waiting for client connection")
         if True:
-            threads = [None, None, None] #None, None, None
+            threads = [None, None, None]  # None, None, None
             for i in range(len(threads)):
                 threads[i] = threading.Thread(target=PoolConnection, name='PoolConnection %d' % i, kwargs={'params': parameters})
                 threads[i].daemon = True

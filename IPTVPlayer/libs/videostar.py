@@ -225,11 +225,11 @@ class VideoStarApi(CBaseHostClass, CaptchaHelper):
                     for item in data['data']['stream_channel']['streams']:
                         if formatId == '2':
                             if 'hls' in item['type']:
-                                hslUrl = item['url'][0] # add here random
+                                hslUrl = item['url'][0]  # add here random
                                 urlsTab.extend(getDirectM3U8Playlist(hslUrl, checkExt=False, cookieParams=self.defaultParams, checkContent=True))
                         elif formatId in ['3', '4']:
                             if 'dash' in item['type']:
-                                dashUrl = item['url'][0] # add here random
+                                dashUrl = item['url'][0]  # add here random
                                 urlsTab.extend(getMPDLinksWithMeta(dashUrl, checkExt=False, cookieParams=self.defaultParams))
                 elif data['_meta'] != None:
                     info = data['_meta']['error']['info']

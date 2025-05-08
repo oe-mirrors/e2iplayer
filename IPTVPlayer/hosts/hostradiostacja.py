@@ -245,7 +245,7 @@ class RadiostacjaPl(CBaseHostClass):
                 if len(tmp):
                     linksTab.append(random.choice(tmp))
         else:
-            linksTab = [{'name': 'stream', 'url': cItem['url'], 'need_resolve':0}]
+            linksTab = [{'name': 'stream', 'url': cItem['url'], 'need_resolve': 0}]
         return linksTab
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):

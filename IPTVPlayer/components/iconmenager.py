@@ -65,7 +65,7 @@ class IconMenager:
 
         self.stopThread = False
 
-        self.checkSpace = 0 # if 0 the left space on disk will be checked
+        self.checkSpace = 0  # if 0 the left space on disk will be checked
         self.downloadNew = downloadNew
 
     def __del__(self):
@@ -250,7 +250,7 @@ class IconMenager:
             self.checkSpace -= 1
         file_path = "%s%s" % (path, filename)
 
-        params = {} #{'maintype': 'image'}
+        params = {}  # {'maintype': 'image'}
 
         if config.plugins.iptvplayer.allowedcoverformats.value != 'all':
             subtypes = config.plugins.iptvplayer.allowedcoverformats.value.split(',')

@@ -251,7 +251,7 @@ class IPTVHost(CHostBase):
 
     def converItem(self, cItem):
         hostList = []
-        searchTypesOptions = [] # ustawione alfabetycznie
+        searchTypesOptions = []  # ustawione alfabetycznie
 
         hostLinks = []
         type = CDisplayListItem.TYPE_UNKNOWN

@@ -8,5 +8,5 @@ setup(name='enigma2-plugin-extensions-iptvplayer',
        package_dir={pkg: 'IPTVPlayer'},
        packages=[pkg],
        package_data={pkg: ['*.*', '*/*.*', '*/*/*.*', '*/*/*/*.*', '*/*/*/*/*.*']},
-       cmdclass=setup_translate.cmdclass, # for translation
+       cmdclass=setup_translate.cmdclass,  # for translation
       )

@@ -157,7 +157,7 @@ class FilmezzEU(CBaseHostClass):
             query['p'] = page
 
         for key in self.cacheFiltersKeys:
-            baseKey = key[2:] # "f_"
+            baseKey = key[2:]  # "f_"
             if key in cItem:
                 query[baseKey] = urllib_quote(cItem[key])
 

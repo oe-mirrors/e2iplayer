@@ -44,8 +44,8 @@ def _gh(url):
         return ""
     return "https://celeburdi.github.io/static/icons/" + url
 
-def _addepg(epgs,id,item):
-    x = next((x for x, epg in enumerate(epgs) if epg["id"] == id),None)
+def _addepg(epgs, id, item):
+    x = next((x for x, epg in enumerate(epgs) if epg["id"] == id), None)
     if x:
         epgs[x]["items"].append(item)
     else:
@@ -153,7 +153,7 @@ def _getMindigChannelDefs():
 class MindigTVHU(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {"history":"mindigtv.hu", "cookie":"mindigtvhu.cookie"})
+        CBaseHostClass.__init__(self, {"history": "mindigtv.hu", "cookie": "mindigtvhu.cookie"})
 
         self.DEFAULT_ICON_URL = _gh("mindigtvdefault.jpg")
         self.HEADER = self.cm.getDefaultHeader()
@@ -185,12 +185,12 @@ class MindigTVHU(CBaseHostClass):
         self.HBBTV_HEADER = dict(self.HEADER)
         self.HBBTV_HEADER.update({"User-Agent": "Mozilla/5.0 (SMART-TV; Linux; Tizen 2.3) AppleWebkit/538.1 (KHTML, like Gecko) SamsungBrowser/1.0 TV Safari/538.1"})
 
-        self.mindigiParams = {"header":self.MINDIG_HEADER}
-        self.hbbtvParams = {"header":self.HBBTV_HEADER}
+        self.mindigiParams = {"header": self.MINDIG_HEADER}
+        self.hbbtvParams = {"header": self.HBBTV_HEADER}
 
         self.loggedIn = False
 
-        self.defaultParams = {"header":self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
 
         self.tvChannels = None
         self.radioChannels = None
@@ -260,7 +260,7 @@ class MindigTVHU(CBaseHostClass):
         videos = []
         tvEpgs = []
         radioEpgs = []
-        groups = ["","main","movie","news","docu","child","sport","music","regional","religious","porno","info"]
+        groups = ["", "main", "movie", "news", "docu", "child", "sport", "music", "regional", "religious", "porno", "info"]
         chdefs = _getMindigChannelDefs()
 
         # get MinDigTV TV/radio channels
@@ -278,8 +278,8 @@ class MindigTVHU(CBaseHostClass):
                         title = chdef["rename"]
                         i["title"] = title
                     icon = chdef.get("icon")
-                    order = groups.index(chdef.get("group",""))
-                    force = chdef.get("force",False)
+                    order = groups.index(chdef.get("group", ""))
+                    force = chdef.get("force", False)
                 else:
                     icon = ""
                     order = 0
@@ -323,9 +323,9 @@ class MindigTVHU(CBaseHostClass):
                     continue
                 chdef = next((chdef for chdef in chdefs if chdef["title"] == title), None)
                 if chdef:
-                    title = chdef.get("rename",title)
+                    title = chdef.get("rename", title)
                     icon = chdef.get("icon")
-                    order = groups.index(chdef.get("group",""))
+                    order = groups.index(chdef.get("group", ""))
                 else:
                     icon = ""
                     order = 0
@@ -334,7 +334,7 @@ class MindigTVHU(CBaseHostClass):
                     params['icon'] = icon
                 ch = next((ch for ch in mindigChannels if ch["title"] == title), None)
                 if ch and ch["has_epg"]:
-                    params["epg"] = _addepg(tvEpgs,str(ch["id"]),params)
+                    params["epg"] = _addepg(tvEpgs, str(ch["id"]), params)
                 tvChannels.append(params)
         except Exception:
             printExc()
@@ -346,7 +346,7 @@ class MindigTVHU(CBaseHostClass):
                 raise Exception("Can't get HbbTV HD channels")
             data = self.cm.ph.getDataBeetwenMarkers(data, "streams = ", ";", False)[1]
             data = json_loads(data)
-            for k,v in data.items():
+            for k, v in data.items():
                 if k == "enabled" or k == "fox":
                     continue
                 title = v.get("channel")
@@ -355,9 +355,9 @@ class MindigTVHU(CBaseHostClass):
                     url = "H" + url[6:]
                     chdef = next((chdef for chdef in chdefs if chdef["title"] == title), None)
                     if chdef:
-                        title = chdef.get("rename",title)
+                        title = chdef.get("rename", title)
                         icon = chdef.get("icon")
-                        order = groups.index(chdef.get("group",""))
+                        order = groups.index(chdef.get("group", ""))
                     else:
                         icon = ""
                         order = 0
@@ -366,7 +366,7 @@ class MindigTVHU(CBaseHostClass):
                         params['icon'] = icon
                     ch = next((ch for ch in mindigChannels if ch["title"] == title), None)
                     if ch and ch["has_epg"]:
-                        params["epg"] = _addepg(tvEpgs,str(ch["id"]),params)
+                        params["epg"] = _addepg(tvEpgs, str(ch["id"]), params)
                     tvChannels.append(params)
         except Exception:
             printExc()
@@ -386,9 +386,9 @@ class MindigTVHU(CBaseHostClass):
                                
                 chdef = next((chdef for chdef in chdefs if chdef["title"] == title), None)
                 if chdef:
-                    title = chdef.get("rename",title)
+                    title = chdef.get("rename", title)
                     icon = chdef.get("icon")
-                    order = groups.index(chdef.get("group",""))
+                    order = groups.index(chdef.get("group", ""))
                 else:
                     icon = ""
                     order = 0
@@ -401,7 +401,7 @@ class MindigTVHU(CBaseHostClass):
                     params['icon'] = icon
                 ch = next((ch for ch in mindigChannels if ch["title"] == title), None)
                 if ch and ch["has_epg"]:
-                    params["epg"] = _addepg(radioEpgs,str(ch["id"]),params)
+                    params["epg"] = _addepg(radioEpgs, str(ch["id"]), params)
                 radioChannels.append(params)
         except Exception:
             printExc()
@@ -441,9 +441,9 @@ class MindigTVHU(CBaseHostClass):
     
     def listMainMenu(self, cItem):
         printDBG("MindigTVHU.listMainMenu")
-        MAIN_CAT_TAB = [{"category":"list_tvChannels", "title": _("TV channels")},
-                        {"category":"list_radioChannels", "title": _("Radio stations")},
-                        {"category":"list_videos", "title": _("Videos")}]
+        MAIN_CAT_TAB = [{"category": "list_tvChannels", "title": _("TV channels")},
+                        {"category": "list_radioChannels", "title": _("Radio stations")},
+                        {"category": "list_videos", "title": _("Videos")}]
 
         self.listsTab(MAIN_CAT_TAB, cItem)
         self.tryTologin()
@@ -475,7 +475,7 @@ class MindigTVHU(CBaseHostClass):
         try:
             if url[:1] == "D":
                 if not url.endswith(".m3u"):
-                   videoUrls.append({'name':'direct link', 'url':url[1:]})
+                   videoUrls.append({'name': 'direct link', 'url': url[1:]})
                    return videoUrls
                 sts, data = self.cm.getPage(url[1:], self.mindigiParams)
                 if not sts:
@@ -485,16 +485,16 @@ class MindigTVHU(CBaseHostClass):
                     if not i.startswith("http"):
                         continue
                     if i.endswith('.mp3'):
-                        videoUrls.append({'name': "mp3", 'url':i})
+                        videoUrls.append({'name': "mp3", 'url': i})
                     if i.endswith('.aac'):
-                        videoUrls.append({'name': "aac", 'url':i})
+                        videoUrls.append({'name': "aac", 'url': i})
                 return videoUrls
             
             link = cItem.get("link")
-            expires = cItem.get("expires",0)
+            expires = cItem.get("expires", 0)
             if not link or expires < time.time():
-                cItem.pop("link",None)
-                cItem.pop("expires",None)
+                cItem.pop("link", None)
+                cItem.pop("expires", None)
                 if url[:1] == "M":
                     sts, data = self.cm.getPage(self.MINDIG_MEDIA_URL.format(url[1:]), self.mindigiParams)
                     if not sts:
@@ -518,14 +518,14 @@ class MindigTVHU(CBaseHostClass):
                 retTab = getDirectM3U8Playlist(uri, checkExt=False, checkContent=True)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':link})
+                videoUrls.append({'name': 'direct link', 'url': link})
         except Exception():
             printExc()
         return videoUrls
 
     def getFavouriteData(self, cItem):
         printDBG('MindigTVHU.getFavouriteData')
-        params = {'type':cItem['type'], 'category':cItem.get('category', ''), 'title':cItem['title'], 'url':cItem['url'], 'icon':cItem['icon']}
+        params = {'type': cItem['type'], 'category': cItem.get('category', ''), 'title': cItem['title'], 'url': cItem['url'], 'icon': cItem['icon']}
         return json_dumps(params)
 
 
@@ -537,7 +537,7 @@ class MindigTVHU(CBaseHostClass):
         elif cItem["type"] == "audio":
             if "epg" in cItem:
                 self.getEpg(self.radioEpgs[cItem["epg"]])
-        retTab = {'title':cItem['title'], 'text': cItem['desc'], 'images':[{'title':'', 'url':self.getFullIconUrl(cItem.get('icon'))}]}
+        retTab = {'title': cItem['title'], 'text': cItem['desc'], 'images': [{'title': '', 'url': self.getFullIconUrl(cItem.get('icon'))}]}
         return [retTab]
 
 
@@ -562,7 +562,7 @@ class MindigTVHU(CBaseHostClass):
 
     #MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_tvChannels':
             self.listTVChannels(self.currItem) 
         elif category == 'list_radioChannels':

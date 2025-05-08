@@ -268,7 +268,7 @@ class GamatoTV(CBaseHostClass):
                 return
 
             tmp = re.split('''(<img[^>]+?\.jpg[^>]+?>)''', data)
-            if len(data) > 1: # collection
+            if len(data) > 1:  # collection
                 for idx in range(1, len(tmp), 1):
                     printDBG("++++++++++++++++++++++++++++++++++++++++")
                     item = tmp[idx]

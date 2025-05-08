@@ -27,11 +27,11 @@ def gettytul():
 class TV2Play(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'tv2play', 'cookie':'tv2play.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'tv2play', 'cookie': 'tv2play.cookie'})
         self.MAIN_URL = 'https://tv2play.hu/'
         self.DEFAULT_ICON_URL = "http://www.blindspot.nhely.hu/Thumbnails/tv2play.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -78,7 +78,7 @@ class TV2Play(CBaseHostClass):
                 retTab = getMPDLinksWithMeta(uri, False)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def _uriIsValid(self, url):
@@ -86,9 +86,9 @@ class TV2Play(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('TV2Play.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Műsorok'), 'page': 0},
-                        {'category':'search', 'title': _('Keresés'), 'search_item':True, 'desc': 'A kereső fejlesztés alatt áll.'},
-                        {'category':'search_history', 'title': _('Keresési előzmények'), 'desc': 'A kereső fejlesztés alatt áll.'}]
+        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Műsorok'), 'page': 0},
+                        {'category': 'search', 'title': _('Keresés'), 'search_item': True, 'desc': 'A kereső fejlesztés alatt áll.'},
+                        {'category': 'search_history', 'title': _('Keresési előzmények'), 'desc': 'A kereső fejlesztés alatt áll.'}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
     
     def exploreItems(self, cItem):
@@ -228,7 +228,7 @@ class TV2Play(CBaseHostClass):
         self.currList = []
         
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem)
         elif category == 'list_items':
@@ -239,10 +239,10 @@ class TV2Play(CBaseHostClass):
             self.apiRibbons(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)			
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

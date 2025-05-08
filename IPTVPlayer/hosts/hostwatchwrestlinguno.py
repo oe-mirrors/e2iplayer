@@ -220,7 +220,7 @@ class WatchwrestlingUNO(CBaseHostClass):
         urlTab = []
         live = cItem.get('live', False)
         if live:
-            return [{'name': cItem['title'], 'url':cItem['url'], 'need_resolve':1}]
+            return [{'name': cItem['title'], 'url': cItem['url'], 'need_resolve': 1}]
 
         url = strwithmeta(cItem['url'])
         referer = url.meta.get('Referer', '')

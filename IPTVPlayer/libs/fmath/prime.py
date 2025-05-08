@@ -33,10 +33,10 @@ def rabin_miller(possiblePrime, aTestInteger):
     if (y != 1 and y != (possiblePrime - 1)):
         j = 1
         while (j <= s - 1 and y != possiblePrime - 1):
-            y = pow(y, 2, possiblePrime) # (y*y) % n
+            y = pow(y, 2, possiblePrime)  # (y*y) % n
             if y == 1:
-                return 0 # failed - composite
+                return 0  # failed - composite
             j = j + 1
         if y != (possiblePrime - 1):
-            return 0 # failed - composite
-    return 1 # success - still a possible prime
+            return 0  # failed - composite
+    return 1  # success - still a possible prime

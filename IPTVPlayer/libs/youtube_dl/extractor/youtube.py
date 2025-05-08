@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
 
 class CYTSignAlgoExtractor:
-    MAX_REC_DEPTH = 5 # MAX RECURSION Depth for security
+    MAX_REC_DEPTH = 5  # MAX RECURSION Depth for security
     RE_FUNCTION_NAMES = re.compile('[ =(,]([a-zA-Z$]+?)\([a-z0-9,]*?\)')
     RE_OBJECTS = re.compile('[ =(,;]([a-zA-Z$]+?)\.([a-zA-Z$]+?)\(')
     RE_MAIN = re.compile('([a-zA-Z0-9$]+)\(')
@@ -223,11 +223,11 @@ class YoutubeIE(object):
                                       '172', '141', '171', '140', '139'
                                       ]
 
-    _supported_formats = ['18', '22', '37', '38', # mp4
-                          '82', '83', '84', '85', # mp4 3D
-                          '92', '93', '94', '95', '96', '132', '151', # Apple HTTP Live Streaming
-                          '133', '134', '135', '136', '137', '138', '160', '298', '299', # Dash mp4
-                          '139', '140', '141', # Dash mp4 audio
+    _supported_formats = ['18', '22', '37', '38',  # mp4
+                          '82', '83', '84', '85',  # mp4 3D
+                          '92', '93', '94', '95', '96', '132', '151',  # Apple HTTP Live Streaming
+                          '133', '134', '135', '136', '137', '138', '160', '298', '299',  # Dash mp4
+                          '139', '140', '141',  # Dash mp4 audio
                           ]
 
     _video_formats_map = {
@@ -391,7 +391,7 @@ class YoutubeIE(object):
         proxyURL = params.get('proxyURL', '')
         useProxy = params.get('useProxy', False)
         self.cm = common(proxyURL, useProxy)
-        self.cm.HOST = 'Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0' #'Mpython-urllib/2.7'
+        self.cm.HOST = 'Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0'  # 'Mpython-urllib/2.7'
 
     def _extract_id(self, url):
         video_id = ''
@@ -584,7 +584,7 @@ class YoutubeIE(object):
         except Exception:
             printExc()
 
-        if video_info.get('isLive', True) and not video_url_list: #j00zek needs verification if default value should be True or False, for now assuming yes
+        if video_info.get('isLive', True) and not video_url_list:  # j00zek needs verification if default value should be True or False, for now assuming yes
             is_m3u8 = 'yes'
             manifest_url = _unquote(player_response['streamingData']['hlsManifestUrl'], None)
             url_map = self._extract_from_m3u8(manifest_url, video_id)
@@ -695,9 +695,9 @@ class YoutubeIE(object):
             return None
 
     def _get_video_url_list(self, url_map, allowVP9=False):
-        format_list = list(self._available_formats_prefer_free) # available_formats
+        format_list = list(self._available_formats_prefer_free)  # available_formats
         if allowVP9:
             format_list.extend(['313', '271'])
         existing_formats = [x for x in format_list if x in url_map]
 
-        return [(f, url_map[f]) for f in existing_formats] # All formats
+        return [(f, url_map[f]) for f in existing_formats]  # All formats

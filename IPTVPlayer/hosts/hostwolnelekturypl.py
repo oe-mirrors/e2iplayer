@@ -223,7 +223,7 @@ class WolnelekturyPL(CBaseHostClass):
             if not sts:
                 desc = ''
             otherInfo = {}
-            return [{'title': self.cleanHtmlStr(data['title']), 'text': self.cleanHtmlStr(desc), 'images':[{'title': '', 'url': data['cover']}], 'other_info':otherInfo}]
+            return [{'title': self.cleanHtmlStr(data['title']), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': data['cover']}], 'other_info': otherInfo}]
         except Exception:
             printExc()
 

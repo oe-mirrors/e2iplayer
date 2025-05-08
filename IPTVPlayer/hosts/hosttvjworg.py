@@ -308,7 +308,7 @@ class TVJWORG(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, TVJWORG(), True, []) #[CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]
+        CHostBase.__init__(self, TVJWORG(), True, [])  # [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('tvjworglogo.png')])
@@ -328,7 +328,7 @@ class IPTVHost(CHostBase):
 
     def converItem(self, cItem):
         hostList = []
-        searchTypesOptions = [] # ustawione alfabetycznie
+        searchTypesOptions = []  # ustawione alfabetycznie
 
         hostLinks = []
         type = CDisplayListItem.TYPE_UNKNOWN

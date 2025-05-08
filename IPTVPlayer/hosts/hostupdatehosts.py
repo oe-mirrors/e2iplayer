@@ -41,13 +41,13 @@ class UPDATEHOSTS(CBaseHostClass):
 
     def __init__(self):
         printDBG("Updatehosts.__init__")
-        CBaseHostClass.__init__(self, {'history':'updatehosts', 'cookie':'updatehosts.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'updatehosts', 'cookie': 'updatehosts.cookie'})
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = self.cm.getDefaultHeader()
         self.versionpath = normpath("/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/version.py")
         self.playerpath = normpath("/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/")
         self.changespath = self.playerpath + "/changes.txt"
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': False, 'load_cookie': False, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': False, 'load_cookie': False, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE}
         self.DEFAULT_ICON_URL = 'http://www.figyelmeztetes.hu/updatehosts_logo.jpg'
     
     def main_menu(self, cItem):
@@ -147,7 +147,7 @@ class UPDATEHOSTS(CBaseHostClass):
         vissza = False
         try:
             for i in range(tries):
-                tmp = DownloadFile(url,destination)
+                tmp = DownloadFile(url, destination)
                 if tmp:
                     vissza = True
                     break
@@ -184,7 +184,7 @@ class UPDATEHOSTS(CBaseHostClass):
             url = self.currItem.get("url", '')
             self.currList = []
             if name == None:
-                self.main_menu({'name':'category'})
+                self.main_menu({'name': 'category'})
             elif url == "changes":
                 self.getchanges()
             elif url == "update":

@@ -134,7 +134,7 @@ class KijkNL(CBaseHostClass):
 
         urlparams = dict(self.defaultParams)
         urlparams['header'] = dict(urlparams['header'])
-        urlparams['cookie_items'] = {'OPTOUTMULTI': '0:0%7Cc5:0%7Cc1:0%7Cc4:0%7Cc3:0%7Cc2:0'} #{'OPTOUTMULTI':'0:0|c5:0|c1:0|c4:0|c3:0|c2:0'}
+        urlparams['cookie_items'] = {'OPTOUTMULTI': '0:0%7Cc5:0%7Cc1:0%7Cc4:0%7Cc3:0%7Cc2:0'}  # {'OPTOUTMULTI':'0:0|c5:0|c1:0|c4:0|c3:0|c2:0'}
         urlparams['header']['Referer'] = 'http://consent.kijk.nl/?url=' + urllib_quote('http://www.kijk.nl/')
 
         sts, data = self.getPage(cItem['url'], urlparams)
@@ -208,7 +208,7 @@ class KijkNL(CBaseHostClass):
                 items = data['items']
 
             for item in items:
-                if item['type'] in ['clip', 'episode', 'series']: #and item['available']
+                if item['type'] in ['clip', 'episode', 'series']:  # and item['available']
                     icon = item['images'].get('nonretina_image', '')
                     if icon == '':
                         icon = item['images'].get('retina_image', '')

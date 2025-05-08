@@ -85,7 +85,7 @@ class KissCartoonMe(CBaseHostClass):
             else:
                 newUrl += url[idx]
             idx += 1
-        return newUrl #.replace('¡', '%C2%A1')
+        return newUrl  # .replace('¡', '%C2%A1')
 
     def getPage(self, baseUrl, params={}, post_data=None):
         params['cloudflare_params'] = {'domain': 'kisscartoon.es', 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': self._getFullUrl}
@@ -480,4 +480,4 @@ class KissCartoonMe(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, KissCartoonMe(), True, favouriteTypes=[]) #[CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
+        CHostBase.__init__(self, KissCartoonMe(), True, favouriteTypes=[])  # [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])

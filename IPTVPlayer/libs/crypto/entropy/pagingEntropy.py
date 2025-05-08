@@ -20,7 +20,7 @@ class PagingEntropyCollector:
         """ Initialize paging entropy collector,
             memSize must be larger than allocated memory """
         self.size = memSize
-        self.memBlock = self.size * chr(0) # long string of length self.size
+        self.memBlock = self.size * chr(0)  # long string of length self.size
         self.index = 0
         import random
         self.rand = random.Random(1555551)

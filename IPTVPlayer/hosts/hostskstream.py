@@ -351,7 +351,7 @@ class SKStream(CBaseHostClass):
                             # get JS player script code from confirmation page
                             sts, tmpData = self.cm.ph.getDataBeetwenMarkers(data, ">eval(", '</script>', False)
                             if sts:
-                                data += unpackJSPlayerParams(tmpData, VIDEOMEGA_decryptPlayerParams, 0, r2=True) #YOUWATCH_decryptPlayerParams == VIDUPME_decryptPlayerParams
+                                data += unpackJSPlayerParams(tmpData, VIDEOMEGA_decryptPlayerParams, 0, r2=True)  # YOUWATCH_decryptPlayerParams == VIDUPME_decryptPlayerParams
 
                             printDBG(data)
                             url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])

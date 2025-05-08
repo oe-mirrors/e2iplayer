@@ -50,9 +50,9 @@ def gettytul():
 class m4sport(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'m4sport.hu', 'cookie':'m4sport.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'm4sport.hu', 'cookie': 'm4sport.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0'
-        self.HEADER = {'User-Agent':self.USER_AGENT, 'DNT':'1', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate, br'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate, br'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://www.m4sport.hu/videok/'
@@ -67,7 +67,7 @@ class m4sport(CBaseHostClass):
         self.aid = config.plugins.iptvplayer.m4sport_id.value
         self.aid_ki = ''
         self.eblf = 'https://www.m4sport.hu/bajnokokligaja'
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getFullIconUrl(self, url):
         url = url.replace('&amp;', '&')
@@ -83,7 +83,7 @@ class m4sport(CBaseHostClass):
             else:
                 return urllib.parse.urljoin(baseUrl, url)
             
-        addParams['cloudflare_params'] = {'domain':self.up.getDomain(baseUrl), 'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT, 'full_url_handle':_getFullUrl}
+        addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
         
@@ -145,56 +145,56 @@ class m4sport(CBaseHostClass):
             msg_elo3 = self.aid_ki + 'M4 Sport 3 élő adásának megjelenítése.'
             msg_elo4 = self.aid_ki + 'M4 Sport 4 élő adásának megjelenítése.'
             msg_elo5 = self.aid_ki + 'M4 Sport 5 élő adásának megjelenítése.'
-            MAIN_CAT_TAB = [{'category': 'list_main', 'title': 'BOXUTCA', 'tab_id': 'boxutca', 'desc': msg_boxutca, 'icon':self.DEFAULT_ICON_URL},
-                            {'category': 'list_main', 'title': 'MAGYAR FOCI', 'tab_id': 'foci', 'desc': msg_foci, 'icon':self.ICON_URL_FOCI},
-                            {'category': 'list_main', 'title': 'UEFA BAJNOKOK LIGÁJA FOCI', 'tab_id': 'blfoci', 'desc': msg_blfoci, 'icon':self.ICON_URL_FOCI},
-                            {'category': 'list_main', 'title': 'SPORTHÍREK', 'tab_id': 'sporthirek', 'desc': msg_sporthirek, 'icon':self.DEFAULT_ICON_URL},
-                            {'category': 'list_main', 'title': 'SPORTKÖZVETÍTÉSEK', 'tab_id': 'kozvetitesek', 'desc': msg_kozvetitesek, 'icon':self.DEFAULT_ICON_URL},
-                            {'category': 'search', 'title': 'Keresés', 'search_item': True, 'tab_id': 'kereses', 'desc': msg_kereses, 'icon':self.DEFAULT_ICON_URL},
-                            {'category': 'search_history', 'title': 'Keresés az előzmények közt', 'tab_id': 'keres_elozmeny', 'desc': msg_keres_elozmeny, 'icon':self.DEFAULT_ICON_URL}
+            MAIN_CAT_TAB = [{'category': 'list_main', 'title': 'BOXUTCA', 'tab_id': 'boxutca', 'desc': msg_boxutca, 'icon': self.DEFAULT_ICON_URL},
+                            {'category': 'list_main', 'title': 'MAGYAR FOCI', 'tab_id': 'foci', 'desc': msg_foci, 'icon': self.ICON_URL_FOCI},
+                            {'category': 'list_main', 'title': 'UEFA BAJNOKOK LIGÁJA FOCI', 'tab_id': 'blfoci', 'desc': msg_blfoci, 'icon': self.ICON_URL_FOCI},
+                            {'category': 'list_main', 'title': 'SPORTHÍREK', 'tab_id': 'sporthirek', 'desc': msg_sporthirek, 'icon': self.DEFAULT_ICON_URL},
+                            {'category': 'list_main', 'title': 'SPORTKÖZVETÍTÉSEK', 'tab_id': 'kozvetitesek', 'desc': msg_kozvetitesek, 'icon': self.DEFAULT_ICON_URL},
+                            {'category': 'search', 'title': 'Keresés', 'search_item': True, 'tab_id': 'kereses', 'desc': msg_kereses, 'icon': self.DEFAULT_ICON_URL},
+                            {'category': 'search_history', 'title': 'Keresés az előzmények közt', 'tab_id': 'keres_elozmeny', 'desc': msg_keres_elozmeny, 'icon': self.DEFAULT_ICON_URL}
                            ]
             self.listsTab(MAIN_CAT_TAB, cItem)
             pvt = 'M4 ÉLŐ ADÁSA'
             pvd = msg_elo
             pvu = "https://www.mediaklikk.hu/m4-elo/"
             icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav':False, 'title':pvt, 'url':pvu, 'url2':pvu, 'desc':pvd, 'icon':icon, 'md': 'elo', 'id': "mtv4live"})
+            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "mtv4live"})
             self.addVideo(params)
             pvt = 'M4 SPORT+'
             pvd = msg_eloplus
             pvu = "https://www.mediaklikk.hu/m4-elo/"
             icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav':False, 'title':pvt, 'url':pvu, 'url2':pvu, 'desc':pvd, 'icon':icon, 'md': 'elo', 'id': "mtv4plus"})
+            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "mtv4plus"})
             self.addVideo(params)
             pvt = 'M4 SPORT 1'
             pvd = msg_elo1
             pvu = "https://www.mediaklikk.hu/m4-elo/"
             icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav':False, 'title':pvt, 'url':pvu, 'url2':pvu, 'desc':pvd, 'icon':icon, 'md': 'elo', 'id': "m4sport1"})
+            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "m4sport1"})
             self.addVideo(params)
             pvt = 'M4 SPORT 2'
             pvd = msg_elo2
             pvu = "https://www.mediaklikk.hu/m4-elo/"
             icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav':False, 'title':pvt, 'url':pvu, 'url2':pvu, 'desc':pvd, 'icon':icon, 'md': 'elo', 'id': "m4sport2"})
+            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "m4sport2"})
             self.addVideo(params)
             pvt = 'M4 SPORT 3'
             pvd = msg_elo3
             pvu = "https://www.mediaklikk.hu/m4-elo/"
             icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav':False, 'title':pvt, 'url':pvu, 'url2':pvu, 'desc':pvd, 'icon':icon, 'md': 'elo', 'id': "m4sport3"})
+            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "m4sport3"})
             self.addVideo(params)
             pvt = 'M4 SPORT 4'
             pvd = msg_elo4
             pvu = "https://www.mediaklikk.hu/m4-elo/"
             icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav':False, 'title':pvt, 'url':pvu, 'url2':pvu, 'desc':pvd, 'icon':icon, 'md': 'elo', 'id': "m4sport4"})
+            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "m4sport4"})
             self.addVideo(params)
             pvt = 'M4 SPORT 5'
             pvd = msg_elo5
             pvu = "https://www.mediaklikk.hu/m4-elo/"
             icon = self.ICON_URL_ELO
-            params = MergeDicts(cItem, {'good_for_fav':False, 'title':pvt, 'url':pvu, 'url2':pvu, 'desc':pvd, 'icon':icon, 'md': 'elo', 'id': "m4sport5"})
+            params = MergeDicts(cItem, {'good_for_fav': False, 'title': pvt, 'url': pvu, 'url2': pvu, 'desc': pvd, 'icon': icon, 'md': 'elo', 'id': "m4sport5"})
             self.addVideo(params)
         except Exception:
             printExc()
@@ -204,19 +204,19 @@ class m4sport(CBaseHostClass):
             tabID = cItem.get('tab_id', '')
             if tabID == 'boxutca':
                 self.susn('2', '11', 'm4_boxutca')
-                self.dfml('548','4',4)
+                self.dfml('548', '4', 4)
             elif tabID == 'foci':
                 self.susn('2', '11', 'm4_foci')
-                self.dfml('768','4',4)
+                self.dfml('768', '4', 4)
             elif tabID == 'blfoci':
                 self.susn('2', '11', 'm4_blfoci')
                 self.dfbl(self.eblf)
             elif tabID == 'sporthirek':
                 self.susn('2', '11', 'm4_sporthirek')
-                self.dfml('1020','4',4)
+                self.dfml('1020', '4', 4)
             elif tabID == 'kozvetitesek':
                 self.susn('2', '11', 'm4_kozvetitesek')
-                self.dfml('1025','4',7)
+                self.dfml('1025', '4', 7)
         except Exception:
             printExc()
             
@@ -227,7 +227,7 @@ class m4sport(CBaseHostClass):
                 params['header'] = dict(self.AJAX_HEADER)
                 pue = 'https://www.m4sport.hu/wp-content/plugins/telesport.hu.widgets/widgets/newSubCategory/ajax_loadmore.php?cat_id={}&post_type=video&blog_id={}&page_number={}'
                 for x in range(1, mig):
-                    puf = pue.format(cid,bid,str(x))
+                    puf = pue.format(cid, bid, str(x))
                     sts, data = self.getPage(puf, params)
                     if not sts:
                         return
@@ -236,13 +236,13 @@ class m4sport(CBaseHostClass):
                     data = json_loads(data)
                     for item in data:
                         title = item['title']
-                        date_str = item['date'][0:10].replace('.','/').strip()
+                        date_str = item['date'][0:10].replace('.', '/').strip()
                         url = item['link']
                         rstr = 'video/' + date_str + '/' 
-                        url2 = url.replace('videok//',rstr)
+                        url2 = url.replace('videok//', rstr)
                         desc = item['date'] + '-i adás\n\nA műsor tartalma:\n' + title
                         icon = item['image']
-                        params = {'title':title, 'url':url, 'url2':url2, 'desc':desc, 'icon':icon, 'md': 'egyeb'}
+                        params = {'title': title, 'url': url, 'url2': url2, 'desc': desc, 'icon': icon, 'md': 'egyeb'}
                         self.addVideo(params)
         except Exception:
             printExc()
@@ -284,7 +284,7 @@ class m4sport(CBaseHostClass):
                     if title == '':
                         continue
                     desc = 'A műsor tartalma:\n' + title
-                    params = {'title':title, 'url':url, 'url2':url, 'desc':desc, 'icon':icon, 'md': 'egyeb'}
+                    params = {'title': title, 'url': url, 'url2': url, 'desc': desc, 'icon': icon, 'md': 'egyeb'}
                     self.addVideo(params)
                     if ln > 30:
                         break
@@ -340,7 +340,7 @@ class m4sport(CBaseHostClass):
                 retTab = getMPDLinksWithMeta(uri, False)
                 videoUrls.extend(retTab)
              else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
         
     def kvlva(self, pu, opcio):
@@ -368,7 +368,7 @@ class m4sport(CBaseHostClass):
                     vl = vl[1]
                 else:
                    vl = vl[0]
-                vl = vl.replace('\/','/')
+                vl = vl.replace('\/', '/')
                 if vl.startswith('/'):
                     vl = 'https:' + vl
                 if not self.cm.isValidUrl(vl): 
@@ -381,7 +381,7 @@ class m4sport(CBaseHostClass):
         
     def malvadst(self, i_md='', i_hgk='', i_mpu=''):
         uhe = 'http://www.figyelmeztetes.hu/hely/sata/vansatdb.php'
-        pstd = {'md':i_md, 'hgk':i_hgk, 'mpu':i_mpu}
+        pstd = {'md': i_md, 'hgk': i_hgk, 'mpu': i_mpu}
         t_s = ''
         temp_vn = ''
         temp_vni = ''
@@ -412,7 +412,7 @@ class m4sport(CBaseHostClass):
         
     def susn(self, i_md='', i_hgk='', i_mpu=''):
         uhe = 'http://www.figyelmeztetes.hu/hely/sata/vansatdb.php'
-        pstd = {'md':i_md, 'hgk':i_hgk, 'mpu':i_mpu, 'hv':self.vivn, 'orv':self.porv, 'bts':self.pbtp}
+        pstd = {'md': i_md, 'hgk': i_hgk, 'mpu': i_mpu, 'hv': self.vivn, 'orv': self.porv, 'bts': self.pbtp}
         try:
             if i_md != '' and i_hgk != '' and i_mpu != '':
                 sts, data = self.cm.getPage(uhe, self.defaultParams, pstd)
@@ -425,7 +425,7 @@ class m4sport(CBaseHostClass):
         tt = []
         try:
             if fileExists('/etc/issue'):
-                fr = open('/etc/issue','r')
+                fr = open('/etc/issue', 'r')
                 for ln in fr:
                     ln = ln.rstrip('\n')
                     if ln != '':
@@ -454,17 +454,17 @@ class m4sport(CBaseHostClass):
         category = self.currItem.get("category", '')
         self.currList = []
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_main':
             self.listMainItems(self.currItem)
         elif category == 'list_second':
             self.listSecondItems(self.currItem)
         elif category in ['search', 'search_next_page']:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == 'search_history':
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

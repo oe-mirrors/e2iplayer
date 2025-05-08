@@ -368,7 +368,7 @@ class GamatoMovies(CBaseHostClass):
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category in ['movies', 'series']:
             if category == 'movies':
-                filtersTab = ['genres', 'order', 'year'] #min_rating
+                filtersTab = ['genres', 'order', 'year']  # min_rating
             else:
                 filtersTab = ['genres', 'order']
             idx = self.currItem.get('f_idx', 0)
@@ -397,4 +397,4 @@ class GamatoMovies(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, GamatoMovies(), True, []) #[CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]
+        CHostBase.__init__(self, GamatoMovies(), True, [])  # [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]

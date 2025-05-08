@@ -162,7 +162,7 @@ class TvGryPL(CBaseHostClass):
         urlParams['header']['Referer'] = cItem['url']
         sts, data = self.getPage('https://tvgry.pl/ajax/vptype.asp', urlParams, {'TYPE': 'Y'})
 
-        sts, data = self.getPage(cItem['url'], self.defaultParams) #{'use_cookie':True, 'cookie_items':{'agegate':1}})
+        sts, data = self.getPage(cItem['url'], self.defaultParams)  # {'use_cookie':True, 'cookie_items':{'agegate':1}})
         if not sts:
             return []
 

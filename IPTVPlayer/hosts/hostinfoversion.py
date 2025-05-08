@@ -2917,7 +2917,7 @@ class Host:
                     else:
                         a = 2
                     Updated = item.split('\n')[a]
-                    Name = 'samsamsam' #item.split('\n')[a+1]
+                    Name = 'samsamsam'  # item.split('\n')[a+1]
                     Title = item.split('\n')[a + 2]
                     if x == config.plugins.iptvplayer.ilepozycji.value:
                         break
@@ -2931,7 +2931,7 @@ class Host:
                 Updated = self.cm.ph.getSearchGroups(item, '''<updated>([^>]+?)</updated>''', 1, True)[0]
                 Name = self.cm.ph.getSearchGroups(item, '''<name>([^>]+?)</name>''', 1, True)[0]
                 if x == config.plugins.iptvplayer.ilepozycji.value:
-                    break #return valTab
+                    break  # return valTab
                 x += 1
                 Updated = Updated.replace('T', '   ').replace('Z', '   ')
                 Updated = Updated.replace('+01:00', '   ').replace('+02:00', '   ').replace('+00:00', '   ')
@@ -4340,7 +4340,7 @@ class Host:
             if not sts:
                 return ''
             #printDBG( 'Host listsItems data1: '+data )
-            js = self.cm.ph.getDataBeetwenMarkers(data, '<script type="text/javascript">', '</script>', False)[1] #.strip()
+            js = self.cm.ph.getDataBeetwenMarkers(data, '<script type="text/javascript">', '</script>', False)[1]  # .strip()
             #js = "\n".join(js)
             #printDBG( 'Host  js: %s' % js )
             urls = js_execute(js + '\nfor (n in this){print(n+"="+this[n]+";");}')
@@ -4538,14 +4538,14 @@ class Host:
 
                 unpacked = ''
                 packer = re.compile('(eval\(function\(p,a,c,k,e,(?:r|d).*)')
-                packeds = packer.findall(data)#[0]
+                packeds = packer.findall(data)  # [0]
                 for packed in packeds:
                     unpacked += unpackJSPlayerParams(packed, TEAMCASTPL_decryptPlayerParams, 0, True, True)
                 varhost = re.compile('var host_tmg="(.*?)"').findall(unpacked)
                 varfname = re.compile('var file_name="(.*?)"').findall(unpacked)
                 varjdtk = re.compile('var jdtk="(.*?)"').findall(unpacked)
                 if varhost and varfname and varjdtk:
-                    videoUrl = 'https://' + varhost[0] + '/' + varfname[0] + '?token=' + varjdtk[0] # +'|User-Agent='+urllib.quote(UA)+'&Referer='+link
+                    videoUrl = 'https://' + varhost[0] + '/' + varfname[0] + '?token=' + varjdtk[0]  # +'|User-Agent='+urllib.quote(UA)+'&Referer='+link
                 videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': link, 'User-Agent': self.USER_AGENT})
                 tmp = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
                 for item in tmp:
@@ -4838,7 +4838,7 @@ class Host:
                     #printDBG( 'Host item: '+str(item) )
                     return item['url']
 
-        if 'bg-gledai' in url: #url.startswith('http://www.bg-gledai.tv') or url.startswith('http://www.bg-gledai.me'):
+        if 'bg-gledai' in url:  # url.startswith('http://www.bg-gledai.tv') or url.startswith('http://www.bg-gledai.me'):
             #printDBG( 'Host getResolvedURL mainurl: '+url )
             COOKIEFILE = os_path.join(GetCookieDir(), 'gledai.cookie')
             host = "Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; androVM for VirtualBox ('Tablet' version with phone caps) Build/JRO03S) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30"

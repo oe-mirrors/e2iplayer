@@ -800,7 +800,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                     self.stepFinished(-1, _("Problem with parsing the server list."))
                 return
             if config.plugins.iptvplayer.hiddenAllVersionInUpdate.value:
-                self.__addLastVersion(serversList) # get last version from gitlab.com only for developers
+                self.__addLastVersion(serversList)  # get last version from gitlab.com only for developers
 
             if config.plugins.iptvplayer.gitlab_repo.value and config.plugins.iptvplayer.preferredupdateserver.value == '2':
                 serversList.append(self.gitlabList)
@@ -825,7 +825,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                             continue
                         if 'X.X' != server['pyver'] and pythonVer != server['pyver']:
                             continue
-                        if config.plugins.iptvplayer.possibleUpdateType.value not in [server['packagetype'], 'all']: #"sourcecode", "precompiled"
+                        if config.plugins.iptvplayer.possibleUpdateType.value not in [server['packagetype'], 'all']:  # "sourcecode", "precompiled"
                             continue
 
                     name = "| %s | python %s | %s | %s |" % (server['version'], server['pyver'], server['packagetype'], server['name'])

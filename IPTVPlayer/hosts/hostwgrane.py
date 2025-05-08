@@ -141,7 +141,7 @@ class WgranePL(CBaseHostClass):
                 continue
             if 'playlist=' in url:
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
-                continue # playlists not supported now
+                continue  # playlists not supported now
             else:
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']*?video_picture[^"^']+?)['"]''')[0])
                 if icon == '':
@@ -162,7 +162,7 @@ class WgranePL(CBaseHostClass):
                 params.update({'category': nextCategory})
                 self.addDir(params)
             elif 'PlaylistItemAdd' in item:
-                self.addVideo(params) # how to know if this is audio or video item?
+                self.addVideo(params)  # how to know if this is audio or video item?
             else:
                 self.addPicture(params)
 

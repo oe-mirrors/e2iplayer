@@ -30,8 +30,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.ogladajto_login = ConfigText(default=readCFG('ogladajto_login',""), fixed_size=False)
-config.plugins.iptvplayer.ogladajto_password = ConfigText(default=readCFG('ogladajto_password',""), fixed_size=False)
+config.plugins.iptvplayer.ogladajto_login = ConfigText(default=readCFG('ogladajto_login', ""), fixed_size=False)
+config.plugins.iptvplayer.ogladajto_password = ConfigText(default=readCFG('ogladajto_password', ""), fixed_size=False)
 
 
 def GetConfigList():

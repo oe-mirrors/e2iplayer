@@ -202,7 +202,7 @@ class ZDFmediathek(CBaseHostClass):
             sectionTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<h2', '</h2>')[1])
 
             items = []
-            data = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('<span', '>', 'circle icon'), ('<picture', '>', '"artdirect"')) #('<article', '>'))
+            data = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('<span', '>', 'circle icon'), ('<picture', '>', '"artdirect"'))  # ('<article', '>'))
             tmp = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('<span', '>', 'circle icon'), ('<', '>', '"artdirect"'))
             if len(tmp) > len(data):
                 data = tmp

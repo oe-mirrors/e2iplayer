@@ -67,7 +67,7 @@ def search(data, pattern, flags=0, limits=-1):
         limits = reObj.groups
     if isPY2():
         match = reObj.search(data)
-    else: #PY3 compares only data with the same type
+    else:  # PY3 compares only data with the same type
         if type(pattern) == type(data):
             match = reObj.search(data)
         elif isinstance(pattern, basestring):
@@ -75,10 +75,10 @@ def search(data, pattern, flags=0, limits=-1):
         elif isinstance(pattern, bytes):
             match = reObj.search(ensure_binary(data))
         else:
-            try: # just blind try
+            try:  # just blind try
                 match = reObj.search(data)
             except Exception:
-                printExc('EXCEPTION: unknown types: type(pattern)=%s vs type(data)=%s' % (str(type(pattern)),str(type(data))))
+                printExc('EXCEPTION: unknown types: type(pattern)=%s vs type(data)=%s' % (str(type(pattern)), str(type(data))))
 
     for idx in range(limits):
         try:
@@ -309,7 +309,7 @@ def clean_html(string):
         except Exception:
             printExc('WARNING')
 
-    if STRIP_HTML_TAGS_C: # and type(' ') != type(string):
+    if STRIP_HTML_TAGS_C:  # and type(' ') != type(string):
         return STRIP_HTML_TAGS_C.strip_html_tags(string)
 
     string = string.replace('<', ' <')

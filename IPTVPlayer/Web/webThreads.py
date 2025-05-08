@@ -57,7 +57,7 @@ class buildActiveHostsHTML(threading.Thread):
 
 	def run(self):
 		for hostName in SortHostsList(GetHostsList()):
-			if hostName in ['localmedia', 'urllist']: # those are local hosts, nothing to do via web interface
+			if hostName in ['localmedia', 'urllist']:  # those are local hosts, nothing to do via web interface
 				continue
 			if not IsHostEnabled(hostName):
 				continue
@@ -67,7 +67,7 @@ class buildActiveHostsHTML(threading.Thread):
 				title = _temp.gettytul()
 				_temp = None
 			except Exception:
-				continue # we do NOT use broken hosts!!!
+				continue  # we do NOT use broken hosts!!!
 
 			logo = getHostLogo(hostName)
 
@@ -194,7 +194,7 @@ class buildConfigsHTML(threading.Thread):
 				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
 				title = _temp.gettytul()
 			except Exception:
-				continue # we do NOT use broken hosts!!!
+				continue  # we do NOT use broken hosts!!!
 			usedCFG.append("host%s" % hostName)
 
 			logo = getHostLogo(hostName)
@@ -225,7 +225,7 @@ class buildConfigsHTML(threading.Thread):
 			hostsCFG += '<td style="width:120px">%s</td>' % hostNameWithURLandLOGO
 			hostsCFG += '<td>%s</td>' % OnOffState
 			if len(OptionsList) == 0:
-				hostsCFG += '<td><a>%s</a></td>' % "" # _('Host does not have configuration options')
+				hostsCFG += '<td><a>%s</a></td>' % ""  # _('Host does not have configuration options')
 			else:
 				hostsCFG += '<td><table border="1" style="width:100%">'
 				for item in self.buildSettingsTable(List2=OptionsList, List1=list(config.plugins.iptvplayer.dict().items()), exclList=usedCFG, direction='2>1'):
@@ -293,7 +293,7 @@ class doUseHostAction(threading.Thread):
 			if ret.status == RetHost.OK and isinstance(ret.value, list):
 				for item in ret.value:
 					if isinstance(item, CUrlItem):
-						item.urlNeedsResolve = 0 # protection from recursion
+						item.urlNeedsResolve = 0  # protection from recursion
 						linkList.append(item)
 					elif isinstance(item, str):
 						linkList.append(CUrlItem(item, item, 0))
@@ -319,7 +319,7 @@ class doUseHostAction(threading.Thread):
 					print("ListForItem>urlItems exception:", str(e))
 					links = 'NOVALIDURLS'
 				try:
-					settings.retObj = settings.activeHost['Obj'].getLinksForVideo(myID, settings.retObj.value[myID]) #returns "NOT_IMPLEMENTED" when host is using curlitem
+					settings.retObj = settings.activeHost['Obj'].getLinksForVideo(myID, settings.retObj.value[myID])  # returns "NOT_IMPLEMENTED" when host is using curlitem
 				except Exception as e:
 					print("ListForItem>getLinksForVideo exception:", str(e))
 					settings.retObj = RetHost(RetHost.NOT_IMPLEMENTED, value=[])
@@ -375,11 +375,11 @@ class doGlobalSearch(threading.Thread):
 			return
 		for hostName in SortHostsList(GetHostsList()):
 			self.stopIfRequested()
-			if hostName in ['localmedia', 'urllist']: # those are local hosts, nothing to do via web interface
+			if hostName in ['localmedia', 'urllist']:  # those are local hosts, nothing to do via web interface
 				continue
-			elif hostName in ['localmedia', 'urllist']: # those are local hosts, nothing to do via web interface
+			elif hostName in ['localmedia', 'urllist']:  # those are local hosts, nothing to do via web interface
 				continue
-			elif hostName in ['seriesonline']: # those hosts have issues wth global search, need more investigation
+			elif hostName in ['seriesonline']:  # those hosts have issues wth global search, need more investigation
 				continue
 			elif not IsHostEnabled(hostName):
 				continue
@@ -396,7 +396,7 @@ class doGlobalSearch(threading.Thread):
 				continue
 			#print "settings.GlobalSearchQuery=",settings.GlobalSearchQuery, 'hostName=', hostName
 			settings.searchingInHost = hostName
-			time.sleep(0.2) #
+			time.sleep(0.2)
 			try:
 				self.host.getSupportedFavoritesTypes()
 				ret = self.host.getInitList()

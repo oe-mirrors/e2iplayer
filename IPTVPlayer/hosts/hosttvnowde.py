@@ -418,7 +418,7 @@ class TVNowDE(CBaseHostClass):
         if len(cacheTab):
             return cacheTab
 
-        urlDashClear = '' #cItem.get('dashclear', '')
+        urlDashClear = ''  # cItem.get('dashclear', '')
         if not self.cm.isValidUrl(urlDashClear):
             try:
                 seoUrlItem = cItem['f_seo_url_format']

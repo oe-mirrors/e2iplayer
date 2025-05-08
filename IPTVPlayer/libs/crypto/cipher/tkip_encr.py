@@ -58,7 +58,7 @@ class TKIP_encr:
         """
         assert (ord(cipherText[3]) & 0x20), 'extIV SHOULD be set in TKIP header'
         self.setCurrentKeyID = (ord(cipherText[3]) & 0xC0) >> 6
-        return cipherText[:3] + cipherText[5:9] # note iv octets are little-endian!!!
+        return cipherText[:3] + cipherText[5:9]  # note iv octets are little-endian!!!
 
     def _makeARC4key(self, tscOctets, keyID=0):
         """ Make an ARC4 key from TKIP Sequence Counter Octets (little-endian) """

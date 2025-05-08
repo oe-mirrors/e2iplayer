@@ -73,7 +73,7 @@ class InteriaTv(CBaseHostClass):
         try:
             cTree = cItem['c_tree']
             for item in cTree['list']:
-                title = self.cleanHtmlStr(item['dat']) #self.cm.ph.getDataBeetwenNodes(item['dat'], ('<div', '>', 'title'), ('</div', '>'))[1]
+                title = self.cleanHtmlStr(item['dat'])  # self.cm.ph.getDataBeetwenNodes(item['dat'], ('<div', '>', 'title'), ('</div', '>'))[1]
                 url = self.getFullUrl(self.cm.ph.getSearchGroups(item['dat'], '''href=['"]([^'^"]+?)['"]''')[0])
                 if 'list' not in item:
                     if self.cm.isValidUrl(url) and title != '':

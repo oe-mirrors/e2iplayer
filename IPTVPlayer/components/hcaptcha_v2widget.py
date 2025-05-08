@@ -42,12 +42,12 @@ class UnCaptchahCaptchaWidget(Screen):
             self.coversSelection.append([])
             for y in range(self.numOfRow):
                 coversSkin += """<widget name="cover_%s%s" zPosition="5" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y,
-                    (self.offsetCoverX + self.markerWidth * x), # pos X image
-                    (self.offsetCoverY + self.markerHeight * y), # pos Y image
+                    (self.offsetCoverX + self.markerWidth * x),  # pos X image
+                    (self.offsetCoverY + self.markerHeight * y),  # pos Y image
                     self.markerWidth,
                     self.markerHeight
                 )
-                self.coversSelection[x].append(False) # at start no icon is selected
+                self.coversSelection[x].append(False)  # at start no icon is selected
 
         skin_puzzle_part = ""
         for n_img in range(self.numOfImg):

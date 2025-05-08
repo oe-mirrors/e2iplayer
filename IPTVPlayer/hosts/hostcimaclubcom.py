@@ -223,7 +223,7 @@ class CimaClubCom(CBaseHostClass):
         if 'f_idx' in cItem:
             post_data = {}
             for key in self.cacheFiltersKeys:
-                baseKey = key[2:] # "f_"
+                baseKey = key[2:]  # "f_"
                 if key in cItem:
                     post_data[baseKey] = cItem[key]
             for item in self.cacheFilters.get('operators', []):

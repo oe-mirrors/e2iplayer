@@ -43,7 +43,7 @@ class WpTV(CBaseHostClass):
         self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.cm.HEADER = self.HEADER # default header
+        self.cm.HEADER = self.HEADER  # default header
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_URL = 'http://wp.tv/'
@@ -218,7 +218,7 @@ class WpTV(CBaseHostClass):
                 continue
             itemsTab = self.getSectionItems(section)
             for item in itemsTab:
-                item.update({'good_for_fav': True, 'desc': item['desc'] + '[/br]' + mainDesc}) #, 'title':item['desc']
+                item.update({'good_for_fav': True, 'desc': item['desc'] + '[/br]' + mainDesc})  # , 'title':item['desc']
                 self.addVideo(item)
 
         if self.cm.isValidUrl(nextPage):

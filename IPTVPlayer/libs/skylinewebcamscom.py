@@ -92,9 +92,9 @@ class WkylinewebcamsComApi:
                 titletext = self.cm.ph.getSearchGroups(item, '''html">([^"]+?)$''', 1, True)[0]
                 title = "%s: %s" % (continent.capitalize(), self.cleanHtmlStr(titletext))
                 if url != '' and title != '':
-                   tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'}) #explore_item
+                   tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})  # explore_item
 
-        tab = sorted(tab, key=lambda x:x['title'], reverse=True)
+        tab = sorted(tab, key=lambda x: x['title'], reverse=True)
         for item in tab:
             params = dict(cItem)
             params.update(item)
@@ -107,7 +107,7 @@ class WkylinewebcamsComApi:
            url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
            title = self.cleanHtmlStr("Category: " + self.cm.ph.getSearchGroups(item, '''class="tcam">([^<]+?)<''', 1, True)[0])
            if url != '' and title != '':
-               tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'}) #explore_item
+               tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})  # explore_item
 
         for item in tab[::-1]:
             params = dict(cItem)
@@ -120,7 +120,7 @@ class WkylinewebcamsComApi:
             catData = data[idx]
             catData = catData.split('</a>')
             if url != '' and title != '':
-                    tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'}) #explore_item
+                    tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})  # explore_item
             if len(catData) < 2:
                 continue
             catTitle = self.cleanHtmlStr(catData[0])
@@ -131,7 +131,7 @@ class WkylinewebcamsComApi:
                 url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
                 title = self.cleanHtmlStr(item)
                 if url != '' and title != '':
-                    tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'}) #explore_item
+                    tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})  # explore_item
             if len(tab):
                 tab.insert(0, {'url': self.getFullUrl(catUrl), 'title': _('All'), 'cat': 'list_cams'})
                 self.mainMenuCache[idx] = tab

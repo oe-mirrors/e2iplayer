@@ -138,7 +138,7 @@ class DixMax(CBaseHostClass):
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
 
-        keys = ('f_type', 'f_genre') #('genres[]', 'fichaType[]')
+        keys = ('f_type', 'f_genre')  # ('genres[]', 'fichaType[]')
         tmp = ph.findall(data, ('<select', '>', 'b-multiple'), '</select>', limits=2)
         for section in tmp:
             key = keys[len(self.cacheFiltersKeys)]
@@ -364,7 +364,7 @@ class DixMax(CBaseHostClass):
         else:
             post_data.update({'i': 'false'})
 
-        url = self.getFullUrl('/get_links.php') #get_all_links
+        url = self.getFullUrl('/get_links.php')  # get_all_links
         sts, data = self.getPage(url, post_data=post_data)
         if not sts:
             return

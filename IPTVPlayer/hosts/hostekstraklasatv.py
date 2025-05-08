@@ -146,7 +146,7 @@ class Ekstraklasa(CBaseHostClass):
 
         if "scheduledAirDate" in video_json:
             date_time_str = video_json["scheduledAirDate"]
-            date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M:%S.%fZ') + self.timeoffset #"2020-06-09T15:55:00.000Z"
+            date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M:%S.%fZ') + self.timeoffset  # "2020-06-09T15:55:00.000Z"
             date_time_text = date_time_obj.strftime("%d/%m/%Y, %H:%M")
             title = title + " (" + date_time_text + ")"
 
@@ -171,10 +171,10 @@ class Ekstraklasa(CBaseHostClass):
         else:
             descStr.append(_("Not Free"))
 
-        playFrom = video_json.get("playableFrom", '') #"2020-06-07T17:55:00.000Z"
+        playFrom = video_json.get("playableFrom", '')  # "2020-06-07T17:55:00.000Z"
         if playFrom:
             date_time_str = playFrom
-            date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M:%S.%fZ') + self.timeoffset #"2020-06-09T15:55:00.000Z"
+            date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%dT%H:%M:%S.%fZ') + self.timeoffset  # "2020-06-09T15:55:00.000Z"
             date_time_text = date_time_obj.strftime("%d/%m/%Y, %H:%M")
 
             descStr.append(_("Playable from ") + date_time_text)

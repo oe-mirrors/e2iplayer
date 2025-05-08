@@ -147,7 +147,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                 t = self.cleanHtmlStr(t)
                 if t:
                     descTab.append(t)
-            if type in ['series', 'peliculas']: # , 'listas', 'gente'
+            if type in ['series', 'peliculas']:  # , 'listas', 'gente'
                 nextCategory = 'explore_item'
             elif type == 'actores':
                 nextCategory = 'list_actor_items'

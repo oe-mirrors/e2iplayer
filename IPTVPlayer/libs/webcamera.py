@@ -213,7 +213,7 @@ class WebCameraApi(CBaseHostClass):
                 elif 'list' not in item:
                     if self.cm.isValidUrl(url) and title != '':
                         if url.endswith('/aktualnosci'):
-                            continue # not handled at now
+                            continue  # not handled at now
                         params = dict(cItem)
                         params.pop('c_tree', None)
                         params.update({'priv_category': nextCategory, 'title': title, 'url': url, 'icon': icon})

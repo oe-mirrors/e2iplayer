@@ -247,7 +247,7 @@ class NuteczkiEU(CBaseHostClass):
             params = dict(cItem)
             params['post_data'] = dict(params['post_data'])
             params['post_data'] .update(item['post_data'])
-            params['post_data']['filter-enable-category'] = 105 # no idea what this is
+            params['post_data']['filter-enable-category'] = 105  # no idea what this is
             params['title'] = item['title']
             self.addDir(params)
 

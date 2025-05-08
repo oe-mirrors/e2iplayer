@@ -478,7 +478,7 @@ class IPTVSubDownloaderWidget(Screen):
                 if selItem.itemIdx > -1 and len(self.currList) > selItem.itemIdx:
                     currSelIndex = selItem.itemIdx
 
-            dots = ""#_("...............")
+            dots = ""  # _("...............")
             IDS_DOWNLOADING = _("Downloading") + dots
             IDS_LOADING = _("Loading") + dots
             IDS_REFRESHING = _("Refreshing") + dots

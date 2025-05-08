@@ -5,7 +5,7 @@ except Exception:
     xrange = range
 
 
-def _0xe35c(d, e, f):# {
+def _0xe35c(d, e, f):  # {
     g = list("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/")
     h = g[0:e]
     i = g[0:f]
@@ -27,7 +27,7 @@ def _0xe35c(d, e, f):# {
     return int(k) if k else 0
 
 
-def dehunt(h, u, n, t, e, r):# {
+def dehunt(h, u, n, t, e, r):  # {
     r = ""
     i = 0
 
@@ -39,7 +39,7 @@ def dehunt(h, u, n, t, e, r):# {
                 ooo = chr(h[i])
             except:
                 ooo = h[i]
-            s += ooo#chr(h[i]);
+            s += ooo  # chr(h[i]);
             i += 1
         for j in xrange(len(n)):
             try:

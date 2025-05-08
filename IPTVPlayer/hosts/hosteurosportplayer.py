@@ -108,7 +108,7 @@ class EuroSportPlayer(CBaseHostClass):
             CAT_TAB = [
                        {'category': 'on_air', 'title': _('On Air'), },
                        {'category': 'schedule', 'title': _('Schedule'), },
-                       {'category': 'vod_sport_filters', 'title': _('All Sports'), } #,
+                       {'category': 'vod_sport_filters', 'title': _('All Sports'), }  # ,
                        #{'category':'search',             'title': _('Search'),          'search_item':True    },
                        #{'category':'search_history',     'title': _('Search history')}
                       ]

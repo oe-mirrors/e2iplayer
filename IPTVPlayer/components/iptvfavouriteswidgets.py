@@ -131,7 +131,7 @@ class IPTVFavouritesAddItemWidget(Screen):
                     return
                 else:
                     self.session.openWithCallback(self.iptvDoFinish, MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
-            else: # addn new group
+            else:  # addn new group
                 self.session.openWithCallback(self.addNewFavouriteGroup, IPTVFavouritesAddNewGroupWidget, self.favourites)
         else:
             self.iptvDoFinish()
@@ -171,12 +171,12 @@ class IPTVFavouritesMainWidget(Screen):
          <widget name="title" position="5,47"  zPosition="1" size="%d,23" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
         </screen>""" % (
             _("Favourites manager"),
-            sz_w, sz_h, # size
+            sz_w, sz_h,  # size
             GetIconDir("red.png"),
             GetIconDir("green.png"),
             GetIconDir("yellow.png"),
-            sz_w - 10, sz_h - 105, # size list
-            sz_w - 135, # size title
+            sz_w - 10, sz_h - 105,  # size list
+            sz_w - 135,  # size title
             )
 
     def __init__(self, session):
@@ -187,7 +187,7 @@ class IPTVFavouritesMainWidget(Screen):
         self.onClose.append(self.__onClose)
         self.favourites = None
         self.started = False
-        self.menu = ":groups:" # "items"
+        self.menu = ":groups:"  # "items"
         self.modified = False
 
         self.IDS_ENABLE_REORDERING = _('Enable reordering')

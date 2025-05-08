@@ -30,11 +30,11 @@ def gettytul():
 class FilmPapa(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filmpapa', 'cookie':'filmpapa.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'filmpapa', 'cookie': 'filmpapa.cookie'})
         self.MAIN_URL = 'https://plusz.club'
         self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/filmpapalogo.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -70,7 +70,7 @@ class FilmPapa(CBaseHostClass):
                 retTab = getMPDLinksWithMeta(uri, False)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def _uriIsValid(self, url):
@@ -78,9 +78,9 @@ class FilmPapa(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('FilmPapa.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Kategóriák')},
-                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Kategóriák')},
+                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
 
     def listItems(self, cItem):
@@ -90,27 +90,27 @@ class FilmPapa(CBaseHostClass):
             return
         lurl = cItem['url']
         page = cItem['page']
-        max = self.cm.ph.getDataBeetwenMarkers(data, '</div><p class="mt10">','</p>', False)[1]
-        movies = self.cm.ph.getAllItemsBeetwenMarkers(data,'<div class="movie-box">','</small></span>									</div>')
+        max = self.cm.ph.getDataBeetwenMarkers(data, '</div><p class="mt10">', '</p>', False)[1]
+        movies = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="movie-box">', '</small></span>									</div>')
         for m in movies:
-            title = self.cm.ph.getDataBeetwenMarkers(m, 'alt="','" width=', False)[1]
+            title = self.cm.ph.getDataBeetwenMarkers(m, 'alt="', '" width=', False)[1]
             if "&#8211;" in title:
                 title = title.replace("&#8211;", "-")
             if "&#8217;" in title:
                 title = title.replace("&#8217;", "")
-            icon = self.cm.ph.getDataBeetwenMarkers(m, 'img src="','" alt="', False)[1]
-            url = self.cm.ph.getDataBeetwenMarkers(m, '<a href="','">', False)[1]
+            icon = self.cm.ph.getDataBeetwenMarkers(m, 'img src="', '" alt="', False)[1]
+            url = self.cm.ph.getDataBeetwenMarkers(m, '<a href="', '">', False)[1]
             sts, data2 = self.getPage(url)
             if not sts:
                 return
-            desc = "IMDB pontszám: " + self.cm.ph.getDataBeetwenMarkers(m, '<span class="icon-star imdb tooltip">',' <span class=', False)[1] + ", Tartalom: " + self.cm.ph.getDataBeetwenMarkers(data2, '<div class="description">','</div>', False)[1]
+            desc = "IMDB pontszám: " + self.cm.ph.getDataBeetwenMarkers(m, '<span class="icon-star imdb tooltip">', ' <span class=', False)[1] + ", Tartalom: " + self.cm.ph.getDataBeetwenMarkers(data2, '<div class="description">', '</div>', False)[1]
             if '<br />' in desc or '</br>' in desc:
                 try:
                    desc = desc.replace('<br />', "")
                    desc = desc.replace('</br>', "")
                 except:
                    pass
-            params = {'title':title, 'icon': icon, 'url': url, 'desc': desc}
+            params = {'title': title, 'icon': icon, 'url': url, 'desc': desc}
             self.addVideo(params)
         if max != "There were no results found.":
             params = {'category': 'list_filters', 'title': "Következő oldal", 'icon': None, 'url': lurl, 'page': page + 1}
@@ -122,16 +122,16 @@ class FilmPapa(CBaseHostClass):
         sts, data = self.getPage(url)                    
         if not sts:
             return
-        cat = self.cm.ph.getAllItemsBeetwenMarkers(data,'<li class="cat-item cat-item','</li>')
+        cat = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="cat-item cat-item', '</li>')
         for c in cat:
-            title = self.cm.ph.getDataBeetwenMarkers(c, '" >','</a>', False)[1]
+            title = self.cm.ph.getDataBeetwenMarkers(c, '" >', '</a>', False)[1]
             if title == "":
-                title = self.cm.ph.getDataBeetwenMarkers(c, 'title=','/a>', False)[1]
-                title = self.cm.ph.getDataBeetwenMarkers(title, '">','<', False)[1]
+                title = self.cm.ph.getDataBeetwenMarkers(c, 'title=', '/a>', False)[1]
+                title = self.cm.ph.getDataBeetwenMarkers(title, '">', '<', False)[1]
             page = 1
             icon = None
-            url = self.cm.ph.getDataBeetwenMarkers(c, '<a href="','"', False)[1]
-            params = {'category':'list_filters','title':title, 'icon': icon, 'url': url, 'page': page}
+            url = self.cm.ph.getDataBeetwenMarkers(c, '<a href="', '"', False)[1]
+            params = {'category': 'list_filters', 'title': title, 'icon': icon, 'url': url, 'page': page}
             self.addDir(params)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -149,17 +149,17 @@ class FilmPapa(CBaseHostClass):
         self.currList = []
         
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listFilters(self.currItem)
         elif category == 'list_filters':
             self.listItems(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)			
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         
@@ -173,26 +173,26 @@ class FilmPapa(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])		
         if not sts:
             return
-        movies = self.cm.ph.getAllItemsBeetwenMarkers(data,'<div class="movie-box">','</small></span>									</div>')
+        movies = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="movie-box">', '</small></span>									</div>')
         for m in movies:
-            title = self.cm.ph.getDataBeetwenMarkers(m, 'alt="','" width=', False)[1]
+            title = self.cm.ph.getDataBeetwenMarkers(m, 'alt="', '" width=', False)[1]
             if "&#8211;" in title:
                 title = title.replace("&#8211;", "-")
             if "&#8217;" in title:
                 title = title.replace("&#8217;", "")
-            icon = self.cm.ph.getDataBeetwenMarkers(m, 'img src="','" alt="', False)[1]
-            url = self.cm.ph.getDataBeetwenMarkers(m, '<a href="','">', False)[1]
+            icon = self.cm.ph.getDataBeetwenMarkers(m, 'img src="', '" alt="', False)[1]
+            url = self.cm.ph.getDataBeetwenMarkers(m, '<a href="', '">', False)[1]
             sts, data2 = self.getPage(url)
             if not sts:
                 return
-            desc = "IMDB pontszám: " + self.cm.ph.getDataBeetwenMarkers(m, '<span class="icon-star imdb tooltip">',' <span class=', False)[1] + ", Tartalom: " + self.cm.ph.getDataBeetwenMarkers(data2, '<div class="description">','</div>', False)[1]
+            desc = "IMDB pontszám: " + self.cm.ph.getDataBeetwenMarkers(m, '<span class="icon-star imdb tooltip">', ' <span class=', False)[1] + ", Tartalom: " + self.cm.ph.getDataBeetwenMarkers(data2, '<div class="description">', '</div>', False)[1]
             if '<br />' in desc or '</br>' in desc:
                 try:
                    desc = desc.replace('<br />', "")
                    desc = desc.replace('</br>', "")
                 except:
                    pass
-            params = {'title':title, 'icon': icon, 'url': url, 'desc': desc}
+            params = {'title': title, 'icon': icon, 'url': url, 'desc': desc}
             self.addVideo(params)
 
 class IPTVHost(CHostBase):

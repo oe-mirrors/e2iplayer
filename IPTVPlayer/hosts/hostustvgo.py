@@ -75,7 +75,7 @@ class ustvgo(CBaseHostClass):
         url = baseUrl
         urlParams = deepcopy(addParams)
         urlData = deepcopy(post_data)
-        unloadUrl = None #
+        unloadUrl = None
         tries = 0
         removeCookieItems = False
         while tries < 20:

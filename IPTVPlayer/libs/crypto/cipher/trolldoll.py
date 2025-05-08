@@ -61,7 +61,7 @@ class Trolldoll(Icedoll):
     def encrypt(self, plainText, more=None):
         """ """
         if not (self.hasIV):  # On first call to encrypt put in an IV
-            plainText = self._makeIV() + plainText # add the 'IV'
+            plainText = self._makeIV() + plainText  # add the 'IV'
             self.hasIV = 1
         if more == None:    # on last call to encrypt append integrity check
             plainText = plainText + self._makeIC()
@@ -76,7 +76,7 @@ class Trolldoll(Icedoll):
         """
         plainText = Icedoll.decrypt(self, cipherText, more=more)
         if not (self.hasIV):  # on first call to decrypt remove IV
-            plainText = plainText[self.ivSize:] # remove the IV
+            plainText = plainText[self.ivSize:]  # remove the IV
             self.hasIV = 1
         if more == None:    # on last call to encrypt append integrity check
             if not (self._verifyIC(plainText[-self.micSize:])):

@@ -108,7 +108,7 @@ class YifyTV(CBaseHostClass):
         url = baseUrl
         urlParams = deepcopy(addParams)
         urlData = deepcopy(post_data)
-        unloadUrl = None #
+        unloadUrl = None
         tries = 0
         removeCookieItems = False
         while tries < 20:
@@ -420,7 +420,7 @@ class YifyTV(CBaseHostClass):
                         printDBG(data)
                         if 'jscode' in data:
                             try:
-                                data = byteify(json.loads(data))[0]['jscode'][1:-1]#.replace('eval(', 'print(')
+                                data = byteify(json.loads(data))[0]['jscode'][1:-1]  # .replace('eval(', 'print(')
                                 jsTab = ['']
                                 jsTab.append('''var iptv_href="%s"; var iptv_domain="%s"; var iptv_video_id="%s"; var iptv_jwpath="%s";\n''' % (self.getMainUrl(), self.up.getDomain(self.getMainUrl()), imdbid, url))
                                 jsTab.append(base64.b64decode('''ZnVuY3Rpb24gU2hvd0Rpdigpe31mdW5jdGlvbiBzaG93aUZyYW1lKCl7cHJpbnQoYXJndW1lbnRzWzBdKX1mdW5jdGlvbiBnZXRKd1BhdGgoKXtyZXR1cm4gaXB0dl9qd3BhdGh9ZnVuY3Rpb24gZ2V0X3BhcmFtc19ub19zb3JjZXMoKXtyZXR1cm4gaXB0dl92aWRlb19pZH1mdW5jdGlvbiBzZXRUaW1lb3V0KHQsbil7aWYoaXB0dl9kaXJlY3QpdHJ5e3QoKX1jYXRjaChlKXtwcmludCgiXG4iKX1lbHNlIHRoaXMudHJ5dXAoKX12YXIgZG9jdW1lbnQ9e30sd2luZG93PXRoaXMsbG9jYXRpb249e307bG9jYXRpb24uaHJlZj1pcHR2X2hyZWYsbG9jYXRpb24uaG9zdG5hbWU9aXB0dl9kb21haW4sbG9jYXRpb24udG9TdHJpbmc9ZnVuY3Rpb24oKXtyZXR1cm4gaXB0dl9ocmVmfSxkb2N1bWVudC5sb2NhdGlvbj1sb2NhdGlvbjt2YXIgZWxlbWVudD1mdW5jdGlvbih0KXt0aGlzLnRleHQ9ZnVuY3Rpb24oKXtyZXR1cm4ibm9uZSJ9LHRoaXMuZmlyc3Q9ZnVuY3Rpb24oKXtyZXR1cm4gbmV3IGVsZW1lbnR9fSwkPWZ1bmN0aW9uKHQpe3JldHVybiBuZXcgZWxlbWVudCh0KX0scGxheWVybW9kZT0iIixzb3VyY2VTZWxlY3RlZD0wLHNvdXJjZXM9W3tzdWJfZGVsYXk6MCxzdWJfZmFjdG9yOjF9XTskLmdldD1mdW5jdGlvbigpe3JldHVybiBwcmludChhcmd1bWVudHNbMF0pLHtkb25lOlNob3dEaXYsZXJyb3I6U2hvd0Rpdn19LCQucG9zdD1mdW5jdGlvbigpe3ByaW50KCJcbklQVFZfUE9TVF9TVEFSVFxuIikscHJpbnQoSlNPTi5zdHJpbmdpZnkoe3VybDphcmd1bWVudHNbMF0scGFyYW1zOmFyZ3VtZW50c1sxXX0pKSxwcmludCgiXG5JUFRWX1BPU1RfRU5EXG4iKX07'''))

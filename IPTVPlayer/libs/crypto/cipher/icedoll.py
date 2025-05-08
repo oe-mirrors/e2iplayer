@@ -49,7 +49,7 @@ class Icedoll(Rijndael):
 
         self.Nb = self.blockSize / 4          # Nb is number of columns of 32 bit words
         self.Nk = keySize / 4                 # Nk is the key length in 32-bit words
-        self.Nr = NrTable[self.Nb][self.Nk] + extraRounds # <------- !!! change from Rijndael !!!
+        self.Nr = NrTable[self.Nb][self.Nk] + extraRounds  # <------- !!! change from Rijndael !!!
 
         if key != None:
             self.setKey(key)
@@ -64,7 +64,7 @@ class Icedoll(Rijndael):
         """ Encrypt a block, plainTextBlock must be a array of bytes [Nb by 4] """
         self.state = self._toBlock(plainTextBlock)
         if self.encryptBlockCount == 0:   # first call, set frdd back
-            self.priorFeedBack = self._toBlock(chr(0) * (4 * self.Nb)) # <------- !!! change from Rijndael !!!
+            self.priorFeedBack = self._toBlock(chr(0) * (4 * self.Nb))  # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.priorFeedBack)                      # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.__expandedKey[0:self.Nb])
         for round in range(1, self.Nr):          #for round = 1 step 1 to Nr�1
@@ -85,7 +85,7 @@ class Icedoll(Rijndael):
         """ decrypt a block (array of bytes) """
         self.state = self._toBlock(encryptedBlock)
         if self.decryptBlockCount == 0:   # first call, set frdd back
-            self.priorFeedBack = self._toBlock(chr(0) * (4 * self.Nb)) # <------- !!! change from Rijndael !!!
+            self.priorFeedBack = self._toBlock(chr(0) * (4 * self.Nb))  # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.priorFeedBack)                        # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.__expandedKey[self.Nr * self.Nb:(self.Nr + 1) * self.Nb])
         for round in range(self.Nr - 1, 0, -1):
@@ -98,6 +98,6 @@ class Icedoll(Rijndael):
         InvShiftRows(self)
         InvSubBytes(self)
         AddRoundKey(self, self.__expandedKey[0:self.Nb])
-        AddRoundKey(self, self.priorFeedBack) # <------- !!! change from Rijndael !!!
+        AddRoundKey(self, self.priorFeedBack)  # <------- !!! change from Rijndael !!!
         self.priorFeedBack = nextFeedBack     # <------- !!! change from Rijndael !!!
         return self._toBString(self.state)

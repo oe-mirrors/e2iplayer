@@ -142,7 +142,7 @@ class NGolosCOM(CBaseHostClass):
         page = cItem.get('page', 1)
 
         params = dict(self.defaultParams)
-        params['cookie_items'] = {'orderby': cItem.get('orderby', '')} #'latest'
+        params['cookie_items'] = {'orderby': cItem.get('orderby', '')}  # 'latest'
         sts, data = self.getPage(cItem['url'], params)
         if not sts:
             return

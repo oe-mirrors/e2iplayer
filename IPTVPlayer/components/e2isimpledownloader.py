@@ -41,9 +41,9 @@ class SingleFileDownloaderWidget(Screen):
          <widget name="console"      position="10,%d"   zPosition="2" size="%d,160" valign="center" halign="center"   font="Regular;24" transparent="0" foregroundColor="white" backgroundColor="black"/>
         </screen>""" % (
             _("Single file downloader"),
-            sz_w, sz_h, # size
-            sz_w - 135, # size title
-            (sz_h - 160) / 2, sz_w - 20, # console
+            sz_w, sz_h,  # size
+            sz_w - 135,  # size title
+            (sz_h - 160) / 2, sz_w - 20,  # console
             )
 
     def __init__(self, session, uri, outFile, title=''):

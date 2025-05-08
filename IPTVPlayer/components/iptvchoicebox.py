@@ -51,8 +51,8 @@ class IPTVChoiceBoxWidget(Screen):
                 <widget name="list"  position="5,50"  zPosition="2" size="%d,%d" scrollbarMode="showOnDemand" transparent="1"  backgroundColor="#00000000" enableWrapAround="1" />
             </screen>""" % (
                 self.params.get('title', _("Select option")),
-                width, height, # size
-                width - 10, # title width
+                width, height,  # size
+                width - 10,  # title width
                 width - 10, height - 50
                 )
         return skin

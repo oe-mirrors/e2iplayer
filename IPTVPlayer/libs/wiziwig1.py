@@ -33,7 +33,7 @@ class Wiziwig1Api(CBaseHostClass):
         return self.cm.getPage(baseUrl, addParams, post_data)
 
     def localTime(self, date_time_str):
-        date_time_obj = datetime.datetime.strptime(date_time_str, '%H:%M') + self.timeoffset #"2020-06-09T15:55:00.000Z"
+        date_time_obj = datetime.datetime.strptime(date_time_str, '%H:%M') + self.timeoffset  # "2020-06-09T15:55:00.000Z"
         time2 = date_time_obj.strftime("%H:%M")
 
         return time2

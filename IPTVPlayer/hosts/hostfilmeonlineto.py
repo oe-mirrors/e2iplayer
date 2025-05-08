@@ -214,7 +214,7 @@ class FilmeOnlineTo(CBaseHostClass):
             else:
                 filterList = ['f_search']
             for key in filterList:
-                baseKey = key[2:].replace('[]', '') # "f_"
+                baseKey = key[2:].replace('[]', '')  # "f_"
                 if key in cItem:
                     post_data[baseKey] = cItem.get(key, 'all')
 

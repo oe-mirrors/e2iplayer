@@ -120,7 +120,7 @@ class PlayerSelectorWidget(Screen):
         self.groupObj = groupObj
         self.numOfLockedItems = numOfLockedItems
 
-        self.IconsSize = iconSize #do ladowania ikon
+        self.IconsSize = iconSize  # do ladowania ikon
         self.MarkerSize = self.IconsSize + 45
 
         self.lastSelection = PlayerSelectorWidget.LAST_SELECTION.get(self.groupName, 0)
@@ -145,11 +145,11 @@ class PlayerSelectorWidget(Screen):
             """ % (
               GetIPTVPlayerVersion(),
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth,  # width of window
-              offsetCoverY + tmpY * numOfRow + offsetCoverX - disHeight, # height of window
+              offsetCoverY + tmpY * numOfRow + offsetCoverX - disHeight,  # height of window
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth,  # width of status line
-              offsetMarkerX, offsetMarkerY, # first marker position
+              offsetMarkerX, offsetMarkerY,  # first marker position
               markerWidth, markerHeight,    # marker size
-              self.pageItemStartX, self.pageItemStartY, # pagination marker
+              self.pageItemStartX, self.pageItemStartY,  # pagination marker
               self.pageItemSize, self.pageItemSize,
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth - 70,
               )
@@ -163,11 +163,11 @@ class PlayerSelectorWidget(Screen):
             """ % (
               GetIPTVPlayerVersion(),
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth,  # width of window
-              offsetCoverY + tmpY * numOfRow + offsetCoverX - disHeight, # height of window
+              offsetCoverY + tmpY * numOfRow + offsetCoverX - disHeight,  # height of window
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth,  # width of status line
-              offsetMarkerX, offsetMarkerY, # first marker position
+              offsetMarkerX, offsetMarkerY,  # first marker position
               markerWidth, markerHeight,    # marker size
-              self.pageItemStartX, self.pageItemStartY, # pagination marker
+              self.pageItemStartX, self.pageItemStartY,  # pagination marker
               self.pageItemSize, self.pageItemSize,
               offsetCoverX + tmpX * numOfCol + offsetCoverX - disWidth - 70,
               )
@@ -175,8 +175,8 @@ class PlayerSelectorWidget(Screen):
         for y in range(1, numOfRow + 1):
             for x in range(1, numOfCol + 1):
                 skinCoverLine = """<widget name="cover_%s%s" zPosition="4" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y,
-                    (offsetCoverX + tmpX * (x - 1)), # pos X image
-                    (offsetCoverY + tmpY * (y - 1)), # pos Y image
+                    (offsetCoverX + tmpX * (x - 1)),  # pos X image
+                    (offsetCoverY + tmpY * (y - 1)),  # pos Y image
                     coverWidth,
                     coverHeight
                 )

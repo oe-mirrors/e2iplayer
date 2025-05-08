@@ -50,7 +50,7 @@ if __name__ == "__main__":
         key = f.read()
 
     sys.path.insert(1, libsPath)
-    if sys.version_info[0] >= 3: #PY3
+    if sys.version_info[0] >= 3:  # PY3
         sys.path.append('/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/libs/crypto/cipher')
 
     decrypt_file(file, key)

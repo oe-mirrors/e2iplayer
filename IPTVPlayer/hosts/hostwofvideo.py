@@ -22,11 +22,11 @@ def gettytul():
 class WOFvideo(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'wofvideo', 'cookie':'wofvideo.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'wofvideo', 'cookie': 'wofvideo.cookie'})
         self.MAIN_URL = 'https://wofvideo.pro/'
         self.DEFAULT_ICON_URL = "https://wofvideo.pro/wp-content/uploads/2022/12/cropped-cropped-cropped-cropped-logo-light-1-1.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -38,10 +38,10 @@ class WOFvideo(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])                        
         if not sts:
             return
-        encodedurl = self.cm.ph.getDataBeetwenMarkers(data,'<li data-video-source="',',', False)[1]
-        url = self.cm.ph.getDataBeetwenMarkers(encodedurl,'encrypt:',"'", False)[1]
+        encodedurl = self.cm.ph.getDataBeetwenMarkers(data, '<li data-video-source="', ',', False)[1]
+        url = self.cm.ph.getDataBeetwenMarkers(encodedurl, 'encrypt:', "'", False)[1]
         if not url:
-            url = self.cm.ph.getDataBeetwenMarkers(encodedurl,"source:'","'", False)[1]
+            url = self.cm.ph.getDataBeetwenMarkers(encodedurl, "source:'", "'", False)[1]
         else:
             url = url.encode('ascii')
             url = base64.b64decode(url)
@@ -67,7 +67,7 @@ class WOFvideo(CBaseHostClass):
                 retTab = getMPDLinksWithMeta(uri, False)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def _uriIsValid(self, url):
@@ -75,9 +75,9 @@ class WOFvideo(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('Wofvideo.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Kategóriák')},
-                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Kategóriák')},
+                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
 
     def listItems(self, cItem):
@@ -106,7 +106,7 @@ class WOFvideo(CBaseHostClass):
                     url = url.replace("038;", "")
                 else:
                     stop = 1
-            params = {'category':'seasons','title':title, 'icon': icon, 'url': url, 'desc': desc}
+            params = {'category': 'seasons', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
             if not stop:
                 if 'series' in url:
                     self.addDir(params)
@@ -117,7 +117,7 @@ class WOFvideo(CBaseHostClass):
         if '<div class="nav-links">' in odata:
             next = self.cm.ph.getDataBeetwenMarkers(odata, '<div class="nav-links">', '</nav>', False)[1]
             next = self.cm.ph.getSearchGroups(next, '''href=['"]([^"^']+?)['"].+NEXT''', 1, True)[0]
-            params = {'category':'list_items','title':"Következő oldal", 'icon': None, 'url': next}
+            params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': next}
             self.addDir(params)
     
     def listFilters(self, cItem):
@@ -125,11 +125,11 @@ class WOFvideo(CBaseHostClass):
         sts, data = self.getPage(self.MAIN_URL)                    
         if not sts:
             return
-        cat = self.cm.ph.getDataBeetwenMarkers(data,'<section id="categories-3"','</section>', False)[1]
-        cat = self.cm.ph.getAllItemsBeetwenMarkers(cat,'<a href=','/a>', False)
+        cat = self.cm.ph.getDataBeetwenMarkers(data, '<section id="categories-3"', '</section>', False)[1]
+        cat = self.cm.ph.getAllItemsBeetwenMarkers(cat, '<a href=', '/a>', False)
         stop = 0
         for c in cat:
-            title = self.cm.ph.getDataBeetwenMarkers(c, '">','<', False)[1]
+            title = self.cm.ph.getDataBeetwenMarkers(c, '">', '<', False)[1]
             if "&amp;" in title:
                 title = title.replace("&amp;", "&")
             if "&nbsp;" in title:
@@ -138,9 +138,9 @@ class WOFvideo(CBaseHostClass):
                 stop = 1
             page = 1
             icon = None
-            url = self.cm.ph.getDataBeetwenMarkers(c, '"','">', False)[1]
+            url = self.cm.ph.getDataBeetwenMarkers(c, '"', '">', False)[1]
             if not stop:
-                params = {'category':'list_items','title':title, 'icon': icon, 'url': url, 'page': page}
+                params = {'category': 'list_items', 'title': title, 'icon': icon, 'url': url, 'page': page}
                 self.addDir(params)
             if stop:
                 stop = 0
@@ -158,11 +158,11 @@ class WOFvideo(CBaseHostClass):
             seasons = self.cm.ph.getAllItemsBeetwenMarkers(seasons, '<ul>', '</ul>', False)
             for i in seasons:
                 title = str(seasons.index(i) + 1) + ".évad"
-                params = {'category':'list_episodes','title':title, 'icon': cItem['icon'], 'url': link, 'desc': desc}
+                params = {'category': 'list_episodes', 'title': title, 'icon': cItem['icon'], 'url': link, 'desc': desc}
                 self.addDir(params)
         else:
            title = "1.évad"
-           params = {'category':'list_episodes','title':title, 'icon': cItem['icon'], 'url': link, 'desc': desc}
+           params = {'category': 'list_episodes', 'title': title, 'icon': cItem['icon'], 'url': link, 'desc': desc}
            self.addDir(params)
     
     def listEpisodes(self, cItem):
@@ -176,7 +176,7 @@ class WOFvideo(CBaseHostClass):
             url = url.replace("#", "")
             url = url.replace("038;", "")
             title = self.cm.ph.getDataBeetwenMarkers(i, '<strong>', '</strong>', False)[1]
-            params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
+            params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
             self.addVideo(params)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -194,7 +194,7 @@ class WOFvideo(CBaseHostClass):
         self.currList = []
         
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
         elif category == 'list_filters':
@@ -205,10 +205,10 @@ class WOFvideo(CBaseHostClass):
             self.listEpisodes(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)			
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

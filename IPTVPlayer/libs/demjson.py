@@ -432,7 +432,7 @@ def _nonnumber_float_constants():
                 import sys
                 xnan = '7ff8000000000000'.decode('hex')  # Quiet NaN
                 xinf = '7ff0000000000000'.decode('hex')
-                xcheck = 'bdc145651592979d'.decode('hex') # -3.14159e-11
+                xcheck = 'bdc145651592979d'.decode('hex')  # -3.14159e-11
                 # Could use float.__getformat__, but it is a new python feature,
                 # so we use sys.byteorder.
                 if sys.byteorder == 'big':
@@ -899,7 +899,7 @@ class utf32(codecs.CodecInfo):
 
         for pos, c in enumerate(obj):
             n = ord(c)
-            if 0xD800 <= n <= 0xDFFF: # surrogate codepoints are prohibited by UTF-32
+            if 0xD800 <= n <= 0xDFFF:  # surrogate codepoints are prohibited by UTF-32
                 if errors == 'ignore':
                     pass
                 elif errors == 'replace':
@@ -998,7 +998,7 @@ class utf32(codecs.CodecInfo):
                     esc = "&#%d;" % (n,)
                     for esc_c in esc:
                         chars.append(esc_c)
-                else: # ignore
+                else:  # ignore
                     pass
             else:
                 chars.append(helpers.safe_unichr(n))
@@ -1267,13 +1267,13 @@ class helpers(object):
         # in a JSON document will be ASCII.  The second byte will be ASCII
         # unless the first byte was a quotation mark.
 
-        elif len(s) >= 4 and a == 0 and b == 0 and c == 0 and d != 0: # UTF-32BE  (0 0 0 x)
+        elif len(s) >= 4 and a == 0 and b == 0 and c == 0 and d != 0:  # UTF-32BE  (0 0 0 x)
             encoding = 'utf-32be'
-        elif len(s) >= 4 and a != 0 and b == 0 and c == 0 and d == 0 and z == 0: # UTF-32LE  (x 0 0 0 [... 0])
+        elif len(s) >= 4 and a != 0 and b == 0 and c == 0 and d == 0 and z == 0:  # UTF-32LE  (x 0 0 0 [... 0])
             encoding = 'utf-32le'
-        elif len(s) >= 2 and a == 0 and b != 0: # UTF-16BE  (0 x)
+        elif len(s) >= 2 and a == 0 and b != 0:  # UTF-16BE  (0 x)
             encoding = 'utf-16be'
-        elif len(s) >= 2 and a != 0 and b == 0 and z == 0: # UTF-16LE  (x 0 [... 0])
+        elif len(s) >= 2 and a != 0 and b == 0 and z == 0:  # UTF-16LE  (x 0 [... 0])
             encoding = 'utf-16le'
         elif ord('\t') <= a <= 127:
             # First byte appears to be ASCII, so guess UTF-8.
@@ -1323,7 +1323,7 @@ class helpers(object):
             if len(unitxt) > 0 and unitxt[0] == '\uFEFF':
                 bom = cdk.encode(unitxt[0])[0]
                 unitxt = unitxt[1:]
-            elif len(unitxt) > 0 and unitxt[0] == '\uFFFE': # Reversed BOM
+            elif len(unitxt) > 0 and unitxt[0] == '\uFFFE':  # Reversed BOM
                 raise UnicodeDecodeError(cdk.name, txt, 0, 0, "Wrong byte order, found reversed BOM U+FFFE")
             else:
                 bom = None
@@ -2511,7 +2511,7 @@ class decode_state(object):
         try:
             self.buf = buffered_stream(txt, encoding=encoding)
         except JSONError as err:
-            err.position = 0 # set position to start of file
+            err.position = 0  # set position to start of file
             err.severity = 'fatal'
             self.push_exception(err)
         except Exception as err:
@@ -2653,7 +2653,7 @@ class decode_state(object):
 
         if isinstance(float_value, decimal.Decimal):
             st.num_floats_decimal += 1
-            if st.num_floats_decimal == 1: # Only warn once
+            if st.num_floats_decimal == 1:  # Only warn once
                 self.push_cond(self.options.non_portable,
                                 "Floats larger or more precise than an IEEE \"double\" may not be portable",
                                 **kwargs)
@@ -2962,7 +2962,7 @@ class json_options(object, metaclass=_behaviors_metaclass):
              "A JSON document may start with a Unicode BOM (Byte Order Mark)"),
         ("non_portable",
              "Anything technically valid but likely to cause data portablibity issues"),
-        ) # end behavior list
+        )  # end behavior list
 
     def reset_to_defaults(self):
         # Plain attrs (other than above behaviors) are simply copied
@@ -3053,7 +3053,7 @@ class json_options(object, metaclass=_behaviors_metaclass):
             self.strictness = kwargs['strict']
 
         for kw, val in list(kwargs.items()):
-            if kw == 'compactly': # alias for 'encode_compactly'
+            if kw == 'compactly':  # alias for 'encode_compactly'
                 self.encode_compactly = val
             elif kw == 'strict':
                 pass   # Already handled
@@ -3131,7 +3131,7 @@ class json_options(object, metaclass=_behaviors_metaclass):
 
     def copy_from(self, other):
         if self is other:
-            return # Myself!
+            return  # Myself!
 
         self.strictness = other.strictness  # sets behaviors in bulk
 
@@ -3202,7 +3202,7 @@ class json_options(object, metaclass=_behaviors_metaclass):
             self._sort_keys = method
         elif method in sorting_methods:
             self._sort_keys = method
-        elif method in sorting_method_aliases: # alias
+        elif method in sorting_method_aliases:  # alias
             self._sort_keys = sorting_method_aliases[method]
         elif method == True:
             self._sort_keys = SORT_ALPHA
@@ -3301,7 +3301,7 @@ class json_options(object, metaclass=_behaviors_metaclass):
                             n = n.copy_negate()
                     elif sign == '-':
                         n *= -1
-            else: # not already an int
+            else:  # not already an int
                 n = self.make_float(s, sign)
                 n2 = self.make_float(s[:-1] + ('9' if s[-1] <= '5' else '0'), sign)
                 if (n == inf or n == n2) and self.float_type != NUMBER_FLOAT:
@@ -3473,7 +3473,7 @@ class JSON(object):
     """
     _string_quotes = '"\''
 
-    _escapes_json = { # character escapes in JSON
+    _escapes_json = {  # character escapes in JSON
         '"': '"',
         '/': '/',
         '\\': '\\',
@@ -3484,7 +3484,7 @@ class JSON(object):
         't': '\t',
         }
 
-    _escapes_js = { # character escapes in Javascript
+    _escapes_js = {  # character escapes in Javascript
         '"': '"',
         '\'': '\'',
         '\\': '\\',
@@ -3727,7 +3727,7 @@ class JSON(object):
         """
         if c == '\r' or c == '\n':
             return True
-        if c == '\u2028' or c == '\u2029': # unicodedata.category(c) in  ['Zl', 'Zp']
+        if c == '\u2028' or c == '\u2029':  # unicodedata.category(c) in  ['Zl', 'Zp']
             return True
         return False
 
@@ -3940,8 +3940,8 @@ class JSON(object):
             units_digits = []    # digits making up whole number portion
             fraction_digits = []  # digits making up fractional portion
             exponent_digits = []  # digits making up exponent portion (excluding sign)
-            esign = '+' # sign of exponent
-            sigdigits = 0 # number of significant digits (approximate)
+            esign = '+'  # sign of exponent
+            sigdigits = 0  # number of significant digits (approximate)
             saw_decimal_point = False
             saw_exponent = False
 
@@ -3969,7 +3969,7 @@ class JSON(object):
                         self.recover_parser(state)
                         return undefined
                     esign = c
-                else: #digit
+                else:  # digit
                     if in_part == 'units':
                         units_digits.append(c)
                     elif in_part == 'fraction':
@@ -4027,7 +4027,7 @@ class JSON(object):
                 except ValueError:
                     state.push_error('Bad number, not a valid octal value', number, position=start_position)
                     self.recover_parser(state)
-                    return self.options.nan # undefined
+                    return self.options.nan  # undefined
                 state.update_integer_stats(ival, sign=sign, position=start_position)
                 n = state.options.make_int(ival, sign, number_format=NUMBER_FORMAT_LEGACYOCTAL)
                 return n
@@ -4188,7 +4188,7 @@ class JSON(object):
                                           position=highsur_position, outer_position=string_position,
                                           context='String')
                         should_stop = state.should_stop
-                        uc = '\ufffd' # replacement char
+                        uc = '\ufffd'  # replacement char
                     _append(uc)
                     high_surrogate = None
                     highsur_position = None
@@ -4198,18 +4198,18 @@ class JSON(object):
                                      position=highsur_position, outer_position=string_position,
                                      context='String')
                     should_stop = state.should_stop
-                    _append('\ufffd') # replacement char
+                    _append('\ufffd')  # replacement char
                     high_surrogate = None
                     highsur_position = None
 
             if c == quote:
-                buf.skip() # skip over closing quote
+                buf.skip()  # skip over closing quote
                 saw_final_quote = True
                 break
             elif c == '\\':
                 # Escaped character
                 escape_position = buf.position
-                buf.skip() # skip over backslash
+                buf.skip()  # skip over backslash
                 c = buf.peek()
                 if not c:
                     state.push_error('Escape in string literal is incomplete', position=escape_position,
@@ -4230,7 +4230,7 @@ class JSON(object):
                                          'Zero-byte character (U+0000) in string may not be universally safe',
                                          "\\" + digits, position=escape_position, outer_position=string_position,
                                          context='String')
-                    else: # n != 0
+                    else:  # n != 0
                         state.push_cond(self.options.octal_numbers,
                                          "JSON does not allow octal character escapes other than \"\\0\"",
                                          "\\" + digits, position=escape_position, outer_position=string_position,
@@ -4259,7 +4259,7 @@ class JSON(object):
                                              context='String')
                         else:
                             maxdigits = 4
-                    else: # c== 'x'
+                    else:  # c== 'x'
                         state.push_cond(self.options.js_string_escapes,
                                          "JSON strings may not use the \\x hex-escape",
                                          position=escape_position, outer_position=string_position,
@@ -4285,7 +4285,7 @@ class JSON(object):
                                          position=escape_position, outer_position=string_position,
                                          context='String')
                         should_stop = state.should_stop
-                        codepoint = 0xfffd # replacement char
+                        codepoint = 0xfffd  # replacement char
                     else:
                         if maxdigits and len(digits) != maxdigits:
                             state.push_error('escape sequence has too few hexadecimal digits', esc_sequence,
@@ -4297,7 +4297,7 @@ class JSON(object):
                         state.push_error('Unicode codepoint is beyond U+10FFFF', esc_opener + digits + esc_closer,
                                           position=escape_position, outer_position=string_position,
                                           context='String')
-                        codepoint = 0xfffd # replacement char
+                        codepoint = 0xfffd  # replacement char
 
                     if high_surrogate:
                         # Decode surrogate pair and clear high surrogate
@@ -4309,7 +4309,7 @@ class JSON(object):
                                               outer_position=string_position,
                                               context='String')
                             should_stop = state.should_stop
-                            uc = '\ufffd' # replacement char
+                            uc = '\ufffd'  # replacement char
                         _append(uc)
                         high_surrogate = None
                         highsur_position = None
@@ -4322,15 +4322,15 @@ class JSON(object):
                                              context='String')
                             should_stop = state.should_stop
                         _append(chr(codepoint))
-                    elif 0xd800 <= codepoint <= 0xdbff: # high surrogate
+                    elif 0xd800 <= codepoint <= 0xdbff:  # high surrogate
                         high_surrogate = chr(codepoint)  # remember until we get to the low surrogate
                         highsur_position = escape_position.copy()
-                    elif 0xdc00 <= codepoint <= 0xdfff: # low surrogate
+                    elif 0xdc00 <= codepoint <= 0xdfff:  # low surrogate
                         state.push_error('Low unicode surrogate must be proceeded by a high surrogate', position=escape_position,
                                          outer_position=string_position,
                                          context='String')
                         should_stop = state.should_stop
-                        _append('\ufffd') # replacement char
+                        _append('\ufffd')  # replacement char
                     else:
                         # Other chars go in as a unicode char
                         _append(helpers.safe_unichr(codepoint))
@@ -4343,7 +4343,7 @@ class JSON(object):
                     should_stop = state.should_stop
                     _append(c)
                     buf.skip()
-            elif ord(c) <= 0x1f: # A control character
+            elif ord(c) <= 0x1f:  # A control character
                 if ord(c) == 0:
                     state.push_cond(self.options.zero_byte,
                                      'Zero-byte character (U+0000) in string may not be universally safe',
@@ -4370,10 +4370,10 @@ class JSON(object):
                                      context='String')
                     should_stop = state.should_stop
                     buf.skip()
-            elif 0xd800 <= ord(c) <= 0xdbff: # a raw high surrogate
+            elif 0xd800 <= ord(c) <= 0xdbff:  # a raw high surrogate
                 high_surrogate = buf.pop()  # remember until we get to the low surrogate
                 highsur_position = buf.position.copy()
-            else: # A normal character; not an escape sequence or end-quote.
+            else:  # A normal character; not an escape sequence or end-quote.
                 # Find a whole sequence of "safe" characters so we can append them
                 # all at once rather than one a time, for speed.
                 chunk = buf.popwhile(lambda c: c not in helpers.unsafe_string_chars and c != quote)
@@ -4388,7 +4388,7 @@ class JSON(object):
             state.push_error('High unicode surrogate must be followed by a low surrogate',
                              position=highsur_position, outer_position=string_position,
                              context='String')
-            _append('\ufffd') # replacement char
+            _append('\ufffd')  # replacement char
             high_surrogate = None
             highsur_position = None
 
@@ -4526,7 +4526,7 @@ class JSON(object):
                 else:
                     chunks.append(c)
                 i += 1
-            else: # ord(c) >= 0x10000
+            else:  # ord(c) >= 0x10000
                 # Non-BMP Unicode
                 if always_escape and c in always_escape:
                     doesc = True
@@ -4728,7 +4728,7 @@ class JSON(object):
                 self.skipws(state)
                 c = buf.peek()
                 if c == '':
-                    break # will report error futher down because done==False
+                    break  # will report error futher down because done==False
                 elif c == ',':
                     if not saw_value:
                         # no preceeding value, an elided (omitted) element
@@ -4744,7 +4744,7 @@ class JSON(object):
                             obj.append(undefined)
                             if state.stats:
                                 state.stats.num_undefineds += 1
-                    buf.skip() # skip over comma
+                    buf.skip()  # skip over comma
                     saw_value = False
                     continue
                 elif c == closer:
@@ -4759,7 +4759,7 @@ class JSON(object):
                                              'Strict JSON does not allow a final comma in an array (list) literal',
                                              outer_position=start_position,
                                              context='Array')
-                    buf.skip() # skip over closer
+                    buf.skip()  # skip over closer
                     done = True
                     break
                 elif c in ']}':
@@ -4827,7 +4827,7 @@ class JSON(object):
                         state.push_error('Missing value for object property, expected ":"',
                                          position=value_position, outer_position=start_position,
                                          context='Object')
-                    buf.skip() # skip over colon
+                    buf.skip()  # skip over colon
                     self.skipws(state)
 
                     rval = self.decodeobj(state)
@@ -4845,7 +4845,7 @@ class JSON(object):
                                              context='Object')
                         obj[key] = rval
                         num_items += 1
-                else: # islist
+                else:  # islist
                     obj.append(val)
                     num_items += 1
             # end while
@@ -5025,7 +5025,7 @@ class JSON(object):
         if len(unitxt) >= 2:
             first, second = unitxt[:2]
             if first in self._string_quotes:
-                pass # second can be anything inside string literal
+                pass  # second can be anything inside string literal
             else:
                 if ((ord(first) < 0x20 or ord(first) > 0x7f) or
                     (ord(second) < 0x20 or ord(second) > 0x7f)) and \
@@ -5257,15 +5257,15 @@ class JSON(object):
                     raise err1
         elif obj_classification == 'string':
             self.encode_string(obj, state)
-        elif obj_classification == 'enum': # Python 3.4 enum.Enum
+        elif obj_classification == 'enum':  # Python 3.4 enum.Enum
             self.encode_enum(obj, state)
-        elif obj_classification == 'datetime': # Python datetime.datetime
+        elif obj_classification == 'datetime':  # Python datetime.datetime
             self.encode_datetime(obj, state)
-        elif obj_classification == 'date': # Python datetime.date
+        elif obj_classification == 'date':  # Python datetime.date
             self.encode_date(obj, state)
-        elif obj_classification == 'time': # Python datetime.time
+        elif obj_classification == 'time':  # Python datetime.time
             self.encode_time(obj, state)
-        elif obj_classification == 'timedelta': # Python datetime.time
+        elif obj_classification == 'timedelta':  # Python datetime.time
             self.encode_timedelta(obj, state)
         else:
             # Anything left is probably composite, or an unconvertable type.
@@ -5297,7 +5297,7 @@ class JSON(object):
                 fmt = '%Y-%m-%dT%H:%M:%S.%f%z'
         s = dt.strftime(fmt)
         if is_iso and s.endswith('-00:00') or s.endswith('+00:00'):
-            s = s[:-6] + 'Z' # Change UTC to use 'Z' notation
+            s = s[:-6] + 'Z'  # Change UTC to use 'Z' notation
         self.encode_string(s, state)
 
     def encode_time(self, t, state):
@@ -5310,7 +5310,7 @@ class JSON(object):
                 fmt = 'T%H:%M:%S.%f%z'
         s = t.strftime(fmt)
         if is_iso and s.endswith('-00:00') or s.endswith('+00:00'):
-            s = s[:-6] + 'Z' # Change UTC to use 'Z' notation
+            s = s[:-6] + 'Z'  # Change UTC to use 'Z' notation
         self.encode_string(s, state)
 
     def encode_timedelta(self, td, state):
@@ -5423,9 +5423,9 @@ class JSON(object):
 
             # Now iterate through all the items and collect their representations
             parts = []  # Collects each of the members
-            part_keys = [] # For dictionary key sorting, tuples (key,index)
+            part_keys = []  # For dictionary key sorting, tuples (key,index)
 
-            try: # while not StopIteration
+            try:  # while not StopIteration
                 part_idx = 0
                 while True:
                     obj2 = next(it)
@@ -5517,7 +5517,7 @@ class JSON(object):
                 else:
                     state.append(' ')
             state.append(closer)  # final '}' or ']'
-        else: # Can't create an iterator for the object
+        else:  # Can't create an iterator for the object
             self.try_encode_default(obj, state)
 
     def encode_equivalent(self, obj, state):

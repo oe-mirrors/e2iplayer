@@ -296,7 +296,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         printDBG(tab)
         for item in tab:
             params = dict(cItem)
-            params.update(item) # item = {'title', 'imdbid'}
+            params.update(item)  # item = {'title', 'imdbid'}
             params.update({'category': nextCategory})
             self.addDir(params)
 
@@ -329,7 +329,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
             return
         for item in tab:
             params = dict(cItem)
-            params.update(item) # item = "episode_title", "episode", "eimdbid"
+            params.update(item)  # item = "episode_title", "episode", "eimdbid"
             title = 's{0}e{1} {2}'.format(str(season).zfill(2), str(item['episode']).zfill(2), item['episode_title'])
             params.update({'category': nextCategory, 'title': title})
             self.addDir(params)

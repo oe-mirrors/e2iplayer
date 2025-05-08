@@ -61,7 +61,7 @@ class FreeDiscPL(CBaseHostClass):
     FILTERS_TAB = [{'title': _('Movies'), 'filter': 'movies'},
                    {'title': _('Music'), 'filter': 'music'}]
                    #{'title':_('Pictures'),  'filter':'pictures'} ]
-    TYPES = {'movies': 7, 'music': 6}#, 'pictures':2}
+    TYPES = {'movies': 7, 'music': 6}  # , 'pictures':2}
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': '  FreeDiscPL.tv', 'cookie': 'FreeDiscPL.cookie'})
@@ -336,7 +336,7 @@ class FreeDiscPL(CBaseHostClass):
                 for key in self.treeCache[userId][dirId]:
                     if self.treeCache[userId][dirId][key]['type'] == 'd':
                         dirsTab.append(self.treeCache[userId][dirId][key])
-                dirsTab.sort(key=lambda item: item['name']) #, reverse=True)
+                dirsTab.sort(key=lambda item: item['name'])  # , reverse=True)
 
                 for item in dirsTab:
                     if item['id'] in ['0', dirId]:
@@ -361,7 +361,7 @@ class FreeDiscPL(CBaseHostClass):
                 for key in data['data']:
                     if data['data'][key]['type'] == 'f' and data['data'][key]['type_fk'] in ['7', '6']:
                         filesTab.append(data['data'][key])
-                filesTab.sort(key=lambda item: item['name']) #, reverse=True)
+                filesTab.sort(key=lambda item: item['name'])  # , reverse=True)
                 url = self.getFullIconUrl('/static/img/icons/big_dir.png')
                 for item in filesTab:
                     if '7' == item['type_fk']:

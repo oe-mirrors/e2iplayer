@@ -44,7 +44,7 @@ def gettytul():
 class NonstopMozi(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'nonstopmozi', 'cookie':'nonstopmozi.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'nonstopmozi', 'cookie': 'nonstopmozi.cookie'})
         self.DEFAULT_ICON_URL = 'http://www.figyelmeztetes.hu/nonstopmozi_logo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0'
         self.HEADER = self.cm.getDefaultHeader()
@@ -52,7 +52,7 @@ class NonstopMozi(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://nonstopmozi.com'
         self.basicurl = 'https://nonstopmozi.com/online-filmek'
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}        
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}        
     
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -61,14 +61,14 @@ class NonstopMozi(CBaseHostClass):
     
     def getStringToLowerWithout(self, szoveg):
         szoveg = szoveg.lower()
-        szoveg = szoveg.replace('á','a').replace('é','e').replace('í','i').replace('ó','o').replace('ö','o').replace('ő','o').replace('ú','u').replace('ü','u').replace('ű','u')
+        szoveg = szoveg.replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ö', 'o').replace('ő', 'o').replace('ú', 'u').replace('ü', 'u').replace('ű', 'u')
         return szoveg
         
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category':'list_categories', 'title': _('Filmek')}, 
-        {'category':'list_categories', 'title': _('Sorozatok')},
-        {'category':'search', 'title': _('Keresés'), 'search_item':True},
-        {'category':'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_categories', 'title': _('Filmek')}, 
+        {'category': 'list_categories', 'title': _('Sorozatok')},
+        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
+        {'category': 'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem)
         
     def listCategories(self, cItem, title):
@@ -86,7 +86,7 @@ class NonstopMozi(CBaseHostClass):
         for item in data:
             url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(item, 'href="', '" title=', False)[1]
             title = self.cm.ph.getDataBeetwenMarkers(item, '">', '</a', False)[1]
-            params = {'category': 'list_items', 'title':title, 'url':url}
+            params = {'category': 'list_items', 'title': title, 'url': url}
             self.addDir(params)
     
     def listItems(self, cItem, title):
@@ -116,10 +116,10 @@ class NonstopMozi(CBaseHostClass):
             icon = self.cm.ph.getDataBeetwenMarkers(item, '" src=" ', '" width')[1]
             icon = icon.replace('" src=" ', '')
             icon = icon.replace('" width', '')
-            params = {'category': 'explore_item', 'title':title, 'url':url, 'icon':icon}
+            params = {'category': 'explore_item', 'title': title, 'url': url, 'icon': icon}
             self.addDir(params)
         if nextPage:
-            params = {'category': 'list_items','title':_("Következő oldal"), 'page':page + 1, 'url': lasturl}
+            params = {'category': 'list_items', 'title': _("Következő oldal"), 'page': page + 1, 'url': lasturl}
             self.addDir(params)
     
     def exploreItem(self, cItem):
@@ -137,7 +137,7 @@ class NonstopMozi(CBaseHostClass):
             url = self.cm.ph.getDataBeetwenMarkers(dat, "<script>window.location.href = '", "';</script>", False)[1]
             title = self.cm.ph.getDataBeetwenMarkers(data, "<h1 style='font-size:35px; font-weight: bold; padding-bottom:15px; color:black; text-shadow: 0 5px 5px rgb(255,255,255);'>", "</h1></b>", False)[1] + " - " + self.cm.ph.getDataBeetwenMarkers(url, "https://", "/", False)[1]
             desc = "IMDB pontszám: " + self.cm.ph.getDataBeetwenMarkers(data, "</a><strong>", "</strong>", False)[1] + "/10" + "  " + self.cm.ph.getDataBeetwenMarkers(data, "<h4 style='font-size:20px; font-weight: bold; color:black; text-shadow: 2px 2px 3px #FFFFFF;'><p style='font-size: 110%;' itemprop='description'>", "</p>			</h4>", False)[1]
-            params = {'title':title, 'url':url, 'icon':cItem['icon'], 'desc':desc}
+            params = {'title': title, 'url': url, 'icon': cItem['icon'], 'desc': desc}
             self.addVideo(params)
     
     def exploreItems(self, cItem):
@@ -150,7 +150,7 @@ class NonstopMozi(CBaseHostClass):
         for s in share:
             url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(s, "<a href='", "'>", False)[1]
             title = self.cm.ph.getDataBeetwenMarkers(s, "'>", "</a>", False)[1] + ".évad"
-            params = {'category': 'explore_item', 'title':title, 'url':url, 'icon':cItem['icon']}
+            params = {'category': 'explore_item', 'title': title, 'url': url, 'icon': cItem['icon']}
             self.addDir(params)
     
     def exploreItemd(self, cItem):
@@ -163,7 +163,7 @@ class NonstopMozi(CBaseHostClass):
         for s in share:
             url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(s, "<a href='", "'>", False)[1]
             title = self.cm.ph.getDataBeetwenMarkers(s, "'>", "</a>", False)[1] + ".epizód"
-            params = {'category': 'explore_item', 'title':title, 'url':url, 'icon':cItem['icon']}
+            params = {'category': 'explore_item', 'title': title, 'url': url, 'icon': cItem['icon']}
             self.addDir(params)
     
     def exploreItema(self, cItem):
@@ -181,7 +181,7 @@ class NonstopMozi(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)['"].target''', 1, True)[0]
             title = self.cm.ph.getDataBeetwenMarkers(data, "<h1 style='font-size:35px; font-weight: bold; padding-bottom:15px; color:black; text-shadow: 0 5px 5px rgb(255,255,255);'>", "</h1><b", False)[1] + " - " + self.cm.ph.getDataBeetwenMarkers(url, "https://", "/", False)[1]
             desc = "IMDB pontszám: " + self.cm.ph.getDataBeetwenMarkers(data, "</a><strong>", "</strong>", False)[1] + "/10" + "  " + self.cm.ph.getDataBeetwenMarkers(data, "<h4 style='font-size:20px; font-weight: bold; color:black; text-shadow: 2px 2px 3px #FFFFFF;'><p style='font-size: 110%;' itemprop='description'>", "</p>			</h4>", False)[1]
-            params = {'title':title, 'url':url, 'icon':cItem['icon'], 'desc':desc}
+            params = {'title': title, 'url': url, 'icon': cItem['icon'], 'desc': desc}
             self.addVideo(params)
     
     def _uriIsValid(self, url):
@@ -210,24 +210,24 @@ class NonstopMozi(CBaseHostClass):
                 retTab = getMPDLinksWithMeta(uri, False)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def listSearchResult(self, cItem, searchPattern, searchType):
         uagnt = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0'
-        phdre = {'User-Agent':uagnt, 'DNT':'1', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate, br', 'Accept-Language':'hu-HU,hu;q=0.8,en-US;q=0.5,en;q=0.3', 'Host':'nonstopmozi.com', 'Upgrade-Insecure-Requests':'1', 'Connection':'keep-alive', 'Content-Type':'application/x-www-form-urlencoded', 'Referer':'https://nonstopmozi.com'}
-        phdr = {'header':phdre, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE} 
+        phdre = {'User-Agent': uagnt, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate, br', 'Accept-Language': 'hu-HU,hu;q=0.8,en-US;q=0.5,en;q=0.3', 'Host': 'nonstopmozi.com', 'Upgrade-Insecure-Requests': '1', 'Connection': 'keep-alive', 'Content-Type': 'application/x-www-form-urlencoded', 'Referer': 'https://nonstopmozi.com'}
+        phdr = {'header': phdre, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE} 
         krsstr = searchPattern
         krsstr_lnk = self.getStringToLowerWithout(searchPattern.replace(' ', '-'))
         uhe = 'https://nonstopmozi.com/online-filmek/kereses/' + krsstr_lnk
-        pstd = {'keres':krsstr, 'submit':'Keresés'}
+        pstd = {'keres': krsstr, 'submit': 'Keresés'}
         sts, data = self.cm.getPage(uhe, phdr, pstd)
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<div class='col-md-2 w3l-movie-gride-agile'", "div class='clearfix'>")
         for item in data:
             url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(item, 'href="', '">', False)[1]
             title = self.cm.ph.getDataBeetwenMarkers(item, "movie-text'><h3>", '</h3></div>', False)[1] + self.cm.ph.getDataBeetwenMarkers(item, "<div class='mid-2'>", "</a>", False)[1]
             icon = self.cm.ph.getDataBeetwenMarkers(item, '" src=" ', '" width', False)[1]
-            params = {'category': 'explore_item', 'title':title, 'url':url, 'icon':icon}
+            params = {'category': 'explore_item', 'title': title, 'url': url, 'icon': icon}
             self.addDir(params)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -239,7 +239,7 @@ class NonstopMozi(CBaseHostClass):
         title = self.currItem.get("title", '')
         self.currList = []
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_categories':
             self.listCategories(self.currItem, title)
         elif category == 'list_items':
@@ -255,7 +255,7 @@ class NonstopMozi(CBaseHostClass):
         elif category == "search":
             self.listSearchResult(self.currItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search', 'tab_id':'', 'tps':'0'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search', 'tab_id': '', 'tps': '0'}, 'desc', _("Type: "))
         else:
             return
         CBaseHostClass.endHandleService(self, index, refresh)

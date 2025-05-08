@@ -312,7 +312,7 @@ class Christusvincit(CBaseHostClass):
 
         tmp = section.split('</table>', 1)
         sTitle = self.cleanHtmlStr(tmp[0])
-        if sTitle.lower() in ('linki',): #'kategorie'
+        if sTitle.lower() in ('linki',):  # 'kategorie'
             return
         sIcon = self.getFullUrl(ph.search(section, ph.IMAGE_SRC_URI_RE)[1])
 
@@ -456,7 +456,7 @@ class Christusvincit(CBaseHostClass):
         urlsTab = []
 
         if 'url' in cItem and cItem['url'].startswith('rtmp://'):
-            urlsTab = [{'name': 'rtmp', 'url': cItem['url'], 'need_resolve':0}]
+            urlsTab = [{'name': 'rtmp', 'url': cItem['url'], 'need_resolve': 0}]
         elif 'url' in cItem:
             urlsTab = getDirectM3U8Playlist(cItem['url'])
         else:

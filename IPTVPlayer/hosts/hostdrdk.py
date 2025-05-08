@@ -115,7 +115,7 @@ class DRDK(CBaseHostClass):
                     for qual in serv["Qualities"]:
                         for stream in qual["Streams"]:
                             url = self.up.decorateUrl(serv["Server"] + "/" + stream["Stream"])
-                            title = serv["LinkType"] #+ " [{0}Kbps]".format(qual["Kbps"])
+                            title = serv["LinkType"]  # + " [{0}Kbps]".format(qual["Kbps"])
                             ip = config.plugins.iptvplayer.drdk_myip.value
                             if '' != ip:
                                 url.meta['X-Forwarded-For'] = ip
@@ -185,7 +185,7 @@ class DRDK(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, DRDK(), True) #, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
+        CHostBase.__init__(self, DRDK(), True)  # , [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('drdklogo.png')])
@@ -215,7 +215,7 @@ class IPTVHost(CHostBase):
 
     def converItem(self, cItem):
         hostList = []
-        searchTypesOptions = [] # ustawione alfabetycznie
+        searchTypesOptions = []  # ustawione alfabetycznie
         #searchTypesOptions.append((_("Movies"), "movies"))
         #searchTypesOptions.append((_("Series"), "series"))
 

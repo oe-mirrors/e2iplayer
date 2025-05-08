@@ -26,11 +26,11 @@ def gettytul():
 
 class StreamStat(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'streamstat', 'cookie':'streamstat.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'streamstat', 'cookie': 'streamstat.cookie'})
         self.MAIN_URL = 'http://streamstat.net/'
         self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/streamstat.jpg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -65,19 +65,19 @@ class StreamStat(CBaseHostClass):
               retTab = getMPDLinksWithMeta(uri, False)
               videoUrls.extend(retTab)
            else:
-              videoUrls.append({'name':'direct link', 'url':uri})
+              videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def listMainMenu(self, cItem):   
         printDBG('StreamStat.listMainMenu')
         page = 1
-        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('YP connected'), 'url':'http://streamstat.net/main.cgi?mode=yp&search=&page=1&fp=50', 'page': page},
-                        {'category':'list_items', 'title': _('Collected streams only'), 'url':'http://streamstat.net/main.cgi?mode=col&search=&page=1&fp=50', 'page': page},
-                        {'category':'list_items', 'title': _('Free IPTV list'), 'url':'http://streamstat.net/main.cgi?mode=hls&search=&page=1&fp=50', 'page': page},
-                        {'category':'list_items', 'title': _('All streams'), 'url':'http://streamstat.net/main.cgi?mode=all&search=&page=1&fp=50', 'page': page},
-                        {'category':'list_items', 'title': _('Random selection'), 'url':'http://streamstat.net/main.cgi?mode=&search=&page=1&fp=50', 'page': page},
-                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('YP connected'), 'url': 'http://streamstat.net/main.cgi?mode=yp&search=&page=1&fp=50', 'page': page},
+                        {'category': 'list_items', 'title': _('Collected streams only'), 'url': 'http://streamstat.net/main.cgi?mode=col&search=&page=1&fp=50', 'page': page},
+                        {'category': 'list_items', 'title': _('Free IPTV list'), 'url': 'http://streamstat.net/main.cgi?mode=hls&search=&page=1&fp=50', 'page': page},
+                        {'category': 'list_items', 'title': _('All streams'), 'url': 'http://streamstat.net/main.cgi?mode=all&search=&page=1&fp=50', 'page': page},
+                        {'category': 'list_items', 'title': _('Random selection'), 'url': 'http://streamstat.net/main.cgi?mode=&search=&page=1&fp=50', 'page': page},
+                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
         
     def listItems(self, cItem):
@@ -88,7 +88,7 @@ class StreamStat(CBaseHostClass):
         if not sts:
             return
         page = cItem['page']
-        web = self.cm.ph.getAllItemsBeetwenMarkers(dat, 'Select playlist link:</li><li><a target="_blank" href="','">', False)
+        web = self.cm.ph.getAllItemsBeetwenMarkers(dat, 'Select playlist link:</li><li><a target="_blank" href="', '">', False)
         titles = self.cm.ph.getAllItemsBeetwenMarkers(dat, '<p class="allomasnev_sorszam hidden-sm hidden-md hidden-lg">', '</p>', False)
         id = self.cm.ph.getAllItemsBeetwenMarkers(dat, '<td class="sorszam lista_th_hidden-xs">', '.</td>', False)
         links = self.cm.ph.getAllItemsBeetwenMarkers(dat, '<div class="logo_logo" style="background-image: url(', ');', False)
@@ -117,7 +117,7 @@ class StreamStat(CBaseHostClass):
             printDBG(str(desc))
             if title == "":
                 title = "Unnamed"
-            params = {'title':title, 'icon': icon, 'url': url, 'desc': desc}
+            params = {'title': title, 'icon': icon, 'url': url, 'desc': desc}
             if "HLS" in quality[web.index(i)]:
                 self.addVideo(params)
             else:
@@ -142,15 +142,15 @@ class StreamStat(CBaseHostClass):
         self.currList = []
         
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)			
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

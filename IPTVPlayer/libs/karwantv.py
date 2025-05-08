@@ -63,7 +63,7 @@ class KarwanTvApi(CBaseHostClass):
             initList = cItem.get('init_list', True)
             if initList:
                 rm(self.COOKIE_FILE)
-                for item in [{'title': 'TV', 'priv_cat': 'tv'}, {'url': self.getFullUrl('radio.html'), 'title': 'Radio', 'priv_cat': 'radio'}]: #{'url':self.getMainUrl24(), 'title':'Karwan24.com', 'priv_cat':'karwan24_tv'}
+                for item in [{'title': 'TV', 'priv_cat': 'tv'}, {'url': self.getFullUrl('radio.html'), 'title': 'Radio', 'priv_cat': 'radio'}]:  # {'url':self.getMainUrl24(), 'title':'Karwan24.com', 'priv_cat':'karwan24_tv'}
                     params = dict(cItem)
                     params.update(item)
                     params['init_list'] = False

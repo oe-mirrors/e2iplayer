@@ -54,14 +54,14 @@ class Favourites(CBaseHostClass):
         self.helper = IPTVFavourites(GetFavouritesDir())
         self.host = None
         self.hostName = ''
-        self.guestMode = False # main or guest
+        self.guestMode = False  # main or guest
         self.DEFAULT_ICON_URL = 'http://sarah-bauer.weebly.com/uploads/4/2/2/3/42234635/1922500_orig.png'
 
     def _setHost(self, hostName):
         if hostName == self.hostName:
             return True
         try:
-            _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0) #absolute import for P3 compatybility
+            _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0)  # absolute import for P3 compatybility
             host = _temp.IPTVHost()
             if isinstance(host, IHost):
                 self.hostName = hostName

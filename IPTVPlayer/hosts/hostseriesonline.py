@@ -79,7 +79,7 @@ class SeriesOnlineIO(CBaseHostClass):
         while tries < 2:
             tries += 1
             captcha = False
-            sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data) #self.cm.getPage(baseUrl, addParams, post_data)
+            sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)  # self.cm.getPage(baseUrl, addParams, post_data)
             if 'captcha' in self.cm.meta.get('url', ''):
                 rm(self.COOKIE_FILE)
                 captcha = True
@@ -116,7 +116,7 @@ class SeriesOnlineIO(CBaseHostClass):
         return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
 
     def selectDomain(self):
-        domains = ['https://www2.series9.io/'] #'http://123movieshd.us/'
+        domains = ['https://www2.series9.io/']  # 'http://123movieshd.us/'
         domain = config.plugins.iptvplayer.seriesonlineio_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
             if domain[-1] != '/':

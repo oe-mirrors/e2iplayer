@@ -210,7 +210,7 @@ class CBaseSubProviderClass:
         return ret
 
     def getMaxFileSize(self):
-        return 1024 * 1024 * 5 # 5MB, max size of sub file to be download
+        return 1024 * 1024 * 5  # 5MB, max size of sub file to be download
 
     def getMaxItemsInDir(self):
         return 500
@@ -316,7 +316,7 @@ class CBaseSubProviderClass:
                 self.currItem = {"name": None}
             else:
                 self.currItem = self.currList[index]
-        if 2 == refresh: # refresh for more items
+        if 2 == refresh:  # refresh for more items
             printDBG("CBaseSubProviderClass endHandleService index[%s]" % index)
             # remove item more and store items before and after item more
             self.beforeMoreItemList = self.currList[0:index]
@@ -328,7 +328,7 @@ class CBaseSubProviderClass:
                 self.currItem = self.currList[index]
 
     def endHandleService(self, index, refresh):
-        if 2 == refresh: # refresh for more items
+        if 2 == refresh:  # refresh for more items
             currList = self.currList
             self.currList = self.beforeMoreItemList
             for item in currList:
@@ -512,7 +512,7 @@ class CBaseSubProviderClass:
         printDBG("isubprovider.py CBaseSubProviderClass.writeFile path='%s'" % filePath)
         try:
             with open(filePath, 'wb') as f:
-                f.write(strEncode(data)) #p3 needs bytes, for p2 no oncoding
+                f.write(strEncode(data))  # p3 needs bytes, for p2 no oncoding
             return True
         except Exception:
             printExc()

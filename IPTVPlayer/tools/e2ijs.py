@@ -72,7 +72,7 @@ def js_execute_ext(items, params={}):
             code = item.get('code', '')
 
             name = item.get('name', '')
-            if name: # cache enabled
+            if name:  # cache enabled
                 hash = item.get('hash', '')
                 if not hash:
                     # we will need to calc hash by our self
@@ -86,7 +86,7 @@ def js_execute_ext(items, params={}):
                 if fileExists(byteFileName):
                     sts, tmp = ReadTextFile(metaFileName)
                     if sts:
-                        tmp = tmp.split('|') # DUKTAPE_VER|hash
+                        tmp = tmp.split('|')  # DUKTAPE_VER|hash
                         if DUKTAPE_VER != tmp[0] or hash != tmp[-1].strip():
                             sts = False
                     if not sts:

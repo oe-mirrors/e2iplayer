@@ -44,7 +44,7 @@ class DjingComApi(CBaseHostClass):
         self.COOKIE_FILE = GetCookieDir('viortv.cookie')
 
         self.defaultParams = {}
-        self.defaultParams.update({'header': self.HTTP_HEADER, 'cookiefile': self.COOKIE_FILE}) #'save_cookie': True, 'load_cookie': True,
+        self.defaultParams.update({'header': self.HTTP_HEADER, 'cookiefile': self.COOKIE_FILE})  # 'save_cookie': True, 'load_cookie': True,
         self.loggedIn = False
         self.accountInfo = ''
 

@@ -127,9 +127,9 @@ class ConnectionManager:
 
     def __init__(self):
         self._lock = _thread.allocate_lock()
-        self._hostmap = {} # map hosts to a list of connections
-        self._connmap = {} # map connections to host
-        self._readymap = {} # map connection to ready state
+        self._hostmap = {}  # map hosts to a list of connections
+        self._connmap = {}  # map connections to host
+        self._readymap = {}  # map connection to ready state
 
     def add(self, host, connection, ready):
         self._lock.acquire()
@@ -407,18 +407,18 @@ class HTTPResponse(http.client.HTTPResponse):
     # modification from socket.py
 
     def __init__(self, sock, debuglevel=0, strict=0, method=None):
-        if method: # the httplib in python 2.3 uses the method arg
+        if method:  # the httplib in python 2.3 uses the method arg
             http.client.HTTPResponse.__init__(self, sock, debuglevel, method)
-        else: # 2.2 doesn't
+        else:  # 2.2 doesn't
             http.client.HTTPResponse.__init__(self, sock, debuglevel)
         self.fileno = sock.fileno
         self.code = None
         self._rbuf = b""
         self._rbufsize = 8096
-        self._handler = None # inserted by the handler later
+        self._handler = None  # inserted by the handler later
         self._host = None    # (same)
         self._url = None     # (same)
-        self._connection = None # (same)
+        self._connection = None  # (same)
 
     _raw_read = http.client.HTTPResponse.read
 

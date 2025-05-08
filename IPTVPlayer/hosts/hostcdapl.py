@@ -330,7 +330,7 @@ class cda(CBaseHostClass, CaptchaHelper):
         counts = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?polecani_video_count\s*?='), re.compile(';'), False)[1].strip()
         maps = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('var\s*?mapping \s*?='), re.compile(';'), False)[1].strip()
         try:
-            tmp = re.compile('''"([^"]+?)"\s*?\:\s*?\[''').findall(cats) # we use this trick to get valid order of cats
+            tmp = re.compile('''"([^"]+?)"\s*?\:\s*?\[''').findall(cats)  # we use this trick to get valid order of cats
             data = []
             for item in tmp:
                 data.append('"%s"' % item)

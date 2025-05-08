@@ -60,7 +60,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         return 'http://subs.ro/'
 
     def getMaxFileSize(self):
-        return 1024 * 1024 * 10 # 10MB, max size of sub file to be download
+        return 1024 * 1024 * 10  # 10MB, max size of sub file to be download
 
     def getFormQuery(self, data, marker, searchText):
         query = {}

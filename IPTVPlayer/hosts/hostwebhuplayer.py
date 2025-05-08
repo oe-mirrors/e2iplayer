@@ -53,7 +53,7 @@ class webhuplayer(CBaseHostClass):
 
     def __init__(self):
         printDBG("webhuplayer.__init__")
-        CBaseHostClass.__init__(self, {'history':'webhuplayer', 'cookie':'webhuplayer.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'webhuplayer', 'cookie': 'webhuplayer.cookie'})
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = self.cm.getDefaultHeader()
         self.DEFAULT_ICON_URL = 'http://www.figyelmeztetes.hu/webhuplayer_logo.jpg'
@@ -65,7 +65,7 @@ class webhuplayer(CBaseHostClass):
         self.path_webh = config.plugins.iptvplayer.webmedia_dir.value + "/"
         self.path_full = normpath(self.path_webh + self.list_tart)
         self.path_aktual = normpath(self.path_webh + self.aktual)
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': False, 'load_cookie': False, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': False, 'load_cookie': False, 'save_cookie': False, 'cookiefile': self.COOKIE_FILE}
         
     def _uriIsValid(self, url):
         return '://' in url
@@ -172,7 +172,7 @@ class webhuplayer(CBaseHostClass):
         return version
     
     def _update(self):
-        msg = 'Telepítés/frissítés szükséges. A telepítés/frissítés helye:  ' + config.plugins.iptvplayer.webmedia_dir.value.replace('/',' / ').strip() + '\nFolytathatom?'
+        msg = 'Telepítés/frissítés szükséges. A telepítés/frissítés helye:  ' + config.plugins.iptvplayer.webmedia_dir.value.replace('/', ' / ').strip() + '\nFolytathatom?'
         msg += '\n\nHa máshova szeretnéd, akkor itt nem - utána KÉK gomb, majd az Oldal beállításai.\nOtt az adatok megadása, s utána a ZÖLD gomb (Mentés) megnyomása!'
         ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_YESNO, default=True)
         if ret[0]:
@@ -219,7 +219,7 @@ class webhuplayer(CBaseHostClass):
         vissza = False
         try:
             for i in range(tries):
-                tmp = DownloadFile(url,destination)
+                tmp = DownloadFile(url, destination)
                 if tmp:
                     vissza = True
                     break
@@ -271,7 +271,7 @@ class webhuplayer(CBaseHostClass):
                 retTab = getMPDLinksWithMeta(uri, False)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -281,15 +281,15 @@ class webhuplayer(CBaseHostClass):
             category = self.currItem.get("category", '')
             self.currList = []
             if name == None:
-                self.list_tartalom({'name':'category'})
+                self.list_tartalom({'name': 'category'})
             elif category == "list_items":
                 self.listItems(self.currItem)
             elif category in ['search', 'search_next_page']:
                 cItem = dict(self.currItem)
-                cItem.update({'search_item':False, 'name':'category'}) 
+                cItem.update({'search_item': False, 'name': 'category'}) 
                 self.listSearchResult(cItem, searchPattern, searchType)
             elif category == 'search_history':
-                self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+                self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
             else:
                 printExc()
             CBaseHostClass.endHandleService(self, index, refresh)

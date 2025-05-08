@@ -119,7 +119,7 @@ class GreekDocumentaries3(CBaseHostClass):
         if 'url_suffix' in cItem:
             url += cItem['url_suffix']
 
-        sts, data = self.cm.getPage(url) #, {'header':self.AJAX_HEADER}
+        sts, data = self.cm.getPage(url)  # , {'header':self.AJAX_HEADER}
         if not sts:
             return
 
@@ -209,7 +209,7 @@ class GreekDocumentaries3(CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         printDBG("GreekDocumentaries3.getLinksForVideo [%s]" % cItem)
-        urlTab = [{'name': '', 'url': cItem['url'], 'need_resolve':1}]
+        urlTab = [{'name': '', 'url': cItem['url'], 'need_resolve': 1}]
         return urlTab
 
     def getVideoLinks(self, videoUrl):
@@ -265,7 +265,7 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         # for now we must disable favourites due to problem with links extraction for types other than movie
-        CHostBase.__init__(self, GreekDocumentaries3(), True, favouriteTypes=[]) #, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
+        CHostBase.__init__(self, GreekDocumentaries3(), True, favouriteTypes=[])  # , [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('greekdocumentaries3logo.png')])
@@ -309,7 +309,7 @@ class IPTVHost(CHostBase):
 
     def converItem(self, cItem):
         hostList = []
-        searchTypesOptions = [] # ustawione alfabetycznie
+        searchTypesOptions = []  # ustawione alfabetycznie
         #searchTypesOptions.append((_("Movies"),   "movie"))
         #searchTypesOptions.append((_("TV Shows"), "tv_shows"))
 

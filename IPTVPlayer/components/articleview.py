@@ -44,7 +44,7 @@ class ArticleView(Screen):
 
         self.onClose.append(self.__onClose)
         self.onShown.append(self.updateTitle)
-        self.onLayoutFinish.append(self.startRun) # dont start before gui is finished
+        self.onLayoutFinish.append(self.startRun)  # dont start before gui is finished
 
     def __del__(self):
         printDBG("ArticleView.__del__ -------------------------------")

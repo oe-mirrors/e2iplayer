@@ -157,8 +157,8 @@ class PlusDEDE(CBaseHostClass):
                 #val = self.cm.ph.getSearchGroups(data[idx], '''[^>]+?value=['"]([^'^"]+?)['"]''')[0].split(';')
                 #if 2 != len(val): continue
                 try:
-                    start = datetime.now().year #int(val[1])
-                    end = 1900 #int(val[0])
+                    start = datetime.now().year  # int(val[1])
+                    end = 1900  # int(val[0])
                     self.cacheFilters[key] = []
                     for val in range(start, end - 1, -1):
                         self.cacheFilters[key].append({'title': str(val), key: '%s;%s' % (val, val)})

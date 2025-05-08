@@ -14,7 +14,7 @@ from urllib.parse import urlparse as compat_urllib_parse_urlparse
 try:
     try:
         import http.cookiejar as compat_cookiejar
-    except ImportError: # Python 2
+    except ImportError:  # Python 2
         import http.cookiejar as compat_cookiejar
 except Exception:
     printDBG("YT import problem 5")
@@ -22,7 +22,7 @@ except Exception:
 try:
     try:
         import html.entities as compat_html_entities
-    except ImportError: # Python 2
+    except ImportError:  # Python 2
         import html.entities as compat_html_entities
 except Exception:
     printDBG("YT import problem 6")
@@ -30,14 +30,14 @@ except Exception:
 try:
     try:
         import http.client as compat_http_client
-    except ImportError: # Python 2
+    except ImportError:  # Python 2
         import http.client as compat_http_client
 except Exception:
     printDBG("YT import problem 8")
 
 try:
     from urllib.parse import parse_qs as compat_parse_qs
-except ImportError: # Python 2
+except ImportError:  # Python 2
     # HACK: The following is the correct parse_qs implementation from cpython 3's stdlib.
     # Python 2's version is apparently totally broken
     def _unquote(string, encoding='utf-8', errors='replace'):
@@ -112,12 +112,12 @@ except ImportError: # Python 2
         return parsed_result
 
 try:
-    compat_str = str # Python 2
+    compat_str = str  # Python 2
 except NameError:
     compat_str = str
 
 try:
-    compat_chr = chr # Python 2
+    compat_chr = chr  # Python 2
 except NameError:
     compat_chr = chr
 

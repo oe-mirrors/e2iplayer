@@ -257,7 +257,7 @@ class VevoIE(InfoExtractor):
             hls = config.plugins.iptvplayer.vevo_allow_hls.value
 
         json_url = 'http://api.vevo.com/VideoService/AuthenticateVideo?isrc=%s' % video_id
-        response = None #self._download_json(json_url, video_id)
+        response = None  # self._download_json(json_url, video_id)
         if response == None:
             video_info = {}
         else:

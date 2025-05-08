@@ -137,7 +137,7 @@ class Body():
 			tempText += '</table>\n'
 			tempText += '<p><b><font color="#FFE4C4">%s</font></b></p>' % LogDescr
 			tempText += '<table border="1: style="width:520px; table-layout: fixed"><td><tt><p><font size="2">'
-			tempText += settings.tempLogsHTML + '</font></p></tt></td></table>' #<<< data from thread
+			tempText += settings.tempLogsHTML + '</font></p></tt></td></table>'  # <<< data from thread
 			if settings.tempLogsHTML != '' and not isThreadRunning('buildtempLogsHTML'):
 				settings.tempLogsHTML = ''
 			tempText += formSUBMITvalue([('cmd', 'downloadLog')], _("Download log file"))
@@ -314,7 +314,7 @@ class Body():
 							formSUBMITvalue([('watchMovie', item.fileName)], _("Watch")),
 							formSUBMITvalue([('stopDownload', item.downloadIdx)], _("Stop download")))
 
-				elif DMHelper.STS.DOWNLOADED == item.status and item.url[:1] == '/': # for Archive section
+				elif DMHelper.STS.DOWNLOADED == item.status and item.url[:1] == '/':  # for Archive section
 					status = _("DOWNLOADED")
 					icon = '<img border="0" src="./icons/icondone.png" width="64" height="64">'
 					info = info1
@@ -427,7 +427,7 @@ class Body():
 
 	def buildUrlsTable(self, item, index):
 		iName = removeSpecialChars(item.name)
-		iUrl = item.url #.replace("ext://url/","") #to chyba sss zrobil do wymuszenia extplayera przyklad pierwszatv
+		iUrl = item.url  # .replace("ext://url/","") #to chyba sss zrobil do wymuszenia extplayera przyklad pierwszatv
 		iurlNeedsResolve = int(item.urlNeedsResolve)
 		txt = tableHorizontalRedLine(colspan=3)
 		if iUrl in ['', 'fake', 'fakeUrl']:
@@ -458,7 +458,7 @@ class Body():
 			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Path:'), settings.activeHost['Status'])
 			tempText += '</tr>\n'
 			tempText += '</tbody></table>\n'
-			tempText += self.useHostSubMenu() #Submenu table
+			tempText += self.useHostSubMenu()  # Submenu table
 			# main list
 			if isCurrentItemSelected():
 				tempText += '<table border="0" cellspacing="15px"><tbody>\n'
@@ -484,7 +484,7 @@ class Body():
 			# end main list
 			if index > 10:
 				tempText += '<tr><td><br></td>'
-				tempText += self.useHostSubMenu(isTop=False) #Submenu table
+				tempText += self.useHostSubMenu(isTop=False)  # Submenu table
 			setNewHostListShown(True)
 		tempText += '</div></body>\n'
 		return tempText

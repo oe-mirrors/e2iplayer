@@ -60,7 +60,7 @@ class HMAC(Hash):
         self.H.reset()
         if self.keyed == None:
             raise Exception('no key defined')
-        self.H.update(self.k_xor_ipad) # start inner hash with key xored with ipad
+        self.H.update(self.k_xor_ipad)  # start inner hash with key xored with ipad
                                        # outer hash always called as one full pass (no updates)
 
     def update(self, data):

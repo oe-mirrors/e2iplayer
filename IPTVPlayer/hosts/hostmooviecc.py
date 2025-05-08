@@ -253,7 +253,7 @@ class MoovieCC(CBaseHostClass):
     def listSort(self, cItem, nextCategory):
         printDBG("MoovieCC.listSeries")
         if 0 == len(self.cacheSortOrder):
-            sts, data = self.getPage(self.getFullUrl('/online-filmek/')) # sort order is same for movies and series
+            sts, data = self.getPage(self.getFullUrl('/online-filmek/'))  # sort order is same for movies and series
             if not sts:
                 return
             data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="sort_by">', '</ul>')[1]
@@ -588,7 +588,7 @@ class MoovieCC(CBaseHostClass):
         data = self.cm.ph.getDataBeetwenMarkers(data, '<table style="margin-left', '</table>')[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>')
         mapDesc = {'Eredeti Cím:': 'alternate_title', 'Év:': 'year', 'Játékidő:': 'duration', 'IMDb értékelés:': 'imdb_rating',
-                   'Kategória:': 'category', 'Írta:': 'writers', 'Rendezte:': 'directors', 'Szereplők:': 'actors'} #'Megtekintve:':'views',
+                   'Kategória:': 'category', 'Írta:': 'writers', 'Rendezte:': 'directors', 'Szereplők:': 'actors'}  # 'Megtekintve:':'views',
         for item in data:
             item = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td', '</td>')
             if len(item) != 2:

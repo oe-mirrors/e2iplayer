@@ -71,7 +71,7 @@ def gettytul():
 
 
 class TvpVod(CBaseHostClass, CaptchaHelper):
-    DEFAULT_ICON_URL = 'https://s.tvp.pl/files/vod.tvp.pl/img/menu/logo_vod.png' #'http://sd-xbmc.org/repository/xbmc-addons/tvpvod.png'
+    DEFAULT_ICON_URL = 'https://s.tvp.pl/files/vod.tvp.pl/img/menu/logo_vod.png'  # 'http://sd-xbmc.org/repository/xbmc-addons/tvpvod.png'
     PAGE_SIZE = 12
     SPORT_PAGE_SIZE = 30
     ALL_FORMATS = [{"video/mp4": "mp4"}, {"application/x-mpegurl": "m3u8"}, {"video/x-ms-wmv": "wmv"}]
@@ -653,9 +653,9 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         videoTab = []
 
         def __getLinkQuality(itemLink):
-            bitrate = int(itemLink.get('bitrate',itemLink.get('bandwitch',0)))
+            bitrate = int(itemLink.get('bitrate', itemLink.get('bandwitch', 0)))
             if bitrate == 0:
-                bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink.get('width',0), itemLink.get('height',0)))
+                bitrate = self.getBitrateFromFormat('%sx%s' % (itemLink.get('width', 0), itemLink.get('height', 0)))
             return bitrate
 
         if 'api.tvp.pl' in url:

@@ -46,14 +46,14 @@ class IPTVSetupImpl:
         self.glibcVersion = -1
 
         # wget members
-        self.wgetVersion = 1902 # 1.15
+        self.wgetVersion = 1902  # 1.15
         self.wgetpaths = ["wget", "/usr/bin/wget", "/usr/bin/fullwget", GetBinDir("wget", "")]
         self._wgetInstallChoiseList = [(_('Install into the "%s".') % ("/usr/bin/fullwget " + _("recommended")), "/usr/bin/fullwget"),
                                        (_('Install into the "%s".') % "IPTVPlayer/bin/wget", GetBinDir("wget", "")),
                                        (_('Install into the "%s".') % "/usr/bin/wget", "/usr/bin/wget"),
                                        (_("Do not install (not recommended)"), "")]
         # rtmpdump members
-        self.rtmpdumpVersion = 20151215 #{'sh4':'2015', 'mipsel':'2015', 'armv5t':'2015', 'armv7':'2015', 'default':"Compiled by samsamsam@o2.pl 2015-01-11"} #'K-S-V patch'
+        self.rtmpdumpVersion = 20151215  # {'sh4':'2015', 'mipsel':'2015', 'armv5t':'2015', 'armv7':'2015', 'default':"Compiled by samsamsam@o2.pl 2015-01-11"} #'K-S-V patch'
         self.rtmpdumppaths = ["/usr/bin/rtmpdump", "rtmpdump"]
 
         # f4mdump member
@@ -67,7 +67,7 @@ class IPTVSetupImpl:
                                           (_("Do not install (not recommended)"), "")]
 
         # uchardet member
-        self.uchardetVersion = [0, 0, 6] #UCHARDET_VERSION_MAJOR, UCHARDET_VERSION_MINOR, UCHARDET_VERSION_REVISION
+        self.uchardetVersion = [0, 0, 6]  # UCHARDET_VERSION_MAJOR, UCHARDET_VERSION_MINOR, UCHARDET_VERSION_REVISION
         self.uchardetpaths = ["/usr/bin/uchardet", GetBinDir("uchardet", "")]
         self._uchardetInstallChoiseList = [(_('Install into the "%s".') % ("/usr/bin/uchardet (%s)" % _("recommended")), "/usr/bin/uchardet"),
                                           (_('Install into the "%s".') % "IPTVPlayer/bin/uchardet", GetBinDir("uchardet", "")),
@@ -101,7 +101,7 @@ class IPTVSetupImpl:
         self.subparserPaths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/libs/iptvsubparser/_subparser.so')]
 
         # e2icjson
-        self.e2icjsonVersion = 10202 #'1.2.2' int(z[0]) * 10000 + int(z[1]) * 100 + int(z[2])
+        self.e2icjsonVersion = 10202  # '1.2.2' int(z[0]) * 10000 + int(z[1]) * 100 + int(z[2])
         self.e2icjsonPaths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/libs/e2icjson/e2icjson.so')]
 
         # hlsdl
@@ -113,11 +113,11 @@ class IPTVSetupImpl:
         self.cmdwrapPaths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/cmdwrap'), "/usr/bin/cmdwrap"]
 
         # duk
-        self.dukVersion = 5 # "2.1.99" # real version
+        self.dukVersion = 5  # "2.1.99" # real version
         self.dukPaths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/duk'), "/usr/bin/duk"]
 
 	# duk v6
-        self.duk6Version = 6 # "2.3.0" # real version
+        self.duk6Version = 6  # "2.3.0" # real version
         self.duk6Paths = [resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/bin/duk6'), "/usr/bin/duk6"]
 
         self.binaryInstalledSuccessfully = False
@@ -1444,7 +1444,7 @@ class IPTVSetupImpl:
         if len(stsTab) > 0 and True == stsTab[-1]:
             self.binaryInstalledSuccessfully = True
             # NEXT STEP
-            self.binaryDetect() # run detect step once again to make sure that installed binary will be detected
+            self.binaryDetect()  # run detect step once again to make sure that installed binary will be detected
         else:
             self.showMessage(_("Installation binary failed. Retry?"), MessageBox.TYPE_YESNO, self.binaryInstallRetry)
 

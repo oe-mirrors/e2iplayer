@@ -151,7 +151,7 @@ class Laola1TV(CBaseHostClass):
                 del dataL2[0]
                 for itemL2 in dataL2:
                     if '<ul class="level3">' in itemL2:
-                        dataL3 = itemL2.split('<span class="level2point">') #'<ul class="level3">')
+                        dataL3 = itemL2.split('<span class="level2point">')  # '<ul class="level3">')
                     else:
                         dataL3 = [itemL2]
                     if 1 == len(dataL3):
@@ -489,7 +489,7 @@ class IPTVHost(CHostBase):
 
     def converItem(self, cItem):
         hostList = []
-        searchTypesOptions = [] # ustawione alfabetycznie
+        searchTypesOptions = []  # ustawione alfabetycznie
         searchTypesOptions.append((_("Live-streams"), "live"))
         searchTypesOptions.append((_("Videos"), "videos"))
 

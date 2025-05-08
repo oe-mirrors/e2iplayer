@@ -29,11 +29,11 @@ def gettytul():
 class FilmTar(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filmtar', 'cookie':'filmtar.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'filmtar', 'cookie': 'filmtar.cookie'})
         self.MAIN_URL = 'https://filmtar.online/'
         self.DEFAULT_ICON_URL = "http://www.blindspot.nhely.hu/Thumbnails/filmtar.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -66,7 +66,7 @@ class FilmTar(CBaseHostClass):
                 retTab = getMPDLinksWithMeta(uri, False)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def _uriIsValid(self, url):
@@ -74,10 +74,10 @@ class FilmTar(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('FilmTar.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_filters', 'title': _('Film Kategóriák'), 'url': 'https://filmtar.online/filmek/kategoriak'},
-                        {'category':'list_filters', 'title': _('Sorozat Kategóriák'), 'url': 'https://filmtar.online/sorozatok/kategoriak'},
-                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Film Kategóriák'), 'url': 'https://filmtar.online/filmek/kategoriak'},
+                        {'category': 'list_filters', 'title': _('Sorozat Kategóriák'), 'url': 'https://filmtar.online/sorozatok/kategoriak'},
+                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
 
     def listItems(self, cItem):
@@ -86,22 +86,22 @@ class FilmTar(CBaseHostClass):
         if not sts:
             return
         movies = self.cm.ph.getDataBeetwenMarkers(data, '<section class="container-fluid">', '</section>', False)[1]
-        movies = self.cm.ph.getAllItemsBeetwenMarkers(movies,'<div class="col ">','</a>')
+        movies = self.cm.ph.getAllItemsBeetwenMarkers(movies, '<div class="col ">', '</a>')
         for m in movies:
             title = self.cm.ph.getDataBeetwenMarkers(m, '<h5 class="movie-box__title" data-toggle="tooltip" data-placement="top" title="', '"', False)[1]
             if not title:
                 title = self.cm.ph.getDataBeetwenMarkers(m, '" alt="', '"', False)[1]
             icon = self.cm.ph.getDataBeetwenMarkers(m, 'data-src="', '"', False)[1]
             url = self.cm.ph.getDataBeetwenMarkers(m, '<a href="', '"', False)[1]
-            desc = "Kategória: " + self.cm.ph.getDataBeetwenMarkers(m, '<br />','</li>', False)[1] + "\n" + "Játékidő: " + self.cm.ph.getDataBeetwenMarkers(m, 'Játékidő:</strong><br />','</li>', False)[1] + "\n" + "Nyelv: " + self.cm.ph.getDataBeetwenMarkers(m, '<div class="icon-language" data-toggle="tooltip" data-placement="top" title="','"', False)[1] + "\n" + "IMDb: " + self.cm.ph.getDataBeetwenMarkers(m, '<i class="fa fa-star"></i> ','</span>', False)[1] + "\n" + "Megjelenés: " + self.cm.ph.getDataBeetwenMarkers(m, '<span class="movie-box__year">','</span>', False)[1].strip()
+            desc = "Kategória: " + self.cm.ph.getDataBeetwenMarkers(m, '<br />', '</li>', False)[1] + "\n" + "Játékidő: " + self.cm.ph.getDataBeetwenMarkers(m, 'Játékidő:</strong><br />', '</li>', False)[1] + "\n" + "Nyelv: " + self.cm.ph.getDataBeetwenMarkers(m, '<div class="icon-language" data-toggle="tooltip" data-placement="top" title="', '"', False)[1] + "\n" + "IMDb: " + self.cm.ph.getDataBeetwenMarkers(m, '<i class="fa fa-star"></i> ', '</span>', False)[1] + "\n" + "Megjelenés: " + self.cm.ph.getDataBeetwenMarkers(m, '<span class="movie-box__year">', '</span>', False)[1].strip()
             if "sorozatok" in url:
-                params = {'category': 'list_sorozat', 'title':title, 'icon': icon, 'url': url, 'desc': desc}
+                params = {'category': 'list_sorozat', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
             if "filmek" in url:
-                params = {'category': 'list_film', 'title':title, 'icon': icon, 'url': url, 'desc': desc}
+                params = {'category': 'list_film', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
             self.addDir(params)
         if 'Következő &raquo;' in data:
             next = self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)['"] rel="next"''', 1, True)[0]
-            params = {'category': 'list_items', 'title':"Következő oldal", 'icon': None, 'url': next}
+            params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': next}
             self.addDir(params)
     
     def listFilm(self, cItem):
@@ -118,14 +118,14 @@ class FilmTar(CBaseHostClass):
             links = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie-source__header">', 'Lejátszás', False)[1]
             title = self.cm.ph.getDataBeetwenMarkers(links, '<span class="movie-source__title">', '</span>', False)[1]
             url = self.cm.ph.getDataBeetwenMarkers(links, 'href="', '"', False)[1]
-            params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
+            params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
             self.addVideo(params)
             return
         for l in links:
             title = self.cm.ph.getDataBeetwenMarkers(l, '<span class="movie-source__title">', '</span>', False)[1]
             if title:
                 url = self.cm.ph.getDataBeetwenMarkers(l, 'href="', '"', False)[1]
-                params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
+                params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
                 self.addVideo(params)
     
     def listSeries(self, cItem):
@@ -137,13 +137,13 @@ class FilmTar(CBaseHostClass):
         lists = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="list-numbers">', '</ul>', False)[1]
         list = self.cm.ph.getAllItemsBeetwenMarkers(lists, '<a class="number-item"', '</a>', False)
         if not list:
-            title = self.cm.ph.getDataBeetwenMarkers(lists, '<strong><span>', '</strong>', False)[1].replace('</span>', '') + " - ", + self.cm.ph.getDataBeetwenMarkers(lists.replace('<strong><span>',''), '<span>', '</span>', False)[1]
+            title = self.cm.ph.getDataBeetwenMarkers(lists, '<strong><span>', '</strong>', False)[1].replace('</span>', '') + " - ", + self.cm.ph.getDataBeetwenMarkers(lists.replace('<strong><span>', ''), '<span>', '</span>', False)[1]
             url = self.cm.ph.getDataBeetwenMarkers(lists, 'href="', '"', False)[1]
-            params = {'category': 'list_episodes', 'title':title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
+            params = {'category': 'list_episodes', 'title': title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
             self.addDir(params)
             return
         for i in list:
-            title = self.cm.ph.getDataBeetwenMarkers(i, '<strong><span>', '</strong>', False)[1].replace('</span>', '') + " - " + self.cm.ph.getDataBeetwenMarkers(i.replace('<strong><span>',''), '<span>', '</span>', False)[1]
+            title = self.cm.ph.getDataBeetwenMarkers(i, '<strong><span>', '</strong>', False)[1].replace('</span>', '') + " - " + self.cm.ph.getDataBeetwenMarkers(i.replace('<strong><span>', ''), '<span>', '</span>', False)[1]
             url = self.cm.ph.getDataBeetwenMarkers(i, 'href="', '"', False)[1]
             params = {'category': 'list_episodes', 'title': title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
             self.addDir(params)
@@ -161,12 +161,12 @@ class FilmTar(CBaseHostClass):
             num = 1
             for i in episodes:
                 title = str(num) + "." + " epizód"
-                params = {'category':'list_links','title':title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
+                params = {'category': 'list_links', 'title': title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
                 self.addDir(params)
                 num = num + 1
         else:
            title = "1.epizód"
-           params = {'category':'list_links','title':title, 'icon': cItem['icon'], 'url': cItem['url'], 'desc': cItem['desc']}
+           params = {'category': 'list_links', 'title': title, 'icon': cItem['icon'], 'url': cItem['url'], 'desc': cItem['desc']}
            self.addDir(params)
     
     def listLinks(self, cItem):
@@ -185,21 +185,21 @@ class FilmTar(CBaseHostClass):
                         links = self.cm.ph.getDataBeetwenMarkers(i, '<div class="movie-source__header">', 'Lejátszás', False)[1]
                         title = self.cm.ph.getDataBeetwenMarkers(links, '<span class="movie-source__title">', '</span>', False)[1]
                         url = self.cm.ph.getDataBeetwenMarkers(links, 'href="', '"', False)[1]
-                        params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
+                        params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
                         self.addVideo(params)
                         return
                     for l in links:
                         title = self.cm.ph.getDataBeetwenMarkers(l, '<span class="movie-source__title">', '</span>', False)[1]
                         if title:
                             url = self.cm.ph.getDataBeetwenMarkers(l, 'href="', '"', False)[1]
-                            params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
+                            params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
                             self.addVideo(params)
                 num = num + 1
         else:
            links = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie-source__header">', 'Lejátszás', False)[1]
            title = self.cm.ph.getDataBeetwenMarkers(links, '<span class="movie-source__title">', '</span>', False)[1]
            url = self.cm.ph.getDataBeetwenMarkers(links, 'href="', '"', False)[1]
-           params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
+           params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': cItem['desc']}
            self.addVideo(params)
     
     def listFilters(self, cItem):
@@ -209,18 +209,18 @@ class FilmTar(CBaseHostClass):
         title = "Összes " + self.cm.ph.getDataBeetwenMarkers(data, '<h1 class="section-title mb-3 mb-md-0">', '<span class="font-weight-normal pl-4">', False)[1].strip()
         icon = None
         desc = self.cm.ph.getDataBeetwenMarkers(data, '<span class="font-weight-normal pl-4">', '</span>', False)[1].strip() + "\n" + "Rendezve feltöltés ideje szerint"
-        params = {'category':'list_items','title':title, 'icon': icon, 'url': url2, 'desc': desc}
+        params = {'category': 'list_items', 'title': title, 'icon': icon, 'url': url2, 'desc': desc}
         self.addDir(params)
         sts, data = self.getPage(cItem['url'])                    
         if not sts:
             return
-        cat = self.cm.ph.getAllItemsBeetwenMarkers(data,'<div class="col mb-4">','</div>', False)
+        cat = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="col mb-4">', '</div>', False)
         for c in cat:
-                title = self.cm.ph.getDataBeetwenMarkers(c, '<span>','</span>', False)[1]
+                title = self.cm.ph.getDataBeetwenMarkers(c, '<span>', '</span>', False)[1]
                 icon = None
-                url = self.cm.ph.getDataBeetwenMarkers(c, '<a href="','"', False)[1]
+                url = self.cm.ph.getDataBeetwenMarkers(c, '<a href="', '"', False)[1]
                 desc = self.cm.ph.getDataBeetwenMarkers(c, '<span class="font-weight-normal opacity--7">', '</span>', False)[1]
-                params = {'category':'list_items','title':title, 'icon': icon, 'url': url, 'desc': desc}
+                params = {'category': 'list_items', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
                 self.addDir(params)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -239,7 +239,7 @@ class FilmTar(CBaseHostClass):
         self.currList = []
         
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
         elif category == 'list_filters':
@@ -254,10 +254,10 @@ class FilmTar(CBaseHostClass):
             self.listLinks(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)			
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         

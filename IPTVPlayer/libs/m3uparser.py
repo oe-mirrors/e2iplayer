@@ -15,7 +15,7 @@ import re
 
 def GetM3uAttribs(txt, firstKeyAsLength=False):
     attribs = {}
-    type = 0 # 0 - key, 1 - start val, 2 - end val
+    type = 0  # 0 - key, 1 - start val, 2 - end val
     key = ''
     val = ''
     if firstKeyAsLength:
@@ -75,7 +75,7 @@ def ParseM3u(data):
                 it = it.split('=')
                 if len(it) != 2:
                     continue
-                it[0] = it[0].lower() # key
+                it[0] = it[0].lower()  # key
                 for m in [("program", 'program-id'), ('http-user-agent', 'user_agent')]:
                     if it[0] == m[0]:
                         params[m[1]] = it[1]

@@ -102,9 +102,9 @@ class XrysoiSE(CBaseHostClass):
         tmp = re.compile('<a[^>]*?href="([^"]+?)"[^>]*?>([^<]+?)<').findall(tmp)
         for item in tmp:
             if item[0].endswith('collection/'):
-                continue # at now we are not able to handle colletion
+                continue  # at now we are not able to handle colletion
             if item[0].endswith('προσεχώς/'):
-                continue # soon, so there is only trailer link available
+                continue  # soon, so there is only trailer link available
             moviesTab.append({'title': self.cleanHtmlStr(item[1]), 'url': self._getFullUrl(item[0])})
 
         moviesTab.append({'title': 'Κινούμενα Σχέδια (με μετάφραση)', 'url': self._getFullUrl('category/κιν-σχέδια/')})
@@ -132,7 +132,7 @@ class XrysoiSE(CBaseHostClass):
         if 'url_suffix' in cItem:
             url += cItem['url_suffix']
 
-        sts, data = self.cm.getPage(url) #, {'header':self.AJAX_HEADER}
+        sts, data = self.cm.getPage(url)  # , {'header':self.AJAX_HEADER}
         if not sts:
             return
 

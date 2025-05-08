@@ -134,7 +134,7 @@ class MoonwalkParser():
                             key = unhexlify(key)
                         if tmp['salt']['iv']['type'] == 'hex':
                             iv = unhexlify(iv)
-                        post_data[itemKey] = base64.b64encode(self.cryptoJS_AES_encrypt(decrypted, key, iv)) #.replace('+', ' ')
+                        post_data[itemKey] = base64.b64encode(self.cryptoJS_AES_encrypt(decrypted, key, iv))  # .replace('+', ' ')
                     except Exception:
                         post_data[itemKey] = data['data'][itemKey]
             except Exception:

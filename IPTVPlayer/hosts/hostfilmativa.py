@@ -360,7 +360,7 @@ class IPTVHost(CHostBase):
 
     def converItem(self, cItem):
         hostList = []
-        searchTypesOptions = [] # ustawione alfabetycznie
+        searchTypesOptions = []  # ustawione alfabetycznie
         searchTypesOptions.append((_("Movies"), "movies"))
         searchTypesOptions.append((_("Series"), "series"))
 

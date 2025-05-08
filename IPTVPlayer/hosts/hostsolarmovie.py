@@ -55,7 +55,7 @@ class SolarMovie(CBaseHostClass):
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.DEFAULT_ICON_URL = 'http://www.top-site-list.com/topsites/wp-content/uploads/2013/10/421.png' #'https://solarmovie.st/assets/movie/frontend/images/logo.png'
+        self.DEFAULT_ICON_URL = 'http://www.top-site-list.com/topsites/wp-content/uploads/2013/10/421.png'  # 'https://solarmovie.st/assets/movie/frontend/images/logo.png'
         self.MAIN_URL = None
         self.cacheFiltersKeys = []
         self.cacheFilters = {}
@@ -210,7 +210,7 @@ class SolarMovie(CBaseHostClass):
         keysList = ['f_type[]']
         keysList.extend(self.cacheFiltersKeys)
         for key in keysList:
-            baseKey = key[2:] # "f_"
+            baseKey = key[2:]  # "f_"
             if key in cItem:
                 query[baseKey] = cItem[key]
 

@@ -25,7 +25,7 @@ class ARC4:
     def __init__(self, key=None):
         """ key -> octet string for key """
         self.name = 'ARC4'
-        self.strength = None # depends on keySize
+        self.strength = None  # depends on keySize
         self.blockSize = 1    # blockSize is in bytes
 
         if key != None:
@@ -40,7 +40,7 @@ class ARC4:
         for i in range(256):
             j = (j + self.state[i] + ord(key[i % len(key)])) % 256
             self.state[i], self.state[j] = self.state[j], self.state[i]
-        self.keyReady = 1 # Ready
+        self.keyReady = 1  # Ready
 
     def encrypt(self, plainText, more=None):
         """ Encrypt a string and return a binary string
@@ -74,5 +74,5 @@ def arcfourBlock(state, input):
         state[i], state[j] = state[j], state[i]
         n = (state[i] + state[j]) % 256
         output.append(chr(ord(byte) ^ state[n]))
-    output = ''.join(output) # convert to string
+    output = ''.join(output)  # convert to string
     return output

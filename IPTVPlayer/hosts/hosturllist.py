@@ -198,7 +198,7 @@ class IPTVHost(CHostBase):
 
     def convertList(self, cList):
         hostList = []
-        searchTypesOptions = [] # ustawione alfabetycznie
+        searchTypesOptions = []  # ustawione alfabetycznie
         #searchTypesOptions.append(("Filmy", "filmy"))
         #searchTypesOptions.append(("Seriale", "seriale"))
 

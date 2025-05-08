@@ -248,7 +248,7 @@ class OurmatchNet(CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         printDBG("OurmatchNet.getLinksForVideo [%s]" % cItem)
-        urlTab = [] #{'name':'', 'url':cItem['url'], 'need_resolve':1}]
+        urlTab = []  # {'name':'', 'url':cItem['url'], 'need_resolve':1}]
 
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:

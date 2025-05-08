@@ -107,7 +107,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
                 scrollbar_mode = 'showNever'
             else:
                 scrollbar_mode = 'showOnDemand'
-                list_width += 30 # added for scrollbar
+                list_width += 30  # added for scrollbar
             skin.append('<widget name="col_%d" position="%d,%d" zPosition="1" size="%d,%d" scrollbarMode="%s" transparent="1"  backgroundColor="#00000000" enableWrapAround="1" />' % (idx, x, y, list_width, list_height, scrollbar_mode))
             x += 10 + list_width
         y += list_height + 10
@@ -251,7 +251,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
             try:
                 item = self["col_%d" % self.column_index]
                 itemContent = item.l.getCurrentSelection()[0]
-                if itemContent['id'] == None: # do not allow to select empty cell
+                if itemContent['id'] == None:  # do not allow to select empty cell
                     return
                 if itemContent['selected']:
                     self.iptv_num_sel_items -= 1

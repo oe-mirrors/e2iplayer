@@ -144,7 +144,7 @@ class RteIE(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+)['"]''')[0])
             if not self.cm.isValidUrl(url):
                 continue
-            title = url.split('/')[-2] #self.cleanHtmlStr(item)
+            title = url.split('/')[-2]  # self.cleanHtmlStr(item)
             params = dict(cItem)
             params = {'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url}
             self.addDir(params)

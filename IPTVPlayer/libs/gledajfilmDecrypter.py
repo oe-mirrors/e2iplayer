@@ -22,7 +22,7 @@ class gledajfilmDecrypter:
 		_loc10_ = None
 		_loc4_ = []
 		_loc5_ = []
-		_loc6_ = self.hexToChars(param1) #==48 characters
+		_loc6_ = self.hexToChars(param1)  # ==48 characters
 		_loc7_ = self.blockSize / 8
 		_lo8st = self.strToChars(param2)
 		_loc8_ = self.keyExpansion(_lo8st)
@@ -51,7 +51,7 @@ class gledajfilmDecrypter:
 		self.Nk = self.keySize / 32     # =6, what if this was 5
 		self.Nb = self.blockSize / 32
 		_loc3_ = []
-		self.Nr = self.roundsArray[self.Nk][self.Nb] # ==12, what if this was 10?
+		self.Nr = self.roundsArray[self.Nk][self.Nb]  # ==12, what if this was 10?
 		_loc4_ = 0
 		_loc3_ = [0] * (self.Nb * (self.Nr + 1))
 		while _loc4_ < self.Nk:
@@ -173,7 +173,7 @@ class gledajfilmDecrypter:
 
 	def decryption(self, param1, param2):
 		param1 = self.packBytes(param1)
-		self.InverseFinalRound(param1, param2[self.Nb * self.Nr:]) # nb*nr=42
+		self.InverseFinalRound(param1, param2[self.Nb * self.Nr:])  # nb*nr=42
 		_loc3_ = self.Nr - 1
 		while (_loc3_ > 0):
 			self.InverseRound(param1, param2[(self.Nb * _loc3_):self.Nb * (_loc3_ + 1)])

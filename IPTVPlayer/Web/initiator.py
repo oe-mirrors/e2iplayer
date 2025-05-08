@@ -10,7 +10,7 @@ from twisted.web import static
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir
 from . import settings
 
-IPTVwebRoot = static.File(GetPluginDir('Web/').encode()) #webRoot = pluginDir to get access to icons and logos
+IPTVwebRoot = static.File(GetPluginDir('Web/').encode())  # webRoot = pluginDir to get access to icons and logos
 IPTVwebRoot.putChild(b"icons", static.File(GetPluginDir('icons/').encode()))
 IPTVwebRoot.putChild(b"", StartPage())
 IPTVwebRoot.putChild(b"hosts", hostsPage())

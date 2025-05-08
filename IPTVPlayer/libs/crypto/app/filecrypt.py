@@ -80,7 +80,7 @@ def main():
     else:
         sys.stdout.write(output)
 
-    sys.exit() # normal termination
+    sys.exit()  # normal termination
 
 
 if __name__ == "__main__":

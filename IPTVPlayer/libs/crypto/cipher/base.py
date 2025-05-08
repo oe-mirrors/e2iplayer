@@ -67,7 +67,7 @@ class BlockCipher:
         """ Decrypt a string and return a string """
         try:
             self.bytesToDecrypt += cipherText  # append to any bytes from prior decrypt
-        except Exception: # most likely py3 would go there
+        except Exception:  # most likely py3 would go there
             self.bytesToDecrypt += cipherText.encode('utf-8', 'ignore')  # append to any bytes from prior decrypt
         
         numBlocks, numExtraBytes = divmod(len(self.bytesToDecrypt), self.blockSize)

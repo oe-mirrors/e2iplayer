@@ -53,7 +53,7 @@ class MediasetPlay(CBaseHostClass):
 
         self.MAIN_URL = 'https://www.mediasetplay.mediaset.it/'
         self.API_BASE_URL = 'https://api-ott-prod-fe.mediaset.net/PROD/play/'
-        self.DEFAULT_ICON_URL = 'https://i.pinimg.com/originals/34/67/9b/34679b83e426516b478ba9d63dcebfa2.png' #'http://www.digitaleterrestrefacile.it/wp-content/uploads/2018/07/mediaset-play.jpg' #'https://cdn.one.accedo.tv/files/5b0d3b6e23eec6000dd56c7f'
+        self.DEFAULT_ICON_URL = 'https://i.pinimg.com/originals/34/67/9b/34679b83e426516b478ba9d63dcebfa2.png'  # 'http://www.digitaleterrestrefacile.it/wp-content/uploads/2018/07/mediaset-play.jpg' #'https://cdn.one.accedo.tv/files/5b0d3b6e23eec6000dd56c7f'
 
         self.cacheLinks = {}
         self.initData = {}
@@ -135,7 +135,7 @@ class MediasetPlay(CBaseHostClass):
             for item in data['entries']:
                 if 'vip' in item['mediasetstation$pageUrl']:
                     continue
-                icon = self.getFullIconUrl(item['thumbnails']['channel_logo-100x100']['url']) #next(iter(item['thumbnails']))['url'] )
+                icon = self.getFullIconUrl(item['thumbnails']['channel_logo-100x100']['url'])  # next(iter(item['thumbnails']))['url'] )
                 title = item['title']
                 url = self.getFullIconUrl(item['mediasetstation$pageUrl'])
                 self.addVideo(MergeDicts(cItem, {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'call_sign': item['callSign'], 'is_live': True}))
@@ -247,9 +247,9 @@ class MediasetPlay(CBaseHostClass):
             query['inOnda'] = 'true'
         url = self.API_BASE_URL + 'rec/azlisting/v1.0?' + urllib_urlencode(query)
         if 'f_query' in cItem:
-            url += '&query=%s' % cItem['f_query'] #query['query'] = cItem['f_query']
+            url += '&query=%s' % cItem['f_query']  # query['query'] = cItem['f_query']
         if 'f_category' in cItem:
-            url += '&categories=%s' % cItem['f_category'] #query['categories'] = cItem['f_category']
+            url += '&categories=%s' % cItem['f_category']  # query['categories'] = cItem['f_category']
 
         cItem = MergeDicts(cItem, {'category': 'list_items', 'url': url})
         self.listItems(cItem, nextCategory)

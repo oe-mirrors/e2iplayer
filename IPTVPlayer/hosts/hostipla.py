@@ -341,13 +341,13 @@ class Ipla(CBaseHostClass):
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, Ipla(), True, [CDisplayListItem.TYPE_VIDEO]) # with search history, can generate favorite item
+        CHostBase.__init__(self, Ipla(), True, [CDisplayListItem.TYPE_VIDEO])  # with search history, can generate favorite item
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('iplalogo.png')])
 
     def converItem(self, cItem):
-        searchTypesOptions = [] # ustawione alfabetycznie
+        searchTypesOptions = []  # ustawione alfabetycznie
         hostLinks = []
         type = CDisplayListItem.TYPE_UNKNOWN
         possibleTypesOfSearch = None

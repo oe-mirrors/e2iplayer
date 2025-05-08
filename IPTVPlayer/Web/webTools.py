@@ -188,5 +188,5 @@ def stopRunningThread(name):
 		if name == myThread.name:
 			if (myThread.is_alive()):
 				myThread.terminate()
-	time.sleep(0.2) #time for thread to close
+	time.sleep(0.2)  # time for thread to close
 	return isThreadRunning(name)

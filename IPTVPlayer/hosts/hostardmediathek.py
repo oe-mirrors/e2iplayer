@@ -60,7 +60,7 @@ class ARDmediathek(CBaseHostClass):
 
         self.MAIN_URL = 'http://www.ardmediathek.de/'
         self.MAIN_API_URL = 'http://www.ardmediathek.de/'
-        self.DEFAULT_ICON_URL = 'http://www.fluentu.com/german/blog/wp-content/uploads/sites/5/2014/12/how-to-hack-through-geoblocking-and-watch-german-tv-online1.png' # 'http://www.ardmediathek.de/ard/static/img/base/icon/ardlogo_weiss.png'
+        self.DEFAULT_ICON_URL = 'http://www.fluentu.com/german/blog/wp-content/uploads/sites/5/2014/12/how-to-hack-through-geoblocking-and-watch-german-tv-online1.png'  # 'http://www.ardmediathek.de/ard/static/img/base/icon/ardlogo_weiss.png'
         self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Start'), 'url': self.getFullUrl('appdata/servlet/tv?json')},
                              {'category': 'list_items', 'title': _('Missed the show?'), 'url': self.getFullUrl('appdata/servlet/tv/sendungVerpasst?json')},
                              {'category': 'list_items', 'title': _('Program A-Z'), 'url': self.getFullUrl('appdata/servlet/tv/sendungAbisZ?json')},
@@ -185,7 +185,7 @@ class ARDmediathek(CBaseHostClass):
                             if button['typ'] in ['buttonTyp']:
                                 continue
                             if button['buttonTyp'] == 'paging':
-                                continue # paging is handled in diffrent way
+                                continue  # paging is handled in diffrent way
                             #if button.get('disabled', False): continue
                             title = self.cleanHtmlStr(button['label']['text'])
                             try:
@@ -196,7 +196,7 @@ class ARDmediathek(CBaseHostClass):
                             if not self.cm.isValidUrl(url):
                                 continue
                             if len(filters) and (url.endswith('quelle.radio') or url.endswith('quelle.tv')):
-                                continue # some workaround
+                                continue  # some workaround
                             filters.append({'good_for_fav': True, 'title': mainTitle + title, 'url': self.getFullUrl(url), 'desc': desc, 'skip_buttons': skipButtons})
 
                 # if there are filter buttons add them as subcategories
@@ -212,7 +212,7 @@ class ARDmediathek(CBaseHostClass):
                     for teaser in inhalte:
                         if teaser['typ'] not in ['Teaser']:
                             continue
-                        if 'Gruppe' in teaser['teaserTyp']: # in ['TabGruppe']:
+                        if 'Gruppe' in teaser['teaserTyp']:  # in ['TabGruppe']:
                             mainTitle = self.cleanHtmlStr(teaser['ueberschrift'])
                             tab = []
                             interInhalte = self._getList(teaser, 'inhalte')

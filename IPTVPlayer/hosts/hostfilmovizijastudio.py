@@ -43,7 +43,7 @@ class FilmovizijaStudio(CBaseHostClass):
         self.MOV_SEARCH_URL = self.getFullUrl('search1.php?ser=506&subs=&lks=1&rfrom=0&rto=0&gfrom=0&gto=0&gns=&btn=&keywords=')
         self.SER_SEARCH_URL = self.getFullUrl('search1.php?ser=528&subs=&lks=1&rfrom=0&rto=0&gfrom=0&gto=0&gns=&btn=&keywords=')
 
-        self.DEFAULT_ICON_URL = 'http://prvobitno.com/slike/filmovizijatv.jpg' #self.getFullUrl('/cdn/images/logo6.png')
+        self.DEFAULT_ICON_URL = 'http://prvobitno.com/slike/filmovizijatv.jpg'  # self.getFullUrl('/cdn/images/logo6.png')
         self.EPISODE_URL = self.getFullUrl('/episode.php?vid=')
 
         mc = 'browse-movies-videos-1-date.html'

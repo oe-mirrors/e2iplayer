@@ -772,7 +772,7 @@ class Decimal(object):
             return cmp(self_padded, other_padded) * (-1)**self._sign
         elif self_adjusted > other_adjusted:
             return (-1)**self._sign
-        else: # self_adjusted < other_adjusted
+        else:  # self_adjusted < other_adjusted
             return -((-1)**self._sign)
 
     def __eq__(self, other):
@@ -852,7 +852,7 @@ class Decimal(object):
                 return sign + 'Infinity'
             elif self._exp == 'n':
                 return sign + 'NaN' + self._int
-            else: # self._exp == 'N'
+            else:  # self._exp == 'N'
                 return sign + 'sNaN' + self._int
 
         # number of digits of self._int to left of decimal point
@@ -1853,7 +1853,7 @@ class Decimal(object):
                     if remainder:
                         return None
 
-                if e * 65 >= p * 93: # 93/65 > log(10)/log(5)
+                if e * 65 >= p * 93:  # 93/65 > log(10)/log(5)
                     return None
                 xc = 5**e
 
@@ -1879,7 +1879,7 @@ class Decimal(object):
                     xe, remainder = divmod(xe * yc, ten_pow)
                     if remainder:
                         return None
-                if e * 3 >= p * 10: # 10/3 > log(10)/log(2)
+                if e * 3 >= p * 10:  # 10/3 > log(10)/log(2)
                     return None
                 xc = 2**e
             else:
@@ -1918,7 +1918,7 @@ class Decimal(object):
                 return None
 
             # compute nth root of xc using Newton's method
-            a = 1 << -(-_nbits(xc) // n) # initial estimate
+            a = 1 << -(-_nbits(xc) // n)  # initial estimate
             while True:
                 q, r = divmod(xc, a**(n - 1))
                 if a <= q:
@@ -2846,7 +2846,7 @@ class Decimal(object):
 
         # correctly rounded result: repeatedly increase precision by 3
         # until we get an unambiguously roundable result
-        places = p - self._ln_exp_bound() + 2 # at least p+3 places
+        places = p - self._ln_exp_bound() + 2  # at least p+3 places
         while True:
             coeff = _dlog(c, e, places)
             # assert len(str(abs(coeff)))-p >= 1
@@ -3177,7 +3177,7 @@ class Decimal(object):
 
         if comparison == -1:
             ans = self.next_plus(context)
-        else: # comparison == 1
+        else:  # comparison == 1
             ans = self.next_minus(context)
 
         # decide which flags to raise using value of ans
@@ -4871,13 +4871,13 @@ def _dlog10(c, e, p):
         else:
             c = _div_nearest(c, 10**-k)
 
-        log_d = _ilog(c, M) # error < 5 + 22 = 27
-        log_10 = _log10_digits(p) # error < 1
+        log_d = _ilog(c, M)  # error < 5 + 22 = 27
+        log_10 = _log10_digits(p)  # error < 1
         log_d = _div_nearest(log_d * M, log_10)
-        log_tenpower = f * M # exact
+        log_tenpower = f * M  # exact
     else:
         log_d = 0  # error < 2.31
-        log_tenpower = div_nearest(f, 10**-p) # error < 0.5
+        log_tenpower = div_nearest(f, 10**-p)  # error < 0.5
 
     return _div_nearest(log_tenpower + log_d, 100)
 
@@ -4906,7 +4906,7 @@ def _dlog(c, e, p):
             c = _div_nearest(c, 10**-k)  # error of <= 0.5 in c
 
         # _ilog magnifies existing error in c by a factor of at most 10
-        log_d = _ilog(c, 10**p) # error < 5 + 22 = 27
+        log_d = _ilog(c, 10**p)  # error < 5 + 22 = 27
     else:
         # p <= 0: just approximate the whole thing by 0; error < 2.31
         log_d = 0
@@ -5073,7 +5073,7 @@ def _dpower(xc, xe, yc, ye, p):
     if pc == 0:
         # we prefer a result that isn't exactly 1; this makes it
         # easier to compute a correctly rounded result in __pow__
-        if ((len(str(xc)) + xe >= 1) == (yc > 0)): # if x**y > 1:
+        if ((len(str(xc)) + xe >= 1) == (yc > 0)):  # if x**y > 1:
             coeff, exp = 10**(p - 1) + 1, 1 - p
         else:
             coeff, exp = 10**p - 1, -p

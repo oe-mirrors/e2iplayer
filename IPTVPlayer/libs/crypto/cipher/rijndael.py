@@ -33,7 +33,7 @@ class Rijndael(BlockCipher):
 
         self.Nb = int(self.blockSize / 4)   # Nb is number of columns of 32 bit words
         self.Nk = int(keySize / 4)          # Nk is the key length in 32-bit words
-        self.Nr = NrTable[self.Nb][self.Nk] # The number of rounds (Nr) is a function of
+        self.Nr = NrTable[self.Nb][self.Nk]  # The number of rounds (Nr) is a function of
                                             # the block (Nb) and key (Nk) sizes.
         if key != None:
             self.setKey(key)
@@ -101,7 +101,7 @@ NrTable = {4: {4: 10, 5: 11, 6: 12, 7: 13, 8: 14},
 
 def keyExpansion(algInstance, keyString):
     """ Expand a string of size keySize into a larger array """
-    Nk, Nb, Nr = algInstance.Nk, algInstance.Nb, algInstance.Nr # for readability
+    Nk, Nb, Nr = algInstance.Nk, algInstance.Nb, algInstance.Nr  # for readability
     key = [getOrdForVal(byte) for byte in keyString]  # convert string to list
 
     w = [[key[4 * i], key[4 * i + 1], key[4 * i + 2], key[4 * i + 3]] for i in range(Nk)]

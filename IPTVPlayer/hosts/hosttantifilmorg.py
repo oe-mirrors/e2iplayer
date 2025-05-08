@@ -37,7 +37,7 @@ class TantiFilmOrg(CBaseHostClass):
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.cm.HEADER = self.HEADER # default header
+        self.cm.HEADER = self.HEADER  # default header
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_URL = 'https://tantifilm.mba/'
@@ -118,7 +118,7 @@ class TantiFilmOrg(CBaseHostClass):
         for item in data:
             title = self.cleanHtmlStr(item)
             if title.upper() == 'HOME':
-                continue # not items on home page
+                continue  # not items on home page
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
             if self.cm.getBaseUrl(self.getMainUrl(), True) != self.cm.getBaseUrl(url, True) or '/supporto/' in url:
                 continue

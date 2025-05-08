@@ -19,7 +19,7 @@ def S(word):
 """
 
 from crypto.cipher.rijndael import Sbox
-tkipSbox = [list(range(256)), list(range(256))] # arbitrary initialization
+tkipSbox = [list(range(256)), list(range(256))]  # arbitrary initialization
 for i in range(256):
     k = Sbox[i]           # the rijndael S box (imported)
     if k & 0x80:          # calculate k*2 polynomial math
@@ -62,7 +62,7 @@ class TKIP_Mixer:
             raise Exception('Wrong key size')
         # for readability of subroutines, make tk a list of 1 octet ints
         self.tk = [ord(byte) for byte in key]
-        if self.ta != None: # reset phase1 value
+        if self.ta != None:  # reset phase1 value
             self.phase1Key = phase1KeyMixing(self.tk, self.ta, self.pn)
 
     def setTA(self, taBytes):
@@ -70,14 +70,14 @@ class TKIP_Mixer:
         if len(taBytes) != 6:
             raise Exception('Bad size for transmitterAddress')
         self.ta = [ord(byte) for byte in taBytes]
-        if self.tk != None: # reset phase1 value
+        if self.tk != None:  # reset phase1 value
             self.phase1Key = phase1KeyMixing(self.tk, self.ta, self.pn)
 
     def setPnBytes(self, pnBytes):
         """ Set the pnBytes from the packet number (int) """
         assert (len(pnBytes) == 6), 'pnBytes must be 6 octets'
         self.pnBytes = pnBytes
-        self.pn = [ord(byte) for byte in pnBytes] # int list for readability
+        self.pn = [ord(byte) for byte in pnBytes]  # int list for readability
 
     def newKey(self, pnBytes):
         """ return a new 'mixed' key (16 octets) based on
@@ -86,7 +86,7 @@ class TKIP_Mixer:
         assert (self.ta != None), 'No TA'
         assert (self.tk != None), 'No TK'
         self.setPnBytes(pnBytes)
-        if self.pnBytes[-4:] != self.upper4SequenceOctets: # check if upper bits change
+        if self.pnBytes[-4:] != self.upper4SequenceOctets:  # check if upper bits change
             # calculate phase1 key only when upper bytes change
             self.upper4SequenceOctets = pnBytes[-4:]
             self.phase1Key = phase1KeyMixing(self.tk, self.ta, self.pn)
@@ -115,7 +115,7 @@ def phase2KeyMixing(tk, p1k, pn):
     """ Create a 16 octet key from the phase1Key (p1k)
         and 2 octets of sequence counter """
     ppk = [i for i in p1k]
-    ppk.append(p1k[4] + pn[1] * 256 + pn[0]) # append value for ppk[5]
+    ppk.append(p1k[4] + pn[1] * 256 + pn[0])  # append value for ppk[5]
     # Bijective non-linear mixing of the 96 bits of ppk
     ppk[0] = (ppk[0] + S(ppk[5] ^ (tk[1] * 256 + tk[0]))) & 0xFFFF
     ppk[1] = (ppk[1] + S(ppk[0] ^ (tk[3] * 256 + tk[2]))) & 0xFFFF
@@ -139,5 +139,5 @@ def phase2KeyMixing(tk, p1k, pn):
     for i in range(6):
         rc4Key[4 + 2 * i] = ppk[i] & 0xff
         rc4Key[5 + 2 * i] = (ppk[i] >> 8) & 0xff
-    wepSeed = ''.join([chr(i) for i in rc4Key]) # convert to string
+    wepSeed = ''.join([chr(i) for i in rc4Key])  # convert to string
     return wepSeed
