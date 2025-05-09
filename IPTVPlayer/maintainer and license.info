@@ -18,6 +18,29 @@ Webpages:
     - http://iptvplayer.vline.pl/
     - http://www.iptvplayer.gitlab.io/
 
+
+###### English ######	
+	E2iPlayer plugin can be modified by anyone.
+The author of each modification is obliged to send, with acknowledgment of receipt, a detailed ops of the modification along with its source code to the e-mail address: samsamsam@o2.pl.
+
+Anyone has the right to decommission the code of the E2iPlayer plugin in case it was published without sources.
+
+In case of Enigma2 distributions containing pre-installed E2iPlayer plugin or allowing its installation or upgrade, the code of E2iPlayer components 
+within the provided version must be identical with the code from the main repository available at https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2.
+It is forbidden to provide incomplete code of the E2iPlayer plugin without prior approval of the main developer.
+At the same time, it is allowed to distribute the plugin code in the form of pre-compiled pyo files.
+
+The developers of the E2iPlayer plugin are not liable for damages resulting from the use of the E2iPlayer plugin regardless of how these damages arose and what they concern.
+The developers of the E2iPlayer plugin are not liable for improper or illegal use of the E2iPlayer plugin in a given country, including illegal downloading of video materials using the E2iPlayer plugin.
+
+E2iPlayer plugin should be treated as a browser of contents available on the Internet, therefore the creators of E2iPlayer plugin cannot and do not bear responsibility for the contents accessed by the user using 
+E2iPlayer plugin.
+
+E2iPlayer plugin supports the function of logging in to some services requiring premium accounts.
+However, the creators of the plugin do not sell such accounts.
+
+
+###### Polish ######
 Plugin E2iPlayer może być modyfikowany przez każdego.
 Autor każdej modyfikacji zobowiązany jest do wysłania, z potwierdzeniem odbioru, szczegółowego opsu modyfikacji w raz z jej kodem źródłowym na adres e-mail: samsamsam@o2.pl.
 
