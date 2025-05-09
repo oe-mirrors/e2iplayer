@@ -60,13 +60,11 @@ hostgamatocom
 hostgovodtv
 hostgledalica
 hostgreekdocumentaries3
-hostguardaserie
 hosthdfilmetv
 hosthdfull
 hosthdpopcornscom
 hosthdseanspl
 hosthoofootcom
-hosticefilmsinfo
 hostinteriatv
 hostipla
 hostiptvplayerinfo
@@ -94,13 +92,11 @@ hostmindigo
 hostmindigtv
 hostmooviecc
 hostmovienightws
-hostmovierulzsx
 hostmovizlandcom
 hostmovs4ucom
 hostmrpiracy
 hostmusicbox
 hostmusicmp3ru
-hostmythewatchseries
 hostngolos
 hostninateka
 hostnonstopmozi
