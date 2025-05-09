@@ -74,7 +74,7 @@ class IPTVDirectorySelectorWidget(Screen):
     def __init__(self, session, currDir, title="Directory browser"):
         printDBG("IPTVDirectorySelectorWidget.__init__ -------------------------------")
         Screen.__init__(self, session)
-        if type(self) == IPTVDirectorySelectorWidget:
+        if type(self) is IPTVDirectorySelectorWidget:
             self["key_red"] = Label(_("Cancel"))
             #self["key_yellow"] = Label(_("Odśwież"))
             self["key_blue"] = Label(_("New dir"))
@@ -318,7 +318,7 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
         printDBG("IPTVFileSelectorWidget.__init__ -------------------------------")
         IPTVDirectorySelectorWidget.__init__(self, session, currDir, title)
 
-        if type(self) == IPTVFileSelectorWidget:
+        if type(self) is IPTVFileSelectorWidget:
             self["key_red"] = Label(_("Cancel"))
             self["curr_dir"] = Label(_(" "))
             self["list"] = IPTVDirBrowserList()

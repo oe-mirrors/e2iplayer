@@ -90,7 +90,7 @@ class WeebTvApi:
         return ret
 
     def _getStr(self, v, default=''):
-        if type(v) == type(''):
+        if isinstance(v, str):
             return v
         return default
 

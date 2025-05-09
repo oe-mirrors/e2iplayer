@@ -61,8 +61,8 @@ class DRDK(CBaseHostClass):
             url = url.replace('https://', 'http://')
         return url
 
-    def _getIcon(self, Slug):
-        url = MAIN_URL + 'api/1.2/asset/{0}?width={1}&height={2}&crop={3}&raw={4}'.format(Slug, )
+#    def _getIcon(self, Slug):
+#        url = self.MAIN_URL + 'api/1.2/asset/{0}?width={1}&height={2}&crop={3}&raw={4}'.format(Slug, )
 
     def listsTab(self, tab, cItem, type='dir'):
         printDBG("DRDK.listsTab")

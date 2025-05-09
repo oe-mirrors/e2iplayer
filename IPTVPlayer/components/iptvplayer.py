@@ -5,7 +5,7 @@ try:
     from Screens.InfoBarGenerics import InfoBarAspectSelection
 except ImportError:
     class InfoBarAspectSelection:
-    	def __init__(self):
+        def __init__(self):
             pass
 
 from Screens.HelpMenu import HelpableScreen

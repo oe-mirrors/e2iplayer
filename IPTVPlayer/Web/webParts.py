@@ -368,8 +368,7 @@ class Body():
 
 	def useHostSubMenu(self, isTop=True, LVL=1):
 		txt = '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
-		txtWarning = '<tr><td colspan="4" align="center"><p><b><font size="2" color="#FE642E">%s</font></b><font size="2">%s</font></p></td></tr>\n' % (
-				      _('REMEMBER: '), _('first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!'))
+		txtWarning = '<tr><td colspan="4" align="center"><p><b><font size="2" color="#FE642E">%s</font></b><font size="2">%s</font></p></td></tr>\n' % (_('REMEMBER: '), _('first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!'))
 		if isTop:
 			txt += txtWarning
 		txt += '<tr><td><br></td>'
@@ -497,13 +496,13 @@ class Body():
 		#Status table
 		if not isThreadRunning('doGlobalSearch'):
 			tempText += '<table border="0"><td>%s</td></table>' % formSUBMITtextWithOptions(_('Search in all active hosts'),
-										   'GlobalSearch',
-										   'style="color: #DBA901;background: none;border: none;text-decoration: underline"',
-										   settings.GlobalSearchQuery,
-										   [('ALL', '', _('All materials')),
-										    ('VIDEO', 'checked', _('Only videos')),
-										    ('AUDIO', '', _('Only music'))]
-										   )
+											'GlobalSearch',
+											'style="color: #DBA901;background: none;border: none;text-decoration: underline"',
+											settings.GlobalSearchQuery, [
+												('ALL', '', _('All materials')),
+												('VIDEO', 'checked', _('Only videos')),
+												('AUDIO', '', _('Only music'))
+											])
 		if len(list(settings.GlobalSearchResults.keys())) > 0:
 			tempText += '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
 			for key in settings.GlobalSearchResults.keys():

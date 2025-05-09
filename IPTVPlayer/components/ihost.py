@@ -828,7 +828,7 @@ class CBaseHostClass:
         for histItem in list:
             plot = ''
             try:
-                if type(histItem) == type({}):
+                if type(histItem) is type({}):
                     pattern = histItem.get('pattern', '')
                     search_type = histItem.get('type', '')
                     if '' != search_type:

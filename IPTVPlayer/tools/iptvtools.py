@@ -1223,7 +1223,7 @@ class CSearchHistoryHelper():
                 value = line.replace('\n', '').strip()
                 if len(value) > 0:
                     try:
-                        historyList.insert(0, value)
+                        historyList.insert(0, ensure_str(value))
                     except Exception:
                         printExc()
             file.close()
@@ -1269,7 +1269,7 @@ class CSearchHistoryHelper():
                 value = itemValue
                 if None is not itemType:
                     value = value + self.TYPE_SEP + itemType
-                value = value if type('') == type(value) else value.decode('utf-8', 'replace')
+                # value = value if type('') == type(value) else value.decode('utf-8', 'replace')
                 file.write(value + '\n')
                 printDBG('Added pattern: "%s"' % itemValue)
                 file.close
@@ -1321,7 +1321,7 @@ def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
 def WriteTextFile(filePath, text, encode='utf-8', errors='ignore'):
     sts = False
     try:
-        toSave = text if type('') == type(text) else text.decode('utf-8', errors)
+        toSave = text # if type('') == type(text) else text.decode('utf-8', errors)
         file = codecs.open(filePath, 'w', encode, errors)
         file.write(toSave)
         file.close()
@@ -1357,7 +1357,7 @@ class CMoviePlayerPerHost():
                 sts = True
             else:
                 file = codecs.open(self.filePath, 'r', 'utf-8', 'ignore')
-                ret = file.read()
+                ret = ensure_str(file.read(), encoding='utf-8', errors='ignore')
                 file.close()
                 activePlayer = {}
                 ret = json_loads(ret)
@@ -1381,7 +1381,7 @@ class CMoviePlayerPerHost():
                 data = {}
                 data['buffering'] = self.activePlayer['buffering']
                 data['player'] = {'value': self.activePlayer['player'].value, 'text': self.activePlayer['player'].getText()}
-                data = json_dumps(data)
+                data = json_dumps(ensure_str(data))
                 file = codecs.open(self.filePath, 'w', 'utf-8', 'replace')
                 file.write(data)
                 file.close

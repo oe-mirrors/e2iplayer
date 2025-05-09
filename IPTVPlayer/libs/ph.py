@@ -68,7 +68,7 @@ def search(data, pattern, flags=0, limits=-1):
     if isPY2():
         match = reObj.search(data)
     else:  # PY3 compares only data with the same type
-        if type(pattern) == type(data):
+        if type(pattern) is type(data):
             match = reObj.search(data)
         elif isinstance(pattern, basestring):
             match = reObj.search(ensure_str(data))

@@ -15994,7 +15994,7 @@ class pageParser(CaptchaHelper):
             count = js_int(c.pop(0))
             while count:
                 current_array = []
-                for _ in range(count):
+                for x in range(count):
                     current_array.insert(0, js_int(c.pop(0)))
                 d.append(current_array)
                 count = js_int(c.pop(0))

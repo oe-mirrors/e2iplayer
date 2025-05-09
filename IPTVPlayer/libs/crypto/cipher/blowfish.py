@@ -372,10 +372,7 @@ class Blowfish:
 		key_len = len(key)
 		index = 0
 		for i in range(len(self.p_boxes)):
-			val = (ord(key[index % key_len]) << 24) + \
-			      (ord(key[(index + 1) % key_len]) << 16) + \
-			      (ord(key[(index + 2) % key_len]) << 8) + \
-			       ord(key[(index + 3) % key_len])
+			val = (ord(key[index % key_len]) << 24) + (ord(key[(index + 1) % key_len]) << 16) + (ord(key[(index + 2) % key_len]) << 8) + ord(key[(index + 3) % key_len])
 			self.p_boxes[i] = self.p_boxes[i] ^ val
 			index = index + 4
 

@@ -3,6 +3,7 @@
 
 import re
 import sys
+import traceback
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 
 
@@ -140,7 +141,7 @@ if sys.version_info < (3, 0):
         printDBG(s.encode(preferredencoding(), 'xmlcharrefreplace'))
 else:
     def compat_print(s):
-        assert type(s) == type('')
+        # assert type(s) == type('')
         printDBG(s)
 
 
@@ -172,11 +173,11 @@ def htmlentity_transform(entity):
 
 def clean_html(html):
     """Clean an HTML snippet into a readable string"""
-    if type(html) == type(''):
-        strType = 'unicode'
-    elif type(html) == type(''):
-        strType = 'utf-8'
-        html = html.decode("utf-8", 'ignore')
+    #if type(html) == type(''):
+    #    strType = 'unicode'
+    #elif type(html) == type(''):
+    #    strType = 'utf-8'
+    #    html = html.decode("utf-8", 'ignore')
 
     # Newline vs <br />
     html = html.replace('\n', ' ')
@@ -187,8 +188,8 @@ def clean_html(html):
     # Replace html entities
     html = unescapeHTML(html)
 
-    if strType == 'utf-8':
-        html = html.encode("utf-8")
+    #if strType == 'utf-8':
+    #    html = html.encode("utf-8")
 
     return html.strip()
 
@@ -196,7 +197,7 @@ def clean_html(html):
 def unescapeHTML(s):
     if s is None:
         return None
-    assert type(s) == compat_str
+    # assert type(s) == compat_str
 
     return re.sub(r'&([^;]+);', lambda m: htmlentity_transform(m.group(1)), s)
 

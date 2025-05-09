@@ -91,7 +91,7 @@ class TVNowDE(CBaseHostClass):
         value = item.get(key, None)
         if value is None:
             value = ''
-        elif type('') == type(value):
+        elif isinstance(value, str):
             return value
         return str(value)
 
