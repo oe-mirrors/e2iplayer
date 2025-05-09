@@ -1321,7 +1321,7 @@ def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
 def WriteTextFile(filePath, text, encode='utf-8', errors='ignore'):
     sts = False
     try:
-        toSave = text # if type('') == type(text) else text.decode('utf-8', errors)
+        toSave = text  # if type('') == type(text) else text.decode('utf-8', errors)
         file = codecs.open(filePath, 'w', encode, errors)
         file.write(toSave)
         file.close()
