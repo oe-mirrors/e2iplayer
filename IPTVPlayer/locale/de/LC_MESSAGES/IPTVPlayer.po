@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-11 14:18+0200\n"
-"PO-Revision-Date: 2025-05-09 15:04+0200\n"
+"PO-Revision-Date: 2025-05-11 14:35+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
 "Language: de_DE\n"
@@ -852,9 +852,8 @@ msgid "Auto selection based on the settings"
 msgstr "Automatisch aus Ihrer Konfiguration"
 
 #: ../components/iptvconfigmenu.py:320
-#, fuzzy
 msgid "Auto start method"
-msgstr "Autoplay Startverzögerung"
+msgstr "Auto Start Methode"
 
 #: ../subproviders/subprov_youtubecom.py:65
 msgid "Auto-translate"
@@ -1618,7 +1617,7 @@ msgstr "E2iPlayer - Konfiguration"
 
 #: ../components/iptvconfigmenu.py:319
 msgid "E2iPlayer auto start at Enigma2 start"
-msgstr ""
+msgstr "E2iPlayer startet automatisch beim Start von Enigma2"
 
 #: ../components/configgroups.py:37
 msgid "E2iPlayer enable/disabled groups"
@@ -1646,7 +1645,7 @@ msgstr "Pädagogische Animation"
 
 #: ../hosts/hosttv2play.py:43
 msgid "Elérhető legjobb minőség beállítása"
-msgstr ""
+msgstr "Stellen Sie die beste verfügbare Qualität ein"
 
 #: ../hosts/hostidokep.py:78
 msgid "Előrejelzés"
@@ -2825,7 +2824,7 @@ msgstr "Niedrig"
 
 #: ../components/iptvconfigmenu.py:318
 msgid "MIPS Floating Point Architecture"
-msgstr ""
+msgstr "MIPS Fließkomma Architektur"
 
 #: ../hosts/hostfilmpalast.py:47 ../hosts/hostfilmstreamvkcom.py:103
 #: ../hosts/hosthoofootcom.py:39 ../hosts/hostkabarety.py:45
@@ -3668,7 +3667,7 @@ msgstr "Praises:"
 
 #: ../components/iptvconfigmenu.py:321
 msgid "Prefer hlsld for playlist with alt. media"
-msgstr ""
+msgstr "Bevorzuge hlsld für Wiedergabelisten mit alt. Medien"
 
 #: ../hosts/hostardmediathek.py:39 ../hosts/hostzdfmediathek.py:39
 msgid "Prefered format"
