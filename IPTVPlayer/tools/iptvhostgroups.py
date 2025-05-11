@@ -88,7 +88,8 @@ class IPTVHostsGroups:
                                                      'ourmatchnet', 'watchwrestlinguno', 'watchwrestling', 'laola1tv', 'hoofootcom', 'fightvideo', 'twitchtv', 'ted', 'ororotv', 'pinkbike', 'dancetrippin',
                                                      'ustreamtv', 'rteieplayer', '3player', 'questtvcouk', 'forjatn', 'yesmoviesto', 'filmeonlineto', 'playrtsiw', '123movieshd', 'orthobulletscom', 'vumedicom', 'ddl']
         self.PREDEFINED_HOSTS['german'] = ['youtube', 'webstream', 'ardmediathek', 'zdfmediathek', 'artetv', 'tvnowde', 'spiegeltv', 'ddl', 'serienstreamto', 'bsto', 'hdfilmetv', 'cineto', 'filmpalast', 'kinox', 'tata',
-                                                     'dailymotion', 'vimeo', 'laola1tv', 'sportdeutschland', 'twitchtv', 'playrtsiw', 'del', 'kkiste', "kinoger", "einschalten", "kinokiste", "megakino", "movie4k", "topstreamfilm"]
+                                                     'dailymotion', 'vimeo', 'laola1tv', 'sportdeutschland', 'twitchtv', 'playrtsiw', 'del', 'kkiste', "kinoger", "einschalten", "kinokiste", "megakino", "moflixstream",
+                                                     "movie4k", "streamcloud", "cineto", "topstreamfilm"]
         self.PREDEFINED_HOSTS['french'] = ['youtube', 'skstream', 'filmstreamvkcom', 'streamcomplet', 'librestream', 'cinemay', 'otakufr', 'rtbfbe', 'artetv', 'dailymotion',
                                                      'vimeo', 'twitchtv', 'forjatn', 'planetstreamingcom', 'playrtsiw']
         self.PREDEFINED_HOSTS['russian'] = ['youtube', 'hd1080online', 'treetv', 'kinogo', 'kinotan', 'hdkinomir', 'sovdub', 'filmixco', 'kinopokaz', 'movie4kto', 'dailymotion', 'vimeo', 'twitchtv']
