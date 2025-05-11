@@ -315,10 +315,10 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry(_("The default aspect ratio for the external player"), config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio))
 
             # list.append(getConfigListEntry("exteplayer3path", config.plugins.iptvplayer.exteplayer3path))
-            list.append(getConfigListEntry("MIPS Floating Point Architecture", config.plugins.iptvplayer.plarformfpuabi))
-            list.append(getConfigListEntry("E2iPlayer auto start at Enigma2 start", config.plugins.iptvplayer.plugin_autostart))
-            list.append(getConfigListEntry("Auto start method", config.plugins.iptvplayer.plugin_autostart_method))
-            list.append(getConfigListEntry("Prefer hlsld for playlist with alt. media", config.plugins.iptvplayer.prefer_hlsdl_for_pls_with_alt_media))
+            list.append(getConfigListEntry(_("MIPS Floating Point Architecture"), config.plugins.iptvplayer.plarformfpuabi))
+            list.append(getConfigListEntry(_("E2iPlayer auto start at Enigma2 start"), config.plugins.iptvplayer.plugin_autostart))
+            list.append(getConfigListEntry(_("Auto start method"), config.plugins.iptvplayer.plugin_autostart_method))
+            list.append(getConfigListEntry(_("Prefer hlsld for playlist with alt. media"), config.plugins.iptvplayer.prefer_hlsdl_for_pls_with_alt_media))
             list.append(getConfigListEntry(_("Hosts List Type-NOT FINISHED"), config.plugins.iptvplayer.hostsListType))
         list.append(getConfigListEntry('\\c00289496' + _("----- BASIC CONFIGURATION (OK) -----"), config.plugins.iptvplayer.basicConfVisible))
         if basicConfVisible:  # BASIC CONFIGURATION
