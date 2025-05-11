@@ -19,21 +19,7 @@ from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.base import noPadding
 from Plugins.Extensions.IPTVPlayer.libs import pbkdf2
 from Plugins.Extensions.IPTVPlayer.libs import pyaes
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML, clean_html
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import unpackJSPlayerParams, unpackJS, \
-                                                               JS_FromCharCode, \
-                                                               JS_toString, \
-                                                               VIDUPME_decryptPlayerParams,    \
-                                                               SAWLIVETV_decryptPlayerParams,  \
-                                                               TEAMCASTPL_decryptPlayerParams, \
-                                                               VIDEOWEED_decryptPlayerParams, \
-                                                               KINGFILESNET_decryptPlayerParams, \
-                                                               captchaParser, \
-                                                               getDirectM3U8Playlist, \
-                                                               getMPDLinksWithMeta, \
-                                                               getF4MLinksWithMeta, \
-                                                               decorateUrl, \
-                                                               int2base, drdX_fx, \
-                                                               unicode_escape
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import unpackJSPlayerParams, unpackJS, JS_FromCharCode, JS_toString, VIDUPME_decryptPlayerParams, SAWLIVETV_decryptPlayerParams, TEAMCASTPL_decryptPlayerParams, VIDEOWEED_decryptPlayerParams, KINGFILESNET_decryptPlayerParams, captchaParser, getDirectM3U8Playlist, getMPDLinksWithMeta, getF4MLinksWithMeta, decorateUrl, int2base, drdX_fx, unicode_escape
 from Plugins.Extensions.IPTVPlayer.libs.dehunt import dehunt
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute, MainSessionWrapper
@@ -247,6 +233,7 @@ class urlparser:
                        #d
                        'd000d.com': self.pp.parserDOOD,
                        'd0000d.com': self.pp.parserDOOD,
+                       'd0o0d.com': self.pp.parserDOOD,
                        'daaidaij.com': self.pp.parserMOONWALKCC,
                        'daclips.in': self.pp.parserFASTVIDEOIN,
                        'daddylive.club': self.pp.parserDADDYLIVE,
@@ -264,16 +251,26 @@ class urlparser:
                        'dood.cx': self.pp.parserDOOD,
                        'dood.la': self.pp.parserDOOD,
                        'dood.pm': self.pp.parserDOOD,
+                       'dood.re': self.pp.parserDOOD,
                        'dood.sh': self.pp.parserDOOD,
                        'dood.so': self.pp.parserDOOD,
                        'dood.to': self.pp.parserDOOD,
                        'dood.watch': self.pp.parserDOOD,
+                       'dood.wf': self.pp.parserDOOD,
                        'dood.ws': self.pp.parserDOOD,
                        'dood.yt': self.pp.parserDOOD,
+                       'doods.pro': self.pp.parserDOOD,
+                       'doods.to': self.pp.parserVEEVTO,
+                       'dooodster.com': self.pp.parserDOOD,
+                       'doodstream.co': self.pp.parserDOOD,
                        'doodstream.com': self.pp.parserDOOD,
+                       'dood.stream': self.pp.parserDOOD,
+                       'dooood.com': self.pp.parserDOOD,
                        'dotstream.tv': self.pp.parserDOTSTREAMTV,
                        'droonws.xyz': self.pp.parserTXNEWSNETWORK,
                        'dropload.io': self.pp.parserONLYSTREAMTV,
+                       'ds2play.com': self.pp.parserDOOD,
+                       'ds2video.com': self.pp.parserDOOD,
                        'dwn.so': self.pp.parserDWN,
                        #e
                        'easyload.io': self.pp.parserEASYLOAD,
@@ -353,6 +350,8 @@ class urlparser:
                        'goldvod.tv': self.pp.parserGOLDVODTV,
                        'goodcast.co': self.pp.parserGOODCASTCO,
                        'goodrtmp.com': self.pp.parserGOODRTMP,
+                       'goodstream.one': self.pp.parserGOODSTREAM,
+                       'goodstream.uno': self.pp.parserGOODSTREAM,
                        'google.com': self.pp.parserGOOGLE,
                        'gorillavid.in': self.pp.parserFASTVIDEOIN,
                        'gounlimited.to': self.pp.parserGOUNLIMITEDTO,
@@ -398,7 +397,7 @@ class urlparser:
                        'kingfiles.net': self.pp.parserKINGFILESNET,
                        'kingvid.tv': self.pp.parserKINGVIDTV,
                        'kinoger.be': self.pp.parserVIDHIDE,
-                       'kinoger.pw': self.pp.parserVEEVTO,
+                       'kinoger.pw': self.pp.parserVIDGUARDTO,
                        'kinoger.re': self.pp.parserSBS,
                        'kinoger.ru': self.pp.parserVAST,
                        'krakenfiles.com': self.pp.parserKRAKENFILESCOM,
@@ -439,12 +438,15 @@ class urlparser:
                        'mightyupload.com': self.pp.parserMIGHTYUPLOAD,
                        'miplayer.net': self.pp.parserMIPLAYERNET,
                        'mirrorace.com': self.pp.parserMIRRORACE,
+                       'mixdrop.ag': self.pp.parserMIXDROP,
                        'mixdrop.club': self.pp.parserMIXDROP,
                        'mixdrop.co': self.pp.parserMIXDROP,
                        'mixdrop.ps': self.pp.parserMIXDROP,
                        'moevideo.net': self.pp.parserPLAYEREPLAY,
                        'moflix-stream.click': self.pp.parserVIDHIDE,
+                       'moflix-stream.day': self.pp.parserVIDGUARDTO,
                        'moflix-stream.fans': self.pp.parserVAST,
+                       'moflix.rpmplay.xyz': self.pp.parserSBS,
                        'moflix.upns.xyz': self.pp.parserSBS,
                        'moonwalk.cc': self.pp.parserMOONWALKCC,
                        'moshahda.net': self.pp.parseMOSHAHDANET,
@@ -13711,81 +13713,35 @@ class pageParser(CaptchaHelper):
         return urlTabs
 
     def parserDOOD(self, baseUrl):
-        printDBG("parserDOOD baseUrl [%s]" % baseUrl)
-
-        httpParams = {
-            'header': {
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
-                'Accept': '*/*',
-                'Accept-Encoding': 'gzip',
-                'Referer': baseUrl
-            },
-            'use_cookie': True,
-            'load_cookie': True,
-            'save_cookie': True,
-            'cookiefile': GetCookieDir("dood.cookie"),
-            'max_data_size': 0,
-            'no_redirection': True
-        }
+        def dood_decode(data):
+            t = string.ascii_letters + string.digits
+            return data + ''.join([random_choice(t) for _ in range(10)])
 
         urlsTab = []
+        sub_tracks = []
+        printDBG("parserDOOD baseUrl [%s]" % baseUrl)
+        baseUrl = baseUrl.replace('dood.to', 'do7go.com').replace('d000d.com', 'do7go.com').replace('/d/', '/e/')
+        host = baseUrl.split("/")[2]
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return []
 
-        if '/d/' in baseUrl:
-            baseUrl = baseUrl.replace('/d/', '/e/')
+        sub = re.findall(r"""dsplayer\.addRemoteTextTrack\({src:'([^']+)',\s*label:'([^']*)',kind:'captions'""", data)
+        if sub:
+            sub_tracks = [{'title': '', 'url': 'https:' + src if src.startswith('//') else src, 'lang': label} for src, label in sub if len(label) > 1]
+        match = re.search(r'''dsplayer\.hotkeys[^']+'([^']+).+?function\s*makePlay.+?return[^?]+([^"]+)''', data, re.DOTALL)
+        if match:
+            token = match.group(2)
+            sts, data = self.cm.getPage('https://{0}{1}'.format(host, match.group(1)), urlParams)
+            if not sts:
+                return []
 
-        sts, data = self.cm.getPage(baseUrl, httpParams)
-        url = self.cm.meta.get('location', '')
-        if url != '':
-            baseUrl = url
-            httpParams['header']['Referer'] = baseUrl
-        del httpParams['max_data_size']
-        del httpParams['no_redirection']
-        sts, data = self.cm.getPage(baseUrl, httpParams)
-
-#        if sts:
-#            printDBG("-----------------------")
-#            printDBG(data)
-#            printDBG("-----------------------")
-
-        subTracks = []
-        #<track kind="captions" src="https://doodstream.com/srt/00705/s72n7d5hi6qc_Serbian.vtt" srclang="en" label="Serbian" default>
-        tracks = self.cm.ph.getAllItemsBeetwenMarkers(data, '<track', '>', withMarkers=True)
-        for track in tracks:
-            track_kind = self.cm.ph.getSearchGroups(track, '''kind=['"]([^'^"]+?)['"]''')[0]
-            if 'caption' in track_kind:
-                srtUrl = self.cm.ph.getSearchGroups(track, '''src=['"]([^'^"]+?)['"]''')[0]
-                srtLabel = self.cm.ph.getSearchGroups(track, '''label=['"]([^'^"]+?)['"]''')[0]
-                srtFormat = srtUrl[-3:]
-                params = {'title': srtLabel, 'url': srtUrl, 'lang': srtLabel.lower()[:3], 'format': srtFormat}
-                printDBG(str(params))
-                subTracks.append(params)
-
-        #$.get('/pass_md5/3526522-87-9-1595176733-d1cadb0bad545cdcc61809e26c0ccf93/p3yuk59uqm525k1zc9boovu4'
-        #function makePlay(){for(var a="",t="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",n=t.length,o=0;10>o;o++)a+=t.charAt(Math.floor(Math.random()*n));return a+"?token=p3yuk59uqm525k1zc9boovu4&expiry="+Date.now();};
-        pass_md5_url = self.cm.ph.getSearchGroups(data, r"\$\.get\('(/pass_md5[^']+?)'")[0]
-        makePlay = re.findall(r'(function\s*makePlay.+?\{.*?\};)', data, re.DOTALL)[0]
-        if pass_md5_url and makePlay:
-            pass_md5_url = self.cm.getFullUrl(pass_md5_url, self.cm.getBaseUrl(baseUrl))
-            sts, new_url = self.cm.getPage(pass_md5_url, httpParams)
-
-            if sts:
-                code = "var url = '%s';\n%s\nconsole.log(url + makePlay());" % (new_url, makePlay)
-
-                printDBG("-----------------------")
-                printDBG(code)
-                printDBG("-----------------------")
-
-                ret = js_execute(code)
-                newUrl = ret['data'].replace("\n", "")
-                if newUrl:
-                    if subTracks:
-                        newUrl = urlparser.decorateUrl(newUrl, {'Referer': baseUrl, 'external_sub_tracks': subTracks})
-                    else:
-                        newUrl = urlparser.decorateUrl(newUrl, {'Referer': baseUrl})
-                    params = {'name': 'link', 'url': newUrl}
-                    printDBG(str(params))
-                    urlsTab.append(params)
-
+            url = data.strip() if 'cloudflarestorage.' in data else dood_decode(data) + token + str(int(time.time() * 1000))
+            url = urlparser.decorateUrl(url, {'external_sub_tracks': sub_tracks, 'User-Agent': urlParams['header']['User-Agent'], 'Referer': baseUrl})
+            params = {'name': 'mp4', 'url': url}
+            urlsTab.append(params)
         return urlsTab
 
     def parserSTREAMTAPE(self, baseUrl):
@@ -15888,10 +15844,11 @@ class pageParser(CaptchaHelper):
                         if key in r:
                             url = r[key]
                             if '.m3u8' in url:
-                                params = {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'Origin': urlparser.getDomain(baseUrl, False), 'external_sub_tracks': subtitles}
-                                url = urlparser.decorateUrl(url, params)
+                                url = urlparser.decorateUrl(url, {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'Origin': urlparser.getDomain(baseUrl, False), 'external_sub_tracks': subtitles})
                                 urlTab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
                             else:
+                                if subtitles:
+                                    url = urlparser.decorateUrl(url, {'external_sub_tracks': subtitles})
                                 urlTab.append({'name': 'MP4', 'url': url})
             return urlTab
 
@@ -15964,9 +15921,9 @@ class pageParser(CaptchaHelper):
         printDBG("parserVEEVTO baseUrl[%s]" % baseUrl)
 
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        HTTP_HEADER['Referer'] = baseUrl
-        HTTP_HEADER['Origin'] = urlparser.getDomain(baseUrl, False)
-        HTTP_HEADER['Accept-Language'] = 'en-US,en;q=0.5'
+        HTTP_HEADER.update({'Referer': baseUrl,
+            'Origin': urlparser.getDomain(baseUrl, False),
+            'Accept-Language': 'en-US,en;q=0.5'})
         urlParams = {'header': HTTP_HEADER}
 
         def veev_decode(etext):
@@ -15977,7 +15934,7 @@ class pageParser(CaptchaHelper):
             result.append(c)
             for char in etext[1:]:
                 code = ord(char)
-                nc = char if code < 128 else lut.get(code, c + c[0])
+                nc = char if code < 256 else lut.get(code, c + c[0])
                 result.append(nc)
                 lut[n] = c + nc[0]
                 n += 1
@@ -16012,9 +15969,13 @@ class pageParser(CaptchaHelper):
             return ds
 
         urlTab = []
+        sub_tracks = []
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return False
+        url = self.cm.meta.get('url', '')
+        if url != '':
+            baseUrl = url
         items = re.findall(r'''[\.\s'](?:fc|_vvto\[[^\]]*)(?:['\]]*)?\s*[:=]\s*['"]([^'"]+)''', data)
         if items:
             for f in items[::-1]:
@@ -16033,10 +15994,11 @@ class pageParser(CaptchaHelper):
                         return False
                     jresp = json_loads(jresp).get('file')
                     if jresp and jresp.get('file_status') == 'OK':
-                        str_url = decode_url(veev_decode(ensure_binary(jresp.get('dv')[0].get('s')).decode('utf8')), build_array(ch)[0])
-                        if str_url != '':
-                            str_url = strwithmeta(str_url, HTTP_HEADER)
-                            urlTab.append({'name': 'mp4', 'url': str_url})
+                        sub_tracks = [{'title': sub.get('label'), 'url': sub.get('src'), 'lang': sub.get('language')} for sub in jresp.get('captions_list', [])]
+                        url = decode_url(veev_decode(ensure_binary(jresp.get('dv')[0].get('s')).decode('utf8')), build_array(ch)[0])
+                        if url:
+                            url = strwithmeta(url, HTTP_HEADER)
+                            urlTab.append({'name': 'MP4', 'url': urlparser.decorateUrl(url, {'external_sub_tracks': sub_tracks})})
                             return urlTab
 
         return False
@@ -16320,5 +16282,20 @@ class pageParser(CaptchaHelper):
                 data = json_loads(data)
                 sub_tracks = [{'title': '', 'lang': x.get('language'), 'url': x.get('file_path')} for x in data]
             hls = urlparser.decorateUrl(hls, {'iptv_proto': 'm3u8', 'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': 'https://%s/' % host, 'Origin': 'https://%s' % host, 'external_sub_tracks': sub_tracks})
+            urlTab.extend(getDirectM3U8Playlist(hls))
+        return urlTab
+
+    def parserGOODSTREAM(self, url):
+        printDBG("parserGOODSTREAM baseUrl[%s]" % url)
+        host = url.split("/")[2]
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        urlParams = {'header': HTTP_HEADER}
+        sts, data = self.cm.getPage(url, urlParams)
+        if not sts:
+            return []
+        urlTab = []
+        url = re.search('file:"([^"]+)', data)
+        if url:
+            hls = urlparser.decorateUrl(url.group(1), {'iptv_proto': 'm3u8', 'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': 'https://%s/' % host, 'Origin': 'https://%s' % host})
             urlTab.extend(getDirectM3U8Playlist(hls))
         return urlTab
