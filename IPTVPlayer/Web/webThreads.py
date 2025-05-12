@@ -18,6 +18,8 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDown
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, IsHostEnabled, SaveHostsOrderList, SortHostsList, GetLogoDir, GetHostsOrderList, getDebugMode, formatBytes, printDBG
 from Components.config import config
 
+from Plugins.Extensions.IPTVPlayer.__init__ import _
+
 ########################################################
 
 

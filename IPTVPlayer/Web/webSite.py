@@ -2,7 +2,7 @@
 #### Local imports
 
 
-from .__init__ import _
+from Plugins.Extensions.IPTVPlayer.__init__ import _
 from . import settings
 from . import webParts
 from . import webThreads

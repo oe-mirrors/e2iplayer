@@ -4,6 +4,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, DownloadFile, eConnectCallback
+from Plugins.Extensions.IPTVPlayer.__init__ import _
 ###################################################
 # FOREIGN import
 ###################################################
@@ -31,22 +32,8 @@ gIPTVPlayerNotificationList = None
 ###################################################
 
 
-def localeInit():
-    lang = language.getLanguage()[:2]  # getLanguage returns e.g. "fi_FI" for "language_country"
-    os.environ["LANGUAGE"] = lang  # Enigma doesn't set this (or LC_ALL, LC_MESSAGES, LANG). gettext needs it!
-    printDBG(PluginLanguageDomain + " set language to " + lang)
-    gettext.bindtextdomain(PluginLanguageDomain, resolveFilename(SCOPE_PLUGINS, PluginLanguagePath))
-
-
 def TranslateTXT(txt):
-    t = gettext.dgettext(PluginLanguageDomain, txt)
-    if t == txt:
-        t = gettext.gettext(txt)
-    return t
-
-
-localeInit()
-language.addCallback(localeInit)
+    return _(txt)
 
 
 def IPTVPlayerNeedInit(value=None):
