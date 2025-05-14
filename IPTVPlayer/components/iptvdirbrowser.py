@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorL
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, mkdir, IsValidFileName, eConnectCallback, GetNice
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -27,7 +27,6 @@ from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Tools.BoundFunction import boundFunction
 from os import path as os_path, chmod as os_chmod
-import six
 ###################################################
 
 
@@ -195,8 +194,7 @@ class IPTVDirectorySelectorWidget(Screen):
             self.tmpData = ''
 
     def refreshNewData(self, data):
-        data = six.ensure_str(data)
-        self.tmpData += data
+        self.tmpData += ensure_str(data)
         newItems = self.tmpData.split('\n')
         if self.tmpData.endswith('\n'):
             self.tmpData = ''

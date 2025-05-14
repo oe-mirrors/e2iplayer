@@ -17,7 +17,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper, DMItemBase
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvlist import IPTVDownloadManagerList
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -29,8 +29,8 @@ from Components.ActionMap import ActionMap, HelpableActionMap
 from Components.Label import Label
 from Components.Sources.StaticText import StaticText
 from Components.config import config
+
 from os import chmod as os_chmod, path as os_path, remove as os_remove
-import six
 ###################################################
 
 #########################################################
@@ -139,8 +139,7 @@ class IPTVDMWidget(Screen):
         printDBG("IPTVDMWidget.refreshNewData")
         if self.iptvclosing:
             return
-        data = six.ensure_str(data)
-        self.tmpData += data
+        self.tmpData += ensure_str(data)
         newFiles = self.tmpData.split('\n')
         if not self.tmpData.endswith('\n'):
             self.tmpData = newFiles[-1]

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-import six
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html as yt_clean_html
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printExc
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
@@ -299,7 +298,7 @@ STRIP_HTML_TAGS_C = None
 
 def clean_html(string):
     global STRIP_HTML_TAGS_C
-    string = six.ensure_str(string)
+    string = ensure_str(string)
     if None is STRIP_HTML_TAGS_C:
         STRIP_HTML_TAGS_C = False
         try:

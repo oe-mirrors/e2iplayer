@@ -48,7 +48,6 @@ from io import StringIO
 import gzip
 from urllib.parse import urljoin, urlparse, urlunparse
 from binascii import hexlify
-import six
 ###################################################
 
 
@@ -553,7 +552,7 @@ class common:
         responseHeaders = {}
 
         def _headerFunction(headerLine):
-            headerLine = six.ensure_str(headerLine)
+            headerLine = ensure_str(headerLine)
             if ':' not in headerLine:
                 if 0 == maxDataSize:
                     if headerLine in ['\r\n', '\n']:
@@ -1219,20 +1218,21 @@ class common:
                     if len(checkFromFirstBytes):
                         OK = False
                         for item in checkFromFirstBytes:
-                            bitem = six.ensure_binary(item)
-                            if CurrBuffer.startswith(bitem):
-                                # change extension of file
-                                if bitem in [b'\xFF\xD8', b'\xFF\xD9']:
-                                    printDBG("SaveWebFile. It's a jpeg")
-                                elif bitem == b'\x89\x50\x4E\x47':
-                                    printDBG("SaveWebFile. It's a png")
-                                    #file_path = file_path.replace('.jpg','.png')
-                                elif bitem in [b'GIF87a', b'GIF89a']:
-                                    printDBG("SaveWebFile. It's a gif")
-                                    #file_path = file_path.replace('.jpg','.gif')
-                                elif bitem == b'RI':
-                                    printDBG("SaveWebFile. It's a webp")
-                                    file_path = file_path.replace('.jpg', '.webp')
+                            if CurrBuffer.startswith(ensure_binary(item)):
+#                            bitem = six.ensure_binary(item)
+#                            if CurrBuffer.startswith(bitem):
+#                                # change extension of file
+#                                if bitem in [b'\xFF\xD8', b'\xFF\xD9']:
+#                                    printDBG("SaveWebFile. It's a jpeg")
+#                                elif bitem == b'\x89\x50\x4E\x47':
+#                                    printDBG("SaveWebFile. It's a png")
+#                                    #file_path = file_path.replace('.jpg','.png')
+#                                elif bitem in [b'GIF87a', b'GIF89a']:
+#                                    printDBG("SaveWebFile. It's a gif")
+#                                    #file_path = file_path.replace('.jpg','.gif')
+#                                elif bitem == b'RI':
+#                                    printDBG("SaveWebFile. It's a webp")
+#                                    file_path = file_path.replace('.jpg', '.webp')
                                 OK = True
                                 break
                         if not OK:
@@ -1535,7 +1535,7 @@ class common:
     def iriToUri(self, iri):
         try:
             if isinstance(iri, bytes):
-                iri.decode('utf-8')
+                iri = iri.decode('utf-8')
             parts = urlparse(iri)
             encodedParts = []
             for parti, part in enumerate(parts):
@@ -1547,7 +1547,7 @@ class common:
                         newPart = self.urlEncodeNonAscii(part.encode('utf-8'))
                 except Exception:
                     printExc()
-                encodedParts.append(six.ensure_str(newPart))
+                encodedParts.append(ensure_str(newPart))
             return urlunparse(encodedParts)
         except Exception:
             printExc()

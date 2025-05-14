@@ -370,10 +370,11 @@ class LocalMedia(CBaseHostClass):
                     except Exception:
                         printExc()
                         continue
+                title = item[0]
                 try:
-                    title = item[0].decode(encoding).encode('utf-8')
+                    if isinstance(title, bytes):
+                        title = item[0].decode(encoding, 'ignore')
                 except Exception:
-                    title = item[0]
                     printExc()
                 params = {'title': title, 'raw_name': item[0]}
                 if 'd' == item[1]:
