@@ -759,6 +759,7 @@ def GetHostsAliases():
         HOST_PATH = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/hosts/')
         sts, data = ReadTextFile(os.path.join(HOST_PATH, 'aliases.txt'))
         if sts:
+            data = data.replace("'", '"')
             data = json_loads(data)
             if isinstance(data, dict):
                 ret = data
