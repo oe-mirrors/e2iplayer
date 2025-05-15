@@ -18,7 +18,6 @@ from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKey
 # FOREIGN import
 ###################################################
 import re
-from enigma import getDesktop
 
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
@@ -27,6 +26,7 @@ from Components.ActionMap import ActionMap, HelpableActionMap
 from Components.Label import Label
 from Components.config import config, ConfigDirectory, ConfigText, ConfigPassword, ConfigBoolean, ConfigSelection, configfile
 from Components.ConfigList import ConfigListScreen
+from Components.Sources.StaticText import StaticText
 from Tools.BoundFunction import boundFunction
 ###################################################
 COLORS_DEFINITONS = [("#000000", _("black")), ("#C0C0C0", _("silver")), ("#808080", _("gray")), ("#FFFFFF", _("white")), ("#800000", _("maroon")), ("#FF0000", _("red")), ("#800080", _("purple")), ("#FF00FF", _("fuchsia")),
@@ -41,54 +41,35 @@ class ConfigIPTVFileSelection(ConfigDirectory):
 
 
 class ConfigBaseWidget(Screen, ConfigListScreen):
-    screenwidth = getDesktop(0).size().width()
-    if screenwidth == 1920:
-        width = 920
-        height = 860
-        font = 28
-    elif screenwidth == 1280:
-        width = 720
-        height = 600
-        font = 22
-    else:
-        width = 620
-        height = 440
-        font = 22
-
     skin = """
-        <screen position="center,center" size="%d,%d" title="" >
-            <widget name="config"    position="10,50" size="%d,%s" zPosition="1" transparent="1" scrollbarMode="showOnDemand" enableWrapAround="1" />
-            <widget name="key_red"   position="10,10" zPosition="2" size="%d,35" valign="center" halign="left"   font="Regular;%d" transparent="1" foregroundColor="red" />
-            <widget name="key_ok"    position="10,10" zPosition="2" size="%d,35" valign="center" halign="center" font="Regular;%d" transparent="1" foregroundColor="white" />
-            <widget name="key_green" position="10,10" zPosition="2" size="%d,35" valign="center" halign="right"  font="Regular;%d" transparent="1" foregroundColor="green" />
+        <screen position="center,center" size="720,600" title="" resolution="1280,720" >
+            <widget name="config"    position="10,50" size="700,520" zPosition="1" transparent="1" scrollbarMode="showOnDemand" enableWrapAround="1" font="Regular;22" itemHeight="32" />
+            <widget source="key_red" render="Label"  position="10,10" zPosition="2" size="700,35" valign="center" halign="left"   font="Regular;22" transparent="1" foregroundColor="red" />
+            <widget name="footnote"    position="10,10" zPosition="2" size="700,35" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" />
+            <widget source="key_green" render="Label" position="10,10" zPosition="2" size="700,35" valign="center" halign="right"  font="Regular;22" transparent="1" foregroundColor="green" />
 
-            <widget name="key_blue"    position="0,0" zPosition="2" size="%d,35" valign="center" halign="right"  font="Regular;%d" transparent="1" foregroundColor="green" />
-            <widget name="key_yellow"  position="0,0" zPosition="2" size="%d,35" valign="center" halign="right"  font="Regular;%d" transparent="1" foregroundColor="green" />
-        </screen>""" % (width, height,
-                        width - 20, height - 80,
-                        width - 20, font,
-                        width - 20, font,
-                        width - 20, font,
-                        width - 20, font,
-                        width - 20, font)
+            <widget source="key_blue"   render="Label" position="0,0" zPosition="2" size="700,35" valign="center" halign="right"  font="Regular;22" transparent="1" foregroundColor="green" />
+            <widget source="key_yellow" render="Label" position="0,0" zPosition="2" size="700,35" valign="center" halign="right"  font="Regular;22" transparent="1" foregroundColor="green" />
+        </screen>"""
 
     def __init__(self, session):
         printDBG("ConfigBaseWidget.__init__ -------------------------------")
+
         Screen.__init__(self, session)
+
+        self.skinName = ["ConfigBaseWidget"]
 
         self.onChangedEntry = []
         self.list = []
         ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
         self.setup_title = (_("E2iPlayer - settings"))
 
-        self["key_green"] = Label(_("Save"))
-        self["key_ok"] = Label(_(" "))
-        self["key_red"] = Label(_("Cancel"))
+        self["key_green"] = StaticText(_("Save"))
+        self["footnote"] = Label(_(" "))
+        self["key_red"] = StaticText(_("Cancel"))
 
-        self["key_blue"] = Label()
-        self["key_yellow"] = Label()
-        self["key_blue"].hide()
-        self["key_yellow"].hide()
+        self["key_blue"] = StaticText()
+        self["key_yellow"] = StaticText()
 
         self["actions"] = ActionMap(["SetupActions", "ColorActions", "WizardActions", "ListboxActions", "IPTVPlayerListActions"],
             {
@@ -153,7 +134,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             labelText = labelText % "OK"
         else:
             labelText = labelText % "  "
-        self["key_ok"].setText(_(labelText))
+        self["footnote"].setText(_(labelText))
 
     def isOkActive(self):
         if self["config"].getCurrent() is not None:

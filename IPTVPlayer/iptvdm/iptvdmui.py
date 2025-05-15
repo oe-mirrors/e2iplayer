@@ -8,14 +8,13 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetIconDir, GetNice
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetIconDir, GetNice, formatBytes
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper, DMItemBase
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvlist import IPTVDownloadManagerList
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
@@ -23,12 +22,16 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 from Screens.Screen import Screen
 from Screens.ChoiceBox import ChoiceBox
-from enigma import getDesktop, eTimer, eConsoleAppContainer
+from enigma import eTimer, eConsoleAppContainer
 from Components.config import config
 from Components.ActionMap import ActionMap, HelpableActionMap
 from Components.Label import Label
+from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
 from Components.config import config
+from Tools.LoadPixmap import LoadPixmap
+
+from datetime import timedelta
 
 from os import chmod as os_chmod, path as os_path, remove as os_remove
 ###################################################
@@ -41,12 +44,19 @@ gIPTVDM_listChanged = False
 
 class IPTVDMWidget(Screen):
 
-    sz_w = getDesktop(0).size().width() - 190
-    sz_h = getDesktop(0).size().height() - 195
-    if sz_h < 500:
-        sz_h += 4
+    ICONS_FILESNAMES = {DMHelper.STS.WAITING: 'iconwait1.png',
+                        DMHelper.STS.DOWNLOADING: 'iconwait2.png',
+                        DMHelper.STS.DOWNLOADED: 'icondone.png',
+                        DMHelper.STS.INTERRUPTED: 'iconerror.png',
+                        DMHelper.STS.ERROR: 'iconwarning.png',
+                        }
+
+    # sz_w = getDesktop(0).size().width() - 190
+    #sz_h = getDesktop(0).size().height() - 195
+    #if sz_h < 500:
+    #    sz_h += 4
     skin = """
-        <screen name="IPTVDMWidget" position="center,center" title="%s" size="%d,%d">
+        <screen name="IPTVDMWidget" position="center,center" title="%s" size="1280,720" resolution="1280,720">
          <ePixmap position="5,9"   zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
          <ePixmap position="180,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
          <ePixmap position="385,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
@@ -55,20 +65,30 @@ class IPTVDMWidget(Screen):
          <widget render="Label" source="key_green"  position="225,9" size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
          <widget render="Label" source="key_yellow" position="425,9" size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
          <widget render="Label" source="key_blue"   position="635,9" size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget name="list" position="5,100" zPosition="2" size="%d,%d" scrollbarMode="showOnDemand" transparent="0"  backgroundColor="#00000000" enableWrapAround="1" />
-         <widget name="titel" position="5,47" zPosition="1" size="%d,23" font="Regular;20" transparent="1"  backgroundColor="#00000000"/>
+         <widget source="downloadlist" render="Listbox" position="center,100" zPosition="2" size="1160,532" scrollbarMode="showOnDemand" transparent="0"  backgroundColor="#00000000" enableWrapAround="1">
+            <convert type="TemplatedMultiContent">
+            {"template": [
+                    MultiContentEntryPixmapAlphaBlend(pos = (10, 18), size = (42, 42), flags = BT_SCALE, png = 0),  # Flag.
+                    MultiContentEntryText(pos = (80, 0), size = (1060, 30), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 1),  # Title
+                    MultiContentEntryText(pos = (80, 30), size = (1060, 24), font = 1, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 2),  # adress
+                    MultiContentEntryText(pos = (80, 54), size = (300, 20), font = 1, color=0xa4c400,color_sel=0xffaf17, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 3),  # Duration
+                    MultiContentEntryText(pos = (800, 54), size = (300, 20), font = 1, color=0x7e93ae,color_sel=0x19f4eb, flags = RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text = 4),  # status
+                                        ],
+                                    "fonts": [gFont("Regular",20), gFont("Regular",16)],
+                                    "itemHeight": 76
+                                    }
+                </convert>
+             </widget>
+         <widget name="titel" position="5,47" zPosition="1" size="900,23" font="Regular;20" transparent="1"  backgroundColor="#00000000"/>
         </screen>""" % (_("%s download manager") % "E2iPlayer",
-            sz_w, sz_h,  # size
-            GetIconDir('red.png'), GetIconDir('green.png'), GetIconDir('yellow.png'), GetIconDir('blue.png'),
-            sz_w - 10, sz_h - 20,  # size list
-            sz_w - 135,  # size titel
+            GetIconDir('red.png'), GetIconDir('green.png'), GetIconDir('yellow.png'), GetIconDir('blue.png')
             )
         # <widget render="Label" source="key_yellow" position="220,9" size="180,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
         # <widget render="Label" source="key_blue" position="630,9" size="140,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
 
     def __init__(self, session, downloadmanager):
         self.session = session
-        Screen.__init__(self, session)
+        Screen.__init__(self, session, mandatoryWidgets=["downloadlist"])
 
         self.currentService = self.session.nav.getCurrentlyPlayingServiceReference()
         self.session.nav.event.append(self.__event)
@@ -78,8 +98,9 @@ class IPTVDMWidget(Screen):
         self["key_yellow"] = StaticText(_("Archive"))
         self["key_blue"] = StaticText(_("Downloads"))
 
-        self["list"] = IPTVDownloadManagerList()
-        self["list"].connectSelChanged(self.onSelectionChanged)
+        self["downloadlist"] = List()
+        # self["list"] = IPTVDownloadManagerList()
+        # self["list"].connectSelChanged(self.onSelectionChanged)
         self["actions"] = ActionMap(["WizardActions", "DirectionActions", "ColorActions"],
         {
             "ok": self.ok_pressed,
@@ -92,6 +113,15 @@ class IPTVDMWidget(Screen):
         }, -1)
 
         self["titel"] = Label()
+
+        self.dictPIX = {}
+        for key in self.ICONS_FILESNAMES.keys():
+            try:
+                pixFile = self.ICONS_FILESNAMES.get(key, None)
+                if pixFile:
+                    self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
+            except Exception:
+                printExc()
 
         self.DM = downloadmanager
         self.DM.connectListChanged(self.onListChanged)
@@ -213,7 +243,7 @@ class IPTVDMWidget(Screen):
         try:
             self.currentService = None
             self.session.nav.event.remove(self.__event)
-            self["list"].disconnectSelChanged(self.onSelectionChanged)
+            # self["list"].disconnectSelChanged(self.onSelectionChanged)
 
             self.onClose.remove(self.__onClose)
             self.onShow.remove(self.onStart)
@@ -362,11 +392,11 @@ class IPTVDMWidget(Screen):
                 self.DM.moveToTopDownloadItem(item.downloadIdx)
 
     def getSelIndex(self):
-        currSelIndex = self["list"].getCurrentIndex()
+        currSelIndex = self["downloadlist"].getCurrentIndex()
         return currSelIndex
 
     def getSelItem(self):
-        currSelIndex = self["list"].getCurrentIndex()
+        currSelIndex = self["downloadlist"].getCurrentIndex()
         if not self.localMode:
             list = self.currList
         else:
@@ -376,13 +406,13 @@ class IPTVDMWidget(Screen):
             return None
         return list[currSelIndex]
 
-    def getSelectedItem(self):
-        sel = None
-        try:
-            sel = self["list"].l.getCurrentSelection()[0]
-        except Exception:
-            return None
-        return sel
+#    def getSelectedItem(self):
+#        sel = None
+#        try:
+#            sel = self["list"].l.getCurrentSelection()[0]
+#        except Exception:
+#            return None
+#        return sel
 
     def onStart(self):
         if self.started == 0:
@@ -390,22 +420,90 @@ class IPTVDMWidget(Screen):
             self.started = 1
         return
 
+    def buildEntry(self, item):
+        # width = self.l.getItemSize().width()
+        # height = self.l.getItemSize().height()
+        # res = [None]
+
+        # Downloaded Size
+        info1 = formatBytes(item.downloadedSize)
+
+        # File Size
+        if item.fileSize > 0:
+            info1 += "/" + formatBytes(item.fileSize)
+
+        elif item.totalFileDuration > 0 and item.downloadedFileDuration > 0:
+            totalDuration = item.totalFileDuration
+            downloadDuration = item.downloadedFileDuration
+            totalDuration = str(timedelta(seconds=totalDuration))
+            downloadDuration = str(timedelta(seconds=downloadDuration))
+            if totalDuration.startswith('0:'):
+                totalDuration = totalDuration[2:]
+            if downloadDuration.startswith('0:'):
+                downloadDuration = downloadDuration[2:]
+            info1 = "{0}/{1} ({2})".format(downloadDuration, totalDuration, info1)
+
+        # Downloaded Procent
+        if item.downloadedProcent >= 0:
+            info1 += ", " + str(item.downloadedProcent) + "%"
+
+        # Download Speed
+        info2 = info1 + ", " + formatBytes(item.downloadedSpeed) + "/s"
+
+        try:
+            fileName = item.fileName.split('/')[-1]
+        except Exception:
+            fileName = ''
+       # res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, 0, width - 70, self.fonts[0][2], 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, fileName))
+       # res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, self.fonts[0][2], width - 70, self.fonts[1][2], 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.url))
+
+        status = ""
+        info = ""
+        if DMHelper.STS.WAITING == item.status:
+            status += _("PENDING")
+        elif DMHelper.STS.DOWNLOADING == item.status:
+            status += _("DOWNLOADING")
+            info = info2
+        elif DMHelper.STS.DOWNLOADED == item.status:
+            status += _("DOWNLOADED")
+            info = info1
+        elif DMHelper.STS.INTERRUPTED == item.status:
+            status += _("ABORTED")
+            info = info1
+        elif DMHelper.STS.ERROR == item.status:
+            status += _("DOWNLOAD ERROR")
+
+#        res.append((eListboxPythonMultiContent.TYPE_TEXT, width - 240, self.fonts[0][2] + self.fonts[1][2], 240, self.fonts[2][2], 2, RT_HALIGN_RIGHT | RT_VALIGN_CENTER, status))
+#        res.append((eListboxPythonMultiContent.TYPE_TEXT, 45, self.fonts[0][2] + self.fonts[1][2], width - 45 - 240, self.fonts[2][2], 2, RT_HALIGN_LEFT | RT_VALIGN_CENTER, info))
+
+#        res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, 1, 64, 64, self.dictPIX.get(item.status, None)))
+
+        return (self.dictPIX.get(item.status, None), fileName, item.url, info, status)
+
+    def buildEnties(self, items):
+        listItems = []
+        for x in items:
+            listItems.append(self.buildEntry(x))
+        return listItems
+
     def reloadList(self, force=False):
         if not self.localMode:
             global gIPTVDM_listChanged
             if True is gIPTVDM_listChanged or force:
                 printDBG("IPTV_DM_UI reload downloads list")
-                self["list"].hide()
+                # self["list"].hide()
                 gIPTVDM_listChanged = False
                 # get current List from api
                 self.currList = self.DM.getList()
-                self["list"].setList([(x,) for x in self.currList])
-                self["list"].show()
+                self["downloadlist"].setList(self.buildEnties(self.currList))
+                # self["list"].setList([(x,) for x in self.currList])
+                # self["list"].show()
         elif force:
             printDBG("IPTV_DM_UI reload archive list")
-            self["list"].hide()
-            self["list"].setList([(x,) for x in self.localFiles])
-            self["list"].show()
+            self["downloadlist"].setList(self.buildEnties(self.localFiles))
+            #self["list"].hide()
+            #self["list"].setList([(x,) for x in self.localFiles])
+            #self["list"].show()
     #end reloadList
 
     def hideWindow(self):
@@ -424,12 +522,10 @@ class IPTVDMWidget(Screen):
 
 
 class IPTVDMNotificationWidget(Screen):
-    d_w = getDesktop(0).size().width() - 20
-    #d_h = getDesktop(0).size().height()
 
-    skin = """<screen name="IPTVDMNotificationWidget" position="%d,%d" zPosition="10" size="350,60" title="IPTVPlayer downloader" backgroundColor="#31000000" >
+    skin = """<screen name="IPTVDMNotificationWidget" position="center,center" zPosition="10" size="350,60" title="IPTVPlayer downloader" backgroundColor="#31000000" >
             <widget name="message_label" font="Regular;24" position="0,0" zPosition="2" valign="center" halign="center" size="350,60" backgroundColor="#31000000" transparent="1" />
-        </screen>""" % (d_w - 350, 60)
+        </screen>"""
 
     def __init__(self, session):
         Screen.__init__(self, session)
