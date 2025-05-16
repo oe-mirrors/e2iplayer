@@ -28,6 +28,7 @@ hostdixmax
 hostdokumentalnenet
 hostdmdamedia
 hostdrdk
+hosteinschalten
 hostegybest
 hostekinotv
 hostekstraklasatv
@@ -72,6 +73,8 @@ hostitvcom
 hostjoemonsterorg
 hostkabarety
 hostkijknl
+hostkinoger
+hostkinokiste
 hostkinomoc
 hostkinox
 hostkisscartoonme
@@ -88,9 +91,12 @@ hostmaxtvgo
 hostmeczykipl
 hostmediasetplay
 hostmediayou
+hostmegakino
 hostmindigo
 hostmindigtv
+hostmoflixstream
 hostmooviecc
+hostmovie4k
 hostmovienightws
 hostmovizlandcom
 hostmovs4ucom
@@ -135,6 +141,7 @@ hostsolarmovie
 hostspiegeltv
 hostsportdeutschland
 hostspryciarze
+hoststreamcloud
 hoststreamcomplet
 hoststreamliveto
 hoststreamstat
@@ -142,6 +149,7 @@ hostsvtplayse
 hosttainieskaiseirestv
 hosttantifilmorg
 hostted
+hosttopstreamfilm
 hosttv2play
 hostthewatchseriesto
 hosttvgrypl
