@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-17 15:03+0200\n"
-"PO-Revision-Date: 2025-05-11 14:35+0200\n"
+"PO-Revision-Date: 2025-05-17 18:44+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
 "Language: de_DE\n"
@@ -807,9 +807,8 @@ msgid "Approaches"
 msgstr "Vorgehensweisen"
 
 #: ../tools/iptvhostgroups.py:44
-#, fuzzy
 msgid "Arabic"
-msgstr "Arabische Filme"
+msgstr "Arabisch"
 
 #: ../hosts/hostegybest.py:67
 msgid "Arabic movies"
@@ -881,7 +880,7 @@ msgstr "NACH TAG"
 
 #: ../tools/iptvhostgroups.py:49
 msgid "Balkans"
-msgstr ""
+msgstr "Balkan"
 
 #: ../hosts/hostorthobulletscom.py:118
 msgid "Basic Science"
@@ -1022,7 +1021,7 @@ msgstr "Captcha-Lösungsservice"
 
 #: ../tools/iptvhostgroups.py:32
 msgid "Cartoons and anime"
-msgstr ""
+msgstr "Zeichentrickfilme und Anime"
 
 #: ../hosts/hostbbcsport.py:189
 msgid "Catch up"
@@ -1418,9 +1417,8 @@ msgid "Documentaries"
 msgstr "Dokumentarfilme"
 
 #: ../tools/iptvhostgroups.py:36
-#, fuzzy
 msgid "Documentary"
-msgstr "Dokumentarfilme"
+msgstr "Dokumentation"
 
 #: ../components/iptvextmovieplayer.py:895
 #: ../components/iptvplayerwidget.py:172
@@ -2157,7 +2155,7 @@ msgstr "Grafische Serviceauswahl"
 
 #: ../tools/iptvhostgroups.py:45
 msgid "Greek"
-msgstr ""
+msgstr "Griechisch"
 
 #: ../components/iptvfavouriteswidgets.py:62 ../tools/iptvfavourites.py:97
 #, python-format
@@ -2269,9 +2267,8 @@ msgid "Humanitarian"
 msgstr "Humanitär"
 
 #: ../tools/iptvhostgroups.py:43
-#, fuzzy
 msgid "Hungarian"
-msgstr "Humanitär"
+msgstr "Ungarisch"
 
 #: ../hosts/hostidokep.py:80
 msgid "Hőtérkép"
@@ -2660,9 +2657,8 @@ msgid "Latest update"
 msgstr "Letzte Aktualisierung"
 
 #: ../tools/iptvhostgroups.py:46
-#, fuzzy
 msgid "Latino"
-msgstr "Bewertung"
+msgstr "Lateinamerikaner"
 
 #: ../components/iptvplayerwidget.py:703
 msgid "Lead programmer: "
@@ -3038,9 +3034,8 @@ msgid "Movies"
 msgstr "Filme"
 
 #: ../tools/iptvhostgroups.py:31
-#, fuzzy
 msgid "Movies and series"
-msgstr "Film-Genre"
+msgstr "Filme und Serien"
 
 #: ../hosts/hostmovienightws.py:37
 msgid "Movies by year"
@@ -4055,9 +4050,8 @@ msgid "Schedule"
 msgstr "Zeitplan"
 
 #: ../tools/iptvhostgroups.py:37
-#, fuzzy
 msgid "Science"
-msgstr "Grundlagenwissenschaft"
+msgstr "Wissenschaft"
 
 #: ../hosts/hostgamatocom.py:101
 msgid "Score at least: "
@@ -4918,7 +4912,7 @@ msgstr "Chirurgische Techniken"
 
 #: ../tools/iptvhostgroups.py:48
 msgid "Swedish"
-msgstr ""
+msgstr "Schwedisch"
 
 #: ../components/iptvextmovieplayer.py:889
 msgid "Synchronize"
@@ -5453,9 +5447,8 @@ msgid "Use web-proxy for VODs (it may be illegal):"
 msgstr "Benutze Web-Proxy für VOD (könnte illegal sein):"
 
 #: ../tools/iptvhostgroups.py:30
-#, fuzzy
 msgid "User defined"
-msgstr "Benutzer-Dateien"
+msgstr "Benutzerdefiniert"
 
 #: ../hosts/hosturllist.py:55
 msgid "User files"
