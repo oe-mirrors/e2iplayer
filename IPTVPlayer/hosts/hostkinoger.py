@@ -67,7 +67,7 @@ class KinoGer(CBaseHostClass):
             addParams = MergeDicts(self.defaultParams, {'Referer': self.cm.getBaseUrl(baseUrl), 'Origin': self.cm.getBaseUrl(baseUrl)[:-1]})
 
             proxy = self.getProxy()
-            if proxy != None:
+            if proxy is not None:
                 addParams = MergeDicts(addParams, {'http_proxy': proxy})
 
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -89,10 +89,10 @@ class KinoGer(CBaseHostClass):
                 if 'KinoGer' in data:
                     self.setMainUrl(self.cm.meta['url'])
                     break
-            elif self.MAIN_URL != None:
+            elif self.MAIN_URL is not None:
                 break
 
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.MAIN_URL = domains[0]
 
     def getFullIconUrl(self, url):
@@ -100,7 +100,7 @@ class KinoGer(CBaseHostClass):
         if url == '':
             return ''
         proxy = self.getProxy()
-        if proxy != None:
+        if proxy is not None:
             url = strwithmeta(url, {'iptv_http_proxy': proxy})
 
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance', '__cfduid'])
@@ -248,7 +248,7 @@ class KinoGer(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             self.selectDomain()
 
         name = self.currItem.get("name", '')
