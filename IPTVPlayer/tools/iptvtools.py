@@ -8,6 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
+from Plugins.Extensions.IPTVPlayer.__init__ import _
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib2_urlopen, urllib2_Request, urllib2_URLError, urllib2_HTTPError
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode, iterDictItems, ensure_str
@@ -828,9 +829,9 @@ def GetSkinsList():
     for filename in fileList:
         skins.append((filename, filename))
     skins.sort()
-    skins.insert(0, ("Auto", "Auto"))
-    skins.insert(0, ("Default", "Default"))
-    skins.append(("auto", "auto"))
+    skins.insert(0, ("auto", _("Auto")))
+    skins.insert(0, ("Default", _("Default")))
+    skins.append(("Auto", _("Auto")))  # FIXME .. Why do we need auto and Auto ?
     printDBG('getSkinsList end')
     return skins
 
