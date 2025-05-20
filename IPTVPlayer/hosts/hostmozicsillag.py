@@ -83,7 +83,7 @@ def parserOKRU(url):
 
 
 class MoziCsillag(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'mozicsillag', 'cookie': 'mozicsillag.cookie'})
         self.MAIN_URL = 'https://mozicsillag1.me/'
@@ -93,26 +93,26 @@ class MoziCsillag(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-    
+
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
-    
+
     def _uriIsValid(self, url):
         return '://' in url
-    
+
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [
                         {'category': 'list_filters', 'title': _('Filmek'), 'url': 'https://mozicsillag1.me/filmek-online/legfrissebb'},
                         {'category': 'list_filters', 'title': _('Sorozatok'), 'url': 'https://mozicsillag1.me/sorozatok-online'},
                         {'category': 'search', 'title': _('Keresés'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Keresési előzmények')} 
+                        {'category': 'search_history', 'title': _('Keresési előzmények')}
                           ]
         self.listsTab(MAIN_CAT_TAB, {'name': 'category'})
-    
+
     def listFilters(self, cItem):
         printDBG("MoziCsillag.listFilters")
         sts, data = self.getPage(cItem['url'])
@@ -152,7 +152,7 @@ class MoziCsillag(CBaseHostClass):
                     title = "Legjobbra értékelt"
                     params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url}
                     self.addDir(params)
-    
+
     def listItems(self, cItem):
         printDBG("MoziCsillag.listItems")
         sts, data = self.getPage(cItem['url'])
@@ -178,14 +178,14 @@ class MoziCsillag(CBaseHostClass):
             next = next[-1]
             params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': next}
             self.addDir(params)
-    
+
     def exploreItems(self, cItem):
         printDBG("MoziCsillag.exploreItems")
         sts, data = self.getPage(cItem['url'])
         desc = self.cm.ph.getDataBeetwenMarkers(data, '<p>', '</p>', False)[1]
         desc = self.cleanHtmlStr(desc)
         urls = data.split('<div class="panel">')
-        if len(urls): 
+        if len(urls):
            del urls[0]
         #printDBG('Lekért linkek: '+str(urls))
         if len(urls) == 1:
@@ -209,7 +209,7 @@ class MoziCsillag(CBaseHostClass):
                printDBG('ELSE Title: ' + str(title))
                params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
                self.addVideo(params)
-    
+
     def exploreEpisodes(self, cItem):
         printDBG("MoziCsillag.exploreEpisodes")
         sts, data = self.getPage(cItem['url'])
@@ -222,7 +222,7 @@ class MoziCsillag(CBaseHostClass):
             title = num + ".rész"
             params = {'category': 'explore_episodes', 'title': title, 'url': cItem['url'], 'icon': cItem['icon'], 'num': num, 'desc': desc}
             self.addDir(params)
-    
+
     def exploreLinks(self, cItem):
         sts, data = self.getPage(cItem['url'])
         episode = self.cm.ph.getDataBeetwenMarkers(data, "<strong>Epizód %s</strong>" % cItem['num'], '</dd>', False)[1]
@@ -231,7 +231,7 @@ class MoziCsillag(CBaseHostClass):
         for i in urls:
             params = {'title': titles[urls.index(i)], 'url': i, 'icon': cItem['icon'], 'desc': cItem['desc']}
             self.addVideo(params)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("MoziCsillag.getLinksForVideo")
         videoUrls = []
@@ -247,7 +247,7 @@ class MoziCsillag(CBaseHostClass):
            video_url = parseFilemoonVideoLink(data)
            if video_url:
               videoUrls.append({'name': 'filemoon iframe', 'url': video_url})
-        
+
         if 'ok.ru' in url:
            printDBG('OK.RU feldolgozás...')
            sts, data = self.cm.getPage(url)
@@ -257,7 +257,7 @@ class MoziCsillag(CBaseHostClass):
            else:
               video_url = video_url.replace('\\u0026', '&')
               videoUrls.append({'name': 'ok.ru m3u8', 'url': video_url})
-        
+
         if "vidoza" in url or "videzz" in url:
            urls = self.cm.ph.getSearchGroups(data, 'src:.["]([^"]+?)["].{,16}mp4', 1, True)
            if urls:
@@ -310,7 +310,7 @@ class MoziCsillag(CBaseHostClass):
               videoUrls.append({'name': 'direct link', 'url': uri})
 
         return videoUrls
-    
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG("MoziCsillag.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -320,7 +320,7 @@ class MoziCsillag(CBaseHostClass):
         url = self.currItem.get("url", '')
         self.currList = []
         if name == None:
-            self.listMainMenu({'name': 'category'})        
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem)
         elif category == 'list_items':
@@ -338,7 +338,7 @@ class MoziCsillag(CBaseHostClass):
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("MoziCsillag.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         try:
@@ -351,11 +351,10 @@ class MoziCsillag(CBaseHostClass):
         url = url.decode("ascii")
         url = 'https://mozicsillag1.me/kereses/' + url
         cItem['url'] = url
-        self.listItems(cItem) 
+        self.listItems(cItem)
 
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, MoziCsillag(), True, [])
-    
