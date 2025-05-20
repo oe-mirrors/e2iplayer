@@ -30,11 +30,11 @@ def gettytul():
 class FilmVilag(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'filmvilag', 'cookie':'filmvilag.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'filmvilag', 'cookie': 'filmvilag.cookie'})
         self.MAIN_URL = 'https://onlinefilmvilag2.eu/'
         self.DEFAULT_ICON_URL = "https://onlinefilmvilag2.eu/img/portrait.1.1668130502.jpeg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -79,7 +79,7 @@ class FilmVilag(CBaseHostClass):
                 retTab = getMPDLinksWithMeta(uri, False)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def _uriIsValid(self, url):
@@ -87,9 +87,9 @@ class FilmVilag(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('FilmVilag.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Kategóriák'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
-                        {'category':'search', 'title': _('Keresés'), 'search_item':True, 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
-                        {'category':'search_history', 'title': _('Keresési előzmények'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}]
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Kategóriák'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
+                        {'category': 'search', 'title': _('Keresés'), 'search_item': True, 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
+                        {'category': 'search_history', 'title': _('Keresési előzmények'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
 
     def getdesc(self, iurl):
@@ -128,13 +128,13 @@ class FilmVilag(CBaseHostClass):
             return
         lurl = cItem['url']
         page = cItem['page']
-        movies = self.cm.ph.getAllItemsBeetwenMarkers(data,'<div class="article">',' <span class="section"><span class="art-delimit-wa"><span> | </span></span>')
+        movies = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="article">', ' <span class="section"><span class="art-delimit-wa"><span> | </span></span>')
         for m in movies:
-            title = self.cm.ph.getDataBeetwenMarkers(m, '<span class="decoration" title="','"></span>', False)[1]
-            icon = self.cm.ph.getDataBeetwenMarkers(m, '<img src="','" width', False)[1]
-            url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '<a href="','">', False)[1]
+            title = self.cm.ph.getDataBeetwenMarkers(m, '<span class="decoration" title="', '"></span>', False)[1]
+            icon = self.cm.ph.getDataBeetwenMarkers(m, '<img src="', '" width', False)[1]
+            url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '<a href="', '">', False)[1]
             desc = self.getdesc(url)
-            params = {'title':title, 'icon': icon, 'url': url, 'desc': desc}
+            params = {'title': title, 'icon': icon, 'url': url, 'desc': desc}
             self.addVideo(params)
         if "Következő &raquo" in data:
             params = {'category': 'list_filters', 'title': "Következő oldal", 'icon': None, 'url': lurl, 'page': page + 1}
@@ -168,18 +168,18 @@ class FilmVilag(CBaseHostClass):
         sts, data = self.getPage(utl)                    
         if not sts:
             return
-        cat = self.cm.ph.getAllItemsBeetwenMarkers(data,'<li class="">','</li>', False)
+        cat = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="">', '</li>', False)
         for c in cat:
             if c != cat[0] and c != cat[1] and c != cat[2] and c != cat[3] and c != cat[-1] and c != cat[-2] and c != cat[-5]:
-                title = self.cm.ph.getDataBeetwenMarkers(c, '">','</a>', False)[1]
+                title = self.cm.ph.getDataBeetwenMarkers(c, '">', '</a>', False)[1]
                 if "amp;" in title:
                     title = title.replace("amp;", "")
                 title = self.upp(title)
                 if "SOROZAT" not in title:
                     icon = None
-                    url = utl + self.cm.ph.getDataBeetwenMarkers(c, '<a href="/','/">', False)[1]
+                    url = utl + self.cm.ph.getDataBeetwenMarkers(c, '<a href="/', '/">', False)[1]
                     page = 1
-                    params = {'category':'list_filters','title':title, 'icon': icon, 'url': url, 'page': page}
+                    params = {'category': 'list_filters', 'title': title, 'icon': icon, 'url': url, 'page': page}
                     self.addDir(params)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -198,17 +198,17 @@ class FilmVilag(CBaseHostClass):
         self.currList = []
         
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listFilters(self.currItem)
         elif category == 'list_filters':
             self.listItems(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)			
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         
@@ -219,7 +219,7 @@ class FilmVilag(CBaseHostClass):
         printDBG("FilmVilag.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = 'http://katalogus.eoldal.hu/'
         s = searchPattern.replace(" ", "+")
-        sts, data = self.getPage(url, self.defaultParams, {'uid':664389, 'key': s})
+        sts, data = self.getPage(url, self.defaultParams, {'uid': 664389, 'key': s})
         if not sts:
             return
         results = self.cm.ph.getDataBeetwenMarkers(data, '<ul>', '</ul>', False)[1]
@@ -231,12 +231,12 @@ class FilmVilag(CBaseHostClass):
                 sts, data = self.getPage(n)
                 result = self.cm.ph.getDataBeetwenMarkers(data, '<div class="article">', '<div class="article-cont-clear clear">', False)[1]
                 printDBG(result)
-                title = self.cm.ph.getDataBeetwenMarkers(result, 'span class="span-a-title">','</span>', False)[1]
+                title = self.cm.ph.getDataBeetwenMarkers(result, 'span class="span-a-title">', '</span>', False)[1]
                 printDBG(title)
-                icon = self.cm.ph.getDataBeetwenMarkers(result, 'height="169" src="','"', False)[1]
-                url = self.cm.ph.getDataBeetwenMarkers(result, '" src="','"', False)[1]
+                icon = self.cm.ph.getDataBeetwenMarkers(result, 'height="169" src="', '"', False)[1]
+                url = self.cm.ph.getDataBeetwenMarkers(result, '" src="', '"', False)[1]
                 desc = self.getdesc(title, n)
-                params = {'title':title, 'icon': icon, 'url': url, 'desc': desc}
+                params = {'title': title, 'icon': icon, 'url': url, 'desc': desc}
                 self.addVideo(params)
 
 class IPTVHost(CHostBase):

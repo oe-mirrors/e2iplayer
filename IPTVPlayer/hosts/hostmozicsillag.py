@@ -70,7 +70,7 @@ def parserOKRU(url):
         import json
         json_data = json.loads(data)
         hlsUrl = json_data['hlsManifestUrl'].replace('\\u0026', '&')
-        hlsUrl = urlparser.decorateUrl(hlsUrl, {'iptv_proto':'m3u8', 'Referer': baseUrl, 'User-Agent': HTTP_HEADER['User-Agent']})
+        hlsUrl = urlparser.decorateUrl(hlsUrl, {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'User-Agent': HTTP_HEADER['User-Agent']})
         printDBG('OK.RU hlsManifestUrl: ' + hlsUrl)
         return [{'name': 'OK.RU m3u8', 'url': hlsUrl}]
     except Exception as e:
@@ -80,19 +80,19 @@ def parserOKRU(url):
 class MoziCsillag(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'mozicsillag', 'cookie':'mozicsillag.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'mozicsillag', 'cookie': 'mozicsillag.cookie'})
         self.MAIN_URL = 'https://mozicsillag1.me/'
         self.DEFAULT_ICON_URL = 'https://mozicsillag1.me/img/logo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent':self.USER_AGENT}
+        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
         return sts, data
     
@@ -101,12 +101,12 @@ class MoziCsillag(CBaseHostClass):
     
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [
-                        {'category':'list_filters', 'title': _('Filmek'), 'url':'https://mozicsillag1.me/filmek-online/legfrissebb'},
-                        {'category':'list_filters', 'title': _('Sorozatok'), 'url':'https://mozicsillag1.me/sorozatok-online'},
-                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Keresési előzmények')} 
+                        {'category': 'list_filters', 'title': _('Filmek'), 'url': 'https://mozicsillag1.me/filmek-online/legfrissebb'},
+                        {'category': 'list_filters', 'title': _('Sorozatok'), 'url': 'https://mozicsillag1.me/sorozatok-online'},
+                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Keresési előzmények')} 
                           ]
-        self.listsTab(MAIN_CAT_TAB, {'name':'category'})
+        self.listsTab(MAIN_CAT_TAB, {'name': 'category'})
     
     def listFilters(self, cItem):
         printDBG("MoziCsillag.listFilters")
@@ -118,16 +118,16 @@ class MoziCsillag(CBaseHostClass):
                 url = self.cm.ph.getDataBeetwenMarkers(i, '="', '"', False)[1]
                 title = self.cm.ph.getDataBeetwenMarkers(i, '<strong>', '</strong>', False)[1]
                 title = self.cleanHtmlStr(title)
-                params = {'category':'list_items','title':title, 'icon': None, 'url': url}
+                params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url}
                 self.addDir(params)
                 if cats.index(i) == 0:
                     url = 'https://mozicsillag1.me/filmek-online/legnezettebb'
                     title = "Legnézettebb"
-                    params = {'category':'list_items','title':title, 'icon': None, 'url': url}
+                    params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url}
                     self.addDir(params)
                     url = 'https://mozicsillag1.me/filmek-online/legjobbra-ertekelt'
                     title = "Legjobbra értékelt"
-                    params = {'category':'list_items','title':title, 'icon': None, 'url': url}
+                    params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url}
                     self.addDir(params)
         if "sorozatok" in cItem['url']:
             cat = self.cm.ph.getDataBeetwenMarkers(data, '</i> Sorozatok</a>', 'Sztárok', False)[1]
@@ -136,16 +136,16 @@ class MoziCsillag(CBaseHostClass):
                 url = self.cm.ph.getDataBeetwenMarkers(i, '="', '"', False)[1]
                 title = self.cm.ph.getDataBeetwenMarkers(i, '<strong>', '</strong>', False)[1]
                 title = self.cleanHtmlStr(title)
-                params = {'category':'list_items','title':title, 'icon': None, 'url': url}
+                params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url}
                 self.addDir(params)
                 if cats.index(i) == 0:
                     url = 'https://mozicsillag1.me/sorozatok-online/legnezettebb'
                     title = "Legnézettebb"
-                    params = {'category':'list_items','title':title, 'icon': None, 'url': url}
+                    params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url}
                     self.addDir(params)
                     url = 'https://mozicsillag1.me/sorozatok-online/legjobbra-ertekelt'
                     title = "Legjobbra értékelt"
-                    params = {'category':'list_items','title':title, 'icon': None, 'url': url}
+                    params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url}
                     self.addDir(params)
     
     def listItems(self, cItem):
@@ -166,12 +166,12 @@ class MoziCsillag(CBaseHostClass):
             desc = desc.replace("   ", "")
             desc = desc.replace("\n", "")
             desc = desc.replace("Hossz", " Hossz").replace("IMDB", " IMDB").replace("Feltöltve", " Feltöltve")
-            params = {'category':'explore_items','title':title, 'icon': icon, 'url': url, 'desc': desc}
+            params = {'category': 'explore_items', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
             self.addDir(params)
         if "</li><li class='arrow unavailable'>" not in next:
             next = self.cm.ph.getAllItemsBeetwenMarkers(next, "<a href='", "'", False)
             next = next[-1]
-            params = {'category':'list_items','title':"Következő oldal", 'icon': None, 'url': next}
+            params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': next}
             self.addDir(params)
     
     def exploreItems(self, cItem):
@@ -192,7 +192,7 @@ class MoziCsillag(CBaseHostClass):
             printDBG('Lekért URL: ' + str(url))
             title = cItem['title'] + " - " + host.replace('&eacute;', 'é')
             printDBG('Lekért TITLE: ' + str(title))
-            params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
+            params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
             self.addVideo(params)
         else:
            for i in urls:
@@ -202,7 +202,7 @@ class MoziCsillag(CBaseHostClass):
                printDBG('ELSE url: ' + str(url))
                title = cItem['title'] + " - " + host
                printDBG('ELSE Title: ' + str(title))
-               params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
+               params = {'title': title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
                self.addVideo(params)
     
     def exploreEpisodes(self, cItem):
@@ -315,7 +315,7 @@ class MoziCsillag(CBaseHostClass):
         url = self.currItem.get("url", '')
         self.currList = []
         if name == None:
-            self.listMainMenu({'name':'category'})        
+            self.listMainMenu({'name': 'category'})        
         elif category == 'list_filters':
             self.listFilters(self.currItem)
         elif category == 'list_items':
@@ -328,10 +328,10 @@ class MoziCsillag(CBaseHostClass):
             self.exploreLinks(self.currItem)
         elif category == "search":
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'})
+            cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         CBaseHostClass.endHandleService(self, index, refresh)
     
     def listSearchResult(self, cItem, searchPattern, searchType):
