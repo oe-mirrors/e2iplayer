@@ -24,8 +24,11 @@ import datetime
 import urllib
 import html
 ###################################################
+
+
 def gettytul():
     return 'https://onlinefilmvilag2.eu/' 
+
 
 class FilmVilag(CBaseHostClass):
  
@@ -214,7 +217,6 @@ class FilmVilag(CBaseHostClass):
         
         CBaseHostClass.endHandleService(self, index, refresh)
     
-    
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmVilag.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = 'http://katalogus.eoldal.hu/'
@@ -238,6 +240,7 @@ class FilmVilag(CBaseHostClass):
                 desc = self.getdesc(title, n)
                 params = {'title': title, 'icon': icon, 'url': url, 'desc': desc}
                 self.addVideo(params)
+
 
 class IPTVHost(CHostBase):
 

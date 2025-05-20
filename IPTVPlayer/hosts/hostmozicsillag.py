@@ -28,8 +28,11 @@ import base64
 import os
 from Components.config import config, ConfigText, ConfigYesNo, getConfigListEntry
 ###################################################
+
+
 def gettytul():
     return 'https://mozicsillag1.me/'
+
 
 def parseFilemoonVideoLink(data):
     printDBG('*** parseFilemoonVideoLink called ***')
@@ -40,6 +43,7 @@ def parseFilemoonVideoLink(data):
     if match:
        return match.group(1)
     return None
+
 
 def parserOKRU(url):
     printDBG('parserOKRU baseUrl[%s]' % url)
@@ -76,6 +80,7 @@ def parserOKRU(url):
     except Exception as e:
         printDBG('Error parsing OK.RU JSON: ' + str(e))
         return []
+
 
 class MoziCsillag(CBaseHostClass):
  
@@ -347,6 +352,7 @@ class MoziCsillag(CBaseHostClass):
         url = 'https://mozicsillag1.me/kereses/' + url
         cItem['url'] = url
         self.listItems(cItem) 
+
 
 class IPTVHost(CHostBase):
 
