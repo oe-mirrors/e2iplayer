@@ -86,7 +86,7 @@ class MoziCsillag(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
     
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -166,7 +166,7 @@ class MoziCsillag(CBaseHostClass):
             desc = desc.replace("   ", "")
             desc = desc.replace("\n", "")
             desc = desc.replace("Hossz", " Hossz").replace("IMDB", " IMDB").replace("Feltöltve", " Feltöltve")
-            params = {'category':'explore_items','title':title, 'icon': icon , 'url': url, 'desc': desc}
+            params = {'category':'explore_items','title':title, 'icon': icon, 'url': url, 'desc': desc}
             self.addDir(params)
         if "</li><li class='arrow unavailable'>" not in next:
             next = self.cm.ph.getAllItemsBeetwenMarkers(next, "<a href='", "'", False)
@@ -192,7 +192,7 @@ class MoziCsillag(CBaseHostClass):
             printDBG('Lekért URL: '+str(url))
             title = cItem['title'] + " - " + host.replace('&eacute;', 'é')
             printDBG('Lekért TITLE: '+str(title))
-            params = {'title':title, 'icon': cItem['icon'] , 'url': url, 'desc': desc}
+            params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
             self.addVideo(params)
         else:
            for i in urls:
@@ -202,7 +202,7 @@ class MoziCsillag(CBaseHostClass):
                printDBG('ELSE url: '+str(url))
                title = cItem['title'] + " - " + host
                printDBG('ELSE Title: '+str(title))
-               params = {'title':title, 'icon': cItem['icon'] , 'url': url, 'desc': desc}
+               params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
                self.addVideo(params)
     
     def exploreEpisodes(self, cItem):
@@ -315,7 +315,7 @@ class MoziCsillag(CBaseHostClass):
         url    = self.currItem.get("url", '')
         self.currList = []
         if name == None:
-            self.listMainMenu( {'name':'category'} )        
+            self.listMainMenu({'name':'category'})        
         elif category == 'list_filters':
             self.listFilters(self.currItem)
         elif category == 'list_items':

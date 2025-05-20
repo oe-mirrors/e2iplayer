@@ -49,7 +49,7 @@ class FilmVilag(CBaseHostClass):
                 return
             url = re.findall('iframe.+src=["]([^>]+?)["].+/iframe', data, re.S)
             if url:
-               url = url [-1]
+               url = url[-1]
             url = html.unescape(url)
             if "https:" not in url:
                 url = "https:" + url
@@ -64,9 +64,9 @@ class FilmVilag(CBaseHostClass):
         
         printDBG("PROTOCOL [%s] " % protocol)
         
-        urlSupport = self.up.checkHostSupport( uri )
+        urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt( uri )
+            retTab = self.up.getVideoLinkExt(uri)
             videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
             if protocol == 'm3u8':
@@ -130,14 +130,14 @@ class FilmVilag(CBaseHostClass):
         page = cItem['page']
         movies = self.cm.ph.getAllItemsBeetwenMarkers(data,'<div class="article">',' <span class="section"><span class="art-delimit-wa"><span> | </span></span>')
         for m in movies:
-            title = self.cm.ph.getDataBeetwenMarkers(m, '<span class="decoration" title="','"></span>', False) [1]
-            icon = self.cm.ph.getDataBeetwenMarkers(m, '<img src="','" width', False) [1]
-            url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '<a href="','">', False) [1]
+            title = self.cm.ph.getDataBeetwenMarkers(m, '<span class="decoration" title="','"></span>', False)[1]
+            icon = self.cm.ph.getDataBeetwenMarkers(m, '<img src="','" width', False)[1]
+            url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '<a href="','">', False)[1]
             desc = self.getdesc(url)
-            params = {'title':title, 'icon': icon , 'url': url, 'desc': desc}
+            params = {'title':title, 'icon': icon, 'url': url, 'desc': desc}
             self.addVideo(params)
         if "Következő &raquo" in data:
-            params = {'category': 'list_filters', 'title': "Következő oldal", 'icon': None , 'url': lurl, 'page': page+1}
+            params = {'category': 'list_filters', 'title': "Következő oldal", 'icon': None, 'url': lurl, 'page': page+1}
             self.addDir(params)
     
     def upp(self, item):
@@ -171,15 +171,15 @@ class FilmVilag(CBaseHostClass):
         cat = self.cm.ph.getAllItemsBeetwenMarkers(data,'<li class="">','</li>', False)
         for c in cat:
             if c != cat[0] and c != cat[1] and c != cat[2] and c != cat[3] and c != cat[-1] and c != cat[-2] and c != cat[-5]:
-                title = self.cm.ph.getDataBeetwenMarkers(c, '">','</a>', False) [1]
+                title = self.cm.ph.getDataBeetwenMarkers(c, '">','</a>', False)[1]
                 if "amp;" in title:
                     title = title.replace("amp;", "")
                 title = self.upp(title)
                 if "SOROZAT" not in title:
                     icon = None
-                    url = utl + self.cm.ph.getDataBeetwenMarkers(c, '<a href="/','/">', False) [1]
+                    url = utl + self.cm.ph.getDataBeetwenMarkers(c, '<a href="/','/">', False)[1]
                     page = 1
-                    params = {'category':'list_filters','title':title, 'icon': icon , 'url': url, 'page': page}
+                    params = {'category':'list_filters','title':title, 'icon': icon, 'url': url, 'page': page}
                     self.addDir(params)
     
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -194,7 +194,7 @@ class FilmVilag(CBaseHostClass):
         url = self.currItem.get("url", '')
         desc = self.currItem.get("desc", '')
         
-        printDBG( "handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon) )
+        printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
         
         if name == None:
@@ -222,21 +222,21 @@ class FilmVilag(CBaseHostClass):
         sts, data = self.getPage(url, self.defaultParams, {'uid':664389, 'key': s})
         if not sts:
             return
-        results = self.cm.ph.getDataBeetwenMarkers(data, '<ul>', '</ul>', False) [1]
+        results = self.cm.ph.getDataBeetwenMarkers(data, '<ul>', '</ul>', False)[1]
         printDBG(results)
         results = self.cm.ph.getAllItemsBeetwenMarkers(results, 'a href="', '">', False)
         printDBG(results)
         for n in results:
             if results.index(n) != 0:
                 sts, data = self.getPage(n)
-                result = self.cm.ph.getDataBeetwenMarkers(data, '<div class="article">', '<div class="article-cont-clear clear">', False) [1]
+                result = self.cm.ph.getDataBeetwenMarkers(data, '<div class="article">', '<div class="article-cont-clear clear">', False)[1]
                 printDBG(result)
-                title = self.cm.ph.getDataBeetwenMarkers(result, 'span class="span-a-title">','</span>', False) [1]
+                title = self.cm.ph.getDataBeetwenMarkers(result, 'span class="span-a-title">','</span>', False)[1]
                 printDBG(title)
-                icon = self.cm.ph.getDataBeetwenMarkers(result, 'height="169" src="','"', False) [1]
-                url = self.cm.ph.getDataBeetwenMarkers(result, '" src="','"', False) [1]
+                icon = self.cm.ph.getDataBeetwenMarkers(result, 'height="169" src="','"', False)[1]
+                url = self.cm.ph.getDataBeetwenMarkers(result, '" src="','"', False)[1]
                 desc = self.getdesc(title, n)
-                params = {'title':title, 'icon': icon , 'url': url, 'desc': desc}
+                params = {'title':title, 'icon': icon, 'url': url, 'desc': desc}
                 self.addVideo(params)
 
 class IPTVHost(CHostBase):
