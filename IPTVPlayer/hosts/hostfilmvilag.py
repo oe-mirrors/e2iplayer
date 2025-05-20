@@ -53,7 +53,7 @@ class FilmVilag(CBaseHostClass):
             url = html.unescape(url)
             if "https:" not in url:
                 url = "https:" + url
-            printDBG('LEKÉRT LINK: '+url)
+            printDBG('LEKÉRT LINK: ' + url)
         else:
            url = cItem['url']
            if "https:" not in url:
@@ -87,9 +87,9 @@ class FilmVilag(CBaseHostClass):
     
     def listMainMenu(self, cItem):   
         printDBG('FilmVilag.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_items',            'title': _('Kategóriák'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
-                        {'category':'search',          'title': _('Keresés'), 'search_item':True, 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
-                        {'category':'search_history',  'title': _('Keresési előzmények'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}]
+        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Kategóriák'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
+                        {'category':'search', 'title': _('Keresés'), 'search_item':True, 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
+                        {'category':'search_history', 'title': _('Keresési előzmények'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
 
     def getdesc(self, iurl):
@@ -112,8 +112,8 @@ class FilmVilag(CBaseHostClass):
            if "," not in desc[var]:
                if ":" not in desc[var]:
                    desc.pop(var)
-                   var = var-1
-           var = var+1
+                   var = var - 1
+           var = var + 1
         printDBG(desc)
         if "Letöltés" in desc[0]:
             desc.pop(0)
@@ -137,7 +137,7 @@ class FilmVilag(CBaseHostClass):
             params = {'title':title, 'icon': icon, 'url': url, 'desc': desc}
             self.addVideo(params)
         if "Következő &raquo" in data:
-            params = {'category': 'list_filters', 'title': "Következő oldal", 'icon': None, 'url': lurl, 'page': page+1}
+            params = {'category': 'list_filters', 'title': "Következő oldal", 'icon': None, 'url': lurl, 'page': page + 1}
             self.addDir(params)
     
     def upp(self, item):
@@ -187,7 +187,7 @@ class FilmVilag(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')

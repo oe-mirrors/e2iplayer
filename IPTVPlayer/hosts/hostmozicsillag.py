@@ -82,7 +82,7 @@ class MoziCsillag(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history':'mozicsillag', 'cookie':'mozicsillag.cookie'})
         self.MAIN_URL = 'https://mozicsillag1.me/'
-        self.DEFAULT_ICON_URL =  'https://mozicsillag1.me/img/logo.png'
+        self.DEFAULT_ICON_URL = 'https://mozicsillag1.me/img/logo.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT':'1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
@@ -185,23 +185,23 @@ class MoziCsillag(CBaseHostClass):
         #printDBG('Lekért linkek: '+str(urls))
         if len(urls) == 1:
             urls = self.cm.ph.getDataBeetwenMarkers(data, '<div class="panel">', 'Lejátszás</a>', False)[1]
-            printDBG('Lekért URLS: '+str(urls))
+            printDBG('Lekért URLS: ' + str(urls))
             host = self.cm.ph.getSearchGroups(urls, '''title=["]([^"^']+?)["]>.+/span''', 1, True)[0]
-            printDBG('Lekért HOST: '+str(host))
+            printDBG('Lekért HOST: ' + str(host))
             url = self.cm.ph.getSearchGroups(urls, '''href=['"]([^"^']+?)['"].target''', 1, True)[0]
-            printDBG('Lekért URL: '+str(url))
+            printDBG('Lekért URL: ' + str(url))
             title = cItem['title'] + " - " + host.replace('&eacute;', 'é')
-            printDBG('Lekért TITLE: '+str(title))
+            printDBG('Lekért TITLE: ' + str(title))
             params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
             self.addVideo(params)
         else:
            for i in urls:
                host = self.cm.ph.getSearchGroups(i, '''title=["]([^"^']+?)["]>.+/span''', 1, True)[0]
-               printDBG('ELSE HOST: '+str(host))
+               printDBG('ELSE HOST: ' + str(host))
                url = self.cm.ph.getSearchGroups(i, '''href=['"]([^"^']+?)['"].target''', 1, True)[0]
-               printDBG('ELSE url: '+str(url))
+               printDBG('ELSE url: ' + str(url))
                title = cItem['title'] + " - " + host
-               printDBG('ELSE Title: '+str(title))
+               printDBG('ELSE Title: ' + str(title))
                params = {'title':title, 'icon': cItem['icon'], 'url': url, 'desc': desc}
                self.addVideo(params)
     
@@ -213,7 +213,7 @@ class MoziCsillag(CBaseHostClass):
         episodes = re.findall('''href="#.+strong[>]([^"^']+?)[<]/strong''', data)
         for i in episodes:
             printDBG(i)
-            num = str(episodes.index(i)+1)
+            num = str(episodes.index(i) + 1)
             title = num + ".rész"
             params = {'category': 'explore_episodes', 'title': title, 'url': cItem['url'], 'icon': cItem['icon'], 'num': num, 'desc': desc}
             self.addDir(params)
@@ -309,10 +309,10 @@ class MoziCsillag(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG("MoziCsillag.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        mode     = self.currItem.get("mode", '')
-        url    = self.currItem.get("url", '')
+        mode = self.currItem.get("mode", '')
+        url = self.currItem.get("url", '')
         self.currList = []
         if name == None:
             self.listMainMenu({'name':'category'})        
@@ -340,7 +340,7 @@ class MoziCsillag(CBaseHostClass):
             searchPattern = urllib.parse.quote_plus(searchPattern)
         except:
             searchPattern = urllib.quote_plus(searchPattern)
-        url = 'search_term=' + searchPattern +'&search_type=0&search_where=0&search_rating_start=1&search_rating_end=10&search_year_from=1900&search_year_to=2022'
+        url = 'search_term=' + searchPattern + '&search_type=0&search_where=0&search_rating_start=1&search_rating_end=10&search_year_from=1900&search_year_to=2022'
         url = url.encode('ascii')
         url = base64.b64encode(url)
         url = url.decode("ascii")
