@@ -16099,89 +16099,27 @@ class pageParser(CaptchaHelper):
         host = base_url.split("/")[2]
         import os
         import requests
-
-        def get_nonce():
-            random_float = random()
-            x = base36_encode(int(str(random_float).split('.')[1]))
-            z = base36_encode(int(time.time() * 1000))
-            return x + z
-
-        def base36_encode(num):
-            chars = '0123456789abcdefghijklmnopqrstuvwxyz'
-            if num == 0:
-                return '0'
-            result = ''
-            while num > 0:
-                num, i = divmod(num, 36)
-                result = chars[i] + result
-            return result
-
-        def mod_exp(base, exp, mod):  # Thx yogesh-hacker
-            base = int(base)
-            exp = int(exp)
-            mod = int(mod)
-            result = 1
-
-            while exp > 0:
-                if exp & 1:
-                    result = (result * base) % mod
-                base = (base * base) % mod
-                exp >>= 1
-            return result
-
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0"
         headers = {"Referer": "https://%s" % host, "User-Agent": user_agent}
         session = requests.Session()
         session.headers.update(headers)
-        response = session.get(base_url).text
-        match = re.search(r"(?:const|let|var|window\.\w+)\s+\w*\s*=\s*'(.*?)'", response)
-        if not match:
-            return
-        encrypted_data = match.group(1)
-        dh_modulus = int("0xFFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7EDEE386BFB5A899FA5AE9F24117C4B1FE649286651ECE45B3DC2007CB8A163BF0598DA48361C55D39A69163FA8FD24CF5F83655D23DCA3AD961C62F356208552BB9ED529077096966D670C354E4ABC9804F1746C08CA237327FFFFFFFFFFFFFFFF", 16)
-        generator = 2
-        random_bytes_hex = hexlify(os.urandom(32))
-        client_private_key = int(random_bytes_hex, 16) % dh_modulus
-        client_public_key = mod_exp(generator, client_private_key, dh_modulus)
-        data = {"nonce": get_nonce(), "client_public": str(client_public_key)}
-        response = session.post("https://%s/api-2/prepair-token.php" % host, json=data).json()
-        pre_token = response['pre_token']
-        csrf_token = response['csrf_token']
-        server_public = response['server_public']
-        initial_nonce = get_nonce()
-        data = {"nonce": initial_nonce, "pre_token": pre_token, "csrf_token": csrf_token}
-        response = session.post("https://%s/api-2/create-token.php" % host, json=data).json()
-        access_token = response['token']
-        data = {"token": access_token,
-                "initial_nonce": initial_nonce,
-                "nonce": get_nonce(),
-                "csrf_token": csrf_token,
-                "pre_token": pre_token,
-                "encrypted_data": encrypted_data}
-        response = session.post("https://%s/api-2/last-process.php" % host, json=data).json()
-        shared_secret = mod_exp(server_public, client_private_key, dh_modulus)
-        derived_key = sha256(str(shared_secret).encode()).digest()
-        encrypted_data = base64.b64decode(response['encrypted_result'])
-        iv = base64.b64decode(response['iv'])
-        temp_iv = base64.b64decode(response['temp_iv'])
-        encrypted_symmetric_key = base64.b64decode(response['encrypted_symmetric_key'])
-        decryptor = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(derived_key, temp_iv))
-        actual_aes_key = decryptor.feed(encrypted_symmetric_key)
-        actual_aes_key += decryptor.feed()
-        decryptor = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(actual_aes_key, iv))
-        decrypted_payload = decryptor.feed(encrypted_data)
-        decrypted_payload += decryptor.feed()
-        decrypted_data = decrypted_payload.decode("utf-8")
-        url = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_data)
-        if not url:
+        html = session.get(base_url).text
+        r = re.search(r'''(?:const|var|let|window\.)\s*\w*\s*=\s*'([^']+)';''', html)
+        key = unhexlify(requests.get(unhexlify("68747470733A2F2F7261772E67697468756275736572636F6E74656E742E636F6D2F796F676573682D6861636B65722F706C61796572782F726566732F68656164732F6D61696E2F6B65792E6B6579"), headers={'Referer': 'https://github.com/'}).text)
+        if not r or not key:
             return []
+        data = base64.b64decode(r.group(1))
+        decryptor = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(key, data[:16]))
+        data = decryptor.feed(data[16:]) + decryptor.feed()
+        data = data.decode('utf-8')
+        r = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', data)
         sub_tracks = []
-        sub = re.findall(r'file":"([^"]+)","label":"([^"]+)","kind', decrypted_data)
+        sub = re.findall(r'file":"([^"]+)","label":"([^"]+)","kind', data)
         if sub:
             sub_tracks = [{'title': '', 'url': url, 'lang': q} for url, q in sub]
         urlTab = []
-        url = urlparser.decorateUrl(url.group(1), {'iptv_proto': 'm3u8', 'User-Agent': user_agent, 'Referer': 'https://%s/' % host, 'Origin': 'https://%s' % host, 'external_sub_tracks': sub_tracks})
-        if url != '':
+        url = urlparser.decorateUrl(r.group(1), {'iptv_proto': 'm3u8', 'User-Agent': user_agent, 'Referer': 'https://%s/' % host, 'Origin': 'https://%s' % host, 'external_sub_tracks': sub_tracks})
+        if url:
             urlTab.extend(getDirectM3U8Playlist(url))
         return urlTab
 
