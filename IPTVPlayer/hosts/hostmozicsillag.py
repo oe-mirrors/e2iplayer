@@ -213,7 +213,7 @@ class MoziCsillag(CBaseHostClass):
     def exploreEpisodes(self, cItem):
         printDBG("MoziCsillag.exploreEpisodes")
         sts, data = self.getPage(cItem['url'])
-        desc = self.cm.ph.getSearchGroups(data, '''Tag.+\s\s.+\s.+\s.+\s.+<p[>]([^"^']+?)[<]/p>''', 1, True)[0].strip()
+        desc = self.cm.ph.getSearchGroups(data, r'''Tag.+\s\s.+\s.+\s.+\s.+<p[>]([^"^']+?)[<]/p>''', 1, True)[0].strip()
         desc = self.cleanHtmlStr(desc)
         episodes = re.findall('''href="#.+strong[>]([^"^']+?)[<]/strong''', data)
         for i in episodes:
@@ -319,7 +319,7 @@ class MoziCsillag(CBaseHostClass):
         mode = self.currItem.get("mode", '')
         url = self.currItem.get("url", '')
         self.currList = []
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem)

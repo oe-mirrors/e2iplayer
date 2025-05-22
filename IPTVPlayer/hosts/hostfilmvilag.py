@@ -200,7 +200,7 @@ class FilmVilag(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
 
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listFilters(self.currItem)
