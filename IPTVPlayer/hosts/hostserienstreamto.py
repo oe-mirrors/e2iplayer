@@ -1,80 +1,50 @@
 # -*- coding: utf-8 -*-
-###################################################
-# LOCAL import
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+import re
+from copy import deepcopy
+
+from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, MergeDicts, ReadTextFile, WriteTextFile, GetTmpDir, rm
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
-###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
-###################################################
-# FOREIGN import
-###################################################
-import re
-from binascii import hexlify
-from hashlib import md5
-from copy import deepcopy
-from Components.config import config, ConfigSelection, ConfigText, getConfigListEntry
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetCookieDir, GetTmpDir, MergeDicts, ReadTextFile, WriteTextFile, printDBG, printExc, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from functools import cmp_to_key
-###################################################
-
-
-###################################################
-# E2 GUI COMMPONENTS
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 from Screens.MessageBox import MessageBox
-###################################################
-
-###################################################
-# Config options for HOST
-###################################################
-DEFAULTHOST = "http://186.2.175.5/"
-config.plugins.iptvplayer.serienstreamto_langpreference = ConfigSelection(default="de,de_sub,en", choices=[("de,de_sub,en", "de,sub,en"),
-                                                                                                               ("de,en,de_sub", "de,en,sub"),
-                                                                                                               ("de_sub,de,en", "sub,de,en"),
-                                                                                                               ("de_sub,en,de", "sub,en,de"),
-                                                                                                               ("en,de_sub,de", "en,sub,de"),
-                                                                                                               ("en,de,de_sub", "en,de,sub")])
+config.plugins.iptvplayer.serienstreamto_langpreference = ConfigSelection(default="de,de_sub,en", choices=[("de,de_sub,en", "de,sub,en"), ("de,en,de_sub", "de,en,sub"), ("de_sub,de,en", "sub,de,en"), ("de_sub,en,de", "sub,en,de"), ("en,de_sub,de", "en,sub,de"), ("en,de,de_sub", "en,de,sub")])
 config.plugins.iptvplayer.serienstreamto_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.serienstreamto_host = ConfigText(default=DEFAULTHOST, fixed_size=False)
+config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http://186.2.175.5/", choices=[("http://186.2.175.5/", "http://186.2.175.5/"), ("https://s.to/", "https://s.to/"), ("https://serienstream.to/", "https://serienstream.to/")])
 
 
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Your language preference:"), config.plugins.iptvplayer.serienstreamto_langpreference))
-
     optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.serienstreamto_login))
     optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.serienstreamto_password))
-    optionList.append(getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_host))
+    optionList.append(getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_hosts))
     return optionList
-###################################################
 
 
 def gettytul():
-    return config.plugins.iptvplayer.serienstreamto_host.value
+    return config.plugins.iptvplayer.serienstreamto_hosts.value
 
 
 class SerienStreamTo(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'SerienStreamTo.tv', 'cookie': 'serienstreamto.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = gettytul() + '/public/img/facebook.jpg'
-
         self.MAIN_CAT_TAB = [{'category': 'all_series', 'title': 'Alle Serien', 'url': self.getFullUrl('/serien-alphabet')},
                              {'category': 'list_abc', 'title': _('A-Z'), 'url': self.MAIN_URL},
                              {'category': 'list_genres', 'title': _('Genres'), 'url': self.MAIN_URL},
@@ -82,18 +52,15 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                              {'category': 'list_items', 'title': _('Popular'), 'url': self.getFullUrl('/beliebte-serien')},
                              {'category': 'search', 'title': _('Search'), 'search_item': True, },
                              {'category': 'search_history', 'title': _('Search history'), }
-                            ]
-
+                             ]
+        self.ALL_SERIES_TAB = [{'category': 'all_letters', 'title': 'Alphabet', 'url': self.getFullUrl('/serien-alphabet')},
+                               {'category': 'all_genres', 'title': 'Genres', 'url': self.getFullUrl('/serien-genres')}, ]
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cookieHeader = ''
         self.login = ''
         self.password = ''
         self.loggedIn = None
-
-        self.ALL_SERIES_TAB = [{'category': 'all_letters', 'title': 'Alphabet', 'url': self.getFullUrl('/serien-alphabet')},
-                               {'category': 'all_genres', 'title': 'Genres', 'url': self.getFullUrl('/serien-genres')}, ]
-
         self.allCache = {'genres_list': [], 'genres_keys': {}, 'letters_list': [], 'letters_keys': {}}
 
     def getPage(self, baseUrl, params={}, post_data=None):
@@ -456,8 +423,8 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         printDBG('tryTologin start')
 
         if self.login == config.plugins.iptvplayer.serienstreamto_login.value and \
-           self.password == config.plugins.iptvplayer.serienstreamto_password.value:
-           return
+            self.password == config.plugins.iptvplayer.serienstreamto_password.value:
+            return
 
         self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
         self.login = config.plugins.iptvplayer.serienstreamto_login.value
