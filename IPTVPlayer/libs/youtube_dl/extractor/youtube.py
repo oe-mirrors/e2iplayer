@@ -428,7 +428,7 @@ class YoutubeIE(object):
         try:
             for lang in player_captions:
                 printDBG("_get_automatic_captions %s" % lang)
-                sub_url = urllib_unquote_plus(lang['baseUrl'])
+                sub_url = urllib.parse.unquote_plus(lang['baseUrl'])
                 sub_format = self.cm.ph.getSearchGroups(sub_url + '&', r'[\?&]fmt=([^\?^&]+)[\?&]')[0]
                 if sub_format != '':
                     sub_url = sub_url.replace(sub_format, 'vtt')

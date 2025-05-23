@@ -1408,7 +1408,8 @@ class common:
                 customOpeners.append(MultipartPostHandler())
                 dataPost = post_data
             else:
-                dataPost = urllib.parse.urlencode(post_data).encode()
+                dataPost = urllib.parse.urlencode(post_data)
+            dataPost = ensure_binary(dataPost)
             req = Request(pageUrl, dataPost, headers)
         else:
             req = Request(pageUrl, None, headers)

@@ -261,7 +261,7 @@ class iptv_system:
 
     def _dataAvail(self, data):
         if None is not data:
-            self.outData += data.decode(encoding='utf-8', errors='strict')
+            self.outData += strDecode(data)
 
     def _cmdFinished(self, code):
         printDBG("iptv_system._cmdFinished cmd[%s] code[%r]" % (self.cmd, code))
@@ -542,7 +542,11 @@ class CSelOneLink():
     def _cmpLinks(self, item1, item2):
         val1 = self.getQualiyFun(item1)
         val2 = self.getQualiyFun(item2)
-        if val1 < val2:
+
+        if val1 is None or val2 is None:
+            printDBG('iptvtools.CSelOneLink()_cmpLinks <host>__getLinkQuality() returned None value(s) which is an error(val1=%s, val2=%s)\n\t CORRECT <host>!!!' % (str(val1), str(val2)))
+            ret = 0
+        elif val1 < val2:
             ret = -1
         elif val1 > val2:
             ret = 1
@@ -587,8 +591,8 @@ class CSelOneLink():
                 else:
                     group2.append(self.listOfLinks[idx])
             group1.sort(key=cmp_to_key(self._cmpLinks))
-            group1.reverse()
             group2.sort(key=cmp_to_key(self._cmpLinks))
+            group1.reverse()
             group1.extend(group2)
             return group1
 
@@ -944,7 +948,7 @@ def mkdirs(newdir, raiseException=False):
 def rm(fullname):
     try:
         if os.path.exists(fullname):
-            remove(fullname)
+            os.remove(fullname)
         return True
     except Exception:
         printExc()
@@ -1309,8 +1313,8 @@ def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
         file.close()
         if ret.startswith(codecs.BOM_UTF8):
             ret = ret[3:]
-        ret = ret.decode(encoding='utf-8', errors='strict')
         sts = True
+        ret = strDecode(ret, errors)
     except Exception:
         if 'SearchHistory/' in filePath:
             printExc('WARNING')
