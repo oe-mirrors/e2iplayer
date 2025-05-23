@@ -110,7 +110,7 @@ class FFMPEGDownloader(BaseDownloader):
                 if key == 'Range':  # Range is always used by ffmpeg
                     continue
                 elif key == 'User-Agent':
-                    cmdTab.extend(['-user-agent', httpParams[key]])
+                    cmdTab.extend(['-user_agent', httpParams[key]])
                 else:
                     headers.append('%s: %s' % (key, httpParams[key]))
 
