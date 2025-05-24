@@ -63,6 +63,7 @@
 'hostgovodtv': 'https://govod.tv/',
 'hostgovodtv': 'https://govod.tv/',
 'hostgreekdocumentaries3': 'http://greekdocumentaries2.blogspot.gr/',
+'hosthdfilme': 'https://hdfilme.my',
 'hosthdfilmetv': 'http://hdfilme.tv/',
 'hosthdfull': 'https://hdfull.me/',
 'hosthdpopcornscom': 'http://hdpopcorns.co/',
