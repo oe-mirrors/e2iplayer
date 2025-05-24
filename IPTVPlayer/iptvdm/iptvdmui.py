@@ -57,29 +57,33 @@ class IPTVDMWidget(Screen):
     #    sz_h += 4
     skin = """
         <screen name="IPTVDMWidget" position="center,center" title="%s" size="1280,720" resolution="1280,720">
-         <ePixmap position="5,9"   zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
-         <ePixmap position="180,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
-         <ePixmap position="385,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
-         <ePixmap position="590,9" zPosition="4" size="35,30" pixmap="%s" transparent="1" alphatest="on" />
-         <widget render="Label" source="key_red"    position="45,9"  size="140,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget render="Label" source="key_green"  position="225,9" size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget render="Label" source="key_yellow" position="425,9" size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget render="Label" source="key_blue"   position="635,9" size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget source="downloadlist" render="Listbox" position="center,100" zPosition="2" size="1160,532" scrollbarMode="showOnDemand" transparent="0"  backgroundColor="#00000000" enableWrapAround="1">
+         <ePixmap position="025,688"   zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="blend" />
+         <ePixmap position="290,688" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="blend" />
+         <ePixmap position="555,688" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="blend" />
+         <ePixmap position="820,688" zPosition="4" size="35,30" pixmap="%s" transparent="1" alphatest="blend" />
+         <eLabel position="0,0" size="1280,88" backgroundColor="#000d0f16" zPosition="-1" />
+         <eLabel position="0,675" size="1280,48" backgroundColor="#000d0f16" zPosition="-1" />
+         <eLabel position="0,85" size="1280,2" backgroundColor="grey" zPosition="2" />
+         <eLabel position="0,675" size="1280,2" backgroundColor="grey" zPosition="2" />
+         <widget source="Title" render="Label" position="25,30" size="1050,40" foregroundColor="white"  backgroundColor="black" transparent="1" zPosition="1" font="Regular; 27" valign="center" />
+         <widget source="key_red" render="Label" position="60,684" size="220,30" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;20" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+         <widget source="key_green" render="Label" position="325,684" size="220,30" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;20" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+         <widget source="key_yellow" render="Label" position="590,684" size="220,30" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;20" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+         <widget source="key_blue" render="Label" position="855,684" size="220,30" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;20" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+         <widget source="downloadlist" render="Listbox" position="20,100" zPosition="2" size="1240,544" scrollbarMode="showOnDemand" transparent="0"  backgroundColor="#10111112" enableWrapAround="1">
             <convert type="TemplatedMultiContent">
             {"template": [
-                    MultiContentEntryPixmapAlphaBlend(pos = (10, 18), size = (42, 42), flags = BT_SCALE, png = 0),  # Flag.
-                    MultiContentEntryText(pos = (80, 0), size = (1060, 30), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 1),  # Title
-                    MultiContentEntryText(pos = (80, 30), size = (1060, 24), font = 1, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 2),  # adress
-                    MultiContentEntryText(pos = (80, 54), size = (300, 20), font = 1, color=0xa4c400,color_sel=0xffaf17, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 3),  # Duration
-                    MultiContentEntryText(pos = (800, 54), size = (300, 20), font = 1, color=0x7e93ae,color_sel=0x19f4eb, flags = RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text = 4),  # status
+                    MultiContentEntryPixmapAlphaBlend(pos = (10, 14), size = (42, 42), flags = BT_SCALE, png = 0),  # Flag.
+                    MultiContentEntryText(pos = (80, 0), size = (1140, 34), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 1),  # title
+                    MultiContentEntryText(pos = (80, 36), size = (500, 34), font = 1, color=0xa4c400,color_sel=0xffaf17, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 3),  # size
+                    MultiContentEntryText(pos = (920, 36), size = (300, 34), font = 1, color=0x7e93ae,color_sel=0x19f4eb, flags = RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text = 4),  # status
                                         ],
-                                    "fonts": [gFont("Regular",20), gFont("Regular",16)],
-                                    "itemHeight": 76
+                                    "fonts": [gFont("Regular",24), gFont("Regular",22)],
+                                    "itemHeight": 68
                                     }
                 </convert>
              </widget>
-         <widget name="titel" position="5,47" zPosition="1" size="900,23" font="Regular;20" transparent="1"  backgroundColor="#00000000"/>
+           <widget name="titel" position="800,30" size="450,40" foregroundColor="white"  backgroundColor="black" transparent="1" zPosition="1" font="Regular; 27" valign="center"/>
         </screen>""" % (_("%s download manager") % "E2iPlayer",
             GetIconDir('red.png'), GetIconDir('green.png'), GetIconDir('yellow.png'), GetIconDir('blue.png')
             )
@@ -523,8 +527,8 @@ class IPTVDMWidget(Screen):
 
 class IPTVDMNotificationWidget(Screen):
 
-    skin = """<screen name="IPTVDMNotificationWidget" position="center,center" zPosition="10" size="350,60" title="IPTVPlayer downloader" backgroundColor="#31000000" >
-            <widget name="message_label" font="Regular;24" position="0,0" zPosition="2" valign="center" halign="center" size="350,60" backgroundColor="#31000000" transparent="1" />
+    skin = """<screen name="IPTVDMNotificationWidget" position="800,20" zPosition="10" size="350,60" title="IPTVPlayer downloader" backgroundColor="#11000000" >
+            <widget name="message_label" font="Regular;24" position="0,0" zPosition="2" valign="center" halign="center" size="350,60" backgroundColor="#11000000" transparent="1" />
         </screen>"""
 
     def __init__(self, session):
