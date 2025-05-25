@@ -37,7 +37,7 @@ class HDFilme(CBaseHostClass):
             {'category': 'list_genres', 'title': 'Genres'},
             {'category': 'list_year', 'title': 'Jahr'},
             {'category': 'list_country', 'title': 'Land'},
-            {'category': 'search', 'title': _('Search'), 'search_item': True, },
+            {'category': 'search', 'title': _('Search'), 'search_item': True},
             {'category': 'search_history', 'title': _('Search history'), }]
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -59,20 +59,27 @@ class HDFilme(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        nextPage = re.compile('nav_ext">.*?next">.*?href="([^"]+)', re.DOTALL).findall(data)
-        data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="item relative', '</div>')
-        if not data2:
-            data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="pages">', '<svg')
+        nextPage = re.findall('nav_ext">.*?next">.*?href="([^"]+)', data, re.DOTALL)
+        items = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="item relative', 'class="absolute')
+        if not items:
+            items = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="pages">', '<svg')
 
-        for item in data2:
+        for item in items:
+            desc = ''
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'data-src="([^"]+)')[0])
+            duration = self.cm.ph.getSearchGroups(item, r'<span>(\d+ min)</span>')
+            year = self.cm.ph.getSearchGroups(item, r'<span>(\d{4})</span>')
+            if year:
+                desc += "Jahr: %s \n" % year[0]
+            if duration:
+                desc += "Dauer: %s" % duration[0]
             title = self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0]
             if not title:
                 title = self.cm.ph.getSearchGroups(item, '<strong>(.*?)</strong>')[0]
             title = title.split(" &#8211;")[0]
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category': 'list_seasons', 'title': self.cleanHtmlStr(title), 'url': url, 'icon': icon, 'desc': ''})
+            params.update({'good_for_fav': True, 'category': 'list_seasons', 'title': self.cleanHtmlStr(title), 'url': url, 'icon': icon, 'desc': desc})
             self.addDir(params)
         if nextPage:
             params = dict(cItem)
@@ -87,7 +94,7 @@ class HDFilme(CBaseHostClass):
         if not sts:
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
-        data = re.compile(r'#se-ac-(\d+)', re.DOTALL).findall(data)
+        data = re.findall(r'#se-ac-(\d+)', data, re.DOTALL)
         if not data:
             params = dict(cItem)
             params.update({'good_for_fav': True, 'category': 'video', 'title': cItem['title'], 'url': self.getFullUrl(url), 'icon': icon, 'desc': desc})
@@ -109,9 +116,9 @@ class HDFilme(CBaseHostClass):
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
         data = self.cm.ph.getAllItemsBeetwenMarkers(data.replace('\n', ''), '#se-ac-%s' % seasons, '</div></div>')[0]
-        data = re.compile(r'Episode\s(\d+)', re.DOTALL).findall(data)
+        data = re.findall(r'Episode\s(\d+)', data, re.DOTALL)
         for episode in data:
-            title = cItem['title'] + " - Folge " + episode
+            title = cItem['title'] + " - Episode " + episode
             params = dict(cItem)
             params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': desc, 'seasons': seasons, 'episode': episode})
             self.addVideo(params)
@@ -122,7 +129,7 @@ class HDFilme(CBaseHostClass):
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '>%s<' % v, '<div class')
-        data = re.compile('''href="([^"]+).*?>([^<]+)''', re.DOTALL).findall(data[0])
+        data = re.findall('href="([^"]+).*?>([^<]+)', data[0], re.DOTALL)
         for url, title in data:
             if 'ino' in title or 'erien' in title or 'chst' in title:
                 continue
@@ -134,7 +141,7 @@ class HDFilme(CBaseHostClass):
         printDBG("HDFilme.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem['url'] = self.getFullUrl('index.php?do=search&subaction=search&story=%s' % urllib_quote(searchPattern))
-        self.listItems(cItem, 'video')
+        self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):
         printDBG("HDFilme.getLinksForVideo [%s]" % cItem)
@@ -145,20 +152,18 @@ class HDFilme(CBaseHostClass):
         if cItem.get('seasons') and cItem.get('episode'):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data.replace('\n', ''), '#se-ac-%s' % cItem.get('seasons'), '</div></div>')[0]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'x%s Episode' % cItem.get('episode'), '<br')[0]
-            data = re.compile('href="([^"]+)', re.DOTALL).findall(data)
+            data = re.findall('href="([^"]+)', data, re.DOTALL)
         else:
-            data = re.compile(r'<iframe\sw.*?src="([^"]+)', re.DOTALL).findall(data)
+            data = re.findall(r'<iframe\sw.*?src="([^"]+)', data, re.DOTALL)
             sts, data = self.getPage(data[0], self.defaultParams)
             if not sts:
                 return []
-            data = re.compile('data-link="([^"]+)', re.DOTALL).findall(data)
+            data = re.findall('data-link="([^"]+)', data, re.DOTALL)
         for url in data:
             if "meinecloud" in url or "player.php" in url:
                 continue
             url = "https:" + url if url.startswith('//') else url
             linksTab.append({'name': self.up.getHostName(url).capitalize(), 'url': strwithmeta(url, {'Referer': self.MAIN_URL}), 'need_resolve': 1})
-        if linksTab:
-            cItem['url'] = linksTab
         return linksTab
 
     def getVideoLinks(self, videoUrl):
@@ -174,11 +179,10 @@ class HDFilme(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return []
-        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
-        desc = desc if desc else cItem.get('desc', '')
+        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0]) or cItem.get('desc', '')
         actors = self.cm.ph.getAllItemsBeetwenMarkers(data, 'Schauspieler:', '</li>')
         if actors:
-            names = re.compile('">([^<]+)', re.DOTALL).findall(actors[0])
+            names = re.findall('">([^<]+)', actors[0], re.DOTALL)
             if names:
                 otherInfo['actors'] = ", ".join(names)
         released = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'<span>(\d{4})</span>')[0])
