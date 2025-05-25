@@ -500,9 +500,9 @@ class YoutubeIE(object):
                 videoKey = 'video_id'
                 videoInfoparams = {}
 
-                http_params = {'header': {'User-Agent': 'com.google.android.youtube/19.29.37 (Linux; U; Android 11) gzip', 'Content-Type': 'application/json', 'Origin': 'https://www.youtube.com', 'X-YouTube-Client-Name': '3', 'X-YouTube-Client-Version': '19.29.37'}}
+                http_params = {'header': {'User-Agent': 'com.google.android.youtube/19.44.38 (Linux; U; Android 11) gzip', 'Content-Type': 'application/json', 'Origin': 'https://www.youtube.com', 'X-YouTube-Client-Name': '3', 'X-YouTube-Client-Version': '19.44.38'}}
                 http_params['raw_post_data'] = True
-                post_data = "{'videoId': '%s', 'params': 'Q0FFU0FnZ0M=', 'context': {'client': {'hl': '%s', 'clientVersion': '19.29.37', 'clientName': 'ANDROID', 'androidSdkVersion': 30, 'osName': 'Android', 'osVersion': '11',}}}" % (video_id, GetDefaultLang())
+                post_data = "{'videoId': '%s', 'params': '2AMB', 'context': {'client': {'hl': '%s', 'clientVersion': '19.44.38', 'clientName': 'ANDROID', 'androidSdkVersion': 30, 'osName': 'Android', 'osVersion': '11',}}}" % (video_id, GetDefaultLang())
                 sts, video_webpage = self.cm.getPage(url, http_params, post_data)
                 if sts:
                     if allowAgeGate and 'LOGIN_REQUIRED' in video_webpage:
