@@ -196,7 +196,7 @@ class YoutubeIE(object):
 	)
 	_LANG_URL = r'https://www.youtube.com/?hl=en&persist_hl=1&gl=US&persist_gl=1&opt_out_ackd=1'
 	_LOGIN_URL = 'https://accounts.google.com/ServiceLogin'
-	_AGE_URL = 'http://www.youtube.com/verify_age?next_url=/&gl=US&hl=en'
+	_AGE_URL = 'https://www.youtube.com/verify_age?next_url=/&gl=US&hl=en'
 	_NEXT_URL_RE = r'[\?&]next_url=([^&]+)'
 	_NETRC_MACHINE = 'youtube'
 	# Listed in order of quality
@@ -417,7 +417,7 @@ class YoutubeIE(object):
 	def _get_automatic_captions(self, video_id, webpage=None):
 		sub_tracks = []
 		if None is webpage:
-			url = 'http://www.youtube.com/watch?v=%s&hl=%s&has_verified=1' % (video_id, GetDefaultLang())
+			url = 'https://www.youtube.com/watch?v=%s&hl=%s&has_verified=1' % (video_id, GetDefaultLang())
 			sts, webpage = self.cm.getPage(url)
 			player_response = self._extract_yt_initial_variable(
 				webpage, self._YT_INITIAL_PLAYER_RESPONSE_RE,
@@ -483,7 +483,7 @@ class YoutubeIE(object):
 		mobj = re.search(self._NEXT_URL_RE, url)
 		if mobj:
 			# https
-			url = 'http://www.youtube.com/' + _unquote(mobj.group(1)).lstrip('/')
+			url = 'https://www.youtube.com/' + _unquote(mobj.group(1)).lstrip('/')
 		video_id = self._extract_id(url)
 
 		player_response = None
@@ -515,7 +515,7 @@ class YoutubeIE(object):
 						sts, video_webpage = self.cm.getPage(url, http_params, post_data)
 					player_response = json_loads(video_webpage)
 				else:
-					url = 'http://www.youtube.com/watch?v=%s&bpctr=9999999999&has_verified=1&' % video_id
+					url = 'https://www.youtube.com/watch?v=%s&bpctr=9999999999&has_verified=1&' % video_id
 					sts, video_webpage = self.cm.getPage(url)
 					if sts:
 						player_response = self._extract_yt_initial_variable(
