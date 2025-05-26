@@ -1024,7 +1024,7 @@ class common:
         start_time = time.time()
         sts, data = self.getPage(baseUrl, params, post_data)
 
-        if not sts and None != data:
+        if not sts and data is not None:
             from Plugins.Extensions.IPTVPlayer.libs.recaptcha_mye2i import UnCaptchaReCaptcha
             recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
             token = recaptcha.processCaptcha(start_time, baseUrl, captchaType='CF')
