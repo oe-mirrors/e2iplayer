@@ -70,14 +70,15 @@ class IPTVPlayerInfo(CBaseHostClass):
         ITEMS_PER_PAGE = 40
 
         page = cItem.get('page', 0)
-        url = self.getFullUrl('/%s/e2iplayer/-/commits/master?limit=%d&offset=%d' % (config.plugins.iptvplayer.gitlab_repo.value, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE))
+        url = f"https://api.github.com/repos/oe-mirrors/e2iplayer/commits?per_page={ITEMS_PER_PAGE}"
+        # url = self.getFullUrl('/%s/e2iplayer/-/commits/master?limit=%d&offset=%d' % (config.plugins.iptvplayer.gitlab_repo.value, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE))
 
-        if page > 1:
-            if '?' in url:
-                url += '&'
-            else:
-                url += '?'
-            url += 'page=%s' % page
+        #if page > 1:
+        #    if '?' in url:
+        #        url += '&'
+        #    else:
+        #        url += '?'
+        #    url += 'page=%s' % page
 
         sts, data = self.getPage(url)
         if not sts:
@@ -85,13 +86,20 @@ class IPTVPlayerInfo(CBaseHostClass):
 
         try:
             nextPage = False
-            currCommitStamp = GetIPTVPlayerComitStamp()
+            # currCommitStamp = GetIPTVPlayerComitStamp()
 
-            printDBG(">>>> currCommitStamp[%s]" % currCommitStamp)
+            # printDBG(">>>> currCommitStamp[%s]" % currCommitStamp)
 
-            data = byteify(json.loads(data))
-            if data['count'] >= ITEMS_PER_PAGE:
-                nextPage = True
+            data = json.loads(data)
+            #if data['count'] >= ITEMS_PER_PAGE:
+            #    nextPage = True
+            for item in data:
+                url = item.get('html_url', '')
+                title = item.get('commit', {}).get('message', '')
+                desc = item.get('commit', {}).get('author', {}).get('name', '')
+                params = {'title': title, 'url': url, 'desc': desc, 'icon': ""}
+                self.addArticle(params)
+            return
 
             splitReObj = re.compile('''<span[^>]+?class=['"]commit-row-message[^>]+?>''')
 
@@ -113,8 +121,8 @@ class IPTVPlayerInfo(CBaseHostClass):
                     desc = self.cleanHtmlStr(it[1])
 
                     params = {'title': title, 'url': url, 'desc': desc, 'icon': icon}
-                    if currCommitStamp != '' and currCommitStamp == stamp:
-                        params['text_color'] = config.plugins.iptvplayer.iptvplayerinfo_currversion_color.value
+                    # if currCommitStamp != '' and currCommitStamp == stamp:
+                    #     params['text_color'] = config.plugins.iptvplayer.iptvplayerinfo_currversion_color.value
                     self.addArticle(params)
         except Exception:
             printExc()
