@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify, GetIPTVSleep
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsHttpsCertValidationEnabled, byteify, GetDefaultLang, rm, UsePyCurl, GetJSScriptFile
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsExecutable, iptv_system, IsHttpsCertValidationEnabled, byteify, GetDefaultLang, rm, UsePyCurl, GetJSScriptFile
 from Plugins.Extensions.IPTVPlayer.components.asynccall import IsMainThread, IsThreadTerminated, SetThreadKillable
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute_ext
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -868,6 +868,20 @@ class common:
             out_data = strwithmeta(out_data, metadata)
 
         return sts, out_data
+
+    def convertWebp(self, file_path, png=False):
+        printDBG("PCommon.convertWebp %s" % file_path)
+
+        output_path = file_path.replace('.webp', '.jpg')
+        png_path = file_path.replace('.webp', '.png')
+        if IsExecutable('ffmpeg'):
+            if png:
+                command = "ffmpeg -i %s %s && test -e %s && rm %s && mv %s %s" % (file_path, png_path, png_path, file_path, png_path, output_path)
+            else:
+                command = "ffmpeg -i %s %s && test -e %s && rm %s " % (file_path, output_path, output_path, file_path)
+
+            printDBG("Send command %s" % command)
+            self.cmd = iptv_system(command)
 
     def getPageWithPyCurl(self, url, params={}, post_data=None):
         # some error can be caused because of session reuse
