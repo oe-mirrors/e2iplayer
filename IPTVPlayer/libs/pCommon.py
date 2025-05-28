@@ -1152,6 +1152,14 @@ class common:
                         bRet = True
                 elif downDataSize > 0:
                     bRet = True
+
+                # decode webp to jpeg
+                if file_path.endswith(".webp"):
+                    if addParams.get('webp_convert_to_png', False):
+                        self.convertWebp(file_path, png=True)
+                    else:
+                        self.convertWebp(file_path)
+
         except Exception:
             printExc("common.getFile download file exception")
         dictRet.update({'sts': bRet, 'fsize': downDataSize})
