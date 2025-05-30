@@ -101,6 +101,7 @@
 'hostmediayou': 'https://mediayou.net/',
 'hostmegakino': 'https://megakino.world',
 'hostmooviecc': 'https://moovie.cc/',
+'hostmovie2k': 'https://movie2k.ch/',
 'hostmovie4k': 'https://movie4k.food',
 'hostmoflixstream': 'https://moflix-stream.xyz',
 'hostmooviecc': 'https://moovie.cc/',
