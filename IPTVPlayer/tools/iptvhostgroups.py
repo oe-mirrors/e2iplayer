@@ -97,7 +97,7 @@ class IPTVHostsGroups:
         self.PREDEFINED_HOSTS['arabic'] = ['youtube', 'webstream', 'akoam', 'egybest', 'movizlandcom', 'shahiidanimenet', 'dailymotion', 'vimeo', 'twitchtv', 'forjatn', 'faselhdcom', '3sktv', 'cimaclubcom', 'hdsto']
         self.PREDEFINED_HOSTS['greek'] = ['youtube', 'xrysoise', 'tainieskaiseirestv', 'gamatocom', 'greekdocumentaries3', 'dailymotion', 'vimeo', 'twitchtv']
         self.PREDEFINED_HOSTS['latino'] = ['youtube', 'mrpiracy', 'solarmovie', 'artetv', 'dailymotion', 'vimeo', 'twitchtv', 'plusdede', 'hdfull', 'dixmax']
-        self.PREDEFINED_HOSTS['italian'] = ['youtube', 'mediasetplay', 'altadefinizione01', 'tantifilmorg', 'dailymotion', 'vimeo', 'twitchtv', 'playrtsiw', 'raiplay']
+        self.PREDEFINED_HOSTS['italian'] = ['youtube', 'mediasetplay', 'altadefinizione01', 'tantifilmorg', 'dailymotion', 'vimeo', 'twitchtv', 'playrtsiw', 'altadefinizione', 'raiplay']
         self.PREDEFINED_HOSTS['swedish'] = ['youtube', 'dailymotion', 'vimeo', 'svtplayse', 'twitchtv']
         self.PREDEFINED_HOSTS['balkans'] = ['youtube', 'filmehdnet', 'gledalica', 'filmativa', 'filmovizijastudio', 'filma24hdcom', 'filma24io', 'filmaoncom', 'serijeonline', 'filmeonlineto', 'fenixsite',
                                                      'dailymotion', 'vimeo', 'twitchtv']
