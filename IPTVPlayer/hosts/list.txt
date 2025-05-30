@@ -103,6 +103,7 @@ hostmindigo
 hostmindigtv
 hostmoflixstream
 hostmooviecc
+hostmovie2k
 hostmovie4k
 hostmovienightws
 hostmovizlandcom
