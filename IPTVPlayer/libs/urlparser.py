@@ -13534,8 +13534,8 @@ class pageParser(CaptchaHelper):
         printDBG("parserMIXDROP baseUrl[%s]" % baseUrl)
         # example :https://mixdrop.co/f/1f13jq
         # https://mixdrop.co/e/1f13jq
-        if '.co' in baseUrl:
-            baseUrl = baseUrl.replace('.co', '.my')
+        if '.co/' in baseUrl:
+            baseUrl = baseUrl.replace('.co/', '.my/')
         baseUrl = strwithmeta(baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader(browser='firefox')
         referer = baseUrl.meta.get('Referer')
