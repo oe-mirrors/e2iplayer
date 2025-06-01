@@ -404,12 +404,12 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
         self.list.append(self.__getStepDesc(title=_("Obtaining server list."), execFunction=self.stepGetServerLists))
         self.list.append(self.__getStepDesc(title=_("Downloading an update packet."), execFunction=self.stepGetArchive))
         self.list.append(self.__getStepDesc(title=_("Extracting an update packet."), execFunction=self.stepUnpackArchive))
-        #self.list.append(self.__getStepDesc(title=_("Copy post installed binaries."), execFunction=self.stepCopyPostInatalledBinaries, breakable=True, ignoreError=True))
+        # self.list.append(self.__getStepDesc(title=_("Copy post installed binaries."), execFunction=self.stepCopyPostInatalledBinaries, breakable=True, ignoreError=True))
         self.list.append(self.__getStepDesc(title=_("Executing user scripts."), execFunction=self.stepExecuteUserScripts))
         self.list.append(self.__getStepDesc(title=_("Checking version."), execFunction=self.stepCheckFiles))
         self.list.append(self.__getStepDesc(title=_("Removing unnecessary files."), execFunction=self.stepRemoveUnnecessaryFiles, breakable=True, ignoreError=True))
         self.list.append(self.__getStepDesc(title=_("Confirmation of installation."), execFunction=self.stepConfirmInstalation))
-        #self.list.append( self.__getStepDesc(title = _("Removing the old version."),       execFunction = self.stepRemoveOldVersion, breakable=False, ignoreError=True, repeatCount=2) )
+        # self.list.append( self.__getStepDesc(title = _("Removing the old version."),       execFunction = self.stepRemoveOldVersion, breakable=False, ignoreError=True, repeatCount=2) )
         self.list.append(self.__getStepDesc(title=_("Installing new version."), execFunction=self.stepInstallNewVersion, breakable=False, ignoreError=False, repeatCount=3))
         return self.list
 
@@ -578,7 +578,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             text = '\n'.join(cmds)
             WriteTextFile(cmdFilePath, text, 'ascii')
             cmd = '/bin/sh "{0}" '.format(cmdFilePath)
-            #cmd = '/bin/sh "{0}" && rm -rf "{1}" '.format(cmdFilePath, cmdFilePath)
+            # cmd = '/bin/sh "{0}" && rm -rf "{1}" '.format(cmdFilePath, cmdFilePath)
         else:
             cmd = ' && '.join(cmds)
         printDBG("stepRemoveUnnecessaryFiles cmdp[%s]" % cmd)
@@ -733,7 +733,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                 val2 = int(y['version'].replace('.', ''))
             except Exception:
                 val2 = 0
-            #printDBG("ServerComparator val1[%d], val2[%d]" % (val1, val2))
+            # printDBG("ServerComparator val1[%d], val2[%d]" % (val1, val2))
             return cmp(val1, val2)
         try:
             currVerNum = int(GetIPTVPlayerVersion().replace('.', ''))
@@ -764,7 +764,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
             try:
                 with open(filePath) as fileHandle:
                     jsonData = json.load(fileHandle, 'utf-8')
-                #printDBG("__serversListDownloadFinished jsonData [%r]" % jsonData)
+                # printDBG("__serversListDownloadFinished jsonData [%r]" % jsonData)
                 for server in jsonData['servers']:
                     serverOK = True
                     extServer = {}
@@ -775,7 +775,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                         else:
                             extServer[key] = server[key].encode('utf8')
 
-                    #printDBG("")
+                    # printDBG("")
                     if not serverOK:
                         continue
                     enc = server.get('enc')
@@ -818,7 +818,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                             newVerNum = int(server['version'].replace('.', ''))
                         except Exception:
                             continue
-                        #printDBG("newVerNum[%s], currVerNum[%s]" % (newVerNum, currVerNum))
+                        # printDBG("newVerNum[%s], currVerNum[%s]" % (newVerNum, currVerNum))
                         if newVerNum < currVerNum and not config.plugins.iptvplayer.downgradePossible.value:
                             continue
                         if newVerNum == currVerNum and not self.allowTheSameVersion:
@@ -829,7 +829,7 @@ class UpdateMainAppImpl(IUpdateObjectInterface):
                             continue
 
                     name = "| %s | python %s | %s | %s |" % (server['version'], server['pyver'], server['packagetype'], server['name'])
-                    #printDBG("server list: " + name)
+                    # printDBG("server list: " + name)
                     options.append((name, idx))
                 if 1 == len(options) and not config.plugins.iptvplayer.downgradePossible.value:
                     self.__selServerCallBack(options[0])
