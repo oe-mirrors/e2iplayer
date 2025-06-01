@@ -2851,7 +2851,6 @@ class pageParser(CaptchaHelper):
         else:
             return self.parserPLAYEDTO(url)
 
-
     def parserFREEDISC(self, baseUrl):
         linksTab = []
         COOKIE_FILE = GetCookieDir('FreeDiscPL.cookie')
