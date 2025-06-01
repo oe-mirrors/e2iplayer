@@ -215,7 +215,7 @@ class IPTVStandardMoviePlayer(standardMoviePlayer):
     def __init__(self, session, uri, title):
         self.session = session
         self.WithoutStopClose = True
-        #if '://' not in uri: uri = 'file://' + uri
+        # if '://' not in uri: uri = 'file://' + uri
         fileRef = eServiceReference(4097, 0, uri)
         fileRef.setName(title)
 
@@ -240,7 +240,7 @@ class IPTVMiniMoviePlayer(customMoviePlayer):
     def __init__(self, session, uri, title, lastPosition=None, bugEOFworkaround=0):
         self.session = session
         self.WithoutStopClose = True
-        #if '://' not in uri: uri = 'file://' + uri
+        # if '://' not in uri: uri = 'file://' + uri
         fileRef = eServiceReference(4097, 0, uri)
         fileRef.setName(title)
         customMoviePlayer.__init__(self, self.session, fileRef, lastPosition, bugEOFworkaround)

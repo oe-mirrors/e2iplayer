@@ -27,12 +27,12 @@ from Components.config import config
 ###################################################
 
 
-#config.plugins.iptvplayer.showcover (true|false)
-#config.plugins.iptvplayer.SciezkaCache = ConfigText(default = "/hdd/IPTVCache")
+# config.plugins.iptvplayer.showcover (true|false)
+# config.plugins.iptvplayer.SciezkaCache = ConfigText(default = "/hdd/IPTVCache")
 
 class IconMenager:
     HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
-    #HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'}
+    # HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'}
 
     def __init__(self, updateFun=None, downloadNew=True):
         printDBG("IconMenager.__init__")
@@ -48,16 +48,16 @@ class IconMenager:
         self.queueAA = {}
         self.lockAA = threading.Lock()
 
-        #this function will be called after a new icon will be available
+        # this function will be called after a new icon will be available
         self.updateFun = None
 
-        #new icons dir for each run
+        # new icons dir for each run
         self.currDownloadDir = self.DOWNLOADED_IMAGE_PATH_BASE + '/' + GetNewIconsDirName()
         if not os_path.exists(self.currDownloadDir):
             mkdirs(self.currDownloadDir)
 
-        #load available icon from disk
-        #will be runned in separeted thread to speed UP start plugin
+        # load available icon from disk
+        # will be runned in separeted thread to speed UP start plugin
         AsyncMethod(self.loadHistoryFromDisk)(self.currDownloadDir)
 
         # this is called to remove icons which are stored in old version
@@ -103,7 +103,7 @@ class IconMenager:
     def addToDQueue(self, addQueue=[]):
         self.lockDQ.acquire()
         self.queueDQ.extend(addQueue)
-        #self.queueDQ.append(addQueue)
+        # self.queueDQ.append(addQueue)
         self.runWorkThread()
         self.lockDQ.release()
 
@@ -125,7 +125,7 @@ class IconMenager:
             RemoveIconsDirByPath(path)
         for item in iconsFiles:
             self.addItemToAAueue(path, item)
-            #printDBG('IconMenager.loadIconsFromPath path[%s], name[%s] loaded' % (path, item))
+            # printDBG('IconMenager.loadIconsFromPath path[%s], name[%s] loaded' % (path, item))
 
     def addItemToAAueue(self, path, name):
         self.lockAA.acquire()
@@ -145,7 +145,7 @@ class IconMenager:
         else:
             file = item
         ret = False
-        #without locking. Is it safety?
+        # without locking. Is it safety?
         self.lockAA.acquire()
         if None is not self.queueAA.get(file, None):
             ret = True
@@ -187,7 +187,7 @@ class IconMenager:
             die = 0
             url = ''
 
-            #getFirstFromDQueue
+            # getFirstFromDQueue
             self.lockDQ.acquire()
 
             if False is self.stopThread:
@@ -212,7 +212,7 @@ class IconMenager:
                 name = hashAlg(url)
                 file = hexlify(name).decode("utf-8", "strict") + '.jpg'
 
-                #check if this image is not already available in cache AA list
+                # check if this image is not already available in cache AA list
                 if self.isItemInAAueue(file, 1):
                     continue
 
@@ -254,7 +254,7 @@ class IconMenager:
 
         if config.plugins.iptvplayer.allowedcoverformats.value != 'all':
             subtypes = config.plugins.iptvplayer.allowedcoverformats.value.split(',')
-            #params['subtypes'] = subtypes
+            # params['subtypes'] = subtypes
             params['check_first_bytes'] = []
             if 'jpeg' in subtypes:
                 params['check_first_bytes'].extend([b'\xFF\xD8', b'\xFF\xD9'])

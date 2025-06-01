@@ -115,12 +115,12 @@ class VevoIE(InfoExtractor):
         formats = []
         # Already sorted from worst to best quality
         for attr in renditions:
-            #format_note = '%(videoCodec)s@%(videoBitrate)4sk, %(audioCodec)s@%(audioBitrate)3sk' % attr
+            # format_note = '%(videoCodec)s@%(videoBitrate)4sk, %(audioCodec)s@%(audioBitrate)3sk' % attr
             formats.append({
                 'url': self.xmlGetArg(attr, 'url'),
                 'format_id': self.xmlGetArg(attr, 'name'),
                 'bitrate': (_int(self.xmlGetArg(attr, 'videoBitrate')) + _int(self.xmlGetArg(attr, 'audioBitrate'))) * 1000,
-                #'format_note': format_note,
+                # 'format_note': format_note,
                 'height': _int(self.xmlGetArg(attr, 'frameheight')),
                 'width': _int(self.xmlGetArg(attr, 'frameWidth')),
             })
@@ -277,7 +277,7 @@ class VevoIE(InfoExtractor):
                 self._initialize_api(video_id)
             except Exception:
                 ytid = response.get('errorInfo', {}).get('ytid')
-                #if ytid:
+                # if ytid:
                 #    self.report_warning(
                 #        'Video is geoblocked, trying with the YouTube video %s' % ytid)
                 #    return self.url_result(ytid, 'Youtube', ytid)

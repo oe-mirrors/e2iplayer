@@ -46,7 +46,7 @@ class IPTVInputBoxWidget(InputBox):
         self.icon = icon
         self["cover"] = Cover2()
         self.onShown.append(self.setIcon)
-    #end def __init__(self, session):
+    # end def __init__(self, session):
 
     def setIcon(self):
         if 0 < len(self.icon.get('icon_path', '')):
@@ -54,4 +54,4 @@ class IPTVInputBoxWidget(InputBox):
                 self["cover"].updateIcon(self.icon['icon_path'])
             except Exception:
                 printExc()
-#class IPTVInputBoxWidget
+# class IPTVInputBoxWidget

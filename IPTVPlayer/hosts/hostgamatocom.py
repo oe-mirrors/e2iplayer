@@ -273,7 +273,7 @@ class GamatoMovies(CBaseHostClass):
             name = self.cleanHtmlStr(item)
             url = self.cm.ph.getSearchGroups(item, '''playVideo[^'^"]+?['"](http[^'^"]+?)['"]''')[0].strip()
             urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
-        #try:
+        # try:
         #    data = '[' + self.cm.ph.getDataBeetwenMarkers(data, '"link":[', ']', False)[1] + ']'
         #    printDBG(data)
         #    data = byteify(json.loads(data))
@@ -282,7 +282,7 @@ class GamatoMovies(CBaseHostClass):
         #        if not self.cm.isValidUrl(url): continue
         #        name = '{0} {1} - {2}'.format(self.getStr(item, 'created_at'), self.getStr(item, 'quality').lower(), self.getStr(item, 'label').lower())
         #        urlTab.append({'name':name, 'url':url, 'need_resolve':1})
-        #except Exception:
+        # except Exception:
         #    printExc()
         #    return []
 
@@ -364,7 +364,7 @@ class GamatoMovies(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category in ['movies', 'series']:
@@ -381,12 +381,12 @@ class GamatoMovies(CBaseHostClass):
             self.listSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

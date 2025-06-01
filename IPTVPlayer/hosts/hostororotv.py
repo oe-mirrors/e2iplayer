@@ -101,16 +101,16 @@ class OroroTV(CBaseHostClass):
         if not sts:
             return
 
-        #desc = []
-        #tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'show-desc'), ('</section', '>'))[1]
-        #tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
-        #for t in tmpTab:
+        # desc = []
+        # tmp = self.cm.ph.getDataBeetwenNodes(data, ('<section', '>', 'show-desc'), ('</section', '>'))[1]
+        # tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
+        # for t in tmpTab:
         #    t = self.cleanHtmlStr(t)
         #    if t == '': continue
         #    desc.append(t)
-        #desc  = '|'.join( desc )
-        #if desc != '': desc + '[/br]'
-        #desc += self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(tmp, ('<p', '>', 'show-desc-text'), ('</p', '>'))[1] )
+        # desc  = '|'.join( desc )
+        # if desc != '': desc + '[/br]'
+        # desc += self.cleanHtmlStr( self.cm.ph.getDataBeetwenNodes(tmp, ('<p', '>', 'show-desc-text'), ('</p', '>'))[1] )
 
         sp = re.compile(r'''<div[^>]+?js\-watched\-mark[^>]+?>''')
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'show-content'), ('<div', '>', 'site-footer'))[1]
@@ -224,19 +224,19 @@ class OroroTV(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_channels':
             self.listChannels(self.currItem, 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -176,7 +176,7 @@ def setNewHostListShown(status):
 def isThreadRunning(name):
 	status = False
 	for i in threading.enumerate():
-		#print 'isThreadRunning>running threads:' , i.name
+		# print 'isThreadRunning>running threads:' , i.name
 		if name == i.name:
 			status = True
 	return status
@@ -186,7 +186,7 @@ def isThreadRunning(name):
 def stopRunningThread(name):
 	settings.StopThreads = True
 	for myThread in threading.enumerate():
-		#print 'isThreadRunning>running threads:' , i.name
+		# print 'isThreadRunning>running threads:' , i.name
 		if name == myThread.name:
 			if (myThread.is_alive()):
 				myThread.terminate()

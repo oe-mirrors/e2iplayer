@@ -340,7 +340,7 @@ class ogladajto(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None and category == '':
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
@@ -359,12 +359,12 @@ class ogladajto(CBaseHostClass):
         elif category == 'list_episodes':
             self.listSeriesEpisodes(self.currItem)
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

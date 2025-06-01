@@ -148,7 +148,7 @@ class HasBahCa(CBaseHostClass):
         self.currList = []
         self.currItem = {}
 
-        #Login data
+        # Login data
         self.sort = config.plugins.iptvplayer.SortowanieWebstream.value
         self.sessionEx = MainSessionWrapper()
 
@@ -894,7 +894,7 @@ class HasBahCa(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s]" % (name))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsMainMenu(self.MAIN_GROUPED_TAB)
         elif name == "HasBahCa":

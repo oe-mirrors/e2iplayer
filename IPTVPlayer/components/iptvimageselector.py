@@ -151,7 +151,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
 
         self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
-        #self.skinName = "IPTVMultipleImageSelectorWidget"
+        # self.skinName = "IPTVMultipleImageSelectorWidget"
 
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)

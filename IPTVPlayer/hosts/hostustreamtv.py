@@ -67,7 +67,7 @@ class UstreamTV(CBaseHostClass):
             self.cacheFilters[filterName] = []
             for item in filterData:
                 self.cacheFilters[filterName].append({'title': self.cleanHtmlStr(item[1]), 'value': item[0]})
-        #printDBG("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK [%s]" % )
+        # printDBG("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK [%s]" % )
 
     def listFilters(self, cItem, filterName, category):
         self.cacheFilters = {}
@@ -124,7 +124,7 @@ class UstreamTV(CBaseHostClass):
             return
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="submenu-column half-width-links">', '<form', False)[1]
         data = re.compile('<a href="[^"]*?/explore/([^"]+?)"[^>]*?>([^<]+?)<').findall(data)
-        #data = re.compile('<a[^>]*?/([^/]+?)\.json[^>]*?>([^<]+?)<').findall(data)
+        # data = re.compile('<a[^>]*?/([^/]+?)\.json[^>]*?>([^<]+?)<').findall(data)
         for item in data:
             if item[0] == 'all':
                 continue
@@ -200,7 +200,7 @@ class UstreamTV(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
@@ -212,15 +212,15 @@ class UstreamTV(CBaseHostClass):
             self.listFilters(self.currItem, 'type', 'filter_location')
         elif category == 'filter_location':
             self.listFilters(self.currItem, 'location', 'items')
-    #ITEMS
+    # ITEMS
         elif category == 'items':
             self.listRegular(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

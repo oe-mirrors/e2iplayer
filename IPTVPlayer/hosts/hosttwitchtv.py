@@ -159,8 +159,8 @@ class Twitch(CBaseHostClass):
             dirChannels.append(params)
 
         TAB = [{'category': 'dir_games', 'title': _('Games')},
-               #{'category':'dir_communities',   'title': _('Communities') },
-               #{'category':'dir_communities',   'title': _('Creative') },
+               # {'category':'dir_communities',   'title': _('Communities') },
+               # {'category':'dir_communities',   'title': _('Creative') },
                {'category': 'sub_items', 'title': _('Channels'), 'sub_items': dirChannels},
         ]
         self.listsTab(TAB, cItem)
@@ -195,7 +195,7 @@ class Twitch(CBaseHostClass):
         lang = '"%s"' % cItem['lang'].upper() if 'lang' in cItem else ''
         cursor = ',"cursor":"%s"' % cItem['cursor'] if 'cursor' in cItem else ''
         type = cItem.get('platform_type', 'all')
-        #post_data = '[{"operationName":"BrowsePage_Popular","variables":{"limit":30,"platformType":"%s","tags":[%s],"isTagsExperiment":false%s},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"4a3254b9537ad005b6fbc6e7a811a4045312d4a4b5c0541bea86df60383972fd"}}}]' % (type, lang, cursor)
+        # post_data = '[{"operationName":"BrowsePage_Popular","variables":{"limit":30,"platformType":"%s","tags":[%s],"isTagsExperiment":false%s},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"4a3254b9537ad005b6fbc6e7a811a4045312d4a4b5c0541bea86df60383972fd"}}}]' % (type, lang, cursor)
         post_data = '[{"operationName":"BrowsePage_Popular","variables":{"limit":30,"platformType":"%s","options":{"tags":[%s]},"sortTypeIsRecency":false%s},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"b32fa28ffd43e370b42de7d9e6e3b8a7ca310035fdbb83932150443d6b693e4d"}}}]' % (type, lang, cursor)
         url = self.getFullUrl('/gql', self.API2_URL)
         sts, data = self.getPage(url, MergeDicts(self.defaultParams, {'raw_post_data': True}), post_data)
@@ -583,7 +583,7 @@ class Twitch(CBaseHostClass):
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
 
@@ -638,12 +638,12 @@ class Twitch(CBaseHostClass):
         elif category == 'v5_streams':
             self.listV5Streams(self.currItem)
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

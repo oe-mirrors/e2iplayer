@@ -143,7 +143,7 @@ class ShoutcastCom(CBaseHostClass):
                     type = 'MP3'
                 desc.append(_('Type: %s') % type)
                 desc = ' | '.join(desc)
-                #desc += '[/br] ' + self.cleanHtmlStr(item['CurrentTrack'])
+                # desc += '[/br] ' + self.cleanHtmlStr(item['CurrentTrack'])
 
                 params = {'good_for_fav': True, 'station_id': stationId, 'title': title, 'url': self.getFullUrl('?station_id=' + stationId), 'desc': desc}
                 self.addAudio(params)
@@ -186,7 +186,7 @@ class ShoutcastCom(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'genres':
@@ -197,12 +197,12 @@ class ShoutcastCom(CBaseHostClass):
             self.listSort(self.currItem, 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

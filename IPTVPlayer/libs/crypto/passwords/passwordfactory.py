@@ -13,7 +13,7 @@
 from random import Random
 from sha import sha    # the SHA1 algorithm for cryptographic hashing
 from math import log, ceil
-#from binascii_plus import b2a_p
+# from binascii_plus import b2a_p
 
 
 class PasswordFactory:
@@ -85,7 +85,7 @@ class PasswordFactoryReadable_01(PasswordFactory):
 
     def getPassword(self, pwSeed):
         """ Create a new password. Also used to recover passwords by using same pwSeed """
-        #self.rand.seed( 'getPassword'+self.__factorySeed+pwSeed )   # reset prf sequence
+        # self.rand.seed( 'getPassword'+self.__factorySeed+pwSeed )   # reset prf sequence
         self.passwordSize = self.rand.randrange(self.minSize, self.maxSize + 1)
         password = ''
         for i in range(self.passwordSize):

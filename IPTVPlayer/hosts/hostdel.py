@@ -205,7 +205,7 @@ class Del(CBaseHostClass):
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
 

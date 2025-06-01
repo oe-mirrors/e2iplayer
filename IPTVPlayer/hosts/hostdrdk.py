@@ -41,11 +41,11 @@ class DRDK(CBaseHostClass):
 
     MAIN_CAT_TAB = [{'category': 'dr_live_channels', 'channel_type': 'video', 'title': _('TV channels'), 'url': MAIN_URL + 'mu-online/api/1.0/channel/all-active-dr-tv-channels', 'icon': ''},
                     {'category': 'dr_live_channels', 'channel_type': 'audio', 'title': _('Radio stations'), 'url': MAIN_URL + 'mu-online/api/1.0/channel/all-active-dr-radio-channels', 'icon': ''},
-                    #{'category':'latest_series',      'title': _('Latest series'), 'url':MAIN_URL, 'icon':''},
-                    #{'category':'genres_movies',      'title': _('Movies'), 'url':MAIN_URL+'filmy', 'icon':''},
-                    #{'category':'genres_series',      'title': _('Series'), 'url':MAIN_URL+'seriale', 'icon':''},
-                    #{'category':'search',             'title': _('Search'), 'search_item':True},
-                    #{'category':'search_history',     'title': _('Search history')}
+                    # {'category':'latest_series',      'title': _('Latest series'), 'url':MAIN_URL, 'icon':''},
+                    # {'category':'genres_movies',      'title': _('Movies'), 'url':MAIN_URL+'filmy', 'icon':''},
+                    # {'category':'genres_series',      'title': _('Series'), 'url':MAIN_URL+'seriale', 'icon':''},
+                    # {'category':'search',             'title': _('Search'), 'search_item':True},
+                    # {'category':'search_history',     'title': _('Search history')}
                     ]
 
     def __init__(self):
@@ -86,7 +86,7 @@ class DRDK(CBaseHostClass):
             else:
                 video = False
             data = byteify(json.loads(data))
-            #if video: data.sort(key=lambda item: item["WebChannel"])
+            # if video: data.sort(key=lambda item: item["WebChannel"])
             for item in data:
                 if item.get("WebChannel", False):
                     continue
@@ -162,18 +162,18 @@ class DRDK(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-    #MOVIES
+    # MOVIES
         elif category == 'dr_live_channels':
             self.listLiveChannels(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
@@ -216,8 +216,8 @@ class IPTVHost(CHostBase):
     def converItem(self, cItem):
         hostList = []
         searchTypesOptions = []  # ustawione alfabetycznie
-        #searchTypesOptions.append((_("Movies"), "movies"))
-        #searchTypesOptions.append((_("Series"), "series"))
+        # searchTypesOptions.append((_("Movies"), "movies"))
+        # searchTypesOptions.append((_("Series"), "series"))
 
         hostLinks = []
         type = CDisplayListItem.TYPE_UNKNOWN

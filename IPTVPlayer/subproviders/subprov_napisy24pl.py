@@ -160,7 +160,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                     params.update({'sub_item_type': 'series', 'category': nextCategoryMovie, 'title': title, 'url': self.getFullUrl(url), 'imdbid': imdbid, 'desc': self.cleanHtmlStr(desc)})
                     self.addDir(params)
 
-        #subtitles items
+        # subtitles items
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="tbl" data-napis-id', '<div class="footertext">')
         for item in data:
             imdbid = self.cm.ph.getSearchGroups(item, 'data-imdb="(tt[0-9]+?)"')[0]
@@ -401,7 +401,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
         printDBG("handleService: name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.initSubProvider(self.currItem)
             self.getMoviesList({'name': 'category', 'category': 'get_movies_list'}, 'get_seasons')

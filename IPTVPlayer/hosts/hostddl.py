@@ -380,7 +380,7 @@ class DDLMe(CBaseHostClass):
             return
         cUrl = self.getFullUrl(self.cm.meta['url'])
 
-        #printDBG(data)
+        # printDBG(data)
 
         desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'detailDesc'), ('</p', '>'), False)[1])
 
@@ -422,14 +422,14 @@ class DDLMe(CBaseHostClass):
                                 parts = 0
                                 sNum = int(dat['info']['staffel'])
                                 eNum = int(dat['info']['nr'])
-                                #eId =  int(dat['info']['sid'])
-                                #urlKey = '%s_%s_%s' % (str(sNum).zfill(4), str(eNum).zfill(4), str(pNum).zfill(4))
+                                # eId =  int(dat['info']['sid'])
+                                # urlKey = '%s_%s_%s' % (str(sNum).zfill(4), str(eNum).zfill(4), str(pNum).zfill(4))
                                 title = '%s: %sx%s %s' % (cItem['title'], str(sNum).zfill(2), str(eNum).zfill(2), self.cleanHtmlStr(dat['info']['name']))
                             else:
                                 parts = int(dat['1'])
                                 sNum = 0
                                 eNum = 0
-                                #urlKey = str(pNum).zfill(4)
+                                # urlKey = str(pNum).zfill(4)
                                 title = cItem['title']
 
                             urlKey = '%s_%s_%s' % (str(sNum).zfill(4), str(eNum).zfill(4), str(pNum).zfill(4))
@@ -622,7 +622,7 @@ class DDLMe(CBaseHostClass):
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
 
@@ -657,12 +657,12 @@ class DDLMe(CBaseHostClass):
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

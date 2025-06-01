@@ -169,9 +169,9 @@ class KissAnimeTo(CBaseHostClass):
                         addParams2['header'] = dict(addParams2['header'])
                         addParams2['header']['Referer'] = prevMeta['url']
                         sts2, data2 = self.cm.getPageCFProtection(action, addParams, post_data2)
-                        #printDBG("++++++++++++++++++++++++++++++++++")
-                        #printDBG(data2)
-                        #printDBG("++++++++++++++++++++++++++++++++++")
+                        # printDBG("++++++++++++++++++++++++++++++++++")
+                        # printDBG(data2)
+                        # printDBG("++++++++++++++++++++++++++++++++++")
                         if sts2:
                             if 'areyouhuman' in self.cm.meta['url'].lower():
                                 printDBG(">>> TRY AGAIN")
@@ -185,9 +185,9 @@ class KissAnimeTo(CBaseHostClass):
         if len(errorMessages):
             GetIPTVNotify().push('\n'.join(errorMessages), 'error', 10)
 
-        #printDBG("++++++++++++++++++++++++++++++++++")
-        #printDBG(data)
-        #printDBG("++++++++++++++++++++++++++++++++++")
+        # printDBG("++++++++++++++++++++++++++++++++++")
+        # printDBG(data)
+        # printDBG("++++++++++++++++++++++++++++++++++")
 
         for item in images:
             rm(item['path'])
@@ -229,8 +229,8 @@ class KissAnimeTo(CBaseHostClass):
     def listHome(self, cItem, category):
         printDBG("listHome.listHome [%s]" % cItem)
 
-        #http://kissanime.to/Home/GetNextUpdatedCartoon
-        #POSTDATA {id:50, page:10}
+        # http://kissanime.to/Home/GetNextUpdatedCartoon
+        # POSTDATA {id:50, page:10}
 
         self.cacheHome = {}
         self.sortTab = []
@@ -426,7 +426,7 @@ class KissAnimeTo(CBaseHostClass):
 
         if 'kissanime' not in videoUrl:
             return self.up.getVideoLinkExt(videoUrl)
-        #if '&s=' in videoUrl:
+        # if '&s=' in videoUrl:
 
         def _decUrl(data, password):
             printDBG('PASSWORD 2: ' + sha256(password).hexdigest())
@@ -531,7 +531,7 @@ class KissAnimeTo(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'home':
@@ -555,12 +555,12 @@ class KissAnimeTo(CBaseHostClass):
             self.listItems(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -193,7 +193,7 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
             with open(scriptUrl, 'r') as f:
                 keyUrl = f.read().strip()
         else:
-            #keyUrl = urlPath + base64.b64encode('l=' + 'nhl' + '&g=' + 'OTT-COL-20171110' + '&f=' + 'home' + '&u=' + base64.b64encode(keyUrl))
+            # keyUrl = urlPath + base64.b64encode('l=' + 'nhl' + '&g=' + 'OTT-COL-20171110' + '&f=' + 'home' + '&u=' + base64.b64encode(keyUrl))
             keyUrl = urlPath + base64.b64encode(keyUrl)
         if not keyUrl.startswith('https://') and not keyUrl.startswith('http://'):
             if keyUrl[0] == '/':
@@ -201,7 +201,7 @@ class Proxy(http.server.SimpleHTTPRequestHandler):
             keyUrl = mainUrl + keyUrl
         parsedUri = urlparse(mainUrl)
         sts, data = getPageCF(keyUrl, {'User-Agent': userAgent, 'Referer': mainUrl, 'Origin': '{uri.scheme}://{uri.netloc}'.format(uri=parsedUri), 'cookiefile': cookiefile})
-        #printDBG("sts [%s] data[%s]" % (sts, data))
+        # printDBG("sts [%s] data[%s]" % (sts, data))
         if sts:
             self.send_response(200)
             self.end_headers()
@@ -229,7 +229,7 @@ if __name__ == "__main__":
             scriptUrl = json.loads(base64.b64decode(scriptUrl))
 
         socketserver.TCPServer.allow_reuse_address = True
-        #httpd = SocketServer.ForkingTCPServer(('127.0.0.1', port), Proxy)
+        # httpd = SocketServer.ForkingTCPServer(('127.0.0.1', port), Proxy)
         httpd = socketserver.TCPServer(('127.0.0.1', port), Proxy)
         print('\n%s\n' % hlsUrl, file=sys.stderr)
         httpd.serve_forever()

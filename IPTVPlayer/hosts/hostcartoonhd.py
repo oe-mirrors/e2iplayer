@@ -436,9 +436,9 @@ class CartoonHD(CBaseHostClass):
             type = 'getMovieEmb'
         else:
             type = 'getEpisodeEmb'
-        #if '/movie/' in cItem['url']:
+        # if '/movie/' in cItem['url']:
         #    type = 'getMovieEmb'
-        #else: type = 'getEpisodeEmb'
+        # else: type = 'getEpisodeEmb'
 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<select', '</select>', False)[1]
         hostings = []
@@ -456,7 +456,7 @@ class CartoonHD(CBaseHostClass):
         if 'class="play"' in data and 'id="updateSources"' not in data:
             requestLinks.append('ajax/embeds.php')
 
-        #httpParams['header']['Cookie'] = '%s=%s; PHPSESSID=%s; flixy=%s;'% (elid, urllib_quote(encElid), getCookieItem('PHPSESSID'), getCookieItem('flixy'))
+        # httpParams['header']['Cookie'] = '%s=%s; PHPSESSID=%s; flixy=%s;'% (elid, urllib_quote(encElid), getCookieItem('PHPSESSID'), getCookieItem('flixy'))
         for url in requestLinks:
             post_data = {'action': type, 'idEl': elid, 'token': tor, 'elid': urllib_quote(encElid), 'nopop': ''}
             sts, data = self.cm.getPage(url, httpParams, post_data)
@@ -631,7 +631,7 @@ class CartoonHD(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.selectDomain()
             self.listMainMenu({'name': 'category'})
@@ -651,12 +651,12 @@ class CartoonHD(CBaseHostClass):
             self.listSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

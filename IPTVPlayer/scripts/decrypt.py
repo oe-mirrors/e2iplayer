@@ -5,7 +5,7 @@ import sys
 
 def printDBG(strDat):
     print("%s" % strDat)
-    #print("%s" % strDat, file=sys.stderr)
+    # print("%s" % strDat, file=sys.stderr)
 
 
 def decrypt_file(file, key):

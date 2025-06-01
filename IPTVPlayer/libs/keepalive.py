@@ -189,7 +189,7 @@ class KeepAliveHandler:
     def __init__(self):
         self._cm = ConnectionManager()
 
-    #### Connection Management
+    # Connection Management
     def open_connections(self):
         """return a list of connected hosts and the number of connections
         to each.  [('foo.com:80', 2), ('bar.org', 1)]"""
@@ -220,7 +220,7 @@ class KeepAliveHandler:
             connection.close()
         self._cm.remove(connection)
 
-    #### Transaction Execution
+    # Transaction Execution
     def do_open(self, req):
         host = req.host
         if not host:

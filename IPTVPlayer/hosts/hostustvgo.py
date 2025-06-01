@@ -110,7 +110,7 @@ class ustvgo(CBaseHostClass):
             if removeCookieItems:
                 self.defaultParams.pop('cookie_items', None)
             self.cm.clearCookie(self.COOKIE_FILE, removeNames=['___utmvc'])
-            #printDBG(data)
+            # printDBG(data)
             return sts, data
 
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -224,7 +224,7 @@ class ustvgo(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_category':

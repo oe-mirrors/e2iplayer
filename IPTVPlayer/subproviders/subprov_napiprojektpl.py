@@ -361,7 +361,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listKinds({'name': 'category'}, 'get_movies_list')
         elif category == 'get_movies_list':

@@ -2722,7 +2722,7 @@ class pageParser(CaptchaHelper):
             cacheItem = None
 
         tmpTab = re.findall(r'''['"]?url([0-9]+?)['"]?[=:]['"]?(http[^"]+?\.mp4[^;^"^']*)[;"']''', data)
-        ##prepare urls list without duplicates
+        # prepare urls list without duplicates
         for item in tmpTab:
             item = list(item)
             if item[1].endswith('&amp'):

@@ -355,8 +355,8 @@ class FaselhdCOM(CBaseHostClass):
 
             printDBG(">>>>>>>>>>>>>>>>>> marker[%s] -> value[%s]" % (marker, value))
 
-            #marker = self.cm.ph.getSearchGroups(item, '''(\sfa\-[^'^"]+?)['"]''')[0].split('fa-')[-1]
-            #printDBG(">>>>>>>>>>>>>>>>>> " + marker)
+            # marker = self.cm.ph.getSearchGroups(item, '''(\sfa\-[^'^"]+?)['"]''')[0].split('fa-')[-1]
+            # printDBG(">>>>>>>>>>>>>>>>>> " + marker)
             if marker not in keysMap:
                 continue
             if value == '':
@@ -385,7 +385,7 @@ class FaselhdCOM(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_categories':
@@ -396,12 +396,12 @@ class FaselhdCOM(CBaseHostClass):
             self.listLists(self.currItem, 'list_items')
         elif category == 'explore_item':
             self.exploreItem(self.currItem, 'list_items')
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

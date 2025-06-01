@@ -27,8 +27,8 @@ from Components.config import config, ConfigText, ConfigSelection, ConfigYesNo, 
 # Config options for HOST
 ###################################################
 
-#config.plugins.iptvplayer.ekstraklasa_usedf = ConfigYesNo(default = False)
-#config.plugins.iptvplayer.ekstraklasa_proxy = ConfigYesNo(default = False)
+# config.plugins.iptvplayer.ekstraklasa_usedf = ConfigYesNo(default = False)
+# config.plugins.iptvplayer.ekstraklasa_proxy = ConfigYesNo(default = False)
 
 config.plugins.iptvplayer.ekstraklasa_defaultres = ConfigSelection(default="0", choices=[("0", _("Ask")), ("800", "800 kbps"), ("1000", "1000 kbps"), ("1800", "1800 kbps"), ("3600", "3600 kbps"), ("6000", "6000 kbps"), ("99999", "Max")])
 config.plugins.iptvplayer.ekstraklasa_login = ConfigText(default="", fixed_size=False)
@@ -41,8 +41,8 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Username"), config.plugins.iptvplayer.ekstraklasa_login))
     optionList.append(getConfigListEntry(_("Password"), config.plugins.iptvplayer.ekstraklasa_password))
 
-    #optionList.append( getConfigListEntry( "Używaj domyślnego format video:", config.plugins.iptvplayer.ekstraklasa_usedf ) )
-    #optionList.append( getConfigListEntry( "Ekstraklasa korzystaj z proxy?", config.plugins.iptvplayer.ekstraklasa_proxy) )
+    # optionList.append( getConfigListEntry( "Używaj domyślnego format video:", config.plugins.iptvplayer.ekstraklasa_usedf ) )
+    # optionList.append( getConfigListEntry( "Ekstraklasa korzystaj z proxy?", config.plugins.iptvplayer.ekstraklasa_proxy) )
     return optionList
 ###################################################
 
@@ -60,21 +60,21 @@ class Ekstraklasa(CBaseHostClass):
         self.ORG_URL = 'https://ekstraklasa.org/'
         self.CHANNELS_JSON_URL = 'https://core.oz.com/channels?slug=ekstraklasa&org=ekstraklasa.tv'
         self.AUTH_URL = "https://core.oz.com/oauth2/token"
-        #self.CHANNELS_JSON_URL = 'https://core.oz.com/channels'
+        # self.CHANNELS_JSON_URL = 'https://core.oz.com/channels'
 
         self.DEFAULT_ICON_URL = "https://d3pwgdagcpl4mv.cloudfront.net/oz/image/upload/f_auto,fl_progressive,w_300/v1565967880/gbtbw0hwdthy72jknsct.png"
 
-        #self.HEADER = {'User-Agent':self.USER_AGENT, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
-        #self.AJAX_HEADER = dict(self.HEADER)
-        #self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
-        #self.cm.HEADER = self.HEADER # default header
-        #self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        # self.HEADER = {'User-Agent':self.USER_AGENT, 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding':'gzip, deflate'}
+        # self.AJAX_HEADER = dict(self.HEADER)
+        # self.AJAX_HEADER.update( {'X-Requested-With': 'XMLHttpRequest'} )
+        # self.cm.HEADER = self.HEADER # default header
+        # self.defaultParams = {'header':self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_CAT_TAB = [
                             {'category': 'matches', 'title': _('Matches'), 'url': self.MAIN_URL + 'ekstraklasa/schedule'},
                             {'category': 'categories', 'title': _('Videos'), 'url': self.MAIN_URL + 'ekstraklasa/browse'},
-                            #{'category':'search',           'title': _('Search'), 'search_item':True,   },
-                            #{'category':'search_history',   'title': _('Search history'),               }
+                            # {'category':'search',           'title': _('Search'), 'search_item':True,   },
+                            # {'category':'search_history',   'title': _('Search history'),               }
                             ]
 
         self.loggedIn = None
@@ -103,7 +103,7 @@ class Ekstraklasa(CBaseHostClass):
 
             clsecret = 'PHb7Aw7KZXGMYvgfEz'
             clid = "ClubWebClient"
-            #UA = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0'
+            # UA = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0'
 
             postData = {
                 "client_id": clid,
@@ -402,7 +402,7 @@ class Ekstraklasa(CBaseHostClass):
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name is None:
             self.listMainMenu(self.currItem)
         elif category == 'matches':

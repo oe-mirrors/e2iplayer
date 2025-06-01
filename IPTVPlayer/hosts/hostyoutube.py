@@ -67,10 +67,10 @@ class Youtube(CBaseHostClass):
         self.SEARCH_TYPES = [(_("Video"), "video"),
                                (_("Channel"), "channel"),
                                (_("Playlist"), "playlist"),
-                              #(_("Movie"),    "movie"   ),
+                              # (_("Movie"),    "movie"   ),
                                (_("Live"), "live")]
-                              #("Program",            "show"    ),
-                              #("traylist",           "traylist"),
+                              # ("Program",            "show"    ),
+                              # ("traylist",           "traylist"),
         self.ytp = YouTubeParser()
         self.currFileHost = None
 
@@ -312,12 +312,12 @@ class Youtube(CBaseHostClass):
             self.listItems(self.currItem)
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
-        #SEARCH
+        # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-        #HISTORIA SEARCH
+        # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

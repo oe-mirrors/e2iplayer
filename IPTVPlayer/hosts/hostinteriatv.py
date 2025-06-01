@@ -268,7 +268,7 @@ class InteriaTv(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'}, 'list_categories', 'list_sort')
         elif category == 'list_categories':
@@ -279,17 +279,17 @@ class InteriaTv(CBaseHostClass):
             self.listItems(self.currItem, 'list_playlist_items')
         elif category == 'list_playlist_items':
             self.listPlaylistItems(self.currItem)
-    #SEARCH ITEMS
+    # SEARCH ITEMS
         elif category == 'search_filters':
             self.listSearchFilters(self.currItem, 'list_search_items')
         elif category == 'list_search_items':
             self.listSearchItems(self.currItem, 'list_playlist_items')
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

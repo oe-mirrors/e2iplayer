@@ -358,7 +358,7 @@ class LuxVeritatisPL(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
     # RADIO MARYJA
@@ -379,12 +379,12 @@ class LuxVeritatisPL(CBaseHostClass):
             self.listTVTrwamSort(self.currItem, 'list_tv_trwam_items')
         elif category == 'list_tv_trwam_items':
             self.listTVTrwamItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

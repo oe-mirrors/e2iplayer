@@ -182,7 +182,7 @@ class IPTVHostsGroups:
         # available or they are disabled globally
         outObj = {"version": 0, "hosts": hostsList, "disabled_hosts": []}
 
-        #check if some host from diabled one has been enabled
+        # check if some host from diabled one has been enabled
         disabledHosts = []
         for host in self.LOADED_DISABLED_HOSTS[groupName]:
             if host not in hostsList:

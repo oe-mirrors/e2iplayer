@@ -262,7 +262,7 @@ class RadiostacjaPl(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
     # LIVE

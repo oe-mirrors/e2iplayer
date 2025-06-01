@@ -124,12 +124,12 @@ class MeczykiPL(CBaseHostClass):
         if not sts:
             return
 
-        #reObj = re.compile('<[\s/]*?br[\s/]*?>', re.IGNORECASE)
+        # reObj = re.compile('<[\s/]*?br[\s/]*?>', re.IGNORECASE)
         titles = []
         tmp = ph.find(data, ('<div', '>', 'video-watch'), ('<div', '>', 'content-box-title'))[1]
         tmp = ph.rfindall(tmp, '</div>', ('<div', '>', 'video-watch'), flags=0)
         for item in tmp:
-            #item = reObj.split(item)
+            # item = reObj.split(item)
             item = item.split('</div>', 1)
             title = self.cleanHtmlStr(item[0])
             desc = self.cleanHtmlStr(item[-1])
@@ -204,7 +204,7 @@ class MeczykiPL(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL is None:
-            #rm(self.COOKIE_FILE)
+            # rm(self.COOKIE_FILE)
             self.selectDomain()
 
         name = self.currItem.get("name", '')
@@ -214,7 +214,7 @@ class MeczykiPL(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'}, 'list_items')
         elif 'list_items' == category:

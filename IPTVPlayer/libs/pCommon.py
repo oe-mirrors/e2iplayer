@@ -70,7 +70,7 @@ def EncodeGzipped(data):
 class NoRedirection(HTTPRedirectHandler):
     def http_error_302(self, req, fp, code, msg, headers):
         infourl = addinfourl(fp, headers, req.get_full_url())
-		#infourl.status = code
+		# infourl.status = code
         infourl.code = code
         return infourl
     http_error_300 = http_error_302
@@ -241,7 +241,7 @@ class CParsingHelper:
     # to dump page code to the file
     @staticmethod
     def writeToFile(file, data, mode="w"):
-        #helper to see html returned by ajax
+        # helper to see html returned by ajax
         file_path = file
         text_file = open(file_path, mode)
         text_file.write(data)
@@ -416,8 +416,8 @@ class common:
         if UsePyCurl():
             if self.pyCurlAvailable is None:
                 try:
-                    #import pycurl as pycurl
-                    #test = pycurl.SSLVERSION_TLSv1_3
+                    # import pycurl as pycurl
+                    # test = pycurl.SSLVERSION_TLSv1_3
                     verInfo = pycurl.version_info()
                     printDBG("usePyCurl VERSION: %s" % [verInfo])
                     # #define CURL_VERSION_ASYNCHDNS    (1<<7)
@@ -727,7 +727,7 @@ class common:
                 curlSession.setopt(pycurl.LOW_SPEED_TIME, timeout)  # in seconds
                 curlSession.setopt(pycurl.LOW_SPEED_LIMIT, 10)  # in bytes
                 # set maximum time the request is allowed to take
-                #curlSession.setopt(pycurl.TIMEOUT, 300) # in seconds
+                # curlSession.setopt(pycurl.TIMEOUT, 300) # in seconds
 
             if not params.get('no_redirection', False):
                 curlSession.setopt(pycurl.FOLLOWLOCATION, 1)
@@ -735,24 +735,24 @@ class common:
                 curlSession.setopt(pycurl.MAXREDIRS, 5)
 
             # debug
-            #curlSession.setopt(pycurl.VERBOSE, 1)
-            #curlSession.setopt(pycurl.DEBUGFUNCTION, debug_fun)
+            # curlSession.setopt(pycurl.VERBOSE, 1)
+            # curlSession.setopt(pycurl.DEBUGFUNCTION, debug_fun)
 
             if not IsHttpsCertValidationEnabled():
                 curlSession.setopt(pycurl.SSL_VERIFYHOST, 0)
                 curlSession.setopt(pycurl.SSL_VERIFYPEER, 0)
-                #curlSession.setopt(pycurl.PROXY_SSL_VERIFYHOST, 0)
+                # curlSession.setopt(pycurl.PROXY_SSL_VERIFYHOST, 0)
                 curlSession.setopt(pycurl.PROXY_SSL_VERIFYPEER, 0)
             else:
                 curlSession.setopt(pycurl.CAINFO, "/etc/ssl/certs/ca-certificates.crt")
                 curlSession.setopt(pycurl.PROXY_CAINFO, "/etc/ssl/certs/ca-certificates.crt")
 
-            #proxy support
+            # proxy support
             if self.useProxy:
                 http_proxy = self.proxyURL
             else:
                 http_proxy = ''
-            #proxy from parameters (if available) overwrite default one
+            # proxy from parameters (if available) overwrite default one
             if 'http_proxy' in params:
                 http_proxy = params['http_proxy']
             if '' != http_proxy:
@@ -775,7 +775,7 @@ class common:
                     printDBG("multipart_post_data NOT SUPPORTED")
                     dataPost = post_data
                     curlSession.setopt(pycurl.HTTPPOST, post_data)
-                    #curlSession.setopt(pycurl.CUSTOMREQUEST, "PUT")
+                    # curlSession.setopt(pycurl.CUSTOMREQUEST, "PUT")
                 else:
                     curlSession.setopt(pycurl.POSTFIELDS, urllib_urlencode(post_data))
 
@@ -794,7 +794,7 @@ class common:
             curlSession.setopt(pycurl.NOPROGRESS, False)
             curlSession.setopt(pycurl.PROGRESSFUNCTION, _terminateFunction)
             curlSession.setopt(pycurl.NOSIGNAL, 1)
-            #if 0 == maxDataSize:
+            # if 0 == maxDataSize:
             #    curlSession.setopt(pycurl.NOBODY, True);
 
             if not IsThreadTerminated():
@@ -1188,7 +1188,7 @@ class common:
     def getURLRequestData(self, params={}, post_data=None):
 
         def urlOpen(req, customOpeners, timeout):
-            #req = ensure_binary(req)
+            # req = ensure_binary(req)
             # above line was added to resolve > "TypeError: POST data should be bytes, an iterable of bytes, or a file object. It cannot be of type str."
             # but it seems it breaks other scenarios
             # also documentation says req should be a string. :(
@@ -1245,7 +1245,7 @@ class common:
         printDBG('pCommon - getURLRequestData() -> headers: ' + str(headers))
 
         customOpeners = []
-        #cookie support
+        # cookie support
         if 'use_cookie' not in params and 'cookiefile' in params and ('load_cookie' in params or 'save_cookie' in params):
             params['use_cookie'] = True
 
@@ -1274,8 +1274,8 @@ class common:
         else:
             sslProtoVer = None
         # debug
-        #customOpeners.append(urllib2.HTTPSHandler(debuglevel=1))
-        #customOpeners.append(urllib2.HTTPHandler(debuglevel=1))
+        # customOpeners.append(urllib2.HTTPSHandler(debuglevel=1))
+        # customOpeners.append(urllib2.HTTPHandler(debuglevel=1))
         if not IsHttpsCertValidationEnabled():
             try:
                 if sslProtoVer is not None:
@@ -1289,12 +1289,12 @@ class common:
             ctx = ssl.SSLContext(sslProtoVer)
             customOpeners.append(HTTPSHandler(context=ctx))
 
-        #proxy support
+        # proxy support
         if self.useProxy:
             http_proxy = self.proxyURL
         else:
             http_proxy = ''
-        #proxy from parameters (if available) overwrite default one
+        # proxy from parameters (if available) overwrite default one
         if 'http_proxy' in params:
             http_proxy = params['http_proxy']
         if '' != http_proxy:
@@ -1369,8 +1369,8 @@ class common:
                         data = e.fp.read()
                     else:
                         data = e.fp.read(max)
-                    #e.msg
-                    #e.headers
+                    # e.msg
+                    # e.headers
                 elif e.code == 503:
                     if params.get('use_cookie', False):
                         new_cookie = e.fp.info().get('Set-Cookie', '')
@@ -1381,7 +1381,7 @@ class common:
                     if e.code in [300, 302, 303, 307] and params.get('use_cookie', False) and params.get('save_cookie', False):
                         new_cookie = e.fp.info().get('Set-Cookie', '')
                         printDBG("> new_cookie[%s]" % new_cookie)
-                        #for cookieKey in params.get('cookie_items', {}).keys():
+                        # for cookieKey in params.get('cookie_items', {}).keys():
                         #    cj.clear('', '/', cookieKey)
                         cj.save(params['cookiefile'], ignore_discard=True)
                     raise e

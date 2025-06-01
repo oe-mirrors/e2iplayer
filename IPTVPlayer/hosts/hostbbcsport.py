@@ -146,9 +146,9 @@ class BBCSport(CBaseHostClass):
             params.update({'good_for_fav': True, 'category': category, 'title': title, 'url': url})
             self.addDir(params)
 
-        #MAIN_CAT_TAB = [{'category':'list_items', 'title': 'Start',    'url':self.getFullUrl('/sport')},
+        # MAIN_CAT_TAB = [{'category':'list_items', 'title': 'Start',    'url':self.getFullUrl('/sport')},
         #                {'category':'list_items', 'title': 'Golf',     'url':self.getFullUrl('/sport/golf')},]
-        #self.listsTab(MAIN_CAT_TAB, cItem)
+        # self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listAllItems(self, cItem, nextCategory):
         printDBG("BBCSport.listAllItems")
@@ -205,7 +205,7 @@ class BBCSport(CBaseHostClass):
             for datItem in self.liveGuideItemsCache[cItem['f_key']]:
                 sDate = self._gmt2local(datItem['scheduledStartTime'])
 
-                if (datItem['hasAudio'] or datItem['hasVideo']) and (datItem['status'] != 'COMING_UP'):  #NOW > sDate or self._absTimeDelta(NOW, sDate, 60) < 6
+                if (datItem['hasAudio'] or datItem['hasVideo']) and (datItem['status'] != 'COMING_UP'):  # NOW > sDate or self._absTimeDelta(NOW, sDate, 60) < 6
                     for item in datItem['media']:
                         if 'identifiers' not in item or 'playablePid' not in item['identifiers']:
                             continue
@@ -249,8 +249,8 @@ class BBCSport(CBaseHostClass):
 
                     desc = [datItem['sectionName']]
 
-                    #eDate = self._gmt2local(datItem['scheduledEndTime'])
-                    #if sDate.year == NOW.year  and sDate.month == NOW.month:
+                    # eDate = self._gmt2local(datItem['scheduledEndTime'])
+                    # if sDate.year == NOW.year  and sDate.month == NOW.month:
                     diff = sDate.day - NOW.day
                     if diff >= 0 and diff < 7:
                         if NOW.day == sDate.day:
@@ -457,8 +457,8 @@ class BBCSport(CBaseHostClass):
             self.loginMessage = ''
 
             if '' == self.login.strip() or '' == self.password.strip():
-                #msg = _('You now need to sign in to watch.\nPlease fill your login and password in the host configuration - available under blue button.')
-                #GetIPTVNotify().push(msg, 'info', 10)
+                # msg = _('You now need to sign in to watch.\nPlease fill your login and password in the host configuration - available under blue button.')
+                # GetIPTVNotify().push(msg, 'info', 10)
                 return False
 
             sts, data = self.getPage(self.getFullUrl('/sport'))
@@ -587,7 +587,7 @@ class BBCSport(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'}, 'sub_menu', 'all_items')
         elif category == 'all_items':

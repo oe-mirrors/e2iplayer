@@ -109,9 +109,9 @@ class TantiFilmOrg(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        #params = dict(cItem)
-        #params.update({'category':nextCategory, 'title':'Film', 'url':self.getFullUrl('/film/')})
-        #self.addDir(params)
+        # params = dict(cItem)
+        # params.update({'category':nextCategory, 'title':'Film', 'url':self.getFullUrl('/film/')})
+        # self.addDir(params)
         printDBG(data)
         data = self.cm.ph.getDataBeetwenNodes(data, ('<nav', '>', 'ddmenu'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>', withMarkers=True)
@@ -480,7 +480,7 @@ class TantiFilmOrg(CBaseHostClass):
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             if TantiFilmOrg.REMOVE_COOKIE:
                 TantiFilmOrg.REMOVE_COOKIE = False
@@ -501,12 +501,12 @@ class TantiFilmOrg(CBaseHostClass):
             self.listSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

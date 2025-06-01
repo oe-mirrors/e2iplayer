@@ -154,8 +154,8 @@ class PlusDEDE(CBaseHostClass):
         for idx in range(len(data)):
             key = 'f_%s' % self.cm.ph.getSearchGroups(data[idx], '''[^>]+?name=['"]([^'^"]+?)['"]''')[0]
             if key in ['f_year']:
-                #val = self.cm.ph.getSearchGroups(data[idx], '''[^>]+?value=['"]([^'^"]+?)['"]''')[0].split(';')
-                #if 2 != len(val): continue
+                # val = self.cm.ph.getSearchGroups(data[idx], '''[^>]+?value=['"]([^'^"]+?)['"]''')[0].split(';')
+                # if 2 != len(val): continue
                 try:
                     start = datetime.now().year  # int(val[1])
                     end = 1900  # int(val[0])
@@ -414,8 +414,8 @@ class PlusDEDE(CBaseHostClass):
                     continue
                 host = self.cm.ph.getSearchGroups(item, r'''src=['"][^'^"]*?/hosts/([^'^"^\.]+?)['"\.]''')[0]
                 lang = self.cm.ph.getSearchGroups(item, r'''src=['"][^'^"]*?/flags/([^'^"^\.]+?)['"\.]''')[0]
-                #dataV = self.cm.ph.getSearchGroups(item, '''data\-v=['"]([^'^"]+?)['"]''')[0]
-                #dataId = self.cm.ph.getSearchGroups(item, '''data\-id=['"]([^'^"]+?)['"]''')[0]
+                # dataV = self.cm.ph.getSearchGroups(item, '''data\-v=['"]([^'^"]+?)['"]''')[0]
+                # dataId = self.cm.ph.getSearchGroups(item, '''data\-id=['"]([^'^"]+?)['"]''')[0]
                 titleTab = [host, lang]
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<div', '</div>')
                 for t in tmp:
@@ -427,7 +427,7 @@ class PlusDEDE(CBaseHostClass):
                 else:
                     dwnTab.append({'name': '%s' % (' | '.join(titleTab)), 'url': self.getFullUrl(url), 'need_resolve': 1})
 
-        #retTab.extend(dwnTab)
+        # retTab.extend(dwnTab)
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
         return retTab
@@ -666,7 +666,7 @@ class PlusDEDE(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_filters':
@@ -679,12 +679,12 @@ class PlusDEDE(CBaseHostClass):
             self.exploreItem(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

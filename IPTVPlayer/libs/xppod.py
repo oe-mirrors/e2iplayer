@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
 # Based on (root)/trunk/xbmc-addons/src/plugin.video.polishtv.live/self.HOSTs/ @ 419 - Wersja 636
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # uppod decoder
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 def Decode(param):
-    #-- define variables
+    # -- define variables
     loc_3 = [0, 0, 0, 0]
     loc_4 = [0, 0, 0]
     loc_2 = ''
-    #-- define hash parameters for decoding
+    # -- define hash parameters for decoding
     dec = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
     hash1 = ["L", "y", "c", "X", "2", "M", "a", "l", "p", "5", "Q", "e", "R", "t", "Z", "Y", "9", "m", "d", "0", "s", "V", "b", "3", "7", "="]
     hash2 = ["i", "B", "v", "U", "H", "4", "D", "n", "k", "8", "x", "T", "u", "G", "w", "f", "N", "J", "6", "W", "1", "g", "z", "o", "I", "r"]
     hash1 = ["c", "u", "4", "V", "z", "5", "k", "m", "y", "p", "L", "J", "I", "d", "0", "M", "9", "e", "3", "8", "v", "l", "i", "7", "n", "="]
     hash2 = ["t", "Y", "T", "x", "B", "g", "G", "b", "2", "X", "1", "R", "a", "N", "w", "Q", "f", "W", "U", "D", "Z", "s", "6", "H", "o", "r"]
 
-    #-- decode
+    # -- decode
     for i in range(0, len(hash1)):
         re1 = hash1[i]
         re2 = hash2[i]

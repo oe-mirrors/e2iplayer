@@ -747,12 +747,12 @@ class json_int((1).__class__):    # Have to specify base this way to satisfy 2to
 
 def skipstringsafe(s, start=0, end=None):
     i = start
-    #if end is None:
+    # if end is None:
     #    end = len(s)
     unsafe = helpers.unsafe_string_chars
     while i < end and s[i] not in unsafe:
-        #c = s[i]
-        #if c in unsafe_string_chars:
+        # c = s[i]
+        # if c in unsafe_string_chars:
         #    break
         i += 1
     return i
@@ -817,8 +817,8 @@ class utf32(codecs.CodecInfo):
     See http://en.wikipedia.org/wiki/UTF-32
 
     """
-    BOM_UTF32_BE = _make_raw_bytes([0, 0, 0xFE, 0xFF])  #'\x00\x00\xfe\xff'
-    BOM_UTF32_LE = _make_raw_bytes([0xFF, 0xFE, 0, 0])  #'\xff\xfe\x00\x00'
+    BOM_UTF32_BE = _make_raw_bytes([0, 0, 0xFE, 0xFF])  # '\x00\x00\xfe\xff'
+    BOM_UTF32_LE = _make_raw_bytes([0xFF, 0xFE, 0, 0])  # '\xff\xfe\x00\x00'
 
     @staticmethod
     def lookup(name):
@@ -1427,7 +1427,7 @@ class helpers(object):
         import collections
         return isinstance(obj, (str,)) \
                or isinstance(obj, collections.UserString)
-               ## or isinstance(obj, UserString.MutableString)
+               # or isinstance(obj, UserString.MutableString)
 
     @staticmethod
     def decode_hex(hexstring):
@@ -2161,7 +2161,7 @@ class JSONError(JSONException):
     @position.setter
     def position(self, pos):
         if pos == 0:
-            self._position = 0  #position_marker() # start of input
+            self._position = 0  # position_marker() # start of input
         else:
             self._position = pos
 
@@ -2279,9 +2279,9 @@ class JSONEncodeHookError(JSONEncodeError):
         super(JSONEncodeHookError, self).__init__(msg, *args, **kwargs)
 
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 # Encoder state object
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 class encode_state(object):
     """An internal transient object used during JSON encoding to
@@ -2330,9 +2330,9 @@ class encode_state(object):
         return self.chunks < other_state.chunks
 
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 # Decoder statistics
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 class decode_statistics(object):
     """An object that records various statistics about a decoded JSON document.
@@ -2463,9 +2463,9 @@ class decode_statistics(object):
             return '\n'.join(lines) + '\n'
 
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 # Decoder state object
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 class decode_state(object):
     """An internal transient object used during JSON decoding to
@@ -5415,7 +5415,7 @@ class JSON(object):
                 opener = '['
                 closer = ']'
             if not compactly:
-                #opener = opener + ' '
+                # opener = opener + ' '
                 spaces_after_opener = self.options.spaces_to_next_indent_level(subtract=len(opener))
 
             state.append(opener)
@@ -5502,7 +5502,7 @@ class JSON(object):
             elif len(parts) <= self.options.max_items_per_line:
                 sep = ', '
             else:
-                #state.append(spaces_after_opener)
+                # state.append(spaces_after_opener)
                 state.append('\n' + indent)
                 sep = ',\n' + indent
 

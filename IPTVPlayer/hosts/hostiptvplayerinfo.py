@@ -73,7 +73,7 @@ class IPTVPlayerInfo(CBaseHostClass):
         url = f"https://api.github.com/repos/oe-mirrors/e2iplayer/commits?per_page={ITEMS_PER_PAGE}"
         # url = self.getFullUrl('/%s/e2iplayer/-/commits/master?limit=%d&offset=%d' % (config.plugins.iptvplayer.gitlab_repo.value, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE))
 
-        #if page > 1:
+        # if page > 1:
         #    if '?' in url:
         #        url += '&'
         #    else:
@@ -91,7 +91,7 @@ class IPTVPlayerInfo(CBaseHostClass):
             # printDBG(">>>> currCommitStamp[%s]" % currCommitStamp)
 
             data = json.loads(data)
-            #if data['count'] >= ITEMS_PER_PAGE:
+            # if data['count'] >= ITEMS_PER_PAGE:
             #    nextPage = True
             for item in data:
                 url = item.get('html_url', '')
@@ -148,7 +148,7 @@ class IPTVPlayerInfo(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'commits':

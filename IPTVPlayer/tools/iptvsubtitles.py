@@ -7,7 +7,7 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 # INFO about subtitles format
 # https://wiki.videolan.org/Subtitles#Subtitles_support_in_VLC
 
-#def printDBG(data):
+# def printDBG(data):
 #    print("%s" % data)
 
 ###################################################
@@ -47,10 +47,10 @@ class IPTVSubtitlesHandler:
 
     def _srtClearText(self, text):
         return re.sub('<[^>]*>', '', text)
-        #<b></b> : bold
-        #<i></i> : italic
-        #<u></u> : underline
-        #<font color=”#rrggbb”></font>
+        # <b></b> : bold
+        # <i></i> : italic
+        # <u></u> : underline
+        # <font color=”#rrggbb”></font>
 
     def _srtTc2ms2(self, tc):
         sign = 1
@@ -128,23 +128,23 @@ class IPTVSubtitlesHandler:
                 subAtoms.append({'start': self._mplTc2ms(tmp.group(1)), 'end': self._mplTc2ms(tmp.group(2)), 'text': self._mplClearText(tmp.group(3))})
         return subAtoms
 
-    #def _preparPails(self, scope):
+    # def _preparPails(self, scope):
 
     def getSubtitlesFromSubAtoms(self, currTimeMS):
-        #time1 = time.time()
+        # time1 = time.time()
         subsText = []
         for item in self.subAtoms:
             if currTimeMS >= item['start'] and currTimeMS < item['end']:
                 subsText.append(item['text'])
         ret = '\n'.join(subsText)
-        #time2 = time.time()
-        #printDBG('>>>>>>>>>>getSubtitlesFromSubAtoms function took %0.3f ms' % ((time2-time1)*1000.0))
+        # time2 = time.time()
+        # printDBG('>>>>>>>>>>getSubtitlesFromSubAtoms function took %0.3f ms' % ((time2-time1)*1000.0))
         printDBG("OpenSubOrg.getSubtitlesFromSubAtoms(%s) returns [%s]" % (currTimeMS, ret))
         return ret
 
     def getSubtitles(self, currTimeMS, prevMarker):
         printDBG("OpenSubOrg.getSubtitles(currTimeMS = %s, prevMarker = %s)" % (currTimeMS, prevMarker))
-        #time1 = time.time()
+        # time1 = time.time()
         subsText = []
         tmp = currTimeMS / self.CAPACITY
         tmpList = self.pailsOfAtoms.get(tmp, [])
@@ -167,8 +167,8 @@ class IPTVSubtitlesHandler:
                     item = self.subAtoms[idx]
                     subsText.append(item['text'])
                 ret = '\n'.join(subsText)
-            #time2 = time.time()
-            #printDBG('>>>>>>>>>>getSubtitles function took %0.3f ms' % ((time2-time1)*1000.0))
+            # time2 = time.time()
+            # printDBG('>>>>>>>>>>getSubtitles function took %0.3f ms' % ((time2-time1)*1000.0))
             return marker, ret
 
     def removeCacheFile(self, filePath):
@@ -292,10 +292,10 @@ class IPTVSubtitlesHandler:
         return self._loadSubtitles(filePath, encoding)
 
     def _loadSubtitles(self, filePath, encoding):
-        #printDBG("OpenSubOrg._loadSubtitles filePath[%s]" % filePath)
+        # printDBG("OpenSubOrg._loadSubtitles filePath[%s]" % filePath)
         saveCache = True
         self.subAtoms = []
-        #time1 = time.time()
+        # time1 = time.time()
         sts = self._loadFromCache(filePath)
         if not sts:
             try:
@@ -321,8 +321,8 @@ class IPTVSubtitlesHandler:
         if saveCache and len(self.subAtoms):
             self._saveToCache(filePath)
 
-        #time2 = time.time()
-        #printDBG('>>>>>>>>>>loadSubtitles function took %0.3f ms' % ((time2-time1)*1000.0))
+        # time2 = time.time()
+        # printDBG('>>>>>>>>>>loadSubtitles function took %0.3f ms' % ((time2-time1)*1000.0))
 
         return sts
 
@@ -336,10 +336,10 @@ class IPTVEmbeddedSubtitlesHandler:
 
     def _srtClearText(self, text):
         return re.sub('<[^>]*>', '', text)
-        #<b></b> : bold
-        #<i></i> : italic
-        #<u></u> : underline
-        #<font color=”#rrggbb”></font>
+        # <b></b> : bold
+        # <i></i> : italic
+        # <u></u> : underline
+        # <font color=”#rrggbb”></font>
 
     def addSubAtom(self, inAtom):
         try:

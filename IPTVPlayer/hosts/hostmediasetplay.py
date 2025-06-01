@@ -454,15 +454,15 @@ class MediasetPlay(CBaseHostClass):
         cItem = MergeDicts(cItem, {'category': 'list_items', 'url': url})
         self.listItems(cItem, 'video_mixed')
 
-        #'CWSEARCHBRAND'
-        #'CWSEARCHCLIP',
-        #'CWSEARCHEPISODE'
-        #'CWSEARCHMOVIE'
+        # 'CWSEARCHBRAND'
+        # 'CWSEARCHCLIP',
+        # 'CWSEARCHEPISODE'
+        # 'CWSEARCHMOVIE'
 
-        #https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHBRAND&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&page=1
-        #https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHCLIP&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&sort=Viewers=DESC&page=1
-        #https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHEPISODE&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&page=1
-        #https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHMOVIE&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&page=1
+        # https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHBRAND&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&page=1
+        # https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHCLIP&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&sort=Viewers=DESC&page=1
+        # https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHEPISODE&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&page=1
+        # https://api-ott-prod-fe.mediaset.net/PROD/play/rec/search/v1.0?uxReference=CWSEARCHMOVIE&query=shrek&platform=pc&traceCid=73dd1614-f553-4851-ace3-bd01e34bdd26&page=1
 
     def getLinksForVideo(self, cItem):
         printDBG(": %s" % cItem)
@@ -561,7 +561,7 @@ class MediasetPlay(CBaseHostClass):
         self.currList = []
         self.initApi()
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMain({'name': 'category', 'type': 'category'}, 'list_items')
 
@@ -598,12 +598,12 @@ class MediasetPlay(CBaseHostClass):
         elif category == 'video_mixed':
             self.listVideoMixed(self.currItem)
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

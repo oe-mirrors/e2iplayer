@@ -176,28 +176,28 @@ class LiveLeak(CBaseHostClass):
 
         if None is name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-    #ITEMS TAB
+    # ITEMS TAB
         elif 'tab_items' == category:
             self.listsTab(self.ITEMS_CAT_TAB, self.currItem)
-    #CHANNELS TAB
+    # CHANNELS TAB
         elif 'tab_channels' == category:
             self.listsTab(self.CHANNEL_CAT_TAB, self.currItem)
-    #LIST ITEMS
+    # LIST ITEMS
         elif 'recent_items' == category:
             self.listRecentItems(self.currItem)
-    #BROWSE CHANNELS
+    # BROWSE CHANNELS
         elif 'channels' == category:
             self.listChannels(self.currItem)
-    #LIST CHANNEL ITEMS
+    # LIST CHANNEL ITEMS
         elif 'channel' == category:
             self.listChannelItems(self.currItem)
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

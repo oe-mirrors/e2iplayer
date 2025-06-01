@@ -318,7 +318,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.getMoviesTitles({'name': 'category'}, 'get_type')
         elif category == 'get_type':

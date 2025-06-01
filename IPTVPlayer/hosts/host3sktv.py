@@ -143,7 +143,7 @@ class C3skTv(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0], currentUrl)
             if url == currentUrl:
                 continue
-            #printDBG("++++++++ [%s]" % url)
+            # printDBG("++++++++ [%s]" % url)
             if 'forumdisplay.php' in url:
                 nextCategory = 'list_threads'
             elif 'showthread.php' in url:
@@ -307,7 +307,7 @@ class C3skTv(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_threads':
@@ -316,12 +316,12 @@ class C3skTv(CBaseHostClass):
             self.listThread(self.currItem)
         elif category == 'list_items':
             self.listItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -410,7 +410,7 @@ class OpenSubOrgProvider(CBaseSubProviderClass):
         printDBG("handleService: name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             rm(self.COOKIE_FILE)
             login = config.plugins.iptvplayer.opensuborg_login.value

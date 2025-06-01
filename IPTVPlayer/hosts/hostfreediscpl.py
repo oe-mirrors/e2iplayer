@@ -60,7 +60,7 @@ class FreeDiscPL(CBaseHostClass):
 
     FILTERS_TAB = [{'title': _('Movies'), 'filter': 'movies'},
                    {'title': _('Music'), 'filter': 'music'}]
-                   #{'title':_('Pictures'),  'filter':'pictures'} ]
+                   # {'title':_('Pictures'),  'filter':'pictures'} ]
     TYPES = {'movies': 7, 'music': 6}  # , 'pictures':2}
 
     def __init__(self):
@@ -219,7 +219,7 @@ class FreeDiscPL(CBaseHostClass):
                     self.addVideo(params)
                 elif 'file_icon_6' in item:
                     self.addAudio(params)
-                #elif 'file_icon_2' in item:
+                # elif 'file_icon_2' in item:
                 #    self.addPicture(params)
         except Exception:
             printExc()
@@ -307,8 +307,8 @@ class FreeDiscPL(CBaseHostClass):
     def listDir(self, cItem):
         printDBG("FreeDiscPL.listDir cItem[%s]" % (cItem))
 
-        #sts, data = self.getPage(cItem['url'])
-        #if not sts: return
+        # sts, data = self.getPage(cItem['url'])
+        # if not sts: return
 
         userId = cItem.get('f_user_id', '')
         dirId = cItem.get('f_dir_id', '')
@@ -498,7 +498,7 @@ class FreeDiscPL(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
@@ -513,12 +513,12 @@ class FreeDiscPL(CBaseHostClass):
             self.listExploreItem(self.currItem, 'list_dir')
         elif category == 'list_dir':
             self.listDir(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

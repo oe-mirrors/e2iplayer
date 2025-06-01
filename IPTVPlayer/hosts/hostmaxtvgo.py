@@ -116,7 +116,7 @@ class MaxtvGO(CBaseHostClass):
                 subItems = []
                 for it in item['videos']:
                     title = self.cleanHtmlStr(it['title'])
-                    #icon = self.getFullIconUrl(it['image'])
+                    # icon = self.getFullIconUrl(it['image'])
                     icon = str(it.get('vimeoPosterId', ''))
                     if icon != '':
                         icon = 'http://i.vimeocdn.com/video/%s.jpg?mw=300' % icon
@@ -271,7 +271,7 @@ class MaxtvGO(CBaseHostClass):
 
         icon = self.cm.ph.getDataBeetwenNodes(data, ('<video', '>'), ('</video', '>'))[1]
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(icon, '''poster=['"]([^'^"]+?)['"]''')[0])
-        #icon = ''
+        # icon = ''
         title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'video-title'), ('</p', '>'), False)[1])
 
         urlBase = self.getFullUrl('/api/comments.php?action=get&videoID=%s' % videoID)
@@ -319,7 +319,7 @@ class MaxtvGO(CBaseHostClass):
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_filters':
@@ -330,12 +330,12 @@ class MaxtvGO(CBaseHostClass):
             self.listYTChannel(self.currItem)
         elif category == 'sub_items':
             self.currList = self.currItem.get('sub_items', [])
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

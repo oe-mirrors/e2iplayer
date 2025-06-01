@@ -127,7 +127,7 @@ def js_execute_ext(items, params={}):
                         raise Exception('Faile to create file "%s"' % path)
                     tmpFiles.append(path)
                     fileList.append(path)
-        #ret = duktape_execute('-t %s ' % params.get('timeout_sec', 20) + ' '.join([ '"%s"' % file for file in fileList ]) )
+        # ret = duktape_execute('-t %s ' % params.get('timeout_sec', 20) + ' '.join([ '"%s"' % file for file in fileList ]) )
         ret = duktape_execute(' '.join(['"%s"' % file for file in fileList]))
     except Exception:
         printExc()

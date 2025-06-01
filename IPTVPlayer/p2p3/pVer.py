@@ -1,4 +1,4 @@
-#from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+# from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 import sys
 
 pyVersion = sys.version_info[0]

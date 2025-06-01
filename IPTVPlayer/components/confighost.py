@@ -86,7 +86,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
     def runSetup(self):
         ConfigBaseWidget.runSetup(self)
 
-    #def changeSubOptions(self):
+    # def changeSubOptions(self):
     #    self.runSetup()
 
     def isChanged(self):

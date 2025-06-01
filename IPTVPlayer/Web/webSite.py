@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#### Local imports
+# Local imports
 
 
 from Plugins.Extensions.IPTVPlayer.__init__ import _
@@ -14,11 +14,11 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper, DMItemBase
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir, printDBG
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
-#### e2 imports
+# e2 imports
 from Components.config import configfile, config
 from Components.Language import language
 
-#### system imports
+# system imports
 import os
 from twisted.web import resource, http, util
 import urllib.parse
@@ -150,7 +150,7 @@ class searchPage(resource.Resource):
                     else:
                         settings.GlobalSearchTypes = ["VIDEO"]
                 arg = req.args.get(key, None)[0]
-            #print 'searchPage received: ', key, '=' , arg
+            # print 'searchPage received: ', key, '=' , arg
         else:
             key = None
             arg = None
@@ -537,7 +537,7 @@ class useHostPage(resource.Resource):
             settings.currItem = {}
             settings.activeHost['Status'] = settings.activeHost['Status'].rpartition('>')[0]
             setNewHostListShown(False)
-        #long running commands
+        # long running commands
         elif isNewHostListShown() and not isThreadRunning('doUseHostAction'):
             self.Counter = 0
             setNewHostListShown(False)

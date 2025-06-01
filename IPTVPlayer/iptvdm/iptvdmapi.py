@@ -42,7 +42,7 @@ class IPTVDMApi():
         self.updateProgress = False
         self.sleepDelay = refreshDelay
 
-        #self.currDMItem = None
+        # self.currDMItem = None
         # under download queue
         self.queueUD = []
         self.MAX_DOWNLOAD_ITEM = parallelDownloadNum
@@ -53,7 +53,7 @@ class IPTVDMApi():
 
         self.onlistChanged = []
 
-        #main Queue
+        # main Queue
         self.mainTimer = eTimer()
         self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.processDQ)
 
@@ -161,7 +161,7 @@ class IPTVDMApi():
             item = self.queueAA[listUDIdx]
 
             item.status = DMHelper.STS.WAITING
-            #item.fileSize = -1
+            # item.fileSize = -1
             item.downloadedSize = 0
             item.downloadedProcent = -1
             item.totalFileDuration = -1
@@ -378,8 +378,8 @@ class IPTVDMApi():
         except Exception:
             printExc()
 
-        #dItem = self.queueUD[listUDIdx]
-        #print( dItem.fileName + ": "+ " status: " + dItem.status + dItem.downloadedSize + " " + dItem.downloadedProcent + " " + dItem.downloadedSpeed + " " + dItem.timeToFinish )
+        # dItem = self.queueUD[listUDIdx]
+        # print( dItem.fileName + ": "+ " status: " + dItem.status + dItem.downloadedSize + " " + dItem.downloadedProcent + " " + dItem.downloadedSpeed + " " + dItem.timeToFinish )
     # end updateEndItemStatus
 
     def updateItemSTS(self, downloadItem):

@@ -198,7 +198,7 @@ class FilmPalastTo(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
-            #params['icon'] = self.getFullIconUrl('/files/movies/450/%s.jpg' % item['url'].split('/')[-1])
+            # params['icon'] = self.getFullIconUrl('/files/movies/450/%s.jpg' % item['url'].split('/')[-1])
             self.addVideo(params)
 
     def exploreItem(self, cItem, nextCategory):
@@ -297,8 +297,8 @@ class FilmPalastTo(CBaseHostClass):
         data_stamp = videoUrl.meta.get('data_stamp', '')
 
         if data_id and data_stamp:
-            #sts, data = self.getPage(key, self.defaultParams)
-            #if not sts: return []
+            # sts, data = self.getPage(key, self.defaultParams)
+            # if not sts: return []
 
             url = self.getFullUrl('/stream/%s/%s' % (data_id, data_stamp))
             urlParams = dict(self.defaultParams)
@@ -403,7 +403,7 @@ class FilmPalastTo(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL is None:
-            #rm(self.COOKIE_FILE)
+            # rm(self.COOKIE_FILE)
             self.selectDomain()
 
         name = self.currItem.get("name", '')
@@ -413,7 +413,7 @@ class FilmPalastTo(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'movies' == category:
@@ -437,12 +437,12 @@ class FilmPalastTo(CBaseHostClass):
         elif 'list_episodes' == category:
             self.listEpisodes(self.currItem)
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

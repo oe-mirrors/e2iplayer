@@ -6,7 +6,7 @@ import time
 from urllib.parse import urlparse, urlunparse, unquote as _unquote
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import *
-#from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import _unquote
+# from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import _unquote
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, byteify, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -478,7 +478,7 @@ class YoutubeIE(object):
 
         mobj = re.search(self._NEXT_URL_RE, url)
         if mobj:
-            #https
+            # https
             url = 'http://www.youtube.com/' + compat_urllib_parse.unquote(mobj.group(1)).lstrip('/')
         video_id = self._extract_id(url)
 
@@ -556,9 +556,9 @@ class YoutubeIE(object):
 
                     cipher = cipher.split('&')
                     for item in cipher:
-                        #sig_item = ''
-                        #s_item = ''
-                        #sp_item = ''
+                        # sig_item = ''
+                        # s_item = ''
+                        # sp_item = ''
                         if 'url=' in item:
                             url_item = {'url': _unquote(item.replace('url=', ''), None)}
                         if 'sig=' in item:
@@ -634,7 +634,7 @@ class YoutubeIE(object):
             # Extension
             video_extension = self._video_extensions.get(format_param, 'flv')
 
-            #video_format = '{0} - {1}'.format(format_param if format_param else video_extension,
+            # video_format = '{0} - {1}'.format(format_param if format_param else video_extension,
             #                                  self._video_dimensions.get(format_param, '???'))
             video_format = self._video_dimensions.get(format_param, '???')
             video_real_url = url_item['url']

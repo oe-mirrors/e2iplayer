@@ -72,8 +72,8 @@ class MLBStreamTVApi(CBaseHostClass):
         if category is None:
             tab = [{'url': 'http://mlbstream.tv/', 'icon': self.DEFAULT_ICON_URL},
                    {'url': 'http://nhlstream.tv/', 'icon': 'http://nhlstream.tv/wp-content/uploads/2018/09/nhl-logo.png'},
-                   #{'url':'http://nflstream.tv/'},
-                   #{'url':'http://nbastream.tv/'},
+                   # {'url':'http://nflstream.tv/'},
+                   # {'url':'http://nbastream.tv/'},
                   ]
             for item in tab:
                 channelsList.append({'name': 'mlbstream.tv', 'type': 'dir', 'priv_cat': 'list_items', 'title': item['url'], 'url': item['url'], 'icon': item['icon']})

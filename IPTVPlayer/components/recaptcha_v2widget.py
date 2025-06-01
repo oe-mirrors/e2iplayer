@@ -130,7 +130,7 @@ class UnCaptchaReCaptchaWidget(Screen):
             self['marker'].hide()
         return self.focusOnAcceptButton
 
-    #Calculate marker position Y
+    # Calculate marker position Y
     def calcMarkerPosY(self):
         if self.currY > (self.numOfRow + 1 - 1):
             self.currY = 0
@@ -138,7 +138,7 @@ class UnCaptchaReCaptchaWidget(Screen):
             self.currY = (self.numOfRow + 1 - 1)
         return
 
-    #Calculate marker position X
+    # Calculate marker position X
     def calcMarkerPosX(self):
         if self.currX > (self.numOfCol - 1):
             self.currX = 0

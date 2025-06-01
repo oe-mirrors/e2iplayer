@@ -109,8 +109,8 @@ class EuroSportPlayer(CBaseHostClass):
                        {'category': 'on_air', 'title': _('On Air'), },
                        {'category': 'schedule', 'title': _('Schedule'), },
                        {'category': 'vod_sport_filters', 'title': _('All Sports'), }  # ,
-                       #{'category':'search',             'title': _('Search'),          'search_item':True    },
-                       #{'category':'search_history',     'title': _('Search history')}
+                       # {'category':'search',             'title': _('Search'),          'search_item':True    },
+                       # {'category':'search_history',     'title': _('Search history')}
                       ]
 
             self.listsTab(CAT_TAB, cItem)
@@ -160,7 +160,7 @@ class EuroSportPlayer(CBaseHostClass):
 
     def addVideoFromData(self, videoData, OnlyLive=False, label_format=None, future=False):
         # printDBG(json_dumps(videoData))
-        #{"relationships": {
+        # {"relationships": {
         #       "txSports": {"data": [{"type": "taxonomyNode", "id": "bec78875-c777-4b6b-aa5f-6f73093fef69"}]},
         #       "txCompetitions": {"data": [{"type": "taxonomyNode", "id": "3cc643aa-be3c-4bbc-b0bd-45537f4f9025"}]},
         #       "show": {"data": {"type": "show", "id": "5528"}},
@@ -201,17 +201,17 @@ class EuroSportPlayer(CBaseHostClass):
         #       "isExpiring": false},
         #   "type": "video",
         #   "id": "250797"
-        #}
+        # }
         params = {}
         video_id = videoData['id']
         item_data = videoData['attributes']
         printDBG(json_dumps(item_data))
 
         if 'broadcastType' in item_data:
-            #printDBG(" %s, %s , %s" % (item_data['name'], item_data['videoType'], item_data['broadcastType'] ))
+            # printDBG(" %s, %s , %s" % (item_data['name'], item_data['videoType'], item_data['broadcastType'] ))
             bt = item_data['broadcastType']
         else:
-            #printDBG(" %s, %s , %s" % (item_data['name'], item_data['videoType'], '' ))
+            # printDBG(" %s, %s , %s" % (item_data['name'], item_data['videoType'], '' ))
             bt = item_data['videoType']
 
         if (not OnlyLive) or (item_data['videoType'] == 'LIVE'):
@@ -220,16 +220,16 @@ class EuroSportPlayer(CBaseHostClass):
             else:
                 start = item_data['earliestPlayableStart']
 
-            #printDBG("start: %s" % start)
+            # printDBG("start: %s" % start)
             scheduleDate = self._gmt2local(start)
-            #printDBG("local time: %s" % str(scheduleDate))
+            # printDBG("local time: %s" % str(scheduleDate))
 
             if scheduleDate < datetime.now() or future:
 
                 txtDate = scheduleDate.strftime("%d/%m/%Y")
                 txtTime = scheduleDate.strftime("%H:%M")
 
-                #"routes": {"data": [{"type": "route", "id": "ba42a747696c2cc69574ee9414806703f3cc4271c97578ed68d795e81f526c3c"}]},
+                # "routes": {"data": [{"type": "route", "id": "ba42a747696c2cc69574ee9414806703f3cc4271c97578ed68d795e81f526c3c"}]},
                 if 'routes' in videoData['relationships']:
                     route_id = videoData['relationships']['routes']['data'][0]['id']
                 else:
@@ -240,7 +240,7 @@ class EuroSportPlayer(CBaseHostClass):
                         if 'txSports' in videoData['relationships']:
                             sport_node_id = videoData['relationships']['txSports']['data'][0]['id']
                             sport = self.espTaxonomyNodes[sport_node_id]
-                            #printDBG(json_dumps(sport))
+                            # printDBG(json_dumps(sport))
                             txtSport = sport['attributes']['name']
                         else:
                             txtSport = ''
@@ -248,7 +248,7 @@ class EuroSportPlayer(CBaseHostClass):
                         if 'primaryChannel' in videoData['relationships']:
                             channel_id = videoData['relationships']['primaryChannel']['data']['id']
                             channel = self.espChannels[channel_id]
-                            #printDBG(json_dumps(channel))
+                            # printDBG(json_dumps(channel))
                             txtChannel = channel['attributes']['name']
                         else:
                             txtChannel = ''
@@ -307,16 +307,16 @@ class EuroSportPlayer(CBaseHostClass):
                     self.addItemInDB(item)
 
             for item in menuData['data']:
-                #printDBG(json_dumps(self.espCollectionItems[item['id']]))
+                # printDBG(json_dumps(self.espCollectionItems[item['id']]))
                 node_id = self.espCollectionItems[item['id']]['relationships']['taxonomyNode']['data']['id']
                 node = self.espTaxonomyNodes[node_id]
 
-                #printDBG(json_dumps(node))
+                # printDBG(json_dumps(node))
                 iconData = self.espImages[node['relationships']['images']['data'][0]['id']]
-                #printDBG(json_dumps(iconData))
+                # printDBG(json_dumps(iconData))
                 route_id = node['relationships']['routes']['data'][0]['id']
                 routeData = self.espRoutes[route_id]
-                #printDBG(json_dumps(routeData))
+                # printDBG(json_dumps(routeData))
                 title = node['attributes']['name']
                 icon = iconData['attributes']['src']
                 url = self.getFullPath(routeData['attributes']['url'], 'route')
@@ -336,7 +336,7 @@ class EuroSportPlayer(CBaseHostClass):
             if not sts:
                 return
 
-            #printDBG(data)
+            # printDBG(data)
             data = json_loads(data)
 
             videoList = []
@@ -445,7 +445,7 @@ class EuroSportPlayer(CBaseHostClass):
                 item_id = item['id']
                 if item['type'] == 'collectionItem':
                     c = self.espCollectionItems[item_id]
-                    #printDBG(json_dumps(c))
+                    # printDBG(json_dumps(c))
                     video_id = c['relationships']['video']['data']['id']
                     videoData = self.espVideos[video_id]
                     printDBG(json_dumps(videoData))
@@ -638,14 +638,14 @@ class EuroSportPlayer(CBaseHostClass):
                 route = self.espRoutes[route_id]
                 printDBG(json_dumps(route))
 
-                #{"attributes": {"url": "/videos/eurosport/world-championship-239400", "canonical": true}, "type": "route", "id": "292e72a63ebcccb480984a84f3497b7702623ab6fe6e7d7d29b1dce79ed3da35"}
+                # {"attributes": {"url": "/videos/eurosport/world-championship-239400", "canonical": true}, "type": "route", "id": "292e72a63ebcccb480984a84f3497b7702623ab6fe6e7d7d29b1dce79ed3da35"}
                 route_url = self.getFullPath(route['attributes']['url'], 'route') + "?include=default"
 
                 sts, data = self.getPage(route_url)
 
-                #if sts:
-                    #printDBG('--------------------------------')
-                    #printDBG(data)
+                # if sts:
+                    # printDBG('--------------------------------')
+                    # printDBG(data)
 
             # open video playback json page
             playback_info_url = self.PLAYBACK_URL.replace('{%video_id%}', video_id)
@@ -666,10 +666,10 @@ class EuroSportPlayer(CBaseHostClass):
                 link_url = strwithmeta(s['hls']['url'], {'User-Agent': self.USER_AGENT, 'Referer': video_page_url})
                 linksTab.append({'name': 'auto hls', 'url': link_url})
                 linksTab.extend(getDirectM3U8Playlist(link_url, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-            #if 'dash' in s:
+            # if 'dash' in s:
             #    link_url = strwithmeta(s['dash']['url'], {'User-Agent': self.USER_AGENT, 'Referer' : video_page_url})
             #    linksTab.append({'name':'dash', 'url': link_url})
-            #if 'mss' in s:
+            # if 'mss' in s:
             #    link_url = strwithmeta(s['dash']['url'], {'User-Agent': self.USER_AGENT, 'Referer' : video_page_url})
             #    linksTab.append({'name':'mss', 'url': link_url})
 
@@ -692,7 +692,7 @@ class EuroSportPlayer(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
 
@@ -712,7 +712,7 @@ class EuroSportPlayer(CBaseHostClass):
         elif category == 'list_vod_items':
             self.listVodItems(self.currItem)
 
-        #SEARCH
+        # SEARCH
         elif category == 'list_search_items':
             self.listSearchItems(self.currItem)
         elif category in ["search", "search_next_page"]:
@@ -720,7 +720,7 @@ class EuroSportPlayer(CBaseHostClass):
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
 
-        #HISTORIA SEARCH
+        # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

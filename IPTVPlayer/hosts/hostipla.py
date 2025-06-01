@@ -242,12 +242,12 @@ class Ipla(CBaseHostClass):
         xmlTree = self.getCatXmlTree(refresh)
         if xmlTree:
             try:
-                #cats = xmlTree.findall("cat")
+                # cats = xmlTree.findall("cat")
                 cats = xmlTree
                 listVideo = False
                 numOfSubCat = 0
                 for cat in cats:
-                    #val = cat.attrib
+                    # val = cat.attrib
                     val = cat
                     try:
                         listVideo = True
@@ -260,7 +260,7 @@ class Ipla(CBaseHostClass):
                             title = self.getStr(val.get('title', ''), '')
                             plot = self.getStr(val.get('descr', ''), '')
                             icon = self.getStr(val.get('thumbnail', ''), '')
-                            #check if this is only link to diffrent category
+                            # check if this is only link to diffrent category
                             try:
                                 link = self.getStr(val.get('action', ''), '')
                                 linkMarker = "ipla://cmd-cmd=gotocat&catid="
@@ -271,7 +271,7 @@ class Ipla(CBaseHostClass):
                                 pass
                             params = {'category': 'category', 'title': self.cleanHtmlStr(title), 'plot': plot, 'icon': icon, 'catId': catId, 'pCatId': pid}
                             self.addDir(params)
-                        #printDBG("||||||||||||||||: %s" %pid)
+                        # printDBG("||||||||||||||||: %s" %pid)
                     except Exception:
                         printDBG("getCategories except")
                         printExc()
@@ -323,17 +323,17 @@ class Ipla(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| category[%r] " % (category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if category is None:
             self.listsMainMenu(refresh)
-    #GET SUB CATEGORY
+    # GET SUB CATEGORY
         elif category == 'category':
             self.getCategories(catId, refresh)
-    #WYSZUKAJ
+    # WYSZUKAJ
         elif category == 'Wyszukaj':
             pattern = urllib_quote_plus(searchPattern)
             self.getVideosList(Ipla.SEARCH_URL + pattern)
-    #HISTORIA WYSZUKIWANIA
+    # HISTORIA WYSZUKIWANIA
         elif category == "search_history":
             self.listsHistory()
 

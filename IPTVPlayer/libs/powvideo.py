@@ -34,7 +34,7 @@ def swapUrl(html_data, strToSwap):
     printDBG("-------------- swap code part 2 -------------")
     printDBG(code2)
 
-    #look for all string codes to replace in code2
+    # look for all string codes to replace in code2
     m = re.search("(?P<varName>_0x[a-f0-9]{3,6})", code2)
 
     if not m:

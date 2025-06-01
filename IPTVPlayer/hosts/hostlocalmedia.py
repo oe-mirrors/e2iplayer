@@ -427,7 +427,7 @@ class LocalMedia(CBaseHostClass):
                     if item.get('size', -1) >= 0:
                         descTab.append(_("Total size: ") + formatBytes(item['size']))
 
-                    #if len(table):
+                    # if len(table):
                     #    params['iso_mount_path']  = self.getMountPoint(fullPath, table)
                     #    if params['iso_mount_path']:
                     #        descTab.append( _('Mounted on %s') % params['iso_mount_path'] )
@@ -519,7 +519,7 @@ class LocalMedia(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsMainMenu({'name': 'category', 'good_for_fav': True})
         elif category == 'm3u':

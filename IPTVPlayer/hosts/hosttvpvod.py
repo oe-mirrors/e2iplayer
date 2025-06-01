@@ -95,17 +95,17 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     {'category': 'streams', 'title': 'TVP na żywo', 'url': 'http://tvpstream.tvp.pl/'},
                     {'category': 'digi_menu', 'title': 'Rekonstrukcja cyfrowa TVP', 'url': 'https://cyfrowa.tvp.pl/'},
 
-                    #{'category':'vods_list_items1',    'title':'Polecamy',                  'url':MAIN_VOD_URL},
-                    #{'category':'vods_sub_categories', 'title':'Polecane',                  'marker':'Polecane'},
-                    #{'category':'vods_sub_categories', 'title':'VOD',                       'marker':'VOD'},
-                    #{'category':'vods_sub_categories', 'title':'Programy',                  'marker':'Programy'},
-                    #{'category':'vods_sub_categories', 'title':'Informacje i publicystyka', 'marker':'Informacje i publicystyka'},
+                    # {'category':'vods_list_items1',    'title':'Polecamy',                  'url':MAIN_VOD_URL},
+                    # {'category':'vods_sub_categories', 'title':'Polecane',                  'marker':'Polecane'},
+                    # {'category':'vods_sub_categories', 'title':'VOD',                       'marker':'VOD'},
+                    # {'category':'vods_sub_categories', 'title':'Programy',                  'marker':'Programy'},
+                    # {'category':'vods_sub_categories', 'title':'Informacje i publicystyka', 'marker':'Informacje i publicystyka'},
                     {'category': 'search', 'title': _('Search'), 'search_item': True},
                     {'category': 'search_history', 'title': _('Search history')}]
 
     STREAMS_CAT_TAB = [{'category': 'tvp3_streams', 'title': 'TVP 3', 'url': 'http://tvpstream.tvp.pl/', 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/TVP3_logo_2016.png/240px-TVP3_logo_2016.png'},
                        {'category': 'week_epg', 'title': 'TVP SPORT', 'url': STREAMS_URL_TEMPLATE, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
-                       #{'category': 'tvpsport_streams', 'title': 'Transmisje sport.tvp.pl', 'url': 'http://sport.tvp.pl/transmisje', 'icon': 'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
+                       # {'category': 'tvpsport_streams', 'title': 'Transmisje sport.tvp.pl', 'url': 'http://sport.tvp.pl/transmisje', 'icon': 'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
                       ]
 
     def __init__(self):
@@ -382,7 +382,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         if not sts:
             return
         try:
-            #date.fromtimestamp(item['release_date']['sec']).strftime('%H:%M')
+            # date.fromtimestamp(item['release_date']['sec']).strftime('%H:%M')
             data = json_loads(data)
             data['items'].sort(key=lambda item: item['release_date_hour'])
             for item in data['items']:
@@ -1017,7 +1017,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         elif category == 'digi_explore_site':
             self.exploreDigiSite(currItem)
 
-    #WYSZUKAJ
+    # WYSZUKAJ
         elif category == "search":
             cItem = dict(currItem)
             cItem.update({'category': 'list_search', 'searchPattern': searchPattern, 'searchType': searchType, 'search_item': False})
@@ -1027,7 +1027,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
             searchPattern = cItem.get('searchPattern', '')
             searchType = cItem.get('searchType', '')
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA WYSZUKIWANIA
+    # HISTORIA WYSZUKIWANIA
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

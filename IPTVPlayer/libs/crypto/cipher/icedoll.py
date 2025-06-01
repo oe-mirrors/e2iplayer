@@ -67,7 +67,7 @@ class Icedoll(Rijndael):
             self.priorFeedBack = self._toBlock(chr(0) * (4 * self.Nb))  # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.priorFeedBack)                      # <------- !!! change from Rijndael !!!
         AddRoundKey(self, self.__expandedKey[0:self.Nb])
-        for round in range(1, self.Nr):          #for round = 1 step 1 to Nr�1
+        for round in range(1, self.Nr):  # for round = 1 step 1 to Nr�1
             SubBytes(self)
             ShiftRows(self)
             MixColumns(self)

@@ -255,7 +255,7 @@ class Delegate(object):
         self.returnValues = args
         self.event.set()
 
-    #def __del__(self):
+    # def __del__(self):
     #    printDBG("Delegate.__del__ ---")
 
 
@@ -264,7 +264,7 @@ class DelegateToMainThread(Delegate):
         global gMainFunctionsQueueTab
         Delegate.__init__(self, gMainFunctionsQueueTab[mainThreadIdx], fnc)
 
-    #def __del__(self):
+    # def __del__(self):
     #    printDBG("DelegateToMainThread.__del__ ---")
 
 
@@ -371,7 +371,7 @@ class iptv_execute(object):
         self.iptv_system.kill()
         self._callBack(-1, "terminated")
 
-    #def __del__(self):
+    # def __del__(self):
     #    printDBG("iptv_execute.__del__ ---")
 
 ###############################################################################
@@ -488,7 +488,7 @@ class CFunctionProxyQueue:
 
             self.QueueLock.acquire()
             if len(self.Queue) > 0:
-                #get CPQItemCallBack from mainList
+                # get CPQItemCallBack from mainList
                 item = self.Queue.pop(0)
                 printDBG("CFunctionProxyQueue.processQueue")
             else:

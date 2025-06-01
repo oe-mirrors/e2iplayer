@@ -361,7 +361,7 @@ class FilmovizijaStudio(CBaseHostClass):
         for item in mainData:
             try:
                 tmp = self.cm.ph.getDataBeetwenMarkers(item, '<a ', '>')[1]
-                #tmp = re.compile('''\s(\w)=['"]([^'^"]+?)['"]''').findall(tmp)
+                # tmp = re.compile('''\s(\w)=['"]([^'^"]+?)['"]''').findall(tmp)
                 tmp = re.compile(r'''[^a-zA-Z0-9_]([a-zA-Z0-9_]+?)\s*=\s*['"]([^'^"]+?)['"]''').findall(tmp)
 
                 attribs = {}
@@ -529,7 +529,7 @@ class FilmovizijaStudio(CBaseHostClass):
         self.currList = []
         self.cacheLinks = {}
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
@@ -540,17 +540,17 @@ class FilmovizijaStudio(CBaseHostClass):
             self.listMovieCats(self.currItem, 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem)
-    #SEASONS
+    # SEASONS
         elif category == 'list_seasons':
             self.listSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -316,8 +316,8 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
             self.raw_requestline = self.raw_requestline[idx:]
         if idx == -1:
             printDBG("Wrong request %s..." % self.raw_requestline[:256])
-            #sys.exit(-1)
-            #raise Exception("Wrong request %s..." % self.raw_requestline[:256])
+            # sys.exit(-1)
+            # raise Exception("Wrong request %s..." % self.raw_requestline[:256])
         return BaseHTTPRequestHandler.parse_request(self)
 
     def _set_headers(self, returnCode=200, addHeaders=[]):
@@ -368,7 +368,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
                 return_data = 3129
             else:
                 returnCode = 404
-                #sys.exit(-1)
+                # sys.exit(-1)
         elif data['url'] == '/captcha/list':
             if jd.captcha_result is None:
                 return_data = [{'hoster': 'iptvplayer.gitlab.io', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}]
@@ -378,7 +378,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
             return_data = {"subscriptionid": jd.subscription_id, "subscribed": True, "subscriptions": None, "exclusions": None, "maxPolltimeout": 25000, "maxKeepalive": 120000}
             jd.captcha_notified = False
         elif data['url'] == '/events/setsubscription':
-            #'^downloads', '^extraction', '^linkcrawler', '^dialogs', '^downloadwatchdog'
+            # '^downloads', '^extraction', '^linkcrawler', '^dialogs', '^downloadwatchdog'
             return_data = {'maxKeepalive': 120000, 'subscribed': True, 'subscriptions': ['^captchas'], 'maxPolltimeout': 25000, 'subscriptionid': data['params'][0], 'exclusions': ['REFRESH_CONTENT']}
             jd.captcha_notified = False
         elif data['url'] == '/linkcrawler/isCrawling':
@@ -391,11 +391,11 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
             return_data = [{'eventName': 'jdState', 'eventData': {'data': 'IDLE'}}, {'eventName': 'aggregatedNumbers', 'eventData': {'data': {'crawledPackageCount': 0, 'downloadSpeed': 0, 'crawledStatusUnknown': 0, 'crawledStatusOnline': 0, 'crawledLinksCount': 0, 'packageCount': 0, 'linksCount': 0, 'connections': 0, 'running': 0, 'eta': 0, 'crawledStatusOffline': 0, 'totalBytes': 0, 'totalCrawledBytes': 0, 'loadedBytes': 0}}}]
         elif data['url'] == '/events/listen':
             return_data = ''
-            #if jd.captcha_result == None and jd.captcha_notified == False:
+            # if jd.captcha_result == None and jd.captcha_notified == False:
             if jd.captcha_result is None:
                 return_data = [{'eventid': 'NEW', 'eventData': jd.captcha_data['id'], 'publisher': 'captchas'}]
                 jd.captcha_notified = True
-            #elif jd.captcha_result !=  None:
+            # elif jd.captcha_result !=  None:
             else:
                 return_data = [{"eventid": "DONE", "eventData": jd.captcha_data['id'], "publisher": "captchas"}]
                 jd.captcha_finished = True
@@ -440,7 +440,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
             return_data = None
         else:
             returnCode = 404
-            #sys.exit(-1)
+            # sys.exit(-1)
 
         self._set_headers(returnCode)
         return_data = '''{"data" : %s, "rid" : %s}''' % (json.dumps(return_data), data['rid'])

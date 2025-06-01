@@ -95,9 +95,9 @@ class MoviesNight(CBaseHostClass):
 
         cItem = dict(cItem)
         cItem['category'] = category
-        #params = dict(cItem)
-        #params.update({'title':_('All')})
-        #self.addDir(params)
+        # params = dict(cItem)
+        # params.update({'title':_('All')})
+        # self.addDir(params)
         self.listsTab(self.movieFiltersCache.get(filter, []), cItem)
 
     def listItems(self, cItem, category='list_seasons'):
@@ -312,25 +312,25 @@ class MoviesNight(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-    #MOVIES
+    # MOVIES
         elif category == 'movies_genres':
             self.listMoviesGenres(self.currItem, 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem)
-    #TVSERIES
+    # TVSERIES
         elif category == 'list_seasons':
             self.listSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -2236,7 +2236,7 @@ class E2iPlayerWidget(Screen):
                             GetIPTVNotify().push('\n'.join(message), 'error', 120)
             except:
                 printExc()
-#class E2iPlayerWidget
+# class E2iPlayerWidget
 
 
 class IPTVPlayerLCDScreen(Screen):

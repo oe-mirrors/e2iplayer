@@ -23,7 +23,7 @@ import re
 import datetime
 import urllib
 ###################################################
-#repo.mvshrk.xyz/plugins/
+# repo.mvshrk.xyz/plugins/
 
 
 def gettytul():
@@ -50,8 +50,8 @@ class FilmPapa(CBaseHostClass):
         if not sts:
             return
         url = self.cm.ph.getSearchGroups(data, '''iframe.src=['"]([^"^']+?)['"]''', 1, True)[0]
-        #if "https:" not in url:
-            #url = "https:" + url
+        # if "https:" not in url:
+            # url = "https:" + url
         videoUrls = []
         uri = urlparser.decorateParamsFromUrl(url)
         protocol = uri.meta.get('iptv_proto', '')

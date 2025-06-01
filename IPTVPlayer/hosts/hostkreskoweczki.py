@@ -129,7 +129,7 @@ class KreskoweczkiPL(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
             if url == '':
                 continue
-            #title
+            # title
             desc = []
             title1 = []
             title2 = []
@@ -151,20 +151,20 @@ class KreskoweczkiPL(CBaseHostClass):
             title = ' '.join(title1)
             if len(title2):
                 desc.insert(0, '  '.join(title2))
-            #title = self.cm.ph.getDataBeetwenMarkers(item, '<div class="category-name"', '</div>')[1]
-            #if title == '': title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]
-            #if title == '': title = self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>')[1]
-            #title = self.cm.ph.getDataBeetwenMarkers(item, '<span class="pm-category-name', '</span>')[1] + ' ' + title
+            # title = self.cm.ph.getDataBeetwenMarkers(item, '<div class="category-name"', '</div>')[1]
+            # if title == '': title = self.cm.ph.getSearchGroups(item, '''title=['"]([^'^"]+?)['"]''')[0]
+            # if title == '': title = self.cm.ph.getDataBeetwenMarkers(item, '<a ', '</a>')[1]
+            # title = self.cm.ph.getDataBeetwenMarkers(item, '<span class="pm-category-name', '</span>')[1] + ' ' + title
 
             params = dict(cItem)
             params.pop('post_data', None)
             params.update({'good_for_fav': True, 'page': 1, 'title': self.cleanHtmlStr(title), 'url': self.getFullUrl(url), 'icon': self.getFullUrl(icon), 'desc': '[/br]'.join(desc).replace('[/br][/br]', '[/br]')})
 
             if video:
-                #params.update({'desc':self.cleanHtmlStr(item)})
+                # params.update({'desc':self.cleanHtmlStr(item)})
                 self.addVideo(params)
             else:
-                #params.update({'desc':self.cleanHtmlStr(item.replace('</b>', '[/br]'))})
+                # params.update({'desc':self.cleanHtmlStr(item.replace('</b>', '[/br]'))})
                 self.addDir(params)
 
         if nextPage != '':
@@ -273,7 +273,7 @@ class KreskoweczkiPL(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_abc':
@@ -282,12 +282,12 @@ class KreskoweczkiPL(CBaseHostClass):
             self.listTitles(self.currItem, 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

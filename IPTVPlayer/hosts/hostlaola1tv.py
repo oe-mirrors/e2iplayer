@@ -53,7 +53,7 @@ class Laola1TV(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10'}
     MAIN_URL = 'http://laola1.tv/'
 
-    #'http://www.laola1.tv/img/laola1_logo.png'
+    # 'http://www.laola1.tv/img/laola1_logo.png'
     MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
                     {'category': 'search_history', 'title': _('Search history')}]
 
@@ -430,7 +430,7 @@ class Laola1TV(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'}, 'dir')
@@ -442,12 +442,12 @@ class Laola1TV(CBaseHostClass):
             self.listVideos(self.currItem)
         elif category == 'calendar':
             self.listCalendary(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -290,7 +290,7 @@ class TVJWORG(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listCategories({'name': 'category'})
         elif category == 'ondemand':

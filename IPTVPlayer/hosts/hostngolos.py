@@ -381,7 +381,7 @@ class NGolosCOM(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL is None:
-            #rm(self.COOKIE_FILE)
+            # rm(self.COOKIE_FILE)
             self.selectDomain()
 
         name = self.currItem.get("name", '')
@@ -391,7 +391,7 @@ class NGolosCOM(CBaseHostClass):
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             baseItem = {'type': 'category', 'name': 'category', 'url': self.getMainUrl()}
             self.listMainMenu(baseItem, 'list_cat_items')
@@ -403,12 +403,12 @@ class NGolosCOM(CBaseHostClass):
             self.exploreItem(self.currItem, 'sub_items')
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

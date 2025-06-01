@@ -28,7 +28,7 @@ from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import Config
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import iterDictItems, iterDictKeys, ensure_str
-#from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+# from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
 
 ###################################################
@@ -69,7 +69,7 @@ class ExtPlayerCommandsDispatcher():
     def __init__(self, owner):
         self.owner = owner
 
-        #SEEK_SPEED_MAP = [0.125, 0.25, 0.5, 0, 2, 4, 8, 16, 32, 64, 128]
+        # SEEK_SPEED_MAP = [0.125, 0.25, 0.5, 0, 2, 4, 8, 16, 32, 64, 128]
         self.SEEK_SPEED_MAP = []
         for item in reversed(config.seek.speeds_slowmotion.value):
             self.SEEK_SPEED_MAP.append(1.0 / float(item))
@@ -211,14 +211,14 @@ class IPTVExtMoviePlayer(Screen):
         printDBG("Player skin file path:" + self.playerSkinPath)
 
         if os_path.exists(self.playerSkinPath):
-            #read player skin xml file
+            # read player skin xml file
             skinFile = open(self.playerSkinPath, 'r')
             skin = skinFile.read()
             skinFile.close()
 
-            #printDBG("---------------------------------------")
-            #printDBG(skin)
-            #printDBG("---------------------------------------")
+            # printDBG("---------------------------------------")
+            # printDBG(skin)
+            # printDBG("---------------------------------------")
         else:
             skin = ""
 
@@ -265,14 +265,14 @@ class IPTVExtMoviePlayer(Screen):
             printDBG("Player clock file path:" + self.playerClockPath)
 
             if os_path.exists(self.playerClockPath):
-                #read player skin xml file
+                # read player skin xml file
                 clockFile = open(self.playerClockPath, 'r')
                 clockWidget = clockFile.read()
                 clockFile.close()
 
-                #printDBG("---------------------------------------")
-                #printDBG(clockWidget)
-                #printDBG("---------------------------------------")
+                # printDBG("---------------------------------------")
+                # printDBG(clockWidget)
+                # printDBG("---------------------------------------")
 
                 clockWidget = clockWidget % clockFontSize
             else:
@@ -306,7 +306,7 @@ class IPTVExtMoviePlayer(Screen):
 
         try:
             if os_path.exists(settingsPath):
-                #read player skin xml file
+                # read player skin xml file
                 settingsFile = open(settingsPath, 'r')
                 response = settingsFile.read()
                 settingsFile.close()
@@ -425,7 +425,7 @@ class IPTVExtMoviePlayer(Screen):
 
         self.onClose.append(self.__onClose)
         self.onShow.append(self.onStart)
-        #self.onLayoutFinish.append(self.onStart)
+        # self.onLayoutFinish.append(self.onStart)
 
         self.console = None
 
@@ -459,7 +459,7 @@ class IPTVExtMoviePlayer(Screen):
         # for subtitles
         self.infoBanerOffsetY = -1
         for idx in range(self.subLinesNum):
-            #printf('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' % ('subLabel%d'%(idx+1)))
+            # printf('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' % ('subLabel%d'%(idx+1)))
             self['subLabel%d' % (idx + 1)] = Label(" ")
         self.hideSubtitles()
         self.subHandler = {}
@@ -1098,9 +1098,9 @@ class IPTVExtMoviePlayer(Screen):
         marker, text = self.subHandler[handler_type].getSubtitles(timeMS + delay_ms, prevMarker)
         if None is not text:
             self.subHandler['marker'] = marker
-            #printDBG("===============================================================")
-            #printDBG(text)
-            #printDBG("===============================================================")
+            # printDBG("===============================================================")
+            # printDBG(text)
+            # printDBG("===============================================================")
             if "" == text:
                 self.hideSubtitles()
             else:
@@ -1247,7 +1247,7 @@ class IPTVExtMoviePlayer(Screen):
         self['lengthTimeLabel'].setText(str(timedelta(seconds=newLength)))
 
     def playbackUpdateInfo(self, stsObj):
-        #fix TypeError: '>' not supported between instances of 'NoneType' and 'int'
+        # fix TypeError: '>' not supported between instances of 'NoneType' and 'int'
         try:
             # workaround for missing playback length info for under muxing MKV
             if self.playback['Length'] > 0 and self.downloader is not None and self.downloader.getName() == 'ffmpeg':
@@ -1646,14 +1646,14 @@ class IPTVExtMoviePlayer(Screen):
         msgText = ''
         msgType = MessageBox.TYPE_INFO
         for item in data:
-            #printDBG('item= %s' % item)
+            # printDBG('item= %s' % item)
             item = item.strip().replace('{"PLAYBACK_LENGTH":{"PLAYBACK_LENGTH":', '{"PLAYBACK_LENGTH":').replace('{"PLAYBACK_LENGTH":{"J":', '{"J":')
             if item.endswith(':'):
                 item = item[:-1]
             if item.startswith('{'):
                 try:
                     obj = json.loads(item)
-                    #printDBG("Status object [%r]" % obj)
+                    # printDBG("Status object [%r]" % obj)
                     key = list(obj.keys())[0]
                     obj = obj[key]
                 except Exception:
@@ -1664,7 +1664,7 @@ class IPTVExtMoviePlayer(Screen):
                     self.latchSubtitlesTime(obj['c'])
                 elif "PLAYBACK_PLAY" == key:
                     self.onStartPlayer()
-                    #if 'gstplayer' != self.player:
+                    # if 'gstplayer' != self.player:
                     self.updateInfoTimer.start(1000)
                     if 0 == obj['sts']:
                         self.playbackUpdateInfo({'Status': ['Play', '1']})
@@ -1715,10 +1715,10 @@ class IPTVExtMoviePlayer(Screen):
                 elif "PLAYBACK_INFO" == key:
                     if obj['isPaused']:
                         self.playbackUpdateInfo({'Status': ['Pause', '0']})
-                        #if 'gstplayer' == self.player: self.updateInfoTimer.stop()
+                        # if 'gstplayer' == self.player: self.updateInfoTimer.stop()
                         self.subHandler['timer'].stop()
                     else:
-                        #if 'gstplayer' == self.player: self.updateInfoTimer.start(1000)
+                        # if 'gstplayer' == self.player: self.updateInfoTimer.start(1000)
                         if obj['isForwarding']:
                             self.playbackUpdateInfo({'Status': ['FastForward', str(obj['Speed'])]})
                         elif 0 < obj['SlowMotion']:
@@ -1931,7 +1931,7 @@ class IPTVExtMoviePlayer(Screen):
 
     def onStart(self):
         self.onShow.remove(self.onStart)
-        #self.onLayoutFinish.remove(self.onStart)
+        # self.onLayoutFinish.remove(self.onStart)
 
         if '' != self.refreshCmd and (self.downloader is not None or not self.fileSRC.startswith('ext://')):
             self.refreshCmdConsole = iptv_system(self.refreshCmd)
@@ -2013,7 +2013,7 @@ class IPTVExtMoviePlayer(Screen):
                 self.showMessage(msg, MessageBox.TYPE_ERROR)
 
             gstplayerPath = '/usr/bin/gstplayer'
-            #'export GST_DEBUG="*:6" &&' +
+            # 'export GST_DEBUG="*:6" &&' +
             cmd = gstplayerPath + ' "%s"' % self.fileSRC
 
             # active audio track
@@ -2070,7 +2070,7 @@ class IPTVExtMoviePlayer(Screen):
             if "://" in self.fileSRC:
                 ramBufferSizeMB = config.plugins.iptvplayer.rambuffer_sizemb_network_proto.value
                 url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmpUri, True)
-                #cmd += ' ""' # cookies for now will be send in headers
+                # cmd += ' ""' # cookies for now will be send in headers
                 headers = ''
                 for key in httpParams:
                     if key == 'Range':  # Range is always used by ffmpeg
@@ -2153,7 +2153,7 @@ class IPTVExtMoviePlayer(Screen):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self.eplayer3Finished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self.eplayer3DataAvailable)
-        #if 'gstplayer' == self.player:
+        # if 'gstplayer' == self.player:
         #    self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self.eplayer3DataAvailable2 ) # work around to catch EOF event after seeking, pause .etc
         printDBG("->||||||| onStart cmd[%s]" % cmd)
         self.console.setNice(GetNice() + 1)
@@ -2305,7 +2305,7 @@ class IPTVExtMoviePlayer(Screen):
 
     def __onShow(self):
         pass
-        #Screen.hide(self) # we do not need window at now maybe in future
+        # Screen.hide(self) # we do not need window at now maybe in future
 
     def fatalErrorHandler(self, msg):
         if self.fatalErrorOccurs:
@@ -2330,7 +2330,7 @@ class IPTVExtMoviePlayer(Screen):
         self.fatalErrorHandler(msg)
 
     def extPlayerSendCommand(self, command, arg1=''):
-        #printDBG("IPTVExtMoviePlayer.extPlayerSendCommand command[%s] arg1[%s]" % (command, arg1))
+        # printDBG("IPTVExtMoviePlayer.extPlayerSendCommand command[%s] arg1[%s]" % (command, arg1))
         if None is self.console:
             printExc("IPTVExtMoviePlayer.extPlayerSendCommand console not available")
             return False
@@ -2384,7 +2384,7 @@ class IPTVExtMoviePlayer(Screen):
                     socket_path = "/tmp/iptvplayer_extplayer_term_fd"
                     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
                     sock.connect(socket_path)
-                    #sock.sendall("q")
+                    # sock.sendall("q")
                 except Exception:
                     printExc()
                 finally:

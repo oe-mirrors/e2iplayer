@@ -175,7 +175,7 @@ class CCM(BlockCipherWithIntegrity):
             ctr = self.baseCipher.encrypt(ctrModePl)
             ctBlock = ct[(counter - 1) * self.blockSize:counter * self.blockSize]
             pt = pt + xor(ctr, ctBlock)
-        #------- CBC Mac Calculation
+        # ------- CBC Mac Calculation
         blockZero = flagsByte + nonce + packedLenMessage
         if len(blockZero) != self.baseCipher.blockSize:
             raise DecryptError('CCM bad size of first block')

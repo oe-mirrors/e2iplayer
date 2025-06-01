@@ -55,8 +55,8 @@ class Dailymotion(CBaseHostClass):
                          {'title': _('Ranking'), 'sort': 'ranking'},
                          {'title': _('Trending'), 'sort': 'trending'},
                          {'title': _('Random'), 'sort': 'random'}, ]
-                         #{'title':_('Most relevant'), 'sort':'relevance'}
-                         #recent, visited, visited-hour, visited-today, visited-week, visited-month, commented, commented-hour, commented-today, commented-week, commented-month, rated, rated-hour, rated-today, rated-week, rated-month, relevance, random, ranking, trending, old, live-audience
+                         # {'title':_('Most relevant'), 'sort':'relevance'}
+                         # recent, visited, visited-hour, visited-today, visited-week, visited-month, commented, commented-hour, commented-today, commented-week, commented-month, rated, rated-hour, rated-today, rated-week, rated-month, relevance, random, ranking, trending, old, live-audience
 
         self.filterCache = {}
         self.apiData = {'client_type': 'androidapp', 'client_version': '4775', 'family_filter': 'false'}
@@ -309,16 +309,16 @@ class Dailymotion(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-    #CATEGORIES
+    # CATEGORIES
         elif category == 'categories':
             self.listCategories(self.currItem, 'category')
-    #SORT
+    # SORT
         elif category == 'sort':
             self.listSort(self.currItem, 'category')
-    #CATEGORY
+    # CATEGORY
         elif category == 'category':
             self.listVideos(self.currItem)
 
@@ -326,15 +326,15 @@ class Dailymotion(CBaseHostClass):
             self.listSiteSeach(self.currItem)
         elif category == 'list_playlist':
             self.listVideos(self.currItem, 'playlist')
-        #elif category == 'list_channel':
+        # elif category == 'list_channel':
         #    self.listVideos(self.currItem, 'channel')
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
@@ -351,8 +351,8 @@ class IPTVHost(CHostBase):
     def getSearchTypes(self):
         searchTypesOptions = []
         searchTypesOptions.append((_("Videos"), "videos"))
-        #searchTypesOptions.append((_("Lives"),     "lives"))
-        #searchTypesOptions.append((_("Topics"),    "topics"))
-        #searchTypesOptions.append((_("Channels"),  "channels"))
+        # searchTypesOptions.append((_("Lives"),     "lives"))
+        # searchTypesOptions.append((_("Topics"),    "topics"))
+        # searchTypesOptions.append((_("Channels"),  "channels"))
         searchTypesOptions.append((_("Playlists"), "playlists"))
         return searchTypesOptions

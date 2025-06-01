@@ -212,7 +212,7 @@ class SubsRoProvider(CBaseSubProviderClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.getSearchList({'name': 'category'}, 'get_subtitles')
         if category == 'list_dir':
