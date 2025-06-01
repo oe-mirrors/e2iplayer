@@ -62,7 +62,7 @@ def toStringCases(txt_result):
         if "+(" in txt_result:
             m3 = True
             try:
-                sum_base = "+" + re.search(r".toString...(\d+).", txt_result, re.DOTALL).groups(1)
+                sum_base = "+" + re.search(r".toString...(\d+).", txt_result, re.DOTALL).group(1)
             except:
                 sum_base = ""
             txt_pre_temp = re.findall(r"..(\d),(\d+).", txt_result, re.DOTALL)
