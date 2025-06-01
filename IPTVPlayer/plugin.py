@@ -6,7 +6,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import E2iPlayerW
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import IsExecutable, IsWebInterfaceModuleAvailable
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import IsExecutable
 ###################################################
 
 ###################################################
@@ -44,7 +44,7 @@ def Plugins(**kwargs):
     list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=PluginDescriptor.WHERE_MENU, fnc=startIPTVfromMenu))
     if config.plugins.iptvplayer.showinextensions.value:
         list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=[PluginDescriptor.WHERE_EXTENSIONSMENU], fnc=main))
-    if IsWebInterfaceModuleAvailable() and config.plugins.iptvplayer.IPTVWebIterface.value:
+    if config.plugins.iptvplayer.IPTVWebIterface.value:
         try:
             list.append(PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=sessionstart, needsRestart=False))  # activating IPTV web interface
         except Exception:

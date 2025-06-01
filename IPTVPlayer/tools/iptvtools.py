@@ -35,8 +35,8 @@ import datetime
 from functools import cmp_to_key
 import socket
 
-#SERVER_DOMAINS = {'vline': 'http://iptvplayer.vline.pl/', 'gitlab': 'http://zadmario.gitlab.io/', 'private': 'http://www.e2iplayer.gitlab.io/'}
-#SERVER_UPDATE_PATH = {'vline': 'download/update2/', 'gitlab': 'update2/', 'private': 'update2/'}
+# SERVER_DOMAINS = {'vline': 'http://iptvplayer.vline.pl/', 'gitlab': 'http://zadmario.gitlab.io/', 'private': 'http://www.e2iplayer.gitlab.io/'}
+# SERVER_UPDATE_PATH = {'vline': 'download/update2/', 'gitlab': 'update2/', 'private': 'update2/'}
 
 
 def UsePyCurl():
@@ -110,12 +110,14 @@ def GetNice(pid=None):
     return nice
 
 
-#def E2PrioFix(cmd, factor=2):
-#    return cmd
-#    if '/duk' not in cmd:  # and config.plugins.iptvplayer.plarform.value in ('mipsel', 'armv7', 'armv5t'):
-#        return 'nice -n %d %s' % (GetNice() + factor, cmd)
-#    else:
-#        return cmd
+"""
+def E2PrioFix(cmd, factor=2):
+   return cmd
+   if '/duk' not in cmd:  # and config.plugins.iptvplayer.plarform.value in ('mipsel', 'armv7', 'armv5t'):
+       return 'nice -n %d %s' % (GetNice() + factor, cmd)
+   else:
+       return cmd
+"""
 
 
 def GetDefaultLang(full=False):
@@ -277,18 +279,6 @@ class iptv_system:
 
 def IsHttpsCertValidationEnabled():
     return config.plugins.iptvplayer.httpssslcertvalidation.value
-
-
-def IsWebInterfaceModuleAvailable(chekInit=False):
-    if chekInit:
-        file = '__init__'
-    else:
-        file = 'initiator'
-    if (fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.py' % file)) or
-        fileExists(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/Web/%s.pyc' % file))):
-        return True
-    else:
-        return False
 
 
 def GetAvailableIconSize(checkAll=True):
@@ -535,9 +525,9 @@ def Which(program):
 class CSelOneLink():
 
     def __init__(self, listOfLinks, getQualiyFun, maxRes):
-       self.listOfLinks = listOfLinks
-       self.getQualiyFun = getQualiyFun
-       self.maxRes = maxRes
+        self.listOfLinks = listOfLinks
+        self.getQualiyFun = getQualiyFun
+        self.maxRes = maxRes
 
     def _cmpLinks(self, item1, item2):
         val1 = self.getQualiyFun(item1)
@@ -1048,7 +1038,7 @@ def GetIconDirBaseName():
 
 
 def CheckIconName(name):
-    #check if name is correct
+    # check if name is correct
     if 36 == len(name) and '.jpg' == name[-4:]:
         try:
             tmp = int(name[:-4], 16)
@@ -1405,17 +1395,19 @@ class CMoviePlayerPerHost():
 
 
 def byteify(input, noneReplacement=None, baseTypesAsString=False):
-#    if isinstance(input, dict):
-#        return dict([(byteify(key, noneReplacement, baseTypesAsString), byteify(value, noneReplacement, baseTypesAsString)) for key, value in input.items()])
-#    elif isinstance(input, list):
-#        return [byteify(element, noneReplacement, baseTypesAsString) for element in input]
-#    elif isinstance(input, str):
-#        return input.encode('utf-8')
-#    elif input == None and noneReplacement != None:
-#        return noneReplacement
-#    elif baseTypesAsString:
-#        return str(input)
-#    else:
+    """
+    if isinstance(input, dict):
+        return dict([(byteify(key, noneReplacement, baseTypesAsString), byteify(value, noneReplacement, baseTypesAsString)) for key, value in input.items()])
+    elif isinstance(input, list):
+        return [byteify(element, noneReplacement, baseTypesAsString) for element in input]
+    elif isinstance(input, str):
+        return input.encode('utf-8')
+    elif input == None and noneReplacement != None:
+        return noneReplacement
+    elif baseTypesAsString:
+        return str(input)
+    else:
+    """
     return input
 
 
@@ -1779,9 +1771,9 @@ def ReadGnuMIPSABIFP(elfFileName):
                                 if tag == 1 and attrName == "gnu":  # File Attributes
                                     while p < end:
                                         # display_gnu_attribute
-                                          numRead, tag = _readLeb128(contents, p, end)
-                                          p += numRead
-                                          if tag == Tag_GNU_MIPS_ABI_FP:
+                                        numRead, tag = _readLeb128(contents, p, end)
+                                        p += numRead
+                                        if tag == Tag_GNU_MIPS_ABI_FP:
                                             numRead, val = _readLeb128(contents, p, end)
                                             p += numRead
                                             Val_GNU_MIPS_ABI_FP = val
