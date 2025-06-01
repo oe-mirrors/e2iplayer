@@ -6,8 +6,7 @@
 #
 #
 
-from time import sleep as time_sleep
-from os import remove as os_remove, path as os_path
+from os import path as os_path
 from urllib.parse import quote as urllib_quote
 from random import shuffle as random_shuffle
 import traceback
@@ -22,8 +21,7 @@ from Screens.ChoiceBox import ChoiceBox
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.Pixmap import Pixmap
-from Components.ScrollLabel import ScrollLabel
-from Components.config import config, configfile
+from Components.config import config
 from Components.Sources.StaticText import StaticText
 from Tools.BoundFunction import boundFunction
 from Tools.LoadPixmap import LoadPixmap
@@ -42,19 +40,17 @@ from Plugins.Extensions.IPTVPlayer.components.iptvfavouriteswidgets import IPTVF
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools_FreeSpace, \
-                                                          mkdirs as iptvtools_mkdirs, GetIPTVPlayerVersion, GetVersionNum, \
+                                                          mkdirs as iptvtools_mkdirs, GetIPTVPlayerVersion, \
                                                           printDBG, printExc, iptv_system, GetHostsList, IsHostEnabled, \
                                                           eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, GetExtensionsDir, \
-                                                          SortHostsList, GetHostsOrderList, CSearchHistoryHelper, IsExecutable, \
+                                                          SortHostsList, GetHostsOrderList, CSearchHistoryHelper, \
                                                           CMoviePlayerPerHost, GetFavouritesDir, CFakeMoviePlayerOption, GetAvailableIconSize, \
-                                                          GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, TestTmpCookieDir, TestTmpJSCacheDir, \
+                                                          GetE2VideoMode, SetE2VideoMode, TestTmpCookieDir, TestTmpJSCacheDir, \
                                                           ClearTmpCookieDir, ClearTmpJSCacheDir, SetTmpCookieDir, SetTmpJSCacheDir, \
                                                           GetEnabledHostsList, SaveHostsOrderList, GetHostsAliases, formatBytes, getExcMSG
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvbuffui import E2iPlayerBufferingWidget
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
 
@@ -91,14 +87,14 @@ class E2iPlayerWidget(Screen):
                             <widget render="Label" source="key_yellow" position="220,9" size="180,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget name="key_green" position="425,9" size="300,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget render="Label" source="key_blue" position="740,9" size="140,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-                            <widget name="headertext" position="15,55" zPosition="1" size="1080,30" font="Regular;30" transparent="1" backgroundColor="#00000000" />
+                            <widget name="headertext" position="5,55" zPosition="2" size="1080,40" font="Regular;30" transparent="1" backgroundColor="#00000000" />
                             <widget name="statustext" position="15,148" zPosition="1" size="985,120" font="Regular;30" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
-                            <widget name="list" position="5,115" zPosition="2" size="860,690" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" backgroundColor="#00000000" />
-                            <widget name="console" position="1020,310" zPosition="1" size="500,630" font="Regular;26" transparent="1" backgroundColor="#00000000" />
-                            <widget name="cover" zPosition="2" position="1020,80" size="244,280" alphatest="blend" />
-                            <widget name="playerlogo" zPosition="4" position="1264,3" size="240,80" alphatest="blend" />
-                            <widget name="sequencer" position="0,0" zPosition="6" size="1090,625" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
-                            <widget name="spinner"   zPosition="2" position="463,200" size="16,16" transparent="1" alphatest="blend" />
+                            <widget name="list" position="5,105" zPosition="2" size="860,690" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" backgroundColor="#00000000" />
+                            <widget name="console" position="1089,369" zPosition="1" size="500,567" font="Regular;26" transparent="1" backgroundColor="#00000000" />
+                            <widget name="cover" zPosition="2" position="1211,88" size="244,280" alphatest="blend" />
+                            <widget name="playerlogo" zPosition="4" position="1203,10" size="240,80" alphatest="blend" />
+                            <widget name="sequencer" position="0,1" zPosition="6" size="1090,625" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
+                            <widget name="spinner" zPosition="2" position="463,200" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_1" zPosition="1" position="463,200" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_2" zPosition="1" position="479,200" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_3" zPosition="1" position="495,200" size="16,16" transparent="1" alphatest="blend" />
@@ -112,20 +108,20 @@ class E2iPlayerWidget(Screen):
                             <ePixmap position="287,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
                             <ePixmap position="554,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
                             <ePixmap position="801,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
-                            <widget render="Label" source="key_red"    position="65,9"  size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-                            <widget name="key_green"  position="322,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+                            <widget render="Label" source="key_red" position="65,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+                            <widget name="key_green" position="322,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget render="Label" source="key_yellow" position="589,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-                            <widget render="Label" source="key_blue"   position="836,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+                            <widget render="Label" source="key_blue" position="836,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
                             <widget name="headertext" position="5,47" zPosition="1" size="1080,23" font="Regular;20" transparent="1" backgroundColor="#00000000" />
                             <widget name="statustext" position="5,140" zPosition="1" size="985,120" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
-                            <widget name="list" position="5,100" zPosition="2" size="1080,280" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" backgroundColor="#00000000" />
-                            <widget name="console" position="165,430" zPosition="1" size="935,140" font="Regular;20" transparent="1" backgroundColor="#00000000" />
-                            <widget name="cover" zPosition="2" position="5,400" size="122,140" alphatest="blend" />
+                            <widget name="list" position="5,75" zPosition="2" size="1080,280" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" backgroundColor="#00000000" />
+                            <widget name="console" position="155,370" zPosition="1" size="935,140" font="Regular;20" transparent="1" backgroundColor="#00000000" />
+                            <widget name="cover" zPosition="2" position="5,370" size="122,140" alphatest="blend" />
                             <widget name="playerlogo" zPosition="4" position="964,3" size="120,40" alphatest="blend" />
-                            <ePixmap zPosition="4" position="5,395" size="1080,5" pixmap="%s" transparent="1" />
-                            <widget name="sequencer" position="0,0" zPosition="6" size="1090,525" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
+                            <ePixmap zPosition="4" position="5,360" size="1080,5" pixmap="%s" transparent="1" />
+                            <widget name="sequencer" position="0,5" zPosition="6" size="1090,525" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
 
-                            <widget name="spinner"   zPosition="2" position="463,200" size="16,16" transparent="1" alphatest="blend" />
+                            <widget name="spinner" zPosition="2" position="463,200" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_1" zPosition="1" position="463,200" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_2" zPosition="1" position="479,200" size="16,16" transparent="1" alphatest="blend" />
                             <widget name="spinner_3" zPosition="1" position="495,200" size="16,16" transparent="1" alphatest="blend" />
@@ -157,7 +153,6 @@ class E2iPlayerWidget(Screen):
             try:
                 with open(path, "r") as f:
                     self.skin = f.read()
-                    f.close()
             except Exception:
                 printExc("Skin read error: " + path)
 
@@ -237,10 +232,10 @@ class E2iPlayerWidget(Screen):
         self.showHostsErrorMessage = True
 
         self.onClose.append(self.__onClose)
-        #self.onLayoutFinish.append(self.onStart)
+        # self.onLayoutFinish.append(self.onStart)
         self.onShow.append(self.onStart)
 
-        #Defs
+        # Defs
         self.searchPattern = CSearchHistoryHelper.loadLastPattern()[1]
         self.searchType = None
         self.workThread = None
@@ -273,7 +268,7 @@ class E2iPlayerWidget(Screen):
         asynccall.gMainFunctionsQueueTab[0].clearQueue()
         asynccall.gMainFunctionsQueueTab[0].setProcFun(self.doProcessProxyQueueItem)
 
-        #main Queue
+        # main Queue
         self.mainTimer = eTimer()
         self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.processProxyQueue)
         # every 100ms Proxy Queue will be checked
@@ -304,16 +299,11 @@ class E2iPlayerWidget(Screen):
             gDownloadManager = IPTVDMApi(2, int(config.plugins.iptvplayer.IPTVDMMaxDownloadItem.value), GetIPTVDMNotification)
             if config.plugins.iptvplayer.IPTVDMRunAtStart.value:
                 gDownloadManager.runWorkThread()
-        #################################################################
-
-        #################################################################
-        #                   Auto playing sequencer
-        #################################################################
+        # Auto playing sequencer
         self.autoPlaySeqStarted = False
         self.autoPlaySeqTimer = eTimer()
         self.autoPlaySeqTimer_conn = eConnectCallback(self.autoPlaySeqTimer.timeout, self.autoPlaySeqTimerCallBack)
         self.autoPlaySeqTimerValue = 0
-        #################################################################
 
         self.activePlayer = None
         self.canRandomizeList = False
@@ -345,7 +335,7 @@ class E2iPlayerWidget(Screen):
         self.colorDisabled = parseColor("#808080")
 
         self.hostsAliases = GetHostsAliases()
-    #end def __init__(self, session):
+    # end def __init__(self, session):
 
     def updateDownloadButton(self):
         self.downloadable = False
@@ -512,10 +502,11 @@ class E2iPlayerWidget(Screen):
             if not notifyObj.isEmpty():
                 notification = notifyObj.pop()
                 if notification:
-                    typeMap = {'info': MessageBox.TYPE_INFO,
-                               'error': MessageBox.TYPE_ERROR,
-                               'warning': MessageBox.TYPE_WARNING,
-                              }
+                    typeMap = {
+                        'info': MessageBox.TYPE_INFO,
+                        'error': MessageBox.TYPE_ERROR,
+                        'warning': MessageBox.TYPE_WARNING,
+                    }
                     self.session.openWithCallback(self.processIPTVNotify, MessageBox, notification.message, type=typeMap.get(notification.type, MessageBox.TYPE_INFO), timeout=notification.timeout)
                     return
         except Exception:
@@ -537,7 +528,7 @@ class E2iPlayerWidget(Screen):
         try:
             if None is item.retValue[0] or self.workThread == item.retValue[0]:
                 if isinstance(item.retValue[1], asynccall.CPQParamsWrapper):
-                    getattr(self, method)(*item.retValue[1])
+                    getattr(self, item.clientFunName)(*item.retValue[1])
                 else:
                     getattr(self, item.clientFunName)(item.retValue[1])
             else:
@@ -583,7 +574,7 @@ class E2iPlayerWidget(Screen):
 
     def blue_pressed(self):
         # For Keyboard test
-        #if False:
+        # if False:
         #    from Plugins.Extensions.IPTVPlayer.components.e2ivksuggestion import AutocompleteSearch
         #    from Plugins.Extensions.IPTVPlayer.suggestions.google import SuggestionsProvider
         #    self.session.open(GetVirtualKeyboard(), additionalParams={'autocomplete':AutocompleteSearch(SuggestionsProvider(True))})
@@ -704,16 +695,17 @@ class E2iPlayerWidget(Screen):
                 TextMSG += _("E-mail: ") + "\n\t- iptvplayere2@gmail.com\n"
                 TextMSG += _("www: ") + "\n\t- http://iptvplayer.vline.pl/" + '\n\t- http://www.iptvplayer.gitlab.io/\n'
                 TextMSG += _("Developers: ")
-                developersTab = [{'nick': 'zdzislaw22', },
-                                 {'nick': 'mamrot', },
-                                 {'nick': 'MarcinO', },
-                                 {'nick': 'skalita', },
-                                 {'nick': 'atilaks', },
-                                 {'nick': 'huball', },
-                                 {'nick': 'matzg', },
-                                 {'nick': 'tomashj291', },
-                                 {'nick': 'a4tech', },
-                                ]
+                developersTab = [
+                    {'nick': 'zdzislaw22', },
+                    {'nick': 'mamrot', },
+                    {'nick': 'MarcinO', },
+                    {'nick': 'skalita', },
+                    {'nick': 'atilaks', },
+                    {'nick': 'huball', },
+                    {'nick': 'matzg', },
+                    {'nick': 'tomashj291', },
+                    {'nick': 'a4tech', },
+                ]
                 # present alphabetically, the order does not mean validity
                 sortedList = sorted(developersTab, key=lambda k: k['nick'].upper())
                 for item in sortedList:
@@ -741,9 +733,7 @@ class E2iPlayerWidget(Screen):
                 currIdx = -1
                 for idx in range(len(options)):
                     try:
-                        if options[idx].privateData.get('buffering', None) == self.activePlayer.activePlayer.get('buffering', None) and \
-                           options[idx].privateData.get('player', CFakeMoviePlayerOption('', '')).value == \
-                           self.activePlayer.activePlayer.get('player', CFakeMoviePlayerOption('', '')).value:
+                        if options[idx].privateData.get('buffering', None) == self.activePlayer.activePlayer.get('buffering', None) and options[idx].privateData.get('player', CFakeMoviePlayerOption('', '')).value == self.activePlayer.activePlayer.get('player', CFakeMoviePlayerOption('', '')).value:
                             currIdx = idx
                     except Exception:
                         printExc()
@@ -767,7 +757,6 @@ class E2iPlayerWidget(Screen):
                 self.session.openWithCallback(self.editFavouritesCallback, IPTVFavouritesMainWidget)
             elif ret[1] == 'DELETE_FAV':
                 self.session.openWithCallback(self.deletefavouriteItem, MessageBox, _("Definitely remove from favorites?"), type=MessageBox.TYPE_YESNO, timeout=10)
-
             elif ret[1] == 'RandomizePlayableItems':
                 self.randomizePlayableItems()
             elif ret[1] == 'ReversePlayableItems':
@@ -859,7 +848,7 @@ class E2iPlayerWidget(Screen):
             printDBG("updateCover retDict for Ident: %s " % retDict["Ident"])
             updateIcon = False
             if 'cover' == retDict["Ident"]:
-                #check if we have icon for right item on list
+                # check if we have icon for right item on list
                 selItem = self.getSelItem()
                 if selItem and '' != selItem.iconimage:
                     # check if we have this icon and get the path to this icon on disk
@@ -881,7 +870,7 @@ class E2iPlayerWidget(Screen):
                     self[retDict["Ident"]].hide()
         else:
             printDBG("updateCover retDict empty")
-    #end updateCover(self, retDict):
+    # end updateCover(self, retDict):
 
     def changeBottomPanel(self):
         self.displayIcon()
@@ -916,15 +905,15 @@ class E2iPlayerWidget(Screen):
                 printDBG("back_pressed prev sel index %s" % self.nextSelIndex)
                 self.requestListFromHost('Previous')
             else:
-                #There is no prev categories, so exit
-                #self.close()
+                # There is no prev categories, so exit
+                # self.close()
                 if self.group is None:
                     self.selectHost()
                 else:
                     self.selectHostFromGroup()
         else:
             self.showWindow()
-    #end back_pressed(self):
+    # end back_pressed(self):
 
     def info_pressed(self):
         printDBG('info_pressed')
@@ -938,7 +927,7 @@ class E2iPlayerWidget(Screen):
                 self.stopAutoPlaySequencer()
                 self.currSelIndex = currSelIndex = self["list"].getCurrentIndex()
                 self.requestListFromHost('ForArticleContent', currSelIndex)
-    #end info_pressed(self):
+    # end info_pressed(self):
 
     def ok_pressed0(self):
         self.activePlayer.set({})
@@ -1003,9 +992,9 @@ class E2iPlayerWidget(Screen):
                 item = self.getSelItem()
                 self.currItem = item
 
-                #Get current selection
+                # Get current selection
                 currSelIndex = self["list"].getCurrentIndex()
-                #remember only prev categories
+                # remember only prev categories
                 if item.type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_PICTURE, CDisplayListItem.TYPE_DATA]:
                     if CDisplayListItem.TYPE_AUDIO == item.type:
                         self.bufferSize = config.plugins.iptvplayer.requestedAudioBuffSize.value * 1024
@@ -1041,7 +1030,7 @@ class E2iPlayerWidget(Screen):
                     self.startSearchProcedure(item.possibleTypesOfSearch)
         else:
             self.showWindow()
-    #end ok_pressed(self):
+    # end ok_pressed(self):
 
     def checkDirPin(self, callbackFun, arg1, arg2, arg3, pinCode, pin=None):
         if pin is not None:
@@ -1089,7 +1078,7 @@ class E2iPlayerWidget(Screen):
                 return
             self.currList[currSelIndex].urlItems = ret.value
         self.selectLinkForCurrVideo()
-    #end selectMainVideoLinks(self, ret):
+    # end selectMainVideoLinks(self, ret):
 
     def selectResolvedVideoLinks(self, ret):
         printDBG("selectResolvedVideoLinks")
@@ -1132,33 +1121,33 @@ class E2iPlayerWidget(Screen):
 
     def onStart(self):
         self.onShow.remove(self.onStart)
-        #self.onLayoutFinish.remove(self.onStart)
+        # self.onLayoutFinish.remove(self.onStart)
         self.setTitle('E2iPlayer ' + GetIPTVPlayerVersion())
         self.loadSpinner()
         self.hideSpinner()
-#        self.checkBlacklistedImage()
+        # self.checkBlacklistedImage()
         self.selectHost()
 
     def askUpdateAvailable(self, NoUpdateCallback):
         NoUpdateCallback()
-#        return
-#        printDBG(">> askUpdateAvailable")
-#        if config.plugins.iptvplayer.autoCheckForUpdate.value \
-#            and 0 < GetVersionNum(self.lastPluginVersion) \
-#            and GetVersionNum(self.lastPluginVersion) > GetVersionNum(GetIPTVPlayerVersion()) \
-#            and self.lastPluginVersion != config.plugins.iptvplayer.updateLastCheckedVersion.value:
+        # return
+        # printDBG(">> askUpdateAvailable")
+        # if config.plugins.iptvplayer.autoCheckForUpdate.value \
+            # and 0 < GetVersionNum(self.lastPluginVersion) \
+            # and GetVersionNum(self.lastPluginVersion) > GetVersionNum(GetIPTVPlayerVersion()) \
+            # and self.lastPluginVersion != config.plugins.iptvplayer.updateLastCheckedVersion.value:
 
-#            message = _('There is a new version available do you want to update? \nYour version [%s], latest version on server [%s]') % (GetIPTVPlayerVersion(), self.lastPluginVersion)
-#            config.plugins.iptvplayer.updateLastCheckedVersion.value = self.lastPluginVersion
-#            config.plugins.iptvplayer.updateLastCheckedVersion.save()
-#            configfile.save()
-#            self.session.openWithCallback(boundFunction(self.answerUpdateAvailable, NoUpdateCallback), MessageBox, text=message, type=MessageBox.TYPE_YESNO)
-#            return
-#        NoUpdateCallback()
+            # message = _('There is a new version available do you want to update? \nYour version [%s], latest version on server [%s]') % (GetIPTVPlayerVersion(), self.lastPluginVersion)
+            # config.plugins.iptvplayer.updateLastCheckedVersion.value = self.lastPluginVersion
+            # config.plugins.iptvplayer.updateLastCheckedVersion.save()
+            # configfile.save()
+            # self.session.openWithCallback(boundFunction(self.answerUpdateAvailable, NoUpdateCallback), MessageBox, text=message, type=MessageBox.TYPE_YESNO)
+            # return
+        # NoUpdateCallback()
 
     def selectHost(self, arg1=None):
         printDBG(">> selectHost")
-        #self.groupObj = None
+        # self.groupObj = None
         self.group = None
         self.host = None
         self.hostName = ''
@@ -1183,7 +1172,7 @@ class E2iPlayerWidget(Screen):
         self.displayGroupsList.append((_('All'), 'all'))
         self.displayGroupsList.append((_("Configuration"), "config"))
 
-        #if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
+        # if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
         #    self.displayGroupsList.append((_("Update"), "update"))
 
         self.newDisplayGroupsList = []
@@ -1318,7 +1307,7 @@ class E2iPlayerWidget(Screen):
         if len(brokenHostList) > 0:
             errorMessage = _("Following host are broken or additional python modules are needed.") + '\n' + '\n'.join(brokenHostList)
 
-        #if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
+        # if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
         #    self.displayHostsList.append((_("Update"), "update"))
 
         if "" != errorMessage and True is self.showHostsErrorMessage:
@@ -1529,7 +1518,7 @@ class E2iPlayerWidget(Screen):
 
         # request initial list from host
         self.getInitialList()
-    #end selectHostCallback(self, ret):
+    # end selectHostCallback(self, ret):
 
     def selectLinkForCurrVideo(self, customUrlItems=None):
         if not self.visible and not (self.autoPlaySeqStarted and
@@ -1551,13 +1540,13 @@ class E2iPlayerWidget(Screen):
         options = []
         for link in links:
             printDBG("selectLinkForCurrVideo: |%s| |%s|" % (link.name, link.url))
-#            if type('') == type(link.name):
-#                link.name = link.name.encode('utf-8', 'ignore')
-#            if type('') == type(link.url):
-#                link.url = link.url.encode('utf-8', 'ignore')
+            # if type('') == type(link.name):
+                # link.name = link.name.encode('utf-8', 'ignore')
+            # if type('') == type(link.url):
+                # link.url = link.url.encode('utf-8', 'ignore')
             options.append((link.name, link.url, link.urlNeedsResolve))
 
-        #There is no free links for current video
+        # There is no free links for current video
         numOfLinks = len(links)
         if 0 == numOfLinks:
             if not self.checkAutoPlaySequencer():
@@ -1571,7 +1560,7 @@ class E2iPlayerWidget(Screen):
                 self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO, timeout=10)
             return
         elif 1 == numOfLinks or self.autoPlaySeqStarted:
-            #call manualy selectLinksCallback - start VIDEO without links selection
+            # call manualy selectLinksCallback - start VIDEO without links selection
             arg = []
             arg.append(" ")  # name of item - not displayed so empty
             arg.append(links[0].url)
@@ -1579,7 +1568,7 @@ class E2iPlayerWidget(Screen):
             self.selectLinksCallback(arg)
             return
 
-        #options.sort(reverse=True)
+        # options.sort(reverse=True)
         self.session.openWithCallback(self.selectLinksCallback, ChoiceBox, title=_("Select link"), list=options)
 
     def selectLinksCallback(self, retArg):
@@ -1587,13 +1576,13 @@ class E2iPlayerWidget(Screen):
         # retArg[1] - url src
         # retArg[2] - urlNeedsResolve
         if retArg and 3 == len(retArg):
-            #check if we have URL
+            # check if we have URL
             if isinstance(retArg[1], str):
                 videoUrl = retArg[1]
                 if len(videoUrl) > 3:
-                    #check if we need to resolve this URL
+                    # check if we need to resolve this URL
                     if str(retArg[2]) == '1':
-                        #call resolve link from host
+                        # call resolve link from host
                         self.requestListFromHost('ResolveURL', -1, videoUrl)
                     else:
                         list = []
@@ -1793,10 +1782,10 @@ class E2iPlayerWidget(Screen):
                             playerVal = 'eplayer'
                         self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, url, titleOfMovie, None, playerVal, gstAdditionalParams)
         else:
-            #There was problem in resolving direct link for video
+            # There was problem in resolving direct link for video
             if not self.checkAutoPlaySequencer():
                 self.session.open(MessageBox, _("No valid links available."), type=MessageBox.TYPE_INFO, timeout=10)
-    #end playVideo(self, ret):
+    # end playVideo(self, ret):
 
     def leaveMoviePlayer(self, answer=None, lastPosition=None, clipLength=None, *args, **kwargs):
         self.writeCurrentTitleToFile("")
@@ -1836,7 +1825,7 @@ class E2iPlayerWidget(Screen):
             GetIPTVSleep().Reset()
 
             if type not in ['ForVideoLinks', 'ResolveURL', 'ForArticleContent', 'ForFavItem', 'PerformCustomAction']:
-                #hide bottom panel
+                # hide bottom panel
                 self["cover"].hide()
                 self["console"].setText('')
 
@@ -1846,7 +1835,7 @@ class E2iPlayerWidget(Screen):
                     self.categoryList.append(_("Search results"))
                 else:
                     self.categoryList.append(self.currItem.name)
-                #new list, so select first index
+                # new list, so select first index
                 self.nextSelIndex = 0
 
             selItem = None
@@ -1899,7 +1888,7 @@ class E2iPlayerWidget(Screen):
                 self.showSpinner()
             except Exception:
                 printExc('The current host crashed')
-    #end requestListFromHost(self, type, currSelIndex = -1, privateData = ''):
+    # end requestListFromHost(self, type, currSelIndex = -1, privateData = ''):
 
     def startSearchProcedure(self, searchTypes):
         sts, prevPattern = CSearchHistoryHelper.loadLastPattern()
@@ -2044,9 +2033,7 @@ class E2iPlayerWidget(Screen):
         self.currList = ret.value
         self["list"].setList([(x,) for x in self.currList])
 
-        ####################################################
-        #                   iconMenager
-        ####################################################
+        # iconMenager
         iconList = []
         # fill icon List for icon manager
         # if an user whant to see icons
@@ -2060,7 +2047,6 @@ class E2iPlayerWidget(Screen):
             self.iconMenager.clearDQueue()
             # a new list of icons should be downloaded
             self.iconMenager.addToDQueue(iconList)
-        #####################################################
 
         self["headertext"].setText(self.getCategoryPath())
         if len(self.currList) <= 0:
@@ -2077,11 +2063,11 @@ class E2iPlayerWidget(Screen):
             self.setStatusTex(disMessage)
             self["list"].hide()
         else:
-            #restor previus selection
+            # restor previus selection
             if len(self.currList) > self.nextSelIndex:
                 self["list"].moveToIndex(self.nextSelIndex)
-            #else:
-            #selection will not be change so manualy call
+            # else:
+            # selection will not be change so manualy call
             self.changeBottomPanel()
 
             self.setStatusTex("")
@@ -2091,7 +2077,7 @@ class E2iPlayerWidget(Screen):
             self.autoPlaySequencerNext(False)
         elif 1 == refresh:
             self.autoPlaySequencerNext()
-    #end reloadList(self, ret):
+    # end reloadList(self, ret):
 
     def getCategoryPath(self):
         def _getCat(cat, num):
@@ -2102,7 +2088,7 @@ class E2iPlayerWidget(Screen):
                 cat += (' (x%d)' % num)
             return cat
 
-        #str = self.hostName
+        # str = self.hostName
         str = self.hostTitle
         prevCat = ''
         prevNum = 0
@@ -2163,10 +2149,7 @@ class E2iPlayerWidget(Screen):
         printDBG("E2iPlayerWidget.handleFavouriteItemCallback")
         self.setStatusTex("")
         self["list"].show()
-        linkList = []
-        if ret.status == RetHost.OK and \
-           isinstance(ret.value, list) and \
-            1 == len(ret.value) and isinstance(ret.value[0], CFavItem):
+        if ret.status == RetHost.OK and isinstance(ret.value, list) and 1 == len(ret.value) and isinstance(ret.value[0], CFavItem):
             favItem = ret.value[0]
             if CFavItem.RESOLVER_SELF == favItem.resolver:
                 favItem.resolver = self.hostName
@@ -2215,13 +2198,9 @@ class E2iPlayerWidget(Screen):
         printDBG("E2iPlayerWidget.handlePerformCustomActionCallback")
         self.setStatusTex("")
         self["list"].show()
-        linkList = []
-        if ret.status == RetHost.OK and \
-           isinstance(ret.value, list) and 1 == len(ret.value):
+        if ret.status == RetHost.OK and isinstance(ret.value, list) and 1 == len(ret.value):
            self.yellow_pressed()
-        elif ret.status == RetHost.ERROR and \
-             isinstance(ret.value, list) and 1 == len(ret.value) and \
-             isinstance(ret.value[0], str):
+        elif ret.status == RetHost.ERROR and isinstance(ret.value, list) and 1 == len(ret.value) and isinstance(ret.value[0], str):
            self.session.open(MessageBox, ret.value[0], type=MessageBox.TYPE_ERROR)
 
     def markItemAsViewedCallback(self, thread, ret):
@@ -2231,13 +2210,9 @@ class E2iPlayerWidget(Screen):
         printDBG("E2iPlayerWidget.handleMarkItemAsViewedCallback")
         self.setStatusTex("")
         self["list"].show()
-        linkList = []
-        if ret.status == RetHost.OK and \
-           isinstance(ret.value, list) and 1 == len(ret.value) and 'refresh' in ret.value:
+        if ret.status == RetHost.OK and isinstance(ret.value, list) and 1 == len(ret.value) and 'refresh' in ret.value:
            self.getRefreshedCurrList()
-        elif ret.status == RetHost.ERROR and \
-             isinstance(ret.value, list) and 1 == len(ret.value) and \
-             isinstance(ret.value[0], str):
+        elif ret.status == RetHost.ERROR and isinstance(ret.value, list) and 1 == len(ret.value) and isinstance(ret.value[0], str):
            self.session.open(MessageBox, ret.value[0], type=MessageBox.TYPE_ERROR)
         else:
             self.checkAutoPlaySequencer()
