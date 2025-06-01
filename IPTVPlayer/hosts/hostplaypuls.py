@@ -120,9 +120,9 @@ class Playpuls(CBaseHostClass):
                 item = data[idx] + '>'
             else:
                 item = data[idx]
-            #printDBG("============================================")
-            #printDBG(item)
-            #printDBG("============================================")
+            # printDBG("============================================")
+            # printDBG(item)
+            # printDBG("============================================")
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             icon = self.cm.ph.getSearchGroups(item, 'class="cover" src="([^"]+?)"')[0]
             if '' == icon:
@@ -287,12 +287,12 @@ class Playpuls(CBaseHostClass):
             self.listsMainMenu()
         elif 'menu' == category:
             self.listCategory(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -29,9 +29,9 @@ class TV2RChannel():
                 {'title': 'TV2 Midtvest', 'type': 'direct', 'id': 'rtmp://live.tvmidtvest.dk/tvmv/live live=1'},
                 {'title': 'TV2 Nor', 'type': 'fynskemedier.dk', 'id': 'tv2nord-plus'},
                 {'title': 'TV2 East', 'type': 'direct', 'id': 'http://tv2east.live-s.cdn.bitgravity.com/cdn-live-c1/_definst_/tv2east/live/feed01/playlist.m3u8'},
-                #{'title':'TV2 OJ',        'type':'fynskemedier.dk', 'id':'tv2oj'},
+                # {'title':'TV2 OJ',        'type':'fynskemedier.dk', 'id':'tv2oj'},
                 {'title': 'TV Folketinget', 'type': 'direct', 'id': 'rtmp://ftflash.arkena.dk/webtvftlivefl/ playpath=mp4:live.mp4 pageUrl=http://www.ft.dk/webTV/TV_kanalen_folketinget.aspx live=1'},
-                #{'title':'Kanalsport DK', 'type':'direct',          'id':'http://lswb-de-08.servers.octoshape.net:1935/live/kanalsport_1000k/playlist.m3u8'},
+                # {'title':'Kanalsport DK', 'type':'direct',          'id':'http://lswb-de-08.servers.octoshape.net:1935/live/kanalsport_1000k/playlist.m3u8'},
                 ]
 
     def __init__(self):
@@ -63,20 +63,20 @@ class TV2RChannel():
         return links
 
 # TV2 OJ
-#TV2RChannel(108, CATEGORY_TV2_REG, "TV2 OJ").add_urls(
+# TV2RChannel(108, CATEGORY_TV2_REG, "TV2 OJ").add_urls(
 #    best   = 'rtmp://<HOST>:1935/live/_definst_/tv2oj_2000 live=1',
 #    high   = 'rtmp://<HOST>:1935/live/_definst_/tv2oj_1000 live=1',
 #    medium = 'rtmp://<HOST>:1935/live/_definst_/tv2oj_300 live=1'
-#)
+# )
 # TV2 Bornholm
-#Channel(109, CATEGORY_TV2_REG, "TV2 Bornholm").add_urls(
+# Channel(109, CATEGORY_TV2_REG, "TV2 Bornholm").add_urls(
 #    best   = 'mms://itv02.digizuite.dk/tv2b'
-#)
+# )
 
 # http://ft.arkena.tv/xml/core_player_clip_data_v2_REAL.php?wtve=187&wtvl=2&wtvk=012536940751284&as=1
 # Folketinget
 
 # danskespil lotto
-#Channel(202, CATEGORY_MISC, "DanskeSpil Lotto").add_urls(
+# Channel(202, CATEGORY_MISC, "DanskeSpil Lotto").add_urls(
 #    best   = 'rtmp://lvs.wowza.jay.net/webstream/lotto live=1'
-#)
+# )

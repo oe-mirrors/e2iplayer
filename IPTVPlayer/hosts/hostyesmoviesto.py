@@ -250,7 +250,7 @@ class YesMovies(CBaseHostClass):
             return urlTab
         self.cacheLinks = {}
 
-        #rm(self.COOKIE_FILE)
+        # rm(self.COOKIE_FILE)
 
         sts, data = self.getPage(cItem['url'], self.defaultParams)
         if not sts:
@@ -355,8 +355,8 @@ class YesMovies(CBaseHostClass):
         if not sts:
             return []
 
-        #rm(self.COOKIE_FILE)
-        #cookie = self.cm.getCookieHeader(self.COOKIE_FILE)
+        # rm(self.COOKIE_FILE)
+        # cookie = self.cm.getCookieHeader(self.COOKIE_FILE)
         printDBG('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> $$$$$$$$$$$$$$$$$$$$$$ ' + serverId)
         if serverId in ['12', '13', '14', '15', '16']:
             url = 'ajax/movie_embed/' + episodeId
@@ -507,7 +507,7 @@ class YesMovies(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL is None:
-            #rm(self.COOKIE_FILE)
+            # rm(self.COOKIE_FILE)
             self.selectDomain()
 
         name = self.currItem.get("name", '')
@@ -517,7 +517,7 @@ class YesMovies(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.fillCacheFilters()
             self.listMainMenu({'name': 'category'})
@@ -537,12 +537,12 @@ class YesMovies(CBaseHostClass):
             self.listItems(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

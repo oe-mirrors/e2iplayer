@@ -197,12 +197,12 @@ class Pinkbike(CBaseHostClass):
             self.listCatItems(self.currItem, 'list_videos')
         elif 'list_videos' == category:
             self.listVideos(self.currItem)
-    #WYSZUKAJ
+    # WYSZUKAJ
         elif category in ["search"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA WYSZUKIWANIA
+    # HISTORIA WYSZUKIWANIA
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

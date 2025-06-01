@@ -153,7 +153,7 @@ class M3U8Downloader(BaseDownloader):
                             self.refreshDelay = 5
                         if 0 < len(m3u8Obj.segments):
                             newFragments = [self._segUri(seg.absolute_uri) for seg in m3u8Obj.segments]
-                            #self.mergeFragmentsList(newFragments)
+                            # self.mergeFragmentsList(newFragments)
                             self.mergeFragmentsListWithChecking(newFragments, m3u8Obj.media_sequence + len(m3u8Obj.segments))
                             printDBG('m3u8 _updateM3U8Finished list updated ---')
                 except Exception:
@@ -184,7 +184,7 @@ class M3U8Downloader(BaseDownloader):
             self.M3U8ListData += data
 
     def mergeFragmentsListWithChecking_OLD(self, newFragments, media_sequence=-1):
-        #newFragments = self.fixFragmentsList(newFragments)
+        # newFragments = self.fixFragmentsList(newFragments)
         try:
             idx = newFragments.index(self.fragmentList[-1])
             newFragments = newFragments[idx + 1:]
@@ -207,7 +207,7 @@ class M3U8Downloader(BaseDownloader):
 
     def mergeFragmentsListWithChecking(self, newFragments, media_sequence=-1):
         tmpList = []
-        #DebugToFile('last[%s] new[%s] = %s' % (self.lastMediaSequence, media_sequence, newFragments))
+        # DebugToFile('last[%s] new[%s] = %s' % (self.lastMediaSequence, media_sequence, newFragments))
         if self.lastMediaSequence > 0 and media_sequence > 0:
             if media_sequence > self.lastMediaSequence:
                 toAdd = media_sequence - self.lastMediaSequence
@@ -237,7 +237,7 @@ class M3U8Downloader(BaseDownloader):
                 self.fragmentList = self.fragmentList[idx:]
                 self.currentFragment = 20
             self.fragmentList.extend(tmpList)
-            #DebugToFile(">> %s" % self.fragmentList)
+            # DebugToFile(">> %s" % self.fragmentList)
 
     '''
     def fixFragmentsList(self, newFragments):
@@ -304,7 +304,7 @@ class M3U8Downloader(BaseDownloader):
         if None is not self.console:
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
-        #self.console = eConsoleAppContainer()
+        # self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
 
@@ -333,7 +333,7 @@ class M3U8Downloader(BaseDownloader):
             self.console.setNice(GetNice() + 2)
             self.console.execute(cmd)
 
-            #DebugToFile(currentFragment)
+            # DebugToFile(currentFragment)
             return DMHelper.STS.DOWNLOADING
         else:
             if self.liveStream:
@@ -432,7 +432,7 @@ class M3U8Downloader(BaseDownloader):
 
                                 self.lastMediaSequence = m3u8Obj.media_sequence + len(m3u8Obj.segments)
                                 # start update fragment list loop
-                                #self.fragmentList = self.fixFragmentsList(self.fragmentList)
+                                # self.fragmentList = self.fixFragmentsList(self.fragmentList)
                                 self._updateM3U8Finished(-1)
                             else:
                                 self.fragmentList = [self._segUri(seg.absolute_uri) for seg in m3u8Obj.segments]
@@ -470,7 +470,7 @@ class M3U8Downloader(BaseDownloader):
                     localStatus = DMHelper.STS.ERROR
                 else:
                     localStatus = self._startFragment()
-            #elif not self.liveStream and self.remoteFragmentSize > 0 and self.remoteFragmentSize > (self.localFileSize - self.m3u8_prevLocalFileSize):
+            # elif not self.liveStream and self.remoteFragmentSize > 0 and self.remoteFragmentSize > (self.localFileSize - self.m3u8_prevLocalFileSize):
             #    localStatus = DMHelper.STS.INTERRUPTED
             elif 0 < (self.localFileSize - self.m3u8_prevLocalFileSize):
                 if self.totalDuration > 0:

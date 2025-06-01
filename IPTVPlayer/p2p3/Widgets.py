@@ -1,4 +1,4 @@
-#from Plugins.Extensions.IPTVPlayer.p2p3.Widgets import getWidgetText, innerWidgetTextRight
+# from Plugins.Extensions.IPTVPlayer.p2p3.Widgets import getWidgetText, innerWidgetTextRight
 
 def getWidgetText(widgetPointer):
     try:

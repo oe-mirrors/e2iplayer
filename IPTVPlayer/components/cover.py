@@ -54,7 +54,7 @@ class Cover(Pixmap):
     # if decoding will be finished with success
     def decodeCover(self, filename, callBackFun, ident):
         printDBG("_______________decodeCover")
-        #checking if decoding is needed
+        # checking if decoding is needed
         self.waitIcon = {"CallBackFun": callBackFun, "FileName": filename, "Ident": ident}
         if filename != self.currIcon.get('FileName', ''):
             if not self.paramsSet:
@@ -177,30 +177,30 @@ class SimpleAnimatedCover(Pixmap):
         self.currFrame = -1
 
     def loadFrames(self, framesPathList):
-        #printDBG('loadFrames')
+        # printDBG('loadFrames')
         self.framesList = []
         for item in framesPathList:
-            #printDBG('loadFrames [%s]' % item)
+            # printDBG('loadFrames [%s]' % item)
             self.framesList.append(LoadPixmap(item))
 
     def nextFrame(self):
-        #printDBG('nextFrame')
+        # printDBG('nextFrame')
         if 0 < len(self.framesList) and self.visible:
             self.currFrame += 1
             if (self.currFrame + 1) > len(self.framesList):
                 self.currFrame = 0
-            #printDBG('nextFrame [%d]' % self.currFrame)
+            # printDBG('nextFrame [%d]' % self.currFrame)
             self.setPixmap(self.framesList[self.currFrame])
 
     def onShow(self):
-        #printDBG('onShow')
+        # printDBG('onShow')
         self.visible = True
         if -1 == self.currFrame:
             self.nextFrame()
         Pixmap.onShow(self)
 
     def onHide(self):
-        #printDBG('onHide')
+        # printDBG('onHide')
         self.visible = False
         Pixmap.onHide(self)
 

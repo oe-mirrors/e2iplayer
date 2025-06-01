@@ -979,9 +979,9 @@ class E2iVirtualKeyBoard(Screen):
     def textUpdated(self):
         self.updateSuggestions()
         # there is need to work to take position of cursor
-        #if self['text'].getSize()[0] > 740:
+        # if self['text'].getSize()[0] > 740:
         #    self['text'].instance.setHAlign(2)
-        #else:
+        # else:
         #    self['text'].instance.setHAlign(0)
 
     def updateSuggestions(self):
@@ -989,7 +989,7 @@ class E2iVirtualKeyBoard(Screen):
             if not self["text"].text:
                 self.setSuggestionVisible(False)
                 self['right_list'].setList([])
-                #self.autocomplete.stop()
+                # self.autocomplete.stop()
             else:
                 self.autocomplete.start(self.setSuggestions)
                 self.autocomplete.set(self["text"].getText(), self.currentVKLayout['locale'])

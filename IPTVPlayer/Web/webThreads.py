@@ -90,7 +90,7 @@ class buildActiveHostsHTML(threading.Thread):
 				hostNameWithURLandLOGO = '<br><a>%s</a>' % (title)
 			# Column 2 TBD
 
-			#build table row
+			# build table row
 			hostHTML = '<td align="center">%s</td>' % hostNameWithURLandLOGO
 			settings.activeHostsHTML[hostName] = hostHTML
 ########################################################
@@ -139,7 +139,7 @@ class buildConfigsHTML(threading.Thread):
 		self.raise_exc(SystemExit)
 	########################################################
 
-	def buildSettingsTable(self, List1, List2, exclList, direction):  #direction = '1>2'|'2>1'
+	def buildSettingsTable(self, List1, List2, exclList, direction):  # direction = '1>2'|'2>1'
 		def getCFGType(option):
 			cfgtype = ''
 			try:
@@ -168,7 +168,7 @@ class buildConfigsHTML(threading.Thread):
 						ConfName = itemL2[0]
 						ConfDesc = itemL1[0]
 					CFGtype = getCFGType(itemL1[1])
-					#print ConfName, '=' , CFGtype
+					# print ConfName, '=' , CFGtype
 					if CFGtype in ['ConfigYesNo', 'ConfigOnOff', 'ConfigEnableDisable', 'ConfigBoolean']:
 						if int(confKey[1].getValue()) == 0:
 							CFGElements = '<input type="radio" name="cmd" value="ON:%s">%s</input>' % (ConfName, _('Yes'))
@@ -189,7 +189,7 @@ class buildConfigsHTML(threading.Thread):
 
 	def run(self):
 		usedCFG = []
-		#configs for hosts
+		# configs for hosts
 		for hostName in SortHostsList(GetHostsList()):
 			# column 1 containing logo and link if available
 			try:
@@ -222,7 +222,7 @@ class buildConfigsHTML(threading.Thread):
 			except Exception:
 				OptionsList = []
 
-			#build table row
+			# build table row
 			hostsCFG = '<tr>'
 			hostsCFG += '<td style="width:120px">%s</td>' % hostNameWithURLandLOGO
 			hostsCFG += '<td>%s</td>' % OnOffState
@@ -232,7 +232,7 @@ class buildConfigsHTML(threading.Thread):
 				hostsCFG += '<td><table border="1" style="width:100%">'
 				for item in self.buildSettingsTable(List2=OptionsList, List1=list(config.plugins.iptvplayer.dict().items()), exclList=usedCFG, direction='2>1'):
 					usedCFG.append(item[0])
-					#print 'hostsCFG:',item[0], item[1],item[2]
+					# print 'hostsCFG:',item[0], item[1],item[2]
 					if item[0] == 'fake_separator':
 						hostsCFG += '<tr><td colspan="2" align="center"><tt>%s</tt></td></tr>\n' % (item[1])
 					else:
@@ -240,7 +240,7 @@ class buildConfigsHTML(threading.Thread):
 				hostsCFG += '</table></td>'
 			hostsCFG += '</tr>\n'
 			settings.configsHTML[hostName] = hostsCFG
-		#now configs for plugin
+		# now configs for plugin
 		OptionsList = []
 		ConfigMenu.fillConfigList(OptionsList, hiddenOptions=False)
 		for item in self.buildSettingsTable(List1=list(config.plugins.iptvplayer.dict().items()), List2=OptionsList, exclList=usedCFG, direction='2>1'):
@@ -286,7 +286,7 @@ class doUseHostAction(threading.Thread):
 					printDBG('============webThreads.py Initialize Download Manager============')
 					Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager = IPTVDMApi(2, int(config.plugins.iptvplayer.IPTVDMMaxDownloadItem.value))
 				ret = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.addToDQueue(DMItem(url, fullFilePath))
-				#print ret
+				# print ret
 		elif self.key == 'ResolveURL' and self.arg.isdigit():
 			myID = int(self.arg)
 			url = "NOVALIDURLS"
@@ -385,7 +385,7 @@ class doGlobalSearch(threading.Thread):
 				continue
 			elif not IsHostEnabled(hostName):
 				continue
-			#print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ---------------- %s ---------------- !!!!!!!!!!!!!!!!!!!!!!!!!" % hostName
+			# print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ---------------- %s ---------------- !!!!!!!!!!!!!!!!!!!!!!!!!" % hostName
 			try:
 				_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0)
 			except Exception:
@@ -396,7 +396,7 @@ class doGlobalSearch(threading.Thread):
 			except Exception as e:
 				print("doGlobalSearch: Exception initializing iptvhost for %s: %s" % (hostName, str(e)))
 				continue
-			#print "settings.GlobalSearchQuery=",settings.GlobalSearchQuery, 'hostName=', hostName
+			# print "settings.GlobalSearchQuery=",settings.GlobalSearchQuery, 'hostName=', hostName
 			settings.searchingInHost = hostName
 			time.sleep(0.2)
 			try:

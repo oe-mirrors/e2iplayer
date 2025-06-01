@@ -656,13 +656,13 @@ class YouTubeParser():
     ########################################################
     # SEARCH PARSER
     ########################################################
-    #def getVideosFromSearch(self, pattern, page='1'):
+    # def getVideosFromSearch(self, pattern, page='1'):
     def getSearchResult(self, pattern, searchType, page, nextPageCategory, sortBy='A', url=''):
         printDBG('YouTubeParser.getSearchResult pattern[%s], searchType[%s], page[%s]' % (pattern, searchType, page))
         currList = []
 
         try:
-            #url = 'http://www.youtube.com/results?search_query=%s&filters=%s&search_sort=%s&page=%s' % (pattern, searchType, sortBy, page)
+            # url = 'http://www.youtube.com/results?search_query=%s&filters=%s&search_sort=%s&page=%s' % (pattern, searchType, sortBy, page)
 
             nextPage = {}
             nP = {}
@@ -708,14 +708,14 @@ class YouTubeParser():
                         data2 = self.cm.ph.getDataBeetwenMarkers(data, "var ytInitialData =", "};", False)[1]
 
                     data2 = ensure_str(data2.strip())  # just cleaning and ensuring we're working with string
-                    #json simple schema verification and correction
+                    # json simple schema verification and correction
                     jsonStarts = data2.count('{')
                     jsonEnds = data2.count('}')
                     printDBG('youtuberparser.YouTubeParser().getSearchResult correcting json string by adding "}" %s time(s) at the end' % (jsonStarts - jsonEnds))
                     while jsonEnds < jsonStarts:
                         data2 = data2 + '}'
                         jsonEnds += 1
-                    #open("/tmp/data2.txt", "w").write(data2)
+                    # open("/tmp/data2.txt", "w").write(data2)
                     response = json_loads(data2)
 
             if not sts:
@@ -755,7 +755,7 @@ class YouTubeParser():
                     printDBG(str(params))
                     currList.append(params)
 
-            #search playlists
+            # search playlists
 
             r2 = list(self.findKeys(response, 'playlistRenderer'))
 

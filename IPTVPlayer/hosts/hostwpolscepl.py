@@ -113,7 +113,7 @@ class WPolscePL(CBaseHostClass):
         NOW = datetime.now()
 
         itemsList = []
-        #NextDay, PrevDay
+        # NextDay, PrevDay
         day = NOW
         for idx in range(7):
             day = PrevDay(day)
@@ -297,7 +297,7 @@ class WPolscePL(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
@@ -308,12 +308,12 @@ class WPolscePL(CBaseHostClass):
             self.listDays(self.currItem, 'list_day')
         elif category == 'list_day':
             self.listDay(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

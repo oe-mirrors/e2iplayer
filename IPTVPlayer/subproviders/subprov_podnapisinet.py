@@ -302,7 +302,7 @@ class PodnapisiNetProvider(CBaseSubProviderClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None or category.startswith('list_filter_'):
             filter = category.replace('list_filter_', '')
             if filter == '':

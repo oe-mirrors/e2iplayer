@@ -182,7 +182,7 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listSubItems(self.currItem, 'list_subtitles')
         elif category == 'list_subtitles':

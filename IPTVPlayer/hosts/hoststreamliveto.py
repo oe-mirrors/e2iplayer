@@ -94,7 +94,7 @@ class StreamLiveTo(CBaseHostClass):
         self.cacheFiltersKeys = []
 
         sts, data = self.getPage(self._getFullUrl('channels'), self.defaultParams)
-        #sts, data = self.getPage(self.MAIN_URL, self.defaultParams)
+        # sts, data = self.getPage(self.MAIN_URL, self.defaultParams)
         if not sts:
             return
 
@@ -314,7 +314,7 @@ class StreamLiveTo(CBaseHostClass):
             return 0
 
         imgUrl = 'http://www.google.com/recaptcha/api/image?c=' + challenge
-        #return
+        # return
         params = {'maintype': 'image', 'subtypes': ['jpeg'], 'check_first_bytes': [b'\xFF\xD8', b'\xFF\xD9']}
         filePath = GetTmpDir('.iptvplayer_captcha.jpg')
         ret = self.cm.saveWebFile(filePath, imgUrl, params)
@@ -425,7 +425,7 @@ class StreamLiveTo(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             login = config.plugins.iptvplayer.streamliveto_login.value
             passwd = config.plugins.iptvplayer.streamliveto_password.value
@@ -435,7 +435,7 @@ class StreamLiveTo(CBaseHostClass):
                 if not logged:
                     self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_INFO, timeout=10)
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-            #if logged:
+            # if logged:
             #    self.addDir({'name':'category', 'title':_('Get free credits'), 'category':'get_free_credits'})
         elif category == 'get_free_credits':
             self.listGetFreeCredits()
@@ -443,12 +443,12 @@ class StreamLiveTo(CBaseHostClass):
             self.listFilters(self.currItem, 'list_channels')
         elif category == 'list_channels':
             self.listChannels(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

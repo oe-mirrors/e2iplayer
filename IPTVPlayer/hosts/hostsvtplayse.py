@@ -69,10 +69,10 @@ class SVTPlaySE(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/en/5/54/SVT_Play.png'
 
         self.MAIN_CAT_TAB = [
-                             #{'category':'list_items2',        'title': 'POPULÄRT',                            'url':'/populara'        },
-                             #{'category':'list_items2',        'title': 'SENASTE PROGRAM',                     'url':'/senaste'         },
-                             #{'category':'list_items2',        'title': 'SISTA CHANSEN',                       'url':'/sista-chansen'   },
-                             #{'category':'list_items2',        'title': 'LIVESÄNDNINGAR',                      'url':'/live'            },
+                             # {'category':'list_items2',        'title': 'POPULÄRT',                            'url':'/populara'        },
+                             # {'category':'list_items2',        'title': 'SENASTE PROGRAM',                     'url':'/senaste'         },
+                             # {'category':'list_items2',        'title': 'SISTA CHANSEN',                       'url':'/sista-chansen'   },
+                             # {'category':'list_items2',        'title': 'LIVESÄNDNINGAR',                      'url':'/live'            },
 
                              {'category': 'list_items', 'title': _('Popular'), 'url': '/popular'},
                              {'category': 'list_items', 'title': _('Latest programs'), 'url': '/latest'},
@@ -80,7 +80,7 @@ class SVTPlaySE(CBaseHostClass):
                              {'category': 'list_items', 'title': _('Last chance'), 'url': '/last_chance'},
                              {'category': 'list_items', 'title': _('Live broadcasts'), 'url': '/live'},
                              {'category': 'list_channels', 'title': _('Channels'), 'url': '/kanaler'},
-                             {'category': 'list_az_menu', 'title': _('Programs A-Ö'), 'url': '/program'},   #/all_titles
+                             {'category': 'list_az_menu', 'title': _('Programs A-Ö'), 'url': '/program'},  # /all_titles
                              {'category': 'list_items', 'title': _('Categories'), 'url': '/active_clusters'},
 
                              {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
@@ -268,7 +268,7 @@ class SVTPlaySE(CBaseHostClass):
                     title = item.get('name', '')
 
                 params = {'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': '[/br]'.join(descTab)}
-                #if not item.get('hasEpisodes', False):
+                # if not item.get('hasEpisodes', False):
                 if '/klipp/' in url or '/video/' in url:
                     self.addVideo(params)
                 else:
@@ -568,7 +568,7 @@ class SVTPlaySE(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category', 'url': self.MAIN_URL}, 'list_items')
         elif 'live_streams' == category:
@@ -590,12 +590,12 @@ class SVTPlaySE(CBaseHostClass):
         elif 'list_section_items' == category:
             self.listSectionItems(self.currItem, 'explore_page')
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

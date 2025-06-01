@@ -257,7 +257,7 @@ class FilmezzEU(CBaseHostClass):
             if t != '':
                 serverName.append(self.cleanHtmlStr(t))
             serverName = ' | '.join(serverName)
-            #if 'letöltés' in serverName: continue
+            # if 'letöltés' in serverName: continue
 
             t = self.cm.ph.getDataBeetwenReMarkers(tmp, re.compile('<a[^>]+?class="url-btn play"'), re.compile('>'))[1]
             url = self.cm.ph.getSearchGroups(t, '''href=['"]([^'^"]+?)['"]''')[0]
@@ -515,7 +515,7 @@ class FilmezzEU(CBaseHostClass):
 
         if '' == self.login.strip() or '' == self.password.strip():
             printDBG('tryTologin wrong login data')
-            #self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type = MessageBox.TYPE_ERROR, timeout = 10 )
+            # self.sessionEx.open(MessageBox, _('The host %s requires registration. \nPlease fill your login and password in the host configuration. Available under blue button.' % self.getMainUrl()), type = MessageBox.TYPE_ERROR, timeout = 10 )
             return False
 
         url = self.getFullUrl('/bejelentkezes.php')
@@ -549,7 +549,7 @@ class FilmezzEU(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.cacheLinks = {}
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -559,12 +559,12 @@ class FilmezzEU(CBaseHostClass):
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

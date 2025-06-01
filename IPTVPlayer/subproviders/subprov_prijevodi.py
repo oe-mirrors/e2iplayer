@@ -403,7 +403,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.initSubProvider()
             self.listSearchTypes(self.currItem, 'list_abc')

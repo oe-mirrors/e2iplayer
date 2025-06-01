@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#### Local imports
+# Local imports
 
 
 from Plugins.Extensions.IPTVPlayer.__init__ import _
@@ -9,10 +9,10 @@ from .webTools import *
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.version import IPTV_VERSION
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, IsHostEnabled, SaveHostsOrderList, SortHostsList, GetLogoDir, GetHostsOrderList, getDebugMode, formatBytes
-#### e2 imports
+# e2 imports
 from Components.config import config
 
-#### system imports
+# system imports
 import os
 
 ########################################################
@@ -145,7 +145,7 @@ class Body():
 		return tempText
 
 	########################################################
-	def buildSettingsTable(self, List1, List2, exclList, direction):  #direction = '1>2'|'2>1'
+	def buildSettingsTable(self, List1, List2, exclList, direction):  # direction = '1>2'|'2>1'
 		def getCFGType(option):
 			cfgtype = ''
 			try:
@@ -174,7 +174,7 @@ class Body():
 						ConfName = itemL2[0]
 						ConfDesc = itemL1[0]
 					CFGtype = getCFGType(itemL1[1])
-					#print ConfName, '=' , CFGtype
+					# print ConfName, '=' , CFGtype
 					if CFGtype in ['ConfigYesNo', 'ConfigOnOff', 'ConfigEnableDisable', 'ConfigBoolean']:
 						if int(confKey[1].getValue()) == 0:
 							CFGElements = '<input type="radio" name="cmd" value="ON:%s">%s</input>' % (ConfName, _('Yes'))
@@ -197,14 +197,14 @@ class Body():
 		usedCFG = []
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n<div class="main">\n'
 		tempText += IncludeMENU(MenuStatusMSG)
-		#build hosts settings section
+		# build hosts settings section
 		hostsCFG = '<br><table width="850px" border="1"><tbody>\n'
 		hostsCFG += '<tr><td align="center" colspan="3"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % _('Hosts settings')
 		for hostName in SortHostsList(GetHostsList()):
 			if hostName in settings.configsHTML.keys():
 				hostsCFG += settings.configsHTML[hostName]
 		hostsCFG += '</tbody></table>\n'
-		#build plugin global settings
+		# build plugin global settings
 		pluginCFG = '<table width="850px" border="1"><tbody>\n'
 		pluginCFG += '<tr><td align="center" colspan="2"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % _('Plugin global settings')
 		from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
@@ -233,7 +233,7 @@ class Body():
 			if hostName in settings.activeHostsHTML.keys():
 				hostHTML = settings.activeHostsHTML[hostName]
 				tempText += hostHTML
-				#tempText += '<td><button type="button" disabled>%s</button> </td>' % _('Enter')
+				# tempText += '<td><button type="button" disabled>%s</button> </td>' % _('Enter')
 				columnIndex += 1
 				if columnIndex > 4:
 					columnIndex = 1
@@ -263,13 +263,13 @@ class Body():
 				DM_status = _("STARTED")
 				tempText += '<td>' + formSUBMITvalue([('cmd', 'stopDM')], _("Stop"), 'style="background-color:#ff6400"') + '</td>'
 				tempText += '<td>' + formSUBMITvalue([('cmd', 'runDM')], _("Start"), 'disabled style="background-color:#00FF00"') + '</td>'
-				#tempText += '<td><b><font color="#ccE4C4">%s</font></b></td>' % _('Start')
+				# tempText += '<td><b><font color="#ccE4C4">%s</font></b></td>' % _('Start')
 			tempText += '<td>' + formSUBMITvalue([('cmd', 'arvchiveDM')], _("Archive"), 'style="background-color:yellow"') + '</td>'
 			tempText += '<td>' + formSUBMITvalue([('cmd', 'downloadsDM')], _("Downloads"), 'style="background-color:#0080FF"') + '</td></tr>\n'
 			tempText += '<tr><td colspan="2">%s</td><td colspan="2">%s</td></tr>' % (_("Manager status: "), DM_status)
 			tempText += '</tbody></table>\n'
 
-			#display the list of downloads
+			# display the list of downloads
 			tempText += '<table  width="800px" cellspacing="5px"><tbody>\n'
 			for item in currList:
 				# Downloaded Size
@@ -435,7 +435,7 @@ class Body():
 			if int(item.urlNeedsResolve) == 1:
 				txt += '<td>%s</td><td>%s</td></tr>\n' % (iName, formSUBMITvalue([('ResolveURL', index)], _('Select')))
 			else:
-				#txt += '<td>%s</td><td>%s</td>' % ( iName , formSUBMITvalue( [('DownloadURL' , index)], _('Download')) )
+				# txt += '<td>%s</td><td>%s</td>' % ( iName , formSUBMITvalue( [('DownloadURL' , index)], _('Download')) )
 				txt += '<td>%s</td><td><a href="/iptvplayer/usehost?DownloadURL=%d" class = "lnkbtn">%s</a></td>' % (iName, index, _('Add to downloader'))
 				txt += '<td> <a href="%s" target="_blank" class = "lnkbtn">%s</a></td></tr>' % (iUrl, _('Watch'))
 		return txt
@@ -445,14 +445,14 @@ class Body():
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
 		tempText += IncludeMENU(MenuStatusMSG, ShowCancelButton)
 		tempText += '<div class="main">\n'
-		#Status table
+		# Status table
 		if not isNewHostListShown() and not isThreadRunning('doUseHostAction') and 'Name' in list(settings.activeHost.keys()):
 			tempText += '<table border="0" cellspacing="5px"><tbody>\n'
 			tempText += '<tr>'
 			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('host:'), settings.activeHost['Name'])
 			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Title:'), settings.activeHost['Title'])
-			#tempText += '</tr>\n'
-			#tempText += '<tr>'
+			# tempText += '</tr>\n'
+			# tempText += '<tr>'
 			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Level:'), settings.activeHost['PathLevel'])
 			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Path:'), settings.activeHost['Status'])
 			tempText += '</tr>\n'
@@ -464,7 +464,7 @@ class Body():
 				tempText += '<tr><td colspan = "3" style="border: 1px solid blue;">%s "<b>%s</b>"</td></tr>\n' % (_('Links for'), settings.currItem['itemTitle'])
 			else:
 				tempText += '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
-			#if type(settings.retObj.value) is list:
+			# if type(settings.retObj.value) is list:
 			index = 0
 			try:
 				if len(settings.retObj.value) > 0:
@@ -493,7 +493,7 @@ class Body():
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n'
 		tempText += IncludeMENU(MenuStatusMSG, ShowCancelButton)
 		tempText += '<div class="main">\n'
-		#Status table
+		# Status table
 		if not isThreadRunning('doGlobalSearch'):
 			tempText += '<table border="0"><td>%s</td></table>' % formSUBMITtextWithOptions(_('Search in all active hosts'),
 											'GlobalSearch',

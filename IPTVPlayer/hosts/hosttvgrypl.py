@@ -22,8 +22,8 @@ except Exception:
 ###################################################
 # Config options for HOST
 ###################################################
-#config.plugins.iptvplayer.tvgrypl_default_quality = ConfigSelection(default="SD", choices=[("MOB", "MOB: niska"), ("SD", "SD: standardowa"), ("HD", "HD: wysoka")]) #, ("FHD", "FHD: bardzo wysoka")
-#config.plugins.iptvplayer.tvgrypl_use_dq = ConfigYesNo(default=True)
+# config.plugins.iptvplayer.tvgrypl_default_quality = ConfigSelection(default="SD", choices=[("MOB", "MOB: niska"), ("SD", "SD: standardowa"), ("HD", "HD: wysoka")]) #, ("FHD", "FHD: bardzo wysoka")
+# config.plugins.iptvplayer.tvgrypl_use_dq = ConfigYesNo(default=True)
 config.plugins.iptvplayer.tvgrypl_date_of_birth = ConfigText(default="2017-01-31", fixed_size=False)
 
 
@@ -228,17 +228,17 @@ class TvGryPL(CBaseHostClass):
 
         if None is name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-    #ITEMS
+    # ITEMS
         elif 'list_tabs' == category:
             self.listTabs(self.currItem)
         elif 'list_items' == category:
             self.listItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

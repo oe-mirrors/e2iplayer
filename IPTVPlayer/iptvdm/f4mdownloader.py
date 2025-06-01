@@ -171,5 +171,5 @@ class F4mDownloader(BaseDownloader):
             self.onFinish()
 
     def updateStatistic(self):
-        #BaseDownloader.updateStatistic(self)
+        # BaseDownloader.updateStatistic(self)
         return

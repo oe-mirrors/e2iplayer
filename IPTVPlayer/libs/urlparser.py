@@ -8,8 +8,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
-    printDBG, printExc, CSelOneLink, GetCookieDir, byteify,
-    formatBytes, GetPyScriptCmd, GetTmpDir, rm, GetDukPath,
+    printDBG, printExc, CSelOneLink, GetCookieDir,
+    formatBytes, GetPyScriptCmd, GetTmpDir, rm,
     GetDefaultLang, GetFileSize, GetPluginDir, MergeDicts, GetJSScriptFile
 )
 from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
@@ -19,11 +19,10 @@ from Plugins.Extensions.IPTVPlayer.libs.gledajfilmDecrypter import gledajfilmDec
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes import AES
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.base import noPadding
-from Plugins.Extensions.IPTVPlayer.libs import pbkdf2
 from Plugins.Extensions.IPTVPlayer.libs import pyaes
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML, clean_html
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import (
-    unpackJSPlayerParams, unpackJS, JS_FromCharCode, JS_toString, VIDUPME_decryptPlayerParams, SAWLIVETV_decryptPlayerParams,
+    unpackJSPlayerParams, unpackJS, JS_FromCharCode, VIDUPME_decryptPlayerParams, SAWLIVETV_decryptPlayerParams,
     TEAMCASTPL_decryptPlayerParams, VIDEOWEED_decryptPlayerParams, KINGFILESNET_decryptPlayerParams, captchaParser,
     getDirectM3U8Playlist, getMPDLinksWithMeta, getF4MLinksWithMeta, decorateUrl, int2base, drdX_fx, unicode_escape
 )
@@ -55,7 +54,7 @@ from xml.etree import cElementTree
 from random import random, randint, randrange, choice as random_choice
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, urlunparse, parse_qs
 from binascii import hexlify, unhexlify, a2b_hex
-from hashlib import md5, sha256, sha512
+from hashlib import md5, sha256
 from Components.config import config
 
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.mtv import GametrailersIE
@@ -2723,7 +2722,7 @@ class pageParser(CaptchaHelper):
             cacheItem = None
 
         tmpTab = re.findall(r'''['"]?url([0-9]+?)['"]?[=:]['"]?(http[^"]+?\.mp4[^;^"^']*)[;"']''', data)
-        ##prepare urls list without duplicates
+        # prepare urls list without duplicates
         for item in tmpTab:
             item = list(item)
             if item[1].endswith('&amp'):
@@ -2850,7 +2849,6 @@ class pageParser(CaptchaHelper):
                 return self.parserPLAYEDTO(url)
         else:
             return self.parserPLAYEDTO(url)
-
 
     def parserFREEDISC(self, baseUrl):
         linksTab = []
@@ -5716,7 +5714,7 @@ class pageParser(CaptchaHelper):
             return False
         cUrl = self.cm.meta['url']
         videoUrl += '?' + urllib_urlencode(player)
-        pyCmd = GetPyScriptCmd('hydrax') + ' "%s" "%s" "%s" "%s" "%s" "%s" "%s" "%s" ' % (0, videoUrl, 'quality', '0xb1d43309ca93c802b7ed16csf7e8d4f1b', baseUrl, GetJSScriptFile('hydrax.byte'), HTTP_HEADER['User-Agent'], GetDukPath())
+        pyCmd = GetPyScriptCmd('hydrax') + ' "%s" "%s" "%s" "%s" "%s" "%s" "%s" "%s" ' % (0, videoUrl, 'quality', '0xb1d43309ca93c802b7ed16csf7e8d4f1b', baseUrl, GetJSScriptFile('hydrax.byte'), HTTP_HEADER['User-Agent'], "/usr/bin/duk")
         urlsTab = []
         map = [('sd', '480x360'), ('mhd', '640x480'), ('hd', '1280x720'), ('fullhd', '1920x1080')]
         data = json_loads(data)

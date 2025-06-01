@@ -29,7 +29,7 @@ from enigma import eTimer
 from Components.config import config
 from Components.ActionMap import ActionMap
 from Components.Label import Label
-#from Components.Sources.StaticText import StaticText
+# from Components.Sources.StaticText import StaticText
 from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
 from os import remove as os_remove
 from datetime import timedelta
@@ -73,7 +73,7 @@ class E2iPlayerBufferingWidget(Screen):
     # addinfo
     a_x = 10
     a_y = sz_h - 160
-    #button
+    # button
     b_x = sz_w - 10 - 35 * 3
     b_y = sz_h - 10 - 25
 
@@ -116,9 +116,9 @@ class E2iPlayerBufferingWidget(Screen):
         self.activMoviePlayer = activMoviePlayer
 
         self.onClose.append(self.__onClose)
-        #self.onLayoutFinish.append(self.doStart)
+        # self.onLayoutFinish.append(self.doStart)
         self.onShow.append(self.onWindowShow)
-        #self.onHide.append(self.onWindowHide)
+        # self.onHide.append(self.onWindowHide)
 
         self["actions"] = ActionMap(["IPTVAlternateVideoPlayer", "WizardActions", "MoviePlayerActions"],
         {
@@ -144,7 +144,7 @@ class E2iPlayerBufferingWidget(Screen):
 
         self.inMoviePlayer = False
         self.canRunMoviePlayer = False  # used in function updateDisplay, so must be first initialized
-        #main Timer
+        # main Timer
         self.mainTimer = eTimer()
         self.mainTimerEnabled = False
         self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.updateDisplay)
@@ -181,7 +181,7 @@ class E2iPlayerBufferingWidget(Screen):
 
         printDBG(">> activMoviePlayer[%s]" % self.activMoviePlayer)
 
-    #end def __init__(self, session):
+    # end def __init__(self, session):
 
     def onStart(self):
         '''
@@ -261,8 +261,8 @@ class E2iPlayerBufferingWidget(Screen):
         elif ret in ['key_stop']:
             # ask if we should close
             self.lastSize = self.downloader.getLocalFileSize(True)
-            #list = [ (_("yes"), True), (_("no"), False) ]
-            #if self.downloadManager and self.downloader and self.downloader.getPlayableFileSize() > 0:
+            # list = [ (_("yes"), True), (_("no"), False) ]
+            # if self.downloadManager and self.downloader and self.downloader.getPlayableFileSize() > 0:
             #    list.append((_("yes, move playback buffer to the download manager"), 'move'))
             self.session.openWithCallback(self.confirmExitCallBack, MessageBox, text=_("Stop playing?"), type=MessageBox.TYPE_YESNO)
 
@@ -291,8 +291,8 @@ class E2iPlayerBufferingWidget(Screen):
         else:
             # show error message and ask user what to do
             message = _("Moving playback buffer to the download manager failed with the following error \"%s\"" % msg)
-            #message += '\n\n' + _("What do you want to do?")
-            #list = [ (_("Continue playback"), True), (_("Stop playback"), False) ]
+            # message += '\n\n' + _("What do you want to do?")
+            # list = [ (_("Continue playback"), True), (_("Stop playback"), False) ]
             if fromPlayer:
                 message += '\n\n' + _("Stop playing?")
                 self.session.openWithCallback(self.confirmExitCallBack, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
@@ -580,7 +580,7 @@ class E2iPlayerBufferingWidget(Screen):
 
         # check if it is downloading
         if self.downloader.getStatus() not in [DMHelper.STS.POSTPROCESSING, DMHelper.STS.DOWNLOADING, DMHelper.STS.WAITING]:
-            #messageTab = [_("Error occurs during download. \nStatus[%s], tmpBuffSize[%r], canRunMoviePlayer[%r]") % (self.downloader.getStatus(), tmpBuffSize, self.canRunMoviePlayer)]
+            # messageTab = [_("Error occurs during download. \nStatus[%s], tmpBuffSize[%r], canRunMoviePlayer[%r]") % (self.downloader.getStatus(), tmpBuffSize, self.canRunMoviePlayer)]
             messageTab = [_("Error occurs during download.")]
             errorCode, errorDesc = self.downloader.getLastError()
             if errorCode is not None:
@@ -608,9 +608,9 @@ class E2iPlayerBufferingWidget(Screen):
             printExc()
 
         self.onClose.remove(self.__onClose)
-        #self.onLayoutFinish.remove(self.doStart)
+        # self.onLayoutFinish.remove(self.doStart)
         self.onShow.remove(self.onWindowShow)
-        #self.onHide.remove(self.onWindowHide)
+        # self.onHide.remove(self.onWindowHide)
         self.downloadManager = None
 
     def _cleanedUp(self):

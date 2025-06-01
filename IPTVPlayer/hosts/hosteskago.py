@@ -48,7 +48,7 @@ class EskaGo(CBaseHostClass):
                              ]
                             # {'category':'search',                  'title': _('Search'),                'search_item':True,              },
                             # {'category':'search_history',          'title': _('Search history'),                                         }
-                            #]
+                            # ]
 
         self.cacheItems = {}
 
@@ -408,7 +408,7 @@ class EskaGo(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
 
@@ -436,12 +436,12 @@ class EskaGo(CBaseHostClass):
             self.listCacheItems(self.currItem)
         elif 'list_radio_eskapl' == category:
             self.listRadioEskaPL(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

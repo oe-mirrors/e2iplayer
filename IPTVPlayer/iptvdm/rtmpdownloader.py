@@ -128,7 +128,7 @@ class RtmpDownloader(BaseDownloader):
         rtmpdump_url = self._getCMD(url)
 
         if 0:
-            #rtmpdump -r rtmp://5.79.71.195/stream/ --playpath=3001_goldvod --swfUrl=http://goldvod.tv:81/j/jwplayer/jwplayer.flash.swf --pageUrl=http://goldvod.tv/tv-online/tvp1.html -o tvp1.flv
+            # rtmpdump -r rtmp://5.79.71.195/stream/ --playpath=3001_goldvod --swfUrl=http://goldvod.tv:81/j/jwplayer/jwplayer.flash.swf --pageUrl=http://goldvod.tv/tv-online/tvp1.html -o tvp1.flv
             tmpTab = url.split(' ')
             rtmpdump_url = '"' + tmpTab[0].strip() + '"'
             del tmpTab[0]
@@ -160,7 +160,7 @@ class RtmpDownloader(BaseDownloader):
 
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
-        #self.console.stderrAvail.append( self._dataAvail )
+        # self.console.stderrAvail.append( self._dataAvail )
         self.console.setNice(GetNice() + 2)
         self.console.execute(cmd)
 

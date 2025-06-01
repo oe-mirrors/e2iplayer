@@ -165,8 +165,8 @@ class WebCameraApi(CBaseHostClass):
                     except Exception:
                         printExc()
 
-                    #urlPrams['cameras'] = '14'
-                    #urlPrams['columns'] = '12'
+                    # urlPrams['cameras'] = '14'
+                    # urlPrams['columns'] = '12'
 
                     url = self.getFullUrl(cItem['more_url'])
                     url += '?' + urlencode(urlPrams)

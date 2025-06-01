@@ -67,7 +67,7 @@ class IPTVHostsGroups:
                                                      'filmativa', 'filmovizijastudio', 'filma24hdcom', 'serijeonline', 'kinox', 'cartoonhd', 'worldfree4u', 'tantifilmorg', 'forjatn', 'serialeco', 'faselhdcom',
                                                      'yesmoviesto', 'planetstreamingcom', 'filmeonlineto', 'tainieskaiseirestv', '3sktv', 'cimaclubcom', 'gledalica',
                                                      'filmaoncom', 'putlockertvto', 'akoam', 'filmehdnet',
-                                                     'altadefinizione', '123movieshd', 'filma24io', 'ddl', 'hdfull', 'dixmax', 'plusdede', 'fenixsite',
+                                                     'altadefinizione01', '123movieshd', 'filma24io', 'ddl', 'hdfull', 'dixmax', 'plusdede', 'fenixsite',
                                                      'kkiste', 'kinoger', 'movie4k', 'streamcloud', 'topstreamfilm', 'hdfilme', 'movie2k', 'einschalten', 'kinokiste', 'megakino', 'moflixstream']
         self.PREDEFINED_HOSTS['cartoonsandanime'] = ['bajeczkiorg', 'animeodcinki', 'kisscartoonme', 'watchcartoononline', 'shahiidanimenet',
                                                      'otakufr']
@@ -97,7 +97,7 @@ class IPTVHostsGroups:
         self.PREDEFINED_HOSTS['arabic'] = ['youtube', 'webstream', 'akoam', 'egybest', 'movizlandcom', 'shahiidanimenet', 'dailymotion', 'vimeo', 'twitchtv', 'forjatn', 'faselhdcom', '3sktv', 'cimaclubcom', 'hdsto']
         self.PREDEFINED_HOSTS['greek'] = ['youtube', 'xrysoise', 'tainieskaiseirestv', 'gamatocom', 'greekdocumentaries3', 'dailymotion', 'vimeo', 'twitchtv']
         self.PREDEFINED_HOSTS['latino'] = ['youtube', 'mrpiracy', 'solarmovie', 'artetv', 'dailymotion', 'vimeo', 'twitchtv', 'plusdede', 'hdfull', 'dixmax']
-        self.PREDEFINED_HOSTS['italian'] = ['youtube', 'mediasetplay', 'altadefinizione01', 'tantifilmorg', 'dailymotion', 'vimeo', 'twitchtv', 'playrtsiw', 'altadefinizione', 'raiplay']
+        self.PREDEFINED_HOSTS['italian'] = ['youtube', 'mediasetplay', 'altadefinizione01', 'tantifilmorg', 'dailymotion', 'vimeo', 'twitchtv', 'playrtsiw', 'raiplay']
         self.PREDEFINED_HOSTS['swedish'] = ['youtube', 'dailymotion', 'vimeo', 'svtplayse', 'twitchtv']
         self.PREDEFINED_HOSTS['balkans'] = ['youtube', 'filmehdnet', 'gledalica', 'filmativa', 'filmovizijastudio', 'filma24hdcom', 'filma24io', 'filmaoncom', 'serijeonline', 'filmeonlineto', 'fenixsite',
                                                      'dailymotion', 'vimeo', 'twitchtv']
@@ -182,7 +182,7 @@ class IPTVHostsGroups:
         # available or they are disabled globally
         outObj = {"version": 0, "hosts": hostsList, "disabled_hosts": []}
 
-        #check if some host from diabled one has been enabled
+        # check if some host from diabled one has been enabled
         disabledHosts = []
         for host in self.LOADED_DISABLED_HOSTS[groupName]:
             if host not in hostsList:

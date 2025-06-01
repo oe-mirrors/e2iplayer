@@ -290,7 +290,7 @@ class FilmaonCom(CBaseHostClass):
             if len(item) < 2:
                 continue
             fakeHostUrl = 'http://%s/' % self.cleanHtmlStr(item[1]).lower()
-            #if 1 != self.up.checkHostSupport(fakeHostUrl): continue
+            # if 1 != self.up.checkHostSupport(fakeHostUrl): continue
             title = []
             for idx in range(1, len(item)):
                 title.append(self.cleanHtmlStr(item[idx]))
@@ -444,7 +444,7 @@ class FilmaonCom(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None and category == '':
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'}, 'sub_items', 'list_items')
@@ -456,12 +456,12 @@ class FilmaonCom(CBaseHostClass):
             self.listTop(self.currItem, 'sub_items', 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem, 'sub_items')
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

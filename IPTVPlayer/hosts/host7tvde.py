@@ -324,7 +324,7 @@ class C7tvDe(CBaseHostClass):
             printExc()
             return []
 
-        #dashLinks = self.doGetLinks(video_id, client_location, 'application/dash+xml')
+        # dashLinks = self.doGetLinks(video_id, client_location, 'application/dash+xml')
         try:
             for it in (False, True):
                 hlsLinks = self.doGetLinks(video_id, client_location, 'application/x-mpegURL', it)
@@ -386,7 +386,7 @@ class C7tvDe(CBaseHostClass):
             json_data = json_loads(json_data)
             server_id = json_data['server_id']
 
-            #client_name = 'kolibri-1.2.5'
+            # client_name = 'kolibri-1.2.5'
             client_id = salt[:2] + sha1(''.join([salt, video_id, access_token, server_id, client_location, str(source_id), salt, client_name]).encode('utf-8')).hexdigest()
             url_api_url = 'http://vas.sim-technik.de/vas/live/v2/videos/%s/sources/url?%s' % (video_id, urllib_urlencode({
                 'access_token': access_token,
@@ -447,7 +447,7 @@ class C7tvDe(CBaseHostClass):
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMain({'name': 'category', 'type': 'category'}, 'list_items')
 
@@ -477,12 +477,12 @@ class C7tvDe(CBaseHostClass):
 
         elif category == 'list_missed_items':
             self.listMissedItems(self.currItem, 'explore_item')
-    #SEARCH
+    # SEARCH
         elif category == 'search':
             self.listSearchResult(MergeDicts(self.currItem, {'search_item': False, 'name': 'category'}), searchPattern, searchType)
         elif category == 'search_next':
             self.listSearchResultNext(self.currItem, 'explore_item')
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

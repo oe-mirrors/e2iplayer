@@ -79,8 +79,8 @@ class TVPlayer(CBaseHostClass):
 
         self.MAIN_CAT_TAB = [{'category': 'list_channels_genres', 'title': _('Channels'), 'url': self.getFullUrl('/channels')},
 
-                             #{'category':'search',           'title': _('Search'), 'search_item':True,},
-                             #{'category':'search_history',   'title': _('Search history'),            }
+                             # {'category':'search',           'title': _('Search'), 'search_item':True,},
+                             # {'category':'search_history',   'title': _('Search history'),            }
                             ]
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
@@ -395,9 +395,9 @@ class TVPlayer(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
-            #self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
+            # self.listsTab(self.MAIN_CAT_TAB, {'name':'category'})
             cItem = dict(self.MAIN_CAT_TAB[0])
             cItem['name'] = 'category'
             self.listChannelsGenres(cItem, 'list_type')
@@ -407,12 +407,12 @@ class TVPlayer(CBaseHostClass):
             self.listTypeFilter(self.currItem, 'list_channels')
         elif category == 'list_channels':
             self.listChannels(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

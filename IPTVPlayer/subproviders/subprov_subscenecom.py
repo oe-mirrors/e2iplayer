@@ -121,8 +121,8 @@ class SubsceneComProvider(CBaseSubProviderClass):
 
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.SEARCH_TYPE_TAB = [{'title': _('By media title'), 'category': 'search_by_title'}]
-                                #,
-                                #{'title':_('By release name'), 'category':'search_by_release'}]
+                                # ,
+                                # {'title':_('By release name'), 'category':'search_by_release'}]
         self.cache = {}
 
     def _getHeader(self, lang):
@@ -258,7 +258,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
 
             bodyData = self.cm.ph.getAllItemsBeetwenMarkers(item, '<td ', '</td>')
 
-            #title
+            # title
             if 'positive-icon' in bodyData[0]:
                 t1 = '[+]'
             elif 'neutral-icon' in bodyData[0]:
@@ -267,7 +267,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
                 t1 = '[-]'
             title = t1 + ' ' + self.cleanHtmlStr(bodyData[0])
 
-            #lang
+            # lang
             lang = _getLangCode(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(bodyData[0], '<span class="l', '</span>')[1]))
 
             # desc
@@ -368,7 +368,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.getLanguages({'name': 'category'}, 'list_search_types')
         elif category == 'list_search_types':

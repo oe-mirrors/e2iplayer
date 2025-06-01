@@ -51,7 +51,7 @@ class XrysoiSE(CBaseHostClass):
 
     MAIN_CAT_TAB = [{'category': 'movies', 'mode': 'movies', 'title': 'Ταινιες', 'url': '', 'icon': ''},
                     {'category': 'list_items', 'mode': 'series', 'title': 'Ξένες σειρές', 'url': MAIN_URL + 'category/ξένες-σειρές/', 'icon': ''},
-                    #{'category':'list_items',     'mode':'collection', 'title': 'Συλλογες',     'url':MAIN_URL + 'category/collection/',      'icon':''},
+                    # {'category':'list_items',     'mode':'collection', 'title': 'Συλλογες',     'url':MAIN_URL + 'category/collection/',      'icon':''},
                     {'category': 'search', 'title': _('Search'), 'search_item': True},
                     {'category': 'search_history', 'title': _('Search history')}]
 
@@ -148,7 +148,7 @@ class XrysoiSE(CBaseHostClass):
             url = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             icon = self._getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+?)"')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+?)"')[0])
-            #if 'search' == cItem.get('mode'):
+            # if 'search' == cItem.get('mode'):
             #    if '-collection' in url: continue
             if url.startswith('http'):
                 params = dict(cItem)
@@ -369,22 +369,22 @@ class XrysoiSE(CBaseHostClass):
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'movies':
             self.listMoviesCategory(self.currItem, 'list_items')
         elif category == 'list_items':
                 self.listItems(self.currItem)
-    #EXPLORE ITEM
+    # EXPLORE ITEM
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

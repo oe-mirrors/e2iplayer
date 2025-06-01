@@ -51,7 +51,7 @@ class Ninateka(CBaseHostClass):
         self.VIDEOS_URL = self.getFullUrl('filmy?MediaType=video&Paid=False&CategoryCodenames=')
         self.SEARCH_URL = self.VIDEOS_URL + '&SearchQuery='
 
-        #DEFAULT_GET_PARAM = 'MediaType=video&Paid=False'
+        # DEFAULT_GET_PARAM = 'MediaType=video&Paid=False'
 
         self.MAIN_CAT_TAB = [{'category': 'list_all', 'title': 'Wszystkie', 'url': self.VIDEOS_URL},
                              {'category': 'list_cats', 'title': 'Kategorie', 'url': self.MAIN_URL},
@@ -226,29 +226,29 @@ class Ninateka(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-    #WSZYSTKIE
+    # WSZYSTKIE
         elif category == 'list_all':
             self.getVideosList(self.currItem['url'])
-    #KATEGORIE
+    # KATEGORIE
         elif category == 'list_cats':
             self.getMainCategory()
-    #SUB-KATEGORIE
+    # SUB-KATEGORIE
         elif name == 'main-category':
             self.getSubCategory(page)
         elif name == 'sub-category':
             self.getVideosList(page)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
-    #WRONG WAY
+    # WRONG WAY
         else:
             printDBG('handleService WRONG WAY')
 

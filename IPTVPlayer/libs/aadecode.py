@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # Alfa Addon - Kodi Plugin
 # https://github.com/alfa-addon/addon/blob/master/plugin.video.alfa/lib/aadecode.py

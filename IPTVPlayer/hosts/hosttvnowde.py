@@ -106,7 +106,7 @@ class TVNowDE(CBaseHostClass):
             for item in data['items']:
                 if not item.get('active', True):
                     continue
-                #url = '/channels/{0}?fields=%5B%22*%22,%22movies%22,%5B%22id%22,%22title%22,%22episode%22,%22broadcastStartDate%22,%22blockadeText%22,%22free%22,%22replaceMovieInformation%22,%22seoUrl%22,%22pictures%22,%5B%22*%22%5D,%22packages%22,%5B%22*%22%5D,%22manifest%22,%5B%22*%22%5D,%22format%22,%5B%22id%22,+%22station%22,+%22title%22,%22seoUrl%22,%22defaultDvdImage%22%5D%5D%5D'.format(item['id'])
+                # url = '/channels/{0}?fields=%5B%22*%22,%22movies%22,%5B%22id%22,%22title%22,%22episode%22,%22broadcastStartDate%22,%22blockadeText%22,%22free%22,%22replaceMovieInformation%22,%22seoUrl%22,%22pictures%22,%5B%22*%22%5D,%22packages%22,%5B%22*%22%5D,%22manifest%22,%5B%22*%22%5D,%22format%22,%5B%22id%22,+%22station%22,+%22title%22,%22seoUrl%22,%22defaultDvdImage%22%5D%5D%5D'.format(item['id'])
                 url = '/channels/{0}?fields=%5B%22*%22,%22movies%22,%5B%22id%22,%22title%22,%22episode%22,%22broadcastStartDate%22,%22articleLong%22,%22duration%22,%22free%22,%22replaceMovieInformation%22,%22seoUrl%22,%22pictures%22,%5B%22*%22%5D,%22packages%22,%5B%22*%22%5D,%22manifest%22,%5B%22*%22%5D,%22format%22,%5B%22id%22,+%22station%22,+%22title%22,%22seoUrl%22,%22defaultDvdImage%22%5D%5D%5D'.format(item['id'])
                 url = self.getFullUrl(url)
                 title = self.getStr(item, 'title')
@@ -163,7 +163,7 @@ class TVNowDE(CBaseHostClass):
         printDBG("TVNowDE.listCats")
 
         genres = ["Tägliche Serien", "Action", "Crime", "Ratgeber", "Comedy", "Show", "Docutainment", "Drama", "Tiere", "News", "Mags", "Romantik", "Horror", "Familie", "Kochen", "Auto", "Sport", "Reportage und Dokumentationen", "Sitcom", "Mystery", "Lifestyle", "Musik", "Spielfilm", "Anime"]
-        #["Soap", "Action", "Crime", "Ratgeber", "Comedy", "Show", "Docutainment", "Drama", "Tiere", "News", "Mags", "Romantik", "Horror", "Familie", "Kochen", "Auto", "Sport", "Reportage und Dokumentationen", "Sitcom", "Mystery", "Lifestyle", "Musik", "Spielfilm", "Anime"]
+        # ["Soap", "Action", "Crime", "Ratgeber", "Comedy", "Show", "Docutainment", "Drama", "Tiere", "News", "Mags", "Romantik", "Horror", "Familie", "Kochen", "Auto", "Sport", "Reportage und Dokumentationen", "Sitcom", "Mystery", "Lifestyle", "Musik", "Spielfilm", "Anime"]
         for item in genres:
             params = dict(cItem)
             params = {'good_for_fav': False, 'title': item, 'f_genre': item.lower()}
@@ -504,7 +504,7 @@ class TVNowDE(CBaseHostClass):
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'channels':
@@ -531,12 +531,12 @@ class TVNowDE(CBaseHostClass):
             self.listTabItems(self.currItem)
         elif category == 'list_video_items':
             self.listVideoItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

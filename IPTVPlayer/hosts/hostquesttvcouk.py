@@ -158,7 +158,7 @@ class QuesttvCoUK(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listOnDemand({'name': 'category', 'url': self.getFullUrl('/video')})
         else:

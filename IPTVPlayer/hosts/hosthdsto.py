@@ -170,7 +170,7 @@ class HDSTo(CBaseHostClass):
         printDBG('++++')
         printDBG(cItem['c_tree'])
         try:
-            #cTree = cItem['c_tree']
+            # cTree = cItem['c_tree']
             for cTree in cItem['c_tree']['list']:
                 url = self.searchUrl(cTree['dat'])
                 title = self.cleanHtmlStr(cTree['dat'])
@@ -575,7 +575,7 @@ class HDSTo(CBaseHostClass):
 
         self.tryTologin()
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
         elif category == 'cat_items':
@@ -586,12 +586,12 @@ class HDSTo(CBaseHostClass):
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

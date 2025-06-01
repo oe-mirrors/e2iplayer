@@ -97,7 +97,7 @@ class Redbull(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             if not title:
                 title = icon.rsplit('/', 1)[-1].rsplit('.', 1)[0]
-                #title = self.titlesMap.get(title, title.upper())
+                # title = self.titlesMap.get(title, title.upper())
             subItems.append(MergeDicts(cItem, {'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url, 'icon': icon}))
 
         if len(subItems) > 1:
@@ -254,7 +254,7 @@ class Redbull(CBaseHostClass):
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMain({'name': 'category', 'type': 'category'}, 'explore_item')
 
@@ -264,14 +264,14 @@ class Redbull(CBaseHostClass):
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
 
-    #SEARCH
+    # SEARCH
         elif category == 'list_search':
             self.listSearchItems(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -39,7 +39,7 @@ class UnCaptchahCaptcha:
         errorMsgTab = []
         apiKey = config.plugins.iptvplayer.api_key_2captcha.value
 
-        #read ip of box
+        # read ip of box
 
         sts, ip = self.cm.getPage('https://api.ipify.org')
 

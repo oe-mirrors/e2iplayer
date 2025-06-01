@@ -447,7 +447,7 @@ class VODPL(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
@@ -456,12 +456,12 @@ class VODPL(CBaseHostClass):
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem, 'list_items')
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
@@ -484,7 +484,7 @@ class IPTVHost(CHostBase):
         searchTypesOptions.append(("Programy TV", "programy"))
         return searchTypesOptions
 
-    #def withArticleContent(self, cItem):
+    # def withArticleContent(self, cItem):
     #    if (cItem['type'] != 'video' and cItem['category'] != 'explore_item'):
     #        return False
     #    return True

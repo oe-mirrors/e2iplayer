@@ -48,7 +48,7 @@ class Rijndael(BlockCipher):
         """ Encrypt a block, plainTextBlock must be a array of bytes [Nb by 4] """
         self.state = self._toBlock(plainTextBlock)
         AddRoundKey(self, self.__expandedKey[0:self.Nb])
-        for round in range(1, self.Nr):          #for round = 1 step 1 to Nr�1
+        for round in range(1, self.Nr):  # for round = 1 step 1 to Nr�1
             SubBytes(self)
             ShiftRows(self)
             MixColumns(self)
@@ -86,7 +86,7 @@ class Rijndael(BlockCipher):
         return ''.join(l)
 
 
-#-------------------------------------
+# -------------------------------------
 """    Number of rounds Nr = NrTable[Nb][Nk]
 
             Nb  Nk=4   Nk=5   Nk=6   Nk=7   Nk=8
@@ -96,7 +96,7 @@ NrTable = {4: {4: 10, 5: 11, 6: 12, 7: 13, 8: 14},
             6: {4: 12, 5: 12, 6: 12, 7: 13, 8: 14},
             7: {4: 13, 5: 13, 6: 13, 7: 13, 8: 14},
             8: {4: 14, 5: 14, 6: 14, 7: 14, 8: 14}}
-#-------------------------------------
+# -------------------------------------
 
 
 def keyExpansion(algInstance, keyString):
@@ -121,7 +121,7 @@ Rcon = (0, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36,     # not
         0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6,
         0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91)
 
-#-------------------------------------
+# -------------------------------------
 
 
 def AddRoundKey(algInstance, keyBlock):
@@ -129,7 +129,7 @@ def AddRoundKey(algInstance, keyBlock):
     for column in range(algInstance.Nb):
         for row in range(4):
             algInstance.state[column][row] ^= keyBlock[column][row]
-#-------------------------------------
+# -------------------------------------
 
 
 def SubBytes(algInstance):
@@ -210,7 +210,7 @@ InvSbox = (0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38,
            0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26,
            0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d)
 
-#-------------------------------------
+# -------------------------------------
 """ For each block size (Nb), the ShiftRow operation shifts row i
     by the amount Ci.  Note that row 0 is not shifted.
                  Nb      C1 C2 C3
@@ -238,7 +238,7 @@ def InvShiftRows(algInstance):
             tmp[c] = algInstance.state[(c + algInstance.Nb - shiftOffset[algInstance.Nb][r]) % algInstance.Nb][r]
         for c in range(algInstance.Nb):
             algInstance.state[c][r] = tmp[c]
-#-------------------------------------
+# -------------------------------------
 
 
 def MixColumns(a):
@@ -264,7 +264,7 @@ def InvMixColumns(a):
         for i in range(4):
             a.state[j][i] = Sprime[i]
 
-#-------------------------------------
+# -------------------------------------
 
 
 def mul(a, b):

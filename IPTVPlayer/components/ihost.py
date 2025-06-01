@@ -1,4 +1,4 @@
-## @file  ihost.py
+# @file  ihost.py
 #
 
 ###################################################
@@ -32,7 +32,7 @@ class CUrlItem:
             self.url = str(url)
 
         self.urlNeedsResolve = urlNeedsResolve  # additional request to host is needed to resolv this url (url is not direct link)
-## class CDisplayListItem
+# class CDisplayListItem
 # define attribiutes for item of diplay list
 # communicate display layer with host
 #
@@ -247,7 +247,7 @@ class RetHost:
         self.value = value
         self.message = message
 
-## class IHost
+# class IHost
 # interface base class with method used to
 # communicate display layer with host
 #
@@ -572,8 +572,8 @@ class CHostBase(IHost):
 
     def getSearchTypes(self):
         searchTypesOptions = []
-        #searchTypesOptions.append((_("Movies"),   "movie"))
-        #searchTypesOptions.append((_("TV Shows"), "series"))
+        # searchTypesOptions.append((_("Movies"),   "movie"))
+        # searchTypesOptions.append((_("TV Shows"), "series"))
         return searchTypesOptions
 
     def getDefaulIcon(self, cItem):

@@ -171,7 +171,7 @@ class GreekDocumentaries3(CBaseHostClass):
                   ('</iframe>', '<b>', True, True),
                   ('<iframe ', '</iframe>', False, False)]:
 
-            #"<div style='clear: both;'>"
+            # "<div style='clear: both;'>"
             if 1 == m[3]:
                 idx = data.find('Γλώσσα:')
             else:
@@ -186,9 +186,9 @@ class GreekDocumentaries3(CBaseHostClass):
             else:
                 tmp = self.cm.ph.rgetAllItemsBeetwenMarkers(tmp, m[0], m[1])
 
-            #printDBG('=============================================================')
-            #printDBG(tmp)
-            #printDBG('=============================================================')
+            # printDBG('=============================================================')
+            # printDBG(tmp)
+            # printDBG('=============================================================')
 
             for item in tmp:
                 title = self.cleanHtmlStr(self.cleanHtmlStr(item).replace('\r', ' ').replace('\n', ' '))
@@ -238,22 +238,22 @@ class GreekDocumentaries3(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
             self.listCategories(self.currItem, 'list_items')
         elif category == 'list_items':
                 self.listItems(self.currItem)
-    #EXPLORE ITEM
+    # EXPLORE ITEM
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
@@ -294,7 +294,7 @@ class IPTVHost(CHostBase):
 
         return RetHost(RetHost.OK, value=retlist)
 
-    #def getArticleContent(self, Index = 0):
+    # def getArticleContent(self, Index = 0):
     #    retCode = RetHost.ERROR
     #    retlist = []
     #    if not self.isValidIndex(Index): return RetHost(retCode, value=retlist)
@@ -311,8 +311,8 @@ class IPTVHost(CHostBase):
     def converItem(self, cItem):
         hostList = []
         searchTypesOptions = []  # ustawione alfabetycznie
-        #searchTypesOptions.append((_("Movies"),   "movie"))
-        #searchTypesOptions.append((_("TV Shows"), "tv_shows"))
+        # searchTypesOptions.append((_("Movies"),   "movie"))
+        # searchTypesOptions.append((_("TV Shows"), "tv_shows"))
 
         hostLinks = []
         type = CDisplayListItem.TYPE_UNKNOWN

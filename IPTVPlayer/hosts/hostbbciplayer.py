@@ -53,7 +53,7 @@ class BBCiPlayer(CBaseHostClass):
 
         self.MAIN_URL = 'http://www.bbc.co.uk/'
         self.DEFAULT_ICON_URL = 'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_pink.png'
-        #'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_white.png'
+        # 'http://iplayer-web.files.bbci.co.uk/tviplayer-static-assets/10.75.0-1/img/navigation/iplayer_white.png'
 
         self.MAIN_CAT_TAB = [{'category': 'list_channels', 'title': _('Channels'), 'url': self.getFullUrl('iplayer')},
                              {'category': 'list_categories', 'title': _('Categories'), 'url': self.getFullUrl('iplayer')},
@@ -461,7 +461,7 @@ class BBCiPlayer(CBaseHostClass):
             tmp = self.cm.ph.getDataBeetwenNodes(item, ('<a', '>', 'content-item__secondary'), ('</a', '>'))[1]
             if tmp != '':
                 url = self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0]
-                #title += ' | ' + self.cleanHtmlStr(tmp)
+                # title += ' | ' + self.cleanHtmlStr(tmp)
                 type = 'category'
             else:
                 url = self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0]
@@ -610,7 +610,7 @@ class BBCiPlayer(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category', 'url': self.MAIN_URL}, 'list_items')
@@ -641,12 +641,12 @@ class BBCiPlayer(CBaseHostClass):
         elif 'list_episodes_view_all' == category:
             self.listItemsViewAll(self.currItem, 'video')
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

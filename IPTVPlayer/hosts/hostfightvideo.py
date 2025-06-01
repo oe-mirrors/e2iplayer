@@ -313,7 +313,7 @@ class FightVideo(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             cItem = dict(self.currItem)
             cItem['category'] = 'list_filters'

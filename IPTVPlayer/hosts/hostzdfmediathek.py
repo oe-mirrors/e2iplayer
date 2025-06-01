@@ -84,7 +84,7 @@ class ZDFmediathek(CBaseHostClass):
                     {'category': 'missed_date', 'title': _('Missed the show?')},
                     {'category': 'list_cluster', 'title': _('Program A-Z'), 'simplify': False, 'url': BRANDS_ALPHABETICAL_API_URL},
                     {'category': 'list_cluster', 'title': _('Categories'), 'url': CATEGORIES_PAGE_API_URL},
-                    #{'category':'themen',         'title':_('Topics'), 'url': NEWS_API_URL},
+                    # {'category':'themen',         'title':_('Topics'), 'url': NEWS_API_URL},
                     {'category': 'kinder', 'title': _('Children')},
                     {'category': 'search', 'title': _('Search'), 'search_item': True},
                     {'category': 'search_history', 'title': _('Search history')}]
@@ -107,7 +107,7 @@ class ZDFmediathek(CBaseHostClass):
         if 'zdf-cdn.live.cellular.de' in url and False:
             proxy = 'http://www.proxy-german.de/index.php?q={0}&hl=2e1'.format(urllib.parse.quote(url, ''))
             params['header']['Referer'] = proxy
-            #params['header']['Cookie'] = 'flags=2e5;'
+            # params['header']['Cookie'] = 'flags=2e5;'
             url = proxy
         sts, data = self.cm.getPage(url, params, post_data)
         if sts and None is data:
@@ -558,12 +558,12 @@ class ZDFmediathek(CBaseHostClass):
             self.listCluster(self.currItem)
         elif 'list_content' == category:
             self.listContent(self.currItem)
-    #WYSZUKAJ
+    # WYSZUKAJ
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA WYSZUKIWANIA
+    # HISTORIA WYSZUKIWANIA
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

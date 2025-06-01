@@ -70,7 +70,7 @@ class ArteTV(CBaseHostClass):
         # remove weekday & timezone
         datestr = ' '.join(datestr.split(None)[1:5])
 
-        #replace months with numbers - there will be problems with localization
+        # replace months with numbers - there will be problems with localization
         months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
         for i in range(12):
@@ -302,7 +302,7 @@ class ArteTV(CBaseHostClass):
                             printDBG(str(params))
                             self.addDir(params)
 
-                        #elif category_code == "magazine":
+                        # elif category_code == "magazine":
 
         except:
             printExc()
@@ -368,19 +368,19 @@ class ArteTV(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'}, 'list_lang')
         elif category == 'list_lang':
             self.listLang(self.currItem, 'category')
         elif category in ['home_cat', 'category', 'list', 'collection']:
             self.listItems(self.currItem, 'list_items')
-        #SEARCH
+        # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-        #HISTORIA SEARCH
+        # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

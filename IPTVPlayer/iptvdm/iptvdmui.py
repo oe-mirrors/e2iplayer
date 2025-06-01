@@ -52,8 +52,8 @@ class IPTVDMWidget(Screen):
                         }
 
     # sz_w = getDesktop(0).size().width() - 190
-    #sz_h = getDesktop(0).size().height() - 195
-    #if sz_h < 500:
+    # sz_h = getDesktop(0).size().height() - 195
+    # if sz_h < 500:
     #    sz_h += 4
     skin = """
         <screen name="IPTVDMWidget" position="center,center" title="%s" size="1280,720" resolution="1280,720">
@@ -139,7 +139,7 @@ class IPTVDMWidget(Screen):
         self.onClose.append(self.__onClose)
         self.onShow.append(self.onStart)
 
-        #main Timer to refresh liar
+        # main Timer to refresh liar
         self.mainTimer = eTimer()
         self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.reloadList)
         # every 500ms Proxy Queue will be checked
@@ -155,7 +155,7 @@ class IPTVDMWidget(Screen):
         self.iptvclosing = False
         self.currList = []
 
-    #end def __init__(self, session):
+    # end def __init__(self, session):
 
     def refreshFinished(self, code):
         printDBG("IPTVDMWidget.refreshFinished")
@@ -324,7 +324,7 @@ class IPTVDMWidget(Screen):
                 options.extend(retry)
             elif DMHelper.STS.INTERRUPTED == item.status:
                 options.extend(play)
-                #options.extend(cont)
+                # options.extend(cont)
                 options.extend(retry)
                 options.extend(remove)
             elif DMHelper.STS.DOWNLOADING == item.status:
@@ -505,10 +505,10 @@ class IPTVDMWidget(Screen):
         elif force:
             printDBG("IPTV_DM_UI reload archive list")
             self["downloadlist"].setList(self.buildEnties(self.localFiles))
-            #self["list"].hide()
-            #self["list"].setList([(x,) for x in self.localFiles])
-            #self["list"].show()
-    #end reloadList
+            # self["list"].hide()
+            # self["list"].setList([(x,) for x in self.localFiles])
+            # self["list"].show()
+    # end reloadList
 
     def hideWindow(self):
         self.visible = False

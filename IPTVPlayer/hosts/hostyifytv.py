@@ -185,7 +185,7 @@ class YifyTV(CBaseHostClass):
         if 0 == len(self.filterCache.get('languages', [])):
             sts, data = self.getPage(self.MAIN_URL + 'languages/')
             if sts:
-                #languages
+                # languages
                 languages = self.cm.ph.getDataBeetwenMarkers(data, '<!-- start content container -->', '</section>', False)[1]
                 languages = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(languages)
                 self.filterCache['languages'] = []
@@ -195,7 +195,7 @@ class YifyTV(CBaseHostClass):
         if 0 == len(self.filterCache.get('countries', [])):
             sts, data = self.getPage(self.MAIN_URL + 'countries/')
             if sts:
-                #countries
+                # countries
                 countries = self.cm.ph.getDataBeetwenMarkers(data, '<!-- start content container -->', '</section>', False)[1]
                 countries = re.compile('<a[^>]+?href="([^"]+?)"[^>]*?>([^<]+?)</a>').findall(countries)
                 self.filterCache['countries'] = []
@@ -243,7 +243,7 @@ class YifyTV(CBaseHostClass):
         if not sts:
             return
 
-        #printDBG(data)
+        # printDBG(data)
 
         if ('/page/%s/' % (page + 1)) in data:
             nextPage = True
@@ -268,7 +268,7 @@ class YifyTV(CBaseHostClass):
         printDBG("YifyTV.listItems")
         try:
             data = byteify(json.loads(data), noneReplacement='', baseTypesAsString=True)
-            #printDBG(data)
+            # printDBG(data)
             for item in data['posts']:
                 item['url'] = self.getFullUrl(item['link'])
                 item['title'] = self.cleanHtmlStr(item['title'])
@@ -393,7 +393,7 @@ class YifyTV(CBaseHostClass):
         sub_tracks = baseUrl.meta.get('external_sub_tracks', [])
 
         header = dict(self.AJAX_HEADER)
-        #header['Referer'] = baseUrl.meta['Referer']
+        # header['Referer'] = baseUrl.meta['Referer']
 
         if 'sou' in baseUrl.meta:
             souTab = [baseUrl.meta['sou']]
@@ -521,7 +521,7 @@ class YifyTV(CBaseHostClass):
                             data = byteify(json.loads(data))
                         printDBG(data)
                         for item in data:
-                            #printDBG('++++++++++++++++++++++\n%s\n++++++++++++++++++++++' % item)
+                            # printDBG('++++++++++++++++++++++\n%s\n++++++++++++++++++++++' % item)
                             if (item.get('type', '').startswith('video/') or item.get('type', '').startswith('application/x-shockwave-flash')) and self.cm.isValidUrl(item.get('url', '')):
                                 urlTab.append({'name': '{0}x{1}'.format(item.get('height', ''), item.get('width', '')), 'url': item['url'], 'need_resolve': 0})
                     break
@@ -580,12 +580,12 @@ class YifyTV(CBaseHostClass):
 
         self.cacheLinks = {}
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_popular':
             self.listsTab(self.POPULAR_TAB, self.currItem)
-    #MOVIES
+    # MOVIES
         elif category == 'list_countries_filter':
             self.listFilters(self.currItem, 'countries', 'list_genres_filter')
         elif category == 'list_languages_filter':
@@ -600,12 +600,12 @@ class YifyTV(CBaseHostClass):
             self.listItems(self.currItem)
         elif category == 'list_items2':
             self.listItems2(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

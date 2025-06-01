@@ -703,33 +703,33 @@ class RTBFBE(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'}, 'sub_menu')
-    #LIVE
+    # LIVE
         elif category == 'live_categories':
             self.listLiveCategories(self.currItem, 'list_live_items')
         elif category == 'list_live_items':
             self.listLiveItems(self.currItem)
-    #CATEGORIES
+    # CATEGORIES
         elif category == 'categories':
             self.listSubMenuItems(self.currItem, 'sections', 'category')
-    #CHANNELS
+    # CHANNELS
         elif category == 'channels':
             self.listSubMenuItems(self.currItem, 'sections', 'channel')
-    #SECTIONS
+    # SECTIONS
         elif category == 'sections':
             self.listSections(self.currItem, 'list_sub_items', 'sections')
         elif category == 'list_sub_items':
             self.listSubItems(self.currItem)
         elif category == 'list_playlist_items':
             self.listPlaylistItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

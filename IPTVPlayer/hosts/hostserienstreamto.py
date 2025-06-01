@@ -247,8 +247,8 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
         cItem.pop('season_num', None)
         cItem.pop('series_title', None)
 
-        #seriesTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="series-title">', '<div', withMarkers=False)[1])
-        #if seriesTitle == '': seriesTitle = cItem.get('series_title', '')
+        # seriesTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="series-title">', '<div', withMarkers=False)[1])
+        # if seriesTitle == '': seriesTitle = cItem.get('series_title', '')
 
         sts, data = self.getPage(cItem['url'])
         if not sts:
@@ -548,7 +548,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                         item['title'] = _('Answer')
                         item['input']['text'] = ''
                         params['list'].append(item)
-                        #params['vk_params'] = {'invert_letters_case':True}
+                        # params['vk_params'] = {'invert_letters_case':True}
 
                         ret = 0
                         retArg = self.sessionEx.waitForFinishOpen(IPTVMultipleInputBox, params)
@@ -582,7 +582,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
 
         self.tryTologin()
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'all_series' == category:
@@ -603,12 +603,12 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             self.listSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

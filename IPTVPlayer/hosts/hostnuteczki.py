@@ -457,7 +457,7 @@ class NuteczkiEU(CBaseHostClass):
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
 
@@ -475,12 +475,12 @@ class NuteczkiEU(CBaseHostClass):
 
         elif category == 'sub_items':
             self.currList = self.currItem.get('sub_items', [])
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

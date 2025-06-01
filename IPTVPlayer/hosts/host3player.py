@@ -369,7 +369,7 @@ class C3player(CBaseHostClass):
                         return []
                     try:
                         drmProtection = False
-                        #printDBG(data)
+                        # printDBG(data)
                         data = json_loads(data)
                         for item in data['authorization_data'][auth[1]]['streams']:
                             if item['url']['format'] == 'encoded':
@@ -413,7 +413,7 @@ class C3player(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'sub_items':
@@ -432,12 +432,12 @@ class C3player(CBaseHostClass):
             self.listAZ(self.currItem, 'list_az_items')
         elif category == 'list_az_items':
             self.listAZItems(self.currItem, 'explore_show')
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

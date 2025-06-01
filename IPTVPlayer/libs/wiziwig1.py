@@ -45,8 +45,8 @@ class Wiziwig1Api(CBaseHostClass):
         sts, data = self.getPage(self.getFullUrl('/livesports'), self.http_params)
         if not sts:
             return []
-        #self.setMainUrl(self.cm.meta['url'])
-        #self.http_params['header']['Referer'] = self.cm.meta['url']
+        # self.setMainUrl(self.cm.meta['url'])
+        # self.http_params['header']['Referer'] = self.cm.meta['url']
 
         items = re.findall("(<tr>\n<td class='icon'.*?</tr>)", data, re.S)
 

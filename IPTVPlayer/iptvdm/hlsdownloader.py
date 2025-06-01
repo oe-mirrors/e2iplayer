@@ -187,7 +187,7 @@ class HLSDownloader(BaseDownloader):
         return self.liveStream
 
     def updateStatistic(self):
-        #BaseDownloader.updateStatistic(self)
+        # BaseDownloader.updateStatistic(self)
         return
 
     def hasDurationInfo(self):

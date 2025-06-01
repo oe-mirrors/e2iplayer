@@ -173,9 +173,9 @@ def htmlentity_transform(entity):
 
 def clean_html(html):
     """Clean an HTML snippet into a readable string"""
-    #if type(html) == type(''):
+    # if type(html) == type(''):
     #    strType = 'unicode'
-    #elif type(html) == type(''):
+    # elif type(html) == type(''):
     #    strType = 'utf-8'
     #    html = html.decode("utf-8", 'ignore')
 
@@ -188,7 +188,7 @@ def clean_html(html):
     # Replace html entities
     html = unescapeHTML(html)
 
-    #if strType == 'utf-8':
+    # if strType == 'utf-8':
     #    html = html.encode("utf-8")
 
     return html.strip()

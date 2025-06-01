@@ -254,8 +254,8 @@ class MusicBox(CBaseHostClass):
             songs = re.compile(r'<div[^>]*?data\-has\-content[^>]*?>').split(tmp)
 
             for item in songs:
-                #printDBG("-------------- song ------------------")
-                #printDBG(item)
+                # printDBG("-------------- song ------------------")
+                # printDBG(item)
 
                 rank = ph.clean_html(ph.find(item, ('<div', '>', '__rank'), '</div>', flags=0)[1])
 
@@ -435,10 +435,10 @@ class MusicBox(CBaseHostClass):
         if str(page) == 'None' or page == '':
             page = '0'
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsMainMenu()
-    #LISTA
+    # LISTA
         elif category == 'itunes':
             self.Itunes_countries_menu(self.currItem['url'], self.currItem['item'])
         elif category == 'beatport':

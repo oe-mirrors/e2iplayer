@@ -470,7 +470,7 @@ class TED(CBaseHostClass):
         subTracks = []
         urlTab = []
 
-        #cItem['url'] = 'https://www.ted.com/talks/douglas_adams_parrots_the_universe_and_everything'
+        # cItem['url'] = 'https://www.ted.com/talks/douglas_adams_parrots_the_universe_and_everything'
 
         sts, data = self.getPage(cItem['url'])
         if not sts:
@@ -540,7 +540,7 @@ class TED(CBaseHostClass):
                     url = baseMp4Url.replace(baseBitrate, bitrate)
                     printDBG(">> %s %s %s" % (url, baseMp4Url, url))
                     _addLinkItem(urlTab, item, url, '[MP4] ')
-                #for item in tmp:
+                # for item in tmp:
                 #    _addLinkItem(urlTab, item, item['url'], '[HLS] ')
 
             def __getLinkQuality(itemLink):
@@ -587,7 +587,7 @@ class TED(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL is None:
-            #rm(self.COOKIE_FILE)
+            # rm(self.COOKIE_FILE)
             self.selectDomain()
 
         name = self.currItem.get("name", '')
@@ -597,7 +597,7 @@ class TED(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
 
@@ -639,12 +639,12 @@ class TED(CBaseHostClass):
     # PEOPLES
         # TOTO
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

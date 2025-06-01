@@ -291,24 +291,24 @@ class Tvn24(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsMainMenu()
-    #VIDEO_PLAYLIST
+    # VIDEO_PLAYLIST
         elif category == 'playlist':
             self.listPlaylists(url)
         elif category == 'end_playlist':
             self.listPlaylistVideos(self.currItem.get("videos", []))
-    #LIST VIDEOS
+    # LIST VIDEOS
         elif category == "end_cat":
             self.listEndItems(parent_cat, url, page)
-    #LIST MAGAZINES
+    # LIST MAGAZINES
         elif category == "magazines":
             self.listCategories(category, url, page)
-    #LIST CATEGORIES
+    # LIST CATEGORIES
         elif category == "categories":
               self.listCategories(category, url, page)
-    #LIST SUB CATEGORIES
+    # LIST SUB CATEGORIES
         elif category == "sub_categiories":
               self.listSubCategories(category, self.currItem.get("sub_categiories", []))
 
@@ -363,7 +363,7 @@ class IPTVHost(CHostBase):
     def convertList(self, cList):
         hostList = []
         searchTypesOptions = []  # ustawione alfabetycznie
-        #searchTypesOptions.append(("Seriale", "seriale"))
+        # searchTypesOptions.append(("Seriale", "seriale"))
         searchTypesOptions.append(("Filmy", "filmy"))
 
         for cItem in cList:

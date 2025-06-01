@@ -41,7 +41,7 @@ class EM3U8Downloader(M3U8Downloader):
         # M3U8list link provider
         self.EM3U8linkProv = eConsoleAppContainer()
         self.EM3U8linkProv_appClosed_conn = eConnectCallback(self.EM3U8linkProv.appClosed, self._updateEM3U8Finished)
-        #self.EM3U8linkProv_stdoutAvail_conn = eConnectCallback(self.EM3U8linkProv.stdoutAvail, self._updateEM3U8DataAvail)
+        # self.EM3U8linkProv_stdoutAvail_conn = eConnectCallback(self.EM3U8linkProv.stdoutAvail, self._updateEM3U8DataAvail)
         self.EM3U8linkProv_stderrAvail_conn = eConnectCallback(self.EM3U8linkProv.stderrAvail, self._updateEM3U8DataAvail)
 
         self.EM3U8ListData = ''
@@ -99,7 +99,7 @@ class EM3U8Downloader(M3U8Downloader):
         printDBG("M3U8Downloader._terminate")
         if self.EM3U8linkProv:
             self.EM3U8linkProv_appClosed_conn = None
-            #self.EM3U8linkProv_stdoutAvail_conn = None
+            # self.EM3U8linkProv_stdoutAvail_conn = None
             self.EM3U8linkProv_stderrAvail_conn = None
             self.EM3U8linkProv.sendCtrlC()
             self.EM3U8linkProv = None

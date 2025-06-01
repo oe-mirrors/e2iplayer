@@ -383,14 +383,14 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
                         title = tab[1]
                     else:
                         title = ''
-                    #desc = ' | '.join(tab[2:])
+                    # desc = ' | '.join(tab[2:])
                     tab = []
                     tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<small', '</small>')
                     for t in tmp:
                         t = self.cleanHtmlStr(t)
                         if t:
                             tab.append(t)
-                    #desc += '[/br]' + ' | '.join(tab)
+                    # desc += '[/br]' + ' | '.join(tab)
                     title = '%s: s%se%s %s' % (cItem['title'], sNum.zfill(2), eNum.zfill(2), title)
                     params = MergeDicts(cItem, {'good_for_fav': False, 'type': 'video', 'title': title, 'url': url, 'episode_id': episodeId, 'desc': desc, 'prev_url': cUrl})
                     episodes.append(params)
@@ -634,7 +634,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
 
         self.tryTologin()
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMain({'name': 'category', 'type': 'category'})
         elif category in ['series', 'peliculas']:
@@ -658,12 +658,12 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
 
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

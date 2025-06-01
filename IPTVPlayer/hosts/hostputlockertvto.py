@@ -309,7 +309,7 @@ class PutlockerTvTo(CBaseHostClass):
 
         titlesTab = []
         self.cacheLinks = {}
-        #data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="servers">', '<div class="widget')[1]
+        # data = self.cm.ph.getDataBeetwenMarkers(data, '<div id="servers">', '<div class="widget')[1]
         data = data.split('<div class="server row"')
         for tmp in data:
             serverName = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(tmp, '<label', '</label>')[1])
@@ -397,14 +397,14 @@ class PutlockerTvTo(CBaseHostClass):
                             self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name']
                         break
 
-        #sts, data = self.getPage(self.getFullUrl('token'))
-        #if not sts: return []
-        #cookieItem = self.uncensored(data)
+        # sts, data = self.getPage(self.getFullUrl('token'))
+        # if not sts: return []
+        # cookieItem = self.uncensored(data)
 
         params = dict(self.defaultParams)
         params['header'] = dict(self.AJAX_HEADER)
         params['header']['Referer'] = str(videoUrl)
-        #params['cookie_items'] = cookieItem
+        # params['cookie_items'] = cookieItem
 
         sts, data = self.getPage(videoUrl[:videoUrl.rfind('/')], params)
         if sts:
@@ -573,7 +573,7 @@ class PutlockerTvTo(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL is None:
-            #rm(self.COOKIE_FILE)
+            # rm(self.COOKIE_FILE)
             self.selectDomain()
 
         name = self.currItem.get("name", '')
@@ -583,7 +583,7 @@ class PutlockerTvTo(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_filters':
@@ -592,12 +592,12 @@ class PutlockerTvTo(CBaseHostClass):
             self.listItems(self.currItem, 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

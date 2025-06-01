@@ -47,13 +47,13 @@ class Raiplay(CBaseHostClass):
 
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER}
-        #self.defaultParams = { 'header': {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/20100101 Firefox/17.0'}}
+        # self.defaultParams = { 'header': {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/20100101 Firefox/17.0'}}
         self.defaultParams = {'header': {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2956.0 Safari/537.36"}}
 
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        #printDBG(self.defaultParams)
+        # printDBG(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
     def getThumbnailUrl(self, pathId):
@@ -79,18 +79,18 @@ class Raiplay(CBaseHostClass):
             url = self.MAIN_URL + url
 
         url = url.replace(" ", "%20")
-        #url = urllib_quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        # url = urllib_quote(url, safe="%/:=&?~#+!$,;'@()*[]")
 
-        #printDBG("PathID: " + url)
+        # printDBG("PathID: " + url)
 
         return url
 
     def getLinksForVideo(self, cItem):
         printDBG("Raiplay.getLinksForVideo [%s]" % cItem)
-        #sts, data=self.getPage(cItem["url"])
-        #if not sts: return
+        # sts, data=self.getPage(cItem["url"])
+        # if not sts: return
 
-        #printDBG(data)
+        # printDBG(data)
 
         linksTab = []
         if (cItem["category"] == "live_tv") or (cItem["category"] == "live_radio") or (cItem["category"] == "video_link"):
@@ -132,7 +132,7 @@ class Raiplay(CBaseHostClass):
 
         response = json_loads(data)
         tv_stations = response["dirette"]
-        #printDBG(data)
+        # printDBG(data)
 
         for station in tv_stations:
             title = station["channel"]
@@ -151,7 +151,7 @@ class Raiplay(CBaseHostClass):
 
         response = json_loads(data)
         radio_stations = response["dati"]
-        #printDBG(data)
+        # printDBG(data)
 
         for station in radio_stations:
             title = station["nome"]
@@ -306,7 +306,7 @@ class Raiplay(CBaseHostClass):
         # 0-9
         self.addDir(MergeDicts(cItem, {'category': 'ondemand_list', 'title': "0-9", 'name': "0-9", 'url': pathId}))
 
-        #a-z
+        # a-z
         for i in range(26):
             self.addDir(MergeDicts(cItem, {'category': 'ondemand_list', 'title': chr(ord('A') + i), 'name': chr(ord('A') + i), 'url': pathId}))
 
@@ -481,7 +481,7 @@ class Raiplay(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'live_tv':

@@ -212,7 +212,7 @@ class Watchwrestling(CBaseHostClass):
                     return urlTab
                 data = data.replace('// -->', '')
                 data = self._clearData(data)
-                #printDBG(data)
+                # printDBG(data)
                 if 'eval(unescape' in data:
                     data = urllib_unquote(self.cm.ph.getSearchGroups(data, r'''eval\(unescape\(['"]([^"^']+?)['"]''')[0])
                 url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]*?src=['"]([^"^']+?)['"]''', 1, True)[0]
@@ -273,29 +273,29 @@ class Watchwrestling(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
             self.listCategories(self.currItem, 'list_filters')
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_movies')
-    #MOVIES
+    # MOVIES
         elif category == 'list_movies':
             self.listMovies(self.currItem, 'list_server')
         elif category == 'list_server':
             self.listServers(self.currItem, 'list_parts')
         elif category == 'list_parts':
             self.listParts(self.currItem)
-    #LIVE
+    # LIVE
         elif category == 'live':
             self.listLiveStreams(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

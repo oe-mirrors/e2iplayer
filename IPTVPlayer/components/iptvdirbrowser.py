@@ -75,7 +75,7 @@ class IPTVDirectorySelectorWidget(Screen):
         Screen.__init__(self, session)
         if type(self) is IPTVDirectorySelectorWidget:
             self["key_red"] = Label(_("Cancel"))
-            #self["key_yellow"] = Label(_("Odśwież"))
+            # self["key_yellow"] = Label(_("Odśwież"))
             self["key_blue"] = Label(_("New dir"))
             self["key_green"] = Label(_("Apply"))
             self["curr_dir"] = Label(_(" "))
@@ -208,10 +208,10 @@ class IPTVDirectorySelectorWidget(Screen):
             params = item.split('//')
             if item.startswith('.'):
                 continue  # do not list hidden items
-            #printDBG(params)
+            # printDBG(params)
             if 4 == len(params):
-                #if '0' == params[2]: type = 'dir'
-                #else: type = 'linkdir'
+                # if '0' == params[2]: type = 'dir'
+                # else: type = 'linkdir'
                 self.tmpList.append(CListItem(name=params[0], fullDir=params[3], type='dir'))
 
     def requestApply(self):
@@ -338,7 +338,7 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
             params = item.split('//')
             if item.startswith('.'):
                 continue  # do not list hidden items
-            #printDBG(params)
+            # printDBG(params)
             if 4 == len(params):
                 if 'd' == params[1]:
                     type = 'dir'

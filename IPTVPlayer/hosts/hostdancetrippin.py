@@ -213,8 +213,8 @@ class DancetrippinTV(CBaseHostClass):
             if len(filters):
                 hasFilters = True
 
-            #title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^'^"]+?)['"]''')[0])
-            #if title == '':
+            # title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''\stitle=['"]([^'^"]+?)['"]''')[0])
+            # if title == '':
             item = reTitleObj.split(item)
             title = self.cleanHtmlStr(self.cleanHtmlStr(item[0]))
 
@@ -339,7 +339,7 @@ class DancetrippinTV(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'artists':
@@ -358,12 +358,12 @@ class DancetrippinTV(CBaseHostClass):
             self.listPlaylist(self.currItem)
         elif category == 'list_items':
             self.listsItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

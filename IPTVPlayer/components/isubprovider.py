@@ -1,4 +1,4 @@
-## @file  ihost.py
+# @file  ihost.py
 #
 
 ###################################################
@@ -34,7 +34,7 @@ class CSubItem:
         self.imdbid = imdbid
         self.subId = subId
 
-## class ISubProvider
+# class ISubProvider
 # interface base class with method used to
 # communicate display layer with host
 #
@@ -405,7 +405,7 @@ class CBaseSubProviderClass:
                 continue
             imdbid = self.cm.ph.getSearchGroups(item, '/tt([0-9]+?)/')[0]
             baseTtitle = ' '.join(self.cm.ph.getAllItemsBeetwenMarkers(item, '<a ', '</a>'))
-            #title = title.split('<br/>')[0]
+            # title = title.split('<br/>')[0]
             title = self.cleanHtmlStr(item)
             year = self.cm.ph.getSearchGroups(item, r'\((20[0-9]{2})\)')[0]
             if '' == year:

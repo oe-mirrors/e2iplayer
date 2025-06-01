@@ -349,12 +349,12 @@ else:
             offsetMarkerY = int(offsetCoverY - (markerHeight - coverHeight) / 2)
 
             # how to calculate position of image with indexes indxX, indxY:
-            #posX = offsetCoverX + (coverWidth + disWidth) * indxX
-            #posY = offsetCoverY + (coverHeight + disHeight) * indxY
+            # posX = offsetCoverX + (coverWidth + disWidth) * indxX
+            # posY = offsetCoverY + (coverHeight + disHeight) * indxY
 
             # how to calculate position of marker for image with posX, posY
-            #markerPosX = posX - (markerWidth - coverWidth)/2
-            #markerPosY = posY - (markerHeight - coverHeight)/2
+            # markerPosX = posX - (markerWidth - coverWidth)/2
+            # markerPosY = posY - (markerHeight - coverHeight)/2
 
             tmpX = coverWidth + disWidth
             tmpY = coverHeight + disHeight
@@ -516,7 +516,7 @@ else:
             printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>> __onClose idx[%s]" % idx)
             PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
 
-        #Calculate marker position Y
+        # Calculate marker position Y
         def calcMarkerPosY(self):
 
             if self.currLine > (self.numOfLines - 1):
@@ -542,10 +542,10 @@ else:
 
             return
 
-        #Calculate marker position X
+        # Calculate marker position X
         def calcMarkerPosX(self):
             if self.currLine == self.numOfLines - 1:
-                #calculate num of item in last line
+                # calculate num of item in last line
                 self.numItemsInLine = self.numOfItems - ((self.numOfLines - 1) * self.numOfCol)
             else:
                 self.numItemsInLine = self.numOfCol
@@ -618,7 +618,7 @@ else:
                     strIndex = "cover_%s%s" % (x, y)
                     printDBG("updateIcon for self[%s]" % strIndex)
                     if idx < self.numOfItems:
-                        #self[strIndex].updateIcon( resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/' + self.currList[idx][1] + '.png'))
+                        # self[strIndex].updateIcon( resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/' + self.currList[idx][1] + '.png'))
                         self[strIndex].setPixmap(self.pixmapList[idx])
                         self[strIndex].show()
                         idx += 1
@@ -690,8 +690,8 @@ else:
             x = int(imgPosX - (self.markerWidth - self.coverWidth) / 2)
             y = int(imgPosY - (self.markerHeight - self.coverHeight) / 2)
 
-            #x =  30 + self.dispX * 180
-            #y = 130 + self.dispY * 125
+            # x =  30 + self.dispX * 180
+            # y = 130 + self.dispY * 125
             self["marker"].instance.move(ePoint(x, y))
             self["statustext"].setText(self.currList[new_idx][0])
             return

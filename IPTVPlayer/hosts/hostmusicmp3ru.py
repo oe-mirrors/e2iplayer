@@ -326,7 +326,7 @@ class MusicMp3Ru(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'}, 'sub_menu')
         elif category == 'sub_menu':
@@ -337,12 +337,12 @@ class MusicMp3Ru(CBaseHostClass):
             self.listAlbums(self.currItem, 'list_songs')
         elif category == 'list_songs':
             self.listSongsItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -53,7 +53,7 @@ class IPTVSimpleAudioPlayer():
         self.playMode = mode
 
         gstplayerPath = '/usr/bin/gstplayer'
-        #'export GST_DEBUG="*:6" &&' +
+        # 'export GST_DEBUG="*:6" &&' +
         cmd = gstplayerPath + ' "%s"' % self.uri
         if "://" in self.uri:
             cmd += ' "%s" "%s"  "%s"  "%s" ' % (self.gstAdditionalParams['download-buffer-path'], self.gstAdditionalParams['ring-buffer-max-size'], self.gstAdditionalParams['buffer-duration'], self.gstAdditionalParams['buffer-size'])
@@ -101,7 +101,7 @@ class IPTVSimpleAudioPlayer():
             self.console_appClosed_conn = None
             self.console = None
 
-#class IPTVSimpleAudioPlayer
+# class IPTVSimpleAudioPlayer
 
 
 class IPTVPicturePlayerWidget(Screen):
@@ -196,7 +196,7 @@ class IPTVPicturePlayerWidget(Screen):
             frames.append(GetIconDir('/buffering/buffering_%d.png' % idx))
         self["icon"].loadFrames(frames)
 
-        #main Timer
+        # main Timer
         self.mainTimer = eTimer()
         self.mainTimerEnabled = False
 
@@ -212,7 +212,7 @@ class IPTVPicturePlayerWidget(Screen):
 
         self.onClose.append(self.__onClose)
         self.onShow.append(self.doStart)
-        #self.onLayoutFinish.append(self.doStart)
+        # self.onLayoutFinish.append(self.doStart)
 
         self.autoRefresh = False
         self.refreshPostfixes = ['_0', '_1']
@@ -224,7 +224,7 @@ class IPTVPicturePlayerWidget(Screen):
         else:
             self.audioPlayer = None
 
-    #end def __init__(self, session):
+    # end def __init__(self, session):
 
     def __del__(self):
         printDBG('IPTVPicturePlayerWidget.__del__ --------------------------------------')
@@ -243,7 +243,7 @@ class IPTVPicturePlayerWidget(Screen):
         self.mainTimer = None
 
         self.onClose.remove(self.__onClose)
-        #self.onLayoutFinish.remove(self.doStart)
+        # self.onLayoutFinish.remove(self.doStart)
 
     def _getDownloadFilePath(self):
         return self.filePath + self.refreshPostfixes[self.refreshCount % len(self.refreshPostfixes)]

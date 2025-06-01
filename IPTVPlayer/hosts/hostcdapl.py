@@ -525,7 +525,7 @@ class cda(CBaseHostClass, CaptchaHelper):
                 elif sts and sitekey == '' and 'data-sitekey' in data:
                     continue
                 else:
-                    #printDBG(data)
+                    # printDBG(data)
                     self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(msgTab), type=MessageBox.TYPE_ERROR, timeout=10)
                     printDBG('tryTologin failed')
                 break
@@ -576,14 +576,14 @@ class cda(CBaseHostClass, CaptchaHelper):
         elif 'list_folder_items' == category:
             self.listFolderItems(self.currItem)
 
-    #SEARCH
+    # SEARCH
         elif category == "search":
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif 'search_next_page' == category:
             self.listItems(self.currItem, search=True)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

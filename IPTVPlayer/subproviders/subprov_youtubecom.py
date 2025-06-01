@@ -128,7 +128,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
         printDBG("handleService: name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.getSubtitles({'name': 'category', })
 

@@ -257,15 +257,15 @@ class Filma24hdCom(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-    #MOVIES
+    # MOVIES
         elif category == 'movies':
             self.listMoviesCategory(self.currItem, 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem)
-    #TVSERIES
+    # TVSERIES
         elif category == 'series':
             params = dict(self.currItem)
             params.update({'category': 'list_items', 'title': _('--All--')})
@@ -273,12 +273,12 @@ class Filma24hdCom(CBaseHostClass):
             self.listSeriesCategory(self.currItem, 'list_seasons')
         elif category == 'list_seasons':
             self.listSeasons(self.currItem, 'list_items')
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

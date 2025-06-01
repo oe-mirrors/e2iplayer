@@ -122,7 +122,7 @@ class Spryciarze(CBaseHostClass):
                 if len(match) == 1:
                     catItem = {'type': 'sub', 'url': match[0][0], 'name': " ".join(match[0][1].split()), 'ilosc': match[0][2], 'subCatList': []}
 
-                    #Get sub-categories data
+                    # Get sub-categories data
                     pattern = '<a.+?href="(.+?)"[^>]*?>(.+?)\r\n.+?<small>\\(([0-9]+?)\\)</small>.+?</a>'
                     match = re.compile(pattern, re.DOTALL).findall(subTab[1])
                     for j in range(len(match)):
@@ -370,22 +370,22 @@ class Spryciarze(CBaseHostClass):
 
                 printDBG("|||||||||||||||||||||||||||||||||||| %s " % item['type'])
 
-    #MAIN MENU
+    # MAIN MENU
         if self.type is None:
             self.getMainCategory()
-    #SUB CATEGORY
+    # SUB CATEGORY
         elif self.type == 'main':
             self.getSubCategory(self.index)
-    #SUB_SUB_CATEGORY
+    # SUB_SUB_CATEGORY
         elif self.type == 'sub':
             self.getSubSubCategory(self.index)
-    #SUB__SUB_PAGES
+    # SUB__SUB_PAGES
         elif self.type == 'subSub':
             self.getItemsForCat(self.index)
-    #VIDEOS
+    # VIDEOS
         elif self.type == 'subSubPage':
             self.getVideoList2(self.url)
-    #SEARCH
+    # SEARCH
         elif self.type == 'search':
             self.getSearchResut(searchPattern)
     # end handleService
@@ -536,7 +536,7 @@ class IPTVHost(IHost):
         return hostList
 
 
-#host = Spryciarze()
-#host.getMainCategory()
-#host.getVideoList('http://kulinaria.spryciarze.pl/kategorie/dania-miesne')
-#host.getVideoLinks('58763')
+# host = Spryciarze()
+# host.getMainCategory()
+# host.getVideoList('http://kulinaria.spryciarze.pl/kategorie/dania-miesne')
+# host.getVideoLinks('58763')

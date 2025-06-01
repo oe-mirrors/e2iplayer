@@ -70,9 +70,9 @@ class Gledalica(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG("Gledalica.listMainMenu")
-        #sts, data = self.getPage(self.getMainUrl())
-        #if not sts: return
-        #self.setMainUrl(data.meta['url'])
+        # sts, data = self.getPage(self.getMainUrl())
+        # if not sts: return
+        # self.setMainUrl(data.meta['url'])
         MAIN_CAT_TAB = [{'category': 'sort', 'title': 'FILMOVI', 'url': self.getFullUrl('/browse-all-videos-1.html')},
                         {'category': 'sort', 'title': 'SERIJE ', 'url': self.getFullUrl('/browse-series-videos-1.html')},
 #                        {'category':'years',          'title': _('By years'),      'url':self.getMainUrl()},
@@ -501,7 +501,7 @@ class Gledalica(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None and category == '':
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
@@ -531,34 +531,34 @@ class Gledalica(CBaseHostClass):
         elif category == 'list_by_letter':
             self.listByLetter(self.currItem, 'sort')
 
-    #SECTIONS
+    # SECTIONS
         elif category == 'sections':
             self.listSections(self.currItem, 'list_sub_items', 'explore_item')
             if 1 == len(self.currList):
                 self.listSubItems(self.currList[0])
         elif category == 'list_sub_items':
             self.listSubItems(self.currItem)
-    #MOVIES
+    # MOVIES
         elif category == 'movies':
             self.listMovies(self.currItem, 'list_filters')
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem, 'explore_item')
-    #SERIES
+    # SERIES
 
-    #RAITING
+    # RAITING
         elif category == 'raiting':
             self.listRaitingItems(self.currItem, 'explore_item')
 
         elif category == 'explore_item':
             self.exploreItem(self.currItem, 'list_sub_items')
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

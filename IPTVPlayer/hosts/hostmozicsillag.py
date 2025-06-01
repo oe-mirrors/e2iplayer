@@ -187,7 +187,7 @@ class MoziCsillag(CBaseHostClass):
         urls = data.split('<div class="panel">')
         if len(urls):
            del urls[0]
-        #printDBG('Lekért linkek: '+str(urls))
+        # printDBG('Lekért linkek: '+str(urls))
         if len(urls) == 1:
             urls = self.cm.ph.getDataBeetwenMarkers(data, '<div class="panel">', 'Lejátszás</a>', False)[1]
             printDBG('Lekért URLS: ' + str(urls))

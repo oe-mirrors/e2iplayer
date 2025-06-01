@@ -1134,7 +1134,7 @@ class MindiGoHU(CBaseHostClass):
         except:
             printExc()
             self.sessionEx.open(MessageBox, _('Login failed.'), type=MessageBox.TYPE_ERROR, timeout=10)
-        #self.userProducts = set()
+        # self.userProducts = set()
         return False
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -1149,7 +1149,7 @@ class MindiGoHU(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({"name": "category"})
         elif category == "list_tvChannels":
@@ -1192,6 +1192,6 @@ class IPTVHost(CHostBase):
         if cItem['type'] in ["video", "radio"]:
             return True
         return False
-##            != 'video' and cItem['category'] not in ['list_playlist','list_episodes','list_subcategories']):
-##            return False
-##        return True
+# != 'video' and cItem['category'] not in ['list_playlist','list_episodes','list_subcategories']):
+# return False
+# return True

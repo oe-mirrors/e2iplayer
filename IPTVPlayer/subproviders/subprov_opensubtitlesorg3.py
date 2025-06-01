@@ -52,7 +52,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
 
     def __init__(self, params={}):
         self.USER_AGENT = 'IPTVPlayer v1'
-        #self.USER_AGENT    = 'Subliminal v0.3'
+        # self.USER_AGENT    = 'Subliminal v0.3'
         self.MAIN_URL = 'https://rest.opensubtitles.org/'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.MAIN_URL, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
 
@@ -135,7 +135,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         if None is not defaultLanguageItem:
             tmpList.insert(0, defaultLanguageItem)
 
-        #tmpList.insert(0, {'title':_('All'), 'search_lang':''})
+        # tmpList.insert(0, {'title':_('All'), 'search_lang':''})
 
         for item in tmpList:
             params = dict(cItem)
@@ -156,8 +156,8 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         if cdMax != '1':
             title += ' CD[{0}/{1}]'.format(cdMax, cd)
 
-        #lastTime = item.get('SubLastTS', '')
-        #if '' != lastTime: title += ' [{0}]'.format(lastTime)
+        # lastTime = item.get('SubLastTS', '')
+        # if '' != lastTime: title += ' [{0}]'.format(lastTime)
 
         return RemoveDisallowedFilenameChars(title)
 
@@ -321,7 +321,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
         printDBG("handleService: name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.getMoviesTitles({'name': 'category'}, 'get_type')
         elif category == 'get_type':

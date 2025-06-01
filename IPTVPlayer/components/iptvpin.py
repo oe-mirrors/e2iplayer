@@ -72,7 +72,7 @@ class IPTVPinWidget(Screen):
 
         self.selIndx = 0
         self.onLayoutFinish.append(self.updatePinDisplay)
-    #end def __init__(self, session):
+    # end def __init__(self, session):
 
     def updatePinDisplay(self):
         for i in range(len(self.pinList)):
@@ -167,4 +167,4 @@ class IPTVPinWidget(Screen):
     def Error(self, error=None):
         pass
 
-#class IPTVPinWidget
+# class IPTVPinWidget

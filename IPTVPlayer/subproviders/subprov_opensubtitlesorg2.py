@@ -482,7 +482,7 @@ class OpenSubtitles(CBaseSubProviderClass):
         printDBG("handleService: name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.initSubProvider(self.currItem)
             if len(self.languages):

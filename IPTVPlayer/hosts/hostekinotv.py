@@ -501,8 +501,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
                 self.login = config.plugins.iptvplayer.ekinotv_login.value
                 self.password = config.plugins.iptvplayer.ekinotv_password.value
 
-                #rm(self.COOKIE_FILE)
-                #self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
+                # rm(self.COOKIE_FILE)
+                # self.cm.clearCookie(self.COOKIE_FILE, ['__cfduid', 'cf_clearance'])
 
                 self.loggedIn = False
 
@@ -578,7 +578,7 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
 
         if None is name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-    #FILMS CATEGORIES
+    # FILMS CATEGORIES
         elif 'list_cats' == category:
             self.listMovieFilters(self.currItem, 'list_vers')
         elif 'list_vers' == category:
@@ -587,20 +587,20 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
             self.listMovieFilters(self.currItem, 'list_movies')
         elif 'list_movies' == category:
             self.listMovies(self.currItem)
-    #FILMS LETTERS
+    # FILMS LETTERS
         elif 'series_abc' == category:
             self.listsSeriesABC(self.currItem, 'series_list')
-    #LIST SERIALS
+    # LIST SERIALS
         elif 'series_list' == category:
             self.listsSeries(self.currItem, 'series_episodes')
         elif 'series_episodes' == category:
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

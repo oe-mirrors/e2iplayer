@@ -211,7 +211,7 @@ class SerijeOnline(CBaseHostClass):
             return
 
         desc = ''
-        #desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h2', '>', 'upper-blue'), ('</div', '>'))[1])
+        # desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<h2', '>', 'upper-blue'), ('</div', '>'))[1])
         if desc == '':
             desc = cItem.get('desc', '')
 
@@ -257,7 +257,7 @@ class SerijeOnline(CBaseHostClass):
         data = re.compile('''<iframe[^>]+?src=['"]([^"^']+?)['"]''', re.IGNORECASE).findall(tmp)
         for url in data:
             url = self.getFullUrl(url)
-            #if 1 != self.up.checkHostSupport(url): continue
+            # if 1 != self.up.checkHostSupport(url): continue
             if not self.cm.isValidUrl(url):
                 continue
             num += 1
@@ -347,7 +347,7 @@ class SerijeOnline(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'}, 'list_genres')
         elif category == 'list_categories':
@@ -362,12 +362,12 @@ class SerijeOnline(CBaseHostClass):
             self.listLists(self.currItem, 'list_items')
         elif category == 'explore_item':
             self.exploreItem(self.currItem, 'list_items')
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

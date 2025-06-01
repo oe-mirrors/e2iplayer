@@ -146,8 +146,8 @@ class KissCartoonMe(CBaseHostClass):
     def listHome(self, cItem, category):
         printDBG("listHome.listHome [%s]" % cItem)
 
-        #http://kisscartoon.io/Home/GetNextUpdatedCartoon
-        #POSTDATA {id:50, page:10}
+        # http://kisscartoon.io/Home/GetNextUpdatedCartoon
+        # POSTDATA {id:50, page:10}
 
         self.cacheHome = {}
         self.sortTab = []
@@ -272,9 +272,9 @@ class KissCartoonMe(CBaseHostClass):
         if ('page=%d"' % (page + 1)) in data:
             nextPage = True
 
-        #if '/Search/' in cItem['url']:
+        # if '/Search/' in cItem['url']:
         #    m1 = '<div class="list-cartoon"'
-        #else:
+        # else:
         m1 = '<div class="listing full"'
 
         data = self.cm.ph.getDataBeetwenMarkers(data, m1, '<script type', False)[1]
@@ -439,7 +439,7 @@ class KissCartoonMe(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'home':
@@ -463,12 +463,12 @@ class KissCartoonMe(CBaseHostClass):
             self.listItems(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

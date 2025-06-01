@@ -186,7 +186,7 @@ class ARDmediathek(CBaseHostClass):
                                 continue
                             if button['buttonTyp'] == 'paging':
                                 continue  # paging is handled in diffrent way
-                            #if button.get('disabled', False): continue
+                            # if button.get('disabled', False): continue
                             title = self.cleanHtmlStr(button['label']['text'])
                             try:
                                 desc = self.cleanHtmlStr(button['label']['altText'])
@@ -496,12 +496,12 @@ class ARDmediathek(CBaseHostClass):
             self.listCluster(self.currItem)
         elif 'list_content' == category:
             self.listContent(self.currItem)
-    #WYSZUKAJ
+    # WYSZUKAJ
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA WYSZUKIWANIA
+    # HISTORIA WYSZUKIWANIA
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

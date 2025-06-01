@@ -164,10 +164,10 @@ class IPTVArticleRichVisualizer(Screen):
         }, -1)
 
         self.onClose.append(self.__onClose)
-        #self.onShow.append(self.onStart)
+        # self.onShow.append(self.onStart)
         self.onLayoutFinish.append(self.onStart)
 
-    #end def __init__(self, session):
+    # end def __init__(self, session):
 
     def __del__(self):
         printDBG('IPTVArticleRichVisualizer.__del__ --------------------------------------')
@@ -184,7 +184,7 @@ class IPTVArticleRichVisualizer(Screen):
         self.onLayoutFinish.remove(self.onStart)
         self.loadSpinner()
         self["page_marker"].setPixmap(self.spinner["pixmap"][0])  # the same png file is used by page_maker as spinner
-        #self.setTitle(self.artItem.title)
+        # self.setTitle(self.artItem.title)
         self["title"].setText(self.artItem.title)
         self.setText()
         self.setRichDesc()

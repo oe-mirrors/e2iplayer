@@ -138,7 +138,7 @@ class SportDeutschland(CBaseHostClass):
             params = {'name': 'category', 'title': self._getJItemStr(item, 'title'), 'category': 'category', 'icon': icon, 'desc': desc, 'player': self._getJItemStr(item, 'player')}
             printDBG(":::::::::::::::::::::::::::::::::::::\n%s\n:::::::::::::::::::::::::::::::" % item)
             planned = False
-            #if 'LIVE' == self._getJItemStr(item, 'duration', ''):
+            # if 'LIVE' == self._getJItemStr(item, 'duration', ''):
             try:
                 dateUTC = self._getJItemStr(item, 'date').replace('T', ' ').replace('Z', ' UTC')
                 dateUTC = datetime.strptime(dateUTC, "%Y-%m-%d %H:%M:%S %Z")
@@ -190,7 +190,7 @@ class SportDeutschland(CBaseHostClass):
                                 if 'rtmp' == config.plugins.iptvplayer.sportdeutschland_streamprotocol.value:
                                     sts, data = self.cm.getPage(videoUrl)
                                     if sts:
-                                        #printDBG("+++++++++++++++++++++++++++++++++\n%s\n+++++++++++++++++++++++++++++++++" % data)
+                                        # printDBG("+++++++++++++++++++++++++++++++++\n%s\n+++++++++++++++++++++++++++++++++" % data)
                                         videoUrl = self.cm.ph.getSearchGroups(data, 'meta base="(rtmp[^"]+?)"')[0]
                                         if '' != videoUrl and not videoUrl.startswith('/'):
                                             videoUrl += '/'
@@ -231,12 +231,12 @@ class SportDeutschland(CBaseHostClass):
             self.listCategories(self.currItem)
         elif 'category' == category:
             self.listCategory(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -267,7 +267,7 @@ class TheWatchseriesTo(CBaseHostClass):
         data = ph.findall(data, ('<tr', '>', 'download_link_'), '</tr>')
         for item in data:
             host = ph.search(item, '''"download_link_([^'^"]+?)['"]''')[0]
-            #if self.up.checkHostSupport('http://'+host+'/') != 1: continue
+            # if self.up.checkHostSupport('http://'+host+'/') != 1: continue
 #            printDBG(item)
 #            printDBG('------')
             url = ''
@@ -330,7 +330,7 @@ class TheWatchseriesTo(CBaseHostClass):
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
@@ -345,12 +345,12 @@ class TheWatchseriesTo(CBaseHostClass):
             self.listItems(self.currItem, 'video')
         elif category == 'list_items':
             self.listItems(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

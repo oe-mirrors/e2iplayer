@@ -65,10 +65,10 @@ class Sport365LiveApi:
     def getPage(self, url, params={}, post_data=None):
         sts, data = self.cm.getPage(url, params, post_data)
         if sts:
-            #printDBG("---")
-            #printDBG("url: %s" % url)
-            #printDBG(data)
-            #printDBG("---")
+            # printDBG("---")
+            # printDBG("url: %s" % url)
+            # printDBG(data)
+            # printDBG("---")
             return sts, data
 
     def getFullUrl(self, url):
@@ -434,9 +434,9 @@ class Sport365LiveApi:
                         sts, data = self.getPage(link, h)
 
                         if sts:
-                            #printDBG("*****************")
-                            #printDBG(data)
-                            #printDBG("*****************")
+                            # printDBG("*****************")
+                            # printDBG(data)
+                            # printDBG("*****************")
 
                             # search form data in page
                             action = re.compile('[\'"]action[\'"][,\\s]*[\'"](http.*?)[\'"]').findall(data)
@@ -452,12 +452,12 @@ class Sport365LiveApi:
                                 h['header']['Referer'] = link
                                 sts, data = self.getPage(action[0], h, postData)
                                 if sts:
-                                    #printDBG("*****************")
-                                    #printDBG(data)
-                                    #printDBG("*****************")
+                                    # printDBG("*****************")
+                                    # printDBG(data)
+                                    # printDBG("*****************")
 
                                     try:
-                                        #######ads banners#########
+                                        ####### ads banners#########
                                         # simulate ads viewing
                                         bheaders = h
                                         bheaders['header']['Referer'] = action[0]
