@@ -4,7 +4,7 @@
 'host3sktv': 'http://33sk.tv/',
 'host7tvde': 'https://7tv.de/',
 'hostakoam': 'https://ar.akoam.net/',
-'hostaltadefinizione': 'https://altadefinizione01.builders/',
+'hostaltadefinizione01': 'https://altadefinizione01.living/',
 'hostanimeodcinki': 'https://anime-odcinki.pl/',
 'hostappletrailers': 'https://trailers.apple.com/',
 'hostardmediathek': 'ARDmediathek',
