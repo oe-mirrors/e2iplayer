@@ -6,7 +6,6 @@
 		<widget source="Title" render="Label" position="155,15" size="785,55" foregroundColor="#00f0f0f0" backgroundColor="#34111112" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
 		<widget name="headertext" position="1400,1735" zPosition="1" size="490,240" font="Regular; 34" transparent="1" halign="left" valign="center" backgroundColor="#34111112" foregroundColor="#00fcc000" />
 		<widget name="statustext" position="144,267" zPosition="1" size="685,90" font="Regular;30" halign="center" valign="center" transparent="1" backgroundColor="#34111112" />
-		<widget name="key_green_ext" position="520,688" size="220,26" zPosition="2" font="Regular;20" backgroundColor="#34111112" halign="left" transparent="1" valign="center" noWrap="1" />
 		<widget name="list" position="20,100" zPosition="2" size="940,385" backgroundColor="#34111112" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#0034384b" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" />
 		<widget name="console" position="20,500" zPosition="1" size="1240,170" font="Regular;21" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#0034384b" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" backgroundColor="#34111112" halign="left" valign="center" />
 		<widget name="cover" position="985,95" size="273,400" zPosition="3" alphatest="blend" />
