@@ -21,14 +21,13 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import Downloade
 ###################################################
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
-from enigma import getDesktop, eTimer, eServiceReference, eConsoleAppContainer
-from Components.config import config
-from Components.ActionMap import ActionMap, HelpableActionMap
+from enigma import getDesktop, eTimer, eConsoleAppContainer
+from Components.ActionMap import ActionMap
 from Components.Label import Label
-from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
+from Tools.Directories import fileExists
 import os
 import time
-
+from re import search
 ###################################################
 
 
@@ -65,7 +64,7 @@ class IPTVSimpleAudioPlayer():
                 tmp = tmp.meta['http_proxy']
                 if '://' in tmp:
                     if '@' in tmp:
-                        tmp = re.search('([^:]+?://)([^:]+?):([^@]+?)@(.+?)$', tmp)
+                        tmp = search('([^:]+?://)([^:]+?):([^@]+?)@(.+?)$', tmp)
                         if tmp:
                             cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (tmp.group(1) + tmp.group(4), tmp.group(2), tmp.group(3)))
                     else:
@@ -125,9 +124,7 @@ class IPTVPicturePlayerWidget(Screen):
     # picture
     p_w = sz_w - 20
     p_h = sz_h - 20
-    #######################
-    #     POSITIONS
-    #######################
+    # POSITIONS
     start_y = (sz_h - (i_h + c_h)) / 2
     # percentage
     s_x = (sz_w - s_w) / 2
@@ -144,17 +141,19 @@ class IPTVPicturePlayerWidget(Screen):
 
     printDBG("[IPTVPicturePlayerWidget] desktop size %dx%d" % (sz_w, sz_h))
     skin = """
-        <screen name="IPTVPicturePlayerWidget"  position="center,center" size="%d,%d" title="IPTV Picture Player...">
-         <widget name="status"     size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" /> #foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"
-         <widget name="console"    size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" />
-         <widget name="icon"       size="%d,%d"   position="%d,%d"  zPosition="4" transparent="1" alphatest="on" />
-         <widget name="picture"    size="%d,%d"   position="%d,%d"  zPosition="6" transparent="1" alphatest="on" />
-        </screen>""" % (sz_w, sz_h,         # screen
-                        s_w, s_h, s_x, s_y,  # status
-                        c_w, c_h, c_x, c_y,  # console
-                        i_w, i_h, i_x, i_y,  # icon
-                        p_w, p_h, p_x, p_y  # picture
-                      )
+        <screen name="IPTVPicturePlayerWidget" position="center,center" size="%d,%d" title="IPTV Picture Player...">
+            <widget name="status" size="%d,%d" position="%d,%d" zPosition="5" valign="center" halign="center" font="Regular;21" backgroundColor="black" transparent="1" /> <!-- foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" -->
+            <widget name="console" size="%d,%d" position="%d,%d" zPosition="5" valign="center" halign="center" font="Regular;21" backgroundColor="black" transparent="1" />
+            <widget name="icon" size="%d,%d" position="%d,%d" zPosition="4" transparent="1" alphatest="on" />
+            <widget name="picture" size="%d,%d" position="%d,%d" zPosition="6" transparent="1" alphatest="on" />
+        </screen>
+    """ % (
+        sz_w, sz_h,          # screen size
+        s_w, s_h, s_x, s_y,  # status widget
+        c_w, c_h, c_x, c_y,  # console widget
+        i_w, i_h, i_x, i_y,  # icon widget
+        p_w, p_h, p_x, p_y   # picture widget
+    )
 
     def __init__(self, session, url, pathForRecordings, pictureTitle, addParams={}):
         self.session = session

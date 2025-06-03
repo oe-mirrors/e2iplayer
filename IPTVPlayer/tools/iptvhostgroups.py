@@ -5,7 +5,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, GetConfigDir, GetHostsList, IsHostEnabled
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetConfigDir, GetHostsList, IsHostEnabled
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostsGroupItem
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 # FOREIGN import
 ###################################################
 import codecs
-from os import path as os_path, remove as os_remove
+from os import path as os_path
 ###################################################
 
 

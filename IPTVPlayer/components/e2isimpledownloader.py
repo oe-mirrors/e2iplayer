@@ -4,7 +4,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printExc, rm, GetIconDir
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 

@@ -3,7 +3,6 @@
 
 from urllib.request import Request, urlopen, build_opener, install_opener
 import sys
-import time
 import traceback
 import socketserver
 from http.server import SimpleHTTPRequestHandler

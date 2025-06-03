@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-###################################################
-# LOCAL import
-###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import DecodeGzipped
@@ -9,32 +6,13 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import DecodeGzipped
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, \
                                                           RemoveDisallowedFilenameChars, GetSubtitlesDir, rm
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
-###################################################
-
-###################################################
-# FOREIGN import
-###################################################
 import re
-from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
-###################################################
-
-
-###################################################
-# E2 GUI COMMPONENTS
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
-from Screens.MessageBox import MessageBox
-###################################################
-
-###################################################
-# Config options for HOST
-###################################################
+from Components.config import config
 
 
 def GetConfigList():
     optionList = []
     return optionList
-###################################################
 
 
 class OpenSubOrgProvider(CBaseSubProviderClass):

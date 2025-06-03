@@ -6,7 +6,7 @@
 #
 #
 from Screens.Screen import Screen
-from Components.ActionMap import ActionMap, HelpableActionMap
+from Components.ActionMap import ActionMap
 from enigma import ePoint
 from Tools.LoadPixmap import LoadPixmap
 from Components.Label import Label
@@ -14,6 +14,7 @@ from skin import parseColor
 
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover2, Cover3
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetIconDir
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
 
 class UnCaptchaReCaptchaWidget(Screen):
@@ -38,7 +39,8 @@ class UnCaptchaReCaptchaWidget(Screen):
         for x in range(self.numOfCol):
             self.coversSelection.append([])
             for y in range(self.numOfRow):
-                coversSkin += """<widget name="cover_%s%s" zPosition="5" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (x, y,
+                coversSkin += """<widget name="cover_%s%s" zPosition="5" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />""" % (
+                    x, y,
                     (self.offsetCoverX + self.markerWidth * x),  # pos X image
                     (self.offsetCoverY + self.markerHeight * y),  # pos Y image
                     self.markerWidth,

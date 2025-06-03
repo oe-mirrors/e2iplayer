@@ -12,7 +12,7 @@
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVDMImgDir, GetSubtitlesDir, eConnectCallback, \
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSubtitlesDir, eConnectCallback, \
                                                           GetE2VideoAspectChoices, GetE2VideoAspect, SetE2VideoAspect, GetE2VideoPolicyChoices, \
                                                           GetE2VideoPolicy, SetE2VideoPolicy, GetDefaultLang, GetPolishSubEncoding, iptv_system, \
                                                           GetE2AudioCodecMixOption, SetE2AudioCodecMixOption, CreateTmpFile, GetTmpDir, IsExecutable, MapUcharEncoding, \
@@ -27,28 +27,21 @@ from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVFileSele
 from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayerBase, ConfigExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import iterDictItems, iterDictKeys, ensure_str
-# from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
-###################################################
 # FOREIGN import
-###################################################
-from enigma import eServiceReference, eConsoleAppContainer, getDesktop, eTimer, eLabel, gFont, ePoint, eSize, gRGB
+from enigma import eConsoleAppContainer, getDesktop, eTimer, eLabel, gFont, ePoint, eSize, gRGB
 from Screens.Screen import Screen
-from Screens.ChoiceBox import ChoiceBox
-from Components.AVSwitch import AVSwitch
 from Components.ActionMap import ActionMap
 from Components.config import config
 from Components.Label import Label
 from Components.ProgressBar import ProgressBar
 
-from Components.config import config  # temporary player should not use config directly
 from Screens.MessageBox import MessageBox
 from Tools.LoadPixmap import LoadPixmap
 from Tools.BoundFunction import boundFunction
 from Tools.Directories import fileExists
-from skin import parseColor, parseFont
+from skin import parseColor
 
 from datetime import timedelta
 try:
@@ -56,7 +49,7 @@ try:
 except Exception:
     printExc()
 
-from os import chmod as os_chmod, path as os_path
+from os import path as os_path
 import re
 import time
 import socket
@@ -78,7 +71,8 @@ class ExtPlayerCommandsDispatcher():
             self.SEEK_SPEED_MAP.append(item)
         self.speedIdx = self.SEEK_SPEED_MAP.index(0)
 
-    def doAddTriggers(self, arg): self.extPlayerSendCommand('ADD_TRIGGERS', arg)
+    def doAddTriggers(self, arg):
+        self.extPlayerSendCommand('ADD_TRIGGERS', arg)
 
     def stop(self):
         if self.extPlayerSendCommand('PLAYBACK_STOP'):
@@ -117,14 +111,15 @@ class ExtPlayerCommandsDispatcher():
         self.extPlayerSendCommand('PLAYBACK_SEEK_ABS', arg)
         self.speedIdx = self.SEEK_SPEED_MAP.index(0)
 
-    def doSeekFwd(self, arg): self.extPlayerSendCommand('PLAYBACK_FASTFORWARD', arg)
-    def doSlowMotion(self, arg): self.extPlayerSendCommand('PLAYBACK_SLOWMOTION', arg)
+    def doSeekFwd(self, arg):
+        self.extPlayerSendCommand('PLAYBACK_FASTFORWARD', arg)
+
+    def doSlowMotion(self, arg):
+        self.extPlayerSendCommand('PLAYBACK_SLOWMOTION', arg)
 
     def doUpdateInfo(self):
         self.extPlayerSendCommand('PLAYBACK_LENGTH', '', False)
         self.extPlayerSendCommand('PLAYBACK_CURRENT_TIME', '', False)
-
-    ##############################################
 
     def seekFwd(self):
         printDBG('seekFwd skipped')
@@ -280,16 +275,18 @@ class IPTVExtMoviePlayer(Screen):
         else:
             clockWidget = ''
 
-        skin = skin % (getDesktop(0).size().width(),
-                         getDesktop(0).size().height(),
-                         self.playerSkinFolder + "/playback_banner.png",
-                         self.playerSkinFolder + "/playback_progress.png",
-                         self.playerSkinFolder + "/playback_cbuff_progress.png",
-                         self.playerSkinFolder + "/playback_buff_progress.png",
-                         self.playerSkinFolder + '/playback_pointer.png',
-                         clockWidget,
-                         subSkin
-                         )  # 00000000 bottom
+        skin = skin % (
+            getDesktop(0).size().width(),
+            getDesktop(0).size().height(),
+            self.playerSkinFolder + "/playback_banner.png",
+            self.playerSkinFolder + "/playback_progress.png",
+            self.playerSkinFolder + "/playback_cbuff_progress.png",
+            self.playerSkinFolder + "/playback_buff_progress.png",
+            self.playerSkinFolder + "/playback_pointer.png",
+            clockWidget,
+            subSkin
+        )  # 00000000 bottom
+
         sub = None
         return skin
 
@@ -498,24 +495,26 @@ class IPTVExtMoviePlayer(Screen):
         self.playback['GoToSeekTimer'] = eTimer()
         self.playback['GoToSeekTimer_conn'] = eConnectCallback(self.playback['GoToSeekTimer'].timeout, self.doGoToSeek)
 
-        self.playback.update({'CurrentTime': 0,
-                               'BufferCTime': 0,
-                               'ConfirmedCTime': 0,
-                               'BufferFill': 0,
-                               'Length': 0,
-                               'LengthFromPlayerReceived': False,
-                               'GoToSeekTime': 0,
-                               'StartGoToSeekTime': 0,
-                               'GoToSeeking': False,
-                               'IsLive': False,
-                               'IsLoop': False,
-                               'Status': None,
-                               'VideoTrack': {},
-                               'AudioTrack': {},
-                               'AudioTracks': [],
-                               'SubtitleTrack': {},
-                               'SubtitleTracks': [],
-                              })
+        self.playback.update({
+            "CurrentTime": 0,
+            "BufferCTime": 0,
+            "ConfirmedCTime": 0,
+            "BufferFill": 0,
+            "Length": 0,
+            "LengthFromPlayerReceived": False,
+            "GoToSeekTime": 0,
+            "StartGoToSeekTime": 0,
+            "GoToSeeking": False,
+            "IsLive": False,
+            "IsLoop": False,
+            "Status": None,
+            "VideoTrack": {},
+            "AudioTrack": {},
+            "AudioTracks": [],
+            "SubtitleTrack": {},
+            "SubtitleTracks": []
+        })
+
         # load pixmaps for statusIcon
         self.playback['loopIcons'] = {'On': None, 'Off': None}
         self.playback['statusIcons'] = {'Play': None, 'Pause': None, 'FastForward': None, 'SlowMotion': None}
@@ -697,21 +696,24 @@ class IPTVExtMoviePlayer(Screen):
             self.autoHideTime = 1000
 
     def getE2AudioOptions(self):
-        defAudioOptions = {'ac3': GetE2AudioCodecMixOption('ac3'),
-                            'aac': GetE2AudioCodecMixOption('aac'),
-                           }
+        defAudioOptions = {
+            'ac3': GetE2AudioCodecMixOption('ac3'),
+            'aac': GetE2AudioCodecMixOption('aac'),
+        }
         printDBG(">>>>>>>>>>>>>>>>>>>>> getE2AudioOptions[%s]" % defAudioOptions)
         return defAudioOptions
 
     def getE2VideoOptions(self):
-        defVideoOptions = {'aspect': GetE2VideoAspect(),
-                            'aspect_choices': GetE2VideoAspectChoices(),
-                            'policy': GetE2VideoPolicy(),
-                            'policy_choices': GetE2VideoPolicyChoices(),
-                            'policy2': GetE2VideoPolicy('2'),
-                            'policy2_choices': GetE2VideoPolicyChoices(),
-                            'active': None
-                           }
+        defVideoOptions = {
+            "aspect": GetE2VideoAspect(),
+            "aspect_choices": GetE2VideoAspectChoices(),
+            "policy": GetE2VideoPolicy(),
+            "policy_choices": GetE2VideoPolicyChoices(),
+            "policy2": GetE2VideoPolicy("2"),
+            "policy2_choices": GetE2VideoPolicyChoices(),
+            "active": None
+        }
+
         printDBG(">>>>>>>>>>>>>>>>>>>>> getE2VideoOptions[%s]" % defVideoOptions)
         return defVideoOptions
 
@@ -1111,7 +1113,7 @@ class IPTVExtMoviePlayer(Screen):
             self['subLabel%d' % (idx + 1)].hide()
 
     def setSubtitlesText(self, text, stripLine=True, breakToLongLine=True):
-        back = True
+        # back = True
         desktopW = getDesktop(0).size().width()
         desktopH = getDesktop(0).size().height()
 
@@ -1306,7 +1308,7 @@ class IPTVExtMoviePlayer(Screen):
                     self.playback['BufferCTime'] = val
                     self['bufferingCBar'].value = val
                 elif 'Status' == key:
-                    curSts = self.playback['Status']
+                    # curSts = self.playback['Status']
                     if self.playback['Status'] != val[0]:
                         if 'Play' == val[0]:
                             self.showPlaybackInfoBar()
@@ -1415,27 +1417,65 @@ class IPTVExtMoviePlayer(Screen):
         else:
             self.isClosing = True
 
-    def key_play(self): self.extPlayerCmddDispatcher.play()
-    def key_pause(self): self.extPlayerCmddDispatcher.pause()
-    def key_exit(self): self.doExit()
-    def key_info(self): self.doInfo()
-    def key_seek1(self): self.doSeek(config.seek.selfdefined_13.value * -1)
-    def key_seek3(self): self.doSeek(config.seek.selfdefined_13.value)
-    def key_seek4(self): self.doSeek(config.seek.selfdefined_46.value * -1)
-    def key_seek6(self): self.doSeek(config.seek.selfdefined_46.value)
-    def key_seek7(self): self.doSeek(config.seek.selfdefined_79.value * -1)
-    def key_seek9(self): self.doSeek(config.seek.selfdefined_79.value)
-    def key_seekFwd(self): self.extPlayerCmddDispatcher.seekFwd()
-    def key_seekBack(self): self.extPlayerCmddDispatcher.seekBack()
-    def key_left_press(self): self.goToSeekKey(-1, 'press')
-    def key_left_repeat(self): self.goToSeekKey(-1, 'repeat')
-    def key_rigth_press(self): self.goToSeekKey(1, 'press')
-    def key_rigth_repeat(self): self.goToSeekKey(1, 'repeat')
-    def key_up_press(self): self.goSubKey(-1, 'press')
-    def key_up_repeat(self): self.goSubKey(-1, 'repeat')
-    def key_down_press(self): self.goSubKey(1, 'press')
+    def key_play(self):
+        self.extPlayerCmddDispatcher.play()
 
-    def key_down_repeat(self): self.goSubKey(1, 'repeat')
+    def key_pause(self):
+        self.extPlayerCmddDispatcher.pause()
+
+    def key_exit(self):
+        self.doExit()
+
+    def key_info(self):
+        self.doInfo()
+
+    def key_seek1(self):
+        self.doSeek(config.seek.selfdefined_13.value * -1)
+
+    def key_seek3(self):
+        self.doSeek(config.seek.selfdefined_13.value)
+
+    def key_seek4(self):
+        self.doSeek(config.seek.selfdefined_46.value * -1)
+
+    def key_seek6(self):
+        self.doSeek(config.seek.selfdefined_46.value)
+
+    def key_seek7(self):
+        self.doSeek(config.seek.selfdefined_79.value * -1)
+
+    def key_seek9(self):
+        self.doSeek(config.seek.selfdefined_79.value)
+
+    def key_seekFwd(self):
+        self.extPlayerCmddDispatcher.seekFwd()
+
+    def key_seekBack(self):
+        self.extPlayerCmddDispatcher.seekBack()
+
+    def key_left_press(self):
+        self.goToSeekKey(-1, "press")
+
+    def key_left_repeat(self):
+        self.goToSeekKey(-1, "repeat")
+
+    def key_rigth_press(self):
+        self.goToSeekKey(1, "press")
+
+    def key_rigth_repeat(self):
+        self.goToSeekKey(1, "repeat")
+
+    def key_up_press(self):
+        self.goSubKey(-1, "press")
+
+    def key_up_repeat(self):
+        self.goSubKey(-1, "repeat")
+
+    def key_down_press(self):
+        self.goSubKey(1, "press")
+
+    def key_down_repeat(self):
+        self.goSubKey(1, "repeat")
 
     def doSeek(self, val):
         if None is not self.downloader and self.downloader.hasDurationInfo() \
@@ -2146,7 +2186,7 @@ class IPTVExtMoviePlayer(Screen):
                 cmd += ' -f "key_uri_old=%s" -f "key_uri_new=%s" ' % (tmpUri.meta['iptv_m3u8_key_uri_replace_old'], tmpUri.meta['iptv_m3u8_key_uri_replace_new'])
 
             if self.extAdditionalParams.get('moov_atom_file', '') != '':
-                 cmd += ' -F "%s" -S %s -O %s' % (self.extAdditionalParams['moov_atom_file'], self.extAdditionalParams['moov_atom_offset'] + self.extAdditionalParams['moov_atom_size'], self.extAdditionalParams['moov_atom_offset'])
+                cmd += ' -F "%s" -S %s -O %s' % (self.extAdditionalParams['moov_atom_file'], self.extAdditionalParams['moov_atom_offset'] + self.extAdditionalParams['moov_atom_size'], self.extAdditionalParams['moov_atom_offset'])
 
             cmd += (' "%s"' % videoUri) + " > /dev/null"
 
@@ -2432,4 +2472,4 @@ class IPTVExtMoviePlayerSummary(Screen):
             </screen>"""
 
         def __init__(self, session, parent):
-                Screen.__init__(self, session, parent=parent)
+            Screen.__init__(self, session, parent=parent)

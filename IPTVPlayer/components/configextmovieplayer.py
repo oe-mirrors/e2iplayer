@@ -7,9 +7,9 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetHostsList, IsHostEnabled, SaveHostsOrderList, SortHostsList, \
-                                                          GetE2VideoAspectChoices, GetE2VideoAspect, SetE2VideoAspect, GetE2VideoPolicyChoices, \
-                                                          GetE2VideoPolicy, SetE2VideoPolicy, GetE2AudioCodecMixChoices, GetE2AudioCodecMixOption, IsExecutable
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, \
+                                                          GetE2VideoAspectChoices, GetE2VideoPolicyChoices, \
+                                                          GetE2VideoPolicy, GetE2AudioCodecMixChoices
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget, ConfigIPTVFileSelection, COLORS_DEFINITONS
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ###################################################
@@ -18,10 +18,9 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 # FOREIGN import
 ###################################################
 import skin
-from enigma import gRGB, eLabel, getDesktop
+from enigma import eLabel, getDesktop
 from Screens.MessageBox import MessageBox
-from Screens.ChoiceBox import ChoiceBox
-from Components.config import config, ConfigSubsection, ConfigSelection, ConfigDirectory, ConfigYesNo, ConfigOnOff, Config, ConfigInteger, ConfigSubList, ConfigText, getConfigListEntry, configfile
+from Components.config import config, ConfigSelection, ConfigYesNo, ConfigInteger, getConfigListEntry, configfile
 ###################################################
 config.plugins.iptvplayer.extplayer_summary = ConfigSelection(default="yes", choices=[('auto', _('Auto')), ('yes', _('Yes')), ('no', _('No'))])
 config.plugins.iptvplayer.use_clear_iframe = ConfigYesNo(default=False)
@@ -46,9 +45,10 @@ config.plugins.iptvplayer.aac_mix = ConfigSelection(default=None, choices=[(None
 config.plugins.iptvplayer.ac3_mix = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
 
 config.plugins.iptvplayer.extplayer_infobar_timeout = ConfigSelection(default="5", choices=[
-        ("1", "1 " + _("second")), ("2", "2 " + _("seconds")), ("3", "3 " + _("seconds")),
-        ("4", "4 " + _("seconds")), ("5", "5 " + _("seconds")), ("6", "6 " + _("seconds")), ("7", "7 " + _("seconds")),
-        ("8", "8 " + _("seconds")), ("9", "9 " + _("seconds")), ("10", "10 " + _("seconds"))])
+    ("1", "1 " + _("second")), ("2", "2 " + _("seconds")), ("3", "3 " + _("seconds")),
+    ("4", "4 " + _("seconds")), ("5", "5 " + _("seconds")), ("6", "6 " + _("seconds")), ("7", "7 " + _("seconds")),
+    ("8", "8 " + _("seconds")), ("9", "9 " + _("seconds")), ("10", "10 " + _("seconds"))
+])
 config.plugins.iptvplayer.extplayer_aspect = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
 config.plugins.iptvplayer.extplayer_policy = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
 config.plugins.iptvplayer.extplayer_policy2 = ConfigSelection(default=None, choices=[(None, _("from E2 settings"))])
@@ -221,9 +221,10 @@ class ConfigExtMoviePlayerBase():
         return defVideoOptions
 
     def getDefaultAudioOptions(self):
-        defAudioOptions = {'aac': config.plugins.iptvplayer.aac_mix.value,
-                            'ac3': config.plugins.iptvplayer.ac3_mix.value,
-                           }
+        defAudioOptions = {
+            'aac': config.plugins.iptvplayer.aac_mix.value,
+            'ac3': config.plugins.iptvplayer.ac3_mix.value,
+        }
         printDBG(">>>>>>>>>>>>>>>>>>>>> getDefaultAudioOptions[%s]" % defAudioOptions)
         return defAudioOptions
 
@@ -392,13 +393,14 @@ class ConfigExtMoviePlayer(ConfigBaseWidget, ConfigExtMoviePlayerBase):
         ConfigBaseWidget.runSetup(self)
 
     def getSubOptionsList(self):
-        tab = [config.plugins.iptvplayer.extplayer_subtitle_border_enabled,
-               config.plugins.iptvplayer.extplayer_subtitle_shadow_enabled,
-               config.plugins.iptvplayer.extplayer_subtitle_wrapping_enabled,
-               config.plugins.iptvplayer.extplayer_subtitle_background,
-               config.plugins.iptvplayer.show_iframe,
-               config.plugins.iptvplayer.use_clear_iframe,
-              ]
+        tab = [
+            config.plugins.iptvplayer.extplayer_subtitle_border_enabled,
+            config.plugins.iptvplayer.extplayer_subtitle_shadow_enabled,
+            config.plugins.iptvplayer.extplayer_subtitle_wrapping_enabled,
+            config.plugins.iptvplayer.extplayer_subtitle_background,
+            config.plugins.iptvplayer.show_iframe,
+            config.plugins.iptvplayer.use_clear_iframe,
+        ]
 
     def changeSubOptions(self):
         self.runSetup()

@@ -17,11 +17,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 import re
 import codecs
-import time
-try:
-    import json
-except Exception:
-    import simplejson as json
+import json
 from os import remove as os_remove, path as os_path
 ###################################################
 

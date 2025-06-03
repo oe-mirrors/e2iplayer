@@ -10,12 +10,13 @@ except ImportError:
 
 from Screens.HelpMenu import HelpableScreen
 from Components.ActionMap import HelpableActionMap
-from Components.config import config
 from Components.AVSwitch import iAVSwitch
-from Screens.ChoiceBox import ChoiceBox
 from Components.ServiceEventTracker import ServiceEventTracker
 from enigma import iPlayableService, eTimer
+from Screens.InfoBar import MoviePlayer as standardMoviePlayer
+from enigma import eServiceReference
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
 
 class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, InfoBarAspectSelection, InfoBarSubtitleSupport, HelpableScreen, InfoBarNotifications, Screen):
@@ -31,9 +32,9 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         self.skinName = "MoviePlayer"
 
         self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-                iPlayableService.evEOF: self.__evEOF,
-                iPlayableService.evSOF: self.__evEOF,
-            })
+            iPlayableService.evEOF: self.__evEOF,
+            iPlayableService.evSOF: self.__evEOF,
+        })
         self["actions"] = HelpableActionMap(self, "MoviePlayerActions",
             {
                 "leavePlayer": (self.leavePlayer, _("leave movie player...")),
@@ -175,7 +176,7 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
         except Exception:
             printExc(customMoviePlayer._doClose)
         position, length = self.getPosition()
-#        self.close(sts, self.lastPosition)
+        # self.close(sts, self.lastPosition)
         self.close(sts, position, length)
 
     def __evEOF(self):
@@ -207,8 +208,6 @@ class customMoviePlayer(InfoBarShowHide, InfoBarSeek, InfoBarAudioSelection, Inf
 #####################################################
 # movie player by j00zek
 #####################################################
-from Screens.InfoBar import MoviePlayer as standardMoviePlayer
-from enigma import eServiceReference
 
 
 class IPTVStandardMoviePlayer(standardMoviePlayer):

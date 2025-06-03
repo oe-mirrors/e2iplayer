@@ -13,6 +13,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3, Cover2
 from Plugins.Extensions.IPTVPlayer.components.VirtualKeyBoard import IPTVVirtualKeyBoardWithCaptcha
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+
 ###################################################
 
 ###################################################
@@ -24,9 +26,7 @@ from Screens.MessageBox import MessageBox
 from Components.ActionMap import NumberActionMap
 from Components.Label import Label
 from Components.Input import Input
-from Tools.BoundFunction import boundFunction
 from Tools.LoadPixmap import LoadPixmap
-from enigma import gRGB
 from skin import parseColor
 ###################################################
 

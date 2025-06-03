@@ -9,13 +9,11 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import ArticleContent
-from Plugins.Extensions.IPTVPlayer.components.cover import SimpleAnimatedCover, Cover
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
-from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
+from Plugins.Extensions.IPTVPlayer.components.cover import Cover3, Cover
 ###################################################
 
 ###################################################
@@ -23,8 +21,8 @@ from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
 ###################################################
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
-from enigma import getDesktop, eTimer, ePoint
-from Components.ActionMap import ActionMap, HelpableActionMap
+from enigma import eTimer, ePoint
+from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 from Tools.Directories import fileExists

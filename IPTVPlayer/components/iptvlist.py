@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem
 # FOREIGN import
 ###################################################
 from Components.GUIComponent import GUIComponent
-from enigma import eListboxPythonMultiContent, eListbox, gFont, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, getDesktop
+from enigma import eListboxPythonMultiContent, eListbox, gFont, RT_HALIGN_LEFT, RT_VALIGN_CENTER, getDesktop
 from Tools.LoadPixmap import LoadPixmap
 import skin
 ###################################################

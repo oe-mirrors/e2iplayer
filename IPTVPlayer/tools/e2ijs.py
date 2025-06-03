@@ -7,15 +7,12 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Cr
 
 ########################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
-from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 ########################################################
 from Tools.Directories import fileExists
 
 from binascii import hexlify
 from hashlib import md5
-import time
 import _thread
-import six
 
 DUKTAPE_VER = '226'
 

@@ -1,37 +1,14 @@
 # -*- coding: utf-8 -*-
-###################################################
-# LOCAL import
-###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, RemoveDisallowedFilenameChars, \
                                                           GetSubtitlesDir, GetTmpDir, rm, MapUcharEncoding
-###################################################
-
-###################################################
-# FOREIGN import
-###################################################
 import re
-from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
-###################################################
-
-
-###################################################
-# E2 GUI COMMPONENTS
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
-from Screens.MessageBox import MessageBox
-###################################################
-
-###################################################
-# Config options for HOST
-###################################################
 
 
 def GetConfigList():
     optionList = []
     return optionList
-###################################################
 
 
 class YoutubeComProvider(CBaseSubProviderClass):

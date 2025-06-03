@@ -7,7 +7,7 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsValidFileName, GetFavouritesDir, GetIconDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CFavItem, CDisplayListItem
+from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
 ###################################################
@@ -168,16 +168,17 @@ class IPTVFavouritesMainWidget(Screen):
          <widget name="label_yellow"  position="705,9" size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
 
          <widget name="list"  position="5,80"  zPosition="2" size="%d,%d" scrollbarMode="showOnDemand" transparent="1"  backgroundColor="#00000000" enableWrapAround="1" />
-         <widget name="title" position="5,47"  zPosition="1" size="%d,23" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
-        </screen>""" % (
-            _("Favourites manager"),
-            sz_w, sz_h,  # size
-            GetIconDir("red.png"),
-            GetIconDir("green.png"),
-            GetIconDir("yellow.png"),
-            sz_w - 10, sz_h - 105,  # size list
-            sz_w - 135,  # size title
-            )
+         <widget name="title" position="5,47"  zPosition="1" size="%d,23" font="Regular;20" transparent="1" backgroundColor="#00000000"/>
+        </screen>
+    """ % (
+        _("Favourites manager"),
+        sz_w, sz_h,  # size
+        GetIconDir("red.png"),
+        GetIconDir("green.png"),
+        GetIconDir("yellow.png"),
+        sz_w - 10, sz_h - 105,  # size list
+        sz_w - 135,  # size title
+    )
 
     def __init__(self, session):
         self.session = session
@@ -398,13 +399,13 @@ class IPTVFavouritesMainWidget(Screen):
             self.modified = True
 
     def _changeMode(self):
-            if not self.duringMoving:
-                self["list"].instance.setForegroundColorSelected(gRGB(0xFF0505))
-                self.duringMoving = True
-            else:
-                self["list"].instance.setForegroundColorSelected(gRGB(0xFFFFFF))
-                self.duringMoving = False
-            self.displayList()
+        if not self.duringMoving:
+            self["list"].instance.setForegroundColorSelected(gRGB(0xFF0505))
+            self.duringMoving = True
+        else:
+            self["list"].instance.setForegroundColorSelected(gRGB(0xFFFFFF))
+            self.duringMoving = False
+        self.displayList()
 
     def moveItem(self, key):
         if self["list"].instance is not None:
