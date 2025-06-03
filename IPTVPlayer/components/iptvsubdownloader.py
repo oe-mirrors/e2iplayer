@@ -173,7 +173,6 @@ class IPTVSubDownloaderWidget(Screen):
         self.spinnerTimer_interval = 200
         self.spinnerEnabled = False
 
-
         self.downloadedSubItems = []
 
     # end def __init__(self, session):
