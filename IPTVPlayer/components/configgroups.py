@@ -7,21 +7,16 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostsGroupItem
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
-from enigma import gRGB
-from Screens.MessageBox import MessageBox
-from Screens.ChoiceBox import ChoiceBox
-from Components.config import config, getConfigListEntry, NumericalTextInput, ConfigYesNo
-from Tools.BoundFunction import boundFunction
+from Components.config import getConfigListEntry, ConfigYesNo
 ###################################################
 
 

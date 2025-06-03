@@ -4,37 +4,31 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, IsValidFileName, \
-                                                          GetTmpDir, GetSubtitlesDir, GetIconDir, GetSkinsDir, \
-                                                          GetIPTVPlayerVersion, eConnectCallback, GetPluginDir, \
-                                                          iptv_system, IsSubtitlesParserExtensionCanBeUsed
-from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, \
+                                                          GetIconDir, GetSkinsDir, GetIPTVPlayerVersion, eConnectCallback, \
+                                                          GetPluginDir, iptv_system, IsSubtitlesParserExtensionCanBeUsed
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import ISubProvider
-from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
-from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
-from time import sleep as time_sleep
-from os import remove as os_remove, path as os_path
+from os import path as os_path
 from urllib.parse import quote as urllib_quote
-from random import shuffle as random_shuffle
 
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Tools.LoadPixmap import LoadPixmap
-from Components.config import config, configfile
+from Components.config import config
 from Components.Sources.StaticText import StaticText
 from Tools.BoundFunction import boundFunction
 from enigma import getDesktop, eTimer
@@ -44,7 +38,6 @@ from enigma import getDesktop, eTimer
 #                   IPTV components
 ####################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 import Plugins.Extensions.IPTVPlayer.components.asynccall as asynccall
 ###################################################
 
@@ -159,9 +152,7 @@ class IPTVSubDownloaderWidget(Screen):
 
         self.visible = True
 
-        #################################################################
         #                      Inits for Proxy Queue
-        #################################################################
 
         # register function in main Queue
         if None is asynccall.gMainFunctionsQueueTab[1]:
@@ -182,7 +173,6 @@ class IPTVSubDownloaderWidget(Screen):
         self.spinnerTimer_interval = 200
         self.spinnerEnabled = False
 
-        #################################################################
 
         self.downloadedSubItems = []
 
@@ -411,7 +401,7 @@ class IPTVSubDownloaderWidget(Screen):
         try:
             if None is item.retValue[0] or self.workThread == item.retValue[0]:
                 if isinstance(item.retValue[1], asynccall.CPQParamsWrapper):
-                    getattr(self, method)(*item.retValue[1])
+                    getattr(self, item.clientFunName)(*item.retValue[1])
                 else:
                     getattr(self, item.clientFunName)(item.retValue[1])
             else:

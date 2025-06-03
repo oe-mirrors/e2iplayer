@@ -3,19 +3,10 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, DownloadFile, eConnectCallback
 from Plugins.Extensions.IPTVPlayer.__init__ import _
 ###################################################
 # FOREIGN import
 ###################################################
-from Tools.BoundFunction import boundFunction
-from enigma import eConsoleAppContainer
-from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS
-from Components.config import config, configfile
-from Components.Language import language
-import gettext
-import os
-import sys
 import threading
 import time
 ###################################################
@@ -127,7 +118,7 @@ class IPTVPlayerNotificationList(object):
                 self.notificationsList.append(notification)
                 self.empty = False
                 ret = True
-            except Exception:
+            except Exception as e:
                 print(str(e))
         return ret
 

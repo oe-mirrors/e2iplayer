@@ -6,11 +6,10 @@
 #
 #
 from Screens.Screen import Screen
-from Components.ActionMap import ActionMap, HelpableActionMap
+from Components.ActionMap import ActionMap
 from enigma import ePoint
 from Tools.LoadPixmap import LoadPixmap
 from Components.Label import Label
-from skin import parseColor
 
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover2, Cover3
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetIconDir

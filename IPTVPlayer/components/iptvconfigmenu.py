@@ -9,27 +9,23 @@
 ###################################################
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSkinsList, GetHostsList, GetEnabledHostsList, \
-                                                          IsHostEnabled, IsExecutable, CFakeMoviePlayerOption, GetAvailableIconSize, \
-                                                          SetIconsHash, SetGraphicsHash
+                                                          IsExecutable, CFakeMoviePlayerOption
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, IPTVPlayerNeedInit
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget, COLORS_DEFINITONS
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget
+from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayer
+from .iptvpin import IPTVPinWidget
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 from Screens.MessageBox import MessageBox
-from Screens.Screen import Screen
 
-from Components.ActionMap import ActionMap, HelpableActionMap
-from Components.Label import Label
-from Components.config import config, ConfigSubsection, ConfigSelection, ConfigDirectory, ConfigYesNo, ConfigOnOff, Config, ConfigInteger, \
-                              ConfigSubList, ConfigText, getConfigListEntry, configfile, ConfigNothing, NoSave
-from Components.ConfigList import ConfigListScreen
+from Components.config import config, ConfigSubsection, ConfigSelection, ConfigDirectory, ConfigYesNo, ConfigOnOff, ConfigInteger, \
+                              ConfigText, getConfigListEntry, configfile, ConfigNothing, NoSave
 from Tools.BoundFunction import boundFunction
-from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS
 ###################################################
 
 
@@ -48,8 +44,6 @@ config.plugins.iptvplayer.captConfVisible = NoSave(ConfigNothing())
 config.plugins.iptvplayer.subtConfVisible = NoSave(ConfigNothing())
 config.plugins.iptvplayer.playConfVisible = NoSave(ConfigNothing())
 config.plugins.iptvplayer.otherConfVisible = NoSave(ConfigNothing())
-
-from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayer
 
 config.plugins.iptvplayer.plarform = ConfigSelection(default="auto", choices=[("auto", "auto"), ("mipsel", _("mipsel")), ("i686", _("i686")), ("armv7", _("armv7")), ("armv5t", _("armv5t")), ("unknown", _("unknown"))])
 config.plugins.iptvplayer.plarformfpuabi = ConfigSelection(default="", choices=[("", ""), ("hard_float", _("Hardware floating point")), ("soft_float", _("Software floating point"))])
@@ -181,7 +175,6 @@ config.plugins.iptvplayer.numOfCol = ConfigSelection(default="0", choices=[("1",
 config.plugins.iptvplayer.skin = ConfigSelection(default="auto", choices=GetSkinsList())
 
 # Pin code
-from .iptvpin import IPTVPinWidget
 config.plugins.iptvplayer.fakePin = ConfigSelection(default="fake", choices=[("fake", "****")])
 config.plugins.iptvplayer.pin = ConfigText(default="0000", fixed_size=False)
 config.plugins.iptvplayer.disable_live = ConfigYesNo(default=False)
@@ -305,11 +298,11 @@ class ConfigMenu(ConfigBaseWidget):
 
     @staticmethod
     def fillConfigList(list, hiddenOptions=False, basicConfVisible=True, prxyConfVisible=False, buffConfVisible=False, downConfVisible=False,
-                                                  captConfVisible=False, subtConfVisible=False, playConfVisible=False, otherConfVisible=False):
+                       captConfVisible=False, subtConfVisible=False, playConfVisible=False, otherConfVisible=False):
         if hiddenOptions:
             list.append(getConfigListEntry('\\c00289496' + _("----- HIDDEN OPTIONS -----"), config.plugins.iptvplayer.FakeEntry))
-#            list.append(getConfigListEntry(_("Last checked version"), config.plugins.iptvplayer.updateLastCheckedVersion))
-#            list.append(getConfigListEntry(_("Show all version in the update menu"), config.plugins.iptvplayer.hiddenAllVersionInUpdate))
+            # list.append(getConfigListEntry(_("Last checked version"), config.plugins.iptvplayer.updateLastCheckedVersion))
+            # list.append(getConfigListEntry(_("Show all version in the update menu"), config.plugins.iptvplayer.hiddenAllVersionInUpdate))
             list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
             list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
             list.append(getConfigListEntry(_("The default aspect ratio for the external player"), config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio))
@@ -493,7 +486,7 @@ class ConfigMenu(ConfigBaseWidget):
     def runSetup(self):
         self.list = []
         ConfigMenu.fillConfigList(self.list, self.isHiddenOptionsUnlocked(), self.basicConfVisible, self.prxyConfVisible, self.buffConfVisible, self.downConfVisible,
-                                                                             self.captConfVisible, self.subtConfVisible, self.playConfVisible, self.otherConfVisible)
+                                  self.captConfVisible, self.subtConfVisible, self.playConfVisible, self.otherConfVisible)
         ConfigBaseWidget.runSetup(self)
 
     def onSelectionChanged(self):
@@ -505,15 +498,15 @@ class ConfigMenu(ConfigBaseWidget):
         else:
             ConfigBaseWidget.onSelectionChanged(self)
 
-#    def keyUpdate(self):
-#        printDBG("ConfigMenu.keyUpdate")
+    # def keyUpdate(self):
+        # printDBG("ConfigMenu.keyUpdate")
 
     def save(self):
         ConfigBaseWidget.save(self)
         if self.showcoverOld != config.plugins.iptvplayer.showcover.value or \
-           self.SciezkaCacheOld != config.plugins.iptvplayer.SciezkaCache.value:
-           pass
-           # plugin must be restarted if we wont to this options take effect
+            self.SciezkaCacheOld != config.plugins.iptvplayer.SciezkaCache.value:
+            pass
+            # plugin must be restarted if we wont to this options take effect
         if self.platformOld != config.plugins.iptvplayer.plarform.value:
             IPTVPlayerNeedInit(True)
 
@@ -525,7 +518,7 @@ class ConfigMenu(ConfigBaseWidget):
 
     def closeAfterMessage(self, arg=None):
         if arg:
-#            self.doUpdate(True)
+            # self.doUpdate(True)
             self.close()
         else:
             self.close()
@@ -574,19 +567,20 @@ class ConfigMenu(ConfigBaseWidget):
             ConfigBaseWidget.keyOK(self)
 
     def getSubOptionsList(self):
-        tab = [config.plugins.iptvplayer.buforowanie,
-              config.plugins.iptvplayer.buforowanie_m3u8,
-              config.plugins.iptvplayer.buforowanie_rtmp,
-              config.plugins.iptvplayer.showcover,
-              config.plugins.iptvplayer.ListaGraficzna,
-              config.plugins.iptvplayer.pluginProtectedByPin,
-              config.plugins.iptvplayer.configProtectedByPin,
-              config.plugins.iptvplayer.plarform,
-              config.plugins.iptvplayer.osk_type,
-              # config.plugins.iptvplayer.preferredupdateserver,
-              # config.plugins.iptvplayer.captcha_bypass_free,
-              # config.plugins.iptvplayer.captcha_bypass_pay
-              ]
+        tab = [
+            config.plugins.iptvplayer.buforowanie,
+            config.plugins.iptvplayer.buforowanie_m3u8,
+            config.plugins.iptvplayer.buforowanie_rtmp,
+            config.plugins.iptvplayer.showcover,
+            config.plugins.iptvplayer.ListaGraficzna,
+            config.plugins.iptvplayer.pluginProtectedByPin,
+            config.plugins.iptvplayer.configProtectedByPin,
+            config.plugins.iptvplayer.plarform,
+            config.plugins.iptvplayer.osk_type,
+            # config.plugins.iptvplayer.preferredupdateserver,
+            # config.plugins.iptvplayer.captcha_bypass_free,
+            # config.plugins.iptvplayer.captcha_bypass_pay
+        ]
         players = []
         if 'mipsel' == config.plugins.iptvplayer.plarform.value:
             players.append(config.plugins.iptvplayer.defaultMIPSELMoviePlayer0)

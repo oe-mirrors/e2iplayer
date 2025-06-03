@@ -7,15 +7,13 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper, iptv_execute
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
-from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import CSearchHistoryHelper, GetCookieDir, printDBG, printExc, GetTmpDir, GetSubtitlesDir, \
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetCookieDir, printDBG, printExc, GetTmpDir, GetSubtitlesDir, \
                                                           MapUcharEncoding, GetPolishSubEncoding, GetDefaultLang, \
                                                           rm, rmtree, mkdirs
 from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandler
-from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, strEncode
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strEncode
 
 import re
 import urllib.parse

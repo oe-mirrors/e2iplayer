@@ -20,9 +20,9 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 # FOREIGN import
 ###################################################
 import threading
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urljoin
 from binascii import hexlify
-from os import path as os_path, listdir, remove as removeFile, rename as os_rename, rmdir as os_rmdir
+from os import path as os_path, rename as os_rename
 from Components.config import config
 ###################################################
 

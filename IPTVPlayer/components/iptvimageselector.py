@@ -10,6 +10,8 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVListComponentBase
+from Plugins.Extensions.IPTVPlayer.__init__ import _
+
 ###################################################
 
 ###################################################
@@ -18,7 +20,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVListComponentB
 from skin import parseColor
 from enigma import eListboxPythonMultiContent, getDesktop, ePicLoad
 from Tools.LoadPixmap import LoadPixmap
-from Tools.BoundFunction import boundFunction
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap
 from Components.Label import Label
@@ -167,13 +168,12 @@ class IPTVMultipleImageSelectorWidget(Screen):
         if self.iptv_accep_label:
             self["accept_button"] = Label(self.iptv_accep_label)
 
-        self["actions"] = ActionMap(["SetupActions", "ColorActions", "WizardActions", "ListboxActions", "IPTVPlayerListActions"],
+        self["actions"] = ActionMap(["SetupActions", "ColorActions", "WizardActions", "ListboxActions"],
             {
                 "cancel": self.key_cancel,
                 "ok": self.key_ok,
                 "green": self.key_green,
-                "read": self.key_read,
-
+                "red": self.key_read,
                 "up": self.key_up,
                 "down": self.key_down,
                 "moveUp": self.key_up,
@@ -184,7 +184,6 @@ class IPTVMultipleImageSelectorWidget(Screen):
                 "end": self.key_end,
                 "pageUp": self.key_page_up,
                 "pageDown": self.key_page_down,
-
                 "left": self.key_left,
                 "right": self.key_right,
             }, -2)

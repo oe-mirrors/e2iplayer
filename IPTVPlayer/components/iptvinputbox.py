@@ -7,11 +7,9 @@
 #
 
 from Screens.InputBox import InputBox
-from .cover import Cover3
-from Components.Label import Label
-from Tools.LoadPixmap import LoadPixmap
 
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printExc
+from Plugins.Extensions.IPTVPlayer.__init__ import _
 from .cover import Cover2
 
 
@@ -31,17 +29,21 @@ class IPTVInputBoxWidget(InputBox):
             height = size[1]
         if 'size' not in icon:
             icon['size'] = [width - 10, height - 70]
+
         skin = """
-            <screen name="IPTVInputBoxWidget" position="center,center" title="Input" size="%d,%d">
+        <screen name="IPTVInputBoxWidget" position="center,center" title="Input" size="%d,%d">
             <widget name="text" position="center,10" size="%d,30" font="Regular;24" valign="center" halign="center" />
             <widget name="input" position="center,60" size="%d,50" font="Regular;40" valign="center" halign="center" />
             <widget name="cover" zPosition="4" position="center,%d" size="%d,%d" transparent="1" alphatest="on" />
-            </screen>""" % (width, height,
-                             width - 20,
-                             width - 20,
-                             85 + (height - 85 - icon['size'][1]) / 2,
-                             icon['size'][0],
-                             icon['size'][1])
+        </screen>""" % (
+            width, height,
+            width - 20,
+            width - 20,
+            85 + (height - 85 - icon['size'][1]) / 2,
+            icon['size'][0],
+            icon['size'][1]
+        )
+
         self.skin = skin
         self.icon = icon
         self["cover"] = Cover2()
