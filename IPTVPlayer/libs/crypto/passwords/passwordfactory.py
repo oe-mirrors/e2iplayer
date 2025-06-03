@@ -68,7 +68,7 @@ class PasswordFactorySimple(PasswordFactory):
         self.passwordSize = self.rand.randrange(self.minSize, self.maxSize + 1)
         password = ''
         for i in range(self.passwordSize):
-                password = password + self.rand.choice(self.lettersReduced + self.digitsReduced)
+            password = password + self.rand.choice(self.lettersReduced + self.digitsReduced)
         return password
 
     def passwordsForSize(self, pwSize):

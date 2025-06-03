@@ -1185,15 +1185,15 @@ def remove_html_markup(s, replacement=''):
     quote = False
     out = ""
     for c in s:
-            if c == '<' and not quote:
-                tag = True
-            elif c == '>' and not quote:
-                tag = False
-                out += replacement
-            elif (c == '"' or c == "'") and tag:
-                quote = not quote
-            elif not tag:
-                out = out + c
+        if c == '<' and not quote:
+            tag = True
+        elif c == '>' and not quote:
+            tag = False
+            out += replacement
+        elif (c == '"' or c == "'") and tag:
+            quote = not quote
+        elif not tag:
+            out = out + c
     return re.sub(r'&\w+;', ' ', out)
 
 
@@ -1848,10 +1848,11 @@ def readCFG(cfgName, defVal=''):
 def checkWebSiteStatus(URL, HEADERS=None, TIMEOUT=1):
     global LASTExcMSG
     if HEADERS is None:
-        HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:88.0) Gecko/20100101 Firefox/88.0',
-                        'Accept-Charset': 'utf-8',
-                        'Content-Type': 'text/html; charset=utf-8'
-                      }
+        HEADERS = {
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:88.0) Gecko/20100101 Firefox/88.0',
+            'Accept-Charset': 'utf-8',
+            'Content-Type': 'text/html; charset=utf-8'
+    }
     req = urllib2_Request(URL, headers=HEADERS)
     try:
         response = urllib2_urlopen(req, timeout=TIMEOUT)

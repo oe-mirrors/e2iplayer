@@ -11,7 +11,7 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetIconDir, GetNice, formatBytes
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper, DMItemBase
@@ -24,16 +24,15 @@ from Screens.Screen import Screen
 from Screens.ChoiceBox import ChoiceBox
 from enigma import eTimer, eConsoleAppContainer
 from Components.config import config
-from Components.ActionMap import ActionMap, HelpableActionMap
+from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
-from Components.config import config
 from Tools.LoadPixmap import LoadPixmap
 
 from datetime import timedelta
 
-from os import chmod as os_chmod, path as os_path, remove as os_remove
+from os import path as os_path, remove as os_remove
 ###################################################
 
 #########################################################
