@@ -1,61 +1,19 @@
 # -*- coding: utf-8 -*-
-###################################################
-# LOCAL import
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, GetCookieDir, byteify, \
-                                                          RemoveDisallowedFilenameChars, GetSubtitlesDir, GetTmpDir, rm, \
-                                                          MapUcharEncoding, GetPolishSubEncoding, rmtree, mkdirs
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-###################################################
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, \
+                                                          RemoveDisallowedFilenameChars, GetSubtitlesDir
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
-###################################################
-# FOREIGN import
-###################################################
-from datetime import timedelta
-import time
 import re
-import unicodedata
-import base64
 try:
-    from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlsplit, urlunsplit
+    from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlsplit
 except Exception:
     printExc()
-from os import listdir as os_listdir, path as os_path
-try:
-    import json
-except Exception:
-    import simplejson as json
-try:
-    try:
-        from cStringIO import StringIO
-    except Exception:
-        from StringIO import StringIO
-    import gzip
-except Exception:
-    pass
-from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
-###################################################
-
-
-###################################################
-# E2 GUI COMMPONENTS
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
-from Screens.MessageBox import MessageBox
-###################################################
-
-###################################################
-# Config options for HOST
-###################################################
 
 
 def GetConfigList():
     optionList = []
     return optionList
-###################################################
 
 
 class PodnapisiNetProvider(CBaseSubProviderClass):

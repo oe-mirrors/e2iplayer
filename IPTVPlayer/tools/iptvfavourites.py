@@ -5,7 +5,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.components.ihost import CFavItem
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################

@@ -1,29 +1,16 @@
 # -*- coding: utf-8 -*-
-###################################################
-# LOCAL import
-###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import E2iPlayerWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import IsExecutable
-###################################################
 
-###################################################
-# FOREIGN import
-###################################################
 from enigma import getDesktop
 from Screens.Screen import Screen
 from Plugins.Plugin import PluginDescriptor
 from Screens.MessageBox import MessageBox
 from Tools.BoundFunction import boundFunction
 from Components.config import config
-from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS
-###################################################
 import os
-####################################################
-# Wywołanie wtyczki w roznych miejscach
-####################################################
 
 
 def Plugins(**kwargs):

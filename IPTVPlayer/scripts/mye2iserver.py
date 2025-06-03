@@ -8,7 +8,7 @@ import sys
 import os
 import traceback
 import signal
-from urllib.parse import urlsplit, urlparse, parse_qs, urljoin
+from urllib.parse import urlsplit, parse_qs
 
 
 def signal_handler(sig, frame):

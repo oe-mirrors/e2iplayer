@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 #
 # seems not used  to DELETE import urllib
-try:
-    import json
-except Exception:
-    import simplejson as json
+import json
 
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG
 
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 

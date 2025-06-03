@@ -9,9 +9,8 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.__init__ import _
-from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib2_urlopen, urllib2_Request, urllib2_URLError, urllib2_HTTPError
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode, iterDictItems, ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode, ensure_str
 ###################################################
 
 ###################################################
@@ -21,10 +20,8 @@ from Components.config import config
 from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS, SCOPE_CONFIG
 from enigma import eConsoleAppContainer
 from Components.Language import language
-from time import sleep as time_sleep, time
-from urllib.request import Request, urlopen
-from urllib.error import URLError, HTTPError
-import urllib.parse
+from time import time
+from urllib.request import urlopen
 import traceback
 import re
 import sys
