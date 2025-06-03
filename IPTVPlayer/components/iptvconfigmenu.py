@@ -11,10 +11,11 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSkinsList, GetHostsList, GetEnabledHostsList, \
                                                           IsHostEnabled, IsExecutable, CFakeMoviePlayerOption, GetAvailableIconSize, \
                                                           SetIconsHash, SetGraphicsHash
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, IPTVPlayerNeedInit
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import IPTVPlayerNeedInit
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget, COLORS_DEFINITONS
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget
+from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
 ###################################################
 
 ###################################################
@@ -358,8 +359,9 @@ class ConfigMenu(ConfigBaseWidget):
             if config.plugins.iptvplayer.ListaGraficzna.value is True:
                 list.append(getConfigListEntry(_("    Enable hosts groups"), config.plugins.iptvplayer.group_hosts))
                 list.append(getConfigListEntry(_("    Service icon size"), config.plugins.iptvplayer.IconsSize))
-                list.append(getConfigListEntry(_("    Number of rows"), config.plugins.iptvplayer.numOfRow))
-                list.append(getConfigListEntry(_("    Number of columns"), config.plugins.iptvplayer.numOfCol))
+                if not GRIDSUPPORT:
+                    list.append(getConfigListEntry(_("    Number of rows"), config.plugins.iptvplayer.numOfRow))
+                    list.append(getConfigListEntry(_("    Number of columns"), config.plugins.iptvplayer.numOfCol))
 
             list.append(getConfigListEntry(_("Use the PyCurl for HTTP(S) requests"), config.plugins.iptvplayer.usepycurl))
             list.append(getConfigListEntry(_("https - validate SSL certificates"), config.plugins.iptvplayer.httpssslcertvalidation))

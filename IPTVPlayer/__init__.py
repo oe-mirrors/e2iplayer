@@ -2,6 +2,10 @@
 
 from Components.Language import language
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+from Components.SystemInfo import BoxInfo
+
+GRIDSUPPORT = BoxInfo.getItem("distro") in ("openatv", )
+
 import gettext
 
 PluginLanguageDomain = "IPTVPlayer"
