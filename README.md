@@ -6,6 +6,6 @@ includes Movies, TV series, Catoons, Anime, Music, Sport, Live Streams, Document
 Thanks to SamSamSam for the original version of this program! (https://gitlab.com/e2i/e2iplayer)
 
 This is a mirror of https://gitlab.com/zadmario/e2iplayer
-with additions from https://gitlab.com/maxbambi/e2iplayer and https://github.com/Blindspot76/e2iPlayer
+with additions from https://gitlab.com/maxbambi/e2iplayer, https://github.com/Blindspot76/e2iPlayer and https://github.com/Belfagor2005/e2player
 
 including Python3 preparations and general optimizations by jbleyel
