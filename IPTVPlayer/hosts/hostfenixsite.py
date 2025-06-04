@@ -20,6 +20,12 @@ import re
 ###################################################
 
 
+try:
+    xrange
+except NameError:
+    xrange = range
+
+
 def GetConfigList():
     optionList = []
     return optionList

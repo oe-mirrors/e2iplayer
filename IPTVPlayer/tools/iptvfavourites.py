@@ -15,7 +15,6 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 ###################################################
 import codecs
 from os import path as os_path, remove as os_remove
-from Plugins.Extensions.IPTVPlayer.components.ihost import CFavItem
 ###################################################
 
 

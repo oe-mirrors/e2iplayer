@@ -36,7 +36,8 @@ def _get_byte(c):
 
 try:
     xrange
-except:
+except NameError:
+    xrange = range
 
     def to_bufferable(binary):
         if isinstance(binary, bytes):

@@ -27,7 +27,7 @@ from Components.Label import Label
 from Tools.Directories import fileExists
 import os
 import time
-from re import search
+from urllib.parse import urlparse
 ###################################################
 
 
@@ -63,10 +63,10 @@ class IPTVSimpleAudioPlayer():
             if 'http_proxy' in tmp.meta:
                 tmp = tmp.meta['http_proxy']
                 if '://' in tmp:
-                    if '@' in tmp:
-                        tmp = search('([^:]+?://)([^:]+?):([^@]+?)@(.+?)$', tmp)
-                        if tmp:
-                            cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (tmp.group(1) + tmp.group(4), tmp.group(2), tmp.group(3)))
+                    parsed = urlparse(tmp)
+                    if parsed.username and parsed.password:
+                        cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' %
+                                (f"{parsed.scheme}://{parsed.hostname}", parsed.username, parsed.password))
                     else:
                         cmd += (' "proxy=%s" ' % tmp)
         else:

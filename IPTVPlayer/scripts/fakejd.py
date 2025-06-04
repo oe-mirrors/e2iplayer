@@ -8,12 +8,10 @@ import urllib.parse
 from urllib.error import HTTPError
 import base64
 import sys
+import ssl
 import traceback
 from http.server import BaseHTTPRequestHandler
-try:
-    import json
-except Exception:
-    import simplejson as json
+import json
 from binascii import hexlify
 import threading
 

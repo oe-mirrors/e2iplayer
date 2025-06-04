@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 try:
     xrange
-except Exception:
+except NameError:
     xrange = range
 
 

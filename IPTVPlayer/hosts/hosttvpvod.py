@@ -498,6 +498,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
 
         nextPageUrl = ''
         itemsTab = []
+        page = cItem.get('page', 1)
         for item in tmp:
 #            printDBG("TvpVod.exploreApiItem item %s" % item)
             icon = self.cm.ph.getSearchGroups(json_dumps(item.get('images', '')), r'''['"]([^'^"]+?\.jpg)['"]''')[0]

@@ -113,11 +113,6 @@ except ImportError:  # Python 2
         return parsed_result
 
 try:
-    compat_str = str  # Python 2
-except NameError:
-    compat_str = str
-
-try:
     compat_chr = chr  # Python 2
 except NameError:
     compat_chr = chr
@@ -197,7 +192,6 @@ def clean_html(html):
 def unescapeHTML(s):
     if s is None:
         return None
-    # assert type(s) == compat_str
 
     return re.sub(r'&([^;]+);', lambda m: htmlentity_transform(m.group(1)), s)
 

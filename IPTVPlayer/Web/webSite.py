@@ -327,23 +327,32 @@ class settingsPage(resource.Resource):
                 if key is None or arg is None:
                     pass
                 elif key == 'cmd' and arg[:3] == 'ON:':
-                    exec('config.plugins.iptvplayer.%s.setValue(True)\nconfig.plugins.iptvplayer.%s.save()' % (arg[3:], arg[3:]))
+                    print('config.plugins.iptvplayer.%s.setValue(False)\nconfig.plugins.iptvplayer.%s.save()' % (arg[3:], arg[3:]))
+                    setting = getattr(config.plugins.iptvplayer, arg[3:])
+                    setting.value = True
+                    setting.save()
                     settings.configsHTML = {}
                     settings.activeHostsHTML = {}
                     return util.redirectTo("/iptvplayer/settings", req)
                 elif key == 'cmd' and arg[:4] == 'OFF:':
                     print('config.plugins.iptvplayer.%s.setValue(False)\nconfig.plugins.iptvplayer.%s.save()' % (arg[4:], arg[4:]))
-                    exec('config.plugins.iptvplayer.%s.setValue(False)\nconfig.plugins.iptvplayer.%s.save()' % (arg[4:], arg[4:]))
+                    setting = getattr(config.plugins.iptvplayer, arg[4:])
+                    setting.value = False
+                    setting.save()
                     settings.activeHostsHTML.pop(arg[4:], None)
                     settings.activeHostsHTML.pop(arg[8:], None)
                     settings.configsHTML = {}
                     return util.redirectTo("/iptvplayer/settings", req)
                 elif key[:4] == "CFG:":
-                    exec('config.plugins.iptvplayer.%s.setValue("%s")\nconfig.plugins.iptvplayer.%s.save()' % (key[4:], arg, key[4:]))
+                    setting = getattr(config.plugins.iptvplayer, arg[4:])
+                    setting.value = arg
+                    setting.save()
                     settings.configsHTML = {}
                     return util.redirectTo("/iptvplayer/settings", req)
                 elif key[:4] == "INT:":
-                    exec('config.plugins.iptvplayer.%s.setValue("%s")\nconfig.plugins.iptvplayer.%s.save()' % (key[4:], arg, key[4:]))
+                    setting = getattr(config.plugins.iptvplayer, arg[4:])
+                    setting.value = arg
+                    setting.save()
                     settings.configsHTML = {}
                     return util.redirectTo("/iptvplayer/settings", req)
                 configfile.save()

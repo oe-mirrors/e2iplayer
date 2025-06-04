@@ -24,11 +24,12 @@ try:
     def hex_md5(e):
         return md5(six.ensure_binary(e)).hexdigest()
 except Exception:
-    from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5 as md5
+    from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 
     def hex_md5(e):
         hashAlg = MD5()
         return hexlify(hashAlg(e))
+
 
 
 def int2base(x, base):
@@ -111,7 +112,6 @@ def drdX_fx(e):
 def VIDEOMEGA_decryptPlayerParams(p, a, c, k, e, d):
     def e1(c):
         return JS_toString(c, 36)
-        return ret
 
     def k1(matchobj):
         return d[matchobj.group(0)]

@@ -29,7 +29,10 @@ import base64
 from hashlib import sha1, sha256
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
-
+try:
+    import cookielib
+except ImportError:
+    import http.cookiejar as cookielib
 
 ###################################################
 # E2 GUI COMMPONENTS

@@ -384,7 +384,7 @@ class MediasetPlay(CBaseHostClass):
         query = {'uxReference': cItem['f_ref'], 'platform': 'pc'}
         query.update(self.initData)
         url = self.API_BASE_URL + 'rec/cataloguelisting/v1.0?' + urllib_urlencode(query)
-
+        page = cItem.get('page', 1)
         sts, data = self.getPage(url)
         if not sts:
             return

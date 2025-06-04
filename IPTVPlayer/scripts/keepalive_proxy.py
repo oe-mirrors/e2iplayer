@@ -53,7 +53,6 @@ HTTP_HEADER = {'Connection': 'keep-alive', 'return_data': False}
 class Proxy(SimpleHTTPRequestHandler):
     def do_GET(self):
         try:
-            global HTTP_HEADER
             url = self.path
 
             if url.startswith('/https/'):

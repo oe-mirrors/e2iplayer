@@ -566,5 +566,4 @@ gIPTVDMNotification = IPTVDMNotification()
 
 
 def GetIPTVDMNotification():
-    global gIPTVDMNotification
     return gIPTVDMNotification

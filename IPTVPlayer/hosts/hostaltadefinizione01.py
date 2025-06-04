@@ -7,7 +7,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from urllib.parse import urljoin
 ###################################################
 # FOREIGN import
 ###################################################
@@ -38,7 +38,7 @@ class Altadefinizione(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
 
-        self.MAIN_URL = 'https://www.altadefinizione01.living/'
+        self.MAIN_URL = 'https://altadefinizione01.living/'
         self.DEFAULT_ICON_URL = 'http://www.sabinacornovac.ro/wp-content/uploads/2017/04/42557652-Cinema-Camera-icon-Movie-Lover-Series-Icon-Stock-Vector-585x355.jpg'
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -94,7 +94,7 @@ class Altadefinizione(CBaseHostClass):
                 params.update({'name': 'category', 'category': 'sub_items', 'title': mainTitle, 'sub_items': tabs})
                 self.addDir(params)
 
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'menu-menu'), ('</ul', '>'), False)[1]
+        data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'menu-menu-1'), ('</ul', '>'), False)[1]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         for item in data:
             url = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0]
@@ -103,7 +103,7 @@ class Altadefinizione(CBaseHostClass):
             title = self.cleanHtmlStr(item)
             params = dict(cItem)
             params.update({'name': 'category', 'title': title, 'url': self.getFullUrl(url)})
-            if '/catalog' in url:
+            if '/catalog/a/' in url:
                 params['category'] = 'list_abc'
             else:
                 params['category'] = 'list_items'

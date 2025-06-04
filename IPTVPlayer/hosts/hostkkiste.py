@@ -150,7 +150,7 @@ class KKisteAG(CBaseHostClass):
         if not sts:
             return []
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'video-box clearfix"><strong>([^"]+)</div>')[0])
-        desc = desc if desc else c_item.get('desc', '')
+        desc = desc if desc else cItem.get('desc', '')
         actors = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, "Darsteller:(.*?)</div>")[0])
         if actors:
             otherInfo['actors'] = actors

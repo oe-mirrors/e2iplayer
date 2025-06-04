@@ -8,11 +8,14 @@ HOST_VERSION = "3.0"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, GetTmpDir, MergeDicts
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, GetTmpDir, MergeDicts, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
+cm = common('', False)
 ###################################################
 
 ###################################################
@@ -48,13 +51,13 @@ def parseFilemoonVideoLink(data):
 def parserOKRU(url):
     printDBG('parserOKRU baseUrl[%s]' % url)
     baseUrl = url
-
+    HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Referer': baseUrl}
     # Extract movieId
     videoId = urlparser.getParam(url, False).split('/')[-1]
     apiUrl = 'https://ok.ru/dk/video.playJSON?movieId=' + videoId
     printDBG('OK.RU API URL: ' + apiUrl)
 
-    sts, data = self.cm.getPage(apiUrl, {
+    sts, data = cm.getPage(apiUrl, {
         'header': {
             'Referer': baseUrl,
             'User-Agent': HTTP_HEADER['User-Agent'],
@@ -75,6 +78,7 @@ def parserOKRU(url):
         json_data = json.loads(data)
         hlsUrl = json_data['hlsManifestUrl'].replace('\\u0026', '&')
         hlsUrl = urlparser.decorateUrl(hlsUrl, {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'User-Agent': HTTP_HEADER['User-Agent']})
+
         printDBG('OK.RU hlsManifestUrl: ' + hlsUrl)
         return [{'name': 'OK.RU m3u8', 'url': hlsUrl}]
     except Exception as e:

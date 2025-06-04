@@ -16,10 +16,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Components.config import config, ConfigSelection, getConfigListEntry
 from datetime import datetime
 import time
-try:
-    import simplejson as json
-except Exception:
-    import json
+import json
 ###################################################
 
 ###################################################
@@ -68,12 +65,8 @@ class SportDeutschland(CBaseHostClass):
 
     def _getJItemNum(self, item, key, default=0):
         v = item.get(key, None)
-        if None is not v:
-            try:
-                NumberTypes = (int, long, float, complex)
-            except NameError:
-                NumberTypes = (int, long, float)
-
+        if v is not None:
+            NumberTypes = (int, float, complex)
             if isinstance(v, NumberTypes):
                 return v
         return default
