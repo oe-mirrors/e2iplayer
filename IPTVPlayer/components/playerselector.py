@@ -15,6 +15,7 @@ from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
+from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetAvailableIconSize
@@ -47,56 +48,100 @@ if GRIDSUPPORT:
             for idx in range(0, self.numOfItems):
                 self.pixmapList.append(LoadPixmap(GetIconDir('PlayerSelector/' + self.currList[idx][1] + '%i.png' % self.iconSize)))
 
-            skin = """
-            <screen name="PlayerSelectorWidget" position="center,center" title="E2iPlayer" size="1080,600" resolution="1280,720" backgroundColor="#24111112" flags="wfNoBorder">
+            skinHD = """
+            <screen name="PlayerSelectorWidget" position="center,center" title="E2iPlayer" size="1080,600" backgroundColor="#24111112" flags="wfNoBorder">
                 <eLabel position="0,0" size="1080,50" backgroundColor="#000d0f16" zPosition="-1" />
                 <eLabel position="0,560" size="1080,40" backgroundColor="#000d0f16" zPosition="-1" />
                 <eLabel position="0,50" size="1080,2" zPosition="2" backgroundColor="#808080" />
                 <eLabel position="0,556" size="1080,2" zPosition="2" backgroundColor="#808080" />
                 <widget source="Title" render="Label" position="10,10" zPosition="1" size="350,32" font="Regular; 24" halign="left" valign="center" transparent="1" />
                 <widget name="statustext" position="10,522" size="1060,30" font="Regular;20" valign="center" halign="center" foregroundColor="bernstein" />
-	            <widget source="grid" render="Listbox" position="10,60" size="1060,450" conditional="grid" listOrientation="grid" scrollbarMode="showOnDemand" itemSpacing="20,20" itemAlignment="center" selectionZoom="10" itemCornerRadiusSelected="10" itemGradientSelected="blue,green,red,horizontal">
+	            <widget source="grid" render="Listbox" position="10,60" size="1060,450" conditional="grid" listOrientation="grid" scrollbarMode="showOnDemand" itemSpacing="20,20" itemAlignment="center" backgroundColorSelected="#24111112" alphatest="blend">
                     <templates>
                         <template name="Default" fonts="Regular;20">
-                            <mode name="default" itemHeight="110" itemWidth="110">
-                                <pixmap index="0" position="5,5" size="100,100" alpha="blend" scale="centerScaled"/>
+                            <mode name="default" itemHeight="145" itemWidth="145">
+                                <pixmap index="0" position="22,22" size="100,100" alpha="blend" scale="centerScaled"/>
                             </mode>
-                            <mode name="100" itemHeight="110" itemWidth="110">
-                                <pixmap index="0" position="5,5" size="100,100" alpha="blend" scale="centerScaled"/>
+                            <mode name="120" itemHeight="165" itemWidth="165">
+                                <pixmap index="0" position="22,22" size="120,120" alpha="blend" scale="centerScaled"/>
                             </mode>
-                            <mode name="120" itemHeight="130" itemWidth="130">
-                                <pixmap index="0" position="5,5" size="120,120" alpha="blend" scale="centerScaled"/>
-                            </mode>
-                            <mode name="135" itemHeight="145" itemWidth="145">
-                                <pixmap index="0" position="5,5" size="135,135" alpha="blend" scale="centerScaled"/>
+                            <mode name="135" itemHeight="180" itemWidth="180">
+                                <pixmap index="0" position="22,22" size="135,135" alpha="blend" scale="centerScaled"/>
                             </mode>
                         </template>
 	                </templates>
 	            </widget>
-                <widget source="key_menu" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/menu.png" position="10,570" size="32,20" conditional="key_menu" alphatest="blend">
+                <widget source="key_menu" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/menu.png" position="10,570" size="32,20" conditional="key_menu" alphatest="blend">
                     <convert type="ConditionalShowHide" />
                 </widget>
-                <widget source="key_red" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="212,568" size="24,24" alphatest="blend" objectTypes="key_red,StaticText" transparent="1">
+                <widget source="key_red" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="212,568" size="24,24" alphatest="blend" objectTypes="key_red,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
                 <widget source="key_red" render="Label" position="242,568" size="180,24" backgroundColor="#000000" font="Regular;18" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_red,StaticText" transparent="1" />
-                <widget source="key_green" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/green.png" position="426,568" size="24,24" alphatest="blend" objectTypes="key_green,StaticText" transparent="1">
+                <widget source="key_green" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="426,568" size="24,24" alphatest="blend" objectTypes="key_green,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
                 <widget source="key_green" render="Label" position="456,568" size="180,24" backgroundColor="#000000" font="Regular;18" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_green,StaticText" transparent="1" />
-                <widget source="key_yellow" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/yellow.png" position="640,568" size="24,24" alphatest="blend" objectTypes="key_yellow,StaticText" transparent="1">
+                <widget source="key_yellow" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="640,568" size="24,24" alphatest="blend" objectTypes="key_yellow,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
                 <widget source="key_yellow" render="Label" position="670,568" size="180,24" backgroundColor="#000000" font="Regular;18" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_yellow,StaticText" transparent="1" />
-                <widget source="key_blue" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/blue.png" position="854,568" size="24,24" alphatest="blend" objectTypes="key_blue,StaticText" transparent="1">
+                <widget source="key_blue" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/blue.png" position="854,568" size="24,24" alphatest="blend" objectTypes="key_blue,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
                 <widget source="key_blue" render="Label" position="884,568" size="180,24" backgroundColor="#000000" font="Regular;18" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_blue,StaticText" transparent="1" />
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/key_prevnext.png" position="110,570" size="32,20" alphatest="blend" transparent="1" />
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" position="60,570" size="32,20" alphatest="blend" transparent="1" />
+                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/key_prevnext.png" position="110,570" size="32,20" alphatest="blend" transparent="1" />
+                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" position="60,570" size="32,20" alphatest="blend" transparent="1" />
             </screen>
             """
-            self.skin = skin.replace('/FHD/', '/HD/') if not FHD else skin
+
+            skinFHD = """
+            <screen name="PlayerSelectorWidget" position="center,center" title="E2iPlayer" size="1620,900" backgroundColor="#24111112" flags="wfNoBorder">
+                <eLabel position="0,0" size="1620,75" backgroundColor="#000d0f16" zPosition="-1" />
+                <eLabel position="0,840" size="1620,60" backgroundColor="#000d0f16" zPosition="-1" />
+                <eLabel position="0,75" size="1620,3" zPosition="2" backgroundColor="#808080" />
+                <eLabel position="0,834" size="1620,3" zPosition="2" backgroundColor="#808080" />
+                <widget source="Title" render="Label" position="15,15" zPosition="1" size="525,48" font="Regular; 36" halign="left" valign="center" transparent="1" />
+                <widget name="statustext" position="15,783" size="1590,45" font="Regular;30" valign="center" halign="center" foregroundColor="bernstein" />
+                <widget source="grid" render="Listbox" position="15,90" size="1590,675" conditional="grid" listOrientation="grid" scrollbarMode="showOnDemand" itemSpacing="30,30" itemAlignment="center" backgroundColorSelected="#24111112" alphatest="blend">
+                    <templates>
+                        <template name="Default" fonts="Regular;20">
+                            <mode name="default" itemHeight="145" itemWidth="145">
+                                <pixmap index="0" position="22,22" size="100,100" alpha="blend" scale="centerScaled"/>
+                            </mode>
+                            <mode name="120" itemHeight="165" itemWidth="165">
+                                <pixmap index="0" position="22,22" size="120,120" alpha="blend" scale="centerScaled"/>
+                            </mode>
+                            <mode name="135" itemHeight="180" itemWidth="180">
+                                <pixmap index="0" position="22,22" size="135,135" alpha="blend" scale="centerScaled"/>
+                            </mode>
+                        </template>
+	                </templates>
+                </widget>
+                <widget source="key_menu" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/menu.png" position="15,855" size="48,30" conditional="key_menu" alphatest="blend">
+                    <convert type="ConditionalShowHide" />
+                </widget>
+                <widget source="key_red" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="318,852" size="36,36" alphatest="blend" objectTypes="key_red,StaticText" transparent="1">
+                    <convert type="ConditionalShowHide" />
+                </widget>
+                <widget source="key_red" render="Label" position="363,852" size="270,36" backgroundColor="#000000" font="Regular;27" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_red,StaticText" transparent="1" />
+                <widget source="key_green" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/green.png" position="639,852" size="36,36" alphatest="blend" objectTypes="key_green,StaticText" transparent="1">
+                    <convert type="ConditionalShowHide" />
+                </widget>
+                <widget source="key_green" render="Label" position="684,852" size="270,36" backgroundColor="#000000" font="Regular;27" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_green,StaticText" transparent="1" />
+                <widget source="key_yellow" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/yellow.png" position="960,852" size="36,36" alphatest="blend" objectTypes="key_yellow,StaticText" transparent="1">
+                    <convert type="ConditionalShowHide" />
+                </widget>
+                <widget source="key_yellow" render="Label" position="1005,852" size="270,36" backgroundColor="#000000" font="Regular;27" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_yellow,StaticText" transparent="1" />
+                <widget source="key_blue" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/blue.png" position="1281,852" size="36,36" alphatest="blend" objectTypes="key_blue,StaticText" transparent="1">
+                    <convert type="ConditionalShowHide" />
+                </widget>
+                <widget source="key_blue" render="Label" position="1326,852" size="270,36" backgroundColor="#000000" font="Regular;27" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_blue,StaticText" transparent="1" />
+                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/key_prevnext.png" position="165,855" size="48,30" alphatest="blend" transparent="1" />
+                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" position="90,855" size="48,30" alphatest="blend" transparent="1" />
+            </screen>
+            """
+            self.skin = skinFHD if FHD else skinHD
             Screen.__init__(self, session)
             self.setTitle("E2iPlayer %s" % GetIPTVPlayerVersion())
             self["key_menu"] = StaticText(_("MENU"))
@@ -117,7 +162,6 @@ if GRIDSUPPORT:
                 "green": (self.keyMenu, ""),
                 "yellow": (self.keyYellow, ""),
                 "blue": (self.keyBlue, "")
-
             }, prio=0, description="")
 
             # self.session.nav.event.append(self.__event)
@@ -126,7 +170,8 @@ if GRIDSUPPORT:
 
         def layoutFinished(self):
             self.updateIcons()
-            self["grid"].setStyle(str(self.iconSize))
+            self["grid"].setStyle(str(self.iconSize) if self.iconSize in [120, 135] else "default")
+            self.setSelectionImage("")
             self.selectionChanged()
 
         def updateIcons(self):
@@ -163,8 +208,13 @@ if GRIDSUPPORT:
             printDBG(">> PlayerSelectorWidget.keyCancel")
             self.close(None)
 
+        def setSelectionImage(self, move):
+            file = resolveFilename(SCOPE_PLUGINS, f'Extensions/IPTVPlayer/icons/PlayerSelector/marker{move}{self.iconSize + 45}.png')
+            self["grid"].master.master.instance.setSelectionPixmap(LoadPixmap(file))
+
         def keySelect(self):
             if self.reorderingMode:
+                self.setSelectionImage("")
                 targetIndex = self["grid"].getSelectedIndex()
                 if self.moveIndex != targetIndex:
                     def move_element(lst, from_index, to_index):
@@ -242,6 +292,8 @@ if GRIDSUPPORT:
             printDBG(">> PlayerSelectorWidget.changeReorderingMode")
             if not self.reorderingMode and (self.numOfItems - self.numOfLockedItems) > 0:
                 self.reorderingMode = True
+                self.setSelectionImage("Sel")
+                self["grid"].master.master.instance.invalidate()
                 self.moveIndex = self["grid"].getSelectedIndex()
             else:
                 self.moveIndex = -1
