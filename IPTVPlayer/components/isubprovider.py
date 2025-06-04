@@ -22,10 +22,10 @@ from os import listdir as os_listdir, path as os_path
 
 class CSubItem:
     def __init__(self, path="",
-                       name="",
-                       lang="",
-                       imdbid="",
-                       subId=""):
+                 name="",
+                 lang="",
+                 imdbid="",
+                 subId=""):
         self.path = path
         self.name = name
         self.lang = lang
@@ -611,6 +611,7 @@ class CBaseSubProviderClass:
             lang = GetDefaultLang()
 
         if lang == 'pl' and encoding == 'iso-8859-2':
+            tmpFile = GetTmpDir(self.TMP_FILE_NAME)
             encoding = GetPolishSubEncoding(tmpFile)
         elif '' == encoding:
             encoding = 'utf-8'

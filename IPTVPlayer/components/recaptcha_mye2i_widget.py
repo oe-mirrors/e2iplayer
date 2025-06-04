@@ -48,12 +48,12 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
              <widget name="title"        position="5,47"  zPosition="1" size="%d,23" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
              <widget name="console"      position="10,%d" zPosition="2" size="%d,160" valign="center" halign="center"   font="Regular;24" transparent="0" foregroundColor="white" backgroundColor="black"/>
             </screen>""" % (
-                title,
-                sz_w, sz_h,                # size
-                GetIconDir('red' + '.png'),
-                sz_w - 135,                # size title
-                (sz_h - 160) / 2, sz_w - 20,  # console
-                )
+            title,
+            sz_w, sz_h,                # size
+            GetIconDir('red' + '.png'),
+            sz_w - 135,                # size title
+            (sz_h - 160) / 2, sz_w - 20,  # console
+        )
 
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)

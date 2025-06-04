@@ -48,35 +48,39 @@ class IPTVSubDownloaderWidget(Screen):
     if screenwidth and screenwidth == 1920:
         skin = """
                     <screen name="IPTVSubDownloaderWidget" position="center,center" size="1590,825" title="E2iPlayer v%s">
-                            <ePixmap position="5,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
-                            <widget render="Label" source="key_red" position="45,9" size="140,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-                            <widget name="headertext" position="15,55" zPosition="1" size="1580,30" font="Regular;30" transparent="1" backgroundColor="#00000000" />
-                            <widget name="statustext" position="15,148" zPosition="1" size="1580,180" font="Regular;30" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
-                            <widget name="list" position="5,115" zPosition="2" size="1580,410" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" backgroundColor="#00000000" />
-                            <widget name="console" position="5,570" zPosition="1" size="1580,140" font="Regular;26" transparent="1" backgroundColor="#00000000" />
-                            <ePixmap zPosition="4" position="5,535" size="1580,5" pixmap="%s" transparent="1" />
-                            <widget name="spinner"   zPosition="2" position="508,240" size="16,16" transparent="1" alphatest="blend" />
-                            <widget name="spinner_1" zPosition="1" position="508,240" size="16,16" transparent="1" alphatest="blend" />
-                            <widget name="spinner_2" zPosition="1" position="524,240" size="16,16" transparent="1" alphatest="blend" />
-                            <widget name="spinner_3" zPosition="1" position="540,240" size="16,16" transparent="1" alphatest="blend" />
-                            <widget name="spinner_4" zPosition="1" position="556,240" size="16,16" transparent="1" alphatest="blend" />
+                        <!-- add lululla -->
+                        <ePixmap position="11,773" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
+                        <widget render="Label" source="key_red" position="46,770" size="250,32" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;32" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+                        <!-- add lululla end -->
+                        <widget name="headertext" position="15,55" zPosition="1" size="1580,30" font="Regular;30" transparent="1" backgroundColor="#00000000" />
+                        <widget name="statustext" position="15,148" zPosition="1" size="1580,180" font="Regular;30" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
+                        <widget name="list" position="5,115" zPosition="2" size="1580,410" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" backgroundColor="#00000000" />
+                        <widget name="console" position="5,570" zPosition="1" size="1580,140" font="Regular;26" transparent="1" backgroundColor="#00000000" />
+                        <ePixmap zPosition="4" position="5,535" size="1580,5" pixmap="%s" transparent="1" />
+                        <widget name="spinner"   zPosition="2" position="508,240" size="16,16" transparent="1" alphatest="blend" />
+                        <widget name="spinner_1" zPosition="1" position="508,240" size="16,16" transparent="1" alphatest="blend" />
+                        <widget name="spinner_2" zPosition="1" position="524,240" size="16,16" transparent="1" alphatest="blend" />
+                        <widget name="spinner_3" zPosition="1" position="540,240" size="16,16" transparent="1" alphatest="blend" />
+                        <widget name="spinner_4" zPosition="1" position="556,240" size="16,16" transparent="1" alphatest="blend" />
                     </screen>
                 """ % (IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
     else:
         skin = """
                     <screen name="IPTVSubDownloaderWidget" position="center,center" size="1090,525" title="E2iPlayer v%s">
-                            <ePixmap position="30,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
-                            <widget render="Label" source="key_red"    position="65,9"  size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-                            <widget name="headertext" position="5,47" zPosition="1" size="1080,23" font="Regular;20" transparent="1" backgroundColor="#00000000" />
-                            <widget name="statustext" position="5,140" zPosition="1" size="1080,180" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
-                            <widget name="list" position="5,100" zPosition="2" size="1080,280" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" backgroundColor="#00000000" />
-                            <widget name="console" position="5,400" zPosition="1" size="1080,170" font="Regular;20" transparent="1" backgroundColor="#00000000" />
-                            <ePixmap zPosition="4" position="5,395" size="1080,5" pixmap="%s" transparent="1" />
-                            <widget name="spinner"   zPosition="2" position="508,240" size="16,16" transparent="1" alphatest="blend" />
-                            <widget name="spinner_1" zPosition="1" position="508,240" size="16,16" transparent="1" alphatest="blend" />
-                            <widget name="spinner_2" zPosition="1" position="524,240" size="16,16" transparent="1" alphatest="blend" />
-                            <widget name="spinner_3" zPosition="1" position="540,240" size="16,16" transparent="1" alphatest="blend" />
-                            <widget name="spinner_4" zPosition="1" position="556,240" size="16,16" transparent="1" alphatest="blend" />
+                        <!-- add lululla -->
+                        <ePixmap position="23,495" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
+                        <widget render="Label" source="key_red" position="65,493" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+                        <!-- add lululla end -->
+                        <widget name="headertext" position="5,7" zPosition="1" size="1080,23" font="Regular;20" transparent="1" backgroundColor="#00000000" />
+                        <widget name="statustext" position="5,140" zPosition="1" size="1080,180" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
+                        <widget name="list" position="5,30" zPosition="2" size="1080,280" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" backgroundColor="#00000000" />
+                        <widget name="console" position="5,330" zPosition="1" size="1080,170" font="Regular;20" transparent="1" backgroundColor="#00000000" />
+                        <ePixmap zPosition="4" position="5,320" size="1080,5" pixmap="%s" transparent="1" />
+                        <widget name="spinner" zPosition="2" position="508,240" size="16,16" transparent="1" alphatest="blend" />
+                        <widget name="spinner_1" zPosition="1" position="508,240" size="16,16" transparent="1" alphatest="blend" />
+                        <widget name="spinner_2" zPosition="1" position="524,240" size="16,16" transparent="1" alphatest="blend" />
+                        <widget name="spinner_3" zPosition="1" position="540,240" size="16,16" transparent="1" alphatest="blend" />
+                        <widget name="spinner_4" zPosition="1" position="556,240" size="16,16" transparent="1" alphatest="blend" />
                     </screen>
                 """ % (IPTV_VERSION, GetIconDir('red.png'), GetIconDir('line.png'))
 
@@ -406,7 +410,7 @@ class IPTVSubDownloaderWidget(Screen):
             else:
                 printDBG('>>>>>>>>>>>>>>> doProcessProxyQueueItem callback from old workThread[%r][%s]' % (self.workThread, item.retValue))
         except Exception:
-            printExc()
+            printDBG("Exception in doProcessProxyQueueItem")
 
     def getCategoryPath(self):
         def _getCat(cat, num):

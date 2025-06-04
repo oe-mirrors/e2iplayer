@@ -213,10 +213,11 @@ class ConfigExtMoviePlayerBase():
             printExc()
 
     def getDefaultPlayerVideoOptions(self):
-        defVideoOptions = {'aspect': config.plugins.iptvplayer.extplayer_aspect.value,
-                            'policy': config.plugins.iptvplayer.extplayer_policy.value,
-                            'policy2': config.plugins.iptvplayer.extplayer_policy2.value
-                           }
+        defVideoOptions = {
+            'aspect': config.plugins.iptvplayer.extplayer_aspect.value,
+            'policy': config.plugins.iptvplayer.extplayer_policy.value,
+            'policy2': config.plugins.iptvplayer.extplayer_policy2.value
+        }
         printDBG(">>>>>>>>>>>>>>>>>>>>> getE2VideoOptions[%s]" % defVideoOptions)
         return defVideoOptions
 
