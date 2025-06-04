@@ -12,11 +12,25 @@ Developers:
     - @matzg
     - @tomashj291
     - @a4tech
+	
+	for Forks:
+	- Blindspot76
+	- Max (maxbambi)
+	- -=Mario=- (zadmario)
+	- jbleyel
+		
+Forks:
+https://github.com/Blindspot76/e2iPlayer
+https://gitlab.com/maxbambi/e2iplayer
+https://gitlab.com/zadmario/e2iplayer
+https://github.com/oe-mirrors/e2iplayer
+
+
 Testers:
-    - ??
+    - 
 Webpages:
     - http://iptvplayer.vline.pl/
-    - http://www.iptvplayer.gitlab.io/
+    - http://www.e2iplayer.gitlab.io/
 
 
 ###### English ######	
@@ -26,7 +40,7 @@ The author of each modification is obliged to send, with acknowledgment of recei
 Anyone has the right to decommission the code of the E2iPlayer plugin in case it was published without sources.
 
 In case of Enigma2 distributions containing pre-installed E2iPlayer plugin or allowing its installation or upgrade, the code of E2iPlayer components 
-within the provided version must be identical with the code from the main repository available at https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2.
+within the provided version must be identical with the code from the main repository available at https://gitlab.com/e2i/e2iplayer.
 It is forbidden to provide incomplete code of the E2iPlayer plugin without prior approval of the main developer.
 At the same time, it is allowed to distribute the plugin code in the form of pre-compiled pyo files.
 
@@ -47,7 +61,7 @@ Autor każdej modyfikacji zobowiązany jest do wysłania, z potwierdzeniem odbio
 Każdy ma prawo do dekomilacji kodu pluginu E2iPlayer w przypadku, gdy został on opublikowany bez źródeł.
 
 W przypadku dystrybucji Enigmy2 zawierających preinstalowany plugin E2iPlayer, bądź umożliwiających jego instalację lub aktualizację, kod komponentów E2iPlayer 
-w ramach dostarczanej wersji musi być identyczny z kodem z gównego repozytorium dostepnego pod adresem https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2.
+w ramach dostarczanej wersji musi być identyczny z kodem z gównego repozytorium dostepnego pod adresem https://gitlab.com/e2i/e2iplayer.
 Zabrania się dostarczania niekompletnego kodu pluginu E2iPlayer bez uzyskania wcześniejszej zgody głównego dewelopera.
 Jednocześnie zezwala się na rozpowszechnianie kodu pluginu w postaci prekompilowanych plików pyo.
 
