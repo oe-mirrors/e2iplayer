@@ -14,7 +14,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget, COLORS_DEFINITONS
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget
-from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayer
 from .iptvpin import IPTVPinWidget
 ###################################################
 
@@ -236,6 +235,9 @@ config.plugins.iptvplayer.prefer_hlsdl_for_pls_with_alt_media = ConfigYesNo(defa
 ########################################################
 # Generate list of hosts options for Enabling/Disabling
 ########################################################
+
+# This import must be here !!
+from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayer
 
 
 class ConfigIPTVHostOnOff(ConfigOnOff):
