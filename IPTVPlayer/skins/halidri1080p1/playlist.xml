@@ -17,7 +17,7 @@
      <ePixmap position="35,815" zPosition="4" size="1850,2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/line2.png" transparent="1" />
      <ePixmap position="46,270" zPosition="4" size="260,2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/line2.png" transparent="1" />
      <ePixmap position="46,648" zPosition="4" size="260,2" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/line2.png" transparent="1" />
-     <widget name="sequencer" position="234,43" zPosition="6" size="979,385" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="black" />
+     <widget name="sequencer" position="558,265" zPosition="6" size="979,385" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="black" />
      <widget name="spinner" zPosition="2" position="908,340" size="16,16" transparent="1" alphatest="blend" />
      <widget name="spinner_1" zPosition="1" position="908,340" size="16,16" transparent="1" alphatest="blend" />
      <widget name="spinner_2" zPosition="1" position="924,340" size="16,16" transparent="1" alphatest="blend" />

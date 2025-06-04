@@ -24,9 +24,9 @@ class IPTVChoiceBoxItem:
     TYPE_NONE = None
 
     def __init__(self, name="",
-                description="",
-                privateData=None,
-                type=TYPE_NONE):
+                 description="",
+                 privateData=None,
+                 type=TYPE_NONE):
         self.name = name
         self.description = description
         self.type = type
@@ -44,11 +44,11 @@ class IPTVChoiceBoxWidget(Screen):
                 <widget name="title" position="5,10"  zPosition="1" size="%d,30" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
                 <widget name="list"  position="5,50"  zPosition="2" size="%d,%d" scrollbarMode="showOnDemand" transparent="1"  backgroundColor="#00000000" enableWrapAround="1" />
             </screen>""" % (
-                self.params.get('title', _("Select option")),
-                width, height,  # size
-                width - 10,  # title width
-                width - 10, height - 50
-                )
+            self.params.get('title', _("Select option")),
+            width, height,             # size of screen
+            width - 10,                # title width
+            width - 10, height - 50    # list width/height
+        )
         return skin
 
     def __init__(self, session, params={'width': 300, 'height': 300, 'title': '', 'current_idx': 0, 'options': []}):

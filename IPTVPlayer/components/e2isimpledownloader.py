@@ -24,27 +24,38 @@ from Tools.LoadPixmap import LoadPixmap
 
 
 class SingleFileDownloaderWidget(Screen):
+
     sz_w = getDesktop(0).size().width() - 190
     sz_h = getDesktop(0).size().height() - 195
+
     if sz_h < 500:
         sz_h += 4
+
+    label_width = sz_w - 50  # lateral margin
+
     skin = """
         <screen position="center,center" title="%s" size="%d,%d">
-         <widget name="icon_red"    position="5,9"   zPosition="4" size="30,30" transparent="1" alphatest="on" />
-         <widget name="icon_green"  position="355,9" zPosition="4" size="30,30" transparent="1" alphatest="on" />
 
-         <widget name="label_red"     position="45,9"  size="175,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget name="label_green"   position="395,9" size="175,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+            <!-- lululla added dynamic white lines -->
+            <eLabel backgroundColor="white" cornerRadius="3" position="18,990" size="%d,6" zPosition="11" />
+            <eLabel backgroundColor="white" cornerRadius="3" position="5,83" size="%d,6" zPosition="11" />
+            <!-- lululla added end dynamic lines -->
 
-         <widget name="title" position="5,47"  zPosition="1" size="%d,23" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
+            <widget name="icon_red"    position="5,9"   zPosition="4" size="30,30" transparent="1" alphatest="on" />
+            <widget name="icon_green"  position="355,9" zPosition="4" size="30,30" transparent="1" alphatest="on" />
+            <widget name="label_red"     position="45,9"  size="175,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+            <widget name="label_green"   position="395,9" size="175,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
 
-         <widget name="console"      position="10,%d"   zPosition="2" size="%d,160" valign="center" halign="center"   font="Regular;24" transparent="0" foregroundColor="white" backgroundColor="black"/>
+            <widget name="title" position="5,47"  zPosition="1" size="%d,23" font="Regular;20" transparent="1"  backgroundColor="#00000000"/>
+            <widget name="console" position="10,%d"   zPosition="2" size="%d,160" valign="center" halign="center"   font="Regular;24" transparent="0" foregroundColor="white" backgroundColor="black"/>
         </screen>""" % (
-            _("Single file downloader"),
-            sz_w, sz_h,  # size
-            sz_w - 135,  # size title
-            (sz_h - 160) / 2, sz_w - 20,  # console
-            )
+        _("Single file downloader"),  # %s
+        sz_w, sz_h,                   # %d, %d
+        label_width, label_width,     # %d, %d
+        sz_w - 135,                   # %d
+        (sz_h - 160) / 2,             # %d
+        sz_w - 20                     # %d
+    )
 
     def __init__(self, session, uri, outFile, title=''):
         self.session = session

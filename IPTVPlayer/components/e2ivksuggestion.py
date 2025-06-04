@@ -99,6 +99,7 @@ class AutocompleteSearch:
         prevStamp = 0
         stamp = 0
         text = ''
+        retList = []
         while True:
             with self.lock:
                 if not self.run:
