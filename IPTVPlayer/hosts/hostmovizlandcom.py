@@ -259,7 +259,7 @@ class MovizlandCom(CBaseHostClass):
                 continue
             key = self.cleanHtmlStr(item[0])
             if key == '':
-                cotninue
+                continue
             val = []
             item = self.cm.ph.getAllItemsBeetwenMarkers(item[1], '<a', '</a>')
             for it in item:

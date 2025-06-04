@@ -283,7 +283,7 @@ class BBCiPlayer(CBaseHostClass):
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
         if not sts:
             return
-
+        descTab = []
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'channel-page'), ('<div', '>', 'endpanel js-stat'), withNodes=False)[1]
         data = data.split('</div><div class="gel-layout__item')
         for item in data:
@@ -311,7 +311,7 @@ class BBCiPlayer(CBaseHostClass):
                 icon = self.cm.ph.getSearchGroups(item, r'''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
 
                 tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>', withMarkers=True)
-                descTab = []
+
                 for tmpItem in tmp:
                     descTab.append(self.cleanHtmlStr(tmpItem))
 
@@ -324,6 +324,7 @@ class BBCiPlayer(CBaseHostClass):
 
     def listItems2(self, cItem, nextCategory):
         printDBG("BBCiPlayer.listItems2")
+        descTab = []
 
         sts, data = self.cm.getPage(cItem['url'], self.defaultParams)
         if not sts:
@@ -357,7 +358,6 @@ class BBCiPlayer(CBaseHostClass):
                     icon = self.cm.ph.getSearchGroups(item, r'''<source[^>]+?srcset=['"]([^'^"^\s]+?)['"\s]''')[0]
 
                     tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, '<p', '</p>', withMarkers=True)
-                    descTab = []
                     for tmpItem in tmp:
                         descTab.append(self.cleanHtmlStr(tmpItem))
 
@@ -535,8 +535,8 @@ class BBCiPlayer(CBaseHostClass):
             format = 3
             match = re.search(r"'episode_id'\] = '([a-z\d]+)';", html, re.DOTALL)
             if match and match.groups():
-                match = false
-                episode_id = matches.group(1)
+                match = False
+                episode_id = match.group(1)
                 printDBG("Episode ID found: %s" % episode_id)
 
                 jsonurl = "https://www.bbc.co.uk/programmes/%s.json" % episode_id

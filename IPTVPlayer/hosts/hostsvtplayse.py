@@ -7,18 +7,14 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, CSelOneLink
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getMPDLinksWithMeta
-
 ###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin, parse_qs
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin, parse_qs, urlparse
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-try:
-    import json
-except Exception:
-    import simplejson as json
+import json
 from datetime import datetime, timedelta
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 ###################################################

@@ -221,17 +221,18 @@ class CCM(BlockCipherWithIntegrity):
     def _decodeAuthLength(self, byteString):
         """ decode byte string representing length, returns length
             Only the first 2 to 10 bytes of the byte string are examined """
-        firstTwoOctets == unpack('!H', bytesString[0:2])   # two bytes used for length
+        firstTwoOctets = unpack('!H', byteString[0:2])[0]   # two bytes used for length
         if firstTwoOctets == 0:
             raise DecryptError('CCM auth length zero with auth bit set')
         elif 0 < firstTwoOctets < 0xFEFF:
-            messageLength == firstTwoOctets
+            messageLength = firstTwoOctets
         elif 0xFEFF < firstTwoOctets < 0xFFFE:
             raise DecryptError('CCM auth length illegal values')
         elif firstTwoOctets == 0xFFFE:
-            messageLength = unpack('!I', byteString[2:6])  # four bytes used for length
+            messageLength = unpack('!I', byteString[2:6])[0]  # four bytes used for length
         elif firstTwoOctets == 0xFFFF:
-            messageLength = unpack('!Q', byteString[2:10])  # eight bytes used for length
+            messageLength = unpack('!Q', byteString[2:10])[0]  # eight bytes used for length
         else:
             raise DecryptError('CCM auth length error')
         return messageLength
+

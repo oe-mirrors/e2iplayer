@@ -49,6 +49,12 @@ def GetConfigList():
 ###################################################
 
 
+def ensure_binary(s, encoding='utf-8'):
+    if isinstance(s, bytes):
+        return s
+    return s.encode(encoding)
+
+
 def gettytul():
     return 'http://chomikuj.pl/'
 
@@ -66,10 +72,11 @@ class Chomikuj(CBaseHostClass):
         self.FILE_REQUEST_URL = 'api/v3/files/download?fileId='
         self.SEARCH_URL = 'api/v3/files/search?Query=%s&PageNumber=%s&SizeMin=0&MediaType=%s'
         self.SEARCH_ACCOUNT_URL = 'api/v3/account/search?PageNumber=%s&Query=%s'
-        self.HTTP_JSON_HEADER = {'User-Agent': "android/2.1.01 (a675e974-0def-4cbc-a955-ac6c6f99707b; unknown androVM for VirtualBox ('Tablet' version with phone caps))",
-                                   'Content-Type': "application/json; charset=utf-8",
-                                   'Accept-Encoding': 'gzip'
-                                  }
+        self.HTTP_JSON_HEADER = {
+            'User-Agent': "android/2.1.01 (a675e974-0def-4cbc-a955-ac6c6f99707b; unknown androVM for VirtualBox ('Tablet' version with phone caps))",
+            'Content-Type': "application/json; charset=utf-8",
+            'Accept-Encoding': 'gzip'
+        }
         self.loginData = {}
 
     def _getJItemStr(self, item, key, default=''):

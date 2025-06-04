@@ -9,6 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
@@ -516,7 +517,7 @@ class Raiplay(CBaseHostClass):
         elif category in ['tg1', 'tg2', 'tg3']:
             self.searchLastTg(self.currItem)
         elif category == 'nop':
-            printDGB('raiplay no link')
+            printDBG('raiplay no link')
         else:
             printExc()
 

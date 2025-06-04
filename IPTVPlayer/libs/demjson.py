@@ -2033,7 +2033,7 @@ class buffered_stream(object):
         """
         s2 = self.peekstr(len(s))
         if s2 != s:
-            return NULL
+            return None
         self.__pos.advance(s2)
         return s2
 
@@ -2064,7 +2064,7 @@ class buffered_stream(object):
         See also methods: skipuntil() and popwhile()
 
         """
-        return popwhile(lambda c: not testfn(c), maxchars=maxchars)
+        return self.popwhile(lambda c: not testfn(c), maxchars=maxchars)
 
     def __getitem__(self, index):
         """Returns the character at the given index relative to the current position.
@@ -4106,7 +4106,6 @@ class JSON(object):
                 state.append(s)
             return
 
-        global nan, inf, neginf
         if n is nan:
             state.append('NaN')
         elif n is inf:
@@ -5275,11 +5274,11 @@ class JSON(object):
         """Encode a Python Enum value into JSON."""
         eas = self.options.encode_enum_as
         if eas == 'qname':
-            self.encode_string(str(obj), state)
+            self.encode_string(str(val), state)
         elif eas == 'value':
-            self._do_encode(obj.value, state)
+            self._do_encode(val.value, state)
         else:  # eas == 'name'
-            self.encode_string(obj.name, state)
+            self.encode_string(val.name, state)
 
     def encode_date(self, dt, state):
         fmt = self.options.date_format
@@ -5304,7 +5303,7 @@ class JSON(object):
         fmt = self.options.datetime_format
         is_iso = not fmt or fmt == 'iso'
         if is_iso:
-            if dt.microsecond == 0:
+            if t.microsecond == 0:
                 fmt = 'T%H:%M:%S%z'
             else:
                 fmt = 'T%H:%M:%S.%f%z'
@@ -6012,7 +6011,6 @@ MORE INFORMATION:
                          input_encoding=None, output_encoding=None, escape_unicode=True,
                          pfx='',
                          jsonopts=None):
-        global decode, encode
         success = self.SUCCESS_FAIL
         reformatted = None
         if show_stats:

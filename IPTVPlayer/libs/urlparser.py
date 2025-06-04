@@ -5058,7 +5058,7 @@ class pageParser(CaptchaHelper):
             while len(tHex) < 8:
                 tHex = "0" + tHex
             constToken = "9b673b13fa4682ed14c3cfa5af5310274b514c4133e9b3a81e6e3aba009l2564"
-            hashAlg = MD5()
+            hashAlg = md5()
             return hexlify(hashAlg(constToken + urlSuffixe + tHex)) + "/" + tHex
 
         movieUrls = []

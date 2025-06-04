@@ -9,11 +9,6 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.jsinterp import JSInterpreter
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.base import InfoExtractor
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 
-try:
-    import json
-except Exception:
-    import simplejson as json
-
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 
 config.plugins.iptvplayer.vevo_default_quality = ConfigSelection(default="1228800", choices=[
@@ -399,7 +394,7 @@ class VevoIE(InfoExtractor):
         genres = video_info.get('genres')
         genre = (
             genres[0] if genres and isinstance(genres, list) and
-            isinstance(genres[0], compat_str) else None)
+            isinstance(genres[0], str) else None)
 
         is_explicit = video_info.get('isExplicit')
         if is_explicit is True:

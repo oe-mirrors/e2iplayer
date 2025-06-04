@@ -39,6 +39,7 @@ class IPTVSubtitlesHandler:
         self.subAtoms = []
         self.pailsOfAtoms = {}
         self.CAPACITY = 10 * 1000  # 10s
+        self.saveCache = False
         printDBG("IPTVSubtitlesHandler.__init__ self.CAPACITY = %s" % self.CAPACITY)
 
     def _srtClearText(self, text):
@@ -202,7 +203,7 @@ class IPTVSubtitlesHandler:
                 printDBG("IPTVSubtitlesHandler._saveToCache orgFilePath[%s] --> cacheFile[%s]" % (orgFilePath, filePath))
             else:
                 printDBG("IPTVSubtitlesHandler._saveToCache subtitles list empty - nothing to save")
-                removeCacheFile(orgFilePath)  # just in case we have garbage cached
+                self.removeCacheFile(orgFilePath)  # just in case we have garbage cached
 
         except Exception:
             printExc('EXCEPTION in OpenSubOrg._saveToCache')
@@ -278,7 +279,7 @@ class IPTVSubtitlesHandler:
                     # workaround end
                     self._fillPailsOfAtoms()
                     if 1:  # for tests
-                        if saveCache and len(self.subAtoms):
+                        if self.saveCache and len(self.subAtoms):
                             self._saveToCache(filePath)
                     return True
                 else:
@@ -289,7 +290,7 @@ class IPTVSubtitlesHandler:
 
     def _loadSubtitles(self, filePath, encoding):
         # printDBG("OpenSubOrg._loadSubtitles filePath[%s]" % filePath)
-        saveCache = True
+        self.saveCache = True
         self.subAtoms = []
         # time1 = time.time()
         sts = self._loadFromCache(filePath)
@@ -310,11 +311,11 @@ class IPTVSubtitlesHandler:
             except Exception:
                 printExc('EXCEPTION in OpenSubOrg._loadSubtitles')
         else:
-            saveCache = False
+            self.saveCache = False
 
         self._fillPailsOfAtoms()
 
-        if saveCache and len(self.subAtoms):
+        if self.saveCache and len(self.subAtoms):
             self._saveToCache(filePath)
 
         # time2 = time.time()

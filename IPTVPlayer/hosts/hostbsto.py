@@ -17,6 +17,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 ###################################################
 import base64
 import hashlib
+import time
 from binascii import unhexlify
 try:
     import json

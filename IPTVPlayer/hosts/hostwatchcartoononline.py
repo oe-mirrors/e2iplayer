@@ -7,13 +7,13 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, urljoin
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse
 ###################################################
 
 

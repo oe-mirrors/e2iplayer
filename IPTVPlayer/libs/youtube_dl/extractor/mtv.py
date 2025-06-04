@@ -8,11 +8,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.jsinterp import JSInterpreter
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.base import InfoExtractor
 
-try:
-    import json
-except Exception:
-    import simplejson as json
-
 
 class MTVServicesInfoExtractor(InfoExtractor):
     _MOBILE_TEMPLATE = None
@@ -93,7 +88,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
                 continue
             lang = transcript.get('srclang')
             subtitles[lang] = [{
-                'url': compat_str(typographic.get('src')),
+                'url': str(typographic.get('src')),
                 'ext': typographic.get('format')
             } for typographic in transcript.findall('./typographic')]
         return subtitles
@@ -125,7 +120,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
     def _get_videos_info(self, uri):
         video_id = self._id_from_uri(uri)
         feed_url = self._get_feed_url(uri)
-        data = compat_urllib_parse.urlencode({'uri': uri})
+        data = urllib.parse.urlencode({'uri': uri})
         info_url = feed_url + '?'
         if self._LANG:
             info_url += 'lang=%s&' % self._LANG

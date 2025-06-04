@@ -339,7 +339,7 @@ class GamatoTV(CBaseHostClass):
 
         return self.cacheLinks.get(cItem['url'], [])
 
-    def getVideoLinks(self, videoUrl):
+    def getVideoLinks(self, videoUrl, post_data=None):
         printDBG("getVideoLinks [%s]" % videoUrl)
         videoUrl = strwithmeta(videoUrl)
         urlTab = []
@@ -357,7 +357,7 @@ class GamatoTV(CBaseHostClass):
         if 1 != self.up.checkHostSupport(videoUrl):
             httpParams = dict(self.defaultParams)
             httpParams['max_data_size'] = 0
-            self.cm.getPage(url, httpParams, post_data)
+            self.cm.getPage(videoUrl, httpParams, post_data)
             if 'url' in self.cm.meta:
                 videoUrl = self.cm.meta['url']
             else:

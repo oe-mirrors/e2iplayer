@@ -11,7 +11,7 @@
     Read LICENSE.txt for license information.
 """
 import struct
-
+import time
 
 class PagingEntropyCollector:
     """ collect entropy from memory paging """

@@ -3998,7 +3998,8 @@ class Host:
               crc = self.cm.ph.getSearchGroups(data, '''/commit/([^"^']+?)['"]''', 1, True)[0]
               # printDBG( 'crc: '+crc )
               if not crc:
-                  error
+                    raise Exception("CRC not found!")
+
            except:
               printDBG('Host init query error')
               valTab.append(CDisplayListItem('ERROR - Blad pobierania: ' + url, 'ERROR', CDisplayListItem.TYPE_CATEGORY, [''], '', '', None))
@@ -5198,11 +5199,12 @@ class Host:
             type = self.cm.ph.getSearchGroups(data, '''"type":['"]([^"^']+?)['"]''', 1, True)[0]
             id = self.cm.ph.getSearchGroups(data, '''"id":['"]([^"^']+?)['"]''', 1, True)[0]
             postdata = {
-            'playlist[0][type]': type,
-            'playlist[0][id]': id,
-            'requestUrl': '/ivysilani/embed/iFramePlayerCT24.php',
-            'requestSource': 'iVysilani',
-            'type': 'html'}
+                'playlist[0][type]': type,
+                'playlist[0][id]': id,
+                'requestUrl': '/ivysilani/embed/iFramePlayerCT24.php',
+                'requestSource': 'iVysilani',
+                'type': 'html'
+            }
             header = {'User-Agent': host, 'x-addr': '127.0.0.1', 'Accept': 'text/html,application/xhtml+xml,application/xml,application/json', 'Accept-Language': 'en,en-US;q=0.7,en;q=0.3', 'X-Requested-With': 'XMLHttpRequest'}
             query_data = {'url': 'http://www.ceskatelevize.cz/ivysilani/ajax/get-client-playlist', 'header': header, 'use_host': False, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': COOKIEFILE, 'use_post': True, 'return_data': True}
             try:
@@ -5476,18 +5478,18 @@ class Host:
         if url.endswith('.m3u8'):
             tmp = getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999)
             for item in tmp:
-               return item['url']
+                return item['url']
             return ''
 
         videoUrls = self.getLinksForVideo(url)
         if videoUrls:
-           for item in videoUrls:
-              Url = item['url']
-              Name = item['name']
-              # printDBG( 'Host Url:  '+Url )
-              # printDBG( 'Host name:  '+Name )
-              if len(Url) > 8:
-                  return Url
+            for item in videoUrls:
+                Url = item['url']
+                Name = item['name']
+                # printDBG( 'Host Url:  '+Url )
+                # printDBG( 'Host name:  '+Name )
+                if len(Url) > 8:
+                    return Url
 
         if 'assisi' in url:
             # printDBG( 'Host getResolvedURL mainurl: '+url )
@@ -5678,51 +5680,51 @@ class Host:
                     return item['url']
 
         if url.startswith('https://go.toya.net.pl'):
-           # printDBG( 'Host getResolvedURL mainurl: '+url )
-           videoUrl = self.cm.ph.getSearchGroups(data, '''data-stream=['"]([^"^']+?)['"]''', 1, True)[0]
-           if videoUrl:
-              # printDBG( 'Host link: '+videoUrl )
-              return urlparser.decorateUrl(videoUrl, {'User-Agent': 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'})
+            # printDBG( 'Host getResolvedURL mainurl: '+url )
+            videoUrl = self.cm.ph.getSearchGroups(data, '''data-stream=['"]([^"^']+?)['"]''', 1, True)[0]
+            if videoUrl:
+                # printDBG( 'Host link: '+videoUrl )
+                return urlparser.decorateUrl(videoUrl, {'User-Agent': 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'})
 
         if url.startswith('http://www.tvtzgorzelec.pl'):
-           # printDBG( 'Host getResolvedURL mainurl: '+url )
-           parse = re.search("sources:(.*?)image", data, re.S)
-           if parse:
-              link = re.findall('file: "(.*?)"', parse.group(1), re.S)
-              if link:
-                 for item in link:
-                    # printDBG( 'Host listsItems tvt: '+item )
-                    m3u8 = self.cm.ph.getSearchGroups(item, '(http.*?m3u8)')[0]
-                    if m3u8:
-                        return m3u8
+            # printDBG( 'Host getResolvedURL mainurl: '+url )
+            parse = re.search("sources:(.*?)image", data, re.S)
+            if parse:
+                link = re.findall('file: "(.*?)"', parse.group(1), re.S)
+                if link:
+                    for item in link:
+                        # printDBG( 'Host listsItems tvt: '+item )
+                        m3u8 = self.cm.ph.getSearchGroups(item, '(http.*?m3u8)')[0]
+                        if m3u8:
+                            return m3u8
 
         if url.startswith('http://www.tvkstella.pl'):
-           # printDBG( 'Host getResolvedURL mainurl: '+url )
-           swfUrl = 'http://www.tvkstella.pl/flowplayer-3.2.7.swf'
-           playpatch = 'StellaLive'
-           rtmp = 'rtmp://live-tvk.tvkstella.pl/flvplayback/'
-           videoUrl = '%s playpath=%s swfUrl=%s pageUrl=%s live=1' % (rtmp, playpatch, swfUrl, url)
-           return videoUrl
+            # printDBG( 'Host getResolvedURL mainurl: '+url )
+            swfUrl = 'http://www.tvkstella.pl/flowplayer-3.2.7.swf'
+            playpatch = 'StellaLive'
+            rtmp = 'rtmp://live-tvk.tvkstella.pl/flvplayback/'
+            videoUrl = '%s playpath=%s swfUrl=%s pageUrl=%s live=1' % (rtmp, playpatch, swfUrl, url)
+            return videoUrl
 
         if url.startswith('http://nspjkluczbork.pl'):
-           # printDBG( 'Host getResolvedURL mainurl: '+url )
-           link = re.search('data-rtmp="(.*?)"', data, re.S | re.I)
-           link2 = re.search('source src="(.*?)"', data, re.S | re.I)
-           if link:
-              return '%s playpath=%s swfUrl=http://nspjkluczbork.pl/wp-content/plugins/fv-wordpress-flowplayer/flowplayer/flowplayer.swf?ver=6.0.5.12 pageUrl=http://nspjkluczbork.pl/uncategorized/kamera/ live=1' % (link.group(1), link2.group(1))
-           return ''
+            # printDBG( 'Host getResolvedURL mainurl: '+url )
+            link = re.search('data-rtmp="(.*?)"', data, re.S | re.I)
+            link2 = re.search('source src="(.*?)"', data, re.S | re.I)
+            if link:
+                return '%s playpath=%s swfUrl=http://nspjkluczbork.pl/wp-content/plugins/fv-wordpress-flowplayer/flowplayer/flowplayer.swf?ver=6.0.5.12 pageUrl=http://nspjkluczbork.pl/uncategorized/kamera/ live=1' % (link.group(1), link2.group(1))
+            return ''
 
         if url.startswith('http://parafiagornybor.pl'):
-           # printDBG( 'Host getResolvedURL mainurl: '+url )
-           link = re.search("rtmp'.*?(rtmp.*?)'", data, re.S | re.I)
-           if link:
-              playpath = link.group(1).split('/')[-1]
-              rtmp = link.group(1).replace('/' + playpath, '')
-              return '%s playpath=%s swfUrl=http://kamera.parafiaskoczow.ox.pl/FlashPlayer/player-glow.swf pageUrl=http://www.parafiagornybor.ox.pl/index.php/kamera-online.html live=1' % (rtmp, playpath)
-           return ''
+            # printDBG( 'Host getResolvedURL mainurl: '+url )
+            link = re.search("rtmp'.*?(rtmp.*?)'", data, re.S | re.I)
+            if link:
+                playpath = link.group(1).split('/')[-1]
+                rtmp = link.group(1).replace('/' + playpath, '')
+                return '%s playpath=%s swfUrl=http://kamera.parafiaskoczow.ox.pl/FlashPlayer/player-glow.swf pageUrl=http://www.parafiagornybor.ox.pl/index.php/kamera-online.html live=1' % (rtmp, playpath)
+            return ''
 
         if url.startswith('https://tomaszow.lub.pl'):
-           return 'rtmp://159.255.185.248:1936/streamHD/ playpath=kosciol_HD swfUrl=http://p.jwpcdn.com/6/12/jwplayer.flash.swf pageUrl=http://www.tomaszow-sanktuarium.pl/niedzielna-transmisja-wideo/ live=1'
+            return 'rtmp://159.255.185.248:1936/streamHD/ playpath=kosciol_HD swfUrl=http://p.jwpcdn.com/6/12/jwplayer.flash.swf pageUrl=http://www.tomaszow-sanktuarium.pl/niedzielna-transmisja-wideo/ live=1'
 
         if url.startswith('http://www.nsjtomaszowlub.pl'):
             # printDBG( 'Host getResolvedURL mainurl: '+url )
@@ -5792,55 +5794,55 @@ class Host:
             return ''
 
         if url.startswith('https://www.youtube.com/embed'):
-           # printDBG( 'Host getResolvedURL mainurl: '+url )
-           Url = self.cm.ph.getSearchGroups(data, '''['"](http://www.youtube.com/watch[^"^']+?)['"]''')[0]
-           return self.getResolvedURL(Url)
+            # printDBG( 'Host getResolvedURL mainurl: '+url )
+            Url = self.cm.ph.getSearchGroups(data, '''['"](http://www.youtube.com/watch[^"^']+?)['"]''')[0]
+            return self.getResolvedURL(Url)
 
         # printDBG( 'Host getResolvedURL end' )
         return videoUrl
 
 
 def decodeHtml(text):
-	text = text.replace('&amp;#39;', '\'')
-	text = text.replace('&amp;quot;', '"')
-	text = text.replace('  by', '')
-	text = text.replace('-&gt;', 'and')
-	text = text.replace('…  ...    …', '')
-	text = text.replace('  ...  ', '')
-	text = text.replace('&middot;', '')
-	text = text.replace('&amp;', '&')
-	text = text.replace(r'\/', '/')
-	text = text.replace('<b>', '')
-	text = text.replace('</b>', '')
-	text = text.replace('Na żywo: ', '')
-	text = text.replace('&quot;', '"')
-	text = text.replace('\\x22', '"')
-	text = text.replace('&#8221;', '"')
-	text = text.replace('&#8222;', '"')
-	text = text.replace('&#8211;', '-')
-	text = text.replace('&#039;', "'")
-	text = text.replace('&#8217;', "'")
-	text = text.replace('&#160;', " ")
-	return text
+    text = text.replace('&amp;#39;', '\'')
+    text = text.replace('&amp;quot;', '"')
+    text = text.replace('  by', '')
+    text = text.replace('-&gt;', 'and')
+    text = text.replace('…  ...    …', '')
+    text = text.replace('  ...  ', '')
+    text = text.replace('&middot;', '')
+    text = text.replace('&amp;', '&')
+    text = text.replace(r'\/', '/')
+    text = text.replace('<b>', '')
+    text = text.replace('</b>', '')
+    text = text.replace('Na żywo: ', '')
+    text = text.replace('&quot;', '"')
+    text = text.replace('\\x22', '"')
+    text = text.replace('&#8221;', '"')
+    text = text.replace('&#8222;', '"')
+    text = text.replace('&#8211;', '-')
+    text = text.replace('&#039;', "'")
+    text = text.replace('&#8217;', "'")
+    text = text.replace('&#160;', " ")
+    return text
 
 
 def decodeNat1(text):
-	text = text.replace('\u015a', '_')
-	text = text.replace('\u0119', '_')
-	text = text.replace('\u015b', '_')
-	text = text.replace('\u0142a', '_')
-	return text
+    text = text.replace('\u015a', '_')
+    text = text.replace('\u0119', '_')
+    text = text.replace('\u015b', '_')
+    text = text.replace('\u0142a', '_')
+    return text
 
 
 def decodeNat2(text):
-	text = text.replace('\u015a', 'Ś')
-	text = text.replace('\u0119', 'ę')
-	text = text.replace('\u015b', 'ś')
-	text = text.replace('\u0142', 'ł')
-	text = text.replace('\u00f3', 'ó')
-	text = text.replace('\u017c', 'ż')
-	text = text.replace('\u0107', 'ć')
-	text = text.replace('\u0144', 'ń')
-	text = text.replace('\u0105', 'ą')
-	text = text.replace('\u0144', 'ń')
-	return text
+    text = text.replace('\u015a', 'Ś')
+    text = text.replace('\u0119', 'ę')
+    text = text.replace('\u015b', 'ś')
+    text = text.replace('\u0142', 'ł')
+    text = text.replace('\u00f3', 'ó')
+    text = text.replace('\u017c', 'ż')
+    text = text.replace('\u0107', 'ć')
+    text = text.replace('\u0144', 'ń')
+    text = text.replace('\u0105', 'ą')
+    text = text.replace('\u0144', 'ń')
+    return text

@@ -351,7 +351,6 @@ def TestTmpCookieDir():
 
 
 def GetCookieDir(file='', forceFromConfig=False):
-    global gE2iPlayerTempCookieDir
     if gE2iPlayerTempCookieDir is None or forceFromConfig:
         cookieDir = os.path.join(config.plugins.iptvplayer.SciezkaCache.value, 'cookies/')
     else:
@@ -394,7 +393,6 @@ def TestTmpJSCacheDir():
 
 
 def GetJSCacheDir(fileName='', forceFromConfig=False):
-    global gE2iPlayerTempJSCache
     if gE2iPlayerTempJSCache is None or forceFromConfig:
         cookieDir = os.path.join(config.plugins.iptvplayer.SciezkaCache.value, 'JSCache/')
     else:

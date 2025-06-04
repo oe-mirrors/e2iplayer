@@ -53,7 +53,7 @@ class InfoExtractor():
         In case of failure return a default value or raise a WARNING or a
         RegexNotFoundError, depending on fatal, specifying the field name.
         """
-        if isinstance(pattern, (str, compat_str, compiled_regex_type)):
+        if isinstance(pattern, (str, compiled_regex_type)):
             mobj = re.search(pattern, string, flags)
         else:
             for p in pattern:
@@ -72,7 +72,7 @@ class InfoExtractor():
         elif default is not NO_DEFAULT:
             return default
         elif fatal:
-            raise RegexNotFoundError('Unable to extract %s' % _name)
+            raise Exception('Unable to extract %s' % _name)
         else:
             return None
 

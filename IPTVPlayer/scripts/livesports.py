@@ -11,10 +11,7 @@ import http.server
 import re
 import ssl
 from urllib.parse import urlparse, urljoin
-try:
-    import json
-except Exception:
-    import simplejson as json
+import json
 import http.cookiejar
 import time
 
@@ -106,12 +103,6 @@ reCFInput = re.compile(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>')
 
 
 def getPageCF(url, params={}):
-    global duktape
-    global reCFScript
-    global reCFForm
-    global reCFAction
-    global reCFInput
-    global jsscriptPath
     sts, data = getPage(url, params)
     if not sts and data and data.code == 503:
         current = 0
@@ -166,12 +157,6 @@ def getPageCF(url, params={}):
 
 class Proxy(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
-        global mainUrl
-        global userAgent
-        global urlPath
-        global scriptUrl
-        global cookiefile
-        global duktape
         keyUrl = self.path
 
         if keyUrl.startswith('/https/'):

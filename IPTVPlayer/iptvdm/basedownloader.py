@@ -190,7 +190,7 @@ class BaseDownloader:
 
     def unsubscribeFor_Start(self, function):
         if function in self.subscribersFor_Start:
-            subscribersFor_Start.remove(function)
+            self.subscribersFor_Start.remove(function)
 
     def _start(self):
         raise BaseException("_start not implemented")

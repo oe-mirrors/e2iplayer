@@ -479,7 +479,7 @@ class YoutubeIE(object):
         mobj = re.search(self._NEXT_URL_RE, url)
         if mobj:
             # https
-            url = 'http://www.youtube.com/' + compat_urllib_parse.unquote(mobj.group(1)).lstrip('/')
+            url = 'http://www.youtube.com/' + _unquote(mobj.group(1)).lstrip('/')
         video_id = self._extract_id(url)
 
         player_response = None
@@ -674,7 +674,7 @@ class YoutubeIE(object):
 
     def _search_regex(self, pattern, string, name, default=None, fatal=True, flags=0):
         compiled_regex_type = type(re.compile(''))
-        if isinstance(pattern, (str, compat_str, compiled_regex_type)):
+        if isinstance(pattern, (str, compiled_regex_type)):
             mobj = re.search(pattern, string, flags)
         else:
             for p in pattern:
