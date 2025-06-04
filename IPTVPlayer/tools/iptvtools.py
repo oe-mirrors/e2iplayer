@@ -1288,6 +1288,7 @@ class CSearchHistoryHelper():
     @staticmethod
     def loadLastPattern():
         filePath = GetSearchHistoryDir("pattern")
+        mkdirs(filePath)
         return ReadTextFile(filePath)
 # end CSearchHistoryHelper
 

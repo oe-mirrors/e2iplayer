@@ -157,9 +157,9 @@ if GRIDSUPPORT:
             self["actions"] = HelpableActionMap(self, ["OkCancelActions", "MenuActions", "ColorActions"], {
                 "ok": (self.keySelect, ""),
                 "cancel": (self.keyCancel, ""),
-                "menu": (self.keyMenu, ""),
+                "menu": (self.keySetup, ""),
                 "red": (self.changeReorderingMode, ""),
-                "green": (self.keyMenu, ""),
+                "green": (self.keyGreen, ""),
                 "yellow": (self.keyYellow, ""),
                 "blue": (self.keyBlue, "")
             }, prio=0, description="")
@@ -238,10 +238,10 @@ if GRIDSUPPORT:
                 self.close(None)
             return
 
-        def keyMenu(self):
+        def keySetup(self):
             self.close((_("Configuration"), "config"))
-            return
 
+        def keyGreen(self):
             printDBG(">> PlayerSelectorWidget.keyMenu")
             options = []
             selItem = self.getSelectedItem()
