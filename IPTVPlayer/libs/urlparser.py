@@ -1613,37 +1613,21 @@ class pageParser(CaptchaHelper):
     def getVevoIE(self):
         if self.vevoIE is None:
             try:
-                from yt_dlp.extractor.vevo import VevoIE
+                from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.vevo import VevoIE
                 self.vevoIE = VevoIE()
-            except ImportError:
-                try:
-                    from youtube_dl.extractor.vevo import VevoIE
-                    self.vevoIE = VevoIE()
-                except ImportError:
-                    try:
-                        from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.vevo import VevoIE
-                        self.vevoIE = VevoIE()
-                    except Exception:
-                        self.vevoIE = None
-                        printExc()
+            except Exception:
+                self.vevoIE = None
+                printExc()
         return self.vevoIE
 
     def getBBCIE(self):
         if self.bbcIE is None:
             try:
-                from yt_dlp.extractor.bbc import BBCCoUkIE
-                self.vevoIE = BBCCoUkIE()
-            except ImportError:
-                try:
-                    from youtube_dl.extractor.bbc import BBCCoUkIE
-                    self.vevoIE = BBCCoUkIE()
-                except ImportError:
-                    try:
-                        from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.bbc import BBCCoUkIE
-                        self.bbcIE = BBCCoUkIE()
-                    except Exception:
-                        self.bbcIE = None
-                        printExc()
+                from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.bbc import BBCCoUkIE
+                self.bbcIE = BBCCoUkIE()
+            except Exception:
+                self.bbcIE = None
+                printExc()
         return self.bbcIE
 
     def getMoonwalkParser(self):
