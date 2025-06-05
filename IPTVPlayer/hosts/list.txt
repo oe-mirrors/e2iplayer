@@ -171,7 +171,6 @@ hosttvproart
 hosttvpvod
 hosttwitchtv
 hostuktvplay
-hostupdatehosts
 hosturllist
 hostustreamtv
 hostustvgo

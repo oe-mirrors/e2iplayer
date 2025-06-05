@@ -10,7 +10,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVListComponentBase
-from Plugins.Extensions.IPTVPlayer.__init__ import _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
 ###################################################
 

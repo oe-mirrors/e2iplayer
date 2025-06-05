@@ -301,10 +301,12 @@ class M3U8Downloader(BaseDownloader):
         ##############################################################################
         self.downloadType = self.DOWNLOAD_TYPE.SEGMENT
 
-        if None is not self.console:
+        if self.console is None:
+            self.console = eConsoleAppContainer()
+        else:
             self.console_appClosed_conn = None
             self.console_stderrAvail_conn = None
-        # self.console = eConsoleAppContainer()
+
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
 

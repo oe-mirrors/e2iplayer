@@ -2,18 +2,17 @@
 # Local imports
 
 
-from Plugins.Extensions.IPTVPlayer.__init__ import _
 from . import settings
 
-from .webTools import *
+from .webTools import formSUBMITvalue, formSUBMITtext, formSUBMITtextWithOptions, formMultipleSearchesSUBMITtext, tableHorizontalRedLine, removeSpecialChars, isThreadRunning, isActiveHostInitiated, setNewHostListShown, isCurrentItemSelected, isNewHostListShown
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.version import IPTV_VERSION
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, IsHostEnabled, SaveHostsOrderList, SortHostsList, GetLogoDir, GetHostsOrderList, getDebugMode, formatBytes
-# e2 imports
-from Components.config import config
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, SortHostsList, GetHostsOrderList, getDebugMode, formatBytes
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
 # system imports
 import os
+from datetime import timedelta
 
 ########################################################
 
@@ -132,7 +131,7 @@ class Body():
 					tempText += '<td>%s</td>' % formSUBMITvalue([('cmd', 'deleteLog')], _("Delete log file"))
 				else:
 					LogDescr = _('%s file is %d KB in size. Last %d lines are:') % (DebugFileName, os.path.getsize(DebugFileName) / 1024, settings.MaxLogLinesToShow)
-			except:
+			except Exception:
 				LogDescr = _('Last %d lines of the %s file are:') % (settings.MaxLogLinesToShow, DebugFileName)
 			tempText += '</table>\n'
 			tempText += '<p><b><font color="#FFE4C4">%s</font></b></p>' % LogDescr
@@ -149,7 +148,7 @@ class Body():
 		def getCFGType(option):
 			cfgtype = ''
 			try:
-				CFGElements = option.doException()
+				CFGElements = option.doException()  # noqa: F841
 			except Exception as e:
 				cfgtype = str(e).split("'")[1]
 			return cfgtype
@@ -194,7 +193,7 @@ class Body():
 	########################################################
 
 	def settingsPageContent(self, MenuStatusMSG):
-		usedCFG = []
+		# usedCFG = []
 		tempText = '<body bgcolor=\"#666666\" text=\"#FFFFFF\">\n<div class="main">\n'
 		tempText += IncludeMENU(MenuStatusMSG)
 		# build hosts settings section
@@ -427,7 +426,7 @@ class Body():
 	def buildUrlsTable(self, item, index):
 		iName = removeSpecialChars(item.name)
 		iUrl = item.url  # .replace("ext://url/","") #to chyba sss zrobil do wymuszenia extplayera przyklad pierwszatv
-		iurlNeedsResolve = int(item.urlNeedsResolve)
+		# iurlNeedsResolve = int(item.urlNeedsResolve)
 		txt = tableHorizontalRedLine(colspan=3)
 		if iUrl in ['', 'fake', 'fakeUrl']:
 			txt += '<td colspan="2" align="center">%s</td></tr>' % (iName)

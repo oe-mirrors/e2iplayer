@@ -133,54 +133,57 @@ class CDisplayListItem:
 class ArticleContent:
     VISUALIZER_DEFAULT = 'DEFAULT'
     # Posible args and values for richDescParams:
-    RICH_DESC_PARAMS = ["alternate_title", "original_title", "station", "price", "age_limit", "views", "status", "type", "first_air_date", "last_air_date", "seasons", "episodes", "country", "language", "duration", "quality", "subtitles", "year", "imdb_rating", "tmdb_rating",
-                               "released", "broadcast", "remaining", "rating", "rated", "genre", "genres", "category", "categories", "production", "director", "directors", "writer", "writers",
-                               "creator", "creators", "cast", "actors", "stars", "awards", "budget", "translation", ]
+    RICH_DESC_PARAMS = [
+        "alternate_title", "original_title", "station", "price", "age_limit", "views", "status", "type", "first_air_date", "last_air_date", "seasons", "episodes", "country", "language", "duration", "quality", "subtitles", "year", "imdb_rating", "tmdb_rating",
+        "released", "broadcast", "remaining", "rating", "rated", "genre", "genres", "category", "categories", "production", "director", "directors", "writer", "writers",
+        "creator", "creators", "cast", "actors", "stars", "awards", "budget", "translation"
+    ]
     # labels here must be in english language
     # translation should be done before presentation using "locals" mechanism
-    RICH_DESC_LABELS = {"alternate_title": "Alternate Title:",
-                        "original_title": "Original Title:",
-                        "station": "Station:",
-                        "price": "Price:",
-                        "status": "Status:",
-                        "type": "Type:",
-                        "age_limit": "Age limit:",
-                        "first_air_date": "First air date:",
-                        "last_air_date": "Last air date:",
-                        "seasons": "Seasons:",
-                        "episodes": "Episodes:",
-                        "quality": "Quality:",
-                        "subtitles": "Subtitles:",
-                        "country": "Country:",
-                        "language": "Language",
-                        "year": "Year:",
-                        "released": "Released:",
-                        "broadcast": "Broadcast:",
-                        "remaining": "Remaining:",
-                        "imdb_rating": "IMDb Rating:",
-                        "tmdb_rating": "TMDb Rating:",
-                        "rating": "Rating:",
-                        "rated": "Rated:",
-                        "duration": "Duration:",
-                        "genre": "Genre:",
-                        "genres": "Genres:",
-                        "category": "Category:",
-                        "categories": "Categories:",
-                        "production": "Production:",
-                        "director": "Director:",
-                        "directors": "Directors:",
-                        "writer": "Writer:",
-                        "writers": "Writers:",
-                        "creator": "Creator:",
-                        "creators": "Creators:",
-                        "cast": "Cast:",
-                        "actors": "Actors:",
-                        "stars": "Stars:",
-                        "awards": "Awards:",
-                        "views": "Views:",
-                        "budget": "Budget:",
-                        "translation": "Translation:"
-                        }
+    RICH_DESC_LABELS = {
+        "alternate_title": "Alternate Title:",
+        "original_title": "Original Title:",
+        "station": "Station:",
+        "price": "Price:",
+        "status": "Status:",
+        "type": "Type:",
+        "age_limit": "Age limit:",
+        "first_air_date": "First air date:",
+        "last_air_date": "Last air date:",
+        "seasons": "Seasons:",
+        "episodes": "Episodes:",
+        "quality": "Quality:",
+        "subtitles": "Subtitles:",
+        "country": "Country:",
+        "language": "Language",
+        "year": "Year:",
+        "released": "Released:",
+        "broadcast": "Broadcast:",
+        "remaining": "Remaining:",
+        "imdb_rating": "IMDb Rating:",
+        "tmdb_rating": "TMDb Rating:",
+        "rating": "Rating:",
+        "rated": "Rated:",
+        "duration": "Duration:",
+        "genre": "Genre:",
+        "genres": "Genres:",
+        "category": "Category:",
+        "categories": "Categories:",
+        "production": "Production:",
+        "director": "Director:",
+        "directors": "Directors:",
+        "writer": "Writer:",
+        "writers": "Writers:",
+        "creator": "Creator:",
+        "creators": "Creators:",
+        "cast": "Cast:",
+        "actors": "Actors:",
+        "stars": "Stars:",
+        "awards": "Awards:",
+        "views": "Views:",
+        "budget": "Budget:",
+        "translation": "Translation:"
+    }
 
     def __init__(self, title='', text='', images=[], trailers=[], richDescParams={}, visualizer=None):
         self.title = title
@@ -642,7 +645,7 @@ class CHostBase(IHost):
     # end converItem
 
     def getSearchResults(self, searchpattern, searchType=None):
-        retList = []
+        # retList = []
         if self.withSearchHistrory:
             self.host.history.addHistoryItem(searchpattern, searchType)
 
@@ -650,7 +653,7 @@ class CHostBase(IHost):
         self.searchType = searchType
 
         # Find 'Wyszukaj' item
-        list = self.host.getCurrList()
+        # list = self.host.getCurrList()
 
         searchItemIdx = self.getSearchItemInx()
         if searchItemIdx > -1:

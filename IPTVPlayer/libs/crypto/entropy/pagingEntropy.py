@@ -13,6 +13,7 @@
 import struct
 import time
 
+
 class PagingEntropyCollector:
     """ collect entropy from memory paging """
 

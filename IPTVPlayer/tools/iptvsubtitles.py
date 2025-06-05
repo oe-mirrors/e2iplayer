@@ -60,16 +60,25 @@ class IPTVSubtitlesHandler:
         return ((hh * 3600 + mm * 60 + ss) * 1000 + ms) * sign
 
     def _srtTc2ms(self, time):
-        if ',' in time:
-            split_time = time.split(',')
-        else:
-            split_time = time.split('.')
-        minor = split_time[1]
-        major = split_time[0].split(':')
-        if len(major) == 2:  # sometimes 00 hour missing at the begging of subs
-            return (int(major[0]) * 60 + int(major[1])) * 1000 + int(minor)
-        else:
-            return (int(major[0]) * 3600 + int(major[1]) * 60 + int(major[2])) * 1000 + int(minor)
+        try:
+            if ',' in time:
+                split_time = time.split(',')
+            else:
+                split_time = time.split('.')
+            minor = int(split_time[1])  # milliseconds
+            major = split_time[0].split(':')
+            if len(major) == 2:  # format: mm:ss,mmm
+                minutes = int(major[0])
+                seconds = int(major[1])
+                return (minutes * 60 + seconds) * 1000 + minor
+            elif len(major) == 3:  # format: hh:mm:ss,mmm
+                hours = int(major[0])
+                minutes = int(major[1])
+                seconds = int(major[2])
+                return (hours * 3600 + minutes * 60 + seconds) * 1000 + minor
+        except Exception as e:
+            printDBG("Error in _srtTc2ms: %s" % str(e))
+        return 0
 
     def _srtToAtoms(self, srtText):
         subAtoms = []
@@ -225,9 +234,9 @@ class IPTVSubtitlesHandler:
         self.pailsOfAtoms = dict(sorted(self.pailsOfAtoms.items()))
         if 1:  # for tests
             with codecs.open('/tmp/pailsOfAtoms.json', 'w', 'utf-8') as fp:
-                  fp.write(json.dumps(self.pailsOfAtoms))
+                fp.write(json.dumps(self.pailsOfAtoms))
             with codecs.open('/tmp/subAtoms.json', 'w', 'utf-8') as fp:
-                  fp.write(json.dumps(self.subAtoms))
+                fp.write(json.dumps(self.subAtoms))
 
     def loadSubtitles(self, filePath, encoding='utf-8', fps=0):
         printDBG("OpenSubOrg.loadSubtitles filePath[%s]" % filePath)
@@ -362,7 +371,9 @@ class IPTVEmbeddedSubtitlesHandler:
         except Exception:
             pass
 
-    def getSubtitles(self, currTimeMS, prevMarker):
+    def getSubtitles(self, currTimeMS, prevMarker=None):
+        if prevMarker is None:
+            prevMarker = []
         subsText = []
         tmp = currTimeMS / self.CAPACITY
         tmp = self.pailsOfAtoms.get(tmp, [])

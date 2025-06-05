@@ -15816,7 +15816,7 @@ class pageParser(CaptchaHelper):
         url = self.cm.meta.get('url', '')
         if url != '':
             baseUrl = url
-        items = re.findall(r'''[\.\s'](?:fc|_vvto\[[^\]]*)(?:['\]]*)?\s*[:=]\s*['"]([^'"]+)''', data)
+        items = re.findall(r'''[\.\s'](?:fc|_vvto\[[^\]]+\])(?:['\]]*)?\s*[:=]\s*['"]([^'"]+)''', data)
         if items:
             for f in items[::-1]:
                 ch = veev_decode(ensure_binary(f).decode('utf8'))

@@ -172,7 +172,6 @@
 'hosttvpvod': 'https://vod.tvp.pl/',
 'hosttwitchtv': 'https://twitch.tv/',
 'hostuktvplay': 'https://uktvplay.uktv.co.uk/',
-'hostupdatehosts': 'Update Hosts',
 'hosturllist': 'Urllists player',
 'hostustreamtv': 'http://ustream.tv/',
 'hostustvgo': 'http://ustvgo.tv/',

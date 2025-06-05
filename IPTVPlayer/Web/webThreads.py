@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 
 
-import os
 from . import settings
 import threading
 import inspect
 import ctypes
 import time
 
-from .webTools import *
+from .webTools import getHostLogo, isActiveHostInitiated, initActiveHost, formGET, formSUBMITvalue
 
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 import Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget
 
+from Plugins.Extensions.IPTVPlayer.components.ihost import RetHost, CUrlItem
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, IsHostEnabled, SaveHostsOrderList, SortHostsList, GetLogoDir, GetHostsOrderList, getDebugMode, formatBytes, printDBG
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, IsHostEnabled, SortHostsList, printDBG
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Components.config import config
-
-from Plugins.Extensions.IPTVPlayer.__init__ import _
 
 ########################################################
 
@@ -117,7 +116,7 @@ class buildtempLogsHTML(threading.Thread):
 			last_bit = f.readlines()[-settings.MaxLogLinesToShow:]
 			for L in last_bit:
 				if L.find('E2iPlayerWidget.__init__') > 0:
-					LogText = ''
+					LogText = ''  # FIXME
 				settings.tempLogsHTML += L + '<br>\n'
 ########################################################
 
@@ -143,7 +142,7 @@ class buildConfigsHTML(threading.Thread):
 		def getCFGType(option):
 			cfgtype = ''
 			try:
-				CFGElements = option.doException()
+				CFGElements = option.doException()  # noqa: F841
 			except Exception as e:
 				cfgtype = str(e).split("'")[1]
 			return cfgtype
