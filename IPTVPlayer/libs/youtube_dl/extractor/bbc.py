@@ -91,7 +91,7 @@ class BBCCoUkIE(InfoExtractor):
         sts, asx = self.getPage(url, self.defaultParams)
         if not sts:
             return []
-        a = FixMe
+        # FIXME
         return [ref.get('href') for ref in asx.findall('./Entry/ref')]
 
     def _extract_medias(self, mediaData):

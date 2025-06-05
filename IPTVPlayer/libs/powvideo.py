@@ -55,6 +55,8 @@ def swapUrl(html_data, strToSwap):
         printDBG("-------- javascript for decoding strings ------ ")
         printDBG(js_code)
 
+        ss = []
+
         # exec with duktape
         ret = js_execute(js_code)
         if ret['sts'] and 0 == ret['code']:
