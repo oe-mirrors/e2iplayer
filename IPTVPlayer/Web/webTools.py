@@ -6,10 +6,8 @@ from . import settings
 import time
 import threading
 
-from Plugins.Extensions.IPTVPlayer.__init__ import _
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetLogoDir
-from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, ArticleContent, CFavItem
-
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ########################################################
 
 

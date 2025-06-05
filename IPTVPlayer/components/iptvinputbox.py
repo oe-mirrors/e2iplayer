@@ -9,7 +9,7 @@
 from Screens.InputBox import InputBox
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printExc
-from Plugins.Extensions.IPTVPlayer.__init__ import _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from .cover import Cover2
 
 

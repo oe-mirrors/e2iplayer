@@ -4,7 +4,7 @@ import os
 from Plugins.Extensions.WebInterface.WebChilds.Toplevel import addExternalChild
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
-from .webSite import StartPage, redirectionPage, hostsPage, useHostPage, downloaderPage, settingsPage, logsPage, searchPage
+from .webSite import StartPage, hostsPage, useHostPage, downloaderPage, settingsPage, logsPage, searchPage
 from twisted.web import static
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir

@@ -69,8 +69,6 @@ def doPluginAutostart():
 # Konfiguracja wtyczki
 ####################################################
 
-# from __init__ import _
-
 
 def startIPTVfromMenu(menuid, **kwargs):
     if menuid == "system":

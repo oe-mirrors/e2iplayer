@@ -20,7 +20,6 @@ gMainThreadId = None
 
 
 def IsMainThread():
-    global gMainThreadId
     return gMainThreadId == threading.current_thread()
 
 
@@ -168,7 +167,7 @@ class AsyncCall(object):
                 if self.Thread.is_alive():
                     self._kill()
                     self.Thread.join(timeout=1)
-#                    self.Thread._Thread__stop()
+                    # self.Thread._Thread__stop()
                 bRet = True
 
         self.mainLock.release()

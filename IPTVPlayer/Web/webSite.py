@@ -2,25 +2,23 @@
 # Local imports
 
 
-from Plugins.Extensions.IPTVPlayer.__init__ import _
 from . import settings
 from . import webParts
 from . import webThreads
 import Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget
 
-from .webTools import *
-from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, ArticleContent, CFavItem
+from .webTools import isThreadRunning, stopRunningThread, isActiveHostInitiated, initActiveHost, iSactiveHostsHTMLempty, isConfigsHTMLempty, setNewHostListShown, isNewHostListShown
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper, DMItemBase
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir, printDBG
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
+from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 # e2 imports
 from Components.config import configfile, config
 from Components.Language import language
 
 # system imports
 import os
-from twisted.web import resource, http, util
+from twisted.web import resource, util
 import urllib.parse
 import importlib
 
@@ -57,7 +55,7 @@ class redirectionPage(resource.Resource):
         req.setHeader('charset', 'UTF-8')
 
         """ rendering server response """
-        command = req.args.get("cmd", None)
+        # command = req.args.get("cmd", None)
         html = """
 <html lang="%s">
   <head>

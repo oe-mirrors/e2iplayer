@@ -153,7 +153,6 @@ gIPTVPlayerNotificationList = IPTVPlayerNotificationList()
 
 
 def GetIPTVNotify():
-    global gIPTVPlayerNotificationList
     return gIPTVPlayerNotificationList
 
 
@@ -165,7 +164,7 @@ class IPTVPlayerSleep(object):
         self.startTimestamp = 0
 
     def Sleep(self, timeout, blocking=True):
-        tmp = float(timeout)
+        # tmp = float(timeout)  # not used
         with self.mainLock:
             self.timeout = timeout
             self.startTimestamp = time.time()
@@ -191,5 +190,4 @@ gIPTVPlayerSleep = IPTVPlayerSleep()
 
 
 def GetIPTVSleep():
-    global gIPTVPlayerSleep
     return gIPTVPlayerSleep
