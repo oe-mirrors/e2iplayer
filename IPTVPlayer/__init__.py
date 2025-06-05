@@ -2,20 +2,26 @@
 
 from Components.Language import language
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
-import gettext
+from gettext import bindtextdomain, dgettext, gettext
+
+from enigma import eListbox
+try:
+	GRIDSUPPORT = eListbox.orGrid is not None
+except AttributeError:
+	GRIDSUPPORT = False
 
 PluginLanguageDomain = "IPTVPlayer"
 PluginLanguagePath = "Extensions/IPTVPlayer/locale"
 
 
 def localeInit():
-	gettext.bindtextdomain(PluginLanguageDomain, resolveFilename(SCOPE_PLUGINS, PluginLanguagePath))
+	bindtextdomain(PluginLanguageDomain, resolveFilename(SCOPE_PLUGINS, PluginLanguagePath))
 
 
 def _(txt):
-	t = gettext.dgettext(PluginLanguageDomain, txt)
+	t = dgettext(PluginLanguageDomain, txt)
 	if t == txt:
-		t = gettext.gettext(txt)
+		t = gettext(txt)
 	return t
 
 

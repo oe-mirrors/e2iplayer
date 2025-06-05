@@ -69,6 +69,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBox
 import Plugins.Extensions.IPTVPlayer.components.asynccall as asynccall
 from Plugins.Extensions.IPTVPlayer.components.playerselector import PlayerSelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT
 ######################################################
 gDownloadManager = None
 
@@ -343,7 +344,7 @@ class E2iPlayerWidget(Screen):
             if self["list"].visible:
                 item = self.getSelItem()
                 self.downloadable = self.isDownloadableType(item.type)
-                if self.downloadable and item.urlItems[0].url.startswith('file://'):  # workaround for LocalMedia
+                if self.downloadable and item and item.urlItems[0].url.startswith('file://'):  # workaround for LocalMedia
                     self.downloadable = False
         except Exception:
             printExc()
@@ -1164,7 +1165,8 @@ class E2iPlayerWidget(Screen):
         for item in groupsList:
             self.displayGroupsList.append((item.title, item.name))
         self.displayGroupsList.append((_('All'), 'all'))
-        self.displayGroupsList.append((_("Configuration"), "config"))
+        if not GRIDSUPPORT:
+            self.displayGroupsList.append((_("Configuration"), "config"))
 
         # if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
         #    self.displayGroupsList.append((_("Update"), "update"))
@@ -1294,7 +1296,8 @@ class E2iPlayerWidget(Screen):
                 self.displayHostsList.sort(key=lambda t: tuple(str(t[0]).lower()))
             except Exception:
                 self.displayHostsList.sort()
-        self.displayHostsList.append((_("Configuration"), "config"))
+        if not GRIDSUPPORT:
+            self.displayHostsList.append((_("Configuration"), "config"))
 
         # prepare info message when some host or update cannot be used
         errorMessage = ""
