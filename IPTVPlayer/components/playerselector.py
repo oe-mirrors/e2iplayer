@@ -11,7 +11,6 @@ from enigma import ePoint, getDesktop
 from Tools.LoadPixmap import LoadPixmap
 from Components.Label import Label
 from Components.config import config
-from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
@@ -55,8 +54,8 @@ if GRIDSUPPORT:
                 <eLabel position="0,50" size="1080,2" zPosition="2" backgroundColor="#808080" />
                 <eLabel position="0,556" size="1080,2" zPosition="2" backgroundColor="#808080" />
                 <widget source="Title" render="Label" position="10,10" zPosition="1" size="350,32" font="Regular; 24" halign="left" valign="center" transparent="1" />
-                <widget name="statustext" position="10,522" size="1060,30" font="Regular;20" valign="center" halign="center" foregroundColor="bernstein" />
-	            <widget source="grid" render="Listbox" position="10,60" size="1060,450" conditional="grid" listOrientation="grid" scrollbarMode="showOnDemand" itemSpacing="20,20" itemAlignment="center" backgroundColorSelected="#24111112" alphatest="blend">
+                <widget name="statustext" position="10,522" size="1060,30" font="Regular;20" valign="center" halign="center" foregroundColor="#00ffffff" />
+	            <widget source="grid" render="Listbox" position="10,60" size="1060,450" conditional="grid" listOrientation="grid" scrollbarMode="showOnDemand" itemSpacing="20,20" itemAlignment="center" backgroundColorSelected="#24111112">
                     <templates>
                         <template name="Default" fonts="Regular;20">
                             <mode name="default" itemHeight="145" itemWidth="145">
@@ -102,8 +101,8 @@ if GRIDSUPPORT:
                 <eLabel position="0,75" size="1620,3" zPosition="2" backgroundColor="#808080" />
                 <eLabel position="0,834" size="1620,3" zPosition="2" backgroundColor="#808080" />
                 <widget source="Title" render="Label" position="15,15" zPosition="1" size="525,48" font="Regular; 36" halign="left" valign="center" transparent="1" />
-                <widget name="statustext" position="15,783" size="1590,45" font="Regular;30" valign="center" halign="center" foregroundColor="bernstein" />
-                <widget source="grid" render="Listbox" position="15,90" size="1590,675" conditional="grid" listOrientation="grid" scrollbarMode="showOnDemand" itemSpacing="30,30" itemAlignment="center" backgroundColorSelected="#24111112" alphatest="blend">
+                <widget name="statustext" position="15,783" size="1590,45" font="Regular;30" valign="center" halign="center" foregroundColor="#00ffffff" />
+                <widget source="grid" render="Listbox" position="15,90" size="1590,675" conditional="grid" listOrientation="grid" scrollbarMode="showOnDemand" itemSpacing="30,30" itemAlignment="center" backgroundColorSelected="#24111112">
                     <templates>
                         <template name="Default" fonts="Regular;20">
                             <mode name="default" itemHeight="145" itemWidth="145">
@@ -164,7 +163,6 @@ if GRIDSUPPORT:
                 "blue": (self.keyBlue, "")
             }, prio=0, description="")
 
-            # self.session.nav.event.append(self.__event)
             self.onClose.append(self.__onClose)
             self.onLayoutFinish.append(self.layoutFinished)
 
@@ -189,7 +187,6 @@ if GRIDSUPPORT:
                 self["statustext"].setText(self.currList[idx][0])
 
         def __onClose(self):
-            # self.session.nav.event.remove(self.__event)
             self.onClose.remove(self.__onClose)
             try:
                 if self.reorderingMode and self.numOfLockedItems > 0:
@@ -325,7 +322,6 @@ if GRIDSUPPORT:
             return None
 
         def reInitDisplayList(self):
-            # self.lastSelection = self.currLine * self.numOfCol + self.dispX
             self.numOfItems = len(self.currList)
             self.initDisplayList()
 
