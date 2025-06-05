@@ -92,6 +92,7 @@ class IPTVDMWidget(Screen):
     def __init__(self, session, downloadmanager):
         self.session = session
         Screen.__init__(self, session, mandatoryWidgets=["downloadlist"])
+        self.skinName = ["IPTVDMScreen", "IPTVDMWidget"]
 
         self.currentService = self.session.nav.getCurrentlyPlayingServiceReference()
         self.session.nav.event.append(self.__event)
@@ -533,6 +534,7 @@ class IPTVDMNotificationWidget(Screen):
     def __init__(self, session):
         Screen.__init__(self, session)
         self.skin = IPTVDMNotificationWidget.skin
+        self.skinName = ["IPTVDMNotificationScreen", "IPTVDMNotificationWidget"]
         self['message_label'] = Label(_(" "))
 
     def setText(self, text):

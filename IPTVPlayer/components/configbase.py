@@ -57,7 +57,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
 
         Screen.__init__(self, session)
 
-        self.skinName = ["ConfigBaseWidget"]
+        self.skinName = ["ConfigBaseWidgetScreen", "ConfigBaseWidget"]
 
         self.onChangedEntry = []
         self.list = []

@@ -158,6 +158,8 @@ class E2iPlayerWidget(Screen):
                 printExc("Skin read error: " + path)
 
         Screen.__init__(self, session)
+        self.skinName = ["E2iPlayerWidgetScreen", "E2iPlayerWidget"]
+
         self.recorderMode = False  # j00zek
 
         self.currentService = self.session.nav.getCurrentlyPlayingServiceReference()

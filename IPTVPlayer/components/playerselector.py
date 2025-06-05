@@ -142,12 +142,14 @@ if GRIDSUPPORT:
             """
             self.skin = skinFHD if FHD else skinHD
             Screen.__init__(self, session)
+            self.skinName = ["PlayerSelectorScreen", "PlayerSelectorWidget"]
+
             self.setTitle("E2iPlayer %s" % GetIPTVPlayerVersion())
             self["key_menu"] = StaticText(_("MENU"))
             self["key_red"] = StaticText(_("Sort Mode"))
-            self["key_green"] = StaticText(_("More - Menu"))
-            self["key_yellow"] = StaticText(_("Hide/Active Group"))
-            self["key_blue"] = StaticText(_("Download manager"))
+            self["key_green"] = StaticText(_("Hide/Active Group"))
+            self["key_yellow"] = StaticText(_("Download manager"))
+            self["key_blue"] = StaticText(_("More"))
             self["grid"] = List([])
             self["grid"].onSelectionChanged.append(self.selectionChanged)
 
@@ -238,7 +240,7 @@ if GRIDSUPPORT:
         def keySetup(self):
             self.close((_("Configuration"), "config"))
 
-        def keyGreen(self):
+        def keyBlue(self):
             printDBG(">> PlayerSelectorWidget.keyMenu")
             options = []
             selItem = self.getSelectedItem()
@@ -328,10 +330,10 @@ if GRIDSUPPORT:
         def initDisplayList(self):
             self.updateIcons()
 
-        def keyBlue(self):
+        def keyYellow(self):
             self.close((_("Download manager"), "IPTVDM"))
 
-        def keyYellow(self):
+        def keyGreen(self):
             self.close((_("Disable/Enable groups"), "config_groups"))
 
 

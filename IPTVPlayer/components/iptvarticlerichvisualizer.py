@@ -78,7 +78,7 @@ class IPTVArticleRichVisualizer(Screen):
                 skin += """<ePixmap zPosition="2" position="%d,%d" size="%d,%d" pixmap="%s" transparent="1" alphatest="blend" />\n""" % (pageItemX, self.richDesc['page_item_start_y'], self.richDesc['page_item_size'], self.richDesc['page_item_size'], GetIconDir('radio_button_off.png'))
         skin += '</screen>'
         self.skin = skin
-        self.skinName = "IPTVArticleRichVisualizerWidget"
+        self.skinName = ["IPTVArticleRichVisualizerScreen", "IPTVArticleRichVisualizer"]
 
     def __init__(self, session, artItem, addParams):
         self.session = session
