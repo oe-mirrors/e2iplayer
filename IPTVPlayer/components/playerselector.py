@@ -55,7 +55,7 @@ if GRIDSUPPORT:
                 <eLabel position="0,556" size="1080,2" zPosition="2" backgroundColor="#808080" />
                 <widget source="Title" render="Label" position="10,10" zPosition="1" size="350,32" font="Regular; 24" halign="left" valign="center" transparent="1" />
                 <widget name="statustext" position="10,522" size="1060,30" font="Regular;20" valign="center" halign="center" foregroundColor="#00ffffff" />
-	            <widget source="grid" render="Listbox" position="10,60" size="1060,450" conditional="grid" listOrientation="grid" scrollbarMode="showOnDemand" itemSpacing="20,20" itemAlignment="center" backgroundColorSelected="#24111112">
+                <widget source="grid" render="Listbox" position="10,60" size="1060,450" conditional="grid" listOrientation="grid" scrollbarMode="showOnDemand" itemSpacing="20,20" itemAlignment="center" backgroundColorSelected="#24111112">
                     <templates>
                         <template name="Default" fonts="Regular;20">
                             <mode name="default" itemHeight="145" itemWidth="145">
@@ -68,8 +68,8 @@ if GRIDSUPPORT:
                                 <pixmap index="0" position="22,22" size="135,135" alpha="blend" scale="centerScaled"/>
                             </mode>
                         </template>
-	                </templates>
-	            </widget>
+                    </templates>
+                </widget>
                 <widget source="key_menu" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/menu.png" position="10,570" size="32,20" conditional="key_menu" alphatest="blend">
                     <convert type="ConditionalShowHide" />
                 </widget>
@@ -115,7 +115,7 @@ if GRIDSUPPORT:
                                 <pixmap index="0" position="22,22" size="135,135" alpha="blend" scale="centerScaled"/>
                             </mode>
                         </template>
-	                </templates>
+                    </templates>
                 </widget>
                 <widget source="key_menu" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/menu.png" position="15,855" size="48,30" conditional="key_menu" alphatest="blend">
                     <convert type="ConditionalShowHide" />
