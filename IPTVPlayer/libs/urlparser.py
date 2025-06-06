@@ -684,7 +684,7 @@ class urlparser:
             'liveonscore.to': self.pp.parserLIVEONSCORETV,
             'lookhd.xyz': self.pp.parserTXNEWSNETWORK,
             'louishide.com': self.pp.parserONLYSTREAMTV,
-            'lulustream.com': self.pp.parserONLYSTREAMTV,
+            'lulustream.com': self.pp.parserJWPLAYER,
             'lulu.st': self.pp.parserJWPLAYER,
             'luluvdo.com': self.pp.parserJWPLAYER,
             'luluvdoo.com': self.pp.parserJWPLAYER,
@@ -13564,6 +13564,10 @@ class pageParser(CaptchaHelper):
         https://mixdrop.co/f/1f13jq
         https://mixdrop.co/e/1f13jq
         """
+
+        if '.co/' in baseUrl:
+            baseUrl = baseUrl.replace('.co/', '.my/')
+
         baseUrl = strwithmeta(baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader(browser='firefox')
         referer = baseUrl.meta.get('Referer')
