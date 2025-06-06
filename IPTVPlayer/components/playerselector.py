@@ -141,7 +141,7 @@ if GRIDSUPPORT:
             </screen>
             """
             self.skin = skinFHD if FHD else skinHD
-            Screen.__init__(self, session)
+            Screen.__init__(self, session, mandatoryWidgets=["grid"])
             self.skinName = ["PlayerSelectorScreen", "PlayerSelectorWidget"]
 
             self.setTitle("E2iPlayer %s" % GetIPTVPlayerVersion())
