@@ -119,7 +119,7 @@ config.plugins.iptvplayer.numOfRow = ConfigSelection(default="0", choices=[("1",
 config.plugins.iptvplayer.numOfCol = ConfigSelection(default="0", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5"), ("6", "6"), ("7", "7"), ("8", "8"), ("0", "auto")])
 
 config.plugins.iptvplayer.skin = ConfigSelection(default="auto", choices=GetSkinsList())
-
+config.plugins.iptvplayer.skinforceinternal = ConfigYesNo(default=False)
 # Pin code
 config.plugins.iptvplayer.fakePin = ConfigSelection(default="fake", choices=[("fake", "****")])
 config.plugins.iptvplayer.pin = ConfigText(default="0000", fixed_size=False)
@@ -305,6 +305,7 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry(_("Set pin code"), config.plugins.iptvplayer.fakePin))
 
         list.append(getConfigListEntry(_("Skin"), config.plugins.iptvplayer.skin))
+        list.append(getConfigListEntry(_("Force internal Skin"), config.plugins.iptvplayer.skinforceinternal))
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))
         if config.plugins.iptvplayer.showcover.value:
             list.append(getConfigListEntry(_("    Allowed formats of thumbnails"), config.plugins.iptvplayer.allowedcoverformats))
@@ -396,25 +397,22 @@ class ConfigMenu(ConfigBaseWidget):
         if 'exteplayer' in playersValues or 'extgstplayer' in playersValues or 'auto' in playersValues:
             list.append(getConfigListEntry(_("External movie player config"), config.plugins.iptvplayer.fakExtMoviePlayerList))
 
+        list.append(getConfigListEntry(_("The default aspect ratio for the external player"), config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio))
+
         list.append(getConfigListEntry(_("----- OTHER SETTINGS -----"), ))
         list.append(getConfigListEntry(_("Autoplay start delay"), config.plugins.iptvplayer.autoplay_start_delay))
         list.append(getConfigListEntry(_("The number of items in the search history"), config.plugins.iptvplayer.search_history_size))
         list.append(getConfigListEntry(_("Block wmv files"), config.plugins.iptvplayer.ZablokujWMV))
         list.append(getConfigListEntry(_("Show IPTVPlayer in extension list"), config.plugins.iptvplayer.showinextensions))
         list.append(getConfigListEntry(_("Show IPTVPlayer in main menu"), config.plugins.iptvplayer.showinMainMenu))
-        list.append(getConfigListEntry(_("Debug logs"), config.plugins.iptvplayer.debugprint))
-
-        list.append(getConfigListEntry(_("----- MORE OPTIONS -----"), ))
-        # list.append(getConfigListEntry(_("Last checked version"), config.plugins.iptvplayer.updateLastCheckedVersion))
-        # list.append(getConfigListEntry(_("Show all version in the update menu"), config.plugins.iptvplayer.hiddenAllVersionInUpdate))
-        list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
-        list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
-        list.append(getConfigListEntry(_("The default aspect ratio for the external player"), config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio))
-
-        # list.append(getConfigListEntry("exteplayer3path", config.plugins.iptvplayer.exteplayer3path))
-        list.append(getConfigListEntry(_("MIPS Floating Point Architecture"), config.plugins.iptvplayer.plarformfpuabi))
         list.append(getConfigListEntry(_("E2iPlayer auto start at Enigma2 start"), config.plugins.iptvplayer.plugin_autostart))
         list.append(getConfigListEntry(_("Auto start method"), config.plugins.iptvplayer.plugin_autostart_method))
+        list.append(getConfigListEntry(_("Debug logs"), config.plugins.iptvplayer.debugprint))
+
+        list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
+        list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
+
+        list.append(getConfigListEntry(_("MIPS Floating Point Architecture"), config.plugins.iptvplayer.plarformfpuabi))
         list.append(getConfigListEntry(_("Prefer hlsld for playlist with alt. media"), config.plugins.iptvplayer.prefer_hlsdl_for_pls_with_alt_media))
         list.append(getConfigListEntry(_("Hosts List Type-NOT FINISHED"), config.plugins.iptvplayer.hostsListType))
 
