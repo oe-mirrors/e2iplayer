@@ -47,9 +47,6 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             <widget source="key_red" render="Label"  position="10,10" zPosition="2" size="700,35" valign="center" halign="left"   font="Regular;22" transparent="1" foregroundColor="red" />
             <widget name="footnote"    position="10,10" zPosition="2" size="700,35" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" />
             <widget source="key_green" render="Label" position="10,10" zPosition="2" size="700,35" valign="center" halign="right"  font="Regular;22" transparent="1" foregroundColor="green" />
-
-            <widget source="key_blue"   render="Label" position="0,0" zPosition="2" size="700,35" valign="center" halign="right"  font="Regular;22" transparent="1" foregroundColor="green" />
-            <widget source="key_yellow" render="Label" position="0,0" zPosition="2" size="700,35" valign="center" halign="right"  font="Regular;22" transparent="1" foregroundColor="green" />
         </screen>"""
 
     def __init__(self, session):
@@ -68,17 +65,12 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self["footnote"] = Label(_(" "))
         self["key_red"] = StaticText(_("Cancel"))
 
-        self["key_blue"] = StaticText()
-        self["key_yellow"] = StaticText()
-
         self["actions"] = ActionMap(["SetupActions", "ColorActions", "WizardActions", "ListboxActions", "IPTVPlayerListActions"],
             {
                 "cancel": self.keyExit,
                 "green": self.keySave,
                 "ok": self.keyOK,
                 "red": self.keyCancel,
-                "yellow": self.keyYellow,
-                "blue": self.keyBlue,
                 "menu": self.keyMenu,
 
                 "up": self.keyUp,
@@ -96,7 +88,6 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self.onLayoutFinish.append(self.layoutFinished)
         self.onClose.append(self.__onClose)
         self.isOkEnabled = False
-        self.hiddenOptionsSecretCode = ""
 
     def __del__(self):
         printDBG("ConfigBaseWidget.__del__ -------------------------------")
@@ -118,12 +109,6 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self.isOkEnabled = self.isOkActive()
         self.isSelectable = self.isSelectableActive()
         self.setOKLabel()
-
-    def isHiddenOptionsUnlocked(self):
-        if "ybybyybb" == self.hiddenOptionsSecretCode:
-            return True
-        else:
-            return False
 
     def setOKLabel(self):
         if self.isSelectable:
@@ -162,8 +147,8 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
 
     def isChanged(self):
         bChanged = False
-        for x in self["config"].list:
-            if x[1].isChanged():
+        for item in self["config"].list:
+            if len(item) > 1 and item[1].isChanged():
                 bChanged = True
                 break
         printDBG("ConfigMenu.isChanged bChanged[%r]" % bChanged)
@@ -193,11 +178,12 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self.saveAndClose()
 
     def saveOrCancel(self, operation="save"):
-        for x in self["config"].list:
-            if "save" == operation:
-                x[1].save()
-            else:
-                x[1].cancel()
+        for item in self["config"].list:
+            if len(item) > 1:
+                if "save" == operation:
+                    item[1].save()
+                else:
+                    item[1].cancel()
         if "save" == operation:
             configfile.save()
 
@@ -283,22 +269,8 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
     def keyCancel(self):
         self.cancelAndClose()
 
-    def keyYellow(self):
-        self.hiddenOptionsSecretCode += "y"
-        self.runSetup()
-        self.keyPageUp()
-
-    def keyBlue(self):
-        self.hiddenOptionsSecretCode += "b"
-        self.runSetup()
-        self.keyPageDown()
-
-    def keyMenu(self):  # hide/unhide hidden options
-        if self.hiddenOptionsSecretCode == "ybybyybb":
-            self.hiddenOptionsSecretCode = ""
-        else:
-            self.hiddenOptionsSecretCode = "ybybyybb"
-        self.runSetup()
+    def keyMenu(self):
+        ConfigListScreen.keyMenu(self)
 
     def keyUp(self):
         if self["config"].instance is not None:
