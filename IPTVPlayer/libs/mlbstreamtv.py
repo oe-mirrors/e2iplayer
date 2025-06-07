@@ -9,13 +9,12 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, getConfigListEntry, ConfigInteger
 import re
-import urllib.parse
 import base64
 from datetime import datetime, timedelta
 ############################################
@@ -176,7 +175,7 @@ class MLBStreamTVApi(CBaseHostClass):
 
         cUrl = self.cm.meta['url']
         tmp = self.cm.ph.getDataBeetwenMarkers(data, 'unescape(', ')', False)[1].strip()
-        data = urllib.parse.unquote(data[1:-1]) + data
+        data = urllib_unquote(data[1:-1]) + data
 
         printDBG("+++")
         printDBG(data)

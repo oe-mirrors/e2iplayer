@@ -11,10 +11,7 @@ from Plugins.Extensions.IPTVPlayer.components.recaptcha_v2widget import UnCaptch
 from Plugins.Extensions.IPTVPlayer.libs import ph
 
 ###################################################
-# FOREIGN import
-###################################################
-import urllib.parse
-import re
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
 ###################################################
 
 
@@ -84,7 +81,7 @@ class UnCaptchaReCaptcha:
             if retArg is not None and len(retArg) and retArg[0]:
                 answer = retArg[0]
                 printDBG('>>>>>>>> Captcha answer[%s]' % (answer))
-                post_data = urllib.parse.urlencode({'c': cval, 'response': answer}, doseq=True)
+                post_data = urllib_urlencode({'c': cval, 'response': answer}, doseq=True)
                 printDBG(str(post_data))
             else:
                 break

@@ -14,21 +14,27 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, strDecode, iterDictItems, ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin, urlparse, urlunparse
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
-import http.cookiejar as cookielib
-from io import BytesIO
-basestring = str
-unichr = chr
+if isPY2():
+    import cookielib
+    try:
+        from cStringIO import StringIO
+    except Exception:
+        from StringIO import StringIO
+else:
+    import http.cookiejar as cookielib
+    from io import BytesIO
+    basestring = str
+    file = open
+    unichr = chr
 from Components.config import config, ConfigText, configfile
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_addinfourl, urllib_unquote, urllib_quote_plus, urllib_urlencode, urllib_quote, \
                                                       urllib2_HTTPRedirectHandler, urllib2_BaseHandler, urllib2_HTTPHandler, urllib2_HTTPError, \
                                                       urllib2_URLError, urllib2_build_opener, urllib2_urlopen, urllib2_HTTPCookieProcessor, \
                                                       urllib2_HTTPSHandler, urllib2_ProxyHandler, urllib2_Request
+###################################################
 # FOREIGN import
 ###################################################
 import base64
-from urllib.request import urlopen, build_opener, HTTPRedirectHandler, addinfourl, HTTPHandler, HTTPSHandler, BaseHandler, HTTPCookieProcessor, ProxyHandler, Request
-import urllib.parse
-from urllib.error import URLError, HTTPError
 try:
     import ssl
 except Exception:
@@ -36,29 +42,36 @@ except Exception:
 import os
 import re
 import time
-import http.cookiejar
 import unicodedata
 try:
     import pycurl
 except Exception:
     pass
-
-from io import StringIO
-
-import gzip
-from urllib.parse import urljoin, urlparse, urlunparse
+try:
+    import gzip
+except Exception:
+    pass
 from binascii import hexlify
 ###################################################
 
 
 def DecodeGzipped(data):
-    buf = BytesIO(data)
-    f = gzip.GzipFile(fileobj=buf)
-    return f.read()
+    if isPY2():
+        buf = StringIO(data)
+        f = gzip.GzipFile(fileobj=buf)
+        return f.read()
+    else:
+        #return gzip.decompress(data)
+        buf = BytesIO(data)
+        f = gzip.GzipFile(fileobj=buf)
+        return f.read()
 
 
 def EncodeGzipped(data):
-    f = BytesIO()
+    if isPY2():
+        f = StringIO()
+    else:
+        f = BytesIO()
     gzf = gzip.GzipFile(mode="wb", fileobj=f, compresslevel=1)
     gzf.write(data)
     gzf.close()
@@ -67,10 +80,11 @@ def EncodeGzipped(data):
     return encoded
 
 
-class NoRedirection(HTTPRedirectHandler):
+class NoRedirection(urllib2_HTTPRedirectHandler):
     def http_error_302(self, req, fp, code, msg, headers):
-        infourl = addinfourl(fp, headers, req.get_full_url())
-		# infourl.status = code
+        infourl = urllib_addinfourl(fp, headers, req.get_full_url())
+        if isPY2():  # status attribute is missing in p3 version of the addinfourl
+            infourl.status = code
         infourl.code = code
         return infourl
     http_error_300 = http_error_302
@@ -79,8 +93,8 @@ class NoRedirection(HTTPRedirectHandler):
     http_error_307 = http_error_302
 
 
-class MultipartPostHandler(BaseHandler):
-    handler_order = HTTPHandler.handler_order - 10
+class MultipartPostHandler(urllib2_BaseHandler):
+    handler_order = urllib2_HTTPHandler.handler_order - 10
 
     def http_request(self, request):
         data = request.get_data()
@@ -249,13 +263,16 @@ class CParsingHelper:
 
     @staticmethod
     def getNormalizeStr(txt, idx=None):
-        POLISH_CHARACTERS = {'ą': 'a', 'ć': 'c', 'ę': 'ę', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ż': 'z', 'ź': 'z',
-                             'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N', 'Ó': 'O', 'Ś': 'S', 'Ż': 'Z', 'Ź': 'Z',
-                             'á': 'a', 'é': 'e', 'í': 'i', 'ñ': 'n', 'ú': 'u', 'ü': 'u',
-                             'Á': 'A', 'É': 'E', 'Í': 'I', 'Ñ': 'N', 'Ú': 'U', 'Ü': 'U',
+        POLISH_CHARACTERS = {u'ą': u'a', u'ć': u'c', u'ę': u'ę', u'ł': u'l', u'ń': u'n', u'ó': u'o', u'ś': u's', u'ż': u'z', u'ź': u'z',
+                             u'Ą': u'A', u'Ć': u'C', u'Ę': u'E', u'Ł': u'L', u'Ń': u'N', u'Ó': u'O', u'Ś': u'S', u'Ż': u'Z', u'Ź': u'Z',
+                             u'á': u'a', u'é': u'e', u'í': u'i', u'ñ': u'n', u'ó': u'o', u'ú': u'u', u'ü': u'u',
+                             u'Á': u'A', u'É': u'E', u'Í': u'I', u'Ñ': u'N', u'Ó': u'O', u'Ú': u'U', u'Ü': u'U',
                             }
-        if isinstance(txt, bytes):
+        if isPY2():
             txt = txt.decode('utf-8')
+        else:  # PY3
+            if isinstance(txt, bytes):
+                txt = txt.decode('utf-8')
         if None is not idx:
             txt = txt[idx]
         nrmtxt = unicodedata.normalize('NFC', txt)
@@ -267,7 +284,10 @@ class CParsingHelper:
                     ret_str.append(item)
             else:  # pure ASCII character
                 ret_str.append(item)
-        return ''.join(ret_str)
+        if isPY2():
+            return ''.join(ret_str).encode('utf-8')
+        else:
+            return ''.join(ret_str)
 
     @staticmethod
     def isalpha(txt, idx=None):
@@ -364,7 +384,7 @@ class common:
     def buildHTTPQuery(query):
         def _process(query, data, key_prefix):
             if isinstance(data, dict):
-                for key, value in data.items():
+                for key, value in iterDictItems(data):
                     key = '%s[%s]' % (key_prefix, key) if key_prefix else key
                     _process(query, value, key)
             elif isinstance(data, list):
@@ -444,7 +464,7 @@ class common:
         return self.geolocation.get('countryCode', '').lower()
 
     def _pyCurlLoadCookie(self, cookiefile, ignoreDiscard=True, ignoreExpires=False):
-        cj = http.cookiejar.MozillaCookieJar()
+        cj = cookielib.MozillaCookieJar()
         f = open(cookiefile)
         lines = f.readlines()
         f.close()
@@ -461,7 +481,10 @@ class common:
                 lineNeedFix = True
             if lineNeedFix:
                 lines[idx] = '\t'.join(fields)
-        cj._really_load(BytesIO(''.join(lines)), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
+        if isPY2():
+            cj._really_load(StringIO(''.join(lines)), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
+        else:
+            cj._really_load(BytesIO(''.join(lines)), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
         return cj
 
     def clearCookie(self, cookiefile, leaveNames=[], removeNames=None, ignoreDiscard=True, ignoreExpires=False):
@@ -518,7 +541,7 @@ class common:
                     continue
                 value = cookiesDict[name]
                 if unquote:
-                    value = urllib.parse.unquote(value)
+                    value = urllib_unquote(value)
                 ret += '%s=%s; ' % (name, value)
         except Exception:
             printExc()
@@ -543,7 +566,10 @@ class common:
         out_data = None
         sts = False
 
-        CurrBuffer = BytesIO()
+        if isPY2():
+            CurrBuffer = StringIO()
+        else:
+            CurrBuffer = BytesIO()
         checkFromFirstBytes = params.get('check_first_bytes', [])
         fileHandler = None
         firstAttempt = [True]
@@ -944,7 +970,7 @@ class common:
                     if key in responseHeaders:
                         metadata[key.lower()] = responseHeaders[key]
 
-            for header, value in responseHeaders.items():
+            for header, value in iterDictItems(responseHeaders):
                 metadata[header.lower()] = responseHeaders[header]
 
     def getPage(self, url, addParams={}, post_data=None):
@@ -960,7 +986,7 @@ class common:
                 addParams['return_data'] = True
             response = self.getURLRequestData(addParams, post_data)
             status = True
-        except HTTPError as e:
+        except urllib2_HTTPError as e:
             try:
                 printExc()
                 if e.code == 308:
@@ -985,7 +1011,7 @@ class common:
                     e.fp.close()
             except Exception:
                 printExc()
-        except URLError as e:
+        except urllib2_URLError as e:
             printExc()
             errorMsg = str(e)
             if 'ssl_protocol' not in addParams and 'TLSV1_ALERT_PROTOCOL_VERSION' in errorMsg:
@@ -1010,7 +1036,7 @@ class common:
             response = None
             status = False
 
-        if addParams['return_data'] and status and not isinstance(response, str):
+        if addParams['return_data'] and status and not isinstance(response, basestring):
             status = False
 
         return (status, response)
@@ -1107,18 +1133,33 @@ class common:
 
             checkFromFirstBytes = addParams.get('check_first_bytes', [])
             OK = True
-            if 'maintype' in addParams and addParams['maintype'] != downHandler.headers.maintype:
-                printDBG("common.getFile wrong maintype! requested[%r], retrieved[%r]" % (addParams['maintype'], downHandler.headers.maintype))
-                if 0 == len(checkFromFirstBytes):
-                    downHandler.close()
-                OK = False
+            if 'maintype' in addParams:
+                if isPY2():
+                    if addParams['maintype'] != downHandler.headers.maintype:
+                        printDBG("common.getFile wrong maintype! requested[%r], retrieved[%r]" % (addParams['maintype'], downHandler.headers.maintype))
+                        if 0 == len(checkFromFirstBytes):
+                            downHandler.close()
+                        OK = False
+                else:  # PY3
+                    #printDBG('!!!!! downHandler.headers: %s!!!!!' % downHandler.headers )
+                    if addParams['maintype'] not in str(downHandler.headers):  # silly catching Content-Type: image/png from header
+                        printDBG("common.getFile wrong maintype! requested[%s], retrieved[%s]" % (addParams['maintype'], str(downHandler.headers)))
+                        if 0 == len(checkFromFirstBytes):
+                            downHandler.close()
+                        OK = False
 
             if OK and 'subtypes' in addParams:
                 OK = False
                 for item in addParams['subtypes']:
-                    if item == downHandler.headers.subtype:
-                        OK = True
-                        break
+                    if isPY2():
+                        if item == downHandler.headers.subtype:
+                            OK = True
+                            break
+                    else:  # PY3
+                        if item in str(downHandler.headers):
+                            printDBG("common.getFile found '%s' subtype in header" % item)
+                            OK = True
+                            break
 
             if OK or len(checkFromFirstBytes):
                 blockSize = addParams.get('block_size', 8192)
@@ -1166,7 +1207,7 @@ class common:
         return dictRet
 
     def getUrllibSSLProtocolVersion(self, protocolName):
-        if not isinstance(protocolName, str):
+        if not isinstance(protocolName, basestring):
             GetIPTVNotify().push('getUrllibSSLProtocolVersion error. Please report this problem to iptvplayere2@gmail.com', 'error', 40)
             return protocolName
         if protocolName == 'TLSv1_2':
@@ -1176,7 +1217,7 @@ class common:
         return None
 
     def getPyCurlSSLProtocolVersion(self, protocolName):
-        if not isinstance(protocolName, str):
+        if not isinstance(protocolName, basestring):
             GetIPTVNotify().push('getPyCurlSSLProtocolVersion error. Please report this problem to iptvplayere2@gmail.com', 'error', 40)
             return protocolName
         if protocolName == 'TLSv1_2':
@@ -1195,16 +1236,16 @@ class common:
             # NEEDS FURTHER INVESTIGATION !!!
 
             if len(customOpeners) > 0:
-                opener = build_opener(*customOpeners)
+                opener = urllib2_build_opener(*customOpeners)
                 if timeout is not None:
                     response = opener.open(req, timeout=timeout)
                 else:
                     response = opener.open(req)
             else:
                 if timeout is not None:
-                    response = urlopen(req, timeout=timeout)
+                    response = urllib2_urlopen(req, timeout=timeout)
                 else:
-                    response = urlopen(req)
+                    response = urllib2_urlopen(req)
             return response
 
         if IsMainThread():
@@ -1216,7 +1257,7 @@ class common:
         if 'max_data_size' in params and not params.get('return_data', False):
             raise Exception("return_data == False is not accepted with max_data_size.\nPlease also note that return_data == False is deprecated and not supported with PyCurl HTTP backend!")
 
-        cj = http.cookiejar.MozillaCookieJar()
+        cj = cookielib.MozillaCookieJar()
         response = None
         req = None
         out_data = None
@@ -1260,11 +1301,11 @@ class common:
             try:
                 for cookieKey in list(params.get('cookie_items', {}).keys()):
                     printDBG("cookie_item[%s=%s]" % (cookieKey, params['cookie_items'][cookieKey]))
-                    cookieItem = http.cookiejar.Cookie(version=0, name=cookieKey, value=params['cookie_items'][cookieKey], port=None, port_specified=False, domain='', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
+                    cookieItem = cookielib.Cookie(version=0, name=cookieKey, value=params['cookie_items'][cookieKey], port=None, port_specified=False, domain='', domain_specified=False, domain_initial_dot=False, path='/', path_specified=True, secure=False, expires=None, discard=True, comment=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)
                     cj.set_cookie(cookieItem)
             except Exception:
                 printExc()
-            customOpeners.append(HTTPCookieProcessor(cj))
+            customOpeners.append(urllib2_HTTPCookieProcessor(cj))
 
         if params.get('no_redirection', False):
             customOpeners.append(NoRedirection())
@@ -1282,12 +1323,12 @@ class common:
                     ctx = ssl._create_unverified_context(sslProtoVer)
                 else:
                     ctx = ssl._create_unverified_context()
-                customOpeners.append(HTTPSHandler(context=ctx))
+                customOpeners.append(urllib2_HTTPSHandler(context=ctx))
             except Exception:
                 pass
         elif sslProtoVer is not None:
             ctx = ssl.SSLContext(sslProtoVer)
-            customOpeners.append(HTTPSHandler(context=ctx))
+            customOpeners.append(urllib2_HTTPSHandler(context=ctx))
 
         # proxy support
         if self.useProxy:
@@ -1299,13 +1340,13 @@ class common:
             http_proxy = params['http_proxy']
         if '' != http_proxy:
             printDBG('getURLRequestData USE PROXY')
-            customOpeners.append(ProxyHandler({"http": http_proxy}))
-            customOpeners.append(ProxyHandler({"https": http_proxy}))
+            customOpeners.append(urllib2_ProxyHandler({"http": http_proxy}))
+            customOpeners.append(urllib2_ProxyHandler({"https": http_proxy}))
 
         pageUrl = params['url']
         proxy_gateway = params.get('proxy_gateway', '')
         if proxy_gateway != '':
-            pageUrl = proxy_gateway.format(urllib.parse.quote_plus(pageUrl, ''))
+            pageUrl = proxy_gateway.format(urllib_quote_plus(pageUrl, ''))
         printDBG("pageUrl: [%s]" % pageUrl)
         if '","' in pageUrl:  # points incorrectly formatted dict or list
             pageUrl = pageUrl.split('"', 1)[0]  # " is incorrect char for url, shouldn't be there so removing it and everything after it
@@ -1319,11 +1360,11 @@ class common:
                 customOpeners.append(MultipartPostHandler())
                 dataPost = post_data
             else:
-                dataPost = urllib.parse.urlencode(post_data)
+                dataPost = urllib_urlencode(post_data)
             dataPost = ensure_binary(dataPost)
-            req = Request(pageUrl, dataPost, headers)
+            req = urllib2_Request(pageUrl, dataPost, headers)
         else:
-            req = Request(pageUrl, None, headers)
+            req = urllib2_Request(pageUrl, None, headers)
 
         if not params.get('return_data', False):
             out_data = urlOpen(req, customOpeners, timeout)
@@ -1346,7 +1387,7 @@ class common:
                 else:
                     data = response.read(max)
                 response.close()
-            except HTTPError as e:
+            except urllib2_HTTPError as e:
                 ignoreCodeRanges = params.get('ignore_http_code_ranges', [(404, 404), (500, 500)])
                 ignoreCode = False
                 metadata['status_code'] = e.code
@@ -1424,7 +1465,10 @@ class common:
                 if encoding not in ['', 'UTF-8']:
                     printDBG(">> encoding[%s]" % encoding)
                     try:
-                        data = data.decode(encoding)
+                        if isPY2():
+                            data = data.decode(encoding).encode('UTF-8')
+                        else:
+                            data = data.decode(encoding)
                     except Exception:
                         printExc()
                     metadata['orig_charset'] = encoding
@@ -1443,7 +1487,7 @@ class common:
 
     def iriToUri(self, iri):
         try:
-            if isinstance(iri, bytes):
+            if isPY2() or isinstance(iri, bytes):
                 iri = iri.decode('utf-8')
             parts = urlparse(iri)
             encodedParts = []
@@ -1465,5 +1509,5 @@ class common:
     def makeABCList(self, tab=['0 - 9']):
         strTab = list(tab)
         for i in range(65, 91):
-            strTab.append(str(chr(i)))
+            strTab.append(str(unichr(i)))
         return strTab

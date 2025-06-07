@@ -1,22 +1,35 @@
 # -*- encoding: utf-8 -*-
+
+###################################################
+#module run in different context then e2iplayer, must have separate version checking and assigments
+import sys
+if sys.version_info[0] == 2:  # PY2
+    from urllib import quote as urllib_quote
+    from urllib2 import Request as urllib2_Request, HTTPSHandler as urllib2_HTTPSHandler, build_opener as urllib2_build_opener, HTTPError as urllib2_HTTPError
+    from BaseHTTPServer import BaseHTTPRequestHandler
+else:  # PY3
+    from urllib.parse import quote as urllib_quote
+    from urllib.request import Request as urllib2_Request, HTTPSHandler as urllib2_HTTPSHandler, build_opener as urllib2_build_opener
+    from urllib.error import HTTPError as urllib2_HTTPError
+    from http.server import BaseHTTPRequestHandler
+###################################################
+
 import socket
 import hashlib
 import hmac
 import time
-from urllib.request import HTTPSHandler, Request, build_opener
-import urllib.parse
-from urllib.error import HTTPError
 import base64
-import sys
-import ssl
 import traceback
-from http.server import BaseHTTPRequestHandler
-import json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from binascii import hexlify
 import threading
 
 import signal
 import os
+import ssl
 
 
 def signal_handler(sig, frame):
@@ -57,14 +70,14 @@ def getPage(url, headers={}, post_data=None):
 
     try:
         ctx = ssl._create_unverified_context()
-        customOpeners.append(HTTPSHandler(context=ctx))
+        customOpeners.append(urllib2_HTTPSHandler(context=ctx))
     except Exception:
         pass
 
     sts = 0
     data = ''
     try:
-        req = Request(url)
+        req = urllib2_Request(url)
         for key in headers:
             req.add_header(key, headers[key])
 
@@ -72,11 +85,11 @@ def getPage(url, headers={}, post_data=None):
         printDBG(req.headers)
         printDBG("++++HEADERS END++++")
 
-        opener = build_opener(*customOpeners)
+        opener = urllib2_build_opener(*customOpeners)
         response = opener.open(req)
         data = response.read()
         sts = response.getcode()
-    except HTTPError as e:
+    except urllib2_HTTPError as e:
         global LAST_HTTP_ERROR_CODE
         global LAST_HTTP_ERROR_DATA
         LAST_HTTP_ERROR_CODE = e.code
@@ -87,6 +100,13 @@ def getPage(url, headers={}, post_data=None):
     except Exception:
         printExc()
     return sts, data
+
+
+def _fromhex(hex):
+    if sys.version_info < (2, 7, 0):
+        return hex.decode('hex')
+    else:
+        return bytearray.fromhex(hex)
 
 
 class MYJDException(BaseException):
@@ -177,10 +197,10 @@ class Myjdapi:
         else:
             old_token = self._server_encryption_token
         new_token = hashlib.sha256()
-        new_token.update(old_token + bytearray.fromhex(self._session_token))
+        new_token.update(old_token + _fromhex(self._session_token))
         self._server_encryption_token = new_token.digest()
         new_token = hashlib.sha256()
-        new_token.update(self._device_secret + bytearray.fromhex(self._session_token))
+        new_token.update(self._device_secret + _fromhex(self._session_token))
         self._device_encryption_token = new_token.digest()
 
     def _signature_create(self, key, data):
@@ -238,7 +258,7 @@ class Myjdapi:
             query = [path + "?"]
             for param in params:
                 if param[0] != "encryptedLoginSecret":
-                    query += ["%s=%s" % (param[0], urllib.parse.quote(param[1]))]
+                    query += ["%s=%s" % (param[0], urllib_quote(param[1]))]
                 else:
                     query += ["&%s=%s" % (param[0], param[1])]
             query += ["rid=" + str(self._request_id)]
@@ -343,7 +363,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
 
         session_token = self.path.split('/t_', 1)[-1].split('_', 1)[0]
         new_token = hashlib.sha256()
-        new_token.update(jd.get_device_secret() + bytearray.fromhex(session_token))
+        new_token.update(jd.get_device_secret() + _fromhex(session_token))
         encryption_token = new_token.digest()
 
         printDBG("SESSION TOKEN: %s" % session_token)
@@ -487,7 +507,7 @@ if __name__ == "__main__":
     PASSWORD = sys.argv[3]
     JDNAME = "IPTVPlayer@" + sys.argv[4]
     CAPTCHA_DATA = base64.b64decode(sys.argv[5])
-    if isinstance(CAPTCHA_DATA, bytes):
+    if sys.version_info[0] == 3 and isinstance(CAPTCHA_DATA, bytes):  # ensure string in PY3
         CAPTCHA_DATA = CAPTCHA_DATA.decode('utf-8', 'ignore')
     CAPTCHA_DATA = json.loads(CAPTCHA_DATA)
     CAPTCHA_DATA['id'] = int(time.time() * 1000)

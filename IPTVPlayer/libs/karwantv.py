@@ -15,7 +15,7 @@ try:
     import json
 except Exception:
     import simplejson as json
-from urllib.parse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ############################################
 
 ###################################################

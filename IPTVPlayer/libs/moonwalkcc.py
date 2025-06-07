@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
 ###################################################
 # FOREIGN import
 ###################################################
@@ -19,7 +19,7 @@ import re
 import base64
 import copy
 from binascii import unhexlify
-from urllib.parse import urlparse, parse_qsl, urlencode
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, parse_qsl
 from Components.config import config, ConfigSelection, ConfigYesNo
 ###################################################
 
@@ -264,7 +264,7 @@ class MoonwalkParser():
                 if item[0] in ['"', "'"]:
                     item = item[1:-1]
                 query['season'] = item
-                seasonsTab.append({'title': _('Season') + ' ' + item, 'id': int(item), 'url': '%s?%s' % (baseUrl, urlencode(query))})
+                seasonsTab.append({'title': _('Season') + ' ' + item, 'id': int(item), 'url': '%s?%s' % (baseUrl, urllib_urlencode(query))})
             seasonsTab.sort(key=lambda item: item['id'])
         except Exception:
             printExc()
@@ -297,7 +297,7 @@ class MoonwalkParser():
                 for item in episodeData:
                     item = item.strip()
                     query['episode'] = item
-                    url = '%s?%s' % (baseUrl, urlencode(query))
+                    url = '%s?%s' % (baseUrl, urllib_urlencode(query))
 
                     episodesTab.append({'title': _('Episode') + ' ' + item, 'id': int(item), 'url': strwithmeta(url, {'host_name': 'moonwalk.cc'})})
 
@@ -309,7 +309,7 @@ class MoonwalkParser():
                     if item[0] in ['"', "'"]:
                         item = item[1:-1]
                     query['episode'] = item
-                    url = '%s?%s' % (baseUrl, urlencode(query))
+                    url = '%s?%s' % (baseUrl, urllib_urlencode(query))
                     episodesTab.append({'title': _('Episode') + ' ' + item, 'id': int(item), 'url': strwithmeta(url, {'host_name': 'moonwalk.cc'})})
             episodesTab.sort(key=lambda item: item['id'])
         except Exception:

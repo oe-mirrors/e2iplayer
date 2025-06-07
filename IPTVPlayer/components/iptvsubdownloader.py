@@ -16,12 +16,14 @@ from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKey
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+if not isPY2():
+    basestring = str
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
 from os import path as os_path
-from urllib.parse import quote as urllib_quote
 
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -210,7 +212,7 @@ class IPTVSubDownloaderWidget(Screen):
         self.session.openWithCallback(self.confirmMovieTitleCallBack, GetVirtualKeyboard(), title=(_("Confirm the title of the movie")), text=self.movieTitle)
 
     def confirmMovieTitleCallBack(self, text=None):
-        if isinstance(text, str):
+        if isinstance(text, basestring):
             self.movieTitle = text
             self.listSubtitlesProviders()
         else:

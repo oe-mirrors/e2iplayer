@@ -16,7 +16,9 @@ from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKey
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+if not isPY2():
+    basestring = str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -302,7 +304,7 @@ class IPTVMultipleInputBox(Screen):
             return
 
         def VirtualKeyBoardCallBack(newTxt):
-            if isinstance(newTxt, str):
+            if isinstance(newTxt, basestring):
                 self[self.activeInput].setText(newTxt)
             self.setKeyboardMode()
 

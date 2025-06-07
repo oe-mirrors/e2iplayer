@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 
+#module run in different context, must have separate version checking or just try
+try:  # PY2
+    from urllib2 import Request as urllib2_Request, urlopen as urllib2_urlopen
+except Exception:  # PY3
+    from urllib.request import Request as urllib2_Request, urlopen as urllib2_urlopen
 
-from urllib.request import Request, urlopen
 import sys
 import traceback
 import time
@@ -35,12 +40,12 @@ def getPage(url, params={}):
     printDBG('url [%s]' % url)
     sts = False
     try:
-        req = Request(url)
+        req = urllib2_Request(url)
         if 'Referer' in params:
             req.add_header('Referer', params['Referer'])
         if 'User-Agent' in params:
             req.add_header('User-Agent', params['User-Agent'])
-        resp = urlopen(req)
+        resp = urllib2_urlopen(req)
         data = resp.read()
         sts = True
     except Exception:

@@ -7,13 +7,13 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetPyScriptCmd, MergeDicts, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, hex_md5
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import duktape_execute
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 ###################################################
 # FOREIGN import
 ###################################################
@@ -154,7 +154,7 @@ class BilaSportPwApi(CBaseHostClass):
             sts, data = self.getPage(scriptUrl)
             if not sts:
                 return []
-            hash = '/tmp/%s' % hex_md5(data)
+            hash = '/tmp/%s' % hexlify(md5(ensure_binary(data)).digest())
             data = 'btoa=function(t){return Duktape.enc("base64",t)},XMLHttpRequest=function(){},XMLHttpRequest.prototype.open=function(t,e,n,o,p){print(e)};' + data + 'tmp = new XMLHttpRequest();'
             try:
                 with open(hash + '.js', 'w') as f:

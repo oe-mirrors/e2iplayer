@@ -5,8 +5,11 @@ import threading
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.asynccall import AsyncMethod
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback
+
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+
 from enigma import eTimer
-import six
 
 
 class AutocompleteSearch:
@@ -34,7 +37,10 @@ class AutocompleteSearch:
         self.historyList = []
         for item in historyList:
             try:
-                self.historyList.append((item.decode('utf-8').lower(), item))
+                if isPY2():
+                    self.historyList.append((item.decode('utf-8').lower(), item))
+                else:
+                    self.historyList.append((ensure_str(text).lower(), item))
             except Exception:
                 printExc()
 
@@ -112,17 +118,18 @@ class AutocompleteSearch:
             if stamp != prevStamp:
                 if self.historyList:
                     try:
-                        ltext = six.ensure_str(text).lower()
+                        if isPY2():
+                            text = text.decode('utf-8').lower()
+                        else:
+                            text = ensure_str(text).lower()
                         for item in self.historyList:
-                            if item[0] == ltext:
+                            if item[0] == text:
                                 retList.append(item[1])
                     except Exception:
                         printExc()
 
                 try:
-                    text = six.ensure_str(text).lower()
-                    locale = six.ensure_str(locale)
-                    retList = provider.getSuggestions(text, locale)
+                    retList = provider.getSuggestions(ensure_str(text), ensure_str(locale))
                 except Exception:
                     retList = None
                     printExc()

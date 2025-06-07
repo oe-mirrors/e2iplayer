@@ -13,12 +13,11 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigYesNo, ConfigText, getConfigListEntry
-from urllib.parse import urlencode
 from datetime import datetime, timedelta
 ############################################
 
@@ -200,7 +199,7 @@ class UstvnowApi:
 
     def getPasskey(self):
 
-        url = 'http://m.ustvnow.com/gtv/1/live/viewdvrlist?%s' % urlencode({'token': self.token})
+        url = 'http://m.ustvnow.com/gtv/1/live/viewdvrlist?%s' % urllib_urlencode({'token': self.token})
         sts, data = self.cm.getPage(url)
         if not sts:
             return ''

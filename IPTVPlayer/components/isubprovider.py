@@ -13,10 +13,11 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetCookieDir, printDBG
 from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandler
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strEncode
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, strEncode
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 
 import re
-import urllib.parse
 from os import listdir as os_listdir, path as os_path
 
 
@@ -232,6 +233,12 @@ class CBaseSubProviderClass:
 
     @staticmethod
     def getStr(v, default=''):
+        if isPY2:
+            if type(v) == type(u''):
+                return v.encode('utf-8')
+            elif type(v) == type(''):
+                return v
+            return default
         if isinstance(v, str):
             return v
         return default
@@ -299,7 +306,7 @@ class CBaseSubProviderClass:
             if currUrl is None or not self.cm.isValidUrl(currUrl):
                 url = mainUrl + url
             else:
-                url = urllib.parse.urljoin(currUrl, url)
+                url = urljoin(currUrl, url)
         return url
 
     def handleService(self, index, refresh=0):
@@ -388,7 +395,7 @@ class CBaseSubProviderClass:
     def imdbGetMoviesByTitle(self, title):
         printDBG('CBaseSubProviderClass.imdbGetMoviesByTitle title[%s]' % (title))
 
-        sts, data = self.cm.getPage("http://www.imdb.com/find?ref_=nv_sr_fn&q=%s&s=tt" % urllib.parse.quote_plus(title))
+        sts, data = self.cm.getPage("http://www.imdb.com/find?ref_=nv_sr_fn&q=%s&s=tt" % urllib_quote_plus(title))
         if not sts:
             return False, []
         list = []
@@ -498,7 +505,7 @@ class CBaseSubProviderClass:
                     printDBG("downloadFileData: replace fileName[%s] with [%s]" % (fileName, tmpFileName))
                     fileName = tmpFileName
             else:
-                fileName = urllib.parse.unquote(self.cm.meta['url'].split('/')[-1])
+                fileName = urllib_unquote(self.cm.meta['url'].split('/')[-1])
 
             return data, fileName
 

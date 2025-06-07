@@ -1,8 +1,17 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 
+###################################################
+#module run in different context then e2iplayer, must have separate version checking and assigments
+import sys
+if sys.version_info[0] == 2:  # PY2
+    from urllib import urlencode as urllib_urlencode
+    from urllib2 import Request as urllib2_Request, urlopen as urllib2_urlopen
+else:  # PY3
+    from urllib.parse import urlencode as urllib_urlencode
+    from urllib.request import Request as urllib2_Request, urlopen as urllib2_urlopen
+###################################################
 
-from urllib.request import Request, urlopen
-from urllib.parse import urlencode
 import sys
 import traceback
 import time
@@ -41,12 +50,12 @@ def getPage(url, params={}):
     printDBG('url [%s]' % url)
     sts = False
     try:
-        req = Request(url)
+        req = urllib2_Request(url)
         if 'Referer' in params:
             req.add_header('Referer', params['Referer'])
         if 'User-Agent' in params:
             req.add_header('User-Agent', params['User-Agent'])
-        resp = urlopen(req)
+        resp = urllib2_urlopen(req)
         data = resp.read()
         sts = True
     except Exception:
@@ -61,7 +70,7 @@ def getLink(width, mediaId, referer, userAgent):
     rpin = "_rpin.{0:x}".format(randint(0, 1e15))
 
     apiUrl = WS_URL.format(randint(0, 0xffffff), mediaId, 'channel', 'lp-live') + '/1/ustream'
-    url = apiUrl + '?' + urlencode([('media', mediaId), ('referrer', referer), ('appVersion', 2), ('application', 'channel'), ('rsid', rsid), ('appId', 11), ('rpin', rpin), ('type', 'viewer')])
+    url = apiUrl + '?' + urllib_urlencode([('media', mediaId), ('referrer', referer), ('appVersion', 2), ('application', 'channel'), ('rsid', rsid), ('appId', 11), ('rpin', rpin), ('type', 'viewer')])
 
     params = {'Referer': referer, 'User-Agent': userAgent}
     sts, data = getPage(url, params)

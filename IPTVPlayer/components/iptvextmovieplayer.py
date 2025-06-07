@@ -46,6 +46,10 @@ from skin import parseColor
 from datetime import timedelta
 try:
     from math import floor, fabs
+    try:
+        import json
+    except Exception:
+        import simplejson as json
 except Exception:
     printExc()
 
@@ -53,7 +57,6 @@ from os import path as os_path
 import re
 import time
 import socket
-import json
 
 ###################################################
 

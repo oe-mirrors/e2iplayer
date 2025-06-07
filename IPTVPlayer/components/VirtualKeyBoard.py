@@ -7,6 +7,10 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3, Cover2
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.Widgets import innerWidgetTextRight
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+if not isPY2():
+    unichr = chr
 ###################################################
 # FOREIGN import
 ###################################################
@@ -103,7 +107,10 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
         self["key_red"] = Label(_("Cancel"))
 
         self["header"] = Label(title)
-        self["text"] = Input(text=ensure_str(text))  # in p3 str is always unicode, ensure_str used in case it would be a bytes.
+        if isPY2():
+            self["text"] = Input(text=text.decode("utf-8", 'ignore'))  # str > unicode
+        else:
+            self["text"] = Input(text=ensure_str(text))  # in p3 str is always unicode, ensure_str used in case it would be a bytes.
         self["list"] = VirtualKeyBoardList([])
 
         self["actions"] = NumberActionMap(["OkCancelActions", "WizardActions", "ColorActions", "KeyboardInputActions", "InputBoxActions", "InputAsciiActions"],
@@ -161,21 +168,21 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
     def setLang(self, additionalParams):
         if 'keys_list' not in additionalParams:
             self.keys_list = [
-                ["EXIT", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "BACKSPACE"],
-                ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "-", "["],
-                ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "\\"],
-                ["<", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "CLEAR"],
-                ["SHIFT", "SPACE", "OK", "LEFT", "RIGHT"]]
+                [u"EXIT", u"1", u"2", u"3", u"4", u"5", u"6", u"7", u"8", u"9", u"0", u"BACKSPACE"],
+                [u"q", u"w", u"e", u"r", u"t", u"y", u"u", u"i", u"o", u"p", u"-", u"["],
+                [u"a", u"s", u"d", u"f", u"g", u"h", u"j", u"k", u"l", u";", u"'", u"\\"],
+                [u"<", u"z", u"x", u"c", u"v", u"b", u"n", u"m", u",", ".", u"/", u"CLEAR"],
+                [u"SHIFT", u"SPACE", u"OK", u"LEFT", u"RIGHT"]]
         else:
             self.keys_list = additionalParams['keys_list']
 
         if 'shiftkeys_list' not in additionalParams:
             self.shiftkeys_list = [
-                ["EXIT", "!", "@", "#", "$", "%", "^", "&", "(", ")", "=", "BACKSPACE"],
-                ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "*", "]"],
-                ["A", "S", "D", "F", "G", "H", "J", "K", "L", "?", '"', "|"],
-                [">", "Z", "X", "C", "V", "B", "N", "M", ";", ":", "_", "CLEAR"],
-                ["SHIFT", "SPACE", "OK", "LEFT", "RIGHT"]]
+                [u"EXIT", u"!", u"@", u"#", u"$", u"%", u"^", u"&", u"(", u")", u"=", u"BACKSPACE"],
+                [u"Q", u"W", u"E", u"R", u"T", u"Y", u"U", u"I", u"O", u"P", u"*", u"]"],
+                [u"A", u"S", u"D", u"F", u"G", u"H", u"J", u"K", u"L", u"?", u'"', u"|"],
+                [u">", u"Z", u"X", u"C", u"V", u"B", u"N", u"M", u";", u":", u"_", u"CLEAR"],
+                [u"SHIFT", u"SPACE", u"OK", u"LEFT", u"RIGHT"]]
         else:
             self.keys_list = additionalParams['shiftkeys_list']
 
@@ -260,11 +267,14 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
 
         elif text == "SPACE":
             self["text"].insertChar(" ".encode("UTF-8"), self["text"].currPos, False, True)
-            self["text"].innerRight()
+            if isPY2():
+                innerWidgetTextRight(self["text"])
+            else:
+                self["text"].innerRight()
             self["text"].update()
 
         elif text == "OK":
-            self.close(self["text"].getText().encode("UTF-8"))
+            self.close(ensure_str(self["text"].getText()))
 
         elif text == "LEFT":
             self["text"].left()
@@ -274,7 +284,10 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
 
         else:
             self["text"].insertChar(text, self["text"].currPos, False, True)
-            self["text"].innerRight()
+            if isPY2():
+                innerWidgetTextRight(self["text"])
+            else:
+                self["text"].innerRight()
             self["text"].update()
 
     def ok(self):
@@ -329,7 +342,7 @@ class IPTVVirtualKeyBoardWithCaptcha(Screen):
 
     def keyGotAscii(self):
         self.smsChar = None
-        if self.selectAsciiKey(str(chr(getPrevAsciiCode()).encode('utf-8'))):
+        if self.selectAsciiKey(str(unichr(getPrevAsciiCode()).encode('utf-8'))):
             self.okClicked()
 
     def selectAsciiKey(self, char):

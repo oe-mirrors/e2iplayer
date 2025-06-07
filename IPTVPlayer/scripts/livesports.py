@@ -1,18 +1,35 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 
-
-from urllib.request import HTTPCookieProcessor, HTTPSHandler, Request, build_opener
-from urllib.error import HTTPError
+###################################################
+#module run in different context then e2iplayer, must have separate version checking and assigments
 import sys
+if sys.version_info[0] == 2:  # PY2
+    from urlparse import urlsplit, urlparse, parse_qs, urljoin
+    import cookielib
+    from urllib2 import HTTPSHandler as urllib2_HTTPSHandler, HTTPCookieProcessor as urllib2_HTTPCookieProcessor, \
+                        Request as urllib2_Request, build_opener as urllib2_build_opener, HTTPError as urllib2_HTTPError
+    import SocketServer
+    from SimpleHTTPServer import SimpleHTTPRequestHandler
+else:  # PY3
+    from urllib.parse import urlsplit, urlparse, parse_qs, urljoin
+    import http.cookiejar as cookielib
+    from urllib.request import HTTPSHandler as urllib2_HTTPSHandler, HTTPCookieProcessor as urllib2_HTTPCookieProcessor, \
+                               Request as urllib2_Request, build_opener as urllib2_build_opener
+    from urllib.error import HTTPError as urllib2_HTTPError
+    import socketserver as SocketServer
+    from http.server import SimpleHTTPRequestHandler
+###################################################
+try:
+    import json
+except Exception:
+    import simplejson as json
+
 import traceback
 import base64
-import socketserver
-import http.server
 import re
 import ssl
-from urllib.parse import urlparse, urljoin
-import json
-import http.cookiejar
+
 import time
 
 import signal
@@ -61,34 +78,34 @@ def getPage(url, params={}):
 
     try:
         ctx = ssl._create_unverified_context(params['ssl_protocol']) if params.get('ssl_protocol', None) is not None else ssl._create_unverified_context()
-        customOpeners.append(HTTPSHandler(context=ctx))
+        customOpeners.append(urllib2_HTTPSHandler(context=ctx))
     except Exception:
         pass
 
     if params.get('cookiefile'):
         if cj is None:
-            cj = http.cookiejar.MozillaCookieJar()
+            cj = cookielib.cookiejar.MozillaCookieJar()
             try:
                 cj.load(params['cookiefile'], ignore_discard=True)
             except IOError:
                 pass
-        customOpeners.append(HTTPCookieProcessor(cj))
+        customOpeners.append(urllib2_HTTPCookieProcessor(cj))
 
     sts = False
     data = None
     try:
-        req = Request(url)
+        req = urllib2_Request(url)
         for key in ('Referer', 'User-Agent', 'Origin', 'Accept-Encoding', 'Accept'):
             if key in params:
                 req.add_header(key, params[key])
         printDBG("++++HEADERS START++++")
         printDBG(req.headers)
         printDBG("++++HEADERS END++++")
-        opener = build_opener(*customOpeners)
+        opener = urllib2_build_opener(*customOpeners)
         resp = opener.open(req)
         data = resp.read()
         sts = True
-    except HTTPError as e:
+    except urllib2_HTTPError as e:
         data = e
     except Exception:
         printExc()
@@ -155,7 +172,7 @@ def getPageCF(url, params={}):
     return sts, data
 
 
-class Proxy(http.server.SimpleHTTPRequestHandler):
+class Proxy(SimpleHTTPRequestHandler):
     def do_GET(self):
         keyUrl = self.path
 
@@ -213,9 +230,9 @@ if __name__ == "__main__":
         elif scriptUrl.startswith('|'):
             scriptUrl = json.loads(base64.b64decode(scriptUrl))
 
-        socketserver.TCPServer.allow_reuse_address = True
-        # httpd = SocketServer.ForkingTCPServer(('127.0.0.1', port), Proxy)
-        httpd = socketserver.TCPServer(('127.0.0.1', port), Proxy)
+        SocketServer.TCPServer.allow_reuse_address = True
+        #httpd = SocketServer.ForkingTCPServer(('127.0.0.1', port), Proxy)
+        httpd = SocketServer.TCPServer(('127.0.0.1', port), Proxy)
         print('\n%s\n' % hlsUrl, file=sys.stderr)
         httpd.serve_forever()
     except KeyboardInterrupt:

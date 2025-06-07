@@ -9,10 +9,10 @@
 ###################################################
 # FOREIGN import
 ###################################################
-# try:
-import json
-# except Exception:
-#    import simplejson as json
+try:
+    import json
+except Exception:
+    import simplejson as json
 # e2icjson = None
 ############################################
 

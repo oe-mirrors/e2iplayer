@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse
 ###################################################
 
 ###################################################
@@ -27,7 +28,6 @@ from Components.Label import Label
 from Tools.Directories import fileExists
 import os
 import time
-from urllib.parse import urlparse
 ###################################################
 
 

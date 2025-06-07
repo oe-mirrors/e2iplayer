@@ -104,11 +104,16 @@ EXTRA ATTRIBUTES AND METHODS
 
 # $Id: keepalive.py,v 1.17 2006/12/08 00:14:16 mstenner Exp $
 
-from urllib.request import HTTPHandler, HTTPSHandler
-from urllib.error import URLError
-import http.client
 import socket
-import _thread
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib2_URLError, urllib2_HTTPHandler, urllib2_HTTPSHandler
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+if isPY2():
+    import thread
+    import httplib
+else:
+    import _thread as thread
+    import http.client as httplib
+
 
 DEBUG = None
 
@@ -224,7 +229,7 @@ class KeepAliveHandler:
     def do_open(self, req):
         host = req.host
         if not host:
-            raise URLError('no host given')
+            raise urllib2_URLError('no host given')
 
         try:
             h = self._cm.get_ready_conn(host)
@@ -250,8 +255,8 @@ class KeepAliveHandler:
                 self._cm.add(host, h, 0)
                 self._start_transaction(h, req)
                 r = h.getresponse()
-        except (socket.error, http.client.HTTPException) as err:
-            raise URLError(err)
+        except (socket.error, httplib.HTTPException) as err:
+            raise urllib2_URLError(err)
 
         if DEBUG:
             DEBUG.info("STATUS: %s, %s", r.status, r.reason)
@@ -288,7 +293,7 @@ class KeepAliveHandler:
             r = h.getresponse()
             # note: just because we got something back doesn't mean it
             # worked.  We'll check the version below, too.
-        except (socket.error, http.client.HTTPException):
+        except (socket.error, httplib.HTTPException):
             r = None
         except:
             # adding this block just in case we've missed
@@ -340,8 +345,8 @@ class KeepAliveHandler:
                     h.putrequest('GET', req.selector)
                 else:
                     h.putrequest('GET', req.get_selector())
-        except (socket.error, http.client.HTTPException) as err:
-            raise URLError(err)
+        except (socket.error, httplib.HTTPException) as err:
+            raise urllib2_URLError(err)
 
         for args in self.parent.addheaders:
             h.putheader(*args)
@@ -355,7 +360,7 @@ class KeepAliveHandler:
         return NotImplementedError
 
 
-class HTTPHandler(KeepAliveHandler, HTTPHandler):
+class HTTPHandler(KeepAliveHandler, urllib2_HTTPHandler):
     def __init__(self):
         KeepAliveHandler.__init__(self)
 
@@ -366,7 +371,7 @@ class HTTPHandler(KeepAliveHandler, HTTPHandler):
         return HTTPConnection(host)
 
 
-class HTTPSHandler(KeepAliveHandler, HTTPSHandler):
+class HTTPSHandler(KeepAliveHandler, urllib2_HTTPSHandler):
     def __init__(self, ssl_factory=None):
         KeepAliveHandler.__init__(self)
         if not ssl_factory:
@@ -387,7 +392,7 @@ class HTTPSHandler(KeepAliveHandler, HTTPSHandler):
             return HTTPSConnection(host)
 
 
-class HTTPResponse(http.client.HTTPResponse):
+class HTTPResponse(httplib.HTTPResponse):
     # we need to subclass HTTPResponse in order to
     # 1) add readline() and readlines() methods
     # 2) add close_connection() methods
@@ -408,9 +413,9 @@ class HTTPResponse(http.client.HTTPResponse):
 
     def __init__(self, sock, debuglevel=0, strict=0, method=None):
         if method:  # the httplib in python 2.3 uses the method arg
-            http.client.HTTPResponse.__init__(self, sock, debuglevel, method)
+            httplib.HTTPResponse.__init__(self, sock, debuglevel, method)
         else:  # 2.2 doesn't
-            http.client.HTTPResponse.__init__(self, sock, debuglevel)
+            httplib.HTTPResponse.__init__(self, sock, debuglevel)
         self.fileno = sock.fileno
         self.code = None
         self._rbuf = b""
@@ -420,7 +425,7 @@ class HTTPResponse(http.client.HTTPResponse):
         self._url = None     # (same)
         self._connection = None  # (same)
 
-    _raw_read = http.client.HTTPResponse.read
+    _raw_read = httplib.HTTPResponse.read
 
     def close(self):
         if self.fp:
@@ -490,10 +495,10 @@ class HTTPResponse(http.client.HTTPResponse):
         return list
 
 
-class HTTPConnection(http.client.HTTPConnection):
+class HTTPConnection(httplib.HTTPConnection):
     # use the modified response class
     response_class = HTTPResponse
 
 
-class HTTPSConnection(http.client.HTTPSConnection):
+class HTTPSConnection(httplib.HTTPSConnection):
     response_class = HTTPResponse

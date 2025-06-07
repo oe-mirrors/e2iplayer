@@ -11,10 +11,11 @@ from Screens.MessageBox import MessageBox
 from Components.config import config
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+###################################################
 # FOREIGN import
 ###################################################
 import time
-import urllib.parse
 from Components.config import config
 ###################################################
 
@@ -47,9 +48,9 @@ class UnCaptchahCaptcha:
             printDBG("Public IP of box: %s " % ip)
             # add port 443?
             # ip = ip + ":443"
-            apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=hcaptcha&sitekey=' + sitekey + '&json=1&pageurl=' + urllib.parse.quote(referer) + "&proxy=" + ip
+            apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=hcaptcha&sitekey=' + sitekey + '&json=1&pageurl=' + urllib_quote(referer) + "&proxy=" + ip
         else:
-            apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=hcaptcha&sitekey=' + sitekey + '&json=1&pageurl=' + urllib.parse.quote(referer)
+            apiUrl = self.getFullUrl('/in.php?key=') + apiKey + '&method=hcaptcha&sitekey=' + sitekey + '&json=1&pageurl=' + urllib_quote(referer)
 
         try:
             token = ''

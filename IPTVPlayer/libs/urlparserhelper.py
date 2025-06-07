@@ -8,6 +8,16 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper, common
 from Plugins.Extensions.IPTVPlayer.libs import m3u8
 ###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote
+try:
+    from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+except Exception:
+    printExc()
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+if not isPY2():
+    unichr = chr
+###################################################
 # FOREIGN import
 ###################################################
 from binascii import hexlify
@@ -15,16 +25,14 @@ import re
 import time
 import string
 import codecs
-import six
-from urllib.parse import unquote, urljoin
 ###################################################
 try:
     from hashlib import md5
 
     def hex_md5(e):
-        return md5(six.ensure_binary(e)).hexdigest()
+        return md5(ensure_binary(e)).hexdigest()
 except Exception:
-    from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
+    from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5 as md5
 
     def hex_md5(e):
         hashAlg = MD5()
@@ -32,7 +40,11 @@ except Exception:
 
 
 def int2base(x, base):
-    digs = string.digits + string.ascii_lowercase
+    printDBG('int2base(%s,%s)' % (x, base))  # temporary to catch why digits.append(digs[x % base]) sometimes returns TypeError: string indices must be integers
+    if isPY2():
+        digs = string.digits + string.lowercase
+    else:
+        digs = string.digits + string.ascii_lowercase
     if x < 0:
         sign = -1
     elif x == 0:
@@ -61,7 +73,7 @@ def JS_DateValueOf():
 
 
 def JS_FromCharCode(*args):
-    return ''.join(map(chr, args))
+    return ''.join(map(unichr, args))
 
 
 def unicode_escape(s):
@@ -254,7 +266,7 @@ def unpackJS(data, decryptionFun, addCode=''):
     except Exception:
         printExc('unpackJS compile algo code EXCEPTION')
         return ''
-    vGlobals = {"__builtins__": None, 'string': string, 'decodeURIComponent': unquote, 'unescape': unquote}
+    vGlobals = {"__builtins__": None, 'string': string, 'decodeURIComponent': urllib_unquote, 'unescape': urllib_unquote}
     vLocals = {'paramsTouple': None}
 
     try:

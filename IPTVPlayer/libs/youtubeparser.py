@@ -12,13 +12,14 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, urlunparse, parse_qsl
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 from datetime import timedelta
 from Components.config import config, ConfigSelection, ConfigYesNo
 ###################################################
@@ -222,7 +223,7 @@ class YouTubeParser():
         urlParts = urlparse(url)
         query = dict(parse_qsl(urlParts[4]))
         query.update(queryDict)
-        new_query = urlencode(query)
+        new_query = urllib_urlencode(query)
         new_url = urlunparse((urlParts[0], urlParts[1], urlParts[2], urlParts[3], new_query, urlParts[5]))
         return new_url
 
@@ -729,8 +730,11 @@ class YouTubeParser():
             r2 = list(self.findKeys(response, 'videoRenderer'))
 
             printDBG("---------Returned DICT ------------")
-            for item in r2:
-                printDBG(str(item))
+            if isPY2():
+                printDBG(json_dumps(r2))
+            else:
+                for item in r2:
+                    printDBG(str(item))
             printDBG("---------------------")
 
             for item in r2:

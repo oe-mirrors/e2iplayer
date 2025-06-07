@@ -309,7 +309,10 @@ def clean_html(string):
             printExc('WARNING')
 
     if STRIP_HTML_TAGS_C:  # and type(' ') != type(string):
-        return STRIP_HTML_TAGS_C.strip_html_tags(string)
+        if isPY2() and type(u' ') != type(str):
+            return STRIP_HTML_TAGS_C.strip_html_tags(string)
+        else: #PY3
+            return STRIP_HTML_TAGS_C.strip_html_tags(string)
 
     string = string.replace('<', ' <')
     string = string.replace('&nbsp;', ' ')

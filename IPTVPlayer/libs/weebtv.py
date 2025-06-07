@@ -7,12 +7,13 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import iterDictItems
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
-from urllib.parse import unquote_plus
 ############################################
 
 ###################################################
@@ -64,7 +65,7 @@ class WeebTvApi:
     def _jsonToSortedTab(self, data):
         strTab = []
         outTab = []
-        for v, k in data.items():
+        for v, k in iterDictItems(data):
             strTab.append(int(v))
             strTab.append(k)
             outTab.append(strTab)
@@ -90,7 +91,9 @@ class WeebTvApi:
         return ret
 
     def _getStr(self, v, default=''):
-        if isinstance(v, str):
+        if isPY2() and type(v) == type(u''):
+            return v.encode('utf-8')
+        elif type(v) == type(''):
             return v
         return default
 
@@ -199,7 +202,7 @@ class UrlParser:
     def getParam(self, params, name):
         try:
             result = params[name]
-            result = unquote_plus(result)
+            result = urllib_unquote_plus(result)
             return result
         except Exception:
             return None

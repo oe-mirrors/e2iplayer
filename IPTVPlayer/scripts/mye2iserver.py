@@ -1,14 +1,26 @@
 # -*- encoding: utf-8 -*-
 
-import base64
-from http.server import SimpleHTTPRequestHandler
-import json
-import socketserver
+###################################################
+#module run in different context then e2iplayer, must have separate version checking and assigments
 import sys
+if sys.version_info[0] == 2:  # PY2
+    from SimpleHTTPServer import SimpleHTTPRequestHandler
+    import SocketServer
+    from urlparse import urlsplit, urlparse, parse_qs, urljoin
+else:  # PY3
+    from http.server import SimpleHTTPRequestHandler
+    import socketserver as SocketServer
+    from urllib.parse import urlsplit, urlparse, parse_qs, urljoin
+###################################################
+try:
+    import json
+except Exception:
+    import simplejson as json
+
+import base64
 import os
 import traceback
 import signal
-from urllib.parse import urlsplit, parse_qs
 
 
 def signal_handler(sig, frame):
@@ -88,11 +100,11 @@ if __name__ == "__main__":
         siteKey = CAPTCHA_DATA['siteKey']
         captchaType = CAPTCHA_DATA['captchaType']
 
-        socketserver.TCPServer.allow_reuse_address = True
+        SocketServer.TCPServer.allow_reuse_address = True
         if captchaType == 'CF':
-            httpd = socketserver.TCPServer((IP, PORT), redirect_handler_factory('%s#e2itcf_sep_c=%s' % (siteUrl, siteKey)))
+            httpd = SocketServer.TCPServer((IP, PORT), redirect_handler_factory('%s#e2itcf_sep_c=%s' % (siteUrl, siteKey)))
         else:
-            httpd = socketserver.TCPServer((IP, PORT), redirect_handler_factory('%s/#e2it?k=%s&st=%s' % (siteUrl, siteKey, captchaType)))
+            httpd = SocketServer.TCPServer((IP, PORT), redirect_handler_factory('%s/#e2it?k=%s&st=%s' % (siteUrl, siteKey, captchaType)))
         print("Http Server Serving at port", PORT)
         httpd.serve_forever()
     except Exception:

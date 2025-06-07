@@ -15,17 +15,20 @@ from Components.config import config
 from skin import parseColor
 
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import isPY2
+if not isPY2():
+    basestring = str
 
 
 class CUrlItem:
     def __init__(self, name="", url="", urlNeedsResolve=0):
-        if isinstance(name, str):
+        if isinstance(name, basestring):
             self.name = name
         else:
             self.name = str(name)
 
         # used only for TYPE_VIDEO item
-        if isinstance(url, str):
+        if isinstance(url, basestring):
             self.url = url
         else:
             self.url = str(url)
@@ -65,22 +68,22 @@ class CDisplayListItem:
                 textColor='',
                 pinCode=''):
 
-        if isinstance(name, str):
+        if isinstance(name, basestring):
             self.name = name
         else:
             self.name = str(name)
 
-        if isinstance(description, str):
+        if isinstance(description, basestring):
             self.description = description
         else:
             self.description = str(description)
 
-        if isinstance(type, str):
+        if isinstance(type, basestring):
             self.type = type
         else:
             self.type = str(type)
 
-        if isinstance(iconimage, str):
+        if isinstance(iconimage, basestring):
             self.iconimage = iconimage
         else:
             self.iconimage = str(iconimage)
@@ -767,11 +770,10 @@ class CBaseHostClass:
 
     @staticmethod
     def getStr(v, default=''):
-        if isinstance(v, bytes):
-            return v.decode('utf-8')
-        elif isinstance(v, str):
-            return v
-        return default
+        try:
+            return ensure_str(v)
+        except Exception:
+            return default
 
     def getCurrList(self):
         return self.currList

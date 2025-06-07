@@ -3,7 +3,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from .asynccall import AsyncMethod
+from Plugins.Extensions.IPTVPlayer.components.asynccall import AsyncMethod
 from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
@@ -15,12 +15,13 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import mkdirs, \
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strDecode
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 ###################################################
 # FOREIGN import
 ###################################################
 import threading
-from urllib.parse import urljoin
 from binascii import hexlify
 from os import path as os_path, rename as os_rename
 from Components.config import config
@@ -86,14 +87,22 @@ class IconMenager:
     def stopWorkThread(self):
         self.lockDQ.acquire()
 
-        if self.workThread is not None and self.workThread.Thread.is_alive():
-            self.stopThread = True
+        if isPY2():
+            if self.workThread is not None and self.workThread.Thread.isAlive():
+                self.stopThread = True
+        else:
+            if self.workThread is not None and self.workThread.Thread.is_alive():
+                self.stopThread = True
 
         self.lockDQ.release()
 
     def runWorkThread(self):
-        if self.workThread is None or not self.workThread.Thread.is_alive():
-            self.workThread = AsyncMethod(self.processDQ)()
+        if isPY2():
+            if self.workThread is None or not self.workThread.Thread.isAlive():
+                self.workThread = AsyncMethod(self.processDQ)()
+        else:
+            if self.workThread is None or not self.workThread.Thread.is_alive():
+                self.workThread = AsyncMethod(self.processDQ)()
 
     def clearDQueue(self):
         self.lockDQ.acquire()
@@ -141,7 +150,7 @@ class IconMenager:
         if hashed == 0:
             hashAlg = MD5()
             name = hashAlg(item)
-            file = hexlify(name).decode("utf-8", "strict") + '.jpg'
+            file = strDecode(hexlify(name)) + '.jpg'
         else:
             file = item
         ret = False
@@ -160,7 +169,7 @@ class IconMenager:
 
         hashAlg = MD5()
         name = hashAlg(item)
-        filename = hexlify(name).decode("utf-8", "strict") + '.jpg'
+        filename = strDecode(hexlify(name)) + '.jpg'
 
         self.lockAA.acquire()
         file_path = self.queueAA.get(filename, '')
@@ -210,7 +219,7 @@ class IconMenager:
             if url != '':
                 hashAlg = MD5()
                 name = hashAlg(url)
-                file = hexlify(name).decode("utf-8", "strict") + '.jpg'
+                file = strDecode(hexlify(name)) + '.jpg'
 
                 # check if this image is not already available in cache AA list
                 if self.isItemInAAueue(file, 1):

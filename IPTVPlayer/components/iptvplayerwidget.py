@@ -70,6 +70,9 @@ import Plugins.Extensions.IPTVPlayer.components.asynccall as asynccall
 from Plugins.Extensions.IPTVPlayer.components.playerselector import PlayerSelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2, pVersion
+if not isPY2():
+    basestring = str
 ######################################################
 gDownloadManager = None
 
@@ -1576,7 +1579,7 @@ class E2iPlayerWidget(Screen):
         # retArg[2] - urlNeedsResolve
         if retArg and 3 == len(retArg):
             # check if we have URL
-            if isinstance(retArg[1], str):
+            if isinstance(retArg[1], basestring):
                 videoUrl = retArg[1]
                 if len(videoUrl) > 3:
                     # check if we need to resolve this URL

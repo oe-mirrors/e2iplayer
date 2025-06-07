@@ -1,11 +1,22 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 
-
-from urllib.request import Request, urlopen, build_opener, install_opener
+###################################################
+#module run in different context then e2iplayer, must have separate version checking and assigments
 import sys
+if sys.version_info[0] == 2:  # PY2
+    from urllib2 import Request as urllib2_Request, urlopen as urllib2_urlopen, build_opener as urllib2_build_opener, install_opener as urllib2_install_opener
+    import SocketServer
+    from SimpleHTTPServer import SimpleHTTPRequestHandler
+else:  # PY3
+    from urllib.request import Request as urllib2_Request, urlopen as urllib2_urlopen, build_opener as urllib2_build_opener, install_opener as urllib2_install_opener
+    import socketserver as SocketServer
+    from http.server import SimpleHTTPRequestHandler
+###################################################
+
+import time
 import traceback
-import socketserver
-from http.server import SimpleHTTPRequestHandler
+#import urlparse
 
 import signal
 import os
@@ -28,14 +39,14 @@ def getPage(url, params={}, post_data=None):
     data = None
     return_data = params.get('return_data', True)
     try:
-        req = Request(url, post_data, params)
+        req = urllib2_Request(url, post_data, params)
         if 'Referer' in params:
             req.add_header('Referer', params['Referer'])
         if 'User-Agent' in params:
             req.add_header('User-Agent', params['User-Agent'])
         if 'Connection' in params:
             req.add_header('Connection', params['Connection'])
-        resp = urlopen(req)
+        resp = urllib2_urlopen(req)
         if return_data:
             data = resp.read()
             resp.close()
@@ -93,12 +104,12 @@ if __name__ == "__main__":
         sys.path.insert(1, libsPath)
         from keepalive import HTTPHandler
         keepalive_handler = HTTPHandler()
-        opener = build_opener(keepalive_handler)
-        install_opener(opener)
+        opener = urllib2_build_opener(keepalive_handler)
+        urllib2_install_opener(opener)
 
         HTTP_HEADER.update({'User-Agent': userAgent, 'Referer': refererUrl})
-        socketserver.TCPServer.allow_reuse_address = True
-        httpd = socketserver.TCPServer(('127.0.0.1', port), Proxy)
+        SocketServer.TCPServer.allow_reuse_address = True
+        httpd = SocketServer.TCPServer(('127.0.0.1', port), Proxy)
         port = httpd.server_address[1]
         print('\nhttp://127.0.0.1:%s/%s\n' % (port, m3u8Url.replace('://', '/', 1)), file=sys.stderr)
         httpd.serve_forever()
