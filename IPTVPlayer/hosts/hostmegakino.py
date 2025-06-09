@@ -60,11 +60,11 @@ class MegaKino(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="poster grid-item', '</a>')
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
-            # icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'src="([^"]+)')[0]) webp
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'src="([^"]+)')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+)')[0])
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'line-clamp">([^<]+)')[0])
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'link': url, 'desc': desc})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'link': url, 'icon': icon, 'desc': desc})
             if 'taffel' in title or 'documentary' in url:
                 params.update({'category': 'list_episodes'})
                 self.addDir(params)

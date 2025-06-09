@@ -11,13 +11,12 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
 # FOREIGN import
 ###################################################
-import urllib.parse
 import re
-import urllib.parse
 ###################################################
 
 ###################################################
@@ -85,7 +84,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urllib.parse.urljoin(baseUrl, url)
+                return urljoin(baseUrl, url)
 
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -103,7 +102,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         post_data['page'] = cItem.get('page', 1)
         post_data['count'] = count
 
-        post_data = urllib.parse.urlencode(post_data) + '&year%5B%5D={0}&year%5B%5D={1}'.format(sYear, eYear)
+        post_data = urllib_urlencode(post_data) + '&year%5B%5D={0}&year%5B%5D={1}'.format(sYear, eYear)
         printDBG(post_data)
         return post_data
 

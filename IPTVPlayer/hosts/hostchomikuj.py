@@ -9,12 +9,11 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, fo
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigText, getConfigListEntry
-import urllib.parse
 from hashlib import md5
 try:
     import simplejson as json
@@ -173,7 +172,7 @@ class Chomikuj(CBaseHostClass):
         page = cItem.get('page', 1)
 
         if 'accounts' == searchType:
-            url = self.SEARCH_ACCOUNT_URL % (page, urllib.parse.quote_plus(searchPattern))
+            url = self.SEARCH_ACCOUNT_URL % (page, urllib_quote_plus(searchPattern))
             sts, data = self.requestJsonData(url)
             if not sts:
                 return
@@ -197,7 +196,7 @@ class Chomikuj(CBaseHostClass):
                 self.addDir(params)
         else:
             map = {"images": "Image", "video": "Video", "music": "Music"}
-            self.handleDataRequest(cItem, self.SEARCH_URL % (urllib.parse.quote_plus(searchPattern), page, map[searchType]))
+            self.handleDataRequest(cItem, self.SEARCH_URL % (urllib_quote_plus(searchPattern), page, map[searchType]))
 
     def handleProfile(self, cItem):
         printDBG("Chomikuj.handleProfile cItem[%s]" % cItem)

@@ -348,7 +348,7 @@ class E2iPlayerWidget(Screen):
             if self["list"].visible:
                 item = self.getSelItem()
                 self.downloadable = self.isDownloadableType(item.type)
-                if self.downloadable and item and item.urlItems[0].url.startswith('file://'):  # workaround for LocalMedia
+                if self.downloadable and item and item.urlItems and item.urlItems[0].url.startswith('file://'):  # workaround for LocalMedia
                     self.downloadable = False
         except Exception:
             printExc()
