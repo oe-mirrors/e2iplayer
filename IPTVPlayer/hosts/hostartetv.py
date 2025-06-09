@@ -13,7 +13,6 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 import time
 from datetime import datetime, timedelta
 ###################################################

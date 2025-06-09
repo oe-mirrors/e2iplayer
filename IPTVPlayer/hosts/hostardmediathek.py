@@ -8,18 +8,19 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+if not isPY2():
+    from functools import cmp_to_key
 ###################################################
 # FOREIGN import
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 from copy import deepcopy
-import urllib.parse
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 try:
     import simplejson as json
 except Exception:
     import json
-from functools import cmp_to_key
 ###################################################
 
 ###################################################
@@ -331,7 +332,7 @@ class ARDmediathek(CBaseHostClass):
         printDBG("ARDmediathek.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         if 'url' not in cItem:
-            cItem['url'] = self.getFullUrl('appdata/servlet/-/search?json&searchText={0}'.format(urllib.parse.quote_plus(searchPattern)))
+            cItem['url'] = self.getFullUrl('appdata/servlet/-/search?json&searchText={0}'.format(urllib_quote_plus(searchPattern)))
         self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):
@@ -454,7 +455,10 @@ class ARDmediathek(CBaseHostClass):
                                 return 1
                             else:
                                 return 0
-            tmpUrlTab.sort(key=cmp_to_key(_cmpLinks))
+            if isPY2():
+                tmpUrlTab.sort(_cmpLinks)
+            else:
+                tmpUrlTab.sort(key=cmp_to_key(_cmpLinks))
             onelinkmode = config.plugins.iptvplayer.ardmediathek_onelinkmode.value
             for item in tmpUrlTab:
                 url = item['url']
