@@ -46,6 +46,7 @@ except Exception:
 import gzip
 from urllib.parse import urljoin, urlparse, urlunparse
 from binascii import hexlify
+from shutil import move
 ###################################################
 
 try:
@@ -853,7 +854,7 @@ class common:
                 new_name = params['save_to_file'].replace(".webp", ".jpg")
                 printDBG("Change extension of webp image: %s" % new_name)
                 try:
-                    os.rename(params['save_to_file'], new_name)
+                    move(params['save_to_file'], new_name)
                     self.convertWebp(new_name)
                 except:
                     pass
@@ -887,7 +888,7 @@ class common:
                 img.save(output_path, format="png" if png else "jpeg", quality=80)
                 img.close()
                 os.remove(file_path)
-                os.rename(output_path, file_path)
+                move(output_path, file_path)
                 # printDBG("PCommon.convertWebp rename %s %s" % (output_path, file_path))
                 return
             except:
