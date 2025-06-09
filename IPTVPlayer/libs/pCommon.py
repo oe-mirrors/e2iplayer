@@ -15,7 +15,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, 
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin, urlparse, urlunparse
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 import http.cookiejar as cookielib
-from io import BytesIO
+from io import BytesIO, StringIO
 basestring = str
 unichr = chr
 from Components.config import config, ConfigText, configfile
@@ -43,12 +43,16 @@ try:
 except Exception:
     pass
 
-from io import StringIO
-
 import gzip
 from urllib.parse import urljoin, urlparse, urlunparse
 from binascii import hexlify
 ###################################################
+
+try:
+    from PIL import Image
+    hasPIL = True
+except ImportError:
+    hasPIL = False
 
 
 def DecodeGzipped(data):
@@ -423,7 +427,7 @@ class common:
                     # #define CURL_VERSION_ASYNCHDNS    (1<<7)
                     # we need to have ASYNC DNS to be able "cancel"
                     # request
-                    if verInfo[1].startswith('7.'):  # and 'wolfSSL' in verInfo[5]:
+                    if verInfo[1].startswith('7.') or verInfo[1].startswith('8.'):  # and 'wolfSSL' in verInfo[5]:
                         self.pyCurlAvailable = True
                     else:
                         self.pyCurlAvailable = False
@@ -461,7 +465,7 @@ class common:
                 lineNeedFix = True
             if lineNeedFix:
                 lines[idx] = '\t'.join(fields)
-        cj._really_load(BytesIO(''.join(lines)), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
+        cj._really_load(StringIO(''.join(lines)), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
         return cj
 
     def clearCookie(self, cookiefile, leaveNames=[], removeNames=None, ignoreDiscard=True, ignoreExpires=False):
@@ -841,17 +845,19 @@ class common:
                             break
                 else:
                     sts = True
-                    if metadata['content-type'] == 'image/webp':
-                        new_name = params['save_to_file'].replace(".jpg", ".webp")
-                        printDBG("Change extension of webp image: %s" % new_name)
-                        try:
-                            os.rename(params['save_to_file'], new_name)
-                            self.convertWebp(new_name)
-                        except:
-                            pass
 
             if fileHandler:
                 fileHandler.close()
+
+            if metadata['status_code'] == 200 and metadata['content-type'] == 'image/webp':
+                new_name = params['save_to_file'].replace(".webp", ".jpg")
+                printDBG("Change extension of webp image: %s" % new_name)
+                try:
+                    os.rename(params['save_to_file'], new_name)
+                    self.convertWebp(new_name)
+                except:
+                    pass
+
         except pycurl.error as e:
             try:
                 metadata['pycurl_error'] = (e[0], str(e[1]))
@@ -872,13 +878,23 @@ class common:
     def convertWebp(self, file_path, png=False):
         printDBG("PCommon.convertWebp %s" % file_path)
 
-        output_path = file_path.replace('.webp', '.jpg')
-        png_path = file_path.replace('.webp', '.png')
+        output_path = file_path + ".png" if png else ".jpg"
+        if hasPIL:
+            try:
+                img = Image.open(file_path)
+                # img.thumbnail((400, 300), Image.LANCZOS)
+                # printDBG("PCommon.convertWebp save %s" % output_path)
+                img.save(output_path, format="png" if png else "jpeg", quality=80)
+                img.close()
+                os.remove(file_path)
+                os.rename(output_path, file_path)
+                # printDBG("PCommon.convertWebp rename %s %s" % (output_path, file_path))
+                return
+            except:
+                printExc()
+
         if IsExecutable('ffmpeg'):
-            if png:
-                command = "ffmpeg -i %s %s && test -e %s && rm %s && mv %s %s" % (file_path, png_path, png_path, file_path, png_path, output_path)
-            else:
-                command = "ffmpeg -i %s %s && test -e %s && rm %s " % (file_path, output_path, output_path, file_path)
+            command = "ffmpeg -i %s %s && test -e %s && rm %s && mv %s %s " % (file_path, output_path, output_path, file_path, output_path, file_path)
 
             printDBG("Send command %s" % command)
             self.cmd = iptv_system(command)
@@ -1154,7 +1170,7 @@ class common:
                     bRet = True
 
                 # decode webp to jpeg
-                if file_path.endswith(".webp"):
+                if url.endswith(".webp"):
                     if addParams.get('webp_convert_to_png', False):
                         self.convertWebp(file_path, png=True)
                     else:
