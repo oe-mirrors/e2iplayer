@@ -1,11 +1,25 @@
 # -*- coding: utf-8 -*-
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, RemoveDisallowedFilenameChars, GetSubtitlesDir
 ###################################################
-
+# LOCAL import
+###################################################
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+# from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
+from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
+    printDBG,
+    RemoveDisallowedFilenameChars,
+    GetSubtitlesDir,
+)
+###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+###################################################
+# FOREIGN import
+###################################################
 import re
-import urllib.parse
+
+###################################################
+# Config options for HOST
+###################################################
 
 
 def GetConfigList():
@@ -37,7 +51,7 @@ class SubtitlesGrProvider(CBaseSubProviderClass):
     def listSubItems(self, cItem, nextCategory):
         printDBG("SubtitlesGrProvider.listSubItems")
         page = cItem.get('page', 0)
-        keywords = urllib.parse.quote_plus(self.params['confirmed_title'])
+        keywords = urllib_quote_plus(self.params['confirmed_title'])
         baseUrl = "http://gr.greek-subtitles.com/search.php?page=%s&name=%s" % (page, keywords)
 
         url = self.getFullUrl(baseUrl)

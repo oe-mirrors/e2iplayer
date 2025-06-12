@@ -1,14 +1,33 @@
 # -*- coding: utf-8 -*-
-import re
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, \
-                                                          RemoveDisallowedFilenameChars, GetSubtitlesDir, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
+    printDBG,
+    printExc,
+    GetDefaultLang,
+    RemoveDisallowedFilenameChars,
+    GetSubtitlesDir,
+    rm,
+)
+
+###################################################
+
+###################################################
+# FOREIGN import
+###################################################
+import re
+###################################################
+# Config options for HOST
+###################################################
 
 
 def GetConfigList():
     optionList = []
     return optionList
+###################################################
 
 
 class YoutubeComProvider(CBaseSubProviderClass):

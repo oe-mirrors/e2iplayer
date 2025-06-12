@@ -1,20 +1,49 @@
 # -*- coding: utf-8 -*-
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
 
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, byteify, \
-                                                          RemoveDisallowedFilenameChars, GetSubtitlesDir, GetTmpDir, rm, \
-                                                          MapUcharEncoding, GetPolishSubEncoding
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
+    printDBG,
+    printExc,
+    GetDefaultLang,
+    byteify,
+    RemoveDisallowedFilenameChars,
+    GetSubtitlesDir,
+    GetTmpDir,
+    rm,
+    MapUcharEncoding,
+    GetPolishSubEncoding,
+)
+
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote_plus
+###################################################
+# FOREIGN import
+###################################################
 import re
-from urllib.parse import quote_plus, unquote_plus
-import json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from Components.config import config
+###################################################
+# E2 GUI COMMPONENTS
+###################################################
+# from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
 from Screens.MessageBox import MessageBox
+###################################################
+
+###################################################
+# Config options for HOST
+###################################################
 
 
 def GetConfigList():
     optionList = []
     return optionList
+###################################################
 
 
 class Napisy24plProvider(CBaseSubProviderClass):
@@ -107,7 +136,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
     def getMoviesList(self, cItem, nextCategoryMovie):
         printDBG("Napisy24plProvider.getMoviesList")
         page = cItem.get('page', 1)
-        title = quote_plus(self.params['confirmed_title'])
+        title = urllib_quote_plus(self.params['confirmed_title'])
         url = self.getFullUrl('szukaj?page={0}&lang=0&search={1}&typ=0'.format(page, title))
 
         sts, data = self.getPage(url)
@@ -129,7 +158,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                     url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h2', '</h2>')[1])
                     if title == '':
-                        title = self.cleanHtmlStr(unquote_plus(url.split('/')[-1]).title())
+                        title = self.cleanHtmlStr(urllib_unquote_plus(url.split('/')[-1]).title())
                     desc = item.split('</h2>')[-1]
 
                     params = dict(cItem)
@@ -179,7 +208,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             season = self.cm.ph.getSearchGroups(item, 'sezon([0-9]+?)[^0-9]')[0]
             tmp = self.cm.ph.getDataBeetwenMarkers(item, '<tbody>', '</tbody>', False)[1]
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<tr ', '</tr>')
-            eTab = []
+            # eTab = []
 
             promEpisode = str(self.dInfo.get('episode'))
             promEpisodeItem = None

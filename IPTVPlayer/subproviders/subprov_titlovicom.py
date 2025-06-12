@@ -1,15 +1,30 @@
 # -*- coding: utf-8 -*-
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
 
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, \
-                                                          RemoveDisallowedFilenameChars, GetSubtitlesDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
+    printDBG,
+    RemoveDisallowedFilenameChars,
+    GetSubtitlesDir,
+    GetDefaultLang,
+    printExc
+)
+###################################################
+# FOREIGN import
+###################################################
 import re
+# ###################################################
+# Config options for HOST
+###################################################
 
 
 def GetConfigList():
     optionList = []
     return optionList
+###################################################
 
 
 class TitlovicomProvider(CBaseSubProviderClass):
@@ -70,7 +85,7 @@ class TitlovicomProvider(CBaseSubProviderClass):
     def getEpisodes(self, cItem, nextCategory):
         printDBG("TitlovicomProvider.getEpisodes")
         imdbid = cItem['imdbid']
-        itemTitle = cItem['item_title']
+        # itemTitle = cItem['item_title']
         season = cItem['season']
 
         promEpisode = self.dInfo.get('episode')

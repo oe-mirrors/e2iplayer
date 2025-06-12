@@ -1,9 +1,28 @@
 # -*- coding: utf-8 -*-
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetDefaultLang, RemoveDisallowedFilenameChars, GetSubtitlesDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
+    printDBG,
+    GetDefaultLang,
+    RemoveDisallowedFilenameChars,
+    GetSubtitlesDir,
+)
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+
+###################################################
+# FOREIGN import
+###################################################
 import re
-import urllib.parse
+
+# from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
+###################################################
+
+###################################################
+# Config options for HOST
+###################################################
 
 
 def GetConfigList():
@@ -13,55 +32,56 @@ def GetConfigList():
 
 
 def GetLanguageTab():
-    tab = [["Albanian", "sq", "alb"],
-            ["Arabic", "ar", "ara"],
-            ["Belarusian", "hy", "arm"],
-            ["Bosnian", "bs", "bos"],
-            ["BosnianLatin", "bs", "bos"],
-            ["Bulgarian", "bg", "bul"],
-            ["Brazilian", "pb", "pob"],
-            ["Catalan", "ca", "cat"],
-            ["Chinese", "zh", "chi"],
-            ["Croatian", "hr", "hrv"],
-            ["Czech", "cs", "cze"],
-            ["Danish", "da", "dan"],
-            ["Dutch", "nl", "dut"],
-            ["English", "en", "eng"],
-            ["Espanol", "es", "spa"],
-            ["Estonian", "et", "est"],
-            ["Persian", "fa", "per"],
-            ["Farsi", "fa", "per"],
-            ["Finnish", "fi", "fin"],
-            ["French", "fr", "fre"],
-            ["German", "de", "ger"],
-            ["Greek", "el", "ell"],
-            ["Hebrew", "he", "heb"],
-            ["Hindi", "hi", "hin"],
-            ["Hungarian", "hu", "hun"],
-            ["Icelandic", "is", "ice"],
-            ["Indonesian", "id", "ind"],
-            ["Italian", "it", "ita"],
-            ["Japanese", "ja", "jpn"],
-            ["Korean", "ko", "kor"],
-            ["Latvian", "lv", "lav"],
-            ["Lithuanian", "lt", "lit"],
-            ["Macedonian", "mk", "mac"],
-            ["Malay", "ms", "may"],
-            ["Norwegian", "no", "nor"],
-            ["Polish", "pl", "pol"],
-            ["Portuguese", "pt", "por"],
-            ["Romanian", "ro", "rum"],
-            ["Russian", "ru", "rus"],
-            ["Serbian", "sr", "scc"],
-            ["Slovak", "sk", "slo"],
-            ["Slovenian", "sl", "slv"],
-            ["Spanish", "es", "spa"],
-            ["Swedish", "sv", "swe"],
-            ["Thai", "th", "tha"],
-            ["Turkish", "tr", "tur"],
-            ["Ukrainian", "uk", "ukr"],
-            ["Vietnamese", "vi", "vie"]
-          ]
+    tab = [
+        ["Albanian", "sq", "alb"],
+        ["Arabic", "ar", "ara"],
+        ["Belarusian", "hy", "arm"],
+        ["Bosnian", "bs", "bos"],
+        ["BosnianLatin", "bs", "bos"],
+        ["Bulgarian", "bg", "bul"],
+        ["Brazilian", "pb", "pob"],
+        ["Catalan", "ca", "cat"],
+        ["Chinese", "zh", "chi"],
+        ["Croatian", "hr", "hrv"],
+        ["Czech", "cs", "cze"],
+        ["Danish", "da", "dan"],
+        ["Dutch", "nl", "dut"],
+        ["English", "en", "eng"],
+        ["Espanol", "es", "spa"],
+        ["Estonian", "et", "est"],
+        ["Persian", "fa", "per"],
+        ["Farsi", "fa", "per"],
+        ["Finnish", "fi", "fin"],
+        ["French", "fr", "fre"],
+        ["German", "de", "ger"],
+        ["Greek", "el", "ell"],
+        ["Hebrew", "he", "heb"],
+        ["Hindi", "hi", "hin"],
+        ["Hungarian", "hu", "hun"],
+        ["Icelandic", "is", "ice"],
+        ["Indonesian", "id", "ind"],
+        ["Italian", "it", "ita"],
+        ["Japanese", "ja", "jpn"],
+        ["Korean", "ko", "kor"],
+        ["Latvian", "lv", "lav"],
+        ["Lithuanian", "lt", "lit"],
+        ["Macedonian", "mk", "mac"],
+        ["Malay", "ms", "may"],
+        ["Norwegian", "no", "nor"],
+        ["Polish", "pl", "pol"],
+        ["Portuguese", "pt", "por"],
+        ["Romanian", "ro", "rum"],
+        ["Russian", "ru", "rus"],
+        ["Serbian", "sr", "scc"],
+        ["Slovak", "sk", "slo"],
+        ["Slovenian", "sl", "slv"],
+        ["Spanish", "es", "spa"],
+        ["Swedish", "sv", "swe"],
+        ["Thai", "th", "tha"],
+        ["Turkish", "tr", "tur"],
+        ["Ukrainian", "uk", "ukr"],
+        ["Vietnamese", "vi", "vie"]
+    ]
     return tab
 
 
@@ -78,8 +98,6 @@ class SubsceneComProvider(CBaseSubProviderClass):
 
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.SEARCH_TYPE_TAB = [{'title': _('By media title'), 'category': 'search_by_title'}]
-                                # ,
-                                # {'title':_('By release name'), 'category':'search_by_release'}]
         self.cache = {}
 
     def _getHeader(self, lang):
@@ -176,7 +194,7 @@ class SubsceneComProvider(CBaseSubProviderClass):
 
     def searchByReleaseName(self, cItem, nextCategory):
         printDBG("SubsceneComProvider.searchByReleaseName")
-        url = self.getFullUrl('/subtitles/release?q={0}&r=true'.format(urllib.parse.quote_plus(self.params['confirmed_title'])))
+        url = self.getFullUrl('/subtitles/release?q={0}&r=true'.format(urllib_quote_plus(self.params['confirmed_title'])))
         cItem = dict(cItem)
         cItem.update({'url': url})
         self.listSubItems(cItem, nextCategory)

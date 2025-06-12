@@ -1,14 +1,36 @@
 # -*- coding: utf-8 -*-
+###################################################
+# LOCAL import
+###################################################
+# from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
 
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, RemoveDisallowedFilenameChars, GetSubtitlesDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
+    printDBG,
+    printExc,
+    RemoveDisallowedFilenameChars,
+    GetSubtitlesDir,
+)
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
+
+###################################################
+# FOREIGN import
+###################################################
 import re
-import urllib.parse
+# import unicodedata
+# import base64
+# from os import listdir as os_listdir, path as os_path
+# from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
+
+###################################################
+# Config options for HOST
+###################################################
 
 
 def GetConfigList():
     optionList = []
     return optionList
+###################################################
 
 
 class SubsRoProvider(CBaseSubProviderClass):
@@ -62,7 +84,7 @@ class SubsRoProvider(CBaseSubProviderClass):
             actionUrl += '&'
         else:
             actionUrl += '?'
-        actionUrl += urllib.parse.urlencode(query)
+        actionUrl += urllib_urlencode(query)
 
         sts, data = self.cm.getPage(actionUrl, urlParams)
         if not sts:
