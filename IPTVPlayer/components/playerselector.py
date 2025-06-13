@@ -51,7 +51,7 @@ if GRIDSUPPORT:
             <screen name="PlayerSelectorWidget" position="center,center" size="1020,660" resolution="1280,720" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
                 <widget source="Title" render="Label" position="160,10" size="780,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
                 <widget name="statustext" position="20,563" size="980,30" font="Regular;20" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1"/>
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/iptvlogo.png" position="12,10" size="100,40" zPosition="10" alphatest="blend" transparent="1" />
+                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/iptvlogo.png" position="12,10" size="100,40" zPosition="10" alphatest="blend" transparent="1" />
                 <eLabel name="BG_Title" position="0,0" size="1020,60" backgroundColor="#100d0f16" zPosition="-1" />
                 <eLabel name="BG_Buttons" position="0,612" size="1020,48" backgroundColor="#100d0f16" zPosition="-1" />
                 <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="1020,2" zPosition="2" />
@@ -99,7 +99,7 @@ if GRIDSUPPORT:
             <screen name="PlayerSelectorWidget" position="center,center" size="1530,990" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
                 <widget source="Title" render="Label" position="240,15" size="1170,60" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;36" valign="center" />
                 <widget name="statustext" position="30,845" size="1470,45" font="Regular;30" valign="center" halign="center" backgroundColor="black" foregroundColor="white" transparent="1"/>
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/iptvlogohd.png" position="18,15" size="150,60" zPosition="10" alphatest="blend" transparent="1" />
+                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/iptvlogohd.png" position="18,15" size="150,60" zPosition="10" alphatest="blend" transparent="1" />
                 <eLabel name="BG_Title" position="0,0" size="1530,90" backgroundColor="#100d0f16" zPosition="-1" />
                 <eLabel name="BG_Buttons" position="0,918" size="1530,72" backgroundColor="#100d0f16" zPosition="-1" />
                 <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,90" size="1530,3" zPosition="2" />
