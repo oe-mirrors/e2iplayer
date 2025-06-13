@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -172,7 +172,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             encoding = encoding.strip()
         try:
             with codecs.open(self.downloader.getFullFileName(), 'r', encoding, 'replace') as fp:
-                subText = fp.read().encode('utf-8').strip()
+                subText = ensure_str(fp.read()).strip()
 
             ext = self.currItem.get('format', '')
             if ext == '':
