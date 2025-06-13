@@ -1,4 +1,4 @@
-<screen name="E2iPlayerWidget" position="center,center" size="1635,788" resolution="1920,1080" title="E2iPlayer %s" backgroundColor="#34111112" flags="wfNoBorder">
+<screen name="E2iPlayerWidget" position="center,center" size="1635,788" resolution="1920,1080" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
     <ePixmap position="33,1031" size="60,39" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/info.png" transparent="1" alphatest="blend" />
     <ePixmap position="120,1031" size="60,39" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" transparent="1" alphatest="blend" />
     <ePixmap position="207,1031" size="60,39" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/key_prevnext.png" transparent="1" alphatest="blend" />
