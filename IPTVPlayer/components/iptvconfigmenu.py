@@ -173,7 +173,7 @@ config.plugins.iptvplayer.IconsSize = ConfigSelection(default="100", choices=[("
 config.plugins.iptvplayer.numOfRow = ConfigSelection(default="0", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("0", "auto")])
 config.plugins.iptvplayer.numOfCol = ConfigSelection(default="0", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5"), ("6", "6"), ("7", "7"), ("8", "8"), ("0", "auto")])
 
-config.plugins.iptvplayer.skin = ConfigSelection(default="auto", choices=GetSkinsList())
+config.plugins.iptvplayer.skin = ConfigSelection(default="", choices=GetSkinsList())
 
 # Pin code
 config.plugins.iptvplayer.fakePin = ConfigSelection(default="fake", choices=[("fake", "****")])

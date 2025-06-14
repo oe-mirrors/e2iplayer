@@ -818,9 +818,7 @@ def GetSkinsList():
     for filename in fileList:
         skins.append((filename, filename))
     skins.sort()
-    skins.insert(0, ("auto", _("Auto")))
-    skins.insert(0, ("Default", _("Default")))
-    skins.append(("Auto", _("Auto")))  # FIXME .. Why do we need auto and Auto ?
+    skins.insert(0, ("", _("Default")))
     printDBG('getSkinsList end')
     return skins
 
