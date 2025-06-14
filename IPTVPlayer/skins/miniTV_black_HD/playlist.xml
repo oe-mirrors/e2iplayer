@@ -17,7 +17,7 @@
 	<ePixmap position="287,647" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/green.png" transparent="1" alphatest="on"/>
 	<ePixmap position="554,647" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/yellow.png" transparent="1" alphatest="on"/>
 	<ePixmap position="801,647" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/blue.png" transparent="1" alphatest="on"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/iptvlogohd.png" position="1120,620" size="150,60" alphatest="blend"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/iptvlogo.png" position="1120,620" size="150,60" alphatest="blend"/>
 	<widget name="playerlogo" zPosition="4" position="1130,2" size="120,40" alphatest="blend"/>
 	<widget render="Label" source="key_red" position="65,647" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
 	<widget name="key_green" position="322,647" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>

@@ -55,7 +55,7 @@ class IPTVDMWidget(Screen):
     skin = """
         <screen name="IPTVDMWidget" position="center,center" title="%s" size="1180,680" resolution="1280,720" flags="wfNoBorder">
             <widget source="Title" render="Label" position="160,10" size="600,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/iptvlogo.png" position="12,10" size="100,40" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/iptvlogo.png" position="12,10" size="100,40" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="240,648" size="20,20" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="470,648" size="20,20" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="700,648" size="20,20" alphatest="blend" transparent="1" />
@@ -87,7 +87,7 @@ class IPTVDMWidget(Screen):
         </screen>""" % (_("%s download manager") % "E2iPlayer")
 
     if fullHD:
-        skin = skin.replace("/HD/", "/FHD/").replace("iptvlogo.png", "iptvlogohd.png")
+        skin = skin.replace("/HD/", "/FHD/")
 
     def __init__(self, session, downloadmanager):
         self.session = session

@@ -13,7 +13,7 @@
 	<widget name="console" position="10,660" zPosition="1" size="1130,325" font="Regular; 23" transparent="1" backgroundColor="#00000000" foregroundColor="#32CD32"/>
 	<widget name="cover" zPosition="2" position="1186,505" size="633,349" alphatest="blend" borderWidth="2" borderColor="white" backgroundColor="black"/>
 	<widget name="playerlogo" zPosition="4" position="1690,0" size="150,50" alphatest="blend"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/iptvlogohd.png" position="1700,950" size="150,60" alphatest="blend"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/iptvlogo.png" position="1700,950" size="150,60" alphatest="blend"/>
 	<widget name="sequencer" position="234,43" zPosition="6" size="979,385" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="black"/>
 	<widget render="Label" source="key_red" position="135,980" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="background" font="Regular;30" transparent="1" foregroundColor="white"/>
 	<widget name="key_green" position="465,980" size="250,30" zPosition="5" valign="center" halign="left" backgroundColor="background" font="Regular;30" transparent="1" foregroundColor="white"/>
