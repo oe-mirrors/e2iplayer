@@ -261,7 +261,7 @@ class E2iPlayerBufferingWidget(Screen):
         elif ret in ['key_stop']:
             # ask if we should close
             self.lastSize = self.downloader.getLocalFileSize(True)
-            # list = [ (_("yes"), True), (_("no"), False) ]
+            # list = [ (_("Yes"), True), (_("No"), False) ]
             # if self.downloadManager and self.downloader and self.downloader.getPlayableFileSize() > 0:
             #    list.append((_("yes, move playback buffer to the download manager"), 'move'))
             self.session.openWithCallback(self.confirmExitCallBack, MessageBox, text=_("Stop playing?"), type=MessageBox.TYPE_YESNO)
