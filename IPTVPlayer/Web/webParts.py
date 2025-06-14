@@ -55,7 +55,7 @@ def IncludeMENU(MenuStatusMSG='', ShowCancelButton=False):
 	if isActiveHostInitiated():
 		tempText = """
   <div class="topbar">
-    <a href="http://iptvplayer.vline.pl/" target="_blank"> <img border="0" alt="IPTVPlayer" src="./icons/iptvlogo.png" width="60" height="24"></a>
+    <a href="http://iptvplayer.vline.pl/" target="_blank"> <img border="0" alt="IPTVPlayer" src="./icons/HD/iptvlogo.png" width="60" height="24"></a>
     <a href="/iptvplayer/usehost" >%s</a>
     <a href="/iptvplayer/downloader" >%s</a>
     <a href="/iptvplayer/logs" >%s</a>
@@ -69,7 +69,7 @@ def IncludeMENU(MenuStatusMSG='', ShowCancelButton=False):
 	else:
 		tempText = """
   <div class="topbar">
-    <a href="http://iptvplayer.vline.pl/" target="_blank"> <img border="0" alt="IPTVPlayer" src="./icons/iptvlogo.png" width="60" height="24"></a>
+    <a href="http://iptvplayer.vline.pl/" target="_blank"> <img border="0" alt="IPTVPlayer" src="./icons/HD/iptvlogo.png" width="60" height="24"></a>
     <a href="/iptvplayer/" >%s</a>
     <a href="/iptvplayer/hosts" ">%s</a>
     <a href="/iptvplayer/search" ">%s</a>

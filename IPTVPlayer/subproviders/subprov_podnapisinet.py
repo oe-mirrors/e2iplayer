@@ -1,19 +1,36 @@
 # -*- coding: utf-8 -*-
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+# from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, \
-                                                          RemoveDisallowedFilenameChars, GetSubtitlesDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, RemoveDisallowedFilenameChars, GetSubtitlesDir
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
+###################################################
+# FOREIGN import
+###################################################
 import re
+
 try:
     from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlsplit
 except Exception:
     printExc()
 
 
+###################################################
+# E2 GUI COMMPONENTS
+###################################################
+
+###################################################
+# Config options for HOST
+###################################################
+
+
 def GetConfigList():
     optionList = []
     return optionList
+###################################################
 
 
 class PodnapisiNetProvider(CBaseSubProviderClass):

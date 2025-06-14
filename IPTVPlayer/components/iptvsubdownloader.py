@@ -88,14 +88,16 @@ class IPTVSubDownloaderWidget(Screen):
         # params: vk_title, movie_title
         printDBG("IPTVSubDownloaderWidget.__init__ desktop IPTV_VERSION[%s]\n" % (IPTVSubDownloaderWidget.IPTV_VERSION))
         self.session = session
-        path = GetSkinsDir(config.plugins.iptvplayer.skin.value) + "/subplaylist.xml"
-        if os_path.exists(path):
-            try:
-                with open(path, "r") as f:
-                    self.skin = f.read()
-                    f.close()
-            except Exception:
-                printExc("Skin read error: " + path)
+        skinName = config.plugins.iptvplayer.skin.value
+        if skinName:
+            path = GetSkinsDir(skinName) + "/subplaylist.xml"
+            if os_path.exists(path):
+                try:
+                    with open(path, "r") as f:
+                        self.skin = f.read()
+                        f.close()
+                except Exception:
+                    printExc("Skin read error: " + path)
 
         Screen.__init__(self, session)
 

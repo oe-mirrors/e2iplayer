@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 from Screens.Screen import Screen
 from Screens.ChoiceBox import ChoiceBox
-from enigma import eTimer, eConsoleAppContainer
+from enigma import eTimer, eConsoleAppContainer, getDesktop
 from Components.config import config
 from Components.ActionMap import ActionMap
 from Components.Label import Label
@@ -50,44 +50,44 @@ class IPTVDMWidget(Screen):
                         DMHelper.STS.ERROR: 'iconwarning.png',
                         }
 
-    # sz_w = getDesktop(0).size().width() - 190
-    # sz_h = getDesktop(0).size().height() - 195
-    # if sz_h < 500:
-    #    sz_h += 4
+    fullHD = getDesktop(0).size().width() == 1920
+
     skin = """
-        <screen name="IPTVDMWidget" position="center,center" title="%s" size="1280,720" resolution="1280,720">
-         <ePixmap position="025,688"   zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="blend" />
-         <ePixmap position="290,688" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="blend" />
-         <ePixmap position="555,688" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="blend" />
-         <ePixmap position="820,688" zPosition="4" size="35,30" pixmap="%s" transparent="1" alphatest="blend" />
-         <eLabel position="0,0" size="1280,88" backgroundColor="#000d0f16" zPosition="-1" />
-         <eLabel position="0,675" size="1280,48" backgroundColor="#000d0f16" zPosition="-1" />
-         <eLabel position="0,85" size="1280,2" backgroundColor="grey" zPosition="2" />
-         <eLabel position="0,675" size="1280,2" backgroundColor="grey" zPosition="2" />
-         <widget source="Title" render="Label" position="25,30" size="1050,40" foregroundColor="white"  backgroundColor="black" transparent="1" zPosition="1" font="Regular; 27" valign="center" />
-         <widget source="key_red" render="Label" position="60,684" size="220,30" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;20" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget source="key_green" render="Label" position="325,684" size="220,30" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;20" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget source="key_yellow" render="Label" position="590,684" size="220,30" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;20" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
-         <widget source="key_blue" render="Label" position="855,684" size="220,30" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;20" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget source="downloadlist" render="Listbox" position="20,100" zPosition="2" size="1240,544" scrollbarMode="showOnDemand" transparent="0"  backgroundColor="#10111112" enableWrapAround="1">
-            <convert type="TemplatedMultiContent">
-            {"template": [
-                    MultiContentEntryPixmapAlphaBlend(pos = (10, 14), size = (42, 42), flags = BT_SCALE, png = 0),  # Flag.
-                    MultiContentEntryText(pos = (80, 0), size = (1140, 34), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 1),  # title
-                    MultiContentEntryText(pos = (80, 36), size = (500, 34), font = 1, color=0xa4c400,color_sel=0xffaf17, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 3),  # size
-                    MultiContentEntryText(pos = (920, 36), size = (300, 34), font = 1, color=0x7e93ae,color_sel=0x19f4eb, flags = RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text = 4),  # status
-                                        ],
-                                    "fonts": [gFont("Regular",24), gFont("Regular",22)],
-                                    "itemHeight": 68
-                                    }
+        <screen name="IPTVDMWidget" position="center,center" title="%s" size="1180,680" resolution="1280,720" flags="wfNoBorder">
+            <widget source="Title" render="Label" position="160,10" size="600,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/iptvlogo.png" position="12,10" size="100,40" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="240,648" size="20,20" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="470,648" size="20,20" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="700,648" size="20,20" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/blue.png" position="930,648" size="20,20" alphatest="blend" transparent="1" />
+            <widget source="key_red" render="Label" position="274,644" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <widget source="key_green" render="Label" position="504,644" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <widget source="key_yellow" render="Label" position="734,644" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <widget source="key_blue" render="Label" position="964,644" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <eLabel name="BG_Title" position="0,0" size="1180,60" backgroundColor="#100d0f16" zPosition="-1" />
+            <eLabel name="BG_Buttons" position="0,632" size="1180,48" backgroundColor="#100d0f16" zPosition="-1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="1180,2" zPosition="2" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,630" size="1180,2" zPosition="2" />
+            <ePixmap position="22,644" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
+            <ePixmap position="80,644" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
+            <widget source="downloadlist" render="Listbox" position="10,66" zPosition="2" size="1160,560" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" shadowColor="black" shadowOffset="-2,-2" enableWrapAround="1">
+                <convert type="TemplatedMultiContent">
+                {"template": [
+                    MultiContentEntryPixmapAlphaBlend(pos = (10, 10), size = (42, 42), flags = BT_SCALE, png = 0),  # Flag.
+                    MultiContentEntryText(pos = (80, 0), size = (1140, 32), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 1),  # title
+                    MultiContentEntryText(pos = (80, 32), size = (500, 26), font = 1, color=0xa4c400,color_sel=0xffaf17, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 3),  # size
+                    MultiContentEntryText(pos = (820, 32), size = (300, 26), font = 1, color=0x7e93ae,color_sel=0x19f4eb, flags = RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text = 4),  # status
+                    ],
+                    "fonts": [gFont("Regular",22), gFont("Regular",18)],
+                    "itemHeight": 56
+                }
                 </convert>
              </widget>
-           <widget name="titel" position="800,30" size="450,40" foregroundColor="white"  backgroundColor="black" transparent="1" zPosition="1" font="Regular; 27" valign="center"/>
-        </screen>""" % (_("%s download manager") % "E2iPlayer",
-            GetIconDir('red.png'), GetIconDir('green.png'), GetIconDir('yellow.png'), GetIconDir('blue.png')
-            )
-        # <widget render="Label" source="key_yellow" position="220,9" size="180,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-        # <widget render="Label" source="key_blue" position="630,9" size="140,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+           <widget name="titel" position="800,10" size="370,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
+        </screen>""" % (_("%s download manager") % "E2iPlayer")
+
+    if fullHD:
+        skin = skin.replace("/HD/", "/FHD/")
 
     def __init__(self, session, downloadmanager):
         self.session = session
@@ -527,8 +527,8 @@ class IPTVDMWidget(Screen):
 
 class IPTVDMNotificationWidget(Screen):
 
-    skin = """<screen name="IPTVDMNotificationWidget" position="800,20" zPosition="10" size="350,60" title="IPTVPlayer downloader" backgroundColor="#11000000" >
-            <widget name="message_label" font="Regular;24" position="0,0" zPosition="2" valign="center" halign="center" size="350,60" backgroundColor="#11000000" transparent="1" />
+    skin = """<screen name="IPTVDMNotificationWidget" position="800,10" zPosition="10" size="70,40" title="IPTVPlayer downloader" backgroundColor="#34111112" flags="wfNoBorder" >
+            <widget name="message_label" font="Regular;24" position="0,0" zPosition="2" valign="center" halign="center" size="370,40" foregroundColor="green" backgroundColor="#34111112" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" transparent="1" />
         </screen>"""
 
     def __init__(self, session):

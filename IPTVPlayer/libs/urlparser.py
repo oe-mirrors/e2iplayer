@@ -253,8 +253,7 @@ def tear_decode(data_file, data_seed):
         a96 = a90[1]
         a97 = int(-957401312)
         for a98 in range(32):
-            a96 = int(a96) - ((((int(a95) << 4) ^ rshift(int(a95), 5)) + a95) ^ (
-            a97 + a91[(rshift(int(a97), 11) & 3)]))
+            a96 = int(a96) - ((((int(a95) << 4) ^ rshift(int(a95), 5)) + a95) ^ (a97 + a91[(rshift(int(a97), 11) & 3)]))
             a96 = int(a96 | 0)
             a97 = int(a97) + 1640531527
             a97 = int(a97 | 0)
@@ -447,6 +446,7 @@ class urlparser:
             'bro.adca.st': self.pp.parserBROADCAST,
             'bro.adcast.tech': self.pp.parserBROADCAST,
             'browncrossing.net': self.pp.parserONLYSTREAMTV,
+            'bullstream.xyz': self.pp.parserSTREAMEMBED,
             'byetv.org': self.pp.parserBYETVORG,
             # c
             'casacinema.cc': self.pp.parserCASACINEMACC,
@@ -584,10 +584,6 @@ class urlparser:
             'firedrive.com': self.pp.parserFIREDRIVE,
             'flashcast.pw': self.pp.parserCASTFLASHPW,
             'flashlive.pw': self.pp.parserCASTFLASHPW,
-            'flashx.co': self.pp.parserFLASHXTV,
-            'flashx.net': self.pp.parserFLASHXTV,
-            'flashx.pw': self.pp.parserFLASHXTV,
-            'flashx.tv': self.pp.parserFLASHXTV,
             'flaswish.com': self.pp.parserCLIPWATCHINGCOM,
             'flix555.com': self.pp.parserFLIX555COM,
             'foothubhd.live': self.pp.parserSHOWSPORTXYZ,
@@ -724,6 +720,7 @@ class urlparser:
             'movpod.in': self.pp.parserFASTVIDEOIN,
             'movreel.com': self.pp.parserMOVRELLCOM,
             'movshare.net': self.pp.parserWHOLECLOUD,
+            'mp4player.site': self.pp.parserSTREAMEMBED,
             'mp4upload.com': self.pp.parserONLYSTREAMTV,
             'mstream.fun': self.pp.parserMSTREAMICU,
             'mstream.icu': self.pp.parserMSTREAMICU,
@@ -1079,6 +1076,7 @@ class urlparser:
             # w
             'waaw.tv': self.pp.parserNETUTV,
             'wat.tv': self.pp.parserWATTV,
+            'watch.gxplayer.xyz': self.pp.parserSTREAMEMBED,
             'watchers.to': self.pp.parserWATCHERSTO,
             'watchsb.com': self.pp.parserSTREAMSB,
             'watchvideo.us': self.pp.parserWATCHVIDEO17US,
@@ -7551,234 +7549,6 @@ class pageParser(CaptchaHelper):
 
         return False
 
-    def parserFLASHXTV(self, baseUrl):
-        printDBG("parserFLASHXTV baseUrl[%s]" % baseUrl)
-
-        HTTP_HEADER = self.cm.getDefaultHeader()
-
-        COOKIE_FILE = GetCookieDir('flashxtv.cookie')
-        params = {'header': HTTP_HEADER, 'cookiefile': COOKIE_FILE, 'use_cookie': True, 'save_cookie': True}
-
-        def __parseErrorMSG(data):
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<center>', '</center>', False, False)
-            for item in data:
-                if 'color="red"' in item or ('ile' in item and '<script' not in item):
-                    SetIPTVPlayerLastHostError(clean_html(item))
-                    break
-
-        def __getJS(data, params):
-            tmpUrls = re.compile("""<script[^>]+?src=['"]([^'^"]+?)['"]""", re.IGNORECASE).findall(data)
-            printDBG(tmpUrls)
-            codeUrl = 'https://www.flashx.tv/js/code.js'
-            for tmpUrl in tmpUrls:
-                if tmpUrl.startswith('.'):
-                    tmpUrl = tmpUrl[1:]
-                if tmpUrl.startswith('//'):
-                    tmpUrl = 'https:' + tmpUrl
-                if tmpUrl.startswith('/'):
-                    tmpUrl = 'https://www.flashx.tv' + tmpUrl
-                if self.cm.isValidUrl(tmpUrl):
-                    if ('flashx' in tmpUrl and 'jquery' not in tmpUrl and '/code.js' not in tmpUrl and '/coder.js' not in tmpUrl):
-                        printDBG('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-                        sts, tmp = self.cm.getPage(tmpUrl.replace('\n', ''), params)
-                    elif '/code.js' in tmpUrl or '/coder.js' in tmpUrl:
-                        codeUrl = tmpUrl
-
-            sts, tmp = self.cm.getPage(codeUrl, params)
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, 'function', ';')
-            for tmpItem in tmp:
-                tmpItem = tmpItem.replace(' ', '')
-                if '!=null' in tmpItem:
-                    tmpItem = self.cm.ph.getDataBeetwenMarkers(tmpItem, 'get(', ')')[1]
-                    tmpUrl = self.cm.ph.getSearchGroups(tmpItem, """['"](https?://[^'^"]+?)['"]""")[0]
-                    if not self.cm.isValidUrl(tmpUrl):
-                        continue
-                    getParams = self.cm.ph.getDataBeetwenMarkers(tmpItem, '{', '}', False)[1]
-                    getParams = getParams.replace(':', '=').replace(',', '&').replace('"', '').replace("'", '')
-                    tmpUrl += '?' + getParams
-                    sts, tmp = self.cm.getPage(tmpUrl, params)
-                    break
-
-        if baseUrl.split('?')[0].endswith('.jsp'):
-            rm(COOKIE_FILE)
-            sts, data = self.cm.getPage(baseUrl, params)
-            if not sts:
-                return False
-
-            __parseErrorMSG(data)
-
-            cookies = dict(re.compile(r'''cookie\(\s*['"]([^'^"]+?)['"]\s*\,\s*['"]([^'^"]+?)['"]''', re.IGNORECASE).findall(data))
-            tmpParams = dict(params)
-            tmpParams['cookie_items'] = cookies
-            tmpParams['header']['Referer'] = baseUrl
-
-            __getJS(data, tmpParams)
-
-            data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile('<form[^>]+?method="POST"', re.IGNORECASE), re.compile('</form>', re.IGNORECASE), True)[1]
-            printDBG(data)
-            printDBG("================================================================================")
-
-            action = self.cm.ph.getSearchGroups(data, '''action=['"]([^'^"]+?)['"]''', ignoreCase=True)[0]
-            post_data = dict(re.compile(r'<input[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', re.IGNORECASE).findall(data))
-            try:
-                tmp = dict(re.findall(r'<button[^>]*name="([^"]*)"[^>]*value="([^"]*)"[^>]*>', data))
-                post_data.update(tmp)
-            except Exception:
-                printExc()
-
-            try:
-                GetIPTVSleep().Sleep(int(self.cm.ph.getSearchGroups(data, '>([0-9])</span> seconds<')[0]) + 1)
-            except Exception:
-                printExc()
-
-            if {} == post_data:
-                post_data = None
-            if not self.cm.isValidUrl(action) and baseUrl != '':
-                action = urljoin(baseUrl, action)
-
-            sts, data = self.cm.getPage(action, tmpParams, post_data)
-            if not sts:
-                return False
-
-            printDBG(data)
-            __parseErrorMSG(data)
-
-            # get JS player script code from confirmation page
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, ">eval(", '</script>', False)
-            for item in tmp:
-                printDBG("================================================================================")
-                printDBG(item)
-                printDBG("================================================================================")
-                item = item.strip()
-                if item.endswith(')))'):
-                    idx = 1
-                else:
-                    idx = 0
-                printDBG("IDX[%s]" % idx)
-                for decFun in [SAWLIVETV_decryptPlayerParams, KINGFILESNET_decryptPlayerParams]:
-                    decItem = urllib_unquote(unpackJSPlayerParams(item, decFun, idx))
-                    printDBG('[%s]' % decItem)
-                    data += decItem + ' '
-                    if decItem != '':
-                        break
-
-            urls = []
-            tmp = re.compile(r'''\{[^}]*?src[^}]+?video/mp4[^}]+?\}''').findall(data)
-            for item in tmp:
-                label = self.cm.ph.getSearchGroups(item, r'''['"]?label['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
-                res = self.cm.ph.getSearchGroups(item, r'''['"]?res['"]?\s*:\s*[^0-9]?([0-9]+?)[^0-9]''')[0]
-                name = '%s - %s' % (res, label)
-                url = self.cm.ph.getSearchGroups(item, r'''['"]?src['"]?\s*:\s*['"]([^"^']+?)['"]''')[0]
-                params = {'name': name, 'url': url}
-                if params not in urls:
-                    urls.append(params)
-
-            return urls[::-1]
-
-        if '.tv/embed-' not in baseUrl:
-            baseUrl = baseUrl.replace('.tv/', '.tv/embed-')
-        if not baseUrl.endswith('.html'):
-            baseUrl += '.html'
-
-        params['header']['Referer'] = baseUrl
-        SWF_URL = 'http://static.flashx.tv/player6/jwplayer.flash.swf'
-        id = self.cm.ph.getSearchGroups(baseUrl + '/', 'c=([A-Za-z0-9]{12})[^A-Za-z0-9]')[0]
-        if id == '':
-            id = self.cm.ph.getSearchGroups(baseUrl + '/', '[^A-Za-z0-9]([A-Za-z0-9]{12})[^A-Za-z0-9]')[0]
-        if id == '':
-            id = self.cm.ph.getSearchGroups(baseUrl + '/', '[^A-Za-z0-9]([A-Za-z0-9]{32})[^A-Za-z0-9]')[0]
-        baseUrl = 'http://www.flashx.tv/embed.php?c=' + id
-
-        rm(COOKIE_FILE)
-        params['max_data_size'] = 0
-        self.cm.getPage(baseUrl, params)
-        redirectUrl = self.cm.meta['url']
-
-        id = self.cm.ph.getSearchGroups(redirectUrl + '/', 'c=([A-Za-z0-9]{12})[^A-Za-z0-9]')[0]
-        if id == '':
-            id = self.cm.ph.getSearchGroups(redirectUrl + '/', '[^A-Za-z0-9]([A-Za-z0-9]{12})[^A-Za-z0-9]')[0]
-        if id == '':
-            id = self.cm.ph.getSearchGroups(redirectUrl + '/', '[^A-Za-z0-9]([A-Za-z0-9]{32})[^A-Za-z0-9]')[0]
-        baseUrl = 'http://www.flashx.tv/embed.php?c=' + id
-
-        params.pop('max_data_size', None)
-        sts, data = self.cm.getPage(baseUrl, params)
-        params['header']['Referer'] = redirectUrl
-        params['load_cookie'] = True
-
-        printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        printDBG(data)
-        printDBG("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-
-        play = ''
-        vid = self.cm.ph.getSearchGroups(redirectUrl + '/', '[^A-Za-z0-9]([A-Za-z0-9]{12})[^A-Za-z0-9]')[0]
-        vid = self.cm.ph.getSearchGroups(redirectUrl + '/', '[^A-Za-z0-9]([A-Za-z0-9]{32})[^A-Za-z0-9]')[0]
-        for item in ['playvid', 'playthis', 'playit', 'playme', 'playvideo']:
-            if item + '-' in data:
-                play = item
-                break
-
-        printDBG("vid[%s] play[%s]" % (vid, play))
-
-        __getJS(data, params)
-
-        url = self.cm.ph.getSearchGroups(redirectUrl, """(https?://[^/]+?/)""")[0] + play + '-{0}.html?{1}'.format(vid, play)
-        sts, data = self.cm.getPage(url, params)
-        if not sts:
-            return False
-        printDBG(data)
-
-        if 'fxplay' not in url and 'fxplay' in data:
-            url = self.cm.ph.getSearchGroups(data, '"(http[^"]+?fxplay[^"]+?)"')[0]
-            sts, data = self.cm.getPage(url)
-            if not sts:
-                return False
-
-        try:
-            printDBG(data)
-            __parseErrorMSG(data)
-
-            tmpTab = self.cm.ph.getAllItemsBeetwenMarkers(data, ">eval(", '</script>', False, False)
-            for tmp in tmpTab:
-                tmp2 = ''
-                for type in [0, 1]:
-                    for fun in [SAWLIVETV_decryptPlayerParams, VIDUPME_decryptPlayerParams]:
-                        tmp2 = unpackJSPlayerParams(tmp, fun, type=type)
-                        printDBG(tmp2)
-                        data = tmp2 + data
-                        if tmp2 != '':
-                            printDBG("+++")
-                            printDBG(tmp2)
-                            printDBG("+++")
-                            break
-                    if tmp2 != '':
-                        break
-
-        except Exception:
-            printExc()
-
-        retTab = []
-        linksTab = re.compile("""["']*file["']*[ ]*?:[ ]*?["']([^"^']+?)['"]""").findall(data)
-        linksTab.extend(re.compile("""["']*src["']*[ ]*?:[ ]*?["']([^"^']+?)['"]""").findall(data))
-        linksTab = set(linksTab)
-        for item in linksTab:
-            if item.endswith('/trailer.mp4'):
-                continue
-            if self.cm.isValidUrl(item):
-                if item.split('?')[0].endswith('.smil'):
-                    # get stream link
-                    sts, tmp = self.cm.getPage(item)
-                    if sts:
-                        base = self.cm.ph.getSearchGroups(tmp, 'base="([^"]+?)"')[0]
-                        src = self.cm.ph.getSearchGroups(tmp, 'src="([^"]+?)"')[0]
-                        # if ':' in src:
-                        #    src = src.split(':')[1]
-                        if base.startswith('rtmp'):
-                            retTab.append({'name': 'rtmp', 'url': base + '/' + src + ' swfUrl=%s live=1 pageUrl=%s' % (SWF_URL, redirectUrl)})
-                elif '.mp4' in item:
-                    retTab.append({'name': 'mp4', 'url': item})
-        return retTab[::-1]
-
     def parserMYVIDEODE(self, baseUrl):
         printDBG("parserMYVIDEODE baseUrl[%s]" % baseUrl)
         HTTP_HEADER = {'User-Agent': "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0",
@@ -13562,7 +13332,6 @@ class pageParser(CaptchaHelper):
         """
         example video:
         https://mixdrop.co/f/1f13jq
-        https://mixdrop.co/e/1f13jq
         """
 
         if '.co/' in baseUrl:
@@ -16081,22 +15850,22 @@ class pageParser(CaptchaHelper):
             urlTab.extend(getDirectM3U8Playlist(hls))
         return urlTab
 
-    def parserVINOVO(self, baseUrl):
+    def parserVINOVO(self, baseUrl):  # fix 12.06.25
         printDBG("parserVINOVO baseUrl[%s]" % baseUrl)
         COOKIE_FILE = self.COOKIE_PATH + "vinovo.cookie"
         HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0'}
-        media_id = self.cm.ph.getSearchGroups(baseUrl + '/', '(?:e|f|v)[/-]([A-Za-z0-9]+)[^A-Za-z0-9]')[0]
         sts, data = self.cm.getPage(baseUrl, {'header': HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': COOKIE_FILE})
         if not sts:
             return []
         token = re.search(r'name="token"\s*content="([^"]+)', data)
-        video_data = re.search(r'<video.+?data-base="([^"]+)', data)
-        if token and video_data:
+        video_data = re.search(r'data-base="([^"]+)', data)
+        filecode = re.search(r'filecode="([^"]+)', data)
+        if token and video_data and filecode:
             rurl = urljoin(baseUrl, '/')
             recaptcha = girc(data, rurl)
             HTTP_HEADER.update({'Origin': rurl[:-1], 'Referer': baseUrl, 'X-Requested-With': 'XMLHttpRequest'})
             post_data = {'token': token.group(1), 'recaptcha': recaptcha}
-            api_url = 'https://vinovo.to/api/file/url/{0}'.format(media_id)
+            api_url = 'https://vinovo.to/api/file/url/{0}'.format(filecode.group(1))
             sts, data = self.cm.getPage(api_url, {'header': HTTP_HEADER, 'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': COOKIE_FILE}, post_data)
             if not sts:
                 return []
@@ -16140,4 +15909,26 @@ class pageParser(CaptchaHelper):
         if hlsUrl:
             hls = urlparser.decorateUrl(hlsUrl.group(1), {'iptv_proto': 'm3u8', 'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': 'https://%s/' % host, 'Origin': 'https://%s' % host})
             urlTab.extend(getDirectM3U8Playlist(hls))
+        return urlTab
+
+    def parserSTREAMEMBED(self, baseUrl):
+        urlTab = []
+        host = baseUrl.split("/")[2]
+        printDBG("parserSTREAMEMBED baseUrl[%s]" % baseUrl)
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0'}
+        sts, data = self.cm.getPage(baseUrl, headers)
+        if not sts:
+            return []
+        data = re.search(r'var\s*video\s*=\s*(.*?);\s', data)
+        if data:
+            headers.update({'Referer': baseUrl})
+            data = json_loads(data.group(1))
+            url = 'https://{}/m3u8/{}/{}/master.txt?s=1&id={}&cache=1'.format(host, data.get('uid'), data.get('md5'), data.get('id'))
+            sts, data = self.cm.getPage(url, headers)
+            if not sts:
+                return []
+            data = re.findall(r'\d+x([\d]+)\n(http[^\n]+)', data)
+            if data:
+                for q, url in data:
+                    urlTab.append({'name': q, 'url': url.strip()})
         return urlTab

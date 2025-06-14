@@ -135,7 +135,7 @@ class ZDFmediathek(CBaseHostClass):
 
     def getFullUrl(self, url):
         if 'proxy-german.de' in url:
-            url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', '''\?q=(http[^&]+?)&''')[0])
+            url = urllib_unquote(self.cm.ph.getSearchGroups(url + '&', r'''\?q=(http[^&]+?)&''')[0])
         return CBaseHostClass.getFullUrl(self, url)
 
     def _getNum(self, v, default=0):

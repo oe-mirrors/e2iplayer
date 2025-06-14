@@ -668,7 +668,7 @@ def __isHostNameValid(hostName):
     return False
 
 
-def __getHostsPath(fileName=''):
+def getHostsPath(fileName=''):
     return os.path.join(resolveFilename(SCOPE_PLUGINS), 'Extensions/IPTVPlayer/hosts/', fileName)
 
 
@@ -680,7 +680,7 @@ def GetHostsFromList(useCache=True):
 
     lhosts = []
     try:
-        sts, data = ReadTextFile(__getHostsPath('list.txt'))
+        sts, data = ReadTextFile(getHostsPath('list.txt'))
         if sts:
             data = data.split('\n')
             for item in data:
@@ -704,7 +704,7 @@ def GetHostsFromFolder(useCache=True):
 
     lhosts = []
     try:
-        fileList = os.listdir(__getHostsPath())
+        fileList = os.listdir(getHostsPath())
         printDBG('\t len(fileList)=%s' % len(fileList))
         for wholeFileName in fileList:
             # separate file name and file extension
@@ -818,9 +818,7 @@ def GetSkinsList():
     for filename in fileList:
         skins.append((filename, filename))
     skins.sort()
-    skins.insert(0, ("auto", _("Auto")))
-    skins.insert(0, ("Default", _("Default")))
-    skins.append(("Auto", _("Auto")))  # FIXME .. Why do we need auto and Auto ?
+    skins.insert(0, ("", _("Default")))
     printDBG('getSkinsList end')
     return skins
 

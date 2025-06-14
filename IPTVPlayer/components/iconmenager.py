@@ -4,7 +4,6 @@
 # LOCAL import
 ###################################################
 from .asynccall import AsyncMethod
-from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import mkdirs, \
@@ -14,11 +13,14 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import mkdirs, \
                       GetIconsDirs, RemoveIconsDirByPath, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
+
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
+from hashlib import md5
 import threading
 from urllib.parse import urljoin
 from binascii import hexlify
@@ -139,9 +141,7 @@ class IconMenager:
 
     def isItemInAAueue(self, item, hashed=0):
         if hashed == 0:
-            hashAlg = MD5()
-            name = hashAlg(item)
-            file = hexlify(name).decode("utf-8", "strict") + '.jpg'
+            file = md5(ensure_binary(item)).hexdigest() + '.jpg'
         else:
             file = item
         ret = False
@@ -158,9 +158,7 @@ class IconMenager:
         if item.startswith('file://'):
             return item[7:]
 
-        hashAlg = MD5()
-        name = hashAlg(item)
-        filename = hexlify(name).decode("utf-8", "strict") + '.jpg'
+        filename = md5(ensure_binary(item)).hexdigest() + '.jpg'
 
         self.lockAA.acquire()
         file_path = self.queueAA.get(filename, '')
@@ -208,10 +206,7 @@ class IconMenager:
 
             printDBG("IconMenager.processDQ url: [%s]" % url)
             if url != '':
-                hashAlg = MD5()
-                name = hashAlg(url)
-                file = hexlify(name).decode("utf-8", "strict") + '.jpg'
-
+                file = md5(ensure_binary(url)).hexdigest() + '.jpg'
                 # check if this image is not already available in cache AA list
                 if self.isItemInAAueue(file, 1):
                     continue

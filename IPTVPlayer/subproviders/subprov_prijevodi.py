@@ -1,14 +1,27 @@
 # -*- coding: utf-8 -*-
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, RemoveDisallowedFilenameChars, GetSubtitlesDir, rm
+###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote
+###################################################
+# FOREIGN import
+###################################################
 import re
-import urllib.parse
+# from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
+
+###################################################
+# Config options for HOST
+###################################################
 
 
 def GetConfigList():
     optionList = []
     return optionList
+###################################################
 
 
 class PrijevodiOnline(CBaseSubProviderClass):
@@ -297,7 +310,7 @@ class PrijevodiOnline(CBaseSubProviderClass):
             url = self.cm.ph.getSearchGroups(item, r'href="(https?://[^"]+?\.(?:rar|zip))"')[0]
             if not self.cm.isValidUrl(url):
                 continue
-            title = urllib.parse.unquote(url.split('/')[-1])
+            title = urllib_unquote(url.split('/')[-1])
             url = url.replace(' ', '%20')
 
             desc = self.cleanHtmlStr(item)

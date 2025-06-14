@@ -1,16 +1,45 @@
 # -*- coding: utf-8 -*-
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, RemoveDisallowedFilenameChars, GetSubtitlesDir, GetTmpDir, rm, IsSubtitlesParserExtensionCanBeUsed
 
-import re
-from urllib.parse import quote_plus, quote
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
+    printDBG,
+    printExc,
+    RemoveDisallowedFilenameChars,
+    GetSubtitlesDir,
+    GetTmpDir,
+    rm,
+    IsSubtitlesParserExtensionCanBeUsed
+)
+
+# from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+# from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
+# from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
+###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_quote
+
+###################################################
+# FOREIGN import
+###################################################
 import base64
+import re
+
+
+###################################################
+# E2 GUI COMMPONENTS
+###################################################
+###################################################
+# Config options for HOST
+###################################################
 
 
 def GetConfigList():
     optionList = []
     return optionList
+###################################################
 
 
 class NapiProjektProvider(CBaseSubProviderClass):
@@ -67,7 +96,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
 
     def getMoviesList(self, cItem, nextCategoryMovie):
         printDBG("NapiProjektProvider.getMoviesList")
-        title = quote_plus(self.params['confirmed_title'])
+        title = urllib_quote_plus(self.params['confirmed_title'])
         url = self.getFullUrl('/ajax/search_catalog.php')
 
         post_data = {'queryString': title, 'queryKind': cItem.get('kind', 0), 'queryYear': '', 'associate': ''}
@@ -118,7 +147,7 @@ class NapiProjektProvider(CBaseSubProviderClass):
         urlPattern = self.cm.ph.getDataBeetwenMarkers(tmp, 'window.location.href=', ';', False)[1].replace("'", "").replace('"', '').strip()
         urlPattern = urlPattern.split('tytul=')
         if 2 == len(urlPattern):
-            urlPattern = urlPattern[0] + 'tytul=' + quote(urlPattern[1])
+            urlPattern = urlPattern[0] + 'tytul=' + urllib_quote(urlPattern[1])
         else:
             urlPattern = ''
 

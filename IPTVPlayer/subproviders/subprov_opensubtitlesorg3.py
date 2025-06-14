@@ -1,20 +1,49 @@
 # -*- coding: utf-8 -*-
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, byteify, \
-                                                          RemoveDisallowedFilenameChars, GetSubtitlesDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, byteify, RemoveDisallowedFilenameChars, GetSubtitlesDir
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
+###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strEncode
+
+###################################################
+# FOREIGN import
+###################################################
 import re
-import urllib.parse
-import json
-from io import StringIO
-import gzip
+try:
+    import json
+except Exception:
+    import simplejson as json
+try:
+    if isPY2():
+        try:
+            from cStringIO import StringIO
+        except Exception:
+            from StringIO import StringIO
+    else:
+        from io import BytesIO
+    import gzip
+except Exception:
+    pass
 from Components.config import config
+###################################################
+# E2 GUI COMMPONENTS
+###################################################
+
+###################################################
+# Config options for HOST
+###################################################
 
 
 def GetConfigList():
     optionList = []
     return optionList
+###################################################
 
 
 class OpenSubtitlesRest(CBaseSubProviderClass):
@@ -68,7 +97,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
     def getEpisodes(self, cItem, nextCategory):
         printDBG("OpenSubtitlesRest.getEpisodes")
         imdbid = cItem['imdbid']
-        itemTitle = cItem['item_title']
+        # itemTitle = cItem['item_title']
         season = cItem['season']
 
         promEpisode = self.dInfo.get('episode')
@@ -159,7 +188,7 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
                 title = self.imdbGetOrginalByTitle(cItem['imdbid'])[1].get('title', cItem.get('base_title', ''))
             else:
                 title = self.params['confirmed_title']
-            queryTab.append('query-%s' % urllib.parse.quote(title))
+            queryTab.append('query-%s' % urllib_quote(title))
 
         if langid != '':
             queryTab.append('sublanguageid-%s' % langid)
@@ -255,7 +284,10 @@ class OpenSubtitlesRest(CBaseSubProviderClass):
             return retData
 
         try:
-            buf = StringIO(data)
+            if isPY2():
+                buf = StringIO(data)
+            else:
+                buf = BytesIO(strEncode(data))
             f = gzip.GzipFile(fileobj=buf)
             data = f.read()
         except Exception:

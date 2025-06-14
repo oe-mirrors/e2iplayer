@@ -1,20 +1,38 @@
 # -*- coding: utf-8 -*-
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, RemoveDisallowedFilenameChars, GetSubtitlesDir
+###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_urlencode
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
-
+# from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
+###################################################
+# FOREIGN import
+###################################################
 import re
 from hashlib import md5
 from Components.config import config
+###################################################
+
+###################################################
+# E2 GUI COMMPONENTS
+###################################################
 from Screens.MessageBox import MessageBox
+###################################################
+
+###################################################
+# Config options for HOST
+###################################################
 
 
 def GetConfigList():
     optionList = []
     return optionList
+###################################################
 
 
 class OpenSubtitles(CBaseSubProviderClass):
