@@ -15,7 +15,7 @@ import os
 
 def Plugins(**kwargs):
     screenwidth = getDesktop(0).size().width()
-    iconFile = "icons/FHD/iptvlogo.png" % ("FHD" if screenwidth and screenwidth == 1920 else "HD")
+    iconFile = "icons/%s/iptvlogo.png" % ("FHD" if screenwidth and screenwidth == 1920 else "HD")
     desc = _("Watch Videos Online")
     list = []
     if config.plugins.iptvplayer.plugin_autostart.value:
