@@ -24,7 +24,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://gamato-movies.com/'
+    return 'https://gamatomovies.info/'
 
 
 class GamatoMovies(CBaseHostClass):
@@ -33,11 +33,11 @@ class GamatoMovies(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'GamatoMovies.tv', 'cookie': 'gamatomoviescom.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
+        self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
 
-        self.MAIN_URL = 'http://gamato-movies.com/'
+        self.MAIN_URL = 'https://gamatomovies.info/'
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/uploads/images/aaw81QHKtm.png'
 
         self.MAIN_CAT_TAB = [{'category': 'movies', 'title': _('Movies'), 'priv_type': 'movie', 'url': self.getFullUrl('movies'), 'icon': self.DEFAULT_ICON_URL},
