@@ -405,8 +405,7 @@ class common:
             try:
                 verInfo = pycurl.version_info()
                 printDBG("usePyCurl VERSION: %s" % [verInfo])
-                if verInfo[1].startswith('7.') or verInfo[1].startswith('8.'):
-                    pyCurlInstalled = True
+                pyCurlInstalled = (int(verInfo[1].split('.')[0]) >= 7) and bool(verInfo[4] & pycurl.VERSION_ASYNCHDNS)
             except Exception:
                 printExc()
             if pyCurlInstalled:
@@ -426,10 +425,7 @@ class common:
                     # #define CURL_VERSION_ASYNCHDNS    (1<<7)
                     # we need to have ASYNC DNS to be able "cancel"
                     # request
-                    if verInfo[1].startswith('7.') or verInfo[1].startswith('8.'):
-                        self.pyCurlAvailable = True
-                    else:
-                        self.pyCurlAvailable = False
+                    self.pyCurlAvailable = (int(verInfo[1].split('.')[0]) >= 7) and bool(verInfo[4] & pycurl.VERSION_ASYNCHDNS)
                 except Exception:
                     self.pyCurlAvailable = False
                     printExc()
