@@ -268,6 +268,7 @@ class ConfigMenu(ConfigBaseWidget):
         self.SciezkaCacheOld = config.plugins.iptvplayer.SciezkaCache.value
         self.remove_diabled_hostsOld = config.plugins.iptvplayer.remove_diabled_hosts.value
         self.enabledHostsListOld = GetEnabledHostsList()
+        self.runtimeOptionsValues = self.getRuntimeOptionsValues()
 
     def __del__(self):
         printDBG("ConfigMenu.__del__ -------------------------------")
@@ -309,6 +310,8 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("----- SKIN CONFIGURATION -----"),))
         list.append(getConfigListEntry(_("Skin"), config.plugins.iptvplayer.skin))
         list.append(getConfigListEntry(_("Force internal Skin"), config.plugins.iptvplayer.skinforceinternal))
+        list.append(getConfigListEntry(_("Info bar clock format"), config.plugins.iptvplayer.extplayer_infobanner_clockformat))
+        list.append(getConfigListEntry(_("Player Skin"), config.plugins.iptvplayer.extplayer_skin))
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))
         if config.plugins.iptvplayer.showcover.value:
             list.append(getConfigListEntry(_("    Allowed formats of thumbnails"), config.plugins.iptvplayer.allowedcoverformats))
@@ -322,6 +325,7 @@ class ConfigMenu(ConfigBaseWidget):
                 list.append(getConfigListEntry(_("    Number of rows"), config.plugins.iptvplayer.numOfRow))
                 list.append(getConfigListEntry(_("    Number of columns"), config.plugins.iptvplayer.numOfCol))
         list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
+        list.append(getConfigListEntry(_("Create LCD/VFD summary screen"), config.plugins.iptvplayer.extplayer_summary))
 
         list.append(getConfigListEntry(_("----- PROXIES CONFIGURATION -----"),))
         list.append(getConfigListEntry(_("Alternative proxy server (1)"), config.plugins.iptvplayer.alternative_proxy1))
@@ -420,6 +424,17 @@ class ConfigMenu(ConfigBaseWidget):
             self.SciezkaCacheOld != config.plugins.iptvplayer.SciezkaCache.value:
             pass
             # plugin must be restarted if we wont to this options take effect
+
+    def getRuntimeOptionsValues(self):
+        valTab = []
+        valTab.append(config.plugins.iptvplayer.skin.value)
+        return valTab
+
+    def getMessageAfterSave(self):
+        if self.runtimeOptionsValues != self.getRuntimeOptionsValues():
+            return _('Some settings will be applied only after GUI restart.')
+        else:
+            return ''
 
     def getMessageBeforeClose(self, afterSave):
         return ''
