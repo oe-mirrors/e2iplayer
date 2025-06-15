@@ -405,7 +405,7 @@ class common:
             try:
                 verInfo = pycurl.version_info()
                 printDBG("usePyCurl VERSION: %s" % [verInfo])
-                if verInfo[1].startswith('7.'):  # and 'wolfSSL' in verInfo[5]:
+                if verInfo[1].startswith('7.') or verInfo[1].startswith('8.'):
                     pyCurlInstalled = True
             except Exception:
                 printExc()
@@ -421,14 +421,12 @@ class common:
         if UsePyCurl():
             if self.pyCurlAvailable is None:
                 try:
-                    # import pycurl as pycurl
-                    # test = pycurl.SSLVERSION_TLSv1_3
                     verInfo = pycurl.version_info()
                     printDBG("usePyCurl VERSION: %s" % [verInfo])
                     # #define CURL_VERSION_ASYNCHDNS    (1<<7)
                     # we need to have ASYNC DNS to be able "cancel"
                     # request
-                    if verInfo[1].startswith('7.') or verInfo[1].startswith('8.'):  # and 'wolfSSL' in verInfo[5]:
+                    if verInfo[1].startswith('7.') or verInfo[1].startswith('8.'):
                         self.pyCurlAvailable = True
                     else:
                         self.pyCurlAvailable = False
