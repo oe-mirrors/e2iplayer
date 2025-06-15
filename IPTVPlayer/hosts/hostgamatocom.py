@@ -5,6 +5,7 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
 ###################################################
@@ -305,6 +306,12 @@ class GamatoMovies(CBaseHostClass):
         shortUri = videoUrl
         domain = self.up.getDomain(videoUrl)
         sts, data = self.cm.getPage(videoUrl)
+        if 'gosafedomain.eu' in videoUrl:
+            params = dict(self.AJAX_HEADER)
+            params['no_redirection'] = True
+            sts, dummy = self.cm.getPage(videoUrl, params)
+            if sts and self.cm.meta.get('location'):
+                videoUrl = self.cm.meta.get('location')
         if sts and 'shorte.st/' in data:
             videoUrl = videoUrl.replace(domain, 'sh.st')
             domain = 'sh.st'
@@ -324,6 +331,7 @@ class GamatoMovies(CBaseHostClass):
                             self.cacheLinks[key][idx]['url'] = videoUrl
                             break
         if self.cm.isValidUrl(videoUrl):
+            videoUrl = strwithmeta(videoUrl, {'Referer': self.MAIN_URL})
             return self.up.getVideoLinkExt(videoUrl)
 
         return urlTab
