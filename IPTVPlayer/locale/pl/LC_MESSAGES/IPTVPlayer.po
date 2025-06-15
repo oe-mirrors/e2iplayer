@@ -370,51 +370,51 @@ msgstr "-- OK --"
 
 #: ../components/iptvconfigmenu.py:286
 msgid "----- BASIC CONFIGURATION -----"
-msgstr ""
+msgstr "----- USTAWIENIA PODSTAWOWE -----"
 
 #: ../components/iptvconfigmenu.py:339
 msgid "----- BUFFERING CONFIGURATION -----"
-msgstr ""
+msgstr "----- USTAWIENIA BUFOROWANIA -----"
 
 #: ../components/iptvconfigmenu.py:358
 msgid "----- CAPTCHA CONFIGURATION -----"
-msgstr ""
+msgstr "----- USTAWIENIA CAPTCHA -----"
 
 #: ../components/iptvconfigmenu.py:348
 msgid "----- DOWNLOADING CONFIGURATION -----"
-msgstr ""
+msgstr "----- POBIERANIE KONFIGURACJI -----"
 
 #: ../components/iptvconfigmenu.py:396
 msgid "----- OTHER SETTINGS -----"
-msgstr ""
+msgstr "----- INNE USTAWIENIA -----"
 
 #: ../components/iptvconfigmenu.py:379
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
-msgstr ""
+msgstr "----- USTAWIENIA ODTWARZACZY I ODTWARZANIA -----"
 
 #: ../components/iptvconfigmenu.py:327
 msgid "----- PROXIES CONFIGURATION -----"
-msgstr ""
+msgstr "----- USTAWIENIA PROXY -----"
 
 #: ../components/iptvconfigmenu.py:304
 msgid "----- SECURITY CONFIGURATION -----"
-msgstr ""
+msgstr "----- SECURITY CONFIGURATION -----"
 
 #: ../components/iptvconfigmenu.py:301
 msgid "----- SERVICE CONFIGURATION -----"
-msgstr ""
+msgstr "----- USTAWIENIA SERWISÓW -----"
 
 #: ../components/iptvconfigmenu.py:310
 msgid "----- SKIN CONFIGURATION -----"
-msgstr ""
+msgstr "----- USTAWIENIA SKÓRY -----"
 
 #: ../components/iptvconfigmenu.py:335
 msgid "----- STORAGE CONFIGURATION -----"
-msgstr ""
+msgstr "----- USTAWIENIA PAMIĘCI TRWAŁEJ -----"
 
 #: ../components/iptvconfigmenu.py:368
 msgid "----- SUBTITLES CONFIGURATION -----"
-msgstr ""
+msgstr "----- USTAWIENIA NAPISÓW -----"
 
 #: ../components/configextmovieplayer.py:272
 msgid "----------------- External exteplayer3 options -----------------"
@@ -498,7 +498,7 @@ msgstr ""
 
 #: ../Web/webParts.py:104
 msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr ""
+msgstr "<font color=\"#FE642E\">ZAPAMIĘTAJ:</font></b> E2iPlayer <b>JEST TYLKO</b> specjalistyczną przeglądarką internetową. Aplikacja <b>NIE</b> przechowuje żadnych materiałów!!!</font>"
 
 #: ../hosts/hostbbcsport.py:514
 msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
@@ -606,7 +606,7 @@ msgstr "Dodane przez: %s, reżyser: %s"
 
 #: ../hosts/hostyoutube.py:39
 msgid "Age-gate bypass:"
-msgstr ""
+msgstr "Obejście ograniczeń wieku:"
 
 #: ../hosts/hostseezsu.py:86
 msgid "Airing"
@@ -667,7 +667,7 @@ msgstr "Cały czas"
 
 #: ../hosts/hostyoutube.py:45
 msgid "Allow VP9 codec:"
-msgstr ""
+msgstr "Akceptuj kodek VP9:"
 
 #: ../hosts/hostyoutube.py:43
 msgid "Allow dash format:"
@@ -840,7 +840,7 @@ msgstr "Czy na pewno chcesz usunąć plik \"%s\"?"
 
 #: ../hosts/hostvevo.py:420
 msgid "Artists"
-msgstr ""
+msgstr "Artyści"
 
 #: ../hosts/hostekstraklasatv.py:33
 msgid "Ask"
@@ -892,7 +892,7 @@ msgstr "DZIEŃ"
 
 #: ../tools/iptvhostgroups.py:49
 msgid "Balkans"
-msgstr ""
+msgstr "Bałkany"
 
 #: ../hosts/hostorthobulletscom.py:118
 msgid "Basic Science"
@@ -925,7 +925,7 @@ msgstr "Przegląd zarządu"
 
 #: ../hosts/hostmediasetplay.py:621
 msgid "Brand"
-msgstr ""
+msgstr "Marka"
 
 #: ../hosts/hostartetv.py:109
 #, fuzzy, python-format
@@ -947,7 +947,7 @@ msgstr "Przeglądaj wideo"
 
 #: ../hosts/hostyoutube.py:64
 msgid "Browse youtube trending feeds"
-msgstr ""
+msgstr "Przeglądaj wiodące trendy YouTube"
 
 #: ../components/iptvconfigmenu.py:346
 msgid "Buffering location"
@@ -1134,7 +1134,7 @@ msgstr "Komedie"
 
 #: ../hosts/hostbbcsport.py:189
 msgid "Coming up"
-msgstr "Wkótce"
+msgstr "Wkrótce"
 
 #: ../hosts/hostplusdede.py:351
 #, python-format
@@ -1972,7 +1972,7 @@ msgstr "Menadżer ulubionych"
 
 #: ../hosts/hostidokep.py:81
 msgid "Felhőkép"
-msgstr ""
+msgstr "Zachmurzenie"
 
 #: ../hosts/hostlocalmedia.py:666
 #, python-format
@@ -2004,12 +2004,12 @@ msgstr ""
 
 #: ../hosts/hostfilmtar.py:80
 msgid "Film Kategóriák"
-msgstr ""
+msgstr "Kategorie filmów"
 
 #: ../hosts/hostdmdamedia.py:96 ../hosts/hostmozicsillag.py:113
 #: ../hosts/hostnonstopmozi.py:71
 msgid "Filmek"
-msgstr ""
+msgstr "Filmy"
 
 #: ../suggestions/filmstarts.py:17
 msgid "Filmstarts Suggestions"
@@ -2055,7 +2055,7 @@ msgstr "Stopa i kostka"
 
 #: ../components/iptvconfigmenu.py:312
 msgid "Force internal Skin"
-msgstr ""
+msgstr "Wymuś wewnętrzną Skórę"
 
 #: ../components/iptvplayerwidget.py:1628
 msgid "Format 'wmv' blocked in configuration."
@@ -2068,7 +2068,7 @@ msgstr " Darmowe "
 
 #: ../hosts/hoststreamstat.py:79
 msgid "Free IPTV list"
-msgstr ""
+msgstr "Darmowa lista IPTV"
 
 #: ../hosts/hostmediayou.py:29 ../tools/iptvhostgroups.py:41
 msgid "French"
@@ -2088,7 +2088,7 @@ msgstr "Funkcjonalność zabezpieczona przez Google reCAPTCHA!"
 
 #: ../components/configextmovieplayer.py:334
 msgid "GSTplayer no IFD workarround"
-msgstr ""
+msgstr "Objejście braku IFD GSTplayer"
 
 #: ../hosts/hosttwitchtv.py:507
 #, python-format
@@ -2106,11 +2106,11 @@ msgstr "ogólnie"
 
 #: ../hosts/hostappletrailers.py:104 ../hosts/hostddl.py:575
 msgid "Genre:"
-msgstr "Gatunk:"
+msgstr "Gatunek:"
 
 #: ../hosts/hostgamatocom.py:81
 msgid "Genre: "
-msgstr "Gatuneki: "
+msgstr "Gatunki: "
 
 #: ../hosts/hostshoutcast.py:137
 #, python-format
@@ -2158,11 +2158,11 @@ msgstr "Pobranie tokena nie powiodło się!"
 
 #: ../hosts/hostxxx.py:74
 msgid "Global search :"
-msgstr ""
+msgstr "Globalne wyszukiwanie :"
 
 #: ../hosts/hostxxx.py:75
 msgid "Global sort :"
-msgstr ""
+msgstr "Glboalne sortowanie :"
 
 #: ../components/captcha_helper.py:67
 msgid "Go to the host configuration available under blue button."
@@ -2182,7 +2182,7 @@ msgstr "Graficzna lista wyboru"
 
 #: ../tools/iptvhostgroups.py:45
 msgid "Greek"
-msgstr ""
+msgstr "Grecki"
 
 #: ../components/iptvfavouriteswidgets.py:62 ../tools/iptvfavourites.py:96
 #, python-format
@@ -2241,7 +2241,7 @@ msgstr "Ukry \"%s\" grupę"
 
 #: ../components/playerselector.py:150
 msgid "Hide/Active Group"
-msgstr ""
+msgstr "Ukryj/Pokaż Grupę"
 
 #: ../hosts/hostlaola1tv.py:28
 msgid "High"
@@ -2300,7 +2300,7 @@ msgstr "Humanitarny"
 
 #: ../hosts/hostidokep.py:80
 msgid "Hőtérkép"
-msgstr ""
+msgstr "Mapa ciepła"
 
 #: ../suggestions/imdb.py:19
 msgid "IMDb Suggestions"
@@ -2392,7 +2392,7 @@ msgstr "Wewnętrzny błąd serwera. Kod odpowiedzi serwera: %s"
 
 #: ../hosts/hostonlinestream.py:111
 msgid "Internetes rádiók listázása"
-msgstr ""
+msgstr "Lista radio internetowego"
 
 #: ../components/recaptcha_mye2i_widget.py:137
 #: ../components/recaptcha_v2myjd_widget.py:128
@@ -2409,7 +2409,7 @@ msgstr "Czy ta wiadomość została wyświetlona poprawnie?"
 
 #: ../hosts/hostmindigo.py:805
 msgid "Ismeretterjesztő"
-msgstr ""
+msgstr "Edukacyjny"
 
 #: ../libs/pCommon.py:534 ../libs/pCommon.py:1228
 msgid "It is not allowed to call getURLRequestData from main thread."
@@ -2467,7 +2467,7 @@ msgstr "Włoskie"
 #: ../components/iptvplayerwidget.py:787
 #, python-format
 msgid "Item %s removed!"
-msgstr ""
+msgstr "Obiekt %s usunięty!"
 
 #: ../tools/iptvfavourites.py:174
 #, python-format
@@ -2514,20 +2514,20 @@ msgstr "Klub dziennikarski"
 
 #: ../hosts/hostmindigo.py:797
 msgid "Játék és vetélkedő"
-msgstr ""
+msgstr "Gry i quize"
 
 #: ../hosts/hostmindigo.py:785
 msgid "Kabaré, vígjáték"
-msgstr ""
+msgstr "Kabarety, komedie"
 
 #: ../hosts/hostidokep.py:83
 msgid "Kamerák"
-msgstr ""
+msgstr "Kamery"
 
 #: ../hosts/hostdmdamedia.py:95 ../hosts/hostfilmpapa.py:84
 #: ../hosts/hostfilmvilag.py:93 ../hosts/hostwofvideo.py:80
 msgid "Kategóriák"
-msgstr ""
+msgstr "Kategorie"
 
 #: ../hosts/hostdmdamedia.py:98 ../hosts/hostfilmpapa.py:85
 #: ../hosts/hostfilmtar.py:82 ../hosts/hostfilmvilag.py:94
@@ -2535,7 +2535,7 @@ msgstr ""
 #: ../hosts/hostonlinestream.py:114 ../hosts/hoststreamstat.py:82
 #: ../hosts/hosttv2play.py:127 ../hosts/hostwofvideo.py:81
 msgid "Keresés"
-msgstr ""
+msgstr "Szukaj"
 
 #: ../hosts/hostdmdamedia.py:99 ../hosts/hostfilmpapa.py:86
 #: ../hosts/hostfilmtar.py:83 ../hosts/hostfilmvilag.py:95
@@ -2543,7 +2543,7 @@ msgstr ""
 #: ../hosts/hostonlinestream.py:115 ../hosts/hoststreamstat.py:83
 #: ../hosts/hosttv2play.py:128 ../hosts/hostwofvideo.py:82
 msgid "Keresési előzmények"
-msgstr ""
+msgstr "Historia wyszukiwania"
 
 #: ../hosts/hostorthobulletscom.py:112
 msgid "Knee & Sports"
@@ -2689,7 +2689,7 @@ msgstr "Ostatnio aktualizowane"
 #: ../tools/iptvhostgroups.py:46
 #, fuzzy
 msgid "Latino"
-msgstr "Ocena"
+msgstr "Latynoski"
 
 #: ../components/iptvplayerwidget.py:693
 msgid "Lead programmer: "
@@ -2876,7 +2876,7 @@ msgstr ""
 
 #: ../Web/webParts.py:68 ../Web/webParts.py:85
 msgid "Logs"
-msgstr ""
+msgstr "Logi"
 
 #: ../hosts/hostcartoonhd.py:32 ../hosts/hostxrysoise.py:31
 msgid "Longest"
@@ -2892,7 +2892,7 @@ msgstr ""
 
 #: ../components/iptvconfigmenu.py:399
 msgid "MIPS Floating Point Architecture"
-msgstr ""
+msgstr "Architektura zmiennoprzecinkowa MIPS"
 
 #: ../hosts/hostfilmpalast.py:47 ../hosts/hostfilmstreamvkcom.py:103
 #: ../hosts/hosthoofootcom.py:39 ../hosts/hostkabarety.py:45
@@ -2953,7 +2953,7 @@ msgstr "Menu"
 
 #: ../hosts/hostmindigo.py:813
 msgid "Mesék"
-msgstr ""
+msgstr "Bajki"
 
 #: ../hosts/hostlaola1tv.py:28
 msgid "Mid"
@@ -2978,7 +2978,7 @@ msgstr "Przegapiłeś?"
 
 #: ../hosts/hostwatchwrestling.py:47
 msgid "Monthly"
-msgstr ""
+msgstr "Miesięczny"
 
 #: ../hosts/hostddl.py:585
 msgid "Mood:"
@@ -3741,7 +3741,7 @@ msgstr "Pochwała:"
 
 #: ../hosts/hostddl.py:597
 msgid "Praises:"
-msgstr "Pochwał:"
+msgstr "Pochwały:"
 
 #: ../components/iptvconfigmenu.py:400
 msgid "Prefer hlsld for playlist with alt. media"
@@ -4050,7 +4050,7 @@ msgstr "Odwróć listę odtwarzania"
 
 #: ../hosts/hostmindigo.py:789
 msgid "Romantikus"
-msgstr ""
+msgstr "Romantyczny"
 
 #: ../hosts/hostmediayou.py:29 ../tools/iptvhostgroups.py:42
 msgid "Russian"
@@ -4622,7 +4622,7 @@ msgstr ""
 
 #: ../hosts/hostmusicbox.py:43
 msgid "Show Youtube Api Key warnings"
-msgstr ""
+msgstr "Pokaż ostrzeżenia klucza API YouTube"
 
 #: ../libs/videostar.py:42 ../libs/weebtv.py:59
 msgid "Show all channels"
@@ -4659,11 +4659,11 @@ msgstr "Wyświetl elementy zabezpieczone DRM"
 
 #: ../hosts/hostartetv.py:30
 msgid "Show only audio in selected language:"
-msgstr ""
+msgstr "Pokaż tylko dźwięk w wybranym języku:"
 
 #: ../hosts/hostartetv.py:29
 msgid "Show only best quality of streams:"
-msgstr ""
+msgstr "Pokaż tylko najlepszą jakość strumieni:"
 
 #: ../hosts/hosttvnowde.py:35
 msgid "Show paid items (it may be illegal)"
@@ -4696,7 +4696,7 @@ msgstr "Skóra"
 
 #: ../components/configextmovieplayer.py:265
 msgid "Skip video shorter than [min]"
-msgstr ""
+msgstr "Pomiń wideo krótsze niż [min]"
 
 #: ../hosts/hostwatchwrestling.py:56 ../hosts/hostwatchwrestlinguno.py:41
 msgid "Smackdown"
@@ -4729,7 +4729,7 @@ msgstr "Przepraszamy. Program TVPlayer jest obecnie dostępny tylko w Wielkiej B
 
 #: ../components/playerselector.py:149
 msgid "Sort Mode"
-msgstr ""
+msgstr "Tryb sortowania"
 
 #: ../hosts/hostxxx.py:73
 msgid "Sort Myfreecams :"
@@ -4792,7 +4792,7 @@ msgstr "Specjalności"
 
 #: ../hosts/hostorthobulletscom.py:110
 msgid "Spine"
-msgstr ""
+msgstr "Kręgosłup"
 
 #: ../hosts/hostmindigo.py:817 ../hosts/hostyoutube.py:200
 #: ../tools/iptvhostgroups.py:34
@@ -4944,7 +4944,7 @@ msgstr "Napisy dla: %s"
 
 #: ../hosts/hostonlinestream.py:110
 msgid "Sugárzó rádiók listázása"
-msgstr ""
+msgstr "Radio tradycyjne (naziemnie, itp.)"
 
 #: ../hosts/hostorthobulletscom.py:99
 msgid "Surgical Approaches"
@@ -4952,19 +4952,19 @@ msgstr "Podejścia chirurgiczne"
 
 #: ../hosts/hostorthobulletscom.py:100
 msgid "Surgical Cases"
-msgstr ""
+msgstr "Przypadki chirurgiczne"
 
 #: ../hosts/hostorthobulletscom.py:101
 msgid "Surgical Complications"
-msgstr ""
+msgstr "Powikłania chhirurgiczne"
 
 #: ../hosts/hostorthobulletscom.py:102
 msgid "Surgical Techniques"
-msgstr ""
+msgstr "Techniki chirurgiczne"
 
 #: ../tools/iptvhostgroups.py:48
 msgid "Swedish"
-msgstr ""
+msgstr "Szwedzkie"
 
 #: ../components/iptvextmovieplayer.py:891
 msgid "Synchronize"
@@ -4976,7 +4976,7 @@ msgstr "System"
 
 #: ../hosts/hostmindigo.py:801
 msgid "Színház"
-msgstr ""
+msgstr "Teatr"
 
 #: ../hosts/hostwatchwrestling.py:51
 msgid "TNA"
@@ -5023,7 +5023,7 @@ msgstr "Seriale TV"
 
 #: ../hosts/hostonlinestream.py:112
 msgid "TV-k listázása"
-msgstr ""
+msgstr "Kanały TV"
 
 #: ../hosts/hostted.py:81 ../hosts/hostted.py:383 ../hosts/hostted.py:663
 msgid "Talks"
@@ -5207,11 +5207,11 @@ msgstr "Przezroczyste"
 
 #: ../hosts/hostorthobulletscom.py:109
 msgid "Trauma"
-msgstr ""
+msgstr "Uraz"
 
 #: ../hosts/hostorthobulletscom.py:104
 msgid "Treatment Consult"
-msgstr ""
+msgstr "Konsultacja leczenia"
 
 #: ../components/iptvconfigmenu.py:46
 #, fuzzy
@@ -5230,7 +5230,7 @@ msgstr "Spróbuj ominąć DRM (może być nielegalne)"
 
 #: ../components/iptvextmovieplayer.py:1779
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
-msgstr ""
+msgstr "Spróbuj zmienić extplayer lub wyłącz IFD w konfiguracji GSTplayer"
 
 # hostwebstream
 #: ../hosts/hostwebstream.py:98
@@ -5334,15 +5334,15 @@ msgstr "Typ: "
 #: ../hosts/hostshoutcast.py:144
 #, python-format
 msgid "Type: %s"
-msgstr "Typ %s"
+msgstr "Typ: %s"
 
 #: ../hosts/hostidokep.py:85
 msgid "Térképek"
-msgstr ""
+msgstr "Pogoda"
 
 #: ../hosts/hostmindigo.py:777
 msgid "Tévéfilmek és sorozatok"
-msgstr ""
+msgstr "Filmy i seriale"
 
 #: ../hosts/hostwatchwrestlinguno.py:45
 msgid "UFC"
@@ -5696,7 +5696,7 @@ msgstr "Web proxy"
 
 #: ../hosts/hostonlinestream.py:113
 msgid "Webkamerák listázása"
-msgstr ""
+msgstr "Kamery internetowe"
 
 #: ../hosts/hostwatchwrestling.py:52
 msgid "Weekly Indys"
@@ -5724,7 +5724,7 @@ msgstr "Recenzja pisemnych tablic"
 
 #: ../hosts/hostmusicbox.py:94
 msgid "Wrong Youtube Api Key length"
-msgstr ""
+msgstr "Niepoprawna długość klucza API YouTube"
 
 #: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4822
 msgid "Wrong answer."
@@ -5869,11 +5869,11 @@ msgstr "Sugestie YouTube"
 
 #: ../hosts/hostmusicbox.py:102
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr ""
+msgstr "Wyszukiwania YouTube dzialają szybciej jeżeli wpiszesz klucz API w menu ustawień"
 
 #: ../hosts/hostmindigo.py:809
 msgid "Zene"
-msgstr ""
+msgstr "Muzyka"
 
 #: ../components/confighost.py:45
 #, python-format
@@ -5986,7 +5986,7 @@ msgstr "wyśrodkuj"
 
 #: ../components/iptvconfigmenu.py:231
 msgid "cobalt"
-msgstr ""
+msgstr "kobaltowy"
 
 #: ../hosts/hostxxx.py:59
 msgid "couple"
@@ -6153,7 +6153,7 @@ msgstr "wyjdź z odtwarzacza..."
 
 #: ../components/configbase.py:33
 msgid "lime"
-msgstr "cytrynowo zielony"
+msgstr "limonkowy"
 
 #: ../components/iptvconfigmenu.py:231
 msgid "line"
@@ -6162,7 +6162,7 @@ msgstr ""
 #: ../hosts/hostmediasetplay.py:349
 #, fuzzy
 msgid "live"
-msgstr "oliwkowy"
+msgstr "na żywo"
 
 #: ../components/iptvconfigmenu.py:370 ../components/iptvconfigmenu.py:372
 #: ../components/iptvconfigmenu.py:374 ../hosts/hostcartoonhd.py:39
