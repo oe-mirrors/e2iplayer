@@ -1,61 +1,85 @@
 # -*- coding: utf-8 -*-
 
-###################################################
-# LOCAL import
-###################################################
-from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError, GetIPTVSleep
+import base64
+from binascii import a2b_hex, hexlify, unhexlify
+import codecs
+from copy import deepcopy
+from hashlib import md5, sha256
+import math
+from random import choice as random_choice, randint, random, randrange
+import re
+import string
+import time
+from xml.etree import cElementTree
+
+from Components.config import config
+from Screens.MessageBox import MessageBox
+
+from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute, MainSessionWrapper
 from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, CSelOneLink, GetCookieDir, formatBytes, GetPyScriptCmd, GetTmpDir, rm, GetDefaultLang, GetFileSize, GetPluginDir, MergeDicts, GetJSScriptFile
-from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
-from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
-from Plugins.Extensions.IPTVPlayer.libs.gledajfilmDecrypter import gledajfilmDecrypter
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import (
+    GetIPTVSleep,
+    SetIPTVPlayerLastHostError,
+    TranslateTXT as _,
+)
+from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+from Plugins.Extensions.IPTVPlayer.libs import aadecode, ph, pyaes
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes import AES
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.base import noPadding
-from Plugins.Extensions.IPTVPlayer.libs import pyaes
-from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML, clean_html
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import unpackJSPlayerParams, unpackJS, JS_FromCharCode, VIDUPME_decryptPlayerParams, SAWLIVETV_decryptPlayerParams, TEAMCASTPL_decryptPlayerParams, VIDEOWEED_decryptPlayerParams, KINGFILESNET_decryptPlayerParams, captchaParser, getDirectM3U8Playlist, getMPDLinksWithMeta, getF4MLinksWithMeta, decorateUrl, int2base, drdX_fx, unicode_escape
+from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.libs.dehunt import dehunt
-from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute, MainSessionWrapper
-from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-from Plugins.Extensions.IPTVPlayer.libs import aadecode
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import dumps as json_dumps, loads as json_loads
+from Plugins.Extensions.IPTVPlayer.libs.gledajfilmDecrypter import gledajfilmDecrypter
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
-from Screens.MessageBox import MessageBox
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
+from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import (
+    captchaParser,
+    decorateUrl,
+    drdX_fx,
+    getDirectM3U8Playlist,
+    getF4MLinksWithMeta,
+    getMPDLinksWithMeta,
+    int2base,
+    JS_FromCharCode,
+    KINGFILESNET_decryptPlayerParams,
+    SAWLIVETV_decryptPlayerParams,
+    TEAMCASTPL_decryptPlayerParams,
+    unicode_escape,
+    unpackJS,
+    unpackJSPlayerParams,
+    VIDEOWEED_decryptPlayerParams,
+    VIDUPME_decryptPlayerParams,
+)
+from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.mtv import GametrailersIE
+from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html, unescapeHTML
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str, iterDictValues
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus, urllib_unquote, urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import parse_qs, urljoin, urlparse, urlsplit, urlunparse, urlunsplit
+from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute, js_execute_ext
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
+    CSelOneLink,
+    formatBytes,
+    GetCookieDir,
+    GetDefaultLang,
+    GetFileSize,
+    GetJSScriptFile,
+    GetPluginDir,
+    GetPyScriptCmd,
+    GetTmpDir,
+    MergeDicts,
+    printDBG,
+    printExc,
+    rm,
+)
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+
 if not isPY2():
     basestring = str
     xrange = range
     from functools import cmp_to_key
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote, urllib_quote_plus, urllib_urlencode, urllib_quote
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary, iterDictValues
-###################################################
-# FOREIGN import
-###################################################
-import re
-import time
-import string
-import codecs
-import base64
-import math
-
-from xml.etree import cElementTree
-from random import random, randint, randrange, choice as random_choice
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, urlunparse, parse_qs
-from binascii import hexlify, unhexlify, a2b_hex
-from hashlib import md5, sha256
-from Components.config import config
-
-from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.mtv import GametrailersIE
-try:
-    from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlsplit, urlunsplit, urljoin
-except Exception:
-    printExc()
-###################################################
 
 
 def tear_decode(data_file, data_seed):
@@ -4662,8 +4686,8 @@ class pageParser(CaptchaHelper):
                     if not ret.get('sts'):
                         SetIPTVPlayerLastHostError(_('Fail to get "%s".') % imgUrl)
                         return False
+
                     from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
-                    from copy import deepcopy
                     params = deepcopy(IPTVMultipleInputBox.DEF_PARAMS)
                     params['accep_label'] = _('Send')
                     params['title'] = _('Answer')

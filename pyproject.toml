@@ -2,3 +2,19 @@
 line-length = 120
 select = ["E","F","W"]
 ignore = ["E501","E722","E741","E402","E731","F401","F821","F811","F405","F403","F841","W191"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+force_sort_within_sections = true
+combine_as_imports = true
+lines_between_types = 1
+include_trailing_comma = true
+multi_line_output = 3
+force_single_line = false
+default_section = "THIRDPARTY"
+sections = ["STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+known_third_party = ["Components", "Screens", "Tools"]
+known_first_party = ["Plugins"]
+no_lines_before = ["STDLIB"]
+order_by_type = false
