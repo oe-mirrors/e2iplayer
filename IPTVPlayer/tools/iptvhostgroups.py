@@ -283,7 +283,7 @@ class IPTVHostsGroups:
             except Exception:
                 printExc()
 
-        if GRIDSUPPORT and "all" not in groups:
+        if GRIDSUPPORT and "all" not in groups and "all" not in disabledGroups:
             return
 
         self.LOADED_GROUPS = groups
