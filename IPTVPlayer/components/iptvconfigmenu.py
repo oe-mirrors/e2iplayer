@@ -59,14 +59,12 @@ config.plugins.iptvplayer.IPTVDMRunAtStart = ConfigYesNo(default=False)
 config.plugins.iptvplayer.IPTVDMShowAfterAdd = ConfigYesNo(default=True)
 config.plugins.iptvplayer.IPTVDMMaxDownloadItem = ConfigSelection(default="1", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4")])
 
-config.plugins.iptvplayer.AktualizacjaWmenu = ConfigYesNo(default=True)
 config.plugins.iptvplayer.sortuj = ConfigYesNo(default=True)
 config.plugins.iptvplayer.remove_diabled_hosts = ConfigYesNo(default=False)
 config.plugins.iptvplayer.IPTVWebIterface = ConfigYesNo(default=False)
 config.plugins.iptvplayer.plugin_autostart = ConfigYesNo(default=False)
 config.plugins.iptvplayer.plugin_autostart_method = ConfigSelection(default="wizard", choices=[("wizard", "wizard"), ("infobar", "infobar")])
 
-# config.plugins.iptvplayer.preferredupdateserver = ConfigSelection(default="", choices=[("", _("Default")), ("1", "http://e2iplayer.pkteam.pl/"), ("2", _("Gitlab")), ("3", _("private"))])
 config.plugins.iptvplayer.osk_type = ConfigSelection(default="", choices=[("", _("Auto")), ("system", _("System")), ("own", _("Own model"))])
 config.plugins.iptvplayer.osk_layout = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.osk_allow_suggestions = ConfigYesNo(default=True)
@@ -464,7 +462,6 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.configProtectedByPin,
             config.plugins.iptvplayer.osk_type,
             config.plugins.iptvplayer.plugin_autostart
-            # config.plugins.iptvplayer.preferredupdateserver,
             # config.plugins.iptvplayer.captcha_bypass_free,
             # config.plugins.iptvplayer.captcha_bypass_pay
         ]
