@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-15 21:15+0200\n"
-"PO-Revision-Date: 2025-06-14 14:35+0200\n"
+"PO-Revision-Date: 2025-06-16 17:56+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
 "Language: de_DE\n"
@@ -4680,9 +4680,8 @@ msgid "Some changes will be applied only after movie player restart."
 msgstr "Manche Änderungen werden erst nach Movie Player Neustart angewendet."
 
 #: ../components/iptvconfigmenu.py:435
-#, fuzzy
 msgid "Some settings will be applied only after GUI restart."
-msgstr "Manche Änderungen werden erst nach Movie Player Neustart angewendet."
+msgstr "Manche Einstellungen werden erst nach GUI Neustart angewendet."
 
 #: ../hosts/hostfilmtar.py:81
 msgid "Sorozat Kategóriák"
