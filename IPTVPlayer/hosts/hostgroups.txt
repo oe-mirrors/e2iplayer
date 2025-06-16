@@ -73,7 +73,6 @@
   "ddl",
   "hdfull",
   "dixmax",
-  "plusdede",
   "fenixsite",
   "kkiste",
   "kinoger",
@@ -355,7 +354,6 @@
   "dailymotion",
   "vimeo",
   "twitchtv",
-  "plusdede",
   "hdfull",
   "dixmax"
  ],
