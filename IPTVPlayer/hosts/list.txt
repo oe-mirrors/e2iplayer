@@ -1,7 +1,6 @@
 host123movieshd
 host3player
 host3sktv
-host7tvde
 hostakoam
 hostaltadefinizione01
 hostanimeodcinki
@@ -71,7 +70,6 @@ hosthdsto
 hosthoofootcom
 hosthorrorycc
 hostidokep
-hostinfoversion
 hostinteriatv
 hostipla
 hostiptvplayerinfo
@@ -130,7 +128,6 @@ hostplanetstreamingcom
 hostplaypuls
 hostplayrtsiw
 hostplayzcc
-hostplusdede
 hostputlockertvto
 hostquesttvcouk
 hostradiostacja
