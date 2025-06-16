@@ -424,7 +424,6 @@ class urlparser:
             'clicknupload.org': self.pp.parserUPLOAD,
             'clickopen.win': self.pp.parserCLICKOPENWIN,
             'clipwatching.com': self.pp.parserCLIPWATCHINGCOM,
-            'clooud.cc': self.pp.parserCLOOUDCC,
             'closedjelly.net': self.pp.parserONLYSTREAMTV,
             'cloud.mail.ru': self.pp.parserCOUDMAILRU,
             'cloudcartel.net': self.pp.parserCLOUDCARTELNET,
@@ -586,7 +585,8 @@ class urlparser:
             'hdgo.cx': self.pp.parserHDGOCC,
             'hdvid.tv': self.pp.parserHDVIDTV,
             'herokuapp.com': self.pp.parserANIMESHINDEN,
-            'hexupload.net': self.pp.parserJAWCLOUDCO,
+            'hexload.com': self.pp.parserHEXLOAD,
+            'hexupload.net': self.pp.parserHEXLOAD,
             'highload.to': self.pp.parserHIGHLOADTO,
             'highstream.tv': self.pp.parserCLIPWATCHINGCOM,
             'hlsflast.com': self.pp.parserJWPLAYER,
@@ -605,8 +605,6 @@ class urlparser:
             'interia.tv': self.pp.parserINTERIATV,
             # j
             'jacvideo.com': self.pp.parseJACVIDEOCOM,
-            'jawcloud.co': self.pp.parserJAWCLOUDCO,
-            'jetload.net': self.pp.parserJETLOADNET,
             'jodwish.com': self.pp.parserJWPLAYER,
             'johntryopen.com': self.pp.parserMATCHATONLINE,
             'jokerswidget.org': self.pp.parserJOKERSWIDGETORG,
@@ -619,7 +617,7 @@ class urlparser:
             'kinoger.be': self.pp.parserJWPLAYER,
             'kinoger.pw': self.pp.parserVIDGUARDTO,
             'kinoger.re': self.pp.parserSBS,
-            'kinoger.ru': self.pp.parserVAST,
+            'kinoger.ru': self.pp.parserBOOSTERADXONLINE,
             'krakenfiles.com': self.pp.parserKRAKENFILESCOM,
             # l
             'leton.tv': self.pp.parserDOTSTREAMTV,
@@ -668,7 +666,7 @@ class urlparser:
             'moevideo.net': self.pp.parserPLAYEREPLAY,
             'moflix-stream.click': self.pp.parserJWPLAYER,
             'moflix-stream.day': self.pp.parserVIDGUARDTO,
-            'moflix-stream.fans': self.pp.parserVAST,
+            'moflix-stream.fans': self.pp.parserBOOSTERADXONLINE,
             'moflix.rpmplay.xyz': self.pp.parserSBS,
             'moflix.upns.xyz': self.pp.parserSBS,
             'moonwalk.cc': self.pp.parserMOONWALKCC,
@@ -716,7 +714,6 @@ class urlparser:
             'ok.ru': self.pp.parserOKRU,
             'onet.pl': self.pp.parserONETTV,
             'onet.tv': self.pp.parserONETTV,
-            'onlinez.pl': self.pp.parserJAWCLOUDCO,
             'onlystream.tv': self.pp.parserONLYSTREAMTV,
             'openlive.org': self.pp.parserOPENLIVEORG,
             'openload.info': self.pp.parserEXASHARECOM,
@@ -744,7 +741,6 @@ class urlparser:
             'poophq.com': self.pp.parserVEEV,
             'premiertvlive.com': self.pp.parserTXNEWSNETWORK,
             'premiumserver.club': self.pp.parserMSTREAMICU,
-            'prettyfast.to': self.pp.parserPRETTYFASTTO,
             'primevideos.net': self.pp.parserPRIMEVIDEOS,
             'privatestream.tv': self.pp.parserPRIVATESTREAM,
             'promptfile.com': self.pp.parserPROMPTFILE,
@@ -929,7 +925,6 @@ class urlparser:
             'upload.af': self.pp.parserUPLOAD,
             'upload.mn': self.pp.parserUPLOAD2,
             'uploadc.com': self.pp.parserUPLOADCCOM,
-            'uploadit.cc': self.pp.parserJAWCLOUDCO,
             'uploaduj.net': self.pp.parserUPLOADUJNET,
             'uploadx.link': self.pp.parserUPLOAD,
             'uploadx.org': self.pp.parserUPLOAD,
@@ -1011,7 +1006,6 @@ class urlparser:
             'videzz.net': self.pp.parserVIDOZANET,
             'vidshare.tv': self.pp.parserVIDSHARETV,
             'vidspace.io': self.pp.parserVIDEOSPACE,
-            'vidspot.net': self.pp.parserVIDSPOT,
             'vidsrc.pro': self.pp.parserVIDSRCPRO,
             'vidsso.com': self.pp.parserVIDSSO,
             'vidstodo.me': self.pp.parserVIDSTODOME,
@@ -5551,41 +5545,6 @@ class pageParser(CaptchaHelper):
                 urlTab.append({'name': 'res: ' + label, 'url': url})
         return urlTab
 
-    def parserPRETTYFASTTO(self, baseUrl):
-        printDBG("parserPRETTYFASTTO baseUrl[%r]" % baseUrl)
-        baseUrl = strwithmeta(baseUrl)
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        referer = baseUrl.meta.get('Referer')
-        if referer:
-            HTTP_HEADER['Referer'] = referer
-        COOKIE_FILE = GetCookieDir('ddos-guard.net.cookie')
-        urlParams = {'header': HTTP_HEADER, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': COOKIE_FILE}
-        urlParams['cloudflare_params'] = {'cookie_file': COOKIE_FILE, 'User-Agent': HTTP_HEADER['User-Agent']}
-        self.cm.clearCookie(COOKIE_FILE, ['__cfduid', 'cf_clearance', '__ddgu'])
-        sts, data = self.cm.getPageDDGU(baseUrl, urlParams)
-        if not sts:
-            return False
-        cUrl = self.cm.meta['url']
-        retTab = []
-        data = ph.find(data, ('<video', '>'), '</video>', flags=0)[1]
-        data = ph.findall(data, '<source', '>', flags=0)
-        for item in data:
-            url = self.cm.getFullUrl(ph.getattr(item, 'src').replace('&amp;', '&'), cUrl)
-            type = ph.clean_html(ph.getattr(item, 'type').lower())
-            if 'video' not in type and 'x-mpeg' not in type:
-                continue
-            cookieHeader = self.cm.getCookieHeader(COOKIE_FILE, domain=self.cm.getBaseUrl(url, True))
-            url = strwithmeta(url, {'Referer': cUrl, 'User-Agent': HTTP_HEADER['User-Agent'], 'Cookie': cookieHeader})
-            if 'video' in type:
-                width = ph.getattr(item, 'width')
-                height = ph.getattr(item, 'height')
-                bitrate = ph.getattr(item, 'bitrate')
-                retTab.append({'name': '[%s] %sx%s %s' % (type, width, height, bitrate), 'url': url})
-            elif 'x-mpeg' in type:
-                retTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
-
-        return retTab
-
     def parserHYDRAXNET(self, baseUrl):
         printDBG("parserHYDRAXNET baseUrl[%r]" % baseUrl)
         player = json_loads(baseUrl.meta['player_data'])
@@ -5732,10 +5691,6 @@ class pageParser(CaptchaHelper):
             elif 'mp4' in url:
                 urlTab.append({'name': type, 'url': url})
         return urlTab
-
-    def parserCLOOUDCC(self, baseUrl):
-        printDBG("parserCLOOUDCC baseUrl[%r]" % baseUrl)
-        return self.parserPRETTYFASTTO(baseUrl)
 
     def parserVEUCLIPS(self, baseUrl):
         printDBG("parserVEUCLIPS baseUrl[%r]" % baseUrl)
@@ -5890,11 +5845,6 @@ class pageParser(CaptchaHelper):
         for idx in range(len(linksTab)):
             linksTab[idx]['url'] = strwithmeta(linksTab[idx]['url'], {'Referer': baseUrl, 'User-Agent': HTTP_HEADER['User-Agent']})
         return linksTab
-
-    def parserVIDSPOT(self, url):
-        printDBG("parserVIDSPOT url[%r]" % url)
-        # example video: http://vidspot.net/2oeqp21cdsee
-        return self.__parseJWPLAYER_A(url, 'vidspot.net')
 
     def parserVIDBULL(self, baseUrl):
         printDBG("parserVIDBULL baseUrl[%s]" % baseUrl)
@@ -12181,37 +12131,6 @@ class pageParser(CaptchaHelper):
             urlTab.append({'name': '{0} {1}'.format(domain, label), 'url': url})
         return urlTab
 
-    def parserJAWCLOUDCO(self, baseUrl):
-        printDBG("parserJAWCLOUDCO baseUrl[%r]" % baseUrl)
-
-        baseUrl = strwithmeta(baseUrl)
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        HTTP_HEADER['Referer'] = baseUrl.meta.get('Referer', baseUrl)
-        urlParams = {'with_metadata': True, 'header': HTTP_HEADER}
-
-        sts, data = self.cm.getPage(baseUrl, urlParams)
-        if not sts:
-            return False
-        cUrl = self.cm.meta['url']
-        domain = urlparser.getDomain(cUrl)
-
-        linksTab = []
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<video', '</video>')[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<source', '>', False)
-        for item in data:
-            url = self.cm.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?)['"]''')[0], domain)
-            type = self.cm.ph.getSearchGroups(item, '''type=['"]([^'^"]+?)['"]''')[0].lower()
-            if 'video' not in type and 'x-mpeg' not in type:
-                continue
-            if url == '':
-                continue
-            if 'video' in type:
-                url = strwithmeta(url, {'Referer': baseUrl, 'iptv_wget_continue': True, 'iptv_wget_timeout': 100})
-                linksTab.append({'name': '[%s]' % type, 'url': url})
-            elif 'x-mpeg' in type:
-                linksTab.extend(getDirectM3U8Playlist(url, checkContent=True, sortWithMaxBitrate=999999999))
-        return linksTab
-
     def parserGOUNLIMITEDTO(self, baseUrl):
         printDBG("parserGOUNLIMITEDTO baseUrl[%r]" % baseUrl)
 
@@ -13246,61 +13165,6 @@ class pageParser(CaptchaHelper):
                 urlsTab.append(params)
 
         return urlsTab
-
-    def parserJETLOADNET(self, baseUrl):
-        printDBG("parserJETLOADNET baseUrl[%s]" % baseUrl)
-
-        video_id = self.cm.ph.getSearchGroups(baseUrl + '/', '/([A-Za-z0-9]{12})[/.]')[0]
-        printDBG("parserJETLOADNET video_id[%s]" % video_id)
-
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        referer = baseUrl.meta.get('Referer')
-        if referer:
-            HTTP_HEADER['Referer'] = referer
-        urlParams = {'header': HTTP_HEADER}
-
-        urlParams['ignore_http_code_ranges'] = [(502, 502)]
-        urlParams['header'].update({'Accept': 'application/json, text/javascript, */*', 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest'})
-        url = 'https://jetload.net/api/fetch/{0}'.format(video_id)
-        sts, data = self.cm.getPage(url, urlParams)
-        if not sts:
-            return False
-
-        if '"err":' in data:
-            sts, data = self.cm.getPage('http://jlpair.net', urlParams)
-            if not sts:
-                return False
-            cUrl = self.cm.meta['url']
-
-            sitekey = ph.search(data, '''sitekey=['"]([^"^']+?)['"]''')[0]
-            token = ''
-            if sitekey != '':
-                token, errorMsgTab = self.processCaptcha(sitekey, cUrl)
-                if token == '':
-                    SetIPTVPlayerLastHostError('\n'.join(errorMsgTab))
-                    return False
-
-            post_data = {'g-recaptcha-response': token}
-            sts, data = self.cm.getPage('http://jlpair.net', urlParams, post_data)
-            if not sts:
-                return False
-
-            url = 'https://jetload.net/api/fetch/{0}'.format(video_id)
-            sts, data = self.cm.getPage(url, urlParams)
-            if not sts:
-                return False
-
-        printDBG("parserJETLOADNET data[%s]" % data)
-        urlTab = []
-        url = self.cm.ph.getSearchGroups(data, '''['"]src['"]:['"]([^'^"]+?)['"]''')[0]
-        if url != '' and 'm3u8' not in url:
-            url = strwithmeta(url, {'Origin': "https://" + urlparser.getDomain(baseUrl), 'Referer': baseUrl})
-            urlTab.append({'name': 'mp4', 'url': url})
-        hlsUrl = self.cm.ph.getSearchGroups(data, r'''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', ignoreCase=True)[0]
-        if hlsUrl != '':
-            hlsUrl = strwithmeta(hlsUrl, {'Origin': "https://" + urlparser.getDomain(baseUrl), 'Referer': baseUrl})
-            urlTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
-        return urlTab
 
     def parserVIDLOADNET(self, baseUrl):
         printDBG("parserVIDLOADNET baseUrl[%s]" % baseUrl)
@@ -15283,7 +15147,7 @@ class pageParser(CaptchaHelper):
 
         return urlTab
 
-    def parserBOOSTERADXONLINE(self, baseUrl):
+    def parserBOOSTERADXONLINE(self, baseUrl):  # need fix
         printDBG("parserBOOSTERADXONLINE baseUrl[%s]" % baseUrl)
 
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -15369,34 +15233,6 @@ class pageParser(CaptchaHelper):
         hlsUrl = urlparser.decorateUrl(hlsUrl, {'iptv_proto': 'm3u8', 'User-Agent': urlParams['header']['User-Agent'], 'Referer': tmpUrl, 'Origin': urlparser.getDomain(tmpUrl, False)})
         if hlsUrl != '':
             urlTab.extend(getDirectM3U8Playlist(hlsUrl))
-        return urlTab
-
-    def parserVAST(self, base_url):
-        printDBG("parserVAST baseUrl[%s]" % base_url)
-        host = base_url.split("/")[2]
-        import requests
-        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0"
-        headers = {"Referer": "https://%s" % host, "User-Agent": user_agent}
-        session = requests.Session()
-        session.headers.update(headers)
-        html = session.get(base_url).text
-        r = re.search(r'''(?:const|var|let|window\.)\s*\w*\s*=\s*'([^']+)';''', html)
-        key = unhexlify(requests.get(unhexlify("68747470733A2F2F7261772E67697468756275736572636F6E74656E742E636F6D2F796F676573682D6861636B65722F706C61796572782F726566732F68656164732F6D61696E2F6B65792E6B6579"), headers={'Referer': 'https://github.com/'}).text)
-        if not r or not key:
-            return []
-        data = base64.b64decode(r.group(1))
-        decryptor = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(key, data[:16]))
-        data = decryptor.feed(data[16:]) + decryptor.feed()
-        data = data.decode('utf-8')
-        r = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', data)
-        sub_tracks = []
-        sub = re.findall(r'file":"([^"]+)","label":"([^"]+)","kind', data)
-        if sub:
-            sub_tracks = [{'title': '', 'url': url, 'lang': q} for url, q in sub]
-        urlTab = []
-        url = urlparser.decorateUrl(r.group(1), {'iptv_proto': 'm3u8', 'User-Agent': user_agent, 'Referer': 'https://%s/' % host, 'Origin': 'https://%s' % host, 'external_sub_tracks': sub_tracks})
-        if url:
-            urlTab.extend(getDirectM3U8Playlist(url))
         return urlTab
 
     def parserVEEV(self, baseUrl):  # check 150625
@@ -15707,4 +15543,18 @@ class pageParser(CaptchaHelper):
         if hlsUrl:
             hls = urlparser.decorateUrl(hlsUrl.group(1), {'iptv_proto': 'm3u8', 'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': baseUrl, 'Origin': host[:-1], 'external_sub_tracks': subTracks})
             urlTab.extend(getDirectM3U8Playlist(hls))
+        return urlTab
+
+    def parserHEXLOAD(self, baseUrl):  # add 160625
+        printDBG("parserHEXLOAD baseUrl[%s]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        urlTab = []
+        postdata = {'op': 'download3', 'id': urlparse(baseUrl).path.strip('/'), 'ajax': '1', 'method_free': '1', 'dataType': "json"}
+        sts, data = self.cm.getPage("https://hexload.com/download", HTTP_HEADER, postdata)
+        if not sts:
+            return []
+        data = json_loads(data)
+        url = data.get('result', {}).get('url')
+        if url:
+            urlTab.append({'name': 'mp4', 'url': url})
         return urlTab
