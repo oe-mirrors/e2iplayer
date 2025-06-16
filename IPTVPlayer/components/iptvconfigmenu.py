@@ -59,14 +59,12 @@ config.plugins.iptvplayer.IPTVDMRunAtStart = ConfigYesNo(default=False)
 config.plugins.iptvplayer.IPTVDMShowAfterAdd = ConfigYesNo(default=True)
 config.plugins.iptvplayer.IPTVDMMaxDownloadItem = ConfigSelection(default="1", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4")])
 
-config.plugins.iptvplayer.AktualizacjaWmenu = ConfigYesNo(default=True)
 config.plugins.iptvplayer.sortuj = ConfigYesNo(default=True)
 config.plugins.iptvplayer.remove_diabled_hosts = ConfigYesNo(default=False)
 config.plugins.iptvplayer.IPTVWebIterface = ConfigYesNo(default=False)
 config.plugins.iptvplayer.plugin_autostart = ConfigYesNo(default=False)
 config.plugins.iptvplayer.plugin_autostart_method = ConfigSelection(default="wizard", choices=[("wizard", "wizard"), ("infobar", "infobar")])
 
-# config.plugins.iptvplayer.preferredupdateserver = ConfigSelection(default="", choices=[("", _("Default")), ("1", "http://e2iplayer.pkteam.pl/"), ("2", _("Gitlab")), ("3", _("private"))])
 config.plugins.iptvplayer.osk_type = ConfigSelection(default="", choices=[("", _("Auto")), ("system", _("System")), ("own", _("Own model"))])
 config.plugins.iptvplayer.osk_layout = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.osk_allow_suggestions = ConfigYesNo(default=True)
@@ -270,6 +268,7 @@ class ConfigMenu(ConfigBaseWidget):
         self.SciezkaCacheOld = config.plugins.iptvplayer.SciezkaCache.value
         self.remove_diabled_hostsOld = config.plugins.iptvplayer.remove_diabled_hosts.value
         self.enabledHostsListOld = GetEnabledHostsList()
+        self.runtimeOptionsValues = self.getRuntimeOptionsValues()
 
     def __del__(self):
         printDBG("ConfigMenu.__del__ -------------------------------")
@@ -311,6 +310,8 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("----- SKIN CONFIGURATION -----"),))
         list.append(getConfigListEntry(_("Skin"), config.plugins.iptvplayer.skin))
         list.append(getConfigListEntry(_("Force internal Skin"), config.plugins.iptvplayer.skinforceinternal))
+        list.append(getConfigListEntry(_("Info bar clock format"), config.plugins.iptvplayer.extplayer_infobanner_clockformat))
+        list.append(getConfigListEntry(_("Player Skin"), config.plugins.iptvplayer.extplayer_skin))
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))
         if config.plugins.iptvplayer.showcover.value:
             list.append(getConfigListEntry(_("    Allowed formats of thumbnails"), config.plugins.iptvplayer.allowedcoverformats))
@@ -324,6 +325,7 @@ class ConfigMenu(ConfigBaseWidget):
                 list.append(getConfigListEntry(_("    Number of rows"), config.plugins.iptvplayer.numOfRow))
                 list.append(getConfigListEntry(_("    Number of columns"), config.plugins.iptvplayer.numOfCol))
         list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
+        list.append(getConfigListEntry(_("Create LCD/VFD summary screen"), config.plugins.iptvplayer.extplayer_summary))
 
         list.append(getConfigListEntry(_("----- PROXIES CONFIGURATION -----"),))
         list.append(getConfigListEntry(_("Alternative proxy server (1)"), config.plugins.iptvplayer.alternative_proxy1))
@@ -423,6 +425,17 @@ class ConfigMenu(ConfigBaseWidget):
             pass
             # plugin must be restarted if we wont to this options take effect
 
+    def getRuntimeOptionsValues(self):
+        valTab = []
+        valTab.append(config.plugins.iptvplayer.skin.value)
+        return valTab
+
+    def getMessageAfterSave(self):
+        if self.runtimeOptionsValues != self.getRuntimeOptionsValues():
+            return _('Some settings will be applied only after GUI restart.')
+        else:
+            return ''
+
     def getMessageBeforeClose(self, afterSave):
         return ''
 
@@ -464,7 +477,6 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.configProtectedByPin,
             config.plugins.iptvplayer.osk_type,
             config.plugins.iptvplayer.plugin_autostart
-            # config.plugins.iptvplayer.preferredupdateserver,
             # config.plugins.iptvplayer.captcha_bypass_free,
             # config.plugins.iptvplayer.captcha_bypass_pay
         ]

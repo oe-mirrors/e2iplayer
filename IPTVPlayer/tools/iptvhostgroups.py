@@ -8,6 +8,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetConfigDir, GetHostsList, IsHostEnabled, getHostsPath
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostsGroupItem
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT
 ###################################################
 
 ###################################################
@@ -26,7 +27,7 @@ class IPTVHostsGroups:
 
         # groups
         self.PREDEFINED_GROUPS = ["userdefined", "moviesandseries", "cartoonsandanime", "music", "sport", "live", "documentary", "science",
-                                  "polish", "english", "german", "french", "russian", "hungarian", "arabic", "greek", "latino", "italian", "swedish", "balkans", "others"]
+                                  "polish", "english", "german", "french", "russian", "hungarian", "arabic", "greek", "latino", "italian", "swedish", "balkans", "others", "all"]
         self.PREDEFINED_GROUPS_TITLES = {"userdefined": _("User defined"),
                                          "moviesandseries": _("Movies and series"),
                                          "cartoonsandanime": _("Cartoons and anime"),
@@ -48,7 +49,11 @@ class IPTVHostsGroups:
                                          'swedish': _("Swedish"),
                                          "balkans": _("Balkans"),
                                          "others": _("Others"),
+                                         "all": _("All")
                                         }
+        if not GRIDSUPPORT:
+            self.PREDEFINED_GROUPS.remove("all")
+            del self.PREDEFINED_GROUPS_TITLES["all"]
 
         self.LOADED_GROUPS = []
         self.LOADED_GROUPS_TITLES = {}
@@ -161,7 +166,7 @@ class IPTVHostsGroups:
             self._saveToFile(groupFile, data)
         except Exception:
             printExc()
-            self.lastError = _("Error writing file \"%s\".\n") % self.GROUPS_FILE
+            self.lastError = _("Error writing file \"%s\".\n") % groupFile
             ret = False
         return ret
 
@@ -277,6 +282,9 @@ class IPTVHostsGroups:
                         titles[name] = str(item['title'])
             except Exception:
                 printExc()
+
+        if GRIDSUPPORT and "all" not in groups and "all" not in disabledGroups:
+            return
 
         self.LOADED_GROUPS = groups
         self.LOADED_DISABLED_GROUPS = disabledGroups

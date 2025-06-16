@@ -320,7 +320,6 @@ class E2iPlayerWidget(Screen):
         self.enabledHostsListOld = []
         asynccall.SetMainThreadId()
 
-        self.checkWrongImage = True
         self.downloadable = False
         self.colorEnabled = parseColor("#FFFFFF")
         self.colorDisabled = parseColor("#808080")
@@ -1110,25 +1109,7 @@ class E2iPlayerWidget(Screen):
         self.setTitle('E2iPlayer ' + GetIPTVPlayerVersion())
         self.loadSpinner()
         self.hideSpinner()
-        # self.checkBlacklistedImage()
         self.selectHost()
-
-    def askUpdateAvailable(self, NoUpdateCallback):
-        NoUpdateCallback()
-        # return
-        # printDBG(">> askUpdateAvailable")
-        # if config.plugins.iptvplayer.autoCheckForUpdate.value \
-            # and 0 < GetVersionNum(self.lastPluginVersion) \
-            # and GetVersionNum(self.lastPluginVersion) > GetVersionNum(GetIPTVPlayerVersion()) \
-            # and self.lastPluginVersion != config.plugins.iptvplayer.updateLastCheckedVersion.value:
-
-            # message = _('There is a new version available do you want to update? \nYour version [%s], latest version on server [%s]') % (GetIPTVPlayerVersion(), self.lastPluginVersion)
-            # config.plugins.iptvplayer.updateLastCheckedVersion.value = self.lastPluginVersion
-            # config.plugins.iptvplayer.updateLastCheckedVersion.save()
-            # configfile.save()
-            # self.session.openWithCallback(boundFunction(self.answerUpdateAvailable, NoUpdateCallback), MessageBox, text=message, type=MessageBox.TYPE_YESNO)
-            # return
-        # NoUpdateCallback()
 
     def selectHost(self, arg1=None):
         printDBG(">> selectHost")
@@ -1154,12 +1135,9 @@ class E2iPlayerWidget(Screen):
         groupsList = self.groupObj.getGroupsList()
         for item in groupsList:
             self.displayGroupsList.append((item.title, item.name))
-        self.displayGroupsList.append((_('All'), 'all'))
         if not GRIDSUPPORT:
+            self.displayGroupsList.append((_('All'), 'all'))
             self.displayGroupsList.append((_("Configuration"), "config"))
-
-        # if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
-        #    self.displayGroupsList.append((_("Update"), "update"))
 
         self.newDisplayGroupsList = []
         self.session.openWithCallback(self.selectGroupCallback, PlayerSelectorWidget, inList=self.displayGroupsList, outList=self.newDisplayGroupsList, numOfLockedItems=self.getNumOfSpecialItems(self.displayGroupsList), groupName='selectgroup')
@@ -1250,10 +1228,6 @@ class E2iPlayerWidget(Screen):
             else:
                 SaveHostsOrderList(hostsList)
         self.groupObj.flushAddedHosts()
-        self.askUpdateAvailable(boundFunction(self.selectHostFromGroupCallback2, ret))
-
-    def selectHostFromGroupCallback2(self, ret):
-        printDBG(">> selectHostFromGroupCallback2")
         self.selectItemCallback(ret, 'selecthostfromgroup')
 
     def selectHostFromSingleList(self):
@@ -1294,9 +1268,6 @@ class E2iPlayerWidget(Screen):
         if len(brokenHostList) > 0:
             errorMessage = _("Following host are broken or additional python modules are needed.") + '\n' + '\n'.join(brokenHostList)
 
-        # if config.plugins.iptvplayer.AktualizacjaWmenu.value == True:
-        #    self.displayHostsList.append((_("Update"), "update"))
-
         if "" != errorMessage and True is self.showHostsErrorMessage:
             self.showHostsErrorMessage = False
             self.session.openWithCallback(self.displayListOfHosts, MessageBox, errorMessage, type=MessageBox.TYPE_INFO, timeout=10)
@@ -1313,7 +1284,9 @@ class E2iPlayerWidget(Screen):
             self.session.openWithCallback(self.selectHostCallback, PlayerSelectorWidget, inList=self.displayHostsList, outList=self.newDisplayHostsList, numOfLockedItems=self.getNumOfSpecialItems(self.displayHostsList), groupName='selecthost')
         return
 
-    def getNumOfSpecialItems(self, inList, filters=['config', 'update', 'all']):
+    def getNumOfSpecialItems(self, inList, filters=['config', 'all']):
+        if GRIDSUPPORT:
+            return 0
         numOfSpecialItems = 0
         for item in inList:
             if item[1] in filters:
@@ -1330,16 +1303,7 @@ class E2iPlayerWidget(Screen):
                 hostsList.append(self.newDisplayHostsList[idx][1])
             SaveHostsOrderList(hostsList)
 
-        checkUpdate = True
-        try:
-            if 0 < len(ret) and ret[1] == "update":
-                checkUpdate = False
-        except Exception:
-            pass
-        if checkUpdate:
-            self.askUpdateAvailable(boundFunction(self.selectHostCallback2, ret))
-        else:
-            self.selectHostCallback2(ret)
+        self.selectHostCallback2(ret)
 
     def selectHostCallback2(self, ret):
         printDBG(">> selectHostCallback2")
@@ -1367,11 +1331,6 @@ class E2iPlayerWidget(Screen):
                 nextFunction = self.runConfigGroupsMenu
                 prevFunction = self.selectHost
                 protectedByPin = config.plugins.iptvplayer.configProtectedByPin.value
-            elif ret[1] == "noupdate":
-                self.close()
-                return
-            elif ret[1] == "update":
-                return
             elif ret[1] == "IPTVDM":
                 if type in ['selecthost', 'selectgroup']:
                     self.runIPTVDM(self.selectHost)
@@ -2204,25 +2163,6 @@ class E2iPlayerWidget(Screen):
         else:
             self.checkAutoPlaySequencer()
 
-    def checkBlacklistedImage(self):
-        if self.checkWrongImage:
-            self.checkWrongImage = False
-            try:
-                if os_path.isfile(GetExtensionsDir('/iPabUpdater/__init__.py')):
-                    message = ["WARNING (phase 1/3)"]
-                    message.append("Because of blocking part of functionality of the IPTVPlayer by http://ipab.tv/ developer your image was blacklisted.")
-                    message.append("Please be also informed that users of http://ipab.tv/ will NOT get support, due to same reason.")
-                    GetIPTVNotify().push('\n'.join(message), 'error', 120)
-                elif os_path.isfile('/etc/bpversion'):
-                    with open("/etc/bpversion") as file:
-                        data = file.read(256)
-                        if 'opendonki' in data.lower():
-                            message = ["WARNING (phase 1/3)"]
-                            message.append("Because of very bad behaviour of user @DirtyDonki your image was blacklisted.")
-                            message.append("Please be also informed that users of https://vuplus-images.co.uk/ forum will NOT get support, due to same reason.")
-                            GetIPTVNotify().push('\n'.join(message), 'error', 120)
-            except:
-                printExc()
 # class E2iPlayerWidget
 
 
