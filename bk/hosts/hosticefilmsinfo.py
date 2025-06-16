@@ -158,7 +158,7 @@ class IceFilms(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
 
 
-        self.cm.HEADER = self.HEADER # default header
+        self.cm.HEADER = self.HEADER  # default header
 
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -314,7 +314,7 @@ class IceFilms(CBaseHostClass):
 
 
 
-    #def getFullIconUrl(self, url, baseUrl=None):
+    # def getFullIconUrl(self, url, baseUrl=None):
 
 
     #    return ''
@@ -1115,7 +1115,7 @@ class IceFilms(CBaseHostClass):
         m = baseM + random.randint(21, 1000)
 
 
-        #url = self.getFullUrl(baseUrl % (sourceId, s, m, secret, t))
+        # url = self.getFullUrl(baseUrl % (sourceId, s, m, secret, t))
 
 
         url = self.getFullUrl(baseUrl % (sourceId, t))
@@ -1382,7 +1382,7 @@ class IceFilms(CBaseHostClass):
 
 
 
-    #MAIN MENU
+    # MAIN MENU
 
 
         if name == None:
@@ -1415,7 +1415,7 @@ class IceFilms(CBaseHostClass):
             self.listEpisodes(self.currItem)
 
 
-    #SEARCH
+    # SEARCH
 
 
         elif category in ["search", "search_next_page"]:
@@ -1430,7 +1430,7 @@ class IceFilms(CBaseHostClass):
             self.listSearchResult(cItem, searchPattern, searchType)
 
 
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
 
 
         elif category == "search_history":

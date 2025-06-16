@@ -327,7 +327,7 @@ class Kkiste(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_cats':
@@ -338,12 +338,12 @@ class Kkiste(CBaseHostClass):
             self.exploreItem(self.currItem)
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORY SEARCH
+    # HISTORY SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

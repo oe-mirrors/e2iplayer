@@ -209,7 +209,7 @@ class MyTheWatchseries(CBaseHostClass):
 
 
 
-                        #{'category':'list_categories', 'title': _('CATEGORIES'),  'url':self.getMainUrl()},
+                        # {'category':'list_categories', 'title': _('CATEGORIES'),  'url':self.getMainUrl()},
 
 
 
@@ -428,7 +428,7 @@ class MyTheWatchseries(CBaseHostClass):
         for key in keys:
 
 
-            baseKey = key[2:] # "f_"
+            baseKey = key[2:]  # "f_"
 
 
             if key in cItem:
@@ -1295,7 +1295,7 @@ class MyTheWatchseries(CBaseHostClass):
         if self.MAIN_URL == None:
 
 
-            #rm(self.COOKIE_FILE)
+            # rm(self.COOKIE_FILE)
 
 
             self.selectDomain()
@@ -1325,7 +1325,7 @@ class MyTheWatchseries(CBaseHostClass):
 
 
 
-    #MAIN MENU
+    # MAIN MENU
 
 
         if name == None:
@@ -1358,7 +1358,7 @@ class MyTheWatchseries(CBaseHostClass):
             self.exploreItem(self.currItem)
 
 
-    #SEARCH
+    # SEARCH
 
 
         elif category in ["search", "search_next_page"]:
@@ -1373,7 +1373,7 @@ class MyTheWatchseries(CBaseHostClass):
             self.listSearchResult(cItem, searchPattern, searchType)
 
 
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
 
 
         elif category == "search_history":

@@ -875,10 +875,10 @@ class MovieRulzSX(CBaseHostClass):
 
 
 
-            #marker = self.cm.ph.getSearchGroups(item, '''(\sfa\-[^'^"]+?)['"]''')[0].split('fa-')[-1]
+            # marker = self.cm.ph.getSearchGroups(item, '''(\sfa\-[^'^"]+?)['"]''')[0].split('fa-')[-1]
 
 
-            #printDBG(">>>>>>>>>>>>>>>>>> " + marker)
+            # printDBG(">>>>>>>>>>>>>>>>>> " + marker)
 
 
             if marker not in keysMap:
@@ -965,7 +965,7 @@ class MovieRulzSX(CBaseHostClass):
 
 
 
-    #MAIN MENU
+    # MAIN MENU
 
 
         if name == None:
@@ -998,7 +998,7 @@ class MovieRulzSX(CBaseHostClass):
             self.listItems(self.currItem)
 
 
-    #SEARCH
+    # SEARCH
 
 
         elif category in ["search", "search_next_page"]:
@@ -1013,7 +1013,7 @@ class MovieRulzSX(CBaseHostClass):
             self.listSearchResult(cItem, searchPattern, searchType)
 
 
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
 
 
         elif category == "search_history":
@@ -1055,7 +1055,7 @@ class IPTVHost(CHostBase):
 
 
 
-    #def withArticleContent(self, cItem):
+    # def withArticleContent(self, cItem):
 
 
     #    return cItem.get('good_for_fav', False)

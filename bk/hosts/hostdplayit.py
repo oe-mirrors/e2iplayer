@@ -54,15 +54,15 @@ class Dplayit(CBaseHostClass):
 
         self.GENRE_URL = self.MAIN_SERVER_URL + "/api/genre/GetList"
 
-        #self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        #self.defaultParams = { 'header': {'User-Agent' : 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0'}}
+        # self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        # self.defaultParams = { 'header': {'User-Agent' : 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0'}}
         self.defaultParams = {'header': {'User-Agent': 'okhttp/3.3.0'}}
         self.AccessToken = ""
 
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        #printDBG(self.defaultParams)
+        # printDBG(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
     def getHeader(self, add_bearer=False):
@@ -104,7 +104,7 @@ class Dplayit(CBaseHostClass):
             if not sts:
                 return
 
-            #printDBG(data)
+            # printDBG(data)
             response = json_loads(data)
             stream_url = response['data']['attributes']['streaming']['hls']['url']
             stream_url = strwithmeta(stream_url, h)
@@ -121,8 +121,8 @@ class Dplayit(CBaseHostClass):
                         {'category': 'channel-menu', 'title': 'Canali'},
                         {'category': 'genre-menu', 'title': 'Generi'}]
                         # these item are not working
-                        #{'category':'popular', 'title': 'Video popolari'},
-                        #{'category':'lastadded', 'title': 'Ultimi aggiunti'}]
+                        # {'category':'popular', 'title': 'Video popolari'},
+                        # {'category':'lastadded', 'title': 'Ultimi aggiunti'}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listChannels(self, cItem):
@@ -137,7 +137,7 @@ class Dplayit(CBaseHostClass):
         if not sts:
             return
 
-        #printDBG(data)
+        # printDBG(data)
         response = json_loads(data)
 
         for channel in response["Data"]:
@@ -162,7 +162,7 @@ class Dplayit(CBaseHostClass):
         if not sts:
             return
 
-        #printDBG(data)
+        # printDBG(data)
         response = json_loads(data)
 
         channel = response["Data"]
@@ -182,7 +182,7 @@ class Dplayit(CBaseHostClass):
         # 0-9
         self.addDir(MergeDicts(cItem, {'category': 'programs_az', 'title': "0-9", 'ch_id': ch_id}))
 
-        #a-z
+        # a-z
         for i in range(26):
             self.addDir(MergeDicts(cItem, {'category': 'programs_az', 'title': chr(ord('A') + i), 'ch_id': ch_id}))
 
@@ -200,7 +200,7 @@ class Dplayit(CBaseHostClass):
         if not sts:
             return
 
-        #printDBG(data)
+        # printDBG(data)
         response = json_loads(data)
 
         for show in response["Data"]:
@@ -235,7 +235,7 @@ class Dplayit(CBaseHostClass):
         if not sts:
             return
 
-        #printDBG(data)
+        # printDBG(data)
         response = json_loads(data)
 
         if len(response["Data"]["Sections"]) > 0:
@@ -253,7 +253,7 @@ class Dplayit(CBaseHostClass):
                             desc = '{0}\n\n{1} {2}'.format(desc, "Disponibile fino a ", date.strftime("%d/%m/%Y"))
                         title = '{0} ({1} {2} - {3} {4})'.format(name, _("Season"), season_number, _("Episode"), num_episode)
                         videoUrl = video["PlaybackInfoUrl"]
-                        #printDBG ("add video '%s' with playback info url '%s'" % (title,videoUrl))
+                        # printDBG ("add video '%s' with playback info url '%s'" % (title,videoUrl))
                         self.addVideo(MergeDicts(cItem, {'title': title, 'name': title, 'desc': desc, 'video_id': video_id, 'url': videoUrl, 'icon': icon, 'category': 'video'}))
 
     def listGenres(self, cItem):
@@ -268,7 +268,7 @@ class Dplayit(CBaseHostClass):
         if not sts:
             return
 
-        #printDBG(data)
+        # printDBG(data)
         response = json_loads(data)
 
         for genre in response["Data"]:
@@ -292,7 +292,7 @@ class Dplayit(CBaseHostClass):
         if not sts:
             return
 
-        #printDBG(data)
+        # printDBG(data)
         response = json_loads(data)
 
         for show in response["Data"]:
@@ -316,7 +316,7 @@ class Dplayit(CBaseHostClass):
         if not sts:
             return
 
-        #printDBG(data)
+        # printDBG(data)
         response = json_loads(data)
 
         for video in response["Data"]["Items"]:
@@ -358,7 +358,7 @@ class Dplayit(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'channel-menu':

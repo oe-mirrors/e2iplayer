@@ -35,11 +35,11 @@ config.plugins.iptvplayer.hdstreams_bypassrecaptcha = ConfigSelection(default="N
 
 def GetConfigList():
     optionList = []
-    #optionList.append(getConfigListEntry(_("Use links cache"), config.plugins.iptvplayer.hdstreams_linkcache))
-    #optionList.append(getConfigListEntry(_("Captcha solving service"), config.plugins.iptvplayer.hdstreams_bypassrecaptcha))
-    #if config.plugins.iptvplayer.hdstreams_bypassrecaptcha.value == '9kw.eu':
+    # optionList.append(getConfigListEntry(_("Use links cache"), config.plugins.iptvplayer.hdstreams_linkcache))
+    # optionList.append(getConfigListEntry(_("Captcha solving service"), config.plugins.iptvplayer.hdstreams_bypassrecaptcha))
+    # if config.plugins.iptvplayer.hdstreams_bypassrecaptcha.value == '9kw.eu':
     #    optionList.append(getConfigListEntry(_("%s API KEY") % '    ', config.plugins.iptvplayer.api_key_9kweu))
-    #elif config.plugins.iptvplayer.hdstreams_bypassrecaptcha.value == '2captcha.com':
+    # elif config.plugins.iptvplayer.hdstreams_bypassrecaptcha.value == '2captcha.com':
     #    optionList.append(getConfigListEntry(_("%s API KEY") % '    ', config.plugins.iptvplayer.api_key_2captcha))
     return optionList
 ###################################################
@@ -178,11 +178,11 @@ class HDStreams(CBaseHostClass):
 
     def listItems(self, cItem, nextCategory='', searchPattern=''):
         printDBG("HDStreams.listItems |%s|" % cItem)
-        #NUM = 48
+        # NUM = 48
         url = cItem['url']
         page = cItem.get('page', 1)
 
-        query = {'page': page} #'perPage':NUM,
+        query = {'page': page}  # 'perPage':NUM,
         keys = [('f_genre', 'genre[]'), ('f_year', 'year[]'), ('f_order', 'order'), ('f_order_by', 'orderBy')]
         for item in keys:
             if item[0] in cItem:
@@ -325,7 +325,7 @@ class HDStreams(CBaseHostClass):
                     if '' in tmp:
                         continue
                     name = self.cleanHtmlStr(linkItem)
-                    url = strwithmeta(cItem['url'], {'links_key': linksKey, 'link_data': tmp, 'post_data': {'e': tmp[0], 'h': tmp[1], 'lang': 'de'}}) #langId
+                    url = strwithmeta(cItem['url'], {'links_key': linksKey, 'link_data': tmp, 'post_data': {'e': tmp[0], 'h': tmp[1], 'lang': 'de'}})  # langId
                     linksTab.append({'name': name, 'url': url, 'need_resolve': 1})
 
                 if len(linksTab):
@@ -456,7 +456,7 @@ class HDStreams(CBaseHostClass):
             ciphertext = base64.b64decode(tmp['ct'][::-1])
             iv = unhexlify(tmp['iv'])
             salt = unhexlify(tmp['s'])
-            b = urlParams['header']['x-csrf-token'] #urlParams['header']['User-Agent']
+            b = urlParams['header']['x-csrf-token']  # urlParams['header']['User-Agent']
             b = base64.b64encode(b[::-1])
             printDBG("b: " + b)
             tmp = self.cryptoJS_AES_decrypt(ciphertext, b, salt)
@@ -551,7 +551,7 @@ class HDStreams(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL == None:
-            #rm(self.COOKIE_FILE)
+            # rm(self.COOKIE_FILE)
             self.selectDomain()
 
         name = self.currItem.get("name", '')
@@ -561,7 +561,7 @@ class HDStreams(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
@@ -574,12 +574,12 @@ class HDStreams(CBaseHostClass):
             self.listItems(self.currItem, 'explore_item')
         elif 'explore_item' == category:
             self.exploreItem(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

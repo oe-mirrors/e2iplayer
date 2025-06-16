@@ -283,7 +283,7 @@ class StreamingHDFun(CBaseHostClass):
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'play-box'), ('</div', '>'))
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0])
-            #if 1 != self.up.checkHostSupport(url): continue
+            # if 1 != self.up.checkHostSupport(url): continue
             id = self.cm.ph.getSearchGroups(item, '''id=['"]([^"^']+?)['"]''', 1, True)[0]
             name = namesData.get(id, '') + _(' main link')
             if name == '':
@@ -299,7 +299,7 @@ class StreamingHDFun(CBaseHostClass):
             if len(item) < 2:
                 continue
             fakeHostUrl = 'http://%s/' % self.cleanHtmlStr(item[1]).lower()
-            #if 1 != self.up.checkHostSupport(fakeHostUrl): continue
+            # if 1 != self.up.checkHostSupport(fakeHostUrl): continue
             title = []
             for idx in range(1, len(item)):
                 title.append(self.cleanHtmlStr(item[idx]))
@@ -455,7 +455,7 @@ class StreamingHDFun(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None and category == '':
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
@@ -469,12 +469,12 @@ class StreamingHDFun(CBaseHostClass):
             self.listTop(self.currItem, 'sub_items', 'explore_item')
         elif category == 'explore_item':
             self.exploreItem(self.currItem, 'sub_items')
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

@@ -151,7 +151,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
             query['page'] = page
 
         for key in self.cacheFiltersKeys:
-            baseKey = key[2:] # "f_"
+            baseKey = key[2:]  # "f_"
             if key in cItem:
                 query[baseKey] = cItem[key]
 
@@ -249,7 +249,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
             printExc()
 
         serverNamesMap = {}
-        #tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'servers'), ('</div', '>'))[1]
+        # tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'servers'), ('</div', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'data-name'), ('</span', '>'))
         for item in tmp:
             serverName = self.cleanHtmlStr(item)
@@ -411,10 +411,10 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         params = dict(self.defaultParams)
         params['header'] = dict(self.AJAX_HEADER)
         params['header']['Referer'] = str(videoUrl)
-        #params['cookie_items'] = cookieItem
+        # params['cookie_items'] = cookieItem
 
-        #sts, data = self.getPage('https://9anime.to/ajax/episode/info?id=%s&update=0' % id, params)
-        #if not sts: return []
+        # sts, data = self.getPage('https://9anime.to/ajax/episode/info?id=%s&update=0' % id, params)
+        # if not sts: return []
 
         sts, data = self.getPage(videoUrl[:videoUrl.rfind('/')], params)
         if sts:
@@ -518,7 +518,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         printDBG("++++++++++++> timestamp[%s], id[%s]" % (timestamp, id))
 
         getParams = {'ts': timestamp}
-        #getParams = self._updateParams(getParams)
+        # getParams = self._updateParams(getParams)
         url = self.getFullUrl('/ajax/film/tooltip/' + id + '?' + urllib_urlencode(getParams))
         sts, data = self.getPage(url, params)
         if not sts:
@@ -599,7 +599,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None:
             self.cacheLinks = {}
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
@@ -613,12 +613,12 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
             self.exploreItem(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

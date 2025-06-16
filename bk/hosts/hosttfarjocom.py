@@ -412,7 +412,7 @@ class TfarjoCom(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None and category == '':
             self.cm.clearCookie(self.COOKIE_FILE, ['PHPSESSID', '__cfduid', 'cf_clearance'])
             self.listMainMenu({'name': 'category'})
@@ -427,12 +427,12 @@ class TfarjoCom(CBaseHostClass):
 
         elif category == 'explore_item':
             self.exploreItem(self.currItem, 'sub_items')
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

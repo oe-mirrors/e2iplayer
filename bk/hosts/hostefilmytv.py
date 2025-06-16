@@ -698,7 +698,7 @@ class EFilmyTv(CBaseHostClass):
         self.login = config.plugins.iptvplayer.efilmytv_login.value
         self.password = config.plugins.iptvplayer.efilmytv_password.value
 
-        #rm(self.COOKIE_FILE)
+        # rm(self.COOKIE_FILE)
         self.loggedIn = False
 
         if '' == self.login.strip() or '' == self.password.strip():
@@ -762,10 +762,10 @@ class EFilmyTv(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'}, 'sub_menu')
-    #MOVIES
+    # MOVIES
         elif category == 'movies':
             self.listMoviesCats(self.currItem, 'list_movies_cmd')
         elif category == 'movies_top':
@@ -778,7 +778,7 @@ class EFilmyTv(CBaseHostClass):
             self.listSort(self.currItem, 'list_movies')
         elif category == 'list_movies':
             self.listMovies(self.currItem)
-    #SERIES
+    # SERIES
         elif category == 'series':
             self.listSeriesCats(self.currItem, 'list_series_cmd')
         elif category == 'series_top':
@@ -797,12 +797,12 @@ class EFilmyTv(CBaseHostClass):
             self.listSeriesSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listSeriesEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

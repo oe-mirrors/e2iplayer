@@ -37,7 +37,7 @@ class AndrijaIAndjelka(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
 
         self.MAIN_URL = 'https://andrija-i-andjelka.com/'
-        #https://previews.123rf.com/images/yusufsangdes89/yusufsangdes891507/yusufsangdes89150700042/42557652-cinema-camera-icon-movie-lover-series-icon.jpg
+        # https://previews.123rf.com/images/yusufsangdes89/yusufsangdes891507/yusufsangdes89150700042/42557652-cinema-camera-icon-movie-lover-series-icon.jpg
         self.DEFAULT_ICON_URL = 'https://img00.deviantart.net/972b/i/2010/241/0/4/tv_series_icon_set_by_silentbang-d2xl0kj.jpg'
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'cookie_items': {}}
@@ -157,7 +157,7 @@ class AndrijaIAndjelka(CBaseHostClass):
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0])
             if 1 == self.up.checkHostSupport(url):
-                name = self.up.getHostName(url) #, nameOnly=True)
+                name = self.up.getHostName(url)  # , nameOnly=True)
                 url = strwithmeta(url, {'Referer': cItem['url']})
                 urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
 
@@ -181,7 +181,7 @@ class AndrijaIAndjelka(CBaseHostClass):
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'list_items':
@@ -190,12 +190,12 @@ class AndrijaIAndjelka(CBaseHostClass):
             self.listSeries(self.currItem, 'list_items')
         elif category == 'sub_items':
             self.currList = self.currItem.get('sub_items', [])
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

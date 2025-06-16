@@ -812,7 +812,7 @@ class GuardaSerieClick(CBaseHostClass):
 
 
 
-    #MAIN MENU
+    # MAIN MENU
 
 
         if name == None:
@@ -860,7 +860,7 @@ class GuardaSerieClick(CBaseHostClass):
             self.listABCItems(self.currItem, 'explore_item')
 
 
-    #SEARCH
+    # SEARCH
 
 
         elif category in ["search", "search_next_page"]:
@@ -875,7 +875,7 @@ class GuardaSerieClick(CBaseHostClass):
             self.listSearchResult(cItem, searchPattern, searchType)
 
 
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
 
 
         elif category == "search_history":
