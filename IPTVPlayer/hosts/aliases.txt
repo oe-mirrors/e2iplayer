@@ -60,7 +60,6 @@
 'hostgamatocom': 'https://gamatomovies.info/',
 'hostgledalica': 'https://gledalica.com/',
 'hostgovodtv': 'https://govod.tv/',
-'hostgovodtv': 'https://govod.tv/',
 'hostgreekdocumentaries3': 'http://greekdocumentaries2.blogspot.gr/',
 'hosthdfilme': 'https://hdfilme.my',
 'hosthdfilmetv': 'http://hdfilme.tv/',
