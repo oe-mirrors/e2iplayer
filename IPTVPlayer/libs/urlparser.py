@@ -967,6 +967,7 @@ class urlparser:
             'vidcloud.co': self.pp.parserVIDCLOUDCO,
             'vidcloud.icu': self.pp.parserVIDCLOUDICU,
             'vidcloud9.com': self.pp.parserVIDCLOUD9,
+            'vide0.net': self.pp.parserDOOD,
             'videa.hu': self.pp.parserVIDEAHU,
             'video.filmoviplex.com': self.pp.parserNETUTV,
             'video.meta.ua': self.pp.parserMETAUA,
