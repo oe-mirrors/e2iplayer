@@ -40,14 +40,14 @@ class IPTVChoiceBoxWidget(Screen):
         height = self.params.get('height', 300)
 
         skin = """
-            <screen name="IPTVChoiceBoxWidget" position="center,center" title="%s" size="%d,%d">
-                <widget name="title" position="5,10"  zPosition="1" size="%d,30" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
-                <widget name="list"  position="5,50"  zPosition="2" size="%d,%d" scrollbarMode="showOnDemand" transparent="1"  backgroundColor="#00000000" enableWrapAround="1" />
+            <screen name="IPTVChoiceBoxWidget" position="center,center" resolution="1280,720" title="%s" size="%d,%d" backgroundColor="#34111112" flags="wfNoBorder">
+                <eLabel name="BG_Title" position="0,0" size="1000,50" backgroundColor="#100d0f16" zPosition="-1" />
+                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,50" size="e,2" zPosition="2" />
+                <widget name="title" position="10,14" size="e-10,30" foregroundColor="#0066ccff" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
+                <widget name="list"  position="5,60"  zPosition="2" size="e-10,e-50" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black"/>
             </screen>""" % (
             self.params.get('title', _("Select option")),
-            width, height,             # size of screen
-            width - 10,                # title width
-            width - 10, height - 50    # list width/height
+            width, height             # size of screen
         )
         return skin
 

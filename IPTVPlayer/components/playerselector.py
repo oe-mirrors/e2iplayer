@@ -77,19 +77,19 @@ if GRIDSUPPORT:
                 <widget source="key_red" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="180,628" size="20,20" alphatest="blend" objectTypes="key_red,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
-                <widget source="key_red" render="Label" position="210,626" size="180,24" backgroundColor="#000000" font="Regular;18" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_red,StaticText" transparent="1" />
+                <widget source="key_red" render="Label" position="210,626" size="180,24" backgroundColor="#000000" font="Regular;17" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_red,StaticText" transparent="1" />
                 <widget source="key_green" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="390,628" size="20,20" alphatest="blend" objectTypes="key_green,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
-                <widget source="key_green" render="Label" position="420,626" size="180,24" backgroundColor="#000000" font="Regular;18" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_green,StaticText" transparent="1" />
+                <widget source="key_green" render="Label" position="420,626" size="180,24" backgroundColor="#000000" font="Regular;17" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_green,StaticText" transparent="1" />
                 <widget source="key_yellow" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="600,628" size="20,20" alphatest="blend" objectTypes="key_yellow,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
-                <widget source="key_yellow" render="Label" position="630,626" size="180,24" backgroundColor="#000000" font="Regular;18" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_yellow,StaticText" transparent="1" />
+                <widget source="key_yellow" render="Label" position="630,626" size="180,24" backgroundColor="#000000" font="Regular;17" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_yellow,StaticText" transparent="1" />
                 <widget source="key_blue" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/blue.png" position="810,628" size="20,20" alphatest="blend" objectTypes="key_blue,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
-                <widget source="key_blue" render="Label" position="840,626" size="180,24" backgroundColor="#000000" font="Regular;18" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_blue,StaticText" transparent="1" />
+                <widget source="key_blue" render="Label" position="840,626" size="180,24" backgroundColor="#000000" font="Regular;17" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_blue,StaticText" transparent="1" />
                 <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/key_prevnext.png" position="70,624" size="40,26" alphatest="blend" transparent="1" />
                 <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" position="124,624" size="40,26" alphatest="blend" transparent="1" />
             </screen>
@@ -125,19 +125,19 @@ if GRIDSUPPORT:
                 <widget source="key_red" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="270,942" size="30,30" alphatest="blend" objectTypes="key_red,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
-                <widget source="key_red" render="Label" position="315,939" size="270,36" backgroundColor="#000000" font="Regular;27" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_red,StaticText" transparent="1" />
+                <widget source="key_red" render="Label" position="315,939" size="270,36" backgroundColor="#000000" font="Regular;26" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_red,StaticText" transparent="1" />
                 <widget source="key_green" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/green.png" position="585,942" size="30,30" alphatest="blend" objectTypes="key_green,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
-                <widget source="key_green" render="Label" position="630,939" size="270,36" backgroundColor="#000000" font="Regular;27" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_green,StaticText" transparent="1" />
+                <widget source="key_green" render="Label" position="630,939" size="270,36" backgroundColor="#000000" font="Regular;26" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_green,StaticText" transparent="1" />
                 <widget source="key_yellow" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/yellow.png" position="900,942" size="30,30" alphatest="blend" objectTypes="key_yellow,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
-                <widget source="key_yellow" render="Label" position="945,939" size="270,36" backgroundColor="#000000" font="Regular;27" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_yellow,StaticText" transparent="1" />
+                <widget source="key_yellow" render="Label" position="945,939" size="270,36" backgroundColor="#000000" font="Regular;26" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_yellow,StaticText" transparent="1" />
                 <widget source="key_blue" render="Pixmap" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/blue.png" position="1215,942" size="30,30" alphatest="blend" objectTypes="key_blue,StaticText" transparent="1">
                     <convert type="ConditionalShowHide" />
                 </widget>
-                <widget source="key_blue" render="Label" position="1260,939" size="270,36" backgroundColor="#000000" font="Regular;27" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_blue,StaticText" transparent="1" />
+                <widget source="key_blue" render="Label" position="1260,939" size="270,36" backgroundColor="#000000" font="Regular;26" foregroundColor="#ffffff" zPosition="+1" valign="center" halign="left" objectTypes="key_blue,StaticText" transparent="1" />
                 <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/key_prevnext.png" position="105,936" size="60,39" alphatest="blend" transparent="1" />
                 <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" position="186,936" size="60,39" alphatest="blend" transparent="1" />
             </screen>
