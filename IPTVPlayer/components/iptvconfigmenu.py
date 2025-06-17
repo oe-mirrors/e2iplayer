@@ -418,8 +418,8 @@ class ConfigMenu(ConfigBaseWidget):
         else:
             ConfigBaseWidget.onSelectionChanged(self)
 
-    def save(self):
-        ConfigBaseWidget.save(self)
+    def saveAndClose(self):
+        ConfigBaseWidget.saveAndClose(self)
         if self.showcoverOld != config.plugins.iptvplayer.showcover.value or \
             self.SciezkaCacheOld != config.plugins.iptvplayer.SciezkaCache.value:
             pass
@@ -427,6 +427,13 @@ class ConfigMenu(ConfigBaseWidget):
 
     def getRuntimeOptionsValues(self):
         valTab = []
+        valTab.append(config.plugins.iptvplayer.IPTVWebIterface.value)
+        valTab.append(config.plugins.iptvplayer.showinextensions.value)
+        valTab.append(config.plugins.iptvplayer.showinMainMenu.value)
+        valTab.append(config.plugins.iptvplayer.plugin_autostart.value)
+        valTab.append(config.plugins.iptvplayer.plugin_autostart_method.value)
+        valTab.append(config.plugins.iptvplayer.disable_live.value)
+        valTab.append(config.plugins.iptvplayer.pluginProtectedByPin.value)
         valTab.append(config.plugins.iptvplayer.skin.value)
         return valTab
 
@@ -438,9 +445,6 @@ class ConfigMenu(ConfigBaseWidget):
 
     def getMessageBeforeClose(self, afterSave):
         return ''
-
-    def performCloseWithMessage(self, afterSave=True):
-        self.close()
 
     def closeAfterMessage(self, arg=None):
         if arg:
