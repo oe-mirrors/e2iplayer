@@ -155,7 +155,7 @@ if GRIDSUPPORT:
             self["grid"] = List([])
             self["grid"].onSelectionChanged.append(self.selectionChanged)
 
-            self["statustext"] = Label(self.currList[0][0])
+            self["statustext"] = Label(self.currList[0][0] if self.currList else "")
 
             self["actions"] = HelpableActionMap(self, ["OkCancelActions", "MenuActions", "ColorActions"], {
                 "ok": (self.keySelect, ""),
@@ -184,11 +184,12 @@ if GRIDSUPPORT:
             self["grid"].updateList(items)
 
         def selectionChanged(self):
-            idx = self["grid"].getSelectedIndex()
-            if self.reorderingMode and self.moveIndex != -1:
-                self["statustext"].setText("MOVE: %s" % self.currList[self.moveIndex][0])
-            else:
-                self["statustext"].setText(self.currList[idx][0])
+            if self.currList:
+                idx = self["grid"].getSelectedIndex()
+                if self.reorderingMode and self.moveIndex != -1:
+                    self["statustext"].setText("MOVE: %s" % self.currList[self.moveIndex][0])
+                else:
+                    self["statustext"].setText(self.currList[idx][0])
 
         def __onClose(self):
             self.onClose.remove(self.__onClose)
@@ -244,31 +245,32 @@ if GRIDSUPPORT:
 
         def keyBlue(self):
             printDBG(">> PlayerSelectorWidget.keyMenu")
-            options = []
-            selItem = self.getSelectedItem()
-            if self.groupObj is not None and selItem is not None and len(self.groupObj.getGroupsWithoutHost(selItem[1])):
-                options.append((_("Add host %s to group") % selItem[0], "ADD_HOST_TO_GROUP"))
+            if self.currList:
+                options = []
+                selItem = self.getSelectedItem()
+                if self.groupObj is not None and selItem is not None and len(self.groupObj.getGroupsWithoutHost(selItem[1])):
+                    options.append((_("Add host %s to group") % selItem[0], "ADD_HOST_TO_GROUP"))
 
-            if not self.reorderingMode and self.numOfItems - self.numOfLockedItems > 0:
-                options.append((_("Enable reordering mode"), "CHANGE_REORDERING_MODE"))
-            elif self.reorderingMode:
-                options.append((_("Disable reordering mode"), "CHANGE_REORDERING_MODE"))
-            options.append((_("Download manager"), "IPTVDM"))
-            if self.groupName in ['selecthost', 'all']:
-                options.append((_("Disable/Enable services"), "config_hosts"))
-            if self.groupName in ['selectgroup']:
-                options.append((_("Disable/Enable groups"), "config_groups"))
+                if not self.reorderingMode and self.numOfItems - self.numOfLockedItems > 0:
+                    options.append((_("Enable reordering mode"), "CHANGE_REORDERING_MODE"))
+                elif self.reorderingMode:
+                    options.append((_("Disable reordering mode"), "CHANGE_REORDERING_MODE"))
+                options.append((_("Download manager"), "IPTVDM"))
+                if self.groupName in ['selecthost', 'all']:
+                    options.append((_("Disable/Enable services"), "config_hosts"))
+                if self.groupName in ['selectgroup']:
+                    options.append((_("Disable/Enable groups"), "config_groups"))
 
-            if self.groupName == 'selecthost':
-                pass
-            elif self.groupName == 'selectgroup':
-                if selItem[1] not in ['update', 'config', 'all']:
-                    options.append((_('Hide "%s" group') % selItem[0], "DEL_ITEM"))
-            elif self.groupName not in ['all']:
-                options.append((_('Remove "%s" item') % selItem[0], "DEL_ITEM"))
+                if self.groupName == 'selecthost':
+                    pass
+                elif self.groupName == 'selectgroup':
+                    if selItem[1] not in ['update', 'config', 'all']:
+                        options.append((_('Hide "%s" group') % selItem[0], "DEL_ITEM"))
+                elif self.groupName not in ['all']:
+                    options.append((_('Remove "%s" item') % selItem[0], "DEL_ITEM"))
 
-            if len(options):
-                self.session.openWithCallback(self.selectMenuCallback, ChoiceBox, title=_("Select option"), list=options)
+                if len(options):
+                    self.session.openWithCallback(self.selectMenuCallback, ChoiceBox, title=_("Select option"), list=options)
 
         def selectMenuCallback(self, ret):
             printDBG(">> PlayerSelectorWidget.selectMenuCallback")
@@ -291,15 +293,16 @@ if GRIDSUPPORT:
 
         def changeReorderingMode(self):
             printDBG(">> PlayerSelectorWidget.changeReorderingMode")
-            if not self.reorderingMode and (self.numOfItems - self.numOfLockedItems) > 0:
-                self.reorderingMode = True
-                self.setSelectionImage("Sel")
-                self["grid"].master.master.instance.invalidate()
-                self.moveIndex = self["grid"].getSelectedIndex()
-            else:
-                self.moveIndex = -1
-                self.reorderingMode = False
-            self.selectionChanged()
+            if self.currList:
+                if not self.reorderingMode and (self.numOfItems - self.numOfLockedItems) > 0:
+                    self.reorderingMode = True
+                    self.setSelectionImage("Sel")
+                    self["grid"].master.master.instance.invalidate()
+                    self.moveIndex = self["grid"].getSelectedIndex()
+                else:
+                    self.moveIndex = -1
+                    self.reorderingMode = False
+                self.selectionChanged()
 
         def addHostToGroup(self):
             printDBG(">> PlayerSelectorWidget.addHostToGroup")

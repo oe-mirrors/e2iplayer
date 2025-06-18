@@ -144,7 +144,7 @@ class E2iPlayerWidget(Screen):
 
         Screen.__init__(self, session)
         self.skinName = ["E2iPlayerWidgetScreen", "E2iPlayerWidget"]
-        if config.plugins.iptvplayer.skinforceinternal:
+        if config.plugins.iptvplayer.skinforceinternal.value:
             self.skinName = "_E2iPlayerWidgetScreen"
 
         self.recorderMode = False  # j00zek
