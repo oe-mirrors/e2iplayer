@@ -137,15 +137,27 @@ class MegaKino(CBaseHostClass):
         return urlTab
 
     def getArticleContent(self, cItem):
-        printDBG("Movie4K.getArticleContent [%s]" % cItem)
+        printDBG("MegaKino.getArticleContent [%s]" % cItem)
         otherInfo = {}
         sts, data = self.getPage(cItem['link'])
         if not sts:
             return []
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'description" content="([^"]+)')[0])
+
         desc = desc if desc else cItem.get('desc', '')
+        icon = cItem.get('icon', '')
         title = cItem['title']
-        return [{'title': self.cleanHtmlStr(title), 'text': desc}]
+
+        otherInfo = {}
+        country = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<span itemprop="countryOfOrigin">([^"]+)</span>')[0])
+        if country:
+            otherInfo["country"] = country
+
+        genres = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<div class="pmovie__genres" itemprop="genre">([^"]+)</div>')[0])
+        if genres:
+            otherInfo["genres"] = genres
+
+        return [{'title': self.cleanHtmlStr(title), 'text': desc, 'images': [{'title': '', 'url': icon}], 'other_info': otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')

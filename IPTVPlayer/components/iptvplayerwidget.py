@@ -60,8 +60,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMovi
 from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvpictureplayer import IPTVPicturePlayerWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
-from Plugins.Extensions.IPTVPlayer.components.articleview import ArticleView
-from Plugins.Extensions.IPTVPlayer.components.iptvarticlerichvisualizer import IPTVArticleRichVisualizer
+from Plugins.Extensions.IPTVPlayer.components.iptvarticleview import IPTVArticleView
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, ArticleContent, CFavItem
 from Plugins.Extensions.IPTVPlayer.components.iconmenager import IconMenager
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
@@ -85,7 +84,7 @@ class E2iPlayerWidget(Screen):
                 <ePixmap position="254,687" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
                 <widget source="Title" render="Label" position="160,10" size="785,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
                 <widget name="headertext" position="320,70" zPosition="1" size="940,40" font="Regular; 20" transparent="1" halign="left" valign="center" backgroundColor="black" foregroundColor="#178ef5" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" />
-                <widget name="statustext" position="450,230" zPosition="1" size="685,90" font="Regular;30" halign="left" valign="top" transparent="1" backgroundColor="black" foregroundColor="white" />
+                <widget name="statustext" position="410,230" zPosition="1" size="685,90" font="Regular;30" halign="left" valign="top" transparent="1" backgroundColor="black" foregroundColor="white" />
                 <widget name="list" position="320,110" zPosition="2" size="940,384" itemHeight="32" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" />
                 <widget name="console" position="20,500" zPosition="1" size="1240,170" font="Regular;18" transparent="1" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" halign="left" valign="center" />
                 <widget name="sequencer" position="0,0" zPosition="6" size="1280,720" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
@@ -149,6 +148,7 @@ class E2iPlayerWidget(Screen):
             self.skinName = "_E2iPlayerWidgetScreen"
 
         self.recorderMode = False  # j00zek
+        self.hostLogoPath = None
 
         self.currentService = self.session.nav.getCurrentlyPlayingServiceReference()
         if config.plugins.iptvplayer.disable_live.value:
@@ -1042,10 +1042,7 @@ class E2iPlayerWidget(Screen):
         else:
             artItem = ret.value[0]
         if None is not artItem:
-            if len(artItem.images) and artItem.images[0]['url'].startswith('http'):
-                self.session.openWithCallback(self.leaveArticleView, IPTVArticleRichVisualizer, artItem, {'buffering_path': config.plugins.iptvplayer.bufferingPath.value})
-            else:
-                self.session.openWithCallback(self.leaveArticleView, ArticleView, artItem)
+            self.session.openWithCallback(self.leaveArticleView, IPTVArticleView, artItem, {'buffering_path': config.plugins.iptvplayer.bufferingPath.value, 'host_name': self.hostName, 'logo_path': self.hostLogoPath, 'download_dir': self.iconMenager.currDownloadDir})
 
     def selectMainVideoLinks(self, ret):
         printDBG("selectMainVideoLinks")
@@ -1439,12 +1436,14 @@ class E2iPlayerWidget(Screen):
         # change logo for player
         self["playerlogo"].hide()
         self.session.summary.LCD_hide('LCDlogo')
+        self.hostLogoPath = None
         try:
             hRet = self.host.getLogoPath()
             if hRet.status == RetHost.OK and len(hRet.value):
                 logoPath = hRet.value[0]
                 if logoPath != '':
                     printDBG('Logo Path: ' + logoPath)
+                    self.hostLogoPath = logoPath
                     if not self["playerlogo"].checkDecodeNeeded(logoPath):
                         self["playerlogo"].show()
                     else:
