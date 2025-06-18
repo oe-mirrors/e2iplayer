@@ -10,7 +10,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, mkdir, IsValidFileName, eConnectCallback, GetNice
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, mkdir, IsValidFileName, eConnectCallback, GetNice, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -238,8 +238,11 @@ class IPTVDirectorySelectorWidget(Screen):
         self.tmpData = ''
         cmd = self.prepareCmd()
         printDBG("IPTVDirectorySelectorWidget.requestRefresh cmd[%s]" % cmd)
-        self.console.setNice(GetNice() + 2)
-        self.console.execute(cmd)
+        if hasattr(self.console, "setNice"):
+            self.console.setNice(GetNice() + 2)
+            self.console.execute(cmd)
+        else:
+            self.console.execute(E2PrioFix(cmd))
 
     def requestNewDir(self):
         if self.underClosing:

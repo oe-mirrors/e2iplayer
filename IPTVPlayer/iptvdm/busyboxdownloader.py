@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.wgetdownloader import WgetDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -73,8 +73,11 @@ class BuxyboxWgetDownloader(WgetDownloader):
 
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
-        self.console.setNice(GetNice() + 2)
-        self.console.execute(cmd)
+        if hasattr(self.console, "setNice"):
+            self.console.setNice(GetNice() + 2)
+            self.console.execute(cmd)
+        else:
+            self.console.execute(E2PrioFix(cmd))
 
         self.wgetStatus = self.WGET_STS.CONNECTING
         self.status = DMHelper.STS.DOWNLOADING

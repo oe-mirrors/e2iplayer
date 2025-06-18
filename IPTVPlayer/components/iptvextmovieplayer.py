@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
                                                           GetE2VideoAspectChoices, GetE2VideoAspect, SetE2VideoAspect, GetE2VideoPolicyChoices, \
                                                           GetE2VideoPolicy, SetE2VideoPolicy, GetDefaultLang, GetPolishSubEncoding, iptv_system, \
                                                           GetE2AudioCodecMixOption, SetE2AudioCodecMixOption, CreateTmpFile, GetTmpDir, IsExecutable, MapUcharEncoding, \
-                                                          GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, GetPlayerSkinDir, GetNice
+                                                          GetE2VideoModeChoices, GetE2VideoMode, SetE2VideoMode, GetPlayerSkinDir, GetNice, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandler, IPTVEmbeddedSubtitlesHandler
 from Plugins.Extensions.IPTVPlayer.tools.iptvmoviemetadata import IPTVMovieMetaDataHandler
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -2194,8 +2194,11 @@ class IPTVExtMoviePlayer(Screen):
         # if 'gstplayer' == self.player:
         #    self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self.eplayer3DataAvailable2 ) # work around to catch EOF event after seeking, pause .etc
         printDBG("->||||||| onStart cmd[%s]" % cmd)
-        self.console.setNice(GetNice() + 1)
-        self.console.execute(cmd)
+        if hasattr(self.console, "setNice"):
+            self.console.setNice(GetNice() + 1)
+            self.console.execute(cmd)
+        else:
+            self.console.execute(E2PrioFix(cmd, 1))
         self['statusIcon'].setPixmap(self.playback['statusIcons']['Play'])  # sulge for test
         self['loopIcon'].setPixmap(self.playback['loopIcons']['Off'])
         self['logoIcon'].setPixmap(self.playback['logoIcon'])

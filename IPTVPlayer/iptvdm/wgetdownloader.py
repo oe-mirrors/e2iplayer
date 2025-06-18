@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -137,8 +137,11 @@ class WgetDownloader(BaseDownloader):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        self.console.setNice(GetNice() + 2)
-        self.console.execute(self.downloadCmd)
+        if hasattr(self.console, "setNice"):
+            self.console.setNice(GetNice() + 2)
+            self.console.execute(self.downloadCmd)
+        else:
+            self.console.execute(E2PrioFix(self.downloadCmd))
 
         self.wgetStatus = self.WGET_STS.CONNECTING
         self.status = DMHelper.STS.DOWNLOADING
@@ -206,8 +209,11 @@ class WgetDownloader(BaseDownloader):
            and self.remoteFileSize > self.localFileSize \
            and self.curContinueRetry < self.maxContinueRetry:
             self.curContinueRetry += 1
-            self.console.setNice(GetNice() + 2)
-            self.console.execute(self.downloadCmd)
+            if hasattr(self.console, "setNice"):
+                self.console.setNice(GetNice() + 2)
+                self.console.execute(self.downloadCmd)
+            else:
+                self.console.execute(E2PrioFix(self.downloadCmd))
             return
 
         self._setLastError(code)

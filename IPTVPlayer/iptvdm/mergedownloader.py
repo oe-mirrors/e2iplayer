@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -127,8 +127,11 @@ class MergeDownloader(BaseDownloader):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        self.console.setNice(GetNice() + 2)
-        self.console.execute(cmd)
+        if hasattr(self.console, "setNice"):
+            self.console.setNice(GetNice() + 2)
+            self.console.execute(cmd)
+        else:
+            self.console.execute(E2PrioFix(cmd))
 
         self.status = DMHelper.STS.DOWNLOADING
 
@@ -143,8 +146,11 @@ class MergeDownloader(BaseDownloader):
         printDBG("doStartPostProcess cmd[%s]" % cmd)
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
-        self.console.setNice(GetNice() + 2)
-        self.console.execute(cmd)
+        if hasattr(self.console, "setNice"):
+            self.console.setNice(GetNice() + 2)
+            self.console.execute(cmd)
+        else:
+            self.console.execute(E2PrioFix(cmd))
 
     def _dataAvail(self, data):
         if None is data:

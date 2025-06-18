@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetIconDir, GetNice, formatBytes
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetIconDir, GetNice, formatBytes, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetMoviePlayer
@@ -273,8 +273,11 @@ class IPTVDMWidget(Screen):
             self.tmpData = ''
             cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", config.plugins.iptvplayer.NaszaSciezka.value)
             printDBG("cmd[%s]" % cmd)
-            self.console.setNice(GetNice() + 2)
-            self.console.execute(cmd)
+            if hasattr(self.console, "setNice"):
+                self.console.setNice(GetNice() + 2)
+                self.console.execute(cmd)
+            else:
+                self.console.execute(E2PrioFix(cmd))
 
         self.localMode = True
         self.reloadList(True)

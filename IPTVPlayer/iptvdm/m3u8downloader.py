@@ -8,7 +8,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import m3u8
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
@@ -282,8 +282,11 @@ class M3U8Downloader(BaseDownloader):
         printDBG("Download cmd[%s]" % cmd)
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self._dataAvail)
-        self.console.setNice(GetNice() + 2)
-        self.console.execute(cmd)
+        if hasattr(self.console, "setNice"):
+            self.console.setNice(GetNice() + 2)
+            self.console.execute(cmd)
+        else:
+            self.console.execute(E2PrioFix(cmd))
         ##############################################################################
 
     def _startFragment(self, tryAgain=False):
@@ -332,8 +335,11 @@ class M3U8Downloader(BaseDownloader):
             self.wgetStatus = self.WGET_STS.CONNECTING
             cmd = DMHelper.getBaseWgetCmd(self.downloaderParams) + (' --tries=1 --timeout=%d ' % self._getTimeout()) + '"' + currentFragment + '" -O - >> "' + self.filePath + '"'
             printDBG("Download cmd[%s]" % cmd)
-            self.console.setNice(GetNice() + 2)
-            self.console.execute(cmd)
+            if hasattr(self.console, "setNice"):
+                self.console.setNice(GetNice() + 2)
+                self.console.execute(cmd)
+            else:
+                self.console.execute(E2PrioFix(cmd))
 
             # DebugToFile(currentFragment)
             return DMHelper.STS.DOWNLOADING

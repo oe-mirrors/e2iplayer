@@ -10,7 +10,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.cover import SimpleAnimatedCover, Cover
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, GetNice
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, GetNice, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
@@ -74,8 +74,11 @@ class IPTVSimpleAudioPlayer():
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._playerFinished)
         printDBG("IPTVSimpleAudioPlayer.start cmd[%s]" % cmd)
-        self.console.setNice(GetNice() + 2)
-        self.console.execute(cmd)
+        if hasattr(self.console, "setNice"):
+            self.console.setNice(GetNice() + 2)
+            self.console.execute(cmd)
+        else:
+            self.console.execute(E2PrioFix(cmd))
         self.stopped = False
 
     def _playerFinished(self, code):

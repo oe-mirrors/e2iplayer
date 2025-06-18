@@ -107,14 +107,11 @@ def GetNice(pid=None):
     return nice
 
 
-"""
 def E2PrioFix(cmd, factor=2):
-   return cmd
-   if '/duk' not in cmd:  # and config.plugins.iptvplayer.plarform.value in ('mipsel', 'armv7', 'armv5t'):
-       return 'nice -n %d %s' % (GetNice() + factor, cmd)
-   else:
-       return cmd
-"""
+    if '/duk' not in cmd:  # and config.plugins.iptvplayer.plarform.value in ('mipsel', 'armv7', 'armv5t'):
+        return 'nice -n %d %s' % (GetNice() + factor, cmd)
+    else:
+        return cmd
 
 
 def GetDefaultLang(full=False):
@@ -239,8 +236,11 @@ class iptv_system:
             self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
             self.console_stdoutAvail_conn = eConnectCallback(self.console.stdoutAvail, self._dataAvail)
             self.outData = ""
-        self.console.setNice(GetNice() + 2)
-        self.console.execute(cmd)
+        if hasattr(self.console, "setNice"):
+            self.console.setNice(GetNice() + 2)
+            self.console.execute(cmd)
+        else:
+            self.console.execute(E2PrioFix(cmd))
 
     def terminate(self, doCallBackFun=False):
         self.kill(doCallBackFun)
