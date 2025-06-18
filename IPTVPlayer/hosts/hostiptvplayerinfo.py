@@ -40,13 +40,13 @@ class IPTVPlayerInfo(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'iptvplayer.pl', 'cookie': 'iptvplayer.pl.cookie'})
-        self.DEFAULT_ICON_URL = 'https://about.gitlab.com/images/press/logo/png/gitlab-logo-500.png'
+        self.DEFAULT_ICON_URL = 'https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Accept-Encoding': 'gzip, deflate'})
         self.defaultParams = {'header': self.AJAX_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.MAIN_URL = 'https://gitlab.com/'
+        self.MAIN_URL = 'https://github.com/'
         self.MAIN_CAT_TAB = [
                              {'category': 'commits', 'title': _('Commits'), },
                              {'category': 'tutorial', 'title': _('Tutorials'), }
