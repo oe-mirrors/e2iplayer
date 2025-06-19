@@ -435,6 +435,7 @@ class ConfigMenu(ConfigBaseWidget):
         valTab.append(config.plugins.iptvplayer.disable_live.value)
         valTab.append(config.plugins.iptvplayer.pluginProtectedByPin.value)
         valTab.append(config.plugins.iptvplayer.skin.value)
+        valTab.append(config.plugins.iptvplayer.skinforceinternal.value)
         return valTab
 
     def getMessageAfterSave(self):
