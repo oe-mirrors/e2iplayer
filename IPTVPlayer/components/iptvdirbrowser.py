@@ -48,29 +48,32 @@ class IPTVDirBrowserList(IPTVMainNavigatorList):
 
 
 class IPTVDirectorySelectorWidget(Screen):
-    screenwidth = getDesktop(0).size().width()
-    if screenwidth and screenwidth == 1920:
-        skin = """
-        <screen name="IPTVDirectorySelectorWidget" position="center,center" size="820,860" title="">
-            <widget name="key_red"     position="10,10"  zPosition="2"  size="600,35" valign="center"  halign="left"   font="Regular;28" transparent="1" foregroundColor="red" />
-            <widget name="key_green"   position="10,10"  zPosition="2"  size="600,35" valign="center"  halign="center"  font="Regular;28" transparent="1" foregroundColor="green" />
-            <widget name="key_blue"    position="10,10"  zPosition="2"  size="600,35" valign="center"  halign="right" font="Regular;28" transparent="1" foregroundColor="blue" />
-            <widget name="curr_dir"    position="10,50"  zPosition="2"  size="600,35" valign="center"  halign="left"   font="Regular;28" transparent="1" foregroundColor="white" />
-            <widget name="list"        position="10,95"  zPosition="1"  size="800,725" transparent="1" scrollbarMode="showOnDemand" enableWrapAround="1" />
-        </screen>"""
-    else:
-        skin = """
-        <screen name="IPTVDirectorySelectorWidget" position="center,center" size="620,440" title="">
-            <widget name="key_red"     position="10,10"  zPosition="2"  size="600,35" valign="center"  halign="left"   font="Regular;22" transparent="1" foregroundColor="red" />
-            <widget name="key_green"   position="10,10"  zPosition="2"  size="600,35" valign="center"  halign="center"  font="Regular;22" transparent="1" foregroundColor="green" />
-            <widget name="key_blue"    position="10,10"  zPosition="2"  size="600,35" valign="center"  halign="right" font="Regular;22" transparent="1" foregroundColor="blue" />
-            <widget name="curr_dir"    position="10,50"  zPosition="2"  size="600,35" valign="center"  halign="left"   font="Regular;18" transparent="1" foregroundColor="white" />
-            <widget name="list"        position="10,85"  zPosition="1"  size="580,335" transparent="1" scrollbarMode="showOnDemand" enableWrapAround="1" />
-        </screen>"""
+    skin = """
+    <screen name="IPTVDirectorySelectorWidget" position="center,center" size="840,680" resolution="1280,720" title="" backgroundColor="#34111112" flags="wfNoBorder">
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="140,645" size="20,20" alphatest="blend" transparent="1" />
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="370,645" size="20,20" alphatest="blend" transparent="1" />
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/blue.png" position="600,645" size="20,20" alphatest="blend" transparent="1" />
+        <widget name="key_red" position="174,641" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+        <widget name="key_green" position="404,641" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+        <widget name="key_blue"  position="634,641" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+        <eLabel name="BG_Title" position="0,0" size="840,60" backgroundColor="#100d0f16" zPosition="-1" />
+        <eLabel name="BG_Buttons" position="0,632" size="840,48" backgroundColor="#100d0f16" zPosition="-1" />
+        <ePixmap position="22,642" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
+        <ePixmap position="80,642" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="840,2" zPosition="2" />
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,630" size="840,2" zPosition="2" />           
+        <widget name="curr_dir" position="20,10" size="785,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
+        <widget name="list" position="20,76" zPosition="2" size="800,544" itemHeight="32" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" />
+    </screen>"""
+
+    fullHD = getDesktop(0).size().width() == 1920
+    if fullHD:
+        skin = skin.replace("/HD/", "/FHD/")
 
     def __init__(self, session, currDir, title="Directory browser"):
         printDBG("IPTVDirectorySelectorWidget.__init__ -------------------------------")
         Screen.__init__(self, session)
+        self.skinName = ["IPTVDirectorySelectorScreen", "IPTVDirectorySelectorWidget"]
         if type(self) is IPTVDirectorySelectorWidget:
             self["key_red"] = Label(_("Cancel"))
             # self["key_yellow"] = Label(_("Odśwież"))
@@ -297,21 +300,23 @@ class IPTVDirectorySelectorWidget(Screen):
 
 
 class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
-    screenwidth = getDesktop(0).size().width()
-    if screenwidth and screenwidth == 1920:
-        skin = """
-        <screen name="IPTVFileSelectorWidget" position="center,center" size="820,860" title="">
-            <widget name="key_red"     position="10,10"  zPosition="2"  size="600,35" valign="center"  halign="left"   font="Regular;28" transparent="1" foregroundColor="red" />
-            <widget name="curr_dir"    position="10,50"  zPosition="2"  size="600,35" valign="center"  halign="left"   font="Regular;28" transparent="1" foregroundColor="white" />
-            <widget name="list"        position="10,95"  zPosition="1"  size="800,725" transparent="1" scrollbarMode="showOnDemand" enableWrapAround="1" />
-        </screen>"""
-    else:
-        skin = """
-        <screen name="IPTVFileSelectorWidget" position="center,center" size="620,440" title="">
-            <widget name="key_red"     position="10,10"  zPosition="2"  size="600,35" valign="center"  halign="left"   font="Regular;22" transparent="1" foregroundColor="red" />
-            <widget name="curr_dir"    position="10,50"  zPosition="2"  size="600,35" valign="center"  halign="left"   font="Regular;18" transparent="1" foregroundColor="white" />
-            <widget name="list"        position="10,85"  zPosition="1"  size="580,335" transparent="1" scrollbarMode="showOnDemand" enableWrapAround="1" />
-        </screen>"""
+    skin = """
+    <screen name="IPTVFileSelectorWidget" position="center,center" size="840,680" resolution="1280,720" title="" backgroundColor="#34111112" flags="wfNoBorder">
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="140,645" size="20,20" alphatest="blend" transparent="1" />
+        <widget name="key_red"  position="174,641" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+        <eLabel name="BG_Title" position="0,0" size="840,60" backgroundColor="#100d0f16" zPosition="-1" />
+        <eLabel name="BG_Buttons" position="0,632" size="840,48" backgroundColor="#100d0f16" zPosition="-1" />
+        <ePixmap position="22,642" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
+        <ePixmap position="80,642" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="840,2" zPosition="2" />
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,630" size="840,2" zPosition="2" />           
+        <widget name="curr_dir" position="20,10" size="785,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
+        <widget name="list" position="20,76" zPosition="2" size="800,544" itemHeight="32" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" />
+    </screen>"""
+
+    fullHD = getDesktop(0).size().width() == 1920
+    if fullHD:
+        skin = skin.replace("/HD/", "/FHD/")
 
     def __init__(self, session, currDir, title="File browser", fileMatch=None):
         printDBG("IPTVFileSelectorWidget.__init__ -------------------------------")

@@ -55,7 +55,7 @@ class IPTVChoiceBoxWidget(Screen):
         self.params = params
         self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
-        self.skinName = "IPTVChoiceBoxWidget"
+        self.skinName = ["IPTVChoiceBoxScreen", "IPTVChoiceBoxWidget"]
 
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)

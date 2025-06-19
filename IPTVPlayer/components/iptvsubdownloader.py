@@ -112,6 +112,7 @@ class IPTVSubDownloaderWidget(Screen):
                     printExc("Skin read error: " + path)
 
         Screen.__init__(self, session)
+        self.skinName = ["IPTVSubDownloaderScreen", "IPTVSubDownloaderWidget"]
 
         self["key_red"] = StaticText(_("Cancel"))
 
