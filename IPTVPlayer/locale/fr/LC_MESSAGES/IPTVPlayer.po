@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iptvplayer-for-e 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-18 20:20+0200\n"
+"POT-Creation-Date: 2025-06-19 19:46+0200\n"
 "PO-Revision-Date: 2018-07-28 16:39+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -59,7 +59,7 @@ msgstr ""
 "\n"
 "Erreur[4]."
 
-#: ../components/iptvplayerwidget.py:459 ../components/iptvsubdownloader.py:387
+#: ../components/iptvplayerwidget.py:459 ../components/iptvsubdownloader.py:388
 msgid ""
 "\n"
 "Make sure you are using the latest version of the plugin."
@@ -90,7 +90,7 @@ msgstr ""
 "https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
 "ou ici : samsamsam@o2.pl"
 
-#: ../components/iptvsubdownloader.py:388
+#: ../components/iptvsubdownloader.py:389
 msgid ""
 "\n"
 "You can also report problem here: \n"
@@ -102,8 +102,8 @@ msgstr ""
 "https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
 "ou ici : samsamsam@o2.pl"
 
-#: ../components/configbase.py:80 ../components/iptvdirbrowser.py:79
-#: ../components/iptvdirbrowser.py:322
+#: ../components/configbase.py:80 ../components/iptvdirbrowser.py:82
+#: ../components/iptvdirbrowser.py:327
 #: ../components/iptvfavouriteswidgets.py:45 ../iptvdm/iptvdmui.py:541
 msgid " "
 msgstr " "
@@ -531,7 +531,7 @@ msgstr "AZ"
 msgid "Accept"
 msgstr "Accepter"
 
-#: ../libs/pCommon.py:982
+#: ../libs/pCommon.py:971
 msgid "Access Forbidden"
 msgstr ""
 
@@ -783,7 +783,7 @@ msgstr "Liste d'anime"
 
 #: ../hosts/hostfilmezz.py:387 ../hosts/hostfreediscpl.py:153
 #: ../hosts/hostmooviecc.py:498 ../hosts/hostserienstreamto.py:548
-#: ../hosts/hoststreamliveto.py:328 ../libs/urlparser.py:4688
+#: ../hosts/hoststreamliveto.py:328 ../libs/urlparser.py:4684
 msgid "Answer"
 msgstr "Réponse"
 
@@ -794,7 +794,7 @@ msgstr "Réponse"
 msgid "Any"
 msgstr "Tout"
 
-#: ../components/e2isimpledownloader.py:75 ../components/iptvdirbrowser.py:78
+#: ../components/e2isimpledownloader.py:75 ../components/iptvdirbrowser.py:81
 #: ../components/iptvsubsimpledownloader.py:90
 msgid "Apply"
 msgstr "Appliquer"
@@ -992,9 +992,9 @@ msgstr ""
 "Renvoie les données [%s]."
 
 #: ../components/configbase.py:81 ../components/e2isimpledownloader.py:74
-#: ../components/iptvdirbrowser.py:75 ../components/iptvdirbrowser.py:321
+#: ../components/iptvdirbrowser.py:78 ../components/iptvdirbrowser.py:326
 #: ../components/iptvmultipleinputbox.py:105
-#: ../components/iptvsubdownloader.py:116
+#: ../components/iptvsubdownloader.py:117
 #: ../components/iptvsubsimpledownloader.py:88
 #: ../components/recaptcha_mye2i_widget.py:64
 #: ../components/recaptcha_v2myjd_widget.py:62
@@ -1155,7 +1155,7 @@ msgstr "Configuration d’un lecteur de film externe"
 msgid "Confirm new pin"
 msgstr "Confirmer le nouveau code pin"
 
-#: ../components/iptvsubdownloader.py:224
+#: ../components/iptvsubdownloader.py:225
 msgid "Confirm the title of the movie"
 msgstr "Confirmer le titre du film"
 
@@ -1198,7 +1198,7 @@ msgstr ""
 msgid "Critical Error - cookie can't be saved!"
 msgstr "Erreur critique – cookie ne peut pas être sauvé!"
 
-#: ../libs/pCommon.py:1408
+#: ../libs/pCommon.py:1397
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Erreur critique - Content-Encoding gzip ne peut pas être manipulé!"
 
@@ -1404,7 +1404,7 @@ msgstr "Afficher les miniatures"
 msgid "DixMax Suggestions"
 msgstr ""
 
-#: ../components/iptvsubdownloader.py:544
+#: ../components/iptvsubdownloader.py:545
 msgid "Do you want to finish?"
 msgstr "Voulez-vous terminer?"
 
@@ -1432,7 +1432,7 @@ msgstr "Télécharger « %s » en « %s » a échoué!"
 msgid "Download %s"
 msgstr "Télécharger %s"
 
-#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:10478 ../Web/webParts.py:330
+#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:10474 ../Web/webParts.py:330
 #: ../Web/webParts.py:338 ../Web/webParts.py:345
 msgid "Download again"
 msgstr "Télécharger à nouveau"
@@ -1510,7 +1510,7 @@ msgstr "Gestionnaire de Téléchargement"
 msgid "Download manager is not initialized"
 msgstr "Le gestionnaire de téléchargement n'est pas initialisé"
 
-#: ../components/iptvsubdownloader.py:532
+#: ../components/iptvsubdownloader.py:533
 msgid "Download subtiles failed."
 msgstr "Échec du téléchargement des sous-titres."
 
@@ -1519,7 +1519,7 @@ msgid "Download suggested"
 msgstr "Téléchargement suggéré"
 
 #: ../components/iptvplayerwidget.py:1793
-#: ../components/iptvsubdownloader.py:489
+#: ../components/iptvsubdownloader.py:490
 msgid "Downloading"
 msgstr "Téléchargement"
 
@@ -1704,7 +1704,7 @@ msgstr "Anglais"
 msgid "Enter a value"
 msgstr "Entrer une valeur"
 
-#: ../components/iptvdirbrowser.py:281
+#: ../components/iptvdirbrowser.py:284
 msgid "Enter name"
 msgstr "Entrer votre nom"
 
@@ -1823,7 +1823,7 @@ msgstr ""
 msgid "Exam Review"
 msgstr ""
 
-#: ../components/iptvdirbrowser.py:290
+#: ../components/iptvdirbrowser.py:293
 msgid "Exception occurs"
 msgstr "Une exception s'est produite"
 
@@ -1846,7 +1846,7 @@ msgstr "LIBRE"
 #: ../hosts/hoststreamliveto.py:352 ../libs/hcaptcha.py:109
 #: ../libs/recaptcha_v1.py:37 ../libs/recaptcha_v1.py:64
 #: ../libs/recaptcha_v2.py:39 ../libs/recaptcha_v2.py:79
-#: ../libs/urlparser.py:4682
+#: ../libs/urlparser.py:4678
 #, python-format
 msgid "Fail to get \"%s\"."
 msgstr "Impossible d’obtenir « %s »."
@@ -1955,7 +1955,7 @@ msgstr "Fichier \"%s\" existe déjà"
 msgid "File \"%s\" already exists!"
 msgstr "Le fichier \"%s\" existe déjà!"
 
-#: ../libs/urlparser.py:3176
+#: ../libs/urlparser.py:3183
 msgid "File Not Found."
 msgstr "Fichier Introuvable"
 
@@ -2197,7 +2197,7 @@ msgstr ""
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
-#: ../libs/pCommon.py:398
+#: ../libs/pCommon.py:383
 #, python-format
 msgid "HTTPS connection error \"%s\"\n"
 msgstr "Erreur de connexion HTTPS \"%s\".\n"
@@ -2246,12 +2246,12 @@ msgstr "Accueil"
 msgid "Home page"
 msgstr "Page d'accueil"
 
-#: ../libs/urlparser.py:1231
+#: ../libs/urlparser.py:1254
 #, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr ""
 
-#: ../libs/urlparser.py:1233
+#: ../libs/urlparser.py:1256
 #, fuzzy, python-format
 msgid "Hosting \"%s\" unknown."
 msgstr "Hébergement: %s, %s"
@@ -2362,7 +2362,7 @@ msgstr "Entrée"
 msgid "Interactive Learning Center(ILC)"
 msgstr ""
 
-#: ../libs/urlparser.py:12031
+#: ../libs/urlparser.py:11980
 #, python-format
 msgid "Internal Server Error. Server response code: %s"
 msgstr ""
@@ -2377,7 +2377,7 @@ msgstr ""
 msgid "Invalid email."
 msgstr "Nom non valide."
 
-#: ../components/iptvdirbrowser.py:292
+#: ../components/iptvdirbrowser.py:295
 msgid "Invalid name."
 msgstr "Nom non valide."
 
@@ -2389,7 +2389,7 @@ msgstr "Ce message s'affiche-t-il correctement ?"
 msgid "Ismeretterjesztő"
 msgstr ""
 
-#: ../libs/pCommon.py:528 ../libs/pCommon.py:1222
+#: ../libs/pCommon.py:513 ../libs/pCommon.py:1211
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr "Il n'est pas permis d'appeler getURLRequestData à partir du thread principal."
 
@@ -2397,7 +2397,7 @@ msgstr "Il n'est pas permis d'appeler getURLRequestData à partir du thread prin
 msgid "It looks like some kind of protection. Try again later."
 msgstr ""
 
-#: ../libs/pCommon.py:399
+#: ../libs/pCommon.py:384
 #, python-format
 msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
 msgstr "Il semble que votre configuration actuelle ne permet pas de se connecter à https://%s/.\n"
@@ -2412,7 +2412,7 @@ msgstr "Il semble que l'hôte \"%s\" s'est planté."
 msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
 msgstr "Il semble que l'hôte \"%s\" s'est planté. Voulez-vous signaler ce problème ?"
 
-#: ../components/iptvsubdownloader.py:385
+#: ../components/iptvsubdownloader.py:386
 #, python-format
 msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
 msgstr "Il semble que le fournisseur de sous-titres \"%s\" est planté. Voulez-vous signaler ce problème ?"
@@ -2610,7 +2610,7 @@ msgstr "Dernière mise à jour"
 #: ../hosts/hostxxx.py:2353 ../hosts/hostxxx.py:2830 ../hosts/hostxxx.py:3251
 #: ../hosts/hostxxx.py:3683 ../hosts/hostxxx.py:3778 ../hosts/hostxxx.py:4276
 #: ../hosts/hostxxx.py:5186 ../hosts/hostxxx.py:5960 ../hosts/hostxxx.py:6366
-#: ../hosts/hostxxx.py:6432 ../hosts/hostxxx.py:8175 ../libs/pCommon.py:1409
+#: ../hosts/hostxxx.py:6432 ../hosts/hostxxx.py:8175 ../libs/pCommon.py:1398
 #, python-format
 msgid ""
 "Last error:\n"
@@ -2621,8 +2621,8 @@ msgstr ""
 
 #: ../components/iptvplayerwidget.py:1501
 #: ../components/iptvplayerwidget.py:2003
-#: ../components/iptvsubdownloader.py:537
-#: ../components/iptvsubdownloader.py:578
+#: ../components/iptvsubdownloader.py:538
+#: ../components/iptvsubdownloader.py:579
 #, python-format
 msgid "Last error: \"%s\""
 msgstr "Dernière erreur : \"%s\""
@@ -2708,7 +2708,7 @@ msgstr "Lien protégé par google recaptcha v2."
 #: ../hosts/hostekinotv.py:453 ../hosts/hostfilmezz.py:334
 #: ../hosts/hostfreediscpl.py:85 ../hosts/hostmooviecc.py:447
 #: ../hosts/hostserienstreamto.py:410 ../hosts/hosttvpvod.py:231
-#: ../libs/urlparser.py:10478
+#: ../libs/urlparser.py:10474
 msgid "Link protected with google recaptcha v2."
 msgstr "Lien protégé par google recaptcha v2."
 
@@ -2779,7 +2779,7 @@ msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following er
 msgstr ""
 
 #: ../components/iptvplayerwidget.py:1794
-#: ../components/iptvsubdownloader.py:490
+#: ../components/iptvsubdownloader.py:491
 msgid "Loading"
 msgstr "Chargement"
 
@@ -2844,12 +2844,12 @@ msgstr "La connexion a échoué. Email ou mot de passe invalide."
 msgid "Login needed"
 msgstr "Le login a échoué!"
 
-#: ../libs/urlparser.py:6474
+#: ../libs/urlparser.py:6470
 #, fuzzy, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Login a échoué."
 
-#: ../libs/urlparser.py:2592
+#: ../libs/urlparser.py:2615
 #, python-format
 msgid ""
 "Login user \"%s\" to http://vk.com/ failed!\n"
@@ -3179,7 +3179,7 @@ msgstr "Nouveaux films"
 msgid "New cartoon"
 msgstr "Nouveau dessin animé"
 
-#: ../components/iptvdirbrowser.py:77
+#: ../components/iptvdirbrowser.py:80
 msgid "New dir"
 msgstr "Nouveau reportage"
 
@@ -3326,7 +3326,7 @@ msgid "No"
 msgstr "Non"
 
 #: ../components/iptvplayerwidget.py:1998
-#: ../components/iptvsubdownloader.py:573
+#: ../components/iptvsubdownloader.py:574
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -3414,7 +3414,7 @@ msgstr "Disponible uniquement en Suède."
 msgid "Only available in Sweden.\n"
 msgstr "Disponible uniquement en Suède.\n"
 
-#: ../libs/urlparser.py:9215
+#: ../libs/urlparser.py:9211
 msgid ""
 "Only logged in user have access.\n"
 "Please set login data in the host configuration under blue button."
@@ -3434,7 +3434,7 @@ msgstr "Seulement les vidéos"
 msgid "Opening. Please wait..."
 msgstr "Ouverture. Veuillez patienter....."
 
-#: ../components/iptvplayerwidget.py:881 ../components/iptvsubdownloader.py:259
+#: ../components/iptvplayerwidget.py:881 ../components/iptvsubdownloader.py:260
 msgid "Operation aborted!"
 msgstr "Opération annulée!"
 
@@ -3948,7 +3948,7 @@ msgid "Refresh"
 msgstr "Rafraîchir"
 
 #: ../components/iptvplayerwidget.py:1795
-#: ../components/iptvsubdownloader.py:491
+#: ../components/iptvsubdownloader.py:492
 msgid "Refreshing"
 msgstr "Rafraîchissement"
 
@@ -4370,7 +4370,7 @@ msgstr "Rechercher des matériaux YouTube"
 msgid "Searching in %s, please wait (%d)"
 msgstr "Recherche dans %s, veuillez patienter (%d)"
 
-#: ../components/iptvsubdownloader.py:685
+#: ../components/iptvsubdownloader.py:686
 #, python-format
 msgid "Searching subtitles for \"%s\""
 msgstr "Recherche de sous-titres pour \"%s\"."
@@ -4486,7 +4486,7 @@ msgstr "Sélectionner un service"
 msgid "Select subtitles file"
 msgstr "Sélectionner le fichier de sous-titres"
 
-#: ../components/iptvsubdownloader.py:441
+#: ../components/iptvsubdownloader.py:442
 msgid "Select subtitles provider:"
 msgstr "Sélectionner le fournisseur de sous-titres :"
 
@@ -4517,7 +4517,7 @@ msgstr "Hôtes sélectionnés"
 #: ../hosts/hostfilmezz.py:378 ../hosts/hostfreediscpl.py:113
 #: ../hosts/hostmooviecc.py:489 ../hosts/hostserienstreamto.py:525
 #: ../hosts/hoststreamliveto.py:327 ../hosts/hoststreamliveto.py:374
-#: ../libs/recaptcha_v1.py:68 ../libs/urlparser.py:4687
+#: ../libs/recaptcha_v1.py:68 ../libs/urlparser.py:4683
 msgid "Send"
 msgstr "Envoyer"
 
@@ -4680,7 +4680,7 @@ msgstr "Liste d'anime"
 msgid "Simple subtitles downloader"
 msgstr "Téléchargeur de sous-titres simple"
 
-#: ../components/iptvsubdownloader.py:579
+#: ../components/iptvsubdownloader.py:580
 msgid "Simplify the title and try again."
 msgstr "Simplifier le titre et réessayer."
 
@@ -4776,7 +4776,7 @@ msgstr "Trié les canaux généraux les plus vus [en direct]"
 msgid "Sorted most viewed channels now [live]"
 msgstr "Trié les canaux actuellement les plus vus [en direct]"
 
-#: ../libs/urlparser.py:6324
+#: ../libs/urlparser.py:6320
 #, python-format
 msgid "Source %s"
 msgstr "Source %s"
@@ -4929,7 +4929,7 @@ msgstr "Alignement vertical des sous-titres"
 msgid "Subtitles"
 msgstr "Sous-titres"
 
-#: ../components/iptvsubdownloader.py:543
+#: ../components/iptvsubdownloader.py:544
 #, python-format
 msgid "Subtitles \"%s\" downloaded correctly."
 msgstr "Sous-titres \"%s\" téléchargés correctement."
@@ -5143,7 +5143,7 @@ msgstr ""
 msgid "Title:"
 msgstr "Titre:"
 
-#: ../libs/urlparser.py:2588
+#: ../libs/urlparser.py:2611
 msgid ""
 "To watch videos from http://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
@@ -5599,7 +5599,7 @@ msgstr "Format de la vidéo:"
 msgid "Video with DRM protection."
 msgstr "Vidéo avec protection DRM."
 
-#: ../libs/urlparser.py:3151
+#: ../libs/urlparser.py:3158
 msgid ""
 "Videomega has blocked your IP for some time.\n"
 "Please retry this link after some time."
@@ -5727,7 +5727,7 @@ msgstr ""
 msgid "Wrong Youtube Api Key length"
 msgstr ""
 
-#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4706
+#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4702
 msgid "Wrong answer."
 msgstr "Mauvaise réponse."
 
@@ -5817,17 +5817,17 @@ msgstr ""
 msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
 msgstr "Vous utilisez l'ancienne version d'OpenWebif.<br> Pour accéder à IPTVPlayer web Sélectionnez le lien suivant <br>"
 
-#: ../libs/pCommon.py:402
+#: ../libs/pCommon.py:387
 #, fuzzy
 msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
 msgstr "Vous pouvez désactiver la validation des certificats HTTPS dans la configuration IPTVPlayer pour supprimer ce problème."
 
-#: ../libs/pCommon.py:413
+#: ../libs/pCommon.py:398
 #, fuzzy
 msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
 msgstr "Vous pouvez désactiver la validation des certificats HTTPS dans la configuration IPTVPlayer pour supprimer ce problème."
 
-#: ../libs/pCommon.py:415
+#: ../libs/pCommon.py:400
 #, fuzzy
 msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
 msgstr "Vous pouvez installer le paquet PyCurl à partir de http://www.iptvplayer.gitlab.io/ pour résoudre ce problème."
@@ -5853,7 +5853,7 @@ msgstr "Vous n'avez pas de compte premium. Lancement d'une émission sponsorisé
 msgid "You need to enter email and password in configuration."
 msgstr "Vous devez entrer l'email et le mot de passe dans la configuration."
 
-#: ../libs/pCommon.py:529 ../libs/pCommon.py:1223
+#: ../libs/pCommon.py:514 ../libs/pCommon.py:1212
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Vous ne devez jamais effectuer d'opérations d'E/S de bloc dans le __init__."
 
@@ -6001,7 +6001,7 @@ msgstr "de"
 
 #: ../components/iptvconfigmenu.py:162 ../components/iptvconfigmenu.py:230
 #: ../components/iptvsubsimpledownloader.py:294 ../hosts/hostddl.py:31
-#: ../libs/urlparser.py:8592
+#: ../libs/urlparser.py:8588
 msgid "default"
 msgstr "par défaut"
 

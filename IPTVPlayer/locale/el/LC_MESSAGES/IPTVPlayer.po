@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-18 20:20+0200\n"
-"PO-Revision-Date: 2025-06-19 00:38+0300\n"
+"POT-Creation-Date: 2025-06-19 19:46+0200\n"
+"PO-Revision-Date: 2025-06-19 15:44+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -17,9 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.2\n"
-"X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-SearchPath-0: .\n"
 
 #: ../components/iptvplayerwidget.py:1668
 #, python-format
@@ -63,7 +61,7 @@ msgstr ""
 "\n"
 "Σφάλμα[4]."
 
-#: ../components/iptvplayerwidget.py:459 ../components/iptvsubdownloader.py:387
+#: ../components/iptvplayerwidget.py:459 ../components/iptvsubdownloader.py:388
 msgid ""
 "\n"
 "Make sure you are using the latest version of the plugin."
@@ -91,7 +89,7 @@ msgstr ""
 "Μπορείτε επίσης να αναφέρετε το πρόβλημα εδώ: \n"
 " https://gitlab.com/zadmario/e2iplayer/issues"
 
-#: ../components/iptvsubdownloader.py:388
+#: ../components/iptvsubdownloader.py:389
 msgid ""
 "\n"
 "You can also report problem here: \n"
@@ -103,8 +101,8 @@ msgstr ""
 "https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
 "ή εδώ: samsamsam@o2.pl"
 
-#: ../components/configbase.py:80 ../components/iptvdirbrowser.py:79
-#: ../components/iptvdirbrowser.py:322
+#: ../components/configbase.py:80 ../components/iptvdirbrowser.py:82
+#: ../components/iptvdirbrowser.py:327
 #: ../components/iptvfavouriteswidgets.py:45 ../iptvdm/iptvdmui.py:541
 msgid " "
 msgstr " "
@@ -356,64 +354,52 @@ msgid "-- OK --"
 msgstr "-- ΕΝΤΑΞΕΙ --"
 
 #: ../components/iptvconfigmenu.py:286
-#, fuzzy
 msgid "----- BASIC CONFIGURATION -----"
-msgstr "----- ΒΑΣΙΚΕΣ ΡΥΘΜΙΣΕΙΣ (ΟΚ) -----"
+msgstr "----- ΒΑΣΙΚΕΣ ΡΥΘΜΙΣΕΙΣ -----"
 
 #: ../components/iptvconfigmenu.py:342
-#, fuzzy
 msgid "----- BUFFERING CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΦΟΡΤΩΣΗΣ (OK) -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΦΟΡΤΩΣΗΣ -----"
 
 #: ../components/iptvconfigmenu.py:361
-#, fuzzy
 msgid "----- CAPTCHA CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ CAPTCHA (OK) -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ CAPTCHA -----"
 
 #: ../components/iptvconfigmenu.py:351
-#, fuzzy
 msgid "----- DOWNLOADING CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΛΗΨΕΩΝ (ΟΚ) -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΛΗΨΕΩΝ -----"
 
 #: ../components/iptvconfigmenu.py:399
-#, fuzzy
 msgid "----- OTHER SETTINGS -----"
-msgstr "----- ΑΛΛΕΣ ΡΥΘΜΙΣΕΙΣ (OK) -----"
+msgstr "----- ΑΛΛΕΣ ΡΥΘΜΙΣΕΙΣ -----"
 
 #: ../components/iptvconfigmenu.py:382
-#, fuzzy
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΓΡΑΜΜΑΤΩΝ ΑΝΑΠΑΡΑΓΩΓΗΣ (ΟΚ) -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΓΡΑΜΜΑΤΩΝ ΑΝΑΠΑΡΑΓΩΓΗΣ & ΑΝΑΠΑΡΑΓΩΓΗ -----"
 
 #: ../components/iptvconfigmenu.py:330
-#, fuzzy
 msgid "----- PROXIES CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΔΙΑΚΟΜΙΣΤΩΝ ΜΕΣΟΛΑΒΗΣΗΣ (OK) -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΔΙΑΚΟΜΙΣΤΩΝ ΜΕΣΟΛΑΒΗΣΗΣ -----"
 
 #: ../components/iptvconfigmenu.py:304
-#, fuzzy
 msgid "----- SECURITY CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΥΠΟΤΙΤΛΩΝ (OK) -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΑΣΦΑΛΕΙΑΣ -----"
 
 #: ../components/iptvconfigmenu.py:301
-#, fuzzy
 msgid "----- SERVICE CONFIGURATION -----"
-msgstr "----- ΒΑΣΙΚΕΣ ΡΥΘΜΙΣΕΙΣ (ΟΚ) -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΥΠΗΡΕΣΙΩΝ -----"
 
 #: ../components/iptvconfigmenu.py:310
-#, fuzzy
 msgid "----- SKIN CONFIGURATION -----"
-msgstr "----- ΒΑΣΙΚΕΣ ΡΥΘΜΙΣΕΙΣ (ΟΚ) -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΘΕΜΑΤΩΝ -----"
 
 #: ../components/iptvconfigmenu.py:338
-#, fuzzy
 msgid "----- STORAGE CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΥΠΟΤΙΤΛΩΝ (OK) -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΑΠΟΘΗΚΕΥΣΗΣ -----"
 
 #: ../components/iptvconfigmenu.py:371
-#, fuzzy
 msgid "----- SUBTITLES CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΥΠΟΤΙΤΛΩΝ (OK) -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΥΠΟΤΙΤΛΩΝ -----"
 
 #: ../components/configextmovieplayer.py:264
 msgid "----------------- External exteplayer3 options -----------------"
@@ -540,9 +526,9 @@ msgstr "AZ"
 msgid "Accept"
 msgstr "Αποδοχή"
 
-#: ../libs/pCommon.py:982
+#: ../libs/pCommon.py:971
 msgid "Access Forbidden"
-msgstr ""
+msgstr "Απαγορεύεται η πρόσβαση"
 
 #: ../components/recaptcha_mye2i_widget.py:139
 #: ../components/recaptcha_v2myjd_widget.py:130
@@ -762,7 +748,7 @@ msgstr "Ανατομία"
 #: ../hosts/hostkinokiste.py:34 ../hosts/hostkkiste.py:34
 #: ../hosts/hostmegakino.py:34
 msgid "Animation"
-msgstr "Animation"
+msgstr "Κινούμενα σχέδια"
 
 #: ../hosts/hostyifytv.py:79
 msgid "Animations"
@@ -783,7 +769,7 @@ msgstr "Λίστα anime"
 
 #: ../hosts/hostfilmezz.py:387 ../hosts/hostfreediscpl.py:153
 #: ../hosts/hostmooviecc.py:498 ../hosts/hostserienstreamto.py:548
-#: ../hosts/hoststreamliveto.py:328 ../libs/urlparser.py:4688
+#: ../hosts/hoststreamliveto.py:328 ../libs/urlparser.py:4684
 msgid "Answer"
 msgstr "Απάντηση"
 
@@ -794,7 +780,7 @@ msgstr "Απάντηση"
 msgid "Any"
 msgstr "Οποιοδήποτε"
 
-#: ../components/e2isimpledownloader.py:75 ../components/iptvdirbrowser.py:78
+#: ../components/e2isimpledownloader.py:75 ../components/iptvdirbrowser.py:81
 #: ../components/iptvsubsimpledownloader.py:90
 msgid "Apply"
 msgstr "Εφαρμογή"
@@ -987,9 +973,9 @@ msgstr ""
 "Επιστροφή δεδομένων[%s]."
 
 #: ../components/configbase.py:81 ../components/e2isimpledownloader.py:74
-#: ../components/iptvdirbrowser.py:75 ../components/iptvdirbrowser.py:321
+#: ../components/iptvdirbrowser.py:78 ../components/iptvdirbrowser.py:326
 #: ../components/iptvmultipleinputbox.py:105
-#: ../components/iptvsubdownloader.py:116
+#: ../components/iptvsubdownloader.py:117
 #: ../components/iptvsubsimpledownloader.py:88
 #: ../components/recaptcha_mye2i_widget.py:64
 #: ../components/recaptcha_v2myjd_widget.py:62
@@ -1151,7 +1137,7 @@ msgstr "Ρύθμιση εξωτερικής αναπαραγωγής ταινι�
 msgid "Confirm new pin"
 msgstr "Επιβεβαίωση νέου pin"
 
-#: ../components/iptvsubdownloader.py:224
+#: ../components/iptvsubdownloader.py:225
 msgid "Confirm the title of the movie"
 msgstr "Επιβεβαίωση του τίτλου της ταινίας"
 
@@ -1192,7 +1178,7 @@ msgstr "Δημιουργία οθόνης σύνοψης LCD/VFD"
 msgid "Critical Error - cookie can't be saved!"
 msgstr "Κρίσιμο σφάλμα - το cookie δεν μπορεί να αποθηκευτεί!"
 
-#: ../libs/pCommon.py:1408
+#: ../libs/pCommon.py:1397
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Κρίσιμο Σφάλμα – Το Content-Encoding gzip δεν μπορεί να διαχειριστεί!"
 
@@ -1396,7 +1382,7 @@ msgstr "Εμφάνιση μικρογραφιών"
 msgid "DixMax Suggestions"
 msgstr "Προτάσεις DixMax"
 
-#: ../components/iptvsubdownloader.py:544
+#: ../components/iptvsubdownloader.py:545
 msgid "Do you want to finish?"
 msgstr "Θέλετε να τελειώσετε;"
 
@@ -1423,7 +1409,7 @@ msgstr "Η λήψη του \"%s\" στον φάκελο \"%s\" απέτυχε!"
 msgid "Download %s"
 msgstr "Λήψη %s"
 
-#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:10478 ../Web/webParts.py:330
+#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:10474 ../Web/webParts.py:330
 #: ../Web/webParts.py:338 ../Web/webParts.py:345
 msgid "Download again"
 msgstr "Λήψη ξανά"
@@ -1501,7 +1487,7 @@ msgstr "Διαχείριση λήψεων"
 msgid "Download manager is not initialized"
 msgstr "Η Διαχείριση λήψεων δεν έχει αρχικοποιηθεί"
 
-#: ../components/iptvsubdownloader.py:532
+#: ../components/iptvsubdownloader.py:533
 msgid "Download subtiles failed."
 msgstr "Αποτυχία λήψης υπότιτλων."
 
@@ -1510,7 +1496,7 @@ msgid "Download suggested"
 msgstr "Λήψη προτεινόμενων"
 
 #: ../components/iptvplayerwidget.py:1793
-#: ../components/iptvsubdownloader.py:489
+#: ../components/iptvsubdownloader.py:490
 msgid "Downloading"
 msgstr "Λήψη"
 
@@ -1697,7 +1683,7 @@ msgstr "Αγγλικά"
 msgid "Enter a value"
 msgstr "Εισάγετε μια τιμή"
 
-#: ../components/iptvdirbrowser.py:281
+#: ../components/iptvdirbrowser.py:284
 msgid "Enter name"
 msgstr "Εισαγωγή ονόματος"
 
@@ -1812,7 +1798,7 @@ msgstr "Ηθικά & Νομικά"
 msgid "Exam Review"
 msgstr "Επανεξέταση εξετάσεων"
 
-#: ../components/iptvdirbrowser.py:290
+#: ../components/iptvdirbrowser.py:293
 msgid "Exception occurs"
 msgstr "Παρουσιάστηκε εξαίρεση"
 
@@ -1835,7 +1821,7 @@ msgstr "ΔΩΡΕΑΝ"
 #: ../hosts/hoststreamliveto.py:352 ../libs/hcaptcha.py:109
 #: ../libs/recaptcha_v1.py:37 ../libs/recaptcha_v1.py:64
 #: ../libs/recaptcha_v2.py:39 ../libs/recaptcha_v2.py:79
-#: ../libs/urlparser.py:4682
+#: ../libs/urlparser.py:4678
 #, python-format
 msgid "Fail to get \"%s\"."
 msgstr "Αποτυχία λήψης του \"%s\"."
@@ -1944,7 +1930,7 @@ msgstr "Το αρχείο \"%s\" υπάρχει ήδη"
 msgid "File \"%s\" already exists!"
 msgstr "Το αρχείο \"%s\" υπάρχει ήδη!"
 
-#: ../libs/urlparser.py:3176
+#: ../libs/urlparser.py:3183
 msgid "File Not Found."
 msgstr "Το αρχείο δεν βρέθηκε."
 
@@ -2015,7 +2001,7 @@ msgstr "Πόδι & Αστράγαλος"
 
 #: ../components/iptvconfigmenu.py:312
 msgid "Force internal Skin"
-msgstr ""
+msgstr "Επιβολή εσωτερικού θέματος"
 
 #: ../components/iptvplayerwidget.py:1572
 msgid "Format 'wmv' blocked in configuration."
@@ -2181,7 +2167,7 @@ msgstr "Προτάσεις HDFull"
 msgid "HLS/m3u8"
 msgstr "HLS/m3u8"
 
-#: ../libs/pCommon.py:398
+#: ../libs/pCommon.py:383
 #, python-format
 msgid "HTTPS connection error \"%s\"\n"
 msgstr "Σφάλμα σύνδεσης HTTPS \"%s\"\n"
@@ -2230,12 +2216,12 @@ msgstr "Αρχική"
 msgid "Home page"
 msgstr "Αρχική σελίδα"
 
-#: ../libs/urlparser.py:1231
+#: ../libs/urlparser.py:1254
 #, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr "Το hosting \"%s\" δεν υποστηρίζεται."
 
-#: ../libs/urlparser.py:1233
+#: ../libs/urlparser.py:1256
 #, python-format
 msgid "Hosting \"%s\" unknown."
 msgstr "Άγνωστο hosting \"%s\"."
@@ -2322,9 +2308,8 @@ msgid "Initialize Download Manager"
 msgstr "Αρχικοποίηση Διαχείρισης λήψεων"
 
 #: ../components/iptvconfigmenu.py:292
-#, fuzzy
 msgid "Initialize web interface"
-msgstr "Προετοιμασία διεπαφής ιστού (πειραματικό)"
+msgstr "Αρχικοποίηση διεπαφής ιστού"
 
 #: ../Web/webSite.py:180 ../Web/webSite.py:225 ../Web/webSite.py:363
 #: ../Web/webSite.py:553
@@ -2344,7 +2329,7 @@ msgstr "Εισαγωγή"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Διαδραστικό Κέντρο Μάθησης (ILC)"
 
-#: ../libs/urlparser.py:12031
+#: ../libs/urlparser.py:11980
 #, python-format
 msgid "Internal Server Error. Server response code: %s"
 msgstr "Εσωτερικό σφάλμα διακομιστή. Κωδικός απάντησης διακομιστή: %s"
@@ -2358,7 +2343,7 @@ msgstr "Λίστα διαδικτυακών ραδιοφώνων"
 msgid "Invalid email."
 msgstr "Μη έγκυρο email."
 
-#: ../components/iptvdirbrowser.py:292
+#: ../components/iptvdirbrowser.py:295
 msgid "Invalid name."
 msgstr "Μη έγκυρο όνομα."
 
@@ -2370,7 +2355,7 @@ msgstr "Εμφανίζεται σωστά αυτό το μήνυμα;"
 msgid "Ismeretterjesztő"
 msgstr "Ντοκιμαντέρ"
 
-#: ../libs/pCommon.py:528 ../libs/pCommon.py:1222
+#: ../libs/pCommon.py:513 ../libs/pCommon.py:1211
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr "Δεν επιτρέπεται η κλήση του getURLRequestData από το κύριο νήμα."
 
@@ -2378,7 +2363,7 @@ msgstr "Δεν επιτρέπεται η κλήση του getURLRequestData α�
 msgid "It looks like some kind of protection. Try again later."
 msgstr "Φαίνεται ότι υπάρχει κάποια προστασία. Δοκιμάστε ξανά αργότερα."
 
-#: ../libs/pCommon.py:399
+#: ../libs/pCommon.py:384
 #, python-format
 msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
 msgstr "Φαίνεται ότι η τρέχουσα ρύθμισή σας δεν επιτρέπει σύνδεση στο https://%s/.\n"
@@ -2393,7 +2378,7 @@ msgstr "Φαίνεται ότι ο host \"%s\" κράσαρε."
 msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
 msgstr "Φαίνεται ότι ο host \"%s\" κράσαρε. Θέλετε να αναφέρετε αυτό το πρόβλημα;"
 
-#: ../components/iptvsubdownloader.py:385
+#: ../components/iptvsubdownloader.py:386
 #, python-format
 msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
 msgstr "Φαίνεται ότι ο πάροχος του υπότιτλου \"%s\" έχει κρασάρει. Θέλετε να αναφέρετε αυτό το πρόβλημα;"
@@ -2589,7 +2574,7 @@ msgstr "Χθες"
 #: ../hosts/hostxxx.py:2353 ../hosts/hostxxx.py:2830 ../hosts/hostxxx.py:3251
 #: ../hosts/hostxxx.py:3683 ../hosts/hostxxx.py:3778 ../hosts/hostxxx.py:4276
 #: ../hosts/hostxxx.py:5186 ../hosts/hostxxx.py:5960 ../hosts/hostxxx.py:6366
-#: ../hosts/hostxxx.py:6432 ../hosts/hostxxx.py:8175 ../libs/pCommon.py:1409
+#: ../hosts/hostxxx.py:6432 ../hosts/hostxxx.py:8175 ../libs/pCommon.py:1398
 #, python-format
 msgid ""
 "Last error:\n"
@@ -2600,8 +2585,8 @@ msgstr ""
 
 #: ../components/iptvplayerwidget.py:1501
 #: ../components/iptvplayerwidget.py:2003
-#: ../components/iptvsubdownloader.py:537
-#: ../components/iptvsubdownloader.py:578
+#: ../components/iptvsubdownloader.py:538
+#: ../components/iptvsubdownloader.py:579
 #, python-format
 msgid "Last error: \"%s\""
 msgstr "Τελευταίο σφάλμα: \"%s\""
@@ -2681,7 +2666,7 @@ msgstr "Ο σύνδεσμος προστατεύεται με Google ReCaptcha v
 #: ../hosts/hostekinotv.py:453 ../hosts/hostfilmezz.py:334
 #: ../hosts/hostfreediscpl.py:85 ../hosts/hostmooviecc.py:447
 #: ../hosts/hostserienstreamto.py:410 ../hosts/hosttvpvod.py:231
-#: ../libs/urlparser.py:10478
+#: ../libs/urlparser.py:10474
 msgid "Link protected with google recaptcha v2."
 msgstr "Ο σύνδεσμος προστατεύεται με google recaptcha v2."
 
@@ -2750,7 +2735,7 @@ msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following er
 msgstr "Η φόρτωση της διάταξης εικονικού πληκτρολογίου \"%s\" απέτυχε λόγω του εξής σφάλματος: \"%s\""
 
 #: ../components/iptvplayerwidget.py:1794
-#: ../components/iptvsubdownloader.py:490
+#: ../components/iptvsubdownloader.py:491
 msgid "Loading"
 msgstr "Φόρτωση"
 
@@ -2814,12 +2799,12 @@ msgstr "Αποτυχία σύνδεσης. Μη έγκυρο email ή κωδικ
 msgid "Login needed"
 msgstr "Απαιτείται σύνδεση"
 
-#: ../libs/urlparser.py:6474
+#: ../libs/urlparser.py:6470
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Η σύνδεση στο {0} απέτυχε."
 
-#: ../libs/urlparser.py:2592
+#: ../libs/urlparser.py:2615
 #, python-format
 msgid ""
 "Login user \"%s\" to http://vk.com/ failed!\n"
@@ -3145,7 +3130,7 @@ msgstr "Νέες ταινίες"
 msgid "New cartoon"
 msgstr "Νέα κινούμενα σχέδια"
 
-#: ../components/iptvdirbrowser.py:77
+#: ../components/iptvdirbrowser.py:80
 msgid "New dir"
 msgstr "Νέος κατάλογος"
 
@@ -3290,7 +3275,7 @@ msgid "No"
 msgstr "Όχι"
 
 #: ../components/iptvplayerwidget.py:1998
-#: ../components/iptvsubdownloader.py:573
+#: ../components/iptvsubdownloader.py:574
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -3376,7 +3361,7 @@ msgstr "Διατίθεται μόνο στη Σουηδία."
 msgid "Only available in Sweden.\n"
 msgstr "Διατίθεται μόνο στη Σουηδία.\n"
 
-#: ../libs/urlparser.py:9215
+#: ../libs/urlparser.py:9211
 msgid ""
 "Only logged in user have access.\n"
 "Please set login data in the host configuration under blue button."
@@ -3396,7 +3381,7 @@ msgstr "Μόνο βίντεο"
 msgid "Opening. Please wait..."
 msgstr "Άνοιγμα. Παρακαλώ περιμένετε..."
 
-#: ../components/iptvplayerwidget.py:881 ../components/iptvsubdownloader.py:259
+#: ../components/iptvplayerwidget.py:881 ../components/iptvsubdownloader.py:260
 msgid "Operation aborted!"
 msgstr "Ματαίωση λειτουργίας!"
 
@@ -3549,12 +3534,12 @@ msgstr "Αναπαραγωγή UHD:"
 #: ../hosts/hostnuteczki.py:373
 #, python-format
 msgid "Player %s"
-msgstr "Player %s"
+msgstr "Πρόγραμμα αναπαραγωγής %s"
 
 #: ../hosts/hostnuteczki.py:365
 #, python-format
 msgid "Player %s: %s"
-msgstr "Player %s: %s"
+msgstr "Πρόγραμμα αναπαραγωγής %s: %s"
 
 #: ../components/iptvconfigmenu.py:314
 msgid "Player Skin"
@@ -3897,7 +3882,7 @@ msgid "Refresh"
 msgstr "Ανανέωση"
 
 #: ../components/iptvplayerwidget.py:1795
-#: ../components/iptvsubdownloader.py:491
+#: ../components/iptvsubdownloader.py:492
 msgid "Refreshing"
 msgstr "Ανανέωση"
 
@@ -4317,7 +4302,7 @@ msgstr "Αναζήτηση υλικού youtube "
 msgid "Searching in %s, please wait (%d)"
 msgstr "Αναζήτηση στο %s, παρακαλώ περιμένετε (%d)"
 
-#: ../components/iptvsubdownloader.py:685
+#: ../components/iptvsubdownloader.py:686
 #, python-format
 msgid "Searching subtitles for \"%s\""
 msgstr "Αναζήτηση υποτίτλων για \"%s\""
@@ -4432,7 +4417,7 @@ msgstr "Επιλογή υπηρεσίας"
 msgid "Select subtitles file"
 msgstr "Επιλογή αρχείου υποτίτλων"
 
-#: ../components/iptvsubdownloader.py:441
+#: ../components/iptvsubdownloader.py:442
 msgid "Select subtitles provider:"
 msgstr "Επιλογή παρόχου υποτίτλων:"
 
@@ -4463,7 +4448,7 @@ msgstr "Επιλεγμένοι hosts"
 #: ../hosts/hostfilmezz.py:378 ../hosts/hostfreediscpl.py:113
 #: ../hosts/hostmooviecc.py:489 ../hosts/hostserienstreamto.py:525
 #: ../hosts/hoststreamliveto.py:327 ../hosts/hoststreamliveto.py:374
-#: ../libs/recaptcha_v1.py:68 ../libs/urlparser.py:4687
+#: ../libs/recaptcha_v1.py:68 ../libs/urlparser.py:4683
 msgid "Send"
 msgstr "Αποστολή"
 
@@ -4623,7 +4608,7 @@ msgstr "Απλή λίστα"
 msgid "Simple subtitles downloader"
 msgstr "Απλό πρόγραμμα λήψης υποτίτλων"
 
-#: ../components/iptvsubdownloader.py:579
+#: ../components/iptvsubdownloader.py:580
 msgid "Simplify the title and try again."
 msgstr "Απλοποιήστε τον τίτλο και προσπαθήστε ξανά."
 
@@ -4656,9 +4641,8 @@ msgid "Some changes will be applied only after movie player restart."
 msgstr "Ορισμένες αλλαγές θα εφαρμοστούν μόνο μετά την επανεκκίνηση της αναπαραγωγής ταινιών."
 
 #: ../components/iptvconfigmenu.py:443
-#, fuzzy
 msgid "Some settings will be applied only after GUI restart."
-msgstr "Ορισμένες αλλαγές θα εφαρμοστούν μόνο μετά την επανεκκίνηση της αναπαραγωγής ταινιών."
+msgstr "Ορισμένες ρυθμίσεις θα εφαρμοστούν μόνο μετά την επανεκκίνηση του GUI."
 
 #: ../hosts/hostfilmtar.py:81
 msgid "Sorozat Kategóriák"
@@ -4717,7 +4701,7 @@ msgstr "Ταξινομημένα κανάλια με τις περισσότερ
 msgid "Sorted most viewed channels now [live]"
 msgstr "Ταξινομημένα κανάλια με τις περισσότερες προβολές τώρα [ζωντανά]"
 
-#: ../libs/urlparser.py:6324
+#: ../libs/urlparser.py:6320
 #, python-format
 msgid "Source %s"
 msgstr "Πηγή %s"
@@ -4866,7 +4850,7 @@ msgstr "Κάθετη στοίχιση υποτίτλων"
 msgid "Subtitles"
 msgstr "Υπότιτλοι"
 
-#: ../components/iptvsubdownloader.py:543
+#: ../components/iptvsubdownloader.py:544
 #, python-format
 msgid "Subtitles \"%s\" downloaded correctly."
 msgstr "Οι υπότιτλοι \"%s\" έχουν ληφθεί σωστά."
@@ -5082,7 +5066,7 @@ msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB fl
 msgid "Title:"
 msgstr "Τίτλος:"
 
-#: ../libs/urlparser.py:2588
+#: ../libs/urlparser.py:2611
 msgid ""
 "To watch videos from http://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
@@ -5529,7 +5513,7 @@ msgstr "Πολιτική βίντεο για 4:3"
 msgid "Video with DRM protection."
 msgstr "Βίντεο με προστασία DRM."
 
-#: ../libs/urlparser.py:3151
+#: ../libs/urlparser.py:3158
 msgid ""
 "Videomega has blocked your IP for some time.\n"
 "Please retry this link after some time."
@@ -5655,7 +5639,7 @@ msgstr "Επανεξέταση εξετάσεων με κείμενο"
 msgid "Wrong Youtube Api Key length"
 msgstr "Λάθος μήκος Youtube Api Key"
 
-#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4706
+#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4702
 msgid "Wrong answer."
 msgstr "Λάθος απάντηση."
 
@@ -5714,24 +5698,20 @@ msgid "Yes"
 msgstr "Ναι"
 
 #: ../components/iptvconfigmenu.py:108
-#, fuzzy
 msgid "Yes, to console"
-msgstr "ναι, στη κονσόλα"
+msgstr "Ναι, στην κονσόλα"
 
 #: ../components/iptvconfigmenu.py:109
-#, fuzzy
 msgid "Yes, to file /hdd/iptv.dbg"
-msgstr "ναι, στο αρχείο /hdd/iptv.dbg"
+msgstr "Ναι, στο αρχείο /hdd/iptv.dbg"
 
 #: ../components/iptvconfigmenu.py:111
-#, fuzzy
 msgid "Yes, to file /home/root/logs/iptv.dbg"
-msgstr "ναι, στο αρχείο /home/root/logs/iptv.dbg"
+msgstr "Ναι, στο αρχείο /home/root/logs/iptv.dbg"
 
 #: ../components/iptvconfigmenu.py:110
-#, fuzzy
 msgid "Yes, to file /tmp/iptv.dbg"
-msgstr "ναι, στο αρχείο /tmp/iptv.dbg"
+msgstr "Ναι, στο αρχείο /tmp/iptv.dbg"
 
 #: ../hosts/hosttvnowde.py:153
 msgid "Yesterday"
@@ -5745,15 +5725,15 @@ msgstr "Δεν έχετε άδεια να αναπαραγάγετε αυτό τ
 msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
 msgstr "Χρησιμοποιείτε παλιά έκδοση του OpenWebif.<br> Για να πάτε στον ιστό του E2iPlayer επιλέξτε τον παρακάτω σύνδεσμο<br>"
 
-#: ../libs/pCommon.py:402
+#: ../libs/pCommon.py:387
 msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
 msgstr "Μπορείτε να απενεργοποιήσετε την επαλήθευση πιστοποιητικών HTTPS στις ρυθμίσεις του E2iPlayer για να παρακάμψετε αυτό το πρόβλημα."
 
-#: ../libs/pCommon.py:413
+#: ../libs/pCommon.py:398
 msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
 msgstr "Μπορείτε να ενεργοποιήσετε το PyCurl στις ρυθμίσεις του E2iPlayer για να διορθώσετε αυτό το πρόβλημα."
 
-#: ../libs/pCommon.py:415
+#: ../libs/pCommon.py:400
 msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
 msgstr "Μπορείτε να εγκαταστήσετε το πακέτο PyCurl με υποστήριξη TLS 1.3 από το feed για να διορθώσετε αυτό το πρόβλημα."
 
@@ -5778,7 +5758,7 @@ msgstr "Δεν έχετε λογαριασμό premium. Έναρξη χορηγ�
 msgid "You need to enter email and password in configuration."
 msgstr "Πρέπει να εισάγετε email και κωδικό πρόσβασης στις ρυθμίσεις."
 
-#: ../libs/pCommon.py:529 ../libs/pCommon.py:1223
+#: ../libs/pCommon.py:514 ../libs/pCommon.py:1212
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Δεν πρέπει ποτέ να εκτελείτε block I/O λειτουργίες στο __init__."
 
@@ -5925,7 +5905,7 @@ msgstr "de"
 
 #: ../components/iptvconfigmenu.py:162 ../components/iptvconfigmenu.py:230
 #: ../components/iptvsubsimpledownloader.py:294 ../hosts/hostddl.py:31
-#: ../libs/urlparser.py:8592
+#: ../libs/urlparser.py:8588
 msgid "default"
 msgstr "προεπιλογή"
 
