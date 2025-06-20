@@ -279,11 +279,17 @@ class IPTVArticleView(Screen):
         TC = 0x00ffffff
 
         info = []
-        for item in ArticleContent.RICH_DESC_PARAMS:
-            if item in self.artItem.richDescParams:
-                label = _(ArticleContent.RICH_DESC_LABELS[item])
-                itemText = self.artItem.richDescParams[item].replace("|", " ")
-                info.append(r"\c%08x%s|\c%08x%s" % (LC, label, TC, itemText))
+        if 'custom_items_list' in self.artItem.richDescParams:
+            for item in self.artItem.richDescParams['custom_items_list']:
+                if item and isinstance(item, tuple) and len(item) == 2:
+                    itemText = item[1].replace("|", " ")
+                    info.append(r"\c%08x%s|\c%08x%s" % (LC, item[0], TC, itemText))
+        else:
+            for item in ArticleContent.RICH_DESC_PARAMS:
+                if item in self.artItem.richDescParams:
+                    label = _(ArticleContent.RICH_DESC_LABELS[item])
+                    itemText = self.artItem.richDescParams[item].replace("|", " ")
+                    info.append(r"\c%08x%s|\c%08x%s" % (LC, label, TC, itemText))
 
         text = "\n".join(info) + "\n\n" + r"\c%08x%s" % (TC, self.artItem.text.replace("[/br]", "\n").replace("|", "\n"))
         self["text"].setText(text)
