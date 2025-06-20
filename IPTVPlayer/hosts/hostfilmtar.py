@@ -25,6 +25,10 @@ import urllib
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'https://filmtar.online/'
 

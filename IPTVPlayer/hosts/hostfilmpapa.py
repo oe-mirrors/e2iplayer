@@ -26,6 +26,10 @@ import urllib
 # repo.mvshrk.xyz/plugins/
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'https://plusz.club'
 

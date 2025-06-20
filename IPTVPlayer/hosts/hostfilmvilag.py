@@ -26,6 +26,10 @@ import html
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'https://onlinefilmvilag2.eu/'
 

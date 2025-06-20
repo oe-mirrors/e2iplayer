@@ -33,6 +33,10 @@ from Screens.MessageBox import MessageBox
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'https://dmdamedia.hu'
 

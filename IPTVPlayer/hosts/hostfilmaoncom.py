@@ -20,6 +20,10 @@ except Exception:
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'https://www.filmaon1.com/'
 

@@ -23,6 +23,10 @@ from Components.config import config, ConfigText
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'https://zerion.cc/'
 

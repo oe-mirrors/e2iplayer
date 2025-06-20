@@ -23,6 +23,10 @@ import os
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'http://streamstat.net/'
 

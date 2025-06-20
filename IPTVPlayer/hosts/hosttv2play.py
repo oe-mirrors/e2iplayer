@@ -7,30 +7,17 @@ HOST_VERSION = "1.2"
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.hosts import hosturllist as urllist
-from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
 ###################################################
 # FOREIGN import
 ###################################################
 import re
 import time
-from urllib.parse import unquote
-from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, ConfigInteger, getConfigListEntry
-try:
-    from urllib import quote
-except:
-    from urllib.parse import quote
-###################################################
-# E2 GUI COMPONENTS
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
-from Screens.MessageBox import MessageBox
-###################################################
+from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
 # Config options for HOST
 ###################################################
@@ -157,7 +144,7 @@ class TV2Play(CBaseHostClass):
             sts, r = self.getPage("%s/ribbons/%s" % ("https://tv2play.hu/api", ribbon))
             if r:
                 data = json_loads(r)
-                params = {'category': 'ribbons', 'title': unquote(data['title']), 'id': data['id'], 'icon': thumb if thumb != '' else None, 'desc': plot, 'page': 0}
+                params = {'category': 'ribbons', 'title': urllib_unquote(data['title']), 'id': data['id'], 'icon': thumb if thumb != '' else None, 'desc': plot, 'page': 0}
                 self.addDir(params)
 
     def apiRibbons(self, cItem):
@@ -167,7 +154,7 @@ class TV2Play(CBaseHostClass):
         dirType = 'videos'
         for card in data["cards"]:
             thumb = "%s/%s" % (self.MAIN_URL, card["imageUrl"]) if "https://" not in card["imageUrl"] else card["imageUrl"]
-            title = unquote(card["title"])
+            title = urllib_unquote(card["title"])
             if "contentLength" in card:
                 plot = ""
                 try:
@@ -203,7 +190,7 @@ class TV2Play(CBaseHostClass):
         data = json_loads(data)
         if "seasonNumbers" in data and len(data["seasonNumbers"]) > 0:
             if "seo" in data and "description" in data["seo"] and data["seo"]["description"] is not None:
-                plot = unquote(data["seo"]["description"])
+                plot = urllib_unquote(data["seo"]["description"])
             else:
                 plot = ""
             plot = str(plot)
@@ -251,13 +238,13 @@ class TV2Play(CBaseHostClass):
                             sts, vidata = self.getPage(vidurl)
                             vidata = json_loads(vidata)
                             slug = vidata['slug']
-                            params = {'title': unquote(i['title']), 'slug': slug, 'icon': icon, 'desc': unquote(i['lead']), 'url': "https://tv2play.hu/api/search/" + i['url']}
+                            params = {'title': urllib_unquote(i['title']), 'slug': slug, 'icon': icon, 'desc': urllib_unquote(i['lead']), 'url': "https://tv2play.hu/api/search/" + i['url']}
                             self.addVideo(params)
                         elif i['contentType'] != 'ARTICLE':
-                            params = {'category': 'list_items', 'title': unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': unquote(i['lead'])}
+                            params = {'category': 'list_items', 'title': urllib_unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': unquote(i['lead'])}
                             self.addDir(params)
                     elif i['contentType'] != 'ARTICLE':
-                        params = {'category': 'list_items', 'title': unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': unquote(i['lead'])}
+                        params = {'category': 'list_items', 'title': urllib_unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': unquote(i['lead'])}
                         self.addDir(params)
             except:
                pass
@@ -302,7 +289,7 @@ class TV2Play(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("TV2Play.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        searchPattern = quote(searchPattern).replace("%", "%%")
+        searchPattern = urllib_quote(searchPattern).replace("%", "%%")
         searchURL = "https://tv2-prod.d-saas.com/grrec-tv2-prod-war/JSServlet4?rn=&cid=&ts=%d&rd=0,TV2_W_SEARCH_RESULT,80,[*platform:web;*domain:tv2play;*query:#SEARCHSTRING#;*country:HU;*userAge:18;*pagingOffset:%d],[displayType;channel;title;itemId;duration;isExtra;ageLimit;showId;genre;availableFrom;director;isExclusive;lead;url;contentType;seriesTitle;availableUntil;showSlug;videoType;series;availableEpisode;imageUrl;totalEpisode;category;playerId;currentSeasonNumber;currentEpisodeNumber;part;isPremium]".replace("#SEARCHSTRING#", searchPattern)
         cItem['url'] = searchURL
         self.listFilters(cItem)

@@ -17,6 +17,10 @@ import base64
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'https://wofvideo.pro/'
 

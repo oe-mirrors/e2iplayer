@@ -18,6 +18,10 @@ import urllib.parse
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'https://www.worldfree4u.ws/'
 

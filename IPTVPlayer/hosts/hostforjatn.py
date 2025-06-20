@@ -21,6 +21,10 @@ except Exception:
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'https://forja.tn/'
 

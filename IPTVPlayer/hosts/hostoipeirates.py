@@ -17,6 +17,10 @@ import re
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'https://oipeirates.tv/'
 

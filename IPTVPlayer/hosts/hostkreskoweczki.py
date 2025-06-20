@@ -18,6 +18,10 @@ except Exception:
 ###################################################
 
 
+def GetConfigList():
+    return []
+
+
 def gettytul():
     return 'http://kreskoweczki.pl/'
 
