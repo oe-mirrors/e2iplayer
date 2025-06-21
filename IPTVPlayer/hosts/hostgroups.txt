@@ -102,6 +102,7 @@
   "bbcsport",
   "ourmatchnet",
   "hoofootcom",
+  "hostbasketballvideocom",
   "okgoals",
   "ngolos",
   "watchwrestlinguno",

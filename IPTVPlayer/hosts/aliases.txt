@@ -9,6 +9,7 @@
 'hostardmediathek': 'ARDmediathek',
 'hostartetv': 'https://www.arte.tv/',
 'hostbajeczkiorg': 'http://bajeczki.org/',
+'hostbasketballvideocom': 'https://basketball-video.com/',
 'hostbbciplayer': 'http://www.bbc.co.uk/iplayer',
 'hostbbcsport': 'https://www.bbc.co.uk/sport',
 'hostbsto': 'https://bs.to/',
