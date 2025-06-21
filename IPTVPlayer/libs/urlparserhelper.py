@@ -14,12 +14,10 @@ from urllib.parse import unquote, urljoin
 try:
     from hashlib import md5
 
-
     def hex_md5(e):
         return md5(six.ensure_binary(e)).hexdigest()
 except Exception:
     from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
-
 
     def hex_md5(e):
         hashAlg = MD5()
