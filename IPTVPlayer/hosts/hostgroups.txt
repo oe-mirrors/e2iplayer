@@ -102,7 +102,7 @@
   "bbcsport",
   "ourmatchnet",
   "hoofootcom",
-  "hostbasketballvideocom",
+  "basketballvideocom",
   "okgoals",
   "ngolos",
   "watchwrestlinguno",
@@ -314,6 +314,7 @@
  ],
  "hungarian": [
   "youtube",
+  "filmvilag",
   "mooviecc",
   "filmezz",
   "rtlmost",
