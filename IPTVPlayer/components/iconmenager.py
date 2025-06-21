@@ -247,21 +247,8 @@ class IconMenager:
 
         params = {}  # {'maintype': 'image'}
 
-        if config.plugins.iptvplayer.allowedcoverformats.value != 'all':
-            subtypes = config.plugins.iptvplayer.allowedcoverformats.value.split(',')
-            # params['subtypes'] = subtypes
-            params['check_first_bytes'] = []
-            if 'jpeg' in subtypes:
-                params['check_first_bytes'].extend([b'\xFF\xD8', b'\xFF\xD9'])
-            if 'png' in subtypes:
-                params['check_first_bytes'].append(b'\x89\x50\x4E\x47')
-            if 'gif' in subtypes:
-                params['check_first_bytes'].extend([b'GIF87a', b'GIF89a'])
-            # formato webp	'RI'
-            if 'webp' in subtypes:
-                params['check_first_bytes'].extend([b'RI'])
-        else:
-            params['check_first_bytes'] = [b'\xFF\xD8', b'\xFF\xD9', b'\x89\x50\x4E\x47', b'GIF87a', b'GIF89a', b'RI']
+        # NOTE: RI is not 100% reliable for webp, it is used for some images, but not all
+        params['check_first_bytes'] = [b'\xFF\xD8', b'\xFF\xD9', b'\x89\x50\x4E\x47', b'GIF87a', b'GIF89a', b'RI']
 
         if img_url.endswith('|cf'):
             img_url = img_url[:-3]

@@ -261,11 +261,11 @@ class YouTubeParser():
                     url = ensure_str(img['url'])
                 i = i + 1
 
-            if hq or (not config.plugins.iptvplayer.allowedcoverformats.value) or config.plugins.iptvplayer.allowedcoverformats.value != 'all':
+#            if hq or (not config.plugins.iptvplayer.allowedcoverformats.value) or config.plugins.iptvplayer.allowedcoverformats.value != 'all':
 #                if 'hqdefault' in url:
 #                    url = url.replace('hqdefault', 'hq720')
-                if '?' in url:
-                    url = url.split('?')[0]
+            if '?' in url:
+                url = url.split('?')[0]
         except Exception:
             printExc()
 
