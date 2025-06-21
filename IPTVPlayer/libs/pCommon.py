@@ -1,56 +1,40 @@
 # -*- coding: utf-8 -*-
-
-###################################################
-# LOCAL import
-###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify, GetIPTVSleep
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsExecutable, iptv_system, IsHttpsCertValidationEnabled, byteify, GetDefaultLang, rm, UsePyCurl, GetJSScriptFile
-from Plugins.Extensions.IPTVPlayer.components.asynccall import IsMainThread, IsThreadTerminated, SetThreadKillable
-from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute_ext
-from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, strDecode, iterDictItems, ensure_str
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin, urlparse, urlunparse
-from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
-import http.cookiejar as cookielib
-from io import BytesIO, StringIO
-basestring = str
-unichr = chr
-from Components.config import config, ConfigText, configfile
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_addinfourl, urllib_unquote, urllib_quote_plus, urllib_urlencode, urllib_quote, \
-                                                      urllib2_HTTPRedirectHandler, urllib2_BaseHandler, urllib2_HTTPHandler, urllib2_HTTPError, \
-                                                      urllib2_URLError, urllib2_build_opener, urllib2_urlopen, urllib2_HTTPCookieProcessor, \
-                                                      urllib2_HTTPSHandler, urllib2_ProxyHandler, urllib2_Request
-# FOREIGN import
-###################################################
 import base64
-from urllib.request import urlopen, build_opener, HTTPRedirectHandler, addinfourl, HTTPHandler, HTTPSHandler, BaseHandler, HTTPCookieProcessor, ProxyHandler, Request
-import urllib.parse
-from urllib.error import URLError, HTTPError
+from binascii import hexlify
+import gzip
+import http.cookiejar
+from io import BytesIO, StringIO
+import os
+import re
+from shutil import move
+import time
+import unicodedata
+from urllib.error import HTTPError, URLError
+from urllib.parse import quote_plus, unquote, urlencode, urljoin, urlparse, urlunparse
+from urllib.request import addinfourl, BaseHandler, build_opener, HTTPCookieProcessor, HTTPHandler, HTTPRedirectHandler, HTTPSHandler, ProxyHandler, Request, urlopen
+
+from Components.config import config, configfile, ConfigText
+
+from Plugins.Extensions.IPTVPlayer.components.asynccall import IsMainThread, IsThreadTerminated, SetThreadKillable
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVNotify, TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str, strDecode
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetDefaultLang, iptv_system, IsExecutable, IsHttpsCertValidationEnabled, printDBG, printExc, rm, UsePyCurl
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+
 try:
     import ssl
 except Exception:
     pass
-import os
-import re
-import time
-import http.cookiejar
-import unicodedata
+
 try:
     import pycurl
 except Exception:
     pass
-
-import gzip
-from urllib.parse import urljoin, urlparse, urlunparse
-from binascii import hexlify
-from shutil import move
-###################################################
-
 try:
     from PIL import Image
+
     hasPIL = True
 except ImportError:
     hasPIL = False
@@ -75,9 +59,10 @@ def EncodeGzipped(data):
 class NoRedirection(HTTPRedirectHandler):
     def http_error_302(self, req, fp, code, msg, headers):
         infourl = addinfourl(fp, headers, req.get_full_url())
-		# infourl.status = code
+        # infourl.status = code
         infourl.code = code
         return infourl
+
     http_error_300 = http_error_302
     http_error_301 = http_error_302
     http_error_303 = http_error_302
@@ -247,10 +232,8 @@ class CParsingHelper:
     @staticmethod
     def writeToFile(file, data, mode="w"):
         # helper to see html returned by ajax
-        file_path = file
-        text_file = open(file_path, mode)
-        text_file.write(data)
-        text_file.close()
+        with open(file, mode) as text_file:
+            text_file.write(data)
 
     @staticmethod
     def getNormalizeStr(txt, idx=None):
@@ -258,7 +241,7 @@ class CParsingHelper:
                              'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N', 'Ó': 'O', 'Ś': 'S', 'Ż': 'Z', 'Ź': 'Z',
                              'á': 'a', 'é': 'e', 'í': 'i', 'ñ': 'n', 'ú': 'u', 'ü': 'u',
                              'Á': 'A', 'É': 'E', 'Í': 'I', 'Ñ': 'N', 'Ú': 'U', 'Ü': 'U',
-                            }
+                             }
         if isinstance(txt, bytes):
             txt = txt.decode('utf-8')
         if None is not idx:
@@ -284,24 +267,25 @@ class CParsingHelper:
 
 
 class common:
-    HOST = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
+    HOST = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'
     HEADER = None
     ph = CParsingHelper
 
     @staticmethod
     def getDefaultHeader(browser='firefox'):
         if browser == 'firefox':
-            ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0'
+            ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0'
         elif browser == 'iphone_3_0':
             ua = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16'
         else:
-            ua = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
+            ua = common.HOST
 
         HTTP_HEADER = {'User-Agent': ua,
-                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                        'Accept-Encoding': 'gzip, deflate',
-                        'DNT': 1
-                      }
+                       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                       'Accept-Language': 'de,en-US;q=0.7,en;q=0.3',
+                       'Accept-Encoding': 'gzip, deflate',
+                       'DNT': 1
+                       }
         return dict(HTTP_HEADER)
 
     @staticmethod
@@ -377,6 +361,7 @@ class common:
                     _process(query, data[idx], '%s[%s]' % (key_prefix, idx))
             else:
                 query.append((key_prefix, data))
+
         _query = []
         _process(_query, query, '')
         return _query
@@ -469,7 +454,7 @@ class common:
             if self.usePyCurl():
                 cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
             else:
-                cj = cookielib.MozillaCookieJar()
+                cj = http.cookiejar.MozillaCookieJar()
             cj.load(cookiefile, ignore_discard=ignoreDiscard)
             for cookie in cj:
                 if cookie.name not in leaveNames and (None is removeNames or cookie.name in removeNames):
@@ -492,7 +477,7 @@ class common:
             if self.usePyCurl():
                 cj = self._pyCurlLoadCookie(cookiefile, ignoreDiscard, ignoreExpires)
             else:
-                cj = cookielib.MozillaCookieJar()
+                cj = http.cookiejar.MozillaCookieJar()
                 cj.load(cookiefile, ignore_discard=ignoreDiscard)
         except Exception:
             printExc()
@@ -508,7 +493,7 @@ class common:
             printExc()
         return cookiesDict
 
-    def getCookieHeader(self, cookiefile, allowedNames=[], unquote=True, ignoreDiscard=True, ignoreExpires=False):
+    def getCookieHeader(self, cookiefile, allowedNames=[], dounquote=True, ignoreDiscard=True, ignoreExpires=False):
         ret = ''
         try:
             cookiesDict = self.getCookieItems(cookiefile, ignoreDiscard, ignoreExpires)
@@ -516,8 +501,8 @@ class common:
                 if 0 < len(allowedNames) and name not in allowedNames:
                     continue
                 value = cookiesDict[name]
-                if unquote:
-                    value = urllib.parse.unquote(value)
+                if dounquote:
+                    value = unquote(value)
                 ret += '%s=%s; ' % (name, value)
         except Exception:
             printExc()
@@ -580,8 +565,7 @@ class common:
             # so we can check them if needed
             if firstAttempt[0]:
                 firstAttempt[0] = False
-                if 'check_maintype' in params and \
-                    params['check_maintype'] != responseHeaders.get('content-type', '').split('/', 1)[0]:
+                if 'check_maintype' in params and params['check_maintype'] != responseHeaders.get('content-type', '').split('/', 1)[0]:
                     printDBG('wrong maintype: %s' % responseHeaders.get('content-type', ''))
                     return 0
 
@@ -761,7 +745,7 @@ class common:
             pageUrl = url
             proxy_gateway = params.get('proxy_gateway', '')
             if proxy_gateway != '':
-                pageUrl = proxy_gateway.format(urllib_quote_plus(pageUrl, ''))
+                pageUrl = proxy_gateway.format(quote_plus(pageUrl, ''))
             printDBG("pageUrl: [%s]" % pageUrl)
 
             curlSession.setopt(pycurl.URL, pageUrl)
@@ -776,7 +760,7 @@ class common:
                     curlSession.setopt(pycurl.HTTPPOST, post_data)
                     # curlSession.setopt(pycurl.CUSTOMREQUEST, "PUT")
                 else:
-                    curlSession.setopt(pycurl.POSTFIELDS, urllib_urlencode(post_data))
+                    curlSession.setopt(pycurl.POSTFIELDS, urlencode(post_data))
 
             curlSession.setopt(pycurl.HEADERFUNCTION, _headerFunction)
 
@@ -874,25 +858,31 @@ class common:
         printDBG("PCommon.convertWebp %s" % file_path)
 
         output_path = file_path + ".png" if png else ".jpg"
-        if hasPIL:
-            try:
-                img = Image.open(file_path)
-                # img.thumbnail((400, 300), Image.LANCZOS)
-                # printDBG("PCommon.convertWebp save %s" % output_path)
-                img.save(output_path, format="png" if png else "jpeg", quality=80)
-                img.close()
-                os.remove(file_path)
-                move(output_path, file_path)
-                # printDBG("PCommon.convertWebp rename %s %s" % (output_path, file_path))
-                return
-            except:
-                printExc()
+        if os.path.exists(file_path):
+            if os.path.exists(output_path):
+                os.remove(output_path)
+            if hasPIL:
+                try:
+                    img = Image.open(file_path)
+                    # img.thumbnail((400, 300), Image.LANCZOS)
+                    # printDBG("PCommon.convertWebp save %s" % output_path)
+                    img.save(output_path, format="png" if png else "jpeg", quality=80)
+                    img.close()
+                    os.remove(file_path)
+                    move(output_path, file_path)
+                    # printDBG("PCommon.convertWebp rename %s %s" % (output_path, file_path))
+                    return
+                except:
+                    printExc()
+                    return
 
-        if IsExecutable('ffmpeg'):
-            command = "ffmpeg -i %s %s && test -e %s && rm %s && mv %s %s " % (file_path, output_path, output_path, file_path, output_path, file_path)
+            if IsExecutable('ffmpeg'):
+                command = "ffmpeg -i %s %s && test -e %s && rm %s && mv %s %s " % (file_path, output_path, output_path, file_path, output_path, file_path)
 
-            printDBG("Send command %s" % command)
-            self.cmd = iptv_system(command)
+                printDBG("Send command %s" % command)
+                self.cmd = iptv_system(command)
+        else:
+            printDBG("PCommon.convertWebp file not exists %s" % file_path)
 
     def getPageWithPyCurl(self, url, params={}, post_data=None):
         # some error can be caused because of session reuse
@@ -910,8 +900,7 @@ class common:
             while tries < maxTries:
                 tries += 1
                 sts, data = self._getPageWithPyCurl(url, params, post_data)
-                if not sts and 'pycurl_error' in self.meta and \
-                   pycurl.E_SSL_CONNECT_ERROR == self.meta['pycurl_error'][0]:
+                if not sts and 'pycurl_error' in self.meta and pycurl.E_SSL_CONNECT_ERROR == self.meta['pycurl_error'][0]:
                     if 'SSL_set_session failed' in self.meta['pycurl_error'][1] or '-308' in self.meta['pycurl_error'][1]:
                         printDBG("pCommon - getPageWithPyCurl() - retry with fresh session")
                         if sessionReused:
@@ -1000,12 +989,12 @@ class common:
             printExc()
             errorMsg = str(e)
             if 'ssl_protocol' not in addParams and 'TLSV1_ALERT_PROTOCOL_VERSION' in errorMsg:
-                    try:
-                        newParams = dict(addParams)
-                        newParams['ssl_protocol'] = 'TLSv1_2'
-                        return self.getPage(url, newParams, post_data)
-                    except Exception:
-                        pass
+                try:
+                    newParams = dict(addParams)
+                    newParams['ssl_protocol'] = 'TLSv1_2'
+                    return self.getPage(url, newParams, post_data)
+                except Exception:
+                    pass
             if 'VERSION' in errorMsg:
                 self.reportHttpsError('version', url, errorMsg)
             elif 'VERIFY_FAILED' in errorMsg:
@@ -1095,7 +1084,7 @@ class common:
         outParams, postData = self.getParamsFromUrlWithMeta(url)
         addParams.update(outParams)
         if 'header' not in addParams and 'host' not in addParams:
-            host = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
+            host = self.HOST
             header = {'User-Agent': host, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
             addParams['header'] = header
         addParams['return_data'] = False
@@ -1316,7 +1305,7 @@ class common:
         pageUrl = params['url']
         proxy_gateway = params.get('proxy_gateway', '')
         if proxy_gateway != '':
-            pageUrl = proxy_gateway.format(urllib.parse.quote_plus(pageUrl, ''))
+            pageUrl = proxy_gateway.format(quote_plus(pageUrl, ''))
         printDBG("pageUrl: [%s]" % pageUrl)
         if '","' in pageUrl:  # points incorrectly formatted dict or list
             pageUrl = pageUrl.split('"', 1)[0]  # " is incorrect char for url, shouldn't be there so removing it and everything after it
@@ -1330,7 +1319,7 @@ class common:
                 customOpeners.append(MultipartPostHandler())
                 dataPost = post_data
             else:
-                dataPost = urllib.parse.urlencode(post_data)
+                dataPost = urlencode(post_data)
             dataPost = ensure_binary(dataPost)
             req = Request(pageUrl, dataPost, headers)
         else:

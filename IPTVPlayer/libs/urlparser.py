@@ -2763,7 +2763,7 @@ class pageParser(CaptchaHelper):
 
                 sts, data = self.cm.getPage(videoUrl, params2)
                 if 200 == self.cm.meta['status_code']:
-                    cookieHeader = self.cm.getCookieHeader(COOKIE_FILE, unquote=False)
+                    cookieHeader = self.cm.getCookieHeader(COOKIE_FILE, dounquote=False)
                     linksTab.append({'name': '[prepared] freedisc.pl', 'url': urlparser.decorateUrl(self.cm.meta['url'], {'Cookie': cookieHeader, 'Referer': params2['header']['Referer'], 'User-Agent': params2['header']['User-Agent']})})
             except Exception:
                 printExc()
@@ -15253,7 +15253,7 @@ class pageParser(CaptchaHelper):
             if t.startswith('/'):
                 t = "https:/" + t
             if self.cm.isValidUrl(t):
-                cookieHeader = self.cm.getCookieHeader(COOKIE_FILE, unquote=False)
+                cookieHeader = self.cm.getCookieHeader(COOKIE_FILE, dounquote=False)
                 params = {'Cookie': cookieHeader, 'Referer': httpParams['header']['Referer'], 'User-Agent': httpParams['header']['User-Agent']}
                 params['external_sub_tracks'] = subTracks
                 t = urlparser.decorateUrl(t, params)
