@@ -10945,9 +10945,6 @@ class Host:
               modelName = url.replace('http://showup.tv/', '')
               printDBG('Host modelName: ' + modelName)
 
-              libsPath = GetPluginDir('libs/')
-              import sys
-              sys.path.insert(1, libsPath)
               import websocket
               wsURL1 = 'ws://' + s
               wsURL2 = 'ws://' + ip + ':' + port
@@ -14010,9 +14007,6 @@ def myfreecam_start(url, xchat):
     global CAMGIRLSERVER
     CAMGIRL = url
     CAMGIRLSERVER = 0
-    libsPath = GetPluginDir('libs/')
-    import sys
-    sys.path.insert(1, libsPath)
     import websocket
     printDBG("Connecting to Chat Server:")
     try:
