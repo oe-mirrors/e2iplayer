@@ -154,6 +154,8 @@ class buildConfigsHTML(threading.Thread):
 			tmpList = None
 		tableCFG = []
 		for itemL1 in List1:
+			if len(itemL1) < 2:
+				continue
 			if itemL1[0] in exclList or itemL1[0] in settings.excludedCFGs:
 				continue
 			for itemL2 in List2:
@@ -177,6 +179,20 @@ class buildConfigsHTML(threading.Thread):
 							CFGElements += '<input type="radio" name="cmd" value="OFF:%s">%s</input>' % (ConfName, _('No'))
 					elif CFGtype in ['ConfigInteger']:
 						CFGElements = '<input type="number" name="%s" value="%d" />' % ('INT:' + ConfName, int(confKey[1].getValue()))
+					elif CFGtype in ['ConfigSelection']:
+						def getHTML(configElement, id):
+							res = ""
+							for v in configElement.choices:
+								descr = configElement.description[v]
+								if configElement.value == v:
+									checked = 'checked="checked" '
+								else:
+									checked = ''
+								res += '<input type="radio" name="' + id + '" ' + checked + 'value="' + v + '">' + descr + "</input></br>\n"
+							return res
+						CFGElements = getHTML(confKey[1], 'CFG:' + ConfName)
+					elif CFGtype in ["ConfigText", "ConfigDirectory"]:
+						CFGElements = '<input type="text" name="CFG:' + ConfName + '" value="' + confKey[1].value + '" /><br>\n'
 					else:
 						try:
 							CFGElements = confKey[1].getHTML('CFG:' + ConfName)

@@ -160,6 +160,8 @@ class Body():
 			tmpList = None
 		tableCFG = []
 		for itemL1 in List1:
+			if len(itemL1) < 2:
+				continue
 			if itemL1[0] in exclList or itemL1[0] in settings.excludedCFGs:
 				continue
 			for itemL2 in List2:
@@ -183,6 +185,20 @@ class Body():
 							CFGElements += '<input type="radio" name="cmd" value="OFF:%s">%s</input>' % (ConfName, _('No'))
 					elif CFGtype in ['ConfigInteger']:
 						CFGElements = '<input type="number" name="%s" value="%d" />' % ('INT:' + ConfName, int(confKey[1].getValue()))
+					elif CFGtype in ['ConfigSelection']:
+						def getHTML(configElement, id):
+							res = ""
+							for v in configElement.choices:
+								descr = configElement.description[v]
+								if configElement.value == v:
+									checked = 'checked="checked" '
+								else:
+									checked = ''
+								res += '<input type="radio" name="' + id + '" ' + checked + 'value="' + v + '">' + descr + "</input></br>\n"
+							return res
+						CFGElements = getHTML(confKey[1], 'CFG:' + ConfName)
+					elif CFGtype in ["ConfigText", "ConfigDirectory"]:
+						CFGElements = '<input type="text" name="CFG:' + ConfName + '" value="' + confKey[1].value + '" /><br>\n'
 					else:
 						try:
 							CFGElements = confKey[1].getHTML('CFG:' + ConfName)
@@ -205,13 +221,16 @@ class Body():
 		hostsCFG += '</tbody></table>\n'
 		# build plugin global settings
 		pluginCFG = '<table width="850px" border="1"><tbody>\n'
-		pluginCFG += '<tr><td align="center" colspan="2"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % _('Plugin global settings')
+	#	pluginCFG += '<tr><td align="center" colspan="2"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % _('Plugin global settings')
 		from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 		OptionsList = []
 		ConfigMenu.fillConfigList(OptionsList)
 		for item in OptionsList:
-			if item[0] in settings.configsHTML.keys():
-				pluginCFG += settings.configsHTML[item[0]]
+			if len(item) == 1:
+				pluginCFG += '<tr><td align="center" colspan="2"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % item[0]
+			else:
+				if item[0] in settings.configsHTML.keys():
+					pluginCFG += settings.configsHTML[item[0]]
 		pluginCFG += '</tbody></table>\n'
 		tempText += pluginCFG + '<p><br</p>\n' + hostsCFG + '</div></body>\n'
 		return tempText
