@@ -42,11 +42,6 @@ def GetConfigList():
 ###################################################
 
 
-def GetConfigList():
-    optionList = []
-    return optionList
-
-
 def gettytul():
     return 'https://maxtvgo.com/'
 

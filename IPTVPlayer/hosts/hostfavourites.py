@@ -38,11 +38,6 @@ def GetConfigList():
 ###################################################
 
 
-def GetConfigList():
-    optionList = []
-    return optionList
-
-
 def gettytul():
     return _('Favourites')
 

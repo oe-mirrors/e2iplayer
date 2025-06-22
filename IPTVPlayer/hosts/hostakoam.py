@@ -36,11 +36,6 @@ def GetConfigList():
 ###################################################
 
 
-def GetConfigList():
-    optionList = []
-    return optionList
-
-
 def gettytul():
     return 'https://ar.akoam.net/'
 

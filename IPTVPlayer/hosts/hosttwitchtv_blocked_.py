@@ -451,27 +451,6 @@ class Twitch(CBaseHostClass):
         except Exception:
             printExc()
 
-    def listV5Channels(self, cItem):
-        printDBG("Twitch.listV5Channels [%s]" % cItem)
-        offset = cItem.get('offset', 0)
-        url = cItem['url'] + str(offset)
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        try:
-            data = json.loads(data)
-            for item in data['channels']:
-                descTab = [_('Language: %s') % (jstr(item, 'language'))]
-                descTab.append(_('%s views') % item['views'])
-                descTab.append(_('%s followers') % item['followers'])
-                params = {'good_for_fav': True, 'name': 'category', 'type': 'category', 'category': 'list_channel', 'user_login': jstr(item, 'name'), 'title': jstr(item, 'display_name'), 'icon': jstr(item, 'logo'), 'desc': '[/br]'.join(descTab)}
-                self.addDir(params)
-            offset += len(self.currList)
-            if offset < data['_total']:
-                self.addDir(MergeDicts(cItem, {'title': _('Next page'), 'offset': offset}))
-        except Exception:
-            printExc()
-
     def listV5Games(self, cItem):
         printDBG("Twitch.listV5Games [%s]" % cItem)
         offset = cItem.get('offset', 0)

@@ -419,7 +419,7 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                 urlTab = self.up.getVideoLinkExt(videoUrl)
         return urlTab
 
-    def tryTologin(self):
+    def tryTologin_old(self):
         printDBG('tryTologin start')
 
         if self.login == config.plugins.iptvplayer.serienstreamto_login.value and \

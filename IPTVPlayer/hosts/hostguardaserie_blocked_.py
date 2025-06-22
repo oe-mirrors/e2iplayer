@@ -172,7 +172,7 @@ class GuardaSerieClick(CBaseHostClass):
 
             try:
 
-                item = self.cm.ph.getSearchGroups(item, '''star\s*?s([0-5][^'^"]*?)['"]''')[0].split('_', 1)
+                item = self.cm.ph.getSearchGroups(item, r'''star\s*?s([0-5][^'^"]*?)['"]''')[0].split('_', 1)
 
                 star = str(int(item[0]))
 
@@ -260,7 +260,7 @@ class GuardaSerieClick(CBaseHostClass):
 
         cItem['prev_url'] = cItem['url']
 
-        reObj = re.compile('''meta\-embed[0-9]*?=['"]([^'^"]+?)['"]''')
+        reObj = re.compile(r'''meta\-embed[0-9]*?=['"]([^'^"]+?)['"]''')
 
         marker = 'stagioni row-stagione-'
 
@@ -282,13 +282,13 @@ class GuardaSerieClick(CBaseHostClass):
 
                 if icon == '':
 
-                    icon = self.cm.ph.getSearchGroups(item, '''<img[^>]+?data\-original=['"]([^"^']+?)['"]''')[0]
+                    icon = self.cm.ph.getSearchGroups(item, r'''<img[^>]+?data\-original=['"]([^"^']+?)['"]''')[0]
 
                 desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'desc'), ('</p', '>'))[1])
 
-                season = self.cm.ph.getSearchGroups(item, '''meta\-stag=['"]([^"^']+?)['"]''')[0]
+                season = self.cm.ph.getSearchGroups(item, r'''meta\-stag=['"]([^"^']+?)['"]''')[0]
 
-                episode = self.cm.ph.getSearchGroups(item, '''meta\-ep=['"]([^"^']+?)['"]''')[0]
+                episode = self.cm.ph.getSearchGroups(item, r'''meta\-ep=['"]([^"^']+?)['"]''')[0]
 
                 params = dict(cItem)
 
@@ -396,7 +396,7 @@ class GuardaSerieClick(CBaseHostClass):
 
         try:
 
-            tmp = self.cm.ph.getSearchGroups(data, '''star\s*?s([0-5][^'^"]*?)['"]''')[0].split('_', 1)
+            tmp = self.cm.ph.getSearchGroups(data, r'''star\s*?s([0-5][^'^"]*?)['"]''')[0].split('_', 1)
 
             star = str(int(tmp[0]))
 

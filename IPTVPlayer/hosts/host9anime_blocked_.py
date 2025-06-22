@@ -174,7 +174,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'item'), ('<script', '>'))[1]
         data = self.cm.ph.rgetAllItemsBeetwenNodes(data, ('</div', '>'), ('<div', '>', 'item'))
         if nextPage and len(data):
-            data[-1] = re.compile('<div[^>]+?paging\-wrapper[^>]+?>').split(data[-1], 1)[0]
+            data[-1] = re.compile(r'<div[^>]+?paging\-wrapper[^>]+?>').split(data[-1], 1)[0]
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0])
             tip = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'data-tip="([^"]+?)"')[0])
@@ -229,7 +229,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
 
         getParams = {}
 
-        sitekey = self.cm.ph.getSearchGroups(data, '''data\-sitekey=['"]([^'^"]+?)['"]''')[0]
+        sitekey = self.cm.ph.getSearchGroups(data, r'''data\-sitekey=['"]([^'^"]+?)['"]''')[0]
         if sitekey != '':
             token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'])
             if token != '':
@@ -253,7 +253,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'data-name'), ('</span', '>'))
         for item in tmp:
             serverName = self.cleanHtmlStr(item)
-            serverKey = self.cm.ph.getSearchGroups(item, '''\sdata\-name=['"]([^'^"]+?)['"]''')[0]
+            serverKey = self.cm.ph.getSearchGroups(item, r'''\sdata\-name=['"]([^'^"]+?)['"]''')[0]
             serverNamesMap[serverKey] = serverName
 
         rangesTab = []
@@ -263,19 +263,19 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         for idx in range(1, len(data), 2):
             if 'episodes' not in data[idx + 1]:
                 continue
-            serverKey = self.cm.ph.getSearchGroups(data[idx], '''\sdata\-name=['"]([^'^"]+?)['"]''')[0]
+            serverKey = self.cm.ph.getSearchGroups(data[idx], r'''\sdata\-name=['"]([^'^"]+?)['"]''')[0]
             serverName = serverNamesMap.get(serverKey, serverKey)
 
             rangeNameMap = {}
             tmp = self.cm.ph.getAllItemsBeetwenNodes(data[idx + 1], ('<span', '>', 'data-range-id'), ('</span', '>'))
             for item in tmp:
                 rangeName = self.cleanHtmlStr(item)
-                rangeKey = self.cm.ph.getSearchGroups(item, '''\sdata\-range\-id=['"]([^'^"]+?)['"]''')[0]
+                rangeKey = self.cm.ph.getSearchGroups(item, r'''\sdata\-range\-id=['"]([^'^"]+?)['"]''')[0]
                 rangeNameMap[rangeKey] = rangeName
 
             tmp = self.cm.ph.getAllItemsBeetwenMarkers(data[idx + 1], '<ul', '</ul>')
             for rangeSection in tmp:
-                rangeKey = self.cm.ph.getSearchGroups(rangeSection, '''\sdata\-range\-id=['"]([^'^"]+?)['"]''')[0]
+                rangeKey = self.cm.ph.getSearchGroups(rangeSection, r'''\sdata\-range\-id=['"]([^'^"]+?)['"]''')[0]
                 rangeName = rangeNameMap.get(rangeKey, rangeKey)
 
                 if rangeName not in rangesTab:
@@ -375,7 +375,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
         jsCode = ''
         tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<script', '>', 'all.js'), ('</script', '>'))
         for item in tmp:
-            jsUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^'^"]+?all\.js(?:\?[^'^"]*?)?)['"]''')[0])
+            jsUrl = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''src=['"]([^'^"]+?all\.js(?:\?[^'^"]*?)?)['"]''')[0])
             if jsUrl in self.scriptCache:
                 jsCode = self.scriptCache[jsUrl]
                 break
@@ -581,7 +581,7 @@ class AnimeTo(CBaseHostClass, CaptchaHelper):
             otherInfo['genre'] = tmp
 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="title">', '</div>', False)[1]
-        tmp = self.cm.ph.getSearchGroups(tmp, '''<span[^>]*?>\s*([0-9]+?)\s*<''')[0]
+        tmp = self.cm.ph.getSearchGroups(tmp, r'''<span[^>]*?>\s*([0-9]+?)\s*<''')[0]
         if tmp != '':
             otherInfo['year'] = tmp
 

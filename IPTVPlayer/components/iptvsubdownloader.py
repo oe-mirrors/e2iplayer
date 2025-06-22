@@ -7,7 +7,6 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, \
                                                           GetIconDir, GetSkinsDir, GetIPTVPlayerVersion, eConnectCallback, \
                                                           GetPluginDir, iptv_system, IsSubtitlesParserExtensionCanBeUsed
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import ISubProvider
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList

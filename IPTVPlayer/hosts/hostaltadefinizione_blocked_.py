@@ -344,7 +344,7 @@ class Altadefinizione(CBaseHostClass):
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(desc, '''content=['"]([^'^"]+?)['"]''')[0])
 
         try:
-            title = str(byteify(json.loads(self.cm.ph.getSearchGroups(data, '''"disqusTitle"\:("[^"]+?")''')[0])))
+            title = str(byteify(json.loads(self.cm.ph.getSearchGroups(data, r'''"disqusTitle"\:("[^"]+?")''')[0])))
         except Exception:
             title = ''
 

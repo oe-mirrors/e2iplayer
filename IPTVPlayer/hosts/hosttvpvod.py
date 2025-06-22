@@ -20,7 +20,6 @@ from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, getConfigListEntry
 from datetime import datetime, timedelta, date
 import re
-import time
 ###################################################
 
 

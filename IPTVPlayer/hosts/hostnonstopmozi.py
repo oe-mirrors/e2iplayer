@@ -6,37 +6,11 @@ HOST_VERSION = "1.3"
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm, GetTmpDir, GetIPTVPlayerVersion, MergeDicts
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
-from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
-###################################################
-
-###################################################
-# FOREIGN import
-###################################################
-import re
-import urllib
-import random
-import os
-import datetime
-import time
-import zlib
-import base64
-import traceback
-from copy import deepcopy
-try:
-    import json
-except Exception:
-    import simplejson as json
-from Components.config import config, ConfigText, ConfigYesNo, getConfigListEntry
-from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS
-from datetime import datetime
-from hashlib import sha1
 ###################################################
 
 
