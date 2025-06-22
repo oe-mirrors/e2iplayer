@@ -5,7 +5,6 @@ hostakoam
 hostaltadefinizione01
 hostanimeodcinki
 hostappletrailers
-hostardmediathek
 hostartetv
 hostbajeczkiorg
 hostbasketballvideocom
@@ -22,7 +21,6 @@ hostcineto
 hostclassiccinemaonline
 hostdailymotion
 hostdancetrippin
-hostddl
 hostdel
 hostdixmax
 hostdmdamedia
@@ -101,7 +99,6 @@ hostmegakino
 hostmindigo
 hostmindigtv
 hostmoflixstream
-hostmooviecc
 hostmovie2k
 hostmovie4k
 hostmovienightws
@@ -163,7 +160,6 @@ hosttv2play
 hosttvgrypl
 hosttvjworg
 hosttvn24
-hosttvnowde
 hosttvplayercom
 hosttvproart
 hosttvpvod
@@ -174,7 +170,6 @@ hostustreamtv
 hostustvgo
 hostvevo
 hostvidcorncom
-hostvimeo
 hostvodpl
 hostvumedicom
 hostwatchcartoononline

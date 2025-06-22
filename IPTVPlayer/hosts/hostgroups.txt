@@ -43,7 +43,6 @@
   "rtlmost",
   "gamatocom",
   "xrysoise",
-  "mooviecc",
   "mrpiracy",
   "filmativa",
   "filmovizijastudio",
@@ -70,7 +69,6 @@
   "altadefinizione01",
   "123movieshd",
   "filma24io",
-  "ddl",
   "hdfull",
   "dixmax",
   "fenixsite",
@@ -170,7 +168,6 @@
   "tvjworg",
   "artetv",
   "dailymotion",
-  "vimeo",
   "kabarety",
   "twitchtv",
   "tvgrypl",
@@ -243,17 +240,13 @@
   "123movieshd",
   "orthobulletscom",
   "vumedicom",
-  "ddl"
  ],
  "german": [
   "youtube",
   "webstream",
-  "ardmediathek",
   "zdfmediathek",
   "artetv",
-  "tvnowde",
   "spiegeltv",
-  "ddl",
   "serienstreamto",
   "bsto",
   "hdfilmetv",
@@ -262,7 +255,6 @@
   "kinox",
   "tata",
   "dailymotion",
-  "vimeo",
   "laola1tv",
   "sportdeutschland",
   "twitchtv",
@@ -291,7 +283,6 @@
   "rtbfbe",
   "artetv",
   "dailymotion",
-  "vimeo",
   "twitchtv",
   "forjatn",
   "planetstreamingcom",
@@ -309,17 +300,14 @@
   "kinopokaz",
   "movie4kto",
   "dailymotion",
-  "vimeo",
   "twitchtv"
  ],
  "hungarian": [
   "youtube",
   "filmvilag",
-  "mooviecc",
   "filmezz",
   "rtlmost",
   "dailymotion",
-  "vimeo",
   "twitchtv"
  ],
  "arabic": [
@@ -330,7 +318,6 @@
   "movizlandcom",
   "shahiidanimenet",
   "dailymotion",
-  "vimeo",
   "twitchtv",
   "forjatn",
   "faselhdcom",
@@ -345,7 +332,6 @@
   "gamatocom",
   "greekdocumentaries3",
   "dailymotion",
-  "vimeo",
   "twitchtv"
  ],
  "latino": [
@@ -354,7 +340,6 @@
   "solarmovie",
   "artetv",
   "dailymotion",
-  "vimeo",
   "twitchtv",
   "hdfull",
   "dixmax"
@@ -365,7 +350,6 @@
   "altadefinizione01",
   "tantifilmorg",
   "dailymotion",
-  "vimeo",
   "twitchtv",
   "playrtsiw",
   "raiplay"
@@ -373,7 +357,6 @@
  "swedish": [
   "youtube",
   "dailymotion",
-  "vimeo",
   "svtplayse",
   "twitchtv"
  ],
@@ -390,7 +373,6 @@
   "filmeonlineto",
   "fenixsite",
   "dailymotion",
-  "vimeo",
   "twitchtv"
  ],
  "music": [
@@ -399,7 +381,6 @@
   "musicmp3ru",
   "dancetrippin",
   "musicbox",
-  "vimeo",
   "dailymotion",
   "shoutcast",
   "eskago",
@@ -420,7 +401,6 @@
   "spryciarze",
   "wgrane",
   "dailymotion",
-  "vimeo",
   "ted",
   "ororotv",
   "tvjworg",
