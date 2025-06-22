@@ -1,7 +1,9 @@
 host123movieshd
 host3player
 host3sktv
+host9anime
 hostakoam
+hostaltadefinizione
 hostaltadefinizione01
 hostanimeodcinki
 hostappletrailers
@@ -22,7 +24,6 @@ hostcineto
 hostclassiccinemaonline
 hostdailymotion
 hostdancetrippin
-hostddl
 hostdel
 hostdixmax
 hostdmdamedia
@@ -62,12 +63,14 @@ hostgamatotvme
 hostgledalica
 hostgovodtv
 hostgreekdocumentaries3
+hostguardaserie
 hosthdfilme
 hosthdfilmetv
 hosthdfull
 hosthdpopcornscom
 hosthdseanspl
 hosthdsto
+hosthdstreams
 hosthoofootcom
 hosthorrorycc
 hostidokep
@@ -101,7 +104,6 @@ hostmegakino
 hostmindigo
 hostmindigtv
 hostmoflixstream
-hostmooviecc
 hostmovie2k
 hostmovie4k
 hostmovienightws
@@ -163,7 +165,6 @@ hosttv2play
 hosttvgrypl
 hosttvjworg
 hosttvn24
-hosttvnowde
 hosttvplayercom
 hosttvproart
 hosttvpvod
