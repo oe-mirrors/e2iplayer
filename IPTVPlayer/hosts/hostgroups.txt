@@ -70,7 +70,6 @@
   "altadefinizione01",
   "123movieshd",
   "filma24io",
-  "ddl",
   "hdfull",
   "dixmax",
   "fenixsite",
@@ -243,7 +242,6 @@
   "123movieshd",
   "orthobulletscom",
   "vumedicom",
-  "ddl"
  ],
  "german": [
   "youtube",
@@ -251,9 +249,7 @@
   "ardmediathek",
   "zdfmediathek",
   "artetv",
-  "tvnowde",
   "spiegeltv",
-  "ddl",
   "serienstreamto",
   "bsto",
   "hdfilmetv",
