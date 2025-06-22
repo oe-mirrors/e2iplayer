@@ -117,7 +117,7 @@ class Body():
 			tempText += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Error during deletion of the debug file.')
 		elif htmlError == 'deleteLogNO':
 			tempText += '<p align="center"><b><font color="#ccE4C4">%s</font></b></p>' % _('Debug file does not exist - nothing to delete')
-		elif getDebugMode() not in ['console', 'debugfile']:
+		elif getDebugMode() == "":
 			tempText += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Debug option is disabled - nothing to display')
 		elif getDebugMode() == 'console':
 			tempText += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Debug option set to console - nothing to display')

@@ -9,7 +9,7 @@ import Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget
 
 from .webTools import isThreadRunning, stopRunningThread, isActiveHostInitiated, initActiveHost, iSactiveHostsHTMLempty, isConfigsHTMLempty, setNewHostListShown, isNewHostListShown
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper, DMItemBase
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir, printDBG
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir, printDBG, getDebugMode
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 # e2 imports
@@ -255,11 +255,13 @@ class logsPage(resource.Resource):
         MenuStatusMSG = ''
         extraMeta = ''
 
-        if os.path.exists('/hdd/iptv.dbg'):
-            DBGFileName = '/hdd/iptv.dbg'
-        elif os.path.exists('/tmp/iptv.dbg'):
-            DBGFileName = '/tmp/iptv.dbg'
-        else:
+        DBGFileName = getDebugMode()
+        if DBGFileName == "console":
+            DBGFileName = ""
+        elif DBGFileName == "debugfile":
+            DBGFileName = "/hdd/iptv.dbg"
+
+        if not os.path.exists(DBGFileName):
             DBGFileName = ''
 
         command = req.args.get("cmd", ['NOcmd'])
