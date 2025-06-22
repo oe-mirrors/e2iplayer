@@ -779,7 +779,7 @@ class Host:
                   data = file.read()
                   if 'opendreambox' in data.lower():
                       return ''
-                  #elif 'openatv'      in data.lower(): return ''
+                  # elif 'openatv'      in data.lower(): return ''
                   else:
                       return color
             else:
@@ -2071,7 +2071,7 @@ class Host:
            except:
               printDBG('Host listsItems query error')
               return valTab
-           #printDBG( 'Host listsItems data: '+data )
+           # printDBG( 'Host listsItems data: '+data )
            phCats = re.findall("<entry>.*?<title>(.*?)</title>.*?<updated>(.*?)</updated>.*?<name>(.*?)</name>", data, re.S)
            if phCats:
               for (phTitle, phUpdated, phName) in phCats:
@@ -2145,8 +2145,8 @@ class Host:
               cmd = 'cp -rf "%s"/* "%s"/ 2>&1' % (os_path.join(od, 'IPTVPlayer'), os_path.join(do, 'IPTVPlayer'))
               printDBG('HostXXX Másolás[%s]' % cmd)
               os_system(cmd)
-              #printDBG('HostXXX kopiowanie2 cmd[%s]' % cmd)
-              #iptv_system(cmd)
+              # printDBG('HostXXX kopiowanie2 cmd[%s]' % cmd)
+              # iptv_system(cmd)
               os_system('sync')
            except:
               printDBG('Másolási Hiba')
@@ -2260,7 +2260,7 @@ class Host:
            url = 'https://showup.tv'
            self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
            self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
-           #accept_rules.showup.tv/
+           # accept_rules.showup.tv/
            self.defaultParams['cookie_items'] = {'accept_rules': 'true'}
            sts, data = self.get_Page(url)
            if not sts:
@@ -2290,7 +2290,7 @@ class Host:
            parse = re.search('"categories":(.*?),"more_links"', data, re.S)
            if not parse:
                return valTab
-           #printDBG( 'Host listsItems parse.group(1): '+parse.group(1) )
+           # printDBG( 'Host listsItems parse.group(1): '+parse.group(1) )
            result = simplejson.loads(parse.group(1))
            if result:
               for item in result:
@@ -4189,7 +4189,7 @@ class Host:
         if 'xhamsterlive' == name:
            printDBG('Host listsItems begin name=' + name)
            self.MAIN_URL = 'http://xhamsterlive.com'
-           #url='http://xhamsterlive.com/api/front/models'
+           # url='http://xhamsterlive.com/api/front/models'
            url = 'https://go.hpyrdr.com/api/models?limit=9999'
            COOKIEFILE = os_path.join(GetCookieDir(), 'xhamsterlive.cookie')
            self.HTTP_HEADER = self.cm.getDefaultHeader(browser='iphone_3_0')
@@ -4424,7 +4424,7 @@ class Host:
            if next:
               next = re.findall("</a><a href='(.*?)'>", next[0], re.S)
               if len(next) > 0:
-                 #next = self.cm.getFullUrl(next[0], self.MAIN_URL)
+                 # next = self.cm.getFullUrl(next[0], self.MAIN_URL)
                  valTab.append(CDisplayListItem('Next', next[0].replace('.html', ''), CDisplayListItem.TYPE_CATEGORY, [self.cm.getFullUrl(next[0], url)], name, nextImage(), None))
               return valTab
 
@@ -10208,7 +10208,7 @@ class Host:
            self.MAIN_URL = 'https://www.laidhub.com'
            COOKIEFILE = os_path.join(GetCookieDir(), 'laidhub.cookie')
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
-           #sts, data = self.cm.getPage(url, self.defaultParams)
+           # sts, data = self.cm.getPage(url, self.defaultParams)
            sts, data = self.get_Page(url)
            if not sts:
                return valTab
@@ -12641,7 +12641,7 @@ class Host:
            self.MAIN_URL = 'https://www.freepornhq.xxx'
            COOKIEFILE = os_path.join(GetCookieDir(), 'freepornhq.cookie')
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
-           #sts, data = self.cm.getPage(url, self.defaultParams)
+           # sts, data = self.cm.getPage(url, self.defaultParams)
            sts, data = self.get_Page(url)
            if not sts:
                return valTab
@@ -12978,7 +12978,7 @@ class Host:
            ImageURL = "https://nastypornpics.com/"
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
            sts, data = self.cm.getPage(url, self.defaultParams)
-           #printDBG( 'Főoldal adatai: '+ str(data))
+           # printDBG( 'Főoldal adatai: '+ str(data))
            if not sts:
                return valTab
            data = self.cm.ph.getDataBeetwenMarkers(data, 'class="tags', 'class="tags', False)[1]
@@ -13011,7 +13011,7 @@ class Host:
            catUrl = self.currList[Index].possibleTypesOfSearch
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
            sts, data = self.cm.getPage(url, self.defaultParams)
-           #printDBG( 'Klipek adatai: '+ str(data))
+           # printDBG( 'Klipek adatai: '+ str(data))
            self.MAIN_URL = 'https://pornxp.org'
            if not sts:
                return valTab
@@ -13054,7 +13054,7 @@ class Host:
            ImageURL = "https://nastypornpics.com/"
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
            sts, data = self.cm.getPage(url, self.defaultParams)
-           #printDBG( 'Főoldal adatai: '+ str(data))
+           # printDBG( 'Főoldal adatai: '+ str(data))
            if not sts:
                return valTab
            data = data.split('a class="item"')
@@ -13087,7 +13087,7 @@ class Host:
            catUrl = self.currList[Index].possibleTypesOfSearch
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
            sts, data = self.cm.getPage(url, self.defaultParams)
-           #printDBG( 'Klipek adatai: '+ str(data))
+           # printDBG( 'Klipek adatai: '+ str(data))
            self.MAIN_URL = 'https://severeporn.com'
            if not sts:
                return valTab
@@ -13122,7 +13122,7 @@ class Host:
            ImageURL = "https://nastypornpics.com/"
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
            sts, data = self.cm.getPage(url, self.defaultParams)
-           #printDBG( 'Főoldal adatai: '+ str(data))
+           # printDBG( 'Főoldal adatai: '+ str(data))
            if not sts:
                return valTab
            next = self.cm.ph.getSearchGroups(data, '''next.+href=["]([^ß]+?)["].+Next''', 1, True)[0]
@@ -13158,7 +13158,7 @@ class Host:
            catUrl = self.currList[Index].possibleTypesOfSearch
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
            sts, data = self.cm.getPage(url, self.defaultParams)
-           #printDBG( 'Klipek adatai: '+ str(data))
+           # printDBG( 'Klipek adatai: '+ str(data))
            self.MAIN_URL = 'https://pornoflix.com'
            if not sts:
                return valTab
@@ -13553,7 +13553,7 @@ class Host:
            self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
            self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
            sts, data = self.get_Page(url, self.defaultParams)
-           #printDBG( 'Főoldal adatai: '+ str(data))
+           # printDBG( 'Főoldal adatai: '+ str(data))
            if not sts:
                return valTab
            data = self.cm.ph.getDataBeetwenMarkers(data, 'tags-cloud">', 'tags/" class', False)[1]
@@ -13684,7 +13684,7 @@ class Host:
            ImageURL = "https://nastypornpics.com/"
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
            sts, data = self.get_Page(url, self.defaultParams)
-           #printDBG( 'XXBRITS ADATOK: '+data )
+           # printDBG( 'XXBRITS ADATOK: '+data )
            data = data.split('item-post">')
            if len(data):
                del data[0]
@@ -13775,7 +13775,7 @@ class Host:
            ImageURL = "https://nastypornpics.com/"
            self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
            sts, data = self.get_Page(url, self.defaultParams)
-           #printDBG( 'HDPUSSY ADATOK: '+data )
+           # printDBG( 'HDPUSSY ADATOK: '+data )
            data = data.split('<li><a href=')
            if len(data):
                del data[0]
@@ -14198,7 +14198,7 @@ class Host:
            self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
            self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
            sts, data = self.get_Page(url, self.defaultParams)
-           #printDBG( 'HARDSEXVIDS adatok: '+data )
+           # printDBG( 'HARDSEXVIDS adatok: '+data )
            next = self.cm.ph.getSearchGroups(data, 'current.{,20}href=["]([^"^#]+?)["]', 1, True)[0]
            printDBG('Kövi kategória: ' + str(next))
            data = data.split('a class="item"')
@@ -15183,7 +15183,7 @@ class Host:
            self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
            self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
            sts, data = self.get_Page(url, self.defaultParams)
-           #useCloudScraper = True  # ha gond lehet a sima requests-szel, érdemes bekapcsolni
+           # useCloudScraper = True  # ha gond lehet a sima requests-szel, érdemes bekapcsolni
            data = self.cm.ph.getDataBeetwenMarkers(data, '_list">', '="footer"', False)[1]
            data = data.split('class="item">')
            if len(data):
@@ -15249,14 +15249,14 @@ class Host:
            self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
            self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
            sts, data = self.get_Page(url, self.defaultParams)
-           #useCloudScraper = True  # ha gond lehet a sima requests-szel, érdemes bekapcsolni
+           # useCloudScraper = True  # ha gond lehet a sima requests-szel, érdemes bekapcsolni
            pageUrl = 'https://blowjobit.com/categories/q?page='
            prev = self.cm.ph.getSearchGroups(data, 'href.{,20}[=]([0-9]+?)["].{,25}Previous', 1, True)[0]
            if not prev:
                next_number = 2
            else:
                next_number = int(prev) + 2
-           #data = self.cm.ph.getDataBeetwenMarkers(data, 'Categories</h1>', 'text-sm">', False)[1]
+           # data = self.cm.ph.getDataBeetwenMarkers(data, 'Categories</h1>', 'text-sm">', False)[1]
            data = data.split('transition-colors"')
            if len(data):
                del data[0]
@@ -17701,10 +17701,10 @@ class Host:
             return 'http://www.nuvid.com'
         if url.startswith('http://www.nuvid.com'):
             return 'http://www.nuvid.com'
-        #if url.startswith('http://www.x3xtube.com'):        return 'file: '
+        # if url.startswith('http://www.x3xtube.com'):        return 'file: '
         if url.startswith('http://hornygorilla.com'):
             return 'file: '
-        #if url.startswith('http://www.vikiporn.com'):       return 'file: "'
+        # if url.startswith('http://www.vikiporn.com'):       return 'file: "'
         if url.startswith('http://www.fetishshrine.com'):
             return 'file: '
         if url.startswith('http://theclassicporn.com'):
@@ -17765,7 +17765,7 @@ class Host:
             return "0p'  : '"
         if url.startswith('http://www.hd21.com'):
             return "0p'  : '"
-        #if url.startswith('https://www.pornrox.com'):       return "0p'  : '"
+        # if url.startswith('https://www.pornrox.com'):       return "0p'  : '"
         if url.startswith('https://www.gotporn.com'):
             return 'https://www.gotporn.com'
         if url.startswith('https://www.pornwhite.com'):
@@ -18544,7 +18544,7 @@ class Host:
         videoUrl = ''
         parser = self.getParser(url)
         printDBG('Host getResolvedURL parser: ' + parser)
-        #if parser == '': return url
+        # if parser == '': return url
 
         if 'gounlimited.to' in url:
             if 'embed' not in url:
@@ -18629,7 +18629,7 @@ class Host:
            if not sts:
                return ''
            printDBG('Host listsItems data: ' + data)
-           #videoUrl = re.search('video_url":"([^"]+)', data).group(1)
+           # videoUrl = re.search('video_url":"([^"]+)', data).group(1)
            videoUrl = self.cm.ph.getSearchGroups(data, '''video_url.+['"]([^"^']+?)['"],"''')[0]
            printDBG('Lekért url: ' + videoUrl)
            replacemap = {'M': '\\u041c', 'A': '\\u0410', 'B': '\\u0412', 'C': '\\u0421', 'E': '\\u0415', '=': '~', '+': '.', '/': ','}
@@ -18874,7 +18874,7 @@ class Host:
                        cmd = '/usr/bin/rtmpdump -B 1 -r "%s"' % videoUrl.replace('cdn-t0', 'cdn-t0' + str(x))
                        wow = subprocess.getoutput(cmd)
                        printDBG('HostXXX cmd > ' + cmd)
-                       #printDBG( 'HostXXX rtmpdump > '+ wow )
+                       # printDBG( 'HostXXX rtmpdump > '+ wow )
                        if not 'StreamNotFound' in wow:
                           return videoUrl.replace('cdn-t0', 'cdn-t0' + str(x)) + ' live=1'
                        printDBG('HostXXX GUZIK ')
@@ -18889,7 +18889,7 @@ class Host:
            newurl = 'http://video%s.myfreecams.com:1935/NxServer/mfc_%s.f4v_aac/playlist.m3u8' % (serwer, url)
            try:
               data = urllib.request.urlopen(newurl, timeout=1)
-              #printDBG( 'Host data.meta:  '+str(data.meta) )
+              # printDBG( 'Host data.meta:  '+str(data.meta) )
            except:
               printDBG('Host error newurl:  ' + newurl)
            if data:
@@ -18910,7 +18910,7 @@ class Host:
            sts, data = self.cm.getPage('https://en.bongacams.com/' + username, self.defaultParams)
            if not sts:
                return ''
-           #printDBG( 'Parser Bonga data: '+data )
+           # printDBG( 'Parser Bonga data: '+data )
            amf = self.cm.ph.getSearchGroups(data, '''MobileChatService\(\'\/([^"^']+?)\'\+\$''')[0]
            if not amf:
                amf = 'tools/amf.php?x-country=pl&m=1&res='
@@ -18922,7 +18922,7 @@ class Host:
            sts, data = self.cm.getPage(url_amf, self.defaultParams, postdata)
            if not sts:
                return ''
-           #printDBG( 'Parser Bonga link2: '+data )
+           # printDBG( 'Parser Bonga link2: '+data )
            serwer = self.cm.ph.getSearchGroups(data, '''"videoServerUrl":['"]([^"^']+?)['"]''', 1, True)[0]
            printDBG('Parser Bonga serwer: ' + serwer)
            url_m3u8 = 'https:' + serwer.replace('\/', '/') + '/hls/stream_' + username + '/playlist.m3u8'
@@ -18930,7 +18930,7 @@ class Host:
               videoUrl = urlparser.decorateUrl(url_m3u8, {'User-Agent': host, 'Referer': 'https://bongacams.com/' + username})
               if self.cm.isValidUrl(videoUrl):
                  tmp = getDirectM3U8Playlist(videoUrl)
-                 #if not tmp: return ''
+                 # if not tmp: return ''
                  try:
                      tmp = sorted(tmp, key=lambda item: int(item.get('bitrate', '0')))
                  except Exception:
@@ -19330,9 +19330,9 @@ class Host:
             except:
                 printDBG('Host getResolvedURL query error url: ' + url)
                 return ''
-            #printDBG( 'Host getResolvedURL data: '+data )
+            # printDBG( 'Host getResolvedURL data: '+data )
             dane = '[' + data + ']'
-            #printDBG( 'Host listsItems json: '+dane )
+            # printDBG( 'Host listsItems json: '+dane )
             result = simplejson.loads(dane)
             if result:
                 try:
@@ -19340,23 +19340,23 @@ class Host:
                         token = str(item["token"])
                         app = str(item["app"])
                         serwer = str(item["edge_servers"][0])
-                        #edge_servers2 = str(item["edge_servers"][1])
+                        # edge_servers2 = str(item["edge_servers"][1])
                         stream_name = str(item["stream_name"])
-                        #printDBG( 'Host listsItems token: '+token )
-                        #printDBG( 'Host listsItems app: '+app )
-                        #printDBG( 'Host listsItems edge_servers1: '+serwer )
-                        #printDBG( 'Host listsItems edge_servers2: '+edge_servers2 )
-                        #printDBG( 'Host listsItems stream_name: '+stream_name )
+                        # printDBG( 'Host listsItems token: '+token )
+                        # printDBG( 'Host listsItems app: '+app )
+                        # printDBG( 'Host listsItems edge_servers1: '+serwer )
+                        # printDBG( 'Host listsItems edge_servers2: '+edge_servers2 )
+                        # printDBG( 'Host listsItems stream_name: '+stream_name )
                         name = re.sub('-enc.+', '', stream_name)
                         if rtmp == 0:
-                            #Url = 'https://%s/%s/mp4:%s_mjpeg/playlist.m3u8?token=%s' % (serwer, app, stream_name, token )
+                            # Url = 'https://%s/%s/mp4:%s_mjpeg/playlist.m3u8?token=%s' % (serwer, app, stream_name, token )
                             Url = 'https://%s/%s/mp4:%s_aac/playlist.m3u8?token=%s' % (serwer, app, stream_name, token)
                             USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0'
                             Url = urlparser.decorateUrl(Url, {'User-Agent': USER_AGENT})
                             if self.cm.isValidUrl(Url):
                                 tmp = getDirectM3U8Playlist(Url)
                                 for item in tmp:
-                                    #printDBG( 'Host listsItems valtab: '  +str(item))
+                                    # printDBG( 'Host listsItems valtab: '  +str(item))
                                     if str(item["with"]) == '0':
                                         SetIPTVPlayerLastHostError(' OFFLINE')
                                         return []
@@ -19454,7 +19454,7 @@ class Host:
         if parser == 'http://www.tube8.com/embed/':
            return self.getResolvedURL(url.replace(r"embed/", r""))
 
-        #if parser == 'http://www.pornhub.com/embed/':
+        # if parser == 'http://www.pornhub.com/embed/':
         #   return self.getResolvedURL(url.replace(r"embed/",r"view_video.php?viewkey="))
 
         if parser == 'http://www.tube8.com':
@@ -19465,7 +19465,7 @@ class Host:
            sts, data = self.get_Page(url)
            if not sts:
                return ''
-           #printDBG( 'Host getResolvedURL data: '+data )
+           # printDBG( 'Host getResolvedURL data: '+data )
            headUrl = self.cm.ph.getSearchGroups(data, '''mp4.+videoUrl['"]:['"]([^"^']+?)['"]''')[0].replace('\/', '/')
            printDBG('Video Oldala: ' + headUrl)
            sts, data = self.get_Page(headUrl)
@@ -19495,7 +19495,7 @@ class Host:
            try:
               init = self.cm.ph.getSearchGroups(data, '''window.INITIALSTATE\s*?=\s*?['"]([^"^']+?)['"]''', 1, True)[0]
               init = urllib.parse.unquote(base64.b64decode(init))
-              #printDBG( 'Host listsItems init: '+init )
+              # printDBG( 'Host listsItems init: '+init )
               try:
                  result = byteify(simplejson.loads(init)["page"])
               except Exception:
@@ -19555,7 +19555,7 @@ class Host:
            sts, data = self.getPage(url, 'txxx.cookie', 'txxx.com', self.defaultParams)
            if not sts:
                return ''
-           #printDBG( 'Host listsItems data: '+data )
+           # printDBG( 'Host listsItems data: '+data )
            videoUrl = re.search('video_url":"([^"]+)', data).group(1)
            printDBG('Lekért kód: ' + videoUrl)
            replacemap = {'M': '\\u041c', 'A': '\\u0410', 'B': '\\u0412', 'C': '\\u0421', 'E': '\\u0415', '=': '~', '+': '.', '/': ','}
@@ -19584,12 +19584,12 @@ class Host:
                return ''
            result = self.cm.ph.getSearchGroups(data, '''"videoUrl":['"]([^'"]+?)['"]''')[0].replace('&amp;', '&').replace(r"\/", r"/")
            allUrl = result.replace("/api", "https://www.youporn.com/api")
-           #printDBG( 'Ezt talaltam: '+allUrl )
+           # printDBG( 'Ezt talaltam: '+allUrl )
            sts, data = self.get_Page(allUrl)
-           #printDBG( 'Lekerve: '+data )
+           # printDBG( 'Lekerve: '+data )
            hlsUrl = self.cm.ph.getDataBeetwenMarkers(data, 'videoUrl":"', '","', False)[1]
            videoUrl = hlsUrl.replace("\/", "/").replace('\\u0026', '&')
-           #printDBG( 'Ez a vege: '+videoUrl )
+           # printDBG( 'Ez a vege: '+videoUrl )
            return videoUrl
 
         # make by 12asdfg12
@@ -19610,7 +19610,7 @@ class Host:
               sts, data = self.getPage(url, 'yourporn.cookie', 'sxyprn.com', self.defaultParams)
               if not sts:
                   return ''
-              #printDBG( 'Host listsItems data: '+str(data) )
+              # printDBG( 'Host listsItems data: '+str(data) )
               videoUrl = self.cm.ph.getSearchGroups(data, '''data-vnfo=['"].*?:['"]([^"^']+?)['"]''')[0].replace(r"\/", r"/")
               if videoUrl:
                  printDBG('Host listsItems videoUrl: ' + videoUrl)
@@ -19652,7 +19652,7 @@ class Host:
            sts, data = self.get_Page(url, self.defaultParams)
            if not sts:
                return ''
-           #printDBG( 'Host listsItems streamvid data: '+data )
+           # printDBG( 'Host listsItems streamvid data: '+data )
            printDBG('Streamvid URL: ' + url)
            preTag_1 = self.cm.ph.getSearchGroups(data, '''pics[|]([^|^']+?)[|]''', 1, True)[0]
            if not preTag_1:
@@ -19852,15 +19852,15 @@ class Host:
            sts, data = self.get_Page(url)
            if not sts:
                return
-           #printDBG( 'Host listsItems data: '+data )
+           # printDBG( 'Host listsItems data: '+data )
 
-           #host = 'iPhone'
-           #header = {'User-Agent': host, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'X-Requested-With':'XMLHttpRequest'}
-           #try: data = self.cm.getURLRequestData({ 'url': url, 'header': header, 'use_host': False, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': COOKIEFILE, 'use_post': False, 'return_data': True })
-           #except:
+           # host = 'iPhone'
+           # header = {'User-Agent': host, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'X-Requested-With':'XMLHttpRequest'}
+           # try: data = self.cm.getURLRequestData({ 'url': url, 'header': header, 'use_host': False, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': COOKIEFILE, 'use_post': False, 'return_data': True })
+           # except:
            #   printDBG( 'Host getResolvedURL query error url: '+url )
            #   return ''
-           #printDBG( 'Host getResolvedURL data: '+data )
+           # printDBG( 'Host getResolvedURL data: '+data )
            videoPage = self.cm.ph.getSearchGroups(data, '''"quality":"1080","filename":['"]([^"^']+?)['"]''')[0].replace('\/', '/')
            if videoPage:
               if videoPage.startswith('//'):
@@ -19969,7 +19969,7 @@ class Host:
            printDBG('Javított cím: ' + videoUrl)
            if self.cm.isValidUrl(videoUrl):
               tmp = getDirectM3U8Playlist(videoUrl)
-              #if not tmp: return ''
+              # if not tmp: return ''
               try:
                   tmp = sorted(tmp, key=lambda item: int(item.get('bitrate', '0')))
               except Exception:
@@ -20038,7 +20038,7 @@ class Host:
            sts, data = self._getPage(url, self.defaultParams)
            if not sts:
                return
-           #videoUrl = self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)["].class''')[0]
+           # videoUrl = self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)["].class''')[0]
            videoLinks = self.cm.ph.getDataBeetwenMarkers(data, '<div class="video_actions_wrapper', 'full video', False)[1]
            printDBG('Összes adat: ' + str(videoLinks))
            videoLinks = self.cm.ph.getAllItemsBeetwenMarkers(videoLinks, 'href="', '" class', False)
@@ -20294,7 +20294,7 @@ class Host:
               videoUrl = self.cm.ph.getSearchGroups(data, '''.src=['"]([^"^']+?)['"].?type="video.+''')[0]
 
            if not videoUrl:
-              #parser for vikiporn,porndr, fetishrine
+              # parser for vikiporn,porndr, fetishrine
               videoUrl = self.cm.ph.getSearchGroups(data, '''video_url:.['"]([^"^']+?)['"]''')[0].replace('\/', '/').replace('&amp;', '&').strip()
            if 'function/0/' in videoUrl:
               videoUrl = decryptHash(videoUrl, license_code, '16')
@@ -20582,7 +20582,7 @@ class Host:
            printDBG('PORNVIDEOSBEST PARSER')
            self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
            sts, data = self.get_Page(url)
-           #videoUrl = re.search("video_url'].=.[']([^']+?)[']", data)
+           # videoUrl = re.search("video_url'].=.[']([^']+?)[']", data)
            videoUrl = self.cm.ph.getSearchGroups(data, "video_url'].=.[']([^']+?)[']")[0]
            printDBG('Videolink: ' + videoUrl)
            if videoUrl:
@@ -20762,7 +20762,7 @@ class Host:
            printDBG('Videolink first: ' + videoUrl)
            if 'function/0/' in videoUrl:
               videoUrl = decryptHash(videoUrl, license_code, '16')
-           #videoUrl = videoUrl.rpartition('/')[0]
+           # videoUrl = videoUrl.rpartition('/')[0]
            printDBG('Videolink second: ' + videoUrl)
            try:
                return urlparser.decorateUrl(videoUrl, {'Referer': url})
@@ -21039,7 +21039,7 @@ class Host:
            sts, data = self.getPage(url, 'perfectgirls.cookie', 'perfectgirls.com', self.defaultParams)
            if not sts:
                return ''
-           #printDBG( 'PerfectGirls Linkek: ' +data)
+           # printDBG( 'PerfectGirls Linkek: ' +data)
            videoUrl = self.cm.ph.getSearchGroups(data, '''source.src=['"]([^"^']+?)['"].+1080p''')[0]
            if not videoUrl:
               videoUrl = self.cm.ph.getSearchGroups(data, '''source.src=['"]([^"^']+?)['"].+720p''')[0]
@@ -21047,12 +21047,12 @@ class Host:
               videoUrl = self.cm.ph.getSearchGroups(data, '''source.src=['"]([^"^']+?)['"].+480p''')[0]
            if not videoUrl:
               videoUrl = self.cm.ph.getSearchGroups(data, '''source.src=['"]([^"^']+?)['"].+360p''')[0]
-           #printDBG( 'Elsődleges cím: ' +videoUrl)
+           # printDBG( 'Elsődleges cím: ' +videoUrl)
            sts, data = self.getPage(videoUrl, 'perfectgirls.cookie', 'perfectgirls.com', self.defaultParams)
-           #printDBG( 'PerfectGirls M3U: ' +data)
+           # printDBG( 'PerfectGirls M3U: ' +data)
            videoUrl = self.cm.ph.getSearchGroups(data, '''1280.+\s[h](.+)''')[0]
            videoUrl = 'h' + videoUrl
-           #printDBG( 'Kész link ' +videoUrl)
+           # printDBG( 'Kész link ' +videoUrl)
            return videoUrl
 
         if parser == 'https://jizzbunker.com':
@@ -21161,7 +21161,7 @@ class Host:
            sts, data = self.getPage(url, 'datoporn.cookie', 'datoporn.co', self.defaultParams)
            if not sts:
                return ''
-           #license_code = self.cm.ph.getSearchGroups(data, '''license_code\s*?:\s*?['"]([^"^']+?)['"]''')[0]
+           # license_code = self.cm.ph.getSearchGroups(data, '''license_code\s*?:\s*?['"]([^"^']+?)['"]''')[0]
            allUrl = self.cm.ph.getDataBeetwenMarkers(data, 'Download:', '<div class="block-flagging">', False)[1]
            printDBG('Videok: ' + allUrl)
            videoUrl = self.cm.ph.getDataBeetwenMarkers(allUrl, '<a href="', '" data', False)[1]
@@ -21247,7 +21247,7 @@ class Host:
             for videoUrl in data:
                 if videoUrl.split('?')[0].endswith('m3u8'):
                     printDBG('Host  videoUrl: %s' % videoUrl)
-                    #if self.cm.isValidUrl(videoUrl):
+                    # if self.cm.isValidUrl(videoUrl):
                     #    videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': referer})
                     #    tmp = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
                     #    for item in tmp:
@@ -21319,7 +21319,7 @@ class Host:
                     return item['url']
                     printDBG('Playlist Eleme ' + item(url))
            printDBG('Final URL: ' + videoUrl)
-           #return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.HTTP_HEADER['User-Agent']})
+           # return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.HTTP_HEADER['User-Agent']})
            return videoUrl
 
         if parser == 'https://www.eroprofile.com':
@@ -21371,7 +21371,7 @@ class Host:
            if not sts:
                return ''
            printDBG('ANYBUNNY PARSERDATA: ' + data)
-           #videoUrls = re.search('file:"[ ]([^"^>]+?)[?]', data, re.S)
+           # videoUrls = re.search('file:"[ ]([^"^>]+?)[?]', data, re.S)
            videoUrls = self.cm.ph.getSearchGroups(data, '''file:"[ ]([^"^>]+?)[?]''')[0]
            printDBG('ANYBUNNY LINKEK: ' + str(videoUrls))
            if '.m3u8' in videoUrls:
@@ -21388,7 +21388,7 @@ class Host:
            return videoUrl
 
         if parser == 'https://hqporner.com':
-           #printDBG( 'Selected Resolution: '+url )
+           # printDBG( 'Selected Resolution: '+url )
            videoUrl = urlparser.decorateUrl(url, {'Referer': url})
            if videoUrl:
               return videoUrl
@@ -21581,17 +21581,17 @@ class Host:
               videoUrl = self.cm.ph.getSearchGroups(data, '''src=["]([^j]+?)["].*\n.*s''')[0]
            printDBG('Host license_code: %s' % license_code)
            printDBG('Host video_url: %s' % videoUrl)
-           #if license_code and videoUrl:
+           # if license_code and videoUrl:
             #  if 'function/0/' in videoUrl:
              #    videoUrl = decryptHash(videoUrl, license_code, '16')
-              #return urlparser.decorateUrl(videoUrl, {'Referer': url})
-           #videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''')[0]
-           #if videoUrl:
+              # return urlparser.decorateUrl(videoUrl, {'Referer': url})
+           # videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''')[0]
+           # if videoUrl:
              # return self.getResolvedURL(self.FullUrl(videoUrl))
-           #videoUrl = self.cm.ph.getSearchGroups(data, '''<source[^>]+?src=['"]([^"^']+?mp4)['"]''')[0]
-           #if videoUrl:
+           # videoUrl = self.cm.ph.getSearchGroups(data, '''<source[^>]+?src=['"]([^"^']+?mp4)['"]''')[0]
+           # if videoUrl:
             #  return self.FullUrl(videoUrl)
-           #videoUrl = self.cm.ph.getSearchGroups(data, '''file:\s*?['"]([^"^']+?mp4)['"]''')[0]
+           # videoUrl = self.cm.ph.getSearchGroups(data, '''file:\s*?['"]([^"^']+?mp4)['"]''')[0]
            if videoUrl:
               return urlparser.decorateUrl(videoUrl, {'Referer': url})
            return ''
@@ -21620,7 +21620,7 @@ class Host:
            sts, data = self.get_Page(url, self.defaultParams)
            if not sts:
                return ''
-           #printDBG( 'Host data:%s' % data )
+           # printDBG( 'Host data:%s' % data )
            data2 = self.cm.ph.getDataBeetwenMarkers(data, 'var flashvars', '}', False)[1]
            if data2:
               printDBG('Host data2:%s' % data2)
@@ -21678,7 +21678,7 @@ class Host:
            sts, data = self.getPage(url, 'pornheed.cookie', 'pornheed.com', self.defaultParams)
            if not sts:
                return ''
-           #printDBG( 'Linkek oldala: '+data )
+           # printDBG( 'Linkek oldala: '+data )
            embedUrl = re.search('video:url..content=["]([^@]+?)["]', data).group(1)
            sts, data = self.get_Page(embedUrl)
            videoUrl = re.findall('source.src=["]([^"]+?)["]', data, re.S)
@@ -21979,24 +21979,24 @@ class Host:
            return ''
 
         if parser == 'http://www.ah-me.com':
-           #printDBG( 'Adatok: '+data )
+           # printDBG( 'Adatok: '+data )
            license_code = self.cm.ph.getSearchGroups(data, '''license_code:.['"]([^"^']+?)['"],''')[0]
            videoUrl = self.cm.ph.getSearchGroups(data, '''video_url:.['"]([^"^']+?)['"]''')[0]
            printDBG('Videolink first: ' + videoUrl)
            if 'function/0/' in videoUrl:
               videoUrl = decryptHash(videoUrl, license_code, '16')
            printDBG('Videolink second: ' + videoUrl)
-           #if videoUrl:urlparser.decorateUrl(videoUrl, {'Referer': url})
+           # if videoUrl:urlparser.decorateUrl(videoUrl, {'Referer': url})
            return videoUrl
 
         if parser == 'http://www.yuvutu.com':
-           #printDBG( 'Adatok: '+data )
+           # printDBG( 'Adatok: '+data )
            videoUrl = self.cm.ph.getSearchGroups(data, '''\s*?{\s*?file:.['"]([^"^']+?)['"],''')[0]
-           #printDBG( 'Lekért link:: '+videoUrl )
+           # printDBG( 'Lekért link:: '+videoUrl )
            return videoUrl
 
         if parser == 'http://www.homemoviestube.com':
-           #printDBG( 'Adatok: '+data )
+           # printDBG( 'Adatok: '+data )
            videoUrl = self.cm.ph.getSearchGroups(data, '''value="settings=([^"^']+?)['"]''')[0]
            if videoUrl:
               query_data = {'url': videoUrl, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
@@ -22004,7 +22004,7 @@ class Host:
                  data = self.cm.getURLRequestData(query_data)
               except:
                  printDBG('Host listsItems query error url: ' + url)
-              #printDBG( 'Host listsItems data: '+data )
+              # printDBG( 'Host listsItems data: '+data )
               return self.cm.ph.getSearchGroups(data, '''flvMask:([^"^']+?);''')[0]
            videoUrl = self.cm.ph.getSearchGroups(data, '''<source src=['"]([^"^']+?)['"]''')[0].replace('&amp;', '&')
            if videoUrl:
@@ -22153,7 +22153,7 @@ class Host:
               printDBG('Javított cím: ' + videoUrl)
            if self.cm.isValidUrl(videoUrl):
               tmp = getDirectM3U8Playlist(videoUrl)
-              #if not tmp: return ''
+              # if not tmp: return ''
               try:
                   tmp = sorted(tmp, key=lambda item: int(item.get('bitrate', '0')))
               except Exception:
@@ -22213,7 +22213,7 @@ class Host:
            printDBG('Javított cím: ' + videoUrl)
            if self.cm.isValidUrl(videoUrl):
               tmp = getDirectM3U8Playlist(videoUrl)
-              #if not tmp: return ''
+              # if not tmp: return ''
               try:
                   tmp = sorted(tmp, key=lambda item: int(item.get('bitrate', '0')))
               except Exception:
@@ -22246,7 +22246,7 @@ class Host:
                return ''
             if self.cm.isValidUrl(videoUrl):
                tmp = getDirectM3U8Playlist(videoUrl)
-               #if not tmp: return ''
+               # if not tmp: return ''
                try:
                    tmp = sorted(tmp, key=lambda item: int(item.get('bitrate', '0')))
                except Exception:
@@ -22285,7 +22285,7 @@ class Host:
               videoUrl = videoUrl.replace('m3u8\\', 'm3u8')
               if self.cm.isValidUrl(videoUrl):
                  tmp = getDirectM3U8Playlist(videoUrl)
-                 #if not tmp: return ''
+                 # if not tmp: return ''
                  try:
                      tmp = sorted(tmp, key=lambda item: int(item.get('bitrate', '0')))
                  except:
@@ -22352,7 +22352,7 @@ class Host:
            printDBG('Lekért Link: ' + videoUrl)
            if videoUrl.startswith('//'):
                videoUrl = 'https:' + videoUrl
-           #return urllib2.unquote(videoUrl)
+           # return urllib2.unquote(videoUrl)
            return videoUrl
 
         if parser == 'http://rusporn.tv':
@@ -22373,7 +22373,7 @@ class Host:
            if 'function/0/' in videoUrl:
               videoUrl = decryptHash(videoUrl, license_code, '16')
            return videoUrl
-           #return ''
+           # return ''
 
         if parser == 'https://www.katestube.com':
            data2 = self.cm.ph.getDataBeetwenMarkers(data, 'var flashvars', '}', False)[1]
@@ -22407,7 +22407,7 @@ class Host:
               except:
                  printDBG('Host getResolvedURL query error xml')
                  return ''
-              #printDBG( 'Host data json: '+data )
+              # printDBG( 'Host data json: '+data )
               videoPage = re.findall('source src="(.*?)"', data, re.S)
               if videoPage:
                  return videoPage[0]
@@ -22464,10 +22464,10 @@ class Host:
               return link
            return ''
 
-        #if parser == 'http://www.pornhub.com/embed/':
+        # if parser == 'http://www.pornhub.com/embed/':
          #  match = re.findall("container.*?src.*?'(.*?)'", data, re.S)
           # if match: return match[0]
-           #return ''
+           # return ''
 
         if parser == 'http://m.tube8.com':
            match = re.compile('<div class="play_video.+?<a href="(.+?)"', re.DOTALL).findall(data)
@@ -22619,7 +22619,7 @@ class Host:
               except:
                  printDBG('Host getResolvedURL query error xml')
                  return ''
-              #printDBG( 'Host data json: '+data )
+              # printDBG( 'Host data json: '+data )
               videoPage = re.search('"hq":"(http.*?)"', data, re.S)
               if videoPage:
                   return videoPage.group(1).replace('\/', '/')
@@ -22637,7 +22637,7 @@ class Host:
               except:
                  printDBG('Host getResolvedURL query error xml')
                  return ''
-              #printDBG( 'Host data json: '+data )
+              # printDBG( 'Host data json: '+data )
               videoPage = re.search('"hq":"(http.*?)"', data, re.S)
               if videoPage:
                   return videoPage.group(1).replace('\/', '/')
@@ -22655,7 +22655,7 @@ class Host:
               except:
                  printDBG('Host getResolvedURL query error xml')
                  return ''
-              #printDBG( 'Host data json: '+data )
+              # printDBG( 'Host data json: '+data )
               videoPage = re.search('"hq":"(http.*?)"', data, re.S)
               if videoPage:
                   return videoPage.group(1).replace('\/', '/')
@@ -23195,20 +23195,20 @@ def read_model_data(m):
 		CAMGIRLSERVER = u_info['camserv']
 		printDBG("Video Server : %d Channel Id : %d  Model id : %d " % (CAMGIRLSERVER, CAMGIRLCHANID, CAMGIRLUID))
 		SetIPTVPlayerLastHostError(str(CAMGIRLSERVER))
-#		with open('/tmp/title', 'w') as titleFile:
-#			titleFile.write(str(CAMGIRLSERVER))
-#		if CAMGIRLSERVER >= 3000:
-#			SetIPTVPlayerLastHostError(str(CAMGIRLSERVER))
-#			CAMGIRLSERVER = 0
-#			return []
-#			CAMGIRLSERVER = CAMGIRLSERVER - 1000
-#		elif CAMGIRLSERVER >= 1500:
-#			SetIPTVPlayerLastHostError(str(CAMGIRLSERVER))
-#			CAMGIRLSERVER = 0
-#			return []
-#			CAMGIRLSERVER = CAMGIRLSERVER - 800
-#		elif CAMGIRLSERVER >= 800:
-#			CAMGIRLSERVER = CAMGIRLSERVER - 500
+# with open('/tmp/title', 'w') as titleFile:
+# titleFile.write(str(CAMGIRLSERVER))
+# if CAMGIRLSERVER >= 3000:
+# SetIPTVPlayerLastHostError(str(CAMGIRLSERVER))
+# CAMGIRLSERVER = 0
+# return []
+# CAMGIRLSERVER = CAMGIRLSERVER - 1000
+# elif CAMGIRLSERVER >= 1500:
+# SetIPTVPlayerLastHostError(str(CAMGIRLSERVER))
+# CAMGIRLSERVER = 0
+# return []
+# CAMGIRLSERVER = CAMGIRLSERVER - 800
+# elif CAMGIRLSERVER >= 800:
+# CAMGIRLSERVER = CAMGIRLSERVER - 500
 		if vs != 0:
 			CAMGIRLSERVER = 0
 	except KeyError:
@@ -23278,8 +23278,8 @@ def myfreecam_start(url, xchat):
 		return ''
 	ws.close()
 	if CAMGIRLSERVER != 0:
-		#Url="http://video"+str(CAMGIRLSERVER)+".myfreecams.com:1935/NxServer/ngrp:mfc_"+str(CAMGIRLCHANID)+".f4v_mobile/playlist.m3u8" #+'?nc='+str(int(time_time()*1000))  #+str(datetime.now()) #str(time_time()).encode('utf-8')
-		#Url="http://video"+str(CAMGIRLSERVER)+".myfreecams.com:1935/NxServer/mfc_"+str(CAMGIRLCHANID)+".f4v_aac/playlist.m3u8" #320x240
+		# Url="http://video"+str(CAMGIRLSERVER)+".myfreecams.com:1935/NxServer/ngrp:mfc_"+str(CAMGIRLCHANID)+".f4v_mobile/playlist.m3u8" #+'?nc='+str(int(time_time()*1000))  #+str(datetime.now()) #str(time_time()).encode('utf-8')
+		# Url="http://video"+str(CAMGIRLSERVER)+".myfreecams.com:1935/NxServer/mfc_"+str(CAMGIRLCHANID)+".f4v_aac/playlist.m3u8" #320x240
 		Url = "https://video" + str(CAMGIRLSERVER) + ".myfreecams.com/NxServer/ngrp:mfc_" + str(CAMGIRLCHANID) + ".f4v_mobile/playlist.m3u8?nc=0.5863279394620062"  # +str(random.random())
 		printDBG("Camgirl - " + CAMGIRL)
 		printDBG("Url  - " + Url)
