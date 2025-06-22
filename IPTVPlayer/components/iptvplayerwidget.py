@@ -1187,7 +1187,7 @@ class E2iPlayerWidget(Screen):
         # if there is no order hosts list use old behavior for all group
         if self.group == 'all' and 0 == len(GetHostsOrderList()):
             try:
-                self.displayHostsList.sort(key=lambda t: tuple(str(t[0]).lower()))
+                self.displayHostsList.sort(key=lambda t: tuple(str(t[1]).lower()))
             except Exception:
                 self.displayHostsList.sort()
 
