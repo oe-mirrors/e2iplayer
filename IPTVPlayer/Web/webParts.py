@@ -208,7 +208,7 @@ class Body():
 		pluginCFG += '<tr><td align="center" colspan="2"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % _('Plugin global settings')
 		from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 		OptionsList = []
-		ConfigMenu.fillConfigList(OptionsList, hiddenOptions=False)
+		ConfigMenu.fillConfigList(OptionsList)
 		for item in OptionsList:
 			if item[0] in settings.configsHTML.keys():
 				pluginCFG += settings.configsHTML[item[0]]

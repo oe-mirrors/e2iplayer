@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eC
 from Tools.LoadPixmap import LoadPixmap
 from Components.Pixmap import Pixmap
 from enigma import ePicLoad, ePoint
+import os
 
 
 class Cover(Pixmap):
@@ -63,7 +64,11 @@ class Cover(Pixmap):
                 self.currIcon = self.waitIcon
                 self.waitIcon = {}
                 self.picload_conn = eConnectCallback(self.picload.PictureData, self.decodeCallBack)
-                ret = self.picload.startDecode(filename)
+                if os.path.exists(filename):
+                    ret = self.picload.startDecode(filename)
+                else:
+                    printDBG("_______________decodeCover file not exists (%s)" % filename)
+                    ret = -1
                 if ret != 0:
                     printDBG("_______________error start decodeCover[%d]" % ret)
                     self.picload_conn = None

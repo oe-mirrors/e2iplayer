@@ -241,7 +241,7 @@ class buildConfigsHTML(threading.Thread):
 			settings.configsHTML[hostName] = hostsCFG
 		# now configs for plugin
 		OptionsList = []
-		ConfigMenu.fillConfigList(OptionsList, hiddenOptions=False)
+		ConfigMenu.fillConfigList(OptionsList)
 		for item in self.buildSettingsTable(List1=list(config.plugins.iptvplayer.dict().items()), List2=OptionsList, exclList=usedCFG, direction='2>1'):
 			settings.configsHTML[item[1]] = '<tr><td><tt>%s</tt></td><td>%s</td></tr>\n' % (item[1], formGET(item[2]))
 ########################################################
