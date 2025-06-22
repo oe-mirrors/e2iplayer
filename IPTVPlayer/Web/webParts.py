@@ -221,7 +221,7 @@ class Body():
 		hostsCFG += '</tbody></table>\n'
 		# build plugin global settings
 		pluginCFG = '<table width="850px" border="1"><tbody>\n'
-	#	pluginCFG += '<tr><td align="center" colspan="2"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % _('Plugin global settings')
+	# pluginCFG += '<tr><td align="center" colspan="2"><p><font size="5" color="#9FF781">%s</font></p></td></tr>\n' % _('Plugin global settings')
 		from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 		OptionsList = []
 		ConfigMenu.fillConfigList(OptionsList)
