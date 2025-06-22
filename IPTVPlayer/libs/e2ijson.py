@@ -20,7 +20,7 @@ import json
 def loads(inputString, noneReplacement=None, baseTypesAsString=False, utf8=True):
 #    global e2icjson
 #    e2icjson = False
-#    if e2icjson == None:
+#    if e2icjson is None:
 #        try:
 #            from Plugins.Extensions.IPTVPlayer.libs.e2icjson import e2icjson
 #            e2icjson = e2icjson

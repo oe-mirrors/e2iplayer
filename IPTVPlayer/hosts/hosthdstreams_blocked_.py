@@ -495,7 +495,7 @@ class HDStreams(CBaseHostClass):
         url = strwithmeta(cItem['url'])
         url = url.meta.get('Referer', url)
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(url)
             if not sts:
                 return []
@@ -550,7 +550,7 @@ class HDStreams(CBaseHostClass):
         printDBG('handleService start')
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL == None:
+        if self.MAIN_URL is None:
             # rm(self.COOKIE_FILE)
             self.selectDomain()
 
@@ -562,7 +562,7 @@ class HDStreams(CBaseHostClass):
         self.currList = []
 
     # MAIN MENU
-        if name == None:
+        if name is None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_filters':
             self.listFilters(self.currItem, 'list_items')

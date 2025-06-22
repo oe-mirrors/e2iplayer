@@ -241,10 +241,10 @@ class TV2Play(CBaseHostClass):
                             params = {'title': urllib_unquote(i['title']), 'slug': slug, 'icon': icon, 'desc': urllib_unquote(i['lead']), 'url': "https://tv2play.hu/api/search/" + i['url']}
                             self.addVideo(params)
                         elif i['contentType'] != 'ARTICLE':
-                            params = {'category': 'list_items', 'title': urllib_unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': unquote(i['lead'])}
+                            params = {'category': 'list_items', 'title': urllib_unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': urllib_unquote(i['lead'])}
                             self.addDir(params)
                     elif i['contentType'] != 'ARTICLE':
-                        params = {'category': 'list_items', 'title': urllib_unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': unquote(i['lead'])}
+                        params = {'category': 'list_items', 'title': urllib_unquote(i['title']), 'url': "https://tv2play.hu/api/search/" + i['url'], 'icon': icon, 'desc': urllib_unquote(i['lead'])}
                         self.addDir(params)
             except:
                pass

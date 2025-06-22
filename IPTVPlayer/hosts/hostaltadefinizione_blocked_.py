@@ -119,7 +119,7 @@ class Altadefinizione(CBaseHostClass):
         printDBG("Altadefinizione.listItems")
         page = cItem.get('page', 1)
 
-        if data == None:
+        if data is None:
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
@@ -329,7 +329,7 @@ class Altadefinizione(CBaseHostClass):
         printDBG("Altadefinizione.getArticleContent [%s]" % cItem)
         retTab = []
 
-        if data == None:
+        if data is None:
             url = cItem.get('prev_url', cItem['url'])
             sts, data = self.getPage(url)
             if not sts:
@@ -406,7 +406,7 @@ class Altadefinizione(CBaseHostClass):
         self.currList = []
 
     # MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'sub_items':
             self.listSubItems(self.currItem)

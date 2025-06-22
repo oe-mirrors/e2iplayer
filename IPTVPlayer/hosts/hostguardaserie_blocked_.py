@@ -472,7 +472,7 @@ class GuardaSerieClick(CBaseHostClass):
 
     # MAIN MENU
 
-        if name == None:
+        if name is None:
 
             self.listMainMenu({'name': 'category', 'type': 'category'})
 
