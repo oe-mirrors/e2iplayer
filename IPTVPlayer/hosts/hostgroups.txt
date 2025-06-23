@@ -241,7 +241,7 @@
   "playrtsiw",
   "123movieshd",
   "orthobulletscom",
-  "vumedicom",
+  "vumedicom"
  ],
  "german": [
   "youtube",
