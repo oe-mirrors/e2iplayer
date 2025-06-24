@@ -42,8 +42,6 @@ if GRIDSUPPORT:
             self.reorderingMode = False
             self.reorderingItemSelected = False
 
-            self.lastSelection = PlayerSelectorWidget.LAST_SELECTION.get(self.groupName, 0)
-
             # load icons
             self.pixmapList = []
             for idx in range(0, self.numOfItems):
@@ -177,8 +175,6 @@ if GRIDSUPPORT:
             self["grid"].setStyle(str(self.iconSize) if self.iconSize in [120, 135] else "default")
             self.setSelectionImage("")
             self.selectionChanged()
-            if self.lastSelection and self.lastSelection < self.numOfItems:
-                self["grid"].setSelectedIndex(self.lastSelection)
 
         def updateIcons(self):
             items = []
