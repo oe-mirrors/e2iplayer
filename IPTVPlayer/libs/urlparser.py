@@ -409,6 +409,7 @@ class urlparser:
             'assia25.com': self.pp.parserASSIAORG,
             'assia4.com': self.pp.parserASSIAORG,
             'auroravid.to': self.pp.parserAURORAVIDTO,
+            'awish.pro': self.pp.parserJWPLAYER,
             # b
             'bbc.co.uk': self.pp.parserBBC,
             'bestx.stream': self.pp.parserCHILLXTOP,
@@ -479,7 +480,7 @@ class urlparser:
             'dartstreams.de.cool': self.pp.parserONLYSTREAMTV,
             'deltatv.pw': self.pp.parserDELTATVPW,
             'dhcplay.com': self.pp.parserJWPLAYER,
-            'dhtpre.com': self.pp.parserONLYSTREAMTV,
+            'dhtpre.com': self.pp.parserJWPLAYER,
             'do7go.com': self.pp.parserDOOD,
             'dood.cx': self.pp.parserDOOD,
             'dood.la': self.pp.parserDOOD,
@@ -522,6 +523,7 @@ class urlparser:
             'embedv.net': self.pp.parserVIDGUARDTO,
             'embedwish.com': self.pp.parserONLYSTREAMTV,
             'emturbovid.com': self.pp.parserJWPLAYER,
+            'en.embedz.net': self.pp.parserJWPLAYER,
             'estream.to': self.pp.parserESTREAMTO,
             'evoload.io': self.pp.parserEVOLOADIO,
             'exashare.com': self.pp.parserEXASHARECOM,
@@ -686,6 +688,7 @@ class urlparser:
             'mp4upload.com': self.pp.parserONLYSTREAMTV,
             'my.mail.ru': self.pp.parserVIDEOMAIL,
             'mycloud.to': self.pp.parserMYCLOUDTO,
+            'mysportzfy.com': self.pp.parserJWPLAYER,                                      
             'mystream.la': self.pp.parserMYSTREAMLA,
             # n
             'nadaje.com': self.pp.parserNADAJECOM,
@@ -713,7 +716,6 @@ class urlparser:
             'ok.ru': self.pp.parserOKRU,
             'onet.pl': self.pp.parserONETTV,
             'onet.tv': self.pp.parserONETTV,
-            'onlystream.tv': self.pp.parserONLYSTREAMTV,
             'openlive.org': self.pp.parserOPENLIVEORG,
             'openload.info': self.pp.parserEXASHARECOM,
             'ovva.tv': self.pp.parserOVVATV,
@@ -760,6 +762,7 @@ class urlparser:
             'rutube.ru': self.pp.parserRUTUBE,
             'ryderjet.com': self.pp.parserONLYSTREAMTV,
             # s
+            's3taku.pro': self.pp.parserJWPLAYER,
             'samaup.cc': self.pp.parserUPLOAD,
             'savefiles.com': self.pp.parserJWPLAYER,
             'sawlive.tv': self.pp.parserSAWLIVETV,
@@ -801,7 +804,7 @@ class urlparser:
             'srkcast.com': self.pp.parserSRKCASTCOM,
             'ssh101.com': self.pp.parserSSH101COM,
             'starlive.xyz': self.pp.parserSTARLIVEXYZ,
-            'smoothpre.com': self.pp.parserONLYSTREAMTV,
+            'smoothpre.com': self.pp.parserJWPLAYER,
             'stopbot.tk': self.pp.parserSTOPBOTTK,
             'stream.moe': self.pp.parserSTREAMMOE,
             'stream4k.to': self.pp.parserSTREAM4KTO,
@@ -864,8 +867,8 @@ class urlparser:
             'superfastvideos.xyz': self.pp.parserTXNEWSNETWORK,
             'superfilm.pl': self.pp.parserSUPERFILMPL,
             'supergoodtvlive.com': self.pp.parserTXNEWSNETWORK,
-            'supervideo.tv': self.pp.parserONLYSTREAMTV,
-            'supervideo.cc': self.pp.parserONLYSTREAMTV,
+            'supervideo.tv': self.pp.parserJWPLAYER,
+            'supervideo.cc': self.pp.parserJWPLAYER,
             'suprafiles.org': self.pp.parserUPLOAD,
             'suspents.info': self.pp.parserFASTVIDEOIN,
             'svetacdn.in': self.pp.parserSVETACDNIN,
@@ -13680,17 +13683,22 @@ class pageParser(CaptchaHelper):
                     urlTab.append({'name': q, 'url': url.strip()})
         return urlTab
 
-    def parserJWPLAYER(self, baseUrl):  # update 150625
+    def parserJWPLAYER(self, baseUrl):  # update 280625
         printDBG("parserJWPLAYER baseUrl[%s]" % baseUrl)
         urlTab = []
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        referer = baseUrl.meta.get('Referer')
-        if referer:
-            HTTP_HEADER['Referer'] = referer
+        referer = baseUrl.meta.get('Referer', baseUrl)
+        HTTP_HEADER['Referer'] = referer
         urlParams = {'header': HTTP_HEADER}
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return []
+        if "p,a,c,k,e" not in data and "mp4" not in data and "m3u8" not in data:
+            src = re.search(r'(?:data-embed|iframe\s+src)="([^"]+)"', data)
+            if src:
+                sts, data = self.cm.getPage(src.group(1), urlParams)
+                if not sts:
+                    return []
         if "function(p,a,c,k,e" in data:
             printDBG('Host JSunpack')
             data = get_packed_data(data)
@@ -13699,11 +13707,13 @@ class pageParser(CaptchaHelper):
         host = urlparser.getDomain(baseUrl, False)
         url = re.search(r'''["'](https?://[^'^"]+?\.mp4(?:\?[^"^']+?)?)["']''', data)
         hlsUrl = re.search(r'''["'](https?://[^'^"]+?\.m3u8(?:\?[^"^']+?)?)["']''', data)
+        if not url and not hlsUrl:
+            url = re.search(r'''file":"([^"]+)''', data)
         subTracks = []
         sub = re.findall(r'''{\s*file:\s*["']([^"']+)["'],\s*label:\s*["']([^"']+)["'],\s*kind:\s*["'](?:captions|subtitles)["']''', data)
         if sub:
             for src, label in sub:
-                subTracks.append({'title': '', 'url': src, 'lang': label})
+                subTracks.append({'title': '', 'url': "https:" + src if src.startswith('//') else src, 'lang': label})
         if url:
             urlTab.append({'name': 'MP4', 'url': urlparser.decorateUrl(url.group(1), {'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': baseUrl, 'Origin': host[:-1], 'external_sub_tracks': subTracks})})
         if hlsUrl:
