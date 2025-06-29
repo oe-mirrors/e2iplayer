@@ -145,7 +145,7 @@ class Raiplay(CBaseHostClass):
             content = re.findall("<url type=\"content\">(.*?)</url>", response)
             if content:
                 # <![CDATA[https://dashaz-dc-euwe.akamaized.net/subtl_proxy/6ed6fac0-ae71-4dd7-b4be-d8921d4948b9/20200713102433_12778339.ism/manifest(format=mpd-time-csf,filter=medium_1200-2400).mpd?hdnea=st=1599391792~exp=1599391942~acl=/*~hmac=27e952b0f784662684fe65fb4717152d8644e2a9f3ad575ece21738dfbe88263]]>
-                url = re.findall("<!\[CDATA\[(.*?)\]\]>", content[0])
+                url = re.findall(r"<!\[CDATA\[(.*?)\]\]>", content[0])
                 if url:
                     # find type of stream
                     ct = re.findall("<ct>(.*?)</ct>", response)
@@ -155,7 +155,7 @@ class Raiplay(CBaseHostClass):
                         licenseUrl = re.findall("<license_url>(.*?)</license_url>", response)
                         if licenseUrl:
                             # xbmc.log(licenseUrl[0])
-                            licenseJson = re.findall("<!\[CDATA\[(.*?)\]\]>", licenseUrl[0])
+                            licenseJson = re.findall(r"<!\[CDATA\[(.*?)\]\]>", licenseUrl[0])
                             if licenseJson:
                                 # xbmc.log(licenseJson[0])
                                 try:
@@ -184,11 +184,11 @@ class Raiplay(CBaseHostClass):
                 return {'url': '', 'ct': '', 'key': ''}
 
             # Workaround to normalize URL if the relinker doesn't
-            try:
-                mediaUrl = urllib_quote(mediaUrl, safe="%/:=&?~#+!$,;'@()*[]")
-            except:
-                printExc()
-            return mediaUrl
+            # try:
+            #    mediaUrl = urllib_quote(mediaUrl, safe="%/:=&?~#+!$,;'@()*[]")
+            # except:
+            #    printExc()
+            # return mediaUrl
 
         except:
             return {'url': '', 'type': '', 'key': ''}
@@ -391,7 +391,7 @@ class Raiplay(CBaseHostClass):
                 params = {'title': title, 'url': videoUrl, 'icon': icon, 'category': 'program', 'desc': desc}
             else:
                 # programme is not available
-                title = title + "\c00??8800 [" + _("not available") + "]"
+                title = title + r"\c00??8800 [" + _("not available") + "]"
                 params = {'title': title, 'url': '', 'icon': icon, 'desc': desc, 'category': 'nop'}
 
             printDBG(str(params))
@@ -409,7 +409,7 @@ class Raiplay(CBaseHostClass):
         for item in items:
             if item["sub-type"] in ("RaiPlay Tipologia Page", "RaiPlay Genere Page", "RaiPlay Tipologia Editoriale Page"):
 
-                if not (item["name"] in ("Teatro", "Musica")):
+                if item["name"] not in ("Teatro", "Musica"):
 
                     # new urls
                     # i.e. change "/raiplay/programmi/?json" to "/raiplay/tipologia/programmi/index.json"
@@ -615,7 +615,7 @@ class Raiplay(CBaseHostClass):
             return
 
         items = self.getLastContentByTag(tag)
-        if items == None:
+        if items is None:
             return
 
         for item in items:
@@ -659,7 +659,7 @@ class Raiplay(CBaseHostClass):
         links = re.findall("<a href=\"(?P<url>[^\"]+)\">(?P<title>[^<]+)</a>", menu)
         good_links = []
         for l in links:
-            if ('/archivio.html?' in l[0]) and not ('&amp;' in l[0]):
+            if '/archivio.html?' in l[0] and '&amp;' not in l[0]:
                 printDBG("{'title': '%s', 'url' : '%s'}" % (l[1], l[0]))
                 good_links.append({'title': l[1], 'url': l[0]})
 
@@ -790,7 +790,7 @@ class Raiplay(CBaseHostClass):
         self.currList = []
 
         # MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'live_tv':
             self.listLiveTvChannels(self.currItem)
