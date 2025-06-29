@@ -385,7 +385,7 @@ class IPTVSubDownloaderWidget(Screen):
                     message = _("It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?") % self.hostName
                     message += "\n"
                     message += _('\nMake sure you are using the latest version of the plugin.')
-                    message += _('\nYou can also report problem here: \nhttps://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\nor here: samsamsam@o2.pl')
+                    message += _('\nYou can also report problem here: \nhttps://github.com/oe-mirrors/e2iplayer/issues')
                     self.session.openWithCallback(self.reportHostCrash, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
             self.hideSpinner()
         except Exception:
