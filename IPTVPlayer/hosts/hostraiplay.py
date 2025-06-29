@@ -40,7 +40,7 @@ class Raiplay(CBaseHostClass):
         self.CHANNELS_URL = "https://www.rai.it/dl/RaiPlay/2016/PublishingBlock-9a2ff311-fcf0-4539-8f8f-c4fee2a71d58.html?json"
         self.CHANNELS_RADIO_URL = "https://rai.it/dl/portaleRadio/popup/ContentSet-003728e4-db46-4df8-83ff-606426c0b3f5-json.html"
         self.EPG_URL_OLD = "https://www.rai.it/dl/palinsesti/Page-e120a813-1b92-4057-a214-15943d95aa68-json.html?canale=[nomeCanale]&giorno=[dd-mm-yyyy]"
-        #self.EPG_URL = "https://www.raiplay.it/guidatv/lista?canale=[nomeCanale]&giorno=[dd-mm-yyyy]"
+        # self.EPG_URL = "https://www.raiplay.it/guidatv/lista?canale=[nomeCanale]&giorno=[dd-mm-yyyy]"
         self.EPG_URL = 'https://www.raiplay.it/palinsesto/guidatv/lista/[idCanale]/[dd-mm-yyyy].html'
         self.TG_URL = "http://www.tgr.rai.it/dl/tgr/mhp/home.xml"
 
@@ -86,7 +86,7 @@ class Raiplay(CBaseHostClass):
             url = self.MAIN_URL + url
 
         url = url.replace(" ", "%20")
-        #url = urllib_quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        # url = urllib_quote(url, safe="%/:=&?~#+!$,;'@()*[]")
 
         # fix old format of url for json
         if url.endswith(".html?json"):
@@ -129,7 +129,7 @@ class Raiplay(CBaseHostClass):
         if "output" in qs:
             del (qs['output'])
 
-        #qs['output'] = "20" # only url
+        # qs['output'] = "20" # only url
         qs['output'] = "56"  # xml stream data
 
         query = urllib_urlencode(qs, True)
@@ -138,26 +138,26 @@ class Raiplay(CBaseHostClass):
         try:
             sts, response = self.getPage(url)
 
-            #mediaUrl = response.strip()
-            #xbmc.log(response)
+            # mediaUrl = response.strip()
+            # xbmc.log(response)
 
-            #find real url
+            # find real url
             content = re.findall("<url type=\"content\">(.*?)</url>", response)
             if content:
-                #<![CDATA[https://dashaz-dc-euwe.akamaized.net/subtl_proxy/6ed6fac0-ae71-4dd7-b4be-d8921d4948b9/20200713102433_12778339.ism/manifest(format=mpd-time-csf,filter=medium_1200-2400).mpd?hdnea=st=1599391792~exp=1599391942~acl=/*~hmac=27e952b0f784662684fe65fb4717152d8644e2a9f3ad575ece21738dfbe88263]]>
+                # <![CDATA[https://dashaz-dc-euwe.akamaized.net/subtl_proxy/6ed6fac0-ae71-4dd7-b4be-d8921d4948b9/20200713102433_12778339.ism/manifest(format=mpd-time-csf,filter=medium_1200-2400).mpd?hdnea=st=1599391792~exp=1599391942~acl=/*~hmac=27e952b0f784662684fe65fb4717152d8644e2a9f3ad575ece21738dfbe88263]]>
                 url = re.findall("<!\[CDATA\[(.*?)\]\]>", content[0])
                 if url:
-                    #find type of stream
+                    # find type of stream
                     ct = re.findall("<ct>(.*?)</ct>", response)
                     if ct:
-                        #find license key
-                        #<license_url><![CDATA[{"drmLicenseUrlValues":[{"drm":"WIDEVINE","licenceUrl":"https://mediaservicerainet02.keydelivery.northeurope.media.azure.net/Widevine/?kid=5ca7736f-7e27-49fc-80b2-bde49c8c0259&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiI1Y2E3NzM2Zi03ZTI3LTQ5ZmMtODBiMi1iZGU0OWM4YzAyNTkiLCJpc3MiOiJodHRwOi8vcmFpcGxheSIsImF1ZCI6InVybjpyYWlwbGF5X2hkY3BfdjFfc2wxX3NkIiwiZXhwIjoxNTk5MzkyOTc0fQ.ZwmxivCnx8Gz-GRVu5twKIrjsAdK6jczAT2JZLnO9mw","name":"Widevine Token Restricted JWT HDCP_V1_SL1_SD","audience":"urn:raiplay_hdcp_v1_sl1_sd"},{"drm":"PLAYREADY","licenceUrl":"https://mediaservicerainet02.keydelivery.northeurope.media.azure.net/PlayReady/?kid=5ca7736f-7e27-49fc-80b2-bde49c8c0259&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiI1Y2E3NzM2Zi03ZTI3LTQ5ZmMtODBiMi1iZGU0OWM4YzAyNTkiLCJpc3MiOiJodHRwOi8vcmFpcGxheSIsImF1ZCI6InVybjpyYWlwbGF5IiwiZXhwIjoxNTk5MzkyOTc0fQ.pih3hCVRTJyNkgYGj42oCb8-Tya-4-PPC-PlZn38n2M","name":"Playready Token Restricted JWT","audience":"urn:raiplay"}]}]]></license_url>
+                        # find license key
+                        # <license_url><![CDATA[{"drmLicenseUrlValues":[{"drm":"WIDEVINE","licenceUrl":"https://mediaservicerainet02.keydelivery.northeurope.media.azure.net/Widevine/?kid=5ca7736f-7e27-49fc-80b2-bde49c8c0259&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiI1Y2E3NzM2Zi03ZTI3LTQ5ZmMtODBiMi1iZGU0OWM4YzAyNTkiLCJpc3MiOiJodHRwOi8vcmFpcGxheSIsImF1ZCI6InVybjpyYWlwbGF5X2hkY3BfdjFfc2wxX3NkIiwiZXhwIjoxNTk5MzkyOTc0fQ.ZwmxivCnx8Gz-GRVu5twKIrjsAdK6jczAT2JZLnO9mw","name":"Widevine Token Restricted JWT HDCP_V1_SL1_SD","audience":"urn:raiplay_hdcp_v1_sl1_sd"},{"drm":"PLAYREADY","licenceUrl":"https://mediaservicerainet02.keydelivery.northeurope.media.azure.net/PlayReady/?kid=5ca7736f-7e27-49fc-80b2-bde49c8c0259&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiI1Y2E3NzM2Zi03ZTI3LTQ5ZmMtODBiMi1iZGU0OWM4YzAyNTkiLCJpc3MiOiJodHRwOi8vcmFpcGxheSIsImF1ZCI6InVybjpyYWlwbGF5IiwiZXhwIjoxNTk5MzkyOTc0fQ.pih3hCVRTJyNkgYGj42oCb8-Tya-4-PPC-PlZn38n2M","name":"Playready Token Restricted JWT","audience":"urn:raiplay"}]}]]></license_url>
                         licenseUrl = re.findall("<license_url>(.*?)</license_url>", response)
                         if licenseUrl:
-                            #xbmc.log(licenseUrl[0])
+                            # xbmc.log(licenseUrl[0])
                             licenseJson = re.findall("<!\[CDATA\[(.*?)\]\]>", licenseUrl[0])
                             if licenseJson:
-                                #xbmc.log(licenseJson[0])
+                                # xbmc.log(licenseJson[0])
                                 try:
                                     licenseJson = json_loads(licenseJson[0])
 
@@ -253,7 +253,7 @@ class Raiplay(CBaseHostClass):
 
         response = json_loads(data)
         tv_stations = response["dirette"]
-        #printDBG(data)
+        # printDBG(data)
 
         for station in tv_stations:
             title = station["channel"]
@@ -264,7 +264,7 @@ class Raiplay(CBaseHostClass):
             params = {'title': title, 'url': url, 'icon': icon, 'category': 'live_tv', 'desc': desc}
             self.addVideo(params)
 
-        #add raisport webstreams
+        # add raisport webstreams
         sts, data = self.getPage(self.RAISPORT_LIVE_URL)
         if not sts:
             return
@@ -275,7 +275,7 @@ class Raiplay(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(i, '''data-video-url=['"]([^'^"]+?)['"]''')[0]
             if url:
                 icon = self.cm.ph.getSearchGroups(i, '''stillframe=['"]([^'^"]+?)['"]''')[0]
-                #if icon:
+                # if icon:
                 #    icon = icon
                 title = self.cleanHtmlStr(i)
 
@@ -291,7 +291,7 @@ class Raiplay(CBaseHostClass):
 
         response = json_loads(data)
         radio_stations = response["dati"]
-        #printDBG(data)
+        # printDBG(data)
 
         for station in radio_stations:
             title = station["nome"]
@@ -654,7 +654,7 @@ class Raiplay(CBaseHostClass):
         if not sts:
             return
         menu = self.cm.ph.getDataBeetwenMarkers(data, '<a href="javascript:void(0)">Menu</a>', '</div>')[1]
-        #printDBG(menu)
+        # printDBG(menu)
 
         links = re.findall("<a href=\"(?P<url>[^\"]+)\">(?P<title>[^<]+)</a>", menu)
         good_links = []
@@ -675,10 +675,10 @@ class Raiplay(CBaseHostClass):
                 if dataTematica:
                     if len(dataTematica) > 1:
                         del (dataTematica[0])
-                    #printDBG(str(dataDominio))
-                    #printDBG(str(dataTematica))
+                    # printDBG(str(dataDominio))
+                    # printDBG(str(dataTematica))
                     title = dataTematica[0].split('|')[0]
-                    #title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
+                    # title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
 
                     params = {'title': title, 'dominio': dataDominio[0], 'sub_keys': dataTematica}
                     printDBG(str(params))
@@ -702,7 +702,7 @@ class Raiplay(CBaseHostClass):
 
         for k in sub_keys:
             title = k.split("|")[0]
-            #title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
+            # title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
 
             if title == cItem['title']:
                 title = "Tutto su " + title
@@ -789,7 +789,7 @@ class Raiplay(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'live_tv':
