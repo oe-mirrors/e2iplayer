@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-29 10:14+0200\n"
-"PO-Revision-Date: 2025-06-16 17:56+0200\n"
+"PO-Revision-Date: 2025-06-29 10:59+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
 "Language: de_DE\n"
@@ -105,7 +105,7 @@ msgstr ""
 
 #: ../hosts/hostxxx.py:6055
 msgid "    *    Votes: "
-msgstr ""
+msgstr "    *    Abstimmungen:"
 
 #: ../components/iptvconfigmenu.py:348
 msgid "    Audio buffer size [KB]"
@@ -477,7 +477,7 @@ msgstr "A-Z"
 
 #: ../hosts/host9anime_blocked_.py:55
 msgid "A-Z List"
-msgstr ""
+msgstr "A-Z Liste"
 
 #: ../components/configextmovieplayer.py:278
 msgid "AAC downmix mode"
@@ -505,7 +505,7 @@ msgstr "KÜNSTLER"
 
 #: ../hosts/hostxxx.py:1174
 msgid "ATTENTION !"
-msgstr ""
+msgstr "ACHTUNG !"
 
 #: ../hosts/hostplayrtsiw.py:203
 msgid "AZ"
@@ -2156,7 +2156,7 @@ msgstr "Verstecke \"%s\" Gruppe"
 
 #: ../components/playerselector.py:154
 msgid "Hide/Active Group"
-msgstr "Verstecke/Zeige Gruppe"
+msgstr "Gruppe An/Aus"
 
 #: ../hosts/hostlaola1tv_blocked_.py:28
 msgid "High"
@@ -2560,7 +2560,6 @@ msgid "Last month"
 msgstr "Letzter Monat"
 
 #: ../hosts/host9anime_blocked_.py:53
-#, fuzzy
 msgid "Last update"
 msgstr "Letzte Aktualisierung"
 
@@ -2804,7 +2803,7 @@ msgstr "MIPS Fließkomma Architektur"
 
 #: ../hosts/hosthdstreams_blocked_.py:72
 msgid "MOVIES"
-msgstr ""
+msgstr "FILME"
 
 #: ../hosts/hostfilmpalast.py:47 ../hosts/hostfilmstreamvkcom.py:103
 #: ../hosts/hosthoofootcom.py:39 ../hosts/hostkabarety.py:45
@@ -2925,9 +2924,8 @@ msgid "Most viewed"
 msgstr "Am häufigsten angesehen"
 
 #: ../hosts/host9anime_blocked_.py:54
-#, fuzzy
 msgid "Most watched"
-msgstr "Am meisten bewertet"
+msgstr "Meist gesehen"
 
 #: ../hosts/hostlocalmedia.py:314
 #, python-format
@@ -3109,9 +3107,8 @@ msgid "New icons will not be available."
 msgstr "Neue Icons werden nicht verfügbar sein."
 
 #: ../hosts/host9anime_blocked_.py:52
-#, fuzzy
 msgid "Newest"
-msgstr "niedrigste"
+msgstr "Neuste"
 
 #: ../hosts/hostthewatchseriesto.py:51
 msgid "Newest Episodes"
@@ -3748,7 +3745,7 @@ msgstr "RAM-Puffer in [MB] für Online-Inhalte"
 
 #: ../hosts/hostguardaserie_blocked_.py:413
 msgid "RATING"
-msgstr ""
+msgstr "BEWERTUNG"
 
 #: ../hosts/hostwatchwrestling.py:55 ../hosts/hostwatchwrestlinguno.py:40
 msgid "RAW"
@@ -4934,7 +4931,7 @@ msgstr "Theater"
 
 #: ../hosts/hostxxx.py:20496
 msgid "THIS IS A PRIVATE VIDEO."
-msgstr ""
+msgstr "DIES IST EIN PRIVATES VIDEO."
 
 #: ../hosts/hostwatchwrestling.py:51
 msgid "TNA"
@@ -4955,7 +4952,7 @@ msgstr "TV"
 
 #: ../hosts/hosthdstreams_blocked_.py:73
 msgid "TV SERIES"
-msgstr ""
+msgstr "TV SERIEN"
 
 #: ../hosts/hostfilma24hdcom.py:39 ../hosts/hostmovienightws.py:38
 msgid "TV Series"
@@ -5092,17 +5089,15 @@ msgstr "Dieser Service wurde bereits zu dieser Gruppe hinzugefügt."
 #: ../hosts/hostxxx.py:22292 ../hosts/hostxxx.py:22301
 #: ../hosts/hostxxx.py:22331 ../hosts/hostxxx.py:22342
 msgid "This model is offline."
-msgstr ""
+msgstr "Dieses Model ist offline."
 
 #: ../hosts/hostxxx.py:22318
-#, fuzzy
 msgid "This room is offline. Try again later!"
-msgstr "Es sieht nach einer Art Schutz aus. Versuchen Sie es später noch einmal."
+msgstr "Dieser Raum ist offline. Versuche es später nochmal."
 
 #: ../hosts/hostxxx.py:22281
-#, fuzzy
 msgid "This show is private. Try again later!"
-msgstr "Es sieht nach einer Art Schutz aus. Versuchen Sie es später noch einmal."
+msgstr "Diese Show ist Privat. Versuche es später nochmal."
 
 #: ../hosts/hostseriesonline.py:90
 msgid "This site is protected with Google reCaptcha v2."
@@ -5110,14 +5105,12 @@ msgstr "Diese Seite ist geschützt mit Google reCaptcha v2."
 
 #: ../hosts/hostxxx.py:20449 ../hosts/hostxxx.py:20463
 #: ../hosts/hostxxx.py:20479
-#, fuzzy
 msgid "This video has been deleted."
-msgstr "Debug-Datei wurde gelöscht"
+msgstr "Dieses Video wurde gelöscht"
 
 #: ../hosts/hostxxx.py:20429
-#, fuzzy
 msgid "This video is a private video."
-msgstr " Dieses Video ist Privat."
+msgstr " Dieses Video ist ein privates Video."
 
 #: ../components/iptvplayerwidget.py:1675
 msgid "Tip! You can connect USB flash drive to fix this problem."
@@ -5397,7 +5390,7 @@ msgstr "Demnächst"
 
 #: ../hosts/hostxxx.py:2187
 msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr ""
+msgstr "Die Aktualisierung wurde erfolgreich abgeschlossen. Im Moment wird das System neu gestartet."
 
 #: ../libs/youtubeparser.py:35
 msgid "Upload date"
@@ -5630,7 +5623,7 @@ msgstr "Virtueller Tastatur-Typ"
 
 #: ../hosts/hostxxx.py:2065
 msgid "WARNING! IF UPDATE FAILED: "
-msgstr ""
+msgstr "WARNUNG! WENN DIE AKTUALISIERUNG FEHLSCHLÄGT: "
 
 #: ../hosts/hostwatchwrestling.py:49 ../hosts/hostwatchwrestlinguno.py:36
 msgid "WWE"
@@ -6135,7 +6128,7 @@ msgstr "navyblau"
 
 #: ../hosts/hostraiplay.py:394
 msgid "not available"
-msgstr ""
+msgstr "nicht verfügbar"
 
 #: ../components/configbase.py:33
 msgid "olive"
