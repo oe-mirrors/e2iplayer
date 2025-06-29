@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-29 10:14+0200\n"
+"POT-Creation-Date: 2025-06-29 20:45+0200\n"
 "PO-Revision-Date: 2025-06-19 15:44+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -79,27 +79,15 @@ msgstr ""
 "Αυτός ο host δεν είναι αναπόσπαστο μέρος του πρόσθετου E2iPlayer.\n"
 "Δεν υποστηρίζεται από την ομάδα του E2iPlayer."
 
-#: ../components/iptvplayerwidget.py:460
+#: ../components/iptvplayerwidget.py:460 ../components/iptvsubdownloader.py:388
 msgid ""
 "\n"
 "You can also report problem here: \n"
-" https://github.com/oe-mirrors/e2iplayer/issues"
+"https://github.com/oe-mirrors/e2iplayer/issues"
 msgstr ""
 "\n"
 "Μπορείτε επίσης να αναφέρετε το πρόβλημα εδώ: \n"
 " https://github.com/oe-mirrors/e2iplayer/issues"
-
-#: ../components/iptvsubdownloader.py:388
-msgid ""
-"\n"
-"You can also report problem here: \n"
-"https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
-"or here: samsamsam@o2.pl"
-msgstr ""
-"\n"
-"Μπορείτε επίσης να αναφέρετε το πρόβλημα εδώ:\n"
-"https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
-"ή εδώ: samsamsam@o2.pl"
 
 #: ../components/configbase.py:80 ../components/iptvdirbrowser.py:82
 #: ../components/iptvdirbrowser.py:327
@@ -479,10 +467,6 @@ msgstr "Απαιτείται άδεια TV για να παρακολουθήσ�
 msgid "A-Z"
 msgstr "A-Z"
 
-#: ../hosts/host9anime_blocked_.py:55
-msgid "A-Z List"
-msgstr ""
-
 #: ../components/configextmovieplayer.py:278
 msgid "AAC downmix mode"
 msgstr "Λειτουργία ανάμειξης AAC"
@@ -577,23 +561,23 @@ msgid "Airing"
 msgstr "Μετάδοση"
 
 #: ../components/iptvplayerwidget.py:1139 ../hosts/host3player.py:172
-#: ../hosts/host9anime_blocked_.py:115 ../hosts/hostakoam.py:150
-#: ../hosts/hostanimeodcinki.py:95 ../hosts/hostbbciplayer.py:238
-#: ../hosts/hostcimaclubcom.py:185 ../hosts/hostdailymotion.py:106
-#: ../hosts/hostdancetrippin.py:249 ../hosts/hostegybest.py:114
-#: ../hosts/hostfightvideo.py:82 ../hosts/hostfilmeonlineto.py:146
-#: ../hosts/hostfilmezz.py:121 ../hosts/hosthdfull.py:144
-#: ../hosts/hosthdstreams_blocked_.py:137 ../hosts/hostkabarety.py:47
-#: ../hosts/hostkabarety.py:96 ../hosts/hostkinox.py:160
-#: ../hosts/hostkinox.py:296 ../hosts/hostmindigo.py:701
-#: ../hosts/hostmindigo.py:831 ../hosts/hostmindigo.py:843
-#: ../hosts/hostmrpiracy.py:169 ../hosts/hostorthobulletscom.py:79
-#: ../hosts/hostplayrtsiw.py:380 ../hosts/hostputlockertvto.py:186
-#: ../hosts/hostshahiidanimenet.py:94 ../hosts/hostshoutcast.py:73
-#: ../hosts/hostsolarmovie.py:164 ../hosts/hosttvplayercom.py:135
-#: ../hosts/hosttwitchtv_blocked_.py:112 ../hosts/hosttwitchtv_blocked_.py:114
-#: ../hosts/hostyifytv.py:77 ../libs/skylinewebcamscom.py:136
-#: ../subproviders/subprov_titlovicom.py:115 ../tools/iptvhostgroups.py:52
+#: ../hosts/hostakoam.py:150 ../hosts/hostanimeodcinki.py:95
+#: ../hosts/hostbbciplayer.py:238 ../hosts/hostcimaclubcom.py:185
+#: ../hosts/hostdailymotion.py:106 ../hosts/hostdancetrippin.py:249
+#: ../hosts/hostegybest.py:114 ../hosts/hostfightvideo.py:82
+#: ../hosts/hostfilmeonlineto.py:146 ../hosts/hostfilmezz.py:121
+#: ../hosts/hosthdfull.py:144 ../hosts/hosthdstreams_blocked_.py:137
+#: ../hosts/hostkabarety.py:47 ../hosts/hostkabarety.py:96
+#: ../hosts/hostkinox.py:160 ../hosts/hostkinox.py:296
+#: ../hosts/hostmindigo.py:701 ../hosts/hostmindigo.py:831
+#: ../hosts/hostmindigo.py:843 ../hosts/hostmrpiracy.py:169
+#: ../hosts/hostorthobulletscom.py:79 ../hosts/hostplayrtsiw.py:380
+#: ../hosts/hostputlockertvto.py:186 ../hosts/hostshahiidanimenet.py:94
+#: ../hosts/hostshoutcast.py:73 ../hosts/hostsolarmovie.py:164
+#: ../hosts/hosttvplayercom.py:135 ../hosts/hosttwitchtv_blocked_.py:112
+#: ../hosts/hosttwitchtv_blocked_.py:114 ../hosts/hostyifytv.py:77
+#: ../libs/skylinewebcamscom.py:136 ../subproviders/subprov_titlovicom.py:115
+#: ../tools/iptvhostgroups.py:52
 msgid "All"
 msgstr "Όλα"
 
@@ -755,7 +739,7 @@ msgstr "Λίστα anime"
 
 #: ../hosts/hostfilmezz.py:387 ../hosts/hostfreediscpl.py:153
 #: ../hosts/hostserienstreamto.py:548 ../hosts/hoststreamliveto.py:328
-#: ../libs/urlparser.py:4366
+#: ../libs/urlparser.py:4369
 msgid "Answer"
 msgstr "Απάντηση"
 
@@ -1388,7 +1372,7 @@ msgstr "Η λήψη του \"%s\" στον φάκελο \"%s\" απέτυχε!"
 msgid "Download %s"
 msgstr "Λήψη %s"
 
-#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:9333 ../Web/webParts.py:349
+#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:9336 ../Web/webParts.py:349
 #: ../Web/webParts.py:357 ../Web/webParts.py:364
 msgid "Download again"
 msgstr "Λήψη ξανά"
@@ -1798,7 +1782,7 @@ msgstr "ΔΩΡΕΑΝ"
 #: ../hosts/hoststreamliveto.py:322 ../hosts/hoststreamliveto.py:352
 #: ../libs/hcaptcha.py:109 ../libs/recaptcha_v1.py:37
 #: ../libs/recaptcha_v1.py:64 ../libs/recaptcha_v2.py:39
-#: ../libs/recaptcha_v2.py:79 ../libs/urlparser.py:4360
+#: ../libs/recaptcha_v2.py:79 ../libs/urlparser.py:4363
 #, python-format
 msgid "Fail to get \"%s\"."
 msgstr "Αποτυχία λήψης του \"%s\"."
@@ -1907,7 +1891,7 @@ msgstr "Το αρχείο \"%s\" υπάρχει ήδη"
 msgid "File \"%s\" already exists!"
 msgstr "Το αρχείο \"%s\" υπάρχει ήδη!"
 
-#: ../libs/urlparser.py:2885
+#: ../libs/urlparser.py:2888
 msgid "File Not Found."
 msgstr "Το αρχείο δεν βρέθηκε."
 
@@ -2181,9 +2165,8 @@ msgstr "Κύρια σημεία"
 msgid "History of searched phrases."
 msgstr "Ιστορικό όρων αναζήτησης."
 
-#: ../hosts/host9anime_blocked_.py:51 ../hosts/hostfilmezz.py:69
-#: ../hosts/hostkissanimeto.py:62 ../hosts/hostkisscartoonme.py:48
-#: ../hosts/hostourmatchnet.py:42
+#: ../hosts/hostfilmezz.py:69 ../hosts/hostkissanimeto.py:62
+#: ../hosts/hostkisscartoonme.py:48 ../hosts/hostourmatchnet.py:42
 msgid "Home"
 msgstr "Αρχική"
 
@@ -2192,12 +2175,12 @@ msgstr "Αρχική"
 msgid "Home page"
 msgstr "Αρχική σελίδα"
 
-#: ../libs/urlparser.py:1209
+#: ../libs/urlparser.py:1212
 #, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr "Το hosting \"%s\" δεν υποστηρίζεται."
 
-#: ../libs/urlparser.py:1211
+#: ../libs/urlparser.py:1214
 #, python-format
 msgid "Hosting \"%s\" unknown."
 msgstr "Άγνωστο hosting \"%s\"."
@@ -2305,7 +2288,7 @@ msgstr "Εισαγωγή"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Διαδραστικό Κέντρο Μάθησης (ILC)"
 
-#: ../libs/urlparser.py:10720
+#: ../libs/urlparser.py:10723
 #, python-format
 msgid "Internal Server Error. Server response code: %s"
 msgstr "Εσωτερικό σφάλμα διακομιστή. Κωδικός απάντησης διακομιστή: %s"
@@ -2565,11 +2548,6 @@ msgstr "Τελευταίο σφάλμα: \"%s\""
 msgid "Last month"
 msgstr "Προηγούμενος μήνας"
 
-#: ../hosts/host9anime_blocked_.py:53
-#, fuzzy
-msgid "Last update"
-msgstr "Τελευταία ενημέρωση"
-
 #: ../hosts/hosttwitchtv_blocked_.py:125
 msgid "Last week"
 msgstr "Προηγούμενη εβδομάδα"
@@ -2641,7 +2619,7 @@ msgstr "Ο σύνδεσμος προστατεύεται με Google ReCaptcha v
 #: ../hosts/hostekinotv.py:453 ../hosts/hostfilmezz.py:334
 #: ../hosts/hostfreediscpl.py:85 ../hosts/hosthdstreams_blocked_.py:428
 #: ../hosts/hosthdstreams_blocked_.py:445 ../hosts/hostserienstreamto.py:410
-#: ../hosts/hosttvpvod.py:230 ../libs/urlparser.py:9333
+#: ../hosts/hosttvpvod.py:230 ../libs/urlparser.py:9336
 msgid "Link protected with google recaptcha v2."
 msgstr "Ο σύνδεσμος προστατεύεται με google recaptcha v2."
 
@@ -2774,12 +2752,12 @@ msgstr "Αποτυχία σύνδεσης. Μη έγκυρο email ή κωδικ
 msgid "Login needed"
 msgstr "Απαιτείται σύνδεση"
 
-#: ../libs/urlparser.py:5888
+#: ../libs/urlparser.py:5891
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Η σύνδεση στο {0} απέτυχε."
 
-#: ../libs/urlparser.py:2508
+#: ../libs/urlparser.py:2511
 #, python-format
 msgid ""
 "Login user \"%s\" to http://vk.com/ failed!\n"
@@ -2929,11 +2907,6 @@ msgstr "Πιο πρόσφατο"
 #: ../hosts/hostdailymotion.py:52 ../hosts/hostxrysoise.py:31
 msgid "Most viewed"
 msgstr "Περισσότερες προβολές"
-
-#: ../hosts/host9anime_blocked_.py:54
-#, fuzzy
-msgid "Most watched"
-msgstr "Μεγαλύτερη βαθμολογία"
 
 #: ../hosts/hostlocalmedia.py:314
 #, python-format
@@ -3114,11 +3087,6 @@ msgstr "Νέα επεισόδια"
 msgid "New icons will not be available."
 msgstr "Τα νέα εικονίδια δεν θα είναι διαθέσιμα."
 
-#: ../hosts/host9anime_blocked_.py:52
-#, fuzzy
-msgid "Newest"
-msgstr "χαμηλότερο"
-
 #: ../hosts/hostthewatchseriesto.py:51
 msgid "Newest Episodes"
 msgstr "Νεότερα επεισόδια"
@@ -3143,7 +3111,7 @@ msgstr "Επόμενη σελίδα"
 
 #: ../hosts/host123movieshd.py:217 ../hosts/host3player.py:198
 #: ../hosts/host3sktv.py:128 ../hosts/host3sktv.py:291
-#: ../hosts/host9anime_blocked_.py:208 ../hosts/hostakoam.py:194
+#: ../hosts/host9anime.py:56 ../hosts/hostakoam.py:194
 #: ../hosts/hostaltadefinizione_blocked_.py:154
 #: ../hosts/hostaltadefinizione01.py:169 ../hosts/hostaltadefinizione01.py:234
 #: ../hosts/hostanimeodcinki.py:237 ../hosts/hostardmediathek_blocked_.py:315
@@ -3338,7 +3306,7 @@ msgstr "Διατίθεται μόνο στη Σουηδία."
 msgid "Only available in Sweden.\n"
 msgstr "Διατίθεται μόνο στη Σουηδία.\n"
 
-#: ../libs/urlparser.py:8132
+#: ../libs/urlparser.py:8135
 msgid ""
 "Only logged in user have access.\n"
 "Please set login data in the host configuration under blue button."
@@ -3989,8 +3957,8 @@ msgid "Score at least: "
 msgstr "Βαθμολογία τουλάχιστον: "
 
 #: ../hosts/host123movieshd.py:128 ../hosts/host3player.py:61
-#: ../hosts/host3sktv.py:88 ../hosts/host9anime_blocked_.py:57
-#: ../hosts/hostakoam.py:125 ../hosts/hostaltadefinizione_blocked_.py:110
+#: ../hosts/host3sktv.py:88 ../hosts/host9anime.py:30 ../hosts/hostakoam.py:125
+#: ../hosts/hostaltadefinizione_blocked_.py:110
 #: ../hosts/hostaltadefinizione01.py:112 ../hosts/hostanimeodcinki.py:53
 #: ../hosts/hostappletrailers.py:52 ../hosts/hostardmediathek_blocked_.py:70
 #: ../hosts/hostartetv.py:173 ../hosts/hostbajeczkiorg.py:51
@@ -4156,7 +4124,7 @@ msgstr "Αναζήτηση για \"%s\", %s, %s %s"
 
 #: ../components/e2ivk.py:703 ../hosts/host123movieshd.py:129
 #: ../hosts/host3player.py:62 ../hosts/host3sktv.py:89
-#: ../hosts/host9anime_blocked_.py:58 ../hosts/hostakoam.py:126
+#: ../hosts/host9anime.py:31 ../hosts/hostakoam.py:126
 #: ../hosts/hostaltadefinizione_blocked_.py:111
 #: ../hosts/hostaltadefinizione01.py:113 ../hosts/hostanimeodcinki.py:54
 #: ../hosts/hostappletrailers.py:53 ../hosts/hostardmediathek_blocked_.py:71
@@ -4489,7 +4457,7 @@ msgstr "Επιλεγμένοι hosts"
 #: ../hosts/hostfilmezz.py:378 ../hosts/hostfreediscpl.py:113
 #: ../hosts/hostserienstreamto.py:525 ../hosts/hoststreamliveto.py:327
 #: ../hosts/hoststreamliveto.py:374 ../libs/recaptcha_v1.py:68
-#: ../libs/urlparser.py:4365
+#: ../libs/urlparser.py:4368
 msgid "Send"
 msgstr "Αποστολή"
 
@@ -4734,7 +4702,7 @@ msgstr "Ταξινομημένα κανάλια με τις περισσότερ
 msgid "Sorted most viewed channels now [live]"
 msgstr "Ταξινομημένα κανάλια με τις περισσότερες προβολές τώρα [ζωντανά]"
 
-#: ../libs/urlparser.py:5831
+#: ../libs/urlparser.py:5834
 #, python-format
 msgid "Source %s"
 msgstr "Πηγή %s"
@@ -5133,7 +5101,7 @@ msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB fl
 msgid "Title:"
 msgstr "Τίτλος:"
 
-#: ../libs/urlparser.py:2504
+#: ../libs/urlparser.py:2507
 msgid ""
 "To watch videos from http://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
@@ -5232,7 +5200,7 @@ msgstr "Οδηγοί"
 
 #: ../components/ihost.py:828 ../hosts/host123movieshd.py:411
 #: ../hosts/host3player.py:442 ../hosts/host3sktv.py:326
-#: ../hosts/host9anime_blocked_.py:623 ../hosts/hostakoam.py:481
+#: ../hosts/host9anime.py:150 ../hosts/hostakoam.py:481
 #: ../hosts/hostaltadefinizione_blocked_.py:426
 #: ../hosts/hostaltadefinizione01.py:390 ../hosts/hostanimeodcinki.py:416
 #: ../hosts/hostappletrailers.py:215 ../hosts/hostardmediathek_blocked_.py:510
@@ -5582,7 +5550,7 @@ msgstr "Πολιτική βίντεο για 4:3"
 msgid "Video with DRM protection."
 msgstr "Βίντεο με προστασία DRM."
 
-#: ../libs/urlparser.py:2860
+#: ../libs/urlparser.py:2863
 msgid ""
 "Videomega has blocked your IP for some time.\n"
 "Please retry this link after some time."
@@ -5712,7 +5680,7 @@ msgstr "Επανεξέταση εξετάσεων με κείμενο"
 msgid "Wrong Youtube Api Key length"
 msgstr "Λάθος μήκος Youtube Api Key"
 
-#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4384
+#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4387
 msgid "Wrong answer."
 msgstr "Λάθος απάντηση."
 
@@ -5960,7 +5928,7 @@ msgid "de"
 msgstr "de"
 
 #: ../components/iptvconfigmenu.py:162 ../components/iptvconfigmenu.py:230
-#: ../components/iptvsubsimpledownloader.py:294 ../libs/urlparser.py:7637
+#: ../components/iptvsubsimpledownloader.py:294 ../libs/urlparser.py:7640
 msgid "default"
 msgstr "προεπιλογή"
 

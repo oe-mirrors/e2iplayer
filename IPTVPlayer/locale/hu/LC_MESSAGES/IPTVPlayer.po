@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-29 10:14+0200\n"
+"POT-Creation-Date: 2025-06-29 20:45+0200\n"
 "PO-Revision-Date: 2025-06-29 17:27+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -78,27 +78,15 @@ msgstr ""
 "Ez a host nem szerves része az E2iPlayer bővítménynek.\n"
 "Az E2iPlayer csapata nem támogatja."
 
-#: ../components/iptvplayerwidget.py:460
+#: ../components/iptvplayerwidget.py:460 ../components/iptvsubdownloader.py:388
 msgid ""
 "\n"
 "You can also report problem here: \n"
-" https://github.com/oe-mirrors/e2iplayer/issues"
+"https://github.com/oe-mirrors/e2iplayer/issues"
 msgstr ""
 "\n"
 "A problémát itt is bejelentheted: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-
-#: ../components/iptvsubdownloader.py:388
-msgid ""
-"\n"
-"You can also report problem here: \n"
-"https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
-"or here: samsamsam@o2.pl"
-msgstr ""
-"\n"
-"A problémát itt is bejelentheted:\n"
-"https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
-"vagy itt: samsamsam@o2.pl"
 
 #: ../components/configbase.py:80 ../components/iptvdirbrowser.py:82
 #: ../components/iptvdirbrowser.py:327
@@ -250,12 +238,8 @@ msgstr "%s követő"
 
 #: ../subproviders/subprov_opensubtitlesorg2.py:73
 #, python-format
-msgid ""
-"%s has been protected with google recaptcha v2. You can try to use API "
-"version."
-msgstr ""
-"A(z) %s Google ReCAPTCHA v2-vel lett védve. Megpróbálhatja használni az API "
-"verziót."
+msgid "%s has been protected with google recaptcha v2. You can try to use API version."
+msgstr "A(z) %s Google ReCAPTCHA v2-vel lett védve. Megpróbálhatja használni az API verziót."
 
 #: ../hosts/hostdixmax.py:216
 #, python-format
@@ -306,12 +290,10 @@ msgstr "%s időtúllépés."
 #: ../components/ihost.py:705
 #, python-format
 msgid ""
-"%s uses \"geo-blocking\" measures to prevent you from accessing the services "
-"from abroad.\n"
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
-"A(z) %s \"geo-blokkoló\" intézkedéseket alkalmaz annak megakadályozására, "
-"hogy külföldi szolgáltatásokhoz férjen hozzá.\n"
+"A(z) %s \"geo-blokkoló\" intézkedéseket alkalmaz annak megakadályozására, hogy külföldi szolgáltatásokhoz férjen hozzá.\n"
 "Fogadó ország: %s, az Ön országa: %s"
 
 #: ../hosts/hosttwitchtv_blocked_.py:179 ../hosts/hosttwitchtv_blocked_.py:228
@@ -471,30 +453,18 @@ msgid "4:3 PanScan"
 msgstr "4:3 PanScan"
 
 #: ../Web/webParts.py:104
-msgid ""
-"<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> "
-"specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr ""
-"<font color=\"#FE642E\">NE FELEDJE:</font></b>E2iPlayer <b>CSAK</b> "
-"speciális webböngésző. <b>NEM</b> tartalmaz semmilyen anyagot!!!</font>"
+msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
+msgstr "<font color=\"#FE642E\">NE FELEDJE:</font></b>E2iPlayer <b>CSAK</b> speciális webböngésző. <b>NEM</b> tartalmaz semmilyen anyagot!!!</font>"
 
 #: ../hosts/hostbbcsport.py:514
-msgid ""
-"A TV License is required to watch BBC iPlayer streams, see the BBC website "
-"for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
-msgstr ""
-"A TV licenc szükséges nézni BBC iPlayer streamet, további információkért "
-"nézd a BBC honlapját: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgstr "A TV licenc szükséges nézni BBC iPlayer streamet, további információkért nézd a BBC honlapját: https://www.bbc.co.uk/iplayer/help/tvlicence"
 
 #: ../hosts/host3player.py:59 ../hosts/hostbbciplayer.py:60
 #: ../hosts/hostbbciplayer.py:196 ../hosts/hostgledalica.py:268
 #: ../hosts/hostserienstreamto.py:49
 msgid "A-Z"
 msgstr "A-Z"
-
-#: ../hosts/host9anime_blocked_.py:55
-msgid "A-Z List"
-msgstr "A-tól Z-ig lista"
 
 #: ../components/configextmovieplayer.py:278
 msgid "AAC downmix mode"
@@ -590,23 +560,23 @@ msgid "Airing"
 msgstr "Jelenleg műsoron"
 
 #: ../components/iptvplayerwidget.py:1139 ../hosts/host3player.py:172
-#: ../hosts/host9anime_blocked_.py:115 ../hosts/hostakoam.py:150
-#: ../hosts/hostanimeodcinki.py:95 ../hosts/hostbbciplayer.py:238
-#: ../hosts/hostcimaclubcom.py:185 ../hosts/hostdailymotion.py:106
-#: ../hosts/hostdancetrippin.py:249 ../hosts/hostegybest.py:114
-#: ../hosts/hostfightvideo.py:82 ../hosts/hostfilmeonlineto.py:146
-#: ../hosts/hostfilmezz.py:121 ../hosts/hosthdfull.py:144
-#: ../hosts/hosthdstreams_blocked_.py:137 ../hosts/hostkabarety.py:47
-#: ../hosts/hostkabarety.py:96 ../hosts/hostkinox.py:160
-#: ../hosts/hostkinox.py:296 ../hosts/hostmindigo.py:701
-#: ../hosts/hostmindigo.py:831 ../hosts/hostmindigo.py:843
-#: ../hosts/hostmrpiracy.py:169 ../hosts/hostorthobulletscom.py:79
-#: ../hosts/hostplayrtsiw.py:380 ../hosts/hostputlockertvto.py:186
-#: ../hosts/hostshahiidanimenet.py:94 ../hosts/hostshoutcast.py:73
-#: ../hosts/hostsolarmovie.py:164 ../hosts/hosttvplayercom.py:135
-#: ../hosts/hosttwitchtv_blocked_.py:112 ../hosts/hosttwitchtv_blocked_.py:114
-#: ../hosts/hostyifytv.py:77 ../libs/skylinewebcamscom.py:136
-#: ../subproviders/subprov_titlovicom.py:115 ../tools/iptvhostgroups.py:52
+#: ../hosts/hostakoam.py:150 ../hosts/hostanimeodcinki.py:95
+#: ../hosts/hostbbciplayer.py:238 ../hosts/hostcimaclubcom.py:185
+#: ../hosts/hostdailymotion.py:106 ../hosts/hostdancetrippin.py:249
+#: ../hosts/hostegybest.py:114 ../hosts/hostfightvideo.py:82
+#: ../hosts/hostfilmeonlineto.py:146 ../hosts/hostfilmezz.py:121
+#: ../hosts/hosthdfull.py:144 ../hosts/hosthdstreams_blocked_.py:137
+#: ../hosts/hostkabarety.py:47 ../hosts/hostkabarety.py:96
+#: ../hosts/hostkinox.py:160 ../hosts/hostkinox.py:296
+#: ../hosts/hostmindigo.py:701 ../hosts/hostmindigo.py:831
+#: ../hosts/hostmindigo.py:843 ../hosts/hostmrpiracy.py:169
+#: ../hosts/hostorthobulletscom.py:79 ../hosts/hostplayrtsiw.py:380
+#: ../hosts/hostputlockertvto.py:186 ../hosts/hostshahiidanimenet.py:94
+#: ../hosts/hostshoutcast.py:73 ../hosts/hostsolarmovie.py:164
+#: ../hosts/hosttvplayercom.py:135 ../hosts/hosttwitchtv_blocked_.py:112
+#: ../hosts/hosttwitchtv_blocked_.py:114 ../hosts/hostyifytv.py:77
+#: ../libs/skylinewebcamscom.py:136 ../subproviders/subprov_titlovicom.py:115
+#: ../tools/iptvhostgroups.py:52
 msgid "All"
 msgstr "Összes"
 
@@ -768,7 +738,7 @@ msgstr "Anime lista"
 
 #: ../hosts/hostfilmezz.py:387 ../hosts/hostfreediscpl.py:153
 #: ../hosts/hostserienstreamto.py:548 ../hosts/hoststreamliveto.py:328
-#: ../libs/urlparser.py:4366
+#: ../libs/urlparser.py:4369
 msgid "Answer"
 msgstr "Válasz"
 
@@ -963,8 +933,7 @@ msgid ""
 "Return code[%s].\n"
 "Return data[%s]."
 msgstr ""
-"Nem sikerült csatolási pontokat lekérdezni - a cmd parancs futtatásával "
-"történő csatolás sikertelen.\n"
+"Nem sikerült csatolási pontokat lekérdezni - a cmd parancs futtatásával történő csatolás sikertelen.\n"
 "Visszatérési kód: [%s].\n"
 "Visszatérési adat: [%s]."
 
@@ -1247,15 +1216,11 @@ msgstr "A hibakeresési opció le van tiltva - nincs mit megjeleníteni"
 
 #: ../Web/webParts.py:123
 msgid "Debug option set to console - nothing to display"
-msgstr ""
-"A hibakeresési lehetőség konzolra van beállítva - semmi sem jelenik meg"
+msgstr "A hibakeresési lehetőség konzolra van beállítva - semmi sem jelenik meg"
 
 #: ../Web/webParts.py:125
-msgid ""
-"Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr ""
-"A hibakeresési opció debugfile-re van állítva, de a fájl nem létezik - semmi "
-"sem jelenik meg"
+msgid "Debug option set to debugfile, but file does not exist - nothing to display"
+msgstr "A hibakeresési opció debugfile-re van állítva, de a fájl nem létezik - semmi sem jelenik meg"
 
 #: ../components/iptvpictureplayer.py:358
 #, python-format
@@ -1406,7 +1371,7 @@ msgstr "„%s” letöltése a következőre: „%s” sikertelen!"
 msgid "Download %s"
 msgstr "%s letöltése"
 
-#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:9333 ../Web/webParts.py:349
+#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:9336 ../Web/webParts.py:349
 #: ../Web/webParts.py:357 ../Web/webParts.py:364
 msgid "Download again"
 msgstr "Töltse le újra"
@@ -1816,7 +1781,7 @@ msgstr "INGYENES"
 #: ../hosts/hoststreamliveto.py:322 ../hosts/hoststreamliveto.py:352
 #: ../libs/hcaptcha.py:109 ../libs/recaptcha_v1.py:37
 #: ../libs/recaptcha_v1.py:64 ../libs/recaptcha_v2.py:39
-#: ../libs/recaptcha_v2.py:79 ../libs/urlparser.py:4360
+#: ../libs/recaptcha_v2.py:79 ../libs/urlparser.py:4363
 #, python-format
 msgid "Fail to get \"%s\"."
 msgstr "Nem sikerült lekérni a(z) „%s” fájlt."
@@ -1863,9 +1828,7 @@ msgstr "Nem sikerült gzip-elni."
 #: ../subproviders/subprov_opensubtitlesorg2.py:160
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
-msgstr ""
-"Nem sikerült bejelentkezni a(z) \"%s\" felhasználónak. Kérjük, ellenőrizze a "
-"bejelentkezési adatait és jelszavát."
+msgstr "Nem sikerült bejelentkezni a(z) \"%s\" felhasználónak. Kérjük, ellenőrizze a bejelentkezési adatait és jelszavát."
 
 #: ../components/isubprovider.py:632 ../subproviders/subprov_napisy24pl.py:393
 #: ../subproviders/subprov_popcornsubtitles.py:160
@@ -1927,7 +1890,7 @@ msgstr "A(z) \"%s\" fájl már létezik"
 msgid "File \"%s\" already exists!"
 msgstr "\"%s\" fájl már létezik!"
 
-#: ../libs/urlparser.py:2885
+#: ../libs/urlparser.py:2888
 msgid "File Not Found."
 msgstr "Lejátszási lista fájl nem található."
 
@@ -1990,8 +1953,7 @@ msgstr "Ideiglenes adatok mappája"
 #: ../components/iptvplayerwidget.py:1200
 #: ../components/iptvplayerwidget.py:1269
 msgid "Following host are broken or additional python modules are needed."
-msgstr ""
-"A következő hosztok hibásak, vagy további Python modulokra van szükség."
+msgstr "A következő hosztok hibásak, vagy további Python modulokra van szükség."
 
 #: ../hosts/hostorthobulletscom.py:116
 msgid "Foot & Ankle"
@@ -2202,9 +2164,8 @@ msgstr "Különösségek"
 msgid "History of searched phrases."
 msgstr "Keresési előzmények."
 
-#: ../hosts/host9anime_blocked_.py:51 ../hosts/hostfilmezz.py:69
-#: ../hosts/hostkissanimeto.py:62 ../hosts/hostkisscartoonme.py:48
-#: ../hosts/hostourmatchnet.py:42
+#: ../hosts/hostfilmezz.py:69 ../hosts/hostkissanimeto.py:62
+#: ../hosts/hostkisscartoonme.py:48 ../hosts/hostourmatchnet.py:42
 msgid "Home"
 msgstr "Főoldal"
 
@@ -2213,12 +2174,12 @@ msgstr "Főoldal"
 msgid "Home page"
 msgstr "Főoldal"
 
-#: ../libs/urlparser.py:1209
+#: ../libs/urlparser.py:1212
 #, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr "A(z) \"%s\" host nem támogatott."
 
-#: ../libs/urlparser.py:1211
+#: ../libs/urlparser.py:1214
 #, python-format
 msgid "Hosting \"%s\" unknown."
 msgstr "A(z) \"%s\" host nem ismert."
@@ -2326,7 +2287,7 @@ msgstr "Bevitel"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interaktív Tanulási Központ (ILC)"
 
-#: ../libs/urlparser.py:10720
+#: ../libs/urlparser.py:10723
 #, python-format
 msgid "Internal Server Error. Server response code: %s"
 msgstr "Belső szerverhiba. Szerver válaszkódja: %s"
@@ -2362,12 +2323,8 @@ msgstr "Úgy néz ki, mint valamilyen védelem. Próbáld újra később."
 
 #: ../libs/pCommon.py:390
 #, python-format
-msgid ""
-"It looks like your current configuration do not allow to connect to the "
-"https://%s/.\n"
-msgstr ""
-"Úgy tűnik, hogy a jelenlegi konfiguráció nem teszi lehetővé a https://%s/ "
-"csatlakozást.\n"
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "Úgy tűnik, hogy a jelenlegi konfiguráció nem teszi lehetővé a https://%s/ csatlakozást.\n"
 
 #: ../components/iptvplayerwidget.py:453
 #, python-format
@@ -2376,20 +2333,13 @@ msgstr "Úgy tűnik, a \"%s\" kiszolgáló összeomlott."
 
 #: ../components/iptvplayerwidget.py:457
 #, python-format
-msgid ""
-"It seems that the host \"%s\" has crashed. Do you want to report this "
-"problem?"
-msgstr ""
-"Úgy tűnik, a \"%s\" kiszolgáló összeomlott. Szeretnéd jelenteni a problémát?"
+msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
+msgstr "Úgy tűnik, a \"%s\" kiszolgáló összeomlott. Szeretnéd jelenteni a problémát?"
 
 #: ../components/iptvsubdownloader.py:385
 #, python-format
-msgid ""
-"It seems that the subtitle's provider \"%s\" has crashed. Do you want to "
-"report this problem?"
-msgstr ""
-"Úgy tűnik, hogy a felirat szolgáltatója (\"%s\") összeomlott. Szeretnéd "
-"jelenteni ezt a problémát?"
+msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
+msgstr "Úgy tűnik, hogy a felirat szolgáltatója (\"%s\") összeomlott. Szeretnéd jelenteni ezt a problémát?"
 
 #: ../components/iptvextmovieplayer.py:1593
 #, python-format
@@ -2597,10 +2547,6 @@ msgstr "Utolsó hiba: „%s”"
 msgid "Last month"
 msgstr "Múlt hónap"
 
-#: ../hosts/host9anime_blocked_.py:53
-msgid "Last update"
-msgstr "Utolsó frissítés"
-
 #: ../hosts/hosttwitchtv_blocked_.py:125
 msgid "Last week"
 msgstr "Előző hét"
@@ -2654,12 +2600,8 @@ msgid "Line Spacing"
 msgstr "Vonal távolság"
 
 #: ../components/iptvextmovieplayer.py:2052
-msgid ""
-"Link is not supported by the gstplayer. Please use the extelayer3 if "
-"available."
-msgstr ""
-"A gstplayer nem támogatja a linket. Kérjük, használd az extelayer3-at, ha "
-"elérhető."
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "A gstplayer nem támogatja a linket. Kérjük, használd az extelayer3-at, ha elérhető."
 
 #: ../hosts/hostekinotv.py:422 ../hosts/hostekinotv.py:433
 msgid "Link protected with CF Turnstile ."
@@ -2676,7 +2618,7 @@ msgstr "A linket a Google ReCaptcha v2 védi"
 #: ../hosts/hostekinotv.py:453 ../hosts/hostfilmezz.py:334
 #: ../hosts/hostfreediscpl.py:85 ../hosts/hosthdstreams_blocked_.py:428
 #: ../hosts/hosthdstreams_blocked_.py:445 ../hosts/hostserienstreamto.py:410
-#: ../hosts/hosttvpvod.py:230 ../libs/urlparser.py:9333
+#: ../hosts/hosttvpvod.py:230 ../libs/urlparser.py:9336
 msgid "Link protected with google recaptcha v2."
 msgstr "A linket google recaptcha v2 védi."
 
@@ -2741,12 +2683,8 @@ msgstr "Betöltés"
 
 #: ../components/e2ivk.py:634 ../components/e2ivk.py:637
 #, python-format
-msgid ""
-"Load of the Virtual Keyboard layout \"%s\" failed due to the following "
-"error: \"%s\""
-msgstr ""
-"A(z) „%s” virtuális billentyűzetkiosztás betöltése a következő hiba miatt "
-"sikertelen: „%s”"
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "A(z) „%s” virtuális billentyűzetkiosztás betöltése a következő hiba miatt sikertelen: „%s”"
 
 #: ../components/iptvplayerwidget.py:1797
 #: ../components/iptvsubdownloader.py:490
@@ -2813,12 +2751,12 @@ msgstr "Sikertelen bejelentkezés. Érvénytelen e-mail cím vagy jelszó."
 msgid "Login needed"
 msgstr "Bejelentkezés szükséges"
 
-#: ../libs/urlparser.py:5888
+#: ../libs/urlparser.py:5891
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Bejelentkezés a(z) {0} címen sikertelen."
 
-#: ../libs/urlparser.py:2508
+#: ../libs/urlparser.py:2511
 #, python-format
 msgid ""
 "Login user \"%s\" to http://vk.com/ failed!\n"
@@ -2969,10 +2907,6 @@ msgstr "Legfrissebb"
 msgid "Most viewed"
 msgstr "Legnézettebb"
 
-#: ../hosts/host9anime_blocked_.py:54
-msgid "Most watched"
-msgstr "Legnézettebb"
-
 #: ../hosts/hostlocalmedia.py:314
 #, python-format
 msgid ""
@@ -3040,12 +2974,8 @@ msgstr "Nem sikerült a fájlt \"%s\" fájlból \"%s\" -ra áttenni.\n"
 
 #: ../iptvdm/iptvbuffui.py:293
 #, python-format
-msgid ""
-"Moving playback buffer to the download manager failed with the following "
-"error \"%s\""
-msgstr ""
-"A lejátszási puffer letöltéskezelőbe való áthelyezése a következő hibával "
-"sikertelen volt: \"%s\""
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "A lejátszási puffer letöltéskezelőbe való áthelyezése a következő hibával sikertelen volt: \"%s\""
 
 #: ../hosts/hostfreediscpl.py:62 ../hosts/hostfreediscpl.py:539
 #: ../hosts/hostyoutube.py:179 ../tools/iptvhostgroups.py:34
@@ -3156,10 +3086,6 @@ msgstr "Új epizódok"
 msgid "New icons will not be available."
 msgstr "Új ikonok nem lesznek elérhetők."
 
-#: ../hosts/host9anime_blocked_.py:52
-msgid "Newest"
-msgstr "Legújabb"
-
 #: ../hosts/hostthewatchseriesto.py:51
 msgid "Newest Episodes"
 msgstr "Legújabb epizódok"
@@ -3184,7 +3110,7 @@ msgstr "Következő oldal"
 
 #: ../hosts/host123movieshd.py:217 ../hosts/host3player.py:198
 #: ../hosts/host3sktv.py:128 ../hosts/host3sktv.py:291
-#: ../hosts/host9anime_blocked_.py:208 ../hosts/hostakoam.py:194
+#: ../hosts/host9anime.py:56 ../hosts/hostakoam.py:194
 #: ../hosts/hostaltadefinizione_blocked_.py:154
 #: ../hosts/hostaltadefinizione01.py:169 ../hosts/hostaltadefinizione01.py:234
 #: ../hosts/hostanimeodcinki.py:237 ../hosts/hostardmediathek_blocked_.py:315
@@ -3379,14 +3305,13 @@ msgstr "Csak Svédországban kapható."
 msgid "Only available in Sweden.\n"
 msgstr "Csak Svédországban elérhető.\n"
 
-#: ../libs/urlparser.py:8132
+#: ../libs/urlparser.py:8135
 msgid ""
 "Only logged in user have access.\n"
 "Please set login data in the host configuration under blue button."
 msgstr ""
 "Csak a bejelentkezett felhasználó rendelkezik hozzáféréssel.\n"
-"Kérjük, állítsa be a bejelentkezési adatokat a host konfigurációjában a kék "
-"gomb használatával."
+"Kérjük, állítsa be a bejelentkezési adatokat a host konfigurációjában a kék gomb használatával."
 
 #: ../Web/webParts.py:522
 msgid "Only music"
@@ -3582,45 +3507,27 @@ msgstr ""
 
 #: ../tools/e2ijs.py:37
 #, python-format
-msgid ""
-"Please consider restart your Engima2 and agree to install the %s utlity when "
-"the %s will propose this."
-msgstr ""
-"Kérjük, fontolja meg az Engima2 újraindítását, és egyezzen bele a %s "
-"segédprogram telepítésébe, amikor a %s ezt fel fogja ajánlani."
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "Kérjük, fontolja meg az Engima2 újraindítását, és egyezzen bele a %s segédprogram telepítésébe, amikor a %s ezt fel fogja ajánlani."
 
 #: ../hosts/hostfilmezz.py:336 ../hosts/hostserienstreamto.py:412
-msgid ""
-"Please fill your login and password in the host configuration (available "
-"under blue button) and try again."
-msgstr ""
-"Kérjük, töltse ki a bejelentkezési adatait és jelszavát a host "
-"konfigurációjában (kék gomb alatt érhető el), majd próbálkozzon újra."
+msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
+msgstr "Kérjük, töltse ki a bejelentkezési adatait és jelszavát a host konfigurációjában (kék gomb alatt érhető el), majd próbálkozzon újra."
 
 #: ../components/iptvplayerwidget.py:316
-msgid ""
-"Please make sure that the folder for cache data (set in the configuration) "
-"is writable."
-msgstr ""
-"Ellenőrizze, hogy a gyorsítótár (cache) adatok mappája írható-e (beállítva a "
-"konfigurációban)."
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "Ellenőrizze, hogy a gyorsítótár (cache) adatok mappája írható-e (beállítva a konfigurációban)."
 
 #: ../hosts/hostfreediscpl.py:88
-msgid ""
-"Please register and set login and password in the host configuration, to "
-"solve this problems permanently."
-msgstr ""
-"Kérjük, regisztráljon, és állítsa be a bejelentkezési azonosítót és jelszót "
-"a host konfigurációban, hogy megoldja ezt a problémát véglegesen."
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "Kérjük, regisztráljon, és állítsa be a bejelentkezési azonosítót és jelszót a host konfigurációban, hogy megoldja ezt a problémát véglegesen."
 
 #: ../libs/sport365live.py:132
 msgid ""
-"Please remember to visit http://www.sport365.live/ and watch a few "
-"advertisements.\n"
+"Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
 msgstr ""
-"Kérjük, ne felejtsd el felkeresni a http://www.sport365.live/ oldalt, és "
-"megnézni néhány reklámot.\n"
+"Kérjük, ne felejtsd el felkeresni a http://www.sport365.live/ oldalt, és megnézni néhány reklámot.\n"
 "\n"
 "Ez megoldja a problémát, ha a lejátszás folyamatosan megszakad."
 
@@ -3636,16 +3543,12 @@ msgstr "Adjon meg érvényes %s-ot a(z) %s konfigurációban."
 #: ../hosts/hostfreediscpl.py:86
 #, python-format
 msgid "Please visit \"%s\" and confirm that you are human."
-msgstr ""
-"Kérjük, látogasson el a következőre: \"%s\", és erősítse meg, hogy nem robot."
+msgstr "Kérjük, látogasson el a következőre: \"%s\", és erősítse meg, hogy nem robot."
 
 #: ../components/captcha_helper.py:62
 #, python-format
-msgid ""
-"Please visit %s to learn how to redirect this task to the external device."
-msgstr ""
-"Kérjük, látogasson el a %s oldalra, ha meg szeretné tudni, hogyan "
-"irányíthatja át ezt a feladatot a külső eszközre."
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "Kérjük, látogasson el a %s oldalra, ha meg szeretné tudni, hogyan irányíthatja át ezt a feladatot a külső eszközre."
 
 #: ../iptvdm/iptvbuffui.py:527
 msgid "Please wait - downloading initialization data."
@@ -4050,8 +3953,8 @@ msgid "Score at least: "
 msgstr "Minimális pontszám: "
 
 #: ../hosts/host123movieshd.py:128 ../hosts/host3player.py:61
-#: ../hosts/host3sktv.py:88 ../hosts/host9anime_blocked_.py:57
-#: ../hosts/hostakoam.py:125 ../hosts/hostaltadefinizione_blocked_.py:110
+#: ../hosts/host3sktv.py:88 ../hosts/host9anime.py:30 ../hosts/hostakoam.py:125
+#: ../hosts/hostaltadefinizione_blocked_.py:110
 #: ../hosts/hostaltadefinizione01.py:112 ../hosts/hostanimeodcinki.py:53
 #: ../hosts/hostappletrailers.py:52 ../hosts/hostardmediathek_blocked_.py:70
 #: ../hosts/hostartetv.py:173 ../hosts/hostbajeczkiorg.py:51
@@ -4217,7 +4120,7 @@ msgstr "Keresés: „%s”, %s, %s %s"
 
 #: ../components/e2ivk.py:703 ../hosts/host123movieshd.py:129
 #: ../hosts/host3player.py:62 ../hosts/host3sktv.py:89
-#: ../hosts/host9anime_blocked_.py:58 ../hosts/hostakoam.py:126
+#: ../hosts/host9anime.py:31 ../hosts/hostakoam.py:126
 #: ../hosts/hostaltadefinizione_blocked_.py:111
 #: ../hosts/hostaltadefinizione01.py:113 ../hosts/hostanimeodcinki.py:54
 #: ../hosts/hostappletrailers.py:53 ../hosts/hostardmediathek_blocked_.py:71
@@ -4550,7 +4453,7 @@ msgstr "Kijelölt hostok"
 #: ../hosts/hostfilmezz.py:378 ../hosts/hostfreediscpl.py:113
 #: ../hosts/hostserienstreamto.py:525 ../hosts/hoststreamliveto.py:327
 #: ../hosts/hoststreamliveto.py:374 ../libs/recaptcha_v1.py:68
-#: ../libs/urlparser.py:4365
+#: ../libs/urlparser.py:4368
 msgid "Send"
 msgstr "Küldés"
 
@@ -4736,9 +4639,7 @@ msgstr "Néhány módosítás csak a filmlejátszó újraindítása után lép �
 
 #: ../components/iptvconfigmenu.py:443
 msgid "Some settings will be applied only after GUI restart."
-msgstr ""
-"Néhány beállítás csak a grafikus felhasználói felület újraindítása után lép "
-"életbe."
+msgstr "Néhány beállítás csak a grafikus felhasználói felület újraindítása után lép életbe."
 
 #: ../hosts/hostfilmtar.py:85
 msgid "Sorozat Kategóriák"
@@ -4797,7 +4698,7 @@ msgstr "Legnézettebb csatornák rendezve általános [élő]"
 msgid "Sorted most viewed channels now [live]"
 msgstr "A legnézettebb csatornák rendezése most [élő]"
 
-#: ../libs/urlparser.py:5831
+#: ../libs/urlparser.py:5834
 #, python-format
 msgid "Source %s"
 msgstr "Forrás %s"
@@ -5099,23 +5000,19 @@ msgstr "A külső lejátszó alapértelmezett képaránya"
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
-"Please fill your login and password in the host configuration. Available "
-"under blue button."
+"Please fill your login and password in the host configuration. Available under blue button."
 msgstr ""
 "A(z) %s host regisztrációt igényel. \n"
-"A kék gomb, majd az Oldal beállításai segítségével megadhatod a belépési "
-"adatokat."
+"A kék gomb, majd az Oldal beállításai segítségével megadhatod a belépési adatokat."
 
 #: ../hosts/hostekstraklasatv.py:100 ../hosts/hosteurosportplayer.py:524
 #, python-format
 msgid ""
 "The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available "
-"under blue button."
+"Please fill your login and password in the host configuration - available under blue button."
 msgstr ""
 "A(z) %s host előfizetést igényel.\n"
-"Kérjük, töltse ki a bejelentkezési adatait és jelszavát a host "
-"konfigurációjában - kék gomb alatt."
+"Kérjük, töltse ki a bejelentkezési adatait és jelszavát a host konfigurációjában - kék gomb alatt."
 
 #: ../components/iptvconfigmenu.py:400
 msgid "The number of items in the search history"
@@ -5196,7 +5093,7 @@ msgstr "Tipp! A probléma megoldásához csatlakoztathat USB flash meghajtót."
 msgid "Title:"
 msgstr "Cím:"
 
-#: ../libs/urlparser.py:2504
+#: ../libs/urlparser.py:2507
 msgid ""
 "To watch videos from http://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
@@ -5283,9 +5180,7 @@ msgstr "Próbáld meg megkerülni a DRM-et (lehet, hogy illegális)"
 
 #: ../components/iptvextmovieplayer.py:1779
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
-msgstr ""
-"Próbáld meg módosítani az extplayert, vagy letiltani az IFD-t a GSTplayer "
-"konfigurációjában"
+msgstr "Próbáld meg módosítani az extplayert, vagy letiltani az IFD-t a GSTplayer konfigurációjában"
 
 #: ../hosts/hostwebstream.py:98
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
@@ -5297,7 +5192,7 @@ msgstr "Oktatóanyagok"
 
 #: ../components/ihost.py:828 ../hosts/host123movieshd.py:411
 #: ../hosts/host3player.py:442 ../hosts/host3sktv.py:326
-#: ../hosts/host9anime_blocked_.py:623 ../hosts/hostakoam.py:481
+#: ../hosts/host9anime.py:150 ../hosts/hostakoam.py:481
 #: ../hosts/hostaltadefinizione_blocked_.py:426
 #: ../hosts/hostaltadefinizione01.py:390 ../hosts/hostanimeodcinki.py:416
 #: ../hosts/hostappletrailers.py:215 ../hosts/hostardmediathek_blocked_.py:510
@@ -5587,8 +5482,7 @@ msgid ""
 "Using this host in your country can be illegal.\n"
 "Do you want to continue at your own risk?"
 msgstr ""
-"Ennek a tárhelyszolgáltatónak a használata az Ön országában illegális "
-"lehet.\n"
+"Ennek a tárhelyszolgáltatónak a használata az Ön országában illegális lehet.\n"
 "Saját felelősségére szeretné folytatni?"
 
 #: ../iptvdm/ffmpegdownloader.py:75
@@ -5648,7 +5542,7 @@ msgstr "Videószabályzat 4:3 képarányra vonatkozóan"
 msgid "Video with DRM protection."
 msgstr "Másolásvédett videók."
 
-#: ../libs/urlparser.py:2860
+#: ../libs/urlparser.py:2863
 msgid ""
 "Videomega has blocked your IP for some time.\n"
 "Please retry this link after some time."
@@ -5736,9 +5630,7 @@ msgstr "A webkomponens visszaállt és az összes szál leállt. :)"
 
 #: ../Web/webSite.py:115
 msgid "Web component has been reset, the following threads are still working:"
-msgstr ""
-"A webkomponens visszaállításra került, a következő szálak továbbra is "
-"működnek:"
+msgstr "A webkomponens visszaállításra került, a következő szálak továbbra is működnek:"
 
 #: ../Web/webParts.py:68 ../Web/webParts.py:85
 msgid "Web interface version"
@@ -5780,7 +5672,7 @@ msgstr "Írásbeli testületek áttekintése"
 msgid "Wrong Youtube Api Key length"
 msgstr "Hibás Youtube API kulcshossz"
 
-#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4384
+#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4387
 msgid "Wrong answer."
 msgstr "Rossz válasz."
 
@@ -5851,49 +5743,29 @@ msgid "You are not allowed to play this video"
 msgstr "Nem játszhatod le ezt a videót"
 
 #: ../Web/webSite.py:73
-msgid ""
-"You are using old version of OpenWebif.<br> To go to E2iPlayer web Select "
-"the following link<br>"
-msgstr ""
-"Az OpenWebif régi verzióját használja.<br>Ugrás az E2iPlayer webre. Válassza "
-"ki a következő linket<br>"
+msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
+msgstr "Az OpenWebif régi verzióját használja.<br>Ugrás az E2iPlayer webre. Válassza ki a következő linket<br>"
 
 #: ../libs/pCommon.py:393
-msgid ""
-"You can disable HTTPS certificates validation in the E2iPlayer configuration "
-"to suppress this problem."
-msgstr ""
-"A HTTPS tanúsítványok érvényesítését az E2iPlayer konfigurációban "
-"letilthatja a probléma letiltásához."
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "A HTTPS tanúsítványok érvényesítését az E2iPlayer konfigurációban letilthatja a probléma letiltásához."
 
 #: ../libs/pCommon.py:404
-msgid ""
-"You can enable PyCurl in the E2iPlayer configuration to fix this problem."
-msgstr ""
-"A probléma megoldásához engedélyezheti a PyCurl-t az E2iPlayer "
-"konfigurációjában."
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "A probléma megoldásához engedélyezheti a PyCurl-t az E2iPlayer konfigurációjában."
 
 #: ../libs/pCommon.py:406
-msgid ""
-"You can install PyCurl package with TLS 1.3 support from the feed to fix "
-"this problem."
-msgstr ""
-"A probléma megoldásához telepítheti a TLS 1.3 támogatású PyCurl csomagot a "
-"hírcsatornából."
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "A probléma megoldásához telepítheti a TLS 1.3 támogatású PyCurl csomagot a hírcsatornából."
 
 #: ../hosts/hosthdsto.py:70
-msgid ""
-"You can try to use proxy as workaround, check options under blue button."
-msgstr ""
-"Megpróbálhatja használni a proxy-t, ellenőrizze a beállításokat a kék gombot "
-"használatával."
+msgid "You can try to use proxy as workaround, check options under blue button."
+msgstr "Megpróbálhatja használni a proxy-t, ellenőrizze a beállításokat a kék gombot használatával."
 
 #: ../components/captcha_helper.py:67
 #, python-format
 msgid "You can use \"%s\" or \"%s\" services for automatic solution."
-msgstr ""
-"Az automatikus megoldáshoz használhatja a(z) \"%s\" vagy a(z) \"%s\" "
-"szolgáltatásokat."
+msgstr "Az automatikus megoldáshoz használhatja a(z) \"%s\" vagy a(z) \"%s\" szolgáltatásokat."
 
 #: ../iptvdm/iptvbuffui.py:550
 msgid "You can use external eplayer to start playback faster."
@@ -5926,9 +5798,7 @@ msgstr "Youtube-javaslatok"
 
 #: ../hosts/hostmusicbox.py:102
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr ""
-"A YouTube-keresések gyorsabbak, ha kitöltöd az API-kulcsot a beállítások "
-"menüben"
+msgstr "A YouTube-keresések gyorsabbak, ha kitöltöd az API-kulcsot a beállítások menüben"
 
 #: ../hosts/hostmindigo.py:809
 msgid "Zene"
@@ -6050,7 +5920,7 @@ msgid "de"
 msgstr "deutsch"
 
 #: ../components/iptvconfigmenu.py:162 ../components/iptvconfigmenu.py:230
-#: ../components/iptvsubsimpledownloader.py:294 ../libs/urlparser.py:7637
+#: ../components/iptvsubsimpledownloader.py:294 ../libs/urlparser.py:7640
 msgid "default"
 msgstr "alapértelmezett"
 
@@ -6083,12 +5953,8 @@ msgid "external gstplayer"
 msgstr "külső gstlejátszó"
 
 #: ../Web/webParts.py:389
-msgid ""
-"first check if host works properly in GUI and web <b>BEFORE</b> reporting "
-"error in it !!!"
-msgstr ""
-"először ellenőrizze, hogy a host megfelelően működik-e a GUI-ban és a web-en "
-"<b>MIELŐTT</b> jelenti a hibát!!!"
+msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
+msgstr "először ellenőrizze, hogy a host megfelelően működik-e a GUI-ban és a web-en <b>MIELŐTT</b> jelenti a hibát!!!"
 
 #: ../hosts/hostardmediathek_blocked_.py:33 ../hosts/hostzdfmediathek.py:35
 msgid "format"

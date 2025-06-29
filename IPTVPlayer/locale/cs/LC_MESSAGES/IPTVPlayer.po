@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-29 10:14+0200\n"
+"POT-Creation-Date: 2025-06-29 20:45+0200\n"
 "PO-Revision-Date: 2025-06-29 16:25+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -78,27 +78,15 @@ msgstr ""
 "Tento hostitel není nedílnou součástí pluginu E2iPlayer.\n"
 "Není podporován týmem E2iPlayer."
 
-#: ../components/iptvplayerwidget.py:460
+#: ../components/iptvplayerwidget.py:460 ../components/iptvsubdownloader.py:388
 msgid ""
 "\n"
 "You can also report problem here: \n"
-" https://github.com/oe-mirrors/e2iplayer/issues"
+"https://github.com/oe-mirrors/e2iplayer/issues"
 msgstr ""
 "\n"
 "Problém můžete nahlásit také zde: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-
-#: ../components/iptvsubdownloader.py:388
-msgid ""
-"\n"
-"You can also report problem here: \n"
-"https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
-"or here: samsamsam@o2.pl"
-msgstr ""
-"\n"
-"Problém můžete také nahlásit zde: \n"
-"https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
-"nebo zde: samsamsam@o2.pl"
 
 #: ../components/configbase.py:80 ../components/iptvdirbrowser.py:82
 #: ../components/iptvdirbrowser.py:327
@@ -250,12 +238,8 @@ msgstr "%s sledujících"
 
 #: ../subproviders/subprov_opensubtitlesorg2.py:73
 #, python-format
-msgid ""
-"%s has been protected with google recaptcha v2. You can try to use API "
-"version."
-msgstr ""
-"%s byl chráněn pomocí Google Recaptcha v2. Můžete zkusit použít verzi "
-"rozhraní API."
+msgid "%s has been protected with google recaptcha v2. You can try to use API version."
+msgstr "%s byl chráněn pomocí Google Recaptcha v2. Můžete zkusit použít verzi rozhraní API."
 
 #: ../hosts/hostdixmax.py:216
 #, python-format
@@ -306,12 +290,10 @@ msgstr "%s časový limit."
 #: ../components/ihost.py:705
 #, python-format
 msgid ""
-"%s uses \"geo-blocking\" measures to prevent you from accessing the services "
-"from abroad.\n"
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
-"%s používá opatření \"zeměpisného blokování\", aby vám zabránila v přístupu "
-"ke službám ze zahraničí.\n"
+"%s používá opatření \"zeměpisného blokování\", aby vám zabránila v přístupu ke službám ze zahraničí.\n"
 " Hostitelská země: %s, vaše země: %s"
 
 #: ../hosts/hosttwitchtv_blocked_.py:179 ../hosts/hosttwitchtv_blocked_.py:228
@@ -471,31 +453,18 @@ msgid "4:3 PanScan"
 msgstr "4:3 PanScan"
 
 #: ../Web/webParts.py:104
-msgid ""
-"<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> "
-"specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr ""
-"<font color=\"#FE642E\">PAMATOVAT:</font> E2iPlayer <b>je pouze</b> "
-"specializovaný webový prohlížeč. <b>NEHOSTÍ</b> žádné materiály!!!</font>"
+msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
+msgstr "<font color=\"#FE642E\">PAMATOVAT:</font> E2iPlayer <b>je pouze</b> specializovaný webový prohlížeč. <b>NEHOSTÍ</b> žádné materiály!!!</font>"
 
 #: ../hosts/hostbbcsport.py:514
-msgid ""
-"A TV License is required to watch BBC iPlayer streams, see the BBC website "
-"for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
-msgstr ""
-"Ke sledování streamů BBC iPlayer je vyžadována televizní licence, další "
-"informace naleznete na webových stránkách BBC: https://www.bbc.co.uk/iplayer/"
-"help/tvlicence"
+msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgstr "Ke sledování streamů BBC iPlayer je vyžadována televizní licence, další informace naleznete na webových stránkách BBC: https://www.bbc.co.uk/iplayer/help/tvlicence"
 
 #: ../hosts/host3player.py:59 ../hosts/hostbbciplayer.py:60
 #: ../hosts/hostbbciplayer.py:196 ../hosts/hostgledalica.py:268
 #: ../hosts/hostserienstreamto.py:49
 msgid "A-Z"
 msgstr "A-Z"
-
-#: ../hosts/host9anime_blocked_.py:55
-msgid "A-Z List"
-msgstr "Seznam od A do Z"
 
 #: ../components/configextmovieplayer.py:278
 msgid "AAC downmix mode"
@@ -591,23 +560,23 @@ msgid "Airing"
 msgstr "Větrání"
 
 #: ../components/iptvplayerwidget.py:1139 ../hosts/host3player.py:172
-#: ../hosts/host9anime_blocked_.py:115 ../hosts/hostakoam.py:150
-#: ../hosts/hostanimeodcinki.py:95 ../hosts/hostbbciplayer.py:238
-#: ../hosts/hostcimaclubcom.py:185 ../hosts/hostdailymotion.py:106
-#: ../hosts/hostdancetrippin.py:249 ../hosts/hostegybest.py:114
-#: ../hosts/hostfightvideo.py:82 ../hosts/hostfilmeonlineto.py:146
-#: ../hosts/hostfilmezz.py:121 ../hosts/hosthdfull.py:144
-#: ../hosts/hosthdstreams_blocked_.py:137 ../hosts/hostkabarety.py:47
-#: ../hosts/hostkabarety.py:96 ../hosts/hostkinox.py:160
-#: ../hosts/hostkinox.py:296 ../hosts/hostmindigo.py:701
-#: ../hosts/hostmindigo.py:831 ../hosts/hostmindigo.py:843
-#: ../hosts/hostmrpiracy.py:169 ../hosts/hostorthobulletscom.py:79
-#: ../hosts/hostplayrtsiw.py:380 ../hosts/hostputlockertvto.py:186
-#: ../hosts/hostshahiidanimenet.py:94 ../hosts/hostshoutcast.py:73
-#: ../hosts/hostsolarmovie.py:164 ../hosts/hosttvplayercom.py:135
-#: ../hosts/hosttwitchtv_blocked_.py:112 ../hosts/hosttwitchtv_blocked_.py:114
-#: ../hosts/hostyifytv.py:77 ../libs/skylinewebcamscom.py:136
-#: ../subproviders/subprov_titlovicom.py:115 ../tools/iptvhostgroups.py:52
+#: ../hosts/hostakoam.py:150 ../hosts/hostanimeodcinki.py:95
+#: ../hosts/hostbbciplayer.py:238 ../hosts/hostcimaclubcom.py:185
+#: ../hosts/hostdailymotion.py:106 ../hosts/hostdancetrippin.py:249
+#: ../hosts/hostegybest.py:114 ../hosts/hostfightvideo.py:82
+#: ../hosts/hostfilmeonlineto.py:146 ../hosts/hostfilmezz.py:121
+#: ../hosts/hosthdfull.py:144 ../hosts/hosthdstreams_blocked_.py:137
+#: ../hosts/hostkabarety.py:47 ../hosts/hostkabarety.py:96
+#: ../hosts/hostkinox.py:160 ../hosts/hostkinox.py:296
+#: ../hosts/hostmindigo.py:701 ../hosts/hostmindigo.py:831
+#: ../hosts/hostmindigo.py:843 ../hosts/hostmrpiracy.py:169
+#: ../hosts/hostorthobulletscom.py:79 ../hosts/hostplayrtsiw.py:380
+#: ../hosts/hostputlockertvto.py:186 ../hosts/hostshahiidanimenet.py:94
+#: ../hosts/hostshoutcast.py:73 ../hosts/hostsolarmovie.py:164
+#: ../hosts/hosttvplayercom.py:135 ../hosts/hosttwitchtv_blocked_.py:112
+#: ../hosts/hosttwitchtv_blocked_.py:114 ../hosts/hostyifytv.py:77
+#: ../libs/skylinewebcamscom.py:136 ../subproviders/subprov_titlovicom.py:115
+#: ../tools/iptvhostgroups.py:52
 msgid "All"
 msgstr "Vše"
 
@@ -769,7 +738,7 @@ msgstr "Seznam anime"
 
 #: ../hosts/hostfilmezz.py:387 ../hosts/hostfreediscpl.py:153
 #: ../hosts/hostserienstreamto.py:548 ../hosts/hoststreamliveto.py:328
-#: ../libs/urlparser.py:4366
+#: ../libs/urlparser.py:4369
 msgid "Answer"
 msgstr "Odpověď"
 
@@ -1250,11 +1219,8 @@ msgid "Debug option set to console - nothing to display"
 msgstr "Možnost ladění nastavena na konzoli - nic k zobrazení"
 
 #: ../Web/webParts.py:125
-msgid ""
-"Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr ""
-"Možnost ladění nastavena na debugfile, ale soubor neexistuje - nic k "
-"zobrazení"
+msgid "Debug option set to debugfile, but file does not exist - nothing to display"
+msgstr "Možnost ladění nastavena na debugfile, ale soubor neexistuje - nic k zobrazení"
 
 #: ../components/iptvpictureplayer.py:358
 #, python-format
@@ -1405,7 +1371,7 @@ msgstr "Stažení souboru „%s“ do „%s“ se nezdařilo!"
 msgid "Download %s"
 msgstr "Stáhnout %s"
 
-#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:9333 ../Web/webParts.py:349
+#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:9336 ../Web/webParts.py:349
 #: ../Web/webParts.py:357 ../Web/webParts.py:364
 msgid "Download again"
 msgstr "Stáhnout znovu"
@@ -1821,7 +1787,7 @@ msgstr "ZDARMA"
 #: ../hosts/hoststreamliveto.py:322 ../hosts/hoststreamliveto.py:352
 #: ../libs/hcaptcha.py:109 ../libs/recaptcha_v1.py:37
 #: ../libs/recaptcha_v1.py:64 ../libs/recaptcha_v2.py:39
-#: ../libs/recaptcha_v2.py:79 ../libs/urlparser.py:4360
+#: ../libs/recaptcha_v2.py:79 ../libs/urlparser.py:4363
 #, python-format
 msgid "Fail to get \"%s\"."
 msgstr "Nepodařilo se získat „%s“."
@@ -1868,9 +1834,7 @@ msgstr "Nepodařilo se gzipovat."
 #: ../subproviders/subprov_opensubtitlesorg2.py:160
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
-msgstr ""
-"Přihlášení uživatele „%s“ se nezdařilo. Zkontrolujte prosím své přihlašovací "
-"jméno a heslo."
+msgstr "Přihlášení uživatele „%s“ se nezdařilo. Zkontrolujte prosím své přihlašovací jméno a heslo."
 
 #: ../components/isubprovider.py:632 ../subproviders/subprov_napisy24pl.py:393
 #: ../subproviders/subprov_popcornsubtitles.py:160
@@ -1932,7 +1896,7 @@ msgstr "Soubor „%s“ již existuje"
 msgid "File \"%s\" already exists!"
 msgstr "Soubor „%s“ již existuje!"
 
-#: ../libs/urlparser.py:2885
+#: ../libs/urlparser.py:2888
 msgid "File Not Found."
 msgstr "Soubor playlistu nebyl nalezen."
 
@@ -1995,9 +1959,7 @@ msgstr "Složka pro dočasná data"
 #: ../components/iptvplayerwidget.py:1200
 #: ../components/iptvplayerwidget.py:1269
 msgid "Following host are broken or additional python modules are needed."
-msgstr ""
-"Následující hostitelské systémy jsou nefunkční nebo jsou potřeba další "
-"moduly Pythonu."
+msgstr "Následující hostitelské systémy jsou nefunkční nebo jsou potřeba další moduly Pythonu."
 
 #: ../hosts/hostorthobulletscom.py:116
 msgid "Foot & Ankle"
@@ -2208,9 +2170,8 @@ msgstr "Hlavní body"
 msgid "History of searched phrases."
 msgstr "Historie vyhledávaných frází."
 
-#: ../hosts/host9anime_blocked_.py:51 ../hosts/hostfilmezz.py:69
-#: ../hosts/hostkissanimeto.py:62 ../hosts/hostkisscartoonme.py:48
-#: ../hosts/hostourmatchnet.py:42
+#: ../hosts/hostfilmezz.py:69 ../hosts/hostkissanimeto.py:62
+#: ../hosts/hostkisscartoonme.py:48 ../hosts/hostourmatchnet.py:42
 msgid "Home"
 msgstr "Domů"
 
@@ -2219,12 +2180,12 @@ msgstr "Domů"
 msgid "Home page"
 msgstr "Domácí stránka"
 
-#: ../libs/urlparser.py:1209
+#: ../libs/urlparser.py:1212
 #, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr "Hosting „%s“ není podporován."
 
-#: ../libs/urlparser.py:1211
+#: ../libs/urlparser.py:1214
 #, python-format
 msgid "Hosting \"%s\" unknown."
 msgstr "Hosting „%s“ je neznámý."
@@ -2332,7 +2293,7 @@ msgstr "Vstup"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interaktivní vzdělávací centrum (ILC)"
 
-#: ../libs/urlparser.py:10720
+#: ../libs/urlparser.py:10723
 #, python-format
 msgid "Internal Server Error. Server response code: %s"
 msgstr "Interní chyba serveru. Kód odpovědi serveru: %s"
@@ -2368,11 +2329,8 @@ msgstr "Vypadá to jako nějaká ochrana. Zkuste to znovu později."
 
 #: ../libs/pCommon.py:390
 #, python-format
-msgid ""
-"It looks like your current configuration do not allow to connect to the "
-"https://%s/.\n"
-msgstr ""
-"Zdá se, že vaše aktuální konfigurace neumožňuje připojení k https://%s/.\n"
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "Zdá se, že vaše aktuální konfigurace neumožňuje připojení k https://%s/.\n"
 
 #: ../components/iptvplayerwidget.py:453
 #, python-format
@@ -2381,18 +2339,13 @@ msgstr "Zdá se, že hostitel „%s“ selhal."
 
 #: ../components/iptvplayerwidget.py:457
 #, python-format
-msgid ""
-"It seems that the host \"%s\" has crashed. Do you want to report this "
-"problem?"
+msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
 msgstr "Zdá se, že hostitel „%s“ selhal. Chcete tento problém nahlásit?"
 
 #: ../components/iptvsubdownloader.py:385
 #, python-format
-msgid ""
-"It seems that the subtitle's provider \"%s\" has crashed. Do you want to "
-"report this problem?"
-msgstr ""
-"Zdá se, že poskytovatel titulků „%s“ selhal. Chcete tento problém nahlásit?"
+msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
+msgstr "Zdá se, že poskytovatel titulků „%s“ selhal. Chcete tento problém nahlásit?"
 
 #: ../components/iptvextmovieplayer.py:1593
 #, python-format
@@ -2600,10 +2553,6 @@ msgstr "Poslední chyba: „%s“"
 msgid "Last month"
 msgstr "Minulý měsíc"
 
-#: ../hosts/host9anime_blocked_.py:53
-msgid "Last update"
-msgstr "Poslední aktualizace"
-
 #: ../hosts/hosttwitchtv_blocked_.py:125
 msgid "Last week"
 msgstr "Minulý týden"
@@ -2657,12 +2606,8 @@ msgid "Line Spacing"
 msgstr "Řádkování"
 
 #: ../components/iptvextmovieplayer.py:2052
-msgid ""
-"Link is not supported by the gstplayer. Please use the extelayer3 if "
-"available."
-msgstr ""
-"Odkaz není gstplayerem podporován. Pokud je k dispozici, použijte prosím "
-"extelayer3."
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "Odkaz není gstplayerem podporován. Pokud je k dispozici, použijte prosím extelayer3."
 
 #: ../hosts/hostekinotv.py:422 ../hosts/hostekinotv.py:433
 msgid "Link protected with CF Turnstile ."
@@ -2679,7 +2624,7 @@ msgstr "Odkaz chráněný pomocí Google ReCaptcha v2"
 #: ../hosts/hostekinotv.py:453 ../hosts/hostfilmezz.py:334
 #: ../hosts/hostfreediscpl.py:85 ../hosts/hosthdstreams_blocked_.py:428
 #: ../hosts/hosthdstreams_blocked_.py:445 ../hosts/hostserienstreamto.py:410
-#: ../hosts/hosttvpvod.py:230 ../libs/urlparser.py:9333
+#: ../hosts/hosttvpvod.py:230 ../libs/urlparser.py:9336
 msgid "Link protected with google recaptcha v2."
 msgstr "Odkaz chráněný pomocí Google ReCAPTCHA v2."
 
@@ -2744,12 +2689,8 @@ msgstr "Načíst"
 
 #: ../components/e2ivk.py:634 ../components/e2ivk.py:637
 #, python-format
-msgid ""
-"Load of the Virtual Keyboard layout \"%s\" failed due to the following "
-"error: \"%s\""
-msgstr ""
-"Načtení rozložení virtuální klávesnice „%s“ se nezdařilo kvůli následující "
-"chybě: „%s“"
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "Načtení rozložení virtuální klávesnice „%s“ se nezdařilo kvůli následující chybě: „%s“"
 
 #: ../components/iptvplayerwidget.py:1797
 #: ../components/iptvsubdownloader.py:490
@@ -2816,12 +2757,12 @@ msgstr "Přihlášení se nezdařilo. Neplatný e-mail nebo heslo."
 msgid "Login needed"
 msgstr "Nutné přihlášení"
 
-#: ../libs/urlparser.py:5888
+#: ../libs/urlparser.py:5891
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Přihlášení na {0} se nezdařilo."
 
-#: ../libs/urlparser.py:2508
+#: ../libs/urlparser.py:2511
 #, python-format
 msgid ""
 "Login user \"%s\" to http://vk.com/ failed!\n"
@@ -2972,10 +2913,6 @@ msgstr "Nejnovější"
 msgid "Most viewed"
 msgstr "Nejvíce zobrazované"
 
-#: ../hosts/host9anime_blocked_.py:54
-msgid "Most watched"
-msgstr "Nejsledovanější"
-
 #: ../hosts/hostlocalmedia.py:314
 #, python-format
 msgid ""
@@ -3043,12 +2980,8 @@ msgstr "Přesun souboru z „%s“ do „%s“ selhal.\n"
 
 #: ../iptvdm/iptvbuffui.py:293
 #, python-format
-msgid ""
-"Moving playback buffer to the download manager failed with the following "
-"error \"%s\""
-msgstr ""
-"Přesun vyrovnávací paměti přehrávání do správce stahování selhal s "
-"následující chybou „%s“."
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "Přesun vyrovnávací paměti přehrávání do správce stahování selhal s následující chybou „%s“."
 
 #: ../hosts/hostfreediscpl.py:62 ../hosts/hostfreediscpl.py:539
 #: ../hosts/hostyoutube.py:179 ../tools/iptvhostgroups.py:34
@@ -3159,10 +3092,6 @@ msgstr "Nové epizody"
 msgid "New icons will not be available."
 msgstr "Nové ikony nebudou k dispozici."
 
-#: ../hosts/host9anime_blocked_.py:52
-msgid "Newest"
-msgstr "Nejnovější"
-
 #: ../hosts/hostthewatchseriesto.py:51
 msgid "Newest Episodes"
 msgstr "Nejnovější epizody"
@@ -3187,7 +3116,7 @@ msgstr "Další stránka"
 
 #: ../hosts/host123movieshd.py:217 ../hosts/host3player.py:198
 #: ../hosts/host3sktv.py:128 ../hosts/host3sktv.py:291
-#: ../hosts/host9anime_blocked_.py:208 ../hosts/hostakoam.py:194
+#: ../hosts/host9anime.py:56 ../hosts/hostakoam.py:194
 #: ../hosts/hostaltadefinizione_blocked_.py:154
 #: ../hosts/hostaltadefinizione01.py:169 ../hosts/hostaltadefinizione01.py:234
 #: ../hosts/hostanimeodcinki.py:237 ../hosts/hostardmediathek_blocked_.py:315
@@ -3380,14 +3309,13 @@ msgstr "K dispozici pouze ve Švédsku."
 msgid "Only available in Sweden.\n"
 msgstr "K dispozici pouze ve Švédsku.\n"
 
-#: ../libs/urlparser.py:8132
+#: ../libs/urlparser.py:8135
 msgid ""
 "Only logged in user have access.\n"
 "Please set login data in the host configuration under blue button."
 msgstr ""
 "Přístup mají pouze přihlášení uživatelé.\n"
-"Nastavte prosím přihlašovací údaje v konfiguraci hostitele pod modrým "
-"tlačítkem."
+"Nastavte prosím přihlašovací údaje v konfiguraci hostitele pod modrým tlačítkem."
 
 #: ../Web/webParts.py:522
 msgid "Only music"
@@ -3583,45 +3511,27 @@ msgstr ""
 
 #: ../tools/e2ijs.py:37
 #, python-format
-msgid ""
-"Please consider restart your Engima2 and agree to install the %s utlity when "
-"the %s will propose this."
-msgstr ""
-"Zvažte prosím restartování zařízení Engima2 a souhlaste s instalací nástroje "
-"%s, jakmile vás %s navrhne."
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "Zvažte prosím restartování zařízení Engima2 a souhlaste s instalací nástroje %s, jakmile vás %s navrhne."
 
 #: ../hosts/hostfilmezz.py:336 ../hosts/hostserienstreamto.py:412
-msgid ""
-"Please fill your login and password in the host configuration (available "
-"under blue button) and try again."
-msgstr ""
-"Vyplňte prosím své přihlašovací jméno a heslo v konfiguraci hostitele (k "
-"dispozici pod modrým tlačítkem) a zkuste to znovu."
+msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
+msgstr "Vyplňte prosím své přihlašovací jméno a heslo v konfiguraci hostitele (k dispozici pod modrým tlačítkem) a zkuste to znovu."
 
 #: ../components/iptvplayerwidget.py:316
-msgid ""
-"Please make sure that the folder for cache data (set in the configuration) "
-"is writable."
-msgstr ""
-"Ujistěte se, že složka pro data mezipaměti (nastavená v konfiguraci) je "
-"zapisovatelná."
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "Ujistěte se, že složka pro data mezipaměti (nastavená v konfiguraci) je zapisovatelná."
 
 #: ../hosts/hostfreediscpl.py:88
-msgid ""
-"Please register and set login and password in the host configuration, to "
-"solve this problems permanently."
-msgstr ""
-"Pro trvalé vyřešení těchto problémů se prosím zaregistrujte a nastavte "
-"přihlašovací jméno a heslo v konfiguraci hostitele."
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "Pro trvalé vyřešení těchto problémů se prosím zaregistrujte a nastavte přihlašovací jméno a heslo v konfiguraci hostitele."
 
 #: ../libs/sport365live.py:132
 msgid ""
-"Please remember to visit http://www.sport365.live/ and watch a few "
-"advertisements.\n"
+"Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
 msgstr ""
-"Nezapomeňte prosím navštívit http://www.sport365.live/ a shlédnout několik "
-"reklam.\n"
+"Nezapomeňte prosím navštívit http://www.sport365.live/ a shlédnout několik reklam.\n"
 "Tím se vyřeší problém, pokud je vaše přehrávání neustále přerušované."
 
 #: ../hosts/hostserienstreamto.py:415
@@ -3640,11 +3550,8 @@ msgstr "Navštivte prosím stránku „%s“ a potvrďte, že jste člověk."
 
 #: ../components/captcha_helper.py:62
 #, python-format
-msgid ""
-"Please visit %s to learn how to redirect this task to the external device."
-msgstr ""
-"Navštivte prosím %s, kde se dozvíte, jak tuto úlohu přesměrovat na externí "
-"zařízení."
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "Navštivte prosím %s, kde se dozvíte, jak tuto úlohu přesměrovat na externí zařízení."
 
 #: ../iptvdm/iptvbuffui.py:527
 msgid "Please wait - downloading initialization data."
@@ -4053,8 +3960,8 @@ msgid "Score at least: "
 msgstr "Minimální skóre: "
 
 #: ../hosts/host123movieshd.py:128 ../hosts/host3player.py:61
-#: ../hosts/host3sktv.py:88 ../hosts/host9anime_blocked_.py:57
-#: ../hosts/hostakoam.py:125 ../hosts/hostaltadefinizione_blocked_.py:110
+#: ../hosts/host3sktv.py:88 ../hosts/host9anime.py:30 ../hosts/hostakoam.py:125
+#: ../hosts/hostaltadefinizione_blocked_.py:110
 #: ../hosts/hostaltadefinizione01.py:112 ../hosts/hostanimeodcinki.py:53
 #: ../hosts/hostappletrailers.py:52 ../hosts/hostardmediathek_blocked_.py:70
 #: ../hosts/hostartetv.py:173 ../hosts/hostbajeczkiorg.py:51
@@ -4220,7 +4127,7 @@ msgstr "Hledat „%s“, %s, %s %s"
 
 #: ../components/e2ivk.py:703 ../hosts/host123movieshd.py:129
 #: ../hosts/host3player.py:62 ../hosts/host3sktv.py:89
-#: ../hosts/host9anime_blocked_.py:58 ../hosts/hostakoam.py:126
+#: ../hosts/host9anime.py:31 ../hosts/hostakoam.py:126
 #: ../hosts/hostaltadefinizione_blocked_.py:111
 #: ../hosts/hostaltadefinizione01.py:113 ../hosts/hostanimeodcinki.py:54
 #: ../hosts/hostappletrailers.py:53 ../hosts/hostardmediathek_blocked_.py:71
@@ -4553,7 +4460,7 @@ msgstr "Vybraní hostitelé"
 #: ../hosts/hostfilmezz.py:378 ../hosts/hostfreediscpl.py:113
 #: ../hosts/hostserienstreamto.py:525 ../hosts/hoststreamliveto.py:327
 #: ../hosts/hoststreamliveto.py:374 ../libs/recaptcha_v1.py:68
-#: ../libs/urlparser.py:4365
+#: ../libs/urlparser.py:4368
 msgid "Send"
 msgstr "Odeslat"
 
@@ -4752,8 +4659,7 @@ msgstr "Sorozatok"
 
 #: ../hosts/hosttvplayercom.py:274
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
-msgstr ""
-"Omlouváme se. TVPlayer je momentálně k dispozici pouze ve Spojeném království"
+msgstr "Omlouváme se. TVPlayer je momentálně k dispozici pouze ve Spojeném království"
 
 #: ../components/playerselector.py:153
 msgid "Sort Mode"
@@ -4799,7 +4705,7 @@ msgstr "Seřazeno nejsledovanější kanály obecně [živé]"
 msgid "Sorted most viewed channels now [live]"
 msgstr "Seřazené nejsledovanější kanály [živé]"
 
-#: ../libs/urlparser.py:5831
+#: ../libs/urlparser.py:5834
 #, python-format
 msgid "Source %s"
 msgstr "Zdroj %s"
@@ -5101,22 +5007,17 @@ msgstr "Výchozí poměr stran pro externí přehrávač"
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
-"Please fill your login and password in the host configuration. Available "
-"under blue button."
-msgstr ""
-"Hostitel %s vyžaduje registraci. Vyplňte prosím své přihlašovací jméno a "
-"heslo v konfiguraci hostitele. Dostupné pod modrým tlačítkem."
+"Please fill your login and password in the host configuration. Available under blue button."
+msgstr "Hostitel %s vyžaduje registraci. Vyplňte prosím své přihlašovací jméno a heslo v konfiguraci hostitele. Dostupné pod modrým tlačítkem."
 
 #: ../hosts/hostekstraklasatv.py:100 ../hosts/hosteurosportplayer.py:524
 #, python-format
 msgid ""
 "The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available "
-"under blue button."
+"Please fill your login and password in the host configuration - available under blue button."
 msgstr ""
 "Hostitel %s vyžaduje předplatné.\n"
-"Vyplňte prosím své přihlašovací jméno a heslo v konfiguraci hostitele – k "
-"dispozici pod modrým tlačítkem."
+"Vyplňte prosím své přihlašovací jméno a heslo v konfiguraci hostitele – k dispozici pod modrým tlačítkem."
 
 #: ../components/iptvconfigmenu.py:400
 msgid "The number of items in the search history"
@@ -5197,7 +5098,7 @@ msgstr "Tip! Tento problém můžete vyřešit připojením USB flash disku."
 msgid "Title:"
 msgstr "Název:"
 
-#: ../libs/urlparser.py:2504
+#: ../libs/urlparser.py:2507
 msgid ""
 "To watch videos from http://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
@@ -5296,7 +5197,7 @@ msgstr "Návody"
 
 #: ../components/ihost.py:828 ../hosts/host123movieshd.py:411
 #: ../hosts/host3player.py:442 ../hosts/host3sktv.py:326
-#: ../hosts/host9anime_blocked_.py:623 ../hosts/hostakoam.py:481
+#: ../hosts/host9anime.py:150 ../hosts/hostakoam.py:481
 #: ../hosts/hostaltadefinizione_blocked_.py:426
 #: ../hosts/hostaltadefinizione01.py:390 ../hosts/hostanimeodcinki.py:416
 #: ../hosts/hostappletrailers.py:215 ../hosts/hostardmediathek_blocked_.py:510
@@ -5646,7 +5547,7 @@ msgstr "Zásady pro videa ve formátu 4:3"
 msgid "Video with DRM protection."
 msgstr "Video s ochranou DRM."
 
-#: ../libs/urlparser.py:2860
+#: ../libs/urlparser.py:2863
 msgid ""
 "Videomega has blocked your IP for some time.\n"
 "Please retry this link after some time."
@@ -5776,7 +5677,7 @@ msgstr "Písemná recenze desek"
 msgid "Wrong Youtube Api Key length"
 msgstr "Nesprávná délka klíče API YouTube"
 
-#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4384
+#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4387
 msgid "Wrong answer."
 msgstr "Špatná odpověď."
 
@@ -5847,41 +5748,24 @@ msgid "You are not allowed to play this video"
 msgstr "Toto video si nemůžete přehrát"
 
 #: ../Web/webSite.py:73
-msgid ""
-"You are using old version of OpenWebif.<br> To go to E2iPlayer web Select "
-"the following link<br>"
-msgstr ""
-"Používáte starou verzi OpenWebifu.<br> Chcete-li přejít na web E2iPlayer, "
-"vyberte následující odkaz<br>"
+msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
+msgstr "Používáte starou verzi OpenWebifu.<br> Chcete-li přejít na web E2iPlayer, vyberte následující odkaz<br>"
 
 #: ../libs/pCommon.py:393
-msgid ""
-"You can disable HTTPS certificates validation in the E2iPlayer configuration "
-"to suppress this problem."
-msgstr ""
-"Tento problém můžete potlačit zakázáním ověřování certifikátů HTTPS v "
-"konfiguraci E2iPlayeru."
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "Tento problém můžete potlačit zakázáním ověřování certifikátů HTTPS v konfiguraci E2iPlayeru."
 
 #: ../libs/pCommon.py:404
-msgid ""
-"You can enable PyCurl in the E2iPlayer configuration to fix this problem."
-msgstr ""
-"Tento problém můžete vyřešit povolením PyCurlu v konfiguraci E2iPlayeru."
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "Tento problém můžete vyřešit povolením PyCurlu v konfiguraci E2iPlayeru."
 
 #: ../libs/pCommon.py:406
-msgid ""
-"You can install PyCurl package with TLS 1.3 support from the feed to fix "
-"this problem."
-msgstr ""
-"Tento problém můžete vyřešit nainstalováním balíčku PyCurl s podporou TLS "
-"1.3 z feedu."
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "Tento problém můžete vyřešit nainstalováním balíčku PyCurl s podporou TLS 1.3 z feedu."
 
 #: ../hosts/hosthdsto.py:70
-msgid ""
-"You can try to use proxy as workaround, check options under blue button."
-msgstr ""
-"Můžete zkusit použít proxy jako alternativní řešení, zkontrolujte možnosti "
-"pod modrým tlačítkem."
+msgid "You can try to use proxy as workaround, check options under blue button."
+msgstr "Můžete zkusit použít proxy jako alternativní řešení, zkontrolujte možnosti pod modrým tlačítkem."
 
 #: ../components/captcha_helper.py:67
 #, python-format
@@ -5919,8 +5803,7 @@ msgstr "Návrhy na YouTube"
 
 #: ../hosts/hostmusicbox.py:102
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr ""
-"Vyhledávání na YouTube je rychlejší, pokud v nastavení vyplníte klíč API"
+msgstr "Vyhledávání na YouTube je rychlejší, pokud v nastavení vyplníte klíč API"
 
 #: ../hosts/hostmindigo.py:809
 msgid "Zene"
@@ -6042,7 +5925,7 @@ msgid "de"
 msgstr "de"
 
 #: ../components/iptvconfigmenu.py:162 ../components/iptvconfigmenu.py:230
-#: ../components/iptvsubsimpledownloader.py:294 ../libs/urlparser.py:7637
+#: ../components/iptvsubsimpledownloader.py:294 ../libs/urlparser.py:7640
 msgid "default"
 msgstr "výchozí"
 
@@ -6075,12 +5958,8 @@ msgid "external gstplayer"
 msgstr "externí přehrávač GST"
 
 #: ../Web/webParts.py:389
-msgid ""
-"first check if host works properly in GUI and web <b>BEFORE</b> reporting "
-"error in it !!!"
-msgstr ""
-"nejdříve zkontrolujte, zda hosting funguje správně v GUI a na webu, <b>NEŽ</"
-"b> nahlásíte chybu!!!"
+msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
+msgstr "nejdříve zkontrolujte, zda hosting funguje správně v GUI a na webu, <b>NEŽ</b> nahlásíte chybu!!!"
 
 #: ../hosts/hostardmediathek_blocked_.py:33 ../hosts/hostzdfmediathek.py:35
 msgid "format"
