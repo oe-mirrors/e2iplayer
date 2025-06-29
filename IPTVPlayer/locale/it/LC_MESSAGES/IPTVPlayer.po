@@ -350,62 +350,50 @@ msgid "-- OK --"
 msgstr "-- OK --"
 
 #: ../components/iptvconfigmenu.py:286
-#, fuzzy
 msgid "----- BASIC CONFIGURATION -----"
 msgstr "----- CONFIGURAZIONE BASE (OK) -----"
 
 #: ../components/iptvconfigmenu.py:342
-#, fuzzy
 msgid "----- BUFFERING CONFIGURATION -----"
 msgstr "----- CONFIGURAZIONE BUFFERING (OK) -----"
 
 #: ../components/iptvconfigmenu.py:361
-#, fuzzy
 msgid "----- CAPTCHA CONFIGURATION -----"
 msgstr "----- CONFIGURAZTIONE CAPTCHA (OK) -----"
 
 #: ../components/iptvconfigmenu.py:351
-#, fuzzy
 msgid "----- DOWNLOADING CONFIGURATION -----"
-msgstr "----- DOWNLOAD CONFIGURAZIONE (OK) -----"
+msgstr "----- CONFIGURAZIONE DOWNLOAD (OK) -----"
 
 #: ../components/iptvconfigmenu.py:399
-#, fuzzy
 msgid "----- OTHER SETTINGS -----"
 msgstr "----- ALTRE IMPOSTAZIONI (OK) -----"
 
 #: ../components/iptvconfigmenu.py:382
-#, fuzzy
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- CONFIGURAZIONE RIPRODUZIONE (OK) -----"
 
 #: ../components/iptvconfigmenu.py:330
-#, fuzzy
 msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- CONFIGURAZIONE PROXY (OK) -----"
 
 #: ../components/iptvconfigmenu.py:304
-#, fuzzy
 msgid "----- SECURITY CONFIGURATION -----"
-msgstr "----- CONFIGURAZIONE BASE (OK) -----"
+msgstr "----- CONFIGURAZIONE SICUREZZA (OK) -----"
 
 #: ../components/iptvconfigmenu.py:301
-#, fuzzy
 msgid "----- SERVICE CONFIGURATION -----"
-msgstr "----- CONFIGURAZIONE BASE (OK) -----"
+msgstr "----- CONFIGURAZIONE SERVIZI (OK) -----"
 
 #: ../components/iptvconfigmenu.py:310
-#, fuzzy
 msgid "----- SKIN CONFIGURATION -----"
-msgstr "----- CONFIGURAZIONE BASE (OK) -----"
+msgstr "----- CONFIGURAZIONE SKIN  (OK) -----"
 
 #: ../components/iptvconfigmenu.py:338
-#, fuzzy
 msgid "----- STORAGE CONFIGURATION -----"
-msgstr "----- CONFIGURAZIONE SOTTOTITOLI (OK) -----"
+msgstr "----- CONFIGURAZIONE ARCHIVIAZIONE (OK) -----"
 
 #: ../components/iptvconfigmenu.py:371
-#, fuzzy
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- CONFIGURAZIONE SOTTOTITOLI (OK) -----"
 
@@ -536,7 +524,7 @@ msgstr "Accetta"
 
 #: ../libs/pCommon.py:971
 msgid "Access Forbidden"
-msgstr ""
+msgstr "Accesso vietato"
 
 #: ../components/recaptcha_mye2i_widget.py:139
 #: ../components/recaptcha_v2myjd_widget.py:130
@@ -597,7 +585,7 @@ msgstr "Bypass del limite di età:"
 
 #: ../hosts/hostseezsu.py:86
 msgid "Airing"
-msgstr ""
+msgstr "In onda"
 
 #: ../components/iptvplayerwidget.py:1136 ../hosts/host3player.py:172
 #: ../hosts/hostakoam.py:155 ../hosts/hostanimeodcinki.py:95
@@ -1015,7 +1003,7 @@ msgstr "Servizio di risoluzione Captcha"
 
 #: ../tools/iptvhostgroups.py:33
 msgid "Cartoons and anime"
-msgstr ""
+msgstr "Cartoni e anime"
 
 #: ../hosts/hostbbcsport.py:189
 msgid "Catch up"
@@ -1041,7 +1029,7 @@ msgstr "Categorie"
 
 #: ../hosts/hostkisscartoonme.py:49
 msgid "Catrtoon list"
-msgstr ""
+msgstr "Elenco Cartoni animati"
 
 #: ../components/iptvplayerwidget.py:584
 msgid "Change active movie player"
@@ -1102,7 +1090,7 @@ msgstr "Attendere la chiusura.."
 
 #: ../hosts/hoststreamstat.py:78
 msgid "Collected streams only"
-msgstr ""
+msgstr "Solo flussi raccolti"
 
 #: ../hosts/hostmovs4ucom.py:43
 msgid "Collections"
@@ -1196,7 +1184,7 @@ msgstr "Errore critico - Non si può accedere al contenuto del gzip!"
 
 #: ../hosts/hostmindigo.py:781
 msgid "Családi filmek"
-msgstr ""
+msgstr "Film per famiglie"
 
 #: ../hosts/hostted.py:388
 msgid "Curator"
@@ -1384,7 +1372,7 @@ msgstr "Abilita/disabilita servizi"
 
 #: ../hosts/hostredbull.py:51
 msgid "Discover"
-msgstr ""
+msgstr "Scoprire"
 
 #: ../components/iptvconfigmenu.py:315
 msgid "Display thumbnails"
@@ -1648,7 +1636,7 @@ msgstr "Impostazione della migliore qualità disponibile"
 
 #: ../hosts/hostidokep.py:78
 msgid "Előrejelzés"
-msgstr ""
+msgstr "Previsione"
 
 #: ../hosts/hostrtlmost.py:49 ../libs/ustvnow.py:43
 msgid "Email"
@@ -1808,7 +1796,7 @@ msgstr ""
 
 #: ../hosts/hostorthobulletscom.py:84
 msgid "Exam Review"
-msgstr ""
+msgstr "Revisione dell'esame"
 
 #: ../components/iptvdirbrowser.py:293
 msgid "Exception occurs"
@@ -1930,7 +1918,7 @@ msgstr "Gestore preferiti"
 
 #: ../hosts/hostidokep.py:81
 msgid "Felhőkép"
-msgstr ""
+msgstr "Paesaggio nuvoloso"
 
 #: ../hosts/hostlocalmedia.py:666
 #, python-format
@@ -1962,12 +1950,12 @@ msgstr ""
 
 #: ../hosts/hostfilmtar.py:80
 msgid "Film Kategóriák"
-msgstr ""
+msgstr "Categorie di film"
 
 #: ../hosts/hostdmdamedia.py:96 ../hosts/hostmozicsillag.py:113
 #: ../hosts/hostnonstopmozi.py:71
 msgid "Filmek"
-msgstr ""
+msgstr "Film"
 
 #: ../suggestions/filmstarts.py:17
 msgid "Filmstarts Suggestions"
@@ -2013,7 +2001,7 @@ msgstr ""
 
 #: ../components/iptvconfigmenu.py:312
 msgid "Force internal Skin"
-msgstr ""
+msgstr "Forza skin interna"
 
 #: ../components/iptvplayerwidget.py:1572
 msgid "Format 'wmv' blocked in configuration."
@@ -2060,7 +2048,7 @@ msgstr "Giochi"
 
 #: ../hosts/hostorthobulletscom.py:121
 msgid "General"
-msgstr ""
+msgstr "Generale"
 
 #: ../hosts/hostappletrailers.py:104 ../hosts/hostddl.py:575
 msgid "Genre:"
@@ -2116,11 +2104,11 @@ msgstr "Errore nel ricevere il token!"
 
 #: ../hosts/hostxxx.py:74
 msgid "Global search :"
-msgstr ""
+msgstr "Ricerca globale:"
 
 #: ../hosts/hostxxx.py:75
 msgid "Global sort :"
-msgstr ""
+msgstr "Ordinamento globale:"
 
 #: ../components/captcha_helper.py:67
 msgid "Go to the host configuration available under blue button."
@@ -2186,7 +2174,7 @@ msgstr "Errore connessione HTTPS \"%s\"\n"
 
 #: ../hosts/hostorthobulletscom.py:115
 msgid "Hand"
-msgstr ""
+msgstr "Mano"
 
 #: ../components/iptvconfigmenu.py:37
 msgid "Hardware floating point"
@@ -2199,7 +2187,7 @@ msgstr "Nascondi il gruppo\"%s\""
 
 #: ../components/playerselector.py:152
 msgid "Hide/Active Group"
-msgstr ""
+msgstr "Nascondi/Attiva Gruppo"
 
 #: ../hosts/hostlaola1tv.py:28
 msgid "High"
@@ -2257,7 +2245,7 @@ msgstr ""
 
 #: ../hosts/hostidokep.py:80
 msgid "Hőtérkép"
-msgstr ""
+msgstr "Mappa di calore"
 
 #: ../suggestions/imdb.py:19
 msgid "IMDb Suggestions"
@@ -2281,7 +2269,7 @@ msgstr "Dimensione delle icone"
 
 #: ../hosts/hostidokep.py:79
 msgid "Időkép"
-msgstr ""
+msgstr "Previsioni del tempo"
 
 #: ../hosts/hostorthobulletscom.py:86
 msgid "Industry"
@@ -2320,7 +2308,6 @@ msgid "Initialize Download Manager"
 msgstr "Inizializza il gestore di download"
 
 #: ../components/iptvconfigmenu.py:292
-#, fuzzy
 msgid "Initialize web interface"
 msgstr "Inizializza l'interfaccia web"
 
@@ -2349,7 +2336,7 @@ msgstr "Errore del server interno. Code di risposta: %s"
 
 #: ../hosts/hostonlinestream.py:111
 msgid "Internetes rádiók listázása"
-msgstr ""
+msgstr "Elenco delle stazioni radio Internet"
 
 #: ../components/recaptcha_mye2i_widget.py:137
 #: ../components/recaptcha_v2myjd_widget.py:128
@@ -2366,7 +2353,7 @@ msgstr "Questo messaggio è visualizzato correttamente?"
 
 #: ../hosts/hostmindigo.py:805
 msgid "Ismeretterjesztő"
-msgstr ""
+msgstr "Educativo"
 
 #: ../libs/pCommon.py:513 ../libs/pCommon.py:1211
 msgid "It is not allowed to call getURLRequestData from main thread."
@@ -2424,7 +2411,7 @@ msgstr "Italiano"
 #: ../components/iptvplayerwidget.py:772
 #, python-format
 msgid "Item %s removed!"
-msgstr ""
+msgstr "Elemento %s rimosso!"
 
 #: ../tools/iptvfavourites.py:174
 #, python-format
@@ -2471,20 +2458,20 @@ msgstr ""
 
 #: ../hosts/hostmindigo.py:797
 msgid "Játék és vetélkedő"
-msgstr ""
+msgstr "Gioco e quiz"
 
 #: ../hosts/hostmindigo.py:785
 msgid "Kabaré, vígjáték"
-msgstr ""
+msgstr "Cabaret, commedia"
 
 #: ../hosts/hostidokep.py:83
 msgid "Kamerák"
-msgstr ""
+msgstr "Telecamere"
 
 #: ../hosts/hostdmdamedia.py:95 ../hosts/hostfilmpapa.py:84
 #: ../hosts/hostfilmvilag.py:93 ../hosts/hostwofvideo.py:80
 msgid "Kategóriák"
-msgstr ""
+msgstr "Categorie"
 
 #: ../hosts/hostdmdamedia.py:98 ../hosts/hostfilmpapa.py:85
 #: ../hosts/hostfilmtar.py:82 ../hosts/hostfilmvilag.py:94
@@ -2492,7 +2479,7 @@ msgstr ""
 #: ../hosts/hostonlinestream.py:114 ../hosts/hoststreamstat.py:82
 #: ../hosts/hosttv2play.py:127 ../hosts/hostwofvideo.py:81
 msgid "Keresés"
-msgstr ""
+msgstr "Ricerca"
 
 #: ../hosts/hostdmdamedia.py:99 ../hosts/hostfilmpapa.py:86
 #: ../hosts/hostfilmtar.py:83 ../hosts/hostfilmvilag.py:95
@@ -2500,7 +2487,7 @@ msgstr ""
 #: ../hosts/hostonlinestream.py:115 ../hosts/hoststreamstat.py:83
 #: ../hosts/hosttv2play.py:128 ../hosts/hostwofvideo.py:82
 msgid "Keresési előzmények"
-msgstr ""
+msgstr "Cronologia delle ricerche"
 
 #: ../hosts/hostorthobulletscom.py:112
 msgid "Knee & Sports"
@@ -2508,11 +2495,11 @@ msgstr "Attività Sportiva"
 
 #: ../hosts/hostidokep.py:84
 msgid "Képtár"
-msgstr ""
+msgstr "Galleria"
 
 #: ../hosts/hostnonstopmozi.py:125
 msgid "Következő oldal"
-msgstr ""
+msgstr "Pagina successiva"
 
 #: ../hosts/hostworldfree4u.py:46
 msgid "LATEST"
@@ -2708,7 +2695,7 @@ msgstr "Elenca solo canali con sottoscrizione"
 #: ../hosts/hostshoutcast.py:138
 #, python-format
 msgid "Listeners: %s"
-msgstr ""
+msgstr "Ascoltatori: %s"
 
 #: ../hosts/hostbbciplayer.py:148 ../hosts/hostbbcsport.py:189
 #: ../hosts/hostplayrtsiw.py:151 ../hosts/hostrteieplayer.py:53
@@ -2892,7 +2879,7 @@ msgstr "Il numero massimo di download in parallelo è stato raggiunto."
 
 #: ../hosts/hostorthobulletscom.py:90
 msgid "Medtryx Marketing"
-msgstr ""
+msgstr "Marketing Medtryx"
 
 #: ../hosts/hostorthobulletscom.py:91
 msgid "Meetings"
@@ -2904,7 +2891,7 @@ msgstr "Menu"
 
 #: ../hosts/hostmindigo.py:813
 msgid "Mesék"
-msgstr ""
+msgstr "Fiabe"
 
 #: ../hosts/hostlaola1tv.py:28
 msgid "Mid"
@@ -2933,11 +2920,11 @@ msgstr "Mensile"
 
 #: ../hosts/hostddl.py:585
 msgid "Mood:"
-msgstr ""
+msgstr "Umore:"
 
 #: ../hosts/hostddl.py:587
 msgid "Moods:"
-msgstr ""
+msgstr "Umors:"
 
 #: ../components/iptvplayerwidget.py:161 ../components/playerselector.py:154
 #: ../hosts/hostdancetrippin.py:160 ../hosts/hostlocalmedia.py:406
@@ -3082,7 +3069,7 @@ msgstr "Esecuzione dello script JMyE2i terminata."
 
 #: ../hosts/hosttv2play.py:126
 msgid "Műsorok"
-msgstr ""
+msgstr "Programmi"
 
 #: ../hosts/hostwatchwrestling.py:53 ../hosts/hostwatchwrestlinguno.py:47
 msgid "NJPW"
@@ -3429,7 +3416,7 @@ msgstr "Proprio modello"
 
 #: ../hosts/hostdancetrippin.py:43
 msgid "PARTIES"
-msgstr ""
+msgstr "FESTE"
 
 #: ../libs/filmonapi.py:94
 msgid "PAY"
@@ -3542,7 +3529,7 @@ msgstr "Riproducibile da "
 
 #: ../hosts/hostxxx.py:83
 msgid "Playback UHD :"
-msgstr ""
+msgstr "Riproduzione UHD:"
 
 #: ../hosts/hostnuteczki.py:373
 #, python-format
@@ -3733,7 +3720,7 @@ msgstr "Utente premium"
 
 #: ../hosts/hostrtlmost.py:88
 msgid "Preview"
-msgstr ""
+msgstr "Anteprima"
 
 #: ../hosts/hostourmatchnet.py:46
 msgid "Previous Seasons"
@@ -3994,7 +3981,7 @@ msgstr "Inverti la playlist"
 
 #: ../hosts/hostmindigo.py:789
 msgid "Romantikus"
-msgstr ""
+msgstr "Romantico"
 
 #: ../hosts/hostmediayou.py:29 ../tools/iptvhostgroups.py:43
 msgid "Russian"
@@ -4654,18 +4641,17 @@ msgid "Some changes will be applied only after movie player restart."
 msgstr "Alcuni cambiamenti saranno applicati,  solo dopo che il movie player sarà riavviato."
 
 #: ../components/iptvconfigmenu.py:443
-#, fuzzy
 msgid "Some settings will be applied only after GUI restart."
-msgstr "Alcuni cambiamenti saranno applicati,  solo dopo che il movie player sarà riavviato."
+msgstr "Alcune impostazioni verranno applicate solo dopo il riavvio dell'interfaccia grafica."
 
 #: ../hosts/hostfilmtar.py:81
 msgid "Sorozat Kategóriák"
-msgstr ""
+msgstr "Categorie di serie"
 
 #: ../hosts/hostdmdamedia.py:97 ../hosts/hostmozicsillag.py:114
 #: ../hosts/hostnonstopmozi.py:72
 msgid "Sorozatok"
-msgstr ""
+msgstr "Serie"
 
 #: ../hosts/hosttvplayercom.py:274
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
@@ -4885,7 +4871,7 @@ msgstr "Sottotitoli per: %s"
 
 #: ../hosts/hostonlinestream.py:110
 msgid "Sugárzó rádiók listázása"
-msgstr ""
+msgstr "Elenco delle emittenti radiofoniche"
 
 #: ../hosts/hostorthobulletscom.py:99
 msgid "Surgical Approaches"
@@ -4917,7 +4903,7 @@ msgstr "Sistema"
 
 #: ../hosts/hostmindigo.py:801
 msgid "Színház"
-msgstr ""
+msgstr "Teatro"
 
 #: ../hosts/hostwatchwrestling.py:51
 msgid "TNA"
@@ -4964,7 +4950,7 @@ msgstr "Serie TV"
 
 #: ../hosts/hostonlinestream.py:112
 msgid "TV-k listázása"
-msgstr ""
+msgstr "Elenco TV"
 
 #: ../hosts/hostted.py:81 ../hosts/hostted.py:383 ../hosts/hostted.py:663
 msgid "Talks"
@@ -4972,7 +4958,7 @@ msgstr "Talk show"
 
 #: ../hosts/hostorthobulletscom.py:103
 msgid "Techniques"
-msgstr ""
+msgstr "Tecnica"
 
 #: ../hosts/hosturllist.py:32
 msgid "Text files ytlist and urllist are in:"
@@ -5103,31 +5089,31 @@ msgstr ""
 
 #: ../hosts/hostfilmovizijastudio.py:54
 msgid "Top Movies"
-msgstr ""
+msgstr "Migliori film"
 
 #: ../hosts/hostserijeonline.py:59
 msgid "Top Videos"
-msgstr ""
+msgstr "Video migliori"
 
 #: ../hosts/hostmediasetplay.py:119
 msgid "Top day"
-msgstr ""
+msgstr "I migliori di oggi"
 
 #: ../hosts/hostfilmezz.py:72
 msgid "Top movies"
-msgstr ""
+msgstr "I migliori film"
 
 #: ../hosts/hostcartoonhd.py:32 ../hosts/hostxrysoise.py:31
 msgid "Top rated"
-msgstr ""
+msgstr "I più votati"
 
 #: ../hosts/hostfilmezz.py:73
 msgid "Top series"
-msgstr ""
+msgstr "Serie migliori"
 
 #: ../hosts/hostwatchwrestling.py:57 ../hosts/hostwatchwrestlinguno.py:42
 msgid "Total Divas"
-msgstr ""
+msgstr "Dive totali"
 
 #: ../hosts/hostlocalmedia.py:428 ../hosts/hostlocalmedia.py:446
 msgid "Total size: "
@@ -5273,7 +5259,7 @@ msgstr "Tipo: %s"
 
 #: ../hosts/hostidokep.py:85
 msgid "Térképek"
-msgstr ""
+msgstr "Mappe"
 
 #: ../hosts/hostmindigo.py:777
 msgid "Tévéfilmek és sorozatok"
@@ -5344,7 +5330,7 @@ msgstr "Codice errore di unzip [%s]."
 
 #: ../hosts/hostseezsu.py:91
 msgid "Upcoming"
-msgstr ""
+msgstr "Prossimamente"
 
 #: ../libs/youtubeparser.py:35
 msgid "Upload date"
@@ -5713,19 +5699,19 @@ msgstr "Sì"
 
 #: ../components/iptvconfigmenu.py:108
 msgid "Yes, to console"
-msgstr "si, nella console"
+msgstr "Si, nella console"
 
 #: ../components/iptvconfigmenu.py:109
 msgid "Yes, to file /hdd/iptv.dbg"
-msgstr "si, nel file /hdd/iptv.dbg"
+msgstr "Si, nel file /hdd/iptv.dbg"
 
 #: ../components/iptvconfigmenu.py:111
 msgid "Yes, to file /home/root/logs/iptv.dbg"
-msgstr "si, nel file /home/root/logs/iptv.dbg"
+msgstr "Si, nel file /home/root/logs/iptv.dbg"
 
 #: ../components/iptvconfigmenu.py:110
 msgid "Yes, to file /tmp/iptv.dbg"
-msgstr "si, nel file /tmp/iptv.dbg"
+msgstr "Si, nel file /tmp/iptv.dbg"
 
 #: ../hosts/hosttvnowde.py:153
 msgid "Yesterday"
@@ -5911,7 +5897,7 @@ msgstr ""
 
 #: ../hosts/hostxxx.py:59
 msgid "couple"
-msgstr ""
+msgstr "coppia"
 
 #: ../hosts/hostardmediathek.py:469
 msgid "de"
