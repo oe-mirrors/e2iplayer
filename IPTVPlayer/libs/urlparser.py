@@ -688,7 +688,7 @@ class urlparser:
             'mp4upload.com': self.pp.parserONLYSTREAMTV,
             'my.mail.ru': self.pp.parserVIDEOMAIL,
             'mycloud.to': self.pp.parserMYCLOUDTO,
-            'mysportzfy.com': self.pp.parserJWPLAYER,                                      
+            'mysportzfy.com': self.pp.parserJWPLAYER,
             'mystream.la': self.pp.parserMYSTREAMLA,
             # n
             'nadaje.com': self.pp.parserNADAJECOM,
