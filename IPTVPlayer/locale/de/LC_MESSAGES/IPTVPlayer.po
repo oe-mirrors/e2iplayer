@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-29 20:45+0200\n"
-"PO-Revision-Date: 2025-06-29 10:59+0200\n"
+"PO-Revision-Date: 2025-06-29 20:57+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
 "Language: de_DE\n"
@@ -89,11 +89,11 @@ msgstr ""
 #: ../components/iptvdirbrowser.py:327
 #: ../components/iptvfavouriteswidgets.py:45 ../iptvdm/iptvdmui.py:541
 msgid " "
-msgstr ""
+msgstr " "
 
 #: ../hosts/hostxxx.py:6055
 msgid "    *    Votes: "
-msgstr "    *    Abstimmungen:"
+msgstr "    *    Abstimmungen: "
 
 #: ../components/iptvconfigmenu.py:348
 msgid "    Audio buffer size [KB]"
@@ -5064,11 +5064,11 @@ msgstr "Dieses Model ist offline."
 
 #: ../hosts/hostxxx.py:22318
 msgid "This room is offline. Try again later!"
-msgstr "Dieser Raum ist offline. Versuche es später nochmal."
+msgstr "Dieser Raum ist offline. Versuche es später nochmal!"
 
 #: ../hosts/hostxxx.py:22281
 msgid "This show is private. Try again later!"
-msgstr "Diese Show ist Privat. Versuche es später nochmal."
+msgstr "Diese Show ist Privat. Versuche es später nochmal!"
 
 #: ../hosts/hostseriesonline.py:90
 msgid "This site is protected with Google reCaptcha v2."
@@ -5077,11 +5077,11 @@ msgstr "Diese Seite ist geschützt mit Google reCaptcha v2."
 #: ../hosts/hostxxx.py:20449 ../hosts/hostxxx.py:20463
 #: ../hosts/hostxxx.py:20479
 msgid "This video has been deleted."
-msgstr "Dieses Video wurde gelöscht"
+msgstr "Dieses Video wurde gelöscht."
 
 #: ../hosts/hostxxx.py:20429
 msgid "This video is a private video."
-msgstr " Dieses Video ist ein privates Video."
+msgstr "Dieses Video ist ein privates Video."
 
 #: ../components/iptvplayerwidget.py:1675
 msgid "Tip! You can connect USB flash drive to fix this problem."
