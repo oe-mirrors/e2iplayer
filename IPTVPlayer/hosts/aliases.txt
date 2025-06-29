@@ -2,7 +2,7 @@
 'host123movieshd': 'https://123movieshd.sc/',
 'host3player': 'https://virginmediatelevision.ie/player',
 'host3sktv': 'http://33sk.tv/',
-'host9anime': '9anime.com.ro/',
+'host9anime': 'https://9anime.com.ro',
 'hostakoam': 'https://ar.akoam.net/',
 'hostaltadefinizione': 'https://altadefinizione.spa/',
 'hostaltadefinizione01': 'https://altadefinizione01.spa/',
