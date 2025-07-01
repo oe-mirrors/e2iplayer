@@ -20,6 +20,7 @@
   "kinomoc",
   "hdseanspl",
   "zerioncc",
+  "guardaserie",
   "playzcc",
   "solarmovie",
   "thewatchseriesto",
@@ -340,6 +341,7 @@
  "italian": [
   "youtube",
   "mediasetplay",
+  "guardaserie",
   "altadefinizione01",
   "tantifilmorg",
   "dailymotion",
