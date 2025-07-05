@@ -11740,13 +11740,15 @@ class pageParser(CaptchaHelper):
                     urlTab.append({'name': q, 'url': url.strip()})
         return urlTab
 
-    def parserJWPLAYER(self, baseUrl):  # update 280625
+    def parserJWPLAYER(self, baseUrl):  # update 050725
         printDBG("parserJWPLAYER baseUrl[%s]" % baseUrl)
         urlTab = []
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         referer = baseUrl.meta.get('Referer', baseUrl)
         HTTP_HEADER['Referer'] = referer
         urlParams = {'header': HTTP_HEADER}
+        if 'savefiles.com/e/' in baseUrl:
+            baseUrl = baseUrl.replace('/e', '')
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return []
