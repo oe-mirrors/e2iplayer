@@ -149,7 +149,7 @@ class Gledalica(CBaseHostClass):
                 params.update({'title': groupTitle, 'category': nextCategory, 'sub_items': subSubItems})
                 self.addDir(params)
 
-    def listSubItems(self, cItem, nextCategory):
+    def listSubItems(self, cItem, nextCategory=""):
         printDBG("Gledalica.listSubItems")
         subList = cItem['sub_items']
         for item in subList:
@@ -268,7 +268,7 @@ class Gledalica(CBaseHostClass):
         self.addDir({'category': 'a_z', 'url': cItem['url'], 'title': _('A-Z')})
         self.addDir({'category': 'sort', 'url': cItem['url'], 'title': _('Episodes')})
 
-    def exploreItem(self, cItem):
+    def exploreItem(self, cItem, nextCategory=""):
         printDBG("Gledalica.exploreItem [%s]" % cItem)
 
         sts, data = self.getPage(cItem['url'])

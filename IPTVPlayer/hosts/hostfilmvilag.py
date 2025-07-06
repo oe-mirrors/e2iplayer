@@ -241,7 +241,8 @@ class FilmVilag(CBaseHostClass):
                 printDBG(title)
                 icon = self.cm.ph.getDataBeetwenMarkers(result, 'height="169" src="', '"', False)[1]
                 url = self.cm.ph.getDataBeetwenMarkers(result, '" src="', '"', False)[1]
-                desc = self.getdesc(title, n)
+                # desc = self.getdesc(title, n)
+                desc = self.getdesc(n)
                 params = {'title': title, 'icon': icon, 'url': url, 'desc': desc}
                 self.addVideo(params)
 
