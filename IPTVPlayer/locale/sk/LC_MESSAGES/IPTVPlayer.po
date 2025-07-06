@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-29 20:45+0200\n"
+"POT-Creation-Date: 2025-07-05 19:13+0200\n"
 "PO-Revision-Date: 2025-06-29 16:00+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -28,7 +28,7 @@ msgstr "\tDostupné miesto na disku: %s"
 msgid "\tDisk space required: %s"
 msgstr "\tPožadované miesto na disku: %s"
 
-#: ../hosts/hostbbcsport.py:466
+#: ../hosts/hostbbcsport_blocked_.py:466
 msgid ""
 "\n"
 "Error[1]."
@@ -36,7 +36,7 @@ msgstr ""
 "\n"
 "Chyba[1]."
 
-#: ../hosts/hostbbcsport.py:477
+#: ../hosts/hostbbcsport_blocked_.py:477
 msgid ""
 "\n"
 "Error[2]."
@@ -44,7 +44,7 @@ msgstr ""
 "\n"
 "Chyba[2]."
 
-#: ../hosts/hostbbcsport.py:485
+#: ../hosts/hostbbcsport_blocked_.py:485
 msgid ""
 "\n"
 "Error[3]."
@@ -52,7 +52,7 @@ msgstr ""
 "\n"
 "Chyba[3]."
 
-#: ../hosts/hostbbcsport.py:518
+#: ../hosts/hostbbcsport_blocked_.py:518
 msgid ""
 "\n"
 "Error[4]."
@@ -303,13 +303,13 @@ msgstr ""
 msgid "%s viewers"
 msgstr "%s divákov"
 
-#: ../hosts/hostcimaclubcom.py:261 ../hosts/hostmediasetplay.py:204
+#: ../hosts/hostcimaclubcom_blocked_.py:261 ../hosts/hostmediasetplay.py:204
 #: ../hosts/hostmediasetplay.py:275 ../hosts/hosttwitchtv_blocked_.py:444
 #, python-format
 msgid "%s views"
 msgstr "%s zobrazenia"
 
-#: ../hosts/hostcimaclubcom.py:267
+#: ../hosts/hostcimaclubcom_blocked_.py:267
 #, python-format
 msgid "%s/10"
 msgstr "%s/10"
@@ -387,7 +387,7 @@ msgstr "----------Iný----------"
 msgid "--All Episodes--"
 msgstr "--Všetky epizódy --"
 
-#: ../hosts/hostappletrailers.py:64 ../hosts/hostdixmax.py:152
+#: ../hosts/hostappletrailers_blocked_.py:64 ../hosts/hostdixmax.py:152
 #: ../hosts/hostdixmax.py:156 ../hosts/hosteskago.py:169
 #: ../hosts/hostfenixsite.py:106 ../hosts/hostfenixsite.py:110
 #: ../hosts/hostfilma24hdcom.py:271 ../hosts/hostfilmpalast.py:109
@@ -456,12 +456,12 @@ msgstr "4:3 PanScan"
 msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
 msgstr "<font color=\"#FE642E\">PAMÄTAŤ:</font> E2iPlayer <b>JE IBA</b> špecializovaný webový prehliadač. <b>NIE JE</b> hostiteľom žiadnych materiálov!!!</font>"
 
-#: ../hosts/hostbbcsport.py:514
+#: ../hosts/hostbbcsport_blocked_.py:514
 msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
 msgstr "Na sledovanie streamov aplikácie BBC iPlayer je potrebná TV licencia, ďalšie informácie nájdete na webovej lokalite BBC: https://www.bbc.co.uk/iplayer/help/tvlicence"
 
-#: ../hosts/host3player.py:59 ../hosts/hostbbciplayer.py:60
-#: ../hosts/hostbbciplayer.py:196 ../hosts/hostgledalica.py:268
+#: ../hosts/host3player_blocked_.py:59 ../hosts/hostbbciplayer_blocked_.py:60
+#: ../hosts/hostbbciplayer_blocked_.py:196 ../hosts/hostgledalica.py:268
 #: ../hosts/hostserienstreamto.py:49
 msgid "A-Z"
 msgstr "A-Z"
@@ -506,7 +506,7 @@ msgstr "Súhlasím"
 msgid "Access Forbidden"
 msgstr "Prístup zakázaný"
 
-#: ../components/recaptcha_mye2i_widget.py:139
+#: ../components/recaptcha_mye2i_widget.py:154
 #: ../components/recaptcha_v2myjd_widget.py:130
 msgid "Access denied. Please check password."
 msgstr "Prístup bol odmietnutý. Skontrolujte heslo."
@@ -515,7 +515,7 @@ msgstr "Prístup bol odmietnutý. Skontrolujte heslo."
 msgid "Active host"
 msgstr "Aktívny hostiteľ"
 
-#: ../hosts/hostappletrailers.py:108
+#: ../hosts/hostappletrailers_blocked_.py:108
 msgid "Actors:"
 msgstr "Aktérov:"
 
@@ -559,24 +559,24 @@ msgstr "Vekový obtok:"
 msgid "Airing"
 msgstr "Vetranie"
 
-#: ../components/iptvplayerwidget.py:1139 ../hosts/host3player.py:172
-#: ../hosts/hostakoam.py:150 ../hosts/hostanimeodcinki.py:95
-#: ../hosts/hostbbciplayer.py:238 ../hosts/hostcimaclubcom.py:185
-#: ../hosts/hostdailymotion.py:106 ../hosts/hostdancetrippin.py:249
-#: ../hosts/hostegybest.py:114 ../hosts/hostfightvideo.py:82
-#: ../hosts/hostfilmeonlineto.py:146 ../hosts/hostfilmezz.py:121
-#: ../hosts/hosthdfull.py:144 ../hosts/hosthdstreams_blocked_.py:137
-#: ../hosts/hostkabarety.py:47 ../hosts/hostkabarety.py:96
-#: ../hosts/hostkinox.py:160 ../hosts/hostkinox.py:296
-#: ../hosts/hostmindigo.py:701 ../hosts/hostmindigo.py:831
-#: ../hosts/hostmindigo.py:843 ../hosts/hostmrpiracy.py:169
-#: ../hosts/hostorthobulletscom.py:79 ../hosts/hostplayrtsiw.py:380
-#: ../hosts/hostputlockertvto.py:186 ../hosts/hostshahiidanimenet.py:94
-#: ../hosts/hostshoutcast.py:73 ../hosts/hostsolarmovie.py:164
-#: ../hosts/hosttvplayercom.py:135 ../hosts/hosttwitchtv_blocked_.py:112
-#: ../hosts/hosttwitchtv_blocked_.py:114 ../hosts/hostyifytv.py:77
-#: ../libs/skylinewebcamscom.py:136 ../subproviders/subprov_titlovicom.py:115
-#: ../tools/iptvhostgroups.py:52
+#: ../components/iptvplayerwidget.py:1139 ../hosts/host3player_blocked_.py:172
+#: ../hosts/hostakoam_blocked_.py:150 ../hosts/hostanimeodcinki_blocked_.py:95
+#: ../hosts/hostbbciplayer_blocked_.py:238
+#: ../hosts/hostcimaclubcom_blocked_.py:185 ../hosts/hostdailymotion.py:106
+#: ../hosts/hostdancetrippin.py:249 ../hosts/hostegybest.py:114
+#: ../hosts/hostfightvideo.py:82 ../hosts/hostfilmeonlineto.py:146
+#: ../hosts/hostfilmezz.py:121 ../hosts/hosthdfull.py:144
+#: ../hosts/hosthdstreams_blocked_.py:137 ../hosts/hostkabarety.py:47
+#: ../hosts/hostkabarety.py:96 ../hosts/hostkinox.py:160
+#: ../hosts/hostkinox.py:296 ../hosts/hostmindigo.py:701
+#: ../hosts/hostmindigo.py:831 ../hosts/hostmindigo.py:843
+#: ../hosts/hostmrpiracy.py:169 ../hosts/hostorthobulletscom.py:79
+#: ../hosts/hostplayrtsiw.py:380 ../hosts/hostputlockertvto.py:186
+#: ../hosts/hostshahiidanimenet.py:94 ../hosts/hostshoutcast.py:73
+#: ../hosts/hostsolarmovie.py:164 ../hosts/hosttvplayercom.py:135
+#: ../hosts/hosttwitchtv_blocked_.py:112 ../hosts/hosttwitchtv_blocked_.py:114
+#: ../hosts/hostyifytv.py:77 ../libs/skylinewebcamscom.py:136
+#: ../subproviders/subprov_titlovicom.py:115 ../tools/iptvhostgroups.py:52
 msgid "All"
 msgstr "Všetko"
 
@@ -646,7 +646,7 @@ msgstr "Abecedne"
 msgid "Alternative"
 msgstr "Alternatívne"
 
-#: ../hosts/host123movieshd.py:34 ../hosts/hostfilmeonlineto.py:37
+#: ../hosts/host123movieshd_blocked_.py:34 ../hosts/hostfilmeonlineto.py:37
 #: ../hosts/hostfilmstreamvkcom.py:36 ../hosts/hostkinox.py:37
 #: ../hosts/hostplanetstreamingcom.py:31 ../hosts/hostputlockertvto.py:41
 #: ../hosts/hostseriesonline.py:36 ../hosts/hostskstream.py:37
@@ -663,8 +663,8 @@ msgstr "Alternatívna geolokácia IP 1:"
 msgid "Alternative geolocation IP 2:"
 msgstr "Alternatívna geolokácia IP 2:"
 
-#: ../components/iptvconfigmenu.py:331 ../hosts/host123movieshd.py:25
-#: ../hosts/hostakoam.py:28 ../hosts/hostcimaclubcom.py:26
+#: ../components/iptvconfigmenu.py:331 ../hosts/host123movieshd_blocked_.py:25
+#: ../hosts/hostakoam_blocked_.py:28 ../hosts/hostcimaclubcom_blocked_.py:26
 #: ../hosts/hostfilmeonlineto.py:28 ../hosts/hostfilmstreamvkcom.py:27
 #: ../hosts/hosthdsto.py:36 ../hosts/hostkinox.py:28
 #: ../hosts/hostkissanimeto.py:32 ../hosts/hostlosmovies.py:29
@@ -675,8 +675,8 @@ msgstr "Alternatívna geolokácia IP 2:"
 msgid "Alternative proxy server (1)"
 msgstr "Alternatívny proxy server (1)"
 
-#: ../components/iptvconfigmenu.py:332 ../hosts/host123movieshd.py:26
-#: ../hosts/hostakoam.py:29 ../hosts/hostcimaclubcom.py:27
+#: ../components/iptvconfigmenu.py:332 ../hosts/host123movieshd_blocked_.py:26
+#: ../hosts/hostakoam_blocked_.py:29 ../hosts/hostcimaclubcom_blocked_.py:27
 #: ../hosts/hostfilmeonlineto.py:29 ../hosts/hostfilmstreamvkcom.py:28
 #: ../hosts/hosthdsto.py:37 ../hosts/hostkinox.py:29
 #: ../hosts/hostkissanimeto.py:33 ../hosts/hostlosmovies.py:30
@@ -731,14 +731,14 @@ msgstr "Anime"
 msgid "Anime Search"
 msgstr "Vyhľadávanie anime"
 
-#: ../hosts/hostanimeodcinki.py:50 ../hosts/hostkissanimeto.py:63
+#: ../hosts/hostanimeodcinki_blocked_.py:50 ../hosts/hostkissanimeto.py:63
 #: ../hosts/hostshahiidanimenet.py:50
 msgid "Anime list"
 msgstr "Zoznam anime"
 
 #: ../hosts/hostfilmezz.py:387 ../hosts/hostfreediscpl.py:153
 #: ../hosts/hostserienstreamto.py:548 ../hosts/hoststreamliveto.py:328
-#: ../libs/urlparser.py:4369
+#: ../libs/urlparser.py:3888
 msgid "Answer"
 msgstr "Odpoveď"
 
@@ -826,7 +826,7 @@ msgstr "Automatické zapínanie externých titulkov"
 msgid "Autoplay start delay"
 msgstr "Oneskorenie spustenia automatického prehrávania"
 
-#: ../hosts/host3player.py:58
+#: ../hosts/host3player_blocked_.py:58
 msgid "BY DAY"
 msgstr "CEZ DEŇ"
 
@@ -897,7 +897,7 @@ msgstr "Umiestnenie vyrovnávacej pamäte"
 msgid "By media title"
 msgstr "Podľa názvu média"
 
-#: ../hosts/hostcimaclubcom.py:143
+#: ../hosts/hostcimaclubcom_blocked_.py:143
 msgid "By year"
 msgstr "Podľa roku"
 
@@ -942,7 +942,7 @@ msgstr ""
 #: ../components/iptvmultipleinputbox.py:105
 #: ../components/iptvsubdownloader.py:116
 #: ../components/iptvsubsimpledownloader.py:88
-#: ../components/recaptcha_mye2i_widget.py:64
+#: ../components/recaptcha_mye2i_widget.py:79
 #: ../components/recaptcha_v2myjd_widget.py:62
 #: ../components/VirtualKeyBoard.py:103 ../Web/webParts.py:87
 msgid "Cancel"
@@ -952,7 +952,7 @@ msgstr "Zrušiť"
 msgid "Captcha"
 msgstr "Captcha"
 
-#: ../components/recaptcha_mye2i_widget.py:132
+#: ../components/recaptcha_mye2i_widget.py:147
 #: ../components/recaptcha_v2myjd_widget.py:123
 msgid ""
 "Captcha solved.\n"
@@ -970,11 +970,11 @@ msgstr "Služba riešenia problémov Captcha"
 msgid "Cartoons and anime"
 msgstr "Karikatúry a anime"
 
-#: ../hosts/hostbbcsport.py:189
+#: ../hosts/hostbbcsport_blocked_.py:189
 msgid "Catch up"
 msgstr "Catch-up"
 
-#: ../hosts/hostbbciplayer.py:59 ../hosts/hostdailymotion.py:48
+#: ../hosts/hostbbciplayer_blocked_.py:59 ../hosts/hostdailymotion.py:48
 #: ../hosts/hostfilma24io.py:86 ../hosts/hostfilmpalast.py:57
 #: ../hosts/hostfilmstreamvkcom.py:104 ../hosts/hostgovodtv.py:76
 #: ../hosts/hostgreekdocumentaries3.py:40 ../hosts/hosthdpopcornscom.py:45
@@ -1009,7 +1009,7 @@ msgstr "Kanál"
 msgid "Channel: %s"
 msgstr "Kanál: %s"
 
-#: ../hosts/hostbbciplayer.py:58 ../hosts/hostitvcom.py:60
+#: ../hosts/hostbbciplayer_blocked_.py:58 ../hosts/hostitvcom.py:60
 #: ../hosts/hostliveleak.py:51 ../hosts/hostororotv.py:48
 #: ../hosts/hostredbull.py:52 ../hosts/hostsvtplayse.py:78
 #: ../hosts/hosttvplayercom.py:80 ../hosts/hosttwitchtv_blocked_.py:129
@@ -1063,7 +1063,7 @@ msgstr "Zbierky"
 msgid "Comedies"
 msgstr "Komédie"
 
-#: ../hosts/hostbbcsport.py:189
+#: ../hosts/hostbbcsport_blocked_.py:189
 msgid "Coming up"
 msgstr "Pripravujeme sa"
 
@@ -1190,7 +1190,7 @@ msgstr "Zistená ochrana DRM."
 msgid "Darkgray"
 msgstr "Tmavo-sivá"
 
-#: ../hosts/hostbbcsport.py:440
+#: ../hosts/hostbbcsport_blocked_.py:440
 msgid "Data mismatch."
 msgstr "Nesúlad údajov."
 
@@ -1257,7 +1257,7 @@ msgstr "Predvolená politika videa pre 4:3"
 msgid "Default video quality"
 msgstr "Predvolená kvalita videa"
 
-#: ../hosts/hostbbciplayer.py:32 ../hosts/hostbbcsport.py:40
+#: ../hosts/hostbbciplayer_blocked_.py:32 ../hosts/hostbbcsport_blocked_.py:40
 #: ../hosts/hostkissanimeto.py:38 ../hosts/hostkisscartoonme.py:30
 #: ../hosts/hostsvtplayse.py:42 ../hosts/hostvevo.py:30
 #: ../hosts/hostyoutube.py:36
@@ -1289,11 +1289,11 @@ msgstr "Nemecky"
 msgid "Developers: "
 msgstr "Vývojári: "
 
-#: ../hosts/hostappletrailers.py:108
+#: ../hosts/hostappletrailers_blocked_.py:108
 msgid "Director:"
 msgstr "Režisér:"
 
-#: ../hosts/hostappletrailers.py:108
+#: ../hosts/hostappletrailers_blocked_.py:108
 msgid "Directors:"
 msgstr "Riaditeľov:"
 
@@ -1371,7 +1371,7 @@ msgstr "Stiahnutie súboru „%s“ do „%s“ zlyhalo!"
 msgid "Download %s"
 msgstr "Stiahnuť %s"
 
-#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:9336 ../Web/webParts.py:349
+#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:7976 ../Web/webParts.py:349
 #: ../Web/webParts.py:357 ../Web/webParts.py:364
 msgid "Download again"
 msgstr "Stiahnuť znova"
@@ -1539,7 +1539,7 @@ msgstr "Umiestnenie sťahovaných súborov"
 msgid "Dramas"
 msgstr "Drámy"
 
-#: ../hosts/hostartetv.py:105 ../hosts/hostcartoonhd.py:535
+#: ../hosts/hostartetv.py:105 ../hosts/hostcartoonhd_blocked_.py:535
 #: ../hosts/hostekstraklasatv.py:161 ../hosts/hosteurosportplayer.py:269
 #: ../hosts/hosthdseanspl.py:307 ../hosts/hostplayzcc.py:241
 #: ../hosts/hostraiplay.py:754 ../hosts/hostted.py:387
@@ -1681,7 +1681,7 @@ msgstr "Epizóda"
 msgid "Episode Search"
 msgstr "Vyhľadávanie epizód"
 
-#: ../hosts/hostcartoonhd.py:531
+#: ../hosts/hostcartoonhd_blocked_.py:531
 msgid "Episode title"
 msgstr "Názov epizódy"
 
@@ -1694,7 +1694,7 @@ msgstr "Epizódy"
 msgid "Error code: %s\n"
 msgstr "Kód chyby: %s\n"
 
-#: ../components/recaptcha_mye2i_widget.py:141
+#: ../components/recaptcha_mye2i_widget.py:156
 #: ../components/recaptcha_v2myjd_widget.py:132
 #, python-format
 msgid ""
@@ -1704,7 +1704,7 @@ msgstr ""
 "Kód chyby: %s\n"
 "Chybové hlásenie: %s"
 
-#: ../hosts/hostbbcsport.py:439 ../hosts/hosteurosportplayer.py:510
+#: ../hosts/hostbbcsport_blocked_.py:439 ../hosts/hosteurosportplayer.py:510
 msgid "Error communicating with the server."
 msgstr "Chyba pri komunikácii so serverom."
 
@@ -1781,7 +1781,7 @@ msgstr "Bezplatné"
 #: ../hosts/hoststreamliveto.py:322 ../hosts/hoststreamliveto.py:352
 #: ../libs/hcaptcha.py:109 ../libs/recaptcha_v1.py:37
 #: ../libs/recaptcha_v1.py:64 ../libs/recaptcha_v2.py:39
-#: ../libs/recaptcha_v2.py:79 ../libs/urlparser.py:4363
+#: ../libs/recaptcha_v2.py:79 ../libs/urlparser.py:3882
 #, python-format
 msgid "Fail to get \"%s\"."
 msgstr "Nepodarilo sa vám získať \"%s\"."
@@ -1890,7 +1890,7 @@ msgstr "Súbor \"%s\" už existuje"
 msgid "File \"%s\" already exists!"
 msgstr "Súbor \"%s\" už existuje!"
 
-#: ../libs/urlparser.py:2888
+#: ../libs/urlparser.py:2601
 msgid "File Not Found."
 msgstr "Súbor sa nenašiel."
 
@@ -1929,7 +1929,7 @@ msgstr "Návrhy spoločnosti Filmweb"
 msgid "Filter By Year"
 msgstr "Filtrovať podľa roku"
 
-#: ../hosts/hostcimaclubcom.py:147 ../hosts/hostmovs4ucom.py:48
+#: ../hosts/hostcimaclubcom_blocked_.py:147 ../hosts/hostmovs4ucom.py:48
 #: ../hosts/hostnuteczki.py:95
 msgid "Filters"
 msgstr "Filtre"
@@ -1988,7 +1988,7 @@ msgstr "Francúzština"
 msgid "From E2 settings"
 msgstr "Z nastavení plánu E2"
 
-#: ../hosts/host123movieshd.py:191
+#: ../hosts/host123movieshd_blocked_.py:191
 msgid "Functionality protected by Google reCAPTCHA!"
 msgstr "Funkcionalita chránená službou Google reCAPTCHA!"
 
@@ -2010,7 +2010,7 @@ msgstr "Hry"
 msgid "General"
 msgstr "Všeobecné"
 
-#: ../hosts/hostappletrailers.py:108
+#: ../hosts/hostappletrailers_blocked_.py:108
 msgid "Genre:"
 msgstr "Žáner:"
 
@@ -2023,8 +2023,9 @@ msgstr "Žáner: "
 msgid "Genre: %s"
 msgstr "Žáner: %s"
 
-#: ../hosts/hostanimeodcinki.py:52 ../hosts/hostbajeczkiorg.py:218
-#: ../hosts/hostbsto_blocked_.py:87 ../hosts/hosthdseanspl.py:308
+#: ../hosts/hostanimeodcinki_blocked_.py:52
+#: ../hosts/hostbajeczkiorg_blocked_.py:218 ../hosts/hostbsto_blocked_.py:87
+#: ../hosts/hostguardaserie.py:29 ../hosts/hosthdseanspl.py:308
 #: ../hosts/hosthorrorycc.py:297 ../hosts/hostmovs4ucom.py:56
 #: ../hosts/hostplayzcc.py:243 ../hosts/hostserienstreamto.py:50
 #: ../hosts/hostshoutcast.py:52 ../hosts/hostthewatchseriesto.py:53
@@ -2033,7 +2034,7 @@ msgstr "Žáner: %s"
 msgid "Genres"
 msgstr "Žánrov"
 
-#: ../hosts/hostappletrailers.py:108 ../hosts/hostfilma24io.py:262
+#: ../hosts/hostappletrailers_blocked_.py:108 ../hosts/hostfilma24io.py:262
 msgid "Genres:"
 msgstr "Žánre:"
 
@@ -2155,7 +2156,7 @@ msgstr "Vysoké"
 msgid "High (or HD)"
 msgstr "Vysoká (alebo HD)"
 
-#: ../hosts/hostbbciplayer.py:200 ../hosts/hostogladajto.py:94
+#: ../hosts/hostbbciplayer_blocked_.py:200 ../hosts/hostogladajto.py:94
 #: ../hosts/hosttwitchtv_blocked_.py:117
 msgid "Highlights"
 msgstr "Zosvetlenie"
@@ -2174,12 +2175,12 @@ msgstr "Domov"
 msgid "Home page"
 msgstr "Domovská stránka"
 
-#: ../libs/urlparser.py:1212
+#: ../libs/urlparser.py:1126
 #, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr "Hosting \"%s\" nie je podporovaný."
 
-#: ../libs/urlparser.py:1214
+#: ../libs/urlparser.py:1128
 #, python-format
 msgid "Hosting \"%s\" unknown."
 msgstr "Hosťovanie \"%s\" neznáme."
@@ -2287,16 +2288,11 @@ msgstr "Vstup"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interaktívne vzdelávacie centrum (ILC)"
 
-#: ../libs/urlparser.py:10723
-#, python-format
-msgid "Internal Server Error. Server response code: %s"
-msgstr "Interná chyba servera. Kód odpovede servera: %s"
-
 #: ../hosts/hostonlinestream.py:114
 msgid "Internetes rádiók listázása"
 msgstr "Internetes rádiók listázása"
 
-#: ../components/recaptcha_mye2i_widget.py:137
+#: ../components/recaptcha_mye2i_widget.py:152
 #: ../components/recaptcha_v2myjd_widget.py:128
 msgid "Invalid email."
 msgstr "Neplatný email."
@@ -2468,7 +2464,7 @@ msgstr "NAJNOVŠÍ OBSAH"
 msgid "LIKES"
 msgstr "RÁD"
 
-#: ../hosts/host3player.py:57
+#: ../hosts/host3player_blocked_.py:57
 msgid "LIVE"
 msgstr "NAŽIVO"
 
@@ -2551,7 +2547,7 @@ msgstr "Minulý mesiac"
 msgid "Last week"
 msgstr "Minulý týždeň"
 
-#: ../hosts/hostcartoonhd.py:32 ../hosts/hostxrysoise.py:31
+#: ../hosts/hostcartoonhd_blocked_.py:32 ../hosts/hostxrysoise.py:31
 msgid "Lastest"
 msgstr "Posledný"
 
@@ -2607,7 +2603,7 @@ msgstr "Gstplayer odkaz nepodporuje. Použite extelayer3, ak je k dispozícii."
 msgid "Link protected with CF Turnstile ."
 msgstr "Spojenie chránené turniketom CF."
 
-#: ../hosts/host3player.py:390
+#: ../hosts/host3player_blocked_.py:390
 msgid "Link protected with DRM."
 msgstr "Prepojenie chránené technológiou DRM."
 
@@ -2618,7 +2614,7 @@ msgstr "Odkaz chránený pomocou služby Google ReCaptcha v2"
 #: ../hosts/hostekinotv.py:453 ../hosts/hostfilmezz.py:334
 #: ../hosts/hostfreediscpl.py:85 ../hosts/hosthdstreams_blocked_.py:428
 #: ../hosts/hosthdstreams_blocked_.py:445 ../hosts/hostserienstreamto.py:410
-#: ../hosts/hosttvpvod.py:230 ../libs/urlparser.py:9336
+#: ../hosts/hosttvpvod.py:230 ../libs/urlparser.py:7976
 msgid "Link protected with google recaptcha v2."
 msgstr "Odkaz chránený pomocou služby Google Recaptcha v2."
 
@@ -2649,10 +2645,11 @@ msgstr "Zoznam iba kanálov s odberom"
 msgid "Listeners: %s"
 msgstr "Poslucháči: %s"
 
-#: ../hosts/hostbbciplayer.py:148 ../hosts/hostbbcsport.py:189
-#: ../hosts/hostplayrtsiw.py:151 ../hosts/hostrteieplayer.py:53
-#: ../hosts/hostyoutube.py:70 ../hosts/hostyoutube.py:191
-#: ../hosts/hostzdfmediathek.py:336 ../tools/iptvhostgroups.py:36
+#: ../hosts/hostbbciplayer_blocked_.py:148
+#: ../hosts/hostbbcsport_blocked_.py:189 ../hosts/hostplayrtsiw.py:151
+#: ../hosts/hostrteieplayer.py:53 ../hosts/hostyoutube.py:70
+#: ../hosts/hostyoutube.py:191 ../hosts/hostzdfmediathek.py:336
+#: ../tools/iptvhostgroups.py:36
 msgid "Live"
 msgstr "Naživo"
 
@@ -2727,8 +2724,8 @@ msgstr "Prihlásenie"
 msgid "Login failed!"
 msgstr "Prihlásenie zlyhalo!"
 
-#: ../hosts/hostbbcsport.py:510 ../hosts/hostcartoonhd.py:616
-#: ../hosts/hostcdapl.py:494 ../hosts/hostdixmax.py:479
+#: ../hosts/hostbbcsport_blocked_.py:510 ../hosts/hostcartoonhd_blocked_.py:616
+#: ../hosts/hostcdapl_blocked_.py:494 ../hosts/hostdixmax.py:479
 #: ../hosts/hostegybest.py:513 ../hosts/hostekinotv.py:562
 #: ../hosts/hostfilman.py:382 ../hosts/hostfilmezz.py:532
 #: ../hosts/hostfreediscpl.py:478 ../hosts/hosthdfull.py:648
@@ -2751,12 +2748,12 @@ msgstr "Prihlásenie zlyhalo. Neplatný e-mail alebo heslo."
 msgid "Login needed"
 msgstr "Je vyžadované prihlásenie"
 
-#: ../libs/urlparser.py:5891
+#: ../libs/urlparser.py:5312
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr "Prihlásenie na {0} zlyhalo."
 
-#: ../libs/urlparser.py:2511
+#: ../libs/urlparser.py:2316
 #, python-format
 msgid ""
 "Login user \"%s\" to http://vk.com/ failed!\n"
@@ -2769,7 +2766,7 @@ msgstr ""
 msgid "Logs"
 msgstr "Logy"
 
-#: ../hosts/hostcartoonhd.py:32 ../hosts/hostxrysoise.py:31
+#: ../hosts/hostcartoonhd_blocked_.py:32 ../hosts/hostxrysoise.py:31
 msgid "Longest"
 msgstr "Najdlhšia"
 
@@ -2800,7 +2797,7 @@ msgstr "Hlavné"
 msgid "Main Event"
 msgstr "Hlavné podujatie"
 
-#: ../hosts/hostcimaclubcom.py:129 ../hosts/hostnuteczki.py:88
+#: ../hosts/hostcimaclubcom_blocked_.py:129 ../hosts/hostnuteczki.py:88
 msgid "Main menu"
 msgstr "Hlavné menu"
 
@@ -2880,7 +2877,7 @@ msgstr "Viac"
 msgid "More important"
 msgstr "Dôležitejšie"
 
-#: ../hosts/hostbbciplayer.py:61
+#: ../hosts/hostbbciplayer_blocked_.py:61
 msgid "Most Popular"
 msgstr "Najpopulárnejšie"
 
@@ -2902,7 +2899,7 @@ msgstr "Najviac hodnotené"
 msgid "Most recent"
 msgstr "Najnovšie"
 
-#: ../hosts/hostartetv.py:187 ../hosts/hostcartoonhd.py:32
+#: ../hosts/hostartetv.py:187 ../hosts/hostcartoonhd_blocked_.py:32
 #: ../hosts/hostdailymotion.py:52 ../hosts/hostxrysoise.py:31
 msgid "Most viewed"
 msgstr "Najviac videné"
@@ -2963,7 +2960,7 @@ msgstr "Filmy podľa roku"
 msgid "Movies genres"
 msgstr "Filmové žánre"
 
-#: ../hosts/hostanimeodcinki.py:51
+#: ../hosts/hostanimeodcinki_blocked_.py:51
 msgid "Movies list"
 msgstr "Zoznam filmov"
 
@@ -2998,7 +2995,7 @@ msgstr "Riešenie MyE2i Cloudflare"
 msgid "MyE2i reCAPTCHA solution"
 msgstr "Riešenie MyE2i reCAPTCHA"
 
-#: ../components/recaptcha_mye2i_widget.py:105
+#: ../components/recaptcha_mye2i_widget.py:120
 #, python-format
 msgid ""
 "MyE2i script execution failed.\n"
@@ -3007,7 +3004,7 @@ msgstr ""
 "Spustenie skriptu MyE2i zlyhalo.\n"
 "Kód chyby: %s\n"
 
-#: ../components/recaptcha_mye2i_widget.py:102
+#: ../components/recaptcha_mye2i_widget.py:117
 msgid "MyE2i script finished."
 msgstr "Skript MyE2i bol dokončený."
 
@@ -3039,7 +3036,7 @@ msgstr ""
 msgid "Name:"
 msgstr "Meno:"
 
-#: ../hosts/hostcartoonhd.py:535
+#: ../hosts/hostcartoonhd_blocked_.py:535
 msgid "Network"
 msgstr "Sieť"
 
@@ -3055,7 +3052,7 @@ msgstr "Sieť zlyhala %s."
 msgid "Never"
 msgstr "Nikdy"
 
-#: ../hosts/hostanimeodcinki.py:48 ../hosts/hostfilmativa.py:47
+#: ../hosts/hostanimeodcinki_blocked_.py:48 ../hosts/hostfilmativa.py:47
 #: ../hosts/hostfilmativa.py:51 ../hosts/hostfilmpalast.py:55
 #: ../hosts/hosthdfilme.py:34 ../hosts/hosthdfilmetv.py:35
 #: ../hosts/hostserienstreamto.py:51 ../hosts/hosttopstreamfilm.py:31
@@ -3108,36 +3105,42 @@ msgstr "Novinky"
 msgid "Next Page"
 msgstr "Ďalšia strana"
 
-#: ../hosts/host123movieshd.py:217 ../hosts/host3player.py:198
-#: ../hosts/host3sktv.py:128 ../hosts/host3sktv.py:291
-#: ../hosts/host9anime.py:56 ../hosts/hostakoam.py:194
+#: ../hosts/host123movieshd_blocked_.py:217
+#: ../hosts/host3player_blocked_.py:198 ../hosts/host3sktv_blocked_.py:128
+#: ../hosts/host3sktv_blocked_.py:291 ../hosts/host9anime.py:56
+#: ../hosts/hostakoam_blocked_.py:194
 #: ../hosts/hostaltadefinizione_blocked_.py:154
 #: ../hosts/hostaltadefinizione01.py:169 ../hosts/hostaltadefinizione01.py:234
-#: ../hosts/hostanimeodcinki.py:237 ../hosts/hostardmediathek_blocked_.py:315
-#: ../hosts/hostbajeczkiorg.py:110 ../hosts/hostbasketballvideocom.py:98
-#: ../hosts/hostbbciplayer.py:501 ../hosts/hostcartoonhd.py:183
-#: ../hosts/hostcdapl.py:232 ../hosts/hostchristusvincit.py:452
-#: ../hosts/hostcimaclubcom.py:276 ../hosts/hostcinemay.py:115
-#: ../hosts/hostcineto.py:245 ../hosts/hostclassiccinemaonline.py:142
-#: ../hosts/hostclassiccinemaonline.py:177 ../hosts/hostdailymotion.py:94
-#: ../hosts/hostdel_blocked_.py:123 ../hosts/hostdixmax.py:265
-#: ../hosts/hostdokumentalnenet.py:140 ../hosts/hostegybest.py:205
-#: ../hosts/hosteinschalten.py:73 ../hosts/hostekinotv.py:203
-#: ../hosts/hostekinotv.py:238 ../hosts/hostekstraklasatv.py:328
-#: ../hosts/hosteskago.py:226 ../hosts/hostfaselhdcom.py:169
-#: ../hosts/hostfenixsite.py:182 ../hosts/hostfightvideo.py:182
-#: ../hosts/hostfightvideo.py:262 ../hosts/hostfilma24hdcom.py:170
-#: ../hosts/hostfilma24io.py:145 ../hosts/hostfilman.py:211
-#: ../hosts/hostfilmaoncom.py:146 ../hosts/hostfilmativa.py:143
-#: ../hosts/hostfilmehdnet.py:140 ../hosts/hostfilmeonlineto.py:258
-#: ../hosts/hostfilmezz.py:220 ../hosts/hostfilmovizijastudio.py:266
-#: ../hosts/hostfilmowoclub.py:178 ../hosts/hostfilmpalast.py:191
-#: ../hosts/hostfilmpertutti.py:119 ../hosts/hostfilmstreamvkcom.py:165
-#: ../hosts/hostforjatn.py:176 ../hosts/hostfreediscpl.py:228
-#: ../hosts/hostfreediscpl.py:268 ../hosts/hostfullmatchtvcom.py:110
-#: ../hosts/hostgamatocom.py:157 ../hosts/hostgamatotvme.py:189
-#: ../hosts/hostgledalica.py:247 ../hosts/hostgovodtv.py:180
-#: ../hosts/hostgreekdocumentaries3.py:146 ../hosts/hosthdfilme.py:86
+#: ../hosts/hostanimeodcinki_blocked_.py:237
+#: ../hosts/hostardmediathek_blocked_.py:315
+#: ../hosts/hostbajeczkiorg_blocked_.py:110
+#: ../hosts/hostbasketballvideocom.py:98
+#: ../hosts/hostbbciplayer_blocked_.py:501
+#: ../hosts/hostcartoonhd_blocked_.py:183 ../hosts/hostcdapl_blocked_.py:232
+#: ../hosts/hostchristusvincit_blocked_.py:452
+#: ../hosts/hostcimaclubcom_blocked_.py:276
+#: ../hosts/hostcinemay_blocked_.py:115 ../hosts/hostcineto.py:245
+#: ../hosts/hostclassiccinemaonline_blocked_.py:142
+#: ../hosts/hostclassiccinemaonline_blocked_.py:177
+#: ../hosts/hostdailymotion.py:94 ../hosts/hostdel_blocked_.py:123
+#: ../hosts/hostdixmax.py:265 ../hosts/hostdokumentalnenet.py:140
+#: ../hosts/hostegybest.py:205 ../hosts/hosteinschalten.py:73
+#: ../hosts/hostekinotv.py:203 ../hosts/hostekinotv.py:238
+#: ../hosts/hostekstraklasatv.py:328 ../hosts/hosteskago.py:226
+#: ../hosts/hostfaselhdcom.py:169 ../hosts/hostfenixsite.py:182
+#: ../hosts/hostfightvideo.py:182 ../hosts/hostfightvideo.py:262
+#: ../hosts/hostfilma24hdcom.py:170 ../hosts/hostfilma24io.py:145
+#: ../hosts/hostfilman.py:211 ../hosts/hostfilmaoncom.py:146
+#: ../hosts/hostfilmativa.py:143 ../hosts/hostfilmehdnet.py:140
+#: ../hosts/hostfilmeonlineto.py:258 ../hosts/hostfilmezz.py:220
+#: ../hosts/hostfilmovizijastudio.py:266 ../hosts/hostfilmowoclub.py:178
+#: ../hosts/hostfilmpalast.py:191 ../hosts/hostfilmpertutti.py:119
+#: ../hosts/hostfilmstreamvkcom.py:165 ../hosts/hostforjatn.py:176
+#: ../hosts/hostfreediscpl.py:228 ../hosts/hostfreediscpl.py:268
+#: ../hosts/hostfullmatchtvcom.py:110 ../hosts/hostgamatocom.py:157
+#: ../hosts/hostgamatotvme.py:189 ../hosts/hostgledalica.py:247
+#: ../hosts/hostgovodtv.py:180 ../hosts/hostgreekdocumentaries3.py:146
+#: ../hosts/hostguardaserie.py:55 ../hosts/hosthdfilme.py:86
 #: ../hosts/hosthdfilmetv.py:77 ../hosts/hosthdfull.py:273
 #: ../hosts/hosthdfull.py:443 ../hosts/hosthdpopcornscom.py:187
 #: ../hosts/hosthdseanspl.py:174 ../hosts/hosthdsto.py:286
@@ -3246,17 +3249,18 @@ msgid "No valid links available."
 msgstr "Nie sú k dispozícii žiadne platné odkazy."
 
 #: ../components/iptvconfigmenu.py:71 ../components/iptvconfigmenu.py:227
-#: ../components/iptvextmovieplayer.py:863 ../hosts/host123movieshd.py:24
-#: ../hosts/hostakoam.py:27 ../hosts/hostbsto_blocked_.py:36
-#: ../hosts/hostcimaclubcom.py:25 ../hosts/hostcineto.py:27
-#: ../hosts/hostfilmeonlineto.py:27 ../hosts/hostfilmstreamvkcom.py:26
-#: ../hosts/hosthdsto.py:34 ../hosts/hosthdstreams_blocked_.py:31
-#: ../hosts/hostkinox.py:27 ../hosts/hostkissanimeto.py:31
-#: ../hosts/hostlocalmedia.py:37 ../hosts/hostlosmovies.py:28
-#: ../hosts/hostmrpiracy.py:44 ../hosts/hostplanetstreamingcom.py:21
-#: ../hosts/hostputlockertvto.py:31 ../hosts/hostseriesonline.py:26
-#: ../hosts/hostskstream.py:27 ../hosts/hostsolarmovie.py:29
-#: ../hosts/hostyesmoviesto.py:28 ../hosts/hostyifytv.py:35
+#: ../components/iptvextmovieplayer.py:863
+#: ../hosts/host123movieshd_blocked_.py:24 ../hosts/hostakoam_blocked_.py:27
+#: ../hosts/hostbsto_blocked_.py:36 ../hosts/hostcimaclubcom_blocked_.py:25
+#: ../hosts/hostcineto.py:27 ../hosts/hostfilmeonlineto.py:27
+#: ../hosts/hostfilmstreamvkcom.py:26 ../hosts/hosthdsto.py:34
+#: ../hosts/hosthdstreams_blocked_.py:31 ../hosts/hostkinox.py:27
+#: ../hosts/hostkissanimeto.py:31 ../hosts/hostlocalmedia.py:37
+#: ../hosts/hostlosmovies.py:28 ../hosts/hostmrpiracy.py:44
+#: ../hosts/hostplanetstreamingcom.py:21 ../hosts/hostputlockertvto.py:31
+#: ../hosts/hostseriesonline.py:26 ../hosts/hostskstream.py:27
+#: ../hosts/hostsolarmovie.py:29 ../hosts/hostyesmoviesto.py:28
+#: ../hosts/hostyifytv.py:35
 msgid "None"
 msgstr "Žiadne"
 
@@ -3305,7 +3309,7 @@ msgstr "K dispozícii iba vo Švédsku."
 msgid "Only available in Sweden.\n"
 msgstr "K dispozícii iba vo Švédsku.\n"
 
-#: ../libs/urlparser.py:8135
+#: ../libs/urlparser.py:6872
 msgid ""
 "Only logged in user have access.\n"
 "Please set login data in the host configuration under blue button."
@@ -3358,7 +3362,7 @@ msgstr "STRANY"
 msgid "PAY"
 msgstr "PLATIŤ"
 
-#: ../hosts/hostcartoonhd.py:535
+#: ../hosts/hostcartoonhd_blocked_.py:535
 msgid "PEGI"
 msgstr "PEGI"
 
@@ -3494,7 +3498,7 @@ msgstr "Zoznam skladieb"
 msgid "Playlists"
 msgstr "Playlisty"
 
-#: ../components/recaptcha_mye2i_widget.py:176
+#: ../components/recaptcha_mye2i_widget.py:191
 #, python-brace-format
 msgid ""
 "Please Open site:\n"
@@ -3616,7 +3620,7 @@ msgstr "Preferovaná kvalita"
 msgid "Preferred bitrate"
 msgstr "Preferovaný dátový tok"
 
-#: ../hosts/hostbbciplayer.py:34 ../hosts/hostbbcsport.py:42
+#: ../hosts/hostbbciplayer_blocked_.py:34 ../hosts/hostbbcsport_blocked_.py:42
 #: ../hosts/hostsvtplayse.py:44
 msgid "Preferred format:"
 msgstr "Preferovaný formát:"
@@ -3683,7 +3687,7 @@ msgstr "Programy A-Ö"
 msgid "Promote item"
 msgstr "Zvýšenie úrovne položky"
 
-#: ../hosts/hostbbcsport.py:189 ../hosts/hosthoofootcom.py:41
+#: ../hosts/hostbbcsport_blocked_.py:189 ../hosts/hosthoofootcom.py:41
 msgid "Promoted"
 msgstr "Promované"
 
@@ -3719,10 +3723,6 @@ msgstr "Veľkosť vyrovnávacej pamäte RAM [MB] pre lokálne súbory"
 msgid "RAM buffer size [MB] for network protocols"
 msgstr "Veľkosť vyrovnávacej pamäte RAM [MB] pre sieťové protokoly"
 
-#: ../hosts/hostguardaserie_blocked_.py:413
-msgid "RATING"
-msgstr "Hodnotenie"
-
 #: ../hosts/hostwatchwrestling.py:55 ../hosts/hostwatchwrestlinguno.py:40
 msgid "RAW"
 msgstr ".RAW"
@@ -3756,11 +3756,11 @@ msgstr "Rozhlasové stanice"
 msgid "Radiology Rounds"
 msgstr "Rádiologické obhliadky"
 
-#: ../hosts/hostcartoonhd.py:552
+#: ../hosts/hostcartoonhd_blocked_.py:552
 msgid "Raiting"
 msgstr "Raiting"
 
-#: ../hosts/hostcartoonhd.py:32 ../hosts/hostdailymotion.py:57
+#: ../hosts/hostcartoonhd_blocked_.py:32 ../hosts/hostdailymotion.py:57
 #: ../hosts/hostxrysoise.py:31
 msgid "Random"
 msgstr "Náhodné"
@@ -3955,65 +3955,69 @@ msgstr "Veda"
 msgid "Score at least: "
 msgstr "Skóre aspoň: "
 
-#: ../hosts/host123movieshd.py:128 ../hosts/host3player.py:61
-#: ../hosts/host3sktv.py:88 ../hosts/host9anime.py:30 ../hosts/hostakoam.py:125
+#: ../hosts/host123movieshd_blocked_.py:128 ../hosts/host3player_blocked_.py:61
+#: ../hosts/host3sktv_blocked_.py:88 ../hosts/host9anime.py:30
+#: ../hosts/hostakoam_blocked_.py:125
 #: ../hosts/hostaltadefinizione_blocked_.py:110
-#: ../hosts/hostaltadefinizione01.py:112 ../hosts/hostanimeodcinki.py:53
-#: ../hosts/hostappletrailers.py:52 ../hosts/hostardmediathek_blocked_.py:70
-#: ../hosts/hostartetv.py:173 ../hosts/hostbajeczkiorg.py:51
-#: ../hosts/hostbbciplayer.py:62 ../hosts/hostbsto_blocked_.py:89
-#: ../hosts/hostcartoonhd.py:84 ../hosts/hostcdapl.py:69
-#: ../hosts/hostchristusvincit.py:304 ../hosts/hostcimaclubcom.py:56
-#: ../hosts/hostcinemay.py:51 ../hosts/hostcineto.py:64
-#: ../hosts/hostclassiccinemaonline.py:48 ../hosts/hostdailymotion.py:49
-#: ../hosts/hostdancetrippin.py:45 ../hosts/hostdixmax.py:132
-#: ../hosts/hostdokumentalnenet.py:52 ../hosts/hostegybest.py:70
-#: ../hosts/hosteinschalten.py:35 ../hosts/hostekinotv.py:71
-#: ../hosts/hostfaselhdcom.py:45 ../hosts/hostfenixsite.py:74
-#: ../hosts/hostfilma24hdcom.py:40 ../hosts/hostfilma24io.py:89
-#: ../hosts/hostfilman.py:95 ../hosts/hostfilmaoncom.py:94
-#: ../hosts/hostfilmativa.py:43 ../hosts/hostfilmehdnet.py:56
-#: ../hosts/hostfilmeonlineto.py:116 ../hosts/hostfilmezz.py:76
-#: ../hosts/hostfilmovizijastudio.py:58 ../hosts/hostfilmowoclub.py:70
-#: ../hosts/hostfilmpalast.py:51 ../hosts/hostfilmpertutti.py:49
-#: ../hosts/hostfilmstreamvkcom.py:107 ../hosts/hostforjatn.py:51
-#: ../hosts/hostfreediscpl.py:58 ../hosts/hostgamatocom.py:46
-#: ../hosts/hostgamatotvme.py:48 ../hosts/hostgledalica.py:80
-#: ../hosts/hostgovodtv.py:78 ../hosts/hostgreekdocumentaries3.py:44
-#: ../hosts/hostguardaserie_blocked_.py:136 ../hosts/hosthdfilme.py:40
-#: ../hosts/hosthdfilmetv.py:39 ../hosts/hosthdfull.py:163
-#: ../hosts/hosthdpopcornscom.py:46 ../hosts/hosthdseanspl.py:69
-#: ../hosts/hosthdsto.py:156 ../hosts/hosthdstreams_blocked_.py:75
-#: ../hosts/hosthoofootcom.py:42 ../hosts/hosthorrorycc.py:77
-#: ../hosts/hostinteriatv.py:63 ../hosts/hostkabarety.py:49
-#: ../hosts/hostkijknl.py:63 ../hosts/hostkinoger.py:39
-#: ../hosts/hostkinokiste.py:36 ../hosts/hostkinomoc.py:71
-#: ../hosts/hostkinox.py:98 ../hosts/hostkissanimeto.py:64
-#: ../hosts/hostkisscartoonme.py:50 ../hosts/hostkkiste.py:37
-#: ../hosts/hostkreskoweczki.py:49 ../hosts/hostlaola1tv_blocked_.py:57
-#: ../hosts/hostlibrestream.py:37 ../hosts/hostliveleak.py:52
-#: ../hosts/hostlosmovies.py:63 ../hosts/hostluxveritatis.py:60
-#: ../hosts/hostmaxtvgo.py:65 ../hosts/hostmediasetplay.py:121
-#: ../hosts/hostmediayou.py:76 ../hosts/hostmegakino.py:37
-#: ../hosts/hostmoflixstream.py:41 ../hosts/hostmovie2k.py:38
-#: ../hosts/hostmovie4k.py:37 ../hosts/hostmovienightws.py:39
-#: ../hosts/hostmovizlandcom.py:40 ../hosts/hostmovs4ucom.py:50
-#: ../hosts/hostmrpiracy.py:124 ../hosts/hostmusicmp3ru.py:91
-#: ../hosts/hostninateka.py:57 ../hosts/hostnuteczki.py:96
-#: ../hosts/hostobejrzyjto.py:80 ../hosts/hostogladajto.py:98
-#: ../hosts/hostoipeirates.py:85 ../hosts/hostokgoals.py:46
-#: ../hosts/hostororotv.py:49 ../hosts/hostorthobulletscom.py:74
-#: ../hosts/hostotakufr.py:67 ../hosts/hostourmatchnet.py:48
-#: ../hosts/hostpinkbike.py:47 ../hosts/hostplanetstreamingcom.py:110
-#: ../hosts/hostplaypuls.py:73 ../hosts/hostplayrtsiw.py:96
-#: ../hosts/hostplayzcc.py:66 ../hosts/hostputlockertvto.py:144
-#: ../hosts/hostredbull.py:54 ../hosts/hostrtbfbe.py:107
-#: ../hosts/hostrteieplayer.py:56 ../hosts/hostrtlmost.py:188
-#: ../hosts/hostseezsu.py:73 ../hosts/hostserialeco.py:48
-#: ../hosts/hostserienstreamto.py:53 ../hosts/hostseriesonline.py:142
-#: ../hosts/hostserijeonline.py:62 ../hosts/hostshahiidanimenet.py:51
-#: ../hosts/hostshoutcast.py:53 ../hosts/hostskstream.py:126
-#: ../hosts/hostsolarmovie.py:133 ../hosts/hostspiegeltv_blocked_.py:78
+#: ../hosts/hostaltadefinizione01.py:112
+#: ../hosts/hostanimeodcinki_blocked_.py:53
+#: ../hosts/hostappletrailers_blocked_.py:52
+#: ../hosts/hostardmediathek_blocked_.py:70 ../hosts/hostartetv.py:173
+#: ../hosts/hostbajeczkiorg_blocked_.py:51
+#: ../hosts/hostbbciplayer_blocked_.py:62 ../hosts/hostbsto_blocked_.py:89
+#: ../hosts/hostcartoonhd_blocked_.py:84 ../hosts/hostcdapl_blocked_.py:69
+#: ../hosts/hostchristusvincit_blocked_.py:304
+#: ../hosts/hostcimaclubcom_blocked_.py:56 ../hosts/hostcinemay_blocked_.py:51
+#: ../hosts/hostcineto.py:64 ../hosts/hostclassiccinemaonline_blocked_.py:48
+#: ../hosts/hostdailymotion.py:49 ../hosts/hostdancetrippin.py:45
+#: ../hosts/hostdixmax.py:132 ../hosts/hostdokumentalnenet.py:52
+#: ../hosts/hostegybest.py:70 ../hosts/hosteinschalten.py:35
+#: ../hosts/hostekinotv.py:71 ../hosts/hostfaselhdcom.py:45
+#: ../hosts/hostfenixsite.py:74 ../hosts/hostfilma24hdcom.py:40
+#: ../hosts/hostfilma24io.py:89 ../hosts/hostfilman.py:95
+#: ../hosts/hostfilmaoncom.py:94 ../hosts/hostfilmativa.py:43
+#: ../hosts/hostfilmehdnet.py:56 ../hosts/hostfilmeonlineto.py:116
+#: ../hosts/hostfilmezz.py:76 ../hosts/hostfilmovizijastudio.py:58
+#: ../hosts/hostfilmowoclub.py:70 ../hosts/hostfilmpalast.py:51
+#: ../hosts/hostfilmpertutti.py:49 ../hosts/hostfilmstreamvkcom.py:107
+#: ../hosts/hostforjatn.py:51 ../hosts/hostfreediscpl.py:58
+#: ../hosts/hostgamatocom.py:46 ../hosts/hostgamatotvme.py:48
+#: ../hosts/hostgledalica.py:80 ../hosts/hostgovodtv.py:78
+#: ../hosts/hostgreekdocumentaries3.py:44 ../hosts/hostguardaserie.py:30
+#: ../hosts/hosthdfilme.py:40 ../hosts/hosthdfilmetv.py:39
+#: ../hosts/hosthdfull.py:163 ../hosts/hosthdpopcornscom.py:46
+#: ../hosts/hosthdseanspl.py:69 ../hosts/hosthdsto.py:156
+#: ../hosts/hosthdstreams_blocked_.py:75 ../hosts/hosthoofootcom.py:42
+#: ../hosts/hosthorrorycc.py:77 ../hosts/hostinteriatv.py:63
+#: ../hosts/hostkabarety.py:49 ../hosts/hostkijknl.py:63
+#: ../hosts/hostkinoger.py:39 ../hosts/hostkinokiste.py:36
+#: ../hosts/hostkinomoc.py:71 ../hosts/hostkinox.py:98
+#: ../hosts/hostkissanimeto.py:64 ../hosts/hostkisscartoonme.py:50
+#: ../hosts/hostkkiste.py:37 ../hosts/hostkreskoweczki.py:49
+#: ../hosts/hostlaola1tv_blocked_.py:57 ../hosts/hostlibrestream.py:37
+#: ../hosts/hostliveleak.py:52 ../hosts/hostlosmovies.py:63
+#: ../hosts/hostluxveritatis.py:60 ../hosts/hostmaxtvgo.py:65
+#: ../hosts/hostmediasetplay.py:121 ../hosts/hostmediayou.py:76
+#: ../hosts/hostmegakino.py:37 ../hosts/hostmoflixstream.py:41
+#: ../hosts/hostmovie2k.py:38 ../hosts/hostmovie4k.py:37
+#: ../hosts/hostmovienightws.py:39 ../hosts/hostmovizlandcom.py:40
+#: ../hosts/hostmovs4ucom.py:50 ../hosts/hostmrpiracy.py:124
+#: ../hosts/hostmusicmp3ru.py:91 ../hosts/hostninateka.py:57
+#: ../hosts/hostnuteczki.py:96 ../hosts/hostobejrzyjto.py:80
+#: ../hosts/hostogladajto.py:98 ../hosts/hostoipeirates.py:85
+#: ../hosts/hostokgoals.py:46 ../hosts/hostororotv.py:49
+#: ../hosts/hostorthobulletscom.py:74 ../hosts/hostotakufr.py:67
+#: ../hosts/hostourmatchnet.py:48 ../hosts/hostpinkbike.py:47
+#: ../hosts/hostplanetstreamingcom.py:110 ../hosts/hostplaypuls.py:73
+#: ../hosts/hostplayrtsiw.py:96 ../hosts/hostplayzcc.py:66
+#: ../hosts/hostputlockertvto.py:144 ../hosts/hostredbull.py:54
+#: ../hosts/hostrtbfbe.py:107 ../hosts/hostrteieplayer.py:56
+#: ../hosts/hostrtlmost.py:188 ../hosts/hostseezsu.py:73
+#: ../hosts/hostserialeco.py:48 ../hosts/hostserienstreamto.py:53
+#: ../hosts/hostseriesonline.py:142 ../hosts/hostserijeonline.py:62
+#: ../hosts/hostshahiidanimenet.py:51 ../hosts/hostshoutcast.py:53
+#: ../hosts/hostskstream.py:126 ../hosts/hostsolarmovie.py:133
+#: ../hosts/hostspiegeltv_blocked_.py:78
 #: ../hosts/hostsportdeutschland_blocked_.py:57 ../hosts/hoststreamcloud.py:39
 #: ../hosts/hoststreamcomplet.py:38 ../hosts/hoststreamliveto.py:53
 #: ../hosts/hostsvtplayse.py:82 ../hosts/hosttainieskaiseirestv.py:62
@@ -4121,66 +4125,69 @@ msgstr "Vyhľadávanie filmov a televíznych seriálov"
 msgid "Search for \"%s\", %s, %s %s"
 msgstr "Vyhľadajte výraz \"%s\", %s, %s %s"
 
-#: ../components/e2ivk.py:703 ../hosts/host123movieshd.py:129
-#: ../hosts/host3player.py:62 ../hosts/host3sktv.py:89
-#: ../hosts/host9anime.py:31 ../hosts/hostakoam.py:126
+#: ../components/e2ivk.py:703 ../hosts/host123movieshd_blocked_.py:129
+#: ../hosts/host3player_blocked_.py:62 ../hosts/host3sktv_blocked_.py:89
+#: ../hosts/host9anime.py:31 ../hosts/hostakoam_blocked_.py:126
 #: ../hosts/hostaltadefinizione_blocked_.py:111
-#: ../hosts/hostaltadefinizione01.py:113 ../hosts/hostanimeodcinki.py:54
-#: ../hosts/hostappletrailers.py:53 ../hosts/hostardmediathek_blocked_.py:71
-#: ../hosts/hostartetv.py:174 ../hosts/hostbajeczkiorg.py:52
-#: ../hosts/hostbbciplayer.py:63 ../hosts/hostbsto_blocked_.py:90
-#: ../hosts/hostcartoonhd.py:85 ../hosts/hostcdapl.py:70
-#: ../hosts/hostchristusvincit.py:305 ../hosts/hostcimaclubcom.py:57
-#: ../hosts/hostcinemay.py:52 ../hosts/hostcineto.py:65
-#: ../hosts/hostclassiccinemaonline.py:49 ../hosts/hostdailymotion.py:50
-#: ../hosts/hostdancetrippin.py:46 ../hosts/hostdixmax.py:133
-#: ../hosts/hostdokumentalnenet.py:53 ../hosts/hostegybest.py:71
-#: ../hosts/hosteinschalten.py:36 ../hosts/hostekinotv.py:72
-#: ../hosts/hostfaselhdcom.py:46 ../hosts/hostfenixsite.py:75
-#: ../hosts/hostfilma24hdcom.py:41 ../hosts/hostfilma24io.py:90
-#: ../hosts/hostfilman.py:96 ../hosts/hostfilmaoncom.py:95
-#: ../hosts/hostfilmativa.py:44 ../hosts/hostfilmehdnet.py:57
-#: ../hosts/hostfilmeonlineto.py:117 ../hosts/hostfilmezz.py:77
-#: ../hosts/hostfilmovizijastudio.py:59 ../hosts/hostfilmowoclub.py:71
-#: ../hosts/hostfilmpalast.py:52 ../hosts/hostfilmpertutti.py:50
-#: ../hosts/hostfilmstreamvkcom.py:108 ../hosts/hostforjatn.py:52
-#: ../hosts/hostfreediscpl.py:59 ../hosts/hostgamatocom.py:47
-#: ../hosts/hostgamatotvme.py:49 ../hosts/hostgledalica.py:81
-#: ../hosts/hostgovodtv.py:79 ../hosts/hostgreekdocumentaries3.py:45
-#: ../hosts/hostguardaserie_blocked_.py:139 ../hosts/hosthdfilme.py:41
-#: ../hosts/hosthdfilmetv.py:40 ../hosts/hosthdfull.py:164
-#: ../hosts/hosthdpopcornscom.py:47 ../hosts/hosthdseanspl.py:70
-#: ../hosts/hosthdsto.py:157 ../hosts/hosthdstreams_blocked_.py:76
-#: ../hosts/hosthoofootcom.py:43 ../hosts/hosthorrorycc.py:78
-#: ../hosts/hostinteriatv.py:64 ../hosts/hostkabarety.py:50
-#: ../hosts/hostkijknl.py:64 ../hosts/hostkinoger.py:40
-#: ../hosts/hostkinokiste.py:37 ../hosts/hostkinomoc.py:72
-#: ../hosts/hostkinox.py:99 ../hosts/hostkissanimeto.py:65
-#: ../hosts/hostkisscartoonme.py:51 ../hosts/hostkkiste.py:38
-#: ../hosts/hostkreskoweczki.py:50 ../hosts/hostlaola1tv_blocked_.py:58
-#: ../hosts/hostlibrestream.py:38 ../hosts/hostliveleak.py:53
-#: ../hosts/hostlosmovies.py:64 ../hosts/hostluxveritatis.py:61
-#: ../hosts/hostmaxtvgo.py:66 ../hosts/hostmediasetplay.py:122
-#: ../hosts/hostmediayou.py:77 ../hosts/hostmegakino.py:38
-#: ../hosts/hostmoflixstream.py:42 ../hosts/hostmovie2k.py:39
-#: ../hosts/hostmovie4k.py:38 ../hosts/hostmovienightws.py:40
-#: ../hosts/hostmovizlandcom.py:41 ../hosts/hostmovs4ucom.py:51
-#: ../hosts/hostmrpiracy.py:125 ../hosts/hostmusicmp3ru.py:92
-#: ../hosts/hostninateka.py:58 ../hosts/hostnuteczki.py:97
-#: ../hosts/hostobejrzyjto.py:81 ../hosts/hostogladajto.py:99
-#: ../hosts/hostoipeirates.py:86 ../hosts/hostokgoals.py:47
-#: ../hosts/hostororotv.py:50 ../hosts/hostorthobulletscom.py:75
-#: ../hosts/hostotakufr.py:68 ../hosts/hostourmatchnet.py:49
-#: ../hosts/hostpinkbike.py:48 ../hosts/hostplanetstreamingcom.py:111
-#: ../hosts/hostplaypuls.py:74 ../hosts/hostplayrtsiw.py:97
-#: ../hosts/hostplayzcc.py:67 ../hosts/hostputlockertvto.py:145
-#: ../hosts/hostredbull.py:55 ../hosts/hostrtbfbe.py:108
-#: ../hosts/hostrteieplayer.py:57 ../hosts/hostrtlmost.py:189
-#: ../hosts/hostseezsu.py:74 ../hosts/hostserialeco.py:49
-#: ../hosts/hostserienstreamto.py:54 ../hosts/hostseriesonline.py:143
-#: ../hosts/hostserijeonline.py:63 ../hosts/hostshahiidanimenet.py:52
-#: ../hosts/hostshoutcast.py:54 ../hosts/hostskstream.py:127
-#: ../hosts/hostsolarmovie.py:134 ../hosts/hostspiegeltv_blocked_.py:79
+#: ../hosts/hostaltadefinizione01.py:113
+#: ../hosts/hostanimeodcinki_blocked_.py:54
+#: ../hosts/hostappletrailers_blocked_.py:53
+#: ../hosts/hostardmediathek_blocked_.py:71 ../hosts/hostartetv.py:174
+#: ../hosts/hostbajeczkiorg_blocked_.py:52
+#: ../hosts/hostbbciplayer_blocked_.py:63 ../hosts/hostbsto_blocked_.py:90
+#: ../hosts/hostcartoonhd_blocked_.py:85 ../hosts/hostcdapl_blocked_.py:70
+#: ../hosts/hostchristusvincit_blocked_.py:305
+#: ../hosts/hostcimaclubcom_blocked_.py:57 ../hosts/hostcinemay_blocked_.py:52
+#: ../hosts/hostcineto.py:65 ../hosts/hostclassiccinemaonline_blocked_.py:49
+#: ../hosts/hostdailymotion.py:50 ../hosts/hostdancetrippin.py:46
+#: ../hosts/hostdixmax.py:133 ../hosts/hostdokumentalnenet.py:53
+#: ../hosts/hostegybest.py:71 ../hosts/hosteinschalten.py:36
+#: ../hosts/hostekinotv.py:72 ../hosts/hostfaselhdcom.py:46
+#: ../hosts/hostfenixsite.py:75 ../hosts/hostfilma24hdcom.py:41
+#: ../hosts/hostfilma24io.py:90 ../hosts/hostfilman.py:96
+#: ../hosts/hostfilmaoncom.py:95 ../hosts/hostfilmativa.py:44
+#: ../hosts/hostfilmehdnet.py:57 ../hosts/hostfilmeonlineto.py:117
+#: ../hosts/hostfilmezz.py:77 ../hosts/hostfilmovizijastudio.py:59
+#: ../hosts/hostfilmowoclub.py:71 ../hosts/hostfilmpalast.py:52
+#: ../hosts/hostfilmpertutti.py:50 ../hosts/hostfilmstreamvkcom.py:108
+#: ../hosts/hostforjatn.py:52 ../hosts/hostfreediscpl.py:59
+#: ../hosts/hostgamatocom.py:47 ../hosts/hostgamatotvme.py:49
+#: ../hosts/hostgledalica.py:81 ../hosts/hostgovodtv.py:79
+#: ../hosts/hostgreekdocumentaries3.py:45 ../hosts/hostguardaserie.py:31
+#: ../hosts/hosthdfilme.py:41 ../hosts/hosthdfilmetv.py:40
+#: ../hosts/hosthdfull.py:164 ../hosts/hosthdpopcornscom.py:47
+#: ../hosts/hosthdseanspl.py:70 ../hosts/hosthdsto.py:157
+#: ../hosts/hosthdstreams_blocked_.py:76 ../hosts/hosthoofootcom.py:43
+#: ../hosts/hosthorrorycc.py:78 ../hosts/hostinteriatv.py:64
+#: ../hosts/hostkabarety.py:50 ../hosts/hostkijknl.py:64
+#: ../hosts/hostkinoger.py:40 ../hosts/hostkinokiste.py:37
+#: ../hosts/hostkinomoc.py:72 ../hosts/hostkinox.py:99
+#: ../hosts/hostkissanimeto.py:65 ../hosts/hostkisscartoonme.py:51
+#: ../hosts/hostkkiste.py:38 ../hosts/hostkreskoweczki.py:50
+#: ../hosts/hostlaola1tv_blocked_.py:58 ../hosts/hostlibrestream.py:38
+#: ../hosts/hostliveleak.py:53 ../hosts/hostlosmovies.py:64
+#: ../hosts/hostluxveritatis.py:61 ../hosts/hostmaxtvgo.py:66
+#: ../hosts/hostmediasetplay.py:122 ../hosts/hostmediayou.py:77
+#: ../hosts/hostmegakino.py:38 ../hosts/hostmoflixstream.py:42
+#: ../hosts/hostmovie2k.py:39 ../hosts/hostmovie4k.py:38
+#: ../hosts/hostmovienightws.py:40 ../hosts/hostmovizlandcom.py:41
+#: ../hosts/hostmovs4ucom.py:51 ../hosts/hostmrpiracy.py:125
+#: ../hosts/hostmusicmp3ru.py:92 ../hosts/hostninateka.py:58
+#: ../hosts/hostnuteczki.py:97 ../hosts/hostobejrzyjto.py:81
+#: ../hosts/hostogladajto.py:99 ../hosts/hostoipeirates.py:86
+#: ../hosts/hostokgoals.py:47 ../hosts/hostororotv.py:50
+#: ../hosts/hostorthobulletscom.py:75 ../hosts/hostotakufr.py:68
+#: ../hosts/hostourmatchnet.py:49 ../hosts/hostpinkbike.py:48
+#: ../hosts/hostplanetstreamingcom.py:111 ../hosts/hostplaypuls.py:74
+#: ../hosts/hostplayrtsiw.py:97 ../hosts/hostplayzcc.py:67
+#: ../hosts/hostputlockertvto.py:145 ../hosts/hostredbull.py:55
+#: ../hosts/hostrtbfbe.py:108 ../hosts/hostrteieplayer.py:57
+#: ../hosts/hostrtlmost.py:189 ../hosts/hostseezsu.py:74
+#: ../hosts/hostserialeco.py:49 ../hosts/hostserienstreamto.py:54
+#: ../hosts/hostseriesonline.py:143 ../hosts/hostserijeonline.py:63
+#: ../hosts/hostshahiidanimenet.py:52 ../hosts/hostshoutcast.py:54
+#: ../hosts/hostskstream.py:127 ../hosts/hostsolarmovie.py:134
+#: ../hosts/hostspiegeltv_blocked_.py:79
 #: ../hosts/hostsportdeutschland_blocked_.py:58 ../hosts/hoststreamcloud.py:40
 #: ../hosts/hoststreamcomplet.py:39 ../hosts/hoststreamliveto.py:54
 #: ../hosts/hostsvtplayse.py:83 ../hosts/hosttainieskaiseirestv.py:63
@@ -4321,8 +4328,9 @@ msgstr "Vyhľadávanie titulkov pre \"%s\""
 msgid "Searching, please wait (%d)"
 msgstr "Hľadáme, prosím počkajte (%d)"
 
-#: ../hosts/hostcartoonhd.py:239 ../hosts/hostdixmax.py:327
-#: ../hosts/hostgovodtv.py:196 ../subproviders/subprov_napiprojektpl.py:218
+#: ../hosts/hostcartoonhd_blocked_.py:239 ../hosts/hostdixmax.py:327
+#: ../hosts/hostgovodtv.py:196 ../hosts/hostguardaserie.py:73
+#: ../subproviders/subprov_napiprojektpl.py:218
 msgid "Season"
 msgstr "Sezóna"
 
@@ -4456,7 +4464,7 @@ msgstr "Vybraní hostitelia"
 #: ../hosts/hostfilmezz.py:378 ../hosts/hostfreediscpl.py:113
 #: ../hosts/hostserienstreamto.py:525 ../hosts/hoststreamliveto.py:327
 #: ../hosts/hoststreamliveto.py:374 ../libs/recaptcha_v1.py:68
-#: ../libs/urlparser.py:4368
+#: ../libs/urlparser.py:3887
 msgid "Send"
 msgstr "Odoslať"
 
@@ -4469,20 +4477,21 @@ msgstr "Seriály"
 #: ../hosts/hostfilmowoclub.py:66 ../hosts/hostfilmpalast.py:49
 #: ../hosts/hostfilmstreamvkcom.py:105 ../hosts/hostforjatn.py:49
 #: ../hosts/hostgamatocom.py:45 ../hosts/hostgovodtv.py:72
-#: ../hosts/hosthdfilme.py:36 ../hosts/hosthdfilmetv.py:37
-#: ../hosts/hosthdseanspl.py:65 ../hosts/hosthdstreams_blocked_.py:599
-#: ../hosts/hosthorrorycc.py:73 ../hosts/hostkijknl.py:70
-#: ../hosts/hostkinoger.py:37 ../hosts/hostkinokiste.py:33
-#: ../hosts/hostkinomoc.py:67 ../hosts/hostkinox.py:96
-#: ../hosts/hostkkiste.py:33 ../hosts/hostmegakino.py:33
-#: ../hosts/hostmindigo.py:853 ../hosts/hostmovie2k.py:36
-#: ../hosts/hostmovie4k.py:33 ../hosts/hostmovs4ucom.py:46
-#: ../hosts/hostobejrzyjto.py:76 ../hosts/hostogladajto.py:92
-#: ../hosts/hostplanetstreamingcom.py:387 ../hosts/hostplayzcc.py:65
-#: ../hosts/hostseezsu.py:69 ../hosts/hoststreamcloud.py:34
-#: ../hosts/hosttopstreamfilm.py:34 ../hosts/hostvodpl.py:62
-#: ../hosts/hostwptv.py:53 ../hosts/hostzaluknijcc.py:80
-#: ../hosts/hostzerioncc.py:76 ../subproviders/subprov_prijevodi.py:41
+#: ../hosts/hostguardaserie.py:28 ../hosts/hosthdfilme.py:36
+#: ../hosts/hosthdfilmetv.py:37 ../hosts/hosthdseanspl.py:65
+#: ../hosts/hosthdstreams_blocked_.py:599 ../hosts/hosthorrorycc.py:73
+#: ../hosts/hostkijknl.py:70 ../hosts/hostkinoger.py:37
+#: ../hosts/hostkinokiste.py:33 ../hosts/hostkinomoc.py:67
+#: ../hosts/hostkinox.py:96 ../hosts/hostkkiste.py:33
+#: ../hosts/hostmegakino.py:33 ../hosts/hostmindigo.py:853
+#: ../hosts/hostmovie2k.py:36 ../hosts/hostmovie4k.py:33
+#: ../hosts/hostmovs4ucom.py:46 ../hosts/hostobejrzyjto.py:76
+#: ../hosts/hostogladajto.py:92 ../hosts/hostplanetstreamingcom.py:387
+#: ../hosts/hostplayzcc.py:65 ../hosts/hostseezsu.py:69
+#: ../hosts/hoststreamcloud.py:34 ../hosts/hosttopstreamfilm.py:34
+#: ../hosts/hostvodpl.py:62 ../hosts/hostwptv.py:53
+#: ../hosts/hostzaluknijcc.py:80 ../hosts/hostzerioncc.py:76
+#: ../subproviders/subprov_prijevodi.py:41
 msgid "Series"
 msgstr "Séria"
 
@@ -4701,7 +4710,7 @@ msgstr "Zoradené najsledovanejšie kanály všeobecné [naživo]"
 msgid "Sorted most viewed channels now [live]"
 msgstr "Zoradené najsledovanejšie kanály teraz [naživo]"
 
-#: ../libs/urlparser.py:5834
+#: ../libs/urlparser.py:5255
 #, python-format
 msgid "Source %s"
 msgstr "Zdroj %s"
@@ -4769,7 +4778,7 @@ msgstr "Prestať hrať?"
 msgid "Stream starts from %s"
 msgstr "Stream začína od %s"
 
-#: ../hosts/hostappletrailers.py:108
+#: ../hosts/hostappletrailers_blocked_.py:108
 msgid "Studio:"
 msgstr "Štúdio:"
 
@@ -5096,7 +5105,7 @@ msgstr "Tip! Tento problém môžete vyriešiť pripojením disku USB flash."
 msgid "Title:"
 msgstr "Názov:"
 
-#: ../libs/urlparser.py:2507
+#: ../libs/urlparser.py:2312
 msgid ""
 "To watch videos from http://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
@@ -5133,7 +5142,7 @@ msgstr "Najlepší deň"
 msgid "Top movies"
 msgstr "Najlepšie filmy"
 
-#: ../hosts/hostcartoonhd.py:32 ../hosts/hostxrysoise.py:31
+#: ../hosts/hostcartoonhd_blocked_.py:32 ../hosts/hostxrysoise.py:31
 msgid "Top rated"
 msgstr "Najlepšie hodnotené"
 
@@ -5193,18 +5202,22 @@ msgstr "Vypnutie vyrovnávacej pamäte pre http://prognoza.pogody.tv/"
 msgid "Tutorials"
 msgstr "Návody"
 
-#: ../components/ihost.py:828 ../hosts/host123movieshd.py:411
-#: ../hosts/host3player.py:442 ../hosts/host3sktv.py:326
-#: ../hosts/host9anime.py:150 ../hosts/hostakoam.py:481
+#: ../components/ihost.py:828 ../hosts/host123movieshd_blocked_.py:411
+#: ../hosts/host3player_blocked_.py:442 ../hosts/host3sktv_blocked_.py:326
+#: ../hosts/host9anime.py:150 ../hosts/hostakoam_blocked_.py:481
 #: ../hosts/hostaltadefinizione_blocked_.py:426
-#: ../hosts/hostaltadefinizione01.py:390 ../hosts/hostanimeodcinki.py:416
-#: ../hosts/hostappletrailers.py:215 ../hosts/hostardmediathek_blocked_.py:510
-#: ../hosts/hostartetv.py:384 ../hosts/hostbajeczkiorg.py:255
-#: ../hosts/hostbbciplayer.py:651 ../hosts/hostbsto_blocked_.py:420
-#: ../hosts/hostcartoonhd.py:661 ../hosts/hostcdapl.py:588
-#: ../hosts/hostchomikuj.py:412 ../hosts/hostchristusvincit.py:518
-#: ../hosts/hostcimaclubcom.py:514 ../hosts/hostcinemay.py:420
-#: ../hosts/hostcineto.py:520 ../hosts/hostclassiccinemaonline.py:316
+#: ../hosts/hostaltadefinizione01.py:390
+#: ../hosts/hostanimeodcinki_blocked_.py:416
+#: ../hosts/hostappletrailers_blocked_.py:215
+#: ../hosts/hostardmediathek_blocked_.py:510 ../hosts/hostartetv.py:384
+#: ../hosts/hostbajeczkiorg_blocked_.py:255
+#: ../hosts/hostbbciplayer_blocked_.py:651 ../hosts/hostbsto_blocked_.py:420
+#: ../hosts/hostcartoonhd_blocked_.py:661 ../hosts/hostcdapl_blocked_.py:588
+#: ../hosts/hostchomikuj_blocked_.py:412
+#: ../hosts/hostchristusvincit_blocked_.py:518
+#: ../hosts/hostcimaclubcom_blocked_.py:514
+#: ../hosts/hostcinemay_blocked_.py:420 ../hosts/hostcineto.py:520
+#: ../hosts/hostclassiccinemaonline_blocked_.py:316
 #: ../hosts/hostdailymotion.py:339 ../hosts/hostdancetrippin.py:368
 #: ../hosts/hostdixmax.py:545 ../hosts/hostdmdamedia.py:271
 #: ../hosts/hostdokumentalnenet.py:202 ../hosts/hostdrdk.py:178
@@ -5223,7 +5236,7 @@ msgstr "Návody"
 #: ../hosts/hostfreediscpl.py:523 ../hosts/hostgamatocom.py:399
 #: ../hosts/hostgamatotvme.py:515 ../hosts/hostgledalica.py:563
 #: ../hosts/hostgovodtv.py:329 ../hosts/hostgreekdocumentaries3.py:258
-#: ../hosts/hostguardaserie_blocked_.py:517 ../hosts/hosthdfilme.py:226
+#: ../hosts/hostguardaserie.py:167 ../hosts/hosthdfilme.py:226
 #: ../hosts/hosthdfilmetv.py:198 ../hosts/hosthdfull.py:704
 #: ../hosts/hosthdpopcornscom.py:406 ../hosts/hosthdseanspl.py:358
 #: ../hosts/hosthdsto.py:596 ../hosts/hosthdstreams_blocked_.py:584
@@ -5392,7 +5405,7 @@ msgstr "Použite predvolenú kvalitu:"
 msgid "Use default video quality"
 msgstr "Použitie predvolenej kvality videa"
 
-#: ../hosts/hostbbciplayer.py:33 ../hosts/hostbbcsport.py:41
+#: ../hosts/hostbbciplayer_blocked_.py:33 ../hosts/hostbbcsport_blocked_.py:41
 #: ../hosts/hostsvtplayse.py:43 ../hosts/hostvevo.py:31
 #: ../hosts/hostyoutube.py:37
 msgid "Use default video quality:"
@@ -5410,8 +5423,8 @@ msgstr "Použite preferovaný dátový tok"
 msgid "Use preferred quality"
 msgstr "Používajte preferovanú kvalitu"
 
-#: ../hosts/host123movieshd.py:32 ../hosts/hostakoam.py:34
-#: ../hosts/hostcimaclubcom.py:32 ../hosts/hostfilmeonlineto.py:35
+#: ../hosts/host123movieshd_blocked_.py:32 ../hosts/hostakoam_blocked_.py:34
+#: ../hosts/hostcimaclubcom_blocked_.py:32 ../hosts/hostfilmeonlineto.py:35
 #: ../hosts/hostfilmstreamvkcom.py:34 ../hosts/hosthdsto.py:44
 #: ../hosts/hostkinox.py:35 ../hosts/hostkissanimeto.py:39
 #: ../hosts/hostlosmovies.py:35 ../hosts/hostplanetstreamingcom.py:29
@@ -5443,11 +5456,11 @@ msgstr "Použite PyCurl pre požiadavky HTTP(S)"
 msgid "Use web proxy gateway"
 msgstr "Používanie webovej brány servera proxy"
 
-#: ../hosts/hostbbciplayer.py:35 ../hosts/hostbbcsport.py:34
+#: ../hosts/hostbbciplayer_blocked_.py:35 ../hosts/hostbbcsport_blocked_.py:34
 msgid "Use web-proxy (it may be illegal):"
 msgstr "Použite webový server proxy (môže to byť nezákonné):"
 
-#: ../hosts/host3player.py:31 ../hosts/hostplayrtsiw.py:32
+#: ../hosts/host3player_blocked_.py:31 ../hosts/hostplayrtsiw.py:32
 msgid "Use web-proxy for VODs (it may be illegal):"
 msgstr "Použite webový server proxy pre videá na vyžiadanie (môže to byť nezákonné):"
 
@@ -5544,14 +5557,6 @@ msgstr "Pravidlá pre videá pre 4:3"
 #: ../hosts/hosttvpvod.py:689
 msgid "Video with DRM protection."
 msgstr "Video s ochranou DRM."
-
-#: ../libs/urlparser.py:2863
-msgid ""
-"Videomega has blocked your IP for some time.\n"
-"Please retry this link after some time."
-msgstr ""
-"Videomega na nejaký čas zablokoval vašu IP adresu.\n"
-"Po určitom čase skúste tento odkaz zopakovať."
 
 #: ../hosts/hostdailymotion.py:353 ../hosts/hostekstraklasatv.py:75
 #: ../hosts/hostlaola1tv_blocked_.py:494 ../hosts/hostmindigo.py:679
@@ -5675,7 +5680,7 @@ msgstr "Preskúmanie písomných fór"
 msgid "Wrong Youtube Api Key length"
 msgstr "Nesprávna dĺžka kľúča rozhrania API služby YouTube"
 
-#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:4387
+#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:3906
 msgid "Wrong answer."
 msgstr "Nesprávna odpoveď."
 
@@ -5703,7 +5708,7 @@ msgstr "Xbox One"
 msgid "YP connected"
 msgstr "YP pripojený"
 
-#: ../hosts/hostcartoonhd.py:535 ../hosts/hostfilmovizijastudio.py:57
+#: ../hosts/hostcartoonhd_blocked_.py:535 ../hosts/hostfilmovizijastudio.py:57
 #: ../hosts/hostkkiste.py:35 ../hosts/hostlibrestream.py:33
 #: ../hosts/hostvidcorncom.py:520
 msgid "Year"
@@ -5923,7 +5928,7 @@ msgid "de"
 msgstr "de"
 
 #: ../components/iptvconfigmenu.py:162 ../components/iptvconfigmenu.py:230
-#: ../components/iptvsubsimpledownloader.py:294 ../libs/urlparser.py:7640
+#: ../components/iptvsubsimpledownloader.py:294 ../libs/urlparser.py:6403
 msgid "default"
 msgstr "predvolené"
 
@@ -5935,7 +5940,7 @@ msgstr "priamy odkaz"
 msgid "downloads location"
 msgstr "umiestnenie sťahovania"
 
-#: ../components/iptvconfigmenu.py:379 ../hosts/hostbbcsport.py:37
+#: ../components/iptvconfigmenu.py:379 ../hosts/hostbbcsport_blocked_.py:37
 #: ../hosts/hosteurosportplayer.py:33 ../hosts/hostfreediscpl.py:37
 #: ../hosts/hostmindigo.py:53 ../hosts/hostmrpiracy.py:51
 #: ../hosts/hostrtbfbe.py:44 ../hosts/hostserienstreamto.py:27
@@ -5946,6 +5951,11 @@ msgstr "e-mail"
 #: ../hosts/hosthdsto.py:45 ../hosts/hosttvplayercom.py:51
 msgid "email"
 msgstr "e-mail"
+
+#: ../hosts/hostguardaserie.py:90
+#, fuzzy
+msgid "episodes"
+msgstr "Epizódy"
 
 #: ../components/iptvconfigmenu.py:76 ../components/iptvextmovieplayer.py:342
 msgid "external eplayer3"
@@ -6064,7 +6074,7 @@ msgid "live"
 msgstr "aktívny"
 
 #: ../components/iptvconfigmenu.py:373 ../components/iptvconfigmenu.py:375
-#: ../components/iptvconfigmenu.py:377 ../hosts/hostcartoonhd.py:39
+#: ../components/iptvconfigmenu.py:377 ../hosts/hostcartoonhd_blocked_.py:39
 #: ../hosts/hostdixmax.py:39 ../hosts/hostdokumentalnenet.py:31
 #: ../hosts/hostegybest.py:39 ../hosts/hostfilmezz.py:41
 #: ../hosts/hosthdfull.py:42 ../hosts/hostmaxtvgo.py:39
@@ -6112,7 +6122,7 @@ msgstr "oliva"
 
 #: ../components/iptvconfigmenu.py:374 ../components/iptvconfigmenu.py:376
 #: ../components/iptvconfigmenu.py:378 ../components/iptvconfigmenu.py:380
-#: ../hosts/hostbbcsport.py:38 ../hosts/hostcartoonhd.py:40
+#: ../hosts/hostbbcsport_blocked_.py:38 ../hosts/hostcartoonhd_blocked_.py:40
 #: ../hosts/hostdixmax.py:40 ../hosts/hostdokumentalnenet.py:32
 #: ../hosts/hostegybest.py:40 ../hosts/hosteurosportplayer.py:34
 #: ../hosts/hostfilmezz.py:42 ../hosts/hostfreediscpl.py:38
@@ -6181,11 +6191,11 @@ msgstr "teal"
 msgid "the best"
 msgstr "najlepší"
 
-#: ../hosts/hostchristusvincit.py:34
+#: ../hosts/hostchristusvincit_blocked_.py:34
 msgid "the highest"
 msgstr "najvyššia"
 
-#: ../hosts/hostchristusvincit.py:24
+#: ../hosts/hostchristusvincit_blocked_.py:24
 msgid "the lowest"
 msgstr "najnižšia"
 
@@ -6200,9 +6210,10 @@ msgstr "najhoršie"
 msgid "top"
 msgstr "hore"
 
-#: ../hosts/host123movieshd.py:232 ../hosts/hostakoam.py:253
-#: ../hosts/hostaltadefinizione_blocked_.py:179 ../hosts/hostcartoonhd.py:221
-#: ../hosts/hostcartoonhd.py:252 ../hosts/hostfilma24io.py:173
+#: ../hosts/host123movieshd_blocked_.py:232 ../hosts/hostakoam_blocked_.py:253
+#: ../hosts/hostaltadefinizione_blocked_.py:179
+#: ../hosts/hostcartoonhd_blocked_.py:221
+#: ../hosts/hostcartoonhd_blocked_.py:252 ../hosts/hostfilma24io.py:173
 #: ../hosts/hostfilmaoncom.py:244 ../hosts/hostgamatocom.py:193
 #: ../hosts/hosthdfull.py:369
 msgid "trailer"
