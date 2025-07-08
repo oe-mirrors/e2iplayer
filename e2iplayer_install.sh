@@ -22,9 +22,9 @@ E2IPLAYER_BACKUP_DIR=$WORKDIR/e2iplayer_backups
 # Here you can select the E2iPlayer Version to be installed/updated e.g.: JBLEYEL_VERSION=yes
 # (only one of the different possible Versions may be marked with yes, namely the desired Version).
 # For jbleyel E2iPlayer Version (only works with python3, so from OpenATV-7.x upwards).
-JBLEYEL_VERSION=no
+JBLEYEL_VERSION=yes
 # For zadmario E2iPlayer Version (works for both python2 and python3, i.e. for all OpenATV Versions).
-ZADMARIO_VERSION=yes
+ZADMARIO_VERSION=no
 # For Blindspot76 E2iPlayer 'python3' Version (only works with python3, so from OpenATV-7.x upwards).
 BLINDSPOT76_PY3_VERSION=no
 # For Blindspot76 E2iPlayer 'python2' Version (only works with python2, i.e. up to OpenATV-6.4).
