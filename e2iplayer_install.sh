@@ -19,10 +19,10 @@ BACKUP=yes
 # Directory where the E2iPlayer Backup is stored (can be changed as desired, e.g. for HDD to E2IPLAYER_BACKUP_DIR=/media/hdd/dirname_as_desired).
 E2IPLAYER_BACKUP_DIR=$WORKDIR/e2iplayer_backups
 
-# Here you can select the E2iPlayer Version to be installed/updated e.g.: JBLEYEL_VERSION=yes
+# Here you can select the E2iPlayer Version to be installed/updated e.g.: OEMIRRORS_VERSION=yes
 # (only one of the different possible Versions may be marked with yes, namely the desired Version).
-# For jbleyel E2iPlayer Version (only works with python3, so from OpenATV-7.x upwards).
-JBLEYEL_VERSION=yes
+# For oemirrors E2iPlayer Version (only works with python3, so from OpenATV-7.x upwards).
+OEMIRRORS_VERSION=yes
 # For zadmario E2iPlayer Version (works for both python2 and python3, i.e. for all OpenATV Versions).
 ZADMARIO_VERSION=no
 # For Blindspot76 E2iPlayer 'python3' Version (only works with python3, so from OpenATV-7.x upwards).
@@ -141,8 +141,8 @@ PYTHON_VERSION=$(python -c "import sys; print(sys.version_info.major)")
 # Determine file Address for Download using the Variables above in lines 25, 27, 29, and 31.
 # Also check whether the selected E2iPlayer Version matches the Image (python2/python3).
 case "yes" in
-	"$JBLEYEL_VERSION")
-		echo "Selected -> E2iPlayer Version of jbleyel for python3."
+	"$OEMIRRORS_VERSION")
+		echo "Selected -> E2iPlayer Version of oemirrors for python3."
 		if [ $PYTHON_VERSION -ne 3 ] ; then
 			echo -e "\n... ERROR ...\nE2iPlayer Version does not match a python$PYTHON_VERSION Image.\n\n"
 			osd_error_message && exit 1
@@ -263,9 +263,9 @@ $WGET -q -O "$TARGET_PATH/IPTVPlayer/keymap.xml" "https://drive.usercontent.goog
 
 # The following (Install Fixes is only valid until @zadmario takes over the Fixes) !
 # Install Fixes 2025 from Mister X for savefiles, Vidhide, vidoza, supervideo.cc, VOE, hdfilmetv and much more, only
-# in the ZADMARIO_VERSION and in the BLINDSPOT76_VERSIONS as already included in the JBLEYEL_VERSION.
+# in the ZADMARIO_VERSION and in the BLINDSPOT76_VERSIONS as already included in the OEMIRRORS_VERSION.
 echo -e "\n\nInstall Fixes 2025 by Mister X ..."
-if [ "$JBLEYEL_VERSION" != "yes" ] ; then
+if [ "$OEMIRRORS_VERSION" != "yes" ] ; then
 	FDIR=$WORKDIR/e2iplayer_fixes && mkdir -p $FDIR
 
 	rm -f $FDIR/e2iplayer_fixes.tar.gz
