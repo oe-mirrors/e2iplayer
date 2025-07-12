@@ -81,10 +81,10 @@ def unpack(source):
 
     if pnew:
         for i in range(count - 1, -1, -1):
-            payload = payload.replace(getstring(i).decode('latin-1') if isPY2 else getstring(i), symtab[i])
+            payload = payload.replace(getstring(i).decode('latin-1') if isPY2() else getstring(i), symtab[i])
         return _replacejsstrings((_replacestrings(payload)))
     else:
-        source = re.sub(r"\b\w+\b", lookup, payload) if isPY2 else re.sub(r"\b\w+\b", lookup, payload, flags=re.ASCII)
+        source = re.sub(r"\b\w+\b", lookup, payload) if isPY2() else re.sub(r"\b\w+\b", lookup, payload, flags=re.ASCII)
         return _replacestrings(source)
 
 
