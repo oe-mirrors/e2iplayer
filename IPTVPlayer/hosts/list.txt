@@ -90,7 +90,7 @@ hostkisscartoonme
 hostkkiste
 hostkreskoweczki
 hostlaola1tv_blocked_
-hostlibrestream
+hostlibrestream_blocked_
 hostliveleak
 hostlocalmedia
 hostlosmovies
@@ -127,7 +127,7 @@ hostorthobulletscom
 hostotakufr
 hostourmatchnet
 hostpinkbike
-hostplanetstreamingcom
+hostplanetstreamingcom_blocked_
 hostplaypuls
 hostplayrtsiw
 hostplayzcc
@@ -146,13 +146,12 @@ hostseriesonline
 hostserijeonline
 hostshahiidanimenet
 hostshoutcast
-hostskstream
+hostskstream_blocked_
 hostsolarmovie
 hostspiegeltv_blocked_
 hostsportdeutschland_blocked_
 hostspryciarze
 hoststreamcloud
-hoststreamcomplet
 hoststreamliveto
 hoststreamstat
 hostsvtplayse
@@ -189,6 +188,7 @@ hostwolnelekturypl
 hostworldfree4u
 hostwpolscepl
 hostwptv
+hostxalaflix
 hostxrysoise
 hostxxx
 hostyesmoviesto
