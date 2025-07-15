@@ -127,6 +127,7 @@
 'hostorthobulletscom': 'https://orthobullets.com/',
 'hostotakufr': 'http://otakufr.com/',
 'hostourmatchnet': 'http://ourmatch.net/',
+'hostpannonrtv': 'https://pannonrtv.com',
 'hostpinkbike': 'https://pinkbike.com/',
 'hostplanetstreamingcom': 'http://ww4.planet-streaming.com/',
 'hostplaypuls': 'http://playpuls.pl/',

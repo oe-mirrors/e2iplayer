@@ -294,6 +294,8 @@
  "hungarian": [
   "youtube",
   "filmvilag",
+  "pannonrtv",
+  "idokep",
   "filmezz",
   "rtlmost",
   "dailymotion",
