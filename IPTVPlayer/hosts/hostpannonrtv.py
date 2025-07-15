@@ -86,10 +86,10 @@ class Pannon(CBaseHostClass):
         desc = 'Pannon RTV \nAz intézmény a szabadkai Magyar Médiaházban működik. Műsorait több mint 100 foglalkoztatott, és mintegy 50 tiszteletdíjas készíti. Az újságírók mellett operatőrök, vágók, adáslebonyolítók, hangtechnikusok, adásszerkesztők, gyártásvezetők és adminisztratív munkatársak dolgoznak. A riporterek és szerkesztők jelentős része felsőfokú végzettségű. Az alkalmazottak zöme 35 év alatti. A Pannon RTV dinamikusan fejlődő médiaház, mely rendszeresen tudósít a nagyobb horderejű eseményekről Vajdaság egész területéről, valamint az anyaországból, továbbá beszámol Európa és a világ híreiről. A Pannon RTV számos művelődési rendezvény médiatámogatója. Élőben közvetíti a vajdasági magyarság kiemelt politikai, közéleti és művelődési eseményeit, ünnepi rendezvényeit (egyebek mellett a Magyar Nemzeti Tanács üléseit, a Pataki Gyűrű-díj átadóját, a Szent István napi központi ünnepséget).'
         sts, pannontv = self.getPage('https://media.gerst.se/pannon.xspf')
         pannontv = re.findall("location>(.*)</location", pannontv)[0]
-        MAIN_CAT_TAB = [{'category':'list_items',            'title': _('Legfrissebb'), 'url':'https://pannonrtv.com/legfrissebb', 'desc': desc},
-                        {'category':'list_filters',            'title': _('Kategóriák'), 'url': self.MAIN_URL, 'desc': desc, 'next': False},
-                        {'category':'search',          'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history',  'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Legfrissebb'), 'url':'https://pannonrtv.com/legfrissebb', 'desc': desc},
+                        {'category':'list_filters', 'title': _('Kategóriák'), 'url': self.MAIN_URL, 'desc': desc, 'next': False},
+                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
+                        {'category':'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
         self.addVideo({'title': _('Pannon TV'), 'url': pannontv, 'desc': 'A Pannon Televízió a Pannon RTV egyik oszlopa, 2006 óta sugároz. Kezdetben csak Szabadkán és környékén láthatták a nézők, ma azonban az IPTV rendszernek köszönhetően egész Vajdaságban fogható, valamint a tartomány több kábeltévé-szolgáltatója is felvette kínálatába. Az interneten a világ bármely pontjáról követhető az adás, illetve visszanézhetők a műsorok. Saját készítésű tájékoztató- és szórakoztató műsorai naponta átlagosan 4-5 órát töltenek ki, emellett számos partnertelevízió (köztük a magyarországi és a szerbiai köztévé) produkcióit (riportműsorait, sorozatait) is sugározza a különböző filmes alkotások és szórakoztató tartalmak mellett. Egyebek mellett koncerteket, színházi előadásokat, játékfilmeket, dokumentumfilmeket, sorozatokat, rajzfilmeket, meséket és videoklipeket is láthatnak a nézők. A Pannon Televízió műsorai az élet összes területével foglalkoznak a tájékoztató- és magazinműsorainak köszönhetően. A médium egyre több saját készítésű dokumentumfilmet tud műsorra tűzni.'})
         self.addAudio({'title': _('Pannon Rádió'), 'url': 'http://stream2.nmih.hu:4120/live.mp3', 'desc': 'Üde, friss, fiatalos, dinamikus – ez a Pannon Rádió. Vajdaság és a mindennapok ritmusa, a 91.5-ös regionális frekvencián. 2008 márciusában indultunk, és nagy utat jártunk be ahhoz, hogy mára Vajdaság vezető magyar nyelvű kereskedelmi rádiójává válhassunk. Nálunk hallható a régió legnépszerűbb magyar nyelvű reggeli műsora, a Pannon Reggeli, valamint a közérdekű információkat közlő, és laza témákban bővelkedő Pannon Presszó is. A nap 24 órájában a legújabb magyar- és külföldi slágerekkel, érdekességekkel, fontos információkkal, sőt óránként rövid hírösszefoglalókkal várunk Titeket. Hangoljatok ránk Szabadkán, Magyarkanizsán, Törökkanizsán, Csókán, Padén, Adán, Moholon, Zentán, Topolyán, Kishegyesen vagy Óbecsén, illetve Magyarországon Szeged, Kiskunhalas és Bácsalmás vonzáskörzetében. Honlapunkról természetesen online is hallhatóak vagyunk, a nap bármely szakában. Ez a Pannon Rádió, 2008 óta. Ismerj meg bennünket!', 'icon': 'https://pannonrtv.com/sites/default/files/inline-images/pannonradioujlogo1-01.jpg'})
@@ -184,17 +184,17 @@ class Pannon(CBaseHostClass):
         title = self.cm.ph.getDataBeetwenMarkers(content,'<div class="node-article-full__field-teaser-text">','</div>', False)[1]
         title = title.strip()
         text[0] = title + "\n" + text[0]
-        if len(images)==len(text):
+        if len(images) == len(text):
             for i in images:
                 txt = re.sub('''<.+?>''', "", text[images.index(i)])
-                params = {'title': str(images.index(i)+1) + ".bekezdés", 'icon': i, 'desc': txt}
+                params = {'title': str(images.index(i) + 1) + ".bekezdés", 'icon': i, 'desc': txt}
                 self.addArticle(params)
-        if len(images)>len(text):
+        if len(images) > len(text):
             for i in text:
                 txt = re.sub('''<.+?>''', "", i)
-                params = {'title': str(text.index(i)+1) + ".bekezdés", 'icon': images[text.index(i)], 'desc': txt}
+                params = {'title': str(text.index(i) + 1) + ".bekezdés", 'icon': images[text.index(i)], 'desc': txt}
                 self.addArticle(params)
-        if len(images)<len(text):
+        if len(images) < len(text):
             printDBG("images:" + str(len(images)))
             printDBG("text:" + str(len(text)))
             a = 1
@@ -202,13 +202,13 @@ class Pannon(CBaseHostClass):
                text[0] = text[0] + " " + text[a]
                text.pop(a)
                printDBG("textuj:" + str(len(text)))
-               if len(images)<len(text):
-                   a+=1
+               if len(images) < len(text):
+                   a += 1
                else:
                   break
             for i in images:
                 txt = re.sub('''<.+?>''', "", text[images.index(i)])
-                params = {'title': str(images.index(i)+1) + ".bekezdés", 'icon': i, 'desc': txt}
+                params = {'title': str(images.index(i) + 1) + ".bekezdés", 'icon': i, 'desc': txt}
                 self.addArticle(params)
         if "YouTube" in og[-1]:
             url = self.cm.ph.getDataBeetwenMarkers(og[-1],'src="','"', False)[1]
@@ -220,7 +220,7 @@ class Pannon(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')
@@ -279,7 +279,7 @@ class Pannon(CBaseHostClass):
                 else:
                     page = cItem['page']
                 url = '&page='
-                params = {'category': 'cont_search', 'title': "Következő oldal", 'icon': None, 'url': url, 'searchPattern': searchPattern, 'page': page+1}
+                params = {'category': 'cont_search', 'title': "Következő oldal", 'icon': None, 'url': url, 'searchPattern': searchPattern, 'page': page + 1}
                 self.addDir(params)      
         
 

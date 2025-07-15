@@ -403,7 +403,7 @@ class Idokep(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')
