@@ -24,11 +24,14 @@ import datetime
 import urllib
 ###################################################
 
+
 def GetConfigList():
     return []
 
+
 def gettytul():
     return 'https://www.idokep.hu/idojaras/Budapest' 
+
 
 class Idokep(CBaseHostClass):
  

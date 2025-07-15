@@ -32,11 +32,14 @@ from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMu
 from Screens.MessageBox import MessageBox
 ###################################################
 
+
 def GetConfigList():
     return []
 
+
 def gettytul():
     return 'https://pannonrtv.com' 
+
 
 class Pannon(CBaseHostClass):
  
