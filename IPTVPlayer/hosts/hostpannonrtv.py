@@ -41,11 +41,11 @@ def gettytul():
 class Pannon(CBaseHostClass):
  
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history':'pannonrtv', 'cookie':'pannonrtv.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'pannonrtv', 'cookie': 'pannonrtv.cookie'})
         self.MAIN_URL = 'https://pannonrtv.com'
         self.DEFAULT_ICON_URL = "https://pannonrtv.com/sites/default/files/2021-05/ogpannon.jpg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
@@ -75,7 +75,7 @@ class Pannon(CBaseHostClass):
                 retTab = getMPDLinksWithMeta(uri, False)
                 videoUrls.extend(retTab)
             else:
-                videoUrls.append({'name':'direct link', 'url':uri})
+                videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
     
     def _uriIsValid(self, url):
@@ -86,10 +86,10 @@ class Pannon(CBaseHostClass):
         desc = 'Pannon RTV \nAz intézmény a szabadkai Magyar Médiaházban működik. Műsorait több mint 100 foglalkoztatott, és mintegy 50 tiszteletdíjas készíti. Az újságírók mellett operatőrök, vágók, adáslebonyolítók, hangtechnikusok, adásszerkesztők, gyártásvezetők és adminisztratív munkatársak dolgoznak. A riporterek és szerkesztők jelentős része felsőfokú végzettségű. Az alkalmazottak zöme 35 év alatti. A Pannon RTV dinamikusan fejlődő médiaház, mely rendszeresen tudósít a nagyobb horderejű eseményekről Vajdaság egész területéről, valamint az anyaországból, továbbá beszámol Európa és a világ híreiről. A Pannon RTV számos művelődési rendezvény médiatámogatója. Élőben közvetíti a vajdasági magyarság kiemelt politikai, közéleti és művelődési eseményeit, ünnepi rendezvényeit (egyebek mellett a Magyar Nemzeti Tanács üléseit, a Pataki Gyűrű-díj átadóját, a Szent István napi központi ünnepséget).'
         sts, pannontv = self.getPage('https://media.gerst.se/pannon.xspf')
         pannontv = re.findall("location>(.*)</location", pannontv)[0]
-        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Legfrissebb'), 'url':'https://pannonrtv.com/legfrissebb', 'desc': desc},
-                        {'category':'list_filters', 'title': _('Kategóriák'), 'url': self.MAIN_URL, 'desc': desc, 'next': False},
-                        {'category':'search', 'title': _('Keresés'), 'search_item':True},
-                        {'category':'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Legfrissebb'), 'url': 'https://pannonrtv.com/legfrissebb', 'desc': desc},
+                        {'category': 'list_filters', 'title': _('Kategóriák'), 'url': self.MAIN_URL, 'desc': desc, 'next': False},
+                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Keresési előzmények')}]
         self.listsTab(MAIN_CAT_TAB, cItem) 
         self.addVideo({'title': _('Pannon TV'), 'url': pannontv, 'desc': 'A Pannon Televízió a Pannon RTV egyik oszlopa, 2006 óta sugároz. Kezdetben csak Szabadkán és környékén láthatták a nézők, ma azonban az IPTV rendszernek köszönhetően egész Vajdaságban fogható, valamint a tartomány több kábeltévé-szolgáltatója is felvette kínálatába. Az interneten a világ bármely pontjáról követhető az adás, illetve visszanézhetők a műsorok. Saját készítésű tájékoztató- és szórakoztató műsorai naponta átlagosan 4-5 órát töltenek ki, emellett számos partnertelevízió (köztük a magyarországi és a szerbiai köztévé) produkcióit (riportműsorait, sorozatait) is sugározza a különböző filmes alkotások és szórakoztató tartalmak mellett. Egyebek mellett koncerteket, színházi előadásokat, játékfilmeket, dokumentumfilmeket, sorozatokat, rajzfilmeket, meséket és videoklipeket is láthatnak a nézők. A Pannon Televízió műsorai az élet összes területével foglalkoznak a tájékoztató- és magazinműsorainak köszönhetően. A médium egyre több saját készítésű dokumentumfilmet tud műsorra tűzni.'})
         self.addAudio({'title': _('Pannon Rádió'), 'url': 'http://stream2.nmih.hu:4120/live.mp3', 'desc': 'Üde, friss, fiatalos, dinamikus – ez a Pannon Rádió. Vajdaság és a mindennapok ritmusa, a 91.5-ös regionális frekvencián. 2008 márciusában indultunk, és nagy utat jártunk be ahhoz, hogy mára Vajdaság vezető magyar nyelvű kereskedelmi rádiójává válhassunk. Nálunk hallható a régió legnépszerűbb magyar nyelvű reggeli műsora, a Pannon Reggeli, valamint a közérdekű információkat közlő, és laza témákban bővelkedő Pannon Presszó is. A nap 24 órájában a legújabb magyar- és külföldi slágerekkel, érdekességekkel, fontos információkkal, sőt óránként rövid hírösszefoglalókkal várunk Titeket. Hangoljatok ránk Szabadkán, Magyarkanizsán, Törökkanizsán, Csókán, Padén, Adán, Moholon, Zentán, Topolyán, Kishegyesen vagy Óbecsén, illetve Magyarországon Szeged, Kiskunhalas és Bácsalmás vonzáskörzetében. Honlapunkról természetesen online is hallhatóak vagyunk, a nap bármely szakában. Ez a Pannon Rádió, 2008 óta. Ismerj meg bennünket!', 'icon': 'https://pannonrtv.com/sites/default/files/inline-images/pannonradioujlogo1-01.jpg'})
@@ -104,12 +104,12 @@ class Pannon(CBaseHostClass):
         if cItem['next'] == True:
             cats = self.cm.ph.getDataBeetwenMarkers(cat, cItem['title'], '</ul>', False)[1]
             cats = self.cm.ph.getAllItemsBeetwenMarkers(cats, '<a', 'a>', False)
-            params = {'category':'list_items','title':cItem['title'], 'icon': None, 'url': cItem['url']}
+            params = {'category': 'list_items', 'title': cItem['title'], 'icon': None, 'url': cItem['url']}
             self.addDir(params)
             for i in cats:
                 title = self.cm.ph.getDataBeetwenMarkers(i, '">', '<', False)[1]
                 url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(i, 'href="', '"', False)[1]
-                params = {'category':'list_items','title':title, 'icon': None, 'url': url}
+                params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url}
                 self.addDir(params)
         else:
             cats = self.cm.ph.getAllItemsBeetwenMarkers(cat, '<li class="block-subnavigation__menu-item menu-item', 'a>', False)
@@ -119,10 +119,10 @@ class Pannon(CBaseHostClass):
                 title = self.cm.ph.getDataBeetwenMarkers(close, '">', '<', False)[1]
                 url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(close, 'href="', '"', False)[1]
                 if "--expanded" in i:
-                    params = {'category':'list_filters','title':title, 'icon': None, 'url': url, 'next': True}
+                    params = {'category': 'list_filters', 'title': title, 'icon': None, 'url': url, 'next': True}
                     self.addDir(params)
                 else:
-                    params = {'category':'list_items','title':title, 'icon': None, 'url': url}
+                    params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url}
                     self.addDir(params)
     
     def listItems(self, cItem):
@@ -132,16 +132,16 @@ class Pannon(CBaseHostClass):
         sts, data = self.getPage(url)                
         if not sts:
             return
-        found = self.cm.ph.getDataBeetwenMarkers(data,'<div class="region-content">','<div class="region-sidebar-second">',False)[1]
-        found = self.cm.ph.getAllItemsBeetwenMarkers(found,'<div data-b-token','--promoted',False)
+        found = self.cm.ph.getDataBeetwenMarkers(data, '<div class="region-content">', '<div class="region-sidebar-second">', False)[1]
+        found = self.cm.ph.getAllItemsBeetwenMarkers(found, '<div data-b-token', '--promoted', False)
         for m in found:
-            title = self.cm.ph.getDataBeetwenMarkers(m, '" rel="bookmark">','</a>', False)[1]
-            icon = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" data-src="','"', False)[1]
-            date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-small__title-date--day">','</span>', False)[1]
+            title = self.cm.ph.getDataBeetwenMarkers(m, '" rel="bookmark">', '</a>', False)[1]
+            icon = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" data-src="', '"', False)[1]
+            date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-small__title-date--day">', '</span>', False)[1]
             if date1 == "":
-                date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-medium__title-date--day">','</span>', False)[1]
+                date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-medium__title-date--day">', '</span>', False)[1]
                 if date1 == "":
-                    date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-big__title-date--day">','</span>', False)[1]
+                    date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-big__title-date--day">', '</span>', False)[1]
             date2 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-small__title-date--hours">', '</span>', False)[1]
             if date2 == "":
                 date2 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-medium__title-date--hours">', '</span>', False)[1]
@@ -156,7 +156,7 @@ class Pannon(CBaseHostClass):
             desc = desc.strip()
             desc = date + "\n" + desc
             url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" href="', '"', False)[1]
-            params = {'category':'explore_item','title':title, 'icon': icon, 'url': url, 'desc': desc}
+            params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
             if not "Kommentár nélkül" in title:
                 self.addDir(params)
         if params:
@@ -172,8 +172,8 @@ class Pannon(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        content = self.cm.ph.getDataBeetwenMarkers(data,'<section id="content">','<div class="node-article-full__field-tags">')[1]
-        images = self.cm.ph.getAllItemsBeetwenMarkers(content,'data-src="','"', False)
+        content = self.cm.ph.getDataBeetwenMarkers(data, '<section id="content">', '<div class="node-article-full__field-tags">')[1]
+        images = self.cm.ph.getAllItemsBeetwenMarkers(content, 'data-src="', '"', False)
         text = re.findall('''<p>(.+?)</p>|<p.+?>(.+?)</p>''', content)
         if text == []:
             text = re.findall('''<p>(.+?\n.+?)</p>|<p.+?>(.+?\n.+?)</p>''', content)
@@ -181,7 +181,7 @@ class Pannon(CBaseHostClass):
             text[text.index(i)] = "".join(i)
         og = list(text)
         printDBG(str(og))
-        title = self.cm.ph.getDataBeetwenMarkers(content,'<div class="node-article-full__field-teaser-text">','</div>', False)[1]
+        title = self.cm.ph.getDataBeetwenMarkers(content, '<div class="node-article-full__field-teaser-text">', '</div>', False)[1]
         title = title.strip()
         text[0] = title + "\n" + text[0]
         if len(images) == len(text):
@@ -211,7 +211,7 @@ class Pannon(CBaseHostClass):
                 params = {'title': str(images.index(i) + 1) + ".bekezdés", 'icon': i, 'desc': txt}
                 self.addArticle(params)
         if "YouTube" in og[-1]:
-            url = self.cm.ph.getDataBeetwenMarkers(og[-1],'src="','"', False)[1]
+            url = self.cm.ph.getDataBeetwenMarkers(og[-1], 'src="', '"', False)[1]
             params = {'title': "Youtube videó", 'icon': None, 'url': url}
             self.addVideo(params)
 	
@@ -228,7 +228,7 @@ class Pannon(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
         elif category == 'list_filters':
@@ -237,12 +237,12 @@ class Pannon(CBaseHostClass):
             self.exploreItems(self.currItem)			
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)	
         elif category == 'cont_search':
             self.listSearchResult(self.currItem, self.currItem['searchPattern'], '')	
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         
@@ -258,19 +258,19 @@ class Pannon(CBaseHostClass):
         sts, data = self.getPage(url)                
         if not sts:
             return
-        found = self.cm.ph.getDataBeetwenMarkers(data,'<section id="content">','<div class="region-sidebar-second">',False)[1]
-        found = self.cm.ph.getAllItemsBeetwenMarkers(found,'node-article-search-result-viewmode__content','search-result-viewmode__field-tags"',False)
+        found = self.cm.ph.getDataBeetwenMarkers(data, '<section id="content">', '<div class="region-sidebar-second">', False)[1]
+        found = self.cm.ph.getAllItemsBeetwenMarkers(found, 'node-article-search-result-viewmode__content', 'search-result-viewmode__field-tags"', False)
         for m in found:
             title = self.cm.ph.getSearchGroups(m, '''" rel="bookmark">([^<].+?)</a>''', 1, True)[0]
-            icon = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, 'src="','"', False)[1]
-            date = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-search-result-viewmode__date--created">','</span>', False)[1]
+            icon = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, 'src="', '"', False)[1]
+            date = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-search-result-viewmode__date--created">', '</span>', False)[1]
             desc = self.cm.ph.getDataBeetwenMarkers(m, 'node-article-search-result-viewmode__field-teaser-text">', "</div>", False)[1]
             desc = desc.strip()
             desc = date + "\n" + desc
             url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" href="', '"', False)[1]
-            check = self.cm.ph.getDataBeetwenMarkers(m, '<div class="article__row article__row--left--image article__row article__row--left--image--bigger helper-relative">','<div class="node-article-search-result-viewmode__field-channel">', False)[1]
+            check = self.cm.ph.getDataBeetwenMarkers(m, '<div class="article__row article__row--left--image article__row article__row--left--image--bigger helper-relative">', '<div class="node-article-search-result-viewmode__field-channel">', False)[1]
             if ('<span class="video">' not in check or '<span class="foto">' in check) and "Közérdekű információk" not in m:
-                params = {'category':'explore_item','title':title, 'icon': icon, 'url': url, 'desc': desc}
+                params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
                 self.addDir(params)
         if params:
             if '<li class="pager__item pager__item--next">' in data:
