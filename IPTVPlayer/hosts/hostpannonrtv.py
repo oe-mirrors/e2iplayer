@@ -60,9 +60,9 @@ class Pannon(CBaseHostClass):
         
         printDBG("PROTOCOL [%s] " % protocol)
         
-        urlSupport = self.up.checkHostSupport( uri )
+        urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
-            retTab = self.up.getVideoLinkExt( uri )
+            retTab = self.up.getVideoLinkExt(uri)
             videoUrls.extend(retTab)
         elif 0 == urlSupport and self._uriIsValid(uri):
             if protocol == 'm3u8':
@@ -104,12 +104,12 @@ class Pannon(CBaseHostClass):
         if cItem['next'] == True:
             cats = self.cm.ph.getDataBeetwenMarkers(cat, cItem['title'], '</ul>', False)[1]
             cats = self.cm.ph.getAllItemsBeetwenMarkers(cats, '<a', 'a>', False)
-            params = {'category':'list_items','title':cItem['title'], 'icon': None , 'url': cItem['url']}
+            params = {'category':'list_items','title':cItem['title'], 'icon': None, 'url': cItem['url']}
             self.addDir(params)
             for i in cats:
                 title = self.cm.ph.getDataBeetwenMarkers(i, '">', '<', False)[1]
                 url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(i, 'href="', '"', False)[1]
-                params = {'category':'list_items','title':title, 'icon': None , 'url': url}
+                params = {'category':'list_items','title':title, 'icon': None, 'url': url}
                 self.addDir(params)
         else:
             cats = self.cm.ph.getAllItemsBeetwenMarkers(cat, '<li class="block-subnavigation__menu-item menu-item', 'a>', False)
@@ -119,10 +119,10 @@ class Pannon(CBaseHostClass):
                 title = self.cm.ph.getDataBeetwenMarkers(close, '">', '<', False)[1]
                 url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(close, 'href="', '"', False)[1]
                 if "--expanded" in i:
-                    params = {'category':'list_filters','title':title, 'icon': None , 'url': url, 'next': True}
+                    params = {'category':'list_filters','title':title, 'icon': None, 'url': url, 'next': True}
                     self.addDir(params)
                 else:
-                    params = {'category':'list_items','title':title, 'icon': None , 'url': url}
+                    params = {'category':'list_items','title':title, 'icon': None, 'url': url}
                     self.addDir(params)
     
     def listItems(self, cItem):
@@ -135,28 +135,28 @@ class Pannon(CBaseHostClass):
         found = self.cm.ph.getDataBeetwenMarkers(data,'<div class="region-content">','<div class="region-sidebar-second">',False)[1]
         found = self.cm.ph.getAllItemsBeetwenMarkers(found,'<div data-b-token','--promoted',False)
         for m in found:
-            title = self.cm.ph.getDataBeetwenMarkers(m, '" rel="bookmark">','</a>', False) [1]
-            icon = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" data-src="','"', False) [1]
-            date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-small__title-date--day">','</span>', False) [1]
+            title = self.cm.ph.getDataBeetwenMarkers(m, '" rel="bookmark">','</a>', False)[1]
+            icon = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" data-src="','"', False)[1]
+            date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-small__title-date--day">','</span>', False)[1]
             if date1 == "":
-                date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-medium__title-date--day">','</span>', False) [1]
+                date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-medium__title-date--day">','</span>', False)[1]
                 if date1 == "":
-                    date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-big__title-date--day">','</span>', False) [1]
+                    date1 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-big__title-date--day">','</span>', False)[1]
             date2 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-small__title-date--hours">', '</span>', False)[1]
             if date2 == "":
                 date2 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-medium__title-date--hours">', '</span>', False)[1]
                 if date2 == "":
                     date2 = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-rovatok-big__title-date--hours">', '</span>', False)[1]
             date = date1 + " " + date2
-            desc = self.cm.ph.getDataBeetwenMarkers(m, '<div class="node-article-rovatok-small__field-teaser-text">', "</div>", False) [1]
+            desc = self.cm.ph.getDataBeetwenMarkers(m, '<div class="node-article-rovatok-small__field-teaser-text">', "</div>", False)[1]
             if desc == "":
-                desc = self.cm.ph.getDataBeetwenMarkers(m, '<div class="node-article-rovatok-medium__field-teaser-text">', "</div>", False) [1]
+                desc = self.cm.ph.getDataBeetwenMarkers(m, '<div class="node-article-rovatok-medium__field-teaser-text">', "</div>", False)[1]
                 if desc == "":
-                    desc = self.cm.ph.getDataBeetwenMarkers(m, '<div class="node-article-rovatok-big__field-teaser-text">', "</div>", False) [1]
+                    desc = self.cm.ph.getDataBeetwenMarkers(m, '<div class="node-article-rovatok-big__field-teaser-text">', "</div>", False)[1]
             desc = desc.strip()
             desc = date + "\n" + desc
             url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" href="', '"', False)[1]
-            params = {'category':'explore_item','title':title, 'icon': icon , 'url': url, 'desc': desc}
+            params = {'category':'explore_item','title':title, 'icon': icon, 'url': url, 'desc': desc}
             if not "Kommentár nélkül" in title:
                 self.addDir(params)
         if params:
@@ -164,7 +164,7 @@ class Pannon(CBaseHostClass):
                 url = self.cm.ph.getDataBeetwenMarkers(data, '<li class="pager__item pager__item--next">', 'rel="next">', False)[1]
                 orl = self.cm.ph.getDataBeetwenMarkers(data, '<meta property="og:url" content="', '"', False)[1]
                 url = orl + self.cm.ph.getDataBeetwenMarkers(url, '<a href="', '"', False)[1]
-                params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None , 'url': url}
+                params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': url}
                 self.addDir(params)      
     
     def exploreItems(self, cItem):
@@ -225,7 +225,7 @@ class Pannon(CBaseHostClass):
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')
         url = self.currItem.get("url", '')
-        printDBG( "handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon) )
+        printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
         if name == None:
             self.listMainMenu({'name':'category'})
@@ -262,15 +262,15 @@ class Pannon(CBaseHostClass):
         found = self.cm.ph.getAllItemsBeetwenMarkers(found,'node-article-search-result-viewmode__content','search-result-viewmode__field-tags"',False)
         for m in found:
             title = self.cm.ph.getSearchGroups(m, '''" rel="bookmark">([^<].+?)</a>''', 1, True)[0]
-            icon = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, 'src="','"', False) [1]
-            date = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-search-result-viewmode__date--created">','</span>', False) [1]
-            desc = self.cm.ph.getDataBeetwenMarkers(m, 'node-article-search-result-viewmode__field-teaser-text">', "</div>", False) [1]
+            icon = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, 'src="','"', False)[1]
+            date = self.cm.ph.getDataBeetwenMarkers(m, '<span class="node-article-search-result-viewmode__date--created">','</span>', False)[1]
+            desc = self.cm.ph.getDataBeetwenMarkers(m, 'node-article-search-result-viewmode__field-teaser-text">', "</div>", False)[1]
             desc = desc.strip()
             desc = date + "\n" + desc
             url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" href="', '"', False)[1]
-            check = self.cm.ph.getDataBeetwenMarkers(m, '<div class="article__row article__row--left--image article__row article__row--left--image--bigger helper-relative">','<div class="node-article-search-result-viewmode__field-channel">', False) [1]
+            check = self.cm.ph.getDataBeetwenMarkers(m, '<div class="article__row article__row--left--image article__row article__row--left--image--bigger helper-relative">','<div class="node-article-search-result-viewmode__field-channel">', False)[1]
             if ('<span class="video">' not in check or '<span class="foto">' in check) and "Közérdekű információk" not in m:
-                params = {'category':'explore_item','title':title, 'icon': icon , 'url': url, 'desc': desc}
+                params = {'category':'explore_item','title':title, 'icon': icon, 'url': url, 'desc': desc}
                 self.addDir(params)
         if params:
             if '<li class="pager__item pager__item--next">' in data:
@@ -279,7 +279,7 @@ class Pannon(CBaseHostClass):
                 else:
                     page = cItem['page']
                 url = '&page='
-                params = {'category': 'cont_search', 'title': "Következő oldal", 'icon': None , 'url': url, 'searchPattern': searchPattern, 'page': page+1}
+                params = {'category': 'cont_search', 'title': "Következő oldal", 'icon': None, 'url': url, 'searchPattern': searchPattern, 'page': page+1}
                 self.addDir(params)      
         
 
