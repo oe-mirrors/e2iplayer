@@ -6,7 +6,7 @@ HOST_VERSION = "1.3"
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass 
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -30,11 +30,11 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://www.idokep.hu/idojaras/Budapest' 
+    return 'https://www.idokep.hu/idojaras/Budapest'
 
 
 class Idokep(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'idokep', 'cookie': 'idokep.cookie'})
         self.MAIN_URL = 'https://www.idokep.hu/idojaras/Budapest'
@@ -46,7 +46,7 @@ class Idokep(CBaseHostClass):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("Idokep.getLinksForVideo")
         videoUrls = []
@@ -77,7 +77,7 @@ class Idokep(CBaseHostClass):
     def _uriIsValid(self, url):
         return '://' in url
 
-    def listMainMenu(self, cItem):   
+    def listMainMenu(self, cItem):
         printDBG('Idokep.listMainMenu')
         MAIN_CAT_TAB = [{'category': 'list_static', 'title': _('Előrejelzés')},
                         {'category': 'list_filters', 'title': _('Időkép'), 'url': 'https://www.idokep.hu/idokep'},
@@ -87,7 +87,7 @@ class Idokep(CBaseHostClass):
                         {'category': 'list_filters', 'title': _('Kamerák'), 'url': 'https://www.idokep.hu/webkamera'},
                         {'category': 'list_album', 'title': _('Képtár'), 'url': 'https://www.idokep.hu/keptar'},
                         {'category': 'list_filters', 'title': _('Térképek'), 'url': 'https://www.idokep.hu/idojaras/Budapest'}]
-        self.listsTab(MAIN_CAT_TAB, cItem) 
+        self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listKepek(self, cItem):
         printDBG('Idokep.listKepek')
@@ -103,7 +103,7 @@ class Idokep(CBaseHostClass):
             url = "https://idokep.hu" + url
             params = {'category': 'show_pic', 'title': title, 'icon': icon, 'url': url}
             self.addDir(params)
-    
+
     def showPic(self, cItem):
         printDBG('Idokep.showPic')
         sts, data = self.getPage(cItem['url'])
@@ -135,7 +135,7 @@ class Idokep(CBaseHostClass):
             url = "https://idokep.hu" + url
             params = {'category': 'list_pics', 'title': title, 'icon': icon, 'url': url}
             self.addDir(params)
-    
+
     def listRiaszt(self, cItem):
         printDBG('Idokep.listRiaszt')
         sts, data = self.getPage(cItem['url'])
@@ -382,7 +382,7 @@ class Idokep(CBaseHostClass):
         if not url:
             url = self.cm.ph.getDataBeetwenMarkers(data, '<source src="', '"', False)[1]
             icon = self.cm.ph.getDataBeetwenMarkers(data, '<video poster="', '"', False)[1]
-            icon = "https:" + icon 
+            icon = "https:" + icon
         url = "https:" + url
         if ".m3u8" in url:
             params = {'title': cItem['title'], 'icon': icon, 'url': url}

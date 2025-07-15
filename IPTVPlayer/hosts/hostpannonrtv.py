@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# WhiteWolf - 2025.07.04. 
+# WhiteWolf - 2025.07.04.
 ###################################################
 HOST_VERSION = "1.1"
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass 
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, CSelOneLink
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
@@ -26,7 +26,7 @@ import requests
 ###################################################
 
 ###################################################
-# E2 GUI COMPONENTS 
+# E2 GUI COMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 from Screens.MessageBox import MessageBox
@@ -38,31 +38,31 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://pannonrtv.com' 
+    return 'https://pannonrtv.com'
 
 
 class Pannon(CBaseHostClass):
- 
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'pannonrtv', 'cookie': 'pannonrtv.cookie'})
         self.MAIN_URL = 'https://pannonrtv.com'
         self.DEFAULT_ICON_URL = "https://pannonrtv.com/sites/default/files/2021-05/ogpannon.jpg"
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
-    
+
     def getLinksForVideo(self, cItem):
         printDBG("Pannonrtv.getLinksForVideo")
         videoUrls = []
         uri = urlparser.decorateParamsFromUrl(cItem['url'])
         protocol = uri.meta.get('iptv_proto', '')
-        
+
         printDBG("PROTOCOL [%s] " % protocol)
-        
+
         urlSupport = self.up.checkHostSupport(uri)
         if 1 == urlSupport:
             retTab = self.up.getVideoLinkExt(uri)
@@ -80,11 +80,11 @@ class Pannon(CBaseHostClass):
             else:
                 videoUrls.append({'name': 'direct link', 'url': uri})
         return videoUrls
-    
+
     def _uriIsValid(self, url):
         return '://' in url
-    
-    def listMainMenu(self, cItem):   
+
+    def listMainMenu(self, cItem):
         printDBG('Pannonrtv.listMainMenu')
         desc = 'Pannon RTV \nAz intézmény a szabadkai Magyar Médiaházban működik. Műsorait több mint 100 foglalkoztatott, és mintegy 50 tiszteletdíjas készíti. Az újságírók mellett operatőrök, vágók, adáslebonyolítók, hangtechnikusok, adásszerkesztők, gyártásvezetők és adminisztratív munkatársak dolgoznak. A riporterek és szerkesztők jelentős része felsőfokú végzettségű. Az alkalmazottak zöme 35 év alatti. A Pannon RTV dinamikusan fejlődő médiaház, mely rendszeresen tudósít a nagyobb horderejű eseményekről Vajdaság egész területéről, valamint az anyaországból, továbbá beszámol Európa és a világ híreiről. A Pannon RTV számos művelődési rendezvény médiatámogatója. Élőben közvetíti a vajdasági magyarság kiemelt politikai, közéleti és művelődési eseményeit, ünnepi rendezvényeit (egyebek mellett a Magyar Nemzeti Tanács üléseit, a Pataki Gyűrű-díj átadóját, a Szent István napi központi ünnepséget).'
         sts, pannontv = self.getPage('https://media.gerst.se/pannon.xspf')
@@ -93,11 +93,11 @@ class Pannon(CBaseHostClass):
                         {'category': 'list_filters', 'title': _('Kategóriák'), 'url': self.MAIN_URL, 'desc': desc, 'next': False},
                         {'category': 'search', 'title': _('Keresés'), 'search_item': True},
                         {'category': 'search_history', 'title': _('Keresési előzmények')}]
-        self.listsTab(MAIN_CAT_TAB, cItem) 
+        self.listsTab(MAIN_CAT_TAB, cItem)
         self.addVideo({'title': _('Pannon TV'), 'url': pannontv, 'desc': 'A Pannon Televízió a Pannon RTV egyik oszlopa, 2006 óta sugároz. Kezdetben csak Szabadkán és környékén láthatták a nézők, ma azonban az IPTV rendszernek köszönhetően egész Vajdaságban fogható, valamint a tartomány több kábeltévé-szolgáltatója is felvette kínálatába. Az interneten a világ bármely pontjáról követhető az adás, illetve visszanézhetők a műsorok. Saját készítésű tájékoztató- és szórakoztató műsorai naponta átlagosan 4-5 órát töltenek ki, emellett számos partnertelevízió (köztük a magyarországi és a szerbiai köztévé) produkcióit (riportműsorait, sorozatait) is sugározza a különböző filmes alkotások és szórakoztató tartalmak mellett. Egyebek mellett koncerteket, színházi előadásokat, játékfilmeket, dokumentumfilmeket, sorozatokat, rajzfilmeket, meséket és videoklipeket is láthatnak a nézők. A Pannon Televízió műsorai az élet összes területével foglalkoznak a tájékoztató- és magazinműsorainak köszönhetően. A médium egyre több saját készítésű dokumentumfilmet tud műsorra tűzni.'})
         self.addAudio({'title': _('Pannon Rádió'), 'url': 'http://stream2.nmih.hu:4120/live.mp3', 'desc': 'Üde, friss, fiatalos, dinamikus – ez a Pannon Rádió. Vajdaság és a mindennapok ritmusa, a 91.5-ös regionális frekvencián. 2008 márciusában indultunk, és nagy utat jártunk be ahhoz, hogy mára Vajdaság vezető magyar nyelvű kereskedelmi rádiójává válhassunk. Nálunk hallható a régió legnépszerűbb magyar nyelvű reggeli műsora, a Pannon Reggeli, valamint a közérdekű információkat közlő, és laza témákban bővelkedő Pannon Presszó is. A nap 24 órájában a legújabb magyar- és külföldi slágerekkel, érdekességekkel, fontos információkkal, sőt óránként rövid hírösszefoglalókkal várunk Titeket. Hangoljatok ránk Szabadkán, Magyarkanizsán, Törökkanizsán, Csókán, Padén, Adán, Moholon, Zentán, Topolyán, Kishegyesen vagy Óbecsén, illetve Magyarországon Szeged, Kiskunhalas és Bácsalmás vonzáskörzetében. Honlapunkról természetesen online is hallhatóak vagyunk, a nap bármely szakában. Ez a Pannon Rádió, 2008 óta. Ismerj meg bennünket!', 'icon': 'https://pannonrtv.com/sites/default/files/inline-images/pannonradioujlogo1-01.jpg'})
         self.addAudio({'title': _('Szabadkai Magyar Rádió'), 'url': 'http://stream2.nmih.hu:4110/live.mp3', 'desc': 'A 2015. november 1-jén elindult Szabadkai Magyar Rádió célja a hallgatók naprakész tájékoztatása. A műsorban terítékre kerülnek politikai és szociális témák. Óránként hírek, és naponta többször híradó is várja a hallgatókat. Hírösszefoglalóinkban beszámolunk Szerbia, Magyarország és a világ eseményeiről is. Hétköznaponként Napindító című reggeli sávunkban részletesen feldolgozzuk a kiemelt eseményeket, az érdekes témákat. A Mozaikban tovább boncolgatjuk a történéseket. Bemutatjuk az itt élő érdekes embereket. A színészek, zenészek olykor élő produkciókkal érkeznek hozzánk. Az érdekes történetek mellé pedig a legszebb magyar és külföldi melódiák szólnak, a nosztalgia fonalára fűzve. Az esti órákban zenés szórakoztató-műsorokkal kedveskedünk a hallgatóknak, és a rádiószínházunkban is többször „felgördült a függöny” a 107,1 MHz-en, a hallgatók hullámhosszán.', 'icon': 'https://pannonrtv.com/sites/default/files/inline-images/onlineradioszmr.png'})
-    
+
     def listFilters(self, cItem):
         printDBG('Pannonrtv.listFilters')
         sts, data = self.getPage(cItem['url'])
@@ -127,12 +127,12 @@ class Pannon(CBaseHostClass):
                 else:
                     params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url}
                     self.addDir(params)
-    
+
     def listItems(self, cItem):
         printDBG('Pannonrtv.listItems')
-        url = cItem['url']    
+        url = cItem['url']
         params = False
-        sts, data = self.getPage(url)                
+        sts, data = self.getPage(url)
         if not sts:
             return
         found = self.cm.ph.getDataBeetwenMarkers(data, '<div class="region-content">', '<div class="region-sidebar-second">', False)[1]
@@ -168,8 +168,8 @@ class Pannon(CBaseHostClass):
                 orl = self.cm.ph.getDataBeetwenMarkers(data, '<meta property="og:url" content="', '"', False)[1]
                 url = orl + self.cm.ph.getDataBeetwenMarkers(url, '<a href="', '"', False)[1]
                 params = {'category': 'list_items', 'title': "Következő oldal", 'icon': None, 'url': url}
-                self.addDir(params)      
-    
+                self.addDir(params)
+
     def exploreItems(self, cItem):
         printDBG('Pannonrtv.exploreItems')
         sts, data = self.getPage(cItem['url'])
@@ -217,10 +217,10 @@ class Pannon(CBaseHostClass):
             url = self.cm.ph.getDataBeetwenMarkers(og[-1], 'src="', '"', False)[1]
             params = {'title': "Youtube videó", 'icon': None, 'url': url}
             self.addVideo(params)
-	
+
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Pannonrtv.handleService start')
-        
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
         name = self.currItem.get("name", '')
@@ -237,20 +237,20 @@ class Pannon(CBaseHostClass):
         elif category == 'list_filters':
             self.listFilters(self.currItem)
         elif category == 'explore_item':
-            self.exploreItems(self.currItem)			
+            self.exploreItems(self.currItem)
         elif category == 'search':
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'}) 
-            self.listSearchResult(cItem, searchPattern, searchType)	
+            cItem.update({'search_item': False, 'name': 'category'})
+            self.listSearchResult(cItem, searchPattern, searchType)
         elif category == 'cont_search':
-            self.listSearchResult(self.currItem, self.currItem['searchPattern'], '')	
+            self.listSearchResult(self.currItem, self.currItem['searchPattern'], '')
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
-        
+
         CBaseHostClass.endHandleService(self, index, refresh)
-    
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Pannonrtv.listSearchResult - Filmek cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = 'https://pannonrtv.com/search?text=' + searchPattern
@@ -258,7 +258,7 @@ class Pannon(CBaseHostClass):
             url = url + cItem['url'] + str(cItem['page'])
             printDBG(url)
         params = False
-        sts, data = self.getPage(url)                
+        sts, data = self.getPage(url)
         if not sts:
             return
         found = self.cm.ph.getDataBeetwenMarkers(data, '<section id="content">', '<div class="region-sidebar-second">', False)[1]
@@ -283,11 +283,10 @@ class Pannon(CBaseHostClass):
                     page = cItem['page']
                 url = '&page='
                 params = {'category': 'cont_search', 'title': "Következő oldal", 'icon': None, 'url': url, 'searchPattern': searchPattern, 'page': page + 1}
-                self.addDir(params)      
-        
+                self.addDir(params)
+
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Pannon(), True, [])
-    
