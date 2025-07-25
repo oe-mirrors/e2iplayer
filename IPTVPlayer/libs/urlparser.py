@@ -576,8 +576,10 @@ class urlparser:
             'kabab.lima-city.de': self.pp.parserKABABLIMA,
             'kingvid.tv': self.pp.parserKINGVIDTV,
             'kinoger.be': self.pp.parserJWPLAYER,
+            'kinoger.p2pplay.pro': self.pp.parserSBS,
             'kinoger.pw': self.pp.parserVIDGUARDTO,
             'kinoger.re': self.pp.parserSBS,
+            'kinoger.ru': self.pp.parserVOESX,
             'krakenfiles.com': self.pp.parserKRAKENFILESCOM,
             # l
             'l1afav.net': self.pp.parserFILEMOON,
