@@ -50,26 +50,6 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
         self.referer = referer
         self.captchaType = captchaType
 
-        sz_w = 504  # getDesktop(0).size().width() - 190
-        sz_h = 300  # getDesktop(0).size().height() - 195
-        if sz_h < 500:
-            sz_h += 4
-
-        self.oldskin = """
-            <screen position="center,center" title="%s" size="%d,%d">
-             <ePixmap position="5,9"   zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
-
-             <widget name="label_red"    position="45,9"  zPosition="5" size="175,27" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-             <widget name="title"        position="5,47"  zPosition="1" size="%d,23" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
-             <widget name="console"      position="10,%d" zPosition="2" size="%d,160" valign="center" halign="center"   font="Regular;24" transparent="0" foregroundColor="white" backgroundColor="black"/>
-            </screen>""" % (
-            title,
-            sz_w, sz_h,                # size
-            GetIconDir('red' + '.png'),
-            sz_w - 135,                # size title
-            (sz_h - 160) / 2, sz_w - 20,  # console
-        )
-
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
 
@@ -78,12 +58,12 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
 
         self["label_red"] = Label(_("Cancel"))
 
-        self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],
-            {
-                "cancel": self.keyExit,
-                # "ok"    : self.keyOK,
-                "red": self.keyRed,
-            }, -2)
+        self["actions"] = ActionMap(["ColorActions", "OKCancelActions"],
+        {
+            "cancel": self.keyExit,
+            # "ok"    : self.keyOK,
+            "red": self.keyRed,
+        }, -2)
 
         self.workconsole = {'console': None, 'close_conn': None, 'stderr_conn': None, 'stdout_conn': None, 'stderr': '', 'stdout': ''}
         self.result = ''
