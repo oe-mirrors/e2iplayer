@@ -14,7 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.hosts import hosturllist as urllist
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
 ###################################################
 
 ###################################################
@@ -104,7 +104,7 @@ class Pannon(CBaseHostClass):
         if not sts:
             return
         cat = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="block-subnavigation__menu menu">', '</nav>', False)[1]
-        if cItem['next'] == True:
+        if cItem['next'] is True:
             cats = self.cm.ph.getDataBeetwenMarkers(cat, cItem['title'], '</ul>', False)[1]
             cats = self.cm.ph.getAllItemsBeetwenMarkers(cats, '<a', 'a>', False)
             params = {'category': 'list_items', 'title': cItem['title'], 'icon': None, 'url': cItem['url']}
@@ -160,7 +160,7 @@ class Pannon(CBaseHostClass):
             desc = date + "\n" + desc
             url = self.MAIN_URL + self.cm.ph.getDataBeetwenMarkers(m, '" href="', '"', False)[1]
             params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': url, 'desc': desc}
-            if not "Kommentár nélkül" in title:
+            if "Kommentár nélkül" not in title:
                 self.addDir(params)
         if params:
             if '<li class="pager__item pager__item--next">' in data:
@@ -230,7 +230,7 @@ class Pannon(CBaseHostClass):
         url = self.currItem.get("url", '')
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)

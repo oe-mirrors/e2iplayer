@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.hosts import hosturllist as urllist
 from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
 ###################################################
 
 ###################################################
@@ -189,7 +189,7 @@ class Idokep(CBaseHostClass):
                     if not link:
                         backup = True
                 link = self.cm.ph.getDataBeetwenMarkers(link, 'src="', '"', False)[1]
-                if backup == True:
+                if backup is True:
                     link = self.cm.ph.getDataBeetwenMarkers(data, 'autoplay muted loop poster="', '"', False)[1]
                 if "https:" not in link and "//" in link:
                     img = "https:" + link
@@ -416,7 +416,7 @@ class Idokep(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s], title[%s], icon[%s] " % (name, category, title, icon))
         self.currList = []
 
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
