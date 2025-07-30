@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-05 19:13+0200\n"
+"POT-Creation-Date: 2025-07-30 21:43+0200\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -16,912 +16,640 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ../plugin\n"
 
-#: ../components/iptvplayerwidget.py:1671
 #, python-format
 msgid "\tDisk space available: %s"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1670
 #, python-format
 msgid "\tDisk space required: %s"
 msgstr ""
 
-#: ../hosts/hostbbcsport_blocked_.py:466
 msgid ""
 "\n"
 "Error[1]."
 msgstr ""
 
-#: ../hosts/hostbbcsport_blocked_.py:477
 msgid ""
 "\n"
 "Error[2]."
 msgstr ""
 
-#: ../hosts/hostbbcsport_blocked_.py:485
 msgid ""
 "\n"
 "Error[3]."
 msgstr ""
 
-#: ../hosts/hostbbcsport_blocked_.py:518
 msgid ""
 "\n"
 "Error[4]."
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:459 ../components/iptvsubdownloader.py:387
 msgid ""
 "\n"
 "Make sure you are using the latest version of the plugin."
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:454
 msgid ""
 "\n"
 "This host is not integral part of the E2iPlayer plugin.\n"
 "It is not supported by E2iPlayer team."
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:460 ../components/iptvsubdownloader.py:388
 msgid ""
 "\n"
 "You can also report problem here: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 msgstr ""
 
-#: ../components/configbase.py:80 ../components/iptvdirbrowser.py:82
-#: ../components/iptvdirbrowser.py:327
-#: ../components/iptvfavouriteswidgets.py:45 ../iptvdm/iptvdmui.py:541
 msgid " "
 msgstr ""
 
-#: ../hosts/hostxxx.py:6055
 msgid "    *    Votes: "
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:348
 #, fuzzy
 msgid "    Audio buffer size [KB]"
 msgstr "    Buffer tamanho [MB]"
 
-#: ../components/iptvconfigmenu.py:289
 msgid "    Background color"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:291
 msgid "    Default suggestions provider"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:322
 msgid "    Enable hosts groups"
 msgstr "    Ativar grupos de hosts"
 
-#: ../components/iptvconfigmenu.py:326
 msgid "    Number of columns"
 msgstr "    Número de colunas"
 
-#: ../components/iptvconfigmenu.py:325
 msgid "    Number of rows"
 msgstr "    Número de linhas"
 
-#: ../components/iptvconfigmenu.py:318
 msgid "    Remove thumbnails"
 msgstr "    Remover miniaturas"
 
-#: ../components/iptvconfigmenu.py:323
 msgid "    Service icon size"
 msgstr "    Tamanho dos icons de Serviço"
 
-#: ../components/iptvconfigmenu.py:290
 msgid "    Show suggestions"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:347
 #, fuzzy
 msgid "    Video buffer size [MB]"
 msgstr "    Buffer tamanho [MB]"
 
-#: ../hosts/hostsportdeutschland_blocked_.py:139
 #, python-format
 msgid " (planned %s)"
 msgstr ""
 
-#: ../hosts/hostfilmpertutti.py:211
 #, fuzzy
 msgid " - others links"
 msgstr "Links do utilizador"
 
-#: ../hosts/hostxxx.py:19938
 msgid " Login Protected."
 msgstr ""
 
-#: ../hosts/hostxxx.py:21452
 msgid " Private Show."
 msgstr ""
 
-#: ../hosts/hostxxx.py:18584
 msgid " This video is a private."
 msgstr ""
 
-#: ../components/captcha_helper.py:66
 msgid " or "
 msgstr ""
 
-#: ../components/e2ivk.py:640
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr ""
 
-#: ../hosts/hostwebstream.py:119
 msgid "\"Web\" streams player"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:492
 #, python-format
 msgid "%s "
 msgstr ""
 
-#: ../hosts/hostiptvplayerinfo.py:56
 #, python-format
 msgid "%s - service overview"
 msgstr ""
 
-#: ../hosts/hostiptvplayerinfo.py:59
 #, python-format
 msgid "%s - subtitles provider"
 msgstr ""
 
-#: ../hosts/hosteskago.py:269
 #, python-format
 msgid "%s - trailer"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:359 ../components/iptvconfigmenu.py:367
-#: ../components/iptvconfigmenu.py:369 ../hosts/hostbsto_blocked_.py:46
-#: ../hosts/hostbsto_blocked_.py:48 ../hosts/hostcineto.py:36
-#: ../hosts/hostcineto.py:38 ../hosts/hostmrpiracy.py:57
-#: ../hosts/hostmrpiracy.py:59 ../hosts/hostmusicbox.py:42
 #, python-format
 msgid "%s API KEY"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:358
 #, python-format
 msgid "%s device name"
 msgstr ""
 
-#: ../iptvdm/iptvdmui.py:87
 #, fuzzy, python-format
 msgid "%s download manager"
 msgstr "IPTV gestor de descargas"
 
-#: ../components/iptvconfigmenu.py:356
 #, python-format
 msgid "%s e-mail"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:340
 #, python-format
 msgid "%s episodes"
 msgstr ""
 
-#: ../Web/webParts.py:133
 #, python-format
 msgid "%s file is %d KB in size. Last %d lines are:"
 msgstr ""
 
-#: ../Web/webParts.py:130
 #, python-format
 msgid "%s file is %d MB in size. Last %d lines are:"
 msgstr ""
 
-#: ../hosts/hosttwitchtv_blocked_.py:445
 #, python-format
 msgid "%s followers"
 msgstr ""
 
-#: ../subproviders/subprov_opensubtitlesorg2.py:73
 #, python-format
 msgid "%s has been protected with google recaptcha v2. You can try to use API version."
 msgstr ""
 
-#: ../hosts/hostdixmax.py:216
 #, python-format
 msgid "%s minutes"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:357
 #, fuzzy, python-format
 msgid "%s password"
 msgstr "Palavra-Passe"
 
-#: ../iptvdm/iptvbuffui.py:587
 #, python-format
 msgid "%s returned %s: %s"
 msgstr ""
 
-#: ../hosts/hostserialeco.py:199 ../hosts/hostserialeco.py:235
 #, python-format
 msgid "%s s%se%s"
 msgstr ""
 
-#: ../libs/youtube_dl/extractor/vevo.py:92
 #, python-format
 msgid "%s said: This page is currently unavailable in your region"
 msgstr ""
 
-#: ../components/confighost.py:84
 #, fuzzy, python-format
 msgid "%s services configuration"
 msgstr "Configuração de serviços"
 
-#: ../hosts/hostplayrtsiw.py:475
 #, python-format
 msgid "%s shows"
 msgstr ""
 
-#: ../hosts/hostiptvplayerinfo.py:57 ../hosts/hostiptvplayerinfo.py:58
 #, python-format
 msgid "%s subtitles download - how to"
 msgstr ""
 
-#: ../libs/hcaptcha_2captcha.py:87 ../libs/recaptcha_v2_2captcha.py:75
-#: ../libs/recaptcha_v2_9kw.py:75 ../libs/recaptcha_v3_2captcha.py:75
 #, python-format
 msgid "%s timeout."
 msgstr ""
 
-#: ../components/ihost.py:705
 #, python-format
 msgid ""
 "%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
 
-#: ../hosts/hosttwitchtv_blocked_.py:179 ../hosts/hosttwitchtv_blocked_.py:228
-#: ../hosts/hosttwitchtv_blocked_.py:278 ../hosts/hosttwitchtv_blocked_.py:314
-#: ../hosts/hosttwitchtv_blocked_.py:376 ../hosts/hosttwitchtv_blocked_.py:484
 #, fuzzy, python-format
 msgid "%s viewers"
 msgstr "%s espectadores, %s canais"
 
-#: ../hosts/hostcimaclubcom_blocked_.py:261 ../hosts/hostmediasetplay.py:204
-#: ../hosts/hostmediasetplay.py:275 ../hosts/hosttwitchtv_blocked_.py:444
 #, python-format
 msgid "%s views"
 msgstr ""
 
-#: ../hosts/hostcimaclubcom_blocked_.py:267
 #, python-format
 msgid "%s/10"
 msgstr ""
 
-#: ../components/iptvpictureplayer.py:268
-#: ../components/iptvpictureplayer.py:346
 msgid "++"
 msgstr ""
 
-#: ../components/iptvpictureplayer.py:263
 msgid "--"
 msgstr ""
 
-#: ../hosts/hostkissanimeto.py:162
 msgid "-- OK --"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:286
 msgid "----- BASIC CONFIGURATION -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:342
 msgid "----- BUFFERING CONFIGURATION -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:361
 msgid "----- CAPTCHA CONFIGURATION -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:351
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:399
 msgid "----- OTHER SETTINGS -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:382
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:330
 msgid "----- PROXIES CONFIGURATION -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:304
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:301
 msgid "----- SERVICE CONFIGURATION -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:310
 msgid "----- SKIN CONFIGURATION -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:338
 msgid "----- STORAGE CONFIGURATION -----"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:371
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:264
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "---------------- Opções de exteplayer3 externo -----------------"
 
-#: ../hosts/hostwebstream.py:97
 msgid "----------Other----------"
 msgstr ""
 
-#: ../hosts/hostfilmpalast.py:61
 #, fuzzy
 msgid "--All Episodes--"
 msgstr "--Todos--"
 
-#: ../hosts/hostappletrailers_blocked_.py:64 ../hosts/hostdixmax.py:152
-#: ../hosts/hostdixmax.py:156 ../hosts/hosteskago.py:169
-#: ../hosts/hostfenixsite.py:106 ../hosts/hostfenixsite.py:110
-#: ../hosts/hostfilma24hdcom.py:271 ../hosts/hostfilmpalast.py:109
-#: ../hosts/hostfilmpertutti.py:61 ../hosts/hostgledalica.py:138
-#: ../hosts/hosthdsto.py:180 ../hosts/hostitvcom.py:127
-#: ../hosts/hostlibrestream.py:101 ../hosts/hostmeczykipl.py:53
-#: ../hosts/hostmusicmp3ru.py:119 ../hosts/hostngolos.py:126
-#: ../hosts/hostngolos.py:176 ../hosts/hostnuteczki.py:119
-#: ../hosts/hostoipeirates.py:106 ../hosts/hostplayrtsiw.py:246
-#: ../hosts/hostplayrtsiw.py:260 ../hosts/hostserijeonline.py:126
-#: ../hosts/hostskstream.py:140 ../hosts/hostsportdeutschland_blocked_.py:95
-#: ../hosts/hostsvtplayse.py:132 ../hosts/hosttainieskaiseirestv.py:104
-#: ../hosts/hostvumedicom.py:120 ../hosts/hostvumedicom.py:160
-#: ../hosts/hostwatchwrestling.py:81 ../hosts/hostwatchwrestlinguno.py:71
-#: ../hosts/hostyoutube.py:109 ../libs/webcamera.py:228
 msgid "--All--"
 msgstr "--Todos--"
 
-#: ../hosts/hostegybest.py:128 ../hosts/hostted.py:113 ../hosts/hostted.py:119
-#: ../hosts/hostted.py:125 ../hosts/hostted.py:130 ../hosts/hostted.py:148
-#: ../hosts/hostted.py:154 ../hosts/hostted.py:159
 msgid "--Any--"
 msgstr ""
 
-#: ../hosts/hostyoutube.py:113
 msgid "--Other--"
 msgstr "--Outros--"
 
-#: ../components/iptvconfigmenu.py:227
 msgid "12 hour format "
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:162
 msgid "16:10 Letterbox"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:162
 msgid "16:10 PanScan"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:162
 msgid "16:9"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:162
 msgid "16:9 Letterbox"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:162
 msgid "16:9 always"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:227
 msgid "24 hour format "
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:162
 msgid "4:3 Letterbox"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:162
 msgid "4:3 PanScan"
 msgstr ""
 
-#: ../Web/webParts.py:104
 msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
 msgstr ""
 
-#: ../hosts/hostbbcsport_blocked_.py:514
 msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
 msgstr ""
 
-#: ../hosts/host3player_blocked_.py:59 ../hosts/hostbbciplayer_blocked_.py:60
-#: ../hosts/hostbbciplayer_blocked_.py:196 ../hosts/hostgledalica.py:268
-#: ../hosts/hostserienstreamto.py:49
 msgid "A-Z"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:278
 #, fuzzy
 msgid "AAC downmix mode"
 msgstr "Modo de mistura AAC"
 
-#: ../iptvdm/iptvdmui.py:478 ../Web/webParts.py:352
 msgid "ABORTED"
 msgstr "ABORTADO"
 
-#: ../components/configextmovieplayer.py:276
 #, fuzzy
 msgid "AC3 downmix mode"
 msgstr "Modo de mistura de AC3"
 
-#: ../hosts/hostmusicmp3ru.py:362
 msgid "ALBUMS"
 msgstr ""
 
-#: ../hosts/hostmediasetplay.py:102
 msgid "API initialization failed!"
 msgstr ""
 
-#: ../hosts/hostdancetrippin.py:42 ../hosts/hostmusicmp3ru.py:363
 msgid "ARTISTS"
 msgstr ""
 
-#: ../hosts/hostxxx.py:1174
 msgid "ATTENTION !"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:203
 msgid "AZ"
 msgstr ""
 
-#: ../components/VirtualKeyBoard.py:101
 msgid "Accept"
 msgstr ""
 
-#: ../libs/pCommon.py:979
 msgid "Access Forbidden"
 msgstr ""
 
-#: ../components/recaptcha_mye2i_widget.py:154
-#: ../components/recaptcha_v2myjd_widget.py:130
 msgid "Access denied. Please check password."
 msgstr ""
 
-#: ../Web/webParts.py:68
 msgid "Active host"
 msgstr ""
 
-#: ../hosts/hostappletrailers_blocked_.py:108
 msgid "Actors:"
 msgstr ""
 
-#: ../components/playerselector.py:257 ../components/playerselector.py:805
 #, fuzzy, python-format
 msgid "Add host %s to group"
 msgstr "Adicionar item ao grupo"
 
-#: ../components/iptvplayerwidget.py:577
 msgid "Add item to favourites"
 msgstr "Adicionar item aos favorios"
 
-#: ../components/iptvfavouriteswidgets.py:329
 msgid "Add item to group"
 msgstr "Adicionar item ao grupo"
 
-#: ../components/iptvfavouriteswidgets.py:201
-#: ../components/iptvfavouriteswidgets.py:290
 msgid "Add new group"
 msgstr "Adicionar novo grupo"
 
-#: ../components/iptvfavouriteswidgets.py:41
-#: ../components/iptvfavouriteswidgets.py:114
 msgid "Add new group of favourites"
 msgstr "Adicionar novo grupo de favoritos"
 
-#: ../Web/webParts.py:457
 #, fuzzy
 msgid "Add to downloader"
 msgstr "Parar a Descarga"
 
-#: ../hosts/hostfreediscpl.py:261
 #, python-format
 msgid "Added by: %s, directory: %s"
 msgstr ""
 
-#: ../hosts/hostyoutube.py:38
 msgid "Age-gate bypass:"
 msgstr ""
 
-#: ../hosts/hostseezsu.py:86
 msgid "Airing"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1139 ../hosts/host3player_blocked_.py:172
-#: ../hosts/hostakoam_blocked_.py:150 ../hosts/hostanimeodcinki_blocked_.py:95
-#: ../hosts/hostbbciplayer_blocked_.py:238
-#: ../hosts/hostcimaclubcom_blocked_.py:185 ../hosts/hostdailymotion.py:106
-#: ../hosts/hostdancetrippin.py:249 ../hosts/hostegybest.py:114
-#: ../hosts/hostfightvideo.py:82 ../hosts/hostfilmeonlineto.py:146
-#: ../hosts/hostfilmezz.py:121 ../hosts/hosthdfull.py:144
-#: ../hosts/hosthdstreams_blocked_.py:137 ../hosts/hostkabarety.py:47
-#: ../hosts/hostkabarety.py:96 ../hosts/hostkinox.py:160
-#: ../hosts/hostkinox.py:296 ../hosts/hostmindigo.py:701
-#: ../hosts/hostmindigo.py:831 ../hosts/hostmindigo.py:843
-#: ../hosts/hostmrpiracy.py:169 ../hosts/hostorthobulletscom.py:79
-#: ../hosts/hostplayrtsiw.py:380 ../hosts/hostputlockertvto.py:186
-#: ../hosts/hostshahiidanimenet.py:94 ../hosts/hostshoutcast.py:73
-#: ../hosts/hostsolarmovie.py:164 ../hosts/hosttvplayercom.py:135
-#: ../hosts/hosttwitchtv_blocked_.py:112 ../hosts/hosttwitchtv_blocked_.py:114
-#: ../hosts/hostyifytv.py:77 ../libs/skylinewebcamscom.py:136
-#: ../subproviders/subprov_titlovicom.py:115 ../tools/iptvhostgroups.py:52
 #, fuzzy
 msgid "All"
 msgstr "--Todos--"
 
-#: ../hosts/hostthewatchseriesto.py:52
 msgid "All A-Z"
 msgstr ""
 
-#: ../hosts/hostourmatchnet.py:45
 msgid "All Leagues"
 msgstr ""
 
-#: ../hosts/hosttwitchtv_blocked_.py:61
 #, fuzzy
 msgid "All Platforms"
 msgstr "Plataforma"
 
-#: ../hosts/hosteurosportplayer.py:111
 msgid "All Sports"
 msgstr ""
 
-#: ../hosts/hosturllist.py:52
 msgid "All in one"
 msgstr ""
 
-#: ../Web/webParts.py:520
 msgid "All materials"
 msgstr ""
 
-#: ../hosts/hoststreamstat.py:84
 msgid "All streams"
 msgstr ""
 
-#: ../hosts/hosttwitchtv_blocked_.py:127
 msgid "All time"
 msgstr ""
 
-#: ../hosts/hostyoutube.py:44
 msgid "Allow VP9 codec:"
 msgstr ""
 
-#: ../hosts/hostyoutube.py:42
 #, fuzzy
 msgid "Allow dash format:"
 msgstr "Permissão de downgrade"
 
-#: ../hosts/hostvevo.py:32
 msgid "Allow hls format"
 msgstr ""
 
-#: ../hosts/hostfavourites.py:34
 msgid "Allow watched flag to be set"
 msgstr ""
 
-#: ../hosts/hostbsto_blocked_.py:88
 msgid "Alphabet"
 msgstr ""
 
-#: ../hosts/hostdancetrippin.py:49
 msgid "Alphabetical "
 msgstr ""
 
-#: ../hosts/hostfilmpalast.py:58 ../hosts/hostfilmpalast.py:62
-#: ../hosts/hostkissanimeto.py:301 ../hosts/hostkisscartoonme.py:218
-#: ../hosts/hostlocalmedia.py:37 ../hosts/hostmovs4ucom.py:54
 msgid "Alphabetically"
 msgstr ""
 
-#: ../hosts/hosthoofootcom.py:252
 msgid "Alternative"
 msgstr ""
 
-#: ../hosts/host123movieshd_blocked_.py:34 ../hosts/hostfilmeonlineto.py:37
-#: ../hosts/hostfilmstreamvkcom.py:36 ../hosts/hostkinox.py:37
-#: ../hosts/hostplanetstreamingcom.py:31 ../hosts/hostputlockertvto.py:41
-#: ../hosts/hostseriesonline.py:36 ../hosts/hostskstream.py:37
-#: ../hosts/hostsolarmovie.py:38 ../hosts/hostustvgo.py:42
-#: ../hosts/hostyesmoviesto.py:38
 msgid "Alternative domain:"
 msgstr ""
 
-#: ../hosts/hostlaola1tv_blocked_.py:42
 msgid "Alternative geolocation IP 1:"
 msgstr ""
 
-#: ../hosts/hostlaola1tv_blocked_.py:43
 msgid "Alternative geolocation IP 2:"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:331 ../hosts/host123movieshd_blocked_.py:25
-#: ../hosts/hostakoam_blocked_.py:28 ../hosts/hostcimaclubcom_blocked_.py:26
-#: ../hosts/hostfilmeonlineto.py:28 ../hosts/hostfilmstreamvkcom.py:27
-#: ../hosts/hosthdsto.py:36 ../hosts/hostkinox.py:28
-#: ../hosts/hostkissanimeto.py:32 ../hosts/hostlosmovies.py:29
-#: ../hosts/hostplanetstreamingcom.py:22 ../hosts/hostputlockertvto.py:32
-#: ../hosts/hostseriesonline.py:27 ../hosts/hostskstream.py:28
-#: ../hosts/hostsolarmovie.py:30 ../hosts/hostyesmoviesto.py:29
-#: ../hosts/hostyifytv.py:36
 msgid "Alternative proxy server (1)"
 msgstr "Servidor proxy alternativo (1)"
 
-#: ../components/iptvconfigmenu.py:332 ../hosts/host123movieshd_blocked_.py:26
-#: ../hosts/hostakoam_blocked_.py:29 ../hosts/hostcimaclubcom_blocked_.py:27
-#: ../hosts/hostfilmeonlineto.py:29 ../hosts/hostfilmstreamvkcom.py:28
-#: ../hosts/hosthdsto.py:37 ../hosts/hostkinox.py:29
-#: ../hosts/hostkissanimeto.py:33 ../hosts/hostlosmovies.py:30
-#: ../hosts/hostplanetstreamingcom.py:23 ../hosts/hostputlockertvto.py:33
-#: ../hosts/hostseriesonline.py:28 ../hosts/hostskstream.py:29
-#: ../hosts/hostsolarmovie.py:31 ../hosts/hostyesmoviesto.py:30
-#: ../hosts/hostyifytv.py:37
 msgid "Alternative proxy server (2)"
 msgstr "Servidor proxy alternativo (2)"
 
-#: ../hosts/hostthewatchseriesto.py:25
 msgid "Always"
 msgstr ""
 
-#: ../libs/ustvnow.py:123
 #, python-format
 msgid ""
 "An error occurred when try to sign in the user \"%s.\n"
 "Please check your login credentials and try again later...\""
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:1047
 #, python-format
 msgid "An error occurred while loading a subtitle from [%s]."
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:2108
 #, python-format
 msgid "An error occurred while writing into: %s"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:119
 msgid "Anatomy"
 msgstr ""
 
-#: ../hosts/hostkinokiste.py:34 ../hosts/hostkkiste.py:34
-#: ../hosts/hostmegakino.py:34
 #, fuzzy
 msgid "Animation"
 msgstr "Configuração"
 
-#: ../hosts/hostyifytv.py:79
 #, fuzzy
 msgid "Animations"
 msgstr "Estações"
 
-#: ../hosts/hostmrpiracy.py:745
 msgid "Anime"
 msgstr ""
 
-#: ../hosts/hostwatchcartoononline.py:368
 #, fuzzy
 msgid "Anime Search"
 msgstr "Procura"
 
-#: ../hosts/hostanimeodcinki_blocked_.py:50 ../hosts/hostkissanimeto.py:63
-#: ../hosts/hostshahiidanimenet.py:50
 msgid "Anime list"
 msgstr ""
 
-#: ../hosts/hostfilmezz.py:387 ../hosts/hostfreediscpl.py:153
-#: ../hosts/hostserienstreamto.py:548 ../hosts/hoststreamliveto.py:328
-#: ../libs/urlparser.py:3888
 msgid "Answer"
 msgstr ""
 
-#: ../hosts/hostcineto.py:138 ../hosts/hostcineto.py:148
-#: ../hosts/hosthdstreams_blocked_.py:124 ../hosts/hoststreamliveto.py:141
-#: ../hosts/hostvimeo_blocked_.py:176 ../hosts/hostyifytv.py:160
-#: ../hosts/hostyifytv.py:178 ../subproviders/subprov_podnapisinet.py:94
 msgid "Any"
 msgstr ""
 
-#: ../components/e2isimpledownloader.py:75 ../components/iptvdirbrowser.py:81
-#: ../components/iptvsubsimpledownloader.py:90
 msgid "Apply"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:120
 msgid "Approaches"
 msgstr ""
 
-#: ../tools/iptvhostgroups.py:45
 msgid "Arabic"
 msgstr ""
 
-#: ../hosts/hostegybest.py:67
 msgid "Arabic movies"
 msgstr ""
 
-#: ../hosts/hosttwitchtv_blocked_.py:116 ../iptvdm/iptvdmui.py:102
-#: ../Web/webParts.py:285
 msgid "Archive"
 msgstr "Arquivos"
 
-#: ../hosts/hostwatchwrestling.py:59
 #, fuzzy
 msgid "Archives"
 msgstr "Arquivos"
 
-#: ../hosts/hostlocalmedia.py:628
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr ""
 
-#: ../hosts/hostvevo.py:415
 msgid "Artists"
 msgstr ""
 
-#: ../hosts/hostekstraklasatv.py:33
 msgid "Ask"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:732
 msgid "Aspect"
 msgstr ""
 
-#: ../hosts/hostdancetrippin.py:249 ../hosts/hostrtbfbe.py:749
 msgid "Audio"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:584
 msgid "Audio tracks"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:68 ../components/iptvconfigmenu.py:71
-#: ../components/iptvconfigmenu.py:142 ../components/iptvconfigmenu.py:174
-#: ../hosts/hostthewatchseriesto.py:25 ../libs/youtubeparser.py:34
 msgid "Auto"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:706
 msgid "Auto selection based on the settings"
 msgstr "Seleção automática baseada nas definições"
 
-#: ../components/iptvconfigmenu.py:297
 #, fuzzy
 msgid "Auto start method"
 msgstr "Atraso no início de reprodução automática"
 
-#: ../subproviders/subprov_youtubecom.py:61
 msgid "Auto-translate"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:289
 msgid "Automatically turn on external subtitles"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:383
 msgid "Autoplay start delay"
 msgstr "Atraso no início de reprodução automática"
 
-#: ../hosts/host3player_blocked_.py:58
 msgid "BY DAY"
 msgstr ""
 
-#: ../tools/iptvhostgroups.py:50
 msgid "Balkans"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:118
 msgid "Basic Science"
 msgstr ""
 
-#: ../hosts/hostpinkbike.py:45
 msgid "Best Pinkbike Videos"
 msgstr ""
 
-#: ../hosts/hostshoutcast.py:139
 #, python-format
 msgid "Bitrate: %s"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:72 ../components/iptvconfigmenu.py:212
 msgid "Black"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:325
 msgid "Black iframe file"
 msgstr "Arquivo preto Iframe"
 
-#: ../components/iptvconfigmenu.py:384
 msgid "Block wmv files"
 msgstr "Bloquear ficheiros 'wmv'"
 
-#: ../hosts/hostorthobulletscom.py:80
 msgid "Board Review"
 msgstr ""
 
-#: ../hosts/hostmediasetplay.py:621
 msgid "Brand"
 msgstr ""
 
-#: ../hosts/hostartetv.py:109
 #, fuzzy, python-format
 msgid "Broadcast begins at %s"
 msgstr "Transmissões"
 
-#: ../hosts/hosttwitchtv_blocked_.py:485
 #, fuzzy, python-format
 msgid "Broadcaster: %s"
 msgstr "Transmissões"
 
-#: ../hosts/hostdixmax.py:125 ../hosts/hosttwitchtv_blocked_.py:146
 msgid "Browse"
 msgstr ""
 
-#: ../hosts/hostvumedicom.py:83
 msgid "Browse videos"
 msgstr ""
 
-#: ../hosts/hostyoutube.py:63
 msgid "Browse youtube trending feeds"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:349
 #, fuzzy
 msgid "Buffering location"
 msgstr "Buffer percurso"
 
-#: ../subproviders/subprov_subscenecom.py:100
 msgid "By media title"
 msgstr ""
 
-#: ../hosts/hostcimaclubcom_blocked_.py:143
 msgid "By year"
 msgstr ""
 
-#: ../hosts/hostitvcom.py:33
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:793
 msgid "Bűnügyi filmek és sorozatok"
 msgstr ""
 
-#: ../hosts/hostdancetrippin.py:41
 msgid "CHANNELS "
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:81
 msgid "CME SAE"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:68 ../hosts/hostwatchwrestling.py:317
-#: ../hosts/hostwatchwrestlinguno.py:57 ../hosts/hostwatchwrestlinguno.py:313
 msgid "COMMENTS"
 msgstr ""
 
-#: ../hosts/hostredbull.py:53
 #, fuzzy
 msgid "Calendar"
 msgstr "standard"
 
-#: ../hosts/hostlocalmedia.py:251
 #, python-format
 msgid ""
 "Can not get mount points - cmd mount failed.\n"
@@ -929,455 +657,319 @@ msgid ""
 "Return data[%s]."
 msgstr ""
 
-#: ../components/configbase.py:81 ../components/e2isimpledownloader.py:74
-#: ../components/iptvdirbrowser.py:78 ../components/iptvdirbrowser.py:326
-#: ../components/iptvmultipleinputbox.py:105
-#: ../components/iptvsubdownloader.py:116
-#: ../components/iptvsubsimpledownloader.py:88
-#: ../components/recaptcha_mye2i_widget.py:79
-#: ../components/recaptcha_v2myjd_widget.py:62
-#: ../components/VirtualKeyBoard.py:103 ../Web/webParts.py:87
 msgid "Cancel"
 msgstr ""
 
-#: ../hosts/hostfreediscpl.py:108 ../hosts/hostserienstreamto.py:523
 msgid "Captcha"
 msgstr ""
 
-#: ../components/recaptcha_mye2i_widget.py:147
-#: ../components/recaptcha_v2myjd_widget.py:123
 msgid ""
 "Captcha solved.\n"
 "Waiting for notification."
 msgstr ""
 
-#: ../hosts/hostbsto_blocked_.py:44 ../hosts/hostcineto.py:34
-#: ../hosts/hostmrpiracy.py:55
 msgid "Captcha solving service"
 msgstr ""
 
-#: ../tools/iptvhostgroups.py:33
 msgid "Cartoons and anime"
 msgstr ""
 
-#: ../hosts/hostbbcsport_blocked_.py:189
 msgid "Catch up"
 msgstr ""
 
-#: ../hosts/hostbbciplayer_blocked_.py:59 ../hosts/hostdailymotion.py:48
-#: ../hosts/hostfilma24io.py:86 ../hosts/hostfilmpalast.py:57
-#: ../hosts/hostfilmstreamvkcom.py:104 ../hosts/hostgovodtv.py:76
-#: ../hosts/hostgreekdocumentaries3.py:40 ../hosts/hosthdpopcornscom.py:45
-#: ../hosts/hostitvcom.py:62 ../hosts/hostmediayou.py:75
-#: ../hosts/hostmovizlandcom.py:39 ../hosts/hostmovs4ucom.py:55
-#: ../hosts/hostogladajto.py:96 ../hosts/hostokgoals.py:45
-#: ../hosts/hostorthobulletscom.py:72 ../hosts/hostpinkbike.py:46
-#: ../hosts/hostplayrtsiw.py:183 ../hosts/hostserijeonline.py:61
-#: ../hosts/hostsportdeutschland_blocked_.py:56
-#: ../hosts/hoststreamcomplet.py:37 ../hosts/hostsvtplayse.py:80
-#: ../hosts/hosttantifilmorg.py:47 ../hosts/hostustreamtv.py:37
-#: ../hosts/hostvimeo_blocked_.py:73 ../hosts/hostwatchwrestling.py:46
-#: ../hosts/hostwatchwrestlinguno.py:35 ../hosts/hostzdfmediathek.py:89
 msgid "Categories"
 msgstr "Categorias"
 
-#: ../hosts/hostkisscartoonme.py:49
 msgid "Catrtoon list"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:584
 msgid "Change active movie player"
 msgstr "Mudar o Leitor de filmes ativo"
 
-#: ../hosts/hostliveleak.py:215 ../hosts/hostyoutube.py:67
-#: ../hosts/hostyoutube.py:171
 msgid "Channel"
 msgstr "Canal"
 
-#: ../hosts/hostuktvplay.py:157 ../hosts/hostuktvplay.py:228
 #, fuzzy, python-format
 msgid "Channel: %s"
 msgstr "Canais"
 
-#: ../hosts/hostbbciplayer_blocked_.py:58 ../hosts/hostitvcom.py:60
-#: ../hosts/hostliveleak.py:51 ../hosts/hostororotv.py:48
-#: ../hosts/hostredbull.py:52 ../hosts/hostsvtplayse.py:78
-#: ../hosts/hosttvplayercom.py:80 ../hosts/hosttwitchtv_blocked_.py:129
-#: ../hosts/hosttwitchtv_blocked_.py:164 ../hosts/hostvimeo_blocked_.py:433
 msgid "Channels"
 msgstr "Canais"
 
-#: ../hosts/hosttwitchtv_blocked_.py:643
 #, fuzzy
 msgid "Channles"
 msgstr "Canais"
 
-#: ../hosts/hostfilman.py:90 ../hosts/hosthdseanspl.py:64
-#: ../hosts/hostogladajto.py:93 ../hosts/hostzdfmediathek.py:91
 msgid "Children"
 msgstr ""
 
-#: ../hosts/hostkinox.py:93
 msgid "Cinema movies"
 msgstr ""
 
-#: ../components/e2ivk.py:431
 msgid "Clear"
 msgstr ""
 
-#: ../Web/webSite.py:74
 msgid "Click"
 msgstr ""
 
-#: ../hosts/hostmediasetplay.py:622
 msgid "Clip"
 msgstr ""
 
-#: ../hosts/hostkijknl.py:68 ../hosts/hosttwitchtv_blocked_.py:131
-#: ../hosts/hosttwitchtv_blocked_.py:302
 msgid "Clips"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:1411
 #, fuzzy
 msgid "Closing. Please wait..."
 msgstr "Durante o processamento, por favor espere."
 
-#: ../hosts/hoststreamstat.py:82
 msgid "Collected streams only"
 msgstr ""
 
-#: ../hosts/hostmovs4ucom.py:47
 #, fuzzy
 msgid "Collections"
 msgstr "Coleção"
 
-#: ../hosts/hostyifytv.py:78
 msgid "Comedies"
 msgstr ""
 
-#: ../hosts/hostbbcsport_blocked_.py:189
 msgid "Coming up"
 msgstr ""
 
-#: ../hosts/hostiptvplayerinfo.py:51
 msgid "Commits"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:581
-#: ../components/iptvplayerwidget.py:1140
-#: ../components/iptvplayerwidget.py:1264 ../components/playerselector.py:249
 msgid "Configuration"
 msgstr "Configuração"
 
-#: ../components/confighost.py:33
 #, fuzzy, python-format
 msgid "Configuration [%s] service"
 msgstr "Configuração para serviços (%s)"
 
-#: ../plugin.py:72
 #, fuzzy, python-format
 msgid "Configure %s"
 msgstr "Configurar host"
 
-#: ../components/iptvplayerwidget.py:596
 msgid "Configure host"
 msgstr "Configurar host"
 
-#: ../components/configextmovieplayer.py:205
-#: ../components/configextmovieplayer.py:241
 msgid "Configuring an external movie player"
 msgstr "Configurar um Leitor de Filmes externos"
 
-#: ../components/iptvconfigmenu.py:513
 msgid "Confirm new pin"
 msgstr "Confirmar o novo PIN"
 
-#: ../components/iptvsubdownloader.py:224
 msgid "Confirm the title of the movie"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:521
 msgid "Confirmation error."
 msgstr "Erro de confirmação."
 
-#: ../hosts/hostjoemonsterorg.py:186 ../hosts/hostmrpiracy.py:636
 msgid "Connection to server failed!"
 msgstr ""
 
-#: ../iptvdm/iptvdmui.py:311
 msgid "Continue downloading"
 msgstr "Continuar a descarga"
 
-#: ../hosts/hostlocalmedia.py:612
 msgid "Copy"
 msgstr ""
 
-#: ../hosts/hostvevo.py:410
 #, python-format
 msgid "Count: %s"
 msgstr ""
 
-#: ../hosts/hostmediayou.py:74 ../hosts/hostyifytv.py:73
 #, fuzzy
 msgid "Countries"
 msgstr "Categorias"
 
-#: ../hosts/hostplayzcc.py:242
 msgid "Country"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:328
 msgid "Create LCD/VFD summary screen"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:314
 msgid "Critical Error - cookie can't be saved!"
 msgstr ""
 
-#: ../libs/pCommon.py:1405
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:781
 msgid "Családi filmek"
 msgstr ""
 
-#: ../hosts/hostted.py:388
 #, fuzzy
 msgid "Curator"
 msgstr "Configuração"
 
-#: ../hosts/hostlocalmedia.py:615
 msgid "Cut"
 msgstr ""
 
-#: ../hosts/hostsvtplayse.py:36 ../libs/youtube_dl/extractor/bbc.py:26
 msgid "DASH/mpd"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:65 ../hosts/hostwatchwrestling.py:314
-#: ../hosts/hostwatchwrestlinguno.py:54 ../hosts/hostwatchwrestlinguno.py:310
 msgid "DATE"
 msgstr ""
 
-#: ../iptvdm/iptvdmui.py:481 ../Web/webParts.py:360
 msgid "DOWNLOAD ERROR"
 msgstr "ERRO DE DESCARGA"
 
-#: ../iptvdm/iptvdmui.py:475 ../Web/webParts.py:336 ../Web/webParts.py:344
 msgid "DOWNLOADED"
 msgstr "DESCARREGADO"
 
-#: ../iptvdm/iptvdmui.py:472 ../Web/webParts.py:328
 msgid "DOWNLOADING"
 msgstr "A DESCARREGAR"
 
-#: ../hosts/hosttvplayercom.py:243
 msgid "DRM protected streams are not supported."
 msgstr ""
 
-#: ../hosts/hostkijknl.py:277
 msgid "DRM protection detected."
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:72 ../components/iptvconfigmenu.py:212
 msgid "Darkgray"
 msgstr ""
 
-#: ../hosts/hostbbcsport_blocked_.py:440
 msgid "Data mismatch."
 msgstr ""
 
-#: ../Web/webParts.py:119
 msgid "Debug file does not exist - nothing to delete"
 msgstr ""
 
-#: ../Web/webSite.py:276
 msgid "Debug file does not exist - nothing to download"
 msgstr ""
 
-#: ../Web/webParts.py:115
 msgid "Debug file has been deleted"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:404
 msgid "Debug logs"
 msgstr "Depurar logs"
 
-#: ../Web/webParts.py:121
 msgid "Debug option is disabled - nothing to display"
 msgstr ""
 
-#: ../Web/webParts.py:123
 msgid "Debug option set to console - nothing to display"
 msgstr ""
 
-#: ../Web/webParts.py:125
 msgid "Debug option set to debugfile, but file does not exist - nothing to display"
 msgstr ""
 
-#: ../components/iptvpictureplayer.py:358
 #, fuzzy, python-format
 msgid "Decode file [%s] problem."
 msgstr "Problema na descarga do ficheiro (%s)."
 
-#: ../libs/youtube_dl/extractor/youtube.py:623
 msgid "Decrypt Signatures Error"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:72 ../hosts/hostfenixsite.py:283
-#: ../hosts/hostfilmehdnet.py:86 ../hosts/hosthdstreams_blocked_.py:156
-#: ../hosts/hosttvjworg.py:30 ../tools/iptvtools.py:821
 msgid "Default"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:362
 msgid "Default captcha bypass"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:283
 msgid "Default video aspect ratio"
 msgstr "A relação de aspecto padrão"
 
-#: ../components/configextmovieplayer.py:285
 #, fuzzy
 msgid "Default video policy for 16:9"
 msgstr "Diretiva de vídeo padrão"
 
-#: ../components/configextmovieplayer.py:287
 #, fuzzy
 msgid "Default video policy for 4:3"
 msgstr "Diretiva de vídeo padrão"
 
-#: ../hosts/hosttvjworg.py:44
 #, fuzzy
 msgid "Default video quality"
 msgstr "Qualidade de vídeo padrão:"
 
-#: ../hosts/hostbbciplayer_blocked_.py:32 ../hosts/hostbbcsport_blocked_.py:40
-#: ../hosts/hostkissanimeto.py:38 ../hosts/hostkisscartoonme.py:30
-#: ../hosts/hostsvtplayse.py:42 ../hosts/hostvevo.py:30
-#: ../hosts/hostyoutube.py:36
 msgid "Default video quality:"
 msgstr "Qualidade de vídeo padrão:"
 
-#: ../components/iptvplayerwidget.py:743
 msgid "Definitely remove from favorites?"
 msgstr ""
 
-#: ../Web/webParts.py:341 ../Web/webParts.py:350 ../Web/webParts.py:358
-#: ../Web/webParts.py:365
 msgid "Delete"
 msgstr ""
 
-#: ../Web/webParts.py:131
 msgid "Delete log file"
 msgstr ""
 
-#: ../components/iptvfavouriteswidgets.py:45
+#, fuzzy
+msgid "Delete search history"
+msgstr "Histórico de pesquisa"
+
 msgid "Description:"
 msgstr "Descrição:"
 
-#: ../hosts/hostlaola1tv_blocked_.py:31 ../hosts/hostmediayou.py:29
 msgid "Deutsch"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:681
 msgid "Developers: "
 msgstr ""
 
-#: ../hosts/hostappletrailers_blocked_.py:108
 msgid "Director:"
 msgstr ""
 
-#: ../hosts/hostappletrailers_blocked_.py:108
 msgid "Directors:"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1663
 #, python-format
 msgid "Directory \"%s\" does not exists."
 msgstr ""
 
-#: ../Web/webThreads.py:229
 msgid "Disable"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:298
 msgid "Disable live at plugin start"
 msgstr "Inativar \"ao vivo\" no início do plugin"
 
-#: ../components/playerselector.py:289 ../components/playerselector.py:837
 #, fuzzy
 msgid "Disable not used services"
 msgstr "Desativar/Ativar serviços"
 
-#: ../components/iptvfavouriteswidgets.py:195
 #, fuzzy
 msgid "Disable reordering"
 msgstr "Inativar o modo de reordenação"
 
-#: ../components/confighost.py:155 ../components/playerselector.py:262
-#: ../components/playerselector.py:810
 msgid "Disable reordering mode"
 msgstr "Inativar o modo de reordenação"
 
-#: ../components/playerselector.py:267 ../components/playerselector.py:347
-#: ../components/playerselector.py:815
 msgid "Disable/Enable groups"
 msgstr "Desativar/Ativar grupos"
 
-#: ../components/playerselector.py:265 ../components/playerselector.py:813
 msgid "Disable/Enable services"
 msgstr "Desativar/Ativar serviços"
 
-#: ../hosts/hostredbull.py:50
 msgid "Discover"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:315
 msgid "Display thumbnails"
 msgstr "Visualizar miniaturas"
 
-#: ../hosts/hostdixmax.py:59
 msgid "DixMax Suggestions"
 msgstr ""
 
-#: ../components/iptvsubdownloader.py:544
 msgid "Do you want to finish?"
 msgstr ""
 
-#: ../hosts/hostkinox.py:95 ../hosts/hostobejrzyjto.py:75
 msgid "Documentaries"
 msgstr ""
 
-#: ../tools/iptvhostgroups.py:37
 msgid "Documentary"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:897
-#: ../components/iptvplayerwidget.py:341
 #, fuzzy
 msgid "Download"
 msgstr "Descargas"
 
-#: ../hosts/hostkissanimeto.py:144
 #, python-format
 msgid "Download \"%s\" in to \"%s\" failed!"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:547 ../hosts/hostplayrtsiw.py:549
 #, fuzzy, python-format
 msgid "Download %s"
 msgstr "Descargas"
 
-#: ../iptvdm/iptvdmui.py:312 ../libs/urlparser.py:7976 ../Web/webParts.py:349
-#: ../Web/webParts.py:357 ../Web/webParts.py:364
 msgid "Download again"
 msgstr "Descarregar novamente"
 
-#: ../components/iptvsubsimpledownloader.py:148
 #, fuzzy, python-format
 msgid ""
 "Download can not be started.\n"
@@ -1386,7 +978,6 @@ msgstr ""
 "A descarga não pode ser iniciada.\n"
 "URL inválido [%s]."
 
-#: ../components/e2isimpledownloader.py:120
 #, fuzzy, python-format
 msgid ""
 "Download can not be started.\n"
@@ -1397,7 +988,6 @@ msgstr ""
 " O descarregador (%s) não está a funcionar devidamente.\n"
 " Estado (%s)"
 
-#: ../components/iptvsubsimpledownloader.py:156
 #, fuzzy, python-format
 msgid ""
 "Download can not be started.\n"
@@ -1408,7 +998,6 @@ msgstr ""
 " O descarregador (%s) não está a funcionar devidamente.\n"
 " Estado (%s)"
 
-#: ../components/e2isimpledownloader.py:111
 #, fuzzy, python-format
 msgid ""
 "Download can not be started.\n"
@@ -1417,53 +1006,40 @@ msgstr ""
 "A descarga não pode ser iniciada.\n"
 "URL inválido [%s]."
 
-#: ../components/e2isimpledownloader.py:125
 #, python-format
 msgid ""
 "Download failed.\n"
 "Last error \"%s (%s)\"."
 msgstr ""
 
-#: ../components/iptvsubsimpledownloader.py:160
 #, python-format
 msgid ""
 "Download failed.\n"
 "Status[%s]"
 msgstr ""
 
-#: ../Web/webParts.py:127 ../Web/webParts.py:142
 #, fuzzy
 msgid "Download log file"
 msgstr "Descarregar novamente"
 
-#: ../components/iptvplayerwidget.py:600 ../components/playerselector.py:155
-#: ../components/playerselector.py:263 ../components/playerselector.py:344
-#: ../components/playerselector.py:798 ../components/playerselector.py:811
-#: ../Web/webParts.py:68 ../Web/webParts.py:85
 #, fuzzy
 msgid "Download manager"
 msgstr "IPTV gestor de descargas"
 
-#: ../Web/webParts.py:271
 msgid "Download manager is not initialized"
 msgstr ""
 
-#: ../components/iptvsubdownloader.py:532
 #, fuzzy
 msgid "Download subtiles failed."
 msgstr "Problema na descarga do ficheiro (%s)."
 
-#: ../components/iptvextmovieplayer.py:894
 #, fuzzy
 msgid "Download suggested"
 msgstr "Descargas"
 
-#: ../components/iptvplayerwidget.py:1796
-#: ../components/iptvsubdownloader.py:489
 msgid "Downloading"
 msgstr "A transferir"
 
-#: ../iptvdm/iptvbuffui.py:211
 #, fuzzy, python-format
 msgid ""
 "Downloading can not be started.\n"
@@ -1474,7 +1050,6 @@ msgstr ""
 " O descarregador (%s) não está a funcionar devidamente.\n"
 " Estado (%s)"
 
-#: ../iptvdm/iptvbuffui.py:200
 #, fuzzy, python-format
 msgid ""
 "Downloading can not be started.\n"
@@ -1483,7 +1058,6 @@ msgstr ""
 "A descarga não pode ser iniciada.\n"
 "URL inválido [%s]."
 
-#: ../components/iptvarticleview.py:182 ../components/iptvpictureplayer.py:296
 #, python-format
 msgid ""
 "Downloading cannot be started.\n"
@@ -1494,7 +1068,6 @@ msgstr ""
 " O descarregador (%s) não está a funcionar devidamente.\n"
 " Estado (%s)"
 
-#: ../components/iptvarticleview.py:173 ../components/iptvpictureplayer.py:275
 #, python-format
 msgid ""
 "Downloading cannot be started.\n"
@@ -1503,851 +1076,615 @@ msgstr ""
 "A descarga não pode ser iniciada.\n"
 "URL inválido [%s]."
 
-#: ../components/iptvarticleview.py:208 ../components/iptvarticleview.py:213
-#: ../components/iptvpictureplayer.py:351
 #, python-format
 msgid "Downloading file [%s] problem."
 msgstr "Problema na descarga do ficheiro (%s)."
 
-#: ../components/e2isimpledownloader.py:105
 #, fuzzy, python-format
 msgid ""
 "Downloading file:\n"
 "%r."
 msgstr "Problema na descarga do ficheiro (%s)."
 
-#: ../components/iptvsubsimpledownloader.py:142
 #, fuzzy, python-format
 msgid ""
 "Downloading subtitles.\n"
 " ('%r')."
 msgstr "Problema na descarga do ficheiro (%s)."
 
-#: ../hosts/hostlocalmedia.py:122 ../iptvdm/iptvdmui.py:103
-#: ../Web/webParts.py:286
 msgid "Downloads"
 msgstr "Descargas"
 
-#: ../components/iptvconfigmenu.py:352
 #, fuzzy
 msgid "Downloads location"
 msgstr "Descarregar novamente"
 
-#: ../hosts/hostyifytv.py:80
 msgid "Dramas"
 msgstr ""
 
-#: ../hosts/hostartetv.py:105 ../hosts/hostcartoonhd_blocked_.py:535
-#: ../hosts/hostekstraklasatv.py:161 ../hosts/hosteurosportplayer.py:269
-#: ../hosts/hosthdseanspl.py:307 ../hosts/hostplayzcc.py:241
-#: ../hosts/hostraiplay.py:754 ../hosts/hostted.py:387
 #, fuzzy
 msgid "Duration"
 msgstr "Configuração"
 
-#: ../hosts/hostfilma24io.py:252 ../hosts/hostyoutube.py:171
 #, fuzzy
 msgid "Duration:"
 msgstr "Descrição:"
 
-#: ../hosts/hostuktvplay.py:226 ../libs/youtubeparser.py:303
 #, fuzzy, python-format
 msgid "Duration: %s"
 msgstr "Estações"
 
-#: ../components/iptvplayerwidget.py:679
 msgid "E-mail: "
 msgstr ""
 
-#: ../components/configbase.py:77 ../components/configbase.py:118
-#: ../components/iptvconfigmenu.py:282
 #, fuzzy
 msgid "E2iPlayer - settings"
 msgstr "IPTV Player - definições"
 
-#: ../components/iptvconfigmenu.py:295
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr ""
 
-#: ../components/configgroups.py:32
 #, fuzzy
 msgid "E2iPlayer enable/disabled groups"
 msgstr "Desativar/Ativar grupos"
 
-#: ../Web/webParts.py:498 ../Web/webParts.py:540
 msgid "ERROR:"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:1598
 msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:578 ../components/iptvplayerwidget.py:580
 msgid "Edit favourites"
 msgstr "Editar favoritos"
 
-#: ../hosts/hostorthobulletscom.py:82
 msgid "Educational Animation"
 msgstr ""
 
-#: ../hosts/hosttv2play.py:30
 msgid "Elérhető legjobb minőség beállítása"
 msgstr ""
 
-#: ../hosts/hostidokep.py:82
 msgid "Előrejelzés"
 msgstr ""
 
-#: ../hosts/hostrtlmost.py:49 ../libs/ustvnow.py:43
 msgid "Email"
 msgstr ""
 
-#: ../Web/webThreads.py:231
 msgid "Enable"
 msgstr ""
 
-#: ../components/iptvfavouriteswidgets.py:194
 #, fuzzy
 msgid "Enable reordering"
 msgstr "Ativar o modo de reordenação"
 
-#: ../components/confighost.py:153 ../components/playerselector.py:260
-#: ../components/playerselector.py:808
 msgid "Enable reordering mode"
 msgstr "Ativar o modo de reordenação"
 
-#: ../libs/youtube_dl/extractor/youtube.py:135
 #, python-format
 msgid ""
 "Encryption function body extraction failed!\n"
 "Please report the problem to %s"
 msgstr ""
 
-#: ../libs/youtube_dl/extractor/youtube.py:129
 #, python-format
 msgid ""
 "Encryption function name extraction failed!\n"
 "Please report the problem to %s"
 msgstr ""
 
-#: ../hosts/hosthdfull.py:34 ../hosts/hostlaola1tv_blocked_.py:31
-#: ../hosts/hostmediayou.py:29 ../hosts/hostngolos.py:26
-#: ../hosts/hosttvjworg.py:30 ../tools/iptvhostgroups.py:40
 msgid "English"
 msgstr ""
 
-#: ../components/configbase.py:273
 #, fuzzy
 msgid "Enter a value"
 msgstr "Introduzir nome"
 
-#: ../components/iptvdirbrowser.py:284
 msgid "Enter name"
 msgstr "Introduzir nome"
 
-#: ../components/iptvconfigmenu.py:507
 msgid "Enter new pin"
 msgstr "Introduza o novo PIN"
 
-#: ../components/iptvconfigmenu.py:500
 msgid "Enter old pin"
 msgstr "Introduza o PIN anterior"
 
-#: ../components/iptvplayerwidget.py:1003
-#: ../components/iptvplayerwidget.py:1362
-#: ../components/iptvplayerwidget.py:1385
-#: ../components/iptvplayerwidget.py:1431 ../plugin.py:81 ../plugin.py:92
 msgid "Enter pin"
 msgstr "Inserir pin"
 
-#: ../components/e2ivk.py:318
 msgid "Enter the text"
 msgstr ""
 
-#: ../hosts/hostkijknl.py:290
 msgid "Entitlement parsing error."
 msgstr ""
 
-#: ../hosts/hostdixmax.py:313 ../hosts/hostmediasetplay.py:623
-#: ../subproviders/subprov_napiprojektpl.py:247
 msgid "Episode"
 msgstr ""
 
-#: ../hosts/hostwatchcartoononline.py:369
 #, fuzzy
 msgid "Episode Search"
 msgstr "Procura"
 
-#: ../hosts/hostcartoonhd_blocked_.py:531
 msgid "Episode title"
 msgstr ""
 
-#: ../hosts/hostgledalica.py:269 ../hosts/hostkijknl.py:67
 msgid "Episodes"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:683
 #, fuzzy, python-format
 msgid "Error code: %s\n"
 msgstr ""
 "Erro. Código --> [%d]\n"
 "%s. "
 
-#: ../components/recaptcha_mye2i_widget.py:156
-#: ../components/recaptcha_v2myjd_widget.py:132
 #, python-format
 msgid ""
 "Error code: %s\n"
 "Error message: %s"
 msgstr ""
 
-#: ../hosts/hostbbcsport_blocked_.py:439 ../hosts/hosteurosportplayer.py:510
 msgid "Error communicating with the server."
 msgstr ""
 
-#: ../tools/iptvfavourites.py:244
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Erro ao apaga ficheiro \"%s\".\n"
 
-#: ../Web/webParts.py:117
 #, fuzzy
 msgid "Error during deletion of the debug file."
 msgstr "Erro ao apaga ficheiro \"%s\".\n"
 
-#: ../subproviders/subprov_opensubtitlesorg.py:215
-#: ../subproviders/subprov_opensubtitlesorg.py:217
 #, python-format
 msgid ""
 "Error message: \"%s\".\n"
 "Error code: \"%s\"."
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:683
 #, fuzzy, python-format
 msgid "Error message: %s\n"
 msgstr "Erro ao ler ficheiro \"%s\".\n"
 
-#: ../components/e2ivksuggestion.py:95
 msgid "Error occurs"
 msgstr ""
 
-#: ../iptvdm/iptvbuffui.py:258 ../iptvdm/iptvbuffui.py:584
 msgid "Error occurs during download."
 msgstr ""
 
-#: ../tools/iptvfavourites.py:213 ../tools/iptvfavourites.py:230
 #, python-format
 msgid "Error reading file \"%s\".\n"
 msgstr "Erro ao ler ficheiro \"%s\".\n"
 
-#: ../tools/iptvfavourites.py:261 ../tools/iptvfavourites.py:276
-#: ../tools/iptvhostgroups.py:169 ../tools/iptvhostgroups.py:254
 #, python-format
 msgid "Error writing file \"%s\".\n"
 msgstr "Erro ao escrever ficheiro \"%s\".\n"
 
-#: ../hosts/hostorthobulletscom.py:83
 msgid "Ethical & Legal"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:84
 msgid "Exam Review"
 msgstr ""
 
-#: ../components/iptvdirbrowser.py:293
 msgid "Exception occurs"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:157
 msgid "Exit"
 msgstr "Sair"
 
-#: ../components/iptvconfigmenu.py:396
 msgid "External movie player config"
 msgstr "Configuração do Leitor de Filmes externo"
 
-#: ../libs/filmonapi.py:96
 msgid "FREE"
 msgstr ""
 
-#: ../hosts/hostfilmezz.py:374 ../hosts/hostfreediscpl.py:138
-#: ../hosts/hostserienstreamto.py:535 ../hosts/hoststreamliveto.py:282
-#: ../hosts/hoststreamliveto.py:295 ../hosts/hoststreamliveto.py:308
-#: ../hosts/hoststreamliveto.py:322 ../hosts/hoststreamliveto.py:352
-#: ../libs/hcaptcha.py:109 ../libs/recaptcha_v1.py:37
-#: ../libs/recaptcha_v1.py:64 ../libs/recaptcha_v2.py:39
-#: ../libs/recaptcha_v2.py:79 ../libs/urlparser.py:3882
 #, python-format
 msgid "Fail to get \"%s\"."
 msgstr ""
 
-#: ../hosts/hoststreamliveto.py:287
 #, fuzzy
 msgid "Fail to get captcha data."
 msgstr "Pasta para informação cache"
 
-#: ../subproviders/subprov_napisy24pl.py:90
-#: ../subproviders/subprov_opensubtitlesorg2.py:134
 #, python-format
 msgid "Failed to connect to server \"%s\"."
 msgstr ""
 
-#: ../components/isubprovider.py:629 ../subproviders/subprov_napisy24pl.py:390
-#: ../subproviders/subprov_popcornsubtitles.py:157
 #, python-format
 msgid "Failed to convert the file \"%s\" to UTF-8."
 msgstr ""
 
-#: ../components/isubprovider.py:554
 #, fuzzy, python-format
 msgid "Failed to create directory \"%s\"."
 msgstr "Problema com a pasta (%s)."
 
-#: ../subproviders/subprov_opensubtitlesorg.py:392
 msgid "Failed to decode to UTF-8."
 msgstr ""
 
-#: ../subproviders/subprov_napisy24pl.py:323
-#: ../subproviders/subprov_opensubtitlesorg.py:378
-#: ../subproviders/subprov_opensubtitlesorg3.py:283
-#: ../subproviders/subprov_popcornsubtitles.py:109
-#: ../subproviders/subprov_youtubecom.py:97
 #, fuzzy
 msgid "Failed to download subtitle."
 msgstr "Ficheiro (%s) foi adicionado ao spool de descargas."
 
-#: ../subproviders/subprov_opensubtitlesorg.py:385
-#: ../subproviders/subprov_opensubtitlesorg3.py:295
 msgid "Failed to gzip."
 msgstr ""
 
-#: ../subproviders/subprov_napisy24pl.py:104
-#: ../subproviders/subprov_opensubtitlesorg2.py:160
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
 msgstr ""
 
-#: ../components/isubprovider.py:632 ../subproviders/subprov_napisy24pl.py:393
-#: ../subproviders/subprov_popcornsubtitles.py:160
 #, python-format
 msgid "Failed to open the file \"%s\"."
 msgstr ""
 
-#: ../subproviders/subprov_popcornsubtitles.py:102
 msgid "Failed to page with subtitle link."
 msgstr ""
 
-#: ../components/isubprovider.py:515 ../subproviders/subprov_napisy24pl.py:331
-#: ../subproviders/subprov_opensubtitlesorg.py:404
-#: ../subproviders/subprov_popcornsubtitles.py:117
-#: ../subproviders/subprov_youtubecom.py:105
 #, fuzzy, python-format
 msgid "Failed to write file \"%s\"."
 msgstr "Erro ao escrever ficheiro \"%s\".\n"
 
-#: ../subproviders/subprov_napisy24pl.py:387
-#: ../subproviders/subprov_popcornsubtitles.py:154
 #, fuzzy, python-format
 msgid "Failed to write the file \"%s\"."
 msgstr "Erro ao escrever ficheiro \"%s\".\n"
 
-#: ../components/iptvplayerwidget.py:1421
 #, python-format
 msgid "Failed: %s"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:2370
 msgid "Fatal error: consoleWrite failed!"
 msgstr ""
 
-#: ../hosts/hostfavourites.py:42
 msgid "Favourites"
 msgstr "Favoritos"
 
-#: ../components/iptvfavouriteswidgets.py:198
-#: ../components/iptvfavouriteswidgets.py:288
 msgid "Favourites groups"
 msgstr "Grupos favoritos"
 
-#: ../components/iptvfavouriteswidgets.py:174
 msgid "Favourites manager"
 msgstr "Gestor de Favoritos"
 
-#: ../hosts/hostidokep.py:85
 msgid "Felhőkép"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:666
 #, fuzzy, python-format
 msgid "File \"%s\" already exists"
 msgstr "Grupo \"%s\" já existe."
 
-#: ../hosts/hostlocalmedia.py:649
 #, fuzzy, python-format
 msgid "File \"%s\" already exists!"
 msgstr "Grupo \"%s\" já existe."
 
-#: ../libs/urlparser.py:2601
 msgid "File Not Found."
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1694
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "Ficheiro (%s) foi adicionado ao spool de descargas."
 
-#: ../components/iptvplayerwidget.py:1688
 #, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Ficheiro não pode ser descarregado. Protocolo (%s) não é suportado."
 
-#: ../hosts/hostmindigo.py:849 ../hosts/hoststreamcloud.py:33
 msgid "Film"
 msgstr ""
 
-#: ../hosts/hostfilmtar.py:84
 msgid "Film Kategóriák"
 msgstr ""
 
-#: ../hosts/hostdmdamedia.py:100 ../hosts/hostmozicsillag.py:113
-#: ../hosts/hostnonstopmozi.py:45
 msgid "Filmek"
 msgstr ""
 
-#: ../suggestions/filmstarts.py:17
 msgid "Filmstarts Suggestions"
 msgstr ""
 
-#: ../suggestions/filmweb.py:18
 msgid "Filmweb Suggestions"
 msgstr ""
 
-#: ../hosts/hosthorrorycc.py:74 ../hosts/hostzaluknijcc.py:81
 msgid "Filter By Year"
 msgstr ""
 
-#: ../hosts/hostcimaclubcom_blocked_.py:147 ../hosts/hostmovs4ucom.py:48
-#: ../hosts/hostnuteczki.py:95
 msgid "Filters"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:390
 msgid "First movie player in buffering mode"
 msgstr "Modo de buffering no primeiro Leitor de Filmes"
 
-#: ../components/iptvconfigmenu.py:386
 msgid "First movie player without buffering mode"
 msgstr "Sem Modo de buffering no primeiro Leitor de Filmes"
 
-#: ../components/iptvconfigmenu.py:339
 msgid "Folder for cache data"
 msgstr "Pasta para informação cache"
 
-#: ../components/iptvconfigmenu.py:340
 msgid "Folder for temporary data"
 msgstr "Pasta para dados temporários"
 
-#: ../components/iptvplayerwidget.py:1200
-#: ../components/iptvplayerwidget.py:1269
 msgid "Following host are broken or additional python modules are needed."
 msgstr "Os hosts estão fragmentados ou módulos de python adicionaiis são necessários."
 
-#: ../hosts/hostorthobulletscom.py:116
 msgid "Foot & Ankle"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:312
 msgid "Force internal Skin"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1575
 msgid "Format 'wmv' blocked in configuration."
 msgstr "Formato 'wmv' bloqueado na configuração."
 
-#: ../hosts/hostekstraklasatv.py:170 ../hosts/hoststreamliveto.py:141
-#: ../hosts/hosttvplayercom.py:135
 msgid "Free"
 msgstr ""
 
-#: ../hosts/hoststreamstat.py:83
 msgid "Free IPTV list"
 msgstr ""
 
-#: ../hosts/hostmediayou.py:29 ../tools/iptvhostgroups.py:42
 msgid "French"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:32
-#: ../components/configextmovieplayer.py:45
-#: ../components/configextmovieplayer.py:58
-#: ../components/configextmovieplayer.py:71
-#: ../components/configextmovieplayer.py:84
 msgid "From E2 settings"
 msgstr "Das definições de E2"
 
-#: ../hosts/host123movieshd_blocked_.py:191
 msgid "Functionality protected by Google reCAPTCHA!"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:326
 msgid "GSTplayer no IFD workarround"
 msgstr ""
 
-#: ../hosts/hosttwitchtv_blocked_.py:486
 #, fuzzy, python-format
 msgid "Game: %s"
 msgstr "Jogos"
 
-#: ../hosts/hosttwitchtv_blocked_.py:161 ../hosts/hosttwitchtv_blocked_.py:641
-#: ../hosts/hostyoutube.py:183
 msgid "Games"
 msgstr "Jogos"
 
-#: ../hosts/hostorthobulletscom.py:121
 msgid "General"
 msgstr ""
 
-#: ../hosts/hostappletrailers_blocked_.py:108
 msgid "Genre:"
 msgstr ""
 
-#: ../hosts/hostgamatocom.py:82
 msgid "Genre: "
 msgstr ""
 
-#: ../hosts/hostshoutcast.py:137
 #, python-format
 msgid "Genre: %s"
 msgstr ""
 
-#: ../hosts/hostanimeodcinki_blocked_.py:52
-#: ../hosts/hostbajeczkiorg_blocked_.py:218 ../hosts/hostbsto_blocked_.py:87
-#: ../hosts/hostguardaserie.py:29 ../hosts/hosthdseanspl.py:308
-#: ../hosts/hosthorrorycc.py:297 ../hosts/hostmovs4ucom.py:56
-#: ../hosts/hostplayzcc.py:243 ../hosts/hostserienstreamto.py:50
-#: ../hosts/hostshoutcast.py:52 ../hosts/hostthewatchseriesto.py:53
-#: ../hosts/hostvidcorncom.py:540 ../hosts/hostyifytv.py:71
-#: ../hosts/hostzaluknijcc.py:306 ../hosts/hostzerioncc.py:79
 msgid "Genres"
 msgstr ""
 
-#: ../hosts/hostappletrailers_blocked_.py:108 ../hosts/hostfilma24io.py:262
 msgid "Genres:"
 msgstr ""
 
-#: ../hosts/hostdrdk.py:30
 msgid "Geolocation IP:"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:469 ../tools/iptvhostgroups.py:41
 msgid "German"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:334
 msgid "German proxy server url"
 msgstr "Url do Servidor proxy alemão"
 
-#: ../libs/ustvnow.py:46
 msgid "Get EPG"
 msgstr ""
 
-#: ../subproviders/subprov_opensubtitlesorg.py:242
 msgid "Get languages failed!"
 msgstr ""
 
-#: ../subproviders/subprov_opensubtitlesorg.py:215
 msgid "Get token failed!"
 msgstr ""
 
-#: ../hosts/hostxxx.py:282
 msgid "Global search :"
 msgstr ""
 
-#: ../hosts/hostxxx.py:283
 msgid "Global sort :"
 msgstr ""
 
-#: ../components/captcha_helper.py:67
 msgid "Go to the host configuration available under blue button."
 msgstr ""
 
-#: ../hosts/hostourmatchnet.py:47
 msgid "Goal Of The Month"
 msgstr ""
 
-#: ../suggestions/google.py:18
 msgid "Google Suggestions"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:46 ../components/iptvconfigmenu.py:320
 msgid "Graphic services selector"
 msgstr "Seletor de serviços gráficos"
 
-#: ../tools/iptvhostgroups.py:46
 msgid "Greek"
 msgstr ""
 
-#: ../components/iptvfavouriteswidgets.py:62 ../tools/iptvfavourites.py:96
 #, python-format
 msgid "Group \"%s\" already exists."
 msgstr "Grupo \"%s\" já existe."
 
-#: ../components/iptvfavouriteswidgets.py:45
 #, python-format
 msgid "Group %d"
 msgstr "Grupo %d"
 
-#: ../hosts/hosturllist.py:34
 msgid "Group links into categories: "
 msgstr ""
 
-#: ../tools/iptvfavourites.py:196
 #, python-format
 msgid "Group with id[%s] not found."
 msgstr "Grupo com id[%s] não encontrado."
 
-#: ../hosts/hostvimeo_blocked_.py:434
 #, fuzzy
 msgid "Groups"
 msgstr "Grupo %d"
 
-#: ../libs/videostar.py:180
 #, python-format
 msgid "Guest timeout: %s"
 msgstr ""
 
-#: ../hosts/hosthdfull.py:63
 msgid "HDFull Suggestions"
 msgstr ""
 
-#: ../hosts/hostsvtplayse.py:35 ../libs/youtube_dl/extractor/bbc.py:25
 msgid "HLS/m3u8"
 msgstr ""
 
-#: ../libs/pCommon.py:389
 #, python-format
 msgid "HTTPS connection error \"%s\"\n"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:115
 msgid "Hand"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:37
 msgid "Hardware floating point"
 msgstr ""
 
-#: ../components/playerselector.py:273 ../components/playerselector.py:821
 #, python-format
 msgid "Hide \"%s\" group"
 msgstr "\"%s\" Ocultar Grupos"
 
-#: ../components/playerselector.py:154
 msgid "Hide/Active Group"
 msgstr ""
 
-#: ../hosts/hostlaola1tv_blocked_.py:28
 msgid "High"
 msgstr ""
 
-#: ../libs/weebtv.py:31
 msgid "High (or HD)"
 msgstr ""
 
-#: ../hosts/hostbbciplayer_blocked_.py:200 ../hosts/hostogladajto.py:94
-#: ../hosts/hosttwitchtv_blocked_.py:117
 msgid "Highlights"
 msgstr ""
 
-#: ../hosts/hostyoutube.py:64
 msgid "History of searched phrases."
 msgstr "Histórico de frases procuradas."
 
-#: ../hosts/hostfilmezz.py:69 ../hosts/hostkissanimeto.py:62
-#: ../hosts/hostkisscartoonme.py:48 ../hosts/hostourmatchnet.py:42
 #, fuzzy
 msgid "Home"
 msgstr "Página Inicial"
 
-#: ../hosts/hostngolos.py:77 ../hosts/hostzdfmediathek.py:86
-#: ../hosts/hostzdfmediathek.py:102
 msgid "Home page"
 msgstr "Página Inicial"
 
-#: ../libs/urlparser.py:1126
 #, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr ""
 
-#: ../libs/urlparser.py:1128
 #, python-format
 msgid "Hosting \"%s\" unknown."
 msgstr ""
 
-#: ../hosts/hosturllist.py:98 ../hosts/hosturllist.py:110
 #, python-format
 msgid "Hosting: %s, %s"
 msgstr ""
 
-#: ../Web/webParts.py:217
 #, fuzzy
 msgid "Hosts settings"
 msgstr "Das definições de E2"
 
-#: ../hosts/hostorthobulletscom.py:85
 msgid "Humanitarian"
 msgstr ""
 
-#: ../tools/iptvhostgroups.py:44
 msgid "Hungarian"
 msgstr ""
 
-#: ../hosts/hostidokep.py:84
 msgid "Hőtérkép"
 msgstr ""
 
-#: ../suggestions/imdb.py:19
 msgid "IMDb Suggestions"
 msgstr ""
 
-#: ../hosts/hostvidcorncom.py:524
 msgid "IMDb rating"
 msgstr ""
 
-#: ../hosts/hosttvjworg.py:46
 #, fuzzy
 msgid "Icon type"
 msgstr "Tamanho dos Icons"
 
-#: ../hosts/hostardmediathek_blocked_.py:39
 #, fuzzy
 msgid "Icons quality"
 msgstr "qualidade"
 
-#: ../hosts/hostzdfmediathek.py:41
 msgid "Icons size"
 msgstr "Tamanho dos Icons"
 
-#: ../hosts/hostidokep.py:83
 msgid "Időkép"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:86
 msgid "Industry"
 msgstr ""
 
-#: ../hosts/hostwatchwrestlinguno.py:46
 msgid "Indy"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:599
 msgid "Info"
 msgstr "Informação"
 
-#: ../components/iptvconfigmenu.py:313
 msgid "Info bar clock format"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:280
 msgid "Info bar timeout"
 msgstr ""
 
-#: ../Web/webParts.py:85
 #, fuzzy
 msgid "Information"
 msgstr "formato"
 
-#: ../components/iptvextmovieplayer.py:841
 msgid "Information about audio tracks not available."
 msgstr ""
 
-#: ../Web/webParts.py:401
 msgid "Initial list"
 msgstr ""
 
-#: ../Web/webParts.py:272
 #, fuzzy
 msgid "Initialize Download Manager"
 msgstr "IPTV gestor de descargas"
 
-#: ../components/iptvconfigmenu.py:292
 #, fuzzy
 msgid "Initialize web interface"
 msgstr "Inicializar interface web (experimental)"
 
-#: ../Web/webSite.py:180 ../Web/webSite.py:225 ../Web/webSite.py:365
-#: ../Web/webSite.py:555
 msgid "Initiating data, please wait"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:320
 #, fuzzy
 msgid "Inject black iframe at video playback finish"
 msgstr "Usar o iframe preto na reprodução de vídeo normal"
 
-#: ../components/iptvinputbox.py:22 ../components/iptvmultipleinputbox.py:36
-#: ../components/iptvmultipleinputbox.py:101
 msgid "Input"
 msgstr "Entrada"
 
-#: ../hosts/hostorthobulletscom.py:87
 msgid "Interactive Learning Center(ILC)"
 msgstr ""
 
-#: ../hosts/hostonlinestream.py:114
 msgid "Internetes rádiók listázása"
 msgstr ""
 
-#: ../components/recaptcha_mye2i_widget.py:152
-#: ../components/recaptcha_v2myjd_widget.py:128
 #, fuzzy
 msgid "Invalid email."
 msgstr "Nome inválido"
 
-#: ../components/iptvdirbrowser.py:295
 msgid "Invalid name."
 msgstr "Nome inválido"
 
-#: ../components/iptvextmovieplayer.py:791
 msgid "Is this message displayed correctly?"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:805
 msgid "Ismeretterjesztő"
 msgstr ""
 
-#: ../libs/pCommon.py:519 ../libs/pCommon.py:1219
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr ""
 
-#: ../hosts/hostcineto.py:410
 msgid "It looks like some kind of protection. Try again later."
 msgstr ""
 
-#: ../libs/pCommon.py:390
 #, python-format
 msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:453
 #, fuzzy, python-format
 msgid "It seems that the host \"%s\" has crashed."
 msgstr "Parece que o host \"%s\" caiu (crash). Quer reportar este problema?"
 
-#: ../components/iptvplayerwidget.py:457
 #, python-format
 msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
 msgstr "Parece que o host \"%s\" caiu (crash). Quer reportar este problema?"
 
-#: ../components/iptvsubdownloader.py:385
 #, fuzzy, python-format
 msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
 msgstr "Parece que o host \"%s\" caiu (crash). Quer reportar este problema?"
 
-#: ../components/iptvextmovieplayer.py:1593
 #, python-format
 msgid ""
 "It seems that the video player \"%s\" does not work properly.\n"
@@ -2356,568 +1693,401 @@ msgid ""
 "ERROR CODE: %r"
 msgstr ""
 
-#: ../components/isubprovider.py:565
 msgid "It seems that unrar utility is not installed."
 msgstr ""
 
-#: ../components/isubprovider.py:542 ../subproviders/subprov_napisy24pl.py:352
 msgid "It seems that unzip utility is not installed."
 msgstr ""
 
-#: ../hosts/hostmediayou.py:29 ../tools/iptvhostgroups.py:48
 msgid "Italian"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:772
 #, python-format
 msgid "Item %s removed!"
 msgstr ""
 
-#: ../tools/iptvfavourites.py:174
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."
 msgstr "Item idx[%d] não encontrado no grupo [%s]."
 
-#: ../hosts/hostliveleak.py:50 ../hosts/hostliveleak.py:214
 msgid "Items"
 msgstr ""
 
-#: ../components/iptvfavouriteswidgets.py:325
 #, python-format
 msgid "Items in group \"%s\""
 msgstr "Items no grupo \"%s\""
 
-#: ../components/recaptcha_v2myjd_widget.py:166
 #, fuzzy
 msgid "JDownloader script execution"
 msgstr "Problema com a execução de script do utilizador.\n"
 
-#: ../components/recaptcha_v2myjd_widget.py:100
 #, python-format
 msgid ""
 "JDownloader script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
 
-#: ../components/recaptcha_v2myjd_widget.py:97
 msgid "JDownloader script finished."
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:88
 msgid "Jobs & Positions"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:89
 msgid "Journal Club"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:797
 msgid "Játék és vetélkedő"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:785
 msgid "Kabaré, vígjáték"
 msgstr ""
 
-#: ../hosts/hostidokep.py:87
 msgid "Kamerák"
 msgstr ""
 
-#: ../hosts/hostdmdamedia.py:99 ../hosts/hostfilmpapa.py:88
-#: ../hosts/hostfilmvilag.py:97 ../hosts/hostwofvideo.py:84
 msgid "Kategóriák"
 msgstr ""
 
-#: ../hosts/hostdmdamedia.py:102 ../hosts/hostfilmpapa.py:89
-#: ../hosts/hostfilmtar.py:86 ../hosts/hostfilmvilag.py:98
-#: ../hosts/hostmozicsillag.py:115 ../hosts/hostnonstopmozi.py:47
-#: ../hosts/hostonlinestream.py:117 ../hosts/hoststreamstat.py:86
-#: ../hosts/hosttv2play.py:114 ../hosts/hostwofvideo.py:85
 msgid "Keresés"
 msgstr ""
 
-#: ../hosts/hostdmdamedia.py:103 ../hosts/hostfilmpapa.py:90
-#: ../hosts/hostfilmtar.py:87 ../hosts/hostfilmvilag.py:99
-#: ../hosts/hostmozicsillag.py:116 ../hosts/hostnonstopmozi.py:48
-#: ../hosts/hostonlinestream.py:118 ../hosts/hoststreamstat.py:87
-#: ../hosts/hosttv2play.py:115 ../hosts/hostwofvideo.py:86
 msgid "Keresési előzmények"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:112
 msgid "Knee & Sports"
 msgstr ""
 
-#: ../hosts/hostidokep.py:88
 msgid "Képtár"
 msgstr ""
 
-#: ../hosts/hostnonstopmozi.py:99
 msgid "Következő oldal"
 msgstr ""
 
-#: ../hosts/hostworldfree4u.py:50
 msgid "LATEST"
 msgstr ""
 
-#: ../hosts/hostdancetrippin.py:40
 msgid "LATEST CONTENT"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:67 ../hosts/hostwatchwrestling.py:316
-#: ../hosts/hostwatchwrestlinguno.py:56 ../hosts/hostwatchwrestlinguno.py:312
 msgid "LIKES"
 msgstr ""
 
-#: ../hosts/host3player_blocked_.py:57
 msgid "LIVE"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:48 ../hosts/hostwatchwrestlinguno.py:37
 msgid "LIVE 24/7"
 msgstr ""
 
-#: ../hosts/hostgreekdocumentaries3.py:42
 msgid "Labels"
 msgstr ""
 
-#: ../hosts/hosthdfull.py:41 ../hosts/hostkinox.py:234
-#: ../hosts/hostkinox.py:421 ../hosts/hostmediayou.py:34
-#: ../hosts/hosttvjworg.py:43
 msgid "Language"
 msgstr ""
 
-#: ../hosts/hostlaola1tv_blocked_.py:41 ../hosts/hostngolos.py:31
-#: ../libs/skylinewebcamscom.py:39
 msgid "Language:"
 msgstr ""
 
-#: ../hosts/hosttwitchtv_blocked_.py:443 ../hosts/hosttwitchtv_blocked_.py:483
 #, python-format
 msgid "Language: %s"
 msgstr ""
 
-#: ../hosts/hostyifytv.py:72
 msgid "Languages"
 msgstr ""
 
-#: ../Web/webParts.py:135
 #, python-format
 msgid "Last %d lines of the %s file are:"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:2009
 #, python-format
 msgid "Last Exception error: \"%s\""
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1507
 #, python-format
 msgid "Last Exception error: '%s'"
 msgstr ""
 
-#: ../hosts/hostartetv.py:188 ../hosts/hostsvtplayse.py:76
 msgid "Last chance"
 msgstr ""
 
-#: ../hosts/hosttwitchtv_blocked_.py:124
 #, fuzzy
 msgid "Last day"
 msgstr "após dia"
 
-#: ../components/iptvplayerwidget.py:315 ../hosts/hostxxx.py:4576
-#: ../hosts/hostxxx.py:4700 ../hosts/hostxxx.py:5381 ../hosts/hostxxx.py:6113
-#: ../hosts/hostxxx.py:6589 ../hosts/hostxxx.py:7282 ../hosts/hostxxx.py:15761
-#: ../libs/pCommon.py:1406
 #, fuzzy, python-format
 msgid ""
 "Last error:\n"
 "%s"
 msgstr "Último erro"
 
-#: ../components/iptvplayerwidget.py:1504
-#: ../components/iptvplayerwidget.py:2006
-#: ../components/iptvsubdownloader.py:537
-#: ../components/iptvsubdownloader.py:578
 #, fuzzy, python-format
 msgid "Last error: \"%s\""
 msgstr "Último erro"
 
-#: ../hosts/hosttwitchtv_blocked_.py:126
 #, fuzzy
 msgid "Last month"
 msgstr "Último erro"
 
-#: ../hosts/hosttwitchtv_blocked_.py:125
 #, fuzzy
 msgid "Last week"
 msgstr "após uma semana"
 
-#: ../hosts/hostcartoonhd_blocked_.py:32 ../hosts/hostxrysoise.py:31
 msgid "Lastest"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:159
 msgid "Latest"
 msgstr ""
 
-#: ../hosts/hostfilmezz.py:74
 msgid "Latest added"
 msgstr ""
 
-#: ../hosts/hostmovienightws.py:35
 msgid "Latest movies"
 msgstr ""
 
-#: ../hosts/hostsvtplayse.py:75
 msgid "Latest news broadcast"
 msgstr ""
 
-#: ../hosts/hostsvtplayse.py:74
 msgid "Latest programs"
 msgstr ""
 
-#: ../hosts/hostkissanimeto.py:69 ../hosts/hostkisscartoonme.py:54
 msgid "Latest update"
 msgstr ""
 
-#: ../tools/iptvhostgroups.py:47
 #, fuzzy
 msgid "Latino"
 msgstr "Classificação"
 
-#: ../components/iptvplayerwidget.py:678
 msgid "Lead programmer: "
 msgstr ""
 
-#: ../Web/webParts.py:474
+msgid "Legfrissebb"
+msgstr ""
+
 msgid "Level:"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:72 ../components/iptvconfigmenu.py:212
 msgid "Lightgray"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:295
 msgid "Line Spacing"
 msgstr "Intervalo entre linhas"
 
-#: ../components/iptvextmovieplayer.py:2052
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr ""
 
-#: ../hosts/hostekinotv.py:422 ../hosts/hostekinotv.py:433
 msgid "Link protected with CF Turnstile ."
 msgstr ""
 
-#: ../hosts/host3player_blocked_.py:390
 msgid "Link protected with DRM."
 msgstr ""
 
-#: ../components/captcha_helper.py:23
 msgid "Link protected with Google ReCaptcha v2"
 msgstr ""
 
-#: ../hosts/hostekinotv.py:453 ../hosts/hostfilmezz.py:334
-#: ../hosts/hostfreediscpl.py:85 ../hosts/hosthdstreams_blocked_.py:428
-#: ../hosts/hosthdstreams_blocked_.py:445 ../hosts/hostserienstreamto.py:410
-#: ../hosts/hosttvpvod.py:230 ../libs/urlparser.py:7976
 msgid "Link protected with google recaptcha v2."
 msgstr ""
 
-#: ../Web/webParts.py:482
 msgid "Links for"
 msgstr ""
 
-#: ../hosts/hosturllist.py:52
 msgid "Links from all files without categories"
 msgstr ""
 
-#: ../hosts/hosturllist.py:53 ../hosts/hosturllist.py:54
-#: ../hosts/hosturllist.py:55
 #, python-format
 msgid "Links from the file %s"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:172
 msgid "List by day"
 msgstr ""
 
-#: ../libs/ustvnow.py:45
 msgid "List only channels with subscription"
 msgstr ""
 
-#: ../hosts/hostshoutcast.py:138
 #, python-format
 msgid "Listeners: %s"
 msgstr ""
 
-#: ../hosts/hostbbciplayer_blocked_.py:148
-#: ../hosts/hostbbcsport_blocked_.py:189 ../hosts/hostplayrtsiw.py:151
-#: ../hosts/hostrteieplayer.py:53 ../hosts/hostyoutube.py:70
-#: ../hosts/hostyoutube.py:191 ../hosts/hostzdfmediathek.py:336
-#: ../tools/iptvhostgroups.py:36
 msgid "Live"
 msgstr "Ao Vivo"
 
-#: ../hosts/hostardmediathek_blocked_.py:69
 msgid "Live Radio"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:68
 #, fuzzy
 msgid "Live TV"
 msgstr "Ao Vivo"
 
-#: ../hosts/hostsvtplayse.py:77
 #, fuzzy
 msgid "Live broadcasts"
 msgstr "Transmissões"
 
-#: ../hosts/hosttwitchtv_blocked_.py:642 ../hosts/hosturllist.py:54
-#: ../hosts/hostyoutube.py:228
 msgid "Live streams"
 msgstr ""
 
-#: ../hosts/hostlaola1tv_blocked_.py:493
 msgid "Live-streams"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:896
 #, fuzzy
 msgid "Load"
 msgstr "A carregar..."
 
-#: ../components/e2ivk.py:634 ../components/e2ivk.py:637
 #, python-format
 msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1797
-#: ../components/iptvsubdownloader.py:490
 msgid "Loading"
 msgstr "A carregar..."
 
-#: ../components/iptvplayerwidget.py:1417
 #, python-format
 msgid "Loading %s failed due to following error:"
 msgstr ""
 
-#: ../Web/webSite.py:299 ../Web/webSite.py:368
 #, fuzzy
 msgid "Loading data, please wait"
 msgstr "Durante o processamento, por favor espere."
 
-#: ../Web/webSite.py:230 ../Web/webSite.py:559
 #, python-format
 msgid "Loading data, please wait (%d)"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:56
 msgid "LocalMedia"
 msgstr ""
 
-#: ../components/e2ivk.py:629
 #, python-format
 msgid "Locale ID mismatched! %s <> %s"
 msgstr ""
 
-#: ../hosts/hostdailymotion.py:29
 msgid "Localization"
 msgstr ""
 
-#: ../hosts/hoststreamliveto.py:38 ../libs/videostar.py:46
 #, fuzzy
 msgid "Login"
 msgstr "login"
 
-#: ../subproviders/subprov_opensubtitlesorg.py:210
-#: ../subproviders/subprov_opensubtitlesorg.py:217
 msgid "Login failed!"
 msgstr ""
 
-#: ../hosts/hostbbcsport_blocked_.py:510 ../hosts/hostcartoonhd_blocked_.py:616
-#: ../hosts/hostcdapl_blocked_.py:494 ../hosts/hostdixmax.py:479
-#: ../hosts/hostegybest.py:513 ../hosts/hostekinotv.py:562
-#: ../hosts/hostfilman.py:382 ../hosts/hostfilmezz.py:532
-#: ../hosts/hostfreediscpl.py:478 ../hosts/hosthdfull.py:648
-#: ../hosts/hosthdsto.py:554 ../hosts/hostmaxtvgo.py:239
-#: ../hosts/hostmindigo.py:1139 ../hosts/hostnuteczki.py:437
-#: ../hosts/hostogladajto.py:323 ../hosts/hostorthobulletscom.py:263
-#: ../hosts/hostrtbfbe.py:684 ../hosts/hostrtlmost.py:490
-#: ../hosts/hostserienstreamto.py:457 ../hosts/hostserienstreamto.py:567
-#: ../hosts/hostserijeonline.py:332 ../hosts/hoststreamliveto.py:436
-#: ../hosts/hosttvplayercom.py:380 ../hosts/hostvidcorncom.py:609
-#: ../hosts/hostvumedicom.py:397
 msgid "Login failed."
 msgstr ""
 
-#: ../hosts/hostekstraklasatv.py:131 ../hosts/hosteurosportplayer.py:599
 msgid "Login failed. Invalid email or password."
 msgstr ""
 
-#: ../hosts/hosteurosportplayer.py:503
 msgid "Login needed"
 msgstr ""
 
-#: ../libs/urlparser.py:5312
 #, python-brace-format
 msgid "Login on {0} failed."
 msgstr ""
 
-#: ../libs/urlparser.py:2316
 #, python-format
 msgid ""
 "Login user \"%s\" to http://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
 
-#: ../Web/webParts.py:68 ../Web/webParts.py:85
 msgid "Logs"
 msgstr ""
 
-#: ../hosts/hostcartoonhd_blocked_.py:32 ../hosts/hostxrysoise.py:31
 msgid "Longest"
 msgstr ""
 
-#: ../hosts/hostlaola1tv_blocked_.py:28 ../libs/weebtv.py:31
 #, fuzzy
 msgid "Low"
 msgstr "baixo"
 
-#: ../components/playerselector.py:152
 msgid "MENU"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:402
 msgid "MIPS Floating Point Architecture"
 msgstr ""
 
-#: ../hosts/hosthdstreams_blocked_.py:72
 msgid "MOVIES"
 msgstr ""
 
-#: ../hosts/hostfilmpalast.py:47 ../hosts/hostfilmstreamvkcom.py:103
-#: ../hosts/hosthoofootcom.py:39 ../hosts/hostkabarety.py:45
-#: ../hosts/hostokgoals.py:44 ../hosts/hostrtbfbe.py:102
-#: ../hosts/hostspiegeltv_blocked_.py:82 ../hosts/hostwptv.py:52
 msgid "Main"
 msgstr ""
 
-#: ../hosts/hostwatchwrestlinguno.py:44
 msgid "Main Event"
 msgstr ""
 
-#: ../hosts/hostcimaclubcom_blocked_.py:129 ../hosts/hostnuteczki.py:88
 msgid "Main menu"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:306
 #, fuzzy, python-format
 msgid "Make directory [%s]"
 msgstr "Problema com a pasta (%s)."
 
-#: ../iptvdm/iptvdmui.py:215 ../Web/webParts.py:287
 msgid "Manager status: "
 msgstr "Gestor de estado: "
 
-#: ../hosts/hostfilmstreamvkcom.py:106
 msgid "Manga"
 msgstr ""
 
-#: ../hosts/hostekstraklasatv.py:74
 msgid "Matches"
 msgstr ""
 
-#: ../hosts/hostekstraklasatv.py:40
 msgid "Max bitrate:"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:50
 msgid "Max items per page"
 msgstr ""
 
-#: ../iptvdm/iptvdmapi.py:235
 msgid "Max number of parallel downloads has been reached."
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:90
 msgid "Medtryx Marketing"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:91
 msgid "Meetings"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:590
 msgid "Menu"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:813
 msgid "Mesék"
 msgstr ""
 
-#: ../hosts/hostlaola1tv_blocked_.py:28
 msgid "Mid"
 msgstr ""
 
-#: ../hosts/hostyifytv.py:362 ../hosts/hostyifytv.py:366
 msgid "Mirror"
 msgstr ""
 
-#: ../hosts/hostkijknl.py:69
 msgid "Missed"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:66 ../hosts/hostzdfmediathek.py:87
-#: ../hosts/hostzdfmediathek.py:104
 msgid "Missed the show?"
 msgstr "Perdeu o espetáculo?"
 
-#: ../hosts/hostwatchwrestling.py:47
 msgid "Monthly"
 msgstr "Mensalmente"
 
-#: ../components/iptvplayerwidget.py:161 ../components/playerselector.py:156
-#: ../hosts/hostdancetrippin.py:160 ../hosts/hostlocalmedia.py:406
-#: ../hosts/hostrtbfbe.py:384 ../hosts/hosttvpvod.py:469
 msgid "More"
 msgstr "Mais"
 
-#: ../hosts/hostardmediathek_blocked_.py:42 ../hosts/hostzdfmediathek.py:44
 msgid "More important"
 msgstr "Mais importante"
 
-#: ../hosts/hostbbciplayer_blocked_.py:61
 msgid "Most Popular"
 msgstr "Mais popular"
 
-#: ../hosts/hostdancetrippin.py:48
 #, fuzzy
 msgid "Most featured"
 msgstr "Destaque"
 
-#: ../hosts/hostplayrtsiw.py:167
 #, fuzzy
 msgid "Most popular"
 msgstr "Mais popular"
 
-#: ../hosts/hostdailymotion.py:54
 msgid "Most rated"
 msgstr ""
 
-#: ../hosts/hostartetv.py:186 ../hosts/hostdailymotion.py:53
-#: ../hosts/hostplayrtsiw.py:249 ../hosts/hostplayrtsiw.py:254
-#: ../hosts/hostplayrtsiw.py:263 ../hosts/hostplayrtsiw.py:268
 msgid "Most recent"
 msgstr ""
 
-#: ../hosts/hostartetv.py:187 ../hosts/hostcartoonhd_blocked_.py:32
-#: ../hosts/hostdailymotion.py:52 ../hosts/hostxrysoise.py:31
 msgid "Most viewed"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:314
 #, python-format
 msgid ""
 "Mount ISO file [%s] on [%s] failed.\n"
@@ -2925,120 +2095,77 @@ msgid ""
 "Return data[%s]."
 msgstr ""
 
-#: ../components/iptvsubsimpledownloader.py:89
 msgid "Move group"
 msgstr "Mover grupo"
 
-#: ../hosts/hostlibrestream.py:32 ../hosts/hostmediasetplay.py:624
 msgid "Movie"
 msgstr "Filme"
 
-#: ../hosts/hostegybest.py:66 ../hosts/hosteinschalten.py:31
-#: ../hosts/hostfilma24hdcom.py:38 ../hosts/hostfilman.py:89
-#: ../hosts/hostfilmativa.py:41 ../hosts/hostfilmativa.py:365
-#: ../hosts/hostfilmeonlineto.py:114 ../hosts/hostfilmezz.py:70
-#: ../hosts/hostfilmovizijastudio.py:52 ../hosts/hostfilmowoclub.py:63
-#: ../hosts/hostfilmpalast.py:48 ../hosts/hostforjatn.py:48
-#: ../hosts/hostforjatn.py:427 ../hosts/hostfreediscpl.py:61
-#: ../hosts/hostfreediscpl.py:538 ../hosts/hostgamatocom.py:44
-#: ../hosts/hostgovodtv.py:71 ../hosts/hosthdfilmetv.py:36
-#: ../hosts/hosthdseanspl.py:63 ../hosts/hosthdstreams_blocked_.py:598
-#: ../hosts/hosthorrorycc.py:70 ../hosts/hostkinokiste.py:32
-#: ../hosts/hostkinomoc.py:64 ../hosts/hostkinox.py:94
-#: ../hosts/hostkkiste.py:32 ../hosts/hostmegakino.py:31
-#: ../hosts/hostmovie2k.py:35 ../hosts/hostmovie4k.py:32
-#: ../hosts/hostmovs4ucom.py:45 ../hosts/hostmrpiracy.py:743
-#: ../hosts/hostobejrzyjto.py:74 ../hosts/hostogladajto.py:91
-#: ../hosts/hostplanetstreamingcom.py:386 ../hosts/hostplayzcc.py:64
-#: ../hosts/hostseezsu.py:68 ../hosts/hostvodpl.py:61
-#: ../hosts/hostyoutube.py:187 ../hosts/hostzaluknijcc.py:77
-#: ../subproviders/subprov_prijevodi.py:41
 #, fuzzy
 msgid "Movies"
 msgstr "Filme"
 
-#: ../tools/iptvhostgroups.py:32
 #, fuzzy
 msgid "Movies and series"
 msgstr "Leitor de Filmes"
 
-#: ../hosts/hostmovienightws.py:37
 #, fuzzy
 msgid "Movies by year"
 msgstr "Leitor de Filmes"
 
-#: ../hosts/hostfilman.py:93 ../hosts/hosthorrorycc.py:75
-#: ../hosts/hostmovienightws.py:36 ../hosts/hostseezsu.py:71
-#: ../hosts/hostzaluknijcc.py:82
 #, fuzzy
 msgid "Movies genres"
 msgstr "Leitor de Filmes"
 
-#: ../hosts/hostanimeodcinki_blocked_.py:51
 #, fuzzy
 msgid "Movies list"
 msgstr "Filme"
 
-#: ../hosts/hostlocalmedia.py:683
 #, python-format
 msgid "Moving file from \"%s\" to \"%s\" failed.\n"
 msgstr ""
 
-#: ../iptvdm/iptvbuffui.py:293
 #, python-format
 msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
 msgstr ""
 
-#: ../hosts/hostfreediscpl.py:62 ../hosts/hostfreediscpl.py:539
-#: ../hosts/hostyoutube.py:179 ../tools/iptvhostgroups.py:34
 msgid "Music"
 msgstr ""
 
-#: ../libs/recaptcha_v2_myjd.py:17
 msgid "My JDownloader reCAPTCHA v2 solution"
 msgstr ""
 
-#: ../hosts/hostmusicbox.py:86
 #, fuzzy
 msgid "My list"
 msgstr "Lista de Reprodução"
 
-#: ../libs/recaptcha_mye2i.py:18
 msgid "MyE2i Cloudflare solution"
 msgstr ""
 
-#: ../libs/recaptcha_mye2i.py:20
 msgid "MyE2i reCAPTCHA solution"
 msgstr ""
 
-#: ../components/recaptcha_mye2i_widget.py:120
 #, python-format
 msgid ""
 "MyE2i script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
 
-#: ../components/recaptcha_mye2i_widget.py:117
 msgid "MyE2i script finished."
 msgstr ""
 
-#: ../hosts/hosttv2play.py:113
 msgid "Műsorok"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:53 ../hosts/hostwatchwrestlinguno.py:47
 msgid "NJPW"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:58 ../hosts/hostwatchwrestlinguno.py:43
 msgid "NXT"
 msgstr ""
 
-#: ../components/iptvfavouriteswidgets.py:55
 msgid "Name cannot be empty."
 msgstr "O nome tem de estar preenchido."
 
-#: ../components/iptvfavouriteswidgets.py:57
 msgid ""
 "Name is not valid.\n"
 "Please remove special characters."
@@ -3046,202 +2173,66 @@ msgstr ""
 "Nome inválido.\n"
 "Por favor, remova os carateres especiais."
 
-#: ../components/iptvfavouriteswidgets.py:45
 msgid "Name:"
 msgstr "Nome:"
 
-#: ../hosts/hostcartoonhd_blocked_.py:535
 msgid "Network"
 msgstr ""
 
-#: ../libs/hcaptcha_2captcha.py:78 ../libs/hcaptcha_2captcha.py:92
-#: ../libs/recaptcha_v2_2captcha.py:66 ../libs/recaptcha_v2_2captcha.py:80
-#: ../libs/recaptcha_v2_9kw.py:66 ../libs/recaptcha_v2_9kw.py:80
-#: ../libs/recaptcha_v3_2captcha.py:66 ../libs/recaptcha_v3_2captcha.py:80
 #, python-format
 msgid "Network failed %s."
 msgstr ""
 
-#: ../hosts/hostthewatchseriesto.py:25
 msgid "Never"
 msgstr ""
 
-#: ../hosts/hostanimeodcinki_blocked_.py:48 ../hosts/hostfilmativa.py:47
-#: ../hosts/hostfilmativa.py:51 ../hosts/hostfilmpalast.py:55
-#: ../hosts/hosthdfilme.py:34 ../hosts/hosthdfilmetv.py:35
-#: ../hosts/hostserienstreamto.py:51 ../hosts/hosttopstreamfilm.py:31
 #, fuzzy
 msgid "New"
 msgstr "Notícias"
 
-#: ../hosts/hostfilmovizijastudio.py:56
 msgid "New Episodes"
 msgstr ""
 
-#: ../hosts/hostfilmovizijastudio.py:53
 #, fuzzy
 msgid "New Movies"
 msgstr "Filme"
 
-#: ../hosts/hostkissanimeto.py:70 ../hosts/hostkisscartoonme.py:55
 msgid "New cartoon"
 msgstr ""
 
-#: ../components/iptvdirbrowser.py:80
 msgid "New dir"
 msgstr ""
 
-#: ../hosts/hostfilmativa.py:52
 msgid "New episodes"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1351
 msgid "New icons will not be available."
 msgstr "Os novos icons não estarão disponíveis."
 
-#: ../hosts/hostthewatchseriesto.py:51
 msgid "Newest Episodes"
 msgstr ""
 
-#: ../hosts/hostserijeonline.py:60
 #, fuzzy
 msgid "Newest Videos"
 msgstr "Vídeos"
 
-#: ../hosts/hostgovodtv.py:73 ../hosts/hostkinox.py:92
-#: ../hosts/hostyoutube.py:195
 msgid "News"
 msgstr "Notícias"
 
-#: ../hosts/hostvumedicom.py:97
 #, fuzzy
 msgid "News Feed"
 msgstr "Notícias"
 
-#: ../libs/youtubeparser.py:639 ../libs/youtubeparser.py:787
-#: ../libs/youtubeparser.py:802
 #, fuzzy
 msgid "Next Page"
 msgstr "Página seguinte"
 
-#: ../hosts/host123movieshd_blocked_.py:217
-#: ../hosts/host3player_blocked_.py:198 ../hosts/host3sktv_blocked_.py:128
-#: ../hosts/host3sktv_blocked_.py:291 ../hosts/host9anime.py:56
-#: ../hosts/hostakoam_blocked_.py:194
-#: ../hosts/hostaltadefinizione_blocked_.py:154
-#: ../hosts/hostaltadefinizione01.py:169 ../hosts/hostaltadefinizione01.py:234
-#: ../hosts/hostanimeodcinki_blocked_.py:237
-#: ../hosts/hostardmediathek_blocked_.py:315
-#: ../hosts/hostbajeczkiorg_blocked_.py:110
-#: ../hosts/hostbasketballvideocom.py:98
-#: ../hosts/hostbbciplayer_blocked_.py:501
-#: ../hosts/hostcartoonhd_blocked_.py:183 ../hosts/hostcdapl_blocked_.py:232
-#: ../hosts/hostchristusvincit_blocked_.py:452
-#: ../hosts/hostcimaclubcom_blocked_.py:276
-#: ../hosts/hostcinemay_blocked_.py:115 ../hosts/hostcineto.py:245
-#: ../hosts/hostclassiccinemaonline_blocked_.py:142
-#: ../hosts/hostclassiccinemaonline_blocked_.py:177
-#: ../hosts/hostdailymotion.py:94 ../hosts/hostdel_blocked_.py:123
-#: ../hosts/hostdixmax.py:265 ../hosts/hostdokumentalnenet.py:140
-#: ../hosts/hostegybest.py:205 ../hosts/hosteinschalten.py:73
-#: ../hosts/hostekinotv.py:203 ../hosts/hostekinotv.py:238
-#: ../hosts/hostekstraklasatv.py:328 ../hosts/hosteskago.py:226
-#: ../hosts/hostfaselhdcom.py:169 ../hosts/hostfenixsite.py:182
-#: ../hosts/hostfightvideo.py:182 ../hosts/hostfightvideo.py:262
-#: ../hosts/hostfilma24hdcom.py:170 ../hosts/hostfilma24io.py:145
-#: ../hosts/hostfilman.py:211 ../hosts/hostfilmaoncom.py:146
-#: ../hosts/hostfilmativa.py:143 ../hosts/hostfilmehdnet.py:140
-#: ../hosts/hostfilmeonlineto.py:258 ../hosts/hostfilmezz.py:220
-#: ../hosts/hostfilmovizijastudio.py:266 ../hosts/hostfilmowoclub.py:178
-#: ../hosts/hostfilmpalast.py:191 ../hosts/hostfilmpertutti.py:119
-#: ../hosts/hostfilmstreamvkcom.py:165 ../hosts/hostforjatn.py:176
-#: ../hosts/hostfreediscpl.py:228 ../hosts/hostfreediscpl.py:268
-#: ../hosts/hostfullmatchtvcom.py:110 ../hosts/hostgamatocom.py:157
-#: ../hosts/hostgamatotvme.py:189 ../hosts/hostgledalica.py:247
-#: ../hosts/hostgovodtv.py:180 ../hosts/hostgreekdocumentaries3.py:146
-#: ../hosts/hostguardaserie.py:55 ../hosts/hosthdfilme.py:86
-#: ../hosts/hosthdfilmetv.py:77 ../hosts/hosthdfull.py:273
-#: ../hosts/hosthdfull.py:443 ../hosts/hosthdpopcornscom.py:187
-#: ../hosts/hosthdseanspl.py:174 ../hosts/hosthdsto.py:286
-#: ../hosts/hosthdstreams_blocked_.py:226 ../hosts/hosthoofootcom.py:228
-#: ../hosts/hosthorrorycc.py:181 ../hosts/hostinteriatv.py:151
-#: ../hosts/hostinteriatv.py:196 ../hosts/hostiptvplayerinfo.py:132
-#: ../hosts/hostjoemonsterorg.py:107 ../hosts/hostjoemonsterorg.py:142
-#: ../hosts/hostkabarety.py:207 ../hosts/hostkijknl.py:105
-#: ../hosts/hostkijknl.py:251 ../hosts/hostkinoger.py:75
-#: ../hosts/hostkinokiste.py:74 ../hosts/hostkinomoc.py:182
-#: ../hosts/hostkinox.py:429 ../hosts/hostkissanimeto.py:369
-#: ../hosts/hostkisscartoonme.py:289 ../hosts/hostkkiste.py:76
-#: ../hosts/hostkreskoweczki.py:176 ../hosts/hostlaola1tv_blocked_.py:252
-#: ../hosts/hostlaola1tv_blocked_.py:300 ../hosts/hostlibrestream.py:203
-#: ../hosts/hostliveleak.py:120 ../hosts/hostlosmovies.py:203
-#: ../hosts/hostluxveritatis.py:148 ../hosts/hostluxveritatis.py:275
-#: ../hosts/hostmeczykipl.py:115 ../hosts/hostmediasetplay.py:291
-#: ../hosts/hostmediasetplay.py:401 ../hosts/hostmegakino.py:75
-#: ../hosts/hostmindigo.py:892 ../hosts/hostmoflixstream.py:107
-#: ../hosts/hostmovie2k.py:95 ../hosts/hostmovie4k.py:75
-#: ../hosts/hostmovienightws.py:150 ../hosts/hostmovizlandcom.py:170
-#: ../hosts/hostmovs4ucom.py:200 ../hosts/hostmrpiracy.py:298
-#: ../hosts/hostmusicmp3ru.py:154 ../hosts/hostngolos.py:214
-#: ../hosts/hostnuteczki.py:319 ../hosts/hostobejrzyjto.py:212
-#: ../hosts/hostogladajto.py:198 ../hosts/hostoipeirates.py:210
-#: ../hosts/hostokgoals.py:116 ../hosts/hostorthobulletscom.py:173
-#: ../hosts/hostotakufr.py:146 ../hosts/hostourmatchnet.py:247
-#: ../hosts/hostpinkbike.py:152 ../hosts/hostplanetstreamingcom.py:237
-#: ../hosts/hostplayrtsiw.py:425 ../hosts/hostplayrtsiw.py:515
-#: ../hosts/hostplayzcc.py:116 ../hosts/hostputlockertvto.py:279
-#: ../hosts/hostraiplay.py:773 ../hosts/hostrtbfbe.py:227
-#: ../hosts/hostrtbfbe.py:401 ../hosts/hostrtlmost.py:358
-#: ../hosts/hostseezsu.py:182 ../hosts/hostserialeco.py:110
-#: ../hosts/hostserienstreamto.py:204 ../hosts/hostseriesonline.py:232
-#: ../hosts/hostserijeonline.py:201 ../hosts/hostshahiidanimenet.py:185
-#: ../hosts/hostshahiidanimenet.py:241 ../hosts/hostskstream.py:208
-#: ../hosts/hostsolarmovie.py:258 ../hosts/hostspiegeltv_blocked_.py:307
-#: ../hosts/hostsportdeutschland_blocked_.py:162 ../hosts/hoststreamcloud.py:72
-#: ../hosts/hoststreamcomplet.py:105 ../hosts/hoststreamliveto.py:227
-#: ../hosts/hostsvtplayse.py:278 ../hosts/hostsvtplayse.py:419
-#: ../hosts/hosttainieskaiseirestv.py:152 ../hosts/hosttantifilmorg.py:243
-#: ../hosts/hostted.py:342 ../hosts/hostted.py:399 ../hosts/hostted.py:465
-#: ../hosts/hostthewatchseriesto.py:214 ../hosts/hosttopstreamfilm.py:81
-#: ../hosts/hosttvgrypl.py:142 ../hosts/hosttvproart.py:47
-#: ../hosts/hosttvpvod.py:465 ../hosts/hosttvpvod.py:541
-#: ../hosts/hosttwitchtv_blocked_.py:188 ../hosts/hosttwitchtv_blocked_.py:233
-#: ../hosts/hosttwitchtv_blocked_.py:330 ../hosts/hosttwitchtv_blocked_.py:393
-#: ../hosts/hosttwitchtv_blocked_.py:450 ../hosts/hosttwitchtv_blocked_.py:469
-#: ../hosts/hosttwitchtv_blocked_.py:492 ../hosts/hostustreamtv.py:168
-#: ../hosts/hostustvgo.py:192 ../hosts/hostvevo.py:171 ../hosts/hostvevo.py:339
-#: ../hosts/hostvevo.py:368 ../hosts/hostvidcorncom.py:179
-#: ../hosts/hostvidcorncom.py:221 ../hosts/hostvidcorncom.py:241
-#: ../hosts/hostvidcorncom.py:262 ../hosts/hostvimeo_blocked_.py:288
-#: ../hosts/hostvimeo_blocked_.py:359 ../hosts/hostvodpl.py:234
-#: ../hosts/hostvumedicom.py:222 ../hosts/hostvumedicom.py:282
-#: ../hosts/hostwatchwrestling.py:143 ../hosts/hostwatchwrestlinguno.py:141
-#: ../hosts/hostwgrane.py:172 ../hosts/hostworldfree4u.py:138
-#: ../hosts/hostwpolscepl.py:234 ../hosts/hostwptv.py:143
-#: ../hosts/hostwptv.py:227 ../hosts/hostxrysoise.py:159
-#: ../hosts/hostxxx.py:6780 ../hosts/hostxxx.py:16837 ../hosts/hostxxx.py:16915
-#: ../hosts/hostxxx.py:16997 ../hosts/hostxxx.py:17403
-#: ../hosts/hostyesmoviesto.py:202 ../hosts/hostyifytv.py:286
-#: ../hosts/hostzaluknijcc.py:187 ../hosts/hostzdfmediathek.py:400
-#: ../hosts/hostzerioncc.py:193 ../libs/webcamera.py:179
-#: ../subproviders/subprov_napiprojektpl.py:224
-#: ../subproviders/subprov_napisy24pl.py:189
-#: ../subproviders/subprov_opensubtitlesorg2.py:274
-#: ../subproviders/subprov_opensubtitlesorg2.py:316
-#: ../subproviders/subprov_subtitlesgr.py:79
-#: ../subproviders/subprov_titlovicom.py:215
 msgid "Next page"
 msgstr "Página seguinte"
 
-#: ../components/iptvconfigmenu.py:108 ../components/iptvconfigmenu.py:174
-#: ../libs/youtubeparser.py:34 ../subproviders/subprov_subscenecom.py:257
-#: ../Web/webParts.py:182 ../Web/webParts.py:185 ../Web/webThreads.py:176
-#: ../Web/webThreads.py:179
 msgid "No"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:2001
-#: ../components/iptvsubdownloader.py:573
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -3249,284 +2240,209 @@ msgstr ""
 "Não existem itens para visualizar. \n"
 "Prima OK para atualizar.\n"
 
-#: ../Web/webSite.py:483
 msgid "No materials waiting in the downloader queue"
 msgstr ""
 
-#: ../hosts/hosttvplayercom.py:251
 msgid "No playable sources found."
 msgstr ""
 
-#: ../hosts/hostkijknl.py:288
 msgid "No valid entitlement found for asset."
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1501
-#: ../components/iptvplayerwidget.py:1735
-#: ../components/iptvplayerwidget.py:2108 ../hosts/hostfilmativa.py:205
 msgid "No valid links available."
 msgstr "Sem Links válidos disponíveis."
 
-#: ../components/iptvconfigmenu.py:71 ../components/iptvconfigmenu.py:227
-#: ../components/iptvextmovieplayer.py:863
-#: ../hosts/host123movieshd_blocked_.py:24 ../hosts/hostakoam_blocked_.py:27
-#: ../hosts/hostbsto_blocked_.py:36 ../hosts/hostcimaclubcom_blocked_.py:25
-#: ../hosts/hostcineto.py:27 ../hosts/hostfilmeonlineto.py:27
-#: ../hosts/hostfilmstreamvkcom.py:26 ../hosts/hosthdsto.py:34
-#: ../hosts/hosthdstreams_blocked_.py:31 ../hosts/hostkinox.py:27
-#: ../hosts/hostkissanimeto.py:31 ../hosts/hostlocalmedia.py:37
-#: ../hosts/hostlosmovies.py:28 ../hosts/hostmrpiracy.py:44
-#: ../hosts/hostplanetstreamingcom.py:21 ../hosts/hostputlockertvto.py:31
-#: ../hosts/hostseriesonline.py:26 ../hosts/hostskstream.py:27
-#: ../hosts/hostsolarmovie.py:29 ../hosts/hostyesmoviesto.py:28
-#: ../hosts/hostyifytv.py:35
 msgid "None"
 msgstr ""
 
-#: ../hosts/hostekstraklasatv.py:172
 msgid "Not Free"
 msgstr ""
 
-#: ../Web/webSite.py:478
 #, fuzzy
 msgid "Nothing has been downloaded yet."
 msgstr "O PIN foi  modificado."
 
-#: ../hosts/hostekstraklasatv.py:244
 msgid "Now playing"
 msgstr "A Reproduzir"
 
-#: ../components/iptvconfigmenu.py:355
 msgid "Number of downloaded files simultaneously"
 msgstr "Número de ficheiros a descarregar simultaneamente"
 
-#: ../components/confighost.py:111 ../components/iptvmultipleinputbox.py:104
-#: ../components/VirtualKeyBoard.py:102
 msgid "OK"
 msgstr ""
 
-#: ../libs/weebtv.py:58
 #, fuzzy
 msgid "Offline channels"
 msgstr "Canais ao Vivo"
 
-#: ../hosts/hostplayrtsiw.py:299
 msgid "Older"
 msgstr ""
 
-#: ../hosts/hosteurosportplayer.py:109
 msgid "On Air"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:43 ../hosts/hostzdfmediathek.py:45
 msgid "One link mode"
 msgstr "Um modo de ligação"
 
-#: ../hosts/hostsvtplayse.py:149 ../hosts/hostsvtplayse.py:357
 msgid "Only available in Sweden."
 msgstr ""
 
-#: ../hosts/hostsvtplayse.py:257
 msgid "Only available in Sweden.\n"
 msgstr ""
 
-#: ../libs/urlparser.py:6872
 msgid ""
 "Only logged in user have access.\n"
 "Please set login data in the host configuration under blue button."
 msgstr ""
 
-#: ../Web/webParts.py:522
 msgid "Only music"
 msgstr ""
 
-#: ../Web/webParts.py:521
 msgid "Only videos"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:454
 #, fuzzy
 msgid "Opening. Please wait..."
 msgstr "Durante o processamento, por favor espere."
 
-#: ../components/iptvplayerwidget.py:884 ../components/iptvsubdownloader.py:259
 msgid "Operation aborted!"
 msgstr "Operação abortada!"
 
-#: ../hosts/hostgamatocom.py:87
 msgid "Order by: "
 msgstr ""
 
-#: ../hosts/hosturllist.py:90 ../hosts/hostxxx.py:5572 ../hosts/hostxxx.py:5594
 #, fuzzy
 msgid "Other"
 msgstr "--Outros--"
 
-#: ../hosts/hostwatchwrestling.py:54
 msgid "Other Sports"
 msgstr ""
 
-#: ../hosts/hostwatchwrestlinguno.py:48 ../hosts/hostwptv.py:55
-#: ../tools/iptvhostgroups.py:51
 #, fuzzy
 msgid "Others"
 msgstr "--Outros--"
 
-#: ../components/iptvconfigmenu.py:68
 #, fuzzy
 msgid "Own model"
 msgstr "Um modo de ligação"
 
-#: ../hosts/hostdancetrippin.py:43
 msgid "PARTIES"
 msgstr ""
 
-#: ../libs/filmonapi.py:94
 msgid "PAY"
 msgstr ""
 
-#: ../hosts/hostcartoonhd_blocked_.py:535
 msgid "PEGI"
 msgstr ""
 
-#: ../iptvdm/iptvdmui.py:470 ../Web/webParts.py:323
 msgid "PENDING"
 msgstr "PENDENTE"
 
-#: ../libs/bilasportpw.py:35 ../libs/mlbstreamtv.py:31
 msgid "PORT"
 msgstr ""
 
-#: ../hosts/hosthdsto.py:70
 msgid "Page accessible to logged in members only."
 msgstr ""
 
-#: ../hosts/hosttvplayercom.py:135
 msgid "Paid"
 msgstr ""
 
-#: ../hosts/hostekstraklasatv.py:42 ../hosts/hostmrpiracy.py:52
-#: ../hosts/hoststreamliveto.py:39 ../libs/ustvnow.py:44
-#: ../libs/videostar.py:47
+msgid "Pannon Rádió"
+msgstr ""
+
+msgid "Pannon TV"
+msgstr ""
+
 #, fuzzy
 msgid "Password"
 msgstr "Palavra-Passe"
 
-#: ../libs/weebtv.py:39
 #, fuzzy
 msgid "Password:"
 msgstr "Palavra-Passe"
 
-#: ../hosts/hosttwitchtv_blocked_.py:115
 msgid "Past premieres"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:575
 #, python-format
 msgid "Paste \"%s\""
 msgstr ""
 
-#: ../hosts/hostxxx.py:279
 #, fuzzy
 msgid "Path to xxxlist.txt :"
 msgstr "Percurso para ytlist.txt, urllist.txt"
 
-#: ../hosts/hostyoutube.py:34
 msgid "Path to ytlist.txt, urllist.txt"
 msgstr "Percurso para ytlist.txt, urllist.txt"
 
-#: ../Web/webParts.py:475
 msgid "Path:"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:117
 msgid "Pathology"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:92
 msgid "Pathology Rounds"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:113
 msgid "Pediatrics"
 msgstr ""
 
-#: ../hosts/hostvimeo_blocked_.py:432
 msgid "People"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:93
 msgid "Physical Exam"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:519
 msgid "Pin has been changed."
 msgstr "O PIN foi  modificado."
 
-#: ../components/iptvconfigmenu.py:509 ../components/iptvplayerwidget.py:1029
-#: ../components/iptvplayerwidget.py:1401 ../plugin.py:139
 msgid "Pin incorrect!"
 msgstr "Pin incorreto!"
 
-#: ../components/iptvconfigmenu.py:306
 msgid "Pin protection for configuration"
 msgstr "Proteção por 'pin' para a configuração"
 
-#: ../components/iptvconfigmenu.py:305 ../hosts/hostxxx.py:278
 msgid "Pin protection for plugin"
 msgstr "Proteção por 'pin' para o plugin"
 
-#: ../hosts/hostlibrestream.py:36
 msgid "Platform"
 msgstr "Plataforma"
 
-#: ../iptvdm/iptvdmui.py:308 ../iptvdm/iptvdmui.py:309
 #, python-format
 msgid "Play with [%s] player"
 msgstr "Reproduzir com o Leitor (%s)"
 
-#: ../hosts/hosttwitchtv_blocked_.py:61
 #, fuzzy
 msgid "PlayStation 4"
 msgstr "Estações"
 
-#: ../hosts/hostekstraklasatv.py:180
 msgid "Playable from "
 msgstr ""
 
-#: ../hosts/hostxxx.py:286
 msgid "Playback UHD :"
 msgstr ""
 
-#: ../hosts/hostnuteczki.py:373
 #, python-format
 msgid "Player %s"
 msgstr ""
 
-#: ../hosts/hostnuteczki.py:365
 #, python-format
 msgid "Player %s: %s"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:314
 #, fuzzy
 msgid "Player Skin"
 msgstr "Reproduzir ficheiro"
 
-#: ../hosts/hostkijknl.py:329
 msgid "Player data parsing error."
 msgstr ""
 
-#: ../hosts/hostrtlmost.py:89 ../hosts/hostyoutube.py:68
 msgid "Playlist"
 msgstr "Lista de Reprodução"
 
-#: ../hosts/hostdailymotion.py:357 ../hosts/hostted.py:82
-#: ../hosts/hostted.py:664 ../hosts/hostvevo.py:415
 msgid "Playlists"
 msgstr "Listas de Reprodução"
 
-#: ../components/recaptcha_mye2i_widget.py:191
 #, python-brace-format
 msgid ""
 "Please Open site:\n"
@@ -3534,1574 +2450,937 @@ msgid ""
 "in a web browser with the MyE2i extension installed"
 msgstr ""
 
-#: ../tools/e2ijs.py:37
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr ""
 
-#: ../hosts/hostfilmezz.py:336 ../hosts/hostserienstreamto.py:412
 msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:316
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
 msgstr ""
 
-#: ../hosts/hostfreediscpl.py:88
 msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
 msgstr ""
 
-#: ../libs/sport365live.py:132
 msgid ""
 "Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
 msgstr ""
 
-#: ../hosts/hostserienstreamto.py:415
 msgid "Please retry later."
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1664
 #, fuzzy, python-format
 msgid "Please set valid %s in the %s configuration."
 msgstr "Configuração de serviços IPTVPlayer"
 
-#: ../hosts/hostfreediscpl.py:86
 #, python-format
 msgid "Please visit \"%s\" and confirm that you are human."
 msgstr ""
 
-#: ../components/captcha_helper.py:62
 #, python-format
 msgid "Please visit %s to learn how to redirect this task to the external device."
 msgstr ""
 
-#: ../iptvdm/iptvbuffui.py:527
 msgid "Please wait - downloading initialization data."
 msgstr ""
 
-#: ../iptvdm/iptvbuffui.py:498
 msgid "Please wait for initialization data."
 msgstr ""
 
-#: ../hosts/hostmediayou.py:29 ../hosts/hosttvjworg.py:30
-#: ../tools/iptvhostgroups.py:39
+#, fuzzy
+msgid "Podcasts"
+msgstr "Transmissões"
+
 msgid "Polish"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:333
 msgid "Polish proxy server url"
 msgstr "Url do Servidor proxy polaco"
 
-#: ../hosts/hostdixmax.py:124 ../hosts/hostfilmativa.py:48
-#: ../hosts/hostfilmativa.py:53 ../hosts/hosthoofootcom.py:40
-#: ../hosts/hostkabarety.py:46 ../hosts/hostourmatchnet.py:44
-#: ../hosts/hostseezsu.py:84 ../hosts/hostseezsu.py:89
-#: ../hosts/hostserienstreamto.py:52 ../hosts/hostsvtplayse.py:73
-#: ../hosts/hosttwitchtv_blocked_.py:120 ../hosts/hostustreamtv.py:36
-#: ../hosts/hostyifytv.py:69
 msgid "Popular"
 msgstr "Popular"
 
-#: ../hosts/hostthewatchseriesto.py:50
 #, fuzzy
 msgid "Popular Episodes"
 msgstr "Popular"
 
-#: ../hosts/hosttwitchtv_blocked_.py:465
 #, fuzzy
 msgid "Popularity: ?"
 msgstr "Popular"
 
-#: ../hosts/hostlaola1tv_blocked_.py:40
 msgid "Portal:"
 msgstr ""
 
-#: ../hosts/hostngolos.py:26
 msgid "Portuguese"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:94
 msgid "Powerpoint Presentation"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:95
 msgid "Practice Management"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:403
 msgid "Prefer hlsld for playlist with alt. media"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:40 ../hosts/hostzdfmediathek.py:42
 msgid "Prefered format"
 msgstr "Formato preferido"
 
-#: ../hosts/hostardmediathek_blocked_.py:41 ../hosts/hostzdfmediathek.py:43
 msgid "Prefered quality"
 msgstr "Qualidade preferida"
 
-#: ../hosts/hosttvplayercom.py:49
 #, fuzzy
 msgid "Preferred bitrate"
 msgstr "Formato preferido"
 
-#: ../hosts/hostbbciplayer_blocked_.py:34 ../hosts/hostbbcsport_blocked_.py:42
-#: ../hosts/hostsvtplayse.py:44
 #, fuzzy
 msgid "Preferred format:"
 msgstr "Formato preferido"
 
-#: ../libs/videostar.py:44
 #, fuzzy
 msgid "Preferred quality"
 msgstr "Qualidade preferida"
 
-#: ../hosts/hostsportdeutschland_blocked_.py:30 ../libs/filmonapi.py:31
-#: ../libs/videostar.py:43
 msgid "Preferred streaming protocol"
 msgstr ""
 
-#: ../libs/weebtv.py:40
 #, fuzzy
 msgid "Preferred video quality:"
 msgstr "Qualidade preferida"
 
-#: ../hosts/hoststreamliveto.py:141
 msgid "Premium"
 msgstr ""
 
-#: ../libs/filmonapi.py:32 ../libs/weebtv.py:36
 msgid "Premium user"
 msgstr ""
 
-#: ../hosts/hostrtlmost.py:88
 msgid "Preview"
 msgstr ""
 
-#: ../hosts/hostourmatchnet.py:46
 msgid "Previous Seasons"
 msgstr ""
 
-#: ../Web/webParts.py:394 ../Web/webParts.py:397 ../Web/webParts.py:399
 msgid "Previous list"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:96
 msgid "Professional Networks"
 msgstr ""
 
-#: ../hosts/hostrtlmost.py:86
 #, fuzzy
 msgid "Program"
 msgstr "Programas A-Z"
 
-#: ../hosts/hostardmediathek_blocked_.py:67 ../hosts/hostzdfmediathek.py:88
-#: ../hosts/hostzdfmediathek.py:103
 msgid "Program A-Z"
 msgstr "Programas A-Z"
 
-#: ../hosts/hostrteieplayer.py:54
 #, fuzzy
 msgid "Programmes"
 msgstr "Programas A-Z"
 
-#: ../hosts/hostgreekdocumentaries3.py:41 ../hosts/hostwptv.py:54
 #, fuzzy
 msgid "Programs"
 msgstr "Programas A-Z"
 
-#: ../hosts/hostsvtplayse.py:79
 #, fuzzy
 msgid "Programs A-Ö"
 msgstr "Programas A-Z"
 
-#: ../iptvdm/iptvdmui.py:316
 msgid "Promote item"
 msgstr "Promover item"
 
-#: ../hosts/hostbbcsport_blocked_.py:189 ../hosts/hosthoofootcom.py:41
 #, fuzzy
 msgid "Promoted"
 msgstr "Jogos promovidos"
 
-#: ../hosts/hostwebstream.py:402
 msgid "Protocol: "
 msgstr ""
 
-#: ../hosts/hosthdfull.py:566
 msgid "Published:"
 msgstr ""
 
-#: ../hosts/hostmovs4ucom.py:57
 #, fuzzy
 msgid "Qualities"
 msgstr "qualidade"
 
-#: ../hosts/hostlibrestream.py:35
 #, fuzzy
 msgid "Quality"
 msgstr "qualidade"
 
-#: ../hosts/hostfilman.py:201 ../hosts/hosthdstreams_blocked_.py:215
 #, fuzzy
 msgid "Quality:"
 msgstr "qualidade"
 
-#: ../libs/canlitvliveio.py:90
 msgid "RADIO"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:266
 msgid "RAM buffer size [MB] for local files"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:265
 msgid "RAM buffer size [MB] for network protocols"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:55 ../hosts/hostwatchwrestlinguno.py:40
 msgid "RAW"
 msgstr ""
 
-#: ../hosts/hostworldfree4u.py:51
 msgid "RECENT"
 msgstr ""
 
-#: ../Web/webParts.py:389
 msgid "REMEMBER: "
 msgstr ""
 
-#: ../hosts/hostidokep.py:86
 msgid "Radar"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:105
 msgid "Radio"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:323
 #, fuzzy
 msgid "Radio iframe file"
 msgstr "Arquivo preto Iframe"
 
-#: ../hosts/hostdrdk.py:43 ../hosts/hostmindigo.py:678
-#: ../hosts/hostmindigtv.py:448
 #, fuzzy
 msgid "Radio stations"
 msgstr "Estações"
 
-#: ../hosts/hostorthobulletscom.py:97
 msgid "Radiology Rounds"
 msgstr ""
 
-#: ../hosts/hostcartoonhd_blocked_.py:552
 #, fuzzy
 msgid "Raiting"
 msgstr "Classificação"
 
-#: ../hosts/hostcartoonhd_blocked_.py:32 ../hosts/hostdailymotion.py:57
-#: ../hosts/hostxrysoise.py:31
 msgid "Random"
 msgstr "Aleatória"
 
-#: ../hosts/hoststreamstat.py:85
 #, fuzzy
 msgid "Random selection"
 msgstr "Coleção"
 
-#: ../components/iptvplayerwidget.py:590
 msgid "Randomize a playlist"
 msgstr "Randomizer uma Lista de Reprodução"
 
-#: ../hosts/hostdailymotion.py:55
 msgid "Ranking"
 msgstr ""
 
-#: ../hosts/hostaltadefinizione01.py:338 ../hosts/hostfilmpertutti.py:271
-#: ../hosts/hostkinox.py:234 ../hosts/hostvidcorncom.py:531
-#: ../libs/youtubeparser.py:35
 msgid "Rating"
 msgstr "Classificação"
 
-#: ../hosts/hostcineto.py:136
 #, fuzzy, python-format
 msgid "Rating %s"
 msgstr "Classificação"
 
-#: ../hosts/hostfaselhdcom.py:136 ../hosts/hostmovizlandcom.py:253
 #, fuzzy
 msgid "Rating:"
 msgstr "Classificação"
 
-#: ../hosts/hostgreekdocumentaries3.py:39 ../hosts/hosttwitchtv_blocked_.py:121
 msgid "Recent"
 msgstr "Recente"
 
-#: ../hosts/hostorthobulletscom.py:114
 msgid "Recon"
 msgstr ""
 
-#: ../Web/webSite.py:72
 msgid "Redirect"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:160
 msgid "Refresh"
 msgstr "Refrescar"
 
-#: ../components/iptvplayerwidget.py:1798
-#: ../components/iptvsubdownloader.py:491
 msgid "Refreshing"
 msgstr "A refrescar"
 
-#: ../hosts/hostyoutube.py:171
 #, fuzzy
 msgid "Release:"
 msgstr "Relevância"
 
-#: ../hosts/hostmovs4ucom.py:58 ../hosts/hostyifytv.py:68
 #, fuzzy
 msgid "Releases"
 msgstr "Relevância"
 
-#: ../hosts/hostaltadefinizione01.py:345
 #, fuzzy
 msgid "Relese"
 msgstr "Relevância"
 
-#: ../libs/youtubeparser.py:35
 msgid "Relevance"
 msgstr "Relevância"
 
-#: ../Web/webParts.py:400
 #, fuzzy
 msgid "Reload list"
 msgstr "Lista de Reprodução"
 
-#: ../components/configextmovieplayer.py:261
 msgid "Remember last watched position"
 msgstr "Lembrar a última posição visualizada"
 
-#: ../hosts/hostlocalmedia.py:609
 #, fuzzy
 msgid "Remove"
 msgstr "Remover ficheiro"
 
-#: ../components/playerselector.py:275 ../components/playerselector.py:823
 #, fuzzy, python-format
 msgid "Remove \"%s\" item"
 msgstr "Remover item"
 
-#: ../components/iptvconfigmenu.py:303
 msgid "Remove disabled services"
 msgstr "Remover serviços inativos"
 
-#: ../iptvdm/iptvdmui.py:314
 msgid "Remove file"
 msgstr "Remover ficheiro"
 
-#: ../components/iptvplayerwidget.py:581
 #, fuzzy
 msgid "Remove from favourites"
 msgstr "Adicionar item aos favorios"
 
-#: ../components/iptvfavouriteswidgets.py:199
-#: ../components/iptvfavouriteswidgets.py:289
 msgid "Remove group"
 msgstr "Remover grupo"
 
-#: ../components/iptvfavouriteswidgets.py:328 ../iptvdm/iptvdmui.py:315
 msgid "Remove item"
 msgstr "Remover item"
 
-#: ../hosts/hostlocalmedia.py:607
 #, fuzzy
 msgid "Rename"
 msgstr "Introduzir nome"
 
-#: ../hosts/hostwatchwrestlinguno.py:38
 msgid "Replay Shows"
 msgstr ""
 
-#: ../Web/webParts.py:68 ../Web/webParts.py:85
 msgid "Reset State"
 msgstr ""
 
-#: ../libs/hcaptcha_2captcha.py:101
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
 "\n"
 msgstr ""
 
-#: ../libs/recaptcha_v2_2captcha.py:89 ../libs/recaptcha_v2_9kw.py:89
-#: ../libs/recaptcha_v3_2captcha.py:89
 #, python-format
 msgid ""
 "Resolving reCaptcha with %s failed!\n"
 "\n"
 msgstr ""
 
-#: ../Web/webParts.py:402
 msgid "Return to hosts list"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:591
 msgid "Reverse a playlist"
 msgstr "Reverter uma Lista de Reprodução"
 
-#: ../hosts/hostmindigo.py:789
 msgid "Romantikus"
 msgstr ""
 
-#: ../hosts/hostmediayou.py:29 ../tools/iptvhostgroups.py:43
 msgid "Russian"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:335
 msgid "Russian proxy server url"
 msgstr "Url do servidor de proxy russo"
 
-#: ../hosts/hostplayrtsiw.py:473
 msgid "SHOWS"
 msgstr ""
 
-#: ../hosts/hostmusicmp3ru.py:361
 msgid "SONGS"
 msgstr ""
 
-#: ../iptvdm/iptvdmui.py:217 ../Web/webParts.py:281
 msgid "STARTED"
 msgstr "INICIADO"
 
-#: ../iptvdm/iptvdmui.py:219 ../Web/webParts.py:277
 msgid "STOPPED"
 msgstr "PARADO"
 
-#: ../components/configbase.py:79 ../components/iptvmultipleinputbox.py:36
-#: ../components/iptvmultipleinputbox.py:103 ../Web/webTools.py:64
 msgid "Save"
 msgstr ""
 
-#: ../components/configbase.py:179 ../components/iptvfavouriteswidgets.py:300
 msgid "Save changes?"
 msgstr ""
 
-#: ../hosts/hosteurosportplayer.py:110
 msgid "Schedule"
 msgstr ""
 
-#: ../tools/iptvhostgroups.py:38
 msgid "Science"
 msgstr ""
 
-#: ../hosts/hostgamatocom.py:102
 msgid "Score at least: "
 msgstr ""
 
-#: ../hosts/host123movieshd_blocked_.py:128 ../hosts/host3player_blocked_.py:61
-#: ../hosts/host3sktv_blocked_.py:88 ../hosts/host9anime.py:30
-#: ../hosts/hostakoam_blocked_.py:125
-#: ../hosts/hostaltadefinizione_blocked_.py:110
-#: ../hosts/hostaltadefinizione01.py:112
-#: ../hosts/hostanimeodcinki_blocked_.py:53
-#: ../hosts/hostappletrailers_blocked_.py:52
-#: ../hosts/hostardmediathek_blocked_.py:70 ../hosts/hostartetv.py:173
-#: ../hosts/hostbajeczkiorg_blocked_.py:51
-#: ../hosts/hostbbciplayer_blocked_.py:62 ../hosts/hostbsto_blocked_.py:89
-#: ../hosts/hostcartoonhd_blocked_.py:84 ../hosts/hostcdapl_blocked_.py:69
-#: ../hosts/hostchristusvincit_blocked_.py:304
-#: ../hosts/hostcimaclubcom_blocked_.py:56 ../hosts/hostcinemay_blocked_.py:51
-#: ../hosts/hostcineto.py:64 ../hosts/hostclassiccinemaonline_blocked_.py:48
-#: ../hosts/hostdailymotion.py:49 ../hosts/hostdancetrippin.py:45
-#: ../hosts/hostdixmax.py:132 ../hosts/hostdokumentalnenet.py:52
-#: ../hosts/hostegybest.py:70 ../hosts/hosteinschalten.py:35
-#: ../hosts/hostekinotv.py:71 ../hosts/hostfaselhdcom.py:45
-#: ../hosts/hostfenixsite.py:74 ../hosts/hostfilma24hdcom.py:40
-#: ../hosts/hostfilma24io.py:89 ../hosts/hostfilman.py:95
-#: ../hosts/hostfilmaoncom.py:94 ../hosts/hostfilmativa.py:43
-#: ../hosts/hostfilmehdnet.py:56 ../hosts/hostfilmeonlineto.py:116
-#: ../hosts/hostfilmezz.py:76 ../hosts/hostfilmovizijastudio.py:58
-#: ../hosts/hostfilmowoclub.py:70 ../hosts/hostfilmpalast.py:51
-#: ../hosts/hostfilmpertutti.py:49 ../hosts/hostfilmstreamvkcom.py:107
-#: ../hosts/hostforjatn.py:51 ../hosts/hostfreediscpl.py:58
-#: ../hosts/hostgamatocom.py:46 ../hosts/hostgamatotvme.py:48
-#: ../hosts/hostgledalica.py:80 ../hosts/hostgovodtv.py:78
-#: ../hosts/hostgreekdocumentaries3.py:44 ../hosts/hostguardaserie.py:30
-#: ../hosts/hosthdfilme.py:40 ../hosts/hosthdfilmetv.py:39
-#: ../hosts/hosthdfull.py:163 ../hosts/hosthdpopcornscom.py:46
-#: ../hosts/hosthdseanspl.py:69 ../hosts/hosthdsto.py:156
-#: ../hosts/hosthdstreams_blocked_.py:75 ../hosts/hosthoofootcom.py:42
-#: ../hosts/hosthorrorycc.py:77 ../hosts/hostinteriatv.py:63
-#: ../hosts/hostkabarety.py:49 ../hosts/hostkijknl.py:63
-#: ../hosts/hostkinoger.py:39 ../hosts/hostkinokiste.py:36
-#: ../hosts/hostkinomoc.py:71 ../hosts/hostkinox.py:98
-#: ../hosts/hostkissanimeto.py:64 ../hosts/hostkisscartoonme.py:50
-#: ../hosts/hostkkiste.py:37 ../hosts/hostkreskoweczki.py:49
-#: ../hosts/hostlaola1tv_blocked_.py:57 ../hosts/hostlibrestream.py:37
-#: ../hosts/hostliveleak.py:52 ../hosts/hostlosmovies.py:63
-#: ../hosts/hostluxveritatis.py:60 ../hosts/hostmaxtvgo.py:65
-#: ../hosts/hostmediasetplay.py:121 ../hosts/hostmediayou.py:76
-#: ../hosts/hostmegakino.py:37 ../hosts/hostmoflixstream.py:41
-#: ../hosts/hostmovie2k.py:38 ../hosts/hostmovie4k.py:37
-#: ../hosts/hostmovienightws.py:39 ../hosts/hostmovizlandcom.py:40
-#: ../hosts/hostmovs4ucom.py:50 ../hosts/hostmrpiracy.py:124
-#: ../hosts/hostmusicmp3ru.py:91 ../hosts/hostninateka.py:57
-#: ../hosts/hostnuteczki.py:96 ../hosts/hostobejrzyjto.py:80
-#: ../hosts/hostogladajto.py:98 ../hosts/hostoipeirates.py:85
-#: ../hosts/hostokgoals.py:46 ../hosts/hostororotv.py:49
-#: ../hosts/hostorthobulletscom.py:74 ../hosts/hostotakufr.py:67
-#: ../hosts/hostourmatchnet.py:48 ../hosts/hostpinkbike.py:47
-#: ../hosts/hostplanetstreamingcom.py:110 ../hosts/hostplaypuls.py:73
-#: ../hosts/hostplayrtsiw.py:96 ../hosts/hostplayzcc.py:66
-#: ../hosts/hostputlockertvto.py:144 ../hosts/hostredbull.py:54
-#: ../hosts/hostrtbfbe.py:107 ../hosts/hostrteieplayer.py:56
-#: ../hosts/hostrtlmost.py:188 ../hosts/hostseezsu.py:73
-#: ../hosts/hostserialeco.py:48 ../hosts/hostserienstreamto.py:53
-#: ../hosts/hostseriesonline.py:142 ../hosts/hostserijeonline.py:62
-#: ../hosts/hostshahiidanimenet.py:51 ../hosts/hostshoutcast.py:53
-#: ../hosts/hostskstream.py:126 ../hosts/hostsolarmovie.py:133
-#: ../hosts/hostspiegeltv_blocked_.py:78
-#: ../hosts/hostsportdeutschland_blocked_.py:57 ../hosts/hoststreamcloud.py:39
-#: ../hosts/hoststreamcomplet.py:38 ../hosts/hoststreamliveto.py:53
-#: ../hosts/hostsvtplayse.py:82 ../hosts/hosttainieskaiseirestv.py:62
-#: ../hosts/hosttantifilmorg.py:48 ../hosts/hostted.py:84
-#: ../hosts/hostthewatchseriesto.py:54 ../hosts/hosttopstreamfilm.py:39
-#: ../hosts/hosttvgrypl.py:61 ../hosts/hosttvproart.py:40
-#: ../hosts/hosttvpvod.py:102 ../hosts/hosttwitchtv_blocked_.py:147
-#: ../hosts/hostuktvplay.py:78 ../hosts/hostustreamtv.py:38
-#: ../hosts/hostvevo.py:102 ../hosts/hostvidcorncom.py:88
-#: ../hosts/hostvimeo_blocked_.py:74 ../hosts/hostvodpl.py:67
-#: ../hosts/hostvumedicom.py:84 ../hosts/hostwatchcartoononline.py:115
-#: ../hosts/hostwatchwrestling.py:61 ../hosts/hostwatchwrestlinguno.py:50
-#: ../hosts/hostwgrane.py:66 ../hosts/hostwolnelekturypl.py:81
-#: ../hosts/hostworldfree4u.py:52 ../hosts/hostwpolscepl.py:45
-#: ../hosts/hostwptv.py:56 ../hosts/hostxrysoise.py:55 ../hosts/hostxxx.py:1166
-#: ../hosts/hostxxx.py:2226 ../hosts/hostxxx.py:2307 ../hosts/hostxxx.py:2382
-#: ../hosts/hostxxx.py:2439 ../hosts/hostxxx.py:2495 ../hosts/hostxxx.py:2552
-#: ../hosts/hostxxx.py:2608 ../hosts/hostxxx.py:2662 ../hosts/hostxxx.py:2725
-#: ../hosts/hostxxx.py:2820 ../hosts/hostxxx.py:2936 ../hosts/hostxxx.py:3044
-#: ../hosts/hostxxx.py:3104 ../hosts/hostxxx.py:3168 ../hosts/hostxxx.py:3265
-#: ../hosts/hostxxx.py:3351 ../hosts/hostxxx.py:3457 ../hosts/hostxxx.py:3622
-#: ../hosts/hostxxx.py:3700 ../hosts/hostxxx.py:3818 ../hosts/hostxxx.py:3906
-#: ../hosts/hostxxx.py:4075 ../hosts/hostxxx.py:4145 ../hosts/hostxxx.py:4254
-#: ../hosts/hostxxx.py:4353 ../hosts/hostxxx.py:4468 ../hosts/hostxxx.py:4536
-#: ../hosts/hostxxx.py:4596 ../hosts/hostxxx.py:4654 ../hosts/hostxxx.py:4761
-#: ../hosts/hostxxx.py:4844 ../hosts/hostxxx.py:4925 ../hosts/hostxxx.py:4997
-#: ../hosts/hostxxx.py:5068 ../hosts/hostxxx.py:5144 ../hosts/hostxxx.py:5208
-#: ../hosts/hostxxx.py:5288 ../hosts/hostxxx.py:5338 ../hosts/hostxxx.py:5408
-#: ../hosts/hostxxx.py:5470 ../hosts/hostxxx.py:5528 ../hosts/hostxxx.py:5633
-#: ../hosts/hostxxx.py:5695 ../hosts/hostxxx.py:5764 ../hosts/hostxxx.py:5816
-#: ../hosts/hostxxx.py:5882 ../hosts/hostxxx.py:5950 ../hosts/hostxxx.py:6023
-#: ../hosts/hostxxx.py:6173 ../hosts/hostxxx.py:6236 ../hosts/hostxxx.py:6301
-#: ../hosts/hostxxx.py:6402 ../hosts/hostxxx.py:6460 ../hosts/hostxxx.py:6550
-#: ../hosts/hostxxx.py:6609 ../hosts/hostxxx.py:6740 ../hosts/hostxxx.py:6808
-#: ../hosts/hostxxx.py:6864 ../hosts/hostxxx.py:6942 ../hosts/hostxxx.py:7153
-#: ../hosts/hostxxx.py:7216 ../hosts/hostxxx.py:7307 ../hosts/hostxxx.py:7372
-#: ../hosts/hostxxx.py:7465 ../hosts/hostxxx.py:7525 ../hosts/hostxxx.py:7584
-#: ../hosts/hostxxx.py:7652 ../hosts/hostxxx.py:7714 ../hosts/hostxxx.py:7785
-#: ../hosts/hostxxx.py:7865 ../hosts/hostxxx.py:7957 ../hosts/hostxxx.py:8048
-#: ../hosts/hostxxx.py:8111 ../hosts/hostxxx.py:8168 ../hosts/hostxxx.py:8268
-#: ../hosts/hostxxx.py:8328 ../hosts/hostxxx.py:8432 ../hosts/hostxxx.py:8527
-#: ../hosts/hostxxx.py:8664 ../hosts/hostxxx.py:8725 ../hosts/hostxxx.py:8860
-#: ../hosts/hostxxx.py:8916 ../hosts/hostxxx.py:8996 ../hosts/hostxxx.py:9066
-#: ../hosts/hostxxx.py:9135 ../hosts/hostxxx.py:9202 ../hosts/hostxxx.py:9282
-#: ../hosts/hostxxx.py:9346 ../hosts/hostxxx.py:9401 ../hosts/hostxxx.py:9459
-#: ../hosts/hostxxx.py:9546 ../hosts/hostxxx.py:9639 ../hosts/hostxxx.py:9743
-#: ../hosts/hostxxx.py:9834 ../hosts/hostxxx.py:10019 ../hosts/hostxxx.py:10104
-#: ../hosts/hostxxx.py:10197 ../hosts/hostxxx.py:10289
-#: ../hosts/hostxxx.py:10362 ../hosts/hostxxx.py:10459
-#: ../hosts/hostxxx.py:10559 ../hosts/hostxxx.py:10651
-#: ../hosts/hostxxx.py:10766 ../hosts/hostxxx.py:10860
-#: ../hosts/hostxxx.py:10947 ../hosts/hostxxx.py:11017
-#: ../hosts/hostxxx.py:11083 ../hosts/hostxxx.py:11156
-#: ../hosts/hostxxx.py:11234 ../hosts/hostxxx.py:11301
-#: ../hosts/hostxxx.py:11373 ../hosts/hostxxx.py:11458
-#: ../hosts/hostxxx.py:11527 ../hosts/hostxxx.py:11623
-#: ../hosts/hostxxx.py:11701 ../hosts/hostxxx.py:11768
-#: ../hosts/hostxxx.py:11831 ../hosts/hostxxx.py:11911
-#: ../hosts/hostxxx.py:12009 ../hosts/hostxxx.py:12079
-#: ../hosts/hostxxx.py:12140 ../hosts/hostxxx.py:12208
-#: ../hosts/hostxxx.py:12275 ../hosts/hostxxx.py:12409
-#: ../hosts/hostxxx.py:12483 ../hosts/hostxxx.py:12560
-#: ../hosts/hostxxx.py:12630 ../hosts/hostxxx.py:12696
-#: ../hosts/hostxxx.py:12767 ../hosts/hostxxx.py:12911
-#: ../hosts/hostxxx.py:13000 ../hosts/hostxxx.py:13076
-#: ../hosts/hostxxx.py:13144 ../hosts/hostxxx.py:13236
-#: ../hosts/hostxxx.py:13334 ../hosts/hostxxx.py:13423
-#: ../hosts/hostxxx.py:13488 ../hosts/hostxxx.py:13575
-#: ../hosts/hostxxx.py:13642 ../hosts/hostxxx.py:13708
-#: ../hosts/hostxxx.py:13848 ../hosts/hostxxx.py:13912
-#: ../hosts/hostxxx.py:13976 ../hosts/hostxxx.py:14041
-#: ../hosts/hostxxx.py:14144 ../hosts/hostxxx.py:14223
-#: ../hosts/hostxxx.py:14318 ../hosts/hostxxx.py:14381
-#: ../hosts/hostxxx.py:14491 ../hosts/hostxxx.py:14590
-#: ../hosts/hostxxx.py:14657 ../hosts/hostxxx.py:14719
-#: ../hosts/hostxxx.py:14832 ../hosts/hostxxx.py:14906
-#: ../hosts/hostxxx.py:14968 ../hosts/hostxxx.py:15124
-#: ../hosts/hostxxx.py:15204 ../hosts/hostxxx.py:15279
-#: ../hosts/hostxxx.py:15350 ../hosts/hostxxx.py:15467
-#: ../hosts/hostxxx.py:15575 ../hosts/hostxxx.py:15642
-#: ../hosts/hostxxx.py:15712 ../hosts/hostxxx.py:15781
-#: ../hosts/hostxxx.py:15846 ../hosts/hostxxx.py:15907
-#: ../hosts/hostxxx.py:15966 ../hosts/hostxxx.py:16028
-#: ../hosts/hostxxx.py:16121 ../hosts/hostxxx.py:16189
-#: ../hosts/hostxxx.py:16283 ../hosts/hostxxx.py:16345
-#: ../hosts/hostxxx.py:16449 ../hosts/hostxxx.py:16566
-#: ../hosts/hostxxx.py:16634 ../hosts/hostxxx.py:16727
-#: ../hosts/hostxxx.py:16794 ../hosts/hostxxx.py:16872
-#: ../hosts/hostxxx.py:16952 ../hosts/hostxxx.py:17030
-#: ../hosts/hostxxx.py:17095 ../hosts/hostxxx.py:17186
-#: ../hosts/hostxxx.py:17273 ../hosts/hostxxx.py:17361
-#: ../hosts/hostyesmoviesto.py:110 ../hosts/hostyifytv.py:74
-#: ../hosts/hostyoutube.py:62 ../hosts/hostzaluknijcc.py:84
-#: ../hosts/hostzdfmediathek.py:92 ../hosts/hostzerioncc.py:81
-#: ../Web/webParts.py:85
 msgid "Search"
 msgstr "Procura"
 
-#: ../subproviders/subprov_opensubtitlesorg2.py:52
 msgid "Search Movies and TV Series"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:473 ../hosts/hostplayrtsiw.py:490
 #, python-format
 msgid "Search for \"%s\", %s, %s %s"
 msgstr ""
 
-#: ../components/e2ivk.py:703 ../hosts/host123movieshd_blocked_.py:129
-#: ../hosts/host3player_blocked_.py:62 ../hosts/host3sktv_blocked_.py:89
-#: ../hosts/host9anime.py:31 ../hosts/hostakoam_blocked_.py:126
-#: ../hosts/hostaltadefinizione_blocked_.py:111
-#: ../hosts/hostaltadefinizione01.py:113
-#: ../hosts/hostanimeodcinki_blocked_.py:54
-#: ../hosts/hostappletrailers_blocked_.py:53
-#: ../hosts/hostardmediathek_blocked_.py:71 ../hosts/hostartetv.py:174
-#: ../hosts/hostbajeczkiorg_blocked_.py:52
-#: ../hosts/hostbbciplayer_blocked_.py:63 ../hosts/hostbsto_blocked_.py:90
-#: ../hosts/hostcartoonhd_blocked_.py:85 ../hosts/hostcdapl_blocked_.py:70
-#: ../hosts/hostchristusvincit_blocked_.py:305
-#: ../hosts/hostcimaclubcom_blocked_.py:57 ../hosts/hostcinemay_blocked_.py:52
-#: ../hosts/hostcineto.py:65 ../hosts/hostclassiccinemaonline_blocked_.py:49
-#: ../hosts/hostdailymotion.py:50 ../hosts/hostdancetrippin.py:46
-#: ../hosts/hostdixmax.py:133 ../hosts/hostdokumentalnenet.py:53
-#: ../hosts/hostegybest.py:71 ../hosts/hosteinschalten.py:36
-#: ../hosts/hostekinotv.py:72 ../hosts/hostfaselhdcom.py:46
-#: ../hosts/hostfenixsite.py:75 ../hosts/hostfilma24hdcom.py:41
-#: ../hosts/hostfilma24io.py:90 ../hosts/hostfilman.py:96
-#: ../hosts/hostfilmaoncom.py:95 ../hosts/hostfilmativa.py:44
-#: ../hosts/hostfilmehdnet.py:57 ../hosts/hostfilmeonlineto.py:117
-#: ../hosts/hostfilmezz.py:77 ../hosts/hostfilmovizijastudio.py:59
-#: ../hosts/hostfilmowoclub.py:71 ../hosts/hostfilmpalast.py:52
-#: ../hosts/hostfilmpertutti.py:50 ../hosts/hostfilmstreamvkcom.py:108
-#: ../hosts/hostforjatn.py:52 ../hosts/hostfreediscpl.py:59
-#: ../hosts/hostgamatocom.py:47 ../hosts/hostgamatotvme.py:49
-#: ../hosts/hostgledalica.py:81 ../hosts/hostgovodtv.py:79
-#: ../hosts/hostgreekdocumentaries3.py:45 ../hosts/hostguardaserie.py:31
-#: ../hosts/hosthdfilme.py:41 ../hosts/hosthdfilmetv.py:40
-#: ../hosts/hosthdfull.py:164 ../hosts/hosthdpopcornscom.py:47
-#: ../hosts/hosthdseanspl.py:70 ../hosts/hosthdsto.py:157
-#: ../hosts/hosthdstreams_blocked_.py:76 ../hosts/hosthoofootcom.py:43
-#: ../hosts/hosthorrorycc.py:78 ../hosts/hostinteriatv.py:64
-#: ../hosts/hostkabarety.py:50 ../hosts/hostkijknl.py:64
-#: ../hosts/hostkinoger.py:40 ../hosts/hostkinokiste.py:37
-#: ../hosts/hostkinomoc.py:72 ../hosts/hostkinox.py:99
-#: ../hosts/hostkissanimeto.py:65 ../hosts/hostkisscartoonme.py:51
-#: ../hosts/hostkkiste.py:38 ../hosts/hostkreskoweczki.py:50
-#: ../hosts/hostlaola1tv_blocked_.py:58 ../hosts/hostlibrestream.py:38
-#: ../hosts/hostliveleak.py:53 ../hosts/hostlosmovies.py:64
-#: ../hosts/hostluxveritatis.py:61 ../hosts/hostmaxtvgo.py:66
-#: ../hosts/hostmediasetplay.py:122 ../hosts/hostmediayou.py:77
-#: ../hosts/hostmegakino.py:38 ../hosts/hostmoflixstream.py:42
-#: ../hosts/hostmovie2k.py:39 ../hosts/hostmovie4k.py:38
-#: ../hosts/hostmovienightws.py:40 ../hosts/hostmovizlandcom.py:41
-#: ../hosts/hostmovs4ucom.py:51 ../hosts/hostmrpiracy.py:125
-#: ../hosts/hostmusicmp3ru.py:92 ../hosts/hostninateka.py:58
-#: ../hosts/hostnuteczki.py:97 ../hosts/hostobejrzyjto.py:81
-#: ../hosts/hostogladajto.py:99 ../hosts/hostoipeirates.py:86
-#: ../hosts/hostokgoals.py:47 ../hosts/hostororotv.py:50
-#: ../hosts/hostorthobulletscom.py:75 ../hosts/hostotakufr.py:68
-#: ../hosts/hostourmatchnet.py:49 ../hosts/hostpinkbike.py:48
-#: ../hosts/hostplanetstreamingcom.py:111 ../hosts/hostplaypuls.py:74
-#: ../hosts/hostplayrtsiw.py:97 ../hosts/hostplayzcc.py:67
-#: ../hosts/hostputlockertvto.py:145 ../hosts/hostredbull.py:55
-#: ../hosts/hostrtbfbe.py:108 ../hosts/hostrteieplayer.py:57
-#: ../hosts/hostrtlmost.py:189 ../hosts/hostseezsu.py:74
-#: ../hosts/hostserialeco.py:49 ../hosts/hostserienstreamto.py:54
-#: ../hosts/hostseriesonline.py:143 ../hosts/hostserijeonline.py:63
-#: ../hosts/hostshahiidanimenet.py:52 ../hosts/hostshoutcast.py:54
-#: ../hosts/hostskstream.py:127 ../hosts/hostsolarmovie.py:134
-#: ../hosts/hostspiegeltv_blocked_.py:79
-#: ../hosts/hostsportdeutschland_blocked_.py:58 ../hosts/hoststreamcloud.py:40
-#: ../hosts/hoststreamcomplet.py:39 ../hosts/hoststreamliveto.py:54
-#: ../hosts/hostsvtplayse.py:83 ../hosts/hosttainieskaiseirestv.py:63
-#: ../hosts/hosttantifilmorg.py:49 ../hosts/hostted.py:85
-#: ../hosts/hostthewatchseriesto.py:55 ../hosts/hosttopstreamfilm.py:40
-#: ../hosts/hosttvgrypl.py:62 ../hosts/hosttvproart.py:41
-#: ../hosts/hosttvpvod.py:103 ../hosts/hosttwitchtv_blocked_.py:148
-#: ../hosts/hostuktvplay.py:79 ../hosts/hostustreamtv.py:39
-#: ../hosts/hostvevo.py:103 ../hosts/hostvidcorncom.py:89
-#: ../hosts/hostvimeo_blocked_.py:75 ../hosts/hostvodpl.py:68
-#: ../hosts/hostvumedicom.py:85 ../hosts/hostwatchcartoononline.py:116
-#: ../hosts/hostwatchwrestling.py:62 ../hosts/hostwatchwrestlinguno.py:51
-#: ../hosts/hostwgrane.py:67 ../hosts/hostwolnelekturypl.py:82
-#: ../hosts/hostworldfree4u.py:53 ../hosts/hostwpolscepl.py:46
-#: ../hosts/hostwptv.py:57 ../hosts/hostxrysoise.py:56 ../hosts/hostxxx.py:1165
-#: ../hosts/hostxxx.py:2225 ../hosts/hostxxx.py:2306 ../hosts/hostxxx.py:2381
-#: ../hosts/hostxxx.py:2438 ../hosts/hostxxx.py:2494 ../hosts/hostxxx.py:2551
-#: ../hosts/hostxxx.py:2607 ../hosts/hostxxx.py:2661 ../hosts/hostxxx.py:2724
-#: ../hosts/hostxxx.py:2819 ../hosts/hostxxx.py:2935 ../hosts/hostxxx.py:3043
-#: ../hosts/hostxxx.py:3103 ../hosts/hostxxx.py:3167 ../hosts/hostxxx.py:3264
-#: ../hosts/hostxxx.py:3350 ../hosts/hostxxx.py:3456 ../hosts/hostxxx.py:3621
-#: ../hosts/hostxxx.py:3699 ../hosts/hostxxx.py:3817 ../hosts/hostxxx.py:3905
-#: ../hosts/hostxxx.py:4074 ../hosts/hostxxx.py:4144 ../hosts/hostxxx.py:4253
-#: ../hosts/hostxxx.py:4352 ../hosts/hostxxx.py:4467 ../hosts/hostxxx.py:4535
-#: ../hosts/hostxxx.py:4595 ../hosts/hostxxx.py:4653 ../hosts/hostxxx.py:4760
-#: ../hosts/hostxxx.py:4843 ../hosts/hostxxx.py:4924 ../hosts/hostxxx.py:4996
-#: ../hosts/hostxxx.py:5067 ../hosts/hostxxx.py:5143 ../hosts/hostxxx.py:5207
-#: ../hosts/hostxxx.py:5287 ../hosts/hostxxx.py:5337 ../hosts/hostxxx.py:5407
-#: ../hosts/hostxxx.py:5469 ../hosts/hostxxx.py:5527 ../hosts/hostxxx.py:5632
-#: ../hosts/hostxxx.py:5694 ../hosts/hostxxx.py:5763 ../hosts/hostxxx.py:5815
-#: ../hosts/hostxxx.py:5881 ../hosts/hostxxx.py:5949 ../hosts/hostxxx.py:6022
-#: ../hosts/hostxxx.py:6172 ../hosts/hostxxx.py:6235 ../hosts/hostxxx.py:6300
-#: ../hosts/hostxxx.py:6401 ../hosts/hostxxx.py:6459 ../hosts/hostxxx.py:6549
-#: ../hosts/hostxxx.py:6608 ../hosts/hostxxx.py:6739 ../hosts/hostxxx.py:6807
-#: ../hosts/hostxxx.py:6863 ../hosts/hostxxx.py:6941 ../hosts/hostxxx.py:7152
-#: ../hosts/hostxxx.py:7215 ../hosts/hostxxx.py:7306 ../hosts/hostxxx.py:7371
-#: ../hosts/hostxxx.py:7464 ../hosts/hostxxx.py:7524 ../hosts/hostxxx.py:7583
-#: ../hosts/hostxxx.py:7651 ../hosts/hostxxx.py:7713 ../hosts/hostxxx.py:7784
-#: ../hosts/hostxxx.py:7864 ../hosts/hostxxx.py:7956 ../hosts/hostxxx.py:8047
-#: ../hosts/hostxxx.py:8110 ../hosts/hostxxx.py:8167 ../hosts/hostxxx.py:8267
-#: ../hosts/hostxxx.py:8327 ../hosts/hostxxx.py:8431 ../hosts/hostxxx.py:8526
-#: ../hosts/hostxxx.py:8663 ../hosts/hostxxx.py:8724 ../hosts/hostxxx.py:8859
-#: ../hosts/hostxxx.py:8915 ../hosts/hostxxx.py:8995 ../hosts/hostxxx.py:9065
-#: ../hosts/hostxxx.py:9134 ../hosts/hostxxx.py:9201 ../hosts/hostxxx.py:9281
-#: ../hosts/hostxxx.py:9345 ../hosts/hostxxx.py:9400 ../hosts/hostxxx.py:9458
-#: ../hosts/hostxxx.py:9545 ../hosts/hostxxx.py:9638 ../hosts/hostxxx.py:9742
-#: ../hosts/hostxxx.py:9833 ../hosts/hostxxx.py:10018 ../hosts/hostxxx.py:10103
-#: ../hosts/hostxxx.py:10196 ../hosts/hostxxx.py:10288
-#: ../hosts/hostxxx.py:10361 ../hosts/hostxxx.py:10458
-#: ../hosts/hostxxx.py:10558 ../hosts/hostxxx.py:10650
-#: ../hosts/hostxxx.py:10765 ../hosts/hostxxx.py:10859
-#: ../hosts/hostxxx.py:10946 ../hosts/hostxxx.py:11016
-#: ../hosts/hostxxx.py:11082 ../hosts/hostxxx.py:11155
-#: ../hosts/hostxxx.py:11233 ../hosts/hostxxx.py:11300
-#: ../hosts/hostxxx.py:11372 ../hosts/hostxxx.py:11457
-#: ../hosts/hostxxx.py:11526 ../hosts/hostxxx.py:11622
-#: ../hosts/hostxxx.py:11700 ../hosts/hostxxx.py:11767
-#: ../hosts/hostxxx.py:11830 ../hosts/hostxxx.py:11910
-#: ../hosts/hostxxx.py:12008 ../hosts/hostxxx.py:12078
-#: ../hosts/hostxxx.py:12139 ../hosts/hostxxx.py:12207
-#: ../hosts/hostxxx.py:12274 ../hosts/hostxxx.py:12408
-#: ../hosts/hostxxx.py:12482 ../hosts/hostxxx.py:12559
-#: ../hosts/hostxxx.py:12629 ../hosts/hostxxx.py:12695
-#: ../hosts/hostxxx.py:12766 ../hosts/hostxxx.py:12910
-#: ../hosts/hostxxx.py:12999 ../hosts/hostxxx.py:13075
-#: ../hosts/hostxxx.py:13143 ../hosts/hostxxx.py:13235
-#: ../hosts/hostxxx.py:13333 ../hosts/hostxxx.py:13422
-#: ../hosts/hostxxx.py:13487 ../hosts/hostxxx.py:13574
-#: ../hosts/hostxxx.py:13641 ../hosts/hostxxx.py:13707
-#: ../hosts/hostxxx.py:13847 ../hosts/hostxxx.py:13911
-#: ../hosts/hostxxx.py:13975 ../hosts/hostxxx.py:14040
-#: ../hosts/hostxxx.py:14143 ../hosts/hostxxx.py:14222
-#: ../hosts/hostxxx.py:14317 ../hosts/hostxxx.py:14380
-#: ../hosts/hostxxx.py:14490 ../hosts/hostxxx.py:14589
-#: ../hosts/hostxxx.py:14656 ../hosts/hostxxx.py:14718
-#: ../hosts/hostxxx.py:14831 ../hosts/hostxxx.py:14905
-#: ../hosts/hostxxx.py:14967 ../hosts/hostxxx.py:15123
-#: ../hosts/hostxxx.py:15203 ../hosts/hostxxx.py:15278
-#: ../hosts/hostxxx.py:15349 ../hosts/hostxxx.py:15466
-#: ../hosts/hostxxx.py:15574 ../hosts/hostxxx.py:15641
-#: ../hosts/hostxxx.py:15711 ../hosts/hostxxx.py:15780
-#: ../hosts/hostxxx.py:15845 ../hosts/hostxxx.py:15906
-#: ../hosts/hostxxx.py:15965 ../hosts/hostxxx.py:16027
-#: ../hosts/hostxxx.py:16120 ../hosts/hostxxx.py:16188
-#: ../hosts/hostxxx.py:16282 ../hosts/hostxxx.py:16344
-#: ../hosts/hostxxx.py:16448 ../hosts/hostxxx.py:16565
-#: ../hosts/hostxxx.py:16633 ../hosts/hostxxx.py:16726
-#: ../hosts/hostxxx.py:16793 ../hosts/hostxxx.py:16871
-#: ../hosts/hostxxx.py:16951 ../hosts/hostxxx.py:17029
-#: ../hosts/hostxxx.py:17094 ../hosts/hostxxx.py:17185
-#: ../hosts/hostxxx.py:17272 ../hosts/hostxxx.py:17360
-#: ../hosts/hostyesmoviesto.py:111 ../hosts/hostyifytv.py:75
-#: ../hosts/hostyoutube.py:64 ../hosts/hostzaluknijcc.py:85
-#: ../hosts/hostzdfmediathek.py:93 ../hosts/hostzerioncc.py:82
 msgid "Search history"
 msgstr "Histórico de pesquisa"
 
-#: ../Web/webTools.py:47
 #, fuzzy
 msgid "Search in "
 msgstr "Procura"
 
-#: ../Web/webParts.py:516
 msgid "Search in all active hosts"
 msgstr ""
 
-#: ../subproviders/subprov_opensubtitlesorg2.py:52
 msgid "Search only in Movies"
 msgstr ""
 
-#: ../subproviders/subprov_opensubtitlesorg2.py:52
 msgid "Search only in TV Series"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1783
 msgid "Search results"
 msgstr "Resultados da Procura"
 
-#: ../components/iptvplayerwidget.py:1846
 msgid "Search type"
 msgstr "Tipo de procura"
 
-#: ../hosts/hostyoutube.py:62
 #, fuzzy
 msgid "Search youtube materials "
 msgstr "Procurar vídeos YouTube."
 
-#: ../Web/webSite.py:189
 #, fuzzy, python-format
 msgid "Searching in %s, please wait (%d)"
 msgstr "Durante o processamento, por favor espere."
 
-#: ../components/iptvsubdownloader.py:685
 #, fuzzy, python-format
 msgid "Searching subtitles for \"%s\""
 msgstr "Selecionar o ficheiro de Legenda"
 
-#: ../Web/webSite.py:187
 #, fuzzy, python-format
 msgid "Searching, please wait (%d)"
 msgstr "Durante o processamento, por favor espere."
 
-#: ../hosts/hostcartoonhd_blocked_.py:239 ../hosts/hostdixmax.py:327
-#: ../hosts/hostgovodtv.py:196 ../hosts/hostguardaserie.py:73
-#: ../subproviders/subprov_napiprojektpl.py:218
 msgid "Season"
 msgstr ""
 
-#: ../hosts/hostserialeco.py:174 ../hosts/hostserialeco.py:207
-#: ../hosts/hostuktvplay.py:185 ../subproviders/subprov_napisy24pl.py:245
-#: ../subproviders/subprov_opensubtitlesorg.py:321
-#: ../subproviders/subprov_opensubtitlesorg3.py:92
-#: ../subproviders/subprov_titlovicom.py:80
 #, python-format
 msgid "Season %s"
 msgstr ""
 
-#: ../hosts/hostdixmax.py:328
 #, python-format
 msgid "Season %s (%s)"
 msgstr ""
 
-#: ../hosts/hostgamatocom.py:203
 #, python-brace-format
 msgid "Season {0}"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:392
 msgid "Second movie player in buffering mode"
 msgstr "Modo de buffering no segundo Leitor de Filmes"
 
-#: ../components/iptvconfigmenu.py:388
 msgid "Second movie player without buffering mode"
 msgstr "Sem Modo de buffering no segundo Leitor de Filmes"
 
-#: ../hosts/hostted.py:131
 msgid "See all events"
 msgstr ""
 
-#: ../hosts/hostted.py:120
 msgid "See all languages"
 msgstr ""
 
-#: ../hosts/hostted.py:114 ../hosts/hostted.py:149
 #, fuzzy
 msgid "See all topics"
 msgstr "todos os tipos"
 
-#: ../Web/webParts.py:454
 #, fuzzy
 msgid "Select"
 msgstr "Selecionar link"
 
-#: ../components/iptvextmovieplayer.py:765
-#: ../components/iptvextmovieplayer.py:781
 #, fuzzy, python-format
 msgid "Select %s"
 msgstr "Selecionar link"
 
-#: ../components/iptvplayerwidget.py:2133 ../iptvdm/iptvdmui.py:343
 msgid "Select action"
 msgstr "Selecionar ação"
 
-#: ../components/iptvextmovieplayer.py:839
 #, fuzzy
 msgid "Select audio track"
 msgstr "Selecionar o ficheiro de Legenda"
 
-#: ../components/iptvconfigmenu.py:464
 #, fuzzy
 msgid "Select directory"
 msgstr "Selecionar ação"
 
-#: ../components/iptvfavouriteswidgets.py:116
 msgid "Select favourite group"
 msgstr "Selecionar o grupo favorito"
 
-#: ../components/playerselector.py:321 ../components/playerselector.py:856
 #, fuzzy
 msgid "Select group"
 msgstr "Selecionar opção"
 
-#: ../components/e2ivk.py:733
 #, fuzzy
 msgid "Select language"
 msgstr "Selecionar link"
 
-#: ../components/iptvplayerwidget.py:1520
 msgid "Select link"
 msgstr "Selecionar link"
 
-#: ../components/iptvplayerwidget.py:736
 msgid "Select movie player"
 msgstr "Selecionar o Leitor de Filmes"
 
-#: ../components/confighost.py:156 ../components/iptvchoicebox.py:49
-#: ../components/iptvchoicebox.py:63 ../components/iptvplayerwidget.py:601
-#: ../components/playerselector.py:278 ../components/playerselector.py:826
 msgid "Select option"
 msgstr "Selecionar opção"
 
-#: ../components/iptvimageselector.py:87
 #, fuzzy
 msgid "Select pictures"
 msgstr "Selecionar serviço"
 
-#: ../components/iptvplayerwidget.py:1281
 msgid "Select service"
 msgstr "Selecionar serviço"
 
-#: ../components/iptvextmovieplayer.py:949
 #, fuzzy
 msgid "Select subtitles file"
 msgstr "Selecionar o ficheiro de Legenda"
 
-#: ../components/iptvsubdownloader.py:441
 #, fuzzy
 msgid "Select subtitles provider:"
 msgstr "Selecionar o ficheiro de Legenda"
 
-#: ../components/iptvsubsimpledownloader.py:246
 #, fuzzy
 msgid "Select subtitles to download"
 msgstr "Selecionar o ficheiro de Legenda"
 
-#: ../components/iptvextmovieplayer.py:899
 msgid "Select subtitles track"
 msgstr "Selecionar o ficheiro de Legenda"
 
-#: ../components/configbase.py:262
 #, fuzzy
 msgid "Select the directory"
 msgstr "Problema com a pasta (%s)."
 
-#: ../components/configbase.py:255
 #, fuzzy
 msgid "Select the file"
 msgstr "Selecionar serviço"
 
-#: ../components/iptvextmovieplayer.py:743
 #, fuzzy
 msgid "Select video option"
 msgstr "Selecionar opção"
 
-#: ../Web/webParts.py:85
 #, fuzzy
 msgid "Selected hosts"
 msgstr "Selecionar opção"
 
-#: ../hosts/hostfilmezz.py:378 ../hosts/hostfreediscpl.py:113
-#: ../hosts/hostserienstreamto.py:525 ../hosts/hoststreamliveto.py:327
-#: ../hosts/hoststreamliveto.py:374 ../libs/recaptcha_v1.py:68
-#: ../libs/urlparser.py:3887
 msgid "Send"
 msgstr ""
 
-#: ../hosts/hostforjatn.py:428
 msgid "Seriale"
 msgstr ""
 
-#: ../hosts/hostfilman.py:91 ../hosts/hostfilmativa.py:366
-#: ../hosts/hostfilmezz.py:71 ../hosts/hostfilmovizijastudio.py:55
-#: ../hosts/hostfilmowoclub.py:66 ../hosts/hostfilmpalast.py:49
-#: ../hosts/hostfilmstreamvkcom.py:105 ../hosts/hostforjatn.py:49
-#: ../hosts/hostgamatocom.py:45 ../hosts/hostgovodtv.py:72
-#: ../hosts/hostguardaserie.py:28 ../hosts/hosthdfilme.py:36
-#: ../hosts/hosthdfilmetv.py:37 ../hosts/hosthdseanspl.py:65
-#: ../hosts/hosthdstreams_blocked_.py:599 ../hosts/hosthorrorycc.py:73
-#: ../hosts/hostkijknl.py:70 ../hosts/hostkinoger.py:37
-#: ../hosts/hostkinokiste.py:33 ../hosts/hostkinomoc.py:67
-#: ../hosts/hostkinox.py:96 ../hosts/hostkkiste.py:33
-#: ../hosts/hostmegakino.py:33 ../hosts/hostmindigo.py:853
-#: ../hosts/hostmovie2k.py:36 ../hosts/hostmovie4k.py:33
-#: ../hosts/hostmovs4ucom.py:46 ../hosts/hostobejrzyjto.py:76
-#: ../hosts/hostogladajto.py:92 ../hosts/hostplanetstreamingcom.py:387
-#: ../hosts/hostplayzcc.py:65 ../hosts/hostseezsu.py:69
-#: ../hosts/hoststreamcloud.py:34 ../hosts/hosttopstreamfilm.py:34
-#: ../hosts/hostvodpl.py:62 ../hosts/hostwptv.py:53
-#: ../hosts/hostzaluknijcc.py:80 ../hosts/hostzerioncc.py:76
-#: ../subproviders/subprov_prijevodi.py:41
 #, fuzzy
 msgid "Series"
 msgstr "Categorias"
 
-#: ../hosts/hostlibrestream.py:34
 msgid "Series TV"
 msgstr ""
 
-#: ../hosts/hostthewatchseriesto.py:49
 msgid "Series list"
 msgstr ""
 
-#: ../hosts/hostcineto.py:409
 msgid "Server return 404 - Not Found."
 msgstr ""
 
-#: ../subproviders/subprov_napisy24pl.py:109
 #, python-format
 msgid ""
 "Service %s requires registration. \n"
 "Please fill your login and password in the %s configuration."
 msgstr ""
 
-#: ../components/confighost.py:146
 #, python-format
 msgid "Service [%s] has no additional settings."
 msgstr "Serviço (%s) não tem definições adicionais."
 
-#: ../components/confighost.py:69 ../components/iptvconfigmenu.py:302
 msgid "Services configuration"
 msgstr "Configuração de serviços"
 
-#: ../hosts/hostiptvplayerinfo.py:55
 msgid "Services management"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:586
 msgid "Set active movie player"
 msgstr "Definir o Leitor de Filmes ativo"
 
-#: ../hosts/hostlocalmedia.py:639
 #, fuzzy
 msgid "Set file name"
 msgstr "Introduzir nome"
 
-#: ../components/iptvconfigmenu.py:308
 msgid "Set pin code"
 msgstr "Definir o código PIN"
 
-#: ../hosts/hostfavourites.py:268
 msgid "Set watched"
 msgstr ""
 
-#: ../Web/webParts.py:85
 msgid "Settings"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:111
+msgid "Shorts"
+msgstr ""
+
 msgid "Shoulder & Elbow"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:293
 msgid "Show IPTVPlayer in extension list"
 msgstr "Exibir o IPTVPlayer na lista de extensões"
 
-#: ../components/iptvconfigmenu.py:294
 msgid "Show IPTVPlayer in main menu"
 msgstr "Exibir o IPTVPlayer no Menu Principal"
 
-#: ../hosts/hostxxx.py:284
 msgid "Show Profiles in ZBIORNIK MINI :"
 msgstr ""
 
-#: ../hosts/hostmusicbox.py:43
 msgid "Show Youtube Api Key warnings"
 msgstr ""
 
-#: ../libs/videostar.py:42 ../libs/weebtv.py:59
 #, fuzzy
 msgid "Show all channels"
 msgstr "Canais polacos"
 
-#: ../hosts/hostxxx.py:285
 msgid "Show changelog :"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:354
 msgid "Show download manager after adding new item"
 msgstr "Exibir o gestor de descargas depois de adicionar um novo serviço"
 
-#: ../hosts/hostlocalmedia.py:47
 msgid "Show file size"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:49
 msgid "Show hiddens catalogs"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:48
 msgid "Show hiddens files"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:321
 #, fuzzy
 msgid "Show iframe during audio playback"
 msgstr "Exibir iframe para o item de áudio"
 
-#: ../hosts/hostartetv.py:30
 msgid "Show only audio in selected language:"
 msgstr ""
 
-#: ../hosts/hostartetv.py:29
 msgid "Show only best quality of streams:"
 msgstr ""
 
-#: ../hosts/hostitvcom.py:61
 msgid "Shows"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:46
 msgid "Simple list"
 msgstr ""
 
-#: ../components/iptvsubsimpledownloader.py:64
 #, fuzzy
 msgid "Simple subtitles downloader"
 msgstr "Cor da sombra das legendas"
 
-#: ../components/iptvsubdownloader.py:579
 msgid "Simplify the title and try again."
 msgstr ""
 
-#: ../components/e2isimpledownloader.py:52
 msgid "Single file downloader"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:311
 msgid "Skin"
 msgstr "Definição da Skin"
 
-#: ../components/configextmovieplayer.py:263
 msgid "Skip video shorter than [min]"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:56 ../hosts/hostwatchwrestlinguno.py:41
 msgid "Smackdown"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:273
 msgid "Software decoding as"
 msgstr "Descodificação de software como"
 
-#: ../components/iptvconfigmenu.py:37
 #, fuzzy
 msgid "Software floating point"
 msgstr "Descodificação de software como"
 
-#: ../components/configextmovieplayer.py:235
 msgid "Some changes will be applied only after movie player restart."
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:443
 msgid "Some settings will be applied only after GUI restart."
 msgstr ""
 
-#: ../hosts/hostfilmtar.py:85
 msgid "Sorozat Kategóriák"
 msgstr ""
 
-#: ../hosts/hostdmdamedia.py:101 ../hosts/hostmozicsillag.py:114
-#: ../hosts/hostnonstopmozi.py:46
 msgid "Sorozatok"
 msgstr ""
 
-#: ../hosts/hosttvplayercom.py:274
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr ""
 
-#: ../components/playerselector.py:153
 msgid "Sort Mode"
 msgstr ""
 
-#: ../hosts/hostxxx.py:281
 msgid "Sort Myfreecams :"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:46
 msgid "Sort alphabetically"
 msgstr ""
 
-#: ../hosts/hostkissanimeto.py:67 ../hosts/hostkisscartoonme.py:52
 msgid "Sort by alphabet"
 msgstr ""
 
-#: ../hosts/hostkissanimeto.py:68 ../hosts/hostkisscartoonme.py:53
 #, fuzzy
 msgid "Sort by popularity"
 msgstr "Mais popular"
 
-#: ../hosts/hostyoutube.py:33
 msgid "Sort by:"
 msgstr "Ordenar por:"
 
-#: ../hosts/hosturllist.py:33
 msgid "Sort the list:"
 msgstr ""
 
-#: ../hosts/hostxxx.py:280
 msgid "Sort xxxlist :"
 msgstr ""
 
-#: ../libs/weebtv.py:55
 #, fuzzy
 msgid "Sorted channels A-Z [live]"
 msgstr "Canais promovidos"
 
-#: ../libs/weebtv.py:57
 msgid "Sorted most viewed channels general [live]"
 msgstr ""
 
-#: ../libs/weebtv.py:56
 msgid "Sorted most viewed channels now [live]"
 msgstr ""
 
-#: ../libs/urlparser.py:5255
 #, python-format
 msgid "Source %s"
 msgstr ""
 
-#: ../hosts/hostekstraklasatv.py:166
 #, fuzzy
 msgid "Source type"
 msgstr "Tipo de procura"
 
-#: ../hosts/hosthdfull.py:34 ../hosts/hostngolos.py:26
 msgid "Spanish"
 msgstr ""
 
-#: ../hosts/hostvumedicom.py:82
 msgid "Specialities"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:110
 msgid "Spine"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:817 ../hosts/hostyoutube.py:199
-#: ../tools/iptvhostgroups.py:35
 msgid "Sport"
 msgstr ""
 
-#: ../libs/weebtv.py:31
 #, fuzzy
 msgid "Standard"
 msgstr "standard"
 
-#: ../hosts/hostardmediathek_blocked_.py:65 ../iptvdm/iptvdmui.py:101
-#: ../Web/webParts.py:279 ../Web/webParts.py:283
 msgid "Start"
 msgstr "Iniciar"
 
-#: ../components/iptvconfigmenu.py:353
 msgid "Start download manager per default"
 msgstr "Iniciar o gestor de descargas por defeito"
 
-#: ../components/configextmovieplayer.py:274
 msgid "Stereo downmix mode for software decoder"
 msgstr "Modo de downmix estéreo para software descodificador"
 
-#: ../iptvdm/iptvdmui.py:100 ../Web/webParts.py:278 ../Web/webParts.py:282
 msgid "Stop"
 msgstr "Parar"
 
-#: ../Web/webParts.py:333
 #, fuzzy
 msgid "Stop download"
 msgstr "Parar a Descarga"
 
-#: ../iptvdm/iptvdmui.py:313
 msgid "Stop downloading"
 msgstr "Parar a Descarga"
 
-#: ../components/iptvextmovieplayer.py:588
 #, fuzzy
 msgid "Stop playback with buffer save"
 msgstr "Leitor de Filmes sem modo buffering"
 
-#: ../iptvdm/iptvbuffui.py:267 ../iptvdm/iptvbuffui.py:297
 #, fuzzy
 msgid "Stop playing?"
 msgstr "A Reproduzir"
 
-#: ../hosts/hostekstraklasatv.py:342
 #, python-format
 msgid "Stream starts from %s"
 msgstr ""
 
-#: ../hosts/hostappletrailers_blocked_.py:108
 msgid "Studio:"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:98
 msgid "Study Plan"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:73
 msgid "Subspecialities"
 msgstr ""
 
-#: ../components/configextmovieplayer.py:300
 msgid "Subtitle background"
 msgstr "Fundo das legendas"
 
-#: ../components/configextmovieplayer.py:311
 msgid "Subtitle border color"
 msgstr "Cor da borda das legendas"
 
-#: ../components/configextmovieplayer.py:309
 msgid "Subtitle border enabled"
 msgstr "Borda das legendas ativada"
 
-#: ../components/configextmovieplayer.py:312
 msgid "Subtitle border width"
 msgstr "Largura da borda das legendas"
 
-#: ../components/configextmovieplayer.py:305
 msgid "Subtitle box height"
 msgstr "Altura da borda das legendas"
 
-#: ../components/configextmovieplayer.py:302
 msgid "Subtitle box position"
 msgstr "Posição da Caixa das legendas"
 
-#: ../components/configextmovieplayer.py:291
 msgid "Subtitle font"
 msgstr "Fonte das Legendas"
 
-#: ../components/configextmovieplayer.py:299
 msgid "Subtitle font color"
 msgstr "Cor da Fonte de Legendas"
 
-#: ../components/configextmovieplayer.py:292
 msgid "Subtitle font size"
 msgstr "Tamanho da fonte nas Legendas"
 
-#: ../components/configextmovieplayer.py:294
-#: ../components/configextmovieplayer.py:297
 msgid "Subtitle line height"
 msgstr "Altura da linha das legendas"
 
-#: ../components/configextmovieplayer.py:290
 msgid "Subtitle line wrapping"
 msgstr "Acondicionamento da linha das legendas"
 
-#: ../components/configextmovieplayer.py:317
 msgid "Subtitle shadow X offset"
 msgstr "Deslocamento X da sombra das legendas"
 
-#: ../components/configextmovieplayer.py:318
 msgid "Subtitle shadow Y offset"
 msgstr "Deslocamento Y da sombra das legendas"
 
-#: ../components/configextmovieplayer.py:316
 msgid "Subtitle shadow color"
 msgstr "Cor da sombra das legendas"
 
-#: ../components/configextmovieplayer.py:314
 msgid "Subtitle shadow enabled"
 msgstr "Sombra das legendas ativada"
 
-#: ../components/configextmovieplayer.py:306
 msgid "Subtitle vertical alignment"
 msgstr "Alinhamento vertical das legendas"
 
-#: ../components/iptvextmovieplayer.py:582
 #, fuzzy
 msgid "Subtitles"
 msgstr "Fonte das Legendas"
 
-#: ../components/iptvsubdownloader.py:543
 #, python-format
 msgid "Subtitles \"%s\" downloaded correctly."
 msgstr ""
 
-#: ../components/iptvsubsimpledownloader.py:194
 msgid "Subtitles conversion to UTF-8 failed."
 msgstr ""
 
-#: ../components/iptvsubsimpledownloader.py:162
 #, python-format
 msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
 msgstr ""
 
-#: ../components/iptvsubsimpledownloader.py:221
 #, fuzzy, python-format
 msgid "Subtitles for: %s"
 msgstr "Tamanho da fonte nas Legendas"
 
-#: ../hosts/hostonlinestream.py:113
 msgid "Sugárzó rádiók listázása"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:99
 msgid "Surgical Approaches"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:100
 msgid "Surgical Cases"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:101
 msgid "Surgical Complications"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:102
 msgid "Surgical Techniques"
 msgstr ""
 
-#: ../tools/iptvhostgroups.py:49
 msgid "Swedish"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:891
 msgid "Synchronize"
 msgstr "Sincronizar"
 
-#: ../components/iptvconfigmenu.py:68
 msgid "System"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:801
+msgid "Szabadkai Magyar Rádió"
+msgstr ""
+
 msgid "Színház"
 msgstr ""
 
-#: ../hosts/hostxxx.py:20496
 msgid "THIS IS A PRIVATE VIDEO."
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:51
 msgid "TNA"
 msgstr ""
 
-#: ../hosts/hostnuteczki.py:94
 msgid "TOP 10"
 msgstr ""
 
-#: ../hosts/hostforjatn.py:212 ../hosts/hostgamatotvme.py:228
 msgid "TRAILER"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:105 ../hosts/hostredbull.py:51
-#: ../libs/canlitvliveio.py:89
 msgid "TV"
 msgstr ""
 
-#: ../hosts/hosthdstreams_blocked_.py:73
 msgid "TV SERIES"
 msgstr ""
 
-#: ../hosts/hostfilma24hdcom.py:39 ../hosts/hostmovienightws.py:38
 msgid "TV Series"
 msgstr ""
 
-#: ../hosts/hostmrpiracy.py:744
 msgid "TV Show"
 msgstr ""
 
-#: ../hosts/hostdrdk.py:42 ../hosts/hostmindigo.py:677
-#: ../hosts/hostmindigtv.py:447
 #, fuzzy
 msgid "TV channels"
 msgstr "Canais"
 
-#: ../hosts/hostegybest.py:69 ../hosts/hostfilmativa.py:42
-#: ../hosts/hostgreekdocumentaries3.py:43
 msgid "TV series"
 msgstr ""
 
-#: ../hosts/hostvidcorncom.py:516
 msgid "TV status"
 msgstr ""
 
-#: ../hosts/hostfilmeonlineto.py:115
 msgid "TV-Series"
 msgstr ""
 
-#: ../hosts/hostonlinestream.py:115
 msgid "TV-k listázása"
 msgstr ""
 
-#: ../hosts/hostted.py:81 ../hosts/hostted.py:383 ../hosts/hostted.py:663
 msgid "Talks"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:103
 msgid "Techniques"
 msgstr ""
 
-#: ../hosts/hosturllist.py:32
 msgid "Text files ytlist and urllist are in:"
 msgstr ""
 
-#: ../tools/e2ijs.py:36
 #, python-format
 msgid "The %s utility is necessary here but it was not detected."
 msgstr ""
 
-#: ../subproviders/subprov_youtubecom.py:52
 msgid "The YouTube video ID is invalid."
 msgstr ""
 
-#: ../hosts/hostlaola1tv_blocked_.py:28
 #, fuzzy
 msgid "The best"
 msgstr "os melhores"
 
-#: ../hosts/hostiptvplayerinfo.py:30
 msgid "The color of the current version"
 msgstr ""
 
-#: ../hosts/hostfavourites.py:36
 msgid "The color of the viewed item"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:397
 msgid "The default aspect ratio for the external player"
 msgstr ""
 
-#: ../hosts/hostdixmax.py:475 ../hosts/hostmaxtvgo.py:132
-#: ../hosts/hostmindigo.py:1071 ../hosts/hostorthobulletscom.py:210
-#: ../hosts/hostrtlmost.py:429 ../hosts/hostvumedicom.py:361
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
 "Please fill your login and password in the host configuration. Available under blue button."
 msgstr ""
 
-#: ../hosts/hostekstraklasatv.py:100 ../hosts/hosteurosportplayer.py:524
 #, python-format
 msgid ""
 "The host %s requires subscription.\n"
 "Please fill your login and password in the host configuration - available under blue button."
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:400
 msgid "The number of items in the search history"
 msgstr "O número de itens no histórico de procura"
 
-#: ../iptvdm/iptvbuffui.py:289
 #, python-format
 msgid ""
 "The playback buffer has been moved to the download manager.\n"
@@ -5109,1268 +3388,839 @@ msgid ""
 "\"%s\""
 msgstr ""
 
-#: ../tools/iptvfavourites.py:164
 msgid "The same item already exists in this group."
 msgstr "O mesmo item já existe neste grupo"
 
-#: ../hosts/hostlaola1tv_blocked_.py:28
 #, fuzzy
 msgid "The worst"
 msgstr "Os piores"
 
-#: ../components/iptvfavouriteswidgets.py:118
 #, fuzzy
 msgid "There are no other favourite groups"
 msgstr "Não existem grupos favoritos"
 
-#: ../components/iptvplayerwidget.py:1669
 #, fuzzy, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr "Não existe espaço suficiente no drive (%s)."
 
-#: ../components/iptvplayerwidget.py:1351
 #, python-format
 msgid "There is no free space on the drive [%s]."
 msgstr "Não existe espaço suficiente no drive (%s)."
 
-#: ../components/iptvplayerwidget.py:1215
 #, fuzzy
 msgid "There is no hosts in this group."
 msgstr "Não existem grupos favoritos"
 
-#: ../tools/iptvhostgroups.py:87
 #, fuzzy
 msgid "This host has been added already to this group."
 msgstr "O mesmo item já existe neste grupo"
 
-#: ../hosts/hostxxx.py:22292 ../hosts/hostxxx.py:22301
-#: ../hosts/hostxxx.py:22331 ../hosts/hostxxx.py:22342
 msgid "This model is offline."
 msgstr ""
 
-#: ../hosts/hostxxx.py:22318
 msgid "This room is offline. Try again later!"
 msgstr ""
 
-#: ../hosts/hostxxx.py:22281
 msgid "This show is private. Try again later!"
 msgstr ""
 
-#: ../hosts/hostseriesonline.py:90
 msgid "This site is protected with Google reCaptcha v2."
 msgstr ""
 
-#: ../hosts/hostxxx.py:20449 ../hosts/hostxxx.py:20463
-#: ../hosts/hostxxx.py:20479
 msgid "This video has been deleted."
 msgstr ""
 
-#: ../hosts/hostxxx.py:20429
 msgid "This video is a private video."
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1675
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr ""
 
-#: ../Web/webParts.py:471
 msgid "Title:"
 msgstr ""
 
-#: ../libs/urlparser.py:2312
 msgid ""
 "To watch videos from http://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 
-#: ../hosts/hosteurosportplayer.py:421
 msgid "Today"
 msgstr ""
 
-#: ../hosts/hostfilmpalast.py:56 ../hosts/hostseezsu.py:85
-#: ../hosts/hostseezsu.py:90
 msgid "Top"
 msgstr "Cima"
 
-#: ../hosts/hostyifytv.py:70
 msgid "Top +250"
 msgstr ""
 
-#: ../hosts/hostfilmovizijastudio.py:54
 #, fuzzy
 msgid "Top Movies"
 msgstr "Filme"
 
-#: ../hosts/hostserijeonline.py:59
 #, fuzzy
 msgid "Top Videos"
 msgstr "Vídeos"
 
-#: ../hosts/hostmediasetplay.py:119
 msgid "Top day"
 msgstr ""
 
-#: ../hosts/hostfilmezz.py:72
 msgid "Top movies"
 msgstr ""
 
-#: ../hosts/hostcartoonhd_blocked_.py:32 ../hosts/hostxrysoise.py:31
 msgid "Top rated"
 msgstr ""
 
-#: ../hosts/hostfilmezz.py:73
 msgid "Top series"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:57 ../hosts/hostwatchwrestlinguno.py:42
 msgid "Total Divas"
 msgstr ""
 
-#: ../hosts/hostlocalmedia.py:428 ../hosts/hostlocalmedia.py:446
 msgid "Total size: "
 msgstr ""
 
-#: ../hosts/hostegybest.py:222 ../hosts/hostfenixsite.py:289
-#: ../hosts/hostgamatocom.py:268 ../hosts/hostmrpiracy.py:438
-#: ../hosts/hostserienstreamto.py:222 ../hosts/hostshahiidanimenet.py:215
 msgid "Trailer"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:72 ../components/iptvconfigmenu.py:212
 #, fuzzy
 msgid "Transparent"
 msgstr "transparente"
 
-#: ../hosts/hostorthobulletscom.py:109
 msgid "Trauma"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:104
 msgid "Treatment Consult"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:46
 msgid "Tree list"
 msgstr ""
 
-#: ../hosts/hostdailymotion.py:56 ../hosts/hostegybest.py:65
-#: ../hosts/hostourmatchnet.py:43 ../hosts/hosttwitchtv_blocked_.py:123
-#: ../hosts/hostyoutube.py:63 ../hosts/hostyoutube.py:175
 #, fuzzy
 msgid "Trending"
 msgstr "Pendentes"
 
-#: ../hosts/hosttvplayercom.py:53
 msgid "Try to bypass DRM (it may be illegal)"
 msgstr ""
 
-#: ../components/iptvextmovieplayer.py:1779
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr ""
 
-#: ../hosts/hostwebstream.py:98
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
 msgstr ""
 
-#: ../hosts/hostiptvplayerinfo.py:52
 msgid "Tutorials"
 msgstr ""
 
-#: ../components/ihost.py:828 ../hosts/host123movieshd_blocked_.py:411
-#: ../hosts/host3player_blocked_.py:442 ../hosts/host3sktv_blocked_.py:326
-#: ../hosts/host9anime.py:150 ../hosts/hostakoam_blocked_.py:481
-#: ../hosts/hostaltadefinizione_blocked_.py:426
-#: ../hosts/hostaltadefinizione01.py:390
-#: ../hosts/hostanimeodcinki_blocked_.py:416
-#: ../hosts/hostappletrailers_blocked_.py:215
-#: ../hosts/hostardmediathek_blocked_.py:510 ../hosts/hostartetv.py:384
-#: ../hosts/hostbajeczkiorg_blocked_.py:255
-#: ../hosts/hostbbciplayer_blocked_.py:651 ../hosts/hostbsto_blocked_.py:420
-#: ../hosts/hostcartoonhd_blocked_.py:661 ../hosts/hostcdapl_blocked_.py:588
-#: ../hosts/hostchomikuj_blocked_.py:412
-#: ../hosts/hostchristusvincit_blocked_.py:518
-#: ../hosts/hostcimaclubcom_blocked_.py:514
-#: ../hosts/hostcinemay_blocked_.py:420 ../hosts/hostcineto.py:520
-#: ../hosts/hostclassiccinemaonline_blocked_.py:316
-#: ../hosts/hostdailymotion.py:339 ../hosts/hostdancetrippin.py:368
-#: ../hosts/hostdixmax.py:545 ../hosts/hostdmdamedia.py:271
-#: ../hosts/hostdokumentalnenet.py:202 ../hosts/hostdrdk.py:178
-#: ../hosts/hostegybest.py:549 ../hosts/hosteinschalten.py:151
-#: ../hosts/hostekinotv.py:605 ../hosts/hosteskago.py:446
-#: ../hosts/hosteurosportplayer.py:725 ../hosts/hostfaselhdcom.py:406
-#: ../hosts/hostfenixsite.py:394 ../hosts/hostfilma24hdcom.py:283
-#: ../hosts/hostfilma24io.py:299 ../hosts/hostfilman.py:425
-#: ../hosts/hostfilmaoncom.py:470 ../hosts/hostfilmativa.py:324
-#: ../hosts/hostfilmehdnet.py:389 ../hosts/hostfilmeonlineto.py:530
-#: ../hosts/hostfilmezz.py:569 ../hosts/hostfilmovizijastudio.py:555
-#: ../hosts/hostfilmowoclub.py:362 ../hosts/hostfilmpalast.py:447
-#: ../hosts/hostfilmpapa.py:169 ../hosts/hostfilmpertutti.py:323
-#: ../hosts/hostfilmstreamvkcom.py:334 ../hosts/hostfilmtar.py:267
-#: ../hosts/hostfilmvilag.py:218 ../hosts/hostforjatn.py:410
-#: ../hosts/hostfreediscpl.py:523 ../hosts/hostgamatocom.py:399
-#: ../hosts/hostgamatotvme.py:515 ../hosts/hostgledalica.py:563
-#: ../hosts/hostgovodtv.py:329 ../hosts/hostgreekdocumentaries3.py:258
-#: ../hosts/hostguardaserie.py:167 ../hosts/hosthdfilme.py:226
-#: ../hosts/hosthdfilmetv.py:198 ../hosts/hosthdfull.py:704
-#: ../hosts/hosthdpopcornscom.py:406 ../hosts/hosthdseanspl.py:358
-#: ../hosts/hosthdsto.py:596 ../hosts/hosthdstreams_blocked_.py:584
-#: ../hosts/hosthoofootcom.py:329 ../hosts/hosthorrorycc.py:347
-#: ../hosts/hostinteriatv.py:294 ../hosts/hostkabarety.py:338
-#: ../hosts/hostkijknl.py:385 ../hosts/hostkinoger.py:207
-#: ../hosts/hostkinokiste.py:186 ../hosts/hostkinomoc.py:358
-#: ../hosts/hostkinox.py:677 ../hosts/hostkissanimeto.py:565
-#: ../hosts/hostkisscartoonme.py:473 ../hosts/hostkkiste.py:194
-#: ../hosts/hostkreskoweczki.py:296 ../hosts/hostlaola1tv_blocked_.py:452
-#: ../hosts/hostlibrestream.py:303 ../hosts/hostliveleak.py:202
-#: ../hosts/hostlosmovies.py:511 ../hosts/hostluxveritatis.py:389
-#: ../hosts/hostm4sport.py:461 ../hosts/hostmaxtvgo.py:335
-#: ../hosts/hostmediasetplay.py:608 ../hosts/hostmediayou.py:220
-#: ../hosts/hostmegakino.py:184 ../hosts/hostmoflixstream.py:226
-#: ../hosts/hostmovie2k.py:209 ../hosts/hostmovie4k.py:193
-#: ../hosts/hostmovienightws.py:335 ../hosts/hostmovizlandcom.py:311
-#: ../hosts/hostmovs4ucom.py:547 ../hosts/hostmozicsillag.py:343
-#: ../hosts/hostmrpiracy.py:729 ../hosts/hostmusicmp3ru.py:347
-#: ../hosts/hostngolos.py:413 ../hosts/hostninateka.py:248
-#: ../hosts/hostnonstopmozi.py:235 ../hosts/hostnuteczki.py:485
-#: ../hosts/hostobejrzyjto.py:356 ../hosts/hostogladajto.py:369
-#: ../hosts/hostoipeirates.py:450 ../hosts/hostokgoals.py:262
-#: ../hosts/hostonlinestream.py:247 ../hosts/hostororotv.py:241
-#: ../hosts/hostorthobulletscom.py:306 ../hosts/hostotakufr.py:327
-#: ../hosts/hostourmatchnet.py:405 ../hosts/hostpinkbike.py:207
-#: ../hosts/hostplanetstreamingcom.py:372 ../hosts/hostplaypuls.py:297
-#: ../hosts/hostplayrtsiw.py:680 ../hosts/hostplayzcc.py:285
-#: ../hosts/hostputlockertvto.py:602 ../hosts/hostredbull.py:275
-#: ../hosts/hostrtbfbe.py:734 ../hosts/hostrteieplayer.py:379
-#: ../hosts/hostrtlmost.py:523 ../hosts/hostseezsu.py:286
-#: ../hosts/hostserialeco.py:340 ../hosts/hostserienstreamto.py:613
-#: ../hosts/hostseriesonline.py:528 ../hosts/hostserijeonline.py:372
-#: ../hosts/hostshahiidanimenet.py:391 ../hosts/hostshoutcast.py:207
-#: ../hosts/hostskstream.py:474 ../hosts/hostsolarmovie.py:595
-#: ../hosts/hostspiegeltv_blocked_.py:523
-#: ../hosts/hostsportdeutschland_blocked_.py:234
-#: ../hosts/hoststreamcloud.py:218 ../hosts/hoststreamcomplet.py:275
-#: ../hosts/hoststreamliveto.py:453 ../hosts/hoststreamstat.py:160
-#: ../hosts/hostsvtplayse.py:596 ../hosts/hosttainieskaiseirestv.py:419
-#: ../hosts/hosttantifilmorg.py:511 ../hosts/hostted.py:649
-#: ../hosts/hostthewatchseriesto.py:355 ../hosts/hosttopstreamfilm.py:228
-#: ../hosts/hosttv2play.py:284 ../hosts/hosttvgrypl.py:243
-#: ../hosts/hosttvplayercom.py:417 ../hosts/hosttvproart.py:171
-#: ../hosts/hosttvpvod.py:1032 ../hosts/hosttwitchtv_blocked_.py:627
-#: ../hosts/hostuktvplay.py:306 ../hosts/hostustreamtv.py:225
-#: ../hosts/hostvevo.py:476 ../hosts/hostvidcorncom.py:668
-#: ../hosts/hostvimeo_blocked_.py:411 ../hosts/hostvodpl.py:466
-#: ../hosts/hostvumedicom.py:442 ../hosts/hostwatchcartoononline.py:354
-#: ../hosts/hostwatchwrestling.py:300 ../hosts/hostwatchwrestlinguno.py:296
-#: ../hosts/hostwebhuplayer.py:296 ../hosts/hostwgrane.py:234
-#: ../hosts/hostwofvideo.py:217 ../hosts/hostwolnelekturypl.py:282
-#: ../hosts/hostworldfree4u.py:299 ../hosts/hostwpolscepl.py:318
-#: ../hosts/hostwptv.py:333 ../hosts/hostxrysoise.py:389
-#: ../hosts/hostyesmoviesto.py:547 ../hosts/hostyifytv.py:610
-#: ../hosts/hostyoutube.py:321 ../hosts/hostzaluknijcc.py:356
-#: ../hosts/hostzdfmediathek.py:574 ../hosts/hostzerioncc.py:357
 msgid "Type: "
 msgstr "Tipo:"
 
-#: ../hosts/hostshoutcast.py:144
 #, fuzzy, python-format
 msgid "Type: %s"
 msgstr "Tipo:"
 
-#: ../hosts/hostidokep.py:89
 msgid "Térképek"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:777
 msgid "Tévéfilmek és sorozatok"
 msgstr ""
 
-#: ../hosts/hostwatchwrestlinguno.py:45
 msgid "UFC"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:336
 msgid "Ukrainian proxy server url"
 msgstr "Url do servidor de proxy ucraniano"
 
-#: ../hosts/hostlocalmedia.py:603
 msgid "Umount iso file"
 msgstr ""
 
-#: ../hosts/hostkissanimeto.py:146
 msgid "Unknow data in the captcha item!"
 msgstr ""
 
-#: ../hosts/hostkinox.py:234 ../hosts/hostkinox.py:421
-#: ../hosts/hostserienstreamto.py:345
 msgid "Unknown"
 msgstr "Desconhecido"
 
-#: ../hosts/hostkissanimeto.py:111
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
 msgstr ""
 
-#: ../libs/videostar.py:121
 #, fuzzy
 msgid "Unknown error."
 msgstr "Desconhecido"
 
-#: ../components/isubprovider.py:458
 #, python-format
 msgid "Unknown file extension \"%s\"."
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1577
 #, python-format
 msgid "Unknown protocol [%s]"
 msgstr "Protocolo desconhecido (%s)"
 
-#: ../hosts/hostrtbfbe.py:609
 msgid "Unknown server response."
 msgstr ""
 
-#: ../subproviders/subprov_napiprojektpl.py:321
 #, python-format
 msgid "Unknown subtitle parser for format \"%s\"."
 msgstr ""
 
-#: ../components/isubprovider.py:563
 #, python-format
 msgid "Unrar error code[%s]."
 msgstr ""
 
-#: ../hosts/hostfavourites.py:266
 msgid "Unset watched"
 msgstr ""
 
-#: ../components/isubprovider.py:540 ../subproviders/subprov_napisy24pl.py:350
 #, python-format
 msgid "Unzip error code[%s]."
 msgstr ""
 
-#: ../hosts/hostseezsu.py:91
 msgid "Upcoming"
 msgstr ""
 
-#: ../hosts/hostxxx.py:2187
 msgid "Update completed successfully. For the moment, the system will reboot."
 msgstr ""
 
-#: ../libs/youtubeparser.py:35
 msgid "Upload date"
 msgstr "Data de envio"
 
-#: ../hosts/hosttwitchtv_blocked_.py:118
 #, fuzzy
 msgid "Uploads"
 msgstr "Data de envio"
 
-#: ../hosts/hosturllist.py:40
 #, fuzzy
 msgid "Urllists player"
 msgstr "Reproduzir com o Leitor (%s)"
 
-#: ../hosts/hostwebstream.py:99
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr ""
 
-#: ../hosts/hostlaola1tv_blocked_.py:39
 #, fuzzy
 msgid "Use default quality:"
 msgstr "Usar a qualidade de vídeo padrão:"
 
-#: ../hosts/hosttvjworg.py:45
 #, fuzzy
 msgid "Use default video quality"
 msgstr "Usar a qualidade de vídeo padrão:"
 
-#: ../hosts/hostbbciplayer_blocked_.py:33 ../hosts/hostbbcsport_blocked_.py:41
-#: ../hosts/hostsvtplayse.py:43 ../hosts/hostvevo.py:31
-#: ../hosts/hostyoutube.py:37
 msgid "Use default video quality:"
 msgstr "Usar a qualidade de vídeo padrão:"
 
-#: ../hosts/hostbsto_blocked_.py:43 ../hosts/hostmrpiracy.py:54
 #, fuzzy
 msgid "Use links cache"
 msgstr "Links do utilizador"
 
-#: ../hosts/hosttvplayercom.py:50
 #, fuzzy
 msgid "Use preferred bitrate"
 msgstr "Formato preferido"
 
-#: ../libs/videostar.py:45
 #, fuzzy
 msgid "Use preferred quality"
 msgstr "Qualidade preferida"
 
-#: ../hosts/host123movieshd_blocked_.py:32 ../hosts/hostakoam_blocked_.py:34
-#: ../hosts/hostcimaclubcom_blocked_.py:32 ../hosts/hostfilmeonlineto.py:35
-#: ../hosts/hostfilmstreamvkcom.py:34 ../hosts/hosthdsto.py:44
-#: ../hosts/hostkinox.py:35 ../hosts/hostkissanimeto.py:39
-#: ../hosts/hostlosmovies.py:35 ../hosts/hostplanetstreamingcom.py:29
-#: ../hosts/hostputlockertvto.py:39 ../hosts/hostseriesonline.py:34
-#: ../hosts/hostskstream.py:35 ../hosts/hostsolarmovie.py:37
-#: ../hosts/hostyesmoviesto.py:36 ../hosts/hostyifytv.py:42
 #, fuzzy
 msgid "Use proxy server:"
 msgstr "Url do Servidor proxy polaco"
 
-#: ../components/configextmovieplayer.py:267
-#: ../components/configextmovieplayer.py:268
-#: ../components/configextmovieplayer.py:269
-#: ../components/configextmovieplayer.py:270
-#: ../components/configextmovieplayer.py:271
-#: ../components/configextmovieplayer.py:272
 #, fuzzy, python-format
 msgid "Use software decoder for the %s"
 msgstr "O Leitor externo usa sotware de descodificação AAC"
 
-#: ../components/iptvconfigmenu.py:372
 msgid "Use subtitles parser extension if available"
 msgstr "Usar extensões de análise de legendas se disponível"
 
-#: ../components/iptvconfigmenu.py:299
 msgid "Use the PyCurl for HTTP(S) requests"
 msgstr ""
 
-#: ../hosts/hostthewatchseriesto.py:30
 msgid "Use web proxy gateway"
 msgstr ""
 
-#: ../hosts/hostbbciplayer_blocked_.py:35 ../hosts/hostbbcsport_blocked_.py:34
 msgid "Use web-proxy (it may be illegal):"
 msgstr ""
 
-#: ../hosts/host3player_blocked_.py:31 ../hosts/hostplayrtsiw.py:32
 msgid "Use web-proxy for VODs (it may be illegal):"
 msgstr ""
 
-#: ../tools/iptvhostgroups.py:31
 #, fuzzy
 msgid "User defined"
 msgstr "Links do utilizador"
 
-#: ../hosts/hosturllist.py:55
 #, fuzzy
 msgid "User files"
 msgstr "Links do utilizador"
 
-#: ../hosts/hostyoutube.py:61
 msgid "User links"
 msgstr "Links do utilizador"
 
-#: ../hosts/hostyoutube.py:61
 msgid "User links stored in the ytlist.txt file."
 msgstr "Links do utilizador guardados no ficheiro ytlist.txt."
 
-#: ../hosts/hostekstraklasatv.py:41
 #, fuzzy
 msgid "Username"
 msgstr "Introduzir nome"
 
-#: ../hosts/hosteurosportplayer.py:503
 #, python-format
 msgid "Username in settings is different from %s"
 msgstr ""
 
-#: ../libs/weebtv.py:38
 #, fuzzy
 msgid "Username:"
 msgstr "Introduzir nome"
 
-#: ../components/confighost.py:216
 msgid ""
 "Using this host in your country can be illegal.\n"
 "Do you want to continue at your own risk?"
 msgstr ""
 
-#: ../iptvdm/ffmpegdownloader.py:75
 #, python-format
 msgid "Utility \"%s\" can not be found."
 msgstr ""
 
-#: ../hosts/hostdancetrippin.py:44
 msgid "VENUES"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:327
 msgid "VFD set current title:"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:66 ../hosts/hostwatchwrestling.py:315
-#: ../hosts/hostwatchwrestlinguno.py:55 ../hosts/hostwatchwrestlinguno.py:311
 msgid "VIEWS"
 msgstr ""
 
-#: ../components/hcaptcha_v2widget.py:98
-#: ../components/iptvmultipleinputbox.py:109
-#: ../components/recaptcha_v2widget.py:92
 msgid "Verify"
 msgstr ""
 
-#: ../hosts/hostdancetrippin.py:249 ../hosts/hostrtbfbe.py:748
-#: ../hosts/hostrtlmost.py:87 ../hosts/hostyoutube.py:66
 msgid "Video"
 msgstr " Vídeo"
 
-#: ../hosts/hostlaola1tv_blocked_.py:38
 #, fuzzy
 msgid "Video default quality:"
 msgstr "Usar a qualidade de vídeo padrão:"
 
-#: ../hosts/hostyoutube.py:35
 msgid "Video format:"
 msgstr "Formato de Vídeo:"
 
-#: ../components/iptvextmovieplayer.py:732
 #, fuzzy
 msgid "Video mode"
 msgstr " Vídeo"
 
-#: ../components/iptvextmovieplayer.py:585
 #, fuzzy
 msgid "Video options"
 msgstr "Vídeos"
 
-#: ../components/iptvextmovieplayer.py:732
 #, fuzzy
 msgid "Video policy"
 msgstr "Diretiva de vídeo padrão"
 
-#: ../components/iptvextmovieplayer.py:732
 #, fuzzy
 msgid "Video policy for 4:3"
 msgstr "Formato de Vídeo:"
 
-#: ../hosts/hosttvpvod.py:689
 msgid "Video with DRM protection."
 msgstr ""
 
-#: ../hosts/hostdailymotion.py:353 ../hosts/hostekstraklasatv.py:75
-#: ../hosts/hostlaola1tv_blocked_.py:494 ../hosts/hostmindigo.py:679
-#: ../hosts/hostmindigo.py:680 ../hosts/hostmindigo.py:681
-#: ../hosts/hostmindigo.py:682 ../hosts/hostmindigo.py:683
-#: ../hosts/hostmindigtv.py:449 ../hosts/hosttwitchtv_blocked_.py:130
-#: ../hosts/hosturllist.py:53 ../hosts/hostvevo.py:415
-#: ../hosts/hostvimeo_blocked_.py:431 ../hosts/hostyoutube.py:223
 msgid "Videos"
 msgstr "Vídeos"
 
-#: ../hosts/hosttwitchtv_blocked_.py:297
 #, fuzzy, python-format
 msgid "Videos %s"
 msgstr "Vídeos"
 
-#: ../hosts/hostuktvplay.py:159
 #, fuzzy, python-format
 msgid "Videos count: %s"
 msgstr "Ver contagem"
 
-#: ../libs/youtubeparser.py:35
 msgid "View count"
 msgstr "Ver contagem"
 
-#: ../hosts/hostaltadefinizione01.py:342
 msgid "Views"
 msgstr ""
 
-#: ../hosts/hostfaselhdcom.py:138 ../hosts/hosthdstreams_blocked_.py:218
 msgid "Views:"
 msgstr ""
 
-#: ../hosts/hostvimeo_blocked_.py:36
 msgid "Vimeo Suggestions"
 msgstr ""
 
-#: ../components/e2ivk.py:360 ../components/VirtualKeyBoard.py:149
 msgid "Virtual Keyboard"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:287
 msgid "Virtual Keyboard type"
 msgstr ""
 
-#: ../hosts/hostxxx.py:2065
 msgid "WARNING! IF UPDATE FAILED: "
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:49 ../hosts/hostwatchwrestlinguno.py:36
 msgid "WWE"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:50
 msgid "WWE Network"
 msgstr ""
 
-#: ../Web/webSite.py:164
 #, python-format
 msgid "Waiting search thread to stop, please wait (%d)"
 msgstr ""
 
-#: ../Web/webParts.py:332 ../Web/webParts.py:340 ../Web/webParts.py:348
-#: ../Web/webParts.py:356 ../Web/webParts.py:458
 msgid "Watch"
 msgstr ""
 
-#: ../hosts/hostgreekdocumentaries3.py:164
 msgid "Watch Trailer"
 msgstr ""
 
-#: ../plugin.py:19
 msgid "Watch Videos Online"
 msgstr ""
 
-#: ../Web/webSite.py:113
 msgid "Web component has been reset and all threads are stopped. :)"
 msgstr ""
 
-#: ../Web/webSite.py:115
 msgid "Web component has been reset, the following threads are still working:"
 msgstr ""
 
-#: ../Web/webParts.py:68 ../Web/webParts.py:85
 msgid "Web interface version"
 msgstr ""
 
-#: ../hosts/hosthdsto.py:35
 msgid "Web proxy"
 msgstr ""
 
-#: ../hosts/hostonlinestream.py:116
 msgid "Webkamerák listázása"
 msgstr ""
 
-#: ../hosts/hostwatchwrestling.py:52
 #, fuzzy
 msgid "Weekly Indys"
 msgstr "Semanal"
 
-#: ../iptvdm/iptvbuffui.py:548
 msgid "Whole file must be downloaded to start playback!"
 msgstr ""
 
-#: ../hosts/hostsvtplayse.py:151
 msgid "With closed captioned."
 msgstr ""
 
-#: ../hosts/hostegybest.py:68
 #, fuzzy
 msgid "With subtitles"
 msgstr "Selecionar o ficheiro de Legenda"
 
-#: ../components/iptvconfigmenu.py:401
 msgid "Write current title to file:"
 msgstr ""
 
-#: ../hosts/hostorthobulletscom.py:105
 msgid "Written Boards Review"
 msgstr ""
 
-#: ../hosts/hostmusicbox.py:94
 msgid "Wrong Youtube Api Key length"
 msgstr ""
 
-#: ../hosts/hoststreamliveto.py:354 ../libs/urlparser.py:3906
 #, fuzzy
 msgid "Wrong answer."
 msgstr "Indexações erradas."
 
-#: ../components/isubprovider.py:567
 msgid "Wrong format of rar archive."
 msgstr ""
 
-#: ../components/isubprovider.py:544 ../subproviders/subprov_napisy24pl.py:354
 msgid "Wrong format of zip archive."
 msgstr ""
 
-#: ../tools/iptvfavourites.py:123 ../tools/iptvfavourites.py:187
 msgid "Wrong indexes."
 msgstr "Indexações erradas."
 
-#: ../subproviders/subprov_popcornsubtitles.py:55
 #, fuzzy
 msgid "Wrong uri."
 msgstr "Indexações erradas."
 
-#: ../hosts/hosttwitchtv_blocked_.py:61
 msgid "Xbox One"
 msgstr ""
 
-#: ../hosts/hoststreamstat.py:81
 msgid "YP connected"
 msgstr ""
 
-#: ../hosts/hostcartoonhd_blocked_.py:535 ../hosts/hostfilmovizijastudio.py:57
-#: ../hosts/hostkkiste.py:35 ../hosts/hostlibrestream.py:33
-#: ../hosts/hostvidcorncom.py:520
 msgid "Year"
 msgstr ""
 
-#: ../hosts/hostcineto.py:146
 #, python-format
 msgid "Year %s"
 msgstr ""
 
-#: ../hosts/hostfilman.py:201 ../hosts/hostgamatocom.py:94
-#: ../hosts/hostgamatocom.py:97
 msgid "Year: "
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:174 ../libs/youtubeparser.py:34
-#: ../subproviders/subprov_subscenecom.py:255 ../Web/webParts.py:181
-#: ../Web/webParts.py:184 ../Web/webThreads.py:175 ../Web/webThreads.py:178
 msgid "Yes"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:108
 msgid "Yes, to console"
 msgstr "sim, para consola"
 
-#: ../components/iptvconfigmenu.py:109
 msgid "Yes, to file /hdd/iptv.dbg"
 msgstr "sim, para o ficheiro /hdd/iptv.dbg"
 
-#: ../components/iptvconfigmenu.py:111
 #, fuzzy
 msgid "Yes, to file /home/root/logs/iptv.dbg"
 msgstr "sim, para o ficheiro /hdd/iptv.dbg"
 
-#: ../components/iptvconfigmenu.py:110
 #, fuzzy
 msgid "Yes, to file /tmp/iptv.dbg"
 msgstr "sim, para o ficheiro /hdd/iptv.dbg"
 
-#: ../hosts/hostekstraklasatv.py:388
 msgid "You are not allowed to play this video"
 msgstr ""
 
-#: ../Web/webSite.py:73
 msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
 msgstr ""
 
-#: ../libs/pCommon.py:393
 msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
 msgstr ""
 
-#: ../libs/pCommon.py:404
 msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
 msgstr ""
 
-#: ../libs/pCommon.py:406
 msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
 msgstr ""
 
-#: ../hosts/hosthdsto.py:70
 msgid "You can try to use proxy as workaround, check options under blue button."
 msgstr ""
 
-#: ../components/captcha_helper.py:67
 #, python-format
 msgid "You can use \"%s\" or \"%s\" services for automatic solution."
 msgstr ""
 
-#: ../iptvdm/iptvbuffui.py:550
 msgid "You can use external eplayer to start playback faster."
 msgstr ""
 
-#: ../libs/weebtv.py:189
 msgid "You do not have a premium account. Starting a sponsored broadcast."
 msgstr ""
 
-#: ../libs/ustvnow.py:126
 msgid "You need to enter email and password in configuration."
 msgstr ""
 
-#: ../libs/pCommon.py:520 ../libs/pCommon.py:1220
 msgid "You should never perform block I/O operations in the __init__."
 msgstr ""
 
-#: ../hosts/hostserienstreamto.py:26
 msgid "Your language preference:"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:1911
-#: ../components/iptvplayerwidget.py:1915
 msgid "Your search entry"
 msgstr "A sua procura"
 
-#: ../suggestions/google.py:18
 msgid "Youtube Suggestions"
 msgstr ""
 
-#: ../hosts/hostmusicbox.py:102
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:809
 msgid "Zene"
 msgstr ""
 
-#: ../components/confighost.py:45
 #, python-format
 msgid "[%s] - configuration"
 msgstr "(%s) - configuração"
 
-#: ../components/iptvplayerwidget.py:709 ../components/iptvplayerwidget.py:711
 #, python-format
 msgid "[%s] with buffering"
 msgstr "[%s] com buffering"
 
-#: ../components/iptvplayerwidget.py:713 ../components/iptvplayerwidget.py:715
 #, python-format
 msgid "[%s] without buffering"
 msgstr "[%s] sem buffering"
 
-#: ../components/iptvconfigmenu.py:344
 msgid "[HLS/M3U8] buffering"
 msgstr "[HLS/M3U8] buffering"
 
-#: ../components/iptvconfigmenu.py:343
 msgid "[HTTP] buffering"
 msgstr "[HTTP] buffering"
 
-#: ../hosts/hostnuteczki.py:182 ../hosts/hostnuteczki.py:307
 msgid "[Logged-in-only] "
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:345
 msgid "[RTMP] buffering (rtmpdump required)"
 msgstr "[RTMP] buffering (rtmpdump requerido)"
 
-#: ../hosts/hostiptvplayerinfo.py:57
 msgid "[en]"
 msgstr ""
 
-#: ../hosts/hostiptvplayerinfo.py:58
 msgid "[pl]"
 msgstr ""
 
-#: ../hosts/hostfilmeonlineto.py:277 ../hosts/hosttainieskaiseirestv.py:202
 msgid "[trailer]"
 msgstr ""
 
-#: ../subproviders/subprov_opensubtitlesorg.py:180
 msgid "_checkStatus except error"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:43
 msgid "after a week"
 msgstr "após uma semana"
 
-#: ../components/iptvconfigmenu.py:43
 msgid "after closing"
 msgstr "depois de fechar"
 
-#: ../components/iptvconfigmenu.py:43
 msgid "after day"
 msgstr "após dia"
 
-#: ../components/iptvconfigmenu.py:43
 msgid "after three days"
 msgstr "após três dias"
 
-#: ../hosts/hostvevo.py:114
 #, fuzzy
 msgid "all"
 msgstr "pequeno"
 
-#: ../hosts/hostgamatocom.py:77 ../hosts/hostgamatocom.py:97
 msgid "any"
 msgstr ""
 
-#: ../components/configbase.py:33
 msgid "aqua"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:76 ../hosts/hostdailymotion.py:24
 msgid "auto"
 msgstr ""
 
-#: ../libs/videostar.py:33
 msgid "average"
 msgstr ""
 
-#: ../components/configbase.py:32 ../components/iptvconfigmenu.py:230
 msgid "black"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:230
 msgid "black&white"
 msgstr ""
 
-#: ../components/configbase.py:33 ../components/iptvconfigmenu.py:230
 msgid "blue"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:224
 msgid "bottom"
 msgstr "fundo"
 
-#: ../components/iptvplayerwidget.py:1664
 msgid "buffering location"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:224
 msgid "center"
 msgstr "centro"
 
-#: ../components/iptvconfigmenu.py:230
 msgid "cobalt"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:469
 msgid "de"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:162 ../components/iptvconfigmenu.py:230
-#: ../components/iptvsubsimpledownloader.py:294 ../libs/urlparser.py:6403
 msgid "default"
 msgstr ""
 
-#: ../hosts/hosturllist.py:63
 #, fuzzy
 msgid "direct link"
 msgstr "Selecionar link"
 
-#: ../components/iptvplayerwidget.py:1664
 #, fuzzy
 msgid "downloads location"
 msgstr "Descarregar novamente"
 
-#: ../components/iptvconfigmenu.py:379 ../hosts/hostbbcsport_blocked_.py:37
-#: ../hosts/hosteurosportplayer.py:33 ../hosts/hostfreediscpl.py:37
-#: ../hosts/hostmindigo.py:53 ../hosts/hostmrpiracy.py:51
-#: ../hosts/hostrtbfbe.py:44 ../hosts/hostserienstreamto.py:27
-#: ../hosts/hostvidcorncom.py:36
 msgid "e-mail"
 msgstr ""
 
-#: ../hosts/hosthdsto.py:45 ../hosts/hosttvplayercom.py:51
 msgid "email"
 msgstr ""
 
-#: ../hosts/hostguardaserie.py:90
 msgid "episodes"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:76 ../components/iptvextmovieplayer.py:342
 msgid "external eplayer3"
 msgstr "eplayer3 externo"
 
-#: ../components/iptvconfigmenu.py:76 ../components/iptvextmovieplayer.py:333
 msgid "external gstplayer"
 msgstr "gstplayer externo"
 
-#: ../Web/webParts.py:389
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:33 ../hosts/hostzdfmediathek.py:35
 msgid "format"
 msgstr "formato"
 
-#: ../components/iptvconfigmenu.py:193 ../components/iptvconfigmenu.py:194
-#: ../components/iptvconfigmenu.py:201 ../components/iptvconfigmenu.py:202
-#: ../components/iptvconfigmenu.py:203
 #, fuzzy
 msgid "from E2 settings"
 msgstr "Das definições de E2"
 
-#: ../components/configbase.py:32
 msgid "fuchsia"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:312
 msgid "geoblocked"
 msgstr ""
 
-#: ../components/configbase.py:32
 msgid "gray"
 msgstr ""
 
-#: ../components/configbase.py:33 ../components/iptvconfigmenu.py:230
 msgid "green"
 msgstr ""
 
-#: ../libs/hcaptcha.py:83
 msgid "hCaptcha already solved!"
 msgstr ""
 
-#: ../libs/hcaptcha.py:1157
 msgid "hCaptcha not solved!"
 msgstr ""
 
-#: ../libs/hcaptcha.py:1153
 msgid "hCaptcha solved!"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:32 ../hosts/hostzdfmediathek.py:34
 msgid "hd"
 msgstr "hd"
 
-#: ../hosts/hostardmediathek_blocked_.py:29
-#: ../hosts/hostardmediathek_blocked_.py:32 ../hosts/hostzdfmediathek.py:34
-#: ../libs/videostar.py:33
 msgid "high"
 msgstr "alto"
 
-#: ../hosts/hosttvplayercom.py:37
 #, fuzzy
 msgid "highest"
 msgstr "alto"
 
-#: ../hosts/hosttvjworg.py:31
 msgid "horizontal"
 msgstr ""
 
-#: ../hosts/hostserienstreamto.py:29
 msgid "host"
 msgstr ""
 
-#: ../Web/webParts.py:470
 msgid "host:"
 msgstr ""
 
-#: ../hosts/hostxxx.py:66 ../hosts/hostxxx.py:67
 msgid "https"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:300
 msgid "https - validate SSL certificates"
 msgstr "https - validar certificados SSL"
 
-#: ../hosts/hostwatchwrestlinguno.py:39
 msgid "iMPACT Wrestling"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:76
 msgid "internal"
 msgstr "interno"
 
-#: ../components/iptvconfigmenu.py:230
 msgid "jersey"
 msgstr ""
 
-#: ../hosts/hostpinkbike.py:25 ../hosts/hostzdfmediathek.py:31
 msgid "large"
 msgstr "amplo"
 
-#: ../components/iptvplayer.py:40 ../components/iptvplayer.py:41
 #, fuzzy
 msgid "leave movie player..."
 msgstr "Definir o Leitor de Filmes ativo"
 
-#: ../components/configbase.py:33
 msgid "lime"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:230
 msgid "line"
 msgstr ""
 
-#: ../hosts/hostmediasetplay.py:349
 msgid "live"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:373 ../components/iptvconfigmenu.py:375
-#: ../components/iptvconfigmenu.py:377 ../hosts/hostcartoonhd_blocked_.py:39
-#: ../hosts/hostdixmax.py:39 ../hosts/hostdokumentalnenet.py:31
-#: ../hosts/hostegybest.py:39 ../hosts/hostfilmezz.py:41
-#: ../hosts/hosthdfull.py:42 ../hosts/hostmaxtvgo.py:39
-#: ../hosts/hostnuteczki.py:33 ../hosts/hostorthobulletscom.py:42
-#: ../hosts/hostserijeonline.py:38 ../hosts/hostvumedicom.py:38
-#: ../libs/filmonapi.py:34
 msgid "login"
 msgstr "login"
 
-#: ../hosts/hostardmediathek_blocked_.py:29
-#: ../hosts/hostardmediathek_blocked_.py:32 ../hosts/hostzdfmediathek.py:34
-#: ../libs/videostar.py:33
 msgid "low"
 msgstr "baixo"
 
-#: ../hosts/hosttvplayercom.py:43
 msgid "lowest"
 msgstr ""
 
-#: ../libs/webcamera.py:70
 msgid "main"
 msgstr ""
 
-#: ../components/configbase.py:32
 msgid "maroon"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:29
-#: ../hosts/hostardmediathek_blocked_.py:32 ../hosts/hostpinkbike.py:25
-#: ../hosts/hostzdfmediathek.py:31 ../hosts/hostzdfmediathek.py:34
 msgid "medium"
 msgstr "moderado"
 
-#: ../components/configbase.py:33 ../components/iptvconfigmenu.py:230
 msgid "navy"
 msgstr ""
 
-#: ../hosts/hostraiplay.py:394
 msgid "not available"
 msgstr ""
 
-#: ../components/configbase.py:33
 msgid "olive"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:374 ../components/iptvconfigmenu.py:376
-#: ../components/iptvconfigmenu.py:378 ../components/iptvconfigmenu.py:380
-#: ../hosts/hostbbcsport_blocked_.py:38 ../hosts/hostcartoonhd_blocked_.py:40
-#: ../hosts/hostdixmax.py:40 ../hosts/hostdokumentalnenet.py:32
-#: ../hosts/hostegybest.py:40 ../hosts/hosteurosportplayer.py:34
-#: ../hosts/hostfilmezz.py:42 ../hosts/hostfreediscpl.py:38
-#: ../hosts/hosthdfull.py:43 ../hosts/hosthdsto.py:46
-#: ../hosts/hostmaxtvgo.py:40 ../hosts/hostmindigo.py:54
-#: ../hosts/hostnuteczki.py:34 ../hosts/hostorthobulletscom.py:43
-#: ../hosts/hostrtbfbe.py:45 ../hosts/hostrtlmost.py:50
-#: ../hosts/hostserienstreamto.py:28 ../hosts/hostserijeonline.py:39
-#: ../hosts/hosttvplayercom.py:52 ../hosts/hostvidcorncom.py:37
-#: ../hosts/hostvumedicom.py:39 ../libs/filmonapi.py:35
 msgid "password"
 msgstr "Palavra-Passe"
 
-#: ../components/configbase.py:32
 msgid "purple"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:33 ../hosts/hostzdfmediathek.py:35
 msgid "quality"
 msgstr "qualidade"
 
-#: ../components/configbase.py:32 ../components/iptvconfigmenu.py:230
 #, fuzzy
 msgid "red"
 msgstr "Abortado"
 
-#: ../hosts/hostlocalmedia.py:122
 msgid "rootfs"
 msgstr ""
 
-#: ../hosts/hostxxx.py:66 ../hosts/hostxxx.py:67
 msgid "rtmp"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:197
 msgid "second"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:197 ../components/iptvconfigmenu.py:198
-#: ../components/iptvconfigmenu.py:199
 msgid "seconds"
 msgstr ""
 
-#: ../hosts/hostplayrtsiw.py:473
 msgid "shows"
 msgstr ""
 
-#: ../components/configbase.py:32
 msgid "silver"
 msgstr ""
 
-#: ../hosts/hostpinkbike.py:25 ../hosts/hostzdfmediathek.py:31
 msgid "small"
 msgstr "pequeno"
 
-#: ../components/iptvconfigmenu.py:76
 msgid "standard"
 msgstr "standard"
 
-#: ../components/configbase.py:33
 msgid "teal"
 msgstr ""
 
-#: ../hosts/hostsvtplayse.py:31 ../libs/videostar.py:33
-#: ../libs/youtube_dl/extractor/bbc.py:21
-#: ../libs/youtube_dl/extractor/vevo.py:27 ../libs/youtubeparser.py:30
 msgid "the best"
 msgstr "os melhores"
 
-#: ../hosts/hostchristusvincit_blocked_.py:34
 #, fuzzy
 msgid "the highest"
 msgstr "os melhores"
 
-#: ../hosts/hostchristusvincit_blocked_.py:24
 #, fuzzy
 msgid "the lowest"
 msgstr "os melhores"
 
-#: ../hosts/hostkissanimeto.py:30 ../hosts/hostkisscartoonme.py:25
-#: ../hosts/hostsvtplayse.py:27 ../hosts/hosttvjworg.py:32
-#: ../libs/videostar.py:33 ../libs/youtube_dl/extractor/bbc.py:17
-#: ../libs/youtube_dl/extractor/vevo.py:15 ../libs/youtubeparser.py:30
 msgid "the worst"
 msgstr "Os piores"
 
-#: ../components/iptvconfigmenu.py:224
 msgid "top"
 msgstr "topo"
 
-#: ../hosts/host123movieshd_blocked_.py:232 ../hosts/hostakoam_blocked_.py:253
-#: ../hosts/hostaltadefinizione_blocked_.py:179
-#: ../hosts/hostcartoonhd_blocked_.py:221
-#: ../hosts/hostcartoonhd_blocked_.py:252 ../hosts/hostfilma24io.py:173
-#: ../hosts/hostfilmaoncom.py:244 ../hosts/hostgamatocom.py:193
-#: ../hosts/hosthdfull.py:369
 msgid "trailer"
 msgstr ""
 
-#: ../components/iptvconfigmenu.py:77 ../hosts/hosturllist.py:65
 msgid "unknown"
 msgstr "desconhecido"
 
-#: ../Web/webParts.py:68 ../Web/webParts.py:85
 #, fuzzy
 msgid "version"
 msgstr "Versão correta."
 
-#: ../hosts/hosttvjworg.py:31
 msgid "vertical"
 msgstr ""
 
-#: ../hosts/hostardmediathek_blocked_.py:32 ../hosts/hostzdfmediathek.py:34
 msgid "very high"
 msgstr "muito alta"
 
-#: ../libs/youtubeparser.py:372
 #, fuzzy, python-format
 msgid "videos: %s"
 msgstr "Vídeos"
 
-#: ../hosts/hostdailymotion.py:169
 msgid "views"
 msgstr ""
 
-#: ../Web/webThreads.py:85
 msgid "visit site"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:436
 #, python-format
 msgid "wait %s second"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:434
 #, python-format
 msgid "wait %s seconds"
 msgstr ""
 
-#: ../components/configbase.py:32
 msgid "white"
 msgstr ""
 
-#: ../components/iptvplayerwidget.py:680
 msgid "www: "
 msgstr ""
 
-#: ../components/configbase.py:33
 msgid "yellow"
 msgstr ""
