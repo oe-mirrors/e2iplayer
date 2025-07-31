@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-31 18:24+0200\n"
-"PO-Revision-Date: 2025-07-30 22:23+0200\n"
+"PO-Revision-Date: 2025-07-31 19:51+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
 "Language: de_DE\n"
@@ -540,9 +540,8 @@ msgstr "Archiv"
 msgid "Archives"
 msgstr "Archive"
 
-#, fuzzy
 msgid "Are you sure you want to delete search history?"
-msgstr "Sind Sie sicher, dass Sie die Datei \"%s\" entfernen wollen?"
+msgstr "Sind Sie sicher, dass Sie den Suchverlauf löschen möchten?"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
@@ -2246,9 +2245,9 @@ msgstr "Läuft gerade"
 msgid "Number of downloaded files simultaneously"
 msgstr "Anzahl der gleichzeitigen Downloads"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Number of items in search history: %d"
-msgstr "Anzahl der Einträge im Suchverlauf"
+msgstr "Anzahl der Einträge im Suchverlauf: %d"
 
 msgid "OK"
 msgstr "OK"
@@ -2759,12 +2758,11 @@ msgstr "Mindestbewertung: "
 msgid "Search"
 msgstr "Suche"
 
-#, fuzzy
 msgid "Search History is empty."
-msgstr "Suchverlauf"
+msgstr "Der Suchverlauf ist leer."
 
 msgid "Search History successfully deleted."
-msgstr ""
+msgstr "Suchverlauf erfolgreich gelöscht."
 
 msgid "Search Movies and TV Series"
 msgstr "Suche Filme und TV-Serien"
@@ -3468,7 +3466,7 @@ msgid "Umount iso file"
 msgstr "Iso-Datei aushängen"
 
 msgid "Unable to comply. Search History is empty."
-msgstr ""
+msgstr "Kann nicht erfüllt werden. Der Suchverlauf ist leer."
 
 msgid "Unknow data in the captcha item!"
 msgstr "Unbekannte Daten im Captcha-Element!"
