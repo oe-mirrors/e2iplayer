@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# date of last change: 30-07-2025
+# date of last change: 31-07-2025
 
 ###################################################
 # LOCAL import
@@ -348,7 +348,7 @@ class Youtube(CBaseHostClass):
 
     def delhistory(self):
         printDBG('Youtube.delhistory')
-        msg = 'Are you sure you want to delete search history?'
+        msg = _('Are you sure you want to delete search history?')
         ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_YESNO, default=True)
         if ret[0]:
             self.doit()
@@ -356,10 +356,10 @@ class Youtube(CBaseHostClass):
     def doit(self):
         try:
            os.remove(GetSearchHistoryDir("ytlist.txt"))
-           msg = 'Search History successfully deleted.'
+           msg = _('Search History successfully deleted.')
            ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO)
         except:
-           msg = 'Unable to comply. Search History is empty.'
+           msg = _('Unable to comply. Search History is empty.')
            ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO)
 
     def lenhistory(self):
@@ -371,8 +371,8 @@ class Youtube(CBaseHostClass):
                 num = num + 1
             file.close()
         except:
-            return ("Search History is empty.")
-        return ("Number of items in search history: " + str(num))
+            return _("Search History is empty.")
+        return _("Number of items in search history: %d") % num
 
     def getSuggestionsProvider(self, index):
         printDBG('Youtube.getSuggestionsProvider')
