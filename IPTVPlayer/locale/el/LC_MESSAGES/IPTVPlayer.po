@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 21:43+0200\n"
+"POT-Creation-Date: 2025-07-31 18:24+0200\n"
 "PO-Revision-Date: 2025-06-19 15:44+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -543,6 +543,10 @@ msgstr "Αρχείο"
 
 msgid "Archives"
 msgstr "Αρχεία"
+
+#, fuzzy
+msgid "Are you sure you want to delete search history?"
+msgstr "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε το αρχείο \"%s\";"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
@@ -2249,6 +2253,10 @@ msgstr "Αναπαραγωγή τώρα"
 msgid "Number of downloaded files simultaneously"
 msgstr "Αριθμός ταυτόχρονης λήψης αρχείων"
 
+#, fuzzy, python-format
+msgid "Number of items in search history: %d"
+msgstr "Αριθμός στοιχείων στο ιστορικό αναζήτησης"
+
 msgid "OK"
 msgstr "ΕΝΤΑΞΕΙ"
 
@@ -2758,6 +2766,13 @@ msgstr "Βαθμολογία τουλάχιστον: "
 
 msgid "Search"
 msgstr "Αναζήτηση"
+
+#, fuzzy
+msgid "Search History is empty."
+msgstr "Ιστορικό αναζήτησης"
+
+msgid "Search History successfully deleted."
+msgstr ""
 
 msgid "Search Movies and TV Series"
 msgstr "Αναζήτηση Ταινιών και Τηλεοπτικών σειρών"
@@ -3464,6 +3479,9 @@ msgstr "URL ουκρανικού διακομιστή μεσολάβησης"
 
 msgid "Umount iso file"
 msgstr "Μη προσάρτηση αρχείου iso"
+
+msgid "Unable to comply. Search History is empty."
+msgstr ""
 
 msgid "Unknow data in the captcha item!"
 msgstr "Άγνωστα δεδομένα στο στοιχείο captcha!"

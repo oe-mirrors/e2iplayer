@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 21:43+0200\n"
+"POT-Creation-Date: 2025-07-31 18:24+0200\n"
 "PO-Revision-Date: 2025-06-29 16:00+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -542,6 +542,10 @@ msgstr "Archív"
 
 msgid "Archives"
 msgstr "Archívy"
+
+#, fuzzy
+msgid "Are you sure you want to delete search history?"
+msgstr "Naozaj chcete odstrániť súbor \"%s\"?"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
@@ -2248,6 +2252,10 @@ msgstr "Teraz hrá"
 msgid "Number of downloaded files simultaneously"
 msgstr "Počet stiahnutých súborov súčasne"
 
+#, fuzzy, python-format
+msgid "Number of items in search history: %d"
+msgstr "Počet položiek v histórii vyhľadávania"
+
 msgid "OK"
 msgstr "OK"
 
@@ -2757,6 +2765,13 @@ msgstr "Skóre aspoň: "
 
 msgid "Search"
 msgstr "Hľadať"
+
+#, fuzzy
+msgid "Search History is empty."
+msgstr "História vyhľadávania"
+
+msgid "Search History successfully deleted."
+msgstr ""
 
 msgid "Search Movies and TV Series"
 msgstr "Vyhľadávanie filmov a televíznych seriálov"
@@ -3459,6 +3474,9 @@ msgstr "URL adresa ukrajinského proxy servera"
 
 msgid "Umount iso file"
 msgstr "Umount iso file"
+
+msgid "Unable to comply. Search History is empty."
+msgstr ""
 
 msgid "Unknow data in the captcha item!"
 msgstr "Neznáme údaje v položke captcha!"

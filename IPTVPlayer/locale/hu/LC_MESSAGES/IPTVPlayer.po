@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 21:43+0200\n"
+"POT-Creation-Date: 2025-07-31 18:24+0200\n"
 "PO-Revision-Date: 2025-06-29 17:27+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -542,6 +542,10 @@ msgstr "Archívum"
 
 msgid "Archives"
 msgstr "Archívum"
+
+#, fuzzy
+msgid "Are you sure you want to delete search history?"
+msgstr "Biztosan eltávolítja a(z) „%s” fájlt?"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
@@ -2248,6 +2252,10 @@ msgstr "Most játszik"
 msgid "Number of downloaded files simultaneously"
 msgstr "Egyidejűleg letöltött fájlok száma"
 
+#, fuzzy, python-format
+msgid "Number of items in search history: %d"
+msgstr "A keresési előzményekben szereplő elemek száma"
+
 msgid "OK"
 msgstr "OK"
 
@@ -2754,6 +2762,13 @@ msgstr "Minimális pontszám: "
 
 msgid "Search"
 msgstr "Keresés"
+
+#, fuzzy
+msgid "Search History is empty."
+msgstr "Keresési előzmények"
+
+msgid "Search History successfully deleted."
+msgstr ""
 
 msgid "Search Movies and TV Series"
 msgstr "Keresés a Filmek és a TV sorozatokban"
@@ -3456,6 +3471,9 @@ msgstr "Ukrán proxy szerver URL"
 
 msgid "Umount iso file"
 msgstr "Umount iso fájl"
+
+msgid "Unable to comply. Search History is empty."
+msgstr ""
 
 msgid "Unknow data in the captcha item!"
 msgstr "Ismeretlen adat a captcha elemben!"

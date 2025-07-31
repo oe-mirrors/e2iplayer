@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 21:43+0200\n"
+"POT-Creation-Date: 2025-07-31 18:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -520,6 +520,9 @@ msgid "Archive"
 msgstr ""
 
 msgid "Archives"
+msgstr ""
+
+msgid "Are you sure you want to delete search history?"
 msgstr ""
 
 #, python-format
@@ -2164,6 +2167,10 @@ msgstr ""
 msgid "Number of downloaded files simultaneously"
 msgstr ""
 
+#, python-format
+msgid "Number of items in search history: %d"
+msgstr ""
+
 msgid "OK"
 msgstr ""
 
@@ -2660,6 +2667,12 @@ msgid "Score at least: "
 msgstr ""
 
 msgid "Search"
+msgstr ""
+
+msgid "Search History is empty."
+msgstr ""
+
+msgid "Search History successfully deleted."
 msgstr ""
 
 msgid "Search Movies and TV Series"
@@ -3350,6 +3363,9 @@ msgid "Ukrainian proxy server url"
 msgstr ""
 
 msgid "Umount iso file"
+msgstr ""
+
+msgid "Unable to comply. Search History is empty."
 msgstr ""
 
 msgid "Unknow data in the captcha item!"

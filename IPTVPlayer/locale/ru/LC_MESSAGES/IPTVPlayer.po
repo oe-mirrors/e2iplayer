@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 21:43+0200\n"
+"POT-Creation-Date: 2025-07-31 18:24+0200\n"
 "PO-Revision-Date: 2025-06-29 17:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -543,6 +543,10 @@ msgstr "Архив"
 
 msgid "Archives"
 msgstr "Архивы"
+
+#, fuzzy
+msgid "Are you sure you want to delete search history?"
+msgstr "Вы действительно хотите удалить файл \"%s\"?"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
@@ -2249,6 +2253,10 @@ msgstr "Сейчас играет"
 msgid "Number of downloaded files simultaneously"
 msgstr "Количество одновременно скачанных файлов"
 
+#, fuzzy, python-format
+msgid "Number of items in search history: %d"
+msgstr "Количество элементов в истории поиска"
+
 msgid "OK"
 msgstr "OK"
 
@@ -2758,6 +2766,13 @@ msgstr "Оценка не менее: "
 
 msgid "Search"
 msgstr "Поиск"
+
+#, fuzzy
+msgid "Search History is empty."
+msgstr "История поиска"
+
+msgid "Search History successfully deleted."
+msgstr ""
 
 msgid "Search Movies and TV Series"
 msgstr "Поиск Фильмов и Сериалов"
@@ -3460,6 +3475,9 @@ msgstr "Украинский прокси-сервер url"
 
 msgid "Umount iso file"
 msgstr "Снятие iso файла"
+
+msgid "Unable to comply. Search History is empty."
+msgstr ""
 
 msgid "Unknow data in the captcha item!"
 msgstr "Неизвестные данные в элементе captcha!"

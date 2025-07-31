@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 21:43+0200\n"
+"POT-Creation-Date: 2025-07-31 18:24+0200\n"
 "PO-Revision-Date: 2025-07-30 22:23+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
@@ -539,6 +539,10 @@ msgstr "Archiv"
 
 msgid "Archives"
 msgstr "Archive"
+
+#, fuzzy
+msgid "Are you sure you want to delete search history?"
+msgstr "Sind Sie sicher, dass Sie die Datei \"%s\" entfernen wollen?"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
@@ -2242,6 +2246,10 @@ msgstr "Läuft gerade"
 msgid "Number of downloaded files simultaneously"
 msgstr "Anzahl der gleichzeitigen Downloads"
 
+#, fuzzy, python-format
+msgid "Number of items in search history: %d"
+msgstr "Anzahl der Einträge im Suchverlauf"
+
 msgid "OK"
 msgstr "OK"
 
@@ -2750,6 +2758,13 @@ msgstr "Mindestbewertung: "
 
 msgid "Search"
 msgstr "Suche"
+
+#, fuzzy
+msgid "Search History is empty."
+msgstr "Suchverlauf"
+
+msgid "Search History successfully deleted."
+msgstr ""
 
 msgid "Search Movies and TV Series"
 msgstr "Suche Filme und TV-Serien"
@@ -3451,6 +3466,9 @@ msgstr "Ukrainische Proxy Server URL"
 
 msgid "Umount iso file"
 msgstr "Iso-Datei aushängen"
+
+msgid "Unable to comply. Search History is empty."
+msgstr ""
 
 msgid "Unknow data in the captcha item!"
 msgstr "Unbekannte Daten im Captcha-Element!"
