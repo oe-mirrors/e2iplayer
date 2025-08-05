@@ -6,7 +6,7 @@
         <convert type="ClockToText">Format:%a %d.%m.%Y</convert>
     </widget>
     <widget name="headertext" position="600,8" zPosition="1" size="1544,64" font="Regular; 35" transparent="1" valign="center" backgroundColor="#bbff" foregroundColor="#bbff" halign="left" />
-    <widget name="list" position="43,348" size="466,644" enableWrapAround="2" transparent="1" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/SKY-ICONS/selbutton.png" scrollbarMode="showNever" />
+    <widget name="list" position="43,348" size="466,644" enableWrapAround="2" transparent="1" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/SKY/SKY-ICONS/selbutton.png" scrollbarMode="showNever" />
     <widget name="console" position="980,410" size="900,1150" zPosition="1" font="Regular;42" transparent="1" />
     <widget name="spinner" zPosition="3" position="925,200" size="16,16" transparent="1" alphatest="blend" />
     <widget name="spinner_1" zPosition="2" position="925,200" size="16,16" transparent="1" alphatest="blend" />
@@ -15,5 +15,5 @@
     <widget name="spinner_4" zPosition="2" position="973,200" size="16,16" transparent="1" alphatest="blend" />
     <widget name="cover" zPosition="2" position="532,402" size="326,510" alphatest="blend" />
     <widget name="playerlogo" zPosition="9" position="1000,333" size="120,40" alphatest="blend" />
-    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/SKY-ICONS/back-iptv4.png" position="0,0" size="1920,1080" zPosition="-1" alphatest="on" transparent="0" />
+    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/SKY/SKY-ICONS/back-iptv4.png" position="0,0" size="1920,1080" zPosition="-1" alphatest="on" transparent="0" />
 </screen>

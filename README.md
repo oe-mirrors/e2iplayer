@@ -1,5 +1,5 @@
 # E2iPlayer Plugin for Enigma2 (Python 3)
-<img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/IPTVPlayer/icons/logos/iptvplayerinfologo.png">
+<img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/IPTVPlayer/icons/iptvlogohd.png">
 
 ## Github status
 [![Build](https://github.com/oe-mirrors/e2iplayer/actions/workflows/buildbot.yml/badge.svg)](https://github.com/oe-mirrors/oe-mirrors/e2iplayer/workflows/buildbot.yml)
