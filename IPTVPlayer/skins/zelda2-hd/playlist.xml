@@ -7,7 +7,7 @@
     </widget>
     <widget name="headertext" position="145,17" zPosition="1" size="976,33" font="Regular; 25" transparent="1" valign="center" backgroundColor="#191919" foregroundColor="#fff000" halign="left"/>
     <widget name="statustext" position="84,234" zPosition="1" size="456,103" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="#191919"/>
-    <widget name="list" position="22,61" zPosition="0" size="524,436" itemHeight="37" enableWrapAround="1" scrollbarWidth="10" scrollbarSliderBorderWidth="1" scrollbarSliderForegroundColor="#e6e6e6" scrollbarSliderBorderColor="#3b3e3f" scrollbarMode="showOnDemand" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/zelda2-icons/selbutton.png" transparent="1"/>
+    <widget name="list" position="22,61" zPosition="0" size="524,436" itemHeight="37" enableWrapAround="1" scrollbarWidth="10" scrollbarSliderBorderWidth="1" scrollbarSliderForegroundColor="#e6e6e6" scrollbarSliderBorderColor="#3b3e3f" scrollbarMode="showOnDemand" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Zelda2-hd/zelda2-icons/selbutton.png" transparent="1"/>
     <widget name="console" position="21,509" zPosition="1" size="1235,178" font="Regular; 36" transparent="1" backgroundColor="#191919" foregroundColor="#ffcc99" halign="left" render="VRunningText" valign="top"/>
     <widget name="spinner_2" zPosition="2" position="281,297" size="16,16" transparent="1" alphatest="blend"/>
     <widget name="spinner_3" zPosition="2" position="300,297" size="16,16" transparent="1" alphatest="blend"/>
@@ -23,6 +23,6 @@
     <widget source="key_yellow" render="Label" position="381,690" size="133,27" zPosition="1" font="Regular; 22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
     <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/blue.png" position="518,690" size="35,27" alphatest="blend" transparent="1"/>
     <widget source="key_blue" render="Label" position="558,690" size="117,27" zPosition="1" font="Regular; 22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
-    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/zelda2-icons/back-iptv4.png" position="center,center" size="1277,723" alphatest="on" transparent="1" zPosition="-4"/>
-    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/zelda2-icons/cover.png" position="746,52" size="276,449" alphatest="blend" transparent="1" zPosition="4"/>
+    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Zelda2-hd/zelda2-icons/back-iptv4.png" position="center,center" size="1277,723" alphatest="on" transparent="1" zPosition="-4"/>
+    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Zelda2-hd/zelda2-icons/cover.png" position="746,52" size="276,449" alphatest="blend" transparent="1" zPosition="4"/>
 </screen>
