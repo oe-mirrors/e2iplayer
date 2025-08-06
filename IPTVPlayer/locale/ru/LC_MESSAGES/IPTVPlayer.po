@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 18:24+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: 2025-06-29 17:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -79,9 +79,6 @@ msgstr ""
 "Вы также можете сообщить о проблеме здесь: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid " "
-msgstr " "
-
 msgid "    *    Votes: "
 msgstr "    *    Голоса: "
 
@@ -140,10 +137,6 @@ msgstr "\"%s\" Виртуальная Клавиатура недоступна.
 
 msgid "\"Web\" streams player"
 msgstr "\"Сеть\" потоковый плеер"
-
-#, python-format
-msgid "%s "
-msgstr "%s "
 
 #, python-format
 msgid "%s - service overview"
@@ -313,7 +306,7 @@ msgstr "--Любой--"
 msgid "--Other--"
 msgstr "--Иные--"
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr "12 часовой формат "
 
 msgid "16:10 Letterbox"
@@ -331,7 +324,7 @@ msgstr "16:9 Режим ящика"
 msgid "16:9 always"
 msgstr "16:9 всегда"
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr "24 часовой формат "
 
 msgid "4:3 Letterbox"
@@ -2802,7 +2795,7 @@ msgstr "Результаты поиска"
 msgid "Search type"
 msgstr "Тип поиска"
 
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr "Поиск материалов youtube "
 
 #, python-format

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-05 22:08+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,9 +60,6 @@ msgid ""
 "\n"
 "You can also report problem here: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-msgstr ""
-
-msgid " "
 msgstr ""
 
 msgid "    *    Votes: "
@@ -122,10 +119,6 @@ msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr ""
 
 msgid "\"Web\" streams player"
-msgstr ""
-
-#, python-format
-msgid "%s "
 msgstr ""
 
 #, python-format
@@ -293,7 +286,7 @@ msgstr ""
 msgid "--Other--"
 msgstr ""
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr ""
 
 msgid "16:10 Letterbox"
@@ -311,7 +304,7 @@ msgstr ""
 msgid "16:9 always"
 msgstr ""
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr ""
 
 msgid "4:3 Letterbox"
@@ -2703,7 +2696,7 @@ msgstr ""
 msgid "Search type"
 msgstr ""
 
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr ""
 
 #, python-format

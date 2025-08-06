@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-05 22:08+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: 2025-08-02 13:55+0300\n"
 "Last-Translator: angel_heart[Mohamed Elsafty]\n"
 "Language-Team: \n"
@@ -79,9 +79,6 @@ msgstr ""
 "يمكنك أيضًا الإبلاغ عن المشكلة هنا: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid " "
-msgstr " "
-
 msgid "    *    Votes: "
 msgstr "    *    الأصوات: "
 
@@ -140,10 +137,6 @@ msgstr "تخطيط لوحة المفاتيح الافتراضية \"%s\" غير 
 
 msgid "\"Web\" streams player"
 msgstr "مشغل البث عبر الويب"
-
-#, python-format
-msgid "%s "
-msgstr "%s "
 
 #, python-format
 msgid "%s - service overview"
@@ -312,7 +305,7 @@ msgstr "--أي--"
 msgid "--Other--"
 msgstr "--أخرى--"
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr "تنسيق 12 ساعة "
 
 msgid "16:10 Letterbox"
@@ -330,7 +323,7 @@ msgstr "‏16:9 بحواف سوداء (Letterbox)"
 msgid "16:9 always"
 msgstr "‏16:9 دائمًا"
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr "تنسيق 24 ساعة "
 
 msgid "4:3 Letterbox"
@@ -2796,7 +2789,7 @@ msgstr "نتائج البحث"
 msgid "Search type"
 msgstr "نوع البحث"
 
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr "البحث في محتويات يوتيوب "
 
 #, python-format

@@ -79,7 +79,7 @@ class IPTVDirectorySelectorWidget(Screen):
             # self["key_yellow"] = Label(_("Odśwież"))
             self["key_blue"] = Label(_("New dir"))
             self["key_green"] = Label(_("Apply"))
-            self["curr_dir"] = Label(_(" "))
+            self["curr_dir"] = Label()
             self["list"] = IPTVDirBrowserList()
             self["FilelistActions"] = ActionMap(["ColorActions", "SetupActions"],
                 {
@@ -324,7 +324,7 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
 
         if type(self) is IPTVFileSelectorWidget:
             self["key_red"] = Label(_("Cancel"))
-            self["curr_dir"] = Label(_(" "))
+            self["curr_dir"] = Label()
             self["list"] = IPTVDirBrowserList()
             self["FilelistActions"] = ActionMap(["ColorActions", "SetupActions"],
                 {

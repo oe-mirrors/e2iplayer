@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 18:24+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: 2025-08-06 16:22+0200\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -79,9 +79,6 @@ msgstr ""
 "U kunt een eventueel probleem ook hier melden:\n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid " "
-msgstr " "
-
 msgid "    *    Votes: "
 msgstr "    *    Stemmen: "
 
@@ -140,10 +137,6 @@ msgstr "\"%s\" Het Virtuele Keyboard is niet beschikbaar."
 
 msgid "\"Web\" streams player"
 msgstr "Webstreams"
-
-#, python-format
-msgid "%s "
-msgstr "%s "
 
 #, python-format
 msgid "%s - service overview"
@@ -312,7 +305,7 @@ msgstr "--Elke--"
 msgid "--Other--"
 msgstr "--Overig--"
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr "12-uurs tijdformaat "
 
 msgid "16:10 Letterbox"
@@ -330,7 +323,7 @@ msgstr "16:9 Letterbox"
 msgid "16:9 always"
 msgstr "16:9 Altijd"
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr "24-uurs tijdformaat "
 
 msgid "4:3 Letterbox"
@@ -2818,7 +2811,7 @@ msgstr "Zoek resultaten"
 msgid "Search type"
 msgstr "Zoek-modus"
 
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr "Zoeken op YouTube "
 
 #, python-format

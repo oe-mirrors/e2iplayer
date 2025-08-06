@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 18:24+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: doubledip <islu@gmx.de>\n"
 "Language-Team: julianko\n"
@@ -71,9 +71,6 @@ msgstr ""
 "https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
 "o aquí: samsamsam@o2.pl"
 
-msgid " "
-msgstr ""
-
 msgid "    *    Votes: "
 msgstr ""
 
@@ -135,10 +132,6 @@ msgstr ""
 
 msgid "\"Web\" streams player"
 msgstr "\"Web\" Streams Player"
-
-#, python-format
-msgid "%s "
-msgstr ""
 
 #, python-format
 msgid "%s - service overview"
@@ -307,7 +300,7 @@ msgstr ""
 msgid "--Other--"
 msgstr "--Otro--"
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr ""
 
 #, fuzzy
@@ -327,7 +320,7 @@ msgstr "letterbox"
 msgid "16:9 always"
 msgstr ""
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr ""
 
 #, fuzzy
@@ -2944,7 +2937,7 @@ msgstr "Resultados de la búsqueda"
 msgid "Search type"
 msgstr "Tipo de Busqueda"
 
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr "Buscar en YouTube "
 
 #, fuzzy, python-format

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 18:24+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: 2025-07-31 19:51+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
@@ -76,9 +76,6 @@ msgstr ""
 "Sie können Probleme auch hier melden: \n"
 " https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid " "
-msgstr " "
-
 msgid "    *    Votes: "
 msgstr "    *    Abstimmungen: "
 
@@ -137,10 +134,6 @@ msgstr "Das virtuelle \"%s\" Tastatur-Layout ist nicht vorhanden."
 
 msgid "\"Web\" streams player"
 msgstr "\"Web\" Streams Player"
-
-#, python-format
-msgid "%s "
-msgstr "%s "
 
 #, python-format
 msgid "%s - service overview"
@@ -309,7 +302,7 @@ msgstr "--Beliebige--"
 msgid "--Other--"
 msgstr "--Andere--"
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr "12 Stunden-Format "
 
 msgid "16:10 Letterbox"
@@ -327,7 +320,7 @@ msgstr "16:9 Letterbox"
 msgid "16:9 always"
 msgstr "16:9 immer"
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr "24 Stunden-Format "
 
 msgid "4:3 Letterbox"
@@ -2792,7 +2785,7 @@ msgstr "Suchergebnisse"
 msgid "Search type"
 msgstr "Suchmodus"
 
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr "Suche auf Youtube "
 
 #, python-format

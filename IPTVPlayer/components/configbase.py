@@ -77,7 +77,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self.setup_title = (_("E2iPlayer - settings"))
 
         self["key_green"] = StaticText(_("Save"))
-        self["footnote"] = Label(_(" "))
+        self["footnote"] = Label()
         self["key_red"] = StaticText(_("Cancel"))
 
         self["actions"] = ActionMap(["SetupActions", "ColorActions", "WizardActions", "ListboxActions", "IPTVPlayerListActions"],

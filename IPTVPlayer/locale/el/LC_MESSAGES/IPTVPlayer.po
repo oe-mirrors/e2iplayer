@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 18:24+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: 2025-06-19 15:44+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -80,9 +80,6 @@ msgstr ""
 "Μπορείτε επίσης να αναφέρετε το πρόβλημα εδώ: \n"
 " https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid " "
-msgstr " "
-
 msgid "    *    Votes: "
 msgstr ""
 
@@ -141,10 +138,6 @@ msgstr "Η διάταξη εικονικού πληκτρολογίου \"%s\" �
 
 msgid "\"Web\" streams player"
 msgstr "Αναπαραγωγή ροών \"Web\""
-
-#, python-format
-msgid "%s "
-msgstr "%s "
 
 #, python-format
 msgid "%s - service overview"
@@ -313,7 +306,7 @@ msgstr "--Οποιοδήποτε--"
 msgid "--Other--"
 msgstr "--Άλλα-"
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr "Μορφή 12 ωρών "
 
 msgid "16:10 Letterbox"
@@ -331,7 +324,7 @@ msgstr "16:9 Γραμματοκιβώτιο"
 msgid "16:9 always"
 msgstr "16:9 πάντα"
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr "Μορφή 24 ωρών "
 
 msgid "4:3 Letterbox"
@@ -2802,7 +2795,7 @@ msgstr "Αποτελέσματα αναζήτησης"
 msgid "Search type"
 msgstr "Τύπος αναζήτησης"
 
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr "Αναζήτηση υλικού youtube "
 
 #, python-format

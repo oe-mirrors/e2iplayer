@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 18:24+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: 2025-06-29 17:27+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -79,9 +79,6 @@ msgstr ""
 "A problémát itt is bejelentheted: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid " "
-msgstr " "
-
 msgid "    *    Votes: "
 msgstr "    *    Szavazatok: "
 
@@ -140,10 +137,6 @@ msgstr "„%s” Virtuális billentyűzetkiosztás nem érhető el."
 
 msgid "\"Web\" streams player"
 msgstr "„Web” stream lejátszó"
-
-#, python-format
-msgid "%s "
-msgstr "%s "
 
 #, python-format
 msgid "%s - service overview"
@@ -312,7 +305,7 @@ msgstr "--Bármilyen--"
 msgid "--Other--"
 msgstr "--Más--"
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr "12 órás formátum "
 
 msgid "16:10 Letterbox"
@@ -330,7 +323,7 @@ msgstr "16:9-es képarányú postaláda"
 msgid "16:9 always"
 msgstr "16:9 mindig"
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr "24 órás formátum "
 
 msgid "4:3 Letterbox"
@@ -2798,7 +2791,7 @@ msgstr "Keresési eredmények"
 msgid "Search type"
 msgstr "Keresés típusa"
 
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr "Youtube tartalmak keresése "
 
 #, python-format

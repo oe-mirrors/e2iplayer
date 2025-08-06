@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 18:24+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n"
 "Language-Team: IPTVPlayer\n"
@@ -77,9 +77,6 @@ msgstr ""
 "Możesz również zgłosić problem tutaj: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid " "
-msgstr " "
-
 msgid "    *    Votes: "
 msgstr ""
 
@@ -139,10 +136,6 @@ msgstr "Plik konfiguracyjny \"%s\" klawiatury wirtualnej jest niedostępny."
 
 msgid "\"Web\" streams player"
 msgstr "Odtwarzacz strumieni z Internetu"
-
-#, python-format
-msgid "%s "
-msgstr "%s "
 
 #, python-format
 msgid "%s - service overview"
@@ -311,7 +304,7 @@ msgstr "--Dowolny--"
 msgid "--Other--"
 msgstr "--Pozostałe--"
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr "format 12 godzinny "
 
 msgid "16:10 Letterbox"
@@ -329,7 +322,7 @@ msgstr ""
 msgid "16:9 always"
 msgstr "16:9 zawsze"
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr "format 24 godzinny "
 
 msgid "4:3 Letterbox"
@@ -2829,7 +2822,7 @@ msgstr "Wyniki wyszukiwania"
 msgid "Search type"
 msgstr "Wybierz typ wyszukiwania"
 
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr "Szukaj materiałów w YouTube "
 
 #, python-format

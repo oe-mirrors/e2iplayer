@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 18:24+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: 2025-06-29 16:00+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -79,9 +79,6 @@ msgstr ""
 "Problém môžete nahlásiť aj tu: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid " "
-msgstr " "
-
 msgid "    *    Votes: "
 msgstr "    *    Hlasy: "
 
@@ -140,10 +137,6 @@ msgstr "Rozloženie virtuálnej klávesnice \"%s\" nie je k dispozícii."
 
 msgid "\"Web\" streams player"
 msgstr "Prehrávač streamov \"Web\""
-
-#, python-format
-msgid "%s "
-msgstr "%s "
 
 #, python-format
 msgid "%s - service overview"
@@ -312,7 +305,7 @@ msgstr "--Akýkoľvek--"
 msgid "--Other--"
 msgstr "--Iný--"
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr "12-hodinový formát "
 
 msgid "16:10 Letterbox"
@@ -330,7 +323,7 @@ msgstr "16:9 Letterbox"
 msgid "16:9 always"
 msgstr "16:9 vždy"
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr "24-hodinový formát "
 
 msgid "4:3 Letterbox"
@@ -2801,7 +2794,7 @@ msgstr "Výsledky vyhľadávania"
 msgid "Search type"
 msgstr "Typ vyhľadávania"
 
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr "Vyhľadávanie materiálov na youtube "
 
 #, python-format

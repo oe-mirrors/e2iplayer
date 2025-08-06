@@ -538,7 +538,7 @@ class IPTVDMNotificationWidget(Screen):
         Screen.__init__(self, session)
         self.skin = IPTVDMNotificationWidget.skin
         self.skinName = ["IPTVDMNotificationScreen", "IPTVDMNotificationWidget"]
-        self['message_label'] = Label(_(" "))
+        self['message_label'] = Label()
 
     def setText(self, text):
         self['message_label'].setText(text)

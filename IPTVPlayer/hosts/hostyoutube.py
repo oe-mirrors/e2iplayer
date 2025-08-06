@@ -69,7 +69,7 @@ class Youtube(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/YouTube_Logo_2017.svg/640px-YouTube_Logo_2017.svg.png'
         self.yeah = self.lenhistory()
         self.MAIN_GROUPED_TAB = [{'category': 'from_file', 'title': _("User links"), 'desc': _("User links stored in the ytlist.txt file.")},
-                                 {'category': 'search', 'title': _("Search"), 'desc': _("Search youtube materials "), 'search_item': True},
+                                 {'category': 'search', 'title': _("Search"), 'desc': _("Search youtube materials"), 'search_item': True},
                                  {'category': 'feeds', 'title': _("Trending"), 'desc': _("Browse youtube trending feeds")},
                                  {'category': 'search_history', 'title': _("Search history"), 'desc': _("History of searched phrases.")},
                                  {'category': 'delete_history', 'title': _('Delete search history'), 'desc': self.yeah}]

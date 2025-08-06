@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 18:24+0200\n"
+"POT-Creation-Date: 2025-08-06 19:02+0200\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -59,9 +59,6 @@ msgid ""
 "\n"
 "You can also report problem here: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-msgstr ""
-
-msgid " "
 msgstr ""
 
 msgid "    *    Votes: "
@@ -124,10 +121,6 @@ msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr ""
 
 msgid "\"Web\" streams player"
-msgstr ""
-
-#, python-format
-msgid "%s "
 msgstr ""
 
 #, python-format
@@ -296,7 +289,7 @@ msgstr ""
 msgid "--Other--"
 msgstr "--Outros--"
 
-msgid "12 hour format "
+msgid "12 hour format"
 msgstr ""
 
 msgid "16:10 Letterbox"
@@ -314,7 +307,7 @@ msgstr ""
 msgid "16:9 always"
 msgstr ""
 
-msgid "24 hour format "
+msgid "24 hour format"
 msgstr ""
 
 msgid "4:3 Letterbox"
@@ -2848,7 +2841,7 @@ msgid "Search type"
 msgstr "Tipo de procura"
 
 #, fuzzy
-msgid "Search youtube materials "
+msgid "Search youtube materials"
 msgstr "Procurar vídeos YouTube."
 
 #, fuzzy, python-format
