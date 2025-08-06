@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 18:24+0200\n"
+"POT-Creation-Date: 2025-08-05 22:08+0200\n"
 "PO-Revision-Date: 2025-08-02 13:55+0300\n"
 "Last-Translator: angel_heart[Mohamed Elsafty]\n"
 "Language-Team: \n"
@@ -1229,12 +1229,14 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "حدث خطأ أثناء الاتصال بالخادم."
 
+#, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "حدث خطأ أثناء حذف الملف \"%s\".\n"
 
 msgid "Error during deletion of the debug file."
 msgstr "حدث خطأ أثناء حذف ملف التصحيح."
 
+#, python-format
 msgid ""
 "Error message: \"%s\".\n"
 "Error code: \"%s\"."
@@ -1242,6 +1244,7 @@ msgstr ""
 "رسالة الخطأ: \"%s\".\n"
 "رمز الخطأ: \"%s\"."
 
+#, python-format
 msgid "Error message: %s\n"
 msgstr "رسالة الخطأ: %s\n"
 
@@ -1251,9 +1254,11 @@ msgstr "حدث خطأ"
 msgid "Error occurs during download."
 msgstr "حدث خطأ أثناء التنزيل."
 
+#, python-format
 msgid "Error reading file \"%s\".\n"
 msgstr "حدث خطأ أثناء قراءة الملف \"%s\".\n"
 
+#, python-format
 msgid "Error writing file \"%s\".\n"
 msgstr "حدث خطأ أثناء كتابة الملف \"%s\".\n"
 
@@ -1275,18 +1280,22 @@ msgstr "إعداد مشغل الفيديو الخارجي"
 msgid "FREE"
 msgstr "مجاني"
 
+#, python-format
 msgid "Fail to get \"%s\"."
 msgstr "فشل في الحصول على \"%s\"."
 
 msgid "Fail to get captcha data."
 msgstr "فشل في الحصول على بيانات الكابتشا."
 
+#, python-format
 msgid "Failed to connect to server \"%s\"."
 msgstr "فشل الاتصال بالخادم \"%s\"."
 
+#, python-format
 msgid "Failed to convert the file \"%s\" to UTF-8."
 msgstr "فشل في تحويل الملف \"%s\" إلى ترميز UTF-8."
 
+#, python-format
 msgid "Failed to create directory \"%s\"."
 msgstr "فشل في إنشاء المجلد \"%s\"."
 
@@ -1299,21 +1308,26 @@ msgstr "فشل في تحميل الترجمة."
 msgid "Failed to gzip."
 msgstr "فشل في ضغط الملف بـ gzip."
 
+#, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
 msgstr "فشل تسجيل الدخول للمستخدم \"%s\". يرجى التحقق من اسم المستخدم وكلمة المرور."
 
+#, python-format
 msgid "Failed to open the file \"%s\"."
 msgstr "فشل في فتح الملف \"%s\"."
 
 msgid "Failed to page with subtitle link."
 msgstr "فشل في تحميل الصفحة التي تحتوي على رابط الترجمة."
 
+#, python-format
 msgid "Failed to write file \"%s\"."
 msgstr "فشل في كتابة الملف \"%s\"."
 
+#, python-format
 msgid "Failed to write the file \"%s\"."
 msgstr "فشل في كتابة الملف \"%s\"."
 
+#, python-format
 msgid "Failed: %s"
 msgstr "فشل: %s"
 
@@ -1332,18 +1346,22 @@ msgstr "مدير المفضلة"
 msgid "Felhőkép"
 msgstr "صورة الأقمار الصناعية"
 
+#, python-format
 msgid "File \"%s\" already exists"
 msgstr "الملف \"%s\" موجود بالفعل"
 
+#, python-format
 msgid "File \"%s\" already exists!"
 msgstr "الملف \"%s\" موجود بالفعل!"
 
 msgid "File Not Found."
 msgstr "الملف غير موجود."
 
+#, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "تمت إضافة الملف [%s] إلى قائمة التنزيل."
 
+#, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "لا يمكن تحميل الملف. البروتوكول [%s] غير مدعوم"
 
@@ -1410,6 +1428,7 @@ msgstr "الوظيفة محمية بواسطة reCAPTCHA من Google!"
 msgid "GSTplayer no IFD workarround"
 msgstr "حل مؤقت لمشكلة IFD في GSTplayer"
 
+#, python-format
 msgid "Game: %s"
 msgstr "اللعبة: %s"
 
@@ -1425,6 +1444,7 @@ msgstr "النوع:"
 msgid "Genre: "
 msgstr "النوع: "
 
+#, python-format
 msgid "Genre: %s"
 msgstr "النوع: %s"
 
@@ -1473,21 +1493,25 @@ msgstr "اختيار الخدمات الرسومية"
 msgid "Greek"
 msgstr "اليونانية"
 
+#, python-format
 msgid "Group \"%s\" already exists."
 msgstr "المجموعة \"%s\" موجودة بالفعل."
 
+#, python-format
 msgid "Group %d"
 msgstr "المجموعة %d"
 
 msgid "Group links into categories: "
 msgstr "تجميع الروابط في فئات: "
 
+#, python-format
 msgid "Group with id[%s] not found."
 msgstr "لم يتم العثور على مجموعة بالمعرف [%s]."
 
 msgid "Groups"
 msgstr "المجموعات"
 
+#, python-format
 msgid "Guest timeout: %s"
 msgstr "مدة انتهاء الضيف: %s"
 
@@ -1497,6 +1521,7 @@ msgstr "اقتراحات HDFull"
 msgid "HLS/m3u8"
 msgstr "HLS / m3u8"
 
+#, python-format
 msgid "HTTPS connection error \"%s\"\n"
 msgstr "خطأ في الاتصال عبر HTTPS: \"%s\"\n"
 
@@ -1506,6 +1531,7 @@ msgstr "يد"
 msgid "Hardware floating point"
 msgstr "الوحدة العائمة في العتاد"
 
+#, python-format
 msgid "Hide \"%s\" group"
 msgstr "إخفاء المجموعة \"%s\""
 
@@ -2362,6 +2388,7 @@ msgstr "حماية الرقم السري للإضافة"
 msgid "Platform"
 msgstr "المنصة"
 
+#, python-format
 msgid "Play with [%s] player"
 msgstr "تشغيل باستخدام المشغل [%s]"
 
@@ -2374,9 +2401,11 @@ msgstr "يمكن تشغيله من "
 msgid "Playback UHD :"
 msgstr "تشغيل UHD :"
 
+#, python-format
 msgid "Player %s"
 msgstr "المشغل %s"
 
+#, python-format
 msgid "Player %s: %s"
 msgstr "المشغل %s: %s"
 
@@ -2401,6 +2430,7 @@ msgstr ""
 "يرجى فتح الموقع:\n"
 "http://{0}:{1}"
 
+#, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr "يرجى إعادة تشغيل جهاز Enigma2 والموافقة على تثبيت أداة %s عندما يعرضها %s."
 
@@ -2423,12 +2453,15 @@ msgstr ""
 msgid "Please retry later."
 msgstr "يرجى المحاولة لاحقًا."
 
+#, python-format
 msgid "Please set valid %s in the %s configuration."
 msgstr "يرجى تعيين %s صالح في إعدادات %s."
 
+#, python-format
 msgid "Please visit \"%s\" and confirm that you are human."
 msgstr "يرجى زيارة \"%s\" والتأكيد أنك لست روبوتًا."
 
+#, python-format
 msgid "Please visit %s to learn how to redirect this task to the external device."
 msgstr "يرجى زيارة %s لمعرفة كيفية تحويل هذه المهمة إلى جهاز خارجي."
 
@@ -2597,6 +2630,7 @@ msgstr "الترتيب"
 msgid "Rating"
 msgstr "التقييم"
 
+#, python-format
 msgid "Rating %s"
 msgstr "التقييم %s"
 
@@ -2639,6 +2673,7 @@ msgstr "تذكر آخر موضع مشاهدة"
 msgid "Remove"
 msgstr "إزالة"
 
+#, python-format
 msgid "Remove \"%s\" item"
 msgstr "إزالة العنصر \"%s\""
 
@@ -2666,6 +2701,7 @@ msgstr "إعادة عرض البرامج"
 msgid "Reset State"
 msgstr "إعادة التهيئة"
 
+#, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
 "\n"
@@ -2673,6 +2709,7 @@ msgstr ""
 "فشل حل hCaptcha باستخدام %s!\n"
 "\n"
 
+#, python-format
 msgid ""
 "Resolving reCaptcha with %s failed!\n"
 "\n"
