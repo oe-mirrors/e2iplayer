@@ -1,0 +1,31 @@
+<screen position="0,40" size="1280,720" title="E2iPlayer" backgroundColor="#00000000">
+	<widget source="global.CurrentTime" render="Label" position="930,580" size="150,35" backgroundColor="#00000000" foregroundColor="#00ffffff" transparent="1" zPosition="1" font="Regular;30" valign="center" halign="right">
+		<convert type="ClockToText">Format:%-H:%M</convert>
+	</widget>
+	<widget source="global.CurrentTime" render="Label" position="880,615" size="200,25" backgroundColor="#18101214" foregroundColor="#00ffffff" transparent="1" zPosition="1" font="Regular;18" valign="center" halign="right">
+		<convert type="ClockToText">Format:%A, %d.%m.%Y</convert>
+	</widget>
+	<widget source="session.VideoPicture" render="Pig" position="821,53" size="443,248" zPosition="3" backgroundColor="transparent"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/MiniTV_black_HD/images/tv_2.png" position="803,40" size="475,275" alphatest="on"/>
+	<widget name="headertext" position="5,5" zPosition="1" size="1080,28" font="Regular;25" transparent="1" backgroundColor="#00000000" foregroundColor="#4876FF"/>
+	<widget name="statustext" position="453,240" zPosition="1" size="537,90" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="#00000000"/>
+	<widget name="list" position="13,40" zPosition="2" size="786,340" scrollbarMode="showOnDemand" itemHeight="35" transparent="1" backgroundColor="#00000000"/>
+	<widget name="console" position="10,390" zPosition="1" size="800,262" font="Regular;17" transparent="1" backgroundColor="#00000000" foregroundColor="#32CD32"/>
+	<widget name="cover" zPosition="1" position="842,317" size="401,255" alphatest="blend" borderWidth="2" borderColor="white" backgroundColor="black"/>
+	<widget name="sequencer" position="0,0" zPosition="6" size="1090,525" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#00000000"/>
+	<ePixmap position="30,647" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/red.png" transparent="1" alphatest="on"/>
+	<ePixmap position="287,647" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/green.png" transparent="1" alphatest="on"/>
+	<ePixmap position="554,647" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/yellow.png" transparent="1" alphatest="on"/>
+	<ePixmap position="801,647" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/blue.png" transparent="1" alphatest="on"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/iptvlogo.png" position="1120,620" size="150,60" alphatest="blend"/>
+	<widget name="playerlogo" zPosition="4" position="1130,2" size="120,40" alphatest="blend"/>
+	<widget render="Label" source="key_red" position="65,647" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+	<widget name="key_green" position="322,647" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+	<widget render="Label" source="key_yellow" position="589,647" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+	<widget render="Label" source="key_blue" position="836,647" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+	<widget name="spinner" zPosition="2" position="689,300" size="16,16" transparent="1" alphatest="blend"/>
+	<widget name="spinner_1" zPosition="1" position="689,300" size="16,16" transparent="1" alphatest="blend"/>
+	<widget name="spinner_2" zPosition="1" position="705,300" size="16,16" transparent="1" alphatest="blend"/>
+	<widget name="spinner_3" zPosition="1" position="721,300" size="16,16" transparent="1" alphatest="blend"/>
+	<widget name="spinner_4" zPosition="1" position="737,300" size="16,16" transparent="1" alphatest="blend"/>
+</screen>
