@@ -6,7 +6,7 @@
 		<convert type="ClockToText">Format:%A, %d.%m.%Y</convert>
 	</widget>
 	<widget source="session.VideoPicture" render="Pig" position="1146,70" size="713,410" zPosition="3" backgroundColor="transparent"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/miniTV_black_Full HD/images/tv_2.png" position="1118,50" size="764,452" alphatest="on"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/MiniTV_black_Full HD/images/tv_2.png" position="1118,50" size="764,452" alphatest="on"/>
 	<widget name="headertext" position="10,0" zPosition="1" size="1800,50" font="Regular;40" transparent="1" backgroundColor="background" foregroundColor="#4876FF"/>
 	<widget name="statustext" position="453,240" zPosition="1" size="960,150" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="black"/>
 	<widget name="list" position="10,60" zPosition="2" size="1080,600" scrollbarMode="showOnDemand" itemHeight="40" transparent="1" backgroundColor="#00000000"/>
