@@ -1178,6 +1178,8 @@ class E2iPlayerWidget(Screen):
                 if not title:
                     _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
                     title = _temp.gettytul()
+                elif title in ("LocalMedia", "Favourites"):
+                    title = _(title)
             except Exception:
                 printExc('get host name exception for host "%s"' % hostName)
                 brokenHostList.append('host' + hostName)
