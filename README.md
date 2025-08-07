@@ -24,12 +24,18 @@ includes Movies, TV series, Catoons, Anime, Music, Sport, Live Streams, Document
 
 ---
 
+
+### 📜 License [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+This plugin is released under GPLv3. See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html#license-text) for full details.
+
+---
+
 ### 🚀 Features
 - 🎥 **YouTube Player Support**
 - 🖥️ **Responsive UI**  
   Supports different screen resolutions (Full HD and HD) with custom skins.
 - 🔍 **Browse M3U Playlists**
-- 🎥 **Media Player**
+- 📺 **Media Player**
 - 📁 **Favorites lists**
 
 ---
@@ -81,8 +87,8 @@ You can activate Logs and choose the path in preferences. If errors or malfuncti
 
 ---
 
-### 🤝 Contributing
-Feel free to open issues or contribute!
+### 🤝 Contributing & Contact
+For questions or feedback, feel free and please open an issue or contribute with a Pull Request!
 
 Pull requests are very welcome for:
 - Feature enhancements
@@ -92,3 +98,8 @@ Pull requests are very welcome for:
 - new Hosts
 
 Please fork the repository, create a feature branch, and submit a Pull Request.
+
+---
+
+### ℹ️ WIKI
+See the [Wiki](https://github.com/oe-mirrors/e2iplayer/wiki) for more information
