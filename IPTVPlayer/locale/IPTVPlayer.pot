@@ -615,7 +615,7 @@ msgstr ""
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr ""
 
-msgid "Bűnügyi filmek és sorozatok"
+msgid "Crime movies and series"
 msgstr ""
 
 msgid "CHANNELS "
@@ -660,7 +660,7 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-msgid "Catrtoon list"
+msgid "Cartoon list"
 msgstr ""
 
 msgid "Change active movie player"
@@ -769,7 +769,7 @@ msgstr ""
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr ""
 
-msgid "Családi filmek"
+msgid "Family movies"
 msgstr ""
 
 msgid "Curator"
@@ -1081,10 +1081,10 @@ msgstr ""
 msgid "Educational Animation"
 msgstr ""
 
-msgid "Elérhető legjobb minőség beállítása"
+msgid "Setting the best quality available"
 msgstr ""
 
-msgid "Előrejelzés"
+msgid "Forecast"
 msgstr ""
 
 msgid "Email"
@@ -1272,7 +1272,7 @@ msgstr ""
 msgid "Favourites manager"
 msgstr ""
 
-msgid "Felhőkép"
+msgid "Cloudscape"
 msgstr ""
 
 #, python-format
@@ -1297,10 +1297,10 @@ msgstr ""
 msgid "Film"
 msgstr ""
 
-msgid "Film Kategóriák"
+msgid "Movie Categories"
 msgstr ""
 
-msgid "Filmek"
+msgid "Movies"
 msgstr ""
 
 msgid "Filmstarts Suggestions"
@@ -1506,7 +1506,7 @@ msgstr ""
 msgid "Hungarian"
 msgstr ""
 
-msgid "Hőtérkép"
+msgid "Heat map"
 msgstr ""
 
 msgid "IMDb Suggestions"
@@ -1569,7 +1569,7 @@ msgstr ""
 msgid "Interactive Learning Center(ILC)"
 msgstr ""
 
-msgid "Internetes rádiók listázása"
+msgid "Listing Internet radio stations"
 msgstr ""
 
 msgid "Invalid email."
@@ -1581,7 +1581,7 @@ msgstr ""
 msgid "Is this message displayed correctly?"
 msgstr ""
 
-msgid "Ismeretterjesztő"
+msgid "Knowledgeable"
 msgstr ""
 
 msgid "It is not allowed to call getURLRequestData from main thread."
@@ -1656,31 +1656,31 @@ msgstr ""
 msgid "Journal Club"
 msgstr ""
 
-msgid "Játék és vetélkedő"
+msgid "Game and quiz"
 msgstr ""
 
-msgid "Kabaré, vígjáték"
+msgid "Cabaret, comedy"
 msgstr ""
 
-msgid "Kamerák"
+msgid "Cameras"
 msgstr ""
 
-msgid "Kategóriák"
+msgid "Categories"
 msgstr ""
 
-msgid "Keresés"
+msgid "Search"
 msgstr ""
 
-msgid "Keresési előzmények"
+msgid "Search history"
 msgstr ""
 
 msgid "Knee & Sports"
 msgstr ""
 
-msgid "Képtár"
+msgid "Gallery"
 msgstr ""
 
-msgid "Következő oldal"
+msgid "Next page"
 msgstr ""
 
 msgid "LATEST"
@@ -1775,7 +1775,7 @@ msgstr ""
 msgid "Lead programmer: "
 msgstr ""
 
-msgid "Legfrissebb"
+msgid "Latest
 msgstr ""
 
 msgid "Level:"
@@ -1954,7 +1954,7 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
-msgid "Mesék"
+msgid "Tales"
 msgstr ""
 
 msgid "Mid"
@@ -2056,7 +2056,7 @@ msgstr ""
 msgid "MyE2i script finished."
 msgstr ""
 
-msgid "Műsorok"
+msgid "Shows"
 msgstr ""
 
 msgid "NJPW"
@@ -2935,10 +2935,10 @@ msgstr ""
 msgid "Some settings will be applied only after GUI restart."
 msgstr ""
 
-msgid "Sorozat Kategóriák"
+msgid "Series Categories"
 msgstr ""
 
-msgid "Sorozatok"
+msgid "Series"
 msgstr ""
 
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
@@ -3102,7 +3102,7 @@ msgstr ""
 msgid "Subtitles for: %s"
 msgstr ""
 
-msgid "Sugárzó rádiók listázása"
+msgid "Listing of broadcasting radios"
 msgstr ""
 
 msgid "Surgical Approaches"
@@ -3126,7 +3126,7 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-msgid "Szabadkai Magyar Rádió"
+msgid "Hungarian Radio Subotica"
 msgstr ""
 
 msgid "Színház"
@@ -3168,7 +3168,7 @@ msgstr ""
 msgid "TV-Series"
 msgstr ""
 
-msgid "TV-k listázása"
+msgid "Listing TVs"
 msgstr ""
 
 msgid "Talks"
@@ -3343,10 +3343,10 @@ msgstr ""
 msgid "Type: %s"
 msgstr ""
 
-msgid "Térképek"
+msgid "Maps"
 msgstr ""
 
-msgid "Tévéfilmek és sorozatok"
+msgid "TV movies and series"
 msgstr ""
 
 msgid "UFC"
@@ -3588,7 +3588,7 @@ msgstr ""
 msgid "Web proxy"
 msgstr ""
 
-msgid "Webkamerák listázása"
+msgid "List of webcams"
 msgstr ""
 
 msgid "Weekly Indys"
