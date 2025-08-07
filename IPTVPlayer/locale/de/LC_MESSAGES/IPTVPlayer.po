@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 19:02+0200\n"
+"POT-Creation-Date: 2025-08-07 22:23+0200\n"
 "PO-Revision-Date: 2025-07-31 19:51+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
@@ -633,9 +633,6 @@ msgstr "Nach Jahr"
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Umgehe Geoblocking für VOD (könnte illegal sein):"
 
-msgid "Bűnügyi filmek és sorozatok"
-msgstr "Krimis und Serien"
-
 msgid "CHANNELS "
 msgstr "KANÄLE "
 
@@ -791,9 +788,6 @@ msgstr "Kritischer Fehler - Cookie kann nicht gespeichert werden!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Kritischer Fehler - Content-Encoding gzip kann nicht behandelt werden!"
-
-msgid "Családi filmek"
-msgstr "Familienfilme"
 
 msgid "Curator"
 msgstr "Kurator"
@@ -1134,12 +1128,6 @@ msgstr "Favoriten bearbeiten"
 msgid "Educational Animation"
 msgstr "Pädagogische Animation"
 
-msgid "Elérhető legjobb minőség beállítása"
-msgstr "Stellen Sie die beste verfügbare Qualität ein"
-
-msgid "Előrejelzés"
-msgstr "Vorhersage"
-
 msgid "Email"
 msgstr "E-Mail"
 
@@ -1331,9 +1319,6 @@ msgstr "Favoriten-Gruppen"
 msgid "Favourites manager"
 msgstr "Favoriten Verwaltung"
 
-msgid "Felhőkép"
-msgstr "Wolkenbild"
-
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Datei \"%s\" existiert bereits"
@@ -1355,12 +1340,6 @@ msgstr "Datei kann nicht heruntergeladen werden. Protokoll [%s] wird nicht unter
 
 msgid "Film"
 msgstr "Film"
-
-msgid "Film Kategóriák"
-msgstr "Film Kategorien"
-
-msgid "Filmek"
-msgstr "Filme"
 
 msgid "Filmstarts Suggestions"
 msgstr "Filmstarts Vorschläge"
@@ -1565,9 +1544,6 @@ msgstr "Humanitär"
 msgid "Hungarian"
 msgstr "Ungarisch"
 
-msgid "Hőtérkép"
-msgstr "Wärmekarte"
-
 msgid "IMDb Suggestions"
 msgstr "IMDb Vorschläge"
 
@@ -1582,9 +1558,6 @@ msgstr "Icons Qualität"
 
 msgid "Icons size"
 msgstr "Icons  Größe"
-
-msgid "Időkép"
-msgstr "Zeitbild"
 
 msgid "Industry"
 msgstr "Industrie"
@@ -1628,9 +1601,6 @@ msgstr "Eingabe"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interaktives Lernzentrum (ILC)"
 
-msgid "Internetes rádiók listázása"
-msgstr "Liste der Internet-Radiosender"
-
 msgid "Invalid email."
 msgstr "Ungültige E-Mail."
 
@@ -1639,9 +1609,6 @@ msgstr "Ungültiger Name."
 
 msgid "Is this message displayed correctly?"
 msgstr "Wird diese Nachricht korrekt dargestellt?"
-
-msgid "Ismeretterjesztő"
-msgstr "Verbreitung"
 
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr "Es ist nicht erlaubt, getURLRequestData vom Hauptthread aus aufzurufen."
@@ -1721,32 +1688,8 @@ msgstr "Jobs & Positionen"
 msgid "Journal Club"
 msgstr "Journal Club"
 
-msgid "Játék és vetélkedő"
-msgstr "Spiel und Quiz"
-
-msgid "Kabaré, vígjáték"
-msgstr "Kabarett, Komödie"
-
-msgid "Kamerák"
-msgstr "Kameras"
-
-msgid "Kategóriák"
-msgstr "Kategorien"
-
-msgid "Keresés"
-msgstr "Suche unter"
-
-msgid "Keresési előzmények"
-msgstr "Suchverlauf"
-
 msgid "Knee & Sports"
 msgstr "Knie & Sport"
-
-msgid "Képtár"
-msgstr "Galerie"
-
-msgid "Következő oldal"
-msgstr "Nächste Seite"
 
 msgid "LATEST"
 msgstr "LETZTE"
@@ -1841,9 +1784,6 @@ msgstr "Lateinamerikaner"
 
 msgid "Lead programmer: "
 msgstr "Leitender Programmierer: "
-
-msgid "Legfrissebb"
-msgstr "Neueste"
 
 msgid "Level:"
 msgstr "Level:"
@@ -2023,9 +1963,6 @@ msgstr "Besprechungen"
 msgid "Menu"
 msgstr "Menü"
 
-msgid "Mesék"
-msgstr "Geschichten"
-
 msgid "Mid"
 msgstr "Mitte"
 
@@ -2129,9 +2066,6 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "MyE2i Script beendet."
-
-msgid "Műsorok"
-msgstr "Sendungen"
 
 msgid "NJPW"
 msgstr "NJPW"
@@ -2317,12 +2251,6 @@ msgstr "Diese Seite ist nur für eingeloggte Mitglieder zugänglich."
 
 msgid "Paid"
 msgstr "Bezahl"
-
-msgid "Pannon Rádió"
-msgstr "Pannon Radio"
-
-msgid "Pannon TV"
-msgstr "Pannon TV"
 
 msgid "Password"
 msgstr "Passwort"
@@ -2586,9 +2514,6 @@ msgstr "AKTUELL"
 msgid "REMEMBER: "
 msgstr "ERINNERUNG: "
 
-msgid "Radar"
-msgstr "Radar"
-
 msgid "Radio"
 msgstr "Radio"
 
@@ -2711,9 +2636,6 @@ msgstr "Zurück zur Hosts-Liste"
 
 msgid "Reverse a playlist"
 msgstr "Wiedergabeliste umkehren"
-
-msgid "Romantikus"
-msgstr "Romantisch"
 
 msgid "Russian"
 msgstr "Russisch"
@@ -3026,12 +2948,6 @@ msgstr "Manche Änderungen werden erst nach Movie Player Neustart angewendet."
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Manche Einstellungen werden erst nach GUI Neustart angewendet."
 
-msgid "Sorozat Kategóriák"
-msgstr "Serien-Kategorien"
-
-msgid "Sorozatok"
-msgstr "Serie"
-
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr "Entschuldigung. TVPlayer ist zur Zeit nur in Großbritannien verfügbar"
 
@@ -3193,9 +3109,6 @@ msgstr "Untertitel erfolgreich heruntergeladen. [%s], Umwandlung in UTF-8."
 msgid "Subtitles for: %s"
 msgstr "Untertitel für: %s"
 
-msgid "Sugárzó rádiók listázása"
-msgstr "Auflistung der Radios, die senden"
-
 msgid "Surgical Approaches"
 msgstr "Chirurgische Ansätze"
 
@@ -3216,12 +3129,6 @@ msgstr "Synchronisieren"
 
 msgid "System"
 msgstr "System"
-
-msgid "Szabadkai Magyar Rádió"
-msgstr "Ungarischer Rundfunk in Subotica"
-
-msgid "Színház"
-msgstr "Theater"
 
 msgid "THIS IS A PRIVATE VIDEO."
 msgstr "DIES IST EIN PRIVATES VIDEO."
@@ -3258,9 +3165,6 @@ msgstr "TV Status"
 
 msgid "TV-Series"
 msgstr "TV Serien"
-
-msgid "TV-k listázása"
-msgstr "Auflistung der TVs"
 
 msgid "Talks"
 msgstr "Talks"
@@ -3442,12 +3346,6 @@ msgstr "Typ: "
 #, python-format
 msgid "Type: %s"
 msgstr "Typ: %s"
-
-msgid "Térképek"
-msgstr "Karten"
-
-msgid "Tévéfilmek és sorozatok"
-msgstr "TV-Filme und -Serien"
 
 msgid "UFC"
 msgstr "UFC"
@@ -3690,9 +3588,6 @@ msgstr "Web-Interface Version"
 msgid "Web proxy"
 msgstr "Web Proxy"
 
-msgid "Webkamerák listázása"
-msgstr "Auflistung von Webcams"
-
 msgid "Weekly Indys"
 msgstr "Wöchentliche Indizes"
 
@@ -3805,9 +3700,6 @@ msgstr "Youtube Vorschläge"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "YouTube-Suchen sind schneller, wenn du den API-Schlüssel im Einstellungsmenü eingibst"
-
-msgid "Zene"
-msgstr "Musik"
 
 #, python-format
 msgid "[%s] - configuration"

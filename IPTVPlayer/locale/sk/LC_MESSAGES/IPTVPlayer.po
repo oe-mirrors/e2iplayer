@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 19:02+0200\n"
+"POT-Creation-Date: 2025-08-07 22:23+0200\n"
 "PO-Revision-Date: 2025-06-29 16:00+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -637,9 +637,6 @@ msgstr "Podľa roku"
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Obídenie geografického blokovania videí na vyžiadanie (môže byť nezákonné):"
 
-msgid "Bűnügyi filmek és sorozatok"
-msgstr "Bűnügyi filmek és sorozatok"
-
 msgid "CHANNELS "
 msgstr "KANÁLY "
 
@@ -795,9 +792,6 @@ msgstr "Kritická chyba - súbor cookie nie je možné uložiť!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Kritická chyba - gzip kódovania obsahu nie je možné spracovať!"
-
-msgid "Családi filmek"
-msgstr "Rodinné filmy"
 
 msgid "Curator"
 msgstr "Kurátor"
@@ -1139,12 +1133,6 @@ msgstr "Úprava obľúbených položiek"
 msgid "Educational Animation"
 msgstr "Vzdelávacia animácia"
 
-msgid "Elérhető legjobb minőség beállítása"
-msgstr "Elérhető legjobb minőség beállítása"
-
-msgid "Előrejelzés"
-msgstr "Výsledok"
-
 msgid "Email"
 msgstr "E-mail"
 
@@ -1338,9 +1326,6 @@ msgstr "Obľúbené skupiny"
 msgid "Favourites manager"
 msgstr "Správca obľúbených položiek"
 
-msgid "Felhőkép"
-msgstr "Obrázok Felhőkep"
-
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Súbor \"%s\" už existuje"
@@ -1362,12 +1347,6 @@ msgstr "Súbor nie je možné stiahnuť. Protokol [%s] nie je podporovaný"
 
 msgid "Film"
 msgstr "Film"
-
-msgid "Film Kategóriák"
-msgstr "Filmové kategórie"
-
-msgid "Filmek"
-msgstr "Filmek"
 
 msgid "Filmstarts Suggestions"
 msgstr "Návrhy aplikácie Filmstarts"
@@ -1572,9 +1551,6 @@ msgstr "Humanitárne"
 msgid "Hungarian"
 msgstr "Maďarčina"
 
-msgid "Hőtérkép"
-msgstr "Hőtérkép"
-
 msgid "IMDb Suggestions"
 msgstr "Návrhy IMDb"
 
@@ -1589,9 +1565,6 @@ msgstr "Kvalita ikon"
 
 msgid "Icons size"
 msgstr "Veľkosť ikon"
-
-msgid "Időkép"
-msgstr "Obrázok"
 
 msgid "Industry"
 msgstr "Priemysel"
@@ -1635,9 +1608,6 @@ msgstr "Vstup"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interaktívne vzdelávacie centrum (ILC)"
 
-msgid "Internetes rádiók listázása"
-msgstr "Internetes rádiók listázása"
-
 msgid "Invalid email."
 msgstr "Neplatný email."
 
@@ -1646,9 +1616,6 @@ msgstr "Neplatné meno."
 
 msgid "Is this message displayed correctly?"
 msgstr "Zobrazuje sa toto hlásenie správne?"
-
-msgid "Ismeretterjesztő"
-msgstr "Ismeretterjesztő"
 
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr "Nie je dovolené volať getURLRequestData z hlavného vlákna."
@@ -1728,32 +1695,8 @@ msgstr "Pracovné miesta a pozície"
 msgid "Journal Club"
 msgstr "Klub denníka"
 
-msgid "Játék és vetélkedő"
-msgstr "Hráči a veteráni"
-
-msgid "Kabaré, vígjáték"
-msgstr "Kabaré, návnady"
-
-msgid "Kamerák"
-msgstr "Kamerák"
-
-msgid "Kategóriák"
-msgstr "Kategóriák"
-
-msgid "Keresés"
-msgstr "Keresés"
-
-msgid "Keresési előzmények"
-msgstr "Predchádzajúce zmeny vyhľadávania"
-
 msgid "Knee & Sports"
 msgstr "Koleno a šport"
-
-msgid "Képtár"
-msgstr "Képtár"
-
-msgid "Következő oldal"
-msgstr "Kľúčová slova"
 
 msgid "LATEST"
 msgstr "NAJNOVŠIE"
@@ -1848,9 +1791,6 @@ msgstr "Latinoameričan"
 
 msgid "Lead programmer: "
 msgstr "Hlavný programátor: "
-
-msgid "Legfrissebb"
-msgstr ""
 
 msgid "Level:"
 msgstr "Úroveň:"
@@ -2030,9 +1970,6 @@ msgstr "Stretnutia"
 msgid "Menu"
 msgstr "Menu"
 
-msgid "Mesék"
-msgstr "Mesék"
-
 msgid "Mid"
 msgstr "Stredná"
 
@@ -2136,9 +2073,6 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "Skript MyE2i bol dokončený."
-
-msgid "Műsorok"
-msgstr "Músorok"
 
 msgid "NJPW"
 msgstr "NJPW"
@@ -2324,12 +2258,6 @@ msgstr "Stránka je prístupná iba prihláseným členom."
 
 msgid "Paid"
 msgstr "Zaplatené"
-
-msgid "Pannon Rádió"
-msgstr ""
-
-msgid "Pannon TV"
-msgstr ""
 
 msgid "Password"
 msgstr "Heslo"
@@ -2594,9 +2522,6 @@ msgstr "NEDÁVNO"
 msgid "REMEMBER: "
 msgstr "PAMÄTAŤ: "
 
-msgid "Radar"
-msgstr "Radar"
-
 msgid "Radio"
 msgstr "Zaklikávací krúžol"
 
@@ -2719,9 +2644,6 @@ msgstr "Návrat do zoznamu hostiteľov"
 
 msgid "Reverse a playlist"
 msgstr "Obrátenie playlistu"
-
-msgid "Romantikus"
-msgstr "Romantikus"
 
 msgid "Russian"
 msgstr "Ruština"
@@ -3036,12 +2958,6 @@ msgstr "Niektoré zmeny sa použijú až po reštartovaní prehrávača videozá
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Niektoré nastavenia sa použijú až po reštarte grafického rozhrania."
 
-msgid "Sorozat Kategóriák"
-msgstr "Kategóriá so sorozatmi"
-
-msgid "Sorozatok"
-msgstr "Sorozatok"
-
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr "Prepáč. TVPlayer je momentálne k dispozícii iba vo Veľkej Británii"
 
@@ -3203,9 +3119,6 @@ msgstr "Titulky boli úspešne stiahnuté. [%s], konverzia na UTF-8."
 msgid "Subtitles for: %s"
 msgstr "Titulky pre: %s"
 
-msgid "Sugárzó rádiók listázása"
-msgstr "Sugárzó rádiók listázása"
-
 msgid "Surgical Approaches"
 msgstr "Chirurgické prístupy"
 
@@ -3226,12 +3139,6 @@ msgstr "Synchronizujte"
 
 msgid "System"
 msgstr "Systém"
-
-msgid "Szabadkai Magyar Rádió"
-msgstr ""
-
-msgid "Színház"
-msgstr "Színház"
 
 msgid "THIS IS A PRIVATE VIDEO."
 msgstr "TOTO JE SÚKROMNÉ VIDEO."
@@ -3268,9 +3175,6 @@ msgstr "Stav televízora"
 
 msgid "TV-Series"
 msgstr "Televízne seriály"
-
-msgid "TV-k listázása"
-msgstr "TV-k zoznam"
 
 msgid "Talks"
 msgstr "Hovorí"
@@ -3452,12 +3356,6 @@ msgstr "Typ: "
 #, python-format
 msgid "Type: %s"
 msgstr "Typ: %s"
-
-msgid "Térképek"
-msgstr "Térképek"
-
-msgid "Tévéfilmek és sorozatok"
-msgstr "Telefónne filmy a seriály"
 
 msgid "UFC"
 msgstr "UFC"
@@ -3700,9 +3598,6 @@ msgstr "Verzia webového rozhrania"
 msgid "Web proxy"
 msgstr "Webový server proxy"
 
-msgid "Webkamerák listázása"
-msgstr "Zoznamy webových kamier"
-
 msgid "Weekly Indys"
 msgstr "Týždenný Indys"
 
@@ -3815,9 +3710,6 @@ msgstr "Návrhy služby YouTube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Vyhľadávanie na YouTube je rýchlejšie, ak vyplníte API kľúč v ponuke nastavení"
-
-msgid "Zene"
-msgstr "Zene"
 
 #, python-format
 msgid "[%s] - configuration"

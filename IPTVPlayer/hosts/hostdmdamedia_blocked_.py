@@ -96,11 +96,11 @@ class Dmdamedia(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG('Dmdamedia.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Kategóriák'), 'desc': 'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/'},
-                        {'category': 'list_items', 'title': _('Filmek'), 'desc': 'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/filmek', 'page': '1'},
-                        {'category': 'list_items', 'title': _('Sorozatok'), 'desc': 'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/sorozatok', 'page': '1'},
-                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Kategóriák', 'desc': 'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/'},
+                        {'category': 'list_items', 'title': 'Filmek', 'desc': 'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/filmek', 'page': '1'},
+                        {'category': 'list_items', 'title': 'Sorozatok', 'desc': 'Figyelem: Hibajelentés előtt mindig ellenőrizd a videó meglétét a weboldalon.', 'url': 'https://dmdamedia.hu/sorozatok', 'page': '1'},
+                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
+                        {'category': 'search_history', 'title': 'Keresési előzmények'}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listFilters(self, cItem):

@@ -27,7 +27,7 @@ config.plugins.iptvplayer.tv2play_quality = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Elérhető legjobb minőség beállítása"), config.plugins.iptvplayer.tv2play_quality))
+    optionList.append(getConfigListEntry("Elérhető legjobb minőség beállítása", config.plugins.iptvplayer.tv2play_quality))
     return optionList
 
 
@@ -110,9 +110,9 @@ class TV2Play(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG('TV2Play.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Műsorok'), 'page': 0},
-                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Műsorok', 'page': 0},
+                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
+                        {'category': 'search_history', 'title': 'Keresési előzmények'}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def exploreItems(self, cItem):

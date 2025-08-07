@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 19:02+0200\n"
+"POT-Creation-Date: 2025-08-07 22:23+0200\n"
 "PO-Revision-Date: 2025-06-19 15:44+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -638,9 +638,6 @@ msgstr "Κατά έτος"
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Παράκαμψη γεωγραφικού αποκλεισμού για VODs (μπορεί να είναι παράνομο):"
 
-msgid "Bűnügyi filmek és sorozatok"
-msgstr "Αστυνομικές ταινίες και σειρές"
-
 msgid "CHANNELS "
 msgstr "ΚΑΝΑΛΙΑ "
 
@@ -796,9 +793,6 @@ msgstr "Κρίσιμο σφάλμα - το cookie δεν μπορεί να απ�
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Κρίσιμο Σφάλμα – Το Content-Encoding gzip δεν μπορεί να διαχειριστεί!"
-
-msgid "Családi filmek"
-msgstr "Οικογενειακές ταινίες"
 
 msgid "Curator"
 msgstr "Επιμελητής"
@@ -1140,12 +1134,6 @@ msgstr "Επεξεργασία αγαπημένων"
 msgid "Educational Animation"
 msgstr "Εκπαιδευτικό Animation"
 
-msgid "Elérhető legjobb minőség beállítása"
-msgstr "Ρύθμιση της καλύτερης διαθέσιμης ποιότητας"
-
-msgid "Előrejelzés"
-msgstr "Πρόγνωση"
-
 msgid "Email"
 msgstr "Email"
 
@@ -1339,9 +1327,6 @@ msgstr "Ομάδες αγαπημένων"
 msgid "Favourites manager"
 msgstr "Διαχείριση αγαπημένων"
 
-msgid "Felhőkép"
-msgstr "Δορυφορική εικόνα"
-
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Το αρχείο \"%s\" υπάρχει ήδη"
@@ -1363,12 +1348,6 @@ msgstr "Δεν είναι δυνατή η λήψη του αρχείου. Το �
 
 msgid "Film"
 msgstr "Ταινία"
-
-msgid "Film Kategóriák"
-msgstr "Κατηγορίες Ταινιών"
-
-msgid "Filmek"
-msgstr "Ταινίες"
 
 msgid "Filmstarts Suggestions"
 msgstr "Προτάσεις Filmstarts"
@@ -1573,9 +1552,6 @@ msgstr "Ανθρωπιστικά"
 msgid "Hungarian"
 msgstr "Ουγγρικά"
 
-msgid "Hőtérkép"
-msgstr "Θερμικός χάρτης"
-
 msgid "IMDb Suggestions"
 msgstr "Προτάσεις IMDb"
 
@@ -1590,9 +1566,6 @@ msgstr "Ποιότητα εικονιδίων"
 
 msgid "Icons size"
 msgstr "Μέγεθος εικονιδίων"
-
-msgid "Időkép"
-msgstr "Időkép"
 
 msgid "Industry"
 msgstr "Βιομηχανία"
@@ -1636,9 +1609,6 @@ msgstr "Εισαγωγή"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Διαδραστικό Κέντρο Μάθησης (ILC)"
 
-msgid "Internetes rádiók listázása"
-msgstr "Λίστα διαδικτυακών ραδιοφώνων"
-
 msgid "Invalid email."
 msgstr "Μη έγκυρο email."
 
@@ -1647,9 +1617,6 @@ msgstr "Μη έγκυρο όνομα."
 
 msgid "Is this message displayed correctly?"
 msgstr "Εμφανίζεται σωστά αυτό το μήνυμα;"
-
-msgid "Ismeretterjesztő"
-msgstr "Ντοκιμαντέρ"
 
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr "Δεν επιτρέπεται η κλήση του getURLRequestData από το κύριο νήμα."
@@ -1729,32 +1696,8 @@ msgstr "Θέσεις εργασίας"
 msgid "Journal Club"
 msgstr "Λέσχη περιοδικών"
 
-msgid "Játék és vetélkedő"
-msgstr "Παιχνίδι και τηλεπαιχνίδι"
-
-msgid "Kabaré, vígjáték"
-msgstr "Καμπαρέ, κωμωδία"
-
-msgid "Kamerák"
-msgstr "Κάμερες"
-
-msgid "Kategóriák"
-msgstr "Κατηγορίες"
-
-msgid "Keresés"
-msgstr "Αναζήτηση"
-
-msgid "Keresési előzmények"
-msgstr "Ιστορικό αναζητήσεων"
-
 msgid "Knee & Sports"
 msgstr "Γόνατο & Αθλήματα"
-
-msgid "Képtár"
-msgstr "Συλλογή εικόνων"
-
-msgid "Következő oldal"
-msgstr "Επόμενη σελίδα"
 
 msgid "LATEST"
 msgstr "ΤΕΛΕΥΤΑΙΑ"
@@ -1849,9 +1792,6 @@ msgstr "Λατινικά"
 
 msgid "Lead programmer: "
 msgstr "Κύριος προγραμματιστής: "
-
-msgid "Legfrissebb"
-msgstr ""
 
 msgid "Level:"
 msgstr "Επίπεδο:"
@@ -2031,9 +1971,6 @@ msgstr "Συναντήσεις"
 msgid "Menu"
 msgstr "Μενού"
 
-msgid "Mesék"
-msgstr "Παραμύθια"
-
 msgid "Mid"
 msgstr "Μεσαία"
 
@@ -2137,9 +2074,6 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "Το script MyE2i ολοκληρώθηκε."
-
-msgid "Műsorok"
-msgstr "Εκπομπές"
 
 msgid "NJPW"
 msgstr "NJPW"
@@ -2325,12 +2259,6 @@ msgstr "Η σελίδα είναι προσβάσιμη μόνο από συνδ
 
 msgid "Paid"
 msgstr "Επί πληρωμή"
-
-msgid "Pannon Rádió"
-msgstr ""
-
-msgid "Pannon TV"
-msgstr ""
 
 msgid "Password"
 msgstr "Κωδικός πρόσβασης"
@@ -2595,9 +2523,6 @@ msgstr "ΠΡΟΣΦΑΤΑ"
 msgid "REMEMBER: "
 msgstr "ΝΑ ΘΥΜΑΣΤΕ: "
 
-msgid "Radar"
-msgstr "Ραντάρ"
-
 msgid "Radio"
 msgstr "Ραδιόφωνο"
 
@@ -2720,9 +2645,6 @@ msgstr "Επιστροφή στη λίστα hosts"
 
 msgid "Reverse a playlist"
 msgstr "Αντιστροφή λίστας αναπαραγωγής"
-
-msgid "Romantikus"
-msgstr "Ρομαντικές"
 
 msgid "Russian"
 msgstr "Ρωσικά"
@@ -3037,12 +2959,6 @@ msgstr "Ορισμένες αλλαγές θα εφαρμοστούν μόνο �
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Ορισμένες ρυθμίσεις θα εφαρμοστούν μόνο μετά την επανεκκίνηση του GUI."
 
-msgid "Sorozat Kategóriák"
-msgstr "Κατηγορίες Σειρών"
-
-msgid "Sorozatok"
-msgstr "Σειρές"
-
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr "Συγγνώμη. Το TVPlayer είναι προς το παρόν διαθέσιμο μόνο στο Ηνωμένο Βασίλειο"
 
@@ -3204,9 +3120,6 @@ msgstr "Οι υπότιτλοι λήφθηκαν με επιτυχία. [%s], μ
 msgid "Subtitles for: %s"
 msgstr "Υπότιτλοι για: %s"
 
-msgid "Sugárzó rádiók listázása"
-msgstr "Λίστα μεταδιδόμενων ραδιοφώνων"
-
 msgid "Surgical Approaches"
 msgstr "Χειρουργικές προσεγγίσεις"
 
@@ -3227,12 +3140,6 @@ msgstr "Συγχρονισμός"
 
 msgid "System"
 msgstr "Σύστημα"
-
-msgid "Szabadkai Magyar Rádió"
-msgstr ""
-
-msgid "Színház"
-msgstr "Θέατρο"
 
 msgid "THIS IS A PRIVATE VIDEO."
 msgstr ""
@@ -3269,9 +3176,6 @@ msgstr "Κατάσταση TV"
 
 msgid "TV-Series"
 msgstr "Τηλεοπτικές σειρές"
-
-msgid "TV-k listázása"
-msgstr "Λίστα TV"
 
 msgid "Talks"
 msgstr "Ομιλίες"
@@ -3457,12 +3361,6 @@ msgstr "Τύπος: "
 #, python-format
 msgid "Type: %s"
 msgstr "Τύπος: %s"
-
-msgid "Térképek"
-msgstr "Χάρτες"
-
-msgid "Tévéfilmek és sorozatok"
-msgstr "Τηλεταινίες και σειρές"
 
 msgid "UFC"
 msgstr "UFC"
@@ -3705,9 +3603,6 @@ msgstr "Έκδοση διεπαφής ιστού"
 msgid "Web proxy"
 msgstr "Διαδικτυακός proxy"
 
-msgid "Webkamerák listázása"
-msgstr "Λίστα webcam"
-
 msgid "Weekly Indys"
 msgstr "Εβδομαδιαία Indys"
 
@@ -3820,9 +3715,6 @@ msgstr "Προτάσεις Youtube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Οι αναζητήσεις στο Youtube είναι ταχύτερες αν συμπληρώσετε το API key στο μενού ρυθμίσεων"
-
-msgid "Zene"
-msgstr "Μουσική"
 
 #, python-format
 msgid "[%s] - configuration"

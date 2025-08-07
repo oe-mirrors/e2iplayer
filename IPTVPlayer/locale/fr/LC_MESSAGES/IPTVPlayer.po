@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iptvplayer-for-e 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 19:02+0200\n"
+"POT-Creation-Date: 2025-08-07 22:23+0200\n"
 "PO-Revision-Date: 2018-07-28 16:39+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -656,9 +656,6 @@ msgstr "Par année"
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Contourner le géoblocage pour VODs (il peut être illégal) :"
 
-msgid "Bűnügyi filmek és sorozatok"
-msgstr ""
-
 msgid "CHANNELS "
 msgstr "CHAÎNES"
 
@@ -816,9 +813,6 @@ msgstr "Erreur critique – cookie ne peut pas être sauvé!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Erreur critique - Content-Encoding gzip ne peut pas être manipulé!"
-
-msgid "Családi filmek"
-msgstr ""
 
 msgid "Curator"
 msgstr "Conservateur"
@@ -1165,12 +1159,6 @@ msgstr "Modifier les favoris"
 msgid "Educational Animation"
 msgstr ""
 
-msgid "Elérhető legjobb minőség beállítása"
-msgstr ""
-
-msgid "Előrejelzés"
-msgstr ""
-
 msgid "Email"
 msgstr "Email"
 
@@ -1364,9 +1352,6 @@ msgstr "Groupes de favoris"
 msgid "Favourites manager"
 msgstr "Gestionnaire de favoris"
 
-msgid "Felhőkép"
-msgstr ""
-
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Fichier \"%s\" existe déjà"
@@ -1388,13 +1373,6 @@ msgstr "Le fichier ne peut pas être téléchargé. Protocole[%s] n'est pas pris
 
 #, fuzzy
 msgid "Film"
-msgstr "Films"
-
-msgid "Film Kategóriák"
-msgstr ""
-
-#, fuzzy
-msgid "Filmek"
 msgstr "Films"
 
 msgid "Filmstarts Suggestions"
@@ -1603,9 +1581,6 @@ msgstr ""
 msgid "Hungarian"
 msgstr ""
 
-msgid "Hőtérkép"
-msgstr ""
-
 msgid "IMDb Suggestions"
 msgstr ""
 
@@ -1621,9 +1596,6 @@ msgstr "Qualité des icônes"
 
 msgid "Icons size"
 msgstr "Taille des icônes"
-
-msgid "Időkép"
-msgstr ""
 
 msgid "Industry"
 msgstr ""
@@ -1669,9 +1641,6 @@ msgstr "Entrée"
 msgid "Interactive Learning Center(ILC)"
 msgstr ""
 
-msgid "Internetes rádiók listázása"
-msgstr ""
-
 #, fuzzy
 msgid "Invalid email."
 msgstr "Nom non valide."
@@ -1681,9 +1650,6 @@ msgstr "Nom non valide."
 
 msgid "Is this message displayed correctly?"
 msgstr "Ce message s'affiche-t-il correctement ?"
-
-msgid "Ismeretterjesztő"
-msgstr ""
 
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr "Il n'est pas permis d'appeler getURLRequestData à partir du thread principal."
@@ -1763,33 +1729,9 @@ msgstr ""
 msgid "Journal Club"
 msgstr ""
 
-msgid "Játék és vetélkedő"
-msgstr ""
-
-msgid "Kabaré, vígjáték"
-msgstr ""
-
-msgid "Kamerák"
-msgstr ""
-
-msgid "Kategóriák"
-msgstr ""
-
-msgid "Keresés"
-msgstr ""
-
-msgid "Keresési előzmények"
-msgstr ""
-
 #, fuzzy
 msgid "Knee & Sports"
 msgstr "Autres sports"
-
-msgid "Képtár"
-msgstr ""
-
-msgid "Következő oldal"
-msgstr ""
 
 msgid "LATEST"
 msgstr "RÉCENTS"
@@ -1888,9 +1830,6 @@ msgstr "Evaluation"
 
 msgid "Lead programmer: "
 msgstr "Programmeur en chef: "
-
-msgid "Legfrissebb"
-msgstr ""
 
 msgid "Level:"
 msgstr "Niveau :"
@@ -2079,9 +2018,6 @@ msgstr "Réglages"
 msgid "Menu"
 msgstr "Menu"
 
-msgid "Mesék"
-msgstr ""
-
 msgid "Mid"
 msgstr "Demi"
 
@@ -2184,9 +2120,6 @@ msgid ""
 msgstr ""
 
 msgid "MyE2i script finished."
-msgstr ""
-
-msgid "Műsorok"
 msgstr ""
 
 msgid "NJPW"
@@ -2379,12 +2312,6 @@ msgstr ""
 
 msgid "Paid"
 msgstr "Payé"
-
-msgid "Pannon Rádió"
-msgstr ""
-
-msgid "Pannon TV"
-msgstr ""
 
 msgid "Password"
 msgstr "Mot de passe"
@@ -2655,9 +2582,6 @@ msgstr "RÉCENT"
 msgid "REMEMBER: "
 msgstr "RAPPELEZ-VOUS:"
 
-msgid "Radar"
-msgstr ""
-
 msgid "Radio"
 msgstr "Radio"
 
@@ -2787,9 +2711,6 @@ msgstr "Retour à la liste des hôtes"
 
 msgid "Reverse a playlist"
 msgstr "Inverser une liste de lecture"
-
-msgid "Romantikus"
-msgstr ""
 
 msgid "Russian"
 msgstr "Russe"
@@ -3110,12 +3031,6 @@ msgstr "Certaines modifications ne seront appliquées qu'après le redémarrage 
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Certaines modifications ne seront appliquées qu'après le redémarrage du lecteur vidéo."
 
-msgid "Sorozat Kategóriák"
-msgstr ""
-
-msgid "Sorozatok"
-msgstr ""
-
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr "Désolé. TVPlayer n'est actuellement disponible qu'au Royaume-Uni."
 
@@ -3282,9 +3197,6 @@ msgstr "Sous-titres téléchargés avec succès. [%s], conversion en UTF-8."
 msgid "Subtitles for: %s"
 msgstr "Sous-titres pour : %s"
 
-msgid "Sugárzó rádiók listázása"
-msgstr ""
-
 msgid "Surgical Approaches"
 msgstr ""
 
@@ -3304,12 +3216,6 @@ msgid "Synchronize"
 msgstr "Synchroniser"
 
 msgid "System"
-msgstr ""
-
-msgid "Szabadkai Magyar Rádió"
-msgstr ""
-
-msgid "Színház"
 msgstr ""
 
 msgid "THIS IS A PRIVATE VIDEO."
@@ -3347,9 +3253,6 @@ msgstr ""
 
 msgid "TV-Series"
 msgstr "Séries-TV"
-
-msgid "TV-k listázása"
-msgstr ""
 
 msgid "Talks"
 msgstr "Débats"
@@ -3532,12 +3435,6 @@ msgstr "Type :"
 #, python-format
 msgid "Type: %s"
 msgstr "Type: %s"
-
-msgid "Térképek"
-msgstr ""
-
-msgid "Tévéfilmek és sorozatok"
-msgstr ""
 
 msgid "UFC"
 msgstr "UFC"
@@ -3788,9 +3685,6 @@ msgstr "Version de l'interface Web"
 msgid "Web proxy"
 msgstr ""
 
-msgid "Webkamerák listázása"
-msgstr ""
-
 msgid "Weekly Indys"
 msgstr "Indys hebdomadaire"
 
@@ -3908,9 +3802,6 @@ msgid "Youtube Suggestions"
 msgstr ""
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr ""
-
-msgid "Zene"
 msgstr ""
 
 #, python-format

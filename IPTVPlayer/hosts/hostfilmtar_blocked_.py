@@ -81,10 +81,10 @@ class FilmTar(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG('FilmTar.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Film Kategóriák'), 'url': 'https://filmtar.online/filmek/kategoriak'},
-                        {'category': 'list_filters', 'title': _('Sorozat Kategóriák'), 'url': 'https://filmtar.online/sorozatok/kategoriak'},
-                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Film Kategóriák', 'url': 'https://filmtar.online/filmek/kategoriak'},
+                        {'category': 'list_filters', 'title': 'Sorozat Kategóriák', 'url': 'https://filmtar.online/sorozatok/kategoriak'},
+                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
+                        {'category': 'search_history', 'title': 'Keresési előzmények'}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):

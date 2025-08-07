@@ -79,14 +79,14 @@ class Idokep(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG('Idokep.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_static', 'title': _('Előrejelzés')},
-                        {'category': 'list_filters', 'title': _('Időkép'), 'url': 'https://www.idokep.hu/idokep'},
-                        {'category': 'list_filters', 'title': _('Hőtérkép'), 'url': 'https://www.idokep.hu/hoterkep'},
-                        {'category': 'list_filters', 'title': _('Felhőkép'), 'url': 'https://www.idokep.hu/felhokep'},
-                        {'category': 'list_filters', 'title': _('Radar'), 'url': 'https://www.idokep.hu/radar'},
-                        {'category': 'list_filters', 'title': _('Kamerák'), 'url': 'https://www.idokep.hu/webkamera'},
-                        {'category': 'list_album', 'title': _('Képtár'), 'url': 'https://www.idokep.hu/keptar'},
-                        {'category': 'list_filters', 'title': _('Térképek'), 'url': 'https://www.idokep.hu/idojaras/Budapest'}]
+        MAIN_CAT_TAB = [{'category': 'list_static', 'title': 'Előrejelzés'},
+                        {'category': 'list_filters', 'title': 'Időkép', 'url': 'https://www.idokep.hu/idokep'},
+                        {'category': 'list_filters', 'title': 'Hőtérkép', 'url': 'https://www.idokep.hu/hoterkep'},
+                        {'category': 'list_filters', 'title': 'Felhőkép', 'url': 'https://www.idokep.hu/felhokep'},
+                        {'category': 'list_filters', 'title': 'Radar', 'url': 'https://www.idokep.hu/radar'},
+                        {'category': 'list_filters', 'title': 'Kamerák', 'url': 'https://www.idokep.hu/webkamera'},
+                        {'category': 'list_album', 'title': 'Képtár', 'url': 'https://www.idokep.hu/keptar'},
+                        {'category': 'list_filters', 'title': 'Térképek', 'url': 'https://www.idokep.hu/idojaras/Budapest'}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listKepek(self, cItem):

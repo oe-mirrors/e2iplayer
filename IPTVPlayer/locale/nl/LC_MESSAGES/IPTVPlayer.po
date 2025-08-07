@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 19:02+0200\n"
+"POT-Creation-Date: 2025-08-07 22:23+0200\n"
 "PO-Revision-Date: 2025-08-06 16:22+0200\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -639,9 +639,6 @@ msgstr "Op jaartal"
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Geo-blocking omzeilen voor Video On Demand (kan illegaal zijn):"
 
-msgid "Bűnügyi filmek és sorozatok"
-msgstr "Misdaadfilms en -series"
-
 msgid "CHANNELS "
 msgstr "ZENDERS "
 
@@ -800,9 +797,6 @@ msgstr "Fout - Cookie kan niet opgeslagen worden!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Fout - Een gecodeerd gzip bestand kan niet verwerkt worden!"
-
-msgid "Családi filmek"
-msgstr "Familie films"
 
 msgid "Curator"
 msgstr "Curator"
@@ -1143,12 +1137,6 @@ msgstr "Favorieten bewerken"
 msgid "Educational Animation"
 msgstr "Educatieve Animatie"
 
-msgid "Elérhető legjobb minőség beállítása"
-msgstr "De best beschikbare kwaliteit instellen"
-
-msgid "Előrejelzés"
-msgstr "Voorspelling"
-
 msgid "Email"
 msgstr "Email"
 
@@ -1342,9 +1330,6 @@ msgstr "Favoriet groepen"
 msgid "Favourites manager"
 msgstr "Favorieten manager"
 
-msgid "Felhőkép"
-msgstr "Wolkenlandschap"
-
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Bestand \"%s\" bestaat al"
@@ -1366,12 +1351,6 @@ msgstr "Bestand kan niet worden gedownload. Protocol [%s] wordt niet ondersteund
 
 msgid "Film"
 msgstr "Film"
-
-msgid "Film Kategóriák"
-msgstr "Filmcategorieën"
-
-msgid "Filmek"
-msgstr "Films"
 
 msgid "Filmstarts Suggestions"
 msgstr "Filmstarts tips"
@@ -1576,9 +1555,6 @@ msgstr "Humanitair"
 msgid "Hungarian"
 msgstr "Hongaars"
 
-msgid "Hőtérkép"
-msgstr "Warmtekaart"
-
 msgid "IMDb Suggestions"
 msgstr "IMDb Suggesties"
 
@@ -1593,10 +1569,6 @@ msgstr "Icons kwaliteit"
 
 msgid "Icons size"
 msgstr "Icons grootte"
-
-#, fuzzy
-msgid "Időkép"
-msgstr "Radarfoto"
 
 msgid "Industry"
 msgstr "Industrie"
@@ -1640,9 +1612,6 @@ msgstr "Invoer"
 msgid "Interactive Learning Center(ILC)"
 msgstr "Interactive Learning Center(ILC)"
 
-msgid "Internetes rádiók listázása"
-msgstr "Overzicht Internet radiostations"
-
 msgid "Invalid email."
 msgstr "Ongeldig emailadres."
 
@@ -1651,9 +1620,6 @@ msgstr "Ongeldige naam."
 
 msgid "Is this message displayed correctly?"
 msgstr "Wordt deze melding goed weergegeven?"
-
-msgid "Ismeretterjesztő"
-msgstr "Goed geïnformeerd"
 
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr "GetURLRequestData laden van de main thread is niet toegestaan."
@@ -1733,32 +1699,8 @@ msgstr "Banen"
 msgid "Journal Club"
 msgstr "Journal Club"
 
-msgid "Játék és vetélkedő"
-msgstr "Spel en quiz"
-
-msgid "Kabaré, vígjáték"
-msgstr "Cabaret, komedie"
-
-msgid "Kamerák"
-msgstr "Camera's"
-
-msgid "Kategóriák"
-msgstr "Categorieën"
-
-msgid "Keresés"
-msgstr "Zoekopdracht"
-
-msgid "Keresési előzmények"
-msgstr "Zoekgeschiedenis"
-
 msgid "Knee & Sports"
 msgstr "Knie & Sporten"
-
-msgid "Képtár"
-msgstr "Galerij"
-
-msgid "Következő oldal"
-msgstr "Volgende pagina"
 
 msgid "LATEST"
 msgstr "ACTUEEL"
@@ -1853,9 +1795,6 @@ msgstr "Spaans"
 
 msgid "Lead programmer: "
 msgstr "Hoofd programmeur: "
-
-msgid "Legfrissebb"
-msgstr "Nieuwste"
 
 msgid "Level:"
 msgstr "Niveau:"
@@ -2036,9 +1975,6 @@ msgstr "Vergaderingen"
 msgid "Menu"
 msgstr "Menu"
 
-msgid "Mesék"
-msgstr "Verhalen"
-
 msgid "Mid"
 msgstr "Midden"
 
@@ -2143,9 +2079,6 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "MyE2i script gereed."
-
-msgid "Műsorok"
-msgstr "Toont"
 
 msgid "NJPW"
 msgstr "NJPW"
@@ -2334,12 +2267,6 @@ msgstr "Pagina alleen toegankelijk voor aangemelde leden."
 
 msgid "Paid"
 msgstr "Betaald"
-
-msgid "Pannon Rádió"
-msgstr "Pannon Rádió"
-
-msgid "Pannon TV"
-msgstr "Pannon TV"
 
 msgid "Password"
 msgstr "Wachtwoord"
@@ -2605,9 +2532,6 @@ msgstr "RECENT"
 msgid "REMEMBER: "
 msgstr "ONTHOUDEN: "
 
-msgid "Radar"
-msgstr "Radar"
-
 msgid "Radio"
 msgstr "Radio"
 
@@ -2735,9 +2659,6 @@ msgstr "Terug naar hosts overzicht"
 
 msgid "Reverse a playlist"
 msgstr "Keer afspeellijst om"
-
-msgid "Romantikus"
-msgstr "Romantikus"
 
 msgid "Russian"
 msgstr "Russisch"
@@ -3055,12 +2976,6 @@ msgstr "Sommige wijzigingen worden alleen actief na het herstarten van de movie 
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Sommige wijzigingen worden alleen actief na het herstarten van de GUI."
 
-msgid "Sorozat Kategóriák"
-msgstr "Serie categorieën"
-
-msgid "Sorozatok"
-msgstr "Serie"
-
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr "Sorry. TVPlayer is op dit moment alleen beschikbaar in het Verenigd Koninkrijk"
 
@@ -3225,9 +3140,6 @@ msgstr "Ondertitels succesvol gedownload. [%s], conversie naar UTF-8."
 msgid "Subtitles for: %s"
 msgstr "Ondertiteling voor: %s"
 
-msgid "Sugárzó rádiók listázása"
-msgstr "Radio omroepen overzicht"
-
 msgid "Surgical Approaches"
 msgstr "Chirurgische benaderingen"
 
@@ -3248,12 +3160,6 @@ msgstr "Synchroniseren"
 
 msgid "System"
 msgstr "Systeem"
-
-msgid "Szabadkai Magyar Rádió"
-msgstr "Hongaarse Radio Subotica"
-
-msgid "Színház"
-msgstr "Theater"
 
 msgid "THIS IS A PRIVATE VIDEO."
 msgstr "DIT IS EEN PRIVÉ VIDEO."
@@ -3290,9 +3196,6 @@ msgstr "TV status"
 
 msgid "TV-Series"
 msgstr "TV-Series"
-
-msgid "TV-k listázása"
-msgstr "TV Overzicht"
 
 msgid "Talks"
 msgstr "Gesprekken"
@@ -3474,12 +3377,6 @@ msgstr "Type: "
 #, python-format
 msgid "Type: %s"
 msgstr "Type: %s"
-
-msgid "Térképek"
-msgstr "Kaarten"
-
-msgid "Tévéfilmek és sorozatok"
-msgstr "TV-films en series"
 
 msgid "UFC"
 msgstr "UFC"
@@ -3723,9 +3620,6 @@ msgstr "Web interface versie"
 msgid "Web proxy"
 msgstr "Web proxy"
 
-msgid "Webkamerák listázása"
-msgstr "Webcams overzicht"
-
 msgid "Weekly Indys"
 msgstr "Wekelijkse Indy's"
 
@@ -3838,9 +3732,6 @@ msgstr "Youtube Suggesties"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Youtube zoekopdrachten gaan sneller, wanneer u een API sleutel invult in het configuratiemenu"
-
-msgid "Zene"
-msgstr "Muziek"
 
 #, python-format
 msgid "[%s] - configuration"

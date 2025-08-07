@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 19:02+0200\n"
+"POT-Creation-Date: 2025-08-07 22:23+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: doubledip <islu@gmx.de>\n"
 "Language-Team: julianko\n"
@@ -663,9 +663,6 @@ msgstr "Por año"
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr ""
 
-msgid "Bűnügyi filmek és sorozatok"
-msgstr ""
-
 msgid "CHANNELS "
 msgstr ""
 
@@ -824,9 +821,6 @@ msgid "Critical Error - cookie can't be saved!"
 msgstr ""
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
-msgstr ""
-
-msgid "Családi filmek"
 msgstr ""
 
 #, fuzzy
@@ -1189,12 +1183,6 @@ msgstr "Editar favoritos"
 msgid "Educational Animation"
 msgstr ""
 
-msgid "Elérhető legjobb minőség beállítása"
-msgstr ""
-
-msgid "Előrejelzés"
-msgstr ""
-
 msgid "Email"
 msgstr "Email"
 
@@ -1395,9 +1383,6 @@ msgstr "Grupos favoritos"
 msgid "Favourites manager"
 msgstr "Administrador de favoritos"
 
-msgid "Felhőkép"
-msgstr ""
-
 #, fuzzy, python-format
 msgid "File \"%s\" already exists"
 msgstr "¡Ya existe el archivo \"%s\"!"
@@ -1420,13 +1405,6 @@ msgstr "Archivo no puede descargarse. Protocolo [%s] no es compatible"
 
 #, fuzzy
 msgid "Film"
-msgstr "Película"
-
-msgid "Film Kategóriák"
-msgstr ""
-
-#, fuzzy
-msgid "Filmek"
 msgstr "Película"
 
 msgid "Filmstarts Suggestions"
@@ -1643,9 +1621,6 @@ msgstr ""
 msgid "Hungarian"
 msgstr ""
 
-msgid "Hőtérkép"
-msgstr ""
-
 msgid "IMDb Suggestions"
 msgstr ""
 
@@ -1661,9 +1636,6 @@ msgstr "Calidad de los iconos"
 
 msgid "Icons size"
 msgstr "Tamaño de icono"
-
-msgid "Időkép"
-msgstr ""
 
 msgid "Industry"
 msgstr ""
@@ -1710,9 +1682,6 @@ msgstr "Entrada"
 msgid "Interactive Learning Center(ILC)"
 msgstr ""
 
-msgid "Internetes rádiók listázása"
-msgstr ""
-
 #, fuzzy
 msgid "Invalid email."
 msgstr "Nombre no válido."
@@ -1721,9 +1690,6 @@ msgid "Invalid name."
 msgstr "Nombre no válido."
 
 msgid "Is this message displayed correctly?"
-msgstr ""
-
-msgid "Ismeretterjesztő"
 msgstr ""
 
 msgid "It is not allowed to call getURLRequestData from main thread."
@@ -1804,31 +1770,7 @@ msgstr ""
 msgid "Journal Club"
 msgstr "Periodismo"
 
-msgid "Játék és vetélkedő"
-msgstr ""
-
-msgid "Kabaré, vígjáték"
-msgstr ""
-
-msgid "Kamerák"
-msgstr ""
-
-msgid "Kategóriák"
-msgstr ""
-
-msgid "Keresés"
-msgstr ""
-
-msgid "Keresési előzmények"
-msgstr ""
-
 msgid "Knee & Sports"
-msgstr ""
-
-msgid "Képtár"
-msgstr ""
-
-msgid "Következő oldal"
 msgstr ""
 
 #, fuzzy
@@ -1930,9 +1872,6 @@ msgid "Latino"
 msgstr "Calificación"
 
 msgid "Lead programmer: "
-msgstr ""
-
-msgid "Legfrissebb"
 msgstr ""
 
 msgid "Level:"
@@ -2123,9 +2062,6 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
-msgid "Mesék"
-msgstr ""
-
 msgid "Mid"
 msgstr "Medio"
 
@@ -2231,9 +2167,6 @@ msgid ""
 msgstr ""
 
 msgid "MyE2i script finished."
-msgstr ""
-
-msgid "Műsorok"
 msgstr ""
 
 msgid "NJPW"
@@ -2432,12 +2365,6 @@ msgid "Page accessible to logged in members only."
 msgstr ""
 
 msgid "Paid"
-msgstr ""
-
-msgid "Pannon Rádió"
-msgstr ""
-
-msgid "Pannon TV"
 msgstr ""
 
 #, fuzzy
@@ -2722,9 +2649,6 @@ msgstr ""
 msgid "REMEMBER: "
 msgstr ""
 
-msgid "Radar"
-msgstr ""
-
 #, fuzzy
 msgid "Radio"
 msgstr "Radio en directo"
@@ -2857,10 +2781,6 @@ msgstr "Lista de dibujos animados"
 
 msgid "Reverse a playlist"
 msgstr "Lista de reproducción inversa"
-
-#, fuzzy
-msgid "Romantikus"
-msgstr "Rumania"
 
 #, fuzzy
 msgid "Russian"
@@ -3196,12 +3116,6 @@ msgstr "Algunos cambios se aplicarán sólo después dereiniciar reproductor de 
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Algunos cambios se aplicarán sólo después dereiniciar reproductor de películas."
 
-msgid "Sorozat Kategóriák"
-msgstr ""
-
-msgid "Sorozatok"
-msgstr ""
-
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr ""
 
@@ -3368,9 +3282,6 @@ msgstr "Subtítulos descargaron con éxito. [%s], conversión a UTF-8."
 msgid "Subtitles for: %s"
 msgstr "Subtítulos para: %s"
 
-msgid "Sugárzó rádiók listázása"
-msgstr ""
-
 msgid "Surgical Approaches"
 msgstr ""
 
@@ -3390,12 +3301,6 @@ msgid "Synchronize"
 msgstr "Sincronizar"
 
 msgid "System"
-msgstr ""
-
-msgid "Szabadkai Magyar Rádió"
-msgstr ""
-
-msgid "Színház"
 msgstr ""
 
 msgid "THIS IS A PRIVATE VIDEO."
@@ -3436,9 +3341,6 @@ msgstr "statustext"
 #, fuzzy
 msgid "TV-Series"
 msgstr "ТV Series"
-
-msgid "TV-k listázása"
-msgstr ""
 
 msgid "Talks"
 msgstr ""
@@ -3629,12 +3531,6 @@ msgstr "Tipo: "
 #, fuzzy, python-format
 msgid "Type: %s"
 msgstr "Tipo: "
-
-msgid "Térképek"
-msgstr ""
-
-msgid "Tévéfilmek és sorozatok"
-msgstr ""
 
 msgid "UFC"
 msgstr ""
@@ -3892,9 +3788,6 @@ msgstr ""
 msgid "Web proxy"
 msgstr "Utilizar un proxy"
 
-msgid "Webkamerák listázása"
-msgstr ""
-
 #, fuzzy
 msgid "Weekly Indys"
 msgstr "Semanal"
@@ -4011,9 +3904,6 @@ msgid "Youtube Suggestions"
 msgstr ""
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr ""
-
-msgid "Zene"
 msgstr ""
 
 #, python-format

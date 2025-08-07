@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 19:02+0200\n"
+"POT-Creation-Date: 2025-08-07 22:23+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Massimo Bambi <maxbambi@libero.it>\n"
 "Language-Team: Italian\n"
@@ -639,9 +639,6 @@ msgstr "Per Anno"
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Aggira il blocco geografico per i VOD (potrebbe essere illegale):"
 
-msgid "Bűnügyi filmek és sorozatok"
-msgstr "Film e serie poliziesche"
-
 msgid "CHANNELS "
 msgstr "CANALI "
 
@@ -797,9 +794,6 @@ msgstr "Errore critico - il cookie non può essere salvato!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Errore critico - Non si può accedere al contenuto del gzip!"
-
-msgid "Családi filmek"
-msgstr "Film per famiglie"
 
 msgid "Curator"
 msgstr "Curatore"
@@ -1141,12 +1135,6 @@ msgstr "Modifica preferiti"
 msgid "Educational Animation"
 msgstr ""
 
-msgid "Elérhető legjobb minőség beállítása"
-msgstr "Impostazione della migliore qualità disponibile"
-
-msgid "Előrejelzés"
-msgstr "Previsione"
-
 msgid "Email"
 msgstr "E-mail"
 
@@ -1340,9 +1328,6 @@ msgstr "Gruppi preferiti"
 msgid "Favourites manager"
 msgstr "Gestore preferiti"
 
-msgid "Felhőkép"
-msgstr "Paesaggio nuvoloso"
-
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Il file \"%s\" esiste già"
@@ -1364,12 +1349,6 @@ msgstr "Il file non può essere scaricato. Protocollo [%s] non supportato"
 
 msgid "Film"
 msgstr ""
-
-msgid "Film Kategóriák"
-msgstr "Categorie di film"
-
-msgid "Filmek"
-msgstr "Film"
 
 msgid "Filmstarts Suggestions"
 msgstr "Suggerimenti Filmstarts"
@@ -1574,9 +1553,6 @@ msgstr ""
 msgid "Hungarian"
 msgstr ""
 
-msgid "Hőtérkép"
-msgstr "Mappa di calore"
-
 msgid "IMDb Suggestions"
 msgstr "Suggerimenti IMDb"
 
@@ -1591,9 +1567,6 @@ msgstr "Qualità delle icone"
 
 msgid "Icons size"
 msgstr "Dimensione delle icone"
-
-msgid "Időkép"
-msgstr "Previsioni del tempo"
 
 msgid "Industry"
 msgstr ""
@@ -1637,9 +1610,6 @@ msgstr "Input"
 msgid "Interactive Learning Center(ILC)"
 msgstr ""
 
-msgid "Internetes rádiók listázása"
-msgstr "Elenco delle stazioni radio Internet"
-
 msgid "Invalid email."
 msgstr "Email non valida."
 
@@ -1648,9 +1618,6 @@ msgstr "Nome non valido."
 
 msgid "Is this message displayed correctly?"
 msgstr "Questo messaggio è visualizzato correttamente?"
-
-msgid "Ismeretterjesztő"
-msgstr "Educativo"
 
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr "Non è possibile chiamare getURLRequestData dal thread principale."
@@ -1730,32 +1697,8 @@ msgstr ""
 msgid "Journal Club"
 msgstr ""
 
-msgid "Játék és vetélkedő"
-msgstr "Gioco e quiz"
-
-msgid "Kabaré, vígjáték"
-msgstr "Cabaret, commedia"
-
-msgid "Kamerák"
-msgstr "Telecamere"
-
-msgid "Kategóriák"
-msgstr "Categorie"
-
-msgid "Keresés"
-msgstr "Ricerca"
-
-msgid "Keresési előzmények"
-msgstr "Cronologia delle ricerche"
-
 msgid "Knee & Sports"
 msgstr "Attività Sportiva"
-
-msgid "Képtár"
-msgstr "Galleria"
-
-msgid "Következő oldal"
-msgstr "Pagina successiva"
 
 msgid "LATEST"
 msgstr "ULTIMO"
@@ -1850,9 +1793,6 @@ msgstr "Latino"
 
 msgid "Lead programmer: "
 msgstr "Capo programmatore: "
-
-msgid "Legfrissebb"
-msgstr ""
 
 msgid "Level:"
 msgstr "Livello:"
@@ -2032,9 +1972,6 @@ msgstr "Riunioni"
 msgid "Menu"
 msgstr "Menu"
 
-msgid "Mesék"
-msgstr "Fiabe"
-
 msgid "Mid"
 msgstr "Medio"
 
@@ -2138,9 +2075,6 @@ msgstr ""
 
 msgid "MyE2i script finished."
 msgstr "Esecuzione dello script JMyE2i terminata."
-
-msgid "Műsorok"
-msgstr "Programmi"
 
 msgid "NJPW"
 msgstr ""
@@ -2326,12 +2260,6 @@ msgstr "Pagina accessibile solo agli utenti con login."
 
 msgid "Paid"
 msgstr "A pagamento"
-
-msgid "Pannon Rádió"
-msgstr ""
-
-msgid "Pannon TV"
-msgstr ""
 
 msgid "Password"
 msgstr "Password"
@@ -2596,9 +2524,6 @@ msgstr "RECENTI"
 msgid "REMEMBER: "
 msgstr "RICORDA: "
 
-msgid "Radar"
-msgstr ""
-
 msgid "Radio"
 msgstr "Radio"
 
@@ -2721,9 +2646,6 @@ msgstr "Ritorna all'elenco degli host"
 
 msgid "Reverse a playlist"
 msgstr "Inverti la playlist"
-
-msgid "Romantikus"
-msgstr "Romantico"
 
 msgid "Russian"
 msgstr "Russo"
@@ -3038,12 +2960,6 @@ msgstr "Alcuni cambiamenti saranno applicati,  solo dopo che il movie player sar
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Alcune impostazioni verranno applicate solo dopo il riavvio dell'interfaccia grafica."
 
-msgid "Sorozat Kategóriák"
-msgstr "Categorie di serie"
-
-msgid "Sorozatok"
-msgstr "Serie"
-
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr "Mi dispiace, ma TVPlayer è attualmente disponibile solo nel Regno Unito"
 
@@ -3205,9 +3121,6 @@ msgstr "I sottotitoli sono stati scaricati correttamente. [%s], conversione in U
 msgid "Subtitles for: %s"
 msgstr "Sottotitoli per: %s"
 
-msgid "Sugárzó rádiók listázása"
-msgstr "Elenco delle emittenti radiofoniche"
-
 msgid "Surgical Approaches"
 msgstr ""
 
@@ -3228,12 +3141,6 @@ msgstr "Sincronizza"
 
 msgid "System"
 msgstr "Sistema"
-
-msgid "Szabadkai Magyar Rádió"
-msgstr ""
-
-msgid "Színház"
-msgstr "Teatro"
 
 msgid "THIS IS A PRIVATE VIDEO."
 msgstr ""
@@ -3270,9 +3177,6 @@ msgstr "Stato TV"
 
 msgid "TV-Series"
 msgstr "Serie TV"
-
-msgid "TV-k listázása"
-msgstr "Elenco TV"
 
 msgid "Talks"
 msgstr "Talk show"
@@ -3458,12 +3362,6 @@ msgstr "Tipo: "
 #, python-format
 msgid "Type: %s"
 msgstr "Tipo: %s"
-
-msgid "Térképek"
-msgstr "Mappe"
-
-msgid "Tévéfilmek és sorozatok"
-msgstr "Film e serie TV"
 
 msgid "UFC"
 msgstr "UFC"
@@ -3706,9 +3604,6 @@ msgstr "Versione di interfaccia web"
 msgid "Web proxy"
 msgstr "Web proxy"
 
-msgid "Webkamerák listázása"
-msgstr "Elenco delle web cam"
-
 msgid "Weekly Indys"
 msgstr "Settimanale Indys"
 
@@ -3821,9 +3716,6 @@ msgstr "Suggerimenti Youtube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Le ricerche su YouTube sono più veloci se inserisci la chiave API nel menu delle impostazioni"
-
-msgid "Zene"
-msgstr ""
 
 #, python-format
 msgid "[%s] - configuration"
