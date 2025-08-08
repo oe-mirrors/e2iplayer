@@ -110,11 +110,11 @@ class Filmowood(CBaseHostClass):
 
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name=self.currItem.get("name", '')
-        category=self.currItem.get("category", '')
+        name = self.currItem.get("name", '')
+        category = self.currItem.get("category", '')
 
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
-        self.currList=[]
+        self.currList = []
 
         # MAIN MENU
         if name == None:
@@ -127,7 +127,7 @@ class Filmowood(CBaseHostClass):
             self.exploreItems(self.currItem)
         # SEARCH
         elif category in ["search", "search_next_page"]:
-            cItem=dict(self.currItem)
+            cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
         # HISTORIA SEARCH
