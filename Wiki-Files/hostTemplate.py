@@ -28,14 +28,14 @@ import datetime
 ###################################################
 
 def gettytul():
-    return 'https://mainurlofhost.com/' # main url of host
+    return 'https://mainurlofhost.com/'  # main url of host
 
 class NameOfHost(CBaseHostClass):
  
     def __init__(self):
         # init global variables for this class
         
-        CBaseHostClass.__init__(self, {'history':'nameofhost', 'cookie':'nameofhost.cookie'}) # names for history and cookie files in cache
+        CBaseHostClass.__init__(self, {'history': 'nameofhost', 'cookie': 'nameofhost.cookie'})  # names for history and cookie files in cache
         
         # vars default values
 
@@ -48,7 +48,7 @@ class NameOfHost(CBaseHostClass):
 
         # default header and http params
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
-        self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
     def getPage(self, url, addParams={}, post_data=None):
         # default use: call function getPage in pCommon lib
@@ -59,7 +59,7 @@ class NameOfHost(CBaseHostClass):
         return self.cm.getPage(url, addParams, post_data)
 
     
-    def getLinksForVideo(self, cItem):  #cItem is the current item selected in menu
+    def getLinksForVideo(self, cItem):  # cItem is the current item selected in menu
         # mandatory function when you want to play videos, so everytime!
         printDBG("NameOfHost.getLinksForVideo [%s]" % cItem)
 
@@ -82,10 +82,10 @@ class NameOfHost(CBaseHostClass):
         # items of main menu
         # you can add any key you like, like 'url', 'next_category', ...
         printDBG('NameOfHost.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'main', 'title': _('Main page')},
-                        {'category':'item_filters', 'title': _('Categories')},
-                        {'category':'search', 'title': _('Search'), 'search_item':True, },
-                        {'category':'search_history', 'title': _('Search history'),} 
+        MAIN_CAT_TAB = [{'category': 'main', 'title': _('Main page')},
+                        {'category': 'item_filters', 'title': _('Categories')},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                        {'category': 'search_history', 'title': _('Search history'), } 
         self.listsTab(MAIN_CAT_TAB, cItem)  
 
     # here you should add the functions you need to show users list of items (dirs, videos)           
@@ -120,23 +120,23 @@ class NameOfHost(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
         
-        #MAIN MENU
+        # MAIN MENU
         if name == None:
-            self.listMainMenu({'name':'category'})
+            self.listMainMenu({'name': 'category'})
         elif category == 'main':
             self.listItems(self.currItem)
         elif category == 'item_filters':
             self.listFilters(self.currItem)
         elif category == 'item':
             self.exploreItems(self.currItem)       
-        #SEARCH
+        # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item':False, 'name':'category'}) 
+            cItem.update({'search_item': False, 'name': 'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
-        #HISTORIA SEARCH
+        # HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name':'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
         
