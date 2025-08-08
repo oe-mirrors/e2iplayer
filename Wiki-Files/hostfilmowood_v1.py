@@ -81,7 +81,7 @@ class Filmowood(CBaseHostClass):
         MAIN_CAT_TAB = [{'category': 'main', 'title': _('Main page')},
                         {'category': 'item_filters', 'title': _('Categories')},
                         {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'), }
+                        {'category': 'search_history', 'title': _('Search history'), }]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     # here you should add the functions you need to show users list of items (dirs, videos)
