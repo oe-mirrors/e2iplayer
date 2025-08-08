@@ -100,16 +100,19 @@ class DixMax(CBaseHostClass):
 
     def getDBApiKey(self, data=None):
         printDBG("DixMax.listMain")
-        if self.dbApiKey: return self.dbApiKey
+        if self.dbApiKey:
+            return self.dbApiKey
         sts, data = self.getPage(self.getFullUrl('/index.php'))
-        if not sts: return
+        if not sts:
+            return
         data = ph.find(data, 'filterCat(', ')', 0)[1].split(',')
         self.dbApiKey = data[-1].strip()[1:-1]
 
     def listMain(self, cItem):
         printDBG("DixMax.listMain")
         sts, data = self.getPage(self.getFullUrl('/index.php'))
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         tmp = ph.findall(data, ('<li', '>', 'tooltip'), '</li>', limits=2)
@@ -171,7 +174,8 @@ class DixMax(CBaseHostClass):
     def listPopular(self, cItem):
         printDBG("DixMax.listPopular")
         sts, data = self.getPage(cItem['url'])
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         try:
@@ -197,7 +201,8 @@ class DixMax(CBaseHostClass):
 
             title = self.cleanHtmlStr( item['title'] )
             title2 = self.cleanHtmlStr( item['originalTitle'] )
-            if title2 and title2 != title: title  += ' (%s)' % title2
+            if title2 and title2 != title:
+                title  += ' (%s)' % title2
 
             type = item['type']
             desc = [type]
@@ -207,14 +212,16 @@ class DixMax(CBaseHostClass):
             desc.append(duration)
 
             rating = '%s (%s)' % (item['rating'], item['votes']) if int(item['votes']) else ''
-            if rating: desc.append(rating)
+            if rating:
+                desc.append(rating)
             desc.append(item['country'])
             desc.append(item['genres'])
             desc.append(item['popularity'])
             desc = ' | '.join(desc) + '[/br]' + item['sinopsis']
 
             article = {'f_type':type, 'f_isserie':int(item['isSerie']), 'f_year':item['year'], 'f_duration':duration, 'f_rating':rating, 'f_country':item['country'], 'f_genres':item['genres'], 'f_sinopsis':item['sinopsis'], 'f_popularity':item['popularity']}
-            if article['f_isserie']:  article.update({'f_seasons':item['seasons'], 'f_episodes':item['episodes']})
+            if article['f_isserie']:
+                article.update({'f_seasons':item['seasons'], 'f_episodes':item['episodes']})
             params = MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'icon':icon, 'desc':desc, 'f_id':item['id']}, article) 
             retList.append( params )
         return retList
@@ -226,12 +233,16 @@ class DixMax(CBaseHostClass):
         url = 'api/private/get/explore'
         url += '?limit=%s&order=3&start=%s' % (ITEMS_NUM, page*ITEMS_NUM)
 
-        if 'f_genre' in cItem: url += '&genres[]=%s' % cItem['f_genre_t']
-        if 'f_type' in cItem: url += '&fichaType[]=%s' % cItem['f_type']
-        if 'f_year' in cItem: url += '&fromYear=%s&toYear=%s' % (cItem['f_year']-1, cItem['f_year'])
+        if 'f_genre' in cItem:
+            url += '&genres[]=%s' % cItem['f_genre_t']
+        if 'f_type' in cItem:
+            url += '&fichaType[]=%s' % cItem['f_type']
+        if 'f_year' in cItem:
+            url += '&fromYear=%s&toYear=%s' % (cItem['f_year']-1, cItem['f_year'])
 
         sts, data = self.getPage(self.getFullUrl(url))
-        if not sts: return
+        if not sts:
+            return
 
         try:
             data = json_loads(data)
@@ -257,7 +268,8 @@ class DixMax(CBaseHostClass):
         url = 'https://api.themoviedb.org/3/%s/%s/videos?api_key=%s' % (type, cItem['f_id'], apiKey)
 
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         try:
             data = json_loads(data)
             for item in data['results']:
@@ -271,7 +283,8 @@ class DixMax(CBaseHostClass):
         if type == 'tv':
             url = self.getFullUrl('/serie/%s' % cItem['f_id'])
             sts, data = self.getPage(url)
-            if not sts: return
+            if not sts:
+                return
             try:
                 data = ph.find(data, 'gotoFuchaCrazy', '</script>', flags=0)[1]
                 data = data[data.find('{'):data.rfind('}')+1]
@@ -288,7 +301,8 @@ class DixMax(CBaseHostClass):
                         sEpisodes = str(item['episodes'])
 
                         icon = self.getFullIconUrl(item['cover'])
-                        if not icon: icon = sIcon
+                        if not icon:
+                            icon = sIcon
 
                         title = '%s: s%se%s %s' % (sTitle, sNum.zfill(2), eNum.zfill(2), item['name'])
                         type = _('Episode')
@@ -318,7 +332,8 @@ class DixMax(CBaseHostClass):
 
         url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.quote(searchPattern))
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         self.setMainUrl(self.cm.meta['url'])
 
         try:
@@ -346,7 +361,8 @@ class DixMax(CBaseHostClass):
 
         url = self.getFullUrl('/get_links.php') #get_all_links
         sts, data = self.getPage(url, post_data=post_data)
-        if not sts: return
+        if not sts:
+            return
         printDBG(data)
 
         try:
@@ -408,9 +424,12 @@ class DixMax(CBaseHostClass):
             if key in cItem:
                 otherInfo[key[2:]] = cItem[key]
 
-        if title == '': title = cItem['title']
-        if icon == '':  icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
-        if desc == '':  desc  = cItem.get('desc', '')
+        if title == '':
+            title = cItem['title']
+        if icon == '':
+            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+        if desc == '':
+            desc  = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
@@ -425,7 +444,8 @@ class DixMax(CBaseHostClass):
             self.password = config.plugins.iptvplayer.dixmax_password.value
 
             sts, data = self.getPage(self.getMainUrl())
-            if sts: self.setMainUrl(self.cm.meta['url'])
+            if sts:
+                self.setMainUrl(self.cm.meta['url'])
 
             freshSession = False
             if sts and 'logout.php' in data:
@@ -461,7 +481,8 @@ class DixMax(CBaseHostClass):
 
                 sts, data = self.getPage(actionUrl, httpParams, post_data)
                 printDBG(data)
-                if sts: msgTab.append(self.cleanHtmlStr(data))
+                if sts:
+                    msgTab.append(self.cleanHtmlStr(data))
                 sts, data = self.getPage(self.getMainUrl())
 
             if sts and 'logout.php' in data:
