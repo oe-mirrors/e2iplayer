@@ -45,8 +45,7 @@ This plugin is released under GPLv3. See [LICENSE](https://www.gnu.org/licenses/
 
 - Created by **SamSamSam**
 
-
-Thanks to SamSamSam for the original version of this program! (https://gitlab.com/e2i/e2iplayer)
+Thanks to SamSamSam for the original version of this program! (https://gitlab.com/e2i/e2iplayer) The original public version from SamSamSam is Closedsource now and only available for acquaintances and family
 
 This is a mirror of https://gitlab.com/zadmario/e2iplayer
 with additions from https://gitlab.com/maxbambi/e2iplayer, https://github.com/Blindspot76/e2iPlayer and https://github.com/Belfagor2005/e2player
