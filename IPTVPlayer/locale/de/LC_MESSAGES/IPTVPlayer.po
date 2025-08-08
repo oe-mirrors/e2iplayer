@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-07 22:23+0200\n"
-"PO-Revision-Date: 2025-07-31 19:51+0200\n"
+"PO-Revision-Date: 2025-08-08 14:34+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
 "Language: de_DE\n"
@@ -303,7 +303,7 @@ msgid "--Other--"
 msgstr "--Andere--"
 
 msgid "12 hour format"
-msgstr "12 Stunden-Format "
+msgstr "12 Stunden-Format"
 
 msgid "16:10 Letterbox"
 msgstr "16:10 Letterbox"
@@ -321,7 +321,7 @@ msgid "16:9 always"
 msgstr "16:9 immer"
 
 msgid "24 hour format"
-msgstr "24 Stunden-Format "
+msgstr "24 Stunden-Format"
 
 msgid "4:3 Letterbox"
 msgstr "4:3 Letterbox"
@@ -2708,7 +2708,7 @@ msgid "Search type"
 msgstr "Suchmodus"
 
 msgid "Search youtube materials"
-msgstr "Suche auf Youtube "
+msgstr "Suche auf YouTube"
 
 #, python-format
 msgid "Searching in %s, please wait (%d)"
