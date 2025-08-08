@@ -340,7 +340,7 @@ class Raiplay(CBaseHostClass):
 
             icon = self.getThumbnailUrl(station["transparent-icon"]) + '|webpToPng'
             url = station["video"]["contentUrl"]
-            
+
             params = {
                 'title': title,
                 'url': url,
@@ -361,15 +361,15 @@ class Raiplay(CBaseHostClass):
         if not container:
             printDBG("Raiplay - no canali-container found")
             return
-            
+
         channels_block = self.cm.ph.getDataBeetwenNodes(container, ('<ul', '>', 'canali'), '</ul>', False)[1]
         if not channels_block:
             printDBG("Raiplay - no canali list found")
             return
-            
+
         items = self.cm.ph.getAllItemsBeetwenMarkers(channels_block, '<li', '</li>')
         printDBG(f"Raiplay - found {len(items)} sport channels")
-        
+
         for i in items:
             url = self.cm.ph.getSearchGroups(i, '''data-video-url=['"]([^'^"]+?)['"]''')[0]
             if not url:
@@ -378,7 +378,7 @@ class Raiplay(CBaseHostClass):
             icon = self.cm.ph.getSearchGroups(i, '''<img[^>]+src=['"]([^'^"]+?)['"]''')[0]
             if not icon:
                 icon = self.cm.ph.getSearchGroups(i, '''stillframe=['"]([^'^"]+?)['"]''')[0]
-                
+
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(i, ('<div', '>', 'canale-title'), '</div>', False)[1])
             if not title:
                 title = self.cleanHtmlStr(i)
