@@ -27,8 +27,10 @@ import re
 import datetime
 ###################################################
 
+
 def gettytul():
     return 'https://filmowood.com/'  # main url of host
+
 
 class Filmowood(CBaseHostClass):
  
@@ -53,7 +55,6 @@ class Filmowood(CBaseHostClass):
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
-    
     def getLinksForVideo(self, cItem):  # cItem is the current item selected in menu
         # mandatory function when you want to play videos, so everytime!
         printDBG("Filmowood.getLinksForVideo [%s]" % cItem)

@@ -33,6 +33,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.dixmax_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.dixmax_password = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("login"), config.plugins.iptvplayer.dixmax_login))
@@ -40,12 +41,15 @@ def GetConfigList():
     return optionList
 ###################################################
 
+
 def gettytul():
     return 'https://dixmax.com/'
     
+
 class SuggestionsProvider:
     MAIN_URL = 'https://dixmax.com/'
     COOKIE_FILE = ''
+
     def __init__(self):
         self.cm = common()
         self.HTTP_HEADER = {'User-Agent': self.cm.getDefaultHeader(browser='chrome')['User-Agent'], 'X-Requested-With': 'XMLHttpRequest'}
@@ -63,6 +67,7 @@ class SuggestionsProvider:
                 retList.append(item['title'])
             return retList 
         return None
+
 
 class DixMax(CBaseHostClass):
 
@@ -546,6 +551,7 @@ class DixMax(CBaseHostClass):
     def getSuggestionsProvider(self, index):
         printDBG('DixMax.getSuggestionsProvider')
         return SuggestionsProvider()
+
 
 class IPTVHost(CHostBase):
 
