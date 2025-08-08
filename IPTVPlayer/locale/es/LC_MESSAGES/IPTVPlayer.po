@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 18:31+0200\n"
+"POT-Creation-Date: 2025-08-08 22:18+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: doubledip <islu@gmx.de>\n"
 "Language-Team: julianko\n"
@@ -700,6 +700,9 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr ""
 
+msgid "Cartoon list"
+msgstr "Lista de dibujos animados"
+
 msgid "Cartoons and anime"
 msgstr ""
 
@@ -708,9 +711,6 @@ msgstr ""
 
 msgid "Categories"
 msgstr "Categorías"
-
-msgid "Catrtoon list"
-msgstr "Lista de dibujos animados"
 
 msgid "Change active movie player"
 msgstr "Cambiar reproductor de películas activo"
@@ -2710,14 +2710,14 @@ msgid "Refreshing"
 msgstr "Actualizando"
 
 #, fuzzy
+msgid "Release"
+msgstr "Lanzamientos"
+
+#, fuzzy
 msgid "Release:"
 msgstr "Lanzamientos"
 
 msgid "Releases"
-msgstr "Lanzamientos"
-
-#, fuzzy
-msgid "Relese"
 msgstr "Lanzamientos"
 
 msgid "Relevance"

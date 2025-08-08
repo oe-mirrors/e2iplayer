@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 18:31+0200\n"
+"POT-Creation-Date: 2025-08-08 22:18+0200\n"
 "PO-Revision-Date: 2025-06-29 17:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -676,6 +676,9 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Услуги по решению капчи"
 
+msgid "Cartoon list"
+msgstr "Список каттунов"
+
 msgid "Cartoons and anime"
 msgstr "Мультфильмы и аниме"
 
@@ -684,9 +687,6 @@ msgstr "Наверстать"
 
 msgid "Categories"
 msgstr "Категории"
-
-msgid "Catrtoon list"
-msgstr "Список каттунов"
 
 msgid "Change active movie player"
 msgstr "Изменить активный видеоплеер"
@@ -2575,14 +2575,14 @@ msgstr "Обновить"
 msgid "Refreshing"
 msgstr "Обновление"
 
+msgid "Release"
+msgstr "Выпуск"
+
 msgid "Release:"
 msgstr "Выпуск:"
 
 msgid "Releases"
 msgstr "Релизы"
-
-msgid "Relese"
-msgstr "Выпуск"
 
 msgid "Relevance"
 msgstr "Актуальность"

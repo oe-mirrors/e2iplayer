@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 18:31+0200\n"
+"POT-Creation-Date: 2025-08-08 22:18+0200\n"
 "PO-Revision-Date: 2025-08-08 16:48+0200\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -674,6 +674,9 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Captcha oplosser service"
 
+msgid "Cartoon list"
+msgstr "Cartoon overzicht"
+
 msgid "Cartoons and anime"
 msgstr "Tekenfilms en Anime"
 
@@ -682,9 +685,6 @@ msgstr "Catch up"
 
 msgid "Categories"
 msgstr "Categorieën"
-
-msgid "Catrtoon list"
-msgstr "Cartoon overzicht"
 
 msgid "Change active movie player"
 msgstr "Actieve Movie Player wisselen"
@@ -2571,14 +2571,14 @@ msgstr "Vernieuwen"
 msgid "Refreshing"
 msgstr "Verversen"
 
+msgid "Release"
+msgstr "Release"
+
 msgid "Release:"
 msgstr "Release:"
 
 msgid "Releases"
 msgstr "Releases"
-
-msgid "Relese"
-msgstr "Release"
 
 msgid "Relevance"
 msgstr "Relevantie"

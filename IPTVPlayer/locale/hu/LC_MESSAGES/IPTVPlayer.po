@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 18:31+0200\n"
+"POT-Creation-Date: 2025-08-08 22:18+0200\n"
 "PO-Revision-Date: 2025-06-29 17:27+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -675,6 +675,9 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Captcha-megoldó szolgáltatás"
 
+msgid "Cartoon list"
+msgstr "Cartoon lista"
+
 msgid "Cartoons and anime"
 msgstr "Rajzfilmek és animék"
 
@@ -683,9 +686,6 @@ msgstr "Felzárkózni"
 
 msgid "Categories"
 msgstr "Kategóriák"
-
-msgid "Catrtoon list"
-msgstr "Catrtoon lista"
 
 msgid "Change active movie player"
 msgstr "Aktív filmlejátszó váltása"
@@ -2575,14 +2575,14 @@ msgstr "Frissítés"
 msgid "Refreshing"
 msgstr "Üdítő"
 
+msgid "Release"
+msgstr "Kiadások"
+
 msgid "Release:"
 msgstr "Nem lehet lekérni a bővítmény legújabb kiadását:"
 
 msgid "Releases"
 msgstr "Megjelenések"
-
-msgid "Relese"
-msgstr "Kiadások"
 
 msgid "Relevance"
 msgstr "Relevancia"

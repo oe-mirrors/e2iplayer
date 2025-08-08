@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 18:31+0200\n"
+"POT-Creation-Date: 2025-08-08 22:18+0200\n"
 "PO-Revision-Date: 2025-08-02 13:55+0300\n"
 "Last-Translator: angel_heart[Mohamed Elsafty]\n"
 "Language-Team: \n"
@@ -674,6 +674,9 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "خدمة حل الكابتشا"
 
+msgid "Cartoon list"
+msgstr "قائمة الرسوم المتحركة"
+
 msgid "Cartoons and anime"
 msgstr "الرسوم المتحركة والأنمي"
 
@@ -682,9 +685,6 @@ msgstr "مشاهدة لاحقًا"
 
 msgid "Categories"
 msgstr "الفئات"
-
-msgid "Catrtoon list"
-msgstr "قائمة الرسوم المتحركة"
 
 msgid "Change active movie player"
 msgstr "تغيير مشغل الأفلام النشط"
@@ -2570,14 +2570,14 @@ msgstr "تحديث"
 msgid "Refreshing"
 msgstr "جاري التحديث"
 
+msgid "Release"
+msgstr "إصدار"
+
 msgid "Release:"
 msgstr "الإصدار:"
 
 msgid "Releases"
 msgstr "الإصدارات"
-
-msgid "Relese"
-msgstr "إصدار"
 
 msgid "Relevance"
 msgstr "الصلة"
