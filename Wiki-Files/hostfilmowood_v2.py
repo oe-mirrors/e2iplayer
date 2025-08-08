@@ -59,7 +59,7 @@ class Filmowood(CBaseHostClass):
         printDBG("Filmowood.getLinksForVideo [%s]" % cItem)
 
         videoUrl = cItem['url']
-        linksTab=[]
+        linksTab = []
         # if is enough to pass url to urlparser (because is from a known server)
         # use these functions
         if self.up.checkHostSupport(videoUrl) == 1:
@@ -75,11 +75,11 @@ class Filmowood(CBaseHostClass):
 
     def listMainMenu(self, cItem):   
         printDBG('Filmowood.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_items',      'title': _('Movies'), 'url': self.getFullUrl('/')},
-                        {'category':'list_items',      'title': _('Popular'), 'url': self.getFullUrl('/popularni-online-filmovi-sa-prevodom')},
-                        {'category':'list_items',      'title': _('Series'), 'url': self.getFullUrl('/online-serije-sa-prevodom')},
-                        {'category':'search',          'title': _('Search'),    'search_item':True, },
-                        {'category':'search_history',  'title': _('Search history'),}]
+        MAIN_CAT_TAB = [{'category':'list_items', 'title': _('Movies'), 'url': self.getFullUrl('/')},
+                        {'category':'list_items', 'title': _('Popular'), 'url': self.getFullUrl('/popularni-online-filmovi-sa-prevodom')},
+                        {'category':'list_items', 'title': _('Series'), 'url': self.getFullUrl('/online-serije-sa-prevodom')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True, },
+                        {'category':'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)  
 
     # here you should add the functions you need to show users list of items (dirs, videos)           
@@ -107,7 +107,7 @@ class Filmowood(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))

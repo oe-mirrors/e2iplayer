@@ -30,8 +30,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.dixmax_login     = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.dixmax_password  = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.dixmax_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.dixmax_password = ConfigText(default="", fixed_size=False)
 
 def GetConfigList():
     optionList = []
@@ -73,14 +73,14 @@ class DixMax(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_URL    = 'https://dixmax.com/'
+        self.MAIN_URL = 'https://dixmax.com/'
         self.DEFAULT_ICON_URL = 'https://tuelectronica.es/wp-content/uploads/2018/09/dixmax-portada.jpg'
 
-        self.cacheFilters  = {}
+        self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.cacheLinks = {}
         self.loggedIn = None
-        self.login    = ''
+        self.login = ''
         self.password = ''
         self.dbApiKey = ''
 
@@ -122,9 +122,9 @@ class DixMax(CBaseHostClass):
         self.fillCacheFilters(cItem, data)
         self.getDBApiKey(data)
 
-        MAIN_CAT_TAB = [{'category':'list_popular',   'title': title1,        'url':self.getFullUrl('/api/private/get/popular')},
-                        {'category':'list_filters',   'title': title2,        'url':self.getFullUrl('/api/private/get/popular')},
-                        {'category':'search',         'title': _('Search'),       'search_item':True},
+        MAIN_CAT_TAB = [{'category':'list_popular', 'title': title1, 'url':self.getFullUrl('/api/private/get/popular')},
+                        {'category':'list_filters', 'title': title2, 'url':self.getFullUrl('/api/private/get/popular')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True},
                         {'category':'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -141,7 +141,7 @@ class DixMax(CBaseHostClass):
             section = ph.findall(section, ('<option', '>'), '</option>', ph.START_S)
             for idx in range(1, len(section), 2):
                 title = self.cleanHtmlStr(section[idx])
-                value = ph.getattr(section[idx-1], 'value')
+                value = ph.getattr(section[idx - 1], 'value')
                 self.cacheFilters[key].append({'title':title, key:value, key + '_t':title})
             if len(self.cacheFilters[key]):
                 self.cacheFilters[key].insert(0, {'title':_('--All--')})
@@ -150,8 +150,8 @@ class DixMax(CBaseHostClass):
         key = 'f_year'
         self.cacheFilters[key] = [{'title':_('--All--')}]
         currYear = datetime.now().year
-        for year in range(currYear, currYear-20, -1):
-            self.cacheFilters[key].append({'title':'%d-%d' % (year-1, year), key:year})
+        for year in range(currYear, currYear - 20, -1):
+            self.cacheFilters[key].append({'title':'%d-%d' % (year - 1, year), key:year})
         self.cacheFiltersKeys.append(key)
 
         printDBG(self.cacheFilters)
@@ -167,7 +167,7 @@ class DixMax(CBaseHostClass):
         filter = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
-        if f_idx  == len(self.cacheFiltersKeys):
+        if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
         self.listsTab(self.cacheFilters.get(filter, []), cItem)
 
@@ -202,7 +202,7 @@ class DixMax(CBaseHostClass):
             title = self.cleanHtmlStr(item['title'])
             title2 = self.cleanHtmlStr(item['originalTitle'])
             if title2 and title2 != title:
-                title  += ' (%s)' % title2
+                title += ' (%s)' % title2
 
             type = item['type']
             desc = [type]
@@ -231,14 +231,14 @@ class DixMax(CBaseHostClass):
         ITEMS_NUM = 40
         page = cItem.get('page', 0)
         url = 'api/private/get/explore'
-        url += '?limit=%s&order=3&start=%s' % (ITEMS_NUM, page*ITEMS_NUM)
+        url += '?limit=%s&order=3&start=%s' % (ITEMS_NUM, page * ITEMS_NUM)
 
         if 'f_genre' in cItem:
             url += '&genres[]=%s' % cItem['f_genre_t']
         if 'f_type' in cItem:
             url += '&fichaType[]=%s' % cItem['f_type']
         if 'f_year' in cItem:
-            url += '&fromYear=%s&toYear=%s' % (cItem['f_year']-1, cItem['f_year'])
+            url += '&fromYear=%s&toYear=%s' % (cItem['f_year'] - 1, cItem['f_year'])
 
         sts, data = self.getPage(self.getFullUrl(url))
         if not sts:
@@ -287,7 +287,7 @@ class DixMax(CBaseHostClass):
                 return
             try:
                 data = ph.find(data, 'gotoFuchaCrazy', '</script>', flags=0)[1]
-                data = data[data.find('{'):data.rfind('}')+1]
+                data = data[data.find('{'):data.rfind('}') + 1]
                 data = json_loads(data)
                 sTitle = data['result']['info']['title']
                 sIcon = self.getFullIconUrl(data['result']['info']['cover'])
@@ -315,7 +315,7 @@ class DixMax(CBaseHostClass):
                         params.pop('f_seasons')
                         params.pop('f_episodes')
 
-                        key =  '%sx%sx%s' % (cItem['f_id'], params['f_episode'].zfill(2), params['f_season'].zfill(2))
+                        key = '%sx%sx%s' % (cItem['f_id'], params['f_episode'].zfill(2), params['f_season'].zfill(2))
                         subItems.append(params)
 
                     if len(subItems):
@@ -351,9 +351,9 @@ class DixMax(CBaseHostClass):
     def _getLinks(self, key, cItem):
         printDBG("DixMax._getLinks [%s]" % cItem['f_id'])
 
-        post_data={'id':cItem['f_id']}
+        post_data = {'id':cItem['f_id']}
         
-        isSeries =  cItem.get('f_isepisode') or cItem.get('f_isserie')
+        isSeries = cItem.get('f_isepisode') or cItem.get('f_isserie')
         if isSeries:
             post_data.update({'i':'true', 't':cItem.get('f_season'), 'e':cItem.get('f_episode')})
         else:
@@ -384,7 +384,7 @@ class DixMax(CBaseHostClass):
             return self.up.getVideoLinkExt(url)
 
         if 'f_isepisode' in cItem:
-            key =  '%sx%sx%s' % (cItem['f_id'], cItem['f_episode'].zfill(2), cItem['f_season'].zfill(2))
+            key = '%sx%sx%s' % (cItem['f_id'], cItem['f_episode'].zfill(2), cItem['f_season'].zfill(2))
         else:
             key = cItem['f_id']
 
@@ -415,8 +415,8 @@ class DixMax(CBaseHostClass):
         retTab = []
 
         title = cItem['title']
-        icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
-        desc  = cItem.get('f_sinopsis', '')
+        icon = cItem.get('icon', self.DEFAULT_ICON_URL)
+        desc = cItem.get('f_sinopsis', '')
 
         otherInfo = {}
 
@@ -427,9 +427,9 @@ class DixMax(CBaseHostClass):
         if title == '':
             title = cItem['title']
         if icon == '':
-            icon  = cItem.get('icon', self.DEFAULT_ICON_URL)
+            icon = cItem.get('icon', self.DEFAULT_ICON_URL)
         if desc == '':
-            desc  = cItem.get('desc', '')
+            desc = cItem.get('desc', '')
         
         return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
@@ -504,7 +504,7 @@ class DixMax(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
+        name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []

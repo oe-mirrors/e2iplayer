@@ -64,7 +64,7 @@ class NameOfHost(CBaseHostClass):
         printDBG("NameOfHost.getLinksForVideo [%s]" % cItem)
 
         videoUrl = cItem['url']
-        linksTab=[]
+        linksTab = []
         # if is enough to pass url to urlparser (because is from a known server)
         # use these functions
         if self.up.checkHostSupport(videoUrl) == 1:
@@ -82,10 +82,10 @@ class NameOfHost(CBaseHostClass):
         # items of main menu
         # you can add any key you like, like 'url', 'next_category', ...
         printDBG('NameOfHost.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'main',            'title': _('Main page')},
-                        {'category':'item_filters',    'title': _('Categories')},
-                        {'category':'search',          'title': _('Search'),    'search_item':True, },
-                        {'category':'search_history',  'title': _('Search history'),} 
+        MAIN_CAT_TAB = [{'category':'main', 'title': _('Main page')},
+                        {'category':'item_filters', 'title': _('Categories')},
+                        {'category':'search', 'title': _('Search'), 'search_item':True, },
+                        {'category':'search_history', 'title': _('Search history'),} 
         self.listsTab(MAIN_CAT_TAB, cItem)  
 
     # here you should add the functions you need to show users list of items (dirs, videos)           
@@ -114,11 +114,11 @@ class NameOfHost(CBaseHostClass):
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name=self.currItem.get("name", '')
-        category=self.currItem.get("category", '')
+        name = self.currItem.get("name", '')
+        category = self.currItem.get("category", '')
         
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
-        self.currList=[]
+        self.currList = []
         
         #MAIN MENU
         if name == None:
@@ -131,7 +131,7 @@ class NameOfHost(CBaseHostClass):
             self.exploreItems(self.currItem)       
         #SEARCH
         elif category in ["search", "search_next_page"]:
-            cItem=dict(self.currItem)
+            cItem = dict(self.currItem)
             cItem.update({'search_item':False, 'name':'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
         #HISTORIA SEARCH
