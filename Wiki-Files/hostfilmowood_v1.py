@@ -48,7 +48,7 @@ class Filmowood(CBaseHostClass):
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')        
         self.defaultParams = {'header':self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         
-    def getPage(self, url, addParams = {}, post_data = None):
+    def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
@@ -103,17 +103,17 @@ class Filmowood(CBaseHostClass):
         # do something and add items
         #
                         
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         # main cycle to move through items.
         printDBG('Filmowood.handleService start')
         
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
 
-        name     = self.currItem.get("name", '')
-        category = self.currItem.get("category", '')
+        name=self.currItem.get("name", '')
+        category=self.currItem.get("category", '')
         
         printDBG( "handleService: >> name[%s], category[%s] " % (name, category) )
-        self.currList = []
+        self.currList=[]
         
         #MAIN MENU
         if name == None:
@@ -126,7 +126,7 @@ class Filmowood(CBaseHostClass):
             self.exploreItems(self.currItem)       
         #SEARCH
         elif category in ["search", "search_next_page"]:
-            cItem = dict(self.currItem)
+            cItem=dict(self.currItem)
             cItem.update({'search_item':False, 'name':'category'}) 
             self.listSearchResult(cItem, searchPattern, searchType)
         #HISTORIA SEARCH
