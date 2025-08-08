@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-07 22:23+0200\n"
+"POT-Creation-Date: 2025-08-08 18:31+0200\n"
 "PO-Revision-Date: 2025-08-02 13:55+0300\n"
 "Last-Translator: angel_heart[Mohamed Elsafty]\n"
 "Language-Team: \n"
@@ -3914,9 +3914,6 @@ msgstr "متوسط"
 
 msgid "navy"
 msgstr "كحلي"
-
-msgid "not available"
-msgstr "غير متوفر"
 
 msgid "olive"
 msgstr "زيتوني"

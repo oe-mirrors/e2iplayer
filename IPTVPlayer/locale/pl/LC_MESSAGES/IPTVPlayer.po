@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-07 22:23+0200\n"
+"POT-Creation-Date: 2025-08-08 18:31+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n"
 "Language-Team: IPTVPlayer\n"
@@ -3972,9 +3972,6 @@ msgstr "średnia"
 
 msgid "navy"
 msgstr "granatowy"
-
-msgid "not available"
-msgstr ""
 
 msgid "olive"
 msgstr "oliwkowy"

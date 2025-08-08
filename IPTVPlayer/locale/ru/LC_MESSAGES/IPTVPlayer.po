@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-07 22:23+0200\n"
+"POT-Creation-Date: 2025-08-08 18:31+0200\n"
 "PO-Revision-Date: 2025-06-29 17:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -3922,9 +3922,6 @@ msgstr "средний"
 
 msgid "navy"
 msgstr "морской"
-
-msgid "not available"
-msgstr "недоступно"
 
 msgid "olive"
 msgstr "оливковый"

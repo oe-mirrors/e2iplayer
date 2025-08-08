@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-07 22:23+0200\n"
+"POT-Creation-Date: 2025-08-08 18:31+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Massimo Bambi <maxbambi@libero.it>\n"
 "Language-Team: Italian\n"
@@ -3927,9 +3927,6 @@ msgstr "medio"
 
 msgid "navy"
 msgstr "blu marino"
-
-msgid "not available"
-msgstr ""
 
 msgid "olive"
 msgstr "verde oliva"

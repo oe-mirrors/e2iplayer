@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-07 22:23+0200\n"
+"POT-Creation-Date: 2025-08-08 18:31+0200\n"
 "PO-Revision-Date: 2025-06-19 15:44+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -3926,9 +3926,6 @@ msgstr "μέτριο"
 
 msgid "navy"
 msgstr "βαθυγάλαζο"
-
-msgid "not available"
-msgstr ""
 
 msgid "olive"
 msgstr "λαδί"

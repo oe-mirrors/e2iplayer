@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-07 22:23+0200\n"
+"POT-Creation-Date: 2025-08-08 18:31+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -4151,9 +4151,6 @@ msgstr "середній"
 
 msgid "navy"
 msgstr "морські хвилі"
-
-msgid "not available"
-msgstr ""
 
 msgid "olive"
 msgstr "оливковий"
