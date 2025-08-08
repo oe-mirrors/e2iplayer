@@ -124,8 +124,8 @@ class DixMax(CBaseHostClass):
 
         MAIN_CAT_TAB = [{'category':'list_popular',   'title': title1,        'url':self.getFullUrl('/api/private/get/popular')},
                         {'category':'list_filters',   'title': title2,        'url':self.getFullUrl('/api/private/get/popular')},
-                        {'category':'search',         'title': _('Search'),       'search_item':True       },
-                        {'category':'search_history', 'title': _('Search history'),                        }]
+                        {'category':'search',         'title': _('Search'),       'search_item':True},
+                        {'category':'search_history', 'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def fillCacheFilters(self, cItem, data):
@@ -136,7 +136,7 @@ class DixMax(CBaseHostClass):
         keys = ('f_type', 'f_genre') #('genres[]', 'fichaType[]')
         tmp = ph.findall(data, ('<select', '>', 'b-multiple'), '</select>', limits=2)
         for section in tmp:
-            key = keys[len( self.cacheFiltersKeys)]
+            key = keys[len(self.cacheFiltersKeys)]
             self.cacheFilters[key] = []
             section = ph.findall(section, ('<option', '>'), '</option>', ph.START_S)
             for idx in range(1, len(section), 2):
@@ -199,8 +199,8 @@ class DixMax(CBaseHostClass):
 
             icon = self.getFullIconUrl(item['cover'])
 
-            title = self.cleanHtmlStr( item['title'] )
-            title2 = self.cleanHtmlStr( item['originalTitle'] )
+            title = self.cleanHtmlStr(item['title'])
+            title2 = self.cleanHtmlStr(item['originalTitle'])
             if title2 and title2 != title:
                 title  += ' (%s)' % title2
 
@@ -223,7 +223,7 @@ class DixMax(CBaseHostClass):
             if article['f_isserie']:
                 article.update({'f_seasons':item['seasons'], 'f_episodes':item['episodes']})
             params = MergeDicts(cItem, {'good_for_fav':True, 'category':nextCategory, 'title':title, 'icon':icon, 'desc':desc, 'f_id':item['id']}, article) 
-            retList.append( params )
+            retList.append(params)
         return retList
 
     def listItems(self, cItem, nextCategory):
@@ -316,16 +316,16 @@ class DixMax(CBaseHostClass):
                         params.pop('f_episodes')
 
                         key =  '%sx%sx%s' % (cItem['f_id'], params['f_episode'].zfill(2), params['f_season'].zfill(2))
-                        subItems.append( params )
+                        subItems.append(params)
 
                     if len(subItems):
                         params = {'f_type':_('Season'), 'f_isseason':1, 'f_season':sNum}
                         params = MergeDicts(cItem, {'good_for_fav':False, 'category':nextCategory, 'sub_items':subItems, 'title':_('Season %s (%s)') % (sNum.zfill(2), sEpisodes), 'icon':sIcon}, params) 
-                        self.addDir( params )
+                        self.addDir(params)
             except Exception:
                 printExc()
         else:
-            self.addVideo( MergeDicts(cItem) )
+            self.addVideo(MergeDicts(cItem))
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         self.tryTologin()
@@ -431,7 +431,7 @@ class DixMax(CBaseHostClass):
         if desc == '':
             desc  = cItem.get('desc', '')
         
-        return [{'title':self.cleanHtmlStr( title ), 'text': self.cleanHtmlStr( desc ), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
+        return [{'title':self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images':[{'title':'', 'url':self.getFullUrl(icon)}], 'other_info':otherInfo}]
         
     def tryTologin(self):
         printDBG('tryTologin start')
@@ -506,7 +506,7 @@ class DixMax(CBaseHostClass):
 
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG( "handleService: ||| name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: ||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
         self.tryTologin()

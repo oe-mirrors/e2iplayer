@@ -75,28 +75,28 @@ class Filmowood(CBaseHostClass):
 
     def listMainMenu(self, cItem):   
         printDBG('Filmowood.listMainMenu')
-        MAIN_CAT_TAB = [{'category':'list_items',      'title': _('Movies') , 'url' : self.getFullUrl('/') },
-                        {'category':'list_items',      'title': _('Popular'), 'url' : self.getFullUrl('/popularni-online-filmovi-sa-prevodom') },
-                        {'category':'list_items',      'title': _('Series') , 'url': self.getFullUrl('/online-serije-sa-prevodom') }    ,
+        MAIN_CAT_TAB = [{'category':'list_items',      'title': _('Movies'), 'url': self.getFullUrl('/')},
+                        {'category':'list_items',      'title': _('Popular'), 'url': self.getFullUrl('/popularni-online-filmovi-sa-prevodom')},
+                        {'category':'list_items',      'title': _('Series'), 'url': self.getFullUrl('/online-serije-sa-prevodom')},
                         {'category':'search',          'title': _('Search'),    'search_item':True, },
-                        {'category':'search_history',  'title': _('Search history'),     } ]
+                        {'category':'search_history',  'title': _('Search history'),}]
         self.listsTab(MAIN_CAT_TAB, cItem)  
 
     # here you should add the functions you need to show users list of items (dirs, videos)           
-    def listItems (self, cItem):
+    def listItems(self, cItem):
         printDBG('Filmowood.listItems')
         #                
         # do something and add items
         # self.addDir (params) adds a directory
         # self.addVideo (params) adds a video
                         
-    def listFilters (self, cItem):
+    def listFilters(self, cItem):
         printDBG('Filmowood.listFilters')
         #                
         # do something and add items
         #
                         
-    def exploreItems (self, cItem):
+    def exploreItems(self, cItem):
         printDBG('Filmowood.exploreItems')
         #               
         # do something and add items
@@ -110,7 +110,7 @@ class Filmowood(CBaseHostClass):
         name     = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         
-        printDBG( "handleService: >> name[%s], category[%s] " % (name, category) )
+        printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
         
         #MAIN MENU
