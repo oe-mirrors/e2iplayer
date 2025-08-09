@@ -380,7 +380,7 @@ class Raiplay(CBaseHostClass):
             return
 
         items = self.cm.ph.getAllItemsBeetwenMarkers(channels_block, '<li', '</li>')
-        printDBG(f"Raiplay - found {len(items)} sport channels")
+        printDBG("Raiplay - found %d sport channels" % len(items))
 
         for i in items:
             url = self.cm.ph.getSearchGroups(i, '''data-video-url=['"]([^'^"]+?)['"]''')[0]
@@ -396,7 +396,7 @@ class Raiplay(CBaseHostClass):
                 title = self.cleanHtmlStr(i)
 
             params = {
-                'title': f"Rai Sport: {title}",
+                'title': "Rai Sport: %s" % title,
                 'url': url,
                 'icon': icon,
                 'category': 'live_tv',

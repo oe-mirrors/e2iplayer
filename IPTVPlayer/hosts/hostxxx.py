@@ -17,6 +17,7 @@ from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import decorateUrl, getDirectM3U8Playlist, unpackJSPlayerParams, TEAMCASTPL_decryptPlayerParams, getF4MLinksWithMeta, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.ffmpegdownloader import FFMPEGDownloader
 from Plugins.Extensions.IPTVPlayer.components.configbase import COLORS_DEFINITONS
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
 # FOREIGN import
 ###################################################
@@ -30,12 +31,11 @@ try:
     import simplejson
 except:
     import json as simplejson
-import json
 try:
-    from urllib.parse import urlparse, parse_qs, urlencode, urljoin, unquote
+    from urllib.parse import urlparse, parse_qs, urlencode, unquote
     from urllib.request import urlopen
 except ImportError:
-    from urllib import urlencode, urlopen, urljoin, unquote
+    from urllib import urlencode, urlopen, unquote
     from urlparse import urlparse, parse_qs
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, ConfigInteger, getConfigListEntry, ConfigPIN, ConfigDirectory
