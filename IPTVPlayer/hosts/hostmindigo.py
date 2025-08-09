@@ -24,7 +24,6 @@ from datetime import datetime
 from time import time
 
 import zlib
-import urllib
 import base64
 from hashlib import sha1, sha256
 from Components.config import config, ConfigText, getConfigListEntry

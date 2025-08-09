@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.hosts import hosturllist as urllist
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 
 ###################################################
 
@@ -22,7 +23,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import re
 import datetime
-import urllib
 ###################################################
 
 ###################################################
@@ -113,7 +113,7 @@ class Dmdamedia(CBaseHostClass):
             title = self.cm.ph.getDataBeetwenMarkers(i, '">', '<', False)[1]
             printDBG(title)
             url = self.cm.ph.getDataBeetwenMarkers(i, 'href="', '">', False)[1]
-            quot = urllib.quote(url[url.index("=") + 1:-1])
+            quot = urllib_quote(url[url.index("=") + 1:-1])
             url = url.replace(url[url.index("=") + 1:-1], quot)
             params = {'category': 'list_items', 'title': title, 'icon': None, 'url': url, 'page': '1'}
             self.addDir(params)

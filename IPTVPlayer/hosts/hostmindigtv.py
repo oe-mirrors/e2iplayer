@@ -23,7 +23,6 @@ import os
 from datetime import datetime, timedelta
 import time
 import zlib
-import urllib
 import base64
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################

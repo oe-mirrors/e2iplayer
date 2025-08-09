@@ -9,6 +9,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 
 ###################################################
@@ -16,7 +17,6 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 from binascii import hexlify
 from hashlib import md5
-import urllib
 from datetime import datetime
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
@@ -59,7 +59,7 @@ class SuggestionsProvider:
         return _("DixMax Suggestions")
 
     def getSuggestions(self, text, locale):
-        url = self.MAIN_URL + 'api/private/get/search?query=%s&limit=10&f=0' % (urllib.quote(text))
+        url = self.MAIN_URL + 'api/private/get/search?query=%s&limit=10&f=0' % (urllib_quote(text))
         sts, data = self.cm.getPage(url, self.defaultParams)
         if sts:
             retList = []
@@ -335,7 +335,7 @@ class DixMax(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         self.tryTologin()
 
-        url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib.quote(searchPattern))
+        url = self.getFullUrl('/api/private/get/search?query=%s&limit=100&f=1' % urllib_quote(searchPattern))
         sts, data = self.getPage(url)
         if not sts:
             return

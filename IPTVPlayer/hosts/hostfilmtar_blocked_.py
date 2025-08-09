@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.hosts import hosturllist as urllist
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_unquote
 ###################################################
 
 ###################################################
@@ -21,7 +22,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import re
 import datetime
-import urllib
 ###################################################
 
 
@@ -52,7 +52,7 @@ class FilmTar(CBaseHostClass):
         videoUrls = []
         url = cItem['url']
         if url.startswith == "https://sbot.cf":
-            url = urllib.unquote(url)
+            url = urllib_unquote(url)
         uri = urlparser.decorateParamsFromUrl(url)
         protocol = uri.meta.get('iptv_proto', '')
 

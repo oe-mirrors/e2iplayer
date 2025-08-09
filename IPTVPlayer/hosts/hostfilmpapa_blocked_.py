@@ -21,7 +21,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import re
 import datetime
-import urllib
 ###################################################
 # repo.mvshrk.xyz/plugins/
 
