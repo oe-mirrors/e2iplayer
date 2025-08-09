@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 22:18+0200\n"
+"POT-Creation-Date: 2025-08-09 11:41+0200\n"
 "PO-Revision-Date: 2025-08-02 13:55+0300\n"
 "Last-Translator: angel_heart[Mohamed Elsafty]\n"
 "Language-Team: \n"
@@ -1924,6 +1924,10 @@ msgstr "القائمة"
 
 msgid "MIPS Floating Point Architecture"
 msgstr "معمارية النقطة العائمة MIPS"
+
+#, python-format
+msgid "MOVE: %s"
+msgstr ""
 
 msgid "MOVIES"
 msgstr "أفلام"

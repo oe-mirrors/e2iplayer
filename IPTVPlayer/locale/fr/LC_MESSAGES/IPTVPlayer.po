@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iptvplayer-for-e 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 22:18+0200\n"
+"POT-Creation-Date: 2025-08-09 11:41+0200\n"
 "PO-Revision-Date: 2018-07-28 16:39+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1970,6 +1970,10 @@ msgid "MENU"
 msgstr ""
 
 msgid "MIPS Floating Point Architecture"
+msgstr ""
+
+#, python-format
+msgid "MOVE: %s"
 msgstr ""
 
 msgid "MOVIES"

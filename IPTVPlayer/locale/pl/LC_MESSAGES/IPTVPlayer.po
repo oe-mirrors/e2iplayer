@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 22:18+0200\n"
+"POT-Creation-Date: 2025-08-09 11:41+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n"
 "Language-Team: IPTVPlayer\n"
@@ -1947,6 +1947,10 @@ msgstr ""
 
 msgid "MIPS Floating Point Architecture"
 msgstr "Architektura zmiennoprzecinkowa MIPS"
+
+#, python-format
+msgid "MOVE: %s"
+msgstr ""
 
 msgid "MOVIES"
 msgstr ""
