@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# 2022.11.24. Blindspot
+# 2025.07.04. Blindspot
 ###################################################
-HOST_VERSION = "1.2"
+HOST_VERSION = "1.3"
 ###################################################
 # LOCAL import
 ###################################################
@@ -21,7 +21,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import re
 import datetime
-import urllib
 ###################################################
 
 
@@ -79,14 +78,14 @@ class Idokep(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG('Idokep.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_static', 'title': _('Előrejelzés')},
-                        {'category': 'list_filters', 'title': _('Időkép'), 'url': 'https://www.idokep.hu/idokep'},
-                        {'category': 'list_filters', 'title': _('Hőtérkép'), 'url': 'https://www.idokep.hu/hoterkep'},
-                        {'category': 'list_filters', 'title': _('Felhőkép'), 'url': 'https://www.idokep.hu/felhokep'},
-                        {'category': 'list_filters', 'title': _('Radar'), 'url': 'https://www.idokep.hu/radar'},
-                        {'category': 'list_filters', 'title': _('Kamerák'), 'url': 'https://www.idokep.hu/webkamera'},
-                        {'category': 'list_album', 'title': _('Képtár'), 'url': 'https://www.idokep.hu/keptar'},
-                        {'category': 'list_filters', 'title': _('Térképek'), 'url': 'https://www.idokep.hu/idojaras/Budapest'}]
+        MAIN_CAT_TAB = [{'category': 'list_static', 'title': 'Előrejelzés'},
+                        {'category': 'list_filters', 'title': 'Időkép', 'url': 'https://www.idokep.hu/idokep'},
+                        {'category': 'list_filters', 'title': 'Hőtérkép', 'url': 'https://www.idokep.hu/hoterkep'},
+                        {'category': 'list_filters', 'title': 'Felhőkép', 'url': 'https://www.idokep.hu/felhokep'},
+                        {'category': 'list_filters', 'title': 'Radar', 'url': 'https://www.idokep.hu/radar'},
+                        {'category': 'list_filters', 'title': 'Kamerák', 'url': 'https://www.idokep.hu/webkamera'},
+                        {'category': 'list_album', 'title': 'Képtár', 'url': 'https://www.idokep.hu/keptar'},
+                        {'category': 'list_filters', 'title': 'Térképek', 'url': 'https://www.idokep.hu/idojaras/Budapest'}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listKepek(self, cItem):
@@ -97,7 +96,7 @@ class Idokep(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="ik album-image-container col-6 col-sm-3 col-md-2 col-lg-2">', '</a>', False)
         for i in data:
             title = self.cm.ph.getDataBeetwenMarkers(i, '<div class="ik image-title">', '</div>', False)[1]
-            icon = self.cm.ph.getDataBeetwenMarkers(i, '<img src="', '"', False)[1]
+            icon = self.cm.ph.getDataBeetwenMarkers(i, '" src="', '"', False)[1]
             icon = "https://idokep.hu" + icon
             url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '"', False)[1]
             url = "https://idokep.hu" + url
@@ -109,9 +108,10 @@ class Idokep(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        url = self.cm.ph.getDataBeetwenMarkers(data, '<picture>', '</picture>', False)[1]
-        url = self.cm.ph.getDataBeetwenMarkers(url, " src='", "'", False)[1]
-        url = "https://idokep.hu" + url
+        url = self.cm.ph.getDataBeetwenMarkers(data, '<source srcset="', '"', False)[1]
+        if ".webp" in url:
+            url = url.replace(".webp", "")
+        url = "https://www.idokep.hu" + url
         params = {'title': cItem['title'], 'icon': cItem['icon'], 'url': url}
         self.addPicture(params)
 
@@ -128,7 +128,7 @@ class Idokep(CBaseHostClass):
                 title = title[0] + ' ' + title[1]
             else:
                title = title[0]
-            icon = self.cm.ph.getDataBeetwenMarkers(i, '<img src="', '"', False)[1]
+            icon = self.cm.ph.getDataBeetwenMarkers(i, '" src="', '"', False)[1]
             icon = "https://idokep.hu" + icon
             url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '"', False)[1]
             url = "https://idokep.hu" + url
@@ -281,10 +281,7 @@ class Idokep(CBaseHostClass):
         elif cItem['title'] == "Hőtérkép":
             menu = self.cm.ph.getDataBeetwenMarkers(data, 'Hőtérkép</a>', '</ul>', False)[1]
             list = self.cm.ph.getAllItemsBeetwenMarkers(menu, '<li>', '</li>', False)
-            list.pop(0)
-            list.pop(0)
-            list.pop(0)
-            list.pop(0)
+            list.pop(0), list.pop(0), list.pop(0), list.pop(0), list.pop(0)
             for i in list:
                 title = self.cm.ph.getDataBeetwenMarkers(i, '">', '</a>', False)[1]
                 url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
@@ -309,16 +306,14 @@ class Idokep(CBaseHostClass):
             menu = self.cm.ph.getDataBeetwenMarkers(data, 'Radar</a>', '</ul>', False)[1]
             list = self.cm.ph.getAllItemsBeetwenMarkers(menu, '<li>', '</li>', False)
             list.pop(0)
-            list.pop(0)
-            list.pop(0)
             list.pop(-1)
             for i in list:
                 title = self.cm.ph.getDataBeetwenMarkers(i, '">', '</a>', False)[1]
                 url = self.cm.ph.getDataBeetwenMarkers(i, '<a href="', '">', False)[1]
                 category = 'list_items'
-                if list.index(i) == 0:
+                if list.index(i) == 0 or list.index(i) == 1:
                     picture = False
-                if list.index(i) == 1:
+                if list.index(i) == 2:
                     category = 'list_riaszt'
                 if "https:" not in url:
                     url = "https://www.idokep.hu" + url

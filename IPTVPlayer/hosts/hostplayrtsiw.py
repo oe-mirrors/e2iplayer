@@ -489,7 +489,8 @@ class PlayRTSIW(CBaseHostClass):
                     params = dict(baseItem)
                     params.update({'category': 'search_items', 'title': _(self.ITEMS_TYPE_MAP[type].upper()), 'url': cUrl + '100', 'desc': _('Search for "%s", %s, %s %s') % (searchPattern, _(type), data[countKey], _(self.ITEMS_TYPE_MAP[type]))})
                     subItems.append(params)
-                countDesc.append(_('%s ' + self.ITEMS_TYPE_MAP[type]) % (data[countKey]))
+                # countDesc.append(_('%s ' + self.ITEMS_TYPE_MAP[type]) % (data[countKey]))
+                countDesc.append('%s %s' % (data[countKey], self.ITEMS_TYPE_MAP[type]))
             except Exception:
                 printExc()
                 continue

@@ -81,9 +81,9 @@ class WOFvideo(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG('Wofvideo.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Kategóriák')},
-                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Kategóriák'},
+                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
+                        {'category': 'search_history', 'title': 'Keresési előzmények'}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):

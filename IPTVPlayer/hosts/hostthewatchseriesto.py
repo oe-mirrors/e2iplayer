@@ -344,7 +344,7 @@ class TheWatchseriesTo(CBaseHostClass):
         elif category == 'episodes':
             self.listItems(self.currItem, 'video')
         elif category == 'list_items':
-            self.listItems(self.currItem)
+            self.listItems(self.currItem, "")
     # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)

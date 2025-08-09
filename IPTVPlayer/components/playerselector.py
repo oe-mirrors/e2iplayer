@@ -192,7 +192,7 @@ if GRIDSUPPORT:
             if self.currList:
                 idx = self["grid"].getSelectedIndex()
                 if self.reorderingMode and self.moveIndex != -1:
-                    self["statustext"].setText("MOVE: %s" % self.currList[self.moveIndex][0])
+                    self["statustext"].setText(_("MOVE: %s") % self.currList[self.moveIndex][0])
                 else:
                     self["statustext"].setText(self.currList[idx][0])
 

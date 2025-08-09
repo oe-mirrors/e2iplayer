@@ -46,7 +46,7 @@ class KissCartoonMe(CBaseHostClass):
     DEFAULT_ICON_URL = "http://kisscartoon.bz/image/logo.png"
 
     MAIN_CAT_TAB = [{'category': 'home', 'title': _('Home'), 'url': MAIN_URL, },
-                    {'category': 'list_cats', 'title': _('Catrtoon list'), 'url': MAIN_URL + 'CartoonList', },
+                    {'category': 'list_cats', 'title': _('Cartoon list'), 'url': MAIN_URL + 'CartoonList', },
                     {'category': 'search', 'title': _('Search'), 'search_item': True, },
                     {'category': 'search_history', 'title': _('Search history'), }]
     SORT_BY_TAB = [{'title': _('Sort by alphabet')},

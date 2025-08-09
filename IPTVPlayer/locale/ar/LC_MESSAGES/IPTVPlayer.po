@@ -1,0 +1,4019 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-09 11:41+0200\n"
+"PO-Revision-Date: 2025-08-02 13:55+0300\n"
+"Last-Translator: angel_heart[Mohamed Elsafty]\n"
+"Language-Team: \n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.6\n"
+
+#, python-format
+msgid "\tDisk space available: %s"
+msgstr "\tالمساحة المتوفرة على القرص: %s"
+
+#, python-format
+msgid "\tDisk space required: %s"
+msgstr "\tالمساحة المطلوبة على القرص: %s"
+
+msgid ""
+"\n"
+"Error[1]."
+msgstr ""
+"\n"
+"خطأ [1]."
+
+msgid ""
+"\n"
+"Error[2]."
+msgstr ""
+"\n"
+"خطأ [2]."
+
+msgid ""
+"\n"
+"Error[3]."
+msgstr ""
+"\n"
+"خطأ [3]."
+
+msgid ""
+"\n"
+"Error[4]."
+msgstr ""
+"\n"
+"خطأ [4]."
+
+msgid ""
+"\n"
+"Make sure you are using the latest version of the plugin."
+msgstr ""
+"\n"
+"تأكد من أنك تستخدم أحدث إصدار من البلجن."
+
+msgid ""
+"\n"
+"This host is not integral part of the E2iPlayer plugin.\n"
+"It is not supported by E2iPlayer team."
+msgstr ""
+"\n"
+"هذا المضيف ليس جزءًا أساسيًا من بلجن E2iPlayer.\n"
+"ولا يتم دعمه من قِبل فريق E2iPlayer."
+
+msgid ""
+"\n"
+"You can also report problem here: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+msgstr ""
+"\n"
+"يمكنك أيضًا الإبلاغ عن المشكلة هنا: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+
+msgid "    *    Votes: "
+msgstr "    *    الأصوات: "
+
+msgid "    Audio buffer size [KB]"
+msgstr "    حجم مخزن الصوت المؤقت [KB]"
+
+msgid "    Background color"
+msgstr "    لون الخلفية"
+
+msgid "    Default suggestions provider"
+msgstr "    مزود الاقتراحات الافتراضي"
+
+msgid "    Enable hosts groups"
+msgstr "    تفعيل مجموعات المضيفين"
+
+msgid "    Number of columns"
+msgstr "    عدد الأعمدة"
+
+msgid "    Number of rows"
+msgstr "    عدد الصفوف"
+
+msgid "    Remove thumbnails"
+msgstr "    إزالة الصور المصغرة"
+
+msgid "    Service icon size"
+msgstr "    حجم أيقونة الخدمة"
+
+msgid "    Show suggestions"
+msgstr "    إظهار الإقتراحات"
+
+msgid "    Video buffer size [MB]"
+msgstr "    حجم تأخير الفيديو [MB]"
+
+#, python-format
+msgid " (planned %s)"
+msgstr " (مخطط  %s)"
+
+msgid " - others links"
+msgstr " - روابط أخري"
+
+msgid " Login Protected."
+msgstr " تسجيل الدخول محمي."
+
+msgid " Private Show."
+msgstr " عرض خاص."
+
+msgid " This video is a private."
+msgstr " هذا الفيديو خاص."
+
+msgid " or "
+msgstr " أو "
+
+#, python-format
+msgid "\"%s\" Virtual Keyboard layout not available."
+msgstr "تخطيط لوحة المفاتيح الافتراضية \"%s\" غير متاح."
+
+msgid "\"Web\" streams player"
+msgstr "مشغل البث عبر الويب"
+
+#, python-format
+msgid "%s - service overview"
+msgstr "%s - نظرة عامة على الخدمة"
+
+#, python-format
+msgid "%s - subtitles provider"
+msgstr "%s - مزود الترجمة"
+
+#, python-format
+msgid "%s - trailer"
+msgstr "%s - الإعلان التشويقي"
+
+#, python-format
+msgid "%s API KEY"
+msgstr "مفتاح API لـ %s"
+
+#, python-format
+msgid "%s device name"
+msgstr "اسم الجهاز %s"
+
+#, python-format
+msgid "%s download manager"
+msgstr "مدير التنزيل %s"
+
+#, python-format
+msgid "%s e-mail"
+msgstr "البريد الإلكتروني %s"
+
+#, python-format
+msgid "%s episodes"
+msgstr "%s حلقات"
+
+#, python-format
+msgid "%s file is %d KB in size. Last %d lines are:"
+msgstr "حجم الملف %s هو %d كيلوبايت. آخر %d أسطر هي:"
+
+#, python-format
+msgid "%s file is %d MB in size. Last %d lines are:"
+msgstr "حجم الملف %s هو %d ميغابايت. آخر %d أسطر هي:"
+
+#, python-format
+msgid "%s followers"
+msgstr "%s متابعين"
+
+#, python-format
+msgid "%s has been protected with google recaptcha v2. You can try to use API version."
+msgstr "تم حماية %s بواسطة Google Recaptcha v2. يمكنك محاولة استخدام إصدار الـ API."
+
+#, python-format
+msgid "%s minutes"
+msgstr "%s دقائق"
+
+#, python-format
+msgid "%s password"
+msgstr "كلمة المرور %s"
+
+#, python-format
+msgid "%s returned %s: %s"
+msgstr "‏%s أعاد %s: %s"
+
+#, python-format
+msgid "%s s%se%s"
+msgstr "%s الموسم %s الحلقة %s"
+
+#, python-format
+msgid "%s said: This page is currently unavailable in your region"
+msgstr "%s قال: هذه الصفحة غير متوفرة حاليًا في منطقتك"
+
+#, python-format
+msgid "%s services configuration"
+msgstr "إعدادات خدمات %s"
+
+#, python-format
+msgid "%s shows"
+msgstr "عروض %s"
+
+#, python-format
+msgid "%s subtitles download - how to"
+msgstr "تنزيل ترجمات %s - كيفية التنفيذ"
+
+#, python-format
+msgid "%s timeout."
+msgstr "انتهاء مهلة %s."
+
+#, python-format
+msgid ""
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+" Host country: %s, your country: %s"
+msgstr ""
+"%s يستخدم إجراءات \"الحجب الجغرافي\" لمنعك من الوصول إلى الخدمة من خارج الدولة.\n"
+" دولة المضيف: %s، دولتك: %s"
+
+#, python-format
+msgid "%s viewers"
+msgstr "%s مشاهد"
+
+#, python-format
+msgid "%s views"
+msgstr "%s مشاهدة"
+
+#, python-format
+msgid "%s/10"
+msgstr "%s/10"
+
+msgid "++"
+msgstr "++"
+
+msgid "--"
+msgstr "--"
+
+msgid "-- OK --"
+msgstr "-- موافق --"
+
+msgid "----- BASIC CONFIGURATION -----"
+msgstr "----- الإعدادات الأساسية -----"
+
+msgid "----- BUFFERING CONFIGURATION -----"
+msgstr "----- إعدادات التخزين المؤقت -----"
+
+msgid "----- CAPTCHA CONFIGURATION -----"
+msgstr "----- إعدادات CAPTCHA -----"
+
+msgid "----- DOWNLOADING CONFIGURATION -----"
+msgstr "----- إعدادات التنزيل -----"
+
+msgid "----- OTHER SETTINGS -----"
+msgstr "----- إعدادات أخرى -----"
+
+msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
+msgstr "----- إعدادات المشغلات والتشغيل -----"
+
+msgid "----- PROXIES CONFIGURATION -----"
+msgstr "----- إعدادات البروكسي -----"
+
+msgid "----- SECURITY CONFIGURATION -----"
+msgstr "----- إعدادات الأمان -----"
+
+msgid "----- SERVICE CONFIGURATION -----"
+msgstr "----- إعدادات الخدمات -----"
+
+msgid "----- SKIN CONFIGURATION -----"
+msgstr "----- إعدادات المظهر -----"
+
+msgid "----- STORAGE CONFIGURATION -----"
+msgstr "----- إعدادات التخزين -----"
+
+msgid "----- SUBTITLES CONFIGURATION -----"
+msgstr "----- إعدادات الترجمة -----"
+
+msgid "----------------- External exteplayer3 options -----------------"
+msgstr "----------------- خيارات exteplayer3 الخارجية -----------------"
+
+msgid "----------Other----------"
+msgstr "----------أخرى----------"
+
+msgid "--All Episodes--"
+msgstr "--جميع الحلقات--"
+
+msgid "--All--"
+msgstr "--الكل--"
+
+msgid "--Any--"
+msgstr "--أي--"
+
+msgid "--Other--"
+msgstr "--أخرى--"
+
+msgid "12 hour format"
+msgstr "تنسيق 12 ساعة "
+
+msgid "16:10 Letterbox"
+msgstr "‏16:10 بحواف سوداء (Letterbox)"
+
+msgid "16:10 PanScan"
+msgstr "‏16:10 ملء الشاشة (PanScan)"
+
+msgid "16:9"
+msgstr "‏16:9"
+
+msgid "16:9 Letterbox"
+msgstr "‏16:9 بحواف سوداء (Letterbox)"
+
+msgid "16:9 always"
+msgstr "‏16:9 دائمًا"
+
+msgid "24 hour format"
+msgstr "تنسيق 24 ساعة "
+
+msgid "4:3 Letterbox"
+msgstr "‏4:3 بحواف سوداء (Letterbox)"
+
+msgid "4:3 PanScan"
+msgstr "‏4:3 ملء الشاشة (PanScan)"
+
+msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
+msgstr "<font color=\"#FE642E\">تذكير:</font></b> E2iPlayer <b>هو فقط</b> متصفح ويب متخصص. ولا <b>يستضيف</b> أي محتوى!!!</font>"
+
+msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgstr "يجب توفر ترخيص تلفزيوني لمشاهدة بث BBC iPlayer. راجع موقع BBC لمزيد من المعلومات: https://www.bbc.co.uk/iplayer/help/tvlicence"
+
+msgid "A-Z"
+msgstr "أ-ي"
+
+msgid "AAC downmix mode"
+msgstr "وضع خلط AAC للصوت"
+
+msgid "ABORTED"
+msgstr "تم الإلغاء"
+
+msgid "AC3 downmix mode"
+msgstr "وضع خلط AC3 للصوت"
+
+msgid "ALBUMS"
+msgstr "الألبومات"
+
+msgid "API initialization failed!"
+msgstr "فشل تهيئة واجهة البرمجة (API)!"
+
+msgid "ARTISTS"
+msgstr "الفنانون"
+
+msgid "ATTENTION !"
+msgstr "انتباه!"
+
+msgid "AZ"
+msgstr "أبجديًا"
+
+msgid "Accept"
+msgstr "موافقة"
+
+msgid "Access Forbidden"
+msgstr "الدخول محظور"
+
+msgid "Access denied. Please check password."
+msgstr "تم رفض الوصول. يرجى التحقق من كلمة المرور."
+
+msgid "Active host"
+msgstr "المضيف النشط"
+
+msgid "Actors:"
+msgstr "الممثلون:"
+
+#, python-format
+msgid "Add host %s to group"
+msgstr "أضف المضيف %s إلى المجموعة"
+
+msgid "Add item to favourites"
+msgstr "إضافة العنصر إلى المفضلة"
+
+msgid "Add item to group"
+msgstr "إضافة العنصر إلى المجموعة"
+
+msgid "Add new group"
+msgstr "إضافة مجموعة جديدة"
+
+msgid "Add new group of favourites"
+msgstr "إضافة مجموعة جديدة من المفضلة"
+
+msgid "Add to downloader"
+msgstr "إضافة إلى مدير التنزيل"
+
+#, python-format
+msgid "Added by: %s, directory: %s"
+msgstr "أضيف بواسطة: %s، المجلد: %s"
+
+msgid "Age-gate bypass:"
+msgstr "تجاوز قيود العمر:"
+
+msgid "Airing"
+msgstr "يعرض حاليًا"
+
+msgid "All"
+msgstr "الكل"
+
+msgid "All A-Z"
+msgstr "الكل (أ-ي)"
+
+msgid "All Leagues"
+msgstr "جميع الدوريات"
+
+msgid "All Platforms"
+msgstr "جميع المنصات"
+
+msgid "All Sports"
+msgstr "جميع الرياضات"
+
+msgid "All in one"
+msgstr "الكل في واحد"
+
+msgid "All materials"
+msgstr "جميع المواد"
+
+msgid "All streams"
+msgstr "جميع البثوث"
+
+msgid "All time"
+msgstr "كل الأوقات"
+
+msgid "Allow VP9 codec:"
+msgstr "السماح بترميز VP9:"
+
+msgid "Allow dash format:"
+msgstr "السماح بتنسيق DASH:"
+
+msgid "Allow hls format"
+msgstr "السماح بتنسيق HLS"
+
+msgid "Allow watched flag to be set"
+msgstr "السماح بتحديد المحتوى كمشاهد"
+
+msgid "Alphabet"
+msgstr "أبجدية"
+
+msgid "Alphabetical "
+msgstr "ترتيب أبجدي "
+
+msgid "Alphabetically"
+msgstr "حسب الترتيب الأبجدي"
+
+msgid "Alternative"
+msgstr "بديل"
+
+msgid "Alternative domain:"
+msgstr "نطاق بديل:"
+
+msgid "Alternative geolocation IP 1:"
+msgstr "عنوان IP بديل لتحديد الموقع الجغرافي 1:"
+
+msgid "Alternative geolocation IP 2:"
+msgstr "عنوان IP بديل لتحديد الموقع الجغرافي 2:"
+
+msgid "Alternative proxy server (1)"
+msgstr "خادم بروكسي بديل (1)"
+
+msgid "Alternative proxy server (2)"
+msgstr "خادم بروكسي بديل (2)"
+
+msgid "Always"
+msgstr "دائمًا"
+
+#, python-format
+msgid ""
+"An error occurred when try to sign in the user \"%s.\n"
+"Please check your login credentials and try again later...\""
+msgstr ""
+"حدث خطأ أثناء محاولة تسجيل دخول المستخدم \"%s.\n"
+"يرجى التحقق من بيانات الدخول والمحاولة لاحقًا...\""
+
+#, python-format
+msgid "An error occurred while loading a subtitle from [%s]."
+msgstr "حدث خطأ أثناء تحميل الترجمة من [%s]."
+
+#, python-format
+msgid "An error occurred while writing into: %s"
+msgstr "حدث خطأ أثناء الكتابة إلى: %s"
+
+msgid "Anatomy"
+msgstr "علم التشريح"
+
+msgid "Animation"
+msgstr "رسوم متحركة"
+
+msgid "Animations"
+msgstr "الرسوم المتحركة"
+
+msgid "Anime"
+msgstr "أنمي"
+
+msgid "Anime Search"
+msgstr "بحث الأنمي"
+
+msgid "Anime list"
+msgstr "قائمة الأنمي"
+
+msgid "Answer"
+msgstr "الإجابة"
+
+msgid "Any"
+msgstr "أي"
+
+msgid "Apply"
+msgstr "تطبيق"
+
+msgid "Approaches"
+msgstr "مقاربات"
+
+msgid "Arabic"
+msgstr "عربي"
+
+msgid "Arabic movies"
+msgstr "أفلام عربية"
+
+msgid "Archive"
+msgstr "أرشيف"
+
+msgid "Archives"
+msgstr "الأرشيفات"
+
+msgid "Are you sure you want to delete search history?"
+msgstr "هل أنت متأكد أنك تريد حذف سجل البحث؟"
+
+#, python-format
+msgid "Are you sure you want to remove file \"%s\"?"
+msgstr "هل أنت متأكد أنك تريد حذف الملف \"%s\"؟"
+
+msgid "Artists"
+msgstr "الفنانون"
+
+msgid "Ask"
+msgstr "اسأل"
+
+msgid "Aspect"
+msgstr "النسبة البُعدية"
+
+msgid "Audio"
+msgstr "الصوت"
+
+msgid "Audio tracks"
+msgstr "المسارات الصوتية"
+
+msgid "Auto"
+msgstr "تلقائي"
+
+msgid "Auto selection based on the settings"
+msgstr "اختيار تلقائي بناءً على الإعدادات"
+
+msgid "Auto start method"
+msgstr "طريقة التشغيل التلقائي"
+
+msgid "Auto-translate"
+msgstr "ترجمة تلقائية"
+
+msgid "Automatically turn on external subtitles"
+msgstr "تشغيل الترجمة الخارجية تلقائيًا"
+
+msgid "Autoplay start delay"
+msgstr "تأخير بدء التشغيل التلقائي"
+
+msgid "BY DAY"
+msgstr "حسب اليوم"
+
+msgid "Balkans"
+msgstr "البلقان"
+
+msgid "Basic Science"
+msgstr "العلوم الأساسية"
+
+msgid "Best Pinkbike Videos"
+msgstr "أفضل فيديوهات Pinkbike"
+
+#, python-format
+msgid "Bitrate: %s"
+msgstr "معدل البت: %s"
+
+msgid "Black"
+msgstr "أسود"
+
+msgid "Black iframe file"
+msgstr "ملف iframe أسود"
+
+msgid "Block wmv files"
+msgstr "حظر ملفات WMV"
+
+msgid "Board Review"
+msgstr "مراجعة المجلس"
+
+msgid "Brand"
+msgstr "العلامة التجارية"
+
+#, python-format
+msgid "Broadcast begins at %s"
+msgstr "البث يبدأ في %s"
+
+#, python-format
+msgid "Broadcaster: %s"
+msgstr "المُذيع: %s"
+
+msgid "Browse"
+msgstr "تصفح"
+
+msgid "Browse videos"
+msgstr "تصفح الفيديوهات"
+
+msgid "Browse youtube trending feeds"
+msgstr "تصفح الفيديوهات الرائجة على يوتيوب"
+
+msgid "Buffering location"
+msgstr "مكان التخزين المؤقت"
+
+msgid "By media title"
+msgstr "حسب عنوان الوسائط"
+
+msgid "By year"
+msgstr "حسب السنة"
+
+msgid "Bypass geo-blocking for VODs (it may be illegal):"
+msgstr "تجاوز الحجب الجغرافي للفيديوهات حسب الطلب (قد يكون غير قانوني):"
+
+msgid "CHANNELS "
+msgstr "القنوات "
+
+msgid "CME SAE"
+msgstr "CME SAE"
+
+msgid "COMMENTS"
+msgstr "التعليقات"
+
+msgid "Calendar"
+msgstr "التقويم"
+
+#, python-format
+msgid ""
+"Can not get mount points - cmd mount failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"تعذر الحصول على نقاط الربط - فشل تنفيذ أمر mount.\n"
+"رمز الإرجاع [%s].\n"
+"البيانات المرجعة [%s]."
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Captcha"
+msgstr "كابتشا"
+
+msgid ""
+"Captcha solved.\n"
+"Waiting for notification."
+msgstr ""
+"تم حل الكابتشا.\n"
+"بانتظار الإشعار."
+
+msgid "Captcha solving service"
+msgstr "خدمة حل الكابتشا"
+
+msgid "Cartoon list"
+msgstr "قائمة الرسوم المتحركة"
+
+msgid "Cartoons and anime"
+msgstr "الرسوم المتحركة والأنمي"
+
+msgid "Catch up"
+msgstr "مشاهدة لاحقًا"
+
+msgid "Categories"
+msgstr "الفئات"
+
+msgid "Change active movie player"
+msgstr "تغيير مشغل الأفلام النشط"
+
+msgid "Channel"
+msgstr "القناة"
+
+#, python-format
+msgid "Channel: %s"
+msgstr "القناة: %s"
+
+msgid "Channels"
+msgstr "القنوات"
+
+msgid "Channles"
+msgstr "القنوات"
+
+msgid "Children"
+msgstr "أطفال"
+
+msgid "Cinema movies"
+msgstr "أفلام سينمائية"
+
+msgid "Clear"
+msgstr "مسح"
+
+msgid "Click"
+msgstr "اضغط"
+
+msgid "Clip"
+msgstr "مقطع"
+
+msgid "Clips"
+msgstr "مقاطع"
+
+msgid "Closing. Please wait..."
+msgstr "يتم الإغلاق... الرجاء الانتظار..."
+
+msgid "Collected streams only"
+msgstr "البثوث المجمعة فقط"
+
+msgid "Collections"
+msgstr "مجموعات"
+
+msgid "Comedies"
+msgstr "كوميديا"
+
+msgid "Coming up"
+msgstr "قريبًا"
+
+msgid "Commits"
+msgstr "الالتزامات البرمجية"
+
+msgid "Configuration"
+msgstr "الإعدادات"
+
+#, python-format
+msgid "Configuration [%s] service"
+msgstr "إعدادات خدمة [%s]"
+
+#, python-format
+msgid "Configure %s"
+msgstr "تهيئة %s"
+
+msgid "Configure host"
+msgstr "تهيئة المضيف"
+
+msgid "Configuring an external movie player"
+msgstr "تهيئة مشغل أفلام خارجي"
+
+msgid "Confirm new pin"
+msgstr "تأكيد الرقم السري الجديد"
+
+msgid "Confirm the title of the movie"
+msgstr "تأكيد عنوان الفيلم"
+
+msgid "Confirmation error."
+msgstr "خطأ في التأكيد."
+
+msgid "Connection to server failed!"
+msgstr "فشل الاتصال بالخادم!"
+
+msgid "Continue downloading"
+msgstr "استمرار التنزيل"
+
+msgid "Copy"
+msgstr "نسخ"
+
+#, python-format
+msgid "Count: %s"
+msgstr "العدد: %s"
+
+msgid "Countries"
+msgstr "الدول"
+
+msgid "Country"
+msgstr "الدولة"
+
+msgid "Create LCD/VFD summary screen"
+msgstr "إنشاء شاشة ملخص على شاشة LCD/VFD"
+
+msgid "Critical Error - cookie can't be saved!"
+msgstr "خطأ خطير - لا يمكن حفظ ملف تعريف الارتباط!"
+
+msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr "خطأ خطير – لا يمكن التعامل مع ترميز المحتوى gzip!"
+
+msgid "Curator"
+msgstr "القيّم الفني"
+
+msgid "Cut"
+msgstr "قص"
+
+msgid "DASH/mpd"
+msgstr "DASH/mpd"
+
+msgid "DATE"
+msgstr "التاريخ"
+
+msgid "DOWNLOAD ERROR"
+msgstr "خطأ في التنزيل"
+
+msgid "DOWNLOADED"
+msgstr "تم التنزيل"
+
+msgid "DOWNLOADING"
+msgstr "جاري التنزيل"
+
+msgid "DRM protected streams are not supported."
+msgstr "البث المحمي بتقنية DRM غير مدعوم."
+
+msgid "DRM protection detected."
+msgstr "تم الكشف عن حماية DRM."
+
+msgid "Darkgray"
+msgstr "رمادي داكن"
+
+msgid "Data mismatch."
+msgstr "عدم تطابق في البيانات."
+
+msgid "Debug file does not exist - nothing to delete"
+msgstr "ملف التصحيح غير موجود - لا يوجد ما يمكن حذفه"
+
+msgid "Debug file does not exist - nothing to download"
+msgstr "ملف التصحيح غير موجود - لا يوجد ما يمكن تنزيله"
+
+msgid "Debug file has been deleted"
+msgstr "تم حذف ملف التصحيح"
+
+msgid "Debug logs"
+msgstr "سجلات التصحيح"
+
+msgid "Debug option is disabled - nothing to display"
+msgstr "خيار التصحيح معطّل - لا يوجد ما يمكن عرضه"
+
+msgid "Debug option set to console - nothing to display"
+msgstr "خيار التصحيح مضبوط على وحدة التحكم - لا يوجد ما يمكن عرضه"
+
+msgid "Debug option set to debugfile, but file does not exist - nothing to display"
+msgstr "خيار التصحيح مضبوط على ملف التصحيح، لكن الملف غير موجود - لا يوجد ما يمكن عرضه"
+
+#, python-format
+msgid "Decode file [%s] problem."
+msgstr "مشكلة في فك ترميز الملف [%s]"
+
+msgid "Decrypt Signatures Error"
+msgstr "خطأ في فك تشفير التواقيع"
+
+msgid "Default"
+msgstr "افتراضي"
+
+msgid "Default captcha bypass"
+msgstr "تخطي الكابتشا الافتراضي"
+
+msgid "Default video aspect ratio"
+msgstr "نسبة العرض إلى الارتفاع الافتراضية للفيديو"
+
+msgid "Default video policy for 16:9"
+msgstr "سياسة الفيديو الافتراضية لـ 16:9"
+
+msgid "Default video policy for 4:3"
+msgstr "سياسة الفيديو الافتراضية لـ 4:3"
+
+msgid "Default video quality"
+msgstr "جودة الفيديو الافتراضية"
+
+msgid "Default video quality:"
+msgstr "جودة الفيديو الافتراضية:"
+
+msgid "Definitely remove from favorites?"
+msgstr "هل تريد الحذف من المفضلة بشكل نهائي؟"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "Delete log file"
+msgstr "حذف ملف السجل"
+
+msgid "Delete search history"
+msgstr "حذف سجل البحث"
+
+msgid "Description:"
+msgstr "الوصف:"
+
+msgid "Deutsch"
+msgstr "ألماني"
+
+msgid "Developers: "
+msgstr "المطورون: "
+
+msgid "Director:"
+msgstr "المخرج:"
+
+msgid "Directors:"
+msgstr "المخرجون:"
+
+#, python-format
+msgid "Directory \"%s\" does not exists."
+msgstr "الدليل \"%s\" غير موجود."
+
+msgid "Disable"
+msgstr "تعطيل"
+
+msgid "Disable live at plugin start"
+msgstr "تعطيل البث المباشر عند بدء الإضافة"
+
+msgid "Disable not used services"
+msgstr "تعطيل الخدمات غير المستخدمة"
+
+msgid "Disable reordering"
+msgstr "تعطيل إعادة الترتيب"
+
+msgid "Disable reordering mode"
+msgstr "تعطيل وضع إعادة الترتيب"
+
+msgid "Disable/Enable groups"
+msgstr "تعطيل/تمكين المجموعات"
+
+msgid "Disable/Enable services"
+msgstr "تعطيل/تمكين الخدمات"
+
+msgid "Discover"
+msgstr "استكشاف"
+
+msgid "Display thumbnails"
+msgstr "عرض الصور المصغرة"
+
+msgid "DixMax Suggestions"
+msgstr "اقتراحات DixMax"
+
+msgid "Do you want to finish?"
+msgstr "هل تريد الإنهاء؟"
+
+msgid "Documentaries"
+msgstr "أفلام وثائقية"
+
+msgid "Documentary"
+msgstr "وثائقي"
+
+msgid "Download"
+msgstr "تحميل"
+
+#, python-format
+msgid "Download \"%s\" in to \"%s\" failed!"
+msgstr "فشل تحميل \"%s\" إلى \"%s\"!"
+
+#, python-format
+msgid "Download %s"
+msgstr "تحميل %s"
+
+msgid "Download again"
+msgstr "إعادة التحميل"
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+" Incorrect address ('%r')."
+msgstr ""
+"لا يمكن بدء التحميل.\n"
+"العنوان غير صحيح ('%r')."
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Downloader %s not working correctly.\n"
+"Last error \"%s (%s)\"."
+msgstr ""
+"لا يمكن بدء التحميل.\n"
+"المحمل %s لا يعمل بشكل صحيح.\n"
+"آخر خطأ: \"%s (%s)\"."
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Downloader %s not working correctly.\n"
+"Status[%s]"
+msgstr ""
+"لا يمكن بدء التحميل.\n"
+"المحمل %s لا يعمل بشكل صحيح.\n"
+"الحالة [%s]"
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Incorrect address \"%r\"."
+msgstr ""
+"لا يمكن بدء التحميل.\n"
+"العنوان غير صحيح \"%r\"."
+
+#, python-format
+msgid ""
+"Download failed.\n"
+"Last error \"%s (%s)\"."
+msgstr ""
+"فشل التحميل.\n"
+"آخر خطأ: \"%s (%s)\"."
+
+#, python-format
+msgid ""
+"Download failed.\n"
+"Status[%s]"
+msgstr ""
+"فشل التحميل.\n"
+"الحالة [%s]"
+
+msgid "Download log file"
+msgstr "تحميل ملف السجل"
+
+msgid "Download manager"
+msgstr "مدير التحميل"
+
+msgid "Download manager is not initialized"
+msgstr "لم يتم تهيئة مدير التحميل"
+
+msgid "Download subtiles failed."
+msgstr "فشل تحميل الترجمة."
+
+msgid "Download suggested"
+msgstr "اقتراح التحميل"
+
+msgid "Downloading"
+msgstr "جارٍ التحميل"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" Downloader %s does not work properly.\n"
+"Status[%s]"
+msgstr ""
+"لا يمكن بدء التحميل.\n"
+"المحمل %s لا يعمل بشكل سليم.\n"
+"الحالة [%s]"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" The address ('%r') is incorrect."
+msgstr ""
+"لا يمكن بدء التحميل.\n"
+"العنوان ('%r') غير صحيح."
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Downloader [%s] not working properly.\n"
+" Status[%s]"
+msgstr ""
+"لا يمكن بدء التحميل.\n"
+"المحمل [%s] لا يعمل بشكل صحيح.\n"
+"الحالة [%s]"
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Invalid URI[%s]."
+msgstr ""
+"لا يمكن بدء التحميل.\n"
+"رابط غير صالح [%s]."
+
+#, python-format
+msgid "Downloading file [%s] problem."
+msgstr "مشكلة في تحميل الملف [%s]."
+
+#, python-format
+msgid ""
+"Downloading file:\n"
+"%r."
+msgstr ""
+"جاري تحميل الملف:\n"
+"%r."
+
+#, python-format
+msgid ""
+"Downloading subtitles.\n"
+" ('%r')."
+msgstr ""
+"جاري تحميل الترجمة.\n"
+" ('%r')."
+
+msgid "Downloads"
+msgstr "الملفات المحمّلة"
+
+msgid "Downloads location"
+msgstr "مكان التحميل"
+
+msgid "Dramas"
+msgstr "دراما"
+
+msgid "Duration"
+msgstr "المدة"
+
+msgid "Duration:"
+msgstr "المدة:"
+
+#, python-format
+msgid "Duration: %s"
+msgstr "المدة: %s"
+
+msgid "E-mail: "
+msgstr "البريد الإلكتروني: "
+
+msgid "E2iPlayer - settings"
+msgstr "إعدادات E2iPlayer"
+
+msgid "E2iPlayer auto start at Enigma2 start"
+msgstr "تشغيل E2iPlayer تلقائياً عند بدء Enigma2"
+
+msgid "E2iPlayer enable/disabled groups"
+msgstr "تفعيل/تعطيل المجموعات في E2iPlayer"
+
+msgid "ERROR:"
+msgstr "خطأ:"
+
+msgid ""
+"ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
+"Please check if gstreamer plugins are available in your system."
+msgstr ""
+"خطأ: تعذر إنشاء خط التشغيل: العنصر \"playbin2\" غير موجود\n"
+"يرجى التأكد من توفر إضافات gstreamer في النظام."
+
+msgid "Edit favourites"
+msgstr "تعديل المفضلة"
+
+msgid "Educational Animation"
+msgstr "رسوم تعليمية"
+
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgid "Enable"
+msgstr "تفعيل"
+
+msgid "Enable reordering"
+msgstr "تفعيل إعادة الترتيب"
+
+msgid "Enable reordering mode"
+msgstr "تفعيل وضع إعادة الترتيب"
+
+#, python-format
+msgid ""
+"Encryption function body extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"فشل استخراج محتوى دالة التشفير!\n"
+"يرجى الإبلاغ عن المشكلة إلى %s"
+
+#, python-format
+msgid ""
+"Encryption function name extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"فشل استخراج اسم دالة التشفير!\n"
+"يرجى الإبلاغ عن المشكلة إلى %s"
+
+msgid "English"
+msgstr "الإنجليزية"
+
+msgid "Enter a value"
+msgstr "أدخل قيمة"
+
+msgid "Enter name"
+msgstr "أدخل الاسم"
+
+msgid "Enter new pin"
+msgstr "أدخل الرقم السري الجديد"
+
+msgid "Enter old pin"
+msgstr "أدخل الرقم السري القديم"
+
+msgid "Enter pin"
+msgstr "أدخل الرقم السري"
+
+msgid "Enter the text"
+msgstr "أدخل النص"
+
+msgid "Entitlement parsing error."
+msgstr "خطأ في تحليل بيانات الصلاحيات."
+
+msgid "Episode"
+msgstr "حلقة"
+
+msgid "Episode Search"
+msgstr "بحث عن حلقة"
+
+msgid "Episode title"
+msgstr "عنوان الحلقة"
+
+msgid "Episodes"
+msgstr "الحلقات"
+
+#, python-format
+msgid "Error code: %s\n"
+msgstr "رمز الخطأ: %s\n"
+
+#, python-format
+msgid ""
+"Error code: %s\n"
+"Error message: %s"
+msgstr ""
+"رمز الخطأ: %s\n"
+"رسالة الخطأ: %s"
+
+msgid "Error communicating with the server."
+msgstr "حدث خطأ أثناء الاتصال بالخادم."
+
+#, python-format
+msgid "Error deleting file \"%s\".\n"
+msgstr "حدث خطأ أثناء حذف الملف \"%s\".\n"
+
+msgid "Error during deletion of the debug file."
+msgstr "حدث خطأ أثناء حذف ملف التصحيح."
+
+#, python-format
+msgid ""
+"Error message: \"%s\".\n"
+"Error code: \"%s\"."
+msgstr ""
+"رسالة الخطأ: \"%s\".\n"
+"رمز الخطأ: \"%s\"."
+
+#, python-format
+msgid "Error message: %s\n"
+msgstr "رسالة الخطأ: %s\n"
+
+msgid "Error occurs"
+msgstr "حدث خطأ"
+
+msgid "Error occurs during download."
+msgstr "حدث خطأ أثناء التنزيل."
+
+#, python-format
+msgid "Error reading file \"%s\".\n"
+msgstr "حدث خطأ أثناء قراءة الملف \"%s\".\n"
+
+#, python-format
+msgid "Error writing file \"%s\".\n"
+msgstr "حدث خطأ أثناء كتابة الملف \"%s\".\n"
+
+msgid "Ethical & Legal"
+msgstr "أخلاقي وقانوني"
+
+msgid "Exam Review"
+msgstr "مراجعة الامتحان"
+
+msgid "Exception occurs"
+msgstr "حدث استثناء"
+
+msgid "Exit"
+msgstr "خروج"
+
+msgid "External movie player config"
+msgstr "إعداد مشغل الفيديو الخارجي"
+
+msgid "FREE"
+msgstr "مجاني"
+
+#, python-format
+msgid "Fail to get \"%s\"."
+msgstr "فشل في الحصول على \"%s\"."
+
+msgid "Fail to get captcha data."
+msgstr "فشل في الحصول على بيانات الكابتشا."
+
+#, python-format
+msgid "Failed to connect to server \"%s\"."
+msgstr "فشل الاتصال بالخادم \"%s\"."
+
+#, python-format
+msgid "Failed to convert the file \"%s\" to UTF-8."
+msgstr "فشل في تحويل الملف \"%s\" إلى ترميز UTF-8."
+
+#, python-format
+msgid "Failed to create directory \"%s\"."
+msgstr "فشل في إنشاء المجلد \"%s\"."
+
+msgid "Failed to decode to UTF-8."
+msgstr "فشل في فك الترميز إلى UTF-8."
+
+msgid "Failed to download subtitle."
+msgstr "فشل في تحميل الترجمة."
+
+msgid "Failed to gzip."
+msgstr "فشل في ضغط الملف بـ gzip."
+
+#, python-format
+msgid "Failed to log in user \"%s\". Please check your login and password."
+msgstr "فشل تسجيل الدخول للمستخدم \"%s\". يرجى التحقق من اسم المستخدم وكلمة المرور."
+
+#, python-format
+msgid "Failed to open the file \"%s\"."
+msgstr "فشل في فتح الملف \"%s\"."
+
+msgid "Failed to page with subtitle link."
+msgstr "فشل في تحميل الصفحة التي تحتوي على رابط الترجمة."
+
+#, python-format
+msgid "Failed to write file \"%s\"."
+msgstr "فشل في كتابة الملف \"%s\"."
+
+#, python-format
+msgid "Failed to write the file \"%s\"."
+msgstr "فشل في كتابة الملف \"%s\"."
+
+#, python-format
+msgid "Failed: %s"
+msgstr "فشل: %s"
+
+msgid "Fatal error: consoleWrite failed!"
+msgstr "خطأ فادح: فشل في الكتابة على وحدة التحكم!"
+
+msgid "Favourites"
+msgstr "المفضلة"
+
+msgid "Favourites groups"
+msgstr "مجموعات المفضلة"
+
+msgid "Favourites manager"
+msgstr "مدير المفضلة"
+
+#, python-format
+msgid "File \"%s\" already exists"
+msgstr "الملف \"%s\" موجود بالفعل"
+
+#, python-format
+msgid "File \"%s\" already exists!"
+msgstr "الملف \"%s\" موجود بالفعل!"
+
+msgid "File Not Found."
+msgstr "الملف غير موجود."
+
+#, python-format
+msgid "File [%s] was added to downloading queue."
+msgstr "تمت إضافة الملف [%s] إلى قائمة التنزيل."
+
+#, python-format
+msgid "File can not be downloaded. Protocol [%s] is unsupported"
+msgstr "لا يمكن تحميل الملف. البروتوكول [%s] غير مدعوم"
+
+msgid "Film"
+msgstr "فيلم"
+
+msgid "Filmstarts Suggestions"
+msgstr "اقتراحات Filmstarts"
+
+msgid "Filmweb Suggestions"
+msgstr "اقتراحات Filmweb"
+
+msgid "Filter By Year"
+msgstr "تصفية حسب السنة"
+
+msgid "Filters"
+msgstr "الفلاتر"
+
+msgid "First movie player in buffering mode"
+msgstr "مشغل الفيديو الأول في وضع التحميل المؤقت"
+
+msgid "First movie player without buffering mode"
+msgstr "المشغل الأول بدون وضع التخزين المؤقت"
+
+msgid "Folder for cache data"
+msgstr "المجلد المخصص لبيانات التخزين المؤقت"
+
+msgid "Folder for temporary data"
+msgstr "المجلد المخصص للبيانات المؤقتة"
+
+msgid "Following host are broken or additional python modules are needed."
+msgstr "المضيف التالي لا يعمل أو يتطلب وحدات Python إضافية."
+
+msgid "Foot & Ankle"
+msgstr "القدم والكاحل"
+
+msgid "Force internal Skin"
+msgstr "فرض استخدام السكين الداخلي"
+
+msgid "Format 'wmv' blocked in configuration."
+msgstr "الصيغة 'wmv' محظورة في الإعدادات."
+
+msgid "Free"
+msgstr "مجاني"
+
+msgid "Free IPTV list"
+msgstr "قائمة IPTV المجانية"
+
+msgid "French"
+msgstr "الفرنسية"
+
+msgid "From E2 settings"
+msgstr "من إعدادات Enigma2"
+
+msgid "Functionality protected by Google reCAPTCHA!"
+msgstr "الوظيفة محمية بواسطة reCAPTCHA من Google!"
+
+msgid "GSTplayer no IFD workarround"
+msgstr "حل مؤقت لمشكلة IFD في GSTplayer"
+
+#, python-format
+msgid "Game: %s"
+msgstr "اللعبة: %s"
+
+msgid "Games"
+msgstr "ألعاب"
+
+msgid "General"
+msgstr "عام"
+
+msgid "Genre:"
+msgstr "النوع:"
+
+msgid "Genre: "
+msgstr "النوع: "
+
+#, python-format
+msgid "Genre: %s"
+msgstr "النوع: %s"
+
+msgid "Genres"
+msgstr "الأنواع"
+
+msgid "Genres:"
+msgstr "الأنواع:"
+
+msgid "Geolocation IP:"
+msgstr "الموقع الجغرافي (IP):"
+
+msgid "German"
+msgstr "الألمانية"
+
+msgid "German proxy server url"
+msgstr "رابط خادم البروكسي الألماني"
+
+msgid "Get EPG"
+msgstr "الحصول على دليل البرامج (EPG)"
+
+msgid "Get languages failed!"
+msgstr "فشل في جلب اللغات!"
+
+msgid "Get token failed!"
+msgstr "فشل في الحصول على التوكن!"
+
+msgid "Global search :"
+msgstr "بحث شامل:"
+
+msgid "Global sort :"
+msgstr "فرز شامل:"
+
+msgid "Go to the host configuration available under blue button."
+msgstr "اذهب إلى إعدادات المضيف من الزر الأزرق."
+
+msgid "Goal Of The Month"
+msgstr "هدف الشهر"
+
+msgid "Google Suggestions"
+msgstr "اقتراحات Google"
+
+msgid "Graphic services selector"
+msgstr "اختيار الخدمات الرسومية"
+
+msgid "Greek"
+msgstr "اليونانية"
+
+#, python-format
+msgid "Group \"%s\" already exists."
+msgstr "المجموعة \"%s\" موجودة بالفعل."
+
+#, python-format
+msgid "Group %d"
+msgstr "المجموعة %d"
+
+msgid "Group links into categories: "
+msgstr "تجميع الروابط في فئات: "
+
+#, python-format
+msgid "Group with id[%s] not found."
+msgstr "لم يتم العثور على مجموعة بالمعرف [%s]."
+
+msgid "Groups"
+msgstr "المجموعات"
+
+#, python-format
+msgid "Guest timeout: %s"
+msgstr "مدة انتهاء الضيف: %s"
+
+msgid "HDFull Suggestions"
+msgstr "اقتراحات HDFull"
+
+msgid "HLS/m3u8"
+msgstr "HLS / m3u8"
+
+#, python-format
+msgid "HTTPS connection error \"%s\"\n"
+msgstr "خطأ في الاتصال عبر HTTPS: \"%s\"\n"
+
+msgid "Hand"
+msgstr "يد"
+
+msgid "Hardware floating point"
+msgstr "الوحدة العائمة في العتاد"
+
+#, python-format
+msgid "Hide \"%s\" group"
+msgstr "إخفاء المجموعة \"%s\""
+
+msgid "Hide/Active Group"
+msgstr "إخفاء / تفعيل المجموعة"
+
+msgid "High"
+msgstr "عالية"
+
+msgid "High (or HD)"
+msgstr "عالية (أو HD)"
+
+msgid "Highlights"
+msgstr "أبرز الأحداث"
+
+msgid "History of searched phrases."
+msgstr "سجل العبارات التي تم البحث عنها."
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "Home page"
+msgstr "الصفحة الرئيسية"
+
+#, python-format
+msgid "Hosting \"%s\" not supported."
+msgstr "المُضيف \"%s\" غير مدعوم."
+
+#, python-format
+msgid "Hosting \"%s\" unknown."
+msgstr "المُضيف \"%s\" غير معروف."
+
+#, python-format
+msgid "Hosting: %s, %s"
+msgstr "المُضيف: %s، %s"
+
+msgid "Hosts settings"
+msgstr "إعدادات المواقع"
+
+msgid "Humanitarian"
+msgstr "إنساني"
+
+msgid "Hungarian"
+msgstr "الهنغارية"
+
+msgid "IMDb Suggestions"
+msgstr "اقتراحات IMDb"
+
+msgid "IMDb rating"
+msgstr "تقييم IMDb"
+
+msgid "Icon type"
+msgstr "نوع الأيقونة"
+
+msgid "Icons quality"
+msgstr "جودة الأيقونات"
+
+msgid "Icons size"
+msgstr "حجم الأيقونات"
+
+msgid "Industry"
+msgstr "الصناعة"
+
+msgid "Indy"
+msgstr "إندي"
+
+msgid "Info"
+msgstr "معلومات"
+
+msgid "Info bar clock format"
+msgstr "تنسيق ساعة شريط المعلومات"
+
+msgid "Info bar timeout"
+msgstr "مدة عرض شريط المعلومات"
+
+msgid "Information"
+msgstr "معلومات"
+
+msgid "Information about audio tracks not available."
+msgstr "لا توجد معلومات عن المسارات الصوتية."
+
+msgid "Initial list"
+msgstr "القائمة الابتدائية"
+
+msgid "Initialize Download Manager"
+msgstr "تهيئة مدير التحميل"
+
+msgid "Initialize web interface"
+msgstr "تهيئة الواجهة على الإنترنت"
+
+msgid "Initiating data, please wait"
+msgstr "جاري تهيئة البيانات، يرجى الانتظار"
+
+msgid "Inject black iframe at video playback finish"
+msgstr "إدراج إطار أسود بعد انتهاء تشغيل الفيديو"
+
+msgid "Input"
+msgstr "إدخال"
+
+msgid "Interactive Learning Center(ILC)"
+msgstr "مركز التعلم التفاعلي (ILC)"
+
+msgid "Invalid email."
+msgstr "البريد الإلكتروني غير صالح."
+
+msgid "Invalid name."
+msgstr "الاسم غير صالح."
+
+msgid "Is this message displayed correctly?"
+msgstr "هل يتم عرض هذه الرسالة بشكل صحيح؟"
+
+msgid "It is not allowed to call getURLRequestData from main thread."
+msgstr "لا يُسمح باستدعاء getURLRequestData من الخيط الرئيسي."
+
+msgid "It looks like some kind of protection. Try again later."
+msgstr "يبدو أن هناك نوعًا من الحماية. حاول لاحقًا."
+
+#, python-format
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "يبدو أن الإعدادات الحالية لا تسمح بالاتصال بـ https://%s/.\n"
+
+#, python-format
+msgid "It seems that the host \"%s\" has crashed."
+msgstr "يبدو أن المُضيف \"%s\" قد توقف عن العمل."
+
+#, python-format
+msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
+msgstr "يبدو أن المُضيف \"%s\" قد تعطل. هل ترغب في الإبلاغ عن هذه المشكلة؟"
+
+#, python-format
+msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
+msgstr "يبدو أن مزود الترجمة \"%s\" قد تعطل. هل ترغب في الإبلاغ عن هذه المشكلة؟"
+
+#, python-format
+msgid ""
+"It seems that the video player \"%s\" does not work properly.\n"
+"\n"
+"STS: %s\n"
+"ERROR CODE: %r"
+msgstr ""
+"يبدو أن مشغل الفيديو \"%s\" لا يعمل بشكل صحيح.\n"
+"\n"
+"الحالة: %s\n"
+"رمز الخطأ: %r"
+
+msgid "It seems that unrar utility is not installed."
+msgstr "يبدو أن أداة unrar غير مثبتة."
+
+msgid "It seems that unzip utility is not installed."
+msgstr "يبدو أن أداة unzip غير مثبتة."
+
+msgid "Italian"
+msgstr "الإيطالية"
+
+#, python-format
+msgid "Item %s removed!"
+msgstr "تمت إزالة العنصر %s!"
+
+#, python-format
+msgid "Item idx[%d] not found in group[%s]."
+msgstr "العنصر idx[%d] غير موجود في المجموعة [%s]."
+
+msgid "Items"
+msgstr "العناصر"
+
+#, python-format
+msgid "Items in group \"%s\""
+msgstr "العناصر في المجموعة \"%s\""
+
+msgid "JDownloader script execution"
+msgstr "تنفيذ سكربت JDownloader"
+
+#, python-format
+msgid ""
+"JDownloader script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"فشل تنفيذ سكربت JDownloader.\n"
+"رمز الخطأ: %s\n"
+
+msgid "JDownloader script finished."
+msgstr "اكتمل تنفيذ سكربت JDownloader."
+
+msgid "Jobs & Positions"
+msgstr "وظائف ومناصب"
+
+msgid "Journal Club"
+msgstr "نادي المجلة"
+
+msgid "Knee & Sports"
+msgstr "الركبة والرياضة"
+
+msgid "LATEST"
+msgstr "الأحدث"
+
+msgid "LATEST CONTENT"
+msgstr "أحدث المحتوى"
+
+msgid "LIKES"
+msgstr "الإعجابات"
+
+msgid "LIVE"
+msgstr "مباشر"
+
+msgid "LIVE 24/7"
+msgstr "بث مباشر 24/7"
+
+msgid "Labels"
+msgstr "تسميات"
+
+msgid "Language"
+msgstr "اللغة"
+
+msgid "Language:"
+msgstr "اللغة:"
+
+#, python-format
+msgid "Language: %s"
+msgstr "اللغة: %s"
+
+msgid "Languages"
+msgstr "اللغات"
+
+#, python-format
+msgid "Last %d lines of the %s file are:"
+msgstr "آخر %d سطرًا من ملف %s هي:"
+
+#, python-format
+msgid "Last Exception error: \"%s\""
+msgstr "آخر خطأ استثناء: \"%s\""
+
+#, python-format
+msgid "Last Exception error: '%s'"
+msgstr "آخر خطأ استثناء: '%s'"
+
+msgid "Last chance"
+msgstr "الفرصة الأخيرة"
+
+msgid "Last day"
+msgstr "اليوم الأخير"
+
+#, python-format
+msgid ""
+"Last error:\n"
+"%s"
+msgstr ""
+"آخر خطأ:\n"
+"%s"
+
+#, python-format
+msgid "Last error: \"%s\""
+msgstr "آخر خطأ: \"%s\""
+
+msgid "Last month"
+msgstr "الشهر الماضي"
+
+msgid "Last week"
+msgstr "الأسبوع الماضي"
+
+msgid "Lastest"
+msgstr "الأحدث"
+
+msgid "Latest"
+msgstr "الأحدث"
+
+msgid "Latest added"
+msgstr "أُضيف مؤخرًا"
+
+msgid "Latest movies"
+msgstr "أحدث الأفلام"
+
+msgid "Latest news broadcast"
+msgstr "أحدث نشرات الأخبار"
+
+msgid "Latest programs"
+msgstr "أحدث البرامج"
+
+msgid "Latest update"
+msgstr "أحدث تحديث"
+
+msgid "Latino"
+msgstr "لاتيني"
+
+msgid "Lead programmer: "
+msgstr "المبرمج الرئيسي: "
+
+msgid "Level:"
+msgstr "المستوى:"
+
+msgid "Lightgray"
+msgstr "رمادي فاتح"
+
+msgid "Line Spacing"
+msgstr "تباعد الأسطر"
+
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "الرابط غير مدعوم من gstplayer. يُرجى استخدام extelayer3 إن وُجد."
+
+msgid "Link protected with CF Turnstile ."
+msgstr "الرابط محمي باستخدام CF Turnstile."
+
+msgid "Link protected with DRM."
+msgstr "الرابط محمي بتقنية DRM."
+
+msgid "Link protected with Google ReCaptcha v2"
+msgstr "الرابط محمي بـ Google ReCaptcha v2"
+
+msgid "Link protected with google recaptcha v2."
+msgstr "الرابط محمي بـ Google ReCaptcha v2."
+
+msgid "Links for"
+msgstr "روابط لـ"
+
+msgid "Links from all files without categories"
+msgstr "روابط من جميع الملفات بدون تصنيفات"
+
+#, python-format
+msgid "Links from the file %s"
+msgstr "روابط من الملف %s"
+
+msgid "List by day"
+msgstr "قائمة حسب اليوم"
+
+msgid "List only channels with subscription"
+msgstr "عرض القنوات المشتركة فقط"
+
+#, python-format
+msgid "Listeners: %s"
+msgstr "المستمعون: %s"
+
+msgid "Live"
+msgstr "مباشر"
+
+msgid "Live Radio"
+msgstr "راديو مباشر"
+
+msgid "Live TV"
+msgstr "تلفزيون مباشر"
+
+msgid "Live broadcasts"
+msgstr "البثوث المباشرة"
+
+msgid "Live streams"
+msgstr "البث الحي"
+
+msgid "Live-streams"
+msgstr "بثوث مباشرة"
+
+msgid "Load"
+msgstr "تحميل"
+
+#, python-format
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "فشل تحميل تخطيط لوحة المفاتيح الافتراضية \"%s\" بسبب الخطأ التالي: \"%s\""
+
+msgid "Loading"
+msgstr "جارٍ التحميل"
+
+#, python-format
+msgid "Loading %s failed due to following error:"
+msgstr "فشل تحميل %s بسبب الخطأ التالي:"
+
+msgid "Loading data, please wait"
+msgstr "جاري تحميل البيانات، يرجى الانتظار"
+
+#, python-format
+msgid "Loading data, please wait (%d)"
+msgstr "جاري تحميل البيانات، يرجى الانتظار (%d)"
+
+msgid "LocalMedia"
+msgstr "الوسائط المحلية"
+
+#, python-format
+msgid "Locale ID mismatched! %s <> %s"
+msgstr "رمز اللغة غير متطابق! %s ≠ %s"
+
+msgid "Localization"
+msgstr "الترجمة المحلية"
+
+msgid "Login"
+msgstr "تسجيل الدخول"
+
+msgid "Login failed!"
+msgstr "فشل تسجيل الدخول!"
+
+msgid "Login failed."
+msgstr "فشل تسجيل الدخول."
+
+msgid "Login failed. Invalid email or password."
+msgstr "فشل تسجيل الدخول. البريد الإلكتروني أو كلمة المرور غير صحيحة."
+
+msgid "Login needed"
+msgstr "يتطلب تسجيل الدخول"
+
+#, python-brace-format
+msgid "Login on {0} failed."
+msgstr "فشل تسجيل الدخول على {0}."
+
+#, python-format
+msgid ""
+"Login user \"%s\" to http://vk.com/ failed!\n"
+"Please check your login data in the IPTVPlayer configuration."
+msgstr ""
+"فشل تسجيل الدخول للمستخدم \"%s\" إلى http://vk.com/!\n"
+"يرجى التحقق من بيانات تسجيل الدخول في إعدادات IPTVPlayer."
+
+msgid "Logs"
+msgstr "السجلات"
+
+msgid "Longest"
+msgstr "الأطول"
+
+msgid "Low"
+msgstr "منخفض"
+
+msgid "MENU"
+msgstr "القائمة"
+
+msgid "MIPS Floating Point Architecture"
+msgstr "معمارية النقطة العائمة MIPS"
+
+#, python-format
+msgid "MOVE: %s"
+msgstr ""
+
+msgid "MOVIES"
+msgstr "أفلام"
+
+msgid "Main"
+msgstr "الرئيسية"
+
+msgid "Main Event"
+msgstr "الحدث الرئيسي"
+
+msgid "Main menu"
+msgstr "القائمة الرئيسية"
+
+#, python-format
+msgid "Make directory [%s]"
+msgstr "إنشاء مجلد [%s]"
+
+msgid "Manager status: "
+msgstr "حالة المدير: "
+
+msgid "Manga"
+msgstr "مانغا"
+
+msgid "Matches"
+msgstr "المباريات"
+
+msgid "Max bitrate:"
+msgstr "أقصى معدل بت:"
+
+msgid "Max items per page"
+msgstr "الحد الأقصى للعناصر في الصفحة"
+
+msgid "Max number of parallel downloads has been reached."
+msgstr "تم الوصول للحد الأقصى لعدد التنزيلات المتزامنة."
+
+msgid "Medtryx Marketing"
+msgstr "تسويق Medtryx"
+
+msgid "Meetings"
+msgstr "الاجتماعات"
+
+msgid "Menu"
+msgstr "القائمة"
+
+msgid "Mid"
+msgstr "متوسط"
+
+msgid "Mirror"
+msgstr "مرآة"
+
+msgid "Missed"
+msgstr "فاتك"
+
+msgid "Missed the show?"
+msgstr "فاتك العرض؟"
+
+msgid "Monthly"
+msgstr "شهريًا"
+
+msgid "More"
+msgstr "المزيد"
+
+msgid "More important"
+msgstr "الأكثر أهمية"
+
+msgid "Most Popular"
+msgstr "الأكثر شهرة"
+
+msgid "Most featured"
+msgstr "الأكثر تميزًا"
+
+msgid "Most popular"
+msgstr "الأكثر شعبية"
+
+msgid "Most rated"
+msgstr "الأعلى تقييمًا"
+
+msgid "Most recent"
+msgstr "الأحدث"
+
+msgid "Most viewed"
+msgstr "الأكثر مشاهدة"
+
+#, python-format
+msgid ""
+"Mount ISO file [%s] on [%s] failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"فشل تحميل ملف ISO [%s] على [%s].\n"
+"رمز الإرجاع: [%s].\n"
+"البيانات المرجعة: [%s]."
+
+msgid "Move group"
+msgstr "نقل المجموعة"
+
+msgid "Movie"
+msgstr "فيلم"
+
+msgid "Movies"
+msgstr "أفلام"
+
+msgid "Movies and series"
+msgstr "أفلام ومسلسلات"
+
+msgid "Movies by year"
+msgstr "أفلام حسب السنة"
+
+msgid "Movies genres"
+msgstr "أنواع الأفلام"
+
+msgid "Movies list"
+msgstr "قائمة الأفلام"
+
+#, python-format
+msgid "Moving file from \"%s\" to \"%s\" failed.\n"
+msgstr "فشل نقل الملف من \"%s\" إلى \"%s\".\n"
+
+#, python-format
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "فشل نقل مؤقت التشغيل إلى مدير التحميل بالخطأ التالي: \"%s\""
+
+msgid "Music"
+msgstr "موسيقى"
+
+msgid "My JDownloader reCAPTCHA v2 solution"
+msgstr "حل reCAPTCHA v2 لـ My JDownloader"
+
+msgid "My list"
+msgstr "قائمتي"
+
+msgid "MyE2i Cloudflare solution"
+msgstr "حل MyE2i لتجاوز Cloudflare"
+
+msgid "MyE2i reCAPTCHA solution"
+msgstr "حل MyE2i لـ reCAPTCHA"
+
+#, python-format
+msgid ""
+"MyE2i script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"فشل تنفيذ سكربت MyE2i.\n"
+"رمز الخطأ: %s\n"
+
+msgid "MyE2i script finished."
+msgstr "انتهى تنفيذ سكربت MyE2i."
+
+msgid "NJPW"
+msgstr "مصارعة اليابان الجديدة (NJPW)"
+
+msgid "NXT"
+msgstr "NXT (مصارعة)"
+
+msgid "Name cannot be empty."
+msgstr "لا يمكن ترك الاسم فارغًا."
+
+msgid ""
+"Name is not valid.\n"
+"Please remove special characters."
+msgstr ""
+"الاسم غير صالح.\n"
+"يرجى إزالة الرموز الخاصة."
+
+msgid "Name:"
+msgstr "الاسم:"
+
+msgid "Network"
+msgstr "الشبكة"
+
+#, python-format
+msgid "Network failed %s."
+msgstr "فشل في الشبكة: %s."
+
+msgid "Never"
+msgstr "أبدًا"
+
+msgid "New"
+msgstr "جديد"
+
+msgid "New Episodes"
+msgstr "حلقات جديدة"
+
+msgid "New Movies"
+msgstr "أفلام جديدة"
+
+msgid "New cartoon"
+msgstr "رسوم متحركة جديدة"
+
+msgid "New dir"
+msgstr "مجلد جديد"
+
+msgid "New episodes"
+msgstr "حلقات جديدة"
+
+msgid "New icons will not be available."
+msgstr "لن تكون الأيقونات الجديدة متاحة."
+
+msgid "Newest Episodes"
+msgstr "أحدث الحلقات"
+
+msgid "Newest Videos"
+msgstr "أحدث الفيديوهات"
+
+msgid "News"
+msgstr "أخبار"
+
+msgid "News Feed"
+msgstr "تغذية الأخبار"
+
+msgid "Next Page"
+msgstr "الصفحة التالية"
+
+msgid "Next page"
+msgstr "الصفحة التالية"
+
+msgid "No"
+msgstr "لا"
+
+msgid ""
+"No item to display. \n"
+"Press OK to refresh.\n"
+msgstr ""
+"لا يوجد عناصر للعرض.\n"
+"اضغط OK للتحديث.\n"
+
+msgid "No materials waiting in the downloader queue"
+msgstr "لا يوجد مواد في قائمة الانتظار للتحميل"
+
+msgid "No playable sources found."
+msgstr "لم يتم العثور على مصادر قابلة للتشغيل."
+
+msgid "No valid entitlement found for asset."
+msgstr "لم يتم العثور على صلاحية صالحة للمحتوى."
+
+msgid "No valid links available."
+msgstr "لا توجد روابط صالحة متاحة."
+
+msgid "None"
+msgstr "لا شيء"
+
+msgid "Not Free"
+msgstr "غير مجاني"
+
+msgid "Nothing has been downloaded yet."
+msgstr "لم يتم تحميل أي شيء حتى الآن."
+
+msgid "Now playing"
+msgstr "يتم التشغيل الآن"
+
+msgid "Number of downloaded files simultaneously"
+msgstr "عدد الملفات التي يتم تحميلها في نفس الوقت"
+
+#, python-format
+msgid "Number of items in search history: %d"
+msgstr "عدد العناصر في سجل البحث: %d"
+
+msgid "OK"
+msgstr "موافق"
+
+msgid "Offline channels"
+msgstr "قنوات غير متصلة"
+
+msgid "Older"
+msgstr "أقدم"
+
+msgid "On Air"
+msgstr "يُعرض الآن"
+
+msgid "One link mode"
+msgstr "وضع الرابط الواحد"
+
+msgid "Only available in Sweden."
+msgstr "متاح فقط في السويد."
+
+msgid "Only available in Sweden.\n"
+msgstr "متاح فقط في السويد.\n"
+
+msgid ""
+"Only logged in user have access.\n"
+"Please set login data in the host configuration under blue button."
+msgstr ""
+"فقط المستخدمين المسجلين يمكنهم الوصول.\n"
+"يرجى ضبط بيانات الدخول في إعدادات الهوست (زر أزرق)."
+
+msgid "Only music"
+msgstr "موسيقى فقط"
+
+msgid "Only videos"
+msgstr "فيديوهات فقط"
+
+msgid "Opening. Please wait..."
+msgstr "جاري الفتح... الرجاء الانتظار."
+
+msgid "Operation aborted!"
+msgstr "تم إلغاء العملية!"
+
+msgid "Order by: "
+msgstr "الترتيب حسب: "
+
+msgid "Other"
+msgstr "أخرى"
+
+msgid "Other Sports"
+msgstr "رياضات أخرى"
+
+msgid "Others"
+msgstr "آخرون"
+
+msgid "Own model"
+msgstr "نموذج مخصص"
+
+msgid "PARTIES"
+msgstr "حفلات"
+
+msgid "PAY"
+msgstr "دفع"
+
+msgid "PEGI"
+msgstr "تصنيف PEGI"
+
+msgid "PENDING"
+msgstr "قيد الانتظار"
+
+msgid "PORT"
+msgstr "المنفذ"
+
+msgid "Page accessible to logged in members only."
+msgstr "الصفحة متاحة للأعضاء المسجلين فقط."
+
+msgid "Paid"
+msgstr "مدفوع"
+
+msgid "Password"
+msgstr "كلمة المرور"
+
+msgid "Password:"
+msgstr "كلمة المرور:"
+
+msgid "Past premieres"
+msgstr "العروض السابقة"
+
+#, python-format
+msgid "Paste \"%s\""
+msgstr "لصق \"%s\""
+
+msgid "Path to xxxlist.txt :"
+msgstr "المسار إلى xxxlist.txt:"
+
+msgid "Path to ytlist.txt, urllist.txt"
+msgstr "المسار إلى ytlist.txt أو urllist.txt"
+
+msgid "Path:"
+msgstr "المسار:"
+
+msgid "Pathology"
+msgstr "علم الأمراض"
+
+msgid "Pathology Rounds"
+msgstr "جولات علم الأمراض"
+
+msgid "Pediatrics"
+msgstr "طب الأطفال"
+
+msgid "People"
+msgstr "أشخاص"
+
+msgid "Physical Exam"
+msgstr "الفحص السريري"
+
+msgid "Pin has been changed."
+msgstr "تم تغيير الرقم السري."
+
+msgid "Pin incorrect!"
+msgstr "الرقم السري غير صحيح!"
+
+msgid "Pin protection for configuration"
+msgstr "حماية الرقم السري للإعدادات"
+
+msgid "Pin protection for plugin"
+msgstr "حماية الرقم السري للإضافة"
+
+msgid "Platform"
+msgstr "المنصة"
+
+#, python-format
+msgid "Play with [%s] player"
+msgstr "تشغيل باستخدام المشغل [%s]"
+
+msgid "PlayStation 4"
+msgstr "بلايستيشن 4"
+
+msgid "Playable from "
+msgstr "يمكن تشغيله من "
+
+msgid "Playback UHD :"
+msgstr "تشغيل UHD :"
+
+#, python-format
+msgid "Player %s"
+msgstr "المشغل %s"
+
+#, python-format
+msgid "Player %s: %s"
+msgstr "المشغل %s: %s"
+
+msgid "Player Skin"
+msgstr "مظهر المشغل"
+
+msgid "Player data parsing error."
+msgstr "خطأ في تحليل بيانات المشغل."
+
+msgid "Playlist"
+msgstr "قائمة تشغيل"
+
+msgid "Playlists"
+msgstr "قوائم التشغيل"
+
+#, python-brace-format
+msgid ""
+"Please Open site:\n"
+"http://{0}:{1}\n"
+"in a web browser with the MyE2i extension installed"
+msgstr ""
+"يرجى فتح الموقع:\n"
+"http://{0}:{1}"
+
+#, python-format
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "يرجى إعادة تشغيل جهاز Enigma2 والموافقة على تثبيت أداة %s عندما يعرضها %s."
+
+msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
+msgstr "يرجى إدخال اسم المستخدم وكلمة المرور في إعدادات المضيف (متاحة تحت الزر الأزرق) ثم حاول مرة أخرى."
+
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "يرجى التأكد من أن مجلد بيانات التخزين المؤقت (المحدد في الإعدادات) قابل للكتابة."
+
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "يرجى التسجيل وإدخال اسم المستخدم وكلمة المرور في إعدادات المضيف لحل هذه المشكلات بشكل دائم."
+
+msgid ""
+"Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
+"This will fix problem, if your playback is constantly interrupted."
+msgstr ""
+"يرجى تذكّر زيارة http://www.sport365.live/ ومشاهدة بعض الإعلانات.\n"
+"سيساعد ذلك في حل مشكلة الانقطاع المستمر في التشغيل."
+
+msgid "Please retry later."
+msgstr "يرجى المحاولة لاحقًا."
+
+#, python-format
+msgid "Please set valid %s in the %s configuration."
+msgstr "يرجى تعيين %s صالح في إعدادات %s."
+
+#, python-format
+msgid "Please visit \"%s\" and confirm that you are human."
+msgstr "يرجى زيارة \"%s\" والتأكيد أنك لست روبوتًا."
+
+#, python-format
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "يرجى زيارة %s لمعرفة كيفية تحويل هذه المهمة إلى جهاز خارجي."
+
+msgid "Please wait - downloading initialization data."
+msgstr "يرجى الانتظار - جاري تنزيل بيانات التهيئة."
+
+msgid "Please wait for initialization data."
+msgstr "يرجى الانتظار لتحميل بيانات التهيئة."
+
+msgid "Podcasts"
+msgstr "البودكاست"
+
+msgid "Polish"
+msgstr "البولندية"
+
+msgid "Polish proxy server url"
+msgstr "عنوان خادم البروكسي البولندي"
+
+msgid "Popular"
+msgstr "الأكثر شيوعًا"
+
+msgid "Popular Episodes"
+msgstr "الحلقات الشائعة"
+
+msgid "Popularity: ?"
+msgstr "الشعبية: ؟"
+
+msgid "Portal:"
+msgstr "البوابة:"
+
+msgid "Portuguese"
+msgstr "البرتغالية"
+
+msgid "Powerpoint Presentation"
+msgstr "عرض باوربوينت"
+
+msgid "Practice Management"
+msgstr "إدارة العيادة"
+
+msgid "Prefer hlsld for playlist with alt. media"
+msgstr "تفضيل hlsld لقائمة تشغيل بها وسائط بديلة"
+
+msgid "Prefered format"
+msgstr "الصيغة المفضلة"
+
+msgid "Prefered quality"
+msgstr "الجودة المفضلة"
+
+msgid "Preferred bitrate"
+msgstr "معدل البت المفضل"
+
+msgid "Preferred format:"
+msgstr "التنسيق المفضل:"
+
+msgid "Preferred quality"
+msgstr "الجودة المفضلة"
+
+msgid "Preferred streaming protocol"
+msgstr "بروتوكول البث المفضل"
+
+msgid "Preferred video quality:"
+msgstr "جودة الفيديو المفضلة:"
+
+msgid "Premium"
+msgstr "مميز"
+
+msgid "Premium user"
+msgstr "مستخدم مميز"
+
+msgid "Preview"
+msgstr "معاينة"
+
+msgid "Previous Seasons"
+msgstr "المواسم السابقة"
+
+msgid "Previous list"
+msgstr "القائمة السابقة"
+
+msgid "Professional Networks"
+msgstr "الشبكات المهنية"
+
+msgid "Program"
+msgstr "البرنامج"
+
+msgid "Program A-Z"
+msgstr "البرامج من أ إلى ي"
+
+msgid "Programmes"
+msgstr "البرامج"
+
+msgid "Programs"
+msgstr "البرامج"
+
+msgid "Programs A-Ö"
+msgstr "البرامج من أ إلى Ö"
+
+msgid "Promote item"
+msgstr "ترقية العنصر"
+
+msgid "Promoted"
+msgstr "تمت ترقيته"
+
+msgid "Protocol: "
+msgstr "البروتوكول: "
+
+msgid "Published:"
+msgstr "تاريخ النشر:"
+
+msgid "Qualities"
+msgstr "الجودات"
+
+msgid "Quality"
+msgstr "الجودة"
+
+msgid "Quality:"
+msgstr "الجودة:"
+
+msgid "RADIO"
+msgstr "راديو"
+
+msgid "RAM buffer size [MB] for local files"
+msgstr "حجم ذاكرة التخزين المؤقت [MB] للملفات المحلية"
+
+msgid "RAM buffer size [MB] for network protocols"
+msgstr "حجم ذاكرة التخزين المؤقت [MB] لبروتوكولات الشبكة"
+
+msgid "RAW"
+msgstr "خام (RAW)"
+
+msgid "RECENT"
+msgstr "الأحدث"
+
+msgid "REMEMBER: "
+msgstr "تذكير: "
+
+msgid "Radio"
+msgstr "الراديو"
+
+msgid "Radio iframe file"
+msgstr "ملف إطار الراديو (iframe)"
+
+msgid "Radio stations"
+msgstr "محطات الراديو"
+
+msgid "Radiology Rounds"
+msgstr "جولات الأشعة"
+
+msgid "Raiting"
+msgstr "التقييم"
+
+msgid "Random"
+msgstr "عشوائي"
+
+msgid "Random selection"
+msgstr "اختيار عشوائي"
+
+msgid "Randomize a playlist"
+msgstr "تبديل قائمة التشغيل عشوائياً"
+
+msgid "Ranking"
+msgstr "الترتيب"
+
+msgid "Rating"
+msgstr "التقييم"
+
+#, python-format
+msgid "Rating %s"
+msgstr "التقييم %s"
+
+msgid "Rating:"
+msgstr "التقييم:"
+
+msgid "Recent"
+msgstr "الأحدث"
+
+msgid "Recon"
+msgstr "استكشاف"
+
+msgid "Redirect"
+msgstr "إعادة التوجيه"
+
+msgid "Refresh"
+msgstr "تحديث"
+
+msgid "Refreshing"
+msgstr "جاري التحديث"
+
+msgid "Release"
+msgstr "إصدار"
+
+msgid "Release:"
+msgstr "الإصدار:"
+
+msgid "Releases"
+msgstr "الإصدارات"
+
+msgid "Relevance"
+msgstr "الصلة"
+
+msgid "Reload list"
+msgstr "إعادة تحميل القائمة"
+
+msgid "Remember last watched position"
+msgstr "تذكر آخر موضع مشاهدة"
+
+msgid "Remove"
+msgstr "إزالة"
+
+#, python-format
+msgid "Remove \"%s\" item"
+msgstr "إزالة العنصر \"%s\""
+
+msgid "Remove disabled services"
+msgstr "إزالة الخدمات المعطلة"
+
+msgid "Remove file"
+msgstr "إزالة الملف"
+
+msgid "Remove from favourites"
+msgstr "إزالة من المفضلة"
+
+msgid "Remove group"
+msgstr "إزالة المجموعة"
+
+msgid "Remove item"
+msgstr "إزالة العنصر"
+
+msgid "Rename"
+msgstr "إعادة التسمية"
+
+msgid "Replay Shows"
+msgstr "إعادة عرض البرامج"
+
+msgid "Reset State"
+msgstr "إعادة التهيئة"
+
+#, python-format
+msgid ""
+"Resolving hCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"فشل حل hCaptcha باستخدام %s!\n"
+"\n"
+
+#, python-format
+msgid ""
+"Resolving reCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"فشل حل reCaptcha باستخدام %s!\n"
+"\n"
+
+msgid "Return to hosts list"
+msgstr "العودة إلى قائمة المواقع"
+
+msgid "Reverse a playlist"
+msgstr "عكس ترتيب قائمة التشغيل"
+
+msgid "Russian"
+msgstr "الروسية"
+
+msgid "Russian proxy server url"
+msgstr "رابط خادم البروكسي الروسي"
+
+msgid "SHOWS"
+msgstr "البرامج"
+
+msgid "SONGS"
+msgstr "الأغاني"
+
+msgid "STARTED"
+msgstr "بدأ"
+
+msgid "STOPPED"
+msgstr "توقف"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Save changes?"
+msgstr "هل تريد حفظ التغييرات؟"
+
+msgid "Schedule"
+msgstr "الجدول الزمني"
+
+msgid "Science"
+msgstr "العِلم"
+
+msgid "Score at least: "
+msgstr "الحد الأدنى للتقييم: "
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "Search History is empty."
+msgstr "سجل البحث فارغ."
+
+msgid "Search History successfully deleted."
+msgstr "تم حذف سجل البحث بنجاح."
+
+msgid "Search Movies and TV Series"
+msgstr "ابحث عن الأفلام والمسلسلات التلفزيونية"
+
+#, python-format
+msgid "Search for \"%s\", %s, %s %s"
+msgstr "بحث عن \"%s\"، %s، %s %s"
+
+msgid "Search history"
+msgstr "سجل البحث"
+
+msgid "Search in "
+msgstr "البحث في "
+
+msgid "Search in all active hosts"
+msgstr "البحث في جميع المصادر النشطة"
+
+msgid "Search only in Movies"
+msgstr "البحث في الأفلام فقط"
+
+msgid "Search only in TV Series"
+msgstr "البحث في المسلسلات فقط"
+
+msgid "Search results"
+msgstr "نتائج البحث"
+
+msgid "Search type"
+msgstr "نوع البحث"
+
+msgid "Search youtube materials"
+msgstr "البحث في محتويات يوتيوب "
+
+#, python-format
+msgid "Searching in %s, please wait (%d)"
+msgstr "يتم البحث في %s، الرجاء الانتظار (%d)"
+
+#, python-format
+msgid "Searching subtitles for \"%s\""
+msgstr "جارٍ البحث عن ترجمة لـ \"%s\""
+
+#, python-format
+msgid "Searching, please wait (%d)"
+msgstr "جارٍ البحث، الرجاء الانتظار (%d)"
+
+msgid "Season"
+msgstr "الموسم"
+
+#, python-format
+msgid "Season %s"
+msgstr "الموسم %s"
+
+#, python-format
+msgid "Season %s (%s)"
+msgstr "الموسم %s (%s)"
+
+#, python-brace-format
+msgid "Season {0}"
+msgstr "الموسم {0}"
+
+msgid "Second movie player in buffering mode"
+msgstr "مشغل الفيديو الثاني في وضع التحميل المؤقت"
+
+msgid "Second movie player without buffering mode"
+msgstr "مشغل الفيديو الثاني بدون وضع التحميل المؤقت"
+
+msgid "See all events"
+msgstr "عرض جميع الأحداث"
+
+msgid "See all languages"
+msgstr "عرض جميع اللغات"
+
+msgid "See all topics"
+msgstr "عرض جميع المواضيع"
+
+msgid "Select"
+msgstr "اختر"
+
+#, python-format
+msgid "Select %s"
+msgstr "اختر %s"
+
+msgid "Select action"
+msgstr "اختر الإجراء"
+
+msgid "Select audio track"
+msgstr "اختر مسار الصوت"
+
+msgid "Select directory"
+msgstr "اختر المجلد"
+
+msgid "Select favourite group"
+msgstr "اختر مجموعة المفضلة"
+
+msgid "Select group"
+msgstr "اختر المجموعة"
+
+msgid "Select language"
+msgstr "اختر اللغة"
+
+msgid "Select link"
+msgstr "اختر الرابط"
+
+msgid "Select movie player"
+msgstr "اختر مشغل الفيديو"
+
+msgid "Select option"
+msgstr "اختر الخيار"
+
+msgid "Select pictures"
+msgstr "اختر الصور"
+
+msgid "Select service"
+msgstr "اختر الخدمة"
+
+msgid "Select subtitles file"
+msgstr "اختر ملف الترجمة"
+
+msgid "Select subtitles provider:"
+msgstr "اختر مزود الترجمة:"
+
+msgid "Select subtitles to download"
+msgstr "اختر الترجمة التي تريد تحميلها"
+
+msgid "Select subtitles track"
+msgstr "اختر مسار الترجمة"
+
+msgid "Select the directory"
+msgstr "اختر المجلد"
+
+msgid "Select the file"
+msgstr "اختر الملف"
+
+msgid "Select video option"
+msgstr "اختر خيار الفيديو"
+
+msgid "Selected hosts"
+msgstr "المصادر المحددة"
+
+msgid "Send"
+msgstr "إرسال"
+
+msgid "Seriale"
+msgstr "مسلسلات"
+
+msgid "Series"
+msgstr "مسلسلات"
+
+msgid "Series TV"
+msgstr "مسلسلات تلفزيونية"
+
+msgid "Series list"
+msgstr "قائمة المسلسلات"
+
+msgid "Server return 404 - Not Found."
+msgstr "الخادم أعاد 404 - لم يتم العثور عليه."
+
+#, python-format
+msgid ""
+"Service %s requires registration. \n"
+"Please fill your login and password in the %s configuration."
+msgstr ""
+"الخدمة %s تتطلب التسجيل.\n"
+"يرجى إدخال اسم المستخدم وكلمة المرور في إعدادات %s."
+
+#, python-format
+msgid "Service [%s] has no additional settings."
+msgstr "الخدمة [%s] لا تحتوي على إعدادات إضافية."
+
+msgid "Services configuration"
+msgstr "إعدادات الخدمات"
+
+msgid "Services management"
+msgstr "إدارة الخدمات"
+
+msgid "Set active movie player"
+msgstr "تعيين مشغل الفيديو النشط"
+
+msgid "Set file name"
+msgstr "تعيين اسم الملف"
+
+msgid "Set pin code"
+msgstr "تعيين رمز PIN"
+
+msgid "Set watched"
+msgstr "تعيين كمشاهد"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Shorts"
+msgstr "مقاطع قصيرة"
+
+msgid "Shoulder & Elbow"
+msgstr "الكتف والكوع"
+
+msgid "Show IPTVPlayer in extension list"
+msgstr "عرض IPTVPlayer في قائمة الإضافات"
+
+msgid "Show IPTVPlayer in main menu"
+msgstr "عرض IPTVPlayer في القائمة الرئيسية"
+
+msgid "Show Profiles in ZBIORNIK MINI :"
+msgstr "عرض الملفات الشخصية في ZBIORNIK MINI :"
+
+msgid "Show Youtube Api Key warnings"
+msgstr "عرض تحذيرات مفتاح YouTube API"
+
+msgid "Show all channels"
+msgstr "عرض جميع القنوات"
+
+msgid "Show changelog :"
+msgstr "عرض سجل التغييرات :"
+
+msgid "Show download manager after adding new item"
+msgstr "عرض مدير التنزيل بعد إضافة عنصر جديد"
+
+msgid "Show file size"
+msgstr "عرض حجم الملف"
+
+msgid "Show hiddens catalogs"
+msgstr "عرض المجلدات المخفية"
+
+msgid "Show hiddens files"
+msgstr "عرض الملفات المخفية"
+
+msgid "Show iframe during audio playback"
+msgstr "عرض IFrame أثناء تشغيل الصوت"
+
+msgid "Show only audio in selected language:"
+msgstr "عرض الصوت فقط باللغة المحددة:"
+
+msgid "Show only best quality of streams:"
+msgstr "عرض أفضل جودة فقط للبث:"
+
+msgid "Shows"
+msgstr "عروض"
+
+msgid "Simple list"
+msgstr "قائمة بسيطة"
+
+msgid "Simple subtitles downloader"
+msgstr "أداة تحميل ترجمات بسيطة"
+
+msgid "Simplify the title and try again."
+msgstr "بسط العنوان وحاول مرة أخرى."
+
+msgid "Single file downloader"
+msgstr "أداة تحميل ملف واحد"
+
+msgid "Skin"
+msgstr "المظهر"
+
+msgid "Skip video shorter than [min]"
+msgstr "تخطي الفيديو الأقصر من [دقيقة]"
+
+msgid "Smackdown"
+msgstr "سماك داون"
+
+msgid "Software decoding as"
+msgstr "فك التشفير البرمجي كـ"
+
+msgid "Software floating point"
+msgstr "نقطة عائمة برمجية"
+
+msgid "Some changes will be applied only after movie player restart."
+msgstr "بعض التغييرات سيتم تطبيقها فقط بعد إعادة تشغيل مشغل الفيديو."
+
+msgid "Some settings will be applied only after GUI restart."
+msgstr "بعض الإعدادات سيتم تطبيقها فقط بعد إعادة تشغيل الواجهة الرسومية."
+
+msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
+msgstr "عذرًا. خدمة TVPlayer متاحة حاليًا فقط في المملكة المتحدة"
+
+msgid "Sort Mode"
+msgstr "وضع الفرز"
+
+msgid "Sort Myfreecams :"
+msgstr "فرز Myfreecams :"
+
+msgid "Sort alphabetically"
+msgstr "الفرز أبجديًا"
+
+msgid "Sort by alphabet"
+msgstr "الفرز حسب الأبجدية"
+
+msgid "Sort by popularity"
+msgstr "الفرز حسب الشيوع"
+
+msgid "Sort by:"
+msgstr "الفرز حسب:"
+
+msgid "Sort the list:"
+msgstr "فرز القائمة:"
+
+msgid "Sort xxxlist :"
+msgstr "فرز قائمة xxx :"
+
+msgid "Sorted channels A-Z [live]"
+msgstr "القنوات مرتبة من A إلى Z [بث مباشر]"
+
+msgid "Sorted most viewed channels general [live]"
+msgstr "القنوات الأكثر مشاهدة - عام [بث مباشر]"
+
+msgid "Sorted most viewed channels now [live]"
+msgstr "القنوات الأكثر مشاهدة حاليًا [بث مباشر]"
+
+#, python-format
+msgid "Source %s"
+msgstr "المصدر %s"
+
+msgid "Source type"
+msgstr "نوع المصدر"
+
+msgid "Spanish"
+msgstr "الإسبانية"
+
+msgid "Specialities"
+msgstr "التخصصات"
+
+msgid "Spine"
+msgstr "العمود الفقري"
+
+msgid "Sport"
+msgstr "رياضة"
+
+msgid "Standard"
+msgstr "قياسي"
+
+msgid "Start"
+msgstr "بدء"
+
+msgid "Start download manager per default"
+msgstr "تشغيل مدير التنزيل تلقائيًا"
+
+msgid "Stereo downmix mode for software decoder"
+msgstr "وضع خلط الصوت المجسم لفك التشفير البرمجي"
+
+msgid "Stop"
+msgstr "إيقاف"
+
+msgid "Stop download"
+msgstr "إيقاف التنزيل"
+
+msgid "Stop downloading"
+msgstr "إيقاف التنزيل"
+
+msgid "Stop playback with buffer save"
+msgstr "إيقاف التشغيل مع حفظ التخزين المؤقت"
+
+msgid "Stop playing?"
+msgstr "هل تريد إيقاف التشغيل؟"
+
+#, python-format
+msgid "Stream starts from %s"
+msgstr "يبدأ البث من %s"
+
+msgid "Studio:"
+msgstr "الاستوديو:"
+
+msgid "Study Plan"
+msgstr "خطة الدراسة"
+
+msgid "Subspecialities"
+msgstr "تخصصات فرعية"
+
+msgid "Subtitle background"
+msgstr "خلفية الترجمة"
+
+msgid "Subtitle border color"
+msgstr "لون حدود الترجمة"
+
+msgid "Subtitle border enabled"
+msgstr "تمكين حدود الترجمة"
+
+msgid "Subtitle border width"
+msgstr "عرض حدود الترجمة"
+
+msgid "Subtitle box height"
+msgstr "ارتفاع صندوق الترجمة"
+
+msgid "Subtitle box position"
+msgstr "موضع صندوق الترجمة"
+
+msgid "Subtitle font"
+msgstr "خط الترجمة"
+
+msgid "Subtitle font color"
+msgstr "لون خط الترجمة"
+
+msgid "Subtitle font size"
+msgstr "حجم خط الترجمة"
+
+msgid "Subtitle line height"
+msgstr "ارتفاع سطر الترجمة"
+
+msgid "Subtitle line wrapping"
+msgstr "لف سطور الترجمة"
+
+msgid "Subtitle shadow X offset"
+msgstr "إزاحة ظل الترجمة على المحور X"
+
+msgid "Subtitle shadow Y offset"
+msgstr "إزاحة ظل الترجمة على المحور Y"
+
+msgid "Subtitle shadow color"
+msgstr "لون ظل الترجمة"
+
+msgid "Subtitle shadow enabled"
+msgstr "تمكين ظل الترجمة"
+
+msgid "Subtitle vertical alignment"
+msgstr "محاذاة الترجمة عموديًا"
+
+msgid "Subtitles"
+msgstr "الترجمات"
+
+#, python-format
+msgid "Subtitles \"%s\" downloaded correctly."
+msgstr "تم تنزيل الترجمة \"%s\" بنجاح."
+
+msgid "Subtitles conversion to UTF-8 failed."
+msgstr "فشل تحويل الترجمة إلى ترميز UTF-8."
+
+#, python-format
+msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
+msgstr "تم تنزيل الترجمة بنجاح. [%s]، ويتم تحويلها إلى UTF-8."
+
+#, python-format
+msgid "Subtitles for: %s"
+msgstr "ترجمات لـ: %s"
+
+msgid "Surgical Approaches"
+msgstr "الطرق الجراحية"
+
+msgid "Surgical Cases"
+msgstr "الحالات الجراحية"
+
+msgid "Surgical Complications"
+msgstr "المضاعفات الجراحية"
+
+msgid "Surgical Techniques"
+msgstr "التقنيات الجراحية"
+
+msgid "Swedish"
+msgstr "السويدية"
+
+msgid "Synchronize"
+msgstr "مزامنة"
+
+msgid "System"
+msgstr "النظام"
+
+msgid "THIS IS A PRIVATE VIDEO."
+msgstr "هذا فيديو خاص."
+
+msgid "TNA"
+msgstr "TNA"
+
+msgid "TOP 10"
+msgstr "أفضل 10"
+
+msgid "TRAILER"
+msgstr "الإعلان التشويقي"
+
+msgid "TV"
+msgstr "تلفزيون"
+
+msgid "TV SERIES"
+msgstr "مسلسلات تلفزيونية"
+
+msgid "TV Series"
+msgstr "مسلسلات"
+
+msgid "TV Show"
+msgstr "عرض تلفزيوني"
+
+msgid "TV channels"
+msgstr "قنوات تلفزيونية"
+
+msgid "TV series"
+msgstr "مسلسلات"
+
+msgid "TV status"
+msgstr "حالة التلفاز"
+
+msgid "TV-Series"
+msgstr "مسلسلات تلفزيونية"
+
+msgid "Talks"
+msgstr "حوارات"
+
+msgid "Techniques"
+msgstr "تقنيات"
+
+msgid "Text files ytlist and urllist are in:"
+msgstr "ملفات النص ytlist و urllist موجودة في:"
+
+#, python-format
+msgid "The %s utility is necessary here but it was not detected."
+msgstr "الأداة %s مطلوبة هنا ولكن لم يتم العثور عليها."
+
+msgid "The YouTube video ID is invalid."
+msgstr "معرّف الفيديو في YouTube غير صالح."
+
+msgid "The best"
+msgstr "الأفضل"
+
+msgid "The color of the current version"
+msgstr "لون النسخة الحالية"
+
+msgid "The color of the viewed item"
+msgstr "لون العنصر المُشاهد"
+
+msgid "The default aspect ratio for the external player"
+msgstr "نسبة العرض إلى الارتفاع الافتراضية للمشغل الخارجي"
+
+#, python-format
+msgid ""
+"The host %s requires registration. \n"
+"Please fill your login and password in the host configuration. Available under blue button."
+msgstr ""
+"المُضيف %s يتطلب تسجيل الدخول.\n"
+"يرجى إدخال اسم المستخدم وكلمة المرور في إعدادات المُضيف – متاحة تحت الزر الأزرق."
+
+#, python-format
+msgid ""
+"The host %s requires subscription.\n"
+"Please fill your login and password in the host configuration - available under blue button."
+msgstr ""
+"المُضيف %s يتطلب اشتراكًا.\n"
+"يرجى إدخال بيانات الدخول في إعدادات المُضيف – متاحة تحت الزر الأزرق."
+
+msgid "The number of items in the search history"
+msgstr "عدد العناصر في سجل البحث"
+
+#, python-format
+msgid ""
+"The playback buffer has been moved to the download manager.\n"
+"It will be saved in the file:\n"
+"\"%s\""
+msgstr ""
+"تم نقل مؤقت التشغيل إلى مدير التنزيل.\n"
+"سيتم حفظه في الملف:\n"
+"\"%s\""
+
+msgid "The same item already exists in this group."
+msgstr "العنصر موجود بالفعل في هذه المجموعة."
+
+msgid "The worst"
+msgstr "الأسوأ"
+
+msgid "There are no other favourite groups"
+msgstr "لا توجد مجموعات مفضلة أخرى"
+
+#, python-format
+msgid "There is no enough free space in the folder \"%s\"."
+msgstr "لا توجد مساحة كافية في المجلد \"%s\"."
+
+#, python-format
+msgid "There is no free space on the drive [%s]."
+msgstr "لا توجد مساحة حرة على القرص [%s]."
+
+msgid "There is no hosts in this group."
+msgstr "لا توجد مُضيفات في هذه المجموعة."
+
+msgid "This host has been added already to this group."
+msgstr "تمت إضافة هذا المُضيف مسبقًا إلى هذه المجموعة."
+
+msgid "This model is offline."
+msgstr "هذا النموذج غير متصل."
+
+msgid "This room is offline. Try again later!"
+msgstr "هذه الغرفة غير متصلة الآن. حاول لاحقًا!"
+
+msgid "This show is private. Try again later!"
+msgstr "هذا العرض خاص. حاول لاحقًا!"
+
+msgid "This site is protected with Google reCaptcha v2."
+msgstr "هذا الموقع محمي بواسطة Google reCaptcha v2."
+
+msgid "This video has been deleted."
+msgstr "تم حذف هذا الفيديو."
+
+msgid "This video is a private video."
+msgstr "هذا فيديو خاص."
+
+msgid "Tip! You can connect USB flash drive to fix this problem."
+msgstr "نصيحة! يمكنك توصيل وحدة USB لحل هذه المشكلة."
+
+msgid "Title:"
+msgstr "العنوان:"
+
+msgid ""
+"To watch videos from http://vk.com/ you need to login.\n"
+"Please fill your login and password in the IPTVPlayer configuration."
+msgstr ""
+"لمشاهدة الفيديوهات من http://vk.com/ يجب تسجيل الدخول.\n"
+"يرجى إدخال بيانات الدخول في إعدادات IPTVPlayer."
+
+msgid "Today"
+msgstr "اليوم"
+
+msgid "Top"
+msgstr "الأعلى"
+
+msgid "Top +250"
+msgstr "أفضل +250"
+
+msgid "Top Movies"
+msgstr "أفضل الأفلام"
+
+msgid "Top Videos"
+msgstr "أفضل الفيديوهات"
+
+msgid "Top day"
+msgstr "أعلى يوم"
+
+msgid "Top movies"
+msgstr "أفضل الأفلام"
+
+msgid "Top rated"
+msgstr "الأعلى تقييمًا"
+
+msgid "Top series"
+msgstr "أفضل المسلسلات"
+
+msgid "Total Divas"
+msgstr "توتال ديفاز"
+
+msgid "Total size: "
+msgstr "الحجم الكلي: "
+
+msgid "Trailer"
+msgstr "إعلان تشويقي"
+
+msgid "Transparent"
+msgstr "شفاف"
+
+msgid "Trauma"
+msgstr "صدمة"
+
+msgid "Treatment Consult"
+msgstr "استشارة علاجية"
+
+msgid "Tree list"
+msgstr "قائمة شجرية"
+
+msgid "Trending"
+msgstr "الشائع"
+
+msgid "Try to bypass DRM (it may be illegal)"
+msgstr "حاول تجاوز حماية DRM (قد يكون ذلك غير قانوني)"
+
+msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
+msgstr "حاول تغيير extplayer أو تعطيل IFD في إعدادات GSTplayer"
+
+msgid "Turn off buffering for http://prognoza.pogody.tv/"
+msgstr "إيقاف التخزين المؤقت لموقع http://prognoza.pogody.tv/"
+
+msgid "Tutorials"
+msgstr "شروحات"
+
+msgid "Type: "
+msgstr "النوع: "
+
+#, python-format
+msgid "Type: %s"
+msgstr "النوع: %s"
+
+msgid "UFC"
+msgstr "UFC"
+
+msgid "Ukrainian proxy server url"
+msgstr "رابط خادم البروكسي الأوكراني"
+
+msgid "Umount iso file"
+msgstr "إلغاء تحميل ملف ISO"
+
+msgid "Unable to comply. Search History is empty."
+msgstr "غير قادر على التنفيذ. سجل البحث فارغ."
+
+msgid "Unknow data in the captcha item!"
+msgstr "بيانات غير معروفة في عنصر الكابتشا!"
+
+msgid "Unknown"
+msgstr "غير معروف"
+
+#, python-format
+msgid "Unknown captcha form! Data: \"%s\""
+msgstr "نموذج كابتشا غير معروف! البيانات: \"%s\""
+
+msgid "Unknown error."
+msgstr "خطأ غير معروف."
+
+#, python-format
+msgid "Unknown file extension \"%s\"."
+msgstr "امتداد ملف غير معروف \"%s\"."
+
+#, python-format
+msgid "Unknown protocol [%s]"
+msgstr "بروتوكول غير معروف [%s]"
+
+msgid "Unknown server response."
+msgstr "استجابة غير معروفة من الخادم."
+
+#, python-format
+msgid "Unknown subtitle parser for format \"%s\"."
+msgstr "محلل ترجمات غير معروف للتنسيق \"%s\"."
+
+#, python-format
+msgid "Unrar error code[%s]."
+msgstr "رمز خطأ فك الضغط Unrar [%s]."
+
+msgid "Unset watched"
+msgstr "إلغاء تعيين كمشاهد"
+
+#, python-format
+msgid "Unzip error code[%s]."
+msgstr "رمز خطأ فك الضغط Unzip [%s]."
+
+msgid "Upcoming"
+msgstr "قريبًا"
+
+msgid "Update completed successfully. For the moment, the system will reboot."
+msgstr "تم التحديث بنجاح. سيُعاد تشغيل النظام الآن."
+
+msgid "Upload date"
+msgstr "تاريخ الرفع"
+
+msgid "Uploads"
+msgstr "عمليات الرفع"
+
+msgid "Urllists player"
+msgstr "مشغل قوائم الروابط"
+
+msgid "Use Polish proxy for http://prognoza.pogody.tv/"
+msgstr "استخدم بروكسي بولندي لموقع http://prognoza.pogody.tv/"
+
+msgid "Use default quality:"
+msgstr "استخدم الجودة الافتراضية:"
+
+msgid "Use default video quality"
+msgstr "استخدم جودة الفيديو الافتراضية"
+
+msgid "Use default video quality:"
+msgstr "استخدم جودة الفيديو الافتراضية:"
+
+msgid "Use links cache"
+msgstr "استخدم ذاكرة التخزين المؤقت للروابط"
+
+msgid "Use preferred bitrate"
+msgstr "استخدم معدل البت المفضل"
+
+msgid "Use preferred quality"
+msgstr "استخدم الجودة المفضلة"
+
+msgid "Use proxy server:"
+msgstr "استخدم خادم بروكسي:"
+
+#, python-format
+msgid "Use software decoder for the %s"
+msgstr "استخدم فك التشفير البرمجي لـ %s"
+
+msgid "Use subtitles parser extension if available"
+msgstr "استخدم إضافة تحليل الترجمة إن توفرت"
+
+msgid "Use the PyCurl for HTTP(S) requests"
+msgstr "استخدم PyCurl لطلبات HTTP(S)"
+
+msgid "Use web proxy gateway"
+msgstr "استخدم بوابة بروكسي ويب"
+
+msgid "Use web-proxy (it may be illegal):"
+msgstr "استخدم بروكسي ويب (قد يكون غير قانوني):"
+
+msgid "Use web-proxy for VODs (it may be illegal):"
+msgstr "استخدم بروكسي ويب لفيديوهات حسب الطلب (قد يكون غير قانوني):"
+
+msgid "User defined"
+msgstr "يُحدد بواسطة المستخدم"
+
+msgid "User files"
+msgstr "ملفات المستخدم"
+
+msgid "User links"
+msgstr "روابط المستخدم"
+
+msgid "User links stored in the ytlist.txt file."
+msgstr "روابط المستخدم محفوظة في ملف ytlist.txt."
+
+msgid "Username"
+msgstr "اسم المستخدم"
+
+#, python-format
+msgid "Username in settings is different from %s"
+msgstr "اسم المستخدم في الإعدادات مختلف عن %s"
+
+msgid "Username:"
+msgstr "اسم المستخدم:"
+
+msgid ""
+"Using this host in your country can be illegal.\n"
+"Do you want to continue at your own risk?"
+msgstr ""
+"استخدام هذا المضيف في بلدك قد يكون غير قانوني.\n"
+"هل تريد المتابعة على مسؤوليتك الخاصة؟"
+
+#, python-format
+msgid "Utility \"%s\" can not be found."
+msgstr "لم يتم العثور على الأداة \"%s\"."
+
+msgid "VENUES"
+msgstr "أماكن"
+
+msgid "VFD set current title:"
+msgstr "ضبط عنوان VFD الحالي:"
+
+msgid "VIEWS"
+msgstr "المشاهدات"
+
+msgid "Verify"
+msgstr "تحقق"
+
+msgid "Video"
+msgstr "فيديو"
+
+msgid "Video default quality:"
+msgstr "جودة الفيديو الافتراضية:"
+
+msgid "Video format:"
+msgstr "تنسيق الفيديو:"
+
+msgid "Video mode"
+msgstr "وضع الفيديو"
+
+msgid "Video options"
+msgstr "خيارات الفيديو"
+
+msgid "Video policy"
+msgstr "سياسة الفيديو"
+
+msgid "Video policy for 4:3"
+msgstr "سياسة الفيديو بنسبة 4:3"
+
+msgid "Video with DRM protection."
+msgstr "فيديو محمي بـ DRM."
+
+msgid "Videos"
+msgstr "فيديوهات"
+
+#, python-format
+msgid "Videos %s"
+msgstr "فيديوهات %s"
+
+#, python-format
+msgid "Videos count: %s"
+msgstr "عدد الفيديوهات: %s"
+
+msgid "View count"
+msgstr "عدد المشاهدات"
+
+msgid "Views"
+msgstr "المشاهدات"
+
+msgid "Views:"
+msgstr "المشاهدات:"
+
+msgid "Vimeo Suggestions"
+msgstr "اقتراحات Vimeo"
+
+msgid "Virtual Keyboard"
+msgstr "لوحة المفاتيح الافتراضية"
+
+msgid "Virtual Keyboard type"
+msgstr "نوع لوحة المفاتيح الافتراضية"
+
+msgid "WARNING! IF UPDATE FAILED: "
+msgstr "تحذير! إذا فشل التحديث: "
+
+msgid "WWE"
+msgstr "WWE"
+
+msgid "WWE Network"
+msgstr "شبكة WWE"
+
+#, python-format
+msgid "Waiting search thread to stop, please wait (%d)"
+msgstr "بانتظار توقف خيط البحث، الرجاء الانتظار (%d)"
+
+msgid "Watch"
+msgstr "شاهد"
+
+msgid "Watch Trailer"
+msgstr "شاهد الإعلان"
+
+msgid "Watch Videos Online"
+msgstr "مشاهدة الفيديوهات على الإنترنت"
+
+msgid "Web component has been reset and all threads are stopped. :)"
+msgstr "تم إعادة تعيين مكون الويب وتوقفت جميع العمليات :)"
+
+msgid "Web component has been reset, the following threads are still working:"
+msgstr "تم إعادة تعيين مكون الويب، ولا تزال العمليات التالية تعمل:"
+
+msgid "Web interface version"
+msgstr "إصدار واجهة الويب"
+
+msgid "Web proxy"
+msgstr "بروكسي الويب"
+
+msgid "Weekly Indys"
+msgstr "إندي الأسبوعية"
+
+msgid "Whole file must be downloaded to start playback!"
+msgstr "يجب تنزيل الملف بالكامل لبدء التشغيل!"
+
+msgid "With closed captioned."
+msgstr "مع شروحات مغلقة."
+
+msgid "With subtitles"
+msgstr "مع ترجمة"
+
+msgid "Write current title to file:"
+msgstr "اكتب العنوان الحالي إلى ملف:"
+
+msgid "Written Boards Review"
+msgstr "مراجعة لوحات مكتوبة"
+
+msgid "Wrong Youtube Api Key length"
+msgstr "طول مفتاح API الخاص بـ YouTube غير صحيح"
+
+msgid "Wrong answer."
+msgstr "إجابة خاطئة."
+
+msgid "Wrong format of rar archive."
+msgstr "تنسيق ملف rar غير صحيح."
+
+msgid "Wrong format of zip archive."
+msgstr "تنسيق ملف zip غير صحيح."
+
+msgid "Wrong indexes."
+msgstr "فهرسة خاطئة."
+
+msgid "Wrong uri."
+msgstr "رابط غير صحيح."
+
+msgid "Xbox One"
+msgstr "إكس بوكس ون"
+
+msgid "YP connected"
+msgstr "تم الاتصال بـ YP"
+
+msgid "Year"
+msgstr "السنة"
+
+#, python-format
+msgid "Year %s"
+msgstr "السنة %s"
+
+msgid "Year: "
+msgstr "السنة: "
+
+msgid "Yes"
+msgstr "نعم"
+
+msgid "Yes, to console"
+msgstr "نعم، إلى وحدة التحكم"
+
+msgid "Yes, to file /hdd/iptv.dbg"
+msgstr "نعم، إلى الملف /hdd/iptv.dbg"
+
+msgid "Yes, to file /home/root/logs/iptv.dbg"
+msgstr "نعم، إلى الملف /home/root/logs/iptv.dbg"
+
+msgid "Yes, to file /tmp/iptv.dbg"
+msgstr "نعم، إلى الملف /tmp/iptv.dbg"
+
+msgid "You are not allowed to play this video"
+msgstr "غير مسموح لك بمشاهدة هذا الفيديو"
+
+msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
+msgstr "أنت تستخدم إصدارًا قديمًا من OpenWebif.<br> للذهاب إلى واجهة E2iPlayer على الويب، اختر الرابط التالي<br>"
+
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "يمكنك تعطيل التحقق من شهادات HTTPS في إعدادات E2iPlayer لتجاوز هذه المشكلة."
+
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "يمكنك تفعيل PyCurl في إعدادات E2iPlayer لحل هذه المشكلة."
+
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "يمكنك تثبيت حزمة PyCurl بدعم TLS 1.3 من مصدر الحزم لحل هذه المشكلة."
+
+msgid "You can try to use proxy as workaround, check options under blue button."
+msgstr "يمكنك تجربة استخدام بروكسي كحل مؤقت، تحقق من الخيارات تحت الزر الأزرق."
+
+#, python-format
+msgid "You can use \"%s\" or \"%s\" services for automatic solution."
+msgstr "يمكنك استخدام خدمات \"%s\" أو \"%s\" لحل تلقائي."
+
+msgid "You can use external eplayer to start playback faster."
+msgstr "يمكنك استخدام مشغل خارجي لبدء التشغيل بشكل أسرع."
+
+msgid "You do not have a premium account. Starting a sponsored broadcast."
+msgstr "لا تملك حسابًا مميزًا. سيتم تشغيل بث برعاية."
+
+msgid "You need to enter email and password in configuration."
+msgstr "تحتاج إلى إدخال البريد الإلكتروني وكلمة المرور في الإعدادات."
+
+msgid "You should never perform block I/O operations in the __init__."
+msgstr "لا يجب أبدًا تنفيذ عمليات الإدخال/الإخراج في دالة __init__."
+
+msgid "Your language preference:"
+msgstr "تفضيلك اللغوي:"
+
+msgid "Your search entry"
+msgstr "إدخال البحث الخاص بك"
+
+msgid "Youtube Suggestions"
+msgstr "اقتراحات يوتيوب"
+
+msgid "Youtube searches are quicker, if you fill API key in setting menu"
+msgstr "عمليات البحث في يوتيوب أسرع إذا قمت بإدخال مفتاح API في قائمة الإعدادات"
+
+#, python-format
+msgid "[%s] - configuration"
+msgstr "[%s] - الإعدادات"
+
+#, python-format
+msgid "[%s] with buffering"
+msgstr "[%s] مع التخزين المؤقت"
+
+#, python-format
+msgid "[%s] without buffering"
+msgstr "[%s] بدون تخزين مؤقت"
+
+msgid "[HLS/M3U8] buffering"
+msgstr "تخزين مؤقت [HLS/M3U8]"
+
+msgid "[HTTP] buffering"
+msgstr "تخزين مؤقت [HTTP]"
+
+msgid "[Logged-in-only] "
+msgstr "[يتطلب تسجيل الدخول فقط] "
+
+msgid "[RTMP] buffering (rtmpdump required)"
+msgstr "تخزين مؤقت [RTMP] (يتطلب rtmpdump)"
+
+msgid "[en]"
+msgstr "[en]"
+
+msgid "[pl]"
+msgstr "[pl]"
+
+msgid "[trailer]"
+msgstr "[إعلان تشويقي]"
+
+msgid "_checkStatus except error"
+msgstr "_checkStatus حدث خطأ"
+
+msgid "after a week"
+msgstr "بعد أسبوع"
+
+msgid "after closing"
+msgstr "بعد الإغلاق"
+
+msgid "after day"
+msgstr "بعد يوم"
+
+msgid "after three days"
+msgstr "بعد ثلاثة أيام"
+
+msgid "all"
+msgstr "الكل"
+
+msgid "any"
+msgstr "أي"
+
+msgid "aqua"
+msgstr "أكوا"
+
+msgid "auto"
+msgstr "تلقائي"
+
+msgid "average"
+msgstr "متوسط"
+
+msgid "black"
+msgstr "أسود"
+
+msgid "black&white"
+msgstr "أبيض وأسود"
+
+msgid "blue"
+msgstr "أزرق"
+
+msgid "bottom"
+msgstr "أسفل"
+
+msgid "buffering location"
+msgstr "مكان التخزين المؤقت"
+
+msgid "center"
+msgstr "الوسط"
+
+msgid "cobalt"
+msgstr "كوبالت"
+
+msgid "de"
+msgstr "de"
+
+msgid "default"
+msgstr "افتراضي"
+
+msgid "direct link"
+msgstr "رابط مباشر"
+
+msgid "downloads location"
+msgstr "مكان التحميل"
+
+msgid "e-mail"
+msgstr "البريد الإلكتروني"
+
+msgid "email"
+msgstr "البريد الإلكتروني"
+
+msgid "episodes"
+msgstr "حلقات"
+
+msgid "external eplayer3"
+msgstr "المشغل الخارجي eplayer3"
+
+msgid "external gstplayer"
+msgstr "المشغل الخارجي gstplayer"
+
+msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
+msgstr "تحقق أولاً مما إذا كان المضيف يعمل بشكل صحيح في الواجهة الرسومية وعلى الويب <b>قبل</b> الإبلاغ عن أي خطأ فيه !!!"
+
+msgid "format"
+msgstr "الصيغة"
+
+msgid "from E2 settings"
+msgstr "من إعدادات E2"
+
+msgid "fuchsia"
+msgstr "فوشيا"
+
+msgid "geoblocked"
+msgstr "محظور جغرافيًا"
+
+msgid "gray"
+msgstr "رمادي"
+
+msgid "green"
+msgstr "أخضر"
+
+msgid "hCaptcha already solved!"
+msgstr "تم حل hCaptcha مسبقًا!"
+
+msgid "hCaptcha not solved!"
+msgstr "لم يتم حل hCaptcha!"
+
+msgid "hCaptcha solved!"
+msgstr "تم حل hCaptcha!"
+
+msgid "hd"
+msgstr "عالي الدقة"
+
+msgid "high"
+msgstr "عالي"
+
+msgid "highest"
+msgstr "الأعلى"
+
+msgid "horizontal"
+msgstr "أفقي"
+
+msgid "host"
+msgstr "المضيف"
+
+msgid "host:"
+msgstr "المضيف:"
+
+msgid "https"
+msgstr "https"
+
+msgid "https - validate SSL certificates"
+msgstr "https - تحقق من شهادات SSL"
+
+msgid "iMPACT Wrestling"
+msgstr "iMPACT Wrestling"
+
+msgid "internal"
+msgstr "داخلي"
+
+msgid "jersey"
+msgstr "جيرسي"
+
+msgid "large"
+msgstr "كبير"
+
+msgid "leave movie player..."
+msgstr "الخروج من مشغل الفيديو..."
+
+msgid "lime"
+msgstr "ليموني"
+
+msgid "line"
+msgstr "سطر"
+
+msgid "live"
+msgstr "مباشر"
+
+msgid "login"
+msgstr "تسجيل الدخول"
+
+msgid "low"
+msgstr "منخفض"
+
+msgid "lowest"
+msgstr "الأدنى"
+
+msgid "main"
+msgstr "رئيسي"
+
+msgid "maroon"
+msgstr "خمري"
+
+msgid "medium"
+msgstr "متوسط"
+
+msgid "navy"
+msgstr "كحلي"
+
+msgid "olive"
+msgstr "زيتوني"
+
+msgid "password"
+msgstr "كلمة المرور"
+
+msgid "purple"
+msgstr "بنفسجي"
+
+msgid "quality"
+msgstr "الجودة"
+
+msgid "red"
+msgstr "أحمر"
+
+msgid "rootfs"
+msgstr "rootfs"
+
+msgid "rtmp"
+msgstr "rtmp"
+
+msgid "second"
+msgstr "ثانية"
+
+msgid "seconds"
+msgstr "ثوانٍ"
+
+msgid "shows"
+msgstr "عروض"
+
+msgid "silver"
+msgstr "فضي"
+
+msgid "small"
+msgstr "صغير"
+
+msgid "standard"
+msgstr "قياسي"
+
+msgid "teal"
+msgstr "أخضر مائل للأزرق"
+
+msgid "the best"
+msgstr "الأفضل"
+
+msgid "the highest"
+msgstr "الأعلى"
+
+msgid "the lowest"
+msgstr "الأدنى"
+
+msgid "the worst"
+msgstr "الأسوأ"
+
+msgid "top"
+msgstr "أعلى"
+
+msgid "trailer"
+msgstr "إعلان"
+
+msgid "unknown"
+msgstr "غير معروف"
+
+msgid "version"
+msgstr "الإصدار"
+
+msgid "vertical"
+msgstr "عمودي"
+
+msgid "very high"
+msgstr "عالٍ جدًا"
+
+#, python-format
+msgid "videos: %s"
+msgstr "الفيديوهات: %s"
+
+msgid "views"
+msgstr "المشاهدات"
+
+msgid "visit site"
+msgstr "زيارة الموقع"
+
+#, python-format
+msgid "wait %s second"
+msgstr "انتظر %s ثانية"
+
+#, python-format
+msgid "wait %s seconds"
+msgstr "انتظر %s ثوانٍ"
+
+msgid "white"
+msgstr "أبيض"
+
+msgid "www: "
+msgstr "رابط الموقع: "
+
+msgid "yellow"
+msgstr "أصفر"

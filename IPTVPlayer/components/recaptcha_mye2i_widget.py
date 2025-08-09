@@ -11,7 +11,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 ###################################################
 # FOREIGN import
 ###################################################
-from enigma import eConsoleAppContainer, eTimer
+from enigma import eConsoleAppContainer, eTimer, getDesktop
 from Screens.Screen import Screen
 from Components.Label import Label
 from Components.ActionMap import ActionMap
@@ -28,6 +28,20 @@ import base64
 
 
 class UnCaptchaReCaptchaMyE2iWidget(Screen):
+    skin = """
+        <screen position="center,center" title="UnCaptchaReCaptchaMyE2iWidget" size="500,300" resolution="1280,720" backgroundColor="#34111112" flags="wfNoBorder">
+            <eLabel name="BG_Title" position="0,0" size="500,50" backgroundColor="#100d0f16" zPosition="-1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,50" size="e,2" zPosition="2" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,260" size="e,2" zPosition="2" />
+            <ePixmap position="20,272" size="20,20" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" alphatest="blend" transparent="1" />
+            <widget name="label_red" position="54,268" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <widget name="title" position="10,14" size="e-10,30" foregroundColor="#0066ccff" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
+            <widget name="console" position="5,60" zPosition="2" size="490,200" font="Regular;24" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#001B5A91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" />
+        </screen>
+    """
+    fullHD = getDesktop(0).size().width() == 1920
+    if fullHD:
+        skin = skin.replace("/HD/", "/FHD/")
 
     def __init__(self, session, title, sitekey, referer, captchaType):
         self.session = session
@@ -36,39 +50,20 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
         self.referer = referer
         self.captchaType = captchaType
 
-        sz_w = 504  # getDesktop(0).size().width() - 190
-        sz_h = 300  # getDesktop(0).size().height() - 195
-        if sz_h < 500:
-            sz_h += 4
-        self.skin = """
-            <screen position="center,center" title="%s" size="%d,%d">
-             <ePixmap position="5,9"   zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
-
-             <widget name="label_red"    position="45,9"  zPosition="5" size="175,27" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-             <widget name="title"        position="5,47"  zPosition="1" size="%d,23" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
-             <widget name="console"      position="10,%d" zPosition="2" size="%d,160" valign="center" halign="center"   font="Regular;24" transparent="0" foregroundColor="white" backgroundColor="black"/>
-            </screen>""" % (
-            title,
-            sz_w, sz_h,                # size
-            GetIconDir('red' + '.png'),
-            sz_w - 135,                # size title
-            (sz_h - 160) / 2, sz_w - 20,  # console
-        )
-
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
 
-        self["title"] = Label(" ")
+        self["title"] = Label(title)
         self["console"] = Label(" ")
 
         self["label_red"] = Label(_("Cancel"))
 
-        self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],
-            {
-                "cancel": self.keyExit,
-                # "ok"    : self.keyOK,
-                "red": self.keyRed,
-            }, -2)
+        self["actions"] = ActionMap(["ColorActions", "OKCancelActions"],
+        {
+            "cancel": self.keyExit,
+            # "ok"    : self.keyOK,
+            "red": self.keyRed,
+        }, -2)
 
         self.workconsole = {'console': None, 'close_conn': None, 'stderr_conn': None, 'stdout_conn': None, 'stderr': '', 'stdout': ''}
         self.result = ''

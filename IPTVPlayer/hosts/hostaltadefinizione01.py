@@ -342,7 +342,7 @@ class Altadefinizione(CBaseHostClass):
             itemsList.append((_('Views'), tmp))
         tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<p', '>', 'date'), ('</p', '>'), False)[1])
         if tmp != '':
-            itemsList.append((_('Relese'), tmp))
+            itemsList.append((_('Release'), tmp))
 
         if title == '':
             title = cItem['title']

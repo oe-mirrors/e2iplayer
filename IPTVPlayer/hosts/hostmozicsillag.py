@@ -110,10 +110,10 @@ class MoziCsillag(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [
-                        {'category': 'list_filters', 'title': _('Filmek'), 'url': 'https://mozicsillag1.me/filmek-online/legfrissebb'},
-                        {'category': 'list_filters', 'title': _('Sorozatok'), 'url': 'https://mozicsillag1.me/sorozatok-online'},
-                        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Keresési előzmények')}
+                        {'category': 'list_filters', 'title': 'Filmek', 'url': 'https://mozicsillag1.me/filmek-online/legfrissebb'},
+                        {'category': 'list_filters', 'title': 'Sorozatok', 'url': 'https://mozicsillag1.me/sorozatok-online'},
+                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
+                        {'category': 'search_history', 'title': 'Keresési előzmények'}
                           ]
         self.listsTab(MAIN_CAT_TAB, {'name': 'category'})
 

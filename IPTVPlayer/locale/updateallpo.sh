@@ -37,7 +37,7 @@ $localgsed --in-place $Plugin-py.pot --expression=s/CHARSET/UTF-8/
 printf "Creating temporary file $Plugin-xml.pot\n"
 find $findoptions .. -name "*.xml" -exec python xml2po.py {} \+ > $Plugin-xml.pot
 printf "Merging pot files to create: $Plugin.pot\n"
-cat $Plugin-py.pot $Plugin-xml.pot | msguniq --no-wrap -o $Plugin.pot -
+cat $Plugin-py.pot $Plugin-xml.pot | msguniq --no-wrap --no-location -o $Plugin.pot -
 OLDIFS=$IFS
 IFS=" "
 for lang in "${languages[@]}" ; do

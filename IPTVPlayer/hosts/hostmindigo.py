@@ -24,7 +24,6 @@ from datetime import datetime
 from time import time
 
 import zlib
-import urllib
 import base64
 from hashlib import sha1, sha256
 from Components.config import config, ConfigText, getConfigListEntry
@@ -774,43 +773,43 @@ class MindiGoHU(CBaseHostClass):
         printDBG("MindiGoHU.listMTVAArch")
         try:
             params = dict(cItem)
-            params.update({"category": "list_m3videos", "title": _("Tévéfilmek és sorozatok"), "url": "A" + "M3-VMOpdsOpZmlsbWVrIMOpcyBzb3JvemF0b2s"})
+            params.update({"category": "list_m3videos", "title": "Tévéfilmek és sorozatok", "url": "A" + "M3-VMOpdsOpZmlsbWVrIMOpcyBzb3JvemF0b2s"})
             self.addDir(params)
 
             params = dict(cItem)
-            params.update({"category": "list_m3videos", "title": _("Családi filmek"), "url": "A" + "M3-Q3NhbMOhZGkgZmlsbWVr"})
+            params.update({"category": "list_m3videos", "title": "Családi filmek", "url": "A" + "M3-Q3NhbMOhZGkgZmlsbWVr"})
             self.addDir(params)
 
             params = dict(cItem)
-            params.update({"category": "list_m3videos", "title": _("Kabaré, vígjáték"), "url": "A" + "M3-S2FiYXLDqSwgdsOtZ2rDoXTDqWs"})
+            params.update({"category": "list_m3videos", "title": "Kabaré, vígjáték", "url": "A" + "M3-S2FiYXLDqSwgdsOtZ2rDoXTDqWs"})
             self.addDir(params)
 
             params = dict(cItem)
-            params.update({"category": "list_m3videos", "title": _("Romantikus"), "url": "A" + "M3-Um9tYW50aWt1cw"})
+            params.update({"category": "list_m3videos", "title": "Romantikus", "url": "A" + "M3-Um9tYW50aWt1cw"})
             self.addDir(params)
 
             params = dict(cItem)
-            params.update({"category": "list_m3videos", "title": _("Bűnügyi filmek és sorozatok"), "url": "A" + "M3-QsWxbsO8Z3lpIGZpbG1layDDqXMgc29yb3phdG9r"})
+            params.update({"category": "list_m3videos", "title": "Bűnügyi filmek és sorozatok", "url": "A" + "M3-QsWxbsO8Z3lpIGZpbG1layDDqXMgc29yb3phdG9r"})
             self.addDir(params)
 
             params = dict(cItem)
-            params.update({"category": "list_m3videos", "title": _("Játék és vetélkedő"), "url": "A" + "M3-SsOhdMOpayDDqXMgdmV0w6lsa2VkxZE"})
+            params.update({"category": "list_m3videos", "title": "Játék és vetélkedő", "url": "A" + "M3-SsOhdMOpayDDqXMgdmV0w6lsa2VkxZE"})
             self.addDir(params)
 
             params = dict(cItem)
-            params.update({"category": "list_m3videos", "title": _("Színház"), "url": "A" + "M3-U3rDrW5ow6F6"})
+            params.update({"category": "list_m3videos", "title": "Színház", "url": "A" + "M3-U3rDrW5ow6F6"})
             self.addDir(params)
 
             params = dict(cItem)
-            params.update({"category": "list_m3videos", "title": _("Ismeretterjesztő"), "url": "A" + "M3-SXNtZXJldHRlcmplc3p0xZE"})
+            params.update({"category": "list_m3videos", "title": "Ismeretterjesztő", "url": "A" + "M3-SXNtZXJldHRlcmplc3p0xZE"})
             self.addDir(params)
 
             params = dict(cItem)
-            params.update({"category": "list_m3videos", "title": _("Zene"), "url": "A" + "M3-WmVuZQ"})
+            params.update({"category": "list_m3videos", "title": "Zene", "url": "A" + "M3-WmVuZQ"})
             self.addDir(params)
 
             params = dict(cItem)
-            params.update({"category": "list_m3videos", "title": _("Mesék"), "url": "A" + "M3-TWVzw6lr"})
+            params.update({"category": "list_m3videos", "title": "Mesék", "url": "A" + "M3-TWVzw6lr"})
             self.addDir(params)
 
             params = dict(cItem)

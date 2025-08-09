@@ -269,7 +269,7 @@ config.plugins.iptvplayer.camstreams = ConfigYesNo(default=True)
 config.plugins.iptvplayer.anacams = ConfigYesNo(default=True)
 config.plugins.iptvplayer.fotka_pl_kamerki = ConfigYesNo(default=True)
 config.plugins.iptvplayer.xhamsterlive = ConfigYesNo(default=True)
-config.plugins.iptvplayer.showup = ConfigYesNo(default=False)
+config.plugins.iptvplayer.showup = ConfigYesNo(default=True)
 config.plugins.iptvplayer.cam_sex = ConfigYesNo(default=True)
 
 

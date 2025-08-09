@@ -42,10 +42,10 @@ class NonstopMozi(CBaseHostClass):
         return szoveg
 
     def listMainMenu(self, cItem):
-        MAIN_CAT_TAB = [{'category': 'list_categories', 'title': _('Filmek')},
-        {'category': 'list_categories', 'title': _('Sorozatok')},
-        {'category': 'search', 'title': _('Keresés'), 'search_item': True},
-        {'category': 'search_history', 'title': _('Keresési előzmények')}]
+        MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Filmek'},
+        {'category': 'list_categories', 'title': 'Sorozatok'},
+        {'category': 'search', 'title': 'Keresés', 'search_item': True},
+        {'category': 'search_history', 'title': 'Keresési előzmények'}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, title):
@@ -96,7 +96,7 @@ class NonstopMozi(CBaseHostClass):
             params = {'category': 'explore_item', 'title': title, 'url': url, 'icon': icon}
             self.addDir(params)
         if nextPage:
-            params = {'category': 'list_items', 'title': _("Következő oldal"), 'page': page + 1, 'url': lasturl}
+            params = {'category': 'list_items', 'title': "Következő oldal", 'page': page + 1, 'url': lasturl}
             self.addDir(params)
 
     def exploreItem(self, cItem):

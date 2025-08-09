@@ -1,0 +1,4026 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-09 11:41+0200\n"
+"PO-Revision-Date: 2025-06-29 16:00+0200\n"
+"Last-Translator: Warder <ciksa@seznam.cz>\n"
+"Language-Team: \n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.6\n"
+
+#, python-format
+msgid "\tDisk space available: %s"
+msgstr "\tDostupné miesto na disku: %s"
+
+#, python-format
+msgid "\tDisk space required: %s"
+msgstr "\tPožadované miesto na disku: %s"
+
+msgid ""
+"\n"
+"Error[1]."
+msgstr ""
+"\n"
+"Chyba[1]."
+
+msgid ""
+"\n"
+"Error[2]."
+msgstr ""
+"\n"
+"Chyba[2]."
+
+msgid ""
+"\n"
+"Error[3]."
+msgstr ""
+"\n"
+"Chyba[3]."
+
+msgid ""
+"\n"
+"Error[4]."
+msgstr ""
+"\n"
+"Chyba[4]."
+
+msgid ""
+"\n"
+"Make sure you are using the latest version of the plugin."
+msgstr ""
+"\n"
+"Uistite sa, že používate najnovšiu verziu doplnku."
+
+msgid ""
+"\n"
+"This host is not integral part of the E2iPlayer plugin.\n"
+"It is not supported by E2iPlayer team."
+msgstr ""
+"\n"
+"Tento hostiteľ nie je neoddeliteľnou súčasťou doplnku E2iPlayer.\n"
+"Tím E2iPlayer ho nepodporuje."
+
+msgid ""
+"\n"
+"You can also report problem here: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+msgstr ""
+"\n"
+"Problém môžete nahlásiť aj tu: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+
+msgid "    *    Votes: "
+msgstr "    *    Hlasy: "
+
+msgid "    Audio buffer size [KB]"
+msgstr "    Veľkosť vyrovnávacej pamäte zvuku [KB]"
+
+msgid "    Background color"
+msgstr "    Farba pozadia"
+
+msgid "    Default suggestions provider"
+msgstr "    Predvolený poskytovateľ návrhov"
+
+msgid "    Enable hosts groups"
+msgstr "    Povolenie skupín hostiteľov"
+
+msgid "    Number of columns"
+msgstr "    Počet stĺpcov"
+
+msgid "    Number of rows"
+msgstr "    Počet riadkov"
+
+msgid "    Remove thumbnails"
+msgstr "    Odstránenie miniatúr"
+
+msgid "    Service icon size"
+msgstr "    Veľkosť ikony služby"
+
+msgid "    Show suggestions"
+msgstr "    Zobraziť návrhy"
+
+msgid "    Video buffer size [MB]"
+msgstr "    Veľkosť vyrovnávacej pamäte videa [MB]"
+
+#, python-format
+msgid " (planned %s)"
+msgstr " (plánované %s)"
+
+msgid " - others links"
+msgstr " - ďalšie odkazy"
+
+msgid " Login Protected."
+msgstr " Prihlásenie chránené."
+
+msgid " Private Show."
+msgstr " Súkromná show."
+
+msgid " This video is a private."
+msgstr " Toto video je súkromné."
+
+msgid " or "
+msgstr " alebo "
+
+#, python-format
+msgid "\"%s\" Virtual Keyboard layout not available."
+msgstr "Rozloženie virtuálnej klávesnice \"%s\" nie je k dispozícii."
+
+msgid "\"Web\" streams player"
+msgstr "Prehrávač streamov \"Web\""
+
+#, python-format
+msgid "%s - service overview"
+msgstr "%s - prehľad služieb"
+
+#, python-format
+msgid "%s - subtitles provider"
+msgstr "%s - poskytovateľ titulkov"
+
+#, python-format
+msgid "%s - trailer"
+msgstr "%s - príves"
+
+#, python-format
+msgid "%s API KEY"
+msgstr "%s KĽÚČ API"
+
+#, python-format
+msgid "%s device name"
+msgstr "%s názov zariadenia"
+
+#, python-format
+msgid "%s download manager"
+msgstr "Správca sťahovania %s"
+
+#, python-format
+msgid "%s e-mail"
+msgstr "%s e-mailu"
+
+#, python-format
+msgid "%s episodes"
+msgstr "%s epizód"
+
+#, python-format
+msgid "%s file is %d KB in size. Last %d lines are:"
+msgstr "%s súbor má veľkosť %d kB. Posledné %d riadky sú:"
+
+#, python-format
+msgid "%s file is %d MB in size. Last %d lines are:"
+msgstr "%s súbor má veľkosť %d MB. Posledné %d riadky sú:"
+
+#, python-format
+msgid "%s followers"
+msgstr "%s sledovateľov"
+
+#, python-format
+msgid "%s has been protected with google recaptcha v2. You can try to use API version."
+msgstr "%s bol chránený službou Google Recaptcha v2. Môžete skúsiť použiť verziu rozhrania API."
+
+#, python-format
+msgid "%s minutes"
+msgstr "%s minúty"
+
+#, python-format
+msgid "%s password"
+msgstr "%s heslo"
+
+#, python-format
+msgid "%s returned %s: %s"
+msgstr "%s vrátený %s: %s"
+
+#, python-format
+msgid "%s s%se%s"
+msgstr "%s s%se%s"
+
+#, python-format
+msgid "%s said: This page is currently unavailable in your region"
+msgstr "%s povedal: Táto stránka momentálne nie je k dispozícii vo vašom regióne"
+
+#, python-format
+msgid "%s services configuration"
+msgstr "Konfigurácia služieb %s"
+
+#, python-format
+msgid "%s shows"
+msgstr "%s relácií"
+
+#, python-format
+msgid "%s subtitles download - how to"
+msgstr "%s stiahnutie titulkov - ako"
+
+#, python-format
+msgid "%s timeout."
+msgstr "%s časový limit."
+
+#, python-format
+msgid ""
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+" Host country: %s, your country: %s"
+msgstr ""
+"%s používa opatrenia \"geografického blokovania\", aby vám zabránil v prístupe k službám zo zahraničia.\n"
+" Hostiteľská krajina: %s, vaša krajina: %s"
+
+#, python-format
+msgid "%s viewers"
+msgstr "%s divákov"
+
+#, python-format
+msgid "%s views"
+msgstr "%s zobrazenia"
+
+#, python-format
+msgid "%s/10"
+msgstr "%s/10"
+
+msgid "++"
+msgstr "++"
+
+msgid "--"
+msgstr "--"
+
+msgid "-- OK --"
+msgstr "-- Dobre --"
+
+msgid "----- BASIC CONFIGURATION -----"
+msgstr "----- ZÁKLADNÁ KONFIGURÁCIA -----"
+
+msgid "----- BUFFERING CONFIGURATION -----"
+msgstr "----- KONFIGURÁCIA UKLADANIA DO VYROVNANEJ BUFFERINGU -----"
+
+msgid "----- CAPTCHA CONFIGURATION -----"
+msgstr "----- KONFIGURÁCIA CAPTCHA -----"
+
+msgid "----- DOWNLOADING CONFIGURATION -----"
+msgstr "----- STIAHNUTIE KONFIGURÁCIE -----"
+
+msgid "----- OTHER SETTINGS -----"
+msgstr "----- ĎALŠIE NASTAVENIA -----"
+
+msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
+msgstr "----- KONFIGURÁCIA PREHRÁVAČOV A PREHRÁVANIA -----"
+
+msgid "----- PROXIES CONFIGURATION -----"
+msgstr "----- KONFIGURÁCIA PROXY SERVEROV -----"
+
+msgid "----- SECURITY CONFIGURATION -----"
+msgstr "----- KONFIGURÁCIA BEZPEČNOSTI -----"
+
+msgid "----- SERVICE CONFIGURATION -----"
+msgstr "----- KONFIGURÁCIA SLUŽBY -----"
+
+msgid "----- SKIN CONFIGURATION -----"
+msgstr "----- KONFIGURÁCIA SKINU -----"
+
+msgid "----- STORAGE CONFIGURATION -----"
+msgstr "----- KONFIGURÁCIA ÚLOŽISKA -----"
+
+msgid "----- SUBTITLES CONFIGURATION -----"
+msgstr "----- KONFIGURÁCIA TITULKOV -----"
+
+msgid "----------------- External exteplayer3 options -----------------"
+msgstr "----------------- Možnosti externého prehrávača3 -----------------"
+
+msgid "----------Other----------"
+msgstr "----------Iný----------"
+
+msgid "--All Episodes--"
+msgstr "--Všetky epizódy --"
+
+msgid "--All--"
+msgstr "--Všetko--"
+
+msgid "--Any--"
+msgstr "--Akýkoľvek--"
+
+msgid "--Other--"
+msgstr "--Iný--"
+
+msgid "12 hour format"
+msgstr "12-hodinový formát "
+
+msgid "16:10 Letterbox"
+msgstr "16:10 Letterbox"
+
+msgid "16:10 PanScan"
+msgstr "16:10 PanScan"
+
+msgid "16:9"
+msgstr "16: 9"
+
+msgid "16:9 Letterbox"
+msgstr "16:9 Letterbox"
+
+msgid "16:9 always"
+msgstr "16:9 vždy"
+
+msgid "24 hour format"
+msgstr "24-hodinový formát "
+
+msgid "4:3 Letterbox"
+msgstr "4:3 Letterbox"
+
+msgid "4:3 PanScan"
+msgstr "4:3 PanScan"
+
+msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
+msgstr "<font color=\"#FE642E\">PAMÄTAŤ:</font> E2iPlayer <b>JE IBA</b> špecializovaný webový prehliadač. <b>NIE JE</b> hostiteľom žiadnych materiálov!!!</font>"
+
+msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgstr "Na sledovanie streamov aplikácie BBC iPlayer je potrebná TV licencia, ďalšie informácie nájdete na webovej lokalite BBC: https://www.bbc.co.uk/iplayer/help/tvlicence"
+
+msgid "A-Z"
+msgstr "A-Z"
+
+msgid "AAC downmix mode"
+msgstr "Režim downmixu AAC"
+
+msgid "ABORTED"
+msgstr "PRERUŠENÁ"
+
+msgid "AC3 downmix mode"
+msgstr "Režim downmixu AC3"
+
+msgid "ALBUMS"
+msgstr "ALBUMY"
+
+msgid "API initialization failed!"
+msgstr "Inicializácia rozhrania API zlyhala!"
+
+msgid "ARTISTS"
+msgstr "UMELCOV"
+
+msgid "ATTENTION !"
+msgstr "POZOR!"
+
+msgid "AZ"
+msgstr "AZ"
+
+msgid "Accept"
+msgstr "Súhlasím"
+
+msgid "Access Forbidden"
+msgstr "Prístup zakázaný"
+
+msgid "Access denied. Please check password."
+msgstr "Prístup bol odmietnutý. Skontrolujte heslo."
+
+msgid "Active host"
+msgstr "Aktívny hostiteľ"
+
+msgid "Actors:"
+msgstr "Aktérov:"
+
+#, python-format
+msgid "Add host %s to group"
+msgstr "Pridanie %s hostiteľa do skupiny"
+
+msgid "Add item to favourites"
+msgstr "Pridanie položky do obľúbených"
+
+msgid "Add item to group"
+msgstr "Pridanie položky do skupiny"
+
+msgid "Add new group"
+msgstr "Pridať novú skupinu"
+
+msgid "Add new group of favourites"
+msgstr "Pridanie novej skupiny obľúbených položiek"
+
+msgid "Add to downloader"
+msgstr "Pridať do sťahovača"
+
+#, python-format
+msgid "Added by: %s, directory: %s"
+msgstr "Pridal: %s, adresár: %s"
+
+msgid "Age-gate bypass:"
+msgstr "Vekový obtok:"
+
+msgid "Airing"
+msgstr "Vetranie"
+
+msgid "All"
+msgstr "Všetko"
+
+msgid "All A-Z"
+msgstr "Všetky A – Z"
+
+msgid "All Leagues"
+msgstr "Všetky ligy"
+
+msgid "All Platforms"
+msgstr "Všetky platformy"
+
+msgid "All Sports"
+msgstr "Všetky športy"
+
+msgid "All in one"
+msgstr "Všetko v jednom"
+
+msgid "All materials"
+msgstr "Všetky materiály"
+
+msgid "All streams"
+msgstr "Všetky streamy"
+
+msgid "All time"
+msgstr "Po celú dobu"
+
+msgid "Allow VP9 codec:"
+msgstr "Povoliť kodek VP9:"
+
+msgid "Allow dash format:"
+msgstr "Povoliť formát pomlčky:"
+
+msgid "Allow hls format"
+msgstr "Povoliť formát hls"
+
+msgid "Allow watched flag to be set"
+msgstr "Povoliť nastavenie sledovaného príznaku"
+
+msgid "Alphabet"
+msgstr "Abeceda"
+
+msgid "Alphabetical "
+msgstr "Abecedne "
+
+msgid "Alphabetically"
+msgstr "Abecedne"
+
+msgid "Alternative"
+msgstr "Alternatívne"
+
+msgid "Alternative domain:"
+msgstr "Alternatívna doména:"
+
+msgid "Alternative geolocation IP 1:"
+msgstr "Alternatívna geolokácia IP 1:"
+
+msgid "Alternative geolocation IP 2:"
+msgstr "Alternatívna geolokácia IP 2:"
+
+msgid "Alternative proxy server (1)"
+msgstr "Alternatívny proxy server (1)"
+
+msgid "Alternative proxy server (2)"
+msgstr "Alternatívny proxy server (2)"
+
+msgid "Always"
+msgstr "Vždy"
+
+#, python-format
+msgid ""
+"An error occurred when try to sign in the user \"%s.\n"
+"Please check your login credentials and try again later...\""
+msgstr ""
+"Pri pokuse o prihlásenie používateľa \"%s\" sa vyskytla chyba.\n"
+"Skontrolujte svoje prihlasovacie údaje a skúste to znova neskôr...\""
+
+#, python-format
+msgid "An error occurred while loading a subtitle from [%s]."
+msgstr "Pri načítavaní titulkov z [%s] sa vyskytla chyba."
+
+#, python-format
+msgid "An error occurred while writing into: %s"
+msgstr "Pri zápise do: %s"
+
+msgid "Anatomy"
+msgstr "Anatómia"
+
+msgid "Animation"
+msgstr "Animácia"
+
+msgid "Animations"
+msgstr "Animácie"
+
+msgid "Anime"
+msgstr "Anime"
+
+msgid "Anime Search"
+msgstr "Vyhľadávanie anime"
+
+msgid "Anime list"
+msgstr "Zoznam anime"
+
+msgid "Answer"
+msgstr "Odpoveď"
+
+msgid "Any"
+msgstr "Akýkoľvek"
+
+msgid "Apply"
+msgstr "Použiť"
+
+msgid "Approaches"
+msgstr "Priblíženia"
+
+msgid "Arabic"
+msgstr "Arabčina"
+
+msgid "Arabic movies"
+msgstr "Arabské filmy"
+
+msgid "Archive"
+msgstr "Archív"
+
+msgid "Archives"
+msgstr "Archívy"
+
+#, fuzzy
+msgid "Are you sure you want to delete search history?"
+msgstr "Naozaj chcete odstrániť súbor \"%s\"?"
+
+#, python-format
+msgid "Are you sure you want to remove file \"%s\"?"
+msgstr "Naozaj chcete odstrániť súbor \"%s\"?"
+
+msgid "Artists"
+msgstr "Skupina"
+
+msgid "Ask"
+msgstr "Opýtať sa"
+
+msgid "Aspect"
+msgstr "Oblasť"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "Audio tracks"
+msgstr "Zvukové stopy"
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "Auto selection based on the settings"
+msgstr "Automatický výber na základe nastavení"
+
+msgid "Auto start method"
+msgstr "Metóda automatického spustenia"
+
+msgid "Auto-translate"
+msgstr "Automatický preklad"
+
+msgid "Automatically turn on external subtitles"
+msgstr "Automatické zapínanie externých titulkov"
+
+msgid "Autoplay start delay"
+msgstr "Oneskorenie spustenia automatického prehrávania"
+
+msgid "BY DAY"
+msgstr "CEZ DEŇ"
+
+msgid "Balkans"
+msgstr "Balkán"
+
+msgid "Basic Science"
+msgstr "Základná veda"
+
+msgid "Best Pinkbike Videos"
+msgstr "Najlepšie videá Pinkbike"
+
+#, python-format
+msgid "Bitrate: %s"
+msgstr "Bitová rýchlosť: %s"
+
+msgid "Black"
+msgstr "Čierna"
+
+msgid "Black iframe file"
+msgstr "Čierny súbor iframe"
+
+msgid "Block wmv files"
+msgstr "Blokovanie súborov wmv"
+
+msgid "Board Review"
+msgstr "Preskúmanie predstavenstva"
+
+msgid "Brand"
+msgstr "Značka"
+
+#, python-format
+msgid "Broadcast begins at %s"
+msgstr "Vysielanie začína o %s"
+
+#, python-format
+msgid "Broadcaster: %s"
+msgstr "Vysielateľ: %s"
+
+msgid "Browse"
+msgstr "Prehľadávať"
+
+msgid "Browse videos"
+msgstr "Prehliadanie videí"
+
+msgid "Browse youtube trending feeds"
+msgstr "Prehliadanie populárnych informačných kanálov na youtube"
+
+msgid "Buffering location"
+msgstr "Umiestnenie vyrovnávacej pamäte"
+
+msgid "By media title"
+msgstr "Podľa názvu média"
+
+msgid "By year"
+msgstr "Podľa roku"
+
+msgid "Bypass geo-blocking for VODs (it may be illegal):"
+msgstr "Obídenie geografického blokovania videí na vyžiadanie (môže byť nezákonné):"
+
+msgid "CHANNELS "
+msgstr "KANÁLY "
+
+msgid "CME SAE"
+msgstr "CME SAE"
+
+msgid "COMMENTS"
+msgstr "Komentáre"
+
+msgid "Calendar"
+msgstr "Kalendár"
+
+#, python-format
+msgid ""
+"Can not get mount points - cmd mount failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Nie je možné získať montážne body - montáž cmd zlyhala.\n"
+"Návratový kód[%s].\n"
+"Vrátenie údajov[%s]."
+
+msgid "Cancel"
+msgstr "Zrušiť"
+
+msgid "Captcha"
+msgstr "Captcha"
+
+msgid ""
+"Captcha solved.\n"
+"Waiting for notification."
+msgstr ""
+"Captcha vyriešené.\n"
+"Čaká sa na oznámenie."
+
+msgid "Captcha solving service"
+msgstr "Služba riešenia problémov Captcha"
+
+msgid "Cartoon list"
+msgstr "Zoznam karikatúr"
+
+msgid "Cartoons and anime"
+msgstr "Karikatúry a anime"
+
+msgid "Catch up"
+msgstr "Catch-up"
+
+msgid "Categories"
+msgstr "Kategórie"
+
+msgid "Change active movie player"
+msgstr "Zmena aktívneho prehrávača filmov"
+
+msgid "Channel"
+msgstr "Kanál"
+
+#, python-format
+msgid "Channel: %s"
+msgstr "Kanál: %s"
+
+msgid "Channels"
+msgstr "Kanály"
+
+msgid "Channles"
+msgstr "Channles"
+
+msgid "Children"
+msgstr "Deti"
+
+msgid "Cinema movies"
+msgstr "Kino filmy"
+
+msgid "Clear"
+msgstr "Vyčistiť"
+
+msgid "Click"
+msgstr "Kliknúť"
+
+msgid "Clip"
+msgstr "Pripnúť"
+
+msgid "Clips"
+msgstr "Klipy"
+
+msgid "Closing. Please wait..."
+msgstr "Uzatvárací. Prosím počkajte..."
+
+msgid "Collected streams only"
+msgstr "Iba zozbierané streamy"
+
+msgid "Collections"
+msgstr "Zbierky"
+
+msgid "Comedies"
+msgstr "Komédie"
+
+msgid "Coming up"
+msgstr "Pripravujeme sa"
+
+msgid "Commits"
+msgstr "Zaväzuje"
+
+msgid "Configuration"
+msgstr "Konfigurácia"
+
+#, python-format
+msgid "Configuration [%s] service"
+msgstr "Konfigurácia služby [%s]"
+
+#, python-format
+msgid "Configure %s"
+msgstr "Konfigurácia %s"
+
+msgid "Configure host"
+msgstr "Konfigurácia hostiteľa"
+
+msgid "Configuring an external movie player"
+msgstr "Konfigurácia externého prehrávača filmov"
+
+msgid "Confirm new pin"
+msgstr "Potvrďte nový PIN kód"
+
+msgid "Confirm the title of the movie"
+msgstr "Potvrďte názov filmu"
+
+msgid "Confirmation error."
+msgstr "Chyba potvrdenia."
+
+msgid "Connection to server failed!"
+msgstr "Pripojenie k serveru zlyhalo!"
+
+msgid "Continue downloading"
+msgstr "Pokračovať v sťahovaní"
+
+msgid "Copy"
+msgstr "Kopírovať"
+
+#, python-format
+msgid "Count: %s"
+msgstr "Počet: %s"
+
+msgid "Countries"
+msgstr "Krajiny"
+
+msgid "Country"
+msgstr "Krajina"
+
+msgid "Create LCD/VFD summary screen"
+msgstr "Vytvorenie obrazovky súhrnu LCD/VFD"
+
+msgid "Critical Error - cookie can't be saved!"
+msgstr "Kritická chyba - súbor cookie nie je možné uložiť!"
+
+msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr "Kritická chyba - gzip kódovania obsahu nie je možné spracovať!"
+
+msgid "Curator"
+msgstr "Kurátor"
+
+msgid "Cut"
+msgstr "Vystrihnúť"
+
+msgid "DASH/mpd"
+msgstr "DASH/mpd"
+
+msgid "DATE"
+msgstr "Dátum"
+
+msgid "DOWNLOAD ERROR"
+msgstr "Chyba sťahovania: Žiadna odpoveď, skúste to znova"
+
+msgid "DOWNLOADED"
+msgstr "STIAHNUTÉ"
+
+msgid "DOWNLOADING"
+msgstr "Sťahovanie"
+
+msgid "DRM protected streams are not supported."
+msgstr "Prúdy údajov chránené technológiou DRM nie sú podporované."
+
+msgid "DRM protection detected."
+msgstr "Zistená ochrana DRM."
+
+msgid "Darkgray"
+msgstr "Tmavo-sivá"
+
+msgid "Data mismatch."
+msgstr "Nesúlad údajov."
+
+msgid "Debug file does not exist - nothing to delete"
+msgstr "Ladiaci súbor neexistuje - nič na odstránenie"
+
+msgid "Debug file does not exist - nothing to download"
+msgstr "Ladiaci súbor neexistuje - nič na stiahnutie"
+
+msgid "Debug file has been deleted"
+msgstr "Ladiaci súbor bol odstránený"
+
+msgid "Debug logs"
+msgstr "Denníky ladenia"
+
+msgid "Debug option is disabled - nothing to display"
+msgstr "Možnosť ladenia je zakázaná - nič na zobrazenie"
+
+msgid "Debug option set to console - nothing to display"
+msgstr "Možnosť ladenia nastavená na konzolu - nič na zobrazenie"
+
+msgid "Debug option set to debugfile, but file does not exist - nothing to display"
+msgstr "Možnosť ladenia nastavená na ladeniesúbor, ale súbor neexistuje - nič na zobrazenie"
+
+#, python-format
+msgid "Decode file [%s] problem."
+msgstr "Problém s dekódovaním súboru [%s]."
+
+msgid "Decrypt Signatures Error"
+msgstr "Chyba dešifrovania podpisov"
+
+msgid "Default"
+msgstr "Predvolený"
+
+msgid "Default captcha bypass"
+msgstr "Predvolený obtok captcha"
+
+msgid "Default video aspect ratio"
+msgstr "Predvolený pomer strán videa"
+
+msgid "Default video policy for 16:9"
+msgstr "Predvolená politika pre video s pomerom strán 16:9"
+
+msgid "Default video policy for 4:3"
+msgstr "Predvolená politika videa pre 4:3"
+
+msgid "Default video quality"
+msgstr "Predvolená kvalita videa"
+
+msgid "Default video quality:"
+msgstr "Predvolená kvalita videa:"
+
+msgid "Definitely remove from favorites?"
+msgstr "Určite odstrániť z obľúbených?"
+
+msgid "Delete"
+msgstr "Odstrániť"
+
+msgid "Delete log file"
+msgstr "Odstránenie súboru denníka"
+
+#, fuzzy
+msgid "Delete search history"
+msgstr "História vyhľadávania"
+
+msgid "Description:"
+msgstr "Popis:"
+
+msgid "Deutsch"
+msgstr "Nemecky"
+
+msgid "Developers: "
+msgstr "Vývojári: "
+
+msgid "Director:"
+msgstr "Režisér:"
+
+msgid "Directors:"
+msgstr "Riaditeľov:"
+
+#, python-format
+msgid "Directory \"%s\" does not exists."
+msgstr "Adresár \"%s\" neexistuje."
+
+msgid "Disable"
+msgstr "Vypnúť"
+
+msgid "Disable live at plugin start"
+msgstr "Zakázať naživo pri spustení pluginu"
+
+msgid "Disable not used services"
+msgstr "Zakázať nepoužívané služby"
+
+msgid "Disable reordering"
+msgstr "Vypnutie zmeny poradia"
+
+msgid "Disable reordering mode"
+msgstr "Zakázať režim zmeny poradia"
+
+msgid "Disable/Enable groups"
+msgstr "Zakázať/povoliť skupiny"
+
+msgid "Disable/Enable services"
+msgstr "Zakázať/povoliť služby"
+
+msgid "Discover"
+msgstr "Preskúmajte okolie"
+
+msgid "Display thumbnails"
+msgstr "Zobraziť miniatúry"
+
+msgid "DixMax Suggestions"
+msgstr "Návrhy DixMax"
+
+msgid "Do you want to finish?"
+msgstr "Chcete dokončiť?"
+
+msgid "Documentaries"
+msgstr "Dokumentárne"
+
+msgid "Documentary"
+msgstr "Dokumentárny film"
+
+msgid "Download"
+msgstr "Stiahnuť"
+
+#, python-format
+msgid "Download \"%s\" in to \"%s\" failed!"
+msgstr "Stiahnutie súboru „%s“ do „%s“ zlyhalo!"
+
+#, python-format
+msgid "Download %s"
+msgstr "Stiahnuť %s"
+
+msgid "Download again"
+msgstr "Stiahnuť znova"
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+" Incorrect address ('%r')."
+msgstr ""
+"Preberanie sa nedá spustiť.\n"
+" Nesprávna adresa (\"%r\")."
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Downloader %s not working correctly.\n"
+"Last error \"%s (%s)\"."
+msgstr ""
+"Preberanie sa nedá spustiť.\n"
+"Downloader %s nefunguje správne.\n"
+"Posledná chyba \"%s (%s)\"."
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Downloader %s not working correctly.\n"
+"Status[%s]"
+msgstr ""
+"Preberanie sa nedá spustiť.\n"
+"Downloader %s nefunguje správne.\n"
+"Stav[%s]"
+
+#, python-format
+msgid ""
+"Download can not be started.\n"
+"Incorrect address \"%r\"."
+msgstr ""
+"Preberanie sa nedá spustiť.\n"
+"Nesprávna adresa \"%r\"."
+
+#, python-format
+msgid ""
+"Download failed.\n"
+"Last error \"%s (%s)\"."
+msgstr ""
+"Sťahovanie zlyhalo.\n"
+"Posledná chyba \"%s (%s)\"."
+
+#, python-format
+msgid ""
+"Download failed.\n"
+"Status[%s]"
+msgstr ""
+"Sťahovanie zlyhalo.\n"
+"Stav[%s]"
+
+msgid "Download log file"
+msgstr "Stiahnuť súbor denníka"
+
+msgid "Download manager"
+msgstr "Správca na preberanie"
+
+msgid "Download manager is not initialized"
+msgstr "Správca sťahovania nie je inicializovaný"
+
+msgid "Download subtiles failed."
+msgstr "Sťahovanie subdlaždíc zlyhalo."
+
+msgid "Download suggested"
+msgstr "Stiahnuť navrhované"
+
+msgid "Downloading"
+msgstr "Sťahovanie"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" Downloader %s does not work properly.\n"
+"Status[%s]"
+msgstr ""
+"Preberanie nie je možné spustiť.\n"
+" Downloader %s nefunguje správne.\n"
+"Stav[%s]"
+
+#, python-format
+msgid ""
+"Downloading can not be started.\n"
+" The address ('%r') is incorrect."
+msgstr ""
+"Preberanie nie je možné spustiť.\n"
+" Adresa (\"%r\") je nesprávna."
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Downloader [%s] not working properly.\n"
+" Status[%s]"
+msgstr ""
+"Preberanie sa nedá spustiť.\n"
+" Downloader [%s] nefunguje správne.\n"
+" Stav[%s]"
+
+#, python-format
+msgid ""
+"Downloading cannot be started.\n"
+" Invalid URI[%s]."
+msgstr ""
+"Preberanie sa nedá spustiť.\n"
+" Neplatný identifikátor URI[%s]."
+
+#, python-format
+msgid "Downloading file [%s] problem."
+msgstr "Problém so sťahovaním súboru [%s]."
+
+#, python-format
+msgid ""
+"Downloading file:\n"
+"%r."
+msgstr ""
+"Sťahovanie súboru:\n"
+"%r."
+
+#, python-format
+msgid ""
+"Downloading subtitles.\n"
+" ('%r')."
+msgstr ""
+"Sťahovanie titulkov.\n"
+" ('%r')."
+
+msgid "Downloads"
+msgstr "Na stiahnutie"
+
+msgid "Downloads location"
+msgstr "Umiestnenie sťahovaných súborov"
+
+msgid "Dramas"
+msgstr "Drámy"
+
+msgid "Duration"
+msgstr "Trvanie"
+
+msgid "Duration:"
+msgstr "Trvanie:"
+
+#, python-format
+msgid "Duration: %s"
+msgstr "Doba trvania: %s"
+
+msgid "E-mail: "
+msgstr "E-mail: "
+
+msgid "E2iPlayer - settings"
+msgstr "E2iPlayer - nastavenia"
+
+msgid "E2iPlayer auto start at Enigma2 start"
+msgstr "Automatické spustenie E2iPlayeru pri spustení Enigmy2"
+
+msgid "E2iPlayer enable/disabled groups"
+msgstr "Skupiny s povolenou/vypnutou aplikáciou E2iPlayer"
+
+msgid "ERROR:"
+msgstr "CHYBA:"
+
+msgid ""
+"ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
+"Please check if gstreamer plugins are available in your system."
+msgstr ""
+"CHYBA: potrubie sa nepodarilo skonštruovať: žiadny prvok \"playbin2\" \n"
+"Skontrolujte, či sú vo vašom systéme k dispozícii doplnky gstreamer."
+
+msgid "Edit favourites"
+msgstr "Úprava obľúbených položiek"
+
+msgid "Educational Animation"
+msgstr "Vzdelávacia animácia"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Enable"
+msgstr "Povoliť"
+
+msgid "Enable reordering"
+msgstr "Povoliť zmenu poradia"
+
+msgid "Enable reordering mode"
+msgstr "Povoliť režim zmeny poradia"
+
+#, python-format
+msgid ""
+"Encryption function body extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Šifrovacia funkcia extrakcie tela zlyhala!\n"
+"Nahláste problém %s"
+
+#, python-format
+msgid ""
+"Encryption function name extraction failed!\n"
+"Please report the problem to %s"
+msgstr ""
+"Extrakcia názvu šifrovacej funkcie zlyhala!\n"
+"Nahláste problém %s"
+
+msgid "English"
+msgstr "Angličtina"
+
+msgid "Enter a value"
+msgstr "Zadajte hodnotu"
+
+msgid "Enter name"
+msgstr "Zadajte meno"
+
+msgid "Enter new pin"
+msgstr "Zadajte nový PIN kód"
+
+msgid "Enter old pin"
+msgstr "Zadajte starý špendlík"
+
+msgid "Enter pin"
+msgstr "Zadajte PIN kód"
+
+msgid "Enter the text"
+msgstr "Zadajte text"
+
+msgid "Entitlement parsing error."
+msgstr "Chyba analýzy oprávnení."
+
+msgid "Episode"
+msgstr "Epizóda"
+
+msgid "Episode Search"
+msgstr "Vyhľadávanie epizód"
+
+msgid "Episode title"
+msgstr "Názov epizódy"
+
+msgid "Episodes"
+msgstr "Epizódy"
+
+#, python-format
+msgid "Error code: %s\n"
+msgstr "Kód chyby: %s\n"
+
+#, python-format
+msgid ""
+"Error code: %s\n"
+"Error message: %s"
+msgstr ""
+"Kód chyby: %s\n"
+"Chybové hlásenie: %s"
+
+msgid "Error communicating with the server."
+msgstr "Chyba pri komunikácii so serverom."
+
+#, python-format
+msgid "Error deleting file \"%s\".\n"
+msgstr "Chyba pri odstraňovaní súboru \"%s\".\n"
+
+msgid "Error during deletion of the debug file."
+msgstr "Chyba počas odstraňovania ladiaceho súboru."
+
+#, python-format
+msgid ""
+"Error message: \"%s\".\n"
+"Error code: \"%s\"."
+msgstr ""
+"Chybové hlásenie: \"%s\".\n"
+"Kód chyby: \"%s\"."
+
+#, python-format
+msgid "Error message: %s\n"
+msgstr "Chybové hlásenie: %s\n"
+
+msgid "Error occurs"
+msgstr "Vyskytne sa chyba"
+
+msgid "Error occurs during download."
+msgstr "Počas preberania sa vyskytne chyba."
+
+#, python-format
+msgid "Error reading file \"%s\".\n"
+msgstr "Chyba pri čítaní súboru \"%s\".\n"
+
+#, python-format
+msgid "Error writing file \"%s\".\n"
+msgstr "Chyba pri zápise súboru \"%s\".\n"
+
+msgid "Ethical & Legal"
+msgstr "Etické a právne"
+
+msgid "Exam Review"
+msgstr "Prehľad skúšky"
+
+msgid "Exception occurs"
+msgstr "Výnimka sa vyskytuje"
+
+msgid "Exit"
+msgstr "Ukončiť"
+
+msgid "External movie player config"
+msgstr "Konfigurácia externého prehrávača filmov"
+
+msgid "FREE"
+msgstr "Bezplatné"
+
+#, python-format
+msgid "Fail to get \"%s\"."
+msgstr "Nepodarilo sa vám získať \"%s\"."
+
+msgid "Fail to get captcha data."
+msgstr "Nepodarilo sa získať údaje captcha."
+
+#, python-format
+msgid "Failed to connect to server \"%s\"."
+msgstr "Nepodarilo sa pripojiť k serveru \"%s\"."
+
+#, python-format
+msgid "Failed to convert the file \"%s\" to UTF-8."
+msgstr "Nepodarilo sa skonvertovať súbor \"%s\" na UTF-8."
+
+#, python-format
+msgid "Failed to create directory \"%s\"."
+msgstr "Nepodarilo sa vytvoriť adresár \"%s\"."
+
+msgid "Failed to decode to UTF-8."
+msgstr "Nepodarilo sa dekódovať na UTF-8."
+
+msgid "Failed to download subtitle."
+msgstr "Nepodarilo sa stiahnuť titulky."
+
+msgid "Failed to gzip."
+msgstr "Nepodarilo sa gzip."
+
+#, python-format
+msgid "Failed to log in user \"%s\". Please check your login and password."
+msgstr "Nepodarilo sa prihlásiť používateľa \"%s\". Skontrolujte svoje prihlasovacie meno a heslo."
+
+#, python-format
+msgid "Failed to open the file \"%s\"."
+msgstr "Nepodarilo sa otvoriť súbor \"%s\"."
+
+msgid "Failed to page with subtitle link."
+msgstr "Nepodarilo sa zobraziť stránku s odkazom na titulky."
+
+#, python-format
+msgid "Failed to write file \"%s\"."
+msgstr "Nepodarilo sa zapísať súbor \"%s\"."
+
+#, python-format
+msgid "Failed to write the file \"%s\"."
+msgstr "Nepodarilo sa napísať súbor \"%s\"."
+
+#, python-format
+msgid "Failed: %s"
+msgstr "Neúspešné: %s"
+
+msgid "Fatal error: consoleWrite failed!"
+msgstr "Závažná chyba: konzolaZápis zlyhal!"
+
+msgid "Favourites"
+msgstr "Obľúbené"
+
+msgid "Favourites groups"
+msgstr "Obľúbené skupiny"
+
+msgid "Favourites manager"
+msgstr "Správca obľúbených položiek"
+
+#, python-format
+msgid "File \"%s\" already exists"
+msgstr "Súbor \"%s\" už existuje"
+
+#, python-format
+msgid "File \"%s\" already exists!"
+msgstr "Súbor \"%s\" už existuje!"
+
+msgid "File Not Found."
+msgstr "Súbor sa nenašiel."
+
+#, python-format
+msgid "File [%s] was added to downloading queue."
+msgstr "Súbor [%s] bol pridaný do frontu sťahovania."
+
+#, python-format
+msgid "File can not be downloaded. Protocol [%s] is unsupported"
+msgstr "Súbor nie je možné stiahnuť. Protokol [%s] nie je podporovaný"
+
+msgid "Film"
+msgstr "Film"
+
+msgid "Filmstarts Suggestions"
+msgstr "Návrhy aplikácie Filmstarts"
+
+msgid "Filmweb Suggestions"
+msgstr "Návrhy spoločnosti Filmweb"
+
+msgid "Filter By Year"
+msgstr "Filtrovať podľa roku"
+
+msgid "Filters"
+msgstr "Filtre"
+
+msgid "First movie player in buffering mode"
+msgstr "Prvý prehrávač filmov v režime vyrovnávacej pamäte"
+
+msgid "First movie player without buffering mode"
+msgstr "Prvý prehrávač videozáznamov bez režimu vyrovnávacej pamäte"
+
+msgid "Folder for cache data"
+msgstr "Priečinok pre údaje vyrovnávacej pamäte"
+
+msgid "Folder for temporary data"
+msgstr "Priečinok pre dočasné údaje"
+
+msgid "Following host are broken or additional python modules are needed."
+msgstr "Nasledujúci hostiteľ je poškodený alebo sú potrebné ďalšie moduly jazyka Python."
+
+msgid "Foot & Ankle"
+msgstr "Chodidlo a členok"
+
+msgid "Force internal Skin"
+msgstr "Vynútiť vnútorný povrch"
+
+msgid "Format 'wmv' blocked in configuration."
+msgstr "Formát \"wmv\" blokovaný v konfigurácii."
+
+msgid "Free"
+msgstr "Zadarmo"
+
+msgid "Free IPTV list"
+msgstr "Zoznam bezplatných IPTV"
+
+msgid "French"
+msgstr "Francúzština"
+
+msgid "From E2 settings"
+msgstr "Z nastavení plánu E2"
+
+msgid "Functionality protected by Google reCAPTCHA!"
+msgstr "Funkcionalita chránená službou Google reCAPTCHA!"
+
+msgid "GSTplayer no IFD workarround"
+msgstr "GSTplayer žiadne alternatívne riešenie IFD"
+
+#, python-format
+msgid "Game: %s"
+msgstr "Hra: %s"
+
+msgid "Games"
+msgstr "Hry"
+
+msgid "General"
+msgstr "Všeobecné"
+
+msgid "Genre:"
+msgstr "Žáner:"
+
+msgid "Genre: "
+msgstr "Žáner: "
+
+#, python-format
+msgid "Genre: %s"
+msgstr "Žáner: %s"
+
+msgid "Genres"
+msgstr "Žánrov"
+
+msgid "Genres:"
+msgstr "Žánre:"
+
+msgid "Geolocation IP:"
+msgstr "Geolokačná IP:"
+
+msgid "German"
+msgstr "Nemčina"
+
+msgid "German proxy server url"
+msgstr "Adresa URL nemeckého proxy servera"
+
+msgid "Get EPG"
+msgstr "Získať EPG"
+
+msgid "Get languages failed!"
+msgstr "Zlyhanie jazykov!"
+
+msgid "Get token failed!"
+msgstr "Získanie tokenu zlyhalo!"
+
+msgid "Global search :"
+msgstr "Globálne vyhľadávanie:"
+
+msgid "Global sort :"
+msgstr "Globálne triedenie:"
+
+msgid "Go to the host configuration available under blue button."
+msgstr "Prejdite na konfiguráciu hostiteľa, ktorá je k dispozícii pod modrým tlačidlom."
+
+msgid "Goal Of The Month"
+msgstr "Gól mesiaca"
+
+msgid "Google Suggestions"
+msgstr "Návrhy Google"
+
+msgid "Graphic services selector"
+msgstr "Výber grafických služieb"
+
+msgid "Greek"
+msgstr "Gréčtina"
+
+#, python-format
+msgid "Group \"%s\" already exists."
+msgstr "Skupina \"%s\" už existuje."
+
+#, python-format
+msgid "Group %d"
+msgstr "Skupina %d"
+
+msgid "Group links into categories: "
+msgstr "Zoskupenie odkazov do kategórií: "
+
+#, python-format
+msgid "Group with id[%s] not found."
+msgstr "Skupina s id[%s] sa nenašla."
+
+msgid "Groups"
+msgstr "Skupiny"
+
+#, python-format
+msgid "Guest timeout: %s"
+msgstr "Časový limit hostí: %s"
+
+msgid "HDFull Suggestions"
+msgstr "Návrhy HDFull"
+
+msgid "HLS/m3u8"
+msgstr "HLS/m3u8"
+
+#, python-format
+msgid "HTTPS connection error \"%s\"\n"
+msgstr "Chyba pripojenia HTTPS \"%s\"\n"
+
+msgid "Hand"
+msgstr "Ruka"
+
+msgid "Hardware floating point"
+msgstr "Hardvérová pohyblivá rádová čiarka"
+
+#, python-format
+msgid "Hide \"%s\" group"
+msgstr "Skryť skupinu \"%s\""
+
+msgid "Hide/Active Group"
+msgstr "Skryť/Aktívna skupina"
+
+msgid "High"
+msgstr "Vysoké"
+
+msgid "High (or HD)"
+msgstr "Vysoká (alebo HD)"
+
+msgid "Highlights"
+msgstr "Zosvetlenie"
+
+msgid "History of searched phrases."
+msgstr "História hľadaných fráz."
+
+msgid "Home"
+msgstr "Domov"
+
+msgid "Home page"
+msgstr "Domovská stránka"
+
+#, python-format
+msgid "Hosting \"%s\" not supported."
+msgstr "Hosting \"%s\" nie je podporovaný."
+
+#, python-format
+msgid "Hosting \"%s\" unknown."
+msgstr "Hosťovanie \"%s\" neznáme."
+
+#, python-format
+msgid "Hosting: %s, %s"
+msgstr "Hosting: %s, %s"
+
+msgid "Hosts settings"
+msgstr "Nastavenia hostov"
+
+msgid "Humanitarian"
+msgstr "Humanitárne"
+
+msgid "Hungarian"
+msgstr "Maďarčina"
+
+msgid "IMDb Suggestions"
+msgstr "Návrhy IMDb"
+
+msgid "IMDb rating"
+msgstr "Hodnotenie IMDb"
+
+msgid "Icon type"
+msgstr "Typ ikony"
+
+msgid "Icons quality"
+msgstr "Kvalita ikon"
+
+msgid "Icons size"
+msgstr "Veľkosť ikon"
+
+msgid "Industry"
+msgstr "Priemysel"
+
+msgid "Indy"
+msgstr "Indy"
+
+msgid "Info"
+msgstr "Informácie"
+
+msgid "Info bar clock format"
+msgstr "Formát hodín informačného panela"
+
+msgid "Info bar timeout"
+msgstr "Časový limit informačného panela"
+
+msgid "Information"
+msgstr "Informácie"
+
+msgid "Information about audio tracks not available."
+msgstr "Informácie o zvukových stopách nie sú k dispozícii."
+
+msgid "Initial list"
+msgstr "Počiatočný zoznam"
+
+msgid "Initialize Download Manager"
+msgstr "Inicializácia Správcu preberania"
+
+msgid "Initialize web interface"
+msgstr "Inicializácia webového rozhrania"
+
+msgid "Initiating data, please wait"
+msgstr "Inicializujte údaje, počkajte, prosím"
+
+msgid "Inject black iframe at video playback finish"
+msgstr "Vloženie čierneho prvku iframe po dokončení prehrávania videa"
+
+msgid "Input"
+msgstr "Vstup"
+
+msgid "Interactive Learning Center(ILC)"
+msgstr "Interaktívne vzdelávacie centrum (ILC)"
+
+msgid "Invalid email."
+msgstr "Neplatný email."
+
+msgid "Invalid name."
+msgstr "Neplatné meno."
+
+msgid "Is this message displayed correctly?"
+msgstr "Zobrazuje sa toto hlásenie správne?"
+
+msgid "It is not allowed to call getURLRequestData from main thread."
+msgstr "Nie je dovolené volať getURLRequestData z hlavného vlákna."
+
+msgid "It looks like some kind of protection. Try again later."
+msgstr "Vyzerá to ako nejaká ochrana. Skúste to znova neskôr."
+
+#, python-format
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "Vyzerá to, že vaša aktuálna konfigurácia neumožňuje pripojenie k https://%s/.\n"
+
+#, python-format
+msgid "It seems that the host \"%s\" has crashed."
+msgstr "Zdá sa, že hostiteľ \"%s\" havaroval."
+
+#, python-format
+msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
+msgstr "Zdá sa, že hostiteľ \"%s\" havaroval. Chcete nahlásiť tento problém?"
+
+#, python-format
+msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
+msgstr "Zdá sa, že poskytovateľ titulkov \"%s\" havaroval. Chcete nahlásiť tento problém?"
+
+#, python-format
+msgid ""
+"It seems that the video player \"%s\" does not work properly.\n"
+"\n"
+"STS: %s\n"
+"ERROR CODE: %r"
+msgstr ""
+"Zdá sa, že prehrávač videa \"%s\" nefunguje správne.\n"
+"\n"
+"STS: %s\n"
+"KÓD CHYBY: %r"
+
+msgid "It seems that unrar utility is not installed."
+msgstr "Zdá sa, že unrar nástroj nie je nainštalovaný."
+
+msgid "It seems that unzip utility is not installed."
+msgstr "Zdá sa, že nástroj na rozbalenie nie je nainštalovaný."
+
+msgid "Italian"
+msgstr "Taliansky"
+
+#, python-format
+msgid "Item %s removed!"
+msgstr "Položka %s bola odstránená!"
+
+#, python-format
+msgid "Item idx[%d] not found in group[%s]."
+msgstr "Položka idx[%d] sa nenašla v skupine[%s]."
+
+msgid "Items"
+msgstr "Položky"
+
+#, python-format
+msgid "Items in group \"%s\""
+msgstr "Položky v skupine \"%s\""
+
+msgid "JDownloader script execution"
+msgstr "Spustenie skriptu JDownloader"
+
+#, python-format
+msgid ""
+"JDownloader script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Spustenie skriptu JDownloader zlyhalo.\n"
+"Kód chyby: %s\n"
+
+msgid "JDownloader script finished."
+msgstr "Skript JDownloader bol dokončený."
+
+msgid "Jobs & Positions"
+msgstr "Pracovné miesta a pozície"
+
+msgid "Journal Club"
+msgstr "Klub denníka"
+
+msgid "Knee & Sports"
+msgstr "Koleno a šport"
+
+msgid "LATEST"
+msgstr "NAJNOVŠIE"
+
+msgid "LATEST CONTENT"
+msgstr "NAJNOVŠÍ OBSAH"
+
+msgid "LIKES"
+msgstr "RÁD"
+
+msgid "LIVE"
+msgstr "NAŽIVO"
+
+msgid "LIVE 24/7"
+msgstr "NAŽIVO 24/7"
+
+msgid "Labels"
+msgstr "Štítky"
+
+msgid "Language"
+msgstr "Jazyk"
+
+msgid "Language:"
+msgstr "Jazyk:"
+
+#, python-format
+msgid "Language: %s"
+msgstr "Jazykové mutácie: %s"
+
+msgid "Languages"
+msgstr "Jazyky"
+
+#, python-format
+msgid "Last %d lines of the %s file are:"
+msgstr "Posledné %d riadky súboru %s sú:"
+
+#, python-format
+msgid "Last Exception error: \"%s\""
+msgstr "Posledná chyba výnimky: „%s“"
+
+#, python-format
+msgid "Last Exception error: '%s'"
+msgstr "Posledná chyba výnimky: '%s'"
+
+msgid "Last chance"
+msgstr "Posledná šanca"
+
+msgid "Last day"
+msgstr "Posledný deň"
+
+#, python-format
+msgid ""
+"Last error:\n"
+"%s"
+msgstr ""
+"Posledná chyba:\n"
+"%s"
+
+#, python-format
+msgid "Last error: \"%s\""
+msgstr "Posledná chyba: \"%s\""
+
+msgid "Last month"
+msgstr "Minulý mesiac"
+
+msgid "Last week"
+msgstr "Minulý týždeň"
+
+msgid "Lastest"
+msgstr "Posledný"
+
+msgid "Latest"
+msgstr "Najnovšie"
+
+msgid "Latest added"
+msgstr "Najnovšie pridané"
+
+msgid "Latest movies"
+msgstr "Najnovšie filmy"
+
+msgid "Latest news broadcast"
+msgstr "Vysielanie najnovších správ"
+
+msgid "Latest programs"
+msgstr "Najnovšie programy"
+
+msgid "Latest update"
+msgstr "Najnovšia aktualizácia"
+
+msgid "Latino"
+msgstr "Latinoameričan"
+
+msgid "Lead programmer: "
+msgstr "Hlavný programátor: "
+
+msgid "Level:"
+msgstr "Úroveň:"
+
+msgid "Lightgray"
+msgstr "Svetlo sivá"
+
+msgid "Line Spacing"
+msgstr "Riadkovanie"
+
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "Gstplayer odkaz nepodporuje. Použite extelayer3, ak je k dispozícii."
+
+msgid "Link protected with CF Turnstile ."
+msgstr "Spojenie chránené turniketom CF."
+
+msgid "Link protected with DRM."
+msgstr "Prepojenie chránené technológiou DRM."
+
+msgid "Link protected with Google ReCaptcha v2"
+msgstr "Odkaz chránený pomocou služby Google ReCaptcha v2"
+
+msgid "Link protected with google recaptcha v2."
+msgstr "Odkaz chránený pomocou služby Google Recaptcha v2."
+
+msgid "Links for"
+msgstr "Odkazy na"
+
+msgid "Links from all files without categories"
+msgstr "Odkazy zo všetkých súborov bez kategórií"
+
+#, python-format
+msgid "Links from the file %s"
+msgstr "Odkazy zo súboru %s"
+
+msgid "List by day"
+msgstr "Zoznam podľa dňa"
+
+msgid "List only channels with subscription"
+msgstr "Zoznam iba kanálov s odberom"
+
+#, python-format
+msgid "Listeners: %s"
+msgstr "Poslucháči: %s"
+
+msgid "Live"
+msgstr "Naživo"
+
+msgid "Live Radio"
+msgstr "Živé Rádio"
+
+msgid "Live TV"
+msgstr "Živé TV"
+
+msgid "Live broadcasts"
+msgstr "Vyhľadávanie v živých prenosoch"
+
+msgid "Live streams"
+msgstr "Priame prenosy"
+
+msgid "Live-streams"
+msgstr "Priame prenosy"
+
+msgid "Load"
+msgstr "Načitať"
+
+#, python-format
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "Načítanie rozloženia virtuálnej klávesnice \"%s\" zlyhalo z dôvodu nasledujúcej chyby: \"%s\""
+
+msgid "Loading"
+msgstr "Nahrávam"
+
+#, python-format
+msgid "Loading %s failed due to following error:"
+msgstr "Načítanie %s zlyhalo z dôvodu nasledujúcej chyby:"
+
+msgid "Loading data, please wait"
+msgstr "Načítavajú sa údaje, počkajte prosím"
+
+#, python-format
+msgid "Loading data, please wait (%d)"
+msgstr "Načítavajú sa údaje, počkajte (%d)"
+
+msgid "LocalMedia"
+msgstr "Miestne médiá"
+
+#, python-format
+msgid "Locale ID mismatched! %s <> %s"
+msgstr "Identifikátor miestneho nastavenia sa nezhoduje! %s <> %s"
+
+msgid "Localization"
+msgstr "Lokalizácia"
+
+msgid "Login"
+msgstr "Prihlásenie"
+
+msgid "Login failed!"
+msgstr "Prihlásenie zlyhalo!"
+
+msgid "Login failed."
+msgstr "Prihlásenie zlyhalo."
+
+msgid "Login failed. Invalid email or password."
+msgstr "Prihlásenie zlyhalo. Neplatný e-mail alebo heslo."
+
+msgid "Login needed"
+msgstr "Je vyžadované prihlásenie"
+
+#, python-brace-format
+msgid "Login on {0} failed."
+msgstr "Prihlásenie na {0} zlyhalo."
+
+#, python-format
+msgid ""
+"Login user \"%s\" to http://vk.com/ failed!\n"
+"Please check your login data in the IPTVPlayer configuration."
+msgstr ""
+"Prihlasovací používateľ \"%s\" http://vk.com/ zlyhal!\n"
+"Skontrolujte svoje prihlasovacie údaje v konfigurácii IPTVPlayer."
+
+msgid "Logs"
+msgstr "Logy"
+
+msgid "Longest"
+msgstr "Najdlhšia"
+
+msgid "Low"
+msgstr "Nízka"
+
+msgid "MENU"
+msgstr "MENU"
+
+msgid "MIPS Floating Point Architecture"
+msgstr "Architektúra MIPS s pohyblivou desatinnou čiarkou"
+
+#, python-format
+msgid "MOVE: %s"
+msgstr ""
+
+msgid "MOVIES"
+msgstr "FILMY"
+
+msgid "Main"
+msgstr "Hlavné"
+
+msgid "Main Event"
+msgstr "Hlavné podujatie"
+
+msgid "Main menu"
+msgstr "Hlavné menu"
+
+#, python-format
+msgid "Make directory [%s]"
+msgstr "Vytvorenie adresára [%s]"
+
+msgid "Manager status: "
+msgstr "Stav manažéra: "
+
+msgid "Manga"
+msgstr "Manga"
+
+msgid "Matches"
+msgstr "Zápasy"
+
+msgid "Max bitrate:"
+msgstr "Maximálna bitová rýchlosť:"
+
+msgid "Max items per page"
+msgstr "Maximálny počet položiek na stranu"
+
+msgid "Max number of parallel downloads has been reached."
+msgstr "Bol dosiahnutý maximálny počet paralelných stiahnutí."
+
+msgid "Medtryx Marketing"
+msgstr "Medtryx Marketing"
+
+msgid "Meetings"
+msgstr "Stretnutia"
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "Mid"
+msgstr "Stredná"
+
+msgid "Mirror"
+msgstr "Zrkadlovo"
+
+msgid "Missed"
+msgstr "Zmeškané"
+
+msgid "Missed the show?"
+msgstr "Zmeškali ste predstavenie?"
+
+msgid "Monthly"
+msgstr "Mesačne"
+
+msgid "More"
+msgstr "Viac"
+
+msgid "More important"
+msgstr "Dôležitejšie"
+
+msgid "Most Popular"
+msgstr "Najpopulárnejšie"
+
+msgid "Most featured"
+msgstr "Najviac predstavované"
+
+msgid "Most popular"
+msgstr "Najpopulárnejšie"
+
+msgid "Most rated"
+msgstr "Najviac hodnotené"
+
+msgid "Most recent"
+msgstr "Najnovšie"
+
+msgid "Most viewed"
+msgstr "Najviac videné"
+
+#, python-format
+msgid ""
+"Mount ISO file [%s] on [%s] failed.\n"
+"Return code[%s].\n"
+"Return data[%s]."
+msgstr ""
+"Pripojenie súboru ISO [%s] na [%s] zlyhalo.\n"
+"Návratový kód[%s].\n"
+"Vrátenie údajov[%s]."
+
+msgid "Move group"
+msgstr "Premiestniť skupinu"
+
+msgid "Movie"
+msgstr "Film"
+
+msgid "Movies"
+msgstr "Filmy"
+
+msgid "Movies and series"
+msgstr "Filmy a seriály"
+
+msgid "Movies by year"
+msgstr "Filmy podľa roku"
+
+msgid "Movies genres"
+msgstr "Filmové žánre"
+
+msgid "Movies list"
+msgstr "Zoznam filmov"
+
+#, python-format
+msgid "Moving file from \"%s\" to \"%s\" failed.\n"
+msgstr "Presunutie súboru z %s na %s zlyhalo.\n"
+
+#, python-format
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "Presunutie vyrovnávacej pamäte prehrávania do správcu preberania zlyhalo s nasledujúcou chybou \"%s\""
+
+msgid "Music"
+msgstr "Hudba"
+
+msgid "My JDownloader reCAPTCHA v2 solution"
+msgstr "Moje riešenie JDownloader reCAPTCHA v2"
+
+msgid "My list"
+msgstr "Môj zoznam"
+
+msgid "MyE2i Cloudflare solution"
+msgstr "Riešenie MyE2i Cloudflare"
+
+msgid "MyE2i reCAPTCHA solution"
+msgstr "Riešenie MyE2i reCAPTCHA"
+
+#, python-format
+msgid ""
+"MyE2i script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Spustenie skriptu MyE2i zlyhalo.\n"
+"Kód chyby: %s\n"
+
+msgid "MyE2i script finished."
+msgstr "Skript MyE2i bol dokončený."
+
+msgid "NJPW"
+msgstr "NJPW"
+
+msgid "NXT"
+msgstr "NXT"
+
+msgid "Name cannot be empty."
+msgstr "Položka Názov nemôže byť prázdna."
+
+msgid ""
+"Name is not valid.\n"
+"Please remove special characters."
+msgstr ""
+"Meno nie je platné.\n"
+"Odstráňte špeciálne znaky."
+
+msgid "Name:"
+msgstr "Meno:"
+
+msgid "Network"
+msgstr "Sieť"
+
+#, python-format
+msgid "Network failed %s."
+msgstr "Sieť zlyhala %s."
+
+msgid "Never"
+msgstr "Nikdy"
+
+msgid "New"
+msgstr "Nový"
+
+msgid "New Episodes"
+msgstr "Nové epizódy"
+
+msgid "New Movies"
+msgstr "Nové filmy"
+
+msgid "New cartoon"
+msgstr "Nový kreslený film"
+
+msgid "New dir"
+msgstr "Nový adresár"
+
+msgid "New episodes"
+msgstr "Nové epizódy"
+
+msgid "New icons will not be available."
+msgstr "Nové ikony nebudú k dispozícii."
+
+msgid "Newest Episodes"
+msgstr "Najnovšie epizódy"
+
+msgid "Newest Videos"
+msgstr "Najnovšie videá"
+
+msgid "News"
+msgstr "Aktuality"
+
+msgid "News Feed"
+msgstr "Novinky"
+
+msgid "Next Page"
+msgstr "Ďalšia strana"
+
+msgid "Next page"
+msgstr "Ďalšia stránka"
+
+msgid "No"
+msgstr "Nie"
+
+msgid ""
+"No item to display. \n"
+"Press OK to refresh.\n"
+msgstr ""
+"Žiadna položka na zobrazenie. \n"
+"Stlačením tlačidla OK obnovte operáciu.\n"
+
+msgid "No materials waiting in the downloader queue"
+msgstr "Žiadne materiály čakajúce vo fronte sťahovania"
+
+msgid "No playable sources found."
+msgstr "Nenašli sa žiadne hrateľné zdroje."
+
+msgid "No valid entitlement found for asset."
+msgstr "Pre dielo sa nenašiel žiadny platný nárok."
+
+msgid "No valid links available."
+msgstr "Nie sú k dispozícii žiadne platné odkazy."
+
+msgid "None"
+msgstr "Žiadne"
+
+msgid "Not Free"
+msgstr "Nie je zadarmo"
+
+msgid "Nothing has been downloaded yet."
+msgstr "Zatiaľ nebolo nič stiahnuté."
+
+msgid "Now playing"
+msgstr "Teraz hrá"
+
+msgid "Number of downloaded files simultaneously"
+msgstr "Počet stiahnutých súborov súčasne"
+
+#, fuzzy, python-format
+msgid "Number of items in search history: %d"
+msgstr "Počet položiek v histórii vyhľadávania"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Offline channels"
+msgstr "Offline kanály"
+
+msgid "Older"
+msgstr "Predchádzajúce"
+
+msgid "On Air"
+msgstr "Na živo"
+
+msgid "One link mode"
+msgstr "Režim jedného prepojenia"
+
+msgid "Only available in Sweden."
+msgstr "K dispozícii iba vo Švédsku."
+
+msgid "Only available in Sweden.\n"
+msgstr "K dispozícii iba vo Švédsku.\n"
+
+msgid ""
+"Only logged in user have access.\n"
+"Please set login data in the host configuration under blue button."
+msgstr ""
+"Prístup má iba prihlásený používateľ.\n"
+"Nastavte prihlasovacie údaje v konfigurácii hostiteľa pod modrým tlačidlom."
+
+msgid "Only music"
+msgstr "Iba hudba"
+
+msgid "Only videos"
+msgstr "Iba videá"
+
+msgid "Opening. Please wait..."
+msgstr "Otvorenie. Prosím počkajte..."
+
+msgid "Operation aborted!"
+msgstr "Operácia prerušená!"
+
+msgid "Order by: "
+msgstr "Zoradiť podľa: "
+
+msgid "Other"
+msgstr "Iné"
+
+msgid "Other Sports"
+msgstr "Ostatné športy"
+
+msgid "Others"
+msgstr "Iné"
+
+msgid "Own model"
+msgstr "Vlastný model"
+
+msgid "PARTIES"
+msgstr "STRANY"
+
+msgid "PAY"
+msgstr "PLATIŤ"
+
+msgid "PEGI"
+msgstr "PEGI"
+
+msgid "PENDING"
+msgstr "ČAKÁ"
+
+msgid "PORT"
+msgstr "PORT"
+
+msgid "Page accessible to logged in members only."
+msgstr "Stránka je prístupná iba prihláseným členom."
+
+msgid "Paid"
+msgstr "Zaplatené"
+
+msgid "Password"
+msgstr "Heslo"
+
+msgid "Password:"
+msgstr "Heslo:"
+
+msgid "Past premieres"
+msgstr "Minulé premiéry"
+
+#, python-format
+msgid "Paste \"%s\""
+msgstr "Prilepiť \"%s\""
+
+msgid "Path to xxxlist.txt :"
+msgstr "Cesta k súboru xxxlist.txt:"
+
+msgid "Path to ytlist.txt, urllist.txt"
+msgstr "Cesta k ytlistu.txt, urllistu.txt"
+
+msgid "Path:"
+msgstr "Cesta:"
+
+msgid "Pathology"
+msgstr "Patológia"
+
+msgid "Pathology Rounds"
+msgstr "Patologické kolá"
+
+msgid "Pediatrics"
+msgstr "Pediatria"
+
+msgid "People"
+msgstr "Osoby"
+
+msgid "Physical Exam"
+msgstr "Fyzikálne vyšetrenie"
+
+msgid "Pin has been changed."
+msgstr "Pin bol zmenený."
+
+msgid "Pin incorrect!"
+msgstr "Pripnúť nesprávne!"
+
+msgid "Pin protection for configuration"
+msgstr "Ochrana Pinov pre konfiguráciu"
+
+msgid "Pin protection for plugin"
+msgstr "Ochrana Pinov pre plugin"
+
+msgid "Platform"
+msgstr "Platforma"
+
+#, python-format
+msgid "Play with [%s] player"
+msgstr "Hrajte s [%s] hráčom"
+
+msgid "PlayStation 4"
+msgstr "PlayStation 4"
+
+msgid "Playable from "
+msgstr "Hrateľné z "
+
+msgid "Playback UHD :"
+msgstr "Prehrávanie v UHD:"
+
+#, python-format
+msgid "Player %s"
+msgstr "Hráč %s"
+
+#, python-format
+msgid "Player %s: %s"
+msgstr "Hráč %s: %s"
+
+msgid "Player Skin"
+msgstr "Skin hráča"
+
+msgid "Player data parsing error."
+msgstr "Chyba analýzy údajov prehrávača."
+
+msgid "Playlist"
+msgstr "Zoznam skladieb"
+
+msgid "Playlists"
+msgstr "Playlisty"
+
+#, python-brace-format
+msgid ""
+"Please Open site:\n"
+"http://{0}:{1}\n"
+"in a web browser with the MyE2i extension installed"
+msgstr ""
+"Otvorte stránku:\n"
+"http://{0}:{1}\n"
+"vo webovom prehliadači s nainštalovaným rozšírením MyE2i"
+
+#, python-format
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "Zvážte reštartovanie zariadenia Engima2 a dohodnite sa na inštalácii %s utlity, keď to %s navrhne."
+
+msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
+msgstr "Vyplňte svoje prihlasovacie meno a heslo v konfigurácii hostiteľa (k dispozícii pod modrým tlačidlom) a skúste to znova."
+
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "Uistite sa, že priečinok pre údaje vyrovnávacej pamäte (nastavený v konfigurácii) je zapisovateľný."
+
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "Zaregistrujte sa a nastavte prihlasovacie meno a heslo v konfigurácii hostiteľa, aby ste tieto problémy vyriešili natrvalo."
+
+msgid ""
+"Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
+"This will fix problem, if your playback is constantly interrupted."
+msgstr ""
+"Nezabudnite navštíviť http://www.sport365.live/ a pozrieť si niekoľko reklám.\n"
+"Tým sa vyrieši problém, ak sa prehrávanie neustále prerušuje."
+
+msgid "Please retry later."
+msgstr "Skúste to znova neskôr."
+
+#, python-format
+msgid "Please set valid %s in the %s configuration."
+msgstr "V %s konfigurácii nastavte platné %s."
+
+#, python-format
+msgid "Please visit \"%s\" and confirm that you are human."
+msgstr "Navštívte stránku \"%s\" a potvrďte, že ste človek."
+
+#, python-format
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "Navštívte stránku %s a zistite, ako presmerovať túto úlohu na externé zariadenie."
+
+msgid "Please wait - downloading initialization data."
+msgstr "Počkajte prosím - stiahnutie inicializačných údajov."
+
+msgid "Please wait for initialization data."
+msgstr "Počkajte na inicializačné údaje."
+
+#, fuzzy
+msgid "Podcasts"
+msgstr "Vyhľadávanie v živých prenosoch"
+
+msgid "Polish"
+msgstr "Poľština"
+
+msgid "Polish proxy server url"
+msgstr "Adresa URL Poľského proxy servera"
+
+msgid "Popular"
+msgstr "Obľúbené"
+
+msgid "Popular Episodes"
+msgstr "Populárne epizódy"
+
+msgid "Popularity: ?"
+msgstr "Popularita: ?"
+
+msgid "Portal:"
+msgstr "Portál:"
+
+msgid "Portuguese"
+msgstr "Portugalčina"
+
+msgid "Powerpoint Presentation"
+msgstr "PowerPointová prezentácia"
+
+msgid "Practice Management"
+msgstr "Manažment praxe"
+
+msgid "Prefer hlsld for playlist with alt. media"
+msgstr "Preferovať hlsld pre zoznam skladieb s alternatívnymi médiami"
+
+msgid "Prefered format"
+msgstr "Preferovaný formát"
+
+msgid "Prefered quality"
+msgstr "Preferovaná kvalita"
+
+msgid "Preferred bitrate"
+msgstr "Preferovaný dátový tok"
+
+msgid "Preferred format:"
+msgstr "Preferovaný formát:"
+
+msgid "Preferred quality"
+msgstr "Preferovaná kvalita"
+
+msgid "Preferred streaming protocol"
+msgstr "Preferovaný protokol streamovania"
+
+msgid "Preferred video quality:"
+msgstr "Preferovaná kvalita videa:"
+
+msgid "Premium"
+msgstr "Premium"
+
+msgid "Premium user"
+msgstr "Prémiový používateľ"
+
+msgid "Preview"
+msgstr "Náhľad"
+
+msgid "Previous Seasons"
+msgstr "Predchádzajúce sezóny"
+
+msgid "Previous list"
+msgstr "Predchádzajúci zoznam"
+
+msgid "Professional Networks"
+msgstr "Profesionálne siete"
+
+msgid "Program"
+msgstr "Program"
+
+msgid "Program A-Z"
+msgstr "Program A-Z"
+
+msgid "Programmes"
+msgstr "Programov"
+
+msgid "Programs"
+msgstr "Programy"
+
+msgid "Programs A-Ö"
+msgstr "Programy A-Ö"
+
+msgid "Promote item"
+msgstr "Zvýšenie úrovne položky"
+
+msgid "Promoted"
+msgstr "Promované"
+
+msgid "Protocol: "
+msgstr "Protokol: "
+
+msgid "Published:"
+msgstr "Vydané:"
+
+msgid "Qualities"
+msgstr "Vlastnosti"
+
+msgid "Quality"
+msgstr "Kvalita"
+
+msgid "Quality:"
+msgstr "Kvalita:"
+
+msgid "RADIO"
+msgstr "RADIO"
+
+msgid "RAM buffer size [MB] for local files"
+msgstr "Veľkosť vyrovnávacej pamäte RAM [MB] pre lokálne súbory"
+
+msgid "RAM buffer size [MB] for network protocols"
+msgstr "Veľkosť vyrovnávacej pamäte RAM [MB] pre sieťové protokoly"
+
+msgid "RAW"
+msgstr ".RAW"
+
+msgid "RECENT"
+msgstr "NEDÁVNO"
+
+msgid "REMEMBER: "
+msgstr "PAMÄTAŤ: "
+
+msgid "Radio"
+msgstr "Zaklikávací krúžol"
+
+msgid "Radio iframe file"
+msgstr "Súbor Radio iframe"
+
+msgid "Radio stations"
+msgstr "Rozhlasové stanice"
+
+msgid "Radiology Rounds"
+msgstr "Rádiologické obhliadky"
+
+msgid "Raiting"
+msgstr "Raiting"
+
+msgid "Random"
+msgstr "Náhodné"
+
+msgid "Random selection"
+msgstr "Náhodný výber"
+
+msgid "Randomize a playlist"
+msgstr "Náhodné vytvorenie zoznamu skladieb"
+
+msgid "Ranking"
+msgstr "Poradie"
+
+msgid "Rating"
+msgstr "Hodnotenie"
+
+#, python-format
+msgid "Rating %s"
+msgstr "Hodnotenie %s"
+
+msgid "Rating:"
+msgstr "Hodnotenie:"
+
+msgid "Recent"
+msgstr "Najnovšie"
+
+msgid "Recon"
+msgstr "Prieskum"
+
+msgid "Redirect"
+msgstr "Presmerovanie"
+
+msgid "Refresh"
+msgstr "Aktualizovať"
+
+msgid "Refreshing"
+msgstr "Obnovenie"
+
+msgid "Release"
+msgstr "Release"
+
+msgid "Release:"
+msgstr "Dátum vydania:"
+
+msgid "Releases"
+msgstr "Uvoľnenia"
+
+msgid "Relevance"
+msgstr "Relevantnosť"
+
+msgid "Reload list"
+msgstr "Znovu načítať zoznam"
+
+msgid "Remember last watched position"
+msgstr "Zapamätať si naposledy sledovanú pozíciu"
+
+msgid "Remove"
+msgstr "Odstrániť"
+
+#, python-format
+msgid "Remove \"%s\" item"
+msgstr "Odstránenie položky \"%s\""
+
+msgid "Remove disabled services"
+msgstr "Odstránenie zakázaných služieb"
+
+msgid "Remove file"
+msgstr "Odstrániť súbor"
+
+msgid "Remove from favourites"
+msgstr "Vyradiť z oblúbených"
+
+msgid "Remove group"
+msgstr "Odstránenie skupiny"
+
+msgid "Remove item"
+msgstr "Odstrániť položku"
+
+msgid "Rename"
+msgstr "Premenovať"
+
+msgid "Replay Shows"
+msgstr "Prehrávanie relácií"
+
+msgid "Reset State"
+msgstr "Obnoviť stav"
+
+#, python-format
+msgid ""
+"Resolving hCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"Riešenie hCaptcha s %s zlyhalo!\n"
+"\n"
+
+#, python-format
+msgid ""
+"Resolving reCaptcha with %s failed!\n"
+"\n"
+msgstr ""
+"Riešenie reCaptcha s %s zlyhalo!\n"
+"\n"
+
+msgid "Return to hosts list"
+msgstr "Návrat do zoznamu hostiteľov"
+
+msgid "Reverse a playlist"
+msgstr "Obrátenie playlistu"
+
+msgid "Russian"
+msgstr "Ruština"
+
+msgid "Russian proxy server url"
+msgstr "URL adresa ruského proxy servera"
+
+msgid "SHOWS"
+msgstr "Relácie"
+
+msgid "SONGS"
+msgstr "Odstránenie všetkých skladieb zo zoznamu skladieb"
+
+msgid "STARTED"
+msgstr "Nezačaté"
+
+msgid "STOPPED"
+msgstr "ZASTAVENÝ"
+
+msgid "Save"
+msgstr "Uložiť"
+
+msgid "Save changes?"
+msgstr "Uložiť zmeny?"
+
+msgid "Schedule"
+msgstr "Naplánovať"
+
+msgid "Science"
+msgstr "Veda"
+
+msgid "Score at least: "
+msgstr "Skóre aspoň: "
+
+msgid "Search"
+msgstr "Hľadať"
+
+#, fuzzy
+msgid "Search History is empty."
+msgstr "História vyhľadávania"
+
+msgid "Search History successfully deleted."
+msgstr ""
+
+msgid "Search Movies and TV Series"
+msgstr "Vyhľadávanie filmov a televíznych seriálov"
+
+#, python-format
+msgid "Search for \"%s\", %s, %s %s"
+msgstr "Vyhľadajte výraz \"%s\", %s, %s %s"
+
+msgid "Search history"
+msgstr "História vyhľadávania"
+
+msgid "Search in "
+msgstr "Vyhľadávanie v "
+
+msgid "Search in all active hosts"
+msgstr "Vyhľadávanie vo všetkých aktívnych hostiteľoch"
+
+msgid "Search only in Movies"
+msgstr "Vyhľadávanie iba vo filmoch"
+
+msgid "Search only in TV Series"
+msgstr "Vyhľadávanie iba v televíznych seriáloch"
+
+msgid "Search results"
+msgstr "Výsledky vyhľadávania"
+
+msgid "Search type"
+msgstr "Typ vyhľadávania"
+
+msgid "Search youtube materials"
+msgstr "Vyhľadávanie materiálov na youtube "
+
+#, python-format
+msgid "Searching in %s, please wait (%d)"
+msgstr "Pri vyhľadávaní v %s počkajte (%d)"
+
+#, python-format
+msgid "Searching subtitles for \"%s\""
+msgstr "Vyhľadávanie titulkov pre \"%s\""
+
+#, python-format
+msgid "Searching, please wait (%d)"
+msgstr "Hľadáme, prosím počkajte (%d)"
+
+msgid "Season"
+msgstr "Sezóna"
+
+#, python-format
+msgid "Season %s"
+msgstr "Sezóna %s"
+
+#, python-format
+msgid "Season %s (%s)"
+msgstr "Sezóna %s (%s)"
+
+#, python-brace-format
+msgid "Season {0}"
+msgstr "Sezóna {0}"
+
+msgid "Second movie player in buffering mode"
+msgstr "Druhý prehrávač videozáznamov v režime vyrovnávacej pamäte"
+
+msgid "Second movie player without buffering mode"
+msgstr "Druhý prehrávač videozáznamov bez režimu vyrovnávacej pamäte"
+
+msgid "See all events"
+msgstr "Všetky akce"
+
+msgid "See all languages"
+msgstr "Zobraziť všetky jazyky"
+
+msgid "See all topics"
+msgstr "Zobraziť všetky témy"
+
+msgid "Select"
+msgstr "Vybrať"
+
+#, python-format
+msgid "Select %s"
+msgstr "Vyberte %s"
+
+msgid "Select action"
+msgstr "Vybrať akciu"
+
+msgid "Select audio track"
+msgstr "Vyberte zvukovú stopu"
+
+msgid "Select directory"
+msgstr "Vyberte adresár"
+
+msgid "Select favourite group"
+msgstr "Vyberte obľúbenú skupinu"
+
+msgid "Select group"
+msgstr "Vyberte skupinu"
+
+msgid "Select language"
+msgstr "Vybrať jazyk"
+
+msgid "Select link"
+msgstr "Vybrať prepojenie"
+
+msgid "Select movie player"
+msgstr "Vyberte prehrávač videozáznamov"
+
+msgid "Select option"
+msgstr "Vyberte možnosť"
+
+msgid "Select pictures"
+msgstr "Výber obrázkov"
+
+msgid "Select service"
+msgstr "Vyberte službu"
+
+msgid "Select subtitles file"
+msgstr "Vyberte súbor titulkov"
+
+msgid "Select subtitles provider:"
+msgstr "Vyberte poskytovateľa titulkov:"
+
+msgid "Select subtitles to download"
+msgstr "Vyberte titulky na stiahnutie"
+
+msgid "Select subtitles track"
+msgstr "Výber stopy titulkov"
+
+msgid "Select the directory"
+msgstr "Vyberte adresár"
+
+msgid "Select the file"
+msgstr "Vyberte súbor"
+
+msgid "Select video option"
+msgstr "Vyberte možnosť videa"
+
+msgid "Selected hosts"
+msgstr "Vybraní hostitelia"
+
+msgid "Send"
+msgstr "Odoslať"
+
+msgid "Seriale"
+msgstr "Seriály"
+
+msgid "Series"
+msgstr "Séria"
+
+msgid "Series TV"
+msgstr "Seriálová televízia"
+
+msgid "Series list"
+msgstr "Zoznam sérií"
+
+msgid "Server return 404 - Not Found."
+msgstr "Návrat servera 404 - Nenašiel sa."
+
+#, python-format
+msgid ""
+"Service %s requires registration. \n"
+"Please fill your login and password in the %s configuration."
+msgstr ""
+"Servis %s vyžaduje registráciu. \n"
+"Vyplňte svoje prihlasovacie meno a heslo v konfigurácii %s."
+
+#, python-format
+msgid "Service [%s] has no additional settings."
+msgstr "Služba [%s] nemá žiadne ďalšie nastavenia."
+
+msgid "Services configuration"
+msgstr "Konfigurácia služieb %s"
+
+msgid "Services management"
+msgstr "Riadenie služieb"
+
+msgid "Set active movie player"
+msgstr "Nastavenie aktívneho prehrávača filmov"
+
+msgid "Set file name"
+msgstr "Nastavenie názvu súboru"
+
+msgid "Set pin code"
+msgstr "Nastavenie PIN kódu"
+
+msgid "Set watched"
+msgstr "Sada sledovaných"
+
+msgid "Settings"
+msgstr "Nastavenia"
+
+#, fuzzy
+msgid "Shorts"
+msgstr "Všetky športy"
+
+msgid "Shoulder & Elbow"
+msgstr "Rameno a lakeť"
+
+msgid "Show IPTVPlayer in extension list"
+msgstr "Zobraziť IPTVPlayer v zozname rozšírení"
+
+msgid "Show IPTVPlayer in main menu"
+msgstr "Zobraziť IPTVPlayer v hlavnom menu"
+
+msgid "Show Profiles in ZBIORNIK MINI :"
+msgstr "Zobraziť profily v ZBIORNIK MINI :"
+
+msgid "Show Youtube Api Key warnings"
+msgstr "Zobraziť upozornenia kľúča API YouTube"
+
+msgid "Show all channels"
+msgstr "Zobraziť všetky kanály"
+
+msgid "Show changelog :"
+msgstr "Zobraziť zoznam zmien:"
+
+msgid "Show download manager after adding new item"
+msgstr "Zobraziť správcu sťahovania po pridaní novej položky"
+
+msgid "Show file size"
+msgstr "Zobraziť veľkosť súboru"
+
+msgid "Show hiddens catalogs"
+msgstr "Zobraziť skryté katalógy"
+
+msgid "Show hiddens files"
+msgstr "Zobrazenie skrytých súborov"
+
+msgid "Show iframe during audio playback"
+msgstr "Zobrazenie prvku iframe počas prehrávania zvuku"
+
+msgid "Show only audio in selected language:"
+msgstr "Zobraziť iba zvuk vo vybranom jazyku:"
+
+msgid "Show only best quality of streams:"
+msgstr "Zobraziť iba streamy v najlepšej kvalite:"
+
+msgid "Shows"
+msgstr "Relácie"
+
+msgid "Simple list"
+msgstr "Jednoduchý zoznam"
+
+msgid "Simple subtitles downloader"
+msgstr "Jednoduchý sťahovač titulkov"
+
+msgid "Simplify the title and try again."
+msgstr "Zjednodušte názov a skúste to znova."
+
+msgid "Single file downloader"
+msgstr "Preberač jedného súboru"
+
+msgid "Skin"
+msgstr "Vzhľad"
+
+msgid "Skip video shorter than [min]"
+msgstr "Preskočiť video kratšie ako [min]"
+
+msgid "Smackdown"
+msgstr "Smackdown"
+
+msgid "Software decoding as"
+msgstr "Dekódovanie softvéru ako"
+
+msgid "Software floating point"
+msgstr "Softvérová pohyblivá rádová čiarka"
+
+msgid "Some changes will be applied only after movie player restart."
+msgstr "Niektoré zmeny sa použijú až po reštartovaní prehrávača videozáznamov."
+
+msgid "Some settings will be applied only after GUI restart."
+msgstr "Niektoré nastavenia sa použijú až po reštarte grafického rozhrania."
+
+msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
+msgstr "Prepáč. TVPlayer je momentálne k dispozícii iba vo Veľkej Británii"
+
+msgid "Sort Mode"
+msgstr "Režim triedenia"
+
+msgid "Sort Myfreecams :"
+msgstr "Zoradiť Myfreecams :"
+
+msgid "Sort alphabetically"
+msgstr "Zoradiť podľa abecedy"
+
+msgid "Sort by alphabet"
+msgstr "Zoradiť podľa abecedy"
+
+msgid "Sort by popularity"
+msgstr "Zoradiť podľa obľúbenosti"
+
+msgid "Sort by:"
+msgstr "Zoradiť podľa:"
+
+msgid "Sort the list:"
+msgstr "Zoradiť zoznam:"
+
+msgid "Sort xxxlist :"
+msgstr "Zoradiť xxxlist:"
+
+msgid "Sorted channels A-Z [live]"
+msgstr "Zoradené kanály A – Z [live]"
+
+msgid "Sorted most viewed channels general [live]"
+msgstr "Zoradené najsledovanejšie kanály všeobecné [naživo]"
+
+msgid "Sorted most viewed channels now [live]"
+msgstr "Zoradené najsledovanejšie kanály teraz [naživo]"
+
+#, python-format
+msgid "Source %s"
+msgstr "Zdroj %s"
+
+msgid "Source type"
+msgstr "Typ zdroja"
+
+msgid "Spanish"
+msgstr "Španielsky"
+
+msgid "Specialities"
+msgstr "Špecializácie"
+
+msgid "Spine"
+msgstr "Chrbtica"
+
+msgid "Sport"
+msgstr "Šport"
+
+msgid "Standard"
+msgstr "Štandardný"
+
+msgid "Start"
+msgstr "Štart"
+
+msgid "Start download manager per default"
+msgstr "Predvolené spustenie správcu sťahovania"
+
+msgid "Stereo downmix mode for software decoder"
+msgstr "Režim stereo downmixu pre softvérový dekodér"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Stop download"
+msgstr "Zastaviť sťahovanie"
+
+msgid "Stop downloading"
+msgstr "Zastavenie sťahovania"
+
+msgid "Stop playback with buffer save"
+msgstr "Zastavenie prehrávania pomocou uloženia vyrovnávacej pamäte"
+
+msgid "Stop playing?"
+msgstr "Prestať hrať?"
+
+#, python-format
+msgid "Stream starts from %s"
+msgstr "Stream začína od %s"
+
+msgid "Studio:"
+msgstr "Štúdio:"
+
+msgid "Study Plan"
+msgstr "Študijný plán"
+
+msgid "Subspecialities"
+msgstr "Subšpecializácie"
+
+msgid "Subtitle background"
+msgstr "Pozadie titulkov"
+
+msgid "Subtitle border color"
+msgstr "Farba orámovania titulkov"
+
+msgid "Subtitle border enabled"
+msgstr "Povolené orámovanie titulkov"
+
+msgid "Subtitle border width"
+msgstr "Šírka orámovania titulkov"
+
+msgid "Subtitle box height"
+msgstr "Výška rámčeka titulkov"
+
+msgid "Subtitle box position"
+msgstr "Pozícia rámčeka titulkov"
+
+msgid "Subtitle font"
+msgstr "Font titulkov"
+
+msgid "Subtitle font color"
+msgstr "Farba písma titulkov"
+
+msgid "Subtitle font size"
+msgstr "Veľkosť písma titulkov"
+
+msgid "Subtitle line height"
+msgstr "Výška riadka titulkov"
+
+msgid "Subtitle line wrapping"
+msgstr "Zalamovanie riadkov titulkov"
+
+msgid "Subtitle shadow X offset"
+msgstr "Tieň titulkov X odsadenie"
+
+msgid "Subtitle shadow Y offset"
+msgstr "Tieň titulkov Y odsadenie"
+
+msgid "Subtitle shadow color"
+msgstr "Farba tieňa titulkov"
+
+msgid "Subtitle shadow enabled"
+msgstr "Povolený tieň titulkov"
+
+msgid "Subtitle vertical alignment"
+msgstr "Zvislé zarovnanie titulkov"
+
+msgid "Subtitles"
+msgstr "Titulky"
+
+#, python-format
+msgid "Subtitles \"%s\" downloaded correctly."
+msgstr "Titulky \"%s\" stiahnuté správne."
+
+msgid "Subtitles conversion to UTF-8 failed."
+msgstr "Konverzia titulkov na UTF-8 zlyhala."
+
+#, python-format
+msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
+msgstr "Titulky boli úspešne stiahnuté. [%s], konverzia na UTF-8."
+
+#, python-format
+msgid "Subtitles for: %s"
+msgstr "Titulky pre: %s"
+
+msgid "Surgical Approaches"
+msgstr "Chirurgické prístupy"
+
+msgid "Surgical Cases"
+msgstr "Chirurgické prípady"
+
+msgid "Surgical Complications"
+msgstr "Chirurgické komplikácie"
+
+msgid "Surgical Techniques"
+msgstr "Chirurgické techniky"
+
+msgid "Swedish"
+msgstr "Švédčina"
+
+msgid "Synchronize"
+msgstr "Synchronizujte"
+
+msgid "System"
+msgstr "Systém"
+
+msgid "THIS IS A PRIVATE VIDEO."
+msgstr "TOTO JE SÚKROMNÉ VIDEO."
+
+msgid "TNA"
+msgstr "TNA"
+
+msgid "TOP 10"
+msgstr "NAJLEPŠÍCH 10"
+
+msgid "TRAILER"
+msgstr "Príves"
+
+msgid "TV"
+msgstr "TV"
+
+msgid "TV SERIES"
+msgstr "TV SERIÁL"
+
+msgid "TV Series"
+msgstr "TV seriál"
+
+msgid "TV Show"
+msgstr "Televízna relácia"
+
+msgid "TV channels"
+msgstr "Televízne kanály"
+
+msgid "TV series"
+msgstr "Televízne seriály"
+
+msgid "TV status"
+msgstr "Stav televízora"
+
+msgid "TV-Series"
+msgstr "Televízne seriály"
+
+msgid "Talks"
+msgstr "Hovorí"
+
+msgid "Techniques"
+msgstr "Techniky"
+
+msgid "Text files ytlist and urllist are in:"
+msgstr "Textové súbory ytlist a urllist sú v:"
+
+#, python-format
+msgid "The %s utility is necessary here but it was not detected."
+msgstr "Pomôcka %s je tu potrebná, ale nebola zistená."
+
+msgid "The YouTube video ID is invalid."
+msgstr "Identifikátor videa YouTube je neplatný."
+
+msgid "The best"
+msgstr "Najlepší"
+
+msgid "The color of the current version"
+msgstr "Farba aktuálnej verzie"
+
+msgid "The color of the viewed item"
+msgstr "Farba zobrazenej položky"
+
+msgid "The default aspect ratio for the external player"
+msgstr "Predvolený pomer strán pre externý prehrávač"
+
+#, python-format
+msgid ""
+"The host %s requires registration. \n"
+"Please fill your login and password in the host configuration. Available under blue button."
+msgstr ""
+"Hostiteľský %s vyžaduje registráciu. \n"
+"Vyplňte svoje prihlasovacie meno a heslo v konfigurácii hostiteľa. K dispozícii pod modrým tlačidlom."
+
+#, python-format
+msgid ""
+"The host %s requires subscription.\n"
+"Please fill your login and password in the host configuration - available under blue button."
+msgstr ""
+"Hostiteľský %s vyžaduje predplatné.\n"
+"Vyplňte svoje prihlasovacie meno a heslo v konfigurácii hostiteľa - k dispozícii pod modrým tlačidlom."
+
+msgid "The number of items in the search history"
+msgstr "Počet položiek v histórii vyhľadávania"
+
+#, python-format
+msgid ""
+"The playback buffer has been moved to the download manager.\n"
+"It will be saved in the file:\n"
+"\"%s\""
+msgstr ""
+"Vyrovnávacia pamäť prehrávania bola presunutá do správcu preberania.\n"
+"Uloží sa do súboru:\n"
+"\"%s\""
+
+msgid "The same item already exists in this group."
+msgstr "V tejto skupine už existuje rovnaká položka."
+
+msgid "The worst"
+msgstr "Najhoršie"
+
+msgid "There are no other favourite groups"
+msgstr "Neexistujú žiadne iné obľúbené skupiny"
+
+#, python-format
+msgid "There is no enough free space in the folder \"%s\"."
+msgstr "V priečinku \"%s nie je dostatok voľného miesta\"."
+
+#, python-format
+msgid "There is no free space on the drive [%s]."
+msgstr "Na jednotke nie je žiadne voľné miesto [%s]."
+
+msgid "There is no hosts in this group."
+msgstr "V tejto skupine nie sú žiadni hostitelia."
+
+msgid "This host has been added already to this group."
+msgstr "Tento hostiteľ už bol pridaný do tejto skupiny."
+
+msgid "This model is offline."
+msgstr "Tento model je offline."
+
+msgid "This room is offline. Try again later!"
+msgstr "Táto miestnosť je offline. Skúste to znova neskôr!"
+
+msgid "This show is private. Try again later!"
+msgstr "Táto relácia je súkromná. Skúste to znova neskôr!"
+
+msgid "This site is protected with Google reCaptcha v2."
+msgstr "Táto stránka je chránená službou Google reCaptcha v2."
+
+msgid "This video has been deleted."
+msgstr "Toto video bolo odstránené."
+
+msgid "This video is a private video."
+msgstr "Toto video je súkromné video."
+
+msgid "Tip! You can connect USB flash drive to fix this problem."
+msgstr "Tip! Tento problém môžete vyriešiť pripojením disku USB flash."
+
+msgid "Title:"
+msgstr "Názov:"
+
+msgid ""
+"To watch videos from http://vk.com/ you need to login.\n"
+"Please fill your login and password in the IPTVPlayer configuration."
+msgstr ""
+"Ak chcete sledovať videá z http://vk.com/ musíte sa prihlásiť.\n"
+"Vyplňte svoje prihlasovacie meno a heslo v konfigurácii IPTVPlayer."
+
+msgid "Today"
+msgstr "Dnes"
+
+msgid "Top"
+msgstr "Hore"
+
+msgid "Top +250"
+msgstr "Top +250"
+
+msgid "Top Movies"
+msgstr "Najlepšie filmy"
+
+msgid "Top Videos"
+msgstr "Najlepšie videá"
+
+msgid "Top day"
+msgstr "Najlepší deň"
+
+msgid "Top movies"
+msgstr "Najlepšie filmy"
+
+msgid "Top rated"
+msgstr "Najlepšie hodnotené"
+
+msgid "Top series"
+msgstr "Top série"
+
+msgid "Total Divas"
+msgstr "Totálne divy"
+
+msgid "Total size: "
+msgstr "Celková veľkosť: "
+
+msgid "Trailer"
+msgstr "Príves"
+
+msgid "Transparent"
+msgstr "Priehľadná"
+
+msgid "Trauma"
+msgstr "Trauma"
+
+msgid "Treatment Consult"
+msgstr "Konzultácia s liečbou"
+
+msgid "Tree list"
+msgstr "Tree list"
+
+msgid "Trending"
+msgstr "Trendy"
+
+msgid "Try to bypass DRM (it may be illegal)"
+msgstr "Pokúste sa obísť DRM (môže to byť nezákonné)"
+
+msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
+msgstr "Pokúste sa zmeniť extplayer alebo zakázať IFD v konfigurácii GSTplayer"
+
+msgid "Turn off buffering for http://prognoza.pogody.tv/"
+msgstr "Vypnutie vyrovnávacej pamäte pre http://prognoza.pogody.tv/"
+
+msgid "Tutorials"
+msgstr "Návody"
+
+msgid "Type: "
+msgstr "Typ: "
+
+#, python-format
+msgid "Type: %s"
+msgstr "Typ: %s"
+
+msgid "UFC"
+msgstr "UFC"
+
+msgid "Ukrainian proxy server url"
+msgstr "URL adresa ukrajinského proxy servera"
+
+msgid "Umount iso file"
+msgstr "Umount iso file"
+
+msgid "Unable to comply. Search History is empty."
+msgstr ""
+
+msgid "Unknow data in the captcha item!"
+msgstr "Neznáme údaje v položke captcha!"
+
+msgid "Unknown"
+msgstr "Neznáme"
+
+#, python-format
+msgid "Unknown captcha form! Data: \"%s\""
+msgstr "Neznámy formulár captcha! Dáta: „%s“"
+
+msgid "Unknown error."
+msgstr "Neznáma chyba."
+
+#, python-format
+msgid "Unknown file extension \"%s\"."
+msgstr "Neznáma prípona súboru \"%s\"."
+
+#, python-format
+msgid "Unknown protocol [%s]"
+msgstr "Neznámy protokol [%s]"
+
+msgid "Unknown server response."
+msgstr "Neznáma odpoveď servera."
+
+#, python-format
+msgid "Unknown subtitle parser for format \"%s\"."
+msgstr "Neznámy analyzátor titulkov pre formát \"%s\"."
+
+#, python-format
+msgid "Unrar error code[%s]."
+msgstr "Unrar kód chyby[%s]."
+
+msgid "Unset watched"
+msgstr "Nenastavené sledované"
+
+#, python-format
+msgid "Unzip error code[%s]."
+msgstr "Kód chyby dekomprimovania[%s]."
+
+msgid "Upcoming"
+msgstr "Nadchádzajúce"
+
+msgid "Update completed successfully. For the moment, the system will reboot."
+msgstr "Aktualizácia bola úspešne dokončená. Zatiaľ sa systém reštartuje."
+
+msgid "Upload date"
+msgstr "Dátum nahrania"
+
+msgid "Uploads"
+msgstr "Nahrané súbory"
+
+msgid "Urllists player"
+msgstr "Prehrávač URL adries"
+
+msgid "Use Polish proxy for http://prognoza.pogody.tv/"
+msgstr "Použitie poľského servera proxy na http://prognoza.pogody.tv/"
+
+msgid "Use default quality:"
+msgstr "Použite predvolenú kvalitu:"
+
+msgid "Use default video quality"
+msgstr "Použitie predvolenej kvality videa"
+
+msgid "Use default video quality:"
+msgstr "Použite predvolenú kvalitu videa:"
+
+msgid "Use links cache"
+msgstr "Používanie vyrovnávacej pamäte odkazov"
+
+msgid "Use preferred bitrate"
+msgstr "Použite preferovaný dátový tok"
+
+msgid "Use preferred quality"
+msgstr "Používajte preferovanú kvalitu"
+
+msgid "Use proxy server:"
+msgstr "Použiť proxy server:"
+
+#, python-format
+msgid "Use software decoder for the %s"
+msgstr "Použite softvérový dekodér pre %s"
+
+msgid "Use subtitles parser extension if available"
+msgstr "Použitie rozšírenia analyzátora titulkov, ak je k dispozícii"
+
+msgid "Use the PyCurl for HTTP(S) requests"
+msgstr "Použite PyCurl pre požiadavky HTTP(S)"
+
+msgid "Use web proxy gateway"
+msgstr "Používanie webovej brány servera proxy"
+
+msgid "Use web-proxy (it may be illegal):"
+msgstr "Použite webový server proxy (môže to byť nezákonné):"
+
+msgid "Use web-proxy for VODs (it may be illegal):"
+msgstr "Použite webový server proxy pre videá na vyžiadanie (môže to byť nezákonné):"
+
+msgid "User defined"
+msgstr "Definované užívateľom"
+
+msgid "User files"
+msgstr "Používateľské súbory"
+
+msgid "User links"
+msgstr "Odkazy na používateľov"
+
+msgid "User links stored in the ytlist.txt file."
+msgstr "Odkazy na používateľov uložené v súbore ytlist.txt."
+
+msgid "Username"
+msgstr "Užívateľské meno"
+
+#, python-format
+msgid "Username in settings is different from %s"
+msgstr "Používateľské meno v nastaveniach sa líši od %s"
+
+msgid "Username:"
+msgstr "Používateľské meno:"
+
+msgid ""
+"Using this host in your country can be illegal.\n"
+"Do you want to continue at your own risk?"
+msgstr ""
+"Používanie tohto hostiteľa vo vašej krajine môže byť nezákonné.\n"
+"Chcete pokračovať na vlastné riziko?"
+
+#, python-format
+msgid "Utility \"%s\" can not be found."
+msgstr "Pomôcka \"%s\" sa nedá nájsť."
+
+msgid "VENUES"
+msgstr "MIESTACH"
+
+msgid "VFD set current title:"
+msgstr "Aktuálny názov VFD:"
+
+msgid "VIEWS"
+msgstr "Zobrazení"
+
+msgid "Verify"
+msgstr "Over"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Video default quality:"
+msgstr "Predvolená kvalita videa:"
+
+msgid "Video format:"
+msgstr "Formát videa:"
+
+msgid "Video mode"
+msgstr "Režim Videa"
+
+msgid "Video options"
+msgstr "Možnosti videa"
+
+msgid "Video policy"
+msgstr "Pravidlá pre videá"
+
+msgid "Video policy for 4:3"
+msgstr "Pravidlá pre videá pre 4:3"
+
+msgid "Video with DRM protection."
+msgstr "Video s ochranou DRM."
+
+msgid "Videos"
+msgstr "Videá"
+
+#, python-format
+msgid "Videos %s"
+msgstr "Videá %s"
+
+#, python-format
+msgid "Videos count: %s"
+msgstr "Počet videí: %s"
+
+msgid "View count"
+msgstr "Počet zobrazení"
+
+msgid "Views"
+msgstr "Zobrazení"
+
+msgid "Views:"
+msgstr "Zobrazení:"
+
+msgid "Vimeo Suggestions"
+msgstr "Návrhy služby Vimeo"
+
+msgid "Virtual Keyboard"
+msgstr "Virtuálna kľúčová tabuľa"
+
+msgid "Virtual Keyboard type"
+msgstr "Typ virtuálnej klávesnice"
+
+msgid "WARNING! IF UPDATE FAILED: "
+msgstr "UPOZORNENIE! AK AKTUALIZÁCIA ZLYHLA: "
+
+msgid "WWE"
+msgstr "WWE"
+
+msgid "WWE Network"
+msgstr "Sieť WWE"
+
+#, python-format
+msgid "Waiting search thread to stop, please wait (%d)"
+msgstr "Čakanie na zastavenie vyhľadávacieho vlákna, počkajte (%d)"
+
+msgid "Watch"
+msgstr "Sleduj"
+
+msgid "Watch Trailer"
+msgstr "Pozrite si upútavku"
+
+msgid "Watch Videos Online"
+msgstr "Pozrite si videá online"
+
+msgid "Web component has been reset and all threads are stopped. :)"
+msgstr "Webový komponent bol resetovaný a všetky vlákna boli zastavené. :)"
+
+msgid "Web component has been reset, the following threads are still working:"
+msgstr "Webový komponent bol resetovaný, nasledujúce vlákna stále fungujú:"
+
+msgid "Web interface version"
+msgstr "Verzia webového rozhrania"
+
+msgid "Web proxy"
+msgstr "Webový server proxy"
+
+msgid "Weekly Indys"
+msgstr "Týždenný Indys"
+
+msgid "Whole file must be downloaded to start playback!"
+msgstr "Na spustenie prehrávania je potrebné stiahnuť celý súbor!"
+
+msgid "With closed captioned."
+msgstr "So skrytými titulkami."
+
+msgid "With subtitles"
+msgstr "Hodiny s titulkami"
+
+msgid "Write current title to file:"
+msgstr "Napíšte aktuálny názov súboru:"
+
+msgid "Written Boards Review"
+msgstr "Preskúmanie písomných fór"
+
+msgid "Wrong Youtube Api Key length"
+msgstr "Nesprávna dĺžka kľúča rozhrania API služby YouTube"
+
+msgid "Wrong answer."
+msgstr "Nesprávna odpoveď."
+
+msgid "Wrong format of rar archive."
+msgstr "Nesprávny formát archívu rar."
+
+msgid "Wrong format of zip archive."
+msgstr "Nesprávny formát archívu zip."
+
+msgid "Wrong indexes."
+msgstr "Nesprávne indexy."
+
+msgid "Wrong uri."
+msgstr "Nesprávne uri."
+
+msgid "Xbox One"
+msgstr "Xbox One"
+
+msgid "YP connected"
+msgstr "YP pripojený"
+
+msgid "Year"
+msgstr "Rok"
+
+#, python-format
+msgid "Year %s"
+msgstr "Rok %s"
+
+msgid "Year: "
+msgstr "Rok: "
+
+msgid "Yes"
+msgstr "Áno"
+
+msgid "Yes, to console"
+msgstr "Áno, na útechu"
+
+msgid "Yes, to file /hdd/iptv.dbg"
+msgstr "Áno, do súboru /hdd/iptv.dbg"
+
+msgid "Yes, to file /home/root/logs/iptv.dbg"
+msgstr "Ano, do súboru /home/root/logs/iptv.dbg"
+
+msgid "Yes, to file /tmp/iptv.dbg"
+msgstr "Áno, do súboru /tmp/iptv.dbg"
+
+msgid "You are not allowed to play this video"
+msgstr "Toto video nie je povolené prehrávať"
+
+msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
+msgstr "Používate starú verziu OpenWebif.<br> Prechod na web aplikácie E2iPlayer: Vyberte nasledujúce prepojenie:<br>"
+
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "Overenie certifikátov HTTPS môžete zakázať v konfigurácii prehrávača E2iPlayer, aby ste tento problém potlačili."
+
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "Tento problém môžete vyriešiť povolením PyCurl v konfigurácii E2iPlayer."
+
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "Tento problém môžete vyriešiť nainštalovaním balíka PyCurl s podporou TLS 1.3 z informačného kanála."
+
+msgid "You can try to use proxy as workaround, check options under blue button."
+msgstr "Môžete skúsiť použiť proxy ako riešenie, pozrite si možnosti pod modrým tlačidlom."
+
+#, python-format
+msgid "You can use \"%s\" or \"%s\" services for automatic solution."
+msgstr "Na automatické riešenie môžete použiť služby \"%s\" alebo \"%s\"."
+
+msgid "You can use external eplayer to start playback faster."
+msgstr "Na rýchlejšie spustenie prehrávania môžete použiť externý prehrávač eplayer."
+
+msgid "You do not have a premium account. Starting a sponsored broadcast."
+msgstr "Nemáte prémiový účet. Spustenie sponzorovaného vysielania."
+
+msgid "You need to enter email and password in configuration."
+msgstr "V konfigurácii musíte zadať e-mail a heslo."
+
+msgid "You should never perform block I/O operations in the __init__."
+msgstr "Nikdy by ste nemali vykonávať blokové vstupno-výstupné operácie v __init__."
+
+msgid "Your language preference:"
+msgstr "Vaše jazykové preferencie:"
+
+msgid "Your search entry"
+msgstr "Váš vyhľadávací záznam"
+
+msgid "Youtube Suggestions"
+msgstr "Návrhy služby YouTube"
+
+msgid "Youtube searches are quicker, if you fill API key in setting menu"
+msgstr "Vyhľadávanie na YouTube je rýchlejšie, ak vyplníte API kľúč v ponuke nastavení"
+
+#, python-format
+msgid "[%s] - configuration"
+msgstr "[%s] - konfigurácia"
+
+#, python-format
+msgid "[%s] with buffering"
+msgstr "[%s] s vyrovnávacou pamäťou"
+
+#, python-format
+msgid "[%s] without buffering"
+msgstr "[%s] bez ukladania do vyrovnávacej pamäte"
+
+msgid "[HLS/M3U8] buffering"
+msgstr "[HLS/M3U8] vyrovnávacia pamäť"
+
+msgid "[HTTP] buffering"
+msgstr "[HTTP] vyrovnávacia pamäť"
+
+msgid "[Logged-in-only] "
+msgstr "[Len prihlásený] "
+
+msgid "[RTMP] buffering (rtmpdump required)"
+msgstr "[RTMP] vyrovnávacia pamäť (vyžaduje sa RTMPDUMP)"
+
+msgid "[en]"
+msgstr "[en]"
+
+msgid "[pl]"
+msgstr "[pl]"
+
+msgid "[trailer]"
+msgstr "Príves"
+
+msgid "_checkStatus except error"
+msgstr "_checkStatus okrem chyby"
+
+msgid "after a week"
+msgstr "po týždni"
+
+msgid "after closing"
+msgstr "po zatvorení"
+
+msgid "after day"
+msgstr "po dni"
+
+msgid "after three days"
+msgstr "po troch dňoch"
+
+msgid "all"
+msgstr "všetky"
+
+msgid "any"
+msgstr "akýkoľvek"
+
+msgid "aqua"
+msgstr "aqua"
+
+msgid "auto"
+msgstr "automaticky"
+
+msgid "average"
+msgstr "priemer"
+
+msgid "black"
+msgstr "čierna"
+
+msgid "black&white"
+msgstr "čiernobiele"
+
+msgid "blue"
+msgstr "modrá"
+
+msgid "bottom"
+msgstr "dole"
+
+msgid "buffering location"
+msgstr "umiestnenie vyrovnávacej pamäte"
+
+msgid "center"
+msgstr "na stred"
+
+msgid "cobalt"
+msgstr "kobalt"
+
+msgid "de"
+msgstr "de"
+
+msgid "default"
+msgstr "predvolené"
+
+msgid "direct link"
+msgstr "priamy odkaz"
+
+msgid "downloads location"
+msgstr "umiestnenie sťahovania"
+
+msgid "e-mail"
+msgstr "e-mail"
+
+msgid "email"
+msgstr "e-mail"
+
+#, fuzzy
+msgid "episodes"
+msgstr "Epizódy"
+
+msgid "external eplayer3"
+msgstr "externý eplayer3"
+
+msgid "external gstplayer"
+msgstr "externý gstplayer"
+
+msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
+msgstr "najprv skontrolujte, či hostiteľ funguje správne v grafickom používateľskom <b>rozhraní</b> a na webe PRED nahlásením chyby v ňom !!!"
+
+msgid "format"
+msgstr "formát"
+
+msgid "from E2 settings"
+msgstr "z nastavení plánu E2"
+
+msgid "fuchsia"
+msgstr "fuchsia"
+
+msgid "geoblocked"
+msgstr "geograficky blokované"
+
+msgid "gray"
+msgstr "sivá"
+
+msgid "green"
+msgstr "zelená"
+
+msgid "hCaptcha already solved!"
+msgstr "hCaptcha už vyriešená!"
+
+msgid "hCaptcha not solved!"
+msgstr "hCaptcha nebola vyriešená!"
+
+msgid "hCaptcha solved!"
+msgstr "hCaptcha vyriešená!"
+
+msgid "hd"
+msgstr "hd"
+
+msgid "high"
+msgstr "vysoký"
+
+msgid "highest"
+msgstr "najvyššia"
+
+msgid "horizontal"
+msgstr "horizontálna"
+
+msgid "host"
+msgstr "hostiteľ"
+
+msgid "host:"
+msgstr "hostiteľ:"
+
+msgid "https"
+msgstr "https"
+
+msgid "https - validate SSL certificates"
+msgstr "https - overenie SSL certifikátov"
+
+msgid "iMPACT Wrestling"
+msgstr "iMPACT zápasenie"
+
+msgid "internal"
+msgstr "interne"
+
+msgid "jersey"
+msgstr "dres"
+
+msgid "large"
+msgstr "veľké"
+
+msgid "leave movie player..."
+msgstr "opustiť prehrávač filmov..."
+
+msgid "lime"
+msgstr "limetka"
+
+msgid "line"
+msgstr "riadok"
+
+msgid "live"
+msgstr "aktívny"
+
+msgid "login"
+msgstr "prihlásiť sa"
+
+msgid "low"
+msgstr "nízky"
+
+msgid "lowest"
+msgstr "najnižšia"
+
+msgid "main"
+msgstr "hlavný obsah"
+
+msgid "maroon"
+msgstr "maroon"
+
+msgid "medium"
+msgstr "stredný"
+
+msgid "navy"
+msgstr "námorníctvo"
+
+msgid "olive"
+msgstr "oliva"
+
+msgid "password"
+msgstr "heslo"
+
+msgid "purple"
+msgstr "ružová"
+
+msgid "quality"
+msgstr "kvalita"
+
+msgid "red"
+msgstr "červená"
+
+msgid "rootfs"
+msgstr "rootfs"
+
+msgid "rtmp"
+msgstr "rtmp"
+
+msgid "second"
+msgstr "sekunda"
+
+msgid "seconds"
+msgstr "sekundy"
+
+msgid "shows"
+msgstr "zobraziť"
+
+msgid "silver"
+msgstr "strieborný"
+
+msgid "small"
+msgstr "malé"
+
+msgid "standard"
+msgstr "štandard"
+
+msgid "teal"
+msgstr "teal"
+
+msgid "the best"
+msgstr "najlepší"
+
+msgid "the highest"
+msgstr "najvyššia"
+
+msgid "the lowest"
+msgstr "najnižšia"
+
+msgid "the worst"
+msgstr "najhoršie"
+
+msgid "top"
+msgstr "hore"
+
+msgid "trailer"
+msgstr "trailer"
+
+msgid "unknown"
+msgstr "neznáme"
+
+msgid "version"
+msgstr "verzia"
+
+msgid "vertical"
+msgstr "vertikálny"
+
+msgid "very high"
+msgstr "veľmi vysoká"
+
+#, python-format
+msgid "videos: %s"
+msgstr "videá: %s"
+
+msgid "views"
+msgstr "zobrazení"
+
+msgid "visit site"
+msgstr "navštíviť stránku"
+
+#, python-format
+msgid "wait %s second"
+msgstr "počkajte %s sekundu"
+
+#, python-format
+msgid "wait %s seconds"
+msgstr "počkajte %s sekúnd"
+
+msgid "white"
+msgstr "biela"
+
+msgid "www: "
+msgstr "www: "
+
+msgid "yellow"
+msgstr "žltá"

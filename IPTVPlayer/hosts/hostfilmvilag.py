@@ -21,7 +21,6 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import re
 import datetime
-import urllib
 import html
 ###################################################
 
@@ -94,9 +93,9 @@ class FilmVilag(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG('FilmVilag.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Kategóriák'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
-                        {'category': 'search', 'title': _('Keresés'), 'search_item': True, 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
-                        {'category': 'search_history', 'title': _('Keresési előzmények'), 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}]
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Kategóriák', 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
+                        {'category': 'search', 'title': 'Keresés', 'search_item': True, 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
+                        {'category': 'search_history', 'title': 'Keresési előzmények', 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def getdesc(self, iurl):
@@ -241,7 +240,8 @@ class FilmVilag(CBaseHostClass):
                 printDBG(title)
                 icon = self.cm.ph.getDataBeetwenMarkers(result, 'height="169" src="', '"', False)[1]
                 url = self.cm.ph.getDataBeetwenMarkers(result, '" src="', '"', False)[1]
-                desc = self.getdesc(title, n)
+                # desc = self.getdesc(title, n)
+                desc = self.getdesc(n)
                 params = {'title': title, 'icon': icon, 'url': url, 'desc': desc}
                 self.addVideo(params)
 
