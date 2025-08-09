@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # date of last change: 09-08-2025 by Lululla
 # 20250807 fix from lululla for getThumbnailUrl2 (icons) - sport page - events recoded
-# 20250809 fix from lululla for increase getThumbnailUrl2 - sport page show poster - events theatre added 
+# 20250809 fix from lululla for increase getThumbnailUrl2 - sport page show poster - events theatre added
 #
 ###################################################
 # LOCAL import
@@ -25,7 +25,6 @@ import re
 import datetime
 
 ###################################################
-
 
 
 def GetConfigList():
