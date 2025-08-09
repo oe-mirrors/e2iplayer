@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-09 11:41+0200\n"
-"PO-Revision-Date: 2025-06-19 15:44+0300\n"
+"PO-Revision-Date: 2025-08-09 17:34+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2\n"
+"X-Generator: Poedit 3.6\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #, python-format
@@ -77,11 +78,11 @@ msgid ""
 "https://github.com/oe-mirrors/e2iplayer/issues"
 msgstr ""
 "\n"
-"Μπορείτε επίσης να αναφέρετε το πρόβλημα εδώ: \n"
-" https://github.com/oe-mirrors/e2iplayer/issues"
+"Μπορείτε επίσης να αναφέρετε το πρόβλημα εδώ \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
 
 msgid "    *    Votes: "
-msgstr ""
+msgstr "    *    Ψήφοι: "
 
 msgid "    Audio buffer size [KB]"
 msgstr "    Μέγεθος προφόρτωσης ήχου [KB]"
@@ -307,7 +308,7 @@ msgid "--Other--"
 msgstr "--Άλλα-"
 
 msgid "12 hour format"
-msgstr "Μορφή 12 ωρών "
+msgstr "Μορφή 12 ωρών"
 
 msgid "16:10 Letterbox"
 msgstr "16:10 Γραμματοκιβώτιο"
@@ -325,7 +326,7 @@ msgid "16:9 always"
 msgstr "16:9 πάντα"
 
 msgid "24 hour format"
-msgstr "Μορφή 24 ωρών "
+msgstr "Μορφή 24 ωρών"
 
 msgid "4:3 Letterbox"
 msgstr "4:3 Γραμματοκιβώτιο"
@@ -361,7 +362,7 @@ msgid "ARTISTS"
 msgstr "ΚΑΛΛΙΤΕΧΝΕΣ"
 
 msgid "ATTENTION !"
-msgstr ""
+msgstr "ΠΡΟΣΟΧΗ !"
 
 msgid "AZ"
 msgstr "AZ"
@@ -537,9 +538,8 @@ msgstr "Αρχείο"
 msgid "Archives"
 msgstr "Αρχεία"
 
-#, fuzzy
 msgid "Are you sure you want to delete search history?"
-msgstr "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε το αρχείο \"%s\";"
+msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ιστορικό αναζήτησης;"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
@@ -885,9 +885,8 @@ msgstr "Διαγραφή"
 msgid "Delete log file"
 msgstr "Διαγραφή αρχείου καταγραφής"
 
-#, fuzzy
 msgid "Delete search history"
-msgstr "Ιστορικό αναζήτησης"
+msgstr "Διαγραφή ιστορικού αναζήτησης"
 
 msgid "Description:"
 msgstr "Περιγραφή:"
@@ -1930,10 +1929,10 @@ msgstr "Αρχιτεκτονική κινητής υποδιαστολής MIPS"
 
 #, python-format
 msgid "MOVE: %s"
-msgstr ""
+msgstr "ΜΕΤΑΚΙΝΗΣΗ: %s"
 
 msgid "MOVIES"
-msgstr ""
+msgstr "ΤΑΙΝΙΕΣ"
 
 msgid "Main"
 msgstr "Κύριο"
@@ -2184,9 +2183,9 @@ msgstr "Αναπαραγωγή τώρα"
 msgid "Number of downloaded files simultaneously"
 msgstr "Αριθμός ταυτόχρονης λήψης αρχείων"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Number of items in search history: %d"
-msgstr "Αριθμός στοιχείων στο ιστορικό αναζήτησης"
+msgstr "Αριθμός στοιχείων στο ιστορικό αναζήτησης: %d"
 
 msgid "OK"
 msgstr "ΕΝΤΑΞΕΙ"
@@ -2400,9 +2399,8 @@ msgstr "Παρακαλώ περιμένετε - γίνεται λήψη των �
 msgid "Please wait for initialization data."
 msgstr "Παρακαλώ περιμένετε τα δεδομένα αρχικοποίησης."
 
-#, fuzzy
 msgid "Podcasts"
-msgstr "Ζωντανές μεταδόσεις"
+msgstr "Podcasts"
 
 msgid "Polish"
 msgstr "Πολωνικά"
@@ -2686,12 +2684,11 @@ msgstr "Βαθμολογία τουλάχιστον: "
 msgid "Search"
 msgstr "Αναζήτηση"
 
-#, fuzzy
 msgid "Search History is empty."
-msgstr "Ιστορικό αναζήτησης"
+msgstr "Το ιστορικό αναζήτησης είναι άδειο."
 
 msgid "Search History successfully deleted."
-msgstr ""
+msgstr "Το ιστορικό αναζήτησης διαγράφηκε με επιτυχία."
 
 msgid "Search Movies and TV Series"
 msgstr "Αναζήτηση Ταινιών και Τηλεοπτικών σειρών"
@@ -2722,7 +2719,7 @@ msgid "Search type"
 msgstr "Τύπος αναζήτησης"
 
 msgid "Search youtube materials"
-msgstr "Αναζήτηση υλικού youtube "
+msgstr "Αναζήτηση υλικού youtube"
 
 #, python-format
 msgid "Searching in %s, please wait (%d)"
@@ -2881,9 +2878,8 @@ msgstr "Ορισμός παρακολούθησης"
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
-#, fuzzy
 msgid "Shorts"
-msgstr "Όλα τα αθλήματα"
+msgstr "Σύντομα βίντεο"
 
 msgid "Shoulder & Elbow"
 msgstr "Ώμος & αγκώνας"
@@ -3146,7 +3142,7 @@ msgid "System"
 msgstr "Σύστημα"
 
 msgid "THIS IS A PRIVATE VIDEO."
-msgstr ""
+msgstr "ΑΥΤΟ ΕΙΝΑΙ ΙΔΙΩΤΙΚΟ ΒΙΝΤΕΟ."
 
 msgid "TNA"
 msgstr "TNA"
@@ -3161,7 +3157,7 @@ msgid "TV"
 msgstr "TV"
 
 msgid "TV SERIES"
-msgstr ""
+msgstr "ΤΗΛΕΟΠΤΙΚΕΣ ΣΕΙΡΕΣ"
 
 msgid "TV Series"
 msgstr "Τηλεοπτικές σειρές"
@@ -3262,26 +3258,22 @@ msgid "This host has been added already to this group."
 msgstr "Αυτός ο host έχει ήδη προστεθεί σε αυτή την ομάδα."
 
 msgid "This model is offline."
-msgstr ""
+msgstr "Αυτό το μοντέλο είναι εκτός σύνδεσης."
 
-#, fuzzy
 msgid "This room is offline. Try again later!"
-msgstr "Φαίνεται ότι υπάρχει κάποια προστασία. Δοκιμάστε ξανά αργότερα."
+msgstr "Αυτό το δωμάτιο είναι εκτός σύνδεσης. Δοκιμάστε ξανά αργότερα!"
 
-#, fuzzy
 msgid "This show is private. Try again later!"
-msgstr "Φαίνεται ότι υπάρχει κάποια προστασία. Δοκιμάστε ξανά αργότερα."
+msgstr "Αυτή η εκπομπή είναι ιδιωτική. Δοκιμάστε ξανά αργότερα!"
 
 msgid "This site is protected with Google reCaptcha v2."
 msgstr "Αυτός ο ιστότοπος προστατεύεται με Google reCaptcha v2."
 
-#, fuzzy
 msgid "This video has been deleted."
-msgstr "Το αρχείο εντοπισμού σφαλμάτων διαγράφηκε"
+msgstr "Αυτό το βίντεο έχει διαγραφεί."
 
-#, fuzzy
 msgid "This video is a private video."
-msgstr " Αυτό το βίντεο είναι ιδιωτικό."
+msgstr "Αυτό το βίντεο είναι ιδιωτικό."
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB flash drive για να διορθώσετε αυτό το πρόβλημα."
@@ -3376,7 +3368,7 @@ msgid "Umount iso file"
 msgstr "Μη προσάρτηση αρχείου iso"
 
 msgid "Unable to comply. Search History is empty."
-msgstr ""
+msgstr "Δεν είναι δυνατή η συμμόρφωση. Το ιστορικό αναζήτησης είναι άδειο."
 
 msgid "Unknow data in the captcha item!"
 msgstr "Άγνωστα δεδομένα στο στοιχείο captcha!"
@@ -3421,7 +3413,7 @@ msgid "Upcoming"
 msgstr "Επερχόμενα"
 
 msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr ""
+msgstr "Η ενημέρωση ολοκληρώθηκε με επιτυχία. Προς το παρόν, το σύστημα θα επανεκκινηθεί."
 
 msgid "Upload date"
 msgstr "Ημερομηνία μεταφόρτωσης"
@@ -3574,7 +3566,7 @@ msgid "Virtual Keyboard type"
 msgstr "Τύπος εικονικού πληκτρολογίου"
 
 msgid "WARNING! IF UPDATE FAILED: "
-msgstr ""
+msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ! ΑΝ Η ΕΝΗΜΕΡΩΣΗ ΑΠΕΤΥΧΕ: "
 
 msgid "WWE"
 msgstr "WWE"
@@ -3822,9 +3814,8 @@ msgstr "e-mail"
 msgid "email"
 msgstr "email"
 
-#, fuzzy
 msgid "episodes"
-msgstr "Επεισόδια"
+msgstr "επεισόδια"
 
 msgid "external eplayer3"
 msgstr "εξωτερικό eplayer3"
