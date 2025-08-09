@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# date of last change: 07-08-2025 by Lululla
+# date of last change: 09-08-2025 by Lululla
+# 20250807 fix from lululla for getThumbnailUrl2 (icons) - sport page - events recoded
+# 20250809 fix from lululla for increase getThumbnailUrl2 - sport page show poster - events theatre added 
 #
 ###################################################
 # LOCAL import
@@ -23,7 +25,7 @@ import re
 import datetime
 
 ###################################################
-# 20250807 fix from lululla for getThumbnailUrl2 (icons) - sport page - events recoded
+
 
 
 def GetConfigList():
@@ -37,49 +39,52 @@ def gettytul():
 class Raiplay(CBaseHostClass):
 
     def __init__(self):
-        self.cm = common()
 
         CBaseHostClass.__init__(self, {'history': 'raiplay', 'cookie': 'raiplay.it.cookie'})
+        self.cm = common()
         self.MAIN_URL = 'https://raiplay.it/'
         self.MENU_URL = "https://www.rai.it/dl/RaiPlay/2016/menu/PublishingBlock-20b274b1-23ae-414f-b3bf-4bdc13b86af2.html?homejson"
+        self.DEFAULT_ICON_URL = "https://img.tuttoandroid.net/wp-content/uploads/2019/10/Raiplay-logo.jpg"
+        self.DEFAULT_ICON_URL2 = "https://images-eu.ssl-images-amazon.com/images/I/41%2B5P94pGPL.png"
+        self.NOTHUMB_URL = "https://img.tuttoandroid.net/wp-content/uploads/2019/10/Raiplay-logo.jpg"
+        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        self.RELINKER_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36"
+        # self.LOCALIZEURL = "http://mediapolisgs.rai.it/relinker/relinkerServlet.htm?cont=201342"
+
         self.CHANNELS_URL = "https://www.rai.it/dl/RaiPlay/2016/PublishingBlock-9a2ff311-fcf0-4539-8f8f-c4fee2a71d58.html?json"
 
-        self.CHANNELS_RADIO_URL = "https://rai.it/dl/portaleRadio/popup/ContentSet-003728e4-db46-4df8-83ff-606426c0b3f5-json.html"
-        self.CHANNELS_RADIO_URL2 = "http://www.raiplaysound.it/dirette.json"
-
-        self.EPG_URL_OLD = "https://www.rai.it/dl/palinsesti/Page-e120a813-1b92-4057-a214-15943d95aa68-json.html?canale=[nomeCanale]&giorno=[dd-mm-yyyy]"
         # self.EPG_URL = "https://www.raiplay.it/guidatv/lista?canale=[nomeCanale]&giorno=[dd-mm-yyyy]"
         self.EPG_URL = 'https://www.raiplay.it/palinsesto/guidatv/lista/[idCanale]/[dd-mm-yyyy].html'
         self.EPG_URL_JSON = "https://www.raiplay.it/palinsesto/app/old/[idCanale]/[dd-mm-yyyy].json"  # this actual work updated
-        self.TG_URL = "http://www.tgr.rai.it/dl/tgr/mhp/home.xml"
 
+        # Raiplay RADIO
+        # self.BASEURL = "http://www.raiplayradio.it/"
+        self.CHANNELS_RADIO_URL = "https://rai.it/dl/portaleRadio/popup/ContentSet-003728e4-db46-4df8-83ff-606426c0b3f5-json.html"
+        self.CHANNELS_RADIO_URL2 = "http://www.raiplaysound.it/dirette.json"
+        # self.NOTHUMB_RADIO_URL = "http://www.raiplayradio.it/dl/components/img/radio/player/placeholder_img.png"
+
+        self.TG_URL = "http://www.tgr.rai.it/dl/tgr/mhp/home.xml"
+        self.TG1_URL = "https://www.rainews.it/notiziari/tg1/archivio"
+        # https://www.raiplay.it/programmi/specialetg1.json
+        self.TG2_URL = "https://www.rainews.it/notiziari/tg2/archivio"
+        self.TG3_URL = "https://www.rainews.it/notiziari/tg3/archivio"
+
+        # Rai Sport urls Update Rai Sport URL Lululla
         self.RAISPORT_MAIN_URL = 'https://www.raisport.rai.it'
         self.RAISPORT_LIVE_URL = self.RAISPORT_MAIN_URL + '/dirette.html'
         self.RAISPORT_ARCHIVIO_URL = self.RAISPORT_MAIN_URL + '/archivio.html'
-        # self.RAISPORT_SEARCH_URL = self.RAISPORT_MAIN_URL + "/atomatic/news-search-service/api/v1/search?transform=false"
-
-        # Update Rai Sport URL Lululla
+        self.RAISPORTDOMINIO = "RaiNews|Category-6dd7493b-f116-45de-af11-7d28a3f33dd2"
         self.RAISPORT_CATEGORIES_URL = "https://www.rainews.it/category/6dd7493b-f116-45de-af11-7d28a3f33dd2.json"
         self.RAISPORT_SEARCH_URL = "https://www.rainews.it/atomatic/news-search-service/api/v3/search"
 
-        self.DEFAULT_ICON_URL = "https://img.tuttoandroid.net/wp-content/uploads/2019/10/Raiplay-logo.jpg"
-        self.NOTHUMB_URL = "https://img.tuttoandroid.net/wp-content/uploads/2019/10/Raiplay-logo.jpg"
-
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.RELINKER_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36"
+        # # future work
+        # PALINSESTO_URL_HTML = "https://www.raiplay.it/palinsesto/guidatv/lista/[idCanale]/[dd-mm-yyyy].html"
+        # ON_AIR_URL = "https://www.raiplay.it/palinsesto/onAir.json"
+        # RAIPLAY_AZ_TV_SHOW_PATH = "https://www.raiplay.it/dl/RaiTV/RaiPlayMobile/Prod/Config/programmiAZ-elenco.json"
+        # RAIPLAY_AZ_RADIO_SHOW_PATH = "https://www.raiplay.it/dl/RaiTV/RaiRadioMobile/Prod/Config/programmiAZ-elenco.json"
+        # PALINSESTO_URL = "http://www.raiplaysound.it/dl/palinsesti/Page-a47ba852-d24f-44c2-8abb-0c9f90187a3e-json.html?canale=[nomeCanale]&giorno=[dd-mm-yyyy]&mode=light"
 
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        # onAirUrl = "https://www.raiplay.it/palinsesto/onAir.json"
-        # RaiPlayAzTvShowPath = "https://raiplay.it/dl/RaiTV/RaiPlayMobile/Prod/Config/programmiAZ-elenco.json"
-        # noThumbUrl = "http://www.raiplayradio.it/dl/components/img/radio/player/placeholder_img.png"
-        # baseUrl = "http://www.raiplayradio.it/"
-        # localizeUrl = "http://mediapolisgs.rai.it/relinker/relinkerServlet.htm?cont=201342"
-        # palinsestoUrl = "http://www.raiplaysound.it/dl/palinsesti/Page-a47ba852-d24f-44c2-8abb-0c9f90187a3e-json.html?canale=[nomeCanale]&giorno=[dd-mm-yyyy]&mode=light"
-        # RaiRadioAzTvShowPath = "https://raiplay.it/dl/RaiTV/RaiRadioMobile/Prod/Config/programmiAZ-elenco.json"
-        # Rai Sport urls
-        # self.RaiSportMainUrl = 'https://www.rainews.it/archivio/sport'
-        # self.RaiSportCategoriesUrl = "https://www.rainews.it/category/6dd7493b-f116-45de-af11-7d28a3f33dd2.json"
-        # self.RaiSportSearchUrl = self.RAISPORT_MAIN_URL + "/atomatic/news-search-service/api/v3/search?transform=false"
         self.RaiSportKeys = []
 
     def getPage(self, url, addParams={}, post_data=None):
@@ -107,6 +112,11 @@ class Raiplay(CBaseHostClass):
                 return self.getThumbnailUrl(icon_url)
             else:
                 print(">>> Skipping invalid transparent-icon:", icon_url)
+
+        if "audio" in item:
+            ch_image_url = item["poster"]
+            print(">>> Using poster:", ch_image_url)
+            return self.getThumbnailUrl(ch_image_url)
 
         if "chImage" in item:
             ch_image_url = item["chImage"]
@@ -136,9 +146,12 @@ class Raiplay(CBaseHostClass):
             elif "square" in images:
                 print(">>> Using square:", images["square"])
                 return self.getThumbnailUrl(images["square"])
+            elif "default" in images:
+                print(">>> Using default:", images["default"])
+                return self.getThumbnailUrl(images["default"])
 
-        print(">>> No valid thumbnail found, using NOTHUMB_URL")
-        return self.NOTHUMB_URL
+        print(">>> No valid thumbnail found, using DEFAULT_ICON_URL")
+        return self.DEFAULT_ICON_URL
 
     def getFullUrl(self, url):
         if url == "":
@@ -405,9 +418,9 @@ class Raiplay(CBaseHostClass):
         for station in radio_stations:
             title = station["nome"]
             desc = station["chText"]
-            icon = self.getThumbnailUrl2(station)
+            icon = "https://www.rai.it" + station["chImage"]
             if not icon:
-                icon = "https://www.rai.it" + station["chImage"]
+                icon = self.getThumbnailUrl2(station)
             if station["flussi"]["liveAndroid"] != "":
                 url = station["flussi"]["liveAndroid"]
             params = dict(cItem)
@@ -521,6 +534,19 @@ class Raiplay(CBaseHostClass):
                     # i.e. change "/raiplay/programmi/?json" to "/raiplay/tipologia/programmi/index.json"
                     m = re.findall("raiplay/(.*?)/[?]json", item["PathID"])
                     if m:
+                        # add new item not in old json
+                        params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': "Teatro e musica", 'name': "Teatro e musica", 'url': "/raiplay/tipologia/musica-e-teatro/index.json", 'icon': self.getThumbnailUrl("/dl/img/2018/06/04/1528115285089_ico-teatro.png"), 'sub-type': item["sub-type"]})
+                        printDBG(str(params))
+                        self.addDir(params)
+
+                        # new append example: aggiungo "Documentari"
+                        params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': "Documentari", 'name': "Documentari", 'url': "/raiplay/tipologia/documentari/index.json", 'icon': self.getThumbnailUrl("/dl/img/2018/06/04/1528115285089_ico-documentari.png"), 'sub-type': item["sub-type"]})
+                        printDBG(str(params))
+                        self.addDir(params)
+                        # add new item not in old json
+                        params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': "Teatro e musica", 'name': "Teatro e musica", 'url': "/raiplay/tipologia/musica-e-teatro/index.json", 'icon': self.getThumbnailUrl("/dl/img/2018/06/04/1528115285089_ico-teatro.png"), 'sub-type': item["sub-type"]})
+                        printDBG(str(params))
+                        self.addDir(params)
 
                         if m[0] == "fiction":
                             params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': "Serie italiane", 'name': "Serie italiane", 'url': "/raiplay/tipologia/serieitaliane/index.json", 'icon': "https://www.rai.it/dl/img/2018/06/04/1528107006058_ico-fiction.png", 'sub-type': item["sub-type"]})
@@ -558,11 +584,6 @@ class Raiplay(CBaseHostClass):
                                 params["url"] = "/raiplay/tipologia/%s/index.json" % m[0]
                             printDBG(str(params))
                             self.addDir(params)
-
-        # add new item not in old json
-        params = MergeDicts(cItem, {'category': 'ondemand_items', 'title': "Teatro e musica", 'name': "Teatro e musica", 'url': "/raiplay/tipologia/musica-e-teatro/index.json", 'icon': self.getThumbnailUrl("/dl/img/2018/06/04/1528115285089_ico-teatro.png"), 'sub-type': item["sub-type"]})
-        printDBG(str(params))
-        self.addDir(params)
 
     def listOnDemandCategory(self, cItem):
         pathId = cItem["url"]
@@ -647,10 +668,15 @@ class Raiplay(CBaseHostClass):
             videoUrl = item["path_id"]
             icon_url = self.getThumbnailUrl2(item)
             if not icon_url:
-                if item["images"]["portrait"] != "":
-                    icon_url = self.getThumbnailUrl(item["images"]["portrait"])
+                images = item.get("images", {})
+                portrait = images.get("portrait", "")
+                landscape = images.get("landscape", "")
+                if portrait:
+                    icon_url = self.getThumbnailUrl(portrait)
+                elif landscape:
+                    icon_url = self.getThumbnailUrl(landscape)
                 else:
-                    icon_url = self.getThumbnailUrl(item["images"]["landscape"])
+                    icon_url = self.NOTHUMB_URL
             params = {'title': title, 'url': videoUrl, 'icon': icon_url, 'category': 'program'}
             printDBG("add video '%s' with pathId '%s'" % (title, videoUrl))
 
@@ -729,11 +755,16 @@ class Raiplay(CBaseHostClass):
             title = item["name"]
             icon_url = self.getThumbnailUrl2(item)
             if not icon_url:
-                if item["images"]["portrait"] != "":
-                    icon_url = self.getThumbnailUrl(item["images"]["portrait"])
+                images = item.get("images", {})
+                portrait = images.get("portrait", "")
+                landscape = images.get("landscape", "")
+                if portrait:
+                    icon_url = self.getThumbnailUrl(portrait)
+                elif landscape:
+                    icon_url = self.getThumbnailUrl(landscape)
                 else:
-                    icon_url = self.getThumbnailUrl(item["images"]["landscape"])
-            videoUrl = item["Url"]
+                    icon_url = self.NOTHUMB_URL
+            videoUrl = item.get("Url", "")
             params = {'title': title, 'url': videoUrl, 'icon': icon_url, 'category': 'video_link'}
             printDBG("add video '%s' with pathId '%s'" % (title, videoUrl))
 
@@ -885,19 +916,10 @@ class Raiplay(CBaseHostClass):
                     if len(d) == 3:
                         duration = int(d[0]) * 3600 + int(d[1]) * 60 + int(d[2])
 
-                icon = ""
                 images = video.get('images', {})
                 if images:
-                    icon = self.getThumbnailUrl2(images)
-                    if not icon:
-                        if "landscape" in images:
-                            icon = images["landscape"]
-                        elif "landscape43" in images:
-                            icon = images["landscape43"]
-                        elif "portrait" in images:
-                            icon = images["portrait"]
-                        elif "portrait43" in images:
-                            icon = images["portrait43"]
+                    icon = self.getThumbnailUrl2(video)
+
                 creation_date = video.get('create_date', "")
                 desc = video.get('summary', "")
                 if creation_date and desc:
