@@ -21,9 +21,6 @@ from Plugins.Extensions.IPTVPlayer.components.configbase import COLORS_DEFINITON
 # FOREIGN import
 ###################################################
 import re
-import urllib.error
-import urllib.request
-import urllib.parse
 import base64
 import math
 import hashlib
@@ -35,15 +32,16 @@ except:
     import json as simplejson
 import json
 try:
-    from urllib.parse import urlparse, parse_qs, urlencode  # Python 3
+    from urllib.parse import urlparse, parse_qs, urlencode, urljoin, unquote
+    from urllib.request import urlopen
 except ImportError:
-    from urlparse import urlparse, parse_qs      # Python 2
+    from urllib import urlencode, urlopen, urljoin, unquote
+    from urlparse import urlparse, parse_qs
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from Components.config import config, ConfigSelection, ConfigYesNo, ConfigText, ConfigInteger, getConfigListEntry, ConfigPIN, ConfigDirectory
 from time import sleep, time as time_time
 from datetime import datetime
 from os import remove as os_remove, path as os_path, system as os_system
-import urllib.parse
 ###################################################
 # E2 GUI COMMPONENTS
 ###################################################
@@ -718,7 +716,7 @@ class Host:
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urllib.parse.urljoin(baseUrl, url)
+                return urljoin(baseUrl, url)
         if params == {}:
             params = dict(self.defaultParams)
         params['cookie_items'] = {'xxx': 'ok'}
@@ -6487,7 +6485,7 @@ class Host:
               valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + ']   ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
            if next_page:
               if next_page.startswith('aHR'):
-                  next_page = urllib.parse.unquote(base64.b64decode(next_page))
+                  next_page = unquote(base64.b64decode(next_page))
               if '/?page=0' in next_page:
                   next_page = next_page.replace('page=0', 'page=2')
               numer = next_page.split('=')[-1]
@@ -15049,7 +15047,7 @@ class Host:
               next_page = current_page + 1
               base_url = parsed_url.scheme + '://' + parsed_url.netloc + parsed_url.path
               query_params['page'] = [str(next_page)]
-              new_query = urllib.parse.urlencode([(k, v[0]) for k, v in query_params.items()])
+              new_query = urlencode([(k, v[0]) for k, v in query_params.items()])
               next_url = base_url + '?' + new_query
               printDBG('NEXT_URL: ' + next_url)
               valTab.append(CDisplayListItem('************************', '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
@@ -15090,7 +15088,7 @@ class Host:
               base_url = parsed_url.scheme + '://' + parsed_url.netloc + parsed_url.path
               query_params['page'] = [str(next_page)]
               query_params['offset'] = [str((next_page - 1) * limit)]
-              new_query = urllib.parse.urlencode([(k, v[0]) for k, v in query_params.items()])
+              new_query = urlencode([(k, v[0]) for k, v in query_params.items()])
               next_url = base_url + '?' + new_query
               printDBG('NEXT_URL: ' + next_url)
               valTab.append(CDisplayListItem('************************', '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
@@ -18556,7 +18554,7 @@ class Host:
 
         if parser == 'mjpg_stream':
            try:
-              stream = urllib.request.urlopen(url)
+              stream = urlopen(url)
               bytes = ''
               while True:
                  bytes += stream.read(1024)
@@ -18620,7 +18618,7 @@ class Host:
            videoUrl = re.search('sources.{,6}src":"([^"]+)","d', data).group(1)
            videoUrl = videoUrl.replace('\/', '/')
            printDBG('Link a videóhoz: ' + str(videoUrl))
-           return urllib.parse.unquote(videoUrl)
+           return unquote(videoUrl)
 
         if parser == 'http://www.hclips.com':
            COOKIEFILE = os_path.join(GetCookieDir(), 'hclips.cookie')
@@ -18888,7 +18886,7 @@ class Host:
            data = ''
            newurl = 'http://video%s.myfreecams.com:1935/NxServer/mfc_%s.f4v_aac/playlist.m3u8' % (serwer, url)
            try:
-              data = urllib.request.urlopen(newurl, timeout=1)
+              data = urlopen(newurl, timeout=1)
               # printDBG( 'Host data.meta:  '+str(data.meta) )
            except:
               printDBG('Host error newurl:  ' + newurl)
@@ -19494,7 +19492,7 @@ class Host:
            videoID = re.findall('data-id="(\d+)".*?data-quality="(\d+)"', data, re.S)
            try:
               init = self.cm.ph.getSearchGroups(data, '''window.INITIALSTATE\s*?=\s*?['"]([^"^']+?)['"]''', 1, True)[0]
-              init = urllib.parse.unquote(base64.b64decode(init))
+              init = unquote(base64.b64decode(init))
               # printDBG( 'Host listsItems init: '+init )
               try:
                  result = byteify(simplejson.loads(init)["page"])
@@ -20189,7 +20187,7 @@ class Host:
                        else:
                           tmp2 = re.compile('''unescape\(['"]([^"^']+?)['"]''').findall(item)
                           for item2 in tmp2:
-                             ddata += urllib.parse.unquote(item2)
+                             ddata += unquote(item2)
 
                  printDBG('Host listsItems ddata2: ' + ddata)
 
@@ -20201,8 +20199,8 @@ class Host:
                  ddata = self.cm.ph.getSearchGroups(ddata, '''document\.write[^'^"]+?['"]([^'^"]+?)['"]''')[0]
                  data = ''
                  tmp = ddata.split(sp)
-                 ddata = urllib.parse.unquote(tmp[0])
-                 k = urllib.parse.unquote(tmp[1] + modStr)
+                 ddata = unquote(tmp[0])
+                 k = unquote(tmp[1] + modStr)
                  for idx in range(len(ddata)):
                     data += chr((int(k[idx % len(k)]) ^ ord(ddata[idx])) + modInt)
 
@@ -21152,7 +21150,7 @@ class Host:
            videoUrl = self.cm.ph.getSearchGroups(data, '''<source src=['"]([^"^']+?)['"]''')[0].replace('&amp;', '&')
            if videoUrl.startswith('//'):
                videoUrl = 'http:' + videoUrl
-           return urllib.parse.unquote(videoUrl)
+           return unquote(videoUrl)
 
         if parser == 'https://dato.porn':
            USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.120 Chrome/37.0.2062.120 Safari/537.36'
@@ -21819,7 +21817,7 @@ class Host:
            videoUrl = self.cm.ph.getSearchGroups(videoUrl, '''([^"^']+?)[/]\?br''')[0].strip()
            printDBG('Kész link: ' + videoUrl)
            if videoUrl:
-              return urllib2.unquote(videoUrl)
+              return unquote(videoUrl)
            return ''
 
         if parser == 'https://anysex.com/':
@@ -21891,7 +21889,7 @@ class Host:
            videoUrl = self.cm.ph.getSearchGroups(data, '''file\s*:\s*['"]([^"^']+?)['"]''')[0]
            if videoUrl.startswith('//'):
                videoUrl = 'http:' + videoUrl
-           videoUrl = urllib.parse.urljoin(url, videoUrl)
+           videoUrl = urljoin(url, videoUrl)
            self.defaultParams['max_data_size'] = 0
            sts, data = self.get_Page(videoUrl, self.defaultParams)
            if not sts:
@@ -22388,14 +22386,14 @@ class Host:
            if videoUrl:
               if videoUrl.startswith('//'):
                   videoUrl = 'http:' + videoUrl
-              return urllib2.unquote(videoUrl)
+              return unquote(videoUrl)
            videoUrl = self.cm.ph.getSearchGroups(data, '''['"](https://www.katestube.com/get_file[^"^']+?)['"]''')[0].replace('&amp;', '&')
            if not videoUrl:
               videoUrl = self.cm.ph.getSearchGroups(data2, '''video_url:.['"]([^"^']+?)['"]''')[0].replace('\/', '/').replace('&amp;', '&').strip()
            if 'function/0/' in videoUrl:
               videoUrl = decryptHash(videoUrl, license_code, '16')
            if videoUrl:
-              return urllib2.unquote(videoUrl)
+              return unquote(videoUrl)
            return ''
 
         if parser == 'http://www.nuvid.com':
@@ -22442,7 +22440,7 @@ class Host:
               for item in tmp:
                   return item['url']
            printDBG('Videolink: ' + url)
-           return urllib.parse.unquote(url)
+           return unquote(url)
            return ''
 
         if parser == 'http://www.xvideos.com':
@@ -23264,7 +23262,7 @@ def myfreecam_start(url, xchat):
 				if len(msg) < mlen:
 					rembuf = ''.join(sock_buf)
 					break
-				msg = urllib.parse.unquote(msg)
+				msg = unquote(msg)
 				if fc_type == 1:
 					ws.send("10 0 0 20 0 %s\n\0" % CAMGIRL)
 				elif fc_type == 10:

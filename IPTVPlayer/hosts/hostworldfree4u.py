@@ -8,13 +8,13 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 ###################################################
 
 
@@ -141,7 +141,7 @@ class WorldFree4u(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("WorldFree4u.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search/' + urllib.parse.quote(searchPattern))
+        cItem['url'] = self.getFullUrl('/search/' + urllib_quote(searchPattern))
         self.listItems(cItem)
 
     def getLinksForVideo(self, cItem, forEpisodes=False):

@@ -21,7 +21,11 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 ###################################################
 import re
 import datetime
-import html
+
+try:
+    from HTMLParser import HTMLParser  # Python 2
+except ImportError:
+    from html.parser import HTMLParser  # Python 3
 ###################################################
 
 
@@ -56,7 +60,7 @@ class FilmVilag(CBaseHostClass):
             url = re.findall('iframe.+src=["]([^>]+?)["].+/iframe', data, re.S)
             if url:
                url = url[-1]
-            url = html.unescape(url)
+            url = HTMLParser().unescape(url)
             if "https:" not in url:
                 url = "https:" + url
             printDBG('LEKÉRT LINK: ' + url)

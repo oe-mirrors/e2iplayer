@@ -15,6 +15,8 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+
 cm = common('', False)
 ###################################################
 
@@ -22,10 +24,6 @@ cm = common('', False)
 # FOREIGN import
 ###################################################
 import re
-try:
-    import urllib.parse
-except:
-   import urllib
 import random
 import base64
 import os
@@ -345,10 +343,7 @@ class MoziCsillag(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("MoziCsillag.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        try:
-            searchPattern = urllib.parse.quote_plus(searchPattern)
-        except:
-            searchPattern = urllib.quote_plus(searchPattern)
+        searchPattern = urllib_quote_plus(searchPattern)
         url = 'search_term=' + searchPattern + '&search_type=0&search_where=0&search_rating_start=1&search_rating_end=10&search_year_from=1900&search_year_to=2022'
         url = url.encode('ascii')
         url = base64.b64encode(url)

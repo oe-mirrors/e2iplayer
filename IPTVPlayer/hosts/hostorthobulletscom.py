@@ -9,13 +9,15 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
 try:
     import json
 except Exception:
@@ -129,7 +131,7 @@ class OrthoBullets(CBaseHostClass):
             if self.cm.isValidUrl(url):
                 return url
             else:
-                return urllib.parse.urljoin(baseUrl, url)
+                return urljoin(baseUrl, url)
         addParams['cloudflare_params'] = {'domain': self.up.getDomain(baseUrl), 'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT, 'full_url_handle': _getFullUrl}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
@@ -178,7 +180,7 @@ class OrthoBullets(CBaseHostClass):
         self.tryTologin()
 
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/video/list?search=') + urllib.parse.quote(searchPattern)
+        cItem['url'] = self.getFullUrl('/video/list?search=') + urllib_quote(searchPattern)
         cItem['category'] = 'list_items'
         self.listItems(cItem)
 

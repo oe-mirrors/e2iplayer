@@ -11,12 +11,12 @@ from Components.config import config, getConfigListEntry, ConfigYesNo, ConfigTex
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import urllib.parse
-import html.parser
 ####################################################
 # E2 GUI COMMPONENTS
 ####################################################
@@ -147,7 +147,7 @@ class MusicBox(CBaseHostClass):
                 except Exception:
                     iconimage = ''
                 plot = ''
-                search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
+                search_string = urllib_quote(artist + ' ' + track_name + ' music video')
                 params = {'good_for_fav': True, 'title': str(x + 1) + '. ' + artist + '- ' + track_name, 'page': search_string, 'icon': iconimage, 'desc': plot}
                 self.addVideo(params)
         except Exception:
@@ -191,7 +191,7 @@ class MusicBox(CBaseHostClass):
                     iconimage = item['artworkUrl100']
                 except Exception:
                     iconimage = ''
-                search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
+                search_string = urllib_quote(artist + ' ' + track_name + ' music video')
                 params = {'good_for_fav': True, 'title': artist + '- ' + track_name, 'page': search_string, 'icon': iconimage}
                 self.addVideo(params)
         except Exception:
@@ -216,7 +216,7 @@ class MusicBox(CBaseHostClass):
             track_name = title_primary + ' ' + remixed
             artist = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<p', '>', 'track-artists'), ('</p', '>'), False)[1])
             icon = self.cm.getFullUrl(self.cm.ph.getSearchGroups(item, r'''<img[^>]+?data\-src=['"]([^'^"]+?)['"]''')[0], self.cm.meta['url'])
-            search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
+            search_string = urllib_quote(artist + ' ' + track_name + ' music video')
             params = {'good_for_fav': True, 'title': track_number + '. ' + artist + '- ' + track_name, 'page': search_string, 'icon': icon}
             self.addVideo(params)
 
@@ -242,7 +242,7 @@ class MusicBox(CBaseHostClass):
             artist = ph.clean_html(ph.find(item, ('<span', '>', '__artist'), '</span>', flags=0)[1])
             icon = self.cm.ph.getSearchGroups(item, "url\\(['\"]([^\"^']+?)['\"]\\)")[0]
             track_name = name
-            search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
+            search_string = urllib_quote(artist + ' ' + track_name + ' music video')
 
             params = {'good_for_fav': True, 'title': rank + '. ' + name + ' - ' + artist, 'page': search_string, 'icon': icon}
             printDBG(str(params))
@@ -266,7 +266,7 @@ class MusicBox(CBaseHostClass):
                     icon = self.cm.ph.getSearchGroups(item, r'\s(https?://[^\s]+?\-174x174\.jpg)\s')[0]
 
                     track_name = name
-                    search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
+                    search_string = urllib_quote(artist + ' ' + track_name + ' music video')
 
                     params = {'good_for_fav': True, 'title': rank + '. ' + name + ' - ' + artist, 'page': search_string, 'icon': icon}
                     printDBG(str(params))
@@ -306,7 +306,7 @@ class MusicBox(CBaseHostClass):
             if not sts:
                 return
         else:
-            sts, data = self.cm.getPage('http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist=' + urllib.parse.quote(artist) + '&album=' + urllib.parse.quote(album) + '&api_key=' + audioscrobbler_api_key + '&format=json', {'header': HEADER})
+            sts, data = self.cm.getPage('http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist=' + urllib_quote(artist) + '&album=' + urllib_quote(album) + '&api_key=' + audioscrobbler_api_key + '&format=json', {'header': HEADER})
             if not sts:
                 return
         try:
@@ -321,7 +321,7 @@ class MusicBox(CBaseHostClass):
                 item = data[x]
                 artist = item['artist']['name']
                 track_name = item['name']
-                search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
+                search_string = urllib_quote(artist + ' ' + track_name + ' music video')
                 params = {'good_for_fav': True, 'title': track_name + ' - ' + artist, 'page': search_string, 'icon': albumIcon}
                 self.addVideo(params)
         except Exception:
@@ -372,7 +372,7 @@ class MusicBox(CBaseHostClass):
                     iconimage = item['image']
                 except Exception:
                     iconimage = ''
-                search_string = urllib.parse.quote(artist + ' ' + track_name + ' music video')
+                search_string = urllib_quote(artist + ' ' + track_name + ' music video')
                 params = {'title': track_name + ' - ' + artist, 'page': search_string, 'icon': iconimage}
                 self.addVideo(params)
         except Exception:

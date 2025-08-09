@@ -922,7 +922,7 @@ class Raiplay(CBaseHostClass):
                 creation_date = video.get('create_date', "")
                 desc = video.get('summary', "")
                 if creation_date and desc:
-                    desc = f"{creation_date}\n{desc}"
+                    desc = "%s\n%s" % (creation_date, desc)
                 elif creation_date:
                     desc = creation_date
 

@@ -70,7 +70,7 @@ class IPTVPlayerInfo(CBaseHostClass):
         ITEMS_PER_PAGE = 40
 
         page = cItem.get('page', 0)
-        url = f"https://api.github.com/repos/oe-mirrors/e2iplayer/commits?per_page={ITEMS_PER_PAGE}"
+        url = "https://api.github.com/repos/oe-mirrors/e2iplayer/commits?per_page=%s" % {ITEMS_PER_PAGE}
         # url = self.getFullUrl('/%s/e2iplayer/-/commits/master?limit=%d&offset=%d' % (config.plugins.iptvplayer.gitlab_repo.value, ITEMS_PER_PAGE, page * ITEMS_PER_PAGE))
 
         # if page > 1:
