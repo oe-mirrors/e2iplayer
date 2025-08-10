@@ -381,6 +381,7 @@ class urlparser:
             '96ar.com': self.pp.parserFILEMOON,
             # a
             'adblocktape.wiki': self.pp.parserSTREAMTAPE,
+            'aiavh.com': self.pp.parserJWPLAYER,
             'aliez.me': self.pp.parserALIEZME,
             'allocine.fr': self.pp.parserALLOCINEFR,
             'anime-shinden.info': self.pp.parserANIMESHINDEN,
@@ -422,6 +423,7 @@ class urlparser:
             'csst.online': self.pp.parserSST,
             'cybervynx.com': self.pp.parserJWPLAYER,
             # d
+            'd-s.io': self.pp.parserDOOD,
             'd0000d.com': self.pp.parserDOOD,
             'd000d.com': self.pp.parserDOOD,
             'd0o0d.com': self.pp.parserDOOD,
@@ -433,6 +435,7 @@ class urlparser:
             'dancima.shop': self.pp.parserJWPLAYER,
             'darkomplayer.com': self.pp.parserDARKOMPLAYER,
             'dartstreams.de.cool': self.pp.parserONLYSTREAMTV,
+            'davioad.com': self.pp.parserJWPLAYER,
             'dhcplay.com': self.pp.parserJWPLAYER,
             'dhtpre.com': self.pp.parserJWPLAYER,
             'do7go.com': self.pp.parserDOOD,
@@ -459,6 +462,7 @@ class urlparser:
             'doply.net': self.pp.parserDOOD,
             'dpstream.fyi': self.pp.parserJWPLAYER,
             'dropload.io': self.pp.parserJWPLAYER,
+            'dropload.tv': self.pp.parserJWPLAYER,
             'ds2play.com': self.pp.parserDOOD,
             'ds2video.com': self.pp.parserDOOD,
             'dwish.pro': self.pp.parserJWPLAYER,
@@ -581,6 +585,7 @@ class urlparser:
             'kinoger.re': self.pp.parserSBS,
             'kinoger.ru': self.pp.parserVOESX,
             'krakenfiles.com': self.pp.parserKRAKENFILESCOM,
+            'kravaxxa.com': self.pp.parserJWPLAYER,
             # l
             'l1afav.net': self.pp.parserFILEMOON,
             'life-rtmp.com': self.pp.parserLIFERTMP,
@@ -781,6 +786,7 @@ class urlparser:
             'streamtp4.com': self.pp.parserONLYSTREAMTV,
             'streamup.ws': self.pp.parserSTREAMUP,
             'streamvid.net': self.pp.parserONLYSTREAMTV,
+            'streamvid.su': self.pp.parserJWPLAYER,
             'streamwire.net': self.pp.parserONLYSTREAMTV,
             'streamwish.fun': self.pp.parserJWPLAYER,
             'streamwish.to': self.pp.parserJWPLAYER,
