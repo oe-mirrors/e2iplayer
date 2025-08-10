@@ -30,6 +30,8 @@ from Plugins.Extensions.IPTVPlayer.libs.mlbstreamtv import MLBStreamTVApi, GetCo
 from Plugins.Extensions.IPTVPlayer.libs.wiziwig1 import Wiziwig1Api
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+if not isPY2():
+    basestring = str
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlsplit, urlunsplit
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -1017,7 +1019,7 @@ class IPTVHost(CHostBase):
         if isinstance(urlList, list):
             for item in urlList:
                 retlist.append(CUrlItem(item['name'], item['url'], item.get('need_resolve', 0)))
-        elif isinstance(url, str):
+        elif isinstance(url, basestring):
             if url.endswith('.m3u'):
                 tmpList = self.host.getDirectVideoHasBahCa(name, url)
                 for item in tmpList:

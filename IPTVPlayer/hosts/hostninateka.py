@@ -15,7 +15,10 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
 ###################################################
 import re
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
-import json
+try:
+    import json
+except Exception:
+    import simplejson
 ###################################################
 
 ###################################################

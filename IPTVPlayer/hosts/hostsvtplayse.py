@@ -14,7 +14,10 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 # FOREIGN import
 ###################################################
 import re
-import json
+try:
+    import json
+except Exception:
+    import simplejson as json
 from datetime import datetime, timedelta
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 ###################################################

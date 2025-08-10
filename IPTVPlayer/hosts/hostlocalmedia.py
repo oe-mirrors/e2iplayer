@@ -14,7 +14,10 @@ from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBox
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 ###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+if not isPY2():
+    basestring = str
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -372,8 +375,11 @@ class LocalMedia(CBaseHostClass):
                         continue
                 title = item[0]
                 try:
-                    if isinstance(title, bytes):
-                        title = item[0].decode(encoding, 'ignore')
+                    if isPY2():
+                        title = item[0].decode(encoding).encode('utf-8')
+                    else:
+                        if isinstance(item[0], bytes):
+                            title = item[0].decode(encoding, 'ignore')
                 except Exception:
                     printExc()
                 params = {'title': title, 'raw_name': item[0]}
@@ -638,7 +644,7 @@ class IPTVHost(CHostBase):
                 name, ext = os_path.splitext(fileName)
                 ret = self.host.sessionEx.waitForFinishOpen(GetVirtualKeyboard(), title=_('Set file name'), text=name)
                 printDBG('rename_file new name[%s]' % ret)
-                if isinstance(ret[0], str):
+                if isinstance(ret[0], basestring):
                     newPath = os_path.join(path, ret[0] + ext)
                     printDBG('rename_file new path[%s]' % newPath)
                     if not os_path.isfile(newPath) and not os_path.islink(newPath):
