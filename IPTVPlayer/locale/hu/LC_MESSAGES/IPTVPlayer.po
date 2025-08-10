@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-09 11:41+0200\n"
+"POT-Creation-Date: 2025-08-10 20:53+0200\n"
 "PO-Revision-Date: 2025-06-29 17:27+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -1105,9 +1105,6 @@ msgstr "Időtartam:"
 msgid "Duration: %s"
 msgstr "Időtartam: %s"
 
-msgid "E-mail: "
-msgstr "E-mail cím: "
-
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - beállítások"
 
@@ -1788,9 +1785,6 @@ msgstr "Legfrissebb frissítés"
 
 msgid "Latino"
 msgstr "Latin-amerikai"
-
-msgid "Lead programmer: "
-msgstr "Vezető programozó: "
 
 msgid "Level:"
 msgstr "Szint:"
@@ -2940,6 +2934,10 @@ msgstr "Egyszerű fájlletöltő"
 
 msgid "Skin"
 msgstr "Kinézet"
+
+#, fuzzy
+msgid "Skinners: "
+msgstr "Figyelők: %s"
 
 msgid "Skip video shorter than [min]"
 msgstr "[percnél rövidebb videó kihagyása"

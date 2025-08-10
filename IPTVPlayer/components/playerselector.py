@@ -12,6 +12,7 @@ from Tools.LoadPixmap import LoadPixmap
 from Components.Label import Label
 from Components.config import config
 from Screens.ChoiceBox import ChoiceBox
+from Screens.MessageBox import MessageBox
 from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
@@ -274,6 +275,9 @@ if GRIDSUPPORT:
                 elif self.groupName not in ['all']:
                     options.append((_('Remove "%s" item') % selItem[0], "DEL_ITEM"))
 
+                options.append((_("Settings"), "SETTINGS"))
+                options.append((_("Info"), "INFO"))
+
                 if len(options):
                     self.session.openWithCallback(self.selectMenuCallback, ChoiceBox, title=_("Select option"), list=options)
 
@@ -295,6 +299,37 @@ if GRIDSUPPORT:
                         del self.currList[idx]
                         del self.pixmapList[idx]
                         self.reInitDisplayList()
+                elif ret == 'INFO':
+                    self.showInfo()
+                elif ret == 'SETTINGS':
+                    self.keySetup()
+
+        def showInfo(self):
+            TextMSG = _('version') + " :\n" + GetIPTVPlayerVersion() + '\n\n'
+            TextMSG += _("www: ") + "\nhttps://github.com/oe-mirrors/e2iplayer" + '\n\n'
+            TextMSG += _("Developers: ") + "\n"
+            developers = [
+                'samsamsam',
+                'zdzislaw22',
+                'mamrot',
+                'MarcinO',
+                'skalita',
+                'atilaks',
+                'huball',
+                'matzg',
+                'tomashj291',
+                'a4tech',
+                'Blindspot76',
+                'Max (maxbambi)',
+                '-=Mario=- (zadmario)',
+                'Lululla (Belfagor2005)',
+                'jbleyel',
+                'and others'
+            ]
+            TextMSG += ", ".join(developers)
+            TextMSG += '\n\n' + _("Skinners: ") + "\n"
+            TextMSG += ", ".join(('stein17', 'and others'))
+            self.session.open(MessageBox, TextMSG, type=MessageBox.TYPE_INFO)
 
         def changeReorderingMode(self):
             printDBG(">> PlayerSelectorWidget.changeReorderingMode")

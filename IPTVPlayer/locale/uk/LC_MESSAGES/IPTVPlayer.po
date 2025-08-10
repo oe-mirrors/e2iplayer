@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-09 11:41+0200\n"
+"POT-Creation-Date: 2025-08-10 20:53+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -1157,10 +1157,6 @@ msgid "Duration: %s"
 msgstr "Станції"
 
 #, fuzzy
-msgid "E-mail: "
-msgstr "Ел. адрес"
-
-#, fuzzy
 msgid "E2iPlayer - settings"
 msgstr "IPTV Плеєр - Налаштування"
 
@@ -1872,9 +1868,6 @@ msgstr "Останні оновлення"
 #, fuzzy
 msgid "Latino"
 msgstr "Рейтинг"
-
-msgid "Lead programmer: "
-msgstr ""
 
 msgid "Level:"
 msgstr ""
@@ -3112,6 +3105,10 @@ msgstr "Завантажувач простих субтитрів"
 
 msgid "Skin"
 msgstr "Вибір cкіна"
+
+#, fuzzy
+msgid "Skinners: "
+msgstr "Кінцева помилка: %s"
 
 msgid "Skip video shorter than [min]"
 msgstr ""

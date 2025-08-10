@@ -596,7 +596,6 @@ class E2iPlayerWidget(Screen):
                 options.append((_("Configure host"), "HostConfig"))
         except Exception:
             printExc()
-        options.append((_("Info"), "info"))
         options.append((_("Download manager"), "IPTVDM"))
         self.session.openWithCallback(self.blue_pressed_next, ChoiceBox, title=_("Select option"), list=options)
 
@@ -672,35 +671,8 @@ class E2iPlayerWidget(Screen):
         return False
 
     def blue_pressed_next(self, ret):
-        TextMSG = ''
         if ret:
-            if ret[1] == "info":  # information about plugin
-                TextMSG = _('version') + " :\n" + E2iPlayerWidget.IPTV_VERSION + '\n\n'
-                TextMSG += _("www: ") + "\nhttps://github.com/oe-mirrors/e2iplayer" + '\n\n'
-                TextMSG += _("Developers: ") + "\n"
-                developers = [
-                    'samsamsam',
-                    'zdzislaw22',
-                    'mamrot',
-                    'MarcinO',
-                    'skalita',
-                    'atilaks',
-                    'huball',
-                    'matzg',
-                    'tomashj291',
-                    'a4tech',
-                    'Blindspot76',
-                    'Max (maxbambi)',
-                    '-=Mario=- (zadmario)',
-                    'Lululla (Belfagor2005)',
-                    'jbleyel',
-                    'and others'
-                ]
-                TextMSG += ", ".join(developers)
-                TextMSG += '\n\n' + _("Skinners: ") + "\n"
-                TextMSG += ", ".join(('stein17', 'and others'))
-                self.session.open(MessageBox, TextMSG, type=MessageBox.TYPE_INFO)
-            elif ret[1] == "IPTVDM":
+            if ret[1] == "IPTVDM":
                 self.runIPTVDM()
             elif ret[1] == "HostConfig":
                 self.runConfigHostIfAllowed()

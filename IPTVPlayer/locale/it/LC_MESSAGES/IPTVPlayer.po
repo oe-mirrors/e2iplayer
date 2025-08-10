@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-09 11:41+0200\n"
+"POT-Creation-Date: 2025-08-10 20:53+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Massimo Bambi <maxbambi@libero.it>\n"
 "Language-Team: lululla <ekekaz@gmail.com>\n"
@@ -250,7 +250,6 @@ msgstr "--"
 msgid "-- OK --"
 msgstr "-- OK --"
 
-#: ../components/iptvconfigmenu.py:371
 msgid "----- BASIC CONFIGURATION -----"
 msgstr "----- CONFIGURAZIONE BASE (OK) -----"
 
@@ -678,7 +677,6 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Servizio di risoluzione Captcha"
 
-#: ../tools/iptvhostgroups.py:33
 msgid "Cartoon list"
 msgstr "Elenco Cartoni animati"
 
@@ -691,11 +689,6 @@ msgstr ""
 msgid "Categories"
 msgstr "Categorie"
 
-#: ../hosts/hostkisscartoonme.py:49
-msgid "Catrtoon list"
-msgstr "Elenco Cartoni animati"
-
-#: ../components/iptvplayerwidget.py:584
 msgid "Change active movie player"
 msgstr "Cambia movie player attivo"
 
@@ -802,11 +795,6 @@ msgstr "Errore critico - il cookie non può essere salvato!"
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Errore critico - Non si può accedere al contenuto del gzip!"
 
-#: ../hosts/hostmindigo.py:781
-msgid "Családi filmek"
-msgstr "Film per famiglie"
-
-#: ../hosts/hostted.py:388
 msgid "Curator"
 msgstr "Curatore"
 
@@ -1118,9 +1106,6 @@ msgstr "Durata:"
 msgid "Duration: %s"
 msgstr "Durata: %s"
 
-msgid "E-mail: "
-msgstr "E-Mail: "
-
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer -  impostazioni"
 
@@ -1146,15 +1131,6 @@ msgstr "Modifica preferiti"
 msgid "Educational Animation"
 msgstr ""
 
-#: ../hosts/hosttv2play.py:43
-msgid "Elérhető legjobb minőség beállítása"
-msgstr "Impostazione della migliore qualità disponibile"
-
-#: ../hosts/hostidokep.py:78
-msgid "Előrejelzés"
-msgstr "Previsione"
-
-#: ../hosts/hostrtlmost.py:49 ../libs/ustvnow.py:43
 msgid "Email"
 msgstr "E-mail"
 
@@ -1348,11 +1324,6 @@ msgstr "Gruppi preferiti"
 msgid "Favourites manager"
 msgstr "Gestore preferiti"
 
-#: ../hosts/hostidokep.py:81
-msgid "Felhőkép"
-msgstr "Paesaggio nuvoloso"
-
-#: ../hosts/hostlocalmedia.py:666
 #, python-format
 msgid "File \"%s\" already exists"
 msgstr "Il file \"%s\" esiste già"
@@ -1375,16 +1346,6 @@ msgstr "Il file non può essere scaricato. Protocollo [%s] non supportato"
 msgid "Film"
 msgstr ""
 
-#: ../hosts/hostfilmtar.py:80
-msgid "Film Kategóriák"
-msgstr "Categorie di film"
-
-#: ../hosts/hostdmdamedia.py:96 ../hosts/hostmozicsillag.py:113
-#: ../hosts/hostnonstopmozi.py:71
-msgid "Filmek"
-msgstr "Film"
-
-#: ../suggestions/filmstarts.py:17
 msgid "Filmstarts Suggestions"
 msgstr "Suggerimenti Filmstarts"
 
@@ -1588,11 +1549,6 @@ msgstr ""
 msgid "Hungarian"
 msgstr ""
 
-#: ../hosts/hostidokep.py:80
-msgid "Hőtérkép"
-msgstr "Mappa di calore"
-
-#: ../suggestions/imdb.py:19
 msgid "IMDb Suggestions"
 msgstr "Suggerimenti IMDb"
 
@@ -1608,11 +1564,6 @@ msgstr "Qualità delle icone"
 msgid "Icons size"
 msgstr "Dimensione delle icone"
 
-#: ../hosts/hostidokep.py:79
-msgid "Időkép"
-msgstr "Previsioni del tempo"
-
-#: ../hosts/hostorthobulletscom.py:86
 msgid "Industry"
 msgstr ""
 
@@ -1640,7 +1591,6 @@ msgstr "Elenco iniziale"
 msgid "Initialize Download Manager"
 msgstr "Inizializza il gestore di download"
 
-#: ../components/iptvconfigmenu.py:292
 msgid "Initialize web interface"
 msgstr "Inizializza l'interfaccia web"
 
@@ -1656,17 +1606,6 @@ msgstr "Input"
 msgid "Interactive Learning Center(ILC)"
 msgstr ""
 
-#: ../libs/urlparser.py:11980
-#, python-format
-msgid "Internal Server Error. Server response code: %s"
-msgstr "Errore del server interno. Code di risposta: %s"
-
-#: ../hosts/hostonlinestream.py:111
-msgid "Internetes rádiók listázása"
-msgstr "Elenco delle stazioni radio Internet"
-
-#: ../components/recaptcha_mye2i_widget.py:137
-#: ../components/recaptcha_v2myjd_widget.py:128
 msgid "Invalid email."
 msgstr "Email non valida."
 
@@ -1676,11 +1615,6 @@ msgstr "Nome non valido."
 msgid "Is this message displayed correctly?"
 msgstr "Questo messaggio è visualizzato correttamente?"
 
-#: ../hosts/hostmindigo.py:805
-msgid "Ismeretterjesztő"
-msgstr "Educativo"
-
-#: ../libs/pCommon.py:513 ../libs/pCommon.py:1211
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr "Non è possibile chiamare getURLRequestData dal thread principale."
 
@@ -1759,48 +1693,6 @@ msgstr ""
 msgid "Journal Club"
 msgstr ""
 
-#: ../hosts/hostmindigo.py:797
-msgid "Játék és vetélkedő"
-msgstr "Gioco e quiz"
-
-#: ../hosts/hostmindigo.py:785
-msgid "Kabaré, vígjáték"
-msgstr "Cabaret, commedia"
-
-#: ../hosts/hostidokep.py:83
-msgid "Kamerák"
-msgstr "Telecamere"
-
-#: ../hosts/hostdmdamedia.py:95 ../hosts/hostfilmpapa.py:84
-#: ../hosts/hostfilmvilag.py:93 ../hosts/hostwofvideo.py:80
-msgid "Kategóriák"
-msgstr "Categorie"
-
-#: ../hosts/hostdmdamedia.py:98 ../hosts/hostfilmpapa.py:85
-#: ../hosts/hostfilmtar.py:82 ../hosts/hostfilmvilag.py:94
-#: ../hosts/hostmozicsillag.py:115 ../hosts/hostnonstopmozi.py:73
-#: ../hosts/hostonlinestream.py:114 ../hosts/hoststreamstat.py:82
-#: ../hosts/hosttv2play.py:127 ../hosts/hostwofvideo.py:81
-msgid "Keresés"
-msgstr "Ricerca"
-
-#: ../hosts/hostdmdamedia.py:99 ../hosts/hostfilmpapa.py:86
-#: ../hosts/hostfilmtar.py:83 ../hosts/hostfilmvilag.py:95
-#: ../hosts/hostmozicsillag.py:116 ../hosts/hostnonstopmozi.py:74
-#: ../hosts/hostonlinestream.py:115 ../hosts/hoststreamstat.py:83
-#: ../hosts/hosttv2play.py:128 ../hosts/hostwofvideo.py:82
-msgid "Keresési előzmények"
-msgstr "Cronologia delle ricerche"
-
-#: ../hosts/hostidokep.py:84
-msgid "Képtár"
-msgstr "Galleria"
-
-#: ../hosts/hostnonstopmozi.py:125
-msgid "Következő oldal"
-msgstr "Pagina successiva"
-
-#: ../hosts/hostworldfree4u.py:46
 msgid "Knee & Sports"
 msgstr "Attività Sportiva"
 
@@ -1894,9 +1786,6 @@ msgstr "Aggiornamento recente"
 
 msgid "Latino"
 msgstr "Latino"
-
-msgid "Lead programmer: "
-msgstr "Capo programmatore: "
 
 msgid "Level:"
 msgstr "Livello:"
@@ -2080,11 +1969,6 @@ msgstr "Riunioni"
 msgid "Menu"
 msgstr "Menu"
 
-#: ../hosts/hostmindigo.py:813
-msgid "Mesék"
-msgstr "Fiabe"
-
-#: ../hosts/hostlaola1tv.py:28
 msgid "Mid"
 msgstr "Medio"
 
@@ -2100,17 +1984,6 @@ msgstr "Spettacolo perso?"
 msgid "Monthly"
 msgstr "Mensile"
 
-#: ../hosts/hostddl.py:585
-msgid "Mood:"
-msgstr "Umore:"
-
-#: ../hosts/hostddl.py:587
-msgid "Moods:"
-msgstr "Umors:"
-
-#: ../components/iptvplayerwidget.py:161 ../components/playerselector.py:154
-#: ../hosts/hostdancetrippin.py:160 ../hosts/hostlocalmedia.py:406
-#: ../hosts/hostrtbfbe.py:384 ../hosts/hosttvpvod.py:470
 msgid "More"
 msgstr "Di più"
 
@@ -2200,11 +2073,6 @@ msgstr ""
 msgid "MyE2i script finished."
 msgstr "Esecuzione dello script JMyE2i terminata."
 
-#: ../hosts/hosttv2play.py:126
-msgid "Műsorok"
-msgstr "Programmi"
-
-#: ../hosts/hostwatchwrestling.py:53 ../hosts/hostwatchwrestlinguno.py:47
 msgid "NJPW"
 msgstr ""
 
@@ -2775,11 +2643,6 @@ msgstr "Ritorna all'elenco degli host"
 msgid "Reverse a playlist"
 msgstr "Inverti la playlist"
 
-#: ../hosts/hostmindigo.py:789
-msgid "Romantikus"
-msgstr "Romantico"
-
-#: ../hosts/hostmediayou.py:29 ../tools/iptvhostgroups.py:43
 msgid "Russian"
 msgstr "Russo"
 
@@ -3073,6 +2936,10 @@ msgstr "Downloader di file singolo"
 msgid "Skin"
 msgstr "Skin"
 
+#, fuzzy
+msgid "Skinners: "
+msgstr "Ascoltatori: %s"
+
 msgid "Skip video shorter than [min]"
 msgstr "Salta i video più corti di [min]"
 
@@ -3088,16 +2955,6 @@ msgstr "Software floating point"
 msgid "Some changes will be applied only after movie player restart."
 msgstr "Alcuni cambiamenti saranno applicati,  solo dopo che il movie player sarà riavviato."
 
-#: ../hosts/hostfilmtar.py:81
-msgid "Sorozat Kategóriák"
-msgstr "Categorie di serie"
-
-#: ../hosts/hostdmdamedia.py:97 ../hosts/hostmozicsillag.py:114
-#: ../hosts/hostnonstopmozi.py:72
-msgid "Sorozatok"
-msgstr "Serie"
-
-#: ../hosts/hosttvplayercom.py:274
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Alcune impostazioni verranno applicate solo dopo il riavvio dell'interfaccia grafica."
 
@@ -3262,11 +3119,6 @@ msgstr "I sottotitoli sono stati scaricati correttamente. [%s], conversione in U
 msgid "Subtitles for: %s"
 msgstr "Sottotitoli per: %s"
 
-#: ../hosts/hostonlinestream.py:110
-msgid "Sugárzó rádiók listázása"
-msgstr "Elenco delle emittenti radiofoniche"
-
-#: ../hosts/hostorthobulletscom.py:99
 msgid "Surgical Approaches"
 msgstr ""
 
@@ -3287,10 +3139,6 @@ msgstr "Sincronizza"
 
 msgid "System"
 msgstr "Sistema"
-
-#: ../hosts/hostmindigo.py:801
-msgid "Színház"
-msgstr "Teatro"
 
 msgid "THIS IS A PRIVATE VIDEO."
 msgstr "QUESTO È UN VIDEO PRIVATO."
@@ -3328,11 +3176,6 @@ msgstr "Stato TV"
 msgid "TV-Series"
 msgstr "Serie TV"
 
-#: ../hosts/hostonlinestream.py:112
-msgid "TV-k listázása"
-msgstr "Elenco TV"
-
-#: ../hosts/hostted.py:81 ../hosts/hostted.py:383 ../hosts/hostted.py:663
 msgid "Talks"
 msgstr "Talk show"
 
@@ -3514,15 +3357,6 @@ msgstr "Tipo: "
 msgid "Type: %s"
 msgstr "Tipo: %s"
 
-#: ../hosts/hostidokep.py:85
-msgid "Térképek"
-msgstr "Mappe"
-
-#: ../hosts/hostmindigo.py:777
-msgid "Tévéfilmek és sorozatok"
-msgstr "Film e serie TV"
-
-#: ../hosts/hostwatchwrestlinguno.py:45
 msgid "UFC"
 msgstr "UFC"
 
@@ -3961,11 +3795,6 @@ msgstr "centro"
 msgid "cobalt"
 msgstr ""
 
-#: ../hosts/hostxxx.py:59
-msgid "couple"
-msgstr "coppia"
-
-#: ../hosts/hostardmediathek.py:469
 msgid "de"
 msgstr ""
 

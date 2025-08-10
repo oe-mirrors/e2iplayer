@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-09 11:41+0200\n"
+"POT-Creation-Date: 2025-08-10 20:53+0200\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -1105,9 +1105,6 @@ msgstr "Descrição:"
 msgid "Duration: %s"
 msgstr "Estações"
 
-msgid "E-mail: "
-msgstr ""
-
 #, fuzzy
 msgid "E2iPlayer - settings"
 msgstr "IPTV Player - definições"
@@ -1795,9 +1792,6 @@ msgstr ""
 #, fuzzy
 msgid "Latino"
 msgstr "Classificação"
-
-msgid "Lead programmer: "
-msgstr ""
 
 msgid "Level:"
 msgstr ""
@@ -3006,6 +3000,9 @@ msgstr ""
 
 msgid "Skin"
 msgstr "Definição da Skin"
+
+msgid "Skinners: "
+msgstr ""
 
 msgid "Skip video shorter than [min]"
 msgstr ""

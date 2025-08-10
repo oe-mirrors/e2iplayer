@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-09 11:41+0200\n"
+"POT-Creation-Date: 2025-08-10 20:53+0200\n"
 "PO-Revision-Date: 2025-06-29 16:00+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -1105,9 +1105,6 @@ msgstr "Trvanie:"
 msgid "Duration: %s"
 msgstr "Doba trvania: %s"
 
-msgid "E-mail: "
-msgstr "E-mail: "
-
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - nastavenia"
 
@@ -1788,9 +1785,6 @@ msgstr "Najnovšia aktualizácia"
 
 msgid "Latino"
 msgstr "Latinoameričan"
-
-msgid "Lead programmer: "
-msgstr "Hlavný programátor: "
 
 msgid "Level:"
 msgstr "Úroveň:"
@@ -2943,6 +2937,10 @@ msgstr "Preberač jedného súboru"
 
 msgid "Skin"
 msgstr "Vzhľad"
+
+#, fuzzy
+msgid "Skinners: "
+msgstr "Poslucháči: %s"
 
 msgid "Skip video shorter than [min]"
 msgstr "Preskočiť video kratšie ako [min]"

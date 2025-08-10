@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-09 11:41+0200\n"
+"POT-Creation-Date: 2025-08-10 20:53+0200\n"
 "PO-Revision-Date: 2025-08-09 16:00+0200\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -1103,9 +1103,6 @@ msgstr "Tijdsduur:"
 msgid "Duration: %s"
 msgstr "Tijdsduur: %s"
 
-msgid "E-mail: "
-msgstr "E-mail: "
-
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - instellingen"
 
@@ -1786,9 +1783,6 @@ msgstr "Laatste update"
 
 msgid "Latino"
 msgstr "Spaans"
-
-msgid "Lead programmer: "
-msgstr "Hoofd programmeur: "
 
 msgid "Level:"
 msgstr "Niveau:"
@@ -2938,6 +2932,10 @@ msgstr "Downloader voor één bestand"
 
 msgid "Skin"
 msgstr "Skin selectie"
+
+#, fuzzy
+msgid "Skinners: "
+msgstr "Luisteraars: %s"
 
 msgid "Skip video shorter than [min]"
 msgstr "Video korter dan [min] overslaan"

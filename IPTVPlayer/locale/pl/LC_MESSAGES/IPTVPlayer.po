@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-09 11:41+0200\n"
+"POT-Creation-Date: 2025-08-10 20:53+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n"
 "Language-Team: IPTVPlayer\n"
@@ -1121,9 +1121,6 @@ msgstr "Czas trwania:"
 msgid "Duration: %s"
 msgstr "Czas trwania: %s"
 
-msgid "E-mail: "
-msgstr "E-mail: "
-
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - ustawienia"
 
@@ -1808,9 +1805,6 @@ msgstr "Ostatnio aktualizowane"
 #, fuzzy
 msgid "Latino"
 msgstr "Latynoski"
-
-msgid "Lead programmer: "
-msgstr "Główny programista: "
 
 msgid "Level:"
 msgstr "Poziom:"
@@ -2973,6 +2967,10 @@ msgstr "Pobieranie pojedynczego pliku"
 
 msgid "Skin"
 msgstr "Skóra"
+
+#, fuzzy
+msgid "Skinners: "
+msgstr "Słuchacze: %s"
 
 msgid "Skip video shorter than [min]"
 msgstr "Pomiń wideo krótsze niż [min]"
