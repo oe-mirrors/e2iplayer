@@ -675,27 +675,30 @@ class E2iPlayerWidget(Screen):
         TextMSG = ''
         if ret:
             if ret[1] == "info":  # information about plugin
-                TextMSG = _("Lead programmer: ") + "\n\t- samsamsam\n"
-                TextMSG += _("E-mail: ") + "\n\t- iptvplayere2@gmail.com\n"
-                TextMSG += _("www: ") + "\n\t- http://iptvplayer.vline.pl/" + '\n\t- http://www.iptvplayer.gitlab.io/\n'
-                TextMSG += _("Developers: ")
-                developersTab = [
-                    {'nick': 'zdzislaw22', },
-                    {'nick': 'mamrot', },
-                    {'nick': 'MarcinO', },
-                    {'nick': 'skalita', },
-                    {'nick': 'atilaks', },
-                    {'nick': 'huball', },
-                    {'nick': 'matzg', },
-                    {'nick': 'tomashj291', },
-                    {'nick': 'a4tech', },
+                TextMSG = _('version') + " :\n" + E2iPlayerWidget.IPTV_VERSION + '\n\n'
+                TextMSG += _("www: ") + "\nhttps://github.com/oe-mirrors/e2iplayer" + '\n\n'
+                TextMSG += _("Developers: ") + "\n"
+                developers = [
+                    'samsamsam',
+                    'zdzislaw22',
+                    'mamrot',
+                    'MarcinO',
+                    'skalita',
+                    'atilaks',
+                    'huball',
+                    'matzg',
+                    'tomashj291',
+                    'a4tech',
+                    'Blindspot76',
+                    'Max (maxbambi)',
+                    '-=Mario=- (zadmario)',
+                    'Lululla (Belfagor2005)',
+                    'jbleyel',
+                    'and others'
                 ]
-                # present alphabetically, the order does not mean validity
-                sortedList = sorted(developersTab, key=lambda k: k['nick'].upper())
-                for item in sortedList:
-                    TextMSG += "\n\t- {0}, ".format(item['nick'])
-                TextMSG = TextMSG[:-2]
-                TextMSG += "\n\tand others\n"
+                TextMSG += ", ".join(developers)
+                TextMSG += '\n\n' + _("Skinners: ") + "\n"
+                TextMSG += ", ".join(('stein17', 'and others'))
                 self.session.open(MessageBox, TextMSG, type=MessageBox.TYPE_INFO)
             elif ret[1] == "IPTVDM":
                 self.runIPTVDM()
