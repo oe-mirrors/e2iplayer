@@ -24,62 +24,55 @@ class MoflixStream(CBaseHostClass):
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.DEFAULT_ICON_URL = 'https://moflix-stream.xyz/storage/branding_media/18ffe280-a89b-4c07-99db-78556219aad2.png'
+        self.DEFAULT_ICON_URL = gettytul() + 'storage/branding_media/18ffe280-a89b-4c07-99db-78556219aad2.png'
         self.MAIN_URL = None
 
     def menu(self):
-        self.MAIN_URL = 'https://moflix-stream.xyz/'
-        self.API_URL = 'https://moflix-stream.xyz/api/v1/channel/%s?channelType=channel&restriction=&paginate=simple&page='
+        self.MAIN_URL = gettytul()
+        self.API_URL = gettytul() + 'api/v1/channel/%s?channelType=channel&restriction=&paginate=simple&page='
         self.MENU = [
-            {'category': 'list_items', 'title': 'Kürzlich hinzugefügt', 'link': self.API_URL % 'now-playing'},
-            {'category': 'list_items', 'title': 'Filme', 'link': self.API_URL % 'movies'},
-            {'category': 'list_items', 'title': 'Serien', 'link': self.API_URL % 'series'},
-            {'category': 'list_items', 'title': 'Top bewertete Filme', 'link': self.API_URL % 'top-rated-movies'},
-            {'category': 'list_items', 'title': 'Frisch hinzugefügte Serien', 'link': self.API_URL % 'trending-tv'},
-            {'category': 'list_items', 'title': 'Kinder & Familien', 'link': self.API_URL % 'top-kids-liste'},
+            {'category': 'list_items', 'title': 'Kürzlich hinzugefügt', 'url': self.API_URL % 'now-playing'},
+            {'category': 'list_items', 'title': 'Filme', 'url': self.API_URL % 'movies'},
+            {'category': 'list_items', 'title': 'Serien', 'url': self.API_URL % 'series'},
+            {'category': 'list_items', 'title': 'Top bewertete Filme', 'url': self.API_URL % 'top-rated-movies'},
+            {'category': 'list_items', 'title': 'Frisch hinzugefügte Serien', 'url': self.API_URL % 'trending-tv'},
+            {'category': 'list_items', 'title': 'Kinder & Familien', 'url': self.API_URL % 'top-kids-liste'},
             {'category': 'Collection', 'title': "Collectionen"},
             {'category': 'search', 'title': _('Search'), 'search_item': True, },
             {'category': 'search_history', 'title': _('Search history'), }]
         self.COLLECTION = [
-            {'category': 'list_items', 'title': 'American Pie Complete Collection', 'link': self.API_URL % 'the-american-pie-collection'},
-            {'category': 'list_items', 'title': 'A Nightmare on Elm Street Collection', 'link': self.API_URL % 'a-nightmare-on-elm-street-collection'},
-            {'category': 'list_items', 'title': 'Bud Spencer & Terence Hill Collection', 'link': self.API_URL % 'bud-spencer-terence-hill-collection'},
-            {'category': 'list_items', 'title': 'DC Superhelden Collection', 'link': self.API_URL % 'the-dc-universum-collection'},
-            {'category': 'list_items', 'title': 'Die Saga der Maschinen Collection', 'link': self.API_URL % 'transformers-die-saga-der-maschinen'},
-            {'category': 'list_items', 'title': 'Fast & Furious Movie Collection', 'link': self.API_URL % 'fast-furious-movie-collection'},
-            {'category': 'list_items', 'title': 'Halloween Movie Collection', 'link': self.API_URL % 'halloween-movie-collection'},
-            {'category': 'list_items', 'title': 'Harry Potter Collection', 'link': self.API_URL % 'harry-potter-collection'},
-            {'category': 'list_items', 'title': 'Herr der Ringe Collection', 'link': self.API_URL % 'der-herr-der-ringe-collection'},
-            {'category': 'list_items', 'title': 'James Bond Collection', 'link': self.API_URL % 'the-james-bond-collection'},
-            {'category': 'list_items', 'title': 'Jason Bourne Collection', 'link': self.API_URL % 'the-jason-bourne-collection'},
-            {'category': 'list_items', 'title': 'Jurassic Park Collection', 'link': self.API_URL % 'the-jurassic-park-collection'},
-            {'category': 'list_items', 'title': 'Marvel Cinematic Universe Collection', 'link': self.API_URL % 'the-marvel-cinematic-universe-collection'},
-            {'category': 'list_items', 'title': 'Mission: Impossible Collection', 'link': self.API_URL % 'the-mission-impossible-collection'},
-            {'category': 'list_items', 'title': 'Olsenbande Collection', 'link': self.API_URL % 'die-olsenbande-collection'},
-            {'category': 'list_items', 'title': 'Planet der Affen Collection', 'link': self.API_URL % 'the-planet-der-affen-collection'},
-            {'category': 'list_items', 'title': 'Rocky - The Knockout Collection', 'link': self.API_URL % 'rocky-the-knockout-collection'},
-            {'category': 'list_items', 'title': 'Star Trek Kinofilm Collection', 'link': self.API_URL % 'the-star-trek-movies-collection'},
-            {'category': 'list_items', 'title': 'Star Wars Collection', 'link': self.API_URL % 'the-star-wars-collection'},
-            {'category': 'list_items', 'title': 'Scream Collection', 'link': self.API_URL % 'dein-albtraum-beginnt-hier-die-scream-collection'},
-            {'category': 'list_items', 'title': 'Stirb Langsam Collection', 'link': self.API_URL % 'stirb-langsam-collection'},
-            {'category': 'list_items', 'title': 'X-Men Collection', 'link': self.API_URL % 'x-men-collection'}]
+            {'category': 'list_items', 'title': 'American Pie Complete Collection', 'url': self.API_URL % 'the-american-pie-collection'},
+            {'category': 'list_items', 'title': 'A Nightmare on Elm Street Collection', 'url': self.API_URL % 'a-nightmare-on-elm-street-collection'},
+            {'category': 'list_items', 'title': 'Bud Spencer & Terence Hill Collection', 'url': self.API_URL % 'bud-spencer-terence-hill-collection'},
+            {'category': 'list_items', 'title': 'DC Superhelden Collection', 'url': self.API_URL % 'the-dc-universum-collection'},
+            {'category': 'list_items', 'title': 'Die Saga der Maschinen Collection', 'url': self.API_URL % 'transformers-die-saga-der-maschinen'},
+            {'category': 'list_items', 'title': 'Fast & Furious Movie Collection', 'url': self.API_URL % 'fast-furious-movie-collection'},
+            {'category': 'list_items', 'title': 'Halloween Movie Collection', 'url': self.API_URL % 'halloween-movie-collection'},
+            {'category': 'list_items', 'title': 'Harry Potter Collection', 'url': self.API_URL % 'harry-potter-collection'},
+            {'category': 'list_items', 'title': 'Herr der Ringe Collection', 'url': self.API_URL % 'der-herr-der-ringe-collection'},
+            {'category': 'list_items', 'title': 'James Bond Collection', 'url': self.API_URL % 'the-james-bond-collection'},
+            {'category': 'list_items', 'title': 'Jason Bourne Collection', 'url': self.API_URL % 'the-jason-bourne-collection'},
+            {'category': 'list_items', 'title': 'Jurassic Park Collection', 'url': self.API_URL % 'the-jurassic-park-collection'},
+            {'category': 'list_items', 'title': 'Marvel Cinematic Universe Collection', 'url': self.API_URL % 'the-marvel-cinematic-universe-collection'},
+            {'category': 'list_items', 'title': 'Mission: Impossible Collection', 'url': self.API_URL % 'the-mission-impossible-collection'},
+            {'category': 'list_items', 'title': 'Olsenbande Collection', 'url': self.API_URL % 'die-olsenbande-collection'},
+            {'category': 'list_items', 'title': 'Planet der Affen Collection', 'url': self.API_URL % 'the-planet-der-affen-collection'},
+            {'category': 'list_items', 'title': 'Rocky - The Knockout Collection', 'url': self.API_URL % 'rocky-the-knockout-collection'},
+            {'category': 'list_items', 'title': 'Star Trek Kinofilm Collection', 'url': self.API_URL % 'the-star-trek-movies-collection'},
+            {'category': 'list_items', 'title': 'Star Wars Collection', 'url': self.API_URL % 'the-star-wars-collection'},
+            {'category': 'list_items', 'title': 'Scream Collection', 'url': self.API_URL % 'dein-albtraum-beginnt-hier-die-scream-collection'},
+            {'category': 'list_items', 'title': 'Stirb Langsam Collection', 'url': self.API_URL % 'stirb-langsam-collection'},
+            {'category': 'list_items', 'title': 'X-Men Collection', 'url': self.API_URL % 'x-men-collection'}]
 
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
-    def getFullIconUrl(self, url):
-        url = self.getFullUrl(url)
-        if url == '':
-            return ''
-        cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
-
     def listItems(self, cItem, nextCategory):
         printDBG("MoflixStream.listItems |%s|" % cItem)
-        url = cItem['link']
+        url = cItem['url']
         nextPage = ''
         sts, data = self.getPage(url)
         if not sts:
@@ -96,7 +89,7 @@ class MoflixStream(CBaseHostClass):
             icon = item.get('poster', '')
             desc = item.get('description', '')
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category': nextCategory, 'title': self.cleanHtmlStr(title), 'link': item.get('id', ''), 'icon': icon, 'desc': self.cleanHtmlStr(desc) if desc else ''})
+            params.update({'good_for_fav': True, 'category': nextCategory, 'title': self.cleanHtmlStr(title), 'url': item.get('id', ''), 'icon': icon, 'desc': self.cleanHtmlStr(desc) if desc else ''})
             if item.get('is_series'):
                 params.update({'category': 'list_seasons'})
                 self.addDir(params)
@@ -104,13 +97,13 @@ class MoflixStream(CBaseHostClass):
                 self.addVideo(params)
         if nextPage:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title': _("Next page"), 'link': url + str(nextPage)})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'url': url + str(nextPage)})
             self.addDir(params)
 
     def listSeasons(self, cItem):
         printDBG("MoflixStream.listSeasons")
         icon = cItem['icon']
-        sts, data = self.getPage('%sapi/v1/titles/%s?loader=titlePage' % (self.MAIN_URL, cItem['link']))
+        sts, data = self.getPage('%sapi/v1/titles/%s?loader=titlePage' % (gettytul(), cItem['url']))
         if not sts:
             return
         data = json.loads(data)
@@ -118,13 +111,13 @@ class MoflixStream(CBaseHostClass):
             sn = item.get('number')
             url = item.get('title_id')
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category': 'list_episodes', 'title': '%s - Staffel%s' % (cItem['title'], sn), 'link': url, 'icon': icon, 'desc': cItem.get('desc', ''), 'season': sn})
+            params.update({'good_for_fav': True, 'category': 'list_episodes', 'title': '%s - Staffel%s' % (cItem['title'], sn), 'url': url, 'icon': icon, 'desc': cItem.get('desc', ''), 'season': sn})
             self.addDir(params)
 
     def listEpisodes(self, cItem):
         printDBG("MoflixStream.listEpisodes")
         icon = cItem['icon']
-        sts, data = self.getPage('%sapi/v1/titles/%s/seasons/%s?loader=seasonPage' % (self.MAIN_URL, cItem['link'], cItem['season']))
+        sts, data = self.getPage('%sapi/v1/titles/%s/seasons/%s?loader=seasonPage' % (gettytul(), cItem['url'], cItem['season']))
         if not sts:
             return
         data = json.loads(data)
@@ -134,37 +127,33 @@ class MoflixStream(CBaseHostClass):
                 continue
             title = '%s - Episode %s - %s' % (cItem.get('title'), item.get('episode_number'), item.get('name'))
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title': title, 'link': url, 'icon': icon, 'desc': item.get('description', '')})
+            params.update({'good_for_fav': True, 'title': title, 'url': url, 'icon': icon, 'desc': item.get('description', '')})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("MoflixStream.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['link'] = '%sapi/v1/search/%s?loader=searchPage' % (self.MAIN_URL, urllib_quote(searchPattern))
+        cItem['url'] = '%sapi/v1/search/%s?loader=searchPage' % (gettytul(), urllib_quote(searchPattern))
         self.listItems(cItem, 'video')
 
     def getLinksForVideo(self, cItem):
         printDBG("MoflixStream.getLinksForVideo [%s]" % cItem)
-        linksTab = []
-        url = cItem['link']
+        urlTab = []
+        url = cItem['url']
         if 'Episode' not in cItem['title']:
-            sts, data = self.getPage('%sapi/v1/titles/%s?loader=titlePage' % (self.MAIN_URL, url))
+            sts, data = self.getPage('%sapi/v1/titles/%s?loader=titlePage' % (gettytul(), url))
             if not sts:
                 return []
             data = json.loads(data)
             url = data.get('title', {}).get('primary_video', {}).get('id', '')
-        sts, data = self.getPage('%sapi/v1/watch/%s' % (self.MAIN_URL, url), self.defaultParams)
+        sts, data = self.getPage('%sapi/v1/watch/%s' % (gettytul(), url), self.defaultParams)
         if not sts:
             return []
         data = json.loads(data)
         for item in data.get('alternative_videos', []):
             if item['src']:
-                url = item['src']
-                title = urlparse(url).netloc.split('/')[0]
-                linksTab.append({'name': title.capitalize(), 'url': strwithmeta(url, {'Referer': self.MAIN_URL}), 'need_resolve': 1})
-        if linksTab:
-            cItem['url'] = linksTab
-        return linksTab
+                urlTab.append({'name': self.up.getHostName(item['src']).capitalize(), 'url': strwithmeta(item['src'], {'Referer': gettytul()}), 'need_resolve': 1})
+        return urlTab
 
     def getVideoLinks(self, videoUrl):
         printDBG("MoflixStream.getVideoLinks [%s]" % videoUrl)
@@ -175,7 +164,7 @@ class MoflixStream(CBaseHostClass):
 
     def getArticleContent(self, cItem):
         printDBG("MoflixStream.getArticleContent [%s]" % cItem)
-        sts, data = self.getPage('%sapi/v1/titles/%s?loader=titlePage' % (self.MAIN_URL, cItem['link']))
+        sts, data = self.getPage('%sapi/v1/titles/%s?loader=titlePage' % (gettytul(), cItem['url']))
         otherInfo = {}
         if not sts:
             return []
