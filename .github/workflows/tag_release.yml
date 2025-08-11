@@ -1,0 +1,78 @@
+name: Create Tag and Release on Version Change
+
+on:
+  push:
+    paths:
+      - IPTVPlayer/version.py   # Trigger only when this file changes
+    branches:
+      - python3      # Trigger only on the main branch
+
+permissions:
+  contents: write  # Needed to push new tags and create releases
+
+jobs:
+  tag_and_release:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repository with full history (required for tags and logs)
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Read version number from version.py file
+      - name: Read version from file
+        id: get_version
+        run: |
+          VERSION=$(grep -oP '(?<=IPTV_VERSION = ")[^"]+' python3/IPTVPlayer/version.py)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # Check if the tag already exists on the remote
+      - name: Check if tag already exists
+        run: |
+          if git ls-remote --tags origin | grep -q "refs/tags/v${{ steps.get_version.outputs.version }}$"; then
+            echo "Tag v${{ steps.get_version.outputs.version }} already exists."
+            exit 0
+          fi
+
+      # Create and push the new tag
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag v${{ steps.get_version.outputs.version }}
+          git push origin v${{ steps.get_version.outputs.version }}
+
+      # Generate changelog from commits since the last tag
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Find previous tag, excluding the current new tag
+          LAST_TAG=$(git describe --tags --abbrev=0 --exclude "v${{ steps.get_version.outputs.version }}" 2>/dev/null || echo "")
+
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous tag found, showing all commits."
+            CHANGELOG=$(git log --pretty=format:"- %s (%h, %an, %ad)" --date=short --no-merges)
+          else
+            echo "Previous tag: $LAST_TAG"
+            CHANGELOG=$(git log "$LAST_TAG"..HEAD --pretty=format:"- %s (%h, %an, %ad)" --date=short --no-merges)
+          fi
+
+          # Escape % for GitHub output
+          CHANGELOG="${CHANGELOG//'%'/'%25'}"
+          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+
+          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+
+      # Create a GitHub release with the generated changelog
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          body: |
+            ## Changes in this release
+            ${{ steps.changelog.outputs.changelog }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
