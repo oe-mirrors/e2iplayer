@@ -24,7 +24,7 @@ jobs:
       - name: Read version from file
         id: get_version
         run: |
-          VERSION=$(grep -oP '(?<=IPTV_VERSION = ")[^"]+' python3/IPTVPlayer/version.py)
+          VERSION=$(grep -oP '(?<=IPTV_VERSION = ")[^"]+' IPTVPlayer/version.py)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       # Check if the tag already exists on the remote
