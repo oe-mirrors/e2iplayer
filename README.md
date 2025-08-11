@@ -6,6 +6,10 @@
 [![Lint Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/pylint.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions)
 [![Ruff Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions)
 [![Build Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions)
+
+[![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
+[![Latest Release](https://img.shields.io/github/release-date/oe-mirrors/e2iplayer?label=From&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/latest)
+[![GitHub all releases](https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/total.svg?label=Downloads)](https://github.com/oe-mirrors/e2iplayer/releases)
 ## SonarCloud status
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
