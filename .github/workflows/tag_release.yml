@@ -43,22 +43,20 @@ jobs:
           git tag v${{ steps.get_version.outputs.version }}
           git push origin v${{ steps.get_version.outputs.version }}
 
-      # Generate changelog from commits since the last tag
+      # Generate changelog from commits since the last tag (only last 10 commits)
       - name: Generate changelog
         id: changelog
         run: |
-          # Find previous tag, excluding the current new tag
           LAST_TAG=$(git describe --tags --abbrev=0 --exclude "v${{ steps.get_version.outputs.version }}" 2>/dev/null || echo "")
 
           if [ -z "$LAST_TAG" ]; then
-            echo "No previous tag found, showing all commits."
-            CHANGELOG=$(git log --pretty=format:"- %s (%h, %an, %ad)" --date=short --no-merges)
+            echo "No previous tag found, showing last 10 commits."
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges -n 10)
           else
             echo "Previous tag: $LAST_TAG"
-            CHANGELOG=$(git log "$LAST_TAG"..HEAD --pretty=format:"- %s (%h, %an, %ad)" --date=short --no-merges)
+            CHANGELOG=$(git log "$LAST_TAG"..HEAD --pretty=format:"- %s (%h)" --no-merges -n 10)
           fi
 
-          # Escape % for GitHub output
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
           CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
@@ -76,3 +74,4 @@ jobs:
             ${{ steps.changelog.outputs.changelog }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
