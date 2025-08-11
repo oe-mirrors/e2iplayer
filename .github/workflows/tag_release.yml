@@ -3,31 +3,28 @@ name: Create Tag and Release on Version Change
 on:
   push:
     paths:
-      - IPTVPlayer/version.py   # Trigger only when this file changes
+      - IPTVPlayer/version.py
     branches:
-      - python3      # Trigger only on the main branch
+      - python3
 
 permissions:
-  contents: write  # Needed to push new tags and create releases
+  contents: write
 
 jobs:
   tag_and_release:
     runs-on: ubuntu-latest
     steps:
-      # Checkout repository with full history (required for tags and logs)
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Read version number from version.py file
       - name: Read version from file
         id: get_version
         run: |
           VERSION=$(grep -oP '(?<=IPTV_VERSION = ")[^"]+' IPTVPlayer/version.py)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      # Check if the tag already exists on the remote
       - name: Check if tag already exists
         run: |
           if git ls-remote --tags origin | grep -q "refs/tags/v${{ steps.get_version.outputs.version }}$"; then
@@ -35,7 +32,6 @@ jobs:
             exit 0
           fi
 
-      # Create and push the new tag
       - name: Create and push tag
         run: |
           git config user.name "github-actions[bot]"
@@ -43,7 +39,6 @@ jobs:
           git tag v${{ steps.get_version.outputs.version }}
           git push origin v${{ steps.get_version.outputs.version }}
 
-      # Generate changelog from commits since the last tag (only last 10 commits)
       - name: Generate changelog
         id: changelog
         run: |
@@ -57,13 +52,11 @@ jobs:
             CHANGELOG=$(git log "$LAST_TAG"..HEAD --pretty=format:"- %s (%h)" --no-merges -n 10)
           fi
 
+          # Escape only % to avoid GitHub Actions output issues
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
 
           echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
 
-      # Create a GitHub release with the generated changelog
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -74,4 +67,3 @@ jobs:
             ${{ steps.changelog.outputs.changelog }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
