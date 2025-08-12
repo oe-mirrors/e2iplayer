@@ -15,6 +15,7 @@ hostbbciplayer_blocked_
 hostbbcsport_blocked_
 hostbsto_blocked_
 hostcartoonhd_blocked_
+hostcb01
 hostcdapl_blocked_
 hostchomikuj_blocked_
 hostchristusvincit_blocked_
