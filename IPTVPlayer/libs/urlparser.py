@@ -621,6 +621,7 @@ class urlparser:
             'mixdrop.club': self.pp.parserMIXDROP,
             'mixdrop.co': self.pp.parserMIXDROP,
             'mixdrop.my': self.pp.parserMIXDROP,
+            'mixdrop.sn': self.pp.parserMIXDROP,
             'mixdrop.ps': self.pp.parserMIXDROP,
             'moevideo.net': self.pp.parserPLAYEREPLAY,
             'moflix-stream.click': self.pp.parserJWPLAYER,
