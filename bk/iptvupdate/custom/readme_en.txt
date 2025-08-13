@@ -1,1 +1,0 @@
-﻿Translation of the polish version needed :)
