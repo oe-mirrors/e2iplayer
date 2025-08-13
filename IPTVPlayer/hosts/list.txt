@@ -106,6 +106,7 @@ hostmindigtv
 hostmoflixstream
 hostmovie2k
 hostmovie4k
+hostmoviedream
 hostmovienightws
 hostmovizlandcom
 hostmovs4ucom

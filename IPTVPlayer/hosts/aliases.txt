@@ -107,6 +107,7 @@
 'hostmoflixstream': 'https://moflix-stream.xyz',
 'hostmovie2k': 'https://movie2k.ch/',
 'hostmovie4k': 'https://movie4k.food',
+'hostmoviedream': 'https://moviedream.to/',
 'hostmovienightws': 'http://movienight.ws/',
 'hostmovizlandcom': 'http://movizland.com/',
 'hostmovs4ucom': 'http://movs4u.tv/',
