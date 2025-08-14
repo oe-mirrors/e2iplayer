@@ -285,7 +285,10 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self.cancelAndClose()
 
     def keyMenu(self):
-        ConfigListScreen.keyMenu(self)
+        if hasattr(ConfigListScreen, "keyMenu"):
+            ConfigListScreen.keyMenu(self)
+        else:
+            return
 
     def keyUp(self):
         if self["config"].instance is not None:
