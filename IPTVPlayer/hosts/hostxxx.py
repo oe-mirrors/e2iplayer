@@ -21154,8 +21154,8 @@ class Host:
 
         if parser == 'http://www.drtuber.com':
            params = re.findall('params\s\+=\s\'h=(.*?)\'.*?params\s\+=\s\'%26t=(.*?)\'.*?params\s\+=\s\'%26vkey=\'\s\+\s\'(.*?)\'', data, re.S)
-           #teszt = str(base64.b64decode('UFQ2bDEzdW1xVjhLODI3').replace("b'", "").replace("'", ""))
-           #printDBG('Dekódolás után: ' + str(teszt))
+           # teszt = str(base64.b64decode('UFQ2bDEzdW1xVjhLODI3').replace("b'", "").replace("'", ""))
+           # printDBG('Dekódolás után: ' + str(teszt))
            if params:
               for (param1, param2, param3) in params:
                  bparam3 = param3
