@@ -47,7 +47,7 @@ class FilmyNaDzis(CBaseHostClass):
 
         self.DEFAULT_ICON_URL = 'https://filmynadzis.pl/wp-content/uploads/2016/07/logo2.png'
         self.HTTP_HEADER = self.cm.getDefaultHeader('chrome')
-        #{'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()})
+        # {'Referer':self.getMainUrl(), 'Origin':self.getMainUrl()})
         self.AJAX_HEADER = MergeDicts(self.HTTP_HEADER, {'X-Requested-With': ' XMLHttpRequest', 'Accept': '*/*'})
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
@@ -64,7 +64,7 @@ class FilmyNaDzis(CBaseHostClass):
     def getPage(self, baseUrl, params={}, post_data=None):
         if not params:
             params = self.defaultParams
-        #params['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent': self.HTTP_HEADER['User-Agent']}
+        # params['cloudflare_params'] = {'cookie_file':self.COOKIE_FILE, 'User-Agent': self.HTTP_HEADER['User-Agent']}
 
         return self.cm.getPage(baseUrl, params, post_data)
 
@@ -170,8 +170,8 @@ class FilmyNaDzis(CBaseHostClass):
             printDBG("--------------------------------")
 
         for item in items:
-            #printDBG("----------------------------")
-            #printDBG(item)
+            # printDBG("----------------------------")
+            # printDBG(item)
 
             url = ph.search(item, ph.A)[1]
             if url:
@@ -189,7 +189,7 @@ class FilmyNaDzis(CBaseHostClass):
             printDBG(str(params))
             self.addVideo(params)
 
-        #nextpage
+        # nextpage
         nextPage = ph.find(data, ('<div', '>', 'pagenavi'), '</div>', flags=0)[1]
         nextPage = ph.rfind(nextPage, '>%s</a>' % (page + 1), '<a')[1]
         nextPage = self.getFullUrl(ph.getattr(nextPage, 'href'), cUrl)
@@ -292,7 +292,7 @@ class FilmyNaDzis(CBaseHostClass):
         printDBG("handleService: || category[%s] " % (category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if not category:
             self.listMain({'name': 'category'})
         elif category == 'list_items':
@@ -306,13 +306,13 @@ class FilmyNaDzis(CBaseHostClass):
         elif category == 'sub_items':
             self.listSubItems(self.currItem)
 
-    #SEARCH
+    # SEARCH
         elif category == "search":
             self.tryToLogin()
             if self.loggedIn:
                 self.listSearch(self.currItem, searchPattern, searchType)
 
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search', 'desc': _("Type: ")})
         else:

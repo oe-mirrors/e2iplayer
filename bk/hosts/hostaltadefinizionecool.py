@@ -81,17 +81,17 @@ class AltadefinizioneCool(CBaseHostClass):
                     title = 'Qualita'
                 tabTitles[tabId] = title
 
-                #printDBG("------>" + tabId + "---->" + title)
+                # printDBG("------>" + tabId + "---->" + title)
                 tmp = self.cm.ph.getAllItemsBeetwenNodes(data, '<ul class="listSubCat" id="%tabId%"'.replace('%tabId%', title), '</ul>')
-                #print(str(tmp))
+                # print(str(tmp))
                 for tabData in tmp:
-                    #printDBG(tabData)
+                    # printDBG(tabData)
                     tabTitle = tabTitles.get(tabId, '')
                     if tabTitle == '':
                         continue
                     subItems = []
                     tabData = self.cm.ph.getAllItemsBeetwenMarkers(tabData, '<a', '</a>')
-                    #printDBG(str(tabData))
+                    # printDBG(str(tabData))
                     for item in tabData:
                         title = self.cleanHtmlStr(item)
                         url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
@@ -209,7 +209,7 @@ class AltadefinizioneCool(CBaseHostClass):
         printDBG("Altadefinizione.listAZMain")
         # 0-9
         self.addDir(MergeDicts(cItem, {'category': 'az_item', 'title': "0-9", 'letter': '9'}))
-        #a-z
+        # a-z
         for i in range(26):
             self.addDir(MergeDicts(cItem, {'category': 'az_item', 'title': chr(ord('A') + i), 'letter': chr(ord('A') + i)}))
 
@@ -223,7 +223,7 @@ class AltadefinizioneCool(CBaseHostClass):
             return
 
         data = self.cm.ph.getDataBeetwenNodes(data, '<table>', '</table>', False)[1]
-        #printDBG(data)
+        # printDBG(data)
 
         items = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr class="mlnew">', '</tr>')
         for item in items:
@@ -409,7 +409,7 @@ class AltadefinizioneCool(CBaseHostClass):
                    'qualitá': 'quality',
                    'scrittore': 'writers',
                    'attori': 'actors',
-                   'regia': 'directors'} #stars
+                   'regia': 'directors'}  # stars
 
         descData = self.cm.ph.getAllItemsBeetwenNodes(descData, ('<li', '>'), ('</li', '>'), False)
         for item in descData:
@@ -442,7 +442,7 @@ class AltadefinizioneCool(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'sub_items':
@@ -457,12 +457,12 @@ class AltadefinizioneCool(CBaseHostClass):
             self.listAZMain(self.currItem)
         elif category == 'az_item':
             self.listAZItem(self.currItem)
-        #SEARCH
+        # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-        #HISTORIA SEARCH
+        # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

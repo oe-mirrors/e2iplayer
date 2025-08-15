@@ -124,7 +124,7 @@ class Hitbox(CBaseHostClass):
                 params['url'] = item['category_id']
                 params['category'] = category
                 params.update(self._getCategoryBaseParams(item))
-                #params['seo_key'] = item['category_seo_key']
+                # params['seo_key'] = item['category_seo_key']
                 self.addDir(params)
             # check next page
             sts, data = self.cm.getPage(cItem['url'].format(1, (page + 1) * Hitbox.NUM_OF_ITEMS))
@@ -254,20 +254,20 @@ class Hitbox(CBaseHostClass):
 
         if None == name:
             self.listsTab(Hitbox.MAIN_CAT_TAB, {'name': 'category'})
-    #GAMES
+    # GAMES
         elif 'games_list' == category:
             self.listGames(self.currItem, 'games_tab')
         elif 'games_tab' == category:
             self.listGamesTab(self.currItem)
-    #MEDIA
+    # MEDIA
         elif 'media' == category:
             self.listMedia(self.currItem)
-    #WYSZUKAJ
+    # WYSZUKAJ
         elif category in ["search"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA WYSZUKIWANIA
+    # HISTORIA WYSZUKIWANIA
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
@@ -301,7 +301,7 @@ class IPTVHost(CHostBase):
 
     def convertList(self, cList):
         hostList = []
-        searchTypesOptions = [] # ustawione alfabetycznie
+        searchTypesOptions = []  # ustawione alfabetycznie
         searchTypesOptions.append((_("Live now"), "live"))
         searchTypesOptions.append((_("Recordings"), "video"))
 

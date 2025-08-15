@@ -42,13 +42,13 @@ class Filmoviplex(CBaseHostClass):
             {'category': 'list_items', 'title': _('Popular Movies'), 'url': self.getFullUrl('/browse-popular-videos-1.html')},
             {'category': 'list_items', 'title': _('Most Viewed Movies'), 'url': self.getFullUrl('/browse-views-videos-1.html')},
             {'category': 'list_items', 'title': _('Top Movies'), 'url': self.getFullUrl('/browse-top-videos-1.html')},
-            #{'category':'categories',      'title': _('Categories'),           'url': self.MAIN_URL },
+            # {'category':'categories',      'title': _('Categories'),           'url': self.MAIN_URL },
             {'category': 'list_items', 'title': _('Random Movies'), 'url': self.getFullUrl('/browse-random-videos-1.html')},
             {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('/browse-series-videos-1.html')},
             {'category': 'list_items', 'title': _('Popular Series'), 'url': self.getFullUrl('/browse-series-popular-1.html')},
             {'category': 'list_items', 'title': _('Most Viewed Series'), 'url': self.getFullUrl('/browse-series-views-1.html')},
             {'category': 'list_items', 'title': _('Top Series'), 'url': self.getFullUrl('/browse-series-top-1.html')},
-            #{'category':'year',            'title': _('Year'),                 'url': self.MAIN_URL },
+            # {'category':'year',            'title': _('Year'),                 'url': self.MAIN_URL },
             {'category': 'search', 'title': _('Search'), 'search_item': True},
             {'category': 'search_history', 'title': _('Search history')}
             ]
@@ -67,12 +67,12 @@ class Filmoviplex(CBaseHostClass):
         return sts, data
 
     def getUrlFromCode(self, script, s, ep):
-        #examples
-        #$(".openload1_1").append("<iframe id='openload' width='100%' height='500px' src='https://video.filmoviplex.com/e/SDFGREdDNEpSM1VLOE9udnJINlRDdz09' frameborder='0' allowfullscreen=''></iframe>")
-        #$(".openload7_1").append("<h1>USKORO!!</h1>");
+        # examples
+        # $(".openload1_1").append("<iframe id='openload' width='100%' height='500px' src='https://video.filmoviplex.com/e/SDFGREdDNEpSM1VLOE9udnJINlRDdz09' frameborder='0' allowfullscreen=''></iframe>")
+        # $(".openload7_1").append("<h1>USKORO!!</h1>");
 
         re_string = "\$\(\"\.openload%d_%d\"\)\.append\((.*?)\)" % (s, ep)
-        #printDBG(re_string)
+        # printDBG(re_string)
         tag = self.cm.ph.getSearchGroups(script, re_string)[0]
         url = self.cm.ph.getSearchGroups(tag, '''src=['"](http[^'^"^>]+?)[>'"]''')[0]
 
@@ -174,11 +174,11 @@ class Filmoviplex(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        #self.setMainUrl(self.cm.meta['url'])
+        # self.setMainUrl(self.cm.meta['url'])
 
-        #printDBG("-----------------------------")
-        #printDBG(data)
-        #printDBG("-----------------------------")
+        # printDBG("-----------------------------")
+        # printDBG(data)
+        # printDBG("-----------------------------")
 
         if 'cbp-rfgrid' in data:
             tmp = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'cbp-rfgrid'), ('</ul', '>'), False)[1]
@@ -204,7 +204,7 @@ class Filmoviplex(CBaseHostClass):
                 params.update({'good_for_fav': True, 'category': cat, 'title': title, 'url': url, 'icon': icon})
                 self.addDir(params)
 
-        #<a href="https://www.filmoviplex.com/browse-all-videos-1.html/page/2" >Next Page &raquo;</a></span>
+        # <a href="https://www.filmoviplex.com/browse-all-videos-1.html/page/2" >Next Page &raquo;</a></span>
         nextPageUrl = self.cm.ph.getSearchGroups(data, '''href=["']([^"^']+?)["']\s?>Next Page &raquo;</a>''')[0]
         if nextPageUrl:
             params = dict(cItem)
@@ -220,16 +220,16 @@ class Filmoviplex(CBaseHostClass):
         if not sts:
             return
 
-        #self.setMainUrl(self.cm.meta['url'])
+        # self.setMainUrl(self.cm.meta['url'])
 
-        #printDBG("--------------------")
-        #printDBG(data)
-        #printDBG("--------------------")
+        # printDBG("--------------------")
+        # printDBG(data)
+        # printDBG("--------------------")
 
-        #youtube trailer
-        #<iframe src="https://www.youtube.com/embed/LiwFtzuSnkE" width="100%" height="270" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
-        #real link
-        #<iframe class="play-mega" src="/netu.php?id=aHR0cHM6Ly92aWRlby5maWxtb3ZpcGxleC5jb20vZS9ZWE40VGxwRk1rRlJObUZCVUcwMWRtbFhORWxrZHowOQ==" scrolling="no" frameborder="0" width="74%" height="500px" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
+        # youtube trailer
+        # <iframe src="https://www.youtube.com/embed/LiwFtzuSnkE" width="100%" height="270" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
+        # real link
+        # <iframe class="play-mega" src="/netu.php?id=aHR0cHM6Ly92aWRlby5maWxtb3ZpcGxleC5jb20vZS9ZWE40VGxwRk1rRlJObUZCVUcwMWRtbFhORWxrZHowOQ==" scrolling="no" frameborder="0" width="74%" height="500px" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
 
         iframes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '>')
         for iframe in iframes:
@@ -267,22 +267,22 @@ class Filmoviplex(CBaseHostClass):
         if not dataScript:
             return
 
-        #printDBG("--------------------")
-        #printDBG(dataScript)
-        #printDBG("--------------------")
+        # printDBG("--------------------")
+        # printDBG(dataScript)
+        # printDBG("--------------------")
 
-        #var Home = "https://www.filmoviplex.com/",
-        #Excerpt = "When Emily Thorne moves to the Hamptons, everyone wonders about the new girl, but she knows everything about them, including what they did to her family. Years ago, they took everything from her. Now, one by one, she's going to make them pay.",
-        #episodeSlug = "Epizoda",
-        #seasonSlug = "Sezona",
-        #PosterNull = "https://image.tmdb.org/t/p/w500/qx7XytRgg1F03NN5BoK8jx3Cyft.jpg",
-        #baseUrl = "https://api.themoviedb.org/3/tv/",
-        #apikey = "?api_key=ad8148d111b9980e2527c200eadf1d8b",
-        #language = "&language=en-US",
-        #ImgLang = "&include_image_language=en-US,null",
-        #appendToResponse = "&append_to_response=images",
-        #id = 39358,
-        #dataUrl = baseUrl + id + apikey + language + ImgLang + appendToResponse;
+        # var Home = "https://www.filmoviplex.com/",
+        # Excerpt = "When Emily Thorne moves to the Hamptons, everyone wonders about the new girl, but she knows everything about them, including what they did to her family. Years ago, they took everything from her. Now, one by one, she's going to make them pay.",
+        # episodeSlug = "Epizoda",
+        # seasonSlug = "Sezona",
+        # PosterNull = "https://image.tmdb.org/t/p/w500/qx7XytRgg1F03NN5BoK8jx3Cyft.jpg",
+        # baseUrl = "https://api.themoviedb.org/3/tv/",
+        # apikey = "?api_key=ad8148d111b9980e2527c200eadf1d8b",
+        # language = "&language=en-US",
+        # ImgLang = "&include_image_language=en-US,null",
+        # appendToResponse = "&append_to_response=images",
+        # id = 39358,
+        # dataUrl = baseUrl + id + apikey + language + ImgLang + appendToResponse;
 
         code = self.cm.ph.getSearchGroups(dataScript, "(var[^;]+?dataUrl[^;]+?;)")[0]
         code = code + '''
@@ -311,9 +311,9 @@ class Filmoviplex(CBaseHostClass):
             sts, apiData = self.getPage(response['dataUrl'])
 
             if sts:
-                #printDBG("--------------------")
-                #printDBG(apiData)
-                #printDBG("--------------------")
+                # printDBG("--------------------")
+                # printDBG(apiData)
+                # printDBG("--------------------")
 
                 try:
                     apiJson = json_loads(apiData)
@@ -336,9 +336,9 @@ class Filmoviplex(CBaseHostClass):
                         sts, seasonData = self.getPage(response['seasonUrl'] % str(sNum))
 
                         if sts:
-                            #printDBG("--------------------")
-                            #printDBG(seasonData)
-                            #printDBG("--------------------")
+                            # printDBG("--------------------")
+                            # printDBG(seasonData)
+                            # printDBG("--------------------")
 
                             try:
                                 seasonJson = json_loads(seasonData)
@@ -352,7 +352,7 @@ class Filmoviplex(CBaseHostClass):
                                     else:
                                         eTitle = "%d. %s" % (eNum, eTitle)
 
-                                    #aggiungere ricerca dell'url
+                                    # aggiungere ricerca dell'url
                                     url = self.getUrlFromCode(dataScript, sNum, eNum)
                                     if url == '':
                                         eTitle = eTitle + " [link not found!]"
@@ -528,7 +528,7 @@ class Filmoviplex(CBaseHostClass):
         self.currList = []
         self.cacheLinks = {}
 
-        #MAIN MENU
+        # MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'categories':
@@ -541,17 +541,17 @@ class Filmoviplex(CBaseHostClass):
             self.listItems(self.currItem)
         elif category == 'explore_item':
             self.exploreItem(self.currItem)
-        #SEASONS
+        # SEASONS
         elif category == 'list_seasons':
             self.listSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-        #SEARCH
+        # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-        #HISTORIA SEARCH
+        # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

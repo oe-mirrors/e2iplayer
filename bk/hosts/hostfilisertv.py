@@ -60,7 +60,7 @@ class FiliserTv(CBaseHostClass):
         self.cacheSeasons = {}
         FiliserTv.SALT_CACHE = {}
         self.WaitALittleBit = None
-        self.filtersTab = [] # ['language', 'genres', 'year', 'sort_by']
+        self.filtersTab = []  # ['language', 'genres', 'year', 'sort_by']
 
     def getStr(self, item, key):
         if key not in item:
@@ -84,7 +84,7 @@ class FiliserTv(CBaseHostClass):
 
     def fillFilters(self, cItem):
         self.cacheFilters = {}
-        self.filtersTab = [] # ['language', 'genres', 'year', 'sort_by']
+        self.filtersTab = []  # ['language', 'genres', 'year', 'sort_by']
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
@@ -448,7 +448,7 @@ class FiliserTv(CBaseHostClass):
                     reCaptcha = False
 
                     tries += 1
-                    #if tries > 3:
+                    # if tries > 3:
                     #    rm(self.COOKIE_FILE)
 
                     if tries > 1 and googleCaptcha:
@@ -467,11 +467,11 @@ class FiliserTv(CBaseHostClass):
                         post_data = self.getSweetCaptchaRespond(data)
                         printDBG(post_data)
 
-                        if post_data == None: # cancelled
+                        if post_data == None:  # cancelled
                             videoUrl = ''
                             break
 
-                        if post_data == {}: # retry
+                        if post_data == {}:  # retry
                             continue
 
                         httpParams2 = dict(httpParams)
@@ -479,7 +479,7 @@ class FiliserTv(CBaseHostClass):
                         sts, data = self.getPage(url, httpParams2, post_data)
 
                         if not sts or 'sweetcaptcha' in data:
-                            continue # wrong answer? -> Another try
+                            continue  # wrong answer? -> Another try
                         reCaptcha = True
                         printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                         printDBG(data)
@@ -515,7 +515,7 @@ class FiliserTv(CBaseHostClass):
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'list_items' == category:
@@ -531,12 +531,12 @@ class FiliserTv(CBaseHostClass):
             self.listSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

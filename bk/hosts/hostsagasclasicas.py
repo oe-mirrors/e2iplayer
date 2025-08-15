@@ -12,6 +12,7 @@ config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default='/usr/lib/eni
 config.plugins.iptvplayer.grupujurllist = ConfigYesNo(default=True)
 config.plugins.iptvplayer.sortuj = ConfigYesNo(default=True)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('Text files ytlist and urllist are in:'), config.plugins.iptvplayer.Sciezkaurllist))
@@ -38,9 +39,9 @@ class Urllist(CBaseHostClass):
 #          'desc': _('Links from all files without categories'),
 #          'icon': 'https://mikeharwood.files.wordpress.com/2011/01/all-in-one-logo-on-blue.jpg'}]
         self.MAIN_GROUPED_TAB = ([{'category': Urllist.URLLIST_FILE,
-          #'title': _('Videos'),
-          #'desc': _('Links from the file %s') % normpath(path + 'urllist.txt'),
-          #'icon': 'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'}, {'category': Urllist.URRLIST_STREAMS,
+          # 'title': _('Videos'),
+          # 'desc': _('Links from the file %s') % normpath(path + 'urllist.txt'),
+          # 'icon': 'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'}, {'category': Urllist.URRLIST_STREAMS,
           'title': _('Cine Estrenos'),
           'desc': _('Links from the file %s') % normpath(path + 'urllist.estrenos'),
           'icon': 'http://elrinconenigma2.hol.es/E2iplayericons/cineestrenos.jpg'}, {'category': Urllist.URRLIST_USER,
@@ -62,7 +63,7 @@ class Urllist(CBaseHostClass):
     def _uriIsValid(self, url):
         return '://' in url
 
-    def listCategory(self, cItem, searchMode = False):
+    def listCategory(self, cItem, searchMode=False):
         printDBG('Urllist.listCategory cItem[%s]' % cItem)
         sortList = config.plugins.iptvplayer.sortuj.value
         filespath = config.plugins.iptvplayer.Sciezkaurllist.value
@@ -144,7 +145,7 @@ class Urllist(CBaseHostClass):
                  'url': uri})
         return videoUrls
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Urllist.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get('name', None)
@@ -180,7 +181,7 @@ class IPTVHost(CHostBase):
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('sagasclasicaslogo.png')])
 
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)
         if listLen < Index and listLen > 0:
             printDBG('ERROR getLinksForVideo - current list is to short len: %d, Index: %d' % (listLen, Index))

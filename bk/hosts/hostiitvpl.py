@@ -40,8 +40,8 @@ class IITVPL(CBaseHostClass):
                              {'category': 'list_series2', 'title': 'Popularne seriale', 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
                              {'category': 'list_series1', 'title': 'Wszystkie seriale', 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
 
-                             #{'category':'search',            'title': _('Search'), 'search_item':True,         'icon':self.DEFAULT_ICON_URL},
-                             #{'category':'search_history',    'title': _('Search history'),                     'icon':self.DEFAULT_ICON_URL}
+                             # {'category':'search',            'title': _('Search'), 'search_item':True,         'icon':self.DEFAULT_ICON_URL},
+                             # {'category':'search_history',    'title': _('Search history'),                     'icon':self.DEFAULT_ICON_URL}
                             ]
 
         self.cacheLinks = {}
@@ -269,7 +269,7 @@ class IITVPL(CBaseHostClass):
         if 'station' in info:
             otherInfo['station'] = info['station']
 
-        return [{'title': self.cleanHtmlStr(info['title']), 'text': self.cleanHtmlStr(info['desc']), 'images':[{'title': '', 'url': info['icon']}], 'other_info':otherInfo}]
+        return [{'title': self.cleanHtmlStr(info['title']), 'text': self.cleanHtmlStr(info['desc']), 'images': [{'title': '', 'url': info['icon']}], 'other_info': otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
@@ -283,7 +283,7 @@ class IITVPL(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif category == 'list_abc':
@@ -296,12 +296,12 @@ class IITVPL(CBaseHostClass):
             self.listSeries(self.currItem, 'list_episodes', '<ul id="popular-list">')
         elif category == 'list_episodes':
             self.listEpisodes(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

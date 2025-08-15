@@ -226,7 +226,7 @@ class Vizjer(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Vizjer.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        #url = self.getFullUrl('/wyszukiwarka?phrase=%s') % urllib_quote_plus(searchPattern)
+        # url = self.getFullUrl('/wyszukiwarka?phrase=%s') % urllib_quote_plus(searchPattern)
         url = self.getFullUrl('/wyszukaj?phrase=%s') % urllib_quote_plus(searchPattern)
         params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
         self.listItems(params)
@@ -331,7 +331,7 @@ class Vizjer(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None and category == '':
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
@@ -350,12 +350,12 @@ class Vizjer(CBaseHostClass):
         elif category == 'list_episodes':
             self.listSeriesEpisodes(self.currItem)
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

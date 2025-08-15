@@ -157,7 +157,7 @@ class TVRepublkaPL(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'magazines':

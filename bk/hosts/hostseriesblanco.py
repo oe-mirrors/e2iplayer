@@ -19,6 +19,7 @@ from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.seriesblanco_login = ConfigText(default='', fixed_size=False)
 config.plugins.iptvplayer.seriesblanco_password = ConfigText(default='', fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('login') + ':', config.plugins.iptvplayer.seriesblanco_login))
@@ -81,11 +82,11 @@ class SeriesBlanco(CBaseHostClass, CaptchaHelper):
         self.inLogin = False
         return
 
-    def getDefaultParams(self, forAjax = False):
+    def getDefaultParams(self, forAjax=False):
         header = self.AJAX_HEADER if forAjax else self.HTTP_HEADER
         return MergeDicts(self.defaultParams, {'header': header})
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         baseUrl = self.cm.iriToUri(baseUrl)
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE,
          'User-Agent': self.HTTP_HEADER['User-Agent']}
@@ -318,7 +319,7 @@ class SeriesBlanco(CBaseHostClass, CaptchaHelper):
 
         return self.up.getVideoLinkExt(videoUrl)
 
-    def getArticleContent(self, cItem, data = None):
+    def getArticleContent(self, cItem, data=None):
         printDBG('SeriesBlanco.getArticleContent [%s]' % cItem)
         self.tryTologin()
         retTab = []
@@ -408,7 +409,7 @@ class SeriesBlanco(CBaseHostClass, CaptchaHelper):
                 WriteTextFile(loginCookie, hash)
         return self.loggedIn
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         self.tryTologin()
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

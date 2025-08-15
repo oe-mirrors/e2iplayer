@@ -47,7 +47,7 @@ class La7it(CBaseHostClass):
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        #printDBG(self.defaultParams)
+        # printDBG(self.defaultParams)
         return self.cm.getPage(url, addParams, post_data)
 
     def getFullUrl(self, url):
@@ -149,7 +149,7 @@ class La7it(CBaseHostClass):
 
         guida_tv = ph.findall(html, "<div id=\"content_guida_tv_rivedi", "<!-- THEME DEBUG -->")
         if len(guida_tv) > 0:
-            #printDBG(guida_tv[0])
+            # printDBG(guida_tv[0])
 
             items = ph.findall(guida_tv[0], '<div id="item', '</div>\r\n                  </div>\r\n')
             for item in items:
@@ -164,7 +164,7 @@ class La7it(CBaseHostClass):
                     icon = icon[0]
                     if icon.startswith('//'):
                         icon = 'https:' + icon
-                #search for url
+                # search for url
                 url = re.findall("href=\"(.*?)\"", item)
                 if url:
                     url = url[0]
@@ -205,7 +205,7 @@ class La7it(CBaseHostClass):
             anchor = item[1]
             icon = self.getFullUrl(item[3])
             title = self.cleanHtmlStr(item[4])
-            #title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
+            # title = HTMLParser.HTMLParser().unescape(title).encode('utf-8')
             params = MergeDicts(cItem, {'category': 'program', 'title': title, 'url': url, 'icon': icon})
             printDBG(str(params))
             shows[anchor].append(params)
@@ -326,7 +326,7 @@ class La7it(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'rivedila7' or category == 'rivedila7d':

@@ -4,7 +4,7 @@
 #
 # @Codermik release, based on @Samsamsam's E2iPlayer public.
 # Released with kind permission of Samsamsam.
-# All code developed by Samsamsam is the property of the Samsamsam and the E2iPlayer project,  
+# All code developed by Samsamsam is the property of the Samsamsam and the E2iPlayer project,
 # all other work is ? E2iStream Team, aka Codermik.  TSiPlayer is ? Rgysoft, his group can be
 # found here:  https://www.facebook.com/E2TSIPlayer/
 #
@@ -19,11 +19,15 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 
-import urlparse, urllib, base64, re
+import urlparse
+import urllib
+import base64
+import re
 from Components.config import config, ConfigText, getConfigListEntry
 from Screens.MessageBox import MessageBox
 config.plugins.iptvplayer.allboxtv_login = ConfigText(default='', fixed_size=False)
 config.plugins.iptvplayer.allboxtv_password = ConfigText(default='', fixed_size=False)
+
 
 def GetConfigList():
     optionList = []
@@ -91,7 +95,7 @@ class AllBoxTV(CBaseHostClass):
             sts, data = self.getPage(cItem['url'])
             if not sts:
                 return
-            data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'movie cat'), ('</a','>'))
+            data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'movie cat'), ('</a', '>'))
             for item in data:
                 letter = self.cm.ph.getSearchGroups(item, 'cat\\-([^\'^"]+?)[\'"]')[0]
                 if letter == '':
@@ -156,10 +160,10 @@ class AllBoxTV(CBaseHostClass):
             if not sts:
                 return
         data = ph.findall(data, ('<ul', '>', ph.check(ph.any, ('moviesVersions', 'moviesCategories', 'moviesYears', 'moviesCountries'))), '</ul>', flags=ph.START_S)
-        
+
         if data and 'moviesYears' in data[(-2)] and 'moviesYearsRating' not in data[(-2)]:
             del data[-2:]
-            
+
         if len(data) / 2 > f_idx:
             tmp = ph.findall(data[(f_idx * 2 + 1)], ('<a', '>'), '</a>', flags=ph.START_S)
             f_idx += 1
@@ -290,12 +294,12 @@ class AllBoxTV(CBaseHostClass):
         if not sts:
             return
         self.setMainUrl(self.cm.meta['url'])
-        icon = self.cm.ph.getDataBeetwenNodes(data, ('<img', '>', '"image"'), ('<','>'))[1]
+        icon = self.cm.ph.getDataBeetwenNodes(data, ('<img', '>', '"image"'), ('<', '>'))[1]
         icon = self.cm.ph.getSearchGroups(icon, '<img[^>]+?src="([^"]+?\\.(:?jpe?g|png)(:?\\?[^"]+?)?)"')[0]
-        seriesTitle = ph.clean_html(self.cm.ph.getDataBeetwenNodes(data, ('<', '>','movie-name'), ('<','>'))[1])
+        seriesTitle = ph.clean_html(self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'movie-name'), ('<', '>'))[1])
         if seriesTitle == '':
             seriesTitle = cItem['title']
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'modal-trailer'), ('<div','>','row'))
+        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'modal-trailer'), ('<div', '>', 'row'))
         printDBG(tmp)
         num = 1
         for item in tmp:
@@ -419,7 +423,7 @@ class AllBoxTV(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'id="sources"'), ('</table','>'))[1]
+        data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'id="sources"'), ('</table', '>'))[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<tr', '</tr>')
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href=[\'"]([^"^\']+?)[\'"]')[0].replace('&amp;', '&'))
@@ -457,7 +461,7 @@ class AllBoxTV(CBaseHostClass):
             if not sts:
                 return []
             SetIPTVPlayerLastHostError(ph.clean_html(ph.find(data, ('<div', '>', 'infoMsg'), '</div>', flags=0)[1]))
-            tmp = self.cm.ph.getDataBeetwenNodes(data, ('<iframe', '>', 'video-player'), ('</iframe','>'))[1]
+            tmp = self.cm.ph.getDataBeetwenNodes(data, ('<iframe', '>', 'video-player'), ('</iframe', '>'))[1]
             videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '<iframe[^>]+?src=[\'"]([^"^\']+?)[\'"]', 1, True)[0])
             if '' == videoUrl:
                 videoUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '<iframe[^>]+?data\\-source=[\'"]([^"^\']+?)[\'"]', 1, True)[0])
@@ -510,7 +514,7 @@ class AllBoxTV(CBaseHostClass):
             sts, data = self.getPage(url)
             if not sts:
                 return False
-            sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'loginForm'), ('</form','>'))
+            sts, data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'loginForm'), ('</form', '>'))
             if not sts:
                 return False
             actionUrl = self.getFullUrl(self.cm.ph.getSearchGroups(data, 'action=[\'"]([^\'^"]+?)[\'"]')[0])
@@ -531,7 +535,7 @@ class AllBoxTV(CBaseHostClass):
             if sts and '/wyloguj' in data:
                 printDBG('tryTologin OK')
                 self.loggedIn = True
-                data = self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'mobile-header'), ('</ul','>'))[1]
+                data = self.cm.ph.getDataBeetwenNodes(data, ('<', '>', 'mobile-header'), ('</ul', '>'))[1]
                 data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
                 self.loginMessage = []
                 for item in data:
@@ -543,7 +547,7 @@ class AllBoxTV(CBaseHostClass):
             else:
                 if sts:
                     errMsg = []
-                    tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'required'), ('</span','>'), False)
+                    tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<span', '>', 'required'), ('</span', '>'), False)
                     for it in tmp:
                         errMsg.append(ph.clean_html(it))
                 else:
@@ -551,7 +555,7 @@ class AllBoxTV(CBaseHostClass):
                      _('Connection error.')]
                 self.sessionEx.open(MessageBox, _('Login failed.') + '\n' + ('\n').join(errMsg), type=MessageBox.TYPE_ERROR, timeout=10)
                 printDBG('tryTologin failed')
-                
+
         return self.loggedIn
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
@@ -591,7 +595,7 @@ class AllBoxTV(CBaseHostClass):
             self.listEpisodes(self.currItem)
         elif category == 'm3u':
             self.listM3u(self.currItem, 'list_m3u_groups')
-        elif category in ('search','search_next_page'):
+        elif category in ('search', 'search_next_page'):
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
@@ -609,5 +613,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, AllBoxTV(), True, [])
-
-

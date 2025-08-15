@@ -139,7 +139,7 @@ class Bildde(CBaseHostClass):
 
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name is None:
             self.listsTab(self.buildMainCatTab(), {})
         elif category == 'listCat':

@@ -194,7 +194,7 @@ class Filman(CBaseHostClass):
         self.setMainUrl(data.meta['url'])
 
         data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'episode-list'), ('<hr', '>'))[1]
-        #data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'active'), ('</ul', '>'))
+        # data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'active'), ('</ul', '>'))
         data = data.split('<span')
         for sitem in data:
 #            printDBG("Filman.listSeries sitem %s" % sitem)
@@ -316,7 +316,7 @@ class Filman(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None and category == '':
             rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
@@ -333,12 +333,12 @@ class Filman(CBaseHostClass):
         elif category == 'list_series':
             self.listSeries(self.currItem)
 
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

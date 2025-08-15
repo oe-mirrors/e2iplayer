@@ -32,7 +32,7 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.francetv_skip_geoblocked = ConfigYesNo(default=True)
-#config.plugins.iptvplayer.francetv_use_x_forwarded_for = ConfigYesNo(default = False)
+# config.plugins.iptvplayer.francetv_use_x_forwarded_for = ConfigYesNo(default = False)
 
 
 def GetConfigList():
@@ -370,7 +370,7 @@ class FranceTv(CBaseHostClass):
 
         results = []
 
-        #if cItem['category'] == 'cat_subitem':
+        # if cItem['category'] == 'cat_subitem':
         #    url = self.CATEGORIES_URL + "/%cat%/contents?sort=begin_date:desc&size=15&page={0}&filter=with-no-vod,only-visible".format(page).replace('%cat%', cItem['id'])
         if cItem['category'] == 'show':
             page = 0
@@ -437,7 +437,7 @@ class FranceTv(CBaseHostClass):
         # 0-9
         self.addDir(MergeDicts(cItem, {'category': next_cat, 'title': "0-9", 'name': "0-9"}))
 
-        #a-z
+        # a-z
         for i in range(26):
             self.addDir(MergeDicts(cItem, {'category': next_cat, 'title': chr(ord('A') + i), 'name': chr(ord('A') + i)}))
 
@@ -493,7 +493,7 @@ class FranceTv(CBaseHostClass):
 
                 if len(v_links) > 0:
                     for v in v_links:
-                        #printDBG(str(v))
+                        # printDBG(str(v))
                         linksTab.extend(getDirectM3U8Playlist(v['real_url'], checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
                 elif len(v_geoblock_links) > 0:
                     if config.plugins.iptvplayer.francetv_skip_geoblocked == True:
@@ -501,7 +501,7 @@ class FranceTv(CBaseHostClass):
                         self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=5)
                     else:
                         for v in v_geoblock_links:
-                            #printDBG(str(v))
+                            # printDBG(str(v))
                             linksTab.extend(getDirectM3U8Playlist(v['real_url'], checkExt=False, variantCheck=True, checkContent=True, sortWithMaxBitrate=99999999))
 
         return linksTab
@@ -521,7 +521,7 @@ class FranceTv(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'live':

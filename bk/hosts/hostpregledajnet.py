@@ -4,7 +4,7 @@
 #
 # @Codermik release, based on @Samsamsam's E2iPlayer public.
 # Released with kind permission of Samsamsam.
-# All code developed by Samsamsam is the property of the Samsamsam and the E2iPlayer project,  
+# All code developed by Samsamsam is the property of the Samsamsam and the E2iPlayer project,
 # all other work is ï¿½ E2iStream Team, aka Codermik.  TSiPlayer is ï¿½ Rgysoft, his group can be
 # found here:  https://www.facebook.com/E2TSIPlayer/
 #
@@ -18,7 +18,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Me
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
 
-import re, urllib
+import re
+import urllib
+
 
 def gettytul():
     return 'https://pregledaj.net/'
@@ -214,7 +216,7 @@ class PregledajNET(CBaseHostClass):
         elif category == 'search_history':
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _('Type: '))
         else:
-            printExc()            
+            printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
@@ -223,4 +225,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, PregledajNET(), True, [])
-

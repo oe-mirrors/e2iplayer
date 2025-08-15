@@ -102,7 +102,7 @@ class PmgSport(CBaseHostClass):
             self.addDir({'category': 'sport', 'title': title, 'url': url, 'text_color': 'yellow'})
 
         menu = ph.findall(data, "<ul id=\"menu-main-header\" class=\"main-menu \">", "</ul></nav>")
-        #printDBG(menu[0])
+        # printDBG(menu[0])
         sports = ph.findall(menu[0], "<li id=\"menu-item-", "</ul>")
 
         for s in sports:
@@ -120,7 +120,7 @@ class PmgSport(CBaseHostClass):
 
             self.MENU_ITEMS[title] = sport_items
 
-        #printDBG(str(self.MENU_ITEMS))
+        # printDBG(str(self.MENU_ITEMS))
 
     def listSportItems(self, cItem):
         printDBG("PmgSport.listMainMenu")
@@ -140,8 +140,8 @@ class PmgSport(CBaseHostClass):
 
         items = ph.findall(data, "<article ", "</article>")
         for i in items:
-            #printDBG(i)
-            #printDBG("%%%%%%%%%%%%%%%%%")
+            # printDBG(i)
+            # printDBG("%%%%%%%%%%%%%%%%%")
             url, title = re.findall("<h3 class=\"entry-title\" >\n.*<a href=\"(.*?)\">\n(.*?)<i", i)[0]
             title = HTMLParser.HTMLParser().unescape(title).encode('utf-8').strip()
 
@@ -174,7 +174,7 @@ class PmgSport(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s] " % (name, category))
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name == None:
             self.listMainMenu()
         elif category == 'sport' or category == 'sport_subitem':

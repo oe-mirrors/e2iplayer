@@ -52,7 +52,7 @@ class Cb01(CBaseHostClass):
         # remove all problems with new lines and spaces between tags
         data = data.replace("\n", " ")
         data = re.sub(r">[ ]{1,5}<", "><", data)
-        #printDBG(data)
+        # printDBG(data)
         return data
 
     def listMainMenu(self, cItem):
@@ -78,7 +78,7 @@ class Cb01(CBaseHostClass):
 
             items = self.cm.ph.getAllItemsBeetwenNodes(group, '<a', '</a>', True)
             for item in items:
-                #printDBG(item)
+                # printDBG(item)
                 title = self.cleanHtmlStr(item)
                 url = re.findall("href=['\"]?([^>'\"]+?)['\"]?>", item)
                 if url:
@@ -158,7 +158,7 @@ class Cb01(CBaseHostClass):
             printDBG(str(params))
             self.addDir(params)
 
-        #search if exsts a next page
+        # search if exsts a next page
         pntemp = re.findall("value=['\"]?([^ >'\"]+?)[ '\"]?>%s</option>" % (page + 1), data, re.S)
         if pntemp:
             params = dict(cItem)
@@ -208,7 +208,7 @@ class Cb01(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
         cItem['prev_url'] = cItem['url']
 
-        #trailer
+        # trailer
         trailer = self.cm.ph.getDataBeetwenNodes(data, 'Guarda il Trailer:', ('</div', '>'), False)[1]
         if trailer:
             url = re.findall("src=['\"]?([^ >'\"]+?)['\"]?[ >]", trailer)
@@ -219,11 +219,11 @@ class Cb01(CBaseHostClass):
                     params.update({'good_for_fav': False, 'url': url[0], 'title': '%s %s' % (title, cItem['title'])})
                     self.addVideo(params)
 
-        #video links
+        # video links
         urlTab = []
 
-        #links = re.findall("href=['\"]?([^ '\"]+?)['\"]? target=\"?_blank\"? rel=\"[^\"]+\">(.*?)</a>", data)
-        #example: <a href="https://stayonline.pro/l/x4xMR/" target="_blank" rel="noopener noreferrer nofollow">Mixdrop</a>
+        # links = re.findall("href=['\"]?([^ '\"]+?)['\"]? target=\"?_blank\"? rel=\"[^\"]+\">(.*?)</a>", data)
+        # example: <a href="https://stayonline.pro/l/x4xMR/" target="_blank" rel="noopener noreferrer nofollow">Mixdrop</a>
         links = re.findall("href=['\"]?([^ '\"]+?)['\"]? target=\"?_blank\"? rel=\"[^\"]+\">(.*?)</a>|<strong>(.*?)</strong>", data)
         categ = ''
 
@@ -260,7 +260,7 @@ class Cb01(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("cb01uno.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        #Verify post parrams and config bellow
+        # Verify post parrams and config bellow
         cItem['url'] = self.MAIN_URL
         cItem['post_data'] = {'s': searchPattern}
         cItem['category'] = 'list_items'
@@ -289,7 +289,7 @@ class Cb01(CBaseHostClass):
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)
 
-    #MAIN MENU
+    # MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category', 'type': 'category'})
         elif category == 'list_items':
@@ -300,12 +300,12 @@ class Cb01(CBaseHostClass):
             self.currList = self.currItem.get('sub_items', [])
         elif category == 'explore_category':
             self.exploreCategory(self.currItem)
-    #SEARCH
+    # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = self.currItem
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    #HISTORIA SEARCH
+    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:

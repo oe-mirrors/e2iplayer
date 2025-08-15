@@ -12,6 +12,7 @@ config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default="/usr/lib/eni
 config.plugins.iptvplayer.grupujurllist = ConfigYesNo(default=True)
 config.plugins.iptvplayer.sortuj = ConfigYesNo(default=True)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('Text files ytlist and urllist are in:'), config.plugins.iptvplayer.Sciezkaurllist))
@@ -32,7 +33,7 @@ class Urllist(CBaseHostClass):
     def __init__(self):
         printDBG('Urllist.__init__')
         path = config.plugins.iptvplayer.Sciezkaurllist.value + '/'
-		
+
 #        self.MAIN_GROUPED_TAB = [{'category': 'all',
 #          'title': _('All in one'),
 #          'desc': _('Links from all files without categories'),
@@ -41,12 +42,12 @@ class Urllist(CBaseHostClass):
           'title': _('BOXTVMANIA BLOG & REVIEWS'),
           'desc': _('Links from the file %s') % normpath(path + 'urllist.blog'),
           'icon': 'https://boxtvmania.files.wordpress.com/2018/08/cropped-bio_facebook.jpg'}])
-          #'title': _('Iptv Channels'),
-          #'desc': _('Links from the file %s') % normpath(path + 'urllist.iptv'),
-          #'icon': 'http://elrinconenigma2.hol.es/E2iplayericons/iptv_spain.jpg'}, {'category': Urllist.URRLIST_USER,
-          #'title': _('Tdt Channels'),
-          #'desc': _('Links from the file %s') % normpath(path + 'urllist.user'),
-          #'icon': 'http://elrinconenigma2.hol.es/E2iplayericons/tdtchannels100.png'}])
+          # 'title': _('Iptv Channels'),
+          # 'desc': _('Links from the file %s') % normpath(path + 'urllist.iptv'),
+          # 'icon': 'http://elrinconenigma2.hol.es/E2iplayericons/iptv_spain.jpg'}, {'category': Urllist.URRLIST_USER,
+          # 'title': _('Tdt Channels'),
+          # 'desc': _('Links from the file %s') % normpath(path + 'urllist.user'),
+          # 'icon': 'http://elrinconenigma2.hol.es/E2iplayericons/tdtchannels100.png'}])
         CBaseHostClass.__init__(self)
         self.currFileHost = None
         return
@@ -62,7 +63,7 @@ class Urllist(CBaseHostClass):
     def _uriIsValid(self, url):
         return '://' in url
 
-    def listCategory(self, cItem, searchMode = False):
+    def listCategory(self, cItem, searchMode=False):
         printDBG('Urllist.listCategory cItem[%s]' % cItem)
         sortList = config.plugins.iptvplayer.sortuj.value
         filespath = config.plugins.iptvplayer.Sciezkaurllist.value
@@ -144,7 +145,7 @@ class Urllist(CBaseHostClass):
                  'url': uri})
         return videoUrls
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('Urllist.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get('name', None)
@@ -180,7 +181,7 @@ class IPTVHost(CHostBase):
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('boxtvmanialogo.png')])
 
-    def getLinksForVideo(self, Index = 0, selItem = None):
+    def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)
         if listLen < Index and listLen > 0:
             printDBG('ERROR getLinksForVideo - current list is to short len: %d, Index: %d' % (listLen, Index))
@@ -201,7 +202,7 @@ class IPTVHost(CHostBase):
 
     def convertList(self, cList):
         hostList = []
-        searchTypesOptions = [] 
+        searchTypesOptions = []
         for cItem in cList:
             hostLinks = []
             type = CDisplayListItem.TYPE_UNKNOWN

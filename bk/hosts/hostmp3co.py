@@ -12,6 +12,7 @@ import re
 from time import time
 from datetime import timedelta
 
+
 def gettytul():
     return 'https://mp3co.info/'
 
@@ -32,11 +33,11 @@ class MP3COInfo(CBaseHostClass):
          'save_cookie': True,
          'cookiefile': self.COOKIE_FILE}
 
-    def getDefaultParams(self, forAjax = False):
+    def getDefaultParams(self, forAjax=False):
         header = self.AJAX_HEADER if forAjax else self.HTTP_HEADER
         return MergeDicts(self.defaultParams, {'header': header})
 
-    def getPage(self, baseUrl, addParams = {}, post_data = None):
+    def getPage(self, baseUrl, addParams={}, post_data=None):
         baseUrl = self.cm.iriToUri(baseUrl)
         addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE,
          'User-Agent': self.HTTP_HEADER['User-Agent']}
@@ -191,7 +192,7 @@ class MP3COInfo(CBaseHostClass):
 
         return urlsTab
 
-    def handleService(self, index, refresh = 0, searchPattern = '', searchType = ''):
+    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         category = self.currItem.get('category', '')

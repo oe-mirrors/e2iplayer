@@ -117,8 +117,8 @@ class Sportitalia(CBaseHostClass):
 
         for item in data['children']:
             title = item['name']
-            #printDBG(title)
-            if not(title in ["Sportitalia HD", "SI SOLOCALCIO", "SI MOTORI", "SI LIVE 24", "SPORTS CENTER"]):
+            # printDBG(title)
+            if not (title in ["Sportitalia HD", "SI SOLOCALCIO", "SI MOTORI", "SI LIVE 24", "SPORTS CENTER"]):
 
                 url = self.PAGES_URL + item['page']['slug']
                 if item['page']['logo_id'] != None:
@@ -172,9 +172,9 @@ class Sportitalia(CBaseHostClass):
 
         for page in data:
             if page['slug'] == cItem['slug']:
-                #printDBG(str(data))
+                # printDBG(str(data))
                 for m in page['modules']:
-                    #printDBG(str(m))
+                    # printDBG(str(m))
                     if m['type']['category'] == 'Content':
                         params = {'title': m['languages'][0]['title'], 'desc': m['languages'][0]['description'], 'module_id': m['id'], 'category': 'si_module', 'icon': cItem['icon']}
                         printDBG(str(params))
@@ -260,7 +260,7 @@ class Sportitalia(CBaseHostClass):
         self.cacheLinks = {}
         self.currList = []
 
-        #MAIN MENU
+        # MAIN MENU
         if name == None:
             self.listMainMenu({'name': 'category'})
         elif category == 'si_menu':
