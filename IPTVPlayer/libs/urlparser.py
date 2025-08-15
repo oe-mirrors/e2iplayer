@@ -465,6 +465,7 @@ class urlparser:
             'dropload.tv': self.pp.parserJWPLAYER,
             'ds2play.com': self.pp.parserDOOD,
             'ds2video.com': self.pp.parserDOOD,
+            'dumbalag.com': self.pp.parserJWPLAYER,
             'dwish.pro': self.pp.parserJWPLAYER,
             # e
             'easyvid.org': self.pp.parserEASYVIDORG,
@@ -549,6 +550,7 @@ class urlparser:
             # h
             'harpy.tv': self.pp.parserHARPYTV,
             'haxhits.com': self.pp.parserHAXHITSCOM,
+            'haxloppd.com': self.pp.parserJWPLAYER,
             'hdbestvd.online': self.pp.parserJWPLAYER,
             'hdfilmstreaming.com': self.pp.parserHDFILMSTREAMING,
             'hdgo.cc': self.pp.parserHDGOCC,
@@ -556,6 +558,7 @@ class urlparser:
             'herokuapp.com': self.pp.parserANIMESHINDEN,
             'hexload.com': self.pp.parserHEXLOAD,
             'hexupload.net': self.pp.parserHEXLOAD,
+            'hglink.to': self.pp.parserJWPLAYER,
             'hgplaycdn.com': self.pp.parserJWPLAYER,
             'highload.to': self.pp.parserHIGHLOADTO,
             'hlsflast.com': self.pp.parserJWPLAYER,
@@ -607,7 +610,9 @@ class urlparser:
             'matchat.online': self.pp.parserMATCHATONLINE,
             'maxupload.tv': self.pp.parserTOPUPLOAD,
             'mcloud.to': self.pp.parserMYCLOUDTO,
+            'md3b0j6hj.com': self.pp.parserMIXDROP,
             'mdbekjwqa.pw': self.pp.parserMIXDROP,
+            'mdfx9dc8n.net': self.pp.parserMIXDROP,
             'mdy48tn97.com': self.pp.parserMIXDROP,
             'mdzsmutpcvykb.net': self.pp.parserMIXDROP,
             'mediafire.com': self.pp.parserMEDIAFIRECOM,
@@ -617,11 +622,23 @@ class urlparser:
             'megom.tv': self.pp.paserMEGOMTV,
             'miplayer.net': self.pp.parserMIPLAYERNET,
             'mirrorace.com': self.pp.parserMIRRORACE,
+            'mixdrp.co': self.pp.parserMIXDROP,
+            'mixdrp.to': self.pp.parserMIXDROP,
+            'mixdroop.co': self.pp.parserMIXDROP,
+            'mixdrop21.net': self.pp.parserMIXDROP,
+            'mixdrop23.net': self.pp.parserMIXDROP,
             'mixdrop.ag': self.pp.parserMIXDROP,
+            'mixdrop.bz': self.pp.parserMIXDROP,
             'mixdrop.club': self.pp.parserMIXDROP,
             'mixdrop.co': self.pp.parserMIXDROP,
             'mixdrop.my': self.pp.parserMIXDROP,
+            'mixdrop.nu': self.pp.parserMIXDROP,
             'mixdrop.ps': self.pp.parserMIXDROP,
+            'mixdrop.sb': self.pp.parserMIXDROP,
+            'mixdrop.si': self.pp.parserMIXDROP,
+            'mixdrop.sx': self.pp.parserMIXDROP,
+            'mixdrop.to': self.pp.parserMIXDROP,
+            'mixdropjmk.pw': self.pp.parserMIXDROP,
             'moevideo.net': self.pp.parserPLAYEREPLAY,
             'moflix-stream.click': self.pp.parserJWPLAYER,
             'moflix-stream.day': self.pp.parserVIDGUARDTO,
@@ -638,6 +655,7 @@ class urlparser:
             'mp4player.site': self.pp.parserSTREAMEMBED,
             'mp4upload.com': self.pp.parserONLYSTREAMTV,
             'mwish.pro': self.pp.parserJWPLAYER,
+            'mxdrop.to': self.pp.parserMIXDROP,
             'mycloud.to': self.pp.parserMYCLOUDTO,
             'mysportzfy.com': self.pp.parserJWPLAYER,
             'mystream.la': self.pp.parserMYSTREAMLA,
@@ -959,6 +977,7 @@ class urlparser:
             'waaw.tv': self.pp.parserNETUTV,
             'wasuytm.store': self.pp.parserSBS,
             'wat.tv': self.pp.parserWATTV,
+            'watch.ezplayer.me': self.pp.parserSBS,
             'watch.gxplayer.xyz': self.pp.parserSTREAMEMBED,
             'watchadsontape.com': self.pp.parserSTREAMTAPE,
             'watchers.to': self.pp.parserWATCHERSTO,
@@ -11658,7 +11677,7 @@ class pageParser(CaptchaHelper):
                 urlTab.append({'name': '360p', 'url': url})
         return urlTab
 
-    def parserSBS(self, baseUrl):  # check 150625
+    def parserSBS(self, baseUrl):  # update 150825
         printDBG("parserSBS baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         referer = baseUrl.meta.get('Referer')
@@ -11666,8 +11685,8 @@ class pageParser(CaptchaHelper):
         urlParams = {'header': HTTP_HEADER}
         if '#' in baseUrl and referer:
             host = referer.split("/")[2]
-            url, id = baseUrl.split('#')
-            baseUrl = '%sapi/v1/video?id=%s&w=1904&h=969&r=%s' % (url, id, host)
+            url = urlparser.getDomain(baseUrl, False)
+            baseUrl = '%sapi/v1/video?id=%s&w=1904&h=969&r=%s' % (url, baseUrl.split('#')[1], host)
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return []
@@ -11756,13 +11775,15 @@ class pageParser(CaptchaHelper):
                     urlTab.append({'name': q, 'url': url.strip()})
         return urlTab
 
-    def parserJWPLAYER(self, baseUrl):  # update 050725
+    def parserJWPLAYER(self, baseUrl):  # update 150825
         printDBG("parserJWPLAYER baseUrl[%s]" % baseUrl)
         urlTab = []
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         referer = baseUrl.meta.get('Referer', baseUrl)
         HTTP_HEADER['Referer'] = referer
         urlParams = {'header': HTTP_HEADER}
+        if 'hglink.to' in baseUrl:
+            baseUrl = baseUrl.replace('hglink.to', 'davioad.com')
         if 'savefiles.com/e/' in baseUrl:
             baseUrl = baseUrl.replace('/e', '')
         sts, data = self.cm.getPage(baseUrl, urlParams)
