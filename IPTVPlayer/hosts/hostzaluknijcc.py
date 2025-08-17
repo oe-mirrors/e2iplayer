@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 17.08.2025
+# Last Modified: 17.08.2025 - Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -29,8 +29,8 @@ class Zaluknij(CBaseHostClass):
     def menu(self):
         self.MAIN_URL = gettytul()
         self.MENU = [{"category": "movies", "title": _("Movies")}, {"category": "series", "title": _("Series")}, {"category": "search", "title": _("Search"), "search_item": True}, {"category": "search_history", "title": _("Search history")}]
-        self.MOVIES = [{"category": "list_items", "title": _("Most recent"), "url": self.getFullUrl("filmy-online/?url=filmy-online%2F&sort=recent&page=1")}, {"category": "list_items", "title": _("Most popular"), "url": self.getFullUrl("filmy-online/?url=filmy-online%2F&sort=votes&page=1")}, {"category": "list_items", "title": _("By year"), "url": self.getFullUrl("filmy-online/?url=filmy-online%2F&sort=year&page=1")}, {"category": "list_items", "title": _("Views"), "url": self.getFullUrl("filmy-online/?url=filmy-online%2F&sort=views&page=1")}, {"category": "list_items", "title": _("Most rated"), "url": self.getFullUrl("filmy-online/?url=filmy-online%2F&sort=rate&page=1")}]
-        self.SERIES = [{"category": "list_items", "title": _("All"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=all_series&page=1")}, {"category": "list_items", "title": _("Latest"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=latest_episodes&page=1")}, {"category": "list_items", "title": _("Most recent"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=recent_series&page=1")}, {"category": "list_items", "title": _("Most popular"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=popular_series&page=1")}, {"category": "list_items", "title": _("Views"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=most_viewed_recently&page=1")}]
+        self.MOVIES = [{"category": "list_items", "title": _("Most recent"), "url": self.getFullUrl("filmy-online/?sort:date/")}, {"category": "list_items", "title": _("Most popular"), "url": self.getFullUrl("filmy-online/sort:vote/")}, {"category": "list_items", "title": _("By year"), "url": self.getFullUrl("filmy-online/sort:premiere/")}, {"category": "list_items", "title": _("Views"), "url": self.getFullUrl("filmy-online/sort:view/")}, {"category": "list_items", "title": _("Most rated"), "url": self.getFullUrl("filmy-online/sort:rate/")}]
+        self.SERIES = [{"category": "list_items", "title": _("All"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=all_series&page=1")}, {"category": "list_items", "title": _("Latest added"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=latest_episodes&page=1")}, {"category": "list_items", "title": _("Most recent"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=recent_series&page=1")}, {"category": "list_items", "title": _("Most popular"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=popular_series&page=1")}, {"category": "list_items", "title": _("Views"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=most_viewed_recently&page=1")}]
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
@@ -43,17 +43,13 @@ class Zaluknij(CBaseHostClass):
         sts, htm = self.getPage(cItem["url"])
         if not sts:
             return
-        nextPage = self.cm.ph.getSearchGroups(htm, 'href="([^"]+)">Nast')[0]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="card"', "</a>")
-        if not data:
-            data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-xs-6 col-sm-3 col-lg-2"', "</a>")
-        if not data:
-            data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4"', "</a>")
+        nextPage = self.cm.ph.getSearchGroups(htm, r'''href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast''')[0]
+        data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'role="listitem', "</a>")
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0]
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+)')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0])
-            se = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'class="tiny">([^<]+)')[0])
+            se = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'meta-line">(.*?)</span>')[0])
             if se:
                 title = "%s - %s" % (title, se)
             params = dict(cItem)
@@ -65,7 +61,7 @@ class Zaluknij(CBaseHostClass):
                 self.addVideo(params)
         if nextPage:
             params = dict(cItem)
-            params.update({"good_for_fav": False, "title": _("Next page"), "url": cItem["url"] + nextPage.replace("amp;", "")})
+            params.update({"good_for_fav": False, "title": _("Next page"), "url": cItem["url"].split('?')[0] + nextPage.replace("amp;", "")})
             self.addDir(params)
 
     def listEpisodes(self, cItem):
