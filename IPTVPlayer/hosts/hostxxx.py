@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 17.08.2025
-# Modified by Blindspot - 2025.06.13.
-# Added new hosts: BLOWJOBIT, AMATEUR-COUGAR * Fixed TEENXY, CAMHUB, PORNTREX, HQPORNER
+# Last Modified: 13.06.2025 - Blindspot - Added new hosts: BLOWJOBIT, AMATEUR-COUGAR * Fixed TEENXY, CAMHUB, PORNTREX, HQPORNER
 ###################################################
 # LOCAL import
 ###################################################

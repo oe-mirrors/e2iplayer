@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.08.2025
-###################################################
-# 2022-07-31 Blindspot (Modified Celeburdi's version)
+# Last Modified: 31.07.2022 - Blindspot (Modified Celeburdi's version)
 ###################################################
 HOST_VERSION = "2.9"
 ###################################################

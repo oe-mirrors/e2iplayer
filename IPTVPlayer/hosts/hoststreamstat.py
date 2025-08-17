@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.08.2025
-# 2021.04.14. Blindspot
+# Last Modified: 14.04.2021 - Blindspot
 ###################################################
 HOST_VERSION = "1.0"
 ###################################################
@@ -35,7 +34,7 @@ class StreamStat(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'streamstat', 'cookie': 'streamstat.cookie'})
         self.MAIN_URL = 'http://streamstat.net/'
-        self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/streamstat.jpg"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/streamstat.jpg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 

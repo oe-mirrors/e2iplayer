@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 03.06.2025
-
 ####################################################################
 # IPLA privacy policy
 # Pobieranie i udostępnianie danych ze źródła ipla przez

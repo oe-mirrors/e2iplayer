@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.08.2025
-# 2022.07.15. Blindspot
+# Last Modified: 15.07.2022 - Blindspot
 ###################################################
 HOST_VERSION = "1.4"
 ###################################################
@@ -39,7 +38,7 @@ class OnlineStream(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'onlinestream', 'cookie': 'onlinestream.cookie'})
         self.MAIN_URL = 'https://onlinestream.live/'
-        self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/onlinestream.jpg"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/onlinestream.jpg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
