@@ -11310,6 +11310,7 @@ class pageParser(CaptchaHelper):
         if referer:
             HTTP_HEADER['Referer'] = referer
         urlParams = {'header': HTTP_HEADER}
+        baseUrl = baseUrl.replace('/v/', '/e/')
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return []
@@ -11775,7 +11776,7 @@ class pageParser(CaptchaHelper):
                     urlTab.append({'name': q, 'url': url.strip()})
         return urlTab
 
-    def parserJWPLAYER(self, baseUrl):  # update 150825
+    def parserJWPLAYER(self, baseUrl):  # update 160825
         printDBG("parserJWPLAYER baseUrl[%s]" % baseUrl)
         urlTab = []
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -11786,6 +11787,8 @@ class pageParser(CaptchaHelper):
             baseUrl = baseUrl.replace('hglink.to', 'davioad.com')
         if 'savefiles.com/e/' in baseUrl:
             baseUrl = baseUrl.replace('/e', '')
+        if 'savefiles.com/v/' in baseUrl:
+            baseUrl = baseUrl.replace('/v', '')
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return []
