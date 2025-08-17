@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 15.08.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -140,7 +141,7 @@ class HasBahCa(CBaseHostClass):
                         {'alias_id': 'wiziwig1.eu', 'name': 'wiziwig1.eu', 'title': 'http://wiziwig1.eu/', 'url': '', 'icon': 'http://i.imgur.com/yBX7fZA.jpg'},
                         {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://www.djing.com/newimages/content/c01.jpg'},
                         {'alias_id': 'nhl66.ir', 'name': 'nhl66.ir', 'title': 'https://nhl66.ir', 'url': 'https://api.nhl66.ir/api/sport/schedule', 'icon': 'https://nhl66.ir/cassets/logo.png'},
-                        {'alias_id': 'strimsy.top', 'name': 'strimsy.top', 'title': 'http://strimsy.top/', 'url': 'http://strimsy.top/', 'icon': ''},
+                        {'alias_id': 'strumyk.net', 'name': 'strumyk.net', 'title': 'https://strumyk.net/', 'url': 'https://strumyk.net/', 'icon': ''},
                        ]
 
     def __init__(self):
@@ -817,13 +818,13 @@ class HasBahCa(CBaseHostClass):
             linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
             linkVideo = linkVideo.strip(' \n\t\r')
             if linkVideo.startswith('/live/'):
-                sts, tmp = self.cm.getPage('http://strimsy.top' + linkVideo)
+                sts, tmp = self.cm.getPage('https://strumyk.net/' + linkVideo)
                 if not sts:
                     return []
                 linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
                 linkVideo = linkVideo.strip(' \n\t\r')
             if len(linkVideo):
-                params = {'name': "strimsy.top"}
+                params = {'name': "strumyk.net"}
                 params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
                 params['title'] = self.up.getDomain(linkVideo)
                 self.addVideo(params)
@@ -835,7 +836,7 @@ class HasBahCa(CBaseHostClass):
             if _url.startswith('?'):
                 _url = url + _url
             if not _url.startswith('http'):
-                _url = 'http://strimsy.top' + _url
+                _url = 'https://strumyk.net/' + _url
             sts, data = self.cm.getPage(_url)
             if sts:
                 tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
@@ -849,7 +850,7 @@ class HasBahCa(CBaseHostClass):
                 if len(linkVideo) and linkVideo.startswith('//'):
                     linkVideo = 'http:' + linkVideo
                 if len(linkVideo) and not linkVideo.startswith('http'):
-                    linkVideo = 'http://strimsy.top' + linkVideo
+                    linkVideo = 'https://strumyk.net/' + linkVideo
                     sts, data = self.cm.getPage(linkVideo)
                     tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'src'), ('</iframe', '>'))[1]
                     if len(tmp):
@@ -866,7 +867,7 @@ class HasBahCa(CBaseHostClass):
                 linkVideo = linkVideo.replace('https://href.li/', '')
                 if '' == linkVideo:
                     continue
-                params = {'name': "strimsy.top"}
+                params = {'name': "strumyk.net"}
                 params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
                 params['title'] = self.cleanHtmlStr(item) + ' - ' + self.up.getDomain(linkVideo)
                 printDBG("StrumykTvDir params [%s]" % params)
@@ -941,7 +942,7 @@ class HasBahCa(CBaseHostClass):
             self.getWiziwig1List(self.currItem)
         elif name == 'nhl66.ir':
             self.getNhl66List(url)
-        elif name == 'strimsy.top':
+        elif name == 'strumyk.net':
             self.getStrumykTvList(url)
         elif name == 'strumyk_tv':
             self.getStrumykTvDir(url)
@@ -1013,7 +1014,7 @@ class IPTVHost(CHostBase):
             urlList = self.host.getMLBStreamTVLink(cItem)
         elif name == "wiziwig1.eu":
             urlList = self.host.getWiziwig1Link(cItem)
-        elif name == "strimsy.top":
+        elif name == "strumyk.net":
             urlList = self.host.getStrumykTvLink(url)
 
         if isinstance(urlList, list):
