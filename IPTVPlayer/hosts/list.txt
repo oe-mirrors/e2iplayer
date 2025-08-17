@@ -190,7 +190,7 @@ hostwolnelekturypl_blocked_
 hostworldfree4u
 hostwpolscepl
 hostwptv_blocked_
-hostxalaflix_blocked_
+hostxalaflix
 hostxrysoise_blocked_
 hostxxx
 hostyesmoviesto_blocked_
