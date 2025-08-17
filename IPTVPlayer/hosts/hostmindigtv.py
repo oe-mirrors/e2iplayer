@@ -42,7 +42,7 @@ def gettytul():
 def _gh(url):
     if not url:
         return ""
-    return "https://celeburdi.github.io/static/icons/" + url
+    return "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/icons/" + url
 
 
 def _addepg(epgs, id, item):
