@@ -63,7 +63,7 @@ hostgamatotvme_blocked_
 hostgledalica_blocked_
 hostgovodtv
 hostgreekdocumentaries3_blocked_
-hostguardaserie_blocked_
+hostguardaserie
 hosthdfilme
 hosthdfilmetv
 hosthdfull_blocked_
