@@ -191,7 +191,7 @@
 'hostworldfree4u': 'https://www.worldfree4u.ws/',
 'hostwpolscepl': 'http://wpolsce.pl/',
 'hostwptv': 'http://wp.tv/',
-'hostxalaflix': 'https://xalaflix.cv,
+'hostxalaflix': 'https://xalaflix.cv',
 'hostxrysoise': 'https://xrysoi.pro/',
 'hostxxx': 'HostXXX',
 'hostyesmoviesto': 'https://yesmovies.to/',
@@ -200,4 +200,5 @@
 'hostzaluknijcc': 'https://zaluknij.cc/',
 'hostzdfmediathek': 'https://zdf-prod-futura.zdf.de/',
 'hostzerioncc': 'https://zerion.cc/'
+
 }
