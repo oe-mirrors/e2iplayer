@@ -1194,6 +1194,7 @@ class CSearchHistoryHelper():
     TYPE_SEP = '|--TYPE--|'
 
     def __init__(self, name, storeTypes=False):
+        self.length = None
         printDBG('CSearchHistoryHelper.__init__')
         self.storeTypes = storeTypes
         try:
@@ -1202,22 +1203,55 @@ class CSearchHistoryHelper():
         except Exception:
             printExc('CSearchHistoryHelper.__init__ EXCEPTION')
 
+    def doRemove(self):
+        printDBG('CSearchHistoryHelper.doRemove file = "%s"' % self.PATH_FILE)
+        self.length = 0
+        try:
+           if os.path.isfile(self.PATH_FILE):
+               os.remove(self.PATH_FILE)
+           msg = 0, _('Search History successfully deleted.')
+        except:
+           msg = 1, _('Unable to comply. Search History is empty.')
+        return msg
+
+    def getLength(self):
+        if self.length is None:
+            self.length = 0
+            if os.path.isfile(self.PATH_FILE):
+                try:
+                    num = 0
+                    file = codecs.open(GetSearchHistoryDir("ytlist.txt"), 'r', 'utf-8', 'ignore')
+                    for line in file:
+                        num = num + 1
+                    file.close()
+                    self.length = num
+                except:
+                    pass
+
+        if self.length:
+            return _("Number of items in search history: %d") % self.length
+        else:
+            return _("Search History is empty.")
+
     def getHistoryList(self):
         printDBG('CSearchHistoryHelper.getHistoryList from file = "%s"' % self.PATH_FILE)
         historyList = []
 
-        try:
-            file = codecs.open(self.PATH_FILE, 'r', 'utf-8', 'ignore')
-            for line in file:
-                value = line.replace('\n', '').strip()
-                if len(value) > 0:
-                    try:
-                        historyList.insert(0, ensure_str(value))
-                    except Exception:
-                        printExc()
-            file.close()
-        except Exception:
-            printExc()
+        if os.path.isfile(self.PATH_FILE):
+            try:
+                file = codecs.open(self.PATH_FILE, 'r', 'utf-8', 'ignore')
+                for line in file:
+                    value = line.replace('\n', '').strip()
+                    if len(value) > 0:
+                        try:
+                            historyList.insert(0, ensure_str(value))
+                        except Exception:
+                            printExc()
+                file.close()
+            except Exception:
+                printExc()
+                return []
+        else:
             return []
 
         orgLen = len(historyList)
@@ -1262,17 +1296,18 @@ class CSearchHistoryHelper():
                 file.write(value + '\n')
                 printDBG('Added pattern: "%s"' % itemValue)
                 file.close
+                self.length += 1
         except Exception:
             printExc('CSearchHistoryHelper.addHistoryItem EXCEPTION')
 
     def _saveHistoryList(self, list):
         printDBG('CSearchHistoryHelper._saveHistoryList to file = "%s"' % self.PATH_FILE)
         try:
-            file = open(self.PATH_FILE, 'w')
             l = len(list)
-            for i in range(l):
-                file.write(list[l - 1 - i] + '\n')
-            file.close
+            with open(self.PATH_FILE, 'w', encoding="UTF-8") as fd:
+                for i in range(l):
+                    fd.write(list[l - 1 - i] + '\n')
+            self.length = l
         except Exception:
             printExc('CSearchHistoryHelper._saveHistoryList EXCEPTION')
 
@@ -1284,26 +1319,31 @@ class CSearchHistoryHelper():
     @staticmethod
     def loadLastPattern():
         filePath = GetSearchHistoryDir("pattern")
-        mkdirs(filePath)
+        if os.path.isdir(filePath):
+            try:
+                os.rmdir(filePath)
+            except Exception:
+                printExc('CSearchHistoryHelper.loadLastPattern EXCEPTION')
         return ReadTextFile(filePath)
 # end CSearchHistoryHelper
 
 
 def ReadTextFile(filePath, encode='utf-8', errors='ignore'):
     sts, ret = False, ''
-    try:
-        file = codecs.open(filePath, 'r', encode, errors)
-        ret = file.read().encode(encode, errors)
-        file.close()
-        if ret.startswith(codecs.BOM_UTF8):
-            ret = ret[3:]
-        sts = True
-        ret = strDecode(ret, errors)
-    except Exception:
-        if 'SearchHistory/' in filePath:
-            printExc('WARNING')
-        else:
-            printExc()
+    if os.path.isfile(filePath):
+        try:
+            file = codecs.open(filePath, 'r', encode, errors)
+            ret = file.read().encode(encode, errors)
+            file.close()
+            if ret.startswith(codecs.BOM_UTF8):
+                ret = ret[3:]
+            sts = True
+            ret = strDecode(ret, errors)
+        except Exception:
+            if 'SearchHistory/' in filePath:
+                printExc('WARNING')
+            else:
+                printExc()
 
     return sts, ret
 

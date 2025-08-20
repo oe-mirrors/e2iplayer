@@ -15,6 +15,7 @@ from Components.config import config
 from skin import parseColor
 
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Screens.MessageBox import MessageBox
 
 
 class CUrlItem:
@@ -70,10 +71,12 @@ class CDisplayListItem:
         else:
             self.name = str(name)
 
-        if isinstance(description, str):
-            self.description = description
+        if callable(description):
+            self._description = description
+        elif isinstance(description, str):
+            self._description = description
         else:
-            self.description = str(description)
+            self._description = str(description)
 
         if isinstance(type, str):
             self.type = type
@@ -128,6 +131,16 @@ class CDisplayListItem:
         except Exception:
             printExc()
         return None
+
+    def _getDescription(self):
+        if callable(self._description):
+            return self._description()
+        return self._description
+
+    def _setDescription(self, description):
+        self._description = description
+
+    description = property(_getDescription, _setDescription)
 
 
 class ArticleContent:
@@ -675,11 +688,16 @@ class CBaseHostClass:
 
         self.currList = []
         self.currItem = {}
+        self._historyLenTextFunction = ""
         if '' != params.get('history', ''):
             self.history = CSearchHistoryHelper(params['history'], params.get('history_store_type', False))
+            self._historyLenTextFunction = self.getHistoryText
         if '' != params.get('cookie', ''):
             self.COOKIE_FILE = GetCookieDir(params['cookie'])
         self.moreMode = False
+
+    def getHistoryText(self):
+        return self.history.getLength()
 
     def informAboutGeoBlockingIfNeeded(self, country, onlyOnce=True):
         try:
@@ -824,6 +842,23 @@ class CBaseHostClass:
         params['type'] = 'marker'
         self.currList.append(params)
         return
+
+    def serchHistorItems(self):
+        if self._historyLenTextFunction:
+            return [
+                {'category': 'search_history', 'title': _("Search history"), 'desc': _("History of searched phrases.")},
+                {'category': 'delete_history', 'title': _('Delete search history'), 'desc': self._historyLenTextFunction}
+            ]
+        else:
+            return []
+
+    def delHistory(self, session):
+        def doit(ret=None):
+            if ret:
+                err, msg = self.history.doRemove()
+                session.open(MessageBox, msg, type=MessageBox.TYPE_ERROR if err else MessageBox.TYPE_INFO, timeout=5)
+        msg = _('Are you sure you want to delete search history?')
+        session.openWithCallback(doit, MessageBox, msg, type=MessageBox.TYPE_YESNO, default=True)
 
     def listsHistory(self, baseItem={'name': 'history', 'category': 'Wyszukaj'}, desc_key='plot', desc_base=(_("Type: "))):
         list = self.history.getHistoryList()

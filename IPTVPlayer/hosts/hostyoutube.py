@@ -66,12 +66,9 @@ class Youtube(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'ytlist', 'cookie': 'youtube.cookie'})
         self.UTLIST_FILE = 'ytlist.txt'
         self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/YouTube_Logo_2017.svg/640px-YouTube_Logo_2017.svg.png'
-        self.yeah = self.lenhistory()
         self.MAIN_GROUPED_TAB = [{'category': 'from_file', 'title': _("User links"), 'desc': _("User links stored in the ytlist.txt file.")},
                                  {'category': 'search', 'title': _("Search"), 'desc': _("Search youtube materials"), 'search_item': True},
-                                 {'category': 'feeds', 'title': _("Trending"), 'desc': _("Browse youtube trending feeds")},
-                                 {'category': 'search_history', 'title': _("Search history"), 'desc': _("History of searched phrases.")},
-                                 {'category': 'delete_history', 'title': _('Delete search history'), 'desc': self.yeah}]
+                                 {'category': 'feeds', 'title': _("Trending"), 'desc': _("Browse youtube trending feeds")}] + self.serchHistorItems()
 
         self.SEARCH_TYPES = [(_("Video"), "video"),
                                (_("Channel"), "channel"),
@@ -337,41 +334,10 @@ class Youtube(CBaseHostClass):
         # HISTORY SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
-        elif category == "delete_history":
-            self.delhistory()
         else:
             printExc()
-        self.yeah = self.lenhistory()
 
         CBaseHostClass.endHandleService(self, index, refresh)
-
-    def delhistory(self):
-        printDBG('Youtube.delhistory')
-        msg = _('Are you sure you want to delete search history?')
-        ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_YESNO, default=True)
-        if ret[0]:
-            self.doit()
-
-    def doit(self):
-        try:
-           os.remove(GetSearchHistoryDir("ytlist.txt"))
-           msg = _('Search History successfully deleted.')
-           ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO)
-        except:
-           msg = _('Unable to comply. Search History is empty.')
-           ret = self.sessionEx.waitForFinishOpen(MessageBox, msg, type=MessageBox.TYPE_INFO)
-
-    def lenhistory(self):
-        num = 0
-
-        try:
-            file = codecs.open(GetSearchHistoryDir("ytlist.txt"), 'r', 'utf-8', 'ignore')
-            for line in file:
-                num = num + 1
-            file.close()
-        except:
-            return _("Search History is empty.")
-        return _("Number of items in search history: %d") % num
 
     def getSuggestionsProvider(self, index):
         printDBG('Youtube.getSuggestionsProvider')
