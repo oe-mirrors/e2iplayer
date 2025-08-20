@@ -6,17 +6,21 @@
 [![Lint Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/pylint.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions)
 [![Ruff Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions)
 [![Build Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions)
+[![TESTS](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml)
 
 [![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
 [![Latest Release](https://img.shields.io/github/release-date/oe-mirrors/e2iplayer?label=From&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/latest)
 [![GitHub all releases](https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/total.svg?label=Downloads)](https://github.com/oe-mirrors/e2iplayer/releases)
 ## SonarCloud status
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 
 
 ---
@@ -35,12 +39,17 @@ This plugin is released under GPLv3. See [LICENSE](https://www.gnu.org/licenses/
 ---
 
 ### 🚀 Features
+NOTE: ⚠️ The E2iPlayer is ONLY a specialized browser. It does NOT host any of its own materials!!!
 - 🎥 **YouTube Player Support**
 - 🖥️ **Responsive UI**  
   Supports different screen resolutions (Full HD and HD) with custom skins.
 - 🔍 **Browse M3U Playlists**
 - 📺 **Media Player**
 - 📁 **Favorites lists**
+- 🆓 **Free platform to add your own hosts**
+- 🌐 **Multi Language support**
+- ⬇️ **Downloadmanager for Videocontent**
+- 🌎 **WebInterface**
 
 ---
 
@@ -55,6 +64,13 @@ This is a mirror of https://gitlab.com/zadmario/e2iplayer
 with additions from https://gitlab.com/maxbambi/e2iplayer, https://github.com/Blindspot76/e2iPlayer and https://github.com/Belfagor2005/e2player
 
 including Python3 preparations and general optimizations by jbleyel
+
+All rights reserved. Redistribution only with explicit credit.
+
+This plugin is made with ❤️ for the Enigma2 community.
+You are free to use and modify it for personal use.
+
+🚫 Do not redistribute modified versions without proper attribution.
 
 ---
 
@@ -104,5 +120,15 @@ Please fork the repository, create a feature branch, and submit a Pull Request.
 
 ---
 
+### 🛠️ Support
+
+For help and support, visit: [oATV Forum](https://www.opena.tv/viewtopic.php?t=42312)
+
+---
+
 ### ℹ️ WIKI
 See the [Wiki](https://github.com/oe-mirrors/e2iplayer/wiki) for more information
+
+---
+
+⭐️ If you find this plugin useful, please give it a star on GitHub!
