@@ -286,6 +286,7 @@ class Ipla(CBaseHostClass):
         self.getCategories('0', refresh)
         self.addDir({'category': 'Wyszukaj', 'title': 'Wyszukaj'})
         self.addDir({'category': 'search_history', 'title': 'Historia wyszukiwania'})
+        self.addDir({'title': _('Delete search history'), 'category': 'delete_history'})
 
     def getFavouriteData(self, cItem):
         return json.dumps(cItem['fav_item'])

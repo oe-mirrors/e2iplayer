@@ -40,12 +40,13 @@ class HoofootCom(CBaseHostClass):
     MAIN_CAT_TAB = [{'category': 'list_cats', 'title': _('Main'), 'url': MAIN_URL, },
                     {'category': 'list_cats2', 'title': _('Popular'), 'url': MAIN_URL, },
                     {'category': 'list_cats3', 'title': _('Promoted'), 'url': MAIN_URL, },
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, }]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'hoofoot.com', 'cookie': 'hoofootcom.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cache = []
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url):
         if url == '':

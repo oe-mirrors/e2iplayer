@@ -72,6 +72,7 @@ class Playpuls(CBaseHostClass):
             #
             self.addDir({'name': 'category', 'title': _('Search'), 'category': 'search', 'search_item': True})
             self.addDir({'name': 'category', 'title': _('Search history'), 'category': 'search_history'})
+            self.addDir({'name': 'category', 'title': _('Delete search history'), 'category': 'delete_history'})
 
     def listCategory(self, cItem, searchMode=False):
         printDBG("Playpuls.listCategory cItem[%s]" % cItem)

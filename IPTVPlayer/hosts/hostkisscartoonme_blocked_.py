@@ -48,7 +48,7 @@ class KissCartoonMe(CBaseHostClass):
 
     MAIN_CAT_TAB = [{'category': 'home', 'title': _('Home'), 'url': MAIN_URL, },
                     {'category': 'list_cats', 'title': _('Cartoon list'), 'url': MAIN_URL + 'CartoonList', },
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, }]
     SORT_BY_TAB = [{'title': _('Sort by alphabet')},
                    {'title': _('Sort by popularity'), 'sort_by': 'MostPopular'},
                    {'title': _('Latest update'), 'sort_by': 'LatestUpdate'},
@@ -59,6 +59,7 @@ class KissCartoonMe(CBaseHostClass):
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheHome = {}
         self.cache = {}
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url):
         if url == '':

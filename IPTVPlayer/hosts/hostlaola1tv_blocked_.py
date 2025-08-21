@@ -55,11 +55,12 @@ class Laola1TV(CBaseHostClass):
     MAIN_URL = 'http://laola1.tv/'
 
     # 'http://www.laola1.tv/img/laola1_logo.png'
-    MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+    MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'Laola1TV', 'cookie': 'Laola1TV.cookie'})
         self.mainCache = {}
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url, baseUrl=None):
         if baseUrl is None:

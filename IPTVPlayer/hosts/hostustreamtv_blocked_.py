@@ -36,13 +36,13 @@ class UstreamTV(CBaseHostClass):
 
     MAIN_CAT_TAB = [{'category': 'items', 'title': _('Popular'), 'icon': DEFAULT_ICON_URL, 'cat_id': 'all', 'filters': {'subCategory': '', 'type': 'no-offline', 'location': 'anywhere'}},
                     {'category': 'categories', 'title': _('Categories'), 'icon': DEFAULT_ICON_URL, 'filters': {}},
-                    {'category': 'search', 'title': _('Search'), 'icon': DEFAULT_ICON_URL, 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON_URL}
+                    {'category': 'search', 'title': _('Search'), 'icon': DEFAULT_ICON_URL, 'search_item': True}
                    ]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'UstreamTV', 'cookie': 'UstreamTV.cookie'})
         self.cacheFilters = {}
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url):
         mainUrl = self.MAIN_URL

@@ -53,7 +53,7 @@ class XrysoiSE(CBaseHostClass):
     MAIN_CAT_TAB = [{'category': 'movies', 'mode': 'movies', 'title': 'Ταινιες', 'url': '', 'icon': ''},
                     {'category': 'list_items', 'mode': 'series', 'title': 'Ξένες σειρές', 'url': MAIN_URL + 'category/ξένες-σειρές/', 'icon': ''},
                     # {'category':'list_items',     'mode':'collection', 'title': 'Συλλογες',     'url':MAIN_URL + 'category/collection/',      'icon':''},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'XrysoiSE.tv', 'cookie': 'XrysoiSEtv.cookie'})
@@ -61,6 +61,7 @@ class XrysoiSE(CBaseHostClass):
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         self.cacheLinks = {}
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url):
         if 0 < len(url) and not url.startswith('http'):

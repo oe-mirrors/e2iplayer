@@ -37,14 +37,14 @@ class MoviesNight(CBaseHostClass):
                     {'category': 'movies_genres', 'title': _('Movies genres'), 'filter': 'genres', 'url': MAIN_URL, 'icon': DEFAULT_ICON_URL},
                     {'category': 'movies_genres', 'title': _('Movies by year'), 'filter': 'years', 'url': MAIN_URL, 'icon': DEFAULT_ICON_URL},
                     {'category': 'list_items', 'title': _('TV Series'), 'url': MAIN_URL + 'tvshows/', 'icon': DEFAULT_ICON_URL},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history')}
-                   ]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}
+                    ]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'MoviesNight', 'cookie': 'MoviesNight.cookie'})
         self.movieFiltersCache = {'genres': [], 'years': []}
         self.episodesCache = {}
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url, series=False):
         if not series:

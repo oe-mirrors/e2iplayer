@@ -51,7 +51,7 @@ class StreamLiveTo(CBaseHostClass):
     MAIN_URL = 'https://www.streamlive.to/'
 
     MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Live Channels', 'icon': ''},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'StreamLiveTo.tv', 'cookie': 'streamliveto.cookie'})
@@ -59,6 +59,7 @@ class StreamLiveTo(CBaseHostClass):
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'images/logo.png'
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url):
         if 0 < len(url):

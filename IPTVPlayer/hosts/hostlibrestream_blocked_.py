@@ -35,8 +35,7 @@ class LibreStream(CBaseHostClass):
                     {'category': 'cats', 'cache_key': 'series_cats', 'title': _('Series TV'), 'url': MAIN_URL, 'icon': DEFAULT_ICON_URL},
                     {'category': 'cats', 'cache_key': 'qualities', 'title': _('Quality'), 'url': MAIN_URL + 'films/', 'icon': DEFAULT_ICON_URL},
                     {'category': 'cats', 'cache_key': 'platforms', 'title': _('Platform'), 'url': MAIN_URL + 'films/', 'icon': DEFAULT_ICON_URL},
-                    {'category': 'search', 'title': _('Search'), 'icon': DEFAULT_ICON_URL, 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON_URL}
+                    {'category': 'search', 'title': _('Search'), 'icon': DEFAULT_ICON_URL, 'search_item': True}
                    ]
 
     def __init__(self):
@@ -47,6 +46,7 @@ class LibreStream(CBaseHostClass):
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.sortCache = []
         self.catCache = {'year_cats': [], 'movie_cats': [], 'series_cats': [], 'qualities': [], 'platforms': []}
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url):
         mainUrl = self.MAIN_URL

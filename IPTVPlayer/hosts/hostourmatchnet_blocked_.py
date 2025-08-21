@@ -46,14 +46,14 @@ class OurmatchNet(CBaseHostClass):
                     {'category': 'allleagues', 'title': _('All Leagues'), 'url': MAIN_URL, 'icon': DEFAULT_ICON},
                     {'category': 'seasons', 'title': _('Previous Seasons'), 'url': MAIN_URL + 'previous-seasons/', 'icon': DEFAULT_ICON},
                     {'category': 'video', 'title': _('Goal Of The Month'), 'url': MAIN_URL + 'goal-of-the-month/', 'icon': DEFAULT_ICON, 'type': 'video'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': DEFAULT_ICON},
-                    {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON}]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': DEFAULT_ICON}]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'ourmatch.net', 'cookie': 'ourmatchnet.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cache = {'popular': [], 'trending': [], 'allleagues': []}
         self.cache2 = {}
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url):
         if url.startswith('//'):

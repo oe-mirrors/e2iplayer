@@ -38,13 +38,13 @@ class Filma24hdCom(CBaseHostClass):
 
     MAIN_CAT_TAB = [{'category': 'movies', 'title': _('Movies'), 'url': MAIN_URL, 'icon': DEFAULT_ICON_URL},
                     {'category': 'series', 'title': _('TV Series'), 'url': MAIN_TV_SERIES_URL, 'icon': DEFAULT_TV_SERIES_ICON_URL},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': DEFAULT_ICON_URL},
-                    {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON_URL}
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': DEFAULT_ICON_URL}
                    ]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'Filma24hdCom', 'cookie': 'Filma24hdCom.cookie'})
         self.seriesSubCategoryCache = []
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url, series=False):
         if not series:

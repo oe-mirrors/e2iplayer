@@ -42,14 +42,14 @@ class GreekDocumentaries3(CBaseHostClass):
                     {'category': 'categories', 'title': _('Programs'), 'url': MAIN_URL, 'icon': DEFAULT_ICON, 'filter': 'programs'},
                     {'category': 'categories', 'title': _('Labels'), 'url': MAIN_URL, 'icon': DEFAULT_ICON, 'filter': 'labels'},
                     {'category': 'list_items', 'title': _('TV series'), 'url': MAIN_URL + 'search/label/TV-Series', 'icon': DEFAULT_ICON},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': DEFAULT_ICON},
-                    {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON}]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': DEFAULT_ICON}]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': '  GreekDocumentaries3.tv', 'cookie': 'GreekDocumentaries3tv.cookie'})
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
         self.cacheLinks = {}
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def _getFullUrl(self, url):
         if url.startswith('//'):

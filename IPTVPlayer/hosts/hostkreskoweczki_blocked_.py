@@ -47,8 +47,7 @@ class KreskoweczkiPL(CBaseHostClass):
                              {'icon': self.DEFAULT_ICON, 'category': 'list_items', 'title': 'Bajki', 'url': self.MAIN_URL + 'typ/toon/'},
                              {'icon': self.DEFAULT_ICON, 'category': 'list_items', 'title': 'Seriale', 'url': self.MAIN_URL + 'typ/serial/'},
                              {'icon': self.DEFAULT_ICON, 'category': 'list_items', 'title': 'Pozostałe', 'url': self.MAIN_URL + 'typ/pozostale/'},
-                             {'icon': self.DEFAULT_ICON, 'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'icon': self.DEFAULT_ICON, 'category': 'search_history', 'title': _('Search history')}]
+                             {'icon': self.DEFAULT_ICON, 'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.needProxy = None
 
     def getPage(self, url, params={}, post_data=None):

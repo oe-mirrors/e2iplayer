@@ -99,7 +99,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     # {'category':'vods_sub_categories', 'title':'VOD',                       'marker':'VOD'},
                     # {'category':'vods_sub_categories', 'title':'Programy',                  'marker':'Programy'},
                     # {'category':'vods_sub_categories', 'title':'Informacje i publicystyka', 'marker':'Informacje i publicystyka'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}]
 
     STREAMS_CAT_TAB = [{'category': 'tvp3_streams', 'title': 'TVP 3', 'url': 'http://tvpstream.tvp.pl/', 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/TVP3_logo_2016.png/240px-TVP3_logo_2016.png'},
                        {'category': 'week_epg', 'title': 'TVP SPORT', 'url': STREAMS_URL_TEMPLATE, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
@@ -111,6 +111,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         CBaseHostClass.__init__(self, {'history': 'TvpVod', 'cookie': 'tvpvod.cookie', 'proxyURL': config.plugins.iptvplayer.proxyurl.value, 'useProxy': config.plugins.iptvplayer.tvpVodProxyEnable.value})
         self.defaultParams = {'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE, 'header': TvpVod.HTTP_HEADERS}
 
+        self.VOD_CAT_TAB += self.serchHistorItems()
         self.loggedIn = None
         self.fixUrlMap = {'nadobre.tvp.pl': 'http://vod.tvp.pl/8514270/na-dobre-i-na-zle',
                           'mjakmilosc.tvp.pl': 'http://vod.tvp.pl/1654521/m-jak-milosc',

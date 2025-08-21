@@ -52,8 +52,7 @@ class TheWatchseriesTo(CBaseHostClass):
                     {'icon': DEFAULT_ICON, 'category': 'episodes', 'title': _('Newest Episodes'), 'url': MAIN_URL + 'latest'},
                     {'icon': DEFAULT_ICON, 'category': 'categories', 'title': _('All A-Z'), 'url': MAIN_URL + 'letters/A'},
                     {'icon': DEFAULT_ICON, 'category': 'categories', 'title': _('Genres'), 'url': MAIN_URL + 'genres/action'},
-                    {'icon': DEFAULT_ICON, 'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'icon': DEFAULT_ICON, 'category': 'search_history', 'title': _('Search history')}]
+                    {'icon': DEFAULT_ICON, 'category': 'search', 'title': _('Search'), 'search_item': True}]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'TheWatchseriesTo.tv', 'cookie': 'thewatchseriesto.cookie'})
@@ -61,6 +60,7 @@ class TheWatchseriesTo(CBaseHostClass):
         self.seasonCache = {}
         self.cacheLinks = {}
         self.needProxy = None
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def isNeedProxy(self):
         val = config.plugins.iptvplayer.swatchseries_web_proxy_gateway.value

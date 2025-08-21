@@ -89,7 +89,7 @@ class ZDFmediathek(CBaseHostClass):
                     {'category': 'list_cluster', 'title': _('Categories'), 'url': CATEGORIES_PAGE_API_URL},
                     # {'category':'themen',         'title':_('Topics'), 'url': NEWS_API_URL},
                     {'category': 'kinder', 'title': _('Children')},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}]
 
     QUALITY_MAP = {'hd': 4, 'veryhigh': 3, 'high': 2, 'med': 1, 'low': 0}
 
@@ -101,6 +101,8 @@ class ZDFmediathek(CBaseHostClass):
         self.KINDER_TAB = [{'category': 'explore_item', 'title': _('Home page'), 'url': self.getFullUrl('/kinder'), 'icon': self.getIconUrl('/assets/zdftivi-home-100~384x216')},
                            {'category': 'kinder_list_abc', 'title': _('Program A-Z'), 'url': self.getFullUrl('/kinder/sendungen-a-z'), 'icon': self.getIconUrl('/assets/a-z-teaser-100~384x216')},
                            {'category': 'explore_item', 'title': _('Missed the show?'), 'url': self.getFullUrl('/kinder/sendung-verpasst'), 'icon': self.getIconUrl('/assets/buehne-tivi-sendung-verpasst-100~384x216')}]
+
+        self.MAIN_CAT_TAB += self.serchHistorItems()
 
     def getPage(self, url, params={}, post_data=None):
         HTTP_HEADER = dict(self.HEADER)
