@@ -35,8 +35,7 @@ class Movie4K(CBaseHostClass):
                     {'category': 'list_genres', 'title': 'Genres'},
                     {'category': 'list_year', 'title': 'Jahr'},
                     {'category': 'list_country', 'title': 'Land'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                    {'category': 'search_history', 'title': _('Search history'), }]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

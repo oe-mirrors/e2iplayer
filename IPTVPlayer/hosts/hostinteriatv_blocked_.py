@@ -61,8 +61,7 @@ class InteriaTv(CBaseHostClass):
                 except Exception:
                     printExc()
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
         params = dict(cItem)
         params.update({'type': 'category', 'good_for_fav': False, 'category': nextCategory2, 'title': 'TOP TYGODNIA', 'url': self.getFullUrl('/top-tygodnia')})

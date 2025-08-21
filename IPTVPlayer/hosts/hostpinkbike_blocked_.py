@@ -44,8 +44,7 @@ class Pinkbike(CBaseHostClass):
 
     MAIN_CAT_TAB = [{'category': 'best_video_categories', 'title': _('Best Pinkbike Videos')},
                     {'category': 'video_categories', 'title': _('Categories')},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history')}]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     def __init__(self):
         printDBG("Pinkbike.__init__")

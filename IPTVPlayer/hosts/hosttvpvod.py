@@ -99,8 +99,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     # {'category':'vods_sub_categories', 'title':'VOD',                       'marker':'VOD'},
                     # {'category':'vods_sub_categories', 'title':'Programy',                  'marker':'Programy'},
                     # {'category':'vods_sub_categories', 'title':'Informacje i publicystyka', 'marker':'Informacje i publicystyka'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history')}]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     STREAMS_CAT_TAB = [{'category': 'tvp3_streams', 'title': 'TVP 3', 'url': 'http://tvpstream.tvp.pl/', 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/TVP3_logo_2016.png/240px-TVP3_logo_2016.png'},
                        {'category': 'week_epg', 'title': 'TVP SPORT', 'url': STREAMS_URL_TEMPLATE, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},

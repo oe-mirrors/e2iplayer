@@ -119,8 +119,7 @@ class MediasetPlay(CBaseHostClass):
         self.addDir(MergeDicts(cItem, {'category': 'cat_channels', 'title': 'Canali', 'url': self.getMainUrl()}))
         self.addDir(MergeDicts(cItem, {'category': 'list_catalog_items', 'title': _('Top day'), 'f_ref': 'CWTOPVIEWEDDAY'}))
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history'), }]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):

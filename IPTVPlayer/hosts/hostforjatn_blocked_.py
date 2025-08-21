@@ -49,9 +49,7 @@ class ForjaTN(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Movies'), 'f_type': 'movies', 'url': self.getFullUrl('/movies')},
                              {'category': 'list_filters', 'title': _('Series'), 'f_type': 'series', 'url': self.getFullUrl('/series')},
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

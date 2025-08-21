@@ -54,9 +54,7 @@ class RteIE(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category': 'list_live', 'title': _('Live'), 'url': self.getFullUrl('player/live')},
                              {'category': 'list_categories', 'title': _('Programmes'), 'url': self.getFullUrl('/player/date/latest/')},
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def _getIdFromUrl(self, url):
         if '/live/' in url:

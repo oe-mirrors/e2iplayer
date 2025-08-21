@@ -130,8 +130,7 @@ class DixMax(CBaseHostClass):
 
         MAIN_CAT_TAB = [{'category': 'list_popular', 'title': title1, 'url': self.getFullUrl('/api/private/get/popular')},
                         {'category': 'list_filters', 'title': title2, 'url': self.getFullUrl('/api/private/get/popular')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history'), }]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def fillCacheFilters(self, cItem, data):

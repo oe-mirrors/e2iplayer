@@ -58,8 +58,7 @@ class TvGryPL(CBaseHostClass):
                              {'category': 'list_items', 'title': 'Tematy', 'url': self.getFullUrl('/tematy.asp')},
                              {'category': 'list_tabs', 'title': 'Zwiastuny gier', 'url': self.getFullUrl('/trailery-z-gier.asp')},
                              {'category': 'list_tabs', 'title': 'Zwiastuny filmów', 'url': self.getFullUrl('/trailery-filmowe.asp')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')}]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     def getPage(self, url, params={}, post_data=None):
         return self.cm.getPage(url, params, post_data)

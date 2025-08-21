@@ -105,8 +105,7 @@ class FilmstreamvkCom(CBaseHostClass):
                         {'category': 'categories', 'title': _('Categories'), 'url': self.getMainUrl()},
                         {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('serie')},
                         {'category': 'list_items', 'title': _('Manga'), 'url': self.getFullUrl('manga')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'), }]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
         self.listsTab(MAIN_CAT_TAB, cItem)
 

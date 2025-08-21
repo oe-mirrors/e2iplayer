@@ -44,9 +44,8 @@ class OkGoals(CBaseHostClass):
 
         self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Main'), 'url': self.getFullUrl('index.php')},
                              {'category': 'list_categories', 'title': _('Categories'), 'url': self.getMainUrl()},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), },
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }
+                            ] + self.serchHistorItems()
 
     def getFullUrl(self, url):
         if url.startswith('//'):

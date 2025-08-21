@@ -64,8 +64,7 @@ class WgranePL(CBaseHostClass):
 
         MAIN_CAT_TAB = [{'category': 'list_sort', 'title': 'Przeglądaj pliki', 'url': self.getFullUrl('/watch.html')},
                         {'category': 'categories', 'title': 'Kategorie', 'url': self.getFullUrl('/categories.html')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):

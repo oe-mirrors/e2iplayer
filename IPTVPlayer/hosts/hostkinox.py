@@ -96,9 +96,7 @@ class Kinox(CBaseHostClass):
                              {'category': 'list_sub_cats', 'title': _('Documentaries'), 'url': self.getMainUrl(), 'f_type': 'documentation', 'sub_idx': 3},
                              {'category': 'list_sub_cats', 'title': _('Series'), 'url': self.getMainUrl(), 'f_type': 'series', 'sub_idx': 4},
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

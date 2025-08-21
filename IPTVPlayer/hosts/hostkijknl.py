@@ -61,9 +61,7 @@ class KijkNL(CBaseHostClass):
                              {'category': 'list_popular', 'title': 'Populair', 'url': self.tmpUrl + 'v2/templates/page/popular'},
                              {'category': 'list_letters', 'title': 'A-Z', 'url': ''},
                              {'category': 'list_themas', 'title': "THEMA'S", 'url': self.getMainUrl()},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.HOME_CAT_TAB = [
                                 {'category': 'list_items', 'title': _("Episodes"), 'url': self.tmpUrl + 'v1/default/sections/home_Episodes-popular'},
                                 {'category': 'list_items', 'title': _("Clips"), 'url': self.tmpUrl + 'v1/default/sections/home_Clips-popular'},

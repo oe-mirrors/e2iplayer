@@ -92,8 +92,7 @@ class FilmaonCom(CBaseHostClass):
                 self.addDir(params)
 
         MAIN_CAT_TAB = [{'category': 'top', 'title': 'TOP IMDb 50', 'url': self.getFullUrl('/top-imdb/')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):

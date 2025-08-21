@@ -65,9 +65,7 @@ class VODPL(CBaseHostClass):
                              {'category': 'list_filters', 'title': 'Dokumentalne', 'url': self.getFullUrl('filmy-dokumentalne'), 'f_element': 'SiteDokumenty', },
 
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def getFullIconUrl(self, url):
         url = url.replace('&amp;', '&')

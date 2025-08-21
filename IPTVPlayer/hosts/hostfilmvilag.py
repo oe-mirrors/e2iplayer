@@ -98,8 +98,7 @@ class FilmVilag(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG('FilmVilag.listMainMenu')
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Kategóriák', 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
-                        {'category': 'search', 'title': 'Keresés', 'search_item': True, 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
-                        {'category': 'search_history', 'title': 'Keresési előzmények', 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}]
+                        {'category': 'search', 'title': 'Keresés', 'search_item': True, 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def getdesc(self, iurl):

@@ -54,9 +54,7 @@ class WpTV(CBaseHostClass):
                              {'category': 'list_sections', 'title': _('Series'), 'url': self.getFullUrl('seriale')},
                              {'category': 'list_sections', 'title': _('Programs'), 'url': self.getFullUrl('programy')},
                              {'category': 'list_groups', 'title': _('Others'), 'url': self.getFullUrl('inne')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')}
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
         self.cacheSections = {}
         self.cacheGroups = {}

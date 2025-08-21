@@ -40,8 +40,7 @@ class HoofootCom(CBaseHostClass):
     MAIN_CAT_TAB = [{'category': 'list_cats', 'title': _('Main'), 'url': MAIN_URL, },
                     {'category': 'list_cats2', 'title': _('Popular'), 'url': MAIN_URL, },
                     {'category': 'list_cats3', 'title': _('Promoted'), 'url': MAIN_URL, },
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                    {'category': 'search_history', 'title': _('Search history'), }]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'hoofoot.com', 'cookie': 'hoofootcom.cookie'})

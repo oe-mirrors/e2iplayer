@@ -89,8 +89,7 @@ class ZDFmediathek(CBaseHostClass):
                     {'category': 'list_cluster', 'title': _('Categories'), 'url': CATEGORIES_PAGE_API_URL},
                     # {'category':'themen',         'title':_('Topics'), 'url': NEWS_API_URL},
                     {'category': 'kinder', 'title': _('Children')},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history')}]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     QUALITY_MAP = {'hd': 4, 'veryhigh': 3, 'high': 2, 'med': 1, 'low': 0}
 

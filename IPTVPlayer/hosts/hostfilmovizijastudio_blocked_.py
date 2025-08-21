@@ -56,8 +56,7 @@ class FilmovizijaStudio(CBaseHostClass):
                              {'category': 'categories', 'title': _('Series'), 'url': self.getMainUrl(), 'filter': 'series'},
                              {'category': 'categories', 'title': _('New Episodes'), 'url': self.getMainUrl(), 'filter': 'new_episodes'},
                              {'category': 'year', 'title': _('Year'), 'url': self.getFullUrl(my), },
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
         self.cacheSeasons = []
         self.needProxy = None

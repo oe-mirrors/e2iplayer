@@ -124,9 +124,8 @@ class SKStream(CBaseHostClass):
                         {'category': 'list_categories', 'title': 'Séries', 'url': self.getFullUrl('/series')},
                         {'category': 'list_categories', 'title': 'Mangas', 'url': self.getFullUrl('/mangas')},
 
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'), }
-                       ]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, }
+                       ] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):

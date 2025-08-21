@@ -94,8 +94,7 @@ class PlayRTSIW(CBaseHostClass):
                 params.update({'category': nextCategory1})
             self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': self.SEARCH_ICON_URL},
-                        {'category': 'search_history', 'title': _('Search history'), 'icon': self.SEARCH_ICON_URL}]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': self.SEARCH_ICON_URL}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listType(self, cItem):

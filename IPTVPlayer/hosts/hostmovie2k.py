@@ -36,8 +36,7 @@ class Movie2K(CBaseHostClass):
             {'category': 'movies', 'title': _("Movies")},
             {'category': 'series', 'title': _("Series")},
             {'category': 'list_genres', 'title': 'Genres'},
-            {'category': 'search', 'title': _('Search'), 'search_item': True, },
-            {'category': 'search_history', 'title': _('Search history'), }]
+            {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
         self.MOVIES_MENU = [
             {'category': 'list_items', 'title': 'Filme Trending', 'url': self.API_URL % ('movies', 'trending')},
             {'category': 'list_items', 'title': 'Filme Updates', 'url': self.API_URL % ('movies', 'updates')},

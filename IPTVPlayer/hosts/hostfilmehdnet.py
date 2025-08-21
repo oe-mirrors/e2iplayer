@@ -54,8 +54,7 @@ class FilmeHD(CBaseHostClass):
                         {'category': 'list_categories', 'title': 'GEN FILM', 'url': url},
                         {'category': 'list_years', 'title': 'FILME DUPA AN', 'url': url},
                         {'category': 'list_sort', 'title': 'SERIALE', 'url': self.getFullUrl('/seriale')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'), }]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSort(self, cItem, nextCategory1, nextCategory2):

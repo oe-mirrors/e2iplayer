@@ -35,8 +35,7 @@ class MegaKino(CBaseHostClass):
                     {'category': 'list_items', 'title': _("Animation"), 'link': self.getFullUrl('/multfilm')},
                     {'category': 'list_items', 'title': "Dokumentationen", 'link': self.getFullUrl('/documentary')},
                     {'category': 'list_genres', 'title': 'Genres'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                    {'category': 'search_history', 'title': _('Search history'), }]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

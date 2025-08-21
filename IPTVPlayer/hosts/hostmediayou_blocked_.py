@@ -74,8 +74,7 @@ class MediayouNet(CBaseHostClass):
                         {'category': 'list_items', 'title': 'Polskie', 'url': self.getFullUrl('/web/getdata.php'), 'post_data': {'option': 'RADIO_Country', 'id': '70'}},
                         {'category': 'categories', 'title': _('Countries'), 'url': self.getFullUrl('/web/getdata.php'), 'post_data': {'option': 'LOCATION', 'id': self.countryCode}, 'option': 'RADIO_Country'},
                         {'category': 'categories', 'title': _('Categories'), 'url': self.getFullUrl('/web/getdata.php'), 'post_data': {'option': 'GENRE', 'id': self.countryCode}, 'option': 'RADIO_Genre'},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):

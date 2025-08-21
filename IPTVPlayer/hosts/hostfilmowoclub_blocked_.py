@@ -68,8 +68,7 @@ class Filmowoclub(CBaseHostClass):
 #                        {'category': 'list_years', 'title': _('Filter By Year'), 'url': self.getFullUrl('/filmy-online-pl/')},
 #                        {'category': 'list_cats',  'title': _('Movies genres'), 'url': self.getFullUrl('/filmy-online-pl/')},
 #                        {'category':'list_az',        'title': _('Alphabetically'),    'url':self.MAIN_URL},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     ###################################################

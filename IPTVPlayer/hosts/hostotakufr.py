@@ -65,9 +65,7 @@ class OtakuFR(CBaseHostClass):
                              {'category': 'list_abc', 'title': 'Terminé', 'url': self.getFullUrl('/anime-termine/')},
                              {'category': 'list_rank_items', 'title': 'Film', 'url': self.getFullUrl('/anime-list/tag/Film/')},
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def listABC(self, cItem, nextCategory):
         printDBG("OtakuFR.listABC")

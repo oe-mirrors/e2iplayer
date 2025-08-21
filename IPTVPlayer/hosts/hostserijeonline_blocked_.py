@@ -60,9 +60,7 @@ class SerijeOnline(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Top Videos'), 'url': self.getFullUrl('/topvideos.html')},
                              {'category': 'list_items', 'title': _('Newest Videos'), 'url': self.getFullUrl('/newvideos.html')},
                              {'category': 'list_categories', 'title': _('Categories'), 'url': self.getFullUrl('/index.html')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
         self.cacheLinks = {}
         self.cacheSubCategories = {}

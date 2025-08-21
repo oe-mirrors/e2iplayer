@@ -28,8 +28,7 @@ class AnimeRo(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.getFullUrl('/wp-content/uploads/2024/07/9anime-logo.png')
         self.MENU = [
             {'category': 'list_AZ', 'title': "A-Z", 'url': self.getFullUrl('anime-tv/')},
-            {'category': 'search', 'title': _('Search'), 'search_item': True, },
-            {'category': 'search_history', 'title': _('Search history'), }]
+            {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

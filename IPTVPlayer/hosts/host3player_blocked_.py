@@ -58,10 +58,8 @@ class C3player(CBaseHostClass):
         MAIN_CAT_TAB = [{'category': 'list_live', 'title': _('LIVE'), 'url': self.getFullUrl('/player/assets/ajax/live_drop_down.php?layout=top_nav')},
                         {'category': 'list_by_day', 'title': _('BY DAY'), 'url': self.getFullUrl('/3player/byday')},
                         {'category': 'list_az', 'title': _('A-Z'), 'url': self.getFullUrl('/3player/a-z')},
-
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'), }
-                       ]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True, }
+                       ] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listLiveChannels(self, cItem):

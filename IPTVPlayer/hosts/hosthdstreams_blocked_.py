@@ -73,9 +73,7 @@ class HDStreams(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('MOVIES'), 'url': self.getFullUrl('/movies')},
                              {'category': 'list_filters', 'title': _('TV SERIES'), 'url': self.getFullUrl('/seasons')},
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

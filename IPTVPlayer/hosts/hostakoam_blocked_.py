@@ -123,8 +123,7 @@ class AkoAm(CBaseHostClass):
         if 0 == len(self.currList):
             return
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubMenu(self, cItem, nextCategory1, nextCategory2):

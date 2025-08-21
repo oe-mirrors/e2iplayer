@@ -38,8 +38,7 @@ class MovizlandCom(CBaseHostClass):
     DEFAULT_ICON_URL = "http://vb.movizland.com/movizland/images/logo.png"
 
     MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), 'url': MAIN_URL, },
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                    {'category': 'search_history', 'title': _('Search history'), }]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': '  MovizlandCom.tv', 'cookie': 'movizlandcom.cookie'})

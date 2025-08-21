@@ -46,9 +46,7 @@ class ClassicCinemaOnline(CBaseHostClass):
                              {'category': 'list_items', 'title': 'Serials', 'url': self.getFullUrl('/serials')},
                              {'category': 'list_items', 'title': 'Silent Films', 'url': self.getFullUrl('/silent-films')},
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     def getMaxDisplayItems(self):
         return 10

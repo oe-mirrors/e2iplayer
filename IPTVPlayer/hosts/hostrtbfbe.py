@@ -105,8 +105,7 @@ class RTBFBE(CBaseHostClass):
                    {'category': 'channels', 'title': 'Chaînes', 'url': self.getFullUrl('/news/api/menu?site=media')},
                    {'category': 'sections', 'title': 'Émissions', 'url': self.getFullUrl('/auvio/emissions')},
                    {'category': 'categories', 'title': 'Catégories', 'url': self.getFullUrl('/news/api/menu?site=media')},
-                   {'category': 'search', 'title': _('Search'), 'search_item': True},
-                   {'category': 'search_history', 'title': _('Search history')}, ]
+                   {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
         params = dict(cItem)
         params['desc'] = self.loginMessage

@@ -34,8 +34,7 @@ class KinoKiste(CBaseHostClass):
                     {'category': 'list_items', 'title': _("Series"), 'link': self.getFullUrl('/serienstream-deutsch')},
                     {'category': 'list_items', 'title': _("Animation"), 'link': self.getFullUrl('/animation')},
                     {'category': 'list_genres', 'title': 'Genres'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                    {'category': 'search_history', 'title': _('Search history'), }]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

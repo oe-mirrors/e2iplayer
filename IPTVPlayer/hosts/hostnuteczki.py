@@ -94,8 +94,7 @@ class NuteczkiEU(CBaseHostClass):
         MAIN_CAT_TAB = [
                         {'category': 'top10', 'title': _('TOP 10'), 'url': self.getFullUrl('/top10/')},
                         {'category': 'filters', 'title': _('Filters'), 'url': self.getFullUrl('/muzyka/'), 'post_data': {}},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):

@@ -82,8 +82,7 @@ class CartoonHD(CBaseHostClass):
         MAIN_CAT_TAB = [{'category': 'new', 'title': 'Featured', 'url': self.getMainUrl()},
                         {'category': 'list_genres', 'title': 'Movies', 'url': self.getFullUrl('/full-movies')},
                         {'category': 'list_genres', 'title': 'TV shows', 'url': self.getFullUrl('/tv-shows')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def _getToken(self, data):

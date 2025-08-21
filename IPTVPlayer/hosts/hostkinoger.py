@@ -37,8 +37,7 @@ class KinoGer(CBaseHostClass):
             {'category': 'list_items', 'title': 'Neues', 'link': self.MAIN_URL},
             {'category': 'list_items', 'title': _("Series"), 'link': self.getFullUrl('/stream/serie/')},
             {'category': 'list_genres', 'title': 'Genres'},
-            {'category': 'search', 'title': _('Search'), 'search_item': True, },
-            {'category': 'search_history', 'title': _('Search history'), }]
+            {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

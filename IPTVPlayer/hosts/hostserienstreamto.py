@@ -51,9 +51,8 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
                              {'category': 'list_genres', 'title': _('Genres'), 'url': self.MAIN_URL},
                              {'category': 'list_items', 'title': _('New'), 'url': self.getFullUrl('/neu')},
                              {'category': 'list_items', 'title': _('Popular'), 'url': self.getFullUrl('/beliebte-serien')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                             ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }
+                             ] + self.serchHistorItems()
         self.ALL_SERIES_TAB = [{'category': 'all_letters', 'title': 'Alphabet', 'url': self.getFullUrl('/serien-alphabet')},
                                {'category': 'all_genres', 'title': 'Genres', 'url': self.getFullUrl('/serien-genres')}, ]
         self.cacheLinks = {}

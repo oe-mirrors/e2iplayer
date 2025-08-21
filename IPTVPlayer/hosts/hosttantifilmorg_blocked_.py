@@ -46,9 +46,7 @@ class TantiFilmOrg(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://raw.githubusercontent.com/Zanzibar82/images/master/posters/tantifilm.png'
 
         self.MAIN_CAT_TAB = [{'category': 'list_categories', 'title': _('Categories'), 'url': self.MAIN_URL},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
         self.cacheCollections = {}
         self.cookieHeader = ''

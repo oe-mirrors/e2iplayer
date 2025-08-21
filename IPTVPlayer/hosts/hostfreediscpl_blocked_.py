@@ -56,8 +56,7 @@ class FreeDiscPL(CBaseHostClass):
 
     MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Najnowsze publiczne pliki użytkowników', 'url': MAIN_URL + 'explore/start/get_tabs_pages_data/%s/newest/'},
                     {'category': 'list_filters', 'title': 'Ostatnio przeglądane pliki', 'url': MAIN_URL + 'explore/start/get_tabs_pages_data/%s/visited/'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history')}]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     FILTERS_TAB = [{'title': _('Movies'), 'filter': 'movies'},
                    {'title': _('Music'), 'filter': 'music'}]

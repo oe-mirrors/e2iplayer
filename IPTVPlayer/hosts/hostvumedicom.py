@@ -82,8 +82,7 @@ class VUMEDI(CBaseHostClass):
 
         MAIN_CAT_TAB = [{'category': 'list_spec', 'title': _('Specialities'), 'url': self.getMainUrl()},
                         {'category': 'list_sort', 'title': _('Browse videos'), 'url': self.getFullUrl('/video/browse/')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory1, nextCategory2):

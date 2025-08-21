@@ -111,8 +111,7 @@ class TV2Play(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG('TV2Play.listMainMenu')
         MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Műsorok', 'page': 0},
-                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
-                        {'category': 'search_history', 'title': 'Keresési előzmények'}]
+                        {'category': 'search', 'title': 'Keresés', 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def exploreItems(self, cItem):

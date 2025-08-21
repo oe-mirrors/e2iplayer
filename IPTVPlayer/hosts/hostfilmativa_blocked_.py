@@ -42,8 +42,7 @@ class Filmativa(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category': 'movies', 'title': _('Movies'), 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
                             {'category': 'series', 'title': _('TV series'), 'url': self.S_MAIN_URL, 'icon': self.S_DEFAULT_ICON_URL},
                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                            {'category': 'search_history', 'title': _('Search history')}
-                            ]
+                            ] + self.serchHistorItems()
 
         self.MOVIES_TAB = [{'category': 'list_movies', 'title': _('New'), 'url': self.MAIN_URL, },
                             {'category': 'list_movies', 'title': _('Popular'), 'url': self.MAIN_URL + 'popularno/'},

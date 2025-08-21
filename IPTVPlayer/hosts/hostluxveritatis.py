@@ -58,8 +58,7 @@ class LuxVeritatisPL(CBaseHostClass):
 
         MAIN_CAT_TAB = [{'category': 'tv_trwam', 'title': 'TV Trwam', 'url': self.MAIN_URL_T, 'desc': self.MAIN_URL_T, 'icon': self.ICON_URL_T},
                         {'category': 'radio', 'title': 'Radio Maryja', 'url': self.MAIN_URL_R, 'desc': self.MAIN_URL_R, 'icon': self.ICON_URL_R},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
         self.listsTab(MAIN_CAT_TAB, cItem)
 

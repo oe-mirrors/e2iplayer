@@ -64,8 +64,7 @@ class Playz(CBaseHostClass, CaptchaHelper):
 
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Movies'), 'url': self.getFullUrl('/movies/')},
                         {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('/tvshows/')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listsTab(self, tab, cItem, category=None):

@@ -38,8 +38,7 @@ class TVProart(CBaseHostClass):
         self.SEARCH_URL = self.getFullUrl('search?q=')
 
         self.MAIN_CAT_TAB = [{'category': 'categories', 'title': 'VOD'},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')}]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.categories = {}
 
     def addNextPage(self, cItem, nextPage, page):

@@ -78,8 +78,7 @@ class Gledalica(CBaseHostClass):
                         {'category': 'sort', 'title': 'SERIJE ', 'url': self.getFullUrl('/browse-series-videos-1.html')},
 #                        {'category':'years',          'title': _('By years'),      'url':self.getMainUrl()},
 #                        {'category':'cats',           'title': _('By category'),   'url':self.getMainUrl()},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCats(self, cItem, nextCategory1, nextCategory2):

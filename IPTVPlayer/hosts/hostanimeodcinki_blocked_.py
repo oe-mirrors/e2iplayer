@@ -51,9 +51,7 @@ class AnimeOdcinkiPL(CBaseHostClass):
                              {'category': 'list_abc', 'title': _('Anime list'), 'url': self.getFullUrl('anime')},
                              {'category': 'list_abc', 'title': _('Movies list'), 'url': self.getFullUrl('filmy')},
                              {'category': 'list_filters', 'title': _('Genres'), 'url': self.getFullUrl('gatunki')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
         self.NEW_CAT_TAB = [{'category': 'list_new', 'title': 'Nowe odcinki emitowane', 'm1': '>Nowe'},
                             {'category': 'list_new', 'title': 'Ostatnio dodane odcinki z poprzednich sezonów', 'm1': '>Ostatnio'}]

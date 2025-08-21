@@ -50,9 +50,7 @@ class DokumentalneNET(CBaseHostClass):
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Kategorie', 'url': self.getMainUrl()},
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     def getFullUrl(self, url):
         return CBaseHostClass.getFullUrl(self, url).replace('&#038;', '&')

@@ -82,8 +82,7 @@ class StreamStat(CBaseHostClass):
                         {'category': 'list_items', 'title': _('Free IPTV list'), 'url': 'http://streamstat.net/main.cgi?mode=hls&search=&page=1&fp=50', 'page': page},
                         {'category': 'list_items', 'title': _('All streams'), 'url': 'http://streamstat.net/main.cgi?mode=all&search=&page=1&fp=50', 'page': page},
                         {'category': 'list_items', 'title': _('Random selection'), 'url': 'http://streamstat.net/main.cgi?mode=&search=&page=1&fp=50', 'page': page},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}]
+                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):

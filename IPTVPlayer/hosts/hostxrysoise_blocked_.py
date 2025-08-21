@@ -53,8 +53,7 @@ class XrysoiSE(CBaseHostClass):
     MAIN_CAT_TAB = [{'category': 'movies', 'mode': 'movies', 'title': 'Ταινιες', 'url': '', 'icon': ''},
                     {'category': 'list_items', 'mode': 'series', 'title': 'Ξένες σειρές', 'url': MAIN_URL + 'category/ξένες-σειρές/', 'icon': ''},
                     # {'category':'list_items',     'mode':'collection', 'title': 'Συλλογες',     'url':MAIN_URL + 'category/collection/',      'icon':''},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history')}]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'XrysoiSE.tv', 'cookie': 'XrysoiSEtv.cookie'})

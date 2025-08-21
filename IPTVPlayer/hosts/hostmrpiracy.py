@@ -122,9 +122,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
                              {'category': 'list_filters', 'mode': 'serie', 'title': 'TV Shows', 'url': self.getFullUrl('series.php')},
                              {'category': 'list_filters', 'mode': 'anime', 'title': 'Animes', 'url': self.getFullUrl('animes.php')},
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
 
     def getFullUrl(self, url):
         if url.startswith('..'):

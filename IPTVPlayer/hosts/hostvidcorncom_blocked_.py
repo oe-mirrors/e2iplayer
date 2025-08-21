@@ -86,8 +86,7 @@ class VidCorn(CBaseHostClass, CaptchaHelper):
             params = MergeDicts(cItem, {'category': category, 'f_type': category, 'title': title, 'url': self.getFullUrl(url)})
             self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history'), }]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listFilters(self, cItem, nextCategory):

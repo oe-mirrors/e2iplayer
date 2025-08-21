@@ -51,8 +51,7 @@ class StreamLiveTo(CBaseHostClass):
     MAIN_URL = 'https://www.streamlive.to/'
 
     MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Live Channels', 'icon': ''},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history')}]
+                    {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'StreamLiveTo.tv', 'cookie': 'streamliveto.cookie'})

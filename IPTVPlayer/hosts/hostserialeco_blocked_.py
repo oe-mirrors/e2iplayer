@@ -46,9 +46,7 @@ class SerialeCO(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'START', 'url': self.getMainUrl()},
                              {'category': 'list_series', 'title': 'SPIS ALFABETYCZNY', 'url': self.getMainUrl()},
 
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
         self.playerData = {}
         self.cacheLinks = {}
 

@@ -55,8 +55,7 @@ class Laola1TV(CBaseHostClass):
     MAIN_URL = 'http://laola1.tv/'
 
     # 'http://www.laola1.tv/img/laola1_logo.png'
-    MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history')}]
+    MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'Laola1TV', 'cookie': 'Laola1TV.cookie'})

@@ -76,8 +76,7 @@ class SpiegelTv(CBaseHostClass):
                     self.listCategories(params, 'list_items')
                 except Exception:
                     printExc()
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
 
         params = dict(cItem)
         params.update({'type': 'category', 'good_for_fav': False, 'category': 'list_main_items', 'title': _('Main'), 'url': self.getMainUrl()})
