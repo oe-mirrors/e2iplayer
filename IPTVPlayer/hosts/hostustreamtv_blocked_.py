@@ -289,16 +289,6 @@ class IPTVHost(CHostBase):
                                     possibleTypesOfSearch=possibleTypesOfSearch)
     # end converItem
 
-    def getSearchItemInx(self):
-        try:
-            list = self.host.getCurrList()
-            for i in range(len(list)):
-                if list[i]['category'] == 'search':
-                    return i
-        except Exception:
-            printDBG('getSearchItemInx EXCEPTION')
-            return -1
-
     def setSearchPattern(self):
         try:
             list = self.host.getCurrList()

@@ -285,9 +285,10 @@ class Ipla(CBaseHostClass):
     def listsMainMenu(self, refresh=False):
         printDBG('listsMainMenu')
         self.getCategories('0', refresh)
-        self.addDir({'category': 'Wyszukaj', 'title': 'Wyszukaj'})
-        self.addDir({'category': 'search_history', 'title': 'Historia wyszukiwania'})
-        self.addDir({'title': _('Delete search history'), 'category': 'delete_history'})
+        for item in self.searchItems():
+            params = {'name': 'category'}
+            params.update(item)
+            self.addDir(params)
 
     def getFavouriteData(self, cItem):
         return json.dumps(cItem['fav_item'])
@@ -332,7 +333,7 @@ class Ipla(CBaseHostClass):
         elif category == 'category':
             self.getCategories(catId, refresh)
     # WYSZUKAJ
-        elif category == 'Wyszukaj':
+        elif category == 'Search':
             pattern = urllib_quote_plus(searchPattern)
             self.getVideosList(Ipla.SEARCH_URL + pattern)
     # HISTORIA WYSZUKIWANIA
@@ -355,7 +356,7 @@ class IPTVHost(CHostBase):
         possibleTypesOfSearch = None
 
         if cItem['type'] == 'category':
-            if cItem['title'] == 'Wyszukaj':
+            if cItem['title'] == 'Search':
                 type = CDisplayListItem.TYPE_SEARCH
                 possibleTypesOfSearch = searchTypesOptions
             else:
@@ -377,17 +378,6 @@ class IPTVHost(CHostBase):
                                     iconimage=icon,
                                     possibleTypesOfSearch=possibleTypesOfSearch)
         return hostItem
-
-    def getSearchItemInx(self):
-        # Find 'Wyszukaj' item
-        try:
-            list = self.host.getCurrList()
-            for i in range(len(list)):
-                if list[i]['category'] == 'Wyszukaj':
-                    return i
-        except Exception:
-            printDBG('getSearchItemInx EXCEPTION')
-            return -1
 
     def setSearchPattern(self):
         try:

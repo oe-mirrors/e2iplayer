@@ -373,7 +373,7 @@ class IPTVHost(CHostBase):
             possibleTypesOfSearch = None
 
             if cItem['type'] == 'category':
-                if cItem['title'] == 'Wyszukaj':
+                if cItem['title'] == 'Search':
                     type = CDisplayListItem.TYPE_SEARCH
                     possibleTypesOfSearch = searchTypesOptions
                 else:

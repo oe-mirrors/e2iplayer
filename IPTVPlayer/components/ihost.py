@@ -616,6 +616,8 @@ class CHostBase(IHost):
                 type = CDisplayListItem.TYPE_SEARCH_HISTORY
             elif cItem.get('category', '') == 'delete_history':
                 type = CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE
+            elif cItem.get('name', '') == 'history':
+                type = CDisplayListItem.TYPE_SEARCH_HISTORY
             else:
                 type = CDisplayListItem.TYPE_CATEGORY
         elif cItem['type'] == 'video':
@@ -671,7 +673,7 @@ class CHostBase(IHost):
         self.searchPattern = searchpattern
         self.searchType = searchType
 
-        # Find 'Wyszukaj' item
+        # Find 'Search' item
         # list = self.host.getCurrList()
 
         searchItemIdx = self.getSearchItemInx()
@@ -867,7 +869,7 @@ class CBaseHostClass:
         msg = _('Are you sure you want to delete search history?')
         session.openWithCallback(doit, MessageBox, msg, type=MessageBox.TYPE_YESNO, default=True)
 
-    def listsHistory(self, baseItem={'name': 'history', 'category': 'Wyszukaj'}, desc_key='plot', desc_base=(_("Type: "))):
+    def listsHistory(self, baseItem={'name': 'history', 'category': 'search'}, desc_key='plot', desc_base=(_("Type: "))):
         list = self.history.getHistoryList()
         for histItem in list:
             plot = ''
