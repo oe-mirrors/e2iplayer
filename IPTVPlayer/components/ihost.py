@@ -612,9 +612,9 @@ class CHostBase(IHost):
             if cItem.get('search_item', False):
                 type = CDisplayListItem.TYPE_SEARCH
                 possibleTypesOfSearch = self.getSearchTypes()
-            elif cItem.get('search_history', False):
+            elif cItem.get('category', '') == 'search_history':
                 type = CDisplayListItem.TYPE_SEARCH_HISTORY
-            elif cItem.get('delete_history', False):
+            elif cItem.get('category', '') == 'delete_history':
                 type = CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE
             else:
                 type = CDisplayListItem.TYPE_CATEGORY
