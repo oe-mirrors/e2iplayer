@@ -44,7 +44,10 @@ class MovieDream(CBaseHostClass):
 
     def menu(self):
         self.MAIN_URL = gettytul()
-        self.MENU = [{"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kino")}, {"category": "movies", "title": _("Movies")}, {"category": "series", "title": _("Series")}, {"category": "search", "title": _("Search"), "search_item": True}, {"category": "search_history", "title": _("Search history")}]
+        self.MENU = [
+            {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kino")},
+            {"category": "movies", "title": _("Movies")},
+            {"category": "series", "title": _("Series")}] + self.searchItems()
         self.MOVIES = [{"category": "list_items", "title": _("Lastest"), "url": self.getFullUrl("neuefilme")}, {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("beliebtefilme")}, {"category": "film_genres", "title": _("Genres")}]
         self.SERIES = [{"category": "list_items", "title": _("Lastest"), "url": self.getFullUrl("neueserien")}, {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("beliebteserien")}, {"category": "series_genres", "title": _("Genres")}]
 

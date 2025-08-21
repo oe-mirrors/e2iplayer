@@ -28,7 +28,7 @@ class Zaluknij(CBaseHostClass):
 
     def menu(self):
         self.MAIN_URL = gettytul()
-        self.MENU = [{"category": "movies", "title": _("Movies")}, {"category": "series", "title": _("Series")}, {"category": "search", "title": _("Search"), "search_item": True}, {"category": "search_history", "title": _("Search history")}]
+        self.MENU = [{"category": "movies", "title": _("Movies")}, {"category": "series", "title": _("Series")}] + self.searchItems()
         self.MOVIES = [{"category": "list_items", "title": _("Most recent"), "url": self.getFullUrl("filmy-online/?sort:date/")}, {"category": "list_items", "title": _("Most popular"), "url": self.getFullUrl("filmy-online/sort:vote/")}, {"category": "list_items", "title": _("By year"), "url": self.getFullUrl("filmy-online/sort:premiere/")}, {"category": "list_items", "title": _("Views"), "url": self.getFullUrl("filmy-online/sort:view/")}, {"category": "list_items", "title": _("Most rated"), "url": self.getFullUrl("filmy-online/sort:rate/")}]
         self.SERIES = [{"category": "list_items", "title": _("All"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=all_series&page=1")}, {"category": "list_items", "title": _("Latest added"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=latest_episodes&page=1")}, {"category": "list_items", "title": _("Most recent"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=recent_series&page=1")}, {"category": "list_items", "title": _("Most popular"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=popular_series&page=1")}, {"category": "list_items", "title": _("Views"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=most_viewed_recently&page=1")}]
 

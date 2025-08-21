@@ -30,8 +30,7 @@ class XalaFlix(CBaseHostClass):
             {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("/series/")},
             {"category": "list_items", "title": _("Most viewed"), "url": self.getFullUrl("/most-watched")},
             {"category": "list_items", "title": _("Latest added"), "url": self.getFullUrl("/added")},
-            {"category": "list_az", "title": _("A-Z")},
-            {"category": "search", "title": _("Search"), "search_item": True}, {"category": "search_history", "title": _("Search history")}]
+            {"category": "list_az", "title": _("A-Z")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
