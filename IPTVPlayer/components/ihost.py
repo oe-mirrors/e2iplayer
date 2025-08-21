@@ -48,6 +48,8 @@ class CDisplayListItem:
     TYPE_DATA = "DATA"
     TYPE_MORE = "MORE"
     TYPE_MARKER = "MARKER"
+    TYPE_SEARCH_HISTORY = "SEARCH_HISTORY"
+    TYPE_SEARCH_HISTORY_DELETE = "SEARCH_HISTORY_DELETE"
 
     TYPE_SUBTITLE = "SUBTITLE"
     TYPE_SUB_PROVIDER = "SUB_PROVIDER"
@@ -610,6 +612,10 @@ class CHostBase(IHost):
             if cItem.get('search_item', False):
                 type = CDisplayListItem.TYPE_SEARCH
                 possibleTypesOfSearch = self.getSearchTypes()
+            elif cItem.get('search_history', False):
+                type = CDisplayListItem.TYPE_SEARCH_HISTORY
+            elif cItem.get('delete_history', False):
+                type = CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE
             else:
                 type = CDisplayListItem.TYPE_CATEGORY
         elif cItem['type'] == 'video':
