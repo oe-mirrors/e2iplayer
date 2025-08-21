@@ -1296,6 +1296,8 @@ class CSearchHistoryHelper():
                 file.write(value + '\n')
                 printDBG('Added pattern: "%s"' % itemValue)
                 file.close
+                if self.length is None:
+                    self.length = 0
                 self.length += 1
         except Exception:
             printExc('CSearchHistoryHelper.addHistoryItem EXCEPTION')
