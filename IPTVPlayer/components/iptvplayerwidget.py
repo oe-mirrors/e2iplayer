@@ -966,13 +966,13 @@ class E2iPlayerWidget(Screen):
                     else:
                         printDBG("ok_pressed selected TYPE_VIDEO.selectLinkForCurrVideo")
                         self.selectLinkForCurrVideo()
-                elif item.type == CDisplayListItem.TYPE_CATEGORY:
+                elif item.type == CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE:
+                    printDBG("ok_pressed selected TYPE_SEARCH_HISTORY_DELETE")
+                    self.host.host.delHistory(self.session)
+                elif item.type == CDisplayListItem.TYPE_CATEGORY or item.type == CDisplayListItem.TYPE_SEARCH_HISTORY:
                     printDBG("ok_pressed selected TYPE_CATEGORY")
                     self.stopAutoPlaySequencer()
                     self.currSelIndex = currSelIndex
-                    if item.name == _("Delete search history"):
-                        self.host.host.delHistory(self.session)
-                        return
                     if item.pinLocked:
                         from .iptvpin import IPTVPinWidget
                         self.session.openWithCallback(boundFunction(self.checkDirPin, self.requestListFromHost, 'ForItem', currSelIndex, '', item.pinCode), IPTVPinWidget, title=_("Enter pin"))
