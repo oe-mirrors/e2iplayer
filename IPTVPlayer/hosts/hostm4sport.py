@@ -143,9 +143,7 @@ class m4sport(CBaseHostClass):
                             {'category': 'list_main', 'title': 'UEFA BAJNOKOK LIGÁJA FOCI', 'tab_id': 'blfoci', 'desc': msg_blfoci, 'icon': self.ICON_URL_FOCI},
                             {'category': 'list_main', 'title': 'SPORTHÍREK', 'tab_id': 'sporthirek', 'desc': msg_sporthirek, 'icon': self.DEFAULT_ICON_URL},
                             {'category': 'list_main', 'title': 'SPORTKÖZVETÍTÉSEK', 'tab_id': 'kozvetitesek', 'desc': msg_kozvetitesek, 'icon': self.DEFAULT_ICON_URL},
-                            {'category': 'search', 'title': 'Keresés', 'search_item': True, 'tab_id': 'kereses', 'desc': msg_kereses, 'icon': self.DEFAULT_ICON_URL},
-                            {'category': 'search_history', 'title': 'Keresés az előzmények közt', 'tab_id': 'keres_elozmeny', 'desc': msg_keres_elozmeny, 'icon': self.DEFAULT_ICON_URL}
-                           ]
+                           ] + self.searchItems()
             self.listsTab(MAIN_CAT_TAB, cItem)
             pvt = 'M4 ÉLŐ ADÁSA'
             pvd = msg_elo
