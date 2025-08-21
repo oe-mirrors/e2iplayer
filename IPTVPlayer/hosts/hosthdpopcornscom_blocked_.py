@@ -43,8 +43,7 @@ class HDPopcornsCom(CBaseHostClass):
         self.MAIN_URL = 'http://hdpopcorns.co/'
         self.DEFAULT_ICON_URL = 'http://7428.net/wp-content/uploads/2014/07/Movie-Time-Ticket-Vector.jpg'
 
-        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Categories'), 'url': self.getMainUrl()},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+        self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Categories'), 'url': self.getMainUrl()}] + self.searchItems()
 
         self.cacheFilters = {}
 

@@ -61,8 +61,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
         self.cacheLinks = {}
         self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'raw_post_data': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_CAT_TAB = [
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+        self.MAIN_CAT_TAB = self.searchItems()
 
     def _getStr(self, item, key, default=''):
         if key not in item:

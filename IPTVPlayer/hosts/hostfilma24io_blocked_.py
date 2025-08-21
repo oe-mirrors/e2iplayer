@@ -87,7 +87,7 @@ class Filma24IO(CBaseHostClass):
             params.update({'title': _('Categories'), 'category': 'sub_items', 'sub_items': subItems})
             self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+        MAIN_CAT_TAB = self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):

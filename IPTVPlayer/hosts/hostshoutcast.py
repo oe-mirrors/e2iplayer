@@ -50,8 +50,7 @@ class ShoutcastCom(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("ShoutcastCom.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category': 'genres', 'title': _('Genres'), 'url': self.getMainUrl()},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+        MAIN_CAT_TAB = [{'category': 'genres', 'title': _('Genres'), 'url': self.getMainUrl()}] + self.searchItems()
 
         self.listsTab(MAIN_CAT_TAB, cItem)
 

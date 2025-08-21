@@ -53,8 +53,7 @@ class FilmeHD(CBaseHostClass):
         MAIN_CAT_TAB = [{'category': 'list_sort', 'title': 'TOATE FILMELE', 'url': url},
                         {'category': 'list_categories', 'title': 'GEN FILM', 'url': url},
                         {'category': 'list_years', 'title': 'FILME DUPA AN', 'url': url},
-                        {'category': 'list_sort', 'title': 'SERIALE', 'url': self.getFullUrl('/seriale')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                        {'category': 'list_sort', 'title': 'SERIALE', 'url': self.getFullUrl('/seriale')}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSort(self, cItem, nextCategory1, nextCategory2):

@@ -36,8 +36,7 @@ class TopStreamFilm(CBaseHostClass):
                     {'category': 'list_genres', 'title': 'Genres'},
                     {'category': 'list_year', 'title': 'Jahr'},
                     {'category': 'list_country', 'title': 'Land'},
-                    {'category': 'list_az', 'title': 'A-Z'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                    {'category': 'list_az', 'title': 'A-Z'}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

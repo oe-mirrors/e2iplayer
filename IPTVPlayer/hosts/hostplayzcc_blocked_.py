@@ -63,8 +63,7 @@ class Playz(CBaseHostClass, CaptchaHelper):
         printDBG("Playz.listMainMenu")
 
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Movies'), 'url': self.getFullUrl('/movies/')},
-                        {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('/tvshows/')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                        {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('/tvshows/')}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listsTab(self, tab, cItem, category=None):

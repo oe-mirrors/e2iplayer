@@ -42,8 +42,7 @@ class NonstopMozi(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Filmek'},
-        {'category': 'list_categories', 'title': 'Sorozatok'},
-        {'category': 'search', 'title': 'Keresés', 'search_item': True}] + self.serchHistorItems()
+        {'category': 'list_categories', 'title': 'Sorozatok'}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, title):

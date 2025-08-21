@@ -302,7 +302,7 @@ class Christusvincit(CBaseHostClass):
             else:
                 self.currList.append(item)
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+        MAIN_CAT_TAB = self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def handleSection(self, cItem, nextCategory, section):

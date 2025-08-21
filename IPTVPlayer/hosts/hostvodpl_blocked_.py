@@ -62,10 +62,7 @@ class VODPL(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Movies'), 'url': self.getFullUrl('filmy'), 'f_element': 'SiteFilmy', },
                              {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('seriale'), 'f_element': 'SiteSeriale', },
                              {'category': 'list_filters', 'title': 'Programy onetu', 'url': self.getFullUrl('programy-onetu'), 'f_element': 'SiteProgramyOnetu', },
-                             {'category': 'list_filters', 'title': 'Dokumentalne', 'url': self.getFullUrl('filmy-dokumentalne'), 'f_element': 'SiteDokumenty', },
-
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                             {'category': 'list_filters', 'title': 'Dokumentalne', 'url': self.getFullUrl('filmy-dokumentalne'), 'f_element': 'SiteDokumenty', }] + self.searchItems()
 
     def getFullIconUrl(self, url):
         url = url.replace('&amp;', '&')

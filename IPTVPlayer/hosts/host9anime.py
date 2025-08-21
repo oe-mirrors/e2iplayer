@@ -26,9 +26,7 @@ class AnimeRo(CBaseHostClass):
         self.defaultParams = {'header': self.HTTP_HEADER}
         self.MAIN_URL = 'https://9anime.com.ro'
         self.DEFAULT_ICON_URL = self.getFullUrl('/wp-content/uploads/2024/07/9anime-logo.png')
-        self.MENU = [
-            {'category': 'list_AZ', 'title': "A-Z", 'url': self.getFullUrl('anime-tv/')},
-            {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+        self.MENU = [{'category': 'list_AZ', 'title': "A-Z", 'url': self.getFullUrl('anime-tv/')}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

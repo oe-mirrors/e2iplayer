@@ -45,9 +45,7 @@ class Kabarety(CBaseHostClass):
 
         self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Main'), 'url': self.getFullUrl('kabarety/')},
                              {'category': 'list_popular', 'title': _('Popular'), 'url': self.getFullUrl('kabarety/')},
-                             {'category': 'list_all', 'title': _('All'), 'url': self.getFullUrl('kabarety/')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                             {'category': 'list_all', 'title': _('All'), 'url': self.getFullUrl('kabarety/')}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

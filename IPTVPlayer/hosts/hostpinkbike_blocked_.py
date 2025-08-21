@@ -43,8 +43,7 @@ class Pinkbike(CBaseHostClass):
     DEFAULT_ICON_URL = 'http://ep1.pinkbike.org/p2pb10472249/p2pb10472249.jpg'
 
     MAIN_CAT_TAB = [{'category': 'best_video_categories', 'title': _('Best Pinkbike Videos')},
-                    {'category': 'video_categories', 'title': _('Categories')},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True}]
+                    {'category': 'video_categories', 'title': _('Categories')}]
 
     def __init__(self):
         printDBG("Pinkbike.__init__")
@@ -52,7 +51,7 @@ class Pinkbike(CBaseHostClass):
         self.best = []
         self.categories = []
         self.catItems = {}
-        self.MAIN_CAT_TAB += self.serchHistorItems()
+        self.MAIN_CAT_TAB += self.searchItems()
 
     def _fillCategories(self):
         printDBG("Pinkbike._fillCategories")

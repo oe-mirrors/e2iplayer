@@ -161,7 +161,7 @@ class HDFull(CBaseHostClass, CaptchaHelper):
             if len(subItems):
                 self.addDir(MergeDicts(cItem, {'url': menuUrl, 'title': menuTitle, 'category': 'sub_items', 'sub_items': subItems}))
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+        MAIN_CAT_TAB = self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):

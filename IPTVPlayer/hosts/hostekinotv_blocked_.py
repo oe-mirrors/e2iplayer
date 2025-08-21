@@ -67,8 +67,8 @@ class EkinoTv(CBaseHostClass, CaptchaHelper):
 
         self.MAIN_CAT_TAB = [{'category': 'list_cats', 'title': 'Filmy', 'url': self.FILMS_CAT_URL},
                              {'category': 'series_abc', 'title': 'Seriale', 'url': self.getFullUrl('/serie/')},
-                             {'category': 'list_movies', 'title': 'Dla dzieci', 'url': self.FILMS_CAT_URL, 'cat': '2,3,5,6'},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                             {'category': 'list_movies', 'title': 'Dla dzieci', 'url': self.FILMS_CAT_URL, 'cat': '2,3,5,6'}
+                             ] + self.searchItems()
 
         self.SORT_MAP = {'data-dodania': 'add',
                           'data-aktualizacji': 'update',

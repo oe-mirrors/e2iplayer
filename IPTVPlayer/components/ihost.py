@@ -843,9 +843,10 @@ class CBaseHostClass:
         self.currList.append(params)
         return
 
-    def serchHistorItems(self):
+    def searchItems(self):
         if self._historyLenTextFunction:
             return [
+                {'category': 'search', 'title': _('Search'), 'search_item': True, },
                 {'category': 'search_history', 'title': _("Search history"), 'desc': _("History of searched phrases.")},
                 {'category': 'delete_history', 'title': _('Delete search history'), 'desc': self._historyLenTextFunction}
             ]

@@ -63,8 +63,7 @@ class WgranePL(CBaseHostClass):
         printDBG("WgranePL.listMainMenu")
 
         MAIN_CAT_TAB = [{'category': 'list_sort', 'title': 'Przeglądaj pliki', 'url': self.getFullUrl('/watch.html')},
-                        {'category': 'categories', 'title': 'Kategorie', 'url': self.getFullUrl('/categories.html')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                        {'category': 'categories', 'title': 'Kategorie', 'url': self.getFullUrl('/categories.html')}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):

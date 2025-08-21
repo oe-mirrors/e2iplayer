@@ -67,8 +67,7 @@ class Youtube(CBaseHostClass):
         self.UTLIST_FILE = 'ytlist.txt'
         self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/YouTube_Logo_2017.svg/640px-YouTube_Logo_2017.svg.png'
         self.MAIN_GROUPED_TAB = [{'category': 'from_file', 'title': _("User links"), 'desc': _("User links stored in the ytlist.txt file.")},
-                                 {'category': 'search', 'title': _("Search"), 'desc': _("Search youtube materials"), 'search_item': True},
-                                 {'category': 'feeds', 'title': _("Trending"), 'desc': _("Browse youtube trending feeds")}] + self.serchHistorItems()
+                                 {'category': 'feeds', 'title': _("Trending"), 'desc': _("Browse youtube trending feeds")}] + self.searchItems()
 
         self.SEARCH_TYPES = [(_("Video"), "video"),
                                (_("Channel"), "channel"),

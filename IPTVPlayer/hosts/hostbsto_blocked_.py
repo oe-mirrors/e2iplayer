@@ -86,8 +86,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
     def selectDomain(self):
         self.MAIN_URL = 'https://bs.to/'
         self.MAIN_CAT_TAB = [{'category': 'list_genres', 'title': _('Genres'), 'url': self.getFullUrl('/serie-genre')},
-                             {'category': 'list_genres', 'title': _('Alphabet'), 'url': self.getFullUrl('/serie-alphabet')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                             {'category': 'list_genres', 'title': _('Alphabet'), 'url': self.getFullUrl('/serie-alphabet')}] + self.searchItems()
 
     def listGenres(self, cItem, nextCategory):
         printDBG("BSTO.listGenres")

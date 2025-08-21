@@ -43,9 +43,8 @@ class GamatoMovies(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'assets/uploads/images/aaw81QHKtm.png'
 
         self.MAIN_CAT_TAB = [{'category': 'movies', 'title': _('Movies'), 'priv_type': 'movie', 'url': self.getFullUrl('movies'), 'icon': self.DEFAULT_ICON_URL},
-                             {'category': 'series', 'title': _('Series'), 'priv_type': 'series', 'url': self.getFullUrl('series'), 'icon': self.DEFAULT_ICON_URL},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': self.DEFAULT_ICON_URL}
-                            ] + self.serchHistorItems()
+                             {'category': 'series', 'title': _('Series'), 'priv_type': 'series', 'url': self.getFullUrl('series'), 'icon': self.DEFAULT_ICON_URL}
+                            ] + self.searchItems()
 
         self.cacheFilters = {}
         self.cacheLinks = {}

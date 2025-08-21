@@ -36,8 +36,7 @@ class HDFilmeTV(CBaseHostClass):
                             {'category': 'list_items', 'title': _("New"), 'link': self.getFullUrl('/aktuelle-kinofilme-im-kino/')},
                             {'category': 'list_items', 'title': _("Movies"), 'link': self.getFullUrl('/kinofilme-online/')},
                             {'category': 'list_items', 'title': _("Series"), 'link': self.getFullUrl('/serienstream-deutsch/')},
-                            {'category': 'list_genres', 'title': 'Genres', 'link': self.MAIN_URL},
-                            {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                            {'category': 'list_genres', 'title': 'Genres', 'link': self.MAIN_URL}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

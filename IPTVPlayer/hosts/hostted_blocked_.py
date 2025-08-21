@@ -80,9 +80,7 @@ class TED(CBaseHostClass):
     def selectDomain(self):
         self.MAIN_URL = 'https://ted.com/'
         self.MAIN_CAT_TAB = [{'category': 'list_talks_filters', 'title': _('Talks'), 'url': self.getFullUrl('/talks')},
-                             {'category': 'list_playlists_filters', 'title': _('Playlists'), 'url': self.getFullUrl('/playlists')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                             {'category': 'list_playlists_filters', 'title': _('Playlists'), 'url': self.getFullUrl('/playlists')}] + self.searchItems()
 
     def _addFilter(self, data, cacheTab, key, anyTitle='', titleBase=''):
         filtersTab = []

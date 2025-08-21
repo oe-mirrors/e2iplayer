@@ -125,9 +125,8 @@ class GoMovies(CBaseHostClass):
         if self.MAIN_URL is None:
             self.selectDomain()
         MAIN_CAT_TAB = [{'category': 'list_filter_genre', 'title': 'Movies', 'url': self.getFullUrl('/movie/filter/movies/')},
-                        {'category': 'list_filter_genre', 'title': 'TV-Series', 'url': self.getFullUrl('/movie/filter/seasons/')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, }
-                       ] + self.serchHistorItems()
+                        {'category': 'list_filter_genre', 'title': 'TV-Series', 'url': self.getFullUrl('/movie/filter/seasons/')}
+                       ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def fillCacheFilters(self):

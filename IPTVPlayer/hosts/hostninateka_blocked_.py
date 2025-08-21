@@ -55,9 +55,7 @@ class Ninateka(CBaseHostClass):
         # DEFAULT_GET_PARAM = 'MediaType=video&Paid=False'
 
         self.MAIN_CAT_TAB = [{'category': 'list_all', 'title': 'Wszystkie', 'url': self.VIDEOS_URL},
-                             {'category': 'list_cats', 'title': 'Kategorie', 'url': self.MAIN_URL},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                             {'category': 'list_cats', 'title': 'Kategorie', 'url': self.MAIN_URL}] + self.searchItems()
 
     def getMenuHTML(self):
         printDBG("getMenuHTML start")

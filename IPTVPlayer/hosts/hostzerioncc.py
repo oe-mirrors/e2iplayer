@@ -77,9 +77,9 @@ class Zerioncc(CBaseHostClass, CaptchaHelper):
         MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Series'), 'url': self.getFullUrl('/seriale')},
 #                        {'category': 'list_items', 'title': _('Children'), 'url': self.getFullUrl('/dla-dzieci/')},
 #                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
-                        {'category': 'list_cats', 'title': _('Genres'), 'url': self.getFullUrl('/seriale')},
+                        {'category': 'list_cats', 'title': _('Genres'), 'url': self.getFullUrl('/seriale')}
 #                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                        ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     ###################################################

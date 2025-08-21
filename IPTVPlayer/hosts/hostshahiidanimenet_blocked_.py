@@ -47,9 +47,7 @@ class ShahiidAnime(CBaseHostClass):
         self.cacheFiltersKeys = []
         self.defaultParams = {'header': self.HEADER, 'raw_post_data': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_CAT_TAB = [
-                             {'category': 'list_filters', 'title': _('Anime list'), 'url': self.getFullUrl('/filter'), },
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+        self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Anime list'), 'url': self.getFullUrl('/filter'), }] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

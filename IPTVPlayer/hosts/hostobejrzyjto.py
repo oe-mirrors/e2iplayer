@@ -78,8 +78,7 @@ class Obejrzyjto(CBaseHostClass):
 #                        {'category':'list_years',     'title': _('Filter By Year'),    'url':self.MAIN_URL},
 #                        {'category': 'list_cats', 'title': _('Movies genres'), 'url': self.API_URL + '?perPage=%d' % self.itemsPerPage},
 #                        {'category':'list_az',        'title': _('Alphabetically'),    'url':self.MAIN_URL},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True}
-                        ] + self.serchHistorItems()
+                        ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     ###################################################

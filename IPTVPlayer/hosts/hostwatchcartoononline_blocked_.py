@@ -113,7 +113,7 @@ class WatchCartoonOnline(CBaseHostClass):
         for item in tmp:
             _fillItems(item)
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+        MAIN_CAT_TAB = self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listABC(self, cItem, nextCategory):

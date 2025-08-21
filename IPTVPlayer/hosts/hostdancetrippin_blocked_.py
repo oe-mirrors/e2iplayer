@@ -42,8 +42,7 @@ class DancetrippinTV(CBaseHostClass):
                              {'category': 'channels', 'title': _('CHANNELS '), 'url': self.getMainUrl()},
                              {'category': 'artists', 'title': _('ARTISTS'), 'url': self.getMainUrl()},
                              {'category': 'fill_items', 'title': _('PARTIES'), 'url': self.getFullUrl('/parties')},
-                             {'category': 'fill_items', 'title': _('VENUES'), 'url': self.getFullUrl('/venues')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                             {'category': 'fill_items', 'title': _('VENUES'), 'url': self.getFullUrl('/venues')}] + self.searchItems()
 
         self.ARTISTS_CAT_TAB = [{'category': 'fill_items', 'title': _('Most featured'), 'url': self.getFullUrl('/artists')},
                                 {'category': 'fill_items', 'title': _('Alphabetical '), 'url': self.getFullUrl('/artists/sort/alphabetical')}]

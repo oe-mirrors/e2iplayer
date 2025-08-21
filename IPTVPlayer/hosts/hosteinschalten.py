@@ -32,8 +32,7 @@ class Einschalten(CBaseHostClass):
                     {'category': 'list_items', 'title': _("Movies"), 'link': self.getFullUrl('/movies')},
                     {'category': 'list_items', 'title': "Zuletzt hinzugefügte Filme", 'link': self.getFullUrl('/movies?order=added')},
                     {'category': 'list_items', 'title': "Sammlungen", 'link': self.getFullUrl('/collections')},
-                    {'category': 'list_genres', 'title': 'Genres'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                    {'category': 'list_genres', 'title': 'Genres'}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

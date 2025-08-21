@@ -37,14 +37,13 @@ class Filma24hdCom(CBaseHostClass):
     DEFAULT_TV_SERIES_ICON_URL = 'http://seriale.filma24hd.com/wp-content/uploads/2015/12/f24hdserie.png'
 
     MAIN_CAT_TAB = [{'category': 'movies', 'title': _('Movies'), 'url': MAIN_URL, 'icon': DEFAULT_ICON_URL},
-                    {'category': 'series', 'title': _('TV Series'), 'url': MAIN_TV_SERIES_URL, 'icon': DEFAULT_TV_SERIES_ICON_URL},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': DEFAULT_ICON_URL}
+                    {'category': 'series', 'title': _('TV Series'), 'url': MAIN_TV_SERIES_URL, 'icon': DEFAULT_TV_SERIES_ICON_URL}
                    ]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'Filma24hdCom', 'cookie': 'Filma24hdCom.cookie'})
         self.seriesSubCategoryCache = []
-        self.MAIN_CAT_TAB += self.serchHistorItems()
+        self.MAIN_CAT_TAB += self.searchItems()
 
     def _getFullUrl(self, url, series=False):
         if not series:

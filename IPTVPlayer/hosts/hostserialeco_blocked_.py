@@ -44,9 +44,7 @@ class SerialeCO(CBaseHostClass):
         self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'START', 'url': self.getMainUrl()},
-                             {'category': 'list_series', 'title': 'SPIS ALFABETYCZNY', 'url': self.getMainUrl()},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                             {'category': 'list_series', 'title': 'SPIS ALFABETYCZNY', 'url': self.getMainUrl()}] + self.searchItems()
         self.playerData = {}
         self.cacheLinks = {}
 

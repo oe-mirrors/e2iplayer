@@ -141,9 +141,8 @@ class PutlockerTvTo(CBaseHostClass):
             return
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Featured', 'url': self.getFullUrl('/featured')},
                         {'category': 'list_filters', 'title': 'Movies', 'url': self.getFullUrl('/movies'), 'f_type[]': 'movie'},
-                        {'category': 'list_filters', 'title': 'TV-Series', 'url': self.getFullUrl('/tv-series'), 'f_type[]': 'series'},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, }
-                       ] + self.serchHistorItems()
+                        {'category': 'list_filters', 'title': 'TV-Series', 'url': self.getFullUrl('/tv-series'), 'f_type[]': 'series'}
+                       ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def fillCacheFilters(self, cItem):

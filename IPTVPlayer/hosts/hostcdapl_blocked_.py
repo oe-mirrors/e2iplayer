@@ -65,8 +65,7 @@ class cda(CBaseHostClass, CaptchaHelper):
 
         self.MAIN_TAB = [{'category': 'video', 'title': 'Filmy wideo', 'url': ''},
                          {'category': 'premium', 'title': 'CDA Premium', 'url': self.getFullUrl('premium')},
-                         {'category': 'channels_cats', 'title': 'Kanały', 'url': ''},
-                         {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                         {'category': 'channels_cats', 'title': 'Kanały', 'url': ''}] + self.searchItems()
 
         self.VIDEO_TAB = [{'category': 'categories', 'title': 'Główna', 'base_url': 'video'},
                           {'category': 'categories', 'title': 'Poczekalnia', 'base_url': 'video/poczekalnia'}]

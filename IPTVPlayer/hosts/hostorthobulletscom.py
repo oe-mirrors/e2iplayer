@@ -70,10 +70,9 @@ class OrthoBullets(CBaseHostClass):
         self.password = ''
 
         self.MAIN_CAT_TAB = [
-                                    {'category': 'categories', 'title': _('Categories'), 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
-                                    {'category': 'subspeciality', 'title': _('Subspecialities'), 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
-                                    {'category': 'search', 'title': _('Search'), 'search_item': True}
-                            ] + self.serchHistorItems()
+                            {'category': 'categories', 'title': _('Categories'), 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL},
+                            {'category': 'subspeciality', 'title': _('Subspecialities'), 'url': self.MAIN_URL, 'icon': self.DEFAULT_ICON_URL}
+                            ] + self.searchItems()
 
         self.CATEGORIES_TAB = [
                                     {'category': 'list_categories', 'title': _('All'), 'url': self.MAIN_URL + 'video/list.aspx'},

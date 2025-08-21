@@ -57,9 +57,7 @@ class Watchwrestling(CBaseHostClass):
                              {'category': 'list_filters', 'title': _('Smackdown'), 'url': self.getFullUrl('category/wwe/smackdown/')},
                              {'category': 'list_filters', 'title': _('Total Divas'), 'url': self.getFullUrl('category/wwe/totaldivas/')},
                              {'category': 'list_filters', 'title': _('NXT'), 'url': self.getFullUrl('category/wwe/nxt/')},
-                             {'category': 'list_filters', 'title': _('Archives'), 'url': self.getFullUrl('category/archives/')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+                             {'category': 'list_filters', 'title': _('Archives'), 'url': self.getFullUrl('category/archives/')}] + self.searchItems()
 
         self.SORT_TAB = [{'sort': 'date', 'title': _('DATE')},
                          {'sort': 'views', 'title': _('VIEWS')},

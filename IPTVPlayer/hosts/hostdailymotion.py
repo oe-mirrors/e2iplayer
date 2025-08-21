@@ -46,8 +46,7 @@ class Dailymotion(CBaseHostClass):
         self.SITE_URL = 'https://www.dailymotion.com/'
         self.MAIN_URL = 'https://api.dailymotion.com/'
         self.DEFAULT_ICON_URL = 'http://static1.dmcdn.net/images/dailymotion-logo-ogtag.png'
-        self.MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True}] + self.serchHistorItems()
+        self.MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories')}] + self.searchItems()
 
         self.SORT_TAB = [{'title': _('Most viewed'), 'sort': 'visited'},
                          {'title': _('Most recent'), 'sort': 'recent'},

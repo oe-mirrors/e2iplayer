@@ -139,8 +139,7 @@ class SeriesOnlineIO(CBaseHostClass):
         self.SEARCH_URL = self.MAIN_URL + 'movie/search'
         self.MAIN_CAT_TAB = [{'category': 'list_filter_genre', 'title': 'Movies', 'url': self.MAIN_URL + 'movie/filter/movie'},
                              {'category': 'list_filter_genre', 'title': 'TV-Series', 'url': self.MAIN_URL + 'movie/filter/series'},
-                             {'category': 'list_filter_genre', 'title': 'Cinema', 'url': self.MAIN_URL + 'movie/filter/cinema'},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                             {'category': 'list_filter_genre', 'title': 'Cinema', 'url': self.MAIN_URL + 'movie/filter/cinema'}] + self.searchItems()
 
     def fillCacheFilters(self):
         self.cacheFilters = {}

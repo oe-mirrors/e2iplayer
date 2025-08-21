@@ -122,10 +122,8 @@ class SKStream(CBaseHostClass):
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Films', 'url': self.getFullUrl('/films')},
                         {'category': 'list_categories', 'title': 'Séries', 'url': self.getFullUrl('/series')},
-                        {'category': 'list_categories', 'title': 'Mangas', 'url': self.getFullUrl('/mangas')},
-
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, }
-                       ] + self.serchHistorItems()
+                        {'category': 'list_categories', 'title': 'Mangas', 'url': self.getFullUrl('/mangas')}
+                       ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):

@@ -120,9 +120,7 @@ class MRPiracyGQ(CBaseHostClass, CaptchaHelper):
 
         self.MAIN_CAT_TAB = [{'category': 'list_filters', 'mode': 'movie', 'title': 'Movies', 'url': self.getFullUrl('filmes.php')},
                              {'category': 'list_filters', 'mode': 'serie', 'title': 'TV Shows', 'url': self.getFullUrl('series.php')},
-                             {'category': 'list_filters', 'mode': 'anime', 'title': 'Animes', 'url': self.getFullUrl('animes.php')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, }] + self.serchHistorItems()
+                             {'category': 'list_filters', 'mode': 'anime', 'title': 'Animes', 'url': self.getFullUrl('animes.php')}] + self.searchItems()
 
     def getFullUrl(self, url):
         if url.startswith('..'):
