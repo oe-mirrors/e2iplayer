@@ -1,11 +1,16 @@
 # E2iPlayer Plugin for Enigma2 (Python 3)
-<img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/IPTVPlayer/icons/iptvlogohd.png">
+
+---
+
+<img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/IPTVPlayer/icons/iptvlogohd.png"> <img width="195" height="78" alt="e2ilogo" src="https://github.com/user-attachments/assets/46ab1d55-c1dc-42da-9fef-0d1381e84d77" />
+
+---
 
 ## Github status
-[![Build](https://github.com/oe-mirrors/e2iplayer/actions/workflows/buildbot.yml/badge.svg)](https://github.com/oe-mirrors/oe-mirrors/e2iplayer/workflows/buildbot.yml)
-[![Lint Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/pylint.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions)
-[![Ruff Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions)
-[![Build Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions)
+[![Build](https://github.com/oe-mirrors/e2iplayer/actions/workflows/buildbot.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/buildbot.yml)
+[![Lint Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/pylint.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/pylint.yml)
+[![Ruff Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml)
+[![Build Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml)
 [![TESTS](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml)
 
 [![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
@@ -20,8 +25,17 @@
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
+
 [![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 
+
+---
+
+### 🖼️ Screenshot
+
+<img width="320" height="180" alt="screenshot4" src="https://github.com/user-attachments/assets/b01437be-2b1b-4af1-8b73-ed6276187d68"/> <img width="320" height="180" alt="screenshot2" src="https://github.com/user-attachments/assets/2ad14081-d64d-44a2-8a1d-9aea95fff390"/>
+
+<img width="320" height="180" alt="screenshot3" src="https://github.com/user-attachments/assets/ac4ab015-1a62-4e44-afe7-3c565674f72b"/> <img width="320" height="180" alt="screenshot1" src="https://github.com/user-attachments/assets/8277d4e2-6acc-4590-ad5d-1552089f1c99"/>
 
 ---
 
@@ -33,8 +47,12 @@ includes Movies, TV series, Catoons, Anime, Music, Sport, Live Streams, Document
 ---
 
 
-### 📜 License [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+### 📜 License Information [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+This is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation
+
 This plugin is released under GPLv3. See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html#license-text) for full details.
+
+<img width="120" height="58" alt="GPLv3_Logo svg" src="https://github.com/user-attachments/assets/67d32b0a-2a44-4fa9-a972-202daf28808e" />
 
 ---
 
@@ -91,7 +109,14 @@ wget -q "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/pytho
 
 ### 📌 Notes
 
-- ⚠️ The plugin **does use external extensions** or complicated dependencies on most images the e2ideps are on the Feeds 
+⚠️ The plugin **does use external extensions** or complicated dependencies on most images the e2ideps are on the Feeds
+- exteplayer3
+- pycurl
+- gstplayer
+- ffmpeg
+- rtmpdump
+- duktape
+- uchardet
 
 ---
 
@@ -128,6 +153,12 @@ For help and support, visit: [oATV Forum](https://www.opena.tv/viewtopic.php?t=4
 
 ### ℹ️ WIKI
 See the [Wiki](https://github.com/oe-mirrors/e2iplayer/wiki) for more information
+
+---
+
+### 🚨 Disclaimer
+
+This repository has no control over the streams, links, or the legality of the content provided by the different hosts (including all mirror sites). It is the end user's responsibility to ensure the legal use of these streams, and we strongly recommend verifying that the content complies with the laws and regulations of your country before use.
 
 ---
 
