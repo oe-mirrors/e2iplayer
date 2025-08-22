@@ -11,6 +11,8 @@
 		<key id="KEY_ENTER" mapto="ok" flags="m" />
 		<key id="KEY_EXIT" mapto="back" flags="m" />
 		<key id="KEY_ESC" mapto="back" flags="m" />
+		<key id="KEY_CHANNELUP" mapto="pageUp" flags="m" />
+		<key id="KEY_CHANNELDOWN" mapto="pageDown" flags="m" />
     </map>
     <map context="IPTVAlternateVideoPlayer">
         <key id="KEY_LEFT"     mapto="left_press"   flags="m" />
