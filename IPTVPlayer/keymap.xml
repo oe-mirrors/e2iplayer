@@ -7,6 +7,10 @@
         <key id="KEY_PLAY"   mapto="play"   flags="m" />
         <key id="KEY_OPTION" mapto="tools"  flags="m" />
         <key id="KEY_RECORD" mapto="record" flags="m" />
+		<key id="KEY_OK" mapto="ok" flags="m" />
+		<key id="KEY_ENTER" mapto="ok" flags="m" />
+		<key id="KEY_EXIT" mapto="back" flags="m" />
+		<key id="KEY_ESC" mapto="back" flags="m" />
     </map>
     <map context="IPTVAlternateVideoPlayer">
         <key id="KEY_LEFT"     mapto="left_press"   flags="m" />

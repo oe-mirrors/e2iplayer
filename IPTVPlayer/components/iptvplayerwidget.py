@@ -163,7 +163,8 @@ class E2iPlayerWidget(Screen):
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
         self["statustext"] = Label("Loading...")
-        self["actions"] = ActionMap(["IPTVPlayerListActions", "WizardActions", "DirectionActions", "ColorActions", "NumberActions"],
+
+        self["actions"] = ActionMap(["IPTVPlayerListActions", "ColorActions", "NumberActions"],
         {
             "red": self.red_pressed,
             "green": self.green_pressed,

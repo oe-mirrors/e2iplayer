@@ -61,7 +61,7 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
 
         self["label_red"] = Label(_("Cancel"))
 
-        self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],
+        self["actions"] = ActionMap(["ColorActions", "SetupActions"],
             {
                 "cancel": self.keyExit,
                 # "ok"    : self.keyOK,

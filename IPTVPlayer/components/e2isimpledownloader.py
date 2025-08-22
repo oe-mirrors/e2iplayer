@@ -77,7 +77,7 @@ class SingleFileDownloaderWidget(Screen):
         self["icon_red"] = Cover3()
         self["icon_green"] = Cover3()
 
-        self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],
+        self["actions"] = ActionMap(["ColorActions", "SetupActions"],
             {
                 "cancel": self.keyExit,
                 "red": self.keyRed,
