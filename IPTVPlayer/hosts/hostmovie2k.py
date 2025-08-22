@@ -91,7 +91,7 @@ class Movie2K(CBaseHostClass):
             else:
                 self.addVideo(params)
         if curPage < totalPages:
-            params.update({'good_for_fav': False, 'category': 'list_items', 'title': _("Next page"), 'url': nextPage})
+            params = {'good_for_fav': False, 'category': 'list_items', 'title': _("Next page"), 'url': nextPage}
             self.addDir(params)
 
     def listGenres(self, cItem):
