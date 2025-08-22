@@ -51,6 +51,8 @@ class CDisplayListItem:
     TYPE_SEARCH_HISTORY = "SEARCH_HISTORY"
     TYPE_SEARCH_HISTORY_DELETE = "SEARCH_HISTORY_DELETE"
     TYPE_NEXT = "NEXT"
+    TYPE_DOWNLOAD = "DOWNLOAD"
+    TYPE_MMC = "MMC"
 
     TYPE_SUBTITLE = "SUBTITLE"
     TYPE_SUB_PROVIDER = "SUB_PROVIDER"
@@ -67,7 +69,8 @@ class CDisplayListItem:
                 isGoodForFavourites=False,
                 isWatched=False,
                 textColor='',
-                pinCode=''):
+                pinCode='',
+                imageType=None):
 
         if isinstance(name, str):
             self.name = name
@@ -85,6 +88,8 @@ class CDisplayListItem:
             self.type = type
         else:
             self.type = str(type)
+
+        self.imageType = imageType or self.type
 
         if isinstance(iconimage, str):
             self.iconimage = iconimage
@@ -655,6 +660,11 @@ class CHostBase(IHost):
         pinCode = cItem.get('pin_code', '')
         textColor = cItem.get('text_color', '')
 
+        if 'image_type' in cItem:
+            imageType = cItem['image_type']
+        else:
+            imageType = type
+
         return CDisplayListItem(name=title,
                                     description=description,
                                     type=type,
@@ -665,7 +675,7 @@ class CHostBase(IHost):
                                     pinLocked=pinLocked,
                                     isGoodForFavourites=isGoodForFavourites,
                                     textColor=textColor,
-                                    pinCode=pinCode)
+                                    pinCode=pinCode, imageType=imageType)
     # end converItem
 
     def getSearchResults(self, searchpattern, searchType=None):

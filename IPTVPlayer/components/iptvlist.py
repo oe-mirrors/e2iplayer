@@ -89,7 +89,24 @@ class IPTVListComponentBase(GUIComponent, object):
 
 
 class IPTVMainNavigatorList(IPTVListComponentBase):
-    ICONS_FILESNAMES = {CDisplayListItem.TYPE_MARKER: 'MarkerItem.png', CDisplayListItem.TYPE_SUB_PROVIDER: 'CategoryItem.png', CDisplayListItem.TYPE_SUBTITLE: 'ArticleItem.png', CDisplayListItem.TYPE_CATEGORY: 'CategoryItem.png', CDisplayListItem.TYPE_MORE: 'MoreItem.png', CDisplayListItem.TYPE_VIDEO: 'VideoItem.png', CDisplayListItem.TYPE_AUDIO: 'AudioItem.png', CDisplayListItem.TYPE_SEARCH: 'SearchItem.png', CDisplayListItem.TYPE_ARTICLE: 'ArticleItem.png', CDisplayListItem.TYPE_PICTURE: 'PictureItem.png', CDisplayListItem.TYPE_DATA: 'DataItem.png', CDisplayListItem.TYPE_SEARCH_HISTORY: 'SearchHistoryItem.png', CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE: 'SearchHistoryDeleteItem.png', CDisplayListItem.TYPE_NEXT: 'NextItem.png'}
+    ICONS_FILESNAMES = {
+        CDisplayListItem.TYPE_MARKER: 'MarkerItem.png',
+        CDisplayListItem.TYPE_SUB_PROVIDER: 'CategoryItem.png',
+        CDisplayListItem.TYPE_SUBTITLE: 'ArticleItem.png',
+        CDisplayListItem.TYPE_CATEGORY: 'CategoryItem.png',
+        CDisplayListItem.TYPE_MORE: 'MoreItem.png',
+        CDisplayListItem.TYPE_VIDEO: 'VideoItem.png',
+        CDisplayListItem.TYPE_AUDIO: 'AudioItem.png',
+        CDisplayListItem.TYPE_SEARCH: 'SearchItem.png',
+        CDisplayListItem.TYPE_ARTICLE: 'ArticleItem.png',
+        CDisplayListItem.TYPE_PICTURE: 'PictureItem.png',
+        CDisplayListItem.TYPE_DATA: 'DataItem.png',
+        CDisplayListItem.TYPE_SEARCH_HISTORY: 'SearchHistoryItem.png',
+        CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE: 'SearchHistoryDeleteItem.png',
+        CDisplayListItem.TYPE_NEXT: 'NextItem.png',
+        CDisplayListItem.TYPE_DOWNLOAD: 'DownloadFolder.png',
+        CDisplayListItem.TYPE_MMC: 'MMCItem.png'
+    }
 
     def __init__(self):
         IPTVListComponentBase.__init__(self)
@@ -131,7 +148,7 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         height = self.l.getItemSize().height()
         res = [None]
         res.append((eListboxPythonMultiContent.TYPE_TEXT, 45, 0, width - 45, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.getDisplayTitle(), item.getTextColor()))
-        res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, 1, 40, 40, self.dictPIX.get(item.type, None)))
+        res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, 1, 40, 40, self.dictPIX.get(item.imageType, None)))
         return res
 
 
