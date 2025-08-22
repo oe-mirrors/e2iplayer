@@ -89,7 +89,7 @@ class IPTVListComponentBase(GUIComponent, object):
 
 
 class IPTVMainNavigatorList(IPTVListComponentBase):
-    ICONS_FILESNAMES = {CDisplayListItem.TYPE_MARKER: 'MarkerItem.png', CDisplayListItem.TYPE_SUB_PROVIDER: 'CategoryItem.png', CDisplayListItem.TYPE_SUBTITLE: 'ArticleItem.png', CDisplayListItem.TYPE_CATEGORY: 'CategoryItem.png', CDisplayListItem.TYPE_MORE: 'MoreItem.png', CDisplayListItem.TYPE_VIDEO: 'VideoItem.png', CDisplayListItem.TYPE_AUDIO: 'AudioItem.png', CDisplayListItem.TYPE_SEARCH: 'SearchItem.png', CDisplayListItem.TYPE_ARTICLE: 'ArticleItem.png', CDisplayListItem.TYPE_PICTURE: 'PictureItem.png', CDisplayListItem.TYPE_DATA: 'DataItem.png', CDisplayListItem.TYPE_SEARCH_HISTORY: 'SearchHistoryItem.png', CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE: 'SearchHistoryDeleteItem.png'}
+    ICONS_FILESNAMES = {CDisplayListItem.TYPE_MARKER: 'MarkerItem.png', CDisplayListItem.TYPE_SUB_PROVIDER: 'CategoryItem.png', CDisplayListItem.TYPE_SUBTITLE: 'ArticleItem.png', CDisplayListItem.TYPE_CATEGORY: 'CategoryItem.png', CDisplayListItem.TYPE_MORE: 'MoreItem.png', CDisplayListItem.TYPE_VIDEO: 'VideoItem.png', CDisplayListItem.TYPE_AUDIO: 'AudioItem.png', CDisplayListItem.TYPE_SEARCH: 'SearchItem.png', CDisplayListItem.TYPE_ARTICLE: 'ArticleItem.png', CDisplayListItem.TYPE_PICTURE: 'PictureItem.png', CDisplayListItem.TYPE_DATA: 'DataItem.png', CDisplayListItem.TYPE_SEARCH_HISTORY: 'SearchHistoryItem.png', CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE: 'SearchHistoryDeleteItem.png', CDisplayListItem.TYPE_NEXT: 'NextItem.png'}
 
     def __init__(self):
         IPTVListComponentBase.__init__(self)

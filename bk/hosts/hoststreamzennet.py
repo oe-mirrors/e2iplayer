@@ -169,7 +169,7 @@ class StreamZenNet(CBaseHostClass):
 
         if nextPage != '':
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title': _('Next Page'), 'page': cItem.get('page', 1) + 1, 'url': self._getFullUrl(nextPage)})
+            params.update({'good_for_fav': False, 'title': _("Next page"), 'page': cItem.get('page', 1) + 1, 'url': self._getFullUrl(nextPage)})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):

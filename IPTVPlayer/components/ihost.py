@@ -50,6 +50,7 @@ class CDisplayListItem:
     TYPE_MARKER = "MARKER"
     TYPE_SEARCH_HISTORY = "SEARCH_HISTORY"
     TYPE_SEARCH_HISTORY_DELETE = "SEARCH_HISTORY_DELETE"
+    TYPE_NEXT = "NEXT"
 
     TYPE_SUBTITLE = "SUBTITLE"
     TYPE_SUB_PROVIDER = "SUB_PROVIDER"
@@ -618,6 +619,8 @@ class CHostBase(IHost):
                 type = CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE
             elif cItem.get('name', '') == 'history':
                 type = CDisplayListItem.TYPE_SEARCH_HISTORY
+            elif cItem.get('title', '') == _('Next page'):
+                type = CDisplayListItem.TYPE_NEXT
             else:
                 type = CDisplayListItem.TYPE_CATEGORY
         elif cItem['type'] == 'video':
