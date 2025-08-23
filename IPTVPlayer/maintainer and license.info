@@ -1,18 +1,20 @@
+E2iPlayer (previously IPTVPlayer) Enigma2 (E²) Plugin
+
 Modelled on SHOUTcast plugin and sd-xbmc.org project 
 
 Main developer, architect, coordinator: 
-    - @samsamsam
+	- @samsamsam
 Developers: 
-    - @j00zek, 
-    - @mamrot, 
-    - @MarcinO, 
-    - @skalita, 
-    - @atilaks, 
-    - @huball, 
-    - @matzg
-    - @tomashj291
-    - @a4tech
-	
+	- @j00zek, 
+	- @mamrot, 
+	- @MarcinO, 
+	- @skalita, 
+	- @atilaks, 
+	- @huball, 
+	- @matzg
+	- @tomashj291
+	- @a4tech
+
 	for Forks:
 	- Blindspot76
 	- Max (maxbambi)
@@ -21,8 +23,8 @@ Developers:
 	- jbleyel
 
 Skinners:
-    - stein17
-		
+	- stein17
+
 Forks:
 https://github.com/Blindspot76/e2iPlayer
 https://gitlab.com/maxbambi/e2iplayer
@@ -32,14 +34,35 @@ https://github.com/oe-mirrors/e2iplayer
 
 
 Testers:
-    - 
+	- 
+
+
 Webpages:
-    - http://iptvplayer.vline.pl/
-    - http://www.e2iplayer.gitlab.io/
+	- http://iptvplayer.vline.pl/
+	- http://www.e2iplayer.gitlab.io/
 
 
-###### English ######	
-	E2iPlayer plugin can be modified by anyone.
+###### License Information ######
+
+This is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation
+
+This plugin is released under GPLv3. See LICENSE for full details.
+https://www.gnu.org/licenses/gpl-3.0.html#license-text
+
+
+###### Disclaimer ######
+
+The project author is not responsible for how this software is used by others.
+It is not intended to be used for accessing or distributing copyrighted materials without authorization.
+Users are solely responsible for determining the legality of their actions.
+
+This repository has no control over the streams, links, or the legality of the content provided by the different hosts (including all mirror sites).
+It is the end user's responsibility to ensure the legal use of these streams, and we strongly recommend verifying that the content complies with all applicable laws,
+including copyright laws and regulations of your countrys jurisdiction before use.
+
+
+###### English ######
+E2iPlayer (previously IPTVPlayer) Enigma2 (E²) Plugin can be modified by anyone.
 The author of each modification is obliged to send, with acknowledgment of receipt, a detailed ops of the modification along with its source code to the e-mail address: samsamsam@o2.pl.
 
 Anyone has the right to decommission the code of the E2iPlayer plugin in case it was published without sources.
@@ -78,8 +101,3 @@ pluginu E2iPlayer.
 
 Plugin E2iPlayer obsługuje funckję logowania się do niektórych serwisów wymagających kont premium.
 Jednakże Twórcy pluginu nie zajmują się sprzedażą takich kont.
-
-
-
-
-

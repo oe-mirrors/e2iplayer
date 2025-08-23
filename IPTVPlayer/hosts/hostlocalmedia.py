@@ -551,7 +551,7 @@ class IPTVHost(CHostBase):
         self.cFilePath = ''
         self.cType = ''
         self.needRefresh = ''
-        self.DEFAULT_ICON = 'http://www.ngonb.ru/files/res_media.png'
+        self.DEFAULT_ICON = 'https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/icons/localmedia.png'
 
     def getPrevList(self, refresh=0):
         self.host.setCurrDir('')
