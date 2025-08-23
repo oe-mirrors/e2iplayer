@@ -51,7 +51,7 @@ class Favourites(CBaseHostClass):
         self.host = None
         self.hostName = ''
         self.guestMode = False  # main or guest
-        self.DEFAULT_ICON_URL = 'http://sarah-bauer.weebly.com/uploads/4/2/2/3/42234635/1922500_orig.png'
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/icons/favourites.png"
 
     def _setHost(self, hostName):
         if hostName == self.hostName:
