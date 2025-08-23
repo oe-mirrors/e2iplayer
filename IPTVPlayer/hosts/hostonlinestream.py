@@ -112,9 +112,8 @@ class OnlineStream(CBaseHostClass):
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Sugárzó rádiók listázása', 'url': 'https://onlinestream.live/main.cgi?search=&broad=1&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
                         {'category': 'list_items', 'title': 'Internetes rádiók listázása', 'url': 'https://onlinestream.live/main.cgi?search=&broad=0&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
                         {'category': 'list_items', 'title': 'TV-k listázása', 'url': 'https://onlinestream.live/?search=&broad=7&feat=&chtype=&server=&format=&sort=listenpeak&fp=20&p=', 'page': page},
-                        {'category': 'list_items', 'title': 'Webkamerák listázása', 'url': 'https://onlinestream.live/?search=&broad=4&feat=&chtype=&server=&format=&sort=&fp=20&p=', 'page': page},
-                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
-                        {'category': 'search_history', 'title': 'Keresési előzmények'}]
+                        {'category': 'list_items', 'title': 'Webkamerák listázása', 'url': 'https://onlinestream.live/?search=&broad=4&feat=&chtype=&server=&format=&sort=&fp=20&p=', 'page': page}
+                        ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):

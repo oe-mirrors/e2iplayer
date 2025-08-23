@@ -46,11 +46,7 @@ class WatchwrestlingUNO(CBaseHostClass):
                              {'category': 'list_filters', 'title': _('UFC'), 'url': self.getFullUrl('category/ufc/')},
                              {'category': 'categories', 'title': _('Indy'), 'url': self.getFullUrl('category/indy/'), 'm1': '>Indy</a>'},
                              {'category': 'list_filters', 'title': _('NJPW'), 'url': self.getFullUrl('category/njpw/')},
-                             {'category': 'list_filters', 'title': _('Others'), 'url': self.getFullUrl('category/wrestling-archives/')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')}
-                            ]
+                             {'category': 'list_filters', 'title': _('Others'), 'url': self.getFullUrl('category/wrestling-archives/')}] + self.searchItems()
 
         self.SORT_TAB = [{'sort': 'date', 'title': _('DATE')},
                          {'sort': 'views', 'title': _('VIEWS')},

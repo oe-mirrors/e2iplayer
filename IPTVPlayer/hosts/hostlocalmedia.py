@@ -123,7 +123,7 @@ class LocalMedia(CBaseHostClass):
     def listsMainMenu(self, cItem):
         printDBG("LocalMedia.listsMainMenu [%s]" % cItem)
         # list mount points
-        predefined = [{'title': _('Downloads'), 'path': config.plugins.iptvplayer.NaszaSciezka.value}, {'title': _('rootfs'), 'path': '/'}]
+        predefined = [{'title': _('Downloads'), 'path': config.plugins.iptvplayer.NaszaSciezka.value, 'image_type': 'DOWNLOAD'}, {'title': _('rootfs'), 'path': '/', 'image_type': 'MMC'}]
         for item in predefined:
             params = dict(cItem)
             params.update(item)
@@ -138,7 +138,10 @@ class LocalMedia(CBaseHostClass):
 
             if '/' != item['node'] and item['filesystem'] in self.FILE_SYSTEMS:
                 params = dict(cItem)
-                params.update({'title': item['node'], 'path': item['node']})
+                if item['node'] in ('/boot',):
+                    params.update({'title': item['node'], 'path': item['node'], 'image_type': 'MMC'})
+                else:
+                    params.update({'title': item['node'], 'path': item['node']})
                 self.addDir(params)
 
     def _getM3uIcon(self, item, cItem):
@@ -548,7 +551,7 @@ class IPTVHost(CHostBase):
         self.cFilePath = ''
         self.cType = ''
         self.needRefresh = ''
-        self.DEFAULT_ICON = 'http://www.ngonb.ru/files/res_media.png'
+        self.DEFAULT_ICON = 'https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/icons/localmedia.png'
 
     def getPrevList(self, refresh=0):
         self.host.setCurrDir('')

@@ -34,9 +34,7 @@ class KKisteAG(CBaseHostClass):
                             {'category': 'list_items', 'title': _("Series"), 'link': self.getFullUrl('/serienstream-deutsch/')},
                             {'category': 'list_items', 'title': _("Animation"), 'link': self.getFullUrl('/animation/')},
                             {'category': 'list_year', 'title': _("Year"), 'link': self.MAIN_URL},
-                            {'category': 'list_genres', 'title': 'Genres', 'link': self.MAIN_URL},
-                            {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                            {'category': 'search_history', 'title': _('Search history'), }]
+                            {'category': 'list_genres', 'title': 'Genres', 'link': self.MAIN_URL}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

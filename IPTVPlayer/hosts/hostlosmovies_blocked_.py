@@ -59,11 +59,7 @@ class LosMovies(CBaseHostClass):
 
         self.MAIN_CAT_TAB = [{'category': 'list_cats', 'mode': 'movie', 'title': 'Movies', 'url': self.getMainUrl()},
                              {'category': 'list_cats', 'mode': 'serie', 'title': 'TV Shows', 'url': self.getFullUrl('watch-popular-tv-shows')},
-                             {'category': 'list_top_cats', 'mode': 'movie', 'title': 'Top Movie Lists', 'url': self.getFullUrl('top-movie-lists')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'list_top_cats', 'mode': 'movie', 'title': 'Top Movie Lists', 'url': self.getFullUrl('top-movie-lists')}] + self.searchItems()
 
         self.MAIN_SUB_CATS_TAB = [{'category': 'list_abc', 'title': 'Alphabetically', },
                                   {'category': 'list_categories', 'title': 'Genres', 'url': self.getFullUrl('movie-genres')},

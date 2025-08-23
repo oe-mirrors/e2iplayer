@@ -37,9 +37,7 @@ class MovizlandCom(CBaseHostClass):
     SEARCH_URL = MAIN_URL + '?s='
     DEFAULT_ICON_URL = "http://vb.movizland.com/movizland/images/logo.png"
 
-    MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), 'url': MAIN_URL, },
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                    {'category': 'search_history', 'title': _('Search history'), }]
+    MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), 'url': MAIN_URL, }]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': '  MovizlandCom.tv', 'cookie': 'movizlandcom.cookie'})
@@ -47,6 +45,7 @@ class MovizlandCom(CBaseHostClass):
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheLinks = {}
+        self.MAIN_CAT_TAB += self.searchItems()
 
     def _getFullUrl(self, url):
         if url.startswith('//'):

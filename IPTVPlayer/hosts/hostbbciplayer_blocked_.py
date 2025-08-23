@@ -59,9 +59,7 @@ class BBCiPlayer(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category': 'list_channels', 'title': _('Channels'), 'url': self.getFullUrl('iplayer')},
                              {'category': 'list_categories', 'title': _('Categories'), 'url': self.getFullUrl('iplayer')},
                              {'category': 'list_az_menu', 'title': _('A-Z'), 'url': self.getFullUrl('iplayer/a-z/')},
-                             {'category': 'list_items', 'title': _('Most Popular'), 'url': self.getFullUrl('iplayer/group/most-popular')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
-                             {'category': 'search_history', 'title': _('Search history'), }]
+                             {'category': 'list_items', 'title': _('Most Popular'), 'url': self.getFullUrl('iplayer/group/most-popular')}] + self.searchItems()
         self.otherIconsTemplate = 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/%s.png'
 
     def getFullUrl(self, url):

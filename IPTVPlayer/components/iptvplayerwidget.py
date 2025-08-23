@@ -163,7 +163,8 @@ class E2iPlayerWidget(Screen):
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
         self["statustext"] = Label("Loading...")
-        self["actions"] = ActionMap(["IPTVPlayerListActions", "WizardActions", "DirectionActions", "ColorActions", "NumberActions"],
+
+        self["actions"] = ActionMap(["IPTVPlayerListActions", "ColorActions", "NumberActions"],
         {
             "red": self.red_pressed,
             "green": self.green_pressed,
@@ -182,6 +183,8 @@ class E2iPlayerWidget(Screen):
             "menu": self.menu_pressed,
             "tools": self.blue_pressed,
             "record": self.green_pressed,
+            # "pageUp": self.pageup_pressed,
+            "pageDown": self.pagedown_pressed
         }, -1)
 
         self["headertext"] = Label()
@@ -932,7 +935,7 @@ class E2iPlayerWidget(Screen):
             try:
                 sel = self["list"].l.getCurrentSelection()[0]
             except Exception:
-                printExc
+                printExc()
                 self.getRefreshedCurrList()
                 return
             if sel is None:
@@ -966,13 +969,13 @@ class E2iPlayerWidget(Screen):
                     else:
                         printDBG("ok_pressed selected TYPE_VIDEO.selectLinkForCurrVideo")
                         self.selectLinkForCurrVideo()
-                elif item.type == CDisplayListItem.TYPE_CATEGORY:
+                elif item.type == CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE:
+                    printDBG("ok_pressed selected TYPE_SEARCH_HISTORY_DELETE")
+                    self.host.host.delHistory(self.session)
+                elif item.type == CDisplayListItem.TYPE_CATEGORY or item.type == CDisplayListItem.TYPE_SEARCH_HISTORY or item.type == CDisplayListItem.TYPE_NEXT:
                     printDBG("ok_pressed selected TYPE_CATEGORY")
                     self.stopAutoPlaySequencer()
                     self.currSelIndex = currSelIndex
-                    if item.name == _("Delete search history"):
-                        self.host.host.delHistory(self.session)
-                        return
                     if item.pinLocked:
                         from .iptvpin import IPTVPinWidget
                         self.session.openWithCallback(boundFunction(self.checkDirPin, self.requestListFromHost, 'ForItem', currSelIndex, '', item.pinCode), IPTVPinWidget, title=_("Enter pin"))
@@ -993,6 +996,22 @@ class E2iPlayerWidget(Screen):
         else:
             self.showWindow()
     # end ok_pressed(self):
+
+    def pagedown_pressed(self):
+        self.stopAutoPlaySequencer()
+        if self.visible:
+            try:
+                if len(self.currList) > 0 and (not self["list"].getVisible()):
+                    printDBG("pagedown_pressed -> ignored /\\")
+                    return
+            except Exception:
+                printExc()
+
+            if self.currList:
+                lastItem = self.currList[-1]
+                if lastItem.type == CDisplayListItem.TYPE_NEXT:
+                    self.currSelIndex = len(self.currList) - 1
+                    self.requestListFromHost('ForItem', self.currSelIndex, '')
 
     def checkDirPin(self, callbackFun, arg1, arg2, arg3, pinCode, pin=None):
         if pin is not None:

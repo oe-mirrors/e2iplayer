@@ -1206,12 +1206,13 @@ class CSearchHistoryHelper():
     def doRemove(self):
         printDBG('CSearchHistoryHelper.doRemove file = "%s"' % self.PATH_FILE)
         self.length = 0
+        msg = 1, _('Unable to comply. Search History is empty.')
         try:
-           if os.path.isfile(self.PATH_FILE):
-               os.remove(self.PATH_FILE)
-           msg = 0, _('Search History successfully deleted.')
+            if os.path.isfile(self.PATH_FILE):
+                os.remove(self.PATH_FILE)
+                msg = 0, _('Search History successfully deleted.')
         except:
-           msg = 1, _('Unable to comply. Search History is empty.')
+            pass
         return msg
 
     def getLength(self):
@@ -1296,6 +1297,8 @@ class CSearchHistoryHelper():
                 file.write(value + '\n')
                 printDBG('Added pattern: "%s"' % itemValue)
                 file.close
+                if self.length is None:
+                    self.length = 0
                 self.length += 1
         except Exception:
             printExc('CSearchHistoryHelper.addHistoryItem EXCEPTION')

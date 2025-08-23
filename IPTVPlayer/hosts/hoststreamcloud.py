@@ -36,9 +36,7 @@ class StreamCloud(CBaseHostClass):
             {'category': 'list_items', 'title': "Top", 'link': self.getFullUrl('/beliebte-filme/')},
             {'category': 'list_genres', 'title': 'Genres'},
             {'category': 'list_year', 'title': 'Jahr'},
-            {'category': 'list_country', 'title': 'Land'},
-            {'category': 'search', 'title': _('Search'), 'search_item': True, },
-            {'category': 'search_history', 'title': _('Search history'), }]
+            {'category': 'list_country', 'title': 'Land'}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

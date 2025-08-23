@@ -47,9 +47,7 @@ class KissCartoonMe(CBaseHostClass):
     DEFAULT_ICON_URL = "http://kisscartoon.bz/image/logo.png"
 
     MAIN_CAT_TAB = [{'category': 'home', 'title': _('Home'), 'url': MAIN_URL, },
-                    {'category': 'list_cats', 'title': _('Cartoon list'), 'url': MAIN_URL + 'CartoonList', },
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                    {'category': 'search_history', 'title': _('Search history'), }]
+                    {'category': 'list_cats', 'title': _('Cartoon list'), 'url': MAIN_URL + 'CartoonList', }]
     SORT_BY_TAB = [{'title': _('Sort by alphabet')},
                    {'title': _('Sort by popularity'), 'sort_by': 'MostPopular'},
                    {'title': _('Latest update'), 'sort_by': 'LatestUpdate'},
@@ -60,6 +58,7 @@ class KissCartoonMe(CBaseHostClass):
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheHome = {}
         self.cache = {}
+        self.MAIN_CAT_TAB += self.searchItems()
 
     def _getFullUrl(self, url):
         if url == '':

@@ -53,10 +53,7 @@ class WpTV(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category': 'list_sections', 'title': _('Main'), 'url': self.MAIN_URL},
                              {'category': 'list_sections', 'title': _('Series'), 'url': self.getFullUrl('seriale')},
                              {'category': 'list_sections', 'title': _('Programs'), 'url': self.getFullUrl('programy')},
-                             {'category': 'list_groups', 'title': _('Others'), 'url': self.getFullUrl('inne')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')}
-                            ]
+                             {'category': 'list_groups', 'title': _('Others'), 'url': self.getFullUrl('inne')}] + self.searchItems()
 
         self.cacheSections = {}
         self.cacheGroups = {}

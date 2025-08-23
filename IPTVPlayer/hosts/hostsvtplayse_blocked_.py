@@ -81,10 +81,7 @@ class SVTPlaySE(CBaseHostClass):
                              {'category': 'list_items', 'title': _('Live broadcasts'), 'url': '/live'},
                              {'category': 'list_channels', 'title': _('Channels'), 'url': '/kanaler'},
                              {'category': 'list_az_menu', 'title': _('Programs A-Ö'), 'url': '/program'},  # /all_titles
-                             {'category': 'list_items', 'title': _('Categories'), 'url': '/active_clusters'},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': 'https://raw.githubusercontent.com/vonH/plugin.video.iplayerwww/master/media/search.png'},
-                             {'category': 'search_history', 'title': _('Search history'), }]
+                             {'category': 'list_items', 'title': _('Categories'), 'url': '/active_clusters'}] + self.searchItems()
         self.itemsPerPage = 48
         self.programsAZCache = {'keys': [], 'dict': {}}
 

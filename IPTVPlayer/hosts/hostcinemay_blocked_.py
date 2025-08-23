@@ -47,11 +47,7 @@ class Cinemay(CBaseHostClass):
 
         self.MAIN_CAT_TAB = [{'category': 'list_movies', 'title': 'Film Box Office', 'url': self.getFullUrl('/film-box-office/')},
                              {'category': 'list_movies', 'title': 'Films', 'url': self.getFullUrl('/films/')},
-                             {'category': 'list_series', 'title': 'Series', 'url': self.getFullUrl('/series-tv-streaming/')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'list_series', 'title': 'Series', 'url': self.getFullUrl('/series-tv-streaming/')}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

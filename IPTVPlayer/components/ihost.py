@@ -48,6 +48,12 @@ class CDisplayListItem:
     TYPE_DATA = "DATA"
     TYPE_MORE = "MORE"
     TYPE_MARKER = "MARKER"
+    TYPE_SEARCH_HISTORY = "SEARCH_HISTORY"
+    TYPE_SEARCH_HISTORY_DELETE = "SEARCH_HISTORY_DELETE"
+    TYPE_NEXT = "NEXT"
+    TYPE_DOWNLOAD = "DOWNLOAD"
+    TYPE_MMC = "MMC"
+    TYPE_WWW = "WWW"
 
     TYPE_SUBTITLE = "SUBTITLE"
     TYPE_SUB_PROVIDER = "SUB_PROVIDER"
@@ -64,7 +70,8 @@ class CDisplayListItem:
                 isGoodForFavourites=False,
                 isWatched=False,
                 textColor='',
-                pinCode=''):
+                pinCode='',
+                imageType=None):
 
         if isinstance(name, str):
             self.name = name
@@ -82,6 +89,8 @@ class CDisplayListItem:
             self.type = type
         else:
             self.type = str(type)
+
+        self.imageType = imageType or self.type
 
         if isinstance(iconimage, str):
             self.iconimage = iconimage
@@ -610,6 +619,14 @@ class CHostBase(IHost):
             if cItem.get('search_item', False):
                 type = CDisplayListItem.TYPE_SEARCH
                 possibleTypesOfSearch = self.getSearchTypes()
+            elif cItem.get('category', '') == 'search_history':
+                type = CDisplayListItem.TYPE_SEARCH_HISTORY
+            elif cItem.get('category', '') == 'delete_history':
+                type = CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE
+            elif cItem.get('name', '') == 'history':
+                type = CDisplayListItem.TYPE_SEARCH_HISTORY
+            elif cItem.get('title', '') == _('Next page'):
+                type = CDisplayListItem.TYPE_NEXT
             else:
                 type = CDisplayListItem.TYPE_CATEGORY
         elif cItem['type'] == 'video':
@@ -644,6 +661,11 @@ class CHostBase(IHost):
         pinCode = cItem.get('pin_code', '')
         textColor = cItem.get('text_color', '')
 
+        if 'image_type' in cItem:
+            imageType = cItem['image_type']
+        else:
+            imageType = type
+
         return CDisplayListItem(name=title,
                                     description=description,
                                     type=type,
@@ -654,7 +676,7 @@ class CHostBase(IHost):
                                     pinLocked=pinLocked,
                                     isGoodForFavourites=isGoodForFavourites,
                                     textColor=textColor,
-                                    pinCode=pinCode)
+                                    pinCode=pinCode, imageType=imageType)
     # end converItem
 
     def getSearchResults(self, searchpattern, searchType=None):
@@ -665,7 +687,7 @@ class CHostBase(IHost):
         self.searchPattern = searchpattern
         self.searchType = searchType
 
-        # Find 'Wyszukaj' item
+        # Find 'Search' item
         # list = self.host.getCurrList()
 
         searchItemIdx = self.getSearchItemInx()
@@ -843,9 +865,10 @@ class CBaseHostClass:
         self.currList.append(params)
         return
 
-    def serchHistorItems(self):
+    def searchItems(self):
         if self._historyLenTextFunction:
             return [
+                {'category': 'search', 'title': _('Search'), 'search_item': True, },
                 {'category': 'search_history', 'title': _("Search history"), 'desc': _("History of searched phrases.")},
                 {'category': 'delete_history', 'title': _('Delete search history'), 'desc': self._historyLenTextFunction}
             ]
@@ -860,7 +883,7 @@ class CBaseHostClass:
         msg = _('Are you sure you want to delete search history?')
         session.openWithCallback(doit, MessageBox, msg, type=MessageBox.TYPE_YESNO, default=True)
 
-    def listsHistory(self, baseItem={'name': 'history', 'category': 'Wyszukaj'}, desc_key='plot', desc_base=(_("Type: "))):
+    def listsHistory(self, baseItem={'name': 'history', 'category': 'search'}, desc_key='plot', desc_base=(_("Type: "))):
         list = self.history.getHistoryList()
         for histItem in list:
             plot = ''

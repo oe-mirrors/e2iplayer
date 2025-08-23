@@ -57,9 +57,7 @@ class TvGryPL(CBaseHostClass):
         self.MAIN_CAT_TAB = [{'category': 'list_tabs', 'title': 'Materiały', 'url': self.getFullUrl('/wideo-tvgry.asp')},
                              {'category': 'list_items', 'title': 'Tematy', 'url': self.getFullUrl('/tematy.asp')},
                              {'category': 'list_tabs', 'title': 'Zwiastuny gier', 'url': self.getFullUrl('/trailery-z-gier.asp')},
-                             {'category': 'list_tabs', 'title': 'Zwiastuny filmów', 'url': self.getFullUrl('/trailery-filmowe.asp')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')}]
+                             {'category': 'list_tabs', 'title': 'Zwiastuny filmów', 'url': self.getFullUrl('/trailery-filmowe.asp')}] + self.searchItems()
 
     def getPage(self, url, params={}, post_data=None):
         return self.cm.getPage(url, params, post_data)

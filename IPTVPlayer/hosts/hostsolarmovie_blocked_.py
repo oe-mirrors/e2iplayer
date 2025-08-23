@@ -129,11 +129,7 @@ class SolarMovie(CBaseHostClass):
 
         self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Featured movies', 'url': self.MAIN_URL + 'featured'},
                              {'category': 'list_filters', 'title': 'Movies', 'url': self.MAIN_URL + 'filter', 'f_type[]': 'movie'},
-                             {'category': 'list_filters', 'title': 'TV-Series', 'url': self.MAIN_URL + 'filter', 'f_type[]': 'series'},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'list_filters', 'title': 'TV-Series', 'url': self.MAIN_URL + 'filter', 'f_type[]': 'series'}] + self.searchItems()
 
     def fillCacheFilters(self, cItem):
         printDBG("SolarMovie.listCategories")

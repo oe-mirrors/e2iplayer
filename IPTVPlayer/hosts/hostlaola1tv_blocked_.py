@@ -55,12 +55,11 @@ class Laola1TV(CBaseHostClass):
     MAIN_URL = 'http://laola1.tv/'
 
     # 'http://www.laola1.tv/img/laola1_logo.png'
-    MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history')}]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'Laola1TV', 'cookie': 'Laola1TV.cookie'})
         self.mainCache = {}
+        self.MAIN_CAT_TAB += self.searchItems()
 
     def _getFullUrl(self, url, baseUrl=None):
         if baseUrl is None:
@@ -528,16 +527,6 @@ class IPTVHost(CHostBase):
                                     iconimage=icon,
                                     possibleTypesOfSearch=possibleTypesOfSearch)
     # end converItem
-
-    def getSearchItemInx(self):
-        try:
-            list = self.host.getCurrList()
-            for i in range(len(list)):
-                if list[i]['category'] == 'search':
-                    return i
-        except Exception:
-            printDBG('getSearchItemInx EXCEPTION')
-            return -1
 
     def setSearchPattern(self):
         try:

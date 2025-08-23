@@ -84,9 +84,7 @@ class FilmPapa(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG('FilmPapa.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Kategóriák'},
-                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
-                        {'category': 'search_history', 'title': 'Keresési előzmények'}]
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Kategóriák'}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):

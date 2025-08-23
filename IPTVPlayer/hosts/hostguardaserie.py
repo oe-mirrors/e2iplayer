@@ -27,7 +27,7 @@ class GuardaSerie(CBaseHostClass):
         self.defaultParams = {"header": self.HTTP_HEADER}
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = self.getFullUrl("templates/Guardaserie/images/new_logo2.png")
-        self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serietv-streaming/")}, {"category": "list_items", "title": _("Top rated"), "url": self.getFullUrl("top-imdb/")}, {"category": "list_genres", "title": _("Genres")}, {"category": "list_az", "title": _("A-Z")}, {"category": "search", "title": _("Search"), "search_item": True}, {"category": "search_history", "title": _("Search history")}]
+        self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serietv-streaming/")}, {"category": "list_items", "title": _("Top rated"), "url": self.getFullUrl("top-imdb/")}, {"category": "list_genres", "title": _("Genres")}, {"category": "list_az", "title": _("A-Z")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:

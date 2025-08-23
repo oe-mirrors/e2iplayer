@@ -71,9 +71,7 @@ class VimeoCom(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("VimeoCom.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), 'url': self.getFullUrl('/categories')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+        MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), 'url': self.getFullUrl('/categories')}] + self.searchItems()
 
         self.listsTab(MAIN_CAT_TAB, cItem)
 

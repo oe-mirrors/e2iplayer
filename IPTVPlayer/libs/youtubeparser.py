@@ -636,7 +636,7 @@ class YouTubeParser():
                     try:
                         label = nextPage["nextContinuationData"]["label"]["runs"][0]["text"]
                     except:
-                        label = _("Next Page")
+                        label = _("Next page")
 
                     urlNextPage = "https://www.youtube.com/youtubei/v1/browse?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
                     post_data = {'context': {'client': {'clientName': 'WEB', 'clientVersion': '2.20201021.03.00', }}, }
@@ -784,7 +784,7 @@ class YouTubeParser():
                 try:
                     label = nextPage["label"]["runs"][0]["text"]
                 except:
-                    label = _("Next Page")
+                    label = _("Next page")
 
                 urlNextPage = self.updateQueryUrl(url, {'pbj': '1', 'ctoken': ctoken, 'continuation': ctoken, 'itct': itct})
                 params = {'type': 'more', 'category': "search_next_page", 'title': label, 'page': str(int(page) + 1), 'url': ensure_str(urlNextPage)}
@@ -799,7 +799,7 @@ class YouTubeParser():
 
                 ctoken = nextPage["continuationCommand"]["token"]
                 itct = nextPage["clickTrackingParams"]
-                label = _("Next Page")
+                label = _("Next page")
 
                 urlNextPage = "https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
                 post_data = {'context': {'client': {'clientName': 'WEB', 'clientVersion': '2.20201021.03.00', }}, }

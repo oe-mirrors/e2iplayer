@@ -37,9 +37,7 @@ class TVProart(CBaseHostClass):
         self.API_URL = self.getFullUrl('ajaxVod/')
         self.SEARCH_URL = self.getFullUrl('search?q=')
 
-        self.MAIN_CAT_TAB = [{'category': 'categories', 'title': 'VOD'},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')}]
+        self.MAIN_CAT_TAB = [{'category': 'categories', 'title': 'VOD'}] + self.searchItems()
         self.categories = {}
 
     def addNextPage(self, cItem, nextPage, page):

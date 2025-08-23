@@ -43,10 +43,8 @@ class OkGoals(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.getFullUrl('/okgoals_logo.jpg')
 
         self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('Main'), 'url': self.getFullUrl('index.php')},
-                             {'category': 'list_categories', 'title': _('Categories'), 'url': self.getMainUrl()},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), },
-                            ]
+                             {'category': 'list_categories', 'title': _('Categories'), 'url': self.getMainUrl()}
+                            ] + self.searchItems()
 
     def getFullUrl(self, url):
         if url.startswith('//'):

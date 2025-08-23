@@ -80,7 +80,7 @@ class IPTVUpdateWindow(Screen):
         self.setup_title = self.updateObjImpl.getSetupTitle()
         self["sub_title"] = Label(_(" "))
         self["console"] = Label(_("> Press OK to start <"))
-        self["actions"] = ActionMap(["SetupActions", "ColorActions"],
+        self["actions"] = ActionMap(["SetupActions"],
             {
                 "cancel": self.keyExit,
                 "ok": self.keyOK,

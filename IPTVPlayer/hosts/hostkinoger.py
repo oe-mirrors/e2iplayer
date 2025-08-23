@@ -36,9 +36,7 @@ class KinoGer(CBaseHostClass):
         self.MENU = [
             {'category': 'list_items', 'title': 'Neues', 'link': self.MAIN_URL},
             {'category': 'list_items', 'title': _("Series"), 'link': self.getFullUrl('/stream/serie/')},
-            {'category': 'list_genres', 'title': 'Genres'},
-            {'category': 'search', 'title': _('Search'), 'search_item': True, },
-            {'category': 'search_history', 'title': _('Search history'), }]
+            {'category': 'list_genres', 'title': 'Genres'}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

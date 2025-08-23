@@ -94,11 +94,7 @@ class Kinox(CBaseHostClass):
                              {'category': 'list_langs', 'title': _('Cinema movies'), 'url': self.getFullUrl('/Kino-filme.html'), 'get_list_mode': 'direct'},
                              {'category': 'list_sub_cats', 'title': _('Movies'), 'url': self.getMainUrl(), 'f_type': 'movie', 'sub_idx': 2},
                              {'category': 'list_sub_cats', 'title': _('Documentaries'), 'url': self.getMainUrl(), 'f_type': 'documentation', 'sub_idx': 3},
-                             {'category': 'list_sub_cats', 'title': _('Series'), 'url': self.getMainUrl(), 'f_type': 'series', 'sub_idx': 4},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'list_sub_cats', 'title': _('Series'), 'url': self.getMainUrl(), 'f_type': 'series', 'sub_idx': 4}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

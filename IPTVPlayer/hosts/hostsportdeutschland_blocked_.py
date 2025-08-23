@@ -53,9 +53,7 @@ class SportDeutschland(CBaseHostClass):
                                   'Origin': self.MAINURL
                                  }
         self.cm.HEADER = dict(self.HTTP_JSON_HEADER)
-        self.MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), },
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }]
+        self.MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories'), }] + self.searchItems()
 
     def _getJItemStr(self, item, key, default=''):
         v = item.get(key, None)

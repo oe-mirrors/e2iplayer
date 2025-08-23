@@ -72,11 +72,8 @@ class FilmezzEU(CBaseHostClass):
                              {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=feltoltve')},
                              {'category': 'list_items', 'title': _('Top movies'), 'url': self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=1&h=0&o=nezettseg')},
                              {'category': 'list_items', 'title': _('Top series'), 'url': self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=2&h=0&o=nezettseg')},
-                             {'category': 'list_items', 'title': _('Latest added'), 'url': self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=0&h=0&o=feltoltve')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'list_items', 'title': _('Latest added'), 'url': self.getFullUrl('kereses.php?q=0&l=0&e=0&c=0&t=0&h=0&o=feltoltve')}
+                           ] + self.searchItems()
 
     def getFullIconUrl(self, url):
         url = url.replace('&amp;', '&')

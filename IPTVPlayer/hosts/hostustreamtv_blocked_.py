@@ -35,14 +35,13 @@ class UstreamTV(CBaseHostClass):
     DEFAULT_ICON_URL = 'http://occopwatch-com.secure40.ezhostingserver.com/wp-content/uploads/2013/10/ustream-logo.jpg'
 
     MAIN_CAT_TAB = [{'category': 'items', 'title': _('Popular'), 'icon': DEFAULT_ICON_URL, 'cat_id': 'all', 'filters': {'subCategory': '', 'type': 'no-offline', 'location': 'anywhere'}},
-                    {'category': 'categories', 'title': _('Categories'), 'icon': DEFAULT_ICON_URL, 'filters': {}},
-                    {'category': 'search', 'title': _('Search'), 'icon': DEFAULT_ICON_URL, 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history'), 'icon': DEFAULT_ICON_URL}
+                    {'category': 'categories', 'title': _('Categories'), 'icon': DEFAULT_ICON_URL, 'filters': {}}
                    ]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'UstreamTV', 'cookie': 'UstreamTV.cookie'})
         self.cacheFilters = {}
+        self.MAIN_CAT_TAB += self.searchItems()
 
     def _getFullUrl(self, url):
         mainUrl = self.MAIN_URL
@@ -289,16 +288,6 @@ class IPTVHost(CHostBase):
                                     iconimage=icon,
                                     possibleTypesOfSearch=possibleTypesOfSearch)
     # end converItem
-
-    def getSearchItemInx(self):
-        try:
-            list = self.host.getCurrList()
-            for i in range(len(list)):
-                if list[i]['category'] == 'search':
-                    return i
-        except Exception:
-            printDBG('getSearchItemInx EXCEPTION')
-            return -1
 
     def setSearchPattern(self):
         try:

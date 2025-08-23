@@ -131,7 +131,7 @@ class BlueWatch(CBaseHostClass):
             url = self.cm.ph.getDataBeetwenMarkers(dat, '<a title="Next" class="page-link" href="', '"', False)[1]
             if 'https://www.watchseries.cyou' not in url:
                 url = 'https://www.watchseries.cyou' + url
-            params = {'category': 'list_items', 'title': "Next Page", 'icon': None, 'url': url}
+            params = {'category': 'list_items', 'title': _("Next page"), 'icon': None, 'url': url}
             self.addDir(params)
 
     def exploreItems(self, cItem):
