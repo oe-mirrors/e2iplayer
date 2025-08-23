@@ -105,7 +105,8 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE: 'SearchHistoryDeleteItem.png',
         CDisplayListItem.TYPE_NEXT: 'NextItem.png',
         CDisplayListItem.TYPE_DOWNLOAD: 'DownloadFolder.png',
-        CDisplayListItem.TYPE_MMC: 'MMCItem.png'
+        CDisplayListItem.TYPE_MMC: 'MMCItem.png',
+        CDisplayListItem.TYPE_WWW: 'GlobItem.png'
     }
 
     def __init__(self):
