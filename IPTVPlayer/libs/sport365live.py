@@ -16,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
@@ -122,7 +122,7 @@ class Sport365LiveApi:
 
         printDBG(">> id[%s]\n" % id)
         xz = str(int(time() * 1000)) + id + str(int(random.random() * 1000)) + str(2 * int(random.random() * 4)) + str(num)
-        xz = base64.b64encode(xz)
+        xz = ensure_str(base64.b64encode(ensure_binary(xz)))
         return 'MarketGidStorage=%s; ' % urllib_quote('{"0":{"svspr":"%s","svsds":%s,"TejndEEDj":"%s"},"C%s":{"page":1,"time":%s}}' % (referer, num, xz, id, int(time() * 100)))
 
     def refreshAdvert(self):
