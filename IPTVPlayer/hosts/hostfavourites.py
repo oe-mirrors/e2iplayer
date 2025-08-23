@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 23.08.2025
+# Last Modified: 22.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -51,7 +51,7 @@ class Favourites(CBaseHostClass):
         self.host = None
         self.hostName = ''
         self.guestMode = False  # main or guest
-        self.DEFAULT_ICON_URL = 'https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/icons/favourites.png'
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/icons/favourites.png"
 
     def _setHost(self, hostName):
         if hostName == self.hostName:
