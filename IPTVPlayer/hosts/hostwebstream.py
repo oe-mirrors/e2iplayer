@@ -899,7 +899,7 @@ class HasBahCa(CBaseHostClass):
 
     # MAIN MENU
         if name is None:
-            self.listsMainMenu(self.MAIN_GROUPED_TAB, {'icon_type': "WWW"})
+            self.listsMainMenu(self.MAIN_GROUPED_TAB, {'image_type': "WWW"})
         elif name == "HasBahCa":
             self.listHasBahCa(self.currItem)
         elif name == "m3u":
