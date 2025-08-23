@@ -141,10 +141,7 @@ class IconMenager:
 
     def isItemInAAueue(self, item, hashed=0):
         if hashed == 0:
-            if item.endswith('.png'):
-                file = md5(ensure_binary(item)).hexdigest() + '.png'
-            else:
-                file = md5(ensure_binary(item)).hexdigest() + '.jpg'
+            file = md5(ensure_binary(item)).hexdigest() + '.jpg'
         else:
             file = item
         ret = False
@@ -162,8 +159,6 @@ class IconMenager:
             return item[7:]
 
         filename = md5(ensure_binary(item)).hexdigest() + '.jpg'
-        if item.endswith('.png'):
-            filename = md5(ensure_binary(item)).hexdigest() + '.png'
 
         self.lockAA.acquire()
         file_path = self.queueAA.get(filename, '')
@@ -211,10 +206,7 @@ class IconMenager:
 
             printDBG("IconMenager.processDQ url: [%s]" % url)
             if url != '':
-                if url.endswith('.png'):
-                    file = md5(ensure_binary(url)).hexdigest() + '.png'
-                else:
-                    file = md5(ensure_binary(url)).hexdigest() + '.jpg'
+                file = md5(ensure_binary(url)).hexdigest() + '.jpg'
                 # check if this image is not already available in cache AA list
                 if self.isItemInAAueue(file, 1):
                     continue

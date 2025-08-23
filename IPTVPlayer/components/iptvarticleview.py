@@ -154,10 +154,6 @@ class IPTVArticleView(Screen):
             if os.path.exists(self.coverPath):
                 if self["cover"].decodeCover(self.coverPath, self.decodePictureEnd, ' '):
                     return
-            filename = md5(ensure_binary(self.cover['src'])).hexdigest() + '.png'
-            if os.path.exists(self.coverPath):
-                if self["cover"].decodeCover(self.coverPath, self.decodePictureEnd, ' '):
-                    return
             self.coverPath = None
 
         self.cover['downloader'] = DownloaderCreator(self.cover['src'])
