@@ -53,6 +53,7 @@ class CDisplayListItem:
     TYPE_NEXT = "NEXT"
     TYPE_DOWNLOAD = "DOWNLOAD"
     TYPE_MMC = "MMC"
+    TYPE_USB = "USB"
     TYPE_WWW = "WWW"
 
     TYPE_SUBTITLE = "SUBTITLE"

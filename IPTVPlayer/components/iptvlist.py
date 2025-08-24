@@ -106,6 +106,7 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         CDisplayListItem.TYPE_NEXT: 'NextItem.png',
         CDisplayListItem.TYPE_DOWNLOAD: 'DownloadFolder.png',
         CDisplayListItem.TYPE_MMC: 'MMCItem.png',
+        CDisplayListItem.TYPE_USB: 'USBItem.png',
         CDisplayListItem.TYPE_WWW: 'GlobItem.png'
     }
 

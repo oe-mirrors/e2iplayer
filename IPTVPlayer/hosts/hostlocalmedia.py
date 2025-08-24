@@ -140,6 +140,8 @@ class LocalMedia(CBaseHostClass):
                 params = dict(cItem)
                 if item['node'] in ('/boot',):
                     params.update({'title': item['node'], 'path': item['node'], 'image_type': 'MMC'})
+                elif item['node'] in ('/usb',):
+                    params.update({'title': item['node'], 'path': item['node'], 'image_type': 'USB'})
                 else:
                     params.update({'title': item['node'], 'path': item['node']})
                 self.addDir(params)
