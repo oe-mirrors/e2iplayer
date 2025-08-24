@@ -234,50 +234,78 @@ class Altadefinizione(CBaseHostClass):
             params.update({'title': _("Next page"), 'url': self.getFullUrl(nextPage), 'page': page + 1})
             self.addDir(params)
 
+    def resolve_unique_urls(self, data, cItem):
+        import re
+        urlTab = []
+        seen_urls = set()
+        counter = {}
+
+        for item in data:
+            matches = self.cm.ph.getSearchGroups(item, r'''data\-link=['"]([^"^']+?)['"]''', 1, True)
+            if not matches:
+                continue
+            url = self.getFullUrl(matches[0])
+            if url.startswith("//"):
+                url = "https:" + url
+            if 1 != self.up.checkHostSupport(url):
+                continue
+            if url in seen_urls:
+                continue
+
+            seen_urls.add(url)
+
+            # Extract domain without www
+            m = re.search(r"https?://(?:www\.)?([^/]+)/", url)
+            provider = m.group(1) if m else "unknown"
+
+            count = counter.get(provider, 0) + 1
+            counter[provider] = count
+
+            name = "{} #{}".format(provider, count)
+
+            url_with_meta = strwithmeta(url, {"Referer": cItem["url"]})
+            urlTab.append({"name": name, "url": url_with_meta, "need_resolve": 1})
+
+        return urlTab
+
     def exploreItem(self, cItem):
         printDBG("Altadefinizione.exploreItem")
 
-        sts, data = self.getPage(cItem['url'])
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-        self.setMainUrl(self.cm.meta['url'])
+        self.setMainUrl(self.cm.meta["url"])
 
         cItem = dict(cItem)
-        cItem['prev_url'] = cItem['url']
+        cItem["prev_url"] = cItem["url"]
 
-        trailer = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'btn_trailer'), ('</div', '>'), False)[1]
+        trailer = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "btn_trailer"), ("</div", ">"), False)[1]
         url = self.getFullUrl(self.cm.ph.getSearchGroups(trailer, '''href=['"]([^"^']+?)['"]''', 1, True)[0])
         if self.cm.isValidUrl(url):
             title = self.cleanHtmlStr(trailer)
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'url': url, 'title': '%s %s' % (title, cItem['title'])})
+            params.update(
+                {"good_for_fav": False, "url": url, "title": "%s %s" % (title, cItem["title"])}
+            )
             self.addVideo(params)
 
-        urlTab = []
-        tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>')
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'data-link'), ('</a', '>'))
+        tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, "<iframe", "</iframe>")
+        data = self.cm.ph.getAllItemsBeetwenNodes(data, ("<a", ">", "data-link"), ("</a", ">"))
+
         for item in tmp:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0])
-            if 'http' not in url:
+            if "http" not in url:
                 continue
-            sts, data = self.getPage(url)
+            sts, data_iframe = self.getPage(url)
             if not sts:
                 return
-            data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<li', '>', 'data-link'), ('</li', '>'))
+            data = self.cm.ph.getAllItemsBeetwenNodes(data_iframe, ("<li", ">", "data-link"), ("</li", ">"))
 
-        for item in data:
-            printDBG("Altadefinizione.exploreItem item [%s]" % item)
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''data\-link=['"]([^"^']+?)['"]''', 1, True)[0])
-            if url.startswith('//'):
-                url = 'https:' + url
-            if 1 == self.up.checkHostSupport(url):
-                name = self.cleanHtmlStr(item)
-                url = strwithmeta(url, {'Referer': cItem['url']})
-                urlTab.append({'name': name, 'url': url, 'need_resolve': 1})
+        urlTab = self.resolve_unique_urls(data, cItem)
 
-        if len(urlTab):
+        if urlTab:
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'urls_tab': urlTab})
+            params.update({"good_for_fav": False, "urls_tab": urlTab})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -302,7 +330,6 @@ class Altadefinizione(CBaseHostClass):
         printDBG("Altadefinizione.getVideoLinks [%s]" % cItem)
         retTab = []
         itemsList = []
-
         if 'prev_url' in cItem:
             url = cItem['prev_url']
         else:
@@ -361,7 +388,6 @@ class Altadefinizione(CBaseHostClass):
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
         mode = self.currItem.get("mode", '')
-
         printDBG("handleService: || name[%s], category[%s] " % (name, category))
         self.currList = []
         self.currItem = dict(self.currItem)
