@@ -59,7 +59,7 @@ class CaptchaHelper():
             if recaptcha is not None:
                 token = recaptcha.processCaptcha(sitekey, refUrl, captchaType)
             else:
-                errorMsgTab.append(_('Please visit %s to learn how to redirect this task to the external device.') % 'http://zadmario.gitlab.io/captcha.html')
+                errorMsgTab.append(_('Please visit %s to learn how to redirect this task to the external device.') % 'https://github.com/oe-mirrors/e2iplayer/wiki/Solve-Google-reCAPTCHA-v2')
                 if not beQuaiet:
                     self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(errorMsgTab), type=MessageBox.TYPE_ERROR, timeout=20)
                 if bypassCaptchaService is not None:

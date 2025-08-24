@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 2025.05.20. Blindspot
+# Last Modified: 20.05.2025 - Blindspot
 ###################################################
 HOST_VERSION = "1.6"
 ###################################################
@@ -97,9 +97,7 @@ class FilmVilag(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG('FilmVilag.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Kategóriák', 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
-                        {'category': 'search', 'title': 'Keresés', 'search_item': True, 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"},
-                        {'category': 'search_history', 'title': 'Keresési előzmények', 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}]
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Kategóriák', 'desc': "Egyes videómegosztók pillanatnyilag nem támogatottak"}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def getdesc(self, iurl):

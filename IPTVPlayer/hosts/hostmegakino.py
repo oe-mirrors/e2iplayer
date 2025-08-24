@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 18.06.2025
 import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -33,9 +34,7 @@ class MegaKino(CBaseHostClass):
                     {'category': 'list_items', 'title': _("Series"), 'link': self.getFullUrl('/serials')},
                     {'category': 'list_items', 'title': _("Animation"), 'link': self.getFullUrl('/multfilm')},
                     {'category': 'list_items', 'title': "Dokumentationen", 'link': self.getFullUrl('/documentary')},
-                    {'category': 'list_genres', 'title': 'Genres'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                    {'category': 'search_history', 'title': _('Search history'), }]
+                    {'category': 'list_genres', 'title': 'Genres'}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

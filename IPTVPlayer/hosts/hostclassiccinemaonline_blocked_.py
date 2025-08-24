@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 02.07.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -43,11 +44,7 @@ class ClassicCinemaOnline(CBaseHostClass):
 
         self.MAIN_CAT_TAB = [{'category': 'list_movies_cats', 'title': 'Movie Billboards', 'url': self.getMainUrl()},
                              {'category': 'list_items', 'title': 'Serials', 'url': self.getFullUrl('/serials')},
-                             {'category': 'list_items', 'title': 'Silent Films', 'url': self.getFullUrl('/silent-films')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+                             {'category': 'list_items', 'title': 'Silent Films', 'url': self.getFullUrl('/silent-films')}] + self.searchItems()
 
     def getMaxDisplayItems(self):
         return 10

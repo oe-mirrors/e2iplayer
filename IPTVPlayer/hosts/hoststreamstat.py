@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 2021.04.14. Blindspot
+# Last Modified: 14.04.2021 - Blindspot
 ###################################################
 HOST_VERSION = "1.0"
 ###################################################
@@ -34,7 +34,7 @@ class StreamStat(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'streamstat', 'cookie': 'streamstat.cookie'})
         self.MAIN_URL = 'http://streamstat.net/'
-        self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/streamstat.jpg"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/streamstat.jpg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
@@ -81,9 +81,7 @@ class StreamStat(CBaseHostClass):
                         {'category': 'list_items', 'title': _('Collected streams only'), 'url': 'http://streamstat.net/main.cgi?mode=col&search=&page=1&fp=50', 'page': page},
                         {'category': 'list_items', 'title': _('Free IPTV list'), 'url': 'http://streamstat.net/main.cgi?mode=hls&search=&page=1&fp=50', 'page': page},
                         {'category': 'list_items', 'title': _('All streams'), 'url': 'http://streamstat.net/main.cgi?mode=all&search=&page=1&fp=50', 'page': page},
-                        {'category': 'list_items', 'title': _('Random selection'), 'url': 'http://streamstat.net/main.cgi?mode=&search=&page=1&fp=50', 'page': page},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}]
+                        {'category': 'list_items', 'title': _('Random selection'), 'url': 'http://streamstat.net/main.cgi?mode=&search=&page=1&fp=50', 'page': page}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):

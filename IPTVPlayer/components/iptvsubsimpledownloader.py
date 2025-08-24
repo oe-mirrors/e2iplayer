@@ -95,7 +95,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
 
-        self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],
+        self["actions"] = ActionMap(["ColorActions", "SetupActions"],
             {
                 "cancel": self.keyExit,
                 "ok": self.keyOK,

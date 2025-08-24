@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 06.07.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -103,9 +104,7 @@ class FilmstreamvkCom(CBaseHostClass):
         MAIN_CAT_TAB = [{'category': 'main', 'title': _('Main'), 'url': self.getMainUrl()},
                         {'category': 'categories', 'title': _('Categories'), 'url': self.getMainUrl()},
                         {'category': 'list_items', 'title': _('Series'), 'url': self.getFullUrl('serie')},
-                        {'category': 'list_items', 'title': _('Manga'), 'url': self.getFullUrl('manga')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'), }]
+                        {'category': 'list_items', 'title': _('Manga'), 'url': self.getFullUrl('manga')}] + self.searchItems()
 
         self.listsTab(MAIN_CAT_TAB, cItem)
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 2022.07.15. Blindspot
+# Last Modified: 15.07.2022 - Blindspot
 ###################################################
 HOST_VERSION = "1.4"
 ###################################################
@@ -38,7 +38,7 @@ class OnlineStream(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'onlinestream', 'cookie': 'onlinestream.cookie'})
         self.MAIN_URL = 'https://onlinestream.live/'
-        self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/onlinestream.jpg"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/onlinestream.jpg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
@@ -112,9 +112,8 @@ class OnlineStream(CBaseHostClass):
         MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Sugárzó rádiók listázása', 'url': 'https://onlinestream.live/main.cgi?search=&broad=1&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
                         {'category': 'list_items', 'title': 'Internetes rádiók listázása', 'url': 'https://onlinestream.live/main.cgi?search=&broad=0&feat=&chtype=&server=&format=&sort=listen&fp=20&p=', 'page': page},
                         {'category': 'list_items', 'title': 'TV-k listázása', 'url': 'https://onlinestream.live/?search=&broad=7&feat=&chtype=&server=&format=&sort=listenpeak&fp=20&p=', 'page': page},
-                        {'category': 'list_items', 'title': 'Webkamerák listázása', 'url': 'https://onlinestream.live/?search=&broad=4&feat=&chtype=&server=&format=&sort=&fp=20&p=', 'page': page},
-                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
-                        {'category': 'search_history', 'title': 'Keresési előzmények'}]
+                        {'category': 'list_items', 'title': 'Webkamerák listázása', 'url': 'https://onlinestream.live/?search=&broad=4&feat=&chtype=&server=&format=&sort=&fp=20&p=', 'page': page}
+                        ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):

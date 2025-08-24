@@ -15,6 +15,7 @@ from Components.config import config
 from skin import parseColor
 
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Screens.MessageBox import MessageBox
 
 
 class CUrlItem:
@@ -47,6 +48,13 @@ class CDisplayListItem:
     TYPE_DATA = "DATA"
     TYPE_MORE = "MORE"
     TYPE_MARKER = "MARKER"
+    TYPE_SEARCH_HISTORY = "SEARCH_HISTORY"
+    TYPE_SEARCH_HISTORY_DELETE = "SEARCH_HISTORY_DELETE"
+    TYPE_NEXT = "NEXT"
+    TYPE_DOWNLOAD = "DOWNLOAD"
+    TYPE_MMC = "MMC"
+    TYPE_USB = "USB"
+    TYPE_WWW = "WWW"
 
     TYPE_SUBTITLE = "SUBTITLE"
     TYPE_SUB_PROVIDER = "SUB_PROVIDER"
@@ -63,22 +71,27 @@ class CDisplayListItem:
                 isGoodForFavourites=False,
                 isWatched=False,
                 textColor='',
-                pinCode=''):
+                pinCode='',
+                imageType=None):
 
         if isinstance(name, str):
             self.name = name
         else:
             self.name = str(name)
 
-        if isinstance(description, str):
-            self.description = description
+        if callable(description):
+            self._description = description
+        elif isinstance(description, str):
+            self._description = description
         else:
-            self.description = str(description)
+            self._description = str(description)
 
         if isinstance(type, str):
             self.type = type
         else:
             self.type = str(type)
+
+        self.imageType = imageType or self.type
 
         if isinstance(iconimage, str):
             self.iconimage = iconimage
@@ -128,6 +141,16 @@ class CDisplayListItem:
         except Exception:
             printExc()
         return None
+
+    def _getDescription(self):
+        if callable(self._description):
+            return self._description()
+        return self._description
+
+    def _setDescription(self, description):
+        self._description = description
+
+    description = property(_getDescription, _setDescription)
 
 
 class ArticleContent:
@@ -597,6 +620,14 @@ class CHostBase(IHost):
             if cItem.get('search_item', False):
                 type = CDisplayListItem.TYPE_SEARCH
                 possibleTypesOfSearch = self.getSearchTypes()
+            elif cItem.get('category', '') == 'search_history':
+                type = CDisplayListItem.TYPE_SEARCH_HISTORY
+            elif cItem.get('category', '') == 'delete_history':
+                type = CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE
+            elif cItem.get('name', '') == 'history':
+                type = CDisplayListItem.TYPE_SEARCH_HISTORY
+            elif cItem.get('title', '') == _('Next page'):
+                type = CDisplayListItem.TYPE_NEXT
             else:
                 type = CDisplayListItem.TYPE_CATEGORY
         elif cItem['type'] == 'video':
@@ -631,6 +662,11 @@ class CHostBase(IHost):
         pinCode = cItem.get('pin_code', '')
         textColor = cItem.get('text_color', '')
 
+        if 'image_type' in cItem:
+            imageType = cItem['image_type']
+        else:
+            imageType = type
+
         return CDisplayListItem(name=title,
                                     description=description,
                                     type=type,
@@ -641,7 +677,7 @@ class CHostBase(IHost):
                                     pinLocked=pinLocked,
                                     isGoodForFavourites=isGoodForFavourites,
                                     textColor=textColor,
-                                    pinCode=pinCode)
+                                    pinCode=pinCode, imageType=imageType)
     # end converItem
 
     def getSearchResults(self, searchpattern, searchType=None):
@@ -652,7 +688,7 @@ class CHostBase(IHost):
         self.searchPattern = searchpattern
         self.searchType = searchType
 
-        # Find 'Wyszukaj' item
+        # Find 'Search' item
         # list = self.host.getCurrList()
 
         searchItemIdx = self.getSearchItemInx()
@@ -675,11 +711,16 @@ class CBaseHostClass:
 
         self.currList = []
         self.currItem = {}
+        self._historyLenTextFunction = ""
         if '' != params.get('history', ''):
             self.history = CSearchHistoryHelper(params['history'], params.get('history_store_type', False))
+            self._historyLenTextFunction = self.getHistoryText
         if '' != params.get('cookie', ''):
             self.COOKIE_FILE = GetCookieDir(params['cookie'])
         self.moreMode = False
+
+    def getHistoryText(self):
+        return self.history.getLength()
 
     def informAboutGeoBlockingIfNeeded(self, country, onlyOnce=True):
         try:
@@ -825,7 +866,25 @@ class CBaseHostClass:
         self.currList.append(params)
         return
 
-    def listsHistory(self, baseItem={'name': 'history', 'category': 'Wyszukaj'}, desc_key='plot', desc_base=(_("Type: "))):
+    def searchItems(self):
+        if self._historyLenTextFunction:
+            return [
+                {'category': 'search', 'title': _('Search'), 'search_item': True, },
+                {'category': 'search_history', 'title': _("Search history"), 'desc': _("History of searched phrases.")},
+                {'category': 'delete_history', 'title': _('Delete search history'), 'desc': self._historyLenTextFunction}
+            ]
+        else:
+            return []
+
+    def delHistory(self, session):
+        def doit(ret=None):
+            if ret:
+                err, msg = self.history.doRemove()
+                session.open(MessageBox, msg, type=MessageBox.TYPE_ERROR if err else MessageBox.TYPE_INFO, timeout=5)
+        msg = _('Are you sure you want to delete search history?')
+        session.openWithCallback(doit, MessageBox, msg, type=MessageBox.TYPE_YESNO, default=True)
+
+    def listsHistory(self, baseItem={'name': 'history', 'category': 'search'}, desc_key='plot', desc_base=(_("Type: "))):
         list = self.history.getHistoryList()
         for histItem in list:
             plot = ''

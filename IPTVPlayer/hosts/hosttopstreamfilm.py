@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 03.06.2025
 import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -35,9 +36,7 @@ class TopStreamFilm(CBaseHostClass):
                     {'category': 'list_genres', 'title': 'Genres'},
                     {'category': 'list_year', 'title': 'Jahr'},
                     {'category': 'list_country', 'title': 'Land'},
-                    {'category': 'list_az', 'title': 'A-Z'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                    {'category': 'search_history', 'title': _('Search history'), }]
+                    {'category': 'list_az', 'title': 'A-Z'}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

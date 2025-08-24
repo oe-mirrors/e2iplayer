@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-###################################################
-# 2019-02-27 Celeburdi
+# Last Modified: 27.02.2019 Celeburdi
 ###################################################
 # LOCAL import
 ###################################################
@@ -185,8 +184,7 @@ class RtlMostHU(CBaseHostClass):
                 self.addDir(params)
         except Exception:
             printExc()
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history'), }]
+        MAIN_CAT_TAB = self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listPrograms(self, cItem):

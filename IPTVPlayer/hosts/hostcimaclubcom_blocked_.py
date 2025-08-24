@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 02.07.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -52,10 +53,7 @@ class CimaClubCom(CBaseHostClass):
         self.cacheLinks = {}
         self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.MAIN_CAT_TAB = [
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+        self.MAIN_CAT_TAB = self.searchItems()
         self.cacheSubSections = {}
         self.cacheMainMenu = []
         self.cacheFilters = {}

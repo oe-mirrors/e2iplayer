@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 03.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -49,9 +50,7 @@ class StreamLiveTo(CBaseHostClass):
     HTTP_MOBILE_HEADER = {'User-Agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10', 'Accept': 'text/html'}
     MAIN_URL = 'https://www.streamlive.to/'
 
-    MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Live Channels', 'icon': ''},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True},
-                    {'category': 'search_history', 'title': _('Search history')}]
+    MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Live Channels', 'icon': ''}]
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'StreamLiveTo.tv', 'cookie': 'streamliveto.cookie'})
@@ -59,6 +58,7 @@ class StreamLiveTo(CBaseHostClass):
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.DEFAULT_ICON_URL = self.MAIN_URL + 'images/logo.png'
+        self.MAIN_CAT_TAB += self.searchItems()
 
     def _getFullUrl(self, url):
         if 0 < len(url):

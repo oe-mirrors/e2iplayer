@@ -571,7 +571,7 @@ else:
             self.pageMarkerPixmap = LoadPixmap(GetIconDir('radio_button_on.png'))
             self.menuPixmap = LoadPixmap(GetIconDir('menu.png'))
 
-            self["actions"] = ActionMap(["WizardActions", "DirectionActions", "ColorActions", "IPTVPlayerListActions"],
+            self["actions"] = ActionMap(["DirectionActions", "ColorActions", "IPTVPlayerListActions"],
             {
                 "ok": self.ok_pressed,
                 "back": self.back_pressed,

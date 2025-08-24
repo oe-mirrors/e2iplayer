@@ -80,9 +80,9 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self["footnote"] = Label()
         self["key_red"] = StaticText(_("Cancel"))
 
-        self["actions"] = ActionMap(["SetupActions", "ColorActions", "WizardActions", "ListboxActions", "IPTVPlayerListActions"],
+        self["actions"] = ActionMap(["ColorActions", "ListboxActions", "IPTVPlayerListActions"],
             {
-                "cancel": self.keyExit,
+                "back": self.keyExit,
                 "green": self.keySave,
                 "ok": self.keyOK,
                 "red": self.keyCancel,

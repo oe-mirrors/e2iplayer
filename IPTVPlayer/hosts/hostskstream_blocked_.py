@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 13.08.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -121,11 +122,8 @@ class SKStream(CBaseHostClass):
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Films', 'url': self.getFullUrl('/films')},
                         {'category': 'list_categories', 'title': 'Séries', 'url': self.getFullUrl('/series')},
-                        {'category': 'list_categories', 'title': 'Mangas', 'url': self.getFullUrl('/mangas')},
-
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'), }
-                       ]
+                        {'category': 'list_categories', 'title': 'Mangas', 'url': self.getFullUrl('/mangas')}
+                       ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):

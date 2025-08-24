@@ -118,7 +118,7 @@ class IPTVSubDownloaderWidget(Screen):
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
         self["statustext"] = Label("Loading...")
-        self["actions"] = ActionMap(["IPTVPlayerListActions", "WizardActions", "DirectionActions", "ColorActions", "NumberActions"],
+        self["actions"] = ActionMap(["IPTVPlayerListActions", "ColorActions"],
         {
             "red": self.red_pressed,
             "green": self.green_pressed,

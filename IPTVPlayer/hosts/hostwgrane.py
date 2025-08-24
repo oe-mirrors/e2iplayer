@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 03.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -62,9 +63,7 @@ class WgranePL(CBaseHostClass):
         printDBG("WgranePL.listMainMenu")
 
         MAIN_CAT_TAB = [{'category': 'list_sort', 'title': 'Przeglądaj pliki', 'url': self.getFullUrl('/watch.html')},
-                        {'category': 'categories', 'title': 'Kategorie', 'url': self.getFullUrl('/categories.html')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}]
+                        {'category': 'categories', 'title': 'Kategorie', 'url': self.getFullUrl('/categories.html')}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):

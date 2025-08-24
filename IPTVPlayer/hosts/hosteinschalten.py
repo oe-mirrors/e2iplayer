@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 03.06.2025
 import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -31,9 +32,7 @@ class Einschalten(CBaseHostClass):
                     {'category': 'list_items', 'title': _("Movies"), 'link': self.getFullUrl('/movies')},
                     {'category': 'list_items', 'title': "Zuletzt hinzugefügte Filme", 'link': self.getFullUrl('/movies?order=added')},
                     {'category': 'list_items', 'title': "Sammlungen", 'link': self.getFullUrl('/collections')},
-                    {'category': 'list_genres', 'title': 'Genres'},
-                    {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                    {'category': 'search_history', 'title': _('Search history'), }]
+                    {'category': 'list_genres', 'title': 'Genres'}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

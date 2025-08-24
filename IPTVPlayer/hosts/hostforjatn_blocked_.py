@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 06.07.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -46,11 +47,7 @@ class ForjaTN(CBaseHostClass):
         self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
         self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('Movies'), 'f_type': 'movies', 'url': self.getFullUrl('/movies')},
-                             {'category': 'list_filters', 'title': _('Series'), 'f_type': 'series', 'url': self.getFullUrl('/series')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+                             {'category': 'list_filters', 'title': _('Series'), 'f_type': 'series', 'url': self.getFullUrl('/series')}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

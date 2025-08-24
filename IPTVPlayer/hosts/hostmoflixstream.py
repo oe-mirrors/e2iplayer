@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 10.08.2025
 import json
 from datetime import timedelta
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -37,9 +38,7 @@ class MoflixStream(CBaseHostClass):
             {'category': 'list_items', 'title': 'Top bewertete Filme', 'url': self.API_URL % 'top-rated-movies'},
             {'category': 'list_items', 'title': 'Frisch hinzugefügte Serien', 'url': self.API_URL % 'trending-tv'},
             {'category': 'list_items', 'title': 'Kinder & Familien', 'url': self.API_URL % 'top-kids-liste'},
-            {'category': 'Collection', 'title': "Collectionen"},
-            {'category': 'search', 'title': _('Search'), 'search_item': True, },
-            {'category': 'search_history', 'title': _('Search history'), }]
+            {'category': 'Collection', 'title': "Collectionen"}] + self.searchItems()
         self.COLLECTION = [
             {'category': 'list_items', 'title': 'American Pie Complete Collection', 'url': self.API_URL % 'the-american-pie-collection'},
             {'category': 'list_items', 'title': 'A Nightmare on Elm Street Collection', 'url': self.API_URL % 'a-nightmare-on-elm-street-collection'},

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 22.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -70,11 +71,7 @@ class HDStreams(CBaseHostClass):
 
         self.MAIN_URL = 'https://hd-streams.org/'
         self.MAIN_CAT_TAB = [{'category': 'list_filters', 'title': _('MOVIES'), 'url': self.getFullUrl('/movies')},
-                             {'category': 'list_filters', 'title': _('TV SERIES'), 'url': self.getFullUrl('/seasons')},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'list_filters', 'title': _('TV SERIES'), 'url': self.getFullUrl('/seasons')}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

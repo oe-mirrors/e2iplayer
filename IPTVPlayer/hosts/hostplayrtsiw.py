@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 07.08.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -93,8 +94,7 @@ class PlayRTSIW(CBaseHostClass):
                 params.update({'category': nextCategory1})
             self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True, 'icon': self.SEARCH_ICON_URL},
-                        {'category': 'search_history', 'title': _('Search history'), 'icon': self.SEARCH_ICON_URL}]
+        MAIN_CAT_TAB = self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listType(self, cItem):

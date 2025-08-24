@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 20.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -90,9 +91,7 @@ class FilmaonCom(CBaseHostClass):
                 params = {'name': 'category', 'type': 'category', 'category': nextCategory1, 'title': sTitle, 'sub_items': subItems}
                 self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category': 'top', 'title': 'TOP IMDb 50', 'url': self.getFullUrl('/top-imdb/')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+        MAIN_CAT_TAB = [{'category': 'top', 'title': 'TOP IMDb 50', 'url': self.getFullUrl('/top-imdb/')}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):

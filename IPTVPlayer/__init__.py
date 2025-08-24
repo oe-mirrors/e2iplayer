@@ -4,9 +4,10 @@ from Components.Language import language
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from gettext import bindtextdomain, dgettext, gettext
 
-from enigma import eListbox
 try:
-	GRIDSUPPORT = eListbox.orGrid is not None
+	from enigma import eListbox
+	from Components.SystemInfo import BoxInfo
+	GRIDSUPPORT = eListbox.orGrid is not None and BoxInfo.getItem("distro") in ("openatv",)
 except AttributeError:
 	GRIDSUPPORT = False
 

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-10 20:53+0200\n"
-"PO-Revision-Date: 2025-08-09 17:34+0300\n"
+"PO-Revision-Date: 2025-08-12 10:21+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -85,7 +85,7 @@ msgid "    *    Votes: "
 msgstr "    *    Ψήφοι: "
 
 msgid "    Audio buffer size [KB]"
-msgstr "    Μέγεθος προφόρτωσης ήχου [KB]"
+msgstr "    Μέγεθος προσωρινής μνήμης ήχου [KB]"
 
 msgid "    Background color"
 msgstr "    Χρώμα φόντου"
@@ -112,7 +112,7 @@ msgid "    Show suggestions"
 msgstr "    Εμφάνιση προτάσεων"
 
 msgid "    Video buffer size [MB]"
-msgstr "    Μέγεθος προφόρτωσης βίντεο [MB]"
+msgstr "    Μέγεθος προσωρινής μνήμης βίντεο [MB]"
 
 #, python-format
 msgid " (planned %s)"
@@ -122,10 +122,10 @@ msgid " - others links"
 msgstr " - άλλοι σύνδεσμοι"
 
 msgid " Login Protected."
-msgstr " Προστατευμένη σύνδεση."
+msgstr " Προστασία με σύνδεση."
 
 msgid " Private Show."
-msgstr " Ιδιωτική παράσταση."
+msgstr " Ιδιωτική προβολή."
 
 msgid " This video is a private."
 msgstr " Αυτό το βίντεο είναι ιδιωτικό."
@@ -182,11 +182,11 @@ msgstr "Το αρχείο %s έχει μέγεθος %d MB. Οι τελευτα�
 
 #, python-format
 msgid "%s followers"
-msgstr "Ακόλουθοι: %s"
+msgstr "%s ακόλουθοι"
 
 #, python-format
 msgid "%s has been protected with google recaptcha v2. You can try to use API version."
-msgstr "Το %s προστατεύεται με Google reCAPTCHA v2. Μπορείτε να δοκιμάσετε να χρησιμοποιήσετε την έκδοση API."
+msgstr "Το %s έχει προστατευτεί με google recaptcha v2. Μπορείτε να δοκιμάσετε να χρησιμοποιήσετε την έκδοση API."
 
 #, python-format
 msgid "%s minutes"
@@ -194,7 +194,7 @@ msgstr "%s λεπτά"
 
 #, python-format
 msgid "%s password"
-msgstr "Κωδικός %s"
+msgstr "%s κωδικός πρόσβασης"
 
 #, python-format
 msgid "%s returned %s: %s"
@@ -210,7 +210,7 @@ msgstr "Το %s είπε: Αυτή η σελίδα δεν είναι προς τ
 
 #, python-format
 msgid "%s services configuration"
-msgstr "Διαμόρφωση υπηρεσιών %s"
+msgstr "Ρυθμίσεις υπηρεσιών %s"
 
 #, python-format
 msgid "%s shows"
@@ -222,19 +222,19 @@ msgstr "%s λήψη υποτίτλων – πώς να"
 
 #, python-format
 msgid "%s timeout."
-msgstr "Λήξη χρόνου για %s."
+msgstr "%s χρονικό όριο."
 
 #, python-format
 msgid ""
 "%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
-"Ο %s χρησιμοποιεί μέτρα \"γεωγραφικού αποκλεισμού\" για να αποτρέψει την πρόσβασή σας στις υπηρεσίες από το εξωτερικό.\n"
+"Ο %s χρησιμοποιεί μέτρα \"γεω-αποκλεισμού\" για να αποτρέψει την πρόσβασή σας στις υπηρεσίες από το εξωτερικό.\n"
 " Χώρα host: %s, η χώρα σας: %s"
 
 #, python-format
 msgid "%s viewers"
-msgstr "Θεατές: %s"
+msgstr "%s θεατές"
 
 #, python-format
 msgid "%s views"
@@ -257,7 +257,7 @@ msgid "----- BASIC CONFIGURATION -----"
 msgstr "----- ΒΑΣΙΚΕΣ ΡΥΘΜΙΣΕΙΣ -----"
 
 msgid "----- BUFFERING CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΦΟΡΤΩΣΗΣ -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΣΩΡΙΝΗΣ ΜΝΗΜΗΣ -----"
 
 msgid "----- CAPTCHA CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ CAPTCHA -----"
@@ -269,7 +269,7 @@ msgid "----- OTHER SETTINGS -----"
 msgstr "----- ΑΛΛΕΣ ΡΥΘΜΙΣΕΙΣ -----"
 
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
-msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΓΡΑΜΜΑΤΩΝ ΑΝΑΠΑΡΑΓΩΓΗΣ & ΑΝΑΠΑΡΑΓΩΓΗ -----"
+msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΓΡΑΜΜΑΤΩΝ ΑΝΑΠΑΡΑΓΩΓΗΣ & ΑΝΑΠΑΡΑΓΩΓΗΣ -----"
 
 msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΔΙΑΚΟΜΙΣΤΩΝ ΜΕΣΟΛΑΒΗΣΗΣ -----"
@@ -311,16 +311,16 @@ msgid "12 hour format"
 msgstr "Μορφή 12 ωρών"
 
 msgid "16:10 Letterbox"
-msgstr "16:10 Γραμματοκιβώτιο"
+msgstr "16:10 Letterbox"
 
 msgid "16:10 PanScan"
-msgstr "16:10 Πανοραμικό"
+msgstr "16:10 PanScan"
 
 msgid "16:9"
 msgstr "16:9"
 
 msgid "16:9 Letterbox"
-msgstr "16:9 Γραμματοκιβώτιο"
+msgstr "16:9 Letterbox"
 
 msgid "16:9 always"
 msgstr "16:9 πάντα"
@@ -329,28 +329,28 @@ msgid "24 hour format"
 msgstr "Μορφή 24 ωρών"
 
 msgid "4:3 Letterbox"
-msgstr "4:3 Γραμματοκιβώτιο"
+msgstr "4:3 Letterbox"
 
 msgid "4:3 PanScan"
-msgstr "4:3 Πανοραμικό"
+msgstr "4:3 PanScan"
 
 msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr "<font color=\"#FE642E\">ΝΑ ΘΥΜΑΣΤΕ:</font></b> Το E2iPlayer είναι <b>ΜΟΝΟ</b> εξειδικευμένο πρόγραμμα περιήγησης ιστού. <b>ΔΕΝ</b> είναι host σε κανένα υλικό!!!</font>"
+msgstr "<font color=\"#FE642E\">ΝΑ ΘΥΜΑΣΤΕ:</font></b> Το E2iPlayer είναι <b>ΜΟΝΟ</b> εξειδικευμένο πρόγραμμα περιήγησης ιστού. <b>ΔΕΝ</b> φιλοξενεί οποιοδήποτε υλικό!!!</font>"
 
 msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
-msgstr "Απαιτείται άδεια TV για να παρακολουθήσετε ροές του BBC iPlayer, δείτε την ιστοσελίδα του BBC για περισσότερες πληροφορίες: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgstr "Απαιτείται άδεια TV για να παρακολουθήσετε ροές του BBC iPlayer, δείτε τον ιστότοπο του BBC για περισσότερες πληροφορίες: https://www.bbc.co.uk/iplayer/help/tvlicence"
 
 msgid "A-Z"
 msgstr "A-Z"
 
 msgid "AAC downmix mode"
-msgstr "Λειτουργία ανάμειξης AAC"
+msgstr "Λειτουργία μεικτής εξόδου AAC"
 
 msgid "ABORTED"
-msgstr "ΜΑΤΑΙΩΣΗ"
+msgstr "ΑΚΥΡΩΘΗΚΕ"
 
 msgid "AC3 downmix mode"
-msgstr "Λειτουργία ανάμειξης AC3"
+msgstr "Λειτουργία μεικτής εξόδου AC3"
 
 msgid "ALBUMS"
 msgstr "ΑΛΜΠΟΥΜ"
@@ -371,7 +371,7 @@ msgid "Accept"
 msgstr "Αποδοχή"
 
 msgid "Access Forbidden"
-msgstr "Απαγορεύεται η πρόσβαση"
+msgstr "Απαγορευμένη πρόσβαση"
 
 msgid "Access denied. Please check password."
 msgstr "Η πρόσβαση απορρίφθηκε. Παρακαλώ ελέγξτε τον κωδικό πρόσβασης."
@@ -384,7 +384,7 @@ msgstr "Ηθοποιοί:"
 
 #, python-format
 msgid "Add host %s to group"
-msgstr "Προσθήκη του host %s στην ομάδα"
+msgstr "Προσθήκη host %s στην ομάδα"
 
 msgid "Add item to favourites"
 msgstr "Προσθήκη στοιχείου στα αγαπημένα"
@@ -399,7 +399,7 @@ msgid "Add new group of favourites"
 msgstr "Προσθήκη νέας ομάδας αγαπημένων"
 
 msgid "Add to downloader"
-msgstr "Προσθήκη στη Διαχείριση λήψεων"
+msgstr "Προσθήκη στο πρόγραμμα λήψεων"
 
 #, python-format
 msgid "Added by: %s, directory: %s"
@@ -409,13 +409,13 @@ msgid "Age-gate bypass:"
 msgstr "Παράκαμψη περιορισμού ηλικίας:"
 
 msgid "Airing"
-msgstr "Μετάδοση"
+msgstr "Προβάλλεται"
 
 msgid "All"
 msgstr "Όλα"
 
 msgid "All A-Z"
-msgstr "Όλα Α-Ω"
+msgstr "Όλα A-Z"
 
 msgid "All Leagues"
 msgstr "Όλα τα πρωταθλήματα"
@@ -442,13 +442,13 @@ msgid "Allow VP9 codec:"
 msgstr "Επιτρέπεται ο κωδικοποιητής VP9:"
 
 msgid "Allow dash format:"
-msgstr "Επιτρέπεται η μορφή παύλας:"
+msgstr "Επιτρέπεται η μορφή dash:"
 
 msgid "Allow hls format"
 msgstr "Επιτρέπεται η μορφή hls"
 
 msgid "Allow watched flag to be set"
-msgstr "Επιτρέπεται η ρύθμιση σημαίας προβολής"
+msgstr "Επιτρέπεται η ρύθμιση της ένδειξης παρακολούθησης"
 
 msgid "Alphabet"
 msgstr "Αλφάβητο"
@@ -466,10 +466,10 @@ msgid "Alternative domain:"
 msgstr "Εναλλακτικός τομέας:"
 
 msgid "Alternative geolocation IP 1:"
-msgstr "Εναλλακτική γεωγραφική θέση της IP 1:"
+msgstr "Εναλλακτική IP γεωεντοπισμού 1:"
 
 msgid "Alternative geolocation IP 2:"
-msgstr "Εναλλακτική γεωγραφική θέση της IP 2:"
+msgstr "Εναλλακτική IP γεωεντοπισμού 2:"
 
 msgid "Alternative proxy server (1)"
 msgstr "Εναλλακτικός διακομιστής μεσολάβησης (1)"
@@ -485,16 +485,16 @@ msgid ""
 "An error occurred when try to sign in the user \"%s.\n"
 "Please check your login credentials and try again later...\""
 msgstr ""
-"Εμφανίστηκε σφάλμα κατά την προσπάθεια σύνδεσης του χρήστη \"%s.\n"
-"Παρακαλώ ελέγξτε τα στοιχεία σύνδεσής σας και προσπαθήστε ξανά αργότερα...\""
+"Προέκυψε σφάλμα κατά την προσπάθεια σύνδεσης του χρήστη \"%s\".\n"
+"Παρακαλώ ελέγξτε τα διαπιστευτήριά σας και δοκιμάστε ξανά αργότερα..."
 
 #, python-format
 msgid "An error occurred while loading a subtitle from [%s]."
-msgstr "Παρουσιάστηκε σφάλμα κατά τη φόρτωση ενός υπότιτλου από το [%s]."
+msgstr "Προέκυψε σφάλμα κατά τη φόρτωση υποτίτλου από [%s]."
 
 #, python-format
 msgid "An error occurred while writing into: %s"
-msgstr "Παρουσιάστηκε σφάλμα κατά την εγγραφή στο: %s"
+msgstr "Προέκυψε σφάλμα κατά την εγγραφή στο: %s"
 
 msgid "Anatomy"
 msgstr "Ανατομία"
@@ -506,13 +506,13 @@ msgid "Animations"
 msgstr "Κινούμενα σχέδια"
 
 msgid "Anime"
-msgstr "Anime"
+msgstr "Άνιμε"
 
 msgid "Anime Search"
-msgstr "Αναζήτηση Anime"
+msgstr "Αναζήτηση άνιμε"
 
 msgid "Anime list"
-msgstr "Λίστα anime"
+msgstr "Λίστα άνιμε"
 
 msgid "Answer"
 msgstr "Απάντηση"
@@ -539,7 +539,7 @@ msgid "Archives"
 msgstr "Αρχεία"
 
 msgid "Are you sure you want to delete search history?"
-msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ιστορικό αναζήτησης;"
+msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ιστορικό αναζητήσεων;"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
@@ -552,7 +552,7 @@ msgid "Ask"
 msgstr "Ερώτηση"
 
 msgid "Aspect"
-msgstr "Λόγος"
+msgstr "Αναλογία"
 
 msgid "Audio"
 msgstr "Ήχος"
@@ -564,10 +564,10 @@ msgid "Auto"
 msgstr "Αυτόματο"
 
 msgid "Auto selection based on the settings"
-msgstr "Αυτόματη επιλογή με βάση τις ρυθμίσεις"
+msgstr "Αυτόματη επιλογή βάσει των ρυθμίσεων"
 
 msgid "Auto start method"
-msgstr "Μέθοδος αυτόματης εκκίνησης"
+msgstr "Αυτόματη μέθοδος εκκίνησης"
 
 msgid "Auto-translate"
 msgstr "Αυτόματη μετάφραση"
@@ -576,7 +576,7 @@ msgid "Automatically turn on external subtitles"
 msgstr "Αυτόματη ενεργοποίηση εξωτερικών υποτίτλων"
 
 msgid "Autoplay start delay"
-msgstr "Καθυστέρηση έναρξης αυτόματης αναπαραγωγής"
+msgstr "Καθυστέρηση εκκίνησης αυτόματης αναπαραγωγής"
 
 msgid "BY DAY"
 msgstr "ΑΝΑ ΗΜΕΡΑ"
@@ -598,13 +598,13 @@ msgid "Black"
 msgstr "Μαύρο"
 
 msgid "Black iframe file"
-msgstr "Αρχείο μαύρου iframe"
+msgstr "Αρχείο iframe μαύρου χρώματος"
 
 msgid "Block wmv files"
 msgstr "Αποκλεισμός αρχείων wmv"
 
 msgid "Board Review"
-msgstr "Επανεξέταση πτυχιακών"
+msgstr "Επισκόπηση πίνακα"
 
 msgid "Brand"
 msgstr "Μάρκα"
@@ -621,13 +621,13 @@ msgid "Browse"
 msgstr "Περιήγηση"
 
 msgid "Browse videos"
-msgstr "Περιήγηση σε βίντεο"
+msgstr "Περιήγηση βίντεο"
 
 msgid "Browse youtube trending feeds"
-msgstr "Περιήγηση στα δημοφιλή Youtube feeds"
+msgstr "Περιήγηση στις δημοφιλείς ροές του youtube"
 
 msgid "Buffering location"
-msgstr "Τοποθεσία προφόρτωσης"
+msgstr "Τοποθεσία προσωρινής μνήμης"
 
 msgid "By media title"
 msgstr "Κατά τίτλο πολυμέσων"
@@ -636,7 +636,7 @@ msgid "By year"
 msgstr "Κατά έτος"
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
-msgstr "Παράκαμψη γεωγραφικού αποκλεισμού για VODs (μπορεί να είναι παράνομο):"
+msgstr "Παράκαμψη γεω-αποκλεισμού για VOD (μπορεί να είναι παράνομο):"
 
 msgid "CHANNELS "
 msgstr "ΚΑΝΑΛΙΑ "
@@ -656,9 +656,9 @@ msgid ""
 "Return code[%s].\n"
 "Return data[%s]."
 msgstr ""
-"Δεν είναι δυνατή η λήψη σημείων προσάρτησης - Η προσάρτηση cmd απέτυχε.\n"
+"Δεν είναι δυνατή η λήψη σημείων προσάρτησης - η εντολή mount απέτυχε.\n"
 "Κωδικός επιστροφής[%s].\n"
-"Επιστροφή δεδομένων[%s]."
+"Δεδομένα επιστροφής[%s]."
 
 msgid "Cancel"
 msgstr "Άκυρο"
@@ -680,7 +680,7 @@ msgid "Cartoon list"
 msgstr "Λίστα κινουμένων σχεδίων"
 
 msgid "Cartoons and anime"
-msgstr "Κινούμενα σχέδια και anime"
+msgstr "Κινούμενα σχέδια και άνιμε"
 
 msgid "Catch up"
 msgstr "Catch up"
@@ -726,7 +726,7 @@ msgid "Closing. Please wait..."
 msgstr "Κλείσιμο. Παρακαλώ περιμένετε..."
 
 msgid "Collected streams only"
-msgstr "Μόνο συγκεντρωμένες ροες"
+msgstr "Μόνο οι συλλεγμένες ροές"
 
 msgid "Collections"
 msgstr "Συλλογές"
@@ -735,17 +735,17 @@ msgid "Comedies"
 msgstr "Κωμωδίες"
 
 msgid "Coming up"
-msgstr "Έρχεται σύντομα"
+msgstr "Επερχόμενα"
 
 msgid "Commits"
 msgstr "Δεσμεύσεις"
 
 msgid "Configuration"
-msgstr "Ρυθμίσεις"
+msgstr "Ρύθμιση"
 
 #, python-format
 msgid "Configuration [%s] service"
-msgstr "Διαμόρφωση υπηρεσίας [%s]"
+msgstr "Ρύθμιση υπηρεσίας [%s]"
 
 #, python-format
 msgid "Configure %s"
@@ -755,19 +755,19 @@ msgid "Configure host"
 msgstr "Ρύθμιση host"
 
 msgid "Configuring an external movie player"
-msgstr "Ρύθμιση εξωτερικής αναπαραγωγής ταινιών"
+msgstr "Ρυθμίσεις εξωτερικής αναπαραγωγής ταινιών"
 
 msgid "Confirm new pin"
-msgstr "Επιβεβαίωση νέου pin"
+msgstr "Επιβεβαίωση νέου PIN"
 
 msgid "Confirm the title of the movie"
-msgstr "Επιβεβαίωση του τίτλου της ταινίας"
+msgstr "Επιβεβαίωση τίτλου ταινίας"
 
 msgid "Confirmation error."
 msgstr "Σφάλμα επιβεβαίωσης."
 
 msgid "Connection to server failed!"
-msgstr "Η σύνδεση με τον διακομιστή απέτυχε!"
+msgstr "Αποτυχία σύνδεσης με τον διακομιστή!"
 
 msgid "Continue downloading"
 msgstr "Συνέχιση λήψης"
@@ -777,7 +777,7 @@ msgstr "Αντιγραφή"
 
 #, python-format
 msgid "Count: %s"
-msgstr "Πλήθος: %s"
+msgstr "Καταμέτρηση: %s"
 
 msgid "Countries"
 msgstr "Χώρες"
@@ -792,7 +792,7 @@ msgid "Critical Error - cookie can't be saved!"
 msgstr "Κρίσιμο σφάλμα - το cookie δεν μπορεί να αποθηκευτεί!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
-msgstr "Κρίσιμο Σφάλμα – Το Content-Encoding gzip δεν μπορεί να διαχειριστεί!"
+msgstr "Κρίσιμο σφάλμα – Η κωδικοποίηση περιεχομένου gzip δεν μπορεί να υποστηριχθεί!"
 
 msgid "Curator"
 msgstr "Επιμελητής"
@@ -810,13 +810,13 @@ msgid "DOWNLOAD ERROR"
 msgstr "ΣΦΑΛΜΑ ΛΗΨΗΣ"
 
 msgid "DOWNLOADED"
-msgstr "ΕΓΙΝΕ ΛΗΨΗ"
+msgstr "ΕΛΗΦΘΗ"
 
 msgid "DOWNLOADING"
-msgstr "ΓΙΝΕΤΑΙ ΛΗΨΗ"
+msgstr "ΛΗΨΗ ΣΕ ΕΞΕΛΙΞΗ"
 
 msgid "DRM protected streams are not supported."
-msgstr "Ροές προστατευμένες με DRM δεν υποστηρίζονται."
+msgstr "Οι ροές με προστασία DRM δεν υποστηρίζονται."
 
 msgid "DRM protection detected."
 msgstr "Εντοπίστηκε προστασία DRM."
@@ -825,28 +825,28 @@ msgid "Darkgray"
 msgstr "Σκούρο γκρι"
 
 msgid "Data mismatch."
-msgstr "Ασυμφωνία δεδομένων."
+msgstr "Αναντιστοιχία δεδομένων."
 
 msgid "Debug file does not exist - nothing to delete"
-msgstr "Το αρχείο εντοπισμού σφαλμάτων δεν υπάρχει - τίποτα προς διαγραφή"
+msgstr "Το αρχείο αποσφαλμάτωσης δεν υπάρχει - τίποτα για διαγραφή"
 
 msgid "Debug file does not exist - nothing to download"
-msgstr "Το αρχείο εντοπισμού σφαλμάτων δεν υπάρχει - τίποτα προς λήψη"
+msgstr "Το αρχείο αποσφαλμάτωσης δεν υπάρχει - τίποτα για λήψη"
 
 msgid "Debug file has been deleted"
-msgstr "Το αρχείο εντοπισμού σφαλμάτων διαγράφηκε"
+msgstr "Το αρχείο αποσφαλμάτωσης διαγράφηκε"
 
 msgid "Debug logs"
-msgstr "Αρχεία εντοπισμού σφαλμάτων"
+msgstr "Αρχεία καταγραφής αποσφαλμάτωσης"
 
 msgid "Debug option is disabled - nothing to display"
-msgstr "Η επιλογή εντοπισμού σφαλμάτων είναι απενεργοποιημένη - τίποτα προς εμφάνιση"
+msgstr "Η επιλογή αποσφαλμάτωσης είναι απενεργοποιημένη - τίποτα για εμφάνιση"
 
 msgid "Debug option set to console - nothing to display"
-msgstr "Η επιλογή εντοπισμού σφαλμάτων έχει οριστεί σε κονσόλα - τίποτα προς εμφάνιση"
+msgstr "Η επιλογή αποσφαλμάτωσης έχει οριστεί σε κονσόλα - τίποτα για εμφάνιση"
 
 msgid "Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr "Η επιλογή εντοπισμού σφαλμάτων έχει οριστεί σε αρχείο καταγραφής, αλλά το αρχείο δεν υπάρχει - τίποτα προς εμφάνιση"
+msgstr "Η επιλογή αποσφαλμάτωσης έχει οριστεί σε debugfile, αλλά το αρχείο δεν υπάρχει - τίποτα για εμφάνιση"
 
 #, python-format
 msgid "Decode file [%s] problem."
@@ -862,7 +862,7 @@ msgid "Default captcha bypass"
 msgstr "Προεπιλεγμένη παράκαμψη captcha"
 
 msgid "Default video aspect ratio"
-msgstr "Προεπιλεγμένος λόγος πλευρών"
+msgstr "Προεπιλεγμένη αναλογία διαστάσεων βίντεο"
 
 msgid "Default video policy for 16:9"
 msgstr "Προεπιλεγμένη πολιτική βίντεο για 16:9"
@@ -877,7 +877,7 @@ msgid "Default video quality:"
 msgstr "Προεπιλεγμένη ποιότητα βίντεο:"
 
 msgid "Definitely remove from favorites?"
-msgstr "Σίγουρα θέλετε να το αφαιρέσετε από τα αγαπημένα;"
+msgstr "Σίγουρα θέλετε να αφαιρεθεί από τα αγαπημένα;"
 
 msgid "Delete"
 msgstr "Διαγραφή"
@@ -911,7 +911,7 @@ msgid "Disable"
 msgstr "Απενεργοποίηση"
 
 msgid "Disable live at plugin start"
-msgstr "Απενεργοποίηση ζωντανής μετάδοσης στην έναρξη του πρόσθετου"
+msgstr "Απενεργοποίηση ζωντανής μετάδοσης κατά την εκκίνηση του πρόσθετου"
 
 msgid "Disable not used services"
 msgstr "Απενεργοποίηση μη χρησιμοποιούμενων υπηρεσιών"
@@ -923,10 +923,10 @@ msgid "Disable reordering mode"
 msgstr "Απενεργοποίηση λειτουργίας αναδιάταξης"
 
 msgid "Disable/Enable groups"
-msgstr "Ενεργοποίηση/απενεργοποίηση ομάδων"
+msgstr "Απενεργοποίηση/ενεργοποίηση ομάδων"
 
 msgid "Disable/Enable services"
-msgstr "Ενεργοποίηση/απενεργοποίηση υπηρεσιών"
+msgstr "Απενεργοποίηση/ενεργοποίηση υπηρεσιών"
 
 msgid "Discover"
 msgstr "Ανακάλυψη"
@@ -938,7 +938,7 @@ msgid "DixMax Suggestions"
 msgstr "Προτάσεις DixMax"
 
 msgid "Do you want to finish?"
-msgstr "Θέλετε να τελειώσετε;"
+msgstr "Θέλετε να ολοκληρώσετε;"
 
 msgid "Documentaries"
 msgstr "Ντοκιμαντέρ"
@@ -951,7 +951,7 @@ msgstr "Λήψη"
 
 #, python-format
 msgid "Download \"%s\" in to \"%s\" failed!"
-msgstr "Η λήψη του \"%s\" στον φάκελο \"%s\" απέτυχε!"
+msgstr "Αποτυχία λήψης \"%s\" στο \"%s\"!"
 
 #, python-format
 msgid "Download %s"
@@ -965,8 +965,8 @@ msgid ""
 "Download can not be started.\n"
 " Incorrect address ('%r')."
 msgstr ""
-"Η λήψη δεν μπορεί να ξεκινήσει.\n"
-" Λανθασμένη διεύθυνση ('%r')."
+"Δεν είναι δυνατή η έναρξη λήψης.\n"
+" Εσφαλμένη διεύθυνση ('%r')."
 
 #, python-format
 msgid ""
@@ -974,7 +974,7 @@ msgid ""
 "Downloader %s not working correctly.\n"
 "Last error \"%s (%s)\"."
 msgstr ""
-"Δεν είναι δυνατή η έναρξη της λήψης.\n"
+"Δεν είναι δυνατή η έναρξη λήψης.\n"
 "Το πρόγραμμα λήψεων %s δεν λειτουργεί σωστά.\n"
 "Τελευταίο σφάλμα: \"%s (%s)\"."
 
@@ -984,8 +984,8 @@ msgid ""
 "Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
-"Η λήψη δεν μπορεί να ξεκινήσει.\n"
-"Το πρόγραμμα λήψης %s δεν λειτουργεί σωστά.\n"
+"Δεν είναι δυνατή η έναρξη λήψης.\n"
+"Το πρόγραμμα λήψεων %s δεν λειτουργεί σωστά.\n"
 "Κατάσταση[%s]"
 
 #, python-format
@@ -993,8 +993,8 @@ msgid ""
 "Download can not be started.\n"
 "Incorrect address \"%r\"."
 msgstr ""
-"Δεν είναι δυνατή η έναρξη της λήψης.\n"
-"Λανθασμένη διεύθυνση \"%r\"."
+"Δεν είναι δυνατή η έναρξη λήψης.\n"
+"Εσφαλμένη διεύθυνση \"%r\"."
 
 #, python-format
 msgid ""
@@ -1022,13 +1022,13 @@ msgid "Download manager is not initialized"
 msgstr "Η Διαχείριση λήψεων δεν έχει αρχικοποιηθεί"
 
 msgid "Download subtiles failed."
-msgstr "Αποτυχία λήψης υπότιτλων."
+msgstr "Αποτυχία λήψης υποτίτλων."
 
 msgid "Download suggested"
 msgstr "Λήψη προτεινόμενων"
 
 msgid "Downloading"
-msgstr "Λήψη"
+msgstr "Λήψη σε εξέλιξη"
 
 #, python-format
 msgid ""
@@ -1036,8 +1036,8 @@ msgid ""
 " Downloader %s does not work properly.\n"
 "Status[%s]"
 msgstr ""
-"Η λήψη δεν μπορεί να ξεκινήσει.\n"
-" Το πρόγραμμα λήψης %s δεν λειτουργεί σωστά.\n"
+"Δεν είναι δυνατή η έναρξη λήψης.\n"
+" Το πρόγραμμα λήψεων %s δεν λειτουργεί σωστά.\n"
 "Κατάσταση[%s]"
 
 #, python-format
@@ -1045,8 +1045,8 @@ msgid ""
 "Downloading can not be started.\n"
 " The address ('%r') is incorrect."
 msgstr ""
-"Η λήψη δεν μπορεί να ξεκινήσει.\n"
-" Η διεύθυνση ('%r') είναι λανθασμένη."
+"Δεν είναι δυνατή η έναρξη λήψης.\n"
+" Η διεύθυνση ('%r') είναι εσφαλμένη."
 
 #, python-format
 msgid ""
@@ -1055,7 +1055,7 @@ msgid ""
 " Status[%s]"
 msgstr ""
 "Δεν είναι δυνατή η έναρξη της λήψης.\n"
-" Το πρόγραμμα λήψης [%s] δεν λειτουργεί σωστά.\n"
+" Το πρόγραμμα λήψεων [%s] δεν λειτουργεί σωστά.\n"
 " Κατάσταση[%s]"
 
 #, python-format
@@ -1063,19 +1063,19 @@ msgid ""
 "Downloading cannot be started.\n"
 " Invalid URI[%s]."
 msgstr ""
-"Δεν είναι δυνατή η έναρξη της λήψης.\n"
+"Δεν είναι δυνατή η έναρξη λήψης.\n"
 " Μη έγκυρο URI[%s]."
 
 #, python-format
 msgid "Downloading file [%s] problem."
-msgstr "Πρόβλημα με τη λήψη του αρχείου [%s]."
+msgstr "Πρόβλημα λήψης αρχείου [%s]."
 
 #, python-format
 msgid ""
 "Downloading file:\n"
 "%r."
 msgstr ""
-"Γίνεται λήψη του αρχείου:\n"
+"Λήψη αρχείου:\n"
 "%r."
 
 #, python-format
@@ -1121,14 +1121,14 @@ msgid ""
 "ERROR: pipeline could not be constructed: no element \"playbin2\" \n"
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
-"ΣΦΑΛΜΑ: αδυναμία δημιουργίας διασύνδεσης: δεν υπάρχει το στοιχείο \"playbin2\" \n"
-"Παρακαλώ ελέγξτε αν το gstreamer είναι διαθέσιμο στο σύστημά σας."
+"ΣΦΑΛΜΑ: δεν ήταν δυνατή η δημιουργία pipeline: δεν υπάρχει στοιχείο \"playbin2\" \n"
+"Παρακαλώ ελέγξτε αν τα πρόσθετα gstreamer είναι διαθέσιμα στο σύστημά σας."
 
 msgid "Edit favourites"
 msgstr "Επεξεργασία αγαπημένων"
 
 msgid "Educational Animation"
-msgstr "Εκπαιδευτικό Animation"
+msgstr "Εκπαιδευτικό κινούμενο σχέδιο"
 
 msgid "Email"
 msgstr "Email"
@@ -1168,25 +1168,25 @@ msgid "Enter name"
 msgstr "Εισαγωγή ονόματος"
 
 msgid "Enter new pin"
-msgstr "Εισαγωγή νέου pin"
+msgstr "Εισαγωγή νέου PIN"
 
 msgid "Enter old pin"
-msgstr "Εισαγωγή παλιού pin"
+msgstr "Εισαγωγή παλαιού PIN"
 
 msgid "Enter pin"
-msgstr "Εισαγωγή pin"
+msgstr "Εισαγωγή PIN"
 
 msgid "Enter the text"
 msgstr "Εισάγετε το κείμενο"
 
 msgid "Entitlement parsing error."
-msgstr "Σφάλμα ανάλυσης εξουσιοδότησης."
+msgstr "Σφάλμα ανάλυσης δικαιώματος."
 
 msgid "Episode"
 msgstr "Επεισόδιο"
 
 msgid "Episode Search"
-msgstr "Αναζήτηση επεισοδίων"
+msgstr "Αναζήτηση επεισοδίου"
 
 msgid "Episode title"
 msgstr "Τίτλος επεισοδίου"
@@ -1214,7 +1214,7 @@ msgid "Error deleting file \"%s\".\n"
 msgstr "Σφάλμα κατά τη διαγραφή του αρχείου \"%s\".\n"
 
 msgid "Error during deletion of the debug file."
-msgstr "Σφάλμα κατά τη διαγραφή του αρχείου εντοπισμού σφαλμάτων."
+msgstr "Σφάλμα κατά τη διαγραφή του αρχείου αποσφαλμάτωσης."
 
 #, python-format
 msgid ""
@@ -1246,7 +1246,7 @@ msgid "Ethical & Legal"
 msgstr "Ηθικά & Νομικά"
 
 msgid "Exam Review"
-msgstr "Επανεξέταση εξετάσεων"
+msgstr "Ανασκόπηση εξετάσεων"
 
 msgid "Exception occurs"
 msgstr "Παρουσιάστηκε εξαίρεση"
@@ -1255,7 +1255,7 @@ msgid "Exit"
 msgstr "Έξοδος"
 
 msgid "External movie player config"
-msgstr "Διαμόρφωση εξωτερικής αναπαραγωγής ταινιών"
+msgstr "Ρυθμίσεις εξωτερικής αναπαραγωγής ταινιών"
 
 msgid "FREE"
 msgstr "ΔΩΡΕΑΝ"
@@ -1290,14 +1290,14 @@ msgstr "Αποτυχία gzip."
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
-msgstr "Η σύνδεση χρήστη \"%s\" απέτυχε. Παρακαλώ ελέγξτε το όνομα χρήστη και τον κωδικό."
+msgstr "Αποτυχία σύνδεσης του χρήστη \"%s\". Παρακαλώ ελέγξτε το όνομα χρήστη και τον κωδικό πρόσβασης."
 
 #, python-format
 msgid "Failed to open the file \"%s\"."
 msgstr "Αποτυχία ανοίγματος του αρχείου \"%s\"."
 
 msgid "Failed to page with subtitle link."
-msgstr "Αποτυχία σελίδας με σύνδεσμο υπότιτλων."
+msgstr "Αποτυχία φόρτωσης σελίδας με σύνδεσμο υποτίτλου."
 
 #, python-format
 msgid "Failed to write file \"%s\"."
@@ -1312,7 +1312,7 @@ msgid "Failed: %s"
 msgstr "Αποτυχία: %s"
 
 msgid "Fatal error: consoleWrite failed!"
-msgstr "Ανεπανόρθωτο σφάλμα: αποτυχία εγγραφήςΚονσολας!"
+msgstr "Μοιραίο σφάλμα: η εγγραφή στην κονσόλα απέτυχε!"
 
 msgid "Favourites"
 msgstr "Αγαπημένα"
@@ -1336,7 +1336,7 @@ msgstr "Το αρχείο δεν βρέθηκε."
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
-msgstr "Το αρχείο [%s] προστέθηκε στην ουρά λήψης."
+msgstr "Το αρχείο [%s] προστέθηκε στην ουρά λήψεων."
 
 #, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
@@ -1358,10 +1358,10 @@ msgid "Filters"
 msgstr "Φίλτρα"
 
 msgid "First movie player in buffering mode"
-msgstr "Πρώτη αναπαραγωγή ταινιών σε λειτουργία προφόρτωσης"
+msgstr "Πρώτη αναπαραγωγή ταινιών σε λειτουργία προσωρινής μνήμης"
 
 msgid "First movie player without buffering mode"
-msgstr "Πρώτη αναπαραγωγή ταινιών χωρίς λειτουργία προφόρτωσης"
+msgstr "Πρώτη αναπαραγωγή ταινιών χωρίς λειτουργία προσωρινής μνήμης"
 
 msgid "Folder for cache data"
 msgstr "Φάκελος για δεδομένα κρυφής μνήμης"
@@ -1370,7 +1370,7 @@ msgid "Folder for temporary data"
 msgstr "Φάκελος για προσωρινά δεδομένα"
 
 msgid "Following host are broken or additional python modules are needed."
-msgstr "Οι ακόλουθοι host είναι κατεστραμμένοι ή χρειάζονται πρόσθετες μονάδες python."
+msgstr "Οι παρακάτω host είναι κατεστραμμένοι ή απαιτούνται επιπλέον μονάδες python."
 
 msgid "Foot & Ankle"
 msgstr "Πόδι & Αστράγαλος"
@@ -1391,7 +1391,7 @@ msgid "French"
 msgstr "Γαλλικά"
 
 msgid "From E2 settings"
-msgstr "Από τις ρυθμίσεις του Ε2"
+msgstr "Από τις ρυθμίσεις E2"
 
 msgid "Functionality protected by Google reCAPTCHA!"
 msgstr "Η λειτουργία προστατεύεται από Google reCAPTCHA!"
@@ -1426,22 +1426,22 @@ msgid "Genres:"
 msgstr "Είδη:"
 
 msgid "Geolocation IP:"
-msgstr "IP γεωγραφικής θέσης:"
+msgstr "IP γεωεντοπισμού:"
 
 msgid "German"
 msgstr "Γερμανικά"
 
 msgid "German proxy server url"
-msgstr "URL γερμανικού διακομιστή μεσολάβησης"
+msgstr "Διεύθυνση URL διακομιστή μεσολάβησης Γερμανίας"
 
 msgid "Get EPG"
 msgstr "Λήψη EPG"
 
 msgid "Get languages failed!"
-msgstr "Η λήψη γλωσσών απέτυχε!"
+msgstr "Αποτυχία λήψης γλωσσών!"
 
 msgid "Get token failed!"
-msgstr "Η απόκτηση του token απέτυχε!"
+msgstr "Αποτυχία λήψης token!"
 
 msgid "Global search :"
 msgstr "Καθολική αναζήτηση:"
@@ -1450,7 +1450,7 @@ msgid "Global sort :"
 msgstr "Καθολική ταξινόμηση:"
 
 msgid "Go to the host configuration available under blue button."
-msgstr "Πηγαίνετε στη διαμόρφωση του host που είναι διαθέσιμη με το μπλε κουμπί."
+msgstr "Μεταβείτε στις ρυθμίσεις του host που είναι διαθέσιμες με το μπλε κουμπί."
 
 msgid "Goal Of The Month"
 msgstr "Στόχος του μήνα"
@@ -1484,7 +1484,7 @@ msgstr "Ομάδες"
 
 #, python-format
 msgid "Guest timeout: %s"
-msgstr "Χρόνος αναμονής επισκέπτη: %s"
+msgstr "Χρονικό όριο επισκέπτη: %s"
 
 msgid "HDFull Suggestions"
 msgstr "Προτάσεις HDFull"
@@ -1504,7 +1504,7 @@ msgstr "Υλικό κινητής υποδιαστολής"
 
 #, python-format
 msgid "Hide \"%s\" group"
-msgstr "Απόκρυψη της ομάδας \"%s\""
+msgstr "Απόκρυψη ομάδας \"%s\""
 
 msgid "Hide/Active Group"
 msgstr "Απόκρ./εμφάνιση ομάδων"
@@ -1537,7 +1537,7 @@ msgstr "Άγνωστο hosting \"%s\"."
 
 #, python-format
 msgid "Hosting: %s, %s"
-msgstr "Φιλοξενία: %s, %s"
+msgstr "Hosting: %s, %s"
 
 msgid "Hosts settings"
 msgstr "Ρυθμίσεις hosts"
@@ -1582,7 +1582,7 @@ msgid "Information"
 msgstr "Πληροφορίες"
 
 msgid "Information about audio tracks not available."
-msgstr "Οι πληροφορίες σχετικά με τα κομμάτια ήχου δεν είναι διαθέσιμες."
+msgstr "Δεν υπάρχουν διαθέσιμες πληροφορίες για τα ηχητικά κομμάτια."
 
 msgid "Initial list"
 msgstr "Αρχική λίστα"
@@ -1591,7 +1591,7 @@ msgid "Initialize Download Manager"
 msgstr "Αρχικοποίηση Διαχείρισης λήψεων"
 
 msgid "Initialize web interface"
-msgstr "Αρχικοποίηση διεπαφής ιστού"
+msgstr "Αρχικοποίηση διαδικτυακής διεπαφής"
 
 msgid "Initiating data, please wait"
 msgstr "Έναρξη δεδομένων, παρακαλώ περιμένετε"
@@ -1600,10 +1600,10 @@ msgid "Inject black iframe at video playback finish"
 msgstr "Εισαγωγή μαύρου iframe στο τέλος της αναπαραγωγής βίντεο"
 
 msgid "Input"
-msgstr "Εισαγωγή"
+msgstr "Είσοδος"
 
 msgid "Interactive Learning Center(ILC)"
-msgstr "Διαδραστικό Κέντρο Μάθησης (ILC)"
+msgstr "Κέντρο Διαδραστικής Μάθησης (ILC)"
 
 msgid "Invalid email."
 msgstr "Μη έγκυρο email."
@@ -1612,29 +1612,29 @@ msgid "Invalid name."
 msgstr "Μη έγκυρο όνομα."
 
 msgid "Is this message displayed correctly?"
-msgstr "Εμφανίζεται σωστά αυτό το μήνυμα;"
+msgstr "Εμφανίζεται αυτό το μήνυμα σωστά;"
 
 msgid "It is not allowed to call getURLRequestData from main thread."
 msgstr "Δεν επιτρέπεται η κλήση του getURLRequestData από το κύριο νήμα."
 
 msgid "It looks like some kind of protection. Try again later."
-msgstr "Φαίνεται ότι υπάρχει κάποια προστασία. Δοκιμάστε ξανά αργότερα."
+msgstr "Φαίνεται να υπάρχει κάποιο είδος προστασίας. Δοκιμάστε ξανά αργότερα."
 
 #, python-format
 msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
-msgstr "Φαίνεται ότι η τρέχουσα ρύθμισή σας δεν επιτρέπει σύνδεση στο https://%s/.\n"
+msgstr "Φαίνεται ότι η τρέχουσα ρύθμισή σας δεν επιτρέπει τη σύνδεση στο https://%s/.\n"
 
 #, python-format
 msgid "It seems that the host \"%s\" has crashed."
-msgstr "Φαίνεται ότι ο host \"%s\" κράσαρε."
+msgstr "Φαίνεται ότι ο host \"%s\" κατέρρευσε."
 
 #, python-format
 msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
-msgstr "Φαίνεται ότι ο host \"%s\" κράσαρε. Θέλετε να αναφέρετε αυτό το πρόβλημα;"
+msgstr "Φαίνεται ότι ο host \"%s\" κατέρρευσε. Θέλετε να αναφέρετε αυτό το πρόβλημα;"
 
 #, python-format
 msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
-msgstr "Φαίνεται ότι ο πάροχος του υπότιτλου \"%s\" έχει κρασάρει. Θέλετε να αναφέρετε αυτό το πρόβλημα;"
+msgstr "Φαίνεται ότι ο πάροχος υποτίτλων \"%s\" κατέρρευσε. Θέλετε να αναφέρετε αυτό το πρόβλημα;"
 
 #, python-format
 msgid ""
@@ -1663,7 +1663,7 @@ msgstr "Το στοιχείο %s διαγράφηκε!"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."
-msgstr "Ο δείκτης του στοιχείου [%d] δεν βρέθηκε στην ομάδα [%s]."
+msgstr "Δεν βρέθηκε το στοιχείο με idx[%d] στην ομάδα[%s]."
 
 msgid "Items"
 msgstr "Στοιχεία"
@@ -1673,21 +1673,21 @@ msgid "Items in group \"%s\""
 msgstr "Στοιχεία στην ομάδα \"%s\""
 
 msgid "JDownloader script execution"
-msgstr "Εκτέλεση script JDownloader"
+msgstr "Εκτέλεση script του JDownloader"
 
 #, python-format
 msgid ""
 "JDownloader script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
-"Η εκτέλεση του script JDownloader απέτυχε.\n"
+"Η εκτέλεση του script του JDownloader απέτυχε.\n"
 "Κωδικός σφάλματος: %s\n"
 
 msgid "JDownloader script finished."
-msgstr "Το script JDownloader ολοκληρώθηκε."
+msgstr "Η εκτέλεση του script του JDownloader ολοκληρώθηκε."
 
 msgid "Jobs & Positions"
-msgstr "Θέσεις εργασίας"
+msgstr "Θέσεις εργασίας & Θέσεις"
 
 msgid "Journal Club"
 msgstr "Λέσχη περιοδικών"
@@ -1699,10 +1699,10 @@ msgid "LATEST"
 msgstr "ΤΕΛΕΥΤΑΙΑ"
 
 msgid "LATEST CONTENT"
-msgstr "ΝΕΟΤΕΡΟ ΠΕΡΙΕΧΟΜΕΝΟ"
+msgstr "ΤΕΛΕΥΤΑΙΟ ΠΕΡΙΕΧΟΜΕΝΟ"
 
 msgid "LIKES"
-msgstr "ΜΟΥ ΑΡΕΣΕ"
+msgstr "ΜΟΥ ΑΡΕΣΕΙ"
 
 msgid "LIVE"
 msgstr "ΖΩΝΤΑΝΑ"
@@ -1775,7 +1775,7 @@ msgid "Latest movies"
 msgstr "Τελευταίες ταινίες"
 
 msgid "Latest news broadcast"
-msgstr "Τελευταία μετάδοση ειδήσεων"
+msgstr "Τελευταία δελτία ειδήσεων"
 
 msgid "Latest programs"
 msgstr "Τελευταία προγράμματα"
@@ -1784,7 +1784,7 @@ msgid "Latest update"
 msgstr "Τελευταία ενημέρωση"
 
 msgid "Latino"
-msgstr "Λατινικά"
+msgstr "Λατινοαμερικάνικα"
 
 msgid "Level:"
 msgstr "Επίπεδο:"
@@ -1793,10 +1793,10 @@ msgid "Lightgray"
 msgstr "Ανοιχτό γκρι"
 
 msgid "Line Spacing"
-msgstr "Διάστιχο"
+msgstr "Απόσταση γραμμών"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
-msgstr "Ο σύνδεσμος δεν υποστηρίζεται από το gstplayer. Παρακαλώ χρησιμοποιήστε το extelayer3 εάν είναι διαθέσιμο."
+msgstr "Ο σύνδεσμος δεν υποστηρίζεται από τον gstplayer. Παρακαλώ χρησιμοποιήστε τον extelayer3 αν είναι διαθέσιμος."
 
 msgid "Link protected with CF Turnstile ."
 msgstr "Ο σύνδεσμος προστατεύεται με CF Turnstile."
@@ -1837,13 +1837,13 @@ msgid "Live Radio"
 msgstr "Ζωντανό ραδιόφωνο"
 
 msgid "Live TV"
-msgstr "Ζωντανή τηλεόραση"
+msgstr "TV-Ζωντανά"
 
 msgid "Live broadcasts"
 msgstr "Ζωντανές μεταδόσεις"
 
 msgid "Live streams"
-msgstr "Ζωντανές μεταδόσεις"
+msgstr "Ζωντανές ροές"
 
 msgid "Live-streams"
 msgstr "Ζωντανές ροές"
@@ -1853,14 +1853,14 @@ msgstr "Φόρτωση"
 
 #, python-format
 msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
-msgstr "Η φόρτωση της διάταξης εικονικού πληκτρολογίου \"%s\" απέτυχε λόγω του εξής σφάλματος: \"%s\""
+msgstr "Η φόρτωση της διάταξης του εικονικού πληκτρολογίου \"%s\" απέτυχε λόγω του ακόλουθου σφάλματος: \"%s\""
 
 msgid "Loading"
 msgstr "Φόρτωση"
 
 #, python-format
 msgid "Loading %s failed due to following error:"
-msgstr "Η φόρτωση του %s απέτυχε λόγω του εξής σφάλματος:"
+msgstr "Η φόρτωση του %s απέτυχε λόγω του ακόλουθου σφάλματος:"
 
 msgid "Loading data, please wait"
 msgstr "Φόρτωση δεδομένων, παρακαλώ περιμένετε"
@@ -1874,37 +1874,35 @@ msgstr "Τοπικά μέσα"
 
 #, python-format
 msgid "Locale ID mismatched! %s <> %s"
-msgstr "Μη συμβατό ID τοπικών ρυθμίσεων! %s <> %s"
+msgstr "Αναντιστοιχία ID τοπικής ρύθμισης! %s <> %s"
 
 msgid "Localization"
 msgstr "Μετάφραση"
 
 msgid "Login"
-msgstr "Σύνδεση"
+msgstr "Είσοδος"
 
 msgid "Login failed!"
-msgstr "Η σύνδεση απέτυχε!"
+msgstr "Η είσοδος απέτυχε!"
 
 msgid "Login failed."
-msgstr "Η σύνδεση απέτυχε."
+msgstr "Η είσοδος απέτυχε."
 
 msgid "Login failed. Invalid email or password."
-msgstr "Αποτυχία σύνδεσης. Μη έγκυρο email ή κωδικός."
+msgstr "Η είσοδος απέτυχε. Μη έγκυρο email ή κωδικός πρόσβασης."
 
 msgid "Login needed"
-msgstr "Απαιτείται σύνδεση"
+msgstr "Απαιτείται είσοδος"
 
 #, python-brace-format
 msgid "Login on {0} failed."
-msgstr "Η σύνδεση στο {0} απέτυχε."
+msgstr "Η είσοδος στο {0} απέτυχε."
 
 #, python-format
 msgid ""
 "Login user \"%s\" to http://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
-msgstr ""
-"Η σύνδεση του χρήστη \"%s\" στο http://vk.com/ απέτυχε!\n"
-"Παρακαλώ ελέγξτε τα δεδομένα σύνδεσής σας στις ρυθμίσεις του IPTVPlayer."
+msgstr "Η είσοδος του χρήστη \"%s\" στο http://vk.com/ απέτυχε! Παρακαλώ ελέγξτε τα στοιχεία εισόδου στις ρυθμίσεις του IPTVPlayer."
 
 msgid "Logs"
 msgstr "Καταγραφές"
@@ -1942,7 +1940,7 @@ msgid "Make directory [%s]"
 msgstr "Δημιουργία καταλόγου [%s]"
 
 msgid "Manager status: "
-msgstr "Κατάσταση διαχείρισης: "
+msgstr "Κατάσταση διαχειριστή: "
 
 msgid "Manga"
 msgstr "Μάνγκα"
@@ -1954,7 +1952,7 @@ msgid "Max bitrate:"
 msgstr "Μέγιστος ρυθμός bit:"
 
 msgid "Max items per page"
-msgstr "Μέγιστος αριθμός στοιχείων ανά σελίδα"
+msgstr "Μέγιστα στοιχεία ανά σελίδα"
 
 msgid "Max number of parallel downloads has been reached."
 msgstr "Έχει επιτευχθεί ο μέγιστος αριθμός ταυτόχρονων λήψεων."
@@ -1987,19 +1985,19 @@ msgid "More"
 msgstr "Περισσότερα"
 
 msgid "More important"
-msgstr "Τα πιο σημαντικά"
+msgstr "Πιο σημαντικά"
 
 msgid "Most Popular"
-msgstr "Δημοφιλέστερα"
+msgstr "Πιο δημοφιλή"
 
 msgid "Most featured"
 msgstr "Πιο προβεβλημένα"
 
 msgid "Most popular"
-msgstr "Τα πιο δημοφιλή"
+msgstr "Πιο δημοφιλή"
 
 msgid "Most rated"
-msgstr "Μεγαλύτερη βαθμολογία"
+msgstr "Περισσότερο αξιολογημένο"
 
 msgid "Most recent"
 msgstr "Πιο πρόσφατο"
@@ -2015,7 +2013,7 @@ msgid ""
 msgstr ""
 "Η προσάρτηση του αρχείου ISO [%s] στο [%s] απέτυχε.\n"
 "Κωδικός επιστροφής[%s].\n"
-"Επιστροφή δεδομένων[%s]."
+"Δεδομένα επιστροφής[%s]."
 
 msgid "Move group"
 msgstr "Μετακίνηση ομάδας"
@@ -2044,13 +2042,13 @@ msgstr "Η μετακίνηση του αρχείου από \"%s\" σε \"%s\" 
 
 #, python-format
 msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
-msgstr "Η μετακίνηση της προφόρτωσης αναπαραγωγής στον διαχειριστή λήψεων απέτυχε με το εξής σφάλμα: \"%s\""
+msgstr "Η μετακίνηση της προσωρινής μνήμης αναπαραγωγής στη Διαχείριση λήψεων απέτυχε με το εξής σφάλμα: \"%s\""
 
 msgid "Music"
 msgstr "Μουσική"
 
 msgid "My JDownloader reCAPTCHA v2 solution"
-msgstr "Λύση My JDownloader reCAPTCHA v2"
+msgstr "Η λύση μου για το JDownloader reCAPTCHA v2"
 
 msgid "My list"
 msgstr "Η λίστα μου"
@@ -2120,7 +2118,7 @@ msgid "New episodes"
 msgstr "Νέα επεισόδια"
 
 msgid "New icons will not be available."
-msgstr "Τα νέα εικονίδια δεν θα είναι διαθέσιμα."
+msgstr "Δεν θα είναι διαθέσιμα νέα εικονίδια."
 
 msgid "Newest Episodes"
 msgstr "Νεότερα επεισόδια"
@@ -2147,11 +2145,11 @@ msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
 msgstr ""
-"Κανένα στοιχείο προς εμφάνιση.\n"
+"Κανένα στοιχείο για εμφάνιση.\n"
 "Πατήστε ΟΚ για ανανέωση.\n"
 
 msgid "No materials waiting in the downloader queue"
-msgstr "Δεν υπάρχουν υλικά στην ουρά λήψεων"
+msgstr "Δεν υπάρχουν υλικά σε αναμονή στην ουρά λήψεων"
 
 msgid "No playable sources found."
 msgstr "Δεν βρέθηκαν πηγές προς αναπαραγωγή."
@@ -2160,13 +2158,13 @@ msgid "No valid entitlement found for asset."
 msgstr "Δεν βρέθηκε έγκυρη εξουσιοδότηση για το περιεχόμενο."
 
 msgid "No valid links available."
-msgstr "Μη διαθέσιμοι έγκυροι σύνδεσμοι."
+msgstr "Δεν υπάρχουν έγκυροι σύνδεσμοι διαθέσιμοι."
 
 msgid "None"
 msgstr "Κανένα"
 
 msgid "Not Free"
-msgstr "Όχι δωρεάν"
+msgstr "Μη δωρεάν"
 
 msgid "Nothing has been downloaded yet."
 msgstr "Δεν έχει ληφθεί ακόμη τίποτα."
@@ -2175,7 +2173,7 @@ msgid "Now playing"
 msgstr "Αναπαραγωγή τώρα"
 
 msgid "Number of downloaded files simultaneously"
-msgstr "Αριθμός ταυτόχρονης λήψης αρχείων"
+msgstr "Αριθμός αρχείων που λαμβάνονται ταυτόχρονα"
 
 #, python-format
 msgid "Number of items in search history: %d"
@@ -2197,17 +2195,17 @@ msgid "One link mode"
 msgstr "Λειτουργία μονού συνδέσμου"
 
 msgid "Only available in Sweden."
-msgstr "Διατίθεται μόνο στη Σουηδία."
+msgstr "Διαθέσιμο μόνο στη Σουηδία."
 
 msgid "Only available in Sweden.\n"
-msgstr "Διατίθεται μόνο στη Σουηδία.\n"
+msgstr "Διαθέσιμο μόνο στη Σουηδία.\n"
 
 msgid ""
 "Only logged in user have access.\n"
 "Please set login data in the host configuration under blue button."
 msgstr ""
 "Μόνο συνδεδεμένοι χρήστες έχουν πρόσβαση.\n"
-"Παρακαλώ ορίστε τα στοιχεία σύνδεσης στη ρύθμιση του host κάτω από το μπλε κουμπί."
+"Παρακαλώ ορίστε τα στοιχεία σύνδεσης στη ρύθμιση του host με το μπλε κουμπί."
 
 msgid "Only music"
 msgstr "Μόνο μουσική"
@@ -2219,10 +2217,10 @@ msgid "Opening. Please wait..."
 msgstr "Άνοιγμα. Παρακαλώ περιμένετε..."
 
 msgid "Operation aborted!"
-msgstr "Ματαίωση λειτουργίας!"
+msgstr "Η λειτουργία ματαιώθηκε!"
 
 msgid "Order by: "
-msgstr "Σειρά κατά: "
+msgstr "Ταξινόμηση κατά: "
 
 msgid "Other"
 msgstr "Άλλο"
@@ -2246,13 +2244,13 @@ msgid "PEGI"
 msgstr "PEGI"
 
 msgid "PENDING"
-msgstr "ΑΝΑΜΟΝΗ"
+msgstr "ΕΚΚΡΕΜΕΙ"
 
 msgid "PORT"
 msgstr "ΘΥΡΑ"
 
 msgid "Page accessible to logged in members only."
-msgstr "Η σελίδα είναι προσβάσιμη μόνο από συνδεδεμένα μέλη."
+msgstr "Η σελίδα είναι προσβάσιμη μόνο σε συνδεδεμένα μέλη."
 
 msgid "Paid"
 msgstr "Επί πληρωμή"
@@ -2274,7 +2272,7 @@ msgid "Path to xxxlist.txt :"
 msgstr "Διαδρομή προς xxxlist.txt:"
 
 msgid "Path to ytlist.txt, urllist.txt"
-msgstr "Διαδρομή για τα ytlist.txt, urllist.txt"
+msgstr "Διαδρομή προς ytlist.txt, urllist.txt"
 
 msgid "Path:"
 msgstr "Διαδρομή:"
@@ -2295,16 +2293,16 @@ msgid "Physical Exam"
 msgstr "Φυσική εξέταση"
 
 msgid "Pin has been changed."
-msgstr "To pin άλλαξε."
+msgstr "Ο κωδικός PIN έχει αλλάξει."
 
 msgid "Pin incorrect!"
-msgstr "Λάθος pin!"
+msgstr "Λάθος PIN!"
 
 msgid "Pin protection for configuration"
-msgstr "Προστασία με pin για τις ρυθμίσεις"
+msgstr "Προστασία PIN για τις ρυθμίσεις"
 
 msgid "Pin protection for plugin"
-msgstr "Προστασία με pin για το πρόσθετο"
+msgstr "Προστασία PIN για το πρόσθετο"
 
 msgid "Platform"
 msgstr "Πλατφόρμα"
@@ -2331,7 +2329,7 @@ msgid "Player %s: %s"
 msgstr "Πρόγραμμα αναπαραγωγής %s: %s"
 
 msgid "Player Skin"
-msgstr "Εμφάνιση προγράμματος αναπαραγωγής"
+msgstr "Θέμα προγράμματος αναπαραγωγής"
 
 msgid "Player data parsing error."
 msgstr "Σφάλμα ανάλυσης δεδομένων προγράμματος αναπαραγωγής."
@@ -2348,22 +2346,22 @@ msgid ""
 "http://{0}:{1}\n"
 "in a web browser with the MyE2i extension installed"
 msgstr ""
-"Παρακαλώ ανοίξτε τη σελίδα:\n"
+"Παρακαλώ ανοίξτε τον ιστότοπο:\n"
 "http://{0}:{1}\n"
-"σε έναν περιηγητή με εγκατεστημένο το πρόσθετο MyE2i"
+"σε πρόγραμμα περιήγησης με εγκατεστημένη την επέκταση MyE2i"
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
-msgstr "Σκεφτείτε να κάνετε επανεκκίνηση του Enigma2 και να συμφωνήσετε στην εγκατάσταση του εργαλείου %s όταν σας προταθεί από το %s."
+msgstr "Σκεφτείτε να κάνετε επανεκκίνηση του Enigma2 και να συμφωνήσετε στην εγκατάσταση του εργαλείου %s όταν το %s το προτείνει."
 
 msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
-msgstr "Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό στη διαμόρφωση του host (διαθέσιμη με το μπλε κουμπί) και δοκιμάστε ξανά."
+msgstr "Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό πρόσβασης στη ρύθμιση του host (διαθέσιμη με το μπλε κουμπί) και δοκιμάστε ξανά."
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
-msgstr "Παρακαλώ βεβαιωθείτε ότι ο φάκελος προσωρινών δεδομένων (ορισμένος στη διαμόρφωση) είναι εγγράψιμος."
+msgstr "Παρακαλώ βεβαιωθείτε ότι ο φάκελος για την κρυφή μνήμη (ορισμένος στις ρυθμίσεις) είναι εγγράψιμος."
 
 msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
-msgstr "Παρακαλώ εγγραφείτε και ορίστε όνομα χρήστη και κωδικό στη διαμόρφωση του host, για να λυθεί μόνιμα αυτό το πρόβλημα."
+msgstr "Παρακαλώ εγγραφείτε και ορίστε όνομα χρήστη και κωδικό πρόσβασης στη ρύθμιση του host για να λύσετε οριστικά αυτά τα προβλήματα."
 
 msgid ""
 "Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
@@ -2377,7 +2375,7 @@ msgstr "Παρακαλώ δοκιμάστε ξανά αργότερα."
 
 #, python-format
 msgid "Please set valid %s in the %s configuration."
-msgstr "Παρακαλώ ορίστε έγκυρο %s στη διαμόρφωση του %s."
+msgstr "Παρακαλώ ορίστε έγκυρο %s στη ρύθμιση του %s."
 
 #, python-format
 msgid "Please visit \"%s\" and confirm that you are human."
@@ -2385,7 +2383,7 @@ msgstr "Παρακαλώ επισκεφτείτε το \"%s\" και επιβε�
 
 #, python-format
 msgid "Please visit %s to learn how to redirect this task to the external device."
-msgstr "Παρακαλώ επισκεφτείτε το %s για να μάθετε πώς να εκχωρήσετε αυτή την εργασία σε εξωτερική συσκευή."
+msgstr "Παρακαλώ επισκεφθείτε το %s για να μάθετε πώς να ανακατευθύνετε αυτήν την εργασία σε εξωτερική συσκευή."
 
 msgid "Please wait - downloading initialization data."
 msgstr "Παρακαλώ περιμένετε - γίνεται λήψη των δεδομένων αρχικοποίησης."
@@ -2400,7 +2398,7 @@ msgid "Polish"
 msgstr "Πολωνικά"
 
 msgid "Polish proxy server url"
-msgstr "URL πολωνικού διακομιστή μεσολάβησης"
+msgstr "Διεύθυνση URL διακομιστή μεσολάβησης Πολωνίας"
 
 msgid "Popular"
 msgstr "Δημοφιλή"
@@ -2421,7 +2419,7 @@ msgid "Powerpoint Presentation"
 msgstr "Παρουσίαση PowerPoint"
 
 msgid "Practice Management"
-msgstr "Διαχείριση ιατρείου"
+msgstr "Διαχείριση Ιατρικής πρακτικής"
 
 msgid "Prefer hlsld for playlist with alt. media"
 msgstr "Προτίμηση hlsld για λίστα αναπαραγωγής με εναλλακτικά πολυμέσα"
@@ -2433,7 +2431,7 @@ msgid "Prefered quality"
 msgstr "Προτιμώμενη ποιότητα"
 
 msgid "Preferred bitrate"
-msgstr "Προτιμώμενο bitrate"
+msgstr "Προτιμώμενος ρυθμός bit"
 
 msgid "Preferred format:"
 msgstr "Προτιμώμενη μορφή:"
@@ -2469,7 +2467,7 @@ msgid "Program"
 msgstr "Πρόγραμμα"
 
 msgid "Program A-Z"
-msgstr "Πρόγραμμα Α-Ω"
+msgstr "Πρόγραμμα A-Z"
 
 msgid "Programmes"
 msgstr "Προγράμματα"
@@ -2505,10 +2503,10 @@ msgid "RADIO"
 msgstr "ΡΑΔΙΟ"
 
 msgid "RAM buffer size [MB] for local files"
-msgstr "Μέγεθος προφόρτωσης RAM [MB] για τοπικά αρχεία"
+msgstr "Μέγεθος προσωρινής μνήμης RAM [MB] για τοπικά αρχεία"
 
 msgid "RAM buffer size [MB] for network protocols"
-msgstr "Μέγεθος προφόρτωσης RAM [MB] για πρωτόκολλα δικτύου"
+msgstr "Μέγεθος προσωρινής μνήμης RAM [MB] για πρωτόκολλα δικτύου"
 
 msgid "RAW"
 msgstr "RAW"
@@ -2517,13 +2515,13 @@ msgid "RECENT"
 msgstr "ΠΡΟΣΦΑΤΑ"
 
 msgid "REMEMBER: "
-msgstr "ΝΑ ΘΥΜΑΣΤΕ: "
+msgstr "ΘΥΜΗΘΕΙΤΕ: "
 
 msgid "Radio"
 msgstr "Ραδιόφωνο"
 
 msgid "Radio iframe file"
-msgstr "Αρχείο iframe για ραδιόφωνο"
+msgstr "Αρχείο iframe ραδιοφώνου"
 
 msgid "Radio stations"
 msgstr "Ραδιοφωνικοί σταθμοί"
@@ -2541,7 +2539,7 @@ msgid "Random selection"
 msgstr "Τυχαία επιλογή"
 
 msgid "Randomize a playlist"
-msgstr "Τυχαία επιλογή μιας λίστας αναπαραγωγής"
+msgstr "Τυχαία επιλογή λίστας αναπαραγωγής"
 
 msgid "Ranking"
 msgstr "Κατάταξη"
@@ -2560,7 +2558,7 @@ msgid "Recent"
 msgstr "Πρόσφατα"
 
 msgid "Recon"
-msgstr "Αποκατάσταση"
+msgstr "Αναγνώριση"
 
 msgid "Redirect"
 msgstr "Ανακατεύθυνση"
@@ -2569,7 +2567,7 @@ msgid "Refresh"
 msgstr "Ανανέωση"
 
 msgid "Refreshing"
-msgstr "Ανανέωση"
+msgstr "Γίνεται ανανέωση"
 
 msgid "Release"
 msgstr "Κυκλοφορία"
@@ -2581,20 +2579,20 @@ msgid "Releases"
 msgstr "Κυκλοφορίες"
 
 msgid "Relevance"
-msgstr "Συνάφεια"
+msgstr "Σχετικότητα"
 
 msgid "Reload list"
-msgstr "Ανανέωση λίστας"
+msgstr "Επαναφόρτωση λίστας"
 
 msgid "Remember last watched position"
-msgstr "Απομνημόνευση της τελευταίας θέσης παρακολούθησης"
+msgstr "Απομνημόνευση τελευταίας θέσης προβολής"
 
 msgid "Remove"
 msgstr "Αφαίρεση"
 
 #, python-format
 msgid "Remove \"%s\" item"
-msgstr "Αφαίρεση του στοιχείου \"%s\""
+msgstr "Αφαίρεση στοιχείου \"%s\""
 
 msgid "Remove disabled services"
 msgstr "Αφαίρεση απενεργοποιημένων υπηρεσιών"
@@ -2615,7 +2613,7 @@ msgid "Rename"
 msgstr "Μετονομασία"
 
 msgid "Replay Shows"
-msgstr "Επαναλήψεις"
+msgstr "Επανάληψη εκπομπών"
 
 msgid "Reset State"
 msgstr "Επαναφορά κατάστασης"
@@ -2625,7 +2623,7 @@ msgid ""
 "Resolving hCaptcha with %s failed!\n"
 "\n"
 msgstr ""
-"Η επίλυση του hCaptcha με %s απέτυχε!\n"
+"Αποτυχία επίλυσης hCaptcha με %s!\n"
 "\n"
 
 #, python-format
@@ -2633,7 +2631,7 @@ msgid ""
 "Resolving reCaptcha with %s failed!\n"
 "\n"
 msgstr ""
-"Η επίλυση του reCaptcha με %s απέτυχε!\n"
+"Αποτυχία επίλυσης reCaptcha με %s!\n"
 "\n"
 
 msgid "Return to hosts list"
@@ -2646,7 +2644,7 @@ msgid "Russian"
 msgstr "Ρωσικά"
 
 msgid "Russian proxy server url"
-msgstr "URL ρωσικού διακομιστή μεσολάβησης"
+msgstr "Διεύθυνση URL διακομιστή μεσολάβησης Ρωσίας"
 
 msgid "SHOWS"
 msgstr "ΕΚΠΟΜΠΕΣ"
@@ -2679,10 +2677,10 @@ msgid "Search"
 msgstr "Αναζήτηση"
 
 msgid "Search History is empty."
-msgstr "Το ιστορικό αναζήτησης είναι άδειο."
+msgstr "Το ιστορικό αναζήτησης είναι κενό."
 
 msgid "Search History successfully deleted."
-msgstr "Το ιστορικό αναζήτησης διαγράφηκε με επιτυχία."
+msgstr "Το ιστορικό αναζήτησης διαγράφηκε επιτυχώς."
 
 msgid "Search Movies and TV Series"
 msgstr "Αναζήτηση Ταινιών και Τηλεοπτικών σειρών"
@@ -2713,7 +2711,7 @@ msgid "Search type"
 msgstr "Τύπος αναζήτησης"
 
 msgid "Search youtube materials"
-msgstr "Αναζήτηση υλικού youtube"
+msgstr "Αναζήτηση υλικού στο YouTube"
 
 #, python-format
 msgid "Searching in %s, please wait (%d)"
@@ -2743,10 +2741,10 @@ msgid "Season {0}"
 msgstr "Σεζόν {0}"
 
 msgid "Second movie player in buffering mode"
-msgstr "Δεύτερη αναπαραγωγή ταινιών σε λειτουργία προφόρτωσης"
+msgstr "Δεύτερη αναπαραγωγή ταινιών σε λειτουργία προσωρινής μνήμης"
 
 msgid "Second movie player without buffering mode"
-msgstr "Δεύτερη αναπαραγωγή ταινιών χωρίς λειτουργία προφόρτωσης"
+msgstr "Δεύτερη αναπαραγωγή ταινιών χωρίς λειτουργία προσωρινής μνήμης"
 
 msgid "See all events"
 msgstr "Δείτε όλα τα γεγονότα"
@@ -2774,7 +2772,7 @@ msgid "Select directory"
 msgstr "Επιλογή καταλόγου"
 
 msgid "Select favourite group"
-msgstr "Επιλογή ομάδας αγαπημένων"
+msgstr "Επιλογή αγαπημένης ομάδας"
 
 msgid "Select group"
 msgstr "Επιλογή ομάδας"
@@ -2792,7 +2790,7 @@ msgid "Select option"
 msgstr "Δώστε μια επιλογή"
 
 msgid "Select pictures"
-msgstr "Επιλέξτε εικόνες"
+msgstr "Επιλογή εικόνων"
 
 msgid "Select service"
 msgstr "Επιλογή υπηρεσίας"
@@ -2804,13 +2802,13 @@ msgid "Select subtitles provider:"
 msgstr "Επιλογή παρόχου υποτίτλων:"
 
 msgid "Select subtitles to download"
-msgstr "Επιλογή υποτίτλων προς λήψη"
+msgstr "Επιλογή υποτίτλων για λήψη"
 
 msgid "Select subtitles track"
 msgstr "Επιλογή κομματιού υποτίτλων"
 
 msgid "Select the directory"
-msgstr "Επιλογή του καταλόγου"
+msgstr "Επιλέξτε τον κατάλογο"
 
 msgid "Select the file"
 msgstr "Επιλέξτε το αρχείο"
@@ -2825,10 +2823,10 @@ msgid "Send"
 msgstr "Αποστολή"
 
 msgid "Seriale"
-msgstr "Σειρά"
+msgstr "Σειρές"
 
 msgid "Series"
-msgstr "Σειρά"
+msgstr "Σειρές"
 
 msgid "Series TV"
 msgstr "Σειρές TV"
@@ -2845,11 +2843,11 @@ msgid ""
 "Please fill your login and password in the %s configuration."
 msgstr ""
 "Η υπηρεσία %s απαιτεί εγγραφή.\n"
-"Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό σας στη ρύθμιση του %s."
+"Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό πρόσβασης στη ρύθμιση του %s."
 
 #, python-format
 msgid "Service [%s] has no additional settings."
-msgstr "Η υπηρεσία [%s] δεν διαθέτει πρόσθετες ρυθμίσεις."
+msgstr "Η υπηρεσία [%s] δεν έχει πρόσθετες ρυθμίσεις."
 
 msgid "Services configuration"
 msgstr "Ρυθμίσεις υπηρεσιών"
@@ -2858,16 +2856,16 @@ msgid "Services management"
 msgstr "Διαχείριση υπηρεσιών"
 
 msgid "Set active movie player"
-msgstr "Ρύθμιση ενεργής αναπαραγωγής ταινιών"
+msgstr "Ορισμός ενεργής αναπαραγωγής ταινιών"
 
 msgid "Set file name"
 msgstr "Ορισμός ονόματος αρχείου"
 
 msgid "Set pin code"
-msgstr "Ορισμός κωδικού pin"
+msgstr "Ορισμός κωδικού PIN"
 
 msgid "Set watched"
-msgstr "Ορισμός παρακολούθησης"
+msgstr "Ορισμός ως προβληθέν"
 
 msgid "Settings"
 msgstr "Ρυθμίσεις"
@@ -2879,10 +2877,10 @@ msgid "Shoulder & Elbow"
 msgstr "Ώμος & αγκώνας"
 
 msgid "Show IPTVPlayer in extension list"
-msgstr "Εμφάνιση του IPTVPlayer στη λίστα επεκτάσεων"
+msgstr "Εμφάνιση IPTVPlayer στη λίστα επεκτάσεων"
 
 msgid "Show IPTVPlayer in main menu"
-msgstr "Εμφάνιση του IPTVPlayer στο κύριο μενού"
+msgstr "Εμφάνιση IPTVPlayer στο κύριο μενού"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
 msgstr "Εμφάνιση προφίλ στο ZBIORNIK MINI:"
@@ -2927,7 +2925,7 @@ msgid "Simple subtitles downloader"
 msgstr "Απλό πρόγραμμα λήψης υποτίτλων"
 
 msgid "Simplify the title and try again."
-msgstr "Απλοποιήστε τον τίτλο και προσπαθήστε ξανά."
+msgstr "Απλοποιήστε τον τίτλο και δοκιμάστε ξανά."
 
 msgid "Single file downloader"
 msgstr "Λήψη μεμονωμένου αρχείου"
@@ -2935,9 +2933,8 @@ msgstr "Λήψη μεμονωμένου αρχείου"
 msgid "Skin"
 msgstr "Θέμα"
 
-#, fuzzy
 msgid "Skinners: "
-msgstr "Ακροατές: %s"
+msgstr "Δημιουργοί θεμάτων: "
 
 msgid "Skip video shorter than [min]"
 msgstr "Παράλειψη βίντεο μικρότερου από [λεπτά]"
@@ -2985,13 +2982,13 @@ msgid "Sort xxxlist :"
 msgstr "Ταξινόμηση xxxlist:"
 
 msgid "Sorted channels A-Z [live]"
-msgstr "Ταξινομημένα κανάλια Α-Ω (ζωντανά)"
+msgstr "Ταξινομημένα κανάλια A-Z [ζωντανά]"
 
 msgid "Sorted most viewed channels general [live]"
-msgstr "Ταξινομημένα κανάλια με τις περισσότερες προβολές γενικά [ζωντανά]"
+msgstr "Ταξινομημένα πιο δημοφιλή κανάλια γενικά [ζωντανά]"
 
 msgid "Sorted most viewed channels now [live]"
-msgstr "Ταξινομημένα κανάλια με τις περισσότερες προβολές τώρα [ζωντανά]"
+msgstr "Ταξινομημένα πιο δημοφιλή κανάλια τώρα [ζωντανά]"
 
 #, python-format
 msgid "Source %s"
@@ -3022,7 +3019,7 @@ msgid "Start download manager per default"
 msgstr "Έναρξη διαχείρισης λήψεων από προεπιλογή"
 
 msgid "Stereo downmix mode for software decoder"
-msgstr "Στερεοφωνική λειτουργία downmix για αποκωδικοποιητή λογισμικού"
+msgstr "Λειτουργία στερεοφωνικής μίξης για αποκωδικοποιητή λογισμικού"
 
 msgid "Stop"
 msgstr "Διακοπή"
@@ -3034,10 +3031,10 @@ msgid "Stop downloading"
 msgstr "Διακοπή λήψης"
 
 msgid "Stop playback with buffer save"
-msgstr "Διακοπή αναπαραγωγής με αποθήκευση προφόρτωσης"
+msgstr "Διακοπή αναπαραγωγής με αποθήκευση προσωρινής μνήμης"
 
 msgid "Stop playing?"
-msgstr "Διακοπή της αναπαραγωγής;"
+msgstr "Να γίνει διακοπή της αναπαραγωγής;"
 
 #, python-format
 msgid "Stream starts from %s"
@@ -3059,7 +3056,7 @@ msgid "Subtitle border color"
 msgstr "Χρώμα περιγράμματος υποτίτλων"
 
 msgid "Subtitle border enabled"
-msgstr "Περίγραμμα υποτίτλων ενεργό"
+msgstr "Ενεργοποίηση περιγράμματος υποτίτλων"
 
 msgid "Subtitle border width"
 msgstr "Πλάτος περιγράμματος υποτίτλων"
@@ -3086,29 +3083,29 @@ msgid "Subtitle line wrapping"
 msgstr "Αναδίπλωση γραμμής υποτίτλων"
 
 msgid "Subtitle shadow X offset"
-msgstr "Μετατόπιση σκιάς υποτίτλων Χ"
+msgstr "Οριζόντια μετατόπιση σκιάς υποτίτλων"
 
 msgid "Subtitle shadow Y offset"
-msgstr "Μετατόπιση σκιάς υποτίτλων Y"
+msgstr "Κατακόρυφη μετατόπιση σκιάς υποτίτλων"
 
 msgid "Subtitle shadow color"
 msgstr "Χρώμα σκιάς υποτίτλων"
 
 msgid "Subtitle shadow enabled"
-msgstr "Σκιά υποτίτλων ενεργή"
+msgstr "Ενεργοποίηση σκιάς υποτίτλων"
 
 msgid "Subtitle vertical alignment"
-msgstr "Κάθετη στοίχιση υποτίτλων"
+msgstr "Κατακόρυφη στοίχιση υποτίτλων"
 
 msgid "Subtitles"
 msgstr "Υπότιτλοι"
 
 #, python-format
 msgid "Subtitles \"%s\" downloaded correctly."
-msgstr "Οι υπότιτλοι \"%s\" έχουν ληφθεί σωστά."
+msgstr "Οι υπότιτλοι \"%s\" λήφθηκαν σωστά."
 
 msgid "Subtitles conversion to UTF-8 failed."
-msgstr "Η μετατροπή υποτίτλων σε UTF-8 απέτυχε."
+msgstr "Αποτυχία μετατροπής υποτίτλων σε UTF-8."
 
 #, python-format
 msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
@@ -3146,7 +3143,7 @@ msgid "TNA"
 msgstr "TNA"
 
 msgid "TOP 10"
-msgstr "TOP 10"
+msgstr "ΚΟΡΥΦΑΙΑ 10"
 
 msgid "TRAILER"
 msgstr "ΤΡΕΪΛΕΡ"
@@ -3189,10 +3186,10 @@ msgid "The %s utility is necessary here but it was not detected."
 msgstr "Το εργαλείο %s είναι απαραίτητο εδώ, αλλά δεν εντοπίστηκε."
 
 msgid "The YouTube video ID is invalid."
-msgstr "Το αναγνωριστικό βίντεο στο YouTube είναι άκυρο."
+msgstr "Το αναγνωριστικό βίντεο YouTube δεν είναι έγκυρο."
 
 msgid "The best"
-msgstr "Καλύτερη"
+msgstr "Η καλύτερη"
 
 msgid "The color of the current version"
 msgstr "Το χρώμα της τρέχουσας έκδοσης"
@@ -3201,7 +3198,7 @@ msgid "The color of the viewed item"
 msgstr "Το χρώμα του προβαλλόμενου στοιχείου"
 
 msgid "The default aspect ratio for the external player"
-msgstr "Προεπιλεγμένος λόγος διαστάσεων εξωτερικής αναπαραγωγής"
+msgstr "Προεπιλεγμένη αναλογία διαστάσεων εξωτερικής αναπαραγωγής"
 
 #, python-format
 msgid ""
@@ -3209,7 +3206,7 @@ msgid ""
 "Please fill your login and password in the host configuration. Available under blue button."
 msgstr ""
 "Ο host %s απαιτεί εγγραφή.\n"
-"Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό σας στη ρύθμιση του host. Διαθέσιμο κάτω από το μπλε κουμπί."
+"Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό πρόσβασης στη ρύθμιση του host. Διαθέσιμο με το μπλε κουμπί."
 
 #, python-format
 msgid ""
@@ -3217,7 +3214,7 @@ msgid ""
 "Please fill your login and password in the host configuration - available under blue button."
 msgstr ""
 "Ο host %s απαιτεί συνδρομή.\n"
-"Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό σας στη ρύθμιση του host - διαθέσιμο κάτω από το μπλε κουμπί."
+"Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό πρόσβασης στη ρύθμιση του host - διαθέσιμο με το μπλε κουμπί."
 
 msgid "The number of items in the search history"
 msgstr "Αριθμός στοιχείων στο ιστορικό αναζήτησης"
@@ -3228,15 +3225,15 @@ msgid ""
 "It will be saved in the file:\n"
 "\"%s\""
 msgstr ""
-"Η προφόρτωση αναπαραγωγής έχει μεταφερθεί στη Διαχείριση λήψεων.\n"
+"Η προσωρινή μνήμη αναπαραγωγής έχει μεταφερθεί στη Διαχείριση λήψεων.\n"
 "Θα αποθηκευτεί στο αρχείο:\n"
 "\"%s\""
 
 msgid "The same item already exists in this group."
-msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτή την ομάδα."
+msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτήν την ομάδα."
 
 msgid "The worst"
-msgstr "Χείριστη"
+msgstr "Η χειρότερη"
 
 msgid "There are no other favourite groups"
 msgstr "Δεν υπάρχουν άλλες αγαπημένες ομάδες"
@@ -3259,7 +3256,7 @@ msgid "This model is offline."
 msgstr "Αυτό το μοντέλο είναι εκτός σύνδεσης."
 
 msgid "This room is offline. Try again later!"
-msgstr "Αυτό το δωμάτιο είναι εκτός σύνδεσης. Δοκιμάστε ξανά αργότερα!"
+msgstr "Αυτός ο χώρος είναι εκτός σύνδεσης. Δοκιμάστε ξανά αργότερα!"
 
 msgid "This show is private. Try again later!"
 msgstr "Αυτή η εκπομπή είναι ιδιωτική. Δοκιμάστε ξανά αργότερα!"
@@ -3271,7 +3268,7 @@ msgid "This video has been deleted."
 msgstr "Αυτό το βίντεο έχει διαγραφεί."
 
 msgid "This video is a private video."
-msgstr "Αυτό το βίντεο είναι ιδιωτικό."
+msgstr "Αυτό το βίντεο είναι ιδιωτικό βίντεο."
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB flash drive για να διορθώσετε αυτό το πρόβλημα."
@@ -3284,7 +3281,7 @@ msgid ""
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 "Για να παρακολουθήσετε βίντεο από το http://vk.com/ πρέπει να συνδεθείτε.\n"
-"Παρακαλώ συμπληρώστε τα στοιχεία σύνδεσης και τον κωδικό πρόσβασης στις ρυθμίσεις του IPTVPlayer."
+"Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό πρόσβασης στις ρυθμίσεις του IPTVPlayer."
 
 msgid "Today"
 msgstr "Σήμερα"
@@ -3308,7 +3305,7 @@ msgid "Top movies"
 msgstr "Κορυφαίες ταινίες"
 
 msgid "Top rated"
-msgstr "Κορυφαία"
+msgstr "Κορυφαία βαθμολογημένα"
 
 msgid "Top series"
 msgstr "Κορυφαίες σειρές"
@@ -3335,19 +3332,19 @@ msgid "Tree list"
 msgstr "Λίστα δέντρου"
 
 msgid "Trending"
-msgstr "Δημοφιλή"
+msgstr "Δημοφιλή τώρα"
 
 msgid "Try to bypass DRM (it may be illegal)"
-msgstr "Προσπάθεια παράκαμψης DRM (ενδέχεται να είναι παράνομο)"
+msgstr "Προσπάθεια παράκαμψης του DRM (ενδέχεται να είναι παράνομο)"
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
-msgstr "Δοκιμάστε να αλλάξετε extplayer ή να απενεργοποιήσετε το IFD στη διαμόρφωση GSTplayer"
+msgstr "Δοκιμάστε να αλλάξετε extplayer ή να απενεργοποιήσετε το IFD στις ρυθμίσεις του GSTplayer"
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
-msgstr "Απενεργοποίηση προφόρτωσης για http://prognoza.pogody.tv/"
+msgstr "Απενεργοποίηση προσωρινής μνήμης για http://prognoza.pogody.tv/"
 
 msgid "Tutorials"
-msgstr "Οδηγοί"
+msgstr "Εκπαιδευτικά βίντεο"
 
 msgid "Type: "
 msgstr "Τύπος: "
@@ -3360,13 +3357,13 @@ msgid "UFC"
 msgstr "UFC"
 
 msgid "Ukrainian proxy server url"
-msgstr "URL ουκρανικού διακομιστή μεσολάβησης"
+msgstr "Διεύθυνση URL διακομιστή μεσολάβησης Ουκρανίας"
 
 msgid "Umount iso file"
-msgstr "Μη προσάρτηση αρχείου iso"
+msgstr "Αποπροσάρτηση αρχείου iso"
 
 msgid "Unable to comply. Search History is empty."
-msgstr "Δεν είναι δυνατή η συμμόρφωση. Το ιστορικό αναζήτησης είναι άδειο."
+msgstr "Αδυναμία συμμόρφωσης. Το ιστορικό αναζήτησης είναι κενό."
 
 msgid "Unknow data in the captcha item!"
 msgstr "Άγνωστα δεδομένα στο στοιχείο captcha!"
@@ -3401,7 +3398,7 @@ msgid "Unrar error code[%s]."
 msgstr "Unrar κωδικός σφάλματος[%s]."
 
 msgid "Unset watched"
-msgstr "Μη ορισμός παρακολούθησης"
+msgstr "Αφαίρεση επισήμανσης ως προβληθέν"
 
 #, python-format
 msgid "Unzip error code[%s]."
@@ -3411,7 +3408,7 @@ msgid "Upcoming"
 msgstr "Επερχόμενα"
 
 msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr "Η ενημέρωση ολοκληρώθηκε με επιτυχία. Προς το παρόν, το σύστημα θα επανεκκινηθεί."
+msgstr "Η ενημέρωση ολοκληρώθηκε επιτυχώς. Προς το παρόν, το σύστημα θα επανεκκινήσει."
 
 msgid "Upload date"
 msgstr "Ημερομηνία μεταφόρτωσης"
@@ -3420,10 +3417,10 @@ msgid "Uploads"
 msgstr "Μεταφορτώσεις"
 
 msgid "Urllists player"
-msgstr "Αναπαραγωγή Urllists"
+msgstr "Αναπαραγωγή λιστών urllists"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
-msgstr "Χρήση πολωνικού διακομιστή μεσολάβησης για το http://prognoza.pogody.tv/"
+msgstr "Χρήση διακομιστή μεσολάβησης Πολωνίας για το http://prognoza.pogody.tv/"
 
 msgid "Use default quality:"
 msgstr "Χρήση προεπιλεγμένης ποιότητας:"
@@ -3435,7 +3432,7 @@ msgid "Use default video quality:"
 msgstr "Χρήση προεπιλεγμένης ποιότητας βίντεο:"
 
 msgid "Use links cache"
-msgstr "Χρήση προσωρινής μνήμης συνδέσμων"
+msgstr "Χρήση κρυφής μνήμης συνδέσμων"
 
 msgid "Use preferred bitrate"
 msgstr "Χρήση προτιμώμενου ρυθμού bit"
@@ -3448,7 +3445,7 @@ msgstr "Χρήση διακομιστή μεσολάβησης:"
 
 #, python-format
 msgid "Use software decoder for the %s"
-msgstr "Χρήση λογισμικού αποκωδικοποιητή για το %s"
+msgstr "Χρήση αποκωδικοποιητή λογισμικού για το %s"
 
 msgid "Use subtitles parser extension if available"
 msgstr "Χρήση επέκτασης ανάλυσης υποτίτλων, εάν είναι διαθέσιμη"
@@ -3463,7 +3460,7 @@ msgid "Use web-proxy (it may be illegal):"
 msgstr "Χρήση διακομιστή μεσολάβησης ιστού (μπορεί να είναι παράνομο):"
 
 msgid "Use web-proxy for VODs (it may be illegal):"
-msgstr "Χρήση web-proxy για VODs (μπορεί να είναι παράνομο):"
+msgstr "Χρήση διακομιστή μεσολάβησης ιστού για VODs (μπορεί να είναι παράνομο):"
 
 msgid "User defined"
 msgstr "Ορισμένο από τον χρήστη"
@@ -3482,7 +3479,7 @@ msgstr "Όνομα χρήστη"
 
 #, python-format
 msgid "Username in settings is different from %s"
-msgstr "Το όνομα χρήστη στις ρυθμίσεις διαφέρει από το %s"
+msgstr "Το όνομα χρήστη στις ρυθμίσεις είναι διαφορετικό από το %s"
 
 msgid "Username:"
 msgstr "Όνομα χρήστη:"
@@ -3499,7 +3496,7 @@ msgid "Utility \"%s\" can not be found."
 msgstr "Το εργαλείο \"%s\" δεν βρέθηκε."
 
 msgid "VENUES"
-msgstr "ΤΟΠΟΙ"
+msgstr "ΧΩΡΟΙ"
 
 msgid "VFD set current title:"
 msgstr "Ορισμός τρέχοντος τίτλου VFD:"
@@ -3543,10 +3540,10 @@ msgstr "Βίντεο %s"
 
 #, python-format
 msgid "Videos count: %s"
-msgstr "Πλήθος βίντεο: %s"
+msgstr "Αριθμός βίντεο: %s"
 
 msgid "View count"
-msgstr "Αριθμός προβολών"
+msgstr "Μετρητής προβολών"
 
 msgid "Views"
 msgstr "Προβολές"
@@ -3570,26 +3567,26 @@ msgid "WWE"
 msgstr "WWE"
 
 msgid "WWE Network"
-msgstr "WWE Network"
+msgstr "Δίκτυο WWE"
 
 #, python-format
 msgid "Waiting search thread to stop, please wait (%d)"
-msgstr "Αναμονή για διακοπή νήματος αναζήτησης, παρακαλώ περιμένετε (%d)"
+msgstr "Αναμονή για τερματισμό νήματος αναζήτησης, παρακαλώ περιμένετε (%d)"
 
 msgid "Watch"
 msgstr "Παρακολούθηση"
 
 msgid "Watch Trailer"
-msgstr "Δείτε το τρέιλερ"
+msgstr "Παρακολούθηση τρέιλερ"
 
 msgid "Watch Videos Online"
 msgstr "Παρακολούθηση βίντεο στο διαδίκτυο"
 
 msgid "Web component has been reset and all threads are stopped. :)"
-msgstr "Το διαδικτυακό στοιχείο επαναρυθμίστηκε και όλα τα νήματα σταμάτησαν. :)"
+msgstr "Το στοιχείο ιστού έχει επαναφερθεί και όλα τα νήματα έχουν σταματήσει. :)"
 
 msgid "Web component has been reset, the following threads are still working:"
-msgstr "Το διαδικτυακό στοιχείο επαναρυθμίστηκε, τα παρακάτω νήματα εξακολουθούν να λειτουργούν:"
+msgstr "Το στοιχείο ιστού έχει επαναφερθεί, τα παρακάτω νήματα εξακολουθούν να λειτουργούν:"
 
 msgid "Web interface version"
 msgstr "Έκδοση διεπαφής ιστού"
@@ -3610,28 +3607,28 @@ msgid "With subtitles"
 msgstr "Με υπότιτλους"
 
 msgid "Write current title to file:"
-msgstr "Εγγραφή τρέχοντος τίτλου στο αρχείο:"
+msgstr "Εγγραφή τρέχοντος τίτλου σε αρχείο:"
 
 msgid "Written Boards Review"
-msgstr "Επανεξέταση εξετάσεων με κείμενο"
+msgstr "Επιθεώρηση για εξετάσεις γραπτών δοκιμίων"
 
 msgid "Wrong Youtube Api Key length"
-msgstr "Λάθος μήκος Youtube Api Key"
+msgstr "Λάθος μήκος κλειδιού Youtube Api"
 
 msgid "Wrong answer."
 msgstr "Λάθος απάντηση."
 
 msgid "Wrong format of rar archive."
-msgstr "Λανθασμένη μορφή αρχείου rar."
+msgstr "Λάθος μορφή αρχείου rar."
 
 msgid "Wrong format of zip archive."
-msgstr "Λανθασμένη μορφή αρχείου zip."
+msgstr "Λάθος μορφή αρχείου zip."
 
 msgid "Wrong indexes."
 msgstr "Λάθος δείκτες."
 
 msgid "Wrong uri."
-msgstr "Λανθασμένο URI."
+msgstr "Λάθος διεύθυνση URI."
 
 msgid "Xbox One"
 msgstr "Xbox One"
@@ -3665,13 +3662,13 @@ msgid "Yes, to file /tmp/iptv.dbg"
 msgstr "Ναι, στο αρχείο /tmp/iptv.dbg"
 
 msgid "You are not allowed to play this video"
-msgstr "Δεν έχετε άδεια να αναπαραγάγετε αυτό το βίντεο"
+msgstr "Δεν σας επιτρέπεται να αναπαράγετε αυτό το βίντεο"
 
 msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
 msgstr "Χρησιμοποιείτε παλιά έκδοση του OpenWebif.<br> Για να πάτε στον ιστό του E2iPlayer επιλέξτε τον παρακάτω σύνδεσμο<br>"
 
 msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
-msgstr "Μπορείτε να απενεργοποιήσετε την επαλήθευση πιστοποιητικών HTTPS στις ρυθμίσεις του E2iPlayer για να παρακάμψετε αυτό το πρόβλημα."
+msgstr "Μπορείτε να απενεργοποιήσετε την επικύρωση πιστοποιητικών HTTPS στις ρυθμίσεις του E2iPlayer για να παρακάμψετε αυτό το πρόβλημα."
 
 msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
 msgstr "Μπορείτε να ενεργοποιήσετε το PyCurl στις ρυθμίσεις του E2iPlayer για να διορθώσετε αυτό το πρόβλημα."
@@ -3680,59 +3677,59 @@ msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix 
 msgstr "Μπορείτε να εγκαταστήσετε το πακέτο PyCurl με υποστήριξη TLS 1.3 από το feed για να διορθώσετε αυτό το πρόβλημα."
 
 msgid "You can try to use proxy as workaround, check options under blue button."
-msgstr "Μπορείτε να δοκιμάσετε να χρησιμοποιήσετε proxy ως λύση, δείτε τις επιλογές στο μπλε κουμπί."
+msgstr "Μπορείτε να προσπαθήσετε να χρησιμοποιήσετε proxy ως λύση, ελέγξτε τις επιλογές στο μπλε κουμπί."
 
 #, python-format
 msgid "You can use \"%s\" or \"%s\" services for automatic solution."
 msgstr "Μπορείτε να χρησιμοποιήσετε τις υπηρεσίες \"%s\" ή \"%s\" για αυτόματη λύση."
 
 msgid "You can use external eplayer to start playback faster."
-msgstr "Μπορείτε να χρησιμοποιήσετε εξωτερικό eplayer για ταχύτερη αναπαραγωγή."
+msgstr "Μπορείτε να χρησιμοποιήσετε εξωτερικό eplayer για πιο γρήγορη εκκίνηση της αναπαραγωγής."
 
 msgid "You do not have a premium account. Starting a sponsored broadcast."
-msgstr "Δεν έχετε λογαριασμό premium. Έναρξη χορηγούμενης μετάδοσης."
+msgstr "Δεν έχετε premium λογαριασμό. Έναρξη χορηγούμενης μετάδοσης."
 
 msgid "You need to enter email and password in configuration."
 msgstr "Πρέπει να εισάγετε email και κωδικό πρόσβασης στις ρυθμίσεις."
 
 msgid "You should never perform block I/O operations in the __init__."
-msgstr "Δεν πρέπει ποτέ να εκτελείτε block I/O λειτουργίες στο __init__."
+msgstr "Δεν πρέπει ποτέ να εκτελείτε λειτουργίες block I/O στο __init__."
 
 msgid "Your language preference:"
-msgstr "Η προτίμησή σας στη γλώσσα:"
+msgstr "Η προτίμησή σας για γλώσσα:"
 
 msgid "Your search entry"
-msgstr "Όροι αναζήτησης"
+msgstr "Η αναζήτησή σας"
 
 msgid "Youtube Suggestions"
 msgstr "Προτάσεις Youtube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr "Οι αναζητήσεις στο Youtube είναι ταχύτερες αν συμπληρώσετε το API key στο μενού ρυθμίσεων"
+msgstr "Οι αναζητήσεις στο Youtube είναι πιο γρήγορες αν συμπληρώσετε το API key στο μενού ρυθμίσεων"
 
 #, python-format
 msgid "[%s] - configuration"
-msgstr "[%s] - ρυθμίσεις"
+msgstr "[%s] - ρύθμιση"
 
 #, python-format
 msgid "[%s] with buffering"
-msgstr "[%s] με προφόρτωση"
+msgstr "[%s] με προσωρινή μνήμη"
 
 #, python-format
 msgid "[%s] without buffering"
-msgstr "[%s] χωρίς προφόρτωση"
+msgstr "[%s] χωρίς προσωρινή μνήμη"
 
 msgid "[HLS/M3U8] buffering"
-msgstr "Προφόρτωση [HLS/M3U8]"
+msgstr "Προσωρινή μνήμη [HLS/M3U8]"
 
 msgid "[HTTP] buffering"
-msgstr "Προφόρτωση [HTTP]"
+msgstr "Προσωρινή μνήμη [HTTP]"
 
 msgid "[Logged-in-only] "
 msgstr "[Μόνο για συνδεδεμένους χρήστες] "
 
 msgid "[RTMP] buffering (rtmpdump required)"
-msgstr "Προφόρτωση [RTMP] (απαιτείται το rtmpdump)"
+msgstr "Προσωρινή μνήμη [RTMP] (απαιτείται rtmpdump)"
 
 msgid "[en]"
 msgstr "[en]"
@@ -3744,7 +3741,7 @@ msgid "[trailer]"
 msgstr "[τρέιλερ]"
 
 msgid "_checkStatus except error"
-msgstr "Σφάλμα _checkStatus εκτός"
+msgstr "_checkStatus σφάλμα εξαίρεσης"
 
 msgid "after a week"
 msgstr "μετά από μια εβδομάδα"
@@ -3765,7 +3762,7 @@ msgid "any"
 msgstr "οποιοδήποτε"
 
 msgid "aqua"
-msgstr "θαλασσί"
+msgstr "γαλάζιο"
 
 msgid "auto"
 msgstr "αυτόματο"
@@ -3786,13 +3783,13 @@ msgid "bottom"
 msgstr "κάτω"
 
 msgid "buffering location"
-msgstr "τοποθεσία προφόρτωσης"
+msgstr "τοποθεσία προσωρινής μνήμης"
 
 msgid "center"
 msgstr "κέντρο"
 
 msgid "cobalt"
-msgstr "cobalt"
+msgstr "κοβαλτί"
 
 msgid "de"
 msgstr "de"
@@ -3801,7 +3798,7 @@ msgid "default"
 msgstr "προεπιλογή"
 
 msgid "direct link"
-msgstr "άμεσος σύνδεσμος"
+msgstr "απευθείας σύνδεσμος"
 
 msgid "downloads location"
 msgstr "τοποθεσία λήψεων"
@@ -3816,10 +3813,10 @@ msgid "episodes"
 msgstr "επεισόδια"
 
 msgid "external eplayer3"
-msgstr "εξωτερικό eplayer3"
+msgstr "εξωτερικός eplayer3"
 
 msgid "external gstplayer"
-msgstr "εξωτερικό gstplayer"
+msgstr "εξωτερικός gstplayer"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
 msgstr "ελέγξτε πρώτα αν ο host λειτουργεί σωστά στο GUI και στον ιστό <b>ΠΡΙΝ</b> αναφέρετε σφάλμα σε αυτόν !!!"
@@ -3834,7 +3831,7 @@ msgid "fuchsia"
 msgstr "φούξια"
 
 msgid "geoblocked"
-msgstr "γεωγραφικός αποκλεισμός"
+msgstr "γεωαποκλεισμένο"
 
 msgid "gray"
 msgstr "γκρι"
@@ -3888,10 +3885,10 @@ msgid "large"
 msgstr "μεγάλο"
 
 msgid "leave movie player..."
-msgstr "αφήστε την αναπαραγωγή ταινιών..."
+msgstr "έξοδος από την αναπαραγωγή ταινιών..."
 
 msgid "lime"
-msgstr "λεμονί"
+msgstr "λαχανί"
 
 msgid "line"
 msgstr "γραμμή"
@@ -3900,7 +3897,7 @@ msgid "live"
 msgstr "ζωντανά"
 
 msgid "login"
-msgstr "σύνδεση"
+msgstr "είσοδος"
 
 msgid "low"
 msgstr "χαμηλή"
@@ -3912,16 +3909,16 @@ msgid "main"
 msgstr "κύριο"
 
 msgid "maroon"
-msgstr "βαθυκόκκινο"
+msgstr "καφέ-μπορντώ"
 
 msgid "medium"
 msgstr "μέτριο"
 
 msgid "navy"
-msgstr "βαθυγάλαζο"
+msgstr "ναυτικό"
 
 msgid "olive"
-msgstr "λαδί"
+msgstr "ελαιόχρωμο"
 
 msgid "password"
 msgstr "κωδικός πρόσβασης"
@@ -3957,13 +3954,13 @@ msgid "small"
 msgstr "μικρή"
 
 msgid "standard"
-msgstr "στάνταρ"
+msgstr "τυπικό"
 
 msgid "teal"
 msgstr "γαλαζοπράσινο"
 
 msgid "the best"
-msgstr "καλύτερη"
+msgstr "η καλύτερη"
 
 msgid "the highest"
 msgstr "το υψηλότερο"
@@ -3972,7 +3969,7 @@ msgid "the lowest"
 msgstr "το χαμηλότερο"
 
 msgid "the worst"
-msgstr "χείριστη"
+msgstr "η χειρότερη"
 
 msgid "top"
 msgstr "κορυφαίο"
@@ -4000,7 +3997,7 @@ msgid "views"
 msgstr "προβολές"
 
 msgid "visit site"
-msgstr "επίσκεψη στον ιστότοπο"
+msgstr "επίσκεψη ιστότοπου"
 
 #, python-format
 msgid "wait %s second"

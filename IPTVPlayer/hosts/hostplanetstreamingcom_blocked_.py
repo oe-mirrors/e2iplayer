@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 25.07.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -106,10 +107,7 @@ class PlanetStreaming(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG("PlanetStreaming.listMainMenu")
-        MAIN_CAT_TAB = [
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'), }
-                       ]
+        MAIN_CAT_TAB = self.searchItems()
 
         sts, data = self.getPage(self.getMainUrl())
         if sts:

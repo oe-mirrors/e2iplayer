@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 2025.07.04. Blindspot
+# Last Modified: 04.07.2025 - Blindspot
 ###################################################
 HOST_VERSION = "1.3"
 ###################################################
@@ -37,7 +37,7 @@ class Idokep(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'idokep', 'cookie': 'idokep.cookie'})
         self.MAIN_URL = 'https://www.idokep.hu/idojaras/Budapest'
-        self.DEFAULT_ICON_URL = "http://www.blindspot.nhely.hu/Thumbnails/idokep.png"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/idokep.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 

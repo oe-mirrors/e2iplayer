@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+# Last Modified: 22.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -66,9 +66,7 @@ class ARDmediathek(CBaseHostClass):
                              {'category': 'list_items', 'title': _('Missed the show?'), 'url': self.getFullUrl('appdata/servlet/tv/sendungVerpasst?json')},
                              {'category': 'list_items', 'title': _('Program A-Z'), 'url': self.getFullUrl('appdata/servlet/tv/sendungAbisZ?json')},
                              {'category': 'list_items', 'title': _('Live TV'), 'url': self.getFullUrl('appdata/servlet/tv/live?json')},
-                             {'category': 'list_items', 'title': _('Live Radio'), 'url': self.getFullUrl('appdata/servlet/radio/live?json')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')}]
+                             {'category': 'list_items', 'title': _('Live Radio'), 'url': self.getFullUrl('appdata/servlet/radio/live?json')}] + self.searchItems()
 
         self.ICON_QUALITY_MAP = {'large': 1080, 'medium': 640, 'small': 240}
         self.STREAM_QUALITY_MAP = {'hd': 4, 'veryhigh': 3, 'high': 2, 'med': 1, 'low': 0}

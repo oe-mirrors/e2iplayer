@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 22.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -85,10 +86,7 @@ class BSTO(CBaseHostClass, CaptchaHelper):
     def selectDomain(self):
         self.MAIN_URL = 'https://bs.to/'
         self.MAIN_CAT_TAB = [{'category': 'list_genres', 'title': _('Genres'), 'url': self.getFullUrl('/serie-genre')},
-                             {'category': 'list_genres', 'title': _('Alphabet'), 'url': self.getFullUrl('/serie-alphabet')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }
-                            ]
+                             {'category': 'list_genres', 'title': _('Alphabet'), 'url': self.getFullUrl('/serie-alphabet')}] + self.searchItems()
 
     def listGenres(self, cItem, nextCategory):
         printDBG("BSTO.listGenres")

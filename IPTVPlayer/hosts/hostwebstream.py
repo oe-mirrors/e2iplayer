@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 15.08.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -123,7 +124,7 @@ def gettytul():
 
 class HasBahCa(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3'}
-    MAIN_GROUPED_TAB = [{'alias_id': 'weeb.tv', 'name': 'weeb.tv', 'title': 'http://weeb.tv/', 'url': '', 'icon': 'http://xmtvplayer.com/wp-content/uploads/2014/07/weebtv.png'},
+    MAIN_GROUPED_TAB = [{'alias_id': 'weeb.tv', 'name': 'weeb.tv', 'title': 'https://weeb.tv/', 'url': '', 'icon': 'https://static.weeb.tv/images/weebtv1.png'},
                         {'alias_id': 'videostar.pl', 'name': 'videostar.pl', 'title': 'https://pilot.wp.pl/', 'url': '', 'icon': 'http://satkurier.pl/uploads/53612.jpg'},
                         {'alias_id': 'prognoza.pogody.tv', 'name': 'prognoza.pogody.tv', 'title': 'http://pogody.tv/', 'url': 'http://prognoza.pogody.tv', 'icon': 'http://pogody.pl/images/pogodytv.png'},
                         {'alias_id': 'meteo.pl', 'name': 'meteo.pl', 'title': 'http://meteo.pl/', 'url': 'http://meteo.pl/', 'icon': 'http://www.meteo.pl/img/napis_glowny_pl_2.png'},
@@ -132,7 +133,7 @@ class HasBahCa(CBaseHostClass):
                         {'alias_id': 'livespotting.tv', 'name': 'livespotting.tv', 'title': 'http://livespotting.tv/', 'url': 'http://livespotting.tv/', 'icon': 'https://livespotting.com/static/images/apple-touch-icon.png'},
                         {'alias_id': 'filmon.com', 'name': 'filmon_groups', 'title': 'http://filmon.com/', 'url': 'http://www.filmon.com/', 'icon': 'http://static.filmon.com/theme/img/filmon_tv_logo_white.png'},
                         {'alias_id': 'ustvnow.com', 'name': 'ustvnow', 'title': 'https://ustvnow.com/', 'url': 'https://www.ustvnow.com/', 'icon': 'http://2.bp.blogspot.com/-SVJ4uZ2-zPc/UBAZGxREYRI/AAAAAAAAAKo/lpbo8OFLISU/s1600/ustvnow.png'},
-                        {'alias_id': 'sport365.live', 'name': 'sport365.live', 'title': 'http://sport365.live/', 'url': 'http://www.sport365.live/', 'icon': 'http://s1.medianetworkinternational.com/images/icons/48x48px.png'},
+                        {'alias_id': 'sport365.live', 'name': 'sport365.live', 'title': 'http://sport365.live/', 'url': 'https://www.sport365.live/', 'icon': 'https://www.sport365.live/assets/48x48px.png'},
                         {'alias_id': 'bilasport.com', 'name': 'bilasport.com', 'title': 'http://bilasport.com/', 'url': '', 'icon': 'https://projects.fivethirtyeight.com/2016-mlb-predictions/images/logos.png'},
                         {'alias_id': 'mlbstream.tv', 'name': 'mlbstream.tv', 'title': 'http://mlbstream.tv/ && http://nhlstream.tv/', 'url': '', 'icon': 'http://mlbstream.tv/wp-content/uploads/2018/03/mlb-network-291x300.png'},
                         {'alias_id': 'karwan.tv', 'name': 'karwan.tv', 'title': 'http://karwan.tv/', 'url': 'http://karwan.tv/', 'icon': 'http://karwan.tv//logo/karwan-tv/karwan-tv-1.png'},
@@ -140,7 +141,7 @@ class HasBahCa(CBaseHostClass):
                         {'alias_id': 'wiziwig1.eu', 'name': 'wiziwig1.eu', 'title': 'http://wiziwig1.eu/', 'url': '', 'icon': 'http://i.imgur.com/yBX7fZA.jpg'},
                         {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://www.djing.com/newimages/content/c01.jpg'},
                         {'alias_id': 'nhl66.ir', 'name': 'nhl66.ir', 'title': 'https://nhl66.ir', 'url': 'https://api.nhl66.ir/api/sport/schedule', 'icon': 'https://nhl66.ir/cassets/logo.png'},
-                        {'alias_id': 'strimsy.top', 'name': 'strimsy.top', 'title': 'http://strimsy.top/', 'url': 'http://strimsy.top/', 'icon': ''},
+                        {'alias_id': 'strumyk.net', 'name': 'strumyk.net', 'title': 'https://strumyk.net/', 'url': 'https://strumyk.net/', 'icon': ''},
                        ]
 
     def __init__(self):
@@ -817,13 +818,13 @@ class HasBahCa(CBaseHostClass):
             linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
             linkVideo = linkVideo.strip(' \n\t\r')
             if linkVideo.startswith('/live/'):
-                sts, tmp = self.cm.getPage('http://strimsy.top' + linkVideo)
+                sts, tmp = self.cm.getPage('https://strumyk.net/' + linkVideo)
                 if not sts:
                     return []
                 linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
                 linkVideo = linkVideo.strip(' \n\t\r')
             if len(linkVideo):
-                params = {'name': "strimsy.top"}
+                params = {'name': "strumyk.net"}
                 params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
                 params['title'] = self.up.getDomain(linkVideo)
                 self.addVideo(params)
@@ -835,7 +836,7 @@ class HasBahCa(CBaseHostClass):
             if _url.startswith('?'):
                 _url = url + _url
             if not _url.startswith('http'):
-                _url = 'http://strimsy.top' + _url
+                _url = 'https://strumyk.net/' + _url
             sts, data = self.cm.getPage(_url)
             if sts:
                 tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
@@ -849,7 +850,7 @@ class HasBahCa(CBaseHostClass):
                 if len(linkVideo) and linkVideo.startswith('//'):
                     linkVideo = 'http:' + linkVideo
                 if len(linkVideo) and not linkVideo.startswith('http'):
-                    linkVideo = 'http://strimsy.top' + linkVideo
+                    linkVideo = 'https://strumyk.net/' + linkVideo
                     sts, data = self.cm.getPage(linkVideo)
                     tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'src'), ('</iframe', '>'))[1]
                     if len(tmp):
@@ -866,7 +867,7 @@ class HasBahCa(CBaseHostClass):
                 linkVideo = linkVideo.replace('https://href.li/', '')
                 if '' == linkVideo:
                     continue
-                params = {'name': "strimsy.top"}
+                params = {'name': "strumyk.net"}
                 params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
                 params['title'] = self.cleanHtmlStr(item) + ' - ' + self.up.getDomain(linkVideo)
                 printDBG("StrumykTvDir params [%s]" % params)
@@ -898,7 +899,7 @@ class HasBahCa(CBaseHostClass):
 
     # MAIN MENU
         if name is None:
-            self.listsMainMenu(self.MAIN_GROUPED_TAB)
+            self.listsMainMenu(self.MAIN_GROUPED_TAB, {'image_type': "WWW"})
         elif name == "HasBahCa":
             self.listHasBahCa(self.currItem)
         elif name == "m3u":
@@ -941,7 +942,7 @@ class HasBahCa(CBaseHostClass):
             self.getWiziwig1List(self.currItem)
         elif name == 'nhl66.ir':
             self.getNhl66List(url)
-        elif name == 'strimsy.top':
+        elif name == 'strumyk.net':
             self.getStrumykTvList(url)
         elif name == 'strumyk_tv':
             self.getStrumykTvDir(url)
@@ -1013,7 +1014,7 @@ class IPTVHost(CHostBase):
             urlList = self.host.getMLBStreamTVLink(cItem)
         elif name == "wiziwig1.eu":
             urlList = self.host.getWiziwig1Link(cItem)
-        elif name == "strimsy.top":
+        elif name == "strumyk.net":
             urlList = self.host.getStrumykTvLink(url)
 
         if isinstance(urlList, list):

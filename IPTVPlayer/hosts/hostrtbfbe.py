@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 13.08.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -103,9 +104,7 @@ class RTBFBE(CBaseHostClass):
                    {'category': 'live_categories', 'title': 'En Direct', 'url': self.getFullUrl('/auvio/direct')},
                    {'category': 'channels', 'title': 'Chaînes', 'url': self.getFullUrl('/news/api/menu?site=media')},
                    {'category': 'sections', 'title': 'Émissions', 'url': self.getFullUrl('/auvio/emissions')},
-                   {'category': 'categories', 'title': 'Catégories', 'url': self.getFullUrl('/news/api/menu?site=media')},
-                   {'category': 'search', 'title': _('Search'), 'search_item': True},
-                   {'category': 'search_history', 'title': _('Search history')}, ]
+                   {'category': 'categories', 'title': 'Catégories', 'url': self.getFullUrl('/news/api/menu?site=media')}] + self.searchItems()
 
         params = dict(cItem)
         params['desc'] = self.loginMessage

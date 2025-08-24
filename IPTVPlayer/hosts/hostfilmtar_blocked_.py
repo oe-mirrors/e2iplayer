@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 2022.07.01. Blindspot
+# Last Modified: 01.07.2022 - Blindspot
 ###################################################
 HOST_VERSION = "1.0"
 ###################################################
@@ -38,7 +38,7 @@ class FilmTar(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'filmtar', 'cookie': 'filmtar.cookie'})
         self.MAIN_URL = 'https://filmtar.online/'
-        self.DEFAULT_ICON_URL = "http://www.blindspot.nhely.hu/Thumbnails/filmtar.png"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/filmtar.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
@@ -82,9 +82,8 @@ class FilmTar(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG('FilmTar.listMainMenu')
         MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Film Kategóriák', 'url': 'https://filmtar.online/filmek/kategoriak'},
-                        {'category': 'list_filters', 'title': 'Sorozat Kategóriák', 'url': 'https://filmtar.online/sorozatok/kategoriak'},
-                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
-                        {'category': 'search_history', 'title': 'Keresési előzmények'}]
+                        {'category': 'list_filters', 'title': 'Sorozat Kategóriák', 'url': 'https://filmtar.online/sorozatok/kategoriak'}
+                        ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):

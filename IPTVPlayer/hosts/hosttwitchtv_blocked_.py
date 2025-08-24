@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 22.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -143,9 +144,7 @@ class Twitch(CBaseHostClass):
     def listMain(self, cItem):
         printDBG("Twitch.listMain")
 
-        MAIN_CAT_TAB = [{'category': 'browse', 'title': _('Browse')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history'), }]
+        MAIN_CAT_TAB = [{'category': 'browse', 'title': _('Browse')}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listDirectories(self, cItem):

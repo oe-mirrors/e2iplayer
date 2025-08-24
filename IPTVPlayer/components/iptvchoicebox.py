@@ -63,7 +63,7 @@ class IPTVChoiceBoxWidget(Screen):
         self["title"] = Label(self.params.get('title', _("Select option")))
         self["list"] = IPTVRadioButtonList()
 
-        self["actions"] = ActionMap(["ColorActions", "SetupActions", "WizardActions", "ListboxActions"],
+        self["actions"] = ActionMap(["SetupActions"],
             {
                 "cancel": self.key_cancel,
                 "ok": self.key_ok,

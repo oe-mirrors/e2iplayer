@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 03.06.2025
 ####################
 #  2025 Team Jogi  #
 ####################
@@ -36,9 +37,7 @@ class HDFilme(CBaseHostClass):
             {'category': 'list_items', 'title': _("Series"), 'url': self.getFullUrl('/serien/')},
             {'category': 'list_genres', 'title': 'Genres'},
             {'category': 'list_year', 'title': 'Jahr'},
-            {'category': 'list_country', 'title': 'Land'},
-            {'category': 'search', 'title': _('Search'), 'search_item': True},
-            {'category': 'search_history', 'title': _('Search history'), }]
+            {'category': 'list_country', 'title': 'Land'}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:

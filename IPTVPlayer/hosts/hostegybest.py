@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 03.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -66,10 +67,7 @@ class EgyBest(CBaseHostClass):
                              {'category': 'list_filters', 'title': _('Movies'), 'url': self.getFullUrl('/movies/')},
                              {'category': 'list_filters', 'title': _('Arabic movies'), 'url': self.getFullUrl('/movies/'), 'f_sort': 'arab'},
                              {'category': 'list_filters', 'title': _('With subtitles'), 'url': self.getFullUrl('/movies/'), 'f_sort': 'subbed'},
-                             {'category': 'list_filters', 'title': _('TV series'), 'url': self.getFullUrl('/tv/')},
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+                             {'category': 'list_filters', 'title': _('TV series'), 'url': self.getFullUrl('/tv/')}] + self.searchItems()
         self.loggedIn = None
         self.login = ''
         self.password = ''

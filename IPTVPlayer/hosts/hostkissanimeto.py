@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 03.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -60,9 +61,7 @@ class KissAnimeTo(CBaseHostClass):
         self.DEFAULT_ICON_URL = "https://ausanimecons.files.wordpress.com/2015/01/kissanime-logo.jpg"
 
         self.MAIN_CAT_TAB = [{'category': 'home', 'title': _('Home'), 'url': self.getMainUrl(), },
-                             {'category': 'list_cats', 'title': _('Anime list'), 'url': self.getFullUrl('AnimeList'), },
-                             {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                             {'category': 'search_history', 'title': _('Search history'), }]
+                             {'category': 'list_cats', 'title': _('Anime list'), 'url': self.getFullUrl('AnimeList'), }] + self.searchItems()
 
         self.SORT_BY_TAB = [{'title': _('Sort by alphabet')},
                             {'title': _('Sort by popularity'), 'sort_by': 'MostPopular'},

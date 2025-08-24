@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 2025.04.17. Blindspot
+# Last Modified: 17.04.2025 - Blindspot
 ###################################################
 HOST_VERSION = "1.2"
 ###################################################
@@ -40,7 +40,7 @@ class TV2Play(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'tv2play', 'cookie': 'tv2play.cookie'})
         self.MAIN_URL = 'https://tv2play.hu/'
-        self.DEFAULT_ICON_URL = "http://www.blindspot.nhely.hu/Thumbnails/tv2play.png"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/tv2play.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
@@ -110,9 +110,7 @@ class TV2Play(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG('TV2Play.listMainMenu')
-        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Műsorok', 'page': 0},
-                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
-                        {'category': 'search_history', 'title': 'Keresési előzmények'}]
+        MAIN_CAT_TAB = [{'category': 'list_filters', 'title': 'Műsorok', 'page': 0}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def exploreItems(self, cItem):

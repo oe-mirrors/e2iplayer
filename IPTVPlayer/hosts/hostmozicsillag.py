@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-###################################################
-# 2025-05-20 by Blindspot
+# Last Modified: 20.05.2025 - Blindspot
 ###################################################
 HOST_VERSION = "3.0"
 ###################################################
@@ -109,10 +108,8 @@ class MoziCsillag(CBaseHostClass):
     def listMainMenu(self, cItem):
         MAIN_CAT_TAB = [
                         {'category': 'list_filters', 'title': 'Filmek', 'url': 'https://mozicsillag1.me/filmek-online/legfrissebb'},
-                        {'category': 'list_filters', 'title': 'Sorozatok', 'url': 'https://mozicsillag1.me/sorozatok-online'},
-                        {'category': 'search', 'title': 'Keresés', 'search_item': True},
-                        {'category': 'search_history', 'title': 'Keresési előzmények'}
-                          ]
+                        {'category': 'list_filters', 'title': 'Sorozatok', 'url': 'https://mozicsillag1.me/sorozatok-online'}
+                        ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, {'name': 'category'})
 
     def listFilters(self, cItem):

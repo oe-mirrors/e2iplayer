@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 03.06.2025
 ####################
 #  2025 Team Jogi  #
 ####################
@@ -34,9 +35,7 @@ class Movie2K(CBaseHostClass):
         self.MENU = [
             {'category': 'movies', 'title': _("Movies")},
             {'category': 'series', 'title': _("Series")},
-            {'category': 'list_genres', 'title': 'Genres'},
-            {'category': 'search', 'title': _('Search'), 'search_item': True, },
-            {'category': 'search_history', 'title': _('Search history'), }]
+            {'category': 'list_genres', 'title': 'Genres'}] + self.searchItems()
         self.MOVIES_MENU = [
             {'category': 'list_items', 'title': 'Filme Trending', 'url': self.API_URL % ('movies', 'trending')},
             {'category': 'list_items', 'title': 'Filme Updates', 'url': self.API_URL % ('movies', 'updates')},
@@ -92,7 +91,7 @@ class Movie2K(CBaseHostClass):
             else:
                 self.addVideo(params)
         if curPage < totalPages:
-            params.update({'good_for_fav': False, 'category': 'list_items', 'title': _("Next page"), 'url': nextPage})
+            params = {'good_for_fav': False, 'category': 'list_items', 'title': _("Next page"), 'url': nextPage}
             self.addDir(params)
 
     def listGenres(self, cItem):

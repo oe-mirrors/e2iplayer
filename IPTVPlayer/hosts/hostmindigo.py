@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-###################################################
-# 2022-07-31 Blindspot (Modified Celeburdi's version)
+# Last Modified: 31.07.2022 - Blindspot (Modified Celeburdi's version)
 ###################################################
 HOST_VERSION = "2.9"
 ###################################################
@@ -62,7 +61,7 @@ def gettytul():
 def _gh(url):
     if not url:
         return ""
-    return "https://celeburdi.github.io/static/icons/" + url
+    return "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/icons/" + url
 
 
 def _addepg(epgs, id, item):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 06.07.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -45,9 +46,7 @@ class FilmPertutti(CBaseHostClass):
         MAIN_CAT_TAB = [{'category': 'list_cats', 'title': 'Film', 'url': self.getFullUrl('/category/film/')},
                         {'category': 'list_cats', 'title': 'Serie TV', 'url': self.getFullUrl('/category/serie-tv/')},
                         {'category': 'list_items', 'title': 'Prime visioni', 'url': self.getFullUrl('/prime-visioni/')},
-                        {'category': 'list_items', 'title': 'Aggiornamenti Serie TV', 'url': self.getFullUrl('/aggiornamenti-serie-tv/')},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history'), }]
+                        {'category': 'list_items', 'title': 'Aggiornamenti Serie TV', 'url': self.getFullUrl('/aggiornamenti-serie-tv/')}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem, nextCategory):

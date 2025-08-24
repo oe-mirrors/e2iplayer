@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+# Last Modified: 02.07.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -140,6 +140,7 @@ class Chomikuj(CBaseHostClass):
         self.addDir({'name': 'category', 'title': title, 'category': 'account'})
         self.addDir({'name': 'category', 'title': 'Wyszukaj', 'category': 'search', 'search_item': True})
         self.addDir({'name': 'category', 'title': 'Historia wyszukiwania', 'category': 'search_history'})
+        self.addDir({'name': 'category', 'title': _('Delete search history'), 'category': 'delete_history'})
 
     def requestLoginData(self):
         url = "api/v3/account/login"

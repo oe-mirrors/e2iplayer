@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 02.07.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -301,8 +302,7 @@ class Christusvincit(CBaseHostClass):
             else:
                 self.currList.append(item)
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history'), }]
+        MAIN_CAT_TAB = self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def handleSection(self, cItem, nextCategory, section):

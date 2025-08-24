@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 03.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -73,11 +74,7 @@ class UKTVPlay(CBaseHostClass):
                              {'category': 'list_items', 'title': 'BOX SET', 'url': 'collections?collection_type=boxset&'},
                              {'category': 'list_items', 'title': 'COLLECTIONS', 'url': 'collections?collection_type=collection&'},
                              {'category': 'list_genres', 'title': 'GENRES', 'url': 'genres?'},
-                             {'category': 'list_letters', 'title': 'A-Z', 'url': 'brand_list?channel=&'},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+                             {'category': 'list_letters', 'title': 'A-Z', 'url': 'brand_list?channel=&'}] + self.searchItems()
         self.listsTab(self.MAIN_CAT_TAB, cItem)
 
     def listGenres(self, cItem, nextCategory, data=None):

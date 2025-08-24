@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 22.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -106,9 +107,7 @@ class Altadefinizione(CBaseHostClass):
                 params.update({'good_for_fav': True, 'category': 'list_items', 'title': title, 'url': url})
                 self.addDir(params)
 
-        MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Categorie'},
-                        {'category': 'search', 'title': _('Search'), 'search_item': True, },
-                        {'category': 'search_history', 'title': _('Search history'), }]
+        MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Categorie'}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubItems(self, cItem):

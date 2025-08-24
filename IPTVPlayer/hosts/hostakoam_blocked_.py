@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 02.07.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -122,8 +123,7 @@ class AkoAm(CBaseHostClass):
         if 0 == len(self.currList):
             return
 
-        MAIN_CAT_TAB = [{'category': 'search', 'title': _('Search'), 'search_item': True},
-                        {'category': 'search_history', 'title': _('Search history')}, ]
+        MAIN_CAT_TAB = self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listSubMenu(self, cItem, nextCategory1, nextCategory2):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 03.06.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -47,11 +48,7 @@ class DokumentalneNET(CBaseHostClass):
         self.MAIN_URL = 'https://dokumentalne.net/'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Kategorie', 'url': self.getMainUrl()},
-
-                             {'category': 'search', 'title': _('Search'), 'search_item': True},
-                             {'category': 'search_history', 'title': _('Search history')},
-                            ]
+        self.MAIN_CAT_TAB = [{'category': 'list_categories', 'title': 'Kategorie', 'url': self.getMainUrl()}] + self.searchItems()
 
     def getFullUrl(self, url):
         return CBaseHostClass.getFullUrl(self, url).replace('&#038;', '&')
