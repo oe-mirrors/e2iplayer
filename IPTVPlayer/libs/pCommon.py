@@ -1193,19 +1193,24 @@ class common:
             # but it seems it breaks other scenarios
             # also documentation says req should be a string. :(
             # NEEDS FURTHER INVESTIGATION !!!
+            from urllib.error import HTTPError
 
-            if len(customOpeners) > 0:
-                opener = build_opener(*customOpeners)
-                if timeout is not None:
-                    response = opener.open(req, timeout=timeout)
+            try:
+                if len(customOpeners) > 0:
+                    opener = build_opener(*customOpeners)
+                    if timeout is not None:
+                        response = opener.open(req, timeout=timeout)
+                    else:
+                        response = opener.open(req)
                 else:
-                    response = opener.open(req)
-            else:
-                if timeout is not None:
-                    response = urlopen(req, timeout=timeout)
-                else:
-                    response = urlopen(req)
-            return response
+                    if timeout is not None:
+                        response = urlopen(req, timeout=timeout)
+                    else:
+                        response = urlopen(req)
+                return response
+            except HTTPError as e:
+                # Return the HTTPError instance which contains the response data
+                return e
 
         if IsMainThread():
             msg1 = _('It is not allowed to call getURLRequestData from main thread.')
