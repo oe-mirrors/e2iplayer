@@ -632,6 +632,7 @@ class urlparser:
             'mixdrop.club': self.pp.parserMIXDROP,
             'mixdrop.co': self.pp.parserMIXDROP,
             'mixdrop.my': self.pp.parserMIXDROP,
+            'mixdrop.sn': self.pp.parserMIXDROP,
             'mixdrop.nu': self.pp.parserMIXDROP,
             'mixdrop.ps': self.pp.parserMIXDROP,
             'mixdrop.sb': self.pp.parserMIXDROP,
