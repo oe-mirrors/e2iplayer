@@ -345,6 +345,7 @@
   "mediasetplay",
   "guardaserie",
   "altadefinizione01",
+  "cb01uno",
   "tantifilmorg",
   "dailymotion",
   "vimeo",
