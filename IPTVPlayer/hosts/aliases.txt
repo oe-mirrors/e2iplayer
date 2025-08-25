@@ -16,6 +16,7 @@
 'hostbbcsport': 'https://www.bbc.co.uk/sport',
 'hostbsto': 'https://bs.to/',
 'hostcartoonhd': 'https://cartoonhd.care/',
+'hostcb01uno': 'https://cb01net.guru/',
 'hostcdapl': 'https://cda.pl/',
 'hostchomikuj': 'http://chomikuj.pl/',
 'hostchristusvincit': 'http://christusvincit-tv.pl/',
@@ -200,5 +201,4 @@
 'hostzaluknijcc': 'https://zaluknij.cc/',
 'hostzdfmediathek': 'https://zdf-prod-futura.zdf.de/',
 'hostzerioncc': 'https://zerion.cc/'
-
 }
