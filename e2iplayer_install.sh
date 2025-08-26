@@ -223,27 +223,11 @@ if [ -d $TARGET_PATH/IPTVPlayer ] ; then
 	fi
 
 	echo -e "\n\nDelete the already installed E2iPlayer in;\n$TARGET_PATH/IPTVPlayer ..."
-	echo -e "However, an already installed E2iPlayer +18 Addon is retained.\n"
-	#$NICE $NICE_ARGS find $TARGET_PATH/IPTVPlayer -type f ! -iname "*xxx*" -exec rm {} +
-	$NICE $NICE_ARGS find $TARGET_PATH/IPTVPlayer -type f -iname "*xxx*" -o -delete
+	$NICE $NICE_ARGS rm -rf  $TARGET_PATH/IPTVPlayer
 
 	if [ "$?" != "0" ] ; then
 		echo -e "\n... INFORMATION ...\nDelete the already installed E2iPlayer failed ! \nHowever, this may not be a tragedy."
 		echo -e "The new E2iPlayer is then simply copied over.\n"
-	fi
-
-	# Only if the +18 Addon is included in the already installed E2iPlayer (i.e. it is already installed) the +18 Addon files
-	# in the unpacked E2iPlayer Source Package are deleted so that an already installed +18 Addon is not overwritten.
-	if [ "$($NICE $NICE_ARGS find $TARGET_PATH/IPTVPlayer -type f -iname "*xxx*" 2>/dev/null)" ] ; then
-		echo -e "\n\nDelete +18 Addon files from;\n$EXTRACTED_SOURCE_PATH"
-		echo -e "so as not to overwrite an already installed +18 Addon when copying ..."
-		#$NICE $NICE_ARGS find $TMP/*/IPTVPlayer -maxdepth 3 -iname "*xxx*" -exec rm {} \;
-		# Better, as the exact Path is specified and -type f also only deletes files, the above also deletes Folders with xxx in their name.
-		#$NICE $NICE_ARGS find $EXTRACTED_SOURCE_PATH -maxdepth 3 -type f -iname "*xxx*" -exec rm {} \;
-		# More efficient than the above command and portable (so should work in any Linux).
-		#$NICE $NICE_ARGS find $EXTRACTED_SOURCE_PATH -maxdepth 3 -type f -iname "*xxx*" -exec rm {} + 
-		# Most efficient if the find with delete works (i think there are also Versions of find where delete does not exist, so not so portable). 
-		$NICE $NICE_ARGS find $EXTRACTED_SOURCE_PATH -maxdepth 3 -type f -iname "*xxx*" -delete
 	fi
 fi
 
