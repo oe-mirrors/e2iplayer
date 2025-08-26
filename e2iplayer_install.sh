@@ -3,7 +3,7 @@
 #e2iplayer install script - Pike_Bishop from oATV
 
 ## Variablen ##
-SCRIPTVERSION=13
+SCRIPTVERSION=14
 STARTDATE="$(date +%a.%d.%b.%Y-%H:%M:%S)"
 BOXIP="http://127.0.0.1"
 WGET=/usr/bin/wget
@@ -64,7 +64,7 @@ osd_error_message() {
 
 
 # If the script was already running but ended with an Error, delete any remains.
-$NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/e2iPlayer-* $TMP/iptv-host-xxx* $TMP/python*.gz $TMP/master.zip
+$NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/e2iPlayer-* $TMP/iptv-host-xxx* $TMP/python*.gz $TMP/master.*
 
 
 # If necessary, install required Plugins/Programmes such as e2iplayer-deps, ppanel, p7zip/7zip, python-pycurl, duktape.
@@ -154,8 +154,9 @@ case "yes" in
 	;;
 	"$ZADMARIO_VERSION")
 		echo "Selected -> E2iPlayer of zadmario."
-		#FILE_ADRESS=https://gitlab.com/zadmario/e2iplayer/-/archive/master/e2iplayer-master.zip
-		FILE_ADRESS=https://gitlab.com/zadmario/e2iplayer/-/archive/master/e2iplayer-master.tar.gz
+		# New from 23 August 2025 from Git with fork of the @zadmario version (can also be downloaded as tar.gz).
+		#FILE_ADRESS=https://github.com/oe-mirrors/e2iplayer-zadmario/archive/refs/heads/master.zip
+		FILE_ADRESS=https://github.com/oe-mirrors/e2iplayer-zadmario/archive/refs/heads/master.tar.gz
 	;;
 	"$BLINDSPOT76_PY3_VERSION")
 		echo "Selected -> E2iPlayer Version of blindspot76 for python3."
@@ -191,6 +192,8 @@ if [ -e $TMP/python3.tar.gz ] ; then
 	$EXTRACT $TMP/python3.tar.gz -C $TMP > /dev/null
 elif [ -e $TMP/e2iplayer-master.tar.gz ] ; then
 	$EXTRACT $TMP/e2iplayer-master.tar.gz -C $TMP > /dev/null
+elif [ -e $TMP/master.tar.gz ] ; then
+	$EXTRACT $TMP/master.tar.gz -C $TMP > /dev/null
 elif [ -e $TMP/master.zip ] ; then
 	$EXTRACT_ZIP x $TMP/master.zip -o$TMP > /dev/null
 fi
@@ -251,41 +254,10 @@ if ! $NICE $NICE_ARGS cp -rf $EXTRACTED_SOURCE_PATH $TARGET_PATH ; then
 	osd_error_message && exit 1
 fi
 
-
 # link duktape, only if duk (duktape binary) exists in /usr/bin and not in the .../IPTVPlayer/bin directory, link it there.
 if [ -e /usr/bin/duk -a ! -e $TARGET_PATH/IPTVPlayer/bin/duk ] ; then
 	ln -s /usr/bin/duk $TARGET_PATH/IPTVPlayer/bin
 fi
-
-# Download and copy special keymap.xml (for @Papi2000 (but is also good for all other users)).
-mv $TARGET_PATH/IPTVPlayer/keymap.xml $TARGET_PATH/IPTVPlayer/keymap.xml.org
-$WGET -q -O "$TARGET_PATH/IPTVPlayer/keymap.xml" "https://drive.usercontent.google.com/download?id=1T9bS_NQC-z7YE-UQfm3b3V-mY2KY9css&export=download&confirm=yes"
-
-
-
-# The following (Install Fixes is only valid until @zadmario takes over the Fixes) !
-# Install Fixes 2025 from Mister X for savefiles, Vidhide, vidoza, supervideo.cc, VOE, hdfilmetv and much more, only
-# in the ZADMARIO_VERSION and in the BLINDSPOT76_VERSIONS as already included in the OEMIRRORS_VERSION.
-echo -e "\n\nInstall Fixes 2025 by Mister X ..."
-if [ "$OEMIRRORS_VERSION" != "yes" ] ; then
-	FDIR=$WORKDIR/e2iplayer_fixes && mkdir -p $FDIR
-
-	rm -f $FDIR/e2iplayer_fixes.tar.gz
-
-	# Download the Fixes (Package "e2iplayer_fixes.tar.gz") from Google Drive.
-	$WGET -q -O "$FDIR/e2iplayer_fixes.tar.gz" "https://drive.usercontent.google.com/download?id=1-kgV9OUBMyrR3TTXQinGk1pwOneTOF5c&export=download&confirm=yes" && sleep 1
-
-	# Unzip the Fixes to the correct Directories of the E2iPlayer (files with the same name there are overwritten).
-	$EXTRACT $FDIR/e2iplayer_fixes.tar.gz -C $TARGET_PATH > /dev/null
-
-	if [ "$?" != "0" ] ; then
-		echo -e '\n... ERROR ...\nFixes unzip or copy failed !\n\n'
-		osd_error_message && exit 1
-	fi
-fi
-echo -e "Fixes Installation successfully completed.\n\n"
-# End Install Fixes.
-
 
 
 # E2iPlayer Installation/Update success Message.
@@ -296,7 +268,7 @@ $WGET -O - -q "$BOXIP/web/message?text=E2iPlayer%20installed%2Fupdated%20success
 
 # Delete the remains.
 echo -e "\nDelete remains (*.tar.gz/*.zip and Directory e2iplayer-*) ...\n"
-$NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/e2iPlayer-* $TMP/python*.gz $TMP/master.zip
+$NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/e2iPlayer-* $TMP/python*.gz $TMP/master.*
 
 
 # Check whether recording(s) is/are running, if not initiate Enigma2-GUI Restart, if so postpone
