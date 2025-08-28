@@ -290,7 +290,7 @@ class E2iPlayerBufferingWidget(Screen):
             self.session.openWithCallback(self.iptvDoClose, MessageBox, text=message, type=MessageBox.TYPE_INFO, timeout=5)
         else:
             # show error message and ask user what to do
-            message = _("Moving playback buffer to the download manager failed with the following error \"%s\"" % msg)
+            message = _("Moving playback buffer to the download manager failed with the following error \"%s\"") % msg
             # message += '\n\n' + _("What do you want to do?")
             # list = [ (_("Continue playback"), True), (_("Stop playback"), False) ]
             if fromPlayer:
