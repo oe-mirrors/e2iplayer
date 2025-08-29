@@ -95,7 +95,7 @@ class ZDFmediathek(CBaseHostClass):
     def __init__(self):
         printDBG("ZDFmediathek.__init__")
         CBaseHostClass.__init__(self, {'history': 'ZDFmediathek.tv', 'cookie': 'zdfde.cookie'})
-        self.DEFAULT_ICON_URL = 'https://www.zdf.de/static//img/bgs/zdf-typical-fallback-314x314.jpg'
+        self.DEFAULT_ICON_URL = 'https://brandguide.zdf.de/pictures/447/2f865620700065672dbce9582f77ad83569beb7f/ZDF_DE_Logo_02.png'
 
         self.KINDER_TAB = [{'category': 'explore_item', 'title': _('Home page'), 'url': self.getFullUrl('/kinder'), 'icon': self.getIconUrl('/assets/zdftivi-home-100~384x216')},
                            {'category': 'kinder_list_abc', 'title': _('Program A-Z'), 'url': self.getFullUrl('/kinder/sendungen-a-z'), 'icon': self.getIconUrl('/assets/a-z-teaser-100~384x216')},
