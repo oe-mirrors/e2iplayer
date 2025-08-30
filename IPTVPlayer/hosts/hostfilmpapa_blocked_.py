@@ -38,7 +38,7 @@ class FilmPapa(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'filmpapa', 'cookie': 'filmpapa.cookie'})
         self.MAIN_URL = 'https://plusz.club'
-        self.DEFAULT_ICON_URL = "http://blindspot.nhely.hu/Thumbnails/filmpapalogo.png"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/filmpapalogo.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 

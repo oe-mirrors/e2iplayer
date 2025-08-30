@@ -23,7 +23,6 @@ import math
 import hashlib
 import random
 import os
-import xml.etree.ElementTree as ET
 try:
 	basestring  # Python 2
 except NameError:
@@ -66,13 +65,8 @@ config.plugins.iptvplayer.cam4 = ConfigSelection(default="0", choices=[("0", _("
 config.plugins.iptvplayer.fotka = ConfigSelection(default="0", choices=[("0", _("https")), ("1", _("rtmp"))])
 config.plugins.iptvplayer.xxxupdate = ConfigYesNo(default=True)
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
-
-tree = ET.parse(os.path.join(script_dir, "hostxxx.xml"))
-root = tree.getroot()
-
-for entry in root.findall("entry"):
-	cfg = entry.get("config")
+SITES = {'3MOVS': 'threemovs', '69TEENTUBE': 'teentube', '9VIDS': 'vids9', 'ABSOLUPORN': 'absoluporn', 'AD69': 'ad69', 'AH-ME': 'ah_me', 'AL4A': 'al4a', 'ALOTPORN': 'alotporn', 'ALPHAPORNO': 'alphaporno', 'AMATEUR8': 'amateur8', 'AMATEUR.RED': 'amateur_red', 'AMATEUR-COUGAR': 'amateurcougar', 'AMAZINGCUCKOLD': 'amazingcuckold', 'ANALDIN': 'analdin', 'ANON-V': 'anonv', 'ANYBUNNY': 'anybunny', 'ANYPORN': 'anyporn', 'ANYSEX': 'anysex', 'BABES34': 'babes34', 'BADDIES': 'baddies', 'BALKANJIZZ': 'balkanjizz', 'BEAUTYMOVIES': 'beautymovies', 'BLOWJOBIT': 'blowjobit', 'BRAVOPORN': 'bravoporn', 'BRAVOTEENS': 'bravoteens', 'CROCOTUBE': 'crocotube', 'CUCKOLDPLACETUBE': 'cuckoldplacetube', 'CUMLOUDER': 'cumlouder', 'DANSMOVIES': 'dansmovies', 'DEFINEBABE': 'definebabe', 'DRTUBER': 'drtuber', 'EBONY8': 'ebony8', 'EPORNER': 'eporner', 'EROPROFILE': 'eroprofile', 'FAMILYPORN': 'familyporn', 'FEMEFUN': 'femefun', 'FETISHPAPA': 'fetishpapa', 'FIRSTANALVIDEOS': 'firstanalvideos', 'FITPORN': 'fitporn', 'FREEOMOVIE': 'freeomovie', 'FREEONES': 'freeones', 'FREEPORNHQ': 'freepornhq', 'FULLXCINEMA': 'fullxcinema', 'FUQER': 'fuqer', 'GLAVMATURES': 'glavmatures', 'HANDJOBHUB': 'handjobhub', 'HARDSEXVIDS': 'hardsexvids', 'HCLIPS': 'hclips', 'HDPORN': 'hdporn', 'HDPUSSY': 'hdpussy', 'HELLMOMS': 'hellmoms', 'HELLO.PORN': 'helloporn', 'HELLPORNO': 'hellporno', 'HENTAIGASM': 'hentaigasm', 'HOME MOVIES TUBE': 'homemoviestube', 'HOMEPORNKING': 'homepornking', 'HQPORNER': 'hqporner', 'HYPNOTUBE': 'hypnotube', 'IN35': 'in35', "IT'S PORN": 'itsporn', 'JAVBANGERS': 'javbangers', 'JAVTEENTUBE': 'javteentube', 'JIZZBOOM': 'jizzboom', 'JIZZBUNKER': 'jizzbunker', 'KATESTUBE': 'katestube', 'KOLOPORNO': 'koloporno', 'LAIDHUB': 'laidhub', 'LECOINPORNO': 'lecoinporno', 'LOVE HOME PORN': 'lovehomeporn', 'MATURE-AMATEUR-SEX': 'mature_amateur_sex', 'MATURE-GIRLS': 'mature_girls', 'MEGATUBE': 'megatube', 'MILF FOX': 'milffox', 'MOMPORNONLY': 'mompornonly', 'MOMSLUST': 'momslust', 'MOMXL': 'momxl', 'MOREAMATEURS': 'moreamateurs', 'MOTHERLESS': 'motherless', 'MOVIEFAP': 'moviefap', 'MR DEEPFAKES': 'mrdeepfakes', 'MUSTJAV': 'mustjav', 'MYPORNHERE': 'mypornhere', 'NEPORN': 'neporn', 'NUDEZ': 'nudez', 'OHSEXFILM': 'ohsexfilm', 'OK.XXX': 'okxxx', 'ORIENTAL-SEX': 'oriental_sex', 'PANDAMOVIE': 'pandamovie', 'PERFECTGIRLS': 'perfectgirls', 'PERVCLIPS': 'pervclips', 'PLAYVIDS': 'playvids', 'PORCORE': 'porcore', 'PORN00': 'porn00', 'PORN300': 'porn300', 'PORN7': 'porn7', 'PORNBIMBO': 'pornbimbo', 'PORNBOLT': 'pornbolt', 'PORNBURST': 'pornburst', 'PORNDIG': 'porndig', 'PORNDR': 'porndr', 'PORNDROIDS': 'porndroids', 'PORNENIX': 'pornenix', 'PORNFD': 'pornfd', 'PORNGO': 'porngo', 'PORNHAT': 'pornhat', 'PORNHEED': 'pornheed', 'PORNHUB': 'pornhub', 'PORNICOM': 'pornicom', 'PORNID': 'pornid', 'PORNMAKI': 'pornmaki', 'PORNOFLIX': 'pornoflix', 'PORNOHAMMER': 'pornohammer', 'PORNONE': 'pornone', 'PORNOREINO': 'pornoreino', 'PORNORUSSIA': 'pornorussia', 'PORNOXO': 'pornoxo', 'PORNRABBIT': 'pornrabbit', 'PORNREWIND': 'pornrewind', 'PORNTREX': 'porntrex', 'PORNVIDEOSBEST': 'pornvideosbest', 'PORNXP': 'pornxp', 'PORNYTEEN': 'pornyteen', 'PORNVIDEOS 4K': 'pornvideos4k', 'PORNWHITE': 'pornwhite', 'PUNISHBANG': 'punishbang', 'REDTUBE': 'redtube', 'RELAX-SEX': 'relax_sex', 'RULEPORN': 'ruleporn', 'RUS.PORN': 'rus_porn', 'SEXMATURE': 'sexmature', 'SEXU': 'sexu', 'SEXVID': 'sexvid', 'SEVEREPORN': 'severeporn', 'SHAMELESS': 'shameless', 'SHEMALEHD': 'shemalehd', 'SHESHAFT': 'sheshaft', 'SHOOSHTIME': 'shooshtime', 'SLEAZYNEASY': 'sleazyneasy', 'STREAMPORN': 'streamporn', 'SUNPORNO': 'sunporno', 'TEENTUBER': 'teentuber', 'TEENXY': 'teenxy', 'TERK.NL': 'terk_nl', 'THE PORN AREA': 'thepornarea', 'THEY ARE HUGE': 'theyarehuge', 'TNAFLIX': 'tnaflix', 'TOPVIDS': 'topvids', 'TRENDYPORN': 'trendyporn', 'TROPICTUBE': 'tropictube', 'TUBE8': 'tube8', 'TUBEPORNCLASSIC': 'tubepornclassic', 'TUBEWOLF': 'tubewolf', 'TXXX': 'txxx', 'VEPORN': 'veporn', 'VINTAGETUBE': 'vintagetube', 'W4NKR': 'w4nkr', 'WANKOZ': 'wankoz', 'WARDDOGS': 'warddogs', 'WATCHMYGF': 'watchmygf', 'WATCHPORNX': 'watchpornx', 'WETSINS': 'wetsins', 'WHORESHUB': 'whoreshub', 'WIFE VIDEOS': 'wifevideos', 'XBABE': 'xbabe', 'XCAFE': 'xcafe', 'XCUM': 'xcum', 'XGROOVY': 'xgroovy', 'XNXX': 'xnxx', 'XNXXHAMSTER': 'xnxxhamster', 'XOZILLA': 'xozilla', 'XPAJA': 'xpaja', 'XRARES': 'xrares', 'XTITS': 'xtits', 'XVIDEOS': 'xvideos', 'XXBRITS': 'xxbrits', 'XXXDAN': 'xxxdan', 'XXXBULE': 'xxxbule', 'XXXSHAKE': 'xxxshake', 'YOUJIZZ': 'youjizz', 'YOUNG-SEX-TUBE': 'young_sex_tube', 'YOUPORN': 'youporn', 'YOUR AMATEUR TUBE': 'youramateur', 'YOURLUST': 'yourlust', 'YUVUTU': 'yuvutu', 'ZBIORNIK MINI': 'zbiornikmini', 'ZBPORN': 'zbporn', 'ZEDPORN': 'zedporn', 'ZIPORN': 'ziporn', 'ANACAMS': 'anacams', 'CAMBEAUTIES': 'cambeauties', 'CAMBRO.TV': 'cambro', 'CAMHUB': 'camhub', 'CAM-SEX': 'cam_sex', 'CAMSTREAMS': 'camstreams', 'CAMVIDEOS': 'camvideos', 'CAMWHORESBAY': 'camwhoresbay', 'CHATURBATE': 'chaturbate', 'EVERYCAMGIRL': 'everycamgirl', 'FOTKA-PL-KAMERKI': 'fotka_pl_kamerki', 'MASTURBATE2GETHER': 'masturbate2gether', 'SHOWUP': 'showup', 'XHAMSTERLIVE': 'xhamsterlive', 'YOURLIVE': 'yourlive'}
+for cfg in SITES.values():
 	setattr(config.plugins.iptvplayer, cfg, ConfigYesNo(default=True))
 
 
@@ -88,13 +82,8 @@ def GetConfigList():
 	optionList.append(getConfigListEntry(_("Show changelog :"), config.plugins.iptvplayer.xxxupdate))
 	optionList.append(getConfigListEntry(_("Playback UHD :"), config.plugins.iptvplayer.xxx4k))
 	#
-	tree = ET.parse(os.path.join(script_dir, "hostxxx.xml"))
-	root = tree.getroot()
-
-	for entry in root.findall("entry"):
-		name = entry.get("name")
-		cfg = entry.get("config")
-		optionList.append(getConfigListEntry(name, getattr(config.plugins.iptvplayer, cfg)))
+	for kv in SITES.items():
+		optionList.append(getConfigListEntry(kv[0], getattr(config.plugins.iptvplayer, kv[1])))
 
 	return optionList
 ###################################################
@@ -412,7 +401,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.tube8.value:
 				valTab.append(CDisplayListItem('TUBE8', 'www.tube8.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.tube8.com/categories.html'], 'tube8', 'https://vectorseek.com/wp-content/uploads/2023/08/Tube8-Logo-Vector.jpg', None))
 			if config.plugins.iptvplayer.youporn.value:
-				valTab.append(CDisplayListItem('YOUPORN', 'www.youporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.youporn.com/categories/'], 'youporn', 'http://www.blindspot.nhely.hu/Thumbnails/youporn.png', None))
+				valTab.append(CDisplayListItem('YOUPORN', 'www.youporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.youporn.com/categories/'], 'youporn', hostImage() + 'youporn.png', None))
 			if config.plugins.iptvplayer.pornhub.value:
 				valTab.append(CDisplayListItem('PORNHUB', 'www.pornhub.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornhub.com/categories'], 'pornhub', 'https://ei.phncdn.com/pics/logos/8831.png', None))
 			if config.plugins.iptvplayer.hdporn.value:
@@ -434,19 +423,19 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.youjizz.value:
 				valTab.append(CDisplayListItem('YOUJIZZ', 'http://www.youjizz.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.youjizz.com/categories'], 'YOUJIZZ', 'https://cdne-static.cdn1122.com/app/1/images/youjizz-default-logo-4.png', None))
 			if config.plugins.iptvplayer.pornhat.value:
-				valTab.append(CDisplayListItem('PORNHAT', 'https://www.pornhat.com/', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornhat.com/'], 'PORNHAT', 'http://www.blindspot.nhely.hu/Thumbnails/pornhat.png', None))
+				valTab.append(CDisplayListItem('PORNHAT', 'https://www.pornhat.com/', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornhat.com/'], 'PORNHAT', hostImage() + 'pornhat.png', None))
 			if config.plugins.iptvplayer.drtuber.value:
 				valTab.append(CDisplayListItem('DRTUBER', 'http://www.drtuber.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.drtuber.com/categories'], 'DRTUBER', 'http://static.drtuber.com/templates/frontend/mobile/images/logo.png', None))
 			if config.plugins.iptvplayer.tnaflix.value:
 				valTab.append(CDisplayListItem('TNAFLIX', 'https://www.tnaflix.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.tnaflix.com/categories'], 'TNAFLIX', 'https://pbs.twimg.com/profile_images/1109542593/logo_400x400.png', None))
 			if config.plugins.iptvplayer.megatube.value:
-				valTab.append(CDisplayListItem('MEGATUBE', 'https://www.megatube.xxx', CDisplayListItem.TYPE_CATEGORY, ['https://www.megatube.xxx/categories'], 'MEGATUBE', 'http://www.blindspot.nhely.hu/Thumbnails/megatube.png', None))
+				valTab.append(CDisplayListItem('MEGATUBE', 'https://www.megatube.xxx', CDisplayListItem.TYPE_CATEGORY, ['https://www.megatube.xxx/categories'], 'MEGATUBE', hostImage() + 'megatube.png', None))
 			if config.plugins.iptvplayer.rus_porn.value:
 				valTab.append(CDisplayListItem('RUS.PORN', 'https://vww.mix-porn.xyz', CDisplayListItem.TYPE_CATEGORY, ['https://i.mix-porn.xyz/category/'], 'RUSPORN', 'https://vww.mix-porn.xyz/favicons/apple-touch-icon.png', None))
 			if config.plugins.iptvplayer.porntrex.value:
 				valTab.append(CDisplayListItem('PORNTREX', 'http://www.porntrex.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.porntrex.com/categories/'], 'PORNTREX', 'https://www.porntrex.com/images/logo.png', None))
 			if config.plugins.iptvplayer.glavmatures.value:
-				valTab.append(CDisplayListItem('GLAVMATURES', 'https://glavmatures.com', CDisplayListItem.TYPE_CATEGORY, ['https://glavmatures.com/tags/'], 'GLAVMATURES', 'http://www.blindspot.nhely.hu/Thumbnails/glavmatures.png', None))
+				valTab.append(CDisplayListItem('GLAVMATURES', 'https://glavmatures.com', CDisplayListItem.TYPE_CATEGORY, ['https://glavmatures.com/tags/'], 'GLAVMATURES', hostImage() + 'glavmatures.png', None))
 			if config.plugins.iptvplayer.watchmygf.value:
 				valTab.append(CDisplayListItem('WATCHMYGF', 'https://www.watchmygf.me', CDisplayListItem.TYPE_CATEGORY, ['https://www.watchmygf.me/categories/'], 'WATCHMYGF', 'http://www.dinoreviews.com/img/watchmygf/watchmygf.jpg', None))
 			if config.plugins.iptvplayer.wankoz.value:
@@ -454,13 +443,13 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.pornmaki.value:
 				valTab.append(CDisplayListItem('PORNMAKI', 'https://pornmaki.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornmaki.com/channels/'], 'PORNMAKI', 'https://images.pornmaki.com/resources/pornmaki.com/rwd_beta/default/images/logo.png', None))
 			if config.plugins.iptvplayer.momslust.value:
-				valTab.append(CDisplayListItem('MOMSLUST', 'https://www.momslust.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.momslust.com/categories/'], 'MOMSLUST', 'http://www.blindspot.nhely.hu/Thumbnails/momslust.png', None))
+				valTab.append(CDisplayListItem('MOMSLUST', 'https://www.momslust.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.momslust.com/categories/'], 'MOMSLUST', hostImage() + 'momslust.png', None))
 			if config.plugins.iptvplayer.yuvutu.value:
 				valTab.append(CDisplayListItem('YUVUTU', 'http://www.yuvutu.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.yuvutu.com/categories/'], 'YUVUTU', 'http://www.yuvutu.com/themes/yuvutu_v2/images/yuvutu_logo.png', None))
 			if config.plugins.iptvplayer.pornicom.value:
 				valTab.append(CDisplayListItem('PORNICOM', 'http://pornicom.com', CDisplayListItem.TYPE_CATEGORY, ['http://pornicom.com/categories/'], 'PORNICOM', 'http://pornicom.com/images/logo.png', None))
 			if config.plugins.iptvplayer.sexvid.value:
-				valTab.append(CDisplayListItem('SEXVID', 'https://www.sexvid.xxx', CDisplayListItem.TYPE_CATEGORY, ['https://www.sexvid.xxx/c/'], 'SEXVID', 'http://www.blindspot.nhely.hu/Thumbnails/sexvid.png', None))
+				valTab.append(CDisplayListItem('SEXVID', 'https://www.sexvid.xxx', CDisplayListItem.TYPE_CATEGORY, ['https://www.sexvid.xxx/c/'], 'SEXVID', hostImage() + 'sexvid.png', None))
 			if config.plugins.iptvplayer.perfectgirls.value:
 				valTab.append(CDisplayListItem('PERFECTGIRLS', 'https://www.perfectgirls.xxx/', CDisplayListItem.TYPE_CATEGORY, ['https://www.perfectgirls.xxx/'], 'PERFECTGIRLS', 'https://static.perfectgirls.xxx/static/images/logo.png', None))
 			if config.plugins.iptvplayer.ziporn.value:
@@ -480,9 +469,9 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.katestube.value:
 				valTab.append(CDisplayListItem('KATESTUBE', 'http://www.katestube.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.katestube.com/categories/'], 'KATESTUBE', 'https://www.katestube.com/images/logo.png', None))
 			if config.plugins.iptvplayer.pornone.value:
-				valTab.append(CDisplayListItem('PORNONE', 'https://pornone.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornone.com/categories/'], 'pornone', 'http://www.blindspot.nhely.hu/Thumbnails/pornone.png', None))
+				valTab.append(CDisplayListItem('PORNONE', 'https://pornone.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornone.com/categories/'], 'pornone', hostImage() + 'pornone.png', None))
 			if config.plugins.iptvplayer.zbporn.value:
-				valTab.append(CDisplayListItem('ZBPORN', 'https://zbporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://zbporn.com/categories/'], 'zbporn', 'http://www.blindspot.nhely.hu/Thumbnails/zbporn.png', None))
+				valTab.append(CDisplayListItem('ZBPORN', 'https://zbporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://zbporn.com/categories/'], 'zbporn', hostImage() + 'zbporn.png', None))
 			if config.plugins.iptvplayer.pornoxo.value:
 				valTab.append(CDisplayListItem('PORNOXO', 'https://www.pornoxo.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornoxo.com'], 'pornoxo', 'http://www.web-tv-sexe.fr/logo/pornoxo.jpg', None))
 			if config.plugins.iptvplayer.pornid.value:
@@ -506,75 +495,75 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.mompornonly.value:
 				valTab.append(CDisplayListItem('MOMPORNONLY', 'https://mompornonly.com', CDisplayListItem.TYPE_CATEGORY, ['https://mompornonly.com/categories/'], 'MOMPORNONLY', 'https://mompornonly.com/wp-content/themes/mompornonly/assets/img/og-image.jpg', None))
 			if config.plugins.iptvplayer.fetishpapa.value:
-				valTab.append(CDisplayListItem('FETISHPAPA', 'https://www.fetishpapa.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.fetishpapa.com/'], 'FETISHPAPA', 'http://www.blindspot.nhely.hu/Thumbnails/fetishpapa.png', None))
+				valTab.append(CDisplayListItem('FETISHPAPA', 'https://www.fetishpapa.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.fetishpapa.com/'], 'FETISHPAPA', hostImage() + 'fetishpapa.png', None))
 			if config.plugins.iptvplayer.handjobhub.value:
 				valTab.append(CDisplayListItem("HANDJOBHUB", 'https://handjobhub.com', CDisplayListItem.TYPE_CATEGORY, ['https://handjobhub.com/category/'], 'HANDJOBHUB', 'https://handjobhub.com/templates/default_tube2016/images/logo.png', None))
 			if config.plugins.iptvplayer.youramateur.value:
 				valTab.append(CDisplayListItem("YOUR AMATEUR TUBE", 'https://youramateurtube.com', CDisplayListItem.TYPE_CATEGORY, ['https://youramateurtube.com/channels/'], 'YOURAMATEURTUBE', 'https://youramateurtube.com/templates/default_tube2016/images/logo.png', None))
 			if config.plugins.iptvplayer.sheshaft.value:
-				valTab.append(CDisplayListItem("SHESHAFT", 'https://www.sheshaft.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.sheshaft.com/categories/'], 'SHESHAFT', 'http://www.blindspot.nhely.hu/Thumbnails/sheshaft.png', None))
+				valTab.append(CDisplayListItem("SHESHAFT", 'https://www.sheshaft.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.sheshaft.com/categories/'], 'SHESHAFT', hostImage() + 'sheshaft.png', None))
 			if config.plugins.iptvplayer.punishbang.value:
-				valTab.append(CDisplayListItem("PUNISHBANG", 'https://www.punishbang.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.punishbang.com/categories/'], 'PUNISHBANG', 'http://www.blindspot.nhely.hu/Thumbnails/punishbang.png', None))
+				valTab.append(CDisplayListItem("PUNISHBANG", 'https://www.punishbang.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.punishbang.com/categories/'], 'PUNISHBANG', hostImage() + 'punishbang.png', None))
 			if config.plugins.iptvplayer.xnxxhamster.value:
-				valTab.append(CDisplayListItem("XNXXHAMSTER", 'https://www.xnxxhamster.net', CDisplayListItem.TYPE_CATEGORY, ['https://www.xnxxhamster.net/channels/'], 'XNXXHAMSTER', 'http://www.blindspot.nhely.hu/Thumbnails/xnxxhamster.png', None))
+				valTab.append(CDisplayListItem("XNXXHAMSTER", 'https://www.xnxxhamster.net', CDisplayListItem.TYPE_CATEGORY, ['https://www.xnxxhamster.net/channels/'], 'XNXXHAMSTER', hostImage() + 'xnxxhamster.png', None))
 			if config.plugins.iptvplayer.tropictube.value:
 				valTab.append(CDisplayListItem("TROPICTUBE", 'https://www.tropictube.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.tropictube.com/streams/'], 'TROPICTUBE', 'https://www.tropictube.com/images/59/porn-parody-2017-hd_16x9.jpg', None))
 			if config.plugins.iptvplayer.mrdeepfakes.value:
-				valTab.append(CDisplayListItem("MR DEEPFAKES", 'https://mrdeepfakes.com', CDisplayListItem.TYPE_CATEGORY, ['https://mrdeepfakes.com/categories'], 'MR DEEPFAKES', 'http://www.blindspot.nhely.hu/Thumbnails/mrdeepfakes.png', None))
+				valTab.append(CDisplayListItem("MR DEEPFAKES", 'https://mrdeepfakes.com', CDisplayListItem.TYPE_CATEGORY, ['https://mrdeepfakes.com/categories'], 'MR DEEPFAKES', hostImage() + 'mrdeepfakes.png', None))
 			if config.plugins.iptvplayer.porcore.value:
 				valTab.append(CDisplayListItem("PORCORE", 'https://porcore.com', CDisplayListItem.TYPE_CATEGORY, ['https://porcore.com/contact'], 'PORCORE', 'https://porcore.com/uploads/porcore-logo-40-height-png5772a7711a40e.png', None))
 			if config.plugins.iptvplayer.al4a.value:
-				valTab.append(CDisplayListItem("AL4A", 'https://www.al4a.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.al4a.com/channels/'], 'AL4A', 'http://www.blindspot.nhely.hu/Thumbnails/al4a.png', None))
+				valTab.append(CDisplayListItem("AL4A", 'https://www.al4a.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.al4a.com/channels/'], 'AL4A', hostImage() + 'al4a.png', None))
 			if config.plugins.iptvplayer.jizzboom.value:
-				valTab.append(CDisplayListItem("JIZZBOOM", 'https://jizzboom.com', CDisplayListItem.TYPE_CATEGORY, ['https://jizzboom.com/category.html'], 'JIZZBOOM', 'http://www.blindspot.nhely.hu/Thumbnails/jizzboom.png', None))
+				valTab.append(CDisplayListItem("JIZZBOOM", 'https://jizzboom.com', CDisplayListItem.TYPE_CATEGORY, ['https://jizzboom.com/category.html'], 'JIZZBOOM', hostImage() + 'jizzboom.png', None))
 			if config.plugins.iptvplayer.javbangers.value:
-				valTab.append(CDisplayListItem("JAVBANGERS", 'https://www.javbangers.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.javbangers.com/categories/'], 'JAVBANGERS', 'http://www.blindspot.nhely.hu/Thumbnails/javbangers.png', None))
+				valTab.append(CDisplayListItem("JAVBANGERS", 'https://www.javbangers.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.javbangers.com/categories/'], 'JAVBANGERS', hostImage() + 'javbangers.png', None))
 			if config.plugins.iptvplayer.xxxdan.value:
-				valTab.append(CDisplayListItem("XXXDAN", 'https://xxxdan.com', CDisplayListItem.TYPE_CATEGORY, ['https://xxxdan.com/channels/alphabetically'], 'XXXDAN', 'http://www.blindspot.nhely.hu/Thumbnails/xxxdan.png', None))
+				valTab.append(CDisplayListItem("XXXDAN", 'https://xxxdan.com', CDisplayListItem.TYPE_CATEGORY, ['https://xxxdan.com/channels/alphabetically'], 'XXXDAN', hostImage() + 'xxxdan.png', None))
 			if config.plugins.iptvplayer.trendyporn.value:
-				valTab.append(CDisplayListItem("TRENDYPORN", 'https://www.trendyporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.trendyporn.com/channels/'], 'TRENDYPORN', 'http://www.blindspot.nhely.hu/Thumbnails/trendyporn.png', None))
+				valTab.append(CDisplayListItem("TRENDYPORN", 'https://www.trendyporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.trendyporn.com/channels/'], 'TRENDYPORN', hostImage() + 'trendyporn.png', None))
 			if config.plugins.iptvplayer.hypnotube.value:
-				valTab.append(CDisplayListItem("HYPNOTUBE", 'https://hypnotube.com', CDisplayListItem.TYPE_CATEGORY, ['https://hypnotube.com/channels/'], 'HYPNOTUBE', 'http://www.blindspot.nhely.hu/Thumbnails/hypnotube.png', None))
+				valTab.append(CDisplayListItem("HYPNOTUBE", 'https://hypnotube.com', CDisplayListItem.TYPE_CATEGORY, ['https://hypnotube.com/channels/'], 'HYPNOTUBE', hostImage() + 'hypnotube.png', None))
 			if config.plugins.iptvplayer.alotporn.value:
-				valTab.append(CDisplayListItem("ALOTPORN", 'https://www.alotporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.alotporn.com/categories/'], 'ALOTPORN', 'http://www.blindspot.nhely.hu/Thumbnails/alotporn.png', None))
+				valTab.append(CDisplayListItem("ALOTPORN", 'https://www.alotporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.alotporn.com/categories/'], 'ALOTPORN', hostImage() + 'alotporn.png', None))
 			if config.plugins.iptvplayer.anonv.value:
-				valTab.append(CDisplayListItem("ANON-V", 'https://anon-v.com', CDisplayListItem.TYPE_CATEGORY, ['https://anon-v.com/porn/'], 'ANON-V', 'http://www.blindspot.nhely.hu/Thumbnails/anonv.png', None))
+				valTab.append(CDisplayListItem("ANON-V", 'https://anon-v.com', CDisplayListItem.TYPE_CATEGORY, ['https://anon-v.com/porn/'], 'ANON-V', hostImage() + 'anonv.png', None))
 			if config.plugins.iptvplayer.mypornhere.value:
-				valTab.append(CDisplayListItem("MYPORNHERE", 'https://www.mypornhere.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.mypornhere.com/categories/'], 'MYPORNHERE', 'http://www.blindspot.nhely.hu/Thumbnails/mypornhere.png', None))
+				valTab.append(CDisplayListItem("MYPORNHERE", 'https://www.mypornhere.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.mypornhere.com/categories/'], 'MYPORNHERE', hostImage() + 'mypornhere.png', None))
 			if config.plugins.iptvplayer.ebony8.value:
-				valTab.append(CDisplayListItem("EBONY8", 'https://www.ebony8.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.ebony8.com/categories/'], 'EBONY8', 'http://www.blindspot.nhely.hu/Thumbnails/ebony8.png', None))
+				valTab.append(CDisplayListItem("EBONY8", 'https://www.ebony8.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.ebony8.com/categories/'], 'EBONY8', hostImage() + 'ebony8.png', None))
 			if config.plugins.iptvplayer.nudez.value:
-				valTab.append(CDisplayListItem("NUDEZ", 'https://nudez.com', CDisplayListItem.TYPE_CATEGORY, ['https://nudez.com/categories/'], 'NUDEZ', 'http://www.blindspot.nhely.hu/Thumbnails/nudez.png', None))
+				valTab.append(CDisplayListItem("NUDEZ", 'https://nudez.com', CDisplayListItem.TYPE_CATEGORY, ['https://nudez.com/categories/'], 'NUDEZ', hostImage() + 'nudez.png', None))
 			if config.plugins.iptvplayer.freepornhq.value:
-				valTab.append(CDisplayListItem("FREEPORNHQ", 'https://www.freepornhq.xxx', CDisplayListItem.TYPE_CATEGORY, ['https://www.freepornhq.xxx/channels/'], 'FREEPORNHQ', 'http://www.blindspot.nhely.hu/Thumbnails/freepornhq.png', None))
+				valTab.append(CDisplayListItem("FREEPORNHQ", 'https://www.freepornhq.xxx', CDisplayListItem.TYPE_CATEGORY, ['https://www.freepornhq.xxx/channels/'], 'FREEPORNHQ', hostImage() + 'freepornhq.png', None))
 			if config.plugins.iptvplayer.pornoreino.value:
-				valTab.append(CDisplayListItem("PORNOREINO", 'https://en.pornoreino.com', CDisplayListItem.TYPE_CATEGORY, ['https://en.pornoreino.com/categories'], 'PORNOREINO', 'http://www.blindspot.nhely.hu/Thumbnails/pornoreino.png', None))
+				valTab.append(CDisplayListItem("PORNOREINO", 'https://en.pornoreino.com', CDisplayListItem.TYPE_CATEGORY, ['https://en.pornoreino.com/categories'], 'PORNOREINO', hostImage() + 'pornoreino.png', None))
 			if config.plugins.iptvplayer.whoreshub.value:
-				valTab.append(CDisplayListItem("WHORESHUB", 'https://www.whoreshub.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.whoreshub.com/categories/'], 'WHORESHUB', 'http://www.blindspot.nhely.hu/Thumbnails/whoreshub.png', None))
+				valTab.append(CDisplayListItem("WHORESHUB", 'https://www.whoreshub.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.whoreshub.com/categories/'], 'WHORESHUB', hostImage() + 'whoreshub.png', None))
 			if config.plugins.iptvplayer.vintagetube.value:
-				valTab.append(CDisplayListItem("VINTAGETUBE", 'https://vintagetube.xxx', CDisplayListItem.TYPE_CATEGORY, ['https://api.vintagetube.xxx/api/v1/categories?sort=most-videos&c=500&min_videos=25'], 'VINTAGETUBE', 'http://www.blindspot.nhely.hu/Thumbnails/vintagetube.png', None))
+				valTab.append(CDisplayListItem("VINTAGETUBE", 'https://vintagetube.xxx', CDisplayListItem.TYPE_CATEGORY, ['https://api.vintagetube.xxx/api/v1/categories?sort=most-videos&c=500&min_videos=25'], 'VINTAGETUBE', hostImage() + 'vintagetube.png', None))
 			if config.plugins.iptvplayer.veporn.value:
-				valTab.append(CDisplayListItem("VEPORN", 'https://veporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://veporn.com/categories/'], 'VEPORN', 'http://www.blindspot.nhely.hu/Thumbnails/veporn.png', None))
+				valTab.append(CDisplayListItem("VEPORN", 'https://veporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://veporn.com/categories/'], 'VEPORN', hostImage() + 'veporn.png', None))
 			if config.plugins.iptvplayer.pornxp.value:
-				valTab.append(CDisplayListItem("PORNXP", 'https://pornxp.org', CDisplayListItem.TYPE_CATEGORY, ['https://pornxp.org/'], 'PORNXP', 'http://www.blindspot.nhely.hu/Thumbnails/pornxp.png', None))
+				valTab.append(CDisplayListItem("PORNXP", 'https://pornxp.org', CDisplayListItem.TYPE_CATEGORY, ['https://pornxp.org/'], 'PORNXP', hostImage() + 'pornxp.png', None))
 			if config.plugins.iptvplayer.severeporn.value:
-				valTab.append(CDisplayListItem("SEVEREPORN", 'https://severeporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://severeporn.com/categories/'], 'SEVEREPORN', 'http://www.blindspot.nhely.hu/Thumbnails/severeporn.png', None))
+				valTab.append(CDisplayListItem("SEVEREPORN", 'https://severeporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://severeporn.com/categories/'], 'SEVEREPORN', hostImage() + 'severeporn.png', None))
 			if config.plugins.iptvplayer.pornoflix.value:
-				valTab.append(CDisplayListItem("PORNOFLIX", 'https://pornoflix.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornoflix.com/categories/'], 'PORNOFLIX', 'http://www.blindspot.nhely.hu/Thumbnails/pornoflix.png', None))
+				valTab.append(CDisplayListItem("PORNOFLIX", 'https://pornoflix.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornoflix.com/categories/'], 'PORNOFLIX', hostImage() + 'pornoflix.png', None))
 			if config.plugins.iptvplayer.neporn.value:
-				valTab.append(CDisplayListItem("NEPORN", 'https://neporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://neporn.com/categories/'], 'NEPORN', 'http://www.blindspot.nhely.hu/Thumbnails/neporn.png', None))
+				valTab.append(CDisplayListItem("NEPORN", 'https://neporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://neporn.com/categories/'], 'NEPORN', hostImage() + 'neporn.png', None))
 			if config.plugins.iptvplayer.pornyteen.value:
-				valTab.append(CDisplayListItem("PORNYTEEN", 'https://pornyteen.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornyteen.com/categories/'], 'PORNYTEEN', 'http://www.blindspot.nhely.hu/Thumbnails/pornyteen.png', None))
+				valTab.append(CDisplayListItem("PORNYTEEN", 'https://pornyteen.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornyteen.com/categories/'], 'PORNYTEEN', hostImage() + 'pornyteen.png', None))
 			if config.plugins.iptvplayer.lecoinporno.value:
 				valTab.append(CDisplayListItem('LECOINPORNO', 'https://lecoinporno.fr/', CDisplayListItem.TYPE_CATEGORY, ['https://lecoinporno.fr/categories/'], 'LECOINPORNO', 'https://lecoinporno.fr/wp-content/themes/lecoinporno/assets/img/logo.png', None))
 			if config.plugins.iptvplayer.streamporn.value:
 				valTab.append(CDisplayListItem('STREAMPORN', 'https://streamporn.org', CDisplayListItem.TYPE_CATEGORY, ['https://streamporn.org'], 'streamporn', 'https://static-ca-cdn.eporner.com/gallery/5K/Oo/wxT1T22Oo5K/501600-beautiful-island-in-the-stream.jpg', None))
 			if config.plugins.iptvplayer.pornvideos4k.value:
-				valTab.append(CDisplayListItem('PORNVIDEOS 4K', 'http://pornvideos4k.com/en/', CDisplayListItem.TYPE_CATEGORY, ['http://pornvideos4k.com/en/'], 'pornvideos4k', 'http://www.blindspot.nhely.hu/Thumbnails/pornvideos4k.png', None))
+				valTab.append(CDisplayListItem('PORNVIDEOS 4K', 'http://pornvideos4k.com/en/', CDisplayListItem.TYPE_CATEGORY, ['http://pornvideos4k.com/en/'], 'pornvideos4k', hostImage() + 'pornvideos4k.png', None))
 			if config.plugins.iptvplayer.pornburst.value:
 				valTab.append(CDisplayListItem('PORNBURST', 'https://www.pornburst.xxx/', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornburst.xxx/categories/'], 'PORNBURST', 'https://cdn.fleshbot.com/data/images/straight/006/003/662/pornburst_web.png?1409241449', None))
 			if config.plugins.iptvplayer.ruleporn.value:
-				valTab.append(CDisplayListItem('RULEPORN', 'https://ruleporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://ruleporn.com/categories/'], 'ruleporn', 'http://www.blindspot.nhely.hu/Thumbnails/ruleporn.png', None))
+				valTab.append(CDisplayListItem('RULEPORN', 'https://ruleporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://ruleporn.com/categories/'], 'ruleporn', hostImage() + 'ruleporn.png', None))
 			if config.plugins.iptvplayer.pandamovie.value:
 				valTab.append(CDisplayListItem('PANDAMOVIE', 'https://pandamovie.info', CDisplayListItem.TYPE_CATEGORY, ['https://pandamovie.info'], '123PANDAMOVIE', 'https://pbs.twimg.com/profile_images/855863642990030849/kkk_MO1e_400x400.jpg', None))
 			if config.plugins.iptvplayer.dansmovies.value:
@@ -594,7 +583,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.relax_sex.value:
 				valTab.append(CDisplayListItem('RELAX-SEX', 'https://relax-sex.com', CDisplayListItem.TYPE_CATEGORY, ['https://relax-sex.com'], 'RELAX-SEX', 'https://relax-sex.com/wp-content/uploads/2022/09/favicon.png', None))
 			if config.plugins.iptvplayer.babes34.value:
-				valTab.append(CDisplayListItem('BABES34', 'http://babes34.me', CDisplayListItem.TYPE_CATEGORY, ['http://babes34.me/tags/'], 'BABES34', 'http://www.blindspot.nhely.hu/Thumbnails/babes34.png', None))
+				valTab.append(CDisplayListItem('BABES34', 'http://babes34.me', CDisplayListItem.TYPE_CATEGORY, ['http://babes34.me/tags/'], 'BABES34', hostImage() + 'babes34.png', None))
 			if config.plugins.iptvplayer.pornbolt.value:
 				valTab.append(CDisplayListItem('PORNBOLT', 'https://pornbolt.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornbolt.com/categories'], 'PORNBOLT', 'https://cdnbolt.com/templates/frontend/pornbolt/img/logoBlack.png', None))
 			if config.plugins.iptvplayer.wetsins.value:
@@ -613,6 +602,8 @@ class Host(CBaseHostClass):
 				valTab.append(CDisplayListItem('OK.XXX', 'https://ok.xxx/', CDisplayListItem.TYPE_CATEGORY, ['https://ok.xxx/tags/'], 'OK.XXX', 'https://ok.xxx/android-icon-192x192.png', None))
 			if config.plugins.iptvplayer.laidhub.value:
 				valTab.append(CDisplayListItem('LAIDHUB', 'https://www.laidhub.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.laidhub.com/porn-categories/'], 'LAIDHUB', 'https://www.laidhub.com/templates/default_tube2016/images/logo.png', None))
+			if config.plugins.iptvplayer.w4nkr.value:
+				valTab.append(CDisplayListItem('W4NKR', 'https://w4nkr.com', CDisplayListItem.TYPE_CATEGORY, ['https://w4nkr.com/categories/'], 'W4NKR', 'https://cdnstatic.w4nkr.com/static/images/logo.png', None))
 			if config.plugins.iptvplayer.momxl.value:
 				valTab.append(CDisplayListItem('MOMXL', 'https://momxl.com', CDisplayListItem.TYPE_CATEGORY, ['https://momxl.com/categories/'], 'MOMXL', 'https://cdnstatic.momxl.com/static/images/logo.png', None))
 			if config.plugins.iptvplayer.yourlust.value:
@@ -626,7 +617,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.pornfd.value:
 				valTab.append(CDisplayListItem("PORNFD", 'http://www.pornfd.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.pornfd.com/categories/'], 'PORNFD', hostImage() + 'pornfd.png', None))
 			if config.plugins.iptvplayer.femefun.value:
-				valTab.append(CDisplayListItem("FEMEFUN", 'https://femefun.com', CDisplayListItem.TYPE_CATEGORY, ['https://femefun.com/categories/piercing/'], 'FEMEFUN', 'http://www.blindspot.nhely.hu/Thumbnails/femefun.png', None))
+				valTab.append(CDisplayListItem("FEMEFUN", 'https://femefun.com', CDisplayListItem.TYPE_CATEGORY, ['https://femefun.com/categories/piercing/'], 'FEMEFUN', hostImage() + 'femefun.png', None))
 			if config.plugins.iptvplayer.shemalehd.value:
 				valTab.append(CDisplayListItem("SHEMALEHD", 'https://www.shemalehd.sex', CDisplayListItem.TYPE_CATEGORY, ['https://www.shemalehd.sex/categories/?mode=async&function=get_block&block_id=list_categories_categories_list&sort_by=&from=1'], 'SHEMALEHD', 'https://www.shemalehd.sex/images/logo.png', None))
 			if config.plugins.iptvplayer.firstanalvideos.value:
@@ -658,7 +649,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.watchpornx.value:
 				valTab.append(CDisplayListItem('WATCHPORNX', 'https://watchpornx.com/', CDisplayListItem.TYPE_CATEGORY, ['https://watchpornx.com/'], 'watchpornx', 'https://watchpornfree.info/adult/wp-content/uploads/2024/08/watchpornfreews-1-e1525276673535.png', None))
 			if config.plugins.iptvplayer.porn300.value:
-				valTab.append(CDisplayListItem('PORN300', 'https://www.porn300.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.porn300.com/categories/'], 'PORN300', 'http://www.blindspot.nhely.hu/Thumbnails/porn300.jpg', None))
+				valTab.append(CDisplayListItem('PORN300', 'https://www.porn300.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.porn300.com/categories/'], 'PORN300', hostImage() + 'porn300.jpg', None))
 			if config.plugins.iptvplayer.pornheed.value:
 				valTab.append(CDisplayListItem('PORNHEED', 'https://www.pornheed.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornheed.com/categories/recently-added/1'], 'PORNHEED', 'https://i.pornheed.com/image/1.jpg', None))
 			if config.plugins.iptvplayer.jizzbunker.value:
@@ -666,7 +657,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.anyporn.value:
 				valTab.append(CDisplayListItem('ANYPORN', 'https://anyporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://anyporn.com/categories/'], 'ANYPORN', 'https://anyporn.com/images/logo.png', None))
 			if config.plugins.iptvplayer.anysex.value:
-				valTab.append(CDisplayListItem('ANYSEX', 'https://anysex.com/', CDisplayListItem.TYPE_CATEGORY, ['https://anysex.com/videos/categories/'], 'ANYSEX', 'http://www.blindspot.nhely.hu/Thumbnails/anysex.png', None))
+				valTab.append(CDisplayListItem('ANYSEX', 'https://anysex.com/', CDisplayListItem.TYPE_CATEGORY, ['https://anysex.com/videos/categories/'], 'ANYSEX', hostImage() + 'anysex.png', None))
 			if config.plugins.iptvplayer.bravoporn.value:
 				valTab.append(CDisplayListItem('BRAVOPORN', 'https://www.bravoporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.bravoporn.com/c/'], 'bravoporn', 'https://www.bravoporn.com/v/images/logo.png', None))
 			if config.plugins.iptvplayer.bravoteens.value:
@@ -674,7 +665,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.sleazyneasy.value:
 				valTab.append(CDisplayListItem('SLEAZYNEASY', 'https://www.sleazyneasy.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.sleazyneasy.com/categories/'], 'sleazyneasy', 'https://cdni.sleazyneasy.com/images/favicon-152.png', None))
 			if config.plugins.iptvplayer.homepornking.value:
-				valTab.append(CDisplayListItem('HOMEPORNKING', 'https://www.homepornking.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.homepornking.com/categories/'], 'homepornking', 'http://www.blindspot.nhely.hu/Thumbnails/homepornking.png', None))
+				valTab.append(CDisplayListItem('HOMEPORNKING', 'https://www.homepornking.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.homepornking.com/categories/'], 'homepornking', hostImage() + 'homepornking.png', None))
 			if config.plugins.iptvplayer.sexmature.value:
 				valTab.append(CDisplayListItem('SEXMATURE', 'https://www.sexmature.xxx', CDisplayListItem.TYPE_CATEGORY, ['https://www.sexmature.xxx/'], 'SEXMATURE', 'https://www.sexmature.xxx/static/img/sexmature-poster.jpg', None))
 			if config.plugins.iptvplayer.teentuber.value:
@@ -752,9 +743,9 @@ class Host(CBaseHostClass):
 			# valTab.insert(0, CDisplayListItem(_('ATTENTION !'), 'UNUSED PAGES CAN BE DISABLED AFTER PRESSING THE BLUE BUTTON IN THE PAGE SETTINGS MENU.', CDisplayListItem.TYPE_ARTICLE, [''], '', 'https://tdc.pl/thumb_product/1745/456/500/0/ra_012.jpg', None))
 			textcolor = magenta
 			if config.plugins.iptvplayer.cambeauties.value:
-				valTab.append(CDisplayListItem(textcolor + "CAMBEAUTIES", 'https://cambeauties.com', CDisplayListItem.TYPE_CATEGORY, ['https://cambeauties.com/categories-e0f337/'], 'CAMBEAUTIES', 'http://www.blindspot.nhely.hu/Thumbnails/cambeauties.png', None))
+				valTab.append(CDisplayListItem(textcolor + "CAMBEAUTIES", 'https://cambeauties.com', CDisplayListItem.TYPE_CATEGORY, ['https://cambeauties.com/categories-e0f337/'], 'CAMBEAUTIES', hostImage() + 'cambeauties.png', None))
 			if config.plugins.iptvplayer.cambro.value:
-				valTab.append(CDisplayListItem(textcolor + "CAMBRO.TV", 'https://www.cambro.tv', CDisplayListItem.TYPE_CATEGORY, ['https://www.cambro.tv/categories/'], 'CAMBRO', 'http://www.blindspot.nhely.hu/Thumbnails/cambro.png', None))
+				valTab.append(CDisplayListItem(textcolor + "CAMBRO.TV", 'https://www.cambro.tv', CDisplayListItem.TYPE_CATEGORY, ['https://www.cambro.tv/categories/'], 'CAMBRO', hostImage() + 'cambro.png', None))
 			if config.plugins.iptvplayer.camhub.value:
 				valTab.append(CDisplayListItem(textcolor + "CAMHUB", 'http://www.camhub.cc', CDisplayListItem.TYPE_CATEGORY, ['https://www.camhub.cc/categories/'], 'CAMHUB', hostImage() + 'camhub.png', None))
 			if config.plugins.iptvplayer.chaturbate.value:
@@ -776,7 +767,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.anacams.value:
 				valTab.append(CDisplayListItem(textcolor + 'ANACAMS', 'https://anacams.com', CDisplayListItem.TYPE_CATEGORY, ['https://anacams.com/discover/'], 'ANACAMS', 'https://anacams.com/images/Logo_AnaCams.png', None))
 			if config.plugins.iptvplayer.camwhoresbay.value:
-				valTab.append(CDisplayListItem(textcolor + 'CAMWHORESBAY', 'https://www.camwhoresbay.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.camwhoresbay.com/categories/'], 'CAMWHORESBAY', 'http://www.blindspot.nhely.hu/Thumbnails/camwhoresbay.png', None))
+				valTab.append(CDisplayListItem(textcolor + 'CAMWHORESBAY', 'https://www.camwhoresbay.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.camwhoresbay.com/categories/'], 'CAMWHORESBAY', hostImage() + 'camwhoresbay.png', None))
 			if config.plugins.iptvplayer.fotka_pl_kamerki.value:
 				valTab.append(CDisplayListItem(textcolor + 'FOTKA-PL-KAMERKI', 'http://www.fotka.pl/kamerki', CDisplayListItem.TYPE_CATEGORY, ['http://api.fotka.pl/v2/cams/get?page=1&limit=100&gender=f'], 'FOTKA-PL-KAMERKI', 'https://pbs.twimg.com/profile_images/3086758992/6fb5cc2ee2735c334d0363bcb01a52ca_400x400.png', None))
 			if config.plugins.iptvplayer.xhamsterlive.value:
@@ -809,9 +800,7 @@ class Host(CBaseHostClass):
 			if self.SEARCH_proc == 'main-menu':
 				valTab = []
 				valTab.sort(key=lambda poz: poz.name)
-
-				hosts = [('http://www.porntrex.com', 'PORNTREX', 'PORNTREX'), ('https://www.ah-me.com', 'AH-ME', 'AH-ME'), ('https://www.alphaporno.com', 'ALPHAPORNO', 'ALPHAPORNO'), ('https://crocotube.com/', 'CROCOTUBE', 'CROCOTUBE'), ('https://in35.com', 'IN35', 'IN35'), ('https://jizzbunker.com', 'JIZZBUNKER', 'JIZZBUNKER'), ('https://relax-sex.com', 'RELAX-SEX', 'RELAX-SEX'), ('http://babes34.me', 'BABES34', 'BABES34'), ('https://pornbolt.com', 'PORNBOLT', 'PORNBOLT'), ('https://www.wetsins.com', 'WETSINS', 'WETSINS'), ('https://pornenix.com', 'PORNENIX', 'PORNENIX'), ('https://www.pornohammer.com', 'PORNOHAMMER', 'PORNOHAMMER'), ('https://xgroovy.com', 'XGROOVY', 'XGROOVY'), ('https://www.theyarehuge.com', 'THEYAREHUGE', 'THEYAREHUGE'), ('https://ok.xxx', 'OK.XXX', 'OK.XXX'), ('https://www.laidhub.com', 'LAIDHUB', 'LAIDHUB'), ('https://momxl.com', 'MOMXL', 'MOMXL'), ('https://yourlust.com', 'YOURLUST', 'YOURLUST'), ('https://www.its.porn', 'ITSPORN', 'ITSPORN'), ('https://ad69.com', 'AD69', 'AD69'), ('http://pornbimbo.com', 'PORNBIMBO', 'PORNBIMBO'), ('https://www.pornhat.com/', 'PORNHAT', 'PORNHAT'), ('https://www.shemalehd.sex', 'SHEMALEHD', 'SHEMALEHD'), ('https://www.cambro.tv', 'CAMBRO', 'CAMBRO'), ('https://cambeauties.com', 'CAMBEAUTIES', 'CAMBEAUTIES'), ('http://pornfd.com', 'PORNFD', 'PORNFD'), ('https://femefun.com', 'FEMEFUN', 'FEMEFUN'), ('https://handjobhub.com', 'HANDJOBHUB', 'HANDJOBHUB'), ('https://youramateurtube.com', 'YOURAMATEURTUBE', 'YOURAMATEURTUBE'), ('https://www.sheshaft.com', 'SHESHAFT', 'SHESHAFT'), ('https://www.punishbang.com', 'PUNISHBANG', 'PUNISHBANG'), ('https://www.xnxxhamster.net', 'XNXXHAMSTER', 'XNXXHAMSTER'), ('https://www.tropictube.com', 'TROPICTUBE', 'TROPICTUBE'), ('https://mrdeepfakes.com', 'MR DEEPFAKES', 'MR DEEPFAKES'), ('https://porcore.com', 'PORCORE', 'PORCORE'), ('https://www.al4a.com', 'AL4A', 'AL4A'), ('http://www.camhub.cc', 'CAMHUB', 'CAMHUB'), ('https://jizzboom.com', 'JIZZBOOM', 'JIZZBOOM'), ('https://www.javbangers.com', 'JAVBANGERS', 'JAVBANGERS'), ('https://xxxdan.com', 'XXXDAN', 'XXXDAN'), ('https://www.trendyporn.com', 'TRENDYPORN', 'TRENDYPORN'), ('https://hypnotube.com', 'HYPNOTUBE', 'HYPNOTUBE'), ('https://www.alotporn.com', 'ALOTPORN', 'ALOTPORN'), ('https://www.mypornhere.com', 'MYPORNHERE', 'MYPORNHERE'), ('https://www.ebony8.com', 'EBONY8', 'EBONY8'), ('https://nudez.com', 'NUDEZ', 'NUDEZ'), ('https://www.freepornhq.xxx', 'FREEPORNHQ', 'FREEPORNHQ'), ('https://en.pornoreino.com', 'PORNOREINO', 'PORNOREINO'), ('https://www.whoreshub.com', 'WHORESHUB', 'WHORESHUB'), ('https://veporn.com', 'VEPORN', 'VEPORN'), ('https://pornxp.org', 'PORNXP', 'PORNXP'), ('https://severeporn.com', 'SEVEREPORN', 'SEVEREPRON'), ('https://pornoflix.com', 'PORNOFLIX', 'PRONOFLIX'), ('https://neporn.com', 'NEPORN', 'NEPORN'), ('https://pornyteen.com', 'PORNYTEEN', 'PORNYTEEN'), ('https://www.cuckoldplacetube.com', 'CUCKOLDPLACETUBE', 'CUCKOLDPLACETUBE'), ('https://baddies.xxx', 'BADDIES', 'BADDIES'), ('https://www.amazingcuckold.com', 'AMAZINGCUCKOLD', 'AMAZINGCUCKOLD'), ('https://www.beautymovies.com', 'BEAUTYMOVIES', 'BEAUTYMOVIES'), ('https://www.xxbrits.com', 'XXBRITS', 'XXBRITS'), ('https://www.xpaja.net', 'XPAJA', 'XPAJA'), ('https://www.xrares.com', 'XRARES', 'XRARES'), ('https://www.xtits.com', 'XTITS', 'XTITS'), ('https://www.terk.nl', 'TERK.NL', 'TERK.NL'), ('https://hardsexvids.com', 'HARDSEXVIDS', 'HARDSEXVIDS'), ('https://amateur.red', 'AMATEUR.RED', 'AMATEUR.RED'), ('https://young-sex-tube.com', 'YOUNG-SEX-TUBE', 'YOUNG-SEX-TUBE'), ('https://pornvideosbest.com', 'PORNVIDEOSBEST', 'PORNVIDEOSBEST'), ('https://www.mature-girls.com', 'MATURE-GIRLS', 'MATURE-GIRLS'), ('https://www.oriental-sex.com', 'ORIENTAL-SEX', 'ORIENTAL-SEX'), ('https://69teentube.com', '69TEENTUBE', '69TEENTUBE'), ('https://www.milffox.com', 'MILFFOX', 'MILFFOX'), ('https://9vids.com', '9VIDS', '9VIDS'), ('https://www.porndr.com', 'PORNDR', 'PORNDR'), ('https://moreamateurs.com', 'MOREAMATEURS', 'MOREAMATEURS'), ('https://www.fuqer.com', 'FUQER', 'FUQER'), ('https://blowjobit.com', 'BLOWJOBIT', 'BLOWJOBIT'), ('https://www.amateur-cougar.com', 'AMATEUR-COUGAR', 'AMATEUR-COUGAR'), ('http://www.drtuber.com', 'DRTUBER', 'DRTUBER'), ('http://www.eporner.com', 'eporner', 'EPORNER'), ('https://www.sexvid.xxx', 'SEXVID', 'SEXVID'), ('http://www.homemoviestube.com', 'HomeMoviesTube', 'HomeMoviesTube'), ('https://www.katestube.com', 'KATESTUBE', 'KATESTUBE'), ('https://www.koloporno.com', 'KOLOPORNO', 'KOLOPORNO'), ('https://www.moviefap.com', 'MOVIEFAP', 'MOVIEFAP'), ('https://hellporno.com/', 'HELLPORNO', 'HELLPORNO'), ('https://www.3movs.com', '3MOVS', '3MOVS'), ('https://www.pornid.xxx', 'PORNID', 'PORNID'), ('https://www.pervclips.com/tube', 'PERVCLIPS', 'PERVCLIPS'), ('https://www.pornwhite.com', 'PORNWHITE', 'PORNWHITE'), ('https://www.pornburst.xxx/', 'PORNBURST', 'PORNBURST'), ('https://www.wankoz.com', 'WANKOZ', 'WANKOZ'), ('https://www.xxxbule.com/', 'XXXBULE', 'XXXBULE'), ('https://www.porndig.com', 'PORNDIG', 'PORNDIG'), ('https://glavmatures.com', 'GLAVMATURES', 'GLAVMATURES'), ('https://xcafe.com', 'XCAFE', 'XCAFE'), ('https://www.pornheed.com', 'PORNHEED', 'PORNHEED'), ('https://xcum.com', 'XCUM', 'XCUM'), ('https://www.sexmature.xxx', 'SEXMATURE', 'SEXMATURE'), ('https://www.teentuber.xxx', 'TEENTUBER', 'TEENTUBER'), ('https://www.porn7.xxx', 'PORN7', 'PORN7'), ('https://thepornarea.com', 'THEPORNAREA', 'THEPORNAREA'), ('https://xxxshake.com', 'XXXSHAKE', 'XXXSHAKE'), ('https://www.watchmygf.me', 'WATCHMYGF', 'WATCHMYGF'), ('https://www.homepornking.com', 'homepornking', 'HOMEPORNKING'), ('https://www.freeones.com', 'freeones', 'FREEONES'), ('https://www.porndroids.com', 'PORNDROIDS', 'PORNDROIDS'), ('http://www.pornhub.com', 'pornhub', 'PORNHUB'), ('http://pornicom.com', 'PORNICOM', 'PORNICOM'), ('https://www.perfectgirls.xxx', 'PERFECTGIRLS', 'PERFECTGIRLS'), ('https://ziporn.com/', 'ZIPORN', 'ZIPORN'), ('https://www.redtube.com', 'redtube', 'REDTUBE'), ('https://www.momslust.com', 'MOMSLUST', 'MOMSLUST'), ('http://www.tube8.com', 'tube8', 'TUBE8'), ('https://www.xhamster.com', 'xhamster', 'XHAMSTER'), ('https://www.xnxx.com', 'xnxx', 'XNXX'), ('https://hellmoms.com', 'HELLMOMS', 'HELLMOMS'), ('https://everycamgirl.com', 'EVERYCAMGIRL', 'EVERYCAMGIRL'), ('https://www.camvideos.tv', 'CAMVIDEOS', 'CAMVIDEOS'), ('https://www.masturbate2gether.com', 'MASTURBATE2GETHER', 'MASTURBATE2GETHER'), ('https://mustjav.com', 'MUSTJAV', 'MUSTJAV'), ('https://fullxcinema.com', 'FULLXCINEMA', 'FULLXCINEMA'), ('https://teenxy.com', 'TEENXY', 'TEENXY'), ('https://warddogs.com', 'WARDDOGS', 'WARDDOGS'), ('https://shooshtime.com', 'SHOOSHTIME', 'SHOOSHTIME'), ('https://www.amateur8.com/', 'AMATEUR8', 'AMATEUR8'), ('https://www.definebabe.com/', 'DEFINEBABE', 'DEFINEBABE'), ('https://hello.porn', 'HELLOPORN', 'HELLOPORN'), ('https://www.xozilla.com', 'XOZILLA', 'XOZILLA'), ('https://www.ohsexfilm.com', 'OHSEXFILM', 'OHSEXFILM'), ('https://www.mature-amateur-sex.com', 'MATURE-AMATEUR-SEX', 'MATURE-AMATEUR-SEX'), ('https://topvids.net', 'TOPVIDS', 'TOPVIDS'), ('https://hdzog.com/', 'HDZOG', 'HDZOG'), ('https://shameless.com', 'SHAMELESS', 'SHAMELESS'), ('http://www.xvideos.com', 'xvideos', 'XVIDEOS'), ('http://www.youjizz.com', 'YOUJIZZ', 'YOUJIZZ'), ('https://www.youporn.com', 'youporn', 'YOUPORN')]
-
+				hosts = [('http://www.porntrex.com', 'PORNTREX', 'PORNTREX'), ('https://www.ah-me.com', 'AH-ME', 'AH-ME'), ('https://www.alphaporno.com', 'ALPHAPORNO', 'ALPHAPORNO'), ('https://crocotube.com/', 'CROCOTUBE', 'CROCOTUBE'), ('https://in35.com', 'IN35', 'IN35'), ('https://jizzbunker.com', 'JIZZBUNKER', 'JIZZBUNKER'), ('https://relax-sex.com', 'RELAX-SEX', 'RELAX-SEX'), ('http://babes34.me', 'BABES34', 'BABES34'), ('https://pornbolt.com', 'PORNBOLT', 'PORNBOLT'), ('https://www.wetsins.com', 'WETSINS', 'WETSINS'), ('https://pornenix.com', 'PORNENIX', 'PORNENIX'), ('https://www.pornohammer.com', 'PORNOHAMMER', 'PORNOHAMMER'), ('https://xgroovy.com', 'XGROOVY', 'XGROOVY'), ('https://www.theyarehuge.com', 'THEYAREHUGE', 'THEYAREHUGE'), ('https://ok.xxx', 'OK.XXX', 'OK.XXX'), ('https://www.laidhub.com', 'LAIDHUB', 'LAIDHUB'), ('https://momxl.com', 'MOMXL', 'MOMXL'), ('https://yourlust.com', 'YOURLUST', 'YOURLUST'), ('https://www.its.porn', 'ITSPORN', 'ITSPORN'), ('https://ad69.com', 'AD69', 'AD69'), ('http://pornbimbo.com', 'PORNBIMBO', 'PORNBIMBO'), ('https://www.pornhat.com/', 'PORNHAT', 'PORNHAT'), ('https://www.shemalehd.sex', 'SHEMALEHD', 'SHEMALEHD'), ('https://www.cambro.tv', 'CAMBRO', 'CAMBRO'), ('https://cambeauties.com', 'CAMBEAUTIES', 'CAMBEAUTIES'), ('http://pornfd.com', 'PORNFD', 'PORNFD'), ('https://femefun.com', 'FEMEFUN', 'FEMEFUN'), ('https://handjobhub.com', 'HANDJOBHUB', 'HANDJOBHUB'), ('https://youramateurtube.com', 'YOURAMATEURTUBE', 'YOURAMATEURTUBE'), ('https://www.sheshaft.com', 'SHESHAFT', 'SHESHAFT'), ('https://www.punishbang.com', 'PUNISHBANG', 'PUNISHBANG'), ('https://www.xnxxhamster.net', 'XNXXHAMSTER', 'XNXXHAMSTER'), ('https://www.tropictube.com', 'TROPICTUBE', 'TROPICTUBE'), ('https://mrdeepfakes.com', 'MR DEEPFAKES', 'MR DEEPFAKES'), ('https://porcore.com', 'PORCORE', 'PORCORE'), ('https://www.al4a.com', 'AL4A', 'AL4A'), ('http://www.camhub.cc', 'CAMHUB', 'CAMHUB'), ('https://jizzboom.com', 'JIZZBOOM', 'JIZZBOOM'), ('https://www.javbangers.com', 'JAVBANGERS', 'JAVBANGERS'), ('https://xxxdan.com', 'XXXDAN', 'XXXDAN'), ('https://www.trendyporn.com', 'TRENDYPORN', 'TRENDYPORN'), ('https://hypnotube.com', 'HYPNOTUBE', 'HYPNOTUBE'), ('https://www.alotporn.com', 'ALOTPORN', 'ALOTPORN'), ('https://www.mypornhere.com', 'MYPORNHERE', 'MYPORNHERE'), ('https://www.ebony8.com', 'EBONY8', 'EBONY8'), ('https://nudez.com', 'NUDEZ', 'NUDEZ'), ('https://www.freepornhq.xxx', 'FREEPORNHQ', 'FREEPORNHQ'), ('https://en.pornoreino.com', 'PORNOREINO', 'PORNOREINO'), ('https://www.whoreshub.com', 'WHORESHUB', 'WHORESHUB'), ('https://veporn.com', 'VEPORN', 'VEPORN'), ('https://pornxp.org', 'PORNXP', 'PORNXP'), ('https://severeporn.com', 'SEVEREPORN', 'SEVEREPRON'), ('https://pornoflix.com', 'PORNOFLIX', 'PRONOFLIX'), ('https://neporn.com', 'NEPORN', 'NEPORN'), ('https://pornyteen.com', 'PORNYTEEN', 'PORNYTEEN'), ('https://www.cuckoldplacetube.com', 'CUCKOLDPLACETUBE', 'CUCKOLDPLACETUBE'), ('https://baddies.xxx', 'BADDIES', 'BADDIES'), ('https://www.amazingcuckold.com', 'AMAZINGCUCKOLD', 'AMAZINGCUCKOLD'), ('https://www.beautymovies.com', 'BEAUTYMOVIES', 'BEAUTYMOVIES'), ('https://www.xxbrits.com', 'XXBRITS', 'XXBRITS'), ('https://www.xpaja.net', 'XPAJA', 'XPAJA'), ('https://www.xrares.com', 'XRARES', 'XRARES'), ('https://www.xtits.com', 'XTITS', 'XTITS'), ('https://www.terk.nl', 'TERK.NL', 'TERK.NL'), ('https://hardsexvids.com', 'HARDSEXVIDS', 'HARDSEXVIDS'), ('https://amateur.red', 'AMATEUR.RED', 'AMATEUR.RED'), ('https://young-sex-tube.com', 'YOUNG-SEX-TUBE', 'YOUNG-SEX-TUBE'), ('https://pornvideosbest.com', 'PORNVIDEOSBEST', 'PORNVIDEOSBEST'), ('https://www.mature-girls.com', 'MATURE-GIRLS', 'MATURE-GIRLS'), ('https://www.oriental-sex.com', 'ORIENTAL-SEX', 'ORIENTAL-SEX'), ('https://69teentube.com', '69TEENTUBE', '69TEENTUBE'), ('https://www.milffox.com', 'MILFFOX', 'MILFFOX'), ('https://9vids.com', '9VIDS', '9VIDS'), ('https://www.porndr.com', 'PORNDR', 'PORNDR'), ('https://moreamateurs.com', 'MOREAMATEURS', 'MOREAMATEURS'), ('https://www.fuqer.com', 'FUQER', 'FUQER'), ('https://blowjobit.com', 'BLOWJOBIT', 'BLOWJOBIT'), ('https://www.amateur-cougar.com', 'AMATEUR-COUGAR', 'AMATEUR-COUGAR'), ('http://www.drtuber.com', 'DRTUBER', 'DRTUBER'), ('http://www.eporner.com', 'eporner', 'EPORNER'), ('https://www.sexvid.xxx', 'SEXVID', 'SEXVID'), ('http://www.homemoviestube.com', 'HomeMoviesTube', 'HomeMoviesTube'), ('https://www.katestube.com', 'KATESTUBE', 'KATESTUBE'), ('https://www.koloporno.com', 'KOLOPORNO', 'KOLOPORNO'), ('https://www.moviefap.com', 'MOVIEFAP', 'MOVIEFAP'), ('https://hellporno.com/', 'HELLPORNO', 'HELLPORNO'), ('https://www.3movs.com', '3MOVS', '3MOVS'), ('https://www.pornid.xxx', 'PORNID', 'PORNID'), ('https://www.pervclips.com/tube', 'PERVCLIPS', 'PERVCLIPS'), ('https://www.pornwhite.com', 'PORNWHITE', 'PORNWHITE'), ('https://www.pornburst.xxx/', 'PORNBURST', 'PORNBURST'), ('https://www.wankoz.com', 'WANKOZ', 'WANKOZ'), ('https://www.xxxbule.com/', 'XXXBULE', 'XXXBULE'), ('https://www.porndig.com', 'PORNDIG', 'PORNDIG'), ('https://glavmatures.com', 'GLAVMATURES', 'GLAVMATURES'), ('https://xcafe.com', 'XCAFE', 'XCAFE'), ('https://www.pornheed.com', 'PORNHEED', 'PORNHEED'), ('https://xcum.com', 'XCUM', 'XCUM'), ('https://www.sexmature.xxx', 'SEXMATURE', 'SEXMATURE'), ('https://www.teentuber.xxx', 'TEENTUBER', 'TEENTUBER'), ('https://www.porn7.xxx', 'PORN7', 'PORN7'), ('https://thepornarea.com', 'THEPORNAREA', 'THEPORNAREA'), ('https://xxxshake.com', 'XXXSHAKE', 'XXXSHAKE'), ('https://www.watchmygf.me', 'WATCHMYGF', 'WATCHMYGF'), ('https://www.homepornking.com', 'homepornking', 'HOMEPORNKING'), ('https://www.freeones.com', 'freeones', 'FREEONES'), ('https://www.porndroids.com', 'PORNDROIDS', 'PORNDROIDS'), ('http://www.pornhub.com', 'pornhub', 'PORNHUB'), ('http://pornicom.com', 'PORNICOM', 'PORNICOM'), ('https://www.perfectgirls.xxx', 'PERFECTGIRLS', 'PERFECTGIRLS'), ('https://ziporn.com/', 'ZIPORN', 'ZIPORN'), ('https://www.redtube.com', 'redtube', 'REDTUBE'), ('https://www.momslust.com', 'MOMSLUST', 'MOMSLUST'), ('http://www.tube8.com', 'tube8', 'TUBE8'), ('https://www.xhamster.com', 'xhamster', 'XHAMSTER'), ('https://www.xnxx.com', 'xnxx', 'XNXX'), ('https://hellmoms.com', 'HELLMOMS', 'HELLMOMS'), ('https://everycamgirl.com', 'EVERYCAMGIRL', 'EVERYCAMGIRL'), ('https://www.camvideos.tv', 'CAMVIDEOS', 'CAMVIDEOS'), ('https://www.masturbate2gether.com', 'MASTURBATE2GETHER', 'MASTURBATE2GETHER'), ('https://mustjav.com', 'MUSTJAV', 'MUSTJAV'), ('https://fullxcinema.com', 'FULLXCINEMA', 'FULLXCINEMA'), ('https://teenxy.com', 'TEENXY', 'TEENXY'), ('https://warddogs.com', 'WARDDOGS', 'WARDDOGS'), ('https://shooshtime.com', 'SHOOSHTIME', 'SHOOSHTIME'), ('https://www.amateur8.com/', 'AMATEUR8', 'AMATEUR8'), ('https://www.definebabe.com/', 'DEFINEBABE', 'DEFINEBABE'), ('https://hello.porn', 'HELLOPORN', 'HELLOPORN'), ('https://www.xozilla.com', 'XOZILLA', 'XOZILLA'), ('https://www.ohsexfilm.com', 'OHSEXFILM', 'OHSEXFILM'), ('https://www.mature-amateur-sex.com', 'MATURE-AMATEUR-SEX', 'MATURE-AMATEUR-SEX'), ('https://topvids.net', 'TOPVIDS', 'TOPVIDS'), ('https://hdzog.com/', 'HDZOG', 'HDZOG'), ('https://shameless.com', 'SHAMELESS', 'SHAMELESS'), ('http://www.xvideos.com', 'xvideos', 'XVIDEOS'), ('http://www.youjizz.com', 'YOUJIZZ', 'YOUJIZZ'), ('https://www.youporn.com', 'youporn', 'YOUPORN'), ('https://w4nkr.com', 'W4NKR', 'W4NKR')]
 				for host in hosts:
 					self.MAIN_URL = host[0]
 					valtemp = self.listsItems(-1, url, host[1] + '-search')
@@ -819,7 +808,6 @@ class Host(CBaseHostClass):
 						for item in valtemp:
 							item.name = host[1] + ' - ' + item.name
 						valTab = valTab + valtemp
-
 				self.MAIN_URL = ''
 				return valTab
 			valTab = self.listsItems(-1, url, self.SEARCH_proc)
@@ -4335,7 +4323,7 @@ class Host(CBaseHostClass):
 			for item2 in data2:
 				phTitle = '******  ' + self.cm.ph.getSearchGroups(item2, '''"[>]([^"^']+?)[<]/a''', 1, True)[0] + '  ******'
 				phUrl = self.cm.ph.getSearchGroups(item2, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
-				phImage = 'http://www.blindspot.nhely.hu/Thumbnails/momslust.png'
+				phImage = hostImage() + 'momslust.png'
 				valTab.sort(key=lambda poz: poz.name)
 				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'MOMSLUST-clips', phImage, None))
 			valTab.insert(0, CDisplayListItem('--- Models Alphabetically---', 'Models Alphabetically', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/models/alphabetically/'], 'MOMSLUST-models', 'https://static-cdn.strpst.com/previews/e/3/c/e3cc763c2478677dae18a27d4ecc426f-full', None))
@@ -4421,7 +4409,7 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
 				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
 				if not phImage:
-					phImage = 'http://www.blindspot.nhely.hu/Thumbnails/momslust.png'
+					phImage = hostImage() + 'momslust.png'
 				phVideos = self.cm.ph.getSearchGroups(item, '''flag"[>]([^"^']+?)[<]/span''', 1, True)[0]
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'MOMSLUST-clips', phImage, None))
 			if next_page:
@@ -8251,6 +8239,102 @@ class Host(CBaseHostClass):
 				valTab.append(self.getNextItem(next.split('=')[-1], next, name, "next"))
 			return valTab
 
+		if 'W4NKR' == name:
+			printDBG('Host listsItems begin name=' + name)
+			self.MAIN_URL = 'https://w4nkr.com'
+			COOKIEFILE = join(GetCookieDir(), 'w4nkr.cookie')
+			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
+			sts, data = self.cm.getPage(url, self.defaultParams)
+			if not sts:
+				return valTab
+			next = self.cm.ph.getSearchGroups(data, '''pagination.*\s.+from[:]([^"^']+)['"].+\n.+Next''', 1, True)[0]
+			data = data.split('class="thumb item">')
+			if len(data):
+				del data[0]
+			for item in data:
+				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^#^@]+?)["]''', 1, True)[0]
+				phUrl = self.cm.ph.getSearchGroups(item, '''a.href=['"]([^"^']+?)['"]''', 1, True)[0]
+				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"].alt''', 1, True)[0]
+				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'W4NKR-clips', phImage, None))
+			valTab.sort(key=lambda poz: poz.name)
+			valTab.insert(0, CDisplayListItem('--- HOME  ---', 'PORN VIDEOS BEING WATCHED', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], 'W4NKR-clips', 'https://cdni.pornpics.com/460/1/385/48865900/48865900_004_e15c.jpg', None))
+			valTab.insert(0, CDisplayListItem('--- TOP RATED  ---', 'TOP RATED PORN VIDEOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/top-rated/'], 'W4NKR-clips', 'https://cdni.pornpics.com/460/7/728/32452046/32452046_029_d62b.jpg', None))
+			valTab.insert(0, CDisplayListItem('--- MOST VIEWED  ---', 'MOST VIEWED PORN VIDEOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-popular/'], 'W4NKR-clips', 'https://cdni.pornpics.com/460/7/728/96417013/96417013_048_4393.jpg', None))
+			valTab.insert(0, CDisplayListItem('--- LATEST ---', 'LATEST PORN VIDEOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/latest-updates/'], 'W4NKR-clips', 'https://cdni.pornpics.com/1280/7/727/10354944/10354944_006_8e44.jpg', None))
+			valTab.insert(0, CDisplayListItem('--- CHANNELS ---', 'CHANNELS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/channels/'], 'W4NKR-channels', 'https://cdni.pornpics.com/1280/7/725/67701853/67701853_082_06eb.jpg', None))
+			self.SEARCH_proc = 'W4NKR-search'
+			valTab = searchItems(valTab, True)
+			if next:
+				next = url + next
+				valTab.append(CDisplayListItem('More Categories', 'Page: ' + next.split('/')[-2], CDisplayListItem.TYPE_CATEGORY, [next], name, '', None, imageType="NEXT"))
+			return valTab
+
+		if 'W4NKR-search' == name:
+			printDBG('Host listsItems begin name=' + name)
+			valTab = self.listsItems(-1, 'https://w4nkr.com/search/' + url.replace(' ', '-') + '/', 'W4NKR-clips')
+			return valTab
+
+		if 'W4NKR-clips' == name:
+			printDBG('Host listsItems begin name=' + name)
+			catUrl = self.currList[Index].possibleTypesOfSearch
+			self.MAIN_URL = 'https://w4nkr.com'
+			COOKIEFILE = join(GetCookieDir(), 'w4nkr.cookie')
+			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
+			sts, data = self.cm.getPage(url, self.defaultParams)
+			if not sts:
+				return valTab
+			currUrl = self.cm.ph.getSearchGroups(data, '''href=['"]([^"^@]+?)['"].{4,10}canon''', 1, True)[0]
+			printDBG('Alap oldal: ' + currUrl)
+			next = self.cm.ph.getSearchGroups(data, '''from.{0,8}[:]([^"^@]+?)['"].+\n.+Next.Page''', 1, True)[0]
+			data = data.split('thumb_rel item')
+			if len(data):
+				del data[0]
+			for item in data:
+				phUrl = self.cm.ph.getSearchGroups(item, '''a.href=['"]([^"^']+?)['"]''', 1, True)[0]
+				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^$]+?)["]''', 1, True)[0].replace('&#x1F92B;', '').replace('&#x1F351;', ' ').replace('&#x1F32D;', ' ').replace('&#x1F608;', ' ').replace('&#x1F44C; ', ' ').replace('&#x270C;', ' ').replace('&#x1F4A6;', ' ').replace('&#x1F975;', ' ').replace('&#x2014;', ' ')
+				phImage = self.cm.ph.getSearchGroups(item, '''original=['"]([^"^;]+?)['"]''', 1, True)[0]
+				if not phImage:
+					phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^;]+?)['"]''', 1, True)[0]
+				phTime = self.cm.ph.getSearchGroups(item, '''time"[>]([^>]+?)[<]''', 1, True)[0].strip()
+				phViews = self.cm.ph.getSearchGroups(item, '''eye.+[>]([^>]+?)[<]''', 1, True)[0].strip()
+				phRate = self.cm.ph.getSearchGroups(item, '''like.+i[>]([^>]+?)[<]''', 1, True)[0].strip()
+				phQuality = self.cm.ph.getSearchGroups(item, '''qualtiy.+"[>]([^>]+?)[<]/''', 1, True)[0].strip()
+				if not phQuality:
+					phQuality = 'SD'
+				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + '] ' + decodeHtml(phTitle) + '\nViews: ' + phViews + '\nRating Positive: ' + phRate + '\nQuality: ' + phQuality, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
+			if next:
+				if 'search' in url:
+					currUrl = url.partition('?')[0]
+					next_page = "%s?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&from_videos=%s" % (currUrl, str(next))
+				else:
+					next_page = currUrl + str(next) + '/'
+				printDBG('Next teljes: ' + str(next_page))
+				valTab.append(self.getNextItem(str(next), next_page))
+			return valTab
+
+		if 'W4NKR-channels' == name:
+			printDBG('Host listsItems begin name=' + name)
+			self.MAIN_URL = 'https://w4nkr.com'
+			COOKIEFILE = join(GetCookieDir(), 'w4nkr.cookie')
+			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
+			sts, data = self.cm.getPage(url, self.defaultParams)
+			if not sts:
+				return valTab
+			next = self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)['"].{3,10}Next''', 1, True)[0]
+			data = data.split('item thumb_rel">')
+			if len(data):
+				del data[0]
+			for item in data:
+				phTitle = self.cm.ph.getSearchGroups(item, '''title"[>]([^#^@]+?)[<]''', 1, True)[0].capitalize().strip()
+				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"].title''', 1, True)[0]
+				phImage = self.cm.ph.getSearchGroups(item, '''original=['"]([^"^;]+?)['"]''', 1, True)[0]
+				if not phImage:
+					phImage = "https://cdnstatic.w4nkr.com/static/images/logo.png"
+				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'W4NKR-clips', phImage, None))
+			if next:
+				valTab.append(self.getNextItem(next.split('=')[-1], next, 'next'))
+			return valTab
+
 		if 'MOMXL' == name:
 			self.MAIN_URL = 'https://momxl.com/'
 			ImageURL = "https://nastypornpics.com/"
@@ -8508,7 +8592,7 @@ class Host(CBaseHostClass):
 
 		if 'AD69' == name:
 			self.MAIN_URL = 'https://ad69.com'
-			mainIcon = "http://www.blindspot.nhely.hu/Thumbnails/ad69.jpg"
+			mainIcon = hostImage() + 'ad69.jpg'
 			COOKIEFILE = join(GetCookieDir(), 'ad69.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -8873,7 +8957,7 @@ class Host(CBaseHostClass):
 
 		if 'FEMEFUN' == name:
 			self.MAIN_URL = 'https://femefun.com'
-			Icon = "http://www.blindspot.nhely.hu/Thumbnails/femefun.png"
+			Icon = hostImage() + 'femefun.png'
 			COOKIEFILE = join(GetCookieDir(), 'femefun.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -10760,7 +10844,7 @@ class Host(CBaseHostClass):
 			for item in data:
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''', 1, True)[0].title()
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
-				phImage = 'http://www.blindspot.nhely.hu/Thumbnails/veporn.png'
+				phImage = hostImage() + 'veporn.png'
 				Videos = self.cm.ph.getSearchGroups(item, '''fwb"[>]([^"^']+?)[<]''', 1, True)[0]
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle) + '\n' + Videos + ' Video(s)', CDisplayListItem.TYPE_CATEGORY, [phUrl], 'VEPORN-clips', phImage, None))
 			if next:
@@ -10977,7 +11061,7 @@ class Host(CBaseHostClass):
 			for item in data:
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''', 1, True)[0].upper()
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
-				phImage = 'http://www.blindspot.nhely.hu/Thumbnails/pornoflix.png'
+				phImage = hostImage() + 'pornoflix.png'
 				Videos = self.cm.ph.getSearchGroups(item, '''fwb"[>]([^"^']+?)[<]''', 1, True)[0]
 				phRate = self.cm.ph.getSearchGroups(item, '''</i[>]([ 0-9%]+?)[<]''', 1, True)[0]
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle) + '\n' + Videos + ' Videos\nRate Positive: ' + phRate, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'PORNOFLIX-clips', phImage, None))
@@ -11366,7 +11450,7 @@ class Host(CBaseHostClass):
 		if 'BEAUTYMOVIES' == name:
 			COOKIEFILE = join(GetCookieDir(), 'beautymovies.cookie')
 			self.MAIN_URL = 'https://www.beautymovies.com'
-			ImageURL = "http://www.blindspot.nhely.hu/Thumbnails/beautymovies.png"
+			ImageURL = hostImage() + 'beautymovies.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -11432,7 +11516,7 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, r'''href="\s[\s]([^"^#]+?)[\s]"''', 1, True)[0]
 				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^#]+?)['"]''', 1, True)[0]
 				if not phImage:
-					phImage = 'http://www.blindspot.nhely.hu/Thumbnails/xxbrits.png'
+					phImage = hostImage() + 'xxbrits.png'
 				phVideos = self.cm.ph.getSearchGroups(item, '''play">.+\n.+[ ]([0-9].{,7})''', 1, True)[0]
 				valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + phVideos + ' Videos', CDisplayListItem.TYPE_CATEGORY, [phUrl], 'XXBRITS-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
@@ -11472,7 +11556,7 @@ class Host(CBaseHostClass):
 				phTitle = self.cm.ph.getSearchGroups(item, '''title=['"]([^>]+?)['"].>''', 1, True)[0].title()
 				phImage = self.cm.ph.getSearchGroups(item, '''inal=['"]([^>]+?)['"]''', 1, True)[0]
 				if not phImage:
-					phImage = 'http://www.blindspot.nhely.hu/Thumbnails/xxbrits.png'
+					phImage = hostImage() + 'xxbrits.png'
 				phImage = urlparser.decorateUrl(phImage, {'Referer': self.MAIN_URL})
 				printDBG('KLIPKÉPEK: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, r'''time.+\n\s{,8}[\s]([0-9:]+)''', 1, True)[0]
@@ -12241,7 +12325,7 @@ class Host(CBaseHostClass):
 		if 'MATURE-GIRLS' == name:
 			COOKIEFILE = join(GetCookieDir(), 'mature-girls.cookie')
 			self.MAIN_URL = 'https://www.mature-girls.com/'
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/mature-girls.png"
+			catImage = hostImage() + 'mature-girls.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12272,7 +12356,7 @@ class Host(CBaseHostClass):
 		if 'MATURE-GIRLS-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'mature-girls.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/mature-girls.png"
+			catImage = hostImage() + 'mature-girls.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12306,7 +12390,7 @@ class Host(CBaseHostClass):
 		if 'ORIENTAL-SEX' == name:
 			COOKIEFILE = join(GetCookieDir(), 'oriental-sex.cookie')
 			self.MAIN_URL = 'https://www.oriental-sex.com'
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/oriental-sex.png"
+			catImage = hostImage() + 'oriental-sex.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12330,7 +12414,7 @@ class Host(CBaseHostClass):
 		if 'ORIENTAL-SEX-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'oriental-sex.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/oriental-sex.png"
+			catImage = hostImage() + 'oriental-sex.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12364,7 +12448,7 @@ class Host(CBaseHostClass):
 		if '69TEENTUBE' == name:
 			COOKIEFILE = join(GetCookieDir(), '69teentube.cookie')
 			self.MAIN_URL = 'https://69teentube.com'
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/69teentube.png"
+			catImage = hostImage() + '69teentube.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12386,7 +12470,7 @@ class Host(CBaseHostClass):
 		if '69TEENTUBE-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), '69teentube.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/69teentube.png"
+			catImage = hostImage() + '69teentube.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12413,7 +12497,7 @@ class Host(CBaseHostClass):
 		if 'WIFEVIDEOS' == name:
 			COOKIEFILE = join(GetCookieDir(), 'wifevideos.cookie')
 			self.MAIN_URL = 'http://www.wifevideos.net'
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/wifevideos.png"
+			catImage = hostImage() + 'wifevideos.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12460,7 +12544,7 @@ class Host(CBaseHostClass):
 			COOKIEFILE = join(GetCookieDir(), 'milffox.cookie')
 			self.MAIN_URL = 'https://www.milffox.com'
 			mainUrl = "https://www.milffox.com/categories/"
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/milfox.png"
+			catImage = hostImage() + 'milfox.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12496,7 +12580,7 @@ class Host(CBaseHostClass):
 		if 'MILFFOX-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'milffox.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/milfox.png"
+			catImage = hostImage() + 'milfox.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12560,7 +12644,7 @@ class Host(CBaseHostClass):
 		if '9VIDS-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), '9vids.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/milfox.png"
+			catImage = hostImage() + 'milfox.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12586,7 +12670,7 @@ class Host(CBaseHostClass):
 		if 'PORNDR' == name:
 			COOKIEFILE = join(GetCookieDir(), 'porndr.cookie')
 			self.MAIN_URL = 'https://www.porndr.com'
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/porndr.png"
+			catImage = hostImage() + 'porndr.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12737,7 +12821,7 @@ class Host(CBaseHostClass):
 		if 'MOREAMATEURS' == name:
 			COOKIEFILE = join(GetCookieDir(), 'moreamateurs.cookie')
 			self.MAIN_URL = 'https://moreamateurs.com'
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/moreamateurs.png"
+			catImage = hostImage() + 'moreamateurs.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12809,7 +12893,7 @@ class Host(CBaseHostClass):
 		if 'FUQER' == name:
 			COOKIEFILE = join(GetCookieDir(), 'fuqer.cookie')
 			self.MAIN_URL = 'https://fuqer.com'
-			catImage = "http://www.blindspot.nhely.hu/Thumbnails/fuqer.png"
+			catImage = hostImage() + 'fuqer.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
