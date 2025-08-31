@@ -33,6 +33,7 @@ class CListItem:
         self.type = type
         self.name = name
         self.fullDir = fullDir
+        self.imageType = type
 
     def getDisplayTitle(self):
         return self.name
