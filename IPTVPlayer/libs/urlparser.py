@@ -637,6 +637,7 @@ class urlparser:
             'mixdrop.ps': self.pp.parserJWPLAYER,
             'mixdrop.sb': self.pp.parserJWPLAYER,
             'mixdrop.si': self.pp.parserJWPLAYER,
+            'mixdrop.sn': self.pp.parserJWPLAYER,
             'mixdrop.sx': self.pp.parserJWPLAYER,
             'mixdrop.to': self.pp.parserJWPLAYER,
             'mixdropjmk.pw': self.pp.parserJWPLAYER,
