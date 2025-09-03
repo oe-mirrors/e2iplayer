@@ -16,7 +16,7 @@ hostbbcsport_blocked_
 hostbsto_blocked_
 hostcartoonhd_blocked_
 hostcb01uno
-hostcdapl_blocked_
+hostcdapl
 hostchomikuj_blocked_
 hostchristusvincit_blocked_
 hostcimaclubcom_blocked_
@@ -32,7 +32,7 @@ hostdokumentalnenet
 hostdrdk_blocked_
 hostegybest
 hosteinschalten
-hostekinotv_blocked_
+hostekinotv
 hostekstraklasatv_blocked_
 hosteskago_blocked_
 hosteurosportplayer
