@@ -57,7 +57,7 @@ hostfilmstreamvkcom_blocked_
 hostfilmtar_blocked_
 hostfilmvilag
 hostforjatn_blocked_
-hostfreediscpl_blocked_
+hostfreediscpl
 hostfullmatchtvcom_blocked_
 hostgamatocom
 hostgamatotvme_blocked_
