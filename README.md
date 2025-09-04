@@ -6,7 +6,8 @@ This plugin was developed with a lot of ❤️ for the Enigma2 community. You ar
 
 ---
 
-<img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/e2ilogo2.png">    <img width="205" height="90" alt="302312157_559248529334315_1248330146907080676_n" src="https://github.com/user-attachments/assets/10b3ea6c-f5fd-4602-88eb-465acc1dc57c" />     <img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/e2ilogo.png">
+<img width="1250" height="500" alt="e2ilogo(Background_Git)" src="https://github.com/user-attachments/assets/3597cb56-f41e-4356-8935-94c0f7070e03" />
+
 
 ---
 
@@ -176,3 +177,5 @@ This repository has no control over the streams, links, or the legality of the c
 
 ⭐️ If you find this plugin useful, please give it a star on GitHub!
 Thanks! ❤️ ❤️ ❤️
+
+<img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/e2ilogo.png">
