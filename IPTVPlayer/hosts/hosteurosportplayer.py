@@ -58,7 +58,7 @@ class EuroSportPlayer(CBaseHostClass):
         self.SCHEDULE_COLLECTION_URL = self.API_URL + 'cms/collections/{%id%}?include=default&{%filter%}'
         self.PLAYBACK_URL = self.API_URL + '/playback/v2/videoPlaybackInfo/{%video_id%}?usePreAuth=true'
 
-        self.DEFAULT_ICON_URL = 'http://mirrors.kodi.tv/addons/leia/plugin.video.eurosportplayer/resources/icon.png'
+        self.DEFAULT_ICON_URL = 'https://mirror.accum.se/mirror/xbmc.org/addons/leia/plugin.video.eurosportplayer/resources/icon.png'
 
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl(), 'X-disco-client': 'WEB:UNKNOWN:esp-web:prod'}
         self.defaultParams = {'header': {'User-Agent': self.USER_AGENT}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}

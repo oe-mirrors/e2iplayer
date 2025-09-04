@@ -51,7 +51,7 @@ class TvGryPL(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.DEFAULT_ICON_URL = 'http://www.gry-online.pl/apple-touch-icon-120x120.png'
+        self.DEFAULT_ICON_URL = 'https://www.gry-online.pl/apple-touch-icon-120x120.png'
         self.MAIN_URL = 'https://tvgry.pl/'
         self.SEARCH_URL = self.getFullUrl('wyszukiwanie.asp')
         self.MAIN_CAT_TAB = [{'category': 'list_tabs', 'title': 'Materiały', 'url': self.getFullUrl('/wideo-tvgry.asp')},
@@ -178,9 +178,9 @@ class TvGryPL(CBaseHostClass):
                     return []
 
                 if ageMarker in data:
-                    SetIPTVPlayerLastHostError("Twój wiek nie został poprawnie zweryfikowany przez serwis http://tvgry.pl/.\nSprawdź ustawioną datę urodzenia w konfiguracji hosta.")
+                    SetIPTVPlayerLastHostError("Twój wiek nie został poprawnie zweryfikowany przez serwis https://tvgry.pl/.\nSprawdź ustawioną datę urodzenia w konfiguracji hosta.")
             else:
-                SetIPTVPlayerLastHostError("Wprowadź datę urodzenia w konfiguracji hosta - wymagane przez serwis http://tvgry.pl/.")
+                SetIPTVPlayerLastHostError("Wprowadź datę urodzenia w konfiguracji hosta - wymagane przez serwis https://tvgry.pl/.")
 
         url = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]
         if self.cm.isValidUrl(url):

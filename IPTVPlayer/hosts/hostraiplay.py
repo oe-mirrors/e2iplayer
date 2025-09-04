@@ -45,7 +45,7 @@ class Raiplay(CBaseHostClass):
         self.NOTHUMB_URL = "https://img.tuttoandroid.net/wp-content/uploads/2019/10/Raiplay-logo.jpg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.RELINKER_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36"
-        # self.LOCALIZEURL = "http://mediapolisgs.rai.it/relinker/relinkerServlet.htm?cont=201342"
+        # self.LOCALIZEURL = "https://mediapolisgs.rai.it/relinker/relinkerServlet.htm?cont=201342"
 
         self.CHANNELS_URL = "https://www.rai.it/dl/RaiPlay/2016/PublishingBlock-9a2ff311-fcf0-4539-8f8f-c4fee2a71d58.html?json"
 
@@ -54,12 +54,12 @@ class Raiplay(CBaseHostClass):
         self.EPG_URL_JSON = "https://www.raiplay.it/palinsesto/app/old/[idCanale]/[dd-mm-yyyy].json"  # this actual work updated
 
         # Raiplay RADIO
-        # self.BASEURL = "http://www.raiplayradio.it/"
+        # self.BASEURL = "https://www.raiplayradio.it/"
         self.CHANNELS_RADIO_URL = "https://rai.it/dl/portaleRadio/popup/ContentSet-003728e4-db46-4df8-83ff-606426c0b3f5-json.html"
-        self.CHANNELS_RADIO_URL2 = "http://www.raiplaysound.it/dirette.json"
-        # self.NOTHUMB_RADIO_URL = "http://www.raiplayradio.it/dl/components/img/radio/player/placeholder_img.png"
+        self.CHANNELS_RADIO_URL2 = "https://www.raiplaysound.it/dirette.json"
+        # self.NOTHUMB_RADIO_URL = "https://www.raiplayradio.it/dl/components/img/radio/player/placeholder_img.png"
 
-        self.TG_URL = "http://www.tgr.rai.it/dl/tgr/mhp/home.xml"
+        self.TG_URL = "https://www.tgr.rai.it/dl/tgr/mhp/home.xml"
         self.TG1_URL = "https://www.rainews.it/notiziari/tg1/archivio"
         # https://www.raiplay.it/programmi/specialetg1.json
         self.TG2_URL = "https://www.rainews.it/notiziari/tg2/archivio"
@@ -78,7 +78,7 @@ class Raiplay(CBaseHostClass):
         # ON_AIR_URL = "https://www.raiplay.it/palinsesto/onAir.json"
         # RAIPLAY_AZ_TV_SHOW_PATH = "https://www.raiplay.it/dl/RaiTV/RaiPlayMobile/Prod/Config/programmiAZ-elenco.json"
         # RAIPLAY_AZ_RADIO_SHOW_PATH = "https://www.raiplay.it/dl/RaiTV/RaiRadioMobile/Prod/Config/programmiAZ-elenco.json"
-        # PALINSESTO_URL = "http://www.raiplaysound.it/dl/palinsesti/Page-a47ba852-d24f-44c2-8abb-0c9f90187a3e-json.html?canale=[nomeCanale]&giorno=[dd-mm-yyyy]&mode=light"
+        # PALINSESTO_URL = "https://www.raiplaysound.it/dl/palinsesti/Page-a47ba852-d24f-44c2-8abb-0c9f90187a3e-json.html?canale=[nomeCanale]&giorno=[dd-mm-yyyy]&mode=light"
 
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.RaiSportKeys = []

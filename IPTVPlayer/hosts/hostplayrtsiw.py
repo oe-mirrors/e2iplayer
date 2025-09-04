@@ -55,7 +55,7 @@ class PlayRTSIW(CBaseHostClass):
                         'srf': 'https://www.srf.ch/',
                         'rsi': 'https://www.rsi.ch/',
                         'swi': 'https://play.swissinfo.ch/',
-                        'rts': 'http://www.rts.ch/'}
+                        'rts': 'https://www.rts.ch/'}
 
         self.PORTALS_MAP = {}
         for item in self.PLAYER_MAP:
@@ -169,7 +169,7 @@ class PlayRTSIW(CBaseHostClass):
 
         if portal != 'swi':
             params = dict(cItem)
-            params.update({'category': 'list_days', 'title': _('List by day'), 'icon': 'http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/calendar-icon.png'})
+            params.update({'category': 'list_days', 'title': _('List by day'), 'icon': 'https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/calendar-icon.png'})
             self.addDir(params)
 
         # chek if categories are available

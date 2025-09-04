@@ -27,7 +27,7 @@ config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=Fals
 config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.cineto_bypassrecaptcha = ConfigSelection(default="", choices=[("", _("None")),
                                                                                           ("9kw.eu", "https://9kw.eu/"),
-                                                                                          ("2captcha.com", "http://2captcha.com/")])
+                                                                                          ("2captcha.com", "https://2captcha.com/")])
 
 
 def GetConfigList():

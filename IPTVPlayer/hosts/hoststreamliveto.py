@@ -313,7 +313,7 @@ class StreamLiveTo(CBaseHostClass):
             SetIPTVPlayerLastHostError(errMsg1)
             return 0
 
-        imgUrl = 'http://www.google.com/recaptcha/api/image?c=' + challenge
+        imgUrl = 'https://www.google.com/recaptcha/api/image?c=' + challenge
         # return
         params = {'maintype': 'image', 'subtypes': ['jpeg'], 'check_first_bytes': [b'\xFF\xD8', b'\xFF\xD9']}
         filePath = GetTmpDir('.iptvplayer_captcha.jpg')

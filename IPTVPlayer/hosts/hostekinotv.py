@@ -47,7 +47,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://ekino-tv.pl/'
+    return 'https://ekino-tv.pl/'
 
 
 class EkinoTv(CBaseHostClass, CaptchaHelper):

@@ -40,7 +40,7 @@ HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Fi
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("%s API KEY") % 'http://youtube.com/', config.plugins.iptvplayer.api_key_youtube))
+    optionList.append(getConfigListEntry(_("%s API KEY") % 'https://youtube.com/', config.plugins.iptvplayer.api_key_youtube))
     optionList.append(getConfigListEntry(_("Show Youtube Api Key warnings"), config.plugins.iptvplayer.api_key_warning))
     optionList.append(getConfigListEntry("Użytkownik Last.fm", config.plugins.iptvplayer.MusicBox_premium))
     if config.plugins.iptvplayer.MusicBox_premium.value:
@@ -64,8 +64,8 @@ class MusicBox(CBaseHostClass):
 
         self.DEFAULT_ICON_URL = 'http://www.darmowe-na-telefon.pl/uploads/tapeta_240x320_muzyka_23.jpg'
         self.BILLBOARD_URL = 'https://www.billboard.com/charts/'
-        self.SERVICE_MENU_TABLE = [{'category': 'itunes', 'title': "Itunes - Top songs by country", 'item': 'song', 'url': 'http://www.geonames.org/flags/x/'},
-                                   {'category': 'itunes', 'title': "Itunes - Top albums by country", 'item': 'album', 'url': 'http://www.geonames.org/flags/x/'},
+        self.SERVICE_MENU_TABLE = [{'category': 'itunes', 'title': "Itunes - Top songs by country", 'item': 'song', 'url': 'https://www.geonames.org/flags/x/'},
+                                   {'category': 'itunes', 'title': "Itunes - Top albums by country", 'item': 'album', 'url': 'https://www.geonames.org/flags/x/'},
                                    {'category': 'beatport', 'title': "Beatport - Top 100", 'url': 'https://pro.beatport.com/top-100'},
 
                                    {'category': 'billboard_charts', 'title': "Billboard - The Hot 100", 'url': self.BILLBOARD_URL + 'hot-100'},
@@ -122,7 +122,7 @@ class MusicBox(CBaseHostClass):
             if country_code[x] not in ["al", "dz", "ao", "bj", "bt", "td", "cn", "cg", "gy", "is", "jm", "kr", "kw", "lr", "mk", "mg", "mw", "ml", "mr", "ms", "pk", "pw", "sn", "sc", "sl", "sb", "lc", "vc", "sr", "st", "tz", "tn", "tc", "uy", "ye"]:  # Countries without music store
                 url = country_code[x]
                 title = country_name[x]
-                icon = 'http://www.geonames.org/flags/x/' + country_code[x] + '.gif'
+                icon = 'https://www.geonames.org/flags/x/' + country_code[x] + '.gif'
                 desc = title
                 if mode == 'song':
                     params = {'good_for_fav': True, 'name': 'Itunes_track_charts', 'title': title, 'page': url, 'icon': icon, 'desc': desc}
@@ -414,7 +414,7 @@ class MusicBox(CBaseHostClass):
         printDBG("_getLinksForVideo url[%s]" % url)
 
         if not url.startswith("http://") and not url.startswith("https://"):
-            url = 'http://www.youtube.com/' + url
+            url = 'https://www.youtube.com/' + url
 
         return self.up.getVideoLinkExt(url)
 

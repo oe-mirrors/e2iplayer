@@ -59,10 +59,10 @@ class webhuplayer(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'webhuplayer', 'cookie': 'webhuplayer.cookie'})
         self.USER_AGENT = 'User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.HEADER = self.cm.getDefaultHeader()
-        self.DEFAULT_ICON_URL = 'http://www.figyelmeztetes.hu/webhuplayer_logo.jpg'
+        self.DEFAULT_ICON_URL = 'https://www.figyelmeztetes.hu/webhuplayer_logo.jpg'
         self.ICON_IDOJARAS = 'https://w.bookcdn.com/weather/picture/4_18069_1_14_151fe8_160_ffffff_333333_08488D_1_ffffff_333333_0_6.png?scode=124&domid=462&anc_id=44759'
-        self.ICON_INFO = 'http://www.figyelmeztetes.hu/webhuplayer_logo_i.jpg'
-        self.ICON_FRISSIT = 'http://www.figyelmeztetes.hu/webhuplayer_logo_fr.jpg'
+        self.ICON_INFO = 'https://www.figyelmeztetes.hu/webhuplayer_logo_i.jpg'
+        self.ICON_FRISSIT = 'https://www.figyelmeztetes.hu/webhuplayer_logo_fr.jpg'
         self.list_tart = 'webhuplayer.list'
         self.aktual = 'aktualis.stream'
         self.path_webh = config.plugins.iptvplayer.webmedia_dir.value + "/"

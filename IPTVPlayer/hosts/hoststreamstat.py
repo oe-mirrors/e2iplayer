@@ -27,13 +27,13 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://streamstat.net/'
+    return 'https://streamstat.net/'
 
 
 class StreamStat(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'streamstat', 'cookie': 'streamstat.cookie'})
-        self.MAIN_URL = 'http://streamstat.net/'
+        self.MAIN_URL = 'https://streamstat.net/'
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/Thumbnails/streamstat.jpg"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -77,11 +77,11 @@ class StreamStat(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG('StreamStat.listMainMenu')
         page = 1
-        MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('YP connected'), 'url': 'http://streamstat.net/main.cgi?mode=yp&search=&page=1&fp=50', 'page': page},
-                        {'category': 'list_items', 'title': _('Collected streams only'), 'url': 'http://streamstat.net/main.cgi?mode=col&search=&page=1&fp=50', 'page': page},
-                        {'category': 'list_items', 'title': _('Free IPTV list'), 'url': 'http://streamstat.net/main.cgi?mode=hls&search=&page=1&fp=50', 'page': page},
-                        {'category': 'list_items', 'title': _('All streams'), 'url': 'http://streamstat.net/main.cgi?mode=all&search=&page=1&fp=50', 'page': page},
-                        {'category': 'list_items', 'title': _('Random selection'), 'url': 'http://streamstat.net/main.cgi?mode=&search=&page=1&fp=50', 'page': page}] + self.searchItems()
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': _('YP connected'), 'url': 'https://streamstat.net/main.cgi?mode=yp&search=&page=1&fp=50', 'page': page},
+                        {'category': 'list_items', 'title': _('Collected streams only'), 'url': 'https://streamstat.net/main.cgi?mode=col&search=&page=1&fp=50', 'page': page},
+                        {'category': 'list_items', 'title': _('Free IPTV list'), 'url': 'https://streamstat.net/main.cgi?mode=hls&search=&page=1&fp=50', 'page': page},
+                        {'category': 'list_items', 'title': _('All streams'), 'url': 'https://streamstat.net/main.cgi?mode=all&search=&page=1&fp=50', 'page': page},
+                        {'category': 'list_items', 'title': _('Random selection'), 'url': 'https://streamstat.net/main.cgi?mode=&search=&page=1&fp=50', 'page': page}] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listItems(self, cItem):
@@ -108,7 +108,7 @@ class StreamStat(CBaseHostClass):
         for i in web:
             title = titles[web.index(i)]
             title = title.replace('&nbsp;', ' ')
-            url = 'http://streamstat.net' + i
+            url = 'https://streamstat.net' + i
             try:
                icon = icons[id.index(web.index(i))]
             except:
@@ -163,7 +163,7 @@ class StreamStat(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("StreamStat.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         searchPattern = searchPattern.replace(" ", "+")
-        url = 'http://streamstat.net/main.cgi?mode=all&search=' + searchPattern + '&page=1&fp=50'
+        url = 'https://streamstat.net/main.cgi?mode=all&search=' + searchPattern + '&page=1&fp=50'
         cItem['url'] = url
         cItem['page'] = 1
         self.listItems(cItem)

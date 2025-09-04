@@ -50,7 +50,7 @@ class ArteTV(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
 
         # from hbbtv
-        self.API_URL = 'http://www.arte.tv/hbbtvv2/services/web/index.php'
+        self.API_URL = 'https://www.arte.tv/hbbtvv2/services/web/index.php'
         self.API_ENDPOINTS = {
             'categories': '/EMAC/teasers/{type}/v2/{lang}',
             'category': '/EMAC/teasers/category/v2/{category_code}/{lang}',

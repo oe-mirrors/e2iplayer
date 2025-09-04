@@ -33,7 +33,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://obejrzyj.to/'
+    return 'https://obejrzyj.to/'
 
 
 class Obejrzyjto(CBaseHostClass):
@@ -42,7 +42,7 @@ class Obejrzyjto(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'obejrzyj.to', 'cookie': 'obejrzyj.to.cookie'})
         config.plugins.iptvplayer.cloudflare_user = ConfigText(default='Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', fixed_size=False)
         self.USER_AGENT = config.plugins.iptvplayer.cloudflare_user.value
-        self.MAIN_URL = 'http://obejrzyj.to/'
+        self.MAIN_URL = 'https://obejrzyj.to/'
         self.API_URL = self.getFullUrl('api/v1/')
         self.DEFAULT_ICON_URL = 'https://obejrzyj.to/storage/branding_media/cbd06244-e15a-4f95-9df0-9c6be3fb83c8.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl(), 'Upgrade-Insecure-Requests': '1', 'Connection': 'keep-alive'}

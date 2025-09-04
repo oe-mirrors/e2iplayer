@@ -27,7 +27,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://rte.ie/player'
+    return 'https://www.rte.ie/player/'
 
 
 class RteIE(CBaseHostClass):
@@ -41,7 +41,7 @@ class RteIE(CBaseHostClass):
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-        self.DEFAULT_ICON_URL = 'http://pbs.twimg.com/profile_images/533371112277557248/iJ7Xwp1i.png'
+        self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/RT%C3%89_logo.svg/1280px-RT%C3%89_logo.svg.png'
         self.MAIN_URL = None
         self.cacheLinks = {}
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
@@ -49,7 +49,7 @@ class RteIE(CBaseHostClass):
     def selectDomain(self):
 
         if self.MAIN_URL is None:
-            self.MAIN_URL = 'http://www.rte.ie/'
+            self.MAIN_URL = 'https://www.rte.ie/'
 
         self.MAIN_CAT_TAB = [{'category': 'list_live', 'title': _('Live'), 'url': self.getFullUrl('player/live')},
                              {'category': 'list_categories', 'title': _('Programmes'), 'url': self.getFullUrl('/player/date/latest/')}] + self.searchItems()

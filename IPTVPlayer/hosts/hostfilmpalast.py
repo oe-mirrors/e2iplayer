@@ -44,7 +44,7 @@ class FilmPalastTo(CBaseHostClass):
         self.cacheLinks = {}
 
     def selectDomain(self):
-        self.MAIN_URL = 'http://filmpalast.to/'
+        self.MAIN_URL = 'https://filmpalast.to/'
         self.MAIN_CAT_TAB = [{'category': 'list_items', 'title': _("Main"), 'url': self.getMainUrl()},
                              {'category': 'movies', 'title': _("Movies")},
                              {'category': 'series', 'title': _("Series"), },

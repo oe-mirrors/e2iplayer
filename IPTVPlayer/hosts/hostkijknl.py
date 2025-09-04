@@ -27,16 +27,16 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://kijk.nl/'
+    return 'https://kijk.nl/'
 
 
 class KijkNL(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'kijk.nl.uk', 'cookie': 'kijk.nl.cookie'})
-        self.DEFAULT_ICON_URL = 'http://is2.mzstatic.com/image/thumb/Purple128/v4/81/1d/19/811d19eb-3de6-1456-ab00-f68204e7dae4/source/1200x630bb.jpg'
+        self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/KIJK_logo.svg/1024px-KIJK_logo.svg.png'
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL = 'http://www.kijk.nl/'
+        self.MAIN_URL = 'https://www.kijk.nl/'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
@@ -45,7 +45,7 @@ class KijkNL(CBaseHostClass):
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.tmpUrl = 'http://api.kijk.nl/'
+        self.tmpUrl = 'https://api.kijk.nl/'
         self.policyKeyCache = ''
 
     def getPage(self, baseUrl, addParams={}, post_data=None):

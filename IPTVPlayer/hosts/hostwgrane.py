@@ -25,7 +25,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://wgrane.pl/'
+    return 'https://wgrane.pl/'
 
 
 class WgranePL(CBaseHostClass):
@@ -38,8 +38,8 @@ class WgranePL(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
 
-        self.MAIN_URL = 'http://www.wgrane.pl/'
-        self.DEFAULT_ICON_URL = 'https://i.ytimg.com/vi/HpTrVOZVNhA/maxresdefault.jpg'
+        self.MAIN_URL = 'https://www.wgrane.pl/'
+        self.DEFAULT_ICON_URL = 'https://www.wgrane.pl/images/logo.gif'
 
         self.defaultParams = {'with_metadata': True, 'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.cacheFilters = {}
