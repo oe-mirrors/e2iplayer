@@ -178,4 +178,4 @@ This repository has no control over the streams, links, or the legality of the c
 ⭐️ If you find this plugin useful, please give it a star on GitHub!
 Thanks! ❤️ ❤️ ❤️
 
-<img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/e2ilogo.png">
+<img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/Logos/e2ilogo.png">
