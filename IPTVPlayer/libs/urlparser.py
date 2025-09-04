@@ -775,6 +775,7 @@ class urlparser:
             'streamwire.net': self.pp.parserONLYSTREAMTV,
             'streamwish.fun': self.pp.parserJWPLAYER,
             'streamwish.to': self.pp.parserJWPLAYER,
+            'strmup.cc': self.pp.parserSTRMUPCC,
             'strmup.to': self.pp.parserJWPLAYER,
             'strtape.cloud': self.pp.parserSTREAMTAPE,
             'strtpe.link': self.pp.parserSTREAMTAPE,
@@ -9678,4 +9679,17 @@ class pageParser(CaptchaHelper):
                 url = "%s?md5=%s&expires=%s" % (url, re.search(r'<hash_value_%s>([^<]+)<' % label, videaXml).group(1), exp)
                 urlTab.append({'name': label, 'url': url})
             urlTab.reverse()
+        return urlTab
+
+    def parserSTRMUPCC(self, baseUrl):  # add 040925
+        printDBG("parserSTRMUPCC baseUrl[%s]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        urlTab = []
+        sts, data = self.cm.getPage("https://strmup.cc/ajax/stream?filecode=%s" % urlparse(baseUrl).path.strip('/'), HTTP_HEADER)
+        if not sts:
+            return []
+        data = json_loads(data)
+        url = data.get('streaming_url')
+        if url:
+            urlTab.append({'name': 'mp4', 'url': url})
         return urlTab
