@@ -49,9 +49,9 @@ class m4sport(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
         self.MAIN_URL = 'https://www.m4sport.hu/videok/'
-        self.DEFAULT_ICON_URL = 'http://www.figyelmeztetes.hu/m4sport_logo.png'
-        self.ICON_URL_ELO = 'http://www.figyelmeztetes.hu/m4sport_logo_elo.png'
-        self.ICON_URL_FOCI = 'http://www.figyelmeztetes.hu/m4sport_logo_foci.png'
+        self.DEFAULT_ICON_URL = 'https://www.figyelmeztetes.hu/m4sport_logo.png'
+        self.ICON_URL_ELO = 'https://www.figyelmeztetes.hu/m4sport_logo_elo.png'
+        self.ICON_URL_FOCI = 'https://www.figyelmeztetes.hu/m4sport_logo_foci.png'
         self.vivn = GetIPTVPlayerVersion()
         self.porv = self.gits()
         self.pbtp = '-'
@@ -371,7 +371,7 @@ class m4sport(CBaseHostClass):
         return bu
 
     def malvadst(self, i_md='', i_hgk='', i_mpu=''):
-        uhe = 'http://www.figyelmeztetes.hu/hely/sata/vansatdb.php'
+        uhe = 'https://www.figyelmeztetes.hu/hely/sata/vansatdb.php'
         pstd = {'md': i_md, 'hgk': i_hgk, 'mpu': i_mpu}
         t_s = ''
         temp_vn = ''
@@ -402,7 +402,7 @@ class m4sport(CBaseHostClass):
             return t_s
 
     def susn(self, i_md='', i_hgk='', i_mpu=''):
-        uhe = 'http://www.figyelmeztetes.hu/hely/sata/vansatdb.php'
+        uhe = 'https://www.figyelmeztetes.hu/hely/sata/vansatdb.php'
         pstd = {'md': i_md, 'hgk': i_hgk, 'mpu': i_mpu, 'hv': self.vivn, 'orv': self.porv, 'bts': self.pbtp}
         try:
             if i_md != '' and i_hgk != '' and i_mpu != '':

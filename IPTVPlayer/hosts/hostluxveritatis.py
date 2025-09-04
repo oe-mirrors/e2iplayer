@@ -32,12 +32,12 @@ class LuxVeritatisPL(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'luxveritatis.pl', 'cookie': 'luxveritatis.pl.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.MAIN_URL_T = 'http://tv-trwam.pl/'
-        self.MAIN_URL_R = 'http://www.radiomaryja.pl/'
+        self.MAIN_URL_T = 'https://tv-trwam.pl/'
+        self.MAIN_URL_R = 'https://www.radiomaryja.pl/'
         self.MAIN_URL = None
         self.DEFAULT_ICON_URL = 'https://luxveritatis.pl/sites/all/themes/luxveritatis/img/logo.png'
         self.ICON_URL_R = 'https://mir-s3-cdn-cf.behance.net/projects/404/84c55124983499.551bd47bd2b6a.png'
-        self.ICON_URL_T = 'http://archidiecezjalubelska.pl/wp-content/uploads/2016/07/trwam.jpg'
+        self.ICON_URL_T = 'https://archidiecezjalubelska.pl/wp-content/uploads/2016/07/trwam.jpg'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': '*/*'})

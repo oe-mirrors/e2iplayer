@@ -33,7 +33,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://dailymotion.com/'
+    return 'https://dailymotion.com/'
 
 
 class Dailymotion(CBaseHostClass):
@@ -45,7 +45,7 @@ class Dailymotion(CBaseHostClass):
 
         self.SITE_URL = 'https://www.dailymotion.com/'
         self.MAIN_URL = 'https://api.dailymotion.com/'
-        self.DEFAULT_ICON_URL = 'http://static1.dmcdn.net/images/dailymotion-logo-ogtag.png'
+        self.DEFAULT_ICON_URL = 'https://static1.dmcdn.net/images/dailymotion-logo-ogtag.png'
         self.MAIN_CAT_TAB = [{'category': 'categories', 'title': _('Categories')}] + self.searchItems()
 
         self.SORT_TAB = [{'title': _('Most viewed'), 'sort': 'visited'},

@@ -25,7 +25,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://shoutcast.com/'
+    return 'https://shoutcast.com/'
 
 
 class ShoutcastCom(CBaseHostClass):
@@ -34,7 +34,7 @@ class ShoutcastCom(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'shoutcast.com', 'cookie': 'shoutcast.com.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://directory.shoutcast.com/'
-        self.DEFAULT_ICON_URL = 'http://wiki.shoutcast.com/images/b/bd/Shoutcast.png'
+        self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Shoutcast_2018_logo.svg/1280px-Shoutcast_2018_logo.svg.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': '*/*', 'Origin': self.getMainUrl()[:-1]})
@@ -160,7 +160,7 @@ class ShoutcastCom(CBaseHostClass):
 
         stationId = cItem.get('station_id', '')
 
-        url = 'http://yp.shoutcast.com/sbin/tunein-station.m3u?id=%s' % stationId
+        url = 'https://yp.shoutcast.com/sbin/tunein-station.m3u?id=%s' % stationId
 
         sts, data = self.getPage(url)
         if not sts:

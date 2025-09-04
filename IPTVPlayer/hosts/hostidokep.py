@@ -396,7 +396,7 @@ class Idokep(CBaseHostClass):
         for i in names:
             icon = links[names.index(i)]
             if "14" in i:
-                icon = 'http://2.eumet.hu/Eumethu_logo.jpg'
+                icon = 'https://www.eumet.hu/wp-content/uploads/logo-beta2.png'
             params = {'title': i, 'icon': icon, 'url': links[names.index(i)]}
             self.addPicture(params)
 

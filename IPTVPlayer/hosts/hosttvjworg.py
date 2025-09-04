@@ -55,7 +55,7 @@ def gettytul():
 
 class TVJWORG(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html'}
-    MAIN_URL = 'http://mediator.jw.org/v1/'
+    MAIN_URL = 'https://mediator.jw.org/v1/'
     DEFAULT_ICON = 'https://s-media-cache-ak0.pinimg.com/236x/3b/aa/32/3baa3268cdbc9dc5114bbe1ab0b00ce0.jpg'
 
     ICONS_KEYS = ["xl", "lg", "md", "sm", "xs"]
@@ -254,7 +254,7 @@ class TVJWORG(CBaseHostClass):
             for item in tmpTab:
                 try:
                     linkVideo = item['progressiveDownloadURL']
-                    linkVideo = urlparser.decorateUrl(linkVideo, {'Referer': 'http://tv.jw.org/'})
+                    linkVideo = urlparser.decorateUrl(linkVideo, {'Referer': 'https://tv.jw.org/'})
                     urlTab.append({'name': item['label'], 'url': linkVideo, 'need_resolve': 0})
                 except Exception:
                     printExc()

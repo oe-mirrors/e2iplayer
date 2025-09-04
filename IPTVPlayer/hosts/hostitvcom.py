@@ -86,7 +86,7 @@ class ITV(CBaseHostClass):
         if not config.plugins.iptvplayer.itv_use_x_forwarded_for.value:
             return ''
         if self.forwardedIP == '':
-            sts, data = self.cm.getPage('http://free-proxy-list.net/uk-proxy.html')
+            sts, data = self.cm.getPage('https://free-proxy-list.net/uk-proxy.html')
             if sts:
                 data = re.compile('<tr><td>([^>]+?)</td><td>').findall(data)
                 if len(data):
@@ -233,7 +233,7 @@ class ITV(CBaseHostClass):
         forwardedIP = self.getRandomGBIP()
         if cItem.get('is_live', False):
             if self.cacheLive == {}:
-                sts, data = self.getPage('http://textuploader.com/dlr3q')
+                sts, data = self.getPage('https://textuploader.com/dlr3q')
                 if not sts:
                     return []
                 data = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ('<code', '>'), ('</code', '>'), False)[1])

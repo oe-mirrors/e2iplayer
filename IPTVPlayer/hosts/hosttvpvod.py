@@ -90,8 +90,8 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     {'category': 'tvp_api', 'title': 'Teatr', 'id': '202'},
                     {'category': 'tvp_api', 'title': 'News', 'id': '205'},
                     {'category': 'tvp_api', 'title': 'Dla dzieci', 'id': '24'},
-                    {'category': 'tvp_sport', 'title': 'TVP Sport', 'url': 'http://sport.tvp.pl/wideo'},
-                    {'category': 'streams', 'title': 'TVP na żywo', 'url': 'http://tvpstream.tvp.pl/'},
+                    {'category': 'tvp_sport', 'title': 'TVP Sport', 'url': 'https://sport.tvp.pl/wideo'},
+                    {'category': 'streams', 'title': 'TVP na żywo', 'url': 'https://tvpstream.tvp.pl/'},
                     {'category': 'digi_menu', 'title': 'Rekonstrukcja cyfrowa TVP', 'url': 'https://cyfrowa.tvp.pl/'}
 
                     # {'category':'vods_list_items1',    'title':'Polecamy',                  'url':MAIN_VOD_URL},
@@ -101,9 +101,9 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
                     # {'category':'vods_sub_categories', 'title':'Informacje i publicystyka', 'marker':'Informacje i publicystyka'},
                    ]
 
-    STREAMS_CAT_TAB = [{'category': 'tvp3_streams', 'title': 'TVP 3', 'url': 'http://tvpstream.tvp.pl/', 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/TVP3_logo_2016.png/240px-TVP3_logo_2016.png'},
+    STREAMS_CAT_TAB = [{'category': 'tvp3_streams', 'title': 'TVP 3', 'url': 'https://tvpstream.tvp.pl/', 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/TVP3_logo_2016.png/240px-TVP3_logo_2016.png'},
                        {'category': 'week_epg', 'title': 'TVP SPORT', 'url': STREAMS_URL_TEMPLATE, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
-                       # {'category': 'tvpsport_streams', 'title': 'Transmisje sport.tvp.pl', 'url': 'http://sport.tvp.pl/transmisje', 'icon': 'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
+                       # {'category': 'tvpsport_streams', 'title': 'Transmisje sport.tvp.pl', 'url': 'https://sport.tvp.pl/transmisje', 'icon': 'https://upload.wikimedia.org/wikipedia/commons/9/9d/TVP_Sport_HD_Logo.png'},
                       ]
 
     def __init__(self):
@@ -113,10 +113,10 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
 
         self.VOD_CAT_TAB += self.searchItems()
         self.loggedIn = None
-        self.fixUrlMap = {'nadobre.tvp.pl': 'http://vod.tvp.pl/8514270/na-dobre-i-na-zle',
-                          'mjakmilosc.tvp.pl': 'http://vod.tvp.pl/1654521/m-jak-milosc',
-                          'barwyszczescia.tvp.pl': 'http://vod.tvp.pl/8514286/barwy-szczescia',
-                          'nasygnale.tvp.pl': 'http://vod.tvp.pl/13883615/na-sygnale'}
+        self.fixUrlMap = {'nadobre.tvp.pl': 'https://vod.tvp.pl/8514270/na-dobre-i-na-zle',
+                          'mjakmilosc.tvp.pl': 'https://vod.tvp.pl/1654521/m-jak-milosc',
+                          'barwyszczescia.tvp.pl': 'https://vod.tvp.pl/8514286/barwy-szczescia',
+                          'nasygnale.tvp.pl': 'https://vod.tvp.pl/13883615/na-sygnale'}
         self.FormatBitrateMap = [("360000", "320x180"), ("590000", "398x224"), ("820000", "480x270"), ("1250000", "640x360"),
                                   ("1750000", "800x450"), ("2850000", "960x540"), ("5420000", "1280x720"), ("6500000", "1600x900"), ("9100000", "1920x1080")]
         self.MAIN_URL = 'https://vod.tvp.pl/'
@@ -447,7 +447,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         try:
             data = json_loads(data)
             for item in data['data']['items']:
-                url = self._getFullUrl(item['url'], 'http://sport.tvp.pl')
+                url = self._getFullUrl(item['url'], 'https://sport.tvp.pl')
                 desc = self.cleanHtmlStr(item['lead'])
                 title = item['title']
                 icon = item['image']['url'].format(width='480', height='360')
@@ -723,7 +723,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
         return self.getVideoLink(asset_id)
 
     def isVideoData(self, asset_id):
-        sts, data = self.cm.getPage('http://www.tvp.pl/shared/cdn/tokenizer_v2.php?mime_type=video%2Fmp4&object_id=' + asset_id, self.defaultParams)
+        sts, data = self.cm.getPage('https://www.tvp.pl/shared/cdn/tokenizer_v2.php?mime_type=video%2Fmp4&object_id=' + asset_id, self.defaultParams)
         if not sts:
             return False
         return 'NOT_FOUND' not in data
@@ -754,7 +754,7 @@ class TvpVod(CBaseHostClass, CaptchaHelper):
 
         # main routine
         if len(videoTab) == 0:
-            sts, data = self.cm.getPage('http://www.tvp.pl/shared/cdn/tokenizer_v2.php?mime_type=video%2Fmp4&object_id=' + asset_id, self.defaultParams)
+            sts, data = self.cm.getPage('https://www.tvp.pl/shared/cdn/tokenizer_v2.php?mime_type=video%2Fmp4&object_id=' + asset_id, self.defaultParams)
             printDBG("%s -> [%s]" % (sts, data))
             try:
                 data = json_loads(data)

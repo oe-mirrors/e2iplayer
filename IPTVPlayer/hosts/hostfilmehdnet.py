@@ -23,7 +23,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'http://filmehd.net/'
+    return 'https://filmehd.net/'
 
 
 class FilmeHD(CBaseHostClass):
@@ -35,7 +35,7 @@ class FilmeHD(CBaseHostClass):
         self.HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', 'DNT': '1', 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
-        self.MAIN_URL = 'http://filmehd.net/'
+        self.MAIN_URL = 'https://filmehd.net/'
         self.cacheLinks = {}
         self.cacheFilters = {}
         self.cacheFiltersKeys = []

@@ -62,7 +62,7 @@ class OrthoBullets(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
 
         self.MAIN_URL = 'https://www.orthobullets.com/'
-        self.DEFAULT_ICON_URL = 'http://pic.accessify.com/thumbnails/777x423/o/orthobullets.com.png'
+        self.DEFAULT_ICON_URL = 'https://pic.accessify.com/thumbnails/777x423/o/orthobullets.com.png'
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
         self.loggedIn = None
