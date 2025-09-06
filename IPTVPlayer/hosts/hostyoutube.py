@@ -74,8 +74,8 @@ class Youtube(CBaseHostClass):
                                (_("Playlist"), "playlist"),
                                (_("Movie"), "movie"),
                                (_("Live"), "live")]
-                               #(_("Program"), "show"),
-                               #(_("traylist"), "traylist"),
+                               # (_("Program"), "show"),
+                               # (_("traylist"), "traylist"),
         self.ytp = YouTubeParser()
         self.currFileHost = None
 
