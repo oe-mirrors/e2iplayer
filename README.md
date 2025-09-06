@@ -39,9 +39,9 @@ This plugin was developed with a lot of ❤️ for the Enigma2 community. You ar
 
 ### 🖼️ Screenshots
 
-<img width="320" height="180" alt="screenshot4" src="https://github.com/user-attachments/assets/b01437be-2b1b-4af1-8b73-ed6276187d68"/> <img width="320" height="180" alt="screenshot2" src="https://github.com/user-attachments/assets/2ad14081-d64d-44a2-8a1d-9aea95fff390"/>
+<img width="320" height="180" alt="screenshot1" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_start.jpg"/> <img width="320" height="180" alt="screenshot2" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_settings.jpg"/> <img width="320" height="180" alt="screenshot3" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_all.jpg"/> 
 
-<img width="320" height="180" alt="screenshot3" src="https://github.com/user-attachments/assets/ac4ab015-1a62-4e44-afe7-3c565674f72b"/> <img width="320" height="180" alt="screenshot1" src="https://github.com/user-attachments/assets/8277d4e2-6acc-4590-ad5d-1552089f1c99"/>
+<img width="320" height="180" alt="screenshot4" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_download.jpg"/> <img width="320" height="180" alt="screenshot5" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_youtube.jpg"/> <img width="320" height="180" alt="screenshot6" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_local.jpg"/>
 
 ---
 
