@@ -49,10 +49,10 @@ class Urllist(CBaseHostClass):
         printDBG("Urllist.__init__")
         path = config.plugins.iptvplayer.Sciezkaurllist.value + '/'
 
-        self.MAIN_GROUPED_TAB = [{'category': 'all', 'title': _("All in one"), 'desc': _("Links from all files without categories"), 'icon': 'https://mikeharwood.files.wordpress.com/2011/01/all-in-one-logo-on-blue.jpg'}]
-        self.MAIN_GROUPED_TAB.extend([{'category': Urllist.URLLIST_FILE, 'title': _("Videos"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'), 'icon': 'https://st2.depositphotos.com/3000465/12281/v/950/depositphotos_122812390-stock-illustration-video-play-sign-with-letter.jpg'},
-                                       {'category': Urllist.URRLIST_STREAMS, 'title': _("Live streams"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.stream'), 'icon': 'http://asiamh.ru.images.1c-bitrix-cdn.ru/images/media_logo.jpg?136879146733721'},
-                                       {'category': Urllist.URRLIST_USER, 'title': _("User files"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.user'), 'icon': 'http://kinovesti.ru/uploads/posts/2014-12/1419918660_1404722920_02.jpg'}])
+        self.MAIN_GROUPED_TAB = [{'category': 'all', 'title': _("All in one"), 'desc': _("Links from all files without categories"), 'icon': 'https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/hosturllist/all-one-neon.jpg'}]
+        self.MAIN_GROUPED_TAB.extend([{'category': Urllist.URLLIST_FILE, 'title': _("Videos"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.txt'), 'icon': 'https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/hosturllist/video.jpg'},
+                                       {'category': Urllist.URRLIST_STREAMS, 'title': _("Live streams"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.stream'), 'icon': 'https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/hosturllist/on-air-live.jpg'},
+                                       {'category': Urllist.URRLIST_USER, 'title': _("User files"), 'desc': _("Links from the file %s") % normpath(path + 'urllist.user'), 'icon': 'https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/hosturllist/my-style.jpg'}])
         CBaseHostClass.__init__(self)
         self.currFileHost = None
 
