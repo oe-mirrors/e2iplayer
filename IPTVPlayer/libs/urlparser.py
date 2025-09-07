@@ -769,14 +769,14 @@ class urlparser:
             'streamtape.xyz': self.pp.parserSTREAMTAPE,
             'streamtp3.com': self.pp.parserONLYSTREAMTV,
             'streamtp4.com': self.pp.parserONLYSTREAMTV,
-            'streamup.ws': self.pp.parserJWPLAYER,
+            'streamup.ws': self.pp.parserSTREAMUP,
             'streamvid.net': self.pp.parserONLYSTREAMTV,
             'streamvid.su': self.pp.parserJWPLAYER,
             'streamwire.net': self.pp.parserONLYSTREAMTV,
             'streamwish.fun': self.pp.parserJWPLAYER,
             'streamwish.to': self.pp.parserJWPLAYER,
-            'strmup.cc': self.pp.parserSTRMUPCC,
-            'strmup.to': self.pp.parserJWPLAYER,
+            'strmup.cc': self.pp.parserSTREAMUP,
+            'strmup.to': self.pp.parserSTREAMUP,
             'strtape.cloud': self.pp.parserSTREAMTAPE,
             'strtpe.link': self.pp.parserSTREAMTAPE,
             'strwish.com': self.pp.parserONLYSTREAMTV,
@@ -9681,15 +9681,22 @@ class pageParser(CaptchaHelper):
             urlTab.reverse()
         return urlTab
 
-    def parserSTRMUPCC(self, baseUrl):  # add 040925
-        printDBG("parserSTRMUPCC baseUrl[%s]" % baseUrl)
+    def parserSTREAMUP(self, baseUrl):  # update 070925
+        printDBG("parserSTREAMUP baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         urlTab = []
-        sts, data = self.cm.getPage("https://strmup.cc/ajax/stream?filecode=%s" % urlparse(baseUrl).path.strip('/'), HTTP_HEADER)
+        subTracks = []
+        host = urlparser.getDomain(baseUrl, False)
+        sts, data = self.cm.getPage("%sajax/stream?filecode=%s" % (host, urlparse(baseUrl).path.strip('/')), HTTP_HEADER)
         if not sts:
             return []
         data = json_loads(data)
         url = data.get('streaming_url')
+        subTracks = [{'title': '', 'url': sub.get('file_path'), 'lang': sub.get('language')} for sub in data.get('subtitles', []) if sub.get('file_path') and sub.get('language')]
         if url:
-            urlTab.append({'name': 'mp4', 'url': url})
+            url = urlparser.decorateUrl(url, {'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': host, 'Origin': host[:-1], 'external_sub_tracks': subTracks})
+            if ".m3u8" in url:
+                urlTab.extend(getDirectM3U8Playlist(url))
+            else:
+                urlTab.append({'name': 'MP4', 'url': url})
         return urlTab
