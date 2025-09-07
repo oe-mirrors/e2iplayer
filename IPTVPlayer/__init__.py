@@ -20,10 +20,10 @@ def localeInit():
 
 
 def _(txt):
-	t = dgettext(PluginLanguageDomain, txt)
-	if t == txt:
-		t = gettext(txt)
-	return t
+	if t := dgettext(PluginLanguageDomain, txt):
+		return t
+	else:
+		return gettext(t)
 
 
 localeInit()
