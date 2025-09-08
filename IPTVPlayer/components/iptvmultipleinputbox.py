@@ -92,13 +92,18 @@ class IPTVMultipleInputBox(Screen):
             skinItems += '<widget name="accept_button"  position="10,%d"  zPosition="2" size="%d,50"  valign="center" halign="center" font="Regular;22" foregroundColor="#00FFFFFF" backgroundColor="#320F0F0F" />' % (pY, maxWidth - 20)
             pY += dY * 2 + 50
         self.skin = """
-        <screen name="IPTVMultipleInputBox" position="center,center" size="%d,%d" title="%s">
-            <widget name="key_red"   position="10,10" zPosition="2" size="%d,35" valign="center" halign="left"   font="Regular;22" transparent="1" foregroundColor="red" />
-            <widget name="key_ok"    position="10,10" zPosition="2" size="%d,35" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" />
-            <widget name="key_green" position="10,10" zPosition="2" size="%d,35" valign="center" halign="right"  font="Regular;22" transparent="1" foregroundColor="green" />
+        <screen name="IPTVMultipleInputBox" position="center,center" size="%d,%d" title="%s" backgroundColor="#34111112" flags="wfNoBorder">
+            <widget name="key_ok" position="516,10" zPosition="2" size="200,28" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <ePixmap position="470,12" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="10,14" size="20,20" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="240,14" size="20,20" alphatest="blend" transparent="1" />
+            <widget name="key_red" position="36,10" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <widget name="key_green" position="266,10" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <eLabel name="BG_Title" position="0,0" size="1020,48" backgroundColor="#100d0f16" zPosition="-1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,48" size="1020,2" zPosition="2" />
             %s
         </screen>
-        """ % (maxWidth, pY, params.get('title', _("Input")), maxWidth - 20, maxWidth - 20, maxWidth - 20, skinItems)
+        """ % (maxWidth, pY, params.get('title', _("Input")), skinItems)
 
         self["key_green"] = Label(params.get('accep_label', _("Save")))
         self["key_ok"] = Label(_("OK"))
