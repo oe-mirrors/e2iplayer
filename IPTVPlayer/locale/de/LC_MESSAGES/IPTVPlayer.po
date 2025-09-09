@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-10 20:53+0200\n"
+"POT-Creation-Date: 2025-09-08 09:37+0200\n"
 "PO-Revision-Date: 2025-08-11 10:12+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -355,9 +355,6 @@ msgstr "API Initialisierung fehlgeschlagen!"
 
 msgid "ARTISTS"
 msgstr "KÜNSTLER"
-
-msgid "ATTENTION !"
-msgstr "ACHTUNG !"
 
 msgid "AZ"
 msgstr "AZ"
@@ -1688,6 +1685,9 @@ msgstr "Journal Club"
 msgid "Knee & Sports"
 msgstr "Knie & Sport"
 
+msgid "Knowledge"
+msgstr ""
+
 msgid "LATEST"
 msgstr "LETZTE"
 
@@ -2127,9 +2127,6 @@ msgstr "Neuigkeiten"
 msgid "News Feed"
 msgstr "News Feed"
 
-msgid "Next Page"
-msgstr "Nächste Seite"
-
 msgid "Next page"
 msgstr "Nächste Seite"
 
@@ -2194,13 +2191,6 @@ msgstr "Nur verfügbar in Schweden."
 
 msgid "Only available in Sweden.\n"
 msgstr "Nur verfügbar in Schweden.\n"
-
-msgid ""
-"Only logged in user have access.\n"
-"Please set login data in the host configuration under blue button."
-msgstr ""
-"Nur angemeldete Benutzer haben Zugriff.\n"
-"Bitte stellen Sie die Zugangsdaten in der Host-Konfiguration zugänglich über die blaue Taste ein."
 
 msgid "Only music"
 msgstr "Nur Musik"
@@ -2705,9 +2695,6 @@ msgstr "Suchergebnisse"
 msgid "Search type"
 msgstr "Suchmodus"
 
-msgid "Search youtube materials"
-msgstr "Suche auf YouTube"
-
 #, python-format
 msgid "Searching in %s, please wait (%d)"
 msgstr "Suche in %s, bitte warten (%d)"
@@ -2885,9 +2872,6 @@ msgstr "Zeige YouTube API -Schlüssel Warnungen"
 
 msgid "Show all channels"
 msgstr "Zeige alle Kanäle"
-
-msgid "Show changelog :"
-msgstr "Zeige Änderungshistorie :"
 
 msgid "Show download manager after adding new item"
 msgstr "Zeige Downloadverwaltung bei Download"
@@ -3402,9 +3386,6 @@ msgstr "Unzip Fehler-Code[%s]."
 msgid "Upcoming"
 msgstr "Demnächst"
 
-msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr "Die Aktualisierung wurde erfolgreich abgeschlossen. Im Moment wird das System neu gestartet."
-
 msgid "Upload date"
 msgstr "Upload Datum"
 
@@ -3503,7 +3484,7 @@ msgid "Verify"
 msgstr "Verifizieren"
 
 msgid "Video"
-msgstr "Video"
+msgstr "Video "
 
 msgid "Video default quality:"
 msgstr "Verwende Video Standardqualität:"
@@ -3554,9 +3535,6 @@ msgstr "Virtuelle Tastatur"
 
 msgid "Virtual Keyboard type"
 msgstr "Virtueller Tastatur-Typ"
-
-msgid "WARNING! IF UPDATE FAILED: "
-msgstr "WARNUNG! WENN DIE AKTUALISIERUNG FEHLSCHLÄGT: "
 
 msgid "WWE"
 msgstr "WWE"
@@ -3803,9 +3781,6 @@ msgstr "E-Mail"
 
 msgid "email"
 msgstr "E-Mail"
-
-msgid "episodes"
-msgstr "Episoden"
 
 msgid "external eplayer3"
 msgstr "Externer Eplayer3"

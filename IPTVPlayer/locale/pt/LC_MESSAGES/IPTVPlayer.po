@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-10 20:53+0200\n"
+"POT-Creation-Date: 2025-09-08 09:37+0200\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -343,9 +343,6 @@ msgid "API initialization failed!"
 msgstr ""
 
 msgid "ARTISTS"
-msgstr ""
-
-msgid "ATTENTION !"
 msgstr ""
 
 msgid "AZ"
@@ -1700,6 +1697,9 @@ msgstr ""
 msgid "Knee & Sports"
 msgstr ""
 
+msgid "Knowledge"
+msgstr ""
+
 msgid "LATEST"
 msgstr ""
 
@@ -2152,10 +2152,6 @@ msgstr "Notícias"
 msgid "News Feed"
 msgstr "Notícias"
 
-#, fuzzy
-msgid "Next Page"
-msgstr "Página seguinte"
-
 msgid "Next page"
 msgstr "Página seguinte"
 
@@ -2221,11 +2217,6 @@ msgid "Only available in Sweden."
 msgstr ""
 
 msgid "Only available in Sweden.\n"
-msgstr ""
-
-msgid ""
-"Only logged in user have access.\n"
-"Please set login data in the host configuration under blue button."
 msgstr ""
 
 msgid "Only music"
@@ -2760,10 +2751,6 @@ msgstr "Resultados da Procura"
 msgid "Search type"
 msgstr "Tipo de procura"
 
-#, fuzzy
-msgid "Search youtube materials"
-msgstr "Procurar vídeos YouTube."
-
 #, fuzzy, python-format
 msgid "Searching in %s, please wait (%d)"
 msgstr "Durante o processamento, por favor espere."
@@ -2956,9 +2943,6 @@ msgstr ""
 #, fuzzy
 msgid "Show all channels"
 msgstr "Canais polacos"
-
-msgid "Show changelog :"
-msgstr ""
 
 msgid "Show download manager after adding new item"
 msgstr "Exibir o gestor de descargas depois de adicionar um novo serviço"
@@ -3486,9 +3470,6 @@ msgstr ""
 msgid "Upcoming"
 msgstr ""
 
-msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr ""
-
 msgid "Upload date"
 msgstr "Data de envio"
 
@@ -3652,9 +3633,6 @@ msgid "Virtual Keyboard"
 msgstr ""
 
 msgid "Virtual Keyboard type"
-msgstr ""
-
-msgid "WARNING! IF UPDATE FAILED: "
 msgstr ""
 
 msgid "WWE"
@@ -3910,9 +3888,6 @@ msgid "e-mail"
 msgstr ""
 
 msgid "email"
-msgstr ""
-
-msgid "episodes"
 msgstr ""
 
 msgid "external eplayer3"

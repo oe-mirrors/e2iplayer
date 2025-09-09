@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-10 20:53+0200\n"
+"POT-Creation-Date: 2025-09-08 09:37+0200\n"
 "PO-Revision-Date: 2025-06-29 17:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -359,9 +359,6 @@ msgstr "Сбой инициализации API!"
 
 msgid "ARTISTS"
 msgstr "АРТИСТЫ"
-
-msgid "ATTENTION !"
-msgstr "ВНИМАНИЕ !"
 
 msgid "AZ"
 msgstr "АЗ"
@@ -1696,6 +1693,9 @@ msgstr "Журнал Клуб"
 msgid "Knee & Sports"
 msgstr "Колени & Спорт"
 
+msgid "Knowledge"
+msgstr ""
+
 msgid "LATEST"
 msgstr "ПОСЛЕДНИЕ"
 
@@ -2135,9 +2135,6 @@ msgstr "Новости"
 msgid "News Feed"
 msgstr "Лента новостей"
 
-msgid "Next Page"
-msgstr "Следующая Страница"
-
 msgid "Next page"
 msgstr "Следующая страница"
 
@@ -2202,13 +2199,6 @@ msgstr "Доступно только в Швеции."
 
 msgid "Only available in Sweden.\n"
 msgstr "Доступно только в Швеции.\n"
-
-msgid ""
-"Only logged in user have access.\n"
-"Please set login data in the host configuration under blue button."
-msgstr ""
-"Доступ имеют только зарегистрированные пользователи.\n"
-"Просим ввести логин и пароль в конфигурации хоста под синей кнопкой."
 
 msgid "Only music"
 msgstr "Только музыка"
@@ -2715,9 +2705,6 @@ msgstr "Результаты поиска"
 msgid "Search type"
 msgstr "Тип поиска"
 
-msgid "Search youtube materials"
-msgstr "Поиск материалов youtube "
-
 #, python-format
 msgid "Searching in %s, please wait (%d)"
 msgstr "Поиск в %s, подождите (%d)"
@@ -2896,9 +2883,6 @@ msgstr "Показывать предупреждения о ключе API YouT
 
 msgid "Show all channels"
 msgstr "Показать все каналы"
-
-msgid "Show changelog :"
-msgstr "Показать журнал изменений :"
 
 msgid "Show download manager after adding new item"
 msgstr "Показать диспетчер загрузки после добавления новой темы"
@@ -3414,9 +3398,6 @@ msgstr "Unzip код ошибки[%s]."
 msgid "Upcoming"
 msgstr "Предстоящие"
 
-msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr "Обновление успешно завершено. Сейчас система перезагрузится."
-
 msgid "Upload date"
 msgstr "Дата загрузки"
 
@@ -3566,9 +3547,6 @@ msgstr "Виртуальная клавиатура"
 
 msgid "Virtual Keyboard type"
 msgstr "Виртуальная Клавиатура тип"
-
-msgid "WARNING! IF UPDATE FAILED: "
-msgstr "ВНИМАНИЕ! ЕСЛИ ОБНОВЛЕНИЕ НЕ УДАЛОСЬ: "
 
 msgid "WWE"
 msgstr "WWE"
@@ -3815,10 +3793,6 @@ msgstr "e-mail"
 
 msgid "email"
 msgstr "email"
-
-#, fuzzy
-msgid "episodes"
-msgstr "Эпизоды"
 
 msgid "external eplayer3"
 msgstr "внешний eplayer3"

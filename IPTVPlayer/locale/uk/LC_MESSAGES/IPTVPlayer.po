@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-10 20:53+0200\n"
+"POT-Creation-Date: 2025-09-08 09:37+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -356,9 +356,6 @@ msgid "API initialization failed!"
 msgstr ""
 
 msgid "ARTISTS"
-msgstr ""
-
-msgid "ATTENTION !"
 msgstr ""
 
 msgid "AZ"
@@ -1770,6 +1767,9 @@ msgstr "Журналістика"
 msgid "Knee & Sports"
 msgstr ""
 
+msgid "Knowledge"
+msgstr ""
+
 #, fuzzy
 msgid "LATEST"
 msgstr "ОСТАННІ ВІДЕО"
@@ -2241,10 +2241,6 @@ msgstr "Новини"
 msgid "News Feed"
 msgstr "Новини"
 
-#, fuzzy
-msgid "Next Page"
-msgstr "Наступна сторінка"
-
 msgid "Next page"
 msgstr "Наступна сторінка"
 
@@ -2313,14 +2309,6 @@ msgstr ""
 
 msgid "Only available in Sweden.\n"
 msgstr ""
-
-#, fuzzy
-msgid ""
-"Only logged in user have access.\n"
-"Please set login data in the host configuration under blue button."
-msgstr ""
-"Цей вузол вимагає реєстрації. \n"
-" Будь ласка,заповніть свій логін і пароль у конфігурації хост-конфігурації.В наявності під синю кнопку . "
 
 msgid "Only music"
 msgstr ""
@@ -2866,9 +2854,6 @@ msgstr "Результати пошуку"
 msgid "Search type"
 msgstr "Тип пошуку"
 
-msgid "Search youtube materials"
-msgstr "Пошук матеріалів в YouTube"
-
 #, fuzzy, python-format
 msgid "Searching in %s, please wait (%d)"
 msgstr "Йде обробка, будь-ласка, зачекайте."
@@ -3058,10 +3043,6 @@ msgid "Show Youtube Api Key warnings"
 msgstr ""
 
 msgid "Show all channels"
-msgstr "Показати всі канали"
-
-#, fuzzy
-msgid "Show changelog :"
 msgstr "Показати всі канали"
 
 msgid "Show download manager after adding new item"
@@ -3607,9 +3588,6 @@ msgstr ""
 msgid "Upcoming"
 msgstr ""
 
-msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr ""
-
 msgid "Upload date"
 msgstr "Дата публікації"
 
@@ -3773,9 +3751,6 @@ msgid "Virtual Keyboard"
 msgstr ""
 
 msgid "Virtual Keyboard type"
-msgstr ""
-
-msgid "WARNING! IF UPDATE FAILED: "
 msgstr ""
 
 msgid "WWE"
@@ -4040,10 +4015,6 @@ msgstr "Ел. адрес"
 #, fuzzy
 msgid "email"
 msgstr "Ел. адрес"
-
-#, fuzzy
-msgid "episodes"
-msgstr "Епізоди"
 
 msgid "external eplayer3"
 msgstr "Зовнішній eplayer3"

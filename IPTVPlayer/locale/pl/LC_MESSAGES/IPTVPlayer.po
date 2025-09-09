@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-10 20:53+0200\n"
+"POT-Creation-Date: 2025-09-08 09:37+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n"
 "Language-Team: IPTVPlayer\n"
@@ -357,9 +357,6 @@ msgstr "Inicjalizacja interfejsu API nie powiodła się!"
 
 msgid "ARTISTS"
 msgstr "ARTYŚCI"
-
-msgid "ATTENTION !"
-msgstr ""
 
 msgid "AZ"
 msgstr "AZ"
@@ -1713,6 +1710,9 @@ msgstr "Klub dziennikarski"
 msgid "Knee & Sports"
 msgstr "Kolano i sport"
 
+msgid "Knowledge"
+msgstr ""
+
 msgid "LATEST"
 msgstr "NAJNOWSZY"
 
@@ -2159,9 +2159,6 @@ msgstr "Nowości"
 msgid "News Feed"
 msgstr "Nowości"
 
-msgid "Next Page"
-msgstr "Następna strona"
-
 msgid "Next page"
 msgstr "Następna strona"
 
@@ -2226,13 +2223,6 @@ msgstr "Dostępne tylko w Szwecji."
 
 msgid "Only available in Sweden.\n"
 msgstr "Only available in Sweden.\n"
-
-msgid ""
-"Only logged in user have access.\n"
-"Please set login data in the host configuration under blue button."
-msgstr ""
-"Dostęp tylko dla zalogowanych użytkowników. \n"
-"Wprowadź login i hasło w konfiguracji hosta dostępnej po naciśnięciu niebieskiego przycisku."
 
 msgid "Only music"
 msgstr "Tylko muzyka"
@@ -2742,9 +2732,6 @@ msgstr "Wyniki wyszukiwania"
 msgid "Search type"
 msgstr "Wybierz typ wyszukiwania"
 
-msgid "Search youtube materials"
-msgstr "Szukaj materiałów w YouTube "
-
 #, python-format
 msgid "Searching in %s, please wait (%d)"
 msgstr "Wyszukiwanie za %s, proszę czekać (%d)"
@@ -2922,10 +2909,6 @@ msgid "Show Youtube Api Key warnings"
 msgstr "Pokaż ostrzeżenia klucza API YouTube"
 
 msgid "Show all channels"
-msgstr "Pokazać wszystkie kanały"
-
-#, fuzzy
-msgid "Show changelog :"
 msgstr "Pokazać wszystkie kanały"
 
 msgid "Show download manager after adding new item"
@@ -3454,9 +3437,6 @@ msgstr "Uznip kod błędu [%s]."
 msgid "Upcoming"
 msgstr ""
 
-msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr ""
-
 msgid "Upload date"
 msgstr "Data przesłania"
 
@@ -3608,9 +3588,6 @@ msgstr "Klawiatura wirtualna"
 
 msgid "Virtual Keyboard type"
 msgstr "Typ klawiatury wirtualnej"
-
-msgid "WARNING! IF UPDATE FAILED: "
-msgstr ""
 
 msgid "WWE"
 msgstr ""
@@ -3864,10 +3841,6 @@ msgstr "e-mail"
 
 msgid "email"
 msgstr "email"
-
-#, fuzzy
-msgid "episodes"
-msgstr "Odcinki"
 
 msgid "external eplayer3"
 msgstr "zewnętrzny eplayer3"

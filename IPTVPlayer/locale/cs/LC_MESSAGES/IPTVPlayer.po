@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-10 20:53+0200\n"
+"POT-Creation-Date: 2025-09-08 09:37+0200\n"
 "PO-Revision-Date: 2025-06-29 16:25+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -358,9 +358,6 @@ msgstr "Inicializace rozhraní API se nezdařila!"
 
 msgid "ARTISTS"
 msgstr "UMĚLCI"
-
-msgid "ATTENTION !"
-msgstr "POZOR !"
 
 msgid "AZ"
 msgstr "AZ"
@@ -1701,6 +1698,9 @@ msgstr "Klub deníků"
 msgid "Knee & Sports"
 msgstr "Kolena a sport"
 
+msgid "Knowledge"
+msgstr ""
+
 msgid "LATEST"
 msgstr "Již používáte nejnovější verzi: %s"
 
@@ -2140,9 +2140,6 @@ msgstr "Novinky"
 msgid "News Feed"
 msgstr "Kanál novinek"
 
-msgid "Next Page"
-msgstr "Další stránka"
-
 msgid "Next page"
 msgstr "Další stránka"
 
@@ -2205,13 +2202,6 @@ msgstr "K dispozici pouze ve Švédsku."
 
 msgid "Only available in Sweden.\n"
 msgstr "K dispozici pouze ve Švédsku.\n"
-
-msgid ""
-"Only logged in user have access.\n"
-"Please set login data in the host configuration under blue button."
-msgstr ""
-"Přístup mají pouze přihlášení uživatelé.\n"
-"Nastavte prosím přihlašovací údaje v konfiguraci hostitele pod modrým tlačítkem."
 
 msgid "Only music"
 msgstr "Pouze hudba"
@@ -2718,9 +2708,6 @@ msgstr "Výsledky vyhledávání"
 msgid "Search type"
 msgstr "Typ vyhledávání"
 
-msgid "Search youtube materials"
-msgstr "Vyhledávání materiálů na YouTube "
-
 #, python-format
 msgid "Searching in %s, please wait (%d)"
 msgstr "Hledání v %s, čekejte prosím (%d)"
@@ -2899,9 +2886,6 @@ msgstr "Zobrazit varování klíče API YouTube"
 
 msgid "Show all channels"
 msgstr "Zobrazit všechny kanály"
-
-msgid "Show changelog :"
-msgstr "Zobrazit seznam změn:"
 
 msgid "Show download manager after adding new item"
 msgstr "Zobrazit správce stahování po přidání nové položky"
@@ -3415,9 +3399,6 @@ msgstr "Kód chyby rozbalení [%s]."
 msgid "Upcoming"
 msgstr "Nadcházející"
 
-msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr "Aktualizace byla úspěšně dokončena. Systém se prozatím restartuje."
-
 msgid "Upload date"
 msgstr "Datum nahrání"
 
@@ -3567,9 +3548,6 @@ msgstr "Vyberte styl pro virtuální klávesnici s obrázkem"
 
 msgid "Virtual Keyboard type"
 msgstr "Typ virtuální klávesnice"
-
-msgid "WARNING! IF UPDATE FAILED: "
-msgstr "VAROVÁNÍ! POKUD AKTUALIZACE NESELHALA: "
 
 msgid "WWE"
 msgstr "WWE"
@@ -3816,10 +3794,6 @@ msgstr "email"
 
 msgid "email"
 msgstr "e-mail"
-
-#, fuzzy
-msgid "episodes"
-msgstr "Epizody"
 
 msgid "external eplayer3"
 msgstr "externí eplayer3"

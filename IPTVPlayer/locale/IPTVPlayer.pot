@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-10 20:53+0200\n"
+"POT-Creation-Date: 2025-09-09 11:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -338,9 +338,6 @@ msgid "API initialization failed!"
 msgstr ""
 
 msgid "ARTISTS"
-msgstr ""
-
-msgid "ATTENTION !"
 msgstr ""
 
 msgid "AZ"
@@ -1623,6 +1620,9 @@ msgstr ""
 msgid "Knee & Sports"
 msgstr ""
 
+msgid "Knowledge"
+msgstr ""
+
 msgid "LATEST"
 msgstr ""
 
@@ -2051,9 +2051,6 @@ msgstr ""
 msgid "News Feed"
 msgstr ""
 
-msgid "Next Page"
-msgstr ""
-
 msgid "Next page"
 msgstr ""
 
@@ -2115,11 +2112,6 @@ msgid "Only available in Sweden."
 msgstr ""
 
 msgid "Only available in Sweden.\n"
-msgstr ""
-
-msgid ""
-"Only logged in user have access.\n"
-"Please set login data in the host configuration under blue button."
 msgstr ""
 
 msgid "Only music"
@@ -2616,9 +2608,6 @@ msgstr ""
 msgid "Search type"
 msgstr ""
 
-msgid "Search youtube materials"
-msgstr ""
-
 #, python-format
 msgid "Searching in %s, please wait (%d)"
 msgstr ""
@@ -2793,9 +2782,6 @@ msgid "Show Youtube Api Key warnings"
 msgstr ""
 
 msgid "Show all channels"
-msgstr ""
-
-msgid "Show changelog :"
 msgstr ""
 
 msgid "Show download manager after adding new item"
@@ -3302,9 +3288,6 @@ msgstr ""
 msgid "Upcoming"
 msgstr ""
 
-msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr ""
-
 msgid "Upload date"
 msgstr ""
 
@@ -3451,9 +3434,6 @@ msgid "Virtual Keyboard"
 msgstr ""
 
 msgid "Virtual Keyboard type"
-msgstr ""
-
-msgid "WARNING! IF UPDATE FAILED: "
 msgstr ""
 
 msgid "WWE"
@@ -3700,9 +3680,6 @@ msgid "e-mail"
 msgstr ""
 
 msgid "email"
-msgstr ""
-
-msgid "episodes"
 msgstr ""
 
 msgid "external eplayer3"

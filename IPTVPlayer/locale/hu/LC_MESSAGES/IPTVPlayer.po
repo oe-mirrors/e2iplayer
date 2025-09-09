@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-10 20:53+0200\n"
+"POT-Creation-Date: 2025-09-08 09:37+0200\n"
 "PO-Revision-Date: 2025-06-29 17:27+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -358,9 +358,6 @@ msgstr "API inicializálása sikertelen!"
 
 msgid "ARTISTS"
 msgstr "MŰVÉSZEK"
-
-msgid "ATTENTION !"
-msgstr "FIGYELEM!"
 
 msgid "AZ"
 msgstr "AZ"
@@ -1695,6 +1692,9 @@ msgstr "Naplóklub"
 msgid "Knee & Sports"
 msgstr "Térd és sport"
 
+msgid "Knowledge"
+msgstr ""
+
 msgid "LATEST"
 msgstr "LEGÚJABB"
 
@@ -2134,9 +2134,6 @@ msgstr "Hírek"
 msgid "News Feed"
 msgstr "Hírfolyam"
 
-msgid "Next Page"
-msgstr "Következő oldal"
-
 msgid "Next page"
 msgstr "Következő oldal"
 
@@ -2201,13 +2198,6 @@ msgstr "Csak Svédországban kapható."
 
 msgid "Only available in Sweden.\n"
 msgstr "Csak Svédországban elérhető.\n"
-
-msgid ""
-"Only logged in user have access.\n"
-"Please set login data in the host configuration under blue button."
-msgstr ""
-"Csak a bejelentkezett felhasználó rendelkezik hozzáféréssel.\n"
-"Kérjük, állítsa be a bejelentkezési adatokat a host konfigurációjában a kék gomb használatával."
 
 msgid "Only music"
 msgstr "Csak zene"
@@ -2711,9 +2701,6 @@ msgstr "Keresési eredmények"
 msgid "Search type"
 msgstr "Keresés típusa"
 
-msgid "Search youtube materials"
-msgstr "Youtube tartalmak keresése "
-
 #, python-format
 msgid "Searching in %s, please wait (%d)"
 msgstr "Keresés a következő helyen: %s, kérjük várjon (%d)"
@@ -2892,9 +2879,6 @@ msgstr "Youtube API-kulcs figyelmeztetések megjelenítése"
 
 msgid "Show all channels"
 msgstr "Összes csatorna megjelenítése"
-
-msgid "Show changelog :"
-msgstr "Változási napló megjelenítése:"
 
 msgid "Show download manager after adding new item"
 msgstr "Letöltéskezelő megjelenítése új elem hozzáadása után"
@@ -3410,9 +3394,6 @@ msgstr "Kicsomagoláskor hibakód: [%s]."
 msgid "Upcoming"
 msgstr "Közelgő"
 
-msgid "Update completed successfully. For the moment, the system will reboot."
-msgstr "A frissítés sikeresen befejeződött. A rendszer egyelőre újraindul."
-
 msgid "Upload date"
 msgstr "Feltöltés dátuma"
 
@@ -3562,9 +3543,6 @@ msgstr "Válassza ki a virtuális billentyűzet képének stílusát"
 
 msgid "Virtual Keyboard type"
 msgstr "Virtuális billentyűzet típusa"
-
-msgid "WARNING! IF UPDATE FAILED: "
-msgstr "FIGYELEM! HA A FRISSÍTÉS SIKERTELEN: "
 
 msgid "WWE"
 msgstr "WWE"
@@ -3811,10 +3789,6 @@ msgstr "e-mail"
 
 msgid "email"
 msgstr "email"
-
-#, fuzzy
-msgid "episodes"
-msgstr "Epizódok"
 
 msgid "external eplayer3"
 msgstr "külső eplayer3"
