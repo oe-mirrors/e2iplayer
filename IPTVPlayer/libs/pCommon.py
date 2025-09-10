@@ -20,7 +20,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVNotif
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str, strDecode
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib2_HTTPError
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetDefaultLang, iptv_system, IsExecutable, IsHttpsCertValidationEnabled, printDBG, printExc, rm, UsePyCurl
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
@@ -1194,22 +1193,19 @@ class common:
             # but it seems it breaks other scenarios
             # also documentation says req should be a string. :(
             # NEEDS FURTHER INVESTIGATION !!!
-            try:
-                if len(customOpeners) > 0:
-                    opener = build_opener(*customOpeners)
-                    if timeout is not None:
-                        response = opener.open(req, timeout=timeout)
-                    else:
-                        response = opener.open(req)
+
+            if len(customOpeners) > 0:
+                opener = build_opener(*customOpeners)
+                if timeout is not None:
+                    response = opener.open(req, timeout=timeout)
                 else:
-                    if timeout is not None:
-                        response = urlopen(req, timeout=timeout)
-                    else:
-                        response = urlopen(req)
-                return response
-            except urllib2_HTTPError as e:
-                # Return the HTTPError instance which contains the response data
-                return e
+                    response = opener.open(req)
+            else:
+                if timeout is not None:
+                    response = urlopen(req, timeout=timeout)
+                else:
+                    response = urlopen(req)
+            return response
 
         if IsMainThread():
             msg1 = _('It is not allowed to call getURLRequestData from main thread.')
