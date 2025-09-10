@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 31.07.2025
+# Last Modified: 10.09.2025
 ###################################################
 # LOCAL import
 ###################################################
@@ -181,15 +181,15 @@ class Youtube(CBaseHostClass):
                 self.addVideo(params)
         else:
            title = _("Movies")
-           url = "https://www.youtube.com/feed/storefront?bp=ogUCKAU%3D"
+           url = "https://www.youtube.com/results?search_query=movies"
            params = {'category': 'feeds_video', 'title': title, 'url': url}
            self.addDir(params)
            title = _("Music")
-           url = "https://www.youtube.com/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ"
+           url = "https://www.youtube.com/results?search_query=music"
            params = {'category': 'feeds_video', 'title': title, 'url': url}
            self.addDir(params)
            title = _("Games")
-           url = "https://www.youtube.com/gaming/trending"
+           url = "https://www.youtube.com/results?search_query=games"
            params = {'category': 'feeds_video', 'title': title, 'url': url}
            self.addDir(params)
            title = _("Live")
@@ -201,7 +201,7 @@ class Youtube(CBaseHostClass):
            params = {'category': 'feeds_video', 'title': title, 'url': url}
            self.addDir(params)
            title = _("Shorts")
-           url = "https://www.youtube.com/shorts/"
+           url = "https://www.youtube.com/results?search_query=Shorts"
            params = {'category': 'feeds_video', 'title': title, 'url': url}
            self.addDir(params)
            title = _("Podcasts")
