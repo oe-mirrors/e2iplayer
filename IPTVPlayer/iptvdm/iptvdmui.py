@@ -14,6 +14,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtM
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
+from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper, DMItemBase
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -31,8 +33,8 @@ from Components.Sources.StaticText import StaticText
 from Tools.LoadPixmap import LoadPixmap
 
 from datetime import timedelta
-
-from os import path as os_path, remove as os_remove
+from Screens.MessageBox import MessageBox
+from os import path as os_path, remove as os_remove, rename as os_rename
 ###################################################
 
 #########################################################
@@ -314,6 +316,7 @@ class IPTVDMWidget(Screen):
         remove = ((_('Remove file'), 'remove'),)
         delet = ((_('Remove item'), 'delet'),)
         move = ((_('Promote item'), 'move'),)
+        rename = ((_('Rename file'), 'rename'),)  # add lululla 20250911
 
         options = []
         item = self.getSelItem()
@@ -321,9 +324,11 @@ class IPTVDMWidget(Screen):
             if self.localMode:
                 options.extend(play)
                 options.extend(remove)
+                options.extend(rename)  # add lululla 20250911
             elif DMHelper.STS.DOWNLOADED == item.status:
                 options.extend(play)
                 options.extend(remove)
+                options.extend(rename)  # add lululla 20250911
                 options.extend(retry)
             elif DMHelper.STS.INTERRUPTED == item.status:
                 options.extend(play)
@@ -374,6 +379,17 @@ class IPTVDMWidget(Screen):
                         self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, item.fileName, title, None, 'gstplayer', additionalParams)
                 else:
                     self.session.openWithCallback(self.leaveMoviePlayer, IPTVStandardMoviePlayer, item.fileName, title)
+            elif ret[1] == "rename":  # add lululla 20250911
+                try:
+                    path, fileName = os_path.split(item.fileName)
+                    name, ext = os_path.splitext(fileName)
+                    caps = {}
+                    virtualKeyboard = GetVirtualKeyboard(caps)
+                    self.session.openWithCallback(self.renameFileCallback, virtualKeyboard, title=_('Set file name'), text=name)
+                    
+                except Exception as e:
+                    printExc()
+                    self.session.open(MessageBox, _("Error getting file name: %s") % str(e), type=MessageBox.TYPE_ERROR)
             elif self.localMode:
                 if ret[1] == "remove":
                     try:
@@ -397,6 +413,54 @@ class IPTVDMWidget(Screen):
                 self.DM.deleteDownloadItem(item.downloadIdx)
             elif ret[1] == "move":
                 self.DM.moveToTopDownloadItem(item.downloadIdx)
+
+    def renameFileCallback(self, callback=None):  # add lululla 20250911
+        if callback is None or not callback:
+            return
+        
+        item = self.getSelItem()
+        if item is None:
+            return
+        
+        try:
+            path, fileName = os_path.split(item.fileName)
+            name, ext = os_path.splitext(fileName)
+            newName = callback.strip()
+            
+            if not newName:
+                self.session.open(MessageBox, _("File name cannot be empty!"), type=MessageBox.TYPE_ERROR)
+                return
+            
+            newPath = os_path.join(path, newName + ext)
+            printDBG('rename_file new path[%s]' % newPath)
+            
+            if os_path.isfile(newPath) or os_path.islink(newPath):
+                self.session.open(MessageBox, _('File "%s" already exists!') % newPath, type=MessageBox.TYPE_ERROR)
+                return
+            
+            os_rename(item.fileName, newPath)
+            
+            if self.localMode:
+                for idx, local_item in enumerate(self.localFiles):
+                    if local_item.fileName == item.fileName:
+                        self.localFiles[idx].fileName = newPath
+                        break
+            else:
+                if hasattr(self.DM, 'renameDownloadItem'):
+                    self.DM.renameDownloadItem(item.downloadIdx, newPath)
+                else:
+                    for idx, dm_item in enumerate(self.DM.getList()):
+                        if dm_item.fileName == item.fileName:
+                            self.DM.getList()[idx].fileName = newPath
+                            break
+            
+            self.reloadList(True)
+            
+            self.session.open(MessageBox, _("File renamed successfully!"), type=MessageBox.TYPE_INFO)
+            
+        except Exception as e:
+            printExc()
+            self.session.open(MessageBox, _("Error renaming file: %s") % str(e), type=MessageBox.TYPE_ERROR)
 
     def getSelIndex(self):
         currSelIndex = self["downloadlist"].getCurrentIndex()
@@ -461,8 +525,8 @@ class IPTVDMWidget(Screen):
             fileName = item.fileName.split('/')[-1]
         except Exception:
             fileName = ''
-       # res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, 0, width - 70, self.fonts[0][2], 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, fileName))
-       # res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, self.fonts[0][2], width - 70, self.fonts[1][2], 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.url))
+        # res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, 0, width - 70, self.fonts[0][2], 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, fileName))
+        # res.append((eListboxPythonMultiContent.TYPE_TEXT, 70, self.fonts[0][2], width - 70, self.fonts[1][2], 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.url))
 
         status = ""
         info = ""
@@ -482,7 +546,6 @@ class IPTVDMWidget(Screen):
 
 #        res.append((eListboxPythonMultiContent.TYPE_TEXT, width - 240, self.fonts[0][2] + self.fonts[1][2], 240, self.fonts[2][2], 2, RT_HALIGN_RIGHT | RT_VALIGN_CENTER, status))
 #        res.append((eListboxPythonMultiContent.TYPE_TEXT, 45, self.fonts[0][2] + self.fonts[1][2], width - 45 - 240, self.fonts[2][2], 2, RT_HALIGN_LEFT | RT_VALIGN_CENTER, info))
-
 #        res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, 1, 64, 64, self.dictPIX.get(item.status, None)))
 
         return (self.dictPIX.get(item.status, None), fileName, item.url, info, status)
