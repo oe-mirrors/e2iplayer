@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-09 11:09+0200\n"
+"POT-Creation-Date: 2025-09-11 22:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1150,6 +1150,10 @@ msgid "Error during deletion of the debug file."
 msgstr ""
 
 #, python-format
+msgid "Error getting file name: %s"
+msgstr ""
+
+#, python-format
 msgid ""
 "Error message: \"%s\".\n"
 "Error code: \"%s\"."
@@ -1167,6 +1171,10 @@ msgstr ""
 
 #, python-format
 msgid "Error reading file \"%s\".\n"
+msgstr ""
+
+#, python-format
+msgid "Error renaming file: %s"
 msgstr ""
 
 #, python-format
@@ -1271,6 +1279,12 @@ msgstr ""
 
 #, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
+msgstr ""
+
+msgid "File name cannot be empty!"
+msgstr ""
+
+msgid "File renamed successfully!"
 msgstr ""
 
 msgid "Film"
@@ -2512,6 +2526,9 @@ msgid "Remove item"
 msgstr ""
 
 msgid "Rename"
+msgstr ""
+
+msgid "Rename file"
 msgstr ""
 
 msgid "Replay Shows"

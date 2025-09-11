@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer OE-Mirrors Version\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-08 09:37+0200\n"
+"POT-Creation-Date: 2025-09-11 22:20+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: polinene\n"
 "Language-Team: polinene\n"
@@ -1227,6 +1227,10 @@ msgstr "Error al eliminar archivo \"%s\".\n"
 msgid "Error during deletion of the debug file."
 msgstr "Error mientras se eliminaba archivo de registro"
 
+#, fuzzy, python-format
+msgid "Error getting file name: %s"
+msgstr "Error al eliminar archivo \"%s\".\n"
+
 #, python-format
 msgid ""
 "Error message: \"%s\".\n"
@@ -1250,6 +1254,10 @@ msgstr "Error mientras se descargaba."
 
 #, fuzzy, python-format
 msgid "Error reading file \"%s\".\n"
+msgstr "Error al leer archivo \"%s\".\n"
+
+#, fuzzy, python-format
+msgid "Error renaming file: %s"
 msgstr "Error al leer archivo \"%s\".\n"
 
 #, fuzzy, python-format
@@ -1356,6 +1364,13 @@ msgstr "Archivo [%s] añadido a cola de descarga."
 #, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Archivo no puede descargarse. Protocolo [%s] incompatible"
+
+#, fuzzy
+msgid "File name cannot be empty!"
+msgstr "El nombre no puede estar vacío."
+
+msgid "File renamed successfully!"
+msgstr ""
 
 #, fuzzy
 msgid "Film"
@@ -2700,6 +2715,10 @@ msgstr "Eliminar elemento"
 
 msgid "Rename"
 msgstr "Renombrar"
+
+#, fuzzy
+msgid "Rename file"
+msgstr "Eliminar archivo"
 
 #, fuzzy
 msgid "Replay Shows"

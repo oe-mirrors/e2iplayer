@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-08 09:37+0200\n"
+"POT-Creation-Date: 2025-09-11 22:20+0200\n"
 "PO-Revision-Date: 2025-06-29 16:25+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -1215,6 +1215,12 @@ msgstr ""
 msgid "Error during deletion of the debug file."
 msgstr "Chyba při mazání ladicího souboru."
 
+#, fuzzy, python-format
+msgid "Error getting file name: %s"
+msgstr ""
+"Chyba při mazání souboru \"%s\".\n"
+"\n"
+
 #, python-format
 msgid ""
 "Error message: \"%s\".\n"
@@ -1235,6 +1241,12 @@ msgstr "Během stahování dochází k chybě."
 
 #, python-format
 msgid "Error reading file \"%s\".\n"
+msgstr ""
+"Chyba při čtení souboru \"%s\".\n"
+"\n"
+
+#, fuzzy, python-format
+msgid "Error renaming file: %s"
 msgstr ""
 "Chyba při čtení souboru \"%s\".\n"
 "\n"
@@ -1344,6 +1356,13 @@ msgstr "Soubor [%s] byl přidán do fronty stahování."
 #, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Soubor nelze stáhnout. Protokol [%s] není podporován"
+
+#, fuzzy
+msgid "File name cannot be empty!"
+msgstr "Jméno nemůže být prázdné."
+
+msgid "File renamed successfully!"
+msgstr ""
 
 msgid "Film"
 msgstr "Filmová tvorba"
@@ -2608,6 +2627,10 @@ msgstr "Odstranit položku"
 
 msgid "Rename"
 msgstr "Přejmenovat"
+
+#, fuzzy
+msgid "Rename file"
+msgstr "Odstranit soubor"
 
 msgid "Replay Shows"
 msgstr "Reprízy"
