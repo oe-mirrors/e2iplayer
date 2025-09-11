@@ -386,7 +386,7 @@ class IPTVDMWidget(Screen):
                     caps = {}
                     virtualKeyboard = GetVirtualKeyboard(caps)
                     self.session.openWithCallback(self.renameFileCallback, virtualKeyboard, title=_('Set file name'), text=name)
-                    
+
                 except Exception as e:
                     printExc()
                     self.session.open(MessageBox, _("Error getting file name: %s") % str(e), type=MessageBox.TYPE_ERROR)
@@ -417,29 +417,29 @@ class IPTVDMWidget(Screen):
     def renameFileCallback(self, callback=None):  # add lululla 20250911
         if callback is None or not callback:
             return
-        
+
         item = self.getSelItem()
         if item is None:
             return
-        
+
         try:
             path, fileName = os_path.split(item.fileName)
             name, ext = os_path.splitext(fileName)
             newName = callback.strip()
-            
+
             if not newName:
                 self.session.open(MessageBox, _("File name cannot be empty!"), type=MessageBox.TYPE_ERROR)
                 return
-            
+
             newPath = os_path.join(path, newName + ext)
             printDBG('rename_file new path[%s]' % newPath)
-            
+
             if os_path.isfile(newPath) or os_path.islink(newPath):
                 self.session.open(MessageBox, _('File "%s" already exists!') % newPath, type=MessageBox.TYPE_ERROR)
                 return
-            
+
             os_rename(item.fileName, newPath)
-            
+
             if self.localMode:
                 for idx, local_item in enumerate(self.localFiles):
                     if local_item.fileName == item.fileName:
@@ -453,11 +453,11 @@ class IPTVDMWidget(Screen):
                         if dm_item.fileName == item.fileName:
                             self.DM.getList()[idx].fileName = newPath
                             break
-            
+
             self.reloadList(True)
-            
+
             self.session.open(MessageBox, _("File renamed successfully!"), type=MessageBox.TYPE_INFO)
-            
+
         except Exception as e:
             printExc()
             self.session.open(MessageBox, _("Error renaming file: %s") % str(e), type=MessageBox.TYPE_ERROR)
