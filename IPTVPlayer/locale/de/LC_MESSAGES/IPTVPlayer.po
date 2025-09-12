@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 22:20+0200\n"
-"PO-Revision-Date: 2025-09-09 18:56+0200\n"
+"PO-Revision-Date: 2025-09-12 14:45+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -1206,9 +1206,9 @@ msgstr "Fehler beim Löschen der Datei \"%s\".\n"
 msgid "Error during deletion of the debug file."
 msgstr "Fehler beim Löschen der Debug-Datei."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error getting file name: %s"
-msgstr "Fehler beim Löschen der Datei \"%s\".\n"
+msgstr "Fehler beim Abrufen des Dateinamens: %s"
 
 #, python-format
 msgid ""
@@ -1232,9 +1232,9 @@ msgstr "Fehler während Download aufgetreten."
 msgid "Error reading file \"%s\".\n"
 msgstr "Fehler beim Lesen der Datei \"%s\".\n"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error renaming file: %s"
-msgstr "Fehler beim Lesen der Datei \"%s\".\n"
+msgstr "Fehler beim Umbenennen der Datei: %s"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1340,12 +1340,11 @@ msgstr "Datei: [%s] zur Download-Warteschlange hinzugefügt."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Datei kann nicht heruntergeladen werden. Protokoll [%s] wird nicht unterstützt"
 
-#, fuzzy
 msgid "File name cannot be empty!"
-msgstr "Der Name darf nicht leer sein."
+msgstr "Der Dateiname darf nicht leer sein!"
 
 msgid "File renamed successfully!"
-msgstr ""
+msgstr "Datei erfolgreich umbenannt!"
 
 msgid "Film"
 msgstr "Film"
@@ -2612,9 +2611,8 @@ msgstr "Eintrag entfernen"
 msgid "Rename"
 msgstr "Umbenennen"
 
-#, fuzzy
 msgid "Rename file"
-msgstr "Datei löschen"
+msgstr "Datei umbenennen"
 
 msgid "Replay Shows"
 msgstr "Replay Shows"
