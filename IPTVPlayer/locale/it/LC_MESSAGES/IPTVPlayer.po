@@ -10,12 +10,15 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 22:20+0200\n"
 "PO-Revision-Date: \n"
-"Last-Translator: Massimo Bambi <maxbambi@libero.it>\n"
+"Last-Translator: Lululla <ekekaz@gmail.com>\n"
 "Language-Team: lululla <ekekaz@gmail.com>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.6\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SearchPath-0: .\n"
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -182,8 +185,11 @@ msgid "%s followers"
 msgstr "%s followers"
 
 #, python-format
-msgid "%s has been protected with google recaptcha v2. You can try to use API version."
-msgstr "%s è protetto con google recaptcha v2. Puoi provare ad usare la versione API."
+msgid ""
+"%s has been protected with google recaptcha v2. You can try to use API "
+"version."
+msgstr ""
+"%s è protetto con google recaptcha v2. Puoi provare ad usare la versione API."
 
 #, python-format
 msgid "%s minutes"
@@ -223,10 +229,12 @@ msgstr "%s timeout."
 
 #, python-format
 msgid ""
-"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services "
+"from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
-"%s usa metodi di  \"geo-blocking\" per non far accedere ai propri servizi dall'estero.\n"
+"%s usa metodi di  \"geo-blocking\" per non far accedere ai propri servizi "
+"dall'estero.\n"
 "Nazione dell'host:%s, tua nazione: %s"
 
 #, python-format
@@ -331,11 +339,20 @@ msgstr "4:3 Letterbox"
 msgid "4:3 PanScan"
 msgstr "4:3 PanScan"
 
-msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr "<font color=\"#FE642E\">RICORDA:</font></b> E2iPlayer <b>E' SOLO</b> un web browser evoluto.  <b>NON</b> possiede nessun materiale!!!</font>"
+msgid ""
+"<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> "
+"specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
+msgstr ""
+"<font color=\"#FE642E\">RICORDA:</font></b> E2iPlayer <b>E' SOLO</b> un web "
+"browser evoluto.  <b>NON</b> possiede nessun materiale!!!</font>"
 
-msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
-msgstr "E' necessaria una licenza TV per poter accedere agli stream di BBC iPlayer, visita il sito web della BBC per informazioni: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgid ""
+"A TV License is required to watch BBC iPlayer streams, see the BBC website "
+"for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgstr ""
+"E' necessaria una licenza TV per poter accedere agli stream di BBC iPlayer, "
+"visita il sito web della BBC per informazioni: https://www.bbc.co.uk/iplayer/"
+"help/tvlicence"
 
 msgid "A-Z"
 msgstr "A-Z"
@@ -841,10 +858,15 @@ msgid "Debug option is disabled - nothing to display"
 msgstr "L'opzione debug è disabilitata - non c'è niente da visualizzare"
 
 msgid "Debug option set to console - nothing to display"
-msgstr "Il debug è impostato con output verso la console - non c'è niente da visualizzare"
+msgstr ""
+"Il debug è impostato con output verso la console - non c'è niente da "
+"visualizzare"
 
-msgid "Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr "L'opzione debug è impostata per la creazione del file, ma questo non esiste - non c'è niente da visualizzare"
+msgid ""
+"Debug option set to debugfile, but file does not exist - nothing to display"
+msgstr ""
+"L'opzione debug è impostata per la creazione del file, ma questo non esiste "
+"- non c'è niente da visualizzare"
 
 #, python-format
 msgid "Decode file [%s] problem."
@@ -1214,9 +1236,9 @@ msgstr "Errore eliminazione file \"%s\".\n"
 msgid "Error during deletion of the debug file."
 msgstr "Errore durante l'eliminazione del file di debug."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error getting file name: %s"
-msgstr "Errore eliminazione file \"%s\".\n"
+msgstr "Errore durante il recupero del nome del file: %s"
 
 #, python-format
 msgid ""
@@ -1240,9 +1262,9 @@ msgstr "Errore durante il download."
 msgid "Error reading file \"%s\".\n"
 msgstr "Errore lettura file \"%s\".\n"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error renaming file: %s"
-msgstr "Errore lettura file \"%s\".\n"
+msgstr "Errore durante la ridenominazione del file: %s"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1296,7 +1318,9 @@ msgstr "Compressione gzip fallita."
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
-msgstr "Fallito l'accesso dell'utente \"%s\" ! Per favore controlla utente e password."
+msgstr ""
+"Fallito l'accesso dell'utente \"%s\" ! Per favore controlla utente e "
+"password."
 
 #, python-format
 msgid "Failed to open the file \"%s\"."
@@ -1348,9 +1372,8 @@ msgstr "File: [%s] aggiunto in attesa per Download."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Il file non può essere scaricato. Protocollo [%s] non supportato"
 
-#, fuzzy
 msgid "File name cannot be empty!"
-msgstr "Il nome non può essere vuoto."
+msgstr "Il nome non può essere vuoto!"
 
 msgid "File renamed successfully!"
 msgstr ""
@@ -1634,20 +1657,31 @@ msgid "It looks like some kind of protection. Try again later."
 msgstr "Sembra che ci sia una qualche protezione. Riprova più tardi."
 
 #, python-format
-msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
-msgstr "Sembra che la tua configurazione attuale non permetta di collegarsi a https://%s/.\n"
+msgid ""
+"It looks like your current configuration do not allow to connect to the "
+"https://%s/.\n"
+msgstr ""
+"Sembra che la tua configurazione attuale non permetta di collegarsi a "
+"https://%s/.\n"
 
 #, python-format
 msgid "It seems that the host \"%s\" has crashed."
 msgstr "Sembra che l'host \"%s\" sia andato in crash."
 
 #, python-format
-msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
-msgstr "Sembra che l'host \"%s\" sia andato in crash. Vuoi segnalare questo problema?"
+msgid ""
+"It seems that the host \"%s\" has crashed. Do you want to report this "
+"problem?"
+msgstr ""
+"Sembra che l'host \"%s\" sia andato in crash. Vuoi segnalare questo problema?"
 
 #, python-format
-msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
-msgstr "Sembra che il provider di sottotitoli \"%s\" sia andato in crash. Vuoi segnalare questo problema?"
+msgid ""
+"It seems that the subtitle's provider \"%s\" has crashed. Do you want to "
+"report this problem?"
+msgstr ""
+"Sembra che il provider di sottotitoli \"%s\" sia andato in crash. Vuoi "
+"segnalare questo problema?"
 
 #, python-format
 msgid ""
@@ -1811,8 +1845,12 @@ msgstr "Grigio chiaro"
 msgid "Line Spacing"
 msgstr "Spazio fra le linee"
 
-msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
-msgstr "Il collegamento non è supportato da gstplayer. Se disponibile, usa il player extplayer3."
+msgid ""
+"Link is not supported by the gstplayer. Please use the extelayer3 if "
+"available."
+msgstr ""
+"Il collegamento non è supportato da gstplayer. Se disponibile, usa il player "
+"extplayer3."
 
 msgid "Link protected with CF Turnstile ."
 msgstr "Llink protetto con CF Turnstile ."
@@ -1868,8 +1906,12 @@ msgid "Load"
 msgstr "Caricare"
 
 #, python-format
-msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
-msgstr "Il caricamento del layout \"%s\" della Tastiera virtuale è fallito per l'errore seguente:  \"%s\""
+msgid ""
+"Load of the Virtual Keyboard layout \"%s\" failed due to the following "
+"error: \"%s\""
+msgstr ""
+"Il caricamento del layout \"%s\" della Tastiera virtuale è fallito per "
+"l'errore seguente:  \"%s\""
 
 msgid "Loading"
 msgstr "Caricamento"
@@ -2059,8 +2101,12 @@ msgid "Moving file from \"%s\" to \"%s\" failed.\n"
 msgstr "Spostamento file da \"%s\" a \"%s\" non riuscito.\n"
 
 #, python-format
-msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
-msgstr "Lo spostamento del buffer di riproduzione al download manager ha prodotto l'errore seguente \"%s\""
+msgid ""
+"Moving playback buffer to the download manager failed with the following "
+"error \"%s\""
+msgstr ""
+"Lo spostamento del buffer di riproduzione al download manager ha prodotto "
+"l'errore seguente \"%s\""
 
 msgid "Music"
 msgstr "Musica"
@@ -2359,24 +2405,43 @@ msgstr ""
 "in un browser web con l'estensione MyE2i installata"
 
 #, python-format
-msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
-msgstr "Ti consiglio di riavviare il tuo Enigma2 ed accettare l'installazione dell'utility %s, quando ti verrà proposto da %s ."
-
-msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
-msgstr "Per favore, inserisci login e password nella configurazione dell'host (disponibile con il tasto blu) e prova ancora."
-
-msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
-msgstr "Assicurati che la cartella per la cache (indicata nella configurazione) sia disponibile in scrittura."
-
-msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
-msgstr "Per favore, registrati ed inserisci login e password nella configurazione dell'host, per risolvere il problema definitivamente."
+msgid ""
+"Please consider restart your Engima2 and agree to install the %s utlity when "
+"the %s will propose this."
+msgstr ""
+"Ti consiglio di riavviare il tuo Enigma2 ed accettare l'installazione "
+"dell'utility %s, quando ti verrà proposto da %s ."
 
 msgid ""
-"Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
+"Please fill your login and password in the host configuration (available "
+"under blue button) and try again."
+msgstr ""
+"Per favore, inserisci login e password nella configurazione dell'host "
+"(disponibile con il tasto blu) e prova ancora."
+
+msgid ""
+"Please make sure that the folder for cache data (set in the configuration) "
+"is writable."
+msgstr ""
+"Assicurati che la cartella per la cache (indicata nella configurazione) sia "
+"disponibile in scrittura."
+
+msgid ""
+"Please register and set login and password in the host configuration, to "
+"solve this problems permanently."
+msgstr ""
+"Per favore, registrati ed inserisci login e password nella configurazione "
+"dell'host, per risolvere il problema definitivamente."
+
+msgid ""
+"Please remember to visit http://www.sport365.live/ and watch a few "
+"advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
 msgstr ""
-"Ricordati di visitare http://www.sport365.live/ e guardare un po' di pubblicità.\n"
-"Se la tua riproduzione è costantemente interrotta, questo può risolvere il problema."
+"Ricordati di visitare http://www.sport365.live/ e guardare un po' di "
+"pubblicità.\n"
+"Se la tua riproduzione è costantemente interrotta, questo può risolvere il "
+"problema."
 
 msgid "Please retry later."
 msgstr "Riprovare più tardi."
@@ -2390,8 +2455,11 @@ msgid "Please visit \"%s\" and confirm that you are human."
 msgstr "Per favore,  visita \"%s\" e conferma che sei umano."
 
 #, python-format
-msgid "Please visit %s to learn how to redirect this task to the external device."
-msgstr "Per favore, visita %s per capire come ridirezionare questo task ad un dispositivo esterno."
+msgid ""
+"Please visit %s to learn how to redirect this task to the external device."
+msgstr ""
+"Per favore, visita %s per capire come ridirezionare questo task ad un "
+"dispositivo esterno."
 
 msgid "Please wait - downloading initialization data."
 msgstr "Attendi, scaricamento dei dati di inizializzazione."
@@ -2620,9 +2688,8 @@ msgstr "Rimuovi voce"
 msgid "Rename"
 msgstr "Rinomina"
 
-#, fuzzy
 msgid "Rename file"
-msgstr "Elimina file"
+msgstr "Rinomina file"
 
 msgid "Replay Shows"
 msgstr "Replay programmi"
@@ -2956,13 +3023,18 @@ msgid "Software floating point"
 msgstr "Software floating point"
 
 msgid "Some changes will be applied only after movie player restart."
-msgstr "Alcuni cambiamenti saranno applicati,  solo dopo che il movie player sarà riavviato."
+msgstr ""
+"Alcuni cambiamenti saranno applicati,  solo dopo che il movie player sarà "
+"riavviato."
 
 msgid "Some settings will be applied only after GUI restart."
-msgstr "Alcune impostazioni verranno applicate solo dopo il riavvio dell'interfaccia grafica."
+msgstr ""
+"Alcune impostazioni verranno applicate solo dopo il riavvio dell'interfaccia "
+"grafica."
 
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
-msgstr "Mi dispiace, ma TVPlayer è attualmente disponibile solo nel Regno Unito"
+msgstr ""
+"Mi dispiace, ma TVPlayer è attualmente disponibile solo nel Regno Unito"
 
 msgid "Sort Mode"
 msgstr ""
@@ -3116,7 +3188,8 @@ msgstr "Conversione dei sottotitoli in UTF-8 non riuscita."
 
 #, python-format
 msgid "Subtitles downloaded successfully. [%s], conversion to UTF-8."
-msgstr "I sottotitoli sono stati scaricati correttamente. [%s], conversione in UTF-8."
+msgstr ""
+"I sottotitoli sono stati scaricati correttamente. [%s], conversione in UTF-8."
 
 #, python-format
 msgid "Subtitles for: %s"
@@ -3210,18 +3283,22 @@ msgstr "Rapporto d'aspetto predef. per il player esterno"
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
-"Please fill your login and password in the host configuration. Available under blue button."
+"Please fill your login and password in the host configuration. Available "
+"under blue button."
 msgstr ""
 "L'host %s richiede la registrazione. \n"
-"Per favore inserisci il tuo login e password nella configurazione dell'host, disponibile con il tasto blu."
+"Per favore inserisci il tuo login e password nella configurazione dell'host, "
+"disponibile con il tasto blu."
 
 #, python-format
 msgid ""
 "The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available under blue button."
+"Please fill your login and password in the host configuration - available "
+"under blue button."
 msgstr ""
 "L'host %s richiede un abbonamento. \n"
-"Per favore inserisci il tuo login e password nella configurazione dell'host, disponibile con il tasto blu."
+"Per favore inserisci il tuo login e password nella configurazione dell'host, "
+"disponibile con il tasto blu."
 
 msgid "The number of items in the search history"
 msgstr "Numero di voci nella cronologia di ricerca"
@@ -3278,7 +3355,8 @@ msgid "This video is a private video."
 msgstr "Questo video è privato."
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
-msgstr "Suggerimento! Puoi collegare una flash drive USB per risolvere il problema."
+msgstr ""
+"Suggerimento! Puoi collegare una flash drive USB per risolvere il problema."
 
 msgid "Title:"
 msgstr "Titolo:"
@@ -3288,7 +3366,8 @@ msgid ""
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 "Per vedere i video di http://vk.com/,  hai bisogno di effettuare il login.\n"
-"Per favore inserisci il tuo nome utente e password nella configurazione di IPTVPlayer."
+"Per favore inserisci il tuo nome utente e password nella configurazione di "
+"IPTVPlayer."
 
 msgid "Today"
 msgstr "Oggi"
@@ -3345,7 +3424,9 @@ msgid "Try to bypass DRM (it may be illegal)"
 msgstr "Prova ad aggirare il DRM (potrebbe essere illegale)"
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
-msgstr "Prova a cambiare extplayer o a disabilitare IFD nella configurazione di GSTplayer"
+msgstr ""
+"Prova a cambiare extplayer o a disabilitare IFD nella configurazione di "
+"GSTplayer"
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
 msgstr "Sospendi il buffering per http://prognoza.pogody.tv/"
@@ -3584,10 +3665,14 @@ msgid "Watch Videos Online"
 msgstr "Guarda video online"
 
 msgid "Web component has been reset and all threads are stopped. :)"
-msgstr "Il componente web è stato resettato e tutti i thread sono stati interrotti. :)"
+msgstr ""
+"Il componente web è stato resettato e tutti i thread sono stati "
+"interrotti. :)"
 
 msgid "Web component has been reset, the following threads are still working:"
-msgstr "Il componente web è stato resettato e il seguenti thread sono ancora funzionanti:"
+msgstr ""
+"Il componente web è stato resettato e il seguenti thread sono ancora "
+"funzionanti:"
 
 msgid "Web interface version"
 msgstr "Versione di interfaccia web"
@@ -3599,7 +3684,9 @@ msgid "Weekly Indys"
 msgstr "Settimanale Indys"
 
 msgid "Whole file must be downloaded to start playback!"
-msgstr "Il file deve essere scaricato completamente, prima di avviare la riproduzione!"
+msgstr ""
+"Il file deve essere scaricato completamente, prima di avviare la "
+"riproduzione!"
 
 msgid "With closed captioned."
 msgstr "Con sottotitoli."
@@ -3665,27 +3752,46 @@ msgstr "Si, nel file /tmp/iptv.dbg"
 msgid "You are not allowed to play this video"
 msgstr "Non ti è consentito riprodurre questo video"
 
-msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
-msgstr "Stai usando una versione vecchia di OpenWebIf.<br> Vai al web di E2iPlayer e seleziona il seguente link<br>"
+msgid ""
+"You are using old version of OpenWebif.<br> To go to E2iPlayer web Select "
+"the following link<br>"
+msgstr ""
+"Stai usando una versione vecchia di OpenWebIf.<br> Vai al web di E2iPlayer e "
+"seleziona il seguente link<br>"
 
-msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
-msgstr "Puoi disabilitare il controllo di validità dei certificati HTTPS nella configurazione di E2iPlayer per eliminare il problema."
+msgid ""
+"You can disable HTTPS certificates validation in the E2iPlayer configuration "
+"to suppress this problem."
+msgstr ""
+"Puoi disabilitare il controllo di validità dei certificati HTTPS nella "
+"configurazione di E2iPlayer per eliminare il problema."
 
-msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
-msgstr "Puoi abilitare PyCurl nella configurazione di E2iPlayer per risolvere il problema."
+msgid ""
+"You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr ""
+"Puoi abilitare PyCurl nella configurazione di E2iPlayer per risolvere il "
+"problema."
 
-msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
-msgstr "Per risolvere questo problema, puoi installare il pacchetto PyCurl con supporto TLS 1.3 dal feed."
+msgid ""
+"You can install PyCurl package with TLS 1.3 support from the feed to fix "
+"this problem."
+msgstr ""
+"Per risolvere questo problema, puoi installare il pacchetto PyCurl con "
+"supporto TLS 1.3 dal feed."
 
-msgid "You can try to use proxy as workaround, check options under blue button."
-msgstr "Puoi provare ad usare un server proxy come soluzione, controlla le opzioni del pulsante blu."
+msgid ""
+"You can try to use proxy as workaround, check options under blue button."
+msgstr ""
+"Puoi provare ad usare un server proxy come soluzione, controlla le opzioni "
+"del pulsante blu."
 
 #, python-format
 msgid "You can use \"%s\" or \"%s\" services for automatic solution."
 msgstr "Puoi usare i servizi \"%s\" o \"%s\" per una soluzione automatica."
 
 msgid "You can use external eplayer to start playback faster."
-msgstr "Puoi usare un player esterno per avviare la riproduzione più velocemente."
+msgstr ""
+"Puoi usare un player esterno per avviare la riproduzione più velocemente."
 
 msgid "You do not have a premium account. Starting a sponsored broadcast."
 msgstr "Non hai un account premium. Si avvia una trasmissione con pubblicità."
@@ -3706,7 +3812,9 @@ msgid "Youtube Suggestions"
 msgstr "Suggerimenti Youtube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr "Le ricerche su YouTube sono più veloci se inserisci la chiave API nel menu delle impostazioni"
+msgstr ""
+"Le ricerche su YouTube sono più veloci se inserisci la chiave API nel menu "
+"delle impostazioni"
 
 #, python-format
 msgid "[%s] - configuration"
@@ -3816,8 +3924,12 @@ msgstr "eplayer3 esterno"
 msgid "external gstplayer"
 msgstr "gstplayer esterno"
 
-msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
-msgstr "controlla se l'host funziona correttamente nella GUI e nella pagina web <b>PRIMA</b>  di riportare degli errori!!!"
+msgid ""
+"first check if host works properly in GUI and web <b>BEFORE</b> reporting "
+"error in it !!!"
+msgstr ""
+"controlla se l'host funziona correttamente nella GUI e nella pagina web "
+"<b>PRIMA</b>  di riportare degli errori!!!"
 
 msgid "format"
 msgstr "formato"
@@ -4013,3 +4125,6 @@ msgstr "www: "
 
 msgid "yellow"
 msgstr "giallo"
+
+#~ msgid "NewVirtualKeyBoard"
+#~ msgstr "Nuova Tastiera Virtuale"
