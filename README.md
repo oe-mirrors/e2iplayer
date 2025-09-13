@@ -39,9 +39,14 @@ This plugin was developed with a lot of ❤️ for the Enigma2 community. You ar
 
 ### 🖼️ Screenshots
 
-<img width="320" height="180" alt="screenshot1" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_start.jpg"/> <img width="320" height="180" alt="screenshot2" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_settings.jpg"/> <img width="320" height="180" alt="screenshot3" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_all.jpg"/> 
+<details>
+<summary>Click to show Screenshots.</summary>  
+<img width="320" height="180" alt="screenshot1" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_start.jpg"/> <img width="320" height="180" alt="screenshot2" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_settings.jpg"/> 
+  
+<img width="320" height="180" alt="screenshot3" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_all.jpg"/> <img width="320" height="180" alt="screenshot4" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_download.jpg"/>
 
-<img width="320" height="180" alt="screenshot4" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_download.jpg"/> <img width="320" height="180" alt="screenshot5" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_youtube.jpg"/> <img width="320" height="180" alt="screenshot6" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_local.jpg"/>
+<img width="320" height="180" alt="screenshot5" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_youtube.jpg"/> <img width="320" height="180" alt="screenshot6" src="https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Readme Screenshots/screenshot_local.jpg"/>
+</details>
 
 ---
 
@@ -150,7 +155,14 @@ Pull requests are very welcome for:
 - Bugfixes
 - new Hosts
 
-Please fork the repository, create a feature branch, and submit a Pull Request.
+Your contribution is very welcome! Follow these steps:
+
+1. 🍴 Fork this repository
+2. 🔄 Create a branch for your feature
+3. 💻 Make your changes
+4. ✅ Commit using conventional messages
+5. 📤 Push to your branch
+6. 🔍 Open a Pull Request
 
 ---
 
@@ -179,3 +191,9 @@ This repository has no control over the streams, links, or the legality of the c
 Thanks! ❤️ ❤️ ❤️
 
 <img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/Logos/e2ilogo.png">
+
+---
+
+<p align="center">
+  Powered ❤️ by <a href="https://www.opena.tv">openATV Team</a>
+</p> 
