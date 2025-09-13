@@ -579,8 +579,8 @@ class Host(CBaseHostClass):
 				valTab.append(CDisplayListItem('LAIDHUB', 'https://www.laidhub.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.laidhub.com/porn-categories/'], 'LAIDHUB', hostImage() + 'laidhub.png', None))
 			if config.plugins.iptvplayer.w4nkr.value:
 				valTab.append(CDisplayListItem('W4NKR', 'https://w4nkr.com', CDisplayListItem.TYPE_CATEGORY, ['https://w4nkr.com/categories/'], 'W4NKR', hostImage() + 'w4nkr.png', None))
-			#if config.plugins.iptvplayer.momxl.value:
-			#	valTab.append(CDisplayListItem('MOMXL', 'https://momxl.com', CDisplayListItem.TYPE_CATEGORY, ['https://momxl.com/categories/'], 'MOMXL', hostImage() + 'momxl.png', None))
+			# if config.plugins.iptvplayer.momxl.value:
+			# valTab.append(CDisplayListItem('MOMXL', 'https://momxl.com', CDisplayListItem.TYPE_CATEGORY, ['https://momxl.com/categories/'], 'MOMXL', hostImage() + 'momxl.png', None))
 			if config.plugins.iptvplayer.yourlust.value:
 				valTab.append(CDisplayListItem('YOURLUST', 'https://yourlust.com', CDisplayListItem.TYPE_CATEGORY, ['https://yourlust.com/categories/'], 'YOURLUST', hostImage() + 'yourlust.png', None))
 			if config.plugins.iptvplayer.itsporn.value:
