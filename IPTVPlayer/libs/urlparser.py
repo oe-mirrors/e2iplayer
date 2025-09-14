@@ -800,7 +800,11 @@ class urlparser:
             'vidoza.net': self.pp.parserVIDOZANET,
             'vidoza.org': self.pp.parserVIDOZANET,
             'vidshare.tv': self.pp.parserVIDSHARETV,
-            'vidsrc.pro': self.pp.parserVIDSRCPRO,
+            'vidsrc.in': self.pp.parserVIDSRC,
+            'vidsrc.net': self.pp.parserVIDSRC,
+            'vidsrc.pm': self.pp.parserVIDSRC,
+            'vidsrc.to': self.pp.parserVIDSRC,
+            'vidsrc.xyz': self.pp.parserVIDSRC,
             'vidstodo.me': self.pp.parserVIDSTODOME,
             'vidstreamup.com': self.pp.parserVIUCLIPS,
             'vidtodo.com': self.pp.parserVIDSTODOME,
@@ -6254,66 +6258,6 @@ class pageParser(CaptchaHelper):
 
         return urlTab
 
-    def parserVIDSRCPRO(self, baseUrl):
-        printDBG("parserVIDSRCPRO baseUrl [%s]" % baseUrl)
-
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        referer = baseUrl.meta.get('Referer')
-        if referer:
-            HTTP_HEADER['Referer'] = referer
-        urlParams = {'header': HTTP_HEADER}
-        sts, data = self.cm.getPage(baseUrl, urlParams)
-        if not sts:
-            return []
-
-        sitekey = ph.search(data, r'''grecaptcha.execute\(['"]([^"^']+?)['"]''')[0]
-        if sitekey != '':
-            token, errorMsgTab = self.processCaptcha(sitekey, baseUrl, captchaType="INVISIBLE")
-            if token == '':
-                SetIPTVPlayerLastHostError('\n'.join(errorMsgTab))
-                return False
-        else:
-            token = ''
-        data = self.cm.ph.getSearchGroups(data, r'''selector:.+?(\{.*?)\)''')[0]
-        # printDBG("parserVIDSRCPRO data [%s]" % data)
-
-        urlsTab = []
-
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '{', '}')
-        for item in data:
-            url = self.cm.ph.getSearchGroups(item, '''['"]url['"]:['"]([^'^"]+?)['"]''')[0]
-            HTTP_HEADER['Referer'] = baseUrl
-            urlParams = {'header': HTTP_HEADER}
-            url = 'https://vidsrc.pro/api/e/%s?token=undefined&captcha=%s' % (url, token)
-            sts, data = self.cm.getPage(url, urlParams)
-            # printDBG("parserVIDSRCPRO data e [%s]" % data)
-            if '"source":' in data:
-                break
-
-        data = json_loads(data)
-        hlsUrl = data.get('source', '')
-
-        subTracks = []
-        tracks = data.get('subtitles', '')
-        for track in tracks:
-            # printDBG("parserVIDSRCPRO track [%s]" % track)
-            srtUrl = track.get('file', '')
-            if srtUrl == '':
-                continue
-            srtLabel = track.get('label', '')
-            srtFormat = srtUrl[-3:]
-            params = {'title': srtLabel, 'url': srtUrl, 'lang': srtLabel.lower()[:3], 'format': srtFormat}
-            # printDBG(str(params))
-            subTracks.append(params)
-
-        if hlsUrl != '':
-            params = {'iptv_proto': 'm3u8', 'Referer': baseUrl, 'Origin': urlparser.getDomain(baseUrl, False)}
-            params['external_sub_tracks'] = subTracks
-            hlsUrl = urlparser.decorateUrl(hlsUrl, params)
-            urlsTab.extend(getDirectM3U8Playlist(hlsUrl, checkExt=False, checkContent=True, sortWithMaxBitrate=999999999))
-
-        return urlsTab
-
     def parserVOESX(self, baseUrl):
         def voe_decode(ct):
             txt = ''.join(chr((ord(i) - 52) % 26 + 65) if 65 <= ord(i) <= 90 else chr((ord(i) - 84) % 26 + 97) if 97 <= ord(i) <= 122 else i for i in ct)
@@ -6753,6 +6697,35 @@ class pageParser(CaptchaHelper):
         subTracks = [{'title': '', 'url': sub.get('file_path'), 'lang': sub.get('language')} for sub in data.get('subtitles', []) if sub.get('file_path') and sub.get('language')]
         if url:
             url = urlparser.decorateUrl(url, {'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': host, 'Origin': host[:-1], 'external_sub_tracks': subTracks})
+            if ".m3u8" in url:
+                urlTab.extend(getDirectM3U8Playlist(url))
+            else:
+                urlTab.append({'name': 'MP4', 'url': url})
+        return urlTab
+
+    def parserVIDSRC(self, baseUrl):  # add 140925
+        printDBG("parserVIDSRC baseUrl[%s]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        urlTab = []
+        baseUrl = baseUrl.replace('vidsrc.to', 'vidsrc.xyz').replace('vidsrc.pm', 'vidsrc.xyz')
+        sts, data = self.cm.getPage(baseUrl, HTTP_HEADER)
+        if not sts:
+            return []
+        url = re.search(r'''src=['"]([^"]+)['"] f''', data)
+        if url:
+            url = url.group(1)
+            url = 'https:' + url if url.startswith('//') else url
+            host = urlparser.getDomain(url, False)
+            sts, data = self.cm.getPage(url, HTTP_HEADER)
+            if not sts:
+                return []
+        url = re.search(r''' src: ['"]([^'"]+)''', data)
+        sts, data = self.cm.getPage(host + url.group(1), HTTP_HEADER)
+        if not sts:
+            return []
+        url = re.search(r'''["']((?:https?:)?//[^'^"]+?\.(?:mp4|m3u8)(?:\?[^"^']+?)?)["']''', data)
+        if url:
+            url = urlparser.decorateUrl(url.group(1), {'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': host, 'Origin': host[:-1]})
             if ".m3u8" in url:
                 urlTab.extend(getDirectM3U8Playlist(url))
             else:
