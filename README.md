@@ -1,13 +1,14 @@
-# E2iPlayer Plugin for Enigma2 (E²)  ![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg)
+# <p align="center">E2iPlayer Plugin for Enigma2 (E²)  ![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg)</p>
 
-Python3 Version from oATV Team.
+Python3 Version from <a href="https://www.opena.tv">openATV Team</a>.
 
-This plugin was developed with a lot of ❤️ for the Enigma2 community. You are free to use and modify it for personal use.
+This plugin was developed with a lot of 💞 for the Enigma2 community. You are free to use and modify it for personal use.
 
 ---
 
+<p align="center">
 <img width="1250" height="500" alt="e2ilogo(Background_Git)" src="https://github.com/user-attachments/assets/3597cb56-f41e-4356-8935-94c0f7070e03" />
-
+</p>
 
 ---
 
@@ -85,16 +86,35 @@ NOTE: ⚠️ The E2iPlayer is ONLY a specialized browser. It does NOT host any o
 
 ---
 
-### 🙏 Credits & Forkinfos
+### 🙏 Credits
 
 👨‍💻 Author:
 
-- Created by **SamSamSam**
+- original Idea and Created by <a href="https://gitlab.com/e2i/e2iplayer">**SamSamSam**</a>
 
-Thanks to SamSamSam for the original version of this program! (https://gitlab.com/e2i/e2iplayer) The original public version from SamSamSam is Closedsource now and only available for acquaintances and family
+Thanks to SamSamSam for the original version of this program! The original public version from SamSamSam is Closedsource now and only available for acquaintances and family
 
-This is a mirror of https://gitlab.com/zadmario/e2iplayer including Python3 preparations and general optimizations by jbleyel
-with additions from https://gitlab.com/maxbambi/e2iplayer, https://github.com/Blindspot76/e2iPlayer and https://github.com/Belfagor2005/e2player
+---
+
+### 👨‍🔧 Maintainer & Forkinfos
+
+**🔧 Maintainer:**
+
+- <a href="https://github.com/oe-mirrors/e2iplayer">**jbleyel, Mr.X and oATV Team**</a>
+
+including general optimizations, feature updates and Python3 preparations  
+
+🗐 **Forkinfos:**
+
+This is a mirror of
+
+- <a href="https://gitlab.com/zadmario/e2iplayer">zadmario</a> 
+
+with additions from
+
+- <a href="https://gitlab.com/maxbambi/e2iplayer">Maxbambi</a>
+- <a href="https://github.com/Blindspot76/e2iPlayer">Blindspot</a>
+- <a href="https://github.com/Belfagor2005/e2iplayer">Lululla</a>
 
 🚫 All rights reserved. Do not redistribute modified versions without proper attribution.  Redistribution only with explicit credit.
 
@@ -112,10 +132,24 @@ with additions from https://gitlab.com/maxbambi/e2iplayer, https://github.com/Bl
 
 ### 📂 Installation
 
+**ℹ️ The best method, and the one we recommend, is to install the plugin via your image feed. This way, you will automatically receive e2iPlayer updates along with regular image updates.**
+
+
+
 To install the plugin manually via Telnet Command connect to your enigma2 device via SSH/Telnet, (eg. `ssh root@boxip`), then use Install script for Telnet installation
 ```bash
 wget -q "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/python3/e2iplayer_install.sh" -O - | /bin/sh
 ```
+
+<details>
+<summary>manually via FTP.</summary>
+
+1. Download this repository and copy over FTP to your plugin directory.
+  
+2. Install dependencies over feed.
+
+3. Restart your enigma2 to load the plugin.
+</details>
 
 ---
 
@@ -188,12 +222,12 @@ This repository has no control over the streams, links, or the legality of the c
 ---
 
 ⭐️ If you find this plugin useful, please give it a star on GitHub!
-Thanks! ❤️ ❤️ ❤️
+Thanks! ❤️ 💞 💖 ❤️‍🔥 💗
 
 <img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/Logos/e2ilogo.png">
 
 ---
 
 <p align="center">
-  Powered ❤️ by <a href="https://www.opena.tv">openATV Team</a>
+  Powered 💡 by <a href="https://www.opena.tv">openATV Team</a>
 </p> 
