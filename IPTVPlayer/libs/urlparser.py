@@ -653,6 +653,7 @@ class urlparser:
             'sfastwish.com': self.pp.parserJWPLAYER,
             'shared.sx': self.pp.parserSHAREDSX,
             'sharerepo.com': self.pp.parserSHAREREPOCOM,
+            'sharevideo.pl': self.pp.parserSHAREVIDEO,
             'shavetape.cash': self.pp.parserSTREAMTAPE,
             'shiid4u.upn.one': self.pp.parserSBS,
             'showsport.xyz': self.pp.parserSHOWSPORTXYZ,
@@ -857,6 +858,7 @@ class urlparser:
             'youtube.com': self.pp.parserYOUTUBE,
             # z
             'zerocast.tv': self.pp.parserZEROCASTTV,
+            'z1ekv717.fun': self.pp.parserJWPLAYER,
             'zstream.to': self.pp.parserZSTREAMTO}
 
     @staticmethod
@@ -6422,21 +6424,26 @@ class pageParser(CaptchaHelper):
                             urlTab.append({'name': 'MP4', 'url': urlparser.decorateUrl(url, {'external_sub_tracks': sub_tracks})})
         return urlTab
 
-    def parserDOOD(self, baseUrl):  # check 230825
+    def parserDOOD(self, baseUrl):  # update 160925
         urlsTab = []
         sub_tracks = []
         printDBG("parserDOOD baseUrl [%s]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        urlParams = {'header': HTTP_HEADER}
         urls = ['d000d.com', 'd0000d.com', 'd0o0d.com', 'do7go.com', 'dood.cx',
                 'dood.la', 'dood.li', 'dood.pm', 'dood.re', 'dood.sh', 'dood.so', 'dood.to', 'dood.watch',
                 'dood.work', 'dood.wf', 'dood.ws', 'dood.yt', 'doods.pro', 'dooodster.com', 'doodstream.com', 'doodstream.co',
-                'dood.stream', 'dooood.com', 'ds2play.com', 'ds2video.com']
+                'dood.stream', 'dooood.com', 'ds2play.com', 'ds2video.com', 'vide0.net']
         for url in urls:
             if url in baseUrl:
-                baseUrl = baseUrl.replace(url, 'doply.net')
-        baseUrl = baseUrl.replace('/d/', '/e/')
-        host = baseUrl.split("/")[2]
-        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        urlParams = {'header': HTTP_HEADER}
+                baseUrl = baseUrl.replace(url, 'd-s.io')
+        host = "https://%s" % urlparser.getDomain(baseUrl, True)
+        if '/d/' in baseUrl:
+            sts, data = self.cm.getPage(baseUrl, urlParams)
+            if not sts:
+                return []
+            url = self.cm.ph.getSearchGroups(data, 'iframe src="([^"]+)')[0]
+            baseUrl = host + url
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return []
@@ -6446,14 +6453,12 @@ class pageParser(CaptchaHelper):
         match = re.search(r'''dsplayer\.hotkeys[^']+'([^']+).+?function\s*makePlay.+?return[^?]+([^"]+)''', data, re.DOTALL)
         if match:
             token = match.group(2)
-            sts, data = self.cm.getPage('https://{0}{1}'.format(host, match.group(1)), urlParams)
+            sts, data = self.cm.getPage('%s%s' % (host, match.group(1)), urlParams)
             if not sts:
                 return []
-
             url = data.strip() if 'cloudflarestorage.' in data else random_seed(10, data) + token + str(int(time.time() * 1000))
             url = urlparser.decorateUrl(url, {'external_sub_tracks': sub_tracks, 'User-Agent': urlParams['header']['User-Agent'], 'Referer': baseUrl})
-            params = {'name': 'mp4', 'url': url}
-            urlsTab.append(params)
+            urlsTab.append({'name': 'mp4', 'url': url})
         return urlsTab
 
     def parserSTREAMTAPE(self, baseUrl):  # check 150625
@@ -6730,4 +6735,18 @@ class pageParser(CaptchaHelper):
                 urlTab.extend(getDirectM3U8Playlist(url))
             else:
                 urlTab.append({'name': 'MP4', 'url': url})
+        return urlTab
+
+    def parserSHAREVIDEO(self, url):
+        printDBG("parserSHAREVIDEO baseUrl[%s]" % url)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
+        host = urlparser.getDomain(url, False)
+        sts, data = self.cm.getPage('%sapi/v1/videos/%s' % (host, url.split('/')[-1]), HTTP_HEADER)
+        if not sts:
+            return []
+        urlTab = []
+        url = self.cm.ph.getSearchGroups(data, 'playlistUrl":"([^"]+)')[0]
+        if url:
+            url = urlparser.decorateUrl(url, {'User-Agent': HTTP_HEADER['User-Agent'], 'Referer': host, 'Origin': host[:-1]})
+            urlTab.extend(getDirectM3U8Playlist(url))
         return urlTab
