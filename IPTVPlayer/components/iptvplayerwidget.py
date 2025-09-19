@@ -234,6 +234,7 @@ class E2iPlayerWidget(Screen):
         self.searchType = None
         self.workThread = None
         self.group = None
+        self.groupDisplayName = None
         self.groupObj = None
         self.host = None
         self.hostName = ''
@@ -1108,6 +1109,7 @@ class E2iPlayerWidget(Screen):
     def selectHost(self, arg1=None):
         printDBG(">> selectHost")
         # self.groupObj = None
+        self.groupDisplayName = None
         self.group = None
         self.host = None
         self.hostName = ''
@@ -1206,7 +1208,7 @@ class E2iPlayerWidget(Screen):
         printDBG(">> displayListOfHostsFromGroup")
         self.newDisplayHostsList = []
         if len(self.displayHostsList):
-            self.session.openWithCallback(self.selectHostFromGroupCallback, PlayerSelectorWidget, inList=self.displayHostsList, outList=self.newDisplayHostsList, numOfLockedItems=0, groupName=self.group, groupObj=self.groupObj)
+            self.session.openWithCallback(self.selectHostFromGroupCallback, PlayerSelectorWidget, inList=self.displayHostsList, outList=self.newDisplayHostsList, numOfLockedItems=0, groupName=self.group, groupObj=self.groupObj, groupDisplayName=self.groupDisplayName)
         else:
             msg = _('There is no hosts in this group.')
             self.session.openWithCallback(self.selectHost, MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=10)
@@ -1339,6 +1341,7 @@ class E2iPlayerWidget(Screen):
                 self.loadHost()
             elif type == 'selectgroup':
                 self.group = ret[1]
+                self.groupDisplayName = ret[0]
                 self.selectHostFromGroup()
                 return
 
