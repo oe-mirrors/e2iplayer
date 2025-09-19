@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 17.08.2025 - Mr.X
+# Last Modified: 19.09.2025 - Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -108,7 +108,7 @@ class XalaFlix(CBaseHostClass):
             if "multiup" in url:
                 continue
             url = url.replace("\\/", "/")
-            if "flixeo.xyz" in url:
+            if "newplayer" in url.lower():
                 params = dict(self.defaultParams)
                 params["no_redirection"] = True
                 sts, dummy = self.cm.getPage(url, params)
