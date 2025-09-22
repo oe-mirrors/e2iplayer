@@ -9,11 +9,12 @@ from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrappe
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, CParsingHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetCookieDir, printDBG, printExc, GetTmpDir, GetSubtitlesDir, \
                                                           MapUcharEncoding, GetPolishSubEncoding, GetDefaultLang, \
-                                                          rm, rmtree, mkdirs
+                                                          rm, rmtree, mkdirs, RemoveDisallowedFilenameChars
 from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandler
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import strEncode
+from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 
 import re
 import urllib.parse
@@ -96,7 +97,7 @@ class CSubProviderBase(ISubProvider):
         if listLen <= Index or Index < 0:
             printDBG("ERROR getLinksForVideo - current list is to short len: %d, Index: %d" % (listLen, Index))
             return False
-        if None is not validTypes and self.converItem(self.subProvider.currList[Index]).type not in validTypes:
+        if validTypes is not None and self.converItem(self.subProvider.currList[Index]).type not in validTypes:
             printDBG("ERROR getLinksForVideo - current item has wrong type")
             return False
         return True
@@ -150,7 +151,7 @@ class CSubProviderBase(ISubProvider):
     def downloadSubtitleFile(self, Index=0):
         if self.isValidIndex(Index, [CDisplayListItem.TYPE_SUBTITLE]):
             retData = self.subProvider.downloadSubtitleFile(self.subProvider.currList[Index])
-            if 'path' in retData and 'title' in retData:
+            if all(key in retData for key in ['path', 'title']):
                 return RetHost(RetHost.OK, value=[CSubItem(retData['path'], retData['title'], retData.get('lang', ''), retData.get('imdbid', ''), retData.get('sub_id', ''))])
         return RetHost(RetHost.ERROR, value=[])
 
@@ -158,7 +159,7 @@ class CSubProviderBase(ISubProvider):
         subProviderList = []
         for cItem in cList:
             subProviderItem = self.converItem(cItem)
-            if None is not subProviderItem:
+            if subProviderItem is not None:
                 subProviderList.append(subProviderItem)
         return subProviderList
     # end convertList
@@ -186,7 +187,7 @@ class CBaseSubProviderClass:
 
     def __init__(self, params={}):
         self.TMP_FILE_NAME = '.iptv_subtitles.file'
-        self.TMP_DIR_NAME = '/.iptv_subtitles.dir/'
+        self.TMP_DIR_NAME = '.iptv_subtitles.dir/'
         self.sessionEx = MainSessionWrapper(mainThreadIdx=1)
 
         proxyURL = params.get('proxyURL', '')
@@ -338,23 +339,23 @@ class CBaseSubProviderClass:
     def imdbGetSeasons(self, imdbid, promSeason=None):
         printDBG('CBaseSubProviderClass.imdbGetSeasons imdbid[%s]' % imdbid)
         promotItem = None
-        list = []
+        sitList = []
         # get all seasons
-        sts, data = self.cm.getPage("http://www.imdb.com/title/tt%s/episodes" % imdbid)
+        sts, data = self.cm.getPage(f"http://www.imdb.com/title/tt{imdbid}/episodes")
         if not sts:
             return False, []
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<select id="bySeason"', '</select>', False)[1]
-        seasons = re.compile('value="([0-9]+?)"').findall(data)
+        data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'''data-testid=["']tab-season-entry["']'''), re.compile('</ul>'), False)[1]
+        seasons = re.compile(r'''href=['"].*?>(.+?)<''').findall(data)
         for season in seasons:
-            if None is not promSeason and season == str(promSeason):
+            if promSeason is not None and season == str(promSeason):
                 promotItem = season
             else:
-                list.append(season)
+                sitList.append(season)
 
         if promotItem is not None:
-            list.insert(0, promotItem)
+            sitList.insert(0, promotItem)
 
-        return True, list
+        return True, sitList
 
     def imdbGetEpisodesForSeason(self, imdbid, season, promEpisode=None):
         printDBG('CBaseSubProviderClass.imdbGetEpisodesForSeason imdbid[%s] season[%s]' % (imdbid, season))
@@ -362,18 +363,16 @@ class CBaseSubProviderClass:
         list = []
 
         # get episodes for season
-        sts, data = self.cm.getPage("http://www.imdb.com/title/tt%s/episodes/_ajax?season=%s" % (imdbid, season))
+        sts, data = self.cm.getPage(f"http://www.imdb.com/title/tt{imdbid}/episodes/?season={season}")
         if not sts:
             return False, []
 
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="list detail eplist">', '<hr>', False)[1]
-        data = data.split('<div class="clear">')
-        if len(data):
-            del data[-1]
-        for item in data:
-            episodeTitle = self.cm.ph.getSearchGroups(item, 'title="([^"]+?)"')[0]
-            eimdbid = self.cm.ph.getSearchGroups(item, 'data-const="tt([0-9]+?)"')[0]
-            episode = self.cm.ph.getSearchGroups(item, 'content="([0-9]+?)"')[0]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, ('<article', '>', 'episode-item-wrapper'), '</section>', False)[1]
+        tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, ('<a', '>', 'ipc-title-link-wrapper'), '</a>')
+        for item in tmp:
+            episodeTitle = unescapeHTML(self.cm.ph.getSearchGroups(item, r'''ipc-title__text["'>]+?([^"^'^>]+?)[<$]''')[0]).split(' ∙ ')[-1].strip()
+            eimdbid = self.cm.ph.getSearchGroups(item, r'''/tt([0-9]+?)/''')[0]
+            episode = self.cm.ph.getSearchGroups(item, r'''[E|e]([0-9]{1,2})''')[0]
             params = {"episode_title": episodeTitle, "episode": episode, "eimdbid": eimdbid}
 
             if None is not promEpisode and episode == str(promEpisode):
@@ -388,30 +387,23 @@ class CBaseSubProviderClass:
     def imdbGetMoviesByTitle(self, title):
         printDBG('CBaseSubProviderClass.imdbGetMoviesByTitle title[%s]' % (title))
 
-        sts, data = self.cm.getPage("http://www.imdb.com/find?ref_=nv_sr_fn&q=%s&s=tt" % urllib.parse.quote_plus(title))
+        sts, data = self.cm.getPage(f"https://www.imdb.com/find/?q={urllib.parse.quote_plus(title)}&s=tt")  # &exact=true
         if not sts:
             return False, []
-        list = []
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<table class="findList">', '</table>', False)[1]
-        data = data.split('</tr>')
-        if len(data):
-            del data[-1]
-        for item in data:
-            item = item.split('<a ')
-            item = '<a ' + item[2]
-            if '(Video Game)' in item:
-                continue
-            imdbid = self.cm.ph.getSearchGroups(item, '/tt([0-9]+?)/')[0]
+
+        iteamList = []
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, ('<section', '>', 'find-results-section-title'), '</section>', False)[1]
+        tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, ('<div', '>', 'ipc-metadata-list-summary-item__tc'), '</ul>')
+        for item in tmp:
+            imdbid = self.cm.ph.getSearchGroups(item, r'/tt([0-9]+?)/')[0]
             baseTtitle = ' '.join(self.cm.ph.getAllItemsBeetwenMarkers(item, '<a ', '</a>'))
-            # title = title.split('<br/>')[0]
             title = self.cleanHtmlStr(item)
-            year = self.cm.ph.getSearchGroups(item, r'\((20[0-9]{2})\)')[0]
-            if '' == year:
+            if not (year := self.cm.ph.getSearchGroups(item, r'''["'>]([0-9]{4})[<\$]?''')[0]):
                 year = self.cm.ph.getSearchGroups(item, r'\((20[0-9]{2})\)')[0]
             if title.endswith('-'):
                 title = title[:-1].strip()
-            list.append({'title': title, 'base_title': self.cleanHtmlStr(baseTtitle), 'year': year, 'imdbid': imdbid})
-        return True, list
+            iteamList.append({'title': title, 'base_title': self.cleanHtmlStr(baseTtitle), 'year': year, 'imdbid': imdbid})
+        return True, iteamList
 
     def imdbGetOrginalByTitle(self, imdbid):
         printDBG('CBaseSubProviderClass.imdbGetOrginalByTitle imdbid[%s]' % (imdbid))
@@ -489,16 +481,15 @@ class CBaseSubProviderClass:
         urlParams = dict(params)
         urlParams['max_data_size'] = self.getMaxFileSize()
 
-        sts, data = self.cm.getPage(url, urlParams, post_data)
+        sts, data = self.cm.getPageRequest(url, urlParams, post_data)
         if sts:
-            fileName = self.cm.meta.get('content-disposition', '')
-            if fileName != '':
-                tmpFileName = self.cm.ph.getSearchGroups(fileName.lower(), '''filename=['"]([^'^"]+?)['"]''')[0]
-                if tmpFileName != '':
-                    printDBG("downloadFileData: replace fileName[%s] with [%s]" % (fileName, tmpFileName))
-                    fileName = tmpFileName
+            if (fileName := self.cm.meta.get('content-disposition', '')):
+                if (tmpFileName := self.cm.ph.getSearchGroups(fileName.lower(), r'''filename=['"]([^'^"]+?)['"]''')[0]):
+                    printDBG(f"downloadFileData: replace fileName[{fileName}] with [{tmpFileName}]")
+                    fileName = RemoveDisallowedFilenameChars(tmpFileName)
             else:
-                fileName = urllib.parse.unquote(self.cm.meta['url'].split('/')[-1])
+                sUrl = self.cm.meta.get('url', url)
+                fileName = urllib.parse.urlparse(sUrl).path.rsplit('/', 1)[-1]
 
             return data, fileName
 
@@ -508,7 +499,7 @@ class CBaseSubProviderClass:
         printDBG("isubprovider.py CBaseSubProviderClass.writeFile path='%s'" % filePath)
         try:
             with open(filePath, 'wb') as f:
-                f.write(strEncode(data))  # p3 needs bytes, for p2 no oncoding
+                f.write(ensure_binary(data))  # p3 needs bytes, for p2 no oncoding
             return True
         except Exception:
             printExc()
@@ -618,7 +609,7 @@ class CBaseSubProviderClass:
 
         # convert file to UTF-8
         try:
-            with open(inFile) as f:
+            with open(inFile, 'rb') as f:
                 data = f.read()
             try:
                 data = data.decode(encoding).encode('UTF-8')
