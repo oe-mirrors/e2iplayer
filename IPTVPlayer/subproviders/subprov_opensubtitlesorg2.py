@@ -366,7 +366,7 @@ class OpenSubtitles(CBaseSubProviderClass):
     def getSubtitlesList(self, cItem, nextCategory):
         printDBG("OpenSubtitles.getSubtitlesList [%s]" % cItem)
 
-        url = cItem['url']
+        url = f"https://dl.opensubtitles.org/en/download/sub/{cItem['url'].split('/')[-1]}"
         downloadUrl = ''
         data = ''
 
@@ -412,7 +412,7 @@ class OpenSubtitles(CBaseSubProviderClass):
 
         urlParams = dict(self.defaultParams)
         tmpDIR = self.downloadAndUnpack(downloadUrl, urlParams)
-        if None is tmpDIR:
+        if tmpDIR is None:
             return
 
         cItem = dict(cItem)
@@ -438,7 +438,7 @@ class OpenSubtitles(CBaseSubProviderClass):
             title = title[match.start():]
 
         fileName = "{0}_{1}_0_{2}_{3}".format(title, lang, subId, imdbid)
-        if fps > 0:
+        if len(fps) > 0:
             fileName += '_fps{0}'.format(fps)
         fileName = fileName + '.' + ext
         return fileName
