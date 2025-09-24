@@ -20,9 +20,13 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 [![TESTS](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml)
 
 
+[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/oe-mirrors/e2iplayer/pulls)
 [![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
 [![Latest Release](https://img.shields.io/github/release-date/oe-mirrors/e2iplayer?label=From&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/latest)
 [![GitHub all releases](https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/total.svg?label=Downloads)](https://github.com/oe-mirrors/e2iplayer/releases)
+[![Github last commit](https://img.shields.io/github/last-commit/oe-mirrors/e2iplayer)](https://github.com/oe-mirrors/e2iplayer)
+[![GitHub Activity](https://img.shields.io/github/commit-activity/y/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
+[![GitHub Activity](https://img.shields.io/github/commit-activity/m/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
 ## SonarCloud status
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
@@ -180,14 +184,17 @@ You can activate Logs and choose the path in preferences. If errors or malfuncti
 
 ### 🤝 Contributing & Contact
 
+E2iPlayer is created by users for users and we welcome every contribution. There are no highly paid developers. There are only users who have seen a problem and done their best to fix it. This means E2iPlayer will always need the contributions of users like you. How can you get involved?
+
 For questions or feedback, feel free and please open an issue or contribute with a Pull Request!
 
 Pull requests are very welcome for:
-- Feature enhancements
-- Translations
-- Integration improvements
-- Bugfixes
-- new Hosts
+- **Coding:** Developers can help by fixing a bug, adding new features,Integration improvements, Feature enhancements
+- **Localization:** Translate into your native language.
+- **Helping users:** Our support process relies on enthusiastic contributors like you to help others get the most out of E2iPlayer.
+- **Add-ons:** add new Hosts
+- **Documentation:** wiki pages are the hub for information. Help make our documentation better by writing new content or correcting existing material.
+- **Spread the word:** Share E2iPlayer with the world! Tell your friends and family about how E2iPlayer creates an amazing entertainment experience.
 
 Your contribution is very welcome! Follow these steps:
 
@@ -197,6 +204,8 @@ Your contribution is very welcome! Follow these steps:
 4. ✅ Commit using conventional messages
 5. 📤 Push to your branch
 6. 🔍 Open a Pull Request
+
+Enjoy and help us improve it today. :)
 
 ---
 
