@@ -168,7 +168,7 @@ class Youtube(CBaseHostClass):
                 self.currList[idx]['good_for_fav'] = True
 
     def listFeeds(self, cItem):
-        printDBG(f'Youtube.listFeeds cItem[{cItem}]')
+        printDBG('Youtube.listFeeds cItem[%s]' % cItem)
         if cItem['category'] == "feeds_video":
             sts, data = self.cm.getPage(cItem['url'])
             data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, "videoRenderer", "watchEndpoint")
@@ -176,10 +176,10 @@ class Youtube(CBaseHostClass):
                 url = "https://www.youtube.com/watch?v=" + self.cm.ph.getDataBeetwenMarkers(item, 'videoId":"', '","thumbnail":', False)[1]
                 icon = self.cm.ph.getDataBeetwenMarkers(item, '},{"url":"', '==', False)[1]
                 title = self.cm.ph.getDataBeetwenMarkers(item, '"title":{"runs":[{"text":"', '"}]', False)[1]
-                desc = _(f"{E2ColoR('yellow')}Channel{E2ColoR('white')}:") + self.cm.ph.getDataBeetwenMarkers(item, 'longBylineText":{"runs":[{"text":"', '","navigationEndpoint"', False)[1] + '\n'
-                desc += _(f"{E2ColoR('yellow')}Release{E2ColoR('white')}:") + self.cm.ph.getDataBeetwenMarkers(item, '"publishedTimeText":{"simpleText":"', '"},"lengthText":', False)[1] + '\n'
-                desc += _(f"{E2ColoR('yellow')}Duration{E2ColoR('white')}:") + self.cm.ph.getDataBeetwenMarkers(item, '"lengthText":{"accessibility":{"accessibilityData":{"label":"', '"}},"simpleText":', False)[1] + '\n'
-                desc += _(f"{E2ColoR('yellow')}Views{E2ColoR('white')}:") + self.cm.ph.getDataBeetwenMarkers(item, '"viewCountText":{"simpleText":"', '"},"navigationEndpoint":', False)[1]
+                desc = E2ColoR('yellow') + _("Channel") + E2ColoR('white') + ":" + self.cm.ph.getDataBeetwenMarkers(item, 'longBylineText":{"runs":[{"text":"', '","navigationEndpoint"', False)[1] + '\n'
+                desc += E2ColoR('yellow') + _("Release") + E2ColoR('white') + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"publishedTimeText":{"simpleText":"', '"},"lengthText":', False)[1] + '\n'
+                desc += E2ColoR('yellow') + _("Duration") + E2ColoR('white') + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"lengthText":{"accessibility":{"accessibilityData":{"label":"', '"}},"simpleText":', False)[1] + '\n'
+                desc += E2ColoR('yellow') + _("Views") + E2ColoR('white') + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"viewCountText":{"simpleText":"', '"},"navigationEndpoint":', False)[1]
                 params = {'title': title, 'url': url, 'icon': icon, 'desc': desc}
                 self.addVideo(params)
         else:
