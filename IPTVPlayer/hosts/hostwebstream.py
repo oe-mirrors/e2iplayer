@@ -929,17 +929,17 @@ class HasBahCa(CBaseHostClass):
 
     def resolveVidembed(self, url):
         printDBG("Resolving vidembed URL using working method: %s" % url)
-        
+
         # Estrai l'ID dello stream dall'URL
         stream_id = url.split('/stream/')[-1].split('?')[0].split('#')[0]
         printDBG("Stream ID: %s" % stream_id)
-        
+
         # URL dell'API funzionante (aggiornato)
         api_url = "https://www.vidembed.re/api/source/" + stream_id
-        
+
         # Dati POST necessari
         post_data = '{"r":"https://daddylive.dad/","d":"www.vidembed.re"}'
-        
+
         # Headers completi per bypassare le protezioni
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -955,7 +955,7 @@ class HasBahCa(CBaseHostClass):
             'Pragma': 'no-cache',
             'Cache-Control': 'no-cache',
         }
-        
+
         # Prima visita la pagina principale per ottenere i cookie necessari
         main_url = "https://www.vidembed.re/"
         self.cm.getPage(main_url, {
@@ -965,11 +965,11 @@ class HasBahCa(CBaseHostClass):
             'save_cookie': True,
             'cookiefile': GetCookieDir('vidembed.cookie')
         })
-        
+
         # Aspetta un momento per permettere ai cookie di essere impostati
         import time
         time.sleep(2)
-        
+
         # Fai la richiesta POST all'API
         sts, data = self.cm.getPage(api_url, {
             'header': headers,
@@ -980,46 +980,46 @@ class HasBahCa(CBaseHostClass):
             'cookiefile': GetCookieDir('vidembed.cookie'),
             'timeout': 30
         })
-        
+
         if not sts:
             printDBG("API request failed, trying alternative approach")
             return self.tryAlternativeVidembedResolution(stream_id)
-        
+
         printDBG("API response: %s" % data)
-        
+
         try:
             # Parsa la risposta JSON
             response = json_loads(data)
-            
+
             if not response.get('success', False):
                 printDBG("API returned unsuccessful response")
                 return []
-            
+
             # Decodifica il campo player (base64)
             import base64
             player_data_encoded = response['player']
             player_data_decoded = base64.b64decode(player_data_encoded).decode('utf-8')
             printDBG("Decoded player data: %s" % player_data_decoded)
-            
+
             # Parsa i dati decodificati
             player_info = json_loads(player_data_decoded)
             source_file = player_info.get('source_file', '')
-            
+
             if not source_file:
                 printDBG("No source_file found in player data")
                 return []
-            
+
             printDBG("Found source file: %s" % source_file)
-            
+
             # Prepara gli header per il video
             meta = {
                 'Referer': 'https://www.vidembed.re/',
                 'Origin': 'https://www.vidembed.re',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
-            
+
             return [{'name': 'strumyk.net', 'url': strwithmeta(source_file, meta)}]
-            
+
         except Exception as e:
             printDBG("Error processing response: %s" % str(e))
             return []
@@ -1027,7 +1027,7 @@ class HasBahCa(CBaseHostClass):
     def tryAlternativeVidembedResolution(self, stream_id):
         """Metodo alternativo per risolvere gli URL Vidembed"""
         printDBG("Trying alternative resolution for stream ID: %s" % stream_id)
-        
+
         # Prova con diversi pattern di URL noti
         url_patterns = [
             "https://vidembed.io/stream/{}/index.m3u8",
@@ -1035,16 +1035,16 @@ class HasBahCa(CBaseHostClass):
             "https://vidembed.net/{}",
             "https://vidembed.pro/{}/master.m3u8",
         ]
-        
+
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
             'Referer': 'https://www.vidembed.re/',
         }
-        
+
         for pattern in url_patterns:
             test_url = pattern.format(stream_id)
             printDBG("Testing URL pattern: %s" % test_url)
-            
+
             try:
                 # Prova una richiesta HEAD per verificare se l'URL esiste
                 sts, _ = self.cm.getPage(test_url, {
@@ -1052,13 +1052,13 @@ class HasBahCa(CBaseHostClass):
                     'method': 'HEAD',
                     'timeout': 10
                 })
-                
+
                 if sts:
                     printDBG("Alternative URL works: %s" % test_url)
                     return [{'name': 'strumyk.net', 'url': strwithmeta(test_url, {'Referer': 'https://www.vidembed.re/'})}]
             except:
                 continue
-        
+
         printDBG("All alternative methods failed")
         return []
 
@@ -1070,7 +1070,7 @@ class HasBahCa(CBaseHostClass):
             return response.get('url', response.get('stream_url', ''))
         except:
             pass
-        
+
         # Cerca URL direttamente nel testo
         patterns = [
             r'(https?://[^\s"\']+\.m3u8[^\s"\']*)',
@@ -1078,7 +1078,7 @@ class HasBahCa(CBaseHostClass):
             r'stream_url["\']?:\s*["\']([^"\']+)["\']',
             r'url["\']?:\s*["\']([^"\']+)["\']',
         ]
-        
+
         for pattern in patterns:
             matches = re.findall(pattern, data)
             for match in matches:
@@ -1091,10 +1091,10 @@ class HasBahCa(CBaseHostClass):
     def fallbackToDirectStream(self, url):
         """Approccio di fallback: prova a costruire URL diretti basati su pattern noti"""
         printDBG("Trying fallback direct stream approach")
-        
+
         # Estrai l'ID dall'URL
         stream_id = url.split('/stream/')[-1].split('?')[0].split('#')[0]
-        
+
         # Prova vari pattern di URL basati su servizi di streaming noti
         direct_url_patterns = [
             "https://vidembed.re/stream/{}/index.m3u8",
@@ -1102,16 +1102,16 @@ class HasBahCa(CBaseHostClass):
             "https://vidembed.re/hls/{}/index.m3u8",
             "https://vidembed.re/{}/master.m3u8",
         ]
-        
+
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
             'Referer': 'https://www.vidembed.re/',
         }
-        
+
         for pattern in direct_url_patterns:
             test_url = pattern.format(stream_id)
             printDBG("Testing direct URL: %s" % test_url)
-            
+
             # Prova una richiesta HEAD per verificare se l'URL esiste
             try:
                 sts, _ = self.cm.getPage(test_url, {'header': headers, 'method': 'HEAD', 'timeout': 10})
@@ -1120,7 +1120,7 @@ class HasBahCa(CBaseHostClass):
                     return [{'name': 'strumyk.net', 'url': strwithmeta(test_url, {'Referer': 'https://www.vidembed.re/'})}]
             except:
                 continue
-        
+
         printDBG("All resolution attempts failed")
         return []
 
