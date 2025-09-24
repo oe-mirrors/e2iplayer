@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iptvplayer-for-e 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 22:20+0200\n"
+"POT-Creation-Date: 2025-09-24 18:29+0200\n"
 "PO-Revision-Date: 2018-07-28 16:39+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1362,9 +1362,6 @@ msgstr "Fichier \"%s\" existe déjà"
 msgid "File \"%s\" already exists!"
 msgstr "Le fichier \"%s\" existe déjà!"
 
-msgid "File Not Found."
-msgstr "Fichier Introuvable"
-
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "Fichier[%s] a été ajouté à la file d'attente de téléchargement."
@@ -1851,10 +1848,6 @@ msgstr "Espacement entre lignes"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr "Le lien n'est pas supporté par le gstplayer. Veuillez utiliser l'extelayer3 si disponible."
-
-#, fuzzy
-msgid "Link protected with CF Turnstile ."
-msgstr "Lien protégé par google recaptcha v2."
 
 #, fuzzy
 msgid "Link protected with DRM."
@@ -3505,6 +3498,9 @@ msgstr "Lecteur de urllists"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Utilisez le proxy polonais pour http://prognoza.pogody.tv/"
+
+msgid "Use colors"
+msgstr ""
 
 msgid "Use default quality:"
 msgstr "Utiliser la qualité par défaut:"

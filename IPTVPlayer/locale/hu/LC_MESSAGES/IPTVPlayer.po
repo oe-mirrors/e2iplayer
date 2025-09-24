@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 22:20+0200\n"
+"POT-Creation-Date: 2025-09-24 18:29+0200\n"
 "PO-Revision-Date: 2025-06-29 17:27+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -1336,9 +1336,6 @@ msgstr "A(z) \"%s\" fájl már létezik"
 msgid "File \"%s\" already exists!"
 msgstr "\"%s\" fájl már létezik!"
 
-msgid "File Not Found."
-msgstr "Lejátszási lista fájl nem található."
-
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "A(z) [%s] fájl hozzáadva a letöltési sorhoz."
@@ -1812,9 +1809,6 @@ msgstr "Vonal távolság"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr "A gstplayer nem támogatja a linket. Kérjük, használd az extelayer3-at, ha elérhető."
-
-msgid "Link protected with CF Turnstile ."
-msgstr "CF forgókapuval védett kapcsolat."
 
 msgid "Link protected with DRM."
 msgstr "A link DRM-mel védett."
@@ -3424,6 +3418,9 @@ msgstr "Urllists lejátszó"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Lengyel proxy használata itt  http://prognoza.pogody.tv/"
+
+msgid "Use colors"
+msgstr ""
 
 msgid "Use default quality:"
 msgstr "Alapértelmezett minőség használata:"

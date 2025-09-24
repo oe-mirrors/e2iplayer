@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 22:20+0200\n"
+"POT-Creation-Date: 2025-09-24 18:29+0200\n"
 "PO-Revision-Date: 2025-08-02 13:55+0300\n"
 "Last-Translator: angel_heart[Mohamed Elsafty]\n"
 "Language-Team: \n"
@@ -1334,9 +1334,6 @@ msgstr "الملف \"%s\" موجود بالفعل"
 msgid "File \"%s\" already exists!"
 msgstr "الملف \"%s\" موجود بالفعل!"
 
-msgid "File Not Found."
-msgstr "الملف غير موجود."
-
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "تمت إضافة الملف [%s] إلى قائمة التنزيل."
@@ -1810,9 +1807,6 @@ msgstr "تباعد الأسطر"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr "الرابط غير مدعوم من gstplayer. يُرجى استخدام extelayer3 إن وُجد."
-
-msgid "Link protected with CF Turnstile ."
-msgstr "الرابط محمي باستخدام CF Turnstile."
 
 msgid "Link protected with DRM."
 msgstr "الرابط محمي بتقنية DRM."
@@ -3421,6 +3415,9 @@ msgstr "مشغل قوائم الروابط"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "استخدم بروكسي بولندي لموقع http://prognoza.pogody.tv/"
+
+msgid "Use colors"
+msgstr ""
 
 msgid "Use default quality:"
 msgstr "استخدم الجودة الافتراضية:"

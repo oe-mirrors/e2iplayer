@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 22:20+0200\n"
+"POT-Creation-Date: 2025-09-24 18:29+0200\n"
 "PO-Revision-Date: 2025-06-29 16:00+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -1336,9 +1336,6 @@ msgstr "Súbor \"%s\" už existuje"
 msgid "File \"%s\" already exists!"
 msgstr "Súbor \"%s\" už existuje!"
 
-msgid "File Not Found."
-msgstr "Súbor sa nenašiel."
-
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "Súbor [%s] bol pridaný do frontu sťahovania."
@@ -1812,9 +1809,6 @@ msgstr "Riadkovanie"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr "Gstplayer odkaz nepodporuje. Použite extelayer3, ak je k dispozícii."
-
-msgid "Link protected with CF Turnstile ."
-msgstr "Spojenie chránené turniketom CF."
 
 msgid "Link protected with DRM."
 msgstr "Prepojenie chránené technológiou DRM."
@@ -3427,6 +3421,9 @@ msgstr "Prehrávač URL adries"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Použitie poľského servera proxy na http://prognoza.pogody.tv/"
+
+msgid "Use colors"
+msgstr ""
 
 msgid "Use default quality:"
 msgstr "Použite predvolenú kvalitu:"

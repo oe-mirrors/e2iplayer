@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 22:20+0200\n"
+"POT-Creation-Date: 2025-09-24 18:29+0200\n"
 "PO-Revision-Date: 2025-08-12 10:21+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -1336,9 +1336,6 @@ msgstr "Το αρχείο \"%s\" υπάρχει ήδη"
 msgid "File \"%s\" already exists!"
 msgstr "Το αρχείο \"%s\" υπάρχει ήδη!"
 
-msgid "File Not Found."
-msgstr "Το αρχείο δεν βρέθηκε."
-
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "Το αρχείο [%s] προστέθηκε στην ουρά λήψεων."
@@ -1812,9 +1809,6 @@ msgstr "Απόσταση γραμμών"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr "Ο σύνδεσμος δεν υποστηρίζεται από τον gstplayer. Παρακαλώ χρησιμοποιήστε τον extelayer3 αν είναι διαθέσιμος."
-
-msgid "Link protected with CF Turnstile ."
-msgstr "Ο σύνδεσμος προστατεύεται με CF Turnstile."
 
 msgid "Link protected with DRM."
 msgstr "Ο σύνδεσμος προστατεύεται με DRM."
@@ -3421,6 +3415,9 @@ msgstr "Αναπαραγωγή λιστών urllists"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Χρήση διακομιστή μεσολάβησης Πολωνίας για το http://prognoza.pogody.tv/"
+
+msgid "Use colors"
+msgstr ""
 
 msgid "Use default quality:"
 msgstr "Χρήση προεπιλεγμένης ποιότητας:"

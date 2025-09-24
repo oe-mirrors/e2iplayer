@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 22:20+0200\n"
+"POT-Creation-Date: 2025-09-24 18:29+0200\n"
 "PO-Revision-Date: 2025-06-29 17:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -1337,9 +1337,6 @@ msgstr "Файл \"%s\" уже существует"
 msgid "File \"%s\" already exists!"
 msgstr "Файл \"%s\" уже существует!"
 
-msgid "File Not Found."
-msgstr "Файл Не Найден."
-
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "Файл [%s] добавлен в очередь загрузки."
@@ -1813,9 +1810,6 @@ msgstr "Межстрочный Интервал"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr "Ссылка не поддерживается gstplayer. Просим использовать extelayer3, если он имеется."
-
-msgid "Link protected with CF Turnstile ."
-msgstr "Ссылка защищена турникетом CF."
 
 msgid "Link protected with DRM."
 msgstr "Ссылка защищена DRM."
@@ -3428,6 +3422,9 @@ msgstr "СписокUrl плеера"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Использовать Польский прокси для http://prognoza.pogody.tv/"
+
+msgid "Use colors"
+msgstr ""
 
 msgid "Use default quality:"
 msgstr "Желаемое качество по умолчанию:"

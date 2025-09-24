@@ -118,6 +118,7 @@ config.plugins.iptvplayer.numOfCol = ConfigSelection(default="0", choices=[("1",
 
 config.plugins.iptvplayer.skinforceinternal = ConfigYesNo(default=False)
 config.plugins.iptvplayer.skin = ConfigSelection(default="", choices=GetSkinsList())
+config.plugins.iptvplayer.use_colors = ConfigYesNo(default=True)
 
 # Pin code
 config.plugins.iptvplayer.fakePin = ConfigSelection(default="fake", choices=[("fake", "****")])
@@ -310,6 +311,7 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("----- SKIN CONFIGURATION -----"),))
         list.append(getConfigListEntry(_("Skin"), config.plugins.iptvplayer.skin))
         list.append(getConfigListEntry(_("Force internal Skin"), config.plugins.iptvplayer.skinforceinternal))
+        list.append(getConfigListEntry(_("Use colors"), config.plugins.iptvplayer.use_colors))
         list.append(getConfigListEntry(_("Info bar clock format"), config.plugins.iptvplayer.extplayer_infobanner_clockformat))
         list.append(getConfigListEntry(_("Player Skin"), config.plugins.iptvplayer.extplayer_skin))
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))

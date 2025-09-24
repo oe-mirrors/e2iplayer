@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 22:20+0200\n"
+"POT-Creation-Date: 2025-09-24 18:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1270,9 +1270,6 @@ msgstr ""
 msgid "File \"%s\" already exists!"
 msgstr ""
 
-msgid "File Not Found."
-msgstr ""
-
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr ""
@@ -1736,9 +1733,6 @@ msgid "Line Spacing"
 msgstr ""
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
-msgstr ""
-
-msgid "Link protected with CF Turnstile ."
 msgstr ""
 
 msgid "Link protected with DRM."
@@ -3315,6 +3309,9 @@ msgid "Urllists player"
 msgstr ""
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
+msgstr ""
+
+msgid "Use colors"
 msgstr ""
 
 msgid "Use default quality:"

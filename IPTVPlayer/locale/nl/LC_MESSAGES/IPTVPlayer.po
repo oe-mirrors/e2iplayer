@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 22:20+0200\n"
+"POT-Creation-Date: 2025-09-24 18:29+0200\n"
 "PO-Revision-Date: 2025-08-09 16:00+0200\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -1334,9 +1334,6 @@ msgstr "Bestand \"%s\" bestaat al"
 msgid "File \"%s\" already exists!"
 msgstr "Bestand \"%s\" bestaat al!"
 
-msgid "File Not Found."
-msgstr "Bestand niet gevonden."
-
 #, python-format
 msgid "File [%s] was added to downloading queue."
 msgstr "Bestand [%s] is toegevoegd aan de download wachtrij."
@@ -1810,9 +1807,6 @@ msgstr "Regelafstand"
 
 msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
 msgstr "Link wordt niet herkend door de gstplayer. A.u.b. extelayer3 gebruiken wanneer beschikbaar."
-
-msgid "Link protected with CF Turnstile ."
-msgstr "Link beveiligd met CF Turnstile ."
 
 msgid "Link protected with DRM."
 msgstr "Link beveiligd met DRM."
@@ -3425,6 +3419,9 @@ msgstr "Url overzicht player"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Gebruik Poolse proxy voor http://prognoza.pogody.tv/"
+
+msgid "Use colors"
+msgstr ""
 
 msgid "Use default quality:"
 msgstr "Gebruik default kwaliteit:"

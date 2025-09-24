@@ -1907,3 +1907,39 @@ def checkWebSiteStatus(URL, HEADERS=None, TIMEOUT=1):
         return (False, 'EXCEPTION', str(e))
     else:
         return (True, '', None)
+
+
+def E2ColoR(color):
+    COLORS_DEFINITIONS = {
+        "black": "\\c00000000",
+        "silver": "\\c00C0C0C0",
+        "gray": "\\c00808080",
+        "white": "\\c00FFFFFF",
+        "maroon": "\\c00800000",
+        "red": "\\c00FA8072",  # Soft red
+        "purple": "\\c00800080",
+        "fuchsia": "\\c00FF00FF",
+        "aqua": "\\c0000FFFF",
+        "teal": "\\c00008080",
+        "blue": "\\c000000FF",
+        "green": "\\c00008000",
+        "lime": "\\c0030FF30",  # Vivid lime green
+        "olive": "\\c00808000",
+        "yellow": "\\c00FFFF30",  # Vivid yellow
+        "navy": "\\c00000080",  # Dark blue
+        "violet": "\\c00EE82EE",
+        "dodgerblue": "\\c001E90FF",
+        "lightcoral": "\\c00F08080",
+        "lightred": "\\c00FF7950",
+        "gold": "\\c00FFD700",
+        "orange": "\\c00FFA500",
+        "skyblue": "\\c0087CEEB",
+        "coral": "\\c00FF7F50",
+        "khaki": "\\c00F0E68C",
+        "crimson": "\\c00DC143C",
+        "cyan": "\\c0000FFFF"
+    }
+    try:
+        return COLORS_DEFINITIONS.get(color, '') if config.plugins.iptvplayer.use_colors.value else ''
+    except AttributeError:
+        return ''
