@@ -123,26 +123,25 @@ def gettytul():
 
 class HasBahCa(CBaseHostClass):
     HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3 Gecko/2008092417 Firefox/3.0.3'}
-    MAIN_GROUPED_TAB = [
-        {'alias_id': 'weeb.tv', 'name': 'weeb.tv', 'title': 'https://weeb.tv/', 'url': '', 'icon': 'https://static.weeb.tv/images/weebtv1.png'},
-        {'alias_id': 'videostar.pl', 'name': 'videostar.pl', 'title': 'https://pilot.wp.pl/', 'url': '', 'icon': 'http://satkurier.pl/uploads/53612.jpg'},
-        {'alias_id': 'prognoza.pogody.tv', 'name': 'prognoza.pogody.tv', 'title': 'http://pogody.tv/', 'url': 'http://prognoza.pogody.tv', 'icon': 'http://pogody.pl/images/pogodytv.png'},
-        {'alias_id': 'meteo.pl', 'name': 'meteo.pl', 'title': 'http://meteo.pl/', 'url': 'http://meteo.pl/', 'icon': 'http://www.meteo.pl/img/napis_glowny_pl_2.png'},
-        {'alias_id': 'webcamera.pl', 'name': 'webcamera.pl', 'title': 'https://webcamera.pl/', 'url': 'https://www.webcamera.pl/', 'icon': 'http://static.webcamera.pl/webcamera/img/loader-min.png'},
-        {'alias_id': 'skylinewebcams.com', 'name': 'skylinewebcams.com', 'title': 'https://skylinewebcams.com/', 'url': 'https://www.skylinewebcams.com/', 'icon': 'https://cdn.skylinewebcams.com/skylinewebcams.png'},
-        {'alias_id': 'livespotting.tv', 'name': 'livespotting.tv', 'title': 'http://livespotting.tv/', 'url': 'http://livespotting.tv/', 'icon': 'https://livespotting.com/static/images/apple-touch-icon.png'},
-        {'alias_id': 'filmon.com', 'name': 'filmon_groups', 'title': 'http://filmon.com/', 'url': 'http://www.filmon.com/', 'icon': 'http://static.filmon.com/theme/img/filmon_tv_logo_white.png'},
-        {'alias_id': 'ustvnow.com', 'name': 'ustvnow', 'title': 'https://ustvnow.com/', 'url': 'https://www.ustvnow.com/', 'icon': 'http://2.bp.blogspot.com/-SVJ4uZ2-zPc/UBAZGxREYRI/AAAAAAAAAKo/lpbo8OFLISU/s1600/ustvnow.png'},
-        {'alias_id': 'sport365.live', 'name': 'sport365.live', 'title': 'http://sport365.live/', 'url': 'https://www.sport365.live/', 'icon': 'https://www.sport365.live/assets/48x48px.png'},
-        {'alias_id': 'bilasport.com', 'name': 'bilasport.com', 'title': 'http://bilasport.com/', 'url': '', 'icon': 'https://projects.fivethirtyeight.com/2016-mlb-predictions/images/logos.png'},
-        {'alias_id': 'mlbstream.tv', 'name': 'mlbstream.tv', 'title': 'http://mlbstream.tv/ && http://nhlstream.tv/', 'url': '', 'icon': 'http://mlbstream.tv/wp-content/uploads/2018/03/mlb-network-291x300.png'},
-        {'alias_id': 'karwan.tv', 'name': 'karwan.tv', 'title': 'http://karwan.tv/', 'url': 'http://karwan.tv/', 'icon': 'http://karwan.tv//logo/karwan-tv/karwan-tv-1.png'},
-        {'alias_id': 'canlitvlive.io', 'name': 'canlitvlive.io', 'title': 'http://canlitvlive.io/', 'url': 'http://www.canlitvlive.io/', 'icon': 'http://www.canlitvlive.io/images/footer_simge.png'},
-        {'alias_id': 'wiziwig1.eu', 'name': 'wiziwig1.eu', 'title': 'http://wiziwig1.eu/', 'url': '', 'icon': 'http://i.imgur.com/yBX7fZA.jpg'},
-        {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://www.djing.com/newimages/content/c01.jpg'},
-        {'alias_id': 'nhl66.ir', 'name': 'nhl66.ir', 'title': 'https://nhl66.ir', 'url': 'https://api.nhl66.ir/api/sport/schedule', 'icon': 'https://nhl66.ir/cassets/logo.png'},
-        {'alias_id': 'strumyk.net', 'name': 'strumyk.net', 'title': 'https://strumyk.net/', 'url': 'https://strumyk.net/', 'icon': 'https://strumyk.net/assets/logo.png'},
-    ]
+    MAIN_GROUPED_TAB = [{'alias_id': 'weeb.tv', 'name': 'weeb.tv', 'title': 'https://weeb.tv/', 'url': '', 'icon': 'https://static.weeb.tv/images/weebtv1.png'},
+                        {'alias_id': 'videostar.pl', 'name': 'videostar.pl', 'title': 'https://pilot.wp.pl/', 'url': '', 'icon': 'https://satkurier.pl/uploads/53612.jpg'},
+                        {'alias_id': 'prognoza.pogody.tv', 'name': 'prognoza.pogody.tv', 'title': 'http://pogody.tv/', 'url': 'http://prognoza.pogody.tv', 'icon': 'http://pogody.pl/images/pogodytv.png'},
+                        {'alias_id': 'meteo.pl', 'name': 'meteo.pl', 'title': 'https://meteo.pl/', 'url': 'https://meteo.pl/', 'icon': 'https://www.meteo.pl/img/napis_glowny_pl_2.png'},
+                        {'alias_id': 'webcamera.pl', 'name': 'webcamera.pl', 'title': 'https://webcamera.pl/', 'url': 'https://www.webcamera.pl/', 'icon': 'https://static.webcamera.pl/webcamera/img/loader-min.png'},
+                        {'alias_id': 'skylinewebcams.com', 'name': 'skylinewebcams.com', 'title': 'https://skylinewebcams.com/', 'url': 'https://www.skylinewebcams.com/', 'icon': 'https://cdn.skylinewebcams.com/skylinewebcams.png'},
+                        {'alias_id': 'livespotting.tv', 'name': 'livespotting.tv', 'title': 'https://livespotting.tv/', 'url': 'https://livespotting.tv/', 'icon': 'https://livespotting.com/static/images/apple-touch-icon.png'},
+                        {'alias_id': 'filmon.com', 'name': 'filmon_groups', 'title': 'https://filmon.com/', 'url': 'https://www.filmon.com/', 'icon': 'https://static.filmon.com/theme/img/filmon_tv_logo_white.png'},
+                        {'alias_id': 'ustvnow.com', 'name': 'ustvnow', 'title': 'https://ustvnow.com/', 'url': 'https://www.ustvnow.com/', 'icon': 'https://2.bp.blogspot.com/-SVJ4uZ2-zPc/UBAZGxREYRI/AAAAAAAAAKo/lpbo8OFLISU/s1600/ustvnow.png'},
+                        {'alias_id': 'sport365.live', 'name': 'sport365.live', 'title': 'https://sport365.live/', 'url': 'https://www.sport365.live/', 'icon': 'https://www.sport365.live/assets/48x48px.png'},
+                        {'alias_id': 'bilasport.com', 'name': 'bilasport.com', 'title': 'http://bilasport.com/', 'url': '', 'icon': 'https://projects.fivethirtyeight.com/2016-mlb-predictions/images/logos.png'},
+                        {'alias_id': 'mlbstream.tv', 'name': 'mlbstream.tv', 'title': 'http://mlbstream.tv/ && http://nhlstream.tv/', 'url': '', 'icon': 'http://mlbstream.tv/wp-content/uploads/2018/03/mlb-network-291x300.png'},
+                        {'alias_id': 'karwan.tv', 'name': 'karwan.tv', 'title': 'https://karwan.tv/', 'url': 'https://karwan.tv/', 'icon': 'https://karwan.tv//logo/karwan-tv/karwan-tv-1.png'},
+                        {'alias_id': 'canlitvlive.io', 'name': 'canlitvlive.io', 'title': 'http://canlitvlive.io/', 'url': 'http://www.canlitvlive.io/', 'icon': 'http://www.canlitvlive.io/images/footer_simge.png'},
+                        {'alias_id': 'wiziwig1.eu', 'name': 'wiziwig1.eu', 'title': 'https://wiziwig1.eu/', 'url': 'https://wiziwig1.eu/', 'icon': 'https://i.imgur.com/yBX7fZA.jpg'},
+                        {'alias_id': 'djing.com', 'name': 'djing.com', 'title': 'https://djing.com/', 'url': 'https://djing.com/', 'icon': 'https://www.djing.com/newimages/content/c01.jpg'},
+                        {'alias_id': 'nhl66.ir', 'name': 'nhl66.ir', 'title': 'https://nhl66.ir', 'url': 'https://api.nhl66.ir/api/sport/schedule', 'icon': 'https://nhl66.ir/cassets/logo.png'},
+                        {'alias_id': 'strumyk.net', 'name': 'strumyk.net', 'title': 'https://strumyk.net/', 'url': 'https://strumyk.net/', 'icon': 'https://strumyk.net/assets/logo.png'},
+                       ]
 
     def __init__(self):
         CBaseHostClass.__init__(self)
@@ -225,7 +224,7 @@ class HasBahCa(CBaseHostClass):
             url = urllib_unquote(url.split('?q=')[-1])
 
         printDBG("listHasBahCa url[%s]" % url)
-        BASE_URL = 'http://hasbahcaiptv.com/'
+        BASE_URL = 'https://hasbahcaiptv.com/'
 
         if '?' in url and '/' == url[-1]:
             url = url[:-1]
@@ -244,7 +243,7 @@ class HasBahCa(CBaseHostClass):
         password = self.hasbahcaiptv.get('password', '')
 
         if login == '' and password == '':
-            sts, data = self.getPage('http://hasbahcaiptv.com/page.php?seite=Passwort.html')
+            sts, data = self.getPage('https://hasbahcaiptv.com/page.php?seite=Passwort.html')
             if sts:
                 login = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Downloads Login', '</h3>', False)[1])
                 password = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, 'Downloads Pass', '</h3>', False)[1])
@@ -396,8 +395,8 @@ class HasBahCa(CBaseHostClass):
                     if len(cTitle):
                         title = cTitle
                     itemUrl = self.up.decorateParamsFromUrl(item)
-                    if 'http://wownet.ro/' in itemUrl:
-                        icon = 'http://wownet.ro/logo/' + icon
+                    if 'https://wownet.ro/' in itemUrl:
+                        icon = 'https://wownet.ro/logo/' + icon
                     else:
                         icon = ''
                     if '' != catTitle:
@@ -424,7 +423,7 @@ class HasBahCa(CBaseHostClass):
                     title = ''
 
     def getOthersList(self, cItem):
-        sts, data = self.cm.getPage("http://www.elevensports.pl/")
+        sts, data = self.cm.getPage("https://www.elevensports.pl/")
         if not sts:
             return
         channels = {0: "ELEVEN", 1: "ELEVEN SPORTS"}
