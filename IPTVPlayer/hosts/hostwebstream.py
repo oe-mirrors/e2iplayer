@@ -7,7 +7,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, RetHost, CUrlItem
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, GetCookieDir, GetHostsOrderList
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
@@ -327,12 +326,13 @@ class HasBahCa(CBaseHostClass):
         tmpList = self.filmOnApi.getGroupList()
         for item in tmpList:
             try:
-                params = {'name': 'filmon_channels',
-                           'title': ensure_str(item['title']),
-                           'desc': ensure_str(item['description']),
-                           'group_id': item['group_id'],
-                           'icon': self.__getFilmOnIconUrl(item)
-                           }
+                params = {
+                    'name': 'filmon_channels',
+                    'title': ensure_str(item['title']),
+                    'desc': ensure_str(item['description']),
+                    'group_id': item['group_id'],
+                    'icon': self.__getFilmOnIconUrl(item)
+                }
                 self.addDir(params)
             except Exception:
                 printExc()
@@ -342,13 +342,14 @@ class HasBahCa(CBaseHostClass):
         tmpList = self.filmOnApi.getChannelsListByGroupID(self.currItem['group_id'])
         for item in tmpList:
             try:
-                params = {'name': 'filmon_channel',
-                           'title': ensure_str(item['title']),
-                           'url': item['id'],
-                           'desc': ensure_str(item['group']),
-                           'seekable': item['seekable'],
-                           'icon': self.__getFilmOnIconUrl(item)
-                           }
+                params = {
+                    'name': 'filmon_channel',
+                    'title': ensure_str(item['title']),
+                    'url': item['id'],
+                    'desc': ensure_str(item['group']),
+                    'seekable': item['seekable'],
+                    'icon': self.__getFilmOnIconUrl(item)
+                }
                 self.addVideo(params)
             except Exception:
                 printExc()
@@ -761,135 +762,476 @@ class HasBahCa(CBaseHostClass):
         except Exception:
             printExc()
 
-    def getStrumykTvList(self, url):
-        printDBG("StrumykTvList start")
-        sts, data = self.cm.getPage(url)
+    # lululla modd -> https://adstrim.live/api/matches/upcoming https://adstrim.live/api/match/54
+    # lululla modd -> https://github.com/vb6rocod/hddlinks_android/blob/a46e87eb723b7def115be2f58cb1cb6ffe88afbc/tv/direct_link.php#L394
+    def getStrumykTvList(self, url):  # sort LIVE match
+        printDBG("StrumykTvList start - Using API")
+        api_url = "https://adstrim.live/api/matches/upcoming"
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'application/json, text/plain, */*',
+            'Referer': 'https://strumyk.net/',
+        }
+        sts, data = self.cm.getPage(api_url, {'header': headers})
         if not sts:
+            printDBG("Failed to get data from API")
             return
-        data = CParsingHelper.getDataBeetwenNodes(data, ('<table', '>', 'ramowka'), ('</table', '>'))[1]
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<td', '>'), ('</td', '>'))
-        for item in data:
-            linkVideo = self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0]
-            if len(linkVideo) and not linkVideo.startswith('http'):
-                linkVideo = self.cm.getFullUrl(linkVideo, url)
-            if linkVideo.endswith('/') and 'class="f1' not in item:
-                params = {'name': "strumyk_cat"}
-            else:
-                params = {'name': "strumyk_tv"}
-            params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
-#            params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
-            params['title'] = self.cleanHtmlStr(item)
-            self.addDir(params)
 
-    def getStrumykTvDirCat(self, url):
-        printDBG("getStrumykTvDirCat start")
-        sts, data = self.cm.getPage(url)
-        if not sts:
-            return
-        tmp = CParsingHelper.getDataBeetwenNodes(data, ('<table', '>', '-table'), ('</table', '>'))[1]
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<tr', '>'), ('</tr', '>'))
-        if len(tmp) < 1:
-            tmp = CParsingHelper.getDataBeetwenNodes(data, ('<span', '>', 'style='), ('</span', '>'))[1]
-            tmp = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<a', '>'), ('</a', '>'))
-        for item in tmp:
-            params = {'name': "strumyk_tv"}
-            params['title'] = self.cleanHtmlStr(item)
-            linkVideo = self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0]
-            if len(linkVideo):
-                if not linkVideo.startswith('http'):
-                    linkVideo = self.cm.getFullUrl(linkVideo, url)
-                params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
-#                params['icon'] = self.cm.ph.getSearchGroups(item, '''\ssrc=['"]([^"^']+?)['"]''')[0]
+        try:
+            matches = json_loads(data)
+            printDBG("Found %d matches from API" % len(matches))
+
+            # Sort matches: live first
+            matches.sort(key=lambda x: x.get('status') != 'live')
+
+            for match in matches:
+                title = match.get('match_name', 'No Title')
+                match_id = match.get('id', '')
+                streams_data = match.get('stream_urls', '[]')
+                status = match.get('status', '')
+
+                try:
+                    streams = json_loads(streams_data)
+                    has_streams = len(streams) > 0
+                except:
+                    has_streams = False
+                    printDBG("Failed to parse streams data")
+
+                if not has_streams:
+                    continue
+
+                desc_parts = []
+                if match.get('start_timestamp'):
+                    from datetime import datetime
+                    dt = datetime.fromtimestamp(match['start_timestamp'])
+                    time_str = dt.strftime('%Y-%m-%d %H:%M')
+                    desc_parts.append(time_str)
+
+                if match.get('sport'):
+                    desc_parts.append(match['sport'])
+
+                if match.get('tournament'):
+                    desc_parts.append(match['tournament'])
+
+                if status:
+                    desc_parts.append("Status: " + status.upper())
+
+                desc_parts.append("Streams: " + str(len(streams)))
+
+                desc = ' | '.join(desc_parts)
+
+                icon = match.get('img_url', '')
+                if icon and not icon.startswith('http'):
+                    icon = 'https://adstrim.live/static/' + icon
+
+                params = {
+                    'name': "strumyk_tv",
+                    'title': title,
+                    'url': str(match_id),
+                    'desc': desc,
+                    'icon': icon
+                }
+
+                if status == 'live':
+                    params['title'] = '[LIVE] ' + params['title']
+                    viewer_count = match.get('viewer_count')
+                    if viewer_count is not None:
+                        params['desc'] += " | Viewers: " + str(viewer_count)
+
                 self.addDir(params)
-            else:
-                self.addMarker(params)
 
-    def getStrumykTvDir(self, url):
-        printDBG("StrumykTvDir start")
-        sts, data = self.cm.getPage(url)
+        except Exception as e:
+            printDBG("Error parsing API data: %s" % str(e))
+            printExc()
+
+    def getStrumykTvDir(self, url):  # sort LIVE
+        printDBG("StrumykTvDir start - Getting streams for match ID: %s" % url)
+
+        api_url = "https://adstrim.live/api/match/" + url
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'application/json, text/plain, */*',
+            'Referer': 'https://strumyk.net/',
+        }
+
+        sts, data = self.cm.getPage(api_url, {'header': headers})
         if not sts:
+            printDBG("Failed to get match details from API")
+            return
+
+        try:
+            match_data = json_loads(data)
+            streams_data = match_data.get('stream_urls', '[]')
+            streams = json_loads(streams_data)
+
+            live_streams = []
+            other_streams = []
+
+            for stream in streams:
+                stream_url = stream.get('url', '')
+                if not stream_url:
+                    continue
+
+                # Determine if live
+                if match_data.get('status') == 'live':
+                    live_streams.append(stream)
+                else:
+                    other_streams.append(stream)
+
+            # Combine lists: live first
+            sorted_streams = live_streams + other_streams
+
+            for stream in sorted_streams:
+                stream_url = stream.get('url', '')
+                stream_name = stream.get('name', 'Stream')
+                stream_lang = stream.get('lang', '')
+                stream_quality = stream.get('quality', '')
+
+                name_parts = []
+                if match_data.get('status') == 'live':
+                    name_parts.append('[LIVE]')
+                name_parts.append(stream_name)
+                if stream_lang:
+                    name_parts.append("[" + stream_lang + "]")
+                if stream_quality:
+                    name_parts.append("(" + stream_quality + ")")
+                title = ' '.join(name_parts)
+
+                desc_parts = []
+                if match_data.get('match_name'):
+                    desc_parts.append(match_data.get('match_name'))
+                if match_data.get('sport'):
+                    desc_parts.append(match_data.get('sport'))
+                if match_data.get('tournament'):
+                    desc_parts.append(match_data.get('tournament'))
+                if match_data.get('status'):
+                    desc_parts.append("Status: " + match_data.get('status').upper())
+                desc = ' | '.join(desc_parts)
+
+                url_meta = {'Referer': 'https://strumyk.net/'}
+                if 'vidembed' in stream_url or 'veplay' in stream_url:
+                    url_meta['need_resolve'] = '1'
+                    url_meta['vidembed_url'] = stream_url
+
+                decorated_url = strwithmeta(stream_url, url_meta)
+                params = {
+                    'name': "strumyk.net",
+                    'title': title,
+                    'url': decorated_url,
+                    'desc': desc,
+                    'need_resolve': url_meta.get('need_resolve', '0')
+                }
+                self.addVideo(params)
+
+        except Exception as e:
+            printDBG("Error parsing stream data: %s" % str(e))
+            printExc()
+
+    def resolveVidembed(self, url):
+        printDBG("Resolving vidembed URL using working method: %s" % url)
+        
+        # Estrai l'ID dello stream dall'URL
+        stream_id = url.split('/stream/')[-1].split('?')[0].split('#')[0]
+        printDBG("Stream ID: %s" % stream_id)
+        
+        # URL dell'API funzionante (aggiornato)
+        api_url = "https://www.vidembed.re/api/source/" + stream_id
+        
+        # Dati POST necessari
+        post_data = '{"r":"https://daddylive.dad/","d":"www.vidembed.re"}'
+        
+        # Headers completi per bypassare le protezioni
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Accept-Encoding': 'gzip, deflate',
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Length': str(len(post_data)),
+            'Origin': 'https://www.vidembed.re',
+            'Referer': 'https://www.vidembed.re/stream/' + stream_id,
+            'Connection': 'keep-alive',
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache',
+        }
+        
+        # Prima visita la pagina principale per ottenere i cookie necessari
+        main_url = "https://www.vidembed.re/"
+        self.cm.getPage(main_url, {
+            'header': headers,
+            'use_cookie': True,
+            'load_cookie': True,
+            'save_cookie': True,
+            'cookiefile': GetCookieDir('vidembed.cookie')
+        })
+        
+        # Aspetta un momento per permettere ai cookie di essere impostati
+        import time
+        time.sleep(2)
+        
+        # Fai la richiesta POST all'API
+        sts, data = self.cm.getPage(api_url, {
+            'header': headers,
+            'post_data': post_data,
+            'use_cookie': True,
+            'load_cookie': True,
+            'save_cookie': True,
+            'cookiefile': GetCookieDir('vidembed.cookie'),
+            'timeout': 30
+        })
+        
+        if not sts:
+            printDBG("API request failed, trying alternative approach")
+            return self.tryAlternativeVidembedResolution(stream_id)
+        
+        printDBG("API response: %s" % data)
+        
+        try:
+            # Parsa la risposta JSON
+            response = json_loads(data)
+            
+            if not response.get('success', False):
+                printDBG("API returned unsuccessful response")
+                return []
+            
+            # Decodifica il campo player (base64)
+            import base64
+            player_data_encoded = response['player']
+            player_data_decoded = base64.b64decode(player_data_encoded).decode('utf-8')
+            printDBG("Decoded player data: %s" % player_data_decoded)
+            
+            # Parsa i dati decodificati
+            player_info = json_loads(player_data_decoded)
+            source_file = player_info.get('source_file', '')
+            
+            if not source_file:
+                printDBG("No source_file found in player data")
+                return []
+            
+            printDBG("Found source file: %s" % source_file)
+            
+            # Prepara gli header per il video
+            meta = {
+                'Referer': 'https://www.vidembed.re/',
+                'Origin': 'https://www.vidembed.re',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+            
+            return [{'name': 'strumyk.net', 'url': strwithmeta(source_file, meta)}]
+            
+        except Exception as e:
+            printDBG("Error processing response: %s" % str(e))
             return []
 
-        tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'src'), ('<script', '>'))[1]
-        if not tmp:
-            tmp = CParsingHelper.getDataBeetwenNodes(data, ('<noscript', '>'), ('<script', '>'))[1]
-        data = self.cm.ph.getAllItemsBeetwenNodes(tmp, ('<a', '>'), ('</a', '>'))
-        if not data:
-            linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
-            linkVideo = linkVideo.strip(' \n\t\r')
-            if linkVideo.startswith('/live/'):
-                sts, tmp = self.cm.getPage('https://strumyk.net/' + linkVideo)
-                if not sts:
-                    return []
-                linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
-                linkVideo = linkVideo.strip(' \n\t\r')
-            if len(linkVideo):
-                params = {'name': "strumyk.net"}
-                params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
-                params['title'] = self.up.getDomain(linkVideo)
-                self.addVideo(params)
+    def tryAlternativeVidembedResolution(self, stream_id):
+        """Metodo alternativo per risolvere gli URL Vidembed"""
+        printDBG("Trying alternative resolution for stream ID: %s" % stream_id)
+        
+        # Prova con diversi pattern di URL noti
+        url_patterns = [
+            "https://vidembed.io/stream/{}/index.m3u8",
+            "https://vidembed.cc/stream/{}/playlist.m3u8",
+            "https://vidembed.net/{}",
+            "https://vidembed.pro/{}/master.m3u8",
+        ]
+        
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': 'https://www.vidembed.re/',
+        }
+        
+        for pattern in url_patterns:
+            test_url = pattern.format(stream_id)
+            printDBG("Testing URL pattern: %s" % test_url)
+            
+            try:
+                # Prova una richiesta HEAD per verificare se l'URL esiste
+                sts, _ = self.cm.getPage(test_url, {
+                    'header': headers,
+                    'method': 'HEAD',
+                    'timeout': 10
+                })
+                
+                if sts:
+                    printDBG("Alternative URL works: %s" % test_url)
+                    return [{'name': 'strumyk.net', 'url': strwithmeta(test_url, {'Referer': 'https://www.vidembed.re/'})}]
+            except:
+                continue
+        
+        printDBG("All alternative methods failed")
+        return []
 
-        for item in data:
-            _url = self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^"^']+?)['"]''')[0]
-            if '?' in url:
-                url = url.split('?', 1)[0]
-            if _url.startswith('?'):
-                _url = url + _url
-            if not _url.startswith('http'):
-                _url = 'https://strumyk.net/' + _url
-            sts, data = self.cm.getPage(_url)
-            if sts:
-                tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'allowfullscreen'), ('</iframe', '>'))[1]
-                if len(tmp):
-                    linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
-                    linkVideo = linkVideo.strip(' \n\t\r')
-                else:
-                    tmp = self.cm.ph.getSearchGroups(data, r'''eval\(unescape\(['"]([^"^']+?)['"]''')[0]
-                    tmp = urllib_unquote(tmp)
-                    linkVideo = self.cm.ph.getSearchGroups(tmp, r'''['"]*(http[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
-                if len(linkVideo) and linkVideo.startswith('//'):
-                    linkVideo = 'http:' + linkVideo
-                if len(linkVideo) and not linkVideo.startswith('http'):
-                    linkVideo = 'https://strumyk.net/' + linkVideo
-                    sts, data = self.cm.getPage(linkVideo)
-                    tmp = CParsingHelper.getDataBeetwenNodes(data, ('<iframe', '>', 'src'), ('</iframe', '>'))[1]
-                    if len(tmp):
-                        linkVideo = self.cm.ph.getSearchGroups(tmp, '''src=['"]([^"^']+?)['"]''')[0]
-                        linkVideo = linkVideo.strip(' \n\t\r')
-                    else:
-                        tmp = self.cm.ph.getSearchGroups(data, r'''eval\(unescape\(['"]([^"^']+?)['"]''')[0]
-                        tmp = urllib_unquote(tmp)
-                        linkVideo = self.cm.ph.getSearchGroups(tmp, r'''['"]*(http[^'^"]+?\.m3u8[^'^"]*?)['"]''')[0]
-                        if '' == linkVideo:
-                            linkVideo = self.cm.ph.getSearchGroups(tmp, r'''['"]*(http[^'^"]+?\.mpd[^'^"]*?)['"]''')[0].replace('\\', '')
-                    if len(linkVideo) and linkVideo.startswith('//'):
-                        linkVideo = 'http:' + linkVideo
-                linkVideo = linkVideo.replace('https://href.li/', '')
-                if '' == linkVideo:
-                    continue
-                params = {'name': "strumyk.net"}
-                params['url'] = urlparser.decorateUrl(linkVideo, {'Referer': url})
-                params['title'] = self.cleanHtmlStr(item) + ' - ' + self.up.getDomain(linkVideo)
-                printDBG("StrumykTvDir params [%s]" % params)
-                self.addVideo(params)
+    def extractUrlFromResolver(self, data):
+        """Estrai l'URL video dalla risposta del resolver"""
+        try:
+            # Prova a parsare come JSON
+            response = json_loads(data)
+            return response.get('url', response.get('stream_url', ''))
+        except:
+            pass
+        
+        # Cerca URL direttamente nel testo
+        patterns = [
+            r'(https?://[^\s"\']+\.m3u8[^\s"\']*)',
+            r'(https?://[^\s"\']+\.mp4[^\s"\']*)',
+            r'stream_url["\']?:\s*["\']([^"\']+)["\']',
+            r'url["\']?:\s*["\']([^"\']+)["\']',
+        ]
+        
+        for pattern in patterns:
+            matches = re.findall(pattern, data)
+            for match in matches:
+                if isinstance(match, tuple):
+                    match = match[0]
+                if match.startswith('http'):
+                    return match
+        return None
+
+    def fallbackToDirectStream(self, url):
+        """Approccio di fallback: prova a costruire URL diretti basati su pattern noti"""
+        printDBG("Trying fallback direct stream approach")
+        
+        # Estrai l'ID dall'URL
+        stream_id = url.split('/stream/')[-1].split('?')[0].split('#')[0]
+        
+        # Prova vari pattern di URL basati su servizi di streaming noti
+        direct_url_patterns = [
+            "https://vidembed.re/stream/{}/index.m3u8",
+            "https://vidembed.re/{}/playlist.m3u8",
+            "https://vidembed.re/hls/{}/index.m3u8",
+            "https://vidembed.re/{}/master.m3u8",
+        ]
+        
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': 'https://www.vidembed.re/',
+        }
+        
+        for pattern in direct_url_patterns:
+            test_url = pattern.format(stream_id)
+            printDBG("Testing direct URL: %s" % test_url)
+            
+            # Prova una richiesta HEAD per verificare se l'URL esiste
+            try:
+                sts, _ = self.cm.getPage(test_url, {'header': headers, 'method': 'HEAD', 'timeout': 10})
+                if sts:
+                    printDBG("Direct URL works: %s" % test_url)
+                    return [{'name': 'strumyk.net', 'url': strwithmeta(test_url, {'Referer': 'https://www.vidembed.re/'})}]
+            except:
+                continue
+        
+        printDBG("All resolution attempts failed")
+        return []
 
     def getStrumykTvLink(self, url):
-        printDBG("StrumykTvLink url[%r]" % url)
-        urlsTab = []
+        printDBG("StrumykTvLink url[%s]" % url)
 
-        if 'm3u8' in url and 'hlsplayer' not in url:
-            urlsTab = getDirectM3U8Playlist(url, False)
-        elif 'mpd' in url:
-            urlsTab = getMPDLinksWithMeta(url, False)
-        else:
-            urlsTab.extend(self.up.getVideoLinkExt(url))
-        return urlsTab
+        if hasattr(url, 'meta') and url.meta.get('need_resolve') == '1':
+            return self.resolveVidembed(url.meta.get('vidembed_url', str(url)))
+
+        return [{'name': 'strumyk.net', 'url': url}]
+
+    def getStrumykTvListOld(self, url):
+        printDBG("StrumykTvList start - nuova versione")
+        printDBG("URL: %s" % url)
+
+        # Try to find the API endpoint that the website uses
+        # Common patterns for sports streaming sites
+        api_endpoints = [
+            "/api/matches",
+            "/api/games",
+            "/api/events",
+            "/api/live",
+            "/matches.json",
+            "/games.json",
+            "/events.json",
+            "/data/matches",
+            "/data/games",
+        ]
+
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Connection': 'keep-alive',
+        }
+
+        # Try each API endpoint
+        for endpoint in api_endpoints:
+            api_url = self.cm.getFullUrl(endpoint, url)
+            printDBG("Trying API endpoint: %s" % api_url)
+
+            sts, api_data = self.cm.getPage(api_url, {'header': headers})
+            if sts and len(api_data) > 100:
+                printDBG("API data length: %d" % len(api_data))
+
+                # Try to parse as JSON
+                try:
+                    json_data = json_loads(api_data)
+                    printDBG("Successfully parsed JSON from API endpoint")
+                    self.parseStrumykJson(json_data, url)
+                    return
+                except:
+                    printDBG("Failed to parse API data as JSON")
+
+        # If API endpoints don't work, try to find the data in the HTML using different patterns
+        sts, data = self.cm.getPage(url, {'header': headers})
+        if not sts:
+            printDBG("Failed to get page content")
+            return
+
+        printDBG("Page content length: %d" % len(data))
+
+        # Look for JavaScript variables that might contain the data
+        js_patterns = [
+            r'var\s+matches\s*=\s*(\[.*?\]);',
+            r'const\s+matches\s*=\s*(\[.*?\]);',
+            r'let\s+matches\s*=\s*(\[.*?\]);',
+            r'window\.matches\s*=\s*(\[.*?\]);',
+            r'data:\s*(\[.*?\]),',
+            r'matches:\s*(\[.*?\]),',
+        ]
+
+        for pattern in js_patterns:
+            matches = re.findall(pattern, data, re.DOTALL)
+            for match in matches:
+                try:
+                    json_data = json_loads(match)
+                    printDBG("Found matches data in JavaScript variable")
+                    self.parseStrumykJson(json_data, url)
+                    return
+                except:
+                    printDBG("Failed to parse JavaScript variable as JSON")
+
+        # If all else fails, try to use a hardcoded list of matches or categories
+        printDBG("Using fallback hardcoded categories")
+
+        # Create some basic categories based on common sports
+        categories = [
+            {"name": "Football", "url": "/schedule?sport=football"},
+            {"name": "Tennis", "url": "/schedule?sport=tennis"},
+            {"name": "Volleyball", "url": "/schedule?sport=volleyball"},
+            {"name": "Basketball", "url": "/schedule?sport=basketball"},
+            {"name": "Hockey", "url": "/schedule?sport=hockey"},
+        ]
+
+        for category in categories:
+            full_url = self.cm.getFullUrl(category["url"], url)
+            params = {
+                'name': "strumyk_cat",
+                'title': category["name"],
+                'url': full_url,
+                'desc': "",
+                'icon': ""
+            }
+            self.addDir(params)
+
+    # lululla modd
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('handleService start')
-
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-
         name = self.currItem.get("name", '')
         title = self.currItem.get("title", '')
         icon = self.currItem.get("icon", '')
@@ -1014,8 +1356,14 @@ class IPTVHost(CHostBase):
             urlList = self.host.getMLBStreamTVLink(cItem)
         elif name == "wiziwig1.eu":
             urlList = self.host.getWiziwig1Link(cItem)
+
+        # mod lululla
         elif name == "strumyk.net":
-            urlList = self.host.getStrumykTvLink(url)
+            # Se l'URL ha bisogno di essere risolto
+            if hasattr(url, 'meta') and url.meta.get('need_resolve') == '1':
+                urlList = self.host.resolveVidembed(str(url))
+            else:
+                urlList = self.host.getStrumykTvLink(url)
 
         if isinstance(urlList, list):
             for item in urlList:
