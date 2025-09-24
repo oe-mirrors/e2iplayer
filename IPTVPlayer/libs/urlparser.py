@@ -375,6 +375,7 @@ class urlparser:
             'adblocktape.wiki': self.pp.parserSTREAMTAPE,
             'aiavh.com': self.pp.parserJWPLAYER,
             'aliez.me': self.pp.parserJWPLAYER,
+            'all3do.com': self.pp.parserDOOD,
             'allocine.fr': self.pp.parserALLOCINEFR,
             'anime4low.sbs': self.pp.parserJWPLAYER,
             'ankrzkz.sbs': self.pp.parserJWPLAYER,
@@ -410,10 +411,10 @@ class urlparser:
             'csst.online': self.pp.parserSST,
             'cybervynx.com': self.pp.parserJWPLAYER,
             # d
-            'd-s.io': self.pp.parserDOOD,
             'd0000d.com': self.pp.parserDOOD,
             'd000d.com': self.pp.parserDOOD,
             'd0o0d.com': self.pp.parserDOOD,
+            'd-s.io': self.pp.parserDOOD,
             'daddylive.club': self.pp.parserDADDYLIVE,
             'daddylive.me': self.pp.parserDADDYLIVE,
             'dailymotion.com': self.pp.parserDAILYMOTION,
@@ -423,6 +424,7 @@ class urlparser:
             'davioad.com': self.pp.parserJWPLAYER,
             'dhcplay.com': self.pp.parserJWPLAYER,
             'dhtpre.com': self.pp.parserJWPLAYER,
+            'do0od.com': self.pp.parserDOOD,
             'do7go.com': self.pp.parserDOOD,
             'dood.cx': self.pp.parserDOOD,
             'dood.la': self.pp.parserDOOD,
@@ -440,6 +442,7 @@ class urlparser:
             'dood.yt': self.pp.parserDOOD,
             'doods.pro': self.pp.parserDOOD,
             'doods.to': self.pp.parserVEEV,
+            'doodcdn.io': self.pp.parserDOOD,
             'doodstream.co': self.pp.parserDOOD,
             'doodstream.com': self.pp.parserDOOD,
             'dooodster.com': self.pp.parserDOOD,
@@ -775,6 +778,7 @@ class urlparser:
             'vidcloud.icu': self.pp.parserVIDCLOUDICU,
             'vidcloud9.com': self.pp.parserVIDCLOUD9,
             'vide0.net': self.pp.parserDOOD,
+            'vidply.com': self.pp.parserDOOD,
             'videa.hu': self.pp.parserVIDEA,
             'videakid.hu': self.pp.parserVIDEA,
             'video.rutube.ru': self.pp.parserRUTUBE,
@@ -827,6 +831,7 @@ class urlparser:
             'vtube.network': self.pp.parserJWPLAYER,
             'vtube.to': self.pp.parserJWPLAYER,
             'vup.to': self.pp.parserONLYSTREAMTV,
+            'vvide0.com': self.pp.parserDOOD,
             # w
             'wasuytm.store': self.pp.parserSBS,
             'watch.ezplayer.me': self.pp.parserSBS,
@@ -6424,19 +6429,21 @@ class pageParser(CaptchaHelper):
                             urlTab.append({'name': 'MP4', 'url': urlparser.decorateUrl(url, {'external_sub_tracks': sub_tracks})})
         return urlTab
 
-    def parserDOOD(self, baseUrl):  # update 160925
+    def parserDOOD(self, baseUrl):  # update 240925
         urlsTab = []
         sub_tracks = []
         printDBG("parserDOOD baseUrl [%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
         urlParams = {'header': HTTP_HEADER}
-        urls = ['d000d.com', 'd0000d.com', 'd0o0d.com', 'do7go.com', 'dood.cx',
-                'dood.la', 'dood.li', 'dood.pm', 'dood.re', 'dood.sh', 'dood.so', 'dood.to', 'dood.watch',
-                'dood.work', 'dood.wf', 'dood.ws', 'dood.yt', 'doods.pro', 'dooodster.com', 'doodstream.com', 'doodstream.co',
-                'dood.stream', 'dooood.com', 'ds2play.com', 'ds2video.com', 'vide0.net']
+        urls = ['all3do.com', 'd0000d.com', 'd000d.com', 'd0o0d.com', 'd-s.io', 'do0od.com',
+                'dooodster.com', 'doply.net', 'dooood.com', 'do7go.com', 'ds2play.com',
+                'ds2video.com', 'dood.cx', 'dood.la', 'dood.li', 'dood.pm', 'dood.re',
+                'dood.sh', 'dood.so', 'dood.stream', 'dood.to', 'dood.watch', 'dood.work',
+                'dood.wf', 'dood.ws', 'dood.yt', 'doods.pro', 'doodcdn.io', 'vide0.net', 'vidply.com',
+                'vvide0.com']
         for url in urls:
             if url in baseUrl:
-                baseUrl = baseUrl.replace(url, 'd-s.io')
+                baseUrl = baseUrl.replace(url, 'dsvplay.com')
         host = "https://%s" % urlparser.getDomain(baseUrl, True)
         if '/d/' in baseUrl:
             sts, data = self.cm.getPage(baseUrl, urlParams)
