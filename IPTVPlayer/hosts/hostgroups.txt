@@ -308,6 +308,7 @@
   "webstream",
   "akoam",
   "egybest",
+  "tvfun",
   "movizlandcom",
   "shahiidanimenet",
   "dailymotion",

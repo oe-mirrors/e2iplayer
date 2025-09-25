@@ -164,6 +164,7 @@ hostted_blocked_
 hostthewatchseriesto_blocked_
 hosttopstreamfilm
 hosttv2play
+hosttvfun
 hosttvgrypl
 hosttvjworg
 hosttvn24_blocked_
