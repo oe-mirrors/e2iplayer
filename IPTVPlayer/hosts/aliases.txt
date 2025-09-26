@@ -165,6 +165,7 @@
 'hostthewatchseriesto': 'https://swatchseries.to/',
 'hosttopstreamfilm': 'https://topstreamfilm.live',
 'hosttv2play': 'https://tv2play.hu/',
+'hosttvfun': 'https://av.tvfun.me',
 'hosttvgrypl': 'https://tvgry.pl/',
 'hosttvjworg': 'https://tv.jw.org/',
 'hosttvn24': 'http://api.tvn24.pl',
