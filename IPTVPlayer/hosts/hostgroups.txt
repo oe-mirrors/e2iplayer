@@ -306,6 +306,7 @@
  "arabic": [
   "youtube",
   "webstream",
+  "aflaam",
   "akoam",
   "egybest",
   "tvfun",

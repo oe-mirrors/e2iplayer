@@ -3,6 +3,7 @@
 'host3player': 'https://virginmediatelevision.ie/player',
 'host3sktv': 'http://33sk.tv/',
 'host9anime': 'https://9anime.com.ro',
+'hostaflaam': 'https://aflaam.com/',
 'hostakoam': 'https://ar.akoam.net/',
 'hostaltadefinizione': 'https://altadefinizione.spa/',
 'hostaltadefinizione01': 'https://altadefinizione01.spa/',

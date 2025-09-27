@@ -119,6 +119,7 @@ with additions from
 - <a href="https://gitlab.com/maxbambi/e2iplayer">Maxbambi</a>
 - <a href="https://github.com/Blindspot76/e2iPlayer">Blindspot</a>
 - <a href="https://github.com/Belfagor2005/e2iplayer">Lululla</a>
+- <a href="https://mohamed_os.gitlab.io">MohamedOS</a>
 
 🚫 All rights reserved. Do not redistribute modified versions without proper attribution.  Redistribution only with explicit credit.
 
