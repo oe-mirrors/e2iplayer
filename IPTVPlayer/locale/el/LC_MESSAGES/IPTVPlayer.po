@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-24 18:29+0200\n"
-"PO-Revision-Date: 2025-08-12 10:21+0300\n"
+"PO-Revision-Date: 2025-09-28 22:22+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.7\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #, python-format
@@ -1213,9 +1213,9 @@ msgstr "Σφάλμα κατά τη διαγραφή του αρχείου \"%s\"
 msgid "Error during deletion of the debug file."
 msgstr "Σφάλμα κατά τη διαγραφή του αρχείου αποσφαλμάτωσης."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error getting file name: %s"
-msgstr "Σφάλμα κατά τη διαγραφή του αρχείου \"%s\".\n"
+msgstr "Σφάλμα ανάκτησης ονόματος αρχείου: %s"
 
 #, python-format
 msgid ""
@@ -1239,9 +1239,9 @@ msgstr "Παρουσιάζεται σφάλμα κατά τη λήψη."
 msgid "Error reading file \"%s\".\n"
 msgstr "Σφάλμα ανάγνωσης του αρχείου \"%s\".\n"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error renaming file: %s"
-msgstr "Σφάλμα ανάγνωσης του αρχείου \"%s\".\n"
+msgstr "Σφάλμα μετονομασίας αρχείου: %s"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1344,12 +1344,11 @@ msgstr "Το αρχείο [%s] προστέθηκε στην ουρά λήψεω
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Δεν είναι δυνατή η λήψη του αρχείου. Το πρωτόκολλο [%s] δεν υποστηρίζεται"
 
-#, fuzzy
 msgid "File name cannot be empty!"
-msgstr "Το όνομα δεν μπορεί να είναι κενό."
+msgstr "Το όνομα αρχείου δεν μπορεί να είναι κενό!"
 
 msgid "File renamed successfully!"
-msgstr ""
+msgstr "Το αρχείο μετονομάστηκε με επιτυχία!"
 
 msgid "Film"
 msgstr "Ταινία"
@@ -1705,7 +1704,7 @@ msgid "Knee & Sports"
 msgstr "Γόνατο & Αθλήματα"
 
 msgid "Knowledge"
-msgstr ""
+msgstr "Γνώση"
 
 msgid "LATEST"
 msgstr "ΤΕΛΕΥΤΑΙΑ"
@@ -2611,9 +2610,8 @@ msgstr "Αφαίρεση στοιχείου"
 msgid "Rename"
 msgstr "Μετονομασία"
 
-#, fuzzy
 msgid "Rename file"
-msgstr "Αφαίρεση αρχείου"
+msgstr "Μετονομασία αρχείου"
 
 msgid "Replay Shows"
 msgstr "Επανάληψη εκπομπών"
@@ -3417,7 +3415,7 @@ msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Χρήση διακομιστή μεσολάβησης Πολωνίας για το http://prognoza.pogody.tv/"
 
 msgid "Use colors"
-msgstr ""
+msgstr "Χρήση χρωμάτων"
 
 msgid "Use default quality:"
 msgstr "Χρήση προεπιλεγμένης ποιότητας:"
