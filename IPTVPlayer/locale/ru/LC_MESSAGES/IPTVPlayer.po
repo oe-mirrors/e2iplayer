@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-24 18:29+0200\n"
-"PO-Revision-Date: 2025-06-29 17:39+0200\n"
+"PO-Revision-Date: 2025-09-28 21:13+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.7\n"
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -183,8 +183,12 @@ msgid "%s followers"
 msgstr "%s наблюдателей"
 
 #, python-format
-msgid "%s has been protected with google recaptcha v2. You can try to use API version."
-msgstr "%s защищено с учетом google recaptcha v2. Можно также попробовать применить API версию."
+msgid ""
+"%s has been protected with google recaptcha v2. You can try to use API "
+"version."
+msgstr ""
+"%s защищено с учетом google recaptcha v2. Можно также попробовать применить "
+"API версию."
 
 #, python-format
 msgid "%s minutes"
@@ -224,10 +228,12 @@ msgstr "%s таймаут."
 
 #, python-format
 msgid ""
-"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services "
+"from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
-"%s использует \"геоблокирующие\" меры, чтобы предотвратить доступ к услугам из-за рубежа.\n"
+"%s использует \"геоблокирующие\" меры, чтобы предотвратить доступ к услугам "
+"из-за рубежа.\n"
 " Страна-хозяйка: %s, ваша страна: %s"
 
 #, python-format
@@ -307,7 +313,7 @@ msgid "--Other--"
 msgstr "--Иные--"
 
 msgid "12 hour format"
-msgstr "12 часовой формат "
+msgstr "12 часовой формат"
 
 msgid "16:10 Letterbox"
 msgstr "16:10 Почтовый ящик"
@@ -325,7 +331,7 @@ msgid "16:9 always"
 msgstr "16:9 всегда"
 
 msgid "24 hour format"
-msgstr "24 часовой формат "
+msgstr "24 часовой формат"
 
 msgid "4:3 Letterbox"
 msgstr "4:3 Режим ящика"
@@ -333,11 +339,20 @@ msgstr "4:3 Режим ящика"
 msgid "4:3 PanScan"
 msgstr "4:3 Панорама"
 
-msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr "<font color=\"#FE642E\">ПОМНИТЕ:</font></b> E2iPlayerr <b>ЭТО ТОЛЬКО</b> специализированный Веб-браузер. Он <b>НЕ</b> содержит никаких материалов!!!</font>"
+msgid ""
+"<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> "
+"specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
+msgstr ""
+"<font color=\"#FE642E\">ПОМНИТЕ:</font></b> E2iPlayerr <b>ЭТО ТОЛЬКО</b> "
+"специализированный Веб-браузер. Он <b>НЕ</b> содержит никаких материалов!!!</"
+"font>"
 
-msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
-msgstr "Необходимо иметь ТВ-лицензию для просмотра потоков BBC iPlayer, подробности см. на веб-сайте BBC: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgid ""
+"A TV License is required to watch BBC iPlayer streams, see the BBC website "
+"for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgstr ""
+"Необходимо иметь ТВ-лицензию для просмотра потоков BBC iPlayer, подробности "
+"см. на веб-сайте BBC: https://www.bbc.co.uk/iplayer/help/tvlicence"
 
 msgid "A-Z"
 msgstr "А-Я"
@@ -534,9 +549,8 @@ msgstr "Архив"
 msgid "Archives"
 msgstr "Архивы"
 
-#, fuzzy
 msgid "Are you sure you want to delete search history?"
-msgstr "Вы действительно хотите удалить файл \"%s\"?"
+msgstr "Вы уверены, что хотите удалить историю поиска?"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
@@ -674,7 +688,7 @@ msgid "Captcha solving service"
 msgstr "Услуги по решению капчи"
 
 msgid "Cartoon list"
-msgstr "Список каттунов"
+msgstr "Список мультфильмов"
 
 msgid "Cartoons and anime"
 msgstr "Мультфильмы и аниме"
@@ -789,7 +803,8 @@ msgid "Critical Error - cookie can't be saved!"
 msgstr "Критическая ошибка — cookie-файл не может быть сохранен!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
-msgstr "Критическая Ошибка – Кодирование-Содержимого gzip не может быть обработано!"
+msgstr ""
+"Критическая Ошибка – Кодирование-Содержимого gzip не может быть обработано!"
 
 msgid "Curator"
 msgstr "Куратор"
@@ -842,8 +857,11 @@ msgstr "Опция отладки отключена - нечего отобра
 msgid "Debug option set to console - nothing to display"
 msgstr "Опция отладки установлена в консоль - нечего отобразить"
 
-msgid "Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr "Опция отладки настроена в отладочный файл, но файл не существует - нечего отобразить"
+msgid ""
+"Debug option set to debugfile, but file does not exist - nothing to display"
+msgstr ""
+"Опция отладки настроена в отладочный файл, но файл не существует - нечего "
+"отобразить"
 
 #, python-format
 msgid "Decode file [%s] problem."
@@ -882,9 +900,8 @@ msgstr "Удалить"
 msgid "Delete log file"
 msgstr "Удалить лог файл"
 
-#, fuzzy
 msgid "Delete search history"
-msgstr "История поиска"
+msgstr "Удалить историю поиска"
 
 msgid "Description:"
 msgstr "Описание:"
@@ -1214,9 +1231,9 @@ msgstr "Ошибка удаления файла \"%s\".\n"
 msgid "Error during deletion of the debug file."
 msgstr "Ошибка при удалении отладочного файла."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error getting file name: %s"
-msgstr "Ошибка удаления файла \"%s\".\n"
+msgstr "Ошибка получения имени файла: %s"
 
 #, python-format
 msgid ""
@@ -1240,9 +1257,9 @@ msgstr "Сбой при попытке загрузки."
 msgid "Error reading file \"%s\".\n"
 msgstr "Ошибка чтения файла \"%s\".\n"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error renaming file: %s"
-msgstr "Ошибка чтения файла \"%s\".\n"
+msgstr "Ошибка переименования файла: %s"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1296,7 +1313,8 @@ msgstr "Провал к gzip."
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
-msgstr "Сбой входа в систему пользователя \"%s\". Проверьте свой логин и пароль."
+msgstr ""
+"Сбой входа в систему пользователя \"%s\". Проверьте свой логин и пароль."
 
 #, python-format
 msgid "Failed to open the file \"%s\"."
@@ -1345,12 +1363,11 @@ msgstr "Файл [%s] добавлен в очередь загрузки."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Файл не скачиваем. Протокол [%s] не поддерживается"
 
-#, fuzzy
 msgid "File name cannot be empty!"
-msgstr "Имя не должно быть пустым."
+msgstr "Имя файла не может быть пустым!"
 
 msgid "File renamed successfully!"
-msgstr ""
+msgstr "Файл успешно переименован!"
 
 msgid "Film"
 msgstr "Фильм"
@@ -1631,20 +1648,31 @@ msgid "It looks like some kind of protection. Try again later."
 msgstr "Похоже, это какая-то защита. Попробуй еще раз позже."
 
 #, python-format
-msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
-msgstr "Очевидно, что ваша текущая конфигурация не позволяет подключиться к https://%s/.\n"
+msgid ""
+"It looks like your current configuration do not allow to connect to the "
+"https://%s/.\n"
+msgstr ""
+"Очевидно, что ваша текущая конфигурация не позволяет подключиться к https://"
+"%s/.\n"
 
 #, python-format
 msgid "It seems that the host \"%s\" has crashed."
 msgstr "Очевидно, что хост \"%s\" отрубился."
 
 #, python-format
-msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
-msgstr "Очевидно, что хост \"%s\" отрубился. Вы хотите сообщить об этой проблеме?"
+msgid ""
+"It seems that the host \"%s\" has crashed. Do you want to report this "
+"problem?"
+msgstr ""
+"Очевидно, что хост \"%s\" отрубился. Вы хотите сообщить об этой проблеме?"
 
 #, python-format
-msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
-msgstr "Похоже, оператор субтитров \"%s\" дал сбой. Вы хотите сообщить об этой проблеме?"
+msgid ""
+"It seems that the subtitle's provider \"%s\" has crashed. Do you want to "
+"report this problem?"
+msgstr ""
+"Похоже, оператор субтитров \"%s\" дал сбой. Вы хотите сообщить об этой "
+"проблеме?"
 
 #, python-format
 msgid ""
@@ -1706,7 +1734,7 @@ msgid "Knee & Sports"
 msgstr "Колени & Спорт"
 
 msgid "Knowledge"
-msgstr ""
+msgstr "Знание"
 
 msgid "LATEST"
 msgstr "ПОСЛЕДНИЕ"
@@ -1808,8 +1836,12 @@ msgstr "Светлосерий"
 msgid "Line Spacing"
 msgstr "Межстрочный Интервал"
 
-msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
-msgstr "Ссылка не поддерживается gstplayer. Просим использовать extelayer3, если он имеется."
+msgid ""
+"Link is not supported by the gstplayer. Please use the extelayer3 if "
+"available."
+msgstr ""
+"Ссылка не поддерживается gstplayer. Просим использовать extelayer3, если он "
+"имеется."
 
 msgid "Link protected with DRM."
 msgstr "Ссылка защищена DRM."
@@ -1862,8 +1894,12 @@ msgid "Load"
 msgstr "Загрузить"
 
 #, python-format
-msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
-msgstr "Загрузка макета Виртуальной Клавиатуры \"%s\" произошла неудачно из-за следующей ошибки: \"%s\""
+msgid ""
+"Load of the Virtual Keyboard layout \"%s\" failed due to the following "
+"error: \"%s\""
+msgstr ""
+"Загрузка макета Виртуальной Клавиатуры \"%s\" произошла неудачно из-за "
+"следующей ошибки: \"%s\""
 
 msgid "Loading"
 msgstr "Загрузка"
@@ -1933,7 +1969,7 @@ msgstr "Архитектура MIPS с плавающей точкой"
 
 #, python-format
 msgid "MOVE: %s"
-msgstr ""
+msgstr "ХОД: %s"
 
 msgid "MOVIES"
 msgstr "ФИЛЬМЫ"
@@ -2053,8 +2089,12 @@ msgid "Moving file from \"%s\" to \"%s\" failed.\n"
 msgstr "Перемещение файла из \"%s\" в \"%s\" не удалось.\n"
 
 #, python-format
-msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
-msgstr "Перемещение буфера воспроизведения в управление загрузками не удалось с ошибкой \"%s\""
+msgid ""
+"Moving playback buffer to the download manager failed with the following "
+"error \"%s\""
+msgstr ""
+"Перемещение буфера воспроизведения в управление загрузками не удалось с "
+"ошибкой \"%s\""
 
 msgid "Music"
 msgstr "Музыка"
@@ -2184,9 +2224,9 @@ msgstr "Сейчас играет"
 msgid "Number of downloaded files simultaneously"
 msgstr "Количество одновременно скачанных файлов"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Number of items in search history: %d"
-msgstr "Количество элементов в истории поиска"
+msgstr "Количество элементов в истории поиска: %d"
 
 msgid "OK"
 msgstr "OK"
@@ -2353,23 +2393,41 @@ msgstr ""
 "в веб-браузере с установленным расширением MyE2i"
 
 #, python-format
-msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
-msgstr "Пожалуйста, перезапустите Enigma2 и согласитесь установить утилиту %s, когда %s предложит это."
-
-msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
-msgstr "Просьба ввести логин и пароль в конфигурации хоста (доступна под синей кнопкой) и повторить попытку."
-
-msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
-msgstr "Убедитесь, что папка для кэширования данных (заданная в конфигурации) доступна для записи."
-
-msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
-msgstr "Чтобы решить эту проблему полностью, пройдите регистрацию и введите логин и пароль в конфигурации хоста."
+msgid ""
+"Please consider restart your Engima2 and agree to install the %s utlity when "
+"the %s will propose this."
+msgstr ""
+"Пожалуйста, перезапустите Enigma2 и согласитесь установить утилиту %s, когда "
+"%s предложит это."
 
 msgid ""
-"Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
+"Please fill your login and password in the host configuration (available "
+"under blue button) and try again."
+msgstr ""
+"Просьба ввести логин и пароль в конфигурации хоста (доступна под синей "
+"кнопкой) и повторить попытку."
+
+msgid ""
+"Please make sure that the folder for cache data (set in the configuration) "
+"is writable."
+msgstr ""
+"Убедитесь, что папка для кэширования данных (заданная в конфигурации) "
+"доступна для записи."
+
+msgid ""
+"Please register and set login and password in the host configuration, to "
+"solve this problems permanently."
+msgstr ""
+"Чтобы решить эту проблему полностью, пройдите регистрацию и введите логин и "
+"пароль в конфигурации хоста."
+
+msgid ""
+"Please remember to visit http://www.sport365.live/ and watch a few "
+"advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
 msgstr ""
-"Не забудьте посетить сайт http://www.sport365.live/ и посмотреть несколько рекламных объявлений.\n"
+"Не забудьте посетить сайт http://www.sport365.live/ и посмотреть несколько "
+"рекламных объявлений.\n"
 "Это исправит проблему, если воспроизведение будет постоянно прерываться."
 
 msgid "Please retry later."
@@ -2384,8 +2442,11 @@ msgid "Please visit \"%s\" and confirm that you are human."
 msgstr "Посетите раздел \"%s\" и подтвердите, что вы человек."
 
 #, python-format
-msgid "Please visit %s to learn how to redirect this task to the external device."
-msgstr "Посетите %sl чтобы узнать, как перенаправить эту задачу на внешнее устройство."
+msgid ""
+"Please visit %s to learn how to redirect this task to the external device."
+msgstr ""
+"Посетите %sl чтобы узнать, как перенаправить эту задачу на внешнее "
+"устройство."
 
 msgid "Please wait - downloading initialization data."
 msgstr "Подождите - скачивание данных инициализации."
@@ -2393,9 +2454,8 @@ msgstr "Подождите - скачивание данных инициали�
 msgid "Please wait for initialization data."
 msgstr "Дождитесь данных инициализации."
 
-#, fuzzy
 msgid "Podcasts"
-msgstr "Прямой эфир"
+msgstr "Подкасты"
 
 msgid "Polish"
 msgstr "Польский"
@@ -2573,7 +2633,7 @@ msgid "Refreshing"
 msgstr "Обновление"
 
 msgid "Release"
-msgstr "Выпуск"
+msgstr "Релиз"
 
 msgid "Release:"
 msgstr "Выпуск:"
@@ -2615,9 +2675,8 @@ msgstr "Удалите товар"
 msgid "Rename"
 msgstr "Переименовать"
 
-#, fuzzy
 msgid "Rename file"
-msgstr "Удалить файл"
+msgstr "Переименовать файл"
 
 msgid "Replay Shows"
 msgstr "Повторное Шоу"
@@ -2683,12 +2742,11 @@ msgstr "Оценка не менее: "
 msgid "Search"
 msgstr "Поиск"
 
-#, fuzzy
 msgid "Search History is empty."
-msgstr "История поиска"
+msgstr "История поиска пуста."
 
 msgid "Search History successfully deleted."
-msgstr ""
+msgstr "История поиска успешно удалена."
 
 msgid "Search Movies and TV Series"
 msgstr "Поиск Фильмов и Сериалов"
@@ -2875,9 +2933,8 @@ msgstr "Смотровой набор"
 msgid "Settings"
 msgstr "Настройки"
 
-#, fuzzy
 msgid "Shorts"
-msgstr "Все Спортивные"
+msgstr "Шорты"
 
 msgid "Shoulder & Elbow"
 msgstr "Плечо и локоть"
@@ -2936,9 +2993,8 @@ msgstr "Загрузчик одного файла"
 msgid "Skin"
 msgstr "Скин"
 
-#, fuzzy
 msgid "Skinners: "
-msgstr "Слушатели: %s"
+msgstr "Скиннеры: "
 
 msgid "Skip video shorter than [min]"
 msgstr "Пропустить видео короче [мин]"
@@ -2953,10 +3009,13 @@ msgid "Software floating point"
 msgstr "ПО с плавающей точкой"
 
 msgid "Some changes will be applied only after movie player restart."
-msgstr "Внесение некоторых изменений произойдет только после перезапуска плеера."
+msgstr ""
+"Внесение некоторых изменений произойдет только после перезапуска плеера."
 
 msgid "Some settings will be applied only after GUI restart."
-msgstr "Некоторые настройки вступят в силу только после перезапуска графического интерфейса."
+msgstr ""
+"Некоторые настройки вступят в силу только после перезапуска графического "
+"интерфейса."
 
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr "Извините. TVPlayer в настоящее время доступен только в Великобритании"
@@ -3207,18 +3266,22 @@ msgstr "Пропорции по умолчанию для внешнего пр�
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
-"Please fill your login and password in the host configuration. Available under blue button."
+"Please fill your login and password in the host configuration. Available "
+"under blue button."
 msgstr ""
 "На хосте %s требуется регистрация. \n"
-"Просим ввести логин и пароль в конфигурации хоста. Доступно под синей кнопкой."
+"Просим ввести логин и пароль в конфигурации хоста. Доступно под синей "
+"кнопкой."
 
 #, python-format
 msgid ""
 "The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available under blue button."
+"Please fill your login and password in the host configuration - available "
+"under blue button."
 msgstr ""
 "На хосте %s требуется подписка.\n"
-"Просим заполнить логин и пароль в конфигурации хоста - доступно под синей кнопкой."
+"Просим заполнить логин и пароль в конфигурации хоста - доступно под синей "
+"кнопкой."
 
 msgid "The number of items in the search history"
 msgstr "Количество элементов в истории поиска"
@@ -3342,7 +3405,8 @@ msgid "Try to bypass DRM (it may be illegal)"
 msgstr "Попробуйте обойти DRM (это может быть незаконно)"
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
-msgstr "Попробуйте изменить extplayer или отключить IFD в конфигурации GSTplayer"
+msgstr ""
+"Попробуйте изменить extplayer или отключить IFD в конфигурации GSTplayer"
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
 msgstr "Отключение буферизации для http://prognoza.pogody.tv/"
@@ -3367,7 +3431,7 @@ msgid "Umount iso file"
 msgstr "Снятие iso файла"
 
 msgid "Unable to comply. Search History is empty."
-msgstr ""
+msgstr "Невозможно выполнить. История поиска пуста."
 
 msgid "Unknow data in the captcha item!"
 msgstr "Неизвестные данные в элементе captcha!"
@@ -3424,7 +3488,7 @@ msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Использовать Польский прокси для http://prognoza.pogody.tv/"
 
 msgid "Use colors"
-msgstr ""
+msgstr "Используйте цвета"
 
 msgid "Use default quality:"
 msgstr "Желаемое качество по умолчанию:"
@@ -3665,27 +3729,46 @@ msgstr "Да, в файл /tmp/iptv.dbg"
 msgid "You are not allowed to play this video"
 msgstr "Вам не разрешено воспроизводить это видео"
 
-msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
-msgstr "Вы используете старую версию OpenWebif.<br> Для перехода на web E2iPlayer Выберите следующую ссылку<br>"
+msgid ""
+"You are using old version of OpenWebif.<br> To go to E2iPlayer web Select "
+"the following link<br>"
+msgstr ""
+"Вы используете старую версию OpenWebif.<br> Для перехода на web E2iPlayer "
+"Выберите следующую ссылку<br>"
 
-msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
-msgstr "Чтобы устранить эту проблему, можно отключить проверку сертификатов HTTPS в конфигурации E2iPlayer."
+msgid ""
+"You can disable HTTPS certificates validation in the E2iPlayer configuration "
+"to suppress this problem."
+msgstr ""
+"Чтобы устранить эту проблему, можно отключить проверку сертификатов HTTPS в "
+"конфигурации E2iPlayer."
 
-msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
-msgstr "Чтобы устранить эту проблему, можно включить PyCurl в конфигурации E2iPlayer."
+msgid ""
+"You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr ""
+"Чтобы устранить эту проблему, можно включить PyCurl в конфигурации E2iPlayer."
 
-msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
-msgstr "Чтобы устранить эту проблему, вы можете установить пакет PyCurl с поддержкой TLS 1.3 из ленты."
+msgid ""
+"You can install PyCurl package with TLS 1.3 support from the feed to fix "
+"this problem."
+msgstr ""
+"Чтобы устранить эту проблему, вы можете установить пакет PyCurl с поддержкой "
+"TLS 1.3 из ленты."
 
-msgid "You can try to use proxy as workaround, check options under blue button."
-msgstr "Вы можете попробовать использовать прокси в качестве обходного пути, проверьте параметры под синей кнопкой."
+msgid ""
+"You can try to use proxy as workaround, check options under blue button."
+msgstr ""
+"Вы можете попробовать использовать прокси в качестве обходного пути, "
+"проверьте параметры под синей кнопкой."
 
 #, python-format
 msgid "You can use \"%s\" or \"%s\" services for automatic solution."
-msgstr "Вы можете выбрать услуги \"%s\" или \"%s\" для автоматического решения."
+msgstr ""
+"Вы можете выбрать услуги \"%s\" или \"%s\" для автоматического решения."
 
 msgid "You can use external eplayer to start playback faster."
-msgstr "Вы также можете использовать внешний плеер, чтобы ускорить воспроизведение."
+msgstr ""
+"Вы также можете использовать внешний плеер, чтобы ускорить воспроизведение."
 
 msgid "You do not have a premium account. Starting a sponsored broadcast."
 msgstr "У вас нет премиум-аккаунта. Начинаем спонсорскую трансляцию."
@@ -3706,7 +3789,8 @@ msgid "Youtube Suggestions"
 msgstr "Предложения Youtube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr "Поиск на YouTube будет быстрее, если вы введете ключ API в меню настроек"
+msgstr ""
+"Поиск на YouTube будет быстрее, если вы введете ключ API в меню настроек"
 
 #, python-format
 msgid "[%s] - configuration"
@@ -3816,8 +3900,12 @@ msgstr "внешний eplayer3"
 msgid "external gstplayer"
 msgstr "внешний gstplayer"
 
-msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
-msgstr "сперва проверьте корректность работы хоста в GUI и web <b>ДО</b> сообщения об ошибке в нем !!!"
+msgid ""
+"first check if host works properly in GUI and web <b>BEFORE</b> reporting "
+"error in it !!!"
+msgstr ""
+"сперва проверьте корректность работы хоста в GUI и web <b>ДО</b> сообщения "
+"об ошибке в нем !!!"
 
 msgid "format"
 msgstr "формат"
