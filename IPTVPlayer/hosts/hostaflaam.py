@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 26.09.2025 - Mr.X
+# Last Modified: 28.09.2025 - Mr.X
 
 import re
 
@@ -82,9 +82,14 @@ class Aflaam(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("Aflaam.getLinksForVideo [%s]" % cItem)
         urlTab = []
-        sts, data = self.getPage(cItem["url"].replace("movie", "watch").replace("episode", "watch"))
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
+        url = re.findall(r'Quality">.*?href="([^"]+)', data, re.DOTALL)
+        if url:
+            sts, data = self.getPage(url[0])
+            if not sts:
+                return []
         data = re.findall(r'<source\s+[^>]*src="([^"]+)"\s+[^>]*size="(\d+)"', data, re.DOTALL)
         for url, q in data:
             urlTab.append({"name": q, "url": url, "need_resolve": 0})
