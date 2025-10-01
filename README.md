@@ -1,4 +1,4 @@
-# <p align="center">E2iPlayer Plugin for Enigma2 (E²)  ![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg)</p>
+# <p align="center">E2iPlayer Plugin for Enigma2 (E²) ![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg) ![Profil views](https://komarev.com/ghpvc/?username=oe-mirrors)</p>
 
 Python3 Version from <a href="https://www.opena.tv">openATV Team</a>.
 
