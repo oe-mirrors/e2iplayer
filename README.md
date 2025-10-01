@@ -1,4 +1,4 @@
-# <p align="center">E2iPlayer Plugin for Enigma2 (E²)  ![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg)</p>
+# <p align="center">E2iPlayer Plugin for Enigma2 (E²) ![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg) ![Profil views](https://komarev.com/ghpvc/?username=oe-mirrors)</p>
 
 Python3 Version from <a href="https://www.opena.tv">openATV Team</a>.
 
@@ -69,6 +69,25 @@ This is free software; you can redistribute it and/or modify it under the terms 
 This plugin is released under GPLv3. See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html#license-text) for full details.
 
 <img width="120" height="58" alt="GPLv3_Logo svg" src="https://github.com/user-attachments/assets/67d32b0a-2a44-4fa9-a972-202daf28808e" />
+
+---
+
+### 📖 How to Use
+
+| **Button**    | **Action**          | **Description**                                                               |
+|:-------------:| --------------------| ------------------------------------------------------------------------------|
+| 🔴 **RED**   | Sort Mode            | activates sort mode                                                           |
+| 🟢 **GREEN** | Hide/Activate Group  | enables groups to be faded in and out                                         |
+| 🟡 **YELLOW**| Download manager     | opens the download manager                                                    |
+| 🔵 **BLUE**  | More                 | shows further options such as player info / config Host                       |
+| ℹ️ **INFO**  | Open Movie Info      | If supported by the host, information about the film/series is displayed.     |
+| ⚙️ **Menu**  | Open Settings        | opens the player's settings menu                                              |
+| 🔠 **TXT**   | Start Subtitle Search| opens the online/local search for subtitles                                   |
+| 🆗 **OK**    | Play selected channel| open selection                                                                |
+| ⏹️ **STOP**  | Stop playback        | Stop playing a video                                                          |
+| ▶️ **PLAY**  | Start playback       | Start playing a video                                                         |
+| ⏸️ **PAUSE** | Pause playback       | Pause playing a video                                                         |
+| ❌ **EXIT**  | Back                 | take a step back                                                              |
 
 ---
 
