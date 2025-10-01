@@ -72,6 +72,25 @@ This plugin is released under GPLv3. See [LICENSE](https://www.gnu.org/licenses/
 
 ---
 
+### 📖 How to Use
+
+| **Button**    | **Action**          | **Description**                                                               |
+|:-------------:| --------------------| ------------------------------------------------------------------------------|
+| 🔴 **RED**   | Sort Mode            | activates sort mode                                                           |
+| 🟢 **GREEN** | Hide/Activate Group  | enables groups to be faded in and out                                         |
+| 🟡 **YELLOW**| Download manager     | opens the download manager                                                    |
+| 🔵 **BLUE**  | More                 | shows further options such as player info / config Host                       |
+| ℹ️ **INFO**  | Open Movie Info      | If supported by the host, information about the film/series is displayed.     |
+| ⚙️ **Menu**  | Open Settings        | opens the player's settings menu                                              |
+| 🔠 **TXT**   | Start Subtitle Search| opens the online/local search for subtitles                                   |
+| 🆗 **OK**    | Play selected channel| open selection                                                                |
+| ⏹️ **STOP**  | Stop playback        | Stop playing a video                                                          |
+| ▶️ **PLAY**  | Start playback       | Start playing a video                                                         |
+| ⏸️ **PAUSE** | Pause playback       | Pause playing a video                                                         |
+| ❌ **EXIT**  | Back                 | take a step back                                                              |
+
+---
+
 ### 🚀 Key Features
 
 NOTE: ⚠️ The E2iPlayer is ONLY a specialized browser. It does NOT host any of its own materials!!!
