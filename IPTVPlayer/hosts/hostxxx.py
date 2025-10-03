@@ -9948,7 +9948,6 @@ class Host(CBaseHostClass):
 				valTab.append(CDisplayListItem('THE FOLDER DOES NOT CONTAIN FREE-TO-WATCH VIDEOS.  TRY IT ON THE NEXT PAGE!', 'THE FOLDER DOES NOT CONTAIN FREE-TO-WATCH VIDEOS.  \nTRY IT ON THE NEXT PAGE!', CDisplayListItem.TYPE_ARTICLE, [''], '', hostImage() + 'camhub.png', None))
 			if next:
 				url = url.partition('?')[0]
-				print("DEBUG", url)
 				if "categories" in url:
 					next_page = "%s?mode=async&function=get_block&block_id=list_videos_common_videos_list&sort_by=post_date&from=%s" % (url, str(next))
 				elif "latest-updates" in url:
