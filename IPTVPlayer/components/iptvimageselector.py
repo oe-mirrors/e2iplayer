@@ -191,7 +191,7 @@ class IPTVMultipleImageSelectorWidget(Screen):
         self.column_index = 0
         self.row_index = 0
         self.picload = ePicLoad()
-        self.picload.setPara((self.iptv_image_width, self.iptv_image_height, 1, 1, False, 1, "#00000000"))
+        self.picload.setPara((self.iptv_image_width, self.iptv_image_height, 1, 1, False, 1, "#FF000000"))
         self.picload_conn = None
 
     def __onClose(self):

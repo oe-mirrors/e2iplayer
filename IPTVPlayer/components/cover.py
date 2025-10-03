@@ -55,7 +55,7 @@ class Cover(Pixmap):
         self.waitIcon = {"CallBackFun": callBackFun, "FileName": filename, "Ident": ident}
         if filename != self.currIcon.get('FileName', ''):
             if not self.paramsSet:
-                self.picload.setPara((self.instance.size().width(), self.instance.size().height(), 1, 1, False, 1, "#00000000"))
+                self.picload.setPara((self.instance.size().width(), self.instance.size().height(), 1, 1, False, 1, "#FF000000"))
                 self.paramsSet = True
             if not self.decoding:
                 printDBG("_______________start decodeCover")
@@ -138,7 +138,7 @@ class Cover2(Pixmap):
 
     def updateIcon(self, filename):
         if not self.paramsSet:
-            self.picload.setPara((self.instance.size().width(), self.instance.size().height(), 1, 1, False, 1, "#00000000"))
+            self.picload.setPara((self.instance.size().width(), self.instance.size().height(), 1, 1, False, 1, "#FF000000"))
             self.paramsSet = True
         self.picload_conn = eConnectCallback(self.picload.PictureData, self.paintIconPixmapCB)
         ret = self.picload.startDecode(filename)
