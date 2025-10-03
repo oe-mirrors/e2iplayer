@@ -9957,15 +9957,14 @@ class Host(CBaseHostClass):
 				elif "most-popular" in url:
 					next_page = "%s?mode=async&function=get_block&block_id=list_videos_common_videos_list&sort_by=video_viewed_month&from=%s" % (url, str(next))
 				elif "search" in url:
-					try:
-						Quiery = re.search('search[/]([a-z-]+)[/]', url).group(1)
-						next_page = "%s?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&q=%s&category_ids=&sort_by=post_date&from_videos=%s&from_albums=%s" % (url, Quiery, str(next), str(next))
-						printDBG('Full Follow: ' + next_page)
-						valTab.append(CDisplayListItem('************************', '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
-						valTab.append(self.getNextItem(str(next), next_page, name, catUrl))
-					except Exception:
-						printExc()
-
+					Quiery = re.search('search[/]([a-z-]+)[/]', url).group(1)
+					next_page = "%s?mode=async&function=get_block&block_id=list_videos_videos_list_search_result&q=%s&category_ids=&sort_by=post_date&from_videos=%s&from_albums=%s" % (url, Quiery, str(next), str(next))
+				try:
+					printDBG('Full Follow: ' + next_page)
+					valTab.append(CDisplayListItem('************************', '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
+					valTab.append(self.getNextItem(str(next), next_page, name, catUrl))
+				except Exception:
+					printExc()
 			return valTab
 
 		if 'JIZZBOOM' == name:
