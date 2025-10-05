@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Last modified:
+# 05/10/2025 - popking (odem2014)
 # typical import for a standard host
 ###################################################
 # LOCAL import
@@ -468,4 +470,5 @@ class IPTVHost(CHostBase):
     def withArticleContent(self, cItem):
         if 'video' == cItem.get('type', '') or 'explore_item' == cItem.get('category', ''):
             return True
+
         return False
