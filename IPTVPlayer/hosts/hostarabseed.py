@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last modified:
-# 05/10/2025 - popking (odem2014)
-# typical import for a standard host
+# Last modified: 05/10/2025 - popking (odem2014)
 ###################################################
 # LOCAL import
 ###################################################
@@ -28,6 +26,9 @@ import base64
 ###################################################
 
 
+def GetConfigList():
+    return []
+
 def gettytul():
     return 'https://a.asd.homes/'  # main url of host
 
@@ -42,11 +43,11 @@ class ArabSeed(CBaseHostClass):
         # vars default values
 
         # various urls
-        self.MAIN_URL = 'https://a.asd.homes/'
+        self.MAIN_URL =  gettytul()
         self.SEARCH_URL = 'https://a.asd.homes/search'
 
         # url for default icon
-        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/popking159/softcam/refs/heads/master/arabseedlogo.png"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/arabseed.png"
 
         # default header and http params
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -120,9 +121,7 @@ class ArabSeed(CBaseHostClass):
             {'category': 'ramadan_folder', 'title': _('رمضان')},
             {'category': 'anime_folder', 'title': _('انمي')},
             {'category': 'other_folder', 'title': _('اخري')},
-            {'category': 'search', 'title': _('Search'), 'search_item': True},
-            {'category': 'search_history', 'title': _('Search history')}
-        ]
+        ] + self.searchItems()
 
         # Define subcategories for each folder
         self.MOVIES_CAT_TAB = [
@@ -426,7 +425,7 @@ class ArabSeed(CBaseHostClass):
         self.currList = []
 
         # MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'mainpage':
             self.listMainItems(self.currItem)
