@@ -69,6 +69,7 @@ class ArabSeed(CBaseHostClass):
             return []
 
         # Try to find embedded iframes or direct <source> links, as fallback
+        # (You can keep or remove this section depending on the site)
         iframes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '>')
         for iframe in iframes:
             url = self.cm.ph.getSearchGroups(iframe, 'src="([^"]+)"')[0]
@@ -85,15 +86,20 @@ class ArabSeed(CBaseHostClass):
                                  'url': strwithmeta(url, {'Referer': self.MAIN_URL}),
                                  'need_resolve': 1})
 
-        # If no links found by parsing the page, fallback to urlparser
+        # **If no links found by parsing the page, fallback to urlparser**
         if not linksTab:
             printDBG("ArabSeed.getLinksForVideo: no direct links found, calling getVideoLinks()")
+            # Delegate to getVideoLinks for parser-based resolution
             resolved = self.getVideoLinks(cItem['url'])
             printDBG("ArabSeed.getLinksForVideo: resolved via parser: %s" % str(resolved))
+            # The parser returns list of dicts or a list of playable links
+            # We should ensure they have consistent keys
             for entry in resolved:
+                # If entry is a dict already
                 if isinstance(entry, dict):
                     linksTab.append(entry)
                 else:
+                    # If it's just a URL or something else
                     linksTab.append({'url': entry, 'name': self.up.getHostName(cItem['url'])})
 
         return linksTab
@@ -109,7 +115,7 @@ class ArabSeed(CBaseHostClass):
         # items of main menu
         printDBG('ArabSeed.listMainMenu')
         
-        # Define main categories statically
+        # Define main categories statically like FilmPalast does
         self.MAIN_CAT_TAB = [
             {'category': 'mainpage', 'title': _('الرئيسية'), 'url': self.getFullUrl('/main0/')},
             {'category': 'movies_folder', 'title': _('الافلام')},
@@ -190,205 +196,67 @@ class ArabSeed(CBaseHostClass):
         printDBG('ArabSeed.listOtherFolder')
         self.listsTab(self.OTHER_CAT_TAB, cItem)
 
-    def listMainItems(self, cItem):
+    def listMainItems(self, cItem, nextCategory=''):
         printDBG("ArabSeed.listMainItems [%s]" % cItem)
-        
-        page = cItem.get('page', 1)
-        url = cItem['url']
-        
-        # Add page parameter to URL if it's not the first page
-        if page > 1:
-            if '?' in url:
-                url += '&page=' + str(page)
-            else:
-                url += '/page/' + str(page)
-                
-        sts, data = self.getPage(url)
-
+        sts, data = self.getPage(cItem['url'])
+        if sts:
+            # Save a sample of the data for debugging
+            sample = data[:2000] if len(data) > 2000 else data
+            printDBG("Page sample: %s" % sample)
         if not sts:
             return
-            
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="menu__bar hide__md">' , '</div>', False)[1]
         printDBG('|||||||||||||||||||||||||||||||||||||||||||tmp|||||||||||||||')
         printDBG(tmp)
-        
         data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
+        #printDBG(data_items)
 
         for m in data_items:
-            title = self.cleanHtmlStr(m)
-            pureurl = self.cm.ph.getSearchGroups(m, "href=['\"]([^'^\"]+?)['\"]")[0]
-            baseurl, filenameurl = pureurl.rsplit('/', 1)
-            fixedfilenameurl = urllib_quote_plus(filenameurl)
-            url = baseurl + "/" + fixedfilenameurl
-            pureicon = self.cm.ph.getSearchGroups(m, "src=['\"]([^'^\"]+?)['\"]")[0]
-            baseicon, filenameicon = pureicon.rsplit('/', 1)
-            fixedfilenameicon = urllib_quote_plus(filenameicon)
-            icon = baseicon + "/" + fixedfilenameicon
-            params = {'category':'explore_item','title':title, 'icon': icon , 'url': url}
-            printDBG(str(params))
-            self.addDir(params)
-
-        # Check for next page
-        nextPage = False
-        pagination_data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paginate">', '</div>', False)[1]
-        if pagination_data:
-            # Look for next page link
-            next_links = self.cm.ph.getAllItemsBeetwenMarkers(pagination_data, '<a', '</a>')
-            for link in next_links:
-                link_text = self.cleanHtmlStr(link)
-                if 'التالي' in link_text or 'Next' in link_text or '>' in link_text:
-                    nextPage = True
-                    break
-        
-        # Add next page item if available
-        if nextPage:
-            params = dict(cItem)
-            params.update({
-                'category': 'mainpage',
-                'title': _('Next Page →'),
-                'page': page + 1
-            })
-            self.addDir(params)
+                   title = self.cleanHtmlStr(m)
+                   pureurl = self.cm.ph.getSearchGroups(m, "href=['\"]([^'^\"]+?)['\"]")[0]
+                   baseurl, filenameurl = pureurl.rsplit('/', 1)
+                   fixedfilenameurl = urllib_quote_plus(filenameurl)
+                   url = baseurl + "/" + fixedfilenameurl
+                   pureicon = self.cm.ph.getSearchGroups(m, "src=['\"]([^'^\"]+?)['\"]")[0]
+                   baseicon, filenameicon = pureicon.rsplit('/', 1)
+                   fixedfilenameicon = urllib_quote_plus(filenameicon)
+                   icon = baseicon + "/" + fixedfilenameicon
+                   params = {'category':'explore_item','title':title, 'icon': icon , 'url': url}
+                   printDBG(str(params))
+                   self.addDir(params)
 
     def listItems(self, cItem):
         printDBG("ArabSeed.listItems [%s]" % cItem)
-        
-        page = cItem.get('page', 1)
-        url = cItem['url']
-        
-        # Add page parameter to URL if it's not the first page
-        if page > 1:
-            if '?' in url:
-                url += '&page=' + str(page)
-            else:
-                # Remove trailing slash if exists
-                if url.endswith('/'):
-                    url = url[:-1]
-                url += '/page/' + str(page)
-        
-        printDBG("Loading URL for page %s: %s" % (page, url))
-        sts, data = self.getPage(url)
+        sts, data = self.getPage(cItem['url'])
+        #printDBG('listitems data print:')
+        #printDBG(data)
         if not sts:
             return
-        
-        # Extract items
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie__blocks"', '</div>', False)[1]
-        if not tmp:
-            tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie__blocks"', '<div class="paginate">', False)[1]
-        
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2 box__sm__2 box__md__3 box__lg__4 box__xl__5">', '</li>')
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie__blocks" id="ajax__area">' , '<div class="paginate">', False)[1]
+        printDBG('listitems tmp print:')
+        printDBG(tmp)
+        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2 box__sm__2 box__md__3 box__lg__4 box__xl__5"> <div class="item__contents ">', '</li></ul></div></div></div></li>')
+        #printDBG('listitems data_items print:')
+        #printDBG(data_items)
 
         for m in data_items:
-            title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
-            if not title:
-                title = self.cm.ph.getSearchGroups(m, r'alt=[\'"]([^\'"]+)[\'"]')[0]
-            
-            pureurl = self.cm.ph.getSearchGroups(m, r'href=[\'"]([^\'"]+)[\'"]')[0]
-            if pureurl:
-                # Fix URL encoding
-                baseurl, filenameurl = pureurl.rsplit('/', 1)
-                fixedfilenameurl = urllib_quote_plus(filenameurl)
-                url_item = baseurl + "/" + fixedfilenameurl + "watch/"
-            else:
-                continue
-                
-            pureicon = self.cm.ph.getSearchGroups(m, r'data-src=[\'"]([^\'"]+)[\'"]')[0]
-            if not pureicon:
-                pureicon = self.cm.ph.getSearchGroups(m, r'src=[\'"]([^\'"]+)[\'"]')[0]
-                
-            if pureicon:
-                baseicon, filenameicon = pureicon.rsplit('/', 1)
-                fixedfilenameicon = urllib_quote_plus(filenameicon)
-                icon = baseicon + "/" + fixedfilenameicon
-            else:
-                icon = ''
-                
-            params = {'category':'explore_item','title':title, 'icon': icon , 'url': url_item}
-            printDBG(str(params))
-            self.addDir(params)
-
-        # Enhanced pagination detection
-        nextPage = False
-        
-        # Method 1: Look for pagination section
-        pagination_selectors = [
-            '<div class="paginate">',
-            '<div class="pagination">',
-            'class="pagination"',
-            'class="paginate"',
-            '<ul class="pagination'
-        ]
-        
-        pagination_data = None
-        for selector in pagination_selectors:
-            if selector in data:
-                if selector.startswith('<'):
-                    # It's a full tag
-                    end_marker = '</div>' if 'div' in selector else '</ul>'
-                    pagination_data = self.cm.ph.getDataBeetwenMarkers(data, selector, end_marker, False)[1]
-                    if pagination_data:
-                        break
-                else:
-                    # It's a class, find the containing element
-                    pos = data.find(selector)
-                    if pos != -1:
-                        start_pos = data.rfind('<', 0, pos)
-                        end_pos = data.find('</div>', pos) if 'div' in selector else data.find('</ul>', pos)
-                        if start_pos != -1 and end_pos != -1:
-                            pagination_data = data[start_pos:end_pos+6]
-                            break
-        
-        if pagination_data:
-            printDBG("Found pagination data: %s" % pagination_data)
-            # Look for next page link
-            next_links = self.cm.ph.getAllItemsBeetwenMarkers(pagination_data, '<a', '</a>')
-            for link in next_links:
-                link_text = self.cleanHtmlStr(link).lower()
-                link_href = self.cm.ph.getSearchGroups(link, 'href="([^"]+)"')[0]
-                
-                # Check for next page indicators
-                next_indicators = ['التالي', 'next', '>', '»', 'الصفحة التالية', 'older', 'newer', 'more']
-                if any(indicator in link_text for indicator in next_indicators):
-                    nextPage = True
-                    break
-                # Also check if link contains next page number
-                if '/page/%d' % (page + 1) in link_href or 'page=%d' % (page + 1) in link_href:
-                    nextPage = True
-                    break
-        
-        # Method 2: If we have items and no explicit next page, assume there might be more
-        if not nextPage and len(data_items) >= 20:  # If we got a full page of items
-            nextPage = True
-        
-        # Add next page item if available
-        if nextPage:
-            params = dict(cItem)
-            params.update({
-                'category': 'list_items',
-                'title': _('Next Page →'),
-                'page': page + 1
-            })
-            self.addDir(params)
-            printDBG("Added Next Page option for page %d" % (page + 1))
+                   title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
+                   pureurl = self.cm.ph.getSearchGroups(m, r'href=[\'"]([^\'"]+)[\'"]')[0]
+                   baseurl, filenameurl = pureurl.rsplit('/', 1)
+                   fixedfilenameurl = urllib_quote_plus(filenameurl)
+                   url = baseurl + "/" + fixedfilenameurl + "watch/"
+                   pureicon = self.cm.ph.getSearchGroups(m, r'data-src=[\'"]([^\'"]+)[\'"]')[0]
+                   baseicon, filenameicon = pureicon.rsplit('/', 1)
+                   fixedfilenameicon = urllib_quote_plus(filenameicon)
+                   icon = baseicon + "/" + fixedfilenameicon
+                   params = {'category':'explore_item','title':title, 'icon': icon , 'url': url}
+                   printDBG(str(params))
+                   self.addDir(params)
 
     def listSeriesItems(self, cItem):
         printDBG("ArabSeed.listSeriesItems ----------")
 
-        page = cItem.get('page', 1)
-        url = cItem['url']
-        
-        # Add page parameter to URL if it's not the first page
-        if page > 1:
-            if '?' in url:
-                url += '&page=' + str(page)
-            else:
-                # Remove trailing slash if exists
-                if url.endswith('/'):
-                    url = url[:-1]
-                url += '/page/' + str(page)
-        
-        printDBG("Loading series URL for page %s: %s" % (page, url))
-        sts, data = self.getPage(url)
+        sts, data = self.getPage(cItem['url'])
         if not sts:
             return
 
@@ -397,24 +265,17 @@ class ArabSeed(CBaseHostClass):
         blocks = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="box__xs__2', '</li>')
         for block in blocks:
             pureurl = self.getFullUrl(self.cm.ph.getSearchGroups(block, 'href="([^"]+?)"')[0])
-            if pureurl:
-                baseurl, filenameurl = pureurl.rsplit('/', 1)
-                fixedfilenameurl = urllib_quote_plus(filenameurl)
-                url_item = baseurl + "/" + fixedfilenameurl
-            else:
+            baseurl, filenameurl = pureurl.rsplit('/', 1)
+            fixedfilenameurl = urllib_quote_plus(filenameurl)
+            baseurl, filenameurl = pureurl.rsplit('/', 1)
+            url = baseurl + "/" + fixedfilenameurl
+            if not url:
                 continue
 
             pureicon = self.cm.ph.getSearchGroups(block, 'data-src="([^"]+?)"')[0]
-            if not pureicon:
-                pureicon = self.cm.ph.getSearchGroups(block, 'src="([^"]+?)"')[0]
-                
-            if pureicon:
-                baseicon, filenameicon = pureicon.rsplit('/', 1)
-                fixedfilenameicon = urllib_quote_plus(filenameicon)
-                icon = baseicon + "/" + fixedfilenameicon
-            else:
-                icon = ''
-                
+            baseicon, filenameicon = pureicon.rsplit('/', 1)
+            fixedfilenameicon = urllib_quote_plus(filenameicon)
+            icon = baseicon + "/" + fixedfilenameicon
             desc = self.cm.ph.getSearchGroups(block, '<p[^>]*?>([^<]+?)</p>')[0]
             fullTitle = self.cm.ph.getSearchGroups(block, '<h3[^>]*?>([^<]+?)</h3>')[0].strip()
 
@@ -429,71 +290,45 @@ class ArabSeed(CBaseHostClass):
             params = dict(cItem)
             params.update({
                 'title': title,
-                'url': url_item,
+                'url': url,
                 'icon': icon,
                 'desc': desc,
-                'category': 'explore_episodes',
+                'category': 'explore_episodes',  # You’ll handle this in handleService()
             })
 
             self.addDir(params)
 
-        # Enhanced pagination detection
-        nextPage = False
+
+    def listCats(self, cItem, nextCategory, marker_start, marker_end):
+        printDBG('ArabSeed.listCats')
+        url = cItem['url']
+        sts, data = self.getPage(url)
+        if not sts:
+            return
+            
+        data = self.cm.ph.getDataBeetwenMarkers(data, marker_start, marker_end, False)[1]
+        items = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
         
-        pagination_selectors = [
-            '<div class="paginate">',
-            '<div class="pagination">',
-            'class="pagination"',
-            'class="paginate"',
-            '<ul class="pagination'
-        ]
-        
-        pagination_data = None
-        for selector in pagination_selectors:
-            if selector in data:
-                if selector.startswith('<'):
-                    end_marker = '</div>' if 'div' in selector else '</ul>'
-                    pagination_data = self.cm.ph.getDataBeetwenMarkers(data, selector, end_marker, False)[1]
-                    if pagination_data:
-                        break
-                else:
-                    pos = data.find(selector)
-                    if pos != -1:
-                        start_pos = data.rfind('<', 0, pos)
-                        end_pos = data.find('</div>', pos) if 'div' in selector else data.find('</ul>', pos)
-                        if start_pos != -1 and end_pos != -1:
-                            pagination_data = data[start_pos:end_pos+6]
-                            break
-        
-        if pagination_data:
-            printDBG("Found pagination data in series: %s" % pagination_data)
-            next_links = self.cm.ph.getAllItemsBeetwenMarkers(pagination_data, '<a', '</a>')
-            for link in next_links:
-                link_text = self.cleanHtmlStr(link).lower()
-                link_href = self.cm.ph.getSearchGroups(link, 'href="([^"]+)"')[0]
-                
-                next_indicators = ['التالي', 'next', '>', '»', 'الصفحة التالية', 'older', 'newer', 'more']
-                if any(indicator in link_text for indicator in next_indicators):
-                    nextPage = True
-                    break
-                if '/page/%d' % (page + 1) in link_href or 'page=%d' % (page + 1) in link_href:
-                    nextPage = True
-                    break
-        
-        # Fallback: if we have many items, assume there might be more pages
-        if not nextPage and len(blocks) >= 20:
-            nextPage = True
-        
-        # Add next page item if available
-        if nextPage:
+        for item in items:
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)"')[0])
+            title = self.cleanHtmlStr(item)
+            if url and title:
+                params = dict(cItem)
+                params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url})
+                self.addDir(params)
+
+    def listSeriesABC(self, cItem, nextCategory):
+        printDBG('ArabSeed.listSeriesABC')
+        # Add alphabet letters for series
+        for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
             params = dict(cItem)
-            params.update({
-                'category': 'series',
-                'title': _('Next Page →'), 
-                'page': page + 1
-            })
+            params.update({'good_for_fav': False, 'category': nextCategory, 'title': letter, 'url': self.getFullUrl('/serien/view?l=' + letter)})
             self.addDir(params)
-            printDBG("Added Next Page option for series page %d" % (page + 1))
+
+    def listSeriesByLetter(self, cItem, nextCategory):
+        printDBG('ArabSeed.listSeriesByLetter')
+        self.listItems(cItem, nextCategory)
+
 
     def exploreItems(self, cItem):
         printDBG('ArabSeed.exploreItems')
@@ -542,6 +377,7 @@ class ArabSeed(CBaseHostClass):
             })
             self.addVideo(params)
 
+
     def exploreSeriesItems(self, cItem):
         printDBG('ArabSeed.exploreSeriesItems')
         url = cItem['url']
@@ -585,27 +421,23 @@ class ArabSeed(CBaseHostClass):
             printDBG('Adding episode: %s' % str(params))
             self.addDir(params)
 
+
     def safe_b64decode(self, data):
         """Base64 decode with automatic padding fix."""
         data += '=' * (-len(data) % 4)
         return base64.b64decode(data).decode('utf-8')
 
+    def listEpisodes(self, cItem):
+        printDBG('ArabSeed.listEpisodes')
+        # For now, just redirect to video
+        cItem['category'] = 'video'
+        self.addDir(cItem)
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ArabSeed.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        
-        page = cItem.get('page', 1)
-        base_url = self.getFullUrl('/search?q=') + urllib_quote_plus(searchPattern)
-        
-        # Add page parameter to URL if it's not the first page
-        if page > 1:
-            if '?' in base_url:
-                base_url += '&page=' + str(page)
-            else:
-                base_url += '/page/' + str(page)
-        
-        cItem['url'] = base_url
-        self.listItems(cItem)
+        cItem['url'] = self.getFullUrl('/search?q=') + urllib_quote(searchPattern)
+        self.listItems(cItem, 'explore_item')
 
     def getFavouriteData(self, cItem):
         printDBG('ArabSeed.getFavouriteData')
@@ -629,6 +461,50 @@ class ArabSeed(CBaseHostClass):
             cItem = {}
             printExc()
         return cItem
+
+    def listSubMenuFolder(self, cItem):
+        """List submenu items from a folder"""
+        printDBG('ArabSeed.listSubMenuFolder')
+        
+        sub_items = cItem.get('sub_items', [])
+        main_category = cItem.get('main_category', 'list_items')
+        
+        for sub_item in sub_items:
+            # Extract title from submenu item
+            title = self.cm.ph.getDataBeetwenMarkers(sub_item, '<span>', '</span>', False)[1]
+            if not title:
+                title = self.cleanHtmlStr(sub_item)
+            
+            # Extract URL
+            url = self.cm.ph.getSearchGroups(sub_item, 'href="([^"]+)"')[0]
+            if not url:
+                continue
+                
+            # Make sure URL is absolute
+            if not url.startswith('http'):
+                url = self.getFullUrl(url)
+            
+            # Use the main category type for subitems, or determine from title
+            category_type = main_category
+            if any(word in title for word in ['مسلسلات', 'رمضان', 'انمي', 'كرتون']):
+                category_type = 'series'
+            elif any(word in title for word in ['افلام']):
+                category_type = 'list_items'
+            
+            params = {
+                'category': category_type,
+                'title': title,
+                'url': url
+            }
+            printDBG("Adding submenu item: %s" % str(params))
+            self.addDir(params)
+
+    def searchItems(self):
+        searchItem = [
+            {'category': 'search', 'title': _('Search'), 'search_item': True},
+            {'category': 'search_history', 'title': _('Search history')}
+        ]
+        return searchItem
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('ArabSeed.handleService start')
