@@ -9,6 +9,7 @@
 'hostaltadefinizione01': 'https://altadefinizione01.spa/',
 'hostanimeodcinki': 'https://anime-odcinki.pl/',
 'hostappletrailers': 'https://trailers.apple.com/',
+'hostarabseed': 'https://a.asd.homes/',
 'hostardmediathek': 'ARDmediathek',
 'hostartetv': 'https://www.arte.tv/',
 'hostbajeczkiorg': 'http://bajeczki.org/',
@@ -204,4 +205,5 @@
 'hostzaluknijcc': 'https://zaluknij.cc/',
 'hostzdfmediathek': 'https://zdf-prod-futura.zdf.de/',
 'hostzerioncc': 'https://zerion.cc/'
+
 }
