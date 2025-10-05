@@ -29,6 +29,7 @@ import base64
 def GetConfigList():
     return []
 
+
 def gettytul():
     return 'https://a.asd.homes/'  # main url of host
 
@@ -43,7 +44,7 @@ class ArabSeed(CBaseHostClass):
         # vars default values
 
         # various urls
-        self.MAIN_URL =  gettytul()
+        self.MAIN_URL = gettytul()
         self.SEARCH_URL = 'https://a.asd.homes/search'
 
         # url for default icon
