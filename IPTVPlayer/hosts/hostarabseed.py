@@ -13,18 +13,15 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Me
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # library for json (instead of standard json.loads and json.dumps)
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-# library for parsing html
-from Plugins.Extensions.IPTVPlayer.libs import ph
 # read informations in m3u8
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 ###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin, urlparse
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
 ###################################################
 import re
-import datetime
 import base64
 ###################################################
 
@@ -69,7 +66,6 @@ class ArabSeed(CBaseHostClass):
             return []
 
         # Try to find embedded iframes or direct <source> links, as fallback
-        # (You can keep or remove this section depending on the site)
         iframes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '>')
         for iframe in iframes:
             url = self.cm.ph.getSearchGroups(iframe, 'src="([^"]+)"')[0]
@@ -93,7 +89,6 @@ class ArabSeed(CBaseHostClass):
             resolved = self.getVideoLinks(cItem['url'])
             printDBG("ArabSeed.getLinksForVideo: resolved via parser: %s" % str(resolved))
             # The parser returns list of dicts or a list of playable links
-            # We should ensure they have consistent keys
             for entry in resolved:
                 # If entry is a dict already
                 if isinstance(entry, dict):
@@ -209,7 +204,6 @@ class ArabSeed(CBaseHostClass):
         printDBG('|||||||||||||||||||||||||||||||||||||||||||tmp|||||||||||||||')
         printDBG(tmp)
         data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
-        #printDBG(data_items)
 
         for m in data_items:
                    title = self.cleanHtmlStr(m)
@@ -228,16 +222,12 @@ class ArabSeed(CBaseHostClass):
     def listItems(self, cItem):
         printDBG("ArabSeed.listItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
-        #printDBG('listitems data print:')
-        #printDBG(data)
         if not sts:
             return
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie__blocks" id="ajax__area">' , '<div class="paginate">', False)[1]
         printDBG('listitems tmp print:')
         printDBG(tmp)
         data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2 box__sm__2 box__md__3 box__lg__4 box__xl__5"> <div class="item__contents ">', '</li></ul></div></div></div></li>')
-        #printDBG('listitems data_items print:')
-        #printDBG(data_items)
 
         for m in data_items:
                    title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
@@ -293,42 +283,10 @@ class ArabSeed(CBaseHostClass):
                 'url': url,
                 'icon': icon,
                 'desc': desc,
-                'category': 'explore_episodes',  # You’ll handle this in handleService()
+                'category': 'explore_episodes',
             })
 
             self.addDir(params)
-
-
-    def listCats(self, cItem, nextCategory, marker_start, marker_end):
-        printDBG('ArabSeed.listCats')
-        url = cItem['url']
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-            
-        data = self.cm.ph.getDataBeetwenMarkers(data, marker_start, marker_end, False)[1]
-        items = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
-        
-        for item in items:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)"')[0])
-            title = self.cleanHtmlStr(item)
-            if url and title:
-                params = dict(cItem)
-                params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'url': url})
-                self.addDir(params)
-
-    def listSeriesABC(self, cItem, nextCategory):
-        printDBG('ArabSeed.listSeriesABC')
-        # Add alphabet letters for series
-        for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'category': nextCategory, 'title': letter, 'url': self.getFullUrl('/serien/view?l=' + letter)})
-            self.addDir(params)
-
-    def listSeriesByLetter(self, cItem, nextCategory):
-        printDBG('ArabSeed.listSeriesByLetter')
-        self.listItems(cItem, nextCategory)
-
 
     def exploreItems(self, cItem):
         printDBG('ArabSeed.exploreItems')
@@ -377,7 +335,6 @@ class ArabSeed(CBaseHostClass):
             })
             self.addVideo(params)
 
-
     def exploreSeriesItems(self, cItem):
         printDBG('ArabSeed.exploreSeriesItems')
         url = cItem['url']
@@ -421,23 +378,16 @@ class ArabSeed(CBaseHostClass):
             printDBG('Adding episode: %s' % str(params))
             self.addDir(params)
 
-
     def safe_b64decode(self, data):
         """Base64 decode with automatic padding fix."""
         data += '=' * (-len(data) % 4)
         return base64.b64decode(data).decode('utf-8')
 
-    def listEpisodes(self, cItem):
-        printDBG('ArabSeed.listEpisodes')
-        # For now, just redirect to video
-        cItem['category'] = 'video'
-        self.addDir(cItem)
-
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ArabSeed.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search?q=') + urllib_quote(searchPattern)
-        self.listItems(cItem, 'explore_item')
+        cItem['url'] = self.getFullUrl('/search?q=') + urllib_quote_plus(searchPattern)
+        self.listItems(cItem)
 
     def getFavouriteData(self, cItem):
         printDBG('ArabSeed.getFavouriteData')
@@ -461,50 +411,6 @@ class ArabSeed(CBaseHostClass):
             cItem = {}
             printExc()
         return cItem
-
-    def listSubMenuFolder(self, cItem):
-        """List submenu items from a folder"""
-        printDBG('ArabSeed.listSubMenuFolder')
-        
-        sub_items = cItem.get('sub_items', [])
-        main_category = cItem.get('main_category', 'list_items')
-        
-        for sub_item in sub_items:
-            # Extract title from submenu item
-            title = self.cm.ph.getDataBeetwenMarkers(sub_item, '<span>', '</span>', False)[1]
-            if not title:
-                title = self.cleanHtmlStr(sub_item)
-            
-            # Extract URL
-            url = self.cm.ph.getSearchGroups(sub_item, 'href="([^"]+)"')[0]
-            if not url:
-                continue
-                
-            # Make sure URL is absolute
-            if not url.startswith('http'):
-                url = self.getFullUrl(url)
-            
-            # Use the main category type for subitems, or determine from title
-            category_type = main_category
-            if any(word in title for word in ['مسلسلات', 'رمضان', 'انمي', 'كرتون']):
-                category_type = 'series'
-            elif any(word in title for word in ['افلام']):
-                category_type = 'list_items'
-            
-            params = {
-                'category': category_type,
-                'title': title,
-                'url': url
-            }
-            printDBG("Adding submenu item: %s" % str(params))
-            self.addDir(params)
-
-    def searchItems(self):
-        searchItem = [
-            {'category': 'search', 'title': _('Search'), 'search_item': True},
-            {'category': 'search_history', 'title': _('Search history')}
-        ]
-        return searchItem
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('ArabSeed.handleService start')
