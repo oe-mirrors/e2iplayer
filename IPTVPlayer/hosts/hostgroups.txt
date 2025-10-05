@@ -311,6 +311,7 @@
   "egybest",
   "tvfun",
   "movizlandcom",
+  "shahid44u",
   "shahiidanimenet",
   "dailymotion",
   "vimeo",

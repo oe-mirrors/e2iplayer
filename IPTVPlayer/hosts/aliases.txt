@@ -149,6 +149,7 @@
 'hostserienstreamto': 'https://serienstream.to/',
 'hostseriesonline': 'https://series9.io/',
 'hostserijeonline': 'http://www.serije.online/',
+'hostshahid44u': 'https://shahid4uu.day/',
 'hostshahiidanimenet': 'https://shahiid-anime.net/',
 'hostshoutcast': 'http://shoutcast.com/',
 'hostskstream': 'https://skstream.info/',
