@@ -111,7 +111,7 @@ class ArabSeed(CBaseHostClass):
     def listMainMenu(self, cItem):
         # items of main menu
         printDBG('ArabSeed.listMainMenu')
-        
+
         # Define main categories statically like FilmPalast does
         self.MAIN_CAT_TAB = [
             {'category': 'mainpage', 'title': _('الرئيسية'), 'url': self.getFullUrl('/main0/')},
@@ -123,7 +123,7 @@ class ArabSeed(CBaseHostClass):
             {'category': 'search', 'title': _('Search'), 'search_item': True},
             {'category': 'search_history', 'title': _('Search history')}
         ]
-        
+
         # Define subcategories for each folder
         self.MOVIES_CAT_TAB = [
             {'category': 'list_items', 'title': _('افلام Netfilx'), 'url': self.getFullUrl('/category/netfilx/%d8%a7%d9%81%d9%84%d8%a7%d9%85-netfilx/')},
@@ -135,7 +135,7 @@ class ArabSeed(CBaseHostClass):
             {'category': 'list_items', 'title': _('افلام مدبلجة'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
             {'category': 'list_items', 'title': _('افلام هندى'), 'url': self.getFullUrl('/category/indian-movies/')}
         ]
-        
+
         self.SERIES_CAT_TAB = [
             {'category': 'series', 'title': _('مسلسلات Netfilx'), 'url': self.getFullUrl('/category/netfilx/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-netfilz/')},
             {'category': 'series', 'title': _('مسلسلات اجنبي'), 'url': self.getFullUrl('/category/foreign-series-2/')},
@@ -147,7 +147,7 @@ class ArabSeed(CBaseHostClass):
             {'category': 'series', 'title': _('مسلسلات مصريه'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%85%d8%b5%d8%b1%d9%8a%d9%87/')},
             {'category': 'series', 'title': _('مسلسلات هندية'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')}
         ]
-        
+
         self.RAMADAN_CAT_TAB = [
             {'category': 'series', 'title': _('مسلسلات رمضان 2025'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/ramadan-series-2025/')},
             {'category': 'series', 'title': _('مسلسلات رمضان 2024'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/ramadan-series-2024/')},
@@ -157,19 +157,19 @@ class ArabSeed(CBaseHostClass):
             {'category': 'series', 'title': _('مسلسلات رمضان 2020'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2020-hd/')},
             {'category': 'series', 'title': _('مسلسلات رمضان 2019'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2019/')}
         ]
-        
+
         self.ANIME_CAT_TAB = [
             {'category': 'list_items', 'title': _('افلام انيميشن'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%86%d9%8a%d9%85%d9%8a%d8%b4%d9%86/')},
             {'category': 'series', 'title': _('مسلسلات كرتون'), 'url': self.getFullUrl('/category/cartoon-series/')}
         ]
-        
+
         self.OTHER_CAT_TAB = [
             {'category': 'list_items', 'title': _('اغاني عربي'), 'url': self.getFullUrl('/category/%d8%a7%d8%ba%d8%a7%d9%86%d9%8a-%d8%b9%d8%b1%d8%a8%d9%8a/')},
             {'category': 'list_items', 'title': _('مصارعه'), 'url': self.getFullUrl('/category/wwe-shows/')},
             {'category': 'list_items', 'title': _('برامج تلفزيونية'), 'url': self.getFullUrl('/category/%d8%a8%d8%b1%d8%a7%d9%85%d8%ac-%d8%aa%d9%84%d9%81%d8%b2%d9%8a%d9%88%d9%86%d9%8a%d8%a9/')},
             {'category': 'list_items', 'title': _('مسرحيات عربيه'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d8%b1%d8%ad%d9%8a%d8%a7%d8%aa-%d8%b9%d8%b1%d8%a8%d9%8a/')}
         ]
-        
+
         # Display main categories
         self.listsTab(self.MAIN_CAT_TAB, cItem)
 
@@ -202,7 +202,7 @@ class ArabSeed(CBaseHostClass):
             printDBG("Page sample: %s" % sample)
         if not sts:
             return
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="menu__bar hide__md">' , '</div>', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="menu__bar hide__md">', '</div>', False)[1]
         printDBG('|||||||||||||||||||||||||||||||||||||||||||tmp|||||||||||||||')
         printDBG(tmp)
         data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
@@ -217,7 +217,7 @@ class ArabSeed(CBaseHostClass):
                    baseicon, filenameicon = pureicon.rsplit('/', 1)
                    fixedfilenameicon = urllib_quote_plus(filenameicon)
                    icon = baseicon + "/" + fixedfilenameicon
-                   params = {'category':'explore_item','title':title, 'icon': icon , 'url': url}
+                   params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': url}
                    printDBG(str(params))
                    self.addDir(params)
 
@@ -226,7 +226,7 @@ class ArabSeed(CBaseHostClass):
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie__blocks" id="ajax__area">' , '<div class="paginate">', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie__blocks" id="ajax__area">', '<div class="paginate">', False)[1]
         printDBG('listitems tmp print:')
         printDBG(tmp)
         data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2 box__sm__2 box__md__3 box__lg__4 box__xl__5"> <div class="item__contents ">', '</li></ul></div></div></div></li>')
@@ -241,7 +241,7 @@ class ArabSeed(CBaseHostClass):
                    baseicon, filenameicon = pureicon.rsplit('/', 1)
                    fixedfilenameicon = urllib_quote_plus(filenameicon)
                    icon = baseicon + "/" + fixedfilenameicon
-                   params = {'category':'explore_item','title':title, 'icon': icon , 'url': url}
+                   params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': url}
                    printDBG(str(params))
                    self.addDir(params)
 
@@ -461,6 +461,7 @@ class ArabSeed(CBaseHostClass):
             printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 
