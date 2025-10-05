@@ -148,6 +148,7 @@ hostserialeco_blocked_
 hostserienstreamto
 hostseriesonline_blocked_
 hostserijeonline_blocked_
+hostshahid44u
 hostshahiidanimenet_blocked_
 hostshoutcast
 hostskstream_blocked_
