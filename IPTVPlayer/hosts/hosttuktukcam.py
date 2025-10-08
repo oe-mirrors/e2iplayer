@@ -26,6 +26,9 @@ import re
 import base64
 ###################################################
 
+def GetConfigList():
+    return []
+
 
 def gettytul():
     return 'https://tuk.cam/'  # main url of host
@@ -45,7 +48,7 @@ class TukTukCam(CBaseHostClass):
         self.SEARCH_URL = 'https://tuk.cam/search'
 
         # url for default icon
-        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/popking159/softcam/refs/heads/master/tuktuk.png"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/tuktuk.png"
 
         # default header and http params
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -115,9 +118,7 @@ class TukTukCam(CBaseHostClass):
             {'category': 'movies_folder', 'title': _('الافلام')},
             {'category': 'series_folder', 'title': _('المسلسلات')},
             {'category': 'anime_folder', 'title': _('انمي')},
-            {'category': 'search', 'title': _('Search'), 'search_item': True},
-            {'category': 'search_history', 'title': _('Search history')}
-        ]
+        ] + self.searchItems()
         # Define subcategories for each folder
         self.MOVIES_CAT_TAB = [
             {'category': 'list_items', 'title': _('افلام اجنبى مدبلجة'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a%d8%a9-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
@@ -222,9 +223,8 @@ class TukTukCam(CBaseHostClass):
         if not sts:
             return
 
-        seriesDict = {}
+        series_dict = {}
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="MasterArchiveSection loadFilter ArcArc"', '</div></section>', False)[1]
-        #printDBG(tmp)
         blocks = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Block--Item">', '</div></a></div>')
 
         for block in blocks:
@@ -245,14 +245,14 @@ class TukTukCam(CBaseHostClass):
                 icon = cItem.get('icon', '')
 
             desc = self.cm.ph.getSearchGroups(block, '<p[^>]*?>([^<]+?)</p>')[0]
-            fullTitle = self.cm.ph.getSearchGroups(block, '<h3[^>]*?>([^<]+?)</h3>')[0].strip()
-            clean_title = re.sub(r'(الحلقة\s*\d+.*|مترجمة.*|الاخيرة.*)', '', fullTitle, flags=re.UNICODE).strip()
+            full_title = self.cm.ph.getSearchGroups(block, '<h3[^>]*?>([^<]+?)</h3>')[0].strip()
+            clean_title = re.sub(r'(الحلقة\s*\d+.*|مترجمة.*|الاخيرة.*)', '', full_title, flags=re.UNICODE).strip()
             clean_title = re.sub(r'\s{2,}', ' ', clean_title)
             title = clean_title
 
-            if title in seriesDict:
+            if title in series_dict:
                 continue
-            seriesDict[title] = True
+            series_dict[title] = True
 
             params = dict(cItem)
             params.update({
@@ -266,8 +266,6 @@ class TukTukCam(CBaseHostClass):
 
         # === PAGINATION HANDLING ===
         pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', '</div>', False)[1]
-        #printDBG("PAGINATION HTML >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        #printDBG(pagination)
 
         nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
         prevPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="prev page-numbers"[^>]+href="([^"]+)"')[0]
@@ -294,22 +292,16 @@ class TukTukCam(CBaseHostClass):
             })
             self.addDir(params)
 
-
     def exploreItems(self, cItem):
         printDBG('TukTukCam.exploreItems')
         url = cItem['url']
         sts, data = self.getPage(url)
-        #printDBG('exploreitems data explore |||||||||||||||||||||||||||||||||| print:')
-        #printDBG(data)
         if not sts:
             return
 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="watch--servers--list">', '</div></div>', False)[1]
         printDBG('listitems tmp |||||||||||||||||||||||||||||||||| print:')
-        #printDBG(tmp)
         items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
-        printDBG('listitems items |||||||||||||||||||||||||||||||||| print:')
-        #printDBG(items)
         for item in items:
             # Extract the label (e.g. "سيرفر 1") and quality (data-qu="480")
             label = self.cm.ph.getSearchGroups(item, '<span>([^<]+)</span>')[0].strip()
@@ -333,17 +325,12 @@ class TukTukCam(CBaseHostClass):
         printDBG('TukTukCam.exploreSeriesItems')
         url = cItem['url']
         sts, data = self.getPage(url)
-        #printDBG('Episodes data||||||||||||||||||||||||||||||||||||||||||data:')
-        #printDBG(data)
         if not sts:
             return
 
         # Extract the block that contains episodes
         episodes_block = self.cm.ph.getDataBeetwenMarkers(data,
             '<div class="episodes--list--side"', '></div></div>', False)[1]
-
-        # printDBG('Episodes block:')
-        # printDBG(episodes_block)
 
         episodes = self.cm.ph.getAllItemsBeetwenMarkers(episodes_block, '<a', '</a>')
         episodes.reverse()

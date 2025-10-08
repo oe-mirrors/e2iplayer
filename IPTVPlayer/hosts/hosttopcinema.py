@@ -27,7 +27,7 @@ import base64
 ###################################################
 
 
-def GetConfigList():
+def get_config_list():
     return []
 
 
@@ -50,7 +50,7 @@ class TopCinema(CBaseHostClass):
         self.SEARCH_URL = 'https://web6.topcinema.cam/search'
 
         # url for default icon
-        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/popking159/softcam/refs/heads/master/topcinema.png"
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/topcinema.png"
 
         # default header and http params
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -58,13 +58,13 @@ class TopCinema(CBaseHostClass):
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Site': 'same-origin'})
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if any(ord(c) > 127 for c in baseUrl):
-            baseUrl = urllib_quote_plus(baseUrl, safe="://")
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+    def getPage(self, base_url, add_params=None, post_data=None):
+        if any(ord(c) > 127 for c in base_url):
+            base_url = urllib_quote_plus(base_url, safe="://")
+        if add_params is None:
+            add_params = dict(self.defaultParams)
+        add_params["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
+        return self.cm.getPageCFProtection(base_url, add_params, post_data)
 
     def getLinksForVideo(self, cItem):
         printDBG("TopCinema.getLinksForVideo [%s]" % cItem)
@@ -195,19 +195,19 @@ class TopCinema(CBaseHostClass):
 
         # === PAGINATION HANDLING ===
         pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paginate">', '</div>', False)[1]
-        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&raquo;\s*</a>')[0]
-        prevPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&laquo;\s*</a>')[0]
+        next_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&raquo;\s*</a>')[0]
+        prev_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&laquo;\s*</a>')[0]
 
-        if nextPage:
-            nextPage = self.getFullUrl(nextPage)
+        if next_page:
+            next_page = self.getFullUrl(next_page)
             params = dict(cItem)
-            params.update({'title': 'Next Page ▶', 'url': nextPage, 'category': 'list_items'})
+            params.update({'title': 'Next Page ▶', 'url': next_page, 'category': 'list_items'})
             self.addDir(params)
 
-        if prevPage:
-            prevPage = self.getFullUrl(prevPage)
+        if prev_page:
+            prev_page = self.getFullUrl(prev_page)
             params = dict(cItem)
-            params.update({'title': '◀ Previous Page', 'url': prevPage, 'category': 'list_items'})
+            params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'list_items'})
             self.addDir(params)
 
 
@@ -253,7 +253,6 @@ class TopCinema(CBaseHostClass):
 
             if url in ['/series/', '/assemblies/']:
                 url = urljoin(url, 'list/')
-                category = ''
 
             params = {'category': 'show_seasons', 'title': title, 'icon': icon, 'url': url}
             printDBG(str(params))
@@ -261,19 +260,19 @@ class TopCinema(CBaseHostClass):
 
         # === PAGINATION HANDLING ===
         pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paginate">', '</div>', False)[1]
-        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&raquo;\s*</a>')[0]
-        prevPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&laquo;\s*</a>')[0]
+        next_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&raquo;\s*</a>')[0]
+        prev_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&laquo;\s*</a>')[0]
 
-        if nextPage:
-            nextPage = self.getFullUrl(nextPage)
+        if next_page:
+            next_page = self.getFullUrl(next_page)
             params = dict(cItem)
-            params.update({'title': 'Next Page ▶', 'url': nextPage, 'category': 'list_items'})
+            params.update({'title': 'Next Page ▶', 'url': next_page, 'category': 'list_items'})
             self.addDir(params)
 
-        if prevPage:
-            prevPage = self.getFullUrl(prevPage)
+        if prev_page:
+            prev_page = self.getFullUrl(prev_page)
             params = dict(cItem)
-            params.update({'title': '◀ Previous Page', 'url': prevPage, 'category': 'list_items'})
+            params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'list_items'})
             self.addDir(params)
 
     def exploreItems(self, cItem):
@@ -281,10 +280,10 @@ class TopCinema(CBaseHostClass):
         url = cItem['url']
         printDBG("|||||||||||||||||exploreUrl||||||||||||||||||||")
         printDBG(url)
-        baseUrl = urljoin(cItem['url'].replace('list/', ''), 'watch/')
-        printDBG("|||||||||||||||||baseUrl||||||||||||||||||||")
-        printDBG(baseUrl)
-        sts, data = self.getPage(baseUrl)
+        base_url = urljoin(cItem['url'].replace('list/', ''), 'watch/')
+        printDBG("|||||||||||||||||base_url||||||||||||||||||||")
+        printDBG(base_url)
+        sts, data = self.getPage(base_url)
         printDBG("||||||||||||||||||exploreitems_data|||||||||||||||||||||")
         #printDBG(data)
         if not sts:
@@ -308,7 +307,7 @@ class TopCinema(CBaseHostClass):
             params['header'] = dict(self.AJAX_HEADER)
             params['header']['Referer'] = self.cm.meta['url']
             params['header']['Origin'] = self.getMainUrl()
-            params['header']['Host'] = self.up.getDomain(baseUrl)
+            params['header']['Host'] = self.up.getDomain(base_url)
 
             sts, data = self.getPage(urljoin(ajaxURL, 'Single/Server.php'), params, post_data)
             if not sts:
@@ -455,26 +454,26 @@ class TopCinema(CBaseHostClass):
 
         # === PAGINATION HANDLING ===
         pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paginate">', '</div>', False)[1]
-        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&raquo;\s*</a>')[0]
-        prevPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&laquo;\s*</a>')[0]
+        next_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&raquo;\s*</a>')[0]
+        prev_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&laquo;\s*</a>')[0]
 
-        if nextPage:
-            nextPage = self.getFullUrl(nextPage)
+        if next_page:
+            next_page = self.getFullUrl(next_page)
             params = dict(cItem)
-            params.update({'title': 'Next Page ▶', 'url': nextPage, 'category': 'list_items'})
+            params.update({'title': 'Next Page ▶', 'url': next_page, 'category': 'list_items'})
             self.addDir(params)
 
-        if prevPage:
-            prevPage = self.getFullUrl(prevPage)
+        if prev_page:
+            prev_page = self.getFullUrl(prev_page)
             params = dict(cItem)
-            params.update({'title': '◀ Previous Page', 'url': prevPage, 'category': 'list_items'})
+            params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'list_items'})
             self.addDir(params)
 
 
-    def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("TopCinema.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
+    def listSearchResult(self, cItem, search_pattern, search_type):
+        printDBG("TopCinema.listSearchResult cItem[%s], search_pattern[%s] search_type[%s]" % (cItem, search_pattern, search_type))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search?q=') + urllib_quote_plus(searchPattern)
+        cItem['url'] = self.getFullUrl('/search?q=') + urllib_quote_plus(search_pattern)
         self.listItems(cItem)
 
     def getFavouriteData(self, cItem):
@@ -500,10 +499,10 @@ class TopCinema(CBaseHostClass):
             printExc()
         return cItem
 
-    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
+    def handleService(self, index, refresh=0, search_pattern='', search_type=''):
         printDBG('TopCinema.handleService start')
 
-        CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        CBaseHostClass.handleService(self, index, refresh, search_pattern, search_type)
 
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
@@ -535,7 +534,7 @@ class TopCinema(CBaseHostClass):
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
-            self.listSearchResult(cItem, searchPattern, searchType)
+            self.listSearchResult(cItem, search_pattern, search_type)
         # HISTORY SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
