@@ -304,9 +304,9 @@
   "twitchtv"
  ],
  "arabic": [
-"hosttuktukcam",
-"hosttopcinema",
-"hostshahid44u",
+  "tuktukcam",
+  "topcinema",
+  "shahid44u",
   "youtube",
   "webstream",
   "aflaam",
