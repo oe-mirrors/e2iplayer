@@ -1,4 +1,7 @@
 {
+'hostshahid44u':  'https://shahid4uu.day/',
+'hosttopcinema': 'https://web6.topcinema.cam/',
+'hosttuktukcam':  'https://tuk.cam/',
 'host123movieshd': 'https://123movieshd.sc/',
 'host3player': 'https://virginmediatelevision.ie/player',
 'host3sktv': 'http://33sk.tv/',

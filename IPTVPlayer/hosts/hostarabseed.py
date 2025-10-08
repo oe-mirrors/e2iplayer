@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last modified: 05/10/2025 - popking (odem2014)
+# Last modified: 08/10/2025 - popking (odem2014)
 ###################################################
 # LOCAL import
 ###################################################
@@ -8,7 +8,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 # host main class
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 # tools - write on log, write exception infos and merge dicts
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, E2ColoR
 # add metadata to url
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # library for json (instead of standard json.loads and json.dumps)
@@ -24,7 +24,10 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 import re
 import base64
 ###################################################
-
+try:
+	from urllib.parse import urlparse, parse_qs, urlencode, unquote
+except ImportError:
+	from urllib import urlencode, urlopen, unquote
 
 def GetConfigList():
     return []
@@ -40,9 +43,8 @@ class ArabSeed(CBaseHostClass):
         # init global variables for this class
 
         CBaseHostClass.__init__(self, {'history': 'arabseed', 'cookie': 'arabseed.cookie'})  # names for history and cookie files in cache
-
         # vars default values
-
+        self.urlencode = urlencode
         # various urls
         self.MAIN_URL = gettytul()
         self.SEARCH_URL = 'https://a.asd.homes/search'
@@ -51,16 +53,16 @@ class ArabSeed(CBaseHostClass):
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/arabseed.png"
 
         # default header and http params
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
-        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+        self.HEADER = self.cm.getDefaultHeader(browser='chrome')
+        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-    def getPage(self, url, addParams={}, post_data=None):
-        # default use: call function getPage in pCommon lib
-        # if needed, last line can become self.cm.getPageCF(url, addParams, post_data)
-        # if site is protected with cloudflare
-        if addParams == {}:
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if any(ord(c) > 127 for c in baseUrl):
+            baseUrl = urllib_quote(baseUrl, safe="://")
+        if addParams is None:
             addParams = dict(self.defaultParams)
-        return self.cm.getPage(url, addParams, post_data)
+        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
+        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def getLinksForVideo(self, cItem):
         printDBG("ArabSeed.getLinksForVideo [%s]" % cItem)
@@ -105,10 +107,10 @@ class ArabSeed(CBaseHostClass):
 
     def getVideoLinks(self, url):
         printDBG("ArabSeed.getVideoLinks [%s]" % url)
-        urlTab = []
+        #urlTab = []
         if self.cm.isValidUrl(url):
             return self.up.getVideoLinkExt(url)
-        return urlTab
+        #return urlTab
 
     def listMainMenu(self, cItem):
         # items of main menu
@@ -116,7 +118,6 @@ class ArabSeed(CBaseHostClass):
 
         # Define main categories statically like FilmPalast does
         self.MAIN_CAT_TAB = [
-            {'category': 'mainpage', 'title': _('الرئيسية'), 'url': self.getFullUrl('/main0/')},
             {'category': 'movies_folder', 'title': _('الافلام')},
             {'category': 'series_folder', 'title': _('المسلسلات')},
             {'category': 'ramadan_folder', 'title': _('رمضان')},
@@ -193,43 +194,15 @@ class ArabSeed(CBaseHostClass):
         printDBG('ArabSeed.listOtherFolder')
         self.listsTab(self.OTHER_CAT_TAB, cItem)
 
-    def listMainItems(self, cItem, nextCategory=''):
-        printDBG("ArabSeed.listMainItems [%s]" % cItem)
-        sts, data = self.getPage(cItem['url'])
-        if sts:
-            # Save a sample of the data for debugging
-            sample = data[:2000] if len(data) > 2000 else data
-            printDBG("Page sample: %s" % sample)
-        if not sts:
-            return
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="menu__bar hide__md">', '</div>', False)[1]
-        printDBG('|||||||||||||||||||||||||||||||||||||||||||tmp|||||||||||||||')
-        printDBG(tmp)
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
-
-        for m in data_items:
-                   title = self.cleanHtmlStr(m)
-                   pureurl = self.cm.ph.getSearchGroups(m, "href=['\"]([^'^\"]+?)['\"]")[0]
-                   baseurl, filenameurl = pureurl.rsplit('/', 1)
-                   fixedfilenameurl = urllib_quote_plus(filenameurl)
-                   url = baseurl + "/" + fixedfilenameurl
-                   pureicon = self.cm.ph.getSearchGroups(m, "src=['\"]([^'^\"]+?)['\"]")[0]
-                   baseicon, filenameicon = pureicon.rsplit('/', 1)
-                   fixedfilenameicon = urllib_quote_plus(filenameicon)
-                   icon = baseicon + "/" + fixedfilenameicon
-                   params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': url}
-                   printDBG(str(params))
-                   self.addDir(params)
-
     def listItems(self, cItem):
         printDBG("ArabSeed.listItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="movie__blocks" id="ajax__area">', '<div class="paginate">', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="blocks__section mt__30 mb__30', '</ul></div></div></section>', False)[1]
         printDBG('listitems tmp print:')
-        printDBG(tmp)
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2 box__sm__2 box__md__3 box__lg__4 box__xl__5"> <div class="item__contents ">', '</li></ul></div></div></div></li>')
+        #printDBG(tmp)
+        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2', '</li>')
 
         for m in data_items:
                    title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
@@ -244,6 +217,36 @@ class ArabSeed(CBaseHostClass):
                    params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': url}
                    printDBG(str(params))
                    self.addDir(params)
+
+        # === PAGINATION HANDLING ===
+        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paginate">', '</div>', False)[1]
+        #printDBG("PAGINATION HTML >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        #printDBG(pagination)
+
+        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
+        prevPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="prev page-numbers"[^>]+href="([^"]+)"')[0]
+
+        if nextPage:
+            nextPage = self.getFullUrl(nextPage)
+            printDBG("NEXT PAGE FOUND >>> %s" % nextPage)
+            params = dict(cItem)
+            params.update({
+                'title': 'Next Page ▶',
+                'url': nextPage,
+                'category': 'list_items',
+            })
+            self.addDir(params)
+
+        if prevPage:
+            prevPage = self.getFullUrl(prevPage)
+            printDBG("PREV PAGE FOUND >>> %s" % prevPage)
+            params = dict(cItem)
+            params.update({
+                'title': '◀ Previous Page',
+                'url': prevPage,
+                'category': 'list_items',
+            })
+            self.addDir(params)
 
     def listSeriesItems(self, cItem):
         printDBG("ArabSeed.listSeriesItems ----------")
@@ -290,52 +293,119 @@ class ArabSeed(CBaseHostClass):
 
             self.addDir(params)
 
+        # === PAGINATION HANDLING ===
+        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paginate">', '</div>', False)[1]
+        #printDBG("PAGINATION HTML >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        #printDBG(pagination)
+
+        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
+        prevPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="prev page-numbers"[^>]+href="([^"]+)"')[0]
+
+        if nextPage:
+            nextPage = self.getFullUrl(nextPage)
+            printDBG("NEXT PAGE FOUND >>> %s" % nextPage)
+            params = dict(cItem)
+            params.update({
+                'title': 'Next Page ▶',
+                'url': nextPage,
+                'category': 'series',
+            })
+            self.addDir(params)
+
+        if prevPage:
+            prevPage = self.getFullUrl(prevPage)
+            printDBG("PREV PAGE FOUND >>> %s" % prevPage)
+            params = dict(cItem)
+            params.update({
+                'title': '◀ Previous Page',
+                'url': prevPage,
+                'category': 'series',
+            })
+            self.addDir(params)
+
     def exploreItems(self, cItem):
-        printDBG('ArabSeed.exploreItems')
+        printDBG("ArabSeed.exploreItems >>> %s" % cItem)
         url = cItem['url']
-        sts, data = self.getPage(url)
+        sts, data = self.cm.getPage(url)
         if not sts:
             return
 
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="servers__list', '</ul>', False)[1]
-        items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
-
-        for item in items:
-            # Extract the label (e.g. "سيرفر 1") and quality (data-qu="480")
-            label = self.cm.ph.getSearchGroups(item, '<span>([^<]+)</span>')[0].strip()
-            quality = self.cm.ph.getSearchGroups(item, 'data-qu="([^"]+)"')[0]
-            link = self.cm.ph.getSearchGroups(item, 'data-link="([^"]+?)"')[0]
-
-            if not link:
-                continue
-
-            # Decode if it's a base64-encoded redirect link (ArabSeed server)
-            if '/asd.php?url=' in link:
+        # robust extraction of token and post id (try a few common patterns)
+        def _extract_one(patterns):
+            for p in patterns:
                 try:
-                    b64 = self.cm.ph.getSearchGroups(link, 'url=([^&"]+)')[0]
-                    decoded_link = self.safe_b64decode(b64)
-                    if 'gamehub.cam' in decoded_link:  # skip broken ones
-                        continue
-                    link = 'https://a.asd.homes/asd.php?url=' + b64  # use working ArabSeed server proxy
-                    label = 'سيرفر عرب سيد'
-                except Exception as e:
-                    printDBG('Base64 decode failed: %s' % str(e))
+                    v = self.cm.ph.getSearchGroups(data, p)[0]
+                    if v:
+                        return v.strip()
+                except Exception:
+                    pass
+            return ''
+
+        token = _extract_one([r"csrf__token['\"]:\s*['\"]([^'\"]+)", r"csrf_token['\"]:\s*['\"]([^'\"]+)", r"name=['\"]csrf-token['\"]\s+content=['\"]([^'\"]+)"])
+        post_id = _extract_one([r"psot_id['\"]:\s*'([^']+)'", r"post_id['\"]:\s*['\"]([^'\"]+)", r"post_id\s*:\s*'([^']+)'"])
+
+        if not token or not post_id:
+            printDBG('[ArabSeed] Missing required POST params (csrf_token or post_id/psot_id)')
+            return
+
+        # 2️⃣ Prepare constants
+        servers = [0, 1, 2, 3, 4]
+        qualities = [480, 720, 1080]
+        post_url = "https://a.asd.homes/get__watch__server/"
+
+        # 3️⃣ Loop through all possible combinations
+        for server in servers:
+            for quality in qualities:
+                payload = {
+                    'post_id': post_id,
+                    'quality': str(quality),
+                    'server': str(server),
+                    'csrf_token': token
+                }
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Referer': url
+                }
+
+                sts, response = self.cm.getPage(post_url, {'header': headers, 'raw_post_data': True}, self.urlencode(payload))
+                if not sts or not response:
                     continue
 
-            # Add quality to title
-            if quality:
-                label = '%s [%sp]' % (label, quality)
+                # 4️⃣ Parse JSON
+                try:
+                    result = json_loads(response)
+                except Exception as e:
+                    printDBG("JSON decode error: %s" % str(e))
+                    continue
 
-            printDBG("Found server link: %s" % link)
+                if result.get("type") != "success":
+                    continue
 
-            params = MergeDicts(cItem, {
-                'title': label,
-                'url': link,
-                'type': 'video',
-                'category': 'video',
-                'need_resolve': 1
-            })
-            self.addVideo(params)
+                link = result.get("server", "")
+                printDBG("server_link: %s" % link)
+                if not link:
+                    continue
+                
+                server_name = self.cm.ph.getSearchGroups(link, r'https?://([^/]+)/')[0]
+                if server_name == 'm.reviewrate.net':
+                    server_name = 'ArabSeed'
+                if not server_name:
+                    server_name = "server%d" % server
+
+                # 6️⃣ Build title and add as video
+                full_label = "%s [%s]" % (server_name , quality)
+                params_video = MergeDicts(cItem, {
+                    'title': full_label,
+                    'url': link,
+                    'type': 'video',
+                    'category': 'video',
+                    'need_resolve': 1,
+                })
+                self.addVideo(params_video)
+
+        printDBG("ArabSeed.exploreItems <<< done")
+
 
     def exploreSeriesItems(self, cItem):
         printDBG('ArabSeed.exploreSeriesItems')
@@ -366,7 +436,7 @@ class ArabSeed(CBaseHostClass):
             if episode_number:
                 title = 'الحلقة %s' % episode_number.strip()
             else:
-                title = self.cleanHtmlStr(item)  # or fallback to generic title
+                title = self.cleanHtmlStr(item)
 
             params = dict(cItem)
             params.update({
@@ -374,11 +444,87 @@ class ArabSeed(CBaseHostClass):
                 'url': episode_url,
                 'icon': cItem.get('icon', ''),
                 'desc': cItem.get('desc', ''),
-                'category': 'explore_item',
+                'category': 'video',
             })
 
             printDBG('Adding episode: %s' % str(params))
-            self.addDir(params)
+
+            # 🔹 Start of server/quality extraction (same as exploreItems)
+            sts2, data2 = self.cm.getPage(episode_url)
+            if not sts2:
+                continue
+
+            def _extract_one(patterns):
+                for p in patterns:
+                    try:
+                        v = self.cm.ph.getSearchGroups(data2, p)[0]
+                        if v:
+                            return v.strip()
+                    except Exception:
+                        pass
+                return ''
+
+            token = _extract_one([r"csrf__token['\"]:\s*['\"]([^'\"]+)", r"csrf_token['\"]:\s*['\"]([^'\"]+)", r"name=['\"]csrf-token['\"]\s+content=['\"]([^'\"]+)"])
+            post_id = _extract_one([r"psot_id['\"]:\s*'([^']+)'", r"post_id['\"]:\s*['\"]([^'\"]+)", r"post_id\s*:\s*'([^']+)'"])
+
+            if not token or not post_id:
+                printDBG('[ArabSeed] Missing required POST params (csrf_token or post_id/psot_id) for episode')
+                continue
+
+            servers = [0, 1, 2, 3, 4]
+            qualities = [480, 720, 1080]
+            post_url = "https://a.asd.homes/get__watch__server/"
+
+            for server in servers:
+                for quality in qualities:
+                    payload = {
+                        'post_id': post_id,
+                        'quality': str(quality),
+                        'server': str(server),
+                        'csrf_token': token
+                    }
+                    headers = {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Referer': episode_url
+                    }
+
+                    sts3, response = self.cm.getPage(post_url, {'header': headers, 'raw_post_data': True}, self.urlencode(payload))
+                    if not sts3 or not response:
+                        continue
+
+                    try:
+                        result = json_loads(response)
+                    except Exception as e:
+                        printDBG("JSON decode error (series): %s" % str(e))
+                        continue
+
+                    if result.get("type") != "success":
+                        continue
+
+                    link = result.get("server", "")
+                    if not link:
+                        continue
+
+                    server_name = self.cm.ph.getSearchGroups(link, r'https?://([^/]+)/')[0]
+                    if server_name == 'm.reviewrate.net':
+                        server_name = 'ArabSeed'
+                    if not server_name:
+                        server_name = "server%d" % server
+
+                    full_label = "%s [%s]" % (server_name, quality)
+                    params_video = MergeDicts(cItem, {
+                        'title': '%s - %s' % (title, full_label),
+                        'url': link,
+                        'type': 'video',
+                        'category': 'video',
+                        'need_resolve': 1,
+                    })
+                    self.addVideo(params_video)
+
+        printDBG("ArabSeed.exploreSeriesItems <<< done")
+
+
 
     def safe_b64decode(self, data):
         """Base64 decode with automatic padding fix."""
@@ -428,8 +574,6 @@ class ArabSeed(CBaseHostClass):
         # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
-        elif category == 'mainpage':
-            self.listMainItems(self.currItem)
         elif category == 'list_items':
             self.listItems(self.currItem)
         elif category == 'series':
@@ -449,6 +593,7 @@ class ArabSeed(CBaseHostClass):
             self.exploreItems(self.currItem)
         elif category == 'explore_episodes':
             self.exploreSeriesItems(self.currItem)
+
         # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
