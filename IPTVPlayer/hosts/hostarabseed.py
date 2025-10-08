@@ -29,6 +29,8 @@ try:
 except ImportError:
 	from urllib import urlencode, urlopen, unquote
 
+LI_CLOSE = '</li>'
+
 def GetConfigList():
     return []
 
@@ -56,13 +58,13 @@ class ArabSeed(CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if any(ord(c) > 127 for c in baseUrl):
-            baseUrl = urllib_quote_plus(baseUrl, safe="://")
-        if addParams is None:
-            addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+    def getPage(self, base_url, add_params=None, post_data=None):
+        if any(ord(c) > 127 for c in base_url):
+            base_url = urllib_quote_plus(base_url, safe="://")
+        if add_params is None:
+            add_params = dict(self.defaultParams)
+        add_params["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
+        return self.cm.getPageCFProtection(base_url, add_params, post_data)
 
     def getLinksForVideo(self, cItem):
         printDBG("ArabSeed.getLinksForVideo [%s]" % cItem)
@@ -107,10 +109,8 @@ class ArabSeed(CBaseHostClass):
 
     def getVideoLinks(self, url):
         printDBG("ArabSeed.getVideoLinks [%s]" % url)
-        #urlTab = []
         if self.cm.isValidUrl(url):
             return self.up.getVideoLinkExt(url)
-        #return urlTab
 
     def listMainMenu(self, cItem):
         # items of main menu
@@ -200,9 +200,7 @@ class ArabSeed(CBaseHostClass):
         if not sts:
             return
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="blocks__section mt__30 mb__30', '</ul></div></div></section>', False)[1]
-        printDBG('listitems tmp print:')
-        #printDBG(tmp)
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2', '</li>')
+        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2', LI_CLOSE)
 
         for m in data_items:
                    title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
@@ -220,30 +218,28 @@ class ArabSeed(CBaseHostClass):
 
         # === PAGINATION HANDLING ===
         pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paginate">', '</div>', False)[1]
-        #printDBG("PAGINATION HTML >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        #printDBG(pagination)
 
-        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
-        prevPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="prev page-numbers"[^>]+href="([^"]+)"')[0]
+        next_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
+        prev_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="prev page-numbers"[^>]+href="([^"]+)"')[0]
 
-        if nextPage:
-            nextPage = self.getFullUrl(nextPage)
-            printDBG("NEXT PAGE FOUND >>> %s" % nextPage)
+        if next_page:
+            next_page = self.getFullUrl(next_page)
+            printDBG("NEXT PAGE FOUND >>> %s" % next_page)
             params = dict(cItem)
             params.update({
                 'title': 'Next Page ▶',
-                'url': nextPage,
+                'url': next_page,
                 'category': 'list_items',
             })
             self.addDir(params)
 
-        if prevPage:
-            prevPage = self.getFullUrl(prevPage)
-            printDBG("PREV PAGE FOUND >>> %s" % prevPage)
+        if prev_page:
+            prev_page = self.getFullUrl(prev_page)
+            printDBG("PREV PAGE FOUND >>> %s" % prev_page)
             params = dict(cItem)
             params.update({
                 'title': '◀ Previous Page',
-                'url': prevPage,
+                'url': prev_page,
                 'category': 'list_items',
             })
             self.addDir(params)
@@ -257,7 +253,7 @@ class ArabSeed(CBaseHostClass):
 
         seriesDict = {}  # Use to avoid duplicates
 
-        blocks = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="box__xs__2', '</li>')
+        blocks = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="box__xs__2', LI_CLOSE)
         for block in blocks:
             pureurl = self.getFullUrl(self.cm.ph.getSearchGroups(block, 'href="([^"]+?)"')[0])
             baseurl, filenameurl = pureurl.rsplit('/', 1)
@@ -295,106 +291,121 @@ class ArabSeed(CBaseHostClass):
 
         # === PAGINATION HANDLING ===
         pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paginate">', '</div>', False)[1]
-        #printDBG("PAGINATION HTML >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        #printDBG(pagination)
 
-        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
-        prevPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="prev page-numbers"[^>]+href="([^"]+)"')[0]
+        next_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
+        prev_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="prev page-numbers"[^>]+href="([^"]+)"')[0]
 
-        if nextPage:
-            nextPage = self.getFullUrl(nextPage)
-            printDBG("NEXT PAGE FOUND >>> %s" % nextPage)
+        if next_page:
+            next_page = self.getFullUrl(next_page)
+            printDBG("NEXT PAGE FOUND >>> %s" % next_page)
             params = dict(cItem)
             params.update({
                 'title': 'Next Page ▶',
-                'url': nextPage,
+                'url': next_page,
                 'category': 'series',
             })
             self.addDir(params)
 
-        if prevPage:
-            prevPage = self.getFullUrl(prevPage)
-            printDBG("PREV PAGE FOUND >>> %s" % prevPage)
+        if prev_page:
+            prev_page = self.getFullUrl(prev_page)
+            printDBG("PREV PAGE FOUND >>> %s" % prev_page)
             params = dict(cItem)
             params.update({
                 'title': '◀ Previous Page',
-                'url': prevPage,
+                'url': prev_page,
                 'category': 'series',
             })
             self.addDir(params)
 
     def exploreItems(self, cItem):
         printDBG("ArabSeed.exploreItems >>> %s" % cItem)
-        url = cItem['url']
+        url = cItem.get('url')
         sts, data = self.cm.getPage(url)
         if not sts:
             return
 
-        # robust extraction of token and post id (try a few common patterns)
-        def _extract_one(patterns):
+        # --- Extractors ---
+        def extract_first(patterns):
             for p in patterns:
                 try:
                     v = self.cm.ph.getSearchGroups(data, p)[0]
                     if v:
                         return v.strip()
                 except Exception:
-                    pass
+                    continue
             return ''
 
-        token = _extract_one([r"csrf__token['\"]:\s*['\"]([^'\"]+)", r"csrf_token['\"]:\s*['\"]([^'\"]+)", r"name=['\"]csrf-token['\"]\s+content=['\"]([^'\"]+)"])
-        post_id = _extract_one([r"psot_id['\"]:\s*'([^']+)'", r"post_id['\"]:\s*['\"]([^'\"]+)", r"post_id\s*:\s*'([^']+)'"])
+        def extract_token_and_postid():
+            token_patterns = [
+                r"csrf__token['\"]:\s*['\"]([^'\"]+)",
+                r"csrf_token['\"]:\s*['\"]([^'\"]+)",
+                r"name=['\"]csrf-token['\"]\s+content=['\"]([^'\"]+)"
+            ]
+            postid_patterns = [
+                r"psot_id['\"]:\s*'([^']+)'",
+                r"post_id['\"]:\s*['\"]([^'\"]+)",
+                r"post_id\s*:\s*'([^']+)'"
+            ]
+            return extract_first(token_patterns), extract_first(postid_patterns)
 
+        token, post_id = extract_token_and_postid()
         if not token or not post_id:
             printDBG('[ArabSeed] Missing required POST params (csrf_token or post_id/psot_id)')
             return
 
-        # 2️⃣ Prepare constants
+        post_url = "https://a.asd.homes/get__watch__server/"
         servers = [0, 1, 2, 3, 4]
         qualities = [480, 720, 1080]
-        post_url = "https://a.asd.homes/get__watch__server/"
 
-        # 3️⃣ Loop through all possible combinations
+        # --- Helpers ---
+        def make_payload(server, quality):
+            return {
+                'post_id': post_id,
+                'quality': str(quality),
+                'server': str(server),
+                'csrf_token': token
+            }
+
+        def make_headers():
+            return {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Referer': url
+            }
+
+        def get_server_link(payload):
+            sts, response = self.cm.getPage(
+                post_url,
+                {'header': make_headers(), 'raw_post_data': True},
+                self.urlencode(payload)
+            )
+            if not sts or not response:
+                return ''
+            try:
+                result = json_loads(response)
+            except Exception as e:
+                printDBG("JSON decode error: %s" % str(e))
+                return ''
+            if result.get("type") != "success":
+                return ''
+            return result.get("server", "")
+
+        def normalize_server_name(link, index):
+            name = self.cm.ph.getSearchGroups(link, r'https?://([^/]+)/')[0]
+            if name == 'm.reviewrate.net':
+                name = 'ArabSeed'
+            return name or "server%d" % index
+
+        # --- Main processing loop ---
         for server in servers:
             for quality in qualities:
-                payload = {
-                    'post_id': post_id,
-                    'quality': str(quality),
-                    'server': str(server),
-                    'csrf_token': token
-                }
-                headers = {
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Referer': url
-                }
-
-                sts, response = self.cm.getPage(post_url, {'header': headers, 'raw_post_data': True}, self.urlencode(payload))
-                if not sts or not response:
-                    continue
-
-                # 4️⃣ Parse JSON
-                try:
-                    result = json_loads(response)
-                except Exception as e:
-                    printDBG("JSON decode error: %s" % str(e))
-                    continue
-
-                if result.get("type") != "success":
-                    continue
-
-                link = result.get("server", "")
-                printDBG("server_link: %s" % link)
+                payload = make_payload(server, quality)
+                link = get_server_link(payload)
                 if not link:
                     continue
 
-                server_name = self.cm.ph.getSearchGroups(link, r'https?://([^/]+)/')[0]
-                if server_name == 'm.reviewrate.net':
-                    server_name = 'ArabSeed'
-                if not server_name:
-                    server_name = "server%d" % server
-
-                # 6️⃣ Build title and add as video
-                full_label = "%s [%s]" % (server_name , quality)
+                server_name = normalize_server_name(link, server)
+                full_label = "%s [%s]" % (server_name, quality)
                 params_video = MergeDicts(cItem, {
                     'title': full_label,
                     'url': link,
@@ -405,7 +416,6 @@ class ArabSeed(CBaseHostClass):
                 self.addVideo(params_video)
 
         printDBG("ArabSeed.exploreItems <<< done")
-
 
     def exploreSeriesItems(self, cItem):
         printDBG('ArabSeed.exploreSeriesItems')
@@ -422,7 +432,7 @@ class ArabSeed(CBaseHostClass):
         printDBG('Episodes block:')
         printDBG(episodes_block)
 
-        episodes = self.cm.ph.getAllItemsBeetwenMarkers(episodes_block, '<li', '</li>')
+        episodes = self.cm.ph.getAllItemsBeetwenMarkers(episodes_block, '<li', LI_CLOSE)
         episodes.reverse()
 
         for item in episodes:
@@ -523,8 +533,6 @@ class ArabSeed(CBaseHostClass):
                     self.addVideo(params_video)
 
         printDBG("ArabSeed.exploreSeriesItems <<< done")
-
-
 
     def safe_b64decode(self, data):
         """Base64 decode with automatic padding fix."""
