@@ -418,35 +418,97 @@ class ArabSeed(CBaseHostClass):
         printDBG("ArabSeed.exploreItems <<< done")
 
     def exploreSeriesItems(self, cItem):
-        printDBG('ArabSeed.exploreSeriesItems')
-        url = cItem['url']
+        printDBG('ArabSeed.exploreSeriesItems >>> %s' % cItem)
+        url = cItem.get('url')
         sts, data = self.getPage(url)
-
         if not sts:
             return
 
-        # Extract the block that contains episodes
-        episodes_block = self.cm.ph.getDataBeetwenMarkers(data,
-            '<ul class="episodes__list', '</ul>', False)[1]
-
+        # --- Extract episodes block ---
+        episodes_block = self.cm.ph.getDataBeetwenMarkers(
+            data, '<ul class="episodes__list', '</ul>', False
+        )[1]
         printDBG('Episodes block:')
         printDBG(episodes_block)
 
         episodes = self.cm.ph.getAllItemsBeetwenMarkers(episodes_block, '<li', LI_CLOSE)
         episodes.reverse()
 
+        # --- Helpers ---
+        def extract_first(patterns, data_src):
+            for p in patterns:
+                try:
+                    v = self.cm.ph.getSearchGroups(data_src, p)[0]
+                    if v:
+                        return v.strip()
+                except Exception:
+                    continue
+            return ''
+
+        def extract_token_postid(data_src):
+            token_patterns = [
+                r"csrf__token['\"]:\s*['\"]([^'\"]+)",
+                r"csrf_token['\"]:\s*['\"]([^'\"]+)",
+                r"name=['\"]csrf-token['\"]\s+content=['\"]([^'\"]+)"
+            ]
+            postid_patterns = [
+                r"psot_id['\"]:\s*'([^']+)'",
+                r"post_id['\"]:\s*['\"]([^'\"]+)",
+                r"post_id\s*:\s*'([^']+)'"
+            ]
+            return extract_first(token_patterns, data_src), extract_first(postid_patterns, data_src)
+
+        def make_payload(post_id, token, server, quality):
+            return {
+                'post_id': post_id,
+                'quality': str(quality),
+                'server': str(server),
+                'csrf_token': token
+            }
+
+        def make_headers(referer):
+            return {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Referer': referer
+            }
+
+        def get_server_link(post_url, payload, referer):
+            sts, response = self.cm.getPage(
+                post_url, {'header': make_headers(referer), 'raw_post_data': True}, self.urlencode(payload)
+            )
+            if not sts or not response:
+                return ''
+            try:
+                result = json_loads(response)
+            except Exception as e:
+                printDBG("JSON decode error (series): %s" % str(e))
+                return ''
+            if result.get("type") != "success":
+                return ''
+            return result.get("server", "")
+
+        def normalize_server_name(link, index):
+            name = self.cm.ph.getSearchGroups(link, r'https?://([^/]+)/')[0]
+            if name == 'm.reviewrate.net':
+                name = 'ArabSeed'
+            return name or "server%d" % index
+
+        # --- Process each episode ---
+        post_url = "https://a.asd.homes/get__watch__server/"
+        servers = [0, 1, 2, 3, 4]
+        qualities = [480, 720, 1080]
+
         for item in episodes:
             episode_url = self.cm.ph.getSearchGroups(item, 'href="([^"]+?)"')[0]
             if not episode_url:
                 continue
-            episode_url = self.getFullUrl(episode_url).rstrip('/') + '/watch'
 
-            # Extract episode number only, and prepend "الحلقة"
-            episode_number = self.cm.ph.getSearchGroups(item, '<div class="epi__num">.*?<b>([^<]+)</b>')[0]
-            if episode_number:
-                title = 'الحلقة %s' % episode_number.strip()
-            else:
-                title = self.cleanHtmlStr(item)
+            episode_url = self.getFullUrl(episode_url).rstrip('/') + '/watch'
+            episode_number = self.cm.ph.getSearchGroups(
+                item, '<div class="epi__num">.*?<b>([^<]+)</b>'
+            )[0]
+            title = 'الحلقة %s' % episode_number.strip() if episode_number else self.cleanHtmlStr(item)
 
             params = dict(cItem)
             params.update({
@@ -456,72 +518,27 @@ class ArabSeed(CBaseHostClass):
                 'desc': cItem.get('desc', ''),
                 'category': 'video',
             })
-
             printDBG('Adding episode: %s' % str(params))
 
-            # 🔹 Start of server/quality extraction (same as exploreItems)
+            # --- Get token and post_id for this episode ---
             sts2, data2 = self.cm.getPage(episode_url)
             if not sts2:
                 continue
 
-            def _extract_one(patterns):
-                for p in patterns:
-                    try:
-                        v = self.cm.ph.getSearchGroups(data2, p)[0]
-                        if v:
-                            return v.strip()
-                    except Exception:
-                        pass
-                return ''
-
-            token = _extract_one([r"csrf__token['\"]:\s*['\"]([^'\"]+)", r"csrf_token['\"]:\s*['\"]([^'\"]+)", r"name=['\"]csrf-token['\"]\s+content=['\"]([^'\"]+)"])
-            post_id = _extract_one([r"psot_id['\"]:\s*'([^']+)'", r"post_id['\"]:\s*['\"]([^'\"]+)", r"post_id\s*:\s*'([^']+)'"])
-
+            token, post_id = extract_token_postid(data2)
             if not token or not post_id:
                 printDBG('[ArabSeed] Missing required POST params (csrf_token or post_id/psot_id) for episode')
                 continue
 
-            servers = [0, 1, 2, 3, 4]
-            qualities = [480, 720, 1080]
-            post_url = "https://a.asd.homes/get__watch__server/"
-
+            # --- Loop through servers and qualities ---
             for server in servers:
                 for quality in qualities:
-                    payload = {
-                        'post_id': post_id,
-                        'quality': str(quality),
-                        'server': str(server),
-                        'csrf_token': token
-                    }
-                    headers = {
-                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Referer': episode_url
-                    }
-
-                    sts3, response = self.cm.getPage(post_url, {'header': headers, 'raw_post_data': True}, self.urlencode(payload))
-                    if not sts3 or not response:
-                        continue
-
-                    try:
-                        result = json_loads(response)
-                    except Exception as e:
-                        printDBG("JSON decode error (series): %s" % str(e))
-                        continue
-
-                    if result.get("type") != "success":
-                        continue
-
-                    link = result.get("server", "")
+                    payload = make_payload(post_id, token, server, quality)
+                    link = get_server_link(post_url, payload, episode_url)
                     if not link:
                         continue
 
-                    server_name = self.cm.ph.getSearchGroups(link, r'https?://([^/]+)/')[0]
-                    if server_name == 'm.reviewrate.net':
-                        server_name = 'ArabSeed'
-                    if not server_name:
-                        server_name = "server%d" % server
-
+                    server_name = normalize_server_name(link, server)
                     full_label = "%s [%s]" % (server_name, quality)
                     params_video = MergeDicts(cItem, {
                         'title': '%s - %s' % (title, full_label),
