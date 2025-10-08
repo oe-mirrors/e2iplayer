@@ -60,7 +60,7 @@ class TopCinema(CBaseHostClass):
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if any(ord(c) > 127 for c in baseUrl):
-            baseUrl = urllib_quote(baseUrl, safe="://")
+            baseUrl = urllib_quote_plus(baseUrl, safe="://")
         if addParams is None:
             addParams = dict(self.defaultParams)
         addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
@@ -280,7 +280,7 @@ class TopCinema(CBaseHostClass):
         printDBG('TopCinema.exploreItems')
         url = cItem['url']
         printDBG("|||||||||||||||||exploreUrl||||||||||||||||||||")
-        printDBG(url)        
+        printDBG(url)
         baseUrl = urljoin(cItem['url'].replace('list/', ''), 'watch/')
         printDBG("|||||||||||||||||baseUrl||||||||||||||||||||")
         printDBG(baseUrl)

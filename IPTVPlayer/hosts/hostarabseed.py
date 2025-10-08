@@ -58,7 +58,7 @@ class ArabSeed(CBaseHostClass):
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if any(ord(c) > 127 for c in baseUrl):
-            baseUrl = urllib_quote(baseUrl, safe="://")
+            baseUrl = urllib_quote_plus(baseUrl, safe="://")
         if addParams is None:
             addParams = dict(self.defaultParams)
         addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
@@ -289,7 +289,7 @@ class ArabSeed(CBaseHostClass):
                 'icon': icon,
                 'desc': desc,
                 'category': 'explore_episodes',
-            })
+                })
 
             self.addDir(params)
 
@@ -386,7 +386,7 @@ class ArabSeed(CBaseHostClass):
                 printDBG("server_link: %s" % link)
                 if not link:
                     continue
-                
+
                 server_name = self.cm.ph.getSearchGroups(link, r'https?://([^/]+)/')[0]
                 if server_name == 'm.reviewrate.net':
                     server_name = 'ArabSeed'

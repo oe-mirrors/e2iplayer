@@ -53,7 +53,7 @@ class TukTukCam(CBaseHostClass):
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if any(ord(c) > 127 for c in baseUrl):
-            baseUrl = urllib_quote(baseUrl, safe="://")
+            baseUrl = urllib_quote_plus(baseUrl, safe="://")
         if addParams is None:
             addParams = dict(self.defaultParams)
         addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
@@ -110,7 +110,6 @@ class TukTukCam(CBaseHostClass):
     def listMainMenu(self, cItem):
         # items of main menu
         printDBG('TukTukCam.listMainMenu')
-        
         # Define main categories statically like FilmPalast does
         self.MAIN_CAT_TAB = [
             {'category': 'movies_folder', 'title': _('الافلام')},
@@ -119,7 +118,6 @@ class TukTukCam(CBaseHostClass):
             {'category': 'search', 'title': _('Search'), 'search_item': True},
             {'category': 'search_history', 'title': _('Search history')}
         ]
-        
         # Define subcategories for each folder
         self.MOVIES_CAT_TAB = [
             {'category': 'list_items', 'title': _('افلام اجنبى مدبلجة'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a%d8%a9-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
@@ -127,18 +125,16 @@ class TukTukCam(CBaseHostClass):
             {'category': 'list_items', 'title': _('افلام تركية'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/')},
             {'category': 'list_items', 'title': _('افلام هندية'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')}
         ]
-        
+
         self.SERIES_CAT_TAB = [
             {'category': 'series', 'title': _('مسلسلات اجنبية'), 'url': self.getFullUrl('/category/series/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
             {'category': 'series', 'title': _('مسلسلات اسيوية'), 'url': self.getFullUrl('/category/series/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')}
         ]
-                
+
         self.ANIME_CAT_TAB = [
             {'category': 'list_items', 'title': _('افلام انيمى'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%86%d9%85%d9%8a/')},
             {'category': 'series', 'title': _('مسلسلات انيمى'), 'url': self.getFullUrl('/category/anime/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d9%86%d9%85%d9%8a/')}
         ]
-        
-        
         # Display main categories
         self.listsTab(self.MAIN_CAT_TAB, cItem)
 
@@ -423,7 +419,7 @@ class TukTukCam(CBaseHostClass):
         self.currList = []
 
         # MAIN MENU
-        if name == None:
+        if name is None:
             self.listMainMenu({'name': 'category'})
         elif category == 'list_items':
             self.listItems(self.currItem)
