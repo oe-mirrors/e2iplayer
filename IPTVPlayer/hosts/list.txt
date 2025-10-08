@@ -1,6 +1,3 @@
-hosttopcinema
-hostshahid44u
-hosttuktukcam
 host123movieshd_blocked_
 host3player_blocked_
 host3sktv_blocked_
@@ -168,7 +165,9 @@ hosttainieskaiseirestv_blocked_
 hosttantifilmorg_blocked_
 hostted_blocked_
 hostthewatchseriesto_blocked_
+hosttopcinema
 hosttopstreamfilm
+hosttuktukcam
 hosttv2play
 hosttvfun
 hosttvgrypl
