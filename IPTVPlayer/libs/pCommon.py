@@ -19,9 +19,12 @@ from Plugins.Extensions.IPTVPlayer.components.asynccall import IsMainThread, IsT
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVNotify, TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str, strDecode
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str, strDecode, iterDictItems
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetDefaultLang, iptv_system, IsExecutable, IsHttpsCertValidationEnabled, printDBG, printExc, rm, UsePyCurl
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from requests import Session as custom_Session
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 try:
     import ssl
@@ -1467,3 +1470,86 @@ class common:
         for i in range(65, 91):
             strTab.append(str(chr(i)))
         return strTab
+
+    def getPageRequest(self, baseUrl, params={}, post_data=None):
+
+        self.meta = {}
+        metadata = self.meta
+
+        retries = Retry(total=2, backoff_factor=1, status_forcelist=[500, 502, 503, 504], allowed_methods=["GET", "POST"])
+        adapter = HTTPAdapter(max_retries=retries)
+
+        with custom_Session() as http:
+            http.mount("http://", adapter)
+            http.mount("https://", adapter)
+
+        pageUrl = self.iriToUri(baseUrl)
+        printDBG(f"pageUrl: [{pageUrl}]")
+
+        timeout = params.get('timeout', 15)
+        method = params.get('method', 'GET')
+        maxDataSize = params.get('max_data_size', None)
+        allow_redirects = params.get('allow_redirects', False)
+        verify = params.get('verify', False)
+        stream = params.get('stream', True)
+
+        if 'host' in params:
+            host = params['host']
+        else:
+            host = self.HOST
+
+        if 'header' in params:
+            headers = params['header']
+        elif self.HEADER is not None:
+            headers = self.HEADER
+        else:
+            headers = {'User-Agent': host}
+
+        if 'User-Agent' not in headers:
+            headers['User-Agent'] = host
+
+        for key, value in iterDictItems(headers):
+            if isinstance(value, int):
+                headers[key] = str(value)
+
+        # printDBG(f'pCommon - getPageRequest() -> params: {str(params)}')
+        # printDBG(f'pCommon - getPageRequest() -> headers: {str(headers)}')
+        # printDBG(f'pCommon - getPageRequest() -> method: {str(method)}')
+
+        cookies = None
+        if 'use_cookie' not in params and 'cookiefile' in params and ('load_cookie' in params or 'save_cookie' in params):
+            params['use_cookie'] = True
+
+        if params.get('use_cookie', False):
+            if params.get('cookie_items', {}):
+                cookies = params.get('cookie_items', {})
+                printDBG(f"cookies -> {cookies}")
+            else:
+                r = http.request(method, pageUrl)
+                if r.cookies:
+                    cookies = r.cookies
+
+        dataPost = None
+        if post_data is not None:
+            printDBG(f'pCommon - getPageRequest() -> post data: {str(post_data)}')
+            if params.get('raw_post_data', False) or method.upper() == 'POST':
+                dataPost = post_data
+            else:
+                dataPost = urlencode(post_data)
+            dataPost = ensure_binary(dataPost)
+
+        sts, data = False, ""
+        try:
+            r = http.request(method, pageUrl, headers=headers, data=dataPost, verify=verify, stream=stream, cookies=cookies, timeout=timeout, allow_redirects=allow_redirects)
+            r.raise_for_status()
+
+            sts, data = True, r.content
+        except Exception:
+            printExc()
+
+        self.fillHeaderItems(metadata, r.headers, True, collectAllHeaders=params.get('collect_all_headers'))
+
+        if maxDataSize is not None and int(r.headers.get('Content-Length', 0)) > maxDataSize:
+            raise Exception(f"Data size exceeds the maximum allowed size of {maxDataSize} bytes.")
+
+        return sts, data
