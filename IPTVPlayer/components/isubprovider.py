@@ -398,7 +398,7 @@ class CBaseSubProviderClass:
             imdbid = self.cm.ph.getSearchGroups(item, r'/tt([0-9]+?)/')[0]
             baseTtitle = ' '.join(self.cm.ph.getAllItemsBeetwenMarkers(item, '<a ', '</a>'))
             title = self.cleanHtmlStr(item)
-			year = self.cm.ph.getSearchGroups(item, r'''["'>]([0-9]{4})[<\$]?''')[0]
+            year = self.cm.ph.getSearchGroups(item, r'''["'>]([0-9]{4})[<\$]?''')[0]
             if not year:
                 year = self.cm.ph.getSearchGroups(item, r'\((20[0-9]{2})\)')[0]
             if title.endswith('-'):
