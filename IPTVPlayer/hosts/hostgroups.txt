@@ -309,6 +309,7 @@
   "aflaam",
   "akoam",
   "arabseed",
+  "cimaclub",
   "egybest",
   "tvfun",
   "movizlandcom",
