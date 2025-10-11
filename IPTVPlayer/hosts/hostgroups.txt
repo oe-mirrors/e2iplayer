@@ -312,6 +312,8 @@
   "egybest",
   "tvfun",
   "movizlandcom",
+  "topcinema",
+  "tuktukcam",
   "shahid44u",
   "shahiidanimenet",
   "dailymotion",

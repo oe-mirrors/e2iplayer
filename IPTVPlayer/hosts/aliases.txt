@@ -166,7 +166,9 @@
 'hosttantifilmorg': 'https://tantifilm.eu/',
 'hostted': 'https://ted.com/',
 'hostthewatchseriesto': 'https://swatchseries.to/',
+'hosttopcinema': 'https://topcinema.buzz/',
 'hosttopstreamfilm': 'https://topstreamfilm.live',
+'hosttuktukcam':  'https://tuk.cam/',
 'hosttv2play': 'https://tv2play.hu/',
 'hosttvfun': 'https://av.tvfun.me',
 'hosttvgrypl': 'https://tvgry.pl/',
@@ -205,5 +207,4 @@
 'hostzaluknijcc': 'https://zaluknij.cc/',
 'hostzdfmediathek': 'https://zdf-prod-futura.zdf.de/',
 'hostzerioncc': 'https://zerion.cc/'
-
 }
