@@ -22,7 +22,7 @@
 'hostcdapl': 'https://cda.pl/',
 'hostchomikuj': 'http://chomikuj.pl/',
 'hostchristusvincit': 'http://christusvincit-tv.pl/',
-'hostcimaclubcom': 'http://cimaclub.com/',
+'hostcimaclub': 'https://ciimaclub.club/',
 'hostcinemay': 'http://cinemay.ws/',
 'hostcineto': 'https://cine.to/',
 'hostclassiccinemaonline': 'http://classiccinemaonline.com/',
@@ -208,3 +208,4 @@
 'hostzdfmediathek': 'https://zdf-prod-futura.zdf.de/',
 'hostzerioncc': 'https://zerion.cc/'
 }
+
