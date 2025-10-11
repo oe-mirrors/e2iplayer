@@ -29,6 +29,7 @@ try:
 except ImportError:
 	from urllib import urlencode, urlopen, unquote
 
+
 def GetConfigList():
     return []
 
@@ -312,7 +313,7 @@ class ArabSeed(CBaseHostClass):
             title = self.cm.ph.getSearchGroups(block, '<h3[^>]*?>([^<]+?)</h3>')[0].strip()
 
             # Remove episode numbers like "الحلقة 30" using regex
-            #title = re.sub(r'الحلقة\s*\d+', '', fullTitle, flags=re.UNICODE).strip()
+            # title = re.sub(r'الحلقة\s*\d+', '', fullTitle, flags=re.UNICODE).strip()
 
             params = dict(cItem)
             params.update({
@@ -608,7 +609,7 @@ class ArabSeed(CBaseHostClass):
 
         token = self.cm.ph.getSearchGroups(data, r"csrf__token['\"]:\s*[\"']([^\"']+)")[0]
         printDBG('listSeriesPacks token >>> %s' % token)
-        #printDBG('ArabSeed.listSeriesPacks >>> %s' % cItem)
+        # printDBG('ArabSeed.listSeriesPacks >>> %s' % cItem)
         if not token:
             printDBG('[ArabSeed] No csrf__token found!')
             return
@@ -694,7 +695,7 @@ class ArabSeed(CBaseHostClass):
             return
 
         seasons_block = self.cm.ph.getDataBeetwenMarkers(data, 'id="seasons__list"', '</div></div>', False)[1]
-        #printDBG('seasons_block >>> %s' % seasons_block)
+        # printDBG('seasons_block >>> %s' % seasons_block)
         if not seasons_block:
             printDBG('[ArabSeed] No seasons__list block found')
             return
@@ -722,11 +723,11 @@ class ArabSeed(CBaseHostClass):
     def listEpisodes(self, cItem):
         printDBG('ArabSeed.listEpisodes >>> %s' % cItem)
         url = cItem.get('url')
-        #printDBG('url_listEpisodes >>> %s' % url)
+        # printDBG('url_listEpisodes >>> %s' % url)
         season_id = cItem.get('season_id', '')
-        #printDBG('season_id_listEpisodes >>> %s' % season_id)
+        # printDBG('season_id_listEpisodes >>> %s' % season_id)
         csrf_token = cItem.get('csrf_token', '')
-        #printDBG('csrf_token_listEpisodes >>> %s' % csrf_token)
+        # printDBG('csrf_token_listEpisodes >>> %s' % csrf_token)
         if not url or not season_id or not csrf_token:
             printDBG('[ArabSeed] Missing required params (url/season_id/csrf_token)')
             return
@@ -746,14 +747,14 @@ class ArabSeed(CBaseHostClass):
         }
 
         sts, response = self.cm.getPage(post_url, {'header': headers}, post_data)
-        #printDBG('response_listEpisodes >>> %s' % response)
+        # printDBG('response_listEpisodes >>> %s' % response)
         if not sts:
             printDBG('[ArabSeed] POST request failed for /season__episodes/')
             return
 
         try:
             result = json_loads(response)
-            #printDBG('result_listEpisodes >>> %s' % result)
+            # printDBG('result_listEpisodes >>> %s' % result)
         except Exception as e:
             printDBG('JSON decode error in listEpisodes: %s' % e)
             return
@@ -764,7 +765,7 @@ class ArabSeed(CBaseHostClass):
 
         # Step 2: Parse returned HTML for episodes
         html = result.get('html', '')
-        #printDBG('html_listEpisodes >>> %s' % html)
+        # printDBG('html_listEpisodes >>> %s' % html)
         episodes = self.cm.ph.getAllItemsBeetwenMarkers(html, '<li', '</li>')
         printDBG('Found %d episodes' % len(episodes))
 
@@ -804,8 +805,6 @@ class ArabSeed(CBaseHostClass):
 
         printDBG('ArabSeed.listEpisodes <<< done')
 
-
-
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('ArabSeed.handleService start')
 
@@ -838,7 +837,7 @@ class ArabSeed(CBaseHostClass):
         elif category == 'series_episodes_list':
             self.listEpisodes(self.currItem)
         elif category == 'explore_episodes':
-            self.exploreSeriesItems(self.currItem)    
+            self.exploreSeriesItems(self.currItem)
         elif category == 'ramadan_folder':
             self.listRamadanFolder(self.currItem)
         elif category == 'anime_folder':
