@@ -35,7 +35,7 @@ class CimaClub(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'cimaclub', 'cookie': 'cimaclub.cookie'})
         self.MAIN_URL = gettytul()
         self.SEARCH_URL = self.MAIN_URL + 'search'
-        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/popking159/softcam/refs/heads/master/tuktuk.png"
+        self.DEFAULT_ICON_URL = "https://i.pinimg.com/originals/f2/67/05/f267052cb0ba96d70dd21e41a20a522e.jpg"
         self.AJAX_URL = self.MAIN_URL + '/wp-content/themes/CimaClub/ajaxCenter/Home/AdvFiltering.php'
 
         self.HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -428,3 +428,4 @@ class IPTVHost(CHostBase):
         if 'video' == cItem.get('type', '') or 'explore_item' == cItem.get('category', ''):
             return True
         return False
+
