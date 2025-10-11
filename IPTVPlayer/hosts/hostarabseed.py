@@ -838,9 +838,7 @@ class ArabSeed(CBaseHostClass):
         elif category == 'series_episodes_list':
             self.listEpisodes(self.currItem)
         elif category == 'explore_episodes':
-            self.exploreSeriesItems(self.currItem)
-        elif category == 'series_episodes_list':
-            self.exploreSeriesItems(self.currItem)     
+            self.exploreSeriesItems(self.currItem)    
         elif category == 'ramadan_folder':
             self.listRamadanFolder(self.currItem)
         elif category == 'anime_folder':
