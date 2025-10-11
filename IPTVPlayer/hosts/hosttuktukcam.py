@@ -26,6 +26,7 @@ import re
 import base64
 ###################################################
 
+
 def GetConfigList():
     return []
 
@@ -158,7 +159,7 @@ class TukTukCam(CBaseHostClass):
             return
 
         # --- Extract movie/series blocks ---
-        tmp = self.cm.ph.getDataBeetwenMarkers(data,'<section class="MasterArchiveSection loadFilter ArcArc"','</div></section>', False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="MasterArchiveSection loadFilter ArcArc"', '</div></section>', False)[1]
         data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Block--Item">', '</a></div>')
 
         for m in data_items:
@@ -214,7 +215,6 @@ class TukTukCam(CBaseHostClass):
                 self.addDir(params)
 
         printDBG("Pagination handled successfully.")
-
 
     def listSeriesItems(self, cItem):
         printDBG("TukTukCam.listSeriesItems ----------")
@@ -439,6 +439,7 @@ class TukTukCam(CBaseHostClass):
             printExc()
 
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
 

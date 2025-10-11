@@ -140,7 +140,6 @@ class TopCinema(CBaseHostClass):
 
         return linksTab
 
-
     def getVideoLinks(self, videoUrl):
         printDBG('TopCinema.getVideoLinks >>> %s' % videoUrl)
         urlsTab = []
@@ -190,8 +189,6 @@ class TopCinema(CBaseHostClass):
         # 🔹 keep your existing resolver for all other hosts
         return self.up.getVideoLinkExt(videoUrl)
 
-
-
     def listMainMenu(self, cItem):
         # items of main menu
         printDBG('TopCinema.listMainMenu')
@@ -199,7 +196,7 @@ class TopCinema(CBaseHostClass):
         # Define main categories statically like FilmPalast does
         self.MAIN_CAT_TAB = [
             {'category': 'movies_folder', 'title': _('الافلام')},
-            #{'category': 'series_folder', 'title': _('المسلسلات')},
+            # {'category': 'series_folder', 'title': _('المسلسلات')},
         ] + self.searchItems()
 
         # Define subcategories for each folder
@@ -241,9 +238,9 @@ class TopCinema(CBaseHostClass):
             return
 
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<main class="site-inner', '</main>', False)[1]
-        #printDBG('tmp.listItems >>> %s' % tmp)
+        # printDBG('tmp.listItems >>> %s' % tmp)
         data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', '</a>', False)
-        #printDBG('data_items.listItems >>> %s' % data_items)
+        # printDBG('data_items.listItems >>> %s' % data_items)
 
         if not data_items:
             data_items = tmp.split('<div class="Small--Box')[1:]
@@ -292,7 +289,6 @@ class TopCinema(CBaseHostClass):
             params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'list_items'})
             self.addDir(params)
 
-
     def listSeriesItems(self, cItem):
         printDBG("TopCinema.listSeriesItems ----------")
 
@@ -313,7 +309,7 @@ class TopCinema(CBaseHostClass):
 
         for m in data_items:
             title = self.cm.ph.getSearchGroups(m, r'title=["\']([^"\']+)["\']')[0]
-            #title = re.sub(r'\s*مترجم\s*أ?ون\s*لاين\s*', '', title).strip()
+            # title = re.sub(r'\s*مترجم\s*أ?ون\s*لاين\s*', '', title).strip()
 
             pureurl = self.cm.ph.getSearchGroups(m, r'href=["\']([^"\']+)["\']')[0]
             if not pureurl:
@@ -494,7 +490,7 @@ class TopCinema(CBaseHostClass):
 
         for m in data_items:
             title = self.cm.ph.getSearchGroups(m, r'title=["\']([^"\']+)["\']')[0]
-            #title = re.sub(r'\s*مترجم\s*أ?ون\s*لاين\s*', '', title).strip()
+            # title = re.sub(r'\s*مترجم\s*أ?ون\s*لاين\s*', '', title).strip()
 
             pureurl = self.cm.ph.getSearchGroups(m, r'href=["\']([^"\']+)["\']')[0]
             if not pureurl:
@@ -514,7 +510,7 @@ class TopCinema(CBaseHostClass):
                 fixedfilenameicon = urllib_quote_plus(filenameicon)
                 icon = baseicon + '/' + fixedfilenameicon
 
-            params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': urljoin(url, 'watch/'),}
+            params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': urljoin(url, 'watch/'), }
             printDBG(str(params))
             self.addDir(params)
 
@@ -534,7 +530,6 @@ class TopCinema(CBaseHostClass):
             params = dict(cItem)
             params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'list_items'})
             self.addDir(params)
-
 
     def listSearchResult(self, cItem, search_pattern, search_type):
         printDBG("TopCinema.listSearchResult cItem[%s], search_pattern[%s] search_type[%s]" % (cItem, search_pattern, search_type))
