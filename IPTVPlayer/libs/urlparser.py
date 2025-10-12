@@ -753,7 +753,7 @@ class urlparser:
             'unbiasedsenseevent.com': self.pp.parserONLYSTREAMTV,
             'up4stream.com': self.pp.parserJWPLAYER,
             'upclips.online': self.pp.parserVIUCLIPS,
-            'updown.icu': self.pp.parserJWPLAYER
+            'updown.icu': self.pp.parserJWPLAYER,
             'upload.mn': self.pp.parserUPLOAD2,
             'uploaduj.net': self.pp.parserUPLOADUJNET,
             'ups2up.fun': self.pp.parserJWPLAYER,
