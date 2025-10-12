@@ -401,6 +401,7 @@ class urlparser:
             'casacinema.cc': self.pp.parserCASACINEMACC,
             'cda.pl': self.pp.parserCDA,
             'cdn1.site': self.pp.parserJWPLAYER,
+            'cdn4.1vid1shar.space': self.pp.parserJWPLAYER,
             'cdnwish.com': self.pp.parserJWPLAYER,
             'chuckle-tube.com': self.pp.parserVOESX,
             'cloud.mail.ru': self.pp.parserCOUDMAILRU,
@@ -752,6 +753,7 @@ class urlparser:
             'unbiasedsenseevent.com': self.pp.parserONLYSTREAMTV,
             'up4stream.com': self.pp.parserJWPLAYER,
             'upclips.online': self.pp.parserVIUCLIPS,
+            'updown.icu': self.pp.parserJWPLAYER,
             'upload.mn': self.pp.parserUPLOAD2,
             'uploaduj.net': self.pp.parserUPLOADUJNET,
             'ups2up.fun': self.pp.parserJWPLAYER,
@@ -766,6 +768,7 @@ class urlparser:
             'ustreamix.com': self.pp.parserUSTREAMIXCOM,
             # v
             'v6embed.xyz': self.pp.parserVIDGUARDTO,
+            'vbn2.vdbtm.shop': self.pp.parserJWPLAYER,
             'vcstream.to': self.pp.parserVCSTREAMTO,
             'veehd.com': self.pp.parserVEEHDCOM,
             'veev.to': self.pp.parserVEEV,
@@ -796,6 +799,7 @@ class urlparser:
             'vidflare.com': self.pp.parserVIDFLARECOM,
             'vidguard.to': self.pp.parserVIDGUARDTO,
             'vidhidefast.com': self.pp.parserJWPLAYER,
+            'vidhidefun.com': self.pp.parserJWPLAYER,
             'vidhidehub.com': self.pp.parserJWPLAYER,
             'vidhidepro.com': self.pp.parserJWPLAYER,
             'vidia.tv': self.pp.parserONLYSTREAMTV,
@@ -857,6 +861,7 @@ class urlparser:
             # x
             'xage.pl': self.pp.parserXAGEPL,
             'xcoic.com': self.pp.parserFILEMOON,
+            'xcv2.goveed1.space': self.pp.parserJWPLAYER,
             'xstreamcdn.com': self.pp.parserXSTREAMCDNCOM,
             'xvideoshare.live': self.pp.parserONLYSTREAMTV,
             # y
