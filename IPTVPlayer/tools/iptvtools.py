@@ -308,6 +308,8 @@ def GetPyScriptCmd(name):
     baseName = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/scripts/') + name
     if fileExists(baseName + '.py'):
         baseName += '.py'
+    elif fileExists(baseName + '.pyc'):
+        baseName += '.pyc'
     if baseName != '':
         for item in ['python']:
             pyPath = Which(item)
@@ -413,8 +415,8 @@ def GetTmpDir(fileName=''):
     return os.path.join(path, fileName)
 
 
-def GetE2iPlayerRootfsDir(fileName=''):
-    return os.path.join('/iptvplayer_rootfs', fileName)
+# def GetE2iPlayerRootfsDir(fileName=''):
+#    return os.path.join('/iptvplayer_rootfs', fileName)
 
 
 def GetE2iPlayerVKLayoutDir(fileName=''):
@@ -501,7 +503,8 @@ def Which(program):
             if is_exe(program):
                 return program
         else:
-            pathTab = ['/iptvplayer_rootfs/bin', '/iptvplayer_rootfs/usr/bin', '/iptvplayer_rootfs/sbin', '/iptvplayer_rootfs/usr/sbin']
+            # pathTab = ['/iptvplayer_rootfs/bin', '/iptvplayer_rootfs/usr/bin', '/iptvplayer_rootfs/sbin', '/iptvplayer_rootfs/usr/sbin']
+            pathTab = []
             pathTab.extend(os.environ["PATH"].split(os.pathsep))
             for path in pathTab:
                 path = path.strip('"')

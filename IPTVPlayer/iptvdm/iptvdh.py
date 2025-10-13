@@ -104,10 +104,10 @@ class DMHelper:
 
     @staticmethod
     def GET_FFMPEG_PATH():
-        altFFMPEGPath = '/iptvplayer_rootfs/usr/bin/ffmpeg'
-        if IsExecutable(altFFMPEGPath):
-            return altFFMPEGPath
-        return "ffmpeg"
+        # altFFMPEGPath = '/iptvplayer_rootfs/usr/bin/ffmpeg'
+        # if IsExecutable(altFFMPEGPath):
+        #    return altFFMPEGPath
+        return '/usr/bin/ffmpeg'
 
     @staticmethod
     def GET_RTMPDUMP_PATH():
