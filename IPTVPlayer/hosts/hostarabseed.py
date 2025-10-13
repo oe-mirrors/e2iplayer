@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last modified: 10/10/2025 - popking (odem2014)
+# Last modified: 13/10/2025 - popking (odem2014)
 ###################################################
 # LOCAL import
 ###################################################
@@ -245,20 +245,73 @@ class ArabSeed(CBaseHostClass):
             return
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="blocks__section mt__30 mb__30', '</ul></div></div></section>', False)[1]
         data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2', '</li>')
+        data_items1 = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2', '</li>')[0]
+        printDBG("data_items1.listItems [%s]" % data_items1)
 
         for m in data_items:
-                   title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
-                   pureurl = self.cm.ph.getSearchGroups(m, r'href=[\'"]([^\'"]+)[\'"]')[0]
-                   baseurl, filenameurl = pureurl.rsplit('/', 1)
-                   fixedfilenameurl = urllib_quote_plus(filenameurl)
-                   url = baseurl + "/" + fixedfilenameurl + "watch/"
-                   pureicon = self.cm.ph.getSearchGroups(m, r'data-src=[\'"]([^\'"]+)[\'"]')[0]
-                   baseicon, filenameicon = pureicon.rsplit('/', 1)
-                   fixedfilenameicon = urllib_quote_plus(filenameicon)
-                   icon = baseicon + "/" + fixedfilenameicon
-                   params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': url}
-                   printDBG(str(params))
-                   self.addDir(params)
+            # Extract basic info
+            title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
+            pureurl = self.cm.ph.getSearchGroups(m, r'href=[\'"]([^\'"]+)[\'"]')[0]
+            pureicon = self.cm.ph.getSearchGroups(m, r'data-src=[\'"]([^\'"]+)[\'"]')[0]
+
+            # Fix URLs safely
+            if pureurl:
+                baseurl, filenameurl = pureurl.rsplit('/', 1)
+                fixedfilenameurl = urllib_quote_plus(filenameurl)
+                url = baseurl + "/" + fixedfilenameurl + "watch/"
+            else:
+                url = ''
+
+            if pureicon:
+                baseicon, filenameicon = pureicon.rsplit('/', 1)
+                fixedfilenameicon = urllib_quote_plus(filenameicon)
+                icon = baseicon + "/" + fixedfilenameicon
+            else:
+                icon = ''
+
+            ###################################################
+            # Extract genre, quality, and story
+            ###################################################
+            genre = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<div class="__genre hide__md">', '</div>', False)[1]).strip()
+            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<div class="__quality hide__md">', '</div>', False)[1]).strip()
+            story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<p>', '</p>', False)[1]).strip()
+
+            # Build combined description
+            desc_parts = []
+            if genre:
+                desc_parts.append(f"{E2ColoR('yellow')}Genre:{E2ColoR('white')} {genre}")
+            if quality:
+                q_color = 'white'
+                if re.search(r'4K|1080|HD|BluRay', quality, re.I):
+                    q_color = 'green'
+                elif re.search(r'720|HDRip|WEB', quality, re.I):
+                    q_color = 'orange'
+                elif re.search(r'CAM|TS|HDCAM', quality, re.I):
+                    q_color = 'red'
+                desc_parts.append(f"{E2ColoR('yellow')}Quality:{E2ColoR('white')} {E2ColoR(q_color)}{quality}{E2ColoR('white')}")
+            if story:
+                desc_parts.append(f"{E2ColoR('yellow')}Story:{E2ColoR('white')} {story}")
+
+            desc = " | ".join(desc_parts)
+
+            ###################################################
+            # Colorize title (movie name + year)
+            ###################################################
+            colored_title = self.colorizeTitle(title)
+
+            ###################################################
+            # Final item
+            ###################################################
+            params = {
+                'category': 'explore_item',
+                'title': colored_title,
+                'icon': icon,
+                'url': url,
+                'desc': desc
+            }
+
+            printDBG(str(params))
+            self.addDir(params)
 
         # === PAGINATION HANDLING ===
         pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paginate">', '</div>', False)[1]
@@ -295,35 +348,70 @@ class ArabSeed(CBaseHostClass):
         if not sts:
             return
 
-        blocks = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="box__xs__2', '</li>')
-        for block in blocks:
-            pureurl = self.getFullUrl(self.cm.ph.getSearchGroups(block, 'href="([^"]+?)"')[0])
-            baseurl, filenameurl = pureurl.rsplit('/', 1)
-            fixedfilenameurl = urllib_quote_plus(filenameurl)
-            baseurl, filenameurl = pureurl.rsplit('/', 1)
-            url = baseurl + "/" + fixedfilenameurl + "watch/"
-            if not url:
-                continue
+        data_items = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li class="box__xs__2', '</li>')
+        for m in data_items:
+            # Extract basic info
+            title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
+            pureurl = self.cm.ph.getSearchGroups(m, r'href=[\'"]([^\'"]+)[\'"]')[0]
+            pureicon = self.cm.ph.getSearchGroups(m, r'data-src=[\'"]([^\'"]+)[\'"]')[0]
 
-            pureicon = self.cm.ph.getSearchGroups(block, 'data-src="([^"]+?)"')[0]
-            baseicon, filenameicon = pureicon.rsplit('/', 1)
-            fixedfilenameicon = urllib_quote_plus(filenameicon)
-            icon = baseicon + "/" + fixedfilenameicon
-            desc = self.cm.ph.getSearchGroups(block, '<p[^>]*?>([^<]+?)</p>')[0]
-            title = self.cm.ph.getSearchGroups(block, '<h3[^>]*?>([^<]+?)</h3>')[0].strip()
+            # Fix URLs safely
+            if pureurl:
+                baseurl, filenameurl = pureurl.rsplit('/', 1)
+                fixedfilenameurl = urllib_quote_plus(filenameurl)
+                url = baseurl + "/" + fixedfilenameurl + "watch/"
+            else:
+                url = ''
 
-            # Remove episode numbers like "الحلقة 30" using regex
-            # title = re.sub(r'الحلقة\s*\d+', '', fullTitle, flags=re.UNICODE).strip()
+            if pureicon:
+                baseicon, filenameicon = pureicon.rsplit('/', 1)
+                fixedfilenameicon = urllib_quote_plus(filenameicon)
+                icon = baseicon + "/" + fixedfilenameicon
+            else:
+                icon = ''
 
-            params = dict(cItem)
-            params.update({
-                'title': title,
-                'url': url,
+            ###################################################
+            # Extract genre, quality, and story
+            ###################################################
+            genre = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<div class="__genre hide__md">', '</div>', False)[1]).strip()
+            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<div class="__quality hide__md">', '</div>', False)[1]).strip()
+            story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<p>', '</p>', False)[1]).strip()
+
+            # Build combined description
+            desc_parts = []
+            if genre:
+                desc_parts.append(f"{E2ColoR('yellow')}Genre:{E2ColoR('white')} {genre}")
+            if quality:
+                q_color = 'white'
+                if re.search(r'4K|1080|HD|BluRay', quality, re.I):
+                    q_color = 'green'
+                elif re.search(r'720|HDRip|WEB', quality, re.I):
+                    q_color = 'orange'
+                elif re.search(r'CAM|TS|HDCAM', quality, re.I):
+                    q_color = 'red'
+                desc_parts.append(f"{E2ColoR('yellow')}Quality:{E2ColoR('white')} {E2ColoR(q_color)}{quality}{E2ColoR('white')}")
+            if story:
+                desc_parts.append(f"{E2ColoR('yellow')}Story:{E2ColoR('white')} {story}")
+
+            desc = " | ".join(desc_parts)
+
+            ###################################################
+            # Colorize title (movie name + year)
+            ###################################################
+            colored_title = self.colorizeTitle(title)
+
+            ###################################################
+            # Final item
+            ###################################################
+            params = {
+                'category': 'explore_item',
+                'title': colored_title,
                 'icon': icon,
-                'desc': desc,
-                'category': 'explore_episodes',
-                })
+                'url': url,
+                'desc': desc
+            }
 
+            printDBG(str(params))
             self.addDir(params)
 
         # === PAGINATION HANDLING ===
@@ -442,16 +530,15 @@ class ArabSeed(CBaseHostClass):
                     continue
 
                 server_name = normalize_server_name(link, server)
-                full_label = "%s [%s]" % (server_name, quality)
+                colored_label = self.colorizeServer(server_name, quality)
                 params_video = MergeDicts(cItem, {
-                    'title': full_label,
+                    'title': colored_label,
                     'url': link,
                     'type': 'video',
                     'category': 'video',
                     'need_resolve': 1,
                 })
                 self.addVideo(params_video)
-
         printDBG("ArabSeed.exploreItems <<< done")
 
     def exploreSeriesItems(self, cItem):
@@ -543,9 +630,10 @@ class ArabSeed(CBaseHostClass):
                     server_name = "server%d" % server
 
                 # --- Add video entry ---
-                full_label = "%s [%s]" % (server_name, quality)
+                colored_server = self.colorizeServer(server_name, quality)
+                colored_title = self.colorizeTitle(cItem.get('title', 'Episode'))
                 params_video = MergeDicts(cItem, {
-                    'title': "%s - %s" % (cItem.get('title', 'Episode'), full_label),
+                    'title': f"{colored_title} - {colored_server}",
                     'url': link,
                     'type': 'video',
                     'category': 'video',
@@ -561,8 +649,84 @@ class ArabSeed(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ArabSeed.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search?q=') + urllib_quote_plus(searchPattern)
-        self.listItems(cItem)
+        cItem['url'] = self.getFullUrl('find/?word=') + urllib_quote_plus(searchPattern)
+        self.listSearchItems(cItem)
+
+    def listSearchItems(self, cItem):
+        printDBG("ArabSeed.listSearchItems [%s]" % cItem)
+        sts, data = self.getPage(cItem['url'])
+        #printDBG("data.listSearchItems [%s]" % data)
+        if not sts:
+            return
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="series__list">', '<div class="paginate">', False)[1]
+        printDBG("tmp.listSearchItems [%s]" % tmp)
+        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2', '</li>')
+        printDBG("data_items.listSearchItems [%s]" % data_items)
+
+        for m in data_items:
+            # Extract basic info
+            title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
+            pureurl = self.cm.ph.getSearchGroups(m, r'href=[\'"]([^\'"]+)[\'"]')[0]
+            pureicon = self.cm.ph.getSearchGroups(m, r'data-src=[\'"]([^\'"]+)[\'"]')[0]
+
+            # Fix URLs safely
+            if pureurl:
+                baseurl, filenameurl = pureurl.rsplit('/', 1)
+                fixedfilenameurl = urllib_quote_plus(filenameurl)
+                url = baseurl + "/" + fixedfilenameurl + "watch/"
+            else:
+                url = ''
+
+            if pureicon:
+                baseicon, filenameicon = pureicon.rsplit('/', 1)
+                fixedfilenameicon = urllib_quote_plus(filenameicon)
+                icon = baseicon + "/" + fixedfilenameicon
+            else:
+                icon = ''
+
+            ###################################################
+            # Extract genre, quality, and story
+            ###################################################
+            genre = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<div class="__genre hide__md">', '</div>', False)[1]).strip()
+            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<div class="__quality hide__md">', '</div>', False)[1]).strip()
+            story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<p>', '</p>', False)[1]).strip()
+
+            # Build combined description
+            desc_parts = []
+            if genre:
+                desc_parts.append(f"{E2ColoR('yellow')}Genre:{E2ColoR('white')} {genre}")
+            if quality:
+                q_color = 'white'
+                if re.search(r'4K|1080|HD|BluRay', quality, re.I):
+                    q_color = 'green'
+                elif re.search(r'720|HDRip|WEB', quality, re.I):
+                    q_color = 'orange'
+                elif re.search(r'CAM|TS|HDCAM', quality, re.I):
+                    q_color = 'red'
+                desc_parts.append(f"{E2ColoR('yellow')}Quality:{E2ColoR('white')} {E2ColoR(q_color)}{quality}{E2ColoR('white')}")
+            if story:
+                desc_parts.append(f"{E2ColoR('yellow')}Story:{E2ColoR('white')} {story}")
+
+            desc = " | ".join(desc_parts)
+
+            ###################################################
+            # Colorize title (movie name + year)
+            ###################################################
+            colored_title = self.colorizeTitle(title)
+
+            ###################################################
+            # Final item
+            ###################################################
+            params = {
+                'category': 'explore_item',
+                'title': colored_title,
+                'icon': icon,
+                'url': url,
+                'desc': desc
+            }
+
+            printDBG(str(params))
+            self.addDir(params)
 
     def getFavouriteData(self, cItem):
         printDBG('ArabSeed.getFavouriteData')
@@ -767,6 +931,7 @@ class ArabSeed(CBaseHostClass):
         html = result.get('html', '')
         # printDBG('html_listEpisodes >>> %s' % html)
         episodes = self.cm.ph.getAllItemsBeetwenMarkers(html, '<li', '</li>')
+        episodes.reverse()
         printDBG('Found %d episodes' % len(episodes))
 
         for ep in episodes:
@@ -804,6 +969,49 @@ class ArabSeed(CBaseHostClass):
                 self.addDir(params)
 
         printDBG('ArabSeed.listEpisodes <<< done')
+
+    ###################################################
+    # COLOR HELPERS
+    ###################################################
+    def colorizeTitle(self, title):
+        """
+        Detects movie title and year in different formats and colorizes both.
+        Handles: 2025, (2025), ( 2025 ), - 2025, [2025]
+        """
+        if not title:
+            return title
+
+        # Match year in various wrapping formats
+        match = re.search(r'(.+?)\s*(?:\(|\[|-)?\s*(\d{4})\s*(?:\)|\])?$', title)
+        if match:
+            movie_title = match.group(1).strip()
+            movie_year = match.group(2).strip()
+            return (
+                f"{E2ColoR('yellow')}{movie_title} "
+                f"{E2ColoR('cyan')}{movie_year}{E2ColoR('white')}"
+            )
+        else:
+            return f"{E2ColoR('yellow')}{title}{E2ColoR('white')}"
+
+    def colorizeQuality(self, quality):
+        """
+        Detect quality level and assign colors
+        """
+        q_color = 'white'
+        if re.search(r'4K|1080|BluRay', quality, re.I):
+            q_color = 'green'
+        elif re.search(r'720|HDRip|WEB', quality, re.I):
+            q_color = 'yellow'
+        elif re.search(r'CAM|TS|HDCAM', quality, re.I):
+            q_color = 'red'
+        return f"{E2ColoR(q_color)}{quality if quality else 'N/A'}{E2ColoR('white')}"
+
+    def colorizeServer(self, name, quality):
+        """
+        Combine server name + quality with colorized labels
+        """
+        q_colored = self.colorizeQuality(str(quality))
+        return f"{E2ColoR('cyan')}{name}{E2ColoR('white')} [{q_colored}]"
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
         printDBG('ArabSeed.handleService start')

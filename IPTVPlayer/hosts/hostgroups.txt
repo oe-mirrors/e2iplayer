@@ -322,7 +322,7 @@
   "forjatn",
   "faselhdcom",
   "3sktv",
-  "cimaclubcom",
+  "cimaclub",
   "hdsto"
  ],
  "greek": [

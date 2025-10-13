@@ -21,7 +21,7 @@ hostcb01uno
 hostcdapl
 hostchomikuj_blocked_
 hostchristusvincit_blocked_
-hostcimaclubcom_blocked_
+hostcimaclub
 hostcinemay_blocked_
 hostcineto
 hostclassiccinemaonline_blocked_
