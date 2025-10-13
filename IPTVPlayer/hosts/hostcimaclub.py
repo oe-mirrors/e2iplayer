@@ -27,11 +27,14 @@ import time
 import base64
 ###################################################
 
+
 def GetConfigList():
     return []
 
+
 def gettytul():
     return 'https://ciimaclub.club/'  # main url of host
+
 
 class CimaClub(CBaseHostClass):
 
@@ -85,10 +88,10 @@ class CimaClub(CBaseHostClass):
         printDBG(f"[CimaClub] Retrying {baseUrl} failed after {max_retries} attempts due to timeout.")
         return False, ''
 
-
     ###################################################
     # MAIN MENU
     ###################################################
+
     def listMainMenu(self, cItem):
         printDBG('CimaClub.listMainMenu')
         MAIN_CAT_TAB = [
@@ -189,7 +192,6 @@ class CimaClub(CBaseHostClass):
 
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'title="([^"]+)"')[0]).replace("مترجمة اون لاين", "").replace("مترجم اون لاين", "").replace("فيلم", "").replace("مسلسل", "").replace("مترجمة", "").replace("مترجم", "").replace("اون لاين", "").strip()
             printDBG('title.listItems >>> %s' % title)
-
 
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)[1])
             quality = self.cleanHtmlStr(
@@ -404,10 +406,10 @@ class CimaClub(CBaseHostClass):
         if len(li_items) == 0:
             printDBG('No <li> items found in <ul id="watch">')
 
-
     ###################################################
     # GET LINKS FOR VIDEO
     ###################################################
+
     def getLinksForVideo(self, cItem):
         printDBG('CimaClub.getLinksForVideo [%s]' % cItem)
         url = cItem.get('url', '')
@@ -472,6 +474,7 @@ class CimaClub(CBaseHostClass):
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
+
 class IPTVHost(CHostBase):
 
     def __init__(self):
@@ -481,4 +484,3 @@ class IPTVHost(CHostBase):
         if 'video' == cItem.get('type', '') or 'explore_item' == cItem.get('category', ''):
             return True
         return False
-

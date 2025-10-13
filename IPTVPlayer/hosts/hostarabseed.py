@@ -655,7 +655,7 @@ class ArabSeed(CBaseHostClass):
     def listSearchItems(self, cItem):
         printDBG("ArabSeed.listSearchItems [%s]" % cItem)
         sts, data = self.getPage(cItem['url'])
-        #printDBG("data.listSearchItems [%s]" % data)
+        # printDBG("data.listSearchItems [%s]" % data)
         if not sts:
             return
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="series__list">', '<div class="paginate">', False)[1]
