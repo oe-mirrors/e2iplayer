@@ -59,7 +59,7 @@
   "filmeonlineto",
   "tainieskaiseirestv",
   "3sktv",
-  "cimaclubcom",
+  "cimaclub",
   "gledalica",
   "filmaoncom",
   "putlockertvto",
@@ -322,7 +322,7 @@
   "forjatn",
   "faselhdcom",
   "3sktv",
-  "cimaclubcom",
+  "cimaclub",
   "hdsto"
  ],
  "greek": [
