@@ -59,7 +59,7 @@
   "filmeonlineto",
   "tainieskaiseirestv",
   "3sktv",
-  "cimaclubcom",
+  "cimaclub",
   "gledalica",
   "filmaoncom",
   "putlockertvto",
