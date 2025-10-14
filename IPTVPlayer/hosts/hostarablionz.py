@@ -370,7 +370,7 @@ class ArabLionzTV(CBaseHostClass):
 
     def listSearchUnits(self, cItem):
         printDBG('ArabLionzTV.listSearchUnits >>> %s' % cItem)
-        
+
         searchPattern = cItem.get('search_pattern', '')
         if not searchPattern:
             printDBG('listSearchUnits: No search pattern provided')
@@ -403,7 +403,7 @@ class ArabLionzTV(CBaseHostClass):
 ###################################################
 # PARSE SEARCH RESULTS
 ###################################################
-        
+
         # Extract the grid containing search results
         grid_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="Grid--ArabLionz">', '</postsscrollloader>', False)[1]
         printDBG('listSearchUnits: grid_block length = %d' % len(grid_block))
@@ -433,15 +433,15 @@ class ArabLionzTV(CBaseHostClass):
             if not title or any(excluded.lower() in title.lower() for excluded in ['IPTV', 'Shof TV']):
                 printDBG('listSearchUnits: Skipped excluded title -> %s' % title)
                 continue
-                
+
             # Get genre/category
             genre_data = self.cm.ph.getDataBeetwenMarkers(item, '<div class="category">', '</div>', False)
             genre = self.cleanHtmlStr(genre_data[1]) if genre_data[0] else ''
-            
+
             # Clean title
             title = title.replace("مترجمة اون لاين", "").replace("مترجم اون لاين", "").replace("فيلم", "").replace("مسلسل", "").replace("مترجمة", "").replace("مترجم", "").replace("مشاهدة", "").replace("اون لاين", "").strip()
             printDBG('title.listSearchUnits >>> %s' % title)
-            
+
             # Get description
             desc_data = self.cm.ph.getDataBeetwenMarkers(item, '<p>', '</p>', False)
             desc = self.cleanHtmlStr(desc_data[1]) if desc_data[0] else ''
@@ -462,7 +462,7 @@ class ArabLionzTV(CBaseHostClass):
                 if len(parts) == 3:
                     before_year = parts[0].strip()
                     after_year = parts[2].strip()
-                    
+
                     if before_year and after_year:
                         colored_title = f"{E2ColoR('yellow')}{before_year} {E2ColoR('cyan')}{year}{E2ColoR('yellow')} {after_year}{E2ColoR('white')}"
                     elif before_year:
@@ -478,7 +478,7 @@ class ArabLionzTV(CBaseHostClass):
 # COLORIZE QUALITY AND GENRE
 ###################################################
             desc_parts = []
-            
+
             # Colorize quality
             if quality:
                 q_color = 'white'
@@ -490,16 +490,16 @@ class ArabLionzTV(CBaseHostClass):
                     q_color = 'red'
                 colored_quality = f"{E2ColoR(q_color)}{quality}{E2ColoR('white')}"
                 desc_parts.append(colored_quality)
-            
+
             # Colorize genre
             if genre:
                 colored_genre = f"{E2ColoR('lightblue')}{genre}{E2ColoR('white')}"
                 desc_parts.append(colored_genre)
-            
+
             # Add description if available
             if desc:
                 desc_parts.append(desc)
-            
+
             desc_text = ' | '.join(desc_parts) if desc_parts else ''
 
             params = dict(cItem)
@@ -556,7 +556,7 @@ class ArabLionzTV(CBaseHostClass):
         elif category == 'movies_categories':
             self.listMoviesCategories(self.currItem)
         elif category == 'series_categories':
-            self.listSeriesCategories(self.currItem)        
+            self.listSeriesCategories(self.currItem)
         elif category == 'list_movies':
             self.listUnits(self.currItem)
         elif category == 'list_series':
