@@ -35,6 +35,7 @@ def GetConfigList():
 def gettytul():
     return 'https://arablionztv.online/'  # main url of host
 
+
 class ArabLionzTV(CBaseHostClass):
 
     def __init__(self):
@@ -89,6 +90,7 @@ class ArabLionzTV(CBaseHostClass):
 ###################################################
 # MAIN MENU
 ###################################################
+
     def listMainMenu(self, cItem):
         printDBG('ArabLionzTV.listMainMenu')
         MAIN_CAT_TAB = [
@@ -576,6 +578,7 @@ class ArabLionzTV(CBaseHostClass):
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
+
 class IPTVHost(CHostBase):
 
     def __init__(self):
@@ -585,4 +588,3 @@ class IPTVHost(CHostBase):
         if 'video' == cItem.get('type', '') or 'explore_item' == cItem.get('category', ''):
             return True
         return False
-
