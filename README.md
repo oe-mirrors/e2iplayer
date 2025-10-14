@@ -162,7 +162,7 @@ with additions from
 - Menu → Extensions/Plugins
 - Green button (“Download extensions”)
 - Select category (Extensions / IPTV)
-- Install PlutoTV, restart E2 if necessary
+- Install E2iPlayer, restart E2 if necessary
 
 **Console**
 
