@@ -9,6 +9,7 @@
 'hostaltadefinizione01': 'https://altadefinizione01.spa/',
 'hostanimeodcinki': 'https://anime-odcinki.pl/',
 'hostappletrailers': 'https://trailers.apple.com/',
+'hostarablionz': 'https://arablionztv.online/',
 'hostarabseed': 'https://a.asd.homes/',
 'hostardmediathek': 'ARDmediathek',
 'hostartetv': 'https://www.arte.tv/',
