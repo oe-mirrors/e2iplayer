@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 17.08.2025 - Mr.X
+# Last Modified: 14.10.2025 - Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -21,9 +21,9 @@ class Zaluknij(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"})
         self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0"
-        self.HEADER = {"User-Agent": self.USER_AGENT, "Accept": "text/html"}
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self.DEFAULT_ICON_URL = gettytul() + "public/dist/images/logozaluknijcccc.png"
+        self.DEFAULT_ICON_URL = gettytul() + "public/dist/images/lgbt.png"
         self.MAIN_URL = None
 
     def menu(self):
@@ -35,7 +35,7 @@ class Zaluknij(CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
+        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def listItems(self, cItem, nextCategory):
@@ -43,8 +43,10 @@ class Zaluknij(CBaseHostClass):
         sts, htm = self.getPage(cItem["url"])
         if not sts:
             return
-        nextPage = self.cm.ph.getSearchGroups(htm, r'''href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast''')[0]
+        nextPage = self.cm.ph.getSearchGroups(htm, r"""href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast""")[0]
         data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'role="listitem', "</a>")
+        if not data:
+            data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0]
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+)')[0])
@@ -61,7 +63,7 @@ class Zaluknij(CBaseHostClass):
                 self.addVideo(params)
         if nextPage:
             params = dict(cItem)
-            params.update({"good_for_fav": False, "title": _("Next page"), "url": cItem["url"].split('?')[0] + nextPage.replace("amp;", "")})
+            params.update({"good_for_fav": False, "title": _("Next page"), "url": cItem["url"].split("?")[0] + nextPage.replace("amp;", "")})
             self.addDir(params)
 
     def listEpisodes(self, cItem):
@@ -89,7 +91,7 @@ class Zaluknij(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return []
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="link-to-video">', "</td>")
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="watch', "</div>")
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0]
             urlTab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1})

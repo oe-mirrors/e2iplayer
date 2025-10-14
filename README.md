@@ -149,7 +149,7 @@ with additions from
 - Enigma2 STB, mipsel or ARM (Dreambox, Vu+, Gigablue, Zgemma, etc.)
 - Running a compatible Image like OE-Alliance Images
 - Installed dependencies -> [See Notes](https://github.com/Masta2002/e2iplayer/tree/Masta2002-patch-1?tab=readme-ov-file#-notes)
-- Active internet connection  
+- Active & Stable internet connection  
 - Python ≥ 3.0
 
 ---
@@ -158,7 +158,13 @@ with additions from
 
 **ℹ️ The best method, and the one we recommend, is to install the plugin via your image feed. This way, you will automatically receive e2iPlayer updates along with regular image updates.**
 
+**GUI (Feed)**
+- Menu → Extensions/Plugins
+- Green button (“Download extensions”)
+- Select category (Extensions / IPTV)
+- Install E2iPlayer, restart E2 if necessary
 
+**Console**
 
 To install the plugin manually via Telnet Command connect to your enigma2 device via SSH/Telnet, (eg. `ssh root@boxip`), then use Install script for Telnet installation
 ```bash
