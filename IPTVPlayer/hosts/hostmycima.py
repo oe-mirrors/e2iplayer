@@ -35,6 +35,7 @@ def GetConfigList():
 def gettytul():
     return 'https://mycima.guru/'  # main url of host
 
+
 class MyCima(CBaseHostClass):
 
     def __init__(self):
@@ -85,10 +86,10 @@ class MyCima(CBaseHostClass):
         printDBG(f"[MyCima] Retrying {baseUrl} failed after {max_retries} attempts due to timeout.")
         return False, ''
 
-
     ###################################################
     # MAIN MENU
     ###################################################
+
     def listMainMenu(self, cItem):
         printDBG('MyCima.listMainMenu')
         MAIN_CAT_TAB = [
@@ -151,7 +152,7 @@ class MyCima(CBaseHostClass):
         printDBG('MyCima.listUnits >>> %s' % cItem)
 
         sts, data = self.getPage(cItem['url'])
-        #printDBG('data.listUnits >>> %s' % data)
+        # printDBG('data.listUnits >>> %s' % data)
         if not sts or not data:
             printDBG('listUnits: failed to load page')
             return
@@ -160,7 +161,7 @@ class MyCima(CBaseHostClass):
         # MAIN MOVIE BLOCK
         ###################################################
         main_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="Grid--WecimaPosts"', '<script type="speculationrules">', False)[1]
-        #printDBG('main_block.listUnits >>> %s' % main_block)
+        # printDBG('main_block.listUnits >>> %s' % main_block)
         if not main_block:
             printDBG('listUnits: No main_block found')
             return
@@ -169,8 +170,8 @@ class MyCima(CBaseHostClass):
         # MOVIE BOXES
         ###################################################
         items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="GridItem"', '<ul class="PostItemStats">')
-        #items2 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="GridItem"', '<ul class="PostItemStats">')[1]
-        #printDBG('items2.listUnits >>> %s' % items2)
+        # items2 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="GridItem"', '<ul class="PostItemStats">')[1]
+        # printDBG('items2.listUnits >>> %s' % items2)
         printDBG('listUnits: Found %d items' % len(items))
 
         for item in items:
@@ -311,7 +312,7 @@ class MyCima(CBaseHostClass):
         printDBG('url.exploreItems >>> %s' % url)
 
         sts, data = self.getPage(url)
-        #printDBG('data.exploreItems >>> %s' % data)
+        # printDBG('data.exploreItems >>> %s' % data)
         if not sts:
             return
 
@@ -444,6 +445,7 @@ class MyCima(CBaseHostClass):
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
+
 class IPTVHost(CHostBase):
 
     def __init__(self):
@@ -453,4 +455,3 @@ class IPTVHost(CHostBase):
         if 'video' == cItem.get('type', '') or 'explore_item' == cItem.get('category', ''):
             return True
         return False
-
