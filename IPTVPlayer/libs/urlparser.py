@@ -425,6 +425,7 @@ class urlparser:
             'davioad.com': self.pp.parserJWPLAYER,
             'dhcplay.com': self.pp.parserJWPLAYER,
             'dhtpre.com': self.pp.parserJWPLAYER,
+            'dingtezuni.com': self.pp.parserJWPLAYER,
             'do0od.com': self.pp.parserDOOD,
             'do7go.com': self.pp.parserDOOD,
             'dood.cx': self.pp.parserDOOD,
@@ -454,6 +455,7 @@ class urlparser:
             'dropload.tv': self.pp.parserJWPLAYER,
             'ds2play.com': self.pp.parserDOOD,
             'ds2video.com': self.pp.parserDOOD,
+            'dsvplay.com': self.pp.parserDOOD,
             'dumbalag.com': self.pp.parserJWPLAYER,
             'dwish.pro': self.pp.parserJWPLAYER,
             # e
@@ -761,6 +763,7 @@ class urlparser:
             'upvideo.cc': self.pp.parserONLYSTREAMTV,
             'upzone.cc': self.pp.parserUPZONECC,
             'uqload.cx': self.pp.parserJWPLAYER,
+            'uqload.io': self.pp.parserJWPLAYER,
             'uqload.ws': self.pp.parserJWPLAYER,
             'uqloads.xyz': self.pp.parserJWPLAYER,
             'userload.co': self.pp.parserUSERLOADCO,
