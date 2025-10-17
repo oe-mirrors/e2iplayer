@@ -314,6 +314,7 @@
   "arablionz",
   "movizlandcom",
   "wecima",
+  "mycima",
   "topcinema",
   "tuktukcam",
   "shahid44u",
