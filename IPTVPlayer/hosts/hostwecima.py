@@ -35,6 +35,7 @@ def GetConfigList():
 def gettytul():
     return 'https://cima.wecima.show/'  # main url of host
 
+
 class WeCima(CBaseHostClass):
 
     def __init__(self):
@@ -85,10 +86,10 @@ class WeCima(CBaseHostClass):
         printDBG(f"[WeCima] Retrying {baseUrl} failed after {max_retries} attempts due to timeout.")
         return False, ''
 
-
     ###################################################
     # MAIN MENU
     ###################################################
+
     def listMainMenu(self, cItem):
         printDBG('WeCima.listMainMenu')
         MAIN_CAT_TAB = [
@@ -318,7 +319,7 @@ class WeCima(CBaseHostClass):
         printDBG('url.exploreItems >>> %s' % url)
 
         sts, data = self.getPage(url)
-        #printDBG('data.exploreItems >>> %s' % data)
+        # printDBG('data.exploreItems >>> %s' % data)
         if not sts:
             return
 
@@ -452,6 +453,7 @@ class WeCima(CBaseHostClass):
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
+
 class IPTVHost(CHostBase):
 
     def __init__(self):
@@ -461,4 +463,3 @@ class IPTVHost(CHostBase):
         if 'video' == cItem.get('type', '') or 'explore_item' == cItem.get('category', ''):
             return True
         return False
-

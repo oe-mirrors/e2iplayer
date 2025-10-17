@@ -120,10 +120,14 @@ class XtreamApiHost(CBaseHostClass):
         desc = ''
         if ai:
             parts = []
-            if ai.get('expiry'): parts.append(_('Expiry: %s') % ai['expiry'])
-            if ai.get('status'): parts.append(_('Status: %s') % ai['status'])
-            if ai.get('max_connections'): parts.append(_('Max connections: %s') % ai['max_connections'])
-            if ai.get('active_cons'): parts.append(_('Active: %s') % ai['active_cons'])
+            if ai.get('expiry'):
+                parts.append(_('Expiry: %s') % ai['expiry'])
+            if ai.get('status'):
+                parts.append(_('Status: %s') % ai['status'])
+            if ai.get('max_connections'):
+                parts.append(_('Max connections: %s') % ai['max_connections'])
+            if ai.get('active_cons'):
+                parts.append(_('Active: %s') % ai['active_cons'])
             desc = ' | '.join(parts)
         self.addDir({'category': 'list_bouquets', 'title': _('LIVE CHANNELS'), 'desc': desc})
 
