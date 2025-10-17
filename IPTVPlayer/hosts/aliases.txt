@@ -119,6 +119,7 @@
 'hostmrpiracy': 'http://mrpiracy.site/',
 'hostmusicbox': 'Music-Box',
 'hostmusicmp3ru': 'https://musicmp3.ru/',
+'hostmycima': 'https://mycima.guru/',
 'hostngolos': 'https://ngolos.com/',
 'hostninateka': 'http://ninateka.pl/',
 'hostnonstopmozi': 'https://nonstopmozi.com/',
