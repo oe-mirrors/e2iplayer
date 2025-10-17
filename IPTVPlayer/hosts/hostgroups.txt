@@ -313,6 +313,7 @@
   "tvfun",
   "arablionz",
   "movizlandcom",
+  "wecima",
   "topcinema",
   "tuktukcam",
   "shahid44u",

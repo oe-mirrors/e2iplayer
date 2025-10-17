@@ -192,6 +192,7 @@ hostwatchwrestling_blocked_
 hostwatchwrestlinguno_blocked_
 hostwebhuplayer
 hostwebstream
+hostwecima
 hostwgrane
 hostwofvideo_blocked_
 hostwolnelekturypl_blocked_
@@ -200,6 +201,7 @@ hostwpolscepl
 hostwptv_blocked_
 hostxalaflix
 hostxrysoise_blocked_
+hostxtream
 hostxxx
 hostyesmoviesto_blocked_
 hostyifytv_blocked_
