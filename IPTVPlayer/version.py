@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 # YYYY.MM.DD.DAY_RELEASE
 
-IPTV_VERSION = "2025.10.17.01"
+IPTV_VERSION = "2025.10.19.01"
