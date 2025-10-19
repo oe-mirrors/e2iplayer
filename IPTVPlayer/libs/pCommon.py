@@ -270,25 +270,19 @@ class CParsingHelper:
 
 
 class common:
-    HOST = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'
+    HOST = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'
     HEADER = None
     ph = CParsingHelper
 
     @staticmethod
     def getDefaultHeader(browser='firefox'):
         if browser == 'firefox':
-            ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0'
+            ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0'
         elif browser == 'iphone_3_0':
             ua = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16'
         else:
             ua = common.HOST
-
-        HTTP_HEADER = {'User-Agent': ua,
-                       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                       'Accept-Language': 'de,en-US;q=0.7,en;q=0.3',
-                       'Accept-Encoding': 'gzip, deflate',
-                       'DNT': 1
-                       }
+        HTTP_HEADER = {'User-Agent': ua, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate', 'DNT': 1}
         return dict(HTTP_HEADER)
 
     @staticmethod
