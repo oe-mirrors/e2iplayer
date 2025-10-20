@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-24 18:29+0200\n"
+"POT-Creation-Date: 2025-10-20 17:58+0200\n"
 "PO-Revision-Date: 2025-08-02 13:55+0300\n"
 "Last-Translator: angel_heart[Mohamed Elsafty]\n"
 "Language-Team: \n"
@@ -238,10 +238,6 @@ msgstr "%s مشاهد"
 msgid "%s views"
 msgstr "%s مشاهدة"
 
-#, python-format
-msgid "%s/10"
-msgstr "%s/10"
-
 msgid "++"
 msgstr "++"
 
@@ -372,6 +368,10 @@ msgid "Access denied. Please check password."
 msgstr "تم رفض الوصول. يرجى التحقق من كلمة المرور."
 
 msgid "Active host"
+msgstr "المضيف النشط"
+
+#, fuzzy, python-format
+msgid "Active: %s"
 msgstr "المضيف النشط"
 
 msgid "Actors:"
@@ -506,7 +506,15 @@ msgstr "أنمي"
 msgid "Anime Search"
 msgstr "بحث الأنمي"
 
+#, fuzzy
+msgid "Anime TV series"
+msgstr "مسلسلات"
+
 msgid "Anime list"
+msgstr "قائمة الأنمي"
+
+#, fuzzy
+msgid "Anime movies"
 msgstr "قائمة الأنمي"
 
 msgid "Answer"
@@ -542,6 +550,14 @@ msgstr "هل أنت متأكد أنك تريد حذف الملف \"%s\"؟"
 
 msgid "Artists"
 msgstr "الفنانون"
+
+#, fuzzy
+msgid "Asian TV series"
+msgstr "مسلسلات"
+
+#, fuzzy
+msgid "Asian movies"
+msgstr "أفلام عربية"
 
 msgid "Ask"
 msgstr "اسأل"
@@ -726,6 +742,9 @@ msgstr "البثوث المجمعة فقط"
 msgid "Collections"
 msgstr "مجموعات"
 
+msgid "Columbia"
+msgstr ""
+
 msgid "Comedies"
 msgstr "كوميديا"
 
@@ -891,6 +910,10 @@ msgstr "ألماني"
 
 msgid "Developers: "
 msgstr "المطورون: "
+
+#, fuzzy
+msgid "Direct"
+msgstr "المخرج:"
 
 msgid "Director:"
 msgstr "المخرج:"
@@ -1156,6 +1179,14 @@ msgstr ""
 msgid "English"
 msgstr "الإنجليزية"
 
+#, fuzzy
+msgid "English TV series"
+msgstr "مسلسلات"
+
+#, fuzzy
+msgid "English movies"
+msgstr "الإنجليزية"
+
 msgid "Enter a value"
 msgstr "أدخل قيمة"
 
@@ -1257,6 +1288,10 @@ msgstr "حدث استثناء"
 msgid "Exit"
 msgstr "خروج"
 
+#, python-format
+msgid "Expiry: %s"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "إعداد مشغل الفيديو الخارجي"
 
@@ -1288,8 +1323,16 @@ msgstr "فشل في فك الترميز إلى UTF-8."
 msgid "Failed to download subtitle."
 msgstr "فشل في تحميل الترجمة."
 
+#, fuzzy
+msgid "Failed to fetch categories"
+msgstr "فشل في إنشاء المجلد \"%s\"."
+
 msgid "Failed to gzip."
 msgstr "فشل في ضغط الملف بـ gzip."
+
+#, fuzzy
+msgid "Failed to load channels"
+msgstr "فشل في تحميل الترجمة."
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
@@ -1570,6 +1613,14 @@ msgstr "جودة الأيقونات"
 msgid "Icons size"
 msgstr "حجم الأيقونات"
 
+#, fuzzy
+msgid "Indian TV series"
+msgstr "مسلسلات"
+
+#, fuzzy
+msgid "Indian movies"
+msgstr "أفلام سينمائية"
+
 msgid "Industry"
 msgstr "الصناعة"
 
@@ -1705,6 +1756,10 @@ msgstr "الركبة والرياضة"
 msgid "Knowledge"
 msgstr ""
 
+#, fuzzy
+msgid "Korean TV series"
+msgstr "مسلسلات"
+
 msgid "LATEST"
 msgstr "الأحدث"
 
@@ -1719,6 +1774,10 @@ msgstr "مباشر"
 
 msgid "LIVE 24/7"
 msgstr "بث مباشر 24/7"
+
+#, fuzzy
+msgid "LIVE CHANNELS"
+msgstr "القنوات "
 
 msgid "Labels"
 msgstr "تسميات"
@@ -1826,6 +1885,9 @@ msgstr "روابط من جميع الملفات بدون تصنيفات"
 #, python-format
 msgid "Links from the file %s"
 msgstr "روابط من الملف %s"
+
+msgid "Lionsgate"
+msgstr ""
 
 msgid "List by day"
 msgstr "قائمة حسب اليوم"
@@ -1960,6 +2022,10 @@ msgstr "المباريات"
 msgid "Max bitrate:"
 msgstr "أقصى معدل بت:"
 
+#, python-format
+msgid "Max connections: %s"
+msgstr ""
+
 msgid "Max items per page"
 msgstr "الحد الأقصى للعناصر في الصفحة"
 
@@ -1995,6 +2061,10 @@ msgstr "المزيد"
 
 msgid "More important"
 msgstr "الأكثر أهمية"
+
+#, fuzzy
+msgid "More results"
+msgstr "نتائج البحث"
 
 msgid "Most Popular"
 msgstr "الأكثر شهرة"
@@ -2098,6 +2168,9 @@ msgstr ""
 msgid "Name:"
 msgstr "الاسم:"
 
+msgid "Netflix"
+msgstr ""
+
 msgid "Network"
 msgstr "الشبكة"
 
@@ -2141,6 +2214,14 @@ msgstr "أخبار"
 msgid "News Feed"
 msgstr "تغذية الأخبار"
 
+#, fuzzy
+msgid "Next"
+msgstr "الصفحة التالية"
+
+#, fuzzy
+msgid "Next Page ▶"
+msgstr "الصفحة التالية"
+
 msgid "Next page"
 msgstr "الصفحة التالية"
 
@@ -2159,6 +2240,10 @@ msgstr "لا يوجد مواد في قائمة الانتظار للتحميل"
 
 msgid "No playable sources found."
 msgstr "لم يتم العثور على مصادر قابلة للتشغيل."
+
+#, python-format
+msgid "No results found for: %s"
+msgstr ""
 
 msgid "No valid entitlement found for asset."
 msgstr "لم يتم العثور على صلاحية صالحة للمحتوى."
@@ -2217,6 +2302,9 @@ msgstr "جاري الفتح... الرجاء الانتظار."
 
 msgid "Operation aborted!"
 msgstr "تم إلغاء العملية!"
+
+msgid "Optional User-Agent (leave blank for default)"
+msgstr ""
 
 msgid "Order by: "
 msgstr "الترتيب حسب: "
@@ -2348,6 +2436,9 @@ msgstr ""
 "يرجى فتح الموقع:\n"
 "http://{0}:{1}"
 
+msgid "Please configure Xtream (blue button)"
+msgstr ""
+
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr "يرجى إعادة تشغيل جهاز Enigma2 والموافقة على تثبيت أداة %s عندما يعرضها %s."
@@ -2451,6 +2542,10 @@ msgstr "مستخدم مميز"
 
 msgid "Preview"
 msgstr "معاينة"
+
+#, fuzzy
+msgid "Previous"
+msgstr "القائمة السابقة"
 
 msgid "Previous Seasons"
 msgstr "المواسم السابقة"
@@ -2569,9 +2664,6 @@ msgstr "جاري التحديث"
 
 msgid "Release"
 msgstr "إصدار"
-
-msgid "Release:"
-msgstr "الإصدار:"
 
 msgid "Releases"
 msgstr "الإصدارات"
@@ -2860,6 +2952,9 @@ msgstr "تعيين مشغل الفيديو النشط"
 msgid "Set file name"
 msgstr "تعيين اسم الملف"
 
+msgid "Set host, username, password in host config"
+msgstr ""
+
 msgid "Set pin code"
 msgstr "تعيين رمز PIN"
 
@@ -3014,6 +3109,10 @@ msgstr "بدء"
 
 msgid "Start download manager per default"
 msgstr "تشغيل مدير التنزيل تلقائيًا"
+
+#, fuzzy, python-format
+msgid "Status: %s"
+msgstr "معدل البت: %s"
 
 msgid "Stereo downmix mode for software decoder"
 msgstr "وضع خلط الصوت المجسم لفك التشفير البرمجي"
@@ -3328,6 +3427,10 @@ msgstr "استشارة علاجية"
 msgid "Tree list"
 msgstr "قائمة شجرية"
 
+#, fuzzy
+msgid "Trend"
+msgstr "الشائع"
+
 msgid "Trending"
 msgstr "الشائع"
 
@@ -3336,6 +3439,10 @@ msgstr "حاول تجاوز حماية DRM (قد يكون ذلك غير قانو
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr "حاول تغيير extplayer أو تعطيل IFD في إعدادات GSTplayer"
+
+#, fuzzy
+msgid "Turkish TV series"
+msgstr "مسلسلات"
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
 msgstr "إيقاف التخزين المؤقت لموقع http://prognoza.pogody.tv/"
@@ -3361,6 +3468,9 @@ msgstr "إلغاء تحميل ملف ISO"
 
 msgid "Unable to comply. Search History is empty."
 msgstr "غير قادر على التنفيذ. سجل البحث فارغ."
+
+msgid "Universal"
+msgstr ""
 
 msgid "Unknow data in the captcha item!"
 msgstr "بيانات غير معروفة في عنصر الكابتشا!"
@@ -3567,6 +3677,12 @@ msgstr "شبكة WWE"
 msgid "Waiting search thread to stop, please wait (%d)"
 msgstr "بانتظار توقف خيط البحث، الرجاء الانتظار (%d)"
 
+msgid "Walt Disney"
+msgstr ""
+
+msgid "Warner Bros"
+msgstr ""
+
 msgid "Watch"
 msgstr "شاهد"
 
@@ -3626,6 +3742,13 @@ msgstr "رابط غير صحيح."
 
 msgid "Xbox One"
 msgstr "إكس بوكس ون"
+
+#, fuzzy
+msgid "Xtream Live Stream"
+msgstr "البث الحي"
+
+msgid "Xtream host (e.g. http://server:port)"
+msgstr ""
 
 msgid "YP connected"
 msgstr "تم الاتصال بـ YP"

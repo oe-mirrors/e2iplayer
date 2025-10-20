@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-24 18:29+0200\n"
+"POT-Creation-Date: 2025-10-20 17:58+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Lululla <ekekaz@gmail.com>\n"
 "Language-Team: lululla <ekekaz@gmail.com>\n"
@@ -240,10 +240,6 @@ msgstr "%s visitatori"
 msgid "%s views"
 msgstr "%s visualizzazioni"
 
-#, python-format
-msgid "%s/10"
-msgstr "%s/10"
-
 msgid "++"
 msgstr "++"
 
@@ -374,6 +370,10 @@ msgid "Access denied. Please check password."
 msgstr "Accesso negato. Controlla la password per favore."
 
 msgid "Active host"
+msgstr "Host attivo"
+
+#, fuzzy, python-format
+msgid "Active: %s"
 msgstr "Host attivo"
 
 msgid "Actors:"
@@ -512,7 +512,15 @@ msgstr "Anime"
 msgid "Anime Search"
 msgstr "Ricerca Anime"
 
+#, fuzzy
+msgid "Anime TV series"
+msgstr "Serie TV"
+
 msgid "Anime list"
+msgstr "Elenco Anime"
+
+#, fuzzy
+msgid "Anime movies"
 msgstr "Elenco Anime"
 
 msgid "Answer"
@@ -548,6 +556,14 @@ msgstr "Sei sicuro di cancellare il file \"%s\" ?"
 
 msgid "Artists"
 msgstr "Artisti"
+
+#, fuzzy
+msgid "Asian TV series"
+msgstr "Serie TV"
+
+#, fuzzy
+msgid "Asian movies"
+msgstr "Film arabi"
 
 msgid "Ask"
 msgstr "Chiedi"
@@ -732,6 +748,9 @@ msgstr "Solo flussi raccolti"
 msgid "Collections"
 msgstr "Collezioni"
 
+msgid "Columbia"
+msgstr ""
+
 msgid "Comedies"
 msgstr "Commedie"
 
@@ -897,6 +916,10 @@ msgstr "Tedesco"
 
 msgid "Developers: "
 msgstr "Sviluppatori: "
+
+#, fuzzy
+msgid "Direct"
+msgstr "Regista:"
 
 msgid "Director:"
 msgstr "Regista:"
@@ -1162,6 +1185,14 @@ msgstr ""
 msgid "English"
 msgstr "Inglese"
 
+#, fuzzy
+msgid "English TV series"
+msgstr "Serie TV"
+
+#, fuzzy
+msgid "English movies"
+msgstr "Inglese"
+
 msgid "Enter a value"
 msgstr "Inserire un valore"
 
@@ -1263,6 +1294,10 @@ msgstr "E' avvenuto un errore"
 msgid "Exit"
 msgstr "Esci"
 
+#, python-format
+msgid "Expiry: %s"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Configurazione movie player esterno"
 
@@ -1294,8 +1329,16 @@ msgstr "Fallita la codifica in UTF-8."
 msgid "Failed to download subtitle."
 msgstr "Download fallito dei sottotitoli."
 
+#, fuzzy
+msgid "Failed to fetch categories"
+msgstr "Creazione cartella %s fallita."
+
 msgid "Failed to gzip."
 msgstr "Compressione gzip fallita."
+
+#, fuzzy
+msgid "Failed to load channels"
+msgstr "Download fallito dei sottotitoli."
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
@@ -1575,6 +1618,14 @@ msgstr "Qualità delle icone"
 msgid "Icons size"
 msgstr "Dimensione delle icone"
 
+#, fuzzy
+msgid "Indian TV series"
+msgstr "Serie TV"
+
+#, fuzzy
+msgid "Indian movies"
+msgstr "Film del cinema"
+
 msgid "Industry"
 msgstr ""
 
@@ -1710,6 +1761,10 @@ msgstr "Attività Sportiva"
 msgid "Knowledge"
 msgstr ""
 
+#, fuzzy
+msgid "Korean TV series"
+msgstr "Serie TV"
+
 msgid "LATEST"
 msgstr "ULTIMO"
 
@@ -1724,6 +1779,10 @@ msgstr "LIVE"
 
 msgid "LIVE 24/7"
 msgstr "LIVE 24/7"
+
+#, fuzzy
+msgid "LIVE CHANNELS"
+msgstr "CANALI "
 
 msgid "Labels"
 msgstr "Etichette"
@@ -1831,6 +1890,9 @@ msgstr "Link da tutti i file senza categorie"
 #, python-format
 msgid "Links from the file %s"
 msgstr "Link dal file %s"
+
+msgid "Lionsgate"
+msgstr ""
 
 msgid "List by day"
 msgstr "Elenca per giorno"
@@ -1965,6 +2027,10 @@ msgstr "Corrispondenze"
 msgid "Max bitrate:"
 msgstr "Bitrate massimo:"
 
+#, python-format
+msgid "Max connections: %s"
+msgstr ""
+
 msgid "Max items per page"
 msgstr "Max voci per pagina"
 
@@ -2000,6 +2066,10 @@ msgstr "Di più"
 
 msgid "More important"
 msgstr "Più importanti"
+
+#, fuzzy
+msgid "More results"
+msgstr "Risultati ricerca"
 
 msgid "Most Popular"
 msgstr "Più visti"
@@ -2103,6 +2173,9 @@ msgstr ""
 msgid "Name:"
 msgstr "Nome:"
 
+msgid "Netflix"
+msgstr ""
+
 msgid "Network"
 msgstr "Rete"
 
@@ -2146,6 +2219,14 @@ msgstr "Notizie"
 msgid "News Feed"
 msgstr "Feed di notizie"
 
+#, fuzzy
+msgid "Next"
+msgstr "Pagina Successiva"
+
+#, fuzzy
+msgid "Next Page ▶"
+msgstr "Pagina Successiva"
+
 msgid "Next page"
 msgstr "Pagina Successiva"
 
@@ -2164,6 +2245,10 @@ msgstr "Nessun materiale in attesa nella coda di download"
 
 msgid "No playable sources found."
 msgstr "Non è stata trovata nessuna risorsa da riprodurre."
+
+#, python-format
+msgid "No results found for: %s"
+msgstr ""
 
 msgid "No valid entitlement found for asset."
 msgstr "Non è stato trovato alcun diritto valido per la risorsa."
@@ -2222,6 +2307,9 @@ msgstr "Apertura. Attendere prego.."
 
 msgid "Operation aborted!"
 msgstr "Operazione interrotta!"
+
+msgid "Optional User-Agent (leave blank for default)"
+msgstr ""
 
 msgid "Order by: "
 msgstr "Ordina per: "
@@ -2354,6 +2442,9 @@ msgstr ""
 "http://{0}:{1}\n"
 "in un browser web con l'estensione MyE2i installata"
 
+msgid "Please configure Xtream (blue button)"
+msgstr ""
+
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr "Ti consiglio di riavviare il tuo Enigma2 ed accettare l'installazione dell'utility %s, quando ti verrà proposto da %s ."
@@ -2457,6 +2548,10 @@ msgstr "Utente premium"
 
 msgid "Preview"
 msgstr "Anteprima"
+
+#, fuzzy
+msgid "Previous"
+msgstr "Elenco precedente"
 
 msgid "Previous Seasons"
 msgstr "Stagioni precedenti"
@@ -2575,9 +2670,6 @@ msgstr "Aggiornare"
 
 msgid "Release"
 msgstr ""
-
-msgid "Release:"
-msgstr "Rilascio:"
 
 msgid "Releases"
 msgstr "Uscite"
@@ -2865,6 +2957,9 @@ msgstr "Imposta movie player"
 msgid "Set file name"
 msgstr "Imposta il nome del file"
 
+msgid "Set host, username, password in host config"
+msgstr ""
+
 msgid "Set pin code"
 msgstr "Imposta codice PIN"
 
@@ -3019,6 +3114,10 @@ msgstr "Start"
 
 msgid "Start download manager per default"
 msgstr "Avvia download manager come predefinito"
+
+#, fuzzy, python-format
+msgid "Status: %s"
+msgstr "Bitrate: %s"
 
 msgid "Stereo downmix mode for software decoder"
 msgstr "Modo downmix stereo per decoder software"
@@ -3333,6 +3432,10 @@ msgstr ""
 msgid "Tree list"
 msgstr "Lista ad albero"
 
+#, fuzzy
+msgid "Trend"
+msgstr "Di tendenza"
+
 msgid "Trending"
 msgstr "Di tendenza"
 
@@ -3341,6 +3444,10 @@ msgstr "Prova ad aggirare il DRM (potrebbe essere illegale)"
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr "Prova a cambiare extplayer o a disabilitare IFD nella configurazione di GSTplayer"
+
+#, fuzzy
+msgid "Turkish TV series"
+msgstr "Serie TV"
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
 msgstr "Sospendi il buffering per http://prognoza.pogody.tv/"
@@ -3366,6 +3473,9 @@ msgstr "Smonta il file ISO"
 
 msgid "Unable to comply. Search History is empty."
 msgstr "Impossibile eseguire la ricerca. La cronologia delle ricerche è vuota."
+
+msgid "Universal"
+msgstr ""
 
 msgid "Unknow data in the captcha item!"
 msgstr "Dati sconosciuti nell'oggetto captcha!"
@@ -3572,6 +3682,12 @@ msgstr "WWE Network"
 msgid "Waiting search thread to stop, please wait (%d)"
 msgstr "In attesa della fine del thread di ricerca (%d)"
 
+msgid "Walt Disney"
+msgstr ""
+
+msgid "Warner Bros"
+msgstr ""
+
 msgid "Watch"
 msgstr "Guarda"
 
@@ -3631,6 +3747,13 @@ msgstr "Indirizzo errato."
 
 msgid "Xbox One"
 msgstr "Xbox One"
+
+#, fuzzy
+msgid "Xtream Live Stream"
+msgstr "Canali Live"
+
+msgid "Xtream host (e.g. http://server:port)"
+msgstr ""
 
 msgid "YP connected"
 msgstr "YP connesso"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-24 18:29+0200\n"
+"POT-Creation-Date: 2025-10-20 17:58+0200\n"
 "PO-Revision-Date: 2025-09-28 22:22+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -240,10 +240,6 @@ msgstr "%s θεατές"
 msgid "%s views"
 msgstr "%s προβολές"
 
-#, python-format
-msgid "%s/10"
-msgstr "%s/10"
-
 msgid "++"
 msgstr "++"
 
@@ -374,6 +370,10 @@ msgid "Access denied. Please check password."
 msgstr "Η πρόσβαση απορρίφθηκε. Παρακαλώ ελέγξτε τον κωδικό πρόσβασης."
 
 msgid "Active host"
+msgstr "Ενεργός host"
+
+#, fuzzy, python-format
+msgid "Active: %s"
 msgstr "Ενεργός host"
 
 msgid "Actors:"
@@ -508,7 +508,15 @@ msgstr "Άνιμε"
 msgid "Anime Search"
 msgstr "Αναζήτηση άνιμε"
 
+#, fuzzy
+msgid "Anime TV series"
+msgstr "Τηλεοπτικές σειρές"
+
 msgid "Anime list"
+msgstr "Λίστα άνιμε"
+
+#, fuzzy
+msgid "Anime movies"
 msgstr "Λίστα άνιμε"
 
 msgid "Answer"
@@ -544,6 +552,14 @@ msgstr "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε 
 
 msgid "Artists"
 msgstr "Καλλιτέχνες"
+
+#, fuzzy
+msgid "Asian TV series"
+msgstr "Τηλεοπτικές σειρές"
+
+#, fuzzy
+msgid "Asian movies"
+msgstr "Αραβικές ταινίες"
 
 msgid "Ask"
 msgstr "Ερώτηση"
@@ -728,6 +744,9 @@ msgstr "Μόνο οι συλλεγμένες ροές"
 msgid "Collections"
 msgstr "Συλλογές"
 
+msgid "Columbia"
+msgstr ""
+
 msgid "Comedies"
 msgstr "Κωμωδίες"
 
@@ -893,6 +912,10 @@ msgstr "Γερμανικά"
 
 msgid "Developers: "
 msgstr "Προγραμματιστές: "
+
+#, fuzzy
+msgid "Direct"
+msgstr "Σκηνοθέτης:"
 
 msgid "Director:"
 msgstr "Σκηνοθέτης:"
@@ -1158,6 +1181,14 @@ msgstr ""
 msgid "English"
 msgstr "Αγγλικά"
 
+#, fuzzy
+msgid "English TV series"
+msgstr "Τηλεοπτικές σειρές"
+
+#, fuzzy
+msgid "English movies"
+msgstr "Αγγλικά"
+
 msgid "Enter a value"
 msgstr "Εισάγετε μια τιμή"
 
@@ -1259,6 +1290,10 @@ msgstr "Παρουσιάστηκε εξαίρεση"
 msgid "Exit"
 msgstr "Έξοδος"
 
+#, python-format
+msgid "Expiry: %s"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Ρυθμίσεις εξωτερικής αναπαραγωγής ταινιών"
 
@@ -1290,8 +1325,16 @@ msgstr "Αποτυχία αποκωδικοποίησης σε UTF-8."
 msgid "Failed to download subtitle."
 msgstr "Αποτυχία λήψης υποτίτλου."
 
+#, fuzzy
+msgid "Failed to fetch categories"
+msgstr "Αποτυχία δημιουργίας καταλόγου \"%s\"."
+
 msgid "Failed to gzip."
 msgstr "Αποτυχία gzip."
+
+#, fuzzy
+msgid "Failed to load channels"
+msgstr "Αποτυχία λήψης υποτίτλου."
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
@@ -1571,6 +1614,14 @@ msgstr "Ποιότητα εικονιδίων"
 msgid "Icons size"
 msgstr "Μέγεθος εικονιδίων"
 
+#, fuzzy
+msgid "Indian TV series"
+msgstr "Τηλεοπτικές σειρές"
+
+#, fuzzy
+msgid "Indian movies"
+msgstr "Κινηματογραφικές ταινίες"
+
 msgid "Industry"
 msgstr "Βιομηχανία"
 
@@ -1706,6 +1757,10 @@ msgstr "Γόνατο & Αθλήματα"
 msgid "Knowledge"
 msgstr "Γνώση"
 
+#, fuzzy
+msgid "Korean TV series"
+msgstr "Τηλεοπτικές σειρές"
+
 msgid "LATEST"
 msgstr "ΤΕΛΕΥΤΑΙΑ"
 
@@ -1720,6 +1775,10 @@ msgstr "ΖΩΝΤΑΝΑ"
 
 msgid "LIVE 24/7"
 msgstr "ΖΩΝΤΑΝΑ 24/7"
+
+#, fuzzy
+msgid "LIVE CHANNELS"
+msgstr "ΚΑΝΑΛΙΑ "
 
 msgid "Labels"
 msgstr "Ετικέτες"
@@ -1827,6 +1886,9 @@ msgstr "Σύνδεσμοι από όλα τα αρχεία χωρίς κατηγ
 #, python-format
 msgid "Links from the file %s"
 msgstr "Σύνδεσμοι από το αρχείο %s"
+
+msgid "Lionsgate"
+msgstr ""
 
 msgid "List by day"
 msgstr "Λίστα κατά ημέρα"
@@ -1959,6 +2021,10 @@ msgstr "Αντιστοιχίες"
 msgid "Max bitrate:"
 msgstr "Μέγιστος ρυθμός bit:"
 
+#, python-format
+msgid "Max connections: %s"
+msgstr ""
+
 msgid "Max items per page"
 msgstr "Μέγιστα στοιχεία ανά σελίδα"
 
@@ -1994,6 +2060,10 @@ msgstr "Περισσότερα"
 
 msgid "More important"
 msgstr "Πιο σημαντικά"
+
+#, fuzzy
+msgid "More results"
+msgstr "Αποτελέσματα αναζήτησης"
 
 msgid "Most Popular"
 msgstr "Πιο δημοφιλή"
@@ -2097,6 +2167,9 @@ msgstr ""
 msgid "Name:"
 msgstr "Όνομα:"
 
+msgid "Netflix"
+msgstr ""
+
 msgid "Network"
 msgstr "Δίκτυο"
 
@@ -2140,6 +2213,14 @@ msgstr "Ειδήσεις"
 msgid "News Feed"
 msgstr "Ροή ειδήσεων"
 
+#, fuzzy
+msgid "Next"
+msgstr "Επόμενη σελίδα"
+
+#, fuzzy
+msgid "Next Page ▶"
+msgstr "Επόμενη σελίδα"
+
 msgid "Next page"
 msgstr "Επόμενη σελίδα"
 
@@ -2158,6 +2239,10 @@ msgstr "Δεν υπάρχουν υλικά σε αναμονή στην ουρά
 
 msgid "No playable sources found."
 msgstr "Δεν βρέθηκαν πηγές προς αναπαραγωγή."
+
+#, python-format
+msgid "No results found for: %s"
+msgstr ""
 
 msgid "No valid entitlement found for asset."
 msgstr "Δεν βρέθηκε έγκυρη εξουσιοδότηση για το περιεχόμενο."
@@ -2216,6 +2301,9 @@ msgstr "Άνοιγμα. Παρακαλώ περιμένετε..."
 
 msgid "Operation aborted!"
 msgstr "Η λειτουργία ματαιώθηκε!"
+
+msgid "Optional User-Agent (leave blank for default)"
+msgstr ""
 
 msgid "Order by: "
 msgstr "Ταξινόμηση κατά: "
@@ -2348,6 +2436,9 @@ msgstr ""
 "http://{0}:{1}\n"
 "σε πρόγραμμα περιήγησης με εγκατεστημένη την επέκταση MyE2i"
 
+msgid "Please configure Xtream (blue button)"
+msgstr ""
+
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr "Σκεφτείτε να κάνετε επανεκκίνηση του Enigma2 και να συμφωνήσετε στην εγκατάσταση του εργαλείου %s όταν το %s το προτείνει."
@@ -2451,6 +2542,10 @@ msgstr "Premium χρήστης"
 
 msgid "Preview"
 msgstr "Προεπισκόπηση"
+
+#, fuzzy
+msgid "Previous"
+msgstr "Προηγούμενη λίστα"
 
 msgid "Previous Seasons"
 msgstr "Προηγούμενες σεζόν"
@@ -2569,9 +2664,6 @@ msgstr "Γίνεται ανανέωση"
 
 msgid "Release"
 msgstr "Κυκλοφορία"
-
-msgid "Release:"
-msgstr "Κυκλοφορία:"
 
 msgid "Releases"
 msgstr "Κυκλοφορίες"
@@ -2859,6 +2951,9 @@ msgstr "Ορισμός ενεργής αναπαραγωγής ταινιών"
 msgid "Set file name"
 msgstr "Ορισμός ονόματος αρχείου"
 
+msgid "Set host, username, password in host config"
+msgstr ""
+
 msgid "Set pin code"
 msgstr "Ορισμός κωδικού PIN"
 
@@ -3012,6 +3107,10 @@ msgstr "Έναρξη"
 
 msgid "Start download manager per default"
 msgstr "Έναρξη διαχείρισης λήψεων από προεπιλογή"
+
+#, fuzzy, python-format
+msgid "Status: %s"
+msgstr "Ρυθμός bit: %s"
 
 msgid "Stereo downmix mode for software decoder"
 msgstr "Λειτουργία στερεοφωνικής μίξης για αποκωδικοποιητή λογισμικού"
@@ -3326,6 +3425,10 @@ msgstr "Συμβουλή θεραπείας"
 msgid "Tree list"
 msgstr "Λίστα δέντρου"
 
+#, fuzzy
+msgid "Trend"
+msgstr "Δημοφιλή τώρα"
+
 msgid "Trending"
 msgstr "Δημοφιλή τώρα"
 
@@ -3334,6 +3437,10 @@ msgstr "Προσπάθεια παράκαμψης του DRM (ενδέχεται
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr "Δοκιμάστε να αλλάξετε extplayer ή να απενεργοποιήσετε το IFD στις ρυθμίσεις του GSTplayer"
+
+#, fuzzy
+msgid "Turkish TV series"
+msgstr "Τηλεοπτικές σειρές"
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
 msgstr "Απενεργοποίηση προσωρινής μνήμης για http://prognoza.pogody.tv/"
@@ -3359,6 +3466,9 @@ msgstr "Αποπροσάρτηση αρχείου iso"
 
 msgid "Unable to comply. Search History is empty."
 msgstr "Αδυναμία συμμόρφωσης. Το ιστορικό αναζήτησης είναι κενό."
+
+msgid "Universal"
+msgstr ""
 
 msgid "Unknow data in the captcha item!"
 msgstr "Άγνωστα δεδομένα στο στοιχείο captcha!"
@@ -3565,6 +3675,12 @@ msgstr "Δίκτυο WWE"
 msgid "Waiting search thread to stop, please wait (%d)"
 msgstr "Αναμονή για τερματισμό νήματος αναζήτησης, παρακαλώ περιμένετε (%d)"
 
+msgid "Walt Disney"
+msgstr ""
+
+msgid "Warner Bros"
+msgstr ""
+
 msgid "Watch"
 msgstr "Παρακολούθηση"
 
@@ -3624,6 +3740,13 @@ msgstr "Λάθος διεύθυνση URI."
 
 msgid "Xbox One"
 msgstr "Xbox One"
+
+#, fuzzy
+msgid "Xtream Live Stream"
+msgstr "Ζωντανές ροές"
+
+msgid "Xtream host (e.g. http://server:port)"
+msgstr ""
 
 msgid "YP connected"
 msgstr "YP συνδεδεμένο"

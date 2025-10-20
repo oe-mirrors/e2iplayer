@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-24 18:29+0200\n"
+"POT-Creation-Date: 2025-10-20 17:58+0200\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -221,10 +221,6 @@ msgstr "%s espectadores, %s canais"
 msgid "%s views"
 msgstr ""
 
-#, python-format
-msgid "%s/10"
-msgstr ""
-
 msgid "++"
 msgstr ""
 
@@ -359,6 +355,10 @@ msgstr ""
 
 msgid "Active host"
 msgstr ""
+
+#, fuzzy, python-format
+msgid "Active: %s"
+msgstr "Vídeos"
 
 msgid "Actors:"
 msgstr ""
@@ -497,8 +497,16 @@ msgstr ""
 msgid "Anime Search"
 msgstr "Procura"
 
+#, fuzzy
+msgid "Anime TV series"
+msgstr "Leitor de Filmes"
+
 msgid "Anime list"
 msgstr ""
+
+#, fuzzy
+msgid "Anime movies"
+msgstr "Filme"
 
 msgid "Answer"
 msgstr ""
@@ -534,6 +542,13 @@ msgid "Are you sure you want to remove file \"%s\"?"
 msgstr ""
 
 msgid "Artists"
+msgstr ""
+
+#, fuzzy
+msgid "Asian TV series"
+msgstr "Leitor de Filmes"
+
+msgid "Asian movies"
 msgstr ""
 
 msgid "Ask"
@@ -720,6 +735,9 @@ msgstr ""
 msgid "Collections"
 msgstr "Coleção"
 
+msgid "Columbia"
+msgstr ""
+
 msgid "Comedies"
 msgstr ""
 
@@ -890,6 +908,9 @@ msgid "Deutsch"
 msgstr ""
 
 msgid "Developers: "
+msgstr ""
+
+msgid "Direct"
 msgstr ""
 
 msgid "Director:"
@@ -1155,6 +1176,12 @@ msgstr ""
 msgid "English"
 msgstr ""
 
+msgid "English TV series"
+msgstr ""
+
+msgid "English movies"
+msgstr ""
+
 #, fuzzy
 msgid "Enter a value"
 msgstr "Introduzir nome"
@@ -1257,6 +1284,10 @@ msgstr ""
 msgid "Exit"
 msgstr "Sair"
 
+#, python-format
+msgid "Expiry: %s"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Configuração do Leitor de Filmes externo"
 
@@ -1290,8 +1321,16 @@ msgstr ""
 msgid "Failed to download subtitle."
 msgstr "Ficheiro (%s) foi adicionado ao spool de descargas."
 
+#, fuzzy
+msgid "Failed to fetch categories"
+msgstr "Problema com a pasta (%s)."
+
 msgid "Failed to gzip."
 msgstr ""
+
+#, fuzzy
+msgid "Failed to load channels"
+msgstr "Ficheiro (%s) foi adicionado ao spool de descargas."
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
@@ -1577,6 +1616,13 @@ msgstr "qualidade"
 msgid "Icons size"
 msgstr "Tamanho dos Icons"
 
+#, fuzzy
+msgid "Indian TV series"
+msgstr "Leitor de Filmes"
+
+msgid "Indian movies"
+msgstr ""
+
 msgid "Industry"
 msgstr ""
 
@@ -1712,6 +1758,10 @@ msgstr ""
 msgid "Knowledge"
 msgstr ""
 
+#, fuzzy
+msgid "Korean TV series"
+msgstr "Leitor de Filmes"
+
 msgid "LATEST"
 msgstr ""
 
@@ -1725,6 +1775,9 @@ msgid "LIVE"
 msgstr ""
 
 msgid "LIVE 24/7"
+msgstr ""
+
+msgid "LIVE CHANNELS"
 msgstr ""
 
 msgid "Labels"
@@ -1834,6 +1887,9 @@ msgstr ""
 
 #, python-format
 msgid "Links from the file %s"
+msgstr ""
+
+msgid "Lionsgate"
 msgstr ""
 
 msgid "List by day"
@@ -1973,6 +2029,10 @@ msgstr ""
 msgid "Max bitrate:"
 msgstr ""
 
+#, python-format
+msgid "Max connections: %s"
+msgstr ""
+
 msgid "Max items per page"
 msgstr ""
 
@@ -2008,6 +2068,10 @@ msgstr "Mais"
 
 msgid "More important"
 msgstr "Mais importante"
+
+#, fuzzy
+msgid "More results"
+msgstr "Resultados da Procura"
 
 msgid "Most Popular"
 msgstr "Mais popular"
@@ -2114,6 +2178,9 @@ msgstr ""
 msgid "Name:"
 msgstr "Nome:"
 
+msgid "Netflix"
+msgstr ""
+
 msgid "Network"
 msgstr ""
 
@@ -2161,6 +2228,14 @@ msgstr "Notícias"
 msgid "News Feed"
 msgstr "Notícias"
 
+#, fuzzy
+msgid "Next"
+msgstr "Página seguinte"
+
+#, fuzzy
+msgid "Next Page ▶"
+msgstr "Página seguinte"
+
 msgid "Next page"
 msgstr "Página seguinte"
 
@@ -2178,6 +2253,10 @@ msgid "No materials waiting in the downloader queue"
 msgstr ""
 
 msgid "No playable sources found."
+msgstr ""
+
+#, python-format
+msgid "No results found for: %s"
 msgstr ""
 
 msgid "No valid entitlement found for asset."
@@ -2240,6 +2319,9 @@ msgstr "Durante o processamento, por favor espere."
 
 msgid "Operation aborted!"
 msgstr "Operação abortada!"
+
+msgid "Optional User-Agent (leave blank for default)"
+msgstr ""
 
 msgid "Order by: "
 msgstr ""
@@ -2377,6 +2459,9 @@ msgid ""
 "in a web browser with the MyE2i extension installed"
 msgstr ""
 
+msgid "Please configure Xtream (blue button)"
+msgstr ""
+
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr ""
@@ -2484,6 +2569,9 @@ msgid "Premium user"
 msgstr ""
 
 msgid "Preview"
+msgstr ""
+
+msgid "Previous"
 msgstr ""
 
 msgid "Previous Seasons"
@@ -2616,10 +2704,6 @@ msgstr "A refrescar"
 
 #, fuzzy
 msgid "Release"
-msgstr "Relevância"
-
-#, fuzzy
-msgid "Release:"
 msgstr "Relevância"
 
 #, fuzzy
@@ -2926,6 +3010,9 @@ msgstr "Definir o Leitor de Filmes ativo"
 msgid "Set file name"
 msgstr "Introduzir nome"
 
+msgid "Set host, username, password in host config"
+msgstr ""
+
 msgid "Set pin code"
 msgstr "Definir o código PIN"
 
@@ -3087,6 +3174,10 @@ msgstr "Iniciar"
 
 msgid "Start download manager per default"
 msgstr "Iniciar o gestor de descargas por defeito"
+
+#, python-format
+msgid "Status: %s"
+msgstr ""
 
 msgid "Stereo downmix mode for software decoder"
 msgstr "Modo de downmix estéreo para software descodificador"
@@ -3406,6 +3497,10 @@ msgid "Tree list"
 msgstr ""
 
 #, fuzzy
+msgid "Trend"
+msgstr "Pendentes"
+
+#, fuzzy
 msgid "Trending"
 msgstr "Pendentes"
 
@@ -3413,6 +3508,9 @@ msgid "Try to bypass DRM (it may be illegal)"
 msgstr ""
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
+msgstr ""
+
+msgid "Turkish TV series"
 msgstr ""
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
@@ -3438,6 +3536,9 @@ msgid "Umount iso file"
 msgstr ""
 
 msgid "Unable to comply. Search History is empty."
+msgstr ""
+
+msgid "Universal"
 msgstr ""
 
 msgid "Unknow data in the captcha item!"
@@ -3661,6 +3762,12 @@ msgstr ""
 msgid "Waiting search thread to stop, please wait (%d)"
 msgstr ""
 
+msgid "Walt Disney"
+msgstr ""
+
+msgid "Warner Bros"
+msgstr ""
+
 msgid "Watch"
 msgstr ""
 
@@ -3723,6 +3830,12 @@ msgid "Wrong uri."
 msgstr "Indexações erradas."
 
 msgid "Xbox One"
+msgstr ""
+
+msgid "Xtream Live Stream"
+msgstr ""
+
+msgid "Xtream host (e.g. http://server:port)"
 msgstr ""
 
 msgid "YP connected"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-24 18:29+0200\n"
+"POT-Creation-Date: 2025-10-20 17:58+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -230,10 +230,6 @@ msgstr "Вік перегляду:"
 msgid "%s views"
 msgstr "Перегляди"
 
-#, python-format
-msgid "%s/10"
-msgstr ""
-
 msgid "++"
 msgstr ""
 
@@ -372,6 +368,10 @@ msgstr ""
 
 msgid "Active host"
 msgstr ""
+
+#, fuzzy, python-format
+msgid "Active: %s"
+msgstr "відео"
 
 msgid "Actors:"
 msgstr ""
@@ -522,7 +522,15 @@ msgid "Anime Search"
 msgstr "Пошук"
 
 #, fuzzy
+msgid "Anime TV series"
+msgstr "Телесеріал"
+
+#, fuzzy
 msgid "Anime list"
+msgstr "Аніме Список"
+
+#, fuzzy
+msgid "Anime movies"
 msgstr "Аніме Список"
 
 msgid "Answer"
@@ -563,6 +571,14 @@ msgstr "Ви впевненні, що бажаєте видалити файл \
 #, fuzzy
 msgid "Artists"
 msgstr "Популярні виконавці"
+
+#, fuzzy
+msgid "Asian TV series"
+msgstr "Телесеріал"
+
+#, fuzzy
+msgid "Asian movies"
+msgstr "Всі фільми"
 
 msgid "Ask"
 msgstr ""
@@ -757,6 +773,9 @@ msgstr "Програвач Веб-потоків"
 msgid "Collections"
 msgstr "Колекція"
 
+msgid "Columbia"
+msgstr ""
+
 msgid "Comedies"
 msgstr "Комедії"
 
@@ -932,6 +951,10 @@ msgstr "Німецький"
 
 msgid "Developers: "
 msgstr "Розробники: "
+
+#, fuzzy
+msgid "Direct"
+msgstr "пряме писилання"
 
 msgid "Director:"
 msgstr ""
@@ -1208,6 +1231,14 @@ msgstr ""
 msgid "English"
 msgstr "Англійський"
 
+#, fuzzy
+msgid "English TV series"
+msgstr "Телесеріал"
+
+#, fuzzy
+msgid "English movies"
+msgstr "Англійський"
+
 msgid "Enter a value"
 msgstr "Введіть значення"
 
@@ -1311,6 +1342,10 @@ msgstr ""
 msgid "Exit"
 msgstr "Вихід"
 
+#, python-format
+msgid "Expiry: %s"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Зовнішній плеєр конфігурація"
 
@@ -1344,8 +1379,16 @@ msgstr ""
 msgid "Failed to download subtitle."
 msgstr "Завантажити субтитри %s"
 
+#, fuzzy
+msgid "Failed to fetch categories"
+msgstr "Проблема з каталогом [%s]."
+
 msgid "Failed to gzip."
 msgstr ""
+
+#, fuzzy
+msgid "Failed to load channels"
+msgstr "Завантажити субтитри %s"
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
@@ -1643,6 +1686,14 @@ msgstr "якість"
 msgid "Icons size"
 msgstr "Размір іконок"
 
+#, fuzzy
+msgid "Indian TV series"
+msgstr "Телесеріал"
+
+#, fuzzy
+msgid "Indian movies"
+msgstr "Кінофільми"
+
 msgid "Industry"
 msgstr ""
 
@@ -1782,6 +1833,10 @@ msgid "Knowledge"
 msgstr ""
 
 #, fuzzy
+msgid "Korean TV series"
+msgstr "Телесеріал"
+
+#, fuzzy
 msgid "LATEST"
 msgstr "ОСТАННІ ВІДЕО"
 
@@ -1795,6 +1850,9 @@ msgid "LIVE"
 msgstr ""
 
 msgid "LIVE 24/7"
+msgstr ""
+
+msgid "LIVE CHANNELS"
 msgstr ""
 
 msgid "Labels"
@@ -1911,6 +1969,9 @@ msgstr "Посилання відеоролики і повідомлення, �
 
 #, python-format
 msgid "Links from the file %s"
+msgstr ""
+
+msgid "Lionsgate"
 msgstr ""
 
 msgid "List by day"
@@ -2056,6 +2117,10 @@ msgstr "Найвище оціненні"
 msgid "Max bitrate:"
 msgstr "Бітрейт: 900"
 
+#, python-format
+msgid "Max connections: %s"
+msgstr ""
+
 msgid "Max items per page"
 msgstr "Максимальна кількість на сторінці"
 
@@ -2091,6 +2156,10 @@ msgstr "Опції"
 
 msgid "More important"
 msgstr "Важливо"
+
+#, fuzzy
+msgid "More results"
+msgstr "Результати пошуку"
 
 msgid "Most Popular"
 msgstr "Найпопулярніші"
@@ -2201,6 +2270,9 @@ msgstr ""
 msgid "Name:"
 msgstr "Назва:"
 
+msgid "Netflix"
+msgstr ""
+
 msgid "Network"
 msgstr ""
 
@@ -2249,6 +2321,14 @@ msgstr "Новини"
 msgid "News Feed"
 msgstr "Новини"
 
+#, fuzzy
+msgid "Next"
+msgstr "Наступна сторінка"
+
+#, fuzzy
+msgid "Next Page ▶"
+msgstr "Наступна сторінка"
+
 msgid "Next page"
 msgstr "Наступна сторінка"
 
@@ -2267,6 +2347,10 @@ msgid "No materials waiting in the downloader queue"
 msgstr ""
 
 msgid "No playable sources found."
+msgstr ""
+
+#, python-format
+msgid "No results found for: %s"
 msgstr ""
 
 msgid "No valid entitlement found for asset."
@@ -2331,6 +2415,9 @@ msgstr "Йде обробка, будь-ласка, зачекайте."
 
 msgid "Operation aborted!"
 msgstr "Операція перервана!"
+
+msgid "Optional User-Agent (leave blank for default)"
+msgstr ""
 
 msgid "Order by: "
 msgstr ""
@@ -2468,6 +2555,9 @@ msgid ""
 "in a web browser with the MyE2i extension installed"
 msgstr ""
 
+msgid "Please configure Xtream (blue button)"
+msgstr ""
+
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr ""
@@ -2583,6 +2673,10 @@ msgstr "Преміум користувач"
 
 #, fuzzy
 msgid "Preview"
+msgstr "Попередній"
+
+#, fuzzy
+msgid "Previous"
 msgstr "Попередній"
 
 msgid "Previous Seasons"
@@ -2715,10 +2809,6 @@ msgstr "Оновлюється"
 
 #, fuzzy
 msgid "Release"
-msgstr "Релізи"
-
-#, fuzzy
-msgid "Release:"
 msgstr "Релізи"
 
 msgid "Releases"
@@ -3024,6 +3114,9 @@ msgstr "Вибір активного відеоплеєра"
 msgid "Set file name"
 msgstr "Встановити ім'я файлу"
 
+msgid "Set host, username, password in host config"
+msgstr ""
+
 msgid "Set pin code"
 msgstr "Встановіть пін-код"
 
@@ -3190,6 +3283,10 @@ msgstr "Початок"
 
 msgid "Start download manager per default"
 msgstr "Включити менеджер завантажень по замовчуванню"
+
+#, fuzzy, python-format
+msgid "Status: %s"
+msgstr "Бітрейт: поганий"
 
 msgid "Stereo downmix mode for software decoder"
 msgstr "Стерео мікшування для декодера п/о"
@@ -3520,6 +3617,10 @@ msgid "Tree list"
 msgstr "Сортувати список:"
 
 #, fuzzy
+msgid "Trend"
+msgstr "До"
+
+#, fuzzy
 msgid "Trending"
 msgstr "До"
 
@@ -3528,6 +3629,10 @@ msgstr ""
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr ""
+
+#, fuzzy
+msgid "Turkish TV series"
+msgstr "Телесеріал"
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
 msgstr "Виключіть буферизацію для http://prognoza.pogody.tv/"
@@ -3554,6 +3659,9 @@ msgid "Umount iso file"
 msgstr "Розмонтувати файл iso"
 
 msgid "Unable to comply. Search History is empty."
+msgstr ""
+
+msgid "Universal"
 msgstr ""
 
 msgid "Unknow data in the captcha item!"
@@ -3778,6 +3886,12 @@ msgstr ""
 msgid "Waiting search thread to stop, please wait (%d)"
 msgstr ""
 
+msgid "Walt Disney"
+msgstr ""
+
+msgid "Warner Bros"
+msgstr ""
+
 msgid "Watch"
 msgstr ""
 
@@ -3841,6 +3955,13 @@ msgid "Wrong uri."
 msgstr "Неправильні індекси."
 
 msgid "Xbox One"
+msgstr ""
+
+#, fuzzy
+msgid "Xtream Live Stream"
+msgstr "Прямі-потоки"
+
+msgid "Xtream host (e.g. http://server:port)"
 msgstr ""
 
 msgid "YP connected"

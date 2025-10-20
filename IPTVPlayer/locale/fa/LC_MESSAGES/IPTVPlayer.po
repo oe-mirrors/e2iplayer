@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-24 18:29+0200\n"
+"POT-Creation-Date: 2025-10-20 17:58+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -217,10 +217,6 @@ msgstr ""
 msgid "%s views"
 msgstr ""
 
-#, python-format
-msgid "%s/10"
-msgstr ""
-
 msgid "++"
 msgstr ""
 
@@ -353,6 +349,10 @@ msgstr ""
 msgid "Active host"
 msgstr ""
 
+#, python-format
+msgid "Active: %s"
+msgstr ""
+
 msgid "Actors:"
 msgstr ""
 
@@ -483,7 +483,13 @@ msgstr ""
 msgid "Anime Search"
 msgstr ""
 
+msgid "Anime TV series"
+msgstr ""
+
 msgid "Anime list"
+msgstr ""
+
+msgid "Anime movies"
 msgstr ""
 
 msgid "Answer"
@@ -518,6 +524,12 @@ msgid "Are you sure you want to remove file \"%s\"?"
 msgstr ""
 
 msgid "Artists"
+msgstr ""
+
+msgid "Asian TV series"
+msgstr ""
+
+msgid "Asian movies"
 msgstr ""
 
 msgid "Ask"
@@ -698,6 +710,9 @@ msgstr ""
 msgid "Collections"
 msgstr ""
 
+msgid "Columbia"
+msgstr ""
+
 msgid "Comedies"
 msgstr ""
 
@@ -862,6 +877,9 @@ msgid "Deutsch"
 msgstr ""
 
 msgid "Developers: "
+msgstr ""
+
+msgid "Direct"
 msgstr ""
 
 msgid "Director:"
@@ -1094,6 +1112,12 @@ msgstr ""
 msgid "English"
 msgstr ""
 
+msgid "English TV series"
+msgstr ""
+
+msgid "English movies"
+msgstr ""
+
 msgid "Enter a value"
 msgstr ""
 
@@ -1191,6 +1215,10 @@ msgstr ""
 msgid "Exit"
 msgstr ""
 
+#, python-format
+msgid "Expiry: %s"
+msgstr ""
+
 msgid "External movie player config"
 msgstr ""
 
@@ -1222,7 +1250,13 @@ msgstr ""
 msgid "Failed to download subtitle."
 msgstr ""
 
+msgid "Failed to fetch categories"
+msgstr ""
+
 msgid "Failed to gzip."
+msgstr ""
+
+msgid "Failed to load channels"
 msgstr ""
 
 #, python-format
@@ -1503,6 +1537,12 @@ msgstr ""
 msgid "Icons size"
 msgstr ""
 
+msgid "Indian TV series"
+msgstr ""
+
+msgid "Indian movies"
+msgstr ""
+
 msgid "Industry"
 msgstr ""
 
@@ -1632,6 +1672,9 @@ msgstr ""
 msgid "Knowledge"
 msgstr ""
 
+msgid "Korean TV series"
+msgstr ""
+
 msgid "LATEST"
 msgstr ""
 
@@ -1645,6 +1688,9 @@ msgid "LIVE"
 msgstr ""
 
 msgid "LIVE 24/7"
+msgstr ""
+
+msgid "LIVE CHANNELS"
 msgstr ""
 
 msgid "Labels"
@@ -1750,6 +1796,9 @@ msgstr ""
 
 #, python-format
 msgid "Links from the file %s"
+msgstr ""
+
+msgid "Lionsgate"
 msgstr ""
 
 msgid "List by day"
@@ -1883,6 +1932,10 @@ msgstr ""
 msgid "Max bitrate:"
 msgstr ""
 
+#, python-format
+msgid "Max connections: %s"
+msgstr ""
+
 msgid "Max items per page"
 msgstr ""
 
@@ -1917,6 +1970,9 @@ msgid "More"
 msgstr ""
 
 msgid "More important"
+msgstr ""
+
+msgid "More results"
 msgstr ""
 
 msgid "Most Popular"
@@ -2014,6 +2070,9 @@ msgstr ""
 msgid "Name:"
 msgstr ""
 
+msgid "Netflix"
+msgstr ""
+
 msgid "Network"
 msgstr ""
 
@@ -2057,6 +2116,12 @@ msgstr ""
 msgid "News Feed"
 msgstr ""
 
+msgid "Next"
+msgstr ""
+
+msgid "Next Page ▶"
+msgstr ""
+
 msgid "Next page"
 msgstr ""
 
@@ -2072,6 +2137,10 @@ msgid "No materials waiting in the downloader queue"
 msgstr ""
 
 msgid "No playable sources found."
+msgstr ""
+
+#, python-format
+msgid "No results found for: %s"
 msgstr ""
 
 msgid "No valid entitlement found for asset."
@@ -2130,6 +2199,9 @@ msgid "Opening. Please wait..."
 msgstr ""
 
 msgid "Operation aborted!"
+msgstr ""
+
+msgid "Optional User-Agent (leave blank for default)"
 msgstr ""
 
 msgid "Order by: "
@@ -2260,6 +2332,9 @@ msgid ""
 "in a web browser with the MyE2i extension installed"
 msgstr ""
 
+msgid "Please configure Xtream (blue button)"
+msgstr ""
+
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
 msgstr ""
@@ -2360,6 +2435,9 @@ msgid "Premium user"
 msgstr ""
 
 msgid "Preview"
+msgstr ""
+
+msgid "Previous"
 msgstr ""
 
 msgid "Previous Seasons"
@@ -2478,9 +2556,6 @@ msgid "Refreshing"
 msgstr ""
 
 msgid "Release"
-msgstr ""
-
-msgid "Release:"
 msgstr ""
 
 msgid "Releases"
@@ -2763,6 +2838,9 @@ msgstr ""
 msgid "Set file name"
 msgstr ""
 
+msgid "Set host, username, password in host config"
+msgstr ""
+
 msgid "Set pin code"
 msgstr ""
 
@@ -2915,6 +2993,10 @@ msgid "Start"
 msgstr ""
 
 msgid "Start download manager per default"
+msgstr ""
+
+#, python-format
+msgid "Status: %s"
 msgstr ""
 
 msgid "Stereo downmix mode for software decoder"
@@ -3221,6 +3303,9 @@ msgstr ""
 msgid "Tree list"
 msgstr ""
 
+msgid "Trend"
+msgstr ""
+
 msgid "Trending"
 msgstr ""
 
@@ -3228,6 +3313,9 @@ msgid "Try to bypass DRM (it may be illegal)"
 msgstr ""
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
+msgstr ""
+
+msgid "Turkish TV series"
 msgstr ""
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
@@ -3253,6 +3341,9 @@ msgid "Umount iso file"
 msgstr ""
 
 msgid "Unable to comply. Search History is empty."
+msgstr ""
+
+msgid "Universal"
 msgstr ""
 
 msgid "Unknow data in the captcha item!"
@@ -3458,6 +3549,12 @@ msgstr ""
 msgid "Waiting search thread to stop, please wait (%d)"
 msgstr ""
 
+msgid "Walt Disney"
+msgstr ""
+
+msgid "Warner Bros"
+msgstr ""
+
 msgid "Watch"
 msgstr ""
 
@@ -3516,6 +3613,12 @@ msgid "Wrong uri."
 msgstr ""
 
 msgid "Xbox One"
+msgstr ""
+
+msgid "Xtream Live Stream"
+msgstr ""
+
+msgid "Xtream host (e.g. http://server:port)"
 msgstr ""
 
 msgid "YP connected"
