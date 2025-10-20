@@ -116,26 +116,26 @@ class TukTukCam(CBaseHostClass):
         printDBG('TukTukCam.listMainMenu')
         # Define main categories statically like FilmPalast does
         self.MAIN_CAT_TAB = [
-            {'category': 'movies_folder', 'title': _('الافلام')},
-            {'category': 'series_folder', 'title': _('المسلسلات')},
-            {'category': 'anime_folder', 'title': _('انمي')},
+            {'category': 'movies_folder', 'title': 'الافلام'},
+            {'category': 'series_folder', 'title': 'المسلسلات'},
+            {'category': 'anime_folder', 'title': 'انمي'},
         ] + self.searchItems()
         # Define subcategories for each folder
         self.MOVIES_CAT_TAB = [
-            {'category': 'list_items', 'title': _('افلام اجنبى مدبلجة'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a%d8%a9-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
-            {'category': 'list_items', 'title': _('افلام اجنبية'), 'url': self.getFullUrl('/category/movies/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
-            {'category': 'list_items', 'title': _('افلام تركية'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/')},
-            {'category': 'list_items', 'title': _('افلام هندية'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')}
+            {'category': 'list_items', 'title': 'افلام اجنبى مدبلجة', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a%d8%a9-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
+            {'category': 'list_items', 'title': 'افلام اجنبية', 'url': self.getFullUrl('/category/movies/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
+            {'category': 'list_items', 'title': 'افلام تركية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/')},
+            {'category': 'list_items', 'title': 'افلام هندية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')}
         ]
 
         self.SERIES_CAT_TAB = [
-            {'category': 'series', 'title': _('مسلسلات اجنبية'), 'url': self.getFullUrl('/category/series/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
-            {'category': 'series', 'title': _('مسلسلات اسيوية'), 'url': self.getFullUrl('/category/series/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')}
+            {'category': 'series', 'title': 'مسلسلات اجنبية', 'url': self.getFullUrl('/category/series/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
+            {'category': 'series', 'title': 'مسلسلات اسيوية', 'url': self.getFullUrl('/category/series/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')}
         ]
 
         self.ANIME_CAT_TAB = [
-            {'category': 'list_items', 'title': _('افلام انيمى'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%86%d9%85%d9%8a/')},
-            {'category': 'series', 'title': _('مسلسلات انيمى'), 'url': self.getFullUrl('/category/anime/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d9%86%d9%85%d9%8a/')}
+            {'category': 'list_items', 'title': 'افلام انيمى', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%86%d9%85%d9%8a/')},
+            {'category': 'series', 'title': 'مسلسلات انيمى', 'url': self.getFullUrl('/category/anime/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d9%86%d9%85%d9%8a/')}
         ]
         # Display main categories
         self.listsTab(self.MAIN_CAT_TAB, cItem)

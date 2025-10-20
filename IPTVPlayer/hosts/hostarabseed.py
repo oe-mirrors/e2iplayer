@@ -152,63 +152,63 @@ class ArabSeed(CBaseHostClass):
 
         # Define main categories statically like FilmPalast does
         self.MAIN_CAT_TAB = [
-            {'category': 'movies_folder', 'title': _('الافلام')},
-            {'category': 'series_folder', 'title': _('المسلسلات')},
-            {'category': 'series_packs_folder', 'title': _('مواسم المسلسلات')},
-            {'category': 'ramadan_folder', 'title': _('رمضان')},
-            {'category': 'anime_folder', 'title': _('انمي')},
-            {'category': 'other_folder', 'title': _('اخري')},
+            {'category': 'movies_folder', 'title': 'الافلام'},
+            {'category': 'series_folder', 'title': 'المسلسلات'},
+            {'category': 'series_packs_folder', 'title': 'مواسم المسلسلات'},
+            {'category': 'ramadan_folder', 'title': 'رمضان'},
+            {'category': 'anime_folder', 'title': 'انمي'},
+            {'category': 'other_folder', 'title': 'اخري'},
         ] + self.searchItems()
 
         # Define subcategories for each folder
         self.MOVIES_CAT_TAB = [
-            {'category': 'list_items', 'title': _('افلام Netfilx'), 'url': self.getFullUrl('/category/netfilx/%d8%a7%d9%81%d9%84%d8%a7%d9%85-netfilx/')},
-            {'category': 'list_items', 'title': _('افلام اجنبي'), 'url': self.getFullUrl('/category/foreign-movies-6/')},
-            {'category': 'list_items', 'title': _('افلام اسيوية'), 'url': self.getFullUrl('/category/asian-movies/')},
-            {'category': 'list_items', 'title': _('افلام تركية'), 'url': self.getFullUrl('/category/turkish-movies/')},
-            {'category': 'list_items', 'title': _('افلام عربي'), 'url': self.getFullUrl('/category/arabic-movies-6/')},
-            {'category': 'list_items', 'title': _('افلام كلاسيكيه'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%83%d9%84%d8%a7%d8%b3%d9%8a%d9%83%d9%8a%d9%87/')},
-            {'category': 'list_items', 'title': _('افلام مدبلجة'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
-            {'category': 'list_items', 'title': _('افلام هندى'), 'url': self.getFullUrl('/category/indian-movies/')}
+            {'category': 'list_items', 'title': 'افلام Netfilx', 'url': self.getFullUrl('/category/netfilx/%d8%a7%d9%81%d9%84%d8%a7%d9%85-netfilx/')},
+            {'category': 'list_items', 'title': 'افلام اجنبي', 'url': self.getFullUrl('/category/foreign-movies-6/')},
+            {'category': 'list_items', 'title': 'افلام اسيوية', 'url': self.getFullUrl('/category/asian-movies/')},
+            {'category': 'list_items', 'title': 'افلام تركية', 'url': self.getFullUrl('/category/turkish-movies/')},
+            {'category': 'list_items', 'title': 'افلام عربي', 'url': self.getFullUrl('/category/arabic-movies-6/')},
+            {'category': 'list_items', 'title': 'افلام كلاسيكيه', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%83%d9%84%d8%a7%d8%b3%d9%8a%d9%83%d9%8a%d9%87/')},
+            {'category': 'list_items', 'title': 'افلام مدبلجة', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
+            {'category': 'list_items', 'title': 'افلام هندى', 'url': self.getFullUrl('/category/indian-movies/')}
         ]
 
         self.SERIES_CAT_TAB = [
-            {'category': 'series', 'title': _('مسلسلات Netfilx'), 'url': self.getFullUrl('/category/netfilx/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-netfilz/')},
-            {'category': 'series', 'title': _('مسلسلات اجنبي'), 'url': self.getFullUrl('/category/foreign-series-2/')},
-            {'category': 'series', 'title': _('مسلسلات تركيه'), 'url': self.getFullUrl('/category/turkish-series-2/')},
-            {'category': 'series', 'title': _('مسلسلات عربي'), 'url': self.getFullUrl('/category/arabic-series-3/')},
-            {'category': 'series', 'title': _('مسلسلات كرتون'), 'url': self.getFullUrl('/category/cartoon-series/')},
-            {'category': 'series', 'title': _('مسلسلات كوريه'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%83%d9%88%d8%b1%d9%8a%d9%87/')},
-            {'category': 'series', 'title': _('مسلسلات مدبلجة'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
-            {'category': 'series', 'title': _('مسلسلات مصريه'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%85%d8%b5%d8%b1%d9%8a%d9%87/')},
-            {'category': 'series', 'title': _('مسلسلات هندية'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')}
+            {'category': 'series', 'title': 'مسلسلات Netfilx', 'url': self.getFullUrl('/category/netfilx/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-netfilz/')},
+            {'category': 'series', 'title': 'مسلسلات اجنبي', 'url': self.getFullUrl('/category/foreign-series-2/')},
+            {'category': 'series', 'title': 'مسلسلات تركيه', 'url': self.getFullUrl('/category/turkish-series-2/')},
+            {'category': 'series', 'title': 'مسلسلات عربي', 'url': self.getFullUrl('/category/arabic-series-3/')},
+            {'category': 'series', 'title': 'مسلسلات كرتون', 'url': self.getFullUrl('/category/cartoon-series/')},
+            {'category': 'series', 'title': 'مسلسلات كوريه', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%83%d9%88%d8%b1%d9%8a%d9%87/')},
+            {'category': 'series', 'title': 'مسلسلات مدبلجة', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
+            {'category': 'series', 'title': 'مسلسلات مصريه', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%85%d8%b5%d8%b1%d9%8a%d9%87/')},
+            {'category': 'series', 'title': 'مسلسلات هندية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')}
         ]
 
         self.SERIES_PACKS_CAT_TAB = [
-            {'category': 'series_packs', 'title': _('مواسم مسلسلات اجنبية'), 'url': self.getFullUrl('/category/foreign-series-2/packs/')},
-            {'category': 'series_packs', 'title': _('مواسم مسلسلات تركية'), 'url': self.getFullUrl('/category/turkish-series-2/packs/')}
+            {'category': 'series_packs', 'title': 'مواسم مسلسلات اجنبية', 'url': self.getFullUrl('/category/foreign-series-2/packs/')},
+            {'category': 'series_packs', 'title': 'مواسم مسلسلات تركية', 'url': self.getFullUrl('/category/turkish-series-2/packs/')}
         ]
 
         self.RAMADAN_CAT_TAB = [
-            {'category': 'series', 'title': _('مسلسلات رمضان 2025'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/ramadan-series-2025/')},
-            {'category': 'series', 'title': _('مسلسلات رمضان 2024'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/ramadan-series-2024/')},
-            {'category': 'series', 'title': _('مسلسلات رمضان 2023'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/ramadan-series-2023/')},
-            {'category': 'series', 'title': _('مسلسلات رمضان 2022'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2022/')},
-            {'category': 'series', 'title': _('مسلسلات رمضان 2021'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2021/')},
-            {'category': 'series', 'title': _('مسلسلات رمضان 2020'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2020-hd/')},
-            {'category': 'series', 'title': _('مسلسلات رمضان 2019'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2019/')}
+            {'category': 'series', 'title': 'مسلسلات رمضان 2025', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/ramadan-series-2025/')},
+            {'category': 'series', 'title': 'مسلسلات رمضان 2024', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/ramadan-series-2024/')},
+            {'category': 'series', 'title': 'مسلسلات رمضان 2023', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/ramadan-series-2023/')},
+            {'category': 'series', 'title': 'مسلسلات رمضان 2022', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2022/')},
+            {'category': 'series', 'title': 'مسلسلات رمضان 2021', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2021/')},
+            {'category': 'series', 'title': 'مسلسلات رمضان 2020', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2020-hd/')},
+            {'category': 'series', 'title': 'مسلسلات رمضان 2019', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2019/')}
         ]
 
         self.ANIME_CAT_TAB = [
-            {'category': 'list_items', 'title': _('افلام انيميشن'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%86%d9%8a%d9%85%d9%8a%d8%b4%d9%86/')},
-            {'category': 'series', 'title': _('مسلسلات كرتون'), 'url': self.getFullUrl('/category/cartoon-series/')}
+            {'category': 'list_items', 'title': 'افلام انيميشن', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%86%d9%8a%d9%85%d9%8a%d8%b4%d9%86/')},
+            {'category': 'series', 'title': 'مسلسلات كرتون', 'url': self.getFullUrl('/category/cartoon-series/')}
         ]
 
         self.OTHER_CAT_TAB = [
-            {'category': 'list_items', 'title': _('اغاني عربي'), 'url': self.getFullUrl('/category/%d8%a7%d8%ba%d8%a7%d9%86%d9%8a-%d8%b9%d8%b1%d8%a8%d9%8a/')},
-            {'category': 'list_items', 'title': _('مصارعه'), 'url': self.getFullUrl('/category/wwe-shows/')},
-            {'category': 'list_items', 'title': _('برامج تلفزيونية'), 'url': self.getFullUrl('/category/%d8%a8%d8%b1%d8%a7%d9%85%d8%ac-%d8%aa%d9%84%d9%81%d8%b2%d9%8a%d9%88%d9%86%d9%8a%d8%a9/')},
-            {'category': 'list_items', 'title': _('مسرحيات عربيه'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d8%b1%d8%ad%d9%8a%d8%a7%d8%aa-%d8%b9%d8%b1%d8%a8%d9%8a/')}
+            {'category': 'list_items', 'title': 'اغاني عربي', 'url': self.getFullUrl('/category/%d8%a7%d8%ba%d8%a7%d9%86%d9%8a-%d8%b9%d8%b1%d8%a8%d9%8a/')},
+            {'category': 'list_items', 'title': 'مصارعه', 'url': self.getFullUrl('/category/wwe-shows/')},
+            {'category': 'list_items', 'title': 'برامج تلفزيونية', 'url': self.getFullUrl('/category/%d8%a8%d8%b1%d8%a7%d9%85%d8%ac-%d8%aa%d9%84%d9%81%d8%b2%d9%8a%d9%88%d9%86%d9%8a%d8%a9/')},
+            {'category': 'list_items', 'title': 'مسرحيات عربيه', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d8%b1%d8%ad%d9%8a%d8%a7%d8%aa-%d8%b9%d8%b1%d8%a8%d9%8a/')}
         ]
 
         # Display main categories
