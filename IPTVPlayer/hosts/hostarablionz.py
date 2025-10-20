@@ -232,7 +232,7 @@ class ArabLionzTV(CBaseHostClass):
             if prev_url:
                 params = dict(cItem)
                 params.update({
-                    'title': '<<< ' + _('السابق'),
+                    'title': '<<< ' + _('Previous'),
                     'url': self.getFullUrl(prev_url),
                     'category': cItem.get('category', 'list_movies')
                 })
@@ -242,7 +242,7 @@ class ArabLionzTV(CBaseHostClass):
             if next_url:
                 params = dict(cItem)
                 params.update({
-                    'title': _('التالي') + ' >>>',
+                    'title': _('Next') + ' >>>',
                     'url': self.getFullUrl(next_url),
                     'category': cItem.get('category', 'list_movies')
                 })
@@ -523,7 +523,7 @@ class ArabLionzTV(CBaseHostClass):
             if load_more_url:
                 params = dict(cItem)
                 params.update({
-                    'title': _('المزيد من النتائج') + ' >>>',
+                    'title': _('More results') + ' >>>',
                     'url': self.getFullUrl(load_more_url),
                     'category': 'list_units'
                 })
@@ -533,7 +533,7 @@ class ArabLionzTV(CBaseHostClass):
         if len(self.currList) == 0:
             printDBG('listSearchUnits: No search results found')
             self.addDir({
-                'title': _('لم يتم العثور على نتائج لـ: %s') % searchPattern,
+                'title': _('No results found for: %s') % searchPattern,
                 'category': None
             })
 

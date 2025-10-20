@@ -333,7 +333,7 @@ class CimaClub(CBaseHostClass):
             if prev_url:
                 params = dict(cItem)
                 params.update({
-                    'title': '<<< ' + _('السابق'),
+                    'title': '<<< ' + _('Previous'),
                     'url': self.getFullUrl(prev_url),
                     'category': 'list_movies'
                 })
@@ -343,7 +343,7 @@ class CimaClub(CBaseHostClass):
             if next_url:
                 params = dict(cItem)
                 params.update({
-                    'title': _('التالي') + ' >>>',
+                    'title': _('Next') + ' >>>',
                     'url': self.getFullUrl(next_url),
                     'category': 'list_movies'
                 })
