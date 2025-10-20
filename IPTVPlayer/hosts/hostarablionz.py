@@ -94,26 +94,26 @@ class ArabLionzTV(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG('ArabLionzTV.listMainMenu')
         MAIN_CAT_TAB = [
-            {'category': 'movies_categories', 'title': _('الافلام')},
-            {'category': 'series_categories', 'title': _('المسلسلات')},
+            {'category': 'movies_categories', 'title': _('Movies')},
+            {'category': 'series_categories', 'title': _('TV series')},
         ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
         # Define subcategories for each folder
         self.MOVIES_CAT_TAB = [
-            {'category': 'list_movies', 'title': _('افلام اجنبية'), 'url': self.getFullUrl('/category/movies/english-movies/')},
-            {'category': 'list_movies', 'title': _('افلام اسيوية'), 'url': self.getFullUrl('/category/movies/asian-movies/')},
-            {'category': 'list_movies', 'title': _('افلام هندية'), 'url': self.getFullUrl('/category/movies/indian-movies/')},
-            {'category': 'list_movies', 'title': _('افلام انيمى'), 'url': self.getFullUrl('/category/movies/cartoon/')}
+            {'category': 'list_movies', 'title': _('English movies'), 'url': self.getFullUrl('/category/movies/english-movies/')},
+            {'category': 'list_movies', 'title': _('Asian movies'), 'url': self.getFullUrl('/category/movies/asian-movies/')},
+            {'category': 'list_movies', 'title': _('Indian movies'), 'url': self.getFullUrl('/category/movies/indian-movies/')},
+            {'category': 'list_movies', 'title': _('Anime movies'), 'url': self.getFullUrl('/category/movies/cartoon/')}
         ]
 
         self.SERIES_CAT_TAB = [
-            {'category': 'list_series', 'title': _('مسلسلات اجنبية'), 'url': self.getFullUrl('/category/series/english-series/')},
-            {'category': 'list_series', 'title': _('مسلسلات اسيوية'), 'url': self.getFullUrl('/category/series/asian-series/')},
-            {'category': 'list_series', 'title': _('مسلسلات كورية'), 'url': self.getFullUrl('/category/series/korean-series/')},
-            {'category': 'list_series', 'title': _('مسلسلات تركية'), 'url': self.getFullUrl('/category/series/turkish-series/')},
-            {'category': 'list_series', 'title': _('مسلسلات انيمى'), 'url': self.getFullUrl('/category/series/anime/')},
-            {'category': 'list_series', 'title': _('مسلسلات هندية'), 'url': self.getFullUrl('/category/series/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')}
+            {'category': 'list_series', 'title': _('English TV series'), 'url': self.getFullUrl('/category/series/english-series/')},
+            {'category': 'list_series', 'title': _('Asian TV series'), 'url': self.getFullUrl('/category/series/asian-series/')},
+            {'category': 'list_series', 'title': _('Korean TV series'), 'url': self.getFullUrl('/category/series/korean-series/')},
+            {'category': 'list_series', 'title': _('Turkish TV series'), 'url': self.getFullUrl('/category/series/turkish-series/')},
+            {'category': 'list_series', 'title': _('Anime TV series'), 'url': self.getFullUrl('/category/series/anime/')},
+            {'category': 'list_series', 'title': _('Indian TV series'), 'url': self.getFullUrl('/category/series/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')}
         ]
 
     def listMoviesCategories(self, cItem):

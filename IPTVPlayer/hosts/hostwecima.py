@@ -93,35 +93,35 @@ class WeCima(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG('WeCima.listMainMenu')
         MAIN_CAT_TAB = [
-            {'category': 'movies_categories', 'title': _('الافلام')},
-            {'category': 'series_categories', 'title': _('المسلسلات')},
-            {'category': 'anime_categories', 'title': _('الكارتون')},
-            {'category': 'production_categories', 'title': _('شركات الانتاج')},
+            {'category': 'movies_categories', 'title': 'الافلام'},
+            {'category': 'series_categories', 'title': 'المسلسلات'},
+            {'category': 'anime_categories', 'title': 'الكارتون'},
+            {'category': 'production_categories', 'title': 'شركات الانتاج'},
             {'category': 'other_categories', 'title': _('Others')}
         ]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
         # Define subcategories for each folder
         self.MOVIES_CAT_TAB = [
-            {'category': 'list_movies', 'title': _('افلام اجنبية'), 'url': self.getFullUrl('/category/%d8%a3%d9%81%d9%84%d8%a7%d9%85/10-movies-english-%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
-            {'category': 'list_movies', 'title': _('افلام تركية'), 'url': self.getFullUrl('/category/%d8%a3%d9%81%d9%84%d8%a7%d9%85/1-%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%89-turkish-films/')},
-            {'category': 'list_movies', 'title': _('افلام عربية'), 'url': self.getFullUrl('/category/%d8%a3%d9%81%d9%84%d8%a7%d9%85/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%b9%d8%b1%d8%a8%d9%8a-arabic-movies/')},
-            {'category': 'list_movies', 'title': _('افلام هندية'), 'url': self.getFullUrl('/category/%d8%a3%d9%81%d9%84%d8%a7%d9%85/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%87%d9%86%d8%af%d9%8a-indian-movies/')},
-            {'category': 'list_movies', 'title': _('افلام وثائقية'), 'url': self.getFullUrl('/category/%d8%a3%d9%81%d9%84%d8%a7%d9%85/2-%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%88%d8%ab%d8%a7%d8%a6%d9%82%d9%8a%d8%a9-documentary-films/')}
+            {'category': 'list_movies', 'title': 'افلام اجنبية', 'url': self.getFullUrl('/category/%d8%a3%d9%81%d9%84%d8%a7%d9%85/10-movies-english-%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
+            {'category': 'list_movies', 'title': 'افلام تركية', 'url': self.getFullUrl('/category/%d8%a3%d9%81%d9%84%d8%a7%d9%85/1-%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%89-turkish-films/')},
+            {'category': 'list_movies', 'title': 'افلام عربية', 'url': self.getFullUrl('/category/%d8%a3%d9%81%d9%84%d8%a7%d9%85/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%b9%d8%b1%d8%a8%d9%8a-arabic-movies/')},
+            {'category': 'list_movies', 'title': 'افلام هندية', 'url': self.getFullUrl('/category/%d8%a3%d9%81%d9%84%d8%a7%d9%85/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%87%d9%86%d8%af%d9%8a-indian-movies/')},
+            {'category': 'list_movies', 'title': 'افلام وثائقية', 'url': self.getFullUrl('/category/%d8%a3%d9%81%d9%84%d8%a7%d9%85/2-%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%88%d8%ab%d8%a7%d8%a6%d9%82%d9%8a%d8%a9-documentary-films/')}
         ]
 
         self.SERIES_CAT_TAB = [
-            {'category': 'list_series', 'title': _('مسلسلات اجنبية'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/7-series-english-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
-            {'category': 'list_series', 'title': _('مسلسلات عربية'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/19-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b9%d8%b1%d8%a8%d9%8a%d9%87-arabic-series/')},
-            {'category': 'list_series', 'title': _('مسلسلات هندية'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/10-series-indian-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')},
-            {'category': 'list_series', 'title': _('مسلسلات اسيوية'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/1-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')},
-            {'category': 'list_series', 'title': _('مسلسلات تركية'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/12-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9-turkish-series/')},
-            {'category': 'list_series', 'title': _('مسلسلات وثائقية'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/1-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%88%d8%ab%d8%a7%d8%a6%d9%82%d9%8a%d8%a9-documentary-series/')}
+            {'category': 'list_series', 'title': 'مسلسلات اجنبية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/7-series-english-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
+            {'category': 'list_series', 'title': 'مسلسلات عربية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/19-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b9%d8%b1%d8%a8%d9%8a%d9%87-arabic-series/')},
+            {'category': 'list_series', 'title': 'مسلسلات هندية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/10-series-indian-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')},
+            {'category': 'list_series', 'title': 'مسلسلات اسيوية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/1-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')},
+            {'category': 'list_series', 'title': 'مسلسلات تركية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/12-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9-turkish-series/')},
+            {'category': 'list_series', 'title': 'مسلسلات وثائقية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa/1-%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%88%d8%ab%d8%a7%d8%a6%d9%82%d9%8a%d8%a9-documentary-series/')}
         ]
 
         self.ANIME_CAT_TAB = [
-            {'category': 'list_anime', 'title': _('افلام كارتون'), 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%83%d8%b1%d8%aa%d9%88%d9%86/')},
-            {'category': 'list_anime', 'title': _('مسلسلات كارتون'), 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%83%d8%b1%d8%aa%d9%88%d9%86/')}
+            {'category': 'list_anime', 'title': 'افلام كارتون', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%83%d8%b1%d8%aa%d9%88%d9%86/')},
+            {'category': 'list_anime', 'title': 'مسلسلات كارتون', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%83%d8%b1%d8%aa%d9%88%d9%86/')}
         ]
 
         self.PRODUCTION_CAT_TAB = [
@@ -135,8 +135,8 @@ class WeCima(CBaseHostClass):
 
         self.OTHER_CAT_TAB = [
             {'category': 'list_other', 'title': _('Trend'), 'url': self.getFullUrl('/trends/')},
-            {'category': 'list_other', 'title': _('مصارعة'), 'url': self.getFullUrl('/category/%D9%85%D8%B5%D8%A7%D8%B1%D8%B9%D8%A9-%D8%AD%D8%B1%D8%A9/')},
-            {'category': 'list_other', 'title': _('برامج تليفزيونية'), 'url': self.getFullUrl('/category/%D8%A8%D8%B1%D8%A7%D9%85%D8%AC-%D8%AA%D9%84%D9%8A%D9%81%D8%B2%D9%8A%D9%88%D9%86%D9%8A%D8%A9/')}
+            {'category': 'list_other', 'title': 'مصارعة', 'url': self.getFullUrl('/category/%D9%85%D8%B5%D8%A7%D8%B1%D8%B9%D8%A9-%D8%AD%D8%B1%D8%A9/')},
+            {'category': 'list_other', 'title': 'برامج تليفزيونية', 'url': self.getFullUrl('/category/%D8%A8%D8%B1%D8%A7%D9%85%D8%AC-%D8%AA%D9%84%D9%8A%D9%81%D8%B2%D9%8A%D9%88%D9%86%D9%8A%D8%A9/')}
         ]
 
     def listMoviesCategories(self, cItem):
