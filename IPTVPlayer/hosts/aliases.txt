@@ -24,6 +24,7 @@
 'hostchomikuj': 'http://chomikuj.pl/',
 'hostchristusvincit': 'http://christusvincit-tv.pl/',
 'hostcimaclub': 'https://ciimaclub.club/',
+'hostcimanow': 'https://cimanow.cc/',
 'hostcinemay': 'http://cinemay.ws/',
 'hostcineto': 'https://cine.to/',
 'hostclassiccinemaonline': 'http://classiccinemaonline.com/',
