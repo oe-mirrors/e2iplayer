@@ -36,6 +36,7 @@
 'hostdokumentalnenet': 'https://dokumentalne.net/',
 'hostdrdk': 'http://dr.dk/',
 'hostegybest': 'http://egy.best/',
+'hostegydead': 'https://a.egydead.space/',
 'hosteinschalten': 'https://einschalten.in',
 'hostekinotv': 'http://ekino-tv.pl/',
 'hostekstraklasatv': 'http://ekstraklasa.tv/',

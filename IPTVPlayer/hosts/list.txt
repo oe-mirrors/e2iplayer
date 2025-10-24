@@ -35,6 +35,7 @@ hostdmdamedia_blocked_
 hostdokumentalnenet
 hostdrdk_blocked_
 hostegybest
+hostegydead
 hosteinschalten
 hostekinotv
 hostekstraklasatv_blocked_

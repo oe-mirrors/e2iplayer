@@ -453,6 +453,7 @@ class urlparser:
             "firedrive.com": self.pp.parserFIREDRIVE,
             "flaswish.com": self.pp.parserJWPLAYER,
             "flix555.com": self.pp.parserFLIX555COM,
+            "forafile.com": self.pp.parserJWPLAYER,
             "foothubhd.live": self.pp.parserSHOWSPORTXYZ,
             "forstreams.com": self.pp.parserVIUCLIPS,
             "fsdcmo.sbs": self.pp.parserJWPLAYER,
