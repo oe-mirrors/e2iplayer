@@ -162,7 +162,7 @@ class EgyDead(CBaseHostClass):
         printDBG('EgyDead.listUnits >>> %s' % cItem)
 
         sts, data = self.getPage(cItem['url'])
-        #printDBG('data.listUnits >>> %s' % data)
+        # printDBG('data.listUnits >>> %s' % data)
         if not sts or not data:
             printDBG('listUnits: failed to load page')
             return
@@ -171,7 +171,7 @@ class EgyDead(CBaseHostClass):
         # MAIN MOVIE BLOCK
         ###################################################
         main_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="catHolder">', '<div class="pagination">', False)[1]
-        #printDBG('main_block.listUnits >>> %s' % main_block)
+        # printDBG('main_block.listUnits >>> %s' % main_block)
         if not main_block:
             printDBG('listUnits: No main_block found')
             return
@@ -415,7 +415,7 @@ class EgyDead(CBaseHostClass):
         printDBG('EgyDead.listSeasons >>> %s' % cItem)
 
         sts, data = self.getPage(cItem['url'])
-        #printDBG('data.listSeasons >>> %s' % data)
+        # printDBG('data.listSeasons >>> %s' % data)
         if not sts or not data:
             printDBG('listSeasons: failed to load page')
             return
@@ -424,7 +424,7 @@ class EgyDead(CBaseHostClass):
         # MAIN MOVIE BLOCK
         ###################################################
         main_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="catHolder">', '<div class="pagination">', False)[1]
-        #printDBG('main_block.listSeasons >>> %s' % main_block)
+        # printDBG('main_block.listSeasons >>> %s' % main_block)
         if not main_block:
             printDBG('listSeasons: No main_block found')
             return
@@ -542,7 +542,7 @@ class EgyDead(CBaseHostClass):
         if not sts or not data:
             printDBG('exploreSeasons: failed to load item page')
             return
-        #printDBG('data.exploreSeasons >>> %s' % data)
+        # printDBG('data.exploreSeasons >>> %s' % data)
 
         # --- Extract story part ---
         story_part = self.cm.ph.getDataBeetwenMarkers(data, '<div class="extra-content">', '</div>', False)[1]
@@ -619,7 +619,7 @@ class EgyDead(CBaseHostClass):
         printDBG('EgyDead.listSearchUnits >>> %s' % cItem)
 
         sts, data = self.getPage(cItem['url'])
-        #printDBG('data.listSearchUnits >>> %s' % data)
+        # printDBG('data.listSearchUnits >>> %s' % data)
         if not sts or not data:
             printDBG('listSearchUnits: failed to load page')
             return
@@ -628,7 +628,7 @@ class EgyDead(CBaseHostClass):
         # MAIN MOVIE BLOCK
         ###################################################
         main_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="catHolder">', '</div>', False)[1]
-        #printDBG('main_block.listSearchUnits >>> %s' % main_block)
+        # printDBG('main_block.listSearchUnits >>> %s' % main_block)
         if not main_block:
             printDBG('listSearchUnits: No main_block found')
             return

@@ -138,7 +138,6 @@ class CimaNow(CBaseHostClass):
     # LIST UNITS FROM CATEGORY PAGE (WITH PAGINATION)
     ###################################################
 
-
     def listMoviesUnits(self, cItem):
         printDBG('CimaNow.listMoviesUnits >>> %s' % cItem)
 
@@ -346,7 +345,7 @@ class CimaNow(CBaseHostClass):
 
         # 1) First request: open the main page to trigger Cloudflare JS check and save cookies
         sts, data = self.getPage(url)
-        #printDBG('data.exploreMoviesItems >>> %s' % data)
+        # printDBG('data.exploreMoviesItems >>> %s' % data)
         if not sts:
             printDBG('exploreMoviesItems: initial getPage failed')
             return
@@ -384,14 +383,14 @@ class CimaNow(CBaseHostClass):
             printDBG('exploreMoviesItems: getPageCFProtection exception for watching: %s' % str(e))
             sts2, data2 = False, ''
 
-        #If watching page failed (CF not solved or watching not exists), fall back to the original page
+        # If watching page failed (CF not solved or watching not exists), fall back to the original page
         if not sts2 or not data2 or '/home' in data2:
             printDBG('exploreMoviesItems: watching page fetch failed or redirected; using original page data')
             page_data = data
         else:
             printDBG('exploreMoviesItems: watching page fetched successfully')
             page_data = data2
-        #printDBG('page_data.exploreMoviesItems >>> %s' % page_data)
+        # printDBG('page_data.exploreMoviesItems >>> %s' % page_data)
         main_encoded_block = self.cm.ph.getDataBeetwenMarkers(page_data, 'var hide_my_HTML_ =', 'var', False)[1]
         if not main_encoded_block:
             printDBG('listMoviesUnits: No main_encoded_block found')
@@ -427,7 +426,7 @@ class CimaNow(CBaseHostClass):
                 return urllib.unquote(pct)
 
         page_data_block = decode_obfuscated_block(main_encoded_block)
-        #printDBG('page_data_block.exploreMoviesItems >>> %s' % page_data_block)
+        # printDBG('page_data_block.exploreMoviesItems >>> %s' % page_data_block)
         watch_list = self.cm.ph.getDataBeetwenMarkers(page_data_block, '<ul class="tabcontent active" id="watch">', '<li aria-label="embed">', False)[1]
         printDBG('watch_list.exploreMoviesItems >>> %s' % watch_list)
 
@@ -743,7 +742,7 @@ class CimaNow(CBaseHostClass):
 
         # 1) First request: open the main page to trigger Cloudflare JS check and save cookies
         sts, data = self.getPage(url)
-        #printDBG('data.exploreSeriesItems >>> %s' % data)
+        # printDBG('data.exploreSeriesItems >>> %s' % data)
         if not sts:
             printDBG('exploreSeriesItems: initial getPage failed')
             return
@@ -779,7 +778,7 @@ class CimaNow(CBaseHostClass):
         else:
             printDBG('exploreSeriesItems: watching page fetched successfully')
             page_data = data2
-        #printDBG('page_data.exploreSeriesItems >>> %s' % page_data)
+        # printDBG('page_data.exploreSeriesItems >>> %s' % page_data)
         main_encoded_block = self.cm.ph.getDataBeetwenMarkers(page_data, 'var hide_my_HTML_ =', 'var', False)[1]
         if not main_encoded_block:
             printDBG('listMoviesUnits: No main_encoded_block found')
@@ -815,7 +814,7 @@ class CimaNow(CBaseHostClass):
                 return urllib.unquote(pct)
 
         page_data_block = decode_obfuscated_block(main_encoded_block)
-        #printDBG('page_data_block.exploreSeriesItems >>> %s' % page_data_block)
+        # printDBG('page_data_block.exploreSeriesItems >>> %s' % page_data_block)
         season_list = self.cm.ph.getDataBeetwenMarkers(page_data_block, '<section aria-label="seasons">', '</section>', False)[1]
         printDBG('season_list.exploreSeriesItems >>> %s' % season_list)
 
@@ -896,7 +895,7 @@ class CimaNow(CBaseHostClass):
 
         # 1) First request: open the main page to trigger Cloudflare JS check and save cookies
         sts, data = self.getPage(url)
-        #printDBG('data.listSeriesEpisodes >>> %s' % data)
+        # printDBG('data.listSeriesEpisodes >>> %s' % data)
         if not sts:
             printDBG('listSeriesEpisodes: initial getPage failed')
             return
@@ -932,7 +931,7 @@ class CimaNow(CBaseHostClass):
         else:
             printDBG('listSeriesEpisodes: watching page fetched successfully')
             page_data = data2
-        #printDBG('page_data.listSeriesEpisodes >>> %s' % page_data)
+        # printDBG('page_data.listSeriesEpisodes >>> %s' % page_data)
         main_encoded_block = self.cm.ph.getDataBeetwenMarkers(page_data, 'var hide_my_HTML_ =', 'var', False)[1]
         if not main_encoded_block:
             printDBG('listSeriesEpisodes: No main_encoded_block found')
