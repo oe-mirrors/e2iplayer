@@ -35,6 +35,7 @@ def GetConfigList():
 def gettytul():
     return 'https://cimanow.cc/'  # main url of host
 
+
 class CimaNow(CBaseHostClass):
 
     def __init__(self):
@@ -391,7 +392,7 @@ class CimaNow(CBaseHostClass):
         else:
             printDBG('exploreItems: watching page fetched successfully')
             page_data = data2
-        #printDBG('page_data.exploreItems >>> %s' % page_data)
+        # printDBG('page_data.exploreItems >>> %s' % page_data)
         main_encoded_block = self.cm.ph.getDataBeetwenMarkers(page_data, 'var hide_my_HTML_ =', 'var', False)[1]
         if not main_encoded_block:
             printDBG('listUnits: No main_encoded_block found')
@@ -602,6 +603,7 @@ class CimaNow(CBaseHostClass):
 
         CBaseHostClass.endHandleService(self, index, refresh)
 
+
 class IPTVHost(CHostBase):
 
     def __init__(self):
@@ -611,4 +613,3 @@ class IPTVHost(CHostBase):
         if 'video' == cItem.get('type', '') or 'explore_item' == cItem.get('category', ''):
             return True
         return False
-
