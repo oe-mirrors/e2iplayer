@@ -23,6 +23,7 @@ hostcdapl
 hostchomikuj_blocked_
 hostchristusvincit_blocked_
 hostcimaclub
+hostcimanow
 hostcinemay_blocked_
 hostcineto
 hostclassiccinemaonline_blocked_
