@@ -311,6 +311,7 @@
   "cimanow",
   "arabseed",
   "egybest",
+  "egydead",
   "tvfun",
   "arablionz",
   "movizlandcom",
