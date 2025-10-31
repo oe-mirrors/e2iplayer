@@ -19,7 +19,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, RemoveDisallowedFilenameChars, GetSubtitlesDir
 from Components.config import config, ConfigText, getConfigListEntry, ConfigSubsection
-import os, json, re
+import os
+import json
+import re
 try:
     import requests
 except Exception:
@@ -38,9 +40,11 @@ if not hasattr(config.plugins.iptvplayer, 'subsourceapi'):
     from Components.config import ConfigText
     config.plugins.iptvplayer.subsourceapi = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     optionList = []
     return optionList
+
 
 def GetLanguageTab():
     tab = [
@@ -95,6 +99,7 @@ def GetLanguageTab():
     ]
     return tab
 
+
 def get_subsource_api():
     """Return SubSource API key"""
     try:
@@ -103,10 +108,12 @@ def get_subsource_api():
         printExc()
         return ""
 
+
 #########################################################
 # BASE SETTINGS
 #########################################################
 BASE_URL = "https://api.subsource.net/api/v1"
+
 
 def build_headers():
     """Return default API headers with X-API-Key"""
@@ -117,6 +124,8 @@ def build_headers():
 #########################################################
 # PROVIDER IMPLEMENTATION
 #########################################################
+
+
 class SubsourceAPIProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
         CBaseSubProviderClass.__init__(self, params)
@@ -324,6 +333,8 @@ class SubsourceAPIProvider(CBaseSubProviderClass):
 #########################################################
 # ENTRY POINT FOR E2IPLAYER
 #########################################################
+
+
 class IPTVSubProvider(CSubProviderBase):
     def __init__(self, params={}):
         CSubProviderBase.__init__(self, SubsourceAPIProvider(params))
