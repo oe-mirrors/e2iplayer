@@ -608,6 +608,7 @@ class IPTVSubDownloaderWidget(Screen):
         subtitlesgr = {'title': "Subtitles.gr", 'sub_provider': 'subtitlesgr'}
         prijevodi = {'title': "Prijevodi-Online.org", 'sub_provider': 'prijevodi'}
         subsro = {'title': "Subs.ro", 'sub_provider': 'subsro'}
+        subsourceapi = {'title': "SubsourceAPI", 'sub_provider': 'subsourceapi'}
 
         defaultLang = GetDefaultLang()
 
@@ -637,6 +638,7 @@ class IPTVSubDownloaderWidget(Screen):
         subProvidersList.append(podnapisinet)
         subProvidersList.append(titlovi)
         subProvidersList.append(subscene)
+        subProvidersList.append(subsourceapi)
 
         if 'pl' != defaultLang:
             subProvidersList.append(napisy24pl)
