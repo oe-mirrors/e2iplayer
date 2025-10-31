@@ -5,39 +5,22 @@
 # Created By : popking (odem2014)
 # Last modified: 31/10/2025 - popking (odem2014)
 #########################################################
+import os
+import zipfile
+import requests
+from Components.config import config, ConfigText, ConfigSubsection
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
-from Plugins.Extensions.IPTVPlayer.libs.pCommon import DecodeGzipped
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
-    printDBG,
-    printExc,
-    GetDefaultLang,
-    RemoveDisallowedFilenameChars,
-    GetSubtitlesDir,
-    rm,
-)
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, RemoveDisallowedFilenameChars, GetSubtitlesDir
-from Components.config import config, ConfigText, getConfigListEntry, ConfigSubsection
-import os
-import json
-import re
-try:
-    import requests
-except Exception:
-    printExc()
-import traceback
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, RemoveDisallowedFilenameChars, GetSubtitlesDir
 
 #########################################################
 # CONFIGURATION (uses existing key)
 #########################################################
 if not hasattr(config.plugins, 'iptvplayer'):
-    from Components.config import ConfigSubsection
     config.plugins.iptvplayer = ConfigSubsection()
 
 # use the existing SubSource API key variable
 if not hasattr(config.plugins.iptvplayer, 'subsourceapi'):
-    from Components.config import ConfigText
     config.plugins.iptvplayer.subsourceapi = ConfigText(default="", fixed_size=False)
 
 
@@ -279,7 +262,6 @@ class SubsourceAPIProvider(CBaseSubProviderClass):
             printDBG("✅ Download complete: %s" % filePath)
 
             # Optionally unzip to .srt (SubSource always gives a single file inside zip)
-            import zipfile
             extracted_path = None
             with zipfile.ZipFile(filePath, 'r') as zip_ref:
                 zip_list = zip_ref.namelist()
