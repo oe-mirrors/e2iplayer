@@ -183,7 +183,7 @@ class E2iPlayerWidget(Screen):
             "menu": self.menu_pressed,
             "tools": self.blue_pressed,
             "record": self.green_pressed,
-            # "pageUp": self.pageup_pressed,
+            "pageUp": self.pageup_pressed,
             "pageDown": self.pagedown_pressed
         }, -1)
 
@@ -997,6 +997,14 @@ class E2iPlayerWidget(Screen):
         else:
             self.showWindow()
     # end ok_pressed(self):
+
+    def pageup_pressed(self):
+        self.stopAutoPlaySequencer()
+        if self.visible and self.prevSelList and self.prevSelList[-1]:
+            self.nextSelIndex = self.prevSelList.pop() - len(self.currList)
+            self.categoryList.pop()
+            printDBG(f"back_pressed prev sel index {self.nextSelIndex}")
+            self.requestListFromHost('Previous')
 
     def pagedown_pressed(self):
         self.stopAutoPlaySequencer()
