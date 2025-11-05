@@ -399,7 +399,8 @@ class CBaseSubProviderClass:
             baseTtitle = ' '.join(self.cm.ph.getAllItemsBeetwenMarkers(item, '<a ', '</a>'))
             title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'), False)[1])
             desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'type-data'), ('</span', '>'), False)[1])
-            if not (year := self.cm.ph.getSearchGroups(item, r'''["'>]([0-9]{4})[<\$]?''')[0]):
+            year = self.cm.ph.getSearchGroups(item, r'''["'>]([0-9]{4})[<\$]?''')[0]
+            if not year:
                 year = self.cm.ph.getSearchGroups(item, r'\((20[0-9]{2})\)')[0]
             if title.endswith('-'):
                 title = title[:-1].strip()
