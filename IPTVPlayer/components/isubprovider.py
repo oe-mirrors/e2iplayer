@@ -404,7 +404,7 @@ class CBaseSubProviderClass:
                 year = self.cm.ph.getSearchGroups(item, r'\((20[0-9]{2})\)')[0]
             if title.endswith('-'):
                 title = title[:-1].strip()
-            sTitle = "%s %s %s" %(title, year, desc)
+            sTitle = "%s %s %s" % (title, year, desc)
 
             iteamList.append({'title': sTitle, 'base_title': self.cleanHtmlStr(baseTtitle), 'year': year, 'imdbid': imdbid})
         return True, iteamList
