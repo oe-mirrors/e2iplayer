@@ -393,17 +393,20 @@ class CBaseSubProviderClass:
 
         iteamList = []
         tmp = self.cm.ph.getDataBeetwenMarkers(data, ('<section', '>', 'find-results-section-title'), '</section>', False)[1]
-        tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, ('<div', '>', 'ipc-metadata-list-summary-item__tc'), '</ul>')
+        tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, ('<li', '>', 'ipc-metadata-list-summary-item'), '</li>')
         for item in tmp:
             imdbid = self.cm.ph.getSearchGroups(item, r'/tt([0-9]+?)/')[0]
             baseTtitle = ' '.join(self.cm.ph.getAllItemsBeetwenMarkers(item, '<a ', '</a>'))
-            title = self.cleanHtmlStr(item)
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h3', '>'), ('</h3', '>'), False)[1])
+            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<span', '>', 'type-data'), ('</span', '>'), False)[1])
             year = self.cm.ph.getSearchGroups(item, r'''["'>]([0-9]{4})[<\$]?''')[0]
             if not year:
                 year = self.cm.ph.getSearchGroups(item, r'\((20[0-9]{2})\)')[0]
             if title.endswith('-'):
                 title = title[:-1].strip()
-            iteamList.append({'title': title, 'base_title': self.cleanHtmlStr(baseTtitle), 'year': year, 'imdbid': imdbid})
+            sTitle = "%s %s %s" %(title, year, desc)
+
+            iteamList.append({'title': sTitle, 'base_title': self.cleanHtmlStr(baseTtitle), 'year': year, 'imdbid': imdbid})
         return True, iteamList
 
     def imdbGetOrginalByTitle(self, imdbid):
