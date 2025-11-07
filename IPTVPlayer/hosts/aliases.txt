@@ -8,6 +8,7 @@
 'hostaltadefinizione': 'https://altadefinizione.spa/',
 'hostaltadefinizione01': 'https://altadefinizione01.spa/',
 'hostanimeodcinki': 'https://anime-odcinki.pl/',
+'hostaniworld': 'https://aniworld.to/',
 'hostappletrailers': 'https://trailers.apple.com/',
 'hostarablionz': 'https://arablionztv.online/',
 'hostarabseed': 'https://a.asd.homes/',

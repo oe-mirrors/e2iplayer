@@ -1,7 +1,9 @@
 {
  "userdefined": [
   "favourites",
-  "localmedia"
+  "localmedia",
+  "urllist",
+  "iptvplayerinfo"
  ],
  "moviesandseries": [
   "seezsu",
@@ -86,6 +88,9 @@
  "cartoonsandanime": [
   "bajeczkiorg",
   "animeodcinki",
+  "aniworld",
+  "9anime",
+  "kissanimeto",
   "kisscartoonme",
   "watchcartoononline",
   "shahiidanimenet",
@@ -243,6 +248,7 @@
   "zdfmediathek",
   "artetv",
   "spiegeltv",
+  "aniworld",
   "serienstreamto",
   "bsto",
   "hdfilmetv",
