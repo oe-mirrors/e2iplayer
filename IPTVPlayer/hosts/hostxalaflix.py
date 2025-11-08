@@ -14,7 +14,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://xalaflix.cv"
+    return "https://old.xalaflix.cv"
 
 
 class XalaFlix(CBaseHostClass):
