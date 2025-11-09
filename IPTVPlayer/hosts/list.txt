@@ -107,6 +107,7 @@ hostmaxtvgo
 hostmeczykipl_blocked_
 hostmediasetplay_blocked_
 hostmediayou_blocked_
+hostmegafilme
 hostmegakino
 hostmindigo
 hostmindigtv
