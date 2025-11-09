@@ -108,6 +108,7 @@
 'hostmeczykipl': 'http://www.meczyki.pl/',
 'hostmediasetplay': 'https://mediasetplay.it/',
 'hostmediayou': 'https://mediayou.net/',
+'hostmegafilme': 'https://megafilme.vip/',
 'hostmegakino': 'https://megakino.world',
 'hostmindigo': 'https://tv.mindigo.hu',
 'hostmindigtv': 'https://www.mindigtv.hu/',

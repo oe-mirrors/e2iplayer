@@ -256,6 +256,7 @@
   "moviedream",
   "filmpalast",
   "kinox",
+  "megafilme",
   "dailymotion",
   "vimeo",
   "laola1tv",
