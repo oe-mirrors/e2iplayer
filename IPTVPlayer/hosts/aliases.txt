@@ -4,7 +4,7 @@
 'host3sktv': 'http://33sk.tv/',
 'host9anime': 'https://9anime.com.ro',
 'hostaflaam': 'https://aflaam.com/',
-'hostakoam': 'https://ar.akoam.net/',
+'hostakoam': 'https://ak.sv/',
 'hostaltadefinizione': 'https://altadefinizione.spa/',
 'hostaltadefinizione01': 'https://altadefinizione01.spa/',
 'hostanimeodcinki': 'https://anime-odcinki.pl/',
