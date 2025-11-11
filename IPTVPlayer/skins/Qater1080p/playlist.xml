@@ -1,0 +1,21 @@
+<screen name="Qater" position="center,center" size="1920,1080" title="E2iPlayer" flags="wfBorder">
+	<widget source="global.CurrentTime" render="Label" position="1022,134" size="120,32" font="Regular; 28" backgroundColor="background" transparent="1" foregroundColor="#FFFFFF" halign="center" zPosition="1" valign="center">
+		<convert type="ClockToText">Default</convert>
+	</widget>
+	<widget source="global.CurrentTime" render="Label" position="570,134" size="294,47" font="Regular; 34" backgroundColor="background" foregroundColor="#FFFFFF" transparent="1" zPosition="1" halign="right">
+		<convert type="ClockToText">Format:%a %d.%m.%Y</convert>
+	</widget>
+	<widget name="headertext" position="600,8" zPosition="1" size="1544,64" font="Regular; 35" transparent="1" valign="center" backgroundColor="#bbff" foregroundColor="#bbff" halign="left" />
+	<widget name="list" position="850,267" size="542,795" scrollbarMode="showOnDemand" enableWrapAround="1" transparent="1" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Qater1080p/Icons/selbutton.png" />
+	<widget name="console" position="105,452" size="712,599" zPosition="1" font="Regular;36" transparent="1" />
+	<widget name="spinner" zPosition="3" position="1020,210" size="20,20" transparent="1" alphatest="blend" />
+	<widget name="spinner_1" zPosition="3" position="1020,210" size="20,20" transparent="1" alphatest="blend" />
+	<widget name="spinner_2" zPosition="3" position="1042,210" size="20,20" transparent="1" alphatest="blend" />
+	<widget name="spinner_3" zPosition="3" position="1061,210" size="20,20" transparent="1" alphatest="blend" />
+	<widget name="spinner_4" zPosition="3" position="1083,210" size="20,20" transparent="1" alphatest="blend" />
+	<widget name="cover" zPosition="2" position="1477,478" size="420,542" scale="1" alphatest="blend" />
+	<widget name="playerlogo" zPosition="1" position="890,90" size="120,120" transparent="1" alphatest="blend" />
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Qater1080p/Icons/cover.png" position="1462,466" size="441,617" scale="1" alphatest="blend" transparent="1" zPosition="4" />
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Qater1080p/Icons/BB_blank.png" position="835,245" size="570,825" scale="1" zPosition="-1" alphatest="on" transparent="0" />
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Qater1080p/Icons/back-iptv4.png" position="0,0" size="1920,1080" zPosition="-2" alphatest="on" transparent="0" />
+</screen>
