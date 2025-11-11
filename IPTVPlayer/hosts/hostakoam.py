@@ -143,7 +143,7 @@ class Akoam(CBaseHostClass):
         printDBG('Akoam.listUnits >>> %s' % cItem)
 
         sts, data = self.getPage(cItem['url'])
-        #printDBG('data.listUnits >>> %s' % data)
+        # printDBG('data.listUnits >>> %s' % data)
         if not sts or not data:
             printDBG('listUnits: failed to load page')
             return
@@ -160,8 +160,8 @@ class Akoam(CBaseHostClass):
         # MOVIE BOXES
         ###################################################
         items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="entry-box entry-box-1">', '<div class="col-lg')
-        #items1 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="entry-box entry-box-1">', '<div class="col-lg')[0]
-        #printDBG('items1.listUnits >>> %s' % items1)
+        # items1 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="entry-box entry-box-1">', '<div class="col-lg')[0]
+        # printDBG('items1.listUnits >>> %s' % items1)
         printDBG('listUnits: Found %d items' % len(items))
 
         for item in items:
@@ -424,8 +424,8 @@ class Akoam(CBaseHostClass):
         # MOVIE BOXES
         ###################################################
         items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="entry-box entry-box-1">', '<div class="col-lg')
-        #items1 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="entry-box entry-box-1">', '<div class="col-lg')[0]
-        #printDBG('items1.listUnits >>> %s' % items1)
+        # items1 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="entry-box entry-box-1">', '<div class="col-lg')[0]
+        # printDBG('items1.listUnits >>> %s' % items1)
         printDBG('listUnits: Found %d items' % len(items))
 
         for item in items:
