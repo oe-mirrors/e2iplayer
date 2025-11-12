@@ -4,7 +4,7 @@ host3sktv_blocked_
 host9anime
 hostaflaam
 hostakoam
-hostaltadefinizione_blocked_
+hostaltadefinizione
 hostaltadefinizione01
 hostanimeodcinki_blocked_
 hostaniworld
@@ -28,6 +28,7 @@ hostcimanow
 hostcinemay_blocked_
 hostcineto
 hostclassiccinemaonline_blocked_
+hostcuevanatv
 hostdailymotion
 hostdancetrippin_blocked_
 hostdel_blocked_

@@ -350,6 +350,7 @@
  "latino": [
   "youtube",
   "mrpiracy",
+  "cuevanatv",
   "solarmovie",
   "artetv",
   "dailymotion",
@@ -362,6 +363,7 @@
   "youtube",
   "mediasetplay",
   "guardaserie",
+  "altadefinizione",
   "altadefinizione01",
   "cb01uno",
   "tantifilmorg",
