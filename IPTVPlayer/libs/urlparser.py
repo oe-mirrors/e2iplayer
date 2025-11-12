@@ -429,6 +429,7 @@ class urlparser:
             "emturbovid.com": self.pp.parserJWPLAYER,
             "en.embedz.net": self.pp.parserJWPLAYER,
             # f
+            "f16px.com": self.pp.parserf16px,
             "f51rm.com": self.pp.parserFILEMOON,
             "facebook.com": self.pp.parserFACEBOOK,
             "fastshare.cz": self.pp.parserFASTSHARECZ,
@@ -6342,4 +6343,18 @@ class pageParser(CaptchaHelper):
         if url:
             url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
             urltab.extend(getDirectM3U8Playlist(url))
+        return urltab
+
+    def parserf16px(self, url):  # add 121125 Partial support
+        printDBG("parserf16px baseUrl[%s]" % url)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        host = urlparser.getDomain(url, False)
+        sts, data = self.cm.getPage(url.replace("/e/", "/api/videos/") + "/embed/playback", HTTP_HEADER)
+        if not sts:
+            return []
+        urltab = []
+        url = re.search('url":"([^"]+)', data)
+        if url:
+            url = host + url.group(1)
+            urltab.append({"name": url, "url": url})
         return urltab

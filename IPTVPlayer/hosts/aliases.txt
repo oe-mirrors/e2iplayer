@@ -29,6 +29,7 @@
 'hostcinemay': 'http://cinemay.ws/',
 'hostcineto': 'https://cine.to/',
 'hostclassiccinemaonline': 'http://classiccinemaonline.com/',
+'hostcuevanatv': 'https://cuevanatv.lol/',
 'hostdailymotion': 'http://dailymotion.com/',
 'hostdancetrippin': 'http://dancetrippin.tv/',
 'hostdel': 'https://del.org/',
