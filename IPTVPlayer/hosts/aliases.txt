@@ -26,6 +26,7 @@
 'hostchristusvincit': 'http://christusvincit-tv.pl/',
 'hostcimaclub': 'https://ciimaclub.club/',
 'hostcimanow': 'https://cimanow.cc/',
+'hostcinemana': 'https://cinemana.vip/'
 'hostcinemay': 'http://cinemay.ws/',
 'hostcineto': 'https://cine.to/',
 'hostclassiccinemaonline': 'http://classiccinemaonline.com/',
@@ -97,6 +98,7 @@
 'hostkisscartoonme': 'https://kisscartoon.ac/',
 'hostkkiste': 'https://kinokiste.me/',
 'hostkreskoweczki': 'http://kreskoweczki.pl/',
+'hostkrmzy': 'https://krmzy.org/',
 'hostlaola1tv': 'http://laola1.tv/',
 'hostlibrestream': 'http://ls-streaming.com/',
 'hostliveleak': 'https://liveleak.com/',
@@ -144,6 +146,7 @@
 'hostplayrtsiw': 'https://srgssr.ch/',
 'hostplayzcc': 'https://playz.cc/',
 'hostputlockertvto': 'https://putlockertv.to/',
+'hostq3isk': 'https://3d.q9w8e7.shop/',
 'hostquesttvcouk': 'http://questtv.co.uk/',
 'hostradiostacja': 'http://radiostacja.pl/',
 'hostraiplay': 'http://raiplay.it',
@@ -215,4 +218,5 @@
 'hostzaluknijcc': 'https://zaluknij.cc/',
 'hostzdfmediathek': 'https://zdf-prod-futura.zdf.de/',
 'hostzerioncc': 'https://zerion.cc/'
+
 }
