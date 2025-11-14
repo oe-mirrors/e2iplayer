@@ -4,7 +4,7 @@ host3sktv_blocked_
 host9anime
 hostaflaam
 hostakoam
-hostaltadefinizione
+hostaltadefinizione_blocked_
 hostaltadefinizione01
 hostanimeodcinki_blocked_
 hostaniworld
@@ -90,7 +90,6 @@ hostjoemonsterorg
 hostkabarety_blocked_
 hostkijknl
 hostkinoger
-hostkinokiste
 hostkinomoc_blocked_
 hostkinox
 hostkissanimeto

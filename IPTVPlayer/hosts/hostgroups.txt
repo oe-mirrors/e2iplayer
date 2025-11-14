@@ -81,7 +81,6 @@
   "hdfilme",
   "movie2k",
   "einschalten",
-  "kinokiste",
   "megakino",
   "moflixstream"
  ],
@@ -267,7 +266,6 @@
   "kkiste",
   "kinoger",
   "einschalten",
-  "kinokiste",
   "megakino",
   "moflixstream",
   "movie4k",
