@@ -151,7 +151,7 @@ class Q3isk(CBaseHostClass):
         main_info_block = self.cm.ph.getDataBeetwenMarkers(
             data, '<div class="story">', '<div style="clear', True
         )[1]
-        #printDBG('main_info_block.listSeriesEpisodes >>> %s' % main_info_block)
+        # printDBG('main_info_block.listSeriesEpisodes >>> %s' % main_info_block)
 
         if main_info_block:
             # --- Poster ---
@@ -293,7 +293,7 @@ class Q3isk(CBaseHostClass):
         pagination = self.cm.ph.getDataBeetwenMarkers(
             data, '<div class="pagination">', '</ul>', True)[1]
 
-        #printDBG('pagination.listSeriesUnits >>> %s' % pagination)
+        # printDBG('pagination.listSeriesUnits >>> %s' % pagination)
 
         # Next page is ALWAYS class="next page-numbers"
         nextPage = self.cm.ph.getSearchGroups(
@@ -314,7 +314,7 @@ class Q3isk(CBaseHostClass):
         printDBG('Q3isk.listSeriesEpisodes >>> %s' % cItem)
 
         sts, data = self.getPage(cItem['url'])
-        #printDBG('data.listSeriesEpisodes >>> %s' % data)
+        # printDBG('data.listSeriesEpisodes >>> %s' % data)
         if not sts or not data:
             printDBG('listSeriesEpisodes: failed to load page')
             return
@@ -325,7 +325,7 @@ class Q3isk(CBaseHostClass):
         main_info_block = self.cm.ph.getDataBeetwenMarkers(
             data, '<div class="story">', '<div style="clear', True
         )[1]
-        #printDBG('main_info_block.listSeriesEpisodes >>> %s' % main_info_block)
+        # printDBG('main_info_block.listSeriesEpisodes >>> %s' % main_info_block)
 
         if main_info_block:
             # --- Poster ---
@@ -375,7 +375,7 @@ class Q3isk(CBaseHostClass):
         main_block = self.cm.ph.getDataBeetwenMarkers(
             data, '<div class="BlocksHolder"', '<div style="clear', True
         )[1]
-        #printDBG('main_block.listSeriesEpisodes >>> %s' % main_block)
+        # printDBG('main_block.listSeriesEpisodes >>> %s' % main_block)
 
         if not main_block:
             printDBG('listSeriesEpisodes: No main_block found')
@@ -491,7 +491,7 @@ class Q3isk(CBaseHostClass):
         pagination = self.cm.ph.getDataBeetwenMarkers(
             data, '<div class="pagination">', '</ul>', True)[1]
 
-        #printDBG('pagination.listMoviesUnits >>> %s' % pagination)
+        # printDBG('pagination.listMoviesUnits >>> %s' % pagination)
 
         # Next page is ALWAYS class="next page-numbers"
         nextPage = self.cm.ph.getSearchGroups(
@@ -578,4 +578,3 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Q3isk(), True, [])
-
