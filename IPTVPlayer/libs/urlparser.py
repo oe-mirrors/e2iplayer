@@ -450,6 +450,7 @@ class urlparser:
             "filemoon.to": self.pp.parserFILEMOON,
             "filemoon.wf": self.pp.parserFILEMOON,
             "fileone.tv": self.pp.parserFILEONETV,
+            "file-upload.org": self.pp.parserJWPLAYER,
             "filez.tv": self.pp.parserFILEZTV,
             "firedrive.com": self.pp.parserFIREDRIVE,
             "flaswish.com": self.pp.parserJWPLAYER,

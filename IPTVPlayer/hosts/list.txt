@@ -25,6 +25,7 @@ hostchomikuj_blocked_
 hostchristusvincit_blocked_
 hostcimaclub
 hostcimanow
+hostcinemana
 hostcinemay_blocked_
 hostcineto
 hostclassiccinemaonline_blocked_
@@ -96,6 +97,7 @@ hostkissanimeto
 hostkisscartoonme_blocked_
 hostkkiste
 hostkreskoweczki_blocked_
+hostkrmzy
 hostlaola1tv_blocked_
 hostlibrestream_blocked_
 hostliveleak_blocked_
@@ -143,6 +145,7 @@ hostplaypuls_blocked_
 hostplayrtsiw
 hostplayzcc_blocked_
 hostputlockertvto
+hostq3isk
 hostquesttvcouk_blocked_
 hostradiostacja
 hostraiplay
