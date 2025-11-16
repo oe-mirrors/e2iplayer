@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 18.08.2025 - Mr.X
+# Last Modified: 15.11.2025 - Mr.X
 import re
 
 from Components.config import ConfigSelection, config, getConfigListEntry
@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
-config.plugins.iptvplayer.guardaserie_hosts = ConfigSelection(default="https://guardaserietv.app/", choices=[("https://guardaserietv.app/", "https://guardaserietv.app/"), ("https://guardaserie.qpon/", "https://guardaserie.qpon/")])
+config.plugins.iptvplayer.guardaserie_hosts = ConfigSelection(default="https://guardaserietv.app/", choices=[("https://guardaserietv.app/", "https://guardaserietv.app/"), ("https://guardaserie.qpon/", "https://guardaserie.qpon/"), ("https://guardaserietv.wiki/", "https://guardaserietv.wiki/")])
 
 
 def GetConfigList():
@@ -22,19 +22,24 @@ def gettytul():
 
 class GuardaSerie(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {"history": "GuardaSerie"})
-        self.HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.defaultParams = {"header": self.HTTP_HEADER}
+        CBaseHostClass.__init__(self, {"history": "GuardaSerie", "cookie": "GuardaSerie.cookie"})
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = self.getFullUrl("templates/Guardaserie/images/new_logo2.png")
-        self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serietv-streaming/")}, {"category": "list_items", "title": _("Top rated"), "url": self.getFullUrl("top-imdb/")}, {"category": "list_genres", "title": _("Genres")}, {"category": "list_az", "title": _("A-Z")}] + self.searchItems()
+        self.DEFAULT_ICON_URL = gettytul() + "templates/Guardaserie/images/new_logo2.png"
+        self.MENU = [
+            {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serietv-streaming/")},
+            {"category": "list_items", "title": _("Top rated"), "url": self.getFullUrl("top-imdb/")},
+            {"category": "list_genres", "title": _("Genres")},
+            {"category": "list_az", "title": _("A-Z")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        return self.cm.getPage(baseUrl, addParams, post_data)
+        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
+        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
-    def listItems(self, cItem, nextCategory="video"):
+    def listItems(self, cItem):
         printDBG("GuardaSerie.listItems |%s|" % cItem)
         url = cItem["url"]
         sts, data = self.getPage(url)
@@ -122,13 +127,6 @@ class GuardaSerie(CBaseHostClass):
             return self.up.getVideoLinkExt(url)
         return []
 
-    def getArticleContent(self, cItem):
-        printDBG("GuardaSerie.getArticleContent [%s]" % cItem)
-        desc = cItem.get("desc", "")
-        title = cItem["title"]
-        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
-        return [{"title": title, "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": self.getFullUrl(icon)}]}]
-
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         if self.MAIN_URL is None:
@@ -139,15 +137,15 @@ class GuardaSerie(CBaseHostClass):
         self.currList = []
         if name is None:
             self.listsTab(self.MENU, {"name": "category"})
-        elif "list_items" == category:
+        elif category == "list_items":
             self.listItems(self.currItem)
-        elif "list_seasons" == category:
+        elif category == "list_seasons":
             self.listSeasons(self.currItem)
-        elif "list_episodes" == category:
+        elif category == "list_episodes":
             self.listEpisodes(self.currItem)
-        elif "list_genres" == category:
+        elif category == "list_genres":
             self.listValue(self.currItem, "Genere<", "</ul>")
-        elif "list_az" == category:
+        elif category == "list_az":
             self.listValue(self.currItem, 'letter">', "</div>")
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
@@ -163,6 +161,3 @@ class GuardaSerie(CBaseHostClass):
 class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, GuardaSerie(), True, [])
-
-    def withArticleContent(self, cItem):
-        return cItem["category"] in ["video", "list_episodes"]
