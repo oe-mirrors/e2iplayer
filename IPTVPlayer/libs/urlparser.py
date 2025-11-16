@@ -6193,7 +6193,9 @@ class pageParser(CaptchaHelper):
             baseUrl = baseUrl.replace(".co/", ".my/").replace(".club/", ".my/")
             baseUrl = "/".join(baseUrl.split("/")[:5]).replace("/f/", "/e/") if "/f/" in baseUrl else baseUrl
         if "hglink.to" in baseUrl:
-            baseUrl = baseUrl.replace("hglink.to", "davioad.com")
+            baseUrl = baseUrl.replace("hglink.to", "uasopt.com")
+        if "cybervynx.com" in baseUrl:
+            baseUrl = baseUrl.replace("cybervynx.com", "guxhag.com")
         if "savefiles.com/e/" in baseUrl:
             baseUrl = baseUrl.replace("/e", "")
         if "savefiles.com/v/" in baseUrl:
