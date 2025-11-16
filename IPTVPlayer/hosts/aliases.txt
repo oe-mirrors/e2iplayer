@@ -203,6 +203,7 @@
 'hostwebstream': '\'Web\' streams player',
 'hostwecima': 'https://cima.wecima.show/',
 'hostwgrane': 'http://wgrane.pl/',
+'hostwikicourses': 'https://www.wikicourses.net/',
 'hostwofvideo': 'https://wofvideo.pro/',
 'hostwolnelekturypl': 'http://wolnelektury.pl/',
 'hostworldfree4u': 'https://www.worldfree4u.ws/',

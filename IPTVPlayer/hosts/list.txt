@@ -202,6 +202,7 @@ hostwebhuplayer
 hostwebstream
 hostwecima
 hostwgrane
+hostwikicourses
 hostwofvideo_blocked_
 hostwolnelekturypl_blocked_
 hostworldfree4u
