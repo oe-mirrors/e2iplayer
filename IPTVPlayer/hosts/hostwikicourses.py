@@ -338,8 +338,8 @@ class WikiCourses(CBaseHostClass):
         # PARSE SERIES ITEMS
         ###################################################
         items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="course-box', '<i class="fas fa-user')
-        #items1 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="course-box', '<i class="fas fa-user')[0]
-        #printDBG('items1.listSeriesUnits >>> %s' % items1)
+        # items1 = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="course-box', '<i class="fas fa-user')[0]
+        # printDBG('items1.listSeriesUnits >>> %s' % items1)
         printDBG('listSeriesUnits: Found %d items' % len(items))
 
         for item in items:
@@ -499,7 +499,6 @@ class WikiCourses(CBaseHostClass):
         if not main_block:
             printDBG('exploreItems: No main_block found')
             return
-
 
         ##############################################
         # EXTRACT VIDEO URL  (decode HTML entities!)
