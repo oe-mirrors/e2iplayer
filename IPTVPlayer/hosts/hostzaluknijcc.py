@@ -96,7 +96,6 @@ class Zaluknij(CBaseHostClass):
         printDBG("Zaluknij.getVideourls [%s]" % url)
         return self.up.getVideoLinkExt(url)
 
-
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         printDBG("handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
