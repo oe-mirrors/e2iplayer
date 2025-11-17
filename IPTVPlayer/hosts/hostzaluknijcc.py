@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 14.10.2025 - Mr.X
+# Last Modified: 17.11.2025 - Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -20,17 +20,13 @@ def gettytul():
 class Zaluknij(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"})
-        self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0"
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.DEFAULT_ICON_URL = gettytul() + "public/dist/images/lgbt.png"
-        self.MAIN_URL = None
-
-    def menu(self):
         self.MAIN_URL = gettytul()
         self.MENU = [{"category": "movies", "title": _("Movies")}, {"category": "series", "title": _("Series")}] + self.searchItems()
         self.MOVIES = [{"category": "list_items", "title": _("Most recent"), "url": self.getFullUrl("filmy-online/?sort:date/")}, {"category": "list_items", "title": _("Most popular"), "url": self.getFullUrl("filmy-online/sort:vote/")}, {"category": "list_items", "title": _("By year"), "url": self.getFullUrl("filmy-online/sort:premiere/")}, {"category": "list_items", "title": _("Views"), "url": self.getFullUrl("filmy-online/sort:view/")}, {"category": "list_items", "title": _("Most rated"), "url": self.getFullUrl("filmy-online/sort:rate/")}]
-        self.SERIES = [{"category": "list_items", "title": _("All"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=all_series&page=1")}, {"category": "list_items", "title": _("Latest added"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=latest_episodes&page=1")}, {"category": "list_items", "title": _("Most recent"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=recent_series&page=1")}, {"category": "list_items", "title": _("Most popular"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=popular_series&page=1")}, {"category": "list_items", "title": _("Views"), "url": self.getFullUrl("series/index/?url=series%2Findex%2F&sort=most_viewed_recently&page=1")}]
+        self.SERIES = [{"category": "list_items", "title": _("All"), "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=all_series&page=1")}, {"category": "list_items", "title": _("Latest added"), "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=latest_episodes&page=1")}, {"category": "list_items", "title": _("Most recent"), "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=recent_series&page=1")}, {"category": "list_items", "title": _("Most popular"), "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=popular_series&page=1")}, {"category": "list_items", "title": _("Views"), "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=most_viewed_recently&page=1")}]
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
@@ -38,15 +34,13 @@ class Zaluknij(CBaseHostClass):
         addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
-    def listItems(self, cItem, nextCategory):
+    def listItems(self, cItem):
         printDBG("Zaluknij.listItems |%s|" % cItem)
         sts, htm = self.getPage(cItem["url"])
         if not sts:
             return
         nextPage = self.cm.ph.getSearchGroups(htm, r"""href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast""")[0]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'role="listitem', "</a>")
-        if not data:
-            data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
+        data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'role="listitem', "</a>") or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0]
             icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+)')[0])
@@ -55,7 +49,7 @@ class Zaluknij(CBaseHostClass):
             if se:
                 title = "%s - %s" % (title, se)
             params = dict(cItem)
-            params.update({"good_for_fav": True, "category": nextCategory, "title": title.replace("amp;", ""), "url": url, "icon": icon})
+            params.update({"good_for_fav": True, "category": "video", "title": title.replace("amp;", ""), "url": url, "icon": icon})
             if not se and "serial" in url:
                 params.update({"category": "list_episodes"})
                 self.addDir(params)
@@ -67,72 +61,58 @@ class Zaluknij(CBaseHostClass):
             self.addDir(params)
 
     def listEpisodes(self, cItem):
-        printDBG("MovieDream.listEpisodes")
+        printDBG("Zaluknij.listEpisodes")
         icon = cItem["icon"]
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
+        desc = self.cm.ph.getSearchGroups(data, 'class="description">([^<]+)')[0]
         data = re.findall(r'href="([^"]+)">\W(s\d+e\d+)', data, re.DOTALL)
         for url, title in data:
             params = dict(cItem)
-            params.update({"good_for_fav": True, "title": "%s %s" % (cItem["title"], title), "url": self.getFullUrl(url), "icon": icon, "desc": ""})
+            params.update({"good_for_fav": True, "title": "%s %s" % (cItem["title"], title), "url": self.getFullUrl(url), "icon": icon, "desc": desc})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Zaluknij.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem["url"] = "%swyszukiwarka?phrase=%s" % (gettytul(), urllib_quote(searchPattern))
-        self.listItems(cItem, "video")
+        self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):
         printDBG("Zaluknij.getLinksForVideo [%s]" % cItem)
-        urlTab = []
+        urltap = []
         url = cItem["url"]
         sts, data = self.getPage(url)
         if not sts:
             return []
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="watch', "</div>")
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'link-to-video">', "</td>")
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0]
-            urlTab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1})
-        return urlTab
+            urltap.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1})
+        return urltap
 
-    def getVideoLinks(self, videoUrl):
-        printDBG("Zaluknij.getVideourls [%s]" % videoUrl)
-        urlTab = []
-        if self.cm.isValidUrl(videoUrl):
-            return self.up.getVideoLinkExt(videoUrl)
-        return urlTab
+    def getVideoLinks(self, url):
+        printDBG("Zaluknij.getVideourls [%s]" % url)
+        return self.up.getVideoLinkExt(url)
 
-    def getArticleContent(self, cItem):
-        printDBG("Zaluknij.getArticleContent [%s]" % cItem)
-        sts, data = self.getPage(cItem["url"])
-        otherInfo = {}
-        if not sts:
-            return []
-        desc = self.cm.ph.getSearchGroups(data, 'class="description">([^<]+)')[0]
-        title = cItem["title"]
-        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
-        return [{"title": self.cleanHtmlStr(title), "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": self.getFullUrl(icon)}], "other_info": otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         printDBG("handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL is None:
-            self.menu()
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         if name is None:
             self.listsTab(self.MENU, {"name": "category"})
-        elif "list_items" == category:
-            self.listItems(self.currItem, "video")
-        elif "list_episodes" == category:
+        elif category == "list_items":
+            self.listItems(self.currItem)
+        elif category == "list_episodes":
             self.listEpisodes(self.currItem)
-        elif "movies" == category:
+        elif category == "movies":
             self.listsTab(self.MOVIES, self.currItem)
-        elif "series" == category:
+        elif category == "series":
             self.listsTab(self.SERIES, self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
@@ -148,6 +128,3 @@ class Zaluknij(CBaseHostClass):
 class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, Zaluknij(), True, [])
-
-    def withArticleContent(self, cItem):
-        return cItem["category"] in ["video", "list_episodes"]
