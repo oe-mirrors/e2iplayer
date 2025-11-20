@@ -21,12 +21,14 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 
 
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/oe-mirrors/e2iplayer/pulls)
+[![Python](https://img.shields.io/badge/Python-3.x-darkviolet.svg?style=flat)](https://python.org)
 [![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
 [![Latest Release](https://img.shields.io/github/release-date/oe-mirrors/e2iplayer?label=From&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/latest)
 [![GitHub all releases](https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/total.svg?label=Downloads)](https://github.com/oe-mirrors/e2iplayer/releases)
 [![Github last commit](https://img.shields.io/github/last-commit/oe-mirrors/e2iplayer)](https://github.com/oe-mirrors/e2iplayer)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/y/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/m/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
+![Platform](https://img.shields.io/badge/Platform-Enigma2-orange.svg)
 ## SonarCloud status
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
@@ -58,7 +60,7 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 ### 📦 Overview
 
 The E2iPlayer (previously IPTVPlayer) Enigma2 (E²) Plugin is a platform that offers various livestreams and add-ons from all over the world it
-includes Movies, TV series, Catoons, Anime, Music, Sport, Live Streams, Documentries, Science and Content for various languages.
+includes Movies, TV series, Catoons, Anime, Music, Sport, Live Streams, XXX, Documentries, Science and Content for various languages.
 
 ---
 
@@ -99,6 +101,7 @@ NOTE: ⚠️ The E2iPlayer is ONLY a specialized browser. It does NOT host any o
 - 🔍 **Browse M3U Playlists**
 - 📺 **Media Player**
 - 🎞️ **Live Streams**
+- 🎭 **Multiple Player Support**: GStreamer, Exteplayer3, ServiceApp
 - 🔤 **Subtitles Support**
 - 📁 **Favorites lists**
 - 🆓 **Free platform to add your own hosts**
