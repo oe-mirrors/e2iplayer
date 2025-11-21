@@ -1,6 +1,6 @@
 [tool.ruff]
 line-length = 120
-exclude = ["IPTVPlayer/hosts/hostxxx.py"]
+exclude = ["IPTVPlayer/hosts/hostxxx.py", "IPTVPlayer/libs/aesgcm/*.py"]
 select = ["E","F","W"]
 ignore = ["W191","E402","E501","E722","E741","F401","F403","F405","F841"]
 
