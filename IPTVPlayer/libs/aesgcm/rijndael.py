@@ -921,6 +921,7 @@ class Rijndael(object):
     :ival list Ke: key schedule for encryption
     :ival list Kd: key schedule for decryption
     """
+
     def __init__(self, key, block_size=16):
         """Initialise the object, derive keys for encryption and decryption."""
         if block_size != 16 and block_size != 24 and block_size != 32:
@@ -967,24 +968,24 @@ class Rijndael(object):
             # extrapolate using phi (the round key evolution function)
             tt = tk[KC - 1]
             tk[0] ^= (S[(tt >> 16) & 0xFF] & 0xFF) << 24 ^  \
-                     (S[(tt >>  8) & 0xFF] & 0xFF) << 16 ^  \
-                     (S[ tt        & 0xFF] & 0xFF) <<  8 ^  \
-                     (S[(tt >> 24) & 0xFF] & 0xFF)       ^  \
-                     (rcon[rconpointer]    & 0xFF) << 24
+                     (S[(tt >> 8) & 0xFF] & 0xFF) << 16 ^  \
+                     (S[tt & 0xFF] & 0xFF) << 8 ^  \
+                     (S[(tt >> 24) & 0xFF] & 0xFF) ^  \
+                     (rcon[rconpointer] & 0xFF) << 24
             rconpointer += 1
             if KC != 8:
                 for i in range(1, KC):
-                    tk[i] ^= tk[i-1]
+                    tk[i] ^= tk[i - 1]
             else:
                 for i in range(1, KC // 2):
-                    tk[i] ^= tk[i-1]
+                    tk[i] ^= tk[i - 1]
                 tt = tk[KC // 2 - 1]
-                tk[KC // 2] ^= (S[ tt        & 0xFF] & 0xFF)       ^ \
-                              (S[(tt >>  8) & 0xFF] & 0xFF) <<  8 ^ \
+                tk[KC // 2] ^= (S[tt & 0xFF] & 0xFF) ^ \
+                              (S[(tt >> 8) & 0xFF] & 0xFF) << 8 ^ \
                               (S[(tt >> 16) & 0xFF] & 0xFF) << 16 ^ \
                               (S[(tt >> 24) & 0xFF] & 0xFF) << 24
                 for i in range(KC // 2 + 1, KC):
-                    tk[i] ^= tk[i-1]
+                    tk[i] ^= tk[i - 1]
             # copy values into round key arrays
             j = 0
             while j < KC and t < ROUND_KEY_COUNT:
@@ -998,8 +999,8 @@ class Rijndael(object):
                 tt = Kd[r][j]
                 Kd[r][j] = U1[(tt >> 24) & 0xFF] ^ \
                            U2[(tt >> 16) & 0xFF] ^ \
-                           U3[(tt >>  8) & 0xFF] ^ \
-                           U4[ tt        & 0xFF]
+                           U3[(tt >> 8) & 0xFF] ^ \
+                           U4[tt & 0xFF]
         self.Ke = Ke
         self.Kd = Kd
 
@@ -1026,26 +1027,26 @@ class Rijndael(object):
         t = []
         # plaintext to ints + key
         for i in range(BC):
-            t.append((plaintext[i * 4    ] << 24 |
+            t.append((plaintext[i * 4] << 24 |
                       plaintext[i * 4 + 1] << 16 |
-                      plaintext[i * 4 + 2] <<  8 |
-                      plaintext[i * 4 + 3]        ) ^ Ke[0][i])
+                      plaintext[i * 4 + 2] << 8 |
+                      plaintext[i * 4 + 3]) ^ Ke[0][i])
         # apply round transforms
         for r in range(1, ROUNDS):
             for i in range(BC):
-                a[i] = (T1[(t[ i           ] >> 24) & 0xFF] ^
+                a[i] = (T1[(t[i] >> 24) & 0xFF] ^
                         T2[(t[(i + s1) % BC] >> 16) & 0xFF] ^
-                        T3[(t[(i + s2) % BC] >>  8) & 0xFF] ^
-                        T4[ t[(i + s3) % BC]        & 0xFF]  ) ^ Ke[r][i]
+                        T3[(t[(i + s2) % BC] >> 8) & 0xFF] ^
+                        T4[t[(i + s3) % BC] & 0xFF]) ^ Ke[r][i]
             t = a[:]
         # last round is special
         result = []
         for i in range(BC):
             tt = Ke[ROUNDS][i]
-            result.append((S[(t[ i         ] >> 24) & 0xFF] ^ (tt>>24)) & 0xFF)
-            result.append((S[(t[(i+s1) % BC] >> 16) & 0xFF] ^ (tt>>16)) & 0xFF)
-            result.append((S[(t[(i+s2) % BC] >>  8) & 0xFF] ^ (tt>> 8)) & 0xFF)
-            result.append((S[ t[(i+s3) % BC]        & 0xFF] ^  tt     ) & 0xFF)
+            result.append((S[(t[i] >> 24) & 0xFF] ^ (tt >> 24)) & 0xFF)
+            result.append((S[(t[(i + s1) % BC] >> 16) & 0xFF] ^ (tt >> 16)) & 0xFF)
+            result.append((S[(t[(i + s2) % BC] >> 8) & 0xFF] ^ (tt >> 8)) & 0xFF)
+            result.append((S[t[(i + s3) % BC] & 0xFF] ^ tt) & 0xFF)
         return bytearray(result)
 
     def decrypt(self, ciphertext):
@@ -1071,26 +1072,26 @@ class Rijndael(object):
         t = [0] * BC
         # ciphertext to ints + key
         for i in range(BC):
-            t[i] = (ciphertext[i * 4    ] << 24 |
+            t[i] = (ciphertext[i * 4] << 24 |
                     ciphertext[i * 4 + 1] << 16 |
-                    ciphertext[i * 4 + 2] <<  8 |
-                    ciphertext[i * 4 + 3]        ) ^ Kd[0][i]
+                    ciphertext[i * 4 + 2] << 8 |
+                    ciphertext[i * 4 + 3]) ^ Kd[0][i]
         # apply round transforms
         for r in range(1, ROUNDS):
             for i in range(BC):
-                a[i] = (T5[(t[ i           ] >> 24) & 0xFF] ^
+                a[i] = (T5[(t[i] >> 24) & 0xFF] ^
                         T6[(t[(i + s1) % BC] >> 16) & 0xFF] ^
-                        T7[(t[(i + s2) % BC] >>  8) & 0xFF] ^
-                        T8[ t[(i + s3) % BC]        & 0xFF]  ) ^ Kd[r][i]
+                        T7[(t[(i + s2) % BC] >> 8) & 0xFF] ^
+                        T8[t[(i + s3) % BC] & 0xFF]) ^ Kd[r][i]
             t = a[:]
         # last round is special
         result = []
         for i in range(BC):
             tt = Kd[ROUNDS][i]
-            result.append((Si[(t[ i         ] >> 24) & 0xFF] ^ (tt>>24)) &0xFF)
-            result.append((Si[(t[(i+s1) % BC] >> 16) & 0xFF] ^ (tt>>16)) &0xFF)
-            result.append((Si[(t[(i+s2) % BC] >>  8) & 0xFF] ^ (tt>> 8)) &0xFF)
-            result.append((Si[ t[(i+s3) % BC]        & 0xFF] ^  tt     ) &0xFF)
+            result.append((Si[(t[i] >> 24) & 0xFF] ^ (tt >> 24)) & 0xFF)
+            result.append((Si[(t[(i + s1) % BC] >> 16) & 0xFF] ^ (tt >> 16)) & 0xFF)
+            result.append((Si[(t[(i + s2) % BC] >> 8) & 0xFF] ^ (tt >> 8)) & 0xFF)
+            result.append((Si[t[(i + s3) % BC] & 0xFF] ^ tt) & 0xFF)
         return bytearray(result)
 
 
