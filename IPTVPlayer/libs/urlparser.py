@@ -16,6 +16,7 @@ from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelpe
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVSleep, SetIPTVPlayerLastHostError, TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.libs import aadecode, ph, pyaes
+from Plugins.Extensions.IPTVPlayer.libs.aesgcm import python_aesgcm
 from Plugins.Extensions.IPTVPlayer.libs.crypto.cipher.aes_cbc import AES_CBC
 from Plugins.Extensions.IPTVPlayer.libs.dehunt import dehunt
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -6348,16 +6349,38 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserf16px(self, url):  # add 121125 Partial support
+    def parserf16px(self, url):  # fix 221125
+        def ft(e):
+            t = e.replace("-", "+").replace("_", "/")
+            r = 0 if len(t) % 4 == 0 else 4 - len(t) % 4
+            n = t + "=" * r
+            return base64.b64decode(n)
+
+        def xn(e):
+            return b''.join(list(map(ft, e)))
+
         printDBG("parserf16px baseUrl[%s]" % url)
-        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         host = urlparser.getDomain(url, False)
+        urltab = []
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         sts, data = self.cm.getPage(url.replace("/e/", "/api/videos/") + "/embed/playback", HTTP_HEADER)
         if not sts:
             return []
-        urltab = []
-        url = re.search('url":"([^"]+)', data)
-        if url:
-            url = host + url.group(1)
-            urltab.append({"name": url, "url": url})
+        html = json_loads(data)
+        pd = html.get('playback')
+        if pd:
+            iv = ft(pd.get('iv'))
+            key = xn(pd.get('key_parts'))
+            pl = ft(pd.get('payload'))
+            cipher = python_aesgcm.new(key)
+            ct = cipher.open(iv, pl)
+            html = json_loads(ct.decode('latin-1'))
+        sources = html.get('sources')
+        if sources:
+            for x in sources:
+                url = urlparser.decorateUrl(x.get('url'), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                if ".m3u8" in url:
+                    urltab.extend(getDirectM3U8Playlist(url))
+                else:
+                    urltab.append({"name": x.get('label', ''), "url": url})
         return urltab
