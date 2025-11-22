@@ -318,6 +318,7 @@
   "arabseed",
   "egybest",
   "egydead",
+  "myegy",
   "tvfun",
   "arablionz",
   "krmzy",

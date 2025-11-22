@@ -125,6 +125,7 @@ hostmrpiracy
 hostmusicbox
 hostmusicmp3ru
 hostmycima
+hostmyegy
 hostngolos_blocked_
 hostninateka_blocked_
 hostnonstopmozi_blocked_
