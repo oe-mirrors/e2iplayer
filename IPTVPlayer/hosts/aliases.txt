@@ -51,6 +51,7 @@
 'hostfightvideo': 'http://fight.mmashare.club/',
 'hostfilma24hdcom': 'http://www.filma24hd.com/',
 'hostfilma24io': 'http://filma24.io/',
+'hostfilma365': 'https://filma365.cc/',
 'hostfilman': 'https://filman.cc/',
 'hostfilmaoncom': 'https://www.filmaon1.com/',
 'hostfilmativa': 'http://filmativa.ws/',

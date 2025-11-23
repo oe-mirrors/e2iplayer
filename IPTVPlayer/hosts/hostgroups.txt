@@ -391,6 +391,7 @@
   "filmovizijastudio",
   "filma24hdcom",
   "filma24io",
+  "filma365",
   "filmaoncom",
   "serijeonline",
   "filmeonlineto",
