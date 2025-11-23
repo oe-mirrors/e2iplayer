@@ -340,6 +340,7 @@ class urlparser:
             "ankrznm.sbs": self.pp.parserJWPLAYER,
             "antiadtape.com": self.pp.parserSTREAMTAPE,
             "aparat.com": self.pp.parserAPARATCOM,
+            "arabveturk.com": self.pp.parserJWPLAYER,
             "archive.org": self.pp.parserARCHIVEORG,
             "ashortl.ink": self.pp.parserVIDMOLYME,
             "asnwish.com": self.pp.parserJWPLAYER,
@@ -727,6 +728,7 @@ class urlparser:
             "userscloud.com": self.pp.parserUSERSCLOUDCOM,
             "ustreamix.com": self.pp.parserUSTREAMIXCOM,
             # v
+            "v.turkvearab.com": self.pp.parserJWPLAYER,
             "v6embed.xyz": self.pp.parserVIDGUARDTO,
             "vbn2.vdbtm.shop": self.pp.parserJWPLAYER,
             "vcstream.to": self.pp.parserVCSTREAMTO,
@@ -2095,19 +2097,6 @@ class pageParser(CaptchaHelper):
                     url = self.cm.ph.getSearchGroups(item, """src=['"]([^"^']+?)['"]""")[0]
                     tab.append({"name": "stream.moe", "url": url})
             return tab
-
-    def parserCOUDMAILRU(self, baseUrl):
-        printDBG("parserCOUDMAILRU baseUrl[%s]" % baseUrl)
-        HTTP_HEADER = {"User-Agent": "Mozilla/5.0"}
-        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
-        if not sts:
-            return False
-
-        weblink = self.cm.ph.getSearchGroups(data, r'"weblink"\s*:\s*"([^"]+?)"')[0]
-        videoUrl = self.cm.ph.getSearchGroups(data, r'"weblink_video"\s*:[^\]]*?"url"\s*:\s*"(https?://[^"]+?)"')[0]
-        videoUrl += "0p/%s.m3u8?double_encode=1" % (base64.b64encode(weblink))
-        videoUrl = strwithmeta(videoUrl, {"User-Agent": HTTP_HEADER["User-Agent"]})
-        return getDirectM3U8Playlist(videoUrl, checkContent=True)
 
     def parserVIDZER(self, baseUrl):
         printDBG("parserVIDZER baseUrl[%s]" % baseUrl)
@@ -6357,7 +6346,7 @@ class pageParser(CaptchaHelper):
             return base64.b64decode(n)
 
         def xn(e):
-            return b''.join(list(map(ft, e)))
+            return b"".join(list(map(ft, e)))
 
         printDBG("parserf16px baseUrl[%s]" % url)
         host = urlparser.getDomain(url, False)
@@ -6367,20 +6356,37 @@ class pageParser(CaptchaHelper):
         if not sts:
             return []
         html = json_loads(data)
-        pd = html.get('playback')
+        pd = html.get("playback")
         if pd:
-            iv = ft(pd.get('iv'))
-            key = xn(pd.get('key_parts'))
-            pl = ft(pd.get('payload'))
+            iv = ft(pd.get("iv"))
+            key = xn(pd.get("key_parts"))
+            pl = ft(pd.get("payload"))
             cipher = python_aesgcm.new(key)
             ct = cipher.open(iv, pl)
-            html = json_loads(ct.decode('latin-1'))
-        sources = html.get('sources')
+            html = json_loads(ct.decode("latin-1"))
+        sources = html.get("sources")
         if sources:
             for x in sources:
-                url = urlparser.decorateUrl(x.get('url'), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                url = urlparser.decorateUrl(x.get("url"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
                 if ".m3u8" in url:
                     urltab.extend(getDirectM3U8Playlist(url))
                 else:
-                    urltab.append({"name": x.get('label', ''), "url": url})
+                    urltab.append({"name": x.get("label", ""), "url": url})
+        return urltab
+
+    def parserCOUDMAILRU(self, baseUrl):  # Fix 221125
+        printDBG("parserCOUDMAILRU baseUrl[%s]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        urltab = []
+        host = urlparser.getDomain(baseUrl, False)
+        m = re.search(r'"weblink"\s*:\s*"([^"]+?)"', data)
+        r = re.search(r'1","url":"([^"]+)"[^>],"view', data)
+        if r and m:
+            b = base64.b64encode(m.group(1).encode("utf-8")).decode("utf-8")
+            url = "%s/0p/%s.m3u8?double_encode=1" % (r.group(1), b)
+            url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+            urltab.extend(getDirectM3U8Playlist(url))
         return urltab
