@@ -442,7 +442,8 @@ class common:
                 lineNeedFix = True
             if lineNeedFix:
                 lines[idx] = '\t'.join(fields)
-        cj._really_load(StringIO(''.join(lines)), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
+        data = ''.join(lines).encode("utf-8")
+        cj._really_load(BytesIO(data), cookiefile, ignore_discard=ignoreDiscard, ignore_expires=ignoreExpires)
         return cj
 
     def clearCookie(self, cookiefile, leaveNames=[], removeNames=None, ignoreDiscard=True, ignoreExpires=False):
