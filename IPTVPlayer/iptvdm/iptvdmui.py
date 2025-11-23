@@ -593,12 +593,13 @@ class IPTVDMWidget(Screen):
 
 class IPTVDMNotificationWidget(Screen):
 
-    skin = """<screen name="IPTVDMNotificationWidget" position="800,10" zPosition="10" size="70,40" title="IPTVPlayer downloader" backgroundColor="#34111112" flags="wfNoBorder" >
-            <widget name="message_label" font="Regular;24" position="0,0" zPosition="2" valign="center" halign="center" size="370,40" foregroundColor="green" backgroundColor="#34111112" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" transparent="1" />
+    skin = """<screen name="IPTVDMNotificationWidget" position="e-350,60" resolution="1280,720" zPosition="10" size="350,60" title="E2iPlayer downloader" backgroundColor="#34111112" >
+            <widget name="message_label" font="Regular;20" position="0,0" zPosition="2" valign="center" halign="center" size="350,60" foregroundColor="green" backgroundColor="#34111112" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" transparent="1" />
         </screen>"""
 
     def __init__(self, session):
         Screen.__init__(self, session)
+        self.setTitle(_("E2iPlayer downloader"))
         self.skin = IPTVDMNotificationWidget.skin
         self.skinName = ["IPTVDMNotificationScreen", "IPTVDMNotificationWidget"]
         self['message_label'] = Label()

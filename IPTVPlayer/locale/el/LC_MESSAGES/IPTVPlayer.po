@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-20 17:58+0200\n"
+"POT-Creation-Date: 2025-11-23 13:27+0100\n"
 "PO-Revision-Date: 2025-09-28 22:22+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -354,6 +354,9 @@ msgstr "ΑΛΜΠΟΥΜ"
 msgid "API initialization failed!"
 msgstr "Η αρχικοποίηση του API απέτυχε!"
 
+msgid "API_KEY"
+msgstr ""
+
 msgid "ARTISTS"
 msgstr "ΚΑΛΛΙΤΕΧΝΕΣ"
 
@@ -505,8 +508,16 @@ msgstr "Κινούμενα σχέδια"
 msgid "Anime"
 msgstr "Άνιμε"
 
+#, fuzzy
+msgid "Anime Movies"
+msgstr "Λίστα άνιμε"
+
 msgid "Anime Search"
 msgstr "Αναζήτηση άνιμε"
+
+#, fuzzy
+msgid "Anime Series"
+msgstr "Τηλεοπτικές σειρές"
 
 #, fuzzy
 msgid "Anime TV series"
@@ -533,6 +544,14 @@ msgstr "Προσεγγίσεις"
 
 msgid "Arabic"
 msgstr "Αραβικά"
+
+#, fuzzy
+msgid "Arabic Movies"
+msgstr "Αραβικές ταινίες"
+
+#, fuzzy
+msgid "Arabic Series"
+msgstr "Αραβικές ταινίες"
 
 msgid "Arabic movies"
 msgstr "Αραβικές ταινίες"
@@ -966,6 +985,10 @@ msgstr "Ντοκιμαντέρ"
 msgid "Documentary"
 msgstr "Ντοκιμαντέρ"
 
+#, fuzzy
+msgid "Documentary Movies"
+msgstr "Ντοκιμαντέρ"
+
 msgid "Download"
 msgstr "Λήψη"
 
@@ -1131,6 +1154,10 @@ msgstr "E2iPlayer - Ρυθμίσεις"
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr "Αυτόματη εκκίνηση E2iPlayer κατά την εκκίνηση του Enigma2"
 
+#, fuzzy
+msgid "E2iPlayer downloader"
+msgstr "Λήψη μεμονωμένου αρχείου"
+
 msgid "E2iPlayer enable/disabled groups"
 msgstr "Ενεργοποίηση/απενεργοποίηση ομάδων E2iPlayer"
 
@@ -1180,6 +1207,14 @@ msgstr ""
 
 msgid "English"
 msgstr "Αγγλικά"
+
+#, fuzzy
+msgid "English Movies"
+msgstr "Αγγλικά"
+
+#, fuzzy
+msgid "English Series"
+msgstr "Τηλεοπτικές σειρές"
 
 #, fuzzy
 msgid "English TV series"
@@ -1296,6 +1331,10 @@ msgstr ""
 
 msgid "External movie player config"
 msgstr "Ρυθμίσεις εξωτερικής αναπαραγωγής ταινιών"
+
+#, fuzzy
+msgid "FAILED"
+msgstr "ΤΡΕΪΛΕΡ"
 
 msgid "FREE"
 msgstr "ΔΩΡΕΑΝ"
@@ -1605,6 +1644,9 @@ msgstr "Προτάσεις IMDb"
 msgid "IMDb rating"
 msgstr "Βαθμολογία IMDb"
 
+msgid "INTERRUPTED"
+msgstr ""
+
 msgid "Icon type"
 msgstr "Τύπος εικονιδίου"
 
@@ -1613,6 +1655,10 @@ msgstr "Ποιότητα εικονιδίων"
 
 msgid "Icons size"
 msgstr "Μέγεθος εικονιδίων"
+
+#, fuzzy
+msgid "Indian Movies"
+msgstr "Κινηματογραφικές ταινίες"
 
 #, fuzzy
 msgid "Indian TV series"
@@ -2014,6 +2060,9 @@ msgstr "Κατάσταση διαχειριστή: "
 
 msgid "Manga"
 msgstr "Μάνγκα"
+
+msgid "Masrahyat"
+msgstr ""
 
 msgid "Matches"
 msgstr "Αντιστοιχίες"
@@ -2625,6 +2674,9 @@ msgstr "Ακτινολογικές συνεδρίες"
 msgid "Raiting"
 msgstr "Αξιολόγηση"
 
+msgid "Ramadan 2025"
+msgstr ""
+
 msgid "Random"
 msgstr "Τυχαία"
 
@@ -2924,6 +2976,9 @@ msgstr "Σειρές TV"
 msgid "Series list"
 msgstr "Λίστα σειρών"
 
+msgid "Server"
+msgstr ""
+
 msgid "Server return 404 - Not Found."
 msgstr "Ο διακομιστής επέστρεψε 404 - Δεν βρέθηκε."
 
@@ -2962,6 +3017,10 @@ msgstr "Ορισμός ως προβληθέν"
 
 msgid "Settings"
 msgstr "Ρυθμίσεις"
+
+#, fuzzy
+msgid "Short Movies"
+msgstr "Λειτουργία ταξινόμησης"
 
 msgid "Shorts"
 msgstr "Σύντομα βίντεο"
@@ -3254,6 +3313,10 @@ msgstr "Τηλεοπτικές σειρές"
 msgid "TV Show"
 msgstr "Τηλεοπτική εκπομπή"
 
+#, fuzzy
+msgid "TV Shows"
+msgstr "Τηλεοπτική εκπομπή"
+
 msgid "TV channels"
 msgstr "Τηλεοπτικά κανάλια"
 
@@ -3439,6 +3502,14 @@ msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr "Δοκιμάστε να αλλάξετε extplayer ή να απενεργοποιήσετε το IFD στις ρυθμίσεις του GSTplayer"
 
 #, fuzzy
+msgid "Turkish Movies"
+msgstr "Τηλεοπτικές σειρές"
+
+#, fuzzy
+msgid "Turkish Series"
+msgstr "Τηλεοπτικές σειρές"
+
+#, fuzzy
 msgid "Turkish TV series"
 msgstr "Τηλεοπτικές σειρές"
 
@@ -3457,6 +3528,9 @@ msgstr "Τύπος: %s"
 
 msgid "UFC"
 msgstr "UFC"
+
+msgid "UNKNOWN"
+msgstr ""
 
 msgid "Ukrainian proxy server url"
 msgstr "Διεύθυνση URL διακομιστή μεσολάβησης Ουκρανίας"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-20 17:58+0200\n"
+"POT-Creation-Date: 2025-11-23 13:27+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -351,6 +351,9 @@ msgstr ""
 msgid "API initialization failed!"
 msgstr ""
 
+msgid "API_KEY"
+msgstr ""
+
 msgid "ARTISTS"
 msgstr ""
 
@@ -518,8 +521,16 @@ msgid "Anime"
 msgstr "Аніме Список"
 
 #, fuzzy
+msgid "Anime Movies"
+msgstr "Аніме Список"
+
+#, fuzzy
 msgid "Anime Search"
 msgstr "Пошук"
+
+#, fuzzy
+msgid "Anime Series"
+msgstr "Телесеріал"
 
 #, fuzzy
 msgid "Anime TV series"
@@ -547,6 +558,14 @@ msgstr ""
 
 #, fuzzy
 msgid "Arabic"
+msgstr "Всі фільми"
+
+#, fuzzy
+msgid "Arabic Movies"
+msgstr "Всі фільми"
+
+#, fuzzy
+msgid "Arabic Series"
 msgstr "Всі фільми"
 
 #, fuzzy
@@ -1012,6 +1031,10 @@ msgid "Documentary"
 msgstr "Документи"
 
 #, fuzzy
+msgid "Documentary Movies"
+msgstr "Документи"
+
+#, fuzzy
 msgid "Download"
 msgstr "Завантажити"
 
@@ -1183,6 +1206,10 @@ msgstr "IPTV Плеєр - Налаштування"
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr ""
 
+#, fuzzy
+msgid "E2iPlayer downloader"
+msgstr "Завантажувач простих субтитрів"
+
 msgid "E2iPlayer enable/disabled groups"
 msgstr ""
 
@@ -1230,6 +1257,14 @@ msgstr ""
 
 msgid "English"
 msgstr "Англійський"
+
+#, fuzzy
+msgid "English Movies"
+msgstr "Англійський"
+
+#, fuzzy
+msgid "English Series"
+msgstr "Телесеріал"
 
 #, fuzzy
 msgid "English TV series"
@@ -1348,6 +1383,9 @@ msgstr ""
 
 msgid "External movie player config"
 msgstr "Зовнішній плеєр конфігурація"
+
+msgid "FAILED"
+msgstr ""
 
 msgid "FREE"
 msgstr ""
@@ -1676,6 +1714,9 @@ msgstr ""
 msgid "IMDb rating"
 msgstr "Кращий рейтинг"
 
+msgid "INTERRUPTED"
+msgstr ""
+
 msgid "Icon type"
 msgstr "Тип іконка"
 
@@ -1685,6 +1726,10 @@ msgstr "якість"
 
 msgid "Icons size"
 msgstr "Размір іконок"
+
+#, fuzzy
+msgid "Indian Movies"
+msgstr "Кінофільми"
 
 #, fuzzy
 msgid "Indian TV series"
@@ -2108,6 +2153,9 @@ msgstr "Статус менеджера: "
 #, fuzzy
 msgid "Manga"
 msgstr "Мангас"
+
+msgid "Masrahyat"
+msgstr ""
 
 #, fuzzy
 msgid "Matches"
@@ -2766,6 +2814,9 @@ msgstr "Радіостанції"
 msgid "Raiting"
 msgstr "Рейтинг"
 
+msgid "Ramadan 2025"
+msgstr ""
+
 msgid "Random"
 msgstr "Випадковий"
 
@@ -3087,6 +3138,9 @@ msgstr "Серії"
 msgid "Series list"
 msgstr "Серії"
 
+msgid "Server"
+msgstr ""
+
 msgid "Server return 404 - Not Found."
 msgstr ""
 
@@ -3127,6 +3181,10 @@ msgstr "послідні переглянуті"
 #, fuzzy
 msgid "Settings"
 msgstr "Кращий рейтинг"
+
+#, fuzzy
+msgid "Short Movies"
+msgstr "Кращі фільми"
 
 #, fuzzy
 msgid "Shorts"
@@ -3436,6 +3494,10 @@ msgstr "Телесеріал"
 msgid "TV Show"
 msgstr "ТВ Шоу"
 
+#, fuzzy
+msgid "TV Shows"
+msgstr "ТВ Шоу"
+
 msgid "TV channels"
 msgstr "Телеканали"
 
@@ -3631,6 +3693,14 @@ msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr ""
 
 #, fuzzy
+msgid "Turkish Movies"
+msgstr "Телесеріал"
+
+#, fuzzy
+msgid "Turkish Series"
+msgstr "Телесеріал"
+
+#, fuzzy
 msgid "Turkish TV series"
 msgstr "Телесеріал"
 
@@ -3649,6 +3719,9 @@ msgid "Type: %s"
 msgstr "Тип: "
 
 msgid "UFC"
+msgstr ""
+
+msgid "UNKNOWN"
 msgstr ""
 
 #, fuzzy

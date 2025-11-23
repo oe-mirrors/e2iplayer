@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-20 17:58+0200\n"
+"POT-Creation-Date: 2025-11-23 13:27+0100\n"
 "PO-Revision-Date: 2025-09-28 21:09+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -352,6 +352,9 @@ msgstr "ALBUMOK"
 msgid "API initialization failed!"
 msgstr "API inicializálása sikertelen!"
 
+msgid "API_KEY"
+msgstr ""
+
 msgid "ARTISTS"
 msgstr "MŰVÉSZEK"
 
@@ -503,8 +506,16 @@ msgstr "Animációk"
 msgid "Anime"
 msgstr "Anime"
 
+#, fuzzy
+msgid "Anime Movies"
+msgstr "Anime lista"
+
 msgid "Anime Search"
 msgstr "Anime keresés"
+
+#, fuzzy
+msgid "Anime Series"
+msgstr "tévésorozatok"
 
 #, fuzzy
 msgid "Anime TV series"
@@ -531,6 +542,14 @@ msgstr "Megközelítések"
 
 msgid "Arabic"
 msgstr "Arab"
+
+#, fuzzy
+msgid "Arabic Movies"
+msgstr "Arab filmek"
+
+#, fuzzy
+msgid "Arabic Series"
+msgstr "Arab filmek"
 
 msgid "Arabic movies"
 msgstr "Arab filmek"
@@ -964,6 +983,10 @@ msgstr "Dokumentumfilmek"
 msgid "Documentary"
 msgstr "Dokumentumfilm"
 
+#, fuzzy
+msgid "Documentary Movies"
+msgstr "Dokumentumfilmek"
+
 msgid "Download"
 msgstr "Letöltés"
 
@@ -1129,6 +1152,10 @@ msgstr "E2iPlayer - beállítások"
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr "Az E2iPlayer automatikus indítása az Enigma2 indításakor"
 
+#, fuzzy
+msgid "E2iPlayer downloader"
+msgstr "Egyszerű fájlletöltő"
+
 msgid "E2iPlayer enable/disabled groups"
 msgstr "E2iPlayer engedélyezett/letiltott csoportok"
 
@@ -1178,6 +1205,14 @@ msgstr ""
 
 msgid "English"
 msgstr "Angol"
+
+#, fuzzy
+msgid "English Movies"
+msgstr "Angol"
+
+#, fuzzy
+msgid "English Series"
+msgstr "tévésorozatok"
 
 #, fuzzy
 msgid "English TV series"
@@ -1294,6 +1329,10 @@ msgstr ""
 
 msgid "External movie player config"
 msgstr "Külső filmlejátszó konfigurációja"
+
+#, fuzzy
+msgid "FAILED"
+msgstr "FILMELŐZETES"
 
 msgid "FREE"
 msgstr "INGYENES"
@@ -1603,6 +1642,9 @@ msgstr "IMDb javaslatok"
 msgid "IMDb rating"
 msgstr "IMDb minősítés"
 
+msgid "INTERRUPTED"
+msgstr ""
+
 msgid "Icon type"
 msgstr "Ikon típusa"
 
@@ -1611,6 +1653,10 @@ msgstr "Ikonok minősége"
 
 msgid "Icons size"
 msgstr "Ikonok mérete"
+
+#, fuzzy
+msgid "Indian Movies"
+msgstr "Mozifilmek"
 
 #, fuzzy
 msgid "Indian TV series"
@@ -2014,6 +2060,9 @@ msgstr "Menedzser státusza: "
 
 msgid "Manga"
 msgstr "Manga"
+
+msgid "Masrahyat"
+msgstr ""
 
 msgid "Matches"
 msgstr "Egyezések"
@@ -2626,6 +2675,9 @@ msgstr "Radiológiai körök"
 msgid "Raiting"
 msgstr "Értékelés"
 
+msgid "Ramadan 2025"
+msgstr ""
+
 msgid "Random"
 msgstr "Véletlenszerű"
 
@@ -2921,6 +2973,9 @@ msgstr "Sorozat TV"
 msgid "Series list"
 msgstr "Sorozatlista"
 
+msgid "Server"
+msgstr ""
+
 msgid "Server return 404 - Not Found."
 msgstr "A szerver válasza: 404 - Nem található."
 
@@ -2959,6 +3014,10 @@ msgstr "Megfigyelt"
 
 msgid "Settings"
 msgstr "Beállítások"
+
+#, fuzzy
+msgid "Short Movies"
+msgstr "Rendezési mód"
 
 msgid "Shorts"
 msgstr "Rövidnadrág"
@@ -3251,6 +3310,10 @@ msgstr "TV Sorozat"
 msgid "TV Show"
 msgstr "TV-műsor"
 
+#, fuzzy
+msgid "TV Shows"
+msgstr "TV-műsor"
+
 msgid "TV channels"
 msgstr "TV-csatornák"
 
@@ -3436,6 +3499,14 @@ msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr "Próbáld meg módosítani az extplayert, vagy letiltani az IFD-t a GSTplayer konfigurációjában"
 
 #, fuzzy
+msgid "Turkish Movies"
+msgstr "tévésorozatok"
+
+#, fuzzy
+msgid "Turkish Series"
+msgstr "tévésorozatok"
+
+#, fuzzy
 msgid "Turkish TV series"
 msgstr "tévésorozatok"
 
@@ -3454,6 +3525,9 @@ msgstr "Típus: %s"
 
 msgid "UFC"
 msgstr "UFC"
+
+msgid "UNKNOWN"
+msgstr ""
 
 msgid "Ukrainian proxy server url"
 msgstr "Ukrán proxy szerver URL"

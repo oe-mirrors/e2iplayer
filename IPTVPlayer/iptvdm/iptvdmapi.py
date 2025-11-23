@@ -357,17 +357,17 @@ class IPTVDMApi():
         self.updateItemSTS(self.queueUD[listUDIdx])
         # dItem - copy only for reading filed
         dItem = self.queueUD[listUDIdx]
-        status = 'UNKNOWN'
+        status = _('UNKNOWN')
         if dItem.downloadedProcent > 99:
             self.queueUD[listUDIdx].status = DMHelper.STS.DOWNLOADED
-            status = 'DOWNLOADED'
+            status = _('DOWNLOADED')
         else:
             if dItem.downloadedSize > 0:
                 self.queueUD[listUDIdx].status = DMHelper.STS.INTERRUPTED
-                status = 'INTERRUPTED'
+                status = _('INTERRUPTED')
             else:
                 self.queueUD[listUDIdx].status = DMHelper.STS.ERROR
-                status = 'FAILED'
+                status = _('FAILED')
 
         try:
             fileName = self.queueUD[listUDIdx].fileName.split('/')[-1]
@@ -375,7 +375,7 @@ class IPTVDMApi():
             if len(fileName) > len(shortName):
                 shortName += '...'
             shortName += ' '
-            self.finishNotifyCallback().showNotify(shortName + _(status))
+            self.finishNotifyCallback().showNotify(shortName + status)
         except Exception:
             printExc()
 

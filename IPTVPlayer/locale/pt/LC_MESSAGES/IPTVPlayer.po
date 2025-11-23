@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-20 17:58+0200\n"
+"POT-Creation-Date: 2025-11-23 13:27+0100\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -338,6 +338,9 @@ msgstr ""
 msgid "API initialization failed!"
 msgstr ""
 
+msgid "API_KEY"
+msgstr ""
+
 msgid "ARTISTS"
 msgstr ""
 
@@ -494,8 +497,16 @@ msgid "Anime"
 msgstr ""
 
 #, fuzzy
+msgid "Anime Movies"
+msgstr "Filme"
+
+#, fuzzy
 msgid "Anime Search"
 msgstr "Procura"
+
+#, fuzzy
+msgid "Anime Series"
+msgstr "Leitor de Filmes"
 
 #, fuzzy
 msgid "Anime TV series"
@@ -522,6 +533,14 @@ msgstr ""
 
 msgid "Arabic"
 msgstr ""
+
+#, fuzzy
+msgid "Arabic Movies"
+msgstr "Filme"
+
+#, fuzzy
+msgid "Arabic Series"
+msgstr "Categorias"
 
 msgid "Arabic movies"
 msgstr ""
@@ -964,6 +983,9 @@ msgstr ""
 msgid "Documentary"
 msgstr ""
 
+msgid "Documentary Movies"
+msgstr ""
+
 #, fuzzy
 msgid "Download"
 msgstr "Descargas"
@@ -1130,6 +1152,9 @@ msgstr "IPTV Player - definições"
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr ""
 
+msgid "E2iPlayer downloader"
+msgstr ""
+
 #, fuzzy
 msgid "E2iPlayer enable/disabled groups"
 msgstr "Desativar/Ativar grupos"
@@ -1175,6 +1200,14 @@ msgstr ""
 
 msgid "English"
 msgstr ""
+
+#, fuzzy
+msgid "English Movies"
+msgstr "Filme"
+
+#, fuzzy
+msgid "English Series"
+msgstr "Categorias"
 
 msgid "English TV series"
 msgstr ""
@@ -1290,6 +1323,9 @@ msgstr ""
 
 msgid "External movie player config"
 msgstr "Configuração do Leitor de Filmes externo"
+
+msgid "FAILED"
+msgstr ""
 
 msgid "FREE"
 msgstr ""
@@ -1605,6 +1641,9 @@ msgstr ""
 msgid "IMDb rating"
 msgstr ""
 
+msgid "INTERRUPTED"
+msgstr ""
+
 #, fuzzy
 msgid "Icon type"
 msgstr "Tamanho dos Icons"
@@ -1615,6 +1654,10 @@ msgstr "qualidade"
 
 msgid "Icons size"
 msgstr "Tamanho dos Icons"
+
+#, fuzzy
+msgid "Indian Movies"
+msgstr "Leitor de Filmes"
 
 #, fuzzy
 msgid "Indian TV series"
@@ -2021,6 +2064,9 @@ msgid "Manager status: "
 msgstr "Gestor de estado: "
 
 msgid "Manga"
+msgstr ""
+
+msgid "Masrahyat"
 msgstr ""
 
 msgid "Matches"
@@ -2663,6 +2709,9 @@ msgstr ""
 msgid "Raiting"
 msgstr "Classificação"
 
+msgid "Ramadan 2025"
+msgstr ""
+
 msgid "Random"
 msgstr "Aleatória"
 
@@ -2984,6 +3033,9 @@ msgstr ""
 msgid "Series list"
 msgstr ""
 
+msgid "Server"
+msgstr ""
+
 msgid "Server return 404 - Not Found."
 msgstr ""
 
@@ -3021,6 +3073,10 @@ msgstr ""
 
 msgid "Settings"
 msgstr ""
+
+#, fuzzy
+msgid "Short Movies"
+msgstr "Filme"
 
 msgid "Shorts"
 msgstr ""
@@ -3325,6 +3381,9 @@ msgstr ""
 msgid "TV Show"
 msgstr ""
 
+msgid "TV Shows"
+msgstr ""
+
 #, fuzzy
 msgid "TV channels"
 msgstr "Canais"
@@ -3510,6 +3569,14 @@ msgstr ""
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr ""
 
+#, fuzzy
+msgid "Turkish Movies"
+msgstr "Filme"
+
+#, fuzzy
+msgid "Turkish Series"
+msgstr "Categorias"
+
 msgid "Turkish TV series"
 msgstr ""
 
@@ -3527,6 +3594,9 @@ msgid "Type: %s"
 msgstr "Tipo:"
 
 msgid "UFC"
+msgstr ""
+
+msgid "UNKNOWN"
 msgstr ""
 
 msgid "Ukrainian proxy server url"

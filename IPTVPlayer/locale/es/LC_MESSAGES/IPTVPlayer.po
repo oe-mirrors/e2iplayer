@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer OE-Mirrors Version\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-20 17:58+0200\n"
+"POT-Creation-Date: 2025-11-23 13:27+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: polinene\n"
 "Language-Team: polinene\n"
@@ -355,6 +355,9 @@ msgstr "ALBUMES"
 msgid "API initialization failed!"
 msgstr "fallo al inicializar la API !"
 
+msgid "API_KEY"
+msgstr ""
+
 msgid "ARTISTS"
 msgstr "ARTISTAS"
 
@@ -506,8 +509,16 @@ msgstr "Animaciones"
 msgid "Anime"
 msgstr "Anime"
 
+#, fuzzy
+msgid "Anime Movies"
+msgstr "Lista de anime"
+
 msgid "Anime Search"
 msgstr "Buscar Anime"
+
+#, fuzzy
+msgid "Anime Series"
+msgstr "Series de TV"
 
 #, fuzzy
 msgid "Anime TV series"
@@ -534,6 +545,14 @@ msgstr "Estrategias"
 
 msgid "Arabic"
 msgstr "Arabe"
+
+#, fuzzy
+msgid "Arabic Movies"
+msgstr "Peliculas árabes"
+
+#, fuzzy
+msgid "Arabic Series"
+msgstr "Peliculas árabes"
 
 msgid "Arabic movies"
 msgstr "Peliculas árabes"
@@ -967,6 +986,10 @@ msgstr "Documentales"
 msgid "Documentary"
 msgstr "Documental"
 
+#, fuzzy
+msgid "Documentary Movies"
+msgstr "Documentales"
+
 msgid "Download"
 msgstr "Descarga"
 
@@ -1132,6 +1155,9 @@ msgstr "E2iPlayer - configuracion"
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr "Iniciar E2iPlayer al arranque de Enigma2"
 
+msgid "E2iPlayer downloader"
+msgstr ""
+
 msgid "E2iPlayer enable/disabled groups"
 msgstr "Habilita/deshabilita grupos de E2iPlayer"
 
@@ -1181,6 +1207,14 @@ msgstr ""
 
 msgid "English"
 msgstr "Inglés"
+
+#, fuzzy
+msgid "English Movies"
+msgstr "Inglés"
+
+#, fuzzy
+msgid "English Series"
+msgstr "Series de TV"
 
 #, fuzzy
 msgid "English TV series"
@@ -1297,6 +1331,9 @@ msgstr ""
 
 msgid "External movie player config"
 msgstr "Config. del reproductor externo"
+
+msgid "FAILED"
+msgstr ""
 
 msgid "FREE"
 msgstr "LIBRE"
@@ -1609,6 +1646,9 @@ msgstr "Sugerencias de IMDB"
 msgid "IMDb rating"
 msgstr "Calificación IMDB"
 
+msgid "INTERRUPTED"
+msgstr ""
+
 msgid "Icon type"
 msgstr "Tipo de ícono"
 
@@ -1617,6 +1657,10 @@ msgstr "Calidad de los iconos"
 
 msgid "Icons size"
 msgstr "Tamaño de icono"
+
+#, fuzzy
+msgid "Indian Movies"
+msgstr "Peliculas de cine"
 
 #, fuzzy
 msgid "Indian TV series"
@@ -2019,6 +2063,9 @@ msgstr "Estado del gestor: "
 
 msgid "Manga"
 msgstr "Mangas"
+
+msgid "Masrahyat"
+msgstr ""
 
 msgid "Matches"
 msgstr "Coincidencias"
@@ -2630,6 +2677,9 @@ msgstr "Rondas de Radiología"
 msgid "Raiting"
 msgstr "Calificación"
 
+msgid "Ramadan 2025"
+msgstr ""
+
 msgid "Random"
 msgstr "Aleatorio"
 
@@ -2926,6 +2976,9 @@ msgstr "Series de TV"
 msgid "Series list"
 msgstr "Lista de series"
 
+msgid "Server"
+msgstr ""
+
 msgid "Server return 404 - Not Found."
 msgstr "El servidor devuelve 404 - No encontrado."
 
@@ -2962,6 +3015,10 @@ msgstr ""
 
 msgid "Settings"
 msgstr "Configuración"
+
+#, fuzzy
+msgid "Short Movies"
+msgstr "Modo de ordenación"
 
 msgid "Shorts"
 msgstr "Cortos"
@@ -3254,6 +3311,10 @@ msgstr "Series de TV"
 msgid "TV Show"
 msgstr "Programas de TV"
 
+#, fuzzy
+msgid "TV Shows"
+msgstr "Programas de TV"
+
 msgid "TV channels"
 msgstr "Canales de TV"
 
@@ -3441,6 +3502,14 @@ msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr "Pruebe cambiar a extplayer o deshabilite IFD en la config. del GSTplayer"
 
 #, fuzzy
+msgid "Turkish Movies"
+msgstr "Series de TV"
+
+#, fuzzy
+msgid "Turkish Series"
+msgstr "Series de TV"
+
+#, fuzzy
 msgid "Turkish TV series"
 msgstr "Series de TV"
 
@@ -3458,6 +3527,9 @@ msgid "Type: %s"
 msgstr "Tipo: %s"
 
 msgid "UFC"
+msgstr ""
+
+msgid "UNKNOWN"
 msgstr ""
 
 msgid "Ukrainian proxy server url"

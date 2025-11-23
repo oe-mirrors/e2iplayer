@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-20 17:58+0200\n"
+"POT-Creation-Date: 2025-11-23 13:27+0100\n"
 "PO-Revision-Date: 2025-09-28 21:06+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -352,6 +352,9 @@ msgstr "ALBA"
 msgid "API initialization failed!"
 msgstr "Inicializace rozhraní API se nezdařila!"
 
+msgid "API_KEY"
+msgstr ""
+
 msgid "ARTISTS"
 msgstr "UMĚLCI"
 
@@ -503,8 +506,16 @@ msgstr "Animace"
 msgid "Anime"
 msgstr "Anime"
 
+#, fuzzy
+msgid "Anime Movies"
+msgstr "Seznam anime"
+
 msgid "Anime Search"
 msgstr "Anime vyhledávání"
+
+#, fuzzy
+msgid "Anime Series"
+msgstr "Televizní seriál"
 
 #, fuzzy
 msgid "Anime TV series"
@@ -531,6 +542,14 @@ msgstr "Přístupy"
 
 msgid "Arabic"
 msgstr "Arabština"
+
+#, fuzzy
+msgid "Arabic Movies"
+msgstr "Arabské filmy"
+
+#, fuzzy
+msgid "Arabic Series"
+msgstr "Arabské filmy"
 
 msgid "Arabic movies"
 msgstr "Arabské filmy"
@@ -964,6 +983,10 @@ msgstr "Dokumenty"
 msgid "Documentary"
 msgstr "Dokumentární"
 
+#, fuzzy
+msgid "Documentary Movies"
+msgstr "Dokumenty"
+
 msgid "Download"
 msgstr "Stáhnout"
 
@@ -1129,6 +1152,10 @@ msgstr "E2iPlayer - nastavení"
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr "Automatické spuštění E2iPlayeru při spuštění Enigmy2"
 
+#, fuzzy
+msgid "E2iPlayer downloader"
+msgstr "Stahovač jednoho souboru"
+
 msgid "E2iPlayer enable/disabled groups"
 msgstr "Skupiny povolení/zakázání E2iPlayeru"
 
@@ -1178,6 +1205,14 @@ msgstr ""
 
 msgid "English"
 msgstr "Angličtina"
+
+#, fuzzy
+msgid "English Movies"
+msgstr "Angličtina"
+
+#, fuzzy
+msgid "English Series"
+msgstr "Televizní seriál"
 
 #, fuzzy
 msgid "English TV series"
@@ -1300,6 +1335,10 @@ msgstr ""
 
 msgid "External movie player config"
 msgstr "Konfigurace externího přehrávače videí"
+
+#, fuzzy
+msgid "FAILED"
+msgstr "PŘÍVĚS"
 
 msgid "FREE"
 msgstr "ZDARMA"
@@ -1609,6 +1648,9 @@ msgstr "Návrhy IMDb"
 msgid "IMDb rating"
 msgstr "Hodnocení IMDb"
 
+msgid "INTERRUPTED"
+msgstr ""
+
 msgid "Icon type"
 msgstr "Typ ikony"
 
@@ -1617,6 +1659,10 @@ msgstr "Kvalita ikon"
 
 msgid "Icons size"
 msgstr "Velikost ikon"
+
+#, fuzzy
+msgid "Indian Movies"
+msgstr "Filmy v kině"
 
 #, fuzzy
 msgid "Indian TV series"
@@ -2020,6 +2066,9 @@ msgstr "Stav manažera: "
 
 msgid "Manga"
 msgstr "Manga"
+
+msgid "Masrahyat"
+msgstr ""
 
 msgid "Matches"
 msgstr "Shody"
@@ -2629,6 +2678,9 @@ msgstr "Radiologické obchůzky"
 msgid "Raiting"
 msgstr "Hodnocení"
 
+msgid "Ramadan 2025"
+msgstr ""
+
 msgid "Random"
 msgstr "Náhodně"
 
@@ -2928,6 +2980,9 @@ msgstr "Seriály"
 msgid "Series list"
 msgstr "Seznam sérií"
 
+msgid "Server"
+msgstr ""
+
 msgid "Server return 404 - Not Found."
 msgstr "Server vrací chybu 404 - Nenalezeno."
 
@@ -2966,6 +3021,10 @@ msgstr "Nastavit sledované"
 
 msgid "Settings"
 msgstr "Nastavení"
+
+#, fuzzy
+msgid "Short Movies"
+msgstr "Režim řazení"
 
 msgid "Shorts"
 msgstr "Kraťasy"
@@ -3258,6 +3317,10 @@ msgstr "TV seriály"
 msgid "TV Show"
 msgstr "TV seriál"
 
+#, fuzzy
+msgid "TV Shows"
+msgstr "TV seriál"
+
 msgid "TV channels"
 msgstr "Televizní kanály"
 
@@ -3441,6 +3504,14 @@ msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr "Zkuste změnit extplayer nebo zakázat IFD v konfiguraci GSTplayeru"
 
 #, fuzzy
+msgid "Turkish Movies"
+msgstr "Televizní seriál"
+
+#, fuzzy
+msgid "Turkish Series"
+msgstr "Televizní seriál"
+
+#, fuzzy
 msgid "Turkish TV series"
 msgstr "Televizní seriál"
 
@@ -3459,6 +3530,9 @@ msgstr "Typ: %s"
 
 msgid "UFC"
 msgstr "UFC"
+
+msgid "UNKNOWN"
+msgstr ""
 
 msgid "Ukrainian proxy server url"
 msgstr "URL ukrajinského proxy serveru"
