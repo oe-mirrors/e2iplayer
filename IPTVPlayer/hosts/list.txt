@@ -50,6 +50,7 @@ hostfenixsite_blocked_
 hostfightvideo_blocked_
 hostfilma24hdcom_blocked_
 hostfilma24io_blocked_
+hostfilma365
 hostfilman
 hostfilmaoncom
 hostfilmativa_blocked_

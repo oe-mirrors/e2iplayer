@@ -4,35 +4,36 @@
 	</widget>
 	<widget source="global.CurrentTime" render="Label" position="1300,13" size="450,52" foregroundColor="#00f0f0f0" backgroundColor="#00000000" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;30" valign="center" halign="right">
 		<convert type="ClockToText">Date</convert>
-	</widget>	
+	</widget>
 	<widget source="session.VideoPicture" render="Pig" position="1184,130" size="636,365" zPosition="3" backgroundColor="transparent" />
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/MiniTV_black_Full HD/images/tv_3.png" position="1158,110" size="679,402" alphatest="on" />	
-	<widget source="Title" render="Label" position="35,9" size="1140,80" font="Regular;35" halign="left" valign="center" foregroundColor="#00f0f0f0" backgroundColor="#00000000" borderColor="#000000" borderWidth="2" transparent="1" zPosition="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/MiniTV_black_Full HD/images/tv_3.png" position="1158,110" size="679,402" alphatest="on" />
+	<widget source="Title" render="Label" position="35,9" size="1140,80" font="Regular;35" halign="left" valign="center" foregroundColor="#00f0f0f0" backgroundColor="#00000000" borderColor="#000000" borderWidth="2" transparent="1" zPosition="1" />
 	<widget name="headertext" position="35,70" zPosition="1" size="1800,50" font="Regular;30" transparent="1" backgroundColor="background" foregroundColor="#4876FF" />
-	<widget name="statustext" position="35,420" zPosition="1" size="985,90" font="Regular;27" halign="center" valign="center" transparent="1" backgroundColor="#00000000"/>
-	<widget name="list" position="35,110" zPosition="2" size="1100,600" backgroundColor="#00000000" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="2" scrollbarSliderForegroundColor="#0000a2f3" scrollbarborder="#00002b66" enableWrapAround="1" transparent="1"/>
+	<widget name="statustext" position="35,420" zPosition="1" size="985,90" font="Regular;27" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
+	<widget name="list" position="35,110" zPosition="2" size="1100,600" backgroundColor="#00000000" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="2" scrollbarSliderForegroundColor="#0000a2f3" scrollbarborder="#00002b66" enableWrapAround="1" transparent="1" />
 	<widget name="console" position="35,715" zPosition="1" size="1450,265" font="Regular;22" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="2" scrollbarSliderForegroundColor="#0000a2f3" scrollbarborder="#00002b66" enableWrapAround="1" transparent="1" backgroundColor="#00000000" halign="left" />
 	<widget name="cover" zPosition="2" position="1486,525" size="333,480" alphatest="blend" borderWidth="2" borderColor="white" backgroundColor="black" />
 	<widget name="playerlogo" zPosition="4" position="center,21" size="150,50" alphatest="blend" />
 	<ePixmap position="24,1032" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/info.png" transparent="1" alphatest="blend" />
 	<ePixmap position="105,1032" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" transparent="1" alphatest="blend" />
 	<ePixmap position="186,1032" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/key_prevnext.png" transparent="1" alphatest="blend" />
-	<ePixmap position="267,1032" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD//key_updown.png" transparent="1" alphatest="blend" />	
-	<ePixmap position="348,1032" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/exit.png" transparent="1" alphatest="blend"/> 	
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/red.png" position="507,1038" size="30,30" alphatest="blend" transparent="1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/green.png" position="800,1038" size="30,30" alphatest="blend" transparent="1"/> 
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/yellow.png" position="1093,1038" size="30,30" alphatest="blend" transparent="1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/blue.png" position="1386,1038" size="30,30" alphatest="blend" transparent="1"/>
-	<widget source="key_red" render="Label" position="547,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1"/>
-	<widget source="key_green" render="Label" position="840,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1"/>  
-	<widget source="key_yellow" render="Label" position="1133,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1"/>
-	<widget source="key_blue" render="Label" position="1426,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1"/>
-	<widget name="spinner" zPosition="2" position="537,530" size="24,24" transparent="1" alphatest="blend"/>
-	<widget name="spinner_1" zPosition="1" position="537,530" size="24,24" transparent="1" alphatest="blend"/>
-	<widget name="spinner_2" zPosition="1" position="561,530" size="24,24" transparent="1" alphatest="blend"/>
-	<widget name="spinner_3" zPosition="1" position="585,530" size="24,24" transparent="1" alphatest="blend"/>
-	<widget name="spinner_4" zPosition="1" position="609,530" size="24,24" transparent="1" alphatest="blend"/>	
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,710" size="1135,3" zPosition="2" />	
+	<ePixmap position="267,1032" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD//key_updown.png" transparent="1" alphatest="blend" />
+	<ePixmap position="348,1032" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/exit.png" transparent="1" alphatest="blend" />
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/red.png" position="507,1038" size="30,30" alphatest="blend" transparent="1" />
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/green.png" position="800,1038" size="30,30" alphatest="blend" transparent="1" />
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/yellow.png" position="1093,1038" size="30,30" alphatest="blend" transparent="1" />
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/blue.png" position="1386,1038" size="30,30" alphatest="blend" transparent="1" />
+	<widget source="key_red" render="Label" position="547,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1" />
+	<widget source="key_green" render="Label" position="840,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1" />
+	<widget source="key_yellow" render="Label" position="1133,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1" />
+	<widget source="key_blue" render="Label" position="1426,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1" />
+	<widget name="sequencer" position="35,110" zPosition="6" size="1100,600" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="black" />
+	<widget name="spinner" zPosition="2" position="537,530" size="24,24" transparent="1" alphatest="blend" />
+	<widget name="spinner_1" zPosition="1" position="537,530" size="24,24" transparent="1" alphatest="blend" />
+	<widget name="spinner_2" zPosition="1" position="561,530" size="24,24" transparent="1" alphatest="blend" />
+	<widget name="spinner_3" zPosition="1" position="585,530" size="24,24" transparent="1" alphatest="blend" />
+	<widget name="spinner_4" zPosition="1" position="609,530" size="24,24" transparent="1" alphatest="blend" />
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,710" size="1135,3" zPosition="2" />
 	<eLabel name="BG_Title" position="0,0" size="1920,90" backgroundColor="#00000000" zPosition="-1" />
 	<eLabel name="BG_Buttons" position="0,1008" size="1920,72" backgroundColor="#00000000" zPosition="-1" />
 </screen>
