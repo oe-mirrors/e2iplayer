@@ -610,6 +610,7 @@ class urlparser:
             # r
             "room905.com": self.pp.parserONLYSTREAMTV,
             "rubystm.com": self.pp.parserJWPLAYER,
+            "rubyvidhub.com": self.pp.parserJWPLAYER,
             "rumble.com": self.pp.parserRUMBLECOM,
             "ryderjet.com": self.pp.parserONLYSTREAMTV,
             # s
@@ -6172,60 +6173,6 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserJWPLAYER(self, baseUrl):  # update 230825
-        printDBG("parserJWPLAYER baseUrl[%s]" % baseUrl)
-        urltab = []
-        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
-        referer = baseUrl.meta.get("Referer", baseUrl)
-        HTTP_HEADER["Referer"] = referer
-        urlParams = {"header": HTTP_HEADER}
-        if "mxdrop" in baseUrl or "mixdro" in baseUrl or "mixdrp" in baseUrl:
-            baseUrl = baseUrl.replace(".co/", ".my/").replace(".club/", ".my/")
-            baseUrl = "/".join(baseUrl.split("/")[:5]).replace("/f/", "/e/") if "/f/" in baseUrl else baseUrl
-        if "hglink.to" in baseUrl:
-            baseUrl = baseUrl.replace("hglink.to", "uasopt.com")
-        if "cybervynx.com" in baseUrl:
-            baseUrl = baseUrl.replace("cybervynx.com", "guxhag.com")
-        if "savefiles.com/e/" in baseUrl:
-            baseUrl = baseUrl.replace("/e", "")
-        if "savefiles.com/v/" in baseUrl:
-            baseUrl = baseUrl.replace("/v", "")
-        sts, data = self.cm.getPage(baseUrl, urlParams)
-        if not sts:
-            return []
-        if "p,a,c,k,e" not in data and "mp4" not in data and "m3u8" not in data:
-            src = re.search(r'(?:data-embed|iframe\s+src)="([^"]+)"', data)
-            if src:
-                sts, data = self.cm.getPage(src.group(1), urlParams)
-                if not sts:
-                    return []
-        if "function(p,a,c,k,e" in data:
-            printDBG("Host JSunpack")
-            data = get_packed_data(data)
-            if not data:
-                return []
-        host = urlparser.getDomain(baseUrl, False)
-        url = re.search(r"""["']((?:https?:)?//[^'^"]+?\.(?:mp4|m3u8)(?:\?[^"^']+?)?)["']""", data)
-        if not url:
-            url = re.search(r"""file":"([^"]+)""", data)
-        subTracks = []
-        sub = re.findall(r"""{\s*file:\s*["']([^"']+)["'],\s*label:\s*["']([^"']+)["'],\s*kind:\s*["'](?:captions|subtitles)["']""", data)
-        if not sub:
-            sub = re.findall(r"""file_path":"([^"]+)","language":"([^"]+)""", data)
-        if sub:
-            for src, label in sub:
-                src = src.replace(r"\/", "/")
-                subTracks.append({"title": "", "url": "https:" + src if src.startswith("//") else src, "lang": label})
-        if url:
-            url = url.group(1)
-            url = "https:" + url if url.startswith("//") else url
-            url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
-            if ".m3u8" in url:
-                urltab.extend(getDirectM3U8Playlist(url))
-            else:
-                urltab.append({"name": "MP4", "url": url})
-        return urltab
-
     def parserHEXLOAD(self, baseUrl):  # add 160625
         printDBG("parserHEXLOAD baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
@@ -6389,4 +6336,82 @@ class pageParser(CaptchaHelper):
             url = "%s/0p/%s.m3u8?double_encode=1" % (r.group(1), b)
             url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
             urltab.extend(getDirectM3U8Playlist(url))
+        return urltab
+
+    def parserJWPLAYER(self, baseUrl):
+        def jw_hidden(html, url):
+            domain = urlparser.getDomain(url, False)[:-1]
+            mediaid = url.rstrip(".html").split("/")[-1].split("-")[-1]
+            forms = {}
+            for form in re.finditer(r"<form[^>]*>(.*?)</form>", html, re.DOTALL | re.I):
+                purl = re.search(r'action\s*=\s*[\'"]([^\'"]+)', form.group(0))
+                for field in re.finditer(r'type=[\'"]?(hidden|submit)[\'"]?[^>]*>', form.group(1)):
+                    name = re.search(r'name\s*=\s*[\'"]([^\'"]+)', field.group(0))
+                    value = re.search(r'value\s*=\s*[\'"]([^\'"]*)', field.group(0))
+                    if name and value:
+                        name = name.group(1)
+                        value = value.group(1)
+                        if name == "file_code" and value == "":
+                            value = mediaid
+                        forms[name] = value
+                if purl:
+                    purl = purl.group(1)
+                    if purl.startswith("/"):
+                        purl = domain + purl
+                    if purl and forms:
+                        sts, data = self.cm.getPage(purl, urlParams, forms)
+                        if sts:
+                            return data
+            return ""
+
+        printDBG("parserJWPLAYER baseUrl[%s]" % baseUrl)
+        urltab = []
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        referer = baseUrl.meta.get("Referer", urlparser.getDomain(baseUrl, False))
+        HTTP_HEADER["Referer"] = referer
+        urlParams = {"header": HTTP_HEADER}
+        if "mxdrop" in baseUrl or "mixdro" in baseUrl or "mixdrp" in baseUrl:
+            baseUrl = baseUrl.replace(".co/", ".my/").replace(".club/", ".my/")
+            baseUrl = "/".join(baseUrl.split("/")[:5]).replace("/f/", "/e/") if "/f/" in baseUrl else baseUrl
+        if "hglink.to" in baseUrl:
+            baseUrl = baseUrl.replace("hglink.to", "uasopt.com")
+        if "cybervynx.com" in baseUrl:
+            baseUrl = baseUrl.replace("cybervynx.com", "guxhag.com")
+        sts, data = self.cm.getPage(baseUrl, urlParams)
+        if not sts:
+            return []
+        if "p,a,c,k,e" not in data and "mp4" not in data and "m3u8" not in data:
+            if "<form" in data:
+                data = jw_hidden(data, baseUrl)
+            else:
+                src = re.search(r'(?:data-embed|iframe\s+src)="([^"]+)"', data)
+                if src:
+                    sts, data = self.cm.getPage(src.group(1), urlParams)
+                    if not sts:
+                        return []
+        if "function(p,a,c,k,e" in data:
+            printDBG("Host JSunpack")
+            data = get_packed_data(data)
+            if not data:
+                return []
+        host = urlparser.getDomain(baseUrl, False)
+        url = re.search(r"""["']((?:https?:)?//[^'^"]+?\.(?:mp4|m3u8)(?:\?[^"^']+?)?)["']""", data)
+        if not url:
+            url = re.search(r"""file":"([^"]+)""", data)
+        subTracks = []
+        sub = re.findall(r"""{\s*file:\s*["']([^"']+)["'],\s*label:\s*["']([^"']+)["'],\s*kind:\s*["'](?:captions|subtitles)["']""", data)
+        if not sub:
+            sub = re.findall(r"""file_path":"([^"]+)","language":"([^"]+)""", data)
+        if sub:
+            for src, label in sub:
+                src = src.replace(r"\/", "/")
+                subTracks.append({"title": "", "url": "https:" + src if src.startswith("//") else src, "lang": label})
+        if url:
+            url = url.group(1)
+            url = "https:" + url if url.startswith("//") else url
+            url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
+            if ".m3u8" in url:
+                urltab.extend(getDirectM3U8Playlist(url))
+            else:
+                urltab.append({"name": "MP4", "url": url})
         return urltab
