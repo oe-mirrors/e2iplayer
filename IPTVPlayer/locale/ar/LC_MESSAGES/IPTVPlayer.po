@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 13:27+0100\n"
-"PO-Revision-Date: 2025-08-02 13:55+0300\n"
-"Last-Translator: angel_heart[Mohamed Elsafty]\n"
+"PO-Revision-Date: 2025-11-23 15:35+0100\n"
+"Last-Translator: Masta2002\n"
 "Language-Team: \n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.8\n"
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -80,7 +80,7 @@ msgstr ""
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
 msgid "    *    Votes: "
-msgstr "    *    الأصوات: "
+msgstr "    *    التصويتات: "
 
 msgid "    Audio buffer size [KB]"
 msgstr "    حجم مخزن الصوت المؤقت [KB]"
@@ -183,8 +183,11 @@ msgid "%s followers"
 msgstr "%s متابعين"
 
 #, python-format
-msgid "%s has been protected with google recaptcha v2. You can try to use API version."
-msgstr "تم حماية %s بواسطة Google Recaptcha v2. يمكنك محاولة استخدام إصدار الـ API."
+msgid ""
+"%s has been protected with google recaptcha v2. You can try to use API "
+"version."
+msgstr ""
+"تم حماية %s بواسطة Google Recaptcha v2. يمكنك محاولة استخدام إصدار الـ API."
 
 #, python-format
 msgid "%s minutes"
@@ -224,10 +227,12 @@ msgstr "انتهاء مهلة %s."
 
 #, python-format
 msgid ""
-"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services "
+"from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
-"%s يستخدم إجراءات \"الحجب الجغرافي\" لمنعك من الوصول إلى الخدمة من خارج الدولة.\n"
+"%s يستخدم إجراءات \"الحجب الجغرافي\" لمنعك من الوصول إلى الخدمة من خارج "
+"الدولة.\n"
 " دولة المضيف: %s، دولتك: %s"
 
 #, python-format
@@ -302,7 +307,7 @@ msgid "--Other--"
 msgstr "--أخرى--"
 
 msgid "12 hour format"
-msgstr "تنسيق 12 ساعة "
+msgstr "تنسيق 12 ساعة"
 
 msgid "16:10 Letterbox"
 msgstr "‏16:10 بحواف سوداء (Letterbox)"
@@ -320,7 +325,7 @@ msgid "16:9 always"
 msgstr "‏16:9 دائمًا"
 
 msgid "24 hour format"
-msgstr "تنسيق 24 ساعة "
+msgstr "تنسيق 24 ساعة"
 
 msgid "4:3 Letterbox"
 msgstr "‏4:3 بحواف سوداء (Letterbox)"
@@ -328,11 +333,19 @@ msgstr "‏4:3 بحواف سوداء (Letterbox)"
 msgid "4:3 PanScan"
 msgstr "‏4:3 ملء الشاشة (PanScan)"
 
-msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr "<font color=\"#FE642E\">تذكير:</font></b> E2iPlayer <b>هو فقط</b> متصفح ويب متخصص. ولا <b>يستضيف</b> أي محتوى!!!</font>"
+msgid ""
+"<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> "
+"specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
+msgstr ""
+"<font color=\"#FE642E\">تذكير:</font></b> E2iPlayer <b>هو فقط</b> متصفح ويب "
+"متخصص. ولا <b>يستضيف</b> أي محتوى!!!</font>"
 
-msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
-msgstr "يجب توفر ترخيص تلفزيوني لمشاهدة بث BBC iPlayer. راجع موقع BBC لمزيد من المعلومات: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgid ""
+"A TV License is required to watch BBC iPlayer streams, see the BBC website "
+"for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgstr ""
+"يجب توفر ترخيص تلفزيوني لمشاهدة بث BBC iPlayer. راجع موقع BBC لمزيد من "
+"المعلومات: https://www.bbc.co.uk/iplayer/help/tvlicence"
 
 msgid "A-Z"
 msgstr "أ-ي"
@@ -373,9 +386,9 @@ msgstr "تم رفض الوصول. يرجى التحقق من كلمة المرو
 msgid "Active host"
 msgstr "المضيف النشط"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Active: %s"
-msgstr "المضيف النشط"
+msgstr "نشط: %s"
 
 msgid "Actors:"
 msgstr "الممثلون:"
@@ -507,26 +520,26 @@ msgid "Anime"
 msgstr "أنمي"
 
 #, fuzzy
+#| msgid "Anime movies"
 msgid "Anime Movies"
-msgstr "قائمة الأنمي"
+msgstr "أفلام أنمي"
 
 msgid "Anime Search"
 msgstr "بحث الأنمي"
 
 #, fuzzy
+#| msgid "Anime TV series"
 msgid "Anime Series"
-msgstr "مسلسلات"
+msgstr "مسلسلات أنمي"
 
-#, fuzzy
 msgid "Anime TV series"
-msgstr "مسلسلات"
+msgstr "مسلسلات أنمي"
 
 msgid "Anime list"
 msgstr "قائمة الأنمي"
 
-#, fuzzy
 msgid "Anime movies"
-msgstr "قائمة الأنمي"
+msgstr "أفلام أنمي"
 
 msgid "Answer"
 msgstr "الإجابة"
@@ -544,10 +557,12 @@ msgid "Arabic"
 msgstr "عربي"
 
 #, fuzzy
+#| msgid "Arabic movies"
 msgid "Arabic Movies"
 msgstr "أفلام عربية"
 
 #, fuzzy
+#| msgid "Arabic movies"
 msgid "Arabic Series"
 msgstr "أفلام عربية"
 
@@ -568,15 +583,13 @@ msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "هل أنت متأكد أنك تريد حذف الملف \"%s\"؟"
 
 msgid "Artists"
-msgstr "الفنانون"
+msgstr "فنانون"
 
-#, fuzzy
 msgid "Asian TV series"
-msgstr "مسلسلات"
+msgstr "مسلسلات آسيوية"
 
-#, fuzzy
 msgid "Asian movies"
-msgstr "أفلام عربية"
+msgstr "أفلام آسيوية"
 
 msgid "Ask"
 msgstr "اسأل"
@@ -762,7 +775,7 @@ msgid "Collections"
 msgstr "مجموعات"
 
 msgid "Columbia"
-msgstr ""
+msgstr "شركة كولومبيا"
 
 msgid "Comedies"
 msgstr "كوميديا"
@@ -878,8 +891,11 @@ msgstr "خيار التصحيح معطّل - لا يوجد ما يمكن عرض�
 msgid "Debug option set to console - nothing to display"
 msgstr "خيار التصحيح مضبوط على وحدة التحكم - لا يوجد ما يمكن عرضه"
 
-msgid "Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr "خيار التصحيح مضبوط على ملف التصحيح، لكن الملف غير موجود - لا يوجد ما يمكن عرضه"
+msgid ""
+"Debug option set to debugfile, but file does not exist - nothing to display"
+msgstr ""
+"خيار التصحيح مضبوط على ملف التصحيح، لكن الملف غير موجود - لا يوجد ما يمكن "
+"عرضه"
 
 #, python-format
 msgid "Decode file [%s] problem."
@@ -930,9 +946,8 @@ msgstr "ألماني"
 msgid "Developers: "
 msgstr "المطورون: "
 
-#, fuzzy
 msgid "Direct"
-msgstr "المخرج:"
+msgstr "مباشر"
 
 msgid "Director:"
 msgstr "المخرج:"
@@ -984,6 +999,7 @@ msgid "Documentary"
 msgstr "وثائقي"
 
 #, fuzzy
+#| msgid "Documentaries"
 msgid "Documentary Movies"
 msgstr "أفلام وثائقية"
 
@@ -1153,6 +1169,7 @@ msgid "E2iPlayer auto start at Enigma2 start"
 msgstr "تشغيل E2iPlayer تلقائياً عند بدء Enigma2"
 
 #, fuzzy
+#| msgid "Single file downloader"
 msgid "E2iPlayer downloader"
 msgstr "أداة تحميل ملف واحد"
 
@@ -1207,20 +1224,20 @@ msgid "English"
 msgstr "الإنجليزية"
 
 #, fuzzy
+#| msgid "English movies"
 msgid "English Movies"
-msgstr "الإنجليزية"
+msgstr "أفلام إنجليزية"
 
 #, fuzzy
+#| msgid "English TV series"
 msgid "English Series"
-msgstr "مسلسلات"
+msgstr "مسلسلات إنجليزية"
 
-#, fuzzy
 msgid "English TV series"
-msgstr "مسلسلات"
+msgstr "مسلسلات إنجليزية"
 
-#, fuzzy
 msgid "English movies"
-msgstr "الإنجليزية"
+msgstr "أفلام إنجليزية"
 
 msgid "Enter a value"
 msgstr "أدخل قيمة"
@@ -1277,9 +1294,9 @@ msgstr "حدث خطأ أثناء حذف الملف \"%s\".\n"
 msgid "Error during deletion of the debug file."
 msgstr "حدث خطأ أثناء حذف ملف التصحيح."
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error getting file name: %s"
-msgstr "حدث خطأ أثناء حذف الملف \"%s\".\n"
+msgstr "حدث خطأ أثناء الحصول على اسم الملف: %s"
 
 #, python-format
 msgid ""
@@ -1303,9 +1320,9 @@ msgstr "حدث خطأ أثناء التنزيل."
 msgid "Error reading file \"%s\".\n"
 msgstr "حدث خطأ أثناء قراءة الملف \"%s\".\n"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error renaming file: %s"
-msgstr "حدث خطأ أثناء قراءة الملف \"%s\".\n"
+msgstr "حدث خطأ أثناء إعادة تسمية الملف: %s"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1325,12 +1342,13 @@ msgstr "خروج"
 
 #, python-format
 msgid "Expiry: %s"
-msgstr ""
+msgstr "تاريخ الانتهاء: %s"
 
 msgid "External movie player config"
-msgstr "إعداد مشغل الفيديو الخارجي"
+msgstr "إعدادات مشغل الأفلام الخارجي"
 
 #, fuzzy
+#| msgid "TRAILER"
 msgid "FAILED"
 msgstr "الإعلان التشويقي"
 
@@ -1362,20 +1380,19 @@ msgstr "فشل في فك الترميز إلى UTF-8."
 msgid "Failed to download subtitle."
 msgstr "فشل في تحميل الترجمة."
 
-#, fuzzy
 msgid "Failed to fetch categories"
-msgstr "فشل في إنشاء المجلد \"%s\"."
+msgstr "فشل في جلب الأقسام"
 
 msgid "Failed to gzip."
 msgstr "فشل في ضغط الملف بـ gzip."
 
-#, fuzzy
 msgid "Failed to load channels"
-msgstr "فشل في تحميل الترجمة."
+msgstr "فشل في تحميل القنوات"
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
-msgstr "فشل تسجيل الدخول للمستخدم \"%s\". يرجى التحقق من اسم المستخدم وكلمة المرور."
+msgstr ""
+"فشل تسجيل الدخول للمستخدم \"%s\". يرجى التحقق من اسم المستخدم وكلمة المرور."
 
 #, python-format
 msgid "Failed to open the file \"%s\"."
@@ -1424,12 +1441,11 @@ msgstr "تمت إضافة الملف [%s] إلى قائمة التنزيل."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "لا يمكن تحميل الملف. البروتوكول [%s] غير مدعوم"
 
-#, fuzzy
 msgid "File name cannot be empty!"
-msgstr "لا يمكن ترك الاسم فارغًا."
+msgstr "لا يمكن ترك اسم الملف فارغًا!"
 
 msgid "File renamed successfully!"
-msgstr ""
+msgstr "تمت إعادة تسمية الملف بنجاح!"
 
 msgid "Film"
 msgstr "فيلم"
@@ -1656,16 +1672,15 @@ msgid "Icons size"
 msgstr "حجم الأيقونات"
 
 #, fuzzy
+#| msgid "Indian movies"
 msgid "Indian Movies"
-msgstr "أفلام سينمائية"
+msgstr "أفلام هندية"
 
-#, fuzzy
 msgid "Indian TV series"
-msgstr "مسلسلات"
+msgstr "مسلسلات هندية"
 
-#, fuzzy
 msgid "Indian movies"
-msgstr "أفلام سينمائية"
+msgstr "أفلام هندية"
 
 msgid "Industry"
 msgstr "الصناعة"
@@ -1725,7 +1740,9 @@ msgid "It looks like some kind of protection. Try again later."
 msgstr "يبدو أن هناك نوعًا من الحماية. حاول لاحقًا."
 
 #, python-format
-msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgid ""
+"It looks like your current configuration do not allow to connect to the "
+"https://%s/.\n"
 msgstr "يبدو أن الإعدادات الحالية لا تسمح بالاتصال بـ https://%s/.\n"
 
 #, python-format
@@ -1733,12 +1750,17 @@ msgid "It seems that the host \"%s\" has crashed."
 msgstr "يبدو أن المُضيف \"%s\" قد توقف عن العمل."
 
 #, python-format
-msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
+msgid ""
+"It seems that the host \"%s\" has crashed. Do you want to report this "
+"problem?"
 msgstr "يبدو أن المُضيف \"%s\" قد تعطل. هل ترغب في الإبلاغ عن هذه المشكلة؟"
 
 #, python-format
-msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
-msgstr "يبدو أن مزود الترجمة \"%s\" قد تعطل. هل ترغب في الإبلاغ عن هذه المشكلة؟"
+msgid ""
+"It seems that the subtitle's provider \"%s\" has crashed. Do you want to "
+"report this problem?"
+msgstr ""
+"يبدو أن مزود الترجمة \"%s\" قد تعطل. هل ترغب في الإبلاغ عن هذه المشكلة؟"
 
 #, python-format
 msgid ""
@@ -1800,11 +1822,10 @@ msgid "Knee & Sports"
 msgstr "الركبة والرياضة"
 
 msgid "Knowledge"
-msgstr ""
+msgstr "المعرفة"
 
-#, fuzzy
 msgid "Korean TV series"
-msgstr "مسلسلات"
+msgstr "مسلسلات كورية"
 
 msgid "LATEST"
 msgstr "الأحدث"
@@ -1821,12 +1842,11 @@ msgstr "مباشر"
 msgid "LIVE 24/7"
 msgstr "بث مباشر 24/7"
 
-#, fuzzy
 msgid "LIVE CHANNELS"
-msgstr "القنوات "
+msgstr "القنوات المباشرة"
 
 msgid "Labels"
-msgstr "تسميات"
+msgstr "التصنيفات"
 
 msgid "Language"
 msgstr "اللغة"
@@ -1910,7 +1930,9 @@ msgstr "رمادي فاتح"
 msgid "Line Spacing"
 msgstr "تباعد الأسطر"
 
-msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgid ""
+"Link is not supported by the gstplayer. Please use the extelayer3 if "
+"available."
 msgstr "الرابط غير مدعوم من gstplayer. يُرجى استخدام extelayer3 إن وُجد."
 
 msgid "Link protected with DRM."
@@ -1933,7 +1955,7 @@ msgid "Links from the file %s"
 msgstr "روابط من الملف %s"
 
 msgid "Lionsgate"
-msgstr ""
+msgstr "شركة لايونزغيت"
 
 msgid "List by day"
 msgstr "قائمة حسب اليوم"
@@ -1967,8 +1989,11 @@ msgid "Load"
 msgstr "تحميل"
 
 #, python-format
-msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
-msgstr "فشل تحميل تخطيط لوحة المفاتيح الافتراضية \"%s\" بسبب الخطأ التالي: \"%s\""
+msgid ""
+"Load of the Virtual Keyboard layout \"%s\" failed due to the following "
+"error: \"%s\""
+msgstr ""
+"فشل تحميل تخطيط لوحة المفاتيح الافتراضية \"%s\" بسبب الخطأ التالي: \"%s\""
 
 msgid "Loading"
 msgstr "جارٍ التحميل"
@@ -2038,7 +2063,7 @@ msgstr "معمارية النقطة العائمة MIPS"
 
 #, python-format
 msgid "MOVE: %s"
-msgstr ""
+msgstr "نقل: %s"
 
 msgid "MOVIES"
 msgstr "أفلام"
@@ -2073,7 +2098,7 @@ msgstr "أقصى معدل بت:"
 
 #, python-format
 msgid "Max connections: %s"
-msgstr ""
+msgstr "أقصى عدد للاتصالات: %s"
 
 msgid "Max items per page"
 msgstr "الحد الأقصى للعناصر في الصفحة"
@@ -2111,9 +2136,8 @@ msgstr "المزيد"
 msgid "More important"
 msgstr "الأكثر أهمية"
 
-#, fuzzy
 msgid "More results"
-msgstr "نتائج البحث"
+msgstr "المزيد من النتائج"
 
 msgid "Most Popular"
 msgstr "الأكثر شهرة"
@@ -2169,7 +2193,9 @@ msgid "Moving file from \"%s\" to \"%s\" failed.\n"
 msgstr "فشل نقل الملف من \"%s\" إلى \"%s\".\n"
 
 #, python-format
-msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgid ""
+"Moving playback buffer to the download manager failed with the following "
+"error \"%s\""
 msgstr "فشل نقل مؤقت التشغيل إلى مدير التحميل بالخطأ التالي: \"%s\""
 
 msgid "Music"
@@ -2218,7 +2244,7 @@ msgid "Name:"
 msgstr "الاسم:"
 
 msgid "Netflix"
-msgstr ""
+msgstr "نتفليكس"
 
 msgid "Network"
 msgstr "الشبكة"
@@ -2263,13 +2289,11 @@ msgstr "أخبار"
 msgid "News Feed"
 msgstr "تغذية الأخبار"
 
-#, fuzzy
 msgid "Next"
-msgstr "الصفحة التالية"
+msgstr "التالي"
 
-#, fuzzy
 msgid "Next Page ▶"
-msgstr "الصفحة التالية"
+msgstr "الصفحة التالية ▶"
 
 msgid "Next page"
 msgstr "الصفحة التالية"
@@ -2292,7 +2316,7 @@ msgstr "لم يتم العثور على مصادر قابلة للتشغيل."
 
 #, python-format
 msgid "No results found for: %s"
-msgstr ""
+msgstr "لم يتم العثور على نتائج لـ: %s"
 
 msgid "No valid entitlement found for asset."
 msgstr "لم يتم العثور على صلاحية صالحة للمحتوى."
@@ -2353,7 +2377,7 @@ msgid "Operation aborted!"
 msgstr "تم إلغاء العملية!"
 
 msgid "Optional User-Agent (leave blank for default)"
-msgstr ""
+msgstr "وكيل المستخدم اختياري (اتركه فارغًا للإعداد الافتراضي)"
 
 msgid "Order by: "
 msgstr "الترتيب حسب: "
@@ -2486,23 +2510,39 @@ msgstr ""
 "http://{0}:{1}"
 
 msgid "Please configure Xtream (blue button)"
-msgstr ""
+msgstr "يرجى تكوين Xtream (زر أزرق)"
 
 #, python-format
-msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
-msgstr "يرجى إعادة تشغيل جهاز Enigma2 والموافقة على تثبيت أداة %s عندما يعرضها %s."
-
-msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
-msgstr "يرجى إدخال اسم المستخدم وكلمة المرور في إعدادات المضيف (متاحة تحت الزر الأزرق) ثم حاول مرة أخرى."
-
-msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
-msgstr "يرجى التأكد من أن مجلد بيانات التخزين المؤقت (المحدد في الإعدادات) قابل للكتابة."
-
-msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
-msgstr "يرجى التسجيل وإدخال اسم المستخدم وكلمة المرور في إعدادات المضيف لحل هذه المشكلات بشكل دائم."
+msgid ""
+"Please consider restart your Engima2 and agree to install the %s utlity when "
+"the %s will propose this."
+msgstr ""
+"يرجى إعادة تشغيل جهاز Enigma2 والموافقة على تثبيت أداة %s عندما يعرضها %s."
 
 msgid ""
-"Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
+"Please fill your login and password in the host configuration (available "
+"under blue button) and try again."
+msgstr ""
+"يرجى إدخال اسم المستخدم وكلمة المرور في إعدادات المضيف (متاحة تحت الزر "
+"الأزرق) ثم حاول مرة أخرى."
+
+msgid ""
+"Please make sure that the folder for cache data (set in the configuration) "
+"is writable."
+msgstr ""
+"يرجى التأكد من أن مجلد بيانات التخزين المؤقت (المحدد في الإعدادات) قابل "
+"للكتابة."
+
+msgid ""
+"Please register and set login and password in the host configuration, to "
+"solve this problems permanently."
+msgstr ""
+"يرجى التسجيل وإدخال اسم المستخدم وكلمة المرور في إعدادات المضيف لحل هذه "
+"المشكلات بشكل دائم."
+
+msgid ""
+"Please remember to visit http://www.sport365.live/ and watch a few "
+"advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
 msgstr ""
 "يرجى تذكّر زيارة http://www.sport365.live/ ومشاهدة بعض الإعلانات.\n"
@@ -2520,7 +2560,8 @@ msgid "Please visit \"%s\" and confirm that you are human."
 msgstr "يرجى زيارة \"%s\" والتأكيد أنك لست روبوتًا."
 
 #, python-format
-msgid "Please visit %s to learn how to redirect this task to the external device."
+msgid ""
+"Please visit %s to learn how to redirect this task to the external device."
 msgstr "يرجى زيارة %s لمعرفة كيفية تحويل هذه المهمة إلى جهاز خارجي."
 
 msgid "Please wait - downloading initialization data."
@@ -2592,9 +2633,8 @@ msgstr "مستخدم مميز"
 msgid "Preview"
 msgstr "معاينة"
 
-#, fuzzy
 msgid "Previous"
-msgstr "القائمة السابقة"
+msgstr "السابق"
 
 msgid "Previous Seasons"
 msgstr "المواسم السابقة"
@@ -2754,9 +2794,8 @@ msgstr "إزالة العنصر"
 msgid "Rename"
 msgstr "إعادة التسمية"
 
-#, fuzzy
 msgid "Rename file"
-msgstr "إزالة الملف"
+msgstr "إعادة تسمية الملف"
 
 msgid "Replay Shows"
 msgstr "إعادة عرض البرامج"
@@ -3008,7 +3047,7 @@ msgid "Set file name"
 msgstr "تعيين اسم الملف"
 
 msgid "Set host, username, password in host config"
-msgstr ""
+msgstr "اضبط المضيف واسم المستخدم وكلمة المرور في إعدادات المضيف"
 
 msgid "Set pin code"
 msgstr "تعيين رمز PIN"
@@ -3020,6 +3059,7 @@ msgid "Settings"
 msgstr "الإعدادات"
 
 #, fuzzy
+#| msgid "Sort Mode"
 msgid "Short Movies"
 msgstr "وضع الفرز"
 
@@ -3083,9 +3123,8 @@ msgstr "أداة تحميل ملف واحد"
 msgid "Skin"
 msgstr "المظهر"
 
-#, fuzzy
 msgid "Skinners: "
-msgstr "المستمعون: %s"
+msgstr "المصمّمون: "
 
 msgid "Skip video shorter than [min]"
 msgstr "تخطي الفيديو الأقصر من [دقيقة]"
@@ -3169,9 +3208,9 @@ msgstr "بدء"
 msgid "Start download manager per default"
 msgstr "تشغيل مدير التنزيل تلقائيًا"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Status: %s"
-msgstr "معدل البت: %s"
+msgstr "الحالة: %s"
 
 msgid "Stereo downmix mode for software decoder"
 msgstr "وضع خلط الصوت المجسم لفك التشفير البرمجي"
@@ -3316,6 +3355,7 @@ msgid "TV Show"
 msgstr "عرض تلفزيوني"
 
 #, fuzzy
+#| msgid "TV Show"
 msgid "TV Shows"
 msgstr "عرض تلفزيوني"
 
@@ -3362,15 +3402,18 @@ msgstr "نسبة العرض إلى الارتفاع الافتراضية للم�
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
-"Please fill your login and password in the host configuration. Available under blue button."
+"Please fill your login and password in the host configuration. Available "
+"under blue button."
 msgstr ""
 "المُضيف %s يتطلب تسجيل الدخول.\n"
-"يرجى إدخال اسم المستخدم وكلمة المرور في إعدادات المُضيف – متاحة تحت الزر الأزرق."
+"يرجى إدخال اسم المستخدم وكلمة المرور في إعدادات المُضيف – متاحة تحت الزر "
+"الأزرق."
 
 #, python-format
 msgid ""
 "The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available under blue button."
+"Please fill your login and password in the host configuration - available "
+"under blue button."
 msgstr ""
 "المُضيف %s يتطلب اشتراكًا.\n"
 "يرجى إدخال بيانات الدخول في إعدادات المُضيف – متاحة تحت الزر الأزرق."
@@ -3490,9 +3533,8 @@ msgstr "استشارة علاجية"
 msgid "Tree list"
 msgstr "قائمة شجرية"
 
-#, fuzzy
 msgid "Trend"
-msgstr "الشائع"
+msgstr "اتجاه"
 
 msgid "Trending"
 msgstr "الشائع"
@@ -3504,16 +3546,17 @@ msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr "حاول تغيير extplayer أو تعطيل IFD في إعدادات GSTplayer"
 
 #, fuzzy
+#| msgid "Turkish TV series"
 msgid "Turkish Movies"
-msgstr "مسلسلات"
+msgstr "مسلسلات تركية"
 
 #, fuzzy
+#| msgid "Turkish TV series"
 msgid "Turkish Series"
-msgstr "مسلسلات"
+msgstr "مسلسلات تركية"
 
-#, fuzzy
 msgid "Turkish TV series"
-msgstr "مسلسلات"
+msgstr "مسلسلات تركية"
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
 msgstr "إيقاف التخزين المؤقت لموقع http://prognoza.pogody.tv/"
@@ -3544,7 +3587,7 @@ msgid "Unable to comply. Search History is empty."
 msgstr "غير قادر على التنفيذ. سجل البحث فارغ."
 
 msgid "Universal"
-msgstr ""
+msgstr "عام"
 
 msgid "Unknow data in the captcha item!"
 msgstr "بيانات غير معروفة في عنصر الكابتشا!"
@@ -3601,7 +3644,7 @@ msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "استخدم بروكسي بولندي لموقع http://prognoza.pogody.tv/"
 
 msgid "Use colors"
-msgstr ""
+msgstr "استخدم الألوان"
 
 msgid "Use default quality:"
 msgstr "استخدم الجودة الافتراضية:"
@@ -3752,10 +3795,10 @@ msgid "Waiting search thread to stop, please wait (%d)"
 msgstr "بانتظار توقف خيط البحث، الرجاء الانتظار (%d)"
 
 msgid "Walt Disney"
-msgstr ""
+msgstr "شركة والت ديزني"
 
 msgid "Warner Bros"
-msgstr ""
+msgstr "شركة وارنر برذرز"
 
 msgid "Watch"
 msgstr "شاهد"
@@ -3817,12 +3860,11 @@ msgstr "رابط غير صحيح."
 msgid "Xbox One"
 msgstr "إكس بوكس ون"
 
-#, fuzzy
 msgid "Xtream Live Stream"
-msgstr "البث الحي"
+msgstr "بث مباشر Xtream"
 
 msgid "Xtream host (e.g. http://server:port)"
-msgstr ""
+msgstr "مضيف Xtream (مثل http://server:port)"
 
 msgid "YP connected"
 msgstr "تم الاتصال بـ YP"
@@ -3855,19 +3897,30 @@ msgstr "نعم، إلى الملف /tmp/iptv.dbg"
 msgid "You are not allowed to play this video"
 msgstr "غير مسموح لك بمشاهدة هذا الفيديو"
 
-msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
-msgstr "أنت تستخدم إصدارًا قديمًا من OpenWebif.<br> للذهاب إلى واجهة E2iPlayer على الويب، اختر الرابط التالي<br>"
+msgid ""
+"You are using old version of OpenWebif.<br> To go to E2iPlayer web Select "
+"the following link<br>"
+msgstr ""
+"أنت تستخدم إصدارًا قديمًا من OpenWebif.<br> للذهاب إلى واجهة E2iPlayer على "
+"الويب، اختر الرابط التالي<br>"
 
-msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
-msgstr "يمكنك تعطيل التحقق من شهادات HTTPS في إعدادات E2iPlayer لتجاوز هذه المشكلة."
+msgid ""
+"You can disable HTTPS certificates validation in the E2iPlayer configuration "
+"to suppress this problem."
+msgstr ""
+"يمكنك تعطيل التحقق من شهادات HTTPS في إعدادات E2iPlayer لتجاوز هذه المشكلة."
 
-msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgid ""
+"You can enable PyCurl in the E2iPlayer configuration to fix this problem."
 msgstr "يمكنك تفعيل PyCurl في إعدادات E2iPlayer لحل هذه المشكلة."
 
-msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgid ""
+"You can install PyCurl package with TLS 1.3 support from the feed to fix "
+"this problem."
 msgstr "يمكنك تثبيت حزمة PyCurl بدعم TLS 1.3 من مصدر الحزم لحل هذه المشكلة."
 
-msgid "You can try to use proxy as workaround, check options under blue button."
+msgid ""
+"You can try to use proxy as workaround, check options under blue button."
 msgstr "يمكنك تجربة استخدام بروكسي كحل مؤقت، تحقق من الخيارات تحت الزر الأزرق."
 
 #, python-format
@@ -3896,7 +3949,8 @@ msgid "Youtube Suggestions"
 msgstr "اقتراحات يوتيوب"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr "عمليات البحث في يوتيوب أسرع إذا قمت بإدخال مفتاح API في قائمة الإعدادات"
+msgstr ""
+"عمليات البحث في يوتيوب أسرع إذا قمت بإدخال مفتاح API في قائمة الإعدادات"
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4006,8 +4060,12 @@ msgstr "المشغل الخارجي eplayer3"
 msgid "external gstplayer"
 msgstr "المشغل الخارجي gstplayer"
 
-msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
-msgstr "تحقق أولاً مما إذا كان المضيف يعمل بشكل صحيح في الواجهة الرسومية وعلى الويب <b>قبل</b> الإبلاغ عن أي خطأ فيه !!!"
+msgid ""
+"first check if host works properly in GUI and web <b>BEFORE</b> reporting "
+"error in it !!!"
+msgstr ""
+"تحقق أولاً مما إذا كان المضيف يعمل بشكل صحيح في الواجهة الرسومية وعلى الويب "
+"<b>قبل</b> الإبلاغ عن أي خطأ فيه !!!"
 
 msgid "format"
 msgstr "الصيغة"
