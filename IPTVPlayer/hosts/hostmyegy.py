@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last modified: 20/11/2025
-# MyEegy Host (Modified By Mohamed Elsafty)
+# Last modified: 26/11/2025
+# MyEgy Host (Modified By Mohamed Elsafty)
 import re
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
@@ -16,19 +16,19 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://myeegy.com/"
+    return "https://myyegy.com/"
 
 
-class MyEegy(CBaseHostClass):
+class MyEgy(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {"history": "myeegy", "cookie": "myeegy.cookie"})
+        CBaseHostClass.__init__(self, {"history": "myegy", "cookie": "myegy.cookie"})
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = gettytul() + "wp-content/uploads/2025/09/cropped-favicon-3-238x238.png"
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
 
     def getPage(self, base_url, add_params=None, post_data=None):
-        printDBG("MyEegy.getPage [%s]" % base_url)
+        printDBG("MyEgy.getPage [%s]" % base_url)
         if any(ord(c) > 127 for c in base_url):
             base_url = urllib_quote_plus(base_url, safe="://")
         if add_params is None:
@@ -37,21 +37,21 @@ class MyEegy(CBaseHostClass):
         return self.cm.getPageCFProtection(base_url, add_params, post_data)
 
     def getLinksForVideo(self, cItem):
-        printDBG("MyEegy.getLinksForVideo [%s]" % cItem)
+        printDBG("MyEgy.getLinksForVideo [%s]" % cItem)
         url = cItem.get("url", "")
         if not url:
             return []
-        return [{"name": "MyEegy - %s" % cItem.get("title", ""), "url": url, "need_resolve": 1}]
+        return [{"name": "MyEgy - %s" % cItem.get("title", ""), "url": url, "need_resolve": 1}]
 
     def getVideoLinks(self, url):
-        printDBG("MyEegy.getVideoLinks [%s]" % url)
+        printDBG("MyEgy.getVideoLinks [%s]" % url)
         urlTab = []
         if self.cm.isValidUrl(url):
             return self.up.getVideoLinkExt(url)
         return urlTab
 
     def listMainMenu(self, cItem):
-        printDBG("MyEegy.listMainMenu")
+        printDBG("MyEgy.listMainMenu")
         self.MAIN_CAT_TAB = [{"category": "movies_folder", "title": "الأفلام"}, {"category": "series_folder", "title": "المسلسلات"}, {"category": "anime_folder", "title": "الأنمي"}, {"category": "wrestling_folder", "title": "عروض المصارعة"}, {"category": "tv_shows_folder", "title": "برامج تلفزيونية"}, {"category": "unsorted_folder", "title": "عروض وحفلات"}, {"category": "list_items", "title": "المضاف حديثا", "cat_id": None}] + self.searchItems()
         self.MOVIES_CAT_TAB = [{"category": "list_items", "title": "أفلام أجنبي", "cat_id": 74}, {"category": "list_items", "title": "أفلام أجنبية مدبلجة", "cat_id": 22668}, {"category": "list_items", "title": "أفلام آسيوي", "cat_id": 1129}, {"category": "list_items", "title": "أفلام آسيوية", "cat_id": 19946}, {"category": "list_items", "title": "أفلام أنمي", "cat_id": 411}, {"category": "list_items", "title": "أفلام أونلاين 2025", "cat_id": 17168}, {"category": "list_items", "title": "أفلام تركي", "cat_id": 21278}, {"category": "list_items", "title": "أفلام تركية", "cat_id": 19943}, {"category": "list_items", "title": "أفلام تركية مدبلجة", "cat_id": 22637}, {"category": "list_items", "title": "أفلام صينية", "cat_id": 19937}, {"category": "list_items", "title": "أفلام عربي", "cat_id": 11988}, {"category": "list_items", "title": "أفلام مدبلجة", "cat_id": 12688}, {"category": "list_items", "title": "أفلام هندي", "cat_id": 20208}, {"category": "list_items", "title": "أفلام هندية", "cat_id": 12654}, {"category": "list_items", "title": "أفلام وثائقية", "cat_id": 22605}]
         self.SERIES_CAT_TAB = [{"category": "list_items", "title": "مسلسلات أجنبي", "cat_id": 20249}, {"category": "list_items", "title": "مسلسلات أسيوي", "cat_id": 20234}, {"category": "list_items", "title": "مسلسلات اجنبي", "cat_id": 162}, {"category": "list_items", "title": "مسلسلات اسيوية", "cat_id": 12}, {"category": "list_items", "title": "مسلسلات تركي", "cat_id": 20116}, {"category": "list_items", "title": "مسلسلات تركية", "cat_id": 16395}, {"category": "list_items", "title": "مسلسلات تركيه", "cat_id": 12490}, {"category": "list_items", "title": "مسلسلات عربية", "cat_id": 12466}, {"category": "list_items", "title": "مسلسلات لاتينية", "cat_id": 22729}, {"category": "list_items", "title": "مسلسلات وثائقية", "cat_id": 22507}]
@@ -60,31 +60,31 @@ class MyEegy(CBaseHostClass):
         self.listsTab(self.MAIN_CAT_TAB, cItem)
 
     def listMoviesFolder(self, cItem):
-        printDBG("MyEegy.listMoviesFolder")
+        printDBG("MyEgy.listMoviesFolder")
         self.listsTab(self.MOVIES_CAT_TAB, cItem)
 
     def listSeriesFolder(self, cItem):
-        printDBG("MyEegy.listSeriesFolder")
+        printDBG("MyEgy.listSeriesFolder")
         self.listsTab(self.SERIES_CAT_TAB, cItem)
 
     def listAnimeFolder(self, cItem):
-        printDBG("MyEegy.listAnimeFolder")
+        printDBG("MyEgy.listAnimeFolder")
         self.listsTab(self.ANIME_CAT_TAB, cItem)
 
     def listWrestlingFolder(self, cItem):
-        printDBG("MyEegy.listWrestlingFolder")
+        printDBG("MyEgy.listWrestlingFolder")
         cItem = dict(cItem)
         cItem["cat_id"] = 20604
         self.listItems(cItem)
 
     def listTVShowsFolder(self, cItem):
-        printDBG("MyEegy.listTVShowsFolder")
+        printDBG("MyEgy.listTVShowsFolder")
         cItem = dict(cItem)
         cItem["cat_id"] = 20564
         self.listItems(cItem)
 
     def listUnsortedFolder(self, cItem):
-        printDBG("MyEegy.listUnsortedFolder")
+        printDBG("MyEgy.listUnsortedFolder")
         cItem = dict(cItem)
         cItem["cat_id"] = 22603
         self.listItems(cItem)
@@ -108,21 +108,21 @@ class MyEegy(CBaseHostClass):
         return None
 
     def listItems(self, cItem):
-        printDBG("MyEegy.listItems >>>>")
+        printDBG("MyEgy.listItems >>>>")
         page = cItem.get("page", 1)
         per_page = 20
         current_url = cItem.get("url", "")
         if current_url and "?s=" in current_url:
-            printDBG("MyEegy.listItems: Processing HTML search URL: %s" % current_url)
+            printDBG("MyEgy.listItems: Processing HTML search URL: %s" % current_url)
             params = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
             sts, data = self.cm.getPage(current_url, params)
             if not sts or not data:
-                printDBG("MyEegy.listItems: Failed to get search page HTML.")
+                printDBG("MyEgy.listItems: Failed to get search page HTML.")
                 self.addDir({"title": "Failed to load search results", "category": "none"})
                 return
             friends_post_pattern = r'<div[^>]+class="friends_post"[^>]*>.*?' r'<h1[^>]+class="post-title"[^>]*>.*?' r'<a[^>]+href="([^"]+)"[^>]*>([^<]+)</a>.*?</h1>.*?' r'<img[^>]+data-src="([^"]+)"[^>]+alt="([^"]*)"[^>]*/?>.*?</div>'
             matches = re.findall(friends_post_pattern, data, re.DOTALL)
-            printDBG("MyEegy.listItems: Found %d search results from HTML." % len(matches))
+            printDBG("MyEgy.listItems: Found %d search results from HTML." % len(matches))
             for link, title, icon, desc in matches:
                 clean_title = self.cleanHtmlStr(title)
                 clean_desc = self.cleanHtmlStr(desc)
@@ -133,7 +133,7 @@ class MyEegy(CBaseHostClass):
                         encoded_path = urllib_quote_plus(parsed_url.path, safe="/")
                         clean_icon = urlunparse(parsed_url._replace(path=encoded_path))
                     except Exception as e:
-                        printDBG("MyEegy.listItems: Error encoding icon URL: %s" % e)
+                        printDBG("MyEgy.listItems: Error encoding icon URL: %s" % e)
                         clean_icon = clean_icon_raw
                 else:
                     clean_icon = clean_icon_raw
@@ -146,7 +146,7 @@ class MyEegy(CBaseHostClass):
                 next_url = next_page_match.group(1)
                 if next_url:
                     next_url_full = self.cm.getFullUrl(next_url)
-                    printDBG("MyEegy.listItems: Found next page URL: %s" % next_url_full)
+                    printDBG("MyEgy.listItems: Found next page URL: %s" % next_url_full)
                     next_item = dict(cItem)
                     next_item.update({"title": "%s▶ NEXT عرض المزيد" % E2ColoR("yellow"), "url": next_url_full, "category": "list_items"})
                     self.addDir(next_item)
@@ -161,8 +161,8 @@ class MyEegy(CBaseHostClass):
             try:
                 posts = json_loads(data)
             except Exception as e:
-                printDBG("MyEegy JSON parse error: %s" % e)
-                self.addDir({"title": "JSON read error - Check /tmp/myeegy_debug.html", "category": "none"})
+                printDBG("MyEgy JSON parse error: %s" % e)
+                self.addDir({"title": "JSON read error - Check /tmp/MyEgy_debug.html", "category": "none"})
                 return
             for post in posts:
                 title = self.cleanHtmlStr(post.get("title", {}).get("rendered", "No Title"))
@@ -186,7 +186,7 @@ class MyEegy(CBaseHostClass):
                 self.addDir(next_item)
 
     def exploreItems(self, cItem):
-        printDBG("MyEegy.exploreItems [%s]" % cItem["url"])
+        printDBG("MyEgy.exploreItems [%s]" % cItem["url"])
         simple_header = dict(self.HEADER)
         if "Accept-Encoding" in simple_header:
             del simple_header["Accept-Encoding"]
@@ -245,25 +245,25 @@ class MyEegy(CBaseHostClass):
             self.addDir({"title": "No servers found", "category": "none"})
 
     def listEpisodes(self, cItem):
-        printDBG("MyEegy.listEpisodes >>>>")
+        printDBG("MyEgy.listEpisodes >>>>")
         episodes = cItem.get("episodes_list", [])
         for ep in episodes:
             params = {"title": ep["title"], "url": ep["url"], "category": "explore_item", "good_for_fav": True, "from_episodes_list": True}
             self.addDir(params)
 
     def exploreSeriesItems(self, cItem):
-        printDBG("MyEegy.exploreSeriesItems [%s]" % cItem["url"])
+        printDBG("MyEgy.exploreSeriesItems [%s]" % cItem["url"])
         self.exploreItems(cItem)
 
     def getArticleContent(self, cItem):
-        printDBG("MyEegy.getArticleContent [%s]" % cItem)
+        printDBG("MyEgy.getArticleContent [%s]" % cItem)
         simple_header = dict(self.HEADER)
         if "Accept-Encoding" in simple_header:
             del simple_header["Accept-Encoding"]
         params = {"header": simple_header, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         sts, data = self.cm.getPage(cItem["url"], params)
         if not sts or not data:
-            printDBG("MyEegy.getArticleContent: Failed to get page data.")
+            printDBG("MyEgy.getArticleContent: Failed to get page data.")
             return []
         meta_pattern = re.compile(r'<div class="meta-row">.*?' r'<span class="meta-label">(.*?)</span>.*?' r'<span class="meta-term">.*?' r"<a.*?>(.*?)</a>.*?" r"</div>", re.DOTALL)
         matches = meta_pattern.findall(data)
@@ -294,22 +294,22 @@ class MyEegy(CBaseHostClass):
             full_description = formatted_description
         title = self.cleanHtmlStr(cItem.get("title", "Information"))
         if not full_description:
-            printDBG("MyEegy.getArticleContent: Could not extract any description.")
+            printDBG("MyEgy.getArticleContent: Could not extract any description.")
             return []
         return [{"title": title, "content": full_description}]
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("MyEegy.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
+        printDBG("MyEgy.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem["url"] = "%s?s=%s" % (gettytul(), urllib_quote_plus(searchPattern))
         self.listItems(cItem)
 
     def getFavouriteData(self, cItem):
-        printDBG("MyEegy.getFavouriteData")
+        printDBG("MyEgy.getFavouriteData")
         return json_dumps(cItem)
 
     def getLinksForFavourite(self, fav_data):
-        printDBG("MyEegy.getLinksForFavourite")
+        printDBG("MyEgy.getLinksForFavourite")
         links = []
         try:
             cItem = json_loads(fav_data)
@@ -319,7 +319,7 @@ class MyEegy(CBaseHostClass):
         return links
 
     def setInitListFromFavouriteItem(self, fav_data):
-        printDBG("MyEegy.setInitListFromFavouriteItem")
+        printDBG("MyEgy.setInitListFromFavouriteItem")
         try:
             cItem = json_loads(fav_data)
         except Exception:
@@ -372,7 +372,7 @@ class MyEegy(CBaseHostClass):
 
 class IPTVHost(CHostBase):
     def __init__(self):
-        CHostBase.__init__(self, MyEegy(), True, [])
+        CHostBase.__init__(self, MyEgy(), True, [])
 
     def withArticleContent(self, cItem):
         return cItem.get("type") == "video" or cItem.get("category") == "explore_item"
