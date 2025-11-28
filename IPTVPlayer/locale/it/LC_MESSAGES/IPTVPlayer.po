@@ -16,7 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.8\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
@@ -375,9 +375,9 @@ msgstr "Accesso negato. Controlla la password per favore."
 msgid "Active host"
 msgstr "Host attivo"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Active: %s"
-msgstr "Host attivo"
+msgstr "Attivo: %s"
 
 msgid "Actors:"
 msgstr "Attori:"
@@ -512,27 +512,23 @@ msgstr "Animazioni"
 msgid "Anime"
 msgstr "Anime"
 
-#, fuzzy
 msgid "Anime Movies"
-msgstr "Elenco Anime"
+msgstr "Film Anime"
 
 msgid "Anime Search"
 msgstr "Ricerca Anime"
 
-#, fuzzy
 msgid "Anime Series"
-msgstr "Serie TV"
+msgstr "Serie Anime"
 
-#, fuzzy
 msgid "Anime TV series"
-msgstr "Serie TV"
+msgstr "Serie TV Anime"
 
 msgid "Anime list"
 msgstr "Elenco Anime"
 
-#, fuzzy
 msgid "Anime movies"
-msgstr "Elenco Anime"
+msgstr "Film Anime"
 
 msgid "Answer"
 msgstr "Risposta"
@@ -549,13 +545,11 @@ msgstr "Approcci"
 msgid "Arabic"
 msgstr "Film arabi"
 
-#, fuzzy
 msgid "Arabic Movies"
-msgstr "Film arabi"
+msgstr "Film Arabi"
 
-#, fuzzy
 msgid "Arabic Series"
-msgstr "Film arabi"
+msgstr "Serie Arabe"
 
 msgid "Arabic movies"
 msgstr "Film arabi"
@@ -576,13 +570,11 @@ msgstr "Sei sicuro di cancellare il file \"%s\" ?"
 msgid "Artists"
 msgstr "Artisti"
 
-#, fuzzy
 msgid "Asian TV series"
-msgstr "Serie TV"
+msgstr "Serie TV Asiatiche"
 
-#, fuzzy
 msgid "Asian movies"
-msgstr "Film arabi"
+msgstr "Film Asiatici"
 
 msgid "Ask"
 msgstr "Chiedi"
@@ -892,7 +884,7 @@ msgid "Decode file [%s] problem."
 msgstr "Problema di decodifica del file [%s]"
 
 msgid "Decrypt Signatures Error"
-msgstr ""
+msgstr "Errore di decifratura firme"
 
 msgid "Default"
 msgstr "Predefinito"
@@ -936,9 +928,8 @@ msgstr "Tedesco"
 msgid "Developers: "
 msgstr "Sviluppatori: "
 
-#, fuzzy
 msgid "Direct"
-msgstr "Regista:"
+msgstr "Regista"
 
 msgid "Director:"
 msgstr "Regista:"
@@ -989,9 +980,8 @@ msgstr "Documentari"
 msgid "Documentary"
 msgstr "Documentari"
 
-#, fuzzy
 msgid "Documentary Movies"
-msgstr "Documentari"
+msgstr "Film Documentari"
 
 msgid "Download"
 msgstr "Download"
@@ -1158,9 +1148,8 @@ msgstr "E2iPlayer -  impostazioni"
 msgid "E2iPlayer auto start at Enigma2 start"
 msgstr "E2iPlayer si avvia automaticamente all'avvio di Enigma2"
 
-#, fuzzy
 msgid "E2iPlayer downloader"
-msgstr "Downloader di file singolo"
+msgstr "Downloader di E2player"
 
 msgid "E2iPlayer enable/disabled groups"
 msgstr "Abilita/disabilita gruppi di host E2iPlayer"
@@ -1179,7 +1168,7 @@ msgid "Edit favourites"
 msgstr "Modifica preferiti"
 
 msgid "Educational Animation"
-msgstr ""
+msgstr "Animazione educativa"
 
 msgid "Email"
 msgstr "E-mail"
@@ -1212,21 +1201,17 @@ msgstr ""
 msgid "English"
 msgstr "Inglese"
 
-#, fuzzy
 msgid "English Movies"
-msgstr "Inglese"
+msgstr "Film Inglesi"
 
-#, fuzzy
 msgid "English Series"
-msgstr "Serie TV"
+msgstr "Serie Inglese"
 
-#, fuzzy
 msgid "English TV series"
-msgstr "Serie TV"
+msgstr "Serie TV Inglese"
 
-#, fuzzy
 msgid "English movies"
-msgstr "Inglese"
+msgstr "Film Inglesi"
 
 msgid "Enter a value"
 msgstr "Inserire un valore"
@@ -1331,14 +1316,13 @@ msgstr "Esci"
 
 #, python-format
 msgid "Expiry: %s"
-msgstr ""
+msgstr "Scadenza: %s"
 
 msgid "External movie player config"
 msgstr "Configurazione movie player esterno"
 
-#, fuzzy
 msgid "FAILED"
-msgstr "TRAILER"
+msgstr "FALLITO"
 
 msgid "FREE"
 msgstr "GRATUITO"
@@ -1368,16 +1352,14 @@ msgstr "Fallita la codifica in UTF-8."
 msgid "Failed to download subtitle."
 msgstr "Download fallito dei sottotitoli."
 
-#, fuzzy
 msgid "Failed to fetch categories"
-msgstr "Creazione cartella %s fallita."
+msgstr "Impossibile recuperare le categorie"
 
 msgid "Failed to gzip."
 msgstr "Compressione gzip fallita."
 
-#, fuzzy
 msgid "Failed to load channels"
-msgstr "Download fallito dei sottotitoli."
+msgstr "Impossibile caricare i canali"
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
@@ -1434,7 +1416,7 @@ msgid "File name cannot be empty!"
 msgstr "Il nome non può essere vuoto!"
 
 msgid "File renamed successfully!"
-msgstr ""
+msgstr "File rinominato con successo!"
 
 msgid "Film"
 msgstr ""
@@ -1556,7 +1538,7 @@ msgid "Graphic services selector"
 msgstr "Selettore servizi grafico"
 
 msgid "Greek"
-msgstr ""
+msgstr "Greco"
 
 #, python-format
 msgid "Group \"%s\" already exists."
@@ -1637,10 +1619,10 @@ msgid "Hosts settings"
 msgstr "Impostazioni degli host"
 
 msgid "Humanitarian"
-msgstr ""
+msgstr "Umanitario"
 
 msgid "Hungarian"
-msgstr ""
+msgstr "Ungherese"
 
 msgid "IMDb Suggestions"
 msgstr "Suggerimenti IMDb"
@@ -1649,7 +1631,7 @@ msgid "IMDb rating"
 msgstr "Valutazione IMDb"
 
 msgid "INTERRUPTED"
-msgstr ""
+msgstr "INTERROTTO"
 
 msgid "Icon type"
 msgstr "Tipo di icona"
@@ -1660,20 +1642,17 @@ msgstr "Qualità delle icone"
 msgid "Icons size"
 msgstr "Dimensione delle icone"
 
-#, fuzzy
 msgid "Indian Movies"
-msgstr "Film del cinema"
+msgstr "Film Indiani"
 
-#, fuzzy
 msgid "Indian TV series"
-msgstr "Serie TV"
+msgstr "Serie TV Indiana"
 
-#, fuzzy
 msgid "Indian movies"
-msgstr "Film del cinema"
+msgstr "Film Indiani"
 
 msgid "Industry"
-msgstr ""
+msgstr "Industria"
 
 msgid "Indy"
 msgstr "Indy"
@@ -1807,9 +1786,8 @@ msgstr "Attività Sportiva"
 msgid "Knowledge"
 msgstr ""
 
-#, fuzzy
 msgid "Korean TV series"
-msgstr "Serie TV"
+msgstr "Serie TV Koreana"
 
 msgid "LATEST"
 msgstr "ULTIMO"
@@ -1826,9 +1804,8 @@ msgstr "LIVE"
 msgid "LIVE 24/7"
 msgstr "LIVE 24/7"
 
-#, fuzzy
 msgid "LIVE CHANNELS"
-msgstr "CANALI "
+msgstr "CANALI LIVE"
 
 msgid "Labels"
 msgstr "Etichette"
@@ -2039,14 +2016,14 @@ msgid "MENU"
 msgstr ""
 
 msgid "MIPS Floating Point Architecture"
-msgstr ""
+msgstr "Architettura in virgola mobile MIPS"
 
 #, python-format
 msgid "MOVE: %s"
-msgstr ""
+msgstr "FILM: %s"
 
 msgid "MOVIES"
-msgstr ""
+msgstr "FILM"
 
 msgid "Main"
 msgstr "Menu principale"
@@ -2078,7 +2055,7 @@ msgstr "Bitrate massimo:"
 
 #, python-format
 msgid "Max connections: %s"
-msgstr ""
+msgstr "Numero massimo di connessioni: %s"
 
 msgid "Max items per page"
 msgstr "Max voci per pagina"
@@ -2116,9 +2093,8 @@ msgstr "Di più"
 msgid "More important"
 msgstr "Più importanti"
 
-#, fuzzy
 msgid "More results"
-msgstr "Risultati ricerca"
+msgstr "Altri risultati"
 
 msgid "Most Popular"
 msgstr "Più visti"
@@ -2268,13 +2244,11 @@ msgstr "Notizie"
 msgid "News Feed"
 msgstr "Feed di notizie"
 
-#, fuzzy
 msgid "Next"
-msgstr "Pagina Successiva"
+msgstr "Successiva"
 
-#, fuzzy
 msgid "Next Page ▶"
-msgstr "Pagina Successiva"
+msgstr "Pagina Successiva ▶"
 
 msgid "Next page"
 msgstr "Pagina Successiva"
@@ -2297,7 +2271,7 @@ msgstr "Non è stata trovata nessuna risorsa da riprodurre."
 
 #, python-format
 msgid "No results found for: %s"
-msgstr ""
+msgstr "Nessun risultato trovato per: %s"
 
 msgid "No valid entitlement found for asset."
 msgstr "Non è stato trovato alcun diritto valido per la risorsa."
@@ -2358,7 +2332,7 @@ msgid "Operation aborted!"
 msgstr "Operazione interrotta!"
 
 msgid "Optional User-Agent (leave blank for default)"
-msgstr ""
+msgstr "User-Agent facoltativo (lasciare vuoto per impostazione predefinita)"
 
 msgid "Order by: "
 msgstr "Ordina per: "
@@ -2492,7 +2466,7 @@ msgstr ""
 "in un browser web con l'estensione MyE2i installata"
 
 msgid "Please configure Xtream (blue button)"
-msgstr ""
+msgstr "Si prega di configurare Xtream (pulsante blu)"
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -2598,9 +2572,8 @@ msgstr "Utente premium"
 msgid "Preview"
 msgstr "Anteprima"
 
-#, fuzzy
 msgid "Previous"
-msgstr "Elenco precedente"
+msgstr "Precedente"
 
 msgid "Previous Seasons"
 msgstr "Stagioni precedenti"
@@ -2609,7 +2582,7 @@ msgid "Previous list"
 msgstr "Elenco precedente"
 
 msgid "Professional Networks"
-msgstr ""
+msgstr "Reti professionali"
 
 msgid "Program"
 msgstr "Programma"
@@ -2630,7 +2603,7 @@ msgid "Promote item"
 msgstr "Favorire voce"
 
 msgid "Promoted"
-msgstr ""
+msgstr "Pubblicizzato"
 
 msgid "Protocol: "
 msgstr "Protocollo: "
@@ -2678,7 +2651,7 @@ msgid "Radiology Rounds"
 msgstr "Stazioni radio"
 
 msgid "Raiting"
-msgstr ""
+msgstr "Valutazione"
 
 msgid "Ramadan 2025"
 msgstr ""
@@ -2721,7 +2694,7 @@ msgid "Refreshing"
 msgstr "Aggiornare"
 
 msgid "Release"
-msgstr ""
+msgstr "Pubblicazione"
 
 msgid "Releases"
 msgstr "Uscite"
@@ -3013,7 +2986,7 @@ msgid "Set file name"
 msgstr "Imposta il nome del file"
 
 msgid "Set host, username, password in host config"
-msgstr ""
+msgstr "Imposta host, nome utente, password nella configurazione dell'host"
 
 msgid "Set pin code"
 msgstr "Imposta codice PIN"
@@ -3024,9 +2997,8 @@ msgstr "Segna come visto"
 msgid "Settings"
 msgstr "Impostazioni"
 
-#, fuzzy
 msgid "Short Movies"
-msgstr "Migliori film"
+msgstr "Cortometraggi"
 
 msgid "Shorts"
 msgstr "Tutti gli sport"
@@ -3088,9 +3060,8 @@ msgstr "Downloader di file singolo"
 msgid "Skin"
 msgstr "Skin"
 
-#, fuzzy
 msgid "Skinners: "
-msgstr "Ascoltatori: %s"
+msgstr "Skinner: "
 
 msgid "Skip video shorter than [min]"
 msgstr "Salta i video più corti di [min]"
@@ -3114,7 +3085,7 @@ msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr "Mi dispiace, ma TVPlayer è attualmente disponibile solo nel Regno Unito"
 
 msgid "Sort Mode"
-msgstr ""
+msgstr "Modalità di ordinamento"
 
 msgid "Sort Myfreecams :"
 msgstr "Ordina Myfreecams:"
@@ -3174,9 +3145,9 @@ msgstr "Start"
 msgid "Start download manager per default"
 msgstr "Avvia download manager come predefinito"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Status: %s"
-msgstr "Bitrate: %s"
+msgstr "Stato: %s"
 
 msgid "Stereo downmix mode for software decoder"
 msgstr "Modo downmix stereo per decoder software"
@@ -3204,7 +3175,7 @@ msgid "Studio:"
 msgstr "Studio:"
 
 msgid "Study Plan"
-msgstr ""
+msgstr "Piano di studi"
 
 msgid "Subspecialities"
 msgstr "Sottospecialità"
@@ -3276,16 +3247,16 @@ msgid "Subtitles for: %s"
 msgstr "Sottotitoli per: %s"
 
 msgid "Surgical Approaches"
-msgstr ""
+msgstr "Approcci chirurgici"
 
 msgid "Surgical Cases"
-msgstr ""
+msgstr "Casi chirurgici"
 
 msgid "Surgical Complications"
-msgstr ""
+msgstr "Complicanze chirurgiche"
 
 msgid "Surgical Techniques"
-msgstr ""
+msgstr "Tecniche chirurgiche"
 
 msgid "Swedish"
 msgstr "Svedese"
@@ -3312,7 +3283,7 @@ msgid "TV"
 msgstr "TV"
 
 msgid "TV SERIES"
-msgstr ""
+msgstr "SERIE TV"
 
 msgid "TV Series"
 msgstr "Serie TV"
@@ -3320,9 +3291,8 @@ msgstr "Serie TV"
 msgid "TV Show"
 msgstr "Programma TV"
 
-#, fuzzy
 msgid "TV Shows"
-msgstr "Programma TV"
+msgstr "Programmi TV"
 
 msgid "TV channels"
 msgstr "Canali TV"
@@ -3490,14 +3460,13 @@ msgid "Trauma"
 msgstr ""
 
 msgid "Treatment Consult"
-msgstr ""
+msgstr "Consulenza sul trattamento"
 
 msgid "Tree list"
 msgstr "Lista ad albero"
 
-#, fuzzy
 msgid "Trend"
-msgstr "Di tendenza"
+msgstr "Tendenza"
 
 msgid "Trending"
 msgstr "Di tendenza"
@@ -3508,17 +3477,14 @@ msgstr "Prova ad aggirare il DRM (potrebbe essere illegale)"
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
 msgstr "Prova a cambiare extplayer o a disabilitare IFD nella configurazione di GSTplayer"
 
-#, fuzzy
 msgid "Turkish Movies"
-msgstr "Serie TV"
+msgstr "Film Turchi"
 
-#, fuzzy
 msgid "Turkish Series"
-msgstr "Serie TV"
+msgstr "Serie Turca"
 
-#, fuzzy
 msgid "Turkish TV series"
-msgstr "Serie TV"
+msgstr "Serie TV turca"
 
 msgid "Turn off buffering for http://prognoza.pogody.tv/"
 msgstr "Sospendi il buffering per http://prognoza.pogody.tv/"
@@ -3549,7 +3515,7 @@ msgid "Unable to comply. Search History is empty."
 msgstr "Impossibile eseguire la ricerca. La cronologia delle ricerche è vuota."
 
 msgid "Universal"
-msgstr ""
+msgstr "Universale"
 
 msgid "Unknow data in the captcha item!"
 msgstr "Dati sconosciuti nell'oggetto captcha!"
@@ -3597,7 +3563,7 @@ msgid "Upload date"
 msgstr "Data di caricamento"
 
 msgid "Uploads"
-msgstr ""
+msgstr "Caricamenti"
 
 msgid "Urllists player"
 msgstr ""
@@ -3606,7 +3572,7 @@ msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Usa il proxy server polacco per http://prognoza.pogody.tv/"
 
 msgid "Use colors"
-msgstr ""
+msgstr "Usa i colori"
 
 msgid "Use default quality:"
 msgstr "Usa la qualità video predefinita:"
@@ -3682,7 +3648,7 @@ msgid "Utility \"%s\" can not be found."
 msgstr "Utility \"%s\" non trovata."
 
 msgid "VENUES"
-msgstr ""
+msgstr "LUOGHI"
 
 msgid "VFD set current title:"
 msgstr "VFD imposta il titolo corrente:"
@@ -3822,12 +3788,11 @@ msgstr "Indirizzo errato."
 msgid "Xbox One"
 msgstr "Xbox One"
 
-#, fuzzy
 msgid "Xtream Live Stream"
-msgstr "Canali Live"
+msgstr "Xtream Live Stream"
 
 msgid "Xtream host (e.g. http://server:port)"
-msgstr ""
+msgstr "Host Xtream (ad esempio http://server:porta)"
 
 msgid "YP connected"
 msgstr "YP connesso"
@@ -3985,7 +3950,7 @@ msgid "center"
 msgstr "centro"
 
 msgid "cobalt"
-msgstr ""
+msgstr "cobalto"
 
 msgid "de"
 msgstr ""
