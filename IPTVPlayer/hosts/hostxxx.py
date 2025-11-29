@@ -1,35 +1,30 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 13.09.2025 - jbleyel, Masta2002 - Update some image links
-###################################################
-# LOCAL import
+# Last Modified: 29.11.2025 - import missing imports, sort imports, fix several obvious bugs, fix W4NKR bug
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetPluginDir, byteify, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetPluginDir, byteify
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError, GetIPTVNotify
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import decorateUrl, getDirectM3U8Playlist, unpackJSPlayerParams, TEAMCASTPL_decryptPlayerParams, getF4MLinksWithMeta, getMPDLinksWithMeta
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, unpackJSPlayerParams, TEAMCASTPL_decryptPlayerParams
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
-###################################################
-# FOREIGN import
-###################################################
 import re
 import base64
 import math
 import hashlib
 import random
-import os
-try:
-	basestring  # Python 2
-except NameError:
-	basestring = str  # Python 3
+import time
+import http.client
+import websocket
+import subprocess
+
 try:
 	import simplejson
-except:
+except ImportError:
 	import json as simplejson
 try:
 	from urllib.parse import urlparse, parse_qs, urlencode, unquote
@@ -42,12 +37,15 @@ from Components.config import config, ConfigSelection, ConfigYesNo, getConfigLis
 from time import time as time_time
 from datetime import datetime
 from os.path import join
-###################################################
-# E2 GUI COMMPONENTS
-###################################################
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Screens.MessageBox import MessageBox
-###################################################
+
+try:
+	basestring  # Python 2
+except NameError:
+	basestring = str  # Python 3
+
+
 black, white, gray = r'\c00000000', r'\c00??????', r'\c00808080'
 blue, green, red = r'\c000000??', r'\c0000??00', r'\c00??0000'
 yellow, cyan, magenta = r'\c00????00', r'\c0000????', r'\c00??00??'
@@ -86,8 +84,6 @@ def GetConfigList():
 
 	return optionList
 ###################################################
-
-###################################################
 # Title of HOST
 ###################################################
 
@@ -104,7 +100,7 @@ def fix_escaped_url(text):
 	def replace_unicode_escapes(match):
 		try:
 			return chr(int(match.group(1), 16))
-		except:
+		except Exception:
 			return match.group(0)
 
 	text = re.sub(r'\\u([0-9a-fA-F]{4})', replace_unicode_escapes, text)
@@ -164,15 +160,14 @@ class IPTVHost(IHost):
 
 	def getPrevList(self, refresh=0):
 		printDBG("getPrevList begin")
-		if (len(self.prevList) > 0):
+		if len(self.prevList) > 0:
 			self.prevIndex.pop()
 			self.currList = self.prevList.pop()
 			self.host.setCurrList(self.currList)
 			printDBG("getPrevList end OK")
 			return RetHost(RetHost.OK, value=self.currList)
-		else:
-			printDBG("getPrevList end ERROR")
-			return RetHost(RetHost.ERROR, value=[])
+		printDBG("getPrevList end ERROR")
+		return RetHost(RetHost.ERROR, value=[])
 
 	def getCurrentList(self, refresh=0):
 		printDBG("getCurrentList begin")
@@ -208,9 +203,9 @@ class IPTVHost(IHost):
 		printDBG("getSearchResults end")
 		return RetHost(RetHost.OK, value=self.currList)
 
-	###################################################
-	# Additional functions on class IPTVHost
-	###################################################
+###################################################
+# Additional functions on class IPTVHost
+###################################################
 
 
 class Host(CBaseHostClass):
@@ -292,8 +287,6 @@ class Host(CBaseHostClass):
 	def _getPage(self, url, addParams={}, post_data=None):
 
 		try:
-			import http.client
-
 			def patch_http_response_read(func):
 				def inner(*args):
 					try:
@@ -312,8 +305,8 @@ class Host(CBaseHostClass):
 			printExc()
 		return sts, data
 
-	def get_Page(self, baseUrl, addParams={}, post_data=None):
-		if addParams == {}:
+	def get_Page(self, baseUrl, addParams=None, post_data=None):
+		if addParams == None:
 			addParams = dict(self.defaultParams)
 		return self.cm.getPage(baseUrl, addParams, post_data)
 
@@ -366,29 +359,29 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.porndig.value:
 				valTab.append(CDisplayListItem('PORNDIG', 'https://www.porndig.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.porndig.com'], 'PORNDIG', hostImage() + 'porndig.png', None))
 			if config.plugins.iptvplayer.homemoviestube.value:
-				valTab.append(CDisplayListItem('HOME MOVIES TUBE', 'http://www.homemoviestube.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.homemoviestube.com/channels/'], 'HomeMoviesTube', hostImage() + 'homemoviestube.png', None))
+				valTab.append(CDisplayListItem('HOME MOVIES TUBE', 'https://www.homemoviestube.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.homemoviestube.com/channels/'], 'HomeMoviesTube', hostImage() + 'homemoviestube.png', None))
 			if config.plugins.iptvplayer.zbiornikmini.value:
 				valTab.append(CDisplayListItem('ZBIORNIK MINI', 'https://mini.zbiornik.com', CDisplayListItem.TYPE_CATEGORY, ['https://mini.zbiornik.com/filmy'], 'ZBIORNIKMINI', hostImage() + 'zbiornik.png', None))
 			if config.plugins.iptvplayer.hclips.value:
-				valTab.append(CDisplayListItem('HCLIPS', 'http://www.hclips.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.hclips.com/categories/'], 'hclips', hostImage() + 'hclips.png', None))
+				valTab.append(CDisplayListItem('HCLIPS', 'https://www.hclips.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.hclips.com/categories/'], 'hclips', hostImage() + 'hclips.png', None))
 			if config.plugins.iptvplayer.eporner.value:
 				valTab.append(CDisplayListItem('EPORNER', 'www.eporner.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.eporner.com/cats/'], 'eporner', hostImage() + 'eporner.png', None))
 			if config.plugins.iptvplayer.tube8.value:
-				valTab.append(CDisplayListItem('TUBE8', 'www.tube8.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.tube8.com/categories.html'], 'tube8', hostImage() + 'tube8.png', None))
+				valTab.append(CDisplayListItem('TUBE8', 'www.tube8.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.tube8.com/categories.html'], 'tube8', hostImage() + 'tube8.png', None))
 			if config.plugins.iptvplayer.youporn.value:
 				valTab.append(CDisplayListItem('YOUPORN', 'www.youporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.youporn.com/categories/'], 'youporn', hostImage() + 'youporn.png', None))
 			if config.plugins.iptvplayer.pornhub.value:
 				valTab.append(CDisplayListItem('PORNHUB', 'www.pornhub.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornhub.com/categories'], 'pornhub', hostImage() + 'pornhub.png', None))
 			if config.plugins.iptvplayer.hdporn.value:
-				valTab.append(CDisplayListItem('HDPORN', 'www.hdporn.net', CDisplayListItem.TYPE_CATEGORY, ['http://www.hdporn.net'], 'hdporn', hostImage() + 'hdporn.png', None))
+				valTab.append(CDisplayListItem('HDPORN', 'www.hdporn.net', CDisplayListItem.TYPE_CATEGORY, ['https://www.hdporn.net'], 'hdporn', hostImage() + 'hdporn.png', None))
 			if config.plugins.iptvplayer.redtube.value:
 				valTab.append(CDisplayListItem('REDTUBE', 'https://www.redtube.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.redtube.com/categories'], 'redtube', hostImage() + 'redtube.png', None))
 			if config.plugins.iptvplayer.hentaigasm.value:
-				valTab.append(CDisplayListItem('HENTAIGASM', 'hentaigasm.com', CDisplayListItem.TYPE_CATEGORY, ['http://hentaigasm.com'], 'hentaigasm', hostImage() + 'hentaigasm.png', None))
+				valTab.append(CDisplayListItem('HENTAIGASM', 'hentaigasm.com', CDisplayListItem.TYPE_CATEGORY, ['https://hentaigasm.com'], 'hentaigasm', hostImage() + 'hentaigasm.png', None))
 			if config.plugins.iptvplayer.xvideos.value:
-				valTab.append(CDisplayListItem('XVIDEOS', 'www.xvideos.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.xvideos.com'], 'xvideos', hostImage() + 'xvideos.png', None))
+				valTab.append(CDisplayListItem('XVIDEOS', 'www.xvideos.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.xvideos.com'], 'xvideos', hostImage() + 'xvideos.png', None))
 			if config.plugins.iptvplayer.xnxx.value:
-				valTab.append(CDisplayListItem('XNXX', 'www.xnxx.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.xnxx.com'], 'xnxx', hostImage() + 'xnxx.png', None))
+				valTab.append(CDisplayListItem('XNXX', 'www.xnxx.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.xnxx.com'], 'xnxx', hostImage() + 'xnxx.png', None))
 			if config.plugins.iptvplayer.pornrabbit.value:
 				valTab.append(CDisplayListItem('PORNRABBIT', 'www.pornrabbit.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornrabbit.com/'], 'pornrabbit', hostImage() + 'pornrabbit.png', None))
 			if config.plugins.iptvplayer.pornwhite.value:
@@ -396,11 +389,11 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.ah_me.value:
 				valTab.append(CDisplayListItem('AH-ME', 'www.ah-me.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.ah-me.com/tags/'], 'AHME', hostImage() + 'ahme.png', None))
 			if config.plugins.iptvplayer.youjizz.value:
-				valTab.append(CDisplayListItem('YOUJIZZ', 'http://www.youjizz.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.youjizz.com/categories'], 'YOUJIZZ', hostImage() + 'youjizz.png', None))
+				valTab.append(CDisplayListItem('YOUJIZZ', 'https://www.youjizz.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.youjizz.com/categories'], 'YOUJIZZ', hostImage() + 'youjizz.png', None))
 			if config.plugins.iptvplayer.pornhat.value:
 				valTab.append(CDisplayListItem('PORNHAT', 'https://www.pornhat.com/', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornhat.com/'], 'PORNHAT', hostImage() + 'pornhat.png', None))
 			if config.plugins.iptvplayer.drtuber.value:
-				valTab.append(CDisplayListItem('DRTUBER', 'http://www.drtuber.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.drtuber.com/categories'], 'DRTUBER', hostImage() + 'drtuber.png', None))
+				valTab.append(CDisplayListItem('DRTUBER', 'https://www.drtuber.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.drtuber.com/categories'], 'DRTUBER', hostImage() + 'drtuber.png', None))
 			if config.plugins.iptvplayer.tnaflix.value:
 				valTab.append(CDisplayListItem('TNAFLIX', 'https://www.tnaflix.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.tnaflix.com/categories'], 'TNAFLIX', hostImage() + 'tnaflix.png', None))
 			if config.plugins.iptvplayer.megatube.value:
@@ -408,7 +401,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.rus_porn.value:
 				valTab.append(CDisplayListItem('RUS.PORN', 'https://vww.mix-porn.xyz', CDisplayListItem.TYPE_CATEGORY, ['https://i.mix-porn.xyz/category/'], 'RUSPORN', hostImage() + 'mixporn.png', None))
 			if config.plugins.iptvplayer.porntrex.value:
-				valTab.append(CDisplayListItem('PORNTREX', 'http://www.porntrex.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.porntrex.com/categories/'], 'PORNTREX', hostImage() + 'porntrex.png', None))
+				valTab.append(CDisplayListItem('PORNTREX', 'https://www.porntrex.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.porntrex.com/categories/'], 'PORNTREX', hostImage() + 'porntrex.png', None))
 			if config.plugins.iptvplayer.glavmatures.value:
 				valTab.append(CDisplayListItem('GLAVMATURES', 'https://glavmatures.com', CDisplayListItem.TYPE_CATEGORY, ['https://glavmatures.com/tags/'], 'GLAVMATURES', hostImage() + 'glavmatures.png', None))
 			if config.plugins.iptvplayer.watchmygf.value:
@@ -420,9 +413,9 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.momslust.value:
 				valTab.append(CDisplayListItem('MOMSLUST', 'https://www.momslust.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.momslust.com/categories/'], 'MOMSLUST', hostImage() + 'momslust.png', None))
 			if config.plugins.iptvplayer.yuvutu.value:
-				valTab.append(CDisplayListItem('YUVUTU', 'http://www.yuvutu.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.yuvutu.com/categories/'], 'YUVUTU', hostImage() + 'yuvutu.png', None))
+				valTab.append(CDisplayListItem('YUVUTU', 'https://www.yuvutu.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.yuvutu.com/categories/'], 'YUVUTU', hostImage() + 'yuvutu.png', None))
 			if config.plugins.iptvplayer.pornicom.value:
-				valTab.append(CDisplayListItem('PORNICOM', 'http://pornicom.com', CDisplayListItem.TYPE_CATEGORY, ['http://pornicom.com/categories/'], 'PORNICOM', hostImage() + 'pornicom.png', None))
+				valTab.append(CDisplayListItem('PORNICOM', 'https://pornicom.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornicom.com/categories/'], 'PORNICOM', hostImage() + 'pornicom.png', None))
 			if config.plugins.iptvplayer.sexvid.value:
 				valTab.append(CDisplayListItem('SEXVID', 'https://www.sexvid.xxx', CDisplayListItem.TYPE_CATEGORY, ['https://www.sexvid.xxx/c/'], 'SEXVID', hostImage() + 'sexvid.png', None))
 			if config.plugins.iptvplayer.perfectgirls.value:
@@ -430,7 +423,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.ziporn.value:
 				valTab.append(CDisplayListItem('ZIPORN', 'https://ziporn.com/', CDisplayListItem.TYPE_CATEGORY, ['https://ziporn.com/categories/'], 'ZIPORN', hostImage() + 'ziporn.png', None))
 			if config.plugins.iptvplayer.tubepornclassic.value:
-				valTab.append(CDisplayListItem('TUBEPORNCLASSIC', 'http://tubepornclassic.com/', CDisplayListItem.TYPE_CATEGORY, ['http://tubepornclassic.com/categories/'], 'TUBEPORNCLASSIC', hostImage() + 'tubepornclassic.png', None))
+				valTab.append(CDisplayListItem('TUBEPORNCLASSIC', 'https://tubepornclassic.com/', CDisplayListItem.TYPE_CATEGORY, ['https://tubepornclassic.com/categories/'], 'TUBEPORNCLASSIC', hostImage() + 'tubepornclassic.png', None))
 			if config.plugins.iptvplayer.koloporno.value:
 				valTab.append(CDisplayListItem('KOLOPORNO', 'https://www.koloporno.com/', CDisplayListItem.TYPE_CATEGORY, ['https://www.koloporno.com/kategoriach/'], 'KOLOPORNO', hostImage() + 'koloporno.png', None))
 			if config.plugins.iptvplayer.motherless.value:
@@ -442,7 +435,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.freeomovie.value:
 				valTab.append(CDisplayListItem('FREEOMOVIE', 'https://www.freeomovie.to', CDisplayListItem.TYPE_CATEGORY, ['https://www.freeomovie.to'], 'freeomovie', hostImage() + 'freeomovie.png', None))
 			if config.plugins.iptvplayer.katestube.value:
-				valTab.append(CDisplayListItem('KATESTUBE', 'http://www.katestube.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.katestube.com/categories/'], 'KATESTUBE', hostImage() + 'katestube.png', None))
+				valTab.append(CDisplayListItem('KATESTUBE', 'https://www.katestube.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.katestube.com/categories/'], 'KATESTUBE', hostImage() + 'katestube.png', None))
 			if config.plugins.iptvplayer.pornone.value:
 				valTab.append(CDisplayListItem('PORNONE', 'https://pornone.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornone.com/categories/'], 'pornone', hostImage() + 'pornone.png', None))
 			if config.plugins.iptvplayer.zbporn.value:
@@ -454,17 +447,17 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.xbabe.value:
 				valTab.append(CDisplayListItem('XBABE', 'https://xbabe.com', CDisplayListItem.TYPE_CATEGORY, ['https://xbabe.com/categories/'], 'xbabe', hostImage() + 'xbabe.png', None))
 			if config.plugins.iptvplayer.txxx.value:
-				valTab.append(CDisplayListItem('TXXX', 'http://www.txxx.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.txxx.com/categories/'], 'txxx', hostImage() + 'txxx.png', None))
+				valTab.append(CDisplayListItem('TXXX', 'https://www.txxx.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.txxx.com/categories/'], 'txxx', hostImage() + 'txxx.png', None))
 			if config.plugins.iptvplayer.sunporno.value:
 				valTab.append(CDisplayListItem('SUNPORNO', 'https://www.sunporno.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.sunporno.com/'], 'sunporno', hostImage() + 'sunporno.png', None))
 			if config.plugins.iptvplayer.sexu.value:
-				valTab.append(CDisplayListItem('SEXU', 'http://sexu.com', CDisplayListItem.TYPE_CATEGORY, ['http://sexu.com/'], 'sexu', hostImage() + 'sexu.png', None))
+				valTab.append(CDisplayListItem('SEXU', 'https://sexu.com', CDisplayListItem.TYPE_CATEGORY, ['https://sexu.com/'], 'sexu', hostImage() + 'sexu.png', None))
 			if config.plugins.iptvplayer.tubewolf.value:
-				valTab.append(CDisplayListItem('TUBEWOLF', 'http://www.tubewolf.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.tubewolf.com'], 'tubewolf', hostImage() + 'tubewolf.png', None))
+				valTab.append(CDisplayListItem('TUBEWOLF', 'https://www.tubewolf.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.tubewolf.com'], 'tubewolf', hostImage() + 'tubewolf.png', None))
 			if config.plugins.iptvplayer.alphaporno.value:
 				valTab.append(CDisplayListItem('ALPHAPORNO', 'https://www.alphaporno.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.alphaporno.com/categories/'], 'ALPHAPORNO', hostImage() + 'alphaporno.png', None))
 			if config.plugins.iptvplayer.zedporn.value:
-				valTab.append(CDisplayListItem('ZEDPORN', 'http://zedporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://zedporn.com'], 'zedporn', hostImage() + 'zedporn.png', None))
+				valTab.append(CDisplayListItem('ZEDPORN', 'https://zedporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://zedporn.com'], 'zedporn', hostImage() + 'zedporn.png', None))
 			if config.plugins.iptvplayer.crocotube.value:
 				valTab.append(CDisplayListItem('CROCOTUBE', 'https://crocotube.com/', CDisplayListItem.TYPE_CATEGORY, ['https://crocotube.com/categories/'], 'CROCOTUBE', hostImage() + 'crocotube.png', None))
 			if config.plugins.iptvplayer.mompornonly.value:
@@ -534,7 +527,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.streamporn.value:
 				valTab.append(CDisplayListItem('STREAMPORN', 'https://streamporn.org', CDisplayListItem.TYPE_CATEGORY, ['https://streamporn.org'], 'streamporn', hostImage() + 'streamporn.png', None))
 			if config.plugins.iptvplayer.pornvideos4k.value:
-				valTab.append(CDisplayListItem('PORNVIDEOS 4K', 'http://pornvideos4k.com/en/', CDisplayListItem.TYPE_CATEGORY, ['http://pornvideos4k.com/en/'], 'pornvideos4k', hostImage() + 'pornvideos4k.png', None))
+				valTab.append(CDisplayListItem('PORNVIDEOS 4K', 'https://pornvideos4k.com/en/', CDisplayListItem.TYPE_CATEGORY, ['https://pornvideos4k.com/en/'], 'pornvideos4k', hostImage() + 'pornvideos4k.png', None))
 			if config.plugins.iptvplayer.pornburst.value:
 				valTab.append(CDisplayListItem('PORNBURST', 'https://www.pornburst.xxx/', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornburst.xxx/categories/'], 'PORNBURST', hostImage() + 'pornburst.png', None))
 			if config.plugins.iptvplayer.ruleporn.value:
@@ -542,7 +535,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.pandamovie.value:
 				valTab.append(CDisplayListItem('PANDAMOVIE', 'https://pandamovie.info', CDisplayListItem.TYPE_CATEGORY, ['https://pandamovie.info'], '123PANDAMOVIE', hostImage() + 'pandamovie.png', None))
 			if config.plugins.iptvplayer.dansmovies.value:
-				valTab.append(CDisplayListItem('DANSMOVIES', 'http://dansmovies.com', CDisplayListItem.TYPE_CATEGORY, ['http://dansmovies.com/'], 'DANSMOVIES', hostImage() + 'dansmovies.png', None))
+				valTab.append(CDisplayListItem('DANSMOVIES', 'https://dansmovies.com', CDisplayListItem.TYPE_CATEGORY, ['https://dansmovies.com/'], 'DANSMOVIES', hostImage() + 'dansmovies.png', None))
 			if config.plugins.iptvplayer.pornrewind.value:
 				valTab.append(CDisplayListItem('PORNREWIND', 'https://www.pornrewind.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornrewind.com/categories/'], 'PORNREWIND', hostImage() + 'pornrewind.png', None))
 			if config.plugins.iptvplayer.balkanjizz.value:
@@ -558,7 +551,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.relax_sex.value:
 				valTab.append(CDisplayListItem('RELAX-SEX', 'https://relax-sex.com', CDisplayListItem.TYPE_CATEGORY, ['https://relax-sex.com'], 'RELAX SEX', hostImage() + 'relax-sex.png', None))
 			if config.plugins.iptvplayer.babes34.value:
-				valTab.append(CDisplayListItem('BABES34', 'http://babes34.me', CDisplayListItem.TYPE_CATEGORY, ['http://babes34.me/tags/'], 'BABES34', hostImage() + 'babes34.png', None))
+				valTab.append(CDisplayListItem('BABES34', 'https://babes34.me', CDisplayListItem.TYPE_CATEGORY, ['https://babes34.me/tags/'], 'BABES34', hostImage() + 'babes34.png', None))
 			if config.plugins.iptvplayer.pornbolt.value:
 				valTab.append(CDisplayListItem('PORNBOLT', 'https://pornbolt.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornbolt.com/categories'], 'PORNBOLT', hostImage() + 'pornbolt.png', None))
 			if config.plugins.iptvplayer.wetsins.value:
@@ -588,9 +581,9 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.ad69.value:
 				valTab.append(CDisplayListItem("AD69", 'https://ad69.com', CDisplayListItem.TYPE_CATEGORY, ['https://ad69.com/categories/'], 'AD69', hostImage() + 'ad69.jpg', None))
 			if config.plugins.iptvplayer.pornbimbo.value:
-				valTab.append(CDisplayListItem("PORNBIMBO", 'http://pornbimbo.com', CDisplayListItem.TYPE_CATEGORY, ['http://pornbimbo.com/categories/'], 'PORNBIMBO', hostImage() + 'pornbimbo.png', None))
+				valTab.append(CDisplayListItem("PORNBIMBO", 'https://pornbimbo.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornbimbo.com/categories/'], 'PORNBIMBO', hostImage() + 'pornbimbo.png', None))
 			if config.plugins.iptvplayer.pornfd.value:
-				valTab.append(CDisplayListItem("PORNFD", 'http://www.pornfd.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.pornfd.com/categories/'], 'PORNFD', hostImage() + 'pornfd.png', None))
+				valTab.append(CDisplayListItem("PORNFD", 'https://www.pornfd.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornfd.com/categories/'], 'PORNFD', hostImage() + 'pornfd.png', None))
 			if config.plugins.iptvplayer.femefun.value:
 				valTab.append(CDisplayListItem("FEMEFUN", 'https://femefun.com', CDisplayListItem.TYPE_CATEGORY, ['https://femefun.com/categories/piercing/'], 'FEMEFUN', hostImage() + 'femefun.png', None))
 			if config.plugins.iptvplayer.shemalehd.value:
@@ -604,13 +597,13 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.hellporno.value:
 				valTab.append(CDisplayListItem('HELLPORNO', 'https://hellporno.com/', CDisplayListItem.TYPE_CATEGORY, ['https://hellporno.com/categories/'], 'HELLPORNO', hostImage() + 'hellporno.png', None))
 			if config.plugins.iptvplayer.eroprofile.value:
-				valTab.append(CDisplayListItem('EROPROFILE', 'http://www.eroprofile.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.eroprofile.com'], 'EROPROFILE', hostImage() + 'eroprofile.png', None))
+				valTab.append(CDisplayListItem('EROPROFILE', 'https://www.eroprofile.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.eroprofile.com'], 'EROPROFILE', hostImage() + 'eroprofile.png', None))
 			if config.plugins.iptvplayer.absoluporn.value:
-				valTab.append(CDisplayListItem('ABSOLUPORN', 'http://www.absoluporn.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.absoluporn.com/en/lettre-tag.html'], 'absoluporn', hostImage() + 'absoluporn.png', None))
+				valTab.append(CDisplayListItem('ABSOLUPORN', 'https://www.absoluporn.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.absoluporn.com/en/lettre-tag.html'], 'absoluporn', hostImage() + 'absoluporn.png', None))
 			if config.plugins.iptvplayer.porngo.value:
 				valTab.append(CDisplayListItem('PORNGO', 'https://porngo.com', CDisplayListItem.TYPE_CATEGORY, ['https://porngo.com/categories/'], 'porngo', hostImage() + 'porngo.png', None))
 			if config.plugins.iptvplayer.anybunny.value:
-				valTab.append(CDisplayListItem('ANYBUNNY', 'http://anybunny.com', CDisplayListItem.TYPE_CATEGORY, ['http://anybunny.com'], 'anybunny', hostImage() + 'anybunny.png', None))
+				valTab.append(CDisplayListItem('ANYBUNNY', 'https://anybunny.com', CDisplayListItem.TYPE_CATEGORY, ['https://anybunny.com'], 'anybunny', hostImage() + 'anybunny.png', None))
 			if config.plugins.iptvplayer.xcafe.value:
 				valTab.append(CDisplayListItem('XCAFE', 'https://xcafe.com/', CDisplayListItem.TYPE_CATEGORY, ['https://xcafe.com/categories/'], 'XCAFE', hostImage() + 'xcafe.png', None))
 			if config.plugins.iptvplayer.hqporner.value:
@@ -620,7 +613,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.cumlouder.value:
 				valTab.append(CDisplayListItem('CUMLOUDER', 'https://www.cumlouder.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.cumlouder.com/categories'], 'cumlouder', hostImage() + 'cumlouder.png', None))
 			if config.plugins.iptvplayer.porn00.value:
-				valTab.append(CDisplayListItem('PORN00', 'http://www.porn00.org', CDisplayListItem.TYPE_CATEGORY, ['http://www.porn00.org/categories/'], 'porn00', hostImage() + 'porn00.png', None))
+				valTab.append(CDisplayListItem('PORN00', 'https://www.porn00.org', CDisplayListItem.TYPE_CATEGORY, ['https://www.porn00.org/categories/'], 'porn00', hostImage() + 'porn00.png', None))
 			if config.plugins.iptvplayer.watchpornx.value:
 				valTab.append(CDisplayListItem('WATCHPORNX', 'https://watchpornx.com/', CDisplayListItem.TYPE_CATEGORY, ['https://watchpornx.com/'], 'watchpornx', hostImage() + 'watchpornx.png', None))
 			if config.plugins.iptvplayer.porn300.value:
@@ -696,7 +689,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.teentube.value:
 				valTab.append(CDisplayListItem("69TEENTUBE", 'https://69teentube.com', CDisplayListItem.TYPE_CATEGORY, ['https://69teentube.com/hdporn/'], '69TEENTUBE', hostImage() + '69teentube.png', None))
 			if config.plugins.iptvplayer.wifevideos.value:
-				valTab.append(CDisplayListItem("WIFE VIDEOS", 'http://www.wifevideos.net', CDisplayListItem.TYPE_CATEGORY, ['http://www.wifevideos.net/'], 'WIFEVIDEOS', hostImage() + 'wifevideos.png', None))
+				valTab.append(CDisplayListItem("WIFE VIDEOS", 'https://www.wifevideos.net', CDisplayListItem.TYPE_CATEGORY, ['https://www.wifevideos.net/'], 'WIFEVIDEOS', hostImage() + 'wifevideos.png', None))
 			if config.plugins.iptvplayer.milffox.value:
 				valTab.append(CDisplayListItem("MILF FOX", 'https://www.milffox.com/', CDisplayListItem.TYPE_CATEGORY, ['https://www.milffox.com/categories/'], 'MILFFOX', hostImage() + 'milfox.png', None))
 			if config.plugins.iptvplayer.porndr.value:
@@ -719,7 +712,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.cambro.value:
 				valTab.append(CDisplayListItem(textcolor + "CAMBRO.TV", 'https://www.cambro.tv', CDisplayListItem.TYPE_CATEGORY, ['https://www.cambro.tv/categories/'], 'CAMBRO', hostImage() + 'cambro.png', None))
 			if config.plugins.iptvplayer.camhub.value:
-				valTab.append(CDisplayListItem(textcolor + "CAMHUB", 'http://www.camhub.cc', CDisplayListItem.TYPE_CATEGORY, ['https://www.camhub.cc/categories/'], 'CAMHUB', hostImage() + 'camhub.png', None))
+				valTab.append(CDisplayListItem(textcolor + "CAMHUB", 'https://www.camhub.cc', CDisplayListItem.TYPE_CATEGORY, ['https://www.camhub.cc/categories/'], 'CAMHUB', hostImage() + 'camhub.png', None))
 			if config.plugins.iptvplayer.chaturbate.value:
 				valTab.append(CDisplayListItem(textcolor + "CHATURBATE", 'https://chaturbate.com', CDisplayListItem.TYPE_CATEGORY, ['https://chaturbate.com/api/ts/hashtags/tag-table-data/?limit=100'], 'CHATURBATE', hostImage() + 'chaturbate.png', None))
 			if config.plugins.iptvplayer.everycamgirl.value:
@@ -741,18 +734,16 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.camwhoresbay.value:
 				valTab.append(CDisplayListItem(textcolor + 'CAMWHORESBAY', 'https://www.camwhoresbay.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.camwhoresbay.com/categories/'], 'CAMWHORESBAY', hostImage() + 'camwhoresbay.png', None))
 			if config.plugins.iptvplayer.fotka_pl_kamerki.value:
-				valTab.append(CDisplayListItem(textcolor + 'FOTKA-PL-KAMERKI', 'http://www.fotka.pl/kamerki', CDisplayListItem.TYPE_CATEGORY, ['http://api.fotka.pl/v2/cams/get?page=1&limit=100&gender=f'], 'FOTKAPLKAMERKI', hostImage() + 'fotka.png', None))
+				valTab.append(CDisplayListItem(textcolor + 'FOTKA-PL-KAMERKI', 'https://www.fotka.pl/kamerki', CDisplayListItem.TYPE_CATEGORY, ['https://api.fotka.pl/v2/cams/get?page=1&limit=100&gender=f'], 'FOTKAPLKAMERKI', hostImage() + 'fotka.png', None))
 			if config.plugins.iptvplayer.xhamsterlive.value:
-				valTab.append(CDisplayListItem(textcolor + 'XHAMSTERLIVE', "Cameras", CDisplayListItem.TYPE_CATEGORY, ['http://xhamsterlive.com'], 'xhamsterlive', hostImage() + 'xhamsterlive.png', None))
+				valTab.append(CDisplayListItem(textcolor + 'XHAMSTERLIVE', "Cameras", CDisplayListItem.TYPE_CATEGORY, ['https://xhamsterlive.com'], 'xhamsterlive', hostImage() + 'xhamsterlive.png', None))
 			if config.plugins.iptvplayer.showup.value:
-				valTab.append(CDisplayListItem(textcolor + 'SHOWUP   - live cams', 'showup.tv', CDisplayListItem.TYPE_CATEGORY, ['http://showup.tv'], 'showup', hostImage() + 'showup.png', None))
+				valTab.append(CDisplayListItem(textcolor + 'SHOWUP   - live cams', 'showup.tv', CDisplayListItem.TYPE_CATEGORY, ['https://showup.tv'], 'showup', hostImage() + 'showup.png', None))
 			valTab.append(CDisplayListItem('+++ XXXLIST +++   XXXversion = ' + str(self.XXXversion), '+++ XXXLIST +++   XXXversion = ' + str(self.XXXversion), CDisplayListItem.TYPE_MARKER, [''], 'XXXLIST', '', None))
 			if config.plugins.iptvplayer.xxxsearch.value:
 				self.SEARCH_proc = name
 				valTab = searchItems(valTab)
 			return valTab
-
-		# ########## #
 		if 'HISTORYDELETE' == name:
 			self.delHistory()
 			self.listsItems(-1, '', self.oldName)
@@ -760,9 +751,7 @@ class Host(CBaseHostClass):
 		if 'HISTORY' == name:
 			for histItem in self.history.getHistoryList():
 				valTab.append(CDisplayListItem(histItem['pattern'], 'Search ', CDisplayListItem.TYPE_CATEGORY, [histItem['pattern'], histItem['type']], 'SEARCH', '', None))
-
 			return valTab
-		# ########## #
 		if 'SEARCH' == name:
 			pattern = url
 			if Index == -1:
@@ -772,9 +761,7 @@ class Host(CBaseHostClass):
 			if self.SEARCH_proc == 'main-menu':
 				valTab = []
 				valTab.sort(key=lambda poz: poz.name)
-				hosts = [
-					('3MOVS', 'https://www.3movs.com'), ('69TEENTUBE', 'https://69teentube.com'), ('9VIDS', 'https://9vids.com'), ('AD69', 'https://ad69.com'), ('AHME', 'https://www.ah-me.com'), ('AL4A', 'https://www.al4a.com'), ('ALOTPORN', 'https://www.alotporn.com'), ('ALPHAPORNO', 'https://www.alphaporno.com'), ('AMATEUR.RED', 'https://amateur.red'), ('AMATEUR8', 'https://www.amateur8.com/'), ('AMATEURCOUGAR', 'https://www.amateur-cougar.com'), ('AMAZINGCUCKOLD', 'https://www.amazingcuckold.com'), ('BABES34', 'http://babes34.me'), ('BADDIES', 'https://baddies.xxx'), ('BEAUTYMOVIES', 'https://www.beautymovies.com'), ('BLOWJOBIT', 'https://blowjobit.com'), ('CAMBEAUTIES', 'https://cambeauties.com'), ('CAMBRO', 'https://www.cambro.tv'), ('CAMHUB', 'http://www.camhub.cc'), ('CAMVIDEOS', 'https://www.camvideos.tv'), ('CROCOTUBE', 'https://crocotube.com/'), ('CUCKOLDPLACETUBE', 'https://www.cuckoldplacetube.com'), ('DEFINEBABE', 'https://www.definebabe.com/'), ('DRTUBER', 'http://www.drtuber.com'), ('EBONY8', 'https://www.ebony8.com'), ('EVERYCAMGIRL', 'https://everycamgirl.com'), ('FEMEFUN', 'https://femefun.com'), ('FREEPORNHQ', 'https://www.freepornhq.xxx'), ('FULLXCINEMA', 'https://fullxcinema.com'), ('FUQER', 'https://www.fuqer.com'), ('GLAVMATURES', 'https://glavmatures.com'), ('HANDJOBHUB', 'https://handjobhub.com'), ('HARDSEXVIDS', 'https://hardsexvids.com'), ('HDZOG', 'https://hdzog.com/'), ('HELLMOMS', 'https://hellmoms.com'), ('HELLOPORN', 'https://hello.porn'), ('HELLPORNO', 'https://hellporno.com/'), ('HYPNOTUBE', 'https://hypnotube.com'), ('HomeMoviesTube', 'http://www.homemoviestube.com'), ('IN35', 'https://in35.com'), ('ITSPORN', 'https://www.its.porn'), ('JAVBANGERS', 'https://www.javbangers.com'), ('JIZZBOOM', 'https://jizzboom.com'), ('JIZZBUNKER', 'https://jizzbunker.com'), ('KATESTUBE', 'https://www.katestube.com'), ('KOLOPORNO', 'https://www.koloporno.com'), ('LAIDHUB', 'https://www.laidhub.com'), ('MASTURBATE2GETHER', 'https://www.masturbate2gether.com'), ('MATUREAMATEURSEX', 'https://www.mature-amateur-sex.com'), ('MATUREGIRLS', 'https://www.mature-girls.com'), ('MILFFOX', 'https://www.milffox.com'), ('MOMSLUST', 'https://www.momslust.com'), ('MOMXL', 'https://momxl.com'), ('MOREAMATEURS', 'https://moreamateurs.com'), ('MOVIEFAP', 'https://www.moviefap.com'), ('MR DEEPFAKES', 'https://mrdeepfakes.com'), ('MUSTJAV', 'https://mustjav.com'), ('MYPORNHERE', 'https://www.mypornhere.com'), ('NEPORN', 'https://neporn.com'), ('NUDEZ', 'https://nudez.com'), ('OHSEXFILM', 'https://www.ohsexfilm.com'), ('OK.XXX', 'https://ok.xxx'), ('ORIENTAL SEX', 'https://www.oriental-sex.com'), ('PERFECTGIRLS', 'https://www.perfectgirls.xxx'), ('PERVCLIPS', 'https://www.pervclips.com/tube'), ('PORCORE', 'https://porcore.com'), ('PORN7', 'https://www.porn7.xxx'), ('PORNBIMBO', 'http://pornbimbo.com'), ('PORNBOLT', 'https://pornbolt.com'), ('PORNBURST', 'https://www.pornburst.xxx/'), ('PORNDIG', 'https://www.porndig.com'), ('PORNDR', 'https://www.porndr.com'), ('PORNDROIDS', 'https://www.porndroids.com'), ('PORNENIX', 'https://pornenix.com'), ('PORNFD', 'http://pornfd.com'), ('PORNHAT', 'https://www.pornhat.com/'), ('PORNHEED', 'https://www.pornheed.com'), ('PORNICOM', 'http://pornicom.com'), ('PORNID', 'https://www.pornid.xxx'), ('PORNOFLIX', 'https://pornoflix.com'), ('PORNOHAMMER', 'https://www.pornohammer.com'), ('PORNOREINO', 'https://en.pornoreino.com'), ('PORNTREX', 'http://www.porntrex.com'), ('PORNVIDEOSBEST', 'https://pornvideosbest.com'), ('PORNWHITE', 'https://www.pornwhite.com'), ('PORNXP', 'https://pornxp.org'), ('PORNYTEEN', 'https://pornyteen.com'), ('PUNISHBANG', 'https://www.punishbang.com'), ('RELAX SEX', 'https://relax-sex.com'), ('SEVEREPORN', 'https://severeporn.com'), ('SEXMATURE', 'https://www.sexmature.xxx'), ('SEXVID', 'https://www.sexvid.xxx'), ('SHAMELESS', 'https://shameless.com'), ('SHEMALEHD', 'https://www.shemalehd.sex'), ('SHESHAFT', 'https://www.sheshaft.com'), ('SHOOSHTIME', 'https://shooshtime.com'), ('TEENTUBER', 'https://www.teentuber.xxx'), ('TEENXY', 'https://teenxy.com'), ('TERK.NL', 'https://www.terk.nl'), ('THEPORNAREA', 'https://thepornarea.com'), ('THEYAREHUGE', 'https://www.theyarehuge.com'), ('TOPVIDS', 'https://topvids.net'), ('TRENDYPORN', 'https://www.trendyporn.com'), ('TROPICTUBE', 'https://www.tropictube.com'), ('VEPORN', 'https://veporn.com'), ('W4NKR', 'https://w4nkr.com'), ('WANKOZ', 'https://www.wankoz.com'), ('WARDDOGS', 'https://warddogs.com'), ('WATCHMYGF', 'https://www.watchmygf.me'), ('WETSINS', 'https://www.wetsins.com'), ('WHORESHUB', 'https://www.whoreshub.com'), ('XCAFE', 'https://xcafe.com'), ('XCUM', 'https://xcum.com'), ('XGROOVY', 'https://xgroovy.com'), ('XNXXHAMSTER', 'https://www.xnxxhamster.net'), ('XOZILLA', 'https://www.xozilla.com'), ('XPAJA', 'https://www.xpaja.net'), ('XRARES', 'https://www.xrares.com'), ('XTITS', 'https://www.xtits.com'), ('XXBRITS', 'https://www.xxbrits.com'), ('XXXBULE', 'https://www.xxxbule.com/'), ('XXXDAN', 'https://xxxdan.com'), ('XXXSHAKE', 'https://xxxshake.com'), ('YOUJIZZ', 'http://www.youjizz.com'), ('YOUNG SEX TUBE', 'https://young-sex-tube.com'), ('YOURAMATEURTUBE', 'https://youramateurtube.com'), ('YOURLUST', 'https://yourlust.com'), ('ZIPORN', 'https://ziporn.com/'), ('eporner', 'http://www.eporner.com'), ('freeones', 'https://www.freeones.com'), ('homepornking', 'https://www.homepornking.com'), ('pornhub', 'http://www.pornhub.com'), ('redtube', 'https://www.redtube.com'), ('tube8', 'http://www.tube8.com'), ('xhamster', 'https://www.xhamster.com'), ('xnxx', 'https://www.xnxx.com'), ('xvideos', 'http://www.xvideos.com'), ('youporn', 'https://www.youporn.com')
- 				]
+				hosts = [('3MOVS', 'https://www.3movs.com'), ('69TEENTUBE', 'https://69teentube.com'), ('9VIDS', 'https://9vids.com'), ('AD69', 'https://ad69.com'), ('AHME', 'https://www.ah-me.com'), ('AL4A', 'https://www.al4a.com'), ('ALOTPORN', 'https://www.alotporn.com'), ('ALPHAPORNO', 'https://www.alphaporno.com'), ('AMATEUR.RED', 'https://amateur.red'), ('AMATEUR8', 'https://www.amateur8.com/'), ('AMATEURCOUGAR', 'https://www.amateur-cougar.com'), ('AMAZINGCUCKOLD', 'https://www.amazingcuckold.com'), ('BABES34', 'https://babes34.me'), ('BADDIES', 'https://baddies.xxx'), ('BEAUTYMOVIES', 'https://www.beautymovies.com'), ('BLOWJOBIT', 'https://blowjobit.com'), ('CAMBEAUTIES', 'https://cambeauties.com'), ('CAMBRO', 'https://www.cambro.tv'), ('CAMHUB', 'https://www.camhub.cc'), ('CAMVIDEOS', 'https://www.camvideos.tv'), ('CROCOTUBE', 'https://crocotube.com/'), ('CUCKOLDPLACETUBE', 'https://www.cuckoldplacetube.com'), ('DEFINEBABE', 'https://www.definebabe.com/'), ('DRTUBER', 'https://www.drtuber.com'), ('EBONY8', 'https://www.ebony8.com'), ('EVERYCAMGIRL', 'https://everycamgirl.com'), ('FEMEFUN', 'https://femefun.com'), ('FREEPORNHQ', 'https://www.freepornhq.xxx'), ('FULLXCINEMA', 'https://fullxcinema.com'), ('FUQER', 'https://www.fuqer.com'), ('GLAVMATURES', 'https://glavmatures.com'), ('HANDJOBHUB', 'https://handjobhub.com'), ('HARDSEXVIDS', 'https://hardsexvids.com'), ('HDZOG', 'https://hdzog.com/'), ('HELLMOMS', 'https://hellmoms.com'), ('HELLOPORN', 'https://hello.porn'), ('HELLPORNO', 'https://hellporno.com/'), ('HYPNOTUBE', 'https://hypnotube.com'), ('HomeMoviesTube', 'https://www.homemoviestube.com'), ('IN35', 'https://in35.com'), ('ITSPORN', 'https://www.its.porn'), ('JAVBANGERS', 'https://www.javbangers.com'), ('JIZZBOOM', 'https://jizzboom.com'), ('JIZZBUNKER', 'https://jizzbunker.com'), ('KATESTUBE', 'https://www.katestube.com'), ('KOLOPORNO', 'https://www.koloporno.com'), ('LAIDHUB', 'https://www.laidhub.com'), ('MASTURBATE2GETHER', 'https://www.masturbate2gether.com'), ('MATUREAMATEURSEX', 'https://www.mature-amateur-sex.com'), ('MATUREGIRLS', 'https://www.mature-girls.com'), ('MILFFOX', 'https://www.milffox.com'), ('MOMSLUST', 'https://www.momslust.com'), ('MOMXL', 'https://momxl.com'), ('MOREAMATEURS', 'https://moreamateurs.com'), ('MOVIEFAP', 'https://www.moviefap.com'), ('MR DEEPFAKES', 'https://mrdeepfakes.com'), ('MUSTJAV', 'https://mustjav.com'), ('MYPORNHERE', 'https://www.mypornhere.com'), ('NEPORN', 'https://neporn.com'), ('NUDEZ', 'https://nudez.com'), ('OHSEXFILM', 'https://www.ohsexfilm.com'), ('OK.XXX', 'https://ok.xxx'), ('ORIENTAL SEX', 'https://www.oriental-sex.com'), ('PERFECTGIRLS', 'https://www.perfectgirls.xxx'), ('PERVCLIPS', 'https://www.pervclips.com/tube'), ('PORCORE', 'https://porcore.com'), ('PORN7', 'https://www.porn7.xxx'), ('PORNBIMBO', 'https://pornbimbo.com'), ('PORNBOLT', 'https://pornbolt.com'), ('PORNBURST', 'https://www.pornburst.xxx/'), ('PORNDIG', 'https://www.porndig.com'), ('PORNDR', 'https://www.porndr.com'), ('PORNDROIDS', 'https://www.porndroids.com'), ('PORNENIX', 'https://pornenix.com'), ('PORNFD', 'https://pornfd.com'), ('PORNHAT', 'https://www.pornhat.com/'), ('PORNHEED', 'https://www.pornheed.com'), ('PORNICOM', 'https://pornicom.com'), ('PORNID', 'https://www.pornid.xxx'), ('PORNOFLIX', 'https://pornoflix.com'), ('PORNOHAMMER', 'https://www.pornohammer.com'), ('PORNOREINO', 'https://en.pornoreino.com'), ('PORNTREX', 'https://www.porntrex.com'), ('PORNVIDEOSBEST', 'https://pornvideosbest.com'), ('PORNWHITE', 'https://www.pornwhite.com'), ('PORNXP', 'https://pornxp.org'), ('PORNYTEEN', 'https://pornyteen.com'), ('PUNISHBANG', 'https://www.punishbang.com'), ('RELAX SEX', 'https://relax-sex.com'), ('SEVEREPORN', 'https://severeporn.com'), ('SEXMATURE', 'https://www.sexmature.xxx'), ('SEXVID', 'https://www.sexvid.xxx'), ('SHAMELESS', 'https://shameless.com'), ('SHEMALEHD', 'https://www.shemalehd.sex'), ('SHESHAFT', 'https://www.sheshaft.com'), ('SHOOSHTIME', 'https://shooshtime.com'), ('TEENTUBER', 'https://www.teentuber.xxx'), ('TEENXY', 'https://teenxy.com'), ('TERK.NL', 'https://www.terk.nl'), ('THEPORNAREA', 'https://thepornarea.com'), ('THEYAREHUGE', 'https://www.theyarehuge.com'), ('TOPVIDS', 'https://topvids.net'), ('TRENDYPORN', 'https://www.trendyporn.com'), ('TROPICTUBE', 'https://www.tropictube.com'), ('VEPORN', 'https://veporn.com'), ('W4NKR', 'https://w4nkr.com'), ('WANKOZ', 'https://www.wankoz.com'), ('WARDDOGS', 'https://warddogs.com'), ('WATCHMYGF', 'https://www.watchmygf.me'), ('WETSINS', 'https://www.wetsins.com'), ('WHORESHUB', 'https://www.whoreshub.com'), ('XCAFE', 'https://xcafe.com'), ('XCUM', 'https://xcum.com'), ('XGROOVY', 'https://xgroovy.com'), ('XNXXHAMSTER', 'https://www.xnxxhamster.net'), ('XOZILLA', 'https://www.xozilla.com'), ('XPAJA', 'https://www.xpaja.net'), ('XRARES', 'https://www.xrares.com'), ('XTITS', 'https://www.xtits.com'), ('XXBRITS', 'https://www.xxbrits.com'), ('XXXBULE', 'https://www.xxxbule.com/'), ('XXXDAN', 'https://xxxdan.com'), ('XXXSHAKE', 'https://xxxshake.com'), ('YOUJIZZ', 'https://www.youjizz.com'), ('YOUNG SEX TUBE', 'https://young-sex-tube.com'), ('YOURAMATEURTUBE', 'https://youramateurtube.com'), ('YOURLUST', 'https://yourlust.com'), ('ZIPORN', 'https://ziporn.com/'), ('eporner', 'https://www.eporner.com'), ('freeones', 'https://www.freeones.com'), ('homepornking', 'https://www.homepornking.com'), ('pornhub', 'https://www.pornhub.com'), ('redtube', 'https://www.redtube.com'), ('tube8', 'https://www.tube8.com'), ('xhamster', 'https://www.xhamster.com'), ('xnxx', 'https://www.xnxx.com'), ('xvideos', 'https://www.xvideos.com'), ('youporn', 'https://www.youporn.com')]
 				for Name, URL in hosts:
 					self.MAIN_URL = URL
 					valtemp = self.listsItems(-1, url, Name + '-search')
@@ -996,11 +983,9 @@ class Host(CBaseHostClass):
 
 		if 'UPDATE-ZMIANY' == name:
 			return valTab
-
-##################################################################
 		if 'tube8' == name:
 			room = 'ZGVwZWNoZTEyMUB3cC5wbA=='
-			self.MAIN_URL = 'http://www.tube8.com'
+			self.MAIN_URL = 'https://www.tube8.com'
 			COOKIEFILE = join(GetCookieDir(), 'tube8.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -1025,10 +1010,10 @@ class Host(CBaseHostClass):
 			valTab.insert(0, CDisplayListItem('--- New Videos ---', 'New Videos', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/newest/page/1/'], 'tube8-clips', siteLogo, None))
 			return searchItems(valTab, True)
 		if 'tube8-search' == name:
-			valTab = self.listsItems(-1, 'http://www.tube8.com/searches.html?q=' + url.replace(' ', '+'), 'tube8-clips')
+			valTab = self.listsItems(-1, 'https://www.tube8.com/searches.html?q=' + url.replace(' ', '+'), 'tube8-clips')
 			return valTab
 		if 'tube8-clips' == name:
-			self.MAIN_URL = 'http://www.tube8.com'
+			self.MAIN_URL = 'https://www.tube8.com'
 			COOKIEFILE = join(GetCookieDir(), 'tube8.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -1052,7 +1037,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'showup' == name:
-			self.MAIN_URL = 'http://showup.tv'
+			self.MAIN_URL = 'https://showup.tv'
 			COOKIEFILE = join(GetCookieDir(), 'showup.cookie')
 			url = 'https://showup.tv'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -1072,8 +1057,8 @@ class Host(CBaseHostClass):
 				streamid = self.cm.ph.getSearchGroups(item, '''streamid=['"]([^"^']+?)['"]''', 1, True)[0]
 				uid = self.cm.ph.getSearchGroups(item, '''uid=['"]([^"^']+?)['"]''', 1, True)[0]
 				phUrl = 'rtmp://' + transcoderaddr + ':1935/webrtc/' + streamid + '_aac'
-				phImage = 'http://showup.tv/' + phImage
-				valTab.append(CDisplayListItem(phTitle, phTitle + '     ' + decodeHtml(phDesc), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 0)], 0, phImage, None))
+				phImage = 'https://showup.tv/' + phImage
+				valTab.append(CDisplayListItem(phTitle, phTitle + '	 ' + decodeHtml(phDesc), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 0)], 0, phImage, None))
 			return valTab
 
 		if 'xnxx' == name:
@@ -1086,7 +1071,6 @@ class Host(CBaseHostClass):
 			parse = re.search('"categories":(.*?),"more_links"', data, re.S)
 			if not parse:
 				return valTab
-			# printDBG( 'Host listsItems parse.group(1): '+parse.group(1) )
 			result = simplejson.loads(parse.group(1))
 			if result:
 				for item in result:
@@ -1101,10 +1085,10 @@ class Host(CBaseHostClass):
 			return searchItems(valTab, True)
 
 		if 'xnxx-search' == name:
-			valTab = self.listsItems(-1, 'http://www.xnxx.com/?k=' + url.replace(' ', '+'), 'xnxx-clips')
+			valTab = self.listsItems(-1, 'https://www.xnxx.com/?k=' + url.replace(' ', '+'), 'xnxx-clips')
 			return valTab
 		if 'xnxx-clips' == name:
-			self.MAIN_URL = 'http://www.xnxx.com'
+			self.MAIN_URL = 'https://www.xnxx.com'
 			COOKIEFILE = join(GetCookieDir(), 'xnxx.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -2537,7 +2521,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'xvideos' == name:
-			self.MAIN_URL = 'http://www.xvideos.com'
+			self.MAIN_URL = 'https://www.xvideos.com'
 			COOKIEFILE = join(GetCookieDir(), 'xvideos.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -2560,7 +2544,7 @@ class Host(CBaseHostClass):
 			valTab.insert(0, CDisplayListItem('--- Countries ---', 'Videos by Countries', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/lang/'], 'xvideos-COUNTRIES', siteLogo, None))
 			return searchItems(valTab, True)
 		if 'xvideos-pornstars' == name:
-			self.MAIN_URL = 'http://www.xvideos.com'
+			self.MAIN_URL = 'https://www.xvideos.com'
 			COOKIEFILE = join(GetCookieDir(), 'xvideos.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -2591,7 +2575,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'xvideos-COUNTRIES' == name:
-			self.MAIN_URL = 'http://www.xvideos.com'
+			self.MAIN_URL = 'https://www.xvideos.com'
 			COOKIEFILE = join(GetCookieDir(), 'xvideos.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -2613,10 +2597,10 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'xvideos-search' == name:
-			valTab = self.listsItems(-1, 'http://www.xvideos.com/?k=' + url.replace(' ', '+'), 'xvideos-clips')
+			valTab = self.listsItems(-1, 'https://www.xvideos.com/?k=' + url.replace(' ', '+'), 'xvideos-clips')
 			return valTab
 		if 'xvideos-clips' == name:
-			self.MAIN_URL = 'http://www.xvideos.com'
+			self.MAIN_URL = 'https://www.xvideos.com'
 			COOKIEFILE = join(GetCookieDir(), 'xvideos.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -2651,7 +2635,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'hentaigasm' == name:
-			self.MAIN_URL = 'http://hentaigasm.com'
+			self.MAIN_URL = 'https://hentaigasm.com'
 			COOKIEFILE = join(GetCookieDir(), 'hentaigasm.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -2823,8 +2807,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'xhamsterlive' == name:
-			self.MAIN_URL = 'http://xhamsterlive.com'
-			# url='http://xhamsterlive.com/api/front/models'
+			self.MAIN_URL = 'https://xhamsterlive.com'
 			url = 'https://go.hpyrdr.com/api/models?limit=9999'
 			COOKIEFILE = join(GetCookieDir(), 'xhamsterlive.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='iphone_3_0')
@@ -2855,7 +2838,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'eporner' == name:
-			self.MAIN_URL = 'http://www.eporner.com'
+			self.MAIN_URL = 'https://www.eporner.com'
 			COOKIEFILE = join(GetCookieDir(), 'eporner.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -2877,18 +2860,18 @@ class Host(CBaseHostClass):
 				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'eporner-clips', phImage, phUrl))
 			valTab.sort(key=lambda poz: poz.name)
 			valTab.insert(0, CDisplayListItem("--- 4k ---", "4k", CDisplayListItem.TYPE_CATEGORY, ["https://www.eporner.com/category/4k-porn/"], 'eporner-clips', siteLogo, '/4k/'))
-			valTab.insert(0, CDisplayListItem("--- HD ---", "HD", CDisplayListItem.TYPE_CATEGORY, ["http://www.eporner.com/hd/"], 'eporner-clips', siteLogo, '/hd/'))
-			valTab.insert(0, CDisplayListItem("--- Top Rated ---", "Top Rated", CDisplayListItem.TYPE_CATEGORY, ["http://www.eporner.com/top_rated/"], 'eporner-clips', siteLogo, '/top_rated/'))
-			valTab.insert(0, CDisplayListItem("--- Popular ---", "Popular", CDisplayListItem.TYPE_CATEGORY, ["http://www.eporner.com/weekly_top/"], 'eporner-clips', siteLogo, '/weekly_top/'))
-			valTab.insert(0, CDisplayListItem("--- On Air ---", "On Air", CDisplayListItem.TYPE_CATEGORY, ["http://www.eporner.com/currently/"], 'eporner-clips', siteLogo, '/currently/'))
-			valTab.insert(0, CDisplayListItem("--- New ---", "New", CDisplayListItem.TYPE_CATEGORY, ["http://www.eporner.com/"], 'eporner-clips', siteLogo, ''))
+			valTab.insert(0, CDisplayListItem("--- HD ---", "HD", CDisplayListItem.TYPE_CATEGORY, ["https://www.eporner.com/hd/"], 'eporner-clips', siteLogo, '/hd/'))
+			valTab.insert(0, CDisplayListItem("--- Top Rated ---", "Top Rated", CDisplayListItem.TYPE_CATEGORY, ["https://www.eporner.com/top_rated/"], 'eporner-clips', siteLogo, '/top_rated/'))
+			valTab.insert(0, CDisplayListItem("--- Popular ---", "Popular", CDisplayListItem.TYPE_CATEGORY, ["https://www.eporner.com/weekly_top/"], 'eporner-clips', siteLogo, '/weekly_top/'))
+			valTab.insert(0, CDisplayListItem("--- On Air ---", "On Air", CDisplayListItem.TYPE_CATEGORY, ["https://www.eporner.com/currently/"], 'eporner-clips', siteLogo, '/currently/'))
+			valTab.insert(0, CDisplayListItem("--- New ---", "New", CDisplayListItem.TYPE_CATEGORY, ["https://www.eporner.com/"], 'eporner-clips', siteLogo, ''))
 			return searchItems(valTab, True)
 		if 'eporner-search' == name:
 			valTab = self.listsItems(-1, 'https://www.eporner.com/search/%s/' % url.replace(' ', '+'), 'eporner-clips')
 			return valTab
 		if 'eporner-clips' == name:
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			self.MAIN_URL = 'http://www.eporner.com'
+			self.MAIN_URL = 'https://www.eporner.com'
 			COOKIEFILE = join(GetCookieDir(), 'eporner.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -2920,7 +2903,7 @@ class Host(CBaseHostClass):
 					phUrl = self.MAIN_URL + phUrl
 				if phImage.startswith('//'):
 					phImage = 'http:' + phImage
-				valTab.append(CDisplayListItem(decodeHtml(phTitle) + '    ' + size, '[' + phRuntime + '] ' + decodeHtml(phTitle) + '    ' + size + '\n' + mbrate + mbvie, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'eporner-serwer', phImage, phImage))
+				valTab.append(CDisplayListItem(decodeHtml(phTitle) + '	' + size, '[' + phRuntime + '] ' + decodeHtml(phTitle) + '	' + size + '\n' + mbrate + mbvie, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'eporner-serwer', phImage, phImage))
 			if next:
 				if next.startswith('/'):
 					next = self.MAIN_URL + next
@@ -2956,7 +2939,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'pornhub' == name:
-			self.MAIN_URL = 'http://www.pornhub.com'
+			self.MAIN_URL = 'https://www.pornhub.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornhub.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self._getPage(url, self.defaultParams)
@@ -2979,7 +2962,7 @@ class Host(CBaseHostClass):
 			valTab = self.listsItems(-1, 'https://www.pornhub.com/video/search?search=%s' % url.replace(' ', '+'), 'pornhub-clips')
 			return valTab
 		if 'pornhub-clips' == name:
-			self.MAIN_URL = 'http://www.pornhub.com'
+			self.MAIN_URL = 'https://www.pornhub.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornhub.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self._getPage(url, self.defaultParams)
@@ -3005,7 +2988,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'hdporn' == name:
-			self.MAIN_URL = 'http://www.hdporn.net'
+			self.MAIN_URL = 'https://www.hdporn.net'
 			COOKIEFILE = join(GetCookieDir(), 'hdporn.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -3047,7 +3030,7 @@ class Host(CBaseHostClass):
 				return valTab
 
 		if 'pornrabbit' == name:
-			self.MAIN_URL = 'http://www.pornrabbit.com'
+			self.MAIN_URL = 'https://www.pornrabbit.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornrabbit.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'pornrabbit.cookie', 'pornrabbit.com', self.defaultParams)
@@ -3140,7 +3123,7 @@ class Host(CBaseHostClass):
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'PORNWHITE-clips', phImage, phUrl))
 			valTab.sort(key=lambda poz: poz.name)
 			valTab.insert(0, CDisplayListItem("--- Newest Videos ---", "Newest Videos", CDisplayListItem.TYPE_CATEGORY, ["https://www.pornwhite.com/latest-updates/"], 'PORNWHITE-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("---    Top Rated Videos ---", "Top Rated Videos", CDisplayListItem.TYPE_CATEGORY, ["https://www.pornwhite.com/top-rated/"], 'PORNWHITE-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("---	Top Rated Videos ---", "Top Rated Videos", CDisplayListItem.TYPE_CATEGORY, ["https://www.pornwhite.com/top-rated/"], 'PORNWHITE-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem("--- Popular Videos ---", "Popular Videos", CDisplayListItem.TYPE_CATEGORY, ["https://www.pornwhite.com/most-popular/"], 'PORNWHITE-clips', siteLogo, None))
 			return searchItems(valTab, True)
 		if 'PORNWHITE-search' == name:
@@ -3170,7 +3153,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'AHME' == name:
-			self.MAIN_URL = 'http://www.ah-me.com'
+			self.MAIN_URL = 'https://www.ah-me.com'
 			host = "Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; androVM for VirtualBox ('Tablet' version with phone caps) Build/JRO03S) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30"
 			header = {'Referer': url, 'User-Agent': host, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
 			query_data = {'url': url, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
@@ -3202,11 +3185,11 @@ class Host(CBaseHostClass):
 			return valTab
 		if 'AHME-clips' == name:
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			self.MAIN_URL = 'http://www.ah-me.com'
+			self.MAIN_URL = 'https://www.ah-me.com'
 			query_data = {'url': url, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
 			try:
 				data = self.cm.getURLRequestData(query_data)
-			except:
+			except Exception:
 				printDBG('Host listsItems query error url: ' + url)
 				return valTab
 			next = self.cm.ph.getSearchGroups(data, '''next"><a.href=['"]([^"^']+?)['"]''', 1, True)[0]
@@ -3315,7 +3298,7 @@ class Host(CBaseHostClass):
 							printExc()
 						if config.plugins.iptvplayer.fotka.value == '0':
 							Url = hls.replace('https', 'http').replace('manifest.hls', 'index.m3u8')
-						valTab.append(CDisplayListItem(Name, '[Age : ' + Age + ']' + '   [Views:  ' + Viewers + ']      ' + Title, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', Url, 0)], 0, Image, None))
+						valTab.append(CDisplayListItem(Name, '[Age : ' + Age + ']' + '   [Views:  ' + Viewers + ']	  ' + Title, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', Url, 0)], 0, Image, None))
 					except Exception:
 						printExc()
 			return valTab
@@ -3682,7 +3665,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'YOUJIZZ' == name:
-			self.MAIN_URL = 'http://www.youjizz.com'
+			self.MAIN_URL = 'https://www.youjizz.com'
 			COOKIEFILE = join(GetCookieDir(), 'youjizz.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -3701,17 +3684,17 @@ class Host(CBaseHostClass):
 					phUrl = self.MAIN_URL + phUrl
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'YOUJIZZ-clips', '', None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- HD ---", "HD", CDisplayListItem.TYPE_CATEGORY, ["http://www.youjizz.com/search/HighDefinition-1.html#"], 'YOUJIZZ-clips', '', None))
-			valTab.insert(0, CDisplayListItem("--- Top Rated ---", "Top Rated", CDisplayListItem.TYPE_CATEGORY, ["http://www.youjizz.com/top-rated/1.html"], 'YOUJIZZ-clips', '', None))
-			valTab.insert(0, CDisplayListItem("--- Newest ---", "Newest", CDisplayListItem.TYPE_CATEGORY, ["http://www.youjizz.com/newest-clips/1.html"], 'YOUJIZZ-clips', '', None))
-			valTab.insert(0, CDisplayListItem("--- Popular ---", "Popular", CDisplayListItem.TYPE_CATEGORY, ["http://www.youjizz.com/most-popular/1.html"], 'YOUJIZZ-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- HD ---", "HD", CDisplayListItem.TYPE_CATEGORY, ["https://www.youjizz.com/search/HighDefinition-1.html#"], 'YOUJIZZ-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Top Rated ---", "Top Rated", CDisplayListItem.TYPE_CATEGORY, ["https://www.youjizz.com/top-rated/1.html"], 'YOUJIZZ-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Newest ---", "Newest", CDisplayListItem.TYPE_CATEGORY, ["https://www.youjizz.com/newest-clips/1.html"], 'YOUJIZZ-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Popular ---", "Popular", CDisplayListItem.TYPE_CATEGORY, ["https://www.youjizz.com/most-popular/1.html"], 'YOUJIZZ-clips', '', None))
 			return searchItems(valTab, True)
 		if 'YOUJIZZ-search' == name:
 			valTab = self.listsItems(-1, 'https://www.youjizz.com/search/%s-1.html' % url.replace(' ', '+'), 'YOUJIZZ-clips')
 			return valTab
 		if 'YOUJIZZ-clips' == name:
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			self.MAIN_URL = 'http://www.youjizz.com'
+			self.MAIN_URL = 'https://www.youjizz.com'
 			url = url.replace(' ', '%20')
 			COOKIEFILE = join(GetCookieDir(), 'youjizz.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -3816,7 +3799,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'DRTUBER' == name:
-			self.MAIN_URL = 'http://www.drtuber.com'
+			self.MAIN_URL = 'https://www.drtuber.com'
 			COOKIEFILE = join(GetCookieDir(), 'drtuber.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -3838,7 +3821,7 @@ class Host(CBaseHostClass):
 			valTab.sort(key=lambda poz: poz.name)
 			return searchItems(valTab, True)
 		if 'DRTUBER-search' == name:
-			valTab = self.listsItems(-1, 'http://www.drtuber.com/search/videos/%s' % url.replace(' ', '+'), 'DRTUBER-clips')
+			valTab = self.listsItems(-1, 'https://www.drtuber.com/search/videos/%s' % url.replace(' ', '+'), 'DRTUBER-clips')
 			return valTab
 		if 'DRTUBER-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'drtuber.cookie')
@@ -3868,7 +3851,6 @@ class Host(CBaseHostClass):
 			COOKIEFILE = join(GetCookieDir(), 'pornheed.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': False, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'pornheed.cookie', 'pornheed.com', self.defaultParams)
-			next = self.cm.ph.getSearchGroups(data, '''current'>.?</a><a href=['"]([^"^']+?)['"]''', 1, True)[0]
 			data = self.cm.ph.getDataBeetwenMarkers(data, '<h2>Categories</h2>', '<div class="pagelist">', False)[1]
 			data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li id=', '</span>')
 			for item in data:
@@ -3881,10 +3863,6 @@ class Host(CBaseHostClass):
 				if phTitle:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'PORNHEED-clips', phImage, None))
 			return searchItems(valTab, True)
-			if next:
-				next = self.MAIN_URL + next
-				valTab.append(self.getNextItem(next, next, name))
-			return valTab
 
 		if 'PORNHEED-search' == name:
 			valTab = self.listsItems(-1, 'https://www.pornheed.com/s/%s' % url.replace(' ', '-'), 'PORNHEED-clips')
@@ -3953,7 +3931,7 @@ class Host(CBaseHostClass):
 			query_data = {'url': url, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
 			try:
 				data = self.cm.getURLRequestData(query_data)
-			except:
+			except Exception:
 				printDBG('Host listsItems query error url: ' + url)
 				return valTab
 			next = self.cm.ph.getSearchGroups(data, r'''next.+\s.+href=['"]([^"^']+?)['"]>''', 1, True)[0]
@@ -4182,7 +4160,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'PORNTREX' == name:
-			self.MAIN_URL = 'http://www.porntrex.com'
+			self.MAIN_URL = 'https://www.porntrex.com'
 			self.format4k = config.plugins.iptvplayer.xxx4k.value
 			COOKIEFILE = join(GetCookieDir(), 'porntrex.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
@@ -4202,7 +4180,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': url})
-				except:
+				except Exception:
 					pass
 				if 'jpg' in phImage:
 					valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'PORNTREX-clips', phImage, None))
@@ -4243,10 +4221,10 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': phUrl})
-				except:
+				except Exception:
 					pass
 				if not '>Private<' in item:
-					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + ']    ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
+					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + ']	' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next:
 				valTab.append(self.getNextItem(next, url, name, "next"))
 			return valTab
@@ -4404,7 +4382,7 @@ class Host(CBaseHostClass):
 					phUrl = 'http:' + phUrl
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
-				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + ']    ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, decodeHtml(phImage)))
+				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + ']	' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, decodeHtml(phImage)))
 			if next:
 				if next.startswith('/'):
 					next = self.MAIN_URL + next
@@ -4451,7 +4429,7 @@ class Host(CBaseHostClass):
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
 			if not sts:
-				return valtab
+				return
 			next = self.cm.ph.getDataBeetwenMarkers(data, 'page-next" href="', '">', False)[1]
 			data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="video-box statisticBox ', '</i></span>')
 			for item in data:
@@ -4496,7 +4474,6 @@ class Host(CBaseHostClass):
 			valTab.insert(0, CDisplayListItem('--- Models Alphabetically---', 'Models Alphabetically', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/models/alphabetically/'], 'MOMSLUST-models', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- Popular Models ---', 'Popular Models', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/models/popular/'], 'MOMSLUST-models', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- Most Models ---', 'Models Having Most Videos ', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/models/most-videos/'], 'MOMSLUST-models', siteLogo, None))
-			####################################################################
 			data = self.cm.ph.getDataBeetwenMarkers(data, '<strong>Videos</strong>', 'page-footer">', False)[1]
 			data = data.split('<div class="item')
 			if len(data):
@@ -4517,7 +4494,7 @@ class Host(CBaseHostClass):
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
 			if not sts:
-				return valTab
+				return
 			if '/models/' in url:
 				data2 = self.cm.ph.getDataBeetwenMarkers(data, 'class="main-content">', 'class="rating-ov">', False)[1]
 				name = self.cm.ph.getSearchGroups(data2, '''src.+alt=['"]([^#]+?)['"]>''', 1, True)[0]
@@ -4535,7 +4512,7 @@ class Host(CBaseHostClass):
 				weight = self.cm.ph.getSearchGroups(data2, r'''Height.+\s.+<li[>]([^#]+?)[<]/span''', 1, True)[0].replace('<span>', '')
 				printDBG('Súly: ' + weight)
 				if name:
-					valTab.append(CDisplayListItem(_(name + '    *    Votes: ' + votes), country + '   *   ' + date + '\n' + hair + '   *   ' + eyes + '\n' + height + '   *   ' + weight + '\n' + meas + '\nFor more information, click the info button !\n' + desc, CDisplayListItem.TYPE_ARTICLE, [], '', cover, None))
+					valTab.append(CDisplayListItem(_(name + '	*	Votes: ' + votes), country + '   *   ' + date + '\n' + hair + '   *   ' + eyes + '\n' + height + '   *   ' + weight + '\n' + meas + '\nFor more information, click the info button !\n' + desc, CDisplayListItem.TYPE_ARTICLE, [], '', cover, None))
 			next = self.cm.ph.getSearchGroups(data, '''next".+href=["]([^"^']+?)["].*data''', 1, True)[0]
 			if next.startswith('/'):
 				next = self.MAIN_URL + next
@@ -4585,7 +4562,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'YUVUTU' == name:
-			self.MAIN_URL = 'http://www.yuvutu.com'
+			self.MAIN_URL = 'https://www.yuvutu.com'
 			query_data = {'url': url, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
 			try:
 				data = self.cm.getURLRequestData(query_data)
@@ -4613,7 +4590,7 @@ class Host(CBaseHostClass):
 			query_data = {'url': url, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
 			try:
 				data = self.cm.getURLRequestData(query_data)
-			except:
+			except Exception:
 				printDBG('Host listsItems query error url: ' + url)
 				return valTab
 			self.page += 1
@@ -4627,14 +4604,14 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'PORNICOM' == name:
-			self.MAIN_URL = 'http://pornicom.com'
+			self.MAIN_URL = 'https://pornicom.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornicom.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
 			if not sts:
-				return valtab
+				return
 			data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="items-list">', 'footer', False)[1]
 			data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="item">', 'quantity')
 			for item in data:
@@ -4644,22 +4621,22 @@ class Host(CBaseHostClass):
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
 				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'PORNICOM-clips', phImage, None))
-			valTab.insert(0, CDisplayListItem("--- Most popular ---", "Most popular", CDisplayListItem.TYPE_CATEGORY, ['http://www.pornicom.com/most-popular/'], 'PORNICOM-clips', '', None))
-			valTab.insert(0, CDisplayListItem("--- Latest updates ---", "Latest updates", CDisplayListItem.TYPE_CATEGORY, ['http://www.pornicom.com/latest-updates/'], 'PORNICOM-clips', '', None))
-			valTab.insert(0, CDisplayListItem("--- Top rated ---", "Top rated", CDisplayListItem.TYPE_CATEGORY, ['http://www.pornicom.com/top-rated/'], 'PORNICOM-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Most popular ---", "Most popular", CDisplayListItem.TYPE_CATEGORY, ['https://www.pornicom.com/most-popular/'], 'PORNICOM-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Latest updates ---", "Latest updates", CDisplayListItem.TYPE_CATEGORY, ['https://www.pornicom.com/latest-updates/'], 'PORNICOM-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Top rated ---", "Top rated", CDisplayListItem.TYPE_CATEGORY, ['https://www.pornicom.com/top-rated/'], 'PORNICOM-clips', '', None))
 			return searchItems(valTab, True)
 		if 'PORNICOM-search' == name:
-			valTab = self.listsItems(-1, 'http://www.pornicom.com/search/?q=%s' % url.replace(' ', '+'), 'PORNICOM-clips')
+			valTab = self.listsItems(-1, 'https://www.pornicom.com/search/?q=%s' % url.replace(' ', '+'), 'PORNICOM-clips')
 			return valTab
 		if 'PORNICOM-clips' == name:
-			self.MAIN_URL = 'http://pornicom.com'
+			self.MAIN_URL = 'https://pornicom.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornicom.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
 			if not sts:
-				return valtab
+				return
 			next_page = self.cm.ph.getDataBeetwenMarkers(data, 'pagination', '</div>', False)[1]
 			next_page = self.cm.ph.getDataBeetwenMarkers(next_page, '</span>', 'Page', False)[1]
 			next_page = self.cm.ph.getSearchGroups(next_page, '''href=['"]([^"^']+?)['"]''')[0]
@@ -4753,8 +4730,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
-				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle),
-				CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
+				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 				valTab.sort(key=lambda poz: poz.name)
 			if next_number:
 				next_page = self.cm.ph.getDataBeetwenMarkers(next_number, 'xxx/', '/', False)[1]
@@ -4839,7 +4815,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'TUBEPORNCLASSIC' == name:
-			self.MAIN_URL = 'http://tubepornclassic.com'
+			self.MAIN_URL = 'https://tubepornclassic.com'
 			url = 'https://tubepornclassic.com/api/json/categories/14400/str.all.json'
 			COOKIEFILE = join(GetCookieDir(), 'tubepornclassic.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -4862,7 +4838,7 @@ class Host(CBaseHostClass):
 			valTab = self.listsItems(-1, 'https://tubepornclassic.com/api/videos.php?params=86400/str/relevance/60/search..1.all..day&s=%s' % url.replace(' ', '+'), 'TUBEPORNCLASSIC-clips')
 			return valTab
 		if 'TUBEPORNCLASSIC-clips' == name:
-			self.MAIN_URL = 'http://tubepornclassic.com'
+			self.MAIN_URL = 'https://tubepornclassic.com'
 			catUrl = self.currList[Index].possibleTypesOfSearch
 			next = url
 			if catUrl == None:
@@ -5139,7 +5115,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'HomeMoviesTube' == name:
-			self.MAIN_URL = 'http://www.homemoviestube.com'
+			self.MAIN_URL = 'https://www.homemoviestube.com'
 			COOKIEFILE = join(GetCookieDir(), 'homemoviestube.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -5172,7 +5148,7 @@ class Host(CBaseHostClass):
 			valTab = self.listsItems(-1, self.MAIN_URL + '/search/%s/page1.html' % url.replace(' ', '+'), 'HomeMoviesTube-clips')
 			return valTab
 		if 'HomeMoviesTube-clips' == name:
-			self.MAIN_URL = 'http://www.homemoviestube.com'
+			self.MAIN_URL = 'https://www.homemoviestube.com'
 			COOKIEFILE = join(GetCookieDir(), 'homemoviestube.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -5238,7 +5214,7 @@ class Host(CBaseHostClass):
 			query_data = {'url': url, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
 			try:
 				data = self.cm.getURLRequestData(query_data)
-			except:
+			except Exception:
 				printDBG('Host listsItems query error url: ' + url)
 				return valTab
 			next = self.cm.ph.getDataBeetwenMarkers(data, 'class="current"', 'next', False)[1]
@@ -5462,7 +5438,7 @@ class Host(CBaseHostClass):
 				next_page = re.compile('href="(.*?)"').findall(next_page)
 				if next_page[-1].startswith('/'):
 					next_page = 'https://mini.zbiornik.com' + next_page[-1]
-			data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a href="/film/', '</a></div>    </div>')
+			data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a href="/film/', '</a></div>	</div>')
 			if not data2:
 				data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a href="/film/', '</a>')
 			for item in data2:
@@ -5543,13 +5519,13 @@ class Host(CBaseHostClass):
 				if phUrl and phTitle:
 					valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'pornone-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- Longest ---", "Longest", CDisplayListItem.TYPE_CATEGORY, ['http://www.pornone.com/longest/'], 'pornone-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("--- Most Votes ---", "Most Votes", CDisplayListItem.TYPE_CATEGORY, ['http://www.pornone.com/votes/'], 'pornone-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("--- Most Comments ---", "Most Comments", CDisplayListItem.TYPE_CATEGORY, ['http://www.pornone.com/comments/'], 'pornone-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("--- Most Favorited ---", "Most Favorited", CDisplayListItem.TYPE_CATEGORY, ['http://www.pornone.com/favorites/'], 'pornone-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("--- Most Viewed ---", "Most Viewed", CDisplayListItem.TYPE_CATEGORY, ['http://www.pornone.com/views/'], 'pornone-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("--- Top Rated ---", "Top Rated", CDisplayListItem.TYPE_CATEGORY, ['http://www.pornone.com/rating/'], 'pornone-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("--- Newest ---", "Newest", CDisplayListItem.TYPE_CATEGORY, ['http://www.pornone.com/newest/'], 'pornone-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- Longest ---", "Longest", CDisplayListItem.TYPE_CATEGORY, ['https://www.pornone.com/longest/'], 'pornone-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- Most Votes ---", "Most Votes", CDisplayListItem.TYPE_CATEGORY, ['https://www.pornone.com/votes/'], 'pornone-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- Most Comments ---", "Most Comments", CDisplayListItem.TYPE_CATEGORY, ['https://www.pornone.com/comments/'], 'pornone-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- Most Favorited ---", "Most Favorited", CDisplayListItem.TYPE_CATEGORY, ['https://www.pornone.com/favorites/'], 'pornone-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- Most Viewed ---", "Most Viewed", CDisplayListItem.TYPE_CATEGORY, ['https://www.pornone.com/views/'], 'pornone-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- Top Rated ---", "Top Rated", CDisplayListItem.TYPE_CATEGORY, ['https://www.pornone.com/rating/'], 'pornone-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- Newest ---", "Newest", CDisplayListItem.TYPE_CATEGORY, ['https://www.pornone.com/newest/'], 'pornone-clips', siteLogo, None))
 			return searchItems(valTab, True)
 		if 'pornone-search' == name:
 			valTab = self.listsItems(-1, 'https://pornone.com/search?q=%s' % url.replace(' ', '+'), 'pornone-clips')
@@ -5700,7 +5676,7 @@ class Host(CBaseHostClass):
 			header = {'Referer': url, 'User-Agent': host, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
 			try:
 				data = self.cm.getURLRequestData({'url': url, 'header': header, 'use_host': False, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': COOKIEFILE, 'use_post': False, 'return_data': True})
-			except:
+			except Exception:
 				printDBG('Host getResolvedURL query error url: ' + url)
 				return ''
 			printDBG('Host getResolvedURL data: ' + data)
@@ -5921,7 +5897,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'hclips' == name:
-			self.MAIN_URL = 'http://www.hclips.com'
+			self.MAIN_URL = 'https://www.hclips.com'
 			url = 'https://hclips.com/api/json/categories/14400/str.all.json'
 			COOKIEFILE = join(GetCookieDir(), 'hclips.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -6037,7 +6013,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'sexu' == name:
-			self.MAIN_URL = 'http://sexu.com'
+			self.MAIN_URL = 'https://sexu.com'
 			COOKIEFILE = join(GetCookieDir(), 'sexu.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -6055,11 +6031,11 @@ class Host(CBaseHostClass):
 				if phUrl:
 					valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'sexu-clips', '', None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- Trending ---", "Trending", CDisplayListItem.TYPE_CATEGORY, ['http://sexu.com/trending/1'], 'sexu-clips', '', None))
-			valTab.insert(0, CDisplayListItem("--- Newest ---", "Newest", CDisplayListItem.TYPE_CATEGORY, ['http://sexu.com/1'], 'sexu-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Trending ---", "Trending", CDisplayListItem.TYPE_CATEGORY, ['https://sexu.com/trending/1'], 'sexu-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Newest ---", "Newest", CDisplayListItem.TYPE_CATEGORY, ['https://sexu.com/1'], 'sexu-clips', '', None))
 			return searchItems(valTab, True)
 		if 'sexu-search' == name:
-			valTab = self.listsItems(-1, 'http://sexu.com/search?q=%s' % url.replace(' ', '+'), 'sexu-clips')
+			valTab = self.listsItems(-1, 'https://sexu.com/search?q=%s' % url.replace(' ', '+'), 'sexu-clips')
 			return valTab
 		if 'sexu-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'sexu.cookie')
@@ -6078,18 +6054,18 @@ class Host(CBaseHostClass):
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''', 1, True)[0]
 				phTime = self.cm.ph.getSearchGroups(item, '''counter">([^>]+?)<''', 1, True)[0]
 				if phUrl.startswith('/'):
-					phUrl = 'http://sexu.com' + phUrl
+					phUrl = 'https://sexu.com' + phUrl
 				if phImage.startswith('/'):
 					phImage = 'http:' + phImage
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + ']  ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next_page:
 				if next_page.startswith('/'):
-					next_page = 'http://sexu.com' + next_page
+					next_page = 'https://sexu.com' + next_page
 				valTab.append(self.getNextItem(next_page, next_page, name))
 			return valTab
 
 		if 'tubewolf' == name:
-			self.MAIN_URL = url  # 'http://www.tubewolf.com'
+			self.MAIN_URL = url  # 'https://www.tubewolf.com'
 			url = url + '/categories/'
 			COOKIEFILE = join(GetCookieDir(), 'tubewolf.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -6097,7 +6073,7 @@ class Host(CBaseHostClass):
 			sts, data = self.get_Page(url)
 			if not sts:
 				return valTab
-			if url.startswith('http://crocotube.com'):
+			if url.startswith('https://crocotube.com'):
 				data = self.cm.ph.getDataBeetwenMarkers(data, 'A-Z porn categories', 'Footer', False)[1]
 				data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a class="ct-az-list-item', '</a>')
 			else:
@@ -6228,7 +6204,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': url})
-				except:
+				except Exception:
 					pass
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next:
@@ -6312,7 +6288,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': url})
-				except:
+				except Exception:
 					pass
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next:
@@ -6538,7 +6514,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'pornvideos4k' == name:
-			self.MAIN_URL = 'http://pornvideos4k.com/en'
+			self.MAIN_URL = 'https://pornvideos4k.com/en'
 			COOKIEFILE = join(GetCookieDir(), 'pornvideos4k.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self._getPage(url, self.defaultParams)
@@ -6553,9 +6529,9 @@ class Host(CBaseHostClass):
 				if phUrl.startswith('//'):
 					phUrl = 'http:' + phUrl + '/'
 				if phUrl.startswith('/'):
-					phUrl = 'http://pornvideos4k.com/en' + phUrl
+					phUrl = 'https://pornvideos4k.com/en' + phUrl
 				if phImage.startswith('/'):
-					phImage = 'http://pornvideos4k.com/en' + phImage
+					phImage = 'https://pornvideos4k.com/en' + phImage
 				if phTitle:
 					valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'pornvideos4k-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
@@ -6582,10 +6558,10 @@ class Host(CBaseHostClass):
 				if phUrl.startswith('//'):
 					phUrl = 'http:' + phUrl + '/'
 				if phUrl.startswith('/'):
-					phUrl = 'http://pornvideos4k.com/en' + phUrl
+					phUrl = 'https://pornvideos4k.com/en' + phUrl
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + ']  ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next2:
-				next_page = 'http://pornvideos4k.com' + next2
+				next_page = 'https://pornvideos4k.com' + next2
 				valTab.append(self.getNextItem(next_page, next_page, name))
 			return valTab
 
@@ -7080,7 +7056,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'DANSMOVIES' == name:
-			self.MAIN_URL = 'http://dansmovies.com'
+			self.MAIN_URL = 'https://dansmovies.com'
 			COOKIEFILE = join(GetCookieDir(), 'dansmovies.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': False, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'dansmovies.cookie', 'dansmovies.com', self.defaultParams)
@@ -7098,13 +7074,13 @@ class Host(CBaseHostClass):
 				if phUrl:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'DANSMOVIES-clips', siteLogo, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- NEW ---", "NEW", CDisplayListItem.TYPE_CATEGORY, ['http://www.dansmovies.com/?sortby=newest'], 'DANSMOVIES-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("--- MOST VIEWED ---", "MOST VIEWED", CDisplayListItem.TYPE_CATEGORY, ['http://www.dansmovies.com/most-viewed/'], 'DANSMOVIES-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("--- TOP RATED ---", "TOP RATED", CDisplayListItem.TYPE_CATEGORY, ['http://www.dansmovies.com/top-rated/'], 'DANSMOVIES-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("--- LONGEST ---", "LONGEST", CDisplayListItem.TYPE_CATEGORY, ['http://www.dansmovies.com/top-longest/'], 'DANSMOVIES-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- NEW ---", "NEW", CDisplayListItem.TYPE_CATEGORY, ['https://www.dansmovies.com/?sortby=newest'], 'DANSMOVIES-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- MOST VIEWED ---", "MOST VIEWED", CDisplayListItem.TYPE_CATEGORY, ['https://www.dansmovies.com/most-viewed/'], 'DANSMOVIES-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- TOP RATED ---", "TOP RATED", CDisplayListItem.TYPE_CATEGORY, ['https://www.dansmovies.com/top-rated/'], 'DANSMOVIES-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- LONGEST ---", "LONGEST", CDisplayListItem.TYPE_CATEGORY, ['https://www.dansmovies.com/top-longest/'], 'DANSMOVIES-clips', siteLogo, None))
 			return searchItems(valTab, True)
 		if 'DANSMOVIES-search' == name:
-			valTab = self.listsItems(-1, 'http://dansmovies.com/search/videos/%s/' % url.replace(' ', '-'), 'DANSMOVIES-clips')
+			valTab = self.listsItems(-1, 'https://dansmovies.com/search/videos/%s/' % url.replace(' ', '-'), 'DANSMOVIES-clips')
 			return valTab
 		if 'DANSMOVIES-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'dansmovies.cookie')
@@ -7122,9 +7098,9 @@ class Host(CBaseHostClass):
 				phTime = self.cm.ph.getSearchGroups(item, '''duration"><i></i>([^"^']+?)[<]''', 1, True)[0]
 				if phImage.startswith('//'):
 					phImage = 'http:' + phImage
-				if phUrl.startswith('http://www.yobt.tv'):
+				if phUrl.startswith('https://www.yobt.tv'):
 					phTitle = ''
-				if phUrl.startswith('http://www.porntube.com'):
+				if phUrl.startswith('https://www.porntube.com'):
 					phTitle = ''
 				if phUrl.startswith('//'):
 					phUrl = 'http:' + phUrl + '/'
@@ -7144,10 +7120,7 @@ class Host(CBaseHostClass):
 			if not sts:
 				return valTab
 			self.page = 0
-			cats = ['3d', 'amateur', 'asmr', 'arab', 'anal', 'webcam', 'voyeur', 'teen', 'romantic', 'beards', 'big tits', 'big butt', 'big dick',
-			'bisexual', 'blonde', 'blowjob', 'bondage', 'bukkake', 'casting', 'college', 'compilation', 'cosplay', 'couples', 'cuckold',
-			'cumshots', 'dp', 'dildos toys', 'ebony', 'european', 'facial'
-			]
+			cats = ['3d', 'amateur', 'asmr', 'arab', 'anal', 'webcam', 'voyeur', 'teen', 'romantic', 'beards', 'big tits', 'big butt', 'big dick', 'bisexual', 'blonde', 'blowjob', 'bondage', 'bukkake', 'casting', 'college', 'compilation', 'cosplay', 'couples', 'cuckold', 'cumshots', 'dp', 'dildos toys', 'ebony', 'european', 'facial']
 			for item in cats:
 				phUrl = 'https://www.pornrewind.com/categories/%s/' % item.replace(' ', '-')
 				valTab.append(CDisplayListItem(item.upper(), item, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'PORNREWIND-clips', '', None))
@@ -7188,7 +7161,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': 'https://www.pornrewind.com'})
-				except:
+				except Exception:
 					pass
 				if phTitle:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle) + '\n' + 'Time: [' + Time + ']' + '\n' + 'Added: [' + Added + ']', CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
@@ -7222,7 +7195,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': 'https://www.balkanjizz.com'})
-				except:
+				except Exception:
 					pass
 				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'BALKANJIZZ-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
@@ -7254,7 +7227,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': 'https://www.balkanjizz.com'})
-				except:
+				except Exception:
 					pass
 				if phTitle:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle) + '\n' + 'Time: [' + Time + ']' + '\n' + 'Views: [' + Views + ']', CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
@@ -7287,7 +7260,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': 'https://pornorussia.mobi'})
-				except:
+				except Exception:
 					pass
 				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'PORNORUSSIA-clips', phImage, None))
 			return searchItems(valTab, True)
@@ -7321,7 +7294,7 @@ class Host(CBaseHostClass):
 					phImage = 'https://pornorussia.mobi' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': 'https://pornorussia.mobi'})
-				except:
+				except Exception:
 					pass
 				if phTitle:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
@@ -7455,7 +7428,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': url})
-				except:
+				except Exception:
 					pass
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next:
@@ -7571,7 +7544,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'BABES34' == name:
-			self.MAIN_URL = 'http://babes34.me'
+			self.MAIN_URL = 'https://babes34.me'
 			COOKIEFILE = join(GetCookieDir(), 'babes34.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': False, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'babes34.cookie', 'babes34.me', self.defaultParams)
@@ -7594,7 +7567,7 @@ class Host(CBaseHostClass):
 			valTab.insert(0, CDisplayListItem("--- RANDOM ---", "RANDOM VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=random'], 'BABES34-clips', siteLogo, None))
 			return searchItems(valTab, True)
 		if 'BABES34-search' == name:
-			valTab = self.listsItems(-1, 'http://babes34.me/?s=%s' % url.replace(' ', '+'), 'BABES34-clips')
+			valTab = self.listsItems(-1, 'https://babes34.me/?s=%s' % url.replace(' ', '+'), 'BABES34-clips')
 			return valTab
 		if 'BABES34-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'babes34.cookie')
@@ -8293,7 +8266,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': url})
-				except:
+				except Exception:
 					pass
 				phVideos = self.cm.ph.getSearchGroups(item, '''/i[>]([^@^#].{8,13})[<]/''', 1, True)[0].strip()
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle) + '\n' + phVideos, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'OK.XXX-clips', phImage, phImage))
@@ -8335,7 +8308,6 @@ class Host(CBaseHostClass):
 			self.MAIN_URL = 'https://www.laidhub.com'
 			COOKIEFILE = join(GetCookieDir(), 'laidhub.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
-			# sts, data = self.cm.getPage(url, self.defaultParams)
 			sts, data = self.get_Page(url)
 			if not sts:
 				return valTab
@@ -8391,7 +8363,6 @@ class Host(CBaseHostClass):
 			sts, data = self.cm.getPage(url, self.defaultParams)
 			if not sts:
 				return valTab
-			next = self.cm.ph.getSearchGroups(data, r'''pagination.*\s.+from[:]([^"^']+)['"].+\n.+Next''', 1, True)[0]
 			data = data.split('class="thumb item">')
 			if len(data):
 				del data[0]
@@ -8400,17 +8371,11 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''a.href=['"]([^"^']+?)['"]''', 1, True)[0]
 				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"].alt''', 1, True)[0]
 				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'W4NKR-clips', phImage, None))
-			valTab.sort(key=lambda poz: poz.name)
 			valTab.insert(0, CDisplayListItem('--- HOME  ---', 'PORN VIDEOS BEING WATCHED', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], 'W4NKR-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- TOP RATED  ---', 'TOP RATED PORN VIDEOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/top-rated/'], 'W4NKR-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- MOST VIEWED  ---', 'MOST VIEWED PORN VIDEOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-popular/'], 'W4NKR-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- LATEST ---', 'LATEST PORN VIDEOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/latest-updates/'], 'W4NKR-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- CHANNELS ---', 'CHANNELS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/channels/'], 'W4NKR-channels', siteLogo, None))
-			self.SEARCH_proc = 'W4NKR-search'
-			valTab = searchItems(valTab, True)
-			if next:
-				next = url + next
-				valTab.append(CDisplayListItem('More Categories', 'Page: ' + next.split('/')[-2], CDisplayListItem.TYPE_CATEGORY, [next], name, '', None, imageType="NEXT"))
 			return valTab
 
 		if 'W4NKR-search' == name:
@@ -8646,7 +8611,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': url})
-				except:
+				except Exception:
 					pass
 				if not phImage:
 					phImage = siteLogo
@@ -8816,7 +8781,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'PORNBIMBO' == name:
-			self.MAIN_URL = 'http://pornbimbo.com'
+			self.MAIN_URL = 'https://pornbimbo.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornbimbo.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -8839,12 +8804,12 @@ class Host(CBaseHostClass):
 			return searchItems(valTab, True)
 
 		if 'PORNBIMBO-search' == name:
-			valTab = self.listsItems(-1, 'http://pornbimbo.com/search/' + url.replace(' ', '-') + '/', 'PORNBIMBO-clips')
+			valTab = self.listsItems(-1, 'https://pornbimbo.com/search/' + url.replace(' ', '-') + '/', 'PORNBIMBO-clips')
 			return valTab
 
 		if 'PORNBIMBO-clips' == name:
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			self.MAIN_URL = 'http://pornbimbo.com'
+			self.MAIN_URL = 'https://pornbimbo.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornbimbo.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -8898,7 +8863,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'PORNBIMBO-channels' == name:
-			self.MAIN_URL = 'http://pornbimbo.com/models/'
+			self.MAIN_URL = 'https://pornbimbo.com/models/'
 			COOKIEFILE = join(GetCookieDir(), 'pornbimbo.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -9006,7 +8971,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'PORNFD' == name:
-			self.MAIN_URL = 'http://www.pornfd.com'
+			self.MAIN_URL = 'https://www.pornfd.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornfd.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -9031,12 +8996,12 @@ class Host(CBaseHostClass):
 			return searchItems(valTab, True)
 
 		if 'PORNFD-search' == name:
-			valTab = self.listsItems(-1, 'http://www.pornfd.com/search/' + url.replace(' ', '-') + '/', 'PORNFD-clips')
+			valTab = self.listsItems(-1, 'https://www.pornfd.com/search/' + url.replace(' ', '-') + '/', 'PORNFD-clips')
 			return valTab
 
 		if 'PORNFD-clips' == name:
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			self.MAIN_URL = 'http://www.pornfd.com'
+			self.MAIN_URL = 'https://www.pornfd.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornfd.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -9461,7 +9426,7 @@ class Host(CBaseHostClass):
 					phUrl = 'https:' + phUrl
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
-				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + ']    ' + decodeHtml(phTitle) + '\n' + phView + '\nRating Positive: ' + phRate, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, decodeHtml(phImage)))
+				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + ']	' + decodeHtml(phTitle) + '\n' + phView + '\nRating Positive: ' + phRate, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, decodeHtml(phImage)))
 			if next:
 				if next.startswith('/'):
 					next = self.MAIN_URL + next
@@ -10830,8 +10795,7 @@ class Host(CBaseHostClass):
 				phImage = str(item["thumb"])
 				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'VINTAGETUBE-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem('--- MOST VIEWED ---', 'MOST VIEWED VIDEOS', CDisplayListItem.TYPE_CATEGORY, ['https://api.vintagetube.xxx/api/v1/videos?sort=most-viewed&tf=all-time&c=100&offset=1'
-			], 'VINTAGETUBE-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem('--- MOST VIEWED ---', 'MOST VIEWED VIDEOS', CDisplayListItem.TYPE_CATEGORY, ['https://api.vintagetube.xxx/api/v1/videos?sort=most-viewed&tf=all-time&c=100&offset=1'], 'VINTAGETUBE-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- TOP RATED ---', 'TOP RATED VIDEOS', CDisplayListItem.TYPE_CATEGORY, ['https://api.vintagetube.xxx/api/v1/videos?sort=top-rated&tf=all-time&c=100&offset=1'], 'VINTAGETUBE-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- LATEST ---', 'LATEST UPDATES', CDisplayListItem.TYPE_CATEGORY, ['https://api.vintagetube.xxx/api/v1/videos?sort=latest&tf=all-time&c=100&offset=1'], 'VINTAGETUBE-clips', siteLogo, None))
 			return valTab
@@ -10849,7 +10813,7 @@ class Host(CBaseHostClass):
 			printDBG('JSON DATA: ' + str(result))
 			try:
 				result = result["videos"]
-			except:
+			except Exception:
 				pass
 			for node in result["data"]:
 				phTitle = str(node["title"])
@@ -11229,7 +11193,7 @@ class Host(CBaseHostClass):
 					try:
 						Quiery = re.search('q[=]([a-z-]+)[&]m', url).group(1)
 						printDBG('Quiery 1: ' + Quiery)
-					except:
+					except Exception:
 						Quiery = re.search('search[/]([a-z-]+)[/]', url).group(1)
 						printDBG('Quiery 2: ' + Quiery)
 					next_page = "%s/search?q=%s&mode=async&function=get_block&block_id=list_videos_videos_list_search_result&q=%s&category_ids=&sort_by=&from_videos=%s&from_albums=%s" % (self.MAIN_URL, Quiery, Quiery, str(next), str(next))
@@ -12580,7 +12544,7 @@ class Host(CBaseHostClass):
 
 		if 'WIFEVIDEOS' == name:
 			COOKIEFILE = join(GetCookieDir(), 'wifevideos.cookie')
-			self.MAIN_URL = 'http://www.wifevideos.net'
+			self.MAIN_URL = 'https://www.wifevideos.net'
 			catImage = hostImage() + 'wifevideos.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -12601,7 +12565,7 @@ class Host(CBaseHostClass):
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
-			self.MAIN_URL = 'http://www.wifevideos.net'
+			self.MAIN_URL = 'https://www.wifevideos.net'
 			if not sts:
 				return valTab
 			next = self.cm.ph.getSearchGroups(data, '''activ.+href=["]([^"]+?)["].class''', 1, True)[0]
@@ -13271,7 +13235,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': url})
-				except:
+				except Exception:
 					pass
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next:
@@ -13398,7 +13362,7 @@ class Host(CBaseHostClass):
 			for item in result:
 				title = str(item["title"])
 				id = str(item["url"])
-				url = 'http://www.eroprofile.com/m/videos/search?niche=%s&pnum=%s' % (id, '1')
+				url = 'https://www.eroprofile.com/m/videos/search?niche=%s&pnum=%s' % (id, '1')
 				valTab.append(CDisplayListItem(title, title, CDisplayListItem.TYPE_CATEGORY, [url], 'EROPROFILE-clips', '', None))
 			valTab.sort(key=lambda poz: poz.name)
 			valTab.insert(0, CDisplayListItem("--- Fun Videos ---", "Fun Videos", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + "/m/videos/search?niche=17"], 'EROPROFILE-clips', '', None))
@@ -13406,7 +13370,7 @@ class Host(CBaseHostClass):
 			valTab.insert(0, CDisplayListItem("--- Videos Home ---", "Videos Home", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + "/m/videos/home"], 'EROPROFILE-clips', '', None))
 			return searchItems(valTab, True)
 		if 'EROPROFILE-search' == name:
-			valTab = self.listsItems(-1, 'http://www.eroprofile.com/m/videos/search?niche=13.14.12.19.27.25.5.11.18.20.23.24.10.26.17.7.15.6.30.16.28.9.8.32.33.34&text=%s&pnum=1' % url.replace(' ', '+'), 'EROPROFILE-clips')
+			valTab = self.listsItems(-1, 'https://www.eroprofile.com/m/videos/search?niche=13.14.12.19.27.25.5.11.18.20.23.24.10.26.17.7.15.6.30.16.28.9.8.32.33.34&text=%s&pnum=1' % url.replace(' ', '+'), 'EROPROFILE-clips')
 			return valTab
 		if 'EROPROFILE-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'eroprofile.cookie')
@@ -13434,7 +13398,7 @@ class Host(CBaseHostClass):
 					phImage = 'http:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': url})
-				except:
+				except Exception:
 					pass
 				if time and not 'Web Analytics' in phTitle and not 'tools' in time:
 					valTab.append(CDisplayListItem(phTitle, '[' + time + '] ' + phTitle + '\nAdded: ' + added, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
@@ -13447,7 +13411,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'absoluporn' == name:
-			self.MAIN_URL = 'http://www.absoluporn.com'
+			self.MAIN_URL = 'https://www.absoluporn.com'
 			COOKIEFILE = join(GetCookieDir(), 'absoluporn.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -13465,12 +13429,12 @@ class Host(CBaseHostClass):
 				if phUrl:
 					valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'absoluporn-clips', '', None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- Most Viewed ---", "Most Viewed", CDisplayListItem.TYPE_CATEGORY, ['http://www.absoluporn.com/en/wall-main-1.html'], 'absoluporn-clips', '', None))
-			valTab.insert(0, CDisplayListItem("--- Top Rated ---", "Top Rated", CDisplayListItem.TYPE_CATEGORY, ['http://www.absoluporn.com/en/wall-note-1.html'], 'absoluporn-clips', '', None))
-			valTab.insert(0, CDisplayListItem("--- Most Recent ---", "Most Recent", CDisplayListItem.TYPE_CATEGORY, ['http://www.absoluporn.com/en/wall-date-1.html'], 'absoluporn-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Most Viewed ---", "Most Viewed", CDisplayListItem.TYPE_CATEGORY, ['https://www.absoluporn.com/en/wall-main-1.html'], 'absoluporn-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Top Rated ---", "Top Rated", CDisplayListItem.TYPE_CATEGORY, ['https://www.absoluporn.com/en/wall-note-1.html'], 'absoluporn-clips', '', None))
+			valTab.insert(0, CDisplayListItem("--- Most Recent ---", "Most Recent", CDisplayListItem.TYPE_CATEGORY, ['https://www.absoluporn.com/en/wall-date-1.html'], 'absoluporn-clips', '', None))
 			return searchItems(valTab, True)
 		if 'absoluporn-search' == name:
-			valTab = self.listsItems(-1, 'http://www.absoluporn.com/en/search-%s-1.html' % url.replace(' ', '+'), 'absoluporn-clips')
+			valTab = self.listsItems(-1, 'https://www.absoluporn.com/en/search-%s-1.html' % url.replace(' ', '+'), 'absoluporn-clips')
 			return valTab
 		if 'absoluporn-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'absoluporn.cookie')
@@ -13495,7 +13459,7 @@ class Host(CBaseHostClass):
 					phImage = 'http:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': self.MAIN_URL})
-				except:
+				except Exception:
 					pass
 				if phTitle:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
@@ -13557,7 +13521,7 @@ class Host(CBaseHostClass):
 					phImage = 'http:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': self.MAIN_URL})
-				except:
+				except Exception:
 					pass
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next:
@@ -13569,13 +13533,13 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'anybunny' == name:
-			self.MAIN_URL = 'http://anybunny.com'
+			self.MAIN_URL = 'https://anybunny.com'
 			COOKIEFILE = join(GetCookieDir(), 'anybunny.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'anybunny.cookie', 'anybunny.com', self.defaultParams)
 			if not sts:
 				return valTab
-			data = data.split('<li>             <a')
+			data = data.split('<li>			 <a')
 			if len(data):
 				del data[0]
 			for item in data:
@@ -13587,11 +13551,11 @@ class Host(CBaseHostClass):
 				if phUrl:
 					valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'anybunny-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- Top Rated ---", "Top Rated", CDisplayListItem.TYPE_CATEGORY, ['http://anybunny.com/top/'], 'anybunny-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("--- New ---", "New", CDisplayListItem.TYPE_CATEGORY, ['http://anybunny.com/new/'], 'anybunny-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- Top Rated ---", "Top Rated", CDisplayListItem.TYPE_CATEGORY, ['https://anybunny.com/top/'], 'anybunny-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- New ---", "New", CDisplayListItem.TYPE_CATEGORY, ['https://anybunny.com/new/'], 'anybunny-clips', siteLogo, None))
 			return searchItems(valTab, True)
 		if 'anybunny-search' == name:
-			valTab = self.listsItems(-1, 'http://anybunny.com/top/%s' % url.replace(' ', '+'), 'anybunny-clips')
+			valTab = self.listsItems(-1, 'https://anybunny.com/top/%s' % url.replace(' ', '+'), 'anybunny-clips')
 			return valTab
 		if 'anybunny-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'anybunny.cookie')
@@ -13617,7 +13581,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': self.MAIN_URL})
-				except:
+				except Exception:
 					pass
 				if phTitle:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + '] ' + decodeHtml(phTitle) + '\nBest Quality: ' + phQuality, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
@@ -13779,7 +13743,7 @@ class Host(CBaseHostClass):
 					phImage = 'https:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': self.MAIN_URL})
-				except:
+				except Exception:
 					pass
 				if phTitle:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'hqporner-serwer', phImage, phImage))
@@ -13868,7 +13832,7 @@ class Host(CBaseHostClass):
 					phImage = 'http:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': self.MAIN_URL})
-				except:
+				except Exception:
 					pass
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next:
@@ -13931,7 +13895,7 @@ class Host(CBaseHostClass):
 					phImage = 'http:' + phImage
 				try:
 					phImage = urlparser.decorateUrl(phImage, {'Referer': self.MAIN_URL})
-				except:
+				except Exception:
 					pass
 				if phTitle:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\n' + Added, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
@@ -13964,7 +13928,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'porn00' == name:
-			self.MAIN_URL = 'http://www.porn00.org'
+			self.MAIN_URL = 'https://www.porn00.org'
 			COOKIEFILE = join(GetCookieDir(), 'porn00.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': False, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'porn00.cookie', 'porn00.org', self.defaultParams)
@@ -15013,7 +14977,7 @@ class Host(CBaseHostClass):
 					phImage = phImage + '/1.jpg'
 					try:
 						phImage = urlparser.decorateUrl(phImage, {'Referer': 'https://cdn.pervclips.com'})
-					except:
+					except Exception:
 						pass
 				phTime = self.cm.ph.getSearchGroups(item, '''duration">([^>]+?)<''', 1, True)[0].strip()
 				Added = self.cm.ph.getSearchGroups(item, '''Published" content=["]([^>]+?)["]>''', 1, True)[0].strip()
@@ -15048,14 +15012,14 @@ class Host(CBaseHostClass):
 	def getParser(self, url):
 		printDBG('Host getParser begin')
 		printDBG('Host getParser mainurl: ' + self.MAIN_URL)
-		printDBG('Host getParser url    : ' + url)
+		printDBG('Host getParser url	: ' + url)
 
-		if url.startswith('http://www.xnxx.com'):
-			return 'http://www.xnxx.com'
+		if url.startswith('https://www.xnxx.com'):
+			return 'https://www.xnxx.com'
 		if 'xnxx-cdn.com' in url:
-			return 'http://www.xnxx.com'
+			return 'https://www.xnxx.com'
 		if url.startswith('https://www.porntrex.com'):
-			return 'http://www.porntrex.com'
+			return 'https://www.porntrex.com'
 		if url.startswith('https://relax-sex.com'):
 			return 'https://relax-sex.com'
 		if url.startswith('https://relaxporn.net'):
@@ -15096,19 +15060,19 @@ class Host(CBaseHostClass):
 			return 'https://www.whoreshub.com'
 		if url.startswith('https://www.camhub.cc'):
 			return 'https://www.camhub.cc'
-		if url.startswith('http://babes34.me'):
-			return 'http://babes34.me'
+		if url.startswith('https://babes34.me'):
+			return 'https://babes34.me'
 		if url.startswith('https://youramateurtube.com'):
-			return 'http://babes34.me'
+			return 'https://babes34.me'
 		if url.startswith('https://streamwish.com'):
 			return 'https://streamwish.to'
 		if url.startswith('https://streamwish.to'):
 			return 'https://streamwish.to'
-		if url.startswith('http://www.amateurporn.net'):
+		if url.startswith('https://www.amateurporn.net'):
 			return 'https://www.amateurporn.me'
 		if url.startswith('https://www.amateurporn.net'):
 			return 'https://www.amateurporn.me'
-		if url.startswith('http://www.amateurporn.me'):
+		if url.startswith('https://www.amateurporn.me'):
 			return 'https://www.amateurporn.me'
 		if url.startswith('https://www.amateurporn.me'):
 			return 'https://www.amateurporn.me'
@@ -15119,24 +15083,24 @@ class Host(CBaseHostClass):
 		if url.startswith('https://sex3.com'):
 			return 'https://sex3.com'
 		if url.startswith('https://www.porntube.com'):
-			return 'http://www.4tube.com'
+			return 'https://www.4tube.com'
 		if url.startswith('https://www.ah-me.com'):
-			return 'http://www.ah-me.com'
+			return 'https://www.ah-me.com'
 		if url.startswith('https://www.pornhat.com/'):
 			return 'https://www.pornhat.com/'
 		if url.startswith('https://pornhat.com/'):
 			return 'https://www.pornhat.com/'
 		if url.startswith('https://ruleporn.com'):
 			return 'https://ruleporn.com'
-		if url.startswith('http://www.drtuber.com'):
-			return 'http://www.drtuber.com'
 		if url.startswith('https://www.drtuber.com'):
-			return 'http://www.drtuber.com'
-		if url.startswith('http://www.eporner.com'):
-			return 'http://www.eporner.com'
+			return 'https://www.drtuber.com'
+		if url.startswith('https://www.drtuber.com'):
+			return 'https://www.drtuber.com'
 		if url.startswith('https://www.eporner.com'):
-			return 'http://www.eporner.com'
-		if url.startswith('http://www.yourupload.com'):
+			return 'https://www.eporner.com'
+		if url.startswith('https://www.eporner.com'):
+			return 'https://www.eporner.com'
+		if url.startswith('https://www.yourupload.com'):
 			return 'https://www.yourupload.com'
 		if url.startswith('http//yourupload.com'):
 			return 'https://www.yourupload.com'
@@ -15145,28 +15109,28 @@ class Host(CBaseHostClass):
 		if url.startswith('https://yourupload.com'):
 			return 'https://www.yourupload.com'
 		if url.startswith('https://www.hclips.com'):
-			return 'http://www.hclips.com'
+			return 'https://www.hclips.com'
 		if url.startswith('https://hclips.com'):
-			return 'http://www.hclips.com'
-		if url.startswith('http://www.hdporn.net'):
-			return 'http://www.hdporn.net'
-		if url.startswith('http://hdsite.net'):
+			return 'https://www.hclips.com'
+		if url.startswith('https://www.hdporn.net'):
+			return 'https://www.hdporn.net'
+		if url.startswith('https://hdsite.net'):
 			return 'https://hdsite.net'
 		if url.startswith('https://hdsite.net'):
 			return 'https://hdsite.net'
 		if url.startswith('https://www.alohatube.com'):
 			return 'https://www.alohatube.com'
-		if url.startswith('http://hentaigasm.com'):
-			return 'http://hentaigasm.com'
-		if url.startswith('http://www.homemoviestube.com'):
-			return 'http://www.homemoviestube.com'
+		if url.startswith('https://hentaigasm.com'):
+			return 'https://hentaigasm.com'
 		if url.startswith('https://www.homemoviestube.com'):
-			return 'http://www.homemoviestube.com'
+			return 'https://www.homemoviestube.com'
+		if url.startswith('https://www.homemoviestube.com'):
+			return 'https://www.homemoviestube.com'
 		if url.startswith('https://zbporn.com'):
 			return 'https://zbporn.com'
 		if url.startswith('https://www.katestube.com'):
 			return 'https://www.katestube.com'
-		if url.startswith('http://www.katestube.com'):
+		if url.startswith('https://www.katestube.com'):
 			return 'https://www.katestube.com'
 		if url.startswith('https://www.koloporno.com'):
 			return 'https://www.koloporno.com'
@@ -15180,34 +15144,34 @@ class Host(CBaseHostClass):
 			return 'https://glavmatures.com'
 		if url.startswith('https://xcum.com'):
 			return 'https://xcum.com'
-		if url.startswith('http://www.pornhd.com'):
-			return 'http://www.pornhd.com'
-		if url.startswith('http://www.pornhub.com/embed/'):
-			return 'http://www.pornhub.com/embed/'
+		if url.startswith('https://www.pornhd.com'):
+			return 'https://www.pornhd.com'
 		if url.startswith('https://www.pornhub.com/embed/'):
-			return 'http://www.pornhub.com/embed/'
-		if url.startswith('http://pl.pornhub.com/embed/'):
-			return 'http://www.pornhub.com/embed/'
-		if url.startswith('http://pl.pornhub.com'):
-			return 'http://www.pornhub.com'
-		if url.startswith('http://www.pornhub.com'):
-			return 'http://www.pornhub.com'
+			return 'https://www.pornhub.com/embed/'
+		if url.startswith('https://www.pornhub.com/embed/'):
+			return 'https://www.pornhub.com/embed/'
+		if url.startswith('https://pl.pornhub.com/embed/'):
+			return 'https://www.pornhub.com/embed/'
+		if url.startswith('https://pl.pornhub.com'):
+			return 'https://www.pornhub.com'
 		if url.startswith('https://www.pornhub.com'):
-			return 'http://www.pornhub.com'
-		if url.startswith('http://m.pornhub.com'):
-			return 'http://m.pornhub.com'
-		if url.startswith('http://pornicom.com'):
-			return 'http://pornicom.com'
+			return 'https://www.pornhub.com'
+		if url.startswith('https://www.pornhub.com'):
+			return 'https://www.pornhub.com'
+		if url.startswith('https://m.pornhub.com'):
+			return 'https://m.pornhub.com'
 		if url.startswith('https://pornicom.com'):
-			return 'http://pornicom.com'
-		if url.startswith('http://www.pornicom.com'):
-			return 'http://pornicom.com'
+			return 'https://pornicom.com'
+		if url.startswith('https://pornicom.com'):
+			return 'https://pornicom.com'
 		if url.startswith('https://www.pornicom.com'):
-			return 'http://pornicom.com'
+			return 'https://pornicom.com'
+		if url.startswith('https://www.pornicom.com'):
+			return 'https://pornicom.com'
 		if url.startswith('https://www.pornoxo.com'):
 			return 'https://www.pornoxo.com'
-		if url.startswith('http://www.pornrabbit.com'):
-			return 'http://www.pornrabbit.com'
+		if url.startswith('https://www.pornrabbit.com'):
+			return 'https://www.pornrabbit.com'
 		if url.startswith('https://www.pornrewind.com'):
 			return 'https://www.pornrewind.com'
 		if url.startswith('https://motherless.com'):
@@ -15222,34 +15186,34 @@ class Host(CBaseHostClass):
 			return 'https://www.redtube.com'
 		if url.startswith('https://shooshtime.com'):
 			return 'https://shooshtime.com'
-		if url.startswith('http://www.tnaflix.com'):
+		if url.startswith('https://www.tnaflix.com'):
 			return 'https://www.tnaflix.com'
 		if url.startswith('https://alpha.tnaflix.com'):
 			return 'https://alpha.tnaflix.com'
-		if url.startswith('http://www.tube8.com/embed/'):
-			return 'http://www.tube8.com/embed/'
-		if url.startswith('http://www.tube8.com'):
-			return 'http://www.tube8.com'
-		if url.startswith('http://m.tube8.com'):
-			return 'http://m.tube8.com'
+		if url.startswith('https://www.tube8.com/embed/'):
+			return 'https://www.tube8.com/embed/'
 		if url.startswith('https://www.tube8.com'):
-			return 'http://www.tube8.com'
+			return 'https://www.tube8.com'
+		if url.startswith('https://m.tube8.com'):
+			return 'https://m.tube8.com'
+		if url.startswith('https://www.tube8.com'):
+			return 'https://www.tube8.com'
 		if url.startswith('https://www.deviants.com'):
 			return 'https://www.deviants.com'
 		if url.startswith('https://pornone.com'):
 			return 'https://pornone.com'
-		if url.startswith('http://xhamster.com'):
-			return 'http://xhamster.com'
 		if url.startswith('https://xhamster.com'):
-			return 'http://xhamster.com'
+			return 'https://xhamster.com'
+		if url.startswith('https://xhamster.com'):
+			return 'https://xhamster.com'
 		if url.startswith('https://xh.video'):
-			return 'http://xhamster.com'
-		if url.startswith('http://www.xvideos.com'):
-			return 'http://www.xvideos.com'
+			return 'https://xhamster.com'
+		if url.startswith('https://www.xvideos.com'):
+			return 'https://www.xvideos.com'
 		if url.startswith('https://porngo.com'):
 			return 'https://porngo.com'
-		if url.startswith('http://www.youjizz.com'):
-			return 'http://www.youjizz.com'
+		if url.startswith('https://www.youjizz.com'):
+			return 'https://www.youjizz.com'
 		if url.startswith('https://www.youporn.com/embed/'):
 			return 'https://www.youporn.com/embed/'
 		if url.startswith('https://www.youporn.com'):
@@ -15260,26 +15224,26 @@ class Host(CBaseHostClass):
 			return 'https://yourporn.sexy'
 		if url.startswith('https://mini.zbiornik.com'):
 			return 'https://mini.zbiornik.com'
-		if url.startswith('http://sexkino.to'):
-			return 'http://sexkino.to'
-		if url.startswith('http://www.plashporn.com'):
-			return 'http://sexkino.to'
-		if url.startswith('http://www.alphaporno.com'):
-			return 'http://www.tubewolf.com'
-		if url.startswith('http://crocotube.com'):
-			return 'http://www.tubewolf.com'
-		if url.startswith('http://www.tubewolf.com'):
-			return 'http://www.tubewolf.com'
-		if url.startswith('http://zedporn.com'):
-			return 'http://www.tubewolf.com'
+		if url.startswith('https://sexkino.to'):
+			return 'https://sexkino.to'
+		if url.startswith('https://www.plashporn.com'):
+			return 'https://sexkino.to'
 		if url.startswith('https://www.alphaporno.com'):
-			return 'http://www.tubewolf.com'
+			return 'https://www.tubewolf.com'
 		if url.startswith('https://crocotube.com'):
-			return 'http://www.tubewolf.com'
+			return 'https://www.tubewolf.com'
 		if url.startswith('https://www.tubewolf.com'):
-			return 'http://www.tubewolf.com'
+			return 'https://www.tubewolf.com'
 		if url.startswith('https://zedporn.com'):
-			return 'http://www.tubewolf.com'
+			return 'https://www.tubewolf.com'
+		if url.startswith('https://www.alphaporno.com'):
+			return 'https://www.tubewolf.com'
+		if url.startswith('https://crocotube.com'):
+			return 'https://www.tubewolf.com'
+		if url.startswith('https://www.tubewolf.com'):
+			return 'https://www.tubewolf.com'
+		if url.startswith('https://zedporn.com'):
+			return 'https://www.tubewolf.com'
 		if url.startswith('https://www.fetishpapa.com'):
 			return 'https://www.redtube.com'
 		if url.startswith('https://upstream.to'):
@@ -15287,22 +15251,22 @@ class Host(CBaseHostClass):
 		if url.startswith('https://prostream.to'):
 			return 'https://prostream.to'
 		if url.startswith('https://www.bravotube.net'):
-			return 'http://www.hdporn.net'
+			return 'https://www.hdporn.net'
 		if url.startswith('https://lecoinporno.fr'):
 			return 'https://lecoinporno.fr'
 		if url.startswith('https://mompornonly.com'):
 			return 'https://mompornonly.com'
 		if url.startswith('https://videobin.co'):
 			return 'https://videobin.co'
-		if url.startswith('http://dato.porn'):
+		if url.startswith('https://dato.porn'):
 			return 'https://dato.porn'
 		if url.startswith('https://dato.porn'):
 			return 'https://dato.porn'
-		if url.startswith('http://datoporn.co'):
+		if url.startswith('https://datoporn.co'):
 			return 'https://dato.porn'
 		if url.startswith('https://datoporn.co'):
 			return 'https://dato.porn'
-		if url.startswith('http://datoporn.com'):
+		if url.startswith('https://datoporn.com'):
 			return 'https://dato.porn'
 		if url.startswith('https://www.datoporn.com'):
 			return 'https://dato.porn'
@@ -15310,86 +15274,85 @@ class Host(CBaseHostClass):
 			return 'https://sinparty.com'
 		if url.startswith('https://vidlox.tv'):
 			return 'https://vidlox.tv'
-		if url.startswith('http://pornvideos4k.com/en'):
-			return 'http://pornvideos4k.com/en'
+		if url.startswith('https://pornvideos4k.com/en'):
+			return 'https://pornvideos4k.com/en'
 		if url.startswith('https://www.watchmygf.me'):
 			return 'https://mangovideo'
-# NEWEST PARSERS
+		# NEWEST PARSERS
 		if 'mix-porn' in url:
-			return 'http://rusporn.tv'
+			return 'https://rusporn.tv'
 		if 'mixporn' in url:
-			return 'http://rusporn.tv'
-		if url.startswith('http://www.slutsxmovies.com/embed/'):
-			return 'http://www.nuvid.com'
-		if url.startswith('http://www.cumyvideos.com/embed/'):
-			return 'http://www.nuvid.com'
-		if url.startswith('http://www.nuvid.com'):
-			return 'http://www.nuvid.com'
-		# if url.startswith('http://www.x3xtube.com'):        return 'file: '
-		if url.startswith('http://hornygorilla.com'):
+			return 'https://rusporn.tv'
+		if url.startswith('https://www.slutsxmovies.com/embed/'):
+			return 'https://www.nuvid.com'
+		if url.startswith('https://www.cumyvideos.com/embed/'):
+			return 'https://www.nuvid.com'
+		if url.startswith('https://www.nuvid.com'):
+			return 'https://www.nuvid.com'
+		# if url.startswith('https://www.x3xtube.com'):		return 'file: '
+		if url.startswith('https://hornygorilla.com'):
 			return 'file: '
-		# if url.startswith('http://www.vikiporn.com'):       return 'file: "'
-		if url.startswith('http://www.fetishshrine.com'):
+		# if url.startswith('https://www.vikiporn.com'):	   return 'file: "'
+		if url.startswith('https://www.fetishshrine.com'):
 			return 'file: '
-		if url.startswith('http://theclassicporn.com'):
+		if url.startswith('https://theclassicporn.com'):
 			return "video_url: '"
-		if url.startswith('http://www.faphub.xxx'):
-			return 'http://www.faphub.xxx'
-		if url.startswith('http://www.sleazyneasy.com'):
+		if url.startswith('https://www.faphub.xxx'):
+			return 'https://www.faphub.xxx'
+		if url.startswith('https://www.sleazyneasy.com'):
 			return 'file: '
-		if url.startswith('http://www.proporn.com'):
-			return 'http://www.proporn.com'
-		if url.startswith('http://www.tryboobs.com'):
+		if url.startswith('https://www.proporn.com'):
+			return 'https://www.proporn.com'
+		if url.startswith('https://www.tryboobs.com'):
 			return "video_url: '"
-		if url.startswith('http://www.viptube.com'):
-			return 'http://www.nuvid.com'
-		if url.startswith('http://www.jizz.us'):
-			return 'http://www.x3xtube.com'
-		if url.startswith('http://www.pornstep.com'):
+		if url.startswith('https://www.viptube.com'):
+			return 'https://www.nuvid.com'
+		if url.startswith('https://www.jizz.us'):
+			return 'https://www.x3xtube.com'
+		if url.startswith('https://www.pornstep.com'):
 			return 'videoFile="'
-		if url.startswith('http://www.azzzian.com'):
+		if url.startswith('https://www.azzzian.com'):
 			return "video_url: '"
-		if url.startswith('http://www.porndreamer.com'):
-			return 'http://www.x3xtube.com'
-		if url.startswith('http://www.tubeon.com'):
-			return 'http://www.tubeon.com'
-		if url.startswith('http://www.finevids.xxx'):
+		if url.startswith('https://www.porndreamer.com'):
+			return 'https://www.x3xtube.com'
+		if url.startswith('https://www.tubeon.com'):
+			return 'https://www.tubeon.com'
+		if url.startswith('https://www.finevids.xxx'):
 			return "video_url: '"
-		if url.startswith('http://www.xfig.net'):
+		if url.startswith('https://www.xfig.net'):
 			return 'videoFile="'
-		if url.startswith('http://www.pornoid.com'):
+		if url.startswith('https://www.pornoid.com'):
 			return "video_url: '"
-		if url.startswith('http://tubeq.xxx'):
-			return 'http://www.faphub.xxx'
-		if url.startswith('http://www.wetplace.com'):
+		if url.startswith('https://tubeq.xxx'):
+			return 'https://www.faphub.xxx'
+		if url.startswith('https://www.wetplace.com'):
 			return "video_url: '"
-		if url.startswith('http://sexylies.com'):
-			return 'http://sexylies.com'
-		if url.startswith('http://www.eskimotube.com'):
-			return 'http://www.eskimotube.com'
-		if url.startswith('http://www.pornalized.com'):
+		if url.startswith('https://sexylies.com'):
+			return 'https://sexylies.com'
+		if url.startswith('https://www.eskimotube.com'):
+			return 'https://www.eskimotube.com'
+		if url.startswith('https://www.pornalized.com'):
 			return "video_url: '"
-		if url.startswith('http://www.porn5.com'):
-			return 'http://www.porn5.com'
+		if url.startswith('https://www.porn5.com'):
+			return 'https://www.porn5.com'
 		if url.startswith('https://www.pornheed.com'):
 			return 'https://www.pornheed.com'
-		if url.startswith('http://www.pornyeah.com'):
-			return 'http://www.pornyeah.com'
-		if url.startswith('http://www.porn.com'):
-			return 'http://www.porn5.com'
-		if url.startswith('http://www.yeptube.com'):
-			return 'http://www.yeptube.com'
-		if url.startswith('http://www.pornpillow.com'):
-			return 'http://www.pornpillow.com'
-		if url.startswith('http://porneo.com'):
-			return 'http://www.nuvid.com'
-		if url.startswith('http://www.5fing.com'):
+		if url.startswith('https://www.pornyeah.com'):
+			return 'https://www.pornyeah.com'
+		if url.startswith('https://www.porn.com'):
+			return 'https://www.porn5.com'
+		if url.startswith('https://www.yeptube.com'):
+			return 'https://www.yeptube.com'
+		if url.startswith('https://www.pornpillow.com'):
+			return 'https://www.pornpillow.com'
+		if url.startswith('https://porneo.com'):
+			return 'https://www.nuvid.com'
+		if url.startswith('https://www.5fing.com'):
 			return 'file: '
-		if url.startswith('http://www.pornroxxx.com'):
+		if url.startswith('https://www.pornroxxx.com'):
 			return "0p'  : '"
-		if url.startswith('http://www.hd21.com'):
+		if url.startswith('https://www.hd21.com'):
 			return "0p'  : '"
-		# if url.startswith('https://www.pornrox.com'):       return "0p'  : '"
 		if url.startswith('https://www.gotporn.com'):
 			return 'https://www.gotporn.com'
 		if url.startswith('https://www.pornwhite.com'):
@@ -15434,11 +15397,11 @@ class Host(CBaseHostClass):
 			return 'https://www.deviants.com'
 		if url.startswith('https://w4nkr.com'):
 			return 'https://www.deviants.com'
-		if url.startswith('http://pornbimbo.com'):
+		if url.startswith('https://pornbimbo.com'):
 			return 'https://www.deviants.com'
 		if url.startswith('https://www.cambro.tv'):
 			return 'https://www.deviants.com'
-		if url.startswith('http://www.pornfd.com'):
+		if url.startswith('https://www.pornfd.com'):
 			return 'https://www.deviants.com'
 		if url.startswith('https://www.punishbang.com'):
 			return 'https://www.deviants.com'
@@ -15500,8 +15463,8 @@ class Host(CBaseHostClass):
 			return 'https://www.oriental-sex.com'
 		if url.startswith('https://69teentube.com'):
 			return 'https://69teentube.com'
-		if url.startswith('http://www.wifevideos.net'):
-			return 'http://www.wifevideos.net'
+		if url.startswith('https://www.wifevideos.net'):
+			return 'https://www.wifevideos.net'
 		if url.startswith('https://www.milffox.com'):
 			return 'https://www.milffox.com'
 		if url.startswith('https://9vids.com'):
@@ -15578,35 +15541,35 @@ class Host(CBaseHostClass):
 			return 'https://www.3movs.com'
 		if url.startswith('https://ziporn.com/'):
 			return 'https://ziporn.com/'
-		if url.startswith('http://www.pornrox.com'):
+		if url.startswith('https://www.pornrox.com'):
 			return 'https://www.alohatube.com'
 		if url.startswith('https://anyporn.com'):
 			return 'https://anyporn.com'
 		if url.startswith('https://anysex.com/'):
 			return 'https://anysex.com/'
-		if url.startswith('http://www.flyflv.com'):
-			return 'http://www.flyflv.com'
-		if url.startswith('http://www.xtube.com'):
+		if url.startswith('https://www.flyflv.com'):
+			return 'https://www.flyflv.com'
+		if url.startswith('https://www.xtube.com'):
 			return 'https://vidlox.tv'
-		if url.startswith('http://xxxkingtube.com'):
-			return 'http://xxxkingtube.com'
-		if url.startswith('http://www.boyfriendtv.com'):
+		if url.startswith('https://xxxkingtube.com'):
+			return 'https://xxxkingtube.com'
+		if url.startswith('https://www.boyfriendtv.com'):
 			return 'source src="'
-		if url.startswith('http://pornxs.com'):
-			return 'http://pornxs.com'
-		if url.startswith('http://pornsharing.com'):
-			return 'http://pornsharing.com'
-		if url.startswith('http://www.vivatube.com'):
-			return 'http://vivatube.com'
-		if url.startswith('http://www.clipcake.com'):
+		if url.startswith('https://pornxs.com'):
+			return 'https://pornxs.com'
+		if url.startswith('https://pornsharing.com'):
+			return 'https://pornsharing.com'
+		if url.startswith('https://www.vivatube.com'):
+			return 'https://vivatube.com'
+		if url.startswith('https://www.clipcake.com'):
 			return 'videoFile="'
-		if url.startswith('http://www.cliplips.com'):
+		if url.startswith('https://www.cliplips.com'):
 			return 'videoFile="'
-		if url.startswith('http://www.sheshaft.com'):
+		if url.startswith('https://www.sheshaft.com'):
 			return 'file: '
-		if url.startswith('http://www.vid2c.com'):
+		if url.startswith('https://www.vid2c.com'):
 			return 'videoFile="'
-		if url.startswith('http://www.bonertube.com'):
+		if url.startswith('https://www.bonertube.com'):
 			return 'videoFile="'
 		if url.startswith('https://hellmoms.com/'):
 			return 'https://xbabe.com'
@@ -15656,8 +15619,8 @@ class Host(CBaseHostClass):
 			return 'https://www.xxxbule.com/'
 		if url.startswith('https://www.porndig.com'):
 			return 'https://www.porndig.com'
-		if url.startswith('http://www.filmyporno.tv'):
-			return 'http://www.filmyporno.tv'
+		if url.startswith('https://www.filmyporno.tv'):
+			return 'https://www.filmyporno.tv'
 		if url.startswith('https://www.firstanalvideos.com/'):
 			return 'https://www.deviants.com'
 		if url.startswith('https://chaturbate.com'):
@@ -15680,43 +15643,43 @@ class Host(CBaseHostClass):
 			return 'https://www.porndroids.com'
 		if url.startswith('https://www.perfectgirls.xxx'):
 			return 'https://www.perfectgirls.xxx'
-# Test mjpg
+		# Test mjpg
 		if url.endswith('.mjpg'):
 			return 'mjpg_stream'
 		if url.endswith('.cgi'):
 			return 'mjpg_stream'
-# URLPARSER
+		# URLPARSER
 		if url.startswith('https://gounlimited.to'):
 			return 'xxxlist.txt'
-		if url.startswith('http://gounlimited.to'):
+		if url.startswith('https://gounlimited.to'):
 			return 'xxxlist.txt'
-		if url.startswith('http://openload.co'):
+		if url.startswith('https://openload.co'):
 			return 'xxxlist.txt'
 		if url.startswith('https://oload.tv'):
 			return 'xxxlist.txt'
-		if url.startswith('http://www.cda.pl'):
-			return 'xxxlist.txt'
-		if url.startswith('http://hqq.tv'):
+		if url.startswith('https://www.cda.pl'):
 			return 'xxxlist.txt'
 		if url.startswith('https://hqq.tv'):
 			return 'xxxlist.txt'
-		if url.startswith('http://hqq.to'):
+		if url.startswith('https://hqq.tv'):
+			return 'xxxlist.txt'
+		if url.startswith('https://hqq.to'):
 			return 'xxxlist.txt'
 		if url.startswith('https://hqq.to'):
 			return 'xxxlist.txt'
 		if url.startswith('https://www.rapidvideo.com'):
 			return 'xxxlist.txt'
-		if url.startswith('http://videomega.tv'):
+		if url.startswith('https://videomega.tv'):
 			return 'xxxlist.txt'
-		if url.startswith('http://www.flashx.tv'):
+		if url.startswith('https://www.flashx.tv'):
 			return 'xxxlist.txt'
-		if url.startswith('http://streamcloud.eu'):
+		if url.startswith('https://streamcloud.eu'):
 			return 'xxxlist.txt'
-		if url.startswith('http://thevideo.me'):
+		if url.startswith('https://thevideo.me'):
 			return 'xxxlist.txt'
 		if url.startswith('https://vidoza.net'):
 			return 'xxxlist.txt'
-		if url.startswith('http://fileone.tv'):
+		if url.startswith('https://fileone.tv'):
 			return 'xxxlist.txt'
 		if url.startswith('https://fileone.tv'):
 			return 'xxxlist.txt'
@@ -15732,7 +15695,7 @@ class Host(CBaseHostClass):
 			return 'xxxlist.txt'
 		if self.MAIN_URL == 'https://streamporn.org':
 			return 'xxxlist.txt'
-		if self.MAIN_URL == 'http://www.xxxstreams.org':
+		if self.MAIN_URL == 'https://www.xxxstreams.org':
 			return 'xxxlist.txt'
 		if self.MAIN_URL == 'https://pandamovie.info':
 			return 'xxxlist.txt'
@@ -15754,7 +15717,7 @@ class Host(CBaseHostClass):
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://relax-sex.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://babes34.me':
+		if self.MAIN_URL == 'https://babes34.me':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://pornbolt.com':
 			return self.MAIN_URL
@@ -15786,11 +15749,11 @@ class Host(CBaseHostClass):
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://ad69.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://pornbimbo.com':
+		if self.MAIN_URL == 'https://pornbimbo.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.cambro.tv':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.pornfd.com':
+		if self.MAIN_URL == 'https://www.pornfd.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.punishbang.com':
 			return self.MAIN_URL
@@ -15880,7 +15843,7 @@ class Host(CBaseHostClass):
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://69teentube.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.wifevideos.net':
+		if self.MAIN_URL == 'https://www.wifevideos.net':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.milffox.com':
 			return self.MAIN_URL
@@ -15958,8 +15921,8 @@ class Host(CBaseHostClass):
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.pornid.xxx':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.homemoviestube.com':
-			return 'http://www.homemoviestube.com'
+		if self.MAIN_URL == 'https://www.homemoviestube.com':
+			return 'https://www.homemoviestube.com'
 		if self.MAIN_URL == 'https://xcafe.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.porndig.com':
@@ -15967,28 +15930,28 @@ class Host(CBaseHostClass):
 		if self.MAIN_URL == 'https://www.alohatube.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.porntube.com':
-			return 'http://www.4tube.com'
+			return 'https://www.4tube.com'
 		if self.MAIN_URL == 'https://www.playvids.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://motherless.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://tubepornclassic.com':
-			return 'http://tubepornclassic.com'
-		if self.MAIN_URL == 'http://dansmovies.com':
-			return 'http://dansmovies.com'
+		if self.MAIN_URL == 'https://tubepornclassic.com':
+			return 'https://tubepornclassic.com'
+		if self.MAIN_URL == 'https://dansmovies.com':
+			return 'https://dansmovies.com'
 		if self.MAIN_URL == 'https://www.koloporno.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.perfectgirls.xxx':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://ziporn.com/':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.yuvutu.com':
+		if self.MAIN_URL == 'https://www.yuvutu.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.momslust.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.wankoz.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.filmyporno.tv':
+		if self.MAIN_URL == 'https://www.filmyporno.tv':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://glavmatures.com':
 			return self.MAIN_URL
@@ -15998,15 +15961,15 @@ class Host(CBaseHostClass):
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.pornwhite.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.porntrex.com':
+		if self.MAIN_URL == 'https://www.porntrex.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://porn720.net':
+		if self.MAIN_URL == 'https://porn720.net':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://rusporn.tv':
+		if self.MAIN_URL == 'https://rusporn.tv':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.megatube.xxx':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.el-ladies.com':
+		if self.MAIN_URL == 'https://www.el-ladies.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.movids.com':
 			return self.MAIN_URL
@@ -16016,11 +15979,11 @@ class Host(CBaseHostClass):
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://pornmaki.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.drtuber.com':
+		if self.MAIN_URL == 'https://www.drtuber.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.pornhat.com/':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.youjizz.com':
+		if self.MAIN_URL == 'https://www.youjizz.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.sexmature.xxx':
 			return self.MAIN_URL
@@ -16036,57 +15999,57 @@ class Host(CBaseHostClass):
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://chaturbate.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.ah-me.com':
+		if self.MAIN_URL == 'https://www.ah-me.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.pornrabbit.com':
+		if self.MAIN_URL == 'https://www.pornrabbit.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.tube8.com':
+		if self.MAIN_URL == 'https://www.tube8.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.redtube.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.youporn.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://showup.tv':
+		if self.MAIN_URL == 'https://showup.tv':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.xnxx.com':
+		if self.MAIN_URL == 'https://www.xnxx.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.xvideos.com':
+		if self.MAIN_URL == 'https://www.xvideos.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://hentaigasm.com':
+		if self.MAIN_URL == 'https://hentaigasm.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://xhamsterlive.com':
-			return 'http://xhamster.com/cams'
-		if self.MAIN_URL == 'http://xhamster.com':
-			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.eporner.com':
+		if self.MAIN_URL == 'https://xhamsterlive.com':
+			return 'https://xhamster.com/cams'
+		if self.MAIN_URL == 'https://xhamster.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.eporner.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.pornhub.com':
+		if self.MAIN_URL == 'https://www.eporner.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.hdporn.net':
+		if self.MAIN_URL == 'https://www.pornhub.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://m.tube8.com':
+		if self.MAIN_URL == 'https://www.hdporn.net':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://m.pornhub.com':
+		if self.MAIN_URL == 'https://m.tube8.com':
+			return self.MAIN_URL
+		if self.MAIN_URL == 'https://m.pornhub.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.katestube.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.hclips.com':
-			return 'http://www.hclips.com'
+		if self.MAIN_URL == 'https://www.hclips.com':
+			return 'https://www.hclips.com'
 		if self.MAIN_URL == 'https://xbabe.com':
 			return 'https://xbabe.com'
 		if self.MAIN_URL == 'https://www.txxx.com':
 			return 'https://www.txxx.com'
-		if self.MAIN_URL == 'http://sexu.com':
+		if self.MAIN_URL == 'https://sexu.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.tubewolf.com':
+		if self.MAIN_URL == 'https://www.tubewolf.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://streamate.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.pornburst.xxx/':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.adulttvlive.net':
+		if self.MAIN_URL == 'https://www.adulttvlive.net':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.balkanjizz.com':
 			return self.MAIN_URL
@@ -16112,15 +16075,15 @@ class Host(CBaseHostClass):
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.eroprofile.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.absoluporn.com':
+		if self.MAIN_URL == 'https://www.absoluporn.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://anybunny.com':
+		if self.MAIN_URL == 'https://anybunny.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.naked.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.cumlouder.com':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'http://www.porn00.org':
+		if self.MAIN_URL == 'https://www.porn00.org':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.porn300.com':
 			return self.MAIN_URL
@@ -16176,7 +16139,7 @@ class Host(CBaseHostClass):
 		if 'clipwatching.com' in url:
 			if 'embed' not in url:
 				video_id = self.cm.ph.getSearchGroups(url, 'clipwatching.com/([A-Za-z0-9]{12})[/.-]')[0]
-				url = 'http://clipwatching.com/embed-{0}.html'.format(video_id)
+				url = 'https://clipwatching.com/embed-{0}.html'.format(video_id)
 
 		if parser == 'mjpg_stream':
 			try:
@@ -16192,14 +16155,13 @@ class Host(CBaseHostClass):
 						with open('/tmp/obraz.jpg', 'w') as titleFile:
 							titleFile.write(jpg)
 							return 'file:///tmp/obraz.jpg'
-			except:
+			except Exception:
 				pass
 			return ''
 
-		if parser == 'http://www.porntrex.com':
+		if parser == 'https://www.porntrex.com':
 			COOKIEFILE = join(GetCookieDir(), 'porntrex.cookie')
-			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'headers': {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' '(KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Referer': url, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 'Accept-Language': 'en-US,en;q=0.5',
-			 'Connection': 'keep-alive', }}
+			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'headers': {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' '(KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Referer': url, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 'Accept-Language': 'en-US,en;q=0.5', 'Connection': 'keep-alive', }}
 			sts, data = self.getPage(url, 'porntrex.cookie', 'porntrex.com', self.defaultParams)
 			if not sts:
 				return ''
@@ -16246,7 +16208,7 @@ class Host(CBaseHostClass):
 			printDBG('Link a video: ' + str(videoUrl))
 			return unquote(videoUrl)
 
-		if parser == 'http://www.hclips.com':
+		if parser == 'https://www.hclips.com':
 			COOKIEFILE = join(GetCookieDir(), 'hclips.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'hclips.cookie', 'hclips.com', self.defaultParams)
@@ -16331,7 +16293,7 @@ class Host(CBaseHostClass):
 			printDBG('End Link: ' + str(videoUrl))
 			return videoUrl
 
-		if parser == 'http://pornvideos4k.com/en':
+		if parser == 'https://pornvideos4k.com/en':
 			COOKIEFILE = join(GetCookieDir(), 'pornvideos4k.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -16343,7 +16305,7 @@ class Host(CBaseHostClass):
 			printDBG('Vege: ' + str(phUrl))
 			return phUrl
 
-		if parser == 'http://tubepornclassic.com':
+		if parser == 'https://tubepornclassic.com':
 			COOKIEFILE = join(GetCookieDir(), 'tubepornclassic.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'tubepornclassic.cookie', 'tubepornclassic.com', self.defaultParams)
@@ -16364,7 +16326,7 @@ class Host(CBaseHostClass):
 				videoUrl = 'https://tubepornclassic.com' + videoUrl
 			return urlparser.decorateUrl(videoUrl, {'Referer': url})
 
-		if parser == 'http://www.hdzog.com':
+		if parser == 'https://www.hdzog.com':
 			COOKIEFILE = join(GetCookieDir(), 'hdzog.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'hdzog.cookie', 'hdzog.com', self.defaultParams)
@@ -16411,11 +16373,11 @@ class Host(CBaseHostClass):
 			videoUrl = videoUrls[-1]
 			return videoUrl
 
-		if parser == 'http://showup.tv':
+		if parser == 'https://showup.tv':
 			COOKIEFILE = join(GetCookieDir(), 'showup.cookie')
 			try:
 				data = self.cm.getURLRequestData({'url': url, 'use_host': False, 'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': COOKIEFILE, 'use_post': False, 'return_data': True})
-			except:
+			except Exception:
 				printDBG('Host getResolvedURL query error url: ' + url)
 				return ''
 			printDBG('Host getResolvedURL data: ' + data)
@@ -16441,11 +16403,10 @@ class Host(CBaseHostClass):
 				printDBG('Host IP: ' + ip)
 				port = s.replace(t.group(1) + ':', '')
 				printDBG('Host Port: ' + port)
-				modelName = url.replace('http://showup.tv/', '')
+				modelName = url.replace('https://showup.tv/', '')
 				printDBG('Host modelName: ' + modelName)
 
 				libsPath = GetPluginDir('libs/')
-				import websocket
 				wsURL1 = 'ws://' + s
 				wsURL2 = 'ws://' + ip + ':' + port
 				printDBG('Host wsURL1: ' + wsURL1)
@@ -16493,7 +16454,6 @@ class Host(CBaseHostClass):
 					videoUrl = 'rtmp://cdn-t0.showup.tv:1935/webrtc/' + Checksum + '_aac'  # token=fake'
 					ws.close()
 					try:
-						import subprocess
 						for x in range(1, 9):
 							cmd = '/usr/bin/rtmpdump -B 1 -r "%s"' % videoUrl.replace('cdn-t0', 'cdn-t0' + str(x))
 							wow = subprocess.getoutput(cmd)
@@ -16502,7 +16462,7 @@ class Host(CBaseHostClass):
 							if not 'StreamNotFound' in wow:
 								return videoUrl.replace('cdn-t0', 'cdn-t0' + str(x)) + ' live=1'
 							printDBG('HostXXX GUZIK ')
-					except:
+					except Exception:
 						printDBG('HostXXX error commands.getoutput ')
 					return videoUrl.replace('cdn-t0', 'cdn-t01') + ' live=1'
 
@@ -16510,11 +16470,11 @@ class Host(CBaseHostClass):
 
 		def base_myfreecam(serwer, url):
 			data = ''
-			newurl = 'http://video%s.myfreecams.com:1935/NxServer/mfc_%s.f4v_aac/playlist.m3u8' % (serwer, url)
+			newurl = 'https://video%s.myfreecams.com:1935/NxServer/mfc_%s.f4v_aac/playlist.m3u8' % (serwer, url)
 			try:
 				data = urlopen(newurl, timeout=1)
 				# printDBG( 'Host data.meta:  '+str(data.meta) )
-			except:
+			except Exception:
 				printDBG('Host error newurl:  ' + newurl)
 			if data:
 				return newurl
@@ -16847,7 +16807,7 @@ class Host(CBaseHostClass):
 				return videoUrl
 			return ''
 
-		if parser == 'http://babes34.me':
+		if parser == 'https://babes34.me':
 			COOKIEFILE = join(GetCookieDir(), 'babes34.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.HTTP_HEADER['Referer'] = url
@@ -16951,7 +16911,7 @@ class Host(CBaseHostClass):
 			query_data = {'url': url, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
 			try:
 				data = self.cm.getURLRequestData(query_data)
-			except:
+			except Exception:
 				printDBG('Host getResolvedURL query error url: ' + url)
 				return ''
 			# printDBG( 'Host getResolvedURL data: '+data )
@@ -17004,8 +16964,8 @@ class Host(CBaseHostClass):
 					return Url
 			return ''
 
-		if parser == 'http://xhamster.com/cams':
-			config = 'http://xhamsterlive.com/api/front/config'
+		if parser == 'https://xhamster.com/cams':
+			config = 'https://xhamsterlive.com/api/front/config'
 			COOKIEFILE = join(GetCookieDir(), 'xhamsterlive.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -17019,7 +16979,7 @@ class Host(CBaseHostClass):
 			sessionHash = parse.group(1)
 			printDBG('Host sessionHash: ' + sessionHash)
 
-			models = 'http://xhamsterlive.com/api/front/models'
+			models = 'https://xhamsterlive.com/api/front/models'
 			COOKIEFILE = join(GetCookieDir(), 'xhamsterlive.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -17033,9 +16993,9 @@ class Host(CBaseHostClass):
 					ID = str(item["id"])
 					Name = item["username"]
 					BroadcastServer = item["broadcastServer"]
-					swf_url = 'http://xhamsterlive.com/assets/cams/components/ui/Player/player.swf?bgColor=2829099&isModel=false&version=1.5.892&bufferTime=1&camFPS=30&camKeyframe=15&camQuality=85&camWidth=640&camHeight=480'
-					Url = 'rtmp://b-eu10.stripcdn.com:1935/%s?sessionHash=%s&domain=xhamsterlive.com playpath=%s swfUrl=%s pageUrl=http://xhamsterlive.com/cams/%s live=1 ' % (BroadcastServer, sessionHash, ID, swf_url, Name)
-					Url = 'rtmp://b-eu10.stripcdn.com:1935/%s?sessionHash=%s&domain=xhamsterlive.com playpath=%s swfVfy=%s pageUrl=http://xhamsterlive.com/cams/%s live=1 ' % (BroadcastServer, sessionHash, ID, swf_url, Name)
+					swf_url = 'https://xhamsterlive.com/assets/cams/components/ui/Player/player.swf?bgColor=2829099&isModel=false&version=1.5.892&bufferTime=1&camFPS=30&camKeyframe=15&camQuality=85&camWidth=640&camHeight=480'
+					Url = 'rtmp://b-eu10.stripcdn.com:1935/%s?sessionHash=%s&domain=xhamsterlive.com playpath=%s swfUrl=%s pageUrl=https://xhamsterlive.com/cams/%s live=1 ' % (BroadcastServer, sessionHash, ID, swf_url, Name)
+					Url = 'rtmp://b-eu10.stripcdn.com:1935/%s?sessionHash=%s&domain=xhamsterlive.com playpath=%s swfVfy=%s pageUrl=https://xhamsterlive.com/cams/%s live=1 ' % (BroadcastServer, sessionHash, ID, swf_url, Name)
 					if ID == url:
 						return urlparser.decorateUrl(Url, {'Referer': 'https://xhamsterlive.com/cams/' + Name, 'iptv_livestream': True})
 			except Exception:
@@ -17075,13 +17035,13 @@ class Host(CBaseHostClass):
 			printDBG('Lejátszás:' + videoUrl)
 			return videoUrl
 
-		if parser == 'http://www.tube8.com/embed/':
+		if parser == 'https://www.tube8.com/embed/':
 			return self.getResolvedURL(url.replace(r"embed/", r""))
 
-		# if parser == 'http://www.pornhub.com/embed/':
+		# if parser == 'https://www.pornhub.com/embed/':
 		#   return self.getResolvedURL(url.replace(r"embed/",r"view_video.php?viewkey="))
 
-		if parser == 'http://www.tube8.com':
+		if parser == 'https://www.tube8.com':
 			COOKIEFILE = join(GetCookieDir(), 'tube8.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -17100,7 +17060,7 @@ class Host(CBaseHostClass):
 			printDBG('Kész link: ' + videoUrl)
 			return videoUrl
 
-		if parser == 'http://www.4tube.com':
+		if parser == 'https://www.4tube.com':
 			COOKIEFILE = join(GetCookieDir(), '4tube.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			if url.startswith('https://www.porntube.com'):
@@ -17166,7 +17126,7 @@ class Host(CBaseHostClass):
 			header = {'User-Agent': host, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
 			try:
 				data = self.cm.getURLRequestData({'url': url, 'header': header, 'use_host': False, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': COOKIEFILE, 'use_post': False, 'return_data': True})
-			except:
+			except Exception:
 				printDBG('Host getResolvedURL query error url: ' + url)
 				return ''
 			printDBG('Host getResolvedURL data: ' + data)
@@ -17216,16 +17176,14 @@ class Host(CBaseHostClass):
 			# printDBG( 'Ez a vege: '+videoUrl )
 			return videoUrl
 
-		# make by 12asdfg12
-
-		def ssut51(str):
-			str = re.sub(r'\D', '', str)
-			sut = 0
-			for i in range(0, len(str)):
-				sut += int(str[i])
-			return sut
-
 		if parser == 'https://yourporn.sexy':
+			def ssut51(str):
+				str = re.sub(r'\D', '', str)
+				sut = 0
+				for i in range(0, len(str)):
+					sut += int(str[i])
+				return sut
+
 			for x in range(1, 99):
 				COOKIEFILE = join(GetCookieDir(), 'yourporn.cookie')
 				self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -17249,7 +17207,7 @@ class Host(CBaseHostClass):
 						sts, jsscript = self.getPage(result, 'yourporn.cookie', 'sxyprn.com', self.defaultParams)
 						replaceint = re.search(r'tmp\[1\]\+= "(\d+)";', jsscript, re.DOTALL | re.IGNORECASE).group(1)
 						videoUrl = videoUrl.replace('/cdn/', '/cdn%s/' % replaceint)
-					except:
+					except Exception:
 						if '/cdn/' in videoUrl:
 							videoUrl = videoUrl.replace('/cdn/', '/cdn' + str(self.yourporn) + '/')
 					videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': url, 'Origin': 'https://sxyprn.com'})
@@ -17331,20 +17289,7 @@ class Host(CBaseHostClass):
 		if parser == 'doodstream.com':
 			baseUrl = url
 			printDBG("parserDOOD baseUrl [%s]" % baseUrl)
-			httpParams = {
-			'header': {
-				'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
-				'Accept': '*/*',
-				'Accept-Encoding': 'gzip',
-				'Referer': baseUrl
-			},
-			'use_cookie': True,
-			'load_cookie': True,
-			'save_cookie': True,
-			'cookiefile': GetCookieDir("dood.cookie"),
-			'max_data_size': 0,
-			'no_redirection': True
-			}
+			httpParams = {'header': {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36', 'Accept': '*/*', 'Accept-Encoding': 'gzip', 'Referer': baseUrl}, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': GetCookieDir("dood.cookie"), 'max_data_size': 0, 'no_redirection': True}
 			urlsTab = []
 			if '/d/' in baseUrl:
 				baseUrl = baseUrl.replace('/d/', '/e/')
@@ -17365,21 +17310,14 @@ class Host(CBaseHostClass):
 					srtLabel = self.cm.ph.getSearchGroups(track, '''label=['"]([^'^"]+?)['"]''')[0]
 					srtFormat = srtUrl[-3:]
 					params = {'title': srtLabel, 'url': srtUrl, 'lang': srtLabel.lower()[:3], 'format': srtFormat}
-					printDBG(str(params))
 					subTracks.append(params)
 			pass_md5_url = self.cm.ph.getSearchGroups(data, r'''; \$.get.['"](.+?)['"],''', 1, True)[0]
-			printDBG(pass_md5_url)
 			makePlay = self.cm.ph.getSearchGroups(data, r'''(function makePlay\(\) \{.+?\};)''', 1, True)[0]
-			printDBG(makePlay)
 			if pass_md5_url and makePlay:
 				pass_md5_url = self.cm.getFullUrl(pass_md5_url, self.cm.getBaseUrl(url))
 				sts, new_url = self.cm.getPage(pass_md5_url, httpParams)
-
 				if sts:
 					code = "var url = '%s';\n%s\nconsole.log(url + makePlay());" % (new_url, makePlay)
-					printDBG("-----------------------")
-					printDBG(code)
-					printDBG("-----------------------")
 					ret = js_execute(code)
 					newUrl = ret['data'].replace("\n", "")
 					if newUrl:
@@ -17388,9 +17326,7 @@ class Host(CBaseHostClass):
 						else:
 							newUrl = urlparser.decorateUrl(newUrl, {'Referer': baseUrl})
 						params = {'name': 'link', 'url': newUrl}
-						printDBG(str(params))
 						urlsTab.append(params)
-
 			return urlsTab
 
 		if parser == 'https://www.playvids.com':
@@ -17419,7 +17355,7 @@ class Host(CBaseHostClass):
 				return self.FullUrl(videoUrl)
 			return ''
 
-		if parser == 'http://www.tubewolf.com':
+		if parser == 'https://www.tubewolf.com':
 			COOKIEFILE = join(GetCookieDir(), 'tubewolf.cookie')
 			for x in range(1, 10):
 				self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
@@ -17439,7 +17375,7 @@ class Host(CBaseHostClass):
 			query_data = {'url': url, 'use_host': False, 'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': COOKIEFILE, 'use_post': False, 'return_data': True}
 			try:
 				data = self.cm.getURLRequestData(query_data)
-			except Exception as e:
+			except Exception:
 				printExc()
 				printDBG('Host listsItems query error url:' + url)
 				return ''
@@ -17449,7 +17385,7 @@ class Host(CBaseHostClass):
 			query_data = {'url': url, 'header': header, 'use_host': False, 'use_cookie': True, 'save_cookie': False, 'load_cookie': True, 'cookiefile': COOKIEFILE, 'use_post': False, 'return_data': True}
 			try:
 				data = self.cm.getURLRequestData(query_data)
-			except Exception as e:
+			except Exception:
 				printExc()
 				printDBG('Host listsItems query error url:' + url)
 				return ''
@@ -17465,26 +17401,17 @@ class Host(CBaseHostClass):
 							printDBG('Host listsItems valtab: ' + str(item))
 							return item['url']
 				return videoUrl
-			except Exception as e:
+			except Exception:
 				printExc()
 			return ''
 
-		if parser == 'http://www.youjizz.com':
+		if parser == 'https://www.youjizz.com':
 			COOKIEFILE = join(GetCookieDir(), 'youjizz.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url)
 			if not sts:
 				return
-			# printDBG( 'Host listsItems data: '+data )
-
-			# host = 'iPhone'
-			# header = {'User-Agent': host, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'X-Requested-With':'XMLHttpRequest'}
-			# try: data = self.cm.getURLRequestData({ 'url': url, 'header': header, 'use_host': False, 'use_cookie': True, 'save_cookie': True, 'load_cookie': False, 'cookiefile': COOKIEFILE, 'use_post': False, 'return_data': True })
-			# except:
-			#   printDBG( 'Host getResolvedURL query error url: '+url )
-			#   return ''
-			# printDBG( 'Host getResolvedURL data: '+data )
 			videoPage = self.cm.ph.getSearchGroups(data, '''"quality":"1080","filename":['"]([^"^']+?)['"]''')[0].replace(r'\/', '/')
 			if videoPage:
 				if videoPage.startswith('//'):
@@ -17550,7 +17477,7 @@ class Host(CBaseHostClass):
 							return str(item["src"])
 						if str(item["desc"]) == '360p' and str(item["active"]) == 'true':
 							return str(item["src"])
-				except Exception as e:
+				except Exception:
 					printExc()
 			videoUrl = self.cm.ph.getSearchGroups(data, '''source src=['"]([^"^']+?)['"]''')[0].replace('&amp;', '&')
 			if videoUrl:
@@ -17563,7 +17490,7 @@ class Host(CBaseHostClass):
 				return []
 			return ''
 
-		if parser == 'http://www.pornhub.com':
+		if parser == 'https://www.pornhub.com':
 			COOKIEFILE = join(GetCookieDir(), 'pornhub.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self._getPage(url, self.defaultParams)
@@ -17640,7 +17567,7 @@ class Host(CBaseHostClass):
 				return videoUrl
 			return ''
 
-		if parser == 'http://www.filmyporno.tv':
+		if parser == 'https://www.filmyporno.tv':
 			COOKIEFILE = join(GetCookieDir(), 'filmyporno.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -17652,7 +17579,7 @@ class Host(CBaseHostClass):
 			printDBG('FILMYPORNO MATCH: ' + str(match))
 			if match:
 				videoUrl = match[0]
-				return urlparser.decorateUrl(videoUrl, {'Referer': 'http://www.filmyporno.tv'})
+				return urlparser.decorateUrl(videoUrl, {'Referer': 'https://www.filmyporno.tv'})
 			else:
 				return ''
 
@@ -17693,7 +17620,7 @@ class Host(CBaseHostClass):
 			printDBG('Host listsItems data: ' + str(data))
 			videoPage = re.findall('<videoLink>.*?//(.*?)(?:]]>|</videoLink>)', data, re.S)
 			if videoPage:
-				return 'http://' + videoPage[-1]
+				return 'https://' + videoPage[-1]
 
 			videoUrl = self.cm.ph.getSearchGroups(data, '''download href=['"]([^"^']+?)['"]''')[0]
 			if not videoUrl:
@@ -17741,7 +17668,7 @@ class Host(CBaseHostClass):
 				printDBG('Host listsItems data2: ' + str(data))
 				url = re.findall('<videoLink>.*?//(.*?)(?:]]>|</videoLink>)', data, re.S)
 				if url:
-					return "http://" + url[-1].replace('&amp;', '&')
+					return "https://" + url[-1].replace('&amp;', '&')
 			return ''
 
 		if parser == 'https://www.pinflix.com':
@@ -17756,7 +17683,7 @@ class Host(CBaseHostClass):
 			return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.USER_AGENT})
 			return ''
 
-		if parser == 'http://www.pornhd.com':
+		if parser == 'https://www.pornhd.com':
 			COOKIEFILE = join(GetCookieDir(), 'pornhd.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'pornhd.cookie', 'pornhd.com', self.defaultParams)
@@ -17780,7 +17707,7 @@ class Host(CBaseHostClass):
 				return ''
 			return data.meta['url']
 
-		if parser == 'http://www.adulttvlive.net':
+		if parser == 'https://www.adulttvlive.net':
 			COOKIEFILE = join(GetCookieDir(), 'adulttv.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'adulttv.cookie', 'adulttv.net', self.defaultParams)
@@ -17814,14 +17741,10 @@ class Host(CBaseHostClass):
 								tmp2 = re.compile(r'''unescape\(['"]([^"^']+?)['"]''').findall(item)
 								for item2 in tmp2:
 									ddata += unquote(item2)
-
 					printDBG('Host listsItems ddata2: ' + ddata)
-
-					funName = self.cm.ph.getSearchGroups(ddata, r'''function\s*([^\(]+?)''')[0].strip()
 					sp = self.cm.ph.getSearchGroups(ddata, r'''split\(\s*['"]([^'^"]+?)['"]''')[0]
 					modStr = self.cm.ph.getSearchGroups(ddata, r'''\+\s*['"]([^'^"]+?)['"]''')[0]
 					modInt = int(self.cm.ph.getSearchGroups(ddata, r'''\+\s*(-?[0-9]+?)[^0-9]''')[0])
-
 					ddata = self.cm.ph.getSearchGroups(ddata, r'''document\.write[^'^"]+?['"]([^'^"]+?)['"]''')[0]
 					data = ''
 					tmp = ddata.split(sp)
@@ -17829,9 +17752,7 @@ class Host(CBaseHostClass):
 					k = unquote(tmp[1] + modStr)
 					for idx in range(len(ddata)):
 						data += chr((int(k[idx % len(k)]) ^ ord(ddata[idx])) + modInt)
-
 					printDBG('host data2: ' + data)
-
 					if 'rtmp://' in data:
 						rtmpUrl = self.cm.ph.getDataBeetwenMarkers(data, '&source=', '&', False)[1]
 						if rtmpUrl == '':
@@ -17847,7 +17768,7 @@ class Host(CBaseHostClass):
 			videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''')[0]
 			if not videoUrl:
 				link = self.cm.ph.getSearchGroups(data, '''streamer":['"]([^"^']+?)['"]''')[0].replace(r"\/", r"/")
-				return 'http://www.filmon.com' + link
+				return 'https://www.filmon.com' + link
 			if not videoUrl:
 				return ''
 			sts, data = self.getPage(videoUrl, 'adulttv.cookie', 'adulttv.net', self.defaultParams)
@@ -17896,7 +17817,7 @@ class Host(CBaseHostClass):
 			license_code = self.cm.ph.getSearchGroups(data, '''license_code:.['"]([^"^']+?)['"],''')[0].strip()
 			if 'eporner' in baseUrl:
 				videoID = self.cm.ph.getSearchGroups(data, '''720p.HD:<a href=['"]([^"^']+?)['"]''')[0]
-				videoUrl = "http://www.eporner.com" + videoID
+				videoUrl = "https://www.eporner.com" + videoID
 			if 'txxx' in baseUrl:
 				videoUrl = re.search('video_url":"([^"]+)', data).group(1)
 				replacemap = {'M': '\\u041c', 'A': '\\u0410', 'B': '\\u0412', 'C': '\\u0421', 'E': '\\u0415', '=': '~', '+': '.', '/': ','}
@@ -18004,7 +17925,7 @@ class Host(CBaseHostClass):
 			printDBG('Videolink third: ' + videoUrl)
 			try:
 				return urlparser.decorateUrl(videoUrl, {'Referer': url})
-			except:
+			except Exception:
 				return videoUrl
 
 		if parser == 'https://www.cuckoldplacetube.com':
@@ -18069,7 +17990,7 @@ class Host(CBaseHostClass):
 			try:
 				videoUrl = re.findall('source.src=["]([^@]+?)["].{,14}/mp4', data, re.S)[0]
 				printDBG('Videolink: ' + videoUrl)
-			except:
+			except Exception:
 				self.sessionEx.open(MessageBox, _("This video has been deleted."), type=MessageBox.TYPE_INFO, timeout=10)
 			if self.cm.isValidUrl(videoUrl):
 				return urlparser.decorateUrl(videoUrl, {'Referer': url})
@@ -18083,7 +18004,7 @@ class Host(CBaseHostClass):
 			try:
 				videoUrl = re.findall('source.src=["]([^@]+?)["].{,14}/mp4', data, re.S)[0]
 				printDBG('Videolink: ' + videoUrl)
-			except:
+			except Exception:
 				self.sessionEx.open(MessageBox, _("This video has been deleted."), type=MessageBox.TYPE_INFO, timeout=10)
 			if self.cm.isValidUrl(videoUrl):
 				return urlparser.decorateUrl(videoUrl, {'Referer': url})
@@ -18099,7 +18020,7 @@ class Host(CBaseHostClass):
 				urls = re.findall('source.src=["]([^@]+?)["].{,14}/mp4', data, re.S)[0]
 				videoUrl = '%s/%s' % (self.MAIN_URL, urls)
 				printDBG('Videolink: ' + videoUrl)
-			except:
+			except Exception:
 				self.sessionEx.open(MessageBox, _("This video has been deleted."), type=MessageBox.TYPE_INFO, timeout=10)
 			if self.cm.isValidUrl(videoUrl):
 				return urlparser.decorateUrl(videoUrl, {'Referer': url})
@@ -18236,7 +18157,7 @@ class Host(CBaseHostClass):
 			if videoUrl:
 				return urlparser.decorateUrl(videoUrl, {'Referer': url})
 
-		if parser == 'http://www.wifevideos.net':
+		if parser == 'https://www.wifevideos.net':
 			printDBG('WIFEVIDEOS PARSER')
 			self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
 			COOKIEFILE = join(GetCookieDir(), 'wifevideos.cookie')
@@ -18390,7 +18311,7 @@ class Host(CBaseHostClass):
 			printDBG('Videolink second: ' + videoUrl)
 			try:
 				return urlparser.decorateUrl(videoUrl, {'Referer': url})
-			except:
+			except Exception:
 				videoID = re.search("file.{9,35}[/]([^']+?)[_]", videoUrl).group(1)
 				printDBG('Lekért videoID: ' + str(videoID))
 				token = re.search("1[/]([^']+?)[/]", videoUrl).group(1)
@@ -18419,7 +18340,7 @@ class Host(CBaseHostClass):
 			try:
 				videoUrl = re.search('source.src=["]([^ß]+?)["].{9,12}/mp4', data).group(1)
 				return videoUrl
-			except:
+			except Exception:
 				videoUrl = re.search('width="560.{9,15}src=["]([^ß]+?)["]', data).group(1)
 				sts, data2 = self.getPage(videoUrl, 'veporn.cookie', 'veporn.com', self.defaultParams)
 				if not sts:
@@ -18447,7 +18368,7 @@ class Host(CBaseHostClass):
 			try:
 				videoUrl = videoUrl[-1]
 				return videoUrl
-			except:
+			except Exception:
 				headUrl = re.search('id="player.+\n.+src=["]([^"]+?)["]', data).group(1)
 				sts, data2 = self.get_Page(headUrl)
 				if not sts:
@@ -18476,7 +18397,7 @@ class Host(CBaseHostClass):
 			try:
 				videoUrl = re.findall("video.{1,6}url.{2,4}['](f[^@]+?)['],", data, re.S)[-1]
 				printDBG('Videolink first: ' + videoUrl)
-			except:
+			except Exception:
 				embedUrl = re.search('getEmbed.+\n.+\n.+src=["]([a-z:/0-9.]+?)["]', data).group(1)
 				printDBG('EMBEDURL: ' + embedUrl)
 				sts, data2 = self.get_Page(embedUrl)
@@ -18751,7 +18672,7 @@ class Host(CBaseHostClass):
 				videoUrl = 'http:' + videoUrl
 			return videoUrl
 
-		if parser == 'http://www.sunporno.com':
+		if parser == 'https://www.sunporno.com':
 			COOKIEFILE = join(GetCookieDir(), 'sunporno.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -18803,7 +18724,7 @@ class Host(CBaseHostClass):
 			printDBG('Link: ' + videoUrl)
 			return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': USER_AGENT})
 
-		if parser == 'http://porn720.net':
+		if parser == 'https://porn720.net':
 			COOKIEFILE = join(GetCookieDir(), 'porn720.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.getPage(url, 'porn720.cookie', 'porn720.org', self.defaultParams)
@@ -18872,11 +18793,11 @@ class Host(CBaseHostClass):
 				if videoUrl.split('?')[0].endswith('m3u8'):
 					printDBG('Host  videoUrl: %s' % videoUrl)
 					# if self.cm.isValidUrl(videoUrl):
-					#    videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': referer})
-					#    tmp = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
-					#    for item in tmp:
-					#        printDBG( 'Host listsItems valtab: '  +str(item))
-					#        return item['url']
+					#	videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': referer})
+					#	tmp = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
+					#	for item in tmp:
+					#		printDBG( 'Host listsItems valtab: '  +str(item))
+					#		return item['url']
 				elif videoUrl.split('?')[0].endswith('mp4'):
 					printDBG('Host  videoUrl: %s' % videoUrl)
 					videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': referer, 'User-Agent': self.USER_AGENT})
@@ -18903,7 +18824,7 @@ class Host(CBaseHostClass):
 				videoUrl = 'http:' + videoUrl
 			return urlparser.decorateUrl(videoUrl, {'Referer': url})
 
-		if parser == 'http://www.pornrabbit.com':
+		if parser == 'https://www.pornrabbit.com':
 			self.cm.HEADER = {'User-Agent': self.cm.getDefaultHeader()['User-Agent'], 'X-Requested-With': 'XMLHttpRequest'}
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.HTTP_HEADER['Referer'] = url
@@ -18937,7 +18858,7 @@ class Host(CBaseHostClass):
 			if 'function/0/' in videoUrl:
 				videoUrl = decryptHash(videoUrl, license_code, '16')
 			if 'm3u8' in videoUrl:
-				videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': url, "Origin": "http://www.pornrabbit.com"})
+				videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': url, "Origin": "https://www.pornrabbit.com"})
 				tmp = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
 				for item in tmp:
 					return item['url']
@@ -18959,7 +18880,7 @@ class Host(CBaseHostClass):
 				videoUrl = 'http:' + videoUrl
 			return urlparser.decorateUrl(videoUrl, {'Referer': url})
 
-		if parser == 'http://www.absoluporn.com':
+		if parser == 'https://www.absoluporn.com':
 			COOKIEFILE = join(GetCookieDir(), 'absoluporn.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -18988,7 +18909,7 @@ class Host(CBaseHostClass):
 				videoUrl = decryptHash(videoUrl, license_code, '16')
 			return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.HTTP_HEADER['User-Agent']})
 
-		if parser == 'http://anybunny.com':
+		if parser == 'https://anybunny.com':
 			COOKIEFILE = join(GetCookieDir(), 'anybunny.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'anybunny.cookie', 'anybunny.com', self.defaultParams)
@@ -19018,7 +18939,7 @@ class Host(CBaseHostClass):
 				return videoUrl
 			return ''
 
-		if parser == 'http://www.eporner.com':
+		if parser == 'https://www.eporner.com':
 			printDBG('Selected Resolution: ' + url)
 			if url.startswith('http'):
 				videoUrl = url
@@ -19037,7 +18958,7 @@ class Host(CBaseHostClass):
 				return videoUrl
 			return ''
 
-		if parser == 'http://dansmovies.com':
+		if parser == 'https://dansmovies.com':
 			COOKIEFILE = join(GetCookieDir(), 'dansmovies.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -19167,7 +19088,7 @@ class Host(CBaseHostClass):
 			printDBG('Link: ' + videoUrl)
 			return videoUrl
 
-		if parser == 'http://sexu.com':
+		if parser == 'https://sexu.com':
 			COOKIEFILE = join(GetCookieDir(), 'sexu.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -19179,15 +19100,15 @@ class Host(CBaseHostClass):
 			if videoUrl:
 				if videoUrl.startswith('//'):
 					videoUrl = 'http:' + videoUrl
-				return urlparser.decorateUrl(videoUrl, {'Referer': 'http://sexu.com/'})
+				return urlparser.decorateUrl(videoUrl, {'Referer': 'https://sexu.com/'})
 			videoUrl = re.findall(r'"file":"(.*?\.mp4)"', data, re.S)
 			if videoUrl:
-				return urlparser.decorateUrl(videoUrl[-1], {'Referer': 'http://sexu.com/'})
+				return urlparser.decorateUrl(videoUrl[-1], {'Referer': 'https://sexu.com/'})
 			videoUrl = self.cm.ph.getSearchGroups(data, '''"src":['"]([^"^']+?)['"]''')[0].replace('&amp;', '&')
 			if videoUrl:
 				if videoUrl.startswith('//'):
 					videoUrl = 'http:' + videoUrl
-				return urlparser.decorateUrl(videoUrl, {'Referer': 'http://sexu.com/'})
+				return urlparser.decorateUrl(videoUrl, {'Referer': 'https://sexu.com/'})
 
 		if parser == 'https://www.amateurporn.me':
 			COOKIEFILE = join(GetCookieDir(), 'amateurporn.cookie')
@@ -19205,22 +19126,11 @@ class Host(CBaseHostClass):
 				videoUrl = self.cm.ph.getSearchGroups(data, '''src=["]([^j]+?)["].*\n.*s''')[0]
 			printDBG('Host license_code: %s' % license_code)
 			printDBG('Host video_url: %s' % videoUrl)
-			# if license_code and videoUrl:
-			#  if 'function/0/' in videoUrl:
-				#    videoUrl = decryptHash(videoUrl, license_code, '16')
-				# return urlparser.decorateUrl(videoUrl, {'Referer': url})
-			# videoUrl = self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''')[0]
-			# if videoUrl:
-				# return self.getResolvedURL(self.FullUrl(videoUrl))
-			# videoUrl = self.cm.ph.getSearchGroups(data, '''<source[^>]+?src=['"]([^"^']+?mp4)['"]''')[0]
-			# if videoUrl:
-			#  return self.FullUrl(videoUrl)
-			# videoUrl = self.cm.ph.getSearchGroups(data, '''file:\s*?['"]([^"^']+?mp4)['"]''')[0]
 			if videoUrl:
 				return urlparser.decorateUrl(videoUrl, {'Referer': url})
 			return ''
 
-		if parser == 'http://www.hdporn.net':
+		if parser == 'https://www.hdporn.net':
 			COOKIEFILE = join(GetCookieDir(), 'hdporn.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -19234,7 +19144,7 @@ class Host(CBaseHostClass):
 			else:
 				return ''
 
-		if parser == 'http://pornicom.com':
+		if parser == 'https://pornicom.com':
 			COOKIEFILE = join(GetCookieDir(), 'pornicom.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.HTTP_HEADER['Referer'] = url
@@ -19255,7 +19165,7 @@ class Host(CBaseHostClass):
 				return videoPage
 			return ''
 
-		if parser == 'http://www.porn00.org':
+		if parser == 'https://www.porn00.org':
 			COOKIEFILE = join(GetCookieDir(), 'porn00.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': False, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'porn00.cookie', 'porn00.org', self.defaultParams)
@@ -19377,7 +19287,7 @@ class Host(CBaseHostClass):
 			printDBG('VideoLink: ' + videoUrl)
 			return videoUrl
 
-		if parser == 'http://xhamster.com':
+		if parser == 'https://xhamster.com':
 			COOKIEFILE = join(GetCookieDir(), 'xhamster.cookie')
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -19548,7 +19458,7 @@ class Host(CBaseHostClass):
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
 			if not sts:
-				return valTab
+				return []
 			printDBG('Host listsItems data: ' + data)
 			license_code = self.cm.ph.getSearchGroups(data, r'''license_code\s*?:\s*?['"]([^"^']+?)['"]''')[0]
 			videoUrl = self.cm.ph.getSearchGroups(data, r'''video_alt_url\s*?:\s*?['"]([^"^']+?)['"]''')[0]
@@ -19563,13 +19473,11 @@ class Host(CBaseHostClass):
 			if 'function/0/' in videoUrl:
 				videoUrl = decryptHash(videoUrl, license_code, '16')
 			return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.HTTP_HEADER['User-Agent']})
-
-##########################################################################################################################
 		query_data = {'url': url, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
 		try:
 			data = self.cm.getURLRequestData(query_data)
 			printDBG('Host getResolvedURL data: ' + data)
-		except:
+		except Exception:
 			printDBG('Host getResolvedURL query error')
 			return videoUrl
 
@@ -19602,7 +19510,7 @@ class Host(CBaseHostClass):
 				return videoPage[0]
 			return ''
 
-		if parser == 'http://www.ah-me.com':
+		if parser == 'https://www.ah-me.com':
 			# printDBG( 'data: '+data )
 			license_code = self.cm.ph.getSearchGroups(data, '''license_code:.['"]([^"^']+?)['"],''')[0]
 			videoUrl = self.cm.ph.getSearchGroups(data, '''video_url:.['"]([^"^']+?)['"]''')[0]
@@ -19613,20 +19521,20 @@ class Host(CBaseHostClass):
 			# if videoUrl:urlparser.decorateUrl(videoUrl, {'Referer': url})
 			return videoUrl
 
-		if parser == 'http://www.yuvutu.com':
+		if parser == 'https://www.yuvutu.com':
 			# printDBG( 'data: '+data )
 			videoUrl = self.cm.ph.getSearchGroups(data, r'''\s*?{\s*?file:.['"]([^"^']+?)['"],''')[0]
 			# printDBG( 'Lekért link:: '+videoUrl )
 			return videoUrl
 
-		if parser == 'http://www.homemoviestube.com':
+		if parser == 'https://www.homemoviestube.com':
 			# printDBG( 'data: '+data )
 			videoUrl = self.cm.ph.getSearchGroups(data, '''value="settings=([^"^']+?)['"]''')[0]
 			if videoUrl:
 				query_data = {'url': videoUrl, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
 				try:
 					data = self.cm.getURLRequestData(query_data)
-				except:
+				except Exception:
 					printDBG('Host listsItems query error url: ' + url)
 				# printDBG( 'Host listsItems data: '+data )
 				return self.cm.ph.getSearchGroups(data, '''flvMask:([^"^']+?);''')[0]
@@ -19901,7 +19809,7 @@ class Host(CBaseHostClass):
 			printDBG('video oldal data: ' + data)
 			try:
 				mainUrl = self.cm.ph.getSearchGroups(data, '''hls_source.{13}[2]([^"^']+?)[u]0022''')[0]
-			except:
+			except Exception:
 				self.sessionEx.open(MessageBox, _("This show is private. Try again later!"), type=MessageBox.TYPE_INFO, timeout=10)
 			printDBG('Original title: ' + mainUrl)
 			if mainUrl:
@@ -19912,7 +19820,7 @@ class Host(CBaseHostClass):
 					# if not tmp: return ''
 					try:
 						tmp = sorted(tmp, key=lambda item: int(item.get('bitrate', '0')))
-					except:
+					except Exception:
 						self.sessionEx.open(MessageBox, _("This model is offline."), type=MessageBox.TYPE_INFO, timeout=10)
 					for item in tmp:
 						printDBG('Host listsItems valtab: ' + str(item))
@@ -19921,7 +19829,7 @@ class Host(CBaseHostClass):
 							return ''
 						return item['url']
 						printDBG('item bitrate: ' + str(item['bitrate']))
-					except:
+					except Exception:
 						self.sessionEx.open(MessageBox, _("This model is offline."), type=MessageBox.TYPE_INFO, timeout=10)
 			printDBG('VideoLink: ' + videoUrl)
 			if videoUrl:
@@ -19951,7 +19859,7 @@ class Host(CBaseHostClass):
 				if self.cm.isValidUrl(videoUrl):
 					try:
 						tmp = getDirectM3U8Playlist(videoUrl)
-					except:
+					except Exception:
 						self.sessionEx.open(MessageBox, _("This model is offline."), type=MessageBox.TYPE_INFO, timeout=10)
 						return ''
 					tmp = sorted(tmp, key=lambda item: int(item.get('bitrate', '0')))
@@ -19962,7 +19870,7 @@ class Host(CBaseHostClass):
 							return ''
 						return item['url']
 						printDBG('item bitrate: ' + str(item['bitrate']))
-					except:
+					except Exception:
 						self.sessionEx.open(MessageBox, _("This model is offline."), type=MessageBox.TYPE_INFO, timeout=10)
 			printDBG('Kész link: ' + videoUrl)
 			if videoUrl:
@@ -19971,15 +19879,14 @@ class Host(CBaseHostClass):
 				return videoUrl
 			return ''
 
-		if parser == 'http://hentaigasm.com':
+		if parser == 'https://hentaigasm.com':
 			videoUrl = self.cm.ph.getSearchGroups(data, '''file: ['"]([^"^']+?)['"]''')[0].replace('&amp;', '&')
 			printDBG('Lekért Link: ' + videoUrl)
 			if videoUrl.startswith('//'):
 				videoUrl = 'https:' + videoUrl
-			# return urllib2.unquote(videoUrl)
 			return videoUrl
 
-		if parser == 'http://rusporn.tv':
+		if parser == 'https://rusporn.tv':
 			sts, data = self.getPage(url, 'rusporn.cookie', 'rusporn.tv', self.defaultParams)
 			printDBG('Parser data: ' + data)
 			videoUrl = self.cm.ph.getSearchGroups(data, '''href=['"]([^"^']+?)['"].data-attach''')[0]
@@ -20022,13 +19929,13 @@ class Host(CBaseHostClass):
 				return unquote(videoUrl)
 			return ''
 
-		if parser == 'http://www.nuvid.com':
-			videoUrl = re.search("http://www.nuvid.com/video/(.*?)/.+", url, re.S)
+		if parser == 'https://www.nuvid.com':
+			videoUrl = re.search("https://www.nuvid.com/video/(.*?)/.+", url, re.S)
 			if videoUrl:
-				xml = 'http://m.nuvid.com/video/%s' % videoUrl.group(1)
+				xml = 'https://m.nuvid.com/video/%s' % videoUrl.group(1)
 				try:
 					data = self.cm.getURLRequestData({'url': xml, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True})
-				except:
+				except Exception:
 					printDBG('Host getResolvedURL query error xml')
 					return ''
 				# printDBG( 'Host data json: '+data )
@@ -20044,21 +19951,21 @@ class Host(CBaseHostClass):
 				return 'http:' + videoPage[0]
 			return ''
 
-		if parser == 'http://www.faphub.xxx':
+		if parser == 'https://www.faphub.xxx':
 			videoPage = re.findall("url: '(.*?)'", data, re.S)
 			if videoPage:
 				printDBG('Host videoPage:' + videoPage[0])
 				return videoPage[0]
 			return ''
 
-		if parser == 'http://www.proporn.com':
+		if parser == 'https://www.proporn.com':
 			videoPage = re.findall('source src="(.*?)"', data, re.S)
 			if videoPage:
 				printDBG('Host videoPage:' + videoPage[0])
 				return videoPage[0]
 			return ''
 
-		if parser == 'http://www.xnxx.com':
+		if parser == 'https://www.xnxx.com':
 			if url:
 				printDBG('XNXX PARSER LINK: ' + url)
 			if 'm3u8' in url:
@@ -20069,7 +19976,7 @@ class Host(CBaseHostClass):
 			return unquote(url)
 			return ''
 
-		if parser == 'http://www.xvideos.com':
+		if parser == 'https://www.xvideos.com':
 			printDBG('data: ' + data)
 			videoUrl = re.search(r"setVideoUrlHigh\('(.*?)'", data, re.S)
 			if videoUrl:
@@ -20087,17 +19994,11 @@ class Host(CBaseHostClass):
 					link = 'https:' + link
 				return link
 			return ''
-
-		# if parser == 'http://www.pornhub.com/embed/':
-		  #  match = re.findall("container.*?src.*?'(.*?)'", data, re.S)
-		   # if match: return match[0]
-			# return ''
-
-		if parser == 'http://m.tube8.com':
+		if parser == 'https://m.tube8.com':
 			match = re.compile('<div class="play_video.+?<a href="(.+?)"', re.DOTALL).findall(data)
 			return match[0]
 
-		if parser == 'http://m.pornhub.com':
+		if parser == 'https://m.pornhub.com':
 			match = re.compile('<div class="play_video.+?<a href="(.+?)"', re.DOTALL).findall(data)
 			return match[0]
 
@@ -20121,7 +20022,7 @@ class Host(CBaseHostClass):
 			if videoUrl:
 				return videoUrl
 
-		if parser == 'http://www.drtuber.com':
+		if parser == 'https://www.drtuber.com':
 			params = re.findall(r'params\s\+=\s\'h=(.*?)\'.*?params\s\+=\s\'%26t=(.*?)\'.*?params\s\+=\s\'%26vkey=\'\s\+\s\'(.*?)\'', data, re.S)
 			# teszt = str(base64.b64decode('UFQ2bDEzdW1xVjhLODI3').replace("b'", "").replace("'", ""))
 			# printDBG('Dekódolás után: ' + str(teszt))
@@ -20132,12 +20033,12 @@ class Host(CBaseHostClass):
 						bparam3 = param3.encode('utf-8')
 					hash = hashlib.md5(bparam3 + base64.b64decode('UFQ2bDEzdW1xVjhLODI3')).hexdigest()
 					printDBG('Kész HASH: ' + str(hash))
-					url = '%s/player_config/?h=%s&t=%s&vkey=%s&pkey=%s&aid=' % ("http://www.drtuber.com", param1, param2, param3, hash)
+					url = '%s/player_config/?h=%s&t=%s&vkey=%s&pkey=%s&aid=' % ("https://www.drtuber.com", param1, param2, param3, hash)
 					printDBG('Kész URL: ' + url)
 					query_data = {'url': url, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
 					try:
 						data = self.cm.getURLRequestData(query_data)
-					except:
+					except Exception:
 						printDBG('Host listsItems query error')
 						printDBG('Host listsItems query error url: ' + url)
 					printDBG('Host listsItems parserdata: ' + data)
@@ -20149,7 +20050,7 @@ class Host(CBaseHostClass):
 						return url
 			return ''
 
-		if parser == 'http://www.el-ladies.com':
+		if parser == 'https://www.el-ladies.com':
 			videoUrl = self.cm.ph.getSearchGroups(data, '''<source[^>]+?src=['"]([^"^']+?)['"]''')[0].replace('&amp;', '&')
 			if videoUrl:
 				return self.FullUrl(videoUrl)
@@ -20158,25 +20059,25 @@ class Host(CBaseHostClass):
 				return videoPage[0]
 			return ''
 
-		if parser == 'http://sexylies.com':
+		if parser == 'https://sexylies.com':
 			videoPage = re.search(r'source\stype="video/mp4"\ssrc="(.*?)"', data, re.S)
 			if videoPage:
 				return videoPage.group(1)
 			return ''
 
-		if parser == 'http://www.eskimotube.com':
+		if parser == 'https://www.eskimotube.com':
 			videoPage = re.search('color=black.*?href=(.*?)>', data, re.S)
 			if videoPage:
 				return videoPage.group(1)
 			return ''
 
-		if parser == 'http://www.porn5.com':
+		if parser == 'https://www.porn5.com':
 			videoPage = re.findall('p",url:"(.*?)"', data, re.S)
 			if videoPage:
 				return videoPage[-1]
 			return ''
 
-		if parser == 'http://www.pornyeah.com':
+		if parser == 'https://www.pornyeah.com':
 			videoPage = re.findall('settings=(.*?)"', data, re.S)
 			if not videoPage:
 				return ''
@@ -20184,7 +20085,7 @@ class Host(CBaseHostClass):
 			printDBG('Host getResolvedURL xml: ' + xml)
 			try:
 				data = self.cm.getURLRequestData({'url': xml, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True})
-			except:
+			except Exception:
 				printDBG('Host getResolvedURL query error xml')
 				return videoUrl
 			videoPage = re.findall('defaultVideo:(.*?);', data, re.S)
@@ -20192,13 +20093,13 @@ class Host(CBaseHostClass):
 				return videoPage[0]
 			return ''
 
-		if parser == 'http://www.pornpillow.com':
+		if parser == 'https://www.pornpillow.com':
 			videoPage = re.findall("'file': '(.*?)'", data, re.S)
 			if videoPage:
 				return videoPage[0]
 			return ''
 
-		if parser == 'http://www.thumbzilla.com':
+		if parser == 'https://www.thumbzilla.com':
 
 			fetchurl = self.cm.ph.getDataBeetwenMarkers(data, 'defaultQuality":false,"format":"hls","videoUrl":"', '","quality"', False)[1]
 			fetchurl = fetchurl.replace(r"\/", r"/")
@@ -20213,37 +20114,37 @@ class Host(CBaseHostClass):
 				return parse.group(1).replace(r'\/', '/')
 			return ''
 
-		if parser == 'http://xxxkingtube.com':
+		if parser == 'https://xxxkingtube.com':
 			parse = re.search("File = '(http.*?)'", data, re.S)
 			if parse:
 				return parse.group(1).replace(r'\/', '/')
 			return ''
 
-		if parser == 'http://pornsharing.com':
+		if parser == 'https://pornsharing.com':
 			parse = re.search(r'btoa\("(http.*?)"', data, re.S)
 			if parse:
 				return parse.group(1).replace(r'\/', '/')
 			return ''
 
-		if parser == 'http://pornxs.com':
+		if parser == 'https://pornxs.com':
 			parse = re.search('config-final-url="(http.*?)"', data, re.S)
 			if parse:
 				return parse.group(1).replace(r'\/', '/')
 			return ''
 
-		if parser == 'http://www.flyflv.com':
+		if parser == 'https://www.flyflv.com':
 			parse = re.search('fileUrl="(http.*?)"', data, re.S)
 			if parse:
 				return parse.group(1).replace(r'\/', '/')
 			return ''
 
-		if parser == 'http://www.yeptube.com':
+		if parser == 'https://www.yeptube.com':
 			videoUrl = re.search('video_id = "(.*?)"', data, re.S)
 			if videoUrl:
-				xml = 'http://www.yeptube.com/player_config_json/?vid=%s&aid=0&domain_id=0&embed=0&ref=&check_speed=0' % videoUrl.group(1)
+				xml = 'https://www.yeptube.com/player_config_json/?vid=%s&aid=0&domain_id=0&embed=0&ref=&check_speed=0' % videoUrl.group(1)
 				try:
 					data = self.cm.getURLRequestData({'url': xml, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True})
-				except:
+				except Exception:
 					printDBG('Host getResolvedURL query error xml')
 					return ''
 				# printDBG( 'Host data json: '+data )
@@ -20255,13 +20156,13 @@ class Host(CBaseHostClass):
 					return videoPage.group(1).replace(r'\/', '/')
 			return ''
 
-		if parser == 'http://vivatube.com':
+		if parser == 'https://vivatube.com':
 			videoUrl = re.search('video_id = "(.*?)"', data, re.S)
 			if videoUrl:
-				xml = 'http://vivatube.com/player_config_json/?vid=%s&aid=0&domain_id=0&embed=0&ref=&check_speed=0' % videoUrl.group(1)
+				xml = 'https://vivatube.com/player_config_json/?vid=%s&aid=0&domain_id=0&embed=0&ref=&check_speed=0' % videoUrl.group(1)
 				try:
 					data = self.cm.getURLRequestData({'url': xml, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True})
-				except:
+				except Exception:
 					printDBG('Host getResolvedURL query error xml')
 					return ''
 				# printDBG( 'Host data json: '+data )
@@ -20273,13 +20174,13 @@ class Host(CBaseHostClass):
 					return videoPage.group(1).replace(r'\/', '/')
 			return ''
 
-		if parser == 'http://www.tubeon.com':
+		if parser == 'https://www.tubeon.com':
 			videoUrl = re.search('video_id = "(.*?)"', data, re.S)
 			if videoUrl:
-				xml = 'http://www.tubeon.com/player_config_json/?vid=%s&aid=0&domain_id=0&embed=0&ref=&check_speed=0' % videoUrl.group(1)
+				xml = 'https://www.tubeon.com/player_config_json/?vid=%s&aid=0&domain_id=0&embed=0&ref=&check_speed=0' % videoUrl.group(1)
 				try:
 					data = self.cm.getURLRequestData({'url': xml, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True})
-				except:
+				except Exception:
 					printDBG('Host getResolvedURL query error xml')
 					return ''
 				# printDBG( 'Host data json: '+data )
@@ -20309,35 +20210,22 @@ class Host(CBaseHostClass):
 						try:
 							if str(item["label"]) == '720p':
 								return str(item["src"]).replace(r'\/', '/')
-						except Exception as e:
-							printExc()
-						try:
 							if str(item["label"]) == '480p':
 								return str(item["src"]).replace(r'\/', '/')
-						except Exception as e:
-							printExc()
-						try:
 							if str(item["label"]) == '360p':
 								return str(item["src"]).replace(r'\/', '/')
-						except Exception as e:
-							printExc()
-						try:
 							if str(item["label"]) == '240p':
 								return str(item["src"]).replace(r'\/', '/')
-						except Exception as e:
+						except Exception:
 							printExc()
-				except Exception as e:
+				except Exception:
 					printExc()
 			return videoUrl
 
-		if parser == 'http://sexkino.to':
+		if parser == 'https://sexkino.to':
 			videoUrl = re.findall('<iframe.*?src="(.*?)"', data, re.S)
 			if videoUrl:
 				return self.getResolvedURL(videoUrl[-1])
-
-############################################
-# functions for host
-############################################
 
 
 def decodeUrl(text):
@@ -20465,7 +20353,7 @@ def decrypt(ciphertext, password, nBits):
 	if not nBits in (128, 192, 256):
 		return ""
 	ciphertext = base64.b64decode(ciphertext)
-#    password = password.encode("utf-8")
+#	password = password.encode("utf-8")
 
 	nBytes = nBits // 8
 	pwBytes = [0] * nBytes
@@ -20504,7 +20392,7 @@ def decrypt(ciphertext, password, nBits):
 		plaintxt[b] = "".join(plaintxtByte)
 
 	plaintext = "".join(plaintxt)
- #   plaintext = plaintext.decode("utf-8")
+	# plaintext = plaintext.decode("utf-8")
 	return plaintext
 
 
@@ -20660,8 +20548,8 @@ def encrypt(plaintext, password, nBits):
 	blockSize = 16
 	if not nBits in (128, 192, 256):
 		return ""
-#    plaintext = plaintext.encode("utf-8")
-#    password  = password.encode("utf-8")
+#	plaintext = plaintext.encode("utf-8")
+#	password  = password.encode("utf-8")
 	nBytes = nBits // 8
 	pwBytes = [0] * nBytes
 	for i in range(nBytes):
@@ -20766,7 +20654,7 @@ def fc_decode_json(m):
 	try:
 		m = m.replace('\r', '\\r').replace('\n', '\\n')
 		return simplejson.loads(m[m.find("{"):].decode("utf-8", "ignore"))
-	except:
+	except Exception:
 		return simplejson.loads("{\"lv\":0}")
 
 
@@ -20780,7 +20668,7 @@ def read_model_data(m):
 	try:
 		sid = msg['sid']
 		level = msg['lv']
-	except:
+	except Exception:
 		printDBG("errr reply ... We're fucked ..")
 		return
 
@@ -20822,20 +20710,6 @@ def read_model_data(m):
 		CAMGIRLSERVER = u_info['camserv']
 		printDBG("Video Server : %d Channel Id : %d  Model id : %d " % (CAMGIRLSERVER, CAMGIRLCHANID, CAMGIRLUID))
 		SetIPTVPlayerLastHostError(str(CAMGIRLSERVER))
-# with open('/tmp/title', 'w') as titleFile:
-# titleFile.write(str(CAMGIRLSERVER))
-# if CAMGIRLSERVER >= 3000:
-# SetIPTVPlayerLastHostError(str(CAMGIRLSERVER))
-# CAMGIRLSERVER = 0
-# return []
-# CAMGIRLSERVER = CAMGIRLSERVER - 1000
-# elif CAMGIRLSERVER >= 1500:
-# SetIPTVPlayerLastHostError(str(CAMGIRLSERVER))
-# CAMGIRLSERVER = 0
-# return []
-# CAMGIRLSERVER = CAMGIRLSERVER - 800
-# elif CAMGIRLSERVER >= 800:
-# CAMGIRLSERVER = CAMGIRLSERVER - 500
 		if vs != 0:
 			CAMGIRLSERVER = 0
 	except KeyError:
@@ -20861,8 +20735,6 @@ def myfreecam_start(url, xchat):
 	global CAMGIRLCHANID
 	CAMGIRL = url
 	CAMGIRLSERVER = 0
-	libsPath = GetPluginDir('libs/')
-	import websocket
 	printDBG("Connecting to Chat Server:")
 	try:
 		host = "ws://" + xchat + ".myfreecams.com:8080/fcsl"
@@ -20870,7 +20742,7 @@ def myfreecam_start(url, xchat):
 		ws = websocket.create_connection(host)
 		ws.send("hello fcserver\n\0")
 		ws.send("1 0 0 20071025 0 guest:guest\n\0")
-	except:
+	except Exception:
 		printDBG("We're fucked ...")
 		return ''
 	rembuf = ""
@@ -20900,13 +20772,11 @@ def myfreecam_start(url, xchat):
 				sock_buf = sock_buf[4 + mlen:]
 				if len(sock_buf) == 0:
 					break
-	except:
+	except Exception:
 		printDBG("WebSocket Error")
 		return ''
 	ws.close()
 	if CAMGIRLSERVER != 0:
-		# Url="http://video"+str(CAMGIRLSERVER)+".myfreecams.com:1935/NxServer/ngrp:mfc_"+str(CAMGIRLCHANID)+".f4v_mobile/playlist.m3u8" #+'?nc='+str(int(time_time()*1000))  #+str(datetime.now()) #str(time_time()).encode('utf-8')
-		# Url="http://video"+str(CAMGIRLSERVER)+".myfreecams.com:1935/NxServer/mfc_"+str(CAMGIRLCHANID)+".f4v_aac/playlist.m3u8" #320x240
 		Url = "https://video" + str(CAMGIRLSERVER) + ".myfreecams.com/NxServer/ngrp:mfc_" + str(CAMGIRLCHANID) + ".f4v_mobile/playlist.m3u8?nc=0.5863279394620062"  # +str(random.random())
 		printDBG("Camgirl - " + CAMGIRL)
 		printDBG("Url  - " + Url)
