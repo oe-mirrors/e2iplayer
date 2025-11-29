@@ -18793,11 +18793,11 @@ class Host(CBaseHostClass):
 				if videoUrl.split('?')[0].endswith('m3u8'):
 					printDBG('Host  videoUrl: %s' % videoUrl)
 					# if self.cm.isValidUrl(videoUrl):
-					#	videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': referer})
-					#	tmp = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
-					#	for item in tmp:
-					#		printDBG( 'Host listsItems valtab: '  +str(item))
-					#		return item['url']
+					# videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': referer})
+					# tmp = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
+					# for item in tmp:
+					# printDBG( 'Host listsItems valtab: '  +str(item))
+					# return item['url']
 				elif videoUrl.split('?')[0].endswith('mp4'):
 					printDBG('Host  videoUrl: %s' % videoUrl)
 					videoUrl = urlparser.decorateUrl(videoUrl, {'Referer': referer, 'User-Agent': self.USER_AGENT})
@@ -20353,7 +20353,7 @@ def decrypt(ciphertext, password, nBits):
 	if not nBits in (128, 192, 256):
 		return ""
 	ciphertext = base64.b64decode(ciphertext)
-#	password = password.encode("utf-8")
+# password = password.encode("utf-8")
 
 	nBytes = nBits // 8
 	pwBytes = [0] * nBytes
@@ -20548,8 +20548,8 @@ def encrypt(plaintext, password, nBits):
 	blockSize = 16
 	if not nBits in (128, 192, 256):
 		return ""
-#	plaintext = plaintext.encode("utf-8")
-#	password  = password.encode("utf-8")
+# plaintext = plaintext.encode("utf-8")
+# password  = password.encode("utf-8")
 	nBytes = nBits // 8
 	pwBytes = [0] * nBytes
 	for i in range(nBytes):
