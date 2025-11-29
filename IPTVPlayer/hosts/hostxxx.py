@@ -3371,7 +3371,7 @@ class Host(CBaseHostClass):
 				if not phTitle:
 					phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^_^@]+?)["]''', 1, True)[0].capitalize()
 				phTime = self.cm.ph.getSearchGroups(item, '''tim"[>]([^a-z^_]+?)[<]''', 1, True)[0]
-				if phTime and phTime:
+				if phTime:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + ']  ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next:
 				if '/search?' in next:
@@ -8418,7 +8418,7 @@ class Host(CBaseHostClass):
 				else:
 					next_page = currUrl + str(next) + '/'
 				printDBG('Next Complete: ' + str(next_page))
-				valTab.append(self.getNextItem(str(next), next_page))
+				valTab.append(self.getNextItem(str(next), next_page, name))
 			return valTab
 
 		if 'W4NKR-channels' == name:
