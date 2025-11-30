@@ -290,7 +290,6 @@ class TopCinema(CBaseHostClass):
                 'episode': episode,
                 'desc': story,
                 'category_name': category,
-                'good_for_fav': True
             }
 
             printDBG(str(params))
