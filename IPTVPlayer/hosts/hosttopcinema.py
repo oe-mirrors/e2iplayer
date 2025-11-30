@@ -28,6 +28,7 @@ import base64
 ###################################################
 config.plugins.iptvplayer.topcinema_hosts = ConfigSelection(default="https://topcinema.surf/", choices=[("https://topcinema.surf/", "https://topcinema.surf/"), ("https://topcinema.buzz/", "https://topcinema.buzz/")])
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.topcinema_hosts))
