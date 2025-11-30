@@ -463,6 +463,7 @@ class urlparser:
             "goofy-banana.com": self.pp.parserVOESX,
             "google.com": self.pp.parserGOOGLE,
             "govid.me": self.pp.parserGOVIDME,
+            "govid.site": self.pp.parserJWPLAYER,
             "gradehgplus.com": self.pp.parserJWPLAYER,
             "gsfjzmqu.sbs": self.pp.parserVIDGUARDTO,
             "gsfqzmqu.sbs": self.pp.parserJWPLAYER,
