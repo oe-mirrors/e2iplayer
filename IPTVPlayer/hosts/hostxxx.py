@@ -19,7 +19,6 @@ import hashlib
 import random
 import time
 import http.client
-import websocket
 import subprocess
 
 try:
@@ -16388,6 +16387,7 @@ class Host(CBaseHostClass):
 				rtmp = parse.group(1)
 			startChildBug = re.search(r"startChildBug\(user\.uid, '', '([\s\S]+?)'", data, re.I)
 			if startChildBug:
+				import websocket
 				s = startChildBug.group(1)
 				printDBG('Host startChildBug: ' + s)
 				ip = ''
@@ -20729,6 +20729,7 @@ def read_model_data(m):
 
 
 def myfreecam_start(url, xchat):
+	import websocket
 	global CAMGIRL
 	global CAMGIRLSERVER
 	global CAMGIRLUID
