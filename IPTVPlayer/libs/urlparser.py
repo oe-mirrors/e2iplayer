@@ -380,6 +380,7 @@ class urlparser:
             "dhmu4p2hkp.sbs": self.pp.parserVIDGUARDTO,
             "dhtpre.com": self.pp.parserJWPLAYER,
             "dingtezuni.com": self.pp.parserJWPLAYER,
+            "dintezuvio.com": self.pp.parserJWPLAYER,
             "do0od.com": self.pp.parserDOOD,
             "do7go.com": self.pp.parserDOOD,
             "dood.cx": self.pp.parserDOOD,
@@ -544,6 +545,7 @@ class urlparser:
             "mwish.pro": self.pp.parserJWPLAYER,
             "mxdrop.to": self.pp.parserJWPLAYER,
             "mysportzfy.com": self.pp.parserJWPLAYER,
+            "myvidplay.com": self.pp.parserDOOD,
             # n
             "nba-streams.online": self.pp.parserSHOWSPORTXYZ,
             "nflinsider.net": self.pp.parserVIDEOHOUSE,
@@ -669,6 +671,7 @@ class urlparser:
             "upstream.to": self.pp.parserONLYSTREAMTV,
             "upvideo.cc": self.pp.parserONLYSTREAMTV,
             "upzone.cc": self.pp.parserUPZONECC,
+            "uqload.com": self.pp.parserJWPLAYER,
             "uqload.cx": self.pp.parserJWPLAYER,
             "uqload.io": self.pp.parserJWPLAYER,
             "uqload.ws": self.pp.parserJWPLAYER,
@@ -751,6 +754,7 @@ class urlparser:
             # y
             "yodbox.com": self.pp.parserONLYSTREAMTV,
             "youdbox.com": self.pp.parserONLYSTREAMTV,
+            "yourupload.com": self.pp.parserJWPLAYER,
             "youtu.be": self.pp.parserYOUTUBE,
             "youtube-nocookie.com": self.pp.parserYOUTUBE,
             "youtube.com": self.pp.parserYOUTUBE,

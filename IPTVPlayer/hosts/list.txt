@@ -48,7 +48,6 @@ hostfaselhdcom
 hostfavourites
 hostfenixsite_blocked_
 hostfightvideo_blocked_
-hostfilma24hdcom_blocked_
 hostfilma24io_blocked_
 hostfilma365
 hostfilman
@@ -93,7 +92,7 @@ hostkabarety_blocked_
 hostkijknl
 hostkinoger
 hostkinomoc_blocked_
-hostkinox
+hostkinox_blocked_
 hostkissanimeto
 hostkisscartoonme_blocked_
 hostkkiste
