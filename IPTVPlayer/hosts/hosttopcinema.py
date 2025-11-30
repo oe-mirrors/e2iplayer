@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last modified: 08/10/2025 - popking (odem2014)
+# Last modified: 30/11/2025 - popking (odem2014)
 ###################################################
 # LOCAL import
 ###################################################
@@ -19,20 +19,23 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
 ###################################################
 # FOREIGN import
 ###################################################
 import re
 import base64
 ###################################################
-
+config.plugins.iptvplayer.topcinema_hosts = ConfigSelection(default="https://topcinema.surf/", choices=[("https://topcinema.surf/", "https://topcinema.surf/"), ("https://topcinema.buzz/", "https://topcinema.buzz/")])
 
 def GetConfigList():
-    return []
+    optionList = []
+    optionList.append(getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.topcinema_hosts))
+    return optionList
 
 
 def gettytul():
-    return 'https://topcinema.buzz/'  # main url of host
+    return config.plugins.iptvplayer.topcinema_hosts.value
 
 
 class TopCinema(CBaseHostClass):
@@ -47,7 +50,7 @@ class TopCinema(CBaseHostClass):
 
         # various urls
         self.MAIN_URL = gettytul()
-        self.SEARCH_URL = 'https://web6.topcinema.cam/search'
+        self.SEARCH_URL = self.MAIN_URL + '?s='
 
         # url for default icon
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/topcinema.png"
@@ -66,129 +69,6 @@ class TopCinema(CBaseHostClass):
         add_params["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(base_url, add_params, post_data)
 
-    def getLinksForVideo(self, cItem):
-        printDBG("TopCinema.getLinksForVideo [%s]" % cItem)
-        linksTab = []
-        url = cItem['url']
-
-        sts, data = self.getPage(url, self.defaultParams)
-        if not sts or not data:
-            return []
-
-        # 1️⃣ Try to extract iframe src directly
-        iframeUrl = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src="([^"]+)"')[0]
-        if iframeUrl:
-            printDBG("Found iframe: %s" % iframeUrl)
-            linksTab.append({
-                'name': self.up.getHostName(iframeUrl).capitalize(),
-                'url': strwithmeta(iframeUrl, {'Referer': url}),
-                'need_resolve': 1
-            })
-
-        # 2️⃣ Try to extract encoded/redirected link from JS (common in sharevid.online)
-        if not iframeUrl:
-            encoded = self.cm.ph.getSearchGroups(data, r"atob\('([^']+)'")[0]
-            if encoded:
-                import base64
-                try:
-                    decoded = base64.b64decode(encoded).decode('utf-8')
-                    printDBG("Decoded base64 URL: %s" % decoded)
-                    linksTab.append({
-                        'name': self.up.getHostName(decoded).capitalize(),
-                        'url': strwithmeta(decoded, {'Referer': url}),
-                        'need_resolve': 1
-                    })
-                except Exception as e:
-                    printDBG("Base64 decode error: %s" % str(e))
-
-        # 3️⃣ Try to extract var URL (e.g. var urlPlay = '...')
-        if not linksTab:
-            js_url = self.cm.ph.getSearchGroups(data, r"var\s+urlPlay\s*=\s*['\"]([^'\"]+)")[0]
-            if js_url:
-                printDBG("Found JS urlPlay: %s" % js_url)
-                linksTab.append({
-                    'name': self.up.getHostName(js_url).capitalize(),
-                    'url': strwithmeta(js_url, {'Referer': url}),
-                    'need_resolve': 1
-                })
-
-        # 4️⃣ Try to extract <source> video src (sometimes they exist)
-        sources = self.cm.ph.getAllItemsBeetwenMarkers(data, '<source', '>')
-        for s in sources:
-            src = self.cm.ph.getSearchGroups(s, r'src="([^"]+)"')[0]
-            if src:
-                printDBG("Found direct video src: %s" % src)
-                linksTab.append({
-                    'name': self.up.getHostName(src).capitalize(),
-                    'url': strwithmeta(src, {'Referer': url}),
-                    'need_resolve': 0
-                })
-
-        # 5️⃣ Fallback to urlparser
-        if not linksTab:
-            printDBG("TopCinema.getLinksForVideo: no links found, using parser fallback...")
-            resolved = self.getVideoLinks(url)
-            for entry in resolved:
-                if isinstance(entry, dict):
-                    linksTab.append(entry)
-                else:
-                    linksTab.append({
-                        'name': self.up.getHostName(url),
-                        'url': entry,
-                        'need_resolve': 1
-                    })
-
-        return linksTab
-
-    def getVideoLinks(self, videoUrl):
-        printDBG('TopCinema.getVideoLinks >>> %s' % videoUrl)
-        urlsTab = []
-
-        # 🔹 Add VikingFile support
-        if 'vikingfile.com' in videoUrl:
-            printDBG('Detected VikingFile link, trying to extract...')
-            sts, data = self.cm.getPage(videoUrl)
-            if not sts:
-                printDBG('Failed to load VikingFile page')
-                return urlsTab
-
-            # 1️⃣ Try direct <video src="...">
-            video = self.cm.ph.getSearchGroups(data, r'<video[^>]+src=["\'](https?://[^"\']+\.(?:mp4|m3u8)[^"\']*)["\']')[0]
-            if video:
-                printDBG('Found direct video src: %s' % video)
-                urlsTab.append({'name': 'VikingFile', 'url': video, 'need_resolve': 0})
-                return urlsTab
-
-            # 2️⃣ Try Base64 encoded URL (inside atob("..."))
-            b64_url = self.cm.ph.getSearchGroups(data, r'atob\(["\']([^"\']+)["\']\)')[0]
-            if b64_url:
-                try:
-                    import base64
-                    decoded = base64.b64decode(b64_url).decode('utf-8')
-                    printDBG('Decoded Base64 VikingFile URL: %s' % decoded)
-                    if decoded.startswith('http'):
-                        urlsTab.append({'name': 'VikingFile (decoded)', 'url': decoded, 'need_resolve': 0})
-                        return urlsTab
-                except Exception as e:
-                    printDBG('VikingFile decode error: %s' % e)
-
-            # 3️⃣ Try embedded iframe with /f/ pattern
-            iframe = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src=["\'](https?://vikingfile\.com/f/[^"\']+)["\']')[0]
-            if iframe:
-                printDBG('Found VikingFile iframe: %s' % iframe)
-                sts, iframe_data = self.cm.getPage(iframe)
-                if sts:
-                    video = self.cm.ph.getSearchGroups(iframe_data, r'<video[^>]+src=["\'](https?://[^"\']+)["\']')[0]
-                    if video:
-                        urlsTab.append({'name': 'VikingFile (iframe)', 'url': video, 'need_resolve': 0})
-                        return urlsTab
-
-            printDBG('VikingFile: no playable link found, may require CAPTCHA')
-            return urlsTab
-
-        # 🔹 keep your existing resolver for all other hosts
-        return self.up.getVideoLinkExt(videoUrl)
-
     def listMainMenu(self, cItem):
         # items of main menu
         printDBG('TopCinema.listMainMenu')
@@ -196,29 +76,33 @@ class TopCinema(CBaseHostClass):
         # Define main categories statically like FilmPalast does
         self.MAIN_CAT_TAB = [
             {'category': 'movies_folder', 'title': 'الافلام'},
-            # {'category': 'series_folder', 'title': 'المسلسلات'},
+            {'category': 'series_folder', 'title': 'المسلسلات'},
         ] + self.searchItems()
 
         # Define subcategories for each folder
         self.MOVIES_CAT_TAB = [
-            {'category': 'list_items', 'title': 'افلام اجنبي', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
-            {'category': 'list_items', 'title': 'افلام اسيوية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')},
-            {'category': 'list_items', 'title': 'افلام انيمى', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%86%d9%85%d9%8a/')},
-            {'category': 'list_items', 'title': 'افلام تركية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/')},
-            {'category': 'list_items', 'title': 'افلام عربية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%b9%d8%b1%d8%a8%d9%8a/')},
-            {'category': 'list_items', 'title': 'افلام هندية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%87%d9%86%d8%af%d9%8a/')}
+            {'category': 'list_items', 'title': 'English', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
+            {'category': 'list_items', 'title': 'Asian', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')},
+            {'category': 'list_items', 'title': 'Anime', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%86%d9%85%d9%8a/')},
+            {'category': 'list_items', 'title': 'Turkish', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/')},
+            {'category': 'list_items', 'title': 'Arabic', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%b9%d8%b1%d8%a8%d9%8a/')},
+            {'category': 'list_items', 'title': 'Indian', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%87%d9%86%d8%af%d9%8a/')},
+            {'category': 'list_items', 'title': 'WWE Shows', 'url': self.getFullUrl('/category/%d8%b9%d8%b1%d9%88%d8%b6-%d9%85%d8%b5%d8%a7%d8%b1%d8%b9%d8%a9/')}
         ]
 
-        # self.SERIES_CAT_TAB = [
-            # {'category': 'series', 'title': 'مسلسلات عربية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b9%d8%b1%d8%a8%d9%8a/')},
-            # {'category': 'series', 'title': 'مسلسلات اجنبي', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
-            # {'category': 'series', 'title': 'مسلسلات تركية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/')},
-            # {'category': 'series', 'title': 'مسلسلات اسيوية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')},
-            # {'category': 'series', 'title': 'مسلسلات انيمى', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d9%86%d9%85%d9%8a/')},
-            # {'category': 'series', 'title': 'مسلسلات مدبلجة', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
-            # {'category': 'series', 'title': 'مسلسلات رمضان 2025', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2025/')},
-            # {'category': 'series', 'title': 'مسلسلات هندية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')}
-        # ]
+        self.SERIES_CAT_TAB = [
+            {'category': 'series', 'title': 'Arabic', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b9%d8%b1%d8%a8%d9%8a/')},
+            {'category': 'series', 'title': 'English', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
+            {'category': 'series', 'title': 'Turkish', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/')},
+            {'category': 'series', 'title': 'Asian', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')},
+            {'category': 'series', 'title': 'Indian', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')},
+            {'category': 'series', 'title': 'Anime', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d9%86%d9%85%d9%8a/')},
+            {'category': 'series', 'title': 'Dubbed', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
+            {'category': 'series', 'title': 'Ramadan 2025', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2025/')},
+            {'category': 'series', 'title': 'Ramadan 2024', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2024/')},
+            {'category': 'series', 'title': 'Ramadan 2023', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2023/')},
+            {'category': 'series', 'title': 'TV Shows', 'url': self.getFullUrl('/category/%d8%a8%d8%b1%d8%a7%d9%85%d8%ac-%d8%aa%d9%84%d9%81%d8%b2%d9%8a%d9%88%d9%86%d9%8a%d8%a9/')}
+        ]
 
         # Display main categories
         self.listsTab(self.MAIN_CAT_TAB, cItem)
@@ -227,53 +111,88 @@ class TopCinema(CBaseHostClass):
         printDBG('TopCinema.listMoviesFolder')
         self.listsTab(self.MOVIES_CAT_TAB, cItem)
 
-    # def listSeriesFolder(self, cItem):
-        # printDBG('TopCinema.listSeriesFolder')
-        # self.listsTab(self.SERIES_CAT_TAB, cItem)
+    def listSeriesFolder(self, cItem):
+        printDBG('TopCinema.listSeriesFolder')
+        self.listsTab(self.SERIES_CAT_TAB, cItem)
 
     def listItems(self, cItem):
         printDBG("TopCinema.listItems [%s]" % cItem)
+
         sts, data = self.getPage(cItem['url'])
         if not sts:
             return
 
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<main class="site-inner', '</main>', False)[1]
-        # printDBG('tmp.listItems >>> %s' % tmp)
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', '</a>', False)
-        # printDBG('data_items.listItems >>> %s' % data_items)
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<main class="site-inner', '</main>', True)[1]
+        items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', '</a>', True)
 
-        if not data_items:
-            data_items = tmp.split('<div class="Small--Box')[1:]
-            data_items = ['<div class="Small--Box' + i for i in data_items]
+        for m in items:
 
-        for m in data_items:
-            title = self.cm.ph.getSearchGroups(m, r'title=["\']([^"\']+)["\']')[0]
-            title = title.replace('مترجم اون لاين', '').strip()
+            ##############################################################
+            # URL
+            ##############################################################
+            url = self.cm.ph.getSearchGroups(m, r'href=["\']([^"\']+)["\']')[0]
 
-            pureurl = self.cm.ph.getSearchGroups(m, r'href=["\']([^"\']+)["\']')[0]
-            if not pureurl:
+            if not url:
                 continue
 
-            baseurl, filenameurl = pureurl.rsplit('/', 1)
-            fixedfilenameurl = urllib_quote_plus(filenameurl)
-            url = baseurl + '/' + fixedfilenameurl + "watch/"
+            ##############################################################
+            # Title (clean Arabic & English)
+            ##############################################################
+            raw_title = self.cm.ph.getSearchGroups(m, r'title=["\']([^"\']+)["\']')[0]
+            title = raw_title.replace('مترجم اون لاين', '').replace('مشاهدة', '').strip()
 
-            pureicon = self.cm.ph.getSearchGroups(m, r'data-src=["\']([^"\']+)["\']')[0]
-            if not pureicon:
-                pureicon = self.cm.ph.getSearchGroups(m, r'src=["\']([^"\']+)["\']')[0]
+            ##############################################################
+            # Poster (prefer data-src → fallback to src)
+            ##############################################################
+            poster = self.cm.ph.getSearchGroups(m, r'data-src=["\']([^"\']+)["\']')[0]
+            if not poster:
+                poster = self.cm.ph.getSearchGroups(m, r'src=["\']([^"\']+)["\']')[0]
 
-            icon = ''
-            if pureicon:
-                baseicon, filenameicon = pureicon.rsplit('/', 1)
-                fixedfilenameicon = urllib_quote_plus(filenameicon)
-                icon = baseicon + '/' + fixedfilenameicon
+            if not poster:
+                poster = "https://topcinema.surf/wp-content/uploads/2025/10/cover.jpg"
 
-            params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': url}
-            printDBG(str(params))
+            ##############################################################
+            # Quality  <span style="">1080p WEB-DL</span>
+            ##############################################################
+            quality = self.cm.ph.getSearchGroups(m, r'<span[^>]*>([^<]+)</span>')[0]
+
+            ##############################################################
+            # Category  <li class="category">افلام اجنبي</li>
+            ##############################################################
+            category = self.cm.ph.getSearchGroups(m, r'<li class="category">([^<]+)</li>')[0]
+
+            ##############################################################
+            # Story inside <p> ... </p>
+            ##############################################################
+            story = self.cm.ph.getSearchGroups(m, r'<p>([^<]+)</p>')[0]
+
+            ##############################################################
+            # URL Fixing (Arabic encoding)
+            ##############################################################
+            # Encode only last filename part
+            try:
+                baseurl, filename = url.rsplit('/', 1)
+                filename = urllib_quote_plus(filename)
+                fixed_url = baseurl + '/' + filename
+            except:
+                fixed_url = url
+
+            params = {
+                'category': 'explore_item',
+                "good_for_fav": True,
+                'title': title,
+                'url': fixed_url,
+                'icon': poster,
+                'quality': quality,
+                'cat': category,
+                'desc': story
+            }
+
+            printDBG("ITEM >>> " + str(params))
             self.addDir(params)
 
         # === PAGINATION HANDLING ===
-        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', '</div>', False)[1]
+        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', '</div>', True)[1]
         prev_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&raquo;\s*</a>')[0]
         next_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&laquo;\s*</a>')[0]
 
@@ -290,43 +209,90 @@ class TopCinema(CBaseHostClass):
             self.addDir(params)
 
     def listSeriesItems(self, cItem):
-        printDBG("TopCinema.listSeriesItems ----------")
+        printDBG("TopCinema.listSeriesItems [%s]" % cItem)
 
         sts, data = self.getPage(cItem['url'])
-        printDBG("data.listSeriesItems ||||||||||||||||||||||||||||||||||||")
-        printDBG(data)
-        if not sts:
+        if not sts or not data:
             return
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="BlocksHolder', '<script type="speculationrules', False)[1]
-        printDBG("tmp.listSeriesItems ||||||||||||||||||||||||||||||||||||")
-        printDBG(tmp)
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', '</a>', False)
-        printDBG("data_items.listSeriesItems ||||||||||||||||||||||||||||||||||||")
-        printDBG(data_items)
+
+        ############################################################
+        # Extract series block (All episodes)
+        ############################################################
+        tmp = self.cm.ph.getDataBeetwenMarkers(
+            data,
+            '<div class="BlocksHolder',
+            '<script type="speculationrules',
+            True
+        )[1]
+
+        data_items = self.cm.ph.getAllItemsBeetwenMarkers(
+            tmp, '<div class="Small--Box', '</a>', True
+        )
+
         if not data_items:
-            data_items = tmp.split('<div class="Small--Box')[1:]
-            data_items = ['<div class="Small--Box' + i for i in data_items]
+            # fallback if needed
+            parts = tmp.split('<div class="Small--Box')
+            data_items = ['<div class="Small--Box' + p for p in parts[1:]]
 
         for m in data_items:
-            title = self.cm.ph.getSearchGroups(m, r'title=["\']([^"\']+)["\']')[0]
-            # title = re.sub(r'\s*مترجم\s*أ?ون\s*لاين\s*', '', title).strip()
 
-            pureurl = self.cm.ph.getSearchGroups(m, r'href=["\']([^"\']+)["\']')[0]
-            if not pureurl:
+            ############################################################
+            # URL
+            ############################################################
+            url = self.cm.ph.getSearchGroups(m, r'href=["\']([^"\']+)["\']')[0]
+
+            if not url:
                 continue
 
-            baseurl, filenameurl = pureurl.rsplit('/', 1)
-            fixedfilenameurl = urllib_quote_plus(filenameurl)
-            url = baseurl + '/' + fixedfilenameurl + "watch/"
-            printDBG(url)
+            ############################################################
+            # Title
+            ############################################################
+            title = self.cm.ph.getSearchGroups(m, r'title=["\']([^"\']+)["\']')[0]
 
+            ############################################################
+            # Episode number
+            ############################################################
+            episode = self.cm.ph.getSearchGroups(m, r'<span>الحلقة</span>\s*<em>(\d+)</em>')[0]
+
+            ############################################################
+            # Story inside <p>
+            ############################################################
+            story = self.cm.ph.getDataBeetwenMarkers(m, '<p>', '</p>', False)[1].strip()
+
+            ############################################################
+            # Icon (data-src preferred)
+            ############################################################
             pureicon = self.cm.ph.getSearchGroups(m, r'data-src=["\']([^"\']+)["\']')[0]
+
             if not pureicon:
                 pureicon = self.cm.ph.getSearchGroups(m, r'src=["\']([^"\']+)["\']')[0]
 
-            icon = ''
+            # Fallback icon
+            if not pureicon:
+                pureicon = "https://topcinema.surf/wp-content/uploads/2025/10/cover.jpg"
 
-            params = {'category': 'exploreSeriesItems', 'title': title, 'icon': icon, 'url': url}
+            icon = pureicon.strip()
+
+            ############################################################
+            # Category
+            ############################################################
+            category = self.cm.ph.getSearchGroups(m, r'<li class="category">([^<]+)</li>')[0]
+
+            ############################################################
+            # Build params
+            ############################################################
+            params = {
+                'category': 'show_seasons',
+                'title': title,
+                "good_for_fav": True,
+                'url': url,
+                'icon': icon,
+                'episode': episode,
+                'desc': story,
+                'category_name': category,
+                'good_for_fav': True
+            }
+
             printDBG(str(params))
             self.addDir(params)
 
@@ -338,180 +304,253 @@ class TopCinema(CBaseHostClass):
         if next_page:
             next_page = self.getFullUrl(next_page)
             params = dict(cItem)
-            params.update({'title': 'Next Page ▶', 'url': next_page, 'category': 'list_items'})
+            params.update({'title': 'Next Page ▶', 'url': next_page, 'category': 'series'})
             self.addDir(params)
 
         if prev_page:
             prev_page = self.getFullUrl(prev_page)
             params = dict(cItem)
-            params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'list_items'})
+            params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'series'})
             self.addDir(params)
 
     def exploreItems(self, cItem):
-        printDBG('TopCinema.exploreItems')
-        url = cItem['url']
-        printDBG("|||||||||||||||||exploreUrl||||||||||||||||||||")
-        printDBG(url)
+        printDBG("TopCinema.exploreItems [%s]" % cItem)
+        raw_url = cItem['url']
+        url = raw_url + 'watch/'
 
         sts, data = self.getPage(url)
         if not sts:
             return
 
-        # Extract servers section
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="ServersList"', '</ul>', False)[1]
-        printDBG("|||||||||||||||||Servers block||||||||||||||||||||")
-        printDBG(tmp)
+        ##########################################################
+        # Extract servers block
+        ##########################################################
+        server_block = self.cm.ph.getDataBeetwenMarkers(
+            data, '<div class="ServersList"', '</ul>', False
+        )[1]
 
-        # Extract each server <li>
-        items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
-        printDBG("|||||||||||||||||servers count||||||||||||||||||||")
-        printDBG(str(len(items)))
+        printDBG("server_block.exploreItems [%s]" % server_block)
+
+        ##########################################################
+        # Extract <li> items
+        ##########################################################
+        items = self.cm.ph.getAllItemsBeetwenMarkers(server_block, '<li', '</li>')
 
         for item in items:
-            link = self.cm.ph.getSearchGroups(item, r'data-watch="([^"]+?)"')[0]
-            if not link:
+
+            ##########################################################
+            # Extract Base64 link from data-watch
+            ##########################################################
+            raw = self.cm.ph.getSearchGroups(item, r'data-watch="([^"]+)"')[0]
+
+            if not raw:
                 continue
 
+            ##########################################################
+            # Extract ONLY base64 part
+            ##########################################################
+            base64_part = raw.rstrip('/').split('/')[-1]
+
+            ##########################################################
+            # Decode Base64
+            ##########################################################
+            try:
+                import base64
+                decoded_url = base64.b64decode(base64_part).decode('utf-8')
+            except Exception as e:
+                printDBG("Base64 decode error: %s" % e)
+                continue
+
+            ##########################################################
+            # Extract title (server name)
+            ##########################################################
             title = self.cleanHtmlStr(item)
             if not title:
-                title = 'Server'
+                title = "Server"
 
             printDBG("Found server title: %s" % title)
-            printDBG("Found server link: %s" % link)
+            printDBG("Decoded stream link: %s" % decoded_url)
 
+            ##########################################################
+            # Add stream
+            ##########################################################
             params = MergeDicts(cItem, {
                 'title': title,
-                'url': self.getFullUrl(link),
+                'url': decoded_url,
                 'type': 'video',
                 'category': 'video',
                 'need_resolve': 1
             })
+
             self.addVideo(params)
-
-    def exploreSeriesItems(self, cItem):
-        printDBG('TopCinema.exploreSeriesItems')
-        url = cItem['url']
-        printDBG("|||||||||||||||||url_exploreSeriesItems||||||||||||||||||||")
-        printDBG(url)
-
-        sts, data = self.getPage(url)
-        printDBG("|||||||||||||||||data_exploreSeriesItems||||||||||||||||||||")
-        printDBG(data)
-        if not sts:
-            return
-
-        # Extract servers section
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="ServersList"', '</ul>', False)[1]
-        printDBG("|||||||||||||||||Servers block||||||||||||||||||||")
-        printDBG(tmp)
-
-        # Extract each server <li>
-        items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
-        printDBG("|||||||||||||||||servers count||||||||||||||||||||")
-        printDBG(str(len(items)))
-
-        for item in items:
-            link = self.cm.ph.getSearchGroups(item, r'data-watch="([^"]+?)"')[0]
-            if not link:
-                continue
-
-            title = self.cleanHtmlStr(item)
-            if not title:
-                title = 'Server'
-
-            printDBG("Found server title: %s" % title)
-            printDBG("Found server link: %s" % link)
-
-            params = MergeDicts(cItem, {
-                'title': title,
-                'url': self.getFullUrl(link),
-                'type': 'video',
-                'category': 'video',
-                'need_resolve': 1
-            })
-            self.addVideo(params)
-
-    def safe_b64decode(self, data):
-        """Base64 decode with automatic padding fix."""
-        data += '=' * (-len(data) % 4)
-        return base64.b64decode(data).decode('utf-8')
 
     def showSeasons(self, cItem):
         printDBG("TopCinema.showSeasons >>> %s" % cItem)
+
         sts, data = self.getPage(cItem['url'])
-        if not sts:
+        if not sts or not data:
             return
 
-        # Debug output for inspection
-        printDBG("====== showSeasons PAGE DATA ======")
-        printDBG(data)
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="allseasonss', '</section>', False)[1]
-        seasons = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box Season', '</a>')
-        seasons.reverse()
+        ############################################################
+        # Extract seasons block
+        ############################################################
+        tmp = self.cm.ph.getDataBeetwenMarkers(
+            data,
+            '<section class="allseasonss',
+            '</section>',
+            True
+        )[1]
 
-        printDBG("====== showSeasons seasons DATA ======")
-        printDBG(seasons)
+        printDBG('tmp.showSeasons >>> %s' % tmp)
+
+        # Each season is one <div class="Small--Box"> ... </a>
+        seasons = self.cm.ph.getAllItemsBeetwenMarkers(
+            tmp,
+            '<div class="Small--Box',
+            '</a>',
+            True
+        )
 
         for s in seasons:
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(s, r'<h3[^>]*class="title"[^>]*>([^<]+)</h3>')[0])
-            if not title:
-                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(s, r'alt="([^"]+)"')[0])
+
+            ############################################################
+            # URL
+            ############################################################
             url = self.cm.ph.getSearchGroups(s, r'href="([^"]+)"')[0]
             if not url:
                 continue
             url = self.getFullUrl(url)
 
+            ############################################################
+            # Title from <h2>
+            ############################################################
+            title = self.cm.ph.getDataBeetwenMarkers(s, '<h2>', '</h2>', False)[1].strip()
+
+            if not title:
+                # fallback to title="..." attribute
+                title = self.cm.ph.getSearchGroups(s, r'title="([^"]+)"')[0]
+
+            if not title:
+                title = "Season"
+
+            ############################################################
+            # Icon: Prefer data-src, fallback to src
+            ############################################################
+            icon = self.cm.ph.getSearchGroups(s, r'data-src="([^"]+)"')[0]
+            if not icon:
+                icon = self.cm.ph.getSearchGroups(s, r'src="([^"]+)"')[0]
+
+            # Final fallback if still empty
+            if not icon:
+                icon = "https://topcinema.surf/wp-content/uploads/2025/10/cover.jpg"
+
+            icon = icon.strip()
+
+            ############################################################
+            # Add the season entry
+            ############################################################
             params = dict(cItem)
             params.update({
-                'title': title or 'Season',
-                'url': urljoin(url, 'list/'),
-                'category': 'show_episodes',
+                'title': title,
+                "good_for_fav": True,
+                'url': url,
+                'icon': icon,
+                'category': 'show_episodes'
             })
+
+            printDBG("season.params >>> %s" % params)
             self.addDir(params)
 
     def showEpisodes(self, cItem):
-        printDBG("TopCinema.showSeasons >>> %s" % cItem)
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-        printDBG("====== showEpisodes episodes DATA ======")
-        printDBG(data)
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="Posts--List SixInRow">', '<div class="paginate">', False)[1]
-        printDBG("====== showEpisodes tmp DATA ======")
-        printDBG(tmp)
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', '</a>', False)
-        data_items.reverse()
-        printDBG("====== showEpisodes data_items DATA in reverse ======")
-        printDBG(data_items)
+        printDBG("TopCinema.showEpisodes >>> %s" % cItem)
 
+        sts, data = self.getPage(cItem['url'])
+        if not sts or not data:
+            return
+
+        #########################################################
+        # Extract the episodes section
+        #########################################################
+        tmp = self.cm.ph.getDataBeetwenMarkers(
+            data,
+            '<section class="allepcont',
+            '</section>',
+            True
+        )[1]
+
+        printDBG('tmp.showEpisodes >>> %s' % tmp)
+
+        #########################################################
+        # Extract each <a ... </a> block (each episode)
+        #########################################################
+        data_items = self.cm.ph.getAllItemsBeetwenMarkers(
+            tmp,
+            '<a ',
+            '</a>',
+            True
+        )
+        data_items.reverse()
+
+        printDBG('episodes.count >>> %s' % len(data_items))
+
+        # If nothing found, fallback to Small--Box
         if not data_items:
             data_items = tmp.split('<div class="Small--Box')[1:]
             data_items = ['<div class="Small--Box' + i for i in data_items]
 
-        for m in data_items:
-            title = self.cm.ph.getSearchGroups(m, r'title=["\']([^"\']+)["\']')[0]
-            # title = re.sub(r'\s*مترجم\s*أ?ون\s*لاين\s*', '', title).strip()
+        #########################################################
+        # Parse each episode
+        #########################################################
+        for ep in data_items:
 
-            pureurl = self.cm.ph.getSearchGroups(m, r'href=["\']([^"\']+)["\']')[0]
+            #############################################
+            # Episode URL
+            #############################################
+            pureurl = self.cm.ph.getSearchGroups(ep, r'href="([^"]+)"')[0]
             if not pureurl:
                 continue
 
+            # Ensure URL is encoded correctly
             baseurl, filenameurl = pureurl.rsplit('/', 1)
-            fixedfilenameurl = urllib_quote_plus(filenameurl)
-            url = baseurl + '/' + fixedfilenameurl
+            url = baseurl + '/' + urllib_quote_plus(filenameurl)
 
-            pureicon = self.cm.ph.getSearchGroups(m, r'data-src=["\']([^"\']+)["\']')[0]
+            #############################################
+            # Title (correct: use <h2> text)
+            #############################################
+            title = self.cm.ph.getDataBeetwenMarkers(ep, '<h2>', '</h2>', False)[1].strip()
+
+            if not title:
+                # fallback to title="..."
+                title = self.cm.ph.getSearchGroups(ep, r'title="([^"]+)"')[0]
+
+            if not title:
+                title = "Episode"
+
+            #############################################
+            # Icon (prefer data-src → fallback to src)
+            #############################################
+            pureicon = self.cm.ph.getSearchGroups(ep, r'data-src="([^"]+)"')[0]
             if not pureicon:
-                pureicon = self.cm.ph.getSearchGroups(m, r'src=["\']([^"\']+)["\']')[0]
+                pureicon = self.cm.ph.getSearchGroups(ep, r'src="([^"]+)"')[0]
 
             icon = ''
             if pureicon:
                 baseicon, filenameicon = pureicon.rsplit('/', 1)
-                fixedfilenameicon = urllib_quote_plus(filenameicon)
-                icon = baseicon + '/' + fixedfilenameicon
+                icon = baseicon + '/' + urllib_quote_plus(filenameicon)
 
-            params = {'category': 'explore_item', 'title': title, 'icon': icon, 'url': urljoin(url, 'watch/'), }
-            printDBG(str(params))
+            #############################################
+            # Add episode to list
+            #############################################
+            params = {
+                'category': 'explore_item',
+                'title': title,
+                "good_for_fav": True,
+                'icon': icon,
+                'url': url,
+                'good_for_fav': True
+            }
+
+            printDBG("episode.params >>> %s" % params)
             self.addDir(params)
 
         # === PAGINATION HANDLING ===
@@ -522,19 +561,19 @@ class TopCinema(CBaseHostClass):
         if next_page:
             next_page = self.getFullUrl(next_page)
             params = dict(cItem)
-            params.update({'title': 'Next Page ▶', 'url': next_page, 'category': 'list_items'})
+            params.update({'title': 'Next Page ▶', 'url': next_page, 'category': 'show_episodes'})
             self.addDir(params)
 
         if prev_page:
             prev_page = self.getFullUrl(prev_page)
             params = dict(cItem)
-            params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'list_items'})
+            params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'show_episodes'})
             self.addDir(params)
 
     def listSearchResult(self, cItem, search_pattern, search_type):
         printDBG("TopCinema.listSearchResult cItem[%s], search_pattern[%s] search_type[%s]" % (cItem, search_pattern, search_type))
         cItem = dict(cItem)
-        cItem['url'] = self.getFullUrl('/search?q=') + urllib_quote_plus(search_pattern)
+        cItem['url'] = self.getFullUrl('?s=') + urllib_quote_plus(search_pattern)
         self.listItems(cItem)
 
     def getFavouriteData(self, cItem):
@@ -560,6 +599,23 @@ class TopCinema(CBaseHostClass):
             printExc()
         return cItem
 
+    ###################################################
+    # GET LINKS FOR VIDEO
+    ###################################################
+    def getLinksForVideo(self, cItem):
+        printDBG('TopCinema.getLinksForVideo [%s]' % cItem)
+        url = cItem.get('url', '')
+        if not url:
+            return []
+        return [{'name': 'TopCinema - %s' % cItem.get('title', ''), 'url': url, 'need_resolve': 1}]
+
+    def getVideoLinks(self, url):
+        printDBG("TopCinema.getVideoLinks [%s]" % url)
+        urlTab = []
+        if self.cm.isValidUrl(url):
+            return self.up.getVideoLinkExt(url)
+        return urlTab
+
     def handleService(self, index, refresh=0, search_pattern='', search_type=''):
         printDBG('TopCinema.handleService start')
 
@@ -581,12 +637,10 @@ class TopCinema(CBaseHostClass):
         # FOLDERS
         elif category == 'movies_folder':
             self.listMoviesFolder(self.currItem)
-        # elif category == 'series_folder':
-            # self.listSeriesFolder(self.currItem)
+        elif category == 'series_folder':
+            self.listSeriesFolder(self.currItem)
         elif category == 'explore_item':
             self.exploreItems(self.currItem)
-        elif category == 'explore_episodes':
-            self.exploreSeriesItems(self.currItem)
         elif category == 'show_seasons':
             self.showSeasons(self.currItem)
         elif category == 'show_episodes':
