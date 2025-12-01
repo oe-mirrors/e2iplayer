@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last modified: 30/11/2025 - popking (odem2014)
+# Last modified: 01/12/2025 - popking (odem2014)
 ###################################################
 # LOCAL import
 ###################################################
@@ -297,9 +297,9 @@ class TopCinema(CBaseHostClass):
             self.addDir(params)
 
         # === PAGINATION HANDLING ===
-        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="paginate">', '</div>', False)[1]
-        next_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&raquo;\s*</a>')[0]
-        prev_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&laquo;\s*</a>')[0]
+        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', '</div>', True)[1]
+        prev_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&raquo;\s*</a>')[0]
+        next_page = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+href="([^"]+)"[^>]*>\s*&laquo;\s*</a>')[0]
 
         if next_page:
             next_page = self.getFullUrl(next_page)
@@ -329,7 +329,7 @@ class TopCinema(CBaseHostClass):
             data, '<div class="ServersList"', '</ul>', False
         )[1]
 
-        printDBG("server_block.exploreItems [%s]" % server_block)
+        printDBG("server_block.exploreItems>>>> %s " % server_block)
 
         ##########################################################
         # Extract <li> items
