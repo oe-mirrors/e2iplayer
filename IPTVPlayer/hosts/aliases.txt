@@ -83,6 +83,7 @@
 'hosthdstreams': 'https://hd-streams.top',
 'hosthoofootcom': 'http://hoofoot.com/',
 'hosthorrorycc': 'https://horrory.cc/',
+'hosthwnaturkya': 'https://hwnaturkya.com/',
 'hostidokep': 'https://www.idokep.hu/idojaras/Budapest',
 'hostinteriatv': 'http://interia.tv/',
 'hostipla': 'https://ipla.tv/',
