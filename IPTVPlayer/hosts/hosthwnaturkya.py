@@ -8,7 +8,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Components.config import ConfigText, config, getConfigListEntry
 
-import re, time
+import re
+import time
 
 config.plugins.iptvplayer.hwnaturkya_alt_domain = ConfigText(default="", fixed_size=False)
 
