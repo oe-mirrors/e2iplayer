@@ -416,7 +416,7 @@ class common:
 
     def getCountryCode(self, lower=True):
         if 'countryCode' not in self.geolocation:
-            sts, data = self.getPage('http://ip-api.com/json')
+            sts, data = self.getPage('http://ip-api.com/json')  # NOSONAR
             if sts:
                 try:
                     self.geolocation['countryCode'] = json_loads(data)['countryCode']
@@ -1474,7 +1474,7 @@ class common:
         adapter = HTTPAdapter(max_retries=retries)
 
         with custom_Session() as http:
-            http.mount("http://", adapter)
+            http.mount("http://", adapter)  # NOSONAR
             http.mount("https://", adapter)
 
         pageUrl = self.iriToUri(baseUrl)

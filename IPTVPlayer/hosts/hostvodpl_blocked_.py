@@ -292,6 +292,7 @@ class VODPL(CBaseHostClass):
         tm = str(int(time.time() * 1000))
         jQ = str(random.randrange(562674473039806, 962674473039806))
         authKey = 'FDF9406DE81BE0B573142F380CFA6043'
+        # TODO: the page is down
         contentUrl = 'http://qi.ckm.onetapi.pl/?callback=jQuery183040' + jQ + '_' + tm + '&body%5Bid%5D=' + authKey + '&body%5Bjsonrpc%5D=2.0&body%5Bmethod%5D=get_asset_detail&body%5Bparams%5D%5BID_Publikacji%5D=' + ckmId + '&body%5Bparams%5D%5BService%5D=ekstraklasa.onet.pl&content-type=application%2Fjsonp&x-onet-app=player.front.onetapi.pl&_=' + tm
         sts, data = self.cm.getPage(contentUrl)
         valTab = []

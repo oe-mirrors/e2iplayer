@@ -1103,7 +1103,7 @@ class pageParser(CaptchaHelper):
                     inUrl = match
         if vidMarker in inUrl:
             vid = self.cm.ph.getSearchGroups(inUrl + "/", "/video/([^/]+?)/")[0]
-            inUrl = "http://ebd.cda.pl/620x368/" + vid
+            inUrl = "https://ebd.cda.pl/620x368/" + vid
         sts, data = getPage(inUrl, defaultParams)
         if sts:
             qualities = ""
@@ -1189,7 +1189,7 @@ class pageParser(CaptchaHelper):
 
         for urlItem in tmpUrls:
             if urlItem["url"].startswith("/"):
-                inUrl = "http://www.cda.pl/" + urlItem["url"]
+                inUrl = "https://www.cda.pl/" + urlItem["url"]
             else:
                 inUrl = urlItem["url"]
             sts, pageData = getPage(inUrl, defaultParams)
@@ -1311,7 +1311,7 @@ class pageParser(CaptchaHelper):
                 return False
             return True
 
-        if baseUrl.startswith("http://"):
+        if baseUrl.startswith("http://"):  # NOSONAR
             baseUrl = "https" + baseUrl[4:]
         sts, data = self.cm.getPage(baseUrl, params)
         if not sts:
@@ -1846,7 +1846,7 @@ class pageParser(CaptchaHelper):
         mobj = re.match(_VALID_URL, baseUrl)
         try:
             video_id = mobj.group("id")
-            linkUrl = "http://docs.google.com/file/d/" + video_id
+            linkUrl = "https://docs.google.com/file/d/" + video_id
         except Exception:
             linkUrl = baseUrl
         _FORMATS_EXT = {
@@ -2092,6 +2092,7 @@ class pageParser(CaptchaHelper):
         jQ = str(randrange(562674473039806, 962674473039806))
         authKey = "FDF9406DE81BE0B573142F380CFA6043"
         hostName = urlparser().getHostName(baseUrl)
+        # TODO: the page is down
         contentUrl = "http://qi.ckm.onetapi.pl/?callback=jQuery183040" + jQ + "_" + tm + "&body%5Bid%5D=" + authKey + "&body%5Bjsonrpc%5D=2.0&body%5Bmethod%5D=get_asset_detail&body%5Bparams%5D%5BID_Publikacji%5D=" + ckmId + "&body%5Bparams%5D%5BService%5D={0}&content-type=application%2Fjsonp&x-onet-app=player.front.onetapi.pl&_=".format(hostName) + tm
         sts, data = self.cm.getPage(contentUrl)
         if sts:

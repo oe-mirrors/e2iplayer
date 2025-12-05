@@ -22,7 +22,7 @@ if not isPY2():
 config.plugins.iptvplayer.serienstreamto_langpreference = ConfigSelection(default="de,de_sub,en", choices=[("de,de_sub,en", "de,sub,en"), ("de,en,de_sub", "de,en,sub"), ("de_sub,de,en", "sub,de,en"), ("de_sub,en,de", "sub,en,de"), ("en,de_sub,de", "en,sub,de"), ("en,de,de_sub", "en,de,sub")])
 config.plugins.iptvplayer.serienstreamto_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http://186.2.175.5/", choices=[("http://186.2.175.5/", "http://186.2.175.5/"), ("https://s.to/", "https://s.to/"), ("https://serienstream.to/", "https://serienstream.to/")])
+config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http://186.2.175.5/", choices=[("http://186.2.175.5/", "http://186.2.175.5/"), ("https://s.to/", "https://s.to/"), ("https://serienstream.to/", "https://serienstream.to/")])  # NOSONAR
 
 
 def GetConfigList():

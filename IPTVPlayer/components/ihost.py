@@ -728,7 +728,7 @@ class CBaseHostClass:
                 return
         except Exception:
             self.isGeoBlockingChecked = False
-        sts, data = self.cm.getPage('http://ip-api.com/json/')
+        sts, data = self.cm.getPage('http://ip-api.com/json/')  # NOSONAR
         if not sts:
             return
         try:

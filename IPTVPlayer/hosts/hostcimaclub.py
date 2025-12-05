@@ -387,7 +387,7 @@ class CimaClub(CBaseHostClass):
             if not url:
                 continue
             # Extract domain (remove https://, www., and path)
-            title = url.replace('https://', '').replace('http://', '').split('/')[0]
+            title = url.replace('https://', '').replace('http://', '').split('/')[0]  # NOSONAR
             title = title.replace('www.', '').strip()
             title = self.cleanHtmlStr(title)
             printDBG('title.exploreItems >>> %s' % title)
