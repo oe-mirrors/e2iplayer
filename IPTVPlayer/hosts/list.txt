@@ -92,6 +92,7 @@ hostjoemonsterorg
 hostkabarety_blocked_
 hostkijknl
 hostkinoger
+hostkinoking
 hostkinomoc_blocked_
 hostkinox_blocked_
 hostkissanimeto

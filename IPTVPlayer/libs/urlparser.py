@@ -343,6 +343,7 @@ class urlparser:
             "bestwish.lol": self.pp.parserJWPLAYER,
             "bf0skv.org": self.pp.parserFILEMOON,
             "bgwp.cc": self.pp.parserJWPLAYER,
+            "bigshare.io": self.pp.parserJWPLAYER,
             "bigwarp.art": self.pp.parserJWPLAYER,
             "bigwarp.cc": self.pp.parserJWPLAYER,
             "bigwarp.io": self.pp.parserJWPLAYER,
@@ -3691,7 +3692,7 @@ class pageParser(CaptchaHelper):
             if not data:
                 return []
         host = urlparser.getDomain(baseUrl, False)
-        url = re.search(r"""["']((?:https?:)?//[^'^"]+?\.(?:mp4|m3u8)(?:\?[^"^']+?)?)["']""", data)
+        url = re.search(r"""["']((?:https?:)?//[^'^"]+?\.(?:mp4|m3u8|mkv)(?:\?[^"^']+?)?)["']""", data)
         if not url:
             url = re.search(r"""file":"([^"]+)""", data)
         subTracks = []
