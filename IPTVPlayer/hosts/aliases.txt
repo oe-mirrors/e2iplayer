@@ -93,6 +93,7 @@
 'hostkabarety': 'http://kabaret.tworzymyhistorie.pl/',
 'hostkijknl': 'http://kijk.nl/',
 'hostkinoger': 'https://kinoger.to/',
+'hostkinoking': 'https://KinoKing.cc/',
 'hostkinomoc': 'https://kinomoc.com/',
 'hostkinox': 'https://kinox.to/',
 'hostkissanimeto': 'http://kissanime.ru/',

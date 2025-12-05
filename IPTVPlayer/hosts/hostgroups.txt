@@ -251,6 +251,7 @@
   "bsto",
   "hdfilmetv",
   "cineto",
+  "kinoking",
   "moviedream",
   "filmpalast",
   "kinox",
