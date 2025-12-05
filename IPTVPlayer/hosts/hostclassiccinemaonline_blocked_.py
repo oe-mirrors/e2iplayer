@@ -236,7 +236,7 @@ class ClassicCinemaOnline(CBaseHostClass):
             img_url = self.getFullUrl(self.cm.ph.getSearchGroups(img_url, r'<img[^>]+?src="([^"]+?\.(:?jpe?g|png)(:?\?[^"]+?)?)"')[0])
             return [{'title': cItem['title'], 'text': cItem.get('desc', ''), 'images': [{'title': '', 'url': img_url}], 'other_info': {}}]
 
-        url = 'http://www.imdb.com/title/tt{0}/'.format(imdbId)
+        url = 'https://www.imdb.com/title/tt{0}/'.format(imdbId)
         sts, data = self.getPage(url)
         if not sts:
             return retTab

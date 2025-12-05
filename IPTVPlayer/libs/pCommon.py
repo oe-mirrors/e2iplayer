@@ -318,7 +318,7 @@ class common:
         return domain
 
     @staticmethod
-    def getFullUrl(url, mainUrl='http://fake/'):
+    def getFullUrl(url, mainUrl='http://fake/'):  # NOSONAR
         if not url:
             return ''
         if url.startswith('./'):

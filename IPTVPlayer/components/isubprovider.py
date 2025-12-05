@@ -284,7 +284,7 @@ class CBaseSubProviderClass:
             try:
                 mainUrl = self.getMainUrl()
             except Exception:
-                mainUrl = 'http://fake'
+                mainUrl = 'http://fake'  # NOSONAR
         else:
             mainUrl = self.cm.getBaseUrl(currUrl)
 
@@ -341,7 +341,7 @@ class CBaseSubProviderClass:
         promotItem = None
         sitList = []
         # get all seasons
-        sts, data = self.cm.getPage("http://www.imdb.com/title/tt%s/episodes" % imdbid)
+        sts, data = self.cm.getPage("https://www.imdb.com/title/tt%s/episodes" % imdbid)
         if not sts:
             return False, []
         data = self.cm.ph.getDataBeetwenReMarkers(data, re.compile(r'''data-testid=["']tab-season-entry["']'''), re.compile('</ul>'), False)[1]
@@ -363,7 +363,7 @@ class CBaseSubProviderClass:
         list = []
 
         # get episodes for season
-        sts, data = self.cm.getPage("http://www.imdb.com/title/tt%s/episodes/?season=%s" % (imdbid, season))
+        sts, data = self.cm.getPage("https://www.imdb.com/title/tt%s/episodes/?season=%s" % (imdbid, season))
         if not sts:
             return False, []
 
@@ -414,7 +414,7 @@ class CBaseSubProviderClass:
 
         if not imdbid.startswith('tt'):
             imdbid = 'tt' + imdbid
-        sts, data = self.cm.getPage('http://www.imdb.com/title/' + imdbid)
+        sts, data = self.cm.getPage('https://www.imdb.com/title/' + imdbid)
         if not sts:
             return False, {}
         title = self.cm.ph.getSearchGroups(data, r'''<meta property='og:title' content="([^\(^"]+?)["\(]''')[0].strip()

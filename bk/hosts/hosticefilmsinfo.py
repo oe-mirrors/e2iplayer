@@ -349,7 +349,7 @@ class IceFilms(CBaseHostClass):
 
         if id != '':
 
-            params.update({'imdb_id': id, 'icon': 'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
+            params.update({'imdb_id': id, 'icon': 'https://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
 
         if '/tv/' not in url:
 
@@ -399,7 +399,7 @@ class IceFilms(CBaseHostClass):
 
                 if id != '':
 
-                    params.update({'imdb_id': id, 'icon': 'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
+                    params.update({'imdb_id': id, 'icon': 'https://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
 
                 if '/tv/' not in url:
 
@@ -467,7 +467,7 @@ class IceFilms(CBaseHostClass):
 
                 if id != '':
 
-                    params.update({'imdb_id': id, 'icon': 'http://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
+                    params.update({'imdb_id': id, 'icon': 'https://www.imdb.com/title/tt%s/?fake=need_resolve.jpeg' % id})
 
                 self.addVideo(params)
 
@@ -709,7 +709,7 @@ class IceFilms(CBaseHostClass):
 
             return retTab
 
-        url = 'http://www.imdb.com/title/tt{0}/'.format(cItem['imdb_id'])
+        url = 'https://www.imdb.com/title/tt{0}/'.format(cItem['imdb_id'])
 
         sts, data = self.getPage(url)
 

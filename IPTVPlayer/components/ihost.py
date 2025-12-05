@@ -786,7 +786,7 @@ class CBaseHostClass:
             except Exception:
                 currUrl = None
             if currUrl is None or not self.cm.isValidUrl(currUrl):
-                currUrl = 'http://fake/'
+                currUrl = 'http://fake/'  # NOSONAR
         return self.cm.getFullUrl(url, currUrl)
 
     def getFullIconUrl(self, url, currUrl=None):
