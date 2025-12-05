@@ -267,7 +267,7 @@ else:
 # pylint: enable=invalid-name
 
 
-if gmpyLoaded or GMPY2_LOADED:
+if gmpyLoaded or GMPY2_LOADED:  # NOSONAR
     def powMod(base, power, modulus):
         base = mpz(base)
         power = mpz(power)

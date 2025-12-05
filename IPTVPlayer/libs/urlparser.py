@@ -3321,6 +3321,9 @@ class pageParser(CaptchaHelper):
         url = self.cm.meta.get("url", "")
         if url != "":
             baseUrl = url
+        # New verison:
+        # items = re.findall(r"""[\.\s'](?:fc|_vvto\[[^\]]*)(?:['\]]+)?\s*[:=]\s*['"]([^'"]+)""", data)
+        # needs to be tested !
         items = re.findall(r"""[\.\s'](?:fc|_vvto\[[^\]]*)(?:['\]]*)?\s*[:=]\s*['"]([^'"]+)""", data)
         if items:
             for f in items[::-1]:

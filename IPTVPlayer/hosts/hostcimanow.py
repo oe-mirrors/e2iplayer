@@ -9,15 +9,8 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 # host main class
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 # tools - write on log, write exception infos and merge dicts
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, E2ColoR
-# add metadata to url
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-# library for json (instead of standard json.loads and json.dumps)
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
-# read informations in m3u8
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
 ###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 ###################################################
 # FOREIGN import
@@ -353,7 +346,7 @@ class CimaNow(CBaseHostClass):
         # 2) Try to access the real "watching" page using the saved cookie (so CF clearance is sent)
         # Build watching URL
         if not url.endswith('/'):
-            watch_url = url + 'watching/'
+            watch_url = url + '/watching/'
         else:
             # url already ends with '/', append watching/
             watch_url = url + 'watching/'
@@ -894,8 +887,8 @@ class CimaNow(CBaseHostClass):
         printDBG('url.listSeriesEpisodes >>> %s' % url)
 
         # 1) First request: open the main page to trigger Cloudflare JS check and save cookies
-        sts, data = self.getPage(url)
-        # printDBG('data.listSeriesEpisodes >>> %s' % data)
+        sts, data1 = self.getPage(url)
+        # printDBG('data.listSeriesEpisodes >>> %s' % data1)
         if not sts:
             printDBG('listSeriesEpisodes: initial getPage failed')
             return
@@ -927,7 +920,7 @@ class CimaNow(CBaseHostClass):
         # If watching page failed (CF not solved or watching not exists), fall back to the original page
         if not sts2 or not data2 or '/home' in data2:
             printDBG('listSeriesEpisodes: watching page fetch failed or redirected; using original page data')
-            page_data = data
+            page_data = data1
         else:
             printDBG('listSeriesEpisodes: watching page fetched successfully')
             page_data = data2

@@ -251,7 +251,7 @@ class SubsourceAPIProvider(CBaseSubProviderClass):
         printDBG("Downloading subtitle to %s" % filePath)
 
         try:
-            response = requests.get(__getSubdown, headers=headers, verify=False, allow_redirects=True, timeout=60, stream=True)
+            response = requests.get(__getSubdown, headers=headers, verify=False, allow_redirects=True, timeout=60, stream=True)  # NOSONAR
             response.raise_for_status()
 
             with open(filePath, "wb") as f:
