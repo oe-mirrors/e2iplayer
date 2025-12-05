@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-23 13:27+0100\n"
-"PO-Revision-Date: 2025-11-24 00:08+0200\n"
+"PO-Revision-Date: 2025-12-05 13:54+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -105,7 +105,7 @@ msgid "    Remove thumbnails"
 msgstr "    Αφαίρεση μικρογραφιών"
 
 msgid "    Service icon size"
-msgstr "    Μέγεθος εικονιδίου υπηρεσίας"
+msgstr "    Μέγεθος εικονιδίων υπηρεσίας"
 
 msgid "    Show suggestions"
 msgstr "    Εμφάνιση προτάσεων"
@@ -153,19 +153,19 @@ msgstr "%s - τρέιλερ"
 
 #, python-format
 msgid "%s API KEY"
-msgstr "Κλειδί API %s"
+msgstr "%s - Κλειδί API"
 
 #, python-format
 msgid "%s device name"
-msgstr "Όνομα συσκευής %s"
+msgstr "%s - Όνομα συσκευής"
 
 #, python-format
 msgid "%s download manager"
-msgstr "Διαχείριση λήψεων %s"
+msgstr "%s - Διαχείριση λήψεων"
 
 #, python-format
 msgid "%s e-mail"
-msgstr "%s e-mail"
+msgstr "%s - E-mail"
 
 #, python-format
 msgid "%s episodes"
@@ -193,7 +193,7 @@ msgstr "%s λεπτά"
 
 #, python-format
 msgid "%s password"
-msgstr "%s κωδικός πρόσβασης"
+msgstr "%s - Κωδικός πρόσβασης"
 
 #, python-format
 msgid "%s returned %s: %s"
@@ -354,7 +354,7 @@ msgid "API initialization failed!"
 msgstr "Η αρχικοποίηση του API απέτυχε!"
 
 msgid "API_KEY"
-msgstr "API_KEY"
+msgstr "- Κλειδί API"
 
 msgid "ARTISTS"
 msgstr "ΚΑΛΛΙΤΕΧΝΕΣ"
@@ -485,7 +485,7 @@ msgid ""
 "Please check your login credentials and try again later...\""
 msgstr ""
 "Προέκυψε σφάλμα κατά την προσπάθεια σύνδεσης του χρήστη \"%s\".\n"
-"Παρακαλώ ελέγξτε τα διαπιστευτήριά σας και δοκιμάστε ξανά αργότερα..."
+"Παρακαλώ ελέγξτε τα στοιχεία σύνδεσής σας και προσπαθήστε ξανά αργότερα...\""
 
 #, python-format
 msgid "An error occurred while loading a subtitle from [%s]."
@@ -1435,7 +1435,7 @@ msgid "First movie player without buffering mode"
 msgstr "Πρώτη αναπαραγωγή ταινιών χωρίς λειτουργία προσωρινής μνήμης"
 
 msgid "Folder for cache data"
-msgstr "Φάκελος για δεδομένα κρυφής μνήμης"
+msgstr "Φάκελος για δεδομένα προσωρινής αποθήκευσης"
 
 msgid "Folder for temporary data"
 msgstr "Φάκελος για προσωρινά δεδομένα"
@@ -1571,7 +1571,7 @@ msgid "Hand"
 msgstr "Χέρι"
 
 msgid "Hardware floating point"
-msgstr "Υλικό κινητής υποδιαστολής"
+msgstr "Υποστηριζόμενη από το υλικό κινητή υποδιαστολή"
 
 #, python-format
 msgid "Hide \"%s\" group"
@@ -1972,29 +1972,31 @@ msgid "Localization"
 msgstr "Μετάφραση"
 
 msgid "Login"
-msgstr "Είσοδος"
+msgstr "Σύνδεση"
 
 msgid "Login failed!"
-msgstr "Η είσοδος απέτυχε!"
+msgstr "Η σύνδεση απέτυχε!"
 
 msgid "Login failed."
-msgstr "Η είσοδος απέτυχε."
+msgstr "Η σύνδεση απέτυχε."
 
 msgid "Login failed. Invalid email or password."
-msgstr "Η είσοδος απέτυχε. Μη έγκυρο email ή κωδικός πρόσβασης."
+msgstr "Η σύνδεση απέτυχε. Μη έγκυρο email ή κωδικός πρόσβασης."
 
 msgid "Login needed"
-msgstr "Απαιτείται είσοδος"
+msgstr "Απαιτείται σύνδεση"
 
 #, python-brace-format
 msgid "Login on {0} failed."
-msgstr "Η είσοδος στο {0} απέτυχε."
+msgstr "Η σύνδεση στο {0} απέτυχε."
 
 #, python-format
 msgid ""
 "Login user \"%s\" to http://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
-msgstr "Η είσοδος του χρήστη \"%s\" στο http://vk.com/ απέτυχε! Παρακαλώ ελέγξτε τα στοιχεία εισόδου στις ρυθμίσεις του IPTVPlayer."
+msgstr ""
+"Η σύνδεση χρήστη \"%s\" στο http://vk.com/ απέτυχε!\r\n"
+"Παρακαλώ ελέγξτε τα δεδομένα σύνδεσης στις ρυθμίσεις του IPTVPlayer."
 
 msgid "Logs"
 msgstr "Καταγραφές"
@@ -2469,7 +2471,7 @@ msgid "Please fill your login and password in the host configuration (available 
 msgstr "Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό πρόσβασης στη ρύθμιση του host (διαθέσιμη με το μπλε κουμπί) και δοκιμάστε ξανά."
 
 msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
-msgstr "Παρακαλώ βεβαιωθείτε ότι ο φάκελος για την κρυφή μνήμη (ορισμένος στις ρυθμίσεις) είναι εγγράψιμος."
+msgstr "Παρακαλώ βεβαιωθείτε ότι ο φάκελος για τα δεδομένα προσωρινής αποθήκευσης (που έχει οριστεί στις ρυθμίσεις) είναι εγγράψιμος."
 
 msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
 msgstr "Παρακαλώ εγγραφείτε και ορίστε όνομα χρήστη και κωδικό πρόσβασης στη ρύθμιση του host για να λύσετε οριστικά αυτά τα προβλήματα."
@@ -3009,7 +3011,7 @@ msgid "Show Profiles in ZBIORNIK MINI :"
 msgstr "Εμφάνιση προφίλ στο ZBIORNIK MINI:"
 
 msgid "Show Youtube Api Key warnings"
-msgstr "Εμφάνιση προειδοποιήσεων Youtube Api Key"
+msgstr "Εμφάνιση προειδοποιήσεων κλειδιού Api Youtube"
 
 msgid "Show all channels"
 msgstr "Εμφάνιση όλων των καναλιών"
@@ -3066,7 +3068,7 @@ msgid "Software decoding as"
 msgstr "Αποκωδικοποίηση λογισμικού ως"
 
 msgid "Software floating point"
-msgstr "Λογισμικό κινητής υποδιαστολής"
+msgstr "Λογισμική κινητή υποδιαστολή"
 
 msgid "Some changes will be applied only after movie player restart."
 msgstr "Ορισμένες αλλαγές θα εφαρμοστούν μόνο μετά την επανεκκίνηση της αναπαραγωγής ταινιών."
@@ -3577,7 +3579,7 @@ msgid "Use default video quality:"
 msgstr "Χρήση προεπιλεγμένης ποιότητας βίντεο:"
 
 msgid "Use links cache"
-msgstr "Χρήση κρυφής μνήμης συνδέσμων"
+msgstr "Χρήση προσωρινής αποθήκευσης συνδέσμων"
 
 msgid "Use preferred bitrate"
 msgstr "Χρήση προτιμώμενου ρυθμού bit"
@@ -3608,7 +3610,7 @@ msgid "Use web-proxy for VODs (it may be illegal):"
 msgstr "Χρήση διακομιστή μεσολάβησης ιστού για VODs (μπορεί να είναι παράνομο):"
 
 msgid "User defined"
-msgstr "Ορισμένο από τον χρήστη"
+msgstr "Καθορισμένο από τον χρήστη"
 
 msgid "User files"
 msgstr "Αρχεία χρήστη"
@@ -3761,7 +3763,7 @@ msgid "Written Boards Review"
 msgstr "Επιθεώρηση για εξετάσεις γραπτών δοκιμίων"
 
 msgid "Wrong Youtube Api Key length"
-msgstr "Λάθος μήκος κλειδιού Youtube Api"
+msgstr "Λάθος μήκος κλειδιού Api Youtube"
 
 msgid "Wrong answer."
 msgstr "Λάθος απάντηση."
@@ -3859,7 +3861,7 @@ msgid "Youtube Suggestions"
 msgstr "Προτάσεις Youtube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr "Οι αναζητήσεις στο Youtube είναι πιο γρήγορες αν συμπληρώσετε το API key στο μενού ρυθμίσεων"
+msgstr "Οι αναζητήσεις στο Youtube είναι πιο γρήγορες αν συμπληρώσετε το κλειδί API στο μενού ρυθμίσεων"
 
 #, python-format
 msgid "[%s] - configuration"
@@ -3958,7 +3960,7 @@ msgid "downloads location"
 msgstr "τοποθεσία λήψεων"
 
 msgid "e-mail"
-msgstr "e-mail"
+msgstr "- E-mail"
 
 msgid "email"
 msgstr "email"
@@ -4048,7 +4050,7 @@ msgid "live"
 msgstr "ζωντανά"
 
 msgid "login"
-msgstr "είσοδος"
+msgstr "- Όνομα χρήστη"
 
 msgid "low"
 msgstr "χαμηλή"
@@ -4072,7 +4074,7 @@ msgid "olive"
 msgstr "ελαιόχρωμο"
 
 msgid "password"
-msgstr "κωδικός πρόσβασης"
+msgstr "- Κωδικός πρόσβασης"
 
 msgid "purple"
 msgstr "μοβ"
@@ -4132,7 +4134,7 @@ msgid "unknown"
 msgstr "άγνωστο"
 
 msgid "version"
-msgstr "έκδοση"
+msgstr "Έκδοση"
 
 msgid "vertical"
 msgstr "κάθετο"
