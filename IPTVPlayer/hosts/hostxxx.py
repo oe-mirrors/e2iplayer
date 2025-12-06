@@ -122,7 +122,7 @@ def hostImage():
 
 
 class IPTVHost(IHost):
-	LOGO_NAME = 'XXXlogo.png'
+	LOGO_NAME = 'xxxlogo.png'
 	PATH_TO_LOGO = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/logos/' + LOGO_NAME)
 
 	def __init__(self):
