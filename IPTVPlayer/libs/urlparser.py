@@ -556,6 +556,7 @@ class urlparser:
             "nova.upn.one": self.pp.parserSBS,
             # o
             "obeywish.com": self.pp.parserJWPLAYER,
+            "odnoklassniki.ru": self.pp.parserOKRU,
             "odysee.com": self.pp.parserODYSEECOM,
             "ok.ru": self.pp.parserOKRU,
             "onet.pl": self.pp.parserONETTV,
@@ -2217,64 +2218,6 @@ class pageParser(CaptchaHelper):
                 videoUrls[idx]["url"] = strwithmeta(videoUrls[idx]["url"], {"external_sub_tracks": subtitlesTab})
         return videoUrls
 
-    def parserOKRU(self, baseUrl):
-        printDBG("parserOKRU baseUrl[%r]" % baseUrl)
-        HTTP_HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36", "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "Referer": baseUrl, "Cookie": "_flashVersion=18", "X-Requested-With": "XMLHttpRequest"}
-        metadataUrl = ""
-        if "videoPlayerMetadata" not in baseUrl:
-            sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
-            if not sts:
-                return False
-            error = clean_html(self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "vp_video_stub_txt"), ("</div", ">"), False)[1])
-            if error == "":
-                error = clean_html(self.cm.ph.getDataBeetwenNodes(data, ("<", ">", "page-not-found"), ("</", ">"), False)[1])
-            if error != "":
-                SetIPTVPlayerLastHostError(error)
-            tmpTab = re.compile("""data-options=['"]([^'^"]+?)['"]""").findall(data)
-            for tmp in tmpTab:
-                tmp = clean_html(tmp)
-                tmp = json_loads(tmp)
-                printDBG("====")
-                printDBG(tmp)
-                printDBG("====")
-                tmp = tmp["flashvars"]
-                if "metadata" in tmp:
-                    data = json_loads(tmp["metadata"])
-                    metadataUrl = ""
-                    break
-                else:
-                    metadataUrl = urllib_unquote(tmp["metadataUrl"])
-        else:
-            metadataUrl = baseUrl
-        if metadataUrl != "":
-            url = metadataUrl
-            sts, data = self.cm.getPage(url, {"header": HTTP_HEADER})
-            if not sts:
-                return False
-            data = json_loads(data)
-        urlsTab = []
-        for item in data["videos"]:
-            url = item["url"]
-            url = strwithmeta(url, {"Referer": baseUrl, "User-Agent": HTTP_HEADER["User-Agent"]})
-            urlsTab.append({"name": item["name"], "url": url})
-        urlsTab = urlsTab[::-1]
-        if 1:
-            url = urlparser.decorateUrl(data["hlsManifestUrl"], {"iptv_proto": "m3u8", "Referer": baseUrl, "User-Agent": HTTP_HEADER["User-Agent"]})
-            urltab = getDirectM3U8Playlist(url, checkExt=False, checkContent=True)
-            for idx in range(len(urltab)):
-                meta = dict(urltab[idx]["url"].meta)
-                meta["iptv_proto"] = "m3u8"
-                url = urltab[idx]["url"]
-                if url.endswith("/"):
-                    urltab[idx]["url"] = strwithmeta(url + "playlist.m3u8", meta)
-            try:
-                tmpurltab = sorted(urltab, key=lambda item: -1 * int(item.get("bitrate", 0)))
-                tmpurltab.extend(urlsTab)
-                urlsTab = tmpurltab
-            except Exception:
-                printExc()
-        return urlsTab
-
     def parserZEROCASTTV(self, baseUrl):
         printDBG("parserZEROCASTTV baseUrl[%r]" % baseUrl)
         if "embed.php" in baseUrl:
@@ -3563,7 +3506,7 @@ class pageParser(CaptchaHelper):
         url = data.get("streaming_url")
         subTracks = [{"title": "", "url": sub.get("file_path"), "lang": sub.get("language")} for sub in data.get("subtitles", []) if sub.get("file_path") and sub.get("language")]
         if url:
-            url = url.replace('\r', '').replace('\n', '')
+            url = url.replace("\r", "").replace("\n", "")
             url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
             if ".m3u8" in url:
                 urltab.extend(getDirectM3U8Playlist(url))
@@ -3715,4 +3658,23 @@ class pageParser(CaptchaHelper):
                 urltab.extend(getDirectM3U8Playlist(url))
             else:
                 urltab.append({"name": "MP4", "url": url})
+        return urltab
+
+    def parserOKRU(self, baseUrl):  # Fix 061225
+        printDBG("parserOKRU baseUrl[%s]" % baseUrl)
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        urltab = []
+        match = re.search(r'data-options="([^"]+)', data)
+        if match:
+            match = match.group(1).replace("&quot;", '"').replace("&amp;", "&")
+            js = json_loads(match).get("flashvars", {}).get("metadata")
+            js = json_loads(js)
+            url = js.get("hlsManifestUrl") or js.get("ondemandHls") or js.get("hlsMasterPlaylistUrl")
+            if url:
+                url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
         return urltab
