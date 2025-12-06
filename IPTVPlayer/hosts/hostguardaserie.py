@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 15.11.2025 - Mr.X
+# Last Modified: 06.12.2025 - Panda555
 import re
 
 from Components.config import ConfigSelection, config, getConfigListEntry
@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
-config.plugins.iptvplayer.guardaserie_hosts = ConfigSelection(default="https://guardaserietv.app/", choices=[("https://guardaserietv.app/", "https://guardaserietv.app/"), ("https://guardaserie.qpon/", "https://guardaserie.qpon/"), ("https://guardaserietv.wiki/", "https://guardaserietv.wiki/")])
+config.plugins.iptvplayer.guardaserie_hosts = ConfigSelection(default="https://guardaserietv.club/", choices=[("https://guardaserietv.app/", "https://guardaserietv.app/"), ("https://guardaserie.qpon/", "https://guardaserie.qpon/"), ("https://guardaserietv.club/", "https://guardaserietv.club/")])
 
 
 def GetConfigList():
