@@ -575,7 +575,7 @@ class Host(CBaseHostClass):
 			if config.plugins.iptvplayer.pornbimbo.value:
 				valTab.append(CDisplayListItem("PORNBIMBO", 'https://pornbimbo.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornbimbo.com/categories/'], 'PORNBIMBO', hostImage() + 'pornbimbo.png', None))
 			if config.plugins.iptvplayer.pornfd.value:
-				valTab.append(CDisplayListItem("PORNFD", 'https://www.pornfd.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.pornfd.com/categories/'], 'PORNFD', hostImage() + 'pornfd.png', None))
+				valTab.append(CDisplayListItem("PORNFD", 'http://www.pornfd.com', CDisplayListItem.TYPE_CATEGORY, ['http://www.pornfd.com/categories/'], 'PORNFD', hostImage() + 'pornfd.png', None))
 			if config.plugins.iptvplayer.femefun.value:
 				valTab.append(CDisplayListItem("FEMEFUN", 'https://femefun.com', CDisplayListItem.TYPE_CATEGORY, ['https://femefun.com/categories/piercing/'], 'FEMEFUN', hostImage() + 'femefun.png', None))
 			if config.plugins.iptvplayer.shemalehd.value:
@@ -753,7 +753,7 @@ class Host(CBaseHostClass):
 			if self.SEARCH_proc == 'main-menu':
 				valTab = []
 				valTab.sort(key=lambda poz: poz.name)
-				hosts = [('3MOVS', 'https://www.3movs.com'), ('69TEENTUBE', 'https://69teentube.com'), ('9VIDS', 'https://9vids.com'), ('AD69', 'https://ad69.com'), ('AHME', 'https://www.ah-me.com'), ('AL4A', 'https://www.al4a.com'), ('ALOTPORN', 'https://www.alotporn.com'), ('ALPHAPORNO', 'https://www.alphaporno.com'), ('AMATEUR.RED', 'https://amateur.red'), ('AMATEUR8', 'https://www.amateur8.com/'), ('AMATEURCOUGAR', 'https://www.amateur-cougar.com'), ('AMAZINGCUCKOLD', 'https://www.amazingcuckold.com'), ('BABES34', 'https://babes34.me'), ('BADDIES', 'https://baddies.xxx'), ('BEAUTYMOVIES', 'https://www.beautymovies.com'), ('BLOWJOBIT', 'https://blowjobit.com'), ('CAMBEAUTIES', 'https://cambeauties.com'), ('CAMBRO', 'https://www.cambro.tv'), ('CAMHUB', 'https://www.camhub.cc'), ('CAMVIDEOS', 'https://www.camvideos.tv'), ('CROCOTUBE', 'https://crocotube.com/'), ('CUCKOLDPLACETUBE', 'https://www.cuckoldplacetube.com'), ('DEFINEBABE', 'https://www.definebabe.com/'), ('DRTUBER', 'https://www.drtuber.com'), ('EBONY8', 'https://www.ebony8.com'), ('EVERYCAMGIRL', 'https://everycamgirl.com'), ('FEMEFUN', 'https://femefun.com'), ('FREEPORNHQ', 'https://www.freepornhq.xxx'), ('FULLXCINEMA', 'https://fullxcinema.com'), ('FUQER', 'https://www.fuqer.com'), ('GLAVMATURES', 'https://glavmatures.com'), ('HANDJOBHUB', 'https://handjobhub.com'), ('HARDSEXVIDS', 'https://hardsexvids.com'), ('HDZOG', 'https://hdzog.com/'), ('HELLMOMS', 'https://hellmoms.com'), ('HELLOPORN', 'https://hello.porn'), ('HELLPORNO', 'https://hellporno.com/'), ('HYPNOTUBE', 'https://hypnotube.com'), ('HomeMoviesTube', 'https://www.homemoviestube.com'), ('IN35', 'https://in35.com'), ('ITSPORN', 'https://www.its.porn'), ('JAVBANGERS', 'https://www.javbangers.com'), ('JIZZBOOM', 'https://jizzboom.com'), ('JIZZBUNKER', 'https://jizzbunker.com'), ('KATESTUBE', 'https://www.katestube.com'), ('KOLOPORNO', 'https://www.koloporno.com'), ('LAIDHUB', 'https://www.laidhub.com'), ('MASTURBATE2GETHER', 'https://www.masturbate2gether.com'), ('MATUREAMATEURSEX', 'https://www.mature-amateur-sex.com'), ('MATUREGIRLS', 'https://www.mature-girls.com'), ('MILFFOX', 'https://www.milffox.com'), ('MOMSLUST', 'https://www.momslust.com'), ('MOMXL', 'https://momxl.com'), ('MOREAMATEURS', 'https://moreamateurs.com'), ('MOVIEFAP', 'https://www.moviefap.com'), ('MR DEEPFAKES', 'https://mrdeepfakes.com'), ('MUSTJAV', 'https://mustjav.com'), ('MYPORNHERE', 'https://www.mypornhere.com'), ('NEPORN', 'https://neporn.com'), ('NUDEZ', 'https://nudez.com'), ('OHSEXFILM', 'https://www.ohsexfilm.com'), ('OK.XXX', 'https://ok.xxx'), ('ORIENTAL SEX', 'https://www.oriental-sex.com'), ('PERFECTGIRLS', 'https://www.perfectgirls.xxx'), ('PERVCLIPS', 'https://www.pervclips.com/tube'), ('PORCORE', 'https://porcore.com'), ('PORN7', 'https://www.porn7.xxx'), ('PORNBIMBO', 'https://pornbimbo.com'), ('PORNBOLT', 'https://pornbolt.com'), ('PORNBURST', 'https://www.pornburst.xxx/'), ('PORNDIG', 'https://www.porndig.com'), ('PORNDR', 'https://www.porndr.com'), ('PORNDROIDS', 'https://www.porndroids.com'), ('PORNENIX', 'https://pornenix.com'), ('PORNFD', 'https://pornfd.com'), ('PORNHAT', 'https://www.pornhat.com/'), ('PORNHEED', 'https://www.pornheed.com'), ('PORNICOM', 'https://pornicom.com'), ('PORNID', 'https://www.pornid.xxx'), ('PORNOFLIX', 'https://pornoflix.com'), ('PORNOHAMMER', 'https://www.pornohammer.com'), ('PORNOREINO', 'https://en.pornoreino.com'), ('PORNTREX', 'https://www.porntrex.com'), ('PORNVIDEOSBEST', 'https://pornvideosbest.com'), ('PORNWHITE', 'https://www.pornwhite.com'), ('PORNXP', 'https://pornxp.org'), ('PORNYTEEN', 'https://pornyteen.com'), ('PUNISHBANG', 'https://www.punishbang.com'), ('RELAX SEX', 'https://relax-sex.com'), ('SEVEREPORN', 'https://severeporn.com'), ('SEXMATURE', 'https://www.sexmature.xxx'), ('SEXVID', 'https://www.sexvid.xxx'), ('SHAMELESS', 'https://shameless.com'), ('SHEMALEHD', 'https://www.shemalehd.sex'), ('SHESHAFT', 'https://www.sheshaft.com'), ('SHOOSHTIME', 'https://shooshtime.com'), ('TEENTUBER', 'https://www.teentuber.xxx'), ('TEENXY', 'https://teenxy.com'), ('TERK.NL', 'https://www.terk.nl'), ('THEPORNAREA', 'https://thepornarea.com'), ('THEYAREHUGE', 'https://www.theyarehuge.com'), ('TOPVIDS', 'https://topvids.net'), ('TRENDYPORN', 'https://www.trendyporn.com'), ('TROPICTUBE', 'https://www.tropictube.com'), ('VEPORN', 'https://veporn.com'), ('W4NKR', 'https://w4nkr.com'), ('WANKOZ', 'https://www.wankoz.com'), ('WARDDOGS', 'https://warddogs.com'), ('WATCHMYGF', 'https://www.watchmygf.me'), ('WETSINS', 'https://www.wetsins.com'), ('WHORESHUB', 'https://www.whoreshub.com'), ('XCAFE', 'https://xcafe.com'), ('XCUM', 'https://xcum.com'), ('XGROOVY', 'https://xgroovy.com'), ('XNXXHAMSTER', 'https://www.xnxxhamster.net'), ('XOZILLA', 'https://www.xozilla.com'), ('XPAJA', 'https://www.xpaja.net'), ('XRARES', 'https://www.xrares.com'), ('XTITS', 'https://www.xtits.com'), ('XXBRITS', 'https://www.xxbrits.com'), ('XXXBULE', 'https://www.xxxbule.com/'), ('XXXDAN', 'https://xxxdan.com'), ('XXXSHAKE', 'https://xxxshake.com'), ('YOUJIZZ', 'https://www.youjizz.com'), ('YOUNG SEX TUBE', 'https://young-sex-tube.com'), ('YOURAMATEURTUBE', 'https://youramateurtube.com'), ('YOURLUST', 'https://yourlust.com'), ('ZIPORN', 'https://ziporn.com/'), ('eporner', 'https://www.eporner.com'), ('freeones', 'https://www.freeones.com'), ('homepornking', 'https://www.homepornking.com'), ('pornhub', 'https://www.pornhub.com'), ('redtube', 'https://www.redtube.com'), ('tube8', 'https://www.tube8.com'), ('xhamster', 'https://www.xhamster.com'), ('xnxx', 'https://www.xnxx.com'), ('xvideos', 'https://www.xvideos.com'), ('youporn', 'https://www.youporn.com')]
+				hosts = [('3MOVS', 'https://www.3movs.com'), ('69TEENTUBE', 'https://69teentube.com'), ('9VIDS', 'https://9vids.com'), ('AHME', 'https://www.ah-me.com'), ('AL4A', 'https://www.al4a.com'), ('ALOTPORN', 'https://www.alotporn.com'), ('ALPHAPORNO', 'https://www.alphaporno.com'), ('AMATEUR.RED', 'https://amateur.red'), ('AMATEUR8', 'https://www.amateur8.com/'), ('AMATEURCOUGAR', 'https://www.amateur-cougar.com'), ('AMAZINGCUCKOLD', 'https://www.amazingcuckold.com'), ('BABES34', 'https://babes34.me'), ('BADDIES', 'https://baddies.xxx'), ('BEAUTYMOVIES', 'https://www.beautymovies.com'), ('CAMBEAUTIES', 'https://cambeauties.com'), ('CAMHUB', 'https://www.camhub.cc'), ('CAMVIDEOS', 'https://www.camvideos.tv'), ('CROCOTUBE', 'https://crocotube.com/'), ('CUCKOLDPLACETUBE', 'https://www.cuckoldplacetube.com'), ('DEFINEBABE', 'https://www.definebabe.com/'), ('DRTUBER', 'https://www.drtuber.com'), ('EBONY8', 'https://www.ebony8.com'), ('EVERYCAMGIRL', 'https://everycamgirl.com'), ('FEMEFUN', 'https://femefun.com'), ('FREEPORNHQ', 'https://www.freepornhq.xxx'), ('FULLXCINEMA', 'https://fullxcinema.com'), ('FUQER', 'https://www.fuqer.com'), ('GLAVMATURES', 'https://glavmatures.com'), ('HANDJOBHUB', 'https://handjobhub.com'), ('HARDSEXVIDS', 'https://hardsexvids.com'), ('HELLMOMS', 'https://hellmoms.com'), ('HELLOPORN', 'https://hello.porn'), ('HELLPORNO', 'https://hellporno.com/'), ('HYPNOTUBE', 'https://hypnotube.com'), ('HomeMoviesTube', 'https://www.homemoviestube.com'), ('IN35', 'https://in35.com'), ('ITSPORN', 'https://www.its.porn'), ('JAVBANGERS', 'https://www.javbangers.com'), ('JIZZBOOM', 'https://jizzboom.com'), ('JIZZBUNKER', 'https://jizzbunker.com'), ('KATESTUBE', 'https://www.katestube.com'), ('KOLOPORNO', 'https://www.koloporno.com'), ('LAIDHUB', 'https://www.laidhub.com'), ('MATUREAMATEURSEX', 'https://www.mature-amateur-sex.com'), ('MATUREGIRLS', 'https://www.mature-girls.com'), ('MILFFOX', 'https://www.milffox.com'), ('MOMSLUST', 'https://www.momslust.com'), ('MOMXL', 'https://momxl.com'), ('MOREAMATEURS', 'https://moreamateurs.com'), ('MOVIEFAP', 'https://www.moviefap.com'), ('MUSTJAV', 'https://mustjav.com'), ('MYPORNHERE', 'https://www.mypornhere.com'), ('NEPORN', 'https://neporn.com'), ('NUDEZ', 'https://nudez.com'), ('OHSEXFILM', 'https://www.ohsexfilm.com'), ('OK.XXX', 'https://ok.xxx'), ('ORIENTAL SEX', 'https://www.oriental-sex.com'), ('PERFECTGIRLS', 'https://www.perfectgirls.xxx'), ('PERVCLIPS', 'https://www.pervclips.com/tube'), ('PORCORE', 'https://porcore.com'), ('PORN7', 'https://www.porn7.xxx'), ('PORNBIMBO', 'http://pornbimbo.com'), ('PORNBOLT', 'https://pornbolt.com'), ('PORNBURST', 'https://www.pornburst.xxx/'), ('PORNDIG', 'https://www.porndig.com'), ('PORNDR', 'https://www.porndr.com'), ('PORNDROIDS', 'https://www.porndroids.com'), ('PORNENIX', 'https://pornenix.com'), ('PORNFD', 'https://pornfd.com'), ('PORNHAT', 'https://www.pornhat.com/'), ('PORNHEED', 'https://www.pornheed.com'), ('PORNICOM', 'https://pornicom.com'), ('PORNID', 'https://www.pornid.xxx'), ('PORNOFLIX', 'https://pornoflix.com'), ('PORNOHAMMER', 'https://www.pornohammer.com'), ('PORNOREINO', 'https://en.pornoreino.com'), ('PORNTREX', 'https://www.porntrex.com'), ('PORNVIDEOSBEST', 'https://pornvideosbest.com'), ('PORNWHITE', 'https://www.pornwhite.com'), ('PORNXP', 'https://pornxp.org'), ('PORNYTEEN', 'https://pornyteen.com'), ('PUNISHBANG', 'https://www.punishbang.com'), ('RELAX SEX', 'https://relax-sex.com'), ('SEVEREPORN', 'https://severeporn.com'), ('SEXMATURE', 'https://www.sexmature.xxx'), ('SEXVID', 'https://www.sexvid.xxx'), ('SHAMELESS', 'https://shameless.com'), ('SHESHAFT', 'https://www.sheshaft.com'), ('SHOOSHTIME', 'https://shooshtime.com'), ('TEENTUBER', 'https://www.teentuber.xxx'), ('TEENXY', 'https://teenxy.com'), ('TERK.NL', 'https://www.terk.nl'), ('THEPORNAREA', 'https://thepornarea.com'), ('THEYAREHUGE', 'https://www.theyarehuge.com'), ('TOPVIDS', 'https://topvids.net'), ('TRENDYPORN', 'https://www.trendyporn.com'), ('VEPORN', 'https://veporn.com'), ('W4NKR', 'https://w4nkr.com'), ('WANKOZ', 'https://www.wankoz.com'), ('WARDDOGS', 'https://warddogs.com'), ('WATCHMYGF', 'https://www.watchmygf.me'), ('WETSINS', 'https://www.wetsins.com'), ('WHORESHUB', 'https://www.whoreshub.com'), ('XCAFE', 'https://xcafe.com'), ('XCUM', 'https://xcum.com'), ('XGROOVY', 'https://xgroovy.com'), ('XNXXHAMSTER', 'https://www.xnxxhamster.net'), ('XOZILLA', 'https://www.xozilla.com'), ('XPAJA', 'https://www.xpaja.net'), ('XRARES', 'https://www.xrares.com'), ('XTITS', 'https://www.xtits.com'), ('XXBRITS', 'https://www.xxbrits.com'), ('XXXBULE', 'https://www.xxxbule.com/'), ('XXXDAN', 'https://xxxdan.com'), ('XXXSHAKE', 'https://xxxshake.com'), ('YOUJIZZ', 'https://www.youjizz.com'), ('YOUNG SEX TUBE', 'https://young-sex-tube.com'), ('YOURAMATEURTUBE', 'https://youramateurtube.com'), ('YOURLUST', 'https://yourlust.com'), ('ZIPORN', 'https://ziporn.com/'), ('eporner', 'https://www.eporner.com'), ('freeones', 'https://www.freeones.com'), ('homepornking', 'https://www.homepornking.com'), ('pornhub', 'https://www.pornhub.com'), ('redtube', 'https://www.redtube.com'), ('tube8', 'https://www.tube8.com'), ('xhamster', 'https://www.xhamster.com'), ('xnxx', 'https://www.xnxx.com'), ('xvideos', 'https://www.xvideos.com'), ('youporn', 'https://www.youporn.com')]
 				for Name, URL in hosts:
 					self.MAIN_URL = URL
 					valtemp = self.listsItems(-1, url, Name + '-search')
@@ -796,6 +796,7 @@ class Host(CBaseHostClass):
 			"youporn": "youporn.png",
 			"redtube": "redtube.png",
 			"xhamsterlive": "xhamsterlive.png",
+			"xhamster": "xhamster.png",
 			"eporner": "eporner.png",
 			"pornhub": "pornhub.png",
 			"hdporn": "hdporn.png",
@@ -2598,7 +2599,7 @@ class Host(CBaseHostClass):
 				return valTab
 			query_data = {'url': url, 'use_host': False, 'use_cookie': False, 'use_post': False, 'return_data': True}
 			result = self.cm.getURLRequestData(query_data)
-			printDBG('Query Data: ' + result)
+			# printDBG('Query Data: ' + result)
 			next = self.cm.ph.getDataBeetwenMarkers(data, '"active" href=', '</ul></div>', False)[1]
 			next = self.cm.ph.getSearchGroups(next, '''href=['"](/[^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&').replace(' ', '+')
 			data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="video', '</p></div>')
@@ -6164,7 +6165,7 @@ class Host(CBaseHostClass):
 			sts, data = self.get_Page(url)
 			if not sts:
 				return valTab
-			printDBG('Host listsItems data: ' + data)
+			# printDBG('Host listsItems data: ' + data)
 			next = self.cm.ph.getSearchGroups(data, '''btn-next.+?href=['"]([^"^']+?)['"].title''', 1, True)[0]
 			if next.startswith('/'):
 				next = self.MAIN_URL + next
@@ -8115,7 +8116,7 @@ class Host(CBaseHostClass):
 			return searchItems(valTab, True)
 		if 'THEYAREHUGE-search' == name:
 			valTab = self.listsItems(-1, 'https://www.theyarehuge.com/search/%s/' % url.replace(' ', '-'), 'THEYAREHUGE-clips')
-			printDBG('THEYAREHUGE Search=' + str(valTab))
+			# printDBG('THEYAREHUGE Search=' + str(valTab))
 			return valTab
 		if 'THEYAREHUGE-clips' == name:
 			self.MAIN_URL = 'https://www.theyarehuge.com'
@@ -8758,7 +8759,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'PORNBIMBO' == name:
-			self.MAIN_URL = 'https://pornbimbo.com'
+			self.MAIN_URL = 'http://pornbimbo.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornbimbo.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -8781,12 +8782,12 @@ class Host(CBaseHostClass):
 			return searchItems(valTab, True)
 
 		if 'PORNBIMBO-search' == name:
-			valTab = self.listsItems(-1, 'https://pornbimbo.com/search/' + url.replace(' ', '-') + '/', 'PORNBIMBO-clips')
+			valTab = self.listsItems(-1, 'http://pornbimbo.com/search/' + url.replace(' ', '-') + '/', 'PORNBIMBO-clips')
 			return valTab
 
 		if 'PORNBIMBO-clips' == name:
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			self.MAIN_URL = 'https://pornbimbo.com'
+			self.MAIN_URL = 'http://pornbimbo.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornbimbo.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -8840,7 +8841,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'PORNBIMBO-channels' == name:
-			self.MAIN_URL = 'https://pornbimbo.com/models/'
+			self.MAIN_URL = 'http://pornbimbo.com/models/'
 			COOKIEFILE = join(GetCookieDir(), 'pornbimbo.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -8948,7 +8949,7 @@ class Host(CBaseHostClass):
 			return valTab
 
 		if 'PORNFD' == name:
-			self.MAIN_URL = 'https://www.pornfd.com'
+			self.MAIN_URL = 'http://www.pornfd.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornfd.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -8973,12 +8974,12 @@ class Host(CBaseHostClass):
 			return searchItems(valTab, True)
 
 		if 'PORNFD-search' == name:
-			valTab = self.listsItems(-1, 'https://www.pornfd.com/search/' + url.replace(' ', '-') + '/', 'PORNFD-clips')
+			valTab = self.listsItems(-1, 'http://www.pornfd.com/search/' + url.replace(' ', '-') + '/', 'PORNFD-clips')
 			return valTab
 
 		if 'PORNFD-clips' == name:
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			self.MAIN_URL = 'https://www.pornfd.com'
+			self.MAIN_URL = 'http://www.pornfd.com'
 			COOKIEFILE = join(GetCookieDir(), 'pornfd.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
@@ -9939,7 +9940,7 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^#^']+?)['"]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^>]+?)["]''', 1, True)[0].title()
 				phImage = self.cm.ph.getSearchGroups(item, '''=["]([^;^"^$]+?)["].alt''', 1, True)[0]
-				printDBG('Clip images: ' + phImage)
+				# printDBG('Clip images: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, '''watch"[>]([\0-9:a-z]+?)[<]''', 1, True)[0]
 				phRate = self.cm.ph.getSearchGroups(item, '''tive"[>]([\0-9,a-z]+?)[<]''', 1, True)[0].strip()
 				if phTime:
@@ -10028,7 +10029,7 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^#^']+?)['"].+"thumb''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^>]+?)["]''', 1, True)[0].title()
 				phImage = self.cm.ph.getSearchGroups(item, '''=["]([^;^"^$]+?)["].alt''', 1, True)[0]
-				printDBG('Clip images: ' + phImage)
+				# printDBG('Clip images: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, '''clock.+[>]([\0-9:]+?)[<]/''', 1, True)[0]
 				phAdded = self.cm.ph.getSearchGroups(item, '''li[>]([0-9 a-z]+?)[<]''', 1, True)[0]
 				phViews = self.cm.ph.getSearchGroups(item, '''mb"[>]([0-9 a-z].{6,15})[<]''', 1, True)[0]
@@ -10087,7 +10088,7 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^#^>]+?)['"].class''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^>]+?)["]''', 1, True)[0].title()
 				phImage = self.cm.ph.getSearchGroups(item, '''=["]([^;^"^$]+?)["].alt''', 1, True)[0]
-				printDBG('Clip images: ' + phImage)
+				# printDBG('Clip images: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, '''datetime.+[>]([\0-9:]+?)[<]/time''', 1, True)[0]
 				if phTime:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, decodeHtml(phImage), None))
@@ -10145,7 +10146,7 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^#^>]+?)['"].+\n<div''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^>]+?)["]''', 1, True)[0].title()
 				phImage = self.cm.ph.getSearchGroups(item, '''nal=["]([^;^"^$]+?)["]''', 1, True)[0]
-				printDBG('Clip images: ' + phImage)
+				# printDBG('Clip images: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, '''tion"[>]([\0-9:]+?)[<]''', 1, True)[0]
 				phViews = self.cm.ph.getSearchGroups(item, '''left"[>]([\0-9a-z]+?)[<]''', 1, True)[0].strip()
 				if phTime:
@@ -10206,7 +10207,7 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^#^=]+?)['"]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^>]+?)["]''', 1, True)[0].title()
 				phImage = self.cm.ph.getSearchGroups(item, '''src=["]([^@]+?)["]''', 1, True)[0]
-				printDBG('Clip images: ' + phImage)
+				# printDBG('Clip images: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, '''time"[>]([\0-9:]+?)[<]''', 1, True)[0]
 				phViews = self.cm.ph.getSearchGroups(item, '''desc"[>]([0-9]+?)[<]''', 1, True)[0]
 				phRate = self.cm.ph.getSearchGroups(item, '''up.+\n.+"[>]([0-9%]+?)[<]''', 1, True)[0]
@@ -10263,7 +10264,7 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^#^=]+?)['"]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^>]+?)["]''', 1, True)[0].title()
 				phImage = self.cm.ph.getSearchGroups(item, '''inal=["]([^@]+?)["]''', 1, True)[0]
-				printDBG('Clip images: ' + phImage)
+				# printDBG('Clip images: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, '''[>]([\0-9:]+?)[<]/span''', 1, True)[0]
 				if phTime:
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, decodeHtml(phImage), None))
@@ -10327,7 +10328,7 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^#^=]+?)['"]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^>]+?)["]''', 1, True)[0].title()
 				phImage = self.cm.ph.getSearchGroups(item, '''inal=["]([^@]+?)["]''', 1, True)[0]
-				printDBG('Clip images: ' + phImage)
+				# printDBG('Clip images: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, '''time"[>]([\0-9:]+?)[<]''', 1, True)[0]
 				if not phTime:
 					phTime = '10:00'
@@ -10387,7 +10388,7 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^#^=]+?)['"]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^>]+?)["]''', 1, True)[0].title()
 				phImage = self.cm.ph.getSearchGroups(item, '''inal=["]([^#]+?)["]''', 1, True)[0]
-				printDBG('Clip images: ' + phImage)
+				# printDBG('Clip images: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, '''tion"[>]([\0-9:]+?)[<]''', 1, True)[0]
 				phViews = self.cm.ph.getSearchGroups(item, '''views"[>]([\0-9:]+?)[<]''', 1, True)[0]
 				phRate = self.cm.ph.getSearchGroups(item, '''tive"[>]([\0-9:]+?)[<]''', 1, True)[0].strip()
@@ -10456,7 +10457,7 @@ class Host(CBaseHostClass):
 				phImage = self.cm.ph.getSearchGroups(item, '''inal=["]([^#]+?)["]''', 1, True)[0]
 				if not phImage:
 					phImage = self.cm.ph.getSearchGroups(item, '''src=["]([^#]+?)["]''', 1, True)[0]
-				printDBG('Clip images: ' + phImage)
+				# printDBG('Clip images: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, '''tion"[>]([\0-9:]+?)[<]''', 1, True)[0]
 				phRate = self.cm.ph.getSearchGroups(item, '''tive"[>]([\0-9:]+?)[<]''', 1, True)[0].strip()
 				phAdded = self.cm.ph.getSearchGroups(item, '''em[>]([\0-9a-z]+?)[<]''', 1, True)[0]
@@ -10772,7 +10773,7 @@ class Host(CBaseHostClass):
 			catUrl = self.currList[Index].possibleTypesOfSearch
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.cm.getPage(url, self.defaultParams)
-			printDBG('Clip details: ' + str(data))
+			# printDBG('Clip details: ' + str(data))
 			self.MAIN_URL = 'https://veporn.com'
 			if not sts:
 				return valTab
@@ -11231,7 +11232,7 @@ class Host(CBaseHostClass):
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
-			printDBG('Clip details: ' + str(data))
+			# printDBG('Clip details: ' + str(data))
 			self.MAIN_URL = 'https://www.cuckoldplacetube.com'
 			if not sts:
 				return valTab
@@ -11505,7 +11506,7 @@ class Host(CBaseHostClass):
 				if not phImage:
 					phImage = hostImage() + 'xxbrits.png'
 				phImage = urlparser.decorateUrl(phImage, {'Referer': self.MAIN_URL})
-				printDBG('Clip images: ' + phImage)
+				# printDBG('Clip images: ' + phImage)
 				phTime = self.cm.ph.getSearchGroups(item, r'''time.+\n\s{,8}[\s]([0-9:]+)''', 1, True)[0]
 				phViews = self.cm.ph.getSearchGroups(item, r'''flex">\n.+\n.+[\s]([0-9HKM ]+)[v]iew''', 1, True)[0]
 				phRate = self.cm.ph.getSearchGroups(item, r'''[\s]([0-9%]{2,4})[\n]''', 1, True)[0]
@@ -12295,7 +12296,7 @@ class Host(CBaseHostClass):
 			self.MAIN_URL = 'https://www.mature-girls.com'
 			if not sts:
 				return valTab
-			printDBG('MATUREGIRLS-data: ' + data)
+			# printDBG('MATUREGIRLS-data: ' + data)
 			next = self.cm.ph.getSearchGroups(data, '''pagi.+href=["]([^#]+?)["].+tive.{13}/ul''', 1, True)[0]
 			if next:
 				printDBG('NEXT: ' + str(next))
@@ -15273,11 +15274,11 @@ class Host(CBaseHostClass):
 			return 'https://www.deviants.com'
 		if url.startswith('https://w4nkr.com'):
 			return 'https://www.deviants.com'
-		if url.startswith('https://pornbimbo.com'):
+		if url.startswith('http://pornbimbo.com'):
 			return 'https://www.deviants.com'
 		if url.startswith('https://www.cambro.tv'):
 			return 'https://www.deviants.com'
-		if url.startswith('https://www.pornfd.com'):
+		if url.startswith('http://www.pornfd.com'):
 			return 'https://www.deviants.com'
 		if url.startswith('https://www.punishbang.com'):
 			return 'https://www.deviants.com'
@@ -15629,7 +15630,7 @@ class Host(CBaseHostClass):
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.cambro.tv':
 			return self.MAIN_URL
-		if self.MAIN_URL == 'https://www.pornfd.com':
+		if self.MAIN_URL == 'http://www.pornfd.com':
 			return self.MAIN_URL
 		if self.MAIN_URL == 'https://www.punishbang.com':
 			return self.MAIN_URL
