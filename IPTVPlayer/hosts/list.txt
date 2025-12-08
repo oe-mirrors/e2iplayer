@@ -51,7 +51,7 @@ hostfightvideo_blocked_
 hostfilma24io_blocked_
 hostfilma365
 hostfilman
-hostfilmaoncom
+hostfilmaon
 hostfilmativa_blocked_
 hostfilmehdnet
 hostfilmeonlineto_blocked_
