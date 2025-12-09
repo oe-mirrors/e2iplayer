@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.06.2025
-import re
+import json
+
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
@@ -14,149 +12,123 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://einschalten.in'
+    return "https://einschalten.in/"
 
 
 class Einschalten(CBaseHostClass):
-
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'einschalten', 'cookie': 'einschalten.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
-        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.MAIN_URL = None
-
-    def menu(self):
-        self.MAIN_URL = 'https://einschalten.in'
+        CBaseHostClass.__init__(self, {"history": "Einschalten", "cookie": "Einschalten.cookie"})
+        self.HEADER = self.cm.getDefaultHeader()
+        self.defaultParams = {"header": self.HEADER, "raw_post_data": True, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.MAIN_URL = gettytul()
         self.MENU = [
-                    {'category': 'list_items', 'title': _("Movies"), 'link': self.getFullUrl('/movies')},
-                    {'category': 'list_items', 'title': "Zuletzt hinzugefügte Filme", 'link': self.getFullUrl('/movies?order=added')},
-                    {'category': 'list_items', 'title': "Sammlungen", 'link': self.getFullUrl('/collections')},
-                    {'category': 'list_genres', 'title': 'Genres'}] + self.searchItems()
+            {"category": "list_items", "title": _("Movies")},
+            {"category": "list_items", "title": _("Latest added"), "order": "added"},
+            {"category": "list_items", "title": "Sammlungen", "url": self.getFullUrl("api/collections?pageSize=32")},
+            {"category": "list_value", "title": _("Genres")}] + self.searchItems()
 
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
-    def getFullIconUrl(self, url):
-        url = self.getFullUrl(url)
-        if url == '':
-            return ''
-        cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
-
-    def listItems(self, cItem, nextCategory):
+    def listItems(self, cItem):
         printDBG("Einschalten.listItems |%s|" % cItem)
-        url = cItem['link']
-        sts, data = self.getPage(url)
+        page = cItem.get("page", 1)
+        if cItem.get("url"):
+            url = cItem.get("url") + "&pageNumber=%s" % page
+            sts, htm = self.getPage(url)
+        else:
+            params = dict(self.defaultParams)
+            params["header"] = dict(params["header"])
+            params["header"].update({"Origin": gettytul()[:-1], "Accept": "application/json, text/plain, */*", "Content-Type": "application/json"})
+            post = {"pageSize": 32, "pageNumber": page}
+            if cItem.get("query"):
+                post["query"] = cItem.get("query")
+            elif cItem.get("collectionId"):
+                post = {"collectionId": cItem.get("collectionId")}
+            else:
+                post["genreId"] = cItem.get("genreId", 0)
+                post["order"] = cItem.get("order", "")
+            sts, htm = self.getPage(gettytul() + "api/search", params, post_data=json.dumps(post))
         if not sts:
             return
-        nextPage = self.cm.ph.getSearchGroups(data, 'items-center" href="([^"]+)"><span>Weiter')[0]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="group', '</a>')
-        for item in data:
-            link = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0]
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'img src="([^"]+)')[0])
-            title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0])
+        data = json.loads(htm)
+        for js in data:
+            title = self.cleanHtmlStr(js.get("title") or js.get("name", ""))
+            icon = gettytul() + "api/image/poster/" + js.get("posterPath") if js.get("posterPath") else ""
+            desc = _("Year: ") + js.get("releaseDate")[:4] if js.get("releaseDate") else ""
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'link': link, 'icon': icon})
-            if '/collections' in link:
-                params.update({'category': 'list_items', 'link': self.getFullUrl(link)})
+            params.update({"good_for_fav": True, "title": title, "icon": icon, "desc": desc})
+            if "collections" in str(cItem.get("url")):
+                params.update({"category": "list_items", "url": "", "collectionId": js.get("id")})
                 self.addDir(params)
             else:
+                params.update({"category": "video", "id": js.get("id"), })
                 self.addVideo(params)
-        if nextPage:
-            nextPage = url.split("?")[0] + "?" + nextPage.split("?")[1]
+        if not cItem.get("query") and not cItem.get("collectionId"):
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'title': _("Next page"), 'link': self.getFullUrl(nextPage)})
+            params.update({"good_for_fav": False, "title": _("Next page"), "page": page + 1})
             self.addDir(params)
 
-    def listGenres(self, cItem):
-        printDBG("Einschalten.Genres")
-        url = self.getFullUrl('/movies')
-        sts, data = self.getPage(url)
+    def listValue(self, cItem):
+        printDBG("Einschalten.listValue")
+        sts, htm = self.getPage(gettytul() + "api/genres")
         if not sts:
             return
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<select id="genre', '</select>')[0]
-        data = re.compile('value="([^"]+).*?>([^<]+)', re.DOTALL).findall(data)
-        for link, title in data:
+        data = json.loads(htm)
+        for js in data:
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category': 'list_items', 'title': title, 'link': url + "?genre=%s" % link})
+            params.update({"good_for_fav": False, "category": "list_items", "title": self.cleanHtmlStr(js.get("name")), "genreId": js.get("id")})
             self.addDir(params)
+
+    def getLinksForVideo(self, cItem):
+        printDBG("Einschalten.getLinksForVideo [%s]" % cItem)
+        urltab = []
+        url = "%sapi/movies/%s/watch" % (gettytul(), cItem.get("id"))
+        sts, data = self.getPage(url)
+        if not sts:
+            return []
+        data = json.loads(data)
+        if data.get("streamUrl"):
+            urltab.append({"name": data.get("streamUrl"), "url": strwithmeta(data.get("streamUrl"), {"Referer": url}), "need_resolve": 1})
+        return urltab
+
+    def getVideoLinks(self, videoUrl):
+        printDBG("Einschalten.getVideoLinks [%s]" % videoUrl)
+        if self.cm.isValidUrl(videoUrl):
+            return self.up.getVideoLinkExt(videoUrl)
+        return []
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Einschalten.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['link'] = self.getFullUrl('/search?query=%s' % urllib_quote(searchPattern))
-        self.listItems(cItem, 'video')
+        cItem["query"] = searchPattern
+        self.listItems(cItem)
 
-    def getLinksForVideo(self, cItem):
-        printDBG("Einschalten.getLinksForVideo [%s]" % cItem)
-        linksTab = []
-        url = self.getFullUrl("/api%s/watch" % cItem['link'])
-        sts, data = self.getPage(url, self.defaultParams)
-        if not sts:
-            return []
-        data = re.compile('streamUrl":"([^"]+)', re.DOTALL).findall(data)
-        for url in data:
-            if url.startswith('//'):
-                url = "https:" + url
-            title = urlparse(url).netloc.split('.')[0]
-            linksTab.append({'name': title.capitalize(), 'url': url, 'need_resolve': 1})
-        if linksTab:
-            cItem['url'] = linksTab
-        return linksTab
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("Einschalten.getVideoLinks [%s]" % videoUrl)
-        urlTab = []
-        if self.cm.isValidUrl(videoUrl):
-            return self.up.getVideoLinkExt(videoUrl)
-        return urlTab
-
-    def getArticleContent(self, cItem):
-        printDBG("Einschalten.getArticleContent [%s]" % cItem)
-        sts, data = self.getPage(self.getFullUrl(cItem['link']))
-        if not sts:
-            return []
-        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'description" content="([^"]+)')[0])
-        desc = desc if desc else cItem.get('desc', '')
-        title = cItem['title']
-        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc)}]
-
-    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
-        printDBG('handleService start')
+    def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL is None:
-            self.menu()
-        name = self.currItem.get("name", '')
-        category = self.currItem.get("category", '')
-        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
+        name = self.currItem.get("name", "")
+        category = self.currItem.get("category", "")
+        printDBG("handleService start\nhandleService: name[%s], category[%s] " % (name, category))
         self.currList = []
         if name is None:
-            self.listsTab(self.MENU, {'name': 'category'})
-        elif 'list_items' == category:
-            self.listItems(self.currItem, 'video')
-        elif 'list_episodes' == category:
-            self.listEpisodes(self.currItem)
-        elif 'list_genres' == category:
-            self.listGenres(self.currItem)
+            self.listsTab(self.MENU, {"name": "category"})
+        elif category == "list_items":
+            self.listItems(self.currItem)
+        elif category == "list_value":
+            self.listValue(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'})
+            cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
 class IPTVHost(CHostBase):
-
     def __init__(self):
         CHostBase.__init__(self, Einschalten(), True, [])
-
-    def withArticleContent(self, cItem):
-        return cItem.get('category', '') == 'video'
