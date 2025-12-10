@@ -20,7 +20,7 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 [![TESTS](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml)
 
 
-[![GitHub stars](https://img.shields.io/github/stars/oe-mirrors/e2iplayer/?style=social)](https://github.com/oe-mirrors/e2iplayer/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/oe-mirrors/e2iplayer?style=flat)](https://github.com/oe-mirrors/e2iplayer/stargazers)
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/oe-mirrors/e2iplayer/pulls)
 [![Python](https://img.shields.io/badge/Python-3.x-darkviolet.svg?style=flat)](https://python.org)
 [![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
