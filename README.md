@@ -20,6 +20,7 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 [![TESTS](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml)
 
 
+[![GitHub stars](https://img.shields.io/github/stars/oe-mirrors/e2iplayer/?style=social)](https://github.com/oe-mirrors/e2iplayer/stargazers)
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/oe-mirrors/e2iplayer/pulls)
 [![Python](https://img.shields.io/badge/Python-3.x-darkviolet.svg?style=flat)](https://python.org)
 [![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
@@ -114,11 +115,16 @@ NOTE: ⚠️ The E2iPlayer is ONLY a specialized browser. It does NOT host any o
 
 ### 🙏 Credits
 
-👨‍💻 Author:
+**👨‍💻 Author:**
 
 - original Idea and Created by <a href="https://gitlab.com/e2i/e2iplayer">**SamSamSam**</a>
 
 Thanks to SamSamSam for the original version of this program! The original public version from SamSamSam is Closedsource now and only available for acquaintances and family
+
+** Special Thanks **
+- All contributors and testers
+- Open source community
+- Enigma2 developers
 
 ---
 
@@ -142,6 +148,8 @@ with additions from
 - <a href="https://github.com/Blindspot76/e2iPlayer">Blindspot</a>
 - <a href="https://github.com/Belfagor2005/e2iplayer">Lululla</a>
 - <a href="https://mohamed_os.gitlab.io">MohamedOS</a>
+
+**Testing Community**: Enigma2 users worldwide
 
 🚫 All rights reserved. Do not redistribute modified versions without proper attribution.  Redistribution only with explicit credit.
 
@@ -219,7 +227,8 @@ For questions or feedback, feel free and please open an issue or contribute with
 
 Pull requests are very welcome for:
 - **Coding:** Developers can help by fixing a bug, adding new features,Integration improvements, Feature enhancements
-- **Localization:** Translate into your native language.
+- **Localization:** Translate into your native language. (Add new language files, Submit translation updates)
+- **Skinning:** Create custom skins
 - **Helping users:** Our support process relies on enthusiastic contributors like you to help others get the most out of E2iPlayer.
 - **Add-ons:** add new Hosts
 - **Documentation:** wiki pages are the hub for information. Help make our documentation better by writing new content or correcting existing material.
@@ -242,6 +251,13 @@ Enjoy and help us improve it today. :)
 
 For help and support, visit us on [oATV Forum](https://www.opena.tv/viewtopic.php?t=42312) or open an [Issue](https://github.com/oe-mirrors/e2iplayer/issues)
 
+**⚠️ Reporting Issues**
+1. Check existing issues on GitHub
+2. Provide Enigma2 and E2iPlayer version
+3. Add Enigma2 debuglogs and E2iPlayer Log (iptv.dbg)
+4. Include steps to reproduce
+5. Add screenshots if applicable
+
 ---
 
 ### ℹ️ WIKI
@@ -262,7 +278,7 @@ This repository has no control over the streams, links, or the legality of the c
 ⭐️ If you find this plugin useful, please give it a star on GitHub!
 Thanks! ❤️ 💞 💖 ❤️‍🔥 💗
 
-<img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/Logos/e2ilogo.png">
+<p align="center"><img src="https://github.com/oe-mirrors/e2iplayer/blob/python3/Logos/e2ilogo.png"></p> 
 
 ---
 
