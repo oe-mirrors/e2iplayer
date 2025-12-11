@@ -59,12 +59,12 @@ class Einschalten(CBaseHostClass):
             icon = gettytul() + "api/image/poster/" + js.get("posterPath") if js.get("posterPath") else ""
             desc = _("Year: ") + js.get("releaseDate")[:4] if js.get("releaseDate") else ""
             params = dict(cItem)
-            params.update({"good_for_fav": True, "title": title, "icon": icon, "desc": desc})
+            params.update({"good_for_fav": True, "title": title, "icon": icon, "desc": self.cleanHtmlStr(desc)})
             if "collections" in str(cItem.get("url")):
                 params.update({"category": "list_items", "url": "", "collectionId": js.get("id")})
                 self.addDir(params)
             else:
-                params.update({"category": "video", "id": js.get("id"), })
+                params.update({"category": "video", "id": js.get("id")})
                 self.addVideo(params)
         if not cItem.get("query") and not cItem.get("collectionId"):
             params = dict(cItem)
