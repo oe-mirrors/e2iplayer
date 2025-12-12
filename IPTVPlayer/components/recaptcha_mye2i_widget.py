@@ -58,7 +58,7 @@ class UnCaptchaReCaptchaMyE2iWidget(Screen):
 
         self["label_red"] = Label(_("Cancel"))
 
-        self["actions"] = ActionMap(["ColorActions", "OKCancelActions"],
+        self["actions"] = ActionMap(["ColorActions", "OkCancelActions"],
         {
             "cancel": self.keyExit,
             # "ok"    : self.keyOK,
