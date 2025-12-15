@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-23 13:27+0100\n"
+"POT-Creation-Date: 2025-12-15 16:37+0100\n"
 "PO-Revision-Date: 2025-11-24 07:59+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.8\n"
+
+#, fuzzy
+msgid "\t*\tVotes: "
+msgstr "    *    Szavazatok: "
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -78,9 +82,6 @@ msgstr ""
 "\n"
 "A problémát itt is bejelentheted: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-
-msgid "    *    Votes: "
-msgstr "    *    Szavazatok: "
 
 msgid "    Audio buffer size [KB]"
 msgstr "    Audió puffer méret [KB]"
@@ -183,12 +184,8 @@ msgid "%s followers"
 msgstr "%s követő"
 
 #, python-format
-msgid ""
-"%s has been protected with google recaptcha v2. You can try to use API "
-"version."
-msgstr ""
-"A(z) %s Google ReCAPTCHA v2-vel lett védve. Megpróbálhatja használni az API "
-"verziót."
+msgid "%s has been protected with google recaptcha v2. You can try to use API version."
+msgstr "A(z) %s Google ReCAPTCHA v2-vel lett védve. Megpróbálhatja használni az API verziót."
 
 #, python-format
 msgid "%s minutes"
@@ -228,12 +225,10 @@ msgstr "%s időtúllépés."
 
 #, python-format
 msgid ""
-"%s uses \"geo-blocking\" measures to prevent you from accessing the services "
-"from abroad.\n"
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
-"A(z) %s \"geo-blokkoló\" intézkedéseket alkalmaz annak megakadályozására, "
-"hogy külföldi szolgáltatásokhoz férjen hozzá.\n"
+"A(z) %s \"geo-blokkoló\" intézkedéseket alkalmaz annak megakadályozására, hogy külföldi szolgáltatásokhoz férjen hozzá.\n"
 "Fogadó ország: %s, az Ön országa: %s"
 
 #, python-format
@@ -334,19 +329,11 @@ msgstr "4:3 Postaláda"
 msgid "4:3 PanScan"
 msgstr "4:3 PanScan"
 
-msgid ""
-"<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> "
-"specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr ""
-"<font color=\"#FE642E\">NE FELEDJE:</font></b>E2iPlayer <b>CSAK</b> "
-"speciális webböngésző. <b>NEM</b> tartalmaz semmilyen anyagot!!!</font>"
+msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
+msgstr "<font color=\"#FE642E\">NE FELEDJE:</font></b>E2iPlayer <b>CSAK</b> speciális webböngésző. <b>NEM</b> tartalmaz semmilyen anyagot!!!</font>"
 
-msgid ""
-"A TV License is required to watch BBC iPlayer streams, see the BBC website "
-"for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
-msgstr ""
-"A TV licenc szükséges nézni BBC iPlayer streamet, további információkért "
-"nézd a BBC honlapját: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgstr "A TV licenc szükséges nézni BBC iPlayer streamet, további információkért nézd a BBC honlapját: https://www.bbc.co.uk/iplayer/help/tvlicence"
 
 msgid "A-Z"
 msgstr "A-Z"
@@ -575,6 +562,10 @@ msgstr "Biztosan törölni szeretnéd a keresési előzményeket?"
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Biztosan eltávolítja a(z) „%s” fájlt?"
 
+#, fuzzy
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Biztosan törölni szeretnéd a keresési előzményeket?"
+
 msgid "Artists"
 msgstr "Előadók"
 
@@ -692,8 +683,7 @@ msgid ""
 "Return code[%s].\n"
 "Return data[%s]."
 msgstr ""
-"Nem sikerült csatolási pontokat lekérdezni - a cmd parancs futtatásával "
-"történő csatolás sikertelen.\n"
+"Nem sikerült csatolási pontokat lekérdezni - a cmd parancs futtatásával történő csatolás sikertelen.\n"
 "Visszatérési kód: [%s].\n"
 "Visszatérési adat: [%s]."
 
@@ -883,14 +873,10 @@ msgid "Debug option is disabled - nothing to display"
 msgstr "A hibakeresési opció le van tiltva - nincs mit megjeleníteni"
 
 msgid "Debug option set to console - nothing to display"
-msgstr ""
-"A hibakeresési lehetőség konzolra van beállítva - semmi sem jelenik meg"
+msgstr "A hibakeresési lehetőség konzolra van beállítva - semmi sem jelenik meg"
 
-msgid ""
-"Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr ""
-"A hibakeresési opció debugfile-re van állítva, de a fájl nem létezik - semmi "
-"sem jelenik meg"
+msgid "Debug option set to debugfile, but file does not exist - nothing to display"
+msgstr "A hibakeresési opció debugfile-re van állítva, de a fájl nem létezik - semmi sem jelenik meg"
 
 #, python-format
 msgid "Decode file [%s] problem."
@@ -919,6 +905,10 @@ msgstr "Alapértelmezett videóminőség"
 
 msgid "Default video quality:"
 msgstr "Alapértelmezett videóminőség:"
+
+#, fuzzy
+msgid "Defaults"
+msgstr "Alapértelmezett"
 
 msgid "Definitely remove from favorites?"
 msgstr "Biztosan eltávolítom a kedvencek közül?"
@@ -1376,9 +1366,7 @@ msgstr "Nem sikerült betölteni a csatornákat"
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
-msgstr ""
-"Nem sikerült bejelentkezni a(z) \"%s\" felhasználónak. Kérjük, ellenőrizze a "
-"bejelentkezési adatait és jelszavát."
+msgstr "Nem sikerült bejelentkezni a(z) \"%s\" felhasználónak. Kérjük, ellenőrizze a bejelentkezési adatait és jelszavát."
 
 #, python-format
 msgid "Failed to open the file \"%s\"."
@@ -1461,8 +1449,7 @@ msgid "Folder for temporary data"
 msgstr "Ideiglenes adatok mappája"
 
 msgid "Following host are broken or additional python modules are needed."
-msgstr ""
-"A következő hosztok hibásak, vagy további Python modulokra van szükség."
+msgstr "A következő hosztok hibásak, vagy további Python modulokra van szükség."
 
 msgid "Foot & Ankle"
 msgstr "Láb és boka"
@@ -1725,31 +1712,20 @@ msgid "It looks like some kind of protection. Try again later."
 msgstr "Úgy néz ki, mint valamilyen védelem. Próbáld újra később."
 
 #, python-format
-msgid ""
-"It looks like your current configuration do not allow to connect to the "
-"https://%s/.\n"
-msgstr ""
-"Úgy tűnik, hogy a jelenlegi konfiguráció nem teszi lehetővé a https://%s/ "
-"csatlakozást.\n"
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "Úgy tűnik, hogy a jelenlegi konfiguráció nem teszi lehetővé a https://%s/ csatlakozást.\n"
 
 #, python-format
 msgid "It seems that the host \"%s\" has crashed."
 msgstr "Úgy tűnik, a \"%s\" kiszolgáló összeomlott."
 
 #, python-format
-msgid ""
-"It seems that the host \"%s\" has crashed. Do you want to report this "
-"problem?"
-msgstr ""
-"Úgy tűnik, a \"%s\" kiszolgáló összeomlott. Szeretnéd jelenteni a problémát?"
+msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
+msgstr "Úgy tűnik, a \"%s\" kiszolgáló összeomlott. Szeretnéd jelenteni a problémát?"
 
 #, python-format
-msgid ""
-"It seems that the subtitle's provider \"%s\" has crashed. Do you want to "
-"report this problem?"
-msgstr ""
-"Úgy tűnik, hogy a felirat szolgáltatója (\"%s\") összeomlott. Szeretnéd "
-"jelenteni ezt a problémát?"
+msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
+msgstr "Úgy tűnik, hogy a felirat szolgáltatója (\"%s\") összeomlott. Szeretnéd jelenteni ezt a problémát?"
 
 #, python-format
 msgid ""
@@ -1919,12 +1895,8 @@ msgstr "Világosszürke"
 msgid "Line Spacing"
 msgstr "Vonal távolság"
 
-msgid ""
-"Link is not supported by the gstplayer. Please use the extelayer3 if "
-"available."
-msgstr ""
-"A gstplayer nem támogatja a linket. Kérjük, használd az extelayer3-at, ha "
-"elérhető."
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "A gstplayer nem támogatja a linket. Kérjük, használd az extelayer3-at, ha elérhető."
 
 msgid "Link protected with DRM."
 msgstr "A link DRM-mel védett."
@@ -1980,12 +1952,8 @@ msgid "Load"
 msgstr "Betöltés"
 
 #, python-format
-msgid ""
-"Load of the Virtual Keyboard layout \"%s\" failed due to the following "
-"error: \"%s\""
-msgstr ""
-"A(z) „%s” virtuális billentyűzetkiosztás betöltése a következő hiba miatt "
-"sikertelen: „%s”"
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "A(z) „%s” virtuális billentyűzetkiosztás betöltése a következő hiba miatt sikertelen: „%s”"
 
 msgid "Loading"
 msgstr "Betöltés"
@@ -2030,9 +1998,9 @@ msgstr "Bejelentkezés szükséges"
 msgid "Login on {0} failed."
 msgstr "Bejelentkezés a(z) {0} címen sikertelen."
 
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"Login user \"%s\" to http://vk.com/ failed!\n"
+"Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
 "„%s” felhasználó bejelentkezése a http://vk.com/ oldalra sikertelen!\n"
@@ -2185,12 +2153,8 @@ msgid "Moving file from \"%s\" to \"%s\" failed.\n"
 msgstr "Nem sikerült a fájlt \"%s\" fájlból \"%s\" -ra áttenni.\n"
 
 #, python-format
-msgid ""
-"Moving playback buffer to the download manager failed with the following "
-"error \"%s\""
-msgstr ""
-"A lejátszási puffer letöltéskezelőbe való áthelyezése a következő hibával "
-"sikertelen volt: \"%s\""
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "A lejátszási puffer letöltéskezelőbe való áthelyezése a következő hibával sikertelen volt: \"%s\""
 
 msgid "Music"
 msgstr "Zene"
@@ -2371,8 +2335,7 @@ msgid "Operation aborted!"
 msgstr "A művelet megszakítva!"
 
 msgid "Optional User-Agent (leave blank for default)"
-msgstr ""
-"Opcionális felhasználói ügynök (hagyja üresen az alapértelmezett beállítást)"
+msgstr "Opcionális felhasználói ügynök (hagyja üresen az alapértelmezett beállítást)"
 
 msgid "Order by: "
 msgstr "Rendezés mód: "
@@ -2509,41 +2472,23 @@ msgid "Please configure Xtream (blue button)"
 msgstr "Kérjük, konfigurálja az Xtream-et (kék gomb)"
 
 #, python-format
-msgid ""
-"Please consider restart your Engima2 and agree to install the %s utlity when "
-"the %s will propose this."
-msgstr ""
-"Kérjük, fontolja meg az Engima2 újraindítását, és egyezzen bele a %s "
-"segédprogram telepítésébe, amikor a %s ezt fel fogja ajánlani."
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "Kérjük, fontolja meg az Engima2 újraindítását, és egyezzen bele a %s segédprogram telepítésébe, amikor a %s ezt fel fogja ajánlani."
+
+msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
+msgstr "Kérjük, töltse ki a bejelentkezési adatait és jelszavát a host konfigurációjában (kék gomb alatt érhető el), majd próbálkozzon újra."
+
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "Ellenőrizze, hogy a gyorsítótár (cache) adatok mappája írható-e (beállítva a konfigurációban)."
+
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "Kérjük, regisztráljon, és állítsa be a bejelentkezési azonosítót és jelszót a host konfigurációban, hogy megoldja ezt a problémát véglegesen."
 
 msgid ""
-"Please fill your login and password in the host configuration (available "
-"under blue button) and try again."
-msgstr ""
-"Kérjük, töltse ki a bejelentkezési adatait és jelszavát a host "
-"konfigurációjában (kék gomb alatt érhető el), majd próbálkozzon újra."
-
-msgid ""
-"Please make sure that the folder for cache data (set in the configuration) "
-"is writable."
-msgstr ""
-"Ellenőrizze, hogy a gyorsítótár (cache) adatok mappája írható-e (beállítva a "
-"konfigurációban)."
-
-msgid ""
-"Please register and set login and password in the host configuration, to "
-"solve this problems permanently."
-msgstr ""
-"Kérjük, regisztráljon, és állítsa be a bejelentkezési azonosítót és jelszót "
-"a host konfigurációban, hogy megoldja ezt a problémát véglegesen."
-
-msgid ""
-"Please remember to visit http://www.sport365.live/ and watch a few "
-"advertisements.\n"
+"Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
 msgstr ""
-"Kérjük, ne felejtsd el felkeresni a http://www.sport365.live/ oldalt, és "
-"megnézni néhány reklámot.\n"
+"Kérjük, ne felejtsd el felkeresni a http://www.sport365.live/ oldalt, és megnézni néhány reklámot.\n"
 "\n"
 "Ez megoldja a problémát, ha a lejátszás folyamatosan megszakad."
 
@@ -2556,15 +2501,11 @@ msgstr "Adjon meg érvényes %s-ot a(z) %s konfigurációban."
 
 #, python-format
 msgid "Please visit \"%s\" and confirm that you are human."
-msgstr ""
-"Kérjük, látogasson el a következőre: \"%s\", és erősítse meg, hogy nem robot."
+msgstr "Kérjük, látogasson el a következőre: \"%s\", és erősítse meg, hogy nem robot."
 
 #, python-format
-msgid ""
-"Please visit %s to learn how to redirect this task to the external device."
-msgstr ""
-"Kérjük, látogasson el a %s oldalra, ha meg szeretné tudni, hogyan "
-"irányíthatja át ezt a feladatot a külső eszközre."
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "Kérjük, látogasson el a %s oldalra, ha meg szeretné tudni, hogyan irányíthatja át ezt a feladatot a külső eszközre."
 
 msgid "Please wait - downloading initialization data."
 msgstr "Kérjük, várjon - inicializálási adatok letöltése folyamatban."
@@ -3045,9 +2986,7 @@ msgid "Set file name"
 msgstr "Fájlnév beállítása"
 
 msgid "Set host, username, password in host config"
-msgstr ""
-"Állítsa be a hosztot, a felhasználónevet és a jelszót a hoszt "
-"konfigurációjában"
+msgstr "Állítsa be a hosztot, a felhasználónevet és a jelszót a hoszt konfigurációjában"
 
 msgid "Set pin code"
 msgstr "PIN-kód beállítása"
@@ -3140,9 +3079,7 @@ msgid "Some changes will be applied only after movie player restart."
 msgstr "Néhány módosítás csak a filmlejátszó újraindítása után lép életbe."
 
 msgid "Some settings will be applied only after GUI restart."
-msgstr ""
-"Néhány beállítás csak a grafikus felhasználói felület újraindítása után lép "
-"életbe."
+msgstr "Néhány beállítás csak a grafikus felhasználói felület újraindítása után lép életbe."
 
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
 msgstr "Bocsánat. A TVPlayer jelenleg csak az Egyesült Királyságban érhető el"
@@ -3179,10 +3116,6 @@ msgstr "Legnézettebb csatornák rendezve általános [élő]"
 
 msgid "Sorted most viewed channels now [live]"
 msgstr "A legnézettebb csatornák rendezése most [élő]"
-
-#, python-format
-msgid "Source %s"
-msgstr "Forrás %s"
 
 msgid "Source type"
 msgstr "Forrás típusa"
@@ -3400,22 +3333,18 @@ msgstr "A külső lejátszó alapértelmezett képaránya"
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
-"Please fill your login and password in the host configuration. Available "
-"under blue button."
+"Please fill your login and password in the host configuration. Available under blue button."
 msgstr ""
 "A(z) %s host regisztrációt igényel. \n"
-"A kék gomb, majd az Oldal beállításai segítségével megadhatod a belépési "
-"adatokat."
+"A kék gomb, majd az Oldal beállításai segítségével megadhatod a belépési adatokat."
 
 #, python-format
 msgid ""
 "The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available "
-"under blue button."
+"Please fill your login and password in the host configuration - available under blue button."
 msgstr ""
 "A(z) %s host előfizetést igényel.\n"
-"Kérjük, töltse ki a bejelentkezési adatait és jelszavát a host "
-"konfigurációjában - kék gomb alatt."
+"Kérjük, töltse ki a bejelentkezési adatait és jelszavát a host konfigurációjában - kék gomb alatt."
 
 msgid "The number of items in the search history"
 msgstr "A keresési előzményekben szereplő elemek száma"
@@ -3477,8 +3406,9 @@ msgstr "Tipp! A probléma megoldásához csatlakoztathat USB flash meghajtót."
 msgid "Title:"
 msgstr "Cím:"
 
+#, fuzzy
 msgid ""
-"To watch videos from http://vk.com/ you need to login.\n"
+"To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 "A http://vk.com/ videóinak megtekintéséhez be kell jelentkezned.\n"
@@ -3511,6 +3441,9 @@ msgstr "Legjobbra értékelt"
 msgid "Top series"
 msgstr "Legjobb sorozatok"
 
+msgid "Top-IMDB"
+msgstr ""
+
 msgid "Total Divas"
 msgstr "Totális dívák"
 
@@ -3542,9 +3475,7 @@ msgid "Try to bypass DRM (it may be illegal)"
 msgstr "Próbáld meg megkerülni a DRM-et (lehet, hogy illegális)"
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
-msgstr ""
-"Próbáld meg módosítani az extplayert, vagy letiltani az IFD-t a GSTplayer "
-"konfigurációjában"
+msgstr "Próbáld meg módosítani az extplayert, vagy letiltani az IFD-t a GSTplayer konfigurációjában"
 
 msgid "Turkish Movies"
 msgstr "Török filmek"
@@ -3709,8 +3640,7 @@ msgid ""
 "Using this host in your country can be illegal.\n"
 "Do you want to continue at your own risk?"
 msgstr ""
-"Ennek a tárhelyszolgáltatónak a használata az Ön országában illegális "
-"lehet.\n"
+"Ennek a tárhelyszolgáltatónak a használata az Ön országában illegális lehet.\n"
 "Saját felelősségére szeretné folytatni?"
 
 #, python-format
@@ -3811,9 +3741,7 @@ msgid "Web component has been reset and all threads are stopped. :)"
 msgstr "A webkomponens visszaállt és az összes szál leállt. :)"
 
 msgid "Web component has been reset, the following threads are still working:"
-msgstr ""
-"A webkomponens visszaállításra került, a következő szálak továbbra is "
-"működnek:"
+msgstr "A webkomponens visszaállításra került, a következő szálak továbbra is működnek:"
 
 msgid "Web interface version"
 msgstr "Webes felület verziója"
@@ -3897,44 +3825,24 @@ msgstr "Igen, a /tmp/iptv.dbg fájlba"
 msgid "You are not allowed to play this video"
 msgstr "Nem játszhatod le ezt a videót"
 
-msgid ""
-"You are using old version of OpenWebif.<br> To go to E2iPlayer web Select "
-"the following link<br>"
-msgstr ""
-"Az OpenWebif régi verzióját használja.<br>Ugrás az E2iPlayer webre. Válassza "
-"ki a következő linket<br>"
+msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
+msgstr "Az OpenWebif régi verzióját használja.<br>Ugrás az E2iPlayer webre. Válassza ki a következő linket<br>"
 
-msgid ""
-"You can disable HTTPS certificates validation in the E2iPlayer configuration "
-"to suppress this problem."
-msgstr ""
-"A HTTPS tanúsítványok érvényesítését az E2iPlayer konfigurációban "
-"letilthatja a probléma letiltásához."
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "A HTTPS tanúsítványok érvényesítését az E2iPlayer konfigurációban letilthatja a probléma letiltásához."
 
-msgid ""
-"You can enable PyCurl in the E2iPlayer configuration to fix this problem."
-msgstr ""
-"A probléma megoldásához engedélyezheti a PyCurl-t az E2iPlayer "
-"konfigurációjában."
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "A probléma megoldásához engedélyezheti a PyCurl-t az E2iPlayer konfigurációjában."
 
-msgid ""
-"You can install PyCurl package with TLS 1.3 support from the feed to fix "
-"this problem."
-msgstr ""
-"A probléma megoldásához telepítheti a TLS 1.3 támogatású PyCurl csomagot a "
-"hírcsatornából."
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "A probléma megoldásához telepítheti a TLS 1.3 támogatású PyCurl csomagot a hírcsatornából."
 
-msgid ""
-"You can try to use proxy as workaround, check options under blue button."
-msgstr ""
-"Megpróbálhatja használni a proxy-t, ellenőrizze a beállításokat a kék gombot "
-"használatával."
+msgid "You can try to use proxy as workaround, check options under blue button."
+msgstr "Megpróbálhatja használni a proxy-t, ellenőrizze a beállításokat a kék gombot használatával."
 
 #, python-format
 msgid "You can use \"%s\" or \"%s\" services for automatic solution."
-msgstr ""
-"Az automatikus megoldáshoz használhatja a(z) \"%s\" vagy a(z) \"%s\" "
-"szolgáltatásokat."
+msgstr "Az automatikus megoldáshoz használhatja a(z) \"%s\" vagy a(z) \"%s\" szolgáltatásokat."
 
 msgid "You can use external eplayer to start playback faster."
 msgstr "Külső lejátszót használhat a lejátszás gyorsabb elindításához."
@@ -3958,9 +3866,7 @@ msgid "Youtube Suggestions"
 msgstr "Youtube-javaslatok"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr ""
-"A YouTube-keresések gyorsabbak, ha kitöltöd az API-kulcsot a beállítások "
-"menüben"
+msgstr "A YouTube-keresések gyorsabbak, ha kitöltöd az API-kulcsot a beállítások menüben"
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4070,12 +3976,8 @@ msgstr "külső eplayer3"
 msgid "external gstplayer"
 msgstr "külső gstlejátszó"
 
-msgid ""
-"first check if host works properly in GUI and web <b>BEFORE</b> reporting "
-"error in it !!!"
-msgstr ""
-"először ellenőrizze, hogy a host megfelelően működik-e a GUI-ban és a web-en "
-"<b>MIELŐTT</b> jelenti a hibát!!!"
+msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
+msgstr "először ellenőrizze, hogy a host megfelelően működik-e a GUI-ban és a web-en <b>MIELŐTT</b> jelenti a hibát!!!"
 
 msgid "format"
 msgstr "formátum"

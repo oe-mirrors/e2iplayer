@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-23 13:27+0100\n"
+"POT-Creation-Date: 2025-12-15 16:37+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n"
 "Language-Team: IPTVPlayer\n"
@@ -15,6 +15,9 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: Web\n"
+
+msgid "\t*\tVotes: "
+msgstr ""
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -76,9 +79,6 @@ msgstr ""
 "\n"
 "Możesz również zgłosić problem tutaj: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-
-msgid "    *    Votes: "
-msgstr ""
 
 msgid "    Audio buffer size [KB]"
 msgstr "    Rozmiar bufora audio w [KB]"
@@ -577,6 +577,10 @@ msgstr "Czy na pewno chcesz usunąć plik \"%s\"?"
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Czy na pewno chcesz usunąć plik \"%s\"?"
 
+#, fuzzy
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Czy na pewno chcesz usunąć plik \"%s\"?"
+
 msgid "Artists"
 msgstr "Artyści"
 
@@ -924,6 +928,10 @@ msgstr "Domyślna jakość wideo"
 
 msgid "Default video quality:"
 msgstr "Domyślny format wideo:"
+
+#, fuzzy
+msgid "Defaults"
+msgstr "Domyślny"
 
 msgid "Definitely remove from favorites?"
 msgstr ""
@@ -2035,9 +2043,9 @@ msgstr "Wymagane logowanie"
 msgid "Login on {0} failed."
 msgstr "Logowanie do {0} nie powiodło się."
 
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"Login user \"%s\" to http://vk.com/ failed!\n"
+"Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
 "Problem z zalogowanie użytwkonika \"%s\" do http://vk.com/!\n"
@@ -3178,10 +3186,6 @@ msgstr "Sortowanie ogólne najczęściej oglądanych kanałów [na żywo]"
 msgid "Sorted most viewed channels now [live]"
 msgstr "Sortowanie kanałów najczęściej oglądanych [na żywo]"
 
-#, python-format
-msgid "Source %s"
-msgstr "Źródło %s"
-
 msgid "Source type"
 msgstr "Rodzaj źródła"
 
@@ -3476,8 +3480,9 @@ msgstr "Wskazówka! Możesz podłączyć dysk flash USB, aby rozwiązać ten pro
 msgid "Title:"
 msgstr "Tytuł:"
 
+#, fuzzy
 msgid ""
-"To watch videos from http://vk.com/ you need to login.\n"
+"To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 "By oglądać wideo z http://vk.com/ potrzebujesz login.\n"
@@ -3510,6 +3515,9 @@ msgstr "Najlepiej oceniane"
 
 msgid "Top series"
 msgstr "Najlepsze seriale"
+
+msgid "Top-IMDB"
+msgstr ""
 
 #, fuzzy
 msgid "Total Divas"

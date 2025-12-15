@@ -52,8 +52,10 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/iptvlogo.png" position="12,10" size="100,40" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="240,630" size="20,20" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="470,630" size="20,20" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="700,630" size="20,20" alphatest="blend" transparent="1" />
             <widget source="key_red" render="Label" position="274,626" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
             <widget source="key_green" render="Label" position="504,626" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <widget source="key_yellow" render="Label" position="734,626" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
             <eLabel name="BG_Title" position="0,0" size="1020,60" backgroundColor="#100d0f16" zPosition="-1" />
             <eLabel name="BG_Buttons" position="0,612" size="1020,48" backgroundColor="#100d0f16" zPosition="-1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="1020,2" zPosition="2" />
@@ -79,6 +81,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self["key_green"] = StaticText(_("Save"))
         self["footnote"] = Label()
         self["key_red"] = StaticText(_("Cancel"))
+        self["key_yellow"] = StaticText(_("Defaults"))
 
         self["actions"] = ActionMap(["ColorActions", "ListboxActions", "IPTVPlayerListActions"],
             {
@@ -86,6 +89,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
                 "green": self.keySave,
                 "ok": self.keyOK,
                 "red": self.keyCancel,
+                "yellow": self.keyDefaults,
                 "menu": self.keyMenu,
 
                 "up": self.keyUp,
@@ -289,6 +293,9 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
             ConfigListScreen.keyMenu(self)
         else:
             return
+
+    def keyDefaults(self):
+        pass
 
     def keyUp(self):
         if self["config"].instance is not None:

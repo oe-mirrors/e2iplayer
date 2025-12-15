@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-23 13:27+0100\n"
+"POT-Creation-Date: 2025-12-15 16:37+0100\n"
 "PO-Revision-Date: 2025-12-05 13:54+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -18,6 +18,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.8\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+
+#, fuzzy
+msgid "\t*\tVotes: "
+msgstr "    *    Ψήφοι: "
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -79,9 +83,6 @@ msgstr ""
 "\n"
 "Μπορείτε επίσης να αναφέρετε το πρόβλημα εδώ \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-
-msgid "    *    Votes: "
-msgstr "    *    Ψήφοι: "
 
 msgid "    Audio buffer size [KB]"
 msgstr "    Μέγεθος προσωρινής μνήμης ήχου [KB]"
@@ -562,6 +563,10 @@ msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε 
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε το αρχείο \"%s\";"
 
+#, fuzzy
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ιστορικό αναζητήσεων;"
+
 msgid "Artists"
 msgstr "Καλλιτέχνες"
 
@@ -901,6 +906,10 @@ msgstr "Προεπιλεγμένη ποιότητα βίντεο"
 
 msgid "Default video quality:"
 msgstr "Προεπιλεγμένη ποιότητα βίντεο:"
+
+#, fuzzy
+msgid "Defaults"
+msgstr "Προεπιλογή"
 
 msgid "Definitely remove from favorites?"
 msgstr "Σίγουρα θέλετε να αφαιρεθεί από τα αγαπημένα;"
@@ -1990,9 +1999,9 @@ msgstr "Απαιτείται σύνδεση"
 msgid "Login on {0} failed."
 msgstr "Η σύνδεση στο {0} απέτυχε."
 
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"Login user \"%s\" to http://vk.com/ failed!\n"
+"Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
 "Η σύνδεση χρήστη \"%s\" στο http://vk.com/ απέτυχε!\r\n"
@@ -3112,10 +3121,6 @@ msgstr "Ταξινομημένα πιο δημοφιλή κανάλια γενι
 msgid "Sorted most viewed channels now [live]"
 msgstr "Ταξινομημένα πιο δημοφιλή κανάλια τώρα [ζωντανά]"
 
-#, python-format
-msgid "Source %s"
-msgstr "Πηγή %s"
-
 msgid "Source type"
 msgstr "Τύπος πηγής"
 
@@ -3405,8 +3410,9 @@ msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB fl
 msgid "Title:"
 msgstr "Τίτλος:"
 
+#, fuzzy
 msgid ""
-"To watch videos from http://vk.com/ you need to login.\n"
+"To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 "Για να παρακολουθήσετε βίντεο από το http://vk.com/ πρέπει να συνδεθείτε.\n"
@@ -3438,6 +3444,9 @@ msgstr "Κορυφαία βαθμολογημένα"
 
 msgid "Top series"
 msgstr "Κορυφαίες σειρές"
+
+msgid "Top-IMDB"
+msgstr ""
 
 msgid "Total Divas"
 msgstr "Σύνολο ντίβας"

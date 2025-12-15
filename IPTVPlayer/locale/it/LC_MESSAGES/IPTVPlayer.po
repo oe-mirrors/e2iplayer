@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-23 13:27+0100\n"
+"POT-Creation-Date: 2025-12-15 16:37+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Lululla <ekekaz@gmail.com>\n"
 "Language-Team: lululla <ekekaz@gmail.com>\n"
@@ -19,6 +19,9 @@ msgstr ""
 "X-Generator: Poedit 3.8\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
+
+msgid "\t*\tVotes: "
+msgstr ""
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -80,9 +83,6 @@ msgstr ""
 "\n"
 "Puoi anche segnalare il problema qui:\n"
 "https://gitlab.com/zadmario/e2iplayer/issues"
-
-msgid "    *    Votes: "
-msgstr ""
 
 msgid "    Audio buffer size [KB]"
 msgstr "   Dimensione buffer audio [KB]"
@@ -567,6 +567,10 @@ msgstr "Sei sicuro di cancellare il file \"%s\" ?"
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Sei sicuro di cancellare il file \"%s\" ?"
 
+#, fuzzy
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Sei sicuro di cancellare il file \"%s\" ?"
+
 msgid "Artists"
 msgstr "Artisti"
 
@@ -906,6 +910,10 @@ msgstr "Qualità video predefinita"
 
 msgid "Default video quality:"
 msgstr "Qualità video predefinita:"
+
+#, fuzzy
+msgid "Defaults"
+msgstr "Predefinito"
 
 msgid "Definitely remove from favorites?"
 msgstr "Vuoi sicuramente rimuoverlo dai preferiti?"
@@ -1995,9 +2003,9 @@ msgstr "Accesso necessario"
 msgid "Login on {0} failed."
 msgstr "Login in {0} non riuscito."
 
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"Login user \"%s\" to http://vk.com/ failed!\n"
+"Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
 "Non è riuscito l'accesso dell'utente \"%s\" a http://vk.com/ !\n"
@@ -3117,10 +3125,6 @@ msgstr "Canali più visti in ordine generico ora [in diretta]"
 msgid "Sorted most viewed channels now [live]"
 msgstr "Canali più visti in ordine alfabetico ora [in diretta]"
 
-#, python-format
-msgid "Source %s"
-msgstr "Sorgente %s"
-
 msgid "Source type"
 msgstr "Tipo di fonte"
 
@@ -3410,8 +3414,9 @@ msgstr "Suggerimento! Puoi collegare una flash drive USB per risolvere il proble
 msgid "Title:"
 msgstr "Titolo:"
 
+#, fuzzy
 msgid ""
-"To watch videos from http://vk.com/ you need to login.\n"
+"To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 "Per vedere i video di http://vk.com/,  hai bisogno di effettuare il login.\n"
@@ -3443,6 +3448,9 @@ msgstr "I più votati"
 
 msgid "Top series"
 msgstr "Serie migliori"
+
+msgid "Top-IMDB"
+msgstr ""
 
 msgid "Total Divas"
 msgstr "Dive totali"

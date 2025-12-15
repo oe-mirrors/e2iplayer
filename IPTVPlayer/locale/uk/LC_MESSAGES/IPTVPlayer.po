@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-23 13:27+0100\n"
+"POT-Creation-Date: 2025-12-15 16:37+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -14,6 +14,9 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SearchPath-0: ../plugin\n"
+
+msgid "\t*\tVotes: "
+msgstr ""
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -70,9 +73,6 @@ msgstr ""
 "Повідомити про проблему ви можете тут: \n"
 "https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
 "або тут: samsamsam@o2.pl"
-
-msgid "    *    Votes: "
-msgstr ""
 
 msgid "    Audio buffer size [KB]"
 msgstr "    Розмір буфера Аудіо [KB]"
@@ -588,6 +588,10 @@ msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Ви впевненні, що бажаєте видалити файл \"%s\"?"
 
 #, fuzzy
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Ви впевненні, що бажаєте видалити файл \"%s\"?"
+
+#, fuzzy
 msgid "Artists"
 msgstr "Популярні виконавці"
 
@@ -947,6 +951,10 @@ msgstr "По замовчуванню якість відео"
 
 msgid "Default video quality:"
 msgstr "Формат відео-по замовчуванню:"
+
+#, fuzzy
+msgid "Defaults"
+msgstr "по замовчуванню"
 
 msgid "Definitely remove from favorites?"
 msgstr ""
@@ -2105,7 +2113,7 @@ msgstr "Помилка входу."
 
 #, python-format
 msgid ""
-"Login user \"%s\" to http://vk.com/ failed!\n"
+"Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
 
@@ -3312,10 +3320,6 @@ msgstr "Сортування всіх найбільш популярних ка
 msgid "Sorted most viewed channels now [live]"
 msgstr "Сортування каналів, самих популярних в даний час [прямий етер]"
 
-#, python-format
-msgid "Source %s"
-msgstr ""
-
 #, fuzzy
 msgid "Source type"
 msgstr "Тип пошуку"
@@ -3619,10 +3623,13 @@ msgstr ""
 msgid "Title:"
 msgstr ""
 
+#, fuzzy
 msgid ""
-"To watch videos from http://vk.com/ you need to login.\n"
+"To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
+"Цей вузол вимагає реєстрації. \n"
+" Будь ласка,заповніть свій логін і пароль у конфігурації хост-конфігурації.В наявності під синю кнопку . "
 
 msgid "Today"
 msgstr ""
@@ -3655,6 +3662,9 @@ msgstr "Самі популярні"
 #, fuzzy
 msgid "Top series"
 msgstr "Телесеріал"
+
+msgid "Top-IMDB"
+msgstr ""
 
 msgid "Total Divas"
 msgstr "Тотальні Діви"

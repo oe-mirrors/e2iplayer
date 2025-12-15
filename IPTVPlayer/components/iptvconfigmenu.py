@@ -422,12 +422,14 @@ class ConfigMenu(ConfigBaseWidget):
         else:
             ConfigBaseWidget.onSelectionChanged(self)
 
+    """
     def saveAndClose(self):
         ConfigBaseWidget.saveAndClose(self)
         if self.showcoverOld != config.plugins.iptvplayer.showcover.value or \
             self.SciezkaCacheOld != config.plugins.iptvplayer.SciezkaCache.value:
             pass
             # plugin must be restarted if we wont to this options take effect
+    """
 
     def getRuntimeOptionsValues(self):
         valTab = []
@@ -452,11 +454,14 @@ class ConfigMenu(ConfigBaseWidget):
         return ''
 
     def closeAfterMessage(self, arg=None):
+        self.close()
+        """
         if arg:
             # self.doUpdate(True)
             self.close()
         else:
             self.close()
+        """
 
     def keyOK(self):
         curIndex = self["config"].getCurrentIndex()
@@ -474,6 +479,18 @@ class ConfigMenu(ConfigBaseWidget):
             self.extMoviePlayerList()
         else:
             ConfigBaseWidget.keyOK(self)
+
+    def keyDefaults(self):
+        def keyDefaultsConfirm(result):
+            if result:
+                for item in self.list:
+                    if len(item) > 1:
+                        configItem = item[1]
+                        if not isinstance(configItem, ConfigText):
+                            configItem.value = configItem.default
+                self.close()
+        message = _("Are you sure you want to reset all settings to their default values?")
+        self.session.openWithCallback(keyDefaultsConfirm, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
 
     def getSubOptionsList(self):
         tab = [

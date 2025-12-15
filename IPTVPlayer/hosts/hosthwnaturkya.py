@@ -76,7 +76,7 @@ class HwnaTurkya(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG("HwnaTurkya.listMainMenu")
-        menuItems = [{"category": "movies", "title": _("الأفـــلام"), "icon": self.DEFAULT_ICON_URL, "name": "movies"}, {"category": "series", "title": _("مســلـســلات"), "icon": self.DEFAULT_ICON_URL, "name": "series"}, {"category": "search", "title": _("Search"), "search_item": True}, {"category": "search_history", "title": _("Search history")}]
+        menuItems = [{"category": "movies", "title": "الأفـــلام", "icon": self.DEFAULT_ICON_URL, "name": "movies"}, {"category": "series", "title": "مســلـســلات", "icon": self.DEFAULT_ICON_URL, "name": "series"}, {"category": "search", "title": _("Search"), "search_item": True}, {"category": "search_history", "title": _("Search history")}]
         self.listsTab(menuItems, cItem)
 
     def listCatItems(self, cItem, nextCategory):
@@ -84,9 +84,9 @@ class HwnaTurkya(CBaseHostClass):
         current_category = self.currItem.get("category", "")
         items = []
         if current_category == "movies":
-            items = [{"category": nextCategory, "name": current_category, "title": _("أفــلام متــرجـمـة"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/افلام-تركية-مترجمة.html/")}, {"category": nextCategory, "name": current_category, "title": _("أفــلام مــدبـلجـة"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/افلام-تركية-مدبلجة.html/")}]
+            items = [{"category": nextCategory, "name": current_category, "title": "أفــلام متــرجـمـة", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/افلام-تركية-مترجمة.html/")}, {"category": nextCategory, "name": current_category, "title": "أفــلام مــدبـلجـة", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/افلام-تركية-مدبلجة.html/")}]
         elif current_category == "series":
-            items = [{"category": nextCategory, "name": current_category, "title": _("مسـلـسـلات متــرجـمـة"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/مسلسلات-تركية-مترجمة.html/")}, {"category": nextCategory, "name": current_category, "title": _("مسـلـسـلات مــدبـلجـة"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/مسلسلات-تركية-مدبلجة.html/")}]
+            items = [{"category": nextCategory, "name": current_category, "title": "مسـلـسـلات متــرجـمـة", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/مسلسلات-تركية-مترجمة.html/")}, {"category": nextCategory, "name": current_category, "title": "مسـلـسـلات مــدبـلجـة", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/مسلسلات-تركية-مدبلجة.html/")}]
         self.listsTab(items, cItem)
 
     def listItems(self, cItem, nextCategory):

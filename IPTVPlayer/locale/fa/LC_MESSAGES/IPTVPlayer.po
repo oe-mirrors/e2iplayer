@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-23 13:27+0100\n"
+"POT-Creation-Date: 2025-12-15 16:37+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -14,6 +14,9 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SearchPath-0: ../plugin\n"
+
+msgid "\t*\tVotes: "
+msgstr ""
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -58,9 +61,6 @@ msgid ""
 "\n"
 "You can also report problem here: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-msgstr ""
-
-msgid "    *    Votes: "
 msgstr ""
 
 msgid "    Audio buffer size [KB]"
@@ -538,6 +538,9 @@ msgstr ""
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr ""
 
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr ""
+
 msgid "Artists"
 msgstr ""
 
@@ -871,6 +874,9 @@ msgid "Default video quality"
 msgstr ""
 
 msgid "Default video quality:"
+msgstr ""
+
+msgid "Defaults"
 msgstr ""
 
 msgid "Definitely remove from favorites?"
@@ -1917,7 +1923,7 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Login user \"%s\" to http://vk.com/ failed!\n"
+"Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
 
@@ -3015,10 +3021,6 @@ msgstr ""
 msgid "Sorted most viewed channels now [live]"
 msgstr ""
 
-#, python-format
-msgid "Source %s"
-msgstr ""
-
 msgid "Source type"
 msgstr ""
 
@@ -3302,7 +3304,7 @@ msgid "Title:"
 msgstr ""
 
 msgid ""
-"To watch videos from http://vk.com/ you need to login.\n"
+"To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 
@@ -3331,6 +3333,9 @@ msgid "Top rated"
 msgstr ""
 
 msgid "Top series"
+msgstr ""
+
+msgid "Top-IMDB"
 msgstr ""
 
 msgid "Total Divas"

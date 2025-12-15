@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-23 13:27+0100\n"
+"POT-Creation-Date: 2025-12-15 16:37+0100\n"
 "PO-Revision-Date: 2025-08-09 16:00+0200\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.5\n"
+
+#, fuzzy
+msgid "\t*\tVotes: "
+msgstr "    *    Stemmen: "
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -78,9 +82,6 @@ msgstr ""
 "\n"
 "U kunt een eventueel probleem ook hier melden:\n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-
-msgid "    *    Votes: "
-msgstr "    *    Stemmen: "
 
 msgid "    Audio buffer size [KB]"
 msgstr "    Audio buffer grootte [kB]"
@@ -567,6 +568,10 @@ msgstr "Weet u zeker dat u de zoekgeschiedenis wilt verwijderen?"
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Weet u zeker dat u bestand \"%s\" wil verwijderen?"
 
+#, fuzzy
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "Weet u zeker dat u de zoekgeschiedenis wilt verwijderen?"
+
 msgid "Artists"
 msgstr "Artiesten"
 
@@ -908,6 +913,10 @@ msgstr "Default video kwaliteit"
 
 msgid "Default video quality:"
 msgstr "Default video kwaliteit:"
+
+#, fuzzy
+msgid "Defaults"
+msgstr "Standaard"
 
 msgid "Definitely remove from favorites?"
 msgstr "Definitief uit de Favorieten verwijderen?"
@@ -2013,9 +2022,9 @@ msgstr "Aanmelden noodzakelijk"
 msgid "Login on {0} failed."
 msgstr "Aanmelden op {0} mislukt."
 
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"Login user \"%s\" to http://vk.com/ failed!\n"
+"Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
 "Aanmelden gebruiker \"%s\" bij http://vk.com/ mislukt!\n"
@@ -3142,10 +3151,6 @@ msgstr "Gesorteerde meest bekeken kanalen algemeen [live]"
 msgid "Sorted most viewed channels now [live]"
 msgstr "Gesorteerde meest bekeken kanalen nu [live]"
 
-#, python-format
-msgid "Source %s"
-msgstr "Bron %s"
-
 msgid "Source type"
 msgstr "Bron type"
 
@@ -3439,8 +3444,9 @@ msgstr "Tip! U kunt een USB flash drive aansluiten om dit probleem op te lossen.
 msgid "Title:"
 msgstr "Titel:"
 
+#, fuzzy
 msgid ""
-"To watch videos from http://vk.com/ you need to login.\n"
+"To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 "Om video's van http://vk.com/ te zien moet u zich aanmelden.\n"
@@ -3472,6 +3478,9 @@ msgstr "Top gewaardeerd"
 
 msgid "Top series"
 msgstr "Top series"
+
+msgid "Top-IMDB"
+msgstr ""
 
 msgid "Total Divas"
 msgstr "Total Diva's"

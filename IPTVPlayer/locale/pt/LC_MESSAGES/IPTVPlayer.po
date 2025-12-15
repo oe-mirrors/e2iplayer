@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-23 13:27+0100\n"
+"POT-Creation-Date: 2025-12-15 16:37+0100\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -15,6 +15,9 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ../plugin\n"
+
+msgid "\t*\tVotes: "
+msgstr ""
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -59,9 +62,6 @@ msgid ""
 "\n"
 "You can also report problem here: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-msgstr ""
-
-msgid "    *    Votes: "
 msgstr ""
 
 #, fuzzy
@@ -560,6 +560,10 @@ msgstr "O número de itens no histórico de procura"
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr ""
 
+#, fuzzy
+msgid "Are you sure you want to reset all settings to their default values?"
+msgstr "O número de itens no histórico de procura"
+
 msgid "Artists"
 msgstr ""
 
@@ -906,6 +910,9 @@ msgstr "Qualidade de vídeo padrão:"
 
 msgid "Default video quality:"
 msgstr "Qualidade de vídeo padrão:"
+
+msgid "Defaults"
+msgstr ""
 
 msgid "Definitely remove from favorites?"
 msgstr ""
@@ -2020,7 +2027,7 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Login user \"%s\" to http://vk.com/ failed!\n"
+"Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
 
@@ -3201,10 +3208,6 @@ msgstr ""
 msgid "Sorted most viewed channels now [live]"
 msgstr ""
 
-#, python-format
-msgid "Source %s"
-msgstr ""
-
 #, fuzzy
 msgid "Source type"
 msgstr "Tipo de procura"
@@ -3500,7 +3503,7 @@ msgid "Title:"
 msgstr ""
 
 msgid ""
-"To watch videos from http://vk.com/ you need to login.\n"
+"To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 
@@ -3531,6 +3534,9 @@ msgid "Top rated"
 msgstr ""
 
 msgid "Top series"
+msgstr ""
+
+msgid "Top-IMDB"
 msgstr ""
 
 msgid "Total Divas"
