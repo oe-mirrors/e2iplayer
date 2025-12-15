@@ -1,4 +1,5 @@
-# <p align="center">E2iPlayer Plugin for Enigma2 (E²) ![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg) ![Profil views](https://komarev.com/ghpvc/?username=oe-mirrors)</p>
+# <p align="center">E2iPlayer Plugin for Enigma2 (E²)</p>
+# <p align="center">![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg) ![Profil views](https://komarev.com/ghpvc/?username=oe-mirrors)</p>
 
 Python3 Version from <a href="https://www.opena.tv">openATV Team</a>.
 
@@ -19,17 +20,23 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 [![Build Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml)
 [![TESTS](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml)
 
-
-[![GitHub stars](https://img.shields.io/github/stars/oe-mirrors/e2iplayer?style=flat)](https://github.com/oe-mirrors/e2iplayer/stargazers)
-[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/oe-mirrors/e2iplayer/pulls)
-[![Python](https://img.shields.io/badge/Python-3.x-darkviolet.svg?style=flat)](https://python.org)
 [![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
 [![Latest Release](https://img.shields.io/github/release-date/oe-mirrors/e2iplayer?label=From&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/latest)
 [![GitHub all releases](https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/total.svg?label=Downloads)](https://github.com/oe-mirrors/e2iplayer/releases)
 [![Github last commit](https://img.shields.io/github/last-commit/oe-mirrors/e2iplayer)](https://github.com/oe-mirrors/e2iplayer)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/y/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/m/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
+[![GitHub Activity](https://img.shields.io/github/commit-activity/w/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
+
+[![GitHub stars](https://img.shields.io/github/stars/oe-mirrors/e2iplayer?style=flat)](https://github.com/oe-mirrors/e2iplayer/stargazers)
+[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/oe-mirrors/e2iplayer/pulls)
+[![Python](https://img.shields.io/badge/Python-3.x-darkviolet.svg?style=flat)](https://python.org)
 ![Platform](https://img.shields.io/badge/Platform-Enigma2-orange.svg)
+[![Issues](https://img.shields.io/github/issues/oe-mirrors/e2iplayer?color=blue?style=flat)](https://github.com/oe-mirrors/e2iplayer/issues)
+[![Forks](https://img.shields.io/github/forks/oe-mirrors/e2iplayer?style=flat)](https://github.com/oe-mirrors/e2iplayer/forks)
+![Languages](https://img.shields.io/github/languages/top/oe-mirrors/e2iplayer?style=flat)
+[![Contributions](https://img.shields.io/github/contributors/oe-mirrors/e2iplayer?style=flat)](https://github.com/oe-mirrors/e2iplayer/graphs/contributors)
+
 ## SonarCloud status
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=oe-mirrors_e2iplayer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=oe-mirrors_e2iplayer)
@@ -59,6 +66,8 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 ---
 
 ### 📦 Overview
+
+**🍿 Watch Videos Online**
 
 The E2iPlayer (previously IPTVPlayer) Enigma2 (E²) Plugin is a platform that offers various livestreams and add-ons from all over the world it
 includes Movies, TV series, Catoons, Anime, Music, Sport, Live Streams, XXX, Documentries, Science and Content for various languages.
@@ -149,7 +158,7 @@ with additions from
 - <a href="https://github.com/Belfagor2005/e2iplayer">Lululla</a>
 - <a href="https://mohamed_os.gitlab.io">MohamedOS</a>
 
-**Testing Community**: Enigma2 users worldwide
+💻 **Testing Community**: Enigma2 users worldwide
 
 🚫 All rights reserved. Do not redistribute modified versions without proper attribution.  Redistribution only with explicit credit.
 
@@ -202,6 +211,8 @@ wget -q "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/pytho
 - gstplayer
 - ffmpeg
 - rtmpdump
+- wget
+- websocket-client
 - duktape
 - uchardet
 
@@ -251,7 +262,7 @@ Enjoy and help us improve it today. :)
 
 For help and support, visit us on [oATV Forum](https://www.opena.tv/viewtopic.php?t=42312) or open an [Issue](https://github.com/oe-mirrors/e2iplayer/issues)
 
-**⚠️ Reporting Issues**
+**⚠️ Reporting Issues 🔥**
 1. Check existing issues on GitHub
 2. Provide Enigma2 and E2iPlayer version
 3. Add Enigma2 debuglogs and E2iPlayer Log (iptv.dbg)

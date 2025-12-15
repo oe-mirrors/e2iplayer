@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-15 16:37+0100\n"
-"PO-Revision-Date: 2025-11-23 13:40+0100\n"
+"PO-Revision-Date: 2025-12-15 20:05+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -15,9 +15,8 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ../plugin\n"
 
-#, fuzzy
 msgid "\t*\tVotes: "
-msgstr "    *    Abstimmungen: "
+msgstr "\t*\tAbstimmungen: "
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -559,9 +558,8 @@ msgstr "Sind Sie sicher, dass Sie den Suchverlauf löschen möchten?"
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Sind Sie sicher, dass Sie die Datei \"%s\" entfernen wollen?"
 
-#, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
-msgstr "Sind Sie sicher, dass Sie den Suchverlauf löschen möchten?"
+msgstr "Bist du sicher, dass du alle Einstellungen auf die Standardwerte zurücksetzen möchtest?"
 
 msgid "Artists"
 msgstr "Künstler"
@@ -903,9 +901,8 @@ msgstr "Standard Video Qualität"
 msgid "Default video quality:"
 msgstr "Standard Video Qualität:"
 
-#, fuzzy
 msgid "Defaults"
-msgstr "Standard"
+msgstr "Standardwerte"
 
 msgid "Definitely remove from favorites?"
 msgstr "Auf jeden Fall aus den Favoriten entfernen?"
@@ -1993,12 +1990,12 @@ msgstr "Anmeldung erforderlich"
 msgid "Login on {0} failed."
 msgstr "Login in {0} fehlgeschlagen."
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
-"Anmelden von Benutzer \"%s\" zu http://vk.com/ fehlgeschlagen!\n"
+"Anmelden von Benutzer \"%s\" zu https://vk.com/ fehlgeschlagen!\n"
 "Bitte überprüfen Sie Ihre Zugangsdaten in der E2iPlayer-Konfiguration."
 
 msgid "Logs"
@@ -3404,12 +3401,11 @@ msgstr "Tipp! Sie können ein USB-Stick anschließen, um das Problem zu beheben.
 msgid "Title:"
 msgstr "Titel:"
 
-#, fuzzy
 msgid ""
 "To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
-"Um Videos von http://vk.com/ schauen zu können, müssen Sie sich anmelden.\n"
+"Um Videos von https://vk.com/ schauen zu können, müssen Sie sich anmelden.\n"
 "Bitte füllen Sie Ihr Login und Passwort in der E2iPlayer-Konfiguration aus."
 
 msgid "Today"
@@ -3440,7 +3436,7 @@ msgid "Top series"
 msgstr "Top Serien"
 
 msgid "Top-IMDB"
-msgstr ""
+msgstr "Top-IMDB"
 
 msgid "Total Divas"
 msgstr "Total Divas"
