@@ -1,6 +1,12 @@
-E2iPlayer (previously IPTVPlayer) Enigma2 (E²) Plugin
+E2iPlayer (previously IPTVPlayer) Plugin for Enigma2 (E²)
 
 Modelled on SHOUTcast plugin and sd-xbmc.org project 
+
+OE-Mirros Version:
+Python3 Version from jbleyel, Mr.X and openATV Team.
+
+SSS Version:
+Thanks to SamSamSam for the original version of this program! The original public version from SamSamSam is Closedsource now and only available for acquaintances and family
 
 Main developer, architect, coordinator: 
 	- @samsamsam
@@ -35,7 +41,8 @@ https://github.com/oe-mirrors/e2iplayer
 
 
 Testers:
-	- 
+	- Masta2002
+	- Testing Community: Enigma2 users worldwide
 
 
 Webpages:
