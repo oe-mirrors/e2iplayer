@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 06.12.2025 - Panda555
-import re
 
+from re import DOTALL, findall
 from Components.config import ConfigSelection, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
-config.plugins.iptvplayer.guardaserie_hosts = ConfigSelection(default="https://guardaserietv.club/", choices=[("https://guardaserietv.app/", "https://guardaserietv.app/"), ("https://guardaserie.qpon/", "https://guardaserie.qpon/"), ("https://guardaserietv.club/", "https://guardaserietv.club/")])
+config.plugins.iptvplayer.guardaserie_hosts = ConfigSelection(default="https://guardaserietv.asia/", choices=[("https://guardaserietv.asia/", "https://guardaserietv.asia/"), ("https://guardaserietv.asia/", "https://guardaserietv.asia/"), ("https://guardaserietv.asia/", "https://guardaserietv.asia/")])
 
 
 def GetConfigList():
@@ -67,7 +67,7 @@ class GuardaSerie(CBaseHostClass):
         if not sts:
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
-        data = re.findall(r'href="#[^"]+" data-toggle="tab">([^<]+)', data, re.DOTALL)
+        data = findall(r'href="#[^"]+" data-toggle="tab">([^<]+)', data, DOTALL)
         if not data:
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "video", "title": cItem["title"], "url": self.getFullUrl(url), "icon": icon, "desc": desc})
@@ -88,7 +88,7 @@ class GuardaSerie(CBaseHostClass):
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="season-%s' % seasons, "</ul>")[0]
-        data = re.findall(r">(\d+)<", data, re.DOTALL)
+        data = findall(r">(\d+)<", data, DOTALL)
         for episode in data:
             title = "%s - %s %s" % (cItem["title"], _("Episode"), episode)
             params = dict(cItem)
@@ -101,7 +101,7 @@ class GuardaSerie(CBaseHostClass):
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, s, e)[0]
-        data = re.findall('href="([^"]+).*?>([^<]+)', data, re.DOTALL)
+        data = findall('href="([^"]+).*?>([^<]+)', data, DOTALL)
         for url, title in data:
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
@@ -118,7 +118,7 @@ class GuardaSerie(CBaseHostClass):
         if not sts:
             return []
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'data-num="%sx%s' % (cItem.get("seasons"), cItem.get("episode")), "</div>")[0]
-        data = re.findall('data-link="(h[^"]+)', data, re.DOTALL)
+        data = findall('data-link="(h[^"]+)', data, DOTALL)
         return [{"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1} for url in data]
 
     def getVideoLinks(self, url):

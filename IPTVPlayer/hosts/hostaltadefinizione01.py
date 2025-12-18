@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
 # FOREIGN import
 ###################################################
-import re
+from re import compile, search
 try:
     import json
 except Exception:
@@ -26,21 +26,21 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://altadefinizione01.racing/'
+    return 'https://altadefinizione01.mov'
 
 
 class Altadefinizione(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'altadefinizione01.spa', 'cookie': 'altadefinizione01.spa.cookie'})
+        CBaseHostClass.__init__(self, {'history': 'altadefinizione01.mov', 'cookie': 'altadefinizione01.mov.cookie'})
 
         self.USER_AGENT = 'Mozilla/5.0'
         self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
 
-        self.MAIN_URL = 'https://altadefinizione01.racing/'
-        self.DEFAULT_ICON_URL = 'https://altadefinizione01.racing/templates/Darktemplate_pagespeed/images/logo.png'
+        self.MAIN_URL = 'https://altadefinizione01.mov/'
+        self.DEFAULT_ICON_URL = 'https://altadefinizione01.mov/templates/Darktemplate_pagespeed/images/logo.png'
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
@@ -65,7 +65,7 @@ class Altadefinizione(CBaseHostClass):
         self.setMainUrl(self.cm.meta['url'])
 
         tmp = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'before_widget'), ('<div', '>', 'before_widget'), False)[1]
-        tmp = re.compile(r'''<div[^>]+?tab\-content[^>]*?>''').split(data)
+        tmp = compile(r'''<div[^>]+?tab\-content[^>]*?>''').split(data)
         if len(tmp) == 2:
             tabs = []
             mainTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[0], ('<div', '>', 'widget-title'), ('</div', '>'))[1])
@@ -126,8 +126,8 @@ class Altadefinizione(CBaseHostClass):
         nextPage = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'page_nav'), ('</div', '>'), False)[1]
         nextPage = self.cm.ph.getSearchGroups(nextPage, '''<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s<''' % (page + 1))[0]
 
-        data = re.compile(r'''<div[^>]+?dle\-content[^>]+?>''').split(data, 1)
-        data[-1] = re.compile('''<div[^>]+?right_bar[^>]+?>''').split(data[-1], 1)[0]
+        data = compile(r'''<div[^>]+?dle\-content[^>]+?>''').split(data, 1)
+        data[-1] = compile('''<div[^>]+?right_bar[^>]+?>''').split(data[-1], 1)[0]
         if len(data) > 1 and page > 1:
             del data[0]
 
@@ -235,7 +235,6 @@ class Altadefinizione(CBaseHostClass):
             self.addDir(params)
 
     def resolve_unique_urls(self, data, cItem):
-        import re
         urlTab = []
         seen_urls = set()
         counter = {}
@@ -255,7 +254,7 @@ class Altadefinizione(CBaseHostClass):
             seen_urls.add(url)
 
             # Extract domain without www
-            m = re.search(r"https?://(?:www\.)?([^/]+)/", url)
+            m = search(r"https?://(?:www\.)?([^/]+)/", url)
             provider = m.group(1) if m else "unknown"
 
             count = counter.get(provider, 0) + 1

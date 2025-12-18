@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Last Modified: 25.08.2025
-import json
-import re
+from json import loads
+from re import findall, DOTALL
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -15,7 +15,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://cb01net.guru/'
+    return 'https://cb01net.homes/'
 
 
 class Cb01(CBaseHostClass):
@@ -65,7 +65,7 @@ class Cb01(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        data = re.findall(r'STAGIONE (\d+) -', data, re.DOTALL)
+        data = findall(r'STAGIONE (\d+) -', data, DOTALL)
         for seasons in data:
             title = "%s - %s %s" % (cItem["title"], _("Season"), seasons)
             params = dict(cItem)
@@ -81,7 +81,7 @@ class Cb01(CBaseHostClass):
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'STAGIONE %s -' % seasons, "</strong>")[0]
-        data = re.findall(r"215;(\d+)", data, re.DOTALL)
+        data = findall(r"215;(\d+)", data, DOTALL)
         for episode in data:
             title = "%s - %s %s" % (cItem["title"], _("Episode"), episode)
             params = dict(cItem)
@@ -94,7 +94,7 @@ class Cb01(CBaseHostClass):
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, s, e)[0]
-        data = re.findall('href="([^"]+).*?>([^<]+)', data, re.DOTALL)
+        data = findall('href="([^"]+).*?>([^<]+)', data, DOTALL)
         for url, title in data:
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
@@ -114,7 +114,7 @@ class Cb01(CBaseHostClass):
         if cItem.get('seasons') and cItem.get('episode'):
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'STAGIONE %s' % cItem.get('seasons'), '</strong>')[0]
             data = self.cm.ph.getAllItemsBeetwenMarkers(data, ';%s' % cItem.get('episode'), '</a></p>')[0]
-        data = re.findall('href="([^"]+)" target.*?>([^<]+)', data, re.DOTALL)
+        data = findall('href="([^"]+)" target.*?>([^<]+)', data, DOTALL)
         for url, title in data:
             if "ixdrop" not in title:
                 continue
@@ -127,12 +127,12 @@ class Cb01(CBaseHostClass):
             sts, data = self.getPage(url)
             if not sts:
                 return
-            data = re.findall(r'linkId = "([^"]+)"', data, re.DOTALL)
+            data = findall(r'linkId = "([^"]+)"', data, DOTALL)
             if data:
                 sts, data = self.getPage('https://stayonline.pro/ajax/linkView.php', self.defaultParams, {'id': data[0], 'ref': ''})
                 if not sts:
                     return
-            url = json.loads(data).get('data', {}).get('value')
+            url = loads(data).get('data', {}).get('value')
             return self.up.getVideoLinkExt(url)
 
     def getArticleContent(self, cItem):
