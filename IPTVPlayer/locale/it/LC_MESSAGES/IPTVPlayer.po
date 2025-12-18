@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 msgid "\t*\tVotes: "
-msgstr ""
+msgstr "\t*\tVoti: "
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -567,9 +567,8 @@ msgstr "Sei sicuro di cancellare il file \"%s\" ?"
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Sei sicuro di cancellare il file \"%s\" ?"
 
-#, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
-msgstr "Sei sicuro di cancellare il file \"%s\" ?"
+msgstr "Vuoi davvero ripristinare tutte le impostazioni ai valori predefiniti?"
 
 msgid "Artists"
 msgstr "Artisti"
@@ -911,7 +910,6 @@ msgstr "Qualità video predefinita"
 msgid "Default video quality:"
 msgstr "Qualità video predefinita:"
 
-#, fuzzy
 msgid "Defaults"
 msgstr "Predefinito"
 
@@ -1481,7 +1479,7 @@ msgid "Functionality protected by Google reCAPTCHA!"
 msgstr "Funzionalità protetta da Google reCAPTCHA!"
 
 msgid "GSTplayer no IFD workarround"
-msgstr ""
+msgstr "GSTplayer non ha una soluzione alternativa IFD"
 
 #, python-format
 msgid "Game: %s"
@@ -1783,7 +1781,7 @@ msgid "JDownloader script finished."
 msgstr "Esecuzione dello script JDownloader terminata."
 
 msgid "Jobs & Positions"
-msgstr ""
+msgstr "Lavori e Posizioni"
 
 msgid "Journal Club"
 msgstr ""
@@ -1792,7 +1790,7 @@ msgid "Knee & Sports"
 msgstr "Attività Sportiva"
 
 msgid "Knowledge"
-msgstr ""
+msgstr "Conoscenza"
 
 msgid "Korean TV series"
 msgstr "Serie TV Koreana"
@@ -1868,7 +1866,7 @@ msgid "Last week"
 msgstr "Ultima settimana"
 
 msgid "Lastest"
-msgstr ""
+msgstr "Ultimo"
 
 msgid "Latest"
 msgstr "Ultimi"
@@ -2003,12 +2001,12 @@ msgstr "Accesso necessario"
 msgid "Login on {0} failed."
 msgstr "Login in {0} non riuscito."
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
-"Non è riuscito l'accesso dell'utente \"%s\" a http://vk.com/ !\n"
+"Accesso utente \"%s\" a https://vk.com/ non riuscito!\n"
 "Controlla i tuoi dati di accesso nella configurazione di IPTVPlayer."
 
 msgid "Logs"
@@ -2171,7 +2169,7 @@ msgid "My list"
 msgstr "La mia Lista"
 
 msgid "MyE2i Cloudflare solution"
-msgstr ""
+msgstr "Soluzione MyE2i Cloudflare"
 
 msgid "MyE2i reCAPTCHA solution"
 msgstr "Soluzione reCAPTCHA v2 di MyE2"
@@ -3414,7 +3412,6 @@ msgstr "Suggerimento! Puoi collegare una flash drive USB per risolvere il proble
 msgid "Title:"
 msgstr "Titolo:"
 
-#, fuzzy
 msgid ""
 "To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
@@ -3574,7 +3571,7 @@ msgid "Uploads"
 msgstr "Caricamenti"
 
 msgid "Urllists player"
-msgstr ""
+msgstr "Riproduttore Urllists"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Usa il proxy server polacco per http://prognoza.pogody.tv/"
