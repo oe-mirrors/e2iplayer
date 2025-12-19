@@ -9,7 +9,6 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
-
 config.plugins.iptvplayer.guardaserie_hosts = ConfigSelection(default="https://guardoserie.bar/", choices=[("https://guardoserie.bar/", "https://guardoserie.bar/"), ("https://guardaserietv.asia/", "https://guardaserietv.asia/"), ("https://guardaserietv.club/", "https://guardaserietv.club/")])
 
 
@@ -24,7 +23,7 @@ def gettytul():
 class GuardaSerie(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "GuardaSerie", "cookie": "GuardaSerie.cookie"})
-        self.HEADER = self.cm.getDefaultHeader()
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = gettytul() + "templates/Guardaserie/images/new_logo2.png"
@@ -37,6 +36,7 @@ class GuardaSerie(CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
+        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def listItems(self, cItem):
@@ -129,6 +129,8 @@ class GuardaSerie(CBaseHostClass):
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+        if self.MAIN_URL is None:
+            self.menu()
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
         printDBG("handleService start\nhandleService: name[%s], category[%s] " % (name, category))

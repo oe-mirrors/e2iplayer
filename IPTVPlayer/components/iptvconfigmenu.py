@@ -45,7 +45,7 @@ config.plugins.iptvplayer.deleteIcons = ConfigSelection(default="3", choices=[("
 config.plugins.iptvplayer.showinextensions = ConfigYesNo(default=True)
 config.plugins.iptvplayer.hostsListType = ConfigSelection(default="G", choices=[("G", _("Graphic services selector")), ("S", _("Simple list")), ("T", _("Tree list"))])
 config.plugins.iptvplayer.showinMainMenu = ConfigYesNo(default=False)
-# config.plugins.iptvplayer.ListaGraficzna = ConfigYesNo(default=True)
+config.plugins.iptvplayer.ListaGraficzna = ConfigYesNo(default=True)
 config.plugins.iptvplayer.group_hosts = ConfigYesNo(default=True)
 config.plugins.iptvplayer.NaszaSciezka = ConfigDirectory(default="/hdd/movie/")  # , fixed_size = False)
 config.plugins.iptvplayer.bufferingPath = ConfigDirectory(default=config.plugins.iptvplayer.NaszaSciezka.value)  # , fixed_size = False)
@@ -320,13 +320,13 @@ class ConfigMenu(ConfigBaseWidget):
             # list.append(getConfigListEntry(_("    Allowed formats of thumbnails"), config.plugins.iptvplayer.allowedcoverformats))
             list.append(getConfigListEntry(_("    Remove thumbnails"), config.plugins.iptvplayer.deleteIcons))
         # list.append(getConfigListEntry("Sort the lists?", config.plugins.iptvplayer.sortuj))
-        # list.append(getConfigListEntry(_("Graphic services selector"), config.plugins.iptvplayer.ListaGraficzna))
-        # if config.plugins.iptvplayer.ListaGraficzna.value is True:
-        list.append(getConfigListEntry(_("    Enable hosts groups"), config.plugins.iptvplayer.group_hosts))
-        list.append(getConfigListEntry(_("    Service icon size"), config.plugins.iptvplayer.IconsSize))
-        if not GRIDSUPPORT:
-            list.append(getConfigListEntry(_("    Number of rows"), config.plugins.iptvplayer.numOfRow))
-            list.append(getConfigListEntry(_("    Number of columns"), config.plugins.iptvplayer.numOfCol))
+        list.append(getConfigListEntry(_("Graphic services selector"), config.plugins.iptvplayer.ListaGraficzna))
+        if config.plugins.iptvplayer.ListaGraficzna.value is True:
+            list.append(getConfigListEntry(_("    Enable hosts groups"), config.plugins.iptvplayer.group_hosts))
+            list.append(getConfigListEntry(_("    Service icon size"), config.plugins.iptvplayer.IconsSize))
+            if not GRIDSUPPORT:
+                list.append(getConfigListEntry(_("    Number of rows"), config.plugins.iptvplayer.numOfRow))
+                list.append(getConfigListEntry(_("    Number of columns"), config.plugins.iptvplayer.numOfCol))
         list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
         list.append(getConfigListEntry(_("Create LCD/VFD summary screen"), config.plugins.iptvplayer.extplayer_summary))
 
@@ -498,7 +498,7 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.buforowanie_m3u8,
             config.plugins.iptvplayer.buforowanie_rtmp,
             config.plugins.iptvplayer.showcover,
-            # config.plugins.iptvplayer.ListaGraficzna,
+            config.plugins.iptvplayer.ListaGraficzna,
             config.plugins.iptvplayer.pluginProtectedByPin,
             config.plugins.iptvplayer.configProtectedByPin,
             config.plugins.iptvplayer.osk_type,
