@@ -1254,11 +1254,13 @@ class E2iPlayerWidget(Screen):
 
                 # The 'http...' in host titles is annoying on regular choiceBox and impacts sorting.
                 # To simplify choiceBox usage and clearly show service is a webpage, list is build using the "<service name> (<service URL>)" schema.
+                """
                 if (config.plugins.iptvplayer.ListaGraficzna.value is False or 0 == GetAvailableIconSize()) and title[:4] == 'http':
                     try:
                         title = ('%s   (%s)') % ('.'.join(title.replace('://', '.').replace('www.', '').split('.')[1:-1]), title)
                     except Exception:
                         pass
+                """
                 self.displayHostsList.append((title, hostName))
         # if there is no order hosts list use old behavior
         if 0 == len(GetHostsOrderList()):
@@ -1282,13 +1284,14 @@ class E2iPlayerWidget(Screen):
         return
 
     def displayListOfHosts(self, arg=None):
+        """
         if config.plugins.iptvplayer.ListaGraficzna.value is False or 0 == GetAvailableIconSize():
             self.newDisplayHostsList = None
             self.session.openWithCallback(self.selectHostCallback, ChoiceBox, title=_("Select service"), list=self.displayHostsList)
         else:
-            self.newDisplayHostsList = []
-            self.session.openWithCallback(self.selectHostCallback, PlayerSelectorWidget, inList=self.displayHostsList, outList=self.newDisplayHostsList, numOfLockedItems=self.getNumOfSpecialItems(self.displayHostsList), groupName='selecthost')
-        return
+        """
+        self.newDisplayHostsList = []
+        self.session.openWithCallback(self.selectHostCallback, PlayerSelectorWidget, inList=self.displayHostsList, outList=self.newDisplayHostsList, numOfLockedItems=self.getNumOfSpecialItems(self.displayHostsList), groupName='selecthost')
 
     def getNumOfSpecialItems(self, inList, filters=['config', 'all']):
         if GRIDSUPPORT:

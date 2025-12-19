@@ -18,6 +18,7 @@
 'hostbasketballvideocom': 'https://basketball-video.com/',
 'hostbbciplayer': 'http://www.bbc.co.uk/iplayer',
 'hostbbcsport': 'https://www.bbc.co.uk/sport',
+'hostbflix': 'https://bflix.sh/',
 'hostbsto': 'https://bs.to/',
 'hostcartoonhd': 'https://cartoonhd.care/',
 'hostcb01uno': 'https://cb01net.shop/',

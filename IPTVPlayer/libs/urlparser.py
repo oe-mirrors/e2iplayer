@@ -37,6 +37,64 @@ if not isPY2():
     xrange = range
 
 
+def crsdiv(a, dec_id):
+    def b64dec(t):
+        return base64.b64decode(t).decode("latin1")
+
+    def dec(a, shift):
+        b64 = a[::-1].replace("-", "+").replace("_", "/")
+        return "".join([chr(ord(ch) - shift) for ch in b64dec(b64)])
+
+    if dec_id == "sXnL9MQIry":
+        b = [ord(ch) for ch in "pWB9V)[*4I`nJpp?ozyB~dbr9yt!_n4u"]
+        d = [int(x, 16) for x in re.findall(r".{2}", a)]
+        decrypted = [(v ^ b[i % len(b)]) - 3 for i, v in enumerate(d)]
+        return b64dec("".join(chr(v) for v in decrypted))
+    elif dec_id == "IhWrImMIGL":
+        d = []
+        for ch in a:
+            if "a" <= ch <= "m" or "A" <= ch <= "M":
+                d.append(chr(ord(ch) + 13))
+            elif "n" <= ch <= "z" or "N" <= ch <= "Z":
+                d.append(chr(ord(ch) - 13))
+            else:
+                d.append(ch)
+        return b64dec("".join(d))
+    elif dec_id == "xTyBxQyGTA":
+        b = a[::-1]
+        c = "".join([b[i] for i in range(0, len(b), 2)])
+        return b64dec(c)
+    elif dec_id == "ux8qjPHC66":
+        rev = a[::-1]
+        data = "".join([chr(int(rev[i: i + 2], 16)) for i in range(0, len(rev), 2)])
+        key = "X9a(O;FMV2-7VO5x;Ao\x05:dN1NoFs?j,"
+        res = []
+        for i, ch in enumerate(data):
+            res.append(chr(ord(ch) ^ ord(key[i % len(key)])))
+        return "".join(res)
+    elif dec_id == "eSfH1IRMyL":
+        rev = [ord(ch) - 1 for ch in reversed(a)]
+        chunks = []
+        i = 0
+        while i < len(rev):
+            val = int("".join([chr(rev[i]), chr(rev[i + 1])]), 16)
+            chunks.append(val)
+            i += 2
+        return "".join(chr(v) for v in chunks)
+    elif dec_id == "KJHidj7det":
+        c = [ord(ch) for ch in '3SAY~#%Y(V%>5d/Yg"$G[Lh1rK4a;7ok']
+        decrypted = [v ^ c[i % len(c)] for i, v in enumerate([ord(ch) for ch in b64dec(a[10:-16])])]
+        return "".join(chr(v) for v in decrypted)
+    elif dec_id == "o2VSUnjnZl":
+        mapping = {"x": "a", "y": "b", "z": "c", "a": "d", "b": "e", "c": "f", "d": "g", "e": "h", "f": "i", "g": "j", "h": "k", "i": "l", "j": "m", "k": "n", "l": "o", "m": "p", "n": "q", "o": "r", "p": "s", "q": "t", "r": "u", "s": "v", "t": "w", "u": "x", "v": "y", "w": "z", "X": "A", "Y": "B", "Z": "C", "A": "D", "B": "E", "C": "F", "D": "G", "E": "H", "F": "I", "G": "J", "H": "K", "I": "L", "J": "M", "K": "N", "L": "O", "M": "P", "N": "Q", "O": "R", "P": "S", "Q": "T", "R": "U", "S": "V", "T": "W", "U": "X", "V": "Y", "W": "Z"}
+        return "".join(mapping.get(ch, ch) for ch in a)
+    elif dec_id in ("JoAHUMCLXV", "Oi3v1dAlaM", "TsA2KGDGux"):
+        shifts = {"JoAHUMCLXV": 3, "Oi3v1dAlaM": 5, "TsA2KGDGux": 7}
+        return dec(a, shifts[dec_id])
+    else:
+        return
+
+
 def rc4(cipher_text, key):
     def compat_ord(c):
         return ord(c) if isinstance(c, str) else c
@@ -351,6 +409,7 @@ class urlparser:
             "bingezove.com": self.pp.parserJWPLAYER,
             "browncrossing.net": self.pp.parserONLYSTREAMTV,
             "bullstream.xyz": self.pp.parserSTREAMEMBED,
+            "bysesayeveum.com": self.pp.parserf16px,
             # c
             "c1z39.com": self.pp.parserFILEMOON,
             "casacinema.cc": self.pp.parserCASACINEMACC,
@@ -718,6 +777,25 @@ class urlparser:
             "vidoza.co": self.pp.parserJWPLAYER,
             "vidoza.net": self.pp.parserJWPLAYER,
             "vidoza.org": self.pp.parserJWPLAYER,
+            "vidsrc.bz": self.pp.parserVIDSRC,
+            "vidsrc.do": self.pp.parserVIDSRC,
+            "vidsrc.gd": self.pp.parserVIDSRC,
+            "vidsrc.in": self.pp.parserVIDSRC,
+            "vidsrc.io": self.pp.parserVIDSRC,
+            "vidsrc.me": self.pp.parserVIDSRC,
+            "vidsrc.mn": self.pp.parserVIDSRC,
+            "vidsrc.net": self.pp.parserVIDSRC,
+            "vidsrc.pm": self.pp.parserVIDSRC,
+            "vidsrc.tw": self.pp.parserVIDSRC,
+            "vidsrc.vc": self.pp.parserVIDSRC,
+            "vidsrc.xyz": self.pp.parserVIDSRC,
+            "vidsrc-embed.ru": self.pp.parserVIDSRC,
+            "vidsrc-embed.su": self.pp.parserVIDSRC,
+            "vidsrc-me.ru": self.pp.parserVIDSRC,
+            "vidsrc-me.su": self.pp.parserVIDSRC,
+            "vidsrcme.ru": self.pp.parserVIDSRC,
+            "vidsrcme.su": self.pp.parserVIDSRC,
+            "vsrc.su": self.pp.parserVIDSRC,
             "vidshare.space": self.pp.parserJWPLAYER,
             "vidstreamup.com": self.pp.parserVIUCLIPS,
             "viduplayer.com": self.pp.parserVIDUPLAYERCOM,
@@ -3539,6 +3617,7 @@ class pageParser(CaptchaHelper):
             return b"".join(list(map(ft, e)))
 
         printDBG("parserf16px baseUrl[%s]" % url)
+        url = url.replace("/d/", "/e/")
         host = urlparser.getDomain(url, False)
         urltab = []
         HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
@@ -3677,4 +3756,40 @@ class pageParser(CaptchaHelper):
             if url:
                 url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
                 urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+        return urltab
+
+    def parserVIDSRC(self, baseUrl):  # add 171225
+        printDBG("parserVIDSRC baseUrl[%s]" % baseUrl)
+        HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
+        urltab = []
+        baseUrl = baseUrl.replace("vidsrc.to", "vidsrc.xyz").replace("vidsrc.pm", "vidsrc.xyz")
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        url = re.search(r"""src=['"]([^"]+)['"] f""", data)
+        if not url:
+            return []
+        url = url.group(1)
+        url = "https:" + url if url.startswith("//") else url
+        host = urlparser.getDomain(url, False)
+        sts, data = self.cm.getPage(url, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        HTTP_HEADER["Referer"] = url
+        url = re.search(r""" src: ['"]([^'"]+)""", data)
+        if not url:
+            return []
+        url = host[:-1] + url.group(1)
+        sts, data = self.cm.getPage(url, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        match = re.findall(r'id="([^"]+)" style="display:none;">([^<]+)', data)
+        if match:
+            a, b = match[0]
+            d = crsdiv(b, a)
+            if d:
+                url = d.split(" ")[0].replace("{v1}", "thrumbleandjaxon.com")
+                url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                if ".m3u8" in url:
+                    urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
         return urltab
