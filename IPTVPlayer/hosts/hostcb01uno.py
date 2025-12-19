@@ -15,7 +15,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://cb01net.homes/'
+    return 'https://cb01net.shop/'  # https://cb01net.homes/'
 
 
 class Cb01(CBaseHostClass):
