@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
-config.plugins.iptvplayer.guardaserie_hosts = ConfigSelection(default="https://guardaserietv.asia/", choices=[("https://guardaserietv.asia/", "https://guardaserietv.asia/"), ("https://guardaserietv.asia/", "https://guardaserietv.asia/"), ("https://guardaserietv.asia/", "https://guardaserietv.asia/")])
+config.plugins.iptvplayer.guardaserie_hosts = ConfigSelection(default="https://guardoserie.bar/", choices=[("https://guardoserie.bar/", "https://guardoserie.bar/"), ("https://guardaserietv.asia/", "https://guardaserietv.asia/"), ("https://guardaserietv.club/", "https://guardaserietv.club/")])
 
 
 def GetConfigList():
