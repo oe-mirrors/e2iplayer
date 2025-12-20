@@ -35,7 +35,7 @@ import datetime
 class EHLSDownloader(HLSDownloader):
 
     def __init__(self):
-        printDBG('EM3U8Downloader.__init__ ----------------------------------')
+        printDBG('EHLSDownloader.__init__ ----------------------------------')
         HLSDownloader.__init__(self)
 
         # M3U8list link provider
@@ -52,14 +52,14 @@ class EHLSDownloader(HLSDownloader):
         self.em3i8_params = {}
 
     def __del__(self):
-        printDBG("EM3U8Downloader.__del__ ----------------------------------")
+        printDBG("EHLSDownloader.__del__ ----------------------------------")
 
     def start(self, url, filePath, params={}):
         self.em3u8_url = strwithmeta(url)
         self.em3u8_filePath = filePath
         self.em3i8_params = params
 
-        printDBG("===================EM3U8Downloader===================")
+        printDBG("===================EHLSDownloader===================")
         printDBG(self.em3u8_url.meta)
         printDBG(self.em3u8_url.meta.get('iptv_refresh_cmd', ''))
         printDBG("=====================================================")
@@ -68,7 +68,7 @@ class EHLSDownloader(HLSDownloader):
         return BaseDownloader.CODE_OK
 
     def _updateEM3U8Finished(self, code=0):
-        printDBG('EM3U8Downloader._updateEM3U8Finished update code[%d]--- ' % (code))
+        printDBG('EHLSDownloader._updateEM3U8Finished update code[%d]--- ' % (code))
         if not self.em3u8Started:
             self.status = DMHelper.STS.ERROR
             HLSDownloader._terminate(self)

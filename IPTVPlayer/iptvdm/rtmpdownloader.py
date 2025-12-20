@@ -180,7 +180,8 @@ class RtmpDownloader(BaseDownloader):
             self.iptv_sys = None
         if DMHelper.STS.DOWNLOADING == self.status:
             if self.console:
-                self.console.sendCtrlC()  # kill # produce zombies
+                self.console.kill()  # kill # produce zombies
+                # self.console.sendCtrlC()  # kill # produce zombies
                 self._cmdFinished(-1, True)
                 return BaseDownloader.CODE_OK
 
