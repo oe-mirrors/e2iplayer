@@ -201,6 +201,24 @@ wget -q "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/pytho
 3. Restart your enigma2 to load the plugin.
 </details>
 
+
+### ❌ Uninstallation
+**GUI (Feed)**
+- Menu → Extensions/Plugins
+- Red button (“Remove Plugins”)
+- Select category (Extensions / IPTV)
+- select E2iPlayer
+- Green button ("Remove Plugin")
+- restart E2 if necessary
+
+<details>
+<summary>manually via FTP.</summary>
+
+1. Remove IPTVPlayer folder over FTP from your plugin directory.
+
+3. Restart your enigma2 to remove the plugin.
+</details>
+
 ---
 
 ### 📌 Notes

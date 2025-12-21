@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 25.08.2025
+# Last Modified: 21.12.2025 - update to current url
 import json
 import re
 
@@ -15,7 +15,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://cb01net.guru/'
+    return 'https://cb01net.shop/'
 
 
 class Cb01(CBaseHostClass):
