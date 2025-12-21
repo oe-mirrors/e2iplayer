@@ -773,6 +773,7 @@ class urlparser:
             "vidmoly.me": self.pp.parserVIDMOLYME,
             "vidmoly.net": self.pp.parserVIDMOLYME,
             "vidmoly.to": self.pp.parserVIDMOLYME,
+            "vidnest.io": self.pp.parserJWPLAYER,
             "vidoo.tv": self.pp.parserONLYSTREAMTV,
             "vidoza.co": self.pp.parserJWPLAYER,
             "vidoza.net": self.pp.parserJWPLAYER,
@@ -3290,7 +3291,7 @@ class pageParser(CaptchaHelper):
                 urltab.append({"name": "mp4", "url": url})
         return urltab
 
-    def parserVEEV(self, baseUrl):  # check 150625
+    def parserVEEV(self, baseUrl):  # update 211225
         printDBG("parserVEEV baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         HTTP_HEADER.update({"Referer": baseUrl, "Origin": urlparser.getDomain(baseUrl, False), "Accept-Language": "en-US,en;q=0.5"})
@@ -3343,10 +3344,7 @@ class pageParser(CaptchaHelper):
         url = self.cm.meta.get("url", "")
         if url != "":
             baseUrl = url
-        # New verison:
-        # items = re.findall(r"""[\.\s'](?:fc|_vvto\[[^\]]*)(?:['\]]+)?\s*[:=]\s*['"]([^'"]+)""", data)
-        # needs to be tested !
-        items = re.findall(r"""[\.\s'](?:fc|_vvto\[[^\]]*)(?:['\]]*)?\s*[:=]\s*['"]([^'"]+)""", data)
+        items = re.findall(r"""[\.\s'](?:fc|_vvto\[[^\]]*)(?:['\]]+)?\s*[:=]\s*['"]([^'"]+)""", data)
         if items:
             for f in items[::-1]:
                 ch = veev_decode(ensure_binary(f).decode("utf8"))
