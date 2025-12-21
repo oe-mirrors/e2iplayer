@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 12.11.2025 by lululla
+# Last Modified: 21.12.2025 - update to current url
 ###################################################
 # LOCAL import
 ###################################################
@@ -26,7 +26,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://altadefinizione01.racing/'
+    return 'https://altadefinizione-01.uno/'
 
 
 class Altadefinizione(CBaseHostClass):
@@ -39,8 +39,8 @@ class Altadefinizione(CBaseHostClass):
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
 
-        self.MAIN_URL = 'https://altadefinizione01.racing/'
-        self.DEFAULT_ICON_URL = 'https://altadefinizione01.racing/templates/Darktemplate_pagespeed/images/logo.png'
+        self.MAIN_URL = gettytul()
+        self.DEFAULT_ICON_URL = gettytul() + 'templates/Darktemplate_pagespeed/images/logo.png'
 
         self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
 
