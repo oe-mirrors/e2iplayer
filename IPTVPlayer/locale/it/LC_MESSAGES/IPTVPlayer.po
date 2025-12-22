@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:37+0100\n"
+"POT-Creation-Date: 2025-12-22 20:02+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Lululla <ekekaz@gmail.com>\n"
 "Language-Team: lululla <ekekaz@gmail.com>\n"
@@ -566,6 +566,10 @@ msgstr "Sei sicuro di cancellare il file \"%s\" ?"
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Sei sicuro di cancellare il file \"%s\" ?"
+
+#, fuzzy
+msgid "Are you sure you want to reset all hosts in this group to defaults?"
+msgstr "Vuoi davvero ripristinare tutte le impostazioni ai valori predefiniti?"
 
 msgid "Are you sure you want to reset all settings to their default values?"
 msgstr "Vuoi davvero ripristinare tutte le impostazioni ai valori predefiniti?"
@@ -2748,6 +2752,10 @@ msgstr "Replay programmi"
 msgid "Reset State"
 msgstr "Azzera lo stato"
 
+#, fuzzy
+msgid "Reset group"
+msgstr "Seleziona gruppo"
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2918,9 +2926,6 @@ msgstr "Seleziona opzione"
 
 msgid "Select pictures"
 msgstr "Seleziona immagini"
-
-msgid "Select service"
-msgstr "Seleziona servizio"
 
 msgid "Select subtitles file"
 msgstr "Seleziona il file per i sottotitoli"
@@ -3100,6 +3105,10 @@ msgid "Sort alphabetically"
 msgstr "Ordina alfabeticamente"
 
 msgid "Sort by alphabet"
+msgstr "Ordina per alfabeto"
+
+#, fuzzy
+msgid "Sort by name"
 msgstr "Ordina per alfabeto"
 
 msgid "Sort by popularity"

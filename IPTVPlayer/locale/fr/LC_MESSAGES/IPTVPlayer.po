@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iptvplayer-for-e 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:37+0100\n"
+"POT-Creation-Date: 2025-12-22 20:02+0100\n"
 "PO-Revision-Date: 2018-07-28 16:39+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -582,6 +582,10 @@ msgstr "Êtes-vous sûr de vouloir effacer le fichier « %s »?"
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
+msgstr "Êtes-vous sûr de vouloir effacer le fichier « %s »?"
+
+#, fuzzy
+msgid "Are you sure you want to reset all hosts in this group to defaults?"
 msgstr "Êtes-vous sûr de vouloir effacer le fichier « %s »?"
 
 #, fuzzy
@@ -2840,6 +2844,10 @@ msgstr "Relire le spectacle"
 msgid "Reset State"
 msgstr "Réinitialiser l'état"
 
+#, fuzzy
+msgid "Reset group"
+msgstr "Sélectionner un groupe"
+
 #, fuzzy, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -3012,9 +3020,6 @@ msgstr "Sélectionnez une option"
 
 msgid "Select pictures"
 msgstr "Sélectionner des images"
-
-msgid "Select service"
-msgstr "Sélectionner un service"
 
 msgid "Select subtitles file"
 msgstr "Sélectionner le fichier de sous-titres"
@@ -3201,6 +3206,10 @@ msgid "Sort alphabetically"
 msgstr "Trier alphabétiquement"
 
 msgid "Sort by alphabet"
+msgstr "Trier par alphabet"
+
+#, fuzzy
+msgid "Sort by name"
 msgstr "Trier par alphabet"
 
 msgid "Sort by popularity"

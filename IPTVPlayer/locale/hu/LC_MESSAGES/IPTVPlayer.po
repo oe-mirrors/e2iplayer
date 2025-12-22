@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:37+0100\n"
+"POT-Creation-Date: 2025-12-22 20:02+0100\n"
 "PO-Revision-Date: 2025-11-24 07:59+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -561,6 +561,10 @@ msgstr "Biztosan törölni szeretnéd a keresési előzményeket?"
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Biztosan eltávolítja a(z) „%s” fájlt?"
+
+#, fuzzy
+msgid "Are you sure you want to reset all hosts in this group to defaults?"
+msgstr "Biztosan törölni szeretnéd a keresési előzményeket?"
 
 #, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
@@ -2746,6 +2750,10 @@ msgstr "Visszajátszás műsorok"
 msgid "Reset State"
 msgstr "Állapot visszaállítása"
 
+#, fuzzy
+msgid "Reset group"
+msgstr "Csoport kiválasztása"
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2912,9 +2920,6 @@ msgstr "Válasszon egy opciót"
 
 msgid "Select pictures"
 msgstr "Képek kiválasztása"
-
-msgid "Select service"
-msgstr "Válasszon szolgáltatást"
 
 msgid "Select subtitles file"
 msgstr "Feliratfájl kiválasztása"
@@ -3094,6 +3099,10 @@ msgid "Sort alphabetically"
 msgstr "Rendezés betűrendben"
 
 msgid "Sort by alphabet"
+msgstr "Rendezés ábécé szerint"
+
+#, fuzzy
+msgid "Sort by name"
 msgstr "Rendezés ábécé szerint"
 
 msgid "Sort by popularity"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer OE-Mirrors Version\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:37+0100\n"
+"POT-Creation-Date: 2025-12-22 20:02+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: polinene\n"
 "Language-Team: polinene\n"
@@ -570,6 +570,10 @@ msgstr "¿Está seguro que desea eliminar el archivo de búsqueda?"
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "¿Está seguro que desea eliminar el archivo \"%s\"?"
+
+#, fuzzy
+msgid "Are you sure you want to reset all hosts in this group to defaults?"
+msgstr "¿Está seguro que desea eliminar el archivo de búsqueda?"
 
 #, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
@@ -2776,6 +2780,10 @@ msgstr "Repetir programas"
 msgid "Reset State"
 msgstr "Reiniciar estado"
 
+#, fuzzy
+msgid "Reset group"
+msgstr "Seleccionar grupo"
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2942,9 +2950,6 @@ msgstr "Seleccionar opción"
 
 msgid "Select pictures"
 msgstr "Seleccionar imágenes"
-
-msgid "Select service"
-msgstr "Seleccione servicio"
 
 msgid "Select subtitles file"
 msgstr "Seleccione el archivo de subtítulos"
@@ -3123,6 +3128,10 @@ msgid "Sort alphabetically"
 msgstr "Ordenar alfabéticamente"
 
 msgid "Sort by alphabet"
+msgstr "Ordenar por alfabeto"
+
+#, fuzzy
+msgid "Sort by name"
 msgstr "Ordenar por alfabeto"
 
 msgid "Sort by popularity"

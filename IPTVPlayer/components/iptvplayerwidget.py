@@ -1329,6 +1329,9 @@ class E2iPlayerWidget(Screen):
                 nextFunction = self.runConfig
                 prevFunction = self.selectHost
                 protectedByPin = config.plugins.iptvplayer.configProtectedByPin.value
+            elif ret[1] == "reset_group":
+                self.groupObj.resetHostList(ret[2])
+                self.selectHost()
             elif ret[1] == "config_hosts":
                 nextFunction = self.runConfigHosts
                 if type == 'selecthost':

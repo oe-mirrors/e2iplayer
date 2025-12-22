@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:37+0100\n"
+"POT-Creation-Date: 2025-12-22 20:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -538,6 +538,9 @@ msgstr ""
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
+msgstr ""
+
+msgid "Are you sure you want to reset all hosts in this group to defaults?"
 msgstr ""
 
 msgid "Are you sure you want to reset all settings to their default values?"
@@ -2654,6 +2657,9 @@ msgstr ""
 msgid "Reset State"
 msgstr ""
 
+msgid "Reset group"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2819,9 +2825,6 @@ msgid "Select option"
 msgstr ""
 
 msgid "Select pictures"
-msgstr ""
-
-msgid "Select service"
 msgstr ""
 
 msgid "Select subtitles file"
@@ -3000,6 +3003,9 @@ msgid "Sort alphabetically"
 msgstr ""
 
 msgid "Sort by alphabet"
+msgstr ""
+
+msgid "Sort by name"
 msgstr ""
 
 msgid "Sort by popularity"

@@ -195,10 +195,20 @@ if GRIDSUPPORT:
         def selectionChanged(self):
             if self.currList:
                 idx = self["grid"].getSelectedIndex()
-                if self.reorderingMode and self.moveIndex != -1:
-                    self["statustext"].setText(_("MOVE: %s") % self.currList[self.moveIndex][0])
-                else:
-                    self["statustext"].setText(self.currList[idx][0])
+                if self.reorderingMode:
+                    if self.moveIndex != -1:
+                        self["statustext"].setText(_("MOVE: %s") % self.currList[self.moveIndex][0])
+                        if self.moveIndex != idx:
+                            def move_element(lst, from_index, to_index):
+                                element = lst.pop(from_index)
+                                lst.insert(to_index, element)
+                                return lst
+                            move_element(self.currList, self.moveIndex, idx)
+                            move_element(self.pixmapList, self.moveIndex, idx)
+                            self.moveIndex = idx
+                            self.reInitDisplayList()
+                        return
+                self["statustext"].setText(self.currList[idx][0])
 
         def __onClose(self):
             self.onClose.remove(self.__onClose)
@@ -225,18 +235,14 @@ if GRIDSUPPORT:
 
         def keySelect(self):
             if self.reorderingMode:
-                self.setSelectionImage("")
-                targetIndex = self["grid"].getSelectedIndex()
-                if self.moveIndex != targetIndex:
-                    def move_element(lst, from_index, to_index):
-                        element = lst.pop(from_index)
-                        lst.insert(to_index, element)
-                        return lst
-                    move_element(self.currList, self.moveIndex, targetIndex)
-                    move_element(self.pixmapList, self.moveIndex, targetIndex)
-                self.reorderingMode = False
-                self.moveIndex = -1
-                self.reInitDisplayList()
+                if self.moveIndex == -1:
+                    self.setSelectionImage("Sel")
+                    self["grid"].master.master.instance.invalidate()
+                    self.moveIndex = self["grid"].getSelectedIndex()
+                else:
+                    self.moveIndex = -1
+                    self.setSelectionImage("")
+                    self.reInitDisplayList()
                 self.selectionChanged()
                 return
 
@@ -264,11 +270,14 @@ if GRIDSUPPORT:
                     options.append((_("Enable reordering mode"), "CHANGE_REORDERING_MODE"))
                 elif self.reorderingMode:
                     options.append((_("Disable reordering mode"), "CHANGE_REORDERING_MODE"))
+                options.append((_("Sort by name"), "SORT_NAME"))
                 options.append((_("Download manager"), "IPTVDM"))
                 if self.groupName in ['selecthost', 'all']:
                     options.append((_("Disable/Enable services"), "config_hosts"))
-                if self.groupName in ['selectgroup']:
+                elif self.groupName in ['selectgroup']:
                     options.append((_("Disable/Enable groups"), "config_groups"))
+                else:
+                    options.append((_("Reset group"), "reset_group"))
 
                 if self.groupName == 'selecthost':
                     pass
@@ -288,10 +297,24 @@ if GRIDSUPPORT:
             printDBG(">> PlayerSelectorWidget.selectMenuCallback")
             if ret:
                 ret = ret[1]
-                if ret == "CHANGE_REORDERING_MODE":
+                if ret == "SORT_NAME":
+                    self.moveIndex = -1
+                    self.reorderingMode = False
+                    self.currList = sorted(self.currList, key=lambda x: x[1])
+                    self.pixmapList = []
+                    for idx in range(0, self.numOfItems):
+                        self.pixmapList.append(LoadPixmap(GetIconDir('PlayerSelector/' + self.currList[idx][1] + '%i.png' % self.iconSize)))
+                    self.reInitDisplayList()
+                elif ret == "CHANGE_REORDERING_MODE":
                     self.changeReorderingMode()
                 elif ret == "IPTVDM":
                     self.keyBlue()
+                elif ret == "reset_group":
+                    def keyDefaultsConfirm(result):
+                        if result:
+                            self.close((_("Disable not used services"), "reset_group", self.groupName))
+                    message = _("Are you sure you want to reset all hosts in this group to defaults?")
+                    self.session.openWithCallback(keyDefaultsConfirm, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
                 elif ret in ["config_hosts", "config_groups"]:
                     self.close((_("Disable not used services"), ret))
                 elif ret == "ADD_HOST_TO_GROUP":

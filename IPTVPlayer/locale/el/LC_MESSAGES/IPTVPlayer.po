@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:37+0100\n"
+"POT-Creation-Date: 2025-12-22 20:02+0100\n"
 "PO-Revision-Date: 2025-12-05 13:54+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -562,6 +562,10 @@ msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε το αρχείο \"%s\";"
+
+#, fuzzy
+msgid "Are you sure you want to reset all hosts in this group to defaults?"
+msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ιστορικό αναζητήσεων;"
 
 #, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
@@ -2746,6 +2750,10 @@ msgstr "Επανάληψη εκπομπών"
 msgid "Reset State"
 msgstr "Επαναφορά κατάστασης"
 
+#, fuzzy
+msgid "Reset group"
+msgstr "Επιλογή ομάδας"
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2916,9 +2924,6 @@ msgstr "Δώστε μια επιλογή"
 
 msgid "Select pictures"
 msgstr "Επιλογή εικόνων"
-
-msgid "Select service"
-msgstr "Επιλογή υπηρεσίας"
 
 msgid "Select subtitles file"
 msgstr "Επιλογή αρχείου υποτίτλων"
@@ -3098,6 +3103,10 @@ msgid "Sort alphabetically"
 msgstr "Ταξινόμηση αλφαβητικά"
 
 msgid "Sort by alphabet"
+msgstr "Ταξινόμηση κατά αλφάβητο"
+
+#, fuzzy
+msgid "Sort by name"
 msgstr "Ταξινόμηση κατά αλφάβητο"
 
 msgid "Sort by popularity"

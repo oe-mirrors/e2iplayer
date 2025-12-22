@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:37+0100\n"
+"POT-Creation-Date: 2025-12-22 20:02+0100\n"
 "PO-Revision-Date: 2025-11-23 21:52+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -561,6 +561,10 @@ msgstr "هل أنت متأكد أنك تريد حذف سجل البحث؟"
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "هل أنت متأكد أنك تريد حذف الملف \"%s\"؟"
+
+#, fuzzy
+msgid "Are you sure you want to reset all hosts in this group to defaults?"
+msgstr "هل أنت متأكد أنك تريد حذف سجل البحث؟"
 
 #, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
@@ -2745,6 +2749,10 @@ msgstr "إعادة عرض البرامج"
 msgid "Reset State"
 msgstr "إعادة التهيئة"
 
+#, fuzzy
+msgid "Reset group"
+msgstr "اختر المجموعة"
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2915,9 +2923,6 @@ msgstr "اختر الخيار"
 
 msgid "Select pictures"
 msgstr "اختر الصور"
-
-msgid "Select service"
-msgstr "اختر الخدمة"
 
 msgid "Select subtitles file"
 msgstr "اختر ملف الترجمة"
@@ -3097,6 +3102,10 @@ msgid "Sort alphabetically"
 msgstr "الفرز أبجديًا"
 
 msgid "Sort by alphabet"
+msgstr "الفرز حسب الأبجدية"
+
+#, fuzzy
+msgid "Sort by name"
 msgstr "الفرز حسب الأبجدية"
 
 msgid "Sort by popularity"

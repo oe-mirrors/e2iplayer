@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:37+0100\n"
+"POT-Creation-Date: 2025-12-22 20:02+0100\n"
 "PO-Revision-Date: 2025-08-09 16:00+0200\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -567,6 +567,10 @@ msgstr "Weet u zeker dat u de zoekgeschiedenis wilt verwijderen?"
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Weet u zeker dat u bestand \"%s\" wil verwijderen?"
+
+#, fuzzy
+msgid "Are you sure you want to reset all hosts in this group to defaults?"
+msgstr "Weet u zeker dat u de zoekgeschiedenis wilt verwijderen?"
 
 #, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
@@ -2774,6 +2778,10 @@ msgstr "Uitzendingen herhalen"
 msgid "Reset State"
 msgstr "Reset status"
 
+#, fuzzy
+msgid "Reset group"
+msgstr "Kies een groep"
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2944,9 +2952,6 @@ msgstr "Kies een optie"
 
 msgid "Select pictures"
 msgstr "Kies afbeeldingen"
-
-msgid "Select service"
-msgstr "Kies een zender"
 
 msgid "Select subtitles file"
 msgstr "Kies een ondertitel bestand"
@@ -3128,6 +3133,10 @@ msgid "Sort alphabetically"
 msgstr "Alfabetisch sorteren"
 
 msgid "Sort by alphabet"
+msgstr "Sorteer op alfabet"
+
+#, fuzzy
+msgid "Sort by name"
 msgstr "Sorteer op alfabet"
 
 msgid "Sort by popularity"

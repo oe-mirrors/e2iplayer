@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:37+0100\n"
+"POT-Creation-Date: 2025-12-22 20:02+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -585,6 +585,10 @@ msgstr "Ви впевненні, що бажаєте видалити файл \
 
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
+msgstr "Ви впевненні, що бажаєте видалити файл \"%s\"?"
+
+#, fuzzy
+msgid "Are you sure you want to reset all hosts in this group to defaults?"
 msgstr "Ви впевненні, що бажаєте видалити файл \"%s\"?"
 
 #, fuzzy
@@ -2920,6 +2924,10 @@ msgstr "ТВ Шоу"
 msgid "Reset State"
 msgstr ""
 
+#, fuzzy
+msgid "Reset group"
+msgstr "Виберіть опцію"
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -3097,9 +3105,6 @@ msgstr "Виберіть опцію"
 
 #, fuzzy
 msgid "Select pictures"
-msgstr "Виберіть послугу"
-
-msgid "Select service"
 msgstr "Виберіть послугу"
 
 msgid "Select subtitles file"
@@ -3297,6 +3302,10 @@ msgid "Sort alphabetically"
 msgstr "В алфавітному порядку"
 
 msgid "Sort by alphabet"
+msgstr "Сортування по алфавіту"
+
+#, fuzzy
+msgid "Sort by name"
 msgstr "Сортування по алфавіту"
 
 msgid "Sort by popularity"

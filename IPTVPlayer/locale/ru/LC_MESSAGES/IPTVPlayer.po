@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-15 16:37+0100\n"
+"POT-Creation-Date: 2025-12-22 20:02+0100\n"
 "PO-Revision-Date: 2025-11-24 07:51+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -561,6 +561,10 @@ msgstr "Вы уверены, что хотите удалить историю �
 #, python-format
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Вы действительно хотите удалить файл \"%s\"?"
+
+#, fuzzy
+msgid "Are you sure you want to reset all hosts in this group to defaults?"
+msgstr "Вы уверены, что хотите удалить историю поиска?"
 
 #, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
@@ -2745,6 +2749,10 @@ msgstr "Повторное Шоу"
 msgid "Reset State"
 msgstr "Состояние Cброса"
 
+#, fuzzy
+msgid "Reset group"
+msgstr "Выбрать группу"
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2915,9 +2923,6 @@ msgstr "Выберите опцию"
 
 msgid "Select pictures"
 msgstr "Выбор рисунков"
-
-msgid "Select service"
-msgstr "Выбрать сервис"
 
 msgid "Select subtitles file"
 msgstr "Выберите файл субтитров"
@@ -3097,6 +3102,10 @@ msgid "Sort alphabetically"
 msgstr "Сортировать в алфлвитном порядке"
 
 msgid "Sort by alphabet"
+msgstr "Сортировать по алфавиту"
+
+#, fuzzy
+msgid "Sort by name"
 msgstr "Сортировать по алфавиту"
 
 msgid "Sort by popularity"

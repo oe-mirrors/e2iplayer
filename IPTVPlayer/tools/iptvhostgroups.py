@@ -15,7 +15,8 @@ from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT
 # FOREIGN import
 ###################################################
 import codecs
-from os import path as os_path
+from os import unlink
+from os.path import isfile
 ###################################################
 
 
@@ -158,6 +159,12 @@ class IPTVHostsGroups:
         groupFile = self._getGroupFile(groupName)
         return self._saveHosts(outObj, groupFile)
 
+    def resetHostList(self, groupName):
+        printDBG("IPTVHostsGroups.resetHostList groupName[%s]" % (groupName))
+        groupFile = self._getGroupFile(groupName)
+        if isfile(groupFile):
+            unlink(groupFile)
+
     def _saveHosts(self, outObj, groupFile):
         printDBG("IPTVHostsGroups._saveHosts")
         ret = True
@@ -177,7 +184,7 @@ class IPTVHostsGroups:
         disabledHosts = []
 
         ret = True
-        if os_path.isfile(groupFile):
+        if isfile(groupFile):
             try:
                 data = self._loadFromFile(groupFile)
                 data = json_loads(data)
@@ -266,7 +273,7 @@ class IPTVHostsGroups:
         disabledGroups = []
 
         ret = True
-        if os_path.isfile(self.GROUPS_FILE):
+        if isfile(self.GROUPS_FILE):
             try:
                 data = self._loadFromFile(self.GROUPS_FILE)
                 data = json_loads(data)
