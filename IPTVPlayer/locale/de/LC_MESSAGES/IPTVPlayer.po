@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-22 20:02+0100\n"
-"PO-Revision-Date: 2025-12-15 20:05+0100\n"
+"PO-Revision-Date: 2025-12-22 20:21+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -558,9 +558,8 @@ msgstr "Sind Sie sicher, dass Sie den Suchverlauf löschen möchten?"
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Sind Sie sicher, dass Sie die Datei \"%s\" entfernen wollen?"
 
-#, fuzzy
 msgid "Are you sure you want to reset all hosts in this group to defaults?"
-msgstr "Bist du sicher, dass du alle Einstellungen auf die Standardwerte zurücksetzen möchtest?"
+msgstr "Bist du sicher, dass du alle Hosts in dieser Gruppe auf Standard zurücksetzen willst?"
 
 msgid "Are you sure you want to reset all settings to their default values?"
 msgstr "Bist du sicher, dass du alle Einstellungen auf die Standardwerte zurücksetzen möchtest?"
@@ -2741,9 +2740,8 @@ msgstr "Replay Shows"
 msgid "Reset State"
 msgstr "Status zurücksetzen"
 
-#, fuzzy
 msgid "Reset group"
-msgstr "Wähle Gruppe"
+msgstr "Gruppe zurücksetzen"
 
 #, python-format
 msgid ""
@@ -3096,9 +3094,8 @@ msgstr "Alphabetisch sortieren"
 msgid "Sort by alphabet"
 msgstr "Nach Alphabet sortieren"
 
-#, fuzzy
 msgid "Sort by name"
-msgstr "Nach Alphabet sortieren"
+msgstr "Sortieren nach Namen"
 
 msgid "Sort by popularity"
 msgstr "Sortiere nach Popularität"
