@@ -463,11 +463,11 @@ class IPTVDMWidget(Screen):
             self.session.open(MessageBox, _("Error renaming file: %s") % str(e), type=MessageBox.TYPE_ERROR)
 
     def getSelIndex(self):
-        currSelIndex = self["downloadlist"].getCurrentIndex()
+        currSelIndex = self["downloadlist"].getIndex()
         return currSelIndex
 
     def getSelItem(self):
-        currSelIndex = self["downloadlist"].getCurrentIndex()
+        currSelIndex = self["downloadlist"].getIndex()
         if not self.localMode:
             list = self.currList
         else:
