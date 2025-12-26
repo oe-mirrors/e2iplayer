@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 17.12.2025 - by Mr.X
+# Last Modified: 26.12.2025 - fixed pycurl for py3 version - by Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -116,7 +116,7 @@ class Bflix(CBaseHostClass):
         params = dict(self.defaultParams)
         params["no_redirection"] = True
         sts, dummy = self.cm.getPage(url, params)
-        if sts and self.cm.meta.get("location"):
+        if self.cm.meta.get("location"):
             return self.up.getVideoLinkExt(self.cm.meta.get("location"))
         return url
 
