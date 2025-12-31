@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 02.10.2025 - Mr.X
+# Last Modified: 31.12.2025 - Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -14,7 +14,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://megakino.ist/"
+    return "https://megakino.lol/"
 
 
 class MegaKino(CBaseHostClass):
@@ -22,31 +22,13 @@ class MegaKino(CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "MegaKino", "cookie": "MegaKino.cookie"})
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self.MAIN_URL = None
-
-    def menu(self):
         self.MAIN_URL = gettytul()
-        self.MENU = [
-            {"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("films")},
-            {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kinofilme")},
-            {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serials")},
-            {"category": "list_items", "title": _("Animation"), "url": self.getFullUrl("multfilm")},
-            {"category": "list_items", "title": _("Documentary"), "url": self.getFullUrl("documentary")},
-            {"category": "list_value", "title": _("Collections"), "s": ">Sammlung"},
-            {"category": "list_value", "title": _("Genres"), "s": ">Genres"}] + self.searchItems()
+        self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("films")}, {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kinofilme")}, {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serials")}, {"category": "list_items", "title": _("Animation"), "url": self.getFullUrl("multfilm")}, {"category": "list_items", "title": _("Documentary"), "url": self.getFullUrl("documentary")}, {"category": "list_value", "title": _("Collections"), "s": ">Sammlung"}, {"category": "list_value", "title": _("Genres"), "s": ">Genres"}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-
-    def getFullIconUrl(self, url):
-        url = self.getFullUrl(url)
-        if url == "":
-            return ""
-        cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {"Cookie": cookieHeader, "User-Agent": self.HEADER.get("User-Agent")})
 
     def listItems(self, cItem, nextCategory):
         printDBG("MegaKino.listItems |%s|" % cItem)
@@ -57,7 +39,7 @@ class MegaKino(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="poster grid-item', "</a>")
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'src="([^"]+)')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'data-src="([^"]+)')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'alt="([^"]+)')[0])
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'line-clamp">([^<]+)')[0])
             params = dict(cItem)
@@ -134,31 +116,27 @@ class MegaKino(CBaseHostClass):
         if not sts:
             return []
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'itemprop="description"\s*data-rows="\d+">(.*?)</div>')[0])
-        desc = desc if desc else cItem.get("desc", "")
-        icon = cItem.get("icon", "")
         fields = {"duration": r"(\d+ min)</div>", "country": 'itemprop="countryOfOrigin">([^"]+)</span>', "director": 'itemprop="directors">(.*?)</span>', "actors": 'itemprop="actors">(.*?)</span>', "genres": 'itemprop="genre">([^"]+)</div>'}
         for key, pattern in fields.items():
             value = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, pattern)[0])
             if value:
                 otherInfo[key] = value
-        return [{"title": cItem["title"], "text": desc, "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
+        return [{"title": cItem["title"], "text": desc if desc else cItem.get("desc", ""), "images": [{"title": "", "url": cItem.get("icon", "")}], "other_info": otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL is None:
-            self.getPage(gettytul() + "index.php?yg=token", self.defaultParams)
-            self.menu()
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
         printDBG("handleService start\nhandleService: name[%s], category[%s] " % (name, category))
         self.currList = []
         if name is None:
+            self.getPage(gettytul() + "index.php?yg=token", self.defaultParams)
             self.listsTab(self.MENU, {"name": "category"})
-        elif "list_items" == category:
+        elif category == "list_items":
             self.listItems(self.currItem, "video")
-        elif "list_episodes" == category:
+        elif category == "list_episodes":
             self.listEpisodes(self.currItem)
-        elif "list_value" == category:
+        elif category == "list_value":
             self.listValue(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
