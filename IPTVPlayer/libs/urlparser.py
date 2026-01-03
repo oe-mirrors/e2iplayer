@@ -549,6 +549,7 @@ class urlparser:
             "luluvdo.com": self.pp.parserJWPLAYER,
             "luluvdoo.com": self.pp.parserJWPLAYER,
             # m
+            "m1xdrop.net": self.pp.parserJWPLAYER,
             "md3b0j6hj.com": self.pp.parserJWPLAYER,
             "mdbekjwqa.pw": self.pp.parserJWPLAYER,
             "mdfx9dc8n.net": self.pp.parserJWPLAYER,
@@ -2921,7 +2922,7 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", urlparser.getDomain(baseUrl, False))
         urlParams = {"header": HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": COOKIE_FILE}
-        if "mxdrop" in baseUrl or "mixdro" in baseUrl or "mixdrp" in baseUrl:
+        if "mxdrop" in baseUrl or "mixdro" in baseUrl or "mixdrp" in baseUrl or "m1xdrop" in baseUrl:
             baseUrl = baseUrl.replace(".co/", ".my/").replace(".club/", ".my/")
             baseUrl = "/".join(baseUrl.split("/")[:5]).replace("/f/", "/e/") if "/f/" in baseUrl else baseUrl
         if "hglink.to" in baseUrl:
