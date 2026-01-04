@@ -79,7 +79,7 @@ class BasketballVideo(CBaseHostClass):
         data = re.compile(r'''(?:src|href)=['"]([^'^"]+?)['"]\s(?:width|rel)''', re.DOTALL).findall(data)
         for url in data:
             url = 'https:' + url if url.startswith('//') else url
-            if "gamesontvtoday.com" in url or "nfl-video.com" or "guidedesgemmes.com" in url:
+            if any(d in url for d in ("gamesontvtoday.com", "nfl-video.com", "guidedesgemmes.com")):
                 sts, d = self.getPage(url)
                 if not sts:
                     continue
