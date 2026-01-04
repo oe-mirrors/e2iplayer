@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 19.10.2025
+# Last Modified: 04.01.2026 - Panda555
 import re
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
@@ -79,7 +79,7 @@ class BasketballVideo(CBaseHostClass):
         data = re.compile(r'''(?:src|href)=['"]([^'^"]+?)['"]\s(?:width|rel)''', re.DOTALL).findall(data)
         for url in data:
             url = 'https:' + url if url.startswith('//') else url
-            if "gamesontvtoday.com" in url or "nfl-video.com" in url:
+            if "gamesontvtoday.com" in url or "nfl-video.com" or "guidedesgemmes.com" in url:
                 sts, d = self.getPage(url)
                 if not sts:
                     continue
