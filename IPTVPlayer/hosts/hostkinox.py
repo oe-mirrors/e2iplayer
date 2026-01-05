@@ -58,7 +58,7 @@ class Kinox(CBaseHostClass):
         self.cacheNewTab = {}
 
     def selectDomain(self):
-        domains = ["https://kinoz.to/", "https://kinox.bz/", "http://kinox.ag/", "http://kinox.me/", "https://kinox.am/", "http://kinox.nu/", "http://kinox.pe/", "http://kinox.sg/", "http://kinox.to/", "http://kinox.tv/"]
+        domains = ["https://kinoz.to/", "https://kinox.to/"]
         domain = config.plugins.iptvplayer.kinox_alt_domain.value.strip()
         if self.cm.isValidUrl(domain):
             if domain[-1] != "/":
@@ -536,7 +536,6 @@ class Kinox(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        #  mode = self.currItem.get("mode", '')
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         if name is None:
