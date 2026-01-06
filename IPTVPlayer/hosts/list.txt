@@ -95,7 +95,7 @@ hostkijknl
 hostkinoger
 hostkinoking
 hostkinomoc_blocked_
-hostkinox_blocked_
+hostkinox
 hostkissanimeto
 hostkisscartoonme_blocked_
 hostkkiste
@@ -112,7 +112,7 @@ hostmaxtvgo
 hostmeczykipl_blocked_
 hostmediasetplay_blocked_
 hostmediayou_blocked_
-hostmegafilme
+hostmegafilme_blocked_
 hostmegakino
 hostmindigo
 hostmindigtv
