@@ -2,7 +2,7 @@
 import json
 import re
 
-from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
+from Components.config import ConfigSelection, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVSleep
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _t
@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import byteify, printDBG, pri
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 config.plugins.iptvplayer.kinox_proxy = ConfigSelection(default="None", choices=[("None", _t("None")), ("proxy_1", _t("Alternative proxy server (1)")), ("proxy_2", _t("Alternative proxy server (2)"))])
-config.plugins.iptvplayer.kinox_alt_domain = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.kinox_hosts = ConfigSelection(default="https://kinox.to/", choices=[("https://kinox.to/", "https://kinox.to/"), ("https://kinoz.to/", "https://kinoz.to/")])
 
 
 def cap(html):
@@ -29,18 +29,18 @@ def cap(html):
         wert = [w for w in words if w in allowed]
         resultat = ",".join([str(b) for a in wert for b, c in ids if a == c])
         return {p1[0]: "", p2[0][0]: p2[0][1], p3[0]: "", p4[0]: resultat}
+    return None
 
 
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_t("Use proxy server:"), config.plugins.iptvplayer.kinox_proxy))
-    if config.plugins.iptvplayer.kinox_proxy.value == "None":
-        optionList.append(getConfigListEntry(_t("Alternative domain:"), config.plugins.iptvplayer.kinox_alt_domain))
+    optionList.append(getConfigListEntry(_t("host") + ":", config.plugins.iptvplayer.kinox_hosts))
     return optionList
 
 
 def gettytul():
-    return "https://kinox.to/"
+    return config.plugins.iptvplayer.kinox_hosts.value
 
 
 class Kinox(CBaseHostClass):
@@ -49,48 +49,21 @@ class Kinox(CBaseHostClass):
         self.DEFAULT_ICON_URL = "https://www.medienrecht-urheberrecht.de/images/Urteil_streaming-plattform.PNG"
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE, "cookie_items": {"ListMode": "cover", "CinemaMode": "cover"}}
-        self.MAIN_URL = None
+        self.MAIN_URL = gettytul()
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
         self.cacheSubCategories = []
         self.cacheLangFlags = {"list": [], "map": {}}
         self.cacheSeasons = {}
         self.cacheNewTab = {}
-
-    def selectDomain(self):
-        domains = ["https://kinoz.to/", "https://kinox.to/"]
-        domain = config.plugins.iptvplayer.kinox_alt_domain.value.strip()
-        if self.cm.isValidUrl(domain):
-            if domain[-1] != "/":
-                domain += "/"
-            domains.insert(0, domain)
-        confirmedDomain = None
-        for domain in domains:
-            self.MAIN_URL = domain
-            for _ in range(2):
-                sts, data = self.getPage(domain)
-                if sts:
-                    if "/Wizard.html" in data:
-                        confirmedDomain = domain
-                        break
-                    continue
-                break
-            if confirmedDomain is not None:
-                break
-        if confirmedDomain is None:
-            self.MAIN_URL = "https://kinox.to/"
         self.MAIN_CAT_TAB = [{"category": "news", "title": _t("News"), "url": self.getMainUrl()}, {"category": "list_langs", "title": _t("Cinema movies"), "url": self.getFullUrl("/Kino-filme.html"), "get_list_mode": "direct"}, {"category": "list_sub_cats", "title": _t("Movies"), "url": self.getMainUrl(), "f_type": "movie", "sub_idx": 2}, {"category": "list_sub_cats", "title": _t("Documentaries"), "url": self.getMainUrl(), "f_type": "documentation", "sub_idx": 3}, {"category": "list_sub_cats", "title": _t("Series"), "url": self.getMainUrl(), "f_type": "series", "sub_idx": 4}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        baseUrl = self.cm.iriToUri(baseUrl)
         proxy = config.plugins.iptvplayer.kinox_proxy.value
         if proxy != "None":
-            if proxy == "proxy_1":
-                proxy = config.plugins.iptvplayer.alternative_proxy1.value
-            else:
-                proxy = config.plugins.iptvplayer.alternative_proxy2.value
+            proxy = config.plugins.iptvplayer.alternative_proxy1.value if proxy == "proxy_1" else config.plugins.iptvplayer.alternative_proxy2.value
             addParams = dict(addParams)
             addParams.update({"http_proxy": proxy})
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -274,10 +247,7 @@ class Kinox(CBaseHostClass):
                     if not self.cm.isValidUrl(url):
                         continue
                     title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(it, "<a", "</a>")[1])
-                    if len(subCats) == 0:
-                        mode = "post_mode"
-                    else:
-                        mode = "direct"
+                    mode = "post_mode" if len(subCats) == 0 else "direct"
                     subCats.append({"url": url, "title": title, "get_list_mode": mode})
                 self.cacheSubCategories.append(subCats)
         if subIdx >= len(self.cacheSubCategories):
@@ -445,7 +415,7 @@ class Kinox(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("Kinox.getVideoLinks [%s]" % videoUrl)
         urlTab = []
-        params = dict({"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE})
+        params = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         params["header"]["X-Requested-With"] = "XMLHttpRequest"
         sts, data = self.getPage(videoUrl)
         if not sts:
@@ -470,7 +440,7 @@ class Kinox(CBaseHostClass):
             for _ in range(int(von)):
                 GetIPTVSleep().Sleep(2)
                 action_match = re.search(r'<form[^>]*action="([^"]+)"', html).group(1)
-                sts, html = self.getPage("https://www22.kinox.to" + action_match, params, cap(html))
+                sts, htm = self.getPage("https://www22.kinox.to" + action_match, params, cap(html))
                 if not sts:
                     return []
                 if self.cm.meta.get("location"):
@@ -478,7 +448,7 @@ class Kinox(CBaseHostClass):
                     if "voe.sx" in data:
                         loc = loc.replace(self.up.getDomain(loc), "voe.sx")
                     return self.up.getVideoLinkExt(loc)
-                html = html
+                html = htm
         return urlTab
 
     def getArticleContent(self, cItem):
@@ -514,10 +484,7 @@ class Kinox(CBaseHostClass):
                 continue
             marker = self.cleanHtmlStr(item[0]).lower()
             value = self.cm.ph.getAllItemsBeetwenMarkers(item[1], "<a", "</a>")
-            if len(value) > 1:
-                value = ", ".join([self.cleanHtmlStr(x) for x in value])
-            else:
-                value = self.cleanHtmlStr(item[1])
+            value = ", ".join([self.cleanHtmlStr(x) for x in value]) if len(value) > 1 else self.cleanHtmlStr(item[1])
             key = mapDesc.get(marker, "")
             if key == "":
                 continue
@@ -539,7 +506,6 @@ class Kinox(CBaseHostClass):
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         if name is None:
-            self.selectDomain()
             self.listsTab(self.MAIN_CAT_TAB, {"name": "category"})
         if category == "news":
             self.listNewsCats(self.currItem, "list_news_tabs")
