@@ -114,7 +114,7 @@
 'hostmediasetplay': 'https://mediasetplay.it/',
 'hostmediayou': 'https://mediayou.net/',
 'hostmegafilme': 'https://megafilme.vip/',
-'hostmegakino': 'https://megakino.world',
+'hostmegakino': 'https://megakino1.fit/',
 'hostmindigo': 'https://tv.mindigo.hu',
 'hostmindigtv': 'https://www.mindigtv.hu/',
 'hostmoflixstream': 'https://moflix-stream.xyz',

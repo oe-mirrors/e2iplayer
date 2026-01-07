@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 31.12.2025 - Mr.X
+# Last Modified: 07.01.2026 - Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -14,13 +14,13 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://megakino.lol/"
+    return "https://megakino1.fit/"
 
 
 class MegaKino(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "MegaKino", "cookie": "MegaKino.cookie"})
-        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
+        self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
         self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("films")}, {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kinofilme")}, {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serials")}, {"category": "list_items", "title": _("Animation"), "url": self.getFullUrl("multfilm")}, {"category": "list_items", "title": _("Documentary"), "url": self.getFullUrl("documentary")}, {"category": "list_value", "title": _("Collections"), "s": ">Sammlung"}, {"category": "list_value", "title": _("Genres"), "s": ">Genres"}] + self.searchItems()
