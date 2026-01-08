@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.06.2025
+# Last Modified: 03.01.2026 - damagic
 ###################################################
 # LOCAL import
 ###################################################
@@ -87,12 +87,12 @@ class Filman(CBaseHostClass, CaptchaHelper):
     def listMainMenu(self, cItem):
         printDBG("Filman.listMainMenu")
 
-        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Movies'), 'url': self.getFullUrl('/filmy/')},
-                        {'category': 'list_items', 'title': _('Children'), 'url': self.getFullUrl('/dla-dzieci-pl/')},
+        MAIN_CAT_TAB = [{'category': 'list_items', 'title': 'Filmy Premiery', 'url': self.getFullUrl('/filmy/sort:premiere/')},
+                        {'category': 'list_items', 'title': 'Filmy Nowe Linki', 'url': self.getFullUrl('/filmy/')},
+                        {'category': 'list_items', 'title': 'Filmy Oceny na Filmweb', 'url': self.getFullUrl('/filmy/sort:filmweb/')},
+                        {'category': 'list_items', 'title': 'Seriale Nowe Odcinki', 'url': self.getFullUrl('/seriale/')},
                         {'category': 'list_sort', 'title': _('Series'), 'url': self.getFullUrl('/seriale/')},
-#                        {'category':'list_years',     'title': _('Movies by year'), 'url':self.MAIN_URL},
-                        {'category': 'list_cats', 'title': _('Movies genres'), 'url': self.getFullUrl('/filmy/')},
-#                        {'category':'list_az',        'title': _('Alphabetically'), 'url':self.MAIN_URL},
+                        {'category': 'list_items', 'title': _('Children'), 'url': self.getFullUrl('/dla-dzieci-pl/')},
                         ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -183,28 +183,86 @@ class Filman(CBaseHostClass, CaptchaHelper):
         if 'phrase=' in cItem['url']:
             data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', 'data-title='), ('</a', '>'))
         else:
-            data = data.split('<div class="poster">')[1:]
+            # Try to get item-list section first
+            item_list_data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'item-list'), ('<div', '>', 'text-center'))[1]
+            if not item_list_data:
+                item_list_data = self.cm.ph.getDataBeetwenNodes(data, ('<div', '>', 'item-list'), ('</div', '>'))[1]
+
+            if item_list_data:
+                # For movie lists - split by column class
+                data = item_list_data.split('<div class="col-xs-6 col-sm-3 col-lg-2">')[1:]
+            else:
+                # Fallback to old method
+                data = data.split('<div class="poster">')[1:]
 
         for item in data:
-#            printDBG("Filman.listItems item %s" % item)
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
-            if url == '':
-                continue
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?poster[^"^']+?)['"]''')[0])
-            title = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''')[0].replace('&quot;', '"'.replace('&amp;', '&'))
-            desc = self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0]
-            if desc == '':
-                desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'description'), ('</div', '>'), False)[1])
-            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'quality-version'), ('</div', '>'), False)[1])
-            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'film_year'), ('</div', '>'), False)[1])
-            if year != '':
-                desc = _('Year: ') + year + ' - ' + _('Quality:') + ' ' + quality + '[/br]' + desc
-            if '/s/' in url:
-                params = {'good_for_fav': True, 'category': 'list_series', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
-                self.addDir(params)
+            # For search results
+            if 'phrase=' in cItem['url']:
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+                if url == '':
+                    continue
+
+                title = self.cm.ph.getSearchGroups(item, '''data-title=['"]([^"^']+?)['"]''')[0].replace('&quot;', '"').replace('&amp;', '&')
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''')[0])
+                desc = self.cleanHtmlStr(item)
+
+                if '/s/' in url or '/serial/' in url:
+                    params = {'good_for_fav': True, 'category': 'list_series', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
+                    self.addDir(params)
+                else:
+                    params = {'good_for_fav': True, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
+                    self.addVideo(params)
             else:
-                params = {'good_for_fav': True, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
-                self.addVideo(params)
+                # For regular lists (movies, series, children)
+                if 'item_list_data' in locals() and item_list_data:
+                    # For movie lists from item-list
+                    item = '<div class="col-xs-6 col-sm-3 col-lg-2">' + item
+
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0])
+                if url == '':
+                    continue
+
+                # Find image URL
+                img_data = self.cm.ph.getDataBeetwenNodes(item, ('<picture', '>'), ('</picture', '>'))[1]
+                if not img_data:
+                    img_data = item
+                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(img_data, '''src=['"]([^"^']+?)['"]''')[0])
+                if not icon:
+                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?poster[^"^']+?)['"]''')[0])
+                title = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)['"]''')[0].replace('&quot;', '"').replace('&amp;', '&')
+                if not title:
+                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<h1', '>', 'film_title'), ('</h1', '>'))[1])
+
+                desc = self.cm.ph.getSearchGroups(item, '''data-text=['"]([^"^']+?)['"]''')[0]
+
+                # Get year for movie lists
+                year = ''
+                if 'item_list_data' in locals() and item_list_data:
+                    year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'film_year'), ('</div', '>'))[1])
+
+                # Get quality
+                quality = ''
+                quality_data = self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'quality-version'), ('</div', '>'), False)
+                if quality_data:
+                    quality = self.cleanHtmlStr(quality_data[1])
+
+                if desc == '':
+                    desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'description'), ('</div', '>'), False)[1])
+
+                if year != '':
+                    if quality:
+                        desc = _('Year: ') + year + ' - ' + _('Quality:') + ' ' + quality + '[/br]' + desc
+                    else:
+                        desc = _('Year: ') + year + '[/br]' + desc
+                elif quality:
+                    desc = _('Quality:') + ' ' + quality + '[/br]' + desc
+
+                if '/s/' in url or '/serial/' in url:
+                    params = {'good_for_fav': True, 'category': 'list_series', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
+                    self.addDir(params)
+                else:
+                    params = {'good_for_fav': True, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
+                    self.addVideo(params)
 
         if nextPage:
             params = dict(cItem)
@@ -266,19 +324,56 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
         cUrl = data.meta['url']
         self.setMainUrl(cUrl)
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<td', '>', 'link-to-video'), ('</tr', '>'))
 
-        for item in data:
-#            printDBG("Filman.getLinksForVideo item[%s]" % item)
-            playerUrl = ensure_str(base64.b64decode(self.cm.ph.getSearchGroups(item, '''data-iframe=['"]([^"^']+?)['"]''')[0])).replace('\\', '')
-            playerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(playerUrl, '''src['"]:['"]([^"^']+?)['"]''')[0])
-            name = self.up.getHostName(playerUrl)
-            item = item.split('</td>\n')
-            if len(item) > 2:
-                name = name + ' - ' + self.cleanHtmlStr(item[1]) + ' - ' + self.cleanHtmlStr(item[2])
-            if playerUrl == '':
-                continue
-            retTab.append({'name': name, 'url': strwithmeta(playerUrl, {'Referer': url}), 'need_resolve': 1})
+        # Find table with links
+        links_section = self.cm.ph.getDataBeetwenNodes(data, ('<table', '>', 'links'), ('</table', '>'))[1]
+        if links_section:
+            rows = self.cm.ph.getAllItemsBeetwenNodes(links_section, ('<tr', '>'), ('</tr', '>'))
+
+            for row in rows:
+                # Skip header row
+                if '<th' in row:
+                    continue
+
+                player_data = self.cm.ph.getDataBeetwenNodes(row, ('<td', '>', 'link-to-video'), ('</td', '>'))[1]
+                if not player_data:
+                    continue
+
+                # Find iframe URL
+                iframe_data = self.cm.ph.getSearchGroups(player_data, r'''data\-iframe=['"]([^"^']+?)['"]''')[0]
+                playerUrl = ''
+                if iframe_data:
+                    try:
+                        playerUrl = ensure_str(base64.b64decode(iframe_data))
+                        playerUrl = json.loads(playerUrl)
+                        playerUrl = playerUrl.get('src', '')
+                    except:
+                        playerUrl = ''
+
+                if not playerUrl:
+                    # Alternatively, try to find direct link
+                    playerUrl = self.cm.ph.getSearchGroups(player_data, '''href=['"]([^"^']+?)['"]''')[0]
+
+                if playerUrl and not playerUrl.startswith('http'):
+                    playerUrl = self.getFullUrl(playerUrl)
+
+                if not playerUrl:
+                    continue
+
+                # Get hosting name
+                name = self.up.getHostName(playerUrl)
+
+                # Get version and quality
+                tds = self.cm.ph.getAllItemsBeetwenNodes(row, ('<td', '>'), ('</td', '>'))
+                if len(tds) > 2:
+                    version = self.cleanHtmlStr(tds[1])
+                    quality = self.cleanHtmlStr(tds[2])
+                    if version:
+                        name += ' - ' + version
+                    if quality:
+                        name += ' - ' + quality
+
+                retTab.append({'name': name, 'url': strwithmeta(playerUrl, {'Referer': url}), 'need_resolve': 1})
 
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
