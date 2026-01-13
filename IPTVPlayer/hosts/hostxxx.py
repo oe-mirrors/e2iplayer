@@ -2916,7 +2916,7 @@ class Host(CBaseHostClass):
 			if len(urls):
 				del urls[0]
 			for item in urls:
-				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"].>.MP''', 1, True)[0]
+				phUrl = self.cm.ph.getSearchGroups(item, '''href="((?:(?!av1)[^"])+)"''', 1, True)[0]
 				if not phUrl:
 					phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"].>.+MP''', 1, True)[0]
 				if phUrl.startswith('/'):
