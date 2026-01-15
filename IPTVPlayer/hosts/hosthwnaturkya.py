@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-# Last modified: 27/11/2025
-# HwnaTurkya Host
+# Last modified: 01/12/2025
+# HwnaTurkya Host (Modified By Mohamed Elsafty)
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Components.config import ConfigText, config, getConfigListEntry
-
 import re
 import time
 
@@ -76,7 +75,7 @@ class HwnaTurkya(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG("HwnaTurkya.listMainMenu")
-        menuItems = [{"category": "movies", "title": "الأفـــلام", "icon": self.DEFAULT_ICON_URL, "name": "movies"}, {"category": "series", "title": "مســلـســلات", "icon": self.DEFAULT_ICON_URL, "name": "series"}, {"category": "search", "title": _("Search"), "search_item": True}, {"category": "search_history", "title": _("Search history")}]
+        menuItems = [{"category": "movies", "title": "الأفـــلام", "icon": self.DEFAULT_ICON_URL, "name": "movies"}, {"category": "series", "title": "مســلـســلات", "icon": self.DEFAULT_ICON_URL, "name": "series"}] + self.searchItems()
         self.listsTab(menuItems, cItem)
 
     def listCatItems(self, cItem, nextCategory):
@@ -298,7 +297,7 @@ class HwnaTurkya(CBaseHostClass):
         self.listItems(params, "explore_item")
 
     def CleanTitleName(self, title, sDesc="", showEP=False):
-        title_display = re.sub(r"\s+", " ", title).strip()
+        title_display = re.sub(r"\s+|\n|\t", " ", title).strip()
         desc = sDesc
         if showEP:
             ep_match = re.search(r"الحلقة\s*(\d+)", title_display)
@@ -335,7 +334,8 @@ class HwnaTurkya(CBaseHostClass):
                 printDBG("No valid URL for: %s" % title)
                 continue
             if title:
-                title_disp = "%s%s %s[%s]%s - %s" % (E2ColoR("white"), cItem["title"], E2ColoR("yellow"), title, E2ColoR("white"), self.up.getHostName(url, True))
+                # title_disp = "%s%s %s[%s]%s - %s" % (E2ColoR("white"), cItem["title"], E2ColoR("yellow"), title, E2ColoR("white"), self.up.getHostName(url, True))
+                title_disp = E2ColoR("white") + cItem["title"] + " " + E2ColoR("yellow") + "[" + title + "]" + E2ColoR("white") + " - " + E2ColoR("yellow") + self.up.getHostName(url, True) + E2ColoR("white")
             else:
                 title_disp = cItem["title"]
             urlTab.append({"name": title_disp, "url": url, "need_resolve": 1})

@@ -13,6 +13,7 @@ hostarablionz
 hostarabseed
 hostardmediathek_blocked_
 hostartetv
+hostasi1tv
 hostbajeczkiorg_blocked_
 hostbasketballvideocom
 hostbbciplayer_blocked_
@@ -65,12 +66,14 @@ hostfilmpertutti_blocked_
 hostfilmstreamvkcom_blocked_
 hostfilmtar_blocked_
 hostfilmvilag
+hostfootyroom
 hostforjatn_blocked_
 hostfreediscpl
 hostfullmatchtvcom_blocked_
 hostgamatocom
 hostgamatotvme_blocked_
 hostgledalica_blocked_
+hostgoals
 hostgovodtv
 hostgreekdocumentaries3_blocked_
 hostguardaserie
@@ -121,6 +124,7 @@ hostmovie2k
 hostmovie4k
 hostmoviedream
 hostmovienightws_blocked_
+hostmovizhome
 hostmovizlandcom_blocked_
 hostmovs4ucom_blocked_
 hostmozicsillag
@@ -154,6 +158,7 @@ hostquesttvcouk_blocked_
 hostradiostacja
 hostraiplay
 hostredbull_blocked_
+hostretroflix
 hostrtbfbe
 hostrteieplayer
 hostrtlmost
