@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-22 20:02+0100\n"
-"PO-Revision-Date: 2025-12-05 13:54+0200\n"
+"PO-Revision-Date: 2026-01-19 00:34+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -19,9 +19,8 @@ msgstr ""
 "X-Generator: Poedit 3.8\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#, fuzzy
 msgid "\t*\tVotes: "
-msgstr "    *    Ψήφοι: "
+msgstr "\t*\tΨήφοι: "
 
 #, python-format
 msgid "\tDisk space available: %s"
@@ -563,13 +562,11 @@ msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε 
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε το αρχείο \"%s\";"
 
-#, fuzzy
 msgid "Are you sure you want to reset all hosts in this group to defaults?"
-msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ιστορικό αναζητήσεων;"
+msgstr "Είστε βέβαιοι ότι θέλετε να επαναφέρετε όλους τους hosts αυτής της ομάδας στις προεπιλογές;"
 
-#, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
-msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ιστορικό αναζητήσεων;"
+msgstr "Είστε βέβαιοι ότι θέλετε να επαναφέρετε όλες τις ρυθμίσεις στις προεπιλεγμένες τιμές;"
 
 msgid "Artists"
 msgstr "Καλλιτέχνες"
@@ -911,9 +908,8 @@ msgstr "Προεπιλεγμένη ποιότητα βίντεο"
 msgid "Default video quality:"
 msgstr "Προεπιλεγμένη ποιότητα βίντεο:"
 
-#, fuzzy
 msgid "Defaults"
-msgstr "Προεπιλογή"
+msgstr "Προεπιλογές"
 
 msgid "Definitely remove from favorites?"
 msgstr "Σίγουρα θέλετε να αφαιρεθεί από τα αγαπημένα;"
@@ -2003,12 +1999,12 @@ msgstr "Απαιτείται σύνδεση"
 msgid "Login on {0} failed."
 msgstr "Η σύνδεση στο {0} απέτυχε."
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
 msgstr ""
-"Η σύνδεση χρήστη \"%s\" στο http://vk.com/ απέτυχε!\r\n"
+"Η σύνδεση χρήστη \"%s\" στο https://vk.com/ απέτυχε!\n"
 "Παρακαλώ ελέγξτε τα δεδομένα σύνδεσης στις ρυθμίσεις του IPTVPlayer."
 
 msgid "Logs"
@@ -2750,9 +2746,8 @@ msgstr "Επανάληψη εκπομπών"
 msgid "Reset State"
 msgstr "Επαναφορά κατάστασης"
 
-#, fuzzy
 msgid "Reset group"
-msgstr "Επιλογή ομάδας"
+msgstr "Επαναφορά ομάδας"
 
 #, python-format
 msgid ""
@@ -3105,9 +3100,8 @@ msgstr "Ταξινόμηση αλφαβητικά"
 msgid "Sort by alphabet"
 msgstr "Ταξινόμηση κατά αλφάβητο"
 
-#, fuzzy
 msgid "Sort by name"
-msgstr "Ταξινόμηση κατά αλφάβητο"
+msgstr "Ταξινόμηση κατά όνομα"
 
 msgid "Sort by popularity"
 msgstr "Ταξινόμηση κατά δημοτικότητα"
@@ -3419,12 +3413,11 @@ msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB fl
 msgid "Title:"
 msgstr "Τίτλος:"
 
-#, fuzzy
 msgid ""
 "To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
-"Για να παρακολουθήσετε βίντεο από το http://vk.com/ πρέπει να συνδεθείτε.\n"
+"Για να παρακολουθήσετε βίντεο από το https://vk.com/ πρέπει να συνδεθείτε.\n"
 "Παρακαλώ συμπληρώστε το όνομα χρήστη και τον κωδικό πρόσβασης στις ρυθμίσεις του IPTVPlayer."
 
 msgid "Today"
@@ -3455,7 +3448,7 @@ msgid "Top series"
 msgstr "Κορυφαίες σειρές"
 
 msgid "Top-IMDB"
-msgstr ""
+msgstr "Κορυφαία IMDB"
 
 msgid "Total Divas"
 msgstr "Σύνολο ντίβας"
