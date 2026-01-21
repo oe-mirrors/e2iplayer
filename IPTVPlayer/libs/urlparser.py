@@ -49,7 +49,7 @@ def crsdiv(a, dec_id):
         d = [int(x, 16) for x in re.findall(r".{2}", a)]
         decrypted = [(v ^ b[i % len(b)]) - 3 for i, v in enumerate(d)]
         return b64dec("".join(chr(v) for v in decrypted))
-    elif dec_id == "IhWrImMIGL":
+    if dec_id == "IhWrImMIGL":
         d = []
         for ch in a:
             if "a" <= ch <= "m" or "A" <= ch <= "M":
@@ -59,11 +59,11 @@ def crsdiv(a, dec_id):
             else:
                 d.append(ch)
         return b64dec("".join(d))
-    elif dec_id == "xTyBxQyGTA":
+    if dec_id == "xTyBxQyGTA":
         b = a[::-1]
         c = "".join([b[i] for i in range(0, len(b), 2)])
         return b64dec(c)
-    elif dec_id == "ux8qjPHC66":
+    if dec_id == "ux8qjPHC66":
         rev = a[::-1]
         data = "".join([chr(int(rev[i: i + 2], 16)) for i in range(0, len(rev), 2)])
         key = "X9a(O;FMV2-7VO5x;Ao\x05:dN1NoFs?j,"
@@ -71,7 +71,7 @@ def crsdiv(a, dec_id):
         for i, ch in enumerate(data):
             res.append(chr(ord(ch) ^ ord(key[i % len(key)])))
         return "".join(res)
-    elif dec_id == "eSfH1IRMyL":
+    if dec_id == "eSfH1IRMyL":
         rev = [ord(ch) - 1 for ch in reversed(a)]
         chunks = []
         i = 0
@@ -80,18 +80,17 @@ def crsdiv(a, dec_id):
             chunks.append(val)
             i += 2
         return "".join(chr(v) for v in chunks)
-    elif dec_id == "KJHidj7det":
+    if dec_id == "KJHidj7det":
         c = [ord(ch) for ch in '3SAY~#%Y(V%>5d/Yg"$G[Lh1rK4a;7ok']
         decrypted = [v ^ c[i % len(c)] for i, v in enumerate([ord(ch) for ch in b64dec(a[10:-16])])]
         return "".join(chr(v) for v in decrypted)
-    elif dec_id == "o2VSUnjnZl":
+    if dec_id == "o2VSUnjnZl":
         mapping = {"x": "a", "y": "b", "z": "c", "a": "d", "b": "e", "c": "f", "d": "g", "e": "h", "f": "i", "g": "j", "h": "k", "i": "l", "j": "m", "k": "n", "l": "o", "m": "p", "n": "q", "o": "r", "p": "s", "q": "t", "r": "u", "s": "v", "t": "w", "u": "x", "v": "y", "w": "z", "X": "A", "Y": "B", "Z": "C", "A": "D", "B": "E", "C": "F", "D": "G", "E": "H", "F": "I", "G": "J", "H": "K", "I": "L", "J": "M", "K": "N", "L": "O", "M": "P", "N": "Q", "O": "R", "P": "S", "Q": "T", "R": "U", "S": "V", "T": "W", "U": "X", "V": "Y", "W": "Z"}
         return "".join(mapping.get(ch, ch) for ch in a)
-    elif dec_id in ("JoAHUMCLXV", "Oi3v1dAlaM", "TsA2KGDGux"):
+    if dec_id in ("JoAHUMCLXV", "Oi3v1dAlaM", "TsA2KGDGux"):
         shifts = {"JoAHUMCLXV": 3, "Oi3v1dAlaM": 5, "TsA2KGDGux": 7}
         return dec(a, shifts[dec_id])
-    else:
-        return
+    return ""
 
 
 def rc4(cipher_text, key):
@@ -405,7 +404,10 @@ class urlparser:
             "bigwarp.pro": self.pp.parserJWPLAYER,
             "bingezove.com": self.pp.parserJWPLAYER,
             "bullstream.xyz": self.pp.parserSTREAMEMBED,
+            "bysekoze.com": self.pp.parserf16px,
             "bysesayeveum.com": self.pp.parserf16px,
+            "bysevepoin.com": self.pp.parserf16px,
+            "bysezejataos.com": self.pp.parserf16px,
             # c
             "c1z39.com": self.pp.parserFILEMOON,
             "cavanhabg.com": self.pp.parserJWPLAYER,
@@ -508,6 +510,7 @@ class urlparser:
             "gradehgplus.com": self.pp.parserJWPLAYER,
             "gsfqzmqu.sbs": self.pp.parserJWPLAYER,
             "guccihide.com": self.pp.parserONLYSTREAMTV,
+            "gupload.xyz": self.pp.parserGUPLOAD,
             # h
             "haxloppd.com": self.pp.parserJWPLAYER,
             "hdbestvd.online": self.pp.parserJWPLAYER,
@@ -525,7 +528,7 @@ class urlparser:
             "jodwish.com": self.pp.parserJWPLAYER,
             "justupload.io": self.pp.parserJWPLAYER,
             # k
-            "kinoger.be": self.pp.parserJWPLAYER,
+            "kinoger.be": self.pp.parserVEEV,
             "kinoger.p2pplay.pro": self.pp.parserSBS,
             "kinoger.re": self.pp.parserSBS,
             "kinoger.ru": self.pp.parserVOESX,
@@ -569,6 +572,7 @@ class urlparser:
             "mixdropjmk.pw": self.pp.parserJWPLAYER,
             "moflix-stream.click": self.pp.parserJWPLAYER,
             "moflix-stream.fans": self.pp.parserJWPLAYER,
+            "moflix-stream.link": self.pp.parserf16px,
             "moflix.rpmplay.xyz": self.pp.parserSBS,
             "moflix.upns.xyz": self.pp.parserSBS,
             "movearnpre.com": self.pp.parserJWPLAYER,
@@ -2649,13 +2653,12 @@ class pageParser(CaptchaHelper):
             return []
         data = re.search(r"var\s*video\s*=\s*(.*?);\s", data)
         if data:
-            headers.update({"Referer": baseUrl})
             data = json_loads(data.group(1))
             url = "{}m3u8/{}/{}/master.txt?s=1&id={}&cache=1".format(host, data.get("uid"), data.get("md5"), data.get("id"))
-            headers["Referer"] = baseUrl
+            headers["Referer"] = host
+            headers["Origin"] = host[:-1]
             headers["Accept"] = "*/*"
-            url = urlparser.decorateUrl(url, {"header": headers, "use_cookie": True, "save_cookie": False, "load_cookie": True, "cookiefile": COOKIE_FILE})
-            urltab.extend(getDirectM3U8Playlist(url))
+            urltab = getDirectM3U8Playlist(url, checkExt=False, checkContent=True, cookieParams={"header": headers, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True})
         return urltab
 
     def parserHEXLOAD(self, baseUrl):  # add 160625
@@ -2742,7 +2745,7 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserf16px(self, url):  # fix 221125
+    def parserf16px(self, baseUrl):  # fix 200126
         def ft(e):
             t = e.replace("-", "+").replace("_", "/")
             r = 0 if len(t) % 4 == 0 else 4 - len(t) % 4
@@ -2752,12 +2755,23 @@ class pageParser(CaptchaHelper):
         def xn(e):
             return b"".join(list(map(ft, e)))
 
-        printDBG("parserf16px baseUrl[%s]" % url)
-        url = url.replace("/d/", "/e/")
-        host = urlparser.getDomain(url, False)
+        printDBG("parserf16px baseUrl[%s]" % baseUrl)
         urltab = []
         HTTP_HEADER = self.cm.getDefaultHeader()
-        sts, data = self.cm.getPage(url.replace("/e/", "/api/videos/") + "/embed/playback", HTTP_HEADER)
+        HTTP_HEADER["Referer"] = baseUrl
+        HTTP_HEADER["X-Embed-Parent"] = baseUrl
+        host = urlparser.getDomain(baseUrl, False)
+        mid = re.search(r"/(?:e|d|download)/([0-9a-zA-Z]+)", baseUrl).group(1)
+        sts, data = self.cm.getPage("%sapi/videos/%s/embed/details" % (host, mid), {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        data = json_loads(data)
+        code = data.get("code")
+        baseUrl = data.get("embed_frame_url", baseUrl)
+        HTTP_HEADER["Referer"] = baseUrl
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER["Origin"] = host[:-1]
+        sts, data = self.cm.getPage("%sapi/videos/%s/embed/playback" % (host, code), {"header": HTTP_HEADER})
         if not sts:
             return []
         html = json_loads(data)
@@ -2774,7 +2788,7 @@ class pageParser(CaptchaHelper):
             for x in sources:
                 url = urlparser.decorateUrl(x.get("url"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
                 if ".m3u8" in url:
-                    urltab.extend(getDirectM3U8Playlist(url))
+                    urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
                 else:
                     urltab.append({"name": x.get("label", ""), "url": url})
         return urltab
@@ -2796,7 +2810,7 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserJWPLAYER(self, baseUrl):  # update 020126
+    def parserJWPLAYER(self, baseUrl):  # update 170126
         def jw_hidden(html, url):
             domain = urlparser.getDomain(url, False)[:-1]
             mediaid = url.rstrip(".html").split("/")[-1].split("-")[-1]
@@ -2833,7 +2847,7 @@ class pageParser(CaptchaHelper):
             baseUrl = baseUrl.replace(".co/", ".my/").replace(".club/", ".my/")
             baseUrl = "/".join(baseUrl.split("/")[:5]).replace("/f/", "/e/") if "/f/" in baseUrl else baseUrl
         if "hglink.to" in baseUrl:
-            baseUrl = baseUrl.replace("hglink.to", "uasopt.com")
+            baseUrl = baseUrl.replace("hglink.to", "dumbalag.com")
         if "cybervynx.com" in baseUrl:
             baseUrl = baseUrl.replace("cybervynx.com", "guxhag.com")
         if "streamwish.to" in baseUrl:
@@ -2928,4 +2942,21 @@ class pageParser(CaptchaHelper):
                 url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
                 if ".m3u8" in url:
                     urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+        return urltab
+
+    def parserGUPLOAD(self, baseUrl):
+        printDBG("parserGUPLOAD baseUrl[%s]" % baseUrl)
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        urltab = []
+        match = re.search(r"""decodePayload.*?['\"]([A-Za-z0-9+/=]+)['\"]""", data)
+        if match:
+            data = base64.b64decode(match.group(1)).decode()
+            url = json_loads(data.split("|", 1)[1]).get("videoUrl")
+            if url:
+                url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
         return urltab
