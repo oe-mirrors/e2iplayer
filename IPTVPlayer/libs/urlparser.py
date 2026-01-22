@@ -580,7 +580,7 @@ class urlparser:
             "player.upn.one": self.pp.parserSBS,
             "playerwish.com": self.pp.parserJWPLAYER,
             "polsatsport.pl": self.pp.parserJWPLAYER,
-            
+
             "poophq.com": self.pp.parserVEEV,
             "pqham.com": self.pp.parserJWPLAYER,
             # r
