@@ -720,6 +720,7 @@ class urlparser:
             "vidoza.co": self.pp.parserJWPLAYER,
             "vidoza.net": self.pp.parserJWPLAYER,
             "vidoza.org": self.pp.parserJWPLAYER,
+            "vidsonic.net": self.pp.parserVIDSONIC,
             "vidsrc.bz": self.pp.parserVIDSRC,
             "vidsrc.do": self.pp.parserVIDSRC,
             "vidsrc.gd": self.pp.parserVIDSRC,
@@ -2885,6 +2886,8 @@ class pageParser(CaptchaHelper):
             url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
             if ".m3u8" in url:
                 urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+            elif ".mpd" in url:
+                urltab.extend(getMPDLinksWithMeta(url))
             else:
                 urltab.append({"name": "MP4", "url": url})
         return urltab
@@ -2959,4 +2962,27 @@ class pageParser(CaptchaHelper):
             if url:
                 url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
                 urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+        return urltab
+
+    def parserVIDSONIC(self, baseUrl):
+        def decode_string(_0x3):
+            _0x4 = _0x3.replace('|', '')
+            _0x5 = ''
+            for i in range(0, len(_0x4), 2):
+                _0x5 += chr(int(_0x4[i: i + 2], 16))
+            return _0x5[::-1]
+
+        printDBG("parserVIDSONIC baseUrl[%s]" % baseUrl)
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        urltab = []
+        match = re.search(r"""const\s+_0x1\s*=\s*'([^']+)';""", data)
+        if match:
+            url = decode_string(match.group(1))
+            if url:
+                url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                urltab.extend(getDirectM3U8Playlist(url))
         return urltab
