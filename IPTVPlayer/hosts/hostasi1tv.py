@@ -651,7 +651,7 @@ class Asi1TV(CBaseHostClass):
                 full_show_name = ar_name
                 if ar_name and season_year_name:
                     if season_year_name not in ar_name and season_year_name != "الموسم الأول":
-                        full_show_name = "%s %s" % (ar_name, season_year_name)
+                        full_show_name = "%s - %s" % (ar_name, season_year_name)
                 elif not ar_name:
                     full_show_name = season_year_name
                 if full_show_name:
