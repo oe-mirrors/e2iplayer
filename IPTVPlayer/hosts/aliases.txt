@@ -56,6 +56,7 @@
 'hostfilman': 'https://filman.cc/',
 'hostfilmaon': 'https://www.filmaon.bz/',
 'hostfilmativa': 'http://filmativa.ws/',
+'hostfilmclub': 'https://filmclub.tv/',
 'hostfilmehdnet': 'http://filmehd.net/',
 'hostfilmeonlineto': 'https://filme-online.to/',
 'hostfilmezz': 'http://filmezz.eu/',

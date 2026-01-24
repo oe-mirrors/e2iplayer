@@ -55,6 +55,7 @@ hostfilma365
 hostfilman
 hostfilmaon
 hostfilmativa_blocked_
+hostfilmclub
 hostfilmehdnet
 hostfilmeonlineto_blocked_
 hostfilmezz_blocked_
