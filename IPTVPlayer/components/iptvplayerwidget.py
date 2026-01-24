@@ -154,7 +154,7 @@ class E2iPlayerWidget(Screen):
         if config.plugins.iptvplayer.disable_live.value:
             self.session.nav.stopService()
 
-        self["key_red"] = StaticText(_("Exit"))
+        self["key_red"] = StaticText(_("Close"))
         self["key_green"] = StaticText()
 
         self["key_yellow"] = StaticText(_("Refresh"))
@@ -545,7 +545,7 @@ class E2iPlayerWidget(Screen):
 
     def red_pressed(self):
         self.stopAutoPlaySequencer()
-        self.close()
+        self.selectHost()
         return
 
     def green_pressed(self):
@@ -601,6 +601,7 @@ class E2iPlayerWidget(Screen):
         except Exception:
             printExc()
         options.append((_("Download manager"), "IPTVDM"))
+        options.append((_("Exit"), "CLOSE"))
         self.session.openWithCallback(self.blue_pressed_next, ChoiceBox, title=_("Select option"), list=options)
 
     def pause_pressed(self):
@@ -678,6 +679,8 @@ class E2iPlayerWidget(Screen):
         if ret:
             if ret[1] == "IPTVDM":
                 self.runIPTVDM()
+            elif ret[1] == "CLOSE":
+                self.close()
             elif ret[1] == "HostConfig":
                 self.runConfigHostIfAllowed()
             elif ret[1] == "SetActiveMoviePlayer":
