@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-22 20:02+0100\n"
-"PO-Revision-Date: 2025-12-22 20:21+0100\n"
+"PO-Revision-Date: 2026-01-24 19:09+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -1310,7 +1310,7 @@ msgid "Exception occurs"
 msgstr "Exception aufgetreten"
 
 msgid "Exit"
-msgstr "Ende"
+msgstr "Beenden"
 
 #, python-format
 msgid "Expiry: %s"

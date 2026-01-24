@@ -265,7 +265,7 @@ class Brstej(CBaseHostClass):
             params = {"good_for_fav": True, "category": nextCategory, "title": title, "url": self.getFullUrl(url), "desc": desc}
             if icon and not icon.startswith("data:image"):
                 params["icon"] = self.getFullIconUrl(icon)
-            if "فيلم" in title or "فيلم" in title:
+            if "فيلم" in title:
                 params["type"] = "FILM"
                 self.addVideo(params)
             else:
