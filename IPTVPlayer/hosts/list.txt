@@ -19,6 +19,7 @@ hostbasketballvideocom
 hostbbciplayer_blocked_
 hostbbcsport_blocked_
 hostbflix
+hostbrstej
 hostbsto_blocked_
 hostcartoonhd_blocked_
 hostcb01uno
@@ -55,6 +56,7 @@ hostfilma365
 hostfilman
 hostfilmaon
 hostfilmativa_blocked_
+hostfilmclub
 hostfilmehdnet
 hostfilmeonlineto_blocked_
 hostfilmezz_blocked_
@@ -201,6 +203,7 @@ hostustreamtv_blocked_
 hostustvgo_blocked_
 hostvevo_blocked_
 hostvidcorncom_blocked_
+hostvidea
 hostvimeo_blocked_
 hostvodpl_blocked_
 hostvumedicom

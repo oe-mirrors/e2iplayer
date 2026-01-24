@@ -5,6 +5,7 @@
 #  $Id$
 #  Page Punkte weiter ausseinander - 132
 #  Version dazu gebaut , skin 14 , 227-229
+import os
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap, HelpableActionMap
 from enigma import ePoint, getDesktop
@@ -47,8 +48,11 @@ if GRIDSUPPORT:
 
             # load icons
             self.pixmapList = []
-            for idx in range(0, self.numOfItems):
-                self.pixmapList.append(LoadPixmap(GetIconDir('PlayerSelector/' + self.currList[idx][1] + '%i.png' % self.iconSize)))
+            for idx in range(self.numOfItems):
+                icon = GetIconDir('PlayerSelector/%s%i.png' % (self.currList[idx][1], self.iconSize))
+                if not os.path.isfile(icon):
+                    icon = GetIconDir('PlayerSelector/comming-soon.%i.png' % self.iconSize)
+                self.pixmapList.append(LoadPixmap(icon))
 
             skinHD = """
             <screen name="PlayerSelectorWidget" position="center,center" size="1020,660" resolution="1280,720" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
@@ -302,8 +306,11 @@ if GRIDSUPPORT:
                     self.reorderingMode = False
                     self.currList = sorted(self.currList, key=lambda x: x[1])
                     self.pixmapList = []
-                    for idx in range(0, self.numOfItems):
-                        self.pixmapList.append(LoadPixmap(GetIconDir('PlayerSelector/' + self.currList[idx][1] + '%i.png' % self.iconSize)))
+                    for idx in range(self.numOfItems):
+                        icon = GetIconDir('PlayerSelector/%s%i.png' % (self.currList[idx][1], self.iconSize))
+                        if not os.path.isfile(icon):
+                            icon = GetIconDir('PlayerSelector/comming-soon.%i.png' % self.iconSize)
+                        self.pixmapList.append(LoadPixmap(icon))
                     self.reInitDisplayList()
                 elif ret == "CHANGE_REORDERING_MODE":
                     self.changeReorderingMode()
@@ -590,7 +597,10 @@ else:
             # load icons
             self.pixmapList = []
             for idx in range(0, self.numOfItems):
-                self.pixmapList.append(LoadPixmap(GetIconDir('PlayerSelector/' + self.currList[idx][1] + '%i.png' % self.IconsSize)))
+                icon = GetIconDir('PlayerSelector/%s%i.png' % (self.currList[idx][1], self.IconsSize))
+                if not os.path.isfile(icon):
+                    icon = GetIconDir('PlayerSelector/comming-soon.%i.png' % self.IconsSize)
+                self.pixmapList.append(LoadPixmap(icon))
 
             self.markerPixmap = LoadPixmap(GetIconDir('PlayerSelector/marker%i.png' % self.MarkerSize))
             self.markerPixmapSel = LoadPixmap(GetIconDir('PlayerSelector/markerSel%i.png' % self.MarkerSize))
