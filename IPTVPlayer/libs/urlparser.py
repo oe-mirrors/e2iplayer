@@ -538,6 +538,7 @@ class urlparser:
             "mdzsmutpcvykb.net": self.pp.parserJWPLAYER,
             "mediafire.com": self.pp.parserMEDIAFIRECOM,
             "mediasetplay.mediaset.it": self.pp.parserMEDIASET,
+            "minochinos.com": self.pp.parserJWPLAYER,
             "mivalyo.com": self.pp.parserJWPLAYER,
             "mixdrp.co": self.pp.parserJWPLAYER,
             "mixdrp.to": self.pp.parserJWPLAYER,
@@ -556,6 +557,7 @@ class urlparser:
             "mixdrop.sn": self.pp.parserJWPLAYER,
             "mixdrop.sx": self.pp.parserJWPLAYER,
             "mixdrop.to": self.pp.parserJWPLAYER,
+            "mixdrop.top": self.pp.parserJWPLAYER,
             "mixdropjmk.pw": self.pp.parserJWPLAYER,
             "moflix-stream.click": self.pp.parserJWPLAYER,
             "moflix-stream.fans": self.pp.parserJWPLAYER,
@@ -2338,7 +2340,8 @@ class pageParser(CaptchaHelper):
             data = get_packed_data(data)
             if not data:
                 return []
-        host = urlparser.getDomain(baseUrl, False)
+        #host = urlparser.getDomain(baseUrl, False)
+        host = urlparser.getDomain(self.cm.meta['url'], False) if 'url' in self.cm.meta else urlparser.getDomain(baseUrl, False)
         url = re.search(r"""["']((?:https?:)?//[^'^"]+?\.(?:mp4|m3u8|mkv)(?:\?[^"^']+?)?)["']""", data)
         if not url:
             url = re.search(r"""file":"([^"]+)""", data)
