@@ -122,7 +122,8 @@ hostmegakino
 hostmindigo
 hostmindigtv
 hostmoflixstream
-hostmovie2k
+hostmovie2kch
+hostmovie2kcx
 hostmovie4k
 hostmoviedream
 hostmovienightws_blocked_

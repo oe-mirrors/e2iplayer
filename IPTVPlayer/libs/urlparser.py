@@ -401,8 +401,10 @@ class urlparser:
             "bigwarp.pro": self.pp.parserJWPLAYER,
             "bigwings.io": self.pp.parserJWPLAYER,
             "bingezove.com": self.pp.parserJWPLAYER,
+            "byseqekaho.com": self.pp.parserf16px,
             "bysekoze.com": self.pp.parserf16px,
             "bysesayeveum.com": self.pp.parserf16px,
+            "bysetayico.com": self.pp.parserf16px,
             "bysevepoin.com": self.pp.parserf16px,
             "bysezejataos.com": self.pp.parserf16px,
             # c
@@ -547,6 +549,7 @@ class urlparser:
             "mixdrop23.net": self.pp.parserJWPLAYER,
             "mixdrop.ag": self.pp.parserJWPLAYER,
             "mixdrop.bz": self.pp.parserJWPLAYER,
+            "mixdrop.ch": self.pp.parserJWPLAYER,
             "mixdrop.club": self.pp.parserJWPLAYER,
             "mixdrop.co": self.pp.parserJWPLAYER,
             "mixdrop.my": self.pp.parserJWPLAYER,
@@ -582,7 +585,6 @@ class urlparser:
             "player.upn.one": self.pp.parserSBS,
             "playerwish.com": self.pp.parserJWPLAYER,
             "polsatsport.pl": self.pp.parserJWPLAYER,
-
             "poophq.com": self.pp.parserVEEV,
             "pqham.com": self.pp.parserJWPLAYER,
             # r
@@ -2093,7 +2095,7 @@ class pageParser(CaptchaHelper):
         printDBG("parserVINOVO baseUrl[%s]" % baseUrl)
         COOKIE_FILE = self.COOKIE_PATH + "vinovo.cookie"
         HTTP_HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0"}
-        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER, "use_cookie": True, "save_cookie": True, "load_cookie": False, "cookiefile": COOKIE_FILE})
+        sts, data = self.cm.getPage(baseUrl.replace("/d/", "/e/"), {"header": HTTP_HEADER, "use_cookie": True, "save_cookie": True, "load_cookie": False, "cookiefile": COOKIE_FILE})
         if not sts:
             return []
         token = re.search(r'name="token"\s*content="([^"]+)', data)
@@ -2317,7 +2319,7 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", urlparser.getDomain(baseUrl, False))
         urlParams = {"header": HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": COOKIE_FILE}
         if "mxdrop" in baseUrl or "mixdro" in baseUrl or "mixdrp" in baseUrl or "m1xdrop" in baseUrl:
-            baseUrl = baseUrl.replace(".co/", ".my/").replace(".club/", ".my/")
+            baseUrl = baseUrl.replace(".co/", ".ag/").replace(".club/", ".ag/")
             baseUrl = "/".join(baseUrl.split("/")[:5]).replace("/f/", "/e/") if "/f/" in baseUrl else baseUrl
         if "hglink.to" in baseUrl:
             baseUrl = baseUrl.replace("hglink.to", "dumbalag.com")
@@ -2340,8 +2342,7 @@ class pageParser(CaptchaHelper):
             data = get_packed_data(data)
             if not data:
                 return []
-        # host = urlparser.getDomain(baseUrl, False)
-        host = urlparser.getDomain(self.cm.meta['url'], False) if 'url' in self.cm.meta else urlparser.getDomain(baseUrl, False)
+        host = urlparser.getDomain(baseUrl, False)
         url = re.search(r"""["']((?:https?:)?//[^'^"]+?\.(?:mp4|m3u8|mkv)(?:\?[^"^']+?)?)["']""", data)
         if not url:
             url = re.search(r"""file":"([^"]+)""", data)
@@ -2439,8 +2440,8 @@ class pageParser(CaptchaHelper):
 
     def parserVIDSONIC(self, baseUrl):
         def decode_string(_0x3):
-            _0x4 = _0x3.replace('|', '')
-            _0x5 = ''
+            _0x4 = _0x3.replace("|", "")
+            _0x5 = ""
             for i in range(0, len(_0x4), 2):
                 _0x5 += chr(int(_0x4[i: i + 2], 16))
             return _0x5[::-1]

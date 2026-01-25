@@ -81,7 +81,8 @@
   "streamcloud",
   "topstreamfilm",
   "hdfilme",
-  "movie2k",
+  "movie2kch",
+  "movie2kcx",
   "einschalten",
   "megakino",
   "moflixstream"
@@ -280,7 +281,8 @@
   "streamcloud",
   "topstreamfilm",
   "hdfilme",
-  "movie2k"
+  "movie2kch"
+  "movie2kcx",
  ],
  "french": [
   "youtube",
