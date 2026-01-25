@@ -2340,7 +2340,7 @@ class pageParser(CaptchaHelper):
             data = get_packed_data(data)
             if not data:
                 return []
-        #host = urlparser.getDomain(baseUrl, False)
+        # host = urlparser.getDomain(baseUrl, False)
         host = urlparser.getDomain(self.cm.meta['url'], False) if 'url' in self.cm.meta else urlparser.getDomain(baseUrl, False)
         url = re.search(r"""["']((?:https?:)?//[^'^"]+?\.(?:mp4|m3u8|mkv)(?:\?[^"^']+?)?)["']""", data)
         if not url:
