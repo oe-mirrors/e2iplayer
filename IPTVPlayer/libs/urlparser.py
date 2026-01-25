@@ -538,6 +538,7 @@ class urlparser:
             "mdzsmutpcvykb.net": self.pp.parserJWPLAYER,
             "mediafire.com": self.pp.parserMEDIAFIRECOM,
             "mediasetplay.mediaset.it": self.pp.parserMEDIASET,
+            "minochinos.com": self.pp.parserJWPLAYER,
             "mivalyo.com": self.pp.parserJWPLAYER,
             "mixdrp.co": self.pp.parserJWPLAYER,
             "mixdrp.to": self.pp.parserJWPLAYER,
