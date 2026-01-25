@@ -281,8 +281,8 @@
   "streamcloud",
   "topstreamfilm",
   "hdfilme",
-  "movie2kch"
-  "movie2kcx",
+  "movie2kch",
+  "movie2kcx"
  ],
  "french": [
   "youtube",
