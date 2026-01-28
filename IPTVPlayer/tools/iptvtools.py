@@ -682,16 +682,20 @@ def GetHostsFromList(useCache=True):
         return list(g_cacheHostsFromList)
 
     lhosts = []
+
     try:
-        sts, data = ReadTextFile(getHostsPath('list.txt'))
-        if sts:
-            data = data.split('\n')
-            for item in data:
-                line = item.strip()
-                if __isHostNameValid(line):
-                    lhosts.append(line[4:])
-                    printDBG('getHostsList add host from list.txt hostName: "%s"' % line[4:])
-    except Exception:
+        unique_names = set()
+        for f in os.listdir(getHostsPath()):
+            if f.endswith((".py", ".pyc")):
+                name = os.path.splitext(f)[0]
+                if len(name) > 4 and "_blocked_" not in name and name.startswith("host"):
+                    unique_names.add(name[4:])
+
+        for filename in unique_names:
+            printDBG('getHostsList add host from list hostName: "%s"' % filename)
+            lhosts.append(filename)
+
+    except OSError:
         printExc()
 
     g_cacheHostsFromList = lhosts
