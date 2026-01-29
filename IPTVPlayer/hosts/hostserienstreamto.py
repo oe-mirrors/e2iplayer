@@ -1,35 +1,19 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 22.06.2025
+# ADD: 29.01.2026 - Mr.X
 import re
-from copy import deepcopy
 
-from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
-from Plugins.Extensions.IPTVPlayer.components.captcha_helper import CaptchaHelper
+from Components.config import ConfigSelection, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.libs import ph
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import hex_md5
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
-from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetCookieDir, GetTmpDir, MergeDicts, ReadTextFile, WriteTextFile, printDBG, printExc, rm
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Screens.MessageBox import MessageBox
 
-if not isPY2():
-    from functools import cmp_to_key
-config.plugins.iptvplayer.serienstreamto_langpreference = ConfigSelection(default="de,de_sub,en", choices=[("de,de_sub,en", "de,sub,en"), ("de,en,de_sub", "de,en,sub"), ("de_sub,de,en", "sub,de,en"), ("de_sub,en,de", "sub,en,de"), ("en,de_sub,de", "en,sub,de"), ("en,de,de_sub", "en,de,sub")])
-config.plugins.iptvplayer.serienstreamto_login = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http://186.2.175.5/", choices=[("http://186.2.175.5/", "http://186.2.175.5/"), ("https://s.to/", "https://s.to/"), ("https://serienstream.to/", "https://serienstream.to/")])  # NOSONAR
+config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http://186.2.175.5/", choices=[("http://186.2.175.5/", "186.2.175.5"), ("https://s.to/", "s.to"), ("https://serienstream.to/", "serienstream.to")])
 
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry(_("Your language preference:"), config.plugins.iptvplayer.serienstreamto_langpreference))
-    optionList.append(getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.serienstreamto_login))
-    optionList.append(getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.serienstreamto_password))
     optionList.append(getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_hosts))
     return optionList
 
@@ -38,509 +22,153 @@ def gettytul():
     return config.plugins.iptvplayer.serienstreamto_hosts.value
 
 
-class SerienStreamTo(CBaseHostClass, CaptchaHelper):
-
+class SerienStreamTo(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {"history": "SerienStreamTo.tv", "cookie": "serienstreamto.cookie"})
-        self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0"
-        self.HEADER = {"User-Agent": self.USER_AGENT, "Accept": "text/html"}
-        self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({"X-Requested-With": "XMLHttpRequest"})
+        CBaseHostClass.__init__(self, {"history": "SerienStreamTo", "cookie": "SerienStreamTo.cookie"})
+        self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = gettytul() + "/public/img/facebook.jpg"
-        self.MAIN_CAT_TAB = [{"category": "all_series", "title": "Alle Serien", "url": self.getFullUrl("/serien-alphabet")}, {"category": "list_abc", "title": _("A-Z"), "url": self.MAIN_URL}, {"category": "list_genres", "title": _("Genres"), "url": self.MAIN_URL}, {"category": "list_items", "title": _("New"), "url": self.getFullUrl("/neu")}, {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("/beliebte-serien")}] + self.searchItems()
-        self.ALL_SERIES_TAB = [
-            {"category": "all_letters", "title": "Alphabet", "url": self.getFullUrl("/serien-alphabet")},
-            {"category": "all_genres", "title": "Genres", "url": self.getFullUrl("/serien-genres")},
-        ]
-        self.cacheLinks = {}
-        self.cacheFilters = {}
-        self.cookieHeader = ""
-        self.login = ""
-        self.password = ""
-        self.loggedIn = None
-        self.allCache = {"genres_list": [], "genres_keys": {}, "letters_list": [], "letters_keys": {}}
+        self.DEFAULT_ICON_URL = self.getFullUrl("public/img/facebook.jpg")
+        self.MENU = [{"category": "list_items", "title": _("Serien"), "url": self.getFullUrl("suche")}, {"category": "list_items", "title": _("Sammlungen"), "url": self.getFullUrl("sammlungen")}, {"category": "list_value", "title": _("Genres"), "s": ">Genres</h2>"}, {"category": "list_value", "title": _("Land"), "s": ">Länder</h2>"}, {"category": "list_value", "title": _("Personen"), "s": ">Personen</h2>"}, {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
 
-    def getPage(self, baseUrl, params={}, post_data=None):
-        if params == {}:
-            params = dict(self.defaultParams)
-        params["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
-        return self.cm.getPageCFProtection(baseUrl, params, post_data)
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
+            addParams = dict(self.defaultParams)
+        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
-    def refreshCookieHeader(self):
-        self.cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
+    def listItems(self, cItem):
+        printDBG("SerienStreamTo.listItems |%s|" % cItem)
+        sts, htm = self.getPage(cItem["url"])
+        if not sts:
+            return
+        nextPage = self.cm.ph.getSearchGroups(htm, 'class="page-link" href="([^"]+)" rel="next">')[0]
+        data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-6', "</div>")
+        if not data:
+            data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="series-item"', "</li>")
+        if not data:
+            data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="collection-item-cover', "</small>")
+        for item in data:
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
+            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+)')[0])
+            title = self.cm.ph.getSearchGroups(item, 'data-search="([^"]+)')[0]
+            if not title:
+                title = self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0]
+            params = dict(cItem)
+            params.update({"good_for_fav": True, "category": "list_seasons", "title": self.cleanHtmlStr(title), "url": url, "icon": icon, "desc": ""})
+            if "sammlung" in url:
+                params.update({"category": "list_items"})
+            self.addDir(params)
+        if nextPage:
+            params = dict(cItem)
+            params.update({"good_for_fav": False, "title": _("Next page"), "url": nextPage})
+            self.addDir(params)
 
-    def getIconUrl(self, url, refreshCookieHeader=True):
-        url = self.getFullUrl(url)
-        if url == "":
-            return ""
-        if refreshCookieHeader:
-            self.refreshCookieHeader()
-        return strwithmeta(url, {"Cookie": self.cookieHeader, "User-Agent": self.USER_AGENT})
-
-    def fillFilters(self, url):
-        printDBG("SerienStreamTo.listABC")
-        self.cacheFilters = {"abc": [], "genres": []}
+    def listSeasons(self, cItem):
+        printDBG("SerienStreamTo.listSeasons")
+        url = cItem["url"]
         sts, data = self.getPage(url)
         if not sts:
             return
-        for abc in [("abc", '<ul class="catalogNav"', '<li class="'), ("genres", '<ul class="homeContentGenresList"', "</ul>")]:
-            tmp = self.cm.ph.getDataBeetwenMarkers(data, abc[1], abc[2], withMarkers=False)[1]
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, "<a ", "</a>", withMarkers=True)
-            for item in tmp:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0])
-                title = self.cleanHtmlStr(item)
-                if title == "":
-                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, """title=['"]([^'^"]+?)['"]""")[0])
-                params = {"good_for_fav": True, "title": title, "url": url}
-                self.cacheFilters[abc[0]].append(params)
-
-    def listFilter(self, cItem, nextCategory, abc):
-        printDBG("SerienStreamTo.listFilter")
-        tab = self.cacheFilters.get(abc, [])
-        if 0 == len(tab):
-            self.fillFilters(cItem["url"])
-            tab = self.cacheFilters.get(abc, [])
-        params = dict(cItem)
-        params["category"] = nextCategory
-        self.listsTab(tab, params)
-
-    def listsAllLetters(self, cItem, nextCategory):
-        printDBG("SerienStreamTo.listsAllLetters")
-        if 0 == len(self.allCache["letters_list"]):
-            sts, data = self.getPage(cItem["url"])
-            if not sts:
-                return
-            self.setMainUrl(data.meta["url"])
-            data = self.cm.ph.getDataBeetwenMarkers(data, "seriesGenreList", "</ul>", False)[1]
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<li", "</li>")
-            for item in data:
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0])
-                title = self.cleanHtmlStr(item)
-                letter = title[0].upper()
-                letter = letter if letter.isalpha() else "#"
-                letter = ensure_str(letter)
-                if letter not in self.allCache["letters_list"]:
-                    self.allCache["letters_list"].append(letter)
-                    self.allCache["letters_keys"][letter] = []
-                self.allCache["letters_keys"][letter].append({"url": url, "title": title})
-            self.allCache["letters_list"].sort()
-        for letter in self.allCache["letters_list"]:
+        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'description-text">([^<]+)')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, 'data-src="([^"]+)')[0])
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="season-nav">', "</nav>")
+        data = re.compile(r'href="([^"]+).*?data-season-pill="(\d+)', re.DOTALL).findall(data[0])
+        for url, se in data:
+            title = "%s - %s %s" % (cItem["title"], _("Season"), se)
             params = dict(cItem)
-            params.update({"category": nextCategory, "title": letter, "all_key": letter, "all_mode": "letters"})
-            self.addDir(params)
-
-    def listsAllGenres(self, cItem, nextCategory):
-        printDBG("SerienStreamTo.listsAllGenres")
-        if 0 == len(self.allCache["genres_list"]):
-            sts, data = self.getPage(cItem["url"])
-            if not sts:
-                return
-            self.setMainUrl(data.meta["url"])
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, "seriesGenreList", "</ul>", False)
-            for section in data:
-                genre = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, "<h3", "</h3>")[1])
-                section = self.cm.ph.getAllItemsBeetwenMarkers(section, "<li", "</li>")
-                for item in section:
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0])
-                    title = self.cleanHtmlStr(item)
-                    if genre not in self.allCache["genres_list"]:
-                        self.allCache["genres_list"].append(genre)
-                        self.allCache["genres_keys"][genre] = []
-                    self.allCache["genres_keys"][genre].append({"url": url, "title": title})
-        for genre in self.allCache["genres_list"]:
-            params = dict(cItem)
-            params.update({"category": nextCategory, "title": genre, "all_key": genre, "all_mode": "genres"})
-            self.addDir(params)
-
-    def listsAllItems(self, cItem, nextCategory):
-        printDBG("SerienStreamTo.listsAllItems")
-        key = cItem["all_key"]
-        mode = cItem["all_mode"]
-        for item in self.allCache["%s_keys" % mode][key]:
-            params = dict(cItem)
-            params.update(item)
-            params.update({"category": nextCategory, "good_for_fav": True})
-            self.addDir(params)
-
-    def listItems(self, cItem, nextCategory):
-        printDBG("SerienStreamTo.listItems")
-        page = cItem.get("page", 1)
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "pagination"), ("</div", ">"), False)[1]
-        nextPage = self.getFullUrl(self.cm.ph.getSearchGroups(nextPage, """<a[^>]*?href=['"]([^'^"]+?)['"][^>]*?>%s<""" % (page + 1))[0])
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="seriesListContainer', '<div class="cf">', withMarkers=True)[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<a ", "</a>", withMarkers=True)
-        for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0])
-            if not self.cm.isValidUrl(url):
-                continue
-            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, """data-src=['"]([^'^"]+?)['"]""")[0])
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<h3>", "</h3>", withMarkers=False)[1])
-            if title == "":
-                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, """alt=['"]([^'^"]+?)['"]""")[0])
-            desc = self.cleanHtmlStr(item)
-            params = dict(cItem)
-            params.update({"category": nextCategory, "good_for_fav": True, "title": title, "url": url, "icon": icon, "desc": desc})
-            self.addDir(params)
-        if nextPage != "":
-            params = dict(cItem)
-            params.update({"good_for_fav": False, "title": _("Next page"), "url": nextPage, "page": page + 1, "desc": ""})
-            self.addDir(params)
-
-    def listSeasons(self, cItem, nextCategory):
-        printDBG("SerienStreamTo.listSeasons")
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="seriesContentBox"', '<div class="series-add')[1]
-        icon = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, """data-src=['"]([^'^"]+?)['"]""")[0])
-        if "" == icon:
-            icon = cItem.get("series_title", "")
-        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tmp, """description=['"]([^'^"]+?)['"]""")[0])
-        trailerUrl = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, """href=['"]([^'^"]+?)['"][^>]+?itemprop=['"]trailer['"]""")[0])
-        if self.cm.isValidUrl(trailerUrl):
-            params = {"good_for_fav": True, "title": _("Trailer"), "url": trailerUrl, "icon": icon, "desc": desc}
-            self.addVideo(params)
-        data = self.cm.ph.getDataBeetwenMarkers(data, "Staffeln:", "</ul>")[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<a ", "</a>")
-        for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0])
-            if not self.cm.isValidUrl(url):
-                continue
-            title = self.cleanHtmlStr(item)
-            try:
-                seasonNum = str(int(title))
-                title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, """title=['"]([^'^"]+?)['"]""")[0])
-            except Exception:
-                seasonNum = ""
-            params = dict(cItem)
-            params.update({"category": nextCategory, "good_for_fav": True, "season_num": seasonNum, "series_title": cItem["title"], "title": cItem["title"] + ": " + title, "url": url, "icon": icon, "desc": desc})
+            params.update({"good_for_fav": True, "category": "list_episodes", "title": title, "url": self.getFullUrl(url), "icon": icon, "desc": desc})
             self.addDir(params)
 
     def listEpisodes(self, cItem):
         printDBG("SerienStreamTo.listEpisodes")
-        seasonNum = cItem.get("season_num", "")
-        seriesTitle = cItem.get("series_title", "")
-        cItem = dict(cItem)
-        cItem.pop("season_num", None)
-        cItem.pop("series_title", None)
-        sts, data = self.getPage(cItem["url"])
+        url = cItem["url"]
+        sts, data = self.getPage(url)
         if not sts:
             return
-        data = self.cm.ph.getDataBeetwenMarkers(data, "<tbody ", "</tbody>")[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<tr ", "</tr>")
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="episode-row', "</tr>")
         for item in data:
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(item, "<td ", "</td>")
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0])
-            if not self.cm.isValidUrl(url):
-                continue
-            title = self.cleanHtmlStr(tmp[1])
-            try:
-                episodeNum = str(int(self.cm.ph.getSearchGroups(item, r"""episode\-([0-9]+?)[^0-9]""")[0]))
-            except Exception:
-                episodeNum = ""
-            if "" != episodeNum and "" != seasonNum:
-                title = "s%se%s" % (seasonNum.zfill(2), episodeNum.zfill(2)) + " - " + title
-            desc = cItem.get("desc", "")
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, "location='([^']+)")[0])
+            name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0])
+            ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'cell">(\d+)')[0])
+            title = "%s - %s %s - %s" % (cItem["title"], _("Episode"), ep, name)
             params = dict(cItem)
-            params.update({"good_for_fav": True, "title": "{0}: {1}".format(seriesTitle, title), "url": url, "desc": desc})
+            params.update({"good_for_fav": True, "title": title, "url": url})
             self.addVideo(params)
+
+    def listValue(self, cItem):
+        printDBG("SerienStreamTo.listValue")
+        sts, data = self.getPage(self.getFullUrl("suche"))
+        if not sts:
+            return
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, cItem["s"], "</ul>")[0]
+        data = re.compile('href="([^"]+).*?>([^<]+)', re.DOTALL).findall(data)
+        for url, title in data:
+            params = dict(cItem)
+            params.update({"good_for_fav": True, "category": "list_items", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url)})
+            self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("SerienStreamTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        baseUrl = self.getFullUrl("ajax/search")
-        post_data = {"keyword": searchPattern}
-        sts, data = self.getPage(baseUrl, {}, post_data)
-        if not sts:
-            return
-        printDBG(data)
-        try:
-            data = json_loads(data)
-            for item in data:
-                title = self.cleanHtmlStr(item["title"])
-                desc = self.cleanHtmlStr(item["description"])
-                url = self.getFullUrl(item["link"])
-                if "serie/" in url:
-                    params = {"name": "category", "category": "list_seasons", "good_for_fav": True, "title": title, "url": url, "desc": desc}
-                    self.addDir(params)
-        except Exception:
-            printExc()
+        cItem = dict(cItem)
+        cItem["url"] = self.getFullUrl("suche?term=%s" % urllib_quote_plus(searchPattern))
+        self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):
         printDBG("SerienStreamTo.getLinksForVideo [%s]" % cItem)
-        urlTab = []
-        # 1 - de, 2 - en, 3 - de_sub
-        langPreference = config.plugins.iptvplayer.serienstreamto_langpreference.value.replace("de_sub", "3").replace("de", "1").replace("en", "2").split(",")
-        printDBG(langPreference)
+        urltab = []
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return []
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="episode-links"', "</article>")[0]
+        data = re.compile(r'data-play-url="([^"]+).*?data-provider-name="([^"]+).*?data-language-label="([^"]+)', re.DOTALL).findall(data)
+        for url, title, lang in data:
+            urltab.append({"name": "%s (%s)" % (title, lang), "url": strwithmeta(self.getFullUrl(url), {"Referer": gettytul()}), "need_resolve": 1})
+        return urltab
 
-        def compare(itemX, itemY):
-            x = itemX["lang_id"]
-            if x in langPreference:
-                x = len(langPreference) - langPreference.index(x)
-            else:
-                x = 0
-            y = itemY["lang_id"]
-            if y in langPreference:
-                y = len(langPreference) - langPreference.index(y)
-            else:
-                y = 0
-            return int(y) - int(x)
+    def getVideoLinks(self, url):
+        printDBG("SerienStreamTo.getVideoLinks [%s]" % url)
+        params = dict(self.defaultParams)
+        params["no_redirection"] = True
+        self.cm.getPage(url, params)
+        if self.cm.meta.get("location"):
+            url = self.cm.meta.get("location")
+            if self.cm.isValidUrl(url):
+                return self.up.getVideoLinkExt(url)
+        return []
 
-        if self.up.getDomain(self.MAIN_URL) in cItem["url"]:
-            if len(self.cacheLinks.get(cItem["url"], [])):
-                urlTab = self.cacheLinks[cItem["url"]]
-            else:
-                sts, data = self.getPage(cItem["url"])
-                if not sts:
-                    return []
-                # fill data lang map
-                langMap = {}
-                tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="changeLanguageBox"', "</div>")[1]
-                tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, "<img ", ">")
-                for item in tmp:
-                    key = self.cm.ph.getSearchGroups(item, """data-lang-key=['"]([^'^"]+?)['"]""")[0]
-                    title = self.cm.ph.getSearchGroups(item, """title=['"]([^'^"]+?)['"]""")[0]
-                    langMap[key] = title
-                data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="changeLanguageBox"', "</ul>")[1]
-                data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<li", "</li>")
-                for item in data:
-                    langId = self.cm.ph.getSearchGroups(item, """data-lang-key=['"]([^'^"]+?)['"]""")[0]
-                    title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<h4>", "</h4>", withMarkers=False)[1])
-                    url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^'^"]+?)['"]""")[0]), {"base_url": cItem["url"]})
-                    if url == "":
-                        url = strwithmeta(self.getFullUrl(self.cm.ph.getSearchGroups(item, r"""data\-link\-target=['"]([^'^"]+?)['"]""")[0]), {"base_url": cItem["url"]})
-                    urlTab.append({"name": "[{0}] {1}".format(langMap.get(langId, _("Unknown")), title), "lang_id": langId, "url": url, "need_resolve": 1})
-
-                if len(urlTab):
-                    self.cacheLinks[cItem["url"]] = urlTab
-            if isPY2():
-                urlTab = sorted(urlTab, cmp=compare)
-            else:
-                urlTab = sorted(urlTab, key=cmp_to_key(compare))
-        else:
-            urlTab = self.up.getVideoLinkExt(cItem["url"])
-        return urlTab
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("SerienStreamTo.getVideoLinks [%s]" % videoUrl)
-        urlTab = []
-        videoUrl = strwithmeta(videoUrl)
-        key = videoUrl.meta.get("base_url", "")
-        if key != "" and key in self.cacheLinks:
-            for idx in range(len(self.cacheLinks[key])):
-                if self.cacheLinks[key][idx]["url"] == videoUrl:
-                    if not self.cacheLinks[key][idx]["name"].startswith("*"):
-                        self.cacheLinks[key][idx]["name"] = "*" + self.cacheLinks[key][idx]["name"]
-        if self.cm.isValidUrl(videoUrl):
-            if 1 != self.up.checkHostSupport(videoUrl):
-                params = dict(self.defaultParams)
-                try:
-                    params["max_data_size"] = 0
-                    params["no_redirection"] = True
-                    tries = 0
-                    url = videoUrl
-                    while tries < 3:
-                        sts, data = self.getPage(url, params)
-                        printDBG("+++++++++++")
-                        printDBG(self.cm.meta)
-                        printDBG("+++++++++++")
-                        url = self.cm.meta.get("location", "")
-                        if not self.cm.isValidUrl(url):
-                            break
-                        if url != "":
-                            videoUrl = url
-                        tries += 1
-                except Exception:
-                    printExc()
-            printDBG(">>>>>>>>>>>>>>>>>>>>>>>>||||||||||||||||||||||||")
-            if 1 != self.up.checkHostSupport(videoUrl):
-                sts, data = self.getPage(videoUrl)
-                if sts:
-                    videoUrl = self.cm.meta["url"]
-                printDBG("+++++++++++")
-                printDBG(data)
-                printDBG("+++++++++++")
-                if sts and "google.com/recaptcha/" in data and "sitekey" in data:
-                    token = ""
-                    sitekey = re.findall("'sitekey': '(.*?)'", data)
-                    printDBG("Sitekey: %s" % sitekey)
-                    if sitekey:
-                        (token, errorMsgTab) = CaptchaHelper.processCaptcha(self, sitekey[0], videoUrl)
-                        printDBG("Captcha Token: %s" % token)
-                    if token:
-                        videoUrl = videoUrl + "?token=" + token
-                        sts, data = self.getPage(videoUrl)
-                        if sts:
-                            videoUrl = self.cm.meta["url"]
-                    else:
-                        message = _("Link protected with google recaptcha v2.")
-                        if True is not self.loggedIn:
-                            message += "\n" + _("Please fill your login and password in the host configuration (available under blue button) and try again.")
-                        else:
-                            message += "\n" + self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<small", "</small>")[1])
-                            message += "\n" + _("Please retry later.")
-                        SetIPTVPlayerLastHostError(message)
-            if 1 == self.up.checkHostSupport(videoUrl):
-                urlTab = self.up.getVideoLinkExt(videoUrl)
-        return urlTab
-
-    def tryTologin_old(self):
-        printDBG("tryTologin start")
-        if self.login == config.plugins.iptvplayer.serienstreamto_login.value and self.password == config.plugins.iptvplayer.serienstreamto_password.value:
-            return
-        self.cm.clearCookie(self.COOKIE_FILE, ["__cfduid", "cf_clearance"])
-        self.login = config.plugins.iptvplayer.serienstreamto_login.value
-        self.password = config.plugins.iptvplayer.serienstreamto_password.value
-        if "" == self.login.strip() or "" == self.password.strip():
-            printDBG("tryTologin wrong login data")
-            self.loggedIn = None
-            return
-        url = self.getFullUrl("/login")
-        post_data = {"email": self.login, "password": self.password, "autoLogin": "on"}
-        while True:
-            httpParams = dict(self.defaultParams)
-            httpParams["header"] = dict(httpParams["header"])
-            httpParams["header"]["Referer"] = url
-            sts, data = self.getPage(url, httpParams, post_data)
-            printDBG(data)
-            sts, data = self.getPage(url)
-            if sts and "/home/logout" in data:
-                printDBG("tryTologin OK")
-                self.loggedIn = True
-                return
-            elif sts:
-                "messageAlert"
-        self.sessionEx.open(MessageBox, _("Login failed."), type=MessageBox.TYPE_ERROR, timeout=10)
-        printDBG("tryTologin failed")
-        self.loggedIn = False
-        return
-
-    def tryTologin(self):
-        printDBG("tryTologin start")
-        if None is self.loggedIn or self.login != config.plugins.iptvplayer.serienstreamto_login.value or self.password != config.plugins.iptvplayer.serienstreamto_password.value:
-            loginCookie = GetCookieDir("s.to.login")
-            self.login = config.plugins.iptvplayer.serienstreamto_login.value
-            self.password = config.plugins.iptvplayer.serienstreamto_password.value
-            sts, data = self.cm.getPage(self.getMainUrl(), self.defaultParams)
-            if sts:
-                self.setMainUrl(self.cm.meta["url"])
-            freshSession = False
-            if sts and "/home/logout" in data:
-                printDBG("Check hash")
-                hash = hex_md5("%s@***@%s" % (self.login, self.password))
-                prevHash = ReadTextFile(loginCookie)[1].strip()
-                printDBG("$hash[%s] $prevHash[%s]" % (hash, prevHash))
-                if hash == prevHash:
-                    self.loggedIn = True
-                    return
-                else:
-                    freshSession = True
-            rm(loginCookie)
-            rm(self.COOKIE_FILE)
-            if freshSession:
-                sts, data = self.cm.getPage(self.getMainUrl(), MergeDicts(self.defaultParams, {"use_new_session": True}))
-            self.loggedIn = False
-            if "" == self.login.strip() or "" == self.password.strip():
-                return False
-            actionUrl = self.getFullUrl("/login")
-            post_data = {"email": self.login, "password": self.password, "autoLogin": "on"}
-            tries = 0
-            while tries < 3:
-                tries += 1
-                errorMsg = ""
-                httpParams = dict(self.defaultParams)
-                httpParams["header"] = dict(httpParams["header"])
-                httpParams["header"]["Referer"] = actionUrl
-                sts, data = self.getPage(actionUrl, httpParams, post_data)
-                printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                printDBG(data)
-                printDBG("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                if sts and not data.strip():
-                    sts, data = self.getPage(actionUrl)
-                if sts and "/home/logout" in data:
-                    printDBG("tryTologin OK")
-                    self.loggedIn = True
-                    break
-                elif sts:
-                    errorMsg = ph.clean_html(ph.find(data, ("<div", ">", "messageAlert"), "</div>", flags=0)[1])
-                    tmp1 = ph.find(data, ("<div", ">", "formCaptcha"), "</div>", flags=0)[1]
-                    imgUrl = self.getFullUrl(ph.search(tmp1, ph.IMAGE_SRC_URI_RE)[1], self.cm.meta["url"])
-                    if imgUrl:
-                        captchaLabel = _("Captcha")
-                        captchaTitle = errorMsg
-                        sendLabel = _("Send")
-                        header = dict(httpParams["header"])
-                        header["Accept"] = "image/png,image/*;q=0.8,*/*;q=0.5"
-                        params = dict(self.defaultParams)
-                        params.update({"maintype": "image", "subtypes": ["jpeg", "png"], "check_first_bytes": [b"\xFF\xD8", b"\xFF\xD9", b"\x89\x50\x4E\x47"], "header": header})
-                        filePath = GetTmpDir(".iptvplayer_captcha.jpg")
-                        rm(filePath)
-                        ret = self.cm.saveWebFile(filePath, imgUrl.replace("&amp;", "&"), params)
-                        if not ret.get("sts"):
-                            SetIPTVPlayerLastHostError(_('Fail to get "%s".') % imgUrl)
-                            return
-                        params = deepcopy(IPTVMultipleInputBox.DEF_PARAMS)
-                        params["accep_label"] = sendLabel
-                        params["title"] = captchaLabel
-                        params["status_text"] = captchaTitle
-                        params["status_text_hight"] = 200
-                        params["with_accept_button"] = True
-                        params["list"] = []
-                        item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
-                        item["label_size"] = (660, 110)
-                        item["input_size"] = (680, 25)
-                        item["icon_path"] = filePath
-                        item["title"] = _("Answer")
-                        item["input"]["text"] = ""
-                        params["list"].append(item)
-                        ret = 0
-                        retArg = self.sessionEx.waitForFinishOpen(IPTVMultipleInputBox, params)
-                        printDBG(retArg)
-                        if retArg and len(retArg) and retArg[0]:
-                            printDBG(retArg[0])
-                            post_data["captcha"] = retArg[0][0]
-                            continue
-                        else:
-                            break
-            if self.loggedIn:
-                hash = hex_md5("%s@***@%s" % (self.login, self.password))
-                WriteTextFile(loginCookie, hash)
-            else:
-                self.sessionEx.open(MessageBox, _("Login failed.") + "\n" + errorMsg, type=MessageBox.TYPE_ERROR, timeout=10)
-        return self.loggedIn
+    def getArticleContent(self, cItem):
+        printDBG("SerienStreamTo.getArticleContent [%s]" % cItem)
+        otherInfo = {}
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return []
+        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'description-text">([^<]+)')[0])
+        icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, 'data-src="([^"]+)')[0]) or cItem.get("icon", "")
+        fields = {"country": '<strong class="me-1">Land:</strong>', "director": '<strong class="me-1">Regisseur:</strong>', "actors": '<strong class="me-1">Besetzung:</strong>', "production": '<strong class="me-1">Produzent:</strong>'}
+        for key, pattern in fields.items():
+            value = self.cm.ph.getAllItemsBeetwenMarkers(data, pattern, "</li>")
+            if value:
+                value2 = re.findall('light">([^<]+)', value[0])
+                if value2:
+                    otherInfo[key] = ", ".join(value2)
+        return [{"title": cItem["title"], "text": desc, "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
-        printDBG("handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
+        printDBG("handleService start\nhandleService: name[%s], category[%s] " % (name, category))
         self.currList = []
-        self.tryTologin()
         if name is None:
-            self.listsTab(self.MAIN_CAT_TAB, {"name": "category"})
-        elif "all_series" == category:
-            self.listsTab(self.ALL_SERIES_TAB, {"name": "category"})
-        elif "all_letters" == category:
-            self.listsAllLetters(self.currItem, "all_items")
-        elif "all_genres" == category:
-            self.listsAllGenres(self.currItem, "all_items")
-        elif "all_items" == category:
-            self.listsAllItems(self.currItem, "list_seasons")
-        elif "list_abc" == category:
-            self.listFilter(self.currItem, "list_items", "abc")
-        elif "list_genres" == category:
-            self.listFilter(self.currItem, "list_items", "genres")
-        elif "list_items" == category:
-            self.listItems(self.currItem, "list_seasons")
+            self.listsTab(self.MENU, {"name": "category"})
+        elif category == "list_items":
+            self.listItems(self.currItem)
         elif category == "list_seasons":
-            self.listSeasons(self.currItem, "list_episodes")
+            self.listSeasons(self.currItem)
         elif category == "list_episodes":
             self.listEpisodes(self.currItem)
+        elif category == "list_value":
+            self.listValue(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
@@ -551,56 +179,10 @@ class SerienStreamTo(CBaseHostClass, CaptchaHelper):
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
 
-    def getArticleContent(self, cItem):
-        printDBG("SerienStreamTo.getArticleContent [%s]" % cItem)
-        retTab = []
-        sts, data = self.getPage(cItem.get("url", ""))
-        if not sts:
-            return retTab
-        retTab = []
-        itemsList = []
-        icons = []
-        title = ""
-        desc = ""
-        sts, data = self.getPage(cItem.get("url"))
-        if not sts:
-            return []
-        cUrl = self.cm.meta["url"]
-        self.setMainUrl(cUrl)
-        if cItem.get("type") == "video":
-            tmp = ph.find(data, ("<div", ">", "containsSeason"), "</script>", flags=0)[1]
-            s = ph.clean_html(ph.getattr(ph.find(tmp, ("<meta", ">", "seasonNumber"))[1], "content"))
-            e = ph.clean_html(ph.getattr(ph.find(tmp, ("<meta", ">", "episode"))[1], "content"))
-            title = ph.clean_html(ph.find(tmp, ("<h2", ">"), "</h2>", flags=0)[1])
-            if s and e and title:
-                title = "s%se%s %s" % (s.zfill(2), e.zfill(2), title)
-            desc = ph.clean_html(ph.find(tmp, ("<p", ">"), "</p>", flags=0)[1])
-        data = ph.find(data, ("<section", ">"), "</section>", flags=0)[1]
-        data = ph.findall(data, ("<strong", "</strong>"), "</ul", flags=ph.START_S)
-        for idx in range(1, len(data), 2):
-            label = ph.clean_html(data[idx - 1])
-            if len(label) < 3:
-                continue
-            value = []
-            tmp = ph.findall(data[idx], ("<li", ">"), "</li>", flags=0)
-            for it in tmp:
-                it = ph.clean_html(it)
-                if it:
-                    value.append(it)
-            if label and value:
-                itemsList.append((label, ", ".join(value)))
-        if not title:
-            title = cItem["title"]
-        if not icons:
-            icons.append({"title": "", "url": cItem.get("icon", self.DEFAULT_ICON_URL)})
-        if not desc:
-            desc = cItem.get("desc", "")
-        return [{"title": ph.clean_html(title), "text": ph.clean_html(desc), "images": icons, "other_info": {"custom_items_list": itemsList}}]
-
 
 class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, SerienStreamTo(), True, [])
 
     def withArticleContent(self, cItem):
-        return cItem.get("type") == "video"
+        return cItem["category"] in ["video", "list_seasons", "list_episodes"]
