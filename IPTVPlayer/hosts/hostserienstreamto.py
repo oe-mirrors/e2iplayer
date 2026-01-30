@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# ADD: 29.01.2026 - Mr.X
+# Last Modified: 29.01.2026 - Mr.X - Completely new writen
 import re
 
 from Components.config import ConfigSelection, config, getConfigListEntry
@@ -29,7 +29,7 @@ class SerienStreamTo(CBaseHostClass):
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = self.getFullUrl("public/img/facebook.jpg")
-        self.MENU = [{"category": "list_items", "title": _("Serien"), "url": self.getFullUrl("suche")}, {"category": "list_items", "title": _("Sammlungen"), "url": self.getFullUrl("sammlungen")}, {"category": "list_value", "title": _("Genres"), "s": ">Genres</h2>"}, {"category": "list_value", "title": _("Land"), "s": ">Länder</h2>"}, {"category": "list_value", "title": _("Personen"), "s": ">Personen</h2>"}, {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
+        self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("suche")}, {"category": "list_items", "title": _("Collections"), "url": self.getFullUrl("sammlungen")}, {"category": "list_value", "title": _("Genres"), "s": ">Genres</h2>"}, {"category": "list_value", "title": _("Country"), "s": ">Länder</h2>"}, {"category": "list_value", "title": _("Persons"), "s": ">Personen</h2>"}, {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
