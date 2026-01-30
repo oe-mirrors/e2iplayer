@@ -206,7 +206,7 @@ class TopCinema(CBaseHostClass):
         if prev_page:
             prev_page = self.getFullUrl(prev_page)
             params = dict(cItem)
-            params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'list_items'})
+            params.update({'title': "◀ " + _("Previous Page"), 'url': prev_page, 'category': 'list_items'})
             self.addDir(params)
 
     def listSeriesItems(self, cItem):
@@ -310,7 +310,7 @@ class TopCinema(CBaseHostClass):
         if prev_page:
             prev_page = self.getFullUrl(prev_page)
             params = dict(cItem)
-            params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'series'})
+            params.update({'title': "◀ " + _("Previous Page"), 'url': prev_page, 'category': 'series'})
             self.addDir(params)
 
     def exploreItems(self, cItem):
@@ -566,7 +566,7 @@ class TopCinema(CBaseHostClass):
         if prev_page:
             prev_page = self.getFullUrl(prev_page)
             params = dict(cItem)
-            params.update({'title': '◀ Previous Page', 'url': prev_page, 'category': 'show_episodes'})
+            params.update({'title': "◀ " + _("Previous Page"), 'url': prev_page, 'category': 'show_episodes'})
             self.addDir(params)
 
     def listSearchResult(self, cItem, search_pattern, search_type):

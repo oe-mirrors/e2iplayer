@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-22 20:02+0100\n"
+"POT-Creation-Date: 2026-01-30 16:58+0100\n"
 "PO-Revision-Date: 2025-11-24 08:05+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -378,6 +378,13 @@ msgstr "Aktivní hostitel"
 msgid "Active: %s"
 msgstr "Aktivní: %s"
 
+msgid "Actor profile and Works"
+msgstr ""
+
+#, fuzzy
+msgid "Actors"
+msgstr "Herci:"
+
 msgid "Actors:"
 msgstr "Herci:"
 
@@ -710,6 +717,10 @@ msgstr "Služba řešení Captcha"
 msgid "Cartoon list"
 msgstr "Seznam kreslených filmů"
 
+#, fuzzy
+msgid "Cartoons"
+msgstr "Seznam kreslených filmů"
+
 msgid "Cartoons and anime"
 msgstr "Kreslené filmy a anime"
 
@@ -738,6 +749,10 @@ msgstr "Kanály"
 msgid "Children"
 msgstr "Dítě"
 
+#, fuzzy
+msgid "Cinema History"
+msgstr "Filmy v kině"
+
 msgid "Cinema movies"
 msgstr "Filmy v kině"
 
@@ -752,6 +767,9 @@ msgstr "Klip"
 
 msgid "Clips"
 msgstr "Klipy"
+
+msgid "Close"
+msgstr ""
 
 msgid "Closing. Please wait..."
 msgstr "Zavírám. Čekejte prosím..."
@@ -940,6 +958,10 @@ msgstr "Přímý"
 
 msgid "Director:"
 msgstr "Režie:"
+
+#, fuzzy
+msgid "Directors"
+msgstr "Ředitelé:"
 
 msgid "Directors:"
 msgstr "Ředitelé:"
@@ -2260,14 +2282,18 @@ msgstr "Kanál novinek"
 msgid "Next"
 msgstr "Další"
 
-msgid "Next Page ▶"
-msgstr "Další stránka ▶"
+#, fuzzy
+msgid "Next Page"
+msgstr "Další stránka"
 
 msgid "Next page"
 msgstr "Další stránka"
 
 msgid "No"
 msgstr "Ne"
+
+msgid "No biography available"
+msgstr ""
 
 msgid ""
 "No item to display. \n"
@@ -2415,6 +2441,9 @@ msgstr "Pediatrie"
 msgid "People"
 msgstr "Lidé"
 
+msgid "Persons"
+msgstr ""
+
 msgid "Physical Exam"
 msgstr "Fyzikální vyšetření"
 
@@ -2499,9 +2528,6 @@ msgstr ""
 "Nezapomeňte prosím navštívit http://www.sport365.live/ a shlédnout několik reklam.\n"
 "Tím se vyřeší problém, pokud je vaše přehrávání neustále přerušované."
 
-msgid "Please retry later."
-msgstr "Zkuste to prosím později."
-
 #, python-format
 msgid "Please set valid %s in the %s configuration."
 msgstr "Nastavte prosím platný %s v konfiguraci %s."
@@ -2584,6 +2610,10 @@ msgid "Preview"
 msgstr "Náhled"
 
 msgid "Previous"
+msgstr "Předchozí"
+
+#, fuzzy
+msgid "Previous Page"
 msgstr "Předchozí"
 
 msgid "Previous Seasons"
@@ -2862,6 +2892,10 @@ msgid "Searching, please wait (%d)"
 msgstr "Hledání, čekejte prosím (%d)"
 
 msgid "Season"
+msgstr "Období"
+
+#, fuzzy
+msgid "Season "
 msgstr "Období"
 
 #, python-format
@@ -3379,6 +3413,10 @@ msgstr "Stejná položka již v této skupině existuje."
 msgid "The worst"
 msgstr "Nejhorší"
 
+#, python-format
+msgid "There are %d more pages in this section"
+msgstr ""
+
 msgid "There are no other favourite groups"
 msgstr "Neexistují žádné další oblíbené skupiny"
 
@@ -3533,9 +3571,6 @@ msgstr "Univerzální"
 
 msgid "Unknow data in the captcha item!"
 msgstr "Neznámá data v položce captcha!"
-
-msgid "Unknown"
-msgstr "Neznámý"
 
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
@@ -3775,6 +3810,9 @@ msgstr "S skrytými titulky."
 msgid "With subtitles"
 msgstr "Hodiny titulků"
 
+msgid "Work of this actor"
+msgstr ""
+
 msgid "Write current title to file:"
 msgstr "Zapsat aktuální název do souboru:"
 
@@ -3869,9 +3907,6 @@ msgstr "V konfiguraci je nutné zadat e-mail a heslo."
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "V __init__ byste nikdy neměli provádět blokové I/O operace."
-
-msgid "Your language preference:"
-msgstr "Vaše jazyková preference:"
 
 msgid "Your search entry"
 msgstr "Váš vyhledávací záznam"

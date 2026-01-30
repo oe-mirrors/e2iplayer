@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-22 20:02+0100\n"
+"POT-Creation-Date: 2026-01-30 16:58+0100\n"
 "PO-Revision-Date: 2025-11-24 07:51+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -378,6 +378,13 @@ msgstr "Активный хост"
 msgid "Active: %s"
 msgstr "Активный: %s"
 
+msgid "Actor profile and Works"
+msgstr ""
+
+#, fuzzy
+msgid "Actors"
+msgstr "Актеры:"
+
 msgid "Actors:"
 msgstr "Актеры:"
 
@@ -710,6 +717,10 @@ msgstr "Услуги по решению капчи"
 msgid "Cartoon list"
 msgstr "Список мультфильмов"
 
+#, fuzzy
+msgid "Cartoons"
+msgstr "Список мультфильмов"
+
 msgid "Cartoons and anime"
 msgstr "Мультфильмы и аниме"
 
@@ -738,6 +749,10 @@ msgstr "Каналы"
 msgid "Children"
 msgstr "Дети"
 
+#, fuzzy
+msgid "Cinema History"
+msgstr "Кино фильмы"
+
 msgid "Cinema movies"
 msgstr "Кино фильмы"
 
@@ -752,6 +767,9 @@ msgstr "Клип"
 
 msgid "Clips"
 msgstr "Клипы"
+
+msgid "Close"
+msgstr ""
 
 msgid "Closing. Please wait..."
 msgstr "Закрытие. Один момент..."
@@ -940,6 +958,10 @@ msgstr "Прямой"
 
 msgid "Director:"
 msgstr "Режиссёр:"
+
+#, fuzzy
+msgid "Directors"
+msgstr "Режиссёры:"
 
 msgid "Directors:"
 msgstr "Режиссёры:"
@@ -2254,14 +2276,18 @@ msgstr "Лента новостей"
 msgid "Next"
 msgstr "Следующий"
 
-msgid "Next Page ▶"
-msgstr "Следующая страница ▶"
+#, fuzzy
+msgid "Next Page"
+msgstr "Следующая страница"
 
 msgid "Next page"
 msgstr "Следующая страница"
 
 msgid "No"
 msgstr "Нет"
+
+msgid "No biography available"
+msgstr ""
 
 msgid ""
 "No item to display. \n"
@@ -2411,6 +2437,9 @@ msgstr "Педиатрия"
 msgid "People"
 msgstr "Люди"
 
+msgid "Persons"
+msgstr ""
+
 msgid "Physical Exam"
 msgstr "Физический осмотр"
 
@@ -2495,9 +2524,6 @@ msgstr ""
 "Не забудьте посетить сайт http://www.sport365.live/ и посмотреть несколько рекламных объявлений.\n"
 "Это исправит проблему, если воспроизведение будет постоянно прерываться."
 
-msgid "Please retry later."
-msgstr "Повторите попытку позже."
-
 #, python-format
 msgid "Please set valid %s in the %s configuration."
 msgstr "Укажите верные %s в %s параметрах."
@@ -2580,6 +2606,10 @@ msgid "Preview"
 msgstr "Предпросмотр"
 
 msgid "Previous"
+msgstr "Предыдущий"
+
+#, fuzzy
+msgid "Previous Page"
 msgstr "Предыдущий"
 
 msgid "Previous Seasons"
@@ -2858,6 +2888,10 @@ msgid "Searching, please wait (%d)"
 msgstr "Поиск, подождите (%d)"
 
 msgid "Season"
+msgstr "Сезон"
+
+#, fuzzy
+msgid "Season "
 msgstr "Сезон"
 
 #, python-format
@@ -3377,6 +3411,10 @@ msgstr "Этот же элемент уже существует в этой г�
 msgid "The worst"
 msgstr "Худшее"
 
+#, python-format
+msgid "There are %d more pages in this section"
+msgstr ""
+
 msgid "There are no other favourite groups"
 msgstr "Иные избранные группы отсутствуют"
 
@@ -3531,9 +3569,6 @@ msgstr "Универсальный"
 
 msgid "Unknow data in the captcha item!"
 msgstr "Неизвестные данные в элементе captcha!"
-
-msgid "Unknown"
-msgstr "Неизвестно"
 
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
@@ -3773,6 +3808,9 @@ msgstr "С закрытыми субтитрами."
 msgid "With subtitles"
 msgstr "С субтитрами"
 
+msgid "Work of this actor"
+msgstr ""
+
 msgid "Write current title to file:"
 msgstr "Записать в файл текущее название:"
 
@@ -3867,9 +3905,6 @@ msgstr "Вам необходимо ввести адрес электронно
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Запрещается выполнять операции ввода/вывода блока в __init__."
-
-msgid "Your language preference:"
-msgstr "Предпочитаемый язык:"
 
 msgid "Your search entry"
 msgstr "Запись поиска"

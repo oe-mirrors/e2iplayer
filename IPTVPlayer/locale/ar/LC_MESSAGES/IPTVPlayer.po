@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-22 20:02+0100\n"
+"POT-Creation-Date: 2026-01-30 16:58+0100\n"
 "PO-Revision-Date: 2025-11-23 21:52+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -377,6 +377,13 @@ msgstr "المضيف النشط"
 msgid "Active: %s"
 msgstr "نشط: %s"
 
+msgid "Actor profile and Works"
+msgstr ""
+
+#, fuzzy
+msgid "Actors"
+msgstr "الممثلون:"
+
 msgid "Actors:"
 msgstr "الممثلون:"
 
@@ -710,6 +717,10 @@ msgstr "خدمة حل الكابتشا"
 msgid "Cartoon list"
 msgstr "قائمة الرسوم المتحركة"
 
+#, fuzzy
+msgid "Cartoons"
+msgstr "قائمة الرسوم المتحركة"
+
 msgid "Cartoons and anime"
 msgstr "الرسوم المتحركة والأنمي"
 
@@ -738,6 +749,10 @@ msgstr "القنوات"
 msgid "Children"
 msgstr "أطفال"
 
+#, fuzzy
+msgid "Cinema History"
+msgstr "أفلام سينمائية"
+
 msgid "Cinema movies"
 msgstr "أفلام سينمائية"
 
@@ -752,6 +767,9 @@ msgstr "مقطع"
 
 msgid "Clips"
 msgstr "مقاطع"
+
+msgid "Close"
+msgstr ""
 
 msgid "Closing. Please wait..."
 msgstr "يتم الإغلاق... الرجاء الانتظار..."
@@ -940,6 +958,10 @@ msgstr "مباشر"
 
 msgid "Director:"
 msgstr "المخرج:"
+
+#, fuzzy
+msgid "Directors"
+msgstr "المخرجون:"
 
 msgid "Directors:"
 msgstr "المخرجون:"
@@ -2255,14 +2277,18 @@ msgstr "تغذية الأخبار"
 msgid "Next"
 msgstr "التالي"
 
-msgid "Next Page ▶"
-msgstr "الصفحة التالية ▶"
+#, fuzzy
+msgid "Next Page"
+msgstr "الصفحة التالية"
 
 msgid "Next page"
 msgstr "الصفحة التالية"
 
 msgid "No"
 msgstr "لا"
+
+msgid "No biography available"
+msgstr ""
 
 msgid ""
 "No item to display. \n"
@@ -2412,6 +2438,9 @@ msgstr "طب الأطفال"
 msgid "People"
 msgstr "أشخاص"
 
+msgid "Persons"
+msgstr ""
+
 msgid "Physical Exam"
 msgstr "الفحص السريري"
 
@@ -2495,9 +2524,6 @@ msgstr ""
 "يرجى تذكّر زيارة http://www.sport365.live/ ومشاهدة بعض الإعلانات.\n"
 "سيساعد ذلك في حل مشكلة الانقطاع المستمر في التشغيل."
 
-msgid "Please retry later."
-msgstr "يرجى المحاولة لاحقًا."
-
 #, python-format
 msgid "Please set valid %s in the %s configuration."
 msgstr "يرجى تعيين %s صالح في إعدادات %s."
@@ -2580,6 +2606,10 @@ msgid "Preview"
 msgstr "معاينة"
 
 msgid "Previous"
+msgstr "السابق"
+
+#, fuzzy
+msgid "Previous Page"
 msgstr "السابق"
 
 msgid "Previous Seasons"
@@ -2858,6 +2888,10 @@ msgid "Searching, please wait (%d)"
 msgstr "جارٍ البحث، الرجاء الانتظار (%d)"
 
 msgid "Season"
+msgstr "الموسم"
+
+#, fuzzy
+msgid "Season "
 msgstr "الموسم"
 
 #, python-format
@@ -3377,6 +3411,10 @@ msgstr "العنصر موجود بالفعل في هذه المجموعة."
 msgid "The worst"
 msgstr "الأسوأ"
 
+#, python-format
+msgid "There are %d more pages in this section"
+msgstr ""
+
 msgid "There are no other favourite groups"
 msgstr "لا توجد مجموعات مفضلة أخرى"
 
@@ -3531,9 +3569,6 @@ msgstr "عام"
 
 msgid "Unknow data in the captcha item!"
 msgstr "بيانات غير معروفة في عنصر الكابتشا!"
-
-msgid "Unknown"
-msgstr "غير معروف"
 
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
@@ -3773,6 +3808,9 @@ msgstr "مع شروحات مغلقة."
 msgid "With subtitles"
 msgstr "مع ترجمة"
 
+msgid "Work of this actor"
+msgstr ""
+
 msgid "Write current title to file:"
 msgstr "اكتب العنوان الحالي إلى ملف:"
 
@@ -3867,9 +3905,6 @@ msgstr "تحتاج إلى إدخال البريد الإلكتروني وكلم�
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "لا يجب أبدًا تنفيذ عمليات الإدخال/الإخراج في دالة __init__."
-
-msgid "Your language preference:"
-msgstr "تفضيلك اللغوي:"
 
 msgid "Your search entry"
 msgstr "إدخال البحث الخاص بك"

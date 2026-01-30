@@ -197,7 +197,7 @@ class TukTukCam(CBaseHostClass):
                 prev_url = self.getFullUrl(prev_page)
                 params = dict(cItem)
                 params.update({
-                    'title': '◀ Previous Page',
+                    'title': "◀ " + _("Previous Page"),
                     'url': prev_url,
                     'category': 'list_items'
                 })
@@ -275,7 +275,7 @@ class TukTukCam(CBaseHostClass):
             printDBG("NEXT PAGE FOUND >>> %s" % nextPage)
             params = dict(cItem)
             params.update({
-                'title': 'Next Page ▶',
+                'title': _("Next Page") + " ▶",
                 'url': nextPage,
                 'category': 'series',
             })
@@ -286,7 +286,7 @@ class TukTukCam(CBaseHostClass):
             printDBG("PREV PAGE FOUND >>> %s" % prevPage)
             params = dict(cItem)
             params.update({
-                'title': '◀ Previous Page',
+                'title': "◀ " + _("Previous Page"),
                 'url': prevPage,
                 'category': 'series',
             })

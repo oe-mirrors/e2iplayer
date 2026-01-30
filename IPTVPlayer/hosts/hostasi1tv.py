@@ -64,20 +64,20 @@ class Asi1TV(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("Asi1TV.listMainMenu")
         self.DRAMA_CAT_TAB = [
-            {"category": "list_drama", "title": _("الدراما الكورية"), "url": self.getFullUrl("/types/الدراما-الكورية/")},
-            {"category": "list_drama", "title": _("الدراما الصينية"), "url": self.getFullUrl("/types/الدراما-الصينية/")},
-            {"category": "list_drama", "title": _("الدراما التايلاندية"), "url": self.getFullUrl("/types/الدراما-التايلندية/")},
-            {"category": "list_drama", "title": _("الدراما التايونية"), "url": self.getFullUrl("/types/الدراما-التايونية/")},
-            {"category": "list_drama", "title": _("الدراما اليابانية"), "url": self.getFullUrl("/types/الدراما-اليابانية/")},
+            {"category": "list_drama", "title": "الدراما الكورية", "url": self.getFullUrl("/types/الدراما-الكورية/")},
+            {"category": "list_drama", "title": "الدراما الصينية", "url": self.getFullUrl("/types/الدراما-الصينية/")},
+            {"category": "list_drama", "title": "الدراما التايلاندية", "url": self.getFullUrl("/types/الدراما-التايلندية/")},
+            {"category": "list_drama", "title": "الدراما التايونية", "url": self.getFullUrl("/types/الدراما-التايونية/")},
+            {"category": "list_drama", "title": "الدراما اليابانية", "url": self.getFullUrl("/types/الدراما-اليابانية/")},
         ]
         MAIN_CAT_TAB = [
-            {"category": "list_items", "title": _("الحلقات الجديدة"), "url": self.getFullUrl("/الحلقات-الجديدة/")},
-            {"category": "list_drama_menu", "title": _("قائمة الدراما")},
-            {"category": "list_items", "title": _("افلام اسيوية"), "url": self.getFullUrl("/types/افلام-اسيوية/")},
-            {"category": "list_items", "title": _("دراما تبث حاليا"), "url": self.getFullUrl("/دراما-تبث-حاليا/")},
-            {"category": "list_items", "title": _("دراما مكتملة"), "url": self.getFullUrl("/دراما-مكتملة/")},
-            {"category": "list_items", "title": _("الدراما الاكثر تقييما"), "url": self.getFullUrl("/الدراما-الاكثر-تقييما/")},
-            {"category": "list_items", "title": _("قائمة الفنانين"), "url": self.getFullUrl("/قائمة-الفنانين/")},
+            {"category": "list_items", "title": "الحلقات الجديدة", "url": self.getFullUrl("/الحلقات-الجديدة/")},
+            {"category": "list_drama_menu", "title": "قائمة الدراما"},
+            {"category": "list_items", "title": "افلام اسيوية", "url": self.getFullUrl("/types/افلام-اسيوية/")},
+            {"category": "list_items", "title": "دراما تبث حاليا", "url": self.getFullUrl("/دراما-تبث-حاليا/")},
+            {"category": "list_items", "title": "دراما مكتملة", "url": self.getFullUrl("/دراما-مكتملة/")},
+            {"category": "list_items", "title": "الدراما الاكثر تقييما", "url": self.getFullUrl("/الدراما-الاكثر-تقييما/")},
+            {"category": "list_items", "title": "قائمة الفنانين", "url": self.getFullUrl("/قائمة-الفنانين/")},
         ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -97,7 +97,7 @@ class Asi1TV(CBaseHostClass):
                 actor_links = self.cm.ph.getAllItemsBeetwenMarkers(actor_blocks, "<a ", "</a>")
                 if cItem.get("url", "").endswith("/قائمة-الفنانين/") or "/page/" not in cItem.get("url", ""):
                     all_list_title = Y + "All List A to Z" + W
-                    all_list_desc = Y + _("ترتيب أبجدي .. يرجي الانتظار لان تحميل قائمة الفنانين الكاملة تأخذ بعض الوقت ... يمكن تصفح القوائم بشكل أسرع") + W
+                    all_list_desc = Y + "ترتيب أبجدي .. يرجي الانتظار لان تحميل قائمة الفنانين الكاملة تأخذ بعض الوقت ... يمكن تصفح القوائم بشكل أسرع" + W
                     self.addDir({"title": all_list_title, "desc": all_list_desc, "icon": self.DEFAULT_ICON_URL, "category": "list_all_actors", "url": "https://asi1tv.com/قائمة-الفنانين/", "type": "all_actors", "good_for_fav": True})
                 for link in actor_links:
                     url = self.cm.ph.getSearchGroups(link, r'href="([^"]+)"')[0]
@@ -355,7 +355,7 @@ class Asi1TV(CBaseHostClass):
                 self.addVideo({"title": title, "url": url, "icon": icon, "desc": self.cleanHtmlStr(desc_block)[:600] + "..." if len(self.cleanHtmlStr(desc_block)) > 600 else self.cleanHtmlStr(desc_block), "type": "video", "urlSeparateRequest": True, "good_for_fav": True})
             else:
                 printDBG("Page contains neither episodes list nor an embed player. Content is currently unavailable.")
-                self.addMarker({"title": "%s المسلسل/الفيلم غير متاح حاليًا %s" % (Y, W), "desc": _("لا توجد حلقات أو روابط تشغيل متاحة لهذه الصفحة بعد.")})
+                self.addMarker({"title": "%s المسلسل/الفيلم غير متاح حاليًا %s" % (Y, W), "desc": "لا توجد حلقات أو روابط تشغيل متاحة لهذه الصفحة بعد."})
 
     def listEpisodes(self, cItem):
         printDBG("Asi1TV.listEpisodes: Opening Season Page")
@@ -617,7 +617,7 @@ class Asi1TV(CBaseHostClass):
             for ep in episodes:
                 self.addVideo(ep)
         elif not season_items:
-            self.addMarker({"title": "%s المسلسل غير مكتمل حاليًا %s" % (Y, W), "desc": _("لم يتم إضافة حلقات أو مواسم لهذا المسلسل بعد.")})
+            self.addMarker({"title": "%s المسلسل غير مكتمل حاليًا %s" % (Y, W), "desc": "لم يتم إضافة حلقات أو مواسم لهذا المسلسل بعد."})
         return True
 
     def listEpisodesForSeason(self, cItem):
@@ -663,7 +663,7 @@ class Asi1TV(CBaseHostClass):
             for ep in episodes_list:
                 self.addVideo(ep)
         else:
-            self.addMarker({"title": "%s لا توجد حلقات متاحة في هذا الموسم %s" % (Y, W), "desc": _("لم يتم إضافة حلقات لهذا الموسم بعد.")})
+            self.addMarker({"title": "%s لا توجد حلقات متاحة في هذا الموسم %s" % (Y, W), "desc": "لم يتم إضافة حلقات لهذا الموسم بعد."})
         return True
 
     def listSearchResult(self, cItem, searchPattern, searchType):

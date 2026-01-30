@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-22 20:02+0100\n"
+"POT-Creation-Date: 2026-01-30 16:58+0100\n"
 "PO-Revision-Date: 2025-11-24 07:59+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -378,6 +378,13 @@ msgstr "Aktív host"
 msgid "Active: %s"
 msgstr "Aktív: %s"
 
+msgid "Actor profile and Works"
+msgstr ""
+
+#, fuzzy
+msgid "Actors"
+msgstr "Színészek:"
+
 msgid "Actors:"
 msgstr "Színészek:"
 
@@ -710,6 +717,10 @@ msgstr "Captcha-megoldó szolgáltatás"
 msgid "Cartoon list"
 msgstr "Rajzfilmlista"
 
+#, fuzzy
+msgid "Cartoons"
+msgstr "Rajzfilmlista"
+
 msgid "Cartoons and anime"
 msgstr "Rajzfilmek és animék"
 
@@ -738,6 +749,10 @@ msgstr "Csatornák"
 msgid "Children"
 msgstr "Gyermek"
 
+#, fuzzy
+msgid "Cinema History"
+msgstr "Mozifilmek"
+
 msgid "Cinema movies"
 msgstr "Mozifilmek"
 
@@ -752,6 +767,9 @@ msgstr "Csipesz"
 
 msgid "Clips"
 msgstr "Clips"
+
+msgid "Close"
+msgstr ""
 
 msgid "Closing. Please wait..."
 msgstr "Zárás. Kérjük, várjon..."
@@ -940,6 +958,10 @@ msgstr "Közvetlen"
 
 msgid "Director:"
 msgstr "Igazgató:"
+
+#, fuzzy
+msgid "Directors"
+msgstr "Rendezők:"
 
 msgid "Directors:"
 msgstr "Rendezők:"
@@ -2254,14 +2276,18 @@ msgstr "Hírfolyam"
 msgid "Next"
 msgstr "Következő"
 
-msgid "Next Page ▶"
-msgstr "Következő oldal ▶"
+#, fuzzy
+msgid "Next Page"
+msgstr "Következő oldal"
 
 msgid "Next page"
 msgstr "Következő oldal"
 
 msgid "No"
 msgstr "Nem"
+
+msgid "No biography available"
+msgstr ""
 
 msgid ""
 "No item to display. \n"
@@ -2411,6 +2437,9 @@ msgstr "Gyermekgyógyászat"
 msgid "People"
 msgstr "Emberek"
 
+msgid "Persons"
+msgstr ""
+
 msgid "Physical Exam"
 msgstr "Fizikális vizsgálat"
 
@@ -2496,9 +2525,6 @@ msgstr ""
 "\n"
 "Ez megoldja a problémát, ha a lejátszás folyamatosan megszakad."
 
-msgid "Please retry later."
-msgstr "Kérjük, próbálja újra később."
-
 #, python-format
 msgid "Please set valid %s in the %s configuration."
 msgstr "Adjon meg érvényes %s-ot a(z) %s konfigurációban."
@@ -2581,6 +2607,10 @@ msgid "Preview"
 msgstr "Előnézet"
 
 msgid "Previous"
+msgstr "Előző"
+
+#, fuzzy
+msgid "Previous Page"
 msgstr "Előző"
 
 msgid "Previous Seasons"
@@ -2855,6 +2885,10 @@ msgid "Searching, please wait (%d)"
 msgstr "Keresés folyamatban, kérjük várjon (%d)"
 
 msgid "Season"
+msgstr "Évad"
+
+#, fuzzy
+msgid "Season "
 msgstr "Évad"
 
 #, python-format
@@ -3374,6 +3408,10 @@ msgstr "Ugyanez az elem már létezik ebben a csoportban."
 msgid "The worst"
 msgstr "A legrosszabb"
 
+#, python-format
+msgid "There are %d more pages in this section"
+msgstr ""
+
 msgid "There are no other favourite groups"
 msgstr "Nincsenek más kedvenc csoportok"
 
@@ -3528,9 +3566,6 @@ msgstr "Általános"
 
 msgid "Unknow data in the captcha item!"
 msgstr "Ismeretlen adat a captcha elemben!"
-
-msgid "Unknown"
-msgstr "Ismeretlen"
 
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
@@ -3770,6 +3805,9 @@ msgstr "Felirattal."
 msgid "With subtitles"
 msgstr "Feliratok az órához"
 
+msgid "Work of this actor"
+msgstr ""
+
 msgid "Write current title to file:"
 msgstr "Írja ki az aktuális címet a fájlba:"
 
@@ -3864,9 +3902,6 @@ msgstr "A konfigurációban meg kell adnia az e-mail címét és jelszavát."
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Soha ne hajts végre blokk I/O műveleteket az __init__-ban."
-
-msgid "Your language preference:"
-msgstr "Nyelvi preferenciája:"
 
 msgid "Your search entry"
 msgstr "A keresési bejegyzésed"

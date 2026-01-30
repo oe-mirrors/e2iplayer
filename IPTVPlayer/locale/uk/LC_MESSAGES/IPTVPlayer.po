@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-22 20:02+0100\n"
+"POT-Creation-Date: 2026-01-30 16:58+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -376,6 +376,12 @@ msgstr ""
 msgid "Active: %s"
 msgstr "відео"
 
+msgid "Actor profile and Works"
+msgstr ""
+
+msgid "Actors"
+msgstr ""
+
 msgid "Actors:"
 msgstr ""
 
@@ -743,6 +749,10 @@ msgstr ""
 msgid "Cartoon list"
 msgstr "Список мультфільмів"
 
+#, fuzzy
+msgid "Cartoons"
+msgstr "Список мультфільмів"
+
 msgid "Cartoons and anime"
 msgstr ""
 
@@ -773,6 +783,10 @@ msgstr "Канали"
 msgid "Children"
 msgstr "Для дітей"
 
+#, fuzzy
+msgid "Cinema History"
+msgstr "Кінофільми"
+
 msgid "Cinema movies"
 msgstr "Кінофільми"
 
@@ -786,6 +800,9 @@ msgid "Clip"
 msgstr ""
 
 msgid "Clips"
+msgstr ""
+
+msgid "Close"
 msgstr ""
 
 #, fuzzy
@@ -989,6 +1006,10 @@ msgstr "пряме писилання"
 
 msgid "Director:"
 msgstr ""
+
+#, fuzzy
+msgid "Directors"
+msgstr "пряме писилання"
 
 msgid "Directors:"
 msgstr ""
@@ -2386,7 +2407,7 @@ msgid "Next"
 msgstr "Наступна сторінка"
 
 #, fuzzy
-msgid "Next Page ▶"
+msgid "Next Page"
 msgstr "Наступна сторінка"
 
 msgid "Next page"
@@ -2395,6 +2416,9 @@ msgstr "Наступна сторінка"
 #, fuzzy
 msgid "No"
 msgstr "ні"
+
+msgid "No biography available"
+msgstr ""
 
 msgid ""
 "No item to display. \n"
@@ -2555,6 +2579,9 @@ msgstr ""
 msgid "People"
 msgstr ""
 
+msgid "Persons"
+msgstr ""
+
 msgid "Physical Exam"
 msgstr ""
 
@@ -2640,9 +2667,6 @@ msgstr ""
 msgid ""
 "Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
-msgstr ""
-
-msgid "Please retry later."
 msgstr ""
 
 #, fuzzy, python-format
@@ -2737,6 +2761,10 @@ msgstr "Попередній"
 
 #, fuzzy
 msgid "Previous"
+msgstr "Попередній"
+
+#, fuzzy
+msgid "Previous Page"
 msgstr "Попередній"
 
 msgid "Previous Seasons"
@@ -3036,6 +3064,9 @@ msgid "Searching, please wait (%d)"
 msgstr "Йде обробка, будь-ласка, зачекайте."
 
 msgid "Season"
+msgstr ""
+
+msgid "Season "
 msgstr ""
 
 #, python-format
@@ -3588,6 +3619,10 @@ msgstr "Те ж саме елемент вже існує в цій групі."
 msgid "The worst"
 msgstr "гірший"
 
+#, python-format
+msgid "There are %d more pages in this section"
+msgstr ""
+
 #, fuzzy
 msgid "There are no other favourite groups"
 msgstr "Там немає групи вибране."
@@ -3758,9 +3793,6 @@ msgstr ""
 
 msgid "Unknow data in the captcha item!"
 msgstr ""
-
-msgid "Unknown"
-msgstr "Невідомий"
 
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
@@ -4020,6 +4052,9 @@ msgstr ""
 msgid "With subtitles"
 msgstr "Субтитри"
 
+msgid "Work of this actor"
+msgstr ""
+
 msgid "Write current title to file:"
 msgstr ""
 
@@ -4119,9 +4154,6 @@ msgid "You need to enter email and password in configuration."
 msgstr "Ви повинні ввести адрес електронної пошти і пароль в конфігурації."
 
 msgid "You should never perform block I/O operations in the __init__."
-msgstr ""
-
-msgid "Your language preference:"
 msgstr ""
 
 msgid "Your search entry"

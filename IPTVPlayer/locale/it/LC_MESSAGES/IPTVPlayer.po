@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-22 20:02+0100\n"
+"POT-Creation-Date: 2026-01-30 16:58+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Lululla <ekekaz@gmail.com>\n"
 "Language-Team: lululla <ekekaz@gmail.com>\n"
@@ -379,6 +379,13 @@ msgstr "Host attivo"
 msgid "Active: %s"
 msgstr "Attivo: %s"
 
+msgid "Actor profile and Works"
+msgstr ""
+
+#, fuzzy
+msgid "Actors"
+msgstr "Attori:"
+
 msgid "Actors:"
 msgstr "Attori:"
 
@@ -714,6 +721,10 @@ msgstr "Servizio di risoluzione Captcha"
 msgid "Cartoon list"
 msgstr "Elenco Cartoni animati"
 
+#, fuzzy
+msgid "Cartoons"
+msgstr "Elenco Cartoni animati"
+
 msgid "Cartoons and anime"
 msgstr "Cartoni e anime"
 
@@ -742,6 +753,10 @@ msgstr "Canali"
 msgid "Children"
 msgstr "Bambini"
 
+#, fuzzy
+msgid "Cinema History"
+msgstr "Film del cinema"
+
 msgid "Cinema movies"
 msgstr "Film del cinema"
 
@@ -756,6 +771,9 @@ msgstr "Filmato"
 
 msgid "Clips"
 msgstr "Filmati"
+
+msgid "Close"
+msgstr ""
 
 msgid "Closing. Please wait..."
 msgstr "Attendere la chiusura.."
@@ -943,6 +961,10 @@ msgstr "Regista"
 
 msgid "Director:"
 msgstr "Regista:"
+
+#, fuzzy
+msgid "Directors"
+msgstr "Registi:"
 
 msgid "Directors:"
 msgstr "Registi:"
@@ -2257,14 +2279,18 @@ msgstr "Feed di notizie"
 msgid "Next"
 msgstr "Successiva"
 
-msgid "Next Page ▶"
-msgstr "Pagina Successiva ▶"
+#, fuzzy
+msgid "Next Page"
+msgstr "Pagina Successiva"
 
 msgid "Next page"
 msgstr "Pagina Successiva"
 
 msgid "No"
 msgstr "No"
+
+msgid "No biography available"
+msgstr ""
 
 msgid ""
 "No item to display. \n"
@@ -2414,6 +2440,9 @@ msgstr "Pediatrici"
 msgid "People"
 msgstr "Persone"
 
+msgid "Persons"
+msgstr ""
+
 msgid "Physical Exam"
 msgstr "Esame fisico"
 
@@ -2498,9 +2527,6 @@ msgstr ""
 "Ricordati di visitare http://www.sport365.live/ e guardare un po' di pubblicità.\n"
 "Se la tua riproduzione è costantemente interrotta, questo può risolvere il problema."
 
-msgid "Please retry later."
-msgstr "Riprovare più tardi."
-
 #, python-format
 msgid "Please set valid %s in the %s configuration."
 msgstr "Per favore inserisci un %s valido nella configurazione di %s."
@@ -2583,6 +2609,10 @@ msgid "Preview"
 msgstr "Anteprima"
 
 msgid "Previous"
+msgstr "Precedente"
+
+#, fuzzy
+msgid "Previous Page"
 msgstr "Precedente"
 
 msgid "Previous Seasons"
@@ -2861,6 +2891,10 @@ msgid "Searching, please wait (%d)"
 msgstr "Ricerca in corso, attendere prego  (%d)"
 
 msgid "Season"
+msgstr "Stagione"
+
+#, fuzzy
+msgid "Season "
 msgstr "Stagione"
 
 #, python-format
@@ -3380,6 +3414,10 @@ msgstr "La stessa voce esiste già in questo gruppo."
 msgid "The worst"
 msgstr "Peggiore"
 
+#, python-format
+msgid "There are %d more pages in this section"
+msgstr ""
+
 msgid "There are no other favourite groups"
 msgstr "Non ci sono altri gruppi preferiti"
 
@@ -3533,9 +3571,6 @@ msgstr "Universale"
 
 msgid "Unknow data in the captcha item!"
 msgstr "Dati sconosciuti nell'oggetto captcha!"
-
-msgid "Unknown"
-msgstr "Sconosciuto"
 
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
@@ -3775,6 +3810,9 @@ msgstr "Con sottotitoli."
 msgid "With subtitles"
 msgstr "Con sottotitoli"
 
+msgid "Work of this actor"
+msgstr ""
+
 msgid "Write current title to file:"
 msgstr "Scrivi il file attuale nel file:"
 
@@ -3869,9 +3907,6 @@ msgstr "E' necessario che tu inserisca email e password nella configurazione."
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Non dovresti mai eseguire operazioni di I/O a blocchi in __init__."
-
-msgid "Your language preference:"
-msgstr "Lingua preferita:"
 
 msgid "Your search entry"
 msgstr "Tua voce di ricerca"

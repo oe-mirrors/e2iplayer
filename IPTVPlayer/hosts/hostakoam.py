@@ -238,7 +238,7 @@ class Akoam(CBaseHostClass):
         if prevPage:
             printDBG('Previous page found: %s' % prevPage)
             params = dict(cItem)
-            params.update({'title': 'Previous Page', 'url': prevPage})
+            params.update({'title': _('Previous Page'), 'url': prevPage})
             self.addDir(params)
         else:
             printDBG('No previous page found in pagination')
@@ -502,7 +502,7 @@ class Akoam(CBaseHostClass):
         if prevPage:
             printDBG('Previous page found: %s' % prevPage)
             params = dict(cItem)
-            params.update({'title': 'Previous Page', 'url': prevPage})
+            params.update({'title': _('Previous Page'), 'url': prevPage})
             self.addDir(params)
         else:
             printDBG('No previous page found in pagination')

@@ -324,7 +324,7 @@ class ArabSeed(CBaseHostClass):
             printDBG("NEXT PAGE FOUND >>> %s" % next_page)
             params = dict(cItem)
             params.update({
-                'title': 'Next Page ▶',
+                'title': _("Next Page") + " ▶",
                 'url': next_page,
                 'category': 'list_items',
             })
@@ -335,7 +335,7 @@ class ArabSeed(CBaseHostClass):
             printDBG("PREV PAGE FOUND >>> %s" % prev_page)
             params = dict(cItem)
             params.update({
-                'title': '◀ Previous Page',
+                'title': "◀ " + _("Previous Page"),
                 'url': prev_page,
                 'category': 'list_items',
             })
@@ -425,7 +425,7 @@ class ArabSeed(CBaseHostClass):
             printDBG("NEXT PAGE FOUND >>> %s" % next_page)
             params = dict(cItem)
             params.update({
-                'title': 'Next Page ▶',
+                'title': _("Next Page") + " ▶",
                 'url': next_page,
                 'category': 'series',
             })
@@ -436,7 +436,7 @@ class ArabSeed(CBaseHostClass):
             printDBG("PREV PAGE FOUND >>> %s" % prev_page)
             params = dict(cItem)
             params.update({
-                'title': '◀ Previous Page',
+                'title': "◀ " + _("Previous Page"),
                 'url': prev_page,
                 'category': 'series',
             })
@@ -836,7 +836,7 @@ class ArabSeed(CBaseHostClass):
             if next_page:
                 params = dict(cItem)
                 params.update({
-                    'title': _('Next Page ▶'),
+                    'title': _("Next Page") + " ▶",
                     'url': self.MAIN_URL + self.getFullUrl(next_page),
                     'category': 'series_packs'
                 })
@@ -962,7 +962,7 @@ class ArabSeed(CBaseHostClass):
             if next_page:
                 params = dict(cItem)
                 params.update({
-                    'title': _('Next Page ▶'),
+                    'title': _("Next Page") + " ▶",
                     'url': self.MAIN_URL + self.getFullUrl(next_page),
                     'category': 'series_episodes_list'
                 })

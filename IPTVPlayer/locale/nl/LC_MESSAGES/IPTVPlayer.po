@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-22 20:02+0100\n"
+"POT-Creation-Date: 2026-01-30 16:58+0100\n"
 "PO-Revision-Date: 2025-08-09 16:00+0200\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -378,6 +378,13 @@ msgstr "Actieve host"
 msgid "Active: %s"
 msgstr "Actieve host"
 
+msgid "Actor profile and Works"
+msgstr ""
+
+#, fuzzy
+msgid "Actors"
+msgstr "Acteurs:"
+
 msgid "Actors:"
 msgstr "Acteurs:"
 
@@ -718,6 +725,10 @@ msgstr "Captcha oplosser service"
 msgid "Cartoon list"
 msgstr "Cartoon overzicht"
 
+#, fuzzy
+msgid "Cartoons"
+msgstr "Cartoon overzicht"
+
 msgid "Cartoons and anime"
 msgstr "Tekenfilms en Anime"
 
@@ -746,6 +757,10 @@ msgstr "Zenders"
 msgid "Children"
 msgstr "Kinderen"
 
+#, fuzzy
+msgid "Cinema History"
+msgstr "Bioscoop films"
+
 msgid "Cinema movies"
 msgstr "Bioscoop films"
 
@@ -760,6 +775,9 @@ msgstr "Clip"
 
 msgid "Clips"
 msgstr "Clips"
+
+msgid "Close"
+msgstr ""
 
 msgid "Closing. Please wait..."
 msgstr "Afsluiten. A.u.b. wachten..."
@@ -949,6 +967,10 @@ msgstr "Director:"
 
 msgid "Director:"
 msgstr "Director:"
+
+#, fuzzy
+msgid "Directors"
+msgstr "Directors:"
 
 msgid "Directors:"
 msgstr "Directors:"
@@ -2281,7 +2303,7 @@ msgid "Next"
 msgstr "Volgende pagina"
 
 #, fuzzy
-msgid "Next Page ▶"
+msgid "Next Page"
 msgstr "Volgende pagina"
 
 msgid "Next page"
@@ -2289,6 +2311,9 @@ msgstr "Volgende pagina"
 
 msgid "No"
 msgstr "Nee"
+
+msgid "No biography available"
+msgstr ""
 
 msgid ""
 "No item to display. \n"
@@ -2438,6 +2463,9 @@ msgstr "Kindergeneeskunde"
 msgid "People"
 msgstr "Mensen"
 
+msgid "Persons"
+msgstr ""
+
 msgid "Physical Exam"
 msgstr "Lichamelijk onderzoek"
 
@@ -2522,9 +2550,6 @@ msgstr ""
 "A.u.b. niet vergeten om naar http://www.sport365.live/ te gaan en enkele reclames te bekijken.\n"
 "Dit lost de vele onderbrekingen op tijdens het afspelen."
 
-msgid "Please retry later."
-msgstr "A.u.b. later opnieuw proberen."
-
 #, python-format
 msgid "Please set valid %s in the %s configuration."
 msgstr "A.u.b. een geldige %s instellen in de %s configuratie."
@@ -2608,6 +2633,10 @@ msgstr "Preview"
 
 #, fuzzy
 msgid "Previous"
+msgstr "Vorig overzicht"
+
+#, fuzzy
+msgid "Previous Page"
 msgstr "Vorig overzicht"
 
 msgid "Previous Seasons"
@@ -2887,6 +2916,10 @@ msgid "Searching, please wait (%d)"
 msgstr "Zoeken is bezig, even geduld (%d)"
 
 msgid "Season"
+msgstr "Seizoen"
+
+#, fuzzy
+msgid "Season "
 msgstr "Seizoen"
 
 #, python-format
@@ -3412,6 +3445,10 @@ msgstr "Hetzelfde item bestaat al in deze groep."
 msgid "The worst"
 msgstr "De slechtste"
 
+#, python-format
+msgid "There are %d more pages in this section"
+msgstr ""
+
 msgid "There are no other favourite groups"
 msgstr "Er zijn geen andere groepen met favorieten"
 
@@ -3570,9 +3607,6 @@ msgstr ""
 
 msgid "Unknow data in the captcha item!"
 msgstr "Onbekende data in het captcha item!"
-
-msgid "Unknown"
-msgstr "Onbekend"
 
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
@@ -3812,6 +3846,9 @@ msgstr "Met ondertiteling."
 msgid "With subtitles"
 msgstr "Met ondertiteling"
 
+msgid "Work of this actor"
+msgstr ""
+
 msgid "Write current title to file:"
 msgstr "Huidige titel naar bestand schrijven:"
 
@@ -3907,9 +3944,6 @@ msgstr "Het invullen van email en wachtwoord in de configuratie is noodzakelijk.
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "A.u.b. geen \"block I/O\" bewerkingen uitvoeren in de __init__."
-
-msgid "Your language preference:"
-msgstr "Uw taalvoorkeur:"
 
 msgid "Your search entry"
 msgstr "Uw zoekopdracht"

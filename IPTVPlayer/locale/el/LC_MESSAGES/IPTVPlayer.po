@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-22 20:02+0100\n"
+"POT-Creation-Date: 2026-01-30 16:58+0100\n"
 "PO-Revision-Date: 2026-01-19 00:34+0200\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -378,6 +378,13 @@ msgstr "Ενεργός host"
 msgid "Active: %s"
 msgstr "Ενεργό: %s"
 
+msgid "Actor profile and Works"
+msgstr ""
+
+#, fuzzy
+msgid "Actors"
+msgstr "Ηθοποιοί:"
+
 msgid "Actors:"
 msgstr "Ηθοποιοί:"
 
@@ -708,6 +715,10 @@ msgstr "Υπηρεσία επίλυσης Captcha"
 msgid "Cartoon list"
 msgstr "Λίστα κινουμένων σχεδίων"
 
+#, fuzzy
+msgid "Cartoons"
+msgstr "Λίστα κινουμένων σχεδίων"
+
 msgid "Cartoons and anime"
 msgstr "Κινούμενα σχέδια και άνιμε"
 
@@ -736,6 +747,10 @@ msgstr "Κανάλια"
 msgid "Children"
 msgstr "Παιδικά"
 
+#, fuzzy
+msgid "Cinema History"
+msgstr "Κινηματογραφικές ταινίες"
+
 msgid "Cinema movies"
 msgstr "Κινηματογραφικές ταινίες"
 
@@ -750,6 +765,9 @@ msgstr "Απόσπασμα"
 
 msgid "Clips"
 msgstr "Αποσπάσματα"
+
+msgid "Close"
+msgstr ""
 
 msgid "Closing. Please wait..."
 msgstr "Κλείσιμο. Παρακαλώ περιμένετε..."
@@ -937,6 +955,10 @@ msgstr "Άμεσο"
 
 msgid "Director:"
 msgstr "Σκηνοθέτης:"
+
+#, fuzzy
+msgid "Directors"
+msgstr "Σκηνοθέτες:"
 
 msgid "Directors:"
 msgstr "Σκηνοθέτες:"
@@ -2251,14 +2273,18 @@ msgstr "Ροή ειδήσεων"
 msgid "Next"
 msgstr "Επόμενο"
 
-msgid "Next Page ▶"
-msgstr "Επόμενη σελίδα ▶"
+#, fuzzy
+msgid "Next Page"
+msgstr "Επόμενη σελίδα"
 
 msgid "Next page"
 msgstr "Επόμενη σελίδα"
 
 msgid "No"
 msgstr "Όχι"
+
+msgid "No biography available"
+msgstr ""
 
 msgid ""
 "No item to display. \n"
@@ -2408,6 +2434,9 @@ msgstr "Παιδιατρική"
 msgid "People"
 msgstr "Άτομα"
 
+msgid "Persons"
+msgstr ""
+
 msgid "Physical Exam"
 msgstr "Φυσική εξέταση"
 
@@ -2492,9 +2521,6 @@ msgstr ""
 "Παρακαλώ μην ξεχάσετε να επισκεφτείτε το http://www.sport365.live/ και να παρακολουθήσετε μερικές διαφημίσεις.\n"
 "Αυτό θα διορθώσει το πρόβλημα, εάν η αναπαραγωγή σας διακόπτεται συνεχώς."
 
-msgid "Please retry later."
-msgstr "Παρακαλώ δοκιμάστε ξανά αργότερα."
-
 #, python-format
 msgid "Please set valid %s in the %s configuration."
 msgstr "Παρακαλώ ορίστε έγκυρο %s στη ρύθμιση του %s."
@@ -2577,6 +2603,10 @@ msgid "Preview"
 msgstr "Προεπισκόπηση"
 
 msgid "Previous"
+msgstr "Προηγούμενο"
+
+#, fuzzy
+msgid "Previous Page"
 msgstr "Προηγούμενο"
 
 msgid "Previous Seasons"
@@ -2854,6 +2884,10 @@ msgid "Searching, please wait (%d)"
 msgstr "Αναζήτηση, παρακαλώ περιμένετε (%d)"
 
 msgid "Season"
+msgstr "Σεζόν"
+
+#, fuzzy
+msgid "Season "
 msgstr "Σεζόν"
 
 #, python-format
@@ -3372,6 +3406,10 @@ msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτήν τ�
 msgid "The worst"
 msgstr "Η χειρότερη"
 
+#, python-format
+msgid "There are %d more pages in this section"
+msgstr ""
+
 msgid "There are no other favourite groups"
 msgstr "Δεν υπάρχουν άλλες αγαπημένες ομάδες"
 
@@ -3525,9 +3563,6 @@ msgstr "Καθολική"
 
 msgid "Unknow data in the captcha item!"
 msgstr "Άγνωστα δεδομένα στο στοιχείο captcha!"
-
-msgid "Unknown"
-msgstr "Άγνωστο"
 
 #, python-format
 msgid "Unknown captcha form! Data: \"%s\""
@@ -3767,6 +3802,9 @@ msgstr "Με κλειστούς υπότιτλους."
 msgid "With subtitles"
 msgstr "Με υπότιτλους"
 
+msgid "Work of this actor"
+msgstr ""
+
 msgid "Write current title to file:"
 msgstr "Εγγραφή τρέχοντος τίτλου σε αρχείο:"
 
@@ -3861,9 +3899,6 @@ msgstr "Πρέπει να εισάγετε email και κωδικό πρόσβ�
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Δεν πρέπει ποτέ να εκτελείτε λειτουργίες block I/O στο __init__."
-
-msgid "Your language preference:"
-msgstr "Η προτίμησή σας για γλώσσα:"
 
 msgid "Your search entry"
 msgstr "Η αναζήτησή σας"

@@ -64,7 +64,7 @@ class MovizHome(CBaseHostClass):
 
     def listMainMenu(self):
         base = "https://movizhome.click"
-        self.addDir({"name": "category", "category": "list_items", "title": _("مضاف حديثا"), "url": self.getFullUrl("/recent/")})
+        self.addDir({"name": "category", "category": "list_items", "title": "مضاف حديثا", "url": self.getFullUrl("/recent/")})
         menu_data = {
             "افلام اجنبيه": ["category/افلام-movis/افلام-اجنبية", [("الأكشن", "genre/اكشن"), ("الرعب", "genre/رعب"), ("الخيال العلمي", "genre/خيال-علمي"), ("الفانتازيا", "genre/fantasy-movies"), ("رومانسية", "genre/رومانسية"), ("الكوميديا", "genre/كوميديا"), ("الإثارة والتشويق", "genre/إثارة"), ("الجريمة", "genre/جريمة"), ("المغامرات", "genre/مغامرات"), ("الدراما", "genre/دراما"), ("كلاسيكية", "tag/افلام-كلاسيكية"), ("الغموض", "genre/غموض"), ("عائلية", "genre/عائلي"), ("تاريخية", "genre/تاريخي"), ("الويسترن", "genre/ويسترن")]],
             "افلام هندية": ["category/افلام-movis/افلام-هنديه", [("التيلجو", "tag/telugu"), ("تاميلية", "tag/افلام-تاميلية"), ("ماليالامية", "tag/افلام-ماليالامية"), ("كنادية", "tag/افلام-كنادية"), ("بنجابية", "tag/punjabi"), ("ماراثية", "tag/افلام-ماراثية"), ("بنغالية", "tag/افلام-بنغالية"), ("كجراتية", "tag/افلام-كجراتية")]],
@@ -89,7 +89,7 @@ class MovizHome(CBaseHostClass):
             for sub in subs:
                 self.addDir({"name": "category", "category": "list_items", "title": sub["title"], "good_for_fav": True, "url": sub["url"]})
         if cItem.get("url"):
-            self.addDir({"name": "category", "category": "list_items", "title": "%s%s%s" % (Y, _("عرض الكل"), W), "url": cItem["url"]})
+            self.addDir({"name": "category", "category": "list_items", "title": "%s%s%s" % (Y, "عرض الكل", W), "url": cItem["url"]})
 
     def getFullIconUrl(self, url):
         url = self.getFullUrl(url)
@@ -147,7 +147,8 @@ class MovizHome(CBaseHostClass):
         nextPage = self.cm.ph.getSearchGroups(htm, '<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')
         if nextPage:
             params = dict(cItem)
-            params.update({"title": "%s%s%s" % (Y, _("Next Page ▶▶▶"), W), "url": self.getFullUrl(nextPage[0]), "good_for_fav": False, "category": "list_items"})
+            next_title = Y + _("Next Page") + " ▶▶▶" + W
+            params.update({"title": next_title, "url": self.getFullUrl(nextPage[0]), "good_for_fav": False, "category": "list_items"})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
