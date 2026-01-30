@@ -19,7 +19,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return config.plugins.iptvplayer.serienstreamto_hosts.value
+    return "https://serienstream.to/"
 
 
 class SerienStreamTo(CBaseHostClass):
@@ -27,7 +27,7 @@ class SerienStreamTo(CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "SerienStreamTo", "cookie": "SerienStreamTo.cookie"})
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self.MAIN_URL = gettytul()
+        self.MAIN_URL = config.plugins.iptvplayer.serienstreamto_hosts.value
         self.DEFAULT_ICON_URL = self.getFullUrl("public/img/facebook.jpg")
         self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("suche")}, {"category": "list_items", "title": _("Collections"), "url": self.getFullUrl("sammlungen")}, {"category": "list_value", "title": _("Genres"), "s": ">Genres</h2>"}, {"category": "list_value", "title": _("Country"), "s": ">Länder</h2>"}, {"category": "list_value", "title": _("Persons"), "s": ">Personen</h2>"}, {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
 
@@ -122,7 +122,7 @@ class SerienStreamTo(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="episode-links"', "</article>")[0]
         data = re.compile(r'data-play-url="([^"]+).*?data-provider-name="([^"]+).*?data-language-label="([^"]+)', re.DOTALL).findall(data)
         for url, title, lang in data:
-            urltab.append({"name": "%s (%s)" % (title, lang), "url": strwithmeta(self.getFullUrl(url), {"Referer": gettytul()}), "need_resolve": 1})
+            urltab.append({"name": "%s (%s)" % (title, lang), "url": strwithmeta(self.getFullUrl(url), {"Referer": config.plugins.iptvplayer.serienstreamto_hosts.value}), "need_resolve": 1})
         return urltab
 
     def getVideoLinks(self, url):

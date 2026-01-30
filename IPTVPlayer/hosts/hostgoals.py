@@ -15,7 +15,7 @@ except Exception:
 
 
 def gettytul():
-    return "Goals.Zone (API) + Streamff(CDN mp4) + Reddit(HLS) + Streamain + Streamusk + Streamin"
+    return "Goals.Zone"
 
 
 class GoalsZoneAPI(CBaseHostClass):

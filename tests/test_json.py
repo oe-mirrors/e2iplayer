@@ -5,21 +5,6 @@ import pytest
 ROOT = "IPTVPlayer"
 
 
-def test_valid_aliases():
-    path = "IPTVPlayer/hosts/aliases.txt"
-    assert os.path.exists(path), f"{path} missing!"
-
-    try:
-        with open(path) as f:
-            data = f.read()
-            data = data.replace("'", '"')
-            config = json.loads(data)
-    except json.JSONDecodeError as e:
-        pytest.fail(f"{path} invalid: {e}")
-
-    assert isinstance(config, dict), f"{path} should be a dictionary"
-
-
 def test_valid_hostgroups():
     path = "IPTVPlayer/hosts/hostgroups.txt"
     assert os.path.exists(path), f"{path} missing!"

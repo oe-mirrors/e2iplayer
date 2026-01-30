@@ -44,12 +44,12 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools_FreeSpace, \
                                                           mkdirs as iptvtools_mkdirs, GetIPTVPlayerVersion, \
                                                           printDBG, printExc, iptv_system, GetHostsList, IsHostEnabled, \
-                                                          eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, GetExtensionsDir, \
+                                                          eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, \
                                                           SortHostsList, GetHostsOrderList, CSearchHistoryHelper, \
                                                           CMoviePlayerPerHost, GetFavouritesDir, CFakeMoviePlayerOption, GetAvailableIconSize, \
                                                           GetE2VideoMode, SetE2VideoMode, TestTmpCookieDir, TestTmpJSCacheDir, \
                                                           ClearTmpCookieDir, ClearTmpJSCacheDir, SetTmpCookieDir, SetTmpJSCacheDir, \
-                                                          GetEnabledHostsList, SaveHostsOrderList, GetHostsAliases, formatBytes, getExcMSG
+                                                          GetEnabledHostsList, SaveHostsOrderList, formatBytes, getExcMSG
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvbuffui import E2iPlayerBufferingWidget
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
@@ -328,7 +328,6 @@ class E2iPlayerWidget(Screen):
         self.colorEnabled = parseColor("#FFFFFF")
         self.colorDisabled = parseColor("#808080")
 
-        self.hostsAliases = GetHostsAliases()
     # end def __init__(self, session):
 
     def updateDownloadButton(self):
@@ -1183,17 +1182,18 @@ class E2iPlayerWidget(Screen):
 
         brokenHostList = []
         for hostName in hostsList:
-            try:
-                title = self.hostsAliases.get('host' + hostName, '')
-                if not title:
+            if hostName == "localmedia":
+                title = _("LocalMedia")
+            elif hostName == "favourites":
+                title = _("Favourites")
+            else:
+                try:
                     _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
                     title = _temp.gettytul()
-                elif title in ("LocalMedia", "Favourites"):
-                    title = _(title)
-            except Exception:
-                printExc('get host name exception for host "%s"' % hostName)
-                brokenHostList.append('host' + hostName)
-                continue
+                except Exception:
+                    printExc('get host name exception for host "%s"' % hostName)
+                    brokenHostList.append('host' + hostName)
+                    continue
             self.displayHostsList.append((title, hostName))
 
         # if there is no order hosts list use old behavior for all group
@@ -1246,10 +1246,8 @@ class E2iPlayerWidget(Screen):
         for hostName in sortedList:
             if IsHostEnabled(hostName):
                 try:
-                    title = self.hostsAliases.get('host' + hostName, '')
-                    if not title:
-                        _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
-                        title = _temp.gettytul()
+                    _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
+                    title = _temp.gettytul()
                 except Exception:
                     printExc('get host name exception for host "%s"' % hostName)
                     brokenHostList.append('host' + hostName)
