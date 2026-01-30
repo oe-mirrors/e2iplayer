@@ -9,7 +9,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
-config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http://186.2.175.5/", choices=[("http://186.2.175.5/", "186.2.175.5"), ("https://s.to/", "s.to"), ("https://serienstream.to/", "serienstream.to")])
+config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http://186.2.175.5/", choices=[("http://186.2.175.5/", "186.2.175.5"), ("https://s.to/", "s.to"), ("https://serienstream.to/", "serienstream.to")])  # NOSONAR
 
 
 def GetConfigList():
@@ -29,7 +29,7 @@ class SerienStreamTo(CBaseHostClass):
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = config.plugins.iptvplayer.serienstreamto_hosts.value
         self.DEFAULT_ICON_URL = self.getFullUrl("public/img/facebook.jpg")
-        self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("suche")}, {"category": "list_items", "title": _("Collections"), "url": self.getFullUrl("sammlungen")}, {"category": "list_value", "title": _("Genres"), "s": ">Genres</h2>"}, {"category": "list_value", "title": _("Country"), "s": ">Länder</h2>"}, {"category": "list_value", "title": _("Persons"), "s": ">Personen</h2>"}, {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
+        self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("suche")}, {"category": "list_items", "title": _("Collections"), "url": self.getFullUrl("sammlungen")}, {"category": "list_newepisodes", "title": "Neueste Episoden"}, {"category": "list_value", "title": _("Genres"), "s": ">Genres</h2>"}, {"category": "list_AZ", "title": "A-Z"}, {"category": "list_value", "title": _("Country"), "s": ">Länder</h2>"}, {"category": "list_value", "title": _("Persons"), "s": ">Personen</h2>"}, {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
@@ -63,6 +63,14 @@ class SerienStreamTo(CBaseHostClass):
             params.update({"good_for_fav": False, "title": _("Next page"), "url": nextPage})
             self.addDir(params)
 
+    def AZ(self, cItem):
+        az = [chr(t) for t in range(ord("A"), ord("Z") + 1)] + ["0-9"]
+        for title in az:
+            url = "katalog/" + title
+            params = dict(cItem)
+            params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
+            self.addDir(params)
+
     def listSeasons(self, cItem):
         printDBG("SerienStreamTo.listSeasons")
         url = cItem["url"]
@@ -94,6 +102,23 @@ class SerienStreamTo(CBaseHostClass):
             params = dict(cItem)
             params.update({"good_for_fav": True, "title": title, "url": url})
             self.addVideo(params)
+
+    def listNewEpisodes(self, cItem):
+        printDBG("SerienStreamTo.listNewEpisodes")
+        sts, data = self.getPage(gettytul())
+        if not sts:
+            return
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="latest-episode', "</a>")
+        if data:
+            for item in data:
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
+                name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-title"\stitle="([^"]+)')[0])
+                se = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-season">([^<]+)')[0])
+                ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-episode">([^<]+)')[0])
+                title = "%s - %s - %s" % (name, se, ep)
+                params = dict(cItem)
+                params.update({"good_for_fav": True, "title": title, "url": url, "desc": url})
+                self.addVideo(params)
 
     def listValue(self, cItem):
         printDBG("SerienStreamTo.listValue")
@@ -169,6 +194,10 @@ class SerienStreamTo(CBaseHostClass):
             self.listEpisodes(self.currItem)
         elif category == "list_value":
             self.listValue(self.currItem)
+        elif category == "list_AZ":
+            self.AZ(self.currItem)
+        elif category == "list_newepisodes":
+            self.listNewEpisodes(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
