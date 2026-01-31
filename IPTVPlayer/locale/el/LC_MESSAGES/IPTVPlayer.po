@@ -9,12 +9,12 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 16:58+0100\n"
-"PO-Revision-Date: 2026-01-19 00:34+0200\n"
+"PO-Revision-Date: 2026-01-30 22:55+0200\n"
 "Last-Translator: \n"
-"Language-Team: giorbak\n"
+"Language-Team: \n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.8\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -379,11 +379,10 @@ msgid "Active: %s"
 msgstr "Ενεργό: %s"
 
 msgid "Actor profile and Works"
-msgstr ""
+msgstr "Προφίλ ηθοποιού και έργα"
 
-#, fuzzy
 msgid "Actors"
-msgstr "Ηθοποιοί:"
+msgstr "Ηθοποιοί"
 
 msgid "Actors:"
 msgstr "Ηθοποιοί:"
@@ -715,9 +714,8 @@ msgstr "Υπηρεσία επίλυσης Captcha"
 msgid "Cartoon list"
 msgstr "Λίστα κινουμένων σχεδίων"
 
-#, fuzzy
 msgid "Cartoons"
-msgstr "Λίστα κινουμένων σχεδίων"
+msgstr "Κινούμενα σχέδια"
 
 msgid "Cartoons and anime"
 msgstr "Κινούμενα σχέδια και άνιμε"
@@ -747,9 +745,8 @@ msgstr "Κανάλια"
 msgid "Children"
 msgstr "Παιδικά"
 
-#, fuzzy
 msgid "Cinema History"
-msgstr "Κινηματογραφικές ταινίες"
+msgstr "Ιστορία κινηματογράφου"
 
 msgid "Cinema movies"
 msgstr "Κινηματογραφικές ταινίες"
@@ -767,7 +764,7 @@ msgid "Clips"
 msgstr "Αποσπάσματα"
 
 msgid "Close"
-msgstr ""
+msgstr "Κλείσιμο"
 
 msgid "Closing. Please wait..."
 msgstr "Κλείσιμο. Παρακαλώ περιμένετε..."
@@ -878,25 +875,25 @@ msgid "Data mismatch."
 msgstr "Αναντιστοιχία δεδομένων."
 
 msgid "Debug file does not exist - nothing to delete"
-msgstr "Το αρχείο αποσφαλμάτωσης δεν υπάρχει - τίποτα για διαγραφή"
+msgstr "Το αρχείο εντοπισμού σφαλμάτων δεν υπάρχει - τίποτα για διαγραφή"
 
 msgid "Debug file does not exist - nothing to download"
-msgstr "Το αρχείο αποσφαλμάτωσης δεν υπάρχει - τίποτα για λήψη"
+msgstr "Το αρχείο εντοπισμού σφαλμάτων δεν υπάρχει - τίποτα για λήψη"
 
 msgid "Debug file has been deleted"
-msgstr "Το αρχείο αποσφαλμάτωσης διαγράφηκε"
+msgstr "Το αρχείο εντοπισμού σφαλμάτων διαγράφηκε"
 
 msgid "Debug logs"
-msgstr "Αρχεία καταγραφής αποσφαλμάτωσης"
+msgstr "Αρχεία καταγραφής εντοπισμού σφαλμάτων"
 
 msgid "Debug option is disabled - nothing to display"
-msgstr "Η επιλογή αποσφαλμάτωσης είναι απενεργοποιημένη - τίποτα για εμφάνιση"
+msgstr "Η επιλογή εντοπισμού σφαλμάτων είναι απενεργοποιημένη - τίποτα για εμφάνιση"
 
 msgid "Debug option set to console - nothing to display"
-msgstr "Η επιλογή αποσφαλμάτωσης έχει οριστεί σε κονσόλα - τίποτα για εμφάνιση"
+msgstr "Η επιλογή εντοπισμού σφαλμάτων έχει οριστεί σε κονσόλα - τίποτα για εμφάνιση"
 
 msgid "Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr "Η επιλογή αποσφαλμάτωσης έχει οριστεί σε debugfile, αλλά το αρχείο δεν υπάρχει - τίποτα για εμφάνιση"
+msgstr "Η επιλογή εντοπισμού σφαλμάτων έχει οριστεί στο debugfile, αλλά το αρχείο δεν υπάρχει - τίποτα για εμφάνιση"
 
 #, python-format
 msgid "Decode file [%s] problem."
@@ -956,9 +953,8 @@ msgstr "Άμεσο"
 msgid "Director:"
 msgstr "Σκηνοθέτης:"
 
-#, fuzzy
 msgid "Directors"
-msgstr "Σκηνοθέτες:"
+msgstr "Σκηνοθέτες"
 
 msgid "Directors:"
 msgstr "Σκηνοθέτες:"
@@ -1292,7 +1288,7 @@ msgid "Error deleting file \"%s\".\n"
 msgstr "Σφάλμα κατά τη διαγραφή του αρχείου \"%s\".\n"
 
 msgid "Error during deletion of the debug file."
-msgstr "Σφάλμα κατά τη διαγραφή του αρχείου αποσφαλμάτωσης."
+msgstr "Σφάλμα κατά τη διαγραφή του αρχείου εντοπισμού σφαλμάτων."
 
 #, python-format
 msgid "Error getting file name: %s"
@@ -2273,7 +2269,6 @@ msgstr "Ροή ειδήσεων"
 msgid "Next"
 msgstr "Επόμενο"
 
-#, fuzzy
 msgid "Next Page"
 msgstr "Επόμενη σελίδα"
 
@@ -2284,7 +2279,7 @@ msgid "No"
 msgstr "Όχι"
 
 msgid "No biography available"
-msgstr ""
+msgstr "Δεν υπάρχει διαθέσιμη βιογραφία"
 
 msgid ""
 "No item to display. \n"
@@ -2435,7 +2430,7 @@ msgid "People"
 msgstr "Άτομα"
 
 msgid "Persons"
-msgstr ""
+msgstr "Πρόσωπα"
 
 msgid "Physical Exam"
 msgstr "Φυσική εξέταση"
@@ -2605,9 +2600,8 @@ msgstr "Προεπισκόπηση"
 msgid "Previous"
 msgstr "Προηγούμενο"
 
-#, fuzzy
 msgid "Previous Page"
-msgstr "Προηγούμενο"
+msgstr "Προηγούμενη σελίδα"
 
 msgid "Previous Seasons"
 msgstr "Προηγούμενες σεζόν"
@@ -2886,9 +2880,8 @@ msgstr "Αναζήτηση, παρακαλώ περιμένετε (%d)"
 msgid "Season"
 msgstr "Σεζόν"
 
-#, fuzzy
 msgid "Season "
-msgstr "Σεζόν"
+msgstr "Σεζόν "
 
 #, python-format
 msgid "Season %s"
@@ -3408,7 +3401,7 @@ msgstr "Η χειρότερη"
 
 #, python-format
 msgid "There are %d more pages in this section"
-msgstr ""
+msgstr "Υπάρχουν %d ακόμη σελίδες σε αυτή την ενότητα"
 
 msgid "There are no other favourite groups"
 msgstr "Δεν υπάρχουν άλλες αγαπημένες ομάδες"
@@ -3803,7 +3796,7 @@ msgid "With subtitles"
 msgstr "Με υπότιτλους"
 
 msgid "Work of this actor"
-msgstr ""
+msgstr "Έργα αυτού του ηθοποιού"
 
 msgid "Write current title to file:"
 msgstr "Εγγραφή τρέχοντος τίτλου σε αρχείο:"
