@@ -25,13 +25,13 @@ class AnimeTV(CBaseHostClass):
         self.defaultParams = {"header": self.HTTP_HEADER}
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = self.getFullUrl('images/logo.png')
-        self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("movie")}, 
-        {"category": "list_items", "title": _("TV Series"), "url": self.getFullUrl("tv")}, 
-        {"category": "list_items", "title": "OVAs", "url": self.getFullUrl("ova")}, 
-        {"category": "list_items", "title": "ONAs", "url": self.getFullUrl("ona")}, 
-        {"category": "list_items", "title": "Specials", "url": self.getFullUrl("special")}, 
-        {"category": "list_items", "title": _("Latest update"), "url": self.getFullUrl("recently-updated")}, 
-        {"category": "list_items", "title": _("Latest added"), "url": self.getFullUrl("recently-added")}, 
+        self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("movie")},
+        {"category": "list_items", "title": _("TV Series"), "url": self.getFullUrl("tv")},
+        {"category": "list_items", "title": "OVAs", "url": self.getFullUrl("ova")},
+        {"category": "list_items", "title": "ONAs", "url": self.getFullUrl("ona")},
+        {"category": "list_items", "title": "Specials", "url": self.getFullUrl("special")},
+        {"category": "list_items", "title": _("Latest update"), "url": self.getFullUrl("recently-updated")},
+        {"category": "list_items", "title": _("Latest added"), "url": self.getFullUrl("recently-added")},
         {"category": "list_value", "title": _("Genres"), "s": '">Genres<'}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
