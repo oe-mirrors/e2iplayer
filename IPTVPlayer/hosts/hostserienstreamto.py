@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 29.01.2026 - Mr.X - Completely new writen
+# Last Modified: 31.01.2026 - Mr.X - Cosmetic fix
 import re
 
 from Components.config import ConfigSelection, config, getConfigListEntry
@@ -13,9 +13,7 @@ config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http:/
 
 
 def GetConfigList():
-    optionList = []
-    optionList.append(getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_hosts))
-    return optionList
+    return [getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_hosts)]
 
 
 def gettytul():
@@ -68,7 +66,7 @@ class SerienStreamTo(CBaseHostClass):
         for title in az:
             url = "katalog/" + title
             params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
+            params.update({"good_for_fav": False, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
             self.addDir(params)
 
     def listSeasons(self, cItem):
@@ -82,7 +80,7 @@ class SerienStreamTo(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="season-nav">', "</nav>")
         data = re.compile(r'href="([^"]+).*?data-season-pill="(\d+)', re.DOTALL).findall(data[0])
         for url, se in data:
-            title = "%s - %s %s" % (cItem["title"], _("Season"), se)
+            title = "%s - %s" % (cItem["title"], _("Movies") if se == "0" else _("Season") + " " + str(se))
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "list_episodes", "title": title, "url": self.getFullUrl(url), "icon": icon, "desc": desc})
             self.addDir(params)
@@ -98,6 +96,8 @@ class SerienStreamTo(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, "location='([^']+)")[0])
             name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0])
             ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'cell">(\d+)')[0])
+            if "Releases soon" in name:
+                continue
             title = "%s - %s %s - %s" % (cItem["title"], _("Episode"), ep, name)
             params = dict(cItem)
             params.update({"good_for_fav": True, "title": title, "url": url})
@@ -117,7 +117,7 @@ class SerienStreamTo(CBaseHostClass):
                 ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-episode">([^<]+)')[0])
                 title = "%s - %s - %s" % (name, se, ep)
                 params = dict(cItem)
-                params.update({"good_for_fav": True, "title": title, "url": url, "desc": url})
+                params.update({"good_for_fav": False, "title": title, "url": url})
                 self.addVideo(params)
 
     def listValue(self, cItem):
@@ -154,11 +154,12 @@ class SerienStreamTo(CBaseHostClass):
         printDBG("SerienStreamTo.getVideoLinks [%s]" % url)
         params = dict(self.defaultParams)
         params["no_redirection"] = True
-        self.cm.getPage(url, params)
-        if self.cm.meta.get("location"):
-            url = self.cm.meta.get("location")
-            if self.cm.isValidUrl(url):
-                return self.up.getVideoLinkExt(url)
+        sts, data = self.cm.getPage(url, params)
+        if not sts:
+            return []
+        url = self.cm.ph.getSearchGroups(data, 'href="([^"]+)')[0]
+        if self.cm.isValidUrl(url):
+            return self.up.getVideoLinkExt(url)
         return []
 
     def getArticleContent(self, cItem):
@@ -173,9 +174,9 @@ class SerienStreamTo(CBaseHostClass):
         for key, pattern in fields.items():
             value = self.cm.ph.getAllItemsBeetwenMarkers(data, pattern, "</li>")
             if value:
-                value2 = re.findall('light">([^<]+)', value[0])
-                if value2:
-                    otherInfo[key] = ", ".join(value2)
+                val = re.findall('light">([^<]+)', value[0])
+                if val:
+                    otherInfo[key] = ", ".join(val)
         return [{"title": cItem["title"], "text": desc, "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
