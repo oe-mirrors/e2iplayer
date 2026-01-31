@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-
 import re
+
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html as yt_clean_html
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printExc
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
+
 if not isPY2():
     basestring = str
-######################################################
 # flags:
 NONE = 0
 START_E = 1
@@ -18,9 +18,9 @@ IGNORECASE = 16
 I = 16
 
 # pre-compiled regular expressions
-IFRAME_SRC_URI_RE = re.compile(r'''<iframe[^>]+?src=(['"])([^>]*?)(?:\1)''', re.I)
-IMAGE_SRC_URI_RE = re.compile(r'''<img[^>]+?src=(['"])([^>]*?\.(?:jpe?g|png)(?:\?[^\1]*?)?)(?:\1)''', re.I)
-A_HREF_URI_RE = re.compile(r'''<a[^>]+?href=(['"])([^>]*?)(?:\1)''', re.I)
+IFRAME_SRC_URI_RE = re.compile(r"""<iframe[^>]+?src=(['"])([^>]*?)(?:\1)""", re.I)
+IMAGE_SRC_URI_RE = re.compile(r"""<img[^>]+?src=(['"])([^>]*?\.(?:jpe?g|png)(?:\?[^\1]*?)?)(?:\1)""", re.I)
+A_HREF_URI_RE = re.compile(r"""<a[^>]+?href=(['"])([^>]*?)(?:\1)""", re.I)
 STRIP_HTML_COMMENT_RE = re.compile(r"<!--[\s\S]*?-->")
 
 # add short aliases
@@ -32,28 +32,28 @@ A = A_HREF_URI_RE
 def getattr(data, attrmame, flags=0):
     if flags & IGNORECASE:
         sData = data.lower()
-        m = '%s=' % attrmame.lower()
+        m = "%s=" % attrmame.lower()
     else:
         sData = data
-        m = '%s=' % attrmame
+        m = "%s=" % attrmame
     sidx = 0
     while True:
         sidx = sData.find(m, sidx)
         if sidx == -1:
-            return ''
-        if data[sidx - 1] in ('\t', ' ', '\n', '\r'):
+            return ""
+        if data[sidx - 1] in ("\t", " ", "\n", "\r"):
             break
         sidx += len(m)
     sidx += len(m)
     z = data[sidx]
     if z not in ('"', "'"):
-        return ''
+        return ""
     eidx = sidx + 1
     while eidx < len(data):
         if data[eidx] == z:
             return data[sidx + 1:eidx]
         eidx += 1
-    return ''
+    return ""
 
 
 def search(data, pattern, flags=0, limits=-1):
@@ -77,13 +77,13 @@ def search(data, pattern, flags=0, limits=-1):
             try:  # just blind try
                 match = reObj.search(data)
             except Exception:
-                printExc('EXCEPTION: unknown types: type(pattern)=%s vs type(data)=%s' % (str(type(pattern)), str(type(data))))
+                printExc("EXCEPTION: unknown types: type(pattern)=%s vs type(data)=%s" % (str(type(pattern)), str(type(data))))
 
     for idx in range(limits):
         try:
             value = match.group(idx + 1)
         except Exception:
-            value = ''
+            value = ""
         tab.append(value)
     return tab
 
@@ -105,8 +105,6 @@ def any(tab, data, start, end):
 def none(tab, data, start, end):
     return not any(tab, data, start, end)
 
-# example: ph.findall(data, ('<a', '>', ph.check(ph.any, ('articles.php', 'readarticle.php'))), '</a>')
-
 
 def check(arg1, arg2=None):
     if arg2 is None and isinstance(arg1, basestring):
@@ -115,7 +113,7 @@ def check(arg1, arg2=None):
     return lambda data, ldata, s, e: arg1(arg2, ldata, s, e)
 
 
-def findall(data, start, end=('',), flags=START_E | END_E, limits=-1):
+def findall(data, start, end=("",), flags=START_E | END_E, limits=-1):
     start = start if isinstance(start, tuple) or isinstance(start, list) else (start,)
     end = end if isinstance(end, tuple) or isinstance(end, list) else (end,)
 
@@ -125,12 +123,12 @@ def findall(data, start, end=('',), flags=START_E | END_E, limits=-1):
     itemsTab = []
 
     n1S = start[0]
-    n1E = start[1] if len(start) > 1 else ''
+    n1E = start[1] if len(start) > 1 else ""
     match1P = start[2] if len(start) > 2 else None
     match1P = check(match1P) if isinstance(match1P, basestring) else match1P
 
     n2S = end[0]
-    n2E = end[1] if len(end) > 1 else ''
+    n2E = end[1] if len(end) > 1 else ""
     match2P = end[2] if len(end) > 2 else None
     match2P = check(match2P) if isinstance(match2P, basestring) else match2P
 
@@ -194,7 +192,7 @@ def findall(data, start, end=('',), flags=START_E | END_E, limits=-1):
     return itemsTab
 
 
-def rfindall(data, start, end=('',), flags=START_E | END_E, limits=-1):
+def rfindall(data, start, end=("",), flags=START_E | END_E, limits=-1):
     start = start if isinstance(start, tuple) or isinstance(start, list) else (start,)
     end = end if isinstance(end, tuple) or isinstance(end, list) else (end,)
 
@@ -204,12 +202,12 @@ def rfindall(data, start, end=('',), flags=START_E | END_E, limits=-1):
     itemsTab = []
 
     n1S = start[0]
-    n1E = start[1] if len(start) > 1 else ''
+    n1E = start[1] if len(start) > 1 else ""
     match1P = start[2] if len(start) > 2 else None
     match1P = check(match1P) if isinstance(match1P, basestring) else match1P
 
     n2S = end[0]
-    n2E = end[1] if len(end) > 1 else ''
+    n2E = end[1] if len(end) > 1 else ""
     match2P = end[2] if len(end) > 2 else None
     match2P = check(match2P) if isinstance(match2P, basestring) else match2P
 
@@ -271,24 +269,24 @@ def rfindall(data, start, end=('',), flags=START_E | END_E, limits=-1):
     return itemsTab
 
 
-def find(data, start, end=('',), flags=START_E | END_E):
+def find(data, start, end=("",), flags=START_E | END_E):
     ret = findall(data, start, end, flags, 1)
     if len(ret):
         return True, ret[0]
     else:
-        return False, ''
+        return False, ""
 
 
-def rfind(data, start, end=('',), flags=START_E | END_E):
+def rfind(data, start, end=("",), flags=START_E | END_E):
     ret = rfindall(data, start, end, flags, 1)
     if len(ret):
         return True, ret[0]
     else:
-        return False, ''
+        return False, ""
 
 
 def strip_doubles(data, pattern):
-    while -1 < data.find(pattern + pattern) and '' != pattern:
+    while -1 < data.find(pattern + pattern) and "" != pattern:
         data = data.replace(pattern + pattern, pattern)
     return data
 
@@ -299,21 +297,19 @@ STRIP_HTML_TAGS_C = None
 def clean_html(string):
     global STRIP_HTML_TAGS_C
     string = ensure_str(string)
-    if None is STRIP_HTML_TAGS_C:
+    if STRIP_HTML_TAGS_C is None:
         STRIP_HTML_TAGS_C = False
         try:
             from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser as p
-            if 'strip_html_tags' in dir(p):
+            if "strip_html_tags" in dir(p):
                 STRIP_HTML_TAGS_C = p
         except Exception:
-            printExc('WARNING')
-
-    if STRIP_HTML_TAGS_C:  # and type(' ') != type(string):
+            printExc("WARNING")
+    if STRIP_HTML_TAGS_C:
         return STRIP_HTML_TAGS_C.strip_html_tags(string)
-
-    string = string.replace('<', ' <')
-    string = string.replace('&nbsp;', ' ')
-    string = string.replace('&nbsp', ' ')
+    replacements = {"<": " <", "&nbsp;": " ", "&nbsp": " ", "&amp;": "&", "&amp;#039;": "'"}
+    for old, new in replacements.items():
+        string = string.replace(old, new)
     string = yt_clean_html(string)
-    string = string.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ')
+    string = " ".join(string.split())
     return strip_doubles(string, ' ').strip()
