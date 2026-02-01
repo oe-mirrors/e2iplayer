@@ -1,0 +1,32 @@
+<screen position="center,center" size="1815,1012" title="E2iPlayer" flags="wfNoBorder" backgroundColor="#40000000">
+	<widget source="global.CurrentTime" render="Label" position="1608,0" size="180,48" font="Regular;48" backgroundColor="background" transparent="1" foregroundColor="#00bbff" halign="center" zPosition="1" valign="center">
+		<convert type="ClockToText">Default</convert>
+	</widget>
+	<widget source="global.CurrentTime" render="Label" position="1537,50" size="255,39" font="Regular;33" foregroundColor="#00ba00" backgroundColor="#000000" transparent="1" zPosition="1" halign="right">
+		<convert type="ClockToText">Format:%a %d.%m.%Y</convert>
+	</widget>
+	<widget name="headertext" position="210,0" zPosition="1" size="1305,89" font="Regular;33" transparent="1" valign="center" backgroundColor="#191919" foregroundColor="#dddddd"/>
+	<widget name="statustext" position="711,285" zPosition="1" size="975,210" font="Regular;30" halign="center" valign="center" transparent="1" backgroundColor="#191919"/>
+	<widget name="list" position="622,110" zPosition="0" size="1179,630" font="Regular;36" itemHeight="45" enableWrapAround="1" scrollbarWidth="15" scrollbarSliderBorderWidth="2" scrollbarSliderForegroundColor="#e6e6e6" scrollbarSliderBorderColor="#3b3e3f" scrollbarMode="showOnDemand" backgroundColor="#191919" transparent="1"/>
+	<widget name="console" position="622,762" zPosition="1" size="1179,242" font="Regular;33" transparent="1" backgroundColor="#191919" foregroundColor="#ffcc99"/>
+	<widget name="spinner" zPosition="3" position="1150,412" size="24,24" transparent="1" alphatest="blend"/>
+	<widget name="spinner_1" zPosition="2" position="1150,412" size="24,24" transparent="1" alphatest="blend"/>
+	<widget name="spinner_2" zPosition="2" position="1185,412" size="24,24" transparent="1" alphatest="blend"/>
+	<widget name="spinner_3" zPosition="2" position="1220,412" size="24,24" transparent="1" alphatest="blend"/>
+	<widget name="spinner_4" zPosition="2" position="1255,412" size="24,24" transparent="1" alphatest="blend"/>
+	<widget name="cover" zPosition="2" position="3,105" size="600,780" alphatest="blend"/>
+	<widget name="playerlogo" zPosition="4" position="15,15" size="180,60" alphatest="blend"/>
+	<widget name="sequencer" position="622,110" zPosition="6" size="1179,630" font="Regular;240" halign="center" valign="center" transparent="1" backgroundColor="#191919"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/red.png" position="3,902" size="53,41" alphatest="blend" transparent="1"/>
+	<widget source="key_red" render="Label" position="59,904" size="233,41" zPosition="1" font="Regular;32" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/green.png" position="310,902" size="53,41" alphatest="blend"/>
+	<widget name="key_green" position="367,904" size="225,41" zPosition="1" font="Regular;32" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/yellow.png" position="3,940" size="53,41" alphatest="blend" zPosition="1" transparent="1"/>
+	<widget source="key_yellow" render="Label" position="59,942" size="233,41" zPosition="1" font="Regular;32" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/blue.png" position="310,940" size="53,41" alphatest="blend" transparent="1"/>
+	<widget source="key_blue" render="Label" position="367,942" size="225,41" zPosition="1" font="Regular;32" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+	<eLabel position="611,99" size="3,906" transparent="0" zPosition="5" backgroundColor="#666666"/>
+	<eLabel position="3,94" size="1799,3" transparent="0" zPosition="5" backgroundColor="#666666"/>
+	<eLabel position="612,752" size="1188,3" transparent="0" zPosition="5" backgroundColor="#666666"/>
+	<eLabel position="3,891" size="607,3" transparent="0" zPosition="5" backgroundColor="#666666"/>
+</screen>
