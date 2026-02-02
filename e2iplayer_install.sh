@@ -122,7 +122,7 @@ fi
 echo -e "\n\nDownload E2iPlayer Source Package (*.tar.gz) to;\n$TMP ...\n"
 if ! $WGET -P $TMP $FILE_ADRESS ; then
 	if ! $WGET "--no-check-certificate" $FILE_ADRESS -P $TMP ; then
-		echo -e "\n... ERROR ...\nDownload E2iPlayer Source Package failed ! \nCheck your Internet Connection\nand restart e2iplayer_install.sh.\n\n"
+		echo -e "\n... ERROR ...\nDownload E2iPlayer Source Package failed ! \nCheck your Internet Connection\nand restart e2iplayer_install.sh.\n\n" >&2
 		exit 1
 	fi
 fi
@@ -133,7 +133,7 @@ if [ -e $TMP/python3.tar.gz ] ; then
 	$EXTRACT $TMP/python3.tar.gz -C $TMP > /dev/null
 
 	if [ "$?" != "0" ] ; then
-		echo -e "\n... ERROR ...\nUnpack E2iPlayer Source Package failed ! \nrestart e2iplayer_install.sh.\n\n"
+		echo -e "\n... ERROR ...\nUnpack E2iPlayer Source Package failed ! \nrestart e2iplayer_install.sh.\n\n" >&2
 		exit 1
 	fi
 fi
@@ -191,7 +191,7 @@ $NICE $NICE_ARGS rm -rf $TMP/e2iplayer-* $TMP/python*.gz $TMP/master.* $TMP/opkg
 
 # Enigma2 GUI restart, yes or no ?, it's your decision (if there are currently no timer recordings running the answer would be yes).
 while true; do
-	read -p "$(echo -e "\nWould you like to restart the Enigma2 GUI? y/n (Default = yes) ?")" -n 1 yn
+	read -p "$(echo -e "\nWould you like to restart the Enigma2 GUI? y/n (Default = yes) ?")" -n 1 yn < /dev/tty
 	case $yn in
 		[yY]* )	echo -e "\n\nEnigma2 GUI restart is executed ...\n"
 				$WGET -q -O - $BOXIP/web/powerstate?newstate=3
