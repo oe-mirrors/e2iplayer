@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.11.2025 - Mr.X
+# Last Modified: 02.02.2026 - Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -24,17 +24,11 @@ class AniWorld(CBaseHostClass):
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = self.getFullUrl("public/img/facebook.jpg")
-        self.MENU = [
-            {"category": "list_items", "title": _("New"), "url": self.getFullUrl("neu")},
-            {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("beliebte-animes")},
-            {"category": "list_items", "title": _("All"), "url": self.getFullUrl("animes-alphabet")},
-            {"category": "list_value", "title": _("A-Z"), "s": 'class="catalogNav">'},
-            {"category": "list_value", "title": _("Genres"), "s": 'class="homeContentGenresList">'}] + self.searchItems()
+        self.MENU = [{"category": "list_items", "title": _("New"), "url": self.getFullUrl("neu")}, {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("beliebte-animes")}, {"category": "list_newepisodes", "title": "Neueste Episoden"}, {"category": "list_items", "title": _("All"), "url": self.getFullUrl("animes-alphabet")}, {"category": "list_value", "title": _("A-Z"), "s": 'class="catalogNav">'}, {"category": "list_value", "title": _("Genres"), "s": 'class="homeContentGenresList">'}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.HEADER.get("User-Agent")}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def getFullIconUrl(self, url):
@@ -44,7 +38,7 @@ class AniWorld(CBaseHostClass):
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {"Cookie": cookieHeader, "User-Agent": self.HEADER.get("User-Agent")})
 
-    def listItems(self, cItem, nextCategory):
+    def listItems(self, cItem):
         printDBG("AniWorld.listItems |%s|" % cItem)
         sts, htm = self.getPage(cItem["url"])
         if not sts:
@@ -67,8 +61,7 @@ class AniWorld(CBaseHostClass):
 
     def listSeasons(self, cItem):
         printDBG("AniWorld.listSeasons")
-        url = cItem["url"]
-        sts, data = self.getPage(url)
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'data-full-description="([^"]+)')[0])
@@ -83,8 +76,7 @@ class AniWorld(CBaseHostClass):
 
     def listEpisodes(self, cItem):
         printDBG("AniWorld.listEpisodes")
-        url = cItem["url"]
-        sts, data = self.getPage(url)
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'itemprop="episode"', "</tr>")
@@ -110,6 +102,26 @@ class AniWorld(CBaseHostClass):
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
             self.addDir(params)
+
+    def listNewEpisodes(self, cItem):
+        printDBG("AniWorld.listNewEpisodes")
+        sts, data = self.getPage(self.getFullUrl("neue-episoden"))
+        if not sts:
+            return
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="row">', "</div>")
+        dup = set()
+        if data:
+            for item in data:
+                url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
+                name = self.cm.ph.getSearchGroups(item, "<strong>([^<]+)")[0]
+                se = self.cm.ph.getSearchGroups(item, 'bigListTag blue2">([^<]+)')[0]
+                dtag = self.cm.ph.getSearchGroups(item, 'elementFloatRight">([^<]+)')[0]
+                title = self.cleanHtmlStr("%s - %s - %s" % (name, se, dtag))
+                if title not in dup:
+                    dup.add(title)
+                    params = dict(cItem)
+                    params.update({"good_for_fav": False, "title": title, "url": self.getFullUrl(url)})
+                    self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("AniWorld.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -138,15 +150,15 @@ class AniWorld(CBaseHostClass):
             urltab.append({"name": title + language_map.get(lang), "url": strwithmeta(self.getFullUrl(url), {"Referer": gettytul()}), "need_resolve": 1})
         return urltab
 
-    def getVideoLinks(self, videoUrl):
-        printDBG("AniWorld.getVideoLinks [%s]" % videoUrl)
+    def getVideoLinks(self, url):
+        printDBG("AniWorld.getVideoLinks [%s]" % url)
         params = dict(self.defaultParams)
         params["no_redirection"] = True
-        sts, dummy = self.cm.getPage(videoUrl, params)
-        if sts and self.cm.meta.get("location"):
-            videoUrl = self.cm.meta.get("location")
-            if self.cm.isValidUrl(videoUrl):
-                return self.up.getVideoLinkExt(videoUrl)
+        self.cm.getPage(url, params)
+        if self.cm.meta.get("location"):
+            url = self.cm.meta.get("location")
+            if self.cm.isValidUrl(url):
+                return self.up.getVideoLinkExt(url)
         return []
 
     def getArticleContent(self, cItem):
@@ -172,14 +184,16 @@ class AniWorld(CBaseHostClass):
         self.currList = []
         if name is None:
             self.listsTab(self.MENU, {"name": "category"})
-        elif "list_items" == category:
-            self.listItems(self.currItem, "video")
-        elif "list_seasons" == category:
+        elif category == "list_items":
+            self.listItems(self.currItem)
+        elif category == "list_seasons":
             self.listSeasons(self.currItem)
-        elif "list_episodes" == category:
+        elif category == "list_episodes":
             self.listEpisodes(self.currItem)
-        elif "list_value" == category:
+        elif category == "list_value":
             self.listValue(self.currItem)
+        elif category == "list_newepisodes":
+            self.listNewEpisodes(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
