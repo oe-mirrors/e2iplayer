@@ -70,7 +70,7 @@ class videa(CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "videa", "cookie": "videa.cookie"})
         self.USER_AGENT = "User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
         self.HEADER = self.cm.getDefaultHeader()
-        self.DEFAULT_ICON_URL = "http://www.figyelmeztetes.hu/videa_logo.jpg"
+        self.DEFAULT_ICON_URL = "https://www.figyelmeztetes.hu/videa_logo.jpg"
         self.MAIN_URL = "https://videa.hu"
         self.vmk = self.MAIN_URL + zlib.decompress(base64.b64decode("eJzTz04sSU3PL8pMzAYAGM8EUg==")).decode("utf-8")
         self.vmcs = self.MAIN_URL + zlib.decompress(base64.b64decode("eJzTTy5OLMkvykvMBgAUvAP2")).decode("utf-8")
