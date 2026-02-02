@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 31.01.2026 - Mr.X - Cosmetic fix
+# Last Modified: 02.02.2026 - Mr.X
 import re
 
 from Components.config import ConfigSelection, config, getConfigListEntry
@@ -71,10 +71,10 @@ class SerienStreamTo(CBaseHostClass):
 
     def listSeasons(self, cItem):
         printDBG("SerienStreamTo.listSeasons")
-        url = cItem["url"]
-        sts, data = self.getPage(url)
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return
+        trailer = self.cm.ph.getSearchGroups(data, 'data-trailer-url="([^"]+)')[0]
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'description-text">([^<]+)')[0])
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, 'data-src="([^"]+)')[0])
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="season-nav">', "</nav>")
@@ -83,12 +83,13 @@ class SerienStreamTo(CBaseHostClass):
             title = "%s - %s" % (cItem["title"], _("Movies") if se == "0" else _("Season") + " " + str(se))
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "list_episodes", "title": title, "url": self.getFullUrl(url), "icon": icon, "desc": desc})
+            if trailer:
+                params.update({"trailer": trailer})
             self.addDir(params)
 
     def listEpisodes(self, cItem):
         printDBG("SerienStreamTo.listEpisodes")
-        url = cItem["url"]
-        sts, data = self.getPage(url)
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="episode-row', "</tr>")
@@ -127,10 +128,14 @@ class SerienStreamTo(CBaseHostClass):
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, cItem["s"], "</ul>")[0]
         data = re.compile('href="([^"]+).*?>([^<]+)', re.DOTALL).findall(data)
+        seen = set()
         for url, title in data:
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_items", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url)})
-            self.addDir(params)
+            cleanTitle = self.cleanHtmlStr(title).strip().rstrip(".").lower()
+            if cleanTitle and len(cleanTitle) > 1 and cleanTitle not in seen:
+                seen.add(cleanTitle)
+                params = dict(cItem)
+                params.update({"good_for_fav": True, "category": "list_items", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url)})
+                self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("SerienStreamTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -148,18 +153,26 @@ class SerienStreamTo(CBaseHostClass):
         data = re.compile(r'data-play-url="([^"]+).*?data-provider-name="([^"]+).*?data-language-label="([^"]+)', re.DOTALL).findall(data)
         for url, title, lang in data:
             urltab.append({"name": "%s (%s)" % (title, lang), "url": strwithmeta(self.getFullUrl(url), {"Referer": config.plugins.iptvplayer.serienstreamto_hosts.value}), "need_resolve": 1})
+        if cItem.get("trailer"):
+            urltab.append({"name": "Trailer", "url": cItem.get("trailer"), "need_resolve": 1})
         return urltab
 
     def getVideoLinks(self, url):
         printDBG("SerienStreamTo.getVideoLinks [%s]" % url)
+        if "youtube" in url:
+            return self.up.getVideoLinkExt(url)
         params = dict(self.defaultParams)
         params["no_redirection"] = True
         sts, data = self.cm.getPage(url, params)
-        if not sts:
-            return []
-        url = self.cm.ph.getSearchGroups(data, 'href="([^"]+)')[0]
-        if self.cm.isValidUrl(url):
-            return self.up.getVideoLinkExt(url)
+        if self.cm.meta["status_code"] == 302:
+            if self.cm.meta.get("location"):
+                url = self.cm.meta.get("location")
+                if self.cm.isValidUrl(url):
+                    return self.up.getVideoLinkExt(url)
+        elif sts:
+            url = self.cm.ph.getSearchGroups(data, 'href="([^"]+)')[0]
+            if self.cm.isValidUrl(url):
+                return self.up.getVideoLinkExt(url)
         return []
 
     def getArticleContent(self, cItem):
@@ -168,16 +181,30 @@ class SerienStreamTo(CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
-        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'description-text">([^<]+)')[0])
+        desc = self.cm.ph.getDataBeetwenMarkers(data, '<div class="small text-body lh-lg mb-3">', "</div>", withMarkers=False)[1]
+        if not desc:
+            desc = self.cm.ph.getSearchGroups(data, 'description-text">([^<]+)')[0]
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, 'data-src="([^"]+)')[0]) or cItem.get("icon", "")
-        fields = {"country": '<strong class="me-1">Land:</strong>', "director": '<strong class="me-1">Regisseur:</strong>', "actors": '<strong class="me-1">Besetzung:</strong>', "production": '<strong class="me-1">Produzent:</strong>'}
+        bc = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="flex-grow-1">', "</span>")
+        if bc:
+            bc = self.cm.ph.getSearchGroups(bc[0], 'title="([^"]+)')[0]
+            if bc:
+                otherInfo["broadcast"] = bc
+        fields = {"country": '<strong class="me-1">Land:</strong>', "director": '<strong class="me-1">Regisseur:</strong>', "actors": '<strong class="me-1">Besetzung:</strong>', "genres": '<strong class="me-1">Genre:</strong>', "production": '<strong class="me-1">Produzent:</strong>'}
         for key, pattern in fields.items():
             value = self.cm.ph.getAllItemsBeetwenMarkers(data, pattern, "</li>")
             if value:
                 val = re.findall('light">([^<]+)', value[0])
                 if val:
                     otherInfo[key] = ", ".join(val)
-        return [{"title": cItem["title"], "text": desc, "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
+        episode = {"country": '<strong class="me-1">Land:</strong>', "director": ">Regisseure</div>", "actors": ">Besetzung</div>", "production": ">Produzenten</div>"}
+        for key, pattern in episode.items():
+            value = self.cm.ph.getAllItemsBeetwenMarkers(data, pattern, "</div>")
+            if value:
+                val = re.findall('title="([^"]+)', value[0])
+                if val:
+                    otherInfo[key] = ", ".join(val)
+        return [{"title": cItem["title"], "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
