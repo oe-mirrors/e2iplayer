@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+###################################################
 # 2026-01-24 by Blindspot
+###################################################
 HOST_VERSION = "1.3"
 ###################################################
 # LOCAL import
@@ -66,9 +68,9 @@ class videa(CBaseHostClass):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "videa", "cookie": "videa.cookie"})
-        self.USER_AGENT = "User-Agent=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0"
+        self.USER_AGENT = "User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
         self.HEADER = self.cm.getDefaultHeader()
-        self.DEFAULT_ICON_URL = "https://www.figyelmeztetes.hu/videa_logo.jpg"
+        self.DEFAULT_ICON_URL = "http://www.figyelmeztetes.hu/videa_logo.jpg"
         self.MAIN_URL = "https://videa.hu"
         self.vmk = self.MAIN_URL + zlib.decompress(base64.b64decode("eJzTz04sSU3PL8pMzAYAGM8EUg==")).decode("utf-8")
         self.vmcs = self.MAIN_URL + zlib.decompress(base64.b64decode("eJzTTy5OLMkvykvMBgAUvAP2")).decode("utf-8")
@@ -117,10 +119,7 @@ class videa(CBaseHostClass):
             desc_search = self.getdvdsz(tab_search, "Keresés...")
             tab_search_hist = "videa_kereses_elozmeny"
             desc_search_hist = self.getdvdsz(tab_search_hist, "Keresés az előzmények között...")
-            MAIN_CAT_TAB = [
-                {"category": "list_main", "title": "Kategóriák", "tab_id": tab_kat, "desc": desc_kat},
-                {"category": "list_main", "title": "Csatornák", "tab_id": tab_csat, "desc": desc_csat},
-            ] + self.searchItems()
+            MAIN_CAT_TAB = [{"category": "list_main", "title": "Kategóriák", "tab_id": tab_kat, "desc": desc_kat}, {"category": "list_main", "title": "Csatornák", "tab_id": tab_csat, "desc": desc_csat}, {"category": "search", "title": _("Search"), "search_item": True, "tab_id": tab_search, "desc": desc_search}, {"category": "search_history", "title": _("Search history"), "tab_id": tab_search_hist, "desc": desc_search_hist}]
             self.listsTab(MAIN_CAT_TAB, {"name": "category"})
             vtb = self.malvadnav(cItem, "7", "12", "0", "14")
             if len(vtb) > 0:
@@ -644,7 +643,7 @@ class videa(CBaseHostClass):
                 plot = ""
                 try:
                     ln += 1
-                    if type(histItem) is type({}):
+                    if type(histItem) == type({}):
                         pattern = histItem.get("pattern", "")
                         search_type = histItem.get("type", "")
                         if "" != search_type:
@@ -677,7 +676,7 @@ class videa(CBaseHostClass):
             name = self.currItem.get("name", "")
             category = self.currItem.get("category", "")
             self.currList = []
-            if name is None:
+            if name == None:
                 self.listMainMenu({"name": "category"})
             elif category == "list_main":
                 self.listMainItems(self.currItem)
