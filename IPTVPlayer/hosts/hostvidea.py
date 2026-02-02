@@ -643,7 +643,7 @@ class videa(CBaseHostClass):
                 plot = ""
                 try:
                     ln += 1
-                    if type(histItem) == type({}):
+                    if type(histItem) is type({}):
                         pattern = histItem.get("pattern", "")
                         search_type = histItem.get("type", "")
                         if "" != search_type:
@@ -676,7 +676,7 @@ class videa(CBaseHostClass):
             name = self.currItem.get("name", "")
             category = self.currItem.get("category", "")
             self.currList = []
-            if name == None:
+            if name is None:
                 self.listMainMenu({"name": "category"})
             elif category == "list_main":
                 self.listMainItems(self.currItem)
