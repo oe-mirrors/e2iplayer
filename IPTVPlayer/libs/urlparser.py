@@ -209,6 +209,7 @@ class urlparser:
             "bysesukior.com": self.pp.parserBYSE,
             "bysetayico.com": self.pp.parserBYSE,
             "bysevepoin.com": self.pp.parserBYSE,
+            "bysewihe.com": self.pp.parserBYSE,
             "bysezejataos.com": self.pp.parserBYSE,
             # c
             "c1z39.com": self.pp.parserBYSE,
@@ -416,6 +417,7 @@ class urlparser:
             "streamadblockplus.com": self.pp.parserSTREAMTAPE,
             "streamhihi.com": self.pp.parserJWPLAYER,
             "streamhls.to": self.pp.parserJWPLAYER,
+            "streamix.so": self.pp.parserSTREAMUP,
             "streamnoads.com": self.pp.parserSTREAMTAPE,
             "streamruby.com": self.pp.parserJWPLAYER,
             "streamta.pe": self.pp.parserSTREAMTAPE,
