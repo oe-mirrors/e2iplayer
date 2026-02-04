@@ -199,6 +199,7 @@ class urlparser:
             "bigwarp.pro": self.pp.parserJWPLAYER,
             "bigwings.io": self.pp.parserJWPLAYER,
             "bingezove.com": self.pp.parserJWPLAYER,
+            "boosteradx.online": self.pp.parserBYSE,
             "bysebuho.com": self.pp.parserBYSE,
             "bysedikamoum.com": self.pp.parserBYSE,
             "bysefujedu.com": self.pp.parserBYSE,
@@ -417,6 +418,7 @@ class urlparser:
             "streamadblockplus.com": self.pp.parserSTREAMTAPE,
             "streamhihi.com": self.pp.parserJWPLAYER,
             "streamhls.to": self.pp.parserJWPLAYER,
+            "streamlyplayer.online": self.pp.parserBYSE,
             "streamix.so": self.pp.parserSTREAMUP,
             "streamnoads.com": self.pp.parserSTREAMTAPE,
             "streamruby.com": self.pp.parserJWPLAYER,
@@ -1947,7 +1949,7 @@ class pageParser(CaptchaHelper):
             urltab.reverse()
         return urltab
 
-    def parserSTREAMUP(self, baseUrl):  # update 280126
+    def parserSTREAMUP(self, baseUrl):  # update 030226
         printDBG("parserSTREAMUP baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER["Referer"] = baseUrl
@@ -1959,7 +1961,8 @@ class pageParser(CaptchaHelper):
             return []
         data = json_loads(data)
         url = data.get("streaming_url")
-        subTracks = [{"title": "", "url": sub.get("file_path"), "lang": sub.get("language")} for sub in data.get("subtitles", []) if sub.get("file_path") and sub.get("language")]
+        if isinstance(data.get("subtitles"), list):
+            subTracks = [{"title": "", "url": sub.get("file_path"), "lang": sub.get("language")} for sub in data.get("subtitles", []) if sub.get("file_path") and sub.get("language")]
         if url:
             url = url.replace("\r", "").replace("\n", "")
             url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
@@ -1998,7 +2001,7 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER["Referer"] = baseUrl
         HTTP_HEADER["X-Embed-Parent"] = baseUrl
-        host = urlparser.getDomain(baseUrl, False)
+        host = urlparser.getDomain(baseUrl.replace("boosteradx.online", "streamlyplayer.online"), False)
         mid = re.search(r"/(?:e|d|download)/([0-9a-zA-Z]+)", baseUrl).group(1)
         sts, data = self.cm.getPage("%sapi/videos/%s/embed/details" % (host, mid), {"header": HTTP_HEADER})
         if not sts:
