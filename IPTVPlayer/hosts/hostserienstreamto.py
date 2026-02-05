@@ -26,7 +26,7 @@ class SerienStreamTo(CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = config.plugins.iptvplayer.serienstreamto_hosts.value
-        self.DEFAULT_ICON_URL = self.getFullUrl("public/img/facebook.jpg")
+        self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/serienstream.to.png"
         self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("suche")}, {"category": "list_items", "title": _("Collections"), "url": self.getFullUrl("sammlungen")}, {"category": "list_newepisodes", "title": "Neueste Episoden"}, {"category": "list_value", "title": _("Genres"), "s": ">Genres</h2>"}, {"category": "list_AZ", "title": "A-Z"}, {"category": "list_value", "title": _("Country"), "s": ">Länder</h2>"}, {"category": "list_value", "title": _("Persons"), "s": ">Personen</h2>"}, {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
@@ -242,4 +242,4 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, SerienStreamTo(), True, [])
 
     def withArticleContent(self, cItem):
-        return cItem["category"] in ["video", "list_seasons", "list_episodes"]
+        return cItem["category"] in ["video", "list_seasons", "list_episodes", "list_newepisodes"]
