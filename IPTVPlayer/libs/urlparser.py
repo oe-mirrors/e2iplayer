@@ -474,6 +474,8 @@ class urlparser:
             "vidply.com": self.pp.parserDOOD,
             "videa.hu": self.pp.parserVIDEA,
             "videakid.hu": self.pp.parserVIDEA,
+            "vidara.so": self.pp.parserSTREAMUP,
+            "vidara.to": self.pp.parserSTREAMUP,
             "vidora.stream": self.pp.parserJWPLAYER,
             "videzz.net": self.pp.parserJWPLAYER,
             "vidhidehub.com": self.pp.parserJWPLAYER,
