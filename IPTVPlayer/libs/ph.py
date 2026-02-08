@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
 
-from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html as yt_clean_html
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printExc
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
@@ -22,11 +21,19 @@ IFRAME_SRC_URI_RE = re.compile(r"""<iframe[^>]+?src=(['"])([^>]*?)(?:\1)""", re.
 IMAGE_SRC_URI_RE = re.compile(r"""<img[^>]+?src=(['"])([^>]*?\.(?:jpe?g|png)(?:\?[^\1]*?)?)(?:\1)""", re.I)
 A_HREF_URI_RE = re.compile(r"""<a[^>]+?href=(['"])([^>]*?)(?:\1)""", re.I)
 STRIP_HTML_COMMENT_RE = re.compile(r"<!--[\s\S]*?-->")
+RE_TAGS = re.compile(r'(<br\s*/?>|</p>\s*<p[^>]*>|<[^>]+>)', re.I)
 
 # add short aliases
 IFRAME = IFRAME_SRC_URI_RE
 IMG = IMAGE_SRC_URI_RE
 A = A_HREF_URI_RE
+
+
+try:
+    from html import unescape  # Py3
+except ImportError:
+    from HTMLParser import HTMLParser
+    unescape = HTMLParser().unescape
 
 
 def getattr(data, attrmame, flags=0):
@@ -291,25 +298,17 @@ def strip_doubles(data, pattern):
     return data
 
 
-STRIP_HTML_TAGS_C = None
+def clean_html(html):
+    if not html:
+        return ''
 
-
-def clean_html(string):
-    global STRIP_HTML_TAGS_C
-    string = ensure_str(string)
-    if STRIP_HTML_TAGS_C is None:
-        STRIP_HTML_TAGS_C = False
-        try:
-            from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser as p
-            if "strip_html_tags" in dir(p):
-                STRIP_HTML_TAGS_C = p
-        except Exception:
-            printExc("WARNING")
-    if STRIP_HTML_TAGS_C:
-        return STRIP_HTML_TAGS_C.strip_html_tags(string)
-    replacements = {"<": " <", "&nbsp;": " ", "&nbsp": " ", "&amp;": "&", "&amp;#039;": "'"}
-    for old, new in replacements.items():
-        string = string.replace(old, new)
-    string = yt_clean_html(string)
-    string = " ".join(string.split())
-    return strip_doubles(string, ' ').strip()
+    html = RE_TAGS.sub(lambda m: '\n' if m.group(1).lower().startswith(('<br', '</p')) else '', html)
+    html = html.replace('\n', ' ')
+    if '&amp;' in html or '&#' in html:
+        for _ in range(2):
+            prev = html
+            html = unescape(html)
+            if html == prev:
+                break
+    html = re.sub(r'\s+', ' ', html)
+    return html.strip()
