@@ -307,7 +307,7 @@ def clean_html(string):
             printExc("WARNING")
     if STRIP_HTML_TAGS_C:
         return STRIP_HTML_TAGS_C.strip_html_tags(string)
-    replacements = {"<": " <", "&nbsp;": " ", "&nbsp": " ", "&amp;": "&", "&amp;#039;": "'"}
+    replacements = {"&amp;": "&", "<": " <", "&nbsp;": " ", "&nbsp": " ", "&#039;": "'", "&#224;": "à", "&#226;": "â"}
     for old, new in replacements.items():
         string = string.replace(old, new)
     string = yt_clean_html(string)
