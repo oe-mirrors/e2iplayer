@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 
+from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html as yt_clean_html
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printExc
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
@@ -298,7 +299,17 @@ def strip_doubles(data, pattern):
     return data
 
 
-def clean_html(html):
+def clean_html(string):
+    string = ensure_str(string)
+    replacements = {"<": " <", "&nbsp;": " ", "&nbsp": " ", "&amp;": "&", "&amp;#039;": "'"}
+    for old, new in replacements.items():
+        string = string.replace(old, new)
+    string = yt_clean_html(string)
+    string = " ".join(string.split())
+    return strip_doubles(string, ' ').strip()
+
+
+def clean_html_new(html):
     if not html:
         return ''
 
