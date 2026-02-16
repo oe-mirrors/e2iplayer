@@ -4,7 +4,19 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostC
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import unpack, detect, get_packed_data
 from Plugins.Extensions.IPTVPlayer.libs import ph
-import base64, urllib, re, time, os, requests, hashlib, subprocess, threading, json, sys, html
+import base64
+import urllib
+import re
+import time
+import os
+import requests
+import hashlib
+import subprocess
+import threading
+import json
+import sys
+import html
+
 from datetime import datetime
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 
@@ -304,7 +316,7 @@ class Lodynet(CBaseHostClass):
     def determineContentType(self, title, url=""):
         title_lower = title.lower()
         url_lower = url.lower() if url else ""
-        printDBG(f"=== determineContentType DEBUG ===")
+        printDBG("=== determineContentType DEBUG ===")
         printDBG(f"Title: {title}")
         printDBG(f"URL: {url}")
         printDBG(f"Title Lower: {title_lower}")
