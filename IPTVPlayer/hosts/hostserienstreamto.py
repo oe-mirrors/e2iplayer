@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 02.02.2026 - Mr.X
+# Last Modified: 14.02.2026 - Mr.X
 import re
 
 from Components.config import ConfigSelection, config, getConfigListEntry
@@ -20,6 +20,12 @@ def gettytul():
     return "https://serienstream.to/"
 
 
+def language(item):
+    lang_map = {"german": "(DE)", "english": "(EN)", "english-german": "(EN/DE-UT)"}
+    flags = re.findall(r'<use href="#icon-flag-([^"]+)', item)
+    return "" if not flags else " ".join(lang_map.get(f, f) for f in flags)
+
+
 class SerienStreamTo(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "SerienStreamTo", "cookie": "SerienStreamTo.cookie"})
@@ -27,7 +33,7 @@ class SerienStreamTo(CBaseHostClass):
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = config.plugins.iptvplayer.serienstreamto_hosts.value
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/gh-pages/Thumbnails/serienstream.to.png"
-        self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("suche")}, {"category": "list_items", "title": _("Collections"), "url": self.getFullUrl("sammlungen")}, {"category": "list_newepisodes", "title": "Neueste Episoden"}, {"category": "list_value", "title": _("Genres"), "s": ">Genres</h2>"}, {"category": "list_AZ", "title": "A-Z"}, {"category": "list_value", "title": _("Country"), "s": ">Länder</h2>"}, {"category": "list_value", "title": _("Persons"), "s": ">Personen</h2>"}, {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
+        self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("suche")}, {"category": "list_newepisodes", "title": "Neueste Episoden"}, {"category": "list_items", "title": _("Collections"), "url": self.getFullUrl("sammlungen")}, {"category": "list_value", "title": _("Genres"), "s": ">Genres</h2>"}, {"category": "list_AZ", "title": "A-Z"}, {"category": "list_value", "title": _("Country"), "s": ">Länder</h2>"}, {"category": "list_value", "title": _("Persons"), "s": ">Personen</h2>"}, {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
@@ -97,9 +103,10 @@ class SerienStreamTo(CBaseHostClass):
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, "location='([^']+)")[0])
             name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0])
             ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'cell">(\d+)')[0])
+            ep = "" if ("Episode" in name or "Folge" in name) else "%s %s - " % (_("Episode"), ep)
             if "Releases soon" in name:
                 continue
-            title = "%s - %s %s - %s" % (cItem["title"], _("Episode"), ep, name)
+            title = "%s - %s%s %s" % (cItem["title"], ep, name, language(item))
             params = dict(cItem)
             params.update({"good_for_fav": True, "title": title, "url": url})
             self.addVideo(params)
@@ -116,7 +123,7 @@ class SerienStreamTo(CBaseHostClass):
                 name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-title"\stitle="([^"]+)')[0])
                 se = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-season">([^<]+)')[0])
                 ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-episode">([^<]+)')[0])
-                title = "%s - %s - %s" % (name, se, ep)
+                title = "%s - %s - %s%s" % (name, se, ep, language(item))
                 params = dict(cItem)
                 params.update({"good_for_fav": False, "title": title, "url": url})
                 self.addVideo(params)
@@ -128,11 +135,10 @@ class SerienStreamTo(CBaseHostClass):
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, cItem["s"], "</ul>")[0]
         data = re.compile('href="([^"]+).*?>([^<]+)', re.DOTALL).findall(data)
-        seen = set()
+        dub = set()
         for url, title in data:
-            cleanTitle = self.cleanHtmlStr(title).strip().rstrip(".").lower()
-            if cleanTitle and len(cleanTitle) > 1 and cleanTitle not in seen:
-                seen.add(cleanTitle)
+            if url not in dub:
+                dub.add(url)
                 params = dict(cItem)
                 params.update({"good_for_fav": True, "category": "list_items", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url)})
                 self.addDir(params)

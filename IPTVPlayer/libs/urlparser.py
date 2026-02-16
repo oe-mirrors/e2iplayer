@@ -1951,14 +1951,20 @@ class pageParser(CaptchaHelper):
             urltab.reverse()
         return urltab
 
-    def parserSTREAMUP(self, baseUrl):  # update 030226
+    def parserSTREAMUP(self, baseUrl):  # fix 140226
         printDBG("parserSTREAMUP baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        filecode = self.cm.ph.getSearchGroups(data, r"filecode;let.*?`/((?:ajax|api)/stream\Wfilecode=)")[0]
+        if not filecode:
+            return []
         HTTP_HEADER["Referer"] = baseUrl
         urltab = []
         subTracks = []
         host = urlparser.getDomain(baseUrl, False)
-        sts, data = self.cm.getPage("%sajax/stream?filecode=%s" % (host, baseUrl.split("/")[-1]), {"header": HTTP_HEADER})
+        sts, data = self.cm.getPage(host + filecode + baseUrl.split("/")[-1], {"header": HTTP_HEADER})
         if not sts:
             return []
         data = json_loads(data)
