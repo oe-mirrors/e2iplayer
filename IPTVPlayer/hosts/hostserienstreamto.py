@@ -45,7 +45,7 @@ class SerienStreamTo(CBaseHostClass):
         sts, htm = self.getPage(cItem["url"])
         if not sts:
             return
-        nextPage = self.cm.ph.getSearchGroups(htm, 'class="page-link" href="([^"]+)" rel="next">')[0]
+        nextPage = self.cm.ph.getSearchGroups(htm, r'class="page-link"\s*href="([^"]+?)"\s*rel="next"')[0]
         data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-6', "</div>")
         if not data:
             data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="series-item"', "</li>")
@@ -64,7 +64,7 @@ class SerienStreamTo(CBaseHostClass):
             self.addDir(params)
         if nextPage:
             params = dict(cItem)
-            params.update({"good_for_fav": False, "title": _("Next page"), "url": nextPage})
+            params.update({"good_for_fav": False, "title": _("Next page"), "url": self.getFullUrl(nextPage)})
             self.addDir(params)
 
     def AZ(self, cItem):
