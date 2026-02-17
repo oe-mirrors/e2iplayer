@@ -2397,7 +2397,7 @@ class Host(CBaseHostClass):
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'ANACAMS-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
 
-			valTab.insert(0,CDisplayListItem("Trans", "Trans", CDisplayListItem.TYPE_CATEGORY,[self.MAIN_URL+'/gender/s/'], 'ANACAMS-clips', siteLogo,None))
+			valTab.insert(0, CDisplayListItem("Trans", "Trans", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/gender/s/'], 'ANACAMS-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem("Couples", "Couples", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/gender/c/'], 'ANACAMS-clips', siteLogo, None))
 
 			for item in (("55+", "55-85"), "46-55", "36-45", "26-35", "20-25", ("18-19", "18-19-yo")):
@@ -2405,12 +2405,11 @@ class Host(CBaseHostClass):
 					item = (item, item)
 				valTab.insert(0, CDisplayListItem(item[0], item[0], CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/age/%s/' % item[1]], 'ANACAMS-clips', siteLogo, None))
 
-			for item in (('Young', 'young'), ('Uncut', 'uncut'), ('Twink', 'twink'), ('Teens', 'teen'), ('Squirt', 'squirt'), ('Stockings', 'stockings'), ('Smalltits', 'smalltits'), ('Skinny', 'skinny'), ('Remote Control', 'lovense'), ('Redhead', 'redhead'), ('Petite', 'petite'), ('Natural', 'natural'), ('Milf', 'milf'), ('Mature', 'mature'), ('Lesbian', 'lesbian'), ('Latina', 'latina'), ('Indian', 'indian'), ('Hairy', 'hairy'), ('Gay', 'gay'),('Feet', 'feet'), ('Ebony', 'ebony'), ('Dirty', 'dirty'), ('Daddy', 'daddy'),('Cum', 'cum'), ('Chicks with Dicks', 'trans'), ('Bigcock', 'bigcock'), ('Big Ass', 'bigass'),('BBW', 'bbw'), ('Ass', 'ass'), ('Asian', 'asian'), ('Anal', 'anal')):
+			for item in (('Young', 'young'), ('Uncut', 'uncut'), ('Twink', 'twink'), ('Teens', 'teen'), ('Squirt', 'squirt'), ('Stockings', 'stockings'), ('Smalltits', 'smalltits'), ('Skinny', 'skinny'), ('Remote Control', 'lovense'), ('Redhead', 'redhead'), ('Petite', 'petite'), ('Natural', 'natural'), ('Milf', 'milf'), ('Mature', 'mature'), ('Lesbian', 'lesbian'), ('Latina', 'latina'), ('Indian', 'indian'), ('Hairy', 'hairy'), ('Gay', 'gay'), ('Feet', 'feet'), ('Ebony', 'ebony'), ('Dirty', 'dirty'), ('Daddy', 'daddy'), ('Cum', 'cum'), ('Chicks with Dicks', 'trans'), ('Bigcock', 'bigcock'), ('Big Ass', 'bigass'), ('BBW', 'bbw'), ('Ass', 'ass'), ('Asian', 'asian'), ('Anal', 'anal')):
 				valTab.insert(0, CDisplayListItem(item[0], item[0], CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/tags/%s/' % item[1]], 'ANACAMS-clips', siteLogo, None))
 
-			for item in (('The US', 'united-states'), ('The UK', 'united-kingdom'), ('Ukraine', 'ukraine'), ('Russia', 'russia'),('Poland', 'Poland'), ('Japan', 'japan'), ('Germany', 'Germany'), ('Colombia', 'colombia'), ('Canada', 'canada'), ('Asia', 'asia')):
-				valTab.insert(0, CDisplayListItem("From %s" % item[0],"From %s" % item[0], CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/location/%s/' % item[1]], 'ANACAMS-clips', siteLogo, None))
-
+			for item in (('The US', 'united-states'), ('The UK', 'united-kingdom'), ('Ukraine', 'ukraine'), ('Russia', 'russia'), ('Poland', 'Poland'), ('Japan', 'japan'), ('Germany', 'Germany'), ('Colombia', 'colombia'), ('Canada', 'canada'), ('Asia', 'asia')):
+				valTab.insert(0, CDisplayListItem("From %s" % item[0], "From %s" % item[0], CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/location/%s/' % item[1]], 'ANACAMS-clips', siteLogo, None))
 
 			valTab.insert(0, CDisplayListItem("--- New  ---", "New Cams", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/discover/'], 'ANACAMS-clips', siteLogo, None))
 			return valTab
