@@ -260,6 +260,7 @@ class urlparser:
             "doply.net": self.pp.parserDOOD,
             "dpstream.fyi": self.pp.parserJWPLAYER,
             "dropload.io": self.pp.parserJWPLAYER,
+            "dropload.pro": self.pp.parserJWPLAYER,
             "dropload.tv": self.pp.parserJWPLAYER,
             "ds2play.com": self.pp.parserDOOD,
             "ds2video.com": self.pp.parserDOOD,
