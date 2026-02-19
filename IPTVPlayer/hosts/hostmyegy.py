@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-# Last modified: 21/12/2025
+# Last modified: 18/02/2026
 # Myegy Host (Modified By Mohamed Elsafty)
 # ===================== Standard library =====================
 import re
+from urllib.parse import urlparse, urlunparse, quote
 
-try:
-    from urllib.parse import urlparse, urlunparse
-except ImportError:
-    from urlparse import urlparse, urlunparse
 # ===================== IPTVPlayer =====================
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
@@ -27,7 +24,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://myigy.online/"
+    return "https://myigy.cam/"
 
 
 class MyYegy(CBaseHostClass):
@@ -35,7 +32,7 @@ class MyYegy(CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "Myegy", "cookie": "Myegy.cookie"})
         self.MAIN_URL = gettytul()
         self.SEARCH_URL = self.MAIN_URL + "search.php?keywords="
-        self.DEFAULT_ICON_URL = gettytul() + "uploads/custom-logo.png"
+        self.DEFAULT_ICON_URL = gettytul() + "wp-content/uploads/2026/02/myegylogo3.png"
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
 
@@ -70,6 +67,9 @@ class MyYegy(CBaseHostClass):
         MAIN_CAT = [
             {"category": "sub_folder", "title": "المسلسلات", "tab_id": "SERIES"},
             {"category": "sub_folder", "title": "الأفلام", "tab_id": "MOVIES"},
+            {"category": "sub_folder", "title": "الأنمي", "tab_id": "ANIME"},
+            {"category": "list_items", "title": "برامج تلفزيونية", "url": self.MAIN_URL + "category/برامج-تلفزيونية/"},
+            {"category": "list_items", "title": "عروض وحفلات", "url": self.MAIN_URL + "category/عروض-وحفلات/"},
         ] + self.searchItems()
         self.listsTab(MAIN_CAT, cItem)
 
@@ -77,64 +77,32 @@ class MyYegy(CBaseHostClass):
         tab_id = cItem.get("tab_id")
         tabs = {
             "SERIES": [
-                {"category": "list_items", "title": "كل المسلسلات", "url": self.MAIN_URL + "category.php?cat=mslslat", "icon": self.MAIN_URL + "uploads/thumbs/be81557d06c7a.jpg"},
-                {"category": "list_items", "title": "مسلسلات اجنبي", "url": self.MAIN_URL + "category.php?cat=mslslat-ajnbyh", "icon": self.MAIN_URL + "uploads/thumbs/7dadcd71536a9.jpg"},
-                {"category": "list_items", "title": "مسلسلات عربي", "url": self.MAIN_URL + "category.php?cat=mslslat-arby", "icon": self.MAIN_URL + "uploads/thumbs/be81557d06c7a.jpg"},
-                {"category": "list_items", "title": "مسلسلات كورية", "url": self.MAIN_URL + "category.php?cat=mslslat-kwryh", "icon": self.MAIN_URL + "uploads/thumbs/76c27da37535d.jpg"},
-                {"category": "list_items", "title": "مسلسلات تركية", "url": self.MAIN_URL + "category.php?cat=mslslat-trkyh", "icon": self.MAIN_URL + "uploads/thumbs/35ebb181ecc2c.jpg"},
-                {"category": "list_items", "title": "مسلسلات انمي", "url": self.MAIN_URL + "category.php?cat=mslslat-anmy", "icon": self.MAIN_URL + "uploads/thumbs/3da6320ddeb52.jpg"},
-                {
-                    "category": "list_items",
-                    "title": "أحدث الحلقات",
-                    "url": self.MAIN_URL + "episodes.php",
-                },
-                {
-                    "category": "list_items",
-                    "title": "أحدث المسلسلات",
-                    "url": self.MAIN_URL + "all-series.php",
-                },
-                {
-                    "category": "list_items",
-                    "title": "الجديد",
-                    "url": self.MAIN_URL + "newvideos.php",
-                },
+                {"category": "list_items", "title": "كل المسلسلات", "url": self.MAIN_URL + "category/series/"},
+                {"category": "list_items", "title": "مسلسلات اجنبي", "url": self.MAIN_URL + "category/مسلسلات-اجنبي/"},
+                {"category": "list_items", "title": "مسلسلات اسيوية", "url": self.MAIN_URL + "category/مسلسلات-اسيوية/"},
+                {"category": "list_items", "title": "مسلسلات تركية", "url": self.MAIN_URL + "category/مسلسلات-تركية/"},
+                {"category": "list_items", "title": "مسلسلات تركية مدبلجة", "url": self.MAIN_URL + "category/مسلسلات-تركية-مدبلجة/"},
+                {"category": "list_items", "title": "مسلسلات لاتينية", "url": self.MAIN_URL + "category/مسلسلات-لاتينية/"},
+                {"category": "list_items", "title": "مسلسلات هندية", "url": self.MAIN_URL + "category/مسلسلات-هندية/"},
+                {"category": "list_items", "title": "مسلسلات وثائقية", "url": self.MAIN_URL + "category/مسلسلات-وثائقية/"},
             ],
             "MOVIES": [
-                {"category": "list_items", "title": "أفلام عربية", "url": self.MAIN_URL + "category.php?cat=aflam-arby", "icon": self.MAIN_URL + "uploads/thumbs/63c01feef1d47.jpg"},
-                {"category": "list_items", "title": "أفلام مغامرة", "url": self.MAIN_URL + "category.php?cat=aflam-mghamrh", "icon": self.MAIN_URL + "uploads/thumbs/22b6dd5d3592a.jpg"},
-                {"category": "list_items", "title": "سلاسل أفلام", "url": self.MAIN_URL + "category.php?cat=slasl-aflam", "icon": self.MAIN_URL + "uploads/thumbs/3769afde8bae5.jpg"},
-                {"category": "list_items", "title": "أفلام غموض", "url": self.MAIN_URL + "category.php?cat=aflam-ghmwd", "icon": self.MAIN_URL + "uploads/thumbs/1c97a3861fa17.jpg"},
-                {"category": "list_items", "title": "أفلام خيال علمي", "url": self.MAIN_URL + "category.php?cat=aflam-khyal-almy", "icon": self.MAIN_URL + "uploads/thumbs/c313f47971925.jpg"},
-                {"category": "list_items", "title": "أفلام كوميدي", "url": self.MAIN_URL + "category.php?cat=aflam-kwmydy", "icon": self.MAIN_URL + "uploads/thumbs/9e5a950e9628d.jpg"},
-                {"category": "list_items", "title": "أفلام 2026", "url": self.MAIN_URL + "category.php?cat=aflam-2026", "icon": self.MAIN_URL + "uploads/thumbs/616a7d0dd4b47.jpg"},
-                {"category": "list_items", "title": "أفلام 2025", "url": self.MAIN_URL + "category.php?cat=aflam-2025", "icon": self.MAIN_URL + "uploads/thumbs/dfff689122cc7.jpg"},
-                {"category": "list_items", "title": "أفلام 2024", "url": self.MAIN_URL + "category.php?cat=aflam-2024", "icon": self.MAIN_URL + "uploads/thumbs/ad1a529ba94cc.jpg"},
-                {"category": "list_items", "title": "أفلام 2023", "url": self.MAIN_URL + "category.php?cat=aflam-2023", "icon": self.MAIN_URL + "uploads/thumbs/9be801bc95dc6.jpg"},
-                {"category": "list_items", "title": "أفلام أكشن", "url": self.MAIN_URL + "category.php?cat=aflam-akshn", "icon": self.MAIN_URL + "uploads/thumbs/455b46bfd90d0.jpg"},
-                {"category": "list_items", "title": "أفلام رعب", "url": self.MAIN_URL + "category.php?cat=aflam-rab", "icon": self.MAIN_URL + "uploads/thumbs/cdfab7df6f641.jpg"},
-                {"category": "list_items", "title": "أفلام حرب", "url": self.MAIN_URL + "category.php?cat=aflam-hrb", "icon": self.MAIN_URL + "uploads/thumbs/455b46bfd90d0.jpg"},
-                {"category": "list_items", "title": "أفلام دراما", "url": self.MAIN_URL + "category.php?cat=aflam-drama", "icon": self.MAIN_URL + "uploads/thumbs/9e5a950e9628d.jpg"},
-                {"category": "list_items", "title": "أفلام فانتازيا", "url": self.MAIN_URL + "category.php?cat=aflam-fantazya", "icon": self.MAIN_URL + "uploads/thumbs/dfff689122cc7.jpg"},
-                {"category": "list_items", "title": "أفلام إثارة", "url": self.MAIN_URL + "category.php?cat=aflam-atharh", "icon": self.MAIN_URL + "uploads/thumbs/2b98d0de29177.jpg"},
-                {"category": "list_items", "title": "أفلام أجنبية", "url": self.MAIN_URL + "category.php?cat=aflam-ajnby", "icon": self.MAIN_URL + "uploads/thumbs/9e5a950e9628d.jpg"},
-                {"category": "list_items", "title": "أفلام غربية", "url": self.MAIN_URL + "category.php?cat=aflam-ghrby", "icon": self.MAIN_URL + "uploads/thumbs/581c1a76f72c4.jpg"},
-                {"category": "list_items", "title": "أفلام هندية", "url": self.MAIN_URL + "category.php?cat=aflam-hndy", "icon": self.MAIN_URL + "uploads/thumbs/f801404a37fae.jpg"},
-                {"category": "list_items", "title": "أفلام كورية", "url": self.MAIN_URL + "category.php?cat=aflam-kwryh", "icon": self.MAIN_URL + "uploads/thumbs/22b6dd5d3592a.jpg"},
-                {"category": "list_items", "title": "أفلام تركية", "url": self.MAIN_URL + "category.php?cat=aflam-trkyh", "icon": self.MAIN_URL + "uploads/thumbs/9307e0a6feea9.jpg"},
-                {"category": "list_items", "title": "أفلام جريمة", "url": self.MAIN_URL + "category.php?cat=aflam-jrymh", "icon": self.MAIN_URL + "uploads/thumbs/2b98d0de29177.jpg"},
-                {"category": "list_items", "title": "أفلام رومانسية", "url": self.MAIN_URL + "category.php?cat=aflam-rwmansyh", "icon": self.MAIN_URL + "uploads/thumbs/9e5a950e9628d.jpg"},
-                {"category": "list_items", "title": "أفلام للكبار فقط", "url": self.MAIN_URL + "category.php?cat=aflam-llkbar-fqt", "icon": self.MAIN_URL + "uploads/thumbs/3061ebc101d86.jpg"},
-                {"category": "list_items", "title": "أفلام تاريخية", "url": self.MAIN_URL + "category.php?cat=aflam-tarykhyh", "icon": self.MAIN_URL + "uploads/thumbs/27959524ccdd7.jpg"},
-                {"category": "list_items", "title": "أفلام موسيقى", "url": self.MAIN_URL + "category.php?cat=aflam-mwsyqa", "icon": self.MAIN_URL + "uploads/thumbs/dfff689122cc7.jpg"},
-                {"category": "list_items", "title": "أفلام سيرة ذاتية", "url": self.MAIN_URL + "category.php?cat=aflam-syrh-thatyh", "icon": self.MAIN_URL + "uploads/thumbs/27959524ccdd7.jpg"},
-                {"category": "list_items", "title": "أفلام عائلية", "url": self.MAIN_URL + "category.php?cat=aflam-aaylyh", "icon": self.MAIN_URL + "uploads/thumbs/dfff689122cc7.jpg"},
-                {"category": "list_items", "title": "أفلام رياضة", "url": self.MAIN_URL + "category.php?cat=aflam-ryadh", "icon": self.MAIN_URL + "uploads/thumbs/9e5a950e9628d.jpg"},
-                {"category": "list_items", "title": "أفلام أنمي وكرتون", "url": self.MAIN_URL + "category.php?cat=aflam-anmy-wkartwn", "icon": self.MAIN_URL + "uploads/thumbs/22b6dd5d3592a.jpg"},
-                {
-                    "category": "list_items",
-                    "title": "أحدث الأفلام",
-                    "url": self.MAIN_URL + "movies.php",
-                },
+                {"category": "list_items", "title": "كل الافلام", "url": self.MAIN_URL + "category/movies/"},
+                {"category": "list_items", "title": "افلام عربي", "url": self.MAIN_URL + "category/افلام-عربي/"},
+                {"category": "list_items", "title": "افلام اجنبي", "url": self.MAIN_URL + "category/افلام-اجنبي/"},
+                {"category": "list_items", "title": "افلام اجنبية مدبلجة", "url": self.MAIN_URL + "category/افلام-اجنبية-مدبلجة/"},
+                {"category": "list_items", "title": "افلام اسيوية", "url": self.MAIN_URL + "category/افلام-اسيوية/"},
+                {"category": "list_items", "title": "افلام تركية", "url": self.MAIN_URL + "category/افلام-تركية/"},
+                {"category": "list_items", "title": "افلام سعودية", "url": self.MAIN_URL + "category/افلام-سعودية/"},
+                {"category": "list_items", "title": "افلام هندية", "url": self.MAIN_URL + "category/افلام-هندية/"},
+                {"category": "list_items", "title": "افلام وثائقية", "url": self.MAIN_URL + "category/افلام-وثائقية/"},
+            ],
+            "ANIME": [
+                {"category": "list_items", "title": "مسلسلات انمي", "url": self.MAIN_URL + "category/مسلسلات-انمي/"},
+                {"category": "list_items", "title": "مسلسلات كرتون", "url": self.MAIN_URL + "category/مسلسلات-كرتون/"},
+                {"category": "list_items", "title": "افلام انمي", "url": self.MAIN_URL + "category/افلام-انمي/"},
+                {"category": "list_items", "title": "افلام اسلام الجيزاوي", "url": self.MAIN_URL + "category/افلام-اسلام-الجيزاوي/"},
+                {"category": "list_items", "title": "افلام كرتون", "url": self.MAIN_URL + "category/افلام-كرتون/"},
             ],
         }
         self.listsTab(tabs.get(tab_id, []), cItem)
@@ -173,74 +141,61 @@ class MyYegy(CBaseHostClass):
         url = cItem.get("url")
         if not url:
             return
-        page = int(cItem.get("page", 1))
         sts, data = self.getPage(url)
         if not sts or not data:
             return
-        blocks = re.findall(r'<div\s+class="video-card-inner">(.*?)</div>\s*</div>\s*</div>', data, re.DOTALL)
-        for item in blocks:
-            link = self.cm.ph.getSearchGroups(item, r'href="([^"]+watch\.php\?vid=[^"]+)"')[0]
-            title_match = re.search(r'title="([^"]+)"', item)
-            title = title_match.group(1) if title_match else ""
-            img_match = re.search(r'data-src="([^"]+\.jpg)"', item)
-            img = img_match.group(1) if img_match else ""
+        page = int(cItem.get("page", 1))
+        articles = re.findall(r'<article class="[^"]*(?:series-card|movie-card)[^"]*".*?</article>', data, re.DOTALL)
+        for item in articles:
+            link = self.cm.ph.getSearchGroups(item, r'<a[^>]+href="([^"]+)"')[0]
+            title = self.cm.ph.getSearchGroups(item, r'<h3 class="card-title">(.*?)</h3>')[0]
+            img = self.cm.ph.getSearchGroups(item, r'<img[^>]+src="([^"]+)"')[0]
             if not img:
-                img_match = re.search(r'src="([^"]+uploads/thumbs/[^"]+\.jpg)"', item)
-                img = img_match.group(1) if img_match else ""
-            duration = ""
-            meta_match = re.search(r'<div\s+class="video-meta">(.*?)</div>', item, re.DOTALL)
-            if meta_match:
-                meta_content = meta_match.group(1)
-                duration_match = re.search(r"<span[^>]*>(.*?)</span>", meta_content)
-                if duration_match:
-                    duration = duration_match.group(1).strip()
-            if not duration:
-                duration_match = re.search(r'<i\s+class="[^"]*fa-clock[^"]*"[^>]*></i>\s*<span[^>]*>(.*?)</span>', item)
-                duration = duration_match.group(1).strip() if duration_match else ""
+                img = self.cm.ph.getSearchGroups(item, r'srcset="([^"]+)"')[0].split(",")[0].split(" ")[0]
             if not link or not title:
                 continue
-            desc = "مدة العرض: " + duration if duration else "مدة العرض غير متوفرة"
-            icon = self.cm.getFullUrl(img)
-            self.addDir({"title": self._cleanTitle(title), "url": self.cm.getFullUrl(link), "icon": icon, "desc": Y + desc + W, "category": "explore_item", "good_for_fav": True})
-        # ===== pagination =====
-        next_page = page + 1
-        baseUrl = url.split("&page=")[0] if "&page=" in url else url
-        sep = "&" if "?" in baseUrl else "?"
-        next_url = f"{baseUrl}{sep}page={next_page}&order=DESC"
-        self.addDir({"title": Y + _("Next Page") + " ▶▶▶" + W, "url": next_url, "category": "list_items", "page": next_page})
-
-    def _extractSeasonsAndEpisodes(self, data):
-        """
-        استخراج المواسم والحلقات من صفحة المسلسل
-        """
-        seasons = []
-        episodes_section = re.search(r'<div\s+class="modern-watch-layout">.*?<div\s+class="modern-classic-episodes">(.*?)</div>\s*</div>', data, re.DOTALL)
-        if not episodes_section:
-            return seasons
-        episodes_content = episodes_section.group(1)
-        season_tabs = re.findall(r'<button\s+class="season-tab[^"]*"[^>]*onclick="openSeason\(event, \'([^\']+)\'"[^>]*>.*?<span>([^<]*)</span>', episodes_content)
-        for season_id, season_name in season_tabs:
-            season_panel = re.search(r'<div\s+id="' + re.escape(season_id) + r'"\s+class="[^"]*season-panel[^"]*">(.*?)</div>', episodes_content, re.DOTALL)
-            if not season_panel:
-                continue
-            episodes = []
-            episodes_html = season_panel.group(1)
-            episode_items = re.findall(r'<a\s+href="([^"]+watch\.php\?vid=[^"]+)"[^>]*class="[^"]*classic-episode-item[^"]*"[^>]*>.*?<div\s+class="episode-number-large">(\d+)</div>.*?<div\s+class="episode-label">([^<]*)</div>', episodes_html, re.DOTALL)
-            for episode_url, episode_num, episode_label in episode_items:
-                episodes.append({"url": self.cm.getFullUrl(episode_url), "title": f"{episode_label} {episode_num}", "num": episode_num})
-            if not season_name:
-                season_name = f"الموسم {len(seasons) + 1}"
-            seasons.append({"id": season_id, "name": season_name, "episodes": episodes})
-        if not seasons:
-            episodes_html = re.search(r'<div\s+class="episodes-grid-classic[^"]*">(.*?)</div>', episodes_content, re.DOTALL)
-            if episodes_html:
-                episodes = []
-                episode_items = re.findall(r'<a\s+href="([^"]+watch\.php\?vid=[^"]+)"[^>]*class="[^"]*classic-episode-item[^"]*"[^>]*>.*?<div\s+class="episode-number-large">(\d+)</div>.*?<div\s+class="episode-label">([^<]*)</div>', episodes_html.group(1), re.DOTALL)
-                for episode_url, episode_num, episode_label in episode_items:
-                    episodes.append({"url": self.cm.getFullUrl(episode_url), "title": f"{episode_label} {episode_num}", "num": episode_num})
-                if episodes:
-                    seasons.append({"id": "season-0", "name": "الموسم 1", "episodes": episodes})
-        return seasons
+            title = self.cleanHtmlStr(title)
+            title = re.sub(r"^(مشاهدة\s+(مسلسل|فيلم|انمي|عرض|مشاهدة)\s+و?تحميل\s+)", "", title, flags=re.IGNORECASE)
+            full_icon = self.cm.getFullUrl(img)
+            try:
+                full_icon = quote(full_icon, safe=":/?=&")
+            except:
+                pass
+            genre = ""
+            country = ""
+            meta_block = self.cm.ph.getDataBeetwenMarkers(item, '<div class="card-meta">', "</div>", False)[1]
+            if meta_block:
+                meta_items = re.findall(r"<a[^>]*>([^<]+)</a>", meta_block)
+                meta_items = [self.cleanHtmlStr(x).strip() for x in meta_items if self.cleanHtmlStr(x).strip()]
+                genre_match = re.search(r'meta-genre".*?</a>\s*<a[^>]*>([^<]+)</a>', meta_block, re.DOTALL)
+                if genre_match:
+                    genre = self.cleanHtmlStr(genre_match.group(1))
+                country_match = re.search(r'meta-country".*?<a[^>]*>([^<]+)</a>', meta_block, re.DOTALL)
+                if country_match:
+                    country = self.cleanHtmlStr(country_match.group(1))
+                if not genre and len(meta_items) > 0:
+                    genre = meta_items[0]
+                if not country and len(meta_items) > 1:
+                    country = meta_items[1]
+            desc_parts = []
+            if genre:
+                desc_parts.append(Y + "النوع: " + W + genre)
+            if country:
+                desc_parts.append(Y + "الدولة: " + W + country)
+            desc = " | ".join(desc_parts)
+            printDBG("DEBUG FINAL DESC: " + desc)
+            self.addDir({"title": title, "url": self.cm.getFullUrl(link), "icon": full_icon, "category": "explore_item", "good_for_fav": True, "desc": desc})
+        next_page = self.cm.ph.getSearchGroups(data, r'<a class="next page-numbers" href="([^"]+)"')[0]
+        if next_page:
+            self.addDir(
+                {
+                    "title": Y + _("Next Page") + " ▶▶▶" + W,
+                    "url": self.cm.getFullUrl(next_page),
+                    "category": "list_items",
+                    "page": page + 1,
+                    "icon": self.DEFAULT_ICON_URL,
+                }
+            )
 
     def exploreItems(self, cItem):
         printDBG("Myegy.exploreItems [%s]" % cItem["url"])
@@ -251,35 +206,55 @@ class MyYegy(CBaseHostClass):
         icon = cItem.get("icon", "")
         series_title = self._cleanTitle(cItem.get("title", "Video"))
         seasons_found = False
+        description_parts = []
+        info_parts = []
+        details_section = re.search(r'<section class="series-details-section">(.*?)</section>', data, re.DOTALL)
+        if details_section:
+            rows = re.findall(r'<div class="detail-row">(.*?)</div>', details_section.group(1), re.DOTALL)
+            for idx, row in enumerate(rows):
+                key_match = re.search(r'<span class="detail-key">(.*?)</span>', row, re.DOTALL)
+                val_match = re.search(r'<span class="detail-val">(.*?)</span>', row, re.DOTALL)
+                if key_match and val_match:
+                    key = re.sub("<.*?>", "", key_match.group(1)).strip()
+                    val = re.sub("<.*?>", "", val_match.group(1)).strip()
+                    key_clean = re.sub(r"^[^\w\s]+", "", key).strip()
+                    key_clean = key_clean.rstrip(":").strip()
+                    val = val.rstrip(",").strip()
+                    if key_clean and val:
+                        info_parts.append(Y + key_clean + ":" + W + " " + val)
+        if info_parts:
+            description_parts.append(" | ".join(info_parts))
+        story = ""
+        story_match = re.search(r'<section class="series-story-section">.*?<p>(.*?)</p>', data, re.DOTALL)
+        if story_match:
+            story = re.sub("<.*?>", "", story_match.group(1)).strip()
+            story = re.sub(r"^القصه", "", story).strip()
+            if story:
+                description_parts.append(Y + "القصــــة:" + W + "\n" + story)
+        desc = "\n".join(description_parts)
         if not cItem.get("from_episodes_list"):
-            season_tabs = re.findall(r'onclick="openSeason\(event,\s*\'(season-(\d+))\'\)"[^>]*>.*?<span>(.*?)</span>', data, re.DOTALL)
-            if season_tabs:
-                self.addMarker({"title": f"{Y}المواسم والحلقات{W}", "icon": icon})
-                for season_id, season_num, season_name in season_tabs:
-                    panel_pattern = r'id="%s"[\s\S]*?>([\s\S]*?)(?=<div id="season-|\s*</div>\s*</div>\s*</div>)' % re.escape(season_id)
-                    panel_match = re.search(panel_pattern, data)
-                    if panel_match:
-                        episodes_html = panel_match.group(1)
-                        episode_items = re.findall(r'href="(watch\.php\?vid=[^"]+)"[^>]*>[\s\S]*?episode-number-large[^>]*>\s*(\d+)\s*</div>[\s\S]*?episode-label[^>]*>([^<]+)</div>', episodes_html)
-                        if episode_items:
-                            seasons_found = True
-                            episodes_list = []
-                            for ep_url, ep_num, ep_label in episode_items:
-                                episodes_list.append({"url": self.getFullUrl(ep_url), "title": "%s %s" % (ep_label.strip(), ep_num), "num": ep_num})
-                            s_name = season_name.strip()
-                            if not s_name:
-                                display_num = str(int(season_num) + 1)
-                                s_title = "الموسم %s" % display_num
-                            else:
-                                s_title = s_name
-                            self.addDir({"category": "list_episodes", "title": s_title, "url": url, "icon": icon, "episodes_list": episodes_list})
+            episodes_section = re.search(r'<section class="episodes-grid-section">(.*?)</section>', data, re.DOTALL)
+            if episodes_section:
+                episode_items = re.findall(r'<a[^>]+href="([^"]+\?episode=(\d+))"[^>]*class="([^"]*episode-number-btn[^"]*)"[^>]*>.*?class="ep-number">\s*(\d+)\s*</span>', episodes_section.group(1), re.DOTALL)
+                if episode_items:
+                    seasons_found = True
+                    episode_items = sorted(episode_items, key=lambda x: int(x[1]))
+                    total_eps = len(episode_items)
+                    self.addMarker({"title": f"{Y}قائمة الحلقات المتاحة ({total_eps}){W}", "icon": icon})
+                    for full_url, ep_num, class_attr, ep_number in episode_items:
+                        ep_num_int = int(ep_num)
+                        if "active" in class_attr:
+                            title = f"{Y}▶ الحلقة {ep_num_int}{W}"
+                        else:
+                            title = f"الحلقة {ep_num_int}"
+                        self.addDir({"category": "explore_item", "title": title, "url": self.cm.getFullUrl(full_url), "icon": icon, "desc": desc, "from_episodes_list": True, "good_for_fav": True})
         if not seasons_found:
             printDBG("Showing servers directly...")
             self.addMarker({"title": f"{Y}سيرفرات المشاهدة{W}", "icon": icon})
-            servers = re.findall(r'data-embed="([^"]+)"[^>]*>.*?<span>([^<]+)</span>', data, re.DOTALL)
+            servers = re.findall(r'data-server-url="([^"]+)"[^>]*data-server-name="([^"]+)"', data)
             for embed_link, srv_name in servers:
                 host_name = self.up.getHostName(embed_link)
-                self.addVideo({"title": "%s [%s] - %s" % (series_title, srv_name.strip(), host_name), "url": strwithmeta(self.getFullUrl(embed_link), {"Referer": url}), "icon": icon, "need_resolve": 1})
+                self.addVideo({"title": "%s [%s] - %s" % (series_title, srv_name.strip(), host_name), "url": strwithmeta(embed_link, {"Referer": url}), "icon": icon, "desc": desc, "need_resolve": 1})
 
     def listEpisodes(self, cItem):
         printDBG("Myegy.listEpisodes >>>>")
@@ -289,6 +264,10 @@ class MyYegy(CBaseHostClass):
             params = {"category": "explore_item", "title": ep["title"], "url": ep["url"], "icon": cItem.get("icon", ""), "from_episodes_list": True, "good_for_fav": True}
             self.addDir(params)
 
+    def exploreSeriesItems(self, cItem):
+        printDBG("Myegy.exploreSeriesItems [%s]" % cItem["url"])
+        self.exploreItems(cItem)
+
     def getArticleContent(self, cItem):
         printDBG("Myegy.getArticleContent [%s]" % cItem)
         simple_header = dict(self.HEADER)
@@ -297,78 +276,73 @@ class MyYegy(CBaseHostClass):
         params = {"header": simple_header, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         sts, data = self.cm.getPage(cItem["url"], params)
         if not sts or not data:
+            printDBG("DEBUG: Failed to load page or empty content")
             return []
-        # ---------------- القصة ----------------
         story_text = ""
-        story_match = re.search(r'<div class="description-text[^"]*">(.*?)</div>', data, re.DOTALL)
+        story_match = re.search(r'<section class="series-story-section">.*?<p>(.*?)</p>', data, re.DOTALL)
         if story_match:
-            story_text = self.cleanHtmlStr(story_match.group(1)).strip()
-        # ---------------- مدة العرض ----------------
-        duration = ""
-        duration_match = re.search(r'<span class="total-time">\s*([^<]+)\s*</span>', data)
-        if duration_match:
-            duration = duration_match.group(1).strip()
-        # ---------------- معلومات إضافية القديمة ----------------
-        meta_info = {}
-        info_match = re.search(r'<div[^>]*class=["\']info-box["\'][^>]*>(.*?)</div>', data, re.DOTALL)
-        if info_match:
-            info_html = info_match.group(1)
-            parts = re.split(r'(<span[^>]*class=["\']info-title["\'][^>]*>[^<]+?</span>)', info_html)
-            current_label = None
-            for part in parts:
-                if "info-title" in part:
-                    lbl_match = re.search(r'<span[^>]*class=["\']info-title["\'][^>]*>([^:<]+):?\s*</span>', part)
-                    if lbl_match:
-                        current_label = lbl_match.group(1).strip()
-                        meta_info[current_label] = []
-                elif current_label:
-                    values = re.findall(r'<span[^>]*class=["\']tag["\'][^>]*>.*?<a[^>]*>([^<]+)</a>', part)
-                    clean_vals = [v.strip() for v in values if v.strip()]
-                    meta_info[current_label].extend(clean_vals)
-        # ---------------- بناء الوصف ----------------
-        full_desc = ""
-        extra_info = ""
-        if duration:
-            full_desc += Y + "مدة العرض :" + W + " " + duration + "\n\n"
+            story_text = re.sub("<.*?>", "", story_match.group(1)).strip()
+            printDBG("DEBUG: story found in series-story-section -> %s" % story_text)
+        story_text = re.sub(r"^القصه", "", story_text).strip()
+        description_parts = []
+        details_section = re.search(r'<section class="series-details-section">(.*?)</section>', data, re.DOTALL)
+        if details_section:
+            printDBG("DEBUG: Found details_section")
+            rows = re.findall(r'<div class="detail-row">(.*?)</div>', details_section.group(1), re.DOTALL)
+            printDBG("DEBUG: Number of rows found -> %d" % len(rows))
+            for idx, row in enumerate(rows):
+                key_match = re.search(r'<span class="detail-key">(.*?)</span>', row, re.DOTALL)
+                val_match = re.search(r'<span class="detail-val">(.*?)</span>', row, re.DOTALL)
+                if key_match and val_match:
+                    key = re.sub("<.*?>", "", key_match.group(1)).strip()
+                    val = re.sub("<.*?>", "", val_match.group(1)).strip()
+                    key_clean = re.sub(r"^[^\w\s]+", "", key).strip()
+                    key_clean = key_clean.rstrip(":").strip()
+                    val = val.rstrip(",").strip()
+                    if key_clean and val:
+                        description_parts.append(Y + key_clean + ":" + W + " " + val)
+                        printDBG("DEBUG: row[%d] key=%s val=%s" % (idx, key_clean, val))
+                else:
+                    printDBG("DEBUG: row[%d] skipped, key or val not found" % idx)
         if story_text:
-            full_desc += Y + "القصة :" + W + " " + story_text
-        if meta_info:
-            desired_order = ["سنة الإصدار", "التصنيف", "الجودة", "اللغة", "الدولة", "الممثلين"]
-            details_list = []
-            for key in desired_order:
-                if key in meta_info and meta_info[key]:
-                    value_str = "، ".join(meta_info[key])
-                    details_list.append(Y + key + " :" + W + " " + value_str)
-            if details_list:
-                extra_info = "\n\n" + " | ".join(details_list)
-        final_text = full_desc + extra_info
-        # ---------------- الصورة ----------------
+            description_parts.append(Y + "القصــــة:" + W + "\n" + story_text)
+        final_text = "\n".join(description_parts)
         icon = cItem.get("icon", "")
         poster_match = re.search(r'<div class="movie-poster">\s*<img src="([^"]+)"', data)
         if poster_match:
             icon = self.cm.getFullUrl(poster_match.group(1))
+            try:
+                icon = quote(icon, safe=":/?=&")
+            except:
+                pass
+        printDBG("DEBUG: poster url -> %s" % icon)
         otherInfo = {}
         return [{"title": cItem.get("title", "Information"), "text": final_text, "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Myegy.listSearchResult searchPattern[%s]" % searchPattern)
-        encoded_search = searchPattern.replace(" ", "+")
-        url = self.SEARCH_URL + encoded_search + "&video-id="
+        url = self.MAIN_URL + "?s=" + quote(searchPattern)
         sts, data = self.getPage(url)
         if not sts:
             return
-        blocks = re.findall(r'<div class="video-card">([\s\S]*?)</div>\s*</div>\s*</div>\s*</div>', data)
+        blocks = re.findall(r'<li class="box__.*?">(.*?)</li>', data, re.DOTALL)
         for item in blocks:
-            match = re.search(r'href="([^"]+watch\.php\?vid=[^"]+)"[\s\S]*?title="([^"]+)"', item)
-            if not match:
+            link_match = re.search(r'<a href="([^"]+)"', item)
+            if not link_match:
                 continue
-            link = match.group(1)
-            title = match.group(2)
+            link = self.getFullUrl(link_match.group(1))
+            title_match = re.search(r"<h3>(.*?)</h3>", item)
+            if not title_match:
+                continue
+            title = title_match.group(1)
+            title = self.cleanHtmlStr(title)
+            title = re.sub(r"^(مشاهدة\s+(مسلسل|فيلم|انمي|عرض|مشاهدة)\s+و?تحميل\s+)", "", title, flags=re.IGNORECASE)
             img = re.search(r'data-src="([^"]+)"', item)
             icon = self.getFullUrl(img.group(1)) if img else ""
-            duration = re.search(r"fa-clock[\s\S]*?<span>\s*([\d:]+)\s*</span>", item)
-            desc = f"{Y}مدة العرض: {duration.group(1)}{W}" if duration else ""
-            self.addDir({"category": "explore_item", "title": self._cleanTitle(title), "url": self.getFullUrl(link), "icon": icon, "desc": desc, "good_for_fav": True})
+            link = quote(link, safe=":/?&=%")
+            icon = quote(icon, safe=":/?&=%") if icon else ""
+            title = f"{Y}{self._cleanTitle(title)}{W}"
+            self.addDir({"category": "explore_item", "title": title, "url": link, "icon": icon, "good_for_fav": True})
 
     def getFavouriteData(self, cItem):
         printDBG("Myegy.getFavouriteData")

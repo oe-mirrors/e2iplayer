@@ -1,365 +1,172 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.06.2025
-###################################################
-# LOCAL import
-###################################################
+# Completely rewritten: 19.02.2026 - Mr.X
+from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-###################################################
-###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
-###################################################
-# FOREIGN import
-###################################################
-import re
-import base64
-try:
-    import json
-except Exception:
-    import simplejson as json
-from Components.config import config, ConfigText
-###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 
 def GetConfigList():
-    optionList = []
-    return optionList
+    return []
 
 
 def gettytul():
-    return 'https://obejrzyj.to/'
+    return "https://obejrzyj.to/"
 
 
 class Obejrzyjto(CBaseHostClass):
-
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'obejrzyj.to', 'cookie': 'obejrzyj.to.cookie'})
-        config.plugins.iptvplayer.cloudflare_user = ConfigText(default='Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', fixed_size=False)
-        self.USER_AGENT = config.plugins.iptvplayer.cloudflare_user.value
-        self.MAIN_URL = 'https://obejrzyj.to/'
-        self.API_URL = self.getFullUrl('api/v1/')
-        self.DEFAULT_ICON_URL = 'https://obejrzyj.to/storage/branding_media/cbd06244-e15a-4f95-9df0-9c6be3fb83c8.png'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl(), 'Upgrade-Insecure-Requests': '1', 'Connection': 'keep-alive'}
-        self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
+        CBaseHostClass.__init__(self, {"history": "Obejrzyjto", "cookie": "Obejrzyjto.cookie"})
+        self.HEADER = self.cm.getDefaultHeader()
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.MAIN_URL = gettytul()
+        self.DEFAULT_ICON_URL = self.getFullUrl("storage/branding_media/ead386d3-fca5-4082-8754-2a0992ae8c22.png")
+        self.API_URL = self.getFullUrl("api/v1/channel/%s?restriction=&order=%s:desc&paginate=lengthAware&returnContentOnly=true&page=")
+        self.MENU = [
+            {"category": "submenu", "title": _("Movies"), "id": "78"},
+            {"category": "list_items", "title": "Popularne polskie filmy", "url": self.API_URL % ("99", "popularity")},
+            {"category": "submenu", "title": _("Series"), "id": "79"},
+            {"category": "list_items", "title": "Polskie seriale", "url": self.API_URL % ("1994", "popularity")},
+            {"category": "list_items", "title": "Polskie programy", "url": self.API_URL % ("396", "popularity")},
+            {"category": "list_items", "title": "Seriale dokumentalne", "url": self.API_URL % ("9742", "popularity")},
+        ] + self.searchItems()
 
-        self.itemsPerPage = 50
-        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
-        self.cacheLinks = {}
-        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+    def listsubMenu(self, cItem):
+        self.listsTab(
+            [{"category": "list_items", "title": _("Popular"), "url": self.API_URL % (cItem["id"], "popularity")},
+                {"category": "list_items", "title": _("Lastest"), "url": self.API_URL % (cItem["id"], "created_at")},
+                {"category": "list_items", "title": _("Latest update"), "url": self.API_URL % (cItem["id"], "videos_updated_at")},
+                {"category": "list_items", "title": _("Rating"), "url": self.API_URL % (cItem["id"], "rating")},
+                {"category": "list_items", "title": "Największy budżet", "url": self.API_URL % (cItem["id"], "budget")},
+                {"category": "list_items", "title": "Największy przychód", "url": self.API_URL % (cItem["id"], "revenue")}], cItem)
 
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
-        origBaseUrl = baseUrl
-        baseUrl = self.cm.iriToUri(baseUrl)
-
-        sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-        if data.meta.get('cf_user', self.USER_AGENT) != self.USER_AGENT:
-            self.__init__()
-        return sts, data
-
-    def setMainUrl(self, url):
-        if self.cm.isValidUrl(url):
-            self.MAIN_URL = self.cm.getBaseUrl(url)
-
-    def listMainMenu(self, cItem):
-        printDBG("Obejrzyjto.listMainMenu")
-
-        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Movies'), 'url': self.API_URL + 'channel/movies?perPage=%d' % self.itemsPerPage},
-                        {'category': 'list_sort', 'title': _('Documentaries'), 'url': self.API_URL + 'channel/dokumentalne?perPage=%d' % self.itemsPerPage},
-                        {'category': 'list_sort', 'title': _('Series'), 'url': self.API_URL + 'channel/series?perPage=%d' % self.itemsPerPage},
-#                        {'category':'list_years',     'title': _('Filter By Year'),    'url':self.MAIN_URL},
-#                        {'category': 'list_cats', 'title': _('Movies genres'), 'url': self.API_URL + '?perPage=%d' % self.itemsPerPage},
-#                        {'category':'list_az',        'title': _('Alphabetically'),    'url':self.MAIN_URL},
-                        ] + self.searchItems()
-        self.listsTab(MAIN_CAT_TAB, cItem)
-
-    ###################################################
-    def _fillMovieFilters(self, cItem):
-        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
-
-        # fill sort
-        dat = [('&order=created_at:desc', 'Data dodania'),
-               ('&order=popularity:desc', 'Popularność'),
-               ('&order=release_date:desc', 'Data wydania'),
-               ('&order=rating:desc', 'Ocena użytkowników'),
-               ('&order=revenue:desc', 'Dochód'),
-               ('&order=budget:desc', 'Budżet')
-            ]
-        for item in dat:
-            self.cacheMovieFilters['sort'].append({'title': item[1], 'sort': item[0]})
-
-        # fill cats
-        dat = [('&genre=Akcja', 'Akcja'),
-               ('&genre=Animacja', 'Animacja'),
-               ('&genre=Dokumentalny', 'Data wydania'),
-               ('&genre=Dramat', 'Dramat'),
-               ('&genre=Familijny', 'Familijny'),
-               ('&genre=Fantasy', 'Fantasy'),
-               ('&genre=Historyczny', 'Historyczny'),
-               ('&genre=Horror', 'Horror'),
-               ('&genre=Komedia', 'Komedia'),
-               ('&genre=Krymina%C5%82', 'Kryminał'),
-               ('&genre=Muzyczny', 'Muzyczny'),
-               ('&genre=Przygodowy', 'Przygodowy'),
-               ('&genre=Romans', 'Romans'),
-               ('&genre=Sci-Fi', 'Sci-Fi'),
-               ('&genre=Tajemnica', 'Tajemnica'),
-               ('&genre=Thriller', 'Thriller'),
-               ('&genre=Western', 'Western'),
-               ('&genre=Wojenny', 'Wojenny'),
-               ('&genre=film%20TV', 'Film TV'),
-               ('&genre=Sport%20LIVE', 'Sport LIVE')
-            ]
-        for item in dat:
-            self.cacheMovieFilters['cats'].append({'title': item[1], 'url': cItem['url'] + item[0]})
-
-    ###################################################
-    def listMovieFilters(self, cItem, category):
-        printDBG("Obejrzyjto.listMovieFilters")
-
-        filter = cItem['category'].split('_')[-1]
-        self._fillMovieFilters(cItem)
-        if len(self.cacheMovieFilters[filter]) > 0:
-            filterTab = []
-            filterTab.extend(self.cacheMovieFilters[filter])
-            self.listsTab(filterTab, cItem, category)
-
-    def listsTab(self, tab, cItem, category=None):
-        printDBG("Obejrzyjto.listsTab")
-        for item in tab:
-            params = dict(cItem)
-            if None is not category:
-                params['category'] = category
-            params.update(item)
-            self.addDir(params)
+        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def listItems(self, cItem):
-        printDBG("Obejrzyjto.listItems [%s]" % cItem)
-        page = cItem.get('page', 1)
-        url = cItem['url']
-
-        sort = cItem.get('sort', '')
-        if sort not in url:
-            url = url + sort
-
-        if page > 1:
-            url = url + '&page={0}'.format(page)
-
-        urlParams = dict(self.defaultParams)
-        sts, data = self.getPage(self.MAIN_URL, urlParams)
-        urlParams['header']['x-xsrf-token'] = self.cm.getCookieItem(self.COOKIE_FILE, 'XSRF-TOKEN').replace('%3D', '=')
-        sts, data = self.getPage(url, urlParams)
+        printDBG("Obejrzyjto.listItems |%s|" % cItem)
+        page = cItem.get("page", 1)
+        url = cItem["url"] + str(page) if "searchPage" not in cItem["url"] else cItem["url"]
+        sts, data = self.getPage(url)
         if not sts:
             return
-        self.setMainUrl(data.meta['url'])
-#        printDBG("Obejrzyjto.listItems data [%s]" % data)
-
-        try:
-            if '/search/' in url:
-                data = json_loads(data)['results']
-                nextPage = False
-            else:
-                data = json_loads(data)['channel']['content']
-                nextPage = data['next_page']
-                data = data['data']
-        except Exception:
-            printExc()
-
-        for item in data:
-#            printDBG("Obejrzyjto.listItems item %s" % item)
-#            if item.get('type', '') == '':
-#                continue
-            try:
-                if item['is_series']:
-                    video_id = item['primary_video']['title_id']
-                else:
-                    video_id = item['primary_video']['id']
-            except Exception:
-                url = self.getFullUrl(self.API_URL + 'titles/%d?load=primaryVideo' % item['id'])
-                sts, data = self.getPage(url)
-                if not sts:
-                    continue
-                try:
-                    data = json_loads(data)['title']
-                    video_id = data['primary_video']['id']
-                except Exception:
-                    continue
-            icon = self.getFullIconUrl(item.get('poster', ''))
-            if 'original' in icon:
-                icon = icon.replace('/original/', '/w500/')
-            title = item.get('name', '')
-            desc = item.get('description', '')
-            if item['is_series']:
-                url = self.getFullUrl(self.API_URL + 'titles/%d/seasons' % video_id)
-                params = {'good_for_fav': True, 'category': 'list_seasons', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
+        htm = json_loads(data)
+        data = htm.get("pagination", {}).get("data", [])
+        if not data:
+            data = htm.get("results", [])
+        nextPage = htm.get("pagination", {}).get("next_page", False)
+        for js in data:
+            title = js.get("name")
+            icon = js.get("poster")
+            desc = js.get("description", "")
+            params = dict(cItem)
+            params.update({"good_for_fav": True, "category": "video", "title": title, "icon": icon.replace("/original/", "/w500/"), "desc": desc})
+            if js.get("is_series"):
+                url = js.get("id")
+                params.update({"category": "list_seasons", "url": url})
                 self.addDir(params)
             else:
-                url = self.getFullUrl(self.API_URL + 'watch/%d' % video_id)
-                params = {'good_for_fav': True, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
+                url = self.getFullUrl("api/v1/titles/%s?loader=titlePage" % js.get("id", "0"))
+                params.update({"url": url})
                 self.addVideo(params)
-
         if nextPage:
             params = dict(cItem)
-            params.update({'title': _('Next page'), 'page': page + 1})
+            params.update({"good_for_fav": False, "title": _("Next page"), "page": nextPage})
             self.addDir(params)
 
-    def listSeriesSeasons(self, cItem, nextCategory):
-        printDBG("Obejrzyjto.listSeriesSeasons")
-        sts, data = self.getPage(cItem['url'])
+    def listSeasons(self, cItem):
+        printDBG("Obejrzyjto.listSeasons")
+        sts, data = self.getPage(self.getFullUrl("api/v1/titles/%s?loader=titlePage" % cItem["url"]))
         if not sts:
             return
+        htm = json_loads(data)
+        desc = htm.get("title", {}).get("description", "")
+        data = htm.get("seasons", {}).get("data", [])
+        for js in data:
+            title = "%s %s" % (_("Season"), js.get("number"))
+            url = self.getFullUrl("api/v1/titles/%s/seasons/%s?loader=seasonPage" % (js.get("title_id"), js.get("number")))
+            params = dict(cItem)
+            params.update({"good_for_fav": True, "category": "list_episodes", "title": title, "url": url, "icon": js.get("poster") or cItem["icon"], "desc": desc})
+            self.addDir(params)
 
-        data = json_loads(data)
-
-        for sItem in data['pagination']['data']:
-#            printDBG("Obejrzyjto.listSeriesSeasons sItem [%s]" % sItem)
-            sts, sdata = self.getPage(self.getFullUrl(cItem['url'] + '/%d/episodes' % sItem['number']))
-            if not sts:
-                return
-            sTitle = 'Sezon %d' % sItem['number']
-            sdata = json_loads(sdata)['pagination']['data']
-            tabItems = []
-            for item in sdata:
-#                printDBG("Obejrzyjto.listSeriesSeasons item [%s]" % item)
-                try:
-                    url = self.getFullUrl(self.API_URL + 'watch/%d' % item['primary_video']['id'])
-                except Exception:
-                    continue
-                icon = self.getFullIconUrl(item.get('poster', ' '))
-                if 'original' in icon:
-                    icon = icon.replace('/original/', '/w500/')
-                title = item.get('name', '')
-                desc = item.get('description', '')
-                tabItems.append({'url': url, 'title': title, 'desc': desc, 'icon': icon})
-            if len(tabItems):
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'episodes': tabItems, 'icon': cItem['icon'], 'desc': ''})
-                self.addDir(params)
-
-    def listSeriesEpisodes(self, cItem):
-        printDBG("Obejrzyjto.listSeriesEpisodes [%s]" % cItem)
-        episodes = cItem.get('episodes', [])
-        cItem = dict(cItem)
-        for item in episodes:
-            self.addVideo(item)
+    def listEpisodes(self, cItem):
+        printDBG("Obejrzyjto.listEpisodes")
+        sts, data = self.getPage(cItem["url"])
+        if not sts:
+            return
+        htm = json_loads(data)
+        data = htm.get("episodes", {}).get("data", [])
+        for js in data:
+            title = "%s %s" % (_("Episodes"), js.get("episode_number"))
+            params = dict(cItem)
+            url = self.getFullUrl("api/v1/titles/%s/seasons/%s/episodes/%s?loader=episodePage" % (js.get("title_id"), js.get("season_number"), js.get("episode_number")))
+            params.update({"good_for_fav": True, "title": title, "url": url, "icon": js.get("poster") or cItem["icon"], "desc": js.get("description")})
+            self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Obejrzyjto.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        url = self.getFullUrl(self.API_URL + 'search/%s?limit=20') % urllib_quote_plus(searchPattern)
-        params = {'name': 'category', 'category': 'list_items', 'good_for_fav': False, 'url': url}
-        self.listItems(params)
+        cItem = dict(cItem)
+        cItem["url"] = self.getFullUrl("api/v1/search/%s?loader=searchPage" % urllib_quote(searchPattern))
+        self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):
         printDBG("Obejrzyjto.getLinksForVideo [%s]" % cItem)
-
-        cacheKey = cItem['url']
-        cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab):
-            return cacheTab
-
-        self.cacheLinks = {}
-
-        cUrl = cItem['url']
-        url = cItem['url']
-
-        retTab = []
-
+        urltab = []
+        url = cItem["url"]
+        if "=titlePage" in url:
+            sts, data = self.getPage(url)
+            if not sts:
+                return []
+            js = json_loads(data)
+            url = self.getFullUrl("api/v1/watch/%s" % js.get("title", {}).get("primary_video", {}).get("id"))
         sts, data = self.getPage(url)
         if not sts:
             return []
+        data = json_loads(data)
+        js = data.get("alternative_videos", [])
+        if not js:
+            js = data.get("episode", {}).get("videos", [])
+        for item in js:
+            urltab.append({"name": self.up.getHostName(item["src"]).capitalize(), "url": strwithmeta(item["src"], {"Referer": gettytul()}), "need_resolve": 1})
+        return urltab
 
-        cUrl = data.meta['url']
-        self.setMainUrl(cUrl)
-        try:
-            data = json_loads(data)
-        except Exception:
-            printExc()
+    def getVideoLinks(self, url):
+        printDBG("Obejrzyjto.getVideoLinks [%s]" % url)
+        if self.cm.isValidUrl(url):
+            return self.up.getVideoLinkExt(url)
+        return []
 
-        for item in data['alternative_videos']:
-            printDBG("Obejrzyjto.getLinksForVideo item[%s]" % item)
-            playerUrl = self.getFullUrl(item.get('src', '')).replace(' ', '%20')
-            if playerUrl == '':
-                continue
-            name = item.get('name', '') + ' - ' + self.up.getHostName(playerUrl)
-            if item['category'] == 'trailer':
-                name = '[trailer] ' + name
-            retTab.append({'name': name, 'url': strwithmeta(playerUrl, {'Referer': url}), 'need_resolve': 1})
-
-        if len(retTab):
-            self.cacheLinks[cacheKey] = retTab
-        return retTab
-
-    def getVideoLinks(self, baseUrl):
-        printDBG("Obejrzyjto.getVideoLinks [%s]" % baseUrl)
-        baseUrl = strwithmeta(baseUrl)
-        urlTab = []
-
-        # mark requested link as used one
-        if len(self.cacheLinks.keys()):
-            for key in self.cacheLinks:
-                for idx in range(len(self.cacheLinks[key])):
-                    if baseUrl in self.cacheLinks[key][idx]['url']:
-                        if not self.cacheLinks[key][idx]['name'].startswith('*'):
-                            self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name'] + '*'
-                        break
-
-        return self.up.getVideoLinkExt(baseUrl)
-
-    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
-        printDBG('handleService start')
-
+    def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-
-        name = self.currItem.get("name", '')
-        category = self.currItem.get("category", '')
-        mode = self.currItem.get("mode", '')
-
-        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
-        self.cacheLinks = {}
+        name = self.currItem.get("name", "")
+        category = self.currItem.get("category", "")
+        printDBG("handleService start\nhandleService: name[%s], category[%s] " % (name, category))
         self.currList = []
-
-    # MAIN MENU
-        if name is None and category == '':
-            rm(self.COOKIE_FILE)
-            self.listMainMenu({'name': 'category'})
-        elif 'list_cats' == category:
-            self.listMovieFilters(self.currItem, 'list_sort')
-        elif 'list_years' == category:
-            self.listMovieFilters(self.currItem, 'list_items')
-        elif 'list_az' == category:
-            self.listMovieFilters(self.currItem, 'list_items')
-        elif 'list_sort' == category:
-            self.listMovieFilters(self.currItem, 'list_items')
-        elif category == 'list_items':
+        if name is None:
+            self.listsTab(self.MENU, {"name": "category"})
+        elif category == "submenu":
+            self.listsubMenu(self.currItem)
+        elif category == "list_items":
             self.listItems(self.currItem)
-        elif category == 'list_seasons':
-            self.listSeriesSeasons(self.currItem, 'list_episodes')
-        elif category == 'list_episodes':
-            self.listSeriesEpisodes(self.currItem)
-
-    # SEARCH
+        elif category == "list_seasons":
+            self.listSeasons(self.currItem)
+        elif category == "list_episodes":
+            self.listEpisodes(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'})
+            cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
-    # HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
         else:
             printExc()
-
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
 class IPTVHost(CHostBase):
-
     def __init__(self):
         CHostBase.__init__(self, Obejrzyjto(), True, [])
