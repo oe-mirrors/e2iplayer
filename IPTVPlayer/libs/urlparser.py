@@ -922,11 +922,11 @@ class pageParser(CaptchaHelper):
         self.jscode["data"] = ""
         return videoUrls[::-1]
 
-    def parserDAILYMOTION(self, baseUrl):  # Partly fix 18.10
+    def parserDAILYMOTION(self, baseUrl):  # Partly fix 180226
         printDBG("parserDAILYMOTION %s" % baseUrl)
         COOKIE_FILE = self.COOKIE_PATH + "dailymotion.cookie"
-        HTTP_HEADER = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36"}
-        httpParams = {"header": HTTP_HEADER, "use_cookie": True, "save_cookie": False, "load_cookie": False, "cookiefile": COOKIE_FILE}
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        httpParams = {"header": HTTP_HEADER, "use_cookie": True, "save_cookie": True, "load_cookie": True, "cookiefile": COOKIE_FILE, "collect_all_headers": True}
         video_id = re.search(r"(?:video=|/video/)([A-Za-z0-9]+)", baseUrl)
         if not video_id:
             printDBG("parserDAILYMOTION -- Video id not found")
@@ -951,7 +951,7 @@ class pageParser(CaptchaHelper):
                             continue
                         media_url = urlparser.decorateUrl(media_url, {"Referer": baseUrl})
                         if media_type == "application/x-mpegURL":
-                            tmpTab = getDirectM3U8Playlist(media_url, False, checkContent=True, sortWithMaxBitrate=99999999, cookieParams={"header": HTTP_HEADER, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True})
+                            tmpTab = getDirectM3U8Playlist(media_url, False, checkContent=True, sortWithMaxBitrate=99999999, cookieParams={"header": HTTP_HEADER, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True, "load_cookie": True})
                             cookieHeader = self.cm.getCookieHeader(COOKIE_FILE)
                             for tmp in tmpTab:
                                 hlsUrl = self.cm.ph.getSearchGroups(tmp["url"], r"""(https?://[^'^"]+?\.m3u8[^'^"]*?)#?""")[0]
