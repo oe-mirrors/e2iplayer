@@ -82,6 +82,7 @@ class Brstej(CBaseHostClass):
             {"category": "list_items", "title": "مسلسلات عربية 2026", "url": self.getFullUrl("/category.php?cat=arab8-2025")},
             {"category": "list_items", "title": "مسلسلات خليجية 2026", "url": self.getFullUrl("/category.php?cat=5a7-2024")},
             {"category": "list_items", "title": "مسلسلات تركية 2026", "url": self.getFullUrl("/category.php?cat=ty9-2025")},
+            {"category": "list_items", "title": "مسلسلات رمضان 2026", "url": self.getFullUrl("/category.php?cat=ramdan2026")},
             {"category": "list_items", "title": "مسلسلات رمضان 2025", "url": self.getFullUrl("/category.php?cat=ramadan2-2025")},
             {"category": "list_items", "title": "مسلسلات رمضان 2024", "url": self.getFullUrl("/category.php?cat=ramdan1-2024")},
             {"category": "list_items", "title": "مسلسلات رمضان 2023", "url": self.getFullUrl("/category.php?cat=ramda1-2023")},
