@@ -33,7 +33,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://mycima.guru/'  # main url of host
+    return 'https://mycima.fan/'  # main url of host
 
 
 class MyCima(CBaseHostClass):
@@ -103,9 +103,9 @@ class MyCima(CBaseHostClass):
         # Define subcategories for each folder
         self.MOVIES_CAT_TAB = [
             {'category': 'list_movies', 'title': 'افلام اجنبية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
-            {'category': 'list_movies', 'title': 'افلام تركية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/')},
             {'category': 'list_movies', 'title': 'افلام عربية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%b9%d8%b1%d8%a8%d9%8a/')},
             {'category': 'list_movies', 'title': 'افلام هندية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%87%d9%86%d8%af%d9%8a/')},
+            {'category': 'list_movies', 'title': 'افلام تركية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/')},
             {'category': 'list_movies', 'title': 'افلام اسيوية', 'url': self.getFullUrl('/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')}
         ]
 
@@ -113,10 +113,13 @@ class MyCima(CBaseHostClass):
             {'category': 'list_series', 'title': 'مسلسلات اجنبية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/')},
             {'category': 'list_series', 'title': 'مسلسلات عربية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b9%d8%b1%d8%a8%d9%8a/')},
             {'category': 'list_series', 'title': 'مسلسلات هندية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%87%d9%86%d8%af%d9%8a%d8%a9/')},
-            {'category': 'list_series', 'title': 'مسلسلات اسيوية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')},
             {'category': 'list_series', 'title': 'مسلسلات تركية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/')},
-            {'category': 'list_series', 'title': 'مسلسلات وثائقية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
-            {'category': 'list_series', 'title': 'مسلسلات رمضان 2025', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2025/')}
+            {'category': 'list_series', 'title': 'مسلسلات اسيوية', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/')},
+            {'category': 'list_series', 'title': 'مسلسلات مدبلجة', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/')},
+            {'category': 'list_series', 'title': 'مسلسلات رمضان 2026', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2026/')},
+            {'category': 'list_series', 'title': 'مسلسلات رمضان 2025', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2025/')},
+            {'category': 'list_series', 'title': 'مسلسلات رمضان 2024', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2024/')},
+            {'category': 'list_series', 'title': 'مسلسلات رمضان 2023', 'url': self.getFullUrl('/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%b1%d9%85%d8%b6%d8%a7%d9%86-2023/')},
         ]
 
         self.ANIME_CAT_TAB = [
