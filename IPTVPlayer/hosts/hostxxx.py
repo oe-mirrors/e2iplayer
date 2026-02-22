@@ -17361,7 +17361,6 @@ class Host(CBaseHostClass):
 			sts, data = self._getPage(url, self.defaultParams)
 			if not sts:
 				return ''
-			printDBG('Host listsItems data: ' + data)
 			embedUrl = self.cm.ph.getSearchGroups(data, '''video:url".content=['"]([^"^']+?)['"]./>''', 1, True)[0]
 			printDBG('Beágyazott oldal: ' + embedUrl)
 			sts, data = self.get_Page(embedUrl)
@@ -17370,7 +17369,7 @@ class Host(CBaseHostClass):
 			printDBG('Beágyazva: ' + embedUrl)
 			videoUrl = self.cm.ph.getSearchGroups(data, '''true.+?hls.{13}['"]([^"^']+?)['"]''', 1, True)[0].replace(r"\/", "/")
 			printDBG('VideóLink: ' + videoUrl)
-			return videoUrl
+			return urlparser.decorateUrl(videoUrl, {'Referer': 'https://www.pornhub.com/', 'User-Agent': USER_AGENT, 'Origin': 'https://www.pornhub.com'})
 
 		if parser == 'https://chaturbate.com':
 			printDBG('Host listsItems parser name= ' + parser)
