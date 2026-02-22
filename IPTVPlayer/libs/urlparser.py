@@ -306,6 +306,7 @@ class urlparser:
             "goofy-banana.com": self.pp.parserVOESX,
             "google.com": self.pp.parserGOOGLE,
             "govid.site": self.pp.parserJWPLAYER,
+            "gscdn.cam": self.pp.parserJWPLAYER,
             "gsfqzmqu.sbs": self.pp.parserJWPLAYER,
             "gupload.xyz": self.pp.parserGUPLOAD,
             # h
