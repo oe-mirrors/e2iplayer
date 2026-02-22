@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last modified: 18/02/2026
+# Last modified: 22/02/2026
 # Myegy Host (Modified By Mohamed Elsafty)
 # ===================== Standard library =====================
 import re
@@ -16,9 +16,10 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 # ===================== COLORS =====================
 Y = E2ColoR("yellow")
 W = E2ColoR("white")
-
-
 # ======================================================
+TAG_RE = re.compile(r"<.*?>", re.DOTALL)
+LEADING_SYMBOLS_RE = re.compile(r"^[^\w\s]+")
+
 def GetConfigList():
     return []
 
@@ -159,7 +160,7 @@ class MyYegy(CBaseHostClass):
             full_icon = self.cm.getFullUrl(img)
             try:
                 full_icon = quote(full_icon, safe=":/?=&")
-            except:
+            except (TypeError, ValueError):
                 pass
             genre = ""
             country = ""
@@ -215,9 +216,9 @@ class MyYegy(CBaseHostClass):
                 key_match = re.search(r'<span class="detail-key">(.*?)</span>', row, re.DOTALL)
                 val_match = re.search(r'<span class="detail-val">(.*?)</span>', row, re.DOTALL)
                 if key_match and val_match:
-                    key = re.sub("<.*?>", "", key_match.group(1)).strip()
-                    val = re.sub("<.*?>", "", val_match.group(1)).strip()
-                    key_clean = re.sub(r"^[^\w\s]+", "", key).strip()
+                    key = TAG_RE.sub("", key_match.group(1)).strip()
+                    val = TAG_RE.sub("", val_match.group(1)).strip()
+                    key_clean = LEADING_SYMBOLS_RE.sub("", key).strip()
                     key_clean = key_clean.rstrip(":").strip()
                     val = val.rstrip(",").strip()
                     if key_clean and val:
@@ -227,7 +228,7 @@ class MyYegy(CBaseHostClass):
         story = ""
         story_match = re.search(r'<section class="series-story-section">.*?<p>(.*?)</p>', data, re.DOTALL)
         if story_match:
-            story = re.sub("<.*?>", "", story_match.group(1)).strip()
+            story = TAG_RE.sub("", story_match.group(1)).strip()
             story = re.sub(r"^القصه", "", story).strip()
             if story:
                 description_parts.append(Y + "القصــــة:" + W + "\n" + story)
@@ -281,7 +282,7 @@ class MyYegy(CBaseHostClass):
         story_text = ""
         story_match = re.search(r'<section class="series-story-section">.*?<p>(.*?)</p>', data, re.DOTALL)
         if story_match:
-            story_text = re.sub("<.*?>", "", story_match.group(1)).strip()
+            story_text = TAG_RE.sub("", story_match.group(1)).strip()
             printDBG("DEBUG: story found in series-story-section -> %s" % story_text)
         story_text = re.sub(r"^القصه", "", story_text).strip()
         description_parts = []
@@ -294,9 +295,9 @@ class MyYegy(CBaseHostClass):
                 key_match = re.search(r'<span class="detail-key">(.*?)</span>', row, re.DOTALL)
                 val_match = re.search(r'<span class="detail-val">(.*?)</span>', row, re.DOTALL)
                 if key_match and val_match:
-                    key = re.sub("<.*?>", "", key_match.group(1)).strip()
-                    val = re.sub("<.*?>", "", val_match.group(1)).strip()
-                    key_clean = re.sub(r"^[^\w\s]+", "", key).strip()
+                    key = TAG_RE.sub("", key_match.group(1)).strip()
+                    val = TAG_RE.sub("", val_match.group(1)).strip()
+                    key_clean = self.LEADING_SYMBOLS_RE.sub("", key).strip()
                     key_clean = key_clean.rstrip(":").strip()
                     val = val.rstrip(",").strip()
                     if key_clean and val:
@@ -313,7 +314,7 @@ class MyYegy(CBaseHostClass):
             icon = self.cm.getFullUrl(poster_match.group(1))
             try:
                 icon = quote(icon, safe=":/?=&")
-            except:
+            except (TypeError, ValueError):
                 pass
         printDBG("DEBUG: poster url -> %s" % icon)
         otherInfo = {}
