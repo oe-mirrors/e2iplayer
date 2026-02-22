@@ -297,7 +297,7 @@ class HwnaTurkya(CBaseHostClass):
         self.listItems(params, "explore_item")
 
     def CleanTitleName(self, title, sDesc="", showEP=False):
-        title_display = re.sub(r"\s+|\n|\t", " ", title).strip()
+        title_display = re.sub(r"\s+", " ", title).strip()
         desc = sDesc
         if showEP:
             ep_match = re.search(r"الحلقة\s*(\d+)", title_display)
