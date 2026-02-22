@@ -87,7 +87,7 @@ class MaxtvGO(CBaseHostClass):
                     # icon = self.getFullIconUrl(it['image'])
                     icon = str(it.get("vimeoPosterId", ""))
                     if icon != "":
-                        icon = "http://i.vimeocdn.com/video/%s.jpg?mw=300" % icon
+                        icon = "https://i.vimeocdn.com/video/%s.jpg?mw=300" % icon
                     url = self.getFullUrl("video.php?film=") + it["code"]
                     params = dict(cItem)
                     params.update({"type": "video", "good_for_fav": True, "title": title, "url": url, "icon": icon})
