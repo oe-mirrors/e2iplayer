@@ -20,6 +20,7 @@ W = E2ColoR("white")
 TAG_RE = re.compile(r"<.*?>", re.DOTALL)
 LEADING_SYMBOLS_RE = re.compile(r"^[^\w\s]+")
 
+
 def GetConfigList():
     return []
 
