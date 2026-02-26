@@ -36,6 +36,17 @@ if not isPY2():
     xrange = range
 
 
+def generate_vrf(movie_id, user_id):
+    key = sha256(user_id.encode("utf-8")).digest()
+    aes = pyaes.AESModeOfOperationCBC(key, iv=b"\x00" * 16)
+    p_len = 16 - len(movie_id) % 16
+    plaintext = movie_id + chr(p_len) * p_len
+    ciphertext = aes.encrypt(plaintext)
+    encoded = base64.b64encode(ciphertext).decode()
+    url_safe = encoded.replace("+", "-").replace("/", "_").replace("=", "")
+    return url_safe
+
+
 def crsdiv(a, dec_id):
     def b64dec(t):
         return base64.b64decode(t).decode("latin1")
@@ -220,6 +231,7 @@ class urlparser:
             "cdnwish.com": self.pp.parserJWPLAYER,
             "chuckle-tube.com": self.pp.parserVOESX,
             "cloud.mail.ru": self.pp.parserCOUDMAILRU,
+            "coverapi.store": self.pp.parserCOVERAPI,
             "csst.online": self.pp.parserSST,
             "cybervynx.com": self.pp.parserJWPLAYER,
             # d
@@ -492,6 +504,7 @@ class urlparser:
             "vidoza.org": self.pp.parserJWPLAYER,
             "vidsonic.net": self.pp.parserVIDSONIC,
             "vidsrc.bz": self.pp.parserVIDSRC,
+            "vidsrc.cc": self.pp.parserMEGAFILES,
             "vidsrc.do": self.pp.parserVIDSRC,
             "vidsrc.gd": self.pp.parserVIDSRC,
             "vidsrc.in": self.pp.parserVIDSRC,
@@ -2102,7 +2115,7 @@ class pageParser(CaptchaHelper):
         if "cybervynx.com" in baseUrl:
             baseUrl = baseUrl.replace("cybervynx.com", "guxhag.com")
         if "streamwish.to" in baseUrl:
-            baseUrl = baseUrl.replace("streamwish.to", "guxhag.com")
+            baseUrl = baseUrl.replace("streamwish.to", "hglamioz.com")
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return []
@@ -2255,4 +2268,75 @@ class pageParser(CaptchaHelper):
             for x in js.get("sources"):
                 url = urlparser.decorateUrl(x.get("file"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
                 urltab.extend(getDirectM3U8Playlist(url))
+        return urltab
+
+    def parserCOVERAPI(self, baseUrl):  # Add Partly work 250226
+        def fix_b64_padding(s):
+            return s + "=" * (-len(s) % 4)
+
+        printDBG("parserCOVERAPI baseUrl[%s]" % baseUrl)
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER["Accept-Language"] = "el,en-US;q=0.9,en;q=0.8"
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        news_id = re.search(r"""news_id:\s*'(\d+)'""", data)
+        if news_id:
+            postdata = {"mod": "players", "news_id": news_id.group(1)}
+            HTTP_HEADER["Referer"] = baseUrl
+            sts, data = self.cm.getPage("%sengine/ajax/controller.php" % host, {"header": HTTP_HEADER}, postdata)
+            if not sts:
+                return []
+            js = json_loads(data).get("html5", "")
+            data = re.search(r'file:"([^"]+)', js)
+            if data:
+                data = str(data.group(1))
+                t = []
+                if data.startswith("#2"):
+                    encoded = data[2:]
+                    encoded = encoded.split("=")
+                    for a in encoded:
+                        if a:
+                            t.append(a.split("//")[0])
+                    t = str("".join(t))
+                    if t:
+                        url = base64.b64decode(fix_b64_padding(t)).decode("latin1")
+                        return urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+            return []
+
+    def parserMEGAFILES(self, baseUrl):  # Add Partly work 250226
+        printDBG("parserMEGAFILES baseUrl[%s]" % baseUrl)
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        urltab = []
+        subTracks = []
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        var = re.findall(r'var\s+(\w+)\s*=\s*"([^"]*)"', data)
+        if var:
+            ids = dict(var)
+            mid = ids.get("movieId")
+            user_id = "zh&72ciO39tgH5" + "_" + ids.get("userId")
+            vrf = generate_vrf(mid, user_id)
+            url = "%sapi/%s/servers?id=%s&type=%s&v=%s&vrf=%s&imdbId=%s" % (host, mid, mid, ids.get("movieType"), ids.get("v"), vrf, ids.get("imdbId", "null"))
+            var = re.findall(r"var\s+(\w+)\s*=\s*(\d+);", data)
+            if var:
+                tv = dict(var)
+                url += "&season=%s&episode=%s" % (tv.get("season"), tv.get("episode"))
+            sts, data = self.cm.getPage(url, {"header": HTTP_HEADER})
+            if not sts:
+                return []
+
+            js = json_loads(data).get("data")
+            url = "%sapi/source/%s" % (host, js[0].get("hash"))
+            sts, data = self.cm.getPage(url, {"header": HTTP_HEADER})
+            if not sts:
+                return []
+            js = json_loads(data).get("data")
+            # if isinstance(js.get("subtitles"), list):
+            #     subTracks = [{"title": "", "url": sub.get("file"), "lang": sub.get("label")} for sub in js.get("subtitles", []) if sub.get("file") and sub.get("label")]
+            url = urlparser.decorateUrl(js.get("source"), {"User-Agent": HTTP_HEADER["User-Agent"], "Accept": "*/*", "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
+            urltab.extend(getDirectM3U8Playlist(url))
         return urltab
