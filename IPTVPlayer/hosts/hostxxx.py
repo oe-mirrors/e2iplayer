@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 20.02.2026 - fix babes34 , sheshaft, Anacams, some PY2 fixes - jbleyel
+# Last Modified: 26.02.2026 - Reordered Anacams categories & added more (Bigboobs, Bigtits, New Models) - DirtyDonki
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.libs import ph
@@ -211,8 +211,8 @@ class IPTVHost(IHost):
 
 
 class Host(CBaseHostClass):
-	XXXversion = "2026.02.20.1"
-	XXXremote = "2026.02.20.1"
+	XXXversion = "2026.02.26.1"
+	XXXremote = "2026.02.26.1"
 	currList = []
 	MAIN_URL = ''
 	SEARCH_proc = ''
@@ -2405,15 +2405,17 @@ class Host(CBaseHostClass):
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'ANACAMS-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
 
-			valTab.insert(0, CDisplayListItem("Trans", "Trans", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/gender/s/'], 'ANACAMS-clips', siteLogo, None))
-			valTab.insert(0, CDisplayListItem("Couples", "Couples", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/gender/c/'], 'ANACAMS-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("New Models", "Trans", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/new-models/'], 'ANACAMS-clips', siteLogo, None))
 
 			for item in (("55+", "55-85"), "46-55", "36-45", "26-35", "20-25", ("18-19", "18-19-yo")):
 				if not isinstance(item, tuple):
 					item = (item, item)
 				valTab.insert(0, CDisplayListItem(item[0], item[0], CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/age/%s/' % item[1]], 'ANACAMS-clips', siteLogo, None))
 
-			for item in (('Young', 'young'), ('Uncut', 'uncut'), ('Twink', 'twink'), ('Teens', 'teen'), ('Squirt', 'squirt'), ('Stockings', 'stockings'), ('Smalltits', 'smalltits'), ('Skinny', 'skinny'), ('Remote Control', 'lovense'), ('Redhead', 'redhead'), ('Petite', 'petite'), ('Natural', 'natural'), ('Milf', 'milf'), ('Mature', 'mature'), ('Lesbian', 'lesbian'), ('Latina', 'latina'), ('Indian', 'indian'), ('Hairy', 'hairy'), ('Gay', 'gay'), ('Feet', 'feet'), ('Ebony', 'ebony'), ('Dirty', 'dirty'), ('Daddy', 'daddy'), ('Cum', 'cum'), ('Chicks with Dicks', 'trans'), ('Bigcock', 'bigcock'), ('Big Ass', 'bigass'), ('BBW', 'bbw'), ('Ass', 'ass'), ('Asian', 'asian'), ('Anal', 'anal')):
+			valTab.insert(0, CDisplayListItem("Trans", "Trans", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/gender/s/'], 'ANACAMS-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem("Couples", "Couples", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/gender/c/'], 'ANACAMS-clips', siteLogo, None))
+
+			for item in (('Young', 'young'), ('Uncut', 'uncut'), ('Twink', 'twink'), ('Teens', 'teen'), ('Squirt', 'squirt'), ('Stockings', 'stockings'), ('Smalltits', 'smalltits'), ('Skinny', 'skinny'), ('Remote Control', 'lovense'), ('Redhead', 'redhead'), ('Petite', 'petite'), ('Natural', 'natural'), ('Milf', 'milf'), ('Mature', 'mature'), ('Lesbian', 'lesbian'), ('Latina', 'latina'), ('Indian', 'indian'), ('Hairy', 'hairy'), ('Gay', 'gay'), ('Feet', 'feet'), ('Ebony', 'ebony'), ('Dirty', 'dirty'), ('Daddy', 'daddy'), ('Cum', 'cum'), ('Chicks with Dicks', 'trans'), ('Bigtitss', 'bigtits'), ('Bigcock', 'bigcock'), ('Bigboobs', 'bigboobs'), ('Big Ass', 'bigass'), ('BBW', 'bbw'), ('Ass', 'ass'), ('Asian', 'asian'), ('Anal', 'anal')):
 				valTab.insert(0, CDisplayListItem(item[0], item[0], CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/tags/%s/' % item[1]], 'ANACAMS-clips', siteLogo, None))
 
 			for item in (('The US', 'united-states'), ('The UK', 'united-kingdom'), ('Ukraine', 'ukraine'), ('Russia', 'russia'), ('Poland', 'Poland'), ('Japan', 'japan'), ('Germany', 'Germany'), ('Colombia', 'colombia'), ('Canada', 'canada'), ('Asia', 'asia')):
