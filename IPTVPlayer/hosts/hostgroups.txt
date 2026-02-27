@@ -362,6 +362,7 @@
   "xrysoise",
   "tainieskaiseirestv",
   "gamatocom",
+  "stremi",
   "greekdocumentaries3",
   "dailymotion",
   "vimeo",

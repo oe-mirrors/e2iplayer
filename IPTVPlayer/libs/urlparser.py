@@ -387,6 +387,8 @@ class urlparser:
             "moflix.rpmplay.xyz": self.pp.parserSBS,
             "moflix.upns.xyz": self.pp.parserSBS,
             "movearnpre.com": self.pp.parserJWPLAYER,
+            "moviesapi.club": self.pp.parserVIDSRC,
+            "moviesapi.to": self.pp.parserVIDSRC,
             "mp4player.site": self.pp.parserSTREAMEMBED,
             "mp4upload.com": self.pp.parserJWPLAYER,
             "mxdrop.to": self.pp.parserJWPLAYER,
@@ -2178,7 +2180,7 @@ class pageParser(CaptchaHelper):
         printDBG("parserVIDSRC baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         urltab = []
-        baseUrl = baseUrl.replace("vidsrc.to", "vidsrc.xyz").replace("vidsrc.pm", "vidsrc.xyz")
+        baseUrl = baseUrl.replace("vidsrc.to", "vidsrc.xyz").replace("vidsrc.pm", "vidsrc.xyz").replace("moviesapi.club/movie", "cdn.moviesapi.to/embed/movie").replace("moviesapi.to/movie", "cdn.moviesapi.to/embed/movie")
         sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
         if not sts:
             return []
@@ -2270,10 +2272,7 @@ class pageParser(CaptchaHelper):
                 urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserCOVERAPI(self, baseUrl):  # Add Partly work 250226
-        def fix_b64_padding(s):
-            return s + "=" * (-len(s) % 4)
-
+    def parserCOVERAPI(self, baseUrl):  # update 270226
         printDBG("parserCOVERAPI baseUrl[%s]" % baseUrl)
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -2281,31 +2280,31 @@ class pageParser(CaptchaHelper):
         sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
         if not sts:
             return []
-        news_id = re.search(r"""news_id:\s*'(\d+)'""", data)
+        news_id = re.search(r"news_id':'(\d+)'", data)
         if news_id:
-            postdata = {"mod": "players", "news_id": news_id.group(1)}
+            mod = "players3" if "player3" in data else "players"
+            postdata = {"mod": mod, "news_id": news_id.group(1)}
             HTTP_HEADER["Referer"] = baseUrl
             sts, data = self.cm.getPage("%sengine/ajax/controller.php" % host, {"header": HTTP_HEADER}, postdata)
             if not sts:
                 return []
-            js = json_loads(data).get("html5", "")
-            data = re.search(r'file:"([^"]+)', js)
-            if data:
-                data = str(data.group(1))
-                t = []
-                if data.startswith("#2"):
-                    encoded = data[2:]
-                    encoded = encoded.split("=")
-                    for a in encoded:
-                        if a:
-                            t.append(a.split("//")[0])
-                    t = str("".join(t))
-                    if t:
-                        url = base64.b64decode(fix_b64_padding(t)).decode("latin1")
-                        return urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
-            return []
+            js = json_loads(data)
+            if js.get("file"):
+                url = js.get("file").split(" or ")[0]
+                if "playlist" in url:
+                    sts, data = self.cm.getPage(url, {"header": HTTP_HEADER})
+                    if not sts:
+                        return []
+                    js = json_loads(data)
+                    if js.get("playlist"):
+                        js = js.get("playlist")[0]
+                        for p in js.get("playlist", []):
+                            if p.get("comment", "").endswith(baseUrl.meta.get("Episode")):
+                                url = p.get("file")
+            return urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+        return []
 
-    def parserMEGAFILES(self, baseUrl):  # Add Partly work 250226
+    def parserMEGAFILES(self, baseUrl):  # update 270226
         printDBG("parserMEGAFILES baseUrl[%s]" % baseUrl)
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -2321,22 +2320,21 @@ class pageParser(CaptchaHelper):
             user_id = "zh&72ciO39tgH5" + "_" + ids.get("userId")
             vrf = generate_vrf(mid, user_id)
             url = "%sapi/%s/servers?id=%s&type=%s&v=%s&vrf=%s&imdbId=%s" % (host, mid, mid, ids.get("movieType"), ids.get("v"), vrf, ids.get("imdbId", "null"))
-            var = re.findall(r"var\s+(\w+)\s*=\s*(\d+);", data)
+            var = re.findall(r'var\s+(\w+)\s*=\s*(\d+);', data)
             if var:
                 tv = dict(var)
-                url += "&season=%s&episode=%s" % (tv.get("season"), tv.get("episode"))
+                url += "&season=%s&episode=%s" % (tv.get('season'), tv.get('episode'))
             sts, data = self.cm.getPage(url, {"header": HTTP_HEADER})
             if not sts:
                 return []
-
             js = json_loads(data).get("data")
             url = "%sapi/source/%s" % (host, js[0].get("hash"))
             sts, data = self.cm.getPage(url, {"header": HTTP_HEADER})
             if not sts:
                 return []
             js = json_loads(data).get("data")
-            # if isinstance(js.get("subtitles"), list):
-            #     subTracks = [{"title": "", "url": sub.get("file"), "lang": sub.get("label")} for sub in js.get("subtitles", []) if sub.get("file") and sub.get("label")]
+            if isinstance(js.get("subtitles"), list):
+                subTracks = [{"title": "", "url": sub.get("file"), "lang": sub.get("label")} for sub in js.get("subtitles", []) if sub.get("file") and sub.get("label")]
             url = urlparser.decorateUrl(js.get("source"), {"User-Agent": HTTP_HEADER["User-Agent"], "Accept": "*/*", "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
