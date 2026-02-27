@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 26.02.2026 - Mr.X
+# Last Modified: 27.02.2026 - Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -24,7 +24,7 @@ class Stremi(CBaseHostClass):
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = gettytul() + "wp-content/uploads/2025/08/ChatGPT-Image-8-%CE%91%CF%85%CE%B3-2025-11_08_29-%CF%80.%CE%BC.png"
-        self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("movies")}, {"category": "list_items", "title": _("tvshows"), "url": self.getFullUrl("tvshows")}] + self.searchItems()
+        self.MENU = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("movies")}, {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("tvshows")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
@@ -57,7 +57,6 @@ class Stremi(CBaseHostClass):
     def listSeasons(self, cItem):
         printDBG("Stremi.listSeasons")
         sts, data = self.getPage(cItem["url"])
-        printDBG(data)
         if not sts:
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'desc">(.*?)</div>')[0])
@@ -72,11 +71,10 @@ class Stremi(CBaseHostClass):
         printDBG("Stremi.listEpisodes")
         ep = cItem["ep"]
         data = re.compile(r"class='ep-(\d+).*?href='([^']+).*?src='([^']+).*?ep-title'>([^<]+)", re.DOTALL).findall(ep)
-
         for ep, url, icon, name in data:
             title = "%s %s - %s" % (_("Episode"), ep, name)
             params = dict(cItem)
-            params.update({"good_for_fav": True, "title": title, "url": url, "icon": icon})
+            params.update({"good_for_fav": True, "title": title, "url": url, "icon": icon, "episode": ep})
             self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -97,7 +95,7 @@ class Stremi(CBaseHostClass):
         for url in data:
             if "vidsrc.xyz" in url:
                 continue
-            urltab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1})
+            urltab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul(), "Episode": cItem.get("episode", "")}), "need_resolve": 1})
         return urltab
 
     def getVideoLinks(self, url):
