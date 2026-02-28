@@ -90,7 +90,7 @@ class StartPage(resource.Resource):
         req.setHeader('charset', 'UTF-8')
         resetStatusMSG = []
         if len(list(req.args.keys())) > 0:
-            if list(req.args.keys())[0] == 'resetState':
+            if list(req.args.keys())[0] == b'resetState':
                 settings.activeHost = {}
                 settings.activeHostsHTML = {}
                 settings.currItem = {}
@@ -116,7 +116,7 @@ class StartPage(resource.Resource):
 
         """ rendering server response """
         if isActiveHostInitiated():
-            return util.redirectTo("/iptvplayer/usehost", req)
+            return util.redirectTo(b"/iptvplayer/usehost", req)
         reloadScripts()
         html = '<html lang="%s">' % language.getLanguage()[:2]
         html += webParts.IncludeHEADER()
@@ -140,10 +140,10 @@ class searchPage(resource.Resource):
             key = list(req.args.keys())[0]
             arg = req.args.get(key, None)[0]
             if len(list(req.args.keys())) > 1:
-                if list(req.args.keys())[1] == 'type':
-                    if req.args.get(list(req.args.keys())[1], 'ALL')[0] == '':
+                if list(req.args.keys())[1] == b'type':
+                    if req.args.get(list(req.args.keys())[1], 'ALL')[0] == b'':
                         settings.GlobalSearchTypes = ["VIDEO", "AUDIO"]
-                    elif req.args.get(list(req.args.keys())[1], 'ALL')[0] == '':
+                    elif req.args.get(list(req.args.keys())[1], 'ALL')[0] == b'':
                         settings.GlobalSearchTypes = ["AUDIO"]
                     else:
                         settings.GlobalSearchTypes = ["VIDEO"]
@@ -152,6 +152,11 @@ class searchPage(resource.Resource):
         else:
             key = None
             arg = None
+
+        if key:
+            key = key.decode('utf-8', 'ignore')
+        if arg:
+            arg = arg.decode('utf-8', 'ignore')
 
         """ rendering server response """
         reloadScripts()
@@ -170,7 +175,7 @@ class searchPage(resource.Resource):
         elif key == 'cmd' and arg == 'stopThread':
             stopRunningThread('doGlobalSearch')
             self.Counter = 0
-            return util.redirectTo("/iptvplayer/search", req)
+            return util.redirectTo(b"/iptvplayer/search", req)
         elif not isThreadRunning('doGlobalSearch') and key == 'GlobalSearch' and settings.GlobalSearchListShown is True:
             settings.GlobalSearchListShown = False
             settings.GlobalSearchQuery = arg
@@ -179,7 +184,7 @@ class searchPage(resource.Resource):
             extraMeta = '<meta http-equiv="refresh" content="1">'
             MenuStatusMSG = _('Initiating data, please wait')
             ShowCancelButton = False
-            return util.redirectTo("/iptvplayer/search?doGlobalSearch=1", req)
+            return util.redirectTo(b"/iptvplayer/search?doGlobalSearch=1", req)
         elif isThreadRunning('doGlobalSearch'):
             self.Counter += 1
             extraMeta = '<meta http-equiv="refresh" content="1">'
@@ -189,7 +194,7 @@ class searchPage(resource.Resource):
                 MenuStatusMSG = _('Searching in %s, please wait (%d)') % (settings.searchingInHost, self.Counter)
             ShowCancelButton = True
         elif not isThreadRunning('doGlobalSearch') and key == 'doGlobalSearch':
-            return util.redirectTo("/iptvplayer/search", req)
+            return util.redirectTo(b"/iptvplayer/search", req)
         else:
             ShowCancelButton = False
             MenuStatusMSG = ''
@@ -264,7 +269,11 @@ class logsPage(resource.Resource):
         if not os.path.exists(DBGFileName):
             DBGFileName = ''
 
-        command = req.args.get("cmd", ['NOcmd'])
+        command = req.args.get(b"cmd")
+        if command:
+            command = command[0].decode('utf-8', 'ignore')
+        else:
+            command = 'NOcmd'
 
         if DBGFileName == '':
             req.setHeader('Content-type', 'text/html')
@@ -275,12 +284,13 @@ class logsPage(resource.Resource):
             html += webParts.Body().logsPageContent(MenuStatusMSG, htmlError, DBGFileName, DBGFileContent)
             html += '<p align="center"><b><font color="#FFE4C4">%s</font></b></p>' % _('Debug file does not exist - nothing to download')
             return html.encode()
-        elif command[0] == "downloadLog":
-            req.responseHeaders.setRawHeaders('content-disposition', ['attachment; filename="iptv_dbg.txt"'])
+        elif command == "downloadLog":
+            req.setHeader(b"Content-Type", b"text/plain; charset=utf-8")
+            req.setHeader(b'Content-Disposition', b'attachment; filename="iptv_dbg.txt"')
             with open(DBGFileName, 'r') as f:
-                  html = f.read()
-                  f.close()
-        elif command[0] == 'deleteLog':
+                html = f.read()
+            return html.encode()
+        elif command == 'deleteLog':
             if os.path.exists(DBGFileName):
                 try:
                     os.remove(DBGFileName)
@@ -321,6 +331,10 @@ class settingsPage(resource.Resource):
         if len(list(req.args.keys())) > 0:
             key = list(req.args.keys())[0]
             arg = req.args.get(key, None)[0]
+            if key:
+                key = key.decode('utf-8', 'ignore')
+            if arg:
+                arg = arg.decode('utf-8', 'ignore')
             print('Received: ', key, '=', arg)
 
             try:
@@ -333,7 +347,7 @@ class settingsPage(resource.Resource):
                     setting.save()
                     settings.configsHTML = {}
                     settings.activeHostsHTML = {}
-                    return util.redirectTo("/iptvplayer/settings", req)
+                    return util.redirectTo(b"/iptvplayer/settings", req)
                 elif key == 'cmd' and arg[:4] == 'OFF:':
                     print('config.plugins.iptvplayer.%s.setValue(False)\nconfig.plugins.iptvplayer.%s.save()' % (arg[4:], arg[4:]))
                     setting = getattr(config.plugins.iptvplayer, arg[4:])
@@ -342,19 +356,19 @@ class settingsPage(resource.Resource):
                     settings.activeHostsHTML.pop(arg[4:], None)
                     settings.activeHostsHTML.pop(arg[8:], None)
                     settings.configsHTML = {}
-                    return util.redirectTo("/iptvplayer/settings", req)
+                    return util.redirectTo(b"/iptvplayer/settings", req)
                 elif key[:4] == "CFG:":
-                    setting = getattr(config.plugins.iptvplayer, arg[4:])
+                    setting = getattr(config.plugins.iptvplayer, key[4:])
                     setting.value = arg
                     setting.save()
                     settings.configsHTML = {}
-                    return util.redirectTo("/iptvplayer/settings", req)
+                    return util.redirectTo(b"/iptvplayer/settings", req)
                 elif key[:4] == "INT:":
-                    setting = getattr(config.plugins.iptvplayer, arg[4:])
-                    setting.value = arg
+                    setting = getattr(config.plugins.iptvplayer, key[4:])
+                    setting.value = int(arg)
                     setting.save()
                     settings.configsHTML = {}
-                    return util.redirectTo("/iptvplayer/settings", req)
+                    return util.redirectTo(b"/iptvplayer/settings", req)
                 configfile.save()
             except Exception:
                 printDBG("[webSite.py:settingsPage] EXCEPTION for updating value '%s' for key '%s'" % (arg, key))
@@ -408,6 +422,14 @@ class downloaderPage(resource.Resource):
                 arg3 = req.args.get(key, None)[2]
             except Exception:
                 pass
+            if key:
+                key = key.decode('utf-8', 'ignore')
+            if arg:
+                arg = arg.decode('utf-8', 'ignore')
+            if arg2:
+                arg2 = arg2.decode('utf-8', 'ignore')
+            if arg3:
+                arg3 = arg3.decode('utf-8', 'ignore')
             print('Received: "%s"="%s","%s","%s"' % (key, arg, arg2, arg3))
 
         if key is None or arg is None:
@@ -431,7 +453,7 @@ class downloaderPage(resource.Resource):
             if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
         elif key == 'watchMovie' and os.path.exists(arg):
-            return util.redirectTo("/file?action=download&file=%s" % urllib.parse.quote(arg.decode('utf8', 'ignore').encode('utf-8')), req)
+            return util.redirectTo(b"/file?action=download&file=%s" % urllib.parse.quote(arg.decode('utf8', 'ignore').encode('utf-8')), req)
         elif key == 'stopDownload' and arg.isdigit():
             if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.stopDownloadItem(int(arg))
@@ -449,7 +471,7 @@ class downloaderPage(resource.Resource):
             if arg2 == 'deleteMovie' and os.path.exists(arg3):
                 os.remove(arg3)
             elif arg2 == 'watchMovie' and os.path.exists(arg3):
-                return util.redirectTo("/file?action=download&file=%s" % urllib.parse.quote(arg3.decode('utf8', 'ignore').encode('utf-8')), req)
+                return util.redirectTo(b"/file?action=download&file=%s" % urllib.parse.quote(arg3.decode('utf8', 'ignore').encode('utf-8')), req)
             if os.path.exists(config.plugins.iptvplayer.NaszaSciezka.value) and None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 files = os.listdir(config.plugins.iptvplayer.NaszaSciezka.value)
                 files.sort(key=lambda x: x.lower())
@@ -516,22 +538,26 @@ class useHostPage(resource.Resource):
         if len(list(req.args.keys())) > 0:
             self.key = list(req.args.keys())[0]
             self.arg = req.args.get(self.key, None)[0]
+            if self.key:
+                self.key = self.key.decode('utf-8', 'ignore')
+            if self.arg:
+                self.arg = self.arg.decode('utf-8', 'ignore')
             if len(list(req.args.keys())) > 1:
-                self.searchType = list(req.args.keys())[1]
+                self.searchType = list(req.args.keys())[1].decode('utf-8', 'ignore')
                 print("useHostPage received: '%s'='%s' searchType='%s'" % (self.key, str(self.arg), self.searchType))
             else:
                 print("useHostPage received: '%s'='%s'" % (self.key, str(self.arg)))
 
         if self.key is None and isActiveHostInitiated() is False:
-            return util.redirectTo("/iptvplayer/hosts", req)
+            return util.redirectTo(b"/iptvplayer/hosts", req)
         elif self.key == 'cmd' and self.arg == 'hosts':
             initActiveHost(None)
-            return util.redirectTo("/iptvplayer/hosts", req)
+            return util.redirectTo(b"/iptvplayer/hosts", req)
         elif self.key == 'cmd' and self.arg == 'stopThread':
             stopRunningThread('doUseHostAction')
             initActiveHost(None)
             setNewHostListShown(False)
-            return util.redirectTo("/iptvplayer/hosts", req)
+            return util.redirectTo(b"/iptvplayer/hosts", req)
         elif self.key == 'cmd' and self.arg == 'InitList':
             settings.retObj = settings.activeHost['Obj'].getInitList()
             settings.activeHost['PathLevel'] = 1

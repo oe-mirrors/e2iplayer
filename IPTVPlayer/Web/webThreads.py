@@ -156,10 +156,12 @@ class buildConfigsHTML(threading.Thread):
 		for itemL1 in List1:
 			if len(itemL1) < 2:
 				continue
-			if itemL1[0] in exclList or itemL1[0] in settings.excludedCFGs:
+			if itemL1[0] in exclList:
 				continue
 			for itemL2 in List2:
 				if itemL2[1] == itemL1[1]:
+					if itemL2[0] in settings.excludedCFGs:
+						continue
 					if direction == '1>2':
 						confKey = itemL1
 						ConfName = itemL1[0]

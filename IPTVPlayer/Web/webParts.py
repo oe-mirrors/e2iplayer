@@ -32,7 +32,7 @@ def IncludeHEADER(extraMetas=''):
     .topbar {overflow: hidden; background-color: #333; position: fixed; top: 0; width: 100%%; }
     .topbar a {float: left; display: block; color: #f2f2f2; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px; }
     .bottombar {overflow: hidden; background-color: #333; position: fixed; bottom: 0; width: 100%%; }
-    .bottombar a {float: left; display: block; color: #f2f2f2; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 12px; }
+    .bottombar a {float: left; display: block; color: #f2f2f2; text-align: center; padding: 12px 0px 12px 10px; text-decoration: none; font-size: 12px; }
 
     .main {padding: 16px; margin-top: 40px; margin-bottom: 40px; }
     p.DMlist {border: 2px solid red; border-radius: 5px; }
@@ -126,8 +126,8 @@ class Body():
 		else:
 			tempText += '<table border="0"><td>%s</td>' % formSUBMITvalue([('cmd', 'downloadLog')], _("Download log file"))
 			try:
-				if os.path.getsize(DebugFileName) > 100000:
-					LogDescr = _('%s file is %d MB in size. Last %d lines are:') % (DebugFileName, os.path.getsize(DebugFileName) >> 20, settings.MaxLogLinesToShow)
+				if os.path.getsize(DebugFileName) > 1000000:
+					LogDescr = _('%s file is %d MB in size. Last %d lines are:') % (DebugFileName, os.path.getsize(DebugFileName) / 1024 / 1024, settings.MaxLogLinesToShow)
 					tempText += '<td>%s</td>' % formSUBMITvalue([('cmd', 'deleteLog')], _("Delete log file"))
 				else:
 					LogDescr = _('%s file is %d KB in size. Last %d lines are:') % (DebugFileName, os.path.getsize(DebugFileName) / 1024, settings.MaxLogLinesToShow)
