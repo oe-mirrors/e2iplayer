@@ -40,7 +40,7 @@ class YouTubeParser():
     def __init__(self):
         self.cm = common()
         self.HTTP_HEADER = {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36',
                             'X-YouTube-Client-Name': '1',
                             'X-YouTube-Client-Version': '2.20201112.04.01',
                             'X-Requested-With': 'XMLHttpRequest'
@@ -168,7 +168,7 @@ class YouTubeParser():
             try:
                 video_id = YoutubeIE()._extract_id(url)
                 url = 'http://www.youtube.com/watch?v=%s&gl=US&hl=en&has_verified=1' % video_id
-                sts, data = self.cm.getPage(url, {'header': {'User-agent': 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10'}})
+                sts, data = self.cm.getPage(url, {'header': {'User-agent': 'Mozilla/5.0 (iPad; CPU OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/146.0.7680.38 Mobile/15E148 Safari/604.1'}})
                 if sts:
                     data = data.replace('\\"', '"').replace('\\\\\\/', '/')
                     hlsUrl = self.cm.ph.getSearchGroups(data, r'''"hlsvp"\s*:\s*"(https?://[^"]+?)"''')[0]
@@ -189,7 +189,7 @@ class YouTubeParser():
 
             if dash:
                 try:
-                    sts, data = self.cm.getPage(url, {'header': {'User-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'}})
+                    sts, data = self.cm.getPage(url, {'header': {'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'}})
                     data = data.replace('\\"', '"').replace('\\\\\\/', '/').replace('\\/', '/')
                     dashUrl = self.cm.ph.getSearchGroups(data, r'''"dashmpd"\s*:\s*"(https?://[^"]+?)"''')[0]
                     dashUrl = json_loads('"%s"' % dashUrl)
