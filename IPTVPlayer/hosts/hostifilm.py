@@ -129,7 +129,7 @@ class IFilmArabicHost(CBaseHostClass):
             colored_title = "{0}{1} {2}({3}){4}".format(Y, match.group(1).strip(), C, match.group(2).strip(), W) if match else Y + title + W
             icon = self.cm.ph.getSearchGroups(item, """src=['"]([^'"]+?)['"]""")[0]
             if not icon or "result[i]" in icon:
-                icon = self.cm.ph.getSearchGroups(item, """url\(&quot;([^&]+?)&quot;\)""")[0]
+                icon = self.cm.ph.getSearchGroups(item, r"""url\(&quot;([^&]+?)&quot;\)""")[0]
             if icon and "result[i]" not in icon:
                 icon = self.getFullUrl(icon)
                 icon = urlQuote(icon.encode("utf-8"), safe=":/")
@@ -140,7 +140,7 @@ class IFilmArabicHost(CBaseHostClass):
             self.addDir({"name": "category", "category": new_category, "title": colored_title, "url": itemUrl, "icon": icon})
             numItems += 1
         if numItems > 0 and "PageingItem" not in baseUrl:
-            page = self.cm.ph.getSearchGroups(baseUrl, "page=(\d+)")[0]
+            page = self.cm.ph.getSearchGroups(baseUrl, r"page=(\d+)")[0]
             if page == "":
                 page = "1"
             nextPage = int(page) + 1
@@ -240,7 +240,7 @@ class IFilmArabicHost(CBaseHostClass):
             if name:
                 cast_list.append("{0} ({1})".format(self.cm.ph.cleanHtmlStr(name), self.cm.ph.cleanHtmlStr(role)))
         full_desc = Y + "الطاقم: " + W + " | ".join(cast_list) + "\n" + Y + "القصة: " + W + story
-        videoUrl = self.cm.ph.getSearchGroups(data, "<source\s+src=[\"']([^\"']+\.mp4[^\"']*)[\"']")[0]
+        videoUrl = self.cm.ph.getSearchGroups(data, r"<source\s+src=[\"']([^\"']+\.mp4[^\"']*)[\"']")[0]
         if videoUrl == "":
             videoUrl = self.cm.ph.getSearchGroups(data, 'id="plyr_video".+?src=["\']([^"\']+)["\']')[0]
         if videoUrl.startswith("//"):
@@ -258,7 +258,7 @@ class IFilmArabicHost(CBaseHostClass):
     def listKidsContent(self, cItem):
         printDBG("IFilmArabicHost.listKidsContent")
         url = cItem.get("url", "")
-        page = self.cm.ph.getSearchGroups(url, "page=(\d+)")[0]
+        page = self.cm.ph.getSearchGroups(url, r"page=(\d+)")[0]
         if not page:
             page = "1"
         sts, data = self.getPage(url)
@@ -406,7 +406,7 @@ class IFilmArabicHost(CBaseHostClass):
         category = self.currItem.get("category", "")
         printDBG("handleService: >> name[%s], category[%s]" % (name, category))
         self.currList = []
-        if name == None:
+        if name is None:
             self.listMainMenu({"name": "category"})
         elif category == "live":
             self.listLiveStreams(self.currItem)
