@@ -82,7 +82,7 @@ class CYTSignAlgoExtractor:
                 if data[idxStart - 1] in (" ", ",", ";", "\n", "\r", "\t"):
                     idxEnd = data.find("}", idxStart)
                     if idxEnd > 0:
-                        return data[idxStart : idxEnd + 1]
+                        return data[idxStart: idxEnd + 1]
             else:
                 return ""
             idxStart += len(marker)
@@ -105,7 +105,7 @@ class CYTSignAlgoExtractor:
                     idxEnd = data.find("};", idxStart)
                     if idxEnd > 0:
                         if ph.all(methods, data, idxStart, idxEnd):
-                            return data[idxStart : idxEnd + 2]
+                            return data[idxStart: idxEnd + 2]
             else:
                 return ""
             idxStart += len(marker)
