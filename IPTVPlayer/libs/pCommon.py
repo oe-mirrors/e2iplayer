@@ -1110,6 +1110,10 @@ class common:
                     downHandler.close()
                 OK = False
 
+            if not downHandler:
+                dictRet.update({'sts': False, 'fsize': 0})
+                return dictRet
+
             if OK and 'subtypes' in addParams:
                 OK = False
                 for item in addParams['subtypes']:
