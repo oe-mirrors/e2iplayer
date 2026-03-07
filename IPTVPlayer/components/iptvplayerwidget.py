@@ -788,10 +788,11 @@ class E2iPlayerWidget(Screen):
             return
 
         # Display icon
-        if selItem and '' != selItem.iconimage and self.iconMenager:
+        if selItem and '' != selItem.iconimage:
+            self.iconMenager.addToDQueue([selItem.iconimage])
             # check if we have this icon and get the path to this icon on disk
             iconPath = self.iconMenager.getIconPathFromAAueue(selItem.iconimage)
-            printDBG('displayIcon -> getIconPathFromAAueue: ' + selItem.iconimage)
+            printDBG('displayIcon -> getIconPathFromAAueue: %s' % selItem.iconimage)
             if '' != iconPath and not self["cover"].checkDecodeNeeded(iconPath):
                 self["cover"].show()
                 return
@@ -1999,10 +2000,10 @@ class E2iPlayerWidget(Screen):
         iconList = []
         # fill icon List for icon manager
         # if an user whant to see icons
-        if config.plugins.iptvplayer.showcover.value and self.iconMenager:
-            for it in self.currList:
-                if it.iconimage != '':
-                    iconList.append(it.iconimage)
+#        if config.plugins.iptvplayer.showcover.value and self.iconMenager:
+#            for it in self.currList:
+#                if it.iconimage != '':
+#                    iconList.append(it.iconimage)
 
         if len(iconList):
             # List has been changed so clear old Queue
