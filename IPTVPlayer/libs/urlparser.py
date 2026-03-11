@@ -2118,6 +2118,8 @@ class pageParser(CaptchaHelper):
             baseUrl = baseUrl.replace("cybervynx.com", "guxhag.com")
         if "streamwish.to" in baseUrl:
             baseUrl = baseUrl.replace("streamwish.to", "hglamioz.com")
+        if "dropload.tv" in baseUrl:
+            baseUrl = baseUrl.replace("dropload.tv", "dropload.pro")
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return []
