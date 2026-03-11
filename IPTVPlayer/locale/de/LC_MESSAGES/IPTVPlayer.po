@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 20:19+0100\n"
-"PO-Revision-Date: 2026-01-30 17:11+0100\n"
+"PO-Revision-Date: 2026-03-11 20:27+0100\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ../plugin\n"
 
@@ -253,7 +253,7 @@ msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- DOWNLOAD KONFIGURATION -----"
 
 msgid "----- Global HostXXX Configuration -----"
-msgstr ""
+msgstr "----- Globale HostXXX Konfiguration -----"
 
 msgid "----- OTHER SETTINGS -----"
 msgstr "----- ANDERE EINSTELLUNGEN -----"
@@ -265,7 +265,7 @@ msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- PROXY KONFIGURATION -----"
 
 msgid "----- Porn Site Configuration -----"
-msgstr ""
+msgstr "----- Pornoseiten Konfiguration -----"
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- SICHERHEITS KONFIGURATION -----"
@@ -283,22 +283,19 @@ msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "-----  UNTERTITEL KONFIGURATION -----"
 
 msgid "----- Show or hide Porn Sites -----"
-msgstr ""
+msgstr "----- Pornoseiten anzeigen oder ausblenden -----"
 
 msgid "----- XXXList Configuration -----"
-msgstr ""
+msgstr "----- XXXList-Konfiguration -----"
 
-#, fuzzy
 msgid "----------  Live Cams  ----------"
-msgstr "----------Andere-----------"
+msgstr "----------  Live Cams  ----------"
 
-#, fuzzy
 msgid "----------  Other  ----------"
-msgstr "----------Andere-----------"
+msgstr "---------- Andere -----------"
 
-#, fuzzy
 msgid "----------  Porn Sites  ----------"
-msgstr "----------Andere-----------"
+msgstr "----------  Pornoseiten  ----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "---------------- Externer Exteplayer3 Optionen ----------------"
@@ -3030,7 +3027,7 @@ msgid "Show file size"
 msgstr "Zeige Dateigröße"
 
 msgid "Show global search :"
-msgstr "Globale Suche :"
+msgstr "Globale Suche anzeigen :"
 
 msgid "Show hiddens catalogs"
 msgstr "Zeige versteckte Ordner"
@@ -3095,9 +3092,8 @@ msgstr "Sortier Modus"
 msgid "Sort Myfreecams :"
 msgstr "Myfreecams sortieren:"
 
-#, fuzzy
 msgid "Sort Pornsites Alphabetical :"
-msgstr "Alphabetisch sortieren"
+msgstr "Pornoseiten alphabetisch sortieren :"
 
 msgid "Sort alphabetically"
 msgstr "Alphabetisch sortieren"
