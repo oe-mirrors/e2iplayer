@@ -77,8 +77,8 @@ def GetConfigList():
 	optionList = []
 	optionList.append(getConfigListEntry(_("----- Global HostXXX Configuration -----"),))
 	optionList.append(getConfigListEntry(_("Pin protection for plugin") + " :", config.plugins.iptvplayer.xxxwymagajpin))
-	optionList.append(getConfigListEntry(_("Global search :"), config.plugins.iptvplayer.xxxsearch))
-	optionList.append(getConfigListEntry(_("Global sort :"), config.plugins.iptvplayer.xxxsortall))
+	optionList.append(getConfigListEntry(_("Show global search :"), config.plugins.iptvplayer.xxxsearch))
+	optionList.append(getConfigListEntry(_("Sort Pornsites Alphabetical :"), config.plugins.iptvplayer.xxxsortall))
 	optionList.append(getConfigListEntry(_("Playback UHD :"), config.plugins.iptvplayer.xxx4k))
 	optionList.append(getConfigListEntry(_("----- XXXList Configuration -----"),))
 	optionList.append(getConfigListEntry(_("Path to xxxlist.txt :"), config.plugins.iptvplayer.xxxlist))

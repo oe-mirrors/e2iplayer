@@ -1628,9 +1628,6 @@ msgstr "Виберіть мову"
 msgid "Get token failed!"
 msgstr "Помилка входу."
 
-msgid "Global search :"
-msgstr ""
-
 #, fuzzy
 msgid "Global sort :"
 msgstr "Загальний"
@@ -3257,6 +3254,9 @@ msgstr "Показати менеджер завантажеь після доб
 
 msgid "Show file size"
 msgstr "Показати размір файлу"
+
+msgid "Show global search :"
+msgstr ""
 
 msgid "Show hiddens catalogs"
 msgstr "Показати скриті каталоги"

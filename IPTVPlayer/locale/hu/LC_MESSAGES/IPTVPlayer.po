@@ -1548,9 +1548,6 @@ msgstr "Nyelvek beszerzése sikertelen!"
 msgid "Get token failed!"
 msgstr "Nem megfelelő a Token!"
 
-msgid "Global search :"
-msgstr "Globális keresés:"
-
 msgid "Global sort :"
 msgstr "Globális rendezés:"
 
@@ -3065,6 +3062,9 @@ msgstr "Letöltéskezelő megjelenítése új elem hozzáadása után"
 
 msgid "Show file size"
 msgstr "Fájlméret megjelenítése"
+
+msgid "Show global search :"
+msgstr "Globális keresés:"
 
 msgid "Show hiddens catalogs"
 msgstr "Rejtett katalógusok megjelenítése"

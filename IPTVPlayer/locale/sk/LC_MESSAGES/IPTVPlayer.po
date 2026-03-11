@@ -1548,9 +1548,6 @@ msgstr "Zlyhanie jazykov!"
 msgid "Get token failed!"
 msgstr "Získanie tokenu zlyhalo!"
 
-msgid "Global search :"
-msgstr "Globálne vyhľadávanie:"
-
 msgid "Global sort :"
 msgstr "Globálne triedenie:"
 
@@ -3068,6 +3065,9 @@ msgstr "Zobraziť správcu sťahovania po pridaní novej položky"
 
 msgid "Show file size"
 msgstr "Zobraziť veľkosť súboru"
+
+msgid "Show global search :"
+msgstr "Globálne vyhľadávanie:"
 
 msgid "Show hiddens catalogs"
 msgstr "Zobraziť skryté katalógy"

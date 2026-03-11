@@ -183,11 +183,8 @@ msgid "%s followers"
 msgstr "%s volgers"
 
 #, python-format
-msgid ""
-"%s has been protected with google recaptcha v2. You can try to use API "
-"version."
-msgstr ""
-"%s is beveiligd met een google recaptcha v2. Je kunt de API versie proberen."
+msgid "%s has been protected with google recaptcha v2. You can try to use API version."
+msgstr "%s is beveiligd met een google recaptcha v2. Je kunt de API versie proberen."
 
 #, python-format
 msgid "%s minutes"
@@ -227,12 +224,10 @@ msgstr "%s time-out."
 
 #, python-format
 msgid ""
-"%s uses \"geo-blocking\" measures to prevent you from accessing the services "
-"from abroad.\n"
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
 " Host country: %s, your country: %s"
 msgstr ""
-"%s gebruikt \"geo-blocking\" om het bekijken van buitenlandse zenders te "
-"voorkomen.\n"
+"%s gebruikt \"geo-blocking\" om het bekijken van buitenlandse zenders te voorkomen.\n"
 " Host land: %s, jouw land: %s"
 
 #, python-format
@@ -333,20 +328,11 @@ msgstr "4:3 Letterbox"
 msgid "4:3 PanScan"
 msgstr "4:3 PanScan"
 
-msgid ""
-"<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> "
-"specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
-msgstr ""
-"<font color=\"#FE642E\">LET OP:</font></b> E2iPlayer <b>IS ALLEEN EEN</b> "
-"aangepaste Web browser. En bevat  <b>GEEN</b> content!!!</font>"
+msgid "<font color=\"#FE642E\">REMEMBER:</font></b> E2iPlayer <b>IS ONLY</b> specialized Web browser. It does <b>NOT</b> host any materials!!!</font>"
+msgstr "<font color=\"#FE642E\">LET OP:</font></b> E2iPlayer <b>IS ALLEEN EEN</b> aangepaste Web browser. En bevat  <b>GEEN</b> content!!!</font>"
 
-msgid ""
-"A TV License is required to watch BBC iPlayer streams, see the BBC website "
-"for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
-msgstr ""
-"Een licentie is noodzakelijk om BBC iPlayer streams te bekijken, ga naar de "
-"BBC website voor meer informatie: https://www.bbc.co.uk/iplayer/help/"
-"tvlicence"
+msgid "A TV License is required to watch BBC iPlayer streams, see the BBC website for more information: https://www.bbc.co.uk/iplayer/help/tvlicence"
+msgstr "Een licentie is noodzakelijk om BBC iPlayer streams te bekijken, ga naar de BBC website voor meer informatie: https://www.bbc.co.uk/iplayer/help/tvlicence"
 
 msgid "A-Z"
 msgstr "A-Z"
@@ -582,13 +568,10 @@ msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "Weet u zeker dat u bestand \"%s\" wil verwijderen?"
 
 msgid "Are you sure you want to reset all hosts in this group to defaults?"
-msgstr ""
-"Weet u zeker dat u alle Hosts in deze groep naar de default waarde wilt "
-"resetten?"
+msgstr "Weet u zeker dat u alle Hosts in deze groep naar de default waarde wilt resetten?"
 
 msgid "Are you sure you want to reset all settings to their default values?"
-msgstr ""
-"Weet u zeker dat u alle instellingen naar de default waarde wilt resetten?"
+msgstr "Weet u zeker dat u alle instellingen naar de default waarde wilt resetten?"
 
 msgid "Artists"
 msgstr "Artiesten"
@@ -908,11 +891,8 @@ msgstr "Debug functie uitgeschakeld - niets om te tonen"
 msgid "Debug option set to console - nothing to display"
 msgstr "Debug functie ingesteld op console - niets om te tonen"
 
-msgid ""
-"Debug option set to debugfile, but file does not exist - nothing to display"
-msgstr ""
-"Debug functie op debug bestand ingesteld, maar bestand bestaat niet - niets "
-"om te tonen"
+msgid "Debug option set to debugfile, but file does not exist - nothing to display"
+msgstr "Debug functie op debug bestand ingesteld, maar bestand bestaat niet - niets om te tonen"
 
 #, python-format
 msgid "Decode file [%s] problem."
@@ -1404,9 +1384,7 @@ msgstr "Laden van kanalen mislukt"
 
 #, python-format
 msgid "Failed to log in user \"%s\". Please check your login and password."
-msgstr ""
-"Aanmelden gebruiker \"%s\" mislukt. A.u.b. uw gebruikersnaam en wachtwoord "
-"controleren."
+msgstr "Aanmelden gebruiker \"%s\" mislukt. A.u.b. uw gebruikersnaam en wachtwoord controleren."
 
 #, python-format
 msgid "Failed to open the file \"%s\"."
@@ -1453,8 +1431,7 @@ msgstr "Bestand [%s] is toegevoegd aan de download wachtrij."
 
 #, python-format
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
-msgstr ""
-"Bestand kan niet worden gedownload. Protocol [%s] wordt niet ondersteund"
+msgstr "Bestand kan niet worden gedownload. Protocol [%s] wordt niet ondersteund"
 
 msgid "File name cannot be empty!"
 msgstr "Bestandsnaam mag niet leeg zijn!"
@@ -1490,8 +1467,7 @@ msgid "Folder for temporary data"
 msgstr "Map voor tijdelijke data"
 
 msgid "Following host are broken or additional python modules are needed."
-msgstr ""
-"De volgende host is defect of aanvullende python modules zijn noodzakelijk."
+msgstr "De volgende host is defect of aanvullende python modules zijn noodzakelijk."
 
 msgid "Foot & Ankle"
 msgstr "Voet & Enkel"
@@ -1563,9 +1539,6 @@ msgstr "Ophalen talen mislukt!"
 
 msgid "Get token failed!"
 msgstr "Token ophalen mislukt!"
-
-msgid "Global search :"
-msgstr "Globaal zoeken :"
 
 msgid "Global sort :"
 msgstr "Globaal sorteren :"
@@ -1754,30 +1727,20 @@ msgid "It looks like some kind of protection. Try again later."
 msgstr "Dit lijkt op een soort beveiliging. Later opnieuw proberen."
 
 #, python-format
-msgid ""
-"It looks like your current configuration do not allow to connect to the "
-"https://%s/.\n"
-msgstr ""
-"Waarschijnlijk staat uw huidige configuratie niet toe om verbinding te maken "
-"met https://%s/.\n"
+msgid "It looks like your current configuration do not allow to connect to the https://%s/.\n"
+msgstr "Waarschijnlijk staat uw huidige configuratie niet toe om verbinding te maken met https://%s/.\n"
 
 #, python-format
 msgid "It seems that the host \"%s\" has crashed."
 msgstr "Waarschijnlijk is host \"%s\" gecrasht."
 
 #, python-format
-msgid ""
-"It seems that the host \"%s\" has crashed. Do you want to report this "
-"problem?"
+msgid "It seems that the host \"%s\" has crashed. Do you want to report this problem?"
 msgstr "Waarschijnlijk is host \"%s\" gecrasht. Wilt u dit probleem melden?"
 
 #, python-format
-msgid ""
-"It seems that the subtitle's provider \"%s\" has crashed. Do you want to "
-"report this problem?"
-msgstr ""
-"Waarschijnlijk is de provider van de ondertitel \"%s\" gecrasht. Wilt u dit "
-"probleem melden?"
+msgid "It seems that the subtitle's provider \"%s\" has crashed. Do you want to report this problem?"
+msgstr "Waarschijnlijk is de provider van de ondertitel \"%s\" gecrasht. Wilt u dit probleem melden?"
 
 #, python-format
 msgid ""
@@ -1947,12 +1910,8 @@ msgstr "Lichtgrijs"
 msgid "Line Spacing"
 msgstr "Regelafstand"
 
-msgid ""
-"Link is not supported by the gstplayer. Please use the extelayer3 if "
-"available."
-msgstr ""
-"Link wordt niet herkend door de gstplayer. A.u.b. extelayer3 gebruiken "
-"wanneer beschikbaar."
+msgid "Link is not supported by the gstplayer. Please use the extelayer3 if available."
+msgstr "Link wordt niet herkend door de gstplayer. A.u.b. extelayer3 gebruiken wanneer beschikbaar."
 
 msgid "Link protected with DRM."
 msgstr "Link beveiligd met DRM."
@@ -2008,12 +1967,8 @@ msgid "Load"
 msgstr "Laden"
 
 #, python-format
-msgid ""
-"Load of the Virtual Keyboard layout \"%s\" failed due to the following "
-"error: \"%s\""
-msgstr ""
-"Laden van het Virtual Keyboard \"%s\" is mislukt door de volgende fout: "
-"\"%s\""
+msgid "Load of the Virtual Keyboard layout \"%s\" failed due to the following error: \"%s\""
+msgstr "Laden van het Virtual Keyboard \"%s\" is mislukt door de volgende fout: \"%s\""
 
 msgid "Loading"
 msgstr "Laden"
@@ -2213,12 +2168,8 @@ msgid "Moving file from \"%s\" to \"%s\" failed.\n"
 msgstr "Verplaatsen bestand van \"%s\" naar \"%s\" mislukt.\n"
 
 #, python-format
-msgid ""
-"Moving playback buffer to the download manager failed with the following "
-"error \"%s\""
-msgstr ""
-"Verplaatsen van de Playback buffer naar de Download Manager mislukt met de "
-"volgende fout \"%s\""
+msgid "Moving playback buffer to the download manager failed with the following error \"%s\""
+msgstr "Verplaatsen van de Playback buffer naar de Download Manager mislukt met de volgende fout \"%s\""
 
 msgid "Music"
 msgstr "Muziek"
@@ -2542,41 +2493,23 @@ msgid "Please configure Xtream (blue button)"
 msgstr "A.u.b. Xtream configureren (Blauwe knop)"
 
 #, python-format
-msgid ""
-"Please consider restart your Engima2 and agree to install the %s utlity when "
-"the %s will propose this."
-msgstr ""
-"Overweeg om Engima2 te herstarten en het %s programma te installeren wanneer "
-"%s daarom vraagt."
+msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
+msgstr "Overweeg om Engima2 te herstarten en het %s programma te installeren wanneer %s daarom vraagt."
+
+msgid "Please fill your login and password in the host configuration (available under blue button) and try again."
+msgstr "A.u.b. uw gebruikersnaam en wachtwoord invullen in de host configuratie (beschikbaar onder de blauwe knop) en probeer het opnieuw."
+
+msgid "Please make sure that the folder for cache data (set in the configuration) is writable."
+msgstr "A.u.b. er voor zorgen dat de map voor cache data (ingesteld in de configuratie) beschrijfbaar is."
+
+msgid "Please register and set login and password in the host configuration, to solve this problems permanently."
+msgstr "A.u.b. registreren en een gebruikersnaam en wachtwoord invullen in de host configuratie, om dit probleem definitief op te lossen."
 
 msgid ""
-"Please fill your login and password in the host configuration (available "
-"under blue button) and try again."
-msgstr ""
-"A.u.b. uw gebruikersnaam en wachtwoord invullen in de host configuratie "
-"(beschikbaar onder de blauwe knop) en probeer het opnieuw."
-
-msgid ""
-"Please make sure that the folder for cache data (set in the configuration) "
-"is writable."
-msgstr ""
-"A.u.b. er voor zorgen dat de map voor cache data (ingesteld in de "
-"configuratie) beschrijfbaar is."
-
-msgid ""
-"Please register and set login and password in the host configuration, to "
-"solve this problems permanently."
-msgstr ""
-"A.u.b. registreren en een gebruikersnaam en wachtwoord invullen in de host "
-"configuratie, om dit probleem definitief op te lossen."
-
-msgid ""
-"Please remember to visit http://www.sport365.live/ and watch a few "
-"advertisements.\n"
+"Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
 msgstr ""
-"A.u.b. niet vergeten om naar http://www.sport365.live/ te gaan en enkele "
-"reclames te bekijken.\n"
+"A.u.b. niet vergeten om naar http://www.sport365.live/ te gaan en enkele reclames te bekijken.\n"
 "Dit lost de vele onderbrekingen op tijdens het afspelen."
 
 #, python-format
@@ -2588,11 +2521,8 @@ msgid "Please visit \"%s\" and confirm that you are human."
 msgstr "A.u.b. \"%s\" bezoeken en bevestigen dat u een mens bent."
 
 #, python-format
-msgid ""
-"Please visit %s to learn how to redirect this task to the external device."
-msgstr ""
-"A.u.b. %s bezoeken om te leren hoe deze taak om te leiden naar de het "
-"externe apparaat."
+msgid "Please visit %s to learn how to redirect this task to the external device."
+msgstr "A.u.b. %s bezoeken om te leren hoe deze taak om te leiden naar de het externe apparaat."
 
 msgid "Please wait - downloading initialization data."
 msgstr "Even geduld - bezig met initialisatie data downloaden."
@@ -3124,6 +3054,9 @@ msgstr "Download Manager tonen na het toevoegen van een nieuw item"
 msgid "Show file size"
 msgstr "Bestandsgrootte tonen"
 
+msgid "Show global search :"
+msgstr "Globaal zoeken :"
+
 msgid "Show hiddens catalogs"
 msgstr "Verborgen catalogs tonen"
 
@@ -3173,17 +3106,13 @@ msgid "Software floating point"
 msgstr "Software floating point"
 
 msgid "Some changes will be applied only after movie player restart."
-msgstr ""
-"Sommige wijzigingen worden alleen actief na het herstarten van de movie "
-"player."
+msgstr "Sommige wijzigingen worden alleen actief na het herstarten van de movie player."
 
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Sommige wijzigingen worden alleen actief na het herstarten van de GUI."
 
 msgid "Sorry. TVPlayer is currently only available in the United Kingdom"
-msgstr ""
-"Sorry. TVPlayer is op dit moment alleen beschikbaar in het Verenigd "
-"Koninkrijk"
+msgstr "Sorry. TVPlayer is op dit moment alleen beschikbaar in het Verenigd Koninkrijk"
 
 msgid "Sort Mode"
 msgstr "Sorteer methode"
@@ -3440,22 +3369,18 @@ msgstr "De default beeldverhouding van de externe player"
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
-"Please fill your login and password in the host configuration. Available "
-"under blue button."
+"Please fill your login and password in the host configuration. Available under blue button."
 msgstr ""
 "Voor de host %s is registratie verplicht. \n"
-"A.u.b. uw gebruikersnaam en wachtwoord in de host configuratie invullen. "
-"Beschikbaar onder de blauwe knop."
+"A.u.b. uw gebruikersnaam en wachtwoord in de host configuratie invullen. Beschikbaar onder de blauwe knop."
 
 #, python-format
 msgid ""
 "The host %s requires subscription.\n"
-"Please fill your login and password in the host configuration - available "
-"under blue button."
+"Please fill your login and password in the host configuration - available under blue button."
 msgstr ""
 "Voor de host %s is een subscriptie verplicht. \n"
-"A.u.b. uw gebruikersnaam en wachtwoord in de host configuratie invullen. "
-"Beschikbaar onder de blauwe knop."
+"A.u.b. uw gebruikersnaam en wachtwoord in de host configuratie invullen. Beschikbaar onder de blauwe knop."
 
 msgid "The number of items in the search history"
 msgstr "Het aantal items in de zoek geschiedenis"
@@ -3516,8 +3441,7 @@ msgid "This video is a private video."
 msgstr "Dit is een privé video."
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
-msgstr ""
-"Tip! U kunt een USB flash drive aansluiten om dit probleem op te lossen."
+msgstr "Tip! U kunt een USB flash drive aansluiten om dit probleem op te lossen."
 
 msgid "Title:"
 msgstr "Titel:"
@@ -3527,8 +3451,7 @@ msgid ""
 "Please fill your login and password in the IPTVPlayer configuration."
 msgstr ""
 "Om video's van http://vk.com/ te zien moet u zich aanmelden.\n"
-"A.u.b. uw gebruikersnaam en wachtwoord invullen in de IPTVPlayer "
-"configuratie."
+"A.u.b. uw gebruikersnaam en wachtwoord invullen in de IPTVPlayer configuratie."
 
 msgid "Today"
 msgstr "Vandaag"
@@ -3591,9 +3514,7 @@ msgid "Try to bypass DRM (it may be illegal)"
 msgstr "Probeer om de DRM te omzeilen (dit is mogelijk illegaal)"
 
 msgid "Try to change extplayer or disable IFD in GSTplayer configuration"
-msgstr ""
-"Probeer de extplayer te wijzigen of schakel IFD uit in de GSTplayer "
-"configuratie"
+msgstr "Probeer de extplayer te wijzigen of schakel IFD uit in de GSTplayer configuratie"
 
 msgid "Turkish Movies"
 msgstr "Turkse films"
@@ -3943,54 +3864,33 @@ msgstr "Ja, naar bestand /tmp/iptv.dbg"
 msgid "You are not allowed to play this video"
 msgstr "Het afspelen van deze video is niet toegestaan"
 
-msgid ""
-"You are using old version of OpenWebif.<br> To go to E2iPlayer web Select "
-"the following link<br>"
-msgstr ""
-"U gebruikt een oude versie van OpenWebif.<br> Gebruik de volgende link om "
-"naar E2iPlayer te gaan<br>"
+msgid "You are using old version of OpenWebif.<br> To go to E2iPlayer web Select the following link<br>"
+msgstr "U gebruikt een oude versie van OpenWebif.<br> Gebruik de volgende link om naar E2iPlayer te gaan<br>"
 
-msgid ""
-"You can disable HTTPS certificates validation in the E2iPlayer configuration "
-"to suppress this problem."
-msgstr ""
-"U kunt de validatie van HTTPS certificaten uitschakelen in de E2iPlayer "
-"configuratie om dit probleem op te lossen."
+msgid "You can disable HTTPS certificates validation in the E2iPlayer configuration to suppress this problem."
+msgstr "U kunt de validatie van HTTPS certificaten uitschakelen in de E2iPlayer configuratie om dit probleem op te lossen."
 
-msgid ""
-"You can enable PyCurl in the E2iPlayer configuration to fix this problem."
-msgstr ""
-"U kunt PyCurl inschakelen in the E2iPlayer configuratie om dit probleem op "
-"te lossen."
+msgid "You can enable PyCurl in the E2iPlayer configuration to fix this problem."
+msgstr "U kunt PyCurl inschakelen in the E2iPlayer configuratie om dit probleem op te lossen."
 
-msgid ""
-"You can install PyCurl package with TLS 1.3 support from the feed to fix "
-"this problem."
-msgstr ""
-"U kunt de PyCurl extensie met TLS 1.3 ondersteuning via de Feed installeren "
-"om dit probleem op te lossen."
+msgid "You can install PyCurl package with TLS 1.3 support from the feed to fix this problem."
+msgstr "U kunt de PyCurl extensie met TLS 1.3 ondersteuning via de Feed installeren om dit probleem op te lossen."
 
-msgid ""
-"You can try to use proxy as workaround, check options under blue button."
-msgstr ""
-"U kunt een proxy als workaround proberen, zie de opties onder de blauwe knop."
+msgid "You can try to use proxy as workaround, check options under blue button."
+msgstr "U kunt een proxy als workaround proberen, zie de opties onder de blauwe knop."
 
 #, python-format
 msgid "You can use \"%s\" or \"%s\" services for automatic solution."
-msgstr ""
-"U kunt de \"%s\" of \"%s\" services gebruiken voor een geautomatiseerde "
-"oplossing."
+msgstr "U kunt de \"%s\" of \"%s\" services gebruiken voor een geautomatiseerde oplossing."
 
 msgid "You can use external eplayer to start playback faster."
-msgstr ""
-"U kunt de externe eplayer gebruiken om het afspelen sneller te starten."
+msgstr "U kunt de externe eplayer gebruiken om het afspelen sneller te starten."
 
 msgid "You do not have a premium account. Starting a sponsored broadcast."
 msgstr "U heeft geen premium account. De uitzending wordt gestart met reclame."
 
 msgid "You need to enter email and password in configuration."
-msgstr ""
-"Het invullen van email en wachtwoord in de configuratie is noodzakelijk."
+msgstr "Het invullen van email en wachtwoord in de configuratie is noodzakelijk."
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "A.u.b. geen \"block I/O\" bewerkingen uitvoeren in de __init__."
@@ -4002,9 +3902,7 @@ msgid "Youtube Suggestions"
 msgstr "Youtube Suggesties"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
-msgstr ""
-"Youtube zoekopdrachten gaan sneller, wanneer u een API sleutel invult in het "
-"configuratiemenu"
+msgstr "Youtube zoekopdrachten gaan sneller, wanneer u een API sleutel invult in het configuratiemenu"
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4114,12 +4012,8 @@ msgstr "externe eplayer3"
 msgid "external gstplayer"
 msgstr "externe gstplayer"
 
-msgid ""
-"first check if host works properly in GUI and web <b>BEFORE</b> reporting "
-"error in it !!!"
-msgstr ""
-"eerst controleren of de host goed functioneert in de GUI en het web "
-"<b>VOORDAT</b> u de fout bij ons meld !!!"
+msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
+msgstr "eerst controleren of de host goed functioneert in de GUI en het web <b>VOORDAT</b> u de fout bij ons meld !!!"
 
 msgid "format"
 msgstr "formaat"

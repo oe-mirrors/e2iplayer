@@ -1551,9 +1551,6 @@ msgstr "Errore nell'ottenere le lingue!"
 msgid "Get token failed!"
 msgstr "Errore nel ricevere il token!"
 
-msgid "Global search :"
-msgstr "Ricerca globale:"
-
 msgid "Global sort :"
 msgstr "Ordinamento globale:"
 
@@ -3071,6 +3068,9 @@ msgstr "Mostra gestore download dopo aggiunta nuova voce"
 
 msgid "Show file size"
 msgstr "Mostra la dimensione del file"
+
+msgid "Show global search :"
+msgstr "Ricerca globale:"
 
 msgid "Show hiddens catalogs"
 msgstr "Mostra i cataloghi nascosti"

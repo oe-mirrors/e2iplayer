@@ -1548,9 +1548,6 @@ msgstr "فشل في جلب اللغات!"
 msgid "Get token failed!"
 msgstr "فشل في الحصول على التوكن!"
 
-msgid "Global search :"
-msgstr "بحث شامل:"
-
 msgid "Global sort :"
 msgstr "فرز شامل:"
 
@@ -3068,6 +3065,9 @@ msgstr "عرض مدير التنزيل بعد إضافة عنصر جديد"
 
 msgid "Show file size"
 msgstr "عرض حجم الملف"
+
+msgid "Show global search :"
+msgstr "بحث شامل:"
 
 msgid "Show hiddens catalogs"
 msgstr "عرض المجلدات المخفية"

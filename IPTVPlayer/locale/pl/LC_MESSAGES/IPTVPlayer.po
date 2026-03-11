@@ -1584,9 +1584,6 @@ msgstr "Pobranie tłumaczeń językowych nieudane!"
 msgid "Get token failed!"
 msgstr "Pobranie tokena nie powiodło się!"
 
-msgid "Global search :"
-msgstr "Globalne wyszukiwanie :"
-
 msgid "Global sort :"
 msgstr "Glboalne sortowanie :"
 
@@ -3128,6 +3125,9 @@ msgstr "Pokazać menadżera pobierania po dodaniu pliku"
 
 msgid "Show file size"
 msgstr "Pokazać rozmiar pliku"
+
+msgid "Show global search :"
+msgstr "Globalne wyszukiwanie :"
 
 msgid "Show hiddens catalogs"
 msgstr "Pokazać ukryte katalogi"

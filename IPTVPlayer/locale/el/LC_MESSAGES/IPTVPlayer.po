@@ -14,7 +14,7 @@ msgstr ""
 "Language-Team: \n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.8\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -1541,9 +1541,6 @@ msgstr "Αποτυχία λήψης γλωσσών!"
 msgid "Get token failed!"
 msgstr "Αποτυχία λήψης token!"
 
-msgid "Global search :"
-msgstr "Καθολική αναζήτηση:"
-
 msgid "Global sort :"
 msgstr "Καθολική ταξινόμηση:"
 
@@ -3057,6 +3054,9 @@ msgstr "Εμφάνιση Διαχείρισης λήψεων μετά την π�
 
 msgid "Show file size"
 msgstr "Εμφάνιση μεγέθους αρχείου"
+
+msgid "Show global search :"
+msgstr "Καθολική αναζήτηση:"
 
 msgid "Show hiddens catalogs"
 msgstr "Εμφάνιση κρυφών καταλόγων"

@@ -1548,9 +1548,6 @@ msgstr "Ошибка с языками!"
 msgid "Get token failed!"
 msgstr "Получить токен не удалось!"
 
-msgid "Global search :"
-msgstr "Общий поиск :"
-
 msgid "Global sort :"
 msgstr "Общая сортировка :"
 
@@ -3068,6 +3065,9 @@ msgstr "Показать диспетчер загрузки после доба
 
 msgid "Show file size"
 msgstr "Показать размер файла"
+
+msgid "Show global search :"
+msgstr "Общий поиск :"
 
 msgid "Show hiddens catalogs"
 msgstr "Показать скрытые каталоги"

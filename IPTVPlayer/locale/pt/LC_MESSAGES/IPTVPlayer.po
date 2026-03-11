@@ -1557,9 +1557,6 @@ msgstr ""
 msgid "Get token failed!"
 msgstr ""
 
-msgid "Global search :"
-msgstr ""
-
 msgid "Global sort :"
 msgstr ""
 
@@ -3144,6 +3141,9 @@ msgid "Show download manager after adding new item"
 msgstr "Exibir o gestor de descargas depois de adicionar um novo serviço"
 
 msgid "Show file size"
+msgstr ""
+
+msgid "Show global search :"
 msgstr ""
 
 msgid "Show hiddens catalogs"

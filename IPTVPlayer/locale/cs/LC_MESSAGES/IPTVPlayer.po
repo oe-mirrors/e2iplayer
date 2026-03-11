@@ -1554,9 +1554,6 @@ msgstr "Získání jazyků se nezdařilo!"
 msgid "Get token failed!"
 msgstr "Získání tokenu se nezdařilo!"
 
-msgid "Global search :"
-msgstr "Globální vyhledávání:"
-
 msgid "Global sort :"
 msgstr "Globální řazení:"
 
@@ -3072,6 +3069,9 @@ msgstr "Zobrazit správce stahování po přidání nové položky"
 
 msgid "Show file size"
 msgstr "Zobrazit velikost souboru"
+
+msgid "Show global search :"
+msgstr "Globální vyhledávání:"
 
 msgid "Show hiddens catalogs"
 msgstr "Zobrazit skryté katalogy"

@@ -1597,9 +1597,6 @@ msgstr "Obtenir les langues a échoué!"
 msgid "Get token failed!"
 msgstr "Échec de l’obtention du jeton!"
 
-msgid "Global search :"
-msgstr ""
-
 msgid "Global sort :"
 msgstr ""
 
@@ -3165,6 +3162,9 @@ msgstr "Afficher le gestionnaire de téléchargement après l'ajout d'un nouvel 
 
 msgid "Show file size"
 msgstr "Afficher taille fichier"
+
+msgid "Show global search :"
+msgstr ""
 
 msgid "Show hiddens catalogs"
 msgstr "Afficher les catalogues cachés"

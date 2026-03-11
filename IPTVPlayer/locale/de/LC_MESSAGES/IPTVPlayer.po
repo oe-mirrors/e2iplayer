@@ -1535,9 +1535,6 @@ msgstr "Bekomme Sprachen gescheitert!"
 msgid "Get token failed!"
 msgstr "Erhalten von Token fehlgeschlagen!"
 
-msgid "Global search :"
-msgstr "Globale Suche :"
-
 msgid "Global sort :"
 msgstr "Globale Sortierung :"
 
@@ -3051,6 +3048,9 @@ msgstr "Zeige Downloadverwaltung bei Download"
 
 msgid "Show file size"
 msgstr "Zeige Dateigröße"
+
+msgid "Show global search :"
+msgstr "Globale Suche :"
 
 msgid "Show hiddens catalogs"
 msgstr "Zeige versteckte Ordner"

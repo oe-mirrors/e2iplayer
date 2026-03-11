@@ -1476,7 +1476,7 @@ msgstr ""
 msgid "Get token failed!"
 msgstr ""
 
-msgid "Global search :"
+msgid "Show global search :"
 msgstr ""
 
 msgid "Global sort :"
