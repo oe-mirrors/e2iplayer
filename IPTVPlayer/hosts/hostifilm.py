@@ -47,11 +47,11 @@ class IFilmArabicHost(CBaseHostClass):
         )
         self.defaultParams = {"header": self.HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_CAT_TAB = [
-            {"category": "live", "title": _("البث المباشر"), "url": self.LIVE_URL},
-            {"category": "series", "title": _("المسلسلات"), "url": self.SERIES_URL},
-            {"category": "movies", "title": _("الأفلام"), "url": self.MOVIES_URL},
-            {"category": "programs", "title": _("البرامج"), "url": self.PROGRAMS_URL},
-            {"category": "kids", "title": _("أطفال آي فيلم"), "url": self.KIDS_URL},
+            {"category": "live", "title": "البث المباشر", "url": self.LIVE_URL},
+            {"category": "series", "title": "المسلسلات", "url": self.SERIES_URL},
+            {"category": "movies", "title": "الأفلام", "url": self.MOVIES_URL},
+            {"category": "programs", "title": "البرامج", "url": self.PROGRAMS_URL},
+            {"category": "kids", "title": "أطفال آي فيلم", "url": self.KIDS_URL},
         ] + self.searchItems()
         self.LIVE_STREAMS = [
             {"name": "iFilm Arabic", "url": "https://live.presstv.ir/hls/ifilmar.m3u8"},
@@ -84,7 +84,7 @@ class IFilmArabicHost(CBaseHostClass):
                 colored_title = L + name + W
             else:
                 colored_title = name
-            params = {"name": "category", "category": "video", "title": colored_title, "url": stream["url"], "icon": self.DEFAULT_ICON_URL, "desc": Y + _("بث مباشر جودة عالية باللغة المختارة") + W}
+            params = {"name": "category", "category": "video", "title": colored_title, "url": stream["url"], "icon": self.DEFAULT_ICON_URL, "desc": Y + "بث مباشر جودة عالية باللغة المختارة" + W}
             self.addVideo(params)
 
     def listContent(self, cItem, nextCategory):
@@ -145,7 +145,7 @@ class IFilmArabicHost(CBaseHostClass):
                 page = "1"
             nextPage = int(page) + 1
             nextUrl = baseUrl.replace("page=" + page, "page=" + str(nextPage)) if "page=" in baseUrl else (baseUrl + ("&" if "?" in baseUrl else "?") + "page=" + str(nextPage))
-            self.addDir({"name": "category", "category": nextCategory, "title": L + _("Next Page »»» (%d)") % nextPage, "url": nextUrl})
+            self.addDir({"name": "category", "category": nextCategory, "title": L + _("Next Page") + " ▶ (%d)" % nextPage, "url": nextUrl})
 
     def listEpisodes(self, cItem):
         printDBG("IFilmArabicHost.listEpisodes")
@@ -158,7 +158,7 @@ class IFilmArabicHost(CBaseHostClass):
                 fallback_url = self.getFullUrl("/Series/Content/" + seriesId)
                 sts, data = self.getPage(fallback_url)
         if not sts:
-            self.addMarker({"title": L + _("! عذراً، هذا المحتوى غير متاح حالياً (خطأ في الاتصال)") + W, "desc": Y + _("المصدر لا يستجيب للطلب، يرجى المحاولة لاحقاً.") + W})
+            self.addMarker({"title": L + "! عذراً، هذا المحتوى غير متاح حالياً (خطأ في الاتصال)" + W, "desc": Y + "المصدر لا يستجيب للطلب، يرجى المحاولة لاحقاً." + W})
             return
         story = self.cm.ph.getDataBeetwenMarkers(data, '<div id="wrapper"', "</div>")[1]
         story = self.cm.ph.cleanHtmlStr(story).strip()
@@ -220,7 +220,7 @@ class IFilmArabicHost(CBaseHostClass):
                 episodes_found = True
         if not episodes_found:
             printDBG("IFilmArabicHost: No episodes added, showing marker.")
-            self.addMarker({"title": L + _("! لا توجد فيديوهات متاحة حالياً لهذا العمل") + W, "desc": Y + _("يبدو أن الحلقات لم يتم رفعها بعد في هذا القسم من المصدر.") + W})
+            self.addMarker({"title": L + "! لا توجد فيديوهات متاحة حالياً لهذا العمل" + W, "desc": Y + "يبدو أن الحلقات لم يتم رفعها بعد في هذا القسم من المصدر." + W})
 
     def listMovies(self, cItem):
         printDBG("IFilmArabicHost.listMovies")
@@ -308,12 +308,12 @@ class IFilmArabicHost(CBaseHostClass):
                 self.addDir({"name": "category", "category": "episodes", "title": colored_title, "url": final_item_url, "icon": final_icon_url, "desc": Y + title + W + " - [أطفال آي فيلم]"})
                 items_found = True
         if not items_found:
-            self.addMarker({"title": R + _("! لا توجد مسلسلات أطفال متاحة في هذه الصفحة حالياً") + W, "desc": Y + _("ربما يتم تحديث القسم أو أن هناك عطلاً في المصدر.") + W})
+            self.addMarker({"title": R + "! لا توجد مسلسلات أطفال متاحة في هذه الصفحة حالياً" + W, "desc": Y + "ربما يتم تحديث القسم أو أن هناك عطلاً في المصدر." + W})
         if items_found:
             next_page_num = str(int(page) + 1)
             if "page=" + next_page_num in data:
                 nextUrl = url.replace("page=" + page, "page=" + next_page_num) if "page=" in url else url + "&page=" + next_page_num
-                self.addDir({"name": "category", "category": "kids", "title": L + _("Next Page »»»") + W, "url": nextUrl})
+                self.addDir({"name": "category", "category": "kids", "title": L + _("Next Page") + " ▶" + W, "url": nextUrl})
 
     def getLinksForVideo(self, cItem):
         printDBG("IFilmArabicHost.getLinksForVideo [%s]" % cItem)

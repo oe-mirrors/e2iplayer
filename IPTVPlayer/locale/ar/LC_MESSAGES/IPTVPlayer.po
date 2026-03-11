@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 16:58+0100\n"
+"POT-Creation-Date: 2026-03-11 20:19+0100\n"
 "PO-Revision-Date: 2025-11-23 21:52+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -187,10 +187,6 @@ msgid "%s has been protected with google recaptcha v2. You can try to use API ve
 msgstr "تم حماية %s بواسطة Google Recaptcha v2. يمكنك محاولة استخدام إصدار الـ API."
 
 #, python-format
-msgid "%s minutes"
-msgstr "%s دقائق"
-
-#, python-format
 msgid "%s password"
 msgstr "كلمة المرور %s"
 
@@ -259,6 +255,9 @@ msgstr "----- إعدادات CAPTCHA -----"
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- إعدادات التنزيل -----"
 
+msgid "----- Global HostXXX Configuration -----"
+msgstr ""
+
 msgid "----- OTHER SETTINGS -----"
 msgstr "----- إعدادات أخرى -----"
 
@@ -267,6 +266,9 @@ msgstr "----- إعدادات المشغلات والتشغيل -----"
 
 msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- إعدادات البروكسي -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- إعدادات الأمان -----"
@@ -282,6 +284,24 @@ msgstr "----- إعدادات التخزين -----"
 
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- إعدادات الترجمة -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- XXXList Configuration -----"
+msgstr ""
+
+#, fuzzy
+msgid "----------  Live Cams  ----------"
+msgstr "----------أخرى----------"
+
+#, fuzzy
+msgid "----------  Other  ----------"
+msgstr "----------أخرى----------"
+
+#, fuzzy
+msgid "----------  Porn Sites  ----------"
+msgstr "----------أخرى----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "----------------- خيارات exteplayer3 الخارجية -----------------"
@@ -457,9 +477,6 @@ msgstr "السماح بتحديد المحتوى كمشاهد"
 
 msgid "Alphabet"
 msgstr "أبجدية"
-
-msgid "Alphabetical "
-msgstr "ترتيب أبجدي "
 
 msgid "Alphabetically"
 msgstr "حسب الترتيب الأبجدي"
@@ -675,9 +692,6 @@ msgstr "حسب السنة"
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "تجاوز الحجب الجغرافي للفيديوهات حسب الطلب (قد يكون غير قانوني):"
-
-msgid "CHANNELS "
-msgstr "القنوات "
 
 msgid "CME SAE"
 msgstr "CME SAE"
@@ -997,9 +1011,6 @@ msgstr "استكشاف"
 msgid "Display thumbnails"
 msgstr "عرض الصور المصغرة"
 
-msgid "DixMax Suggestions"
-msgstr "اقتراحات DixMax"
-
 msgid "Do you want to finish?"
 msgstr "هل تريد الإنهاء؟"
 
@@ -1269,9 +1280,6 @@ msgstr "حلقة"
 msgid "Episode Search"
 msgstr "بحث عن حلقة"
 
-msgid "Episode title"
-msgstr "عنوان الحلقة"
-
 msgid "Episodes"
 msgstr "الحلقات"
 
@@ -1498,9 +1506,6 @@ msgstr "الفرنسية"
 msgid "From E2 settings"
 msgstr "من إعدادات Enigma2"
 
-msgid "Functionality protected by Google reCAPTCHA!"
-msgstr "الوظيفة محمية بواسطة reCAPTCHA من Google!"
-
 msgid "GSTplayer no IFD workarround"
 msgstr "حل مؤقت لمشكلة IFD في GSTplayer"
 
@@ -1547,9 +1552,6 @@ msgstr "فشل في جلب اللغات!"
 
 msgid "Get token failed!"
 msgstr "فشل في الحصول على التوكن!"
-
-msgid "Global sort :"
-msgstr "فرز شامل:"
 
 msgid "Go to the host configuration available under blue button."
 msgstr "اذهب إلى إعدادات المضيف من الزر الأزرق."
@@ -1818,9 +1820,6 @@ msgstr "مسلسلات كورية"
 
 msgid "LATEST"
 msgstr "الأحدث"
-
-msgid "LATEST CONTENT"
-msgstr "أحدث المحتوى"
 
 msgid "LIKES"
 msgstr "الإعجابات"
@@ -2126,9 +2125,6 @@ msgstr "المزيد من النتائج"
 msgid "Most Popular"
 msgstr "الأكثر شهرة"
 
-msgid "Most featured"
-msgstr "الأكثر تميزًا"
-
 msgid "Most popular"
 msgstr "الأكثر شعبية"
 
@@ -2227,9 +2223,6 @@ msgstr "الاسم:"
 
 msgid "Netflix"
 msgstr "نتفليكس"
-
-msgid "Network"
-msgstr "الشبكة"
 
 #, python-format
 msgid "Network failed %s."
@@ -2380,14 +2373,8 @@ msgstr "آخرون"
 msgid "Own model"
 msgstr "نموذج مخصص"
 
-msgid "PARTIES"
-msgstr "حفلات"
-
 msgid "PAY"
 msgstr "دفع"
-
-msgid "PEGI"
-msgstr "تصنيف PEGI"
 
 msgid "PENDING"
 msgstr "قيد الانتظار"
@@ -2684,9 +2671,6 @@ msgstr "محطات الراديو"
 msgid "Radiology Rounds"
 msgstr "جولات الأشعة"
 
-msgid "Raiting"
-msgstr "التقييم"
-
 msgid "Ramadan 2025"
 msgstr "رمضان 2025"
 
@@ -2894,10 +2878,6 @@ msgstr "الموسم"
 #, python-format
 msgid "Season %s"
 msgstr "الموسم %s"
-
-#, python-format
-msgid "Season %s (%s)"
-msgstr "الموسم %s (%s)"
 
 #, python-brace-format
 msgid "Season {0}"
@@ -3131,6 +3111,10 @@ msgstr "وضع الفرز"
 
 msgid "Sort Myfreecams :"
 msgstr "فرز Myfreecams :"
+
+#, fuzzy
+msgid "Sort Pornsites Alphabetical :"
+msgstr "الفرز أبجديًا"
 
 msgid "Sort alphabetically"
 msgstr "الفرز أبجديًا"
@@ -3693,9 +3677,6 @@ msgstr ""
 #, python-format
 msgid "Utility \"%s\" can not be found."
 msgstr "لم يتم العثور على الأداة \"%s\"."
-
-msgid "VENUES"
-msgstr "أماكن"
 
 msgid "VFD set current title:"
 msgstr "ضبط عنوان VFD الحالي:"

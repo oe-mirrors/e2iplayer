@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 16:58+0100\n"
+"POT-Creation-Date: 2026-03-11 20:19+0100\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -187,10 +187,6 @@ msgid "%s has been protected with google recaptcha v2. You can try to use API ve
 msgstr "%s is beveiligd met een google recaptcha v2. Je kunt de API versie proberen."
 
 #, python-format
-msgid "%s minutes"
-msgstr "%s minuten"
-
-#, python-format
 msgid "%s password"
 msgstr "%s wachtwoord"
 
@@ -259,6 +255,9 @@ msgstr "----- CAPTCHA -----"
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- DOWNLOADEN -----"
 
+msgid "----- Global HostXXX Configuration -----"
+msgstr ""
+
 msgid "----- OTHER SETTINGS -----"
 msgstr "----- OVERIGE INSTELLINGEN -----"
 
@@ -267,6 +266,9 @@ msgstr "----- PLAYERS & PLAYBACK -----"
 
 msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- PROXY -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- BEVEILIGING -----"
@@ -282,6 +284,24 @@ msgstr "----- OPSLAG -----"
 
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- ONDERTITELS -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- XXXList Configuration -----"
+msgstr ""
+
+#, fuzzy
+msgid "----------  Live Cams  ----------"
+msgstr "----------Overig----------"
+
+#, fuzzy
+msgid "----------  Other  ----------"
+msgstr "----------Overig----------"
+
+#, fuzzy
+msgid "----------  Porn Sites  ----------"
+msgstr "----------Overig----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "----------------- Externe exteplayer3 opties -----------------"
@@ -456,9 +476,6 @@ msgstr "Bekeken markering toestaan"
 
 msgid "Alphabet"
 msgstr "Alfabet"
-
-msgid "Alphabetical "
-msgstr "Alfabetisch "
 
 msgid "Alphabetically"
 msgstr "Alfabetisch"
@@ -671,9 +688,6 @@ msgstr "Op jaartal"
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Geo-blocking omzeilen voor Video On Demand (kan illegaal zijn):"
-
-msgid "CHANNELS "
-msgstr "ZENDERS "
 
 msgid "CME SAE"
 msgstr "CME SAE"
@@ -989,9 +1003,6 @@ msgstr "Ontdekken"
 msgid "Display thumbnails"
 msgstr "Thumbnails tonen"
 
-msgid "DixMax Suggestions"
-msgstr "DixMax Suggesties"
-
 msgid "Do you want to finish?"
 msgstr "Wilt u afsluiten?"
 
@@ -1261,9 +1272,6 @@ msgstr "Aflevering"
 msgid "Episode Search"
 msgstr "Aflevering zoeken"
 
-msgid "Episode title"
-msgstr "Naam van aflevering"
-
 msgid "Episodes"
 msgstr "Afleveringen"
 
@@ -1490,9 +1498,6 @@ msgstr "Frans"
 msgid "From E2 settings"
 msgstr "Van E2 instellingen"
 
-msgid "Functionality protected by Google reCAPTCHA!"
-msgstr "Functionaliteit beveiligd door Google reCAPTCHA!"
-
 msgid "GSTplayer no IFD workarround"
 msgstr "Tijdelijke oplossing voor \"no IFD in GSTplayer\""
 
@@ -1539,9 +1544,6 @@ msgstr "Ophalen talen mislukt!"
 
 msgid "Get token failed!"
 msgstr "Token ophalen mislukt!"
-
-msgid "Global sort :"
-msgstr "Globaal sorteren :"
 
 msgid "Go to the host configuration available under blue button."
 msgstr "Ga naar de host configuratie beschikbaar onder de blauwe knop."
@@ -1809,9 +1811,6 @@ msgstr "Koreaanse TV series"
 
 msgid "LATEST"
 msgstr "ACTUEEL"
-
-msgid "LATEST CONTENT"
-msgstr "ACTUELE INHOUD"
 
 msgid "LIKES"
 msgstr "LIKES"
@@ -2117,9 +2116,6 @@ msgstr "Meer resultaten"
 msgid "Most Popular"
 msgstr "Meest populair"
 
-msgid "Most featured"
-msgstr "Meest aanbevolen"
-
 msgid "Most popular"
 msgstr "Meest populair"
 
@@ -2218,9 +2214,6 @@ msgstr "Naam:"
 
 msgid "Netflix"
 msgstr "Netflix"
-
-msgid "Network"
-msgstr "Netwerk"
 
 #, python-format
 msgid "Network failed %s."
@@ -2370,14 +2363,8 @@ msgstr "Overige"
 msgid "Own model"
 msgstr "Eigen model"
 
-msgid "PARTIES"
-msgstr "FEESTEN"
-
 msgid "PAY"
 msgstr "BETALEN"
-
-msgid "PEGI"
-msgstr "PEGI"
 
 msgid "PENDING"
 msgstr "IN BEHANDELING"
@@ -2674,9 +2661,6 @@ msgstr "Radio stations"
 msgid "Radiology Rounds"
 msgstr "Radiologie besprekingen"
 
-msgid "Raiting"
-msgstr "Beoordeling"
-
 msgid "Ramadan 2025"
 msgstr "Ramadan 2025"
 
@@ -2882,10 +2866,6 @@ msgstr "Seizoen"
 #, python-format
 msgid "Season %s"
 msgstr "Seizoen %s"
-
-#, python-format
-msgid "Season %s (%s)"
-msgstr "Seizoen %s (%s)"
 
 #, python-brace-format
 msgid "Season {0}"
@@ -3119,6 +3099,10 @@ msgstr "Sorteer methode"
 
 msgid "Sort Myfreecams :"
 msgstr "Myfreecams sorteren :"
+
+#, fuzzy
+msgid "Sort Pornsites Alphabetical :"
+msgstr "Alfabetisch sorteren"
 
 msgid "Sort alphabetically"
 msgstr "Alfabetisch sorteren"
@@ -3682,9 +3666,6 @@ msgstr ""
 #, python-format
 msgid "Utility \"%s\" can not be found."
 msgstr "Programma \"%s\" is niet gevonden."
-
-msgid "VENUES"
-msgstr "LOCATIES"
 
 msgid "VFD set current title:"
 msgstr "VFD toont huidige titel:"

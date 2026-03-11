@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 16:58+0100\n"
+"POT-Creation-Date: 2026-03-11 20:19+0100\n"
 "PO-Revision-Date: 2025-11-24 07:51+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -188,10 +188,6 @@ msgid "%s has been protected with google recaptcha v2. You can try to use API ve
 msgstr "%s защищено с учетом google recaptcha v2. Можно также попробовать применить API версию."
 
 #, python-format
-msgid "%s minutes"
-msgstr "%s минут"
-
-#, python-format
 msgid "%s password"
 msgstr "%s пароль"
 
@@ -260,6 +256,9 @@ msgstr "----- КОНФИГУРАЦИЯ CAPTCHA -----"
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- ЗАГРУЗКА КОНФИГУРАЦИИ -----"
 
+msgid "----- Global HostXXX Configuration -----"
+msgstr ""
+
 msgid "----- OTHER SETTINGS -----"
 msgstr "----- ДРУГИЕ НАСТРОЙКИ -----"
 
@@ -268,6 +267,9 @@ msgstr "----- КОНФИГУРАЦИЯ ПРОИГРЫВАТЕЛЕЙ И ВОСП�
 
 msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- КОНФИГУРАЦИЯ ПРОКСИ -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- КОНФИГУРАЦИЯ БЕЗОПАСНОСТИ -----"
@@ -283,6 +285,24 @@ msgstr "----- КОНФИГУРАЦИЯ ХРАНЕНИЯ -----"
 
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- НАСТРОЙКА СУБТИТРОВ -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- XXXList Configuration -----"
+msgstr ""
+
+#, fuzzy
+msgid "----------  Live Cams  ----------"
+msgstr "----------Иные----------"
+
+#, fuzzy
+msgid "----------  Other  ----------"
+msgstr "----------Иные----------"
+
+#, fuzzy
+msgid "----------  Porn Sites  ----------"
+msgstr "----------Иные----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "----------------- Внешние exteplayer3 варианты -----------------"
@@ -458,9 +478,6 @@ msgstr "Допуск установки флага наблюдения"
 
 msgid "Alphabet"
 msgstr "Алфавит"
-
-msgid "Alphabetical "
-msgstr "Алфавитный "
 
 msgid "Alphabetically"
 msgstr "В алфавитном порядке"
@@ -675,9 +692,6 @@ msgstr "By year"
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Обход гео-блока для VODs (это может быть незаконным):"
-
-msgid "CHANNELS "
-msgstr "КАНАЛЫ "
 
 msgid "CME SAE"
 msgstr "CME SAE"
@@ -997,9 +1011,6 @@ msgstr "Обнаружить"
 msgid "Display thumbnails"
 msgstr "Отображение миниатюр"
 
-msgid "DixMax Suggestions"
-msgstr "DixMax Предложения"
-
 msgid "Do you want to finish?"
 msgstr "Вы хотите закончить?"
 
@@ -1269,9 +1280,6 @@ msgstr "Эпизод"
 msgid "Episode Search"
 msgstr "Эпизоды Поиск"
 
-msgid "Episode title"
-msgstr "Название серии"
-
 msgid "Episodes"
 msgstr "Эпизоды"
 
@@ -1498,9 +1506,6 @@ msgstr "Французский"
 msgid "From E2 settings"
 msgstr "Из E2 параметров"
 
-msgid "Functionality protected by Google reCAPTCHA!"
-msgstr "Функциональность защищена Google reCAPTCHA!"
-
 msgid "GSTplayer no IFD workarround"
 msgstr "GSTplayer без IFD обходной путь"
 
@@ -1547,9 +1552,6 @@ msgstr "Ошибка с языками!"
 
 msgid "Get token failed!"
 msgstr "Получить токен не удалось!"
-
-msgid "Global sort :"
-msgstr "Общая сортировка :"
 
 msgid "Go to the host configuration available under blue button."
 msgstr "Перейдите к конфигурации хоста, доступной под синей кнопкой."
@@ -1817,9 +1819,6 @@ msgstr "Корейский сериал"
 
 msgid "LATEST"
 msgstr "ПОСЛЕДНИЕ"
-
-msgid "LATEST CONTENT"
-msgstr "ПОСЛЕДНИЙ КОНТЕНТ"
 
 msgid "LIKES"
 msgstr "НРАВИТСЯ"
@@ -2125,9 +2124,6 @@ msgstr "Дополнительные результаты"
 msgid "Most Popular"
 msgstr "Самый популярный"
 
-msgid "Most featured"
-msgstr "Самые популярные"
-
 msgid "Most popular"
 msgstr "Самые популярные"
 
@@ -2226,9 +2222,6 @@ msgstr "Имя:"
 
 msgid "Netflix"
 msgstr "Нетфликс"
-
-msgid "Network"
-msgstr "Сеть"
 
 #, python-format
 msgid "Network failed %s."
@@ -2379,14 +2372,8 @@ msgstr "Другие"
 msgid "Own model"
 msgstr "Cвоя модель"
 
-msgid "PARTIES"
-msgstr "СТОРОНЫ"
-
 msgid "PAY"
 msgstr "ПОКУПКА"
-
-msgid "PEGI"
-msgstr "ПЕГИ"
 
 msgid "PENDING"
 msgstr "В ОЖИДАНИИ"
@@ -2684,9 +2671,6 @@ msgstr "Радиостанции"
 msgid "Radiology Rounds"
 msgstr "Радиологические обходы"
 
-msgid "Raiting"
-msgstr "Рейтинг"
-
 msgid "Ramadan 2025"
 msgstr "Рамадан 2025"
 
@@ -2894,10 +2878,6 @@ msgstr "Сезон"
 #, python-format
 msgid "Season %s"
 msgstr "Сезон %s"
-
-#, python-format
-msgid "Season %s (%s)"
-msgstr "Сезон %s (%s)"
 
 #, python-brace-format
 msgid "Season {0}"
@@ -3131,6 +3111,10 @@ msgstr "Режим сортировки"
 
 msgid "Sort Myfreecams :"
 msgstr "Сортировать Myfreecams :"
+
+#, fuzzy
+msgid "Sort Pornsites Alphabetical :"
+msgstr "Сортировать в алфлвитном порядке"
 
 msgid "Sort alphabetically"
 msgstr "Сортировать в алфлвитном порядке"
@@ -3693,9 +3677,6 @@ msgstr ""
 #, python-format
 msgid "Utility \"%s\" can not be found."
 msgstr "Утилита \"%s\" не найдена."
-
-msgid "VENUES"
-msgstr "СЦЕНЫ"
 
 msgid "VFD set current title:"
 msgstr "VFD задать текущее название:"

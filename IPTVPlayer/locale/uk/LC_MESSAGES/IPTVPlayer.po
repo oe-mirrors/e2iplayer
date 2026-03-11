@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 16:58+0100\n"
+"POT-Creation-Date: 2026-03-11 20:19+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -180,10 +180,6 @@ msgstr ""
 msgid "%s has been protected with google recaptcha v2. You can try to use API version."
 msgstr ""
 
-#, python-format
-msgid "%s minutes"
-msgstr ""
-
 #, fuzzy, python-format
 msgid "%s password"
 msgstr "пароль"
@@ -252,6 +248,9 @@ msgstr ""
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr ""
 
+msgid "----- Global HostXXX Configuration -----"
+msgstr ""
+
 msgid "----- OTHER SETTINGS -----"
 msgstr ""
 
@@ -259,6 +258,9 @@ msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr ""
 
 msgid "----- PROXIES CONFIGURATION -----"
+msgstr ""
+
+msgid "----- Porn Site Configuration -----"
 msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
@@ -275,6 +277,24 @@ msgstr ""
 
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr ""
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- XXXList Configuration -----"
+msgstr ""
+
+#, fuzzy
+msgid "----------  Live Cams  ----------"
+msgstr "----------Інше----------"
+
+#, fuzzy
+msgid "----------  Other  ----------"
+msgstr "----------Інше----------"
+
+#, fuzzy
+msgid "----------  Porn Sites  ----------"
+msgstr "----------Інше----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "----------------- Зовнішні опції exteplayer3 -----------------"
@@ -461,10 +481,6 @@ msgstr ""
 
 #, fuzzy
 msgid "Alphabet"
-msgstr "В алфавітному порядку"
-
-#, fuzzy
-msgid "Alphabetical "
 msgstr "В алфавітному порядку"
 
 msgid "Alphabetically"
@@ -707,9 +723,6 @@ msgid "By year"
 msgstr ""
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
-msgstr ""
-
-msgid "CHANNELS "
 msgstr ""
 
 msgid "CME SAE"
@@ -1049,9 +1062,6 @@ msgstr "обкладинка"
 msgid "Display thumbnails"
 msgstr "Показати мініатюри"
 
-msgid "DixMax Suggestions"
-msgstr ""
-
 msgid "Do you want to finish?"
 msgstr ""
 
@@ -1336,10 +1346,6 @@ msgstr "Епізоди"
 msgid "Episode Search"
 msgstr "Епізоди"
 
-#, fuzzy
-msgid "Episode title"
-msgstr "Епізоди"
-
 msgid "Episodes"
 msgstr "Епізоди"
 
@@ -1573,9 +1579,6 @@ msgstr "Франція"
 msgid "From E2 settings"
 msgstr "Налаштування E2"
 
-msgid "Functionality protected by Google reCAPTCHA!"
-msgstr ""
-
 msgid "GSTplayer no IFD workarround"
 msgstr ""
 
@@ -1627,10 +1630,6 @@ msgstr "Виберіть мову"
 #, fuzzy
 msgid "Get token failed!"
 msgstr "Помилка входу."
-
-#, fuzzy
-msgid "Global sort :"
-msgstr "Загальний"
 
 #, fuzzy
 msgid "Go to the host configuration available under blue button."
@@ -1914,9 +1913,6 @@ msgstr "Телесеріал"
 #, fuzzy
 msgid "LATEST"
 msgstr "ОСТАННІ ВІДЕО"
-
-msgid "LATEST CONTENT"
-msgstr ""
 
 msgid "LIKES"
 msgstr ""
@@ -2243,10 +2239,6 @@ msgid "Most Popular"
 msgstr "Найпопулярніші"
 
 #, fuzzy
-msgid "Most featured"
-msgstr "По рейтингу"
-
-#, fuzzy
 msgid "Most popular"
 msgstr "Найпопулярніші"
 
@@ -2349,9 +2341,6 @@ msgid "Name:"
 msgstr "Назва:"
 
 msgid "Netflix"
-msgstr ""
-
-msgid "Network"
 msgstr ""
 
 #, python-format
@@ -2518,14 +2507,7 @@ msgstr "Інші"
 msgid "Own model"
 msgstr "Режим Одно посилання"
 
-#, fuzzy
-msgid "PARTIES"
-msgstr "СТАТТЯ"
-
 msgid "PAY"
-msgstr ""
-
-msgid "PEGI"
 msgstr ""
 
 msgid "PENDING"
@@ -2847,10 +2829,6 @@ msgstr "Радіостанції"
 msgid "Radiology Rounds"
 msgstr "Радіостанції"
 
-#, fuzzy
-msgid "Raiting"
-msgstr "Рейтинг"
-
 msgid "Ramadan 2025"
 msgstr ""
 
@@ -3068,10 +3046,6 @@ msgstr ""
 
 #, python-format
 msgid "Season %s"
-msgstr ""
-
-#, python-format
-msgid "Season %s (%s)"
 msgstr ""
 
 #, python-brace-format
@@ -3327,6 +3301,10 @@ msgstr ""
 
 msgid "Sort Myfreecams :"
 msgstr ""
+
+#, fuzzy
+msgid "Sort Pornsites Alphabetical :"
+msgstr "В алфавітному порядку"
 
 #, fuzzy
 msgid "Sort alphabetically"
@@ -3927,9 +3905,6 @@ msgstr ""
 #, fuzzy, python-format
 msgid "Utility \"%s\" can not be found."
 msgstr "Фільм \"%s\" не знайдено."
-
-msgid "VENUES"
-msgstr ""
 
 msgid "VFD set current title:"
 msgstr ""

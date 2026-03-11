@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iptvplayer-for-e 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 16:58+0100\n"
+"POT-Creation-Date: 2026-03-11 20:19+0100\n"
 "PO-Revision-Date: 2018-07-28 16:39+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -191,10 +191,6 @@ msgstr ""
 msgid "%s has been protected with google recaptcha v2. You can try to use API version."
 msgstr "%s a été protégé avec google recaptcha v2. Vous pouvez essayer d’utiliser la version API."
 
-#, python-format
-msgid "%s minutes"
-msgstr ""
-
 #, fuzzy, python-format
 msgid "%s password"
 msgstr "mot de passe"
@@ -262,6 +258,9 @@ msgstr ""
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr ""
 
+msgid "----- Global HostXXX Configuration -----"
+msgstr ""
+
 msgid "----- OTHER SETTINGS -----"
 msgstr ""
 
@@ -269,6 +268,9 @@ msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr ""
 
 msgid "----- PROXIES CONFIGURATION -----"
+msgstr ""
+
+msgid "----- Porn Site Configuration -----"
 msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
@@ -285,6 +287,24 @@ msgstr ""
 
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr ""
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- XXXList Configuration -----"
+msgstr ""
+
+#, fuzzy
+msgid "----------  Live Cams  ----------"
+msgstr "—————Autre—————"
+
+#, fuzzy
+msgid "----------  Other  ----------"
+msgstr "—————Autre—————"
+
+#, fuzzy
+msgid "----------  Porn Sites  ----------"
+msgstr "—————Autre—————"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "———————— Options du lecteur externe exteplayer3 ———"
@@ -468,9 +488,6 @@ msgstr "Permettre l’indicateur déjà regardé (expérimental)"
 
 #, fuzzy
 msgid "Alphabet"
-msgstr "Alphabétique "
-
-msgid "Alphabetical "
 msgstr "Alphabétique "
 
 msgid "Alphabetically"
@@ -701,9 +718,6 @@ msgstr "Par année"
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Contourner le géoblocage pour VODs (il peut être illégal) :"
-
-msgid "CHANNELS "
-msgstr "CHAÎNES"
 
 msgid "CME SAE"
 msgstr ""
@@ -1029,9 +1043,6 @@ msgstr ""
 msgid "Display thumbnails"
 msgstr "Afficher les miniatures"
 
-msgid "DixMax Suggestions"
-msgstr ""
-
 msgid "Do you want to finish?"
 msgstr "Voulez-vous terminer?"
 
@@ -1306,10 +1317,6 @@ msgstr "Épisode"
 msgid "Episode Search"
 msgstr "Recherche d'épisode"
 
-#, fuzzy
-msgid "Episode title"
-msgstr "Épisode"
-
 msgid "Episodes"
 msgstr "Épisodes"
 
@@ -1545,9 +1552,6 @@ msgstr "Français"
 msgid "From E2 settings"
 msgstr "A partir des réglages E2"
 
-msgid "Functionality protected by Google reCAPTCHA!"
-msgstr "Fonctionnalité protégée par Google reCAPTCHA !"
-
 msgid "GSTplayer no IFD workarround"
 msgstr ""
 
@@ -1596,9 +1600,6 @@ msgstr "Obtenir les langues a échoué!"
 
 msgid "Get token failed!"
 msgstr "Échec de l’obtention du jeton!"
-
-msgid "Global sort :"
-msgstr ""
 
 msgid "Go to the host configuration available under blue button."
 msgstr "Allez à la configuration d'hôte disponible sous le bouton bleu."
@@ -1875,9 +1876,6 @@ msgstr "Série TV"
 
 msgid "LATEST"
 msgstr "RÉCENTS"
-
-msgid "LATEST CONTENT"
-msgstr "CONTENU LE PLUS RÉCENT"
 
 msgid "LIKES"
 msgstr "AIMES"
@@ -2197,9 +2195,6 @@ msgstr "Résultats de recherche"
 msgid "Most Popular"
 msgstr "Le plus populaire"
 
-msgid "Most featured"
-msgstr "Les plus en vedette"
-
 msgid "Most popular"
 msgstr "Plus populaire"
 
@@ -2298,10 +2293,6 @@ msgstr "Nom :"
 
 msgid "Netflix"
 msgstr ""
-
-#, fuzzy
-msgid "Network"
-msgstr "Réseau WWE"
 
 #, python-format
 msgid "Network failed %s."
@@ -2457,14 +2448,8 @@ msgstr "Autres"
 msgid "Own model"
 msgstr "Un mode de liaison"
 
-msgid "PARTIES"
-msgstr "DES SOIRÉES"
-
 msgid "PAY"
 msgstr "PAIE"
-
-msgid "PEGI"
-msgstr ""
 
 msgid "PENDING"
 msgstr "EN ATTENTE"
@@ -2772,10 +2757,6 @@ msgstr "Stations de radio"
 msgid "Radiology Rounds"
 msgstr "Stations de radio"
 
-#, fuzzy
-msgid "Raiting"
-msgstr "Evaluation"
-
 msgid "Ramadan 2025"
 msgstr ""
 
@@ -2987,10 +2968,6 @@ msgstr "Saison"
 
 #, python-format
 msgid "Season %s"
-msgstr "Saison %s"
-
-#, fuzzy, python-format
-msgid "Season %s (%s)"
 msgstr "Saison %s"
 
 #, python-brace-format
@@ -3233,6 +3210,10 @@ msgstr ""
 
 msgid "Sort Myfreecams :"
 msgstr ""
+
+#, fuzzy
+msgid "Sort Pornsites Alphabetical :"
+msgstr "Trier alphabétiquement"
 
 msgid "Sort alphabetically"
 msgstr "Trier alphabétiquement"
@@ -3810,9 +3791,6 @@ msgstr ""
 #, python-format
 msgid "Utility \"%s\" can not be found."
 msgstr "L'utilitaire \"%s\" ne peut pas être trouvé."
-
-msgid "VENUES"
-msgstr "LIEUX"
 
 msgid "VFD set current title:"
 msgstr "VFD définit le titre actuel :"

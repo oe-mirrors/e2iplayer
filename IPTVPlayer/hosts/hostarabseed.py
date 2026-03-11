@@ -616,7 +616,7 @@ class ArabSeed(CBaseHostClass):
             params = dict(cItem)
             params.update(
                 {
-                    "title": _("Next Page ▶"),
+                    "title": _("Next Page") + " ▶",
                     "page": next_page,
                 }
             )
@@ -756,7 +756,7 @@ class ArabSeed(CBaseHostClass):
                 next_page_url = self.MAIN_URL.rstrip("/") + next_page
                 printDBG("Built next_page_url >>> %s" % next_page_url)
                 params = dict(cItem)
-                params.update({"title": _("Next Page ▶"), "url": next_page_url, "category": "series_packs"})
+                params.update({"title": _("Next Page") + " ▶", "url": next_page_url, "category": "series_packs"})
                 self.addDir(params)
         printDBG("ArabSeed.listSeriesPacks <<< done")
 

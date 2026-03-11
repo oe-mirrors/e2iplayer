@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 16:58+0100\n"
+"POT-Creation-Date: 2026-03-11 20:19+0100\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -171,10 +171,6 @@ msgstr ""
 msgid "%s has been protected with google recaptcha v2. You can try to use API version."
 msgstr ""
 
-#, python-format
-msgid "%s minutes"
-msgstr ""
-
 #, fuzzy, python-format
 msgid "%s password"
 msgstr "Palavra-Passe"
@@ -242,6 +238,9 @@ msgstr ""
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr ""
 
+msgid "----- Global HostXXX Configuration -----"
+msgstr ""
+
 msgid "----- OTHER SETTINGS -----"
 msgstr ""
 
@@ -249,6 +248,9 @@ msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr ""
 
 msgid "----- PROXIES CONFIGURATION -----"
+msgstr ""
+
+msgid "----- Porn Site Configuration -----"
 msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
@@ -264,6 +266,21 @@ msgid "----- STORAGE CONFIGURATION -----"
 msgstr ""
 
 msgid "----- SUBTITLES CONFIGURATION -----"
+msgstr ""
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- XXXList Configuration -----"
+msgstr ""
+
+msgid "----------  Live Cams  ----------"
+msgstr ""
+
+msgid "----------  Other  ----------"
+msgstr ""
+
+msgid "----------  Porn Sites  ----------"
 msgstr ""
 
 msgid "----------------- External exteplayer3 options -----------------"
@@ -445,9 +462,6 @@ msgid "Allow watched flag to be set"
 msgstr ""
 
 msgid "Alphabet"
-msgstr ""
-
-msgid "Alphabetical "
 msgstr ""
 
 msgid "Alphabetically"
@@ -674,9 +688,6 @@ msgid "By year"
 msgstr ""
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
-msgstr ""
-
-msgid "CHANNELS "
 msgstr ""
 
 msgid "CME SAE"
@@ -1001,9 +1012,6 @@ msgstr ""
 msgid "Display thumbnails"
 msgstr "Visualizar miniaturas"
 
-msgid "DixMax Suggestions"
-msgstr ""
-
 msgid "Do you want to finish?"
 msgstr ""
 
@@ -1274,9 +1282,6 @@ msgstr ""
 msgid "Episode Search"
 msgstr "Procura"
 
-msgid "Episode title"
-msgstr ""
-
 msgid "Episodes"
 msgstr ""
 
@@ -1507,9 +1512,6 @@ msgstr ""
 msgid "From E2 settings"
 msgstr "Das definições de E2"
 
-msgid "Functionality protected by Google reCAPTCHA!"
-msgstr ""
-
 msgid "GSTplayer no IFD workarround"
 msgstr ""
 
@@ -1555,9 +1557,6 @@ msgid "Get languages failed!"
 msgstr ""
 
 msgid "Get token failed!"
-msgstr ""
-
-msgid "Global sort :"
 msgstr ""
 
 msgid "Go to the host configuration available under blue button."
@@ -1833,9 +1832,6 @@ msgid "Korean TV series"
 msgstr "Leitor de Filmes"
 
 msgid "LATEST"
-msgstr ""
-
-msgid "LATEST CONTENT"
 msgstr ""
 
 msgid "LIKES"
@@ -2150,10 +2146,6 @@ msgid "Most Popular"
 msgstr "Mais popular"
 
 #, fuzzy
-msgid "Most featured"
-msgstr "Destaque"
-
-#, fuzzy
 msgid "Most popular"
 msgstr "Mais popular"
 
@@ -2252,9 +2244,6 @@ msgid "Name:"
 msgstr "Nome:"
 
 msgid "Netflix"
-msgstr ""
-
-msgid "Network"
 msgstr ""
 
 #, python-format
@@ -2417,13 +2406,7 @@ msgstr "--Outros--"
 msgid "Own model"
 msgstr "Um modo de ligação"
 
-msgid "PARTIES"
-msgstr ""
-
 msgid "PAY"
-msgstr ""
-
-msgid "PEGI"
 msgstr ""
 
 msgid "PENDING"
@@ -2738,10 +2721,6 @@ msgstr "Estações"
 msgid "Radiology Rounds"
 msgstr ""
 
-#, fuzzy
-msgid "Raiting"
-msgstr "Classificação"
-
 msgid "Ramadan 2025"
 msgstr ""
 
@@ -2954,10 +2933,6 @@ msgstr ""
 
 #, python-format
 msgid "Season %s"
-msgstr ""
-
-#, python-format
-msgid "Season %s (%s)"
 msgstr ""
 
 #, python-brace-format
@@ -3210,6 +3185,9 @@ msgid "Sort Mode"
 msgstr ""
 
 msgid "Sort Myfreecams :"
+msgstr ""
+
+msgid "Sort Pornsites Alphabetical :"
 msgstr ""
 
 msgid "Sort alphabetically"
@@ -3794,9 +3772,6 @@ msgstr ""
 
 #, python-format
 msgid "Utility \"%s\" can not be found."
-msgstr ""
-
-msgid "VENUES"
 msgstr ""
 
 msgid "VFD set current title:"

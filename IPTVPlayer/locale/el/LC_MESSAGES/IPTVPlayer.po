@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 16:58+0100\n"
+"POT-Creation-Date: 2026-03-11 20:19+0100\n"
 "PO-Revision-Date: 2026-01-30 22:55+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -188,10 +188,6 @@ msgid "%s has been protected with google recaptcha v2. You can try to use API ve
 msgstr "Το %s έχει προστατευτεί με google recaptcha v2. Μπορείτε να δοκιμάσετε να χρησιμοποιήσετε την έκδοση API."
 
 #, python-format
-msgid "%s minutes"
-msgstr "%s λεπτά"
-
-#, python-format
 msgid "%s password"
 msgstr "%s - Κωδικός πρόσβασης"
 
@@ -260,6 +256,9 @@ msgstr "----- ΡΥΘΜΙΣΕΙΣ CAPTCHA -----"
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΛΗΨΕΩΝ -----"
 
+msgid "----- Global HostXXX Configuration -----"
+msgstr ""
+
 msgid "----- OTHER SETTINGS -----"
 msgstr "----- ΑΛΛΕΣ ΡΥΘΜΙΣΕΙΣ -----"
 
@@ -268,6 +267,9 @@ msgstr "----- ΡΥΘΜΙΣΕΙΣ ΠΡΟΓΡΑΜΜΑΤΩΝ ΑΝΑΠΑΡΑΓΩΓΗ
 
 msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΔΙΑΚΟΜΙΣΤΩΝ ΜΕΣΟΛΑΒΗΣΗΣ -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΑΣΦΑΛΕΙΑΣ -----"
@@ -283,6 +285,24 @@ msgstr "----- ΡΥΘΜΙΣΕΙΣ ΑΠΟΘΗΚΕΥΣΗΣ -----"
 
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΥΠΟΤΙΤΛΩΝ -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- XXXList Configuration -----"
+msgstr ""
+
+#, fuzzy
+msgid "----------  Live Cams  ----------"
+msgstr "----------Άλλα----------"
+
+#, fuzzy
+msgid "----------  Other  ----------"
+msgstr "----------Άλλα----------"
+
+#, fuzzy
+msgid "----------  Porn Sites  ----------"
+msgstr "----------Άλλα----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "----------------- Επιλογές εξωτερικού exteplayer3 -----------------"
@@ -457,9 +477,6 @@ msgstr "Επιτρέπεται η ρύθμιση της ένδειξης παρ�
 
 msgid "Alphabet"
 msgstr "Αλφάβητο"
-
-msgid "Alphabetical "
-msgstr "Αλφαβητικά "
 
 msgid "Alphabetically"
 msgstr "Αλφαβητικά"
@@ -672,9 +689,6 @@ msgstr "Κατά έτος"
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Παράκαμψη γεω-αποκλεισμού για VOD (μπορεί να είναι παράνομο):"
-
-msgid "CHANNELS "
-msgstr "ΚΑΝΑΛΙΑ "
 
 msgid "CME SAE"
 msgstr "CME SAE"
@@ -990,9 +1004,6 @@ msgstr "Ανακάλυψη"
 msgid "Display thumbnails"
 msgstr "Εμφάνιση μικρογραφιών"
 
-msgid "DixMax Suggestions"
-msgstr "Προτάσεις DixMax"
-
 msgid "Do you want to finish?"
 msgstr "Θέλετε να ολοκληρώσετε;"
 
@@ -1262,9 +1273,6 @@ msgstr "Επεισόδιο"
 msgid "Episode Search"
 msgstr "Αναζήτηση επεισοδίου"
 
-msgid "Episode title"
-msgstr "Τίτλος επεισοδίου"
-
 msgid "Episodes"
 msgstr "Επεισόδια"
 
@@ -1491,9 +1499,6 @@ msgstr "Γαλλικά"
 msgid "From E2 settings"
 msgstr "Από τις ρυθμίσεις E2"
 
-msgid "Functionality protected by Google reCAPTCHA!"
-msgstr "Η λειτουργία προστατεύεται από Google reCAPTCHA!"
-
 msgid "GSTplayer no IFD workarround"
 msgstr "Παράκαμψη IFD για GSTplayer"
 
@@ -1540,9 +1545,6 @@ msgstr "Αποτυχία λήψης γλωσσών!"
 
 msgid "Get token failed!"
 msgstr "Αποτυχία λήψης token!"
-
-msgid "Global sort :"
-msgstr "Καθολική ταξινόμηση:"
 
 msgid "Go to the host configuration available under blue button."
 msgstr "Μεταβείτε στις ρυθμίσεις του host που είναι διαθέσιμες με το μπλε κουμπί."
@@ -1810,9 +1812,6 @@ msgstr "Κορεατικές τηλεοπτικές σειρές"
 
 msgid "LATEST"
 msgstr "ΤΕΛΕΥΤΑΙΑ"
-
-msgid "LATEST CONTENT"
-msgstr "ΤΕΛΕΥΤΑΙΟ ΠΕΡΙΕΧΟΜΕΝΟ"
 
 msgid "LIKES"
 msgstr "ΜΟΥ ΑΡΕΣΕΙ"
@@ -2118,9 +2117,6 @@ msgstr "Περισσότερα αποτελέσματα"
 msgid "Most Popular"
 msgstr "Πιο δημοφιλή"
 
-msgid "Most featured"
-msgstr "Πιο προβεβλημένα"
-
 msgid "Most popular"
 msgstr "Πιο δημοφιλή"
 
@@ -2219,9 +2215,6 @@ msgstr "Όνομα:"
 
 msgid "Netflix"
 msgstr "Netflix"
-
-msgid "Network"
-msgstr "Δίκτυο"
 
 #, python-format
 msgid "Network failed %s."
@@ -2371,14 +2364,8 @@ msgstr "Άλλα"
 msgid "Own model"
 msgstr "Δικό σας μοντέλο"
 
-msgid "PARTIES"
-msgstr "ΠΑΡΤΙ"
-
 msgid "PAY"
 msgstr "ΠΛΗΡΩΜΗ"
-
-msgid "PEGI"
-msgstr "PEGI"
 
 msgid "PENDING"
 msgstr "ΕΚΚΡΕΜΕΙ"
@@ -2675,9 +2662,6 @@ msgstr "Ραδιοφωνικοί σταθμοί"
 msgid "Radiology Rounds"
 msgstr "Ακτινολογικές συνεδρίες"
 
-msgid "Raiting"
-msgstr "Αξιολόγηση"
-
 msgid "Ramadan 2025"
 msgstr "Ραμαζάνι 2025"
 
@@ -2883,10 +2867,6 @@ msgstr "Σεζόν "
 #, python-format
 msgid "Season %s"
 msgstr "Σεζόν %s"
-
-#, python-format
-msgid "Season %s (%s)"
-msgstr "Σεζόν %s (%s)"
 
 #, python-brace-format
 msgid "Season {0}"
@@ -3120,6 +3100,10 @@ msgstr "Λειτουργία ταξινόμησης"
 
 msgid "Sort Myfreecams :"
 msgstr "Ταξινόμηση Myfreecams:"
+
+#, fuzzy
+msgid "Sort Pornsites Alphabetical :"
+msgstr "Ταξινόμηση αλφαβητικά"
 
 msgid "Sort alphabetically"
 msgstr "Ταξινόμηση αλφαβητικά"
@@ -3680,9 +3664,6 @@ msgstr ""
 #, python-format
 msgid "Utility \"%s\" can not be found."
 msgstr "Το εργαλείο \"%s\" δεν βρέθηκε."
-
-msgid "VENUES"
-msgstr "ΧΩΡΟΙ"
 
 msgid "VFD set current title:"
 msgstr "Ορισμός τρέχοντος τίτλου VFD:"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 16:58+0100\n"
+"POT-Creation-Date: 2026-03-11 20:19+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n"
 "Language-Team: IPTVPlayer\n"
@@ -186,10 +186,6 @@ msgid "%s has been protected with google recaptcha v2. You can try to use API ve
 msgstr "%s jest zabezpieczony przez Google ReCaptcha v2. Proszę spróbować użyć wersji API."
 
 #, python-format
-msgid "%s minutes"
-msgstr "%s minut"
-
-#, python-format
 msgid "%s password"
 msgstr "%s hasło"
 
@@ -258,6 +254,9 @@ msgstr "----- USTAWIENIA CAPTCHA -----"
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- POBIERANIE KONFIGURACJI -----"
 
+msgid "----- Global HostXXX Configuration -----"
+msgstr ""
+
 msgid "----- OTHER SETTINGS -----"
 msgstr "----- INNE USTAWIENIA -----"
 
@@ -266,6 +265,9 @@ msgstr "----- USTAWIENIA ODTWARZACZY I ODTWARZANIA -----"
 
 msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- USTAWIENIA PROXY -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- SECURITY CONFIGURATION -----"
@@ -281,6 +283,24 @@ msgstr "----- USTAWIENIA PAMIĘCI TRWAŁEJ -----"
 
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- USTAWIENIA NAPISÓW -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- XXXList Configuration -----"
+msgstr ""
+
+#, fuzzy
+msgid "----------  Live Cams  ----------"
+msgstr "----------Inne----------"
+
+#, fuzzy
+msgid "----------  Other  ----------"
+msgstr "----------Inne----------"
+
+#, fuzzy
+msgid "----------  Porn Sites  ----------"
+msgstr "----------Inne----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "---------------- Opcje zewnętrznego odtwarzacza ----------------"
@@ -463,9 +483,6 @@ msgstr "Pozwól na oznaczaczanie materiałów jako obejrzane"
 
 msgid "Alphabet"
 msgstr "Alfabet"
-
-msgid "Alphabetical "
-msgstr "Alfabetycznie "
 
 msgid "Alphabetically"
 msgstr "Alfabetycznie"
@@ -694,9 +711,6 @@ msgstr "Według roku"
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Obejdź zabezpieczenie po IP w VOD (może być nielegalne):"
-
-msgid "CHANNELS "
-msgstr "KANAŁY "
 
 msgid "CME SAE"
 msgstr ""
@@ -1022,9 +1036,6 @@ msgstr "Odkryć"
 msgid "Display thumbnails"
 msgstr "Wyświetlać miniatury"
 
-msgid "DixMax Suggestions"
-msgstr "Propozycje DixMax"
-
 msgid "Do you want to finish?"
 msgstr "Chcesz zakończyć?"
 
@@ -1301,9 +1312,6 @@ msgstr "Odcinek"
 msgid "Episode Search"
 msgstr "Szukaj odcinków"
 
-msgid "Episode title"
-msgstr "Tytuł odcinka"
-
 msgid "Episodes"
 msgstr "Odcinki"
 
@@ -1534,9 +1542,6 @@ msgstr "Francuski"
 msgid "From E2 settings"
 msgstr "Z ustawień E2"
 
-msgid "Functionality protected by Google reCAPTCHA!"
-msgstr "Funkcjonalność zabezpieczona przez Google reCAPTCHA!"
-
 msgid "GSTplayer no IFD workarround"
 msgstr "Objejście braku IFD GSTplayer"
 
@@ -1583,9 +1588,6 @@ msgstr "Pobranie tłumaczeń językowych nieudane!"
 
 msgid "Get token failed!"
 msgstr "Pobranie tokena nie powiodło się!"
-
-msgid "Global sort :"
-msgstr "Glboalne sortowanie :"
 
 msgid "Go to the host configuration available under blue button."
 msgstr "Sprzwdź konfigurację serwisu dostępną po naciśnięciu niebieskiego przycisku."
@@ -1859,9 +1861,6 @@ msgstr "Seriale TV"
 
 msgid "LATEST"
 msgstr "NAJNOWSZY"
-
-msgid "LATEST CONTENT"
-msgstr "NAJNOWSZA TREŚĆ"
 
 msgid "LIKES"
 msgstr "POLUBIENIA"
@@ -2172,9 +2171,6 @@ msgstr "Wyniki wyszukiwania"
 msgid "Most Popular"
 msgstr "Najbardziej popularne"
 
-msgid "Most featured"
-msgstr "Polecane"
-
 msgid "Most popular"
 msgstr "Najbardziej popularny"
 
@@ -2276,9 +2272,6 @@ msgstr "Nazwa:"
 
 msgid "Netflix"
 msgstr ""
-
-msgid "Network"
-msgstr "Połączenie"
 
 #, python-format
 msgid "Network failed %s."
@@ -2431,14 +2424,8 @@ msgstr "Pozostałe"
 msgid "Own model"
 msgstr "Własny model"
 
-msgid "PARTIES"
-msgstr "STRONY"
-
 msgid "PAY"
 msgstr "PŁATNE"
-
-msgid "PEGI"
-msgstr "PEGI"
 
 msgid "PENDING"
 msgstr "OCZEKUJĄCY"
@@ -2737,9 +2724,6 @@ msgstr "Stacje Radiowe"
 msgid "Radiology Rounds"
 msgstr "Rundy radiologiczne"
 
-msgid "Raiting"
-msgstr "Ranking"
-
 msgid "Ramadan 2025"
 msgstr ""
 
@@ -2952,10 +2936,6 @@ msgstr "Sezon"
 #, python-format
 msgid "Season %s"
 msgstr "Sezon %s"
-
-#, python-format
-msgid "Season %s (%s)"
-msgstr "Season %s (%s)"
 
 #, python-brace-format
 msgid "Season {0}"
@@ -3194,6 +3174,10 @@ msgstr "Tryb sortowania"
 
 msgid "Sort Myfreecams :"
 msgstr ""
+
+#, fuzzy
+msgid "Sort Pornsites Alphabetical :"
+msgstr "Sortuj alfabetycznie"
 
 msgid "Sort alphabetically"
 msgstr "Sortuj alfabetycznie"
@@ -3773,9 +3757,6 @@ msgstr ""
 #, python-format
 msgid "Utility \"%s\" can not be found."
 msgstr "Narzędzie \"%s\" nie zostało odnalezione."
-
-msgid "VENUES"
-msgstr "MIEJSCA"
 
 msgid "VFD set current title:"
 msgstr "VFD ustawia aktualny tytuł:"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 16:58+0100\n"
+"POT-Creation-Date: 2026-03-11 20:19+0100\n"
 "PO-Revision-Date: 2025-11-24 08:05+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -188,10 +188,6 @@ msgid "%s has been protected with google recaptcha v2. You can try to use API ve
 msgstr "%s byl chráněn pomocí Google Recaptcha v2. Můžete zkusit použít verzi rozhraní API."
 
 #, python-format
-msgid "%s minutes"
-msgstr "%s minut"
-
-#, python-format
 msgid "%s password"
 msgstr "%s heslo"
 
@@ -260,6 +256,9 @@ msgstr "----- KONFIGURACE CAPTCHA -----"
 msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- STAŽOVÁNÍ KONFIGURACE -----"
 
+msgid "----- Global HostXXX Configuration -----"
+msgstr ""
+
 msgid "----- OTHER SETTINGS -----"
 msgstr "----- DALŠÍ NASTAVENÍ -----"
 
@@ -268,6 +267,9 @@ msgstr "----- KONFIGURACE PŘEHRÁVAČŮ A PŘEHRÁVÁNÍ -----"
 
 msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- KONFIGURACE PROXY SERVERŮ -----"
+
+msgid "----- Porn Site Configuration -----"
+msgstr ""
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- KONFIGURACE BEZPEČNOSTI -----"
@@ -283,6 +285,24 @@ msgstr "----- KONFIGURACE ÚLOŽIŠTĚ -----"
 
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- KONFIGURACE TITULKŮ -----"
+
+msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- XXXList Configuration -----"
+msgstr ""
+
+#, fuzzy
+msgid "----------  Live Cams  ----------"
+msgstr "----------Jiné __________----------"
+
+#, fuzzy
+msgid "----------  Other  ----------"
+msgstr "----------Jiné __________----------"
+
+#, fuzzy
+msgid "----------  Porn Sites  ----------"
+msgstr "----------Jiné __________----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "----------------- Možnosti externího exteplayeru3 -----------------"
@@ -458,9 +478,6 @@ msgstr "Povolit nastavení sledovaného příznaku"
 
 msgid "Alphabet"
 msgstr "Abeceda"
-
-msgid "Alphabetical "
-msgstr "Abecední "
 
 msgid "Alphabetically"
 msgstr "Abecedně"
@@ -675,9 +692,6 @@ msgstr "Podle roku"
 
 msgid "Bypass geo-blocking for VODs (it may be illegal):"
 msgstr "Obejít geografické blokování pro VOD (může to být nezákonné):"
-
-msgid "CHANNELS "
-msgstr "KANÁLY "
 
 msgid "CME SAE"
 msgstr "CME SAE"
@@ -997,9 +1011,6 @@ msgstr "Discover"
 msgid "Display thumbnails"
 msgstr "Zobrazit náhledy"
 
-msgid "DixMax Suggestions"
-msgstr "Návrhy DixMaxu"
-
 msgid "Do you want to finish?"
 msgstr "Chceš to dokončit?"
 
@@ -1269,9 +1280,6 @@ msgstr "Epizody"
 msgid "Episode Search"
 msgstr "Vyhledávání epizod"
 
-msgid "Episode title"
-msgstr "Název epizody"
-
 msgid "Episodes"
 msgstr "Epizody"
 
@@ -1504,9 +1512,6 @@ msgstr "Francouzština"
 msgid "From E2 settings"
 msgstr "Z nastavení E2"
 
-msgid "Functionality protected by Google reCAPTCHA!"
-msgstr "Funkce chráněná službou Google reCAPTCHA!"
-
 msgid "GSTplayer no IFD workarround"
 msgstr "GSTplayer bez alternativního řešení IFD"
 
@@ -1553,9 +1558,6 @@ msgstr "Získání jazyků se nezdařilo!"
 
 msgid "Get token failed!"
 msgstr "Získání tokenu se nezdařilo!"
-
-msgid "Global sort :"
-msgstr "Globální řazení:"
 
 msgid "Go to the host configuration available under blue button."
 msgstr "Přejděte do konfigurace hostitele dostupné pod modrým tlačítkem."
@@ -1823,9 +1825,6 @@ msgstr "Korejský televizní seriál"
 
 msgid "LATEST"
 msgstr "Již používáte nejnovější verzi: %s"
-
-msgid "LATEST CONTENT"
-msgstr "NEJNOVĚJŠÍ OBSAH"
 
 msgid "LIKES"
 msgstr "LÍBÍ SE"
@@ -2131,9 +2130,6 @@ msgstr "Více výsledků"
 msgid "Most Popular"
 msgstr "Nejvíce populární"
 
-msgid "Most featured"
-msgstr "Nejvíce doporučované"
-
 msgid "Most popular"
 msgstr "Nejoblíbenější"
 
@@ -2232,9 +2228,6 @@ msgstr "Jméno:"
 
 msgid "Netflix"
 msgstr "Netflix"
-
-msgid "Network"
-msgstr "Síť"
 
 #, python-format
 msgid "Network failed %s."
@@ -2383,14 +2376,8 @@ msgstr "Ostatní"
 msgid "Own model"
 msgstr "Vlastní model"
 
-msgid "PARTIES"
-msgstr "STRANY"
-
 msgid "PAY"
 msgstr "ZAPLATIT"
-
-msgid "PEGI"
-msgstr "PEGI"
 
 msgid "PENDING"
 msgstr "ĆEKAJÍCÍ"
@@ -2688,9 +2675,6 @@ msgstr "Rozhlasové stanice"
 msgid "Radiology Rounds"
 msgstr "Radiologické obchůzky"
 
-msgid "Raiting"
-msgstr "Hodnocení"
-
 msgid "Ramadan 2025"
 msgstr "Ramadán 2025"
 
@@ -2898,10 +2882,6 @@ msgstr "Období"
 #, python-format
 msgid "Season %s"
 msgstr "Sezóna %s"
-
-#, python-format
-msgid "Season %s (%s)"
-msgstr "Sezóna %s (%s)"
 
 #, python-brace-format
 msgid "Season {0}"
@@ -3135,6 +3115,10 @@ msgstr "Režim řazení"
 
 msgid "Sort Myfreecams :"
 msgstr "Řadit Myfreecams :"
+
+#, fuzzy
+msgid "Sort Pornsites Alphabetical :"
+msgstr "Seřadit abecedně"
 
 msgid "Sort alphabetically"
 msgstr "Seřadit abecedně"
@@ -3695,9 +3679,6 @@ msgstr ""
 #, python-format
 msgid "Utility \"%s\" can not be found."
 msgstr "Nástroj „%s“ nebyl nalezen."
-
-msgid "VENUES"
-msgstr "MÍSTA KONÁNÍ"
 
 msgid "VFD set current title:"
 msgstr "Aktuální název sady VFD:"
