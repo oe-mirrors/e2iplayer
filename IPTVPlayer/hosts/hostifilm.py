@@ -70,7 +70,11 @@ class IFilmArabicHost(CBaseHostClass):
         self.LIVE_STREAMS = [
             {"name": "iFilm Arabic", "url": self.STREAM_URL + "ifilmar.m3u8"},
             {"name": "iFilm Persian", "url": self.STREAM_URL + "ifilmfa.m3u8"},
-            {"name": "iFilm 2 Persian", "url": self.STREAM_URL + "ifilm2.m3u8", "icon": "https://fa2.ifilmtv.ir/img/Logoifilm2.png"},
+            {
+                "name": "iFilm 2 Persian",
+                "url": self.STREAM_URL + "ifilm2.m3u8",
+                "icon": "https://fa2.ifilmtv.ir/img/Logoifilm2.png"
+            },
             {'name': 'iFilm English', 'url': self.STREAM_URL + 'ifilmen.m3u8'},
         ]
 
@@ -493,7 +497,7 @@ class IFilmArabicHost(CBaseHostClass):
             return
         artistDesc = self.cm.ph.getDataBeetwenMarkers(data, '<div id="wrapper"', '</div>', False)[1]
         artistDesc = artistDesc.replace("</p>", "\n")
-        artistDesc = self.cleanHtmlStr(artistDesc).strip()
+        artistDesc = self.cm.ph.cleanHtmlStr(artistDesc).strip()
         artistDesc = re.sub(r'\n\s*\n', '\n', artistDesc)
         data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="artist-movies-panel">', '</footer>', False)[1]
         workBlocks = re.findall(r'<div class="panel-inner-movies">(.*?)</div>\s*</div>', data, re.S)
@@ -509,7 +513,7 @@ class IFilmArabicHost(CBaseHostClass):
             if url == '':
                 continue
             title = self.cm.ph.getSearchGroups(block, r'class="neme-movie"[^>]*>([^<]+)')[0]
-            title = self.cleanHtmlStr(title).strip()
+            title = self.cm.ph.cleanHtmlStr(title).strip()
             YEAR_REGEX = re.compile(r'(.+?)\s*\(([^)]+)\)')
             match = YEAR_REGEX.search(title)
             if match:
