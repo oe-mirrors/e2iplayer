@@ -979,6 +979,6 @@ class CBaseHostClass:
         if url:
             params.update({'url': url})
         if page:
-            params.update({page})
+            params.update({'page': page})
         params.update({'title': _("Next page")})
         self.addDir(params)
