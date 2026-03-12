@@ -13,19 +13,8 @@ try:
 except ImportError:
     from urllib import quote
 # Constants
-B  = E2ColoR("blue")
 C = E2ColoR("cyan")
-CO = E2ColoR("coral")
-CR = E2ColoR("crimson")
-DB = E2ColoR("dodgerblue")
-G  = E2ColoR("green")
-GO = E2ColoR("gold")
-GR = E2ColoR("gray")
-K  = E2ColoR("khaki")
 L  = E2ColoR("lime")
-LC = E2ColoR("lightcoral")
-LR = E2ColoR("lightred")
-O  = E2ColoR("orange")
 R  = E2ColoR("red")
 W  = E2ColoR("white")
 Y  = E2ColoR("yellow")
