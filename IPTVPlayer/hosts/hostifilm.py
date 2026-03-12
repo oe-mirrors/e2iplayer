@@ -159,7 +159,7 @@ class IFilmArabicHost(CBaseHostClass):
                 page = "1"
             nextPage = int(page) + 1
             nextUrl = baseUrl.replace(PAGE_PARAM + page, PAGE_PARAM + str(nextPage)) if PAGE_PARAM in baseUrl else (baseUrl + ("&" if "?" in baseUrl else "?") + PAGE_PARAM + str(nextPage))
-            self.addDir({"name": "category", "category": nextCategory, "title": L + _("Next Page »»» (%d)") % nextPage, "url": nextUrl})
+            self.addDir({"name": "category", "category": nextCategory, "title": L + _("Next Page") + " »»» (%d)" % nextPage, "url": nextUrl})
 
     def listEpisodes(self, cItem):
         printDBG("IFilmArabicHost.listEpisodes")
@@ -334,7 +334,7 @@ class IFilmArabicHost(CBaseHostClass):
             next_page_num = str(int(page) + 1)
             if PAGE_PARAM + next_page_num in data:
                 nextUrl = url.replace(PAGE_PARAM + page, PAGE_PARAM + next_page_num) if PAGE_PARAM in url else url + "&page=" + next_page_num
-                self.addDir({"name": "category", "category": "kids", "title": L + _("Next Page »»»") + W, "url": nextUrl})
+                self.addDir({"name": "category", "category": "kids", "title": L + _("Next Page") + " »»»" + W, "url": nextUrl})
 
     def listClips(self, cItem):
         printDBG("IFilmArabicHost.listClips")
@@ -364,7 +364,7 @@ class IFilmArabicHost(CBaseHostClass):
                 self.addVideo(params)
             if len(result) >= 30:
                 params = dict(cItem)
-                params.update({"title": Y + _("Next Page »»»") + W, "page": page + 1})
+                params.update({"title": Y + _("Next Page") + " »»»" + W, "page": page + 1})
                 self.addDir(params)
         except Exception:
             printExc()
@@ -415,7 +415,7 @@ class IFilmArabicHost(CBaseHostClass):
             totalPages = self.cm.ph.getSearchGroups(data, r"TotalPages\s*=\s*(\d+)")[0]
         if totalPages and int(page) < int(totalPages):
             params = dict(cItem)
-            params.update({"title": Y + _("Next Page »»»") + W, "page": page + 1, "url": url})
+            params.update({"title": Y + _("Next Page") + " »»»" + W, "page": page + 1, "url": url})
             self.addDir(params)
 
     def listArtistDetails(self, cItem):

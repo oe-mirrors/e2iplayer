@@ -973,3 +973,12 @@ class CBaseHostClass:
             self.beforeMoreItemList = []
             self.afterMoreItemList = []
         self.moreMode = False
+
+    def applyNextPage(self, cItem, page=None, url=None):
+        params = dict(cItem)
+        if url:
+            params.update({'url': url})
+        if page:
+            params.update({page})
+        params.update({'title': _("Next page")})
+        self.addDir(params)

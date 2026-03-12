@@ -5167,7 +5167,8 @@ class Host(CBaseHostClass):
 				if next_page.startswith('page'):
 					next_page = '/' + next_page
 				next_page = re.sub('page.+', '', url) + next_page
-				valTab.append(CDisplayListItem(_("Next page"), next_page.split('/')[-1].replace('.html', ''), CDisplayListItem.TYPE_CATEGORY, [next_page], name, '', None))
+				valTab.append(self.getNextItem(next_page.split('/')[-1].replace('.html', ''), next_page, name))
+
 			return valTab
 
 		if 'MOVIEFAP' == name:
@@ -14242,7 +14243,7 @@ class Host(CBaseHostClass):
 			if next:
 				if next.startswith('/'):
 					next = self.MAIN_URL + next
-				valTab.append(CDisplayListItem(_("Next page"), 'Page: ' + next.split('/')[-2], CDisplayListItem.TYPE_CATEGORY, [next], name, '', None))
+				valTab.append(self.getNextItem(next.split('/')[-2], next, name))
 			return valTab
 
 		if 'bravoteens' == name:
@@ -14313,7 +14314,7 @@ class Host(CBaseHostClass):
 					next_page = self.RE_SPAN_HREF_DOTALL.findall(next)[-1]
 					if next_page.startswith('/'):
 						next_page = self.MAIN_URL + next_page
-					valTab.append(CDisplayListItem(_("Next page"), 'Page: ' + next_page.split('/')[-2], CDisplayListItem.TYPE_CATEGORY, [next_page], name, '', None))
+					valTab.append(self.getNextItem(next_page.split('/')[-2], next_page, name))
 				except Exception:
 					printExc()
 			return valTab
@@ -14388,7 +14389,7 @@ class Host(CBaseHostClass):
 					next_page = self.RE_HREF_DOTALL.findall(next)[-1]
 					if next_page.startswith('/'):
 						next_page = self.MAIN_URL + next_page
-					valTab.append(CDisplayListItem(_("Next page"), 'Page: ' + next_page.split('/')[-2], CDisplayListItem.TYPE_CATEGORY, [next_page], name, '', None))
+					valTab.append(self.getNextItem(next_page.split('/')[-2], next_page, name))
 				except Exception:
 					printExc()
 			return valTab
