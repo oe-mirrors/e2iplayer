@@ -57,20 +57,20 @@ class IFilmArabicHost(CBaseHostClass):
             "cookiefile": self.COOKIE_FILE
         }
         self.MAIN_CAT_TAB = [
-            {"category": "live", "title": _("البث المباشر"), "url": self.LIVE_URL},
-            {"category": "series", "title": _("المسلسلات"), "url": self.SERIES_URL},
-            {"category": "movies", "title": _("الأفلام"), "url": self.MOVIES_URL},
-            {"category": "programs", "title": _("البرامج"), "url": self.PROGRAMS_URL},
-            {"category": "kids", "title": _("أطفال آي فيلم"), "url": self.KIDS_URL},
-            {"category": "clips", "title": _("كليبات"), "url": self.CLIPS_URL},
-            {"category": "artists_main", "title": _("الفنانين"), "url": self.ARTIST_URL},
-            {"category": "search", "title": _("بحث"), "search_item": True},
-            {"category": "search_history", "title": _("سجل البحث")},
+            {"category": "live", "title": "البث المباشر", "url": self.LIVE_URL},
+            {"category": "series", "title": "المسلسلات", "url": self.SERIES_URL},
+            {"category": "movies", "title": "الأفلام", "url": self.MOVIES_URL},
+            {"category": "programs", "title": "البرامج", "url": self.PROGRAMS_URL},
+            {"category": "kids", "title": "أطفال آي فيلم", "url": self.KIDS_URL},
+            {"category": "clips", "title": "كليبات", "url": self.CLIPS_URL},
+            {"category": "artists_main", "title": "الفنانين", "url": self.ARTIST_URL},
+            {"category": "search", "title": "بحث", "search_item": True},
+            {"category": "search_history", "title": "سجل البحث"},
         ]
         self.LIVE_STREAMS = [
             {"name": "iFilm Arabic", "url": self.STREAM_URL + "ifilmar.m3u8"},
             {"name": "iFilm Persian", "url": self.STREAM_URL + "ifilmfa.m3u8"},
-            {"name": "iFilm 2 Persian", "url": self.STREAM_URL + "ifilm2.m3u8"},
+            {"name": "iFilm 2 Persian", "url": self.STREAM_URL + "ifilm2.m3u8", "icon": "https://fa2.ifilmtv.ir/img/Logoifilm2.png"},
             {'name': 'iFilm English', 'url': self.STREAM_URL + 'ifilmen.m3u8'},
         ]
 
@@ -96,13 +96,14 @@ class IFilmArabicHost(CBaseHostClass):
                 colored_title = O + name + W
             else:
                 colored_title = name
+            stream_icon = stream.get("icon", self.DEFAULT_ICON_URL)
             params = {
                 "name": "category",
                 "category": "video",
                 "title": colored_title,
                 "url": stream["url"],
-                "icon": self.DEFAULT_ICON_URL,
-                "desc": Y + _("بث مباشر جودة عالية باللغة المختارة") + W
+                "icon": stream_icon,
+                "desc": Y + "بث مباشر جودة عالية باللغة المختارة" + W
             }
             self.addVideo(params)
 
@@ -185,8 +186,8 @@ class IFilmArabicHost(CBaseHostClass):
                 sts, data = self.getPage(fallback_url)
         if not sts:
             self.addMarker({
-                "title": L + _("! عذراً، هذا المحتوى غير متاح حالياً (خطأ في الاتصال)") + W,
-                "desc": Y + _("المصدر لا يستجيب للطلب، يرجى المحاولة لاحقاً.") + W
+                "title": L + "! عذراً، هذا المحتوى غير متاح حالياً (خطأ في الاتصال)" + W,
+                "desc": Y + "المصدر لا يستجيب للطلب، يرجى المحاولة لاحقاً." + W
             })
             return
         story = self.cm.ph.getDataBeetwenMarkers(data, '<div id="wrapper"', '</div>')[1]
@@ -222,7 +223,7 @@ class IFilmArabicHost(CBaseHostClass):
         if seriesId and numEpisodes and int(numEpisodes) > 0:
             printDBG("IFilmArabicHost: Using Script Method (Classic)")
             for i in range(1, int(numEpisodes) + 1):
-                title = C + "▶ " + Y + _("الحلقة: ") + W + str(i)
+                title = C + "▶ " + Y + "الحلقة: " + W + str(i)
                 icon = "https://preview.presstv.ir/ifilm/%s%s/%s.png" % (lang, seriesId, i)
                 icon = self.up.decorateUrl(icon, {"Referer": self.MAIN_URL,"User-Agent": "Mozilla/5.0"})
                 videoUrl = "https://vod.ifilmtv.ir/hls/%s%s/,%s,%s_320,.mp4.urlset/master.m3u8" % (lang, seriesId, i, i)
@@ -245,7 +246,7 @@ class IFilmArabicHost(CBaseHostClass):
                             pass
                         for item in result:
                             episode_num = str(item.get("Episode", ""))
-                            title = C + "▶ " + Y + _("الحلقة: ") + W + episode_num
+                            title = C + "▶ " + Y + "الحلقة: " + W + episode_num
                             videoUrl = item.get("VideoAddress", "")
                             if videoUrl:
                                 if not videoUrl.startswith("http"):
@@ -272,8 +273,8 @@ class IFilmArabicHost(CBaseHostClass):
         if not episodes_found:
             printDBG("IFilmArabicHost: No episodes added, showing marker.")
             self.addMarker({
-                "title": L + _("! لا توجد فيديوهات متاحة حالياً لهذا العمل") + W,
-                "desc": Y + _("يبدو أن الحلقات لم يتم رفعها بعد في هذا القسم من المصدر.") + W
+                "title": L + "! لا توجد فيديوهات متاحة حالياً لهذا العمل" + W,
+                "desc": Y + "يبدو أن الحلقات لم يتم رفعها بعد في هذا القسم من المصدر." + W
             })
 
     def listMovies(self, cItem):
@@ -377,8 +378,8 @@ class IFilmArabicHost(CBaseHostClass):
                 items_found = True
         if not items_found:
             self.addMarker({
-                "title": L + _("! لا توجد مسلسلات أطفال متاحة في هذه الصفحة حالياً") + W,
-                "desc": Y + _("ربما يتم تحديث القسم أو أن هناك عطلاً في المصدر.") + W
+                "title": L + "! لا توجد مسلسلات أطفال متاحة في هذه الصفحة حالياً" + W,
+                "desc": Y + "ربما يتم تحديث القسم أو أن هناك عطلاً في المصدر." + W
             })
         if items_found:
             next_page_num = str(int(page) + 1)
@@ -430,10 +431,10 @@ class IFilmArabicHost(CBaseHostClass):
     def listArtistsMain(self, cItem):
         printDBG("IFilmArabicHost.listArtistsMain")
         params = dict(cItem)
-        params.update({"category": "artists_list", "title": _("المخرجون"), "url": self.ARTIST_URL + "1", "page": 1})
+        params.update({"category": "artists_list", "title": "المخرجون", "url": self.ARTIST_URL + "1", "page": 1})
         self.addDir(params)
         params = dict(cItem)
-        params.update({"category": "artists_list", "title": _("الممثلون"), "url": self.ARTIST_URL + "2", "page": 1})
+        params.update({"category": "artists_list", "title": "الممثلون", "url": self.ARTIST_URL + "2", "page": 1})
         self.addDir(params)
 
     def listArtistsItems(self, cItem):
@@ -498,7 +499,7 @@ class IFilmArabicHost(CBaseHostClass):
         workBlocks = re.findall(r'<div class="panel-inner-movies">(.*?)</div>\s*</div>', data, re.S)
         if not workBlocks:
             self.addMarker({
-                "title": L + _("! لا يوجد أعمال متاحة حاليا") + W,
+                "title": L + "! لا يوجد أعمال متاحة حاليا" + W,
                 "desc": artistDesc,
                 "icon": cItem.get("icon", "")
             })
@@ -642,12 +643,12 @@ class IFilmArabicHost(CBaseHostClass):
                     items_found = True
             if not items_found:
                 self.addMarker({
-                    "title": C + _("! عذراً، لا توجد نتائج للبحث عن: ") + Y + searchPattern + W,
-                    "desc": Y + _("تأكد من كتابة الكلمة بشكل صحيح أو جرب كلمات بحث أخرى.") + W
+                    "title": C + "! عذراً، لا توجد نتائج للبحث عن: " + Y + searchPattern + W,
+                    "desc": Y + "تأكد من كتابة الكلمة بشكل صحيح أو جرب كلمات بحث أخرى." + W
                 })
         except Exception as e:
             printDBG("Search Error: " + str(e))
-            self.addMarker({"title": R + _("خطأ في جلب البيانات من المصدر") + W})
+            self.addMarker({"title": R + "خطأ في جلب البيانات من المصدر" + W})
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         printDBG("IFilmArabicHost.handleService start")
