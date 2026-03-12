@@ -126,9 +126,11 @@ class IFilmArabicHost(CBaseHostClass):
                         itemUrl = self.getFullUrl("/Program/Content/" + str(item.get("Id", "")))
                         self.addDir({"name": "category","category": "episodes","title": colored_title,"url": itemUrl,"icon": icon})
                     return 
-                except Exception: printExc()
+                except Exception:
+                    printExc()
         sts, data = self.getPage(baseUrl)
-        if not sts: return
+        if not sts:
+            return
         items = self.cm.ph.getAllItemsBeetwenMarkers(data, "<a", "</a>")
         numItems = 0
         for item in items:
@@ -137,11 +139,13 @@ class IFilmArabicHost(CBaseHostClass):
             if "inner-panel" not in item and "panel-inner-small" not in item:
                 continue
             itemUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^'"]+?)['"]''')[0]
-            if not itemUrl or itemUrl == "#" or RESULT_TOKEN in itemUrl: continue
+            if not itemUrl or itemUrl == "#" or RESULT_TOKEN in itemUrl:
+                continue
             itemUrl = self.getFullUrl(itemUrl)
             title = self.cm.ph.getDataBeetwenMarkers(item, "<h6>", "</h6>")[1]
             title = self.cm.ph.cleanHtmlStr(title).strip()
-            if not title: continue
+            if not title:
+                continue
             YEAR_REGEX = re.compile(r"(.+?)\s*\(([^)]+)\)")
             match = YEAR_REGEX.search(title)
             colored_title = COLOR_TITLE_FORMAT.format(Y, match.group(1).strip(), C, match.group(2).strip(), W) if match else Y+title+W
@@ -232,7 +236,8 @@ class IFilmArabicHost(CBaseHostClass):
                     result = json.loads(json_data)
                     if result and isinstance(result, list) and len(result) > 0:
                         try: result.sort(key=lambda x: int(x.get("Episode", 0)))
-                        except Exception: pass
+                        except Exception:
+                            pass
                         for item in result:
                             episode_num = str(item.get("Episode", ""))
                             title = C + "▶ " + Y + _("الحلقة: ") + W + episode_num
@@ -246,7 +251,8 @@ class IFilmArabicHost(CBaseHostClass):
                                     "desc": full_desc, "need_resolve": 1
                                 })
                                 episodes_found = True
-                except Exception: printExc()
+                except Exception:
+                    printExc()
         items = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="panel-inner-movies">', '</div>')
         for item in items:
             title = self.cm.ph.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<a class="neme-movie">', '</a>')[1]).strip()
@@ -267,7 +273,8 @@ class IFilmArabicHost(CBaseHostClass):
     def listMovies(self, cItem):
         printDBG("IFilmArabicHost.listMovies")
         sts, data = self.getPage(cItem["url"])
-        if not sts: return
+        if not sts:
+            return
         story = self.cm.ph.getDataBeetwenMarkers(data, '<div id="wrapper"', '</div>')[1]
         story = self.cm.ph.cleanHtmlStr(story).strip()
         artists_data = self.cm.ph.getDataBeetwenMarkers(data, 'class="Film-Artists-panel"', '</div>\n\t\t\t\t</div>', False)[1]
@@ -309,30 +316,36 @@ class IFilmArabicHost(CBaseHostClass):
         page = self.cm.ph.getSearchGroups(url, "page=(\d+)")[0]
         if not page: page = "1"
         sts, data = self.getPage(url)
-        if not sts: return
+        if not sts:
+            return
         items = self.cm.ph.getAllItemsBeetwenMarkers(data, "<a", "</a>")
         unique_ids = []
         items_found = False
         for item in items:
             if "panel-inner-small" in item or "Jashnvarh-slider-item" in item:
                 itemUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^'"]+?)['"]''')[0]
-                if not itemUrl: continue
+                if not itemUrl:
+                    continue
                 content_id = self.cm.ph.getSearchGroups(itemUrl, r"Content/(\d+)/")[0]
                 if content_id:
-                    if content_id in unique_ids: continue
+                    if content_id in unique_ids:
+                        continue
                     unique_ids.append(content_id)
                 else:
                     clean_url = itemUrl.split("?")[0].lower().strip("/")
-                    if clean_url in unique_ids: continue
+                    if clean_url in unique_ids:
+                        continue
                     unique_ids.append(clean_url)
                 title = self.cm.ph.getDataBeetwenMarkers(item, "<h4>", "</h4>")[1]
                 title = self.cm.ph.cleanHtmlStr(title).strip()
-                if not title: continue
+                if not title:
+                    continue
                 YEAR_REGEX = re.compile(r"(.+?)\s*\(([^)]+)\)")
                 match = YEAR_REGEX.search(title)
                 colored_title = COLOR_TITLE_FORMAT.format(Y, match.group(1).strip(), C, match.group(2).strip(), W) if match else Y+title+W
                 icon = self.cm.ph.getSearchGroups(item, r"url\(&quot;([^&]+?)&quot;\)")[0]
-                if not icon: icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'"]+?)['"]''')[0]
+                if not icon:
+                    icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'"]+?)['"]''')[0]
                 def encode_url(u):
                     full_u = self.getFullUrl(u)
                     try:
@@ -340,7 +353,8 @@ class IFilmArabicHost(CBaseHostClass):
                             prot, rest = full_u.split("://", 1)
                             domain, path = rest.split("/", 1)
                             full_u = prot + "://" + domain + "/" + quote(path.encode("utf-8"))
-                    except Exception: pass
+                    except Exception:
+                        pass
                     return full_u
                 final_item_url = encode_url(itemUrl)
                 final_icon_url = encode_url(icon)
@@ -363,9 +377,9 @@ class IFilmArabicHost(CBaseHostClass):
             if PAGE_PARAM + next_page_num in data:
                 nextUrl = url.replace(PAGE_PARAM + page, PAGE_PARAM + next_page_num) if PAGE_PARAM in url else url + "&page=" + next_page_num
                 self.addDir({
-                    "name": "category", 
-                    "category": "kids", 
-                    "title": L + _("Next Page »»»") + W, 
+                    "name": "category",
+                    "category": "kids",
+                    "title": L + _("Next Page »»»") + W,
                     "url": nextUrl
                 })
     def listClips(self, cItem):
@@ -376,7 +390,8 @@ class IFilmArabicHost(CBaseHostClass):
         params["header"] = dict(self.defaultParams["header"])
         params["header"].update({"X-Requested-With": "XMLHttpRequest"})
         sts, data = self.cm.getPage(url, params)
-        if not sts: return
+        if not sts:
+            return
         try:
             result = json.loads(data)
             for item in result:
@@ -384,7 +399,8 @@ class IFilmArabicHost(CBaseHostClass):
                 icon = self.getFullUrl(item.get("ImageAddress_M", ""))
                 url  = self.getFullUrl(item.get("VideoAddress", ""))
                 desc = item.get("Discription", "")
-                if url == "": continue
+                if url == "":
+                    continue
                 params = {
                     "title": L + title + W,
                     "url": url,
@@ -422,19 +438,22 @@ class IFilmArabicHost(CBaseHostClass):
         else:
             requestUrl = re.sub(r"page=\d+", PAGE_PARAM + str(page), url)
         sts, data = self.cm.getPage(requestUrl, self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         artistsList = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a href="/artist/Content/', '</a>')
         for item in artistsList:
             url_part = self.cm.ph.getSearchGroups(item, 'href="([^"]+)"')[0]
-            if not url_part: continue
+            if not url_part:
+                continue
             full_url = self.getFullUrl(url_part)
             title = self.cm.ph.getDataBeetwenMarkers(item, "<h3>", "</h3>")[1]
             title = self.cm.ph.cleanHtmlStr(title).strip()
             icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+)"')[0]
-            if not icon:
+            if icon:
                 icon = self.getFullUrl(icon)
                 icon = quote(icon.encode("utf-8"), safe=":/?&=")
-            if not title: continue
+            if not title:
+                continue
             params = dict(cItem)
             params.update({
                 "title": title,
@@ -443,8 +462,8 @@ class IFilmArabicHost(CBaseHostClass):
                 "category": "artist_details"
             })
             self.addDir(params)
-        totalPages = self.cm.ph.getSearchGroups(data, 'totalPages:\s*(\d+)')[0]
-        if totalPages == "": 
+        totalPages = self.cm.ph.getSearchGroups(data, r'totalPages:\s*(\d+)')[0]
+        if totalPages == "":
             totalPages = self.cm.ph.getSearchGroups(data, r'TotalPages\s*=\s*(\d+)')[0]
         if totalPages and int(page) < int(totalPages):
             params = dict(cItem)
@@ -457,7 +476,8 @@ class IFilmArabicHost(CBaseHostClass):
     def listArtistDetails(self, cItem):
         printDBG("IFilmArabicHost.listArtistDetails start")
         sts, data = self.cm.getPage(cItem["url"], self.defaultParams)
-        if not sts: return
+        if not sts:
+            return
         artistDesc = self.cm.ph.getDataBeetwenMarkers(data, '<div id="wrapper"', '</div>', False)[1]
         artistDesc = artistDesc.replace("</p>", "\n")
         artistDesc = self.cleanHtmlStr(artistDesc).strip()
@@ -473,7 +493,8 @@ class IFilmArabicHost(CBaseHostClass):
             return
         for i, block in enumerate(workBlocks):
             url = self.cm.ph.getSearchGroups(block, r'href="([^"]+)"')[0]
-            if url == '': continue
+            if url == '':
+                continue
             title = self.cm.ph.getSearchGroups(block, r'class="neme-movie"[^>]*>([^<]+)')[0]
             title = self.cleanHtmlStr(title).strip()
             YEAR_REGEX = re.compile(r'(.+?)\s*\(([^)]+)\)')
@@ -489,7 +510,8 @@ class IFilmArabicHost(CBaseHostClass):
                 icon = quote(icon.encode("utf-8"), safe=":/?&=")
             if "/Film/" in url: category = "movie_details"
             elif "/Series/" in url: category = "episodes"
-            else: continue
+            else:
+                continue
             params = dict(cItem)
             params.update({"title": colored_title,"url": url,"icon": icon,"desc": L + artistDesc[:900] + "...." + W,"category": category})
             self.addDir(params)
@@ -543,7 +565,8 @@ class IFilmArabicHost(CBaseHostClass):
             "Referer": self.MAIN_URL,
         }}
         sts, data = self.getPage(url, params)
-        if not sts: return
+        if not sts:
+            return
         items_found = False
         try:
             results = json.loads(data)
@@ -554,18 +577,23 @@ class IFilmArabicHost(CBaseHostClass):
                     if catId not in [3, 5, 7]:
                         continue
                     item_id = str(item.get("Id", ""))
-                    if not item_id or item_id in unique_ids: continue
+                    if not item_id or item_id in unique_ids:
+                        continue
                     unique_ids.append(item_id)
                     title = item.get("Title", "")
                     title = self.cm.ph.cleanHtmlStr(title).strip()
-                    if not title: continue
+                    if not title:
+                        continue
                     section_name = ""
                     if catId == 3:
                         if any(word in title for word in ["حكايات", "مغامرات", "كرتون", "سكرستان", "تابتا"]):
                             section_name = "قسم أطفال آي فيلم"
-                        else: section_name = "قسم المسلسلات"
-                    elif catId == 5: section_name = "قسم الأفلام"
-                    elif catId == 7: section_name = "قسم البرامج"
+                        else:
+                            section_name = "قسم المسلسلات"
+                    elif catId == 5:
+                        section_name = "قسم الأفلام"
+                    elif catId == 7:
+                        section_name = "قسم البرامج"
                     full_desc = "{0} - [{1}]".format(title, section_name)
                     YEAR_REGEX = re.compile(r'(.+?)\s*\(([^)]+)\)')
                     match = YEAR_REGEX.search(title)
@@ -577,7 +605,8 @@ class IFilmArabicHost(CBaseHostClass):
                                 prot, rest = full_u.split("://", 1)
                                 domain, path = rest.split("/", 1)
                                 full_u = prot + "://" + domain + "/" + quote(path.encode("utf-8"))
-                        except Exception: pass
+                        except Exception:
+                            pass
                         return full_u
                     icon = item.get("ImageAddress_S", "")
                     if catId == 5:
@@ -611,17 +640,28 @@ class IFilmArabicHost(CBaseHostClass):
         printDBG("handleService: >> name[%s], category[%s]" % (name, category))
         self.currList = []
         if name == None: self.listMainMenu({"name": "category"})
-        elif category == "live": self.listLiveStreams(self.currItem)
-        elif category == "series": self.listContent(self.currItem, "series")
-        elif category == "movies": self.listContent(self.currItem, "movies")
-        elif category == "movie_details": self.listMovies(self.currItem)
-        elif category == "programs": self.listContent(self.currItem, "programs")
-        elif category == "kids": self.listKidsContent(self.currItem)
-        elif category == "episodes": self.listEpisodes(self.currItem)
-        elif category == "clips": self.listClips(self.currItem)
-        elif category == "artists_main": self.listArtistsMain(self.currItem)
-        elif category == "artists_list": self.listArtistsItems(self.currItem)
-        elif category == "artist_details": self.listArtistDetails(self.currItem)
+        elif category == "live":
+            self.listLiveStreams(self.currItem)
+        elif category == "series":
+            self.listContent(self.currItem, "series")
+        elif category == "movies":
+            self.listContent(self.currItem, "movies")
+        elif category == "movie_details":
+            self.listMovies(self.currItem)
+        elif category == "programs":
+            self.listContent(self.currItem, "programs")
+        elif category == "kids":
+            self.listKidsContent(self.currItem)
+        elif category == "episodes":
+            self.listEpisodes(self.currItem)
+        elif category == "clips":
+            self.listClips(self.currItem)
+        elif category == "artists_main":
+            self.listArtistsMain(self.currItem)
+        elif category == "artists_list":
+            self.listArtistsItems(self.currItem)
+        elif category == "artist_details":
+            self.listArtistDetails(self.currItem)
         elif category == "video":
             links = self.getLinksForVideo(self.currItem)
             if links:
