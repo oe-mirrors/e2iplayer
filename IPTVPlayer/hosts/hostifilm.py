@@ -12,19 +12,23 @@ try:
     from urllib.parse import quote
 except ImportError:
     from urllib import quote
+
 # Constants
 C = E2ColoR("cyan")
-L  = E2ColoR("lime")
-R  = E2ColoR("red")
-W  = E2ColoR("white")
-Y  = E2ColoR("yellow")
+L = E2ColoR("lime")
+O = E2ColoR("orange")
+R = E2ColoR("red")
+W = E2ColoR("white")
+Y = E2ColoR("yellow")
 RESULT_TOKEN = "result[i]"
 PAGE_PARAM = "page="
 SERIES_CONTENT = "/Series/Content/"
 MOVIES_CONTENT = "/Film/Content/"
 COLOR_TITLE_FORMAT = "{0}{1} {2}({3}){4}"
+
 def gettytul():
     return "https://ar.ifilmtv.ir/"
+
 class IFilmArabicHost(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "ifilmarabic", "cookie": "ifilmarabic.cookie"})
@@ -36,8 +40,8 @@ class IFilmArabicHost(CBaseHostClass):
         self.MOVIES_URL = self.MAIN_URL + "Film"
         self.PROGRAMS_URL = self.MAIN_URL + "Program"
         self.KIDS_URL = self.MAIN_URL + "News/Tag?id=18379&page=1"
-        self.CLIPS_URL =  self.MAIN_URL + "Music/Clips"
-        self.ARTIST_URL =  self.MAIN_URL + "artist/Index?id="        
+        self.CLIPS_URL = self.MAIN_URL + "Music/Clips"
+        self.ARTIST_URL = self.MAIN_URL + "artist/Index?id="
         self.DEFAULT_ICON_URL = self.MAIN_URL + "img/colorize-logo-final.png"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.HTTP_HEADER.update({
@@ -69,22 +73,29 @@ class IFilmArabicHost(CBaseHostClass):
             {"name": "iFilm 2 Persian", "url": self.STREAM_URL + "ifilm2.m3u8"},
             {'name': 'iFilm English', 'url': self.STREAM_URL + 'ifilmen.m3u8'},
         ]
+
     def getPage(self, url, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
         url = url.strip()
         return self.cm.getPage(url, addParams, post_data)
+
     def listMainMenu(self, cItem):
         printDBG("IFilmArabicHost.listMainMenu")
         self.listsTab(self.MAIN_CAT_TAB, cItem)
+
     def listLiveStreams(self, cItem):
         printDBG("IFilmArabicHost.listLiveStreams")
         for stream in self.LIVE_STREAMS:
             name = stream["name"]
-            if "Arabic" in name: colored_title = C + name + W
-            elif "English" in name: colored_title = L + name + W            
-            elif "Persian" in name: colored_title = O + name + W
-            else: colored_title = name
+            if "Arabic" in name:
+                colored_title = C + name + W
+            elif "English" in name:
+                colored_title = L + name + W
+            elif "Persian" in name:
+                colored_title = O + name + W
+            else:
+                colored_title = name
             params = {
                 "name": "category",
                 "category": "video",
@@ -94,6 +105,7 @@ class IFilmArabicHost(CBaseHostClass):
                 "desc": Y + _("بث مباشر جودة عالية باللغة المختارة") + W
             }
             self.addVideo(params)
+
     def listContent(self, cItem, nextCategory):
         printDBG("IFilmArabicHost.listContent")
         baseUrl = cItem.get("url", "").strip()
@@ -114,7 +126,7 @@ class IFilmArabicHost(CBaseHostClass):
                             icon = quote(icon.encode("utf-8"), safe=":/")
                         itemUrl = self.getFullUrl("/Program/Content/" + str(item.get("Id", "")))
                         self.addDir({"name": "category","category": "episodes","title": colored_title,"url": itemUrl,"icon": icon})
-                    return 
+                    return
                 except Exception:
                     printExc()
         sts, data = self.getPage(baseUrl)
@@ -140,7 +152,7 @@ class IFilmArabicHost(CBaseHostClass):
             colored_title = COLOR_TITLE_FORMAT.format(Y, match.group(1).strip(), C, match.group(2).strip(), W) if match else Y+title+W
             icon = self.cm.ph.getSearchGroups(item, '''src=['"]([^'"]+?)['"]''')[0]
             if not icon or RESULT_TOKEN in icon:
-                icon = self.cm.ph.getSearchGroups(item, '''url\(&quot;([^&]+?)&quot;\)''')[0]
+                icon = self.cm.ph.getSearchGroups(item, r'''url\(&quot;([^&]+?)&quot;\)''')[0]
             if icon and RESULT_TOKEN not in icon:
                 icon = self.getFullUrl(icon)
                 icon = quote(icon.encode("utf-8"), safe=":/")
@@ -149,16 +161,18 @@ class IFilmArabicHost(CBaseHostClass):
             else:
                 new_category = "episodes"
             self.addDir({
-                "name": "category", "category": new_category, 
+                "name": "category", "category": new_category,
                 "title": colored_title, "url": itemUrl, "icon": icon
             })
             numItems += 1
         if numItems > 0 and "PageingItem" not in baseUrl:
             page = self.cm.ph.getSearchGroups(baseUrl, PAGE_PARAM + r"(\d+)")[0]
-            if page == "": page = "1"
+            if page == "":
+                page = "1"
             nextPage = int(page) + 1
             nextUrl = baseUrl.replace(PAGE_PARAM + page, PAGE_PARAM + str(nextPage)) if PAGE_PARAM in baseUrl else (baseUrl + ("&" if "?" in baseUrl else "?") + PAGE_PARAM + str(nextPage))
             self.addDir({"name": "category", "category": nextCategory, "title": L + _("Next Page »»» (%d)") % nextPage, "url": nextUrl})
+
     def listEpisodes(self, cItem):
         printDBG("IFilmArabicHost.listEpisodes")
         url = cItem.get("url", "")
@@ -203,7 +217,8 @@ class IFilmArabicHost(CBaseHostClass):
             })
         numEpisodes = self.cm.ph.getSearchGroups(data, r'var\s+inter_\s*=\s*(\d+)')[0]
         lang = self.cm.ph.getSearchGroups(data, r'var\s+langE\s*=\s*["\']([^"\']+)["\']')[0]
-        if lang == "fa": lang = ""
+        if lang == "fa":
+            lang = ""
         if seriesId and numEpisodes and int(numEpisodes) > 0:
             printDBG("IFilmArabicHost: Using Script Method (Classic)")
             for i in range(1, int(numEpisodes) + 1):
@@ -224,7 +239,8 @@ class IFilmArabicHost(CBaseHostClass):
                 try:
                     result = json.loads(json_data)
                     if result and isinstance(result, list) and len(result) > 0:
-                        try: result.sort(key=lambda x: int(x.get("Episode", 0)))
+                        try:
+                            result.sort(key=lambda x: int(x.get("Episode", 0)))
                         except Exception:
                             pass
                         for item in result:
@@ -259,6 +275,7 @@ class IFilmArabicHost(CBaseHostClass):
                 "title": L + _("! لا توجد فيديوهات متاحة حالياً لهذا العمل") + W,
                 "desc": Y + _("يبدو أن الحلقات لم يتم رفعها بعد في هذا القسم من المصدر.") + W
             })
+
     def listMovies(self, cItem):
         printDBG("IFilmArabicHost.listMovies")
         sts, data = self.getPage(cItem["url"])
@@ -277,9 +294,9 @@ class IFilmArabicHost(CBaseHostClass):
             if name:
                 cast_list.append("{0} ({1})".format(self.cm.ph.cleanHtmlStr(name), self.cm.ph.cleanHtmlStr(role)))
         full_desc = Y + "الطاقم: " + W + " | ".join(cast_list) + "\n" + Y + "القصة: " + W + story
-        videoUrl = self.cm.ph.getSearchGroups(data, '<source\s+src=["\']([^"\']+\.mp4[^"\']*)["\']')[0]
+        videoUrl = self.cm.ph.getSearchGroups(data, r'<source\s+src=["\']([^"\']+\.mp4[^"\']*)["\']')[0]
         if not videoUrl:
-             videoUrl = self.cm.ph.getSearchGroups(data, 'id="plyr_video".+?src=["\']([^"\']+)["\']')[0]
+            videoUrl = self.cm.ph.getSearchGroups(data, 'id="plyr_video".+?src=["\']([^"\']+)["\']')[0]
         if videoUrl.startswith("//"):
             videoUrl = "https:" + videoUrl
         cleanTitle = self.cm.ph.cleanHtmlStr(cItem.get("title", ""))
@@ -290,7 +307,7 @@ class IFilmArabicHost(CBaseHostClass):
                 "title": W + "▶ " + Y + cleanTitle,
                 "url": videoUrl,
                 "desc": full_desc,
-                "need_resolve": 1 
+                "need_resolve": 1
             })
             self.addVideo(params)
         else:
@@ -299,11 +316,13 @@ class IFilmArabicHost(CBaseHostClass):
                 "title": L + "! لا يوجد فيديو متاح حالياً لهذا الفيلم" + W,
                 "desc": full_desc
             })
+
     def listKidsContent(self, cItem):
         printDBG("IFilmArabicHost.listKidsContent")
         url = cItem.get("url", "")
-        page = self.cm.ph.getSearchGroups(url, "page=(\d+)")[0]
-        if not page: page = "1"
+        page = self.cm.ph.getSearchGroups(url, r"page=(\d+)")[0]
+        if not page:
+            page = "1"
         sts, data = self.getPage(url)
         if not sts:
             return
@@ -371,6 +390,7 @@ class IFilmArabicHost(CBaseHostClass):
                     "title": L + _("Next Page »»»") + W,
                     "url": nextUrl
                 })
+
     def listClips(self, cItem):
         printDBG("IFilmArabicHost.listClips")
         page = cItem.get("page", 1)
@@ -386,7 +406,7 @@ class IFilmArabicHost(CBaseHostClass):
             for item in result:
                 title = item.get("Caption", "")
                 icon = self.getFullUrl(item.get("ImageAddress_M", ""))
-                url  = self.getFullUrl(item.get("VideoAddress", ""))
+                url = self.getFullUrl(item.get("VideoAddress", ""))
                 desc = item.get("Discription", "")
                 if url == "":
                     continue
@@ -406,6 +426,7 @@ class IFilmArabicHost(CBaseHostClass):
                 self.addDir(params)
         except Exception:
             printExc()
+
     def listArtistsMain(self, cItem):
         printDBG("IFilmArabicHost.listArtistsMain")
         params = dict(cItem)
@@ -414,6 +435,7 @@ class IFilmArabicHost(CBaseHostClass):
         params = dict(cItem)
         params.update({"category": "artists_list", "title": _("الممثلون"), "url": self.ARTIST_URL + "2", "page": 1})
         self.addDir(params)
+
     def listArtistsItems(self, cItem):
         printDBG("IFilmArabicHost.listArtistsItems")
         page = cItem.get("page", 1)
@@ -462,6 +484,7 @@ class IFilmArabicHost(CBaseHostClass):
                 "url": url
             })
             self.addDir(params)
+
     def listArtistDetails(self, cItem):
         printDBG("IFilmArabicHost.listArtistDetails start")
         sts, data = self.cm.getPage(cItem["url"], self.defaultParams)
@@ -497,13 +520,16 @@ class IFilmArabicHost(CBaseHostClass):
             if icon:
                 icon = self.getFullUrl(icon)
                 icon = quote(icon.encode("utf-8"), safe=":/?&=")
-            if "/Film/" in url: category = "movie_details"
-            elif "/Series/" in url: category = "episodes"
+            if "/Film/" in url:
+                category = "movie_details"
+            elif "/Series/" in url:
+                category = "episodes"
             else:
                 continue
             params = dict(cItem)
             params.update({"title": colored_title,"url": url,"icon": icon,"desc": L + artistDesc[:900] + "...." + W,"category": category})
             self.addDir(params)
+
     def getLinksForVideo(self, cItem):
         printDBG("IFilmArabicHost.getLinksForVideo [%s]" % cItem)
         videoUrl = cItem.get("url", "").strip()
@@ -531,7 +557,7 @@ class IFilmArabicHost(CBaseHostClass):
                         bitrate = int(item.get("bitrate", 0))
                     except Exception:
                         bitrate = 0
-                    if bitrate >= 2000000: 
+                    if bitrate >= 2000000:
                         continue
                     name = item.get("name", "HLS")
                     url = self.up.decorateUrl(item["url"], {"User-Agent": "Mozilla/5.0", "Referer": self.MAIN_URL})
@@ -545,11 +571,12 @@ class IFilmArabicHost(CBaseHostClass):
         elif self.up.checkHostSupport(videoUrl) == 1:
             return self.up.getVideoLinkExt(videoUrl)
         return linksTab
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("IFilmArabicHost.listSearchResult")
         url = self.MAIN_URL + "Home/Search?searchstring=" + quote(searchPattern)
         params = {"header": {
-            "X-Requested-With": "XMLHttpRequest", 
+            "X-Requested-With": "XMLHttpRequest",
             "Accept": "application/json",
             "Referer": self.MAIN_URL,
         }}
@@ -621,6 +648,7 @@ class IFilmArabicHost(CBaseHostClass):
         except Exception as e:
             printDBG("Search Error: " + str(e))
             self.addMarker({"title": R + _("خطأ في جلب البيانات من المصدر") + W})
+
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         printDBG("IFilmArabicHost.handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -628,7 +656,8 @@ class IFilmArabicHost(CBaseHostClass):
         category = self.currItem.get("category", "")
         printDBG("handleService: >> name[%s], category[%s]" % (name, category))
         self.currList = []
-        if name == None: self.listMainMenu({"name": "category"})
+        if name is None:
+            self.listMainMenu({"name": "category"})
         elif category == "live":
             self.listLiveStreams(self.currItem)
         elif category == "series":
@@ -664,6 +693,7 @@ class IFilmArabicHost(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, IFilmArabicHost(), True, [])
