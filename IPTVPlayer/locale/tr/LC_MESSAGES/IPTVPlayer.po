@@ -1,0 +1,1950 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: IPTVPlayer\n"
+"POT-Creation-Date: 2026-03-11 20:19+0100\n"
+"PO-Revision-Date: 2026-03-13 15:06+0300\n"
+"Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
+"Language-Team: Turkish\n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+msgid "\t*\tVotes: "
+msgstr "\t*\tOylar: "
+
+#, python-format
+msgid "\tDisk space available: %s"
+msgstr "\tKullanılabilir disk alanı: %s"
+
+#, python-format
+msgid "\tDisk space required: %s"
+msgstr "\tGerekli disk alanı: %s"
+
+msgid ""
+"\n"
+"Error[1]."
+msgstr ""
+"\n"
+"Hata[1]."
+
+msgid ""
+"\n"
+"Error[2]."
+msgstr ""
+"\n"
+"Hata[2]."
+
+msgid ""
+"\n"
+"Error[3]."
+msgstr ""
+"\n"
+"Hata[3]."
+
+msgid ""
+"\n"
+"Error[4]."
+msgstr ""
+"\n"
+"Hata[4]."
+
+msgid ""
+"\n"
+"Make sure you are using the latest version of the plugin."
+msgstr ""
+"\n"
+"Eklentinin en son sürümünü kullandığınızdan emin olun."
+
+msgid ""
+"\n"
+"This host is not integral part of the E2iPlayer plugin.\n"
+"It is not supported by E2iPlayer team."
+msgstr ""
+"\n"
+"Bu host, E2iPlayer eklentisinin resmi bir parçası değildir.\n"
+"E2iPlayer ekibi tarafından desteklenmemektedir."
+
+msgid ""
+"\n"
+"You can also report problem here: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+msgstr ""
+"\n"
+"Sorunu buradan da bildirebilirsin: \n"
+"https://github.com/oe-mirrors/e2iplayer/issues"
+
+msgid "    Audio buffer size [KB]"
+msgstr "    Ses tampon boyutu [KB]"
+
+msgid "    Background color"
+msgstr "    Arka plan rengi"
+
+msgid "    Default suggestions provider"
+msgstr "    Varsayılan öneri sağlayıcısı"
+
+msgid "    Enable hosts groups"
+msgstr "    Host gruplarını etkinleştir"
+
+msgid "    Number of columns"
+msgstr "    Sütun sayısı"
+
+msgid "    Number of rows"
+msgstr "    Satır sayısı"
+
+msgid "    Remove thumbnails"
+msgstr "    Küçük resimleri kaldır"
+
+msgid "    Service icon size"
+msgstr "    Servis simgesi boyutu"
+
+msgid "    Show suggestions"
+msgstr "    Önerileri göster"
+
+msgid "    Video buffer size [MB]"
+msgstr "    Video tampon boyutu [MB]"
+
+#, python-format
+msgid " (planned %s)"
+msgstr " (planlanan %s)"
+
+msgid " - others links"
+msgstr " - diğer bağlantılar"
+
+msgid " Login Protected."
+msgstr " Giriş korumalı."
+
+msgid " Private Show."
+msgstr " Özel yayın."
+
+msgid " This video is a private."
+msgstr " Bu video özeldir."
+
+msgid " or "
+msgstr " veya "
+
+#, python-format
+msgid "\"%s\" Virtual Keyboard layout not available."
+msgstr "\"%s\" Sanal Klavye düzeni kullanılamıyor."
+
+msgid "\"Web\" streams player"
+msgstr "\"Web\" akış oynatıcısı"
+
+#, python-format
+msgid "%s - service overview"
+msgstr "%s - servis genel görünümü"
+
+#, python-format
+msgid "%s - subtitles provider"
+msgstr "%s - altyazı sağlayıcısı"
+
+#, python-format
+msgid "%s - trailer"
+msgstr "%s - fragman"
+
+#, python-format
+msgid "%s API KEY"
+msgstr "%s API ANAHTARI"
+
+#, python-format
+msgid "%s device name"
+msgstr "%s cihaz adı"
+
+#, python-format
+msgid "%s download manager"
+msgstr "%s indirme yöneticisi"
+
+#, python-format
+msgid "%s e-mail"
+msgstr "%s e-posta"
+
+#, python-format
+msgid "%s episodes"
+msgstr "%s bölüm"
+
+#, python-format
+msgid "%s file is %d KB in size. Last %d lines are:"
+msgstr "%s dosyası %d KB boyutunda. Son %d satır şunlar:"
+
+#, python-format
+msgid "%s file is %d MB in size. Last %d lines are:"
+msgstr "%s dosyası %d MB boyutunda. Son %d satır şunlar:"
+
+#, python-format
+msgid "%s followers"
+msgstr "%s takipçi"
+
+#, python-format
+msgid "%s has been protected with google recaptcha v2. You can try to use API version."
+msgstr "%s, Google reCAPTCHA v2 ile korunuyor. API sürümünü kullanmayı deneyebilirsin."
+
+#, python-format
+msgid "%s password"
+msgstr "%s parola"
+
+#, python-format
+msgid "%s returned %s: %s"
+msgstr "%s şu sonucu döndürdü %s: %s"
+
+#, python-format
+msgid "%s s%se%s"
+msgstr "%s s%se%s"
+
+#, python-format
+msgid "%s said: This page is currently unavailable in your region"
+msgstr "%s dedi ki: Bu sayfa şu anda bölgenizde kullanılamıyor"
+
+#, python-format
+msgid "%s services configuration"
+msgstr "%s servis yapılandırması"
+
+#, python-format
+msgid "%s shows"
+msgstr "%s gösteri"
+
+#, python-format
+msgid "%s subtitles download - how to"
+msgstr "%s altyazı indirme - nasıl yapılır"
+
+#, python-format
+msgid "%s timeout."
+msgstr "%s zaman aşımı."
+
+#, python-format
+msgid ""
+"%s uses \"geo-blocking\" measures to prevent you from accessing the services from abroad.\n"
+" Host country: %s, your country: %s"
+msgstr ""
+"%s, yurt dışından hizmete erişimi engellemek için \"coğrafi engelleme\" kullanıyor.\n"
+" Sunucu ülkesi: %s, sizin ülkeniz: %s"
+
+#, python-format
+msgid "%s viewers"
+msgstr "%s izleyici"
+
+#, python-format
+msgid "%s views"
+msgstr "%s görüntülenme"
+
+msgid "++"
+msgstr "++"
+
+msgid "--"
+msgstr "--"
+
+msgid "-- OK --"
+msgstr "-- TAMAM --"
+
+msgid "----- BASIC CONFIGURATION -----"
+msgstr "----- TEMEL YAPILANDIRMA -----"
+
+msgid "----- BUFFERING CONFIGURATION -----"
+msgstr "----- TAMPON YAPILANDIRMASI -----"
+
+msgid "----- CAPTCHA CONFIGURATION -----"
+msgstr "----- CAPTCHA YAPILANDIRMASI -----"
+
+msgid "----- DOWNLOADING CONFIGURATION -----"
+msgstr "----- İNDİRME YAPILANDIRMASI -----"
+
+msgid "----- Global HostXXX Configuration -----"
+msgstr "----- Genel HostXXX Yapılandırması -----"
+
+msgid "----- OTHER SETTINGS -----"
+msgstr "----- DİĞER AYARLAR -----"
+
+msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
+msgstr "----- OYNATICI VE OYNATIM YAPILANDIRMASI -----"
+
+msgid "----- PROXIES CONFIGURATION -----"
+msgstr "----- VEKİL SUNUCU YAPILANDIRMASI -----"
+
+msgid "----- SECURITY CONFIGURATION -----"
+msgstr "----- GÜVENLİK YAPILANDIRMASI -----"
+
+msgid "----- SERVICE CONFIGURATION -----"
+msgstr "----- SERVİS YAPILANDIRMASI -----"
+
+msgid "----- SKIN CONFIGURATION -----"
+msgstr "----- ARAYÜZ YAPILANDIRMASI -----"
+
+msgid "----- STORAGE CONFIGURATION -----"
+msgstr "----- DEPOLAMA YAPILANDIRMASI -----"
+
+msgid "----- SUBTITLES CONFIGURATION -----"
+msgstr "----- ALTYAZI YAPILANDIRMASI -----"
+
+msgid "----------  Live Cams  ----------"
+msgstr "----------  Canlı Kameralar  ----------"
+
+msgid "----------  Other  ----------"
+msgstr "----------  Diğer  ----------"
+
+msgid "12 hour format"
+msgstr "12 saat biçimi"
+
+msgid "16:10 Letterbox"
+msgstr "16:10 Letterbox"
+
+msgid "16:10 PanScan"
+msgstr "16:10 PanScan"
+
+msgid "16:9"
+msgstr "16:9"
+
+msgid "16:9 Letterbox"
+msgstr "16:9 Letterbox"
+
+msgid "16:9 always"
+msgstr "her zaman 16:9"
+
+msgid "24 hour format"
+msgstr "24 saat biçimi"
+
+msgid "4:3 Letterbox"
+msgstr "4:3 Letterbox"
+
+msgid "4:3 PanScan"
+msgstr "4:3 PanScan"
+
+msgid "A-Z"
+msgstr "A-Z"
+
+msgid "AAC downmix mode"
+msgstr "AAC downmix modu"
+
+msgid "ABORTED"
+msgstr "İPTAL EDİLDİ"
+
+msgid "AC3 downmix mode"
+msgstr "AC3 downmix modu"
+
+msgid "ALBUMS"
+msgstr "ALBÜMLER"
+
+msgid "API initialization failed!"
+msgstr "API başlatma başarısız!"
+
+msgid "API_KEY"
+msgstr "API_ANAHTARI"
+
+msgid "ARTISTS"
+msgstr "SANATÇILAR"
+
+msgid "AZ"
+msgstr "AZ"
+
+msgid "Accept"
+msgstr "Kabul Et"
+
+msgid "Access Forbidden"
+msgstr "Erişim Yasak"
+
+msgid "Access denied. Please check password."
+msgstr "Erişim reddedildi. Lütfen parolayı kontrol edin."
+
+msgid "Active host"
+msgstr "Etkin host"
+
+#, python-format
+msgid "Active: %s"
+msgstr "Etkin: %s"
+
+msgid "Actor profile and Works"
+msgstr "Oyuncu profili ve çalışmaları"
+
+msgid "Actors"
+msgstr "Oyuncular"
+
+msgid "Actors:"
+msgstr "Oyuncular:"
+
+#, python-format
+msgid "Add host %s to group"
+msgstr "%s hostunu gruba ekle"
+
+msgid "Add item to favourites"
+msgstr "Öğeyi favorilere ekle"
+
+msgid "Add item to group"
+msgstr "Öğeyi gruba ekle"
+
+msgid "Add new group"
+msgstr "Yeni grup ekle"
+
+msgid "Add new group of favourites"
+msgstr "Yeni favori grubu ekle"
+
+msgid "Add to downloader"
+msgstr "İndiriciye ekle"
+
+#, python-format
+msgid "Added by: %s, directory: %s"
+msgstr "Ekleyen: %s, dizin: %s"
+
+msgid "Age-gate bypass:"
+msgstr "Yaş sınırı atlatma:"
+
+msgid "Airing"
+msgstr "Yayında"
+
+msgid "All"
+msgstr "Tümü"
+
+msgid "All A-Z"
+msgstr "Tümü A-Z"
+
+msgid "All Leagues"
+msgstr "Tüm Ligler"
+
+msgid "All Platforms"
+msgstr "Tüm Platformlar"
+
+msgid "All Sports"
+msgstr "Tüm Sporlar"
+
+msgid "All in one"
+msgstr "Hepsi bir arada"
+
+msgid "All materials"
+msgstr "Tüm içerikler"
+
+msgid "All streams"
+msgstr "Tüm akışlar"
+
+msgid "All time"
+msgstr "Tüm zamanlar"
+
+msgid "Allow VP9 codec:"
+msgstr "VP9 kodeğine izin ver:"
+
+msgid "Allow dash format:"
+msgstr "DASH biçimine izin ver:"
+
+msgid "Allow hls format"
+msgstr "HLS biçimine izin ver"
+
+msgid "Allow watched flag to be set"
+msgstr "İzlendi işaretinin ayarlanmasına izin ver"
+
+msgid "Alphabet"
+msgstr "Alfabe"
+
+msgid "Alphabetically"
+msgstr "Alfabetik olarak"
+
+msgid "Alternative"
+msgstr "Alternatif"
+
+msgid "Alternative domain:"
+msgstr "Alternatif alan adı:"
+
+msgid "Alternative geolocation IP 1:"
+msgstr "Alternatif coğrafi konum IP 1:"
+
+msgid "Alternative geolocation IP 2:"
+msgstr "Alternatif coğrafi konum IP 2:"
+
+msgid "Alternative proxy server (1)"
+msgstr "Alternatif proxy sunucusu (1)"
+
+msgid "Alternative proxy server (2)"
+msgstr "Alternatif proxy sunucusu (2)"
+
+msgid "Always"
+msgstr "Her zaman"
+
+msgid "Anime"
+msgstr "Anime"
+
+msgid "Anime Movies"
+msgstr "Anime Filmleri"
+
+msgid "Anime Search"
+msgstr "Anime Arama"
+
+msgid "Anime Series"
+msgstr "Anime Dizileri"
+
+msgid "Anime TV series"
+msgstr "Anime TV dizileri"
+
+msgid "Anime list"
+msgstr "Anime listesi"
+
+msgid "Anime movies"
+msgstr "Anime filmleri"
+
+msgid "Answer"
+msgstr "Yanıt"
+
+msgid "Any"
+msgstr "Herhangi biri"
+
+msgid "Apply"
+msgstr "Uygula"
+
+msgid "Arabic"
+msgstr "Arapça"
+
+msgid "Arabic Movies"
+msgstr "Arap Filmleri"
+
+msgid "Arabic Series"
+msgstr "Arap Dizileri"
+
+msgid "Arabic movies"
+msgstr "Arap filmleri"
+
+msgid "Archive"
+msgstr "Arşiv"
+
+msgid "Archives"
+msgstr "Arşivler"
+
+msgid "Are you sure you want to delete search history?"
+msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
+
+msgid "Artists"
+msgstr "Sanatçılar"
+
+msgid "Ask"
+msgstr "Sor"
+
+msgid "Aspect"
+msgstr "En-boy oranı"
+
+msgid "Audio"
+msgstr "Ses"
+
+msgid "Audio tracks"
+msgstr "Ses parçaları"
+
+msgid "Auto"
+msgstr "Otomatik"
+
+msgid "Auto selection based on the settings"
+msgstr "Ayarlara göre otomatik seçim"
+
+msgid "Auto start method"
+msgstr "Otomatik başlatma yöntemi"
+
+msgid "Auto-translate"
+msgstr "Otomatik çeviri"
+
+msgid "Automatically turn on external subtitles"
+msgstr "Harici altyazıları otomatik aç"
+
+msgid "Autoplay start delay"
+msgstr "Otomatik oynatma başlama gecikmesi"
+
+msgid "Black"
+msgstr "Siyah"
+
+msgid "Browse"
+msgstr "Gözat"
+
+msgid "Browse videos"
+msgstr "Videolara gözat"
+
+msgid "Buffering location"
+msgstr "Tampon konumu"
+
+msgid "Calendar"
+msgstr "Takvim"
+
+msgid "Cancel"
+msgstr "İptal"
+
+msgid "Captcha"
+msgstr "Captcha"
+
+msgid "Captcha solving service"
+msgstr "Captcha çözme servisi"
+
+msgid "Cartoons"
+msgstr "Çizgi filmler"
+
+msgid "Categories"
+msgstr "Kategoriler"
+
+msgid "Change active movie player"
+msgstr "Etkin video oynatıcıyı değiştir"
+
+msgid "Channel"
+msgstr "Kanal"
+
+msgid "Channels"
+msgstr "Kanallar"
+
+msgid "Children"
+msgstr "Çocuk"
+
+msgid "Clear"
+msgstr "Temizle"
+
+msgid "Click"
+msgstr "Tıkla"
+
+msgid "Clip"
+msgstr "Klip"
+
+msgid "Clips"
+msgstr "Klipler"
+
+msgid "Close"
+msgstr "Kapat"
+
+msgid "Closing. Please wait..."
+msgstr "Kapanıyor. Lütfen bekleyin..."
+
+msgid "Collections"
+msgstr "Koleksiyonlar"
+
+msgid "Configuration"
+msgstr "Yapılandırma"
+
+msgid "Configure host"
+msgstr "Hostu yapılandır"
+
+msgid "Configuring an external movie player"
+msgstr "Harici video oynatıcı yapılandırılıyor"
+
+msgid "Confirm new pin"
+msgstr "Yeni pini onayla"
+
+msgid "Connection to server failed!"
+msgstr "Sunucu bağlantısı başarısız oldu!"
+
+msgid "Continue downloading"
+msgstr "İndirmeye devam et"
+
+msgid "Copy"
+msgstr "Kopyala"
+
+msgid "Countries"
+msgstr "Ülkeler"
+
+msgid "Country"
+msgstr "Ülke"
+
+msgid "Create LCD/VFD summary screen"
+msgstr "LCD/VFD özet ekranı oluştur"
+
+msgid "Cut"
+msgstr "Kes"
+
+msgid "DASH/mpd"
+msgstr "DASH/mpd"
+
+msgid "DATE"
+msgstr "TARİH"
+
+msgid "DOWNLOAD ERROR"
+msgstr "İNDİRME HATASI"
+
+msgid "DOWNLOADED"
+msgstr "İNDİRİLDİ"
+
+msgid "DOWNLOADING"
+msgstr "İNDİRİLİYOR"
+
+msgid "DRM protected streams are not supported."
+msgstr "DRM korumalı akışlar desteklenmiyor."
+
+msgid "DRM protection detected."
+msgstr "DRM koruması algılandı."
+
+msgid "Darkgray"
+msgstr "Koyu gri"
+
+msgid "Default"
+msgstr "Varsayılan"
+
+msgid "Defaults"
+msgstr "Varsayılanlar"
+
+msgid "Delete"
+msgstr "Sil"
+
+msgid "Delete log file"
+msgstr "Günlük dosyasını sil"
+
+msgid "Delete search history"
+msgstr "Arama geçmişini sil"
+
+msgid "Description:"
+msgstr "Açıklama:"
+
+msgid "Deutsch"
+msgstr "Almanca"
+
+msgid "Disable"
+msgstr "Devre dışı bırak"
+
+msgid "Discover"
+msgstr "Keşfet"
+
+msgid "Display thumbnails"
+msgstr "Küçük resimleri göster"
+
+msgid "Documentaries"
+msgstr "Belgeseller"
+
+msgid "Documentary"
+msgstr "Belgesel"
+
+msgid "Download"
+msgstr "İndir"
+
+msgid "Download again"
+msgstr "Tekrar indir"
+
+msgid "Download log file"
+msgstr "Günlük dosyasını indir"
+
+msgid "Download manager"
+msgstr "İndirme yöneticisi"
+
+msgid "Downloading"
+msgstr "İndiriliyor"
+
+msgid "Downloads"
+msgstr "İndirilenler"
+
+msgid "Downloads location"
+msgstr "İndirme konumu"
+
+msgid "Dramas"
+msgstr "Dramalar"
+
+msgid "Duration"
+msgstr "Süre"
+
+msgid "Duration:"
+msgstr "Süre:"
+
+msgid "E2iPlayer - settings"
+msgstr "E2iPlayer - ayarlar"
+
+msgid "E2iPlayer auto start at Enigma2 start"
+msgstr "Enigma2 başlarken E2iPlayer otomatik açılsın"
+
+msgid "E2iPlayer downloader"
+msgstr "E2iPlayer indirici"
+
+msgid "ERROR:"
+msgstr "HATA:"
+
+msgid "Edit favourites"
+msgstr "Favorileri düzenle"
+
+msgid "Email"
+msgstr "E-posta"
+
+msgid "Enable"
+msgstr "Etkinleştir"
+
+msgid "Enable reordering"
+msgstr "Yeniden sıralamayı etkinleştir"
+
+msgid "Enable reordering mode"
+msgstr "Yeniden sıralama modunu etkinleştir"
+
+msgid "English"
+msgstr "İngilizce"
+
+msgid "Enter a value"
+msgstr "Bir değer girin"
+
+msgid "Enter name"
+msgstr "Ad girin"
+
+msgid "Enter new pin"
+msgstr "Yeni pin girin"
+
+msgid "Enter old pin"
+msgstr "Eski pini girin"
+
+msgid "Enter pin"
+msgstr "Pin girin"
+
+msgid "Enter the text"
+msgstr "Metni girin"
+
+msgid "Episode"
+msgstr "Bölüm"
+
+msgid "Episode Search"
+msgstr "Bölüm arama"
+
+msgid "Episodes"
+msgstr "Bölümler"
+
+msgid "Error communicating with the server."
+msgstr "Sunucu ile iletişim hatası."
+
+msgid "Error occurs"
+msgstr "Hata oluştu"
+
+msgid "Error occurs during download."
+msgstr "İndirme sırasında hata oluştu."
+
+msgid "Exit"
+msgstr "Çıkış"
+
+msgid "FAILED"
+msgstr "BAŞARISIZ"
+
+msgid "FREE"
+msgstr "ÜCRETSİZ"
+
+msgid "Failed to decode to UTF-8."
+msgstr "UTF-8'e dönüştürme başarısız oldu."
+
+msgid "Failed to download subtitle."
+msgstr "Altyazı indirilemedi."
+
+msgid "Favourites"
+msgstr "Favoriler"
+
+msgid "Favourites groups"
+msgstr "Favori grupları"
+
+msgid "Favourites manager"
+msgstr "Favori yöneticisi"
+
+msgid "File name cannot be empty!"
+msgstr "Dosya adı boş olamaz!"
+
+msgid "File renamed successfully!"
+msgstr "Dosya adı başarıyla değiştirildi!"
+
+msgid "Film"
+msgstr "Film"
+
+msgid "Filters"
+msgstr "Filtreler"
+
+msgid "Folder for cache data"
+msgstr "Önbellek verileri klasörü"
+
+msgid "Folder for temporary data"
+msgstr "Geçici veriler klasörü"
+
+msgid "Free"
+msgstr "Ücretsiz"
+
+msgid "Free IPTV list"
+msgstr "Ücretsiz IPTV listesi"
+
+msgid "French"
+msgstr "Fransızca"
+
+msgid "From E2 settings"
+msgstr "E2 ayarlarından"
+
+msgid "Games"
+msgstr "Oyunlar"
+
+msgid "General"
+msgstr "Genel"
+
+msgid "Genre:"
+msgstr "Tür:"
+
+msgid "Genres"
+msgstr "Türler"
+
+msgid "Genres:"
+msgstr "Türler:"
+
+msgid "German"
+msgstr "Almanca"
+
+msgid "Get EPG"
+msgstr "EPG al"
+
+msgid "Google Suggestions"
+msgstr "Google Önerileri"
+
+msgid "Graphic services selector"
+msgstr "Grafik servis seçici"
+
+msgid "Greek"
+msgstr "Yunanca"
+
+msgid "Groups"
+msgstr "Gruplar"
+
+msgid "Hand"
+msgstr "El"
+
+msgid "High"
+msgstr "Yüksek"
+
+msgid "History of searched phrases."
+msgstr "Aranan ifadelerin geçmişi."
+
+msgid "Home"
+msgstr "Ana Sayfa"
+
+msgid "Home page"
+msgstr "Ana sayfa"
+
+msgid "Hosts settings"
+msgstr "Host ayarları"
+
+msgid "Hungarian"
+msgstr "Macarca"
+
+msgid "IMDb Suggestions"
+msgstr "IMDb Önerileri"
+
+msgid "IMDb rating"
+msgstr "IMDb puanı"
+
+msgid "INTERRUPTED"
+msgstr "KESİLDİ"
+
+msgid "Icon type"
+msgstr "Simge türü"
+
+msgid "Icons quality"
+msgstr "Simge kalitesi"
+
+msgid "Icons size"
+msgstr "Simge boyutu"
+
+msgid "Info"
+msgstr "Bilgi"
+
+msgid "Info bar clock format"
+msgstr "Bilgi çubuğu saat biçimi"
+
+msgid "Info bar timeout"
+msgstr "Bilgi çubuğu zaman aşımı"
+
+msgid "Information"
+msgstr "Bilgi"
+
+msgid "Initial list"
+msgstr "Başlangıç listesi"
+
+msgid "Initialize Download Manager"
+msgstr "İndirme Yöneticisini Başlat"
+
+msgid "Input"
+msgstr "Giriş"
+
+msgid "Invalid email."
+msgstr "Geçersiz e-posta."
+
+msgid "Invalid name."
+msgstr "Geçersiz ad."
+
+msgid "Italian"
+msgstr "İtalyanca"
+
+msgid "Items"
+msgstr "Öğeler"
+
+msgid "Language"
+msgstr "Dil"
+
+msgid "Language:"
+msgstr "Dil:"
+
+msgid "Languages"
+msgstr "Diller"
+
+msgid "Latest"
+msgstr "En son"
+
+msgid "Latest added"
+msgstr "Son eklenenler"
+
+msgid "Latest movies"
+msgstr "En yeni filmler"
+
+msgid "Line Spacing"
+msgstr "Satır Aralığı"
+
+msgid "Links for"
+msgstr "Şunun bağlantıları"
+
+msgid "List by day"
+msgstr "Güne göre listele"
+
+msgid "Live"
+msgstr "Canlı"
+
+msgid "Live Radio"
+msgstr "Canlı Radyo"
+
+msgid "Live TV"
+msgstr "Canlı TV"
+
+msgid "Live streams"
+msgstr "Canlı akışlar"
+
+msgid "Load"
+msgstr "Yükle"
+
+msgid "Loading"
+msgstr "Yükleniyor"
+
+msgid "Loading data, please wait"
+msgstr "Veriler yükleniyor, lütfen bekleyin"
+
+msgid "Localization"
+msgstr "Yerelleştirme"
+
+msgid "Login"
+msgstr "Giriş"
+
+msgid "Login failed!"
+msgstr "Giriş başarısız!"
+
+msgid "Login failed."
+msgstr "Giriş başarısız."
+
+msgid "Login needed"
+msgstr "Giriş gerekiyor"
+
+msgid "Logs"
+msgstr "Günlükler"
+
+msgid "Low"
+msgstr "Düşük"
+
+msgid "MENU"
+msgstr "MENÜ"
+
+msgid "MOVIES"
+msgstr "FİLMLER"
+
+msgid "Main"
+msgstr "Ana"
+
+msgid "Main menu"
+msgstr "Ana menü"
+
+msgid "Manager status: "
+msgstr "Yönetici durumu: "
+
+msgid "Matches"
+msgstr "Maçlar"
+
+msgid "Max items per page"
+msgstr "Sayfa başına en fazla öğe"
+
+msgid "Menu"
+msgstr "Menü"
+
+msgid "Mirror"
+msgstr "Ayna"
+
+msgid "Monthly"
+msgstr "Aylık"
+
+msgid "More"
+msgstr "Daha fazla"
+
+msgid "More results"
+msgstr "Daha fazla sonuç"
+
+msgid "Most Popular"
+msgstr "En Popüler"
+
+msgid "Most popular"
+msgstr "En popüler"
+
+msgid "Most recent"
+msgstr "En güncel"
+
+msgid "Most viewed"
+msgstr "En çok görüntülenen"
+
+msgid "Move group"
+msgstr "Grubu taşı"
+
+msgid "Movie"
+msgstr "Film"
+
+msgid "Movies"
+msgstr "Filmler"
+
+msgid "Music"
+msgstr "Müzik"
+
+msgid "Name cannot be empty."
+msgstr "Ad boş olamaz."
+
+msgid "Name:"
+msgstr "Ad:"
+
+msgid "Netflix"
+msgstr "Netflix"
+
+msgid "Never"
+msgstr "Asla"
+
+msgid "New"
+msgstr "Yeni"
+
+msgid "News"
+msgstr "Haberler"
+
+msgid "Next"
+msgstr "Sonraki"
+
+msgid "Next Page"
+msgstr "Sonraki Sayfa"
+
+msgid "Next page"
+msgstr "Sonraki sayfa"
+
+msgid "No"
+msgstr "Hayır"
+
+msgid "No biography available"
+msgstr "Biyografi yok"
+
+msgid "No playable sources found."
+msgstr "Oynatılabilir kaynak bulunamadı."
+
+msgid "No valid links available."
+msgstr "Geçerli bağlantı yok."
+
+msgid "None"
+msgstr "Yok"
+
+msgid "Not Free"
+msgstr "Ücretsiz değil"
+
+msgid "Now playing"
+msgstr "Şimdi oynatılıyor"
+
+msgid "OK"
+msgstr "Tamam"
+
+msgid "Older"
+msgstr "Daha eski"
+
+msgid "On Air"
+msgstr "Yayında"
+
+msgid "Only music"
+msgstr "Sadece müzik"
+
+msgid "Only videos"
+msgstr "Sadece videolar"
+
+msgid "Opening. Please wait..."
+msgstr "Açılıyor. Lütfen bekleyin..."
+
+msgid "Operation aborted!"
+msgstr "İşlem iptal edildi!"
+
+msgid "Other"
+msgstr "Diğer"
+
+msgid "Others"
+msgstr "Diğerleri"
+
+msgid "Paid"
+msgstr "Ücretli"
+
+msgid "Password"
+msgstr "Parola"
+
+msgid "Password:"
+msgstr "Parola:"
+
+msgid "Path:"
+msgstr "Yol:"
+
+msgid "People"
+msgstr "Kişiler"
+
+msgid "Pin has been changed."
+msgstr "Pin değiştirildi."
+
+msgid "Pin incorrect!"
+msgstr "Pin yanlış!"
+
+msgid "Playlist"
+msgstr "Oynatma listesi"
+
+msgid "Playlists"
+msgstr "Oynatma listeleri"
+
+msgid "Podcasts"
+msgstr "Podcastler"
+
+msgid "Polish"
+msgstr "Lehçe"
+
+msgid "Popular"
+msgstr "Popüler"
+
+msgid "Portal:"
+msgstr "Portal:"
+
+msgid "Portuguese"
+msgstr "Portekizce"
+
+msgid "Preferred bitrate"
+msgstr "Tercih edilen bit hızı"
+
+msgid "Preferred quality"
+msgstr "Tercih edilen kalite"
+
+msgid "Preview"
+msgstr "Önizleme"
+
+msgid "Previous"
+msgstr "Önceki"
+
+msgid "Previous Page"
+msgstr "Önceki Sayfa"
+
+msgid "Previous list"
+msgstr "Önceki liste"
+
+msgid "Program"
+msgstr "Program"
+
+msgid "Programs"
+msgstr "Programlar"
+
+msgid "Published:"
+msgstr "Yayınlandı:"
+
+msgid "Qualities"
+msgstr "Kaliteler"
+
+msgid "Quality"
+msgstr "Kalite"
+
+msgid "Quality:"
+msgstr "Kalite:"
+
+msgid "Radio"
+msgstr "Radyo"
+
+msgid "Random"
+msgstr "Rastgele"
+
+msgid "Ranking"
+msgstr "Sıralama"
+
+msgid "Rating"
+msgstr "Puan"
+
+msgid "Rating:"
+msgstr "Puan:"
+
+msgid "Recent"
+msgstr "Son"
+
+msgid "Redirect"
+msgstr "Yönlendir"
+
+msgid "Refresh"
+msgstr "Yenile"
+
+msgid "Refreshing"
+msgstr "Yenileniyor"
+
+msgid "Release"
+msgstr "Yayın"
+
+msgid "Reload list"
+msgstr "Listeyi yenile"
+
+msgid "Remember last watched position"
+msgstr "Son izlenen konumu hatırla"
+
+msgid "Remove"
+msgstr "Kaldır"
+
+msgid "Remove disabled services"
+msgstr "Devre dışı servisleri kaldır"
+
+msgid "Remove file"
+msgstr "Dosyayı kaldır"
+
+msgid "Remove from favourites"
+msgstr "Favorilerden kaldır"
+
+msgid "Remove group"
+msgstr "Grubu kaldır"
+
+msgid "Remove item"
+msgstr "Öğeyi kaldır"
+
+msgid "Rename"
+msgstr "Yeniden adlandır"
+
+msgid "Rename file"
+msgstr "Dosyayı yeniden adlandır"
+
+msgid "Return to hosts list"
+msgstr "Host listesine dön"
+
+msgid "Russian"
+msgstr "Rusça"
+
+msgid "SHOWS"
+msgstr "ŞOVLAR"
+
+msgid "STARTED"
+msgstr "BAŞLADI"
+
+msgid "STOPPED"
+msgstr "DURDURULDU"
+
+msgid "Save"
+msgstr "Kaydet"
+
+msgid "Save changes?"
+msgstr "Değişiklikler kaydedilsin mi?"
+
+msgid "Schedule"
+msgstr "Takvim"
+
+msgid "Science"
+msgstr "Bilim"
+
+msgid "Search"
+msgstr "Ara"
+
+msgid "Search History is empty."
+msgstr "Arama geçmişi boş."
+
+msgid "Search History successfully deleted."
+msgstr "Arama geçmişi başarıyla silindi."
+
+msgid "Search history"
+msgstr "Arama geçmişi"
+
+msgid "Search in all active hosts"
+msgstr "Tüm etkin hostlarda ara"
+
+msgid "Search results"
+msgstr "Arama sonuçları"
+
+msgid "Search type"
+msgstr "Arama türü"
+
+msgid "Season"
+msgstr "Sezon"
+
+msgid "Select"
+msgstr "Seç"
+
+msgid "Select action"
+msgstr "İşlem seç"
+
+msgid "Select audio track"
+msgstr "Ses parçası seç"
+
+msgid "Select directory"
+msgstr "Dizin seç"
+
+msgid "Select group"
+msgstr "Grup seç"
+
+msgid "Select language"
+msgstr "Dil seç"
+
+msgid "Select link"
+msgstr "Bağlantı seç"
+
+msgid "Select movie player"
+msgstr "Video oynatıcı seç"
+
+msgid "Select option"
+msgstr "Seçenek seç"
+
+msgid "Select subtitles file"
+msgstr "Altyazı dosyası seç"
+
+msgid "Select subtitles to download"
+msgstr "İndirilecek altyazıyı seç"
+
+msgid "Select subtitles track"
+msgstr "Altyazı parçası seç"
+
+msgid "Select the directory"
+msgstr "Dizini seç"
+
+msgid "Select the file"
+msgstr "Dosyayı seç"
+
+msgid "Selected hosts"
+msgstr "Seçilen hostlar"
+
+msgid "Send"
+msgstr "Gönder"
+
+msgid "Series"
+msgstr "Diziler"
+
+msgid "Server"
+msgstr "Sunucu"
+
+msgid "Services configuration"
+msgstr "Servis yapılandırması"
+
+msgid "Services management"
+msgstr "Servis yönetimi"
+
+msgid "Set active movie player"
+msgstr "Etkin video oynatıcıyı ayarla"
+
+msgid "Set file name"
+msgstr "Dosya adı ayarla"
+
+msgid "Set pin code"
+msgstr "Pin kodu ayarla"
+
+msgid "Set watched"
+msgstr "İzlendi olarak işaretle"
+
+msgid "Settings"
+msgstr "Ayarlar"
+
+msgid "Show IPTVPlayer in extension list"
+msgstr "IPTVPlayer'ı uzantı listesinde göster"
+
+msgid "Show IPTVPlayer in main menu"
+msgstr "IPTVPlayer'ı ana menüde göster"
+
+msgid "Show all channels"
+msgstr "Tüm kanalları göster"
+
+msgid "Show download manager after adding new item"
+msgstr "Yeni öğe ekledikten sonra indirme yöneticisini göster"
+
+msgid "Show file size"
+msgstr "Dosya boyutunu göster"
+
+msgid "Shows"
+msgstr "Şovlar"
+
+msgid "Simple list"
+msgstr "Basit liste"
+
+msgid "Skin"
+msgstr "Arayüz"
+
+msgid "Skip video shorter than [min]"
+msgstr "[dk] değerinden kısa videoları atla"
+
+msgid "Some settings will be applied only after GUI restart."
+msgstr "Bazı ayarlar ancak arayüz yeniden başlatıldıktan sonra uygulanır."
+
+msgid "Sort Mode"
+msgstr "Sıralama modu"
+
+msgid "Sort alphabetically"
+msgstr "Alfabetik sırala"
+
+msgid "Sort by alphabet"
+msgstr "Alfabeye göre sırala"
+
+msgid "Sort by name"
+msgstr "Ada göre sırala"
+
+msgid "Sort by popularity"
+msgstr "Popülerliğe göre sırala"
+
+msgid "Sort by:"
+msgstr "Şuna göre sırala:"
+
+msgid "Source type"
+msgstr "Kaynak türü"
+
+msgid "Spanish"
+msgstr "İspanyolca"
+
+msgid "Sport"
+msgstr "Spor"
+
+msgid "Standard"
+msgstr "Standart"
+
+msgid "Start"
+msgstr "Başlat"
+
+msgid "Stop"
+msgstr "Durdur"
+
+msgid "Stop download"
+msgstr "İndirmeyi durdur"
+
+msgid "Stop downloading"
+msgstr "İndirmeyi durdur"
+
+msgid "Stop playback with buffer save"
+msgstr "Oynatmayı durdur ve tamponu kaydet"
+
+msgid "Stop playing?"
+msgstr "Oynatma durdurulsun mu?"
+
+msgid "Studio:"
+msgstr "Stüdyo:"
+
+msgid "Subtitle background"
+msgstr "Altyazı arka planı"
+
+msgid "Subtitle border color"
+msgstr "Altyazı kenarlık rengi"
+
+msgid "Subtitle border enabled"
+msgstr "Altyazı kenarlığı etkin"
+
+msgid "Subtitle border width"
+msgstr "Altyazı kenarlık kalınlığı"
+
+msgid "Subtitle box height"
+msgstr "Altyazı kutusu yüksekliği"
+
+msgid "Subtitle box position"
+msgstr "Altyazı kutusu konumu"
+
+msgid "Subtitle font"
+msgstr "Altyazı yazı tipi"
+
+msgid "Subtitle font color"
+msgstr "Altyazı yazı rengi"
+
+msgid "Subtitle font size"
+msgstr "Altyazı yazı boyutu"
+
+msgid "Subtitle line height"
+msgstr "Altyazı satır yüksekliği"
+
+msgid "Subtitle line wrapping"
+msgstr "Altyazı satır kaydırma"
+
+msgid "Subtitle shadow X offset"
+msgstr "Altyazı gölge X ofseti"
+
+msgid "Subtitle shadow Y offset"
+msgstr "Altyazı gölge Y ofseti"
+
+msgid "Subtitle shadow color"
+msgstr "Altyazı gölge rengi"
+
+msgid "Subtitle shadow enabled"
+msgstr "Altyazı gölgesi etkin"
+
+msgid "Subtitle vertical alignment"
+msgstr "Altyazı dikey hizalama"
+
+msgid "Subtitles"
+msgstr "Altyazılar"
+
+msgid "Swedish"
+msgstr "İsveççe"
+
+msgid "Synchronize"
+msgstr "Eşitle"
+
+msgid "System"
+msgstr "Sistem"
+
+msgid "TV"
+msgstr "TV"
+
+msgid "TV SERIES"
+msgstr "TV DİZİLERİ"
+
+msgid "TV Series"
+msgstr "TV Dizileri"
+
+msgid "TV Show"
+msgstr "TV Şovu"
+
+msgid "TV Shows"
+msgstr "TV Şovları"
+
+msgid "TV channels"
+msgstr "TV kanalları"
+
+msgid "TV series"
+msgstr "TV dizileri"
+
+msgid "Talks"
+msgstr "Konuşmalar"
+
+msgid "Today"
+msgstr "Bugün"
+
+msgid "Top"
+msgstr "En üst"
+
+msgid "Top Movies"
+msgstr "En İyi Filmler"
+
+msgid "Top Videos"
+msgstr "En İyi Videolar"
+
+msgid "Top rated"
+msgstr "En yüksek puanlı"
+
+msgid "Trailer"
+msgstr "Fragman"
+
+msgid "Transparent"
+msgstr "Şeffaf"
+
+msgid "Trending"
+msgstr "Trend olanlar"
+
+msgid "Tutorials"
+msgstr "Eğitimler"
+
+msgid "Type: "
+msgstr "Tür: "
+
+msgid "UNKNOWN"
+msgstr "BİLİNMİYOR"
+
+msgid "Universal"
+msgstr "Evrensel"
+
+msgid "Unknown error."
+msgstr "Bilinmeyen hata."
+
+msgid "Upcoming"
+msgstr "Yaklaşan"
+
+msgid "Upload date"
+msgstr "Yükleme tarihi"
+
+msgid "Uploads"
+msgstr "Yüklemeler"
+
+msgid "Use colors"
+msgstr "Renkleri kullan"
+
+msgid "Use links cache"
+msgstr "Bağlantı önbelleğini kullan"
+
+msgid "User defined"
+msgstr "Kullanıcı tanımlı"
+
+msgid "Username"
+msgstr "Kullanıcı adı"
+
+msgid "Username:"
+msgstr "Kullanıcı adı:"
+
+msgid "VIEWS"
+msgstr "GÖRÜNTÜLEME"
+
+msgid "Verify"
+msgstr "Doğrula"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Video mode"
+msgstr "Video modu"
+
+msgid "Video options"
+msgstr "Video seçenekleri"
+
+msgid "Videos"
+msgstr "Videolar"
+
+msgid "View count"
+msgstr "Görüntüleme sayısı"
+
+msgid "Views"
+msgstr "Görüntüleme"
+
+msgid "Views:"
+msgstr "Görüntüleme:"
+
+msgid "Virtual Keyboard"
+msgstr "Sanal Klavye"
+
+msgid "Watch"
+msgstr "İzle"
+
+msgid "Watch Trailer"
+msgstr "Fragmanı İzle"
+
+msgid "Web proxy"
+msgstr "Web proxy"
+
+msgid "With subtitles"
+msgstr "Altyazılı"
+
+msgid "Year"
+msgstr "Yıl"
+
+msgid "Year: "
+msgstr "Yıl: "
+
+msgid "Yes"
+msgstr "Evet"
+
+msgid "You are not allowed to play this video"
+msgstr "Bu videoyu oynatmaya yetkiniz yok"
+
+msgid "Your search entry"
+msgstr "Arama girdiniz"
+
+msgid "Youtube Suggestions"
+msgstr "Youtube Önerileri"
+
+msgid "[trailer]"
+msgstr "[fragman]"
+
+msgid "after a week"
+msgstr "bir hafta sonra"
+
+msgid "after closing"
+msgstr "kapattıktan sonra"
+
+msgid "after day"
+msgstr "bir gün sonra"
+
+msgid "after three days"
+msgstr "üç gün sonra"
+
+msgid "all"
+msgstr "tümü"
+
+msgid "any"
+msgstr "herhangi biri"
+
+msgid "aqua"
+msgstr "akuamarin"
+
+msgid "auto"
+msgstr "otomatik"
+
+msgid "average"
+msgstr "ortalama"
+
+msgid "black"
+msgstr "siyah"
+
+msgid "black&white"
+msgstr "siyah-beyaz"
+
+msgid "blue"
+msgstr "mavi"
+
+msgid "bottom"
+msgstr "alt"
+
+msgid "buffering location"
+msgstr "tampon konumu"
+
+msgid "center"
+msgstr "orta"
+
+msgid "cobalt"
+msgstr "kobalt"
+
+msgid "default"
+msgstr "varsayılan"
+
+msgid "direct link"
+msgstr "doğrudan bağlantı"
+
+msgid "downloads location"
+msgstr "indirme konumu"
+
+msgid "e-mail"
+msgstr "e-posta"
+
+msgid "email"
+msgstr "e-posta"
+
+msgid "external eplayer3"
+msgstr "harici eplayer3"
+
+msgid "external gstplayer"
+msgstr "harici gstplayer"
+
+msgid "format"
+msgstr "biçim"
+
+msgid "from E2 settings"
+msgstr "E2 ayarlarından"
+
+msgid "fuchsia"
+msgstr "fuşya"
+
+msgid "geoblocked"
+msgstr "coğrafi engelli"
+
+msgid "gray"
+msgstr "gri"
+
+msgid "green"
+msgstr "yeşil"
+
+msgid "hCaptcha already solved!"
+msgstr "hCaptcha zaten çözüldü!"
+
+msgid "hCaptcha not solved!"
+msgstr "hCaptcha çözülmedi!"
+
+msgid "hCaptcha solved!"
+msgstr "hCaptcha çözüldü!"
+
+msgid "hd"
+msgstr "hd"
+
+msgid "high"
+msgstr "yüksek"
+
+msgid "highest"
+msgstr "en yüksek"
+
+msgid "horizontal"
+msgstr "yatay"
+
+msgid "host"
+msgstr "host"
+
+msgid "host:"
+msgstr "host:"
+
+msgid "https"
+msgstr "https"
+
+msgid "https - validate SSL certificates"
+msgstr "https - SSL sertifikalarını doğrula"
+
+msgid "internal"
+msgstr "dahili"
+
+msgid "large"
+msgstr "büyük"
+
+msgid "leave movie player..."
+msgstr "video oynatıcıdan çık..."
+
+msgid "lime"
+msgstr "açık yeşil"
+
+msgid "line"
+msgstr "satır"
+
+msgid "live"
+msgstr "canlı"
+
+msgid "login"
+msgstr "giriş"
+
+msgid "low"
+msgstr "düşük"
+
+msgid "lowest"
+msgstr "en düşük"
+
+msgid "main"
+msgstr "ana"
+
+msgid "medium"
+msgstr "orta"
+
+msgid "navy"
+msgstr "lacivert"
+
+msgid "olive"
+msgstr "zeytin"
+
+msgid "password"
+msgstr "parola"
+
+msgid "purple"
+msgstr "mor"
+
+msgid "quality"
+msgstr "kalite"
+
+msgid "red"
+msgstr "kırmızı"
+
+msgid "rtmp"
+msgstr "rtmp"
+
+msgid "second"
+msgstr "saniye"
+
+msgid "seconds"
+msgstr "saniye"
+
+msgid "shows"
+msgstr "şovlar"
+
+msgid "silver"
+msgstr "gümüş"
+
+msgid "small"
+msgstr "küçük"
+
+msgid "standard"
+msgstr "standart"
+
+msgid "teal"
+msgstr "camgöbeği"
+
+msgid "the best"
+msgstr "en iyi"
+
+msgid "the highest"
+msgstr "en yüksek"
+
+msgid "the lowest"
+msgstr "en düşük"
+
+msgid "the worst"
+msgstr "en kötü"
+
+msgid "top"
+msgstr "üst"
+
+msgid "trailer"
+msgstr "fragman"
+
+msgid "unknown"
+msgstr "bilinmiyor"
+
+msgid "version"
+msgstr "sürüm"
+
+msgid "vertical"
+msgstr "dikey"
+
+msgid "very high"
+msgstr "çok yüksek"
+
+msgid "views"
+msgstr "görüntülenme"
+
+msgid "visit site"
+msgstr "siteyi ziyaret et"
+
+msgid "white"
+msgstr "beyaz"
+
+msgid "www: "
+msgstr "www: "
+
+msgid "yellow"
+msgstr "sarı"
