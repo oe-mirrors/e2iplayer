@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
 #, fuzzy
 msgid ""
@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 20:19+0100\n"
-"PO-Revision-Date: 2025-11-23 21:52+0200\n"
+"PO-Revision-Date: 2026-03-14 12:34+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.6\n"
 
-#, fuzzy
 msgid "\t*\tVotes: "
 msgstr "    *    التصويتات: "
 
@@ -34,28 +34,28 @@ msgid ""
 "Error[1]."
 msgstr ""
 "\n"
-"خطأ [1]."
+"خطأ[1]."
 
 msgid ""
 "\n"
 "Error[2]."
 msgstr ""
 "\n"
-"خطأ [2]."
+"خطأ[2]."
 
 msgid ""
 "\n"
 "Error[3]."
 msgstr ""
 "\n"
-"خطأ [3]."
+"خطأ[3]."
 
 msgid ""
 "\n"
 "Error[4]."
 msgstr ""
 "\n"
-"خطأ [4]."
+"خطأ[4]."
 
 msgid ""
 "\n"
@@ -256,7 +256,7 @@ msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- إعدادات التنزيل -----"
 
 msgid "----- Global HostXXX Configuration -----"
-msgstr ""
+msgstr "----- إعدادات HostXXX العامة -----"
 
 msgid "----- OTHER SETTINGS -----"
 msgstr "----- إعدادات أخرى -----"
@@ -268,7 +268,7 @@ msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- إعدادات البروكسي -----"
 
 msgid "----- Porn Site Configuration -----"
-msgstr ""
+msgstr "----- إعدادات مواقع البالغين -----"
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- إعدادات الأمان -----"
@@ -286,22 +286,19 @@ msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- إعدادات الترجمة -----"
 
 msgid "----- Show or hide Porn Sites -----"
-msgstr ""
+msgstr "----- إظهار أو إخفاء مواقع البالغين -----"
 
 msgid "----- XXXList Configuration -----"
-msgstr ""
+msgstr "----- إعدادات قائمة XXX -----"
 
-#, fuzzy
 msgid "----------  Live Cams  ----------"
-msgstr "----------أخرى----------"
+msgstr "----------  الكاميرات المباشرة  ----------"
 
-#, fuzzy
 msgid "----------  Other  ----------"
-msgstr "----------أخرى----------"
+msgstr "----------  أخرى  ----------"
 
-#, fuzzy
 msgid "----------  Porn Sites  ----------"
-msgstr "----------أخرى----------"
+msgstr "----------  مواقع البالغين  ----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "----------------- خيارات exteplayer3 الخارجية -----------------"
@@ -316,7 +313,7 @@ msgid "--All--"
 msgstr "--الكل--"
 
 msgid "--Any--"
-msgstr "--أي--"
+msgstr "--أي منها--"
 
 msgid "--Other--"
 msgstr "--أخرى--"
@@ -398,11 +395,10 @@ msgid "Active: %s"
 msgstr "نشط: %s"
 
 msgid "Actor profile and Works"
-msgstr ""
+msgstr "ملف الممثل وأعماله"
 
-#, fuzzy
 msgid "Actors"
-msgstr "الممثلون:"
+msgstr "الممثلون"
 
 msgid "Actors:"
 msgstr "الممثلون:"
@@ -552,7 +548,7 @@ msgid "Answer"
 msgstr "الإجابة"
 
 msgid "Any"
-msgstr "أي"
+msgstr "أي منها"
 
 msgid "Apply"
 msgstr "تطبيق"
@@ -563,7 +559,6 @@ msgstr "مقاربات"
 msgid "Arabic"
 msgstr "عربي"
 
-#, fuzzy
 msgid "Arabic Movies"
 msgstr "أفلام عربية"
 
@@ -586,11 +581,9 @@ msgstr "هل أنت متأكد أنك تريد حذف سجل البحث؟"
 msgid "Are you sure you want to remove file \"%s\"?"
 msgstr "هل أنت متأكد أنك تريد حذف الملف \"%s\"؟"
 
-#, fuzzy
 msgid "Are you sure you want to reset all hosts in this group to defaults?"
 msgstr "هل أنت متأكد أنك تريد حذف سجل البحث؟"
 
-#, fuzzy
 msgid "Are you sure you want to reset all settings to their default values?"
 msgstr "هل أنت متأكد أنك تريد حذف سجل البحث؟"
 
@@ -731,7 +724,6 @@ msgstr "خدمة حل الكابتشا"
 msgid "Cartoon list"
 msgstr "قائمة الرسوم المتحركة"
 
-#, fuzzy
 msgid "Cartoons"
 msgstr "قائمة الرسوم المتحركة"
 
@@ -763,7 +755,6 @@ msgstr "القنوات"
 msgid "Children"
 msgstr "أطفال"
 
-#, fuzzy
 msgid "Cinema History"
 msgstr "أفلام سينمائية"
 
@@ -783,7 +774,7 @@ msgid "Clips"
 msgstr "مقاطع"
 
 msgid "Close"
-msgstr ""
+msgstr "إغلاق"
 
 msgid "Closing. Please wait..."
 msgstr "يتم الإغلاق... الرجاء الانتظار..."
@@ -942,7 +933,6 @@ msgstr "جودة الفيديو الافتراضية"
 msgid "Default video quality:"
 msgstr "جودة الفيديو الافتراضية:"
 
-#, fuzzy
 msgid "Defaults"
 msgstr "افتراضي"
 
@@ -973,9 +963,8 @@ msgstr "مباشر"
 msgid "Director:"
 msgstr "المخرج:"
 
-#, fuzzy
 msgid "Directors"
-msgstr "المخرجون:"
+msgstr "المخرجون"
 
 msgid "Directors:"
 msgstr "المخرجون:"
@@ -1670,7 +1659,6 @@ msgstr "جودة الأيقونات"
 msgid "Icons size"
 msgstr "حجم الأيقونات"
 
-#, fuzzy
 msgid "Indian Movies"
 msgstr "أفلام هندية"
 
@@ -2021,7 +2009,7 @@ msgstr "يتطلب تسجيل الدخول"
 msgid "Login on {0} failed."
 msgstr "فشل تسجيل الدخول على {0}."
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Login user \"%s\" to https://vk.com/ failed!\n"
 "Please check your login data in the IPTVPlayer configuration."
@@ -2267,7 +2255,6 @@ msgstr "تغذية الأخبار"
 msgid "Next"
 msgstr "التالي"
 
-#, fuzzy
 msgid "Next Page"
 msgstr "الصفحة التالية"
 
@@ -2278,7 +2265,7 @@ msgid "No"
 msgstr "لا"
 
 msgid "No biography available"
-msgstr ""
+msgstr "لا توجد سيرة ذاتية متاحة"
 
 msgid ""
 "No item to display. \n"
@@ -2423,7 +2410,7 @@ msgid "People"
 msgstr "أشخاص"
 
 msgid "Persons"
-msgstr ""
+msgstr "الأشخاص"
 
 msgid "Physical Exam"
 msgstr "الفحص السريري"
@@ -2592,7 +2579,6 @@ msgstr "معاينة"
 msgid "Previous"
 msgstr "السابق"
 
-#, fuzzy
 msgid "Previous Page"
 msgstr "السابق"
 
@@ -2760,7 +2746,6 @@ msgstr "إعادة عرض البرامج"
 msgid "Reset State"
 msgstr "إعادة التهيئة"
 
-#, fuzzy
 msgid "Reset group"
 msgstr "اختر المجموعة"
 
@@ -2871,9 +2856,8 @@ msgstr "جارٍ البحث، الرجاء الانتظار (%d)"
 msgid "Season"
 msgstr "الموسم"
 
-#, fuzzy
 msgid "Season "
-msgstr "الموسم"
+msgstr "الموسم "
 
 #, python-format
 msgid "Season %s"
@@ -3112,9 +3096,8 @@ msgstr "وضع الفرز"
 msgid "Sort Myfreecams :"
 msgstr "فرز Myfreecams :"
 
-#, fuzzy
 msgid "Sort Pornsites Alphabetical :"
-msgstr "الفرز أبجديًا"
+msgstr "الفرز أبجديًا :"
 
 msgid "Sort alphabetically"
 msgstr "الفرز أبجديًا"
@@ -3122,7 +3105,6 @@ msgstr "الفرز أبجديًا"
 msgid "Sort by alphabet"
 msgstr "الفرز حسب الأبجدية"
 
-#, fuzzy
 msgid "Sort by name"
 msgstr "الفرز حسب الأبجدية"
 
@@ -3397,7 +3379,7 @@ msgstr "الأسوأ"
 
 #, python-format
 msgid "There are %d more pages in this section"
-msgstr ""
+msgstr "يوجد %d صفحات أخرى في هذا القسم"
 
 msgid "There are no other favourite groups"
 msgstr "لا توجد مجموعات مفضلة أخرى"
@@ -3440,7 +3422,6 @@ msgstr "نصيحة! يمكنك توصيل وحدة USB لحل هذه المشك�
 msgid "Title:"
 msgstr "العنوان:"
 
-#, fuzzy
 msgid ""
 "To watch videos from https://vk.com/ you need to login.\n"
 "Please fill your login and password in the IPTVPlayer configuration."
@@ -3476,7 +3457,7 @@ msgid "Top series"
 msgstr "أفضل المسلسلات"
 
 msgid "Top-IMDB"
-msgstr ""
+msgstr "الأعلى تقييماً في IMDB"
 
 msgid "Total Divas"
 msgstr "توتال ديفاز"
@@ -3537,7 +3518,7 @@ msgid "UFC"
 msgstr "UFC"
 
 msgid "UNKNOWN"
-msgstr ""
+msgstr "غير معروف"
 
 msgid "Ukrainian proxy server url"
 msgstr "رابط خادم البروكسي الأوكراني"
@@ -3790,7 +3771,7 @@ msgid "With subtitles"
 msgstr "مع ترجمة"
 
 msgid "Work of this actor"
-msgstr ""
+msgstr "أعمال هذا الممثل"
 
 msgid "Write current title to file:"
 msgstr "اكتب العنوان الحالي إلى ملف:"
