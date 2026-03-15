@@ -307,6 +307,7 @@ class urlparser:
             "filemoon.wf": self.pp.parserBYSE,
             "fileone.tv": self.pp.parserFILEONETV,
             "file-upload.org": self.pp.parserJWPLAYER,
+            "filma365.strp2p.site": self.pp.parserSBS,
             "flaswish.com": self.pp.parserJWPLAYER,
             "forafile.com": self.pp.parserJWPLAYER,
             "fsdcmo.sbs": self.pp.parserJWPLAYER,
@@ -2325,7 +2326,7 @@ class pageParser(CaptchaHelper):
             var = re.findall(r'var\s+(\w+)\s*=\s*(\d+);', data)
             if var:
                 tv = dict(var)
-                url += "&season=%s&episode=%s" % (tv.get('season'), tv.get('episode'))
+                url += "&season=%s&episode=%s" % (tv.get("season"), tv.get("episode"))
             sts, data = self.cm.getPage(url, {"header": HTTP_HEADER})
             if not sts:
                 return []
