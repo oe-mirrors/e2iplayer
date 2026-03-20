@@ -15,7 +15,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://cb01net.shop/'
+    return "https://cb01uno.click/"
 
 
 class Cb01(CBaseHostClass):
@@ -65,7 +65,7 @@ class Cb01(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        data = re.findall(r'STAGIONE (\d+) -', data, re.DOTALL)
+        data = re.findall(r"STAGIONE (\d+) -", data, re.DOTALL)
         for seasons in data:
             title = "%s - %s %s" % (cItem["title"], _("Season"), seasons)
             params = dict(cItem)
@@ -80,7 +80,7 @@ class Cb01(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'STAGIONE %s -' % seasons, "</strong>")[0]
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, "STAGIONE %s -" % seasons, "</strong>")[0]
         data = re.findall(r"215;(\d+)", data, re.DOTALL)
         for episode in data:
             title = "%s - %s %s" % (cItem["title"], _("Episode"), episode)
@@ -110,10 +110,10 @@ class Cb01(CBaseHostClass):
         urlTab = []
         sts, data = self.getPage(cItem["url"])
         if not sts:
-            return []
-        if cItem.get('seasons') and cItem.get('episode'):
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'STAGIONE %s' % cItem.get('seasons'), '</strong>')[0]
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, ';%s' % cItem.get('episode'), '</a></p>')[0]
+            return
+        if cItem.get("seasons") and cItem.get("episode"):
+            data = self.cm.ph.getAllItemsBeetwenMarkers(data, "STAGIONE %s" % cItem.get("seasons"), "</strong>")[0]
+            data = self.cm.ph.getAllItemsBeetwenMarkers(data, ";%s" % cItem.get("episode"), "</a></p>")[0]
         data = re.findall('href="([^"]+)" target.*?>([^<]+)', data, re.DOTALL)
         for url, title in data:
             if "ixdrop" not in title:
@@ -129,10 +129,10 @@ class Cb01(CBaseHostClass):
                 return
             data = re.findall(r'linkId = "([^"]+)"', data, re.DOTALL)
             if data:
-                sts, data = self.getPage('https://stayonline.pro/ajax/linkView.php', self.defaultParams, {'id': data[0], 'ref': ''})
+                sts, data = self.getPage("https://stayonline.pro/ajax/linkView.php", self.defaultParams, {"id": data[0], "ref": ""})
                 if not sts:
                     return
-            url = json.loads(data).get('data', {}).get('value')
+            url = json.loads(data).get("data", {}).get("value")
             return self.up.getVideoLinkExt(url)
 
     def getArticleContent(self, cItem):
@@ -152,19 +152,19 @@ class Cb01(CBaseHostClass):
         self.currList = []
         if name is None:
             self.listsTab(self.MENU, {"name": "category"})
-        elif "list_items" == category:
+        elif category == "list_items":
             self.listItems(self.currItem)
-        elif "list_seasons" == category:
+        elif category == "list_seasons":
             self.listSeasons(self.currItem)
-        elif "list_episodes" == category:
+        elif category == "list_episodes":
             self.listEpisodes(self.currItem)
-        elif "list_genres" == category:
-            self.listValue(self.currItem, 'Genere', '</li></ul>')
-        elif "list_year" == category:
-            self.listValue(self.currItem, ' Anno', '</li></ul>')
-        elif "movies" == category:
+        elif category == "list_genres":
+            self.listValue(self.currItem, "Genere", "</li></ul>")
+        elif category == "list_year":
+            self.listValue(self.currItem, " Anno", "</li></ul>")
+        elif category == "movies":
             self.listsTab(self.MOVIES, self.currItem)
-        elif "series" == category:
+        elif category == "series":
             self.listsTab(self.SERIES, self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
