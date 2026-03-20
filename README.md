@@ -297,10 +297,11 @@ See the [Wiki](https://github.com/oe-mirrors/e2iplayer/wiki) for more informatio
 
 ### ⚖️ Legal Disclaimer
 
-The project author is not responsible for how this software is used by others. It is not intended to be used for accessing or distributing copyrighted materials without authorization.
+The project author is not responsible for how this software is used by others. The author assumes no responsibility for any misuse. It is not intended to be used for accessing or distributing copyrighted materials without authorization.
 Users are solely responsible for determining the legality of their actions.
 
-This repository has no control over the streams, links, or the legality of the content provided by the different hosts (including all mirror sites). It is the end user's responsibility to ensure the legal use of these streams, and we strongly recommend verifying that the content complies with all applicable laws, including copyright laws and regulations of your countrys jurisdiction before use.
+> [!WARNING]
+>This repository has no control over the streams, links, or the legality of the content provided by the different hosts (including all mirror sites). It is the end user's responsibility to ensure the legal use of these streams, and we strongly recommend verifying that the content complies with all applicable laws, including copyright laws and regulations of your countrys jurisdiction before use.
 
 No video files are stored in this repository. To remove content from the web, contact the **hosting provider** (not GitHub or repository maintainers).
 
@@ -317,4 +318,4 @@ Thanks! ❤️ 💞 💖 ❤️‍🔥 💗
   Powered 💡 by <a href="https://www.opena.tv">openATV Team</a>
 </p> 
 
-README Last Modified: 2026-02-01
+README Last Modified: 2026-03-20
