@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 13.08.2025
+# Last Modified: 22.03.2026 - Mr.X
 import base64
 import json
 import re
@@ -36,46 +36,38 @@ def evp_bytes_to_key(password, salt, key_len=32):
 class MovieDream(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "MovieDream", "cookie": "MovieDream.cookie"})
-        self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0"
-        self.HEADER = {"User-Agent": self.USER_AGENT, "Accept": "text/html"}
+        self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.DEFAULT_ICON_URL = gettytul() + "LOGO.png"
-        self.MAIN_URL = None
-
-    def menu(self):
         self.MAIN_URL = gettytul()
-        self.MENU = [
-            {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kino")},
-            {"category": "movies", "title": _("Movies")},
-            {"category": "series", "title": _("Series")}] + self.searchItems()
-        self.MOVIES = [{"category": "list_items", "title": _("Lastest"), "url": self.getFullUrl("neuefilme")}, {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("beliebtefilme")}, {"category": "film_genres", "title": _("Genres")}]
-        self.SERIES = [{"category": "list_items", "title": _("Lastest"), "url": self.getFullUrl("neueserien")}, {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("beliebteserien")}, {"category": "series_genres", "title": _("Genres")}]
+        self.MENU = [{"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kino")}, {"category": "movies", "title": _("Movies")}, {"category": "series", "title": _("Series")}] + self.searchItems()
+        self.MOVIES = [{"category": "list_items", "title": _("Lastest"), "url": self.getFullUrl("neuefilme")}, {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("beliebtefilme")}, {"category": "list_value", "title": _("Genres"), "s": "film"}]
+        self.SERIES = [{"category": "list_items", "title": _("Lastest"), "url": self.getFullUrl("neueserien")}, {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("beliebteserien")}, {"category": "list_value", "title": _("Genres"), "s": "serie"}]
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
-    def listItems(self, cItem, nextCategory):
+    def listItems(self, cItem):
         printDBG("MovieDream.listItems |%s|" % cItem)
-        url = cItem["url"]
-        sts, data = self.getPage(url)
+        sts, data = self.getPage(cItem["url"] + cItem.get("page", ""))
         if not sts:
             return
-        nextPage = self.cm.ph.getSearchGroups(data, 'class="righter" href="([^"]+)')[0]
+        nextPage = self.cm.ph.getSearchGroups(data, r'class="righter"\s*href="([^"]+)')[0]
+        lastPage = self.cm.ph.getSearchGroups(data, r'class="seiterr"\s*href="([^"]+)')[0]
         data = re.findall('class="linkto.*?href="([^"]+).*?src="([^"]+).*?>([^>]+)</div>', data, re.DOTALL)
         for url, icon, title in data:
             params = dict(cItem)
-            params.update({"good_for_fav": True, "category": nextCategory, "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url.replace("../..", "")), "icon": self.getFullUrl(icon.replace("../..", ""))})
+            params.update({"good_for_fav": True, "category": "video", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url.replace("../..", "")), "icon": self.getFullUrl(icon.replace("../..", "")), "desc": ""})
             if "serie" in url:
                 params.update({"category": "list_seasons"})
                 self.addDir(params)
             else:
                 self.addVideo(params)
-        if nextPage:
+        if nextPage and cItem.get("page", "") != lastPage:
             params = dict(cItem)
-            params.update({"good_for_fav": False, "title": _("Next page"), "url": cItem["url"] + str(nextPage)})
+            params.update({"good_for_fav": False, "title": _("Next page"), "page": nextPage})
             self.addDir(params)
 
     def listSeasons(self, cItem):
@@ -84,10 +76,11 @@ class MovieDream(CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
+        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '16px;">(.*?)</p>')[0])
         data = re.findall('href="([^"]+)" class="seasonbutton.*?">([^<]+)', data, re.DOTALL)
         for url, title in data:
             params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_episodes", "title": "%s - %s" % (cItem["title"], title), "url": self.getFullUrl(url), "icon": icon, "desc": cItem.get("desc", "")})
+            params.update({"good_for_fav": True, "category": "list_episodes", "title": "%s - %s" % (cItem["title"], title), "url": self.getFullUrl(url), "icon": icon, "desc": desc})
             self.addDir(params)
 
     def listEpisodes(self, cItem):
@@ -99,29 +92,29 @@ class MovieDream(CBaseHostClass):
         data = re.findall(r'href="([^"]+)" class="episodebutton" id="episodebutton\d+">#([\d]+)', data, re.DOTALL)
         for url, title in data:
             params = dict(cItem)
-            params.update({"good_for_fav": True, "title": "%s - %s %s" % (cItem["title"], _("Episodes"), title), "url": self.getFullUrl(url), "icon": icon, "desc": ""})
+            params.update({"good_for_fav": True, "title": "%s - %s %s" % (cItem["title"], _("Episodes"), title), "url": self.getFullUrl(url), "icon": icon})
             self.addVideo(params)
 
-    def listValue(self, cItem, v):
-        printDBG("HDFilme.Value |%s|" % cItem)
-        sts, data = self.getPage(self.MAIN_URL)
+    def listValue(self, cItem):
+        sts, data = self.getPage(gettytul())
         if not sts:
             return
-        data = re.findall('href="(/%s[^"]+)">([^<]+)' % v, data, re.DOTALL)
-        for url, title in data:
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
-            self.addDir(params)
+        data = re.findall('href="(/%s[^"]+)">([^<]+)' % cItem["s"], data, re.DOTALL)
+        if data:
+            for url, title in data:
+                params = dict(cItem)
+                params.update({"good_for_fav": True, "category": "list_items", "title": title, "url": self.getFullUrl(url)})
+                self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("MovieDream.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem["url"] = "%ssuchergebnisse.php?text=%s&sprache=Deutsch" % (gettytul(), urllib_quote(searchPattern))
-        self.listItems(cItem, "video")
+        self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):
         printDBG("MovieDream.getLinksForVideo [%s]" % cItem)
-        urlTab = []
+        urltab = []
         url = cItem["url"]
         sts, data = self.getPage(url)
         if not sts:
@@ -133,15 +126,14 @@ class MovieDream(CBaseHostClass):
             decrypter = pyaes.Decrypter(pyaes.AESModeOfOperationCBC(key, unhexlify(js["iv"])))
             data = decrypter.feed(base64.b64decode(js["ct"])) + decrypter.feed()
             url = json.loads(data.decode("utf-8"))
-            urlTab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1})
-        return urlTab
+            urltab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1})
+        return urltab
 
-    def getVideoLinks(self, videoUrl):
-        printDBG("MovieDream.getVideoLinks [%s]" % videoUrl)
-        urlTab = []
-        if self.cm.isValidUrl(videoUrl):
-            return self.up.getVideoLinkExt(videoUrl)
-        return urlTab
+    def getVideoLinks(self, url):
+        printDBG("MovieDream.getVideoLinks [%s]" % url)
+        if self.cm.isValidUrl(url):
+            return self.up.getVideoLinkExt(url)
+        return []
 
     def getArticleContent(self, cItem):
         printDBG("MovieDream.getArticleContent [%s]" % cItem)
@@ -150,16 +142,16 @@ class MovieDream(CBaseHostClass):
         if not sts:
             return []
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '16px;">(.*?)</p>')[0])
-        actors = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'Schauspieler:(.*?)<br>')[0])
+        actors = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, "Schauspieler:(.*?)<br>")[0])
         if actors:
             otherInfo["actors"] = actors
-        director = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'Regisseur:(.*?)<br>')[0])
+        director = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, "Regisseur:(.*?)<br>")[0])
         if director:
             otherInfo["director"] = director
-        year = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r'>(\d{4})<')[0])
+        year = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, r">(\d{4})<")[0])
         if year:
             otherInfo["year"] = year
-        duration = self.cm.ph.getSearchGroups(data, r'(\d+ Min)')[0]
+        duration = self.cm.ph.getSearchGroups(data, r"(\d+ Min)")[0]
         if duration:
             otherInfo["duration"] = duration
         title = cItem["title"]
@@ -169,27 +161,23 @@ class MovieDream(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         printDBG("handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL is None:
-            self.menu()
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         if name is None:
             self.listsTab(self.MENU, {"name": "category"})
-        elif "list_items" == category:
-            self.listItems(self.currItem, "video")
-        elif "list_seasons" == category:
+        elif category == "list_items":
+            self.listItems(self.currItem)
+        elif category == "list_seasons":
             self.listSeasons(self.currItem)
-        elif "list_episodes" == category:
+        elif category == "list_episodes":
             self.listEpisodes(self.currItem)
-        elif "film_genres" == category:
-            self.listValue(self.currItem, "film")
-        elif "series_genres" == category:
-            self.listValue(self.currItem, "serie")
-        elif "movies" == category:
+        elif category == "list_value":
+            self.listValue(self.currItem)
+        elif category == "movies":
             self.listsTab(self.MOVIES, self.currItem)
-        elif "series" == category:
+        elif category == "series":
             self.listsTab(self.SERIES, self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
