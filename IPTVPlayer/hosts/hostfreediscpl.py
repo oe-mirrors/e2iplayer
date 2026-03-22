@@ -209,7 +209,7 @@ class FreeDiscPL(CBaseHostClass):
             for item in data["data_files"]["data"]:
                 userItem = logins[str(item["user_id"])]
                 dirItem = translated[str(item["parent_id"])]
-                icon = "http://img.freedisc.pl/photo/%s/7/2/%s.png" % (item["id"], item["name_url"])
+                icon = "https://img.freedisc.pl/photo/%s/7/2/%s.png" % (item["id"], item["name_url"])
                 url = "/%s,f-%s,%s" % (userItem["url"], item["id"], item["name_url"])
                 title = item["name"]
                 desc = " | ".join([item["date_add_format"], item["size_format"]])
@@ -307,7 +307,7 @@ class FreeDiscPL(CBaseHostClass):
                 url = self.getFullIconUrl("/static/img/icons/big_dir.png")
                 for item in filesTab:
                     if "7" == item["type_fk"]:
-                        icon = "http://img.freedisc.pl/photo/%s/7/2/%s.png" % (item["id"], item["name_url"])
+                        icon = "https://img.freedisc.pl/photo/%s/7/2/%s.png" % (item["id"], item["name_url"])
                     else:
                         icon = ""
                     url = "/%s,f-%s,%s" % (userId, item["id"], item["name_url"])
