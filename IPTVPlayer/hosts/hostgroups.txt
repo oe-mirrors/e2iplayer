@@ -151,6 +151,7 @@
   "ogladajto",
   "tvpvod",
   "playzcc",
+  "freediscpl",
   "ipla",
   "kinomoc",
   "filmowoclub",

@@ -310,6 +310,7 @@ class urlparser:
             "filma365.strp2p.site": self.pp.parserSBS,
             "flaswish.com": self.pp.parserJWPLAYER,
             "forafile.com": self.pp.parserJWPLAYER,
+            "freedisc.pl": self.pp.parserFREEDISC,
             "fsdcmo.sbs": self.pp.parserJWPLAYER,
             "fsst.online": self.pp.parserSST,
             # g
@@ -2022,6 +2023,7 @@ class pageParser(CaptchaHelper):
         def xn(e):
             return b"".join(list(map(ft, e)))
 
+        baseUrl = baseUrl.replace("/d/", "/e/")
         printDBG("parserBYSE baseUrl[%s]" % baseUrl)
         urltab = []
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -2117,6 +2119,8 @@ class pageParser(CaptchaHelper):
             baseUrl = baseUrl.replace("hglink.to", "dumbalag.com")
         if "cybervynx.com" in baseUrl:
             baseUrl = baseUrl.replace("cybervynx.com", "guxhag.com")
+        if "savefiles.com/" in baseUrl:  # Need Check
+            baseUrl = baseUrl.replace("/v/", "/").replace("/e/", "/")
         if "streamwish.to" in baseUrl:
             baseUrl = baseUrl.replace("streamwish.to", "hglamioz.com")
         if "dropload." in baseUrl:
@@ -2323,7 +2327,7 @@ class pageParser(CaptchaHelper):
             user_id = "zh&72ciO39tgH5" + "_" + ids.get("userId")
             vrf = generate_vrf(mid, user_id)
             url = "%sapi/%s/servers?id=%s&type=%s&v=%s&vrf=%s&imdbId=%s" % (host, mid, mid, ids.get("movieType"), ids.get("v"), vrf, ids.get("imdbId", "null"))
-            var = re.findall(r'var\s+(\w+)\s*=\s*(\d+);', data)
+            var = re.findall(r"var\s+(\w+)\s*=\s*(\d+);", data)
             if var:
                 tv = dict(var)
                 url += "&season=%s&episode=%s" % (tv.get("season"), tv.get("episode"))
@@ -2340,4 +2344,58 @@ class pageParser(CaptchaHelper):
                 subTracks = [{"title": "", "url": sub.get("file"), "lang": sub.get("label")} for sub in js.get("subtitles", []) if sub.get("file") and sub.get("label")]
             url = urlparser.decorateUrl(js.get("source"), {"User-Agent": HTTP_HEADER["User-Agent"], "Accept": "*/*", "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
             urltab.extend(getDirectM3U8Playlist(url))
+        return urltab
+
+    def parserFREEDISC(self, baseUrl):  # OK according to PL user?
+        urltab = []
+        COOKIE_FILE = GetCookieDir("FreeDiscPL.cookie")
+        HTTP_HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0 ", "Accept": "text/html", "Accept-Encoding": "gzip, deflate"}
+        params = {"header": HTTP_HEADER, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True, "load_cookie": True}
+        videoId = self.cm.ph.getSearchGroups(baseUrl, r"""\,f\-([0-9]+?)[^0-9]""")[0]
+        if videoId == "":
+            videoId = self.cm.ph.getSearchGroups(baseUrl, """/video/([0-9]+?)[^0-9]""")[0]
+        rest = baseUrl.split("/")[-1].split(",")[-1]
+        idx = rest.rfind("-")
+        if idx != -1:
+            rest = rest[:idx] + ".mp4"
+            videoUrl = "https://stream.freedisc.pl/video/%s/%s" % (videoId, rest)
+            try:
+                params2 = dict(params)
+                params2["max_data_size"] = 0
+                params2["header"] = dict(HTTP_HEADER)
+                params2["header"].update({"Referer": "https://freedisc.pl/static/player/v612/jwplayer.flash.swf"})
+                sts, data = self.cm.getPage(videoUrl, params2)
+                if self.cm.meta["status_code"] == 200:
+                    cookieHeader = self.cm.getCookieHeader(COOKIE_FILE, [], False)
+                    urltab.append({"name": "[prepared] freedisc.pl", "url": urlparser.decorateUrl(self.cm.meta["url"], {"Cookie": cookieHeader, "Referer": params2["header"]["Referer"], "User-Agent": params2["header"]["User-Agent"]})})
+            except Exception:
+                printExc()
+        params.update({"load_cookie": False, "cookiefile": GetCookieDir("FreeDiscPL_2.cookie")})
+        tmpUrls = []
+        if "/embed/" not in baseUrl:
+            sts, data = self.cm.getPage(baseUrl, params)
+            if not sts:
+                return urltab
+            try:
+                tmp = self.cm.ph.getDataBeetwenMarkers(data, '<script type="application/ld+json">', "</script>", False)[1]
+                tmp = json_loads(tmp)
+                tmp = tmp["embedUrl"].split("?file=")
+                if tmp[1].startswith("https"):
+                    urltab.append({"name": "freedisc.pl", "url": urlparser.decorateUrl(tmp[1], {"Referer": tmp[0], "User-Agent": HTTP_HEADER["User-Agent"]})})
+                    tmpUrls.append(tmp[1])
+            except Exception:
+                printExc()
+            videoUrl = self.cm.ph.getSearchGroups(data, """<iframe[^>]+?src=["'](http[^"^']+?/embed/[^"^']+?)["']""", 1, True)[0]
+        else:
+            videoUrl = baseUrl
+        if videoUrl != "":
+            params["load_cookie"] = True
+            params["header"]["Referer"] = baseUrl
+            sts, data = self.cm.getPage(videoUrl, params)
+            if sts:
+                videoUrl = self.cm.ph.getSearchGroups(data, """data-video-url=["'](http[^"^']+?)["']""", 1, True)[0]
+                if videoUrl == "":
+                    videoUrl = self.cm.ph.getSearchGroups(data, r"""player.swf\?file=(http[^"^']+?)["']""", 1, True)[0]
+                if videoUrl.startswith("https") and videoUrl not in tmpUrls:
+                    urltab.append({"name": "freedisc.pl", "url": urlparser.decorateUrl(videoUrl, {"Referer": "https://freedisc.pl/static/player/v612/jwplayer.flash.swf", "User-Agent": HTTP_HEADER["User-Agent"]})})
         return urltab
