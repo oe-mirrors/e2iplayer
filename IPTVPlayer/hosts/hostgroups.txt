@@ -245,6 +245,7 @@
   "aniworld",
   "serienstreamto",
   "bsto",
+  "watchbase",
   "hdfilmetv",
   "cineto",
   "kinoking",
