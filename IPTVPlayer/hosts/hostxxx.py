@@ -68,7 +68,7 @@ config.plugins.iptvplayer.xxxsortmfc = ConfigYesNo(default=True)
 config.plugins.iptvplayer.xxxsortall = ConfigYesNo(default=True)
 config.plugins.iptvplayer.xxxzbiornik = ConfigYesNo(default=True)
 
-SITES = {'3MOVS': 'threemovs', '69TEENTUBE': 'teentube', '9VIDS': 'vids9', 'ABSOLUPORN': 'absoluporn', 'AHME': 'ah_me', 'AL4A': 'al4a', 'ALOTPORN': 'alotporn', 'ALPHAPORNO': 'alphaporno', 'AMATEUR8': 'amateur8', 'AMATEUR.RED': 'amateur_red', 'AMATEURCOUGAR': 'amateurcougar', 'AMAZINGCUCKOLD': 'amazingcuckold', 'ANALDIN': 'analdin', 'ANYBUNNY': 'anybunny', 'ANYPORN': 'anyporn', 'ANYSEX': 'anysex', 'BABES34': 'babes34', 'BADDIES': 'baddies', 'BALKANJIZZ': 'balkanjizz', 'BEAUTYMOVIES': 'beautymovies', 'BLOWJOBIT': 'blowjobit', 'BRAVOPORN': 'bravoporn', 'BRAVOTEENS': 'bravoteens', 'CROCOTUBE': 'crocotube', 'CUCKOLDPLACETUBE': 'cuckoldplacetube', 'CUMLOUDER': 'cumlouder', 'DANSMOVIES': 'dansmovies', 'DEFINEBABE': 'definebabe', 'DRTUBER': 'drtuber', 'EBONY8': 'ebony8', 'EPORNER': 'eporner', 'EROPROFILE': 'eroprofile', 'FAMILYPORN': 'familyporn', 'FEMEFUN': 'femefun', 'FETISHPAPA': 'fetishpapa', 'FIRSTANALVIDEOS': 'firstanalvideos', 'FITPORN': 'fitporn', 'FREEOMOVIE': 'freeomovie', 'FREEONES': 'freeones', 'FULLXCINEMA': 'fullxcinema', 'FUQER': 'fuqer', 'GLAVMATURES': 'glavmatures', 'HANDJOBHUB': 'handjobhub', 'HARDSEXVIDS': 'hardsexvids', 'HCLIPS': 'hclips', 'HDPORN': 'hdporn', 'HDPUSSY': 'hdpussy', 'HELLMOMS': 'hellmoms', 'HELLO.PORN': 'helloporn', 'HELLPORNO': 'hellporno', 'HENTAIGASM': 'hentaigasm', 'HOME MOVIES TUBE': 'homemoviestube', 'HOMEPORNKING': 'homepornking', 'HQPORNER': 'hqporner', 'HYPNOTUBE': 'hypnotube', 'IN35': 'in35', "IT'S PORN": 'itsporn', 'JAVBANGERS': 'javbangers', 'JAVTEENTUBE': 'javteentube', 'JIZZBOOM': 'jizzboom', 'JIZZBUNKER': 'jizzbunker', 'KATESTUBE': 'katestube', 'KOLOPORNO': 'koloporno', 'LAIDHUB': 'laidhub', 'LECOINPORNO': 'lecoinporno', 'LOVE HOME PORN': 'lovehomeporn', 'MATUREAMATEURSEX': 'mature_amateur_sex', 'MATUREGIRLS': 'mature_girls', 'MEGATUBE': 'megatube', 'MILF FOX': 'milffox', 'MOMPORNONLY': 'mompornonly', 'MOMSLUST': 'momslust', 'MOMXL': 'momxl', 'MOREAMATEURS': 'moreamateurs', 'MOTHERLESS': 'motherless', 'MOVIEFAP': 'moviefap', 'MR DEEPFAKES': 'mrdeepfakes', 'MUSTJAV': 'mustjav', 'MYPORNHERE': 'mypornhere', 'NEPORN': 'neporn', 'NUDEZ': 'nudez', 'OHSEXFILM': 'ohsexfilm', 'OK.XXX': 'okxxx', 'ORIENTAL SEX': 'oriental_sex', 'PANDAMOVIE': 'pandamovie', 'PERFECTGIRLS': 'perfectgirls', 'PERVCLIPS': 'pervclips', 'PLAYVIDS': 'playvids', 'PORCORE': 'porcore', 'PORN00': 'porn00', 'PORN300': 'porn300', 'PORN7': 'porn7', 'PORNBIMBO': 'pornbimbo', 'PORNBOLT': 'pornbolt', 'PORNDIG': 'porndig', 'PORNDR': 'porndr', 'PORNDROIDS': 'porndroids', 'PORNENIX': 'pornenix', 'PORNFD': 'pornfd', 'PORNGO': 'porngo', 'PORNHAT': 'pornhat', 'PORNHEED': 'pornheed', 'PORNHUB': 'pornhub', 'PORNICOM': 'pornicom', 'PORNID': 'pornid', 'PORNMAKI': 'pornmaki', 'PORNOFLIX': 'pornoflix', 'PORNOHAMMER': 'pornohammer', 'PORNONE': 'pornone', 'PORNOREINO': 'pornoreino', 'PORNORUSSIA': 'pornorussia', 'PORNOXO': 'pornoxo', 'PORNRABBIT': 'pornrabbit', 'PORNREWIND': 'pornrewind', 'PORNTREX': 'porntrex', 'PORNVIDEOSBEST': 'pornvideosbest', 'PORNXP': 'pornxp', 'PORNYTEEN': 'pornyteen', 'PORNVIDEOS 4K': 'pornvideos4k', 'PORNWHITE': 'pornwhite', 'PUNISHBANG': 'punishbang', 'REDTUBE': 'redtube', 'RELAX SEX': 'relax_sex', 'RULEPORN': 'ruleporn', 'RUS.PORN': 'rus_porn', 'SEXMATURE': 'sexmature', 'SEXU': 'sexu', 'SEXVID': 'sexvid', 'SEVEREPORN': 'severeporn', 'SHAMELESS': 'shameless', 'SHEMALEHD': 'shemalehd', 'SHESHAFT': 'sheshaft', 'SHOOSHTIME': 'shooshtime', 'SLEAZYNEASY': 'sleazyneasy', 'STREAMPORN': 'streamporn', 'SUNPORNO': 'sunporno', 'TEENTUBER': 'teentuber', 'TEENXY': 'teenxy', 'TERK.NL': 'terk_nl', 'THE PORN AREA': 'thepornarea', 'THEY ARE HUGE': 'theyarehuge', 'TNAFLIX': 'tnaflix', 'TOPVIDS': 'topvids', 'TRENDYPORN': 'trendyporn', 'TUBE8': 'tube8', 'TUBEPORNCLASSIC': 'tubepornclassic', 'TUBEWOLF': 'tubewolf', 'TXXX': 'txxx', 'VEPORN': 'veporn', 'W4NKR': 'w4nkr', 'WANKOZ': 'wankoz', 'WARDDOGS': 'warddogs', 'WATCHMYGF': 'watchmygf', 'WATCHPORNX': 'watchpornx', 'WETSINS': 'wetsins', 'WHORESHUB': 'whoreshub', 'WIFE VIDEOS': 'wifevideos', 'XBABE': 'xbabe', 'XCAFE': 'xcafe', 'XCUM': 'xcum', 'XGROOVY': 'xgroovy', 'XNXX': 'xnxx', 'XNXXHAMSTER': 'xnxxhamster', 'XOZILLA': 'xozilla', 'XPAJA': 'xpaja', 'XRARES': 'xrares', 'XTITS': 'xtits', 'XVIDEOS': 'xvideos', 'XXBRITS': 'xxbrits', 'XXXDAN': 'xxxdan', 'XXXBULE': 'xxxbule', 'XXXSHAKE': 'xxxshake', 'YOUJIZZ': 'youjizz', 'YOUNG SEX TUBE': 'young_sex_tube', 'YOUPORN': 'youporn', 'YOUR AMATEUR TUBE': 'youramateur', 'YOURLUST': 'yourlust', 'YUVUTU': 'yuvutu', 'ZBIORNIK MINI': 'zbiornikmini', 'ZBPORN': 'zbporn', 'ZEDPORN': 'zedporn', 'ZIPORN': 'ziporn', 'ANACAMS': 'anacams', 'CAMBEAUTIES': 'cambeauties', 'CAMBRO.TV': 'cambro', 'CAMHUB': 'camhub', 'CAMSEX': 'cam_sex', 'CAMSTREAMS': 'camstreams', 'CAMVIDEOS': 'camvideos', 'CAMWHORESBAY': 'camwhoresbay', 'CHATURBATE': 'chaturbate', 'EVERYCAMGIRL': 'everycamgirl', 'FOTKAPLKAMERKI': 'fotka_pl_kamerki', 'MASTURBATE2GETHER': 'masturbate2gether', 'SHOWUP': 'showup', 'XHAMSTERLIVE': 'xhamsterlive', 'YOURLIVE': 'yourlive'}
+SITES = {'3MOVS': 'threemovs', '69TEENTUBE': 'teentube', '9VIDS': 'vids9', 'ABSOLUPORN': 'absoluporn', 'AHME': 'ah_me', 'AL4A': 'al4a', 'ALOTPORN': 'alotporn', 'ALPHAPORNO': 'alphaporno', 'AMATEUR8': 'amateur8', 'AMATEUR.RED': 'amateurred', 'AMATEURCOUGAR': 'amateurcougar', 'AMAZINGCUCKOLD': 'amazingcuckold', 'ANALDIN': 'analdin', 'ANYBUNNY': 'anybunny', 'ANYPORN': 'anyporn', 'ANYSEX': 'anysex', 'BABES34': 'babes34', 'BADDIES': 'baddies', 'BALKANJIZZ': 'balkanjizz', 'BEAUTYMOVIES': 'beautymovies', 'BLOWJOBIT': 'blowjobit', 'BRAVOPORN': 'bravoporn', 'BRAVOTEENS': 'bravoteens', 'CROCOTUBE': 'crocotube', 'CUCKOLDPLACETUBE': 'cuckoldplacetube', 'CUMLOUDER': 'cumlouder', 'DANSMOVIES': 'dansmovies', 'DEFINEBABE': 'definebabe', 'DRTUBER': 'drtuber', 'EBONY8': 'ebony8', 'EPORNER': 'eporner', 'EROPROFILE': 'eroprofile', 'FAMILYPORN': 'familyporn', 'FEMEFUN': 'femefun', 'FETISHPAPA': 'fetishpapa', 'FIRSTANALVIDEOS': 'firstanalvideos', 'FITPORN': 'fitporn', 'FREEOMOVIE': 'freeomovie', 'FREEONES': 'freeones', 'FULLXCINEMA': 'fullxcinema', 'FUQER': 'fuqer', 'GLAVMATURES': 'glavmatures', 'HANDJOBHUB': 'handjobhub', 'HARDSEXVIDS': 'hardsexvids', 'HCLIPS': 'hclips', 'HDPORN': 'hdporn', 'HDPUSSY': 'hdpussy', 'HELLMOMS': 'hellmoms', 'HELLO.PORN': 'helloporn', 'HELLPORNO': 'hellporno', 'HENTAIGASM': 'hentaigasm', 'HOME MOVIES TUBE': 'homemoviestube', 'HOMEPORNKING': 'homepornking', 'HQPORNER': 'hqporner', 'HYPNOTUBE': 'hypnotube', 'IN35': 'in35', "IT'S PORN": 'itsporn', 'JAVBANGERS': 'javbangers', 'JAVTEENTUBE': 'javteentube', 'JIZZBOOM': 'jizzboom', 'JIZZBUNKER': 'jizzbunker', 'KATESTUBE': 'katestube', 'KOLOPORNO': 'koloporno', 'LAIDHUB': 'laidhub', 'LECOINPORNO': 'lecoinporno', 'LOVE HOME PORN': 'lovehomeporn', 'MATUREAMATEURSEX': 'matureamateursex', 'MATUREGIRLS': 'maturegirls', 'MEGATUBE': 'megatube', 'MILF FOX': 'milffox', 'MOMPORNONLY': 'mompornonly', 'MOMSLUST': 'momslust', 'MOMXL': 'momxl', 'MOREAMATEURS': 'moreamateurs', 'MOTHERLESS': 'motherless', 'MOVIEFAP': 'moviefap', 'MR DEEPFAKES': 'mrdeepfakes', 'MUSTJAV': 'mustjav', 'MYPORNHERE': 'mypornhere', 'NEPORN': 'neporn', 'NUDEZ': 'nudez', 'OHSEXFILM': 'ohsexfilm', 'OK.XXX': 'okxxx', 'ORIENTAL SEX': 'orientalsex', 'PANDAMOVIE': 'pandamovie', 'PERFECTGIRLS': 'perfectgirls', 'PERVCLIPS': 'pervclips', 'PLAYVIDS': 'playvids', 'PORCORE': 'porcore', 'PORN00': 'porn00', 'PORN300': 'porn300', 'PORN7': 'porn7', 'PORNBIMBO': 'pornbimbo', 'PORNBOLT': 'pornbolt', 'PORNDIG': 'porndig', 'PORNDR': 'porndr', 'PORNDROIDS': 'porndroids', 'PORNENIX': 'pornenix', 'PORNFD': 'pornfd', 'PORNGO': 'porngo', 'PORNHAT': 'pornhat', 'PORNHEED': 'pornheed', 'PORNHUB': 'pornhub', 'PORNICOM': 'pornicom', 'PORNID': 'pornid', 'PORNMAKI': 'pornmaki', 'PORNOFLIX': 'pornoflix', 'PORNOHAMMER': 'pornohammer', 'PORNONE': 'pornone', 'PORNOREINO': 'pornoreino', 'PORNORUSSIA': 'pornorussia', 'PORNOXO': 'pornoxo', 'PORNRABBIT': 'pornrabbit', 'PORNREWIND': 'pornrewind', 'PORNTREX': 'porntrex', 'PORNVIDEOSBEST': 'pornvideosbest', 'PORNXP': 'pornxp', 'PORNYTEEN': 'pornyteen', 'PORNVIDEOS 4K': 'pornvideos4k', 'PORNWHITE': 'pornwhite', 'PUNISHBANG': 'punishbang', 'REDTUBE': 'redtube', 'RELAX SEX': 'relaxsex', 'RULEPORN': 'ruleporn', 'RUS.PORN': 'rus_porn', 'SEXMATURE': 'sexmature', 'SEXU': 'sexu', 'SEXVID': 'sexvid', 'SEVEREPORN': 'severeporn', 'SHAMELESS': 'shameless', 'SHEMALEHD': 'shemalehd', 'SHESHAFT': 'sheshaft', 'SHOOSHTIME': 'shooshtime', 'SLEAZYNEASY': 'sleazyneasy', 'STREAMPORN': 'streamporn', 'SUNPORNO': 'sunporno', 'TEENTUBER': 'teentuber', 'TEENXY': 'teenxy', 'TERK.NL': 'terk_nl', 'THE PORN AREA': 'thepornarea', 'THEY ARE HUGE': 'theyarehuge', 'TNAFLIX': 'tnaflix', 'TOPVIDS': 'topvids', 'TRENDYPORN': 'trendyporn', 'TUBE8': 'tube8', 'TUBEPORNCLASSIC': 'tubepornclassic', 'TUBEWOLF': 'tubewolf', 'TXXX': 'txxx', 'VEPORN': 'veporn', 'W4NKR': 'w4nkr', 'WANKOZ': 'wankoz', 'WARDDOGS': 'warddogs', 'WATCHMYGF': 'watchmygf', 'WATCHPORNX': 'watchpornx', 'WETSINS': 'wetsins', 'WHORESHUB': 'whoreshub', 'WIFE VIDEOS': 'wifevideos', 'XBABE': 'xbabe', 'XCAFE': 'xcafe', 'XCUM': 'xcum', 'XGROOVY': 'xgroovy', 'XNXX': 'xnxx', 'XNXXHAMSTER': 'xnxxhamster', 'XOZILLA': 'xozilla', 'XPAJA': 'xpaja', 'XRARES': 'xrares', 'XTITS': 'xtits', 'XVIDEOS': 'xvideos', 'XXBRITS': 'xxbrits', 'XXXDAN': 'xxxdan', 'XXXBULE': 'xxxbule', 'XXXSHAKE': 'xxxshake', 'YOUJIZZ': 'youjizz', 'YOUNG SEX TUBE': 'youngsextube', 'YOUPORN': 'youporn', 'YOUR AMATEUR TUBE': 'youramateur', 'YOURLUST': 'yourlust', 'YUVUTU': 'yuvutu', 'ZBIORNIK MINI': 'zbiornikmini', 'ZBPORN': 'zbporn', 'ZEDPORN': 'zedporn', 'ZIPORN': 'ziporn', 'ANACAMS': 'anacams', 'CAMBEAUTIES': 'cambeauties', 'CAMBRO.TV': 'cambro', 'CAMHUB': 'camhub', 'CAMSEX': 'cam_sex', 'CAMSTREAMS': 'camstreams', 'CAMVIDEOS': 'camvideos', 'CAMWHORESBAY': 'camwhoresbay', 'CHATURBATE': 'chaturbate', 'EVERYCAMGIRL': 'everycamgirl', 'FOTKAPLKAMERKI': 'fotka_pl_kamerki', 'MASTURBATE2GETHER': 'masturbate2gether', 'SHOWUP': 'showup', 'XHAMSTERLIVE': 'xhamsterlive', 'YOURLIVE': 'yourlive'}
 for cfg in SITES.values():
 	setattr(config.plugins.iptvplayer, cfg, ConfigYesNo(default=True))
 
@@ -379,8 +379,8 @@ class Host(CBaseHostClass):
 				valTab.append(CDisplayListItem('XOZILLA', 'https://www.xozilla.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.xozilla.com/categories/'], 'XOZILLA', hostImage() + 'xozilla.png', None))
 			if config.plugins.iptvplayer.ohsexfilm.value:
 				valTab.append(CDisplayListItem('OHSEXFILM', 'https://www.ohsexfilm.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.ohsexfilm.com/categories/'], 'OHSEXFILM', hostImage() + 'ohsexfilm.png', None))
-			if config.plugins.iptvplayer.mature_amateur_sex.value:
-				valTab.append(CDisplayListItem('MATURE-AMATEUR-SEX', 'https://www.mature-amateur-sex.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.mature-amateur-sex.com/categories/'], 'MATUREAMATEURSEX', hostImage() + 'mature-amateur.png', None))
+			if config.plugins.iptvplayer.matureamateursex.value:
+				valTab.append(CDisplayListItem('MATURE-AMATEUR-SEX', 'https://www.mature-amateur-sex.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.mature-amateur-sex.com/categories/'], 'MATUREAMATEURSEX', hostImage() + 'matureamateur.png', None))
 			if config.plugins.iptvplayer.topvids.value:
 				valTab.append(CDisplayListItem('TOPVIDS', 'https://topvids.net', CDisplayListItem.TYPE_CATEGORY, ['https://topvids.net/categories/'], 'TOPVIDS', hostImage() + 'topvids.png', None))
 			if config.plugins.iptvplayer.shameless.value:
@@ -577,8 +577,8 @@ class Host(CBaseHostClass):
 				valTab.append(CDisplayListItem('ANALDIN', 'https://www.analdin.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.analdin.com/categories/'], 'ANALDIN', hostImage() + 'analdin.png', None))
 			if config.plugins.iptvplayer.in35.value:
 				valTab.append(CDisplayListItem('IN35', 'https://in35.com', CDisplayListItem.TYPE_CATEGORY, ['https://in35.com/categories/'], 'IN35', hostImage() + 'in35.png', None))
-			if config.plugins.iptvplayer.relax_sex.value:
-				valTab.append(CDisplayListItem('RELAX-SEX', 'https://relax-sex.com', CDisplayListItem.TYPE_CATEGORY, ['https://relax-sex.com'], 'RELAX SEX', hostImage() + 'relax-sex.png', None))
+			if config.plugins.iptvplayer.relaxsex.value:
+				valTab.append(CDisplayListItem('RELAX-SEX', 'https://relax-sex.com', CDisplayListItem.TYPE_CATEGORY, ['https://relax-sex.com'], 'RELAX SEX', hostImage() + 'relaxsex.png', None))
 			if config.plugins.iptvplayer.babes34.value:
 				valTab.append(CDisplayListItem('BABES34', 'https://babes34.me', CDisplayListItem.TYPE_CATEGORY, ['https://babes34.me/tags/'], 'BABES34', hostImage() + 'babes34.png', None))
 			if config.plugins.iptvplayer.pornbolt.value:
@@ -701,20 +701,20 @@ class Host(CBaseHostClass):
 				valTab.append(CDisplayListItem("XTITS", 'https://www.xtits.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.xtits.com/categories/'], 'XTITS', hostImage() + 'xtits.png', None))
 			if config.plugins.iptvplayer.terk_nl.value:
 				valTab.append(CDisplayListItem("TERK.NL", 'https://www.terk.nl', CDisplayListItem.TYPE_CATEGORY, ['https://www.terk.nl/'], 'TERK.NL', hostImage() + 'terk_nl.png', None))
-			if config.plugins.iptvplayer.amateur_red.value:
-				valTab.append(CDisplayListItem("AMATEUR.RED", 'https://amateur.red', CDisplayListItem.TYPE_CATEGORY, ['https://amateur.red/categories'], 'AMATEUR.RED', hostImage() + 'amateur_red.png', None))
+			if config.plugins.iptvplayer.amateurred.value:
+				valTab.append(CDisplayListItem("AMATEUR.RED", 'https://amateur.red', CDisplayListItem.TYPE_CATEGORY, ['https://amateur.red/categories'], 'AMATEUR.RED', hostImage() + 'amateurred.png', None))
 			if config.plugins.iptvplayer.hardsexvids.value:
 				valTab.append(CDisplayListItem("HARDSEXVIDS", 'https://hardsexvids.com', CDisplayListItem.TYPE_CATEGORY, ['https://hardsexvids.com/categories/'], 'HARDSEXVIDS', hostImage() + 'hardsexvids.png', None))
-			if config.plugins.iptvplayer.young_sex_tube.value:
-				valTab.append(CDisplayListItem("YOUNG-SEX-TUBE", 'https://young-sex-tube.com', CDisplayListItem.TYPE_CATEGORY, ['https://young-sex-tube.com/category/'], 'YOUNG SEX TUBE', hostImage() + 'young-sex-tube.png', None))
+			if config.plugins.iptvplayer.youngsextube.value:
+				valTab.append(CDisplayListItem("YOUNG-SEX-TUBE", 'https://young-sex-tube.com', CDisplayListItem.TYPE_CATEGORY, ['https://young-sex-tube.com/category/'], 'YOUNG SEX TUBE', hostImage() + 'youngsextube.png', None))
 			if config.plugins.iptvplayer.javteentube.value:
 				valTab.append(CDisplayListItem("JAVTEENTUBE", 'https://javteentube.com', CDisplayListItem.TYPE_CATEGORY, ['https://javteentube.com/categories/'], 'JAVTEENTUBE', hostImage() + 'javteentube.png', None))
 			if config.plugins.iptvplayer.pornvideosbest.value:
 				valTab.append(CDisplayListItem("PORNVIDEOSBEST", 'https://pornvideosbest.com', CDisplayListItem.TYPE_CATEGORY, ['https://pornvideosbest.com/niches/'], 'PORNVIDEOSBEST', hostImage() + 'pornvideosbest.png', None))
-			if config.plugins.iptvplayer.mature_girls.value:
-				valTab.append(CDisplayListItem("MATURE-GIRLS", 'https://www.mature-girls.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.mature-girls.com/categories/'], 'MATUREGIRLS', hostImage() + 'mature-girls.png', None))
-			if config.plugins.iptvplayer.oriental_sex.value:
-				valTab.append(CDisplayListItem("ORIENTAL SEX", 'https://www.oriental-sex.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.oriental-sex.com/'], 'ORIENTAL SEX', hostImage() + 'oriental-sex.png', None))
+			if config.plugins.iptvplayer.maturegirls.value:
+				valTab.append(CDisplayListItem("MATURE-GIRLS", 'https://www.mature-girls.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.mature-girls.com/categories/'], 'MATUREGIRLS', hostImage() + 'maturegirls.png', None))
+			if config.plugins.iptvplayer.orientalsex.value:
+				valTab.append(CDisplayListItem("ORIENTAL SEX", 'https://www.oriental-sex.com', CDisplayListItem.TYPE_CATEGORY, ['https://www.oriental-sex.com/'], 'ORIENTAL SEX', hostImage() + 'orientalsex.png', None))
 			if config.plugins.iptvplayer.teentube.value:
 				valTab.append(CDisplayListItem("69TEENTUBE", 'https://69teentube.com', CDisplayListItem.TYPE_CATEGORY, ['https://69teentube.com/hdporn/'], '69TEENTUBE', hostImage() + '69teentube.png', None))
 			if config.plugins.iptvplayer.wifevideos.value:
@@ -828,7 +828,7 @@ class Host(CBaseHostClass):
 			"HELLOPORN": "helloporn.png",
 			"XOZILLA": "xozilla.png",
 			"OHSEXFILM": "ohsexfilm.png",
-			"MATUREAMATEURSEX": "mature-amateur.png",
+			"MATUREAMATEURSEX": "matureamateur.png",
 			"TOPVIDS": "topvids.png",
 			"EVERYCAMGIRL": "everycamgirl.png",
 			"CAMVIDEOS": "camvideos.png",
@@ -913,7 +913,7 @@ class Host(CBaseHostClass):
 			"3MOVS": "3movs.png",
 			"ANALDIN": "analdin.png",
 			"IN35": "in35.png",
-			"RELAX SEX": "relax-sex.png",
+			"RELAX SEX": "relaxsex.png",
 			"BABES34": "babes34.png",
 			"PORNBOLT": "pornbolt.png",
 			"WETSINS": "wetsins.png",
@@ -976,11 +976,11 @@ class Host(CBaseHostClass):
 			"XTITS": "xtits.png",
 			"TERK.NL": "terk_nl.png",
 			"HARDSEXVIDS": "hardsexvids.png",
-			"AMATEUR.RED": "amateur_red.png",
-			"YOUNG SEX TUBE": "young-sex-tube.png",
+			"AMATEUR.RED": "amateurred.png",
+			"YOUNG SEX TUBE": "youngsextube.png",
 			"JAVTEENTUBE": "javteentube.png",
 			"PORNVIDEOSBEST": "pornvideosbest.png",
-			"ORIENTAL SEX": "oriental-sex.png",
+			"ORIENTAL SEX": "orientalsex.png",
 			"69TEENTUBE": "69teentube.png",
 			"WIFEVIDEOS": "wifevideos.png",
 			"MILFFOX": "milffox.png",
@@ -990,7 +990,7 @@ class Host(CBaseHostClass):
 			"MOREAMATEURS": "moreamateurs.png",
 			"FUQER": "fuqer.png",
 			"BLOWJOBIT": "blowjobit.png",
-			"AMATEURCOUGAR": "amateur-cougar.png",
+			"AMATEURCOUGAR": "amateurcougar.png",
 			"FIRSTANALVIDEOS": "firstanalvideos.png",
 			"PORNDROIDS": "porndroids.png",
 			"lovehomeporn": "lovehomeporn.png",
@@ -1017,7 +1017,7 @@ class Host(CBaseHostClass):
 			"XCUM": "xcum.png",
 			"familyporn": "familyporn.png",
 			"PERVCLIPS": "pervclips.png",
-			"MATUREGIRLS": "mature-girls.png",
+			"MATUREGIRLS": "maturegirls.png",
 			"zedporn": "zedporn.png"
 		}.get(name.split("-")[0])
 
@@ -10900,7 +10900,7 @@ class Host(CBaseHostClass):
 			for item in data:
 				phTitle = self.cm.ph.getSearchGroups(item, '''title"[>]([^ß]+?)[<]/''', 1, True)[0].upper()
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^#]+?)['"]''', 1, True)[0]
-				phImage = catImage = hostImage() + 'neporn.png'
+				phImage = siteLogo
 				phVideos = self.cm.ph.getSearchGroups(item, '''videos"[>]([^"^#]+?)[<]/''', 1, True)[0]
 				valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + phVideos, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'NEPORN-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
@@ -11059,7 +11059,6 @@ class Host(CBaseHostClass):
 		if 'CUCKOLDPLACETUBE' == name:
 			COOKIEFILE = join(GetCookieDir(), 'cuckoldplacetube.cookie')
 			self.MAIN_URL = 'https://www.cuckoldplacetube.com'
-			catImage = hostImage() + 'cuckoldplacetube.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -11072,7 +11071,7 @@ class Host(CBaseHostClass):
 				phTitle = self.cm.ph.getSearchGroups(item, '''title=["]([^ß]+?)["]''', 1, True)[0].upper()
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^#]+?)['"]''', 1, True)[0]
 				phImage = siteLogo
-				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'CUCKOLDPLACETUBE-clips', catImage, None))
+				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'CUCKOLDPLACETUBE-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
 			valTab.insert(0, CDisplayListItem('--- MOST POPULAR  ---', 'MOST POPULAR VIDEOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-popular/'], 'CUCKOLDPLACETUBE-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- LATEST  ---', 'LATEST VIDEOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/latest-updates/'], 'CUCKOLDPLACETUBE-clips', siteLogo, None))
@@ -11085,7 +11084,6 @@ class Host(CBaseHostClass):
 		if 'CUCKOLDPLACETUBE-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'cuckoldplacetube.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = hostImage() + 'cuckoldplacetube.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -11104,7 +11102,7 @@ class Host(CBaseHostClass):
 				phTime = self.cm.ph.getSearchGroups(item, '''timerr"[>]([0-9:hms]+?)[<]''', 1, True)[0]
 				phUp = self.cm.ph.getSearchGroups(item, '''oze"[>]([^>]+?)[<]''', 1, True)[0]
 				if phTime:
-					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + '] ' + decodeHtml(phTitle) + '\nUploaded: ' + phUp, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', catImage, None))
+					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + '] ' + decodeHtml(phTitle) + '\nUploaded: ' + phUp, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', siteLogo, None))
 			if next:
 				valTab.append(CDisplayListItem('************************', '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
 				valTab.append(self.getNextItem(next.split('/')[-2], next, name, catUrl))
@@ -12102,7 +12100,6 @@ class Host(CBaseHostClass):
 		if 'MATUREGIRLS' == name:
 			COOKIEFILE = join(GetCookieDir(), 'mature-girls.cookie')
 			self.MAIN_URL = 'https://www.mature-girls.com/'
-			catImage = hostImage() + 'mature-girls.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12114,9 +12111,9 @@ class Host(CBaseHostClass):
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=["]([^"^#]+?)["]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''title=["]([^ß]+?)["]''', 1, True)[0].replace('mature porn ', '').upper()
 				phImage = self.cm.ph.getSearchGroups(item, '''src=["]([^ß]+?)["]''', 1, True)[0]
-				printDBG('CATIMAGE: ' + phImage)
+				# printDBG('CATIMAGE: ' + phImage)
 				if phImage.endswith('webp'):
-					phImage = catImage
+					phImage = siteLogo
 				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'MATUREGIRLS-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
 			if url[-2].isalpha():
@@ -12132,7 +12129,6 @@ class Host(CBaseHostClass):
 		if 'MATUREGIRLS-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'mature-girls.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = hostImage() + 'mature-girls.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12151,7 +12147,7 @@ class Host(CBaseHostClass):
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=["]([^>]+?)["]''', 1, True)[0].title()
 				phImage = self.cm.ph.getSearchGroups(item, '''-src=['"]([^"^#]+?)['"]''', 1, True)[0]
 				if phImage.endswith('webp'):
-					phImage = catImage
+					phImage = siteLogo
 				Time = self.cm.ph.getSearchGroups(item, '''tion"[>]([0-9:]+)[<]''', 1, True)[0]
 				valTab.append(CDisplayListItem(phTitle, '[' + Time + '] ' + phTitle, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next:
@@ -12166,7 +12162,6 @@ class Host(CBaseHostClass):
 		if 'ORIENTAL SEX' == name:
 			COOKIEFILE = join(GetCookieDir(), 'oriental-sex.cookie')
 			self.MAIN_URL = 'https://www.oriental-sex.com'
-			catImage = hostImage() + 'oriental-sex.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12180,7 +12175,7 @@ class Host(CBaseHostClass):
 				Videos = self.cm.ph.getSearchGroups(item, '''videos"[>]([^ß]+?)[<]''', 1, True)[0]
 				valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + Videos + ' videos', CDisplayListItem.TYPE_CATEGORY, [phUrl], 'ORIENTAL SEX-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- BEST  ---", "BEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/tube/1.html'], "ORIENTAL SEX-clips", catImage, None))
+			valTab.insert(0, CDisplayListItem("--- BEST  ---", "BEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/tube/1.html'], "ORIENTAL SEX-clips", siteLogo, None))
 			return searchItems(valTab, True)
 
 		if 'ORIENTAL SEX-search' == name:
@@ -12189,7 +12184,6 @@ class Host(CBaseHostClass):
 		if 'ORIENTAL SEX-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'oriental-sex.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = hostImage() + 'oriental-sex.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12223,7 +12217,6 @@ class Host(CBaseHostClass):
 		if '69TEENTUBE' == name:
 			COOKIEFILE = join(GetCookieDir(), '69teentube.cookie')
 			self.MAIN_URL = 'https://69teentube.com'
-			catImage = hostImage() + '69teentube.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12233,9 +12226,9 @@ class Host(CBaseHostClass):
 			for item in data:
 				phUrl = self.MAIN_URL + self.cm.ph.getSearchGroups(item, '''href=["]([^"^#]+?)["]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''"[>]([^ß]+?)[<]''', 1, True)[0].upper()
-				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], '69TEENTUBE-clips', catImage, None))
+				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], '69TEENTUBE-clips', siteLogo, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- BEST  ---", "BEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/teen-videos/'], "69TEENTUBE-clips", catImage, None))
+			valTab.insert(0, CDisplayListItem("--- BEST  ---", "BEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/teen-videos/'], "69TEENTUBE-clips", siteLogo, None))
 			return searchItems(valTab, True)
 
 		if '69TEENTUBE-search' == name:
@@ -12244,7 +12237,6 @@ class Host(CBaseHostClass):
 		if '69TEENTUBE-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), '69teentube.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = hostImage() + '69teentube.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12271,7 +12263,6 @@ class Host(CBaseHostClass):
 		if 'WIFEVIDEOS' == name:
 			COOKIEFILE = join(GetCookieDir(), 'wifevideos.cookie')
 			self.MAIN_URL = 'http://www.wifevideos.net'
-			catImage = hostImage() + 'wifevideos.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12284,7 +12275,7 @@ class Host(CBaseHostClass):
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
 				phTitle = self.cm.ph.getSearchGroups(item, '''[>]([A-Z ]+?)[<]''', 1, True)[0]
-				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'WIFEVIDEOS-clips', catImage, None))
+				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'WIFEVIDEOS-clips', siteLogo, None))
 			valTab.sort(key=lambda poz: poz.name)
 			return valTab
 
@@ -12322,7 +12313,6 @@ class Host(CBaseHostClass):
 			COOKIEFILE = join(GetCookieDir(), 'milffox.cookie')
 			self.MAIN_URL = 'https://www.milffox.com'
 			mainUrl = "https://www.milffox.com/categories/"
-			catImage = hostImage() + 'milfox.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12340,9 +12330,9 @@ class Host(CBaseHostClass):
 				Videos = self.cm.ph.getSearchGroups(item, r'''[\[]([^ß]+?)[\]]</em''', 1, True)[0]
 				valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + Videos, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'MILFFOX-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- POPULAR  ---", "POPULAR VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], "MILFFOX-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- RECENT  ---", "LAST ADDED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?o=1'], "MILFFOX-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- LONGEST  ---", "LONGEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?o=2'], "MILFFOX-clips", catImage, None))
+			valTab.insert(0, CDisplayListItem("--- POPULAR  ---", "POPULAR VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], "MILFFOX-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- RECENT  ---", "LAST ADDED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?o=1'], "MILFFOX-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- LONGEST  ---", "LONGEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?o=2'], "MILFFOX-clips", siteLogo, None))
 			if url[-2].isalpha():
 				valTab = searchItems(valTab, True)
 			if next:
@@ -12357,7 +12347,6 @@ class Host(CBaseHostClass):
 		if 'MILFFOX-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), 'milffox.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = hostImage() + 'milfox.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12393,7 +12382,6 @@ class Host(CBaseHostClass):
 		if '9VIDS' == name:
 			COOKIEFILE = join(GetCookieDir(), '9vids.cookie')
 			self.MAIN_URL = 'https://9vids.com'
-			catImage = hostImage() + '9vids.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12404,13 +12392,13 @@ class Host(CBaseHostClass):
 			for item in data:
 				phUrl = self.cm.ph.getSearchGroups(item, 'href=["]([^"^#]+?)["]', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, r'/"[>]([A-Za-z\s]+?)[<]/a', 1, True)[0].upper()
-				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], '9VIDS-clips', catImage, None))
+				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], '9VIDS-clips', siteLogo, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- NEWEST  ---", "LATEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=latest'], "9VIDS-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- POPULAR  ---", "POPULAR VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=popular'], "9VIDS-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- LONGEST  ---", "LONGEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=longest'], "9VIDS-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- MOST VIEWED  ---", "MOST VIEWED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=most-viewed'], "9VIDS-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- RANDOM  ---", "RANDOM VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=random'], "9VIDS-clips", catImage, None))
+			valTab.insert(0, CDisplayListItem("--- NEWEST  ---", "LATEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=latest'], "9VIDS-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- POPULAR  ---", "POPULAR VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=popular'], "9VIDS-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- LONGEST  ---", "LONGEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=longest'], "9VIDS-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- MOST VIEWED  ---", "MOST VIEWED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=most-viewed'], "9VIDS-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- RANDOM  ---", "RANDOM VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/?filter=random'], "9VIDS-clips", siteLogo, None))
 			return searchItems(valTab, True)
 
 		if '9VIDS-search' == name:
@@ -12419,7 +12407,6 @@ class Host(CBaseHostClass):
 		if '9VIDS-clips' == name:
 			COOKIEFILE = join(GetCookieDir(), '9vids.cookie')
 			catUrl = self.currList[Index].possibleTypesOfSearch
-			catImage = hostImage() + 'milfox.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12446,7 +12433,6 @@ class Host(CBaseHostClass):
 		if 'PORNDR' == name:
 			COOKIEFILE = join(GetCookieDir(), 'porndr.cookie')
 			self.MAIN_URL = 'https://www.porndr.com'
-			catImage = hostImage() + 'porndr.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12461,12 +12447,12 @@ class Host(CBaseHostClass):
 				phRate = self.cm.ph.getSearchGroups(item, r'''tion">[\s]([\0-9%]+?)[<]''', 1, True)[0].strip()
 				valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + phVideos + '\nRating Positive: ' + phRate, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'PORNDR-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- NEWEST  ---", "LATEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/latest-updates/'], "PORNDR-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- TOP RATED  ---", "TOP RATED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/top-rated/'], "PORNDR-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- MOST POPULAR  ---", "MOST VIEWED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-popular/'], "PORNDR-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- RECOMMENDED  ---", "RECOMMENDED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/recommended/'], "PORNDR-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- MOST COMMENTED  ---", "MOST COMMENTED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most_commented/'], "PORNDR-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- RANDOM  ---", "RANDOM VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/random/'], "PORNDR-clips", catImage, None))
+			valTab.insert(0, CDisplayListItem("--- NEWEST  ---", "LATEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/latest-updates/'], "PORNDR-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- TOP RATED  ---", "TOP RATED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/top-rated/'], "PORNDR-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- MOST POPULAR  ---", "MOST VIEWED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-popular/'], "PORNDR-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- RECOMMENDED  ---", "RECOMMENDED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/recommended/'], "PORNDR-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- MOST COMMENTED  ---", "MOST COMMENTED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most_commented/'], "PORNDR-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- RANDOM  ---", "RANDOM VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/random/'], "PORNDR-clips", siteLogo, None))
 			return searchItems(valTab, True)
 
 		if 'PORNDR-search' == name:
@@ -12594,7 +12580,6 @@ class Host(CBaseHostClass):
 		if 'MOREAMATEURS' == name:
 			COOKIEFILE = join(GetCookieDir(), 'moreamateurs.cookie')
 			self.MAIN_URL = 'https://moreamateurs.com'
-			catImage = hostImage() + 'moreamateurs.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12609,9 +12594,9 @@ class Host(CBaseHostClass):
 				phRate = self.cm.ph.getSearchGroups(item, r'''tive">[\s]([\0-9%]+?)[<]''', 1, True)[0].strip()
 				valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + phVideos + '\nRating Positive: ' + phRate, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'MOREAMATEURS-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- NEWEST  ---", "LATEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], "MOREAMATEURS-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- TOP RATED  ---", "TOP RATED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/top-rated/'], "MOREAMATEURS-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- MOST POPULAR  ---", "MOST VIEWED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-popular/'], "MOREAMATEURS-clips", catImage, None))
+			valTab.insert(0, CDisplayListItem("--- NEWEST  ---", "LATEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], "MOREAMATEURS-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- TOP RATED  ---", "TOP RATED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/top-rated/'], "MOREAMATEURS-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- MOST POPULAR  ---", "MOST VIEWED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-popular/'], "MOREAMATEURS-clips", siteLogo, None))
 			return searchItems(valTab, True)
 
 		if 'MOREAMATEURS-search' == name:
@@ -12665,7 +12650,6 @@ class Host(CBaseHostClass):
 		if 'FUQER' == name:
 			COOKIEFILE = join(GetCookieDir(), 'fuqer.cookie')
 			self.MAIN_URL = 'https://fuqer.com'
-			catImage = hostImage() + 'fuqer.png'
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12680,10 +12664,10 @@ class Host(CBaseHostClass):
 				phVideos = self.cm.ph.getSearchGroups(item, '''ing"[>]([^ß]+?)[<]''', 1, True)[0]
 				valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + phVideos, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'FUQER-clips', phImage, None))
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- NEWEST  ---", "LATEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], "FUQER-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- TOP RATED  ---", "TOP RATED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/top-rated/'], "FUQER-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- MOST VIEWED  ---", "MOST VIEWED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-viewed/'], "FUQER-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- LONGEST  ---", "LONGEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/longest/'], "FUQER-clips", catImage, None))
+			valTab.insert(0, CDisplayListItem("--- NEWEST  ---", "LATEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], "FUQER-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- TOP RATED  ---", "TOP RATED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/top-rated/'], "FUQER-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- MOST VIEWED  ---", "MOST VIEWED VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-viewed/'], "FUQER-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- LONGEST  ---", "LONGEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/longest/'], "FUQER-clips", siteLogo, None))
 			return searchItems(valTab, True)
 
 		if 'FUQER-search' == name:
@@ -12723,7 +12707,6 @@ class Host(CBaseHostClass):
 		if 'BLOWJOBIT' == name:
 			COOKIEFILE = join(GetCookieDir(), 'blowjobit.cookie')
 			self.MAIN_URL = 'https://blowjobit.com'
-			catImage = hostImage() + "blowjobit.png"
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12747,9 +12730,9 @@ class Host(CBaseHostClass):
 					valTab.append(CDisplayListItem(phTitle, phTitle + '\n' + phVideos, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'BLOWJOBIT-clips', phImage, None))
 
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- LATEST  ---", "LATEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], "BLOWJOBIT-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- POPULAR  ---", "POPULAR VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/videos/q?orderBy=views&sort=desc'], "BLOWJOBIT-clips", catImage, None))
-			valTab.insert(0, CDisplayListItem("--- LONGEST  ---", "LONGEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/videos/q?orderBy=duration&sort=desc'], "BLOWJOBIT-clips", catImage, None))
+			valTab.insert(0, CDisplayListItem("--- LATEST  ---", "LATEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], "BLOWJOBIT-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- POPULAR  ---", "POPULAR VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/videos/q?orderBy=views&sort=desc'], "BLOWJOBIT-clips", siteLogo, None))
+			valTab.insert(0, CDisplayListItem("--- LONGEST  ---", "LONGEST VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/videos/q?orderBy=duration&sort=desc'], "BLOWJOBIT-clips", siteLogo, None))
 			valTab = searchItems(valTab, True)
 			if next_number:
 				next = pageUrl + str(next_number)
@@ -12798,7 +12781,6 @@ class Host(CBaseHostClass):
 		if 'AMATEURCOUGAR' == name:
 			COOKIEFILE = join(GetCookieDir(), 'amateurcougar.cookie')
 			self.MAIN_URL = 'https://www.amateur-cougar.com'
-			self.catImage = hostImage() + "amateurcougar.png"
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='Firefox')
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
@@ -12810,11 +12792,11 @@ class Host(CBaseHostClass):
 				phTitle = self.cm.ph.getSearchGroups(item, '''title=["]([^ß]+?)["]''', 1, True)[0].replace('amateur cougar', '').upper()
 				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"]+?)['"]''', 1, True)[0]
 				if 'webp' in phImage:
-					phImage = self.catImage
+					phImage = siteLogo
 				valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'AMATEURCOUGAR-clips', phImage, None))
 
 			valTab.sort(key=lambda poz: poz.name)
-			valTab.insert(0, CDisplayListItem("--- HOME  ---", "HOME VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], "AMATEURCOUGAR-clips", self.catImage, None))
+			valTab.insert(0, CDisplayListItem("--- HOME  ---", "HOME VIDEOS", CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL], "AMATEURCOUGAR-clips", siteLogo, None))
 			return searchItems(valTab, True)
 
 		if 'AMATEURCOUGAR-search' == name:
@@ -12826,7 +12808,6 @@ class Host(CBaseHostClass):
 			self.HTTP_HEADER = self.cm.getDefaultHeader(browser='chrome')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE, 'return_data': True}
 			sts, data = self.get_Page(url, self.defaultParams)
-			self.catImage = hostImage() + "amateurcougar.png"
 			self.MAIN_URL = 'https://www.amateur-cougar.com'
 			if not sts:
 				return valTab
@@ -12839,7 +12820,7 @@ class Host(CBaseHostClass):
 				phTitle = self.cm.ph.getSearchGroups(item, '''title=["]([^"]+?)["]''', 1, True)[0]
 				phImage = self.cm.ph.getSearchGroups(item, '''-src=['"]([^"]+?)['"]''', 1, True)[0]
 				if 'webp' in phImage:
-					phImage = self.catImage
+					phImage = siteLogo
 				Time = self.cm.ph.getSearchGroups(item, '''tion">([0-9:]+?)<''', 1, True)[0]
 				if phUrl.startswith('http'):
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
