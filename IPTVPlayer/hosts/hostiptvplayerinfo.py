@@ -129,7 +129,7 @@ class IPTVPlayerInfo(CBaseHostClass):
             printExc()
 
         if nextPage:
-            self.applyNextPage(cItem, page=page + 1)
+            self.apply_next_page(cItem, page + 1)
 
     def getLinksForVideo(self, cItem):
         printDBG("getLinksForVideo [%s]" % cItem)
