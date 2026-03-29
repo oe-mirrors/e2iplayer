@@ -32,12 +32,12 @@ class Zaluknij(CBaseHostClass):
         self.cacheLinks = {}
 
         self.MENU = [
-            {"category": "list_items", "title": _("Filmy Premiery"), "url": self.getFullUrl("filmy-online/sort:premiere/")},
-            {"category": "list_items", "title": _("Filmy Nowe Linki"), "url": self.getFullUrl("filmy-online/sort:link/")},
-            {"category": "list_items", "title": _("Filmy Oceny na Zaluknij"), "url": self.getFullUrl("filmy-online/sort:rate/")},
-            {"category": "list_items", "title": _("Seriale"), "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=recent_series&page=1")},
-            {"category": "list_episodes_direct", "title": _("Seriale Nowe Odcinki"), "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=latest_episodes&page=1")},
-            {"category": "list_items", "title": _("Dla dzieci"), "url": self.getFullUrl("dla-dzieci/")},
+            {"category": "list_items", "title": "Filmy Premiery", "url": self.getFullUrl("filmy-online/sort:premiere/")},
+            {"category": "list_items", "title": "Filmy Nowe Linki", "url": self.getFullUrl("filmy-online/sort:link/")},
+            {"category": "list_items", "title": "Filmy Oceny na Zaluknij", "url": self.getFullUrl("filmy-online/sort:rate/")},
+            {"category": "list_items", "title": "Seriale", "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=recent_series&page=1")},
+            {"category": "list_episodes_direct", "title": "Seriale Nowe Odcinki", "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=latest_episodes&page=1")},
+            {"category": "list_items", "title": "Dla dzieci", "url": self.getFullUrl("dla-dzieci/")},
         ] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None, max_retries=3):
