@@ -101,12 +101,12 @@ class Zaluknij(CBaseHostClass):
             is_serial = "serial" in url.lower()
 
             if is_serial:
-                meta_line = self.cm.ph.getSearchGroups(item, '<span class="meta-line">(S\d+\s*E\d+)</span>')
+                meta_line = self.cm.ph.getSearchGroups(item, r'<span class="meta-line">(S\d+\s*E\d+)</span>')
                 if meta_line:
                     meta_line = self.cleanHtmlStr(meta_line[0])
                     title = "%s [%s]" % (title, meta_line)
             else:
-                year = self.cm.ph.getSearchGroups(item, 'class="year">(\d{4})')
+                year = self.cm.ph.getSearchGroups(item, r'class="year">(\d{4})')
                 if year:
                     year = year[0]
                     if not isSearch:
@@ -184,7 +184,7 @@ class Zaluknij(CBaseHostClass):
                 title = "Brak tytułu"
             title = re.sub(r"\s*\[\]\s*", "", title)
 
-            meta_line = self.cm.ph.getSearchGroups(item, '<span class="meta-line">(S\d+\s*E\d+)</span>')
+            meta_line = self.cm.ph.getSearchGroups(item, r'<span class="meta-line">(S\d+\s*E\d+)</span>')
             if meta_line:
                 meta_line = self.cleanHtmlStr(meta_line[0])
                 title = "%s [%s]" % (title, meta_line)
@@ -245,12 +245,12 @@ class Zaluknij(CBaseHostClass):
             is_serial = "serial" in url.lower()
 
             if is_serial:
-                meta_line = self.cm.ph.getSearchGroups(item, '<span class="meta-line">(S\d+\s*E\d+)</span>')
+                meta_line = self.cm.ph.getSearchGroups(item, r'<span class="meta-line">(S\d+\s*E\d+)</span>')
                 if meta_line:
                     meta_line = self.cleanHtmlStr(meta_line[0])
                     title = "%s [%s]" % (title, meta_line)
             else:
-                year = self.cm.ph.getSearchGroups(item, 'class="year">(\d{4})')
+                year = self.cm.ph.getSearchGroups(item, r'class="year">(\d{4})')
                 if year:
                     year = year[0]
                     pass
