@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 20:19+0100\n"
-"PO-Revision-Date: 2026-01-30 22:55+0200\n"
+"PO-Revision-Date: 2026-03-30 13:33+0300\n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: giorbak\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 msgid "\t*\tVotes: "
@@ -257,7 +257,7 @@ msgid "----- DOWNLOADING CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΛΗΨΕΩΝ -----"
 
 msgid "----- Global HostXXX Configuration -----"
-msgstr ""
+msgstr "----- Καθολικές ρυθμίσεις HostXXX -----"
 
 msgid "----- OTHER SETTINGS -----"
 msgstr "----- ΑΛΛΕΣ ΡΥΘΜΙΣΕΙΣ -----"
@@ -269,7 +269,7 @@ msgid "----- PROXIES CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΔΙΑΚΟΜΙΣΤΩΝ ΜΕΣΟΛΑΒΗΣΗΣ -----"
 
 msgid "----- Porn Site Configuration -----"
-msgstr ""
+msgstr "----- Ρυθμίσεις ιστοσελίδων για ενήλικες -----"
 
 msgid "----- SECURITY CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΑΣΦΑΛΕΙΑΣ -----"
@@ -287,22 +287,19 @@ msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΥΠΟΤΙΤΛΩΝ -----"
 
 msgid "----- Show or hide Porn Sites -----"
-msgstr ""
+msgstr "----- Εμφάνιση ή απόκρυψη ιστοσελίδων για ενήλικες -----"
 
 msgid "----- XXXList Configuration -----"
-msgstr ""
+msgstr "----- Ρυθμίσεις λίστας XXX -----"
 
-#, fuzzy
 msgid "----------  Live Cams  ----------"
-msgstr "----------Άλλα----------"
+msgstr "----------  Ζωντανές κάμερες  ----------"
 
-#, fuzzy
 msgid "----------  Other  ----------"
-msgstr "----------Άλλα----------"
+msgstr "----------  Άλλα  ----------"
 
-#, fuzzy
 msgid "----------  Porn Sites  ----------"
-msgstr "----------Άλλα----------"
+msgstr "----------  Ιστοσελίδες για ενήλικες  ----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "----------------- Επιλογές εξωτερικού exteplayer3 -----------------"
@@ -3036,7 +3033,7 @@ msgid "Show file size"
 msgstr "Εμφάνιση μεγέθους αρχείου"
 
 msgid "Show global search :"
-msgstr "Καθολική αναζήτηση:"
+msgstr "Εμφάνιση καθολικής αναζήτησης :"
 
 msgid "Show hiddens catalogs"
 msgstr "Εμφάνιση κρυφών καταλόγων"
@@ -3101,9 +3098,8 @@ msgstr "Λειτουργία ταξινόμησης"
 msgid "Sort Myfreecams :"
 msgstr "Ταξινόμηση Myfreecams:"
 
-#, fuzzy
 msgid "Sort Pornsites Alphabetical :"
-msgstr "Ταξινόμηση αλφαβητικά"
+msgstr "Ταξινόμηση ιστοσελίδων για ενήλικες αλφαβητικά :"
 
 msgid "Sort alphabetically"
 msgstr "Ταξινόμηση αλφαβητικά"
