@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 21.12.2025 - update to current url
+# Last Modified: 29.03.2026 - update to current url - Lululla
 import json
 import re
 
@@ -15,7 +15,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://cb01uno.click/"
+    return "https://cb01uno.world/"
 
 
 class Cb01(CBaseHostClass):
