@@ -35,10 +35,8 @@ W = E2ColoR("white")
 Y = E2ColoR("yellow")
 ###################################################
 
-
 def gettytul():
     return "https://topcima.online"  # main url of host
-
 
 class TopCinema(CBaseHostClass):
     def __init__(self):
@@ -222,21 +220,21 @@ class TopCinema(CBaseHostClass):
                 if not label or not value:
                     continue
                 key = ""
-                if any(x in label for x in ['تصنيف', 'قسم']):
+                if any(x in label for x in ["تصنيف", "قسم"]):
                     key = "{}Category:{}".format(Y, W)
-                elif 'نوع' in label:
+                elif "نوع" in label:
                     key = "{}Genre:{}".format(Y, W)
-                elif 'جودة' in label:
+                elif "جودة" in label:
                     key = "{}Quality:{}".format(Y, W)
-                elif any(x in label for x in ['تاريخ', 'السنة']):
+                elif any(x in label for x in ["تاريخ", "السنة"]):
                     key = "{}Year:{}".format(Y, W)
-                elif 'لغة' in label:
+                elif "لغة" in label:
                     key = "{}Language:{}".format(Y, W)
-                elif any(x in label for x in ['الدولة', 'البلد']):
+                elif any(x in label for x in ["الدولة", "البلد"]):
                     key = "{}Country:{}".format(Y, W)
-                elif 'مدة' in label:
+                elif "مدة" in label:
                     key = "{}Runtime:{}".format(Y, W)
-                elif 'بطولة' in label:
+                elif "بطولة" in label:
                     key = "{}Stars:{}".format(Y, W)
                 if key and value:
                     meta_parts.append("{} {}".format(key, value))
@@ -656,7 +654,6 @@ class TopCinema(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
-
 
 class IPTVHost(CHostBase):
     def __init__(self):
