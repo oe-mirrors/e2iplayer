@@ -26,8 +26,11 @@ W = E2ColoR("white")
 G = E2ColoR("green")
 R = E2ColoR("red")
 ###################################################
+
+
 def gettytul():
     return "https://hd1.brstej.com"
+
 
 class Brstej(CBaseHostClass):
     def __init__(self):
@@ -837,6 +840,7 @@ class Brstej(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
     def __init__(self):
