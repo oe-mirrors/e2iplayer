@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last modified: 06/01/2026
+# Last modified: 08/04/2026
 # Brstej Host (Modified By Mohamed Elsafty)
 ###################################################
 # LOCAL import
@@ -25,18 +25,15 @@ Y = E2ColoR("yellow")
 W = E2ColoR("white")
 G = E2ColoR("green")
 R = E2ColoR("red")
-
-
 ###################################################
 def gettytul():
-    return "https://pro.brstej.com"
-
+    return "https://hd1.brstej.com"
 
 class Brstej(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"cookie": "brstej.cookie", "use_cookie": True, "load_cookie": True, "save_cookie": True})
-        self.MAIN_URL = "https://pro.brstej.com"
-        self.DEFAULT_ICON_URL = "https://pro.brstej.com/22.png"
+        self.MAIN_URL = "https://hd1.brstej.com"
+        self.DEFAULT_ICON_URL = "https://hd1.brstej.com/22.png"
         self.HEADER = self.cm.getDefaultHeader()
         self.HEADER.update({"X-Requested-With": "XMLHttpRequest"})
         self.AJAX_HEADER = self.HEADER.copy()
@@ -511,7 +508,6 @@ class Brstej(CBaseHostClass):
                     res = digits[num % b] + res
                     num //= b
                 return res or "0"
-
             for i in range(len(k) - 1, -1, -1):
                 if k[i]:
                     p = re.sub(r"\b%s\b" % baseN(i, a), k[i], p)
@@ -520,11 +516,10 @@ class Brstej(CBaseHostClass):
         def localGetDomain(url):
             parsed_uri = urlparse(url)
             return "{uri.scheme}://{uri.netloc}/".format(uri=parsed_uri)
-
         urlTab = []
         try:
             printDBG("HDUP extractor start -> %s" % embed_url)
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "Referer": "https://pro.brstej.com/"}
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "Referer": "https://hd1.brstej.com/"}
             params = dict(self.defaultParams)
             params.update({"header": headers, "use_cookie": True, "load_cookie": True, "save_cookie": True})
             sts, html = self.getPage(embed_url, params)
@@ -575,7 +570,6 @@ class Brstej(CBaseHostClass):
                     res = digits[num % b] + res
                     num //= b
                 return res or "0"
-
             for i in range(len(k) - 1, -1, -1):
                 if k[i]:
                     p = re.sub(r"\b%s\b" % baseN(i, a), k[i], p)
@@ -584,10 +578,9 @@ class Brstej(CBaseHostClass):
         def localGetDomain(url):
             parsed_uri = urlparse(url)
             return "{uri.scheme}://{uri.netloc}/".format(uri=parsed_uri)
-
         urlTab = []
         try:
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "Referer": "https://pro.brstej.com/"}
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "Referer": "https://hd1.brstej.com/"}
             params = dict(self.defaultParams)
             params.update({"header": headers, "use_cookie": True, "load_cookie": True, "save_cookie": True})
             sts, html = self.getPage(embed_url, params)
@@ -680,7 +673,7 @@ class Brstej(CBaseHostClass):
             user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
             referer = "https://rty1.film77.xyz/"
             params = dict(self.defaultParams)
-            params.update({"header": {"User-Agent": user_agent, "Referer": "https://pro.brstej.com/"}, "cookiefile": main_cookie})
+            params.update({"header": {"User-Agent": user_agent, "Referer": "https://hd1.brstej.com/"}, "cookiefile": main_cookie})
             sts, html = self.getPage(embed_url, params)
             if not sts:
                 return []
@@ -696,12 +689,10 @@ class Brstej(CBaseHostClass):
                             res = digits[num % b] + res
                             num //= b
                         return res or "0"
-
                     for i in range(int(c) - 1, -1, -1):
                         if k[i]:
                             p = re.sub(r"\b%s\b" % baseN(i, int(a)), k[i], p)
                     return p
-
                 decoded_js = js_unpack(p, a, c, k.split("|"))
             else:
                 decoded_js = html
@@ -733,12 +724,10 @@ class Brstej(CBaseHostClass):
                         res = digits[num % base] + res
                         num //= base
                     return res or "0"
-
                 for i in range(c - 1, -1, -1):
                     if k[i]:
                         p = re.sub(r"\b%s\b" % baseN(i, a), k[i], p)
                 return p
-
             decoded_js = html
             packed_match = re.search(r"eval\(function\(p,a,c,k,e,d\).+?\}\('(.+?)',(\d+),(\d+),'(.+?)'\.split\('\|'\)", html, re.S)
             if packed_match:
@@ -848,7 +837,6 @@ class Brstej(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
-
 
 class IPTVHost(CHostBase):
     def __init__(self):
