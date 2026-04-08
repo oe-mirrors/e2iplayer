@@ -19,6 +19,7 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 [![Ruff Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/ruff.yml)
 [![Build Status](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/compile.yml)
 [![TESTS](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml)
+[![AUTOTAG](https://github.com//oe-mirrors/e2iplayer/actions/workflows/tag_release.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tag_release.yml)
 
 [![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
 [![Latest Release](https://img.shields.io/github/release-date/oe-mirrors/e2iplayer?label=From&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/latest)
@@ -318,4 +319,4 @@ Thanks! ❤️ 💞 💖 ❤️‍🔥 💗
   Powered 💡 by <a href="https://www.opena.tv">openATV Team</a>
 </p> 
 
-README Last Modified: 2026-03-20
+README Last Modified: 2026-04-02

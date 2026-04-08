@@ -1,23 +1,20 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 06.12.2025 - Panda555
+# Last Modified: 06.04.2026 - MR.X
 import re
 
-from Components.config import ConfigSelection, config, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
-config.plugins.iptvplayer.guardaserie_hosts = ConfigSelection(default="https://guardaserietv.club/", choices=[("https://guardaserietv.asia/", "https://guardaserietv.asia/"), ("https://guardaserietv.club/", "https://guardaserietv.club/")])
-
 
 def GetConfigList():
-    return [getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.guardaserie_hosts)]
+    return []
 
 
 def gettytul():
-    return config.plugins.iptvplayer.guardaserie_hosts.value
+    return "https://guarda-serie.ovh/"
 
 
 class GuardaSerie(CBaseHostClass):
@@ -26,12 +23,8 @@ class GuardaSerie(CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = gettytul() + "templates/Guardaserie/images/new_logo2.png"
-        self.MENU = [
-            {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("serietv-streaming/")},
-            {"category": "list_items", "title": _("Top rated"), "url": self.getFullUrl("top-imdb/")},
-            {"category": "list_genres", "title": _("Genres")},
-            {"category": "list_az", "title": _("A-Z")}] + self.searchItems()
+        self.DEFAULT_ICON_URL = gettytul() + "static/logo.png"
+        self.MENU = [{"category": "list_items", "title": _("Series"), "url": self.getFullUrl("archive")}, {"category": "list_items", "title": _("Top rated"), "url": self.getFullUrl("archive?sort=vote")}, {"category": "list_genres", "title": _("Genres")}] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
@@ -61,7 +54,6 @@ class GuardaSerie(CBaseHostClass):
     def listSeasons(self, cItem):
         printDBG("GuardaSerie.listSeasons |%s|" % cItem)
         url = cItem["url"]
-        icon = cItem["icon"]
         sts, data = self.getPage(url)
         if not sts:
             return
@@ -69,34 +61,34 @@ class GuardaSerie(CBaseHostClass):
         data = re.findall(r'href="#[^"]+" data-toggle="tab">([^<]+)', data, re.DOTALL)
         if not data:
             params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "video", "title": cItem["title"], "url": self.getFullUrl(url), "icon": icon, "desc": desc})
+            params.update({"good_for_fav": True, "category": "video", "title": cItem["title"], "url": self.getFullUrl(url), "desc": desc})
             self.addVideo(params)
         else:
             for seasons in data:
                 title = "%s - %s %s" % (cItem["title"], _("Season"), seasons)
                 params = dict(cItem)
-                params.update({"good_for_fav": True, "category": "list_episodes", "title": title, "url": url, "icon": icon, "desc": desc, "seasons": seasons})
+                params.update({"good_for_fav": True, "category": "list_episodes", "title": title, "url": url, "desc": desc, "seasons": seasons})
                 self.addDir(params)
 
     def listEpisodes(self, cItem):
         printDBG("GuardaSerie.listEpisodes |%s|" % cItem)
         url = cItem["url"]
         seasons = cItem["seasons"]
-        icon = cItem["icon"]
         sts, data = self.getPage(url)
         if not sts:
             return
+        tmdbID = self.cm.ph.getSearchGroups(data, r"var\s*tmdbID\s*=\s*(\d+)")[0]
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="season-%s' % seasons, "</ul>")[0]
         data = re.findall(r">(\d+)<", data, re.DOTALL)
         for episode in data:
             title = "%s - %s %s" % (cItem["title"], _("Episode"), episode)
             params = dict(cItem)
-            params.update({"good_for_fav": True, "title": title, "url": url, "icon": icon, "desc": cItem.get("desc", ""), "seasons": seasons, "episode": episode})
+            params.update({"good_for_fav": True, "title": title, "tmdbID": tmdbID, "desc": cItem.get("desc", ""), "seasons": seasons, "episode": episode})
             self.addVideo(params)
 
     def listValue(self, cItem, s, e):
         printDBG("GuardaSerie.Value |%s|" % cItem)
-        sts, data = self.getPage(gettytul() + "serietv-streaming/")
+        sts, data = self.getPage(gettytul())
         if not sts:
             return
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, s, e)[0]
@@ -108,17 +100,13 @@ class GuardaSerie(CBaseHostClass):
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("GuardaSerie.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        cItem["url"] = self.getFullUrl("index.php?do=search&subaction=search&story=%s" % urllib_quote(searchPattern))
+        cItem["url"] = self.getFullUrl("search?q=%s" % urllib_quote_plus(searchPattern))
         self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):
         printDBG("GuardaSerie.getLinksForVideo [%s]" % cItem)
-        sts, data = self.getPage(cItem["url"], self.defaultParams)
-        if not sts:
-            return []
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'data-num="%sx%s' % (cItem.get("seasons"), cItem.get("episode")), "</div>")[0]
-        data = re.findall('data-link="(h[^"]+)', data, re.DOTALL)
-        return [{"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1} for url in data]
+        url = "https://vixsrc.to/tv/%s/%s/%s?lang=it" % (cItem.get("tmdbID"), cItem.get("seasons"), cItem.get("episode"))
+        return [{"name": url, "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1}]
 
     def getVideoLinks(self, url):
         printDBG("GuardaSerie.getVideoLinks [%s]" % url)
@@ -142,8 +130,6 @@ class GuardaSerie(CBaseHostClass):
             self.listEpisodes(self.currItem)
         elif category == "list_genres":
             self.listValue(self.currItem, "Genere<", "</ul>")
-        elif category == "list_az":
-            self.listValue(self.currItem, 'letter">', "</div>")
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
