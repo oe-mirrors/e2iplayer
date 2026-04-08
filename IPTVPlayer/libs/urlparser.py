@@ -271,6 +271,7 @@ class urlparser:
             "dooood.com": self.pp.parserDOOD,
             "doply.net": self.pp.parserDOOD,
             "dpstream.fyi": self.pp.parserJWPLAYER,
+            "dr0pstream.com": self.pp.parserJWPLAYER,
             "dropload.io": self.pp.parserJWPLAYER,
             "dropload.pro": self.pp.parserJWPLAYER,
             "dropload.tv": self.pp.parserJWPLAYER,
@@ -526,6 +527,7 @@ class urlparser:
             "vidsrc-me.su": self.pp.parserVIDSRC,
             "vidsrcme.ru": self.pp.parserVIDSRC,
             "vidsrcme.su": self.pp.parserVIDSRC,
+            "vixsrc.to": self.pp.parserVIXSRC,
             "vsrc.su": self.pp.parserVIDSRC,
             "vidzy.org": self.pp.parserJWPLAYER,
             "vinovo.si": self.pp.parserVINOVO,
@@ -2124,7 +2126,7 @@ class pageParser(CaptchaHelper):
         if "streamwish.to" in baseUrl:
             baseUrl = baseUrl.replace("streamwish.to", "hglamioz.com")
         if "dropload." in baseUrl:
-            baseUrl = baseUrl.replace("dropload.tv", "dropload.pro").replace("dropload.io", "dropload.pro")
+            baseUrl = baseUrl.replace("dropload.tv", "dr0pstream.com").replace("dropload.io", "dr0pstream.com")
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
             return []
@@ -2398,4 +2400,25 @@ class pageParser(CaptchaHelper):
                     videoUrl = self.cm.ph.getSearchGroups(data, r"""player.swf\?file=(http[^"^']+?)["']""", 1, True)[0]
                 if videoUrl.startswith("https") and videoUrl not in tmpUrls:
                     urltab.append({"name": "freedisc.pl", "url": urlparser.decorateUrl(videoUrl, {"Referer": "https://freedisc.pl/static/player/v612/jwplayer.flash.swf", "User-Agent": HTTP_HEADER["User-Agent"]})})
+        return urltab
+
+    def parserVIXSRC(self, baseUrl):
+        printDBG("parserVIXSRC baseUrl[%s]" % baseUrl)
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        urltab = []
+        tok = re.search(r"token':\s*'([^']+)", data)
+        exp = re.search(r"expires':\s*'([^']+)", data)
+        hurl = re.search(r"url:\s*'([^']+)", data)
+        if not all([tok, exp, hurl]):
+            return []
+        url = "%s?token=%s&expires=%s&h=1" % (hurl.group(1), tok.group(1), exp.group(1))
+        if "?lang=it" in baseUrl:
+            url += "&lang=it"
+        if url:
+            url = strwithmeta(url, {"iptv_proto": "m3u8", "User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+            urltab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, sortWithMaxBitrate=99999999))
         return urltab
