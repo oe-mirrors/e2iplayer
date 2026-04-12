@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 14.02.2026 - Mr.X
+# Last Modified: 12.04.2026 - Mr.X
 import re
 
-from Components.config import ConfigSelection, config, getConfigListEntry
+from Components.config import ConfigSelection, config, getConfigListEntry, ConfigYesNo, ConfigText
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
 config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http://186.2.175.5/", choices=[("http://186.2.175.5/", "186.2.175.5"), ("https://s.to/", "s.to"), ("https://serienstream.to/", "serienstream.to")])  # NOSONAR
+config.plugins.iptvplayer.serienstreamto_uselogin = ConfigYesNo(default=False)
+config.plugins.iptvplayer.serienstreamto_login = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed_size=False)
 
 
 def GetConfigList():
-    return [getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_hosts)]
+    return [getConfigListEntry(_("Use login") + ":", config.plugins.iptvplayer.serienstreamto_uselogin), getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.serienstreamto_login), getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.serienstreamto_password), getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_hosts)]
 
 
 def gettytul():
@@ -176,6 +179,9 @@ class SerienStreamTo(CBaseHostClass):
                 if self.cm.isValidUrl(url):
                     return self.up.getVideoLinkExt(url)
         elif sts:
+            if "frameBridge" in data:
+                SetIPTVPlayerLastHostError("Der Link ist geschützt ein s.to Login ist nötig. \nGeben Sie Login und Passwort in der Host Konfiguration (blau) ein und versuchen Sie es erneut.")
+                return []
             url = self.cm.ph.getSearchGroups(data, 'href="([^"]+)')[0]
             if self.cm.isValidUrl(url):
                 return self.up.getVideoLinkExt(url)
@@ -212,6 +218,24 @@ class SerienStreamTo(CBaseHostClass):
                     otherInfo[key] = ", ".join(val)
         return [{"title": cItem["title"], "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
 
+    def login(self):
+        login = config.plugins.iptvplayer.serienstreamto_login.value.strip()
+        passw = config.plugins.iptvplayer.serienstreamto_password.value.strip()
+        if login == "" and passw == "":
+            return
+        lurl = self.getFullUrl("/login")
+        sts, data = self.getPage(lurl)
+        if sts:
+            token = self.cm.ph.getSearchGroups(data, r'csrf-token" content="([^"]+)')
+            post = {"_token": token[0], "email": login, "password": passw}
+            params = dict(self.defaultParams)
+            params["no_redirection"] = True
+            self.cm.getPage(lurl, params, post_data=post)
+            if self.cm.meta["status_code"] == 302 and self.cm.meta.get("location") != lurl:
+                printDBG("Login OK")
+            else:
+                printDBG("Login fehlgeschlagen")
+
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get("name", "")
@@ -220,6 +244,8 @@ class SerienStreamTo(CBaseHostClass):
         self.currList = []
         if name is None:
             self.listsTab(self.MENU, {"name": "category"})
+            if config.plugins.iptvplayer.serienstreamto_uselogin.value:
+                self.login()
         elif category == "list_items":
             self.listItems(self.currItem)
         elif category == "list_seasons":
