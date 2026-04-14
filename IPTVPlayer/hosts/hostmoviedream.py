@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 22.03.2026 - Mr.X
+# Last Modified: 13.04.2026 - Mr.X
 import base64
 import json
 import re
@@ -19,7 +19,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://moviedream.to/"
+    return "https://moviedream.cx/"
 
 
 def evp_bytes_to_key(password, salt, key_len=32):
