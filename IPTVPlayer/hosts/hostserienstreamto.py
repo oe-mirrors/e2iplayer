@@ -104,7 +104,7 @@ class SerienStreamTo(CBaseHostClass):
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="episode-row', "</tr>")
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, "location='([^']+)")[0])
-            name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0])
+            name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)">')[0])
             ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'cell">(\d+)')[0])
             ep = "" if ("Episode" in name or "Folge" in name) else "%s %s - " % (_("Episode"), ep)
             if "Releases soon" in name:
