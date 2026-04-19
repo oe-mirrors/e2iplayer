@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Last modified: 13/10/2025 - popking (odem2014)
-# Last updated:  16/02/2025 - M.Elsafty (angel_heart)
+# Last updated:  18/04/2025 - M.Elsafty (angel_heart)
 ###################################################
 # LOCAL import
 ###################################################
@@ -232,12 +232,10 @@ class ArabSeed(CBaseHostClass):
     def listItems(self, cItem):
         printDBG("ArabSeed.listItems [%s]" % cItem)
         sts, data = self.getPage(cItem["url"])
-        if not sts:
+        if not sts or not data:
             return
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="blocks__section mt__30 mb__30', "</ul></div></div></section>", False)[1]
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2', "</li>")
-        data_items1 = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li class="box__xs__2', "</li>")[0]
-        printDBG("data_items1.listItems [%s]" % data_items1)
+        data_items = re.findall(r'<li[^>]*class="[^"]*box__xs__2[^"]*"[^>]*>(.*?)</li>', data, re.S)
+        printDBG("Items found: %s" % len(data_items))
         for m in data_items:
             # Extract basic info
             title = self.cm.ph.getSearchGroups(m, r'title=[\'"]([^\'"]+)[\'"]')[0]
