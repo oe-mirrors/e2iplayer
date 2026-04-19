@@ -25,11 +25,14 @@ LB = E2ColoR("lightblue")
 G = E2ColoR("green")
 R = E2ColoR("red")
 
+
 def GetConfigList():
     return []
 
+
 def gettytul():
     return "https://asiatvdrama.com/"
+
 
 class Asi1TV(CBaseHostClass):
     def __init__(self):
@@ -371,9 +374,11 @@ class Asi1TV(CBaseHostClass):
         urlTab = []
         try:
             sts, data = self.getPage(cItem["url"])
-            if not sts: return urlTab
+            if not sts:
+                return urlTab
             epwatch_match = re.search(r'name="epwatch"\s+value="(\d+)"', data)
-            if not epwatch_match: return urlTab
+            if not epwatch_match:
+                return urlTab
             epwatch_value = epwatch_match.group(1)
             printDBG("epwatch: %s" % epwatch_value)
             post_url = "https://asiawiki.me"
@@ -392,7 +397,8 @@ class Asi1TV(CBaseHostClass):
                     m = re.search(pattern, server_html, re.IGNORECASE)
                     if m:
                         link = m.group(1).replace("\\/", "/").replace("\\\\", "\\")
-                        if link.startswith("//"): link = "https:" + link
+                        if link.startswith("//"):
+                            link = "https:" + link
                         break
                 if link and "googletagmanager" not in link:
                     server_name = server_name.strip() or "مشغل فيديو"
@@ -696,6 +702,7 @@ class Asi1TV(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
     def __init__(self):
