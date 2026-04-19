@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last modified: 13/12/2025
+# Last modified: 19/04/2026
 # Asi1TV Host (Modified By Mohamed Elsafty)
 ###################################################
 # LOCAL import
@@ -10,15 +10,13 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_quote
 
 ###################################################
 # FOREIGN import
 ###################################################
 import re
 import time
-import pycurl
-from io import BytesIO
 
 ###################################################
 Y = E2ColoR("yellow")
@@ -27,20 +25,17 @@ LB = E2ColoR("lightblue")
 G = E2ColoR("green")
 R = E2ColoR("red")
 
-
 def GetConfigList():
     return []
 
-
 def gettytul():
-    return "https://asi1tv.com/"
-
+    return "https://asiatvdrama.com/"
 
 class Asi1TV(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "asi1tv", "cookie": "asi1tv.cookie"})
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = "https://asi1tv.com/wp-content/uploads/2021/09/cropped-asiadrama-192x192.png"  # fallback icon
+        self.DEFAULT_ICON_URL = "https://asiatvdrama.com/wp-content/uploads/2021/09/cropped-asiadrama-192x192.png"  # fallback icon
         self.SEARCH_URL = self.MAIN_URL + "?s="
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
@@ -60,6 +55,13 @@ class Asi1TV(CBaseHostClass):
                 printDBG("Asi1TV.getPage retry %d failed: %s" % (attempt + 1, str(e)))
             time.sleep(1.2)
         return False, ""
+
+    def _fixUrl(self, url):
+        if url:
+            url = self.getFullUrl(url)
+            if any(ord(c) > 127 for c in url):
+                return urllib_quote(url.encode("utf-8"), safe=":/%?&=+@#,")
+        return url
 
     def listMainMenu(self, cItem):
         printDBG("Asi1TV.listMainMenu")
@@ -98,14 +100,14 @@ class Asi1TV(CBaseHostClass):
                 if cItem.get("url", "").endswith("/قائمة-الفنانين/") or "/page/" not in cItem.get("url", ""):
                     all_list_title = Y + "All List A to Z" + W
                     all_list_desc = Y + "ترتيب أبجدي .. يرجي الانتظار لان تحميل قائمة الفنانين الكاملة تأخذ بعض الوقت ... يمكن تصفح القوائم بشكل أسرع" + W
-                    self.addDir({"title": all_list_title, "desc": all_list_desc, "icon": self.DEFAULT_ICON_URL, "category": "list_all_actors", "url": "https://asi1tv.com/قائمة-الفنانين/", "type": "all_actors", "good_for_fav": True})
+                    self.addDir({"title": all_list_title, "desc": all_list_desc, "icon": self.DEFAULT_ICON_URL, "category": "list_all_actors", "url": "https://asiatvdrama.com/قائمة-الفنانين/", "type": "all_actors", "good_for_fav": True})
                 for link in actor_links:
                     url = self.cm.ph.getSearchGroups(link, r'href="([^"]+)"')[0]
                     title = self.cm.ph.getSearchGroups(link, r"<h2>([^<]+)</h2>")[0].strip()
                     if not url or not title:
                         continue
                     icon = self.cm.ph.getSearchGroups(link, r'<img[^>]+src=["\']([^"\']+)[^>]*>')[0].strip()
-                    icon = self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
+                    icon = self._fixUrl(icon) if icon else self.DEFAULT_ICON_URL
                     params = dict(cItem)
                     params.update({"title": "%s%s%s" % (LB, title, W), "url": self.getFullUrl(url), "icon": icon, "desc": Y + _("Actor profile and Works") + W, "category": "explore_item", "good_for_fav": True})
                     self.addDir(params)
@@ -125,10 +127,10 @@ class Asi1TV(CBaseHostClass):
                 is_vip = '<div class="vip-ribbon">' in item
                 if is_vip:
                     clean_title = "%s[ VIP ] - %s%s" % (Y, clean_title, W)
-                icon = self.cm.ph.getSearchGroups(item, r'data-img="([^"]+)"')[0]
+                icon = self.cm.ph.getSearchGroups(item, r'data-img="([^"]+)"')[0].strip()
                 if not icon:
-                    icon = self.cm.ph.getSearchGroups(item, r'src="([^"]+)"')[0]
-                icon = self.getFullUrl(icon.strip()) if icon else self.DEFAULT_ICON_URL
+                    icon = self.cm.ph.getSearchGroups(item, r'src="([^"]+)"')[0].strip()
+                icon = self._fixUrl(icon) if icon else self.DEFAULT_ICON_URL
                 translate = ""
                 sound = ""
                 translate_block = self.cm.ph.getDataBeetwenMarkers(item, '<div class="translate">', "</div>", False)[1]
@@ -213,7 +215,7 @@ class Asi1TV(CBaseHostClass):
 
     def listAllActors(self, cItem):
         printDBG("Asi1TV.listAllActors")
-        base_url = "https://asi1tv.com/قائمة-الفنانين/"
+        base_url = "https://asiatvdrama.com/قائمة-الفنانين/"
         page = 1
         total_added = 0
         max_pages = 200
@@ -317,7 +319,7 @@ class Asi1TV(CBaseHostClass):
                 work_icon = self.cm.ph.getSearchGroups(item, r'data-img="([^"]+)"')[0].strip()
                 if not work_icon:
                     work_icon = self.cm.ph.getSearchGroups(item, r'src="([^"]+)"')[0].strip()
-                work_icon = self.getFullUrl(work_icon) if work_icon else self.DEFAULT_ICON_URL
+                work_icon = self._fixUrl(work_icon) if work_icon else self.DEFAULT_ICON_URL
                 episode_info = ""
                 eps_match = re.search(r'<div class="eps">[^<]*<span>[^<]*<i[^>]*>[^<]*</i>\s*([^<]+)', item)
                 if eps_match:
@@ -369,30 +371,20 @@ class Asi1TV(CBaseHostClass):
         urlTab = []
         try:
             sts, data = self.getPage(cItem["url"])
-            if not sts:
-                return urlTab
+            if not sts: return urlTab
             epwatch_match = re.search(r'name="epwatch"\s+value="(\d+)"', data)
-            if not epwatch_match:
-                return urlTab
+            if not epwatch_match: return urlTab
             epwatch_value = epwatch_match.group(1)
             printDBG("epwatch: %s" % epwatch_value)
-            buffer = BytesIO()
-            c = pycurl.Curl()
-            c.setopt(c.URL, "https://asiawiki.me")
-            c.setopt(c.POST, 1)
-            c.setopt(c.POSTFIELDS, f"epwatch={epwatch_value}")
-            c.setopt(c.WRITEDATA, buffer)
-            c.setopt(c.FOLLOWLOCATION, True)
-            c.setopt(c.MAXREDIRS, 5)
-            c.setopt(c.USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-            c.setopt(c.REFERER, cItem["url"])
-            c.setopt(c.COOKIEFILE, self.COOKIE_FILE)
-            c.setopt(c.COOKIEJAR, self.COOKIE_FILE)
-            try:
-                c.perform()
-                data_final = buffer.getvalue().decode("utf-8", errors="ignore")
-            finally:
-                c.close()
+            post_url = "https://asiawiki.me"
+            post_data = {"epwatch": epwatch_value}
+            post_params = dict(self.defaultParams)
+            post_params["header"] = dict(self.HEADER)
+            post_params["header"]["Referer"] = cItem["url"]
+            sts, data_final = self.cm.getPage(post_url, post_params, post_data)
+            if not sts or not data_final:
+                printDBG("Failed to get server list page")
+                return urlTab
             matches = re.findall(r'data-server=[\'"](.*?)[\'"][^>]*>\s*<i[^>]*></i>\s*([^<\n]*)', data_final, re.DOTALL | re.IGNORECASE)
             for server_html, server_name in matches:
                 link = None
@@ -400,8 +392,7 @@ class Asi1TV(CBaseHostClass):
                     m = re.search(pattern, server_html, re.IGNORECASE)
                     if m:
                         link = m.group(1).replace("\\/", "/").replace("\\\\", "\\")
-                        if link.startswith("//"):
-                            link = "https:" + link
+                        if link.startswith("//"): link = "https:" + link
                         break
                 if link and "googletagmanager" not in link:
                     server_name = server_name.strip() or "مشغل فيديو"
@@ -414,6 +405,7 @@ class Asi1TV(CBaseHostClass):
                 printDBG("%2d. %-20s → %s" % (i, item["name"], item["url"]))
         except Exception as e:
             printDBG("Error: %s" % e)
+            printExc()
         return urlTab
 
     def getVideoLinks(self, url):
@@ -531,7 +523,7 @@ class Asi1TV(CBaseHostClass):
             def desc_line(label, value):
                 return "%s%s%s : %s" % (Y, label, W, value) if value else "%s%s%s : " % (Y, label, W)
 
-            genres = " - ".join([self.cleanHtmlStr(g) for g in self.cm.ph.getAllItemsBeetwenMarkers(wrapper, '<a href="https://asi1tv.com/genre/', "</a>")])
+            genres = " - ".join([self.cleanHtmlStr(g) for g in self.cm.ph.getAllItemsBeetwenMarkers(wrapper, '<a href="https://asiatvdrama.com/genre/', "</a>")])
             country = self.cm.ph.getSearchGroups(wrapper, r"<span>البلد  المنتج : </span>\s*<a[^>]*>([^<]+)</a>")[0].strip()
             orig_name = clean_between(wrapper, "<span>اسم العمل  :</span>", "</div>")
             ar_name = clean_between(wrapper, "<span>الاسم العربي  :</span>", "</div>")
@@ -704,7 +696,6 @@ class Asi1TV(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
-
 
 class IPTVHost(CHostBase):
     def __init__(self):
