@@ -11,28 +11,25 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_quote
-
 ###################################################
 # FOREIGN import
 ###################################################
 import re
 import time
-
+import json
 ###################################################
 Y = E2ColoR("yellow")
 W = E2ColoR("white")
 LB = E2ColoR("lightblue")
 G = E2ColoR("green")
 R = E2ColoR("red")
-
+###################################################
 
 def GetConfigList():
     return []
 
-
 def gettytul():
     return "https://asiatvdrama.com/"
-
 
 class Asi1TV(CBaseHostClass):
     def __init__(self):
@@ -379,36 +376,22 @@ class Asi1TV(CBaseHostClass):
             epwatch_match = re.search(r'name="epwatch"\s+value="(\d+)"', data)
             if not epwatch_match:
                 return urlTab
-            epwatch_value = epwatch_match.group(1)
-            printDBG("epwatch: %s" % epwatch_value)
-            post_url = "https://asiawiki.me"
-            post_data = {"epwatch": epwatch_value}
-            post_params = dict(self.defaultParams)
-            post_params["header"] = dict(self.HEADER)
-            post_params["header"]["Referer"] = cItem["url"]
-            sts, data_final = self.cm.getPage(post_url, post_params, post_data)
-            if not sts or not data_final:
-                printDBG("Failed to get server list page")
+            ajax_url = "https://asiawiki.me/wp-admin/admin-ajax.php?action=fetch_episode&id=%s" % epwatch_match.group(1)
+            ajax_params = dict(self.defaultParams)
+            ajax_params["header"] = dict(self.HEADER)
+            ajax_params["header"]["Referer"] = "https://asiawiki.me/"
+            sts, json_data = self.cm.getPage(ajax_url, ajax_params)
+            if not sts:
                 return urlTab
-            matches = re.findall(r'data-server=[\'"](.*?)[\'"][^>]*>\s*<i[^>]*></i>\s*([^<\n]*)', data_final, re.DOTALL | re.IGNORECASE)
-            for server_html, server_name in matches:
-                link = None
-                for pattern in [r'src=[\'"](https?://[^\'"]+)', r'src=[\'"](//[^\'"]+)', r'href=[\'"](https?://[^\'"]+)', r'href=[\'"](//[^\'"]+)']:
-                    m = re.search(pattern, server_html, re.IGNORECASE)
-                    if m:
-                        link = m.group(1).replace("\\/", "/").replace("\\\\", "\\")
-                        if link.startswith("//"):
-                            link = "https:" + link
-                        break
-                if link and "googletagmanager" not in link:
-                    server_name = server_name.strip() or "مشغل فيديو"
-                    urlTab.append({"name": server_name, "url": link, "need_resolve": 1})
-                    printDBG("Added: %s ← %s" % (server_name, link))
-            seen = set()
-            urlTab = [i for i in urlTab if not (i["url"] in seen or seen.add(i["url"]))]
-            printDBG("Final links count: %d" % len(urlTab))
-            for i, item in enumerate(urlTab, 1):
-                printDBG("%2d. %-20s → %s" % (i, item["name"], item["url"]))
+            response = json.loads(json_data)
+            for server_name, iframe_html in response.get("servers", {}).items():
+                src_match = re.search(r'<iframe[^>]+src=["\']([^"\']+)["\']', iframe_html, re.IGNORECASE)
+                if src_match:
+                    link = src_match.group(1).replace("\\/", "/")
+                    if link.startswith("//"): link = "https:" + link
+                    name = self.cleanHtmlStr(server_name).strip() or "مشغل فيديو"
+                    if not any(l["url"] == link for l in urlTab):
+                        urlTab.append({"name": name, "url": link, "need_resolve": 1})
         except Exception as e:
             printDBG("Error: %s" % e)
             printExc()
@@ -702,7 +685,6 @@ class Asi1TV(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
-
 
 class IPTVHost(CHostBase):
     def __init__(self):
