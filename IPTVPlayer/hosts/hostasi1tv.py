@@ -25,11 +25,14 @@ G = E2ColoR("green")
 R = E2ColoR("red")
 ###################################################
 
+
 def GetConfigList():
     return []
 
+
 def gettytul():
     return "https://asiatvdrama.com/"
+
 
 class Asi1TV(CBaseHostClass):
     def __init__(self):
@@ -388,7 +391,8 @@ class Asi1TV(CBaseHostClass):
                 src_match = re.search(r'<iframe[^>]+src=["\']([^"\']+)["\']', iframe_html, re.IGNORECASE)
                 if src_match:
                     link = src_match.group(1).replace("\\/", "/")
-                    if link.startswith("//"): link = "https:" + link
+                    if link.startswith("//"):
+                        link = "https:" + link
                     name = self.cleanHtmlStr(server_name).strip() or "مشغل فيديو"
                     if not any(l["url"] == link for l in urlTab):
                         urlTab.append({"name": name, "url": link, "need_resolve": 1})
@@ -685,6 +689,7 @@ class Asi1TV(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
 
 class IPTVHost(CHostBase):
     def __init__(self):
