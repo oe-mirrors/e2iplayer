@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Original File from: 24/10/2025 - popking (odem2014)
-# Last modified: 27/03/2026 - Mohamed Elsafty (angel_heart)
+# Last modified: 20/04/2026 - Mohamed Elsafty (angel_heart)
 # typical import for a standard host
 ###################################################
 # LOCAL import
@@ -41,7 +41,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://c4u1r.sbs"  # main url of host
+    return "https://tv8.egydead.live"  # main url of host
 
 
 class EgyDead(CBaseHostClass):
