@@ -1629,6 +1629,7 @@ class E2iPlayerWidget(Screen):
                     titleFile.write(title)
             except Exception:
                 printExc()
+        """
         if config.plugins.iptvplayer.set_curr_title.value:
             try:
                 from enigma import evfd
@@ -1636,6 +1637,7 @@ class E2iPlayerWidget(Screen):
                 evfd.getInstance().vfd_write_string(title[0:17])
             except Exception:
                 printExc()
+        """
 
     def playVideo(self, ret):
         printDBG("playVideo")
