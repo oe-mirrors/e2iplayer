@@ -231,6 +231,7 @@ class urlparser:
             "cdnwish.com": self.pp.parserJWPLAYER,
             "chuckle-tube.com": self.pp.parserVOESX,
             "cloud.mail.ru": self.pp.parserCOUDMAILRU,
+            "coflix.upn.one": self.pp.parserSBS,
             "coverapi.store": self.pp.parserCOVERAPI,
             "csst.online": self.pp.parserSST,
             "cybervynx.com": self.pp.parserJWPLAYER,
@@ -240,6 +241,7 @@ class urlparser:
             "d0o0d.com": self.pp.parserDOOD,
             "d-s.io": self.pp.parserDOOD,
             "dailymotion.com": self.pp.parserDAILYMOTION,
+            "darkibox.com": self.pp.parserJWPLAYER,
             "dancima.shop": self.pp.parserJWPLAYER,
             "davioad.com": self.pp.parserJWPLAYER,
             "dhcplay.com": self.pp.parserJWPLAYER,
@@ -342,6 +344,7 @@ class urlparser:
             "justupload.io": self.pp.parserJWPLAYER,
             # k
             "kinoger.be": self.pp.parserVEEV,
+            "kinoger.seekplays.pro": self.pp.parserSBS,
             "kinoger.p2pplay.pro": self.pp.parserSBS,
             "kinoger.re": self.pp.parserSBS,
             "kinoger.ru": self.pp.parserVOESX,
@@ -529,6 +532,8 @@ class urlparser:
             "vidsrcme.su": self.pp.parserVIDSRC,
             "vixsrc.to": self.pp.parserVIXSRC,
             "vsrc.su": self.pp.parserVIDSRC,
+            "vsembed.ru": self.pp.parserVIDSRC,
+            "vsembed.su": self.pp.parserVIDSRC,
             "vidzy.org": self.pp.parserJWPLAYER,
             "vinovo.si": self.pp.parserVINOVO,
             "vinovo.to": self.pp.parserVINOVO,
@@ -2419,6 +2424,8 @@ class pageParser(CaptchaHelper):
         if "?lang=it" in baseUrl:
             url += "&lang=it"
         if url:
+            if url.startswith("/"):
+                url = host + url
             url = strwithmeta(url, {"iptv_proto": "m3u8", "User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
             urltab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, sortWithMaxBitrate=99999999))
         return urltab
