@@ -293,32 +293,32 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
     def resolveEmbedUrl(self, embedUrl):
         printDBG("Filman.resolveEmbedUrl [%s]" % embedUrl)
-        
+
         params = dict(self.defaultParams)
         params["header"] = dict(params["header"])
         params["header"]["Referer"] = "https://filman.cc/"
-        
+
         sts, data = self.getPage(embedUrl, params)
         if not sts:
             return embedUrl
-        
+
         finalUrl = ""
-        
+
         pattern = r'''var\s+_e\s*=\s*['"]([^'"]+)['"]'''
         encoded_var = self.cm.ph.getSearchGroups(data, pattern)[0]
         if encoded_var:
             decoded_url = self.decodeEmbedUrl(encoded_var)
             if decoded_url:
                 finalUrl = decoded_url
-        
+
         if not finalUrl:
             iframe_src = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src=["\']([^"\']+)["\']')[0]
             if iframe_src:
                 finalUrl = iframe_src
-        
+
         if finalUrl and not finalUrl.startswith("http"):
             finalUrl = self.getFullUrl(finalUrl)
-        
+
         return finalUrl if finalUrl else embedUrl
 
     def getLinksForVideo(self, cItem):
@@ -387,7 +387,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 if len(tds) > 2:
                     version = self.cleanHtmlStr(tds[1])
                     quality = self.cleanHtmlStr(tds[2])
-                
+
                 resolved_url = self.resolveEmbedUrl(playerUrl)
                 host_name = self.getHostNameFromUrl(resolved_url)
                 name = host_name
