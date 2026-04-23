@@ -147,6 +147,7 @@
   "youtube",
   "xalaflix",
   "otakufr",
+  "coflix",
   "rtbfbe",
   "artetv",
   "dailymotion",
