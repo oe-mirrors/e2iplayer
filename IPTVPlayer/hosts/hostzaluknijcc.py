@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 28.03.2026 - damagic
+# Last Modified: 24.04.2026 - damagic
 ###################################################
 import re
 import json
@@ -41,7 +41,6 @@ class Zaluknij(CBaseHostClass):
         ] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None, max_retries=3):
-        """Pobiera stronę z obsługą Cloudflare i retry"""
         if addParams is None:
             addParams = dict(self.defaultParams)
 
@@ -58,7 +57,6 @@ class Zaluknij(CBaseHostClass):
         return False, ""
 
     def fixIconUrl(self, icon_url):
-        """Zmienia URL ikony z thumb na big dla lepszej jakości"""
         if icon_url and "thumb" in icon_url:
             icon_url = icon_url.replace("thumb", "big")
         return icon_url
@@ -153,7 +151,6 @@ class Zaluknij(CBaseHostClass):
             self.addVideo(params)
 
     def listEpisodesDirect(self, cItem):
-        """Funkcja do wyświetlania najnowszych odcinków seriali"""
         printDBG("Zaluknij.listEpisodesDirect |%s|" % cItem)
         sts, htm = self.getPage(cItem["url"])
         if not sts:
@@ -273,7 +270,6 @@ class Zaluknij(CBaseHostClass):
             self.addDir(params)
 
     def getLinksForVideo(self, cItem):
-        """Pobiera linki do wideo z dodatkowymi informacjami o wersji i jakości"""
         printDBG("Zaluknij.getLinksForVideo [%s]" % cItem)
         cacheKey = cItem["url"]
         cacheTab = self.cacheLinks.get(cacheKey, [])
@@ -335,7 +331,10 @@ class Zaluknij(CBaseHostClass):
 
                 if player_url and not player_url.startswith("http"):
                     player_url = self.getFullUrl(player_url)
-                name = self.up.getHostName(player_url)
+                
+                hostname = self.up.getHostName(player_url)
+                name = hostname.split('.')[0] if '.' in hostname else hostname
+                
                 if version and version not in ["", "Wersja"]:
                     name += " [%s" % version
                     if quality and quality not in ["", "Jakość"]:
@@ -345,6 +344,7 @@ class Zaluknij(CBaseHostClass):
                     name += " [%s]" % quality
 
                 retTab.append({"name": name, "url": strwithmeta(player_url, {"Referer": url}), "need_resolve": 1})
+        
         if not retTab:
             printDBG("Zaluknij.getLinksForVideo - using fallback method")
             data_links = self.cm.ph.getAllItemsBeetwenMarkers(data, 'link-to-video">', "None")
@@ -352,7 +352,9 @@ class Zaluknij(CBaseHostClass):
                 url_match = re.search(r'href="([^"]+)', item)
                 if url_match:
                     video_url = url_match.group(1)
-                    retTab.append({"name": self.up.getHostName(video_url).capitalize(), "url": strwithmeta(video_url, {"Referer": gettytul()}), "need_resolve": 1})
+                    hostname = self.up.getHostName(video_url)
+                    short_name = hostname.split('.')[0] if '.' in hostname else hostname
+                    retTab.append({"name": short_name.capitalize(), "url": strwithmeta(video_url, {"Referer": gettytul()}), "need_resolve": 1})
 
         printDBG("Zaluknij.getLinksForVideo - found %d links" % len(retTab))
         if len(retTab):
