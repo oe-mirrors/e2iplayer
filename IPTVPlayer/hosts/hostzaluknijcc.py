@@ -38,6 +38,7 @@ class Zaluknij(CBaseHostClass):
             {"category": "list_episodes_direct", "title": "Seriale Nowe Odcinki", "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=latest_episodes&page=1")},
             {"category": "list_items", "title": "Dla dzieci", "url": self.getFullUrl("dla-dzieci/")},
         ] + self.searchItems()
+
     def getPage(self, baseUrl, addParams=None, post_data=None, max_retries=3):
         if addParams is None:
             addParams = dict(self.defaultParams)
@@ -50,10 +51,12 @@ class Zaluknij(CBaseHostClass):
                 return sts, data
             printDBG("Zaluknij.getPage - attempt %d failed for %s" % (attempt + 1, baseUrl))
         return False, ""
+
     def fixIconUrl(self, icon_url):
         if icon_url and "thumb" in icon_url:
             icon_url = icon_url.replace("thumb", "big")
         return icon_url
+
     def listItems(self, cItem, isSearch=False):
         printDBG("Zaluknij.listItems |%s| isSearch=%s" % (cItem, isSearch))
         sts, htm = self.getPage(cItem["url"], max_retries=3)
@@ -108,6 +111,7 @@ class Zaluknij(CBaseHostClass):
             next_url = cItem["url"].split("?")[0] + nextPage.replace("amp;", "")
             params.update({"good_for_fav": False, "title": _("Next page"), "url": next_url})
             self.addDir(params)
+
     def listEpisodes(self, cItem):
         printDBG("Zaluknij.listEpisodes")
         icon = cItem["icon"]
@@ -127,6 +131,7 @@ class Zaluknij(CBaseHostClass):
             title = title.strip()
             params.update({"good_for_fav": True, "title": "%s [%s]" % (title, episode_num.upper()), "url": self.getFullUrl(url), "icon": icon, "desc": desc})
             self.addVideo(params)
+
     def listEpisodesDirect(self, cItem):
         printDBG("Zaluknij.listEpisodesDirect |%s|" % cItem)
         sts, htm = self.getPage(cItem["url"])
@@ -166,6 +171,7 @@ class Zaluknij(CBaseHostClass):
             next_url = cItem["url"].split("?")[0] + nextPage.replace("amp;", "")
             params.update({"good_for_fav": False, "title": _("Next page"), "url": next_url})
             self.addDir(params)
+
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Zaluknij.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
@@ -224,6 +230,7 @@ class Zaluknij(CBaseHostClass):
             next_url = "%sszukaj?page=%s" % (gettytul(), nextPage)
             params.update({"good_for_fav": False, "title": _("Next page"), "url": next_url})
             self.addDir(params)
+
     def getLinksForVideo(self, cItem):
         printDBG("Zaluknij.getLinksForVideo [%s]" % cItem)
         cacheKey = cItem["url"]
@@ -301,6 +308,7 @@ class Zaluknij(CBaseHostClass):
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
         return retTab
+
     def getVideoLinks(self, url):
         printDBG("Zaluknij.getVideourls [%s]" % url)
         url = strwithmeta(url)
@@ -312,6 +320,7 @@ class Zaluknij(CBaseHostClass):
                             self.cacheLinks[key][idx]["name"] = "*" + self.cacheLinks[key][idx]["name"] + "*"
                         break
         return self.up.getVideoLinkExt(url)
+
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         printDBG("handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
@@ -336,6 +345,8 @@ class Zaluknij(CBaseHostClass):
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
+
+
 class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, Zaluknij(), True, [])
