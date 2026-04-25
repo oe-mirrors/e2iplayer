@@ -2407,14 +2407,23 @@ class pageParser(CaptchaHelper):
                     urltab.append({"name": "freedisc.pl", "url": urlparser.decorateUrl(videoUrl, {"Referer": "https://freedisc.pl/static/player/v612/jwplayer.flash.swf", "User-Agent": HTTP_HEADER["User-Agent"]})})
         return urltab
 
-    def parserVIXSRC(self, baseUrl):
+    def parserVIXSRC(self, baseUrl):  # fix 250426
         printDBG("parserVIXSRC baseUrl[%s]" % baseUrl)
+        urltab = []
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
-        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        HTTP_HEADER["Referer"] = baseUrl.meta.get("Referer", host)
+        sts, data = self.cm.getPage(baseUrl.replace(host, host + "api/"), {"header": HTTP_HEADER})
         if not sts:
             return []
-        urltab = []
+        src = json_loads(data).get("src", "")
+        if src.startswith("/"):
+            src = host[:-1] + src
+        HTTP_HEADER["Referer"] = host
+        HTTP_HEADER["Upgrade-Insecure-Requests"] = "1"
+        sts, data = self.cm.getPage(src, {"header": HTTP_HEADER})
+        if not sts:
+            return []
         tok = re.search(r"token':\s*'([^']+)", data)
         exp = re.search(r"expires':\s*'([^']+)", data)
         hurl = re.search(r"url:\s*'([^']+)", data)
@@ -2423,9 +2432,8 @@ class pageParser(CaptchaHelper):
         url = "%s?token=%s&expires=%s&h=1" % (hurl.group(1), tok.group(1), exp.group(1))
         if "?lang=it" in baseUrl:
             url += "&lang=it"
-        if url:
-            if url.startswith("/"):
-                url = host + url
-            url = strwithmeta(url, {"iptv_proto": "m3u8", "User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
-            urltab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, sortWithMaxBitrate=99999999))
+        if url.startswith("/"):
+            url = host + url
+        url = strwithmeta(url, {"iptv_proto": "m3u8", "User-Agent": HTTP_HEADER["User-Agent"], "Referer": src, "Accept": "*/*"})
+        urltab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, sortWithMaxBitrate=99999999))
         return urltab
