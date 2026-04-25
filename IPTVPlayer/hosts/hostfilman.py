@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 23.04.2026 - damagic
+# Last Modified: 25.04.2026 - damagic
 
 ###################################################
 # LOCAL import
@@ -205,7 +205,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 title = self.cm.ph.getSearchGroups(item, """data-title=['"]([^"^']+?)['"]""")[0]
             title = title.replace("&quot;", '"').replace("&amp;", "&")
 
-            desc = self.cm.ph.getSearchGroups(item, """data-text=['"]([^"^']+?)['"]""")[0]
+            short_desc = self.cm.ph.getSearchGroups(item, """data-text=['"]([^"^']+?)['"]""")[0]
 
             year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<div", ">", "film_year"), ("</div", ">"))[1])
 
@@ -220,8 +220,8 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 desc_parts.append(_("Rating: ") + rating)
             if quality:
                 desc_parts.append(_("Quality:") + " " + quality)
-            if desc:
-                desc_parts.append(desc)
+            if short_desc:
+                desc_parts.append(short_desc)
 
             full_desc = "[/br]".join(desc_parts)
 
@@ -418,26 +418,59 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
     def getArticleContent(self, cItem):
         printDBG("Filman.getArticleContent [%s]" % cItem)
-        itemsList = []
-
-        sts, data = self.cm.getPage(cItem["url"])
+        
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
 
-        title = cItem["title"]
+        title = cItem.get("title", "")
         icon = cItem.get("icon", "")
         desc = cItem.get("desc", "")
 
-        desc = self.cm.ph.getDataBeetwenNodes(data, ("<p", ">", "description"), ("</p", ">"))[1]
+        full_desc = ""
+        
+        desc_pos = data.find('class="description"')
+        if desc_pos > 0:
+            start_pos = data.rfind('<p', 0, desc_pos)
+            if start_pos > 0:
+                end_pos = data.find('</p>', desc_pos)
+                if end_pos > 0:
+                    full_desc = data[start_pos:end_pos + 4]
+                    full_desc = re.sub(r'<[^>]+>', '', full_desc)
+                    full_desc = self.cleanHtmlStr(full_desc)
+        
+        if not full_desc:
+            meta_match = re.search(r'<meta name="description" content="([^"]+)"', data, re.IGNORECASE)
+            if meta_match:
+                full_desc = meta_match.group(1)
+                full_desc = self.cleanHtmlStr(full_desc)
+        
+        if not full_desc:
+            og_match = re.search(r'<meta property="og:description" content="([^"]+)"', data, re.IGNORECASE)
+            if og_match:
+                full_desc = og_match.group(1)
+                full_desc = self.cleanHtmlStr(full_desc)
+        
+        if not full_desc and desc:
+            desc_parts = desc.split("[/br]")
+            for part in reversed(desc_parts):
+                if not part.startswith(_("Year: ")) and not part.startswith(_("Rating: ")) and not part.startswith(_("Quality:")):
+                    full_desc = part
+                    break
 
-        if title == "":
-            title = cItem["title"]
-        if icon == "":
-            icon = cItem.get("icon", "")
-        if desc == "":
-            desc = cItem.get("desc", "")
+        if not full_desc:
+            full_desc = _("No description available.")
 
-        return [{"title": self.cleanHtmlStr(title), "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": self.getFullUrl(icon)}], "other_info": {"custom_items_list": itemsList}}]
+        if full_desc:
+            full_desc = re.sub(r'\s+', ' ', full_desc)
+            full_desc = full_desc.strip()
+            full_desc = re.sub(r'Zobacz\s+zwiastun', '', full_desc, flags=re.IGNORECASE)
+            full_desc = re.sub(r'Zwiastun', '', full_desc, flags=re.IGNORECASE)
+
+        return [{"title": self.cleanHtmlStr(title), 
+                 "text": full_desc, 
+                 "images": [{"title": "", "url": self.getFullUrl(icon)}], 
+                 "other_info": {"custom_items_list": []}}]
 
     def tryTologin(self):
         printDBG("tryTologin start")
