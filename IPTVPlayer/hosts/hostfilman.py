@@ -418,7 +418,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
     def getArticleContent(self, cItem):
         printDBG("Filman.getArticleContent [%s]" % cItem)
-        
+
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
@@ -428,7 +428,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
         desc = cItem.get("desc", "")
 
         full_desc = ""
-        
+
         desc_pos = data.find('class="description"')
         if desc_pos > 0:
             start_pos = data.rfind('<p', 0, desc_pos)
@@ -438,19 +438,19 @@ class Filman(CBaseHostClass, CaptchaHelper):
                     full_desc = data[start_pos:end_pos + 4]
                     full_desc = re.sub(r'<[^>]+>', '', full_desc)
                     full_desc = self.cleanHtmlStr(full_desc)
-        
+
         if not full_desc:
             meta_match = re.search(r'<meta name="description" content="([^"]+)"', data, re.IGNORECASE)
             if meta_match:
                 full_desc = meta_match.group(1)
                 full_desc = self.cleanHtmlStr(full_desc)
-        
+
         if not full_desc:
             og_match = re.search(r'<meta property="og:description" content="([^"]+)"', data, re.IGNORECASE)
             if og_match:
                 full_desc = og_match.group(1)
                 full_desc = self.cleanHtmlStr(full_desc)
-        
+
         if not full_desc and desc:
             desc_parts = desc.split("[/br]")
             for part in reversed(desc_parts):
@@ -467,9 +467,9 @@ class Filman(CBaseHostClass, CaptchaHelper):
             full_desc = re.sub(r'Zobacz\s+zwiastun', '', full_desc, flags=re.IGNORECASE)
             full_desc = re.sub(r'Zwiastun', '', full_desc, flags=re.IGNORECASE)
 
-        return [{"title": self.cleanHtmlStr(title), 
-                 "text": full_desc, 
-                 "images": [{"title": "", "url": self.getFullUrl(icon)}], 
+        return [{"title": self.cleanHtmlStr(title),
+                 "text": full_desc,
+                 "images": [{"title": "", "url": self.getFullUrl(icon)}],
                  "other_info": {"custom_items_list": []}}]
 
     def tryTologin(self):
