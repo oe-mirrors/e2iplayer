@@ -107,7 +107,11 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         CDisplayListItem.TYPE_DOWNLOAD: 'DownloadFolder.png',
         CDisplayListItem.TYPE_MMC: 'MMCItem.png',
         CDisplayListItem.TYPE_USB: 'USBItem.png',
-        CDisplayListItem.TYPE_WWW: 'GlobItem.png'
+        CDisplayListItem.TYPE_WWW: 'GlobItem.png',
+        CDisplayListItem.TYPE_JUMP: 'JumpItem.png',
+        CDisplayListItem.TYPE_FIRST: 'FirstItem.png',
+        CDisplayListItem.TYPE_PREVIOUS: 'PreviousItem.png',
+        CDisplayListItem.TYPE_LAST: 'LastItem.png',
     }
 
     def __init__(self):

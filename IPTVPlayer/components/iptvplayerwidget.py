@@ -976,7 +976,7 @@ class E2iPlayerWidget(Screen):
                 elif item.type == CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE:
                     printDBG("ok_pressed selected TYPE_SEARCH_HISTORY_DELETE")
                     self.host.host.delHistory(self.session)
-                elif item.type == CDisplayListItem.TYPE_CATEGORY or item.type == CDisplayListItem.TYPE_SEARCH_HISTORY or item.type == CDisplayListItem.TYPE_NEXT:
+                elif item.type in [CDisplayListItem.TYPE_CATEGORY, CDisplayListItem.TYPE_SEARCH_HISTORY, CDisplayListItem.TYPE_NEXT, CDisplayListItem.TYPE_JUMP, CDisplayListItem.TYPE_FIRST, CDisplayListItem.TYPE_PREVIOUS, CDisplayListItem.TYPE_LAST]:
                     printDBG("ok_pressed selected TYPE_CATEGORY")
                     self.stopAutoPlaySequencer()
                     self.currSelIndex = currSelIndex
