@@ -542,6 +542,13 @@ class common:
                         responseHeaders.pop('n', None)
                     elif headerLine.startswith('HTTP/') and headerLine.split(' 30', 1)[-1][0:1] in ['1', '2', '3', '7']:  # new location with 301, 302, 303, 307
                         responseHeaders['n'] = True
+                # Extract HTTP status code from "HTTP/x.x XXX ..." line
+                if headerLine.startswith('HTTP/'):
+                    try:
+                        status_code = int(headerLine.split()[1])
+                        responseHeaders['http_status'] = status_code
+                    except (IndexError, ValueError):
+                        pass
                 return
 
             name, value = headerLine.split(':', 1)
@@ -562,6 +569,13 @@ class common:
             # so we can check them if needed
             if firstAttempt[0]:
                 firstAttempt[0] = False
+
+                # Check HTTP status code first - if not 2xx or 3xx (redirect), abort immediately
+                http_status = responseHeaders.get('http_status', 200)
+                if http_status < 200 or http_status >= 400:
+                    printDBG('HTTP error status: %d' % http_status)
+                    return 0
+
                 if 'check_maintype' in params and params['check_maintype'] != responseHeaders.get('content-type', '').split('/', 1)[0]:
                     printDBG('wrong maintype: %s' % responseHeaders.get('content-type', ''))
                     return 0
@@ -672,7 +686,7 @@ class common:
                 elif lKey == 'cookie':
                     curlSession.setopt(pycurl.COOKIE, headers[key])
                 elif lKey == 'referer':
-                    curlSession.setopt(pycurl.REFERER, headers[key])
+                    curlSession.setopt(pycurl.REFERER, ensure_binary(headers[key]))
                 else:
                     customHeaders.append('%s: %s' % (key, headers[key]))
             if len(customHeaders):
@@ -745,7 +759,7 @@ class common:
                 pageUrl = proxy_gateway.format(quote_plus(pageUrl, ''))
             printDBG("pageUrl: [%s]" % pageUrl)
 
-            curlSession.setopt(pycurl.URL, pageUrl)
+            curlSession.setopt(pycurl.URL, ensure_binary(pageUrl))
 
             if None is not post_data:
                 printDBG('pCommon - getPageWithPyCurl() -> post data: ' + str(post_data))
@@ -778,16 +792,13 @@ class common:
             #    curlSession.setopt(pycurl.NOBODY, True);
 
             if not IsThreadTerminated():
-                if maxDataSize >= 0:
-                    try:
-                        curlSession.perform()
-                    except pycurl.error as e:
-                        if e[0] != pycurl.E_WRITE_ERROR:
-                            raise e
-                        else:
-                            printExc()
-                else:
+                try:
                     curlSession.perform()
+                except pycurl.error as e:
+                    if e.args[0] != pycurl.E_WRITE_ERROR:
+                        raise e
+                    elif maxDataSize >= 0:
+                        printExc()
 
                 metadata['url'] = curlSession.getinfo(pycurl.EFFECTIVE_URL)
                 metadata['status_code'] = curlSession.getinfo(pycurl.HTTP_CODE)
@@ -1312,6 +1323,9 @@ class common:
             pageUrl = pageUrl.split('"', 1)[0]  # " is incorrect char for url, shouldn't be there so removing it and everything after it
             printDBG("CORRECTED pageUrl: [%s]" % pageUrl)
 
+        # Encode URL with UTF-8 support for non-ASCII characters
+        pageUrl = self.iriToUri(pageUrl)
+
         if None is not post_data:
             printDBG('pCommon - getURLRequestData() -> post data: ' + str(post_data))
             if params.get('raw_post_data', False):
@@ -1425,10 +1439,15 @@ class common:
                 if encoding not in ['', 'UTF-8']:
                     printDBG(">> encoding[%s]" % encoding)
                     try:
-                        data = data.decode(encoding)
+                        if isinstance(data, bytes):
+                            data = data.decode(encoding)
+                        else:
+                            # data is already str (decoded as UTF-8 by default)
+                            # but actual encoding is different, so re-encode and decode with correct encoding
+                            data = data.encode('utf-8').decode(encoding)
+                        metadata['orig_charset'] = encoding
                     except Exception:
                         printExc()
-                    metadata['orig_charset'] = encoding
                 else:
                     try:
                         data = strDecode(data)
@@ -1440,7 +1459,7 @@ class common:
         return data, metadata
 
     def urlEncodeNonAscii(self, b):
-        return re.sub(b'[\x80-\xFF]', lambda c: '%%%02x' % ord(c.group(0)), b)
+        return re.sub(b'[\x80-\xFF]', lambda c: ('%%%02x' % c.group(0)[0]).encode('ascii'), b)
 
     def iriToUri(self, iri):
         try:
