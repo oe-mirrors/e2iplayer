@@ -43,11 +43,11 @@ class Zaluknij(CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None, max_retries=5):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        
+
         addParams["cloudflare_params"] = {
-            "cookie_file": addParams["cookiefile"], 
-            "User-Agent": self.HEADER.get("User-Agent"), 
-            "max_retries": max_retries, 
+            "cookie_file": addParams["cookiefile"],
+            "User-Agent": self.HEADER.get("User-Agent"),
+            "max_retries": max_retries,
             "timeout": 30,
             "use_mye2iserver": True
         }
