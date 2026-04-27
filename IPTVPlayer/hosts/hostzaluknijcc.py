@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 24.04.2026 - damagic
+# Last Modified: 27.04.2026 - damagic
 ###################################################
 import re
 import json
@@ -30,6 +30,7 @@ class Zaluknij(CBaseHostClass):
         self.DEFAULT_ICON_URL = gettytul() + "public/dist/images/lgbt.png"
         self.MAIN_URL = gettytul()
         self.cacheLinks = {}
+        self.cacheDescriptions = {}
         self.MENU = [
             {"category": "list_items", "title": "Filmy Premiery", "url": self.getFullUrl("filmy-online/sort:premiere/")},
             {"category": "list_items", "title": "Filmy Nowe Linki", "url": self.getFullUrl("filmy-online/sort:link/")},
@@ -39,23 +40,65 @@ class Zaluknij(CBaseHostClass):
             {"category": "list_items", "title": "Dla dzieci", "url": self.getFullUrl("dla-dzieci/")},
         ] + self.searchItems()
 
-    def getPage(self, baseUrl, addParams=None, post_data=None, max_retries=3):
+    def getPage(self, baseUrl, addParams=None, post_data=None, max_retries=5):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {"cookie_file": addParams["cookiefile"], "User-Agent": self.HEADER.get("User-Agent"), "max_retries": max_retries, "timeout": 30}
+        
+        addParams["cloudflare_params"] = {
+            "cookie_file": addParams["cookiefile"], 
+            "User-Agent": self.HEADER.get("User-Agent"), 
+            "max_retries": max_retries, 
+            "timeout": 30,
+            "use_mye2iserver": True
+        }
+
         for attempt in range(max_retries):
             if attempt > 0:
                 time.sleep(2)
-            sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-            if sts:
-                return sts, data
+
+            try:
+                sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+                if sts and data and len(data) > 1000:
+                    if "Just a moment" not in str(data[:500]) and "503" not in str(data[:500]):
+                        return sts, data
+            except Exception as e:
+                printDBG("Zaluknij.getPage - attempt %d exception: %s" % (attempt + 1, str(e)))
+
             printDBG("Zaluknij.getPage - attempt %d failed for %s" % (attempt + 1, baseUrl))
+
         return False, ""
 
     def fixIconUrl(self, icon_url):
         if icon_url and "thumb" in icon_url:
             icon_url = icon_url.replace("thumb", "big")
         return icon_url
+
+    def getArticleContent(self, cItem):
+        printDBG("Zaluknij.getArticleContent [%s]" % cItem)
+
+        url = cItem.get("url", "")
+        title = cItem.get("title", "")
+        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
+
+        if not url:
+            return []
+
+        if url in self.cacheDescriptions:
+            desc = self.cacheDescriptions[url]
+            if desc:
+                return [{"title": title, "text": desc, "images": [{"title": "", "url": icon}], "other_info": {"custom_items_list": []}}]
+
+        sts, data = self.getPage(url, max_retries=3)
+        if sts:
+            desc = self.cm.ph.getSearchGroups(data, r'<p\s+class="description">([^<]+)')
+            if not desc:
+                desc = self.cm.ph.getSearchGroups(data, r'<meta\s+name="description"\s+content="([^"]+)')
+            if desc:
+                desc_text = self.cleanHtmlStr(desc[0])
+                self.cacheDescriptions[url] = desc_text
+                return [{"title": title, "text": desc_text, "images": [{"title": "", "url": icon}], "other_info": {"custom_items_list": []}}]
+
+        return [{"title": title, "text": "Brak opisu", "images": [{"title": "", "url": icon}], "other_info": {"custom_items_list": []}}]
 
     def listItems(self, cItem, isSearch=False):
         printDBG("Zaluknij.listItems |%s| isSearch=%s" % (cItem, isSearch))
@@ -118,13 +161,19 @@ class Zaluknij(CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-        desc = self.cm.ph.getSearchGroups(data, 'class="description">([^<]+)')
+
+        desc = self.cm.ph.getSearchGroups(data, r'<p\s+class="description">([^<]+)')
         if desc:
             desc = desc[0]
         else:
             desc = ""
-        data = re.findall(r'href="([^"]+)">\W(s\d+e\d+)', data, re.DOTALL)
-        for url, episode_num in data:
+
+        episodes = re.findall(r'href="([^"]+)"[^>]*>.*?<div[^>]*class="[^"]*title[^"]*">([^<]+)</div>', data, re.DOTALL)
+        if not episodes:
+            episodes = re.findall(r'href="([^"]+)"[^>]*>.*?(?:S\d+E\d+|\d+/\d+|Odcinek).*?</a>', data, re.IGNORECASE | re.DOTALL)
+            episodes = [(url, "ODCINEK") for url in episodes]
+
+        for url, episode_num in episodes:
             params = dict(cItem)
             title = cItem["title"]
             title = re.sub(r"\s*\[\]\s*", "", title)
@@ -211,11 +260,6 @@ class Zaluknij(CBaseHostClass):
                 if meta_line:
                     meta_line = self.cleanHtmlStr(meta_line[0])
                     title = "%s [%s]" % (title, meta_line)
-            else:
-                year = self.cm.ph.getSearchGroups(item, r'class="year">(\d{4})')
-                if year:
-                    year = year[0]
-                    pass
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
             params = dict(cItem)
@@ -237,22 +281,28 @@ class Zaluknij(CBaseHostClass):
         cacheTab = self.cacheLinks.get(cacheKey, [])
         if len(cacheTab):
             return cacheTab
+
         retTab = []
         url = cItem["url"]
-        sts, data = self.getPage(url)
+        sts, data = self.getPage(url, max_retries=3)
         if not sts:
             return []
+
+        desc = self.cm.ph.getSearchGroups(data, r'<p\s+class="description">([^<]+)')
+        if desc:
+            self.cacheDescriptions[url] = self.cleanHtmlStr(desc[0])
+
         link_list_div = ""
         link_list_parts = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "link-list"), ("</div", ">"))
         if link_list_parts and len(link_list_parts) > 1:
             link_list_div = link_list_parts[1]
         if not link_list_div:
             link_list_div = data
+
         table_parts = self.cm.ph.getDataBeetwenNodes(link_list_div, ("<table", ">"), ("</table", ">"))
         if table_parts and len(table_parts) > 1:
             table = table_parts[1]
             rows = self.cm.ph.getAllItemsBeetwenNodes(table, ("<tr", ">"), ("</tr", ">"))
-            printDBG("Zaluknij.getLinksForVideo - found %d rows" % len(rows))
             for row in rows:
                 if "<th" in row:
                     continue
@@ -294,8 +344,8 @@ class Zaluknij(CBaseHostClass):
                 elif quality and quality not in ["", "Jakość"]:
                     name += " [%s]" % quality
                 retTab.append({"name": name, "url": strwithmeta(player_url, {"Referer": url}), "need_resolve": 1})
+
         if not retTab:
-            printDBG("Zaluknij.getLinksForVideo - using fallback method")
             data_links = self.cm.ph.getAllItemsBeetwenMarkers(data, 'link-to-video">', "None")
             for item in data_links:
                 url_match = re.search(r'href="([^"]+)', item)
@@ -304,7 +354,7 @@ class Zaluknij(CBaseHostClass):
                     hostname = self.up.getHostName(video_url)
                     short_name = hostname.split('.')[0] if '.' in hostname else hostname
                     retTab.append({"name": short_name.capitalize(), "url": strwithmeta(video_url, {"Referer": gettytul()}), "need_resolve": 1})
-        printDBG("Zaluknij.getLinksForVideo - found %d links" % len(retTab))
+
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
         return retTab
@@ -350,3 +400,6 @@ class Zaluknij(CBaseHostClass):
 class IPTVHost(CHostBase):
     def __init__(self):
         CHostBase.__init__(self, Zaluknij(), True, [])
+
+    def withArticleContent(self, cItem):
+        return True
