@@ -162,22 +162,19 @@ class Zaluknij(CBaseHostClass):
         if not sts:
             return
 
-        desc = self.cm.ph.getSearchGroups(data, r'<p\s+class="description">([^<]+)')
+        desc = self.cm.ph.getSearchGroups(data, 'class="description">([^<]+)')
         if desc:
             desc = desc[0]
         else:
             desc = ""
 
-        episodes = re.findall(r'href="([^"]+)"[^>]*>.*?<div[^>]*class="[^"]*title[^"]*">([^<]+)</div>', data, re.DOTALL)
-        if not episodes:
-            episodes = re.findall(r'href="([^"]+)"[^>]*>.*?(?:S\d+E\d+|\d+/\d+|Odcinek).*?</a>', data, re.IGNORECASE | re.DOTALL)
-            episodes = [(url, "ODCINEK") for url in episodes]
-
-        for url, episode_num in episodes:
+        data = re.findall(r'href="([^"]+)">\W(s\d+e\d+)', data, re.DOTALL)
+        for url, episode_num in data:
             params = dict(cItem)
             title = cItem["title"]
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
+
             params.update({"good_for_fav": True, "title": "%s [%s]" % (title, episode_num.upper()), "url": self.getFullUrl(url), "icon": icon, "desc": desc})
             self.addVideo(params)
 
@@ -186,35 +183,43 @@ class Zaluknij(CBaseHostClass):
         sts, htm = self.getPage(cItem["url"])
         if not sts:
             return
+
         nextPage = self.cm.ph.getSearchGroups(htm, r"""href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast""")
         if nextPage:
             nextPage = nextPage[0]
+
         data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'role="listitem', "</a>") or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
+
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')
             if not url:
                 continue
             url = url[0]
+
             icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+)')
             if icon:
                 icon = self.getFullUrl(icon[0])
             else:
                 icon = self.DEFAULT_ICON_URL
+
             title = self.cm.ph.getSearchGroups(item, 'title="([^"]+)')
             if title:
                 title = self.cleanHtmlStr(title[0])
             else:
                 title = "Brak tytułu"
             title = re.sub(r"\s*\[\]\s*", "", title)
+
             meta_line = self.cm.ph.getSearchGroups(item, r'<span class="meta-line">(S\d+\s*E\d+)</span>')
             if meta_line:
                 meta_line = self.cleanHtmlStr(meta_line[0])
                 title = "%s [%s]" % (title, meta_line)
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
+
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "video", "title": title.replace("amp;", ""), "url": url, "icon": icon})
             self.addVideo(params)
+
         if nextPage:
             params = dict(cItem)
             next_url = cItem["url"].split("?")[0] + nextPage.replace("amp;", "")
