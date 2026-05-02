@@ -358,6 +358,7 @@ class urlparser:
             "luluvdoo.com": self.pp.parserJWPLAYER,
             # m
             "m1xdrop.click": self.pp.parserJWPLAYER,
+            "m1xdrop.com": self.pp.parserJWPLAYER,
             "m1xdrop.net": self.pp.parserJWPLAYER,
             "md3b0j6hj.com": self.pp.parserJWPLAYER,
             "mdbekjwqa.pw": self.pp.parserJWPLAYER,
@@ -368,6 +369,7 @@ class urlparser:
             "mediasetplay.mediaset.it": self.pp.parserMEDIASET,
             "minochinos.com": self.pp.parserJWPLAYER,
             "mivalyo.com": self.pp.parserJWPLAYER,
+            "mixdrp.click": self.pp.parserJWPLAYER,
             "mixdrp.co": self.pp.parserJWPLAYER,
             "mixdrp.to": self.pp.parserJWPLAYER,
             "mixdroop.co": self.pp.parserJWPLAYER,
@@ -398,6 +400,7 @@ class urlparser:
             "moviesapi.to": self.pp.parserVIDSRC,
             "mp4player.site": self.pp.parserSTREAMEMBED,
             "mp4upload.com": self.pp.parserJWPLAYER,
+            "mxdrop.sx": self.pp.parserJWPLAYER,
             "mxdrop.to": self.pp.parserJWPLAYER,
             "mysportzfy.com": self.pp.parserJWPLAYER,
             "myvidplay.com": self.pp.parserDOOD,
@@ -412,6 +415,7 @@ class urlparser:
             "peytonepre.com": self.pp.parserJWPLAYER,
             "player.upn.one": self.pp.parserSBS,
             "playerwish.com": self.pp.parserJWPLAYER,
+            "playmogo.com": self.pp.parserDOOD,
             "polsatsport.pl": self.pp.parserJWPLAYER,
             "poophq.com": self.pp.parserVEEV,
             "pqham.com": self.pp.parserJWPLAYER,
@@ -2032,14 +2036,12 @@ class pageParser(CaptchaHelper):
             urltab.reverse()
         return urltab
 
-    def parserSTREAMUP(self, baseUrl):  # fix 260426
+    def parserSTREAMUP(self, baseUrl):  # fix 300426
         printDBG("parserSTREAMUP baseUrl[%s]" % baseUrl)
         urltab = []
         subTracks = []
         host = urlparser.getDomain(baseUrl, False)
-        filecode = self.cm.ph.getSearchGroups(baseUrl, r"([A-Za-z0-9]{13})")
-        if not filecode:
-            return []
+        filecode = self.cm.ph.getSearchGroups(baseUrl, r"https:\/\/[a-zA-Z0-9.]+\/(?:e\/|v\/)?([A-Za-z0-9]+)")
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER["Referer"] = baseUrl
         HTTP_HEADER["Origin"] = host[:-1]
