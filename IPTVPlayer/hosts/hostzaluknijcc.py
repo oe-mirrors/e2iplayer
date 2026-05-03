@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 01.05.2026 - damagic
+# Last Modified: 04.05.2026 - damagic
 ###################################################
 import re
 import json
 import base64
 import time
-
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_unquote
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
@@ -23,22 +22,62 @@ def gettytul():
 
 class Zaluknij(CBaseHostClass):
     def __init__(self):
-        CBaseHostClass.__init__(self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"})
+        CBaseHostClass.__init__(
+            self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"}
+        )
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.HEADER["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-        self.DEFAULT_ICON_URL = gettytul() + "public/dist/images/lgbt.png"
+        self.HEADER["User-Agent"] = (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
+        )
+        self.defaultParams = {
+            "header": self.HEADER,
+            "use_cookie": True,
+            "load_cookie": True,
+            "save_cookie": True,
+            "cookiefile": self.COOKIE_FILE,
+        }
         self.MAIN_URL = gettytul()
+        self.DEFAULT_ICON_URL = self.fixIconUrl(
+            self.MAIN_URL + "public/dist/images/lgbt.png", self.MAIN_URL
+        )
         self.cacheLinks = {}
         self.cacheDescriptions = {}
         self.cacheDetails = {}
         self.MENU = [
-            {"category": "list_items", "title": "Filmy Premiery", "url": self.getFullUrl("filmy-online/sort:premiere/")},
-            {"category": "list_items", "title": "Filmy Nowe Linki", "url": self.getFullUrl("filmy-online/sort:link/")},
-            {"category": "list_items", "title": "Filmy Oceny na Zaluknij", "url": self.getFullUrl("filmy-online/sort:rate/")},
-            {"category": "list_items", "title": "Seriale", "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=recent_series&page=1")},
-            {"category": "list_episodes_direct", "title": "Seriale Nowe Odcinki", "url": self.getFullUrl("seriale-online/index?url=seriale-online%2Findex&sort=latest_episodes&page=1")},
-            {"category": "list_items", "title": "Dla dzieci", "url": self.getFullUrl("dla-dzieci/")},
+            {
+                "category": "list_items",
+                "title": "Filmy Premiery",
+                "url": self.getFullUrl("filmy-online/sort:premiere/"),
+            },
+            {
+                "category": "list_items",
+                "title": "Filmy Nowe Linki",
+                "url": self.getFullUrl("filmy-online/sort:link/"),
+            },
+            {
+                "category": "list_items",
+                "title": "Filmy Oceny na Zaluknij",
+                "url": self.getFullUrl("filmy-online/sort:rate/"),
+            },
+            {
+                "category": "list_items",
+                "title": "Seriale",
+                "url": self.getFullUrl(
+                    "seriale-online/index?url=seriale-online%2Findex&sort=recent_series&page=1"
+                ),
+            },
+            {
+                "category": "list_episodes_direct",
+                "title": "Seriale Nowe Odcinki",
+                "url": self.getFullUrl(
+                    "seriale-online/index?url=seriale-online%2Findex&sort=latest_episodes&page=1"
+                ),
+            },
+            {
+                "category": "list_items",
+                "title": "Dla dzieci",
+                "url": self.getFullUrl("dla-dzieci/"),
+            },
         ] + self.searchItems()
 
     def getPage(self, baseUrl, addParams=None, post_data=None, max_retries=5):
@@ -49,7 +88,7 @@ class Zaluknij(CBaseHostClass):
             "User-Agent": self.HEADER.get("User-Agent"),
             "max_retries": max_retries,
             "timeout": 30,
-            "use_mye2iserver": True
+            "use_mye2iserver": True,
         }
         for attempt in range(max_retries):
             if attempt > 0:
@@ -57,37 +96,65 @@ class Zaluknij(CBaseHostClass):
             try:
                 sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
                 if sts and data and len(data) > 1000:
-                    if "Just a moment" not in str(data[:500]) and "503" not in str(data[:500]):
+                    if "Just a moment" not in str(data[:500]) and "503" not in str(
+                        data[:500]
+                    ):
                         return sts, data
             except Exception as e:
-                printDBG("Zaluknij.getPage - attempt %d exception: %s" % (attempt + 1, str(e)))
-            printDBG("Zaluknij.getPage - attempt %d failed for %s" % (attempt + 1, baseUrl))
+                printDBG(
+                    "Zaluknij.getPage - attempt %d exception: %s"
+                    % (attempt + 1, str(e))
+                )
+            printDBG(
+                "Zaluknij.getPage - attempt %d failed for %s" % (attempt + 1, baseUrl)
+            )
         return False, ""
 
-    def fixIconUrl(self, icon_url):
-        if icon_url and "thumb" in icon_url:
+    def fixIconUrl(self, icon_url, referer=None):
+        if not icon_url:
+            return ""
+        # fix thumb -> big
+        if "thumb" in icon_url:
             icon_url = icon_url.replace("thumb", "big")
-        return icon_url
+        icon_url = self.getFullUrl(icon_url)
+        # get cf cookie
+        cf = self.cm.getCookieItem(self.COOKIE_FILE, "cf_clearance")
+        return strwithmeta(
+            icon_url,
+            {
+                "Referer": referer if referer else self.MAIN_URL,
+                "User-Agent": self.HEADER["User-Agent"],
+                "Cookie": "cf_clearance=%s" % cf if cf else "",
+            },
+        )
 
     def extractMovieDetails(self, data):
         details = {"categories": [], "version": "", "quality": "", "year": ""}
-        year = self.cm.ph.getSearchGroups(data, r'<sup><a href="[^"]+">(\d{4})</a></sup>')
+        year = self.cm.ph.getSearchGroups(
+            data, r'<sup><a href="[^"]+">(\d{4})</a></sup>'
+        )
         if year:
             details["year"] = year[0]
         cat_pattern = r'<li itemprop="genre"><a href="[^"]+">([^<]+)</a></li>'
         categories = re.findall(cat_pattern, data)
         if categories:
             details["categories"] = categories
-        table_parts = self.cm.ph.getDataBeetwenNodes(data, ("<table", ">"), ("</table", ">"))
+        table_parts = self.cm.ph.getDataBeetwenNodes(
+            data, ("<table", ">"), ("</table", ">")
+        )
         if table_parts and len(table_parts) > 1:
             table = table_parts[1]
-            rows = self.cm.ph.getAllItemsBeetwenNodes(table, ("<tr", ">"), ("</tr", ">"))
+            rows = self.cm.ph.getAllItemsBeetwenNodes(
+                table, ("<tr", ">"), ("</tr", ">")
+            )
             versions = set()
             qualities = set()
             for row in rows:
                 if "<th" in row:
                     continue
-                cells = self.cm.ph.getAllItemsBeetwenNodes(row, ("<td", ">"), ("</td", ">"))
+                cells = self.cm.ph.getAllItemsBeetwenNodes(
+                    row, ("<td", ">"), ("</td", ">")
+                )
                 if len(cells) >= 4:
                     if "link-to-video" in cells[1]:
                         if len(cells) > 2:
@@ -118,9 +185,13 @@ class Zaluknij(CBaseHostClass):
         else:
             sts, data = self.getPage(url, max_retries=3)
             if sts:
-                desc = self.cm.ph.getSearchGroups(data, r'<p\s+class="description">([^<]+)')
+                desc = self.cm.ph.getSearchGroups(
+                    data, r'<p\s+class="description">([^<]+)'
+                )
                 if not desc:
-                    desc = self.cm.ph.getSearchGroups(data, r'<meta\s+name="description"\s+content="([^"]+)')
+                    desc = self.cm.ph.getSearchGroups(
+                        data, r'<meta\s+name="description"\s+content="([^"]+)'
+                    )
                 if desc:
                     desc_text = self.cleanHtmlStr(desc[0])
                     self.cacheDescriptions[url] = desc_text
@@ -150,7 +221,14 @@ class Zaluknij(CBaseHostClass):
             text_parts.append("")
             text_parts.append("Brak opisu i szczegółów")
         final_text = "\n".join(text_parts)
-        return [{"title": title, "text": final_text, "images": [{"title": "", "url": icon}], "other_info": {"custom_items_list": []}}]
+        return [
+            {
+                "title": title,
+                "text": final_text,
+                "images": [{"title": "", "url": icon}],
+                "other_info": {"custom_items_list": []},
+            }
+        ]
 
     def listItems(self, cItem, isSearch=False):
         printDBG("Zaluknij.listItems |%s| isSearch=%s" % (cItem, isSearch))
@@ -158,10 +236,14 @@ class Zaluknij(CBaseHostClass):
         if not sts:
             printDBG("Zaluknij.listItems - failed to get page after retries")
             return
-        nextPage = self.cm.ph.getSearchGroups(htm, r"""href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast""")
+        nextPage = self.cm.ph.getSearchGroups(
+            htm, r"""href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast"""
+        )
         if nextPage:
             nextPage = nextPage[0]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'role="listitem', "</a>") or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
+        data = self.cm.ph.getAllItemsBeetwenMarkers(
+            htm, 'role="listitem', "</a>"
+        ) or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')
             if not url:
@@ -169,7 +251,7 @@ class Zaluknij(CBaseHostClass):
             url = url[0]
             icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+)')
             if icon:
-                icon = self.getFullUrl(icon[0])
+                icon = self.fixIconUrl(icon[0], cItem["url"])
                 if isSearch:
                     icon = self.fixIconUrl(icon)
             else:
@@ -182,7 +264,9 @@ class Zaluknij(CBaseHostClass):
             title = re.sub(r"\s*\[\]\s*", "", title)
             is_serial = "serial" in url.lower()
             if is_serial:
-                meta_line = self.cm.ph.getSearchGroups(item, r'<span class="meta-line">(S\d+\s*E\d+)</span>')
+                meta_line = self.cm.ph.getSearchGroups(
+                    item, r'<span class="meta-line">(S\d+\s*E\d+)</span>'
+                )
                 if meta_line:
                     meta_line = self.cleanHtmlStr(meta_line[0])
                     title = "%s [%s]" % (title, meta_line)
@@ -195,7 +279,15 @@ class Zaluknij(CBaseHostClass):
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
             params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "video", "title": title.replace("amp;", ""), "url": url, "icon": icon})
+            params.update(
+                {
+                    "good_for_fav": True,
+                    "category": "video",
+                    "title": title.replace("amp;", ""),
+                    "url": url,
+                    "icon": icon,
+                }
+            )
             if is_serial:
                 params.update({"category": "list_episodes"})
                 self.addDir(params)
@@ -204,7 +296,9 @@ class Zaluknij(CBaseHostClass):
         if nextPage:
             params = dict(cItem)
             next_url = cItem["url"].split("?")[0] + nextPage.replace("amp;", "")
-            params.update({"good_for_fav": False, "title": _("Next page"), "url": next_url})
+            params.update(
+                {"good_for_fav": False, "title": _("Next page"), "url": next_url}
+            )
             self.addDir(params)
 
     def listEpisodes(self, cItem):
@@ -224,7 +318,15 @@ class Zaluknij(CBaseHostClass):
             title = cItem["title"]
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
-            params.update({"good_for_fav": True, "title": "%s [%s]" % (title, episode_num.upper()), "url": self.getFullUrl(url), "icon": icon, "desc": desc})
+            params.update(
+                {
+                    "good_for_fav": True,
+                    "title": "%s [%s]" % (title, episode_num.upper()),
+                    "url": self.getFullUrl(url),
+                    "icon": icon,
+                    "desc": desc,
+                }
+            )
             self.addVideo(params)
 
     def listEpisodesDirect(self, cItem):
@@ -232,10 +334,14 @@ class Zaluknij(CBaseHostClass):
         sts, htm = self.getPage(cItem["url"])
         if not sts:
             return
-        nextPage = self.cm.ph.getSearchGroups(htm, r"""href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast""")
+        nextPage = self.cm.ph.getSearchGroups(
+            htm, r"""href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast"""
+        )
         if nextPage:
             nextPage = nextPage[0]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'role="listitem', "</a>") or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
+        data = self.cm.ph.getAllItemsBeetwenMarkers(
+            htm, 'role="listitem', "</a>"
+        ) or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')
             if not url:
@@ -243,7 +349,7 @@ class Zaluknij(CBaseHostClass):
             url = url[0]
             icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+)')
             if icon:
-                icon = self.getFullUrl(icon[0])
+                icon = self.fixIconUrl(icon[0], cItem["url"])
             else:
                 icon = self.DEFAULT_ICON_URL
             title = self.cm.ph.getSearchGroups(item, 'title="([^"]+)')
@@ -252,23 +358,38 @@ class Zaluknij(CBaseHostClass):
             else:
                 title = "Brak tytułu"
             title = re.sub(r"\s*\[\]\s*", "", title)
-            meta_line = self.cm.ph.getSearchGroups(item, r'<span class="meta-line">(S\d+\s*E\d+)</span>')
+            meta_line = self.cm.ph.getSearchGroups(
+                item, r'<span class="meta-line">(S\d+\s*E\d+)</span>'
+            )
             if meta_line:
                 meta_line = self.cleanHtmlStr(meta_line[0])
                 title = "%s [%s]" % (title, meta_line)
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
             params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "video", "title": title.replace("amp;", ""), "url": url, "icon": icon})
+            params.update(
+                {
+                    "good_for_fav": True,
+                    "category": "video",
+                    "title": title.replace("amp;", ""),
+                    "url": url,
+                    "icon": icon,
+                }
+            )
             self.addVideo(params)
         if nextPage:
             params = dict(cItem)
             next_url = cItem["url"].split("?")[0] + nextPage.replace("amp;", "")
-            params.update({"good_for_fav": False, "title": _("Next page"), "url": next_url})
+            params.update(
+                {"good_for_fav": False, "title": _("Next page"), "url": next_url}
+            )
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("Zaluknij.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
+        printDBG(
+            "Zaluknij.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]"
+            % (cItem, searchPattern, searchType)
+        )
         cItem = dict(cItem)
         search_url = "%sszukaj" % gettytul()
         post_data = "phrase=%s" % urllib_quote(searchPattern)
@@ -276,13 +397,20 @@ class Zaluknij(CBaseHostClass):
         sts, htm = self.getPage(search_url, post_data=post_data, max_retries=3)
         if not sts:
             printDBG("Zaluknij.listSearchResult - POST failed, trying GET fallback")
-            cItem["url"] = "%swyszukiwarka?phrase=%s" % (gettytul(), urllib_quote(searchPattern))
+            cItem["url"] = "%swyszukiwarka?phrase=%s" % (
+                gettytul(),
+                urllib_quote(searchPattern),
+            )
             self.listItems(cItem, isSearch=True)
             return
-        nextPage = self.cm.ph.getSearchGroups(htm, r"""href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast""")
+        nextPage = self.cm.ph.getSearchGroups(
+            htm, r"""href=['"]([^"']+)["'](?: data-pagenumber='\d+'>|>)Nast"""
+        )
         if nextPage:
             nextPage = nextPage[0]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'role="listitem', "</a>") or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
+        data = self.cm.ph.getAllItemsBeetwenMarkers(
+            htm, 'role="listitem', "</a>"
+        ) or self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-sm-4">', "</a>")
         for item in data:
             url = self.cm.ph.getSearchGroups(item, 'href="([^"]+)')
             if not url:
@@ -290,7 +418,7 @@ class Zaluknij(CBaseHostClass):
             url = url[0]
             icon = self.cm.ph.getSearchGroups(item, 'src="([^"]+)')
             if icon:
-                icon = self.getFullUrl(icon[0])
+                icon = self.fixIconUrl(icon[0], cItem["url"])
                 icon = self.fixIconUrl(icon)
             else:
                 icon = self.DEFAULT_ICON_URL
@@ -302,14 +430,24 @@ class Zaluknij(CBaseHostClass):
             title = re.sub(r"\s*\[\]\s*", "", title)
             is_serial = "serial" in url.lower()
             if is_serial:
-                meta_line = self.cm.ph.getSearchGroups(item, r'<span class="meta-line">(S\d+\s*E\d+)</span>')
+                meta_line = self.cm.ph.getSearchGroups(
+                    item, r'<span class="meta-line">(S\d+\s*E\d+)</span>'
+                )
                 if meta_line:
                     meta_line = self.cleanHtmlStr(meta_line[0])
                     title = "%s [%s]" % (title, meta_line)
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
             params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "video", "title": title.replace("amp;", ""), "url": url, "icon": icon})
+            params.update(
+                {
+                    "good_for_fav": True,
+                    "category": "video",
+                    "title": title.replace("amp;", ""),
+                    "url": url,
+                    "icon": icon,
+                }
+            )
             if is_serial:
                 params.update({"category": "list_episodes"})
                 self.addDir(params)
@@ -318,7 +456,9 @@ class Zaluknij(CBaseHostClass):
         if nextPage:
             params = dict(cItem)
             next_url = "%sszukaj?page=%s" % (gettytul(), nextPage)
-            params.update({"good_for_fav": False, "title": _("Next page"), "url": next_url})
+            params.update(
+                {"good_for_fav": False, "title": _("Next page"), "url": next_url}
+            )
             self.addDir(params)
 
     def getLinksForVideo(self, cItem):
@@ -336,19 +476,27 @@ class Zaluknij(CBaseHostClass):
         if desc:
             self.cacheDescriptions[url] = self.cleanHtmlStr(desc[0])
         link_list_div = ""
-        link_list_parts = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "link-list"), ("</div", ">"))
+        link_list_parts = self.cm.ph.getDataBeetwenNodes(
+            data, ("<div", ">", "link-list"), ("</div", ">")
+        )
         if link_list_parts and len(link_list_parts) > 1:
             link_list_div = link_list_parts[1]
         if not link_list_div:
             link_list_div = data
-        table_parts = self.cm.ph.getDataBeetwenNodes(link_list_div, ("<table", ">"), ("</table", ">"))
+        table_parts = self.cm.ph.getDataBeetwenNodes(
+            link_list_div, ("<table", ">"), ("</table", ">")
+        )
         if table_parts and len(table_parts) > 1:
             table = table_parts[1]
-            rows = self.cm.ph.getAllItemsBeetwenNodes(table, ("<tr", ">"), ("</tr", ">"))
+            rows = self.cm.ph.getAllItemsBeetwenNodes(
+                table, ("<tr", ">"), ("</tr", ">")
+            )
             for row in rows:
                 if "<th" in row:
                     continue
-                cells = self.cm.ph.getAllItemsBeetwenNodes(row, ("<td", ">"), ("</td", ">"))
+                cells = self.cm.ph.getAllItemsBeetwenNodes(
+                    row, ("<td", ">"), ("</td", ">")
+                )
                 if len(cells) < 2:
                     continue
                 player_url = ""
@@ -356,14 +504,18 @@ class Zaluknij(CBaseHostClass):
                 quality = ""
                 for idx, cell in enumerate(cells):
                     if "link-to-video" in cell:
-                        iframe_match = re.search(r"""data-iframe=['"]([^"^']+?)['"]""", cell)
+                        iframe_match = re.search(
+                            r"""data-iframe=['"]([^"^']+?)['"]""", cell
+                        )
                         if iframe_match:
                             try:
-                                decoded = base64.b64decode(iframe_match.group(1)).decode("utf-8")
+                                decoded = base64.b64decode(
+                                    iframe_match.group(1)
+                                ).decode("utf-8")
                                 iframe_data = json.loads(decoded)
                                 player_url = iframe_data.get("src", "")
-                            except:
-                                pass
+                            except Exception as e:
+                                printDBG("iframe decode error: %s" % str(e))
                         if not player_url:
                             href_match = re.search(r"""href=['"]([^"^']+?)['"]""", cell)
                             if href_match:
@@ -377,7 +529,7 @@ class Zaluknij(CBaseHostClass):
                 if player_url and not player_url.startswith("http"):
                     player_url = self.getFullUrl(player_url)
                 hostname = self.up.getHostName(player_url)
-                name = hostname.split('.')[0] if '.' in hostname else hostname
+                name = hostname.split(".")[0] if "." in hostname else hostname
                 if version and version not in ["", "Wersja"]:
                     name += " [%s" % version
                     if quality and quality not in ["", "Jakość"]:
@@ -385,16 +537,30 @@ class Zaluknij(CBaseHostClass):
                     name += "]"
                 elif quality and quality not in ["", "Jakość"]:
                     name += " [%s]" % quality
-                retTab.append({"name": name, "url": strwithmeta(player_url, {"Referer": url}), "need_resolve": 1})
+                retTab.append(
+                    {
+                        "name": name,
+                        "url": strwithmeta(player_url, {"Referer": url}),
+                        "need_resolve": 1,
+                    }
+                )
         if not retTab:
-            data_links = self.cm.ph.getAllItemsBeetwenMarkers(data, 'link-to-video">', "None")
+            data_links = self.cm.ph.getAllItemsBeetwenMarkers(
+                data, 'link-to-video">', "None"
+            )
             for item in data_links:
                 url_match = re.search(r'href="([^"]+)', item)
                 if url_match:
                     video_url = url_match.group(1)
                     hostname = self.up.getHostName(video_url)
-                    short_name = hostname.split('.')[0] if '.' in hostname else hostname
-                    retTab.append({"name": short_name.capitalize(), "url": strwithmeta(video_url, {"Referer": gettytul()}), "need_resolve": 1})
+                    short_name = hostname.split(".")[0] if "." in hostname else hostname
+                    retTab.append(
+                        {
+                            "name": short_name.capitalize(),
+                            "url": strwithmeta(video_url, {"Referer": gettytul()}),
+                            "need_resolve": 1,
+                        }
+                    )
         if len(retTab):
             self.cacheLinks[cacheKey] = retTab
         return retTab
@@ -407,7 +573,9 @@ class Zaluknij(CBaseHostClass):
                 for idx in range(len(self.cacheLinks[key])):
                     if url in self.cacheLinks[key][idx]["url"]:
                         if not self.cacheLinks[key][idx]["name"].startswith("*"):
-                            self.cacheLinks[key][idx]["name"] = "*" + self.cacheLinks[key][idx]["name"] + "*"
+                            self.cacheLinks[key][idx]["name"] = (
+                                "*" + self.cacheLinks[key][idx]["name"] + "*"
+                            )
                         break
         return self.up.getVideoLinkExt(url)
 
@@ -416,7 +584,10 @@ class Zaluknij(CBaseHostClass):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
+        printDBG(
+            "handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] "
+            % (name, category)
+        )
         self.currList = []
         if name is None:
             self.listsTab(self.MENU, {"name": "category"})
@@ -431,7 +602,9 @@ class Zaluknij(CBaseHostClass):
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
+            self.listsHistory(
+                {"name": "history", "category": "search"}, "desc", _("Type: ")
+            )
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
