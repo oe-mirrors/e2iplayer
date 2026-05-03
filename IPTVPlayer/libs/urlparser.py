@@ -1444,6 +1444,8 @@ class pageParser(CaptchaHelper):
         urltab.sort(key=lambda item: item["quality"], reverse=True)
         return urltab
 
+
+
     def parserARCHIVEORG(self, linkUrl):  # Need test
         printDBG("parserARCHIVEORG linkUrl[%s]" % linkUrl)
         urltab = []
@@ -2036,30 +2038,71 @@ class pageParser(CaptchaHelper):
             urltab.reverse()
         return urltab
 
-    def parserSTREAMUP(self, baseUrl):  # fix 300426
+    def parserSTREAMUP(self, baseUrl):  # fix 030526 - vidara.to, streamup.ws
         printDBG("parserSTREAMUP baseUrl[%s]" % baseUrl)
         urltab = []
         subTracks = []
         host = urlparser.getDomain(baseUrl, False)
-        filecode = self.cm.ph.getSearchGroups(baseUrl, r"https:\/\/[a-zA-Z0-9.]+\/(?:e\/|v\/)?([A-Za-z0-9]+)")
+
+        # Pobranie filecode z różnych formatów URL
+        filecode = self.cm.ph.getSearchGroups(baseUrl, r"/(?:e|v|embed)/([A-Za-z0-9]+)")
+        if not filecode:
+            filecode = self.cm.ph.getSearchGroups(baseUrl, r"([A-Za-z0-9]{10,20})")
+        if not filecode:
+            printDBG("parserSTREAMUP - nie znaleziono filecode")
+            return []
+
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER["Referer"] = baseUrl
         HTTP_HEADER["Origin"] = host[:-1]
+        HTTP_HEADER["X-Requested-With"] = "XMLHttpRequest"
+        HTTP_HEADER["Content-Type"] = "application/json"
+        HTTP_HEADER["Accept"] = "application/json, text/javascript, */*; q=0.01"
+
+        # Próba 1: endpoint api/stream
         post = json_dumps({"filecode": filecode[0], "device": "web"})
         sts, data = self.cm.getPage(host + "api/stream", {"header": HTTP_HEADER, "raw_post_data": True}, post)
+
+        # Próba 2: jeśli nie działa, użyj api/source
         if not sts:
+            sts, data = self.cm.getPage(host + "api/source/" + filecode[0], {"header": HTTP_HEADER})
+
+        # Próba 3: jeśli nadal nie działa, pobierz stronę i szukaj tokena
+        if not sts:
+            sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+            if sts:
+                token = re.search(r'token["\']\s*:\s*["\']([^"\']+)["\']', data)
+                if token:
+                    post = json_dumps({"filecode": token.group(1), "device": "web"})
+                    sts, data = self.cm.getPage(host + "api/stream", {"header": HTTP_HEADER, "raw_post_data": True}, post)
+
+        if not sts:
+            printDBG("parserSTREAMUP - nie udało się pobrać danych")
             return []
-        data = json_loads(data)
-        url = data.get("streaming_url")
-        if isinstance(data.get("subtitles"), list):
-            subTracks = [{"title": "", "url": sub.get("file_path"), "lang": sub.get("language")} for sub in data.get("subtitles", []) if sub.get("file_path") and sub.get("language")]
-        if url:
-            url = url.replace("\r", "").replace("\n", "")
-            url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1], "external_sub_tracks": subTracks})
-            if ".m3u8" in url:
-                urltab.extend(getDirectM3U8Playlist(url))
-            else:
-                urltab.append({"name": "MP4", "url": url})
+
+        try:
+            data = json_loads(data)
+            url = data.get("streaming_url") or data.get("result", {}).get("url") or data.get("source")
+            
+            if isinstance(data.get("subtitles"), list):
+                subTracks = [{"title": "", "url": sub.get("file_path") or sub.get("url"), "lang": sub.get("language") or sub.get("label")} 
+                            for sub in data.get("subtitles", []) if sub.get("file_path") or sub.get("url")]
+
+            if url:
+                url = url.replace("\r", "").replace("\n", "")
+                url = urlparser.decorateUrl(url, {
+                    "User-Agent": HTTP_HEADER["User-Agent"],
+                    "Referer": host,
+                    "Origin": host[:-1],
+                    "external_sub_tracks": subTracks
+                })
+                if ".m3u8" in url:
+                    urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+                else:
+                    urltab.append({"name": "MP4", "url": url})
+        except Exception as e:
+            printDBG("parserSTREAMUP - błąd parsowania JSON: %s" % str(e))
+
         return urltab
 
     def parserSHAREVIDEO(self, url):  # add 160925
@@ -2076,7 +2119,7 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserBYSE(self, baseUrl):  # fix 200126
+    def parserBYSE(self, baseUrl):  # fix 030526 - boosteradx.online, filemoon
         def ft(e):
             t = e.replace("-", "+").replace("_", "/")
             r = 0 if len(t) % 4 == 0 else 4 - len(t) % 4
@@ -2092,37 +2135,61 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER["Referer"] = baseUrl
         HTTP_HEADER["X-Embed-Parent"] = baseUrl
+        HTTP_HEADER["Origin"] = urlparser.getDomain(baseUrl, False)[:-1]
+
         host = urlparser.getDomain(baseUrl.replace("boosteradx.online", "streamlyplayer.online"), False)
         mid = re.search(r"/(?:e|d|download)/([0-9a-zA-Z]+)", baseUrl).group(1)
+
         sts, data = self.cm.getPage("%sapi/videos/%s/embed/details" % (host, mid), {"header": HTTP_HEADER})
         if not sts:
             return []
+
         data = json_loads(data)
         code = data.get("code")
         baseUrl = data.get("embed_frame_url", baseUrl)
         HTTP_HEADER["Referer"] = baseUrl
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER["Origin"] = host[:-1]
+
         sts, data = self.cm.getPage("%sapi/videos/%s/embed/playback" % (host, code), {"header": HTTP_HEADER})
         if not sts:
             return []
+
         html = json_loads(data)
         pd = html.get("playback")
         if pd:
             iv = ft(pd.get("iv"))
             key = xn(pd.get("key_parts"))
             pl = ft(pd.get("payload"))
-            cipher = python_aesgcm.new(key)
-            ct = cipher.open(iv, pl)
-            html = json_loads(ct.decode("latin-1"))
+            try:
+                cipher = python_aesgcm.new(key)
+                ct = cipher.open(iv, pl)
+                html = json_loads(ct.decode("latin-1"))
+            except Exception:
+                printDBG("parserBYSE - AES-GCM deszyfrowanie nie powiodło się")
+                pass
+
         sources = html.get("sources")
         if sources:
             for x in sources:
-                url = urlparser.decorateUrl(x.get("url"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
-                if ".m3u8" in url:
-                    urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
-                else:
-                    urltab.append({"name": x.get("label", ""), "url": url})
+                url = x.get("url")
+                if url:
+                    url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                    if ".m3u8" in url:
+                        urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+                    else:
+                        urltab.append({"name": x.get("label", "MP4"), "url": url})
+
+        if not urltab and html.get("result"):
+            for x in html.get("result", {}).get("sources", []):
+                url = x.get("file") or x.get("url")
+                if url:
+                    url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                    if ".m3u8" in url:
+                        urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+                    else:
+                        urltab.append({"name": x.get("label", "MP4"), "url": url})
+
         return urltab
 
     def parserCOUDMAILRU(self, baseUrl):  # Fix 221125
