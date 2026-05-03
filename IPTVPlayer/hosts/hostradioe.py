@@ -139,8 +139,8 @@ class RadioECtWs(CBaseHostClass):
             if not item.get("icon"):
                 item["icon"] = self.DEFAULT_ICON
         tabs = [
-            {"category": "radio_list", "title": _("الراديو"), "url": self.API_STATIONS, "icon": self.DEFAULT_ICON},
-            {"category": "cats_list", "title": _("البرامج"), "url": self.API_CATEGORIES, "icon": self.DEFAULT_ICON},
+            {"category": "radio_list", "title": "الراديو", "url": self.API_STATIONS, "icon": self.DEFAULT_ICON},
+            {"category": "cats_list", "title": "البرامج", "url": self.API_CATEGORIES, "icon": self.DEFAULT_ICON},
         ] + search_items
         self.listsTab(tabs, cItem)
 
@@ -149,7 +149,7 @@ class RadioECtWs(CBaseHostClass):
         printDBG("RadioECtWs.listRadioStations")
         data = self.getJson(cItem["url"])
         if not data or not isinstance(data, list):
-            self.addVideo({"title": _("تعذر تحميل الإذاعات"), "desc": _("تحقق من الإنترنت"), "icon": self.DEFAULT_ICON})
+            self.addVideo({"title": "تعذر تحميل الإذاعات", "desc": "تحقق من الإنترنت", "icon": self.DEFAULT_ICON})
             return
         for item in data:
             try:
@@ -159,7 +159,7 @@ class RadioECtWs(CBaseHostClass):
                 stream = item.get("src", "")
                 icon = self.getSafeIcon(item.get("cover"))
                 country = item.get("country", "")
-                country = country if country else _("محطة إذاعية")
+                country = country if country else "محطة إذاعية"
                 params = {"good_for_fav": True, "title": title, "item_id": item.get("id", title), "stream_url": stream, "url": stream or "", "icon": icon, "desc": Y + country + W}
                 self.addAudio(params)
             except Exception:
@@ -171,7 +171,7 @@ class RadioECtWs(CBaseHostClass):
         printDBG("RadioECtWs.listCategories")
         data = self.getJson(cItem["url"])
         if not data or not isinstance(data, list):
-            self.addVideo({"title": _("تعذر تحميل الفئات"), "desc": _("حاول لاحقاً"), "good_for_fav": True, "icon": self.DEFAULT_ICON})
+            self.addVideo({"title": "تعذر تحميل الفئات", "desc": "حاول لاحقاً", "good_for_fav": True, "icon": self.DEFAULT_ICON})
             return
         for cat in data:
             try:
@@ -195,7 +195,7 @@ class RadioECtWs(CBaseHostClass):
             return
         data = self.getJson(url)
         if not data or not isinstance(data, list):
-            self.addVideo({"title": _("تعذر تحميل البرامج"), "desc": _("الفئة فارغة"), "icon": cItem.get("icon", self.DEFAULT_ICON)})
+            self.addVideo({"title": "تعذر تحميل البرامج", "desc": "الفئة فارغة", "icon": cItem.get("icon", self.DEFAULT_ICON)})
             return
         for prog in data:
             try:
@@ -216,14 +216,14 @@ class RadioECtWs(CBaseHostClass):
                     next_cat, action_url = "episodes_archive", archive
                 else:
                     continue
-                params = {"category": next_cat, "good_for_fav": True, "title": Y + title + W, "prog_id": pid, "prog_type": ptype, "feed_url": feed, "archive_url": archive, "url": action_url, "icon": self.getSafeIcon(prog.get("image")), "desc": prog.get("description", _("برنامج صوتي"))}
+                params = {"category": next_cat, "good_for_fav": True, "title": Y + title + W, "prog_id": pid, "prog_type": ptype, "feed_url": feed, "archive_url": archive, "url": action_url, "icon": self.getSafeIcon(prog.get("image")), "desc": prog.get("description", "برنامج صوتي")}
                 self.addDir(params)
             except Exception:
                 printExc()
                 continue
 
     def _showEmpty(self, cItem, msg):
-        self.addVideo({"title": _("ℹ️ %s") % msg, "desc": _("جرب برنامجاً آخر"), "icon": cItem.get("icon", self.DEFAULT_ICON)})
+        self.addVideo({"title": "ℹ️ %s" % msg, "desc": "جرب برنامجاً آخر", "icon": cItem.get("icon", self.DEFAULT_ICON)})
 
     # ================== Episodes from JSON ==================
     def listEpisodesJSON(self, cItem):
@@ -233,7 +233,7 @@ class RadioECtWs(CBaseHostClass):
             return
         data = self.getJson(url)
         if not data or not isinstance(data, list):
-            self._showEmpty(cItem, _("تعذر التحميل"))
+            self._showEmpty(cItem, "تعذر التحميل")
             return
         printDBG("JSON episodes: %d items" % len(data))
         for ep in data:
@@ -243,13 +243,13 @@ class RadioECtWs(CBaseHostClass):
                     continue
                 audio = ep.get("src") or ep.get("url") or ep.get("audio", "")
                 icon = ep.get("image") or ep.get("cover") or cItem.get("icon")
-                params = {"good_for_fav": True, "title": L + title + W, "url": self.getFullUrl(audio) if audio else "", "icon": self.getSafeIcon(icon), "desc": ep.get("description", _("حلقة صوتية"))}
+                params = {"good_for_fav": True, "title": L + title + W, "url": self.getFullUrl(audio) if audio else "", "icon": self.getSafeIcon(icon), "desc": ep.get("description", "حلقة صوتية")}
                 self.addAudio(params)
             except Exception:
                 printExc()
                 continue
         if not self.currList:
-            self._showEmpty(cItem, _("لا توجد حلقات"))
+            self._showEmpty(cItem, "لا توجد حلقات")
 
     # # ================== Episodes from Archive.org ==================
     def listEpisodesArchive(self, cItem):
@@ -337,7 +337,7 @@ class RadioECtWs(CBaseHostClass):
                         desc_parts.append("%.1f MB" % size_mb)
                     except:
                         pass
-                desc = " | ".join(desc_parts) if desc_parts else _("ملف أرشيفي")
+                desc = " | ".join(desc_parts) if desc_parts else "ملف أرشيفي"
                 episode_data = {"title": title, "url": download_url, "icon": cItem.get("icon"), "desc": Y + desc + W, "format": fformat, "size": fsize, "source": fsource, "base_name": base_name, "episode_num": episode_num}
                 if base_name not in seen_bases:
                     seen_bases[base_name] = episode_data
@@ -377,7 +377,7 @@ class RadioECtWs(CBaseHostClass):
 
     def _addArchiveItem(self, cItem, url):
         """Fallback: add archive URL as single item with resolve flag"""
-        params = {"good_for_fav": True, "title": cItem.get("title", "") + " - أرشيف", "url": url, "icon": cItem.get("icon"), "desc": _("رابط الأرشيف - اضغط للتشغيل"), "need_resolve": 1}
+        params = {"good_for_fav": True, "title": cItem.get("title", "") + " - أرشيف", "url": url, "icon": cItem.get("icon"), "desc": "رابط الأرشيف - اضغط للتشغيل", "need_resolve": 1}
         self.addAudio(params)
 
     # ================== Episodes from RSS ==================
@@ -389,17 +389,17 @@ class RadioECtWs(CBaseHostClass):
         try:
             sts, data = self.cm.getPage(feed_url, {"header": self.HTTP_HEADER, "return_data": True})
             if not sts or not data:
-                self._showEmpty(cItem, _("تعذر تحميل البودكاست"))
+                self._showEmpty(cItem, "تعذر تحميل البودكاست")
                 return
             if data.strip().startswith(("<!DOCTYPE", "<html", "<script")):
-                self._showEmpty(cItem, _("الرابط محمي أو غير متاح"))
+                self._showEmpty(cItem, "الرابط محمي أو غير متاح")
                 return
             # Remove namespaces
             data_clean = re.sub(r'\s*xmlns(:[^=]+)?=["\'][^"\']*["\']', "", data)
             items = re.findall(r"<item>(.*?)</item>", data_clean, re.S | re.I)
             printDBG("Found %d items in RSS" % len(items))
             if not items:
-                self._showEmpty(cItem, _("لا توجد حلقات"))
+                self._showEmpty(cItem, "لا توجد حلقات")
                 return
             count = 0
             for idx, item in enumerate(items):
@@ -416,10 +416,10 @@ class RadioECtWs(CBaseHostClass):
                         # Build enhanced description with colors
                         desc_parts = []
                         if duration:
-                            desc_parts.append(Y + _("Duration: ") + W + duration)
+                            desc_parts.append(Y + _("Duration:") + " " + W + duration)
                         if summary:
                             desc_parts.append(Y + _("Summary: ") + W + summary)
-                        desc = "\n".join(desc_parts) if desc_parts else W + _("حلقة صوتية")
+                        desc = "\n".join(desc_parts) if desc_parts else W + "حلقة صوتية"
                         params = {"good_for_fav": True, "title": L + ep_title + W, "url": audio_url, "icon": icon, "desc": desc}
                         self.addAudio(params)
                         count += 1
@@ -430,10 +430,10 @@ class RadioECtWs(CBaseHostClass):
                     continue
             printDBG("Added %d/%d episodes" % (count, len(items)))
             if count == 0:
-                self._showEmpty(cItem, _("لا توجد حلقات"))
+                self._showEmpty(cItem, "لا توجد حلقات")
         except Exception as e:
             printExc()
-            self._showEmpty(cItem, _("حدث خطأ: %s") % str(e))
+            self._showEmpty(cItem, "حدث خطأ: %s" % str(e))
 
     def _extractEpisodeSimple(self, item_xml_string):
         """
@@ -509,7 +509,7 @@ class RadioECtWs(CBaseHostClass):
         if not final_url or not final_url.startswith("http"):
             return linksTab
         need_resolve = 1 if any(e in final_url.lower() for e in [".m3u8", ".pls", ".asx", ".m3u"]) else 0
-        linksTab.append({"name": _("تشغيل"), "url": final_url, "need_resolve": need_resolve, "meta": {"need_buffering": True}})
+        linksTab.append({"name": "تشغيل", "url": final_url, "need_resolve": need_resolve, "meta": {"need_buffering": True}})
         return linksTab
 
     # ================== Search ==================
