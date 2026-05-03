@@ -1,6 +1,10 @@
 # Translation helper for rich description labels
 # Auto-generated from ihost.py ArticleContent.RICH_DESC_LABELS
 
+def _():  # Dummy translation function
+	return None
+
+
 dummy = _("Alternate Title:")
 dummy = _("Original Title:")
 dummy = _("Station:")
