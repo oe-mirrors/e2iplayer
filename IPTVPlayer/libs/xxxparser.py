@@ -2746,7 +2746,7 @@ class XXXParser:
 			videoUrl = self.cm.ph.getSearchGroups(data, '''source src=["]([^"]+?)["]''')[0]
 			if videoUrl:
 				printDBG('READY LINK: ' + str(videoUrl))
-				#videoUrl = videoUrl[0]
+				# videoUrl = videoUrl[0]
 				return videoUrl
 			return ''
 
@@ -2757,7 +2757,7 @@ class XXXParser:
 			sts, data = self.getPage(url, 'voyeurhit.cookie', 'voyeurhit.com', self.defaultParams)
 			if not sts:
 				return ''
-			#printDBG( 'Host listsItems data: '+data )
+			# printDBG( 'Host listsItems data: '+data )
 			videoUrl = re.search('video_url":"([^"]+)', data).group(1)
 			printDBG('Fetched code: ' + videoUrl)
 			replacemap = {'M': '\\u041c', 'A': '\\u0410', 'B': '\\u0412', 'C': '\\u0421', 'E': '\\u0415', '=': '~', '+': '.', '/': ','}
@@ -2855,7 +2855,7 @@ class XXXParser:
 			self.HTTP_HEADER['Referer'] = url
 			self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.get_Page(url, self.defaultParams)
-			#printDBG( 'YESPORNPLEASE PARSERDATA: '+ str(data))
+			# printDBG( 'YESPORNPLEASE PARSERDATA: '+ str(data))
 			EmbedUrl = self.cm.ph.getSearchGroups(data, r'data-litespeed-src=["](https:[^"]+)["]\sframe.*iframe', 1, True)[0]
 			printDBG('EMBEDURL: ' + str(EmbedUrl))
 			sts, data2 = self.get_Page(EmbedUrl)
@@ -2866,7 +2866,7 @@ class XXXParser:
 				printDBG('Videolink: ' + videoUrl)
 				if videoUrl:
 					return urlparser.decorateUrl(videoUrl, {'Referer': url, 'User-Agent': self.USER_AGENT})
-				#return strwithmeta(videoUrl, {'Referer': url})
+				# return strwithmeta(videoUrl, {'Referer': url})
 			return ''
 
 		if parser == 'https://xhamster.com':

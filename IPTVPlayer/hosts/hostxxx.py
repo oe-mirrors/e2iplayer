@@ -109,7 +109,7 @@ SITEDATA = {
 'EPORNER': ('https://www.eporner.com/cats/', 'eporner', ''),
 'EROPROFILE': ('https://www.eroprofile.com', '', ''),
 'FAMILYPORN': ('https://familyporn.tv/categories/', 'familyporn', ''),
-#'FEMEFUN': ('https://femefun.com/categories/piercing/', '', ''), # offline
+# 'FEMEFUN': ('https://femefun.com/categories/piercing/', '', ''), # offline
 'FETISHPAPA': ('https://www.fetishpapa.com/', '', ''),
 'FIRSTANALVIDEOS': ('https://www.firstanalvideos.com/categories/', '', None),
 'FITPORN': ('https://fit.porn/categories/', '', None),
@@ -332,15 +332,15 @@ SITEDATA = {
 'TEENAGER365': ('https://teenager365.to/categories/', '', ''),
 'BIGBUTTHOLES': ('https://bigbuttholes.com/categories/', '', ''),
 
-#'MOMS-SEX-VIDEOS': ('https://www.moms-sex-videos.com/categories/', 'MOMSSEXVIDEOS', ''),
-#'REAL-MATURE-PORN': ('https://www.REALMATUREPORN.com/categories/', 'REALMATUREPORN', ''),
-#'PORNDREAMZ': ('https://porndreamz.com/categories/', '', ''),
-#'SEXETAG': ('https://www.sexetag.com/', '', ''),
-#'XXXELF': ('https://xxxelf.com/categories', '', ''),
-#'EROGARGA': ('https://www.erogarga.com/', '', ''),
-#'TUBEV': ('https://www.tubev.sex/categories', '', ''),
-#'REALGFPORN': ('https://www.realgfporn.com/', '', ''),
-#'CRAZYAMATEURS': ('https://www.crazy-amateurs.com/categories/', '', ''),
+# 'MOMS-SEX-VIDEOS': ('https://www.moms-sex-videos.com/categories/', 'MOMSSEXVIDEOS', ''),
+# 'REAL-MATURE-PORN': ('https://www.REALMATUREPORN.com/categories/', 'REALMATUREPORN', ''),
+# 'PORNDREAMZ': ('https://porndreamz.com/categories/', '', ''),
+# 'SEXETAG': ('https://www.sexetag.com/', '', ''),
+# 'XXXELF': ('https://xxxelf.com/categories', '', ''),
+# 'EROGARGA': ('https://www.erogarga.com/', '', ''),
+# 'TUBEV': ('https://www.tubev.sex/categories', '', ''),
+# 'REALGFPORN': ('https://www.realgfporn.com/', '', ''),
+# 'CRAZYAMATEURS': ('https://www.crazy-amateurs.com/categories/', '', ''),
 
 }
 
@@ -356,13 +356,13 @@ SITEDATA_CAMS = {
 'MOREAMATEURS': ('https://moreamateurs.com/categories/', '', ''),
 'XHAMSTERLIVE': ('https://xhamsterlive.com', 'xhamsterlive', None),
 
-#'CAM-SEX': ('https://cam-sex.net', 'CAMSEX', None),
-#'CAMBRO.TV': ('https://www.cambro.tv/categories/', 'CAMBRO', None),
-#'CAMVIDEOS': ('https://www.camvideos.tv/categories/', '', ''),
-#'CHATURBATE': ('https://chaturbate.com/api/ts/hashtags/tag-table-data/?limit=100', '', None),
-#'EVERYCAMGIRL': ('https://everycamgirl.com/', '', ''),
-#'SHOWUP   - live cams': ('https://showup.tv', 'showup', None),
-#'YOURLIVE.WEBCAM': ('https://yourlive.webcam', 'YOURLIVE', None),
+# 'CAM-SEX': ('https://cam-sex.net', 'CAMSEX', None),
+# 'CAMBRO.TV': ('https://www.cambro.tv/categories/', 'CAMBRO', None),
+# 'CAMVIDEOS': ('https://www.camvideos.tv/categories/', '', ''),
+# 'CHATURBATE': ('https://chaturbate.com/api/ts/hashtags/tag-table-data/?limit=100', '', None),
+# 'EVERYCAMGIRL': ('https://everycamgirl.com/', '', ''),
+# 'SHOWUP   - live cams': ('https://showup.tv', 'showup', None),
+# 'YOURLIVE.WEBCAM': ('https://yourlive.webcam', 'YOURLIVE', None),
 
 }
 
@@ -528,8 +528,8 @@ class IPTVHost(IHost):
 		return RetHost(RetHost.ERROR, value=[])
 
 	def getCurrentList(self, refresh=0):
-		#printDBG("getCurrentList begin")
-		#printDBG("getCurrentList end")
+		# printDBG("getCurrentList begin")
+		# printDBG("getCurrentList end")
 		return RetHost(RetHost.OK, value=self.currList)
 
 	def getLinksForVideo(self, Index=0, item=None):
@@ -804,8 +804,8 @@ class Host(CBaseHostClass, XXXParser):
 				if cfgItem.value in (True, "1", "2"):
 					valTab.append(CDisplayListItem(key, baseUrl, CDisplayListItem.TYPE_CATEGORY, [_url], _name, hostImage() + nameLower + '.png', None))
 
-#			if config.plugins.iptvplayer.xxxsortall.value:
-#				valTab.sort(key=lambda poz: poz.name)
+# if config.plugins.iptvplayer.xxxsortall.value:
+# valTab.sort(key=lambda poz: poz.name)
 
 			for key, (_url, _name, search) in sorted(SITEDATA_CAMS.items()):
 				baseUrl = get_base_url(_url)
@@ -819,8 +819,8 @@ class Host(CBaseHostClass, XXXParser):
 
 			valTab.append(CDisplayListItem(_('----------  Live Cams  ----------') + ' (%d)' % len(valTabCams), '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
 
-#			if config.plugins.iptvplayer.xxxsortall.value:
-#				valTabCams.sort(key=lambda poz: poz.name)
+# if config.plugins.iptvplayer.xxxsortall.value:
+# valTabCams.sort(key=lambda poz: poz.name)
 
 			valTab.extend(valTabCams)
 
@@ -15641,7 +15641,7 @@ class Host(CBaseHostClass, XXXParser):
 			sts, data = self.getPageWithCFBypass(url)
 			if not sts:
 				return
-			#printDBG( 'REALGFPORN OK:\n'+data )
+			# printDBG( 'REALGFPORN OK:\n'+data )
 			data = self.cm.ph.getDataBeetwenMarkers(data, 'site-cats">', 'fix"></div>', False)[1]
 			data = data.split('<li><a')
 			if len(data):
@@ -15708,7 +15708,7 @@ class Host(CBaseHostClass, XXXParser):
 			sts, data = self.getPageWithCFBypass(url)
 			if not sts:
 				return
-			#printDBG( 'PARADISEHILL OK:\n'+data )
+			# printDBG( 'PARADISEHILL OK:\n'+data )
 			data = data.split('class="item"')
 			if len(data):
 				del data[0]
@@ -15982,7 +15982,7 @@ class Host(CBaseHostClass, XXXParser):
 				phImage = self.cm.ph.getSearchGroups(item, 'srcset=["]([^$]+?webp)["]', 1, True)[0].replace('webp', 'jpg')
 				if phImage.startswith('/'):
 					phImage = 'https:' + phImage
-				#phTime = self.cm.ph.getSearchGroups(item, '>\n.+[\s]([0-9:]+?)[\s]\s', 1, True)[0]
+				# phTime = self.cm.ph.getSearchGroups(item, '>\n.+[\s]([0-9:]+?)[\s]\s', 1, True)[0]
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next:
 				next = '%s%s' % (self.MAIN_URL, next)
@@ -16416,7 +16416,7 @@ class Host(CBaseHostClass, XXXParser):
 			max_number = self.currList[Index].possibleTypesOfSearch if self.currList[Index].possibleTypesOfSearch else None
 			COOKIEFILE = join(GetCookieDir(), 'bigboobs.cookie')
 			sts, data = self.getPageWithCFBypass(url)
-#			sts, data = self.getPage(url, 'bigboobs.cookie', 'bigboobsxxx.com', self.defaultParams)
+# sts, data = self.getPage(url, 'bigboobs.cookie', 'bigboobsxxx.com', self.defaultParams)
 			if not sts or data is None or data == '':
 				return self.showNotFoundMessage(name)
 			root = url.split('?mode')[0]
@@ -17138,7 +17138,7 @@ class Host(CBaseHostClass, XXXParser):
 			sts, data = self.getPageWithCFBypass(url)
 			if not sts or data is None or data == '':
 				return self.showNotFoundMessage(name)
-			#root = re.sub(r'/\d+/?$', '/', url)
+			# root = re.sub(r'/\d+/?$', '/', url)
 			root = self.cm.ph.getSearchGroups(data, 'alternate.{,40}href=["]([^"]+?)([0-9/]+?)"', 1, True)[0]
 			printDBG('ROOT: ' + root)
 			current = self.cm.ph.getSearchGroups(data, r'cur_page[\s]([0-9]+?)[\s]--', 1, True)[0]
@@ -17466,7 +17466,7 @@ class Host(CBaseHostClass, XXXParser):
 					next_number = next.split('/')[-1]
 				printDBG('NEXT NUMBER: ' + next_number)
 			data2 = self.cm.ph.getDataBeetwenMarkers(data, 'nav-pages', '</nav>', False)[1]
-			#max  = self.cm.ph.getSearchGroups(data2, 'href=["]([^"]+?)["]>', 1, True)
+			# max  = self.cm.ph.getSearchGroups(data2, 'href=["]([^"]+?)["]>', 1, True)
 			max = re.findall('href=["]([^"]+?)["]>', data2, re.S)
 			if max:
 				printDBG('ALL MAX: ' + str(max))
@@ -17904,7 +17904,7 @@ class Host(CBaseHostClass, XXXParser):
 			sts, data = self.getPageWithCFBypass(url)
 			if not sts:
 				return valTab
-			#data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="title-col', 'promo-sec')
+			# data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="title-col', 'promo-sec')
 			data = data.split('col -channel">')
 			if len(data):
 				del data[:7]
@@ -18918,7 +18918,7 @@ class Host(CBaseHostClass, XXXParser):
 			catImage = siteLogo
 			COOKIEFILE = join(GetCookieDir(), 'eroticmv.cookie')
 			sts, data = self.getPageWithCFBypass(url)
-			#printDBG('ADATOK: '+data)
+			# printDBG('ADATOK: '+data)
 			if not sts or data is None or data == '':
 				return self.showNotFoundMessage(name)
 			root = url.split('page/')[0]
@@ -19119,7 +19119,7 @@ class Host(CBaseHostClass, XXXParser):
 			max_number = self.currList[Index].possibleTypesOfSearch if self.currList[Index].possibleTypesOfSearch else None
 			COOKIEFILE = join(GetCookieDir(), 'bigboobs.cookie')
 			sts, data = self.getPageWithCFBypass(url)
-#			sts, data = self.getPage(url, 'bigboobs.cookie', 'bigboobsxxx.com', self.defaultParams)
+# sts, data = self.getPage(url, 'bigboobs.cookie', 'bigboobsxxx.com', self.defaultParams)
 			if not sts or data is None or data == '':
 				return self.showNotFoundMessage(name)
 			root = url.split('?mode')[0]
@@ -19218,9 +19218,9 @@ class Host(CBaseHostClass, XXXParser):
 					for item in result["models"]:
 						age = ''
 						phImage = ''
-						#printDBG( 'Host item: '+str(item) )
+						# printDBG( 'Host item: '+str(item) )
 						try:
-							#online = str(item["online"])
+							# online = str(item["online"])
 							room = str(item["room"])
 							phTitle = str(item["username"])
 							phTitle2 = str(item["display_name"])
@@ -19245,7 +19245,7 @@ class Host(CBaseHostClass, XXXParser):
 						except Exception:
 							printExc()
 						printDBG('Host phTitle: ' + phTitle)
-						#printDBG( 'Host online: '+online )
+						# printDBG( 'Host online: '+online )
 						printDBG('Host room: ' + room)
 						phUrl = phTitle
 						if room != 'vip':
@@ -19362,7 +19362,7 @@ class Host(CBaseHostClass, XXXParser):
 			sts, data = self.get_Page(url, self.defaultParams)
 			if not sts:
 				return valTab
-			#printDBG('XHAND CLIPS DATA: '+ data)
+			# printDBG('XHAND CLIPS DATA: '+ data)
 			currUrl = self.cm.ph.getSearchGroups(data, r'href=["]([^"]+?)["]\srel="canon')[0]
 			if not currUrl:
 				currUrl = url.split('?')[0]
@@ -21286,7 +21286,7 @@ class Host(CBaseHostClass, XXXParser):
 				del data[0]
 			for item in data:
 				phUrl = self.MAIN_URL + self.cm.ph.getSearchGroups(item, 'href=["]([^"]+?)["]', 1, True)[0]
-				#phUrl = phUrl + '1/'
+				# phUrl = phUrl + '1/'
 				# printDBG('CATEGORY LINK: ' + phUrl)
 				phTitle = self.cm.ph.getSearchGroups(item, 'title=["]([^"]+?)["]', 1, True)[0].upper()
 				phImage = self.MAIN_URL + self.cm.ph.getSearchGroups(item, 'src=["]([^"#]+?)["]', 1, True)[0]
@@ -21483,7 +21483,7 @@ class Host(CBaseHostClass, XXXParser):
 				del data[0]
 			for item in data:
 				phUrl = self.cm.ph.getSearchGroups(item, '=["]([^"]+?)["]', 1, True)[0]
-				#phUrl = phUrl + '1/'
+				# phUrl = phUrl + '1/'
 				phTitle = self.cm.ph.getSearchGroups(item, '[>]([^"]+?)[<]/a', 1, True)[0].upper()
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'INXXX-clips', catImage, None))
 			valTab.sort(key=lambda poz: poz.name)
@@ -22029,7 +22029,7 @@ class Host(CBaseHostClass, XXXParser):
 				phUrl = self.MAIN_URL + self.cm.ph.getSearchGroups(item, r'href=["]([^"]+?)["]\sclass="media', 1, True)[0]
 				# printDBG('LINK: ' + phUrl)
 				phTitle = self.cm.ph.getSearchGroups(item, 'alt=["]([^"]+?)["]', 1, True)[0]
-				#phImage = self.cm.ph.getSearchGroups(item, 'preview=["]([^"#]+?mp4)["]', 1, True)[0]
+				# phImage = self.cm.ph.getSearchGroups(item, 'preview=["]([^"#]+?mp4)["]', 1, True)[0]
 				Time = self.cm.ph.getSearchGroups(item, 'sticky"[>]([0-9:]+?)[<]', 1, True)[0]
 				Views = self.cm.ph.getSearchGroups(item, r'[>]([0-9.KkHhMm\s]+?)[<]/span', 1, True)[0]
 				if Time:
@@ -22179,9 +22179,9 @@ class Host(CBaseHostClass, XXXParser):
 			sts, data = self.getPageWithCFBypass(url)
 			if not sts:
 				return valTab
-			#printDBG( 'DATA 1: '+data )
+			# printDBG( 'DATA 1: '+data )
 			data = self.cm.ph.getDataBeetwenMarkers(data, 'studios":[],"actions', '"pagination"', False)[1]
-			#printDBG( 'DATA 2: '+data )
+			# printDBG( 'DATA 2: '+data )
 			data = data.split('"name"')
 			if len(data):
 				del data[0]
@@ -22238,8 +22238,8 @@ class Host(CBaseHostClass, XXXParser):
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle) + '\nViews: ' + Views + '\nLikes: ' + Likes, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next:
 				valTab.append(self.getNextItem(str(next_number), next, name, catUrl))
-			#if last_number:
-				#valTab.append(self.getJumpItem(last_number, root, name))
+			# if last_number:
+				# valTab.append(self.getJumpItem(last_number, root, name))
 			return valTab
 
 		if 'TIKPORN-JUMP' == name:
