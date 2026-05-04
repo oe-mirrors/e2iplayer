@@ -1,0 +1,73 @@
+<screen size="1286,722" title="E2iPlayer" flags="wfNoBorder" position="center,center" transparent="0">
+
+	<!-- Uhrzeit & Datum ausgeblendet -->
+	<widget name="headertext" position="1400,17" zPosition="1" size="976,33" font="Regular;25" transparent="1" valign="center" backgroundColor="#191919" foregroundColor="#8D8C86" halign="left"/>
+	<widget name="statustext" position="84,234" zPosition="1" size="456,103" font="Regular;20" halign="center" valign="center" transparent="1" backgroundColor="#191919"/>
+
+	<widget name="list"
+	position="22,35"
+	zPosition="1"
+	size="600,400"
+	itemHeight="40"
+	enableWrapAround="1"
+	scrollbarWidth="10"
+	scrollbarSliderBorderWidth="1"
+	scrollbarSliderForegroundColor="#8D8C86"
+	scrollbarSliderBorderColor="#8D8C86"
+	scrollbarMode="showOnDemand"
+	transparent="1"
+	selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/BBMod_720p/icons/selbutton.png"/>
+
+	<!-- PNG-Hintergrund für Infofeld (sichtbar hinter Text) -->
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/BBMod_720p/icons/filminfo.png"
+		position="21,460" size="1235,210" alphatest="blend" transparent="1" zPosition="1"/>
+
+	<!-- Automatisches Scrollen im Infofeld -->
+	<widget name="console"
+	position="66,502"
+	size="1142,148"
+	zPosition="2"
+	font="Regular;22"
+	transparent="0"
+	foregroundColor="#C0C0C0"
+	halign="left"
+	valign="top"
+	backgroundColor="#3A3A3A"
+	render="ScrollableLabel"/>
+
+	<widget name="spinner_2" zPosition="2" position="281,297" size="16,16" transparent="1" alphatest="blend"/>
+	<widget name="spinner_3" zPosition="2" position="300,297" size="16,16" transparent="1" alphatest="blend"/>
+	<widget name="spinner_4" zPosition="2" position="318,297" size="16,16" transparent="1" alphatest="blend"/>
+
+	<widget name="cover" zPosition="2" position="995,50" size="245,350" alphatest="blend"/>
+	<widget name="playerlogo" zPosition="4" position="665,40" size="260,140" alphatest="blend"/>
+
+<widget source="global.CurrentTime" render="Label"
+	position="680,200" size="240,120"
+	font="DS-Digital;90"
+	foregroundColor="#8D8C86"
+	transparent="1"
+	halign="center" valign="center">
+	<convert type="ClockToText">Default</convert>
+</widget>
+
+
+	<widget name="sequencer" position="22,61" zPosition="6" size="524,436" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#191919"/>
+
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/BBMod_720p/icons/red.png" position="32,670" size="45,45" alphatest="blend" transparent="1"/>
+	<widget source="key_red" render="Label" position="72,675" size="98,27" zPosition="1" font="Regular;22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/BBMod_720p/icons/green.png" position="168,670" size="45,45" alphatest="blend"/>
+	<widget source="key_green" render="Label" position="208,675" size="134,27" zPosition="1" font="Regular;22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/BBMod_720p/icons/yellow.png" position="343,670" size="45,45" alphatest="blend" zPosition="1" transparent="1"/>
+	<widget source="key_yellow" render="Label" position="381,675" size="137,27" zPosition="1" font="Regular;22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/BBMod_720p/icons/blue.png" position="518,670" size="45,45" alphatest="blend" transparent="1"/>
+	<widget source="key_blue" render="Label" position="558,675" size="121,27" zPosition="1" font="Regular;22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
+
+
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/BBMod_720p/icons/back-iptv4.png" position="center,center" size="1277,723" alphatest="on" transparent="1" zPosition="-4"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/BBMod_720p/icons/cover.png" position="972,25" size="285,470" alphatest="blend" transparent="0" zPosition="4"/>
+
+</screen>
