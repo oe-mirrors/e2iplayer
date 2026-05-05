@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 25.04.2026 - damagic
+# Last Modified: 05.05.2026 - damagic
 
 ###################################################
 # LOCAL import
@@ -105,7 +105,6 @@ class Filman(CBaseHostClass, CaptchaHelper):
         ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
-    ###################################################
     def _fillMovieFilters(self, cItem):
         self.cacheMovieFilters = {"cats": [], "sort": [], "years": [], "az": []}
 
@@ -123,7 +122,6 @@ class Filman(CBaseHostClass, CaptchaHelper):
         for item in dat:
             self.cacheMovieFilters["cats"].append({"title": self.cleanHtmlStr(item[1]), "url": cItem["url"] + "category:%s/" % item[0]})
 
-    ###################################################
     def listMovieFilters(self, cItem, category):
         printDBG("Filman.listMovieFilters")
 
@@ -283,6 +281,19 @@ class Filman(CBaseHostClass, CaptchaHelper):
         except:
             return ""
 
+    def _xd_decode(self, enc, key):
+        try:
+            raw = base64.b64decode(enc)
+            if isinstance(raw, bytes):
+                raw = raw.decode('latin-1')
+            out = ''
+            for i in range(len(raw)):
+                out += chr(ord(raw[i]) ^ ord(key[i % len(key)]))
+            return out
+        except Exception as e:
+            printDBG("_xd_decode error: %s" % str(e))
+            return ""
+
     def getHostNameFromUrl(self, url):
         try:
             host = re.search(r'https?://([^/]+)', url).group(1)
@@ -304,22 +315,57 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
         finalUrl = ""
 
-        pattern = r'''var\s+_e\s*=\s*['"]([^'"]+)['"]'''
-        encoded_var = self.cm.ph.getSearchGroups(data, pattern)[0]
-        if encoded_var:
-            decoded_url = self.decodeEmbedUrl(encoded_var)
-            if decoded_url:
+        e_match = re.search(r"var\s+_e\s*=\s*'([^']+)'", data)
+        a_match = re.search(r"var\s+_a\s*=\s*'([^']+)'", data)
+        b_match = re.search(r"var\s+_b\s*=\s*'([^']+)'", data)
+        c_match = re.search(r"var\s+_c\s*=\s*'([^']+)'", data)
+
+        if e_match and a_match and b_match and c_match:
+            _e = e_match.group(1)
+            _a = a_match.group(1)
+            _b = b_match.group(1)
+            _c = c_match.group(1)
+            key = _a + _b + _c
+
+            decoded_url = self._xd_decode(_e, key)
+            if decoded_url and decoded_url.startswith('http'):
                 finalUrl = decoded_url
 
         if not finalUrl:
+            pattern = r'''var\s+_e\s*=\s*['"]([^'"]+)['"]'''
+            encoded_var = self.cm.ph.getSearchGroups(data, pattern)[0]
+            if encoded_var:
+                decoded_url = self.decodeEmbedUrl(encoded_var)
+                if decoded_url and decoded_url.startswith('http'):
+                    finalUrl = decoded_url
+
+        if not finalUrl:
             iframe_src = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src=["\']([^"\']+)["\']')[0]
-            if iframe_src:
+            if iframe_src and iframe_src.startswith('http') and 'favicon' not in iframe_src and 'embed.js' not in iframe_src:
                 finalUrl = iframe_src
+
+        if not finalUrl:
+            video_hosts = ['streamtape', 'doodstream', 'lulustream', 'voe', 'mixdrop', 'upstream',
+                          'vidguard', 'wolfstream', 'filemoon', 'streamhub']
+            for host in video_hosts:
+                pattern = r'["\'](https?://[^"\']*' + host + r'[^"\']*)["\']'
+                urls = re.findall(pattern, data, re.IGNORECASE)
+                if urls:
+                    finalUrl = urls[0]
+                    break
 
         if finalUrl and not finalUrl.startswith("http"):
             finalUrl = self.getFullUrl(finalUrl)
 
-        return finalUrl if finalUrl else embedUrl
+        if finalUrl:
+            finalUrl = re.sub(r'[\x00-\x1f\x7f-\x9f]', '', finalUrl)
+            if 'favicon' in finalUrl or finalUrl.endswith('.js') or 'tenor.com' in finalUrl:
+                finalUrl = ""
+
+        if not finalUrl:
+            return embedUrl
+
+        return finalUrl
 
     def getLinksForVideo(self, cItem):
         printDBG("Filman.getLinksForVideo [%s]" % cItem)
