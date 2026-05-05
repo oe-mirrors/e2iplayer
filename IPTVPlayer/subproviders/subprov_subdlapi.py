@@ -29,6 +29,7 @@ if not hasattr(config.plugins, "iptvplayer"):
 if not hasattr(config.plugins.iptvplayer, "subdlapi"):
     config.plugins.iptvplayer.subdlapi = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import (
         TranslateTXT as _,
@@ -38,6 +39,7 @@ def GetConfigList():
     optionList.append(("subdlapi", _("SubDL.com API Key"), "text"))
     return optionList
 
+
 def get_subdl_api():
     try:
         return config.plugins.iptvplayer.subdlapi.value.strip()
@@ -45,11 +47,14 @@ def get_subdl_api():
         printExc()
         return ""
 
+
 BASE_URL = "https://api.subdl.com/api/v1"
 DOWNLOAD_BASE = "https://dl.subdl.com/subtitle"
 
+
 def build_headers():
     return {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) IPTVPlayer"}
+
 
 def getBuildId(self):
     try:
