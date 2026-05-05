@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 30.04.2026 - update to current url - Masta2002
+# Last Modified: 05.05.2026 - update to current url - Masta2002
 import json
 import re
 
@@ -15,7 +15,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://cb01uno.run/"
+    return "https://cb01uno.watch/"
 
 
 class Cb01(CBaseHostClass):
