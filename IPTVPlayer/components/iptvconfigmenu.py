@@ -24,7 +24,7 @@ from .iptvpin import IPTVPinWidget
 from Screens.MessageBox import MessageBox
 
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigDirectory, ConfigYesNo, ConfigOnOff, ConfigInteger, \
-                              ConfigText, getConfigListEntry, configfile, ConfigNothing, NoSave
+                              ConfigText, getConfigListEntry, configfile
 from Tools.BoundFunction import boundFunction
 ###################################################
 
@@ -101,6 +101,7 @@ config.plugins.iptvplayer.iptvplayer_password = ConfigText(default="", fixed_siz
 
 config.plugins.iptvplayer.useSubtitlesParserExtension = ConfigYesNo(default=True)
 config.plugins.iptvplayer.subsourceapi = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.subdlapi = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.opensuborg_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.opensuborg_password = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.napisy24pl_login = ConfigText(default="", fixed_size=False)
@@ -374,6 +375,7 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("----- SUBTITLES CONFIGURATION -----"), ))
         list.append(getConfigListEntry(_("Use subtitles parser extension if available"), config.plugins.iptvplayer.useSubtitlesParserExtension))
         list.append(getConfigListEntry("https://subsource.net/ " + _("API_KEY"), config.plugins.iptvplayer.subsourceapi))
+        list.append(getConfigListEntry("https://subdl.com/ " + _("API Key"), config.plugins.iptvplayer.subdlapi))
         list.append(getConfigListEntry("http://opensubtitles.org/ " + _("login"), config.plugins.iptvplayer.opensuborg_login))
         list.append(getConfigListEntry("http://opensubtitles.org/ " + _("password"), config.plugins.iptvplayer.opensuborg_password))
         list.append(getConfigListEntry("http://napisy24.pl/ " + _("login"), config.plugins.iptvplayer.napisy24pl_login))
