@@ -741,6 +741,7 @@ class IPTVSubDownloaderWidget(Screen):
         prijevodi = {"title": "Prijevodi-Online.org", "sub_provider": "prijevodi"}
         subsro = {"title": "Subs.ro", "sub_provider": "subsro"}
         subsourceapi = {"title": "SubsourceAPI", "sub_provider": "subsourceapi"}
+        subdlapi = {"title": "SubDLAPI", "sub_provider": "subdlapi"}
 
         defaultLang = GetDefaultLang()
 
@@ -771,6 +772,7 @@ class IPTVSubDownloaderWidget(Screen):
                 subProvidersList.append(napiprojektpl)
 
         subProvidersList.append(subsourceapi)
+        subProvidersList.append(subdlapi)
         subProvidersList.append(openSubtitles2)
         subProvidersList.append(openSubtitles3)
         subProvidersList.append(openSubtitles)
