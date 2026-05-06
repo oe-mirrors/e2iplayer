@@ -24,11 +24,14 @@ W = E2ColoR("white")
 L = E2ColoR("lime")
 C = E2ColoR("cyan")
 OR = E2ColoR("orange")
+
+BASE_URL = "https://api.subdl.com/api/v1"
+DOWNLOAD_BASE = "https://dl.subdl.com/subtitle"
+
 if not hasattr(config.plugins, "iptvplayer"):
     config.plugins.iptvplayer = ConfigSubsection()
 if not hasattr(config.plugins.iptvplayer, "subdlapi"):
     config.plugins.iptvplayer.subdlapi = ConfigText(default="", fixed_size=False)
-
 
 def GetConfigList():
     from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import (
@@ -39,7 +42,6 @@ def GetConfigList():
     optionList.append(("subdlapi", _("SubDL.com API Key"), "text"))
     return optionList
 
-
 def get_subdl_api():
     try:
         return config.plugins.iptvplayer.subdlapi.value.strip()
@@ -47,26 +49,8 @@ def get_subdl_api():
         printExc()
         return ""
 
-
-BASE_URL = "https://api.subdl.com/api/v1"
-DOWNLOAD_BASE = "https://dl.subdl.com/subtitle"
-
-
 def build_headers():
     return {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) IPTVPlayer"}
-
-
-def getBuildId(self):
-    try:
-        r = self.session.get("https://subdl.com", timeout=20)
-        r.raise_for_status()
-        match = re.search(r'"buildId":"(.*?)"', r.text)
-        if match:
-            return match.group(1)
-    except Exception:
-        printExc()
-    return None
-
 
 class SubDLAPIProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
@@ -75,6 +59,7 @@ class SubDLAPIProvider(CBaseSubProviderClass):
         self.session.headers.update(build_headers())
         self.defaultParams = {"header": self.session.headers}
         self.currList = []
+        self._build_id_cache = None
 
     def cleanTitle(self, title, for_search=True):
         if not for_search:
@@ -138,14 +123,17 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                 media_type = item.get("type", "movie")
                 color_type = "orange" if media_type == "tv" else "cyan"
                 type_display = "TV" if media_type == "tv" else "MOVIE"
-                display_title = (
-                    "%s (%s%s%s) - [ %s%s%s ] - [ %s%s%s subtitles ]"
-                    % (
-                        title,
-                        Y, year_str, W,
-                        E2ColoR(color_type), type_display, W,
-                        L, subs_count, W
-                    )
+                display_title = "%s (%s%s%s) - [ %s%s%s ] - [ %s%s%s subtitles ]" % (
+                    title,
+                    Y,
+                    year_str,
+                    W,
+                    E2ColoR(color_type),
+                    type_display,
+                    W,
+                    L,
+                    subs_count,
+                    W,
                 )
                 params_dir = dict(cItem)
                 params_dir.update(
@@ -165,6 +153,20 @@ class SubDLAPIProvider(CBaseSubProviderClass):
             printExc()
             self._searchViaOfficialAPI(cItem)
 
+    def getBuildId(self):
+        if self._build_id_cache:
+            return self._build_id_cache
+        try:
+            r = self.session.get("https://subdl.com", timeout=20)
+            r.raise_for_status()
+            match = re.search(r'"buildId":"(.*?)"', r.text)
+            if match:
+                self._build_id_cache = match.group(1)
+                return self._build_id_cache
+        except Exception:
+            printExc()
+        return None
+
     def getLanguages(self, cItem):
         printDBG("\n=== [SubDL] Getting available languages ===")
         sd_id = cItem.get("sd_id")
@@ -175,9 +177,16 @@ class SubDLAPIProvider(CBaseSubProviderClass):
         season_slug = cItem.get("season_slug")
         if not season_slug:
             season_slug = "first-season"
-        url = (
-            "https://subdl.com/_next/data/Wne_av3hasQukc3wGybvM/en/subtitle/%s/%s/%s.json"
-            % (sd_id, slug, season_slug)
+        build_id = self.getBuildId()
+        if not build_id:
+            printDBG("❌ Cannot get buildId")
+            return
+
+        url = "https://subdl.com/_next/data/%s/en/subtitle/%s/%s/%s.json" % (
+            build_id,
+            sd_id,
+            slug,
+            season_slug,
         )
         printDBG("NextJS URL: %s" % url)
         lang_map = {}
@@ -232,7 +241,7 @@ class SubDLAPIProvider(CBaseSubProviderClass):
         for lang_code, info in lang_map.items():
             lang_name = info["name"]
             count = info["count"]
-            title = "%s \c00FFFF00[ %d ]\c00FFFFFF" % (lang_name, count)
+            title = r"%s \c00FFFF00[ %d ]\c00FFFFFF" % (lang_name, count)
             params_dir = dict(cItem)
             params_dir.update(
                 {
@@ -338,7 +347,7 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                     )
                     desc = ""
                     if releases:
-                        desc = "\c00FFFF00" + ("🎬 " + " | ".join(releases[:2]))
+                        desc = r"\c00FFFF00" + ("🎬 " + " | ".join(releases[:2]))
                     link = item.get("link", "")
                     url = "https://dl.subdl.com/subtitle/%s" % link if link else ""
                     params_sub = dict(cItem)
@@ -532,7 +541,6 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                 printDBG("Could not show info box: %s" % str(e))
             CBaseSubProviderClass.endHandleService(self, index, refresh)
         CBaseSubProviderClass.endHandleService(self, index, refresh)
-
 
 class IPTVSubProvider(CSubProviderBase):
     def __init__(self, params={}):
