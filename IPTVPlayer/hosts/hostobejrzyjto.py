@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Completely rewritten: 19.02.2026 - Mr.X
+# Fixed Pagination for episodes: 02.05.2026 - SlyceMaster
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -34,13 +35,7 @@ class Obejrzyjto(CBaseHostClass):
         ] + self.searchItems()
 
     def listsubMenu(self, cItem):
-        self.listsTab(
-            [{"category": "list_items", "title": _("Popular"), "url": self.API_URL % (cItem["id"], "popularity")},
-                {"category": "list_items", "title": _("Lastest"), "url": self.API_URL % (cItem["id"], "created_at")},
-                {"category": "list_items", "title": _("Latest update"), "url": self.API_URL % (cItem["id"], "videos_updated_at")},
-                {"category": "list_items", "title": _("Rating"), "url": self.API_URL % (cItem["id"], "rating")},
-                {"category": "list_items", "title": "Największy budżet", "url": self.API_URL % (cItem["id"], "budget")},
-                {"category": "list_items", "title": "Największy przychód", "url": self.API_URL % (cItem["id"], "revenue")}], cItem)
+        self.listsTab([{"category": "list_items", "title": _("Popular"), "url": self.API_URL % (cItem["id"], "popularity")}, {"category": "list_items", "title": _("Lastest"), "url": self.API_URL % (cItem["id"], "created_at")}, {"category": "list_items", "title": _("Latest update"), "url": self.API_URL % (cItem["id"], "videos_updated_at")}, {"category": "list_items", "title": _("Rating"), "url": self.API_URL % (cItem["id"], "rating")}, {"category": "list_items", "title": "Największy budżet", "url": self.API_URL % (cItem["id"], "budget")}, {"category": "list_items", "title": "Największy przychód", "url": self.API_URL % (cItem["id"], "revenue")}], cItem)
 
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
@@ -50,7 +45,10 @@ class Obejrzyjto(CBaseHostClass):
     def listItems(self, cItem):
         printDBG("Obejrzyjto.listItems |%s|" % cItem)
         page = cItem.get("page", 1)
-        url = cItem["url"] + str(page) if "searchPage" not in cItem["url"] else cItem["url"]
+        url = cItem["url"]
+        if "searchPage" not in url:
+            url = url + str(page)
+
         sts, data = self.getPage(url)
         if not sts:
             return
@@ -66,12 +64,12 @@ class Obejrzyjto(CBaseHostClass):
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "video", "title": title, "icon": icon.replace("/original/", "/w500/"), "desc": desc})
             if js.get("is_series"):
-                url = js.get("id")
-                params.update({"category": "list_seasons", "url": url})
+                url_id = js.get("id")
+                params.update({"category": "list_seasons", "url": url_id})
                 self.addDir(params)
             else:
-                url = self.getFullUrl("api/v1/titles/%s?loader=titlePage" % js.get("id", "0"))
-                params.update({"url": url})
+                url_id = self.getFullUrl("api/v1/titles/%s?loader=titlePage" % js.get("id", "0"))
+                params.update({"url": url_id})
                 self.addVideo(params)
         if nextPage:
             params = dict(cItem)
@@ -95,17 +93,35 @@ class Obejrzyjto(CBaseHostClass):
 
     def listEpisodes(self, cItem):
         printDBG("Obejrzyjto.listEpisodes")
-        sts, data = self.getPage(cItem["url"])
+        page = cItem.get("page", 1)
+        url = cItem["url"]
+
+        if page > 1:
+            if "?" in url:
+                url += "&page=%s" % page
+            else:
+                url += "?page=%s" % page
+
+        sts, data = self.getPage(url)
         if not sts:
             return
         htm = json_loads(data)
-        data = htm.get("episodes", {}).get("data", [])
+
+        ep_obj = htm.get("episodes", {})
+        data = ep_obj.get("data", [])
+        nextPage = ep_obj.get("pagination", {}).get("next_page", False)
+
         for js in data:
             title = "%s %s" % (_("Episodes"), js.get("episode_number"))
             params = dict(cItem)
-            url = self.getFullUrl("api/v1/titles/%s/seasons/%s/episodes/%s?loader=episodePage" % (js.get("title_id"), js.get("season_number"), js.get("episode_number")))
-            params.update({"good_for_fav": True, "title": title, "url": url, "icon": js.get("poster") or cItem["icon"], "desc": js.get("description")})
+            url_ep = self.getFullUrl("api/v1/titles/%s/seasons/%s/episodes/%s?loader=episodePage" % (js.get("title_id"), js.get("season_number"), js.get("episode_number")))
+            params.update({"good_for_fav": True, "title": title, "url": url_ep, "icon": js.get("poster") or cItem["icon"], "desc": js.get("description")})
             self.addVideo(params)
+
+        if nextPage:
+            params = dict(cItem)
+            params.update({"good_for_fav": False, "title": _("Next page"), "page": nextPage})
+            self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Obejrzyjto.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
