@@ -33,6 +33,7 @@ if not hasattr(config.plugins, "iptvplayer"):
 if not hasattr(config.plugins.iptvplayer, "subdlapi"):
     config.plugins.iptvplayer.subdlapi = ConfigText(default="", fixed_size=False)
 
+
 def GetConfigList():
     from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import (
         TranslateTXT as _,
@@ -42,6 +43,7 @@ def GetConfigList():
     optionList.append(("subdlapi", _("SubDL.com API Key"), "text"))
     return optionList
 
+
 def get_subdl_api():
     try:
         return config.plugins.iptvplayer.subdlapi.value.strip()
@@ -49,8 +51,10 @@ def get_subdl_api():
         printExc()
         return ""
 
+
 def build_headers():
     return {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) IPTVPlayer"}
+
 
 class SubDLAPIProvider(CBaseSubProviderClass):
     def __init__(self, params={}):
@@ -541,6 +545,7 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                 printDBG("Could not show info box: %s" % str(e))
             CBaseSubProviderClass.endHandleService(self, index, refresh)
         CBaseSubProviderClass.endHandleService(self, index, refresh)
+
 
 class IPTVSubProvider(CSubProviderBase):
     def __init__(self, params={}):
