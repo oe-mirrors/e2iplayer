@@ -1028,6 +1028,7 @@ class pageParser(CaptchaHelper):
                     printDBG("Error accessing metadata: %s " % title)
                     return []
                 qualities = metadata.get("qualities", {})
+
                 def append_tokens(url, dmTs, dmV1st):
                     if not url:
                         return url
