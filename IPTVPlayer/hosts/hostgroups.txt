@@ -134,6 +134,7 @@
   "playrtsiw",
   "kkiste",
   "kinoger",
+  "gaskrank",
   "einschalten",
   "megakino",
   "moflixstream",
