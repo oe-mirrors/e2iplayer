@@ -70,7 +70,7 @@ class GaskrankTV(CBaseHostClass):
             return []
 
         linksTab = []
-        links = re.findall('source\ssrc="(.*?)"', data)
+        links = re.findall(r'source\ssrc="(.*?)"', data)
 
         for url in links:
             priority = 0
