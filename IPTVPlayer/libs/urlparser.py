@@ -1006,7 +1006,7 @@ class pageParser(CaptchaHelper):
         self.jscode["data"] = ""
         return videoUrls[::-1]
 
-    def parserDAILYMOTION(self, baseUrl):
+    def parserDAILYMOTION(self, baseUrl):  # fix 180226
         printDBG("parserDAILYMOTION %s" % baseUrl)
         COOKIE_FILE = self.COOKIE_PATH + "dailymotion.cookie"
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -1027,85 +1027,24 @@ class pageParser(CaptchaHelper):
                     title = error.get("title") or error["raw_message"]
                     printDBG("Error accessing metadata: %s " % title)
                     return []
-                qualities = metadata.get("qualities", {})
-
-                def append_tokens(url, dmTs, dmV1st):
-                    if not url:
-                        return url
-                    url = url.split('#')[0]
-                    params_list = []
-                    if dmTs:
-                        params_list.append("dmTs=%s" % dmTs)
-                    if dmV1st:
-                        params_list.append("dmV1st=%s" % dmV1st)
-                    if params_list:
-                        separator = '&' if '?' in url else '?'
-                        url = "%s%s%s" % (url, separator, '&'.join(params_list))
-                    return url
-                if "auto" in qualities:
-                    for m in qualities["auto"]:
+                for quality, media_list in metadata["qualities"].items():
+                    for m in media_list:
                         media_url = m.get("url")
                         media_type = m.get("type")
                         if not media_url or media_type == "application/vnd.lumberjack.manifest":
                             continue
+                        media_url = urlparser.decorateUrl(media_url, {"Referer": baseUrl})
                         if media_type == "application/x-mpegURL":
-                            printDBG("Parsing master playlist: %s" % media_url)
-                            sts, m3u8_content = self.cm.getPage(media_url, httpParams)
-                            if not sts:
-                                continue
-                            dmTs_match = re.search(r'dmTs=([^&]+)', media_url)
-                            dmV1st_match = re.search(r'dmV1st=([^&]+)', media_url)
-                            tokens_ts = dmTs_match.group(1) if dmTs_match else None
-                            tokens_v1st = dmV1st_match.group(1) if dmV1st_match else None
-                            audio_url = ""
-                            audio_match = re.search(r'#EXT-X-MEDIA:TYPE=AUDIO.*?URI="([^"]+)"', m3u8_content)
-                            if audio_match:
-                                audio_url = audio_match.group(1)
-                                if not audio_url.startswith('http'):
-                                    audio_url = self.cm.getFullUrl(audio_url, media_url)
-                                audio_url = append_tokens(audio_url, tokens_ts, tokens_v1st)
-                                printDBG("Found Audio URL (Cleaned): %s" % audio_url)
-                            if audio_url:
-                                pattern = r'#EXT-X-STREAM-INF:.*?RESOLUTION=(\d+)x(\d+).*?\n([^\n]+)'
-                                matches = re.findall(pattern, m3u8_content)
-                                for w, h, v_url in matches:
-                                    v_url = v_url.strip()
-                                    if not v_url.startswith('http'):
-                                        v_url = self.cm.getFullUrl(v_url, media_url)
-                                    v_url = append_tokens(v_url, tokens_ts, tokens_v1st)
-                                    merge_params = {
-                                        'audio_url': audio_url,
-                                        'video_url': v_url
-                                    }
-                                    final_url = urlparser.decorateUrl("merge://audio_url|video_url", merge_params)
-                                    urlsTab.append({
-                                        "name": "dailymotion.com | %sp" % h,
-                                        "url": final_url,
-                                        "quality": h
-                                    })
-                                if urlsTab:
-                                    break
-                else:
-                    printDBG("Auto quality not found, using fallback.")
-                    for quality, media_list in qualities.items():
-                        for m in media_list:
-                            media_url = m.get("url")
-                            media_type = m.get("type")
-                            if not media_url or media_type == "application/vnd.lumberjack.manifest":
-                                continue
-                            media_url = urlparser.decorateUrl(media_url, {"Referer": baseUrl})
-                            if media_type == "application/x-mpegURL":
-                                tmpTab = getDirectM3U8Playlist(media_url, False, checkContent=True, sortWithMaxBitrate=99999999, cookieParams={"header": HTTP_HEADER, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True, "load_cookie": True})
-                                cookieHeader = self.cm.getCookieHeader(COOKIE_FILE)
-                                for tmp in tmpTab:
-                                    hlsUrl = self.cm.ph.getSearchGroups(tmp["url"], r"""(https?://[^'^"]+?\.m3u8[^'^"]*?)#?""")[0]
-                                    redirectUrl = strwithmeta(hlsUrl, {"iptv_proto": "m3u8", "Cookie": cookieHeader, "User-Agent": HTTP_HEADER["User-Agent"]})
-                                    urlsTab.append({"name": "dailymotion.com: %sp hls" % (tmp.get("heigth", "0")), "url": redirectUrl, "quality": tmp.get("heigth", "0")})
-                            else:
-                                urlsTab.append({"name": quality, "url": media_url, "quality": quality.replace('p', '')})
+                            tmpTab = getDirectM3U8Playlist(media_url, False, checkContent=True, sortWithMaxBitrate=99999999, cookieParams={"header": HTTP_HEADER, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True, "load_cookie": True})
+                            cookieHeader = self.cm.getCookieHeader(COOKIE_FILE)
+                            for tmp in tmpTab:
+                                hlsUrl = self.cm.ph.getSearchGroups(tmp["url"], r"""(https?://[^'^"]+?\.m3u8[^'^"]*?)#?""")[0]
+                                redirectUrl = strwithmeta(hlsUrl, {"iptv_proto": "m3u8", "Cookie": cookieHeader, "User-Agent": HTTP_HEADER["User-Agent"]})
+                                urlsTab.append({"name": "dailymotion.com: %sp hls" % (tmp.get("heigth", "0")), "url": redirectUrl, "quality": tmp.get("heigth", "0")})
+                        else:
+                            urlsTab.append({"name": quality, "url": media_url})
             except Exception:
-                printExc()
-        urlsTab.sort(key=lambda x: int(x.get('quality', 0)) if str(x.get('quality', 0)).isdigit() else 0, reverse=True)
+                printExc
         return urlsTab
 
     def parserVK(self, baseUrl):  # Partly work, Login not work

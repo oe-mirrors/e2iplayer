@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.01.2026 - Mr.X
+# Last Modified: 09.05.2026 - Mr.X
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -14,7 +14,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://megakino1.fit/"
+    return "https://megakino4.com/"
 
 
 class MegaKino(CBaseHostClass):
