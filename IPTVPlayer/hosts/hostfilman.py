@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 05.05.2026 - damagic
+# Last Modified: 11.05.2026 - damagic
 
 ###################################################
 # LOCAL import
@@ -26,6 +26,8 @@ from Screens.MessageBox import MessageBox
 ###################################################
 import re
 import base64
+import time
+import os
 
 try:
     import json
@@ -40,12 +42,14 @@ from Components.config import config, ConfigText, ConfigSelection, getConfigList
 ###################################################
 config.plugins.iptvplayer.filman_login = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.filman_password = ConfigText(default="", fixed_size=False)
+config.plugins.iptvplayer.filman_cookie_phpsessid = ConfigText(default="", fixed_size=False)
 
 
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("Filman login:", config.plugins.iptvplayer.filman_login))
     optionList.append(getConfigListEntry("Filman hasło:", config.plugins.iptvplayer.filman_password))
+    optionList.append(getConfigListEntry("Filman cookie (PHPSESSID):", config.plugins.iptvplayer.filman_cookie_phpsessid))
     return optionList
 
 
@@ -60,8 +64,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
     def __init__(self):
         CBaseHostClass.__init__(self, {"history": "Filman.online", "cookie": "filman.cookie"})
-        config.plugins.iptvplayer.cloudflare_user = ConfigText(default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0", fixed_size=False)
-        self.USER_AGENT = config.plugins.iptvplayer.cloudflare_user.value
+        self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         self.MAIN_URL = "https://filman.cc/"
         self.DEFAULT_ICON_URL = "https://filman.cc/public/dist/images/logo.png"
         self.HTTP_HEADER = {"User-Agent": self.USER_AGENT, "DNT": "1", "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "Accept-Encoding": "gzip, deflate", "Accept-Language": "pl,en-US;q=0.7,en;q=0.3", "Referer": self.getMainUrl(), "Origin": self.getMainUrl(), "Connection": "keep-alive", "Upgrade-Insecure-Requests": "1"}
@@ -75,17 +78,40 @@ class Filman(CBaseHostClass, CaptchaHelper):
         self.loggedIn = None
         self.login = ""
         self.password = ""
-        self.loginMessage = ""
+        self._lastTokenRequest = 0
+        self._tokenRequestCount = 0
+        self.cookieDeleted = False
+
+    def _deleteCookie(self):
+        try:
+            if os.path.exists(self.COOKIE_FILE):
+                os.remove(self.COOKIE_FILE)
+                self.cookieDeleted = True
+                printDBG("Filman cookie deleted successfully from: %s" % self.COOKIE_FILE)
+                return True
+            else:
+                printDBG("Filman cookie file does not exist: %s" % self.COOKIE_FILE)
+        except Exception as e:
+            printDBG("Failed to delete cookie: %s" % str(e))
+        return False
+
+    def _overwriteCookie(self, sessid):
+        try:
+            with open(self.COOKIE_FILE, 'w') as f:
+                f.write("# Netscape HTTP Cookie File\n")
+                f.write("filman.cc\tFALSE\t/\tFALSE\t\tPHPSESSID\t" + sessid + "\n")
+            self.cookieDeleted = False
+            printDBG("Filman cookie overwritten with PHPSESSID")
+            return True
+        except Exception as e:
+            printDBG("Failed to write cookie: %s" % str(e))
+            return False
 
     def getPage(self, baseUrl, addParams={}, post_data=None):
         if addParams == {}:
             addParams = dict(self.defaultParams)
-        origBaseUrl = baseUrl
         baseUrl = self.cm.iriToUri(baseUrl)
-
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-        if data.meta.get("cf_user", self.USER_AGENT) != self.USER_AGENT:
-            self.__init__()
         return sts, data
 
     def setMainUrl(self, url):
@@ -94,7 +120,6 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
     def listMainMenu(self, cItem):
         printDBG("Filman.listMainMenu")
-
         MAIN_CAT_TAB = [
             {"category": "list_items", "title": "Filmy Premiery", "url": self.getFullUrl("/filmy/sort:premiere/")},
             {"category": "list_items", "title": "Filmy Nowe Linki", "url": self.getFullUrl("/filmy/")},
@@ -107,147 +132,214 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
     def _fillMovieFilters(self, cItem):
         self.cacheMovieFilters = {"cats": [], "sort": [], "years": [], "az": []}
-
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="filter-sort"', "</ul>", False)[1]
         dat = re.compile('<li[^>]+?data-sort="([^"]+?)".*?<a[^>]*?>(.+?)</a>').findall(dat)
         for item in dat:
             self.cacheMovieFilters["sort"].append({"title": self.cleanHtmlStr(item[1]), "sort": item[0]})
-
         dat = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="filter-category"', "</ul>", False)[1]
         dat = re.compile('<li[^>]+?data-id="([^"]+?)".*?<a[^>]*?>(.+?)</a>').findall(dat)
         for item in dat:
             self.cacheMovieFilters["cats"].append({"title": self.cleanHtmlStr(item[1]), "url": cItem["url"] + "category:%s/" % item[0]})
 
     def listMovieFilters(self, cItem, category):
-        printDBG("Filman.listMovieFilters")
-
         filter = cItem["category"].split("_")[-1]
         self._fillMovieFilters(cItem)
         if len(self.cacheMovieFilters[filter]) > 0:
-            filterTab = []
-            filterTab.extend(self.cacheMovieFilters[filter])
+            filterTab = self.cacheMovieFilters[filter]
             self.listsTab(filterTab, cItem, category)
 
     def listsTab(self, tab, cItem, category=None):
-        printDBG("Filman.listsTab")
         for item in tab:
             params = dict(cItem)
-            if None is not category:
+            if category is not None:
                 params["category"] = category
             params.update(item)
             self.addDir(params)
 
+    def _parseItemInfo(self, item):
+        info = {"title": "", "icon": "", "year": "", "quality": "", "rating": "", "desc": ""}
+
+        link_match = re.search(r'<a\s+href="([^"]+)"', item)
+        if link_match:
+            url = link_match.group(1)
+            if url.startswith('#') or url.startswith('javascript'):
+                link_match = None
+
+        if link_match:
+            info["url"] = self.getFullUrl(link_match.group(1))
+
+        title_match = re.search(r'data-title="([^"]*)"', item)
+        if title_match:
+            info["title"] = title_match.group(1).replace("&quot;", '"').replace("&amp;", "&")
+        if not info["title"]:
+            title_match = re.search(r'<h1\s+class="film_title">(.*?)</h1>', item, re.DOTALL)
+            if title_match:
+                info["title"] = self.cleanHtmlStr(title_match.group(1))
+        if not info["title"]:
+            title_match = re.search(r'<div\s+class="film_title">(.*?)</div>', item, re.DOTALL)
+            if title_match:
+                info["title"] = self.cleanHtmlStr(title_match.group(1))
+        if not info["title"]:
+            a_match = re.search(r'<a\s+[^>]*?title="([^"]+)"[^>]*?>', item)
+            if a_match:
+                info["title"] = a_match.group(1).replace("&quot;", '"').replace("&amp;", "&")
+        if not info["title"]:
+            alt_match = re.search(r'<img\s+[^>]*?alt="([^"]+)"', item)
+            if alt_match:
+                info["title"] = alt_match.group(1)
+
+        img_match = re.search(r'<img\s+src="([^"]+)"', item)
+        if img_match:
+            info["icon"] = self.getFullIconUrl(img_match.group(1))
+
+        year_match = re.search(r'<div\s+class="film_year">(.*?)</div>', item, re.DOTALL)
+        if year_match:
+            info["year"] = self.cleanHtmlStr(year_match.group(1))
+
+        qual_match = re.search(r'<div\s+class="quality-version[^"]*">(.*?)</div>', item, re.DOTALL)
+        if qual_match:
+            info["quality"] = self.cleanHtmlStr(qual_match.group(1))
+
+        rate_match = re.search(r'<div\s+class="rate">(.*?)</div>', item, re.DOTALL)
+        if rate_match:
+            info["rating"] = self.cleanHtmlStr(rate_match.group(1))
+
+        desc_match = re.search(r'data-text="([^"]*)"', item)
+        if desc_match:
+            info["desc"] = desc_match.group(1).replace("&quot;", '"').replace("&amp;", "&")
+
+        return info
+
     def listItems(self, cItem):
         printDBG("Filman.listItems %s" % cItem)
         page = cItem.get("page", 1)
-
         url = cItem["url"]
         sort = cItem.get("sort", "")
-        if sort not in url:
+        if sort and sort not in url:
             url = url + sort
-
         if page > 1:
-            if "?" in url:
-                url += "&"
-            else:
-                url += "?"
-            url = url + "page={0}".format(page)
+            sep = "&" if "?" in url else "?"
+            url = "%s%spage=%d" % (url, sep, page)
 
         sts, data = self.getPage(url)
         if not sts:
             return
+
+        try:
+            if hasattr(data, 'meta') and data.meta.get('status_code') == 404:
+                printDBG("Filman.listItems got 404 for URL: %s" % url)
+                return
+        except:
+            pass
+
         self.setMainUrl(data.meta["url"])
 
-        is_search = "phrase=" in cItem["url"]
+        is_search = "search?phrase=" in cItem.get("url", "")
 
-        if is_search:
-            items = []
+        item_list_match = re.search(r'<div[^>]*id="item-list"[^>]*>(.*?)(?:<div class="row fade-in-section">|<footer|$)', data, re.DOTALL)
+        if not item_list_match:
+            item_list_match = re.search(r'<div[^>]*id="search-results"[^>]*>(.*?)(?:<div class="row fade-in-section">|<footer|$)', data, re.DOTALL)
+        if not item_list_match:
+            printDBG("Filman.listItems could not find item-list container")
+            return
 
-            pattern = r'<div class="col-xs-6 col-sm-3 col-lg-2">.*?</div>\s*</div>'
-            matches = re.findall(pattern, data, re.DOTALL)
+        main_content = item_list_match.group(1)
 
-            for match in matches:
-                items.append(match)
-
-            printDBG("Filman.listItems search found %d items" % len(items))
+        raw_items = []
+        if 'movie-item' in main_content:
+            parts = main_content.split('<div class="col-xs-6 col-sm-2 movie-item">')
+            if len(parts) > 1:
+                raw_items = ['<div class="col-xs-6 col-sm-2 movie-item">' + p for p in parts[1:]]
         else:
-            content_data = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "wrapper"), ("<footer", ">"))[1]
+            parts = main_content.split('<div class="col-xs-6 col-sm-3 col-lg-2">')
+            if len(parts) > 1:
+                raw_items = ['<div class="col-xs-6 col-sm-3 col-lg-2">' + p for p in parts[1:]]
 
-            item_list_data = self.cm.ph.getDataBeetwenNodes(content_data, ("<div", ">", "item-list"), ("<div", ">", "text-center"))[1]
-            if not item_list_data:
-                item_list_data = self.cm.ph.getDataBeetwenNodes(content_data, ("<div", ">", "item-list"), ("</div", ">"))[1]
+        printDBG("Filman.listItems found %d items" % len(raw_items))
 
-            if item_list_data:
-                items = item_list_data.split('<div class="col-xs-6 col-sm-3 col-lg-2">')[1:]
-                for i in range(len(items)):
-                    items[i] = '<div class="col-xs-6 col-sm-3 col-lg-2">' + items[i]
-            else:
-                items = []
-
-        for item in items:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^"^']+?)['"]""")[0])
-            if url == "":
+        for item in raw_items:
+            info = self._parseItemInfo(item)
+            if "url" not in info:
                 continue
 
-            img_data = self.cm.ph.getDataBeetwenNodes(item, ("<img", ">"), ("/>", ">"))[1]
-            if not img_data:
-                img_data = item
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(img_data, """src=['"]([^"^']+?)['"]""")[0])
-
-            title = self.cm.ph.getSearchGroups(item, """title=['"]([^"^']+?)['"]""")[0]
-            if not title:
-                title = self.cm.ph.getSearchGroups(item, """data-title=['"]([^"^']+?)['"]""")[0]
-            title = title.replace("&quot;", '"').replace("&amp;", "&")
-
-            short_desc = self.cm.ph.getSearchGroups(item, """data-text=['"]([^"^']+?)['"]""")[0]
-
-            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<div", ">", "film_year"), ("</div", ">"))[1])
-
-            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<div", ">", "quality-version"), ("</div", ">"), False)[1])
-
-            rating = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<div", ">", "rate"), ("</div", ">"))[1])
+            film_url = info["url"]
+            title = info["title"]
+            icon = info.get("icon", self.DEFAULT_ICON_URL)
 
             desc_parts = []
-            if year:
-                desc_parts.append(_("Year: ") + year)
-            if rating:
-                desc_parts.append(_("Rating: ") + rating)
-            if quality:
-                desc_parts.append(_("Quality:") + " " + quality)
-            if short_desc:
-                desc_parts.append(short_desc)
-
+            if info["year"]:
+                desc_parts.append(_("Year: ") + info["year"])
+            if info["rating"]:
+                desc_parts.append(_("Rating: ") + info["rating"])
+            if info["quality"]:
+                desc_parts.append(_("Quality:") + " " + info["quality"])
+            if info["desc"]:
+                desc_parts.append(info["desc"])
             full_desc = "[/br]".join(desc_parts)
 
-            if "/s/" in url or "/serial/" in url:
-                params = {"good_for_fav": True, "category": "list_series", "url": url, "title": title, "desc": full_desc, "icon": icon}
+            is_series = '/s/' in film_url or '/serial/' in film_url
+            is_episode = '/e/' in film_url
+
+            if not is_series and not is_episode and not title:
+                continue
+
+            if is_series or is_episode:
+                params = {"good_for_fav": True, "category": "list_series", "url": film_url, "title": title, "desc": full_desc, "icon": icon}
                 self.addDir(params)
             else:
-                params = {"good_for_fav": True, "url": url, "title": title, "desc": full_desc, "icon": icon}
+                params = {"good_for_fav": True, "url": film_url, "title": title, "desc": full_desc, "icon": icon}
                 self.addVideo(params)
 
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "pagination"), ("</u", ">"))[1]
-        if "" != self.cm.ph.getSearchGroups(nextPage, "page=(%s)[^0-9]" % (page + 1))[0]:
-            params = dict(cItem)
-            params.update({"title": _("Next page"), "page": page + 1})
-            self.addDir(params)
+        if not is_search:
+            next_page_match = re.search(r'''<li\s+class=['"]next['"]\s*>\s*<a\s+href=['"]\?page=(\d+)['"][^>]*>Nast''', data)
+            if not next_page_match:
+                next_page_match = re.search(r'''<li\s+class=['"]next['"]\s*>\s*<a\s+href=['"]\?page=(\d+)['"]''', data)
+
+            if next_page_match:
+                next_page = int(next_page_match.group(1))
+                printDBG("Filman.listItems adding next page: %d" % next_page)
+                params = dict(cItem)
+                params.update({"title": _("Next page"), "page": next_page, "icon": self.DEFAULT_ICON_URL})
+                self.addDir(params)
 
     def listSeries(self, cItem):
         printDBG("Filman.listSeries %s" % cItem)
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
+
+        try:
+            if hasattr(data, 'meta') and data.meta.get('status_code') == 404:
+                printDBG("Filman.listSeries got 404 for URL: %s" % cItem["url"])
+                return
+        except:
+            pass
+
         self.setMainUrl(data.meta["url"])
 
-        data = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "episode-list"), ("<hr", ">"))[1]
-        if data:
-            data = data.split("<span")
-            for sitem in data:
-                tmp = self.cm.ph.getAllItemsBeetwenNodes(sitem, ("<li", ">"), ("</li", ">"))
+        ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "episode-list"), ("<hr", ">"))[1]
+        if not ep_data:
+            ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "episode-list"), ("<hr", ">"))[1]
+        if not ep_data:
+            ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "episodes"), ("</ul", ">"))[1]
+        if not ep_data:
+            ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<div", "id", "item-content"), ("<hr", ">"))[1]
+
+        if ep_data:
+            tmp = self.cm.ph.getAllItemsBeetwenNodes(ep_data, ("<li", ">"), ("</li", ">"))
+            if not tmp:
+                tmp = re.findall(r'<li[^>]*>.*?<a\s+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>.*?</li>', ep_data, re.DOTALL)
+                for url, title in tmp:
+                    url = self.getFullUrl(url)
+                    if url == "":
+                        continue
+                    title = self.cleanHtmlStr(title)
+                    params = {"good_for_fav": True, "url": url, "title": title, "icon": cItem["icon"]}
+                    self.addVideo(params)
+            else:
                 for item in tmp:
                     url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^"^']+?)['"]""")[0])
                     if url == "":
@@ -257,7 +349,6 @@ class Filman(CBaseHostClass, CaptchaHelper):
                     self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("Filman.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         url = self.getFullUrl("/search?phrase=%s") % urllib_quote_plus(searchPattern)
         params = {"name": "category", "category": "list_items", "good_for_fav": False, "url": url}
         self.listItems(params)
@@ -303,137 +394,160 @@ class Filman(CBaseHostClass, CaptchaHelper):
             return "filman"
 
     def resolveEmbedUrl(self, embedUrl):
-        printDBG("Filman.resolveEmbedUrl [%s]" % embedUrl)
-
+        if not embedUrl or embedUrl.startswith('#') or 'filman.cc/#' in embedUrl:
+            return embedUrl
         params = dict(self.defaultParams)
         params["header"] = dict(params["header"])
-        params["header"]["Referer"] = "https://filman.cc/"
-
+        params["header"]["Referer"] = self.getMainUrl()
         sts, data = self.getPage(embedUrl, params)
         if not sts:
             return embedUrl
-
         finalUrl = ""
-
         e_match = re.search(r"var\s+_e\s*=\s*'([^']+)'", data)
         a_match = re.search(r"var\s+_a\s*=\s*'([^']+)'", data)
         b_match = re.search(r"var\s+_b\s*=\s*'([^']+)'", data)
         c_match = re.search(r"var\s+_c\s*=\s*'([^']+)'", data)
-
         if e_match and a_match and b_match and c_match:
-            _e = e_match.group(1)
-            _a = a_match.group(1)
-            _b = b_match.group(1)
-            _c = c_match.group(1)
-            key = _a + _b + _c
-
-            decoded_url = self._xd_decode(_e, key)
+            key = a_match.group(1) + b_match.group(1) + c_match.group(1)
+            decoded_url = self._xd_decode(e_match.group(1), key)
             if decoded_url and decoded_url.startswith('http'):
                 finalUrl = decoded_url
-
         if not finalUrl:
-            pattern = r'''var\s+_e\s*=\s*['"]([^'"]+)['"]'''
-            encoded_var = self.cm.ph.getSearchGroups(data, pattern)[0]
+            encoded_var = self.cm.ph.getSearchGroups(data, r'''var\s+_e\s*=\s*['"]([^'"]+)['"]''')[0]
             if encoded_var:
                 decoded_url = self.decodeEmbedUrl(encoded_var)
                 if decoded_url and decoded_url.startswith('http'):
                     finalUrl = decoded_url
-
         if not finalUrl:
             iframe_src = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src=["\']([^"\']+)["\']')[0]
             if iframe_src and iframe_src.startswith('http') and 'favicon' not in iframe_src and 'embed.js' not in iframe_src:
                 finalUrl = iframe_src
-
         if not finalUrl:
-            video_hosts = ['streamtape', 'doodstream', 'lulustream', 'voe', 'mixdrop', 'upstream',
-                          'vidguard', 'wolfstream', 'filemoon', 'streamhub']
-            for host in video_hosts:
-                pattern = r'["\'](https?://[^"\']*' + host + r'[^"\']*)["\']'
-                urls = re.findall(pattern, data, re.IGNORECASE)
+            for host in ['streamtape','doodstream','lulustream','voe','mixdrop','upstream','vidguard','wolfstream','filemoon','streamhub']:
+                urls = re.findall(r'["\'](https?://[^"\']*' + host + r'[^"\']*)["\']', data, re.IGNORECASE)
                 if urls:
                     finalUrl = urls[0]
                     break
-
         if finalUrl and not finalUrl.startswith("http"):
             finalUrl = self.getFullUrl(finalUrl)
-
         if finalUrl:
             finalUrl = re.sub(r'[\x00-\x1f\x7f-\x9f]', '', finalUrl)
-            if 'favicon' in finalUrl or finalUrl.endswith('.js') or 'tenor.com' in finalUrl:
+            if any(bad in finalUrl for bad in ['favicon', '.js', 'tenor.com']):
                 finalUrl = ""
+        return finalUrl or embedUrl
 
-        if not finalUrl:
-            return embedUrl
+    def _getLinkToken(self, link_id):
+        now = time.time()
+        elapsed = now - self._lastTokenRequest
 
-        return finalUrl
+        if self._tokenRequestCount >= 6:
+            printDBG("Filman._getLinkToken cooling down after 6 requests, waiting 5s")
+            time.sleep(5)
+            self._tokenRequestCount = 0
+        elif elapsed < 2.5:
+            time.sleep(2.5 - elapsed)
 
-    def getLinksForVideo(self, cItem):
-        printDBG("Filman.getLinksForVideo [%s]" % cItem)
-
-        cacheKey = cItem["url"]
-        cacheTab = self.cacheLinks.get(cacheKey, [])
-        if len(cacheTab):
-            return cacheTab
-
-        self.cacheLinks = {}
+        self._lastTokenRequest = time.time()
+        self._tokenRequestCount += 1
 
         params = dict(self.defaultParams)
         params["header"] = dict(params["header"])
+        params["header"]["Referer"] = self.getMainUrl()
+        params["header"]["X-Requested-With"] = "XMLHttpRequest"
+        params["header"]["Accept"] = "application/json, text/javascript, */*; q=0.01"
 
-        cUrl = cItem["url"]
-        url = cItem["url"]
+        max_retries = 3
+        for attempt in range(max_retries):
+            url = self.getFullUrl("/link/token?link_id=%s" % link_id)
+            printDBG("Filman._getLinkToken requesting: %s (attempt %d)" % (url, attempt + 1))
+            sts, data = self.getPage(url, params)
 
-        retTab = []
+            if sts:
+                try:
+                    resp = json.loads(data)
+                    if resp.get("ok") and resp.get("url"):
+                        decoded = ensure_str(base64.b64decode(resp["url"]))
+                        printDBG("Filman._getLinkToken success")
+                        return decoded
+                    elif "Za szybko" in str(resp.get("error", "")) or "429" in str(data):
+                        printDBG("Filman._getLinkToken rate limited, waiting 6s")
+                        time.sleep(6)
+                        self._tokenRequestCount = 0
+                        continue
+                    else:
+                        printDBG("Filman._getLinkToken failed: %s" % data)
+                        if attempt < max_retries - 1:
+                            time.sleep(1.5)
+                            continue
+                        return ""
+                except Exception as e:
+                    printDBG("Filman._getLinkToken parse error: %s" % str(e))
+                    if attempt < max_retries - 1:
+                        time.sleep(1.5)
+                        continue
+                    return ""
+            else:
+                printDBG("Filman._getLinkToken request failed, retrying")
+                if attempt < max_retries - 1:
+                    time.sleep(2)
+                    continue
+                return ""
+        return ""
 
-        params["header"]["Referer"] = cUrl
-        sts, data = self.getPage(url, params)
+    def getLinksForVideo(self, cItem):
+        cacheKey = cItem["url"]
+        if cacheKey in self.cacheLinks:
+            return self.cacheLinks[cacheKey]
+        self.cacheLinks = {}
+        self._tokenRequestCount = 0
+
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
 
-        cUrl = data.meta["url"]
-        self.setMainUrl(cUrl)
+        try:
+            if hasattr(data, 'meta') and data.meta.get('status_code') == 404:
+                printDBG("Filman.getLinksForVideo got 404 for: %s" % cItem["url"])
+                return []
+        except:
+            pass
 
         links_section = self.cm.ph.getDataBeetwenNodes(data, ("<table", ">", "links"), ("</table", ">"))[1]
+        retTab = []
         if links_section:
             rows = self.cm.ph.getAllItemsBeetwenNodes(links_section, ("<tr", ">"), ("</tr", ">"))
-
             for row in rows:
                 if "<th" in row:
                     continue
-
                 player_data = self.cm.ph.getDataBeetwenNodes(row, ("<td", ">", "link-to-video"), ("</td", ">"))[1]
                 if not player_data:
                     continue
-
-                iframe_data = self.cm.ph.getSearchGroups(player_data, r'''data-iframe=['"]([^"^']+?)['"]''')[0]
                 playerUrl = ""
-                if iframe_data:
-                    try:
-                        decoded = ensure_str(base64.b64decode(iframe_data))
-                        try:
-                            player_data_json = json.loads(decoded)
-                            playerUrl = player_data_json.get("src", "")
-                        except:
-                            playerUrl = decoded
-                    except:
-                        playerUrl = ""
+
+                link_id = self.cm.ph.getSearchGroups(player_data, r'''data-link-id=['"]([^"^']+?)['"]''')[0]
+                if link_id:
+                    printDBG("Filman.getLinksForVideo trying token for link_id: %s" % link_id)
+                    playerUrl = self._getLinkToken(link_id)
 
                 if not playerUrl:
-                    playerUrl = self.cm.ph.getSearchGroups(player_data, """href=['"]([^"^']+?)['"]""")[0]
-
-                if playerUrl and not playerUrl.startswith("http"):
-                    playerUrl = self.getFullUrl(playerUrl)
+                    iframe_data = self.cm.ph.getSearchGroups(player_data, r'''data-iframe=['"]([^"^']+?)['"]''')[0]
+                    if iframe_data:
+                        try:
+                            decoded = ensure_str(base64.b64decode(iframe_data))
+                            try:
+                                player_data_json = json.loads(decoded)
+                                playerUrl = player_data_json.get("src", "")
+                            except:
+                                playerUrl = decoded
+                        except:
+                            playerUrl = ""
 
                 if not playerUrl:
                     continue
 
                 tds = self.cm.ph.getAllItemsBeetwenNodes(row, ("<td", ">"), ("</td", ">"))
-                version = ""
-                quality = ""
-                if len(tds) > 2:
-                    version = self.cleanHtmlStr(tds[1])
-                    quality = self.cleanHtmlStr(tds[2])
-
+                version = self.cleanHtmlStr(tds[1]) if len(tds) > 2 else ""
+                quality = self.cleanHtmlStr(tds[2]) if len(tds) > 2 else ""
                 resolved_url = self.resolveEmbedUrl(playerUrl)
                 host_name = self.getHostNameFromUrl(resolved_url)
                 name = host_name
@@ -441,30 +555,29 @@ class Filman(CBaseHostClass, CaptchaHelper):
                     name += " - " + version
                 if quality:
                     name += " - " + quality
+                retTab.append({"name": name, "url": strwithmeta(resolved_url, {"Referer": cItem["url"]}), "need_resolve": 1})
 
-                retTab.append({"name": name, "url": strwithmeta(resolved_url, {"Referer": url}), "need_resolve": 1})
-
-        if len(retTab):
+        if retTab:
             self.cacheLinks[cacheKey] = retTab
+            self._deleteCookie()
+            printDBG("Filman.getLinksForVideo - cookie deleted after successfully fetching %d video links" % len(retTab))
+        else:
+            printDBG("Filman.getLinksForVideo - no links found, cookie NOT deleted")
+
         return retTab
 
     def getVideoLinks(self, baseUrl):
-        printDBG("Filman.getVideoLinks [%s]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
-
-        if len(self.cacheLinks.keys()):
-            for key in self.cacheLinks:
-                for idx in range(len(self.cacheLinks[key])):
-                    if baseUrl in self.cacheLinks[key][idx]["url"]:
-                        if not self.cacheLinks[key][idx]["name"].startswith("*"):
-                            self.cacheLinks[key][idx]["name"] = "*" + self.cacheLinks[key][idx]["name"] + "*"
-                        break
-
+        for key in self.cacheLinks:
+            for idx in range(len(self.cacheLinks[key])):
+                if baseUrl in self.cacheLinks[key][idx]["url"]:
+                    if not self.cacheLinks[key][idx]["name"].startswith("*"):
+                        self.cacheLinks[key][idx]["name"] = "*" + self.cacheLinks[key][idx]["name"] + "*"
+                    break
         return self.up.getVideoLinkExt(baseUrl)
 
     def getArticleContent(self, cItem):
-        printDBG("Filman.getArticleContent [%s]" % cItem)
-
+        printDBG("Filman.getArticleContent %s" % cItem)
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
@@ -473,127 +586,152 @@ class Filman(CBaseHostClass, CaptchaHelper):
         icon = cItem.get("icon", "")
         desc = cItem.get("desc", "")
 
-        full_desc = ""
+        year = ""
+        duration = ""
+        views = ""
+        genres_str = ""
 
-        desc_pos = data.find('class="description"')
-        if desc_pos > 0:
-            start_pos = data.rfind('<p', 0, desc_pos)
-            if start_pos > 0:
-                end_pos = data.find('</p>', desc_pos)
-                if end_pos > 0:
-                    full_desc = data[start_pos:end_pos + 4]
-                    full_desc = re.sub(r'<[^>]+>', '', full_desc)
-                    full_desc = self.cleanHtmlStr(full_desc)
+        single_info = self.cm.ph.getDataBeetwenNodes(data, ('<div', 'id="single-info"'), ('</div', '>'))[1]
 
-        if not full_desc:
-            meta_match = re.search(r'<meta name="description" content="([^"]+)"', data, re.IGNORECASE)
-            if meta_match:
-                full_desc = meta_match.group(1)
-                full_desc = self.cleanHtmlStr(full_desc)
+        if single_info:
+            h1_match = re.search(r'<h1[^>]*?itemprop="name"[^>]*?>(.*?)</h1>', single_info, re.DOTALL)
+            if not h1_match:
+                h1_match = re.search(r'<h1[^>]*?itemprop="partOfSeries"[^>]*?>(.*?)</h1>', single_info, re.DOTALL)
+            if h1_match:
+                title = self.cleanHtmlStr(h1_match.group(1))
 
-        if not full_desc:
-            og_match = re.search(r'<meta property="og:description" content="([^"]+)"', data, re.IGNORECASE)
-            if og_match:
-                full_desc = og_match.group(1)
-                full_desc = self.cleanHtmlStr(full_desc)
+            episode_subtitle = re.search(r'<span\s+itemprop="name">(.*?)</span>', single_info, re.DOTALL)
+            if episode_subtitle:
+                ep_name = self.cleanHtmlStr(episode_subtitle.group(1))
+                if ep_name:
+                    title = title + " - " + ep_name
 
-        if not full_desc and desc:
-            desc_parts = desc.split("[/br]")
-            for part in reversed(desc_parts):
-                if not part.startswith(_("Year: ")) and not part.startswith(_("Rating: ")) and not part.startswith(_("Quality:")):
-                    full_desc = part
-                    break
+            meta_items = re.findall(r'<div\s+class="flm-meta-item">(.*?)</div>', single_info, re.DOTALL)
+            for meta in meta_items:
+                value_match = re.search(r'<span\s+class="flm-meta-value">(.*?)</span>', meta, re.DOTALL)
+                if value_match:
+                    val = self.cleanHtmlStr(value_match.group(1))
+                    if '📅' in meta:
+                        year = val
+                    elif '⏳' in meta:
+                        duration = val
+                    elif '👁' in meta:
+                        views = val
 
-        if not full_desc:
-            full_desc = _("No description available.")
+            genres = re.findall(r'<a[^>]*?class="flm-genre-tag"[^>]*?>(.*?)</a>', single_info)
+            genres_str = ", ".join([self.cleanHtmlStr(g) for g in genres])
 
-        if full_desc:
-            full_desc = re.sub(r'\s+', ' ', full_desc)
-            full_desc = full_desc.strip()
-            full_desc = re.sub(r'Zobacz\s+zwiastun', '', full_desc, flags=re.IGNORECASE)
-            full_desc = re.sub(r'Zwiastun', '', full_desc, flags=re.IGNORECASE)
+        poster_match = re.search(r'<img\s+class="main-poster"[^>]*?src="([^"]+)"', data)
+        if poster_match:
+            icon = self.getFullIconUrl(poster_match.group(1))
 
-        return [{"title": self.cleanHtmlStr(title),
-                 "text": full_desc,
-                 "images": [{"title": "", "url": self.getFullUrl(icon)}],
-                 "other_info": {"custom_items_list": []}}]
+        desc_match = re.search(r'<p\s+class="description">(.*?)</p>', data, re.DOTALL)
+        if desc_match:
+            desc = self.cleanHtmlStr(desc_match.group(1))
+
+        desc_parts = []
+        if year:
+            desc_parts.append(_("Year: ") + year)
+        if duration:
+            desc_parts.append(_("Duration: ") + duration)
+        if views:
+            desc_parts.append(_("Views: ") + views)
+        if genres_str:
+            desc_parts.append(_("Genre: ") + genres_str)
+        if desc:
+            desc_parts.append(desc)
+
+        full_desc = "[/br]".join(desc_parts)
+
+        return [{"title": title, "text": full_desc, "images": [{"title": "", "url": icon}], "other_info": {"custom_items_list": []}}]
 
     def tryTologin(self):
         printDBG("tryTologin start")
-
-        if None is self.loggedIn or self.login != config.plugins.iptvplayer.filman_login.value or self.password != config.plugins.iptvplayer.filman_password.value:
-
+        manual_sessid = config.plugins.iptvplayer.filman_cookie_phpsessid.value.strip()
+        if manual_sessid:
+            self._overwriteCookie(manual_sessid)
             sts, data = self.getPage(self.getFullUrl("/logowanie"))
-            if not sts:
-                return False
-
-            if sts and "/wylogowanie" not in data:
-                self.login = config.plugins.iptvplayer.filman_login.value
-                self.password = config.plugins.iptvplayer.filman_password.value
-
-                self.cm.clearCookie(self.COOKIE_FILE, ["__cfduid", "cf_clearance"])
-
-                self.loggedIn = False
-
-                if "" == self.login.strip() or "" == self.password.strip():
-                    return False
-
-                cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ["PHPSESSID"])
-                printDBG("tryTologin cookieHeader [%s]" % cookieHeader)
-
-                post_data = {"login": self.login, "password": self.password, "remember": "on", "submit": ""}
-
-                httpParams = dict(self.defaultParams)
-                httpParams["header"] = dict(httpParams["header"])
-                httpParams["header"]["Referer"] = self.getFullUrl("/logowanie")
-
-                sitekey = ""
-                if "data-sitekey" in data:
-                    sitekey = self.cm.ph.getSearchGroups(data, r'data\-sitekey="([^"]+?)"')[0]
-
-                if sitekey != "":
-                    token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta["url"])
-                    if token != "":
-                        post_data["g-recaptcha-response"] = token
-
-                sts, data = self.getPage(self.getFullUrl("/logowanie"), httpParams, post_data)
-                sts, data = self.getPage(self.getFullUrl("/logowanie"))
-
             if sts and "/wylogowanie" in data:
                 self.loggedIn = True
+                self.cookieDeleted = False
+                return True
+
+        if self.loggedIn is None or self.login != config.plugins.iptvplayer.filman_login.value or self.password != config.plugins.iptvplayer.filman_password.value or self.cookieDeleted:
+            self.login = config.plugins.iptvplayer.filman_login.value
+            self.password = config.plugins.iptvplayer.filman_password.value
+            if not self.login.strip() or not self.password.strip():
+                return False
+
+            login_params = dict(self.defaultParams)
+            login_params["header"] = dict(login_params["header"])
+            login_params["header"]["Referer"] = self.getFullUrl("/logowanie")
+
+            sts, data = self.getPage(self.getFullUrl("/logowanie"), login_params)
+            if not sts:
+                return False
+            if "/wylogowanie" in data:
+                self.loggedIn = True
+                self.cookieDeleted = False
+                return True
+
+            csrf_token = ""
+            tmp = self.cm.ph.getSearchGroups(data, r'name="_csrf" value="([^"]+)"')
+            if tmp:
+                csrf_token = tmp[0]
+            printDBG("tryTologin CSRF token: [%s]" % csrf_token)
+
+            post_data = {
+                "login": self.login,
+                "password": self.password,
+                "remember": "on",
+                "submit": ""
+            }
+            if csrf_token:
+                post_data["_csrf"] = csrf_token
+
+            sitekey = "6LcQs24iAAAAALFibpEQwpQZiyhOCn-zdc-eFout"
+            token = None
+            printDBG("Trying sitekey: %s" % sitekey)
+            token, _ = self.processCaptcha(sitekey, self.getFullUrl("/logowanie"))
+            if not token:
+                ent_sitekey = "6LdjECEpAAAAAII12AekMIVTsLnFA6A1Qeu7YRnU"
+                printDBG("Trying enterprise sitekey: %s" % ent_sitekey)
+                token, _ = self.processCaptcha(ent_sitekey, self.getFullUrl("/logowanie"))
+
+            if token:
+                post_data["g-recaptcha-response"] = token
+                printDBG("Got recaptcha token")
             else:
-                if sts:
-                    message = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "alert"), ("</div", ">"))[1])
-                else:
-                    message = ""
-                self.sessionEx.open(MessageBox, _("Login failed.") + "\n" + message, type=MessageBox.TYPE_ERROR, timeout=10)
-                printDBG("tryTologin failed")
+                printDBG("Failed to get any recaptcha token – login will likely fail")
+
+            sts, _ = self.getPage(self.getFullUrl("/logowanie"), login_params, post_data)
+            sts, data = self.getPage(self.getFullUrl("/logowanie"), login_params)
+            if sts and "/wylogowanie" in data:
+                self.loggedIn = True
+                self.cookieDeleted = False
+            else:
+                self.loggedIn = False
+                msg = ""
+                tmp2 = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "alert"), ("</div", ">"))
+                if tmp2:
+                    msg = self.cleanHtmlStr(tmp2[1])
+                self.sessionEx.open(MessageBox, _("Login failed.") + "\n" + msg, type=MessageBox.TYPE_ERROR, timeout=10)
+
         return self.loggedIn
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         printDBG("handleService start")
-
         self.tryTologin()
-
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        mode = self.currItem.get("mode", "")
-
-        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
         self.cacheLinks = {}
         self.currList = []
-
         if name is None and category == "":
             self.listMainMenu({"name": "category"})
-        elif "list_cats" == category:
+        elif category in ["list_cats", "list_years", "list_az"]:
             self.listMovieFilters(self.currItem, "list_sort")
-        elif "list_years" == category:
-            self.listMovieFilters(self.currItem, "list_sort")
-        elif "list_az" == category:
-            self.listMovieFilters(self.currItem, "list_sort")
-        elif "list_sort" == category:
+        elif category == "list_sort":
             self.listMovieFilters(self.currItem, "list_items")
         elif category == "list_items":
             self.listItems(self.currItem)
@@ -607,7 +745,6 @@ class Filman(CBaseHostClass, CaptchaHelper):
             self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
         else:
             printExc()
-
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
