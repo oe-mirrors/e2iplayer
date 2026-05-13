@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 20:46+0200\n"
-"PO-Revision-Date: 2026-03-30 13:33+0300\n"
+"PO-Revision-Date: 2026-05-11 23:10+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -228,9 +228,8 @@ msgstr "----- ΡΥΘΜΙΣΕΙΣ ΑΠΟΘΗΚΕΥΣΗΣ -----"
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- ΡΥΘΜΙΣΕΙΣ ΥΠΟΤΙΤΛΩΝ -----"
 
-#, fuzzy
 msgid "----- Show or hide Live Cams -----"
-msgstr "----- Εμφάνιση ή απόκρυψη ιστοσελίδων για ενήλικες -----"
+msgstr "----- Εμφάνιση ή απόκρυψη Live Cams -----"
 
 msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Εμφάνιση ή απόκρυψη ιστοσελίδων για ενήλικες -----"
@@ -247,9 +246,9 @@ msgstr "----------  Άλλα  ----------"
 msgid "----------  Porn Sites  ----------"
 msgstr "----------  Ιστοσελίδες για ενήλικες  ----------"
 
-#, fuzzy, python-format
+#, python-format
 msgid "----------  Search \"%s\"  ----------"
-msgstr "----------  Άλλα  ----------"
+msgstr "----------  Αναζήτηση \"%s\"  ----------"
 
 msgid "----------------- External exteplayer3 options -----------------"
 msgstr "----------------- Επιλογές εξωτερικού exteplayer3 -----------------"
@@ -321,7 +320,7 @@ msgid "ARTISTS"
 msgstr "ΚΑΛΛΙΤΕΧΝΕΣ"
 
 msgid "ATTENTION!"
-msgstr ""
+msgstr "ΠΡΟΣΟΧΗ!"
 
 msgid "AZ"
 msgstr "AZ"
@@ -348,9 +347,8 @@ msgstr "Προφίλ ηθοποιού και έργα"
 msgid "Actors"
 msgstr "Ηθοποιοί"
 
-#, fuzzy
 msgid "Actors:"
-msgstr "Ηθοποιοί"
+msgstr "Ηθοποιοί:"
 
 #, python-format
 msgid "Add host %s to group"
@@ -375,9 +373,8 @@ msgstr "Προσθήκη στο πρόγραμμα λήψεων"
 msgid "Added by: %s, directory: %s"
 msgstr "Προστέθηκε από: %s, κατάλογος: %s"
 
-#, fuzzy
 msgid "Age limit:"
-msgstr "Λίστα άνιμε"
+msgstr "Όριο ηλικίας:"
 
 msgid "Age-gate bypass:"
 msgstr "Παράκαμψη περιορισμού ηλικίας:"
@@ -409,9 +406,8 @@ msgstr "Επιτρέπεται η ρύθμιση της ένδειξης παρ�
 msgid "Alphabetically"
 msgstr "Αλφαβητικά"
 
-#, fuzzy
 msgid "Alternate Title:"
-msgstr "Εναλλακτικός τομέας:"
+msgstr "Εναλλακτικός τίτλος:"
 
 msgid "Alternative domain:"
 msgstr "Εναλλακτικός τομέας:"
@@ -536,7 +532,7 @@ msgid "Autoplay start delay"
 msgstr "Καθυστέρηση εκκίνησης αυτόματης αναπαραγωγής"
 
 msgid "Awards:"
-msgstr ""
+msgstr "Βραβεία:"
 
 msgid "Balkans"
 msgstr "Βαλκάνια"
@@ -545,7 +541,7 @@ msgid "Basic Science"
 msgstr "Βασικές επιστήμες"
 
 msgid "Best"
-msgstr ""
+msgstr "Καλύτερο"
 
 #, python-format
 msgid "Bitrate: %s"
@@ -567,9 +563,8 @@ msgstr "Επισκόπηση πίνακα"
 msgid "Broadcast begins at %s"
 msgstr "Η μετάδοση ξεκινά στις %s"
 
-#, fuzzy
 msgid "Broadcast:"
-msgstr "Podcasts"
+msgstr "Μετάδοση:"
 
 msgid "Browse videos"
 msgstr "Περιήγηση βίντεο"
@@ -578,7 +573,7 @@ msgid "Browse youtube trending feeds"
 msgstr "Περιήγηση στις δημοφιλείς ροές του youtube"
 
 msgid "Budget:"
-msgstr ""
+msgstr "Προϋπολογισμός:"
 
 msgid "Buffering location"
 msgstr "Τοποθεσία προσωρινής μνήμης"
@@ -625,18 +620,16 @@ msgid "Cartoons and anime"
 msgstr "Κινούμενα σχέδια και άνιμε"
 
 msgid "Cast:"
-msgstr ""
+msgstr "Ηθοποιοί:"
 
 msgid "Categories"
 msgstr "Κατηγορίες"
 
-#, fuzzy
 msgid "Categories:"
-msgstr "Κατηγορίες"
+msgstr "Κατηγορίες:"
 
-#, fuzzy
 msgid "Category:"
-msgstr "Κατηγορίες"
+msgstr "Κατηγορία:"
 
 msgid "Change active movie player"
 msgstr "Αλλαγή ενεργής αναπαραγωγής ταινιών"
@@ -728,19 +721,17 @@ msgstr "Χώρες"
 msgid "Country"
 msgstr "Χώρα"
 
-#, fuzzy
 msgid "Country:"
-msgstr "Χώρα"
+msgstr "Χώρα:"
 
 msgid "Create LCD/VFD summary screen"
 msgstr "Δημιουργία οθόνης σύνοψης LCD/VFD"
 
 msgid "Creator:"
-msgstr ""
+msgstr "Δημιουργός:"
 
-#, fuzzy
 msgid "Creators:"
-msgstr "Σκηνοθέτες"
+msgstr "Δημιουργοί:"
 
 msgid "Critical Error - cookie can't be saved!"
 msgstr "Κρίσιμο σφάλμα - το cookie δεν μπορεί να αποθηκευτεί!"
@@ -770,7 +761,7 @@ msgid "Darkgray"
 msgstr "Σκούρο γκρι"
 
 msgid "Date"
-msgstr ""
+msgstr "Ημερομηνία"
 
 msgid "Debug file does not exist - nothing to delete"
 msgstr "Το αρχείο εντοπισμού σφαλμάτων δεν υπάρχει - τίποτα για διαγραφή"
@@ -845,16 +836,14 @@ msgstr "Προγραμματιστές: "
 msgid "Direct"
 msgstr "Άμεσο"
 
-#, fuzzy
 msgid "Director:"
-msgstr "Σκηνοθέτες"
+msgstr "Σκηνοθέτης:"
 
 msgid "Directors"
 msgstr "Σκηνοθέτες"
 
-#, fuzzy
 msgid "Directors:"
-msgstr "Σκηνοθέτες"
+msgstr "Σκηνοθέτες:"
 
 #, python-format
 msgid "Directory \"%s\" does not exists."
@@ -1045,7 +1034,6 @@ msgstr "Τοποθεσία λήψεων"
 msgid "Duration"
 msgstr "Διάρκεια"
 
-#, fuzzy
 msgid "Duration:"
 msgstr "Διάρκεια:"
 
@@ -1136,12 +1124,11 @@ msgstr "Εισαγωγή νέου PIN"
 msgid "Enter old pin"
 msgstr "Εισαγωγή παλαιού PIN"
 
-#, fuzzy
 msgid "Enter page number"
-msgstr "Εισάγετε μια τιμή"
+msgstr "Εισαγωγή αριθμού σελίδας"
 
 msgid "Enter page number (MAX PAGE: {})"
-msgstr ""
+msgstr "Εισαγωγή αριθμού σελίδας (ΜΕΓΙΣΤΗ ΣΕΛΙΔΑ: {})"
 
 msgid "Enter pin"
 msgstr "Εισαγωγή PIN"
@@ -1158,9 +1145,8 @@ msgstr "Επεισόδιο"
 msgid "Episodes"
 msgstr "Επεισόδια"
 
-#, fuzzy
 msgid "Episodes:"
-msgstr "Επεισόδια"
+msgstr "Επεισόδια:"
 
 #, python-format
 msgid "Error code: %s\n"
@@ -1244,7 +1230,7 @@ msgid "FREE"
 msgstr "ΔΩΡΕΑΝ"
 
 msgid "FUCKER sorting by :"
-msgstr ""
+msgstr "ΤΑΞΙΝΟΜΗΣΗ FUCKER κατά :"
 
 #, python-format
 msgid "Fail to get \"%s\"."
@@ -1349,13 +1335,11 @@ msgstr "Προτάσεις Filmweb"
 msgid "Filters"
 msgstr "Φίλτρα"
 
-#, fuzzy
 msgid "First Page"
-msgstr "Επόμενη σελίδα"
+msgstr "Πρώτη σελίδα"
 
-#, fuzzy
 msgid "First air date:"
-msgstr "Επόμενη σελίδα"
+msgstr "Πρώτη ημερομηνία προβολής:"
 
 msgid "First movie player in buffering mode"
 msgstr "Πρώτη αναπαραγωγή ταινιών σε λειτουργία προσωρινής μνήμης"
@@ -1376,7 +1360,7 @@ msgid "Foot & Ankle"
 msgstr "Πόδι & Αστράγαλος"
 
 msgid "For continuous playing, please press 8!"
-msgstr ""
+msgstr "Για συνεχή αναπαραγωγή, πατήστε το 8!"
 
 msgid "Force internal Skin"
 msgstr "Επιβολή εσωτερικού θέματος"
@@ -1385,7 +1369,7 @@ msgid "Format 'wmv' blocked in configuration."
 msgstr "Η μορφή 'wmv' έχει αποκλειστεί στις ρυθμίσεις."
 
 msgid "Fotka.pl stream :"
-msgstr ""
+msgstr "Ροή Fotka.pl :"
 
 msgid "Free"
 msgstr "Δωρεάν"
@@ -1408,11 +1392,9 @@ msgstr "Παιχνίδια"
 msgid "General"
 msgstr "Γενικά"
 
-#, fuzzy
 msgid "Genre"
-msgstr "Είδος:"
+msgstr "Είδος"
 
-#, fuzzy
 msgid "Genre:"
 msgstr "Είδος:"
 
@@ -1423,9 +1405,8 @@ msgstr "Είδος: %s"
 msgid "Genres"
 msgstr "Είδη"
 
-#, fuzzy
 msgid "Genres:"
-msgstr "Είδη"
+msgstr "Είδη:"
 
 msgid "German"
 msgstr "Γερμανικά"
@@ -1442,13 +1423,11 @@ msgstr "Αποτυχία λήψης γλωσσών!"
 msgid "Get token failed!"
 msgstr "Αποτυχία λήψης token!"
 
-#, fuzzy
 msgid "Global"
-msgstr "κοβαλτί"
+msgstr "Γενική"
 
-#, fuzzy
 msgid "Global Search mode :"
-msgstr "Εμφάνιση καθολικής αναζήτησης :"
+msgstr "Λειτουργία γενικής αναζήτησης :"
 
 msgid "Go to the host configuration available under blue button."
 msgstr "Μεταβείτε στις ρυθμίσεις του host που είναι διαθέσιμες με το μπλε κουμπί."
@@ -1534,9 +1513,8 @@ msgstr "Ανθρωπιστικά"
 msgid "Hungarian"
 msgstr "Ουγγρικά"
 
-#, fuzzy
 msgid "IMDb Rating:"
-msgstr "Αξιολόγηση:"
+msgstr "Βαθμολογία IMDb:"
 
 msgid "IMDb Suggestions"
 msgstr "Προτάσεις IMDb"
@@ -1683,13 +1661,13 @@ msgid "Journal Club"
 msgstr "Λέσχη περιοδικών"
 
 msgid "Jump"
-msgstr ""
+msgstr "Μετάβαση"
 
 msgid "Jump to a selected page"
-msgstr ""
+msgstr "Μετάβαση σε επιλεγμένη σελίδα"
 
 msgid "Jump to a selected page, max: {}"
-msgstr ""
+msgstr "Μετάβαση σε επιλεγμένη σελίδα, μέγιστο: {}"
 
 msgid "Knee & Sports"
 msgstr "Γόνατο & Αθλήματα"
@@ -1712,7 +1690,6 @@ msgstr "Γλώσσα"
 msgid "Language:"
 msgstr "Γλώσσα:"
 
-#, fuzzy
 msgid "Last"
 msgstr "Τελευταία"
 
@@ -1728,9 +1705,8 @@ msgstr "Τελευταίο σφάλμα εξαίρεσης: \"%s\""
 msgid "Last Exception error: '%s'"
 msgstr "Τελευταίο σφάλμα εξαίρεσης: '%s'"
 
-#, fuzzy
 msgid "Last air date:"
-msgstr "Τελευταία ενημέρωση"
+msgstr "Τελευταία ημερομηνία προβολής:"
 
 msgid "Last chance"
 msgstr "Τελευταία ευκαιρία"
@@ -1930,21 +1906,17 @@ msgstr "Χάσατε την εκπομπή;"
 msgid "More"
 msgstr "Περισσότερα"
 
-#, fuzzy
 msgid "More Categories"
-msgstr "Κατηγορίες"
+msgstr "Περισσότερες κατηγορίες"
 
-#, fuzzy
 msgid "More Channels"
-msgstr "Κανάλια"
+msgstr "Περισσότερα κανάλια"
 
-#, fuzzy
 msgid "More Models"
-msgstr "Λειτουργία ταξινόμησης"
+msgstr "Περισσότερα μοντέλα"
 
-#, fuzzy
 msgid "More Pornstars"
-msgstr "Περισσότερα αποτελέσματα"
+msgstr "Περισσότερες Pornstars"
 
 msgid "More important"
 msgstr "Πιο σημαντικά"
@@ -2030,6 +2002,8 @@ msgid ""
 "NO VIDEOS FOUND FOR NOW! \n"
 "CHECK BELOW ADVANCE SEARCH RESULTS!"
 msgstr ""
+"ΔΕΝ ΒΡΕΘΗΚΑΝ ΒΙΝΤΕΟ ΠΡΟΣ ΤΟ ΠΑΡΟΝ! \n"
+"ΕΛΕΓΞΤΕ ΠΑΡΑΚΑΤΩ ΤΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ΠΡΟΗΓΜΕΝΗΣ ΑΝΑΖΗΤΗΣΗΣ!"
 
 msgid "Name cannot be empty."
 msgstr "Το όνομα δεν μπορεί να είναι κενό."
@@ -2078,9 +2052,8 @@ msgstr "Επόμενο"
 msgid "Next Page"
 msgstr "Επόμενη σελίδα"
 
-#, fuzzy
 msgid "Next Page »»»"
-msgstr "Επόμενη σελίδα"
+msgstr "Επόμενη σελίδα »»»"
 
 msgid "Next page"
 msgstr "Επόμενη σελίδα"
@@ -2091,9 +2064,8 @@ msgstr "Όχι"
 msgid "No biography available"
 msgstr "Δεν υπάρχει διαθέσιμη βιογραφία"
 
-#, fuzzy
 msgid "No description available."
-msgstr "Δεν υπάρχουν έγκυροι σύνδεσμοι διαθέσιμοι."
+msgstr "Δεν υπάρχει διαθέσιμη περιγραφή."
 
 msgid ""
 "No item to display. \n"
@@ -2159,7 +2131,7 @@ msgid "Optional User-Agent (leave blank for default)"
 msgstr "Προαιρετικό User-Agent (αφήστε κενό προεπιλογή)"
 
 msgid "Original Title:"
-msgstr ""
+msgstr "Πρωτότυπος τίτλος:"
 
 msgid "Other"
 msgstr "Άλλο"
@@ -2180,7 +2152,7 @@ msgid "PORT"
 msgstr "ΘΥΡΑ"
 
 msgid "Page: "
-msgstr ""
+msgstr "Σελίδα: "
 
 msgid "Password"
 msgstr "Κωδικός πρόσβασης"
@@ -2358,10 +2330,10 @@ msgid "Previous list"
 msgstr "Προηγούμενη λίστα"
 
 msgid "Price:"
-msgstr ""
+msgstr "Τιμή:"
 
 msgid "Production:"
-msgstr ""
+msgstr "Παραγωγή:"
 
 msgid "Professional Networks"
 msgstr "Επαγγελματικά δίκτυα"
@@ -2427,7 +2399,7 @@ msgid "Ranking"
 msgstr "Κατάταξη"
 
 msgid "Rated:"
-msgstr ""
+msgstr "Καταλληλότητα:"
 
 msgid "Rating"
 msgstr "Αξιολόγηση"
@@ -2439,9 +2411,8 @@ msgstr "Αξιολόγηση %s"
 msgid "Rating:"
 msgstr "Αξιολόγηση:"
 
-#, fuzzy
 msgid "Rating: "
-msgstr "Αξιολόγηση:"
+msgstr "Βαθμολογία: "
 
 msgid "Recon"
 msgstr "Αναγνώριση"
@@ -2458,9 +2429,8 @@ msgstr "Γίνεται ανανέωση"
 msgid "Release"
 msgstr "Κυκλοφορία"
 
-#, fuzzy
 msgid "Released:"
-msgstr "Κυκλοφορία"
+msgstr "Κυκλοφόρησε:"
 
 msgid "Relevance"
 msgstr "Σχετικότητα"
@@ -2468,9 +2438,8 @@ msgstr "Σχετικότητα"
 msgid "Reload list"
 msgstr "Επαναφόρτωση λίστας"
 
-#, fuzzy
 msgid "Remaining:"
-msgstr "Αξιολόγηση:"
+msgstr "Απομένουν:"
 
 msgid "Remember last watched position"
 msgstr "Απομνημόνευση τελευταίας θέσης προβολής"
@@ -2541,7 +2510,7 @@ msgid "SHOWS"
 msgstr "ΕΚΠΟΜΠΕΣ"
 
 msgid "SOME.PORN sorting by :"
-msgstr ""
+msgstr "ΤΑΞΙΝΟΜΗΣΗ SOME.PORN κατά :"
 
 msgid "SONGS"
 msgstr "ΤΡΑΓΟΥΔΙΑ"
@@ -2623,9 +2592,8 @@ msgstr "Σεζόν "
 msgid "Season %s"
 msgstr "Σεζόν %s"
 
-#, fuzzy
 msgid "Seasons:"
-msgstr "Σεζόν"
+msgstr "Σεζόν:"
 
 msgid "Second movie player in buffering mode"
 msgstr "Δεύτερη αναπαραγωγή ταινιών σε λειτουργία προσωρινής μνήμης"
@@ -2694,9 +2662,8 @@ msgstr "Επιλογή λειτουργίας βίντεο"
 msgid "Selected hosts"
 msgstr "Επιλεγμένοι hosts"
 
-#, fuzzy
 msgid "Selection"
-msgstr "Επιλογή ενέργειας"
+msgstr "Επιλογή"
 
 msgid "Send"
 msgstr "Αποστολή"
@@ -2878,9 +2845,8 @@ msgstr "Σπορ"
 msgid "Standard"
 msgstr "Τυπικό"
 
-#, fuzzy
 msgid "Stars:"
-msgstr "Έναρξη"
+msgstr "Αστέρες:"
 
 msgid "Start"
 msgstr "Έναρξη"
@@ -2888,13 +2854,11 @@ msgstr "Έναρξη"
 msgid "Start download manager per default"
 msgstr "Έναρξη Διαχείρισης λήψεων από προεπιλογή"
 
-#, fuzzy
 msgid "Station:"
-msgstr "Διάρκεια:"
+msgstr "Σταθμός:"
 
-#, fuzzy
 msgid "Status:"
-msgstr "Κατάσταση: %s"
+msgstr "Κατάσταση:"
 
 #, python-format
 msgid "Status: %s"
@@ -2990,12 +2954,11 @@ msgstr "Οι υπότιτλοι λήφθηκαν με επιτυχία. [%s], μ
 msgid "Subtitles for: %s"
 msgstr "Υπότιτλοι για: %s"
 
-#, fuzzy
 msgid "Subtitles:"
-msgstr "Υπότιτλοι"
+msgstr "Υπότιτλοι:"
 
 msgid "Summary: "
-msgstr ""
+msgstr "Περίληψη: "
 
 msgid "Surgical Approaches"
 msgstr "Χειρουργικές προσεγγίσεις"
@@ -3019,17 +2982,21 @@ msgid "System"
 msgstr "Σύστημα"
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
-msgstr ""
+msgstr "Η ΣΕΛΙΔΑ ΠΟΥ ΑΝΑΖΗΤΑΤΕ ΔΕΝ ΒΡΕΘΗΚΕ."
 
 msgid ""
 "THIS IS A PREMIUM VIDEO.\n"
 "LOGIN OR PREMIUM REQUIRED."
 msgstr ""
+"ΑΥΤΟ ΕΙΝΑΙ PREMIUM ΒΙΝΤΕΟ. \n"
+"ΑΠΑΙΤΕΙΤΑΙ ΣΥΝΔΕΣΗ Ή PREMIUM."
 
 msgid ""
 "THIS IS A PREMIUM VIDEO. \n"
 "LOGIN OR PREMIUM REQUIRED."
 msgstr ""
+"ΑΥΤΟ ΕΙΝΑΙ PREMIUM ΒΙΝΤΕΟ. \n"
+"ΑΠΑΙΤΕΙΤΑΙ ΣΥΝΔΕΣΗ Ή PREMIUM."
 
 msgid "THIS IS A PRIVATE VIDEO."
 msgstr "ΑΥΤΟ ΕΙΝΑΙ ΙΔΙΩΤΙΚΟ ΒΙΝΤΕΟ."
@@ -3038,15 +3005,18 @@ msgid ""
 "THIS VIDEO IS JUST A PREVIEW ON EXTERNAL STORAGE.\n"
 "VIEWING IT HERE IS NOT SUPPORTED."
 msgstr ""
+"ΑΥΤΟ ΤΟ ΒΙΝΤΕΟ ΕΙΝΑΙ ΜΟΝΟ ΠΡΟΕΠΙΣΚΟΠΗΣΗ ΣΕ ΕΞΩΤΕΡΙΚΟ ΑΠΟΘΗΚΕΥΤΙΚΟ ΜΕΣΟ.\n"
+"Η ΠΡΟΒΟΛΗ ΤΟΥ ΕΔΩ ΔΕΝ ΥΠΟΣΤΗΡΙΖΕΤΑΙ."
 
 msgid ""
 "THIS VIDEO IS UNAVAILABLE.\n"
 "TRY AGAIN LATER!"
 msgstr ""
+"ΑΥΤΟ ΤΟ ΒΙΝΤΕΟ ΔΕΝ ΕΙΝΑΙ ΔΙΑΘΕΣΙΜΟ.\n"
+"ΠΡΟΣΠΑΘΗΣΤΕ ΞΑΝΑ ΑΡΓΟΤΕΡΑ!"
 
-#, fuzzy
 msgid "TMDb Rating:"
-msgstr "Αξιολόγηση:"
+msgstr "Βαθμολογία TMDb:"
 
 msgid "TOP 10"
 msgstr "ΚΟΡΥΦΑΙΑ 10"
@@ -3193,9 +3163,8 @@ msgstr "Συνολικό μέγεθος: "
 msgid "Trailer"
 msgstr "Τρέιλερ"
 
-#, fuzzy
 msgid "Translation:"
-msgstr "Διάρκεια:"
+msgstr "Μετάφραση:"
 
 msgid "Transparent"
 msgstr "Διαφανές"
@@ -3233,9 +3202,8 @@ msgstr "Απενεργοποίηση προσωρινής μνήμης για ht
 msgid "Tutorials"
 msgstr "Εκπαιδευτικά βίντεο"
 
-#, fuzzy
 msgid "Type:"
-msgstr "Τύπος: "
+msgstr "Τύπος:"
 
 msgid "Type: "
 msgstr "Τύπος: "
@@ -3316,9 +3284,8 @@ msgstr "Χρήση προεπιλεγμένης ποιότητας βίντεο:
 msgid "Use links cache"
 msgstr "Χρήση προσωρινής αποθήκευσης συνδέσμων"
 
-#, fuzzy
 msgid "Use login"
-msgstr "- Όνομα χρήστη"
+msgstr "Χρήση σύνδεσης"
 
 msgid "Use preferred quality"
 msgstr "Χρήση προτιμώμενης ποιότητας"
@@ -3336,9 +3303,8 @@ msgstr "Χρήση επέκτασης ανάλυσης υποτίτλων, εά�
 msgid "Use the PyCurl for HTTP(S) requests"
 msgstr "Χρήση PyCurl για αιτήματα HTTP(S)"
 
-#, fuzzy
 msgid "Use the best quality :"
-msgstr "Χρήση προεπιλεγμένης ποιότητας:"
+msgstr "Χρήση της καλύτερης ποιότητας :"
 
 msgid "Use web-proxy for VODs (it may be illegal):"
 msgstr "Χρήση διακομιστή μεσολάβησης ιστού για VODs (μπορεί να είναι παράνομο):"
@@ -3460,11 +3426,10 @@ msgid "Write current title to file:"
 msgstr "Εγγραφή τρέχοντος τίτλου σε αρχείο:"
 
 msgid "Writer:"
-msgstr ""
+msgstr "Συγγραφέας:"
 
-#, fuzzy
 msgid "Writers:"
-msgstr "Φίλτρα"
+msgstr "Συγγραφείς:"
 
 msgid "Written Boards Review"
 msgstr "Επιθεώρηση για εξετάσεις γραπτών δοκιμίων"
@@ -3503,9 +3468,8 @@ msgstr "Έτος"
 msgid "Year %s"
 msgstr "Έτος %s"
 
-#, fuzzy
 msgid "Year:"
-msgstr "Έτος: "
+msgstr "Έτος:"
 
 msgid "Year: "
 msgstr "Έτος: "
@@ -3513,9 +3477,8 @@ msgstr "Έτος: "
 msgid "Yes"
 msgstr "Ναι"
 
-#, fuzzy
 msgid "Yes + Global Search"
-msgstr "Εμφάνιση καθολικής αναζήτησης :"
+msgstr "Ναι + Γενική αναζήτηση"
 
 msgid "Yes, to console"
 msgstr "Ναι, στην κονσόλα"
@@ -3801,7 +3764,7 @@ msgid "unknown"
 msgstr "άγνωστο"
 
 msgid "version"
-msgstr "Έκδοση"
+msgstr "έκδοση"
 
 msgid "vertical"
 msgstr "κάθετο"
