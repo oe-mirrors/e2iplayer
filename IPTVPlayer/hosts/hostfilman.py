@@ -426,7 +426,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
             else:
                 printDBG("Filman.listVersions no versions found")
                 return
-        
+
         for version in versions:
             params = {
                 "good_for_fav": True,
@@ -444,39 +444,39 @@ class Filman(CBaseHostClass, CaptchaHelper):
         link_id = cItem.get("link_id")
         parent_url = cItem.get("parent_url", "")
         title = cItem.get("title", "Video")
-        
+
         if not link_id:
             printDBG("Filman.resolveVersion: no link_id")
             return []
-        
+
         playerUrl = self._getLinkToken(link_id)
-        
+
         if not playerUrl:
             printDBG("Filman.resolveVersion: failed to get token")
             self.sessionEx.open(MessageBox, _("Nie udało się pobrać linku do odtwarzania.\nSpróbuj ponownie później."), type=MessageBox.TYPE_ERROR, timeout=5)
             return []
-        
+
         resolved_url = self.resolveEmbedUrl(playerUrl)
-        
+
         if not resolved_url or not resolved_url.startswith("http"):
             printDBG("Filman.resolveVersion: invalid resolved URL")
             return []
-        
+
         printDBG("Filman.resolveVersion success: %s" % resolved_url)
-        
+
         return [{"name": title, "url": strwithmeta(resolved_url, {"Referer": parent_url}), "need_resolve": 1}]
 
     def getLinksForVideo(self, cItem):
         printDBG("Filman.getLinksForVideo %s" % cItem)
-        
+
         category = cItem.get("category", "")
-        
+
         if category == "resolve_version":
             return self.resolveVersion(cItem)
-        
+
         if category == "list_versions":
             return self.listVersions(cItem)
-        
+
         return []
 
     def rot13(self, s):
@@ -549,7 +549,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
             if iframe_src and iframe_src.startswith('http') and 'favicon' not in iframe_src and 'embed.js' not in iframe_src:
                 finalUrl = iframe_src
         if not finalUrl:
-            for host in ['streamtape','doodstream','lulustream','voe','mixdrop','upstream','vidguard','wolfstream','filemoon','streamhub']:
+            for host in ['streamtape', 'doodstream', 'lulustream', 'voe', 'mixdrop', 'upstream', 'vidguard', 'wolfstream', 'filemoon', 'streamhub']:
                 urls = re.findall(r'["\'](https?://[^"\']*' + host + r'[^"\']*)["\']', data, re.IGNORECASE)
                 if urls:
                     finalUrl = urls[0]
