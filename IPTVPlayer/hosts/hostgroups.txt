@@ -185,7 +185,6 @@
   "arabseed",
   "egybest",
   "egydead",
-  "myegy",
   "movizhome",
   "tvfun",
   "hwnaturkya",

@@ -70,8 +70,24 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 
 **🍿 Watch Videos Online**
 
-The E2iPlayer (previously IPTVPlayer) Enigma2 (E²) Plugin is a platform that offers various livestreams and add-ons from all over the world it
-includes Movies, TV series, Catoons, Anime, Music, Sport, Live Streams, XXX, Documentries, Science and Content for various languages.
+The E2iPlayer (previously IPTVPlayer) Enigma2 (E²) Plugin is one of the most powerful and popular media center and streaming plugin.
+Its primary purpose is to stream online video and audio content directly to the TV it is a platform that offers various livestreams and add-ons from all over the world.
+
+E2iPlayer organizes its vast repository of global hosts into easily navigable categories, including:
+
+- **Entertainment:** Movies, TV Series, and Documentaries.  
+
+- **Specialized Animation:** Dedicated sections for Cartoons and Anime.  
+
+- **Live Content:** International Live Streams, IP TV channels, and global Sports coverage.  
+
+- **Niche & Education:** Music platforms, Science channels, and dedicated Adult (XXX) content.  
+
+- **Multilingual Support:** Video and audio feeds tailored to various languages and regional demographics.
+
+**Host-Based Architecture:** Content is organized into so-called "Hosts". Each host represents a specific website or service. If a website changes its layout, usually only that specific host needs an update, rather than the entire plugin.
+
+**Local Media Playback:** In addition to web streams, the plugin can play local media files from hard drives, NAS systems, or USB drives, supporting a vast array of file formats.
 
 ---
 
@@ -319,4 +335,4 @@ Thanks! ❤️ 💞 💖 ❤️‍🔥 💗
   Powered 💡 by <a href="https://www.opena.tv">openATV Team</a>
 </p> 
 
-README Last Modified: 2026-04-02
+README Last Modified: 2026-05-17
