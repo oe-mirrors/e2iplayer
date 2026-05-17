@@ -545,6 +545,8 @@ class urlparser:
             "vk.com": self.pp.parserVK,
             "vkvideo.ru": self.pp.parserVK,
             "voe.sx": self.pp.parserVOESX,
+            "vrra.top": self.pp.parserVRRATOP,
+            "vrrstream.ru": self.pp.parserVRRATOP,
             "vsports.pt": self.pp.parserJWPLAYER,
             "vtbe.to": self.pp.parserJWPLAYER,
             "vtube.network": self.pp.parserJWPLAYER,
@@ -762,6 +764,50 @@ class pageParser(CaptchaHelper):
                 self.bbcIE = None
                 printExc()
         return self.bbcIE
+
+    def parserVRRATOP(self, baseUrl):
+        printDBG("parserVRRATOP baseUrl[%s]" % baseUrl)
+        urltab = []
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        handshake = self.cm.ph.getSearchGroups(data, r"""var HANDSHAKE = "([^"]+)";""")[0]
+        if not handshake:
+            handshake = self.cm.ph.getSearchGroups(data, r"""HANDSHAKE\s*=\s*["']([^"^']+?)["']""")[0]
+        if not handshake:
+            printDBG("parserVRRATOP: Handshake token not found")
+            return []
+        api_url = "https://vrra.top/api/manifest"
+        HTTP_HEADER.update({
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            "Referer": baseUrl
+        })
+        json_data = json_dumps({"h": handshake})
+        sts, resp = self.cm.getPage(api_url, {"header": HTTP_HEADER, "raw_post_data": True}, json_data)
+        if not sts:
+            printDBG("parserVRRATOP: API request failed")
+            return []
+        try:
+            resp_json = json_loads(resp)
+            video_url = resp_json.get("url", "")
+        except:
+            printDBG("parserVRRATOP: Failed to parse JSON response")
+            return []
+        if video_url and self.cm.isValidUrl(video_url):
+            host = "https://vrra.top/"
+            url = urlparser.decorateUrl(video_url, {
+                "User-Agent": HTTP_HEADER["User-Agent"],
+                "Referer": host,
+                "Origin": host[:-1],
+                "iptv_proto": "m3u8"
+            })
+            if ".m3u8" in video_url:
+                urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+            else:
+                urltab.append({"name": "vrra.top", "url": url})
+        return urltab
 
     def parserFREEDISC(self, baseUrl):  # OK according to PL user?
         urltab = []
