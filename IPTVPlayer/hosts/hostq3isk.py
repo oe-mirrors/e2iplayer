@@ -41,7 +41,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://3d.q9w8e7.shop/"  # main url of host
+    return "https://b.3isq.cam/"  # main url of host
 
 
 class Q3isk(CBaseHostClass):
@@ -125,7 +125,7 @@ class Q3isk(CBaseHostClass):
         # ]
         self.SERIES_CAT_TAB = [
             {"category": "list_series", "title": "Full Series", "url": self.getFullUrl("جميع-المسلسلات-2d7ig/")},
-            {"category": "list_movies", "title": "Last Added Episodes", "url": self.getFullUrl("episodes/")},
+            {"category": "list_movies", "title": "Last Added Episodes", "url": self.getFullUrl("آخر-الحلقات-hfgrtjf/")},
         ]
 
     def listSeriesCategories(self, cItem):
@@ -222,7 +222,7 @@ class Q3isk(CBaseHostClass):
         ###################################################
         # MAIN SERIES BLOCK
         ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="Small--Box series">', '<div class="pagination">', True)[1]
+        main_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="Small--Box">', '<div class="pagination">', True)[1]
 
         if not main_block:
             printDBG("listSeriesUnits: No main_block found")
@@ -231,7 +231,7 @@ class Q3isk(CBaseHostClass):
         ###################################################
         # PARSE ITEMS CORRECTLY
         ###################################################
-        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="Small--Box series">', "</a>")
+        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="Small--Box">', "</a>")
 
         printDBG("listSeriesUnits: Found %d items" % len(items))
 
@@ -327,7 +327,7 @@ class Q3isk(CBaseHostClass):
             printDBG("listSeriesEpisodes: No main_block found")
             return
 
-        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="Small--Box series">', "</a>")
+        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="Small--Box">', "</a>")
 
         if not items:
             printDBG("listSeriesEpisodes: No episode items found")
