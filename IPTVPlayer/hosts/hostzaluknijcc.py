@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.05.2026 - damagic
+# Last Modified: 19.05.2026 - damagic
 ###################################################
 import re
 import json
@@ -10,10 +10,17 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Components.config import config, ConfigText, getConfigListEntry
+
+try:
+    import json
+except Exception:
+    import simplejson as json
 
 
 def GetConfigList():
-    return []
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -25,16 +32,19 @@ class Zaluknij(CBaseHostClass):
         CBaseHostClass.__init__(
             self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"}
         )
-        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.HEADER["User-Agent"] = (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
+        config.plugins.iptvplayer.cloudflare_user = ConfigText(
+            default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0",
+            fixed_size=False
         )
+        self.HEADER = self.cm.getDefaultHeader(browser="chrome")
+        self.HEADER["User-Agent"] = config.plugins.iptvplayer.cloudflare_user.value
         self.defaultParams = {
             "header": self.HEADER,
             "use_cookie": True,
             "load_cookie": True,
             "save_cookie": True,
             "cookiefile": self.COOKIE_FILE,
+            "with_metadata": True,
         }
         self.MAIN_URL = gettytul()
         self.DEFAULT_ICON_URL = self.fixIconUrl(
@@ -80,44 +90,21 @@ class Zaluknij(CBaseHostClass):
             },
         ] + self.searchItems()
 
-    def getPage(self, baseUrl, addParams=None, post_data=None, max_retries=5):
+    def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams["cloudflare_params"] = {
-            "cookie_file": addParams["cookiefile"],
-            "User-Agent": self.HEADER.get("User-Agent"),
-            "max_retries": max_retries,
-            "timeout": 30,
-            "use_mye2iserver": True,
-        }
-        for attempt in range(max_retries):
-            if attempt > 0:
-                time.sleep(2)
-            try:
-                sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
-                if sts and data and len(data) > 1000:
-                    if "Just a moment" not in str(data[:500]) and "503" not in str(
-                        data[:500]
-                    ):
-                        return sts, data
-            except Exception as e:
-                printDBG(
-                    "Zaluknij.getPage - attempt %d exception: %s"
-                    % (attempt + 1, str(e))
-                )
-            printDBG(
-                "Zaluknij.getPage - attempt %d failed for %s" % (attempt + 1, baseUrl)
-            )
-        return False, ""
+        baseUrl = self.cm.iriToUri(baseUrl)
+        sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        if data.meta.get("cf_user", self.HEADER["User-Agent"]) != self.HEADER["User-Agent"]:
+            self.__init__()
+        return sts, data
 
     def fixIconUrl(self, icon_url, referer=None):
         if not icon_url:
             return ""
-        # fix thumb -> big
         if "thumb" in icon_url:
             icon_url = icon_url.replace("thumb", "big")
         icon_url = self.getFullUrl(icon_url)
-        # get cf cookie
         cf = self.cm.getCookieItem(self.COOKIE_FILE, "cf_clearance")
         return strwithmeta(
             icon_url,
@@ -183,7 +170,7 @@ class Zaluknij(CBaseHostClass):
             details = self.cacheDetails[url]
             desc = self.cacheDescriptions.get(url, "")
         else:
-            sts, data = self.getPage(url, max_retries=3)
+            sts, data = self.getPage(url)
             if sts:
                 desc = self.cm.ph.getSearchGroups(
                     data, r'<p\s+class="description">([^<]+)'
@@ -232,7 +219,7 @@ class Zaluknij(CBaseHostClass):
 
     def listItems(self, cItem, isSearch=False):
         printDBG("Zaluknij.listItems |%s| isSearch=%s" % (cItem, isSearch))
-        sts, htm = self.getPage(cItem["url"], max_retries=3)
+        sts, htm = self.getPage(cItem["url"])
         if not sts:
             printDBG("Zaluknij.listItems - failed to get page after retries")
             return
@@ -394,7 +381,7 @@ class Zaluknij(CBaseHostClass):
         search_url = "%sszukaj" % gettytul()
         post_data = "phrase=%s" % urllib_quote(searchPattern)
         printDBG("Zaluknij.listSearchResult - using POST to: %s" % search_url)
-        sts, htm = self.getPage(search_url, post_data=post_data, max_retries=3)
+        sts, htm = self.getPage(search_url, post_data=post_data)
         if not sts:
             printDBG("Zaluknij.listSearchResult - POST failed, trying GET fallback")
             cItem["url"] = "%swyszukiwarka?phrase=%s" % (
@@ -469,7 +456,7 @@ class Zaluknij(CBaseHostClass):
             return cacheTab
         retTab = []
         url = cItem["url"]
-        sts, data = self.getPage(url, max_retries=3)
+        sts, data = self.getPage(url)
         if not sts:
             return []
         desc = self.cm.ph.getSearchGroups(data, r'<p\s+class="description">([^<]+)')
