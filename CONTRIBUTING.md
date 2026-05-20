@@ -25,14 +25,46 @@ Enjoy and help us improve it today. :)
 
 ---
 
+### ⚖️ Legal Notice
+
+> [!WARNING]
+>When contributing to this project, you must agree that you have authored 100% of the content, that you have the necessary rights to the content and that the content you contribute may be provided under the project under the LICENSE file in the root directory of this source tree..
+
+---
+
 ### ⚠️ Some general rules we follow
 
-1. We use Unix Filetypes
-2. Code-Style: Keep the code readable. Use descriptive variable and function names.
-3. Python compatibility: Ideally, the code should be written so that it runs on both Python 2.7 and Python 3.x.
-4. No heavy external dependencies: For HTTP requests, use the tools built into E2iPlayer (pCommon, urllib, etc.) instead of heavy external libraries that require a tedious installation process on the receivers.
-5. Try to see if you can open links using one of the existing parsers before you write a new parser
-6. Most websites have security measures in place to prevent links from being exported, and you shouldn't try to bypass them in a way that gets noticed; instead, you should get around them without them noticing—as if you were logging in using a browser.
+- We use Unix Filetypes
+- Follow PEP 8 for Python code
+- Use meaningful variable and function names
+- Add comments for complex logic
+- Keep functions small and focused
+- Code-Style: Keep the code readable. Use descriptive variable and function names.
+- Python compatibility: Ideally, the code should be written so that it runs on both Python 2.7 and Python 3.x.
+- No heavy external dependencies: For HTTP requests, use the tools built into E2iPlayer (pCommon, urllib, etc.) instead of heavy external libraries that require a tedious installation process on the receivers.
+- Try to see if you can open links using one of the existing parsers before you write a new parser
+- Most websites have security measures in place to prevent links from being exported, and you shouldn't try to bypass them in a way that gets noticed; instead, you should get around them without them noticing—as if you were logging in using a browser.
+
+---
+
+### 🔧 Code Review
+
+All submissions, including submissions by project members, require review. We use GitHub pull
+requests for this purpose. Consult the [GitHub Help](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-request-reviews)
+for more information on pull request reviews.
+
+Here are some general guidelines to follow when submitting a pull request:
+
+- **Reply to comments.** If a reviewer asks for changes, reply to each
+  (and every) comment with discussion or follow up questions, or let the reviewer know
+  that you have addressed their concerns ("done").
+- **Be patient.** Reviewing PRs takes time. If a reviewer hasn't responded in a week or so,
+  feel free to ping them. If you are a reviewer and you need more time to review a PR, please
+  let the submitter know.
+- **Be kind.** Remember that everyone involved in the project is a human being. Be kind and
+  respectful in your comments and reviews.
+- **Be open to feedback.** If a reviewer asks for changes, be open to their feedback. Remember that
+  the goal is to improve the project, and feedback is an important part of that process.
 
 ---
 
