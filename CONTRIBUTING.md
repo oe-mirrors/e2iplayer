@@ -1,9 +1,100 @@
-**Some general rules we follow**
+### 🤝 Contributing
 
-1. We use Unix Filetypes
-2. Code-Style: Halte den Code lesbar. Nutze sprechende Variablen- und Funktionsnamen.
-3. Python compatibility: Ideally, the code should be written so that it runs on both Python 2.7 and Python 3.x.
-4. No heavy external dependencies: For HTTP requests, use the tools built into E2iPlayer (pCommon, urllib, etc.) instead of heavy external libraries that require a tedious installation process on the receivers.
-5. Try to see if you can open links using one of the existing parsers before you write a new parser
-6. Most websites have security measures in place to prevent links from being exported, and you shouldn't try to bypass them in a way that gets noticed; instead, you should get around them without them noticing—as if you were logging in using a browser.
-7. 
+This Plugin is created by users for users and we welcome every contribution. There are no highly paid developers. There are only users who have seen a problem and done their best to fix it. This means this Plugin will always need the contributions of users like you. How can you get involved?
+
+For questions or feedback, feel free and please open an issue or contribute with a Pull Request!
+
+Pull requests are very welcome for:
+- **Coding:** Developers can help by fixing a bug, adding new features,Integration improvements, Feature enhancements
+- **Localization:** Translate into your native language. (Add new language files, Submit translation updates)
+- **Skinning:** Create custom skins
+- **Helping users:** Our support process relies on enthusiastic contributors like you to help others get the most out of this Plugin.
+- **Documentation:** wiki pages are the hub for information. Help make our documentation better by writing new content or correcting existing material.
+- **Spread the word:** Share this Plugin with the world! Tell your friends and family about how this Plugin creates an amazing entertainment experience.
+
+Your contribution is very welcome! Follow these steps:
+
+1. 🍴 Fork this repository
+2. 🔄 Create a branch for your feature
+3. 💻 Make your changes
+4. ✅ Commit using conventional messages
+5. 📤 Push to your branch
+6. 🔍 Open a Pull Request
+
+Enjoy and help us improve it today. :)
+
+---
+
+### ⚖️ Legal Notice
+
+> [!WARNING]
+>When contributing to this project, you must agree that you have authored 100% of the content, that you have the necessary rights to the content and that the content you contribute may be provided under the project under the LICENSE file in the root directory of this source tree..
+
+---
+
+### ⚠️ Some general rules we follow
+
+- We use Unix Filetypes
+- Follow PEP 8 for Python code
+- Use meaningful variable and function names
+- Add comments for complex logic
+- Keep functions small and focused
+- Code-Style: Keep the code readable. Use descriptive variable and function names.
+- Python compatibility: Ideally, the code should be written so that it runs on both Python 2.7 and Python 3.x.
+- No heavy external dependencies: For HTTP requests, use the tools built into E2iPlayer (pCommon, urllib, etc.) instead of heavy external libraries that require a tedious installation process on the receivers.
+- Try to see if you can open links using one of the existing parsers before you write a new parser
+- Most websites have security measures in place to prevent links from being exported, and you shouldn't try to bypass them in a way that gets noticed; instead, you should get around them without them noticing—as if you were logging in using a browser.
+
+---
+
+### 🔧 Code Review
+
+All submissions, including submissions by project members, require review. We use GitHub pull
+requests for this purpose. Consult the [GitHub Help](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-request-reviews)
+for more information on pull request reviews.
+
+Here are some general guidelines to follow when submitting a pull request:
+
+- **Reply to comments.** If a reviewer asks for changes, reply to each
+  (and every) comment with discussion or follow up questions, or let the reviewer know
+  that you have addressed their concerns ("done").
+- **Be patient.** Reviewing PRs takes time. If a reviewer hasn't responded in a week or so,
+  feel free to ping them. If you are a reviewer and you need more time to review a PR, please
+  let the submitter know.
+- **Be kind.** Remember that everyone involved in the project is a human being. Be kind and
+  respectful in your comments and reviews.
+- **Be open to feedback.** If a reviewer asks for changes, be open to their feedback. Remember that
+  the goal is to improve the project, and feedback is an important part of that process.
+
+---
+
+### 🤖 AI Policy
+
+"AI" herein refers to generative AI tools like large language models (LLMs) that can generate, edit, and review software code, create and manipulate images, or generate human-like communication.
+
+**💂‍♂️ Responsibility**
+- You are responsible for any code you submit, regardless of whether it was manually written or generated by AI
+- You must understand and be able to explain the code you submit as well as the existing related code
+- In explaining your contribution, do not use AI to automatically generate descriptions
+- You must disclose whether AI has been used to assist in the development of your pull request
+
+**📈 Code Quality**
+- Contributors are expected to submit code that meets projects standards and coding style
+- We will reject pull requests that we deem being "AI slop"
+- Do not waste developers' time by submitting code that is fully or mostly generated by AI, and doesn't meet our standards
+
+**©️ Copyright**
+- Contributors license their code under the same license when it is included into version control repository. That means contributors must own the copyright of any code submitted.
+- Code generated by AI may infringe on copyright and it is the submitter's responsibility to not infringe. We reserve the right to reject any pull requests, AI generated or not, where the copyright is in question.
+
+**📞 Communication**
+- When interacting with developers (forum, discussions, issues, pull requests, etc.) do not use AI to speak for you.
+- Human-to-human communication is essential for an open source community to thrive.
+
+**✨ AI Agents**
+- The use of an AI agent that writes code and then submits a pull request autonomously is not permitted.
+- A human must check any generated code and submit a pull request according to the 'Responsibility' section above.
+
+---
+
+Last Modified: 2026-05-20
