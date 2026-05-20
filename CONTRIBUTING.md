@@ -97,8 +97,4 @@ Here are some general guidelines to follow when submitting a pull request:
 
 ---
 
-<p align="center">
-  Powered 💡 by <a href="https://www.opena.tv">openATV Team</a>
-</p> 
-
 Last Modified: 2026-05-20
