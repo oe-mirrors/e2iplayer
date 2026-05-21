@@ -65,6 +65,43 @@ class SubDLAPIProvider(CBaseSubProviderClass):
         self.currList = []
         self._build_id_cache = None
 
+    def convert_to_utf8(self, filePath):
+        try:
+            with open(filePath, "rb") as f:
+                raw_data = f.read()
+            try:
+                raw_data.decode("utf-8")
+                printDBG("✅ File is already UTF-8: %s" % filePath)
+                return
+            except UnicodeDecodeError:
+                printDBG("⚠️ File is not UTF-8, attempting conversion from ANSI...")
+            encodings_to_try = [
+                "cp1256",
+                "windows-1256",
+                "iso-8859-6",
+                "cp1252",
+                "latin-1",
+            ]
+            decoded_content = None
+            for enc in encodings_to_try:
+                try:
+                    decoded_content = raw_data.decode(enc)
+                    printDBG("🔧 Successfully decoded using encoding: %s" % enc)
+                    break
+                except (UnicodeDecodeError, LookupError):
+                    continue
+            if decoded_content:
+                with open(filePath, "w", encoding="utf-8") as f:
+                    f.write(decoded_content)
+                printDBG("✅ Successfully converted %s to UTF-8" % filePath)
+            else:
+                printDBG(
+                    "❌ Could not decode file %s with common encodings." % filePath
+                )
+        except Exception as e:
+            printDBG("❌ Error converting file encoding: %s" % str(e))
+            printExc()
+
     def cleanTitle(self, title, for_search=True):
         if not for_search:
             return title
@@ -105,7 +142,6 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                 printDBG("❌ __NEXT_DATA__ not found")
                 return
             json_data = match.group(1)
-
             data = json.loads(json_data)
             results = data.get("props", {}).get("pageProps", {}).get("list", [])
             results = sorted(
@@ -302,7 +338,38 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                         continue
                     title_raw = item.get("title", "")
                     author = item.get("author", "")
-                    releases = item.get("releases", [])
+                    releases = item.get("releases", "")
+                    quality_api = item.get("quality", "").strip()
+                    display_type = ""
+                    if quality_api:
+                        q = quality_api.lower()
+                        if q == "web-dl":
+                            display_type = "WEB-DL"
+                        elif q == "bluray":
+                            display_type = "Bluray"
+                        elif q == "hdtv":
+                            display_type = "HDTV"
+                        elif q == "hdrip":
+                            display_type = "HDRip"
+                        elif q == "dvdrip":
+                            display_type = "DVDRip"
+                        elif q == "bdrip":
+                            display_type = "BDRip"
+                        elif q == "webrip":
+                            display_type = "WEBRip"
+                        elif q == "tvrip":
+                            display_type = "TVRip"
+                        elif q == "cam":
+                            display_type = "CAM"
+                        else:
+                            display_type = q.capitalize()
+                    else:
+                        type_patterns = r"(BluRay|WEB-DL|WEBDL|HDTV|HDRip|DVDRip|BDRip|TVRip|CAM|TS|TC|HDTC|PPV|DVDScr|WEBRip|WEB)"
+                        match = re.search(type_patterns, title_raw, re.IGNORECASE)
+                        if match:
+                            display_type = match.group(1)
+                        else:
+                            display_type = "Other"
                     clean = title_raw.replace(".", " ").replace("_", " ")
                     clean = " ".join(clean.split())
                     COLOR = Y
@@ -347,13 +414,23 @@ class SubDLAPIProvider(CBaseSubProviderClass):
 
                     clean = color_season_episode(clean)
                     title = " | ".join(
-                        [x for x in [lang_code.capitalize(), author, clean] if x]
+                        [
+                            x
+                            for x in [
+                                lang_code.capitalize(),
+                                display_type,
+                                author,
+                                clean,
+                            ]
+                            if x
+                        ]
                     )
                     desc = ""
                     if releases:
                         desc = r"\c00FFFF00" + ("🎬 " + " | ".join(releases[:2]))
                     link = item.get("link", "")
                     url = "https://dl.subdl.com/subtitle/%s" % link if link else ""
+                    downloads_count = item.get("downloads", 0)
                     params_sub = dict(cItem)
                     params_sub.update(
                         {
@@ -364,11 +441,44 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                             "subtitle_id": str(item.get("id", "")),
                             "lang": lang_code,
                             "category": "get_download",
+                            "quality": quality_api,
+                            "downloads": downloads_count,
                         }
                     )
                     outList.append(params_sub)
+
+                def get_quality_weight(q_str):
+                    if not q_str:
+                        return 99
+                    q = q_str.lower()
+                    if "bluray" in q or "bdrip" in q:
+                        return 1
+                    if "web-dl" in q or "webdl" in q:
+                        return 2
+                    if "webrip" in q:
+                        return 3
+                    if "hdtv" in q:
+                        return 4
+                    if "hdrip" in q:
+                        return 5
+                    if "dvdrip" in q:
+                        return 6
+                    if "tvrip" in q:
+                        return 7
+                    if "cam" in q or "ts" in q or "tc" in q:
+                        return 8
+                    return 99  # Other
+
+                outList.sort(
+                    key=lambda x: (
+                        get_quality_weight(x.get("quality", "other")),
+                        -int(x.get("downloads", 0)),
+                    )
+                )
                 if outList:
-                    printDBG("✅ Total (NextJS): %d subtitle items" % len(outList))
+                    printDBG(
+                        "✅ Total (NextJS): %d subtitle items (Sorted)" % len(outList)
+                    )
                     return outList
         except Exception as e:
             printDBG("⚠️ NextJS failed: %s" % str(e))
@@ -476,6 +586,7 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                             if os.path.exists(extracted_path):
                                 os.remove(extracted_path)
                             os.rename(src_path, extracted_path)
+                        self.convert_to_utf8(extracted_path)
                         break
             if os.path.exists(filePath):
                 os.remove(filePath)
