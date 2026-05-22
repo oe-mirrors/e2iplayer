@@ -490,12 +490,12 @@ class YouTubeParser():
 
         return currList
 
-    ### Neue Parsing-Funktion für lockupViewModel
+    # Neue Parsing-Funktion für lockupViewModel
     def getLockupVideoData(self, lockupJson):
         videoId = lockupJson.get("contentId", "")
         if not videoId:
             return {}
-        
+
         # Nur Videos, keine anderen Typen
         if lockupJson.get("contentType") != "LOCKUP_CONTENT_TYPE_VIDEO":
             return {}
@@ -535,8 +535,7 @@ class YouTubeParser():
         # Aufrufe und Datum
         time = ''
         try:
-            parts = lockupJson['metadata']['lockupMetadataViewModel']['metadata']\
-                    ['contentMetadataViewModel']['metadataRows'][0]['metadataParts']
+            parts = lockupJson['metadata']['lockupMetadataViewModel']['metadata']['contentMetadataViewModel']['metadataRows'][0]['metadataParts']
             for part in parts:
                 text = part.get('text', {}).get('content', '')
                 if text:
@@ -697,7 +696,7 @@ class YouTubeParser():
                 nextPage = ''
                 for r5 in r4:
                     nP = r5.get('continuationItemRenderer', '')
-                    ### Einschub 7 neuer Zeilen, die der neuen Struktur entsprechen
+                    # Einschub 7 neuer Zeilen, die der neuen Struktur entsprechen
                     lockup = r5.get('richItemRenderer', {}).get('content', {}).get('lockupViewModel', {})
                     if lockup:
                         params = self.getLockupVideoData(lockup)
