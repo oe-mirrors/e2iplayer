@@ -178,7 +178,6 @@ class YouTubeParser():
                         if len(hlsList):
                             dashList = []
                             for item in hlsList:
-                                # item['format'] = "%sx%s" % (item.get('with', 0), item.get('heigth', 0))
                                 item['format'] = "%sx%s" % (item.get('width', 0), item.get('height', 0))
                                 item['ext'] = "m3u8"
                                 item['m3u8'] = True
@@ -491,6 +490,84 @@ class YouTubeParser():
 
         return currList
 
+    ### Neue Parsing-Funktion für lockupViewModel
+    def getLockupVideoData(self, lockupJson):
+        videoId = lockupJson.get("contentId", "")
+        if not videoId:
+            return {}
+        
+        # Nur Videos, keine anderen Typen
+        if lockupJson.get("contentType") != "LOCKUP_CONTENT_TYPE_VIDEO":
+            return {}
+
+        url = 'http://www.youtube.com/watch?v=%s' % videoId
+
+        try:
+            title = lockupJson['metadata']['lockupMetadataViewModel']['title']['content']
+            title = ensure_str(title)
+        except:
+            return {}
+
+        # Thumbnail - Query-Parameter abschneiden
+        icon = ''
+        try:
+            sources = lockupJson['contentImage']['thumbnailViewModel']['image']['sources']
+            icon = ensure_str(sources[-1]['url'])
+            if '?' in icon:
+                icon = icon.split('?')[0]
+        except:
+            pass
+
+        # Duration aus Overlays
+        desc = []
+        try:
+            overlays = lockupJson['contentImage']['thumbnailViewModel']['overlays']
+            for overlay in overlays:
+                badge = overlay.get('thumbnailBottomOverlayViewModel', {}).get('badges', [])
+                if badge:
+                    duration = badge[0].get('thumbnailBadgeViewModel', {}).get('text', '')
+                    if duration:
+                        desc.append(_("Duration: %s") % ensure_str(duration))
+                        break
+        except:
+            pass
+
+        # Aufrufe und Datum
+        time = ''
+        try:
+            parts = lockupJson['metadata']['lockupMetadataViewModel']['metadata']\
+                    ['contentMetadataViewModel']['metadataRows'][0]['metadataParts']
+            for part in parts:
+                text = part.get('text', {}).get('content', '')
+                if text:
+                    desc.append(ensure_str(text))
+                    if not time:
+                        time = ensure_str(text)
+        except:
+            pass
+
+        desc_str = " | ".join(desc)
+
+        # Description Snippet - nur in videoRenderer vorhanden,
+        # in lockupViewModel nicht verfügbar
+        # try:
+            # label = ensure_str(
+                # lockupJson['rendererContext']['accessibilityContext']['label']
+            # )
+            # if label:
+                # desc_str = desc_str + "\n" + label
+        # except:
+            # pass
+
+        return {
+            'type': 'video',
+            'category': 'video',
+            'title': title,
+            'url': ensure_str(url),
+            'icon': icon,
+            'time': time,
+            'desc': desc_str
+        }
     ########################################################
     # Tray List PARSER
     ########################################################
@@ -619,15 +696,23 @@ class YouTubeParser():
 
                 nextPage = ''
                 for r5 in r4:
-                    videoJson = r5.get("richItemRenderer", "")
                     nP = r5.get('continuationItemRenderer', '')
-                    if videoJson:
-                        videoJson = videoJson.get("content", {})
-                        videoJson = videoJson.get("videoRenderer", "")
-                        params = self.getVideoData(videoJson)
+                    ### Einschub 7 neuer Zeilen, die der neuen Struktur entsprechen
+                    lockup = r5.get('richItemRenderer', {}).get('content', {}).get('lockupViewModel', {})
+                    if lockup:
+                        params = self.getLockupVideoData(lockup)
                         if params:
                             printDBG(str(params))
                             currList.append(params)
+                    else:
+                         videoJson = r5.get("richItemRenderer", "")
+                         if videoJson:
+                            videoJson = videoJson.get("content", {})
+                            videoJson = videoJson.get("videoRenderer", "")
+                            params = self.getVideoData(videoJson)
+                            if params:
+                                printDBG(str(params))
+                                currList.append(params)
                     if nP != '':
                         nextPage = nP
 
