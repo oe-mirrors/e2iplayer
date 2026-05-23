@@ -236,7 +236,7 @@ class SubsourceAPIProvider(CBaseSubProviderClass):
         printDBG("SubsourceAPIProvider.getMovieID (Integrated Smart Search)")
         raw_title = cItem.get("base_title", cItem.get("title", ""))
 
-        text = re.sub(r"\\[cCpPbBuU][0-9A-Fa-f]{0,8}", "",raw_title)
+        text = re.sub(r"\\[cCpPbBuU][0-9A-Fa-f]{0,8}", "", raw_title)
         text = re.sub(r"[cC][0-9A-Fa-f]{6}", "", text)
         year_match = re.search(r"\b(19\d{2}|20\d{2})\b", text)
         extracted_year = year_match.group() if year_match else ""
@@ -480,7 +480,7 @@ class SubsourceAPIProvider(CBaseSubProviderClass):
                 if season_episode:
                     season_num = int(season_episode.group(1))
                     episode_num = int(season_episode.group(2))
-                    wanted_episode = "S%02dE%02d" % (season_num,episode_num)
+                    wanted_episode = "S%02dE%02d" % (season_num, episode_num)
             printDBG("Wanted episode: %s" % wanted_episode)
             with zipfile.ZipFile(filePath, 'r') as zip_ref:
                 zip_list = [x for x in zip_ref.namelist()
