@@ -3,7 +3,7 @@
 # Subsource.net API subtitle provider for e2iplayer
 # Compatible with Python 2 and 3
 # Created By : popking (odem2014)
-# Last modified: 04/05/02026 - Mohamed Elsafty (angel_heart)
+# Last modified: 23/05/2026 - Mohamed Elsafty (angel_heart)
 #########################################################
 import os
 import zipfile
@@ -236,7 +236,7 @@ class SubsourceAPIProvider(CBaseSubProviderClass):
         printDBG("SubsourceAPIProvider.getMovieID (Integrated Smart Search)")
         raw_title = cItem.get("base_title", cItem.get("title", ""))
 
-        text = re.sub(r"\\[cCpPbBuU][0-9A-Fa-f]{0,8}", "", raw_title)
+        text = re.sub(r"\\[cCpPbBuU][0-9A-Fa-f]{0,8}", "",raw_title)
         text = re.sub(r"[cC][0-9A-Fa-f]{6}", "", text)
         year_match = re.search(r"\b(19\d{2}|20\d{2})\b", text)
         extracted_year = year_match.group() if year_match else ""
@@ -454,19 +454,56 @@ class SubsourceAPIProvider(CBaseSubProviderClass):
                     if chunk:
                         f.write(chunk)
             printDBG("Download complete: %s" % filePath)
-            # Optionally unzip to .srt (SubSource always gives a single file inside zip)
             extracted_path = None
-            with zipfile.ZipFile(filePath, "r") as zip_ref:
-                zip_list = zip_ref.namelist()
-                if zip_list:
-                    first_file = zip_list[0]
-                    extracted_path = os.path.join(
-                        GetSubtitlesDir(), RemoveDisallowedFilenameChars(first_file)
+            video_title = (
+                self.dInfo.get('season_episode', '') or
+                self.dInfo.get('episode_title', '') or
+                self.dInfo.get('title', '') or
+                self.params.get('confirmed_title', '') or
+                cItem.get('title', '')
+            )
+            printDBG("🎬 video_title = %s" % video_title)
+            wanted_episode = ''
+            episode_match = re.search(
+                r'(S\d+E\d+)',
+                video_title,
+                re.IGNORECASE
+            )
+            if episode_match:
+                wanted_episode = episode_match.group(1).upper()
+            else:
+                season_episode = re.search(
+                    r'(?:Season|Staffel|Saison|Series)\s*(\d+).*?(?:Episode|Episoden|Ep)\s*(\d+)',
+                    video_title,
+                    re.IGNORECASE
+                )
+                if season_episode:
+                    season_num = int(season_episode.group(1))
+                    episode_num = int(season_episode.group(2))
+                    wanted_episode = "S%02dE%02d" % (season_num,episode_num)
+            printDBG("Wanted episode: %s" % wanted_episode)
+            with zipfile.ZipFile(filePath, 'r') as zip_ref:
+                zip_list = [x for x in zip_ref.namelist()
+                            if x.lower().endswith(('.srt', '.ass', '.ssa', '.sub'))]
+                selected_file = None
+                if wanted_episode:
+                    for item in zip_list:
+                        if wanted_episode in item.upper():
+                            selected_file = item
+                            printDBG("Matched episode subtitle: %s" % item)
+                            break
+                if not selected_file and zip_list:
+                    selected_file = zip_list[0]
+                    printDBG("⚠️ No exact episode match, using first subtitle: %s" % selected_file)
+                if selected_file:
+                    zip_ref.extract(selected_file, GetSubtitlesDir())
+                    src_path = os.path.join(GetSubtitlesDir(), *selected_file.split('/'))
+                    clean_name = RemoveDisallowedFilenameChars(
+                        os.path.basename(selected_file)
                     )
-                    zip_ref.extract(first_file, GetSubtitlesDir())
-                    os.rename(
-                        os.path.join(GetSubtitlesDir(), first_file), extracted_path
-                    )
+                    extracted_path = os.path.join(GetSubtitlesDir(), clean_name)
+                    if src_path != extracted_path:
+                        os.rename(src_path, extracted_path)
             if extracted_path:
                 retData = {"title": title, "path": extracted_path, "lang": lang}
                 printDBG("Extracted subtitle: %s" % extracted_path)
