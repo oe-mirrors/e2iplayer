@@ -4,7 +4,6 @@ import zipfile
 import requests
 import re
 import json
-
 from Components.config import config, ConfigText, ConfigSubsection
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import (
@@ -24,10 +23,8 @@ W = E2ColoR("white")
 L = E2ColoR("lime")
 C = E2ColoR("cyan")
 OR = E2ColoR("orange")
-
 BASE_URL = "https://api.subdl.com/api/v1"
 DOWNLOAD_BASE = "https://dl.subdl.com/subtitle"
-
 if not hasattr(config.plugins, "iptvplayer"):
     config.plugins.iptvplayer = ConfigSubsection()
 if not hasattr(config.plugins.iptvplayer, "subdlapi"):
@@ -221,7 +218,6 @@ class SubDLAPIProvider(CBaseSubProviderClass):
         if not build_id:
             printDBG("❌ Cannot get buildId")
             return
-
         url = "https://subdl.com/_next/data/%s/en/subtitle/%s/%s/%s.json" % (
             build_id,
             sd_id,
@@ -573,21 +569,83 @@ class SubDLAPIProvider(CBaseSubProviderClass):
             printDBG("✅ Download complete: %s" % filePath)
             extracted_path = None
             subtitles_dir = GetSubtitlesDir()
+            # Extract current episode number from video title
+            video_title = self.params.get("confirmed_title", "") or cItem.get(
+                "title", ""
+            )
+            printDBG("🎬 video_title = %s" % video_title)
+            wanted_episode = ""
+            # S01E07
+            match = re.search(r"(?i)S(\d+)\s*E(\d+)", video_title)
+            if match:
+                wanted_episode = "S%02dE%02d" % (
+                    int(match.group(1)),
+                    int(match.group(2)),
+                )
+            # Season 1 Episode 7
+            if not wanted_episode:
+                match = re.search(r"(?i)season\s*(\d+)\s*episode\s*(\d+)", video_title)
+                if match:
+                    wanted_episode = "S%02dE%02d" % (
+                        int(match.group(1)),
+                        int(match.group(2)),
+                    )
+            # German formats:
+            # Staffel 1 Episode 7
+            # Staffel 1 Episoden 7
+            # Staffel 1 Folge 7
+            if not wanted_episode:
+                match = re.search(
+                    r"(?i)staffel\s*(\d+).*?(?:episode|episoden|folge)\s*(\d+)",
+                    video_title,
+                )
+                if match:
+                    wanted_episode = "S%02dE%02d" % (
+                        int(match.group(1)),
+                        int(match.group(2)),
+                    )
+            # 1x07
+            if not wanted_episode:
+                match = re.search(r"(?i)\b(\d+)x(\d+)\b", video_title)
+                if match:
+                    wanted_episode = "S%02dE%02d" % (
+                        int(match.group(1)),
+                        int(match.group(2)),
+                    )
+            printDBG("🎯 Wanted episode: %s" % wanted_episode)
             with zipfile.ZipFile(filePath, "r") as zip_ref:
-                for fname in zip_ref.namelist():
-                    if fname.lower().endswith((".srt", ".ass", ".ssa", ".sub", ".txt")):
-                        zip_ref.extract(fname, subtitles_dir)
-                        src_path = os.path.join(subtitles_dir, fname)
-                        final_filename = RemoveDisallowedFilenameChars(
-                            os.path.basename(fname)
-                        )
-                        extracted_path = os.path.join(subtitles_dir, final_filename)
-                        if src_path != extracted_path:
-                            if os.path.exists(extracted_path):
-                                os.remove(extracted_path)
-                            os.rename(src_path, extracted_path)
-                        self.convert_to_utf8(extracted_path)
-                        break
+                zip_list = [
+                    x
+                    for x in zip_ref.namelist()
+                    if x.lower().endswith((".srt", ".ass", ".ssa", ".sub", ".txt"))
+                ]
+                selected_file = None
+                # Search for matching episode subtitle
+                if wanted_episode:
+                    for item in zip_list:
+                        if wanted_episode in item.upper():
+                            selected_file = item
+                            printDBG("✅ Matched episode subtitle: %s" % item)
+                            break
+                # Fallback to first subtitle file
+                if not selected_file and zip_list:
+                    selected_file = zip_list[0]
+                    printDBG(
+                        "⚠️ No exact episode match, using first subtitle: %s"
+                        % selected_file
+                    )
+                if selected_file:
+                    zip_ref.extract(selected_file, subtitles_dir)
+                    src_path = os.path.join(subtitles_dir, selected_file)
+                    final_filename = RemoveDisallowedFilenameChars(
+                        os.path.basename(selected_file)
+                    )
+                    extracted_path = os.path.join(subtitles_dir, final_filename)
+                    if src_path != extracted_path:
+                        if os.path.exists(extracted_path):
+                            os.remove(extracted_path)
+                        os.rename(src_path, extracted_path)
+                    self.convert_to_utf8(extracted_path)
             if os.path.exists(filePath):
                 os.remove(filePath)
             if extracted_path and os.path.exists(extracted_path):
