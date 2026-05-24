@@ -11,19 +11,20 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_quote
+
 ###################################################
 # FOREIGN import
 ###################################################
 import re
 import time
 import json
+
 ###################################################
 Y = E2ColoR("yellow")
 W = E2ColoR("white")
 LB = E2ColoR("lightblue")
 G = E2ColoR("green")
 R = E2ColoR("red")
-###################################################
 
 
 def GetConfigList():

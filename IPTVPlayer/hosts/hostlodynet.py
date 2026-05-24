@@ -35,18 +35,28 @@ class Lodynet(CBaseHostClass):
         }
         CBaseHostClass.__init__(self, params)
         self.MAIN_URL = "https://lodynet.watch"
-        self.DEFAULT_ICON_URL = (
-            "https://lodynet.watch/wp-content/themes/Lodynet2020/Img/Logo.webp"
-        )
+        self.DEFAULT_ICON_URL = "https://lodynet.watch/wp-content/themes/Lodynet2020/Img/Logo.webp"
         self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
 
     # ==========================================================================================
     def searchItems(self):
         if self._historyLenTextFunction:
             return [
-                {"category": "search", "title": "بحث", "search_item": True, },
-                {"category": "search_history", "title": "سجل البحث", "desc": "تاريخ العبارات التي تم البحث عنها.", },
-                {"category": "delete_history", "title": "حذف سجل البحث", "desc": self._historyLenTextFunction, },
+                {
+                    "category": "search",
+                    "title": "بحث",
+                    "search_item": True,
+                },
+                {
+                    "category": "search_history",
+                    "title": "سجل البحث",
+                    "desc": "تاريخ العبارات التي تم البحث عنها.",
+                },
+                {
+                    "category": "delete_history",
+                    "title": "حذف سجل البحث",
+                    "desc": self._historyLenTextFunction,
+                },
             ]
         else:
             return []
@@ -74,9 +84,7 @@ class Lodynet(CBaseHostClass):
             url = self.MAIN_URL + url
         elif not url.startswith("http"):
             url = self.MAIN_URL + "/" + url
-        if any(
-            ext in url.lower() for ext in [".jpg", ".jpeg", ".png", ".webp", ".gif"]
-        ):
+        if any(ext in url.lower() for ext in [".jpg", ".jpeg", ".png", ".webp", ".gif"]):
             if not url.startswith("http"):
                 return self.DEFAULT_ICON_URL
         url = self.encodeUrl(url)
@@ -116,10 +124,24 @@ class Lodynet(CBaseHostClass):
         MAIN_CAT_TAB = [
             {"category": "sub_menu", "title": "مسلسلات", "mode": "10", "sub_mode": 0},
             {"category": "sub_menu", "title": "أفلام", "mode": "10", "sub_mode": 1},
-            {"category": "list_items", "title": "برامج و حفلات", "url": "/category/البرامج-و-حفلات-tv/", },
+            {
+                "category": "list_items",
+                "title": "برامج و حفلات",
+                "url": "/category/البرامج-و-حفلات-tv/",
+            },
             {"category": "sub_menu", "title": "أغاني", "mode": "10", "sub_mode": 2},
-            {"category": "list_items", "title": "المضاف حديثاً", "url": "/", "sub_mode": "newly", },
-            {"category": "list_actors", "title": "الممثلين", "url": "/all_actors/", "sub_mode": "/all_actors/", },
+            {
+                "category": "list_items",
+                "title": "المضاف حديثاً",
+                "url": "/",
+                "sub_mode": "newly",
+            },
+            {
+                "category": "list_actors",
+                "title": "الممثلين",
+                "url": "/all_actors/",
+                "sub_mode": "/all_actors/",
+            },
         ]
         self.listsTab(MAIN_CAT_TAB, cItem)
         search_items = self.searchItems()
@@ -135,62 +157,258 @@ class Lodynet(CBaseHostClass):
         SUB_CAT_TAB = []
         if gnr == 0:
             SUB_CAT_TAB = [
-                {"category": "list_items", "title": "مسلسلات هندية", "url": "/category/مسلسلات-هندية-مترجمة/", },
-                {"category": "list_items", "title": "مسلسلات هندية مدبلجة", "url": "/dubbed-indian-series-p5/", },
-                {"category": "list_items", "title": "مسلسلات ويب هندية", "url": "/category/مسلسل-ويب-هندية/", },
-                {"category": "list_items", "title": "مسلسلات هندية 2020", "url": "/release-year/مسلسلات-هندية-2020-a/", },
-                {"category": "list_items", "title": "مسلسلات هندية 2019", "url": "/release-year/مسلسلات-هندية-2019/", },
-                {"category": "list_items", "title": "مسلسلات هندية 2018", "url": "/release-year/مسلسلات-هندية-2018/", },
-                {"category": "list_items", "title": "مسلسلات تركية", "url": "/category/مسلسلات-تركي/", },
-                {"category": "list_items", "title": "مسلسلات تركية مدبلجة", "url": "/dubbed-turkish-series-g/", },
-                {"category": "list_items", "title": "مسلسلات كورية", "url": "/korean-series-b/", },
-                {"category": "list_items", "title": "مسلسلات صينية", "url": "/category/مسلسلات-صينية-مترجمة/", },
-                {"category": "list_items", "title": "مسلسلات تايلاندية", "url": "/مشاهدة-مسلسلات-تايلندية/", },
-                {"category": "list_items", "title": "مسلسلات باكستانية", "url": "/category/المسلسلات-باكستانية/", },
-                {"category": "list_items", "title": "مسلسلات آسيوية حديثة", "url": "/tag/new-asia/", },
-                {"category": "list_items", "title": "مسلسلات مكسيكية", "url": "/category/مسلسلات-مكسيكية-a/", },
-                {"category": "list_items", "title": "مسلسلات أجنبية", "url": "/category/مسلسلات-اجنبية/", },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات هندية",
+                    "url": "/category/مسلسلات-هندية-مترجمة/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات هندية مدبلجة",
+                    "url": "/dubbed-indian-series-p5/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات ويب هندية",
+                    "url": "/category/مسلسل-ويب-هندية/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات هندية 2020",
+                    "url": "/release-year/مسلسلات-هندية-2020-a/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات هندية 2019",
+                    "url": "/release-year/مسلسلات-هندية-2019/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات هندية 2018",
+                    "url": "/release-year/مسلسلات-هندية-2018/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات تركية",
+                    "url": "/category/مسلسلات-تركي/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات تركية مدبلجة",
+                    "url": "/dubbed-turkish-series-g/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات كورية",
+                    "url": "/korean-series-b/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات صينية",
+                    "url": "/category/مسلسلات-صينية-مترجمة/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات تايلاندية",
+                    "url": "/مشاهدة-مسلسلات-تايلندية/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات باكستانية",
+                    "url": "/category/المسلسلات-باكستانية/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات آسيوية حديثة",
+                    "url": "/tag/new-asia/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات مكسيكية",
+                    "url": "/category/مسلسلات-مكسيكية-a/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "مسلسلات أجنبية",
+                    "url": "/category/مسلسلات-اجنبية/",
+                },
             ]
         elif gnr == 1:
             SUB_CAT_TAB = [
-                {"category": "list_items", "title": "افلام هندية", "url": "/category/افلام-هندية/", },
-                {"category": "list_items", "title": "أفلام هندية مدبلجة", "url": "/category/أفلام-هندية-مدبلجة/", },
-                {"category": "list_items", "title": "افلام هندية جنوبية", "url": "/tag/الافلام-الهندية-الجنوبية/", },
-                {"category": "list_items", "title": "أفلام هندي 2025", "url": "/release-year/أفلام-هندي-2025/", },
-                {"category": "list_items", "title": "أفلام هندي 2024", "url": "/release-year/أفلام-هندي-2024/", },
-                {"category": "list_items", "title": "أفلام هندي 2023", "url": "/release-year/أفلام-هندية-2023/", },
-                {"category": "list_items", "title": "أفلام هندي 2021", "url": "/release-year/movies-hindi-2021/", },
-                {"category": "list_items", "title": "أفلام هندي 2020", "url": "/release-year/افلام-هندي-2020-a/", },
-                {"category": "list_items", "title": "افلام هندي 2019", "url": "/release-year/افلام-هندي-2019/", },
-                {"category": "list_items", "title": "افلام هندي 2018", "url": "/release-year/افلام-هندي-2018/", },
-                {"category": "list_items", "title": "افلام هندي 2017", "url": "/release-year/افلام-هندي-2017/", },
-                {"category": "list_items", "title": "افلام هندي 2016", "url": "/release-year/2016/", },
-                {"category": "list_items", "title": "افلام هندية 4K", "url": "/tag/افلام-هندية-مترجمة-بجودة-4k/", },
-                {"category": "list_items", "title": "أميتاب باتشان", "url": "/actor/أميتاب-باتشان/", },
-                {"category": "list_items", "title": "اعمال شاروخان", "url": "/actor/شاه-روخ-خان-a/", },
-                {"category": "list_items", "title": "أعمال سلمان خان", "url": "/actor/سلمان-خان-a/", },
-                {"category": "list_items", "title": "أعمال عامر خان", "url": "/actor/عامر-خان-a/", },
-                {"category": "list_items", "title": "أعمال شاهد كابور", "url": "/actor/شاهيد-كابور/", },
-                {"category": "list_items", "title": "أعمال رانبير كابور", "url": "/actor/رانبير-كابور/", },
-                {"category": "list_items", "title": "أعمال ديبيكا بادكون", "url": "/actor/ديبيكا-بادكون/", },
-                {"category": "list_items", "title": "أعمال جينيفر ونجت", "url": "/actor/جينيفر-ونجت/", },
-                {"category": "list_items", "title": "أعمال هريتيك روشان", "url": "/actor/هريتيك-روشان/", },
-                {"category": "list_items", "title": "أعمال اكشاي كومار", "url": "/actor/اكشاي-كومار/", },
-                {"category": "list_items", "title": "أعمال تابسي بانو", "url": "/actor/تابسي-بانو/", },
-                {"category": "list_items", "title": "أعمال سانجاي دوت", "url": "/actor/سانجاي-دوت-a/", },
-                {"category": "list_items", "title": "ترجمات احمد بشير", "url": "/tag/جميع-الأفلام-في-هذا-القسم-من-ترجمة-أحمد/", },
-                {"category": "list_items", "title": "افلام تركية مترجم", "url": "/category/افلام-تركية-مترجم/", },
-                {"category": "list_items", "title": "افلام باكستانية", "url": "/tag/افلام-باكستانية-مترجمة/", },
-                {"category": "list_items", "title": "افلام اسيوية", "url": "/category/افلام-اسيوية-a/", },
-                {"category": "list_items", "title": "افلام اجنبي", "url": "/category/افلام-اجنبية-مترجمة-a/", },
+                {
+                    "category": "list_items",
+                    "title": "افلام هندية",
+                    "url": "/category/افلام-هندية/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أفلام هندية مدبلجة",
+                    "url": "/category/أفلام-هندية-مدبلجة/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "افلام هندية جنوبية",
+                    "url": "/tag/الافلام-الهندية-الجنوبية/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أفلام هندي 2025",
+                    "url": "/release-year/أفلام-هندي-2025/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أفلام هندي 2024",
+                    "url": "/release-year/أفلام-هندي-2024/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أفلام هندي 2023",
+                    "url": "/release-year/أفلام-هندية-2023/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أفلام هندي 2021",
+                    "url": "/release-year/movies-hindi-2021/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أفلام هندي 2020",
+                    "url": "/release-year/افلام-هندي-2020-a/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "افلام هندي 2019",
+                    "url": "/release-year/افلام-هندي-2019/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "افلام هندي 2018",
+                    "url": "/release-year/افلام-هندي-2018/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "افلام هندي 2017",
+                    "url": "/release-year/افلام-هندي-2017/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "افلام هندي 2016",
+                    "url": "/release-year/2016/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "افلام هندية 4K",
+                    "url": "/tag/افلام-هندية-مترجمة-بجودة-4k/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أميتاب باتشان",
+                    "url": "/actor/أميتاب-باتشان/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "اعمال شاروخان",
+                    "url": "/actor/شاه-روخ-خان-a/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أعمال سلمان خان",
+                    "url": "/actor/سلمان-خان-a/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أعمال عامر خان",
+                    "url": "/actor/عامر-خان-a/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أعمال شاهد كابور",
+                    "url": "/actor/شاهيد-كابور/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أعمال رانبير كابور",
+                    "url": "/actor/رانبير-كابور/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أعمال ديبيكا بادكون",
+                    "url": "/actor/ديبيكا-بادكون/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أعمال جينيفر ونجت",
+                    "url": "/actor/جينيفر-ونجت/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أعمال هريتيك روشان",
+                    "url": "/actor/هريتيك-روشان/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أعمال اكشاي كومار",
+                    "url": "/actor/اكشاي-كومار/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أعمال تابسي بانو",
+                    "url": "/actor/تابسي-بانو/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أعمال سانجاي دوت",
+                    "url": "/actor/سانجاي-دوت-a/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "ترجمات احمد بشير",
+                    "url": "/tag/جميع-الأفلام-في-هذا-القسم-من-ترجمة-أحمد/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "افلام تركية مترجم",
+                    "url": "/category/افلام-تركية-مترجم/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "افلام باكستانية",
+                    "url": "/tag/افلام-باكستانية-مترجمة/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "افلام اسيوية",
+                    "url": "/category/افلام-اسيوية-a/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "افلام اجنبي",
+                    "url": "/category/افلام-اجنبية-مترجمة-a/",
+                },
                 {"category": "list_items", "title": "انيمي", "url": "/category/انيمي/"},
             ]
         elif gnr == 2:
             SUB_CAT_TAB = [
-                {"category": "list_items", "title": "أغاني المسلسلات", "url": "/category/اغاني/اغاني-المسلسلات-الهندية/", },
-                {"category": "list_items", "title": "تصاميم مسلسلات هندية", "url": "/category/تصاميم-مسلسلات-هندية/", },
-                {"category": "list_items", "title": "أغاني الأفلام", "url": "/category/اغاني-الافلام/", },
-                {"category": "list_items", "title": "اغاني هندية mp3", "url": "/category/اغاني/اغاني-هندية-mp3/", },
+                {
+                    "category": "list_items",
+                    "title": "أغاني المسلسلات",
+                    "url": "/category/اغاني/اغاني-المسلسلات-الهندية/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "تصاميم مسلسلات هندية",
+                    "url": "/category/تصاميم-مسلسلات-هندية/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "أغاني الأفلام",
+                    "url": "/category/اغاني-الافلام/",
+                },
+                {
+                    "category": "list_items",
+                    "title": "اغاني هندية mp3",
+                    "url": "/category/اغاني/اغاني-هندية-mp3/",
+                },
             ]
         self.listsTab(SUB_CAT_TAB, cItem)
 
@@ -209,9 +427,7 @@ class Lodynet(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        items = re.findall(
-            r'<div class="ItemNewly">(.*?)</div>\s*</a>\s*</div>', data, re.S
-        )
+        items = re.findall(r'<div class="ItemNewly">(.*?)</div>\s*</a>\s*</div>', data, re.S)
         for item in items:
             title = re.search(r'title="([^"]+)"', item)
             link = re.search(r'href="([^"]+)"', item)
@@ -220,11 +436,7 @@ class Lodynet(CBaseHostClass):
                 continue
             title = title.group(1).strip()
             item_url = self.getFullUrl(link.group(1))
-            icon = (
-                self.getFullUrl(img.group(1))
-                if img and img.group(1)
-                else self.DEFAULT_ICON_URL
-            )
+            icon = self.getFullUrl(img.group(1)) if img and img.group(1) else self.DEFAULT_ICON_URL
             desc = self.extractDescFromNewly(item)
             if self.determineContentType(title, item_url) == "series":
                 self.addDir(
@@ -264,9 +476,7 @@ class Lodynet(CBaseHostClass):
             )
             return
         # === دعم زر عرض المزيد (GetExpansion) ===
-        more = re.search(
-            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
-        )
+        more = re.search(r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data)
         if more:
             indicator = more.group(1)
             exp_type = more.group(2)
@@ -282,10 +492,7 @@ class Lodynet(CBaseHostClass):
                     "url": url,
                 }
             )
-            printDBG(
-                "Expansion button added: indicator=%s type=%s id=%s"
-                % (indicator, exp_type, exp_id)
-            )
+            printDBG("Expansion button added: indicator=%s type=%s id=%s" % (indicator, exp_type, exp_id))
 
     # ==========================================================================================
     def listEpisodes(self, cItem):
@@ -295,20 +502,14 @@ class Lodynet(CBaseHostClass):
         if not sts:
             return
         items_added = 0
-        blocks = re.findall(
-            r'(<div class="ItemNewly">.*?</div>\s*</a>\s*</div>)', data, re.S
-        )
+        blocks = re.findall(r'(<div class="ItemNewly">.*?</div>\s*</a>\s*</div>)', data, re.S)
         for block in blocks:
             title = re.search(r'title="([^"]+)"', block)
             link = re.search(r'href="([^"]+)"', block)
             img = re.search(r'data-src="([^"]*)"', block)
             if not title or not link:
                 continue
-            icon = (
-                self.getFullUrl(img.group(1))
-                if img and img.group(1)
-                else self.DEFAULT_ICON_URL
-            )
+            icon = self.getFullUrl(img.group(1)) if img and img.group(1) else self.DEFAULT_ICON_URL
             self.addVideo(
                 {
                     "title": title.group(1).strip(),
@@ -320,9 +521,7 @@ class Lodynet(CBaseHostClass):
             )
             items_added += 1
         # === دعم GetExpansion (عرض المزيد) - للأقسام التي تستخدمه ===
-        more = re.search(
-            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
-        )
+        more = re.search(r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data)
         if more and items_added >= 10:
             indicator = more.group(1)
             exp_type = more.group(2)
@@ -340,10 +539,7 @@ class Lodynet(CBaseHostClass):
                     "icon": self.DEFAULT_ICON_URL,
                 }
             )
-            printDBG(
-                "Expansion button added for episodes: indicator=%s type=%s id=%s"
-                % (indicator, exp_type, exp_id)
-            )
+            printDBG("Expansion button added for episodes: indicator=%s type=%s id=%s" % (indicator, exp_type, exp_id))
             return
 
     # ==========================================================================================
@@ -351,10 +547,7 @@ class Lodynet(CBaseHostClass):
         printDBG("Lodynet.loadMore [%s]" % cItem)
         # === معالجة GetExpansion (عرض المزيد) ===
         if cItem.get("is_expansion"):
-            API_URL = (
-                self.MAIN_URL
-                + "/wp-content/themes/Lodynet2020/Api/RequestExpansion.php"
-            )
+            API_URL = self.MAIN_URL + "/wp-content/themes/Lodynet2020/Api/RequestExpansion.php"
             post_data = {
                 "indicator": cItem.get("indicator", ""),
                 "type": cItem.get("exp_type", ""),
@@ -382,31 +575,16 @@ class Lodynet(CBaseHostClass):
                             if url_path.startswith("http"):
                                 full_url = url_path
                             else:
-                                full_url = self.MAIN_URL + (
-                                    url_path
-                                    if url_path.startswith("/")
-                                    else "/" + url_path
-                                )
+                                full_url = self.MAIN_URL + (url_path if url_path.startswith("/") else "/" + url_path)
                             icon = item.get("cover", "")
-                            icon = (
-                                self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
-                            )
+                            icon = self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
                             desc_parts = []
                             if item.get("ribbon"):
-                                desc_parts.append(
-                                    "\\c00????00 النوع: \\c00????FF"
-                                    + item.get("ribbon")
-                                )
+                                desc_parts.append("\\c00????00 النوع: \\c00????FF" + item.get("ribbon"))
                             if item.get("Date"):
-                                desc_parts.append(
-                                    "\\c00????00 وقت النشر: \\c00????FF"
-                                    + self.getTimeAgo(item.get("Date"))
-                                )
+                                desc_parts.append("\\c00????00 وقت النشر: \\c00????FF" + self.getTimeAgo(item.get("Date")))
                             if item.get("episode"):
-                                desc_parts.append(
-                                    "\\c00????00 الحلقة: \\c00????FF"
-                                    + str(item.get("episode"))
-                                )
+                                desc_parts.append("\\c00????00 الحلقة: \\c00????FF" + str(item.get("episode")))
                             full_desc = "\\n".join(desc_parts) if desc_parts else ""
                             self.addDir(
                                 {
@@ -427,31 +605,16 @@ class Lodynet(CBaseHostClass):
                             if url_path.startswith("http"):
                                 full_url = url_path
                             else:
-                                full_url = self.MAIN_URL + (
-                                    url_path
-                                    if url_path.startswith("/")
-                                    else "/" + url_path
-                                )
+                                full_url = self.MAIN_URL + (url_path if url_path.startswith("/") else "/" + url_path)
                             icon = item.get("cover", "")
-                            icon = (
-                                self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
-                            )
+                            icon = self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
                             desc_parts = []
                             if item.get("ribbon"):
-                                desc_parts.append(
-                                    "\\c00????00 النوع: \\c00????FF"
-                                    + item.get("ribbon")
-                                )
+                                desc_parts.append("\\c00????00 النوع: \\c00????FF" + item.get("ribbon"))
                             if item.get("Date"):
-                                desc_parts.append(
-                                    "\\c00????00 وقت النشر: \\c00????FF"
-                                    + self.getTimeAgo(item.get("Date"))
-                                )
+                                desc_parts.append("\\c00????00 وقت النشر: \\c00????FF" + self.getTimeAgo(item.get("Date")))
                             if item.get("episode"):
-                                desc_parts.append(
-                                    "\\c00????00 الحلقة: \\c00????FF"
-                                    + str(item.get("episode"))
-                                )
+                                desc_parts.append("\\c00????00 الحلقة: \\c00????FF" + str(item.get("episode")))
                             full_desc = "\\n".join(desc_parts) if desc_parts else ""
                             params = {
                                 "title": title,
@@ -463,10 +626,7 @@ class Lodynet(CBaseHostClass):
                             if cItem.get("is_episodes"):
                                 self.addVideo(params)
                             else:
-                                if (
-                                    self.determineContentType(title, full_url)
-                                    == "series"
-                                ):
+                                if self.determineContentType(title, full_url) == "series":
                                     params["category"] = "list_episodes"
                                     self.addDir(params)
                                 else:
@@ -507,9 +667,7 @@ class Lodynet(CBaseHostClass):
             printDBG(f"Actor URL pattern detected: {result}")
             return result
         if any(x in title_lower for x in ["ممثل", "نجم", "ممثلة", "فنان", "فنانة"]):
-            if "/actor/" in url_lower or any(
-                x in url_lower for x in ["/actors/", "/celebrity/"]
-            ):
+            if "/actor/" in url_lower or any(x in url_lower for x in ["/actors/", "/celebrity/"]):
                 result = "actor"
                 printDBG(f"Actor title + URL detected: {result}")
                 return result
@@ -601,17 +759,11 @@ class Lodynet(CBaseHostClass):
             result = "series"
             printDBG(f"Season pattern detected: {result}")
             return result
-        if any(
-            keyword in url_lower
-            for keyword in ["/series/", "/مسلسلات/", "/مسلسل/", "/seasons/"]
-        ):
+        if any(keyword in url_lower for keyword in ["/series/", "/مسلسلات/", "/مسلسل/", "/seasons/"]):
             result = "series"
             printDBG(f"Series URL pattern detected: {result}")
             return result
-        if any(
-            keyword in url_lower
-            for keyword in ["/movies/", "/أفلام/", "/فيلم/", "/film/"]
-        ):
+        if any(keyword in url_lower for keyword in ["/movies/", "/أفلام/", "/فيلم/", "/film/"]):
             result = "movie"
             printDBG(f"Movie URL pattern detected: {result}")
             return result
@@ -623,10 +775,7 @@ class Lodynet(CBaseHostClass):
                 "/series-",
                 "/مسلسل-",
             ]
-        ) and not any(
-            keyword in url_lower
-            for keyword in ["/افلام/", "/movies/", "/أغاني/", "/music/"]
-        ):
+        ) and not any(keyword in url_lower for keyword in ["/افلام/", "/movies/", "/أغاني/", "/music/"]):
             result = "series"
             printDBG(f"Foreign series section detected: {result}")
             return result
@@ -673,25 +822,17 @@ class Lodynet(CBaseHostClass):
         desc_parts = []
         type_match = re.search(r'NewlyRibbon">([^<]+)</div>', html_block)
         if type_match:
-            desc_parts.append(
-                "\\c00????00 النوع: \\c00????FF" + type_match.group(1).strip()
-            )
+            desc_parts.append("\\c00????00 النوع: \\c00????FF" + type_match.group(1).strip())
         time_match = re.search(r'NewlyTimeAgo[^>]*data-date="([^"]+)"', html_block)
         if time_match:
             ago = self.getTimeAgo(time_match.group(1).strip())
             desc_parts.append("\\c00????00 وقت النشر: \\c00????FF" + ago)
         episode_match = re.search(r"NewlyEpNumber[^>]*>.*?(\d+)</div>", html_block)
         if episode_match:
-            desc_parts.append(
-                "\\c00????00 الحلقة: \\c00????FF" + episode_match.group(1).strip()
-            )
-        summary_match = re.search(
-            r'class="NewlySummary"[^>]*>([^<]+)</div>', html_block
-        )
+            desc_parts.append("\\c00????00 الحلقة: \\c00????FF" + episode_match.group(1).strip())
+        summary_match = re.search(r'class="NewlySummary"[^>]*>([^<]+)</div>', html_block)
         if summary_match:
-            desc_parts.append(
-                "\\c00????00 الملخص: \\c00FFFFFF" + summary_match.group(1).strip()
-            )
+            desc_parts.append("\\c00????00 الملخص: \\c00FFFFFF" + summary_match.group(1).strip())
         return "\n".join(desc_parts) if desc_parts else "\\c00????00 محتوى مضاف حديثاً"
 
     # ==========================================================================================
@@ -716,16 +857,12 @@ class Lodynet(CBaseHostClass):
             break
         printDBG("PostID = %s" % post_id)
         # ===== Servers =====
-        servers = re.findall(
-            r'<button[^>]+id="ServerWatch(\d+)"[^>]*>([^<]+)</button>', data
-        )
+        servers = re.findall(r'<button[^>]+id="ServerWatch(\d+)"[^>]*>([^<]+)</button>', data)
         printDBG("Found %d server buttons" % len(servers))
         if not post_id or not servers:
             printDBG("No servers or no post_id")
             return []
-        api_url = (
-            self.MAIN_URL + "/wp-content/themes/Lodynet2020/Api/RequestServerEmbed.php"
-        )
+        api_url = self.MAIN_URL + "/wp-content/themes/Lodynet2020/Api/RequestServerEmbed.php"
         green_servers = [
             "ViD LO",
             "Vinovo",
@@ -765,9 +902,7 @@ class Lodynet(CBaseHostClass):
         printDBG("Lodynet.getVideoLinks [%s]" % videoUrl)
         videoUrlStr = str(videoUrl)
         if "ok.ru" in videoUrlStr:
-            printDBG(
-                "Direct OK.ru URL detected in getVideoLinks, using custom resolver"
-            )
+            printDBG("Direct OK.ru URL detected in getVideoLinks, using custom resolver")
             return self.getOkRuLinks(videoUrlStr)
         if hasattr(videoUrl, "meta"):
             post_data = videoUrl.meta.get("post_data")
@@ -778,10 +913,7 @@ class Lodynet(CBaseHostClass):
                     post_data,
                     videoUrl.meta.get("Referer", self.MAIN_URL),
                 )
-        if any(
-            x in videoUrlStr
-            for x in ["vidlo.us", "viidshar.com", "govad.xyz", "vadbam.net"]
-        ):
+        if any(x in videoUrlStr for x in ["vidlo.us", "viidshar.com", "govad.xyz", "vadbam.net"]):
             return self.getVidloDirectLinks(videoUrlStr)
         if videoUrlStr.endswith(".mp4"):
             return [{"name": "Direct MP4", "url": videoUrlStr}]
@@ -823,11 +955,7 @@ class Lodynet(CBaseHostClass):
             data_options = json.loads(data_options_str)
             flashvars = data_options.get("flashvars", {})
             metadata_str = flashvars.get("metadata", "")
-            metadata_str = (
-                metadata_str.replace('\\"', '"')
-                .replace("\\\\", "\\")
-                .replace("\\u0026", "&")
-            )
+            metadata_str = metadata_str.replace('\\"', '"').replace("\\\\", "\\").replace("\\u0026", "&")
             metadata = json.loads(metadata_str)
         except Exception as e:
             printDBG("========= Failed to parse metadata JSON: %s" % e)
@@ -864,9 +992,7 @@ class Lodynet(CBaseHostClass):
                 bitrate = video.get("bitrate") or "unknown"
                 res = video.get("res") or video.get("resolution") or "unknown"
                 codecs = video.get("codecs") or "avc1,mp4a"
-                display = (
-                    f"{display_quality} - MP4 - bitrate: {bitrate} res: {res} {codecs}"
-                )
+                display = f"{display_quality} - MP4 - bitrate: {bitrate} res: {res} {codecs}"
                 all_links.append(
                     {
                         "name": display,
@@ -951,11 +1077,7 @@ class Lodynet(CBaseHostClass):
         # ===================== Standardize MP4 name and infer resolution/bitrate =====================
         for item in all_links:
             if not item.get("is_hls", False) and not item.get("is_dash", False):
-                qv = (
-                    int(item["quality_val"])
-                    if str(item["quality_val"]).isdigit()
-                    else 0
-                )
+                qv = int(item["quality_val"]) if str(item["quality_val"]).isdigit() else 0
                 # Infer resolution from quality_val
                 if "res" not in item["name"] or "unknown" in item["name"]:
                     if qv == 2160:
@@ -997,9 +1119,7 @@ class Lodynet(CBaseHostClass):
                 else:
                     bitrate = "unknown"
                 # Rebuild display name
-                item["name"] = (
-                    f"{item['name'].split(' - ')[0]} - MP4 - bitrate: {bitrate} res: {res} avc1,mp4a"
-                )
+                item["name"] = f"{item['name'].split(' - ')[0]} - MP4 - bitrate: {bitrate} res: {res} avc1,mp4a"
 
         # ===================== Sort links by quality descending =====================
         def sort_key(item):
@@ -1029,9 +1149,7 @@ class Lodynet(CBaseHostClass):
         }
         try:
             printDBG("Sending POST request to API...")
-            response = requests.post(
-                api_url, data=post_data, headers=headers, timeout=30
-            )
+            response = requests.post(api_url, data=post_data, headers=headers, timeout=30)
             response_text = response.text.strip()
             printDBG("API Response: %s" % response_text)
             printDBG("Response length: %d chars" % len(response_text))
@@ -1106,11 +1224,7 @@ class Lodynet(CBaseHostClass):
             re.S,
         )
         for title, item_url, img in items:
-            if any(
-                x in str(value)
-                for value in [title, item_url, img]
-                for x in ["+ CategoryItem.", "CategoryItem."]
-            ):
+            if any(x in str(value) for value in [title, item_url, img] for x in ["+ CategoryItem.", "CategoryItem."]):
                 continue
             full_url = self.getFullUrl(item_url)
             icon = self.getFullUrl(img) if img else self.DEFAULT_ICON_URL
@@ -1123,9 +1237,7 @@ class Lodynet(CBaseHostClass):
                     "good_for_fav": True,
                 }
             )
-        more = re.search(
-            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
-        )
+        more = re.search(r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data)
         if more:
             indicator = more.group(1)
             exp_type = more.group(2)
@@ -1153,20 +1265,14 @@ class Lodynet(CBaseHostClass):
         if not sts:
             return
         items_added = 0
-        blocks = re.findall(
-            r'(<div class="ItemNewly">.*?</div>\s*</a>\s*</div>)', data, re.S
-        )
+        blocks = re.findall(r'(<div class="ItemNewly">.*?</div>\s*</a>\s*</div>)', data, re.S)
         for block in blocks:
             title = re.search(r'title="([^"]+)"', block)
             link = re.search(r'href="([^"]+)"', block)
             img = re.search(r'data-src="([^"]*)"', block)
             if not title or not link:
                 continue
-            icon = (
-                self.getFullUrl(img.group(1))
-                if img and img.group(1)
-                else self.DEFAULT_ICON_URL
-            )
+            icon = self.getFullUrl(img.group(1)) if img and img.group(1) else self.DEFAULT_ICON_URL
             full_url = self.getFullUrl(link.group(1))
             self.addVideo(
                 {
@@ -1178,9 +1284,7 @@ class Lodynet(CBaseHostClass):
                 }
             )
             items_added += 1
-        more = re.search(
-            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
-        )
+        more = re.search(r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data)
         if more and items_added >= 10:
             indicator = more.group(1)
             exp_type = more.group(2)
@@ -1198,20 +1302,14 @@ class Lodynet(CBaseHostClass):
                     "icon": self.DEFAULT_ICON_URL,
                 }
             )
-            printDBG(
-                "Expansion button added for actor movies: indicator=%s" % indicator
-            )
+            printDBG("Expansion button added for actor movies: indicator=%s" % indicator)
 
     # ==========================================================================================
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Lodynet.listSearchResult [%s]" % searchPattern)
         if not searchPattern:
             return
-        search_url = (
-            self.MAIN_URL
-            + "/wp-content/themes/Lodynet2020/Api/RequestSearch.php?value="
-            + quote_plus(searchPattern)
-        )
+        search_url = self.MAIN_URL + "/wp-content/themes/Lodynet2020/Api/RequestSearch.php?value=" + quote_plus(searchPattern)
         printDBG("Search URL: %s" % search_url)
         headers = {
             "User-Agent": self.USER_AGENT,
@@ -1245,9 +1343,7 @@ class Lodynet(CBaseHostClass):
                                     continue
                                 try:
                                     if "\\u" in title:
-                                        title = title.encode("utf-8").decode(
-                                            "unicode_escape"
-                                        )
+                                        title = title.encode("utf-8").decode("unicode_escape")
                                     elif "&#x" in title:
                                         title = html.unescape(title)
                                 except Exception:
@@ -1277,12 +1373,8 @@ class Lodynet(CBaseHostClass):
                                 # الوصف
                                 desc_parts = []
                                 if category:
-                                    desc_parts.append(
-                                        "\\c00????00القسم: \\c00????FF" + category
-                                    )
-                                desc = (
-                                    "\n".join(desc_parts) if desc_parts else "نتيجة بحث"
-                                )
+                                    desc_parts.append("\\c00????00القسم: \\c00????FF" + category)
+                                desc = "\n".join(desc_parts) if desc_parts else "نتيجة بحث"
                                 is_actor = False
                                 if "/actor/" in full_url.lower():
                                     is_actor = True
@@ -1298,10 +1390,7 @@ class Lodynet(CBaseHostClass):
                                     ]
                                 ):
                                     is_actor = True
-                                if any(
-                                    x in title.lower()
-                                    for x in ["خان", "كابور", "باتشان", "شاه", "راي"]
-                                ):
+                                if any(x in title.lower() for x in ["خان", "كابور", "باتشان", "شاه", "راي"]):
                                     if "/actor/" in full_url.lower():
                                         is_actor = True
                                 if is_actor:
@@ -1317,9 +1406,7 @@ class Lodynet(CBaseHostClass):
                                     )
                                     printDBG("Added actor as folder: %s" % title)
                                 else:
-                                    content_type = self.determineContentType(
-                                        title, full_url
-                                    )
+                                    content_type = self.determineContentType(title, full_url)
                                     if content_type == "series":
                                         self.addDir(
                                             {
@@ -1347,8 +1434,7 @@ class Lodynet(CBaseHostClass):
                                     "category": "search",
                                     "title": "\\c00FF0000لم يتم العثور على نتائج",
                                     "url": "",
-                                    "desc": "لم يتم العثور على أي نتائج للبحث: "
-                                    + searchPattern,
+                                    "desc": "لم يتم العثور على أي نتائج للبحث: " + searchPattern,
                                 }
                             )
                     else:
@@ -1403,27 +1489,18 @@ class Lodynet(CBaseHostClass):
         title = cItem.get("title", "")
         icon = cItem.get("icon", self.DEFAULT_ICON_URL)
         summary = ""
-        content_block = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div id="ContentDetails"', "</div>", False
-        )[1]
+        content_block = self.cm.ph.getDataBeetwenMarkers(data, '<div id="ContentDetails"', "</div>", False)[1]
         if content_block:
             if "ملخص أحداث الحلقة" in content_block:
                 summary = content_block.split("ملخص أحداث الحلقة")[-1]
             elif "تبدأ الحلقة" in content_block:
                 summary = "تبدأ الحلقة" + content_block.split("تبدأ الحلقة")[-1]
             else:
-                summary = self.cm.ph.getDataBeetwenMarkers(
-                    content_block, "<p>", "</p>", False
-                )[1]
+                summary = self.cm.ph.getDataBeetwenMarkers(content_block, "<p>", "</p>", False)[1]
         if summary:
             summary = summary.split("قراءة المزيد")[0]
             summary = re.sub(r"<[^>]+>", "", summary)
-            summary = (
-                summary.replace("&#8211;", "-")
-                .replace("&#8220;", '"')
-                .replace("&#8221;", '"')
-                .replace("&nbsp;", " ")
-            )
+            summary = summary.replace("&#8211;", "-").replace("&#8220;", '"').replace("&#8221;", '"').replace("&nbsp;", " ")
             summary = summary.strip()
         old_desc = cItem.get("desc", "")
         final_text = ""
@@ -1486,9 +1563,7 @@ class Lodynet(CBaseHostClass):
             printDBG("تم العثور على مصادر الفيديو")
             video_objects = re.findall(r"\{[^{}]*\}", sources_content)
             for obj in video_objects:
-                url_match = re.search(
-                    r'file["\']?\s*:\s*["\'](https?://[^"\']+)["\']', obj
-                )
+                url_match = re.search(r'file["\']?\s*:\s*["\'](https?://[^"\']+)["\']', obj)
                 label_match = re.search(r'label["\']?\s*:\s*["\']([^"\']+)["\']', obj)
                 if url_match:
                     video_url = url_match.group(1)
@@ -1511,16 +1586,11 @@ class Lodynet(CBaseHostClass):
                             label = "HLS Stream"
                         elif "720p" in video_url.lower() or "/hd/" in video_url.lower():
                             label = "HD [720p]"
-                        elif (
-                            "1080p" in video_url.lower()
-                            or "/fullhd/" in video_url.lower()
-                        ):
+                        elif "1080p" in video_url.lower() or "/fullhd/" in video_url.lower():
                             label = "FULL HD [1080p]"
                         elif "480p" in video_url.lower() or "/sd/" in video_url.lower():
                             label = "SD [480p]"
-                        elif (
-                            "360p" in video_url.lower() or "/low/" in video_url.lower()
-                        ):
+                        elif "360p" in video_url.lower() or "/low/" in video_url.lower():
                             label = "LOW [360p]"
                         elif "576p" in video_url.lower():
                             label = "576p"
@@ -1654,9 +1724,7 @@ class Lodynet(CBaseHostClass):
                     pattern = histItem
                     search_type = None
                 params = dict(baseItem)
-                params.update(
-                    {"title": pattern, "search_type": search_type, desc_key: plot}
-                )
+                params.update({"title": pattern, "search_type": search_type, desc_key: plot})
                 self.addDir(params)
             except Exception:
                 printExc()
@@ -1671,8 +1739,6 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Lodynet(), True, [])
 
     def withArticleContent(self, cItem):
-        if "video" == cItem.get("type", "") or "list_episodes" == cItem.get(
-            "category", ""
-        ):
+        if "video" == cItem.get("type", "") or "list_episodes" == cItem.get("category", ""):
             return True
         return False

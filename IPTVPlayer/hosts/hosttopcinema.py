@@ -6,25 +6,33 @@
 ###################################################
 # localization library
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+
 # host main class
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+
 # tools - write on log, write exception infos and merge dicts
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, MergeDicts, E2ColoR
+
 # add metadata to url
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+
 # library for json (instead of standard json.loads and json.dumps)
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
+
 # read informations in m3u8
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs import ph
+
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_quote
 from Components.config import ConfigSelection, ConfigText, config, getConfigListEntry
+
 ###################################################
 # FOREIGN import
 ###################################################
 import re
+
 ###################################################
 # Constants
 C = E2ColoR("cyan")
@@ -84,8 +92,7 @@ class TopCinema(CBaseHostClass):
             {"category": "list_items", "title": "Turkish", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%aa%d8%b1%d9%83%d9%8a%d8%a9/")},
             {"category": "list_items", "title": "Asian", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/")},
             {"category": "list_items", "title": "Indian", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%87%d9%86%d8%af%d9%89/")},
-            {"category": "list_items", "title": "Netfilx", "url": self.getFullUrl(
-            "/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-netfilx/")},
+            {"category": "list_items", "title": "Netfilx", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-netfilx/")},
             {"category": "list_items", "title": "Anime", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%86%d9%85%d9%8a/")},
             {"category": "list_items", "title": "Cartoon", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%83%d8%b1%d8%aa%d9%88%d9%86/")},
             {"category": "list_items", "title": "Dubbed", "url": self.getFullUrl("/category/%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d9%85%d8%af%d8%a8%d9%84%d8%ac%d8%a9/")},
@@ -142,8 +149,8 @@ class TopCinema(CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, "<main class=\"site-inner", "</main>", True)[1]
-        items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, "<div class=\"Small--Box", "</a>", True)
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<main class="site-inner', "</main>", True)[1]
+        items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', "</a>", True)
         for m in items:
             url = self.cm.ph.getSearchGroups(m, r"href=[\"']([^\"']+)[\"']")[0]
             if not url:
@@ -161,11 +168,11 @@ class TopCinema(CBaseHostClass):
             ##############################################################
             # Extraction of Metadata for Description
             ##############################################################
-            genre = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, "<li class=\"genre\">", "</li>")[1])
-            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, "<li class=\"quality\">", "</li>")[1])
-            runtime = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, "<li class=\"meta-runtime\">", "</li>")[1])
-            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, "<li class=\"meta-year\">", "</li>")[1])
-            imdb = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, "<li class=\"imdbRating\">", "</li>")[1])
+            genre = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="genre">', "</li>")[1])
+            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="quality">', "</li>")[1])
+            runtime = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="meta-runtime">', "</li>")[1])
+            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="meta-year">', "</li>")[1])
+            imdb = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="imdbRating">', "</li>")[1])
             desc_list = []
             if genre:
                 desc_list.append("{}Genre:{} {}".format(Y, W, genre))
@@ -189,7 +196,7 @@ class TopCinema(CBaseHostClass):
             }
             self.addDir(params)
         # === PAGINATION ===
-        pagination = self.cm.ph.getDataBeetwenMarkers(data, "<div class=\"pagination\">", "</div>", True)[1]
+        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', "</div>", True)[1]
         next_page = self.cm.ph.getSearchGroups(pagination, r"<a[^>]+class=\"[^\"]*next[^\"]*\"[^>]+href=\"([^\"]+)\"")[0]
         if not next_page:
             next_page = self.cm.ph.getSearchGroups(pagination, r"<a[^>]+href=\"([^\"]+)\"[^>]*>[^<]*?(?:Next|←|»|&laquo;|التالي)[^<]*?</a>")[0]
@@ -209,9 +216,9 @@ class TopCinema(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts or not data:
             return
-        story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<div class=\"story clearfix\">", "</div>", False)[1])
+        story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="story clearfix">', "</div>", False)[1])
         meta_parts = []
-        info_part = self.cm.ph.getDataBeetwenMarkers(data, "<ul class=\"RightTaxContent\">", "</ul>", False)[1]
+        info_part = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="RightTaxContent">', "</ul>", False)[1]
         if info_part:
             info_items = re.findall(r"<li[^>]*>(.*?)</li>", info_part, re.S)
             for item in info_items:
@@ -222,21 +229,21 @@ class TopCinema(CBaseHostClass):
                 if not label or not value:
                     continue
                 key = ""
-                if any(x in label for x in ['تصنيف', 'قسم']):
+                if any(x in label for x in ["تصنيف", "قسم"]):
                     key = "{}Category:{}".format(Y, W)
-                elif 'نوع' in label:
+                elif "نوع" in label:
                     key = "{}Genre:{}".format(Y, W)
-                elif 'جودة' in label:
+                elif "جودة" in label:
                     key = "{}Quality:{}".format(Y, W)
-                elif any(x in label for x in ['تاريخ', 'السنة']):
+                elif any(x in label for x in ["تاريخ", "السنة"]):
                     key = "{}Year:{}".format(Y, W)
-                elif 'لغة' in label:
+                elif "لغة" in label:
                     key = "{}Language:{}".format(Y, W)
-                elif any(x in label for x in ['الدولة', 'البلد']):
+                elif any(x in label for x in ["الدولة", "البلد"]):
                     key = "{}Country:{}".format(Y, W)
-                elif 'مدة' in label:
+                elif "مدة" in label:
                     key = "{}Runtime:{}".format(Y, W)
-                elif 'بطولة' in label:
+                elif "بطولة" in label:
                     key = "{}Stars:{}".format(Y, W)
                 if key and value:
                     meta_parts.append("{} {}".format(key, value))
@@ -246,15 +253,7 @@ class TopCinema(CBaseHostClass):
             full_desc = "{}\n{}Story:{} {}".format(one_line_info, L, W, story)
         else:
             full_desc = one_line_info
-        params = {
-            "category": "explore_item",
-            "title": "{}".format(cItem.get("title", "")),
-            "url": url,
-            "icon": cItem.get("icon", ""),
-            "desc": full_desc,
-            "good_for_fav": True,
-            "type": "category"
-        }
+        params = {"category": "explore_item", "title": "{}".format(cItem.get("title", "")), "url": url, "icon": cItem.get("icon", ""), "desc": full_desc, "good_for_fav": True, "type": "category"}
         self.addDir(params)
 
     def listSeriesItems(self, cItem):
@@ -265,12 +264,12 @@ class TopCinema(CBaseHostClass):
         ############################################################
         # Extract series block (All episodes)
         ############################################################
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, "<div class=\"BlocksHolder", "<script type=\"speculationrules", True)[1]
-        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, "<div class=\"Small--Box", "</a>", True)
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div class="BlocksHolder', '<script type="speculationrules', True)[1]
+        data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', "</a>", True)
         if not data_items:
             # fallback if needed
-            parts = tmp.split("<div class=\"Small--Box")
-            data_items = ["<div class=\"Small--Box" + p for p in parts[1:]]
+            parts = tmp.split('<div class="Small--Box')
+            data_items = ['<div class="Small--Box' + p for p in parts[1:]]
         for m in data_items:
             ############################################################
             # URL
@@ -291,11 +290,11 @@ class TopCinema(CBaseHostClass):
             ##############################################################
             # Extraction of Metadata for Description
             ##############################################################
-            genre = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, "<li class=\"genre\">", "</li>")[1])
-            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, "<li class=\"quality\">", "</li>")[1])
-            runtime = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, "<li class=\"meta-runtime\">", "</li>")[1])
-            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, "<li class=\"meta-year\">", "</li>")[1])
-            imdb = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, "<li class=\"imdbRating\">", "</li>")[1])
+            genre = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="genre">', "</li>")[1])
+            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="quality">', "</li>")[1])
+            runtime = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="meta-runtime">', "</li>")[1])
+            year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="meta-year">', "</li>")[1])
+            imdb = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(m, '<li class="imdbRating">', "</li>")[1])
             desc_list = []
             if genre:
                 desc_list.append("{}Genre:{} {}".format(Y, W, genre))
@@ -338,7 +337,7 @@ class TopCinema(CBaseHostClass):
             printDBG(str(params))
             self.addDir(params)
         # === PAGINATION HANDLING ===
-        pagination = self.cm.ph.getDataBeetwenMarkers(data, "<div class=\"pagination\">", "</div>", True)[1]
+        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', "</div>", True)[1]
         next_page = self.cm.ph.getSearchGroups(pagination, r"<a[^>]+class=\"[^\"]*next[^\"]*\"[^>]+href=\"([^\"]+)\"")[0]
         if not next_page:
             next_page = self.cm.ph.getSearchGroups(pagination, r"<a[^>]+href=\"([^\"]+)\"[^>]*>[^<]*?(?:Next|←|»|&laquo;|التالي)[^<]*?</a>")[0]
@@ -372,8 +371,8 @@ class TopCinema(CBaseHostClass):
         ##########################################################
         if "series-movies" in data:
             printDBG("Detected Series/Assembly page")
-            series_block = self.cm.ph.getDataBeetwenMarkers(data, "<section class=\"series-movies\"", "</section>")[1]
-            items = self.cm.ph.getAllItemsBeetwenMarkers(series_block, "<div class=\"Small--Box\"", "</a>")
+            series_block = self.cm.ph.getDataBeetwenMarkers(data, '<section class="series-movies"', "</section>")[1]
+            items = self.cm.ph.getAllItemsBeetwenMarkers(series_block, '<div class="Small--Box"', "</a>")
             for item in items:
                 url = self.cm.ph.getSearchGroups(item, r"""href=["']([^"']+)["']""")[0]
                 title = self.cm.ph.getSearchGroups(item, r"""title=["']([^"']+)["']""")[0]
@@ -382,19 +381,13 @@ class TopCinema(CBaseHostClass):
                     icon = self.cm.ph.getSearchGroups(item, r"""src=["']([^"']+)["']""")[0]
                 if not url:
                     continue
-                params = MergeDicts(cItem, {
-                    "title": self.cleanHtmlStr(title),
-                    "url": self.getFullUrl(url),
-                    "icon": self._fixUrl(icon),
-                    "type": "category",
-                    "category": "explore_item"
-                })
+                params = MergeDicts(cItem, {"title": self.cleanHtmlStr(title), "url": self.getFullUrl(url), "icon": self._fixUrl(icon), "type": "category", "category": "explore_item"})
                 self.addDir(params)
             return
         ##########################################################
         # Extract Hosts (Format: Movie Title + Server Name)
         ##########################################################
-        server_block = self.cm.ph.getDataBeetwenMarkers(data, "<ul id=\"watch\"", "</ul>", False)[1]
+        server_block = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="watch"', "</ul>", False)[1]
         printDBG("server_block >>> %s" % server_block)
         items = self.cm.ph.getAllItemsBeetwenMarkers(server_block, "<li", "</li>")
         for item in items:
@@ -405,13 +398,7 @@ class TopCinema(CBaseHostClass):
             server_name = self.cleanHtmlStr(server_name) or "Server"
             final_title = "{} Server - {}{}{}".format(item_title, Y, server_name, W)
             printDBG("Server: %s -> %s" % (final_title, video_url))
-            params = MergeDicts(cItem, {
-                "title": final_title,
-                "url": video_url,
-                "type": "video",
-                "category": "video",
-                "need_resolve": 1
-            })
+            params = MergeDicts(cItem, {"title": final_title, "url": video_url, "type": "video", "category": "video", "need_resolve": 1})
             self.addVideo(params)
 
     def showSeasons(self, cItem):
@@ -422,12 +409,12 @@ class TopCinema(CBaseHostClass):
         ############################################################
         # Extract seasons block
         ############################################################
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, "<section class=\"allseasonss", "</section>", False)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="allseasonss', "</section>", False)[1]
         if not tmp:
-            tmp = self.cm.ph.getDataBeetwenMarkers(data, "<ul class=\"Blocks--List", "</ul>", False)[1]
+            tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="Blocks--List', "</ul>", False)[1]
         printDBG("tmp.showSeasons >>> %s" % tmp)
         # Each season is one <div class="Small--Box"> ... </a>
-        seasons = self.cm.ph.getAllItemsBeetwenMarkers(tmp, "<div class=\"Small--Box", "</a>", True)
+        seasons = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<div class="Small--Box', "</a>", True)
         for s in seasons:
             ############################################################
             # URL
@@ -453,13 +440,7 @@ class TopCinema(CBaseHostClass):
             # Add the season entry
             ############################################################
             params = dict(cItem)
-            params.update({
-                "title": title,
-                "good_for_fav": True,
-                "url": self.getFullUrl(url),
-                "icon": icon,
-                "category": "show_episodes"
-            })
+            params.update({"title": title, "good_for_fav": True, "url": self.getFullUrl(url), "icon": icon, "category": "show_episodes"})
             printDBG("season.params >>> %s" % params)
             self.addDir(params)
 
@@ -468,7 +449,7 @@ class TopCinema(CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts or not data:
             return
-        info_part = self.cm.ph.getDataBeetwenMarkers(data, "<ul class=\"RightTaxContent\">", "</ul>", False)[1]
+        info_part = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="RightTaxContent">', "</ul>", False)[1]
         info_items = re.findall(r"<li[^>]*>(.*?)</li>", info_part, re.S)
         meta_data = []
         for item in info_items:
@@ -493,14 +474,14 @@ class TopCinema(CBaseHostClass):
                 key = "Country"
             if key:
                 meta_data.append("{}{}:{} {}".format(Y, key, W, value))
-        imdb = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<div class=\"imdbRating\">", "</div>", False)[1])
+        imdb = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="imdbRating">', "</div>", False)[1])
         if imdb:
             meta_data.append("{}IMDb:{} {}".format(Y, W, imdb))
-        raw_story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<div class=\"story clearfix\">", "</div>", False)[1])
+        raw_story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="story clearfix">', "</div>", False)[1])
         separator = " {}|{} ".format(C, W)
         one_line_info = separator.join(meta_data)
         final_desc = "{}\n{}Story:{} {}".format(one_line_info, L, W, raw_story)
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, "<section class=\"allepcont", "</section>", True)[1]
+        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<section class="allepcont', "</section>", True)[1]
         data_items = self.cm.ph.getAllItemsBeetwenMarkers(tmp, "<a ", "</a>", True)
         data_items.reverse()
         for ep in data_items:
@@ -551,6 +532,7 @@ class TopCinema(CBaseHostClass):
             cItem = {}
             printExc()
         return cItem
+
     ###################################################
     # GET LINKS FOR VIDEO
     ###################################################
@@ -577,16 +559,16 @@ class TopCinema(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts or not data:
             return []
-        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<h1 class=\"title\">", "</h1>", False)[1])
+        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<h1 class="title">', "</h1>", False)[1])
         if not title:
             title = cItem.get("title", "")
-        story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<div class=\"story clearfix\">", "</div>", False)[1])
+        story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, '<div class="story clearfix">', "</div>", False)[1])
         icon = self.cm.ph.getSearchGroups(data, r"<div class=\"Poster\">.*?<img[^>]+src=\"([^\"]+)\"")[0]
         if not icon:
             icon = cItem.get("icon", "")
         images = [{"title": "", "url": self._fixUrl(icon)}] if icon else []
         otherInfo = {}
-        info_part = self.cm.ph.getDataBeetwenMarkers(data, "<ul class=\"RightTaxContent\">", "</ul>", False)[1]
+        info_part = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="RightTaxContent">', "</ul>", False)[1]
         info_items = re.findall(r"<li[^>]*>(.*?)</li>", info_part, re.S)
         for item in info_items:
             label = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<span>", "</span>", False)[1]).replace(":", "").strip()
@@ -611,12 +593,7 @@ class TopCinema(CBaseHostClass):
                 otherInfo["stars"] = value
             elif "عدد" in label:
                 otherInfo["seasons"] = value
-        return [{
-            "title": self.cleanHtmlStr(title),
-            "text": story,
-            "images": images,
-            "other_info": otherInfo
-        }]
+        return [{"title": self.cleanHtmlStr(title), "text": story, "images": images, "other_info": otherInfo}]
 
     def handleService(self, index, refresh=0, search_pattern="", search_type=""):
         printDBG("TopCinema.handleService start")
