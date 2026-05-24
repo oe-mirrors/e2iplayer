@@ -800,7 +800,7 @@ class Brstej(CBaseHostClass):
                 url = url.replace("\\/", "/").replace("\\", "")
                 query = ""
                 if "?" in url:
-                    query = url[url.find("?") :]
+                    query = url[url.find("?"):]
                 if "master.m3u8" in url:
                     sts, data = self.getPage(url, params)
                     if sts:
