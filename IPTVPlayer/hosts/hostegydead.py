@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Original File from: 24/10/2025 - popking (odem2014)
-# Last modified: 20/04/2026 - Mohamed Elsafty (angel_heart)
+# Last modified: 24/10/2025 - popking (odem2014)
+# Last modified: 17/05/2026 - Mohamed Elsafty (angel_heart)
 # typical import for a standard host
 ###################################################
 # LOCAL import
@@ -41,7 +41,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://tv8.egydead.live"  # main url of host
+    return "https://c4u1r.sbs"  # main url of host
 
 
 class EgyDead(CBaseHostClass):
@@ -329,6 +329,8 @@ class EgyDead(CBaseHostClass):
         if not sts or not data1:
             return
         info_text, story, full_desc = self._extractMetadata(data1)
+        # --- Work Title ---
+        work_title = cItem.get("title", "").strip()
         if '<div class="EpsList">' in data1:
             printDBG("Season page detected — listing episodes...")
             cItem = dict(cItem)
@@ -337,7 +339,6 @@ class EgyDead(CBaseHostClass):
         params = dict(self.defaultParams)
         params.update({"header": {"Content-Type": "application/x-www-form-urlencoded", "Referer": url}})
         post_data = {"View": "1"}
-        sts, data = self.getPage(url, params, post_data)
         sts, data = self.getPage(url, params, post_data)
         if not sts or not data:
             return
@@ -363,8 +364,13 @@ class EgyDead(CBaseHostClass):
             if not title:
                 title = self.cm.ph.getSearchGroups(item, r">([^<]+)</span>")[0].strip()
             title = self.cleanHtmlStr(title)
+            # --- Combine Movie Title + Server Name ---
+            if work_title:
+                video_title = "%s%s%s - [%s]" % (E2ColoR("yellow"), work_title, E2ColoR("white"), title)
+            else:
+                video_title = title
             params = dict(cItem)
-            params.update({"title": title, "url": video_url, "category": "video", "type": "video", "desc": full_desc})
+            params.update({"title": video_title, "url": video_url, "category": "video", "type": "video", "desc": full_desc})
             self.addVideo(params)
 
     def listEpisodes(self, cItem, data1):

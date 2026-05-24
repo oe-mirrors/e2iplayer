@@ -133,23 +133,13 @@ class Q3isk(CBaseHostClass):
         ###################################################
         info_desc = ""
         work_title = ""
-        main_info_block = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div class="story">', '<div style="clear', True
-        )[1]
+        main_info_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="story">', '<div style="clear', True)[1]
         if main_info_block:
-            work_title = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(data, "<h1>", "</h1>", False)[1]
-            )
+            work_title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<h1>", "</h1>", False)[1])
             # --- Story ---
-            story = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    main_info_block, '<div class="story">', "</div>", False
-                )[1]
-            )
+            story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(main_info_block, '<div class="story">', "</div>", False)[1])
             tax_info = {}
-            all_tax_blocks = re.findall(
-                r'<div class="tax">(.*?)</div>', main_info_block, re.S
-            )
+            all_tax_blocks = re.findall(r'<div class="tax">(.*?)</div>', main_info_block, re.S)
             label_map = {
                 "الممثلين": "Cast",
                 "السنة": "Year",
@@ -170,9 +160,7 @@ class Q3isk(CBaseHostClass):
             info_parts = []
             for key in field_order:
                 if key in tax_info and tax_info[key]:
-                    info_parts.append(
-                        f"{E2ColoR('yellow')}{key}:{E2ColoR('white')} {tax_info[key]}"
-                    )
+                    info_parts.append(f"{E2ColoR('yellow')}{key}:{E2ColoR('white')} {tax_info[key]}")
             if info_parts:
                 info_desc = " | ".join(info_parts)
             if story:
@@ -180,9 +168,7 @@ class Q3isk(CBaseHostClass):
         ###################################################
         # MAIN SERVERS BLOCK
         ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(
-            data, '<ul id="watch">', "</ul>", True
-        )[1]
+        main_block = self.cm.ph.getDataBeetwenMarkers(data, '<ul id="watch">', "</ul>", True)[1]
         printDBG("main_block.exploreItems >>> %s" % main_block)
         ###################################################
         # PARSE ITEMS CORRECTLY
@@ -200,9 +186,7 @@ class Q3isk(CBaseHostClass):
                 continue
             video_url = self.getFullUrl(video_url)
             # --- TITLE ---
-            server_name = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(item, "<em>", "</em>", False)[1]
-            )
+            server_name = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, "<em>", "</em>", False)[1])
             if not server_name:
                 server_name = _("Server")
             if work_title:
@@ -231,18 +215,14 @@ class Q3isk(CBaseHostClass):
         ###################################################
         # MAIN SERIES BLOCK
         ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div class="Small--Box">', '<div class="pagination">', True
-        )[1]
+        main_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="Small--Box">', '<div class="pagination">', True)[1]
         if not main_block:
             printDBG("listSeriesUnits: No main_block found")
             return
         ###################################################
         # PARSE ITEMS CORRECTLY
         ###################################################
-        items = self.cm.ph.getAllItemsBeetwenMarkers(
-            main_block, '<div class="Small--Box">', "</a>"
-        )
+        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="Small--Box">', "</a>")
         printDBG("listSeriesUnits: Found %d items" % len(items))
         for item in items:
             # URL
@@ -254,11 +234,7 @@ class Q3isk(CBaseHostClass):
             icon = self.cm.ph.getSearchGroups(item, r'data-src="([^"]+)"')[0]
             icon = self.getFullUrl(icon)
             # TITLE
-            title = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    item, '<div class="title">', "</div>", False
-                )[1]
-            )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="title">', "</div>", False)[1])
             title = title.replace("اون لاين", "")
             # DESCRIPTION
             desc = "%sClick to view episodes%s" % (E2ColoR("yellow"), E2ColoR("white"))
@@ -276,12 +252,8 @@ class Q3isk(CBaseHostClass):
         ###################################################
         # PAGINATION FIX (KRMZY STYLE)
         ###################################################
-        pagination = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div class="pagination">', "</ul>", True
-        )[1]
-        nextPage = self.cm.ph.getSearchGroups(
-            pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"'
-        )[0]
+        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', "</ul>", True)[1]
+        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
         if nextPage:
             nextPage = self.getFullUrl(nextPage)
             printDBG("Next page found: %s" % nextPage)
@@ -300,29 +272,17 @@ class Q3isk(CBaseHostClass):
         ###################################################
         # MAIN INFO BLOCK (Story + Cast)
         ###################################################
-        main_info_block = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div class="story">', '<div style="clear', True
-        )[1]
+        main_info_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="story">', '<div style="clear', True)[1]
         if main_info_block:
             # --- Poster ---
-            info_icon = self.cm.ph.getSearchGroups(
-                data, r'<img[^>]+data-src="([^"]+)"'
-            )[0]
+            info_icon = self.cm.ph.getSearchGroups(data, r'<img[^>]+data-src="([^"]+)"')[0]
             info_icon = self.getFullUrl(info_icon)
             # --- Title ---
-            info_title = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(data, "<h1>", "</h1>", False)[1]
-            )
+            info_title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(data, "<h1>", "</h1>", False)[1])
             # --- Story ---
-            story = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    main_info_block, '<div class="story">', "</div>", False
-                )[1]
-            )
+            story = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(main_info_block, '<div class="story">', "</div>", False)[1])
             tax_info = {}
-            all_tax_blocks = re.findall(
-                r'<div class="tax">(.*?)</div>', main_info_block, re.S
-            )
+            all_tax_blocks = re.findall(r'<div class="tax">(.*?)</div>', main_info_block, re.S)
             label_map = {
                 "الممثلين": "Cast",
                 "السنة": "Year",
@@ -344,9 +304,7 @@ class Q3isk(CBaseHostClass):
             info_parts = []
             for key in field_order:
                 if key in tax_info and tax_info[key]:
-                    info_parts.append(
-                        f"{E2ColoR('yellow')}{key}:{E2ColoR('white')} {tax_info[key]}"
-                    )
+                    info_parts.append(f"{E2ColoR('yellow')}{key}:{E2ColoR('white')} {tax_info[key]}")
             if info_parts:
                 info_desc = " | ".join(info_parts)
             else:
@@ -424,18 +382,14 @@ class Q3isk(CBaseHostClass):
         ###################################################
         # MAIN SERIES BLOCK
         ###################################################
-        main_block = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div class="Small--Box">', '<div class="pagination">', True
-        )[1]
+        main_block = self.cm.ph.getDataBeetwenMarkers(data, '<div class="Small--Box">', '<div class="pagination">', True)[1]
         if not main_block:
             printDBG("listMoviesUnits: No main_block found")
             return
         ###################################################
         # PARSE ITEMS CORRECTLY
         ###################################################
-        items = self.cm.ph.getAllItemsBeetwenMarkers(
-            main_block, '<div class="Small--Box">', "</a>"
-        )
+        items = self.cm.ph.getAllItemsBeetwenMarkers(main_block, '<div class="Small--Box">', "</a>")
         printDBG("listMoviesUnits: Found %d items" % len(items))
         for item in items:
             # URL
@@ -448,11 +402,7 @@ class Q3isk(CBaseHostClass):
             icon = self.cm.ph.getSearchGroups(item, r'data-src="([^"]+)"')[0]
             icon = self.getFullUrl(icon)
             # TITLE
-            title = self.cleanHtmlStr(
-                self.cm.ph.getDataBeetwenMarkers(
-                    item, '<div class="title">', "</div>", False
-                )[1]
-            )
+            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<div class="title">', "</div>", False)[1])
             title = title.replace("اون لاين", "")
             desc = "%sClick to view episodes%s" % (E2ColoR("yellow"), E2ColoR("white"))
             params = dict(cItem)
@@ -469,12 +419,8 @@ class Q3isk(CBaseHostClass):
         ###################################################
         # PAGINATION FIX (KRMZY STYLE)
         ###################################################
-        pagination = self.cm.ph.getDataBeetwenMarkers(
-            data, '<div class="pagination">', "</ul>", True
-        )[1]
-        nextPage = self.cm.ph.getSearchGroups(
-            pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"'
-        )[0]
+        pagination = self.cm.ph.getDataBeetwenMarkers(data, '<div class="pagination">', "</ul>", True)[1]
+        nextPage = self.cm.ph.getSearchGroups(pagination, r'<a[^>]+class="next page-numbers"[^>]+href="([^"]+)"')[0]
         if nextPage:
             nextPage = self.getFullUrl(nextPage)
             printDBG("Next page found: %s" % nextPage)
@@ -511,10 +457,7 @@ class Q3isk(CBaseHostClass):
     # SEARCH
     ###################################################
     def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG(
-            "Q3isk.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]"
-            % (cItem, searchPattern, searchType)
-        )
+        printDBG("Q3isk.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
         cItem["url"] = self.SEARCH_URL + urllib_quote_plus(searchPattern)
         self.listMoviesUnits(cItem)
@@ -548,9 +491,7 @@ class Q3isk(CBaseHostClass):
             self.listSearchResult(cItem, searchPattern, searchType)
         # HISTORY SEARCH
         elif category == "search_history":
-            self.listsHistory(
-                {"name": "history", "category": "search"}, "desc", _("Type: ")
-            )
+            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
@@ -561,8 +502,6 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Q3isk(), True, [])
 
     def withArticleContent(self, cItem):
-        if "video" == cItem.get("type", "") or "explore_item" == cItem.get(
-            "category", ""
-        ):
+        if "video" == cItem.get("type", "") or "explore_item" == cItem.get("category", ""):
             return True
         return False

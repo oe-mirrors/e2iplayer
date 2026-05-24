@@ -25,9 +25,9 @@ Y = E2ColoR("yellow")
 W = E2ColoR("white")
 G = E2ColoR("green")
 R = E2ColoR("red")
+
+
 ###################################################
-
-
 def gettytul():
     return "https://hd1.brstej.com"
 
@@ -380,33 +380,59 @@ class Brstej(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Brstej.listSearchResult |%s|" % searchPattern)
         url = self.getFullUrl("/ajax-search.php")
+        custom_headers = {
+            "Referer": "https://hd1.brstej.com/",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+            "Accept": "text/html, */*; q=0.01",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "en,ar;q=0.9",
+            "X-Requested-With": "XMLHttpRequest",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://hd1.brstej.com",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+        }
         post_data = {"queryString": searchPattern}
-        sts, data = self.getPage(url, post_data=post_data)
-        if not sts:
+        addParams = dict(self.defaultParams)
+        if "header" in addParams:
+            addParams["header"].update(custom_headers)
+        else:
+            addParams["header"] = custom_headers
+        addParams["cloudflare_params"] = {"cookie_file": self.COOKIE_FILE, "User-Agent": custom_headers["User-Agent"]}
+        sts, data = self.getPage(url, addParams=addParams, post_data=post_data)
+        if not sts or not data:
+            printDBG("Brstej.listSearchResult - No data received")
             return
-        items = re.findall(r'<li[^>]*data-video-id=["\']([^"\']+?)["\'][^>]*>.*?<a[^>]+href=["\']([^"\']+?)["\'][^>]*>([^<]+)</a>', data, re.S)
+        items = re.findall(r'<li[^>]*data-video-id=["\']([^"\']+)["\'][^>]*>.*?<a[^>]+href=["\']([^"\']+)["\'][^>]*>([^<]+)</a>', data, re.S | re.I)
+        if not items:
+            printDBG("Brstej.listSearchResult - No items found")
+            printDBG("Response: %s..." % data[:500])
+            return
         added = set()
         for vid, item_url, title in items:
-            title = self.cleanTitle(title)
+            title = self.cleanTitle(title.strip())
             item_url = self.getFullUrl(item_url.strip())
-            if not title or not item_url:
-                continue
-            if item_url in added:
+            if not title or not item_url or item_url in added:
                 continue
             added.add(item_url)
             icon = ""
             desc = ""
             sts_vid, vid_data = self.getPage(item_url)
-            if sts_vid:
-                icon_match = re.search(r'<img[^>]+src=[\'"]([^\'"]*thumbs/[^\'"]+)[\'"]', vid_data)
-                if icon_match:
-                    icon = self.getFullIconUrl(icon_match.group(1).strip())
+            if sts_vid and vid_data:
+                og_image = re.search(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']', vid_data, re.I)
+                if og_image:
+                    icon = self.getFullIconUrl(og_image.group(1).strip())
+                else:
+                    thumb_match = re.search(r'<img[^>]+src=[\'"]([^\'"]*thumbs/[^\'"]+)[\'"]', vid_data, re.I)
+                    if thumb_match:
+                        icon = self.getFullIconUrl(thumb_match.group(1).strip())
                 duration = ""
-                quality = ""
-                dur_match = re.search(r'<span[^>]*class=["\']pm-label-duration["\'][^>]*>([^<]+)', vid_data)
+                dur_match = re.search(r'<span[^>]*class=["\']pm-label-duration["\'][^>]*>([^<]+)', vid_data, re.I)
                 if dur_match:
                     duration = dur_match.group(1).strip()
-                ribon_match = re.search(r'<div[^>]*class=["\']ribon["\'][^>]*>.*?<span[^>]*class=["\']hot["\'][^>]*>.*?<span[^>]*class=["\']after["\'][^>]*>.*?</span>\s*([^<>\s].*?)\s*<span[^>]*class=["\']before["\']', vid_data, re.S)
+                quality = ""
+                ribon_match = re.search(r'<div[^>]*class=["\']ribon["\'][^>]*>.*?<span[^>]*class=["\']hot["\'][^>]*>.*?<span[^>]*class=["\']after["\'][^>]*>([^<>]+?)\s*<span[^>]*class=["\']before["\']', vid_data, re.S | re.I)
                 if ribon_match:
                     quality = ribon_match.group(1).strip()
                 desc_parts = []
@@ -415,12 +441,37 @@ class Brstej(CBaseHostClass):
                 if duration:
                     desc_parts.append(Y + "Duration: %s" % duration + W)
                 desc = " | ".join(desc_parts)
-                is_series = bool(re.search(r'class="SeasonsEpisodes"', vid_data))
+                title_lower = title.lower()
+                url_lower = item_url.lower()
+                if re.search(r"\bفيلم\b|movie\b|film\b", title_lower, re.I) and not re.search(r"مسلسل|حلقة", title_lower, re.I):
+                    is_series = False
+                elif re.search(r"مسلسل|حلقة|season|episode|part\s*\d+", title_lower, re.I):
+                    is_series = True
+                elif re.search(r"series|season|episode", url_lower, re.I):
+                    is_series = True
+                else:
+                    seasons_block = re.search(r'<div[^>]*id=["\']?seasons[^"\'>]*["\']?[^>]*>.*?</div>', vid_data, re.S | re.I)
+                    if not seasons_block:
+                        seasons_block = re.search(r'<div[^>]*class=["\'][^"\']*SeasonsEpisodes[^"\']*["\'][^>]*>(?:(?!<div[^>]*class=["\']similar|recommended|also|قد-يعجبك).)*?</div>', vid_data, re.S | re.I)
+                    is_series = bool(seasons_block)
+            else:
+                title_lower = title.lower()
+                if re.search(r"مسلسل|حلقة|season|episode|part\s*\d+", title_lower, re.I):
+                    is_series = True
+                else:
+                    is_series = False
+            params = {
+                "good_for_fav": True,
+                "title": title,
+                "url": item_url,
+                "icon": icon,
+                "desc": desc,
+            }
             if is_series:
-                params = {"good_for_fav": True, "title": title, "url": item_url, "icon": icon, "desc": desc, "category": "explore_item", "type": "category"}
+                params.update({"category": "explore_item", "type": "category"})
                 self.addDir(params)
             else:
-                params = {"good_for_fav": True, "title": title, "url": item_url, "icon": icon, "desc": desc, "type": "video"}
+                params.update({"type": "video"})
                 self.addVideo(params)
 
     def getLinksForVideo(self, cItem):
@@ -511,6 +562,7 @@ class Brstej(CBaseHostClass):
                     res = digits[num % b] + res
                     num //= b
                 return res or "0"
+
             for i in range(len(k) - 1, -1, -1):
                 if k[i]:
                     p = re.sub(r"\b%s\b" % baseN(i, a), k[i], p)
@@ -519,6 +571,7 @@ class Brstej(CBaseHostClass):
         def localGetDomain(url):
             parsed_uri = urlparse(url)
             return "{uri.scheme}://{uri.netloc}/".format(uri=parsed_uri)
+
         urlTab = []
         try:
             printDBG("HDUP extractor start -> %s" % embed_url)
@@ -573,6 +626,7 @@ class Brstej(CBaseHostClass):
                     res = digits[num % b] + res
                     num //= b
                 return res or "0"
+
             for i in range(len(k) - 1, -1, -1):
                 if k[i]:
                     p = re.sub(r"\b%s\b" % baseN(i, a), k[i], p)
@@ -581,6 +635,7 @@ class Brstej(CBaseHostClass):
         def localGetDomain(url):
             parsed_uri = urlparse(url)
             return "{uri.scheme}://{uri.netloc}/".format(uri=parsed_uri)
+
         urlTab = []
         try:
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36", "Referer": "https://hd1.brstej.com/"}
@@ -692,10 +747,12 @@ class Brstej(CBaseHostClass):
                             res = digits[num % b] + res
                             num //= b
                         return res or "0"
+
                     for i in range(int(c) - 1, -1, -1):
                         if k[i]:
                             p = re.sub(r"\b%s\b" % baseN(i, int(a)), k[i], p)
                     return p
+
                 decoded_js = js_unpack(p, a, c, k.split("|"))
             else:
                 decoded_js = html
@@ -727,10 +784,12 @@ class Brstej(CBaseHostClass):
                         res = digits[num % base] + res
                         num //= base
                     return res or "0"
+
                 for i in range(c - 1, -1, -1):
                     if k[i]:
                         p = re.sub(r"\b%s\b" % baseN(i, a), k[i], p)
                 return p
+
             decoded_js = html
             packed_match = re.search(r"eval\(function\(p,a,c,k,e,d\).+?\}\('(.+?)',(\d+),(\d+),'(.+?)'\.split\('\|'\)", html, re.S)
             if packed_match:
@@ -741,7 +800,7 @@ class Brstej(CBaseHostClass):
                 url = url.replace("\\/", "/").replace("\\", "")
                 query = ""
                 if "?" in url:
-                    query = url[url.find("?"):]
+                    query = url[url.find("?") :]
                 if "master.m3u8" in url:
                     sts, data = self.getPage(url, params)
                     if sts:
