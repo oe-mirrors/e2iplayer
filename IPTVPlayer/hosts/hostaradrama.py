@@ -408,7 +408,7 @@ class ARADrama(CBaseHostClass):
     # -------------------- menus --------------------
     def listMainMenu(self, cItem):
         printDBG("ARADrama.listMainMenu")
-        tab = [{"category": "movies", "title": _("الأفـــلام"), "icon": self.DEFAULT_ICON_URL}, {"category": "series", "title": _("مســلـســلات"), "icon": self.DEFAULT_ICON_URL}, {"category": "tvshow", "title": _("بــرامــج"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/k-shows/")}, {"category": "search", "title": _("Search"), "search_item": True}, {"category": "search_history", "title": _("Search history")}]
+        tab = [{"category": "movies", "title": _("الأفـــلام"), "icon": self.DEFAULT_ICON_URL}, {"category": "series", "title": _("مســلـســلات"), "icon": self.DEFAULT_ICON_URL}, {"category": "tvshow", "title": _("بــرامــج"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/k-shows/")}] + self.searchItems()
         self.listsTab(tab, cItem)
 
     def listCatItems(self, cItem, nextCategory):

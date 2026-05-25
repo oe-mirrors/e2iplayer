@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Last modified: 9/5/2026
 # cimalina Host (Created By Dr HYTHAM MAHMOUD)
 
@@ -191,7 +190,7 @@ class CimaLina(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG("CimaLina.listMainMenu")
-        tab = [{"category": "movies", "title": _("الأفلام"), "icon": self.DEFAULT_ICON_URL}, {"category": "series", "title": _("المسلسلات"), "icon": self.DEFAULT_ICON_URL}, {"category": "search", "title": _("Search"), "search_item": True}, {"category": "search_history", "title": _("Search history")}]
+        tab = [{"category": "movies", "title": _("الأفلام"), "icon": self.DEFAULT_ICON_URL}, {"category": "series", "title": _("المسلسلات"), "icon": self.DEFAULT_ICON_URL}] + self.searchItems()
         self.listsTab(tab, cItem)
 
     def listCatItems(self, cItem, nextCategory):

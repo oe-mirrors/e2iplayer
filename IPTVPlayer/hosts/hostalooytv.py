@@ -493,9 +493,7 @@ class AlooyTV(CBaseHostClass):
             {"category": "sections", "title": _("الأقسام"), "icon": self.DEFAULT_ICON_URL},
             {"category": "ramadan", "title": _("رمضان"), "icon": self.DEFAULT_ICON_URL},
             {"category": "list_items", "title": _("الرئيسية"), "url": self.getMainUrl(), "icon": self.DEFAULT_ICON_URL},
-            {"category": "search", "title": _("Search"), "search_item": True, "icon": self.DEFAULT_ICON_URL},
-            {"category": "search_history", "title": _("Search history"), "icon": self.DEFAULT_ICON_URL},
-        ]
+        ] + self.searchItems()
         self.listsTab(tab, cItem)
 
     def listSections(self, cItem):
