@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 16.05.2026 - damagic
+# Last Modified: 27.05.2026 - damagic
 
 ###################################################
 # LOCAL import
@@ -70,13 +70,11 @@ class Filman(CBaseHostClass, CaptchaHelper):
         self.HTTP_HEADER = {"User-Agent": self.USER_AGENT, "DNT": "1", "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "Accept-Encoding": "gzip, deflate", "Accept-Language": "pl,en-US;q=0.7,en;q=0.3", "Referer": self.getMainUrl(), "Origin": self.getMainUrl(), "Connection": "keep-alive", "Upgrade-Insecure-Requests": "1"}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({"X-Requested-With": "XMLHttpRequest", "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", "Accept": "application/json, text/javascript, */*; q=0.01"})
-
         self.cacheMovieFilters = {"cats": [], "sort": [], "years": [], "az": []}
         self.cacheLinks = {}
         self.cacheVersions = {}
         self.pendingLinks = {}
         self.defaultParams = {"header": self.HTTP_HEADER, "with_metadata": True, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
-
         self.loggedIn = None
         self.login = ""
         self.password = ""
@@ -85,14 +83,12 @@ class Filman(CBaseHostClass, CaptchaHelper):
         self.cookieDeleted = False
 
     def addDir(self, params):
-        """Dodaje katalog - nadpisane aby wspierać image_type dla ikon"""
         params['type'] = 'category'
         self.currList.append(params)
 
     def addVideoAsFolder(self, params):
-        """Dodaje pozycję która ma ikonę video ale zachowuje się jak folder"""
         params['type'] = 'category'
-        params['image_type'] = 'VIDEO'  # To sprawi że ikona będzie video
+        params['image_type'] = 'VIDEO'
         self.currList.append(params)
 
     def _deleteCookie(self):
@@ -174,16 +170,13 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
     def _parseItemInfo(self, item):
         info = {"title": "", "icon": "", "year": "", "quality": "", "rating": "", "desc": ""}
-
         link_match = re.search(r'<a\s+href="([^"]+)"', item)
         if link_match:
             url = link_match.group(1)
             if url.startswith('#') or url.startswith('javascript'):
                 link_match = None
-
         if link_match:
             info["url"] = self.getFullUrl(link_match.group(1))
-
         title_match = re.search(r'data-title="([^"]*)"', item)
         if title_match:
             info["title"] = title_match.group(1).replace("&quot;", '"').replace("&amp;", "&")
@@ -203,28 +196,32 @@ class Filman(CBaseHostClass, CaptchaHelper):
             alt_match = re.search(r'<img\s+[^>]*?alt="([^"]+)"', item)
             if alt_match:
                 info["title"] = alt_match.group(1)
-
         img_match = re.search(r'<img\s+src="([^"]+)"', item)
         if img_match:
             info["icon"] = self.getFullIconUrl(img_match.group(1))
-
         year_match = re.search(r'<div\s+class="film_year">(.*?)</div>', item, re.DOTALL)
         if year_match:
             info["year"] = self.cleanHtmlStr(year_match.group(1))
-
         qual_match = re.search(r'<div\s+class="quality-version[^"]*">(.*?)</div>', item, re.DOTALL)
         if qual_match:
             info["quality"] = self.cleanHtmlStr(qual_match.group(1))
-
         rate_match = re.search(r'<div\s+class="rate">(.*?)</div>', item, re.DOTALL)
         if rate_match:
             info["rating"] = self.cleanHtmlStr(rate_match.group(1))
-
         desc_match = re.search(r'data-text="([^"]*)"', item)
         if desc_match:
             info["desc"] = desc_match.group(1).replace("&quot;", '"').replace("&amp;", "&")
-
         return info
+
+    def _cleanTitleForFilename(self, title):
+        if not title:
+            return "Video"
+        title = title.split('/')[0].strip()
+        title = title.replace(':', '')
+        title = re.sub(r'\s+', ' ', title).strip()
+        if not title:
+            return "Video"
+        return title
 
     def listItems(self, cItem):
         printDBG("Filman.listItems %s" % cItem)
@@ -236,31 +233,24 @@ class Filman(CBaseHostClass, CaptchaHelper):
         if page > 1:
             sep = "&" if "?" in url else "?"
             url = "%s%spage=%d" % (url, sep, page)
-
         sts, data = self.getPage(url)
         if not sts:
             return
-
         try:
             if hasattr(data, 'meta') and data.meta.get('status_code') == 404:
                 printDBG("Filman.listItems got 404 for URL: %s" % url)
                 return
         except:
             pass
-
         self.setMainUrl(data.meta["url"])
-
         is_search = "search?phrase=" in cItem.get("url", "")
-
         item_list_match = re.search(r'<div[^>]*id="item-list"[^>]*>(.*?)(?:<div class="row fade-in-section">|<footer|$)', data, re.DOTALL)
         if not item_list_match:
             item_list_match = re.search(r'<div[^>]*id="search-results"[^>]*>(.*?)(?:<div class="row fade-in-section">|<footer|$)', data, re.DOTALL)
         if not item_list_match:
             printDBG("Filman.listItems could not find item-list container")
             return
-
         main_content = item_list_match.group(1)
-
         raw_items = []
         if 'movie-item' in main_content:
             parts = main_content.split('<div class="col-xs-6 col-sm-2 movie-item">')
@@ -270,18 +260,14 @@ class Filman(CBaseHostClass, CaptchaHelper):
             parts = main_content.split('<div class="col-xs-6 col-sm-3 col-lg-2">')
             if len(parts) > 1:
                 raw_items = ['<div class="col-xs-6 col-sm-3 col-lg-2">' + p for p in parts[1:]]
-
         printDBG("Filman.listItems found %d items" % len(raw_items))
-
         for item in raw_items:
             info = self._parseItemInfo(item)
             if "url" not in info:
                 continue
-
             film_url = info["url"]
             title = info["title"]
             icon = info.get("icon", self.DEFAULT_ICON_URL)
-
             desc_parts = []
             if info["year"]:
                 desc_parts.append(_("Year: ") + info["year"])
@@ -292,24 +278,18 @@ class Filman(CBaseHostClass, CaptchaHelper):
             if info["desc"]:
                 desc_parts.append(info["desc"])
             full_desc = "[/br]".join(desc_parts)
-
             is_series = '/s/' in film_url
             is_episode = '/e/' in film_url
-
             if is_series:
-                # Serial - zwykły folder (domyślna ikona folderu)
                 params = {"good_for_fav": True, "category": "list_series", "url": film_url, "title": title, "desc": full_desc, "icon": icon}
                 self.addDir(params)
             else:
-                # Film lub odcinek - folder z ikoną VIDEO (używamy addVideoAsFolder)
                 params = {"good_for_fav": True, "category": "list_versions", "url": film_url, "title": title, "desc": full_desc, "icon": icon}
                 self.addVideoAsFolder(params)
-
         if not is_search:
             next_page_match = re.search(r'''<li\s+class=['"]next['"]\s*>\s*<a\s+href=['"]\?page=(\d+)['"][^>]*>Nast''', data)
             if not next_page_match:
                 next_page_match = re.search(r'''<li\s+class=['"]next['"]\s*>\s*<a\s+href=['"]\?page=(\d+)['"]''', data)
-
             if next_page_match:
                 next_page = int(next_page_match.group(1))
                 printDBG("Filman.listItems adding next page: %d" % next_page)
@@ -318,21 +298,17 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 self.addDir(params)
 
     def listSeries(self, cItem):
-        """Wyświetla listę odcinków dla serialu"""
         printDBG("Filman.listSeries %s" % cItem)
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-
         try:
             if hasattr(data, 'meta') and data.meta.get('status_code') == 404:
                 printDBG("Filman.listSeries got 404 for URL: %s" % cItem["url"])
                 return
         except:
             pass
-
         self.setMainUrl(data.meta["url"])
-
         ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "episode-list"), ("<hr", ">"))[1]
         if not ep_data:
             ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "episode-list"), ("<hr", ">"))[1]
@@ -340,7 +316,6 @@ class Filman(CBaseHostClass, CaptchaHelper):
             ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "episodes"), ("</ul", ">"))[1]
         if not ep_data:
             ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<div", "id", "item-content"), ("<hr", ">"))[1]
-
         if ep_data:
             tmp = self.cm.ph.getAllItemsBeetwenNodes(ep_data, ("<li", ">"), ("</li", ">"))
             if not tmp:
@@ -350,7 +325,6 @@ class Filman(CBaseHostClass, CaptchaHelper):
                     if url == "":
                         continue
                     title = self.cleanHtmlStr(title)
-                    # Odcinek - folder z ikoną VIDEO
                     params = {"good_for_fav": True, "category": "list_versions", "url": url, "title": title, "icon": cItem["icon"]}
                     self.addVideoAsFolder(params)
             else:
@@ -359,124 +333,112 @@ class Filman(CBaseHostClass, CaptchaHelper):
                     if url == "":
                         continue
                     title = self.cleanHtmlStr(item)
-                    # Odcinek - folder z ikoną VIDEO
                     params = {"good_for_fav": True, "category": "list_versions", "url": url, "title": title, "icon": cItem["icon"]}
                     self.addVideoAsFolder(params)
 
     def listVersions(self, cItem):
-        """Wyświetla listę dostępnych wersji (serwerów) - bez pobierania tokenów"""
         printDBG("Filman.listVersions %s" % cItem)
         cacheKey = cItem["url"]
-
+        movie_title = cItem.get("title", "")
         if cacheKey in self.cacheVersions:
             versions = self.cacheVersions[cacheKey]
         else:
             sts, data = self.getPage(cItem["url"])
             if not sts:
                 return
-
+            if not movie_title:
+                title_match = re.search(r'<h1[^>]*?itemprop="name"[^>]*?>(.*?)</h1>', data, re.DOTALL)
+                if title_match:
+                    movie_title = self.cleanHtmlStr(title_match.group(1))
+                if not movie_title:
+                    title_match = re.search(r'<h1\s+class="film_title">(.*?)</h1>', data, re.DOTALL)
+                    if title_match:
+                        movie_title = self.cleanHtmlStr(title_match.group(1))
             links_section = self.cm.ph.getDataBeetwenNodes(data, ("<table", ">", "links"), ("</table", ">"))[1]
             versions = []
-
             if links_section:
                 rows = self.cm.ph.getAllItemsBeetwenNodes(links_section, ("<tr", ">"), ("</tr", ">"))
                 for row in rows:
                     if "<th" in row:
                         continue
-
                     tds = self.cm.ph.getAllItemsBeetwenNodes(row, ("<td", ">"), ("</td", ">"))
                     if len(tds) < 3:
                         continue
-
                     link_id = self.cm.ph.getSearchGroups(row, r'''data-link-id=['"]([^"^']+?)['"]''')[0]
                     if not link_id:
                         continue
-
                     server_td = tds[0]
                     img_alt = self.cm.ph.getSearchGroups(server_td, r'<img[^>]+alt=["\']([^"\']+)["\']')[0]
                     if img_alt:
                         host_name = img_alt.strip()
                     else:
                         host_name = self.cleanHtmlStr(server_td).strip()
-
                     if not host_name:
                         host_name = self.cleanHtmlStr(server_td).strip()
-
                     version = self.cleanHtmlStr(tds[1]) if len(tds) > 1 else ""
                     quality = self.cleanHtmlStr(tds[2]) if len(tds) > 2 else ""
-
                     name = host_name if host_name else "Nieznany serwer"
                     if version and version != host_name:
                         name += " - " + version
                     if quality:
                         name += " [" + quality + "]"
-
                     versions.append({
                         "name": name,
                         "link_id": link_id,
                         "url": cItem["url"],
                         "host": host_name,
                         "version": version,
-                        "quality": quality
+                        "quality": quality,
+                        "movie_title": movie_title
                     })
-
             if versions:
                 self.cacheVersions[cacheKey] = versions
                 printDBG("Filman.listVersions found %d versions" % len(versions))
             else:
                 printDBG("Filman.listVersions no versions found")
                 return
-
         for version in versions:
+            display_title = version.get("movie_title", cItem.get("title", ""))
+            clean_title = self._cleanTitleForFilename(display_title)
             params = {
                 "good_for_fav": True,
                 "category": "resolve_version",
-                "title": version["name"],
+                "title": clean_title + " - " + version["name"],
                 "link_id": version["link_id"],
                 "parent_url": version["url"],
+                "movie_title": version.get("movie_title", cItem.get("title", "")),
                 "icon": cItem.get("icon", self.DEFAULT_ICON_URL)
             }
             self.addVideo(params)
 
     def resolveVersion(self, cItem):
-        """Pobiera token dla wybranej wersji i zwraca link do odtwarzania"""
         printDBG("Filman.resolveVersion %s" % cItem)
         link_id = cItem.get("link_id")
         parent_url = cItem.get("parent_url", "")
-        title = cItem.get("title", "Video")
-
+        raw_title = cItem.get("movie_title", cItem.get("title", "Video"))
+        title = self._cleanTitleForFilename(raw_title)
         if not link_id:
             printDBG("Filman.resolveVersion: no link_id")
             return []
-
         playerUrl = self._getLinkToken(link_id)
-
         if not playerUrl:
             printDBG("Filman.resolveVersion: failed to get token")
             self.sessionEx.open(MessageBox, _("Nie udało się pobrać linku do odtwarzania.\nSpróbuj ponownie później."), type=MessageBox.TYPE_ERROR, timeout=5)
             return []
-
         resolved_url = self.resolveEmbedUrl(playerUrl)
-
         if not resolved_url or not resolved_url.startswith("http"):
             printDBG("Filman.resolveVersion: invalid resolved URL")
             return []
-
         printDBG("Filman.resolveVersion success: %s" % resolved_url)
-
         return [{"name": title, "url": strwithmeta(resolved_url, {"Referer": parent_url}), "need_resolve": 1}]
 
     def getLinksForVideo(self, cItem):
         printDBG("Filman.getLinksForVideo %s" % cItem)
-
         category = cItem.get("category", "")
-
         if category == "resolve_version":
             return self.resolveVersion(cItem)
-
         if category == "list_versions":
             return self.listVersions(cItem)
-
         return []
 
     def rot13(self, s):
@@ -549,7 +511,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
             if iframe_src and iframe_src.startswith('http') and 'favicon' not in iframe_src and 'embed.js' not in iframe_src:
                 finalUrl = iframe_src
         if not finalUrl:
-            for host in ['streamtape', 'doodstream', 'lulustream', 'voe', 'mixdrop', 'upstream', 'vidguard', 'wolfstream', 'filemoon', 'streamhub']:
+            for host in ['streamtape','doodstream','lulustream','voe','mixdrop','upstream','vidguard','wolfstream','filemoon','streamhub']:
                 urls = re.findall(r'["\'](https?://[^"\']*' + host + r'[^"\']*)["\']', data, re.IGNORECASE)
                 if urls:
                     finalUrl = urls[0]
@@ -565,29 +527,24 @@ class Filman(CBaseHostClass, CaptchaHelper):
     def _getLinkToken(self, link_id):
         now = time.time()
         elapsed = now - self._lastTokenRequest
-
         if self._tokenRequestCount >= 6:
             printDBG("Filman._getLinkToken cooling down after 6 requests, waiting 5s")
             time.sleep(5)
             self._tokenRequestCount = 0
         elif elapsed < 2.5:
             time.sleep(2.5 - elapsed)
-
         self._lastTokenRequest = time.time()
         self._tokenRequestCount += 1
-
         params = dict(self.defaultParams)
         params["header"] = dict(params["header"])
         params["header"]["Referer"] = self.getMainUrl()
         params["header"]["X-Requested-With"] = "XMLHttpRequest"
         params["header"]["Accept"] = "application/json, text/javascript, */*; q=0.01"
-
         max_retries = 3
         for attempt in range(max_retries):
             url = self.getFullUrl("/link/token?link_id=%s" % link_id)
             printDBG("Filman._getLinkToken requesting: %s (attempt %d)" % (url, attempt + 1))
             sts, data = self.getPage(url, params)
-
             if sts:
                 try:
                     resp = json.loads(data)
@@ -612,7 +569,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
                     printDBG("Filman._getLinkToken parse error: %s" % str(e))
                     if attempt < max_retries - 1:
                         time.sleep(1.5)
-                        continue
+                    continue
                     return ""
             else:
                 printDBG("Filman._getLinkToken request failed, retrying")
@@ -637,31 +594,25 @@ class Filman(CBaseHostClass, CaptchaHelper):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
-
         title = cItem.get("title", "")
         icon = cItem.get("icon", "")
         desc = cItem.get("desc", "")
-
         year = ""
         duration = ""
         views = ""
         genres_str = ""
-
         single_info = self.cm.ph.getDataBeetwenNodes(data, ('<div', 'id="single-info"'), ('</div', '>'))[1]
-
         if single_info:
             h1_match = re.search(r'<h1[^>]*?itemprop="name"[^>]*?>(.*?)</h1>', single_info, re.DOTALL)
             if not h1_match:
                 h1_match = re.search(r'<h1[^>]*?itemprop="partOfSeries"[^>]*?>(.*?)</h1>', single_info, re.DOTALL)
             if h1_match:
                 title = self.cleanHtmlStr(h1_match.group(1))
-
             episode_subtitle = re.search(r'<span\s+itemprop="name">(.*?)</span>', single_info, re.DOTALL)
             if episode_subtitle:
                 ep_name = self.cleanHtmlStr(episode_subtitle.group(1))
                 if ep_name:
                     title = title + " - " + ep_name
-
             meta_items = re.findall(r'<div\s+class="flm-meta-item">(.*?)</div>', single_info, re.DOTALL)
             for meta in meta_items:
                 value_match = re.search(r'<span\s+class="flm-meta-value">(.*?)</span>', meta, re.DOTALL)
@@ -673,18 +624,14 @@ class Filman(CBaseHostClass, CaptchaHelper):
                         duration = val
                     elif '👁' in meta:
                         views = val
-
             genres = re.findall(r'<a[^>]*?class="flm-genre-tag"[^>]*?>(.*?)</a>', single_info)
             genres_str = ", ".join([self.cleanHtmlStr(g) for g in genres])
-
         poster_match = re.search(r'<img\s+class="main-poster"[^>]*?src="([^"]+)"', data)
         if poster_match:
             icon = self.getFullIconUrl(poster_match.group(1))
-
         desc_match = re.search(r'<p\s+class="description">(.*?)</p>', data, re.DOTALL)
         if desc_match:
             desc = self.cleanHtmlStr(desc_match.group(1))
-
         desc_parts = []
         if year:
             desc_parts.append(_("Year: ") + year)
@@ -696,9 +643,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
             desc_parts.append(_("Genre: ") + genres_str)
         if desc:
             desc_parts.append(desc)
-
         full_desc = "[/br]".join(desc_parts)
-
         return [{"title": title, "text": full_desc, "images": [{"title": "", "url": icon}], "other_info": {"custom_items_list": []}}]
 
     def tryTologin(self):
@@ -711,17 +656,14 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 self.loggedIn = True
                 self.cookieDeleted = False
                 return True
-
         if self.loggedIn is None or self.login != config.plugins.iptvplayer.filman_login.value or self.password != config.plugins.iptvplayer.filman_password.value or self.cookieDeleted:
             self.login = config.plugins.iptvplayer.filman_login.value
             self.password = config.plugins.iptvplayer.filman_password.value
             if not self.login.strip() or not self.password.strip():
                 return False
-
             login_params = dict(self.defaultParams)
             login_params["header"] = dict(login_params["header"])
             login_params["header"]["Referer"] = self.getFullUrl("/logowanie")
-
             sts, data = self.getPage(self.getFullUrl("/logowanie"), login_params)
             if not sts:
                 return False
@@ -729,13 +671,11 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 self.loggedIn = True
                 self.cookieDeleted = False
                 return True
-
             csrf_token = ""
             tmp = self.cm.ph.getSearchGroups(data, r'name="_csrf" value="([^"]+)"')
             if tmp:
                 csrf_token = tmp[0]
             printDBG("tryTologin CSRF token: [%s]" % csrf_token)
-
             post_data = {
                 "login": self.login,
                 "password": self.password,
@@ -744,7 +684,6 @@ class Filman(CBaseHostClass, CaptchaHelper):
             }
             if csrf_token:
                 post_data["_csrf"] = csrf_token
-
             sitekey = "6LcQs24iAAAAALFibpEQwpQZiyhOCn-zdc-eFout"
             token = None
             printDBG("Trying sitekey: %s" % sitekey)
@@ -753,13 +692,11 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 ent_sitekey = "6LdjECEpAAAAAII12AekMIVTsLnFA6A1Qeu7YRnU"
                 printDBG("Trying enterprise sitekey: %s" % ent_sitekey)
                 token, _ = self.processCaptcha(ent_sitekey, self.getFullUrl("/logowanie"))
-
             if token:
                 post_data["g-recaptcha-response"] = token
                 printDBG("Got recaptcha token")
             else:
                 printDBG("Failed to get any recaptcha token – login will likely fail")
-
             sts, _ = self.getPage(self.getFullUrl("/logowanie"), login_params, post_data)
             sts, data = self.getPage(self.getFullUrl("/logowanie"), login_params)
             if sts and "/wylogowanie" in data:
@@ -772,7 +709,6 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 if tmp2:
                     msg = self.cleanHtmlStr(tmp2[1])
                 self.sessionEx.open(MessageBox, _("Login failed.") + "\n" + msg, type=MessageBox.TYPE_ERROR, timeout=10)
-
         return self.loggedIn
 
     def listSearchResult(self, cItem, searchPattern, searchType):
