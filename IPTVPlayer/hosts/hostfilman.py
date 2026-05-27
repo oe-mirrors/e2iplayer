@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 25.05.2026 - damagic
+# Last Modified: 27.05.2026 - damagic
 
 ###################################################
 # LOCAL import
@@ -399,12 +399,11 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 return
         for version in versions:
             display_title = version.get("movie_title", cItem.get("title", ""))
-            display_title = self._cleanTitleForFilename(display_title)
+            clean_title = self._cleanTitleForFilename(display_title)
             params = {
                 "good_for_fav": True,
                 "category": "resolve_version",
-                "title": display_title,
-                "desc": "Serwer: " + version["name"],
+                "title": clean_title + " - " + version["name"],
                 "link_id": version["link_id"],
                 "parent_url": version["url"],
                 "movie_title": version.get("movie_title", cItem.get("title", "")),
