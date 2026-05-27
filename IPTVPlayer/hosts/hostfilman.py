@@ -511,7 +511,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
             if iframe_src and iframe_src.startswith('http') and 'favicon' not in iframe_src and 'embed.js' not in iframe_src:
                 finalUrl = iframe_src
         if not finalUrl:
-            for host in ['streamtape','doodstream','lulustream','voe','mixdrop','upstream','vidguard','wolfstream','filemoon','streamhub']:
+            for host in ['streamtape', 'doodstream', 'lulustream', 'voe', 'mixdrop', 'upstream', 'vidguard', 'wolfstream', 'filemoon', 'streamhub']:
                 urls = re.findall(r'["\'](https?://[^"\']*' + host + r'[^"\']*)["\']', data, re.IGNORECASE)
                 if urls:
                     finalUrl = urls[0]
