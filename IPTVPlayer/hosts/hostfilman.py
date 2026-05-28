@@ -260,6 +260,9 @@ class Filman(CBaseHostClass, CaptchaHelper):
             title = info["title"]
             icon = info.get("icon", self.DEFAULT_ICON_URL)
 
+            if info["year"] and info["year"] not in title:
+                title = title + " (" + info["year"] + ")"
+
             desc_parts = []
             if info["year"]:
                 desc_parts.append(_("Year: ") + info["year"])
@@ -690,7 +693,14 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 tmp2 = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "alert"), ("</div", ">"))
                 if tmp2:
                     msg = self.cleanHtmlStr(tmp2[1])
-                self.sessionEx.open(MessageBox, _("Login failed.") + "\n" + msg, type=MessageBox.TYPE_ERROR, timeout=10)
+                try:
+                    login_failed_text = str(_("Login failed."))
+                except (TypeError, AttributeError):
+                    login_failed_text = "Login failed."
+                error_msg = login_failed_text
+                if msg:
+                    error_msg += "\n" + ensure_str(str(msg))
+                self.sessionEx.open(MessageBox, error_msg, type=MessageBox.TYPE_ERROR, timeout=10)
 
         return self.loggedIn
 
