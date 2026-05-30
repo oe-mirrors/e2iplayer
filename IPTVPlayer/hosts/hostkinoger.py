@@ -145,7 +145,27 @@ class KinoGer(CBaseHostClass):
     def getVideoLinks(self, videoUrl):
         printDBG("KinoGer.getVideoLinks [%s]" % videoUrl)
         if self.cm.isValidUrl(videoUrl):
-            return self.up.getVideoLinkExt(videoUrl)
+            urlTab = self.up.getVideoLinkExt(videoUrl)
+            for idx in range(len(urlTab)):
+                try:
+                    item = urlTab[idx]
+                    url = item.get('url', '')
+                    if not isinstance(url, strwithmeta):
+                        continue
+                    meta = getattr(url, 'meta', {})
+                    if not isinstance(meta, dict):
+                        continue
+                    videoUrl = meta.get('video_url', '')
+                    audioUrl = meta.get('audio_url', '')
+                    proto = meta.get('iptv_proto', '')
+                    if videoUrl != '' and audioUrl != '':
+                        if proto == 'm3u8' or '.m3u8' in videoUrl.lower():
+                            meta['iptv_ffmpeg_case'] = 'kinoger'
+                            urlTab[idx]['url'] = strwithmeta(str(url), meta)
+                            printDBG("KinoGer.getVideoLinks set iptv_ffmpeg_case=kinoger")
+                except Exception:
+                    printExc()
+            return urlTab
         return []
 
     def getArticleContent(self, cItem):

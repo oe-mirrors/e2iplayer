@@ -47,7 +47,7 @@ class FFMPEGDownloader(BaseDownloader):
         self.parseReObj = {}
         self.parseReObj['start_time'] = re.compile(r'\sstart\:\s*?([0-9]+?)\.')
         self.parseReObj['duration'] = re.compile(r'[\s=]([0-9]+?)\:([0-9]+?)\:([0-9]+?)\.')
-        self.parseReObj['size'] = re.compile(r'size=\s*?([0-9]+?)kB')
+        self.parseReObj['size'] = re.compile(r'size=\s*?([0-9]+?)([kK][iI]?[bB])', re.IGNORECASE)
         self.parseReObj['bitrate'] = re.compile(r'bitrate=\s*?([0-9]+?(?:\.[0-9]+?)?)kbits')
         self.parseReObj['speed'] = re.compile(r'speed=\s*?([0-9]+?(?:\.[0-9]+?)?)x')
 
@@ -72,7 +72,7 @@ class FFMPEGDownloader(BaseDownloader):
                 ffmpegBinaryName = 'ffmpeg'
             sts = False
             if code == 127:
-                reason = _('Utility "%s" can not be found.' % ffmpegBinaryName)
+                reason = _('Utility "%s" can not be found.') % ffmpegBinaryName
             else:
                 reason = data
             self.iptv_sys = None
@@ -104,28 +104,42 @@ class FFMPEGDownloader(BaseDownloader):
         if 'iptv_m3u8_key_uri_replace_old' in tmpUri.meta and 'iptv_m3u8_key_uri_replace_new' in tmpUri.meta:
             cmdTab.extend(['-key_uri_old', str(tmpUri.meta['iptv_m3u8_key_uri_replace_old']), '-key_uri_new', str(tmpUri.meta['iptv_m3u8_key_uri_replace_new'])])
 
-        if "://" in self.url:
-            url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmpUri, True)
+        def _addHttpOpts(cmdTab, meta):
             headers = []
-            for key in httpParams:
-                if key == 'Range':  # Range is always used by ffmpeg
-                    continue
-                elif key == 'User-Agent':
-                    cmdTab.extend(['-user_agent', httpParams[key]])
-                else:
-                    headers.append('%s: %s' % (key, httpParams[key]))
+            try:
+                for key in meta:
+                    if key == 'Range':
+                        continue
+                    elif key == 'User-Agent':
+                        cmdTab.extend(['-user_agent', meta[key]])
+                    elif key == 'Referer':
+                        cmdTab.extend(['-referer', meta[key]])
+                    elif key == 'Origin':
+                        headers.append('%s: %s' % (key, meta[key]))
+                    elif key in ['Cookie', 'Authorization']:
+                        headers.append('%s: %s' % (key, meta[key]))
+            except Exception:
+                printExc()
 
             if len(headers):
-                cmdTab.extend(['-headers', '\r\n'.join(headers)])
+                cmdTab.extend(['-headers', '\r\n'.join(headers) + '\r\n'])
 
         if self.url.startswith("merge://"):
             try:
                 urlsKeys = self.url.split('merge://', 1)[1].split('|')
                 for item in urlsKeys:
-                    cmdTab.extend(['-reconnect', '1', '-i', self.url.meta[item]])
+                    oneUrl = tmpUri.meta[item]
+                    oneMeta = dict(tmpUri.meta)
+                    _addHttpOpts(cmdTab, oneMeta)
+                    cmdTab.extend(['-reconnect', '1', '-i', oneUrl])
             except Exception:
                 printExc()
         else:
+            if "://" in self.url:
+                url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmpUri, True)
+                _addHttpOpts(cmdTab, httpParams)
+            else:
+                url = self.url
             cmdTab.extend(['-reconnect', '1', '-i', url])
 
         cmdTab.extend(['-c:v', 'copy', '-c:a', 'copy', '-f', tmpUri.meta.get('ff_out_container', self.ffmpegOutputContener), self.filePath])
@@ -166,7 +180,9 @@ class FFMPEGDownloader(BaseDownloader):
 
     def _getFileSize(self, data):
         try:
-            return int(self.parseReObj['size'].search(data).group(1)) * 1024
+            match = self.parseReObj['size'].search(data)
+            if match:
+                return int(match.group(1)) * 1024
         except Exception:
             printExc()
         return 0
@@ -193,8 +209,8 @@ class FFMPEGDownloader(BaseDownloader):
             del data[-1]
 
         for item in data:
-            printDBG("---")
-            printDBG(item)
+            # printDBG("---")
+            # printDBG(item)
             if not self.headerReceived:
                 if 'Duration:' in item:
                     duration = self._getDuration(item) - self._getStartTime(item)
