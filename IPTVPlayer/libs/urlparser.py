@@ -223,11 +223,13 @@ class urlparser:
             "bigwings.io": self.pp.parserJWPLAYER,
             "bingezove.com": self.pp.parserJWPLAYER,
             "boosteradx.online": self.pp.parserBYSE,
+            "byse.sx": self.pp.parserBYSE,
             "bysebuho.com": self.pp.parserBYSE,
             "bysedikamoum.com": self.pp.parserBYSE,
             "bysefujedu.com": self.pp.parserBYSE,
             "bysejikuar.com": self.pp.parserBYSE,
             "bysekoze.com": self.pp.parserBYSE,
+            "byselapuix.com": self.pp.parserBYSE,
             "byseqekaho.com": self.pp.parserBYSE,
             "bysesayeveum.com": self.pp.parserBYSE,
             "bysesukior.com": self.pp.parserBYSE,
@@ -298,6 +300,7 @@ class urlparser:
             "ebd.cda.pl": self.pp.parserCDA,
             "edbrdl7pab.sbs": self.pp.parserJWPLAYER,
             "egtpgrvh.sbs": self.pp.parserJWPLAYER,
+            "embedplaybyse.top": self.pp.parserBYSE,
             "embedwish.com": self.pp.parserJWPLAYER,
             "emturbovid.com": self.pp.parserJWPLAYER,
             "en.embedz.net": self.pp.parserJWPLAYER,
@@ -340,6 +343,7 @@ class urlparser:
             "gupload.xyz": self.pp.parserGUPLOAD,
             # h
             "haxloppd.com": self.pp.parserJWPLAYER,
+            "hd1.hdup20.com": self.pp.parserJWPLAYER,
             "hdbestvd.online": self.pp.parserJWPLAYER,
             "hexload.com": self.pp.parserHEXLOAD,
             "hexupload.net": self.pp.parserHEXLOAD,
@@ -435,6 +439,7 @@ class urlparser:
             "rapid-cloud.co": self.pp.parserVIDCLOUD,
             "rubystm.com": self.pp.parserJWPLAYER,
             "rubyvidhub.com": self.pp.parserJWPLAYER,
+            "rty1.film77.xyz": self.pp.parserJWPLAYER,
             "ryderjet.com": self.pp.parserJWPLAYER,
             # s
             "s3taku.pro": self.pp.parserJWPLAYER,
@@ -449,6 +454,7 @@ class urlparser:
             "soundcloud.com": self.pp.parserSOUNDCLOUDCOM,
             "sportsonline.si": self.pp.parserJWPLAYER,
             "sportsonline.to": self.pp.parserJWPLAYER,
+            "ss.hd-vk.com": self.pp.parserJWPLAYER,
             "stape.fun": self.pp.parserSTREAMTAPE,
             "stmix.io": self.pp.parserSTREAMUP,
             "strcloud.club": self.pp.parserSTREAMTAPE,
@@ -1833,7 +1839,7 @@ class pageParser(CaptchaHelper):
             count = js_int(c.pop(0))
             while count:
                 current_array = []
-                for x in range(count):
+                for _x in range(count):
                     current_array.insert(0, js_int(c.pop(0)))
                 d.append(current_array)
                 count = js_int(c.pop(0))
@@ -2125,7 +2131,7 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserBYSE(self, baseUrl):  # fix 220526
+    def parserBYSE(self, baseUrl):  # fix 300526
         def fp(x, y, z):  # thx Gujal00
             v_id = hexlify(urandom(x)).decode()
             d_id = hexlify(urandom(x)).decode()
@@ -2145,8 +2151,12 @@ class pageParser(CaptchaHelper):
             n = t + "=" * r
             return base64.b64decode(n)
 
-        def xn(e):
-            return b"".join(list(map(ft, e)))
+        def xn(e, v):
+            if v:
+                v = int(v)
+                e = [e[v - 1], e[len(e) - v]]
+            t = list(map(ft, e))
+            return b"".join(t)
 
         baseUrl = baseUrl.replace("/d/", "/e/")
         printDBG("parserBYSE baseUrl[%s]" % baseUrl)
@@ -2172,7 +2182,7 @@ class pageParser(CaptchaHelper):
         pd = html.get("playback")
         if pd:
             iv = ft(pd.get("iv"))
-            key = xn(pd.get("key_parts"))
+            key = xn(pd.get("key_parts"), pd.get("version"))
             pl = ft(pd.get("payload"))
             cipher = python_aesgcm.new(key)
             ct = cipher.open(iv, pl)
