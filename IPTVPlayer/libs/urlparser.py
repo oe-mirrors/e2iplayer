@@ -2484,7 +2484,7 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserVIXSRC(self, baseUrl):  # fix 250426
+    def parserVIXSRC(self, baseUrl):  # fix 300526
         printDBG("parserVIXSRC baseUrl[%s]" % baseUrl)
         urltab = []
         host = urlparser.getDomain(baseUrl, False)
@@ -2506,7 +2506,7 @@ class pageParser(CaptchaHelper):
         hurl = re.search(r"url:\s*'([^']+)", data)
         if not all([tok, exp, hurl]):
             return []
-        url = "%s?token=%s&expires=%s&h=1" % (hurl.group(1), tok.group(1), exp.group(1))
+        url = "%s%s&token=%s&expires=%s&h=1" % (hurl.group(1), "&" if "?" in hurl.group(1) else "?", tok.group(1), exp.group(1))
         if "?lang=it" in baseUrl:
             url += "&lang=it"
         if url.startswith("/"):
