@@ -152,7 +152,7 @@ class IPTVSubtitlesHandler:
         printDBG("OpenSubOrg.getSubtitles(currTimeMS = %s, prevMarker = %s)" % (currTimeMS, prevMarker))
         # time1 = time.time()
         subsText = []
-        tmp = currTimeMS / self.CAPACITY
+        tmp = currTimeMS // self.CAPACITY
         tmpList = self.pailsOfAtoms.get(tmp, [])
 
         if len(tmpList) == 0:
@@ -220,17 +220,13 @@ class IPTVSubtitlesHandler:
     def _fillPailsOfAtoms(self):
         self.pailsOfAtoms = {}
         for idx in range(len(self.subAtoms)):
-            tmp = self.subAtoms[idx]['start'] / self.CAPACITY
-            if tmp not in self.pailsOfAtoms:
-                self.pailsOfAtoms[tmp] = [idx]
-            elif idx not in self.pailsOfAtoms[tmp]:
-                self.pailsOfAtoms[tmp].append(idx)
-
-            tmp = self.subAtoms[idx]['end'] / self.CAPACITY
-            if tmp not in self.pailsOfAtoms:
-                self.pailsOfAtoms[tmp] = [idx]
-            elif idx not in self.pailsOfAtoms[tmp]:
-                self.pailsOfAtoms[tmp].append(idx)
+            startBucket = self.subAtoms[idx]['start'] // self.CAPACITY
+            endBucket = self.subAtoms[idx]['end'] // self.CAPACITY
+            for tmp in range(startBucket, endBucket + 1):
+                if tmp not in self.pailsOfAtoms:
+                    self.pailsOfAtoms[tmp] = [idx]
+                elif idx not in self.pailsOfAtoms[tmp]:
+                    self.pailsOfAtoms[tmp].append(idx)
         self.pailsOfAtoms = dict(sorted(self.pailsOfAtoms.items()))
         if 1:  # for tests
             with codecs.open('/tmp/pailsOfAtoms.json', 'w', 'utf-8') as fp:
@@ -357,17 +353,13 @@ class IPTVEmbeddedSubtitlesHandler:
                     idx = len(self.subAtoms)
                     self.subAtoms.append({'start': inAtom['start'], 'end': inAtom['end'], 'text': text})
 
-                    tmp = self.subAtoms[idx]['start'] / self.CAPACITY
-                    if tmp not in self.pailsOfAtoms:
-                        self.pailsOfAtoms[tmp] = [idx]
-                    elif idx not in self.pailsOfAtoms[tmp]:
-                        self.pailsOfAtoms[tmp].append(idx)
-
-                    tmp = self.subAtoms[idx]['end'] / self.CAPACITY
-                    if tmp not in self.pailsOfAtoms:
-                        self.pailsOfAtoms[tmp] = [idx]
-                    elif idx not in self.pailsOfAtoms[tmp]:
-                        self.pailsOfAtoms[tmp].append(idx)
+                    startBucket = self.subAtoms[idx]['start'] // self.CAPACITY
+                    endBucket = self.subAtoms[idx]['end'] // self.CAPACITY
+                    for tmp in range(startBucket, endBucket + 1):
+                        if tmp not in self.pailsOfAtoms:
+                            self.pailsOfAtoms[tmp] = [idx]
+                        elif idx not in self.pailsOfAtoms[tmp]:
+                            self.pailsOfAtoms[tmp].append(idx)
         except Exception:
             pass
 
@@ -375,7 +367,7 @@ class IPTVEmbeddedSubtitlesHandler:
         if prevMarker is None:
             prevMarker = []
         subsText = []
-        tmp = currTimeMS / self.CAPACITY
+        tmp = currTimeMS // self.CAPACITY
         tmp = self.pailsOfAtoms.get(tmp, [])
 
         ret = None
