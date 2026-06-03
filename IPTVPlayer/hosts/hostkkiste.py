@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 04.06.2025
+# Last Modified: 02.06.2026 MR.X
 import re
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
@@ -14,192 +13,150 @@ def GetConfigList():
 
 
 def gettytul():
-    return 'https://kkiste-to.me'
+    return "https://kkiste.study"
 
 
 class KKisteAG(CBaseHostClass):
-
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'kkiste.ag', 'cookie': 'kkiste.ag.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
-        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.DEFAULT_ICON_URL = 'https://tarnkappe.info/wp-content/uploads/kkiste-logo.jpg'
-        self.MAIN_URL = None
+        CBaseHostClass.__init__(self, {"history": "kkiste.ag", "cookie": "kkiste.ag.cookie"})
+        self.HEADER = self.cm.getDefaultHeader()
+        self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
+        self.DEFAULT_ICON_URL = "https://tarnkappe.info/wp-content/uploads/kkiste-logo.jpg"
+        self.MAIN_URL = gettytul()
+        self.MAIN_CAT_TAB = [{"category": "list_items", "title": _("Movies"), "url": self.getFullUrl("/kinofilme-online/")}, {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("/serienstream-deutsch/")}, {"category": "list_items", "title": _("Animation"), "url": self.getFullUrl("/animation/")}, {"category": "list_year", "title": _("Year"), "url": self.MAIN_URL}, {"category": "list_genres", "title": "Genres", "url": self.MAIN_URL}] + self.searchItems()
 
-    def menu(self):
-        self.MAIN_URL = 'https://kkiste-to.me'
-        self.MAIN_CAT_TAB = [
-                            {'category': 'list_items', 'title': _("Movies"), 'link': self.getFullUrl('/kinofilme-online/')},
-                            {'category': 'list_items', 'title': _("Series"), 'link': self.getFullUrl('/serienstream-deutsch/')},
-                            {'category': 'list_items', 'title': _("Animation"), 'link': self.getFullUrl('/animation/')},
-                            {'category': 'list_year', 'title': _("Year"), 'link': self.MAIN_URL},
-                            {'category': 'list_genres', 'title': 'Genres', 'link': self.MAIN_URL}] + self.searchItems()
-
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
+    def getPage(self, baseUrl, addParams=None, post_data=None):
+        if addParams is None:
             addParams = dict(self.defaultParams)
-        addParams['cloudflare_params'] = {'cookie_file': self.COOKIE_FILE, 'User-Agent': self.USER_AGENT}
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
-    def getFullIconUrl(self, url):
-        url = self.getFullUrl(url)
-        if url == '':
-            return ''
-        cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
-        return strwithmeta(url, {'Cookie': cookieHeader, 'User-Agent': self.USER_AGENT})
-
-    def listItems(self, cItem, nextCategory):
+    def listItems(self, cItem):
         printDBG("KKisteAG.listItems |%s|" % cItem)
-        url = cItem['link']
-        sts, data = self.getPage(url)
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return
         nextPage = self.cm.ph.getSearchGroups(data, 'next"><a href="([^"]+)')[0]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="short">', '</article>')
-
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="short">', "</article>")
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, r'img src="([^"]+)')[0])
             title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'href="[^"]+">([^<]+)')[0])
             desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'st-desc">([^<]+)')[0])
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category': nextCategory, 'title': title, 'link': url, 'icon': icon, 'desc': desc})
-            if 'taffel' in title or 'serie' in title:
-                params.update({'category': 'list_episodes'})
+            params.update({"good_for_fav": True, "category": "video", "title": title, "url": url, "icon": icon, "desc": desc})
+            if "taffel" in title or "serie" in title:
+                params.update({"category": "list_episodes"})
                 self.addDir(params)
             else:
                 self.addVideo(params)
-        if nextPage.startswith('https'):
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'title': _("Next page"), 'link': self.getFullUrl(nextPage)})
-            self.addDir(params)
+        if nextPage.startswith("https"):
+            self.apply_next_url(cItem, self.getFullUrl(nextPage))
 
     def listEpisodes(self, cItem):
         printDBG("KKisteAG.listEpisodes")
-        url = cItem['link']
-        icon = cItem['icon']
+        url = cItem["url"]
         sts, data = self.getPage(url)
         if not sts:
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, '<meta name="description" content="([^"]+)')[0])
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li id="serie', '</ul>')
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li id="serie', "</ul>")
         for item in data:
             episode = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '><a href="#">([^<]+)')[0])
-            title = cItem['title'] + " - " + episode
+            title = cItem["title"] + " - " + episode
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'title': title, 'link': url, 'icon': icon, 'desc': desc, 'episode': episode})
+            params.update({"good_for_fav": True, "title": title, "url": url, "desc": desc, "episode": episode})
             self.addVideo(params)
 
     def listGenres(self, cItem, t):
         printDBG("KKisteAG.Genres")
-        url = cItem['link']
+        url = cItem["url"]
         sts, data = self.getPage(url)
         if not sts:
             return
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '>%s<' % t, '</ul>')[0]
+        data = self.cm.ph.getAllItemsBeetwenMarkers(data, ">%s<" % t, "</ul>")[0]
         data = re.compile('href="([^"]+).*?>([^<]+)', re.DOTALL).findall(data)
-
         for url, title in data:
+            if "kino" in title.lower() or "serie" in title.lower():
+                continue
             params = dict(cItem)
-            params.update({'good_for_fav': True, 'category': 'list_items', 'title': title.replace(' stream', ''), 'link': self.getFullUrl(url), 'icon': '', 'desc': ''})
+            params.update({"good_for_fav": True, "category": "list_items", "title": title.replace(" stream", ""), "url": self.getFullUrl(url), "icon": "", "desc": ""})
             self.addDir(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("KKisteAG.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
         cItem = dict(cItem)
-        cItem['link'] = self.getFullUrl('index.php?do=search&subaction=search&story=%s' % urllib_quote(searchPattern))
-        self.listItems(cItem, 'video')
+        cItem["url"] = self.getFullUrl("index.php?do=search&subaction=search&story=%s" % urllib_quote(searchPattern))
+        self.listItems(cItem)
 
     def getLinksForVideo(self, cItem):
         printDBG("KKisteAG.getLinksForVideo [%s]" % cItem)
-        linksTab = []
-        sts, data = self.getPage(cItem['link'], self.defaultParams)
+        urltab = []
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
-        if cItem.get('episode'):
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, cItem.get('episode'), '</ul>')[0]
-        data = re.compile('link="([^"]+)', re.DOTALL).findall(data)
-
+        if cItem.get("episode"):
+            data = self.cm.ph.getAllItemsBeetwenMarkers(data, cItem.get("episode"), "</ul>")[0]
+        data = re.findall('data-link="(h[^"]+)', data, re.DOTALL)
         for url in data:
-            if "vod/mega" in url or "youtube" in url:
+            if "meinecloud" in url or "player.php" in url:
                 continue
-            if url.startswith('//'):
-                url = "https:" + url
-            title = urlparse(url).netloc.split('.')[0]
-            if 'mdy48tn97' in title.lower():
-                title = title.replace('mdy48tn97', 'Mixdrop').lower()
-
-            linksTab.append({'name': title.capitalize(), 'url': url, 'need_resolve': 1})
-        if linksTab:
-            cItem['url'] = linksTab
-        return linksTab
+            url = "https:" + url if url.startswith("//") else url
+            urltab.append({"name": "Trailer" if "youtu" in url else self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": self.MAIN_URL}), "need_resolve": 1})
+        return urltab
 
     def getVideoLinks(self, videoUrl):
         printDBG("KKisteAG.getVideoLinks [%s]" % videoUrl)
-        urlTab = []
+        urltab = []
         if self.cm.isValidUrl(videoUrl):
             return self.up.getVideoLinkExt(videoUrl)
-        return urlTab
+        return urltab
 
     def getArticleContent(self, cItem):
         printDBG("KKisteAG.getArticleContent [%s]" % cItem)
         otherInfo = {}
-        sts, data = self.getPage(cItem['link'])
+        sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'video-box clearfix"><strong>([^"]+)</div>')[0])
-        desc = desc if desc else cItem.get('desc', '')
-        actors = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, "Darsteller:(.*?)</div>")[0])
-        if actors:
-            otherInfo['actors'] = actors
-        c = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, "Regisseur:(.*?)</div>")[0])
-        if c:
-            otherInfo['director'] = c
-        released = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, "Jahr:(.*?)</div>")[0])
-        if released:
-            otherInfo['released'] = released
-        duration = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, "Zeit:(.*?)</div>")[0])
-        if duration:
-            otherInfo['duration'] = duration
-        title = cItem['title']
-        icon = cItem.get('icon', self.DEFAULT_ICON_URL)
-        return [{'title': self.cleanHtmlStr(title), 'text': self.cleanHtmlStr(desc), 'images': [{'title': '', 'url': self.getFullUrl(icon)}], 'other_info': otherInfo}]
+        desc = desc if desc else cItem.get("desc", "")
+        patterns = {"actors": r"Darsteller:(.*?)</div>", "director": r"Regisseur:(.*?)</div>", "released": r"Jahr:(.*?)</div>", "duration": r"Zeit:(.*?)</div>"}
+        for k, p in patterns.items():
+            v = self.cm.ph.getSearchGroups(data, p)
+            if v:
+                otherInfo[k] = self.cleanHtmlStr(v[0])
+        return [{"title": self.cleanHtmlStr(cItem["title"]), "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": self.getFullUrl(cItem.get("icon", self.DEFAULT_ICON_URL))}], "other_info": otherInfo}]
 
-    def handleService(self, index, refresh=0, searchPattern='', searchType=''):
-        printDBG('handleService start')
+    def handleService(self, index, refresh=0, searchPattern="", searchType=""):
+        printDBG("handleService start")
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-        if self.MAIN_URL is None:
-            self.menu()
-        name = self.currItem.get("name", '')
-        category = self.currItem.get("category", '')
+        name = self.currItem.get("name", "")
+        category = self.currItem.get("category", "")
         printDBG("handleService: |||||||||||||||||||||||||||||||||||| name[%s], category[%s] " % (name, category))
         self.currList = []
         if name is None:
-            self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
-        elif 'list_items' == category:
-            self.listItems(self.currItem, 'video')
-        elif 'list_episodes' == category:
+            self.listsTab(self.MAIN_CAT_TAB, {"name": "category"})
+        elif category == "list_items":
+            self.listItems(self.currItem)
+        elif category == "list_episodes":
             self.listEpisodes(self.currItem)
-        elif 'list_year' == category:
+        elif category == "list_year":
             self.listGenres(self.currItem, "Release Jahre")
-        elif 'list_genres' == category:
+        elif category == "list_genres":
             self.listGenres(self.currItem, "Genres")
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'})
+            cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
 class IPTVHost(CHostBase):
-
     def __init__(self):
         CHostBase.__init__(self, KKisteAG(), True, [])
 
     def withArticleContent(self, cItem):
-        return cItem.get('category', '') == 'video'
+        return cItem["category"] in ["video", "list_episodes"]

@@ -359,7 +359,8 @@ class urlparser:
             "jodwish.com": self.pp.parserJWPLAYER,
             "justupload.io": self.pp.parserJWPLAYER,
             # k
-            "kinoger.be": self.pp.parserVEEV,
+            "kinoger.be": self.pp.parserJWPLAYER,
+            "kinoger.embed4me.vip": self.pp.parserSBS,
             "kinoger.seekplays.pro": self.pp.parserSBS,
             "kinoger.p2pplay.pro": self.pp.parserSBS,
             "kinoger.re": self.pp.parserSBS,
@@ -519,6 +520,7 @@ class urlparser:
             "vidply.com": self.pp.parserDOOD,
             "videa.hu": self.pp.parserVIDEA,
             "videakid.hu": self.pp.parserVIDEA,
+            "vidaraa.cc": self.pp.parserSTREAMUP,
             "vidara.so": self.pp.parserSTREAMUP,
             "vidara.to": self.pp.parserSTREAMUP,
             "vidora.stream": self.pp.parserJWPLAYER,
