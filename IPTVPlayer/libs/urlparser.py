@@ -204,6 +204,7 @@ class urlparser:
             "aliez.me": self.pp.parserJWPLAYER,
             "all3do.com": self.pp.parserDOOD,
             "anime4low.sbs": self.pp.parserJWPLAYER,
+            "anonmp4.help": self.pp.parserANONMP4,
             "antiadtape.com": self.pp.parserSTREAMTAPE,
             "arabveturk.com": self.pp.parserJWPLAYER,
             "archive.org": self.pp.parserARCHIVEORG,
@@ -327,6 +328,7 @@ class urlparser:
             "file-upload.org": self.pp.parserJWPLAYER,
             "filma365.strp2p.site": self.pp.parserSBS,
             "flaswish.com": self.pp.parserJWPLAYER,
+            "flyfile.app": self.pp.parserFLYFILE,
             "forafile.com": self.pp.parserJWPLAYER,
             "freedisc.pl": self.pp.parserFREEDISC,
             "fsdcmo.sbs": self.pp.parserJWPLAYER,
@@ -2515,4 +2517,43 @@ class pageParser(CaptchaHelper):
             url = host + url
         url = strwithmeta(url, {"iptv_proto": "m3u8", "User-Agent": HTTP_HEADER["User-Agent"], "Referer": src, "Accept": "*/*"})
         urltab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, sortWithMaxBitrate=99999999))
+        return urltab
+
+    def parserFLYFILE(self, baseUrl):  # add 030626
+        printDBG("parserFLYFILE baseUrl[%s]" % baseUrl)
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        mid = baseUrl.split("?")[0].split("/")[-1]
+        sts, data = self.cm.getPage("https://api.%s/api/streaming/assign/%s" % (urlparser.getDomain(baseUrl), mid), {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        data = json_loads(data)
+        urltab = []
+        if data.get("url") and data.get("token"):
+            url = "%s/hls/%s/master.m3u8" % (data["url"].rstrip("/"), data["token"])
+            url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+            urltab.extend(getDirectM3U8Playlist(url))
+        return urltab
+
+    def parserANONMP4(self, baseUrl):  # add 040626 partaly supported
+        printDBG("parserANONMP4 baseUrl[%s]" % baseUrl)
+        urltab = []
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        url = re.search(r"SINGLE_API_URL\s*=\s*'([^']+)", data)
+        if url:
+            HTTP_HEADER.update({"Referer": host, "Origin": host[:-1]})
+            sts, data = self.cm.getPage(url.group(1), {"header": HTTP_HEADER})
+            if not sts:
+                return []
+            js = json_loads(data)
+            sts, data = self.cm.getPage(js.get("tracks")[0].get("track_url"), {"header": HTTP_HEADER})
+            if not sts:
+                return []
+            js = json_loads(data)
+            url = urlparser.decorateUrl(js.get("hls"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+            urltab.extend(getDirectM3U8Playlist(url))
         return urltab
