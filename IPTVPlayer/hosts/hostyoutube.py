@@ -247,7 +247,7 @@ class Youtube(CBaseHostClass):
                 'url': ''
             }
             self.addDir(params)
-            
+
     def listSubItems(self, cItem):
         printDBG("Youtube.listSubItems")
         self.currList = cItem['sub_items']
