@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 02.06.2026
+# Last Modified: 05.06.2026
 ###################################################
 # LOCAL import
 ###################################################
@@ -56,7 +56,6 @@ def GetConfigList():
     return optionList
 
 
-###################################################
 ###################################################
 
 
@@ -178,7 +177,7 @@ class Youtube(CBaseHostClass):
             pattern = cItem.get("pattern", "")
             search_type = cItem.get("search_type", "")
 
-            # Neuer Weg: Suchbasierte Feeds mit Pagination
+            # A New Approach: Search-Based Feeds with Pagination
             if pattern != "":
                 tmpList = self.ytp.getSearchResult(urllib_quote_plus(pattern), search_type if search_type else "video", page, "search_next_page", config.plugins.iptvplayer.ytSortBy.value, url)
 
@@ -204,7 +203,7 @@ class Youtube(CBaseHostClass):
                         self.addDir(item)
                 return
 
-            # Alter Weg: bestehendes Verhalten für feste URLs beibehalten
+            # Legacy approach: retain existing behavior for fixed URLs
             sts, data = self.cm.getPage(cItem["url"])
             data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, "videoRenderer", "watchEndpoint")
             for item in data2:
@@ -275,7 +274,7 @@ class Youtube(CBaseHostClass):
         url = cItem.get("url", "")
 
         if url:
-            printDBG("URL ricerca -----------> %s" % url)
+            printDBG("URL search -----------> %s" % url)
             tmpList = self.ytp.getSearchResult(urllib_quote_plus(pattern), searchType, page, "search", config.plugins.iptvplayer.ytSortBy.value, url)
         else:
             tmpList = self.ytp.getSearchResult(urllib_quote_plus(pattern), searchType, page, "search", config.plugins.iptvplayer.ytSortBy.value)
