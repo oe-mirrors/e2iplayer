@@ -584,6 +584,7 @@ class urlparser:
             "webcamera.pl": self.pp.parserWEBCAMERAPL,
             "wishembed.pro": self.pp.parserJWPLAYER,
             "wishonly.site": self.pp.parserJWPLAYER,
+            "wrzucaj.pl": self.pp.parserSST,
             # x
             "xcoic.com": self.pp.parserBYSE,
             # y
@@ -1954,18 +1955,26 @@ class pageParser(CaptchaHelper):
                 urltabs.append(params)
         return urltabs
 
-    def parserSST(self, url):  # check 150625
+    def parserSST(self, url):  # update 050626
         printDBG("parserSST baseUrl[%s]" % url)
-        sts, data = self.cm.getPage(url)
+        host = urlparser.getDomain(url, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        sts, data = self.cm.getPage(url, {"header": HTTP_HEADER})
         if not sts:
             return []
         urltab = []
-        url = re.search('file:"([^"]+)', data)
-        if url:
-            url = url.group(1)
-            if "[" in url:
-                urls = re.findall(r"\[(\d+p)\](https?://[^\s,]+)", url)
-                urltab.extend({"name": quality, "url": url} for quality, url in urls)
+        urls = re.findall(r'<source[^>]*src="([^"]+)"[^>]*label="([^"]+)"', data)
+        if urls:
+            for url, q in urls:
+                url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                urltab.append({"name": q, "url": url})
+        else:
+            url = re.search('file:"([^"]+)', data)
+            if url:
+                url = url.group(1)
+                if "[" in url:
+                    urls = re.findall(r"\[(\d+p)\](https?://[^\s,]+)", url)
+                    urltab.extend({"name": quality, "url": url} for quality, url in urls)
             else:
                 urltab.append({"name": "360p", "url": url})
         return urltab
@@ -2535,7 +2544,7 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserANONMP4(self, baseUrl):  # add 040626 partaly supported
+    def parserANONMP4(self, baseUrl):  # fix 050626
         printDBG("parserANONMP4 baseUrl[%s]" % baseUrl)
         urltab = []
         host = urlparser.getDomain(baseUrl, False)
@@ -2550,10 +2559,18 @@ class pageParser(CaptchaHelper):
             if not sts:
                 return []
             js = json_loads(data)
-            sts, data = self.cm.getPage(js.get("tracks")[0].get("track_url"), {"header": HTTP_HEADER})
-            if not sts:
-                return []
-            js = json_loads(data)
-            url = urlparser.decorateUrl(js.get("hls"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
-            urltab.extend(getDirectM3U8Playlist(url))
+            if "tracks" in js:
+                for x in js.get("tracks", []):
+                    name = "[%s] " % x.get("track_name", "unk")
+                    sts, data = self.cm.getPage(x.get("track_url"), {"header": HTTP_HEADER})
+                    if not sts:
+                        continue
+                    js = json_loads(data)
+                    url = urlparser.decorateUrl(js.get("hls"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                    for p in getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999):  # Add language
+                        p["name"] = name + p.get("name", "")
+                        urltab.append(p)
+            else:
+                url = urlparser.decorateUrl(js.get("hls"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
+                urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
         return urltab
