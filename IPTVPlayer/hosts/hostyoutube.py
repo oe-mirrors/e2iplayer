@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 24.09.2025
+# Last Modified: 02.06.2026
 ###################################################
 # LOCAL import
 ###################################################
@@ -169,7 +169,47 @@ class Youtube(CBaseHostClass):
 
     def listFeeds(self, cItem):
         printDBG('Youtube.listFeeds cItem[%s]' % cItem)
-        if cItem['category'] == "feeds_video":
+
+        category = cItem.get('category', '')
+        page = cItem.get('page', '1')
+        url = cItem.get('url', '')
+
+        if category == 'feeds_video':
+            pattern = cItem.get('pattern', '')
+            search_type = cItem.get('search_type', '')
+
+            # Neuer Weg: Suchbasierte Feeds mit Pagination
+            if pattern != '':
+                tmpList = self.ytp.getSearchResult(
+                    urllib_quote_plus(pattern),
+                    search_type if search_type else 'video',
+                    page,
+                    'search_next_page',
+                    config.plugins.iptvplayer.ytSortBy.value,
+                    url
+                )
+
+                for item in tmpList:
+                    item.update({'name': 'category'})
+
+                    if item.get('type', '') == 'video':
+                        self.addVideo(item)
+                    elif item.get('type', '') == 'more':
+                        item.update({
+                            'title': _('Weitere laden'),
+                            'image_type': 'NEXT',
+                            'category': 'feeds_video',
+                            'pattern': pattern,
+                            'search_type': search_type if search_type else 'video',
+                        })
+                        self.addMore(item)
+                    else:
+                        if item.get('category', '') in ["channel", "playlist", "movie", "traylist"]:
+                            item['good_for_fav'] = True
+                        self.addDir(item)
+                return
+
+            # Alter Weg: bestehendes Verhalten für feste URLs beibehalten
             sts, data = self.cm.getPage(cItem['url'])
             data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, "videoRenderer", "watchEndpoint")
             for item in data2:
@@ -182,44 +222,32 @@ class Youtube(CBaseHostClass):
                 desc += E2ColoR('yellow') + _("Views") + E2ColoR('white') + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"viewCountText":{"simpleText":"', '"},"navigationEndpoint":', False)[1]
                 params = {'title': title, 'url': url, 'icon': icon, 'desc': desc}
                 self.addVideo(params)
-        else:
-           title = _("Movies")
-           url = "https://www.youtube.com/results?search_query=movies"
-           params = {'category': 'feeds_video', 'title': title, 'url': url}
-           self.addDir(params)
-           title = _("Music")
-           url = "https://www.youtube.com/results?search_query=music"
-           params = {'category': 'feeds_video', 'title': title, 'url': url}
-           self.addDir(params)
-           title = _("Games")
-           url = "https://www.youtube.com/results?search_query=games"
-           params = {'category': 'feeds_video', 'title': title, 'url': url}
-           self.addDir(params)
-           title = _("Live")
-           url = "https://www.youtube.com/channel/UC4R8DWoMoI7CAwX8_LjQHig"
-           params = {'category': 'feeds_video', 'title': title, 'url': url}
-           self.addDir(params)
-           title = _("News")
-           url = "https://www.youtube.com/channel/UCYfdidRxbB8Qhf0Nx7ioOYw"
-           params = {'category': 'feeds_video', 'title': title, 'url': url}
-           self.addDir(params)
-           title = _("Shorts")
-           url = "https://www.youtube.com/results?search_query=Shorts"
-           params = {'category': 'feeds_video', 'title': title, 'url': url}
-           self.addDir(params)
-           title = _("Podcasts")
-           url = "https://www.youtube.com/podcasts"
-           params = {'category': 'feeds_video', 'title': title, 'url': url}
-           self.addDir(params)
-           title = _("Sport")
-           url = "https://www.youtube.com/channel/UCEgdi0XIXXZ-qJOFPf4JSKw"
-           params = {'category': 'feeds_video', 'title': title, 'url': url}
-           self.addDir(params)
-           title = _("Knowledge")
-           url = "https://www.youtube.com/channel/UCtFRv9O2AHqOZjjynzrv-xg"
-           params = {'category': 'feeds_video', 'title': title, 'url': url}
-           self.addDir(params)
+            return
 
+        feeds = [
+            (_("Movies"), "movies", "video"),
+            (_("Music"), "music", "video"),
+            (_("Games"), "games", "video"),
+            (_("Live"), "live", "live"),
+            (_("News"), "news", "video"),
+            (_("Shorts"), "shorts", "video"),
+            (_("Podcasts"), "podcasts", "video"),
+            (_("Sport"), "sport", "video"),
+            (_("Knowledge"), "knowledge", "video"),
+        ]
+
+        for title, pattern, search_type in feeds:
+            params = {
+                'name': 'category',
+                'category': 'feeds_video',
+                'title': title,
+                'pattern': pattern,
+                'search_type': search_type,
+                'page': '1',
+                'url': ''
+            }
+            self.addDir(params)
+            
     def listSubItems(self, cItem):
         printDBG("Youtube.listSubItems")
         self.currList = cItem['sub_items']
