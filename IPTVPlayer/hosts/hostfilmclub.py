@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Add: 24.01.2026 - Mr.X for Panda555
+# Update: 06.06.2026 - Mr.X
+# for Panda555
 import re
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
@@ -23,6 +24,7 @@ class FilmClub(CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader()
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.MAIN_URL = gettytul()
+        self.sub_tracks = []
         self.DEFAULT_ICON_URL = self.getFullUrl("templates/playtube/img/apple-touch-icon.png")
         self.MENU = [{"category": "list_items", "title": _("New"), "url": self.getFullUrl("newvideos.html")}, {"category": "list_items", "title": _("Popular"), "url": self.getFullUrl("topvideos.php?do=recent")}, {"category": "list_items", "title": _("Series"), "url": self.getFullUrl("series/")}, {"category": "list_value", "title": _("Genres"), "s": 'class="pt-menu-title">ŽANROVI'}] + self.searchItems()
 
@@ -101,9 +103,22 @@ class FilmClub(CBaseHostClass):
         cItem["url"] = self.getFullUrl("search.php?keywords=%s" % urllib_quote_plus(searchPattern))
         self.listItems(cItem)
 
+    def get_redirected_url(self, url):
+        params = dict(self.defaultParams)
+        params["no_redirection"] = True
+        self.cm.getPage(url, params)
+        if self.cm.meta.get("location"):
+            if "voe.php" in url and "play_" not in self.cm.meta.get("location"):
+                url = self.cm.meta.get("location")
+                url = url.replace(self.up.getDomain(url), "voe.sx")
+            else:
+                url = self.cm.meta.get("location")
+        return url
+
     def getLinksForVideo(self, cItem):
         printDBG("FilmClub.getLinksForVideo [%s]" % cItem)
         urltab = []
+        self.sub_tracks = []
         sts, htm = self.getPage(cItem["url"])
         if not sts:
             return []
@@ -111,23 +126,26 @@ class FilmClub(CBaseHostClass):
         if not data:
             data = re.findall(r'iframe src="([^"]+)', htm, re.DOTALL)
         for url in data:
-            params = dict(self.defaultParams)
-            params["no_redirection"] = True
-            self.cm.getPage(url, params)
-            if self.cm.meta.get("location"):
-                if "voe.php" in url:
-                    url = self.cm.meta.get("location")
-                    url = url.replace(self.up.getDomain(url), "voe.sx")
-                else:
-                    url = self.cm.meta.get("location")
-                urltab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(self.getFullUrl(url), {"Referer": gettytul()}), "need_resolve": 1})
+            if "filmclub.sbs" in url:
+                url = self.get_redirected_url(url)
+            if "filmclub.sbs" in url:
+                url = self.get_redirected_url(url)
+            if "?c1_file" in url:
+                sub = re.findall(r'file=([^&]+).*?label=([^&]+)', url, re.DOTALL)
+                for f, t in sub:
+                    self.sub_tracks.append({"title": "", "url": f, "lang": t})
+            urltab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(self.getFullUrl(url), {"Referer": gettytul()}), "need_resolve": 1})
         return urltab
 
     def getVideoLinks(self, videoUrl):
         printDBG("FilmClub.getVideoLinks [%s]" % videoUrl)
-        if self.cm.isValidUrl(videoUrl):
-            return self.up.getVideoLinkExt(videoUrl)
-        return []
+        videoUrl = self.up.getVideoLinkExt(videoUrl)
+        if self.sub_tracks:
+            for url in videoUrl:
+                meta = url.get("url").meta
+                meta["external_sub_tracks"] = self.sub_tracks
+                strwithmeta(str(url), meta)
+        return videoUrl
 
     def getArticleContent(self, cItem):
         printDBG("FilmClub.getArticleContent [%s]" % cItem)
