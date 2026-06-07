@@ -156,6 +156,7 @@ class YouTubeInfo(Screen):
     def keyDown(self):
         self["text"].pageDown()
 
+
 class Youtube(CBaseHostClass):
 
     def __init__(self):
@@ -544,6 +545,7 @@ class Youtube(CBaseHostClass):
         from Plugins.Extensions.IPTVPlayer.suggestions.google import SuggestionsProvider
 
         return SuggestionsProvider(True)
+
 
 class IPTVHost(CHostBase):
 
