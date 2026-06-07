@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-07 19:29+0200\n"
-"PO-Revision-Date: 2026-05-03 21:03+0200\n"
+"PO-Revision-Date: 2026-06-07 19:43+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -310,7 +310,7 @@ msgid "ALBUMS"
 msgstr "ALBEN"
 
 msgid "API Key"
-msgstr ""
+msgstr "API-Schlüssel"
 
 msgid "API_KEY"
 msgstr "API_KEY"
@@ -1198,7 +1198,7 @@ msgid "Error renaming file: %s"
 msgstr "Fehler beim Umbenennen der Datei: %s"
 
 msgid "Error while loading description"
-msgstr ""
+msgstr "Fehler beim Laden der Beschreibung"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1383,13 +1383,11 @@ msgstr "Französisch"
 msgid "From E2 settings"
 msgstr "Aus E2 Einstellungen"
 
-#, fuzzy
 msgid "Full description loaded"
-msgstr "Keine Beschreibung verfügbar."
+msgstr "Vollständige Beschreibung geladen"
 
-#, fuzzy
 msgid "Full description not available"
-msgstr "Keine Beschreibung verfügbar."
+msgstr "Keine vollständige Beschreibung verfügbar"
 
 msgid "GSTplayer no IFD workarround"
 msgstr "GSTplayer kein IFD-Workarround"
@@ -1815,7 +1813,7 @@ msgid "Loading data, please wait (%d)"
 msgstr "Lade Daten, bitte warten (%d)"
 
 msgid "Loading full description..."
-msgstr ""
+msgstr "Vollständige Beschreibung wird geladen..."
 
 msgid "LocalMedia"
 msgstr "Lokale Medien"
@@ -2095,9 +2093,8 @@ msgstr "Für den Vermögenswert wurde keine gültige Berechtigung gefunden."
 msgid "No valid links available."
 msgstr "Keine gültigen Links verfügbar."
 
-#, fuzzy
 msgid "No video ID available"
-msgstr "Keine gültigen Links verfügbar."
+msgstr "Keine Video-ID verfügbar"
 
 msgid "None"
 msgstr "Keine"
@@ -2256,6 +2253,8 @@ msgid ""
 "Please configure your API Key in:\n"
 "Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
 msgstr ""
+"Bitte konfigurieren Sie Ihren API-Schlüssel unter:\n"
+"Einstellungen → IPTVPlayer → Untertitel → SubDL.com API-Schlüssel"
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -2910,12 +2909,18 @@ msgid ""
 "3. Go to: Settings → IPTVPlayer → Subtitles\n"
 "4. Paste the key in \"SubDL.com API Key\" field"
 msgstr ""
+"SubDL Setup:\n"
+"\n"
+"1. Besuche: subdl.com/panel/api\n"
+"2. Kopiere API-Schlüssel\n"
+"3. Gehen zu: Einstellungen → IPTVPlayer → Untertitel\n"
+"4. Füge den Schlüssel „SubDL.com API-Schlüssel“ ein"
 
 msgid "SubDL.com API Key"
-msgstr ""
+msgstr "SubDL.com-API-Schlüssel"
 
 msgid "SubDL: API Key Required"
-msgstr ""
+msgstr "Untertitel: API-Schlüssel erforderlich"
 
 msgid "Subspecialities"
 msgstr "Subspezialitäten"
