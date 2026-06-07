@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 20:46+0200\n"
+"POT-Creation-Date: 2026-06-07 19:29+0200\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -303,6 +303,9 @@ msgid "AC3 downmix mode"
 msgstr "Modo de mistura de AC3"
 
 msgid "ALBUMS"
+msgstr ""
+
+msgid "API Key"
 msgstr ""
 
 msgid "API_KEY"
@@ -1216,6 +1219,9 @@ msgstr "Erro ao ler ficheiro \"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "Erro ao ler ficheiro \"%s\".\n"
 
+msgid "Error while loading description"
+msgstr ""
+
 #, python-format
 msgid "Error writing file \"%s\".\n"
 msgstr "Erro ao escrever ficheiro \"%s\".\n"
@@ -1405,6 +1411,14 @@ msgstr ""
 
 msgid "From E2 settings"
 msgstr "Das definições de E2"
+
+#, fuzzy
+msgid "Full description loaded"
+msgstr "Sem Links válidos disponíveis."
+
+#, fuzzy
+msgid "Full description not available"
+msgstr "Sem Links válidos disponíveis."
 
 msgid "GSTplayer no IFD workarround"
 msgstr ""
@@ -1838,6 +1852,9 @@ msgstr "Durante o processamento, por favor espere."
 msgid "Loading data, please wait (%d)"
 msgstr ""
 
+msgid "Loading full description..."
+msgstr ""
+
 msgid "LocalMedia"
 msgstr ""
 
@@ -2104,10 +2121,6 @@ msgstr ""
 msgid "No biography available"
 msgstr ""
 
-#, fuzzy
-msgid "No description available."
-msgstr "Sem Links válidos disponíveis."
-
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -2126,6 +2139,10 @@ msgid "No valid entitlement found for asset."
 msgstr ""
 
 msgid "No valid links available."
+msgstr "Sem Links válidos disponíveis."
+
+#, fuzzy
+msgid "No video ID available"
 msgstr "Sem Links válidos disponíveis."
 
 msgid "None"
@@ -2286,6 +2303,11 @@ msgid ""
 msgstr ""
 
 msgid "Please configure Xtream (blue button)"
+msgstr ""
+
+msgid ""
+"Please configure your API Key in:\n"
+"Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
 msgstr ""
 
 #, python-format
@@ -2975,6 +2997,21 @@ msgid "Stop playing?"
 msgstr "A Reproduzir"
 
 msgid "Study Plan"
+msgstr ""
+
+msgid ""
+"SubDL Setup:\n"
+"\n"
+"1. Visit: subdl.com/panel/api\n"
+"2. Copy your API Key\n"
+"3. Go to: Settings → IPTVPlayer → Subtitles\n"
+"4. Paste the key in \"SubDL.com API Key\" field"
+msgstr ""
+
+msgid "SubDL.com API Key"
+msgstr ""
+
+msgid "SubDL: API Key Required"
 msgstr ""
 
 msgid "Subspecialities"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 20:46+0200\n"
+"POT-Creation-Date: 2026-06-07 19:29+0200\n"
 "PO-Revision-Date: 2025-11-24 07:59+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -315,6 +315,9 @@ msgstr "AC3 lekeverési mód"
 
 msgid "ALBUMS"
 msgstr "ALBUMOK"
+
+msgid "API Key"
+msgstr ""
 
 msgid "API_KEY"
 msgstr "Hibás Youtube API kulcshossz"
@@ -1223,6 +1226,9 @@ msgstr "Hiba a(z) \"%s\" fájl olvasásakor.\n"
 msgid "Error renaming file: %s"
 msgstr "Hiba a fájl átnevezésekor: %s"
 
+msgid "Error while loading description"
+msgstr ""
+
 #, python-format
 msgid "Error writing file \"%s\".\n"
 msgstr "Hiba a(z) \"%s\" fájl írásakor.\n"
@@ -1407,6 +1413,14 @@ msgstr "Francia"
 
 msgid "From E2 settings"
 msgstr "Az E2 beállításaiból"
+
+#, fuzzy
+msgid "Full description loaded"
+msgstr "Nincsenek érvényes linkek."
+
+#, fuzzy
+msgid "Full description not available"
+msgstr "Nincsenek érvényes linkek."
 
 msgid "GSTplayer no IFD workarround"
 msgstr "GSTplayer nem rendelkezik IFD-megoldással"
@@ -1839,6 +1853,9 @@ msgstr "Adatok betöltése, kérjük várjon"
 msgid "Loading data, please wait (%d)"
 msgstr "Adatok betöltése folyamatban, kérjük várjon (%d)"
 
+msgid "Loading full description..."
+msgstr ""
+
 msgid "LocalMedia"
 msgstr "Helyi média"
 
@@ -2101,10 +2118,6 @@ msgstr "Nem"
 msgid "No biography available"
 msgstr ""
 
-#, fuzzy
-msgid "No description available."
-msgstr "Nincsenek érvényes linkek."
-
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -2123,6 +2136,10 @@ msgid "No valid entitlement found for asset."
 msgstr "Nem található érvényes jogosultság az eszközhöz."
 
 msgid "No valid links available."
+msgstr "Nincsenek érvényes linkek."
+
+#, fuzzy
+msgid "No video ID available"
 msgstr "Nincsenek érvényes linkek."
 
 msgid "None"
@@ -2277,6 +2294,11 @@ msgstr ""
 
 msgid "Please configure Xtream (blue button)"
 msgstr "Kérjük, konfigurálja az Xtream-et (kék gomb)"
+
+msgid ""
+"Please configure your API Key in:\n"
+"Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
+msgstr ""
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -2931,6 +2953,21 @@ msgstr "Abbahagyni a játékot?"
 
 msgid "Study Plan"
 msgstr "Tanulmányi terv"
+
+msgid ""
+"SubDL Setup:\n"
+"\n"
+"1. Visit: subdl.com/panel/api\n"
+"2. Copy your API Key\n"
+"3. Go to: Settings → IPTVPlayer → Subtitles\n"
+"4. Paste the key in \"SubDL.com API Key\" field"
+msgstr ""
+
+msgid "SubDL.com API Key"
+msgstr ""
+
+msgid "SubDL: API Key Required"
+msgstr ""
 
 msgid "Subspecialities"
 msgstr "Alspecialitások"

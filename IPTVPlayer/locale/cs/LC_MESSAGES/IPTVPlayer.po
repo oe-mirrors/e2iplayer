@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 20:46+0200\n"
+"POT-Creation-Date: 2026-06-07 19:29+0200\n"
 "PO-Revision-Date: 2025-11-24 08:05+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -315,6 +315,9 @@ msgstr "Režim downmixu AC3"
 
 msgid "ALBUMS"
 msgstr "ALBA"
+
+msgid "API Key"
+msgstr ""
 
 msgid "API_KEY"
 msgstr "Nesprávná délka klíče API YouTube"
@@ -1227,6 +1230,9 @@ msgstr ""
 msgid "Error renaming file: %s"
 msgstr "Chyba při přejmenování souboru: %s"
 
+msgid "Error while loading description"
+msgstr ""
+
 #, python-format
 msgid "Error writing file \"%s\".\n"
 msgstr ""
@@ -1413,6 +1419,14 @@ msgstr "Francouzština"
 
 msgid "From E2 settings"
 msgstr "Z nastavení E2"
+
+#, fuzzy
+msgid "Full description loaded"
+msgstr "Nejsou k dispozici žádné platné odkazy."
+
+#, fuzzy
+msgid "Full description not available"
+msgstr "Nejsou k dispozici žádné platné odkazy."
 
 msgid "GSTplayer no IFD workarround"
 msgstr "GSTplayer bez alternativního řešení IFD"
@@ -1845,6 +1859,9 @@ msgstr "Načítání dat, čekejte prosím"
 msgid "Loading data, please wait (%d)"
 msgstr "Načítání dat, čekejte prosím (%d)"
 
+msgid "Loading full description..."
+msgstr ""
+
 msgid "LocalMedia"
 msgstr "Místní média"
 
@@ -2107,10 +2124,6 @@ msgstr "Ne"
 msgid "No biography available"
 msgstr ""
 
-#, fuzzy
-msgid "No description available."
-msgstr "Nejsou k dispozici žádné platné odkazy."
-
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -2127,6 +2140,10 @@ msgid "No valid entitlement found for asset."
 msgstr "Pro aktivum nebyl nalezen žádný platný nárok."
 
 msgid "No valid links available."
+msgstr "Nejsou k dispozici žádné platné odkazy."
+
+#, fuzzy
+msgid "No video ID available"
 msgstr "Nejsou k dispozici žádné platné odkazy."
 
 msgid "None"
@@ -2281,6 +2298,11 @@ msgstr ""
 
 msgid "Please configure Xtream (blue button)"
 msgstr "Nakonfigurujte prosím Xtream (modré tlačítko)"
+
+msgid ""
+"Please configure your API Key in:\n"
+"Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
+msgstr ""
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -2938,6 +2960,21 @@ msgstr "Přestat hrát?"
 
 msgid "Study Plan"
 msgstr "Studijní plán"
+
+msgid ""
+"SubDL Setup:\n"
+"\n"
+"1. Visit: subdl.com/panel/api\n"
+"2. Copy your API Key\n"
+"3. Go to: Settings → IPTVPlayer → Subtitles\n"
+"4. Paste the key in \"SubDL.com API Key\" field"
+msgstr ""
+
+msgid "SubDL.com API Key"
+msgstr ""
+
+msgid "SubDL: API Key Required"
+msgstr ""
 
 msgid "Subspecialities"
 msgstr "Subspecializace"

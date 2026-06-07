@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 20:46+0200\n"
+"POT-Creation-Date: 2026-06-07 19:29+0200\n"
 "PO-Revision-Date: 2026-05-11 23:10+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -312,6 +312,9 @@ msgstr "Λειτουργία μεικτής εξόδου AC3"
 
 msgid "ALBUMS"
 msgstr "ΑΛΜΠΟΥΜ"
+
+msgid "API Key"
+msgstr ""
 
 msgid "API_KEY"
 msgstr "- Κλειδί API"
@@ -1200,6 +1203,9 @@ msgstr "Σφάλμα ανάγνωσης του αρχείου \"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "Σφάλμα μετονομασίας αρχείου: %s"
 
+msgid "Error while loading description"
+msgstr ""
+
 #, python-format
 msgid "Error writing file \"%s\".\n"
 msgstr "Σφάλμα εγγραφής του αρχείου \"%s\".\n"
@@ -1382,6 +1388,14 @@ msgstr "Γαλλικά"
 
 msgid "From E2 settings"
 msgstr "Από τις ρυθμίσεις E2"
+
+#, fuzzy
+msgid "Full description loaded"
+msgstr "Δεν υπάρχει διαθέσιμη περιγραφή."
+
+#, fuzzy
+msgid "Full description not available"
+msgstr "Δεν υπάρχει διαθέσιμη περιγραφή."
 
 msgid "GSTplayer no IFD workarround"
 msgstr "Παράκαμψη IFD για GSTplayer"
@@ -1806,6 +1820,9 @@ msgstr "Φόρτωση δεδομένων, παρακαλώ περιμένετε
 msgid "Loading data, please wait (%d)"
 msgstr "Φόρτωση δεδομένων, παρακαλώ περιμένετε (%d)"
 
+msgid "Loading full description..."
+msgstr ""
+
 msgid "LocalMedia"
 msgstr "Τοπικά μέσα"
 
@@ -2064,9 +2081,6 @@ msgstr "Όχι"
 msgid "No biography available"
 msgstr "Δεν υπάρχει διαθέσιμη βιογραφία"
 
-msgid "No description available."
-msgstr "Δεν υπάρχει διαθέσιμη περιγραφή."
-
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -2085,6 +2099,10 @@ msgid "No valid entitlement found for asset."
 msgstr "Δεν βρέθηκε έγκυρη εξουσιοδότηση για το περιεχόμενο."
 
 msgid "No valid links available."
+msgstr "Δεν υπάρχουν έγκυροι σύνδεσμοι διαθέσιμοι."
+
+#, fuzzy
+msgid "No video ID available"
 msgstr "Δεν υπάρχουν έγκυροι σύνδεσμοι διαθέσιμοι."
 
 msgid "None"
@@ -2239,6 +2257,11 @@ msgstr ""
 
 msgid "Please configure Xtream (blue button)"
 msgstr "Παρακαλώ ρυθμίστε το Xtream (μπλε κουμπί)"
+
+msgid ""
+"Please configure your API Key in:\n"
+"Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
+msgstr ""
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -2884,6 +2907,21 @@ msgstr "Να γίνει διακοπή της αναπαραγωγής;"
 
 msgid "Study Plan"
 msgstr "Πρόγραμμα μελέτης"
+
+msgid ""
+"SubDL Setup:\n"
+"\n"
+"1. Visit: subdl.com/panel/api\n"
+"2. Copy your API Key\n"
+"3. Go to: Settings → IPTVPlayer → Subtitles\n"
+"4. Paste the key in \"SubDL.com API Key\" field"
+msgstr ""
+
+msgid "SubDL.com API Key"
+msgstr ""
+
+msgid "SubDL: API Key Required"
+msgstr ""
 
 msgid "Subspecialities"
 msgstr "Υποειδικότητες"

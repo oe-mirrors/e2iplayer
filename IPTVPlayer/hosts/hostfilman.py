@@ -614,11 +614,11 @@ class Filman(CBaseHostClass, CaptchaHelper):
         if year:
             desc_parts.append(_("Year: ") + year)
         if duration:
-            desc_parts.append(_("Duration: ") + duration)
+            desc_parts.append(_("Duration:") + " " + duration)
         if views:
-            desc_parts.append(_("Views: ") + views)
+            desc_parts.append(_("Views:") + " " + views)
         if genres_str:
-            desc_parts.append(_("Genre: ") + genres_str)
+            desc_parts.append(_("Genre:") + " " + genres_str)
         if desc:
             desc_parts.append(desc)
 

@@ -668,9 +668,9 @@ class SubDLAPIProvider(CBaseSubProviderClass):
         if name is None:
             API_KEY = get_subdl_api()
             if not API_KEY:
-                printDBG("❌ ERROR: No SubDL API key configured")
+                printDBG("ERROR: No SubDL API key configured")
                 error_item = {
-                    "title": _("⚠️ SubDL: API Key Required"),
+                    "title": _("SubDL: API Key Required"),
                     "desc": _(
                         "Please configure your API Key in:\nSettings → IPTVPlayer → Subtitles → SubDL.com API Key"
                     ),

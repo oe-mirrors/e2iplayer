@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 20:46+0200\n"
+"POT-Creation-Date: 2026-06-07 19:29+0200\n"
 "PO-Revision-Date: 2026-03-14 12:34+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -312,6 +312,9 @@ msgstr "وضع خلط AC3 للصوت"
 
 msgid "ALBUMS"
 msgstr "الألبومات"
+
+msgid "API Key"
+msgstr ""
 
 msgid "API_KEY"
 msgstr "مفتاح API"
@@ -1213,6 +1216,9 @@ msgstr "حدث خطأ أثناء قراءة الملف \"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "حدث خطأ أثناء إعادة تسمية الملف: %s"
 
+msgid "Error while loading description"
+msgstr ""
+
 #, python-format
 msgid "Error writing file \"%s\".\n"
 msgstr "حدث خطأ أثناء كتابة الملف \"%s\".\n"
@@ -1397,6 +1403,14 @@ msgstr "الفرنسية"
 
 msgid "From E2 settings"
 msgstr "من إعدادات Enigma2"
+
+#, fuzzy
+msgid "Full description loaded"
+msgstr "لا توجد روابط صالحة متاحة."
+
+#, fuzzy
+msgid "Full description not available"
+msgstr "لا توجد روابط صالحة متاحة."
 
 msgid "GSTplayer no IFD workarround"
 msgstr "حل مؤقت لمشكلة IFD في GSTplayer"
@@ -1829,6 +1843,9 @@ msgstr "جاري تحميل البيانات، يرجى الانتظار"
 msgid "Loading data, please wait (%d)"
 msgstr "جاري تحميل البيانات، يرجى الانتظار (%d)"
 
+msgid "Loading full description..."
+msgstr ""
+
 msgid "LocalMedia"
 msgstr "الوسائط المحلية"
 
@@ -2090,10 +2107,6 @@ msgstr "لا"
 msgid "No biography available"
 msgstr "لا توجد سيرة ذاتية متاحة"
 
-#, fuzzy
-msgid "No description available."
-msgstr "لا توجد روابط صالحة متاحة."
-
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -2112,6 +2125,10 @@ msgid "No valid entitlement found for asset."
 msgstr "لم يتم العثور على صلاحية صالحة للمحتوى."
 
 msgid "No valid links available."
+msgstr "لا توجد روابط صالحة متاحة."
+
+#, fuzzy
+msgid "No video ID available"
 msgstr "لا توجد روابط صالحة متاحة."
 
 msgid "None"
@@ -2265,6 +2282,11 @@ msgstr ""
 
 msgid "Please configure Xtream (blue button)"
 msgstr "يرجى تكوين Xtream (زر أزرق)"
+
+msgid ""
+"Please configure your API Key in:\n"
+"Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
+msgstr ""
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -2918,6 +2940,21 @@ msgstr "هل تريد إيقاف التشغيل؟"
 
 msgid "Study Plan"
 msgstr "خطة الدراسة"
+
+msgid ""
+"SubDL Setup:\n"
+"\n"
+"1. Visit: subdl.com/panel/api\n"
+"2. Copy your API Key\n"
+"3. Go to: Settings → IPTVPlayer → Subtitles\n"
+"4. Paste the key in \"SubDL.com API Key\" field"
+msgstr ""
+
+msgid "SubDL.com API Key"
+msgstr ""
+
+msgid "SubDL: API Key Required"
+msgstr ""
 
 msgid "Subspecialities"
 msgstr "تخصصات فرعية"

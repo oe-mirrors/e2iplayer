@@ -489,34 +489,34 @@ class AlooyTV(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         tab = [
-            {"category": "list_items", "title": _("أحدث الإضافات"), "url": self.getFullUrl("/tv-series.html"), "icon": self.DEFAULT_ICON_URL},
-            {"category": "sections", "title": _("الأقسام"), "icon": self.DEFAULT_ICON_URL},
-            {"category": "ramadan", "title": _("رمضان"), "icon": self.DEFAULT_ICON_URL},
-            {"category": "list_items", "title": _("الرئيسية"), "url": self.getMainUrl(), "icon": self.DEFAULT_ICON_URL},
+            {"category": "list_items", "title": "أحدث الإضافات", "url": self.getFullUrl("/tv-series.html"), "icon": self.DEFAULT_ICON_URL},
+            {"category": "sections", "title": "الأقسام", "icon": self.DEFAULT_ICON_URL},
+            {"category": "ramadan", "title": "رمضان", "icon": self.DEFAULT_ICON_URL},
+            {"category": "list_items", "title": "الرئيسية", "url": self.getMainUrl(), "icon": self.DEFAULT_ICON_URL},
         ] + self.searchItems()
         self.listsTab(tab, cItem)
 
     def listSections(self, cItem):
         tab = [
-            {"category": "list_items", "title": _("عربي"), "url": self.getFullUrl("/genre/arabic.html")},
-            {"category": "list_items", "title": _("خليجي"), "url": self.getFullUrl("/genre/kleeji.html")},
-            {"category": "list_items", "title": _("تركي"), "url": self.getFullUrl("/genre/turki.html")},
-            {"category": "list_items", "title": _("فارسي"), "url": self.getFullUrl("/genre/farisi.html")},
-            {"category": "list_items", "title": _("أنمي"), "url": self.getFullUrl("/genre/anmi.html")},
-            {"category": "list_items", "title": _("أفلام أجنبية"), "url": self.getFullUrl("/genre/foreign-movies.html")},
-            {"category": "list_items", "title": _("أفلام كورية"), "url": self.getFullUrl("/genre/Korean-movies.html")},
-            {"category": "list_items", "title": _("مسلسلات أجنبية"), "url": self.getFullUrl("/genre/Foreign-series.html")},
-            {"category": "list_items", "title": _("مسلسلات كورية"), "url": self.getFullUrl("/genre/Korean-series.html")},
-            {"category": "list_items", "title": _("مسلسلات آسيوية"), "url": self.getFullUrl("/genre/asia-series.html")},
+            {"category": "list_items", "title": "عربي", "url": self.getFullUrl("/genre/arabic.html")},
+            {"category": "list_items", "title": "خليجي", "url": self.getFullUrl("/genre/kleeji.html")},
+            {"category": "list_items", "title": "تركي", "url": self.getFullUrl("/genre/turki.html")},
+            {"category": "list_items", "title": "فارسي", "url": self.getFullUrl("/genre/farisi.html")},
+            {"category": "list_items", "title": "أنمي", "url": self.getFullUrl("/genre/anmi.html")},
+            {"category": "list_items", "title": "أفلام أجنبية", "url": self.getFullUrl("/genre/foreign-movies.html")},
+            {"category": "list_items", "title": "أفلام كورية", "url": self.getFullUrl("/genre/Korean-movies.html")},
+            {"category": "list_items", "title": "مسلسلات أجنبية", "url": self.getFullUrl("/genre/Foreign-series.html")},
+            {"category": "list_items", "title": "مسلسلات كورية", "url": self.getFullUrl("/genre/Korean-series.html")},
+            {"category": "list_items", "title": "مسلسلات آسيوية", "url": self.getFullUrl("/genre/asia-series.html")},
         ]
         self.listsTab(tab, cItem)
 
     def listRamadanYears(self, cItem):
         tab = [
-            {"category": "ramadan_year", "title": _("رمضان 2026"), "year": "2026"},
-            {"category": "ramadan_year", "title": _("رمضان 2025"), "year": "2025"},
-            {"category": "ramadan_year", "title": _("رمضان 2024"), "year": "2024"},
-            {"category": "ramadan_year", "title": _("رمضان 2023"), "year": "2023"},
+            {"category": "ramadan_year", "title": "رمضان 2026", "year": "2026"},
+            {"category": "ramadan_year", "title": "رمضان 2025", "year": "2025"},
+            {"category": "ramadan_year", "title": "رمضان 2024", "year": "2024"},
+            {"category": "ramadan_year", "title": "رمضان 2023", "year": "2023"},
         ]
         self.listsTab(tab, cItem)
 
@@ -524,13 +524,13 @@ class AlooyTV(CBaseHostClass):
         year = cItem.get("year", "")
         if year == "2023":
             tab = [
-                {"category": "list_items", "title": _("عربي"), "url": self.getFullUrl("/genre/ramadan-arabi.html")},
-                {"category": "list_items", "title": _("خليجي"), "url": self.getFullUrl("/genre/ramadan-kleeji.html")},
+                {"category": "list_items", "title": "عربي", "url": self.getFullUrl("/genre/ramadan-arabi.html")},
+                {"category": "list_items", "title": "خليجي", "url": self.getFullUrl("/genre/ramadan-kleeji.html")},
             ]
         else:
             tab = [
-                {"category": "list_items", "title": _("عربي"), "url": self.getFullUrl("/genre/ramadan-arabi-%s.html" % year)},
-                {"category": "list_items", "title": _("خليجي"), "url": self.getFullUrl("/genre/ramadan-kleeji-%s.html" % year)},
+                {"category": "list_items", "title": "عربي", "url": self.getFullUrl("/genre/ramadan-arabi-%s.html" % year)},
+                {"category": "list_items", "title": "خليجي", "url": self.getFullUrl("/genre/ramadan-kleeji-%s.html" % year)},
             ]
         self.listsTab(tab, cItem)
 

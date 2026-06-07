@@ -72,11 +72,11 @@ class BtolatCom(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("BtolatCom.listMainMenu")
         MAIN_CAT_TAB = [
-            {"category": "list_videos", "title": _("أحدث الفيديوهات"), "url": self.getFullUrl("/video")},
-            {"category": "list_leagues", "title": _("البطولات والدوريات"), "url": self.getFullUrl("/leagues")},
-            {"category": "list_top_scorers", "title": _("الهدافين"), "url": self.getFullUrl("/leagues")},
-            {"category": "list_professionals", "title": _("المحترفين"), "url": self.getFullUrl("/professionals/video")},
-            {"category": "list_players", "title": _("قائمة اللاعبين وأهدافهم"), "url": self.getFullUrl("/leagues")},
+            {"category": "list_videos", "title": "أحدث الفيديوهات", "url": self.getFullUrl("/video")},
+            {"category": "list_leagues", "title": "البطولات والدوريات", "url": self.getFullUrl("/leagues")},
+            {"category": "list_top_scorers", "title": "الهدافين", "url": self.getFullUrl("/leagues")},
+            {"category": "list_professionals", "title": "المحترفين", "url": self.getFullUrl("/professionals/video")},
+            {"category": "list_players", "title": "قائمة اللاعبين وأهدافهم", "url": self.getFullUrl("/leagues")},
             {"category": "search", "title": _("Search"), "search_item": True},
             {"category": "search_history", "title": _("Search history")},
             {"category": "delete_history", "title": _("Delete search history")},
@@ -207,7 +207,7 @@ class BtolatCom(CBaseHostClass):
         # ===== pagination =====
         if 'class="next-page"' in data:
             params = dict(cItem)
-            params.update({"title": Y + _("Next Page المزيد من الفيديوهات") + " ▶▶▶" + W, "page": page + 1, "url": cItem["url"], "category": "list_league_team_videos"})
+            params.update({"title": Y + "Next Page المزيد من الفيديوهات" + " ▶▶▶" + W, "page": page + 1, "url": cItem["url"], "category": "list_league_team_videos"})
             self.addDir(params)
 
     def listAllLeagueVideos(self, cItem):
@@ -256,7 +256,7 @@ class BtolatCom(CBaseHostClass):
         # ===== pagination =====
         if 'class="next-page"' in data:
             params = dict(cItem)
-            params.update({"title": Y + _("Next Page المزيد من الفيديوهات") + " ▶▶▶" + W, "page": page + 1, "url": url, "category": "list_all_league_videos"})
+            params.update({"title": Y + "Next Page المزيد من الفيديوهات" + " ▶▶▶" + W, "page": page + 1, "url": url, "category": "list_all_league_videos"})
             self.addDir(params)
 
     def listTopScorersMenu(self, cItem):
@@ -333,7 +333,7 @@ class BtolatCom(CBaseHostClass):
         # ===== Load more button =====
         last_position = int(players[-1][0])
         params = dict(cItem)
-        params.update({"title": Y + _("Next Page المزيد من الهدافين") + " ▶▶▶" + W, "page": page + 1, "last_position": last_position, "league_id": league_id, "url": cItem["url"], "category": "list_league_top_scorers"})
+        params.update({"title": Y + "Next Page المزيد من الهدافين" + " ▶▶▶" + W, "page": page + 1, "last_position": last_position, "league_id": league_id, "url": cItem["url"], "category": "list_league_top_scorers"})
         self.addDir(params)
 
     def listProfessionals(self, cItem):
@@ -446,7 +446,7 @@ class BtolatCom(CBaseHostClass):
             # ===== Manual load more button =====
             if len(blocks) > 0:
                 params = dict(cItem)
-                params.update({"title": Y + _("Next Page المزيد من الفيديوهات") + " ▶▶▶" + W, "page": page + 1, "last_row_id": last_row_id, "last_row_date": last_row_date, "url": base_url, "category": "list_player_videos"})
+                params.update({"title": Y + "Next Page المزيد من الفيديوهات" + " ▶▶▶" + W, "page": page + 1, "last_row_id": last_row_id, "last_row_date": last_row_date, "url": base_url, "category": "list_player_videos"})
                 self.addDir(params)
         # ======================================================
         # ================== Other players ====================

@@ -408,7 +408,7 @@ class ARADrama(CBaseHostClass):
     # -------------------- menus --------------------
     def listMainMenu(self, cItem):
         printDBG("ARADrama.listMainMenu")
-        tab = [{"category": "movies", "title": _("الأفـــلام"), "icon": self.DEFAULT_ICON_URL}, {"category": "series", "title": _("مســلـســلات"), "icon": self.DEFAULT_ICON_URL}, {"category": "tvshow", "title": _("بــرامــج"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/k-shows/")}] + self.searchItems()
+        tab = [{"category": "movies", "title": "الأفـــلام", "icon": self.DEFAULT_ICON_URL}, {"category": "series", "title": "مســلـســلات", "icon": self.DEFAULT_ICON_URL}, {"category": "tvshow", "title": "بــرامــج", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/k-shows/")}] + self.searchItems()
         self.listsTab(tab, cItem)
 
     def listCatItems(self, cItem, nextCategory):
@@ -416,20 +416,20 @@ class ARADrama(CBaseHostClass):
         cat = self.currItem.get("category", "")
         if cat == "movies":
             tab = [
-                {"category": nextCategory, "title": _("أفلام أسيوية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/%d8%a7%d9%84%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%84%d8%a2%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/")},
-                {"category": nextCategory, "title": _("أفلام كورية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/type/k-movies/")},
-                {"category": nextCategory, "title": _("أفلام صينية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/type/c-movies/")},
-                {"category": nextCategory, "title": _("أفلام يابانية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/type/j-movie/")},
-                {"category": nextCategory, "title": _("أفلام تايوانية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/type/فيلم-تايواني/")},
-                {"category": nextCategory, "title": _("أفلام فيتنامية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/type/فيلم-فيتنامي/")},
+                {"category": nextCategory, "title": "أفلام أسيوية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/%d8%a7%d9%84%d8%a7%d9%81%d9%84%d8%a7%d9%85-%d8%a7%d9%84%d8%a2%d8%b3%d9%8a%d9%88%d9%8a%d8%a9/")},
+                {"category": nextCategory, "title": "أفلام كورية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/type/k-movies/")},
+                {"category": nextCategory, "title": "أفلام صينية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/type/c-movies/")},
+                {"category": nextCategory, "title": "أفلام يابانية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/type/j-movie/")},
+                {"category": nextCategory, "title": "أفلام تايوانية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/type/فيلم-تايواني/")},
+                {"category": nextCategory, "title": "أفلام فيتنامية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/type/فيلم-فيتنامي/")},
             ]
         elif cat == "series":
             tab = [
-                {"category": nextCategory, "title": _("الدراما الكورية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/serie/korea/")},
-                {"category": nextCategory, "title": _("الدراما اليابانية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/serie/japanese/")},
-                {"category": nextCategory, "title": _("الدراما الصينيةوالتايوانية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/serie/chinese-taiwan/")},
-                {"category": nextCategory, "title": _("الدراما التايلاندية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/serie/tailand/")},
-                {"category": nextCategory, "title": _("الدراما الفلبينية"), "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/serie/f-drama/")},
+                {"category": nextCategory, "title": "الدراما الكورية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/serie/korea/")},
+                {"category": nextCategory, "title": "الدراما اليابانية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/serie/japanese/")},
+                {"category": nextCategory, "title": "الدراما الصينيةوالتايوانية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/serie/chinese-taiwan/")},
+                {"category": nextCategory, "title": "الدراما التايلاندية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/serie/tailand/")},
+                {"category": nextCategory, "title": "الدراما الفلبينية", "icon": self.DEFAULT_ICON_URL, "url": self.getFullUrl("/category/serie/f-drama/")},
             ]
         else:
             tab = []
@@ -502,7 +502,7 @@ class ARADrama(CBaseHostClass):
             playIframe = self._getPlayableIframe(data)
             if self.cm.isValidUrl(playIframe):
                 params = dict(cItem)
-                params.update({"good_for_fav": True, "EPG": True, "title": "%s - %s" % (baseTitle, _("مشاهدة")), "url": playIframe, "icon": cItem.get("icon", self.DEFAULT_ICON_URL), "desc": story})
+                params.update({"good_for_fav": True, "EPG": True, "title": "%s - %s" % (baseTitle, "مشاهدة"), "url": playIframe, "icon": cItem.get("icon", self.DEFAULT_ICON_URL), "desc": story})
                 self.addVideo(params)
         tmp = self.cm.ph.getDataBeetwenMarkers(data, "vc_btn3-inline", "</div>", False)[1]
         href = self.cm.ph.getSearchGroups(tmp, r'href=[\'"]([^\'"]+?)[\'"]')[0]

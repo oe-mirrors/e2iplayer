@@ -25,7 +25,7 @@ class GaskrankTV(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("GaskrankTV.listMainMenu")
 
-        MAIN_CAT_TAB = [{"category": "list_items", "title": _("Neuste Filme"), "url": self.getFullUrl("/tv/motorrad-videos/")}, {"category": "list_items", "title": _("Am besten bewertet"), "url": self.getFullUrl("/tv/user-voted/")}, {"category": "list_items", "title": _("Am meisten gesehen"), "url": self.getFullUrl("/tv/top-videos/")}, {"category": "list_cats", "title": _("Video Kategorien"), "url": self.getFullUrl("/tv/")}]
+        MAIN_CAT_TAB = [{"category": "list_items", "title": "Neuste Filme", "url": self.getFullUrl("/tv/motorrad-videos/")}, {"category": "list_items", "title": "Am besten bewertet", "url": self.getFullUrl("/tv/user-voted/")}, {"category": "list_items", "title": "Am meisten gesehen", "url": self.getFullUrl("/tv/top-videos/")}, {"category": "list_cats", "title": "Video Kategorien", "url": self.getFullUrl("/tv/")}]
         self.listsTab(MAIN_CAT_TAB, cItem)
 
     def listCategories(self, cItem):

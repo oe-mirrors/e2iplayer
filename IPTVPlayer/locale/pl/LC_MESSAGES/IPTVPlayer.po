@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 20:46+0200\n"
+"POT-Creation-Date: 2026-06-07 19:29+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n"
 "Language-Team: IPTVPlayer\n"
@@ -314,6 +314,9 @@ msgstr "Tryb downmix AC3"
 
 msgid "ALBUMS"
 msgstr "ALBUMY"
+
+msgid "API Key"
+msgstr ""
 
 msgid "API_KEY"
 msgstr ""
@@ -1253,6 +1256,9 @@ msgstr "Bład odczytu pliku\"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "Bład odczytu pliku\"%s\".\n"
 
+msgid "Error while loading description"
+msgstr ""
+
 #, python-format
 msgid "Error writing file \"%s\".\n"
 msgstr "Bład zapisu pliku \"%s\".\n"
@@ -1441,6 +1447,14 @@ msgstr "Francuski"
 
 msgid "From E2 settings"
 msgstr "Z ustawień E2"
+
+#, fuzzy
+msgid "Full description loaded"
+msgstr "Brak poprawnych linków."
+
+#, fuzzy
+msgid "Full description not available"
+msgstr "Brak poprawnych linków."
 
 msgid "GSTplayer no IFD workarround"
 msgstr "Objejście braku IFD GSTplayer"
@@ -1881,6 +1895,9 @@ msgstr "Ładowanie danych, proszę czekać"
 msgid "Loading data, please wait (%d)"
 msgstr "Ładowanie danych, proszę czekać (%d)"
 
+msgid "Loading full description..."
+msgstr ""
+
 msgid "LocalMedia"
 msgstr "LocalMedia (pliki lokalne)"
 
@@ -2148,10 +2165,6 @@ msgstr "Nie"
 msgid "No biography available"
 msgstr ""
 
-#, fuzzy
-msgid "No description available."
-msgstr "Brak poprawnych linków."
-
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
@@ -2170,6 +2183,10 @@ msgid "No valid entitlement found for asset."
 msgstr "Brak uprawnienia dla zasobu."
 
 msgid "No valid links available."
+msgstr "Brak poprawnych linków."
+
+#, fuzzy
+msgid "No video ID available"
 msgstr "Brak poprawnych linków."
 
 msgid "None"
@@ -2322,6 +2339,11 @@ msgid ""
 msgstr ""
 
 msgid "Please configure Xtream (blue button)"
+msgstr ""
+
+msgid ""
+"Please configure your API Key in:\n"
+"Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
 msgstr ""
 
 #, python-format
@@ -2995,6 +3017,21 @@ msgstr "Zakończyć odtwarzanie?"
 
 msgid "Study Plan"
 msgstr "Plan studiów"
+
+msgid ""
+"SubDL Setup:\n"
+"\n"
+"1. Visit: subdl.com/panel/api\n"
+"2. Copy your API Key\n"
+"3. Go to: Settings → IPTVPlayer → Subtitles\n"
+"4. Paste the key in \"SubDL.com API Key\" field"
+msgstr ""
+
+msgid "SubDL.com API Key"
+msgstr ""
+
+msgid "SubDL: API Key Required"
+msgstr ""
 
 msgid "Subspecialities"
 msgstr "Podspecjalności"

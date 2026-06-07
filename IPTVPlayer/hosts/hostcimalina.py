@@ -190,7 +190,7 @@ class CimaLina(CBaseHostClass):
 
     def listMainMenu(self, cItem):
         printDBG("CimaLina.listMainMenu")
-        tab = [{"category": "movies", "title": _("الأفلام"), "icon": self.DEFAULT_ICON_URL}, {"category": "series", "title": _("المسلسلات"), "icon": self.DEFAULT_ICON_URL}] + self.searchItems()
+        tab = [{"category": "movies", "title": "الأفلام", "icon": self.DEFAULT_ICON_URL}, {"category": "series", "title": "المسلسلات", "icon": self.DEFAULT_ICON_URL}] + self.searchItems()
         self.listsTab(tab, cItem)
 
     def listCatItems(self, cItem, nextCategory):

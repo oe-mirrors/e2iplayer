@@ -690,7 +690,7 @@ class ArabSeed(CBaseHostClass):
             elif next_page.startswith("/"):
                 next_page = self.MAIN_URL.rstrip("/") + next_page
             params = dict(cItem)
-            params.update({"title": _("Next Page ▶"), "url": next_page, "category": "series_packs"})
+            params.update({"title": _("Next Page »»»"), "url": next_page, "category": "series_packs"})
             self.addDir(params)
             printDBG("Next page: %s" % next_page)
         printDBG("ArabSeed.listSeriesPacks <<< done")
