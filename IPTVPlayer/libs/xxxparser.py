@@ -362,6 +362,7 @@ class XXXParser:
 			'https://www.freeomovie.to/',
 			'https://streamporn.pw',
 			'https://streamporn.org',
+			'https://streamporn.vip',
 			'https://www.xxxstreams.org',
 			'https://pandamovie.info',
 			'https://www.pornrewind.com',

@@ -208,7 +208,7 @@ SITEDATA = {
 'SHESHAFT': ('https://www.sheshaft.com/categories/', '', ''),
 'SHOOSHTIME': ('https://shooshtime.com/categories', '', ''),
 'SLEAZYNEASY': ('https://www.sleazyneasy.com/categories/', 'sleazyneasy', ''),
-'STREAMPORN': ('https://streamporn.org', 'streamporn', ''),
+'STREAMPORN': ('https://streamporn.vip', 'streamporn', ''),
 'SUNPORNO': ('https://www.sunporno.com/', 'sunporno', ''),
 'TEENTUBER': ('https://www.teentuber.xxx/', '', ''),
 'TEENXY': ('https://teenxy.com/categories/', '', ''),
@@ -6268,7 +6268,7 @@ class Host(CBaseHostClass, XXXParser):
 			return valTab
 
 		if 'streamporn' == name:
-			self.MAIN_URL = 'https://streamporn.org'
+			self.MAIN_URL = 'https://streamporn.vip'
 			COOKIEFILE = join(GetCookieDir(), 'streamporn.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self._getPage(url, self.defaultParams)
@@ -6282,13 +6282,13 @@ class Host(CBaseHostClass, XXXParser):
 				if phTitle:
 					valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'streamporn-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- STUDIOS ---', 'POPULAR STUDIOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/studios/'], 'streamporn-studios', siteLogo, None))
-			valTab.insert(0, CDisplayListItem('--- ADULT VIDEOS ---', 'ADULT VIDEOS', CDisplayListItem.TYPE_CATEGORY, ['https://xxxscenes.streamporn.org/'], 'streamporn-clips', siteLogo, None))
+			valTab.insert(0, CDisplayListItem('--- ADULT VIDEOS ---', 'ADULT VIDEOS', CDisplayListItem.TYPE_CATEGORY, ['https://xxxscenes.streamporn.vip/'], 'streamporn-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- MOST VIEWED ---', 'MOST VIEWED VIDEOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-viewed/'], 'streamporn-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- MOST RATING ---', 'MOST RATING VIDEOS', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most-rating/'], 'streamporn-clips', siteLogo, None))
 			valTab.insert(0, CDisplayListItem('--- ADULT MOVIES ---', 'ADULT MOVIES', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/movies/'], 'streamporn-clips', siteLogo, None))
 			return searchItems(valTab, True)
 		if 'streamporn-search' == name:
-			return self.listsItems(-1, 'https://streamporn.org/?s=%s' % url.replace(' ', '+'), 'streamporn-clips')
+			return self.listsItems(-1, 'https://streamporn.vip/?s=%s' % url.replace(' ', '+'), 'streamporn-clips')
 		if 'streamporn-studios' == name:
 			COOKIEFILE = join(GetCookieDir(), 'streamporn.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': COOKIEFILE}
@@ -6334,7 +6334,7 @@ class Host(CBaseHostClass, XXXParser):
 					valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + phTime + ']  ' + decodeHtml(phDesc), CDisplayListItem.TYPE_CATEGORY, [phUrl], 'streamporn-serwer', decodeHtml(phImage), decodeHtml(phImage)))
 			if next_page:
 				if next_page.startswith('/'):
-					next_page = 'https://streamporn.org' + next_page
+					next_page = 'https://streamporn.vip' + next_page
 				valTab.append(self.getNextItem(next_page, next_page, next_page, catUrl))
 			return valTab
 		if 'streamporn-serwer' == name:
