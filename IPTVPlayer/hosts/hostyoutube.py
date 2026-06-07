@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 05.06.2026
+# Last Modified: 07.06.2026
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, ArticleContent, RetHost
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, IsExecutable, printExc, byteify, GetSearchHistoryDir, E2ColoR
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
@@ -30,7 +30,11 @@ from Components.config import config, ConfigDirectory, getConfigListEntry
 ###################################################
 # E2 GUI COMMPONENTS
 ###################################################
+from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
+from Components.ActionMap import ActionMap
+from Components.Label import Label
+from Components.ScrollLabel import ScrollLabel
 
 ###################################################
 ###################################################
@@ -63,6 +67,95 @@ def gettytul():
     return "https://youtube.com/"
 
 
+class YouTubeInfo(Screen):
+
+    skin = """
+        <screen name="YouTubeInfo" position="center,center" size="1100,650" title="YouTube info">
+            <widget name="title" position="20,20" size="1060,80" font="Regular;32" halign="left" valign="center" />
+            <widget name="meta" position="20,105" size="1060,60" font="Regular;24" halign="left" valign="center" />
+            <widget name="status" position="20,165" size="1060,35" font="Regular;22" halign="left" valign="center" />
+            <widget name="text" position="20,205" size="1060,420" font="Regular;26" />
+        </screen>
+    """
+
+    def __init__(self, session, host, cItem):
+        Screen.__init__(self, session)
+        self.host = host
+        self.cItem = cItem
+        self.videoId = ''
+        self.fullDescriptionLoaded = False
+
+        self["title"] = Label("")
+        self["meta"] = Label("")
+        self["status"] = Label("")
+        self["text"] = ScrollLabel("")
+
+        self["actions"] = ActionMap(
+            ["WizardActions", "DirectionActions", "ColorActions"],
+            {
+                "back": self.keyBack,
+                "red": self.keyBack,
+                "ok": self.keyOK,
+                "up": self.keyUp,
+                "down": self.keyDown,
+            },
+            -1
+        )
+        self.onLayoutFinish.append(self.onStart)
+
+    def onStart(self):
+        self._fillBasicData()
+        self.loadFullDescription()
+
+    def _cleanText(self, text):
+        text = str(text or "")
+        return text.replace("[/br]", "\n")
+
+    def _fillBasicData(self):
+        self.videoId = self.host._getVideoIdFromItem(self.cItem)
+        title = self.cItem.get("title", "")
+        desc = self.cItem.get("desc", "")
+        time = self.cItem.get("time", "")
+
+        meta = []
+        if time:
+            meta.append(time)
+        if self.videoId:
+            meta.append("videoId: %s" % self.videoId)
+
+        self["title"].setText(title)
+        self["meta"].setText(" | ".join(meta))
+        self["text"].setText(self._cleanText(desc))
+        self["status"].setText(_("Loading full description...") if self.videoId else _("No video ID available"))
+
+    def loadFullDescription(self):
+        if not self.videoId:
+            return
+        try:
+            fullDesc = self.host.ytp.getFullDescriptionFromWatch(self.videoId)
+            if fullDesc:
+                self["text"].setText(self._cleanText(fullDesc))
+                self["status"].setText(_("Full description loaded"))
+                self.fullDescriptionLoaded = True
+            else:
+                self["status"].setText(_("Full description not available"))
+        except Exception:
+            printExc()
+            self["status"].setText(_("Error while loading description"))
+
+    def keyOK(self):
+        if not self.fullDescriptionLoaded:
+            self.loadFullDescription()
+
+    def keyBack(self):
+        self.close()
+
+    def keyUp(self):
+        self["text"].pageUp()
+
+    def keyDown(self):
+        self["text"].pageDown()
+
 class Youtube(CBaseHostClass):
 
     def __init__(self):
@@ -91,6 +184,55 @@ class Youtube(CBaseHostClass):
         else:
             category = "video"
         return category
+
+    def _extractVideoId(self, url):
+        printDBG("Youtube._extractVideoId")
+        videoId = ''
+        try:
+            url = str(url)
+
+            match = re.search(r'[?&]v=([A-Za-z0-9_-]{11})', url)
+            if match is not None:
+                videoId = match.group(1)
+
+            if not videoId:
+                match = re.search(r'youtu\.be/([A-Za-z0-9_-]{11})', url)
+                if match is not None:
+                    videoId = match.group(1)
+        except Exception:
+            printExc()
+        return videoId
+
+    def _getVideoIdFromItem(self, cItem):
+        printDBG("Youtube._getVideoIdFromItem")
+        videoId = ''
+        try:
+            videoId = cItem.get("video_id", "")
+        except Exception:
+            printExc()
+
+        if not videoId:
+            try:
+                videoId = self._extractVideoId(cItem.get("url", ""))
+            except Exception:
+                printExc()
+        return videoId
+
+    def _getYouTubeInfoText(self, cItem):
+        printDBG("Youtube._getYouTubeInfoText")
+        text = cItem.get("desc", "")
+        if not text:
+            text = cItem.get("title", "")
+        return text
+
+    def _openYouTubeInfo(self, session, cItem):
+        printDBG("Youtube._openYouTubeInfo")
+        try:
+            session.open(YouTubeInfo, self, cItem)
+            return True
+        except Exception:
+            printExc()
+        return False
 
     def listMainMenu(self):
         printDBG("Youtube.listsMainMenu")
@@ -214,7 +356,7 @@ class Youtube(CBaseHostClass):
                 desc += E2ColoR("yellow") + _("Release") + E2ColoR("white") + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"publishedTimeText":{"simpleText":"', '"},"lengthText":', False)[1] + "\n"
                 desc += E2ColoR("yellow") + _("Duration") + E2ColoR("white") + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"lengthText":{"accessibility":{"accessibilityData":{"label":"', '"}},"simpleText":', False)[1] + "\n"
                 desc += E2ColoR("yellow") + _("Views") + E2ColoR("white") + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"viewCountText":{"simpleText":"', '"},"navigationEndpoint":', False)[1]
-                params = {"title": title, "url": url, "icon": icon, "desc": desc}
+                params = {"title": title, "url": url, "icon": icon, "desc": desc, "video_id": self._extractVideoId(url)}
                 self.addVideo(params)
             return
 
@@ -298,6 +440,45 @@ class Youtube(CBaseHostClass):
             return [urlTab[0]]
         return urlTab
 
+    def getArticleContent(self, cItem):
+        printDBG("Youtube.getArticleContent >>> START")
+        retTab = []
+        try:
+            title = cItem.get("title", "")
+            text = self._getYouTubeInfoText(cItem)
+            icon = cItem.get("icon", "")
+            videoId = self._getVideoIdFromItem(cItem)
+            if videoId:
+                try:
+                    fullText = self.ytp._getFullDescriptionFromWatch(videoId)
+                    if fullText:
+                        printDBG("Youtube.getArticleContent fullText FOUND len[%s]" % len(fullText))
+                        text = fullText
+                    else:
+                        printDBG("Youtube.getArticleContent fullText EMPTY")
+                except Exception:
+                    printDBG("Youtube.getArticleContent _getFullDescriptionFromWatch EXCEPTION")
+                    printExc()
+            richDescParams = {}
+            if cItem.get("time", ""):
+                richDescParams["published"] = cItem.get("time", "")
+            if videoId:
+                richDescParams["video_id"] = videoId
+            images = []
+            if icon:
+                images.append({"title": "", "url": icon})
+            retTab.append(ArticleContent(
+                title=title,
+                text=text,
+                images=images,
+                richDescParams=richDescParams
+            ))
+            printDBG("Youtube.getArticleContent >>> END OK")
+        except Exception:
+            printDBG("Youtube.getArticleContent >>> END EXCEPTION")
+            printExc()
+        return retTab
+
     def getFavouriteData(self, cItem):
         printDBG("Youtube.getFavouriteData")
         return json.dumps(cItem)
@@ -364,7 +545,6 @@ class Youtube(CBaseHostClass):
 
         return SuggestionsProvider(True)
 
-
 class IPTVHost(CHostBase):
 
     def getSearchTypes(self):
@@ -372,3 +552,24 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, Youtube(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
+
+    def withArticleContent(self, cItem):
+        try:
+            category = cItem.get("category", "")
+            if category in ["video", "movie", "traylist"] or "video_id" in cItem or "watch?v=" in cItem.get("url", ""):
+                return True
+        except Exception:
+            printExc()
+        return False
+
+    def getArticleContent(self, Index=0):
+        printDBG("IPTVHost.getArticleContent")
+        retCode = RetHost.OK
+        retlist = []
+        try:
+            cItem = self.host.currList[Index]
+            retlist = self.host.getArticleContent(cItem)
+        except Exception:
+            printExc()
+            retCode = RetHost.ERROR
+        return RetHost(retCode, value=retlist)

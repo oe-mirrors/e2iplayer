@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 19.01.2026 - Panda555 - update to current url
+# Last Modified: 07.06.2026 - passata
 ###################################################
 # LOCAL import
 ###################################################
@@ -29,21 +29,21 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://altadefinizione-01.homes/"
+    return "https://altadefinizione.ovh/"
 
 
 class Altadefinizione(CBaseHostClass):
 
     def __init__(self):
-        CBaseHostClass.__init__(self, {"history": "altadefinizione-01.homes", "cookie": "altadefinizione-01.homes.cookie"})
+        CBaseHostClass.__init__(self, {"history": "altadefinizione.ovh", "cookie": "altadefinizione.ovh.cookie"})
 
-        self.USER_AGENT = "Mozilla/5.0"
-        self.HEADER = {"User-Agent": self.USER_AGENT, "Accept": "text/html"}
+        self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        self.HEADER = {"User-Agent": self.USER_AGENT, "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"}
         self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({"X-Requested-With": "XMLHttpRequest", "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"})
+        self.AJAX_HEADER.update({"X-Requested-With": "XMLHttpRequest"})
 
         self.MAIN_URL = gettytul()
-        self.DEFAULT_ICON_URL = gettytul() + "templates/Darktemplate_pagespeed/images/logo.png"
+        self.DEFAULT_ICON_URL = gettytul() + "static/favicon.ico"
 
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
 
@@ -63,325 +63,313 @@ class Altadefinizione(CBaseHostClass):
     def listMainMenu(self, cItem):
         printDBG("Altadefinizione.listMainMenu")
 
-        sts, data = self.getPage(self.getMainUrl())
-        if not sts:
-            return
-        self.setMainUrl(self.cm.meta["url"])
+        main_menu = [{"title": "Home", "url": self.MAIN_URL, "category": "list_items"}, {"title": "Film", "url": self.MAIN_URL + "archive?type=movie", "category": "list_items"}, {"title": "Serie TV", "url": self.MAIN_URL + "archive?type=tv", "category": "list_items"}, {"title": "Archivio", "url": self.MAIN_URL + "archive", "category": "list_items"}, {"title": "Trending", "url": self.MAIN_URL + "archive?sort=trending", "category": "list_items"}, {"title": "Top Rated", "url": self.MAIN_URL + "archive?sort=rating", "category": "list_items"}, {"title": "Random", "url": self.MAIN_URL + "random", "category": "explore_item"}, {"title": "Cerca", "url": "", "category": "search", "need_letters": False}]
 
-        tmp = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "before_widget"), ("<div", ">", "before_widget"), False)[1]
-        tmp = re.compile(r"""<div[^>]+?tab\-content[^>]*?>""").split(data)
-        if len(tmp) == 2:
-            tabs = []
-            mainTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(tmp[0], ("<div", ">", "widget-title"), ("</div", ">"))[1])
-            tmp[0] = self.cm.ph.getAllItemsBeetwenMarkers(tmp[0], "<li", "</li>")
-            for tabItem in tmp[0]:
-                tabTitle = self.cleanHtmlStr(tabItem)
-                key = self.cm.ph.getSearchGroups(tabItem, r"""href=['"]\#([^"^']+?)['"]""")[0]
-                if key == "":
-                    continue
-                categories = []
-                tmp[1] = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", key), ("</ul", ">"), False)[1]
-                tmp[1] = self.cm.ph.getAllItemsBeetwenMarkers(tmp[1], "<li", "</li>")
-                for item in tmp[1]:
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^"^']+?)['"]""")[0])
-                    title = self.cleanHtmlStr(item)
-                    params = dict(cItem)
-                    params.update({"name": "category", "category": "list_items", "title": title, "url": url})
-                    categories.append(params)
-
-                if len(categories):
-                    params = dict(cItem)
-                    params.update({"name": "category", "category": "sub_items", "title": tabTitle, "sub_items": categories})
-                    tabs.append(params)
-
-            if len(tabs):
-                params = dict(cItem)
-                params.update({"name": "category", "category": "sub_items", "title": mainTitle, "sub_items": tabs})
-                self.addDir(params)
-
-        data = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "menu-menu-1"), ("</ul", ">"), False)[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<a", "</a>")
-        for item in data:
-            url = self.cm.ph.getSearchGroups(item, """href=['"]([^"^']+?)['"]""")[0]
-            if "attori" in url or "/domande" in url or "/richiedi" in url or "/player" in url:
-                continue
-            title = self.cleanHtmlStr(item)
+        for item in main_menu:
             params = dict(cItem)
-            params.update({"name": "category", "title": title, "url": self.getFullUrl(url)})
-            if "/catalog/a/" in url:
-                params["category"] = "list_abc"
-            else:
-                params["category"] = "list_items"
+            params.update(item)
             self.addDir(params)
 
-        MAIN_CAT_TAB = self.searchItems()
-        self.listsTab(MAIN_CAT_TAB, cItem)
+        # Extract genres from homepage
+        sts, data = self.getPage(self.MAIN_URL)
+        if sts:
+            genre_links = re.findall(r'<a href="([^"]+archive\?[^"]+genre_id=\d+[^"]+)">([^<]+)</a>', data)
+            if genre_links:
+                genres = []
+                seen = set()
+                for url, title in genre_links:
+                    if title and url and title not in seen:
+                        seen.add(title)
+                        genres.append({"name": "category", "category": "list_items", "title": title.strip(), "url": self.getFullUrl(url)})
+                if genres:
+                    params = dict(cItem)
+                    params.update({"name": "category", "category": "sub_items", "title": "Generi", "sub_items": genres})
+                    self.addDir(params)
+
+    def extractMoviesFromHTML(self, html, cItem):
+        """Extract movie/TV items from HTML"""
+        items = []
+
+        # Carousel items (homepage)
+        carousel_items = re.findall(r'<div class="carousel-item poster-item">(.*?)</div>\s*</div>', html, re.DOTALL)
+
+        for block in carousel_items:
+            item = self.parseMovieBlock(block, cItem)
+            if item:
+                items.append(item)
+
+        # Archive grid items
+        if not items:
+            archive_items = re.findall(r'<div class="[^"]*poster-item[^"]*">(.*?)</div>\s*</div>', html, re.DOTALL)
+            for block in archive_items:
+                item = self.parseMovieBlock(block, cItem)
+                if item:
+                    items.append(item)
+
+        # Fallback: generic pattern
+        if not items:
+            movie_links = re.findall(r'<a href="(/detail/[^"]+)"[^>]*>.*?<img[^>]+src="([^"]+)"[^>]*>.*?<h[^>]*>([^<]+)</h', html, re.DOTALL)
+            for url, icon, title in movie_links:
+                if url and title:
+                    params = dict(cItem)
+                    params.update({"good_for_fav": True, "category": "explore_item", "title": self.cleanHtmlStr(title), "url": self.getFullUrl(url), "icon": self.getFullIconUrl(icon), "desc": title})
+                    items.append(params)
+
+        return items
+
+    def parseMovieBlock(self, block, cItem):
+        """Parse a single movie block"""
+        url_match = re.search(r'href="([^"]+)"', block)
+        if not url_match:
+            return None
+        url = self.getFullUrl(url_match.group(1))
+
+        if "/detail/" not in url:
+            return None
+
+        title_match = re.search(r'<h[^>]*class="[^"]*movie-card-title[^"]*"[^>]*>([^<]+)</h', block)
+        if not title_match:
+            title_match = re.search(r'alt="([^"]+)"', block)
+        if not title_match:
+            return None
+
+        title = self.cleanHtmlStr(title_match.group(1))
+
+        icon_match = re.search(r'<img[^>]+src="([^"]+)"', block)
+        icon = self.getFullIconUrl(icon_match.group(1)) if icon_match else self.DEFAULT_ICON_URL
+
+        rating_match = re.search(r'<span class="label rate">([^<]+)</span>', block)
+        rating = rating_match.group(1) if rating_match else ""
+
+        desc_parts = []
+        if rating:
+            desc_parts.append("Rating: " + rating)
+
+        year_match = re.search(r"/(?:film|tv)-[^-]+-(\d{4})", url)
+        if year_match:
+            desc_parts.append(year_match.group(1))
+
+        if "/tv/" in url:
+            desc_parts.append("Serie TV")
+        elif "/film/" in url:
+            desc_parts.append("Film")
+
+        desc = " | ".join(desc_parts) if desc_parts else title
+
+        params = dict(cItem)
+        params.update({"good_for_fav": True, "category": "explore_item", "title": title, "url": url, "icon": icon, "desc": desc})
+        return params
 
     def listItems(self, cItem, nextCategory):
-        printDBG("Altadefinizione.listItems")
+        printDBG("Altadefinizione.listItems - URL: %s" % cItem["url"])
         page = cItem.get("page", 1)
-        postData = cItem.get("post_data")
 
-        sts, data = self.getPage(cItem["url"], post_data=postData)
-        if not sts:
-            return
-        self.setMainUrl(self.cm.meta["url"])
-
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "page_nav"), ("</div", ">"), False)[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, """<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s<""" % (page + 1))[0]
-
-        data = re.compile(r"""<div[^>]+?dle\-content[^>]+?>""").split(data, 1)
-        data[-1] = re.compile("""<div[^>]+?right_bar[^>]+?>""").split(data[-1], 1)[0]
-        if len(data) > 1 and page > 1:
-            del data[0]
-
-        for dataItem in data:
-            if len(self.currList):
-                self.addMarker({"title": ""})
-            dataItem = self.cm.ph.rgetAllItemsBeetwenNodes(dataItem, ("</div", ">"), ("<div", ">", "boxgrid_shadow"), False)
-            for item in dataItem:
-                tmp = self.cm.ph.getDataBeetwenNodes(item, ("<h", ">"), ("</h", ">"), False)[1]
-
-                icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, """<img[^>]+?src=['"]([^"^']+?)['"]""")[0])
-                url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, """href=['"]([^"^']+?)['"]""")[0])
-                title = self.cleanHtmlStr(tmp)
-
-                desc = []
-                t = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ("<div", ">", "trdublaj"), ("</div", ">"), False)[1])
-                if t != "":
-                    desc.append(t)
-                item = item.split("list-inline", 1)[-1]
-                tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ("<li", ">"), ("</li", ">"), False)
-                for t in tmp:
-                    t = self.cleanHtmlStr(t)
-                    if t != "":
-                        desc.append(t)
-
-                desc = [" | ".join(desc)]
-                tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ("<p", ">"), ("</p", ">"), False)
-                for t in tmp:
-                    t = self.cleanHtmlStr(t)
-                    if t != "":
-                        desc.append(t)
-
-                params = dict(cItem)
-                params.update({"good_for_fav": True, "category": nextCategory, "title": title, "url": url, "icon": icon, "desc": "[/br]".join(desc)})
-                self.addDir(params)
-
-        if nextPage != "":
-            params = dict(cItem)
-            params.update({"title": _("Next page"), "page": page + 1})
-            if nextPage != "#":
-                params["url"] = self.getFullUrl(nextPage)
-                self.addDir(params)
-            elif postData != {}:
-                postData = dict(postData)
-                postData.pop("titleonly", None)
-                postData.update({"search_start": page + 1, "full_search": "0", "result_from": 10 * page + 1})
-                params["post_data"] = postData
-                self.addDir(params)
+        url = cItem["url"]
+        if page > 1:
+            if "?" in url:
+                if "page=" in url:
+                    url = re.sub(r"page=\d+", f"page={page}", url)
+                else:
+                    url += f"&page={page}"
             else:
-                printDBG("NextPage [%s] not handled!!!" % nextPage)
+                url += f"?page={page}"
 
-    def listABC(self, cItem, nextCategory):
-        printDBG("Altadefinizione.listABC")
+        sts, data = self.getPage(url)
+        if not sts:
+            return
+        self.setMainUrl(self.cm.meta["url"])
+
+        items = self.extractMoviesFromHTML(data, cItem)
+
+        for item in items:
+            self.addDir(item)
+
+        # Check for next page
+        next_match = re.search(r'<a[^>]*href="([^"]*page=(\d+)[^"]*)"[^>]*>.*?(?:Next|Successivo|»).*?</a>', data, re.IGNORECASE)
+        if next_match:
+            next_page_num = int(next_match.group(2))
+            if next_page_num > page:
+                params = dict(cItem)
+                params.update({"title": "Next page", "page": next_page_num, "url": cItem["url"]})
+                self.addDir(params)
+
+    def getArticleContent(self, cItem):
+        """Extract movie info - full description and metadata with correct cover"""
+        retTab = []
+
+        # Get the detail page URL
+        url = cItem.get("prev_url", cItem.get("url", ""))
+        if not url:
+            printDBG("No URL for article content")
+            return retTab
+
+        printDBG("Fetching article for: %s" % cItem.get("title", ""))
+
+        sts, data = self.getPage(url)
+        if not sts:
+            printDBG("Failed to fetch page")
+            return retTab
+
+        # Get title from the detail page
+        title_match = re.search(r"<h1[^>]*>([^<]+)</h1>", data)
+        if title_match:
+            title = self.cleanHtmlStr(title_match.group(1))
+        else:
+            title = cItem.get("title", "")
+
+        # Extract description/plot
+        desc = ""
+        desc_match = re.search(r'<p class="slide-plot">([^<]+)</p>', data)
+        if desc_match:
+            desc = self.cleanHtmlStr(desc_match.group(1))
+        else:
+            desc_match = re.search(r'<meta name="description" content="([^"]+)"', data)
+            if desc_match:
+                desc = self.cleanHtmlStr(desc_match.group(1))
+
+        # Clean description
+        if desc:
+            desc = re.sub(r"\s+", " ", desc).strip()
+            if len(desc) > 500:
+                desc = desc[:497] + "..."
+        else:
+            desc = "Nessuna descrizione disponibile"
+
+        # Use the correct cover from cItem (from the movie list)
+        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
+
+        # Build items list for additional info
+        itemsList = []
+
+        # Year
+        year_match = re.search(r'<span class="meta-list"><span>(\d{4})</span></span>', data)
+        if year_match:
+            itemsList.append(("Anno", year_match.group(1)))
+
+        # Rating
+        rating_match = re.search(r'<span class="label rate">([^<]+)</span>', data)
+        if rating_match:
+            itemsList.append(("Voto", rating_match.group(1) + "/10"))
+
+        # Genre
+        genre_match = re.search(r'<a href="[^"]*genre_id=\d+[^"]*">([^<]+)</a>', data)
+        if genre_match:
+            itemsList.append(("Genere", genre_match.group(1)))
+
+        # Duration
+        duration_match = re.search(r"(\d+)\s*(?:min|minuti)", data, re.IGNORECASE)
+        if duration_match:
+            itemsList.append(("Durata", duration_match.group(1) + " minuti"))
+
+        # Build result
+        result = {"title": title, "text": desc, "images": [{"title": "", "url": icon}], "other_info": {"custom_items_list": itemsList}}
+
+        retTab.append(result)
+        printDBG("Article content ready for: %s" % title)
+
+        return retTab
+
+    def exploreItem(self, cItem):
+        printDBG("Altadefinizione.exploreItem - %s" % cItem["title"])
+
+        # Store the URL for article content
+        cItem["prev_url"] = cItem["url"]
 
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
         self.setMainUrl(self.cm.meta["url"])
-
-        data = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "alphabet"), ("</div", ">"), False)[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<a", "</a>")
-        for item in data:
-            title = self.cleanHtmlStr(item)
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^"^']+?)['"]""", 1, True)[0])
-            params = dict(cItem)
-            params.update({"good_for_fav": False, "category": nextCategory, "title": title, "url": url})
-            self.addDir(params)
-
-    def listABCItems(self, cItem, nextCategory):
-        printDBG("Altadefinizione.listABCItems")
-        page = cItem.get("page", 1)
-
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return
-        self.setMainUrl(self.cm.meta["url"])
-
-        nextPage = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "page_nav"), ("</div", ">"), False)[1]
-        nextPage = self.cm.ph.getSearchGroups(nextPage, """<a[^>]+?href=['"]([^'^"]+?)['"][^>]*?>%s<""" % (page + 1))[0]
-
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ("<tr", ">", "mlnew"), ("</tr", ">"), False)
-        for item in data:
-            tmp = self.cm.ph.getDataBeetwenNodes(item, ("<h", ">"), ("</h", ">"), False)[1]
-
-            icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, """<img[^>]+?src=['"]([^"^']+?)['"]""")[0].replace("/40x59-", "/203x293-"))
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, """href=['"]([^"^']+?)['"]""")[0])
-            title = self.cleanHtmlStr(tmp)
-            if url == "":
-                continue
-
-            desc = []
-            tmp = self.cm.ph.getAllItemsBeetwenNodes(item, ("<td", ">"), ("</td", ">"), False)[3:]
-            for t in tmp:
-                t = self.cleanHtmlStr(t)
-                if t != "":
-                    desc.append(t)
-
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "category": nextCategory, "title": title, "url": url, "icon": icon, "desc": " | ".join(desc)})
-            self.addDir(params)
-
-        if nextPage != "":
-            params = dict(cItem)
-            params.update({"title": _("Next page"), "url": self.getFullUrl(nextPage), "page": page + 1})
-            self.addDir(params)
-
-    def resolve_unique_urls(self, data, cItem):
-        import re
 
         urlTab = []
         seen_urls = set()
-        counter = {}
 
-        for item in data:
-            matches = self.cm.ph.getSearchGroups(item, r"""data\-link=['"]([^"^']+?)['"]""", 1, True)
-            if not matches:
-                continue
-            url = self.getFullUrl(matches[0])
-            if url.startswith("//"):
-                url = "https:" + url
-            if 1 != self.up.checkHostSupport(url):
-                continue
-            if url in seen_urls:
-                continue
+        # Find iframes (main video sources)
+        iframes = re.findall(r'<iframe[^>]+src=["\']([^"\']+)["\'][^>]*>', data, re.IGNORECASE)
 
-            seen_urls.add(url)
+        for src in iframes:
+            src = src.strip()
+            if src.startswith("//"):
+                src = "https:" + src
 
-            # Extract domain without www
-            m = re.search(r"https?://(?:www\.)?([^/]+)/", url)
-            provider = m.group(1) if m else "unknown"
+            if src and src not in seen_urls:
+                video_keywords = ["vixsrc", "streamtape", "doodstream", "mp4upload", "vidcloud", "voe", "vudeo", "netu", "m3u8", ".mp4"]
+                if any(keyword in src.lower() for keyword in video_keywords):
+                    seen_urls.add(src)
+                    host_name = self.getVideoHostName(src)
+                    url_with_meta = strwithmeta(src, {"Referer": cItem["url"]})
+                    urlTab.append({"name": host_name, "url": url_with_meta, "need_resolve": 1})
 
-            count = counter.get(provider, 0) + 1
-            counter[provider] = count
+        # Find data-link attributes
+        data_links = re.findall(r'data-link=["\']([^"\']+)["\']', data)
+        for link in data_links:
+            if link and link not in seen_urls:
+                if self.up.checkHostSupport(link):
+                    seen_urls.add(link)
+                    host_name = self.getVideoHostName(link)
+                    url_with_meta = strwithmeta(link, {"Referer": cItem["url"]})
+                    urlTab.append({"name": host_name, "url": url_with_meta, "need_resolve": 1})
 
-            name = "{} #{}".format(provider, count)
-
-            url_with_meta = strwithmeta(url, {"Referer": cItem["url"]})
-            urlTab.append({"name": name, "url": url_with_meta, "need_resolve": 1})
-
-        return urlTab
-
-    def exploreItem(self, cItem):
-        printDBG("Altadefinizione.exploreItem")
-
-        sts, data = self.getPage(cItem["url"])
-        if not sts:
-            return
-        self.setMainUrl(self.cm.meta["url"])
-
-        cItem = dict(cItem)
-        cItem["prev_url"] = cItem["url"]
-
-        trailer = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "btn_trailer"), ("</div", ">"), False)[1]
-        url = self.getFullUrl(self.cm.ph.getSearchGroups(trailer, """href=['"]([^"^']+?)['"]""", 1, True)[0])
-        if self.cm.isValidUrl(url):
-            title = self.cleanHtmlStr(trailer)
-            params = dict(cItem)
-            params.update({"good_for_fav": False, "url": url, "title": "%s %s" % (title, cItem["title"])})
-            self.addVideo(params)
-
-        tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, "<iframe", "</iframe>")
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ("<a", ">", "data-link"), ("</a", ">"))
-
-        for item in tmp:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """src=['"]([^"^']+?)['"]""", 1, True)[0])
-            if "http" not in url:
-                continue
-            sts, data_iframe = self.getPage(url)
-            if not sts:
-                return
-            data = self.cm.ph.getAllItemsBeetwenNodes(data_iframe, ("<li", ">", "data-link"), ("</li", ">"))
-
-        urlTab = self.resolve_unique_urls(data, cItem)
+        # Find direct video URLs
+        video_urls = re.findall(r'file:\s*["\']([^"\']+\.(?:m3u8|mp4)[^"\']*)["\']', data, re.IGNORECASE)
+        for vurl in video_urls:
+            if vurl and vurl not in seen_urls:
+                seen_urls.add(vurl)
+                url_with_meta = strwithmeta(vurl, {"Referer": cItem["url"]})
+                urlTab.append({"name": "Direct Stream", "url": url_with_meta, "need_resolve": 1})
 
         if urlTab:
+            # Add trailer if available
+            trailer_match = re.search(r'(?:youtube\.com|youtu\.be)[^"\']*["\']', data)
+            if trailer_match:
+                trailer_url = re.search(r'(https?://[^"\']+youtu[^"\']+)', data)
+                if trailer_url:
+                    params = dict(cItem)
+                    params.update({"good_for_fav": False, "url": trailer_url.group(1), "title": "Trailer: " + cItem["title"], "type": "video"})
+                    self.addVideo(params)
+
+            # Add main video sources
             params = dict(cItem)
             params.update({"good_for_fav": False, "urls_tab": urlTab})
             self.addVideo(params)
+        else:
+            printDBG("No video sources found for: %s" % cItem["title"])
 
-    def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("Altadefinizione.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-        cItem = dict(cItem)
-        cItem["url"] = self.getFullUrl("index.php?do=search")
-        cItem["post_data"] = {"do": "search", "subaction": "search", "titleonly": "3", "story": searchPattern}
-        cItem["category"] = "list_items"
-        self.listItems(cItem, "explore_item")
+    def getVideoHostName(self, url):
+        url_lower = url.lower()
+        if "vixsrc" in url_lower:
+            return "VixSrc"
+        elif "streamtape" in url_lower:
+            return "StreamTape"
+        elif "doodstream" in url_lower or "dood" in url_lower:
+            return "DoodStream"
+        elif "mp4upload" in url_lower:
+            return "MP4Upload"
+        elif "vidcloud" in url_lower:
+            return "VidCloud"
+        elif "voe" in url_lower:
+            return "Voe"
+        elif ".m3u8" in url_lower:
+            return "HLS Stream"
+        else:
+            domain_match = re.search(r"https?://([^/]+)", url)
+            if domain_match:
+                return domain_match.group(1).split(".")[0].capitalize()
+            return "Video Source"
 
     def getLinksForVideo(self, cItem):
-        printDBG("Altadefinizione.getLinksForVideo [%s]" % cItem)
-        if 1 == self.up.checkHostSupport(cItem["url"]):
+        if cItem.get("url") and 1 == self.up.checkHostSupport(cItem["url"]):
             return self.up.getVideoLinkExt(cItem["url"])
         return cItem.get("urls_tab", [])
 
     def getVideoLinks(self, videoUrl):
-        printDBG("Altadefinizione.getVideoLinks [%s]" % videoUrl)
         return self.up.getVideoLinkExt(videoUrl)
 
-    def getArticleContent(self, cItem):
-        printDBG("Altadefinizione.getVideoLinks [%s]" % cItem)
-        retTab = []
-        itemsList = []
-        if "prev_url" in cItem:
-            url = cItem["prev_url"]
-        else:
-            url = cItem["url"]
-
-        sts, data = self.cm.getPage(url)
-        if not sts:
-            return
-
-        data = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "s_left"), ("<div", ">", "comment"), False)[1]
-
-        icon = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "imagen"), ("</div", ">"), False)[1]
-        icon = self.getFullUrl(self.cm.ph.getSearchGroups(icon, """<img[^>]+?src=['"]([^'^"]+?)['"]""")[0])
-        title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ("<p", ">", "title"), ("</p", ">"), False)[1])
-        desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "entry-content"), ("</div", ">"), False)[1])
-
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ("<p", ">", "meta_dd"), ("</p", ">"), False)
-        for item in tmp:
-            if "title" in item:
-                item = [self.cm.ph.getSearchGroups(item, """title=['"]([^'^"]+?)['"]""")[0], item]
-            else:
-                item = item.split("</b>", 1)
-                if len(item) < 2:
-                    continue
-            key = self.cleanHtmlStr(item[0])
-            val = self.cleanHtmlStr(item[1])
-            if key == "" or val == "":
-                continue
-            itemsList.append((key, val))
-
-        tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ("<span", ">", "dato"), ("</span", ">"), False)[1])
-        if tmp != "":
-            itemsList.append((_("Rating"), tmp))
-
-        tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ("<p", ">", "views"), ("</p", ">"), False)[1])
-        if tmp != "":
-            itemsList.append((_("Views"), tmp))
-        tmp = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(data, ("<p", ">", "date"), ("</p", ">"), False)[1])
-        if tmp != "":
-            itemsList.append((_("Release"), tmp))
-
-        if title == "":
-            title = cItem["title"]
-        if icon == "":
-            icon = cItem.get("icon", self.DEFAULT_ICON_URL)
-        if desc == "":
-            desc = cItem.get("desc", "")
-
-        return [{"title": self.cleanHtmlStr(title), "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": self.getFullUrl(icon)}], "other_info": {"custom_items_list": itemsList}}]
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        search_url = self.getFullUrl(f"search?q={searchPattern.replace(' ', '+')}")
+        cItem = dict(cItem)
+        cItem["url"] = search_url
+        cItem["category"] = "list_items"
+        self.listItems(cItem, "explore_item")
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         printDBG("handleService start")
@@ -390,31 +378,25 @@ class Altadefinizione(CBaseHostClass):
 
         name = self.currItem.get("name", "")
         category = self.currItem.get("category", "")
-        mode = self.currItem.get("mode", "")
-        printDBG("handleService: || name[%s], category[%s] " % (name, category))
+
+        printDBG("handleService: name[%s], category[%s]" % (name, category))
+
         self.currList = []
         self.currItem = dict(self.currItem)
         self.currItem.pop("good_for_fav", None)
 
-        # MAIN MENU
         if name is None:
             self.listMainMenu({"name": "category", "type": "category"})
         elif category == "list_items":
             self.listItems(self.currItem, "explore_item")
         elif category == "explore_item":
             self.exploreItem(self.currItem)
-        elif category == "list_abc":
-            self.listABC(self.currItem, "list_abc_items")
-        elif category == "list_abc_items":
-            self.listABCItems(self.currItem, "explore_item")
         elif category == "sub_items":
             self.currList = self.currItem.get("sub_items", [])
-        # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
-        # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
         else:
@@ -429,7 +411,4 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Altadefinizione(), True, favouriteTypes=[])
 
     def withArticleContent(self, cItem):
-        if "prev_url" in cItem or cItem.get("category", "") == "explore_item":
-            return True
-        else:
-            return False
+        return cItem.get("category", "") == "explore_item"
