@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-07 19:29+0200\n"
-"PO-Revision-Date: 2026-05-11 23:10+0300\n"
+"PO-Revision-Date: 2026-06-14 20:27+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -314,7 +314,7 @@ msgid "ALBUMS"
 msgstr "ΑΛΜΠΟΥΜ"
 
 msgid "API Key"
-msgstr ""
+msgstr "Κλειδί API"
 
 msgid "API_KEY"
 msgstr "- Κλειδί API"
@@ -1204,7 +1204,7 @@ msgid "Error renaming file: %s"
 msgstr "Σφάλμα μετονομασίας αρχείου: %s"
 
 msgid "Error while loading description"
-msgstr ""
+msgstr "Σφάλμα κατά τη φόρτωση της περιγραφής"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1389,13 +1389,11 @@ msgstr "Γαλλικά"
 msgid "From E2 settings"
 msgstr "Από τις ρυθμίσεις E2"
 
-#, fuzzy
 msgid "Full description loaded"
-msgstr "Δεν υπάρχει διαθέσιμη περιγραφή."
+msgstr "Η πλήρης περιγραφή φορτώθηκε"
 
-#, fuzzy
 msgid "Full description not available"
-msgstr "Δεν υπάρχει διαθέσιμη περιγραφή."
+msgstr "Η πλήρης περιγραφή δεν είναι διαθέσιμη"
 
 msgid "GSTplayer no IFD workarround"
 msgstr "Παράκαμψη IFD για GSTplayer"
@@ -1821,7 +1819,7 @@ msgid "Loading data, please wait (%d)"
 msgstr "Φόρτωση δεδομένων, παρακαλώ περιμένετε (%d)"
 
 msgid "Loading full description..."
-msgstr ""
+msgstr "Φόρτωση πλήρους περιγραφής..."
 
 msgid "LocalMedia"
 msgstr "Τοπικά μέσα"
@@ -2101,9 +2099,8 @@ msgstr "Δεν βρέθηκε έγκυρη εξουσιοδότηση για τ�
 msgid "No valid links available."
 msgstr "Δεν υπάρχουν έγκυροι σύνδεσμοι διαθέσιμοι."
 
-#, fuzzy
 msgid "No video ID available"
-msgstr "Δεν υπάρχουν έγκυροι σύνδεσμοι διαθέσιμοι."
+msgstr "Δεν υπάρχει διαθέσιμο ID βίντεο"
 
 msgid "None"
 msgstr "Κανένα"
@@ -2262,6 +2259,8 @@ msgid ""
 "Please configure your API Key in:\n"
 "Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
 msgstr ""
+"Παρακαλώ ρυθμίστε το κλειδί σας API στο:\r\n"
+"Ρυθμίσεις → IPTVPlayer → Υπότιτλοι → Κλειδί API SubDL.com"
 
 #, python-format
 msgid "Please consider restart your Engima2 and agree to install the %s utlity when the %s will propose this."
@@ -2916,12 +2915,18 @@ msgid ""
 "3. Go to: Settings → IPTVPlayer → Subtitles\n"
 "4. Paste the key in \"SubDL.com API Key\" field"
 msgstr ""
+"Ρύθμιση SubDL:\r\n"
+"\r\n"
+"1. Επισκεφθείτε το: subdl.com/panel/api\r\n"
+"2. Αντιγράψτε το κλειδί σας API\r\n"
+"3. Μεταβείτε στις: Ρυθμίσεις → IPTVPlayer → Υπότιτλοι\r\n"
+"4. Επικολλήστε το κλειδί στο πεδίο \"Κλειδί API SubDL.com\""
 
 msgid "SubDL.com API Key"
-msgstr ""
+msgstr "Κλειδί API SubDL.com"
 
 msgid "SubDL: API Key Required"
-msgstr ""
+msgstr "SubDL: Απαιτείται κλειδί API"
 
 msgid "Subspecialities"
 msgstr "Υποειδικότητες"
