@@ -140,7 +140,7 @@ class PublicKey(object):
         R = ellipticcurve.PointEdwards.from_bytes(
             self.curve, signature[: self.baselen]
         )
-        S = bytes_to_int(signature[self.baselen :], "little")
+        S = bytes_to_int(signature[self.baselen:], "little")
         if S >= self.generator.order():
             raise ValueError("Invalid signature")
 
@@ -235,7 +235,7 @@ class PrivateKey(object):
         data = compat26_str(data)
         A = self.public_key().public_key()
 
-        prefix = self.__h[self.baselen :]
+        prefix = self.__h[self.baselen:]
 
         dom = bytearray()
         if self.curve == curve_ed448:

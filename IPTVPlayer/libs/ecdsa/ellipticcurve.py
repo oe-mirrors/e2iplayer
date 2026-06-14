@@ -253,7 +253,7 @@ class AbstractPoint(object):
         # real assert, from_bytes() should not call us with different length
         assert len(data) == raw_encoding_length
         xs = data[: raw_encoding_length // 2]
-        ys = data[raw_encoding_length // 2 :]
+        ys = data[raw_encoding_length // 2:]
         # real assert, raw_encoding_length is calculated by multiplying an
         # integer by two so it will always be even
         assert len(xs) == raw_encoding_length // 2

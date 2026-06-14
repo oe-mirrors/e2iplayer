@@ -165,8 +165,8 @@ def remove_constructed(string):
     length, llen = read_length(string[1:])
     if length > len(string) - 1 - llen:
         raise UnexpectedDER("Length longer than the provided buffer")
-    body = string[1 + llen : 1 + llen + length]
-    rest = string[1 + llen + length :]
+    body = string[1 + llen: 1 + llen + length]
+    rest = string[1 + llen + length:]
     return tag, body, rest
 
 
@@ -210,8 +210,8 @@ def remove_implicit(string, exp_class="context-specific"):
     length, llen = read_length(string[1:])
     if length > len(string) - 1 - llen:
         raise UnexpectedDER("Length longer than the provided buffer")
-    body = string[1 + llen : 1 + llen + length]
-    rest = string[1 + llen + length :]
+    body = string[1 + llen: 1 + llen + length]
+    rest = string[1 + llen + length:]
     return tag, body, rest
 
 
@@ -225,7 +225,7 @@ def remove_sequence(string):
     if length > len(string) - 1 - lengthlength:
         raise UnexpectedDER("Length longer than the provided buffer")
     endseq = 1 + lengthlength + length
-    return string[1 + lengthlength : endseq], string[endseq:]
+    return string[1 + lengthlength: endseq], string[endseq:]
 
 
 def remove_octet_string(string):
@@ -235,8 +235,8 @@ def remove_octet_string(string):
     length, llen = read_length(string[1:])
     if length > len(string) - 1 - llen:
         raise UnexpectedDER("Length longer than the provided buffer")
-    body = string[1 + llen : 1 + llen + length]
-    rest = string[1 + llen + length :]
+    body = string[1 + llen: 1 + llen + length]
+    rest = string[1 + llen + length:]
     return body, rest
 
 
@@ -249,8 +249,8 @@ def remove_object(string):
         n = str_idx_as_int(string, 0)
         raise UnexpectedDER("wanted type 'object' (0x06), got 0x%02x" % n)
     length, lengthlength = read_length(string[1:])
-    body = string[1 + lengthlength : 1 + lengthlength + length]
-    rest = string[1 + lengthlength + length :]
+    body = string[1 + lengthlength: 1 + lengthlength + length]
+    rest = string[1 + lengthlength + length:]
     if not body:
         raise UnexpectedDER("Empty object identifier")
     if len(body) != length:
@@ -286,8 +286,8 @@ def remove_integer(string):
         raise UnexpectedDER("Length longer than provided buffer")
     if length == 0:
         raise UnexpectedDER("0-byte long encoding of integer")
-    numberbytes = string[1 + llen : 1 + llen + length]
-    rest = string[1 + llen + length :]
+    numberbytes = string[1 + llen: 1 + llen + length]
+    rest = string[1 + llen + length:]
     msb = str_idx_as_int(numberbytes, 0)
     if not msb < 0x80:
         raise UnexpectedDER("Negative integers are not supported")
@@ -353,7 +353,7 @@ def read_length(string):
     msb = str_idx_as_int(string, 1)
     if not msb or llen == 1 and msb < 0x80:
         raise UnexpectedDER("Not minimal encoding of length")
-    return int(binascii.hexlify(string[1 : 1 + llen]), 16), 1 + llen
+    return int(binascii.hexlify(string[1: 1 + llen]), 16), 1 + llen
 
 
 def remove_bitstring(string, expect_unused=_sentry):
@@ -409,8 +409,8 @@ def remove_bitstring(string, expect_unused=_sentry):
     length, llen = read_length(string[1:])
     if not length:
         raise UnexpectedDER("Invalid length of bit string, can't be 0")
-    body = string[1 + llen : 1 + llen + length]
-    rest = string[1 + llen + length :]
+    body = string[1 + llen: 1 + llen + length]
+    rest = string[1 + llen + length:]
     if expect_unused is not _sentry:
         unused = str_idx_as_int(body, 0)
         if not 0 <= unused <= 7:
@@ -473,7 +473,7 @@ def topem(der, name):
     b64 = base64.b64encode(compat26_str(der))
     lines = [("-----BEGIN %s-----\n" % name).encode()]
     lines.extend(
-        [b64[start : start + 76] + b"\n" for start in range(0, len(b64), 76)]
+        [b64[start: start + 76] + b"\n" for start in range(0, len(b64), 76)]
     )
     lines.append(("-----END %s-----\n" % name).encode())
     return b"".join(lines)

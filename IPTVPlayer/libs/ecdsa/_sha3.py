@@ -141,7 +141,7 @@ except (TypeError, ValueError):
     # Reinterpret octet array b to word array and XOR it to state s.
     def _reinterpret_to_words_and_xor(s, b):
         for j in range(0, len(b) // 8):
-            s[j] ^= _from_le(b[8 * j : 8 * j + 8])
+            s[j] ^= _from_le(b[8 * j: 8 * j + 8])
 
     # Reinterpret word array w to octet array and return it.
     def _reinterpret_to_octets(w):
@@ -158,7 +158,7 @@ except (TypeError, ValueError):
         idx = 0
         blocks = len(msg) // r_b
         for i in range(0, blocks):
-            _reinterpret_to_words_and_xor(s, msg[idx : idx + r_b])
+            _reinterpret_to_words_and_xor(s, msg[idx: idx + r_b])
             idx += r_b
             _sha3_transform(s)
         # Handle last block padding.
