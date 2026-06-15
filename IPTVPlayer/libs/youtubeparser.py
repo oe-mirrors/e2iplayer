@@ -634,37 +634,7 @@ class YouTubeParser:
 
     def getVideosFromPlaylist(self, url, category, page, cItem):
         printDBG("YouTubeParser.getVideosFromPlaylist")
-        currList = []
-        try:
-            sts, data = self.cm.getPage(url, self.http_params)
-            if sts:
-                self.checkSessionToken(data)
-                data2 = self.cm.ph.getDataBeetwenMarkers(data, 'window["ytInitialData"] =', "};", False)[1]
-                if len(data2) == 0:
-                    data2 = self.cm.ph.getDataBeetwenMarkers(data, "var ytInitialData =", "};", False)[1]
-                response = json_loads(data2 + "}")
-                r1 = response["contents"]["twoColumnBrowseResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"]
-                r2 = []
-                for i in range(len(r1)):
-                    r2.extend(r1[i]["itemSectionRenderer"]["contents"])
-                for r3 in r2:
-                    pl = r3.get("playlistVideoListRenderer", "")
-                    if pl:
-                        pl2 = pl.get("contents", [])
-                        for p in pl2:
-                            videoJson = p.get("playlistVideoRenderer", "")
-                            if videoJson:
-                                params = self.getVideoData(videoJson)
-                                if params:
-                                    try:
-                                        params["title"] = "%s. - %s " % (videoJson["index"]["simpleText"], params["title"])
-                                    except Exception:
-                                        pass
-                                    printDBG(str(params))
-                                    currList.append(params)
-        except Exception:
-            printExc()
-        return currList
+        return self.getVideosApiPlayList(url, category, page, cItem)
 
     def getVideosFromChannelList(self, url, category, page, cItem):
         printDBG("YouTubeParser.getVideosFromChannelList page[%s]" % (page))
@@ -758,7 +728,6 @@ class YouTubeParser:
         printDBG("YouTubeParser.getSearchResult pattern[%s], searchType[%s], page[%s]" % (pattern, searchType, page))
         currList = []
         try:
-            nextPage = {}
             nP = {}
             nP_new = {}
             r2 = []
@@ -827,6 +796,71 @@ class YouTubeParser:
                 if params:
                     printDBG(str(params))
                     currList.append(params)
+            # Nowa obsługa - lockupViewModel dla playlist i kanałów w wyszukiwaniu
+            r2 = list(self.findKeys(response, "lockupViewModel"))
+            printDBG("---------lockupViewModel in search ------------")
+            for item in r2:
+                printDBG(str(item)[:500])
+            printDBG("---------------------")
+            for item in r2:
+                content_type = item.get("contentType", "")
+                if content_type == "LOCKUP_CONTENT_TYPE_PLAYLIST":
+                    try:
+                        playlist_id = item.get("contentId", "")
+                        title = item.get("metadata", {}).get("lockupMetadataViewModel", {}).get("title", {}).get("content", "")
+                        if playlist_id and title:
+                            url = "https://www.youtube.com/playlist?list=%s" % playlist_id
+                            icon = ""
+                            try:
+                                sources = item.get("contentImage", {}).get("collectionThumbnailViewModel", {}).get("primaryThumbnail", {}).get("thumbnailViewModel", {}).get("image", {}).get("sources", [])
+                                if sources:
+                                    icon = ensure_str(sources[-1].get("url", ""))
+                            except Exception:
+                                try:
+                                    sources = item.get("contentImage", {}).get("thumbnailViewModel", {}).get("image", {}).get("sources", [])
+                                    if sources:
+                                        icon = ensure_str(sources[-1].get("url", ""))
+                                except Exception:
+                                    pass
+                            params = {
+                                "type": "category",
+                                "category": "playlist",
+                                "title": title,
+                                "url": ensure_str(url),
+                                "icon": icon,
+                                "time": "",
+                                "desc": ""
+                            }
+                            printDBG(str(params))
+                            currList.append(params)
+                    except Exception:
+                        printExc()
+                elif content_type == "LOCKUP_CONTENT_TYPE_CHANNEL":
+                    try:
+                        channel_id = item.get("contentId", "")
+                        title = item.get("metadata", {}).get("lockupMetadataViewModel", {}).get("title", {}).get("content", "")
+                        if channel_id and title:
+                            url = "https://www.youtube.com/channel/%s" % channel_id
+                            icon = ""
+                            try:
+                                sources = item.get("contentImage", {}).get("thumbnailViewModel", {}).get("image", {}).get("sources", [])
+                                if sources:
+                                    icon = ensure_str(sources[-1].get("url", ""))
+                            except Exception:
+                                pass
+                            params = {
+                                "type": "category",
+                                "category": "channel",
+                                "title": title,
+                                "url": ensure_str(url),
+                                "icon": icon,
+                                "time": "",
+                                "desc": ""
+                            }
+                            printDBG(str(params))
+                            currList.append(params)
+                    except Exception:
+                        printExc()
             nP = list(self.findKeys(response, "nextContinuationData"))
             nP_new = list(self.findKeys(response, "continuationEndpoint"))
             if nP:
