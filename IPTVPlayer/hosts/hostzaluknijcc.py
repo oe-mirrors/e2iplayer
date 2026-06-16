@@ -10,7 +10,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Components.config import config, ConfigText, getConfigListEntry
+from Components.config import config, getConfigListEntry
 
 try:
     import json
@@ -32,13 +32,11 @@ class Zaluknij(CBaseHostClass):
         CBaseHostClass.__init__(
             self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"}
         )
-        if not hasattr(config.plugins.iptvplayer, "cloudflare_user"):
-            config.plugins.iptvplayer.cloudflare_user = ConfigText(
-                default="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0",
-                fixed_size=False
-            )
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.HEADER["User-Agent"] = config.plugins.iptvplayer.cloudflare_user.value
+        try:
+            self.HEADER["User-Agent"] = config.plugins.iptvplayer.cloudflare_user.value
+        except AttributeError:
+            self.HEADER["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0"
         self.defaultParams = {
             "header": self.HEADER,
             "use_cookie": True,
