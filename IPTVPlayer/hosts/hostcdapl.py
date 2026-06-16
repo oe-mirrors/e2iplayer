@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 02.07.2025
+# Last Modified: 16.06.2026
 ###################################################
 # LOCAL import
 ###################################################
@@ -259,10 +259,14 @@ class cda(CBaseHostClass, CaptchaHelper):
         if sts:
             if page is None:
                 page = cItem.get('page', 1)
-                nextPage = ph.find(data, ('<span', '>', 'next-wrapper'), '</span>', flags=0)[1]
-                if not nextPage:
-                    nextPage = ph.find(data, ('<a', '>', 'btn-large '))[1]
-                nextPage = self.getFullUrl(ph.clean_html(ph.getattr(nextPage, 'href')), self.cm.meta['url'])
+                nextPage = ''
+                next_match = re.search(r'<a[^>]+href="([^"]+)"[^>]*>Następna strona<', data, re.I)
+                if next_match:
+                    nextPage = self.getFullUrl(next_match.group(1))
+                else:
+                    next_match = re.search(r'<span[^>]+class="next-wrapper"[^>]*>.*?<a[^>]+href="([^"]+)"', data, re.DOTALL | re.I)
+                    if next_match:
+                        nextPage = self.getFullUrl(next_match.group(1))
             else:
                 nextPage = url if 'Następna strona' in data else ''
 
