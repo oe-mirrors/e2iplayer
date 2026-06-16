@@ -32,12 +32,8 @@ class Zaluknij(CBaseHostClass):
         CBaseHostClass.__init__(
             self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"}
         )
-        config.plugins.iptvplayer.cloudflare_user = ConfigText(
-            default="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0",
-            fixed_size=False
-        )
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.HEADER["User-Agent"] = config.plugins.iptvplayer.cloudflare_user.value
+        self.HEADER["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0"
         self.defaultParams = {
             "header": self.HEADER,
             "use_cookie": True,
