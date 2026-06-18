@@ -111,7 +111,7 @@ class Filmaon(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return []
-        data = re.findall(r"data-type='([^']+)' data-post='(\d+)' data-nume='(\d+)'>", data, re.DOTALL)
+        data = re.findall(r"data-type='([^']+)'\s*data-post='(\d+)'\s*data-nume='(\d+)'", data, re.DOTALL)
         if data:
             params = dict(self.defaultParams)
             params["header"] = dict(params["header"])
