@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 20.05.2026 - damagic
+# Last Modified: 16.06.2026 - damagic
 ###################################################
 import re
 import json
@@ -10,7 +10,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Components.config import config, ConfigText, getConfigListEntry
+from Components.config import config, getConfigListEntry
 
 try:
     import json
@@ -33,7 +33,10 @@ class Zaluknij(CBaseHostClass):
             self, {"history": "Zaluknij", "cookie": "Zaluknij.cookie"}
         )
         self.HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.HEADER["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0"
+        try:
+            self.HEADER["User-Agent"] = config.plugins.iptvplayer.cloudflare_user.value
+        except AttributeError:
+            self.HEADER["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0"
         self.defaultParams = {
             "header": self.HEADER,
             "use_cookie": True,
@@ -49,6 +52,7 @@ class Zaluknij(CBaseHostClass):
         self.cacheLinks = {}
         self.cacheDescriptions = {}
         self.cacheDetails = {}
+        self.cacheQuickDescs = {}
         self.MENU = [
             {
                 "category": "list_items",
@@ -91,6 +95,8 @@ class Zaluknij(CBaseHostClass):
             addParams = dict(self.defaultParams)
         baseUrl = self.cm.iriToUri(baseUrl)
         sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        if data.meta.get("cf_user", self.HEADER["User-Agent"]) != self.HEADER["User-Agent"]:
+            self.__init__()
         return sts, data
 
     def fixIconUrl(self, icon_url, referer=None):
@@ -108,6 +114,35 @@ class Zaluknij(CBaseHostClass):
                 "Cookie": "cf_clearance=%s" % cf if cf else "",
             },
         )
+
+    def getQuickDescription(self, url):
+        if url in self.cacheQuickDescs:
+            return self.cacheQuickDescs[url]
+        try:
+            sts, data = self.getPage(url)
+            if not sts:
+                self.cacheQuickDescs[url] = ""
+                return ""
+            desc = self.cm.ph.getSearchGroups(
+                data, r'<p\s+class="description">([^<]+)'
+            )
+            if not desc:
+                desc = self.cm.ph.getSearchGroups(
+                    data, r'<meta\s+name="description"\s+content="([^"]+)'
+                )
+            if desc:
+                desc_text = self.cleanHtmlStr(desc[0]).strip()
+                if len(desc_text) > 200:
+                    desc_text = desc_text[:200] + "..."
+            else:
+                desc_text = ""
+            self.cacheQuickDescs[url] = desc_text
+            self.cacheDescriptions[url] = desc_text
+            return desc_text
+        except Exception as e:
+            printDBG("getQuickDescription error: %s" % str(e))
+            self.cacheQuickDescs[url] = ""
+            return ""
 
     def extractMovieDetails(self, data):
         details = {"categories": [], "version": "", "quality": "", "year": ""}
@@ -259,6 +294,7 @@ class Zaluknij(CBaseHostClass):
                         title = "%s (%s)" % (title, year)
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
+            quick_desc = self.getQuickDescription(url)
             params = dict(cItem)
             params.update(
                 {
@@ -267,6 +303,7 @@ class Zaluknij(CBaseHostClass):
                     "title": title.replace("amp;", ""),
                     "url": url,
                     "icon": icon,
+                    "desc": quick_desc,
                 }
             )
             if is_serial:
@@ -347,6 +384,7 @@ class Zaluknij(CBaseHostClass):
                 title = "%s [%s]" % (title, meta_line)
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
+            quick_desc = self.getQuickDescription(url)
             params = dict(cItem)
             params.update(
                 {
@@ -355,6 +393,7 @@ class Zaluknij(CBaseHostClass):
                     "title": title.replace("amp;", ""),
                     "url": url,
                     "icon": icon,
+                    "desc": quick_desc,
                 }
             )
             self.addVideo(params)
@@ -419,6 +458,7 @@ class Zaluknij(CBaseHostClass):
                     title = "%s [%s]" % (title, meta_line)
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
+            quick_desc = self.getQuickDescription(url)
             params = dict(cItem)
             params.update(
                 {
@@ -427,6 +467,7 @@ class Zaluknij(CBaseHostClass):
                     "title": title.replace("amp;", ""),
                     "url": url,
                     "icon": icon,
+                    "desc": quick_desc,
                 }
             )
             if is_serial:
