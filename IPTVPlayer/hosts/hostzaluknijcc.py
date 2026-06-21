@@ -32,7 +32,7 @@ def gettytul():
 class Zaluknij(CBaseHostClass):
     """
     Parser for Zaluknij.cc video hosting service.
-    
+
     Features:
     - Browse movies by premiere, new links, and ratings
     - Browse TV series with episode listing
@@ -113,12 +113,12 @@ class Zaluknij(CBaseHostClass):
     def getPage(self, baseUrl, addParams=None, post_data=None):
         """
         Fetch page content with Cloudflare protection support.
-        
+
         Args:
             baseUrl: The URL to fetch
             addParams: Additional parameters for the request
             post_data: POST data if using POST method
-            
+
         Returns:
             Tuple of (status, response_data)
         """
@@ -134,11 +134,11 @@ class Zaluknij(CBaseHostClass):
     def fixIconUrl(self, icon_url, referer=None):
         """
         Fix icon URL with proper metadata and Cloudflare cookies.
-        
+
         Args:
             icon_url: Raw icon URL from the page
             referer: Referer URL for the request header
-            
+
         Returns:
             strwithmeta object with proper headers
         """
@@ -160,10 +160,10 @@ class Zaluknij(CBaseHostClass):
     def getQuickDescription(self, url):
         """
         Get a short description for a video from cache or fetch it.
-        
+
         Args:
             url: The video page URL
-            
+
         Returns:
             Description text string (max 200 characters)
         """
@@ -200,13 +200,13 @@ class Zaluknij(CBaseHostClass):
     def extractMovieDetails(self, data):
         """
         Extract movie metadata from the page HTML.
-        
+
         Parses year, categories, versions and quality information
         from the movie details page.
-        
+
         Args:
             data: HTML content of the movie page
-            
+
         Returns:
             Dictionary with keys: categories, version, quality, year
         """
@@ -260,12 +260,12 @@ class Zaluknij(CBaseHostClass):
     def getArticleContent(self, cItem):
         """
         Build article content with movie details and description.
-        
+
         Used for displaying detailed information about a movie.
-        
+
         Args:
             cItem: Current item dictionary with url, title, icon
-            
+
         Returns:
             List of dictionaries with title, text, images and other_info
         """
@@ -331,11 +331,11 @@ class Zaluknij(CBaseHostClass):
 
     def listItems(self, cItem, isSearch=False):
         """
-        List movies and series from a category page.
-        
-        Parses the page for video items and adds them to the directory
-        or video list depending on whether they are movies or series.
-        
+        List movies and series from a category page with descriptions.
+
+        Parses the page for video items and adds them with quick descriptions
+        to improve user experience when browsing content.
+
         Args:
             cItem: Current item with url to parse
             isSearch: Flag indicating if this is a search result
@@ -392,8 +392,18 @@ class Zaluknij(CBaseHostClass):
                         title = "%s (%s)" % (title, year)
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
+            # Get quick description for the item
             quick_desc = self.getQuickDescription(url)
-            # Prepare item parameters and add to appropriate list
+            # Also try to extract description directly from the item HTML
+            if not quick_desc:
+                item_desc = self.cm.ph.getSearchGroups(
+                    item, r'<p[^>]*>([^<]+)</p>'
+                )
+                if item_desc:
+                    quick_desc = self.cleanHtmlStr(item_desc[0]).strip()
+                    if len(quick_desc) > 200:
+                        quick_desc = quick_desc[:200] + "..."
+            # Prepare item parameters with description
             params = dict(cItem)
             params.update(
                 {
@@ -422,10 +432,10 @@ class Zaluknij(CBaseHostClass):
     def listEpisodes(self, cItem):
         """
         List all episodes for a TV series.
-        
+
         Extracts season and episode numbers from the series page
         and adds them as individual video items.
-        
+
         Args:
             cItem: Current item with series URL
         """
@@ -461,10 +471,10 @@ class Zaluknij(CBaseHostClass):
     def listEpisodesDirect(self, cItem):
         """
         List latest episodes directly with pagination support.
-        
+
         Similar to listItems but specifically for new episodes
         with season/episode metadata in the title.
-        
+
         Args:
             cItem: Current item with episodes listing URL
         """
@@ -532,9 +542,10 @@ class Zaluknij(CBaseHostClass):
     def listSearchResult(self, cItem, searchPattern, searchType):
         """
         Handle search functionality with POST and GET fallback.
-        
+
+        Displays search results with descriptions for better user experience.
         First attempts POST search, falls back to GET if POST fails.
-        
+
         Args:
             cItem: Current item context
             searchPattern: The search query string
@@ -593,7 +604,17 @@ class Zaluknij(CBaseHostClass):
                     title = "%s [%s]" % (title, meta_line)
             title = re.sub(r"\s*\[\]\s*", "", title)
             title = title.strip()
+            # Get description for search results
             quick_desc = self.getQuickDescription(url)
+            if not quick_desc:
+                # Try to get description from search result snippet
+                item_desc = self.cm.ph.getSearchGroups(
+                    item, r'<p[^>]*>([^<]+)</p>'
+                )
+                if item_desc:
+                    quick_desc = self.cleanHtmlStr(item_desc[0]).strip()
+                    if len(quick_desc) > 200:
+                        quick_desc = quick_desc[:200] + "..."
             params = dict(cItem)
             params.update(
                 {
@@ -621,13 +642,13 @@ class Zaluknij(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         """
         Extract video playback links from the movie/episode page.
-        
+
         Handles both iframe-embedded links (base64 encoded JSON)
         and direct href links with version and quality metadata.
-        
+
         Args:
             cItem: Current item with video page URL
-            
+
         Returns:
             List of dictionaries with name, url and need_resolve flag
         """
@@ -748,10 +769,10 @@ class Zaluknij(CBaseHostClass):
     def getVideoLinks(self, url):
         """
         Resolve video URL and mark cached links as used.
-        
+
         Args:
             url: The video URL to resolve
-            
+
         Returns:
             Resolved video link from the appropriate parser
         """
@@ -772,10 +793,10 @@ class Zaluknij(CBaseHostClass):
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         """
         Main service handler - routes requests to appropriate methods.
-        
+
         Handles menu navigation, item listing, episode listing,
         search functionality and search history.
-        
+
         Args:
             index: Current menu index
             refresh: Refresh flag
