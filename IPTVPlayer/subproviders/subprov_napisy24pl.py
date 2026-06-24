@@ -23,6 +23,8 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_
 # FOREIGN import
 ###################################################
 import re
+import os
+import shutil
 try:
     import json
 except Exception:
@@ -316,19 +318,25 @@ class Napisy24plProvider(CBaseSubProviderClass):
         tmpFileZip = tmpFile + '.zip'
 
         urlParams = dict(self.defaultParams)
-        urlParams['max_data_size'] = self.getMaxFileSize()
+        urlParams['return_data'] = True
+        urlParams['save_to_file'] = tmpFileZip
+        if 'max_data_size' in urlParams:
+            del urlParams['max_data_size']
 
         sts, data = self.getPage(url, urlParams)
         if not sts:
             SetIPTVPlayerLastHostError(_('Failed to download subtitle.'))
             return retData
 
-        try:
-            with open(tmpFileZip, 'w') as f:
-                f.write(data)
-        except Exception:
-            printExc()
-            SetIPTVPlayerLastHostError(_('Failed to write file "%s".') % tmpFileZip)
+        if os.path.exists(tmpFileZip):
+            dataSize = os.path.getsize(tmpFileZip)
+            printDBG("Saved file size: %d bytes" % dataSize)
+        else:
+            dataSize = 0
+            printDBG("File not saved, using returned data size: %d bytes" % len(data) if data else 0)
+
+        if dataSize < 100:
+            SetIPTVPlayerLastHostError(_('Downloaded file is too small or corrupted.'))
             return retData
 
         printDBG(">>")
@@ -343,19 +351,66 @@ class Napisy24plProvider(CBaseSubProviderClass):
             rm(tmpFile)
             rm(tmpFileZip)
 
-        cmd = "unzip -po '{0}' -x Napisy24.pl.url > '{1}' 2>/dev/null".format(tmpFileZip, tmpFile)
+        cmd = "unzip -po '{0}' > '{1}' 2>/dev/null".format(tmpFileZip, tmpFile)
         ret = self.iptv_execute(cmd)
+
         if not ret['sts'] or 0 != ret['code']:
+            extractDir = GetTmpDir('napisy24_extract_')
+            try:
+                os.makedirs(extractDir, exist_ok=True)
+            except Exception:
+                printExc()
+                __cleanFiles()
+                SetIPTVPlayerLastHostError(_('Failed to create extraction directory.'))
+                return retData
+
+            cmd = "unzip -o '{0}' -d '{1}' 2>&1".format(tmpFileZip, extractDir)
+            ret = self.iptv_execute(cmd)
+            printDBG("ZIP extract result: sts[%s] code[%s] data[%s]" % (ret['sts'], ret['code'], ret['data']))
+
+            if not ret['sts'] or 0 != ret['code']:
+                try:
+                    with open(tmpFileZip, 'rb') as f:
+                        content = f.read()
+                    if content.startswith(b'1\r\n') or content.startswith(b'1\n') or b'-->' in content:
+                        shutil.copy(tmpFileZip, tmpFile)
+                    else:
+                        __cleanFiles()
+                        message = _('Unzip error code[%s].') % ret['code']
+                        if str(ret['code']) == str(127):
+                            message += '\n' + _('It seems that unzip utility is not installed.')
+                        elif str(ret['code']) == str(9):
+                            message += '\n' + _('Wrong format of zip archive.')
+                        else:
+                            message += '\n' + _('File might be corrupted (size: %d bytes).') % dataSize
+                        SetIPTVPlayerLastHostError(message)
+                        return retData
+                except Exception:
+                    printExc()
+                    __cleanFiles()
+                    message = _('Unzip error code[%s].') % ret['code']
+                    SetIPTVPlayerLastHostError(message)
+                    return retData
+            else:
+                srtFiles = []
+                for root, dirs, files in os.walk(extractDir):
+                    for file in files:
+                        if file.lower().endswith(('.srt', '.txt', '.sub')):
+                            srtFiles.append(os.path.join(root, file))
+
+                if not srtFiles:
+                    __cleanFiles()
+                    SetIPTVPlayerLastHostError(_('No subtitle file found in the archive.'))
+                    return retData
+
+                shutil.copy(srtFiles[0], tmpFile)
+                shutil.rmtree(extractDir, ignore_errors=True)
+
+        if not os.path.exists(tmpFile) or os.path.getsize(tmpFile) == 0:
             __cleanFiles()
-            message = _('Unzip error code[%s].') % ret['code']
-            if str(ret['code']) == str(127):
-                message += '\n' + _('It seems that unzip utility is not installed.')
-            elif str(ret['code']) == str(9):
-                message += '\n' + _('Wrong format of zip archive.')
-            SetIPTVPlayerLastHostError(message)
+            SetIPTVPlayerLastHostError(_('Extracted subtitle file is empty or missing.'))
             return retData
 
-        # detect encoding
         cmd = '/usr/bin/uchardet "%s"' % tmpFile
         ret = self.iptv_execute(cmd)
         if ret['sts'] and 0 == ret['code']:
@@ -372,14 +427,13 @@ class Napisy24plProvider(CBaseSubProviderClass):
         elif '' == encoding:
             encoding = 'utf-8'
 
-        # convert file to UTF-8
         try:
-            with open(tmpFile) as f:
+            with open(tmpFile, 'rb') as f:
                 data = f.read()
             try:
                 data = data.decode(encoding).encode('UTF-8')
                 try:
-                    with open(fileName, 'w') as f:
+                    with open(fileName, 'wb') as f:
                         f.write(data)
                     retData = {'title': title, 'path': fileName, 'lang': lang, 'imdbid': imdbid, 'sub_id': subId}
                 except Exception:
@@ -413,7 +467,6 @@ class Napisy24plProvider(CBaseSubProviderClass):
         elif category == 'get_movies_list':
             self.getMoviesList(self.currItem, 'get_seasons')
         elif category == 'get_seasons':
-            # take actions depending on the type
             self.getSeasons(self.currItem, 'get_episodes')
         elif category == 'get_episodes':
             self.getEpisodes(self.currItem, 'get_subtitles')
