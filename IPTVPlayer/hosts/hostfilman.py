@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 28.05.2026 - damagic
+# Last Modified: 25.06.2026 - damagic
 
 ###################################################
 # LOCAL import
@@ -192,6 +192,18 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
         return info
 
+    def _cleanTitleForFilename(self, title, year=""):
+        if not title:
+            return "Video"
+        title = title.split('/')[0].strip()
+        title = re.sub(r'[<>:"/\\|?*]', '', title)
+        title = re.sub(r'\s+', ' ', title).strip()
+        if not title:
+            return "Video"
+        if year:
+            title = title + " (" + year + ")"
+        return title
+
     def listItems(self, cItem):
         printDBG("Filman.listItems %s" % cItem)
         page = cItem.get("page", 1)
@@ -260,8 +272,11 @@ class Filman(CBaseHostClass, CaptchaHelper):
             title = info["title"]
             icon = info.get("icon", self.DEFAULT_ICON_URL)
 
-            if info["year"] and info["year"] not in title:
-                title = title + " (" + info["year"] + ")"
+            display_title = title
+            if info["year"] and info["year"] not in display_title:
+                display_title = display_title + " (" + info["year"] + ")"
+
+            file_title = self._cleanTitleForFilename(title, info["year"])
 
             desc_parts = []
             if info["year"]:
@@ -279,10 +294,10 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 continue
 
             if is_series:
-                params = {"good_for_fav": True, "category": "list_series", "url": film_url, "title": title, "desc": full_desc, "icon": icon}
+                params = {"good_for_fav": True, "category": "list_series", "url": film_url, "title": display_title, "desc": full_desc, "icon": icon}
                 self.addDir(params)
             else:
-                params = {"good_for_fav": True, "url": film_url, "title": title, "desc": full_desc, "icon": icon}
+                params = {"good_for_fav": True, "url": film_url, "title": file_title, "desc": full_desc, "icon": icon}
                 self.addVideo(params)
 
         if not is_search:
@@ -306,33 +321,57 @@ class Filman(CBaseHostClass, CaptchaHelper):
             return
         self.setMainUrl(data.meta["url"])
 
-        ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "episode-list"), ("<hr", ">"))[1]
-        if not ep_data:
-            ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<div", ">", "episode-list"), ("<hr", ">"))[1]
-        if not ep_data:
-            ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<ul", ">", "episodes"), ("</ul", ">"))[1]
-        if not ep_data:
-            ep_data = self.cm.ph.getDataBeetwenNodes(data, ("<div", "id", "item-content"), ("<hr", ">"))[1]
+        series_title = cItem.get("title", "")
+        if series_title:
+            series_title = re.sub(r'\s*\(\d{4}\)\s*$', '', series_title).strip()
+            series_title = re.sub(r'\s*\bonline\s+pl\b\s*', '', series_title, flags=re.IGNORECASE).strip()
+            series_title = series_title.split('/')[0].strip()
 
-        if ep_data:
-            tmp = self.cm.ph.getAllItemsBeetwenNodes(ep_data, ("<li", ">"), ("</li", ">"))
-            if not tmp:
-                tmp = re.findall(r'<li[^>]*>.*?<a\s+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>.*?</li>', ep_data, re.DOTALL)
-                for url, title in tmp:
-                    url = self.getFullUrl(url)
-                    if url == "":
-                        continue
-                    title = self.cleanHtmlStr(title)
-                    params = {"good_for_fav": True, "url": url, "title": title, "icon": cItem["icon"]}
-                    self.addVideo(params)
+        episodes = re.findall(
+            r'<a\s+href=["\']([^"\']+)["\'][^>]*?>\s*(.*?)</a>',
+            data,
+            re.DOTALL | re.IGNORECASE,
+        )
+        for url, raw_title in episodes:
+            if '/e/' not in url:
+                continue
+            url = self.getFullUrl(url)
+            if url == "":
+                continue
+            raw_title = self.cleanHtmlStr(raw_title).strip()
+            match = re.match(
+                r'\[?(s\d+e\d+)\]?\s*(.*)',
+                raw_title,
+                re.IGNORECASE,
+            )
+            if match:
+                episode_num = match.group(1).upper()
+                ep_title = match.group(2).strip()
             else:
-                for item in tmp:
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(item, """href=['"]([^"^']+?)['"]""")[0])
-                    if url == "":
-                        continue
-                    title = self.cleanHtmlStr(item)
-                    params = {"good_for_fav": True, "url": url, "title": title, "icon": cItem["icon"]}
-                    self.addVideo(params)
+                episode_num = ""
+                ep_title = raw_title
+            if episode_num:
+                if ep_title:
+                    full_title = "%s [%s] %s" % (
+                        series_title,
+                        episode_num,
+                        ep_title,
+                    )
+                else:
+                    full_title = "%s [%s]" % (
+                        series_title,
+                        episode_num,
+                    )
+            else:
+                full_title = "%s - %s" % (series_title, ep_title)
+            clean_title = self._cleanTitleForFilename(full_title)
+            params = {
+                "good_for_fav": True,
+                "url": url,
+                "title": clean_title,
+                "icon": cItem["icon"],
+            }
+            self.addVideo(params)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         url = self.getFullUrl("/search?phrase=%s") % urllib_quote_plus(searchPattern)
@@ -401,7 +440,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
         if iframe_src and iframe_src.startswith('http') and 'favicon' not in iframe_src and 'embed.js' not in iframe_src:
             return iframe_src
 
-        for host in ['streamtape', 'doodstream', 'lulustream', 'voe', 'mixdrop', 'upstream', 'vidguard', 'wolfstream', 'filemoon', 'streamhub', 'vidoza', 'vidmoly', 'savefiles', 'veev', 'myvidplay', 'vidara']:
+        for host in ['streamtape', 'doodstream', 'lulustream', 'voe', 'mixdrop', 'upstream', 'vidguard', 'wolfstream', 'filemoon', 'streamhub', 'vidoza', 'vidmoly', 'savefiles', 'veev', 'vrra', 'myvidplay', 'vidara']:
             urls = re.findall(r'["\'](https?://[^"\']*' + host + r'[^"\']*(?:/e/|/embed/)[^"\']*)["\']', data, re.IGNORECASE)
             if urls:
                 return urls[0]
@@ -580,6 +619,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
                 h1_match = re.search(r'<h1[^>]*?itemprop="partOfSeries"[^>]*?>(.*?)</h1>', single_info, re.DOTALL)
             if h1_match:
                 title = self.cleanHtmlStr(h1_match.group(1))
+                title = re.sub(r'\s*\bonline\s+pl\b\s*', '', title, flags=re.IGNORECASE).strip()
 
             episode_subtitle = re.search(r'<span\s+itemprop="name">(.*?)</span>', single_info, re.DOTALL)
             if episode_subtitle:
@@ -614,11 +654,11 @@ class Filman(CBaseHostClass, CaptchaHelper):
         if year:
             desc_parts.append(_("Year: ") + year)
         if duration:
-            desc_parts.append(_("Duration:") + " " + duration)
+            desc_parts.append(_("Duration: ") + " " + duration)
         if views:
-            desc_parts.append(_("Views:") + " " + views)
+            desc_parts.append(_("Views: ") + " " + views)
         if genres_str:
-            desc_parts.append(_("Genre:") + " " + genres_str)
+            desc_parts.append(_("Genre: ") + " " + genres_str)
         if desc:
             desc_parts.append(desc)
 
