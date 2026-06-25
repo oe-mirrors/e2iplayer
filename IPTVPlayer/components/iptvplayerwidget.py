@@ -593,10 +593,15 @@ class E2iPlayerWidget(Screen):
             options.append((_('Randomize a playlist'), "RandomizePlayableItems"))
             options.append((_('Reverse a playlist'), "ReversePlayableItems"))
 
+        self._hostActions = []
         try:
             host = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + self.hostName, globals(), locals(), ['GetConfigList'], 0)
             if (len(host.GetConfigList()) > 0):
                 options.append((_("Configure host"), "HostConfig"))
+            if hasattr(host, 'GetHostActions'):
+                self._hostActions = host.GetHostActions()
+                for i, action in enumerate(self._hostActions):
+                    options.append((action[0], f"HostAction:{i}"))
         except Exception:
             printExc()
         options.append((_("Download manager"), "IPTVDM"))
@@ -726,6 +731,13 @@ class E2iPlayerWidget(Screen):
                 self.randomizePlayableItems()
             elif ret[1] == 'ReversePlayableItems':
                 self.reversePlayableItems()
+            elif ret[1].startswith("HostAction:"):
+                try:
+                    idx = int(ret[1].split(":")[1])
+                    if hasattr(self, '_hostActions') and idx < len(self._hostActions):
+                        self._hostActions[idx][1](self.session)
+                except Exception:
+                    printExc()
 
     def deletefavouriteItem(self, confirmed):
         if confirmed and self.hostName == 'favourites':

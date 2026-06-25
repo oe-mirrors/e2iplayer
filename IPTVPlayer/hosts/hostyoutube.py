@@ -60,6 +60,27 @@ def GetConfigList():
     return optionList
 
 
+def _clearYouTubeSearchHistory(session):
+    import os
+    historyFile = GetSearchHistoryDir("ytlist.txt")
+    try:
+        if os.path.isfile(historyFile):
+            os.remove(historyFile)
+            msg = _("YouTube search history cleared.")
+        else:
+            msg = _("No YouTube search history found.")
+    except Exception:
+        printExc()
+        msg = _("Failed to clear YouTube search history.")
+    session.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=5)
+
+
+def GetHostActions():
+    return [
+        (_("Clear search history"), _clearYouTubeSearchHistory),
+    ]
+
+
 ###################################################
 
 
