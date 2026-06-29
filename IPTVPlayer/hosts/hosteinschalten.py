@@ -102,16 +102,16 @@ class Einschalten(CBaseHostClass):
         otherInfo = {}
         desc = ""
         sts, htm = self.getPage(gettytul() + "api/movies/%s" % cItem.get("id", "0"))
-        if sts and htm.startswith("{"):
+        if sts and htm and htm.startswith("{"):
             data = json.loads(htm)
-            desc = data.get("overview")
+            desc = data.get("overview", "")
             if data.get("runtime"):
                 otherInfo["duration"] = "%s Min" % data.get("runtime")
             if data.get("voteAverage"):
                 otherInfo["rating"] = str(data.get("voteAverage"))
             if data.get("releaseDate"):
                 otherInfo["released"] = str(data.get("releaseDate")[:4])
-        return [{"title": cItem["title"], "text": desc, "images": [{"title": "", "url": cItem["icon"]}], "other_info": otherInfo}]
+        return [{"title": cItem["title"], "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": cItem["icon"]}], "other_info": otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
