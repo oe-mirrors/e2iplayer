@@ -26,7 +26,7 @@ class Cover(Pixmap):
         self.paramsSet = False
 
         self.decoding = False
-        self.picload_conn = None
+        self.picload_conn = eConnectCallback(self.picload.PictureData, self.decodeCallBack)
 
     def __del__(self):
         printDBG("Cover.__del__ ---------------------------")
@@ -63,7 +63,6 @@ class Cover(Pixmap):
                 prevIcon = self.currIcon
                 self.currIcon = self.waitIcon
                 self.waitIcon = {}
-                self.picload_conn = eConnectCallback(self.picload.PictureData, self.decodeCallBack)
                 if os.path.exists(filename):
                     ret = self.picload.startDecode(filename)
                 else:
@@ -71,7 +70,6 @@ class Cover(Pixmap):
                     ret = -1
                 if ret != 0:
                     printDBG("_______________error start decodeCover[%d]" % ret)
-                    self.picload_conn = None
                     self.decoding = False
                     self.currIcon = prevIcon
                     return -1
@@ -98,7 +96,9 @@ class Cover(Pixmap):
 
     def decodeCallBack(self, picInfo=None):
         printDBG("decodeCallBack")
-        self.picload_conn = None
+        if not self.decoding:
+            printDBG("decodeCallBack ignored - no active decode")
+            return
         self.decoding = False
         ptr = self.picload.getData()
         if '' != self.waitIcon.get('FileName', '') and self.waitIcon.get('FileName', '') != self.currIcon.get('FileName', ''):
