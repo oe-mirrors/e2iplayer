@@ -1,4 +1,601 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 29.06.2026
+###################################################
+# LOCAL import
+###################################################
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, CDisplayListItem, ArticleContent, RetHost
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, IsExecutable, printExc, byteify, GetSearchHistoryDir, E2ColoR
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
+from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+
+###################################################
+
+###################################################
+# FOREIGN import
+###################################################
+try:
+    import json
+except Exception:
+    import simplejson as json
+import re
+import os
+import codecs
+from Components.config import config, ConfigDirectory, getConfigListEntry
+
+###################################################
+
+###################################################
+# E2 GUI COMMPONENTS
+###################################################
+from Screens.Screen import Screen
+from Screens.MessageBox import MessageBox
+from Components.ActionMap import ActionMap
+from Components.Label import Label
+from Components.ScrollLabel import ScrollLabel
+
+###################################################
+###################################################
+# Config options for HOST
+###################################################
+config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default="/hdd/")
+
+
+def GetConfigList():
+    optionList = []
+    optionList.append(getConfigListEntry(_("Sort by:"), config.plugins.iptvplayer.ytSortBy))
+    optionList.append(getConfigListEntry(_("Path to ytlist.txt, urllist.txt"), config.plugins.iptvplayer.Sciezkaurllist))
+    optionList.append(getConfigListEntry(_("Video format:"), config.plugins.iptvplayer.ytformat))
+    optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.ytDefaultformat))
+    optionList.append(getConfigListEntry(_("Use default video quality:"), config.plugins.iptvplayer.ytUseDF))
+    optionList.append(getConfigListEntry(_("Age-gate bypass:"), config.plugins.iptvplayer.ytAgeGate))
+    # temporary, the ffmpeg must be in right version to be able to merge file without transcoding
+    # checking should be moved to setup
+    if IsExecutable("ffmpeg"):
+        optionList.append(getConfigListEntry(_("Allow dash format:"), config.plugins.iptvplayer.ytShowDash))
+        if config.plugins.iptvplayer.ytShowDash.value != "false":
+            optionList.append(getConfigListEntry(_("Allow VP9 codec:"), config.plugins.iptvplayer.ytVP9))
+    return optionList
+
+
+def _clearYouTubeSearchHistory(session):
+    historyFile = GetSearchHistoryDir("ytlist.txt")
+    try:
+        if os.path.isfile(historyFile):
+            os.remove(historyFile)
+            msg = _("YouTube search history cleared.")
+        else:
+            msg = _("No YouTube search history found.")
+    except Exception:
+        printExc()
+        msg = _("Failed to clear YouTube search history.")
+    session.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=5)
+
+
+def GetHostActions():
+    return [
+        (_("Clear search history"), _clearYouTubeSearchHistory),
+    ]
+
+
+###################################################
+
+
+def gettytul():
+    return "https://youtube.com/"
+
+
+class YouTubeInfo(Screen):
+
+    skin = """
+        <screen name="YouTubeInfo" position="center,center" size="1100,650" title="YouTube info">
+            <widget name="title" position="20,20" size="1060,80" font="Regular;32" halign="left" valign="center" />
+            <widget name="meta" position="20,105" size="1060,60" font="Regular;24" halign="left" valign="center" />
+            <widget name="status" position="20,165" size="1060,35" font="Regular;22" halign="left" valign="center" />
+            <widget name="text" position="20,205" size="1060,420" font="Regular;26" />
+        </screen>
+    """
+
+    def __init__(self, session, host, cItem):
+        Screen.__init__(self, session)
+        self.host = host
+        self.cItem = cItem
+        self.videoId = ''
+        self.fullDescriptionLoaded = False
+
+        self["title"] = Label("")
+        self["meta"] = Label("")
+        self["status"] = Label("")
+        self["text"] = ScrollLabel("")
+
+        self["actions"] = ActionMap(
+            ["WizardActions", "DirectionActions", "ColorActions"],
+            {
+                "back": self.keyBack,
+                "red": self.keyBack,
+                "ok": self.keyOK,
+                "up": self.keyUp,
+                "down": self.keyDown,
+            },
+            -1
+        )
+        self.onLayoutFinish.append(self.onStart)
+
+    def onStart(self):
+        self._fillBasicData()
+        self.loadFullDescription()
+
+    def _cleanText(self, text):
+        text = str(text or "")
+        return text.replace("[/br]", "\n")
+
+    def _fillBasicData(self):
+        self.videoId = self.host._getVideoIdFromItem(self.cItem)
+        title = self.cItem.get("title", "")
+        desc = self.cItem.get("desc", "")
+        time = self.cItem.get("time", "")
+
+        meta = []
+        if time:
+            meta.append(time)
+        if self.videoId:
+            meta.append("videoId: %s" % self.videoId)
+
+        self["title"].setText(title)
+        self["meta"].setText(" | ".join(meta))
+        self["text"].setText(self._cleanText(desc))
+        self["status"].setText(_("Loading full description...") if self.videoId else _("No video ID available"))
+
+    def loadFullDescription(self):
+        if not self.videoId:
+            return
+        try:
+            fullDesc = self.host.ytp.getFullDescriptionFromWatch(self.videoId)
+            if fullDesc:
+                self["text"].setText(self._cleanText(fullDesc))
+                self["status"].setText(_("Full description loaded"))
+                self.fullDescriptionLoaded = True
+            else:
+                self["status"].setText(_("Full description not available"))
+        except Exception:
+            printExc()
+            self["status"].setText(_("Error while loading description"))
+
+    def keyOK(self):
+        if not self.fullDescriptionLoaded:
+            self.loadFullDescription()
+
+    def keyBack(self):
+        self.close()
+
+    def keyUp(self):
+        self["text"].pageUp()
+
+    def keyDown(self):
+        self["text"].pageDown()
+
+
+class Youtube(CBaseHostClass):
+
+    def __init__(self):
+        printDBG("Youtube.__init__")
+        CBaseHostClass.__init__(self, {"history": "ytlist", "cookie": "youtube.cookie"})
+        self.UTLIST_FILE = "ytlist.txt"
+        self.DEFAULT_ICON_URL = "https://reklamadim.pl/youtube.png"
+        self.MAIN_GROUPED_TAB = [{"category": "from_file", "title": _("User links"), "desc": _("User links stored in the ytlist.txt file.")}, {"category": "feeds", "title": _("Trending"), "desc": _("Browse youtube trending feeds")}] + self.searchItems()
+
+        self.SEARCH_TYPES = [(_("Video"), "video"), (_("Channel"), "channel"), (_("Playlist"), "playlist"), (_("Movie"), "movie"), (_("Live"), "live")]
+        # (_("Program"), "show"),
+        # (_("traylist"), "traylist"),
+        self.ytp = YouTubeParser()
+        self.currFileHost = None
+
+    def _getCategory(self, url):
+        printDBG("Youtube._getCategory")
+        if "/playlist?list=" in url:
+            category = "playlist"
+        elif url.split("?")[0].endswith("/playlists"):
+            category = "playlists"
+        elif None is not re.search(r"/watch\?v=[^\&]+?\&list=", url):
+            category = "traylist"
+        elif "user/" in url or (("channel/" in url or "/c/" in url or "/@" in url) and not url.endswith("/live")):
+            category = "channel"
+        else:
+            category = "video"
+        return category
+
+    def _extractVideoId(self, url):
+        printDBG("Youtube._extractVideoId")
+        videoId = ''
+        try:
+            url = str(url)
+
+            match = re.search(r'[?&]v=([A-Za-z0-9_-]{11})', url)
+            if match is not None:
+                videoId = match.group(1)
+
+            if not videoId:
+                match = re.search(r'youtu\.be/([A-Za-z0-9_-]{11})', url)
+                if match is not None:
+                    videoId = match.group(1)
+        except Exception:
+            printExc()
+        return videoId
+
+    def _getVideoIdFromItem(self, cItem):
+        printDBG("Youtube._getVideoIdFromItem")
+        videoId = ''
+        try:
+            videoId = cItem.get("video_id", "")
+        except Exception:
+            printExc()
+
+        if not videoId:
+            try:
+                videoId = self._extractVideoId(cItem.get("url", ""))
+            except Exception:
+                printExc()
+        return videoId
+
+    def _getYouTubeInfoText(self, cItem):
+        printDBG("Youtube._getYouTubeInfoText")
+        text = cItem.get("desc", "")
+        if not text:
+            text = cItem.get("title", "")
+        return text
+
+    def _openYouTubeInfo(self, session, cItem):
+        printDBG("Youtube._openYouTubeInfo")
+        try:
+            session.open(YouTubeInfo, self, cItem)
+            return True
+        except Exception:
+            printExc()
+        return False
+
+    def listMainMenu(self):
+        printDBG("Youtube.listsMainMenu")
+        for item in self.MAIN_GROUPED_TAB:
+            params = {"name": "category"}
+            params.update(item)
+            self.addDir(params)
+
+    def listCategory(self, cItem, searchMode=False):
+        printDBG("Youtube.listCategory cItem[%s]" % cItem)
+
+        sortList = True
+        filespath = config.plugins.iptvplayer.Sciezkaurllist.value
+        groupList = True
+        if "sub_file_category" not in cItem:
+            self.currFileHost = IPTVFileHost()
+            self.currFileHost.addFile(filespath + self.UTLIST_FILE, encoding="utf-8")
+            tmpList = self.currFileHost.getGroups(sortList)
+            if 0 < len(tmpList):
+                params = dict(cItem)
+                params.update({"sub_file_category": "all", "group": "all", "title": _("--All--")})
+                self.addDir(params)
+            for item in tmpList:
+                if "" == item:
+                    title = _("--Other--")
+                else:
+                    title = item
+                params = dict(cItem)
+                params.update({"sub_file_category": "group", "title": title, "group": item})
+                self.addDir(params)
+        else:
+            if "all" == cItem["sub_file_category"]:
+                tmpList = self.currFileHost.getAllItems(sortList)
+                for item in tmpList:
+                    params = dict(cItem)
+                    category = self._getCategory(item["url"])
+                    params.update({"good_for_fav": True, "title": item["full_title"], "url": item["url"], "desc": item["url"], "category": category})
+                    if "video" == category:
+                        self.addVideo(params)
+                    elif "more" == category:
+                        params.update({"image_type": "NEXT"})
+                        self.addMore(params)
+                    else:
+                        self.addDir(params)
+            elif "group" == cItem["sub_file_category"]:
+                tmpList = self.currFileHost.getItemsInGroup(cItem["group"], sortList)
+                for item in tmpList:
+                    if "" == item["title_in_group"]:
+                        title = item["full_title"]
+                    else:
+                        title = item["title_in_group"]
+                    params = dict(cItem)
+                    category = self._getCategory(item["url"])
+                    params.update({"good_for_fav": True, "title": title, "url": item["url"], "desc": item["url"], "category": category})
+                    if "video" == category:
+                        self.addVideo(params)
+                    elif "more" == category:
+                        params.update({"image_type": "NEXT"})
+                        self.addMore(params)
+                    else:
+                        self.addDir(params)
+
+    def listItems(self, cItem):
+        printDBG("Youtube.listItems cItem[%s]" % (cItem))
+        category = cItem.get("category", "")
+        url = cItem.get("url", "")
+        page = cItem.get("page", "1")
+
+        if "playlists" == category:
+            self.currList = self.ytp.getListPlaylistsItems(url, category, page, cItem)
+
+        for idx in range(len(self.currList)):
+            if self.currList[idx]["category"] in ["channel", "playlist", "movie", "traylist"]:
+                self.currList[idx]["good_for_fav"] = True
+
+    def listFeeds(self, cItem):
+        printDBG("Youtube.listFeeds cItem[%s]" % cItem)
+
+        category = cItem.get("category", "")
+        page = cItem.get("page", "1")
+        url = cItem.get("url", "")
+
+        if category == "feeds_video":
+            pattern = cItem.get("pattern", "")
+            search_type = cItem.get("search_type", "")
+
+            # A New Approach: Search-Based Feeds with Pagination
+            if pattern != "":
+                tmpList = self.ytp.getSearchResult(urllib_quote_plus(pattern), search_type if search_type else "video", page, "search_next_page", config.plugins.iptvplayer.ytSortBy.value, url)
+
+                for item in tmpList:
+                    item.update({"name": "category"})
+
+                    if item.get("type", "") == "video":
+                        self.addVideo(item)
+                    elif item.get("type", "") == "more":
+                        item.update(
+                            {
+                                "title": _("Next page"),
+                                "image_type": "NEXT",
+                                "category": "feeds_video",
+                                "pattern": pattern,
+                                "search_type": search_type if search_type else "video",
+                            }
+                        )
+                        self.addMore(item)
+                    else:
+                        if item.get("category", "") in ["channel", "playlist", "movie", "traylist"]:
+                            item["good_for_fav"] = True
+                        self.addDir(item)
+                return
+
+            # Legacy approach: retain existing behavior for fixed URLs
+            sts, data = self.cm.getPage(cItem["url"])
+            data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, "videoRenderer", "watchEndpoint")
+            for item in data2:
+                url = "https://www.youtube.com/watch?v=" + self.cm.ph.getDataBeetwenMarkers(item, 'videoId":"', '","thumbnail":', False)[1]
+                icon = self.cm.ph.getDataBeetwenMarkers(item, '},{"url":"', "==", False)[1]
+                title = self.cm.ph.getDataBeetwenMarkers(item, '"title":{"runs":[{"text":"', '"}]', False)[1]
+                desc = E2ColoR("yellow") + _("Channel") + E2ColoR("white") + ":" + self.cm.ph.getDataBeetwenMarkers(item, 'longBylineText":{"runs":[{"text":"', '","navigationEndpoint"', False)[1] + "\n"
+                desc += E2ColoR("yellow") + _("Release") + E2ColoR("white") + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"publishedTimeText":{"simpleText":"', '"},"lengthText":', False)[1] + "\n"
+                desc += E2ColoR("yellow") + _("Duration") + E2ColoR("white") + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"lengthText":{"accessibility":{"accessibilityData":{"label":"', '"}},"simpleText":', False)[1] + "\n"
+                desc += E2ColoR("yellow") + _("Views") + E2ColoR("white") + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"viewCountText":{"simpleText":"', '"},"navigationEndpoint":', False)[1]
+                params = {"title": title, "url": url, "icon": icon, "desc": desc, "video_id": self._extractVideoId(url)}
+                self.addVideo(params)
+            return
+
+        feeds = [
+            (_("Movies"), "movies", "video"),
+            (_("Music"), "music", "video"),
+            (_("Games"), "games", "video"),
+            (_("Live"), "live", "live"),
+            (_("News"), "news", "video"),
+            (_("Shorts"), "shorts", "video"),
+            (_("Podcasts"), "podcasts", "video"),
+            (_("Sport"), "sport", "video"),
+            (_("Knowledge"), "knowledge", "video"),
+        ]
+
+        for title, pattern, search_type in feeds:
+            params = {"name": "category", "category": "feeds_video", "title": title, "pattern": pattern, "search_type": search_type, "page": "1", "url": ""}
+            self.addDir(params)
+
+    def listSubItems(self, cItem):
+        printDBG("Youtube.listSubItems")
+        self.currList = cItem["sub_items"]
+
+    def getVideos(self, cItem):
+        printDBG("Youtube.getVideos cItem[%s]" % (cItem))
+
+        category = cItem.get("category", "")
+        url = strwithmeta(cItem.get("url", ""))
+        page = cItem.get("page", "1")
+
+        if "channel" == category:
+            if "browse" not in url and ("ctoken" not in url):
+                if url.endswith("/videos"):
+                    url = url + "?flow=list&view=0&sort=dd"
+                else:
+                    url = url + "/videos?flow=list&view=0&sort=dd"
+                tmp = self.ytp.getVideosFromChannelList(url, category, page, cItem)
+                if len(tmp) > 0:
+                    params = {"good_for_fav": False, "category": "sub_items", "title": _("Videos"), "sub_items": tmp}
+                    self.addDir(params)
+                url = url.replace("videos", "streams")
+                tmp = self.ytp.getVideosFromChannelList(url, category, page, cItem)
+                if len(tmp) > 0:
+                    params = {"good_for_fav": False, "category": "sub_items", "title": _("Live streams"), "sub_items": tmp}
+                    self.addDir(params)
+            else:
+                self.currList = self.ytp.getVideosFromChannelList(url, category, page, cItem)
+        elif "playlist" == category:
+            self.currList = self.ytp.getVideosApiPlayList(url, category, page, cItem)
+        elif "traylist" == category:
+            self.currList = self.ytp.getVideosFromTraylist(url, category, page, cItem)
+        else:
+            printDBG("YTlist.getVideos Error unknown category[%s]" % category)
+
+    def listSearchResult(self, cItem, pattern, searchType):
+        page = cItem.get("page", "1")
+        url = cItem.get("url", "")
+
+        if url:
+            printDBG("URL search -----------> %s" % url)
+            tmpList = self.ytp.getSearchResult(urllib_quote_plus(pattern), searchType, page, "search", config.plugins.iptvplayer.ytSortBy.value, url)
+        else:
+            tmpList = self.ytp.getSearchResult(urllib_quote_plus(pattern), searchType, page, "search", config.plugins.iptvplayer.ytSortBy.value)
+
+        for item in tmpList:
+            item.update({"name": "category"})
+            if "video" == item["type"]:
+                self.addVideo(item)
+            elif "more" == item["type"]:
+                item.update({"image_type": "NEXT"})
+                self.addMore(item)
+            else:
+                if item["category"] in ["channel", "playlist", "movie", "traylist"]:
+                    item["good_for_fav"] = True
+                self.addDir(item)
+
+    def getLinksForVideo(self, cItem):
+        printDBG("Youtube.getLinksForVideo cItem[%s]" % cItem)
+        urlTab = self.up.getVideoLinkExt(cItem["url"])
+        if config.plugins.iptvplayer.ytUseDF.value and 0 < len(urlTab):
+            return [urlTab[0]]
+        return urlTab
+
+    def getArticleContent(self, cItem):
+        printDBG("Youtube.getArticleContent >>> START")
+        retTab = []
+        try:
+            title = cItem.get("title", "")
+            text = self._getYouTubeInfoText(cItem)
+            icon = cItem.get("icon", "")
+            videoId = self._getVideoIdFromItem(cItem)
+            if videoId:
+                try:
+                    fullText = self.ytp._getFullDescriptionFromWatch(videoId)
+                    if fullText:
+                        printDBG("Youtube.getArticleContent fullText FOUND len[%s]" % len(fullText))
+                        text = fullText
+                    else:
+                        printDBG("Youtube.getArticleContent fullText EMPTY")
+                except Exception:
+                    printDBG("Youtube.getArticleContent _getFullDescriptionFromWatch EXCEPTION")
+                    printExc()
+            richDescParams = {}
+            if cItem.get("time", ""):
+                richDescParams["published"] = cItem.get("time", "")
+            if videoId:
+                richDescParams["video_id"] = videoId
+            images = []
+            if icon:
+                images.append({"title": "", "url": icon})
+            retTab.append(ArticleContent(
+                title=title,
+                text=text,
+                images=images,
+                richDescParams=richDescParams
+            ))
+            printDBG("Youtube.getArticleContent >>> END OK")
+        except Exception:
+            printDBG("Youtube.getArticleContent >>> END EXCEPTION")
+            printExc()
+        return retTab
+
+    def getFavouriteData(self, cItem):
+        printDBG("Youtube.getFavouriteData")
+        return json.dumps(cItem)
+
+    def getLinksForFavourite(self, fav_data):
+        printDBG("Youtube.getLinksForFavourite")
+        links = []
+        try:
+            cItem = byteify(json.loads(fav_data))
+            links = self.getLinksForVideo(cItem)
+        except Exception:
+            printExc()
+            return self.getLinksForVideo({"url": fav_data})
+        return links
+
+    def setInitListFromFavouriteItem(self, fav_data):
+        printDBG("Youtube.setInitListFromFavouriteItem")
+        try:
+            params = byteify(json.loads(fav_data))
+        except Exception:
+            params = {}
+            printExc()
+        self.addDir(params)
+        return True
+
+    def handleService(self, index, refresh=0, searchPattern="", searchType=""):
+        printDBG("Youtube.handleService start")
+
+        CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+
+        name = self.currItem.get("name", "")
+        category = self.currItem.get("category", "")
+        printDBG("Youtube.handleService: ---------> name[%s], category[%s] " % (name, category))
+        self.currList = []
+
+        if None is name:
+            self.listMainMenu()
+        elif "from_file" == category:
+            self.listCategory(self.currItem)
+        elif category in ["channel", "playlist", "movie", "traylist"]:
+            self.getVideos(self.currItem)
+        elif category.startswith("feeds"):
+            self.listFeeds(self.currItem)
+        elif category == "playlists":
+            self.listItems(self.currItem)
+        elif category == "sub_items":
+            self.listSubItems(self.currItem)
+        # SEARCH
+        elif category in ["search", "search_next_page"]:
+            cItem = dict(self.currItem)
+            cItem.update({"search_item": False, "name": "category"})
+            self.listSearchResult(cItem, searchPattern, searchType)
+        # HISTORY SEARCH
+        elif category == "search_history":
+            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
+        else:
+            printExc()
+
+        CBaseHostClass.endHandleService(self, index, refresh)
+
+    def getSuggestionsProvider(self, index):
+        printDBG("Youtube.getSuggestionsProvider")
+        from Plugins.Extensions.IPTVPlayer.suggestions.google import SuggestionsProvider
+
+        return SuggestionsProvider(True)
+
+
+class IPTVHost(CHostBase):
+
+    def getSearchTypes(self):
+        return self.host.SEARCH_TYPES
+
+    def __init__(self):
+        CHostBase.__init__(self, Youtube(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
+
+    def withArticleContent(self, cItem):
+        try:
+            category = cItem.get("category", "")
+            if category in ["video", "movie", "traylist"] or "video_id" in cItem or "watch?v=" in cItem.get("url", ""):
+                return True
+        except Exception:
+            printExc()
+        return False
+
+    def getArticleContent(self, Index=0):
+        printDBG("IPTVHost.getArticleContent")
+        retCode = RetHost.OK
+        retlist = []
+        try:
+            cItem = self.host.currList[Index]
+            retlist = self.host.getArticleContent(cItem)
+        except Exception:
+            printExc()
+            retCode = RetHost.ERROR
+        return RetHost(retCode, value=retlist)
+# -*- coding: utf-8 -*-
 # Last Modified: 07.06.2026
 ###################################################
 # LOCAL import
