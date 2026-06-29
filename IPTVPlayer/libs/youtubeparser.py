@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 18.06.2026
+# Last Modified: 25.06.2026 - Change: Improved normalization of thumbnail and avatar URLs
 # LOCAL import
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.extractor.youtube import YoutubeIE
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsExecutable
@@ -11,11 +11,10 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse, urlunparse, parse_qsl
 # FOREIGN import
 import re
-from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
-from datetime import timedelta
 from Components.config import config, ConfigSelection, ConfigYesNo
 
 # Config options for HOST
@@ -214,7 +213,7 @@ class YouTubeParser:
         urlParts = urlparse(url)
         query = dict(parse_qsl(urlParts[4]))
         query.update(queryDict)
-        new_query = urlencode(query)
+        new_query = urllib_urlencode(query)
         new_url = urlunparse((urlParts[0], urlParts[1], urlParts[2], urlParts[3], new_query, urlParts[5]))
         return new_url
 
@@ -234,12 +233,29 @@ class YouTubeParser:
         url = ensure_str(url)
         if not url:
             return ""
+        url = url.replace("\\u0026", "&").replace("\\/", "/").strip()
+        if url.startswith("//"):
+            url = "https:" + url
+        if url.startswith("http://yt3.googleusercontent.com/"):
+            url = "https://" + url[len("http://"):]
+        elif url.startswith("http://yt3.ggpht.com/"):
+            url = "https://" + url[len("http://"):]
+        elif url.startswith("http://i.ytimg.com/"):
+            url = "https://" + url[len("http://"):]
+        elif url.startswith("http://"):
+            parsed = urlparse(url)
+            host = parsed.netloc.lower()
+            if host.endswith("googleusercontent.com") or host.endswith("ggpht.com") or host.endswith("ytimg.com"):
+                url = "https://" + url[len("http://"):]
         if "?" in url:
             url = url.split("?", 1)[0]
+        url = re.sub(r"=s([0-9]+)(?:-c)?(?:-k-c0x00ffffff)?(?:-no-rj)?(?:-mo)?$", "", url, flags=re.IGNORECASE)
         url = re.sub(r"(/hq720)(?:_custom_[0-9]+)+(\.(jpg|jpeg|png|webp))$", r"\1\2", url, flags=re.IGNORECASE)
         url = re.sub(r"(/hqdefault)(?:_custom_[0-9]+)+(\.(jpg|jpeg|png|webp))$", r"\1\2", url, flags=re.IGNORECASE)
         url = re.sub(r"(/mqdefault)(?:_custom_[0-9]+)+(\.(jpg|jpeg|png|webp))$", r"\1\2", url, flags=re.IGNORECASE)
         url = re.sub(r"(/default)(?:_custom_[0-9]+)+(\.(jpg|jpeg|png|webp))$", r"\1\2", url, flags=re.IGNORECASE)
+        if "/ytc/" in url:
+            url = url.replace("yt3.ggpht.com/ytc/", "yt3.googleusercontent.com/ytc/")
         return strwithmeta(url)
 
     def getThumbnailUrl(self, thumbJson, maxWidth=1000, hq=False):
