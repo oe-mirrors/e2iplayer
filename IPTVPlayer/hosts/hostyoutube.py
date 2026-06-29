@@ -66,7 +66,6 @@ def GetConfigList():
 
 
 def _clearYouTubeSearchHistory(session):
-    import os
     historyFile = GetSearchHistoryDir("ytlist.txt")
     try:
         if os.path.isfile(historyFile):
@@ -386,7 +385,7 @@ class Youtube(CBaseHostClass):
                 outTab.append(item)
 
         return outTab
-    
+
     def _openYouTubeInfo(self, session, cItem):
         printDBG("Youtube._openYouTubeInfo")
         try:
