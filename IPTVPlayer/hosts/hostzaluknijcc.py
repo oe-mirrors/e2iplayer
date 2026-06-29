@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 22.06.2026 - damagic
+# Last Modified: 29.06.2026 - damagic
 ###################################################
 import re
 import json
@@ -27,12 +27,15 @@ RE_ITEM_IMAGE = r'src="([^"]+)'
 RE_META_LINE = r'<span class="meta-line">(S\d+\s*E\d+)</span>'
 RE_YEAR_SUP = r'<sup><a href="[^"]+">(\d{4})</a></sup>'
 RE_YEAR_CLASS = r'class="year">(\d{4})'
+RE_YEAR_PRODUCTION = r'<li>Rok\s+Produkcji:</li>\s*<li>(\d{4})</li>'
 RE_GENRE_ITEMPROP = r'<li itemprop="genre"><a href="[^"]+">([^<]+)</a></li>'
 RE_IFRAME_DATA = r"""data-iframe=['"]([^"^']+?)['"]"""
 RE_HREF_LINK = r"""href=['"]([^"^']+?)['"]"""
 RE_EPISODE_LINK = r'href="([^"]+)">\W(s\d+e\d+)'
 RE_CLEAN_TITLE = r"\s*\[\]\s*"
 RE_DESCRIPTION_FALLBACK = r'class="description">([^<]+)'
+RE_ALT_TITLE = r'alt="([^"]+)'
+RE_DIV_TITLE = r'<div\s+class="title">([^<]+)'
 
 
 def GetConfigList():
@@ -228,10 +231,18 @@ class Zaluknij(CBaseHostClass):
             Dictionary with keys: categories, version, quality, year
         """
         details = {"categories": [], "version": "", "quality": "", "year": ""}
-        # Extract release year from superscript link
+        # Extract release year from superscript link (movies)
         year = self.cm.ph.getSearchGroups(data, RE_YEAR_SUP)
-        if year:
+        printDBG("extractMovieDetails RE_YEAR_SUP result: %s" % str(year))
+        if year and year[0].isdigit():
             details["year"] = year[0]
+        else:
+            # Extract year from production info (series)
+            year = self.cm.ph.getSearchGroups(data, RE_YEAR_PRODUCTION)
+            printDBG("extractMovieDetails RE_YEAR_PRODUCTION result: %s" % str(year))
+            if year:
+                details["year"] = year[0]
+        printDBG("extractMovieDetails final year: %s" % details["year"])
         # Extract genre categories using itemprop attribute
         categories = re.findall(RE_GENRE_ITEMPROP, data)
         if categories:
@@ -382,6 +393,8 @@ class Zaluknij(CBaseHostClass):
                 icon = self.DEFAULT_ICON_URL
             # Extract title from the item
             title = self.cm.ph.getSearchGroups(item, RE_ITEM_TITLE)
+            if not title:
+                title = self.cm.ph.getSearchGroups(item, RE_ALT_TITLE)
             if title:
                 title = self.cleanHtmlStr(title[0])
             else:
@@ -510,9 +523,15 @@ class Zaluknij(CBaseHostClass):
                 icon = self.fixIconUrl(icon[0], cItem["url"])
             else:
                 icon = self.DEFAULT_ICON_URL
-            title = self.cm.ph.getSearchGroups(item, RE_ITEM_TITLE)
+            # Extract title from alt attribute of img or from title div
+            title = self.cm.ph.getSearchGroups(item, RE_ALT_TITLE)
+            if not title:
+                title = self.cm.ph.getSearchGroups(item, RE_DIV_TITLE)
             if title:
                 title = self.cleanHtmlStr(title[0])
+                # Get only the Polish title (before first slash if multiple titles)
+                if "/" in title:
+                    title = title.split("/")[0].strip()
             else:
                 title = "Brak tytułu"
             title = re.sub(RE_CLEAN_TITLE, "", title)
@@ -593,6 +612,8 @@ class Zaluknij(CBaseHostClass):
             else:
                 icon = self.DEFAULT_ICON_URL
             title = self.cm.ph.getSearchGroups(item, RE_ITEM_TITLE)
+            if not title:
+                title = self.cm.ph.getSearchGroups(item, RE_ALT_TITLE)
             if title:
                 title = self.cleanHtmlStr(title[0])
             else:
