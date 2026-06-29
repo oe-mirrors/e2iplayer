@@ -45,6 +45,7 @@ config.plugins.iptvplayer.youtube_sidecar = ConfigYesNo(default=True)
 config.plugins.iptvplayer.youtube_mkv_chapters = ConfigYesNo(default=True)
 config.plugins.iptvplayer.youtube_enigma2_cuts = ConfigYesNo(default=True)
 
+
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_("Sort by:"), config.plugins.iptvplayer.ytSortBy))
@@ -79,7 +80,7 @@ def _clearYouTubeSearchHistory(session):
     session.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=5)
 
 
-#def GetHostActions():
+# def GetHostActions():
 #    return [
 #        (_("Clear search history"), _clearYouTubeSearchHistory),
 #    ]
@@ -198,7 +199,7 @@ class Youtube(CBaseHostClass):
         self.currFileHost = None
 
     def _getCategory(self, url):
-        #printDBG("Youtube._getCategory")
+        # printDBG("Youtube._getCategory")
         if "/playlist?list=" in url:
             category = "playlist"
         elif url.split("?")[0].endswith("/playlists"):
