@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.06.2026
+# Last Modified: 26.06.2026 - Change: Channel name in titles + sidecar files (.txt + .jpg) after merge download + MKV chapters + Enigma2 .cuts chapter marks
 ###################################################
 # LOCAL import
 ###################################################
@@ -23,7 +23,7 @@ except Exception:
 import re
 import os
 import codecs
-from Components.config import config, ConfigDirectory, getConfigListEntry
+from Components.config import config, ConfigDirectory, ConfigYesNo, getConfigListEntry
 
 ###################################################
 
@@ -41,7 +41,9 @@ from Components.ScrollLabel import ScrollLabel
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default="/hdd/")
-
+config.plugins.iptvplayer.youtube_sidecar = ConfigYesNo(default=True)
+config.plugins.iptvplayer.youtube_mkv_chapters = ConfigYesNo(default=True)
+config.plugins.iptvplayer.youtube_enigma2_cuts = ConfigYesNo(default=True)
 
 def GetConfigList():
     optionList = []
@@ -51,6 +53,9 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.ytDefaultformat))
     optionList.append(getConfigListEntry(_("Use default video quality:"), config.plugins.iptvplayer.ytUseDF))
     optionList.append(getConfigListEntry(_("Age-gate bypass:"), config.plugins.iptvplayer.ytAgeGate))
+    optionList.append(getConfigListEntry(_("Create sidecar files (.txt/.jpg)") + ":", config.plugins.iptvplayer.youtube_sidecar))
+    optionList.append(getConfigListEntry(_("Create MKV with chapter marks from description") + ":", config.plugins.iptvplayer.youtube_mkv_chapters))
+    optionList.append(getConfigListEntry(_("Create Enigma2 .cuts chapter marks") + ":", config.plugins.iptvplayer.youtube_enigma2_cuts))
     # temporary, the ffmpeg must be in right version to be able to merge file without transcoding
     # checking should be moved to setup
     if IsExecutable("ffmpeg"):
@@ -61,7 +66,6 @@ def GetConfigList():
 
 
 def _clearYouTubeSearchHistory(session):
-    import os
     historyFile = GetSearchHistoryDir("ytlist.txt")
     try:
         if os.path.isfile(historyFile):
@@ -75,10 +79,10 @@ def _clearYouTubeSearchHistory(session):
     session.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=5)
 
 
-def GetHostActions():
-    return [
-        (_("Clear search history"), _clearYouTubeSearchHistory),
-    ]
+#def GetHostActions():
+#    return [
+#        (_("Clear search history"), _clearYouTubeSearchHistory),
+#    ]
 
 
 ###################################################
@@ -122,6 +126,7 @@ class YouTubeInfo(Screen):
             },
             -1
         )
+
         self.onLayoutFinish.append(self.onStart)
 
     def onStart(self):
@@ -153,7 +158,7 @@ class YouTubeInfo(Screen):
         if not self.videoId:
             return
         try:
-            fullDesc = self.host.ytp.getFullDescriptionFromWatch(self.videoId)
+            fullDesc = self.host.ytp._getFullDescriptionFromWatch(self.videoId)
             if fullDesc:
                 self["text"].setText(self._cleanText(fullDesc))
                 self["status"].setText(_("Full description loaded"))
@@ -188,13 +193,12 @@ class Youtube(CBaseHostClass):
         self.MAIN_GROUPED_TAB = [{"category": "from_file", "title": _("User links"), "desc": _("User links stored in the ytlist.txt file.")}, {"category": "feeds", "title": _("Trending"), "desc": _("Browse youtube trending feeds")}] + self.searchItems()
 
         self.SEARCH_TYPES = [(_("Video"), "video"), (_("Channel"), "channel"), (_("Playlist"), "playlist"), (_("Movie"), "movie"), (_("Live"), "live")]
-        # (_("Program"), "show"),
-        # (_("traylist"), "traylist"),
+        # (_("Program"), "show"),... # (_("traylist"), "traylist"),
         self.ytp = YouTubeParser()
         self.currFileHost = None
 
     def _getCategory(self, url):
-        printDBG("Youtube._getCategory")
+        #printDBG("Youtube._getCategory")
         if "/playlist?list=" in url:
             category = "playlist"
         elif url.split("?")[0].endswith("/playlists"):
@@ -247,6 +251,141 @@ class Youtube(CBaseHostClass):
             text = cItem.get("title", "")
         return text
 
+    def _extractChannelNameFromItem(self, item, defaultChannel=''):
+        channel = ''
+        try:
+            channel = item.get('channel', '')
+            if channel:
+                return channel.strip()
+        except Exception:
+            printExc()
+
+        try:
+            channel = defaultChannel or ''
+            if channel:
+                return channel.strip()
+        except Exception:
+            printExc()
+
+        try:
+            desc = item.get('desc', '') or ''
+            m = re.search(r'Channel\s*:\s*([^\n\r]+)', desc)
+            if m:
+                return m.group(1).strip()
+        except Exception:
+            printExc()
+
+        return ''
+
+    def _prefixTitleWithChannel(self, item, defaultChannel=''):
+        try:
+            title = item.get('title', '') or ''
+            title = title.strip()
+            channel = self._extractChannelNameFromItem(item, defaultChannel)
+
+            if not channel or not title:
+                return
+
+            prefix = channel + ' - '
+            if title.startswith(prefix):
+                return
+
+            item['title'] = '%s - %s' % (channel, title)
+        except Exception:
+            printExc()
+
+    def _prefixTitlesWithChannel(self, itemList, defaultChannel=''):
+        printDBG("Youtube._prefixTitlesWithChannel count[%d]" % len(itemList))
+        try:
+            for item in itemList:
+                self._prefixTitleWithChannel(item, defaultChannel)
+        except Exception:
+            printExc()
+
+    def _getSidecarData(self, cItem):
+        printDBG("Youtube._getSidecarData")
+        sidecarTxt = ''
+        sidecarImg = ''
+
+        try:
+            article = self.getArticleContent(cItem)
+            if article and isinstance(article, list):
+                articleItem = article[0]
+                try:
+                    sidecarTxt = articleItem.get('text', '')
+                except Exception:
+                    try:
+                        sidecarTxt = articleItem.text
+                    except Exception:
+                        sidecarTxt = ''
+
+                try:
+                    images = articleItem.get('images', [])
+                except Exception:
+                    try:
+                        images = articleItem.images
+                    except Exception:
+                        images = []
+
+                if images and images[0].get('url'):
+                    sidecarImg = images[0].get('url')
+        except Exception:
+            printExc("Youtube.getArticleContent for sidecar failed")
+
+        if not sidecarTxt:
+            sidecarTxt = cItem.get('desc', '')
+        if not sidecarImg:
+            sidecarImg = cItem.get('icon', '')
+
+        return sidecarTxt, sidecarImg
+
+    def _applySidecarMetaToUrl(self, url, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled=False, cutsChaptersEnabled=False):
+        try:
+            meta = dict(strwithmeta(url).meta)
+        except Exception:
+            meta = {}
+
+        if sidecarEnabled:
+            meta['e2i_sidecar_enabled'] = True
+            meta['e2i_sidecar_txt'] = sidecarTxt
+            meta['e2i_sidecar_img'] = sidecarImg
+        else:
+            meta.pop('e2i_sidecar_enabled', None)
+            meta.pop('e2i_sidecar_txt', None)
+            meta.pop('e2i_sidecar_img', None)
+
+        if mkvChaptersEnabled:
+            meta['e2i_mkv_chapters'] = True
+            if sidecarTxt:
+                meta['e2i_sidecar_txt'] = sidecarTxt
+        else:
+            meta.pop('e2i_mkv_chapters', None)
+
+        if cutsChaptersEnabled:
+            meta['e2i_cuts_chapters'] = True
+            if sidecarTxt:
+                meta['e2i_sidecar_txt'] = sidecarTxt
+        else:
+            meta.pop('e2i_cuts_chapters', None)
+
+        return strwithmeta(str(url), meta)
+
+    def _addSidecarMetaToUrlTab(self, urlTab, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled=False, cutsChaptersEnabled=False):
+        printDBG("Youtube._addSidecarMetaToUrlTab count[%d]" % len(urlTab))
+        outTab = []
+
+        for item in urlTab:
+            try:
+                newItem = dict(item)
+                itemUrl = newItem.get('url', '')
+                newItem['url'] = self._applySidecarMetaToUrl(itemUrl, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled, cutsChaptersEnabled)
+                outTab.append(newItem)
+            except Exception:
+                printExc()
+                outTab.append(item)
+
+        return outTab
+
     def _openYouTubeInfo(self, session, cItem):
         printDBG("Youtube._openYouTubeInfo")
         try:
@@ -277,14 +416,14 @@ class Youtube(CBaseHostClass):
                 params = dict(cItem)
                 params.update({"sub_file_category": "all", "group": "all", "title": _("--All--")})
                 self.addDir(params)
-            for item in tmpList:
-                if "" == item:
-                    title = _("--Other--")
-                else:
-                    title = item
-                params = dict(cItem)
-                params.update({"sub_file_category": "group", "title": title, "group": item})
-                self.addDir(params)
+                for item in tmpList:
+                    if "" == item:
+                        title = _("--Other--")
+                    else:
+                        title = item
+                    params = dict(cItem)
+                    params.update({"sub_file_category": "group", "title": title, "group": item})
+                    self.addDir(params)
         else:
             if "all" == cItem["sub_file_category"]:
                 tmpList = self.currFileHost.getAllItems(sortList)
@@ -326,9 +465,9 @@ class Youtube(CBaseHostClass):
         if "playlists" == category:
             self.currList = self.ytp.getListPlaylistsItems(url, category, page, cItem)
 
-        for idx in range(len(self.currList)):
-            if self.currList[idx]["category"] in ["channel", "playlist", "movie", "traylist"]:
-                self.currList[idx]["good_for_fav"] = True
+            for idx in range(len(self.currList)):
+                if self.currList[idx]["category"] in ["channel", "playlist", "movie", "traylist"]:
+                    self.currList[idx]["good_for_fav"] = True
 
     def listFeeds(self, cItem):
         printDBG("Youtube.listFeeds cItem[%s]" % cItem)
@@ -398,10 +537,6 @@ class Youtube(CBaseHostClass):
             params = {"name": "category", "category": "feeds_video", "title": title, "pattern": pattern, "search_type": search_type, "page": "1", "url": ""}
             self.addDir(params)
 
-    def listSubItems(self, cItem):
-        printDBG("Youtube.listSubItems")
-        self.currList = cItem["sub_items"]
-
     def getVideos(self, cItem):
         printDBG("Youtube.getVideos cItem[%s]" % (cItem))
 
@@ -415,17 +550,22 @@ class Youtube(CBaseHostClass):
                     url = url + "?flow=list&view=0&sort=dd"
                 else:
                     url = url + "/videos?flow=list&view=0&sort=dd"
+
                 tmp = self.ytp.getVideosFromChannelList(url, category, page, cItem)
                 if len(tmp) > 0:
+                    self._prefixTitlesWithChannel(tmp, cItem.get("title", ""))
                     params = {"good_for_fav": False, "category": "sub_items", "title": _("Videos"), "sub_items": tmp}
                     self.addDir(params)
+
                 url = url.replace("videos", "streams")
                 tmp = self.ytp.getVideosFromChannelList(url, category, page, cItem)
                 if len(tmp) > 0:
+                    self._prefixTitlesWithChannel(tmp, cItem.get("title", ""))
                     params = {"good_for_fav": False, "category": "sub_items", "title": _("Live streams"), "sub_items": tmp}
                     self.addDir(params)
             else:
                 self.currList = self.ytp.getVideosFromChannelList(url, category, page, cItem)
+                self._prefixTitlesWithChannel(self.currList, cItem.get("title", ""))
         elif "playlist" == category:
             self.currList = self.ytp.getVideosApiPlayList(url, category, page, cItem)
         elif "traylist" == category:
@@ -457,7 +597,25 @@ class Youtube(CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         printDBG("Youtube.getLinksForVideo cItem[%s]" % cItem)
-        urlTab = self.up.getVideoLinkExt(cItem["url"])
+
+        sidecarEnabled = config.plugins.iptvplayer.youtube_sidecar.value
+        mkvChaptersEnabled = config.plugins.iptvplayer.youtube_mkv_chapters.value
+        cutsChaptersEnabled = config.plugins.iptvplayer.youtube_enigma2_cuts.value
+        sidecarTxt = ''
+        sidecarImg = ''
+
+        workItem = dict(cItem)
+
+        if sidecarEnabled or mkvChaptersEnabled or cutsChaptersEnabled:
+            sidecarTxt, sidecarImg = self._getSidecarData(workItem)
+            try:
+                workItem['url'] = self._applySidecarMetaToUrl(workItem.get('url', ''), sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled, cutsChaptersEnabled)
+            except Exception:
+                printExc("Youtube.getLinksForVideo apply sidecar/meta to source url failed")
+
+        urlTab = self.up.getVideoLinkExt(workItem["url"])
+        urlTab = self._addSidecarMetaToUrlTab(urlTab, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled, cutsChaptersEnabled)
+
         if config.plugins.iptvplayer.ytUseDF.value and 0 < len(urlTab):
             return [urlTab[0]]
         return urlTab
@@ -470,6 +628,7 @@ class Youtube(CBaseHostClass):
             text = self._getYouTubeInfoText(cItem)
             icon = cItem.get("icon", "")
             videoId = self._getVideoIdFromItem(cItem)
+
             if videoId:
                 try:
                     fullText = self.ytp._getFullDescriptionFromWatch(videoId)
@@ -481,14 +640,17 @@ class Youtube(CBaseHostClass):
                 except Exception:
                     printDBG("Youtube.getArticleContent _getFullDescriptionFromWatch EXCEPTION")
                     printExc()
+
             richDescParams = {}
             if cItem.get("time", ""):
                 richDescParams["published"] = cItem.get("time", "")
             if videoId:
                 richDescParams["video_id"] = videoId
+
             images = []
             if icon:
                 images.append({"title": "", "url": icon})
+
             retTab.append(ArticleContent(
                 title=title,
                 text=text,
@@ -548,12 +710,10 @@ class Youtube(CBaseHostClass):
             self.listItems(self.currItem)
         elif category == "sub_items":
             self.listSubItems(self.currItem)
-        # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
-        # HISTORY SEARCH
         elif category == "search_history":
             self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
         else:
@@ -564,7 +724,6 @@ class Youtube(CBaseHostClass):
     def getSuggestionsProvider(self, index):
         printDBG("Youtube.getSuggestionsProvider")
         from Plugins.Extensions.IPTVPlayer.suggestions.google import SuggestionsProvider
-
         return SuggestionsProvider(True)
 
 
