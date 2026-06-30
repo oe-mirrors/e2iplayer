@@ -97,7 +97,8 @@
   "radiostacja",
   "nuteczki",
   "luxveritatis",
-  "joemonsterorg"
+  "joemonsterorg",
+  "premiumsmarteu"
  ],
  "english": [
   "youtube",
