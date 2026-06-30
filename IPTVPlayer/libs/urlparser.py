@@ -2534,6 +2534,8 @@ class pageParser(CaptchaHelper):
         printDBG("parserFLYFILE baseUrl[%s]" % baseUrl)
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER['Referer'] = baseUrl
+        HTTP_HEADER['Origin'] = host[:-1] if host.endswith('/') else host
         mid = baseUrl.split("?")[0].split("/")[-1]
         sts, data = self.cm.getPage("https://api.%s/api/streaming/assign/%s" % (urlparser.getDomain(baseUrl), mid), {"header": HTTP_HEADER})
         if not sts:
@@ -2546,33 +2548,63 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserANONMP4(self, baseUrl):  # fix 050626
+    def parserANONMP4(self, baseUrl):
         printDBG("parserANONMP4 baseUrl[%s]" % baseUrl)
         urltab = []
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER['Referer'] = baseUrl
+        HTTP_HEADER['Origin'] = host[:-1] if host.endswith('/') else host
         sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
         if not sts:
             return []
-        url = re.search(r"SINGLE_API_URL\s*=\s*'([^']+)", data)
+
+        api_url = None
+        url = re.search(r"fetch\('(https://cryoapi\.shadowapi\.skin/load/[^']+)'\)", data)
         if url:
-            HTTP_HEADER.update({"Referer": host, "Origin": host[:-1]})
-            sts, data = self.cm.getPage(url.group(1), {"header": HTTP_HEADER})
-            if not sts:
-                return []
-            js = json_loads(data)
-            if "tracks" in js:
-                for x in js.get("tracks", []):
-                    name = "[%s] " % x.get("track_name", "unk")
-                    sts, data = self.cm.getPage(x.get("track_url"), {"header": HTTP_HEADER})
-                    if not sts:
-                        continue
+            api_url = url.group(1)
+
+        if api_url:
+            printDBG("parserANONMP4 API URL: %s" % api_url)
+            HTTP_HEADER.update({"Referer": host, "Origin": host[:-1] if host.endswith('/') else host})
+            sts, data = self.cm.getPage(api_url, {"header": HTTP_HEADER})
+            if sts:
+                try:
                     js = json_loads(data)
-                    url = urlparser.decorateUrl(js.get("hls"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
-                    for p in getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999):  # Add language
-                        p["name"] = name + p.get("name", "")
-                        urltab.append(p)
-            else:
-                url = urlparser.decorateUrl(js.get("hls"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
-                urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+                except Exception:
+                    printExc()
+                    return []
+
+                if "tracks" in js:
+                    for x in js.get("tracks", []):
+                        name = "[%s] " % x.get("track_name", "unk")
+                        track_url = x.get("track_url", "")
+                        if not track_url:
+                            continue
+                        sts, tdata = self.cm.getPage(track_url, {"header": HTTP_HEADER})
+                        if not sts:
+                            continue
+                        try:
+                            tjs = json_loads(tdata)
+                        except Exception:
+                            continue
+                        hls = tjs.get("hls", "")
+                        if hls:
+                            hls_url = urlparser.decorateUrl(hls, {
+                                "User-Agent": HTTP_HEADER["User-Agent"],
+                                "Referer": host,
+                                "Origin": host[:-1] if host.endswith('/') else host
+                            })
+                            for p in getDirectM3U8Playlist(hls_url, sortWithMaxBitrate=99999999):
+                                p["name"] = name + p.get("name", "")
+                                urltab.append(p)
+                elif "hls" in js:
+                    hls = js.get("hls", "")
+                    if hls:
+                        hls_url = urlparser.decorateUrl(hls, {
+                            "User-Agent": HTTP_HEADER["User-Agent"],
+                            "Referer": host,
+                            "Origin": host[:-1] if host.endswith('/') else host
+                        })
+                        urltab.extend(getDirectM3U8Playlist(hls_url, sortWithMaxBitrate=99999999))
         return urltab
