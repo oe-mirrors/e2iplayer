@@ -2608,3 +2608,4 @@ class pageParser(CaptchaHelper):
                         })
                         urltab.extend(getDirectM3U8Playlist(hls_url, sortWithMaxBitrate=99999999))
         return urltab
+        
