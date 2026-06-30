@@ -523,6 +523,8 @@ class urlparser:
             "videa.hu": self.pp.parserVIDEA,
             "videakid.hu": self.pp.parserVIDEA,
             "vidaraa.cc": self.pp.parserSTREAMUP,
+            "vidarax.cc": self.pp.parserSTREAMUP,
+            "vidavaca.net": self.pp.parserSTREAMUP,
             "vidara.so": self.pp.parserSTREAMUP,
             "vidara.to": self.pp.parserSTREAMUP,
             "vidora.stream": self.pp.parserJWPLAYER,
@@ -673,22 +675,26 @@ class urlparser:
         return hostName
 
     def getParser(self, url, host=None):
-        if host is None:
+        if None is host:
             host = self.getHostName(url)
         parser = self.hostMap.get(host, None)
-        if parser is None:
+        if None is parser:
             host2 = host[host.find(".") + 1:]
             printDBG("urlparser.getParser II try host[%s]->host2[%s]" % (host, host2))
             parser = self.hostMap.get(host2, None)
         return parser
 
     def checkHostSupport(self, url):
+        # -1 - not supported
+        #  0 - unknown
+        #  1 - supported
         host = self.getHostName(url)
+        # quick fix
         if host == "facebook.com" and "likebox.php" in url or "like.php" in url or "/groups/" in url:
             return 0
         ret = 0
         parser = self.getParser(url, host)
-        if parser is not None:
+        if None is not parser:
             return 1
         elif self.isHostsNotSupported(host):
             return -1
@@ -723,7 +729,7 @@ class urlparser:
             url = self.decorateParamsFromUrl(url)
             nUrl = ""
             parser = self.getParser(url)
-            if parser is not None:
+            if None is not parser:
                 nUrl = parser(url)
             else:
                 host = self.getHostName(url)
@@ -736,6 +742,7 @@ class urlparser:
                     return nUrl
                 if len(nUrl) > 0:
                     return nUrl[0]["url"]
+
             return nUrl
         except Exception:
             printExc()
@@ -818,7 +825,7 @@ class pageParser(CaptchaHelper):
                 urltab.append({"name": "vrra.top", "url": url})
         return urltab
 
-    def parserFREEDISC(self, baseUrl):
+    def parserFREEDISC(self, baseUrl):  # OK according to PL user?
         urltab = []
         COOKIE_FILE = GetCookieDir("FreeDiscPL.cookie")
         HTTP_HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0 ", "Accept": "text/html", "Accept-Encoding": "gzip, deflate"}
@@ -872,7 +879,7 @@ class pageParser(CaptchaHelper):
                     urltab.append({"name": "freedisc.pl", "url": urlparser.decorateUrl(videoUrl, {"Referer": "https://freedisc.pl/static/player/v612/jwplayer.flash.swf", "User-Agent": HTTP_HEADER["User-Agent"]})})
         return urltab
 
-    def parserCDA(self, inUrl):
+    def parserCDA(self, inUrl):  # Need test
         printDBG("parserCDA inUrl[%r]" % inUrl)
         COOKIE_FILE = GetCookieDir("cdapl.cookie")
         self.cm.clearCookie(COOKIE_FILE, removeNames=["vToken"])
@@ -897,6 +904,7 @@ class pageParser(CaptchaHelper):
                 if (cookie.name == "vToken" and cookie.path in inUrl) or cookie.name == "PHPSESSID":
                     cookies.append("%s=%s;" % (cookie.name, cookie.value))
                     printDBG(">> \t%s \t%s \t%s \t%s" % (cookie.domain, cookie.path, cookie.name, cookie.value))
+            # prepare extended link
             retUrl = strwithmeta(inUrl)
             retUrl.meta["User-Agent"] = HTTP_HEADER["User-Agent"]
             retUrl.meta["Referer"] = referer
@@ -1060,7 +1068,7 @@ class pageParser(CaptchaHelper):
         self.jscode["data"] = ""
         return videoUrls[::-1]
 
-    def parserDAILYMOTION(self, baseUrl):
+    def parserDAILYMOTION(self, baseUrl):  # fix 180226
         printDBG("parserDAILYMOTION %s" % baseUrl)
         COOKIE_FILE = self.COOKIE_PATH + "dailymotion.cookie"
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -1098,10 +1106,10 @@ class pageParser(CaptchaHelper):
                         else:
                             urlsTab.append({"name": quality, "url": media_url})
             except Exception:
-                printExc()
+                printExc
         return urlsTab
 
-    def parserVK(self, baseUrl):
+    def parserVK(self, baseUrl):  # Partly work, Login not work
         printDBG("parserVK url[%s]" % baseUrl)
         COOKIE_FILE = GetCookieDir("vkcom.cookie")
         HTTP_HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36"}
@@ -1130,7 +1138,7 @@ class pageParser(CaptchaHelper):
                 return False
             return True
 
-        if baseUrl.startswith("http://"):  # noqa: S106
+        if baseUrl.startswith("http://"):  # NOSONAR
             baseUrl = "https" + baseUrl[4:]
         sts, data = self.cm.getPage(baseUrl, params)
         if not sts:
@@ -1170,6 +1178,7 @@ class pageParser(CaptchaHelper):
         else:
             cacheItem = None
         tmpTab = re.findall(r"""['"]?url([0-9]+?)['"]?[=:]['"]?(http[^"]+?\.mp4[^;^"^']*)[;"']""", data)
+        # prepare urls list without duplicates
         for item in tmpTab:
             item = list(item)
             if item[1].endswith("&amp"):
@@ -1182,6 +1191,8 @@ class pageParser(CaptchaHelper):
                     break
             if not found:
                 movieUrls.append({"name": "vk.com: " + item[0] + "p", "url": item[1].encode("UTF-8")})
+        # move default format to first position in urls list
+        # default format should be a configurable
         DEFAULT_FORMAT = "vk.com: 720p"
         defaultItem = None
         for idx in range(len(movieUrls)):
@@ -1190,9 +1201,9 @@ class pageParser(CaptchaHelper):
                 del movieUrls[idx]
                 break
         movieUrls = movieUrls[::-1]
-        if defaultItem is not None:
+        if None is not defaultItem:
             movieUrls.insert(0, defaultItem)
-        if cacheItem is not None:
+        if None is not cacheItem:
             movieUrls.insert(0, cacheItem)
         return movieUrls
 
@@ -1205,7 +1216,7 @@ class pageParser(CaptchaHelper):
             except Exception:
                 return 0
 
-        if self.getYTParser() is not None:
+        if None is not self.getYTParser():
             try:
                 formats = config.plugins.iptvplayer.ytformat.value
                 height = config.plugins.iptvplayer.ytDefaultformat.value
@@ -1234,7 +1245,7 @@ class pageParser(CaptchaHelper):
             return videoUrls
         return False
 
-    def parserFILEONETV(self, baseUrl):
+    def parserFILEONETV(self, baseUrl):  # check 030126
         printDBG("parserFILEONETV baseUrl[%s]" % baseUrl)
         url = baseUrl.replace("show/player", "v")
         sts, data = self.cm.getPage(url)
@@ -1250,7 +1261,7 @@ class pageParser(CaptchaHelper):
             return videoUrl
         return False
 
-    def parserUSERSCLOUDCOM(self, baseUrl):
+    def parserUSERSCLOUDCOM(self, baseUrl):  # Need test
         printDBG("parserUSERSCLOUDCOM baseUrl[%s]\n" % baseUrl)
         HTTP_HEADER = {"User-Agent": "Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; androVM for VirtualBox ('Tablet' version with phone caps) Build/JRO03S) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30"}
         COOKIE_FILE = GetCookieDir("userscloudcom.cookie")
@@ -1265,6 +1276,7 @@ class pageParser(CaptchaHelper):
                 break
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<div id="player_code"', "</div>", True)[1]
         tmp = self.cm.ph.getDataBeetwenMarkers(tmp, ">eval(", "</script>")[1]
+        # unpack and decode params from JS player script code
         tmp = unpackJSPlayerParams(tmp, VIDUPME_decryptPlayerParams)
         if tmp is not None:
             data = tmp + data
@@ -1284,7 +1296,7 @@ class pageParser(CaptchaHelper):
         if sts and "text" not in self.cm.meta["content-type"]:
             return self.cm.meta["url"]
 
-    def parserUPZONECC(self, baseUrl):
+    def parserUPZONECC(self, baseUrl):  # Need test
         printDBG("parserUPZONECC baseUrl[%r]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -1309,7 +1321,7 @@ class pageParser(CaptchaHelper):
         url = self.cm.getFullUrl(ret["data"].strip(), cUrl)
         return strwithmeta(url, {"Referer": cUrl, "User-Agent": HTTP_HEADER["User-Agent"]})
 
-    def parser1FICHIERCOM(self, baseUrl):
+    def parser1FICHIERCOM(self, baseUrl):  # Need test
         printDBG("parser1FICHIERCOM baseUrl[%s]" % baseUrl)
         HTTP_HEADER = {
             "User-Agent": "Mozilla/%s%s" % (pageParser.FICHIER_DOWNLOAD_NUM, pageParser.FICHIER_DOWNLOAD_NUM),
@@ -1401,7 +1413,7 @@ class pageParser(CaptchaHelper):
             return videoUrl
         return False
 
-    def parserFILECLOUDIO(self, baseUrl):
+    def parserFILECLOUDIO(self, baseUrl):  # Need test
         printDBG("parserFILECLOUDIO baseUrl[%s]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
         referer = baseUrl.meta.get("Referer", baseUrl)
@@ -1437,7 +1449,7 @@ class pageParser(CaptchaHelper):
             return strwithmeta(data["downloadUrl"], {"Referer": cUrl, "User-Agent": HTTP_HEADER["User-Agent"]})
         return False
 
-    def parserGOOGLE(self, baseUrl):
+    def parserGOOGLE(self, baseUrl):  # Need test
         printDBG("parserGOOGLE baseUrl[%s]" % baseUrl)
         urltab = []
         _VALID_URL = r"https?://(?:(?:docs|drive)\.google\.com/(?:uc\?.*?id=|file/d/)|video\.google\.com/get_player\?.*?docid=)(?P<id>[a-zA-Z0-9_-]{28,})"
@@ -1494,7 +1506,7 @@ class pageParser(CaptchaHelper):
         urltab.sort(key=lambda item: item["quality"], reverse=True)
         return urltab
 
-    def parserARCHIVEORG(self, linkUrl):
+    def parserARCHIVEORG(self, linkUrl):  # Need test
         printDBG("parserARCHIVEORG linkUrl[%s]" % linkUrl)
         urltab = []
         sts, data = self.cm.getPage(linkUrl)
@@ -1510,7 +1522,7 @@ class pageParser(CaptchaHelper):
                 printExc()
         return urltab
 
-    def parserWEBCAMERAPL(self, baseUrl):
+    def parserWEBCAMERAPL(self, baseUrl):  # Need test
         printDBG("parserWEBCAMERAPL baseUrl[%s]" % baseUrl)
         sts, data = self.cm.getPage(baseUrl)
         if not sts:
@@ -1534,7 +1546,7 @@ class pageParser(CaptchaHelper):
             printExc()
         return vidTab
 
-    def parserBBC(self, baseUrl):
+    def parserBBC(self, baseUrl):  # Need test
         printDBG("parserBBC baseUrl[%r]" % baseUrl)
         vpid = self.cm.ph.getSearchGroups(baseUrl, "/vpid/([^/]+?)/")[0]
         if vpid == "":
@@ -1578,7 +1590,7 @@ class pageParser(CaptchaHelper):
                 videoUrls[idx]["url"] = strwithmeta(videoUrls[idx]["url"], {"external_sub_tracks": subtitlesTab})
         return videoUrls
 
-    def parserMEDIAFIRECOM(self, baseUrl):
+    def parserMEDIAFIRECOM(self, baseUrl):  # Need test
         printDBG("parserMEDIAFIRECOM baseUrl[%s]" % baseUrl)
         HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0", "Accept": "*/*", "Accept-Encoding": "gzip, deflate"}
         sts, data = self.cm.getPage(baseUrl, {"header": HEADER})
@@ -1594,7 +1606,7 @@ class pageParser(CaptchaHelper):
                 return videoUrl
         return False
 
-    def parserVIDLOADCO(self, baseUrl):
+    def parserVIDLOADCO(self, baseUrl):  # Need test
         printDBG("parserVIDLOADCO baseUrl[%r]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
         cUrl = baseUrl
@@ -1628,7 +1640,7 @@ class pageParser(CaptchaHelper):
                     urltab.append({"name": "[%s] %s %s" % (types, domain, label), "url": url})
         return urltab
 
-    def parserSOUNDCLOUDCOM(self, baseUrl):
+    def parserSOUNDCLOUDCOM(self, baseUrl):  # Need test
         printDBG("parserSOUNDCLOUDCOM baseUrl[%r]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
         cUrl = baseUrl
@@ -1666,7 +1678,7 @@ class pageParser(CaptchaHelper):
                 urls.append({"name": baseName + " " + key, "url": url})
         return urls
 
-    def parserFILEFACTORYCOM(self, baseUrl):
+    def parserFILEFACTORYCOM(self, baseUrl):  # Need test
         printDBG("parserFILEFACTORYCOM baseUrl[%r]" % baseUrl)
         baseUrl = strwithmeta(baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -1693,7 +1705,7 @@ class pageParser(CaptchaHelper):
             SetIPTVPlayerLastHostError(msg)
         return False
 
-    def parserMEDIASET(self, baseUrl):
+    def parserMEDIASET(self, baseUrl):  # Need test
         printDBG("parserMEDIASET baseUrl[%r]" % baseUrl)
         guid = ph.search(baseUrl, r"""https?://(?:(?:www|static3)\.)?mediasetplay\.mediaset\.it/(?:(?:video|on-demand)/(?:[^/]+/)+[^/]+_|player/index\.html\?.*?\bprogramGuid=)([0-9A-Z]{16})""")[0]
         if not guid:
@@ -1719,7 +1731,7 @@ class pageParser(CaptchaHelper):
                         retTab.append({"name": "%s - %s" % (f, asset_type), "url": url})
         return retTab
 
-    def parserVIDMOLYME(self, baseUrl):
+    def parserVIDMOLYME(self, baseUrl):  # fix 150126
         printDBG("parserVIDMOLYME baseUrl[%r]" % baseUrl)
         urltab = []
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -1804,7 +1816,7 @@ class pageParser(CaptchaHelper):
                                 urltab.append({"name": "MP4", "url": url})
             return urltab
 
-    def parserVEEV(self, baseUrl):
+    def parserVEEV(self, baseUrl):  # update 211225
         printDBG("parserVEEV baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER.update({"Referer": baseUrl, "Origin": urlparser.getDomain(baseUrl, False), "Accept-Language": "en-US,en;q=0.5"})
@@ -1876,7 +1888,7 @@ class pageParser(CaptchaHelper):
                             urltab.append({"name": "MP4", "url": urlparser.decorateUrl(url, {"external_sub_tracks": sub_tracks})})
         return urltab
 
-    def parserDOOD(self, baseUrl):
+    def parserDOOD(self, baseUrl):  # update 240925
         urlsTab = []
         sub_tracks = []
         printDBG("parserDOOD baseUrl [%s]" % baseUrl)
@@ -1910,7 +1922,7 @@ class pageParser(CaptchaHelper):
             urlsTab.append({"name": "mp4", "url": url})
         return urlsTab
 
-    def parserSTREAMTAPE(self, baseUrl):
+    def parserSTREAMTAPE(self, baseUrl):  # check 150625
         printDBG("parserSTREAMTAPE baseUrl[%s]" % baseUrl)
         urltabs = []
         subTracks = []
@@ -1945,7 +1957,7 @@ class pageParser(CaptchaHelper):
                 urltabs.append(params)
         return urltabs
 
-    def parserSST(self, url):
+    def parserSST(self, url):  # update 050626
         printDBG("parserSST baseUrl[%s]" % url)
         host = urlparser.getDomain(url, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -1969,7 +1981,7 @@ class pageParser(CaptchaHelper):
                 urltab.append({"name": "360p", "url": url})
         return urltab
 
-    def parserSBS(self, baseUrl):
+    def parserSBS(self, baseUrl):  # update 020126
         printDBG("parserSBS baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         referer = baseUrl.meta.get("Referer")
@@ -2000,7 +2012,7 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(hls))
         return urltab
 
-    def parserVINOVO(self, baseUrl):
+    def parserVINOVO(self, baseUrl):  # fix 15.06.25
         printDBG("parserVINOVO baseUrl[%s]" % baseUrl)
         COOKIE_FILE = self.COOKIE_PATH + "vinovo.cookie"
         HTTP_HEADER = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:139.0) Gecko/20100101 Firefox/139.0"}
@@ -2026,7 +2038,7 @@ class pageParser(CaptchaHelper):
                 return [{"name": "MP4", "url": urlparser.decorateUrl(vid_src, HTTP_HEADER)}]
         return []
 
-    def parserSTREAMEMBED(self, baseUrl):
+    def parserSTREAMEMBED(self, baseUrl):  # fix 191025
         urltab = []
         printDBG("parserSTREAMEMBED baseUrl[%s]" % baseUrl)
         headers = self.cm.getDefaultHeader()
@@ -2045,7 +2057,7 @@ class pageParser(CaptchaHelper):
             urltab = getDirectM3U8Playlist(url, checkExt=False, checkContent=True, cookieParams={"header": headers, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True})
         return urltab
 
-    def parserHEXLOAD(self, baseUrl):
+    def parserHEXLOAD(self, baseUrl):  # add 160625
         printDBG("parserHEXLOAD baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         urltab = []
@@ -2059,7 +2071,7 @@ class pageParser(CaptchaHelper):
             urltab.append({"name": "mp4", "url": url})
         return urltab
 
-    def parserVIDEA(self, baseUrl):
+    def parserVIDEA(self, baseUrl):  # add 180625
         printDBG("parserVIDEA baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         STATIC_SECRET = "xHb0ZvME5q8CBcoQi6AngerDu3FGO9fkUlwPmLVY_RTzj2hJIS4NasXWKy1td7p"
@@ -2094,7 +2106,7 @@ class pageParser(CaptchaHelper):
             urltab.reverse()
         return urltab
 
-    def parserSTREAMUP(self, baseUrl):
+    def parserSTREAMUP(self, baseUrl):  # fix 300426
         printDBG("parserSTREAMUP baseUrl[%s]" % baseUrl)
         urltab = []
         subTracks = []
@@ -2120,7 +2132,7 @@ class pageParser(CaptchaHelper):
                 urltab.append({"name": "MP4", "url": url})
         return urltab
 
-    def parserSHAREVIDEO(self, url):
+    def parserSHAREVIDEO(self, url):  # add 160925
         printDBG("parserSHAREVIDEO baseUrl[%s]" % url)
         HTTP_HEADER = self.cm.getDefaultHeader()
         host = urlparser.getDomain(url, False)
@@ -2134,8 +2146,8 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserBYSE(self, baseUrl):
-        def fp(x, y, z):
+    def parserBYSE(self, baseUrl):  # fix 300526
+        def fp(x, y, z):  # thx Gujal00
             v_id = hexlify(urandom(x)).decode()
             d_id = hexlify(urandom(x)).decode()
             ctime = int(time.time())
@@ -2200,7 +2212,7 @@ class pageParser(CaptchaHelper):
                     urltab.append({"name": x.get("label", ""), "url": url})
         return urltab
 
-    def parserCOUDMAILRU(self, baseUrl):
+    def parserCOUDMAILRU(self, baseUrl):  # Fix 221125
         printDBG("parserCOUDMAILRU baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
@@ -2217,7 +2229,7 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserJWPLAYER(self, baseUrl):
+    def parserJWPLAYER(self, baseUrl):  # update 170126
         def jw_hidden(html, url):
             domain = urlparser.getDomain(url, False)[:-1]
             mediaid = url.rstrip(".html").split("/")[-1].split("-")[-1]
@@ -2304,7 +2316,7 @@ class pageParser(CaptchaHelper):
                 urltab.append({"name": "MP4", "url": url})
         return urltab
 
-    def parserOKRU(self, baseUrl):
+    def parserOKRU(self, baseUrl):  # Fix 061225
         printDBG("parserOKRU baseUrl[%s]" % baseUrl)
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -2323,7 +2335,7 @@ class pageParser(CaptchaHelper):
                 urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
         return urltab
 
-    def parserVIDSRC(self, baseUrl):
+    def parserVIDSRC(self, baseUrl):  # add 171225
         printDBG("parserVIDSRC baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         urltab = []
@@ -2400,7 +2412,7 @@ class pageParser(CaptchaHelper):
         urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserVIDCLOUD(self, baseUrl):
+    def parserVIDCLOUD(self, baseUrl):  # add 280126
         printDBG("parserVIDCLOUD baseUrl[%s]" % baseUrl)
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -2420,7 +2432,7 @@ class pageParser(CaptchaHelper):
                 urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserCOVERAPI(self, baseUrl):
+    def parserCOVERAPI(self, baseUrl):  # update 270226
         printDBG("parserCOVERAPI baseUrl[%s]" % baseUrl)
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -2452,7 +2464,7 @@ class pageParser(CaptchaHelper):
             return urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
         return []
 
-    def parserMEGAFILES(self, baseUrl):
+    def parserMEGAFILES(self, baseUrl):  # update 270226
         printDBG("parserMEGAFILES baseUrl[%s]" % baseUrl)
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
@@ -2487,7 +2499,7 @@ class pageParser(CaptchaHelper):
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
 
-    def parserVIXSRC(self, baseUrl):
+    def parserVIXSRC(self, baseUrl):  # fix 300526
         printDBG("parserVIXSRC baseUrl[%s]" % baseUrl)
         urltab = []
         host = urlparser.getDomain(baseUrl, False)
@@ -2518,7 +2530,7 @@ class pageParser(CaptchaHelper):
         urltab.extend(getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, sortWithMaxBitrate=99999999))
         return urltab
 
-    def parserFLYFILE(self, baseUrl):
+    def parserFLYFILE(self, baseUrl):  # add 030626
         printDBG("parserFLYFILE baseUrl[%s]" % baseUrl)
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
