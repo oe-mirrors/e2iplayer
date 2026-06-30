@@ -523,6 +523,8 @@ class urlparser:
             "videa.hu": self.pp.parserVIDEA,
             "videakid.hu": self.pp.parserVIDEA,
             "vidaraa.cc": self.pp.parserSTREAMUP,
+            "vidarax.cc": self.pp.parserSTREAMUP,
+            "vidavaca.net": self.pp.parserSTREAMUP,
             "vidara.so": self.pp.parserSTREAMUP,
             "vidara.to": self.pp.parserSTREAMUP,
             "vidora.stream": self.pp.parserJWPLAYER,
