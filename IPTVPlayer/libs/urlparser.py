@@ -2534,6 +2534,8 @@ class pageParser(CaptchaHelper):
         printDBG("parserFLYFILE baseUrl[%s]" % baseUrl)
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER['Referer'] = baseUrl  # FIX: Added
+        HTTP_HEADER['Origin'] = host[:-1] if host.endswith('/') else host  # FIX: Added
         mid = baseUrl.split("?")[0].split("/")[-1]
         sts, data = self.cm.getPage("https://api.%s/api/streaming/assign/%s" % (urlparser.getDomain(baseUrl), mid), {"header": HTTP_HEADER})
         if not sts:
@@ -2545,16 +2547,18 @@ class pageParser(CaptchaHelper):
             url = urlparser.decorateUrl(url, {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
             urltab.extend(getDirectM3U8Playlist(url))
         return urltab
-
+        
     def parserANONMP4(self, baseUrl):  # fix 050626
         printDBG("parserANONMP4 baseUrl[%s]" % baseUrl)
         urltab = []
         host = urlparser.getDomain(baseUrl, False)
         HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER['Referer'] = baseUrl  # FIX: Added
+        HTTP_HEADER['Origin'] = host[:-1] if host.endswith('/') else host  # FIX: Added
         sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
         if not sts:
             return []
-        url = re.search(r"SINGLE_API_URL\s*=\s*'([^']+)", data)
+        url = re.search(r"fetch\('(https://cryoapi\.shadowapi\.skin/load/[^']+)'\)", data)  # FIX: Changed from SINGLE_API_URL
         if url:
             HTTP_HEADER.update({"Referer": host, "Origin": host[:-1]})
             sts, data = self.cm.getPage(url.group(1), {"header": HTTP_HEADER})
