@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.06.2025
+# Last Modified: 02.07.2026 damagic
 ###################################################
 # LOCAL import
 ###################################################
@@ -13,6 +13,7 @@ from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
 # FOREIGN import
 ###################################################
 import re
+import json
 from Components.config import config, ConfigText, getConfigListEntry
 ###################################################
 
@@ -46,8 +47,8 @@ class NuteczkiEU(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'nuteczki.eu', 'cookie': 'nuteczki.eu.cookie'})
 
-        self.USER_AGENT = 'Mozilla/5.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html'}
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        self.HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
         self.AJAX_HEADER = dict(self.HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'})
 
@@ -92,8 +93,7 @@ class NuteczkiEU(CBaseHostClass):
                 printExc()
 
         MAIN_CAT_TAB = [
-                        {'category': 'top10', 'title': _('TOP 10'), 'url': self.getFullUrl('/top10/')},
-                        {'category': 'filters', 'title': _('Filters'), 'url': self.getFullUrl('/muzyka/'), 'post_data': {}}
+                        {'category': 'list_items', 'title': _('Najnowsze'), 'url': self.getFullUrl('/muzyka/')}
                         ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
@@ -123,77 +123,8 @@ class NuteczkiEU(CBaseHostClass):
         except Exception:
             printExc()
 
-    def top10Types(self, cItem, nextCategory):
-        printDBG("NuteczkiEU.top10Types")
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'nav-top10'), ('<footer', '>'))[1]
-
-        # main tabs
-        mainMap = {}
-        tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul', '</ul>')[1]
-        tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
-
-        for item in tmp:
-            title = self.cleanHtmlStr(item)
-            marker = self.cm.ph.getSearchGroups(item, r'''href=['"]\#([^'^"]+?)['"]''')[0]
-            if marker != '':
-                mainMap[marker] = title
-
-        data = re.compile('''<div[^>]+?id=['"](%s)['"][^>]*?>''' % '|'.join(list(mainMap.keys()))).split(data)
-        for mainIdx in range(1, len(data), 2):
-            mainTitle = mainMap[data[mainIdx]]
-
-            subMap = {}
-            tmp = self.cm.ph.getDataBeetwenMarkers(data[mainIdx + 1], '<ul', '</ul>')[1]
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<li', '</li>')
-            for item in tmp:
-                title = self.cleanHtmlStr(item)
-                marker = self.cm.ph.getSearchGroups(item, r'''href=['"]\#([^'^"]+?)['"]''')[0]
-                if marker != '':
-                    subMap[marker] = title
-
-            subItems = []
-            subData = re.compile('''<div[^>]+?id=['"](%s)['"][^>]*?>''' % '|'.join(list(subMap.keys()))).split(data[mainIdx + 1])
-            for subIdx in range(1, len(subData), 2):
-                subTitle = subMap[subData[subIdx]]
-
-                items = []
-                tmp = self.cm.ph.rgetAllItemsBeetwenNodes(subData[subIdx + 1], ('</div', '>'), ('<div', '>', 'row'), False)
-                for item in tmp:
-                    icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
-                    url = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''')[0]
-                    if url == '#':
-                        url = self.cm.ph.getSearchGroups(item, '''(<div[^>]+?getPlayer[^>]+?>)''')[0]
-                        url = self.cm.ph.getSearchGroups(url, r'''\sid=['"]([^"^']+?)['"]''')[0]
-                        if url != '':
-                            url = '/getPlayer.php?id=' + url
-                    url = self.getFullUrl(url)
-
-                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''')[0])
-                    desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'news-meta'), ('</div', '>'), False)[1])
-                    params = dict(cItem)
-                    params.update({'good_for_fav': True, 'title': title, 'url': url, 'desc': desc, 'icon': icon})
-                    if url != '':
-                        params['type'] = 'audio'
-                    else:
-                        params['title'] = _('[Logged-in-only] ') + params['title']
-                        params['type'] = 'article'
-                    items.append(params)
-
-                if len(items):
-                    params = dict(cItem)
-                    params.update({'good_for_fav': False, 'category': nextCategory, 'title': subTitle, 'sub_items': items})
-                    subItems.append(params)
-            if len(subItems):
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'category': nextCategory, 'title': mainTitle, 'sub_items': subItems})
-                self.addDir(params)
-
     def fillCacheFilters(self, cItem):
-        printDBG("NuteczkiEU.listCategories")
+        printDBG("NuteczkiEU.fillCacheFilters")
         self.cacheFilters = {}
         self.cacheFiltersKeys = []
 
@@ -202,29 +133,65 @@ class NuteczkiEU(CBaseHostClass):
             return
         self.setMainUrl(self.cm.meta['url'])
 
-        def addFilter(data, marker, baseKey):
-            self.cacheFilters[key] = []
-            for item in data:
-                value = self.cm.ph.getSearchGroups(item, marker + '''="([^"]+?)"''')[0]
-                if value == '':
+        # Szukamy formularza filtrowania - nowa struktura
+        form_data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'filter'), ('</form', '>'), False)[1]
+        if not form_data:
+            # Próbujemy znaleźć selecty z klasą lub id
+            selects = self.cm.ph.getAllItemsBeetwenNodes(data, ('<select', '>'), ('</select', '>'), False)
+            for select in selects:
+                key = self.cm.ph.getSearchGroups(select, '''name="([^"]+?)"''')[0]
+                if key == '':
                     continue
-                title = self.cleanHtmlStr(item)
-                self.cacheFilters[key].append({'title': title, 'post_data': {key: value}})
+                options = self.cm.ph.getAllItemsBeetwenMarkers(select, '<option', '</option>')
+                self.cacheFilters[key] = []
+                for option in options:
+                    value = self.cm.ph.getSearchGroups(option, '''value="([^"]+?)"''')[0]
+                    if value == '':
+                        continue
+                    title = self.cleanHtmlStr(option)
+                    self.cacheFilters[key].append({'title': title, 'post_data': {key: value}})
+                if len(self.cacheFilters[key]):
+                    self.cacheFiltersKeys.append(key)
+            return
 
-            if len(self.cacheFilters[key]):
-                self.cacheFiltersKeys.append(key)
-
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<form', '>', 'filter'), ('</form', '>'), False)[1]
-        filtersData = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'form-group'), ('</div', '>'))
+        # Stara metoda - dla formularza
+        filtersData = self.cm.ph.getAllItemsBeetwenNodes(form_data, ('<div', '>', 'form-group'), ('</div', '>'))
+        if not filtersData:
+            # Próbujemy znaleźć selecty bezpośrednio w formularzu
+            selects = self.cm.ph.getAllItemsBeetwenMarkers(form_data, '<select', '</select>')
+            for select in selects:
+                key = self.cm.ph.getSearchGroups(select, '''name="([^"]+?)"''')[0]
+                if key == '':
+                    continue
+                options = self.cm.ph.getAllItemsBeetwenMarkers(select, '<option', '</option>')
+                self.cacheFilters[key] = []
+                for option in options:
+                    value = self.cm.ph.getSearchGroups(option, '''value="([^"]+?)"''')[0]
+                    if value == '':
+                        continue
+                    title = self.cleanHtmlStr(option)
+                    self.cacheFilters[key].append({'title': title, 'post_data': {key: value}})
+                if len(self.cacheFilters[key]):
+                    self.cacheFiltersKeys.append(key)
+            return
 
         for tmp in filtersData:
             key = self.cm.ph.getSearchGroups(tmp, '''name="([^"]+?)"''')[0]
             if key == '':
                 continue
-            tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>')
-            addFilter(tmp, 'value', key)
+            options = self.cm.ph.getAllItemsBeetwenMarkers(tmp, '<option', '</option>')
+            self.cacheFilters[key] = []
+            for option in options:
+                value = self.cm.ph.getSearchGroups(option, '''value="([^"]+?)"''')[0]
+                if value == '':
+                    continue
+                title = self.cleanHtmlStr(option)
+                self.cacheFilters[key].append({'title': title, 'post_data': {key: value}})
+            if len(self.cacheFilters[key]):
+                self.cacheFiltersKeys.append(key)
 
-        printDBG(self.cacheFilters)
+        printDBG("cacheFilters: %s" % self.cacheFilters)
+        printDBG("cacheFiltersKeys: %s" % self.cacheFiltersKeys)
 
     def listFilters(self, cItem, nextCategory):
         printDBG("NuteczkiEU.listFilters")
@@ -237,17 +204,20 @@ class NuteczkiEU(CBaseHostClass):
         if f_idx >= len(self.cacheFiltersKeys):
             return
 
-        filter = self.cacheFiltersKeys[f_idx]
+        filter_key = self.cacheFiltersKeys[f_idx]
         f_idx += 1
         cItem['f_idx'] = f_idx
         if f_idx == len(self.cacheFiltersKeys):
             cItem['category'] = nextCategory
 
-        for item in self.cacheFilters.get(filter, []):
+        for item in self.cacheFilters.get(filter_key, []):
             params = dict(cItem)
-            params['post_data'] = dict(params['post_data'])
-            params['post_data'] .update(item['post_data'])
-            params['post_data']['filter-enable-category'] = 105  # no idea what this is
+            params['post_data'] = dict(params.get('post_data', {}))
+            params['post_data'].update(item['post_data'])
+            # Dodajemy domyślne parametry jeśli istnieją
+            if 'do=search' in cItem.get('url', ''):
+                params['post_data']['do'] = 'search'
+                params['post_data']['subaction'] = 'search'
             params['title'] = item['title']
             self.addDir(params)
 
@@ -282,7 +252,7 @@ class NuteczkiEU(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(tmp, '''href=['"]([^"^']+?)['"]''')[0]
             if url == '#':
                 url = self.cm.ph.getSearchGroups(item, '''(<div[^>]+?getPlayer[^>]+?>)''')[0]
-                url = self.cm.ph.getSearchGroups(url, r'''\sid=['"]([^"^']+?)['"]''')[0]
+                url = self.cm.ph.getSearchGroups(url, r'''\sid=['"]([^'^"]+?)['"]''')[0]
                 if url != '':
                     url = '/getPlayer.php?id=' + url
             url = self.getFullUrl(url)
@@ -327,6 +297,76 @@ class NuteczkiEU(CBaseHostClass):
         cItem['category'] = 'list_items'
         self.listItems(cItem)
 
+    def _extract_player_urls(self, data, base_url):
+        """
+        Wyodrębnia wszystkie URL-e odtwarzaczy ze strony.
+        """
+        urls = []
+
+        # Szukamy iframe
+        iframes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>', caseSensitive=False)
+        for iframe in iframes:
+            url = self.cm.ph.getSearchGroups(iframe, r'''\ssrc=['"]([^"^']+?)['"]''', 1, True)[0]
+            if url and 'facebook' not in url.lower() and 'radioftb' not in url.lower():
+                urls.append(self.getFullUrl(url, base_url))
+
+        # Szukamy div z data-url (krakenfiles)
+        divs = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'frame-fixer'), ('</div', '>'), caseSensitive=False)
+        for div in divs:
+            url = self.cm.ph.getSearchGroups(div, r'''\sdata\-url=['"]([^"^']+?)['"]''', 1, True)[0]
+            if url and 'radioftb' not in url.lower():
+                urls.append(self.getFullUrl(url, base_url))
+
+        # Szukamy bezpośrednich linków do odtwarzaczy (tylko krakenfiles)
+        player_links = re.findall(r'''<a[^>]+?href=['"]([^'"]*krakenfiles[^'"]+?)['"]''', data, re.I)
+        for url in player_links:
+            if url.startswith('/'):
+                url = self.getFullUrl(url, base_url)
+            if url and 'facebook' not in url.lower() and 'radioftb' not in url.lower():
+                urls.append(url)
+
+        # Usuwamy duplikaty zachowując kolejność
+        seen = set()
+        unique_urls = []
+        for url in urls:
+            if url not in seen:
+                seen.add(url)
+                unique_urls.append(url)
+
+        return unique_urls
+
+    def _extract_kraken_audio_url(self, data):
+        """
+        Wyodrębnia bezpośredni URL do pliku audio z krakenfiles.com.
+        """
+        # Szukamy w JavaScript - format m4a
+        match = re.search(r'''m4a:\s*['"]([^'"]+\.m4a)['"]''', data, re.I)
+        if match:
+            return match.group(1)
+
+        # Szukamy w JavaScript - format mp3
+        match = re.search(r'''mp3:\s*['"]([^'"]+\.mp3)['"]''', data, re.I)
+        if match:
+            return match.group(1)
+
+        # Szukamy bezpośredniego linku do pliku
+        match = re.search(r'''https?://[^'"]+\.(?:m4a|mp3)''', data, re.I)
+        if match:
+            return match.group(0)
+
+        # Szukamy w JSON
+        try:
+            json_match = re.search(r'''\{[^}]*"(?:m4a|mp3|file)"[^}]*\}''', data, re.I)
+            if json_match:
+                json_data = json.loads(json_match.group(0))
+                for key in ['m4a', 'mp3', 'file']:
+                    if key in json_data:
+                        return json_data[key]
+        except Exception:
+            pass
+
+        return None
+
     def getLinksForVideo(self, cItem):
         printDBG("NuteczkiEU.getLinksForVideo [%s]" % cItem)
         self.tryTologin()
@@ -338,68 +378,79 @@ class NuteczkiEU(CBaseHostClass):
             return []
         self.setMainUrl(self.cm.meta['url'])
 
-        tmp = self.cm.ph.getAllItemsBeetwenNodes(data, ('<div', '>', 'frame-fixer'), ('</div', '>'), caseSensitive=False)
-        for idx in range(len(tmp)):
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[idx], r'''\sdata\-url=['"]([^"^']+?)['"]''', 1, True)[0])
-            if 1 != self.up.checkHostSupport(url):
-                jscode = []
-                jsData = self.cm.ph.getAllItemsBeetwenNodes(tmp[idx], ('<script', '>'), ('</script', '>'), caseSensitive=False)
-                for jsItem in jsData:
-                    if 'src=' in jsItem.lower():
-                        scriptUrl = self.getFullUrl(self.cm.ph.getSearchGroups(jsItem, '''<script[^>]+?src=['"]([^'^"]*?krakenfiles[^'^"]+?)['"]''', 1, True)[0], self.cm.meta['url'])
-                        sts, jsItem = self.getPage(scriptUrl)
-                        if sts and jsItem != '':
-                            jscode.append(jsItem)
-                    else:
-                        sts, jsItem = self.cm.ph.getDataBeetwenNodes(jsItem, ('<script', '>'), ('</script', '>'), False, caseSensitive=False)
-                        if sts:
-                            jscode.append(jsItem)
-                if len(jscode):
-                    jscode.insert(0, 'window={}; window.location={}; window.location.protocol="%s"; var document={}; document.write=function(txt){print(txt);}' % self.getMainUrl().split('//', 1)[0])
-                    ret = js_execute('\n'.join(jscode), {'timeout_sec': 15})
-                    if ret['sts'] and 0 == ret['code']:
-                        printDBG(ret['data'])
-                        data += ret['data'].strip()
+        # Wyodrębnij wszystkie URL-e odtwarzaczy (tylko krakenfiles)
+        player_urls = self._extract_player_urls(data, self.cm.meta['url'])
 
-            elif 'facebook' not in url.lower():
+        for idx, url in enumerate(player_urls):
+            # Sprawdź czy to znany host
+            if 1 == self.up.checkHostSupport(url):
                 name = _('Player %s: %s') % (idx + 1, self.up.getHostName(url))
                 urlTab.append({'url': url, 'name': name, 'need_resolve': 1})
+            else:
+                # Dla nieznanych hostów próbujemy pobrać bezpośredni link
+                name = _('Player %s') % (idx + 1)
+                urlTab.append({'url': url, 'name': name, 'need_resolve': 1})
 
-        tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, '<iframe', '</iframe>', caseSensitive=False)
-        for idx in range(len(tmp)):
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp[idx], r'''\ssrc=['"]([^"^']+?)['"]''', 1, True)[0])
-            if url == '' or 'facebook' in url.lower():
-                continue
-            name = _('Player %s') % (idx + 1)
-            urlTab.append({'url': url, 'name': name, 'need_resolve': 1})
+        # Jeśli nie znaleziono żadnych odtwarzaczy, spróbuj znaleźć bezpośredni link audio
+        if not urlTab:
+            # Szukaj bezpośredniego linku do pliku audio
+            audio_urls = re.findall(r'''https?://[^'"]+\.(?:mp3|m4a|ogg|wav)''', data, re.I)
+            for url in audio_urls:
+                if url not in [item['url'] for item in urlTab]:
+                    urlTab.append({'url': url, 'name': 'Direct', 'need_resolve': 0})
 
         return urlTab
 
     def getVideoLinks(self, videoUrl):
         printDBG("NuteczkiEU.getVideoLinks [%s]" % videoUrl)
 
+        # Jeśli to znany host, użyj jego resolwera
         if 1 == self.up.checkHostSupport(videoUrl):
             return self.up.getVideoLinkExt(videoUrl)
 
         urlTab = []
+
+        # Pobierz stronę
         sts, data = self.getPage(videoUrl)
         if not sts:
             return []
 
-        printDBG(data)
+        # Obsługa krakenfiles.com
+        if 'krakenfiles.com' in videoUrl.lower():
+            audio_url = self._extract_kraken_audio_url(data)
+            if audio_url:
+                # Sprawdź czy to już jest pełny URL
+                if not audio_url.startswith('http'):
+                    audio_url = 'https:' + audio_url if audio_url.startswith('//') else 'https://' + audio_url
+                urlTab.append({'name': 'Audio', 'url': audio_url})
 
-        urls = []
-        data = re.compile(r'''['"]([^'^"]*?/music[^'^"]+?\.mp3(?:\?[^'^"]*?)?)['"]''', re.I).findall(data)
-        for url in data:
-            url = self.getFullUrl(url)
-            if url == '' or url in urls:
-                continue
-            urls.append(url)
-            name = self.cm.ph.getSearchGroups(url, '''/music([^'^"]*?)/''')[0]
-            if name == '':
-                name = 'SD'
-            urlTab.append({'name': name, 'url': url})
-        urlTab.sort(key=lambda item: item['name'])
+        # Ogólne wyszukiwanie linków audio
+        if not urlTab:
+            # Szukaj bezpośrednich linków do plików audio
+            audio_patterns = [
+                r'''https?://[^'"]+\.mp3(?:\?[^'"]*)?''',
+                r'''https?://[^'"]+\.m4a(?:\?[^'"]*)?''',
+                r'''https?://[^'"]+\.ogg(?:\?[^'"]*)?''',
+                r'''https?://[^'"]+\.wav(?:\?[^'"]*)?''',
+            ]
+            for pattern in audio_patterns:
+                matches = re.findall(pattern, data, re.I)
+                for url in matches:
+                    if url not in [item['url'] for item in urlTab]:
+                        urlTab.append({'name': 'Direct', 'url': url})
+
+        # Próbuj wyciągnąć z JavaScript (dla krakenfiles)
+        if not urlTab:
+            # Szukaj w kodzie JavaScript
+            js_blocks = self.cm.ph.getAllItemsBeetwenMarkers(data, '<script', '</script>')
+            for js in js_blocks:
+                # Szukaj URL-i w stringach
+                urls = re.findall(r'''['"](https?://[^'"]+\.(?:mp3|m4a|ogg|wav)[^'"]*)['"]''', js, re.I)
+                for url in urls:
+                    if url not in [item['url'] for item in urlTab]:
+                        urlTab.append({'name': 'JS', 'url': url})
+
+        printDBG("NuteczkiEU.getVideoLinks result: %s" % urlTab)
         return urlTab
 
     def tryTologin(self):
@@ -457,7 +508,7 @@ class NuteczkiEU(CBaseHostClass):
         self.currItem = dict(self.currItem)
         self.currItem.pop('good_for_fav', None)
 
-    # MAIN MENU
+        # MAIN MENU
         if name is None:
             self.listMainMenu({'name': 'category'})
 
@@ -467,20 +518,17 @@ class NuteczkiEU(CBaseHostClass):
         elif category == 'list_items':
             self.listItems(self.currItem)
 
-        elif category == 'top10':
-            self.top10Types(self.currItem, 'sub_items')
-
         elif category == 'filters':
             self.listFilters(self.currItem, 'list_items')
 
         elif category == 'sub_items':
             self.currList = self.currItem.get('sub_items', [])
-    # SEARCH
+        # SEARCH
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    # HISTORIA SEARCH
+        # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
