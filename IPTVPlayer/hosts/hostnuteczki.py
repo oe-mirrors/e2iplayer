@@ -61,9 +61,11 @@ class NuteczkiEU(CBaseHostClass):
     HTML_SPAN_END = '</span'
     HTML_FORM_END = '</form>'
 
-    # Stałe dla wzorców URL
+    # Stałe dla wzorców URL - bezpieczne, bez backtrackingu
     PATTERN_AUDIO_EXT = r'https?://[^"\']+\.(?:mp3|m4a|ogg|wav)'
     PATTERN_JSON_KEY = r'"(?:m4a|mp3|file)"\s*:\s*"([^"]+)"'
+    # Bezpieczny wzorzec dla krakenfiles - używa [^"]* zamiast .*?
+    PATTERN_KRAKENFILES = r'<a[^>]*href="([^"]*krakenfiles[^"]*)"'
 
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'nuteczki.eu', 'cookie': 'nuteczki.eu.cookie'})
@@ -499,10 +501,8 @@ class NuteczkiEU(CBaseHostClass):
                 urls.append(self.getFullUrl(url, base_url))
 
         # Szukamy bezpośrednich linków do odtwarzaczy (tylko krakenfiles)
-        # Używamy prostszego wzorca bez backtrackingu
-        player_links = re.findall(
-            r'''<a[^>]*href=['"]([^'"]*krakenfiles[^'"]*?)['"]''', data, re.I
-        )
+        # Używamy wzorca z PATTERN_KRAKENFILES - bezpieczny, bez backtrackingu
+        player_links = re.findall(self.PATTERN_KRAKENFILES, data, re.I)
         for url in player_links:
             if url.startswith('/'):
                 url = self.getFullUrl(url, base_url)
