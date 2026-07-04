@@ -1,14 +1,35 @@
 # -*- coding: utf-8 -*-
-from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+# Last Modified: 30.06.2026 - damagic
+###################################################
+# LOCAL import
+###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
+###################################################
+###################################################
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urlparse
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote, urllib_quote_plus
+###################################################
+# FOREIGN import
+###################################################
+import re
+import base64
+try:
+    import json
+except Exception:
+    import simplejson as json
+from Components.config import config, ConfigText
+###################################################
 
 
 def GetConfigList():
-    return []
+    optionList = []
+    return optionList
 
 
 def gettytul():
@@ -16,52 +37,127 @@ def gettytul():
 
 
 class Premiumsmarteu(CBaseHostClass):
+
     def __init__(self):
         CBaseHostClass.__init__(self, {'history': 'premiumsmart.eu', 'cookie': 'premiumsmart.eu.cookie'})
-        self.HEADER = self.cm.getDefaultHeader()
-        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.MAIN_URL = gettytul()
+        config.plugins.iptvplayer.cloudflare_user = ConfigText(default='Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0', fixed_size=False)
+        self.USER_AGENT = config.plugins.iptvplayer.cloudflare_user.value
+        self.MAIN_URL = 'https://premiumsmart.eu/'
         self.API_URL = self.getFullUrl('api/v1/')
-        self.DEFAULT_ICON_URL = self.getFullUrl('storage/branding_media/9a5b1890-53ce-4052-9a83-862d97a6b285.png')
-        self.itemsPerPage = 50
-        self.MENU = [
-            {'category': 'list_sort', 'title': _('Filmy'), 'url': self.API_URL + 'channel/filmy?perPage=%d' % self.itemsPerPage},
-            {'category': 'list_sort', 'title': _('Seriale'), 'url': self.API_URL + 'channel/seriale?perPage=%d' % self.itemsPerPage},
-            {'category': 'search', 'title': _('Search'), 'search_item': True},
-            {'category': 'search_history', 'title': _('Search history')},
-        ]
+        self.DEFAULT_ICON_URL = 'https://premiumsmart.eu/storage/branding_media/9a5b1890-53ce-4052-9a83-862d97a6b285.png'
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl(), 'Upgrade-Insecure-Requests': '1', 'Connection': 'keep-alive'}
+        self.AJAX_HEADER = dict(self.HTTP_HEADER)
+        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
 
-    def getPage(self, baseUrl, addParams=None, post_data=None):
-        if addParams is None:
+        self.itemsPerPage = 50
+        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
+        self.cacheLinks = {}
+        self.defaultParams = {'header': self.HTTP_HEADER, 'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+
+    def getPage(self, baseUrl, addParams={}, post_data=None):
+        if addParams == {}:
             addParams = dict(self.defaultParams)
-        return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        origBaseUrl = baseUrl
+        baseUrl = self.cm.iriToUri(baseUrl)
+
+        sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+        if data.meta.get('cf_user', self.USER_AGENT) != self.USER_AGENT:
+            self.__init__()
+        return sts, data
+
+    def setMainUrl(self, url):
+        if self.cm.isValidUrl(url):
+            self.MAIN_URL = self.cm.getBaseUrl(url)
 
     def listMainMenu(self, cItem):
         printDBG("Premiumsmarteu.listMainMenu")
-        self.listsTab(self.MENU, cItem)
 
-    def listSort(self, cItem):
-        printDBG("Premiumsmarteu.listSort")
-        SORT_TAB = [
-            {'category': 'list_items', 'title': 'Data dodania', 'url': cItem['url'] + '&order=created_at:desc'},
-            {'category': 'list_items', 'title': 'Popularność', 'url': cItem['url'] + '&order=popularity:desc'},
-            {'category': 'list_items', 'title': 'Data wydania', 'url': cItem['url'] + '&order=release_date:desc'},
-            {'category': 'list_items', 'title': 'Ocena użytkowników', 'url': cItem['url'] + '&order=rating:desc'},
-            {'category': 'list_items', 'title': 'Dochód', 'url': cItem['url'] + '&order=revenue:desc'},
-            {'category': 'list_items', 'title': 'Budżet', 'url': cItem['url'] + '&order=budget:desc'},
-        ]
-        self.listsTab(SORT_TAB, cItem)
+        MAIN_CAT_TAB = [{'category': 'list_sort', 'title': _('Filmy'), 'url': self.API_URL + 'channel/filmy?perPage=%d' % self.itemsPerPage},
+                        {'category': 'list_sort', 'title': _('Seriale'), 'url': self.API_URL + 'channel/seriale?perPage=%d' % self.itemsPerPage},
+                        {'category': 'search', 'title': _('Search'), 'search_item': True},
+                        {'category': 'search_history', 'title': _('Search history')},
+                        ]
+        self.listsTab(MAIN_CAT_TAB, cItem)
+
+    ###################################################
+    def _fillMovieFilters(self, cItem):
+        self.cacheMovieFilters = {'cats': [], 'sort': [], 'years': [], 'az': []}
+
+        # fill sort
+        dat = [('&order=created_at:desc', 'Data dodania'),
+               ('&order=popularity:desc', 'Popularność'),
+               ('&order=release_date:desc', 'Data wydania'),
+               ('&order=rating:desc', 'Ocena użytkowników'),
+               ('&order=revenue:desc', 'Dochód'),
+               ('&order=budget:desc', 'Budżet')
+            ]
+        for item in dat:
+            self.cacheMovieFilters['sort'].append({'title': item[1], 'sort': item[0]})
+
+        # fill cats
+        dat = [('&genre=Akcja', 'Akcja'),
+               ('&genre=Animacja', 'Animacja'),
+               ('&genre=Dokumentalny', 'Data wydania'),
+               ('&genre=Dramat', 'Dramat'),
+               ('&genre=Familijny', 'Familijny'),
+               ('&genre=Fantasy', 'Fantasy'),
+               ('&genre=Historyczny', 'Historyczny'),
+               ('&genre=Horror', 'Horror'),
+               ('&genre=Komedia', 'Komedia'),
+               ('&genre=Krymina%C5%82', 'Kryminał'),
+               ('&genre=Muzyczny', 'Muzyczny'),
+               ('&genre=Przygodowy', 'Przygodowy'),
+               ('&genre=Romans', 'Romans'),
+               ('&genre=Sci-Fi', 'Sci-Fi'),
+               ('&genre=Tajemnica', 'Tajemnica'),
+               ('&genre=Thriller', 'Thriller'),
+               ('&genre=Western', 'Western'),
+               ('&genre=Wojenny', 'Wojenny'),
+               ('&genre=film%20TV', 'Film TV'),
+               ('&genre=Sport%20LIVE', 'Sport LIVE')
+            ]
+        for item in dat:
+            self.cacheMovieFilters['cats'].append({'title': item[1], 'url': cItem['url'] + item[0]})
+
+    ###################################################
+    def listMovieFilters(self, cItem, category):
+        printDBG("Premiumsmarteu.listMovieFilters")
+
+        filter = cItem['category'].split('_')[-1]
+        self._fillMovieFilters(cItem)
+        if len(self.cacheMovieFilters[filter]) > 0:
+            filterTab = []
+            filterTab.extend(self.cacheMovieFilters[filter])
+            self.listsTab(filterTab, cItem, category)
+
+    def listsTab(self, tab, cItem, category=None):
+        printDBG("Premiumsmarteu.listsTab")
+        for item in tab:
+            params = dict(cItem)
+            if category is not None:
+                params['category'] = category
+            params.update(item)
+            self.addDir(params)
 
     def listItems(self, cItem):
         printDBG("Premiumsmarteu.listItems [%s]" % cItem)
         page = cItem.get('page', 1)
         url = cItem['url']
+
+        sort = cItem.get('sort', '')
+        if sort not in url:
+            url = url + sort
+
         if page > 1:
             url = url + '&page={0}'.format(page)
 
-        sts, data = self.getPage(url)
+        urlParams = dict(self.defaultParams)
+        sts, data = self.getPage(self.MAIN_URL, urlParams)
+        urlParams['header']['x-xsrf-token'] = self.cm.getCookieItem(self.COOKIE_FILE, 'XSRF-TOKEN').replace('%3D', '=')
+        sts, data = self.getPage(url, urlParams)
         if not sts:
             return
+        self.setMainUrl(data.meta['url'])
 
         try:
             if '/search/' in url:
@@ -69,25 +165,39 @@ class Premiumsmarteu(CBaseHostClass):
                 nextPage = False
             else:
                 data = json_loads(data)['channel']['content']
-                nextPage = data.get('next_page', False)
+                nextPage = data['next_page']
                 data = data['data']
         except Exception:
             printExc()
             return
 
         for item in data:
+            try:
+                if item['is_series']:
+                    video_id = item['id']
+                else:
+                    video_id = item['primary_video']['id']
+            except Exception:
+                url = self.getFullUrl(self.API_URL + 'titles/%d?load=primaryVideo' % item['id'])
+                sts, data = self.getPage(url)
+                if not sts:
+                    continue
+                try:
+                    data = json_loads(data)['title']
+                    video_id = data['primary_video']['id']
+                except Exception:
+                    continue
+            icon = self.getFullIconUrl(item.get('poster', ''))
+            if 'original' in icon:
+                icon = icon.replace('/original/', '/w500/')
             title = item.get('name', '')
             desc = item.get('description', '')
-            icon = self.getFullIconUrl(item.get('poster', '')).replace('/original/', '/w500/')
-            if item.get('is_series'):
-                url = self.getFullUrl(self.API_URL + 'titles/%d/seasons' % item['id'])
+            if item['is_series']:
+                url = self.getFullUrl(self.API_URL + 'titles/%d/seasons' % video_id)
                 params = {'good_for_fav': True, 'category': 'list_seasons', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addDir(params)
             else:
-                try:
-                    url = self.getFullUrl(self.API_URL + 'watch/%d' % item['primary_video']['id'])
-                except (KeyError, TypeError):
-                    continue
+                url = self.getFullUrl(self.API_URL + 'watch/%d' % video_id)
                 params = {'good_for_fav': True, 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addVideo(params)
 
@@ -96,43 +206,68 @@ class Premiumsmarteu(CBaseHostClass):
             params.update({'title': _('Next page'), 'page': page + 1})
             self.addDir(params)
 
-    def listSeasons(self, cItem):
-        printDBG("Premiumsmarteu.listSeasons")
+    def listSeriesSeasons(self, cItem, nextCategory):
+        printDBG("Premiumsmarteu.listSeriesSeasons")
         sts, data = self.getPage(cItem['url'])
         if not sts:
+            return
+
+        if not data or not data.strip():
+            printDBG("Premiumsmarteu.listSeriesSeasons: empty response")
+            return
+
+        if '<!DOCTYPE' in data or '<html' in data:
+            printDBG("Premiumsmarteu.listSeriesSeasons: got HTML instead of JSON (probably 404)")
             return
 
         try:
             data = json_loads(data)
         except Exception:
+            printDBG("Premiumsmarteu.listSeriesSeasons: invalid JSON response")
             return
 
-        for sItem in data.get('pagination', {}).get('data', []):
+        if 'pagination' not in data or 'data' not in data['pagination']:
+            printDBG("Premiumsmarteu.listSeriesSeasons: no pagination data")
+            return
+
+        for sItem in data['pagination']['data']:
             sts, sdata = self.getPage(self.getFullUrl(cItem['url'] + '/%d/episodes' % sItem['number']))
             if not sts:
-                continue
+                return
             sTitle = 'Sezon %d' % sItem['number']
             try:
                 sdata = json_loads(sdata)
             except Exception:
+                printDBG("Premiumsmarteu.listSeriesSeasons: invalid episodes JSON")
                 continue
 
-            episodes = []
-            for item in sdata.get('pagination', {}).get('data', []):
+            if 'pagination' not in sdata or 'data' not in sdata['pagination']:
+                printDBG("Premiumsmarteu.listSeriesSeasons: no episodes data")
+                continue
+
+            sdata = sdata['pagination']['data']
+            tabItems = []
+            for item in sdata:
                 try:
                     url = self.getFullUrl(self.API_URL + 'watch/%d' % item['primary_video']['id'])
                 except Exception:
                     continue
-                icon = self.getFullIconUrl(item.get('poster', ' ')).replace('/original/', '/w500/')
-                episodes.append({'url': url, 'title': item.get('name', ''), 'desc': item.get('description', ''), 'icon': icon})
-            if episodes:
+                icon = self.getFullIconUrl(item.get('poster', ' '))
+                if 'original' in icon:
+                    icon = icon.replace('/original/', '/w500/')
+                title = item.get('name', '')
+                desc = item.get('description', '')
+                tabItems.append({'url': url, 'title': title, 'desc': desc, 'icon': icon})
+            if len(tabItems):
                 params = dict(cItem)
-                params.update({'good_for_fav': False, 'category': 'list_episodes', 'title': sTitle, 'episodes': episodes, 'icon': cItem.get('icon', ''), 'desc': ''})
+                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sTitle, 'episodes': tabItems, 'icon': cItem['icon'], 'desc': ''})
                 self.addDir(params)
 
-    def listEpisodes(self, cItem):
-        printDBG("Premiumsmarteu.listEpisodes")
-        for item in cItem.get('episodes', []):
+    def listSeriesEpisodes(self, cItem):
+        printDBG("Premiumsmarteu.listSeriesEpisodes [%s]" % cItem)
+        episodes = cItem.get('episodes', [])
+        cItem = dict(cItem)
+        for item in episodes:
             self.addVideo(item)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
@@ -143,60 +278,115 @@ class Premiumsmarteu(CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         printDBG("Premiumsmarteu.getLinksForVideo [%s]" % cItem)
-        urltab = []
+
+        cacheKey = cItem['url']
+        cacheTab = self.cacheLinks.get(cacheKey, [])
+        if len(cacheTab):
+            printDBG("Premiumsmarteu.getLinksForVideo using cache [%d] items" % len(cacheTab))
+            return cacheTab
+
+        self.cacheLinks = {}
+
+        cUrl = cItem['url']
         url = cItem['url']
+
+        retTab = []
 
         sts, data = self.getPage(url)
         if not sts:
+            printDBG("Premiumsmarteu.getLinksForVideo failed to get page")
             return []
 
+        cUrl = data.meta['url']
+        self.setMainUrl(cUrl)
         try:
             data = json_loads(data)
+            printDBG("Premiumsmarteu.getLinksForVideo alternative_videos count[%d]" % len(data.get('alternative_videos', [])))
         except Exception:
             printExc()
             return []
 
-        for item in data.get('alternative_videos', []):
-            playerUrl = item.get('src', '')
-            if not playerUrl:
+        SKIP_HOSTS = ['drakkar.st', 'bysetayico.com', 'byse']
+
+        for item in data['alternative_videos']:
+            playerUrl = self.getFullUrl(item.get('src', '')).replace(' ', '%20')
+            if playerUrl == '':
+                printDBG("Premiumsmarteu.getLinksForVideo empty playerUrl for item[%s]" % item.get('name', 'unknown'))
                 continue
+
+            host = self.up.getHostName(playerUrl)
+
+            skip = False
+            for skip_host in SKIP_HOSTS:
+                if skip_host in host:
+                    printDBG("Premiumsmarteu.getLinksForVideo SKIPPING host[%s] playerUrl[%s]" % (host, playerUrl))
+                    skip = True
+                    break
+            if skip:
+                continue
+
             name = item.get('name', '') + ' - ' + self.up.getHostName(playerUrl)
-            if item.get('category') == 'trailer':
+            if item['category'] == 'trailer':
                 name = '[trailer] ' + name
-            urltab.append({'name': name, 'url': strwithmeta(playerUrl, {'Referer': self.MAIN_URL}), 'need_resolve': 1})
 
-        return urltab
+            meta = {'Referer': self.MAIN_URL, 'User-Agent': self.USER_AGENT}
+            printDBG("Premiumsmarteu.getLinksForVideo host[%s] playerUrl[%s]" % (host, playerUrl))
 
-    def getVideoLinks(self, url):
-        printDBG("Premiumsmarteu.getVideoLinks [%s]" % url)
-        if self.cm.isValidUrl(url):
-            return self.up.getVideoLinkExt(url)
-        return []
+            retTab.append({'name': name, 'url': strwithmeta(playerUrl, meta), 'need_resolve': 1})
 
-    def getArticleContent(self, cItem):
-        printDBG("Premiumsmarteu.getArticleContent [%s]" % cItem)
-        otherInfo = {}
-        title = cItem.get("title", "")
-        desc = cItem.get("desc", "")
-        icon = cItem.get("icon", self.DEFAULT_ICON_URL)
-        return [{"title": title, "text": desc, "images": [{"url": icon}], "other_info": otherInfo}]
+        printDBG("Premiumsmarteu.getLinksForVideo total links[%d]" % len(retTab))
+        if len(retTab):
+            self.cacheLinks[cacheKey] = retTab
+        return retTab
+
+    def getVideoLinks(self, baseUrl):
+        printDBG("Premiumsmarteu.getVideoLinks [%s]" % baseUrl)
+        baseUrl = strwithmeta(baseUrl)
+        urlTab = []
+
+        if len(self.cacheLinks.keys()):
+            for key in self.cacheLinks:
+                for idx in range(len(self.cacheLinks[key])):
+                    if baseUrl in self.cacheLinks[key][idx]['url']:
+                        if not self.cacheLinks[key][idx]['name'].startswith('*'):
+                            self.cacheLinks[key][idx]['name'] = '*' + self.cacheLinks[key][idx]['name'] + '*'
+                        break
+
+        if 'User-Agent' not in baseUrl.meta:
+            baseUrl.meta['User-Agent'] = self.USER_AGENT
+
+        return self.up.getVideoLinkExt(baseUrl)
 
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
+        printDBG('handleService start')
+
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
+
         name = self.currItem.get("name", '')
         category = self.currItem.get("category", '')
-        printDBG("handleService: name[%s], category[%s] " % (name, category))
+        mode = self.currItem.get("mode", '')
+
+        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
+        self.cacheLinks = {}
         self.currList = []
-        if name is None:
+
+        if name is None and category == '':
+            rm(self.COOKIE_FILE)
             self.listMainMenu({'name': 'category'})
-        elif category == 'list_sort':
-            self.listSort(self.currItem)
+        elif 'list_cats' == category:
+            self.listMovieFilters(self.currItem, 'list_sort')
+        elif 'list_years' == category:
+            self.listMovieFilters(self.currItem, 'list_items')
+        elif 'list_az' == category:
+            self.listMovieFilters(self.currItem, 'list_items')
+        elif 'list_sort' == category:
+            self.listMovieFilters(self.currItem, 'list_items')
         elif category == 'list_items':
             self.listItems(self.currItem)
         elif category == 'list_seasons':
-            self.listSeasons(self.currItem)
+            self.listSeriesSeasons(self.currItem, 'list_episodes')
         elif category == 'list_episodes':
-            self.listEpisodes(self.currItem)
+            self.listSeriesEpisodes(self.currItem)
         elif category in ["search", "search_next_page"]:
             cItem = dict(self.currItem)
             cItem.update({'search_item': False, 'name': 'category'})
@@ -205,12 +395,11 @@ class Premiumsmarteu(CBaseHostClass):
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
         else:
             printExc()
+
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
 class IPTVHost(CHostBase):
+
     def __init__(self):
         CHostBase.__init__(self, Premiumsmarteu(), True, [])
-
-    def withArticleContent(self, cItem):
-        return cItem["category"] in ["video", "list_seasons", "list_episodes"]
