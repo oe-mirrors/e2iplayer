@@ -36,6 +36,7 @@ except NameError:
     binary_type = bytes
     string_types = (str, bytes)
 
+
 def ensureText(data, encoding='utf-8'):
     if data is None:
         return u''
@@ -63,6 +64,7 @@ def ensureText(data, encoding='utf-8'):
         except Exception:
             return u''
 
+
 def fsPath(path):
     path = ensureText(path)
     try:
@@ -72,6 +74,7 @@ def fsPath(path):
         pass
     return path
 
+
 def shellQuote(value):
     value = ensureText(value)
     value = value.replace('\\', '\\\\')
@@ -79,6 +82,7 @@ def shellQuote(value):
     value = value.replace('`', '\\`')
     value = value.replace('$', '\\$')
     return value
+
 
 def writeUtf8TextFile(path, data):
     try:
@@ -97,6 +101,7 @@ def writeUtf8TextFile(path, data):
 # One instance of this class can be used only for
 # one download
 ###################################################
+
 
 class MergeDownloader(BaseDownloader):
 
@@ -168,7 +173,7 @@ class MergeDownloader(BaseDownloader):
             reason = data
             self.iptv_sys = None
             callBackFun(sts, reason)
-        else: # Need wget for correct working, so check also if wget working correctly
+        else:  # Need wget for correct working, so check also if wget working correctly
             self._isWgetWorkingCorrectly(callBackFun)
 
     def _isWgetWorkingCorrectly(self, callBackFun):
@@ -568,7 +573,7 @@ class MergeDownloader(BaseDownloader):
 
     def start(self, url, filePath, params={}):
         self.downloaderParams = params
-        self.fileExtension = '' # should be implemented in future
+        self.fileExtension = ''  # should be implemented in future
         self.url = url
         self.chapterMetaPath = ''
         self.finalizedPath = ''
@@ -721,9 +726,9 @@ class MergeDownloader(BaseDownloader):
         if self.status in [DMHelper.STS.DOWNLOADING, DMHelper.STS.POSTPROCESSING]:
             if self.console:
                 if hasattr(self.console, "sendCtrlC"):
-                    self.console.sendCtrlC() # kill produce zombies
+                    self.console.sendCtrlC()  # kill produce zombies
                 elif hasattr(self.console, "kill"):
-                    self.console.kill() # kill produce zombies
+                    self.console.kill()  # kill produce zombies
                 self._cmdFinished(-1, True)
             return BaseDownloader.CODE_OK
         return BaseDownloader.CODE_NOT_DOWNLOADING

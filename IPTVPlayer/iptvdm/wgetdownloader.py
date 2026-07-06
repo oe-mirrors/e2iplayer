@@ -262,7 +262,7 @@ class WgetDownloader(BaseDownloader):
         self.url = url
         self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension = '' # should be implemented in future
+        self.fileExtension = ''  # should be implemented in future
 
         self.outData = ''
         self.contentType = 'unknown'
@@ -364,9 +364,9 @@ class WgetDownloader(BaseDownloader):
         if DMHelper.STS.DOWNLOADING == self.status:
             if self.console:
                 if hasattr(self.console, "sendCtrlC"):
-                    self.console.sendCtrlC() # kill produce zombies
+                    self.console.sendCtrlC()  # kill produce zombies
                 elif hasattr(self.console, "kill"):
-                    self.console.kill() # kill produce zombies
+                    self.console.kill()  # kill produce zombies
                 self._cmdFinished(-1, True)
                 return BaseDownloader.CODE_OK
 

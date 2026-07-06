@@ -37,6 +37,7 @@ except NameError:
     binary_type = bytes
     string_types = (str, bytes)
 
+
 def ensureText(data, encoding='utf-8'):
     if data is None:
         return u''
@@ -63,6 +64,7 @@ def ensureText(data, encoding='utf-8'):
             return text_type(str(data))
         except Exception:
             return u''
+
 
 def writeUtf8TextFile(path, data):
     try:
@@ -228,7 +230,7 @@ class HLSDownloader(BaseDownloader):
         self.url = url
         self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension = '' # should be implemented in future
+        self.fileExtension = ''  # should be implemented in future
         self.outData = ''
         self.contentType = 'unknown'
 
@@ -337,9 +339,9 @@ class HLSDownloader(BaseDownloader):
         if DMHelper.STS.DOWNLOADING == self.status:
             if self.console:
                 if hasattr(self.console, "sendCtrlC"):
-                    self.console.sendCtrlC() # kill # produce zombies
+                    self.console.sendCtrlC()  # kill # produce zombies
                 elif hasattr(self.console, "kill"):
-                    self.console.kill() # kill produce zombies
+                    self.console.kill()  # kill produce zombies
                 self._cmdFinished(-1, True)
                 return BaseDownloader.CODE_OK
         return BaseDownloader.CODE_NOT_DOWNLOADING

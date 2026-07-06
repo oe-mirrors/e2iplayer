@@ -241,16 +241,16 @@ class YouTubeParser:
         if url.startswith("//"):
             url = "https:" + url
         if url.startswith("http://yt3.googleusercontent.com/"):
-            url = "https://" + url[len("http://") :]
+            url = "https://" + url[len("http://"):]
         elif url.startswith("http://yt3.ggpht.com/"):
-            url = "https://" + url[len("http://") :]
+            url = "https://" + url[len("http://"):]
         elif url.startswith("http://i.ytimg.com/"):
-            url = "https://" + url[len("http://") :]
+            url = "https://" + url[len("http://"):]
         elif url.startswith("http://"):
             parsed = urlparse(url)
             host = parsed.netloc.lower()
             if host.endswith("googleusercontent.com") or host.endswith("ggpht.com") or host.endswith("ytimg.com"):
-                url = "https://" + url[len("http://") :]
+                url = "https://" + url[len("http://"):]
         if "?" in url:
             url = url.split("?", 1)[0]
         url = re.sub(r"=s([0-9]+)(?:-c)?(?:-k-c0x00ffffff)?(?:-no-rj)?(?:-mo)?$", "", url, flags=re.IGNORECASE)
