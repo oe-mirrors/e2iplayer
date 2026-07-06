@@ -2588,11 +2588,11 @@ class pageParser(CaptchaHelper):
         HTTP_HEADER = self.cm.getDefaultHeader()
         HTTP_HEADER['Referer'] = baseUrl
         HTTP_HEADER['Origin'] = host[:-1] if host.endswith('/') else host
-        
+
         sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
         if not sts:
             return []
-            
+
         urltab = []
         r = re.search(r'({\\"src.+})]}]', data)
         if r:
@@ -2600,17 +2600,17 @@ class pageParser(CaptchaHelper):
                 json_str = r.group(1).replace('\\', '')
                 jd = json_loads(json_str)
                 src = jd.get('src')
-                
+
                 if src:
                     if src.startswith('/'):
                         src = "https://%s%s" % (urlparser.getDomain(baseUrl), src)
-                    
+
                     url = urlparser.decorateUrl(src, {
-                        "User-Agent": HTTP_HEADER["User-Agent"], 
-                        "Referer": baseUrl, 
+                        "User-Agent": HTTP_HEADER["User-Agent"],
+                        "Referer": baseUrl,
                         "Origin": host[:-1] if host.endswith('/') else host
                     })
-                    
+
                     if '.m3u8' in url.lower():
                         urltab.extend(getDirectM3U8Playlist(url))
                     else:
@@ -2618,5 +2618,5 @@ class pageParser(CaptchaHelper):
             except Exception:
                 printExc()
                 return []
-                
+
         return urltab
