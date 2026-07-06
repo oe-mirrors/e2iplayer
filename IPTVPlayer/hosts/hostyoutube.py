@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 26.06.2026 - Change: Channel name in titles + sidecar files (.txt + .jpg) after merge download + MKV chapters + Enigma2 .cuts chapter marks
+# Last Modified: 01.07.2026 - Change: configurable YouTube display language, configurable channel name for downloaded files, absolute published date in info view
 ###################################################
 # LOCAL import
 ###################################################
@@ -23,7 +23,7 @@ except Exception:
 import re
 import os
 import codecs
-from Components.config import config, ConfigDirectory, ConfigYesNo, getConfigListEntry
+from Components.config import config, ConfigDirectory, ConfigYesNo, ConfigSelection, getConfigListEntry
 
 ###################################################
 
@@ -37,6 +37,7 @@ from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 
 ###################################################
+
 ###################################################
 # Config options for HOST
 ###################################################
@@ -44,6 +45,15 @@ config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default="/hdd/")
 config.plugins.iptvplayer.youtube_sidecar = ConfigYesNo(default=True)
 config.plugins.iptvplayer.youtube_mkv_chapters = ConfigYesNo(default=True)
 config.plugins.iptvplayer.youtube_enigma2_cuts = ConfigYesNo(default=True)
+config.plugins.iptvplayer.youtube_download_channel_name = ConfigYesNo(default=True)
+config.plugins.iptvplayer.youtube_ui_language = ConfigSelection(
+    default="system",
+    choices=[
+        ("system", _("System language")),
+        ("de", _("German")),
+        ("en", _("English")),
+    ],
+)
 
 
 def GetConfigList():
@@ -54,6 +64,8 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.ytDefaultformat))
     optionList.append(getConfigListEntry(_("Use default video quality:"), config.plugins.iptvplayer.ytUseDF))
     optionList.append(getConfigListEntry(_("Age-gate bypass:"), config.plugins.iptvplayer.ytAgeGate))
+    optionList.append(getConfigListEntry(_("Display language:"), config.plugins.iptvplayer.youtube_ui_language))
+    optionList.append(getConfigListEntry(_("Add channel name to downloaded file") + ":", config.plugins.iptvplayer.youtube_download_channel_name))
     optionList.append(getConfigListEntry(_("Create sidecar files (.txt/.jpg)") + ":", config.plugins.iptvplayer.youtube_sidecar))
     optionList.append(getConfigListEntry(_("Create MKV with chapter marks from description") + ":", config.plugins.iptvplayer.youtube_mkv_chapters))
     optionList.append(getConfigListEntry(_("Create Enigma2 .cuts chapter marks") + ":", config.plugins.iptvplayer.youtube_enigma2_cuts))
@@ -61,29 +73,9 @@ def GetConfigList():
     # checking should be moved to setup
     if IsExecutable("ffmpeg"):
         optionList.append(getConfigListEntry(_("Allow dash format:"), config.plugins.iptvplayer.ytShowDash))
-        if config.plugins.iptvplayer.ytShowDash.value != "false":
-            optionList.append(getConfigListEntry(_("Allow VP9 codec:"), config.plugins.iptvplayer.ytVP9))
+    if config.plugins.iptvplayer.ytShowDash.value != "false":
+        optionList.append(getConfigListEntry(_("Allow VP9 codec:"), config.plugins.iptvplayer.ytVP9))
     return optionList
-
-
-def _clearYouTubeSearchHistory(session):
-    historyFile = GetSearchHistoryDir("ytlist.txt")
-    try:
-        if os.path.isfile(historyFile):
-            os.remove(historyFile)
-            msg = _("YouTube search history cleared.")
-        else:
-            msg = _("No YouTube search history found.")
-    except Exception:
-        printExc()
-        msg = _("Failed to clear YouTube search history.")
-    session.open(MessageBox, msg, type=MessageBox.TYPE_INFO, timeout=5)
-
-
-# def GetHostActions():
-#    return [
-#        (_("Clear search history"), _clearYouTubeSearchHistory),
-#    ]
 
 
 ###################################################
@@ -108,8 +100,9 @@ class YouTubeInfo(Screen):
         Screen.__init__(self, session)
         self.host = host
         self.cItem = cItem
-        self.videoId = ''
+        self.videoId = ""
         self.fullDescriptionLoaded = False
+        self.watchDataLoaded = False
 
         self["title"] = Label("")
         self["meta"] = Label("")
@@ -125,54 +118,77 @@ class YouTubeInfo(Screen):
                 "up": self.keyUp,
                 "down": self.keyDown,
             },
-            -1
+            -1,
         )
 
         self.onLayoutFinish.append(self.onStart)
 
     def onStart(self):
         self._fillBasicData()
-        self.loadFullDescription()
+        self.loadWatchData()
 
     def _cleanText(self, text):
         text = str(text or "")
         return text.replace("[/br]", "\n")
 
+    def _setMeta(self, published=""):
+        meta = []
+        if published:
+            meta.append(published)
+        elif self.cItem.get("time", ""):
+            meta.append(self.cItem.get("time", ""))
+
+        if self.videoId:
+            meta.append("videoId: %s" % self.videoId)
+
+        self["meta"].setText(" | ".join(meta))
+
     def _fillBasicData(self):
         self.videoId = self.host._getVideoIdFromItem(self.cItem)
         title = self.cItem.get("title", "")
         desc = self.cItem.get("desc", "")
-        time = self.cItem.get("time", "")
-
-        meta = []
-        if time:
-            meta.append(time)
-        if self.videoId:
-            meta.append("videoId: %s" % self.videoId)
 
         self["title"].setText(title)
-        self["meta"].setText(" | ".join(meta))
+        self._setMeta()
         self["text"].setText(self._cleanText(desc))
-        self["status"].setText(_("Loading full description...") if self.videoId else _("No video ID available"))
+        self["status"].setText(_("Loading watch data...") if self.videoId else _("No video ID available"))
 
-    def loadFullDescription(self):
+    def loadWatchData(self):
         if not self.videoId:
             return
+
         try:
-            fullDesc = self.host.ytp._getFullDescriptionFromWatch(self.videoId)
+            watchData = self.host.ytp._getWatchPageData(self.videoId)
+            self.watchDataLoaded = True
+
+            absolutePublished = watchData.get("absolutePublished", "")
+            fullDesc = watchData.get("fullDescription", "")
+            shortDesc = self.cItem.get("desc", "")
+
+            if absolutePublished:
+                self.cItem["time"] = absolutePublished
+                self._setMeta(absolutePublished)
+                printDBG("YouTubeInfo.loadWatchData absolutePublished[%s]" % absolutePublished)
+            else:
+                self._setMeta()
+
             if fullDesc:
                 self["text"].setText(self._cleanText(fullDesc))
                 self["status"].setText(_("Full description loaded"))
                 self.fullDescriptionLoaded = True
+                printDBG("YouTubeInfo.loadWatchData fullDescriptionLen[%d]" % len(fullDesc))
             else:
+                self["text"].setText(self._cleanText(shortDesc))
                 self["status"].setText(_("Full description not available"))
+                printDBG("YouTubeInfo.loadWatchData fullDescription EMPTY")
+
         except Exception:
             printExc()
-            self["status"].setText(_("Error while loading description"))
+            self["status"].setText(_("Error while loading watch data"))
 
     def keyOK(self):
-        if not self.fullDescriptionLoaded:
-            self.loadFullDescription()
+        if not self.watchDataLoaded:
+            self.loadWatchData()
 
     def keyBack(self):
         self.close()
@@ -193,8 +209,7 @@ class Youtube(CBaseHostClass):
         self.DEFAULT_ICON_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/YouTube_2024.svg/960px-YouTube_2024.svg.png"
         self.MAIN_GROUPED_TAB = [{"category": "from_file", "title": _("User links"), "desc": _("User links stored in the ytlist.txt file.")}, {"category": "feeds", "title": _("Trending"), "desc": _("Browse youtube trending feeds")}] + self.searchItems()
 
-        self.SEARCH_TYPES = [(_("Video"), "video"), (_("Channel"), "channel"), (_("Playlist"), "playlist"), (_("Movie"), "movie"), (_("Live"), "live")]
-        # (_("Program"), "show"),... # (_("traylist"), "traylist"),
+        self.SEARCH_TYPES = [(_("Video"), "video"), (_("Channel"), "channel"), (_("Playlist"), "playlist"), (_("Movie"), "movie"), (_("Live"), "live")]  # (_("Program"), "show"),... # (_("traylist"), "traylist"),
         self.ytp = YouTubeParser()
         self.currFileHost = None
 
@@ -214,16 +229,16 @@ class Youtube(CBaseHostClass):
 
     def _extractVideoId(self, url):
         printDBG("Youtube._extractVideoId")
-        videoId = ''
+        videoId = ""
         try:
             url = str(url)
 
-            match = re.search(r'[?&]v=([A-Za-z0-9_-]{11})', url)
+            match = re.search(r"[?&]v=([A-Za-z0-9_-]{11})", url)
             if match is not None:
                 videoId = match.group(1)
 
             if not videoId:
-                match = re.search(r'youtu\.be/([A-Za-z0-9_-]{11})', url)
+                match = re.search(r"youtu\.be/([A-Za-z0-9_-]{11})", url)
                 if match is not None:
                     videoId = match.group(1)
         except Exception:
@@ -232,7 +247,7 @@ class Youtube(CBaseHostClass):
 
     def _getVideoIdFromItem(self, cItem):
         printDBG("Youtube._getVideoIdFromItem")
-        videoId = ''
+        videoId = ""
         try:
             videoId = cItem.get("video_id", "")
         except Exception:
@@ -252,149 +267,207 @@ class Youtube(CBaseHostClass):
             text = cItem.get("title", "")
         return text
 
-    def _extractChannelNameFromItem(self, item, defaultChannel=''):
-        channel = ''
+    def _extractChannelNameFromItem(self, item, defaultChannel=""):
+        invalidTitles = [_("Next page"), "Next page", _("Nächste Seite"), "Nächste Seite"]
+
         try:
-            channel = item.get('channel', '')
-            if channel:
-                return channel.strip()
+            if item.get("is_pagination", False):
+                return ""
         except Exception:
             printExc()
 
         try:
-            channel = defaultChannel or ''
-            if channel:
-                return channel.strip()
+            if item.get("type", "") == "more" or item.get("image_type", "") == "NEXT":
+                return ""
         except Exception:
             printExc()
 
         try:
-            desc = item.get('desc', '') or ''
-            m = re.search(r'Channel\s*:\s*([^\n\r]+)', desc)
-            if m:
-                return m.group(1).strip()
-        except Exception:
-            printExc()
-
-        return ''
-
-    def _prefixTitleWithChannel(self, item, defaultChannel=''):
-        try:
-            title = item.get('title', '') or ''
+            title = item.get("title", "") or ""
+            if isinstance(title, str):
+                try:
+                    title = title.decode("utf-8")
+                except Exception:
+                    pass
             title = title.strip()
-            channel = self._extractChannelNameFromItem(item, defaultChannel)
-
-            if not channel or not title:
-                return
-
-            prefix = channel + ' - '
-            if title.startswith(prefix):
-                return
-
-            item['title'] = '%s - %s' % (channel, title)
+            if title in invalidTitles:
+                return ""
         except Exception:
             printExc()
 
-    def _prefixTitlesWithChannel(self, itemList, defaultChannel=''):
-        printDBG("Youtube._prefixTitlesWithChannel count[%d]" % len(itemList))
+        try:
+            channel = item.get("channel", "")
+            if channel:
+                if isinstance(channel, str):
+                    try:
+                        channel = channel.decode("utf-8")
+                    except Exception:
+                        pass
+                channel = channel.strip()
+                if channel and channel not in invalidTitles:
+                    return channel
+        except Exception:
+            printExc()
+
+        try:
+            channel = defaultChannel or ""
+            if channel:
+                if isinstance(channel, str):
+                    try:
+                        channel = channel.decode("utf-8")
+                    except Exception:
+                        pass
+                channel = channel.strip()
+                if channel and channel not in invalidTitles:
+                    return channel
+        except Exception:
+            printExc()
+
+        try:
+            desc = item.get("desc", "") or ""
+            if isinstance(desc, str):
+                try:
+                    desc = desc.decode("utf-8")
+                except Exception:
+                    pass
+            desc = re.sub(r"[\x00-\x1f]+", " ", desc)
+            m = re.search(r"Channel\s*:\s*([^\n\r]+)", desc, re.IGNORECASE)
+            if m:
+                ch = m.group(1).strip()
+                if ch not in invalidTitles:
+                    return ch
+        except Exception:
+            printExc()
+
+        return ""
+
+    def _injectChannelNameToItem(self, item, defaultChannel=""):
+        try:
+            if item.get("is_pagination", False):
+                return
+
+            if item.get("type", "") == "more":
+                return
+
+            if item.get("image_type", "") == "NEXT":
+                return
+
+            title = item.get("title", "") or ""
+            if isinstance(title, str):
+                try:
+                    title = title.decode("utf-8")
+                except Exception:
+                    pass
+            title = title.strip()
+
+            if title in [_("Next page"), "Next page", _("Nächste Seite"), "Nächste Seite"]:
+                return
+
+            channel = self._extractChannelNameFromItem(item, defaultChannel)
+            if not channel:
+                return
+
+            if not item.get("channel", ""):
+                item["channel"] = channel
+        except Exception:
+            printExc()
+
+    def _injectChannelNameToItems(self, itemList, defaultChannel=""):
+        printDBG("Youtube._injectChannelNameToItems count[%d]" % len(itemList))
         try:
             for item in itemList:
-                self._prefixTitleWithChannel(item, defaultChannel)
+                self._injectChannelNameToItem(item, defaultChannel)
         except Exception:
             printExc()
 
     def _getSidecarData(self, cItem):
         printDBG("Youtube._getSidecarData")
-        sidecarTxt = ''
-        sidecarImg = ''
+        sidecarTxt = ""
+        sidecarImg = ""
 
         try:
             article = self.getArticleContent(cItem)
             if article and isinstance(article, list):
                 articleItem = article[0]
                 try:
-                    sidecarTxt = articleItem.get('text', '')
+                    sidecarTxt = articleItem.get("text", "")
                 except Exception:
                     try:
                         sidecarTxt = articleItem.text
                     except Exception:
-                        sidecarTxt = ''
+                        sidecarTxt = ""
 
                 try:
-                    images = articleItem.get('images', [])
+                    images = articleItem.get("images", [])
                 except Exception:
                     try:
                         images = articleItem.images
                     except Exception:
                         images = []
 
-                if images and images[0].get('url'):
-                    sidecarImg = images[0].get('url')
+                if images and images[0].get("url"):
+                    sidecarImg = images[0].get("url")
         except Exception:
             printExc("Youtube.getArticleContent for sidecar failed")
 
         if not sidecarTxt:
-            sidecarTxt = cItem.get('desc', '')
+            sidecarTxt = cItem.get("desc", "")
         if not sidecarImg:
-            sidecarImg = cItem.get('icon', '')
+            sidecarImg = cItem.get("icon", "")
 
         return sidecarTxt, sidecarImg
 
-    def _applySidecarMetaToUrl(self, url, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled=False, cutsChaptersEnabled=False):
+    def _applySidecarMetaToUrl(self, url, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled=False, cutsChaptersEnabled=False, channelName=""):
         try:
             meta = dict(strwithmeta(url).meta)
         except Exception:
             meta = {}
 
         if sidecarEnabled:
-            meta['e2i_sidecar_enabled'] = True
-            meta['e2i_sidecar_txt'] = sidecarTxt
-            meta['e2i_sidecar_img'] = sidecarImg
+            meta["e2i_sidecar_enabled"] = True
+            meta["e2i_sidecar_txt"] = sidecarTxt
+            meta["e2i_sidecar_img"] = sidecarImg
         else:
-            meta.pop('e2i_sidecar_enabled', None)
-            meta.pop('e2i_sidecar_txt', None)
-            meta.pop('e2i_sidecar_img', None)
+            meta.pop("e2i_sidecar_enabled", None)
+            meta.pop("e2i_sidecar_txt", None)
+            meta.pop("e2i_sidecar_img", None)
 
         if mkvChaptersEnabled:
-            meta['e2i_mkv_chapters'] = True
+            meta["e2i_mkv_chapters"] = True
             if sidecarTxt:
-                meta['e2i_sidecar_txt'] = sidecarTxt
+                meta["e2i_sidecar_txt"] = sidecarTxt
         else:
-            meta.pop('e2i_mkv_chapters', None)
+            meta.pop("e2i_mkv_chapters", None)
 
         if cutsChaptersEnabled:
-            meta['e2i_cuts_chapters'] = True
+            meta["e2i_cuts_chapters"] = True
             if sidecarTxt:
-                meta['e2i_sidecar_txt'] = sidecarTxt
+                meta["e2i_sidecar_txt"] = sidecarTxt
         else:
-            meta.pop('e2i_cuts_chapters', None)
+            meta.pop("e2i_cuts_chapters", None)
+
+        if channelName:
+            meta["e2i_channel_name"] = channelName
+        else:
+            meta.pop("e2i_channel_name", None)
 
         return strwithmeta(str(url), meta)
 
-    def _addSidecarMetaToUrlTab(self, urlTab, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled=False, cutsChaptersEnabled=False):
+    def _addSidecarMetaToUrlTab(self, urlTab, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled=False, cutsChaptersEnabled=False, channelName=""):
         printDBG("Youtube._addSidecarMetaToUrlTab count[%d]" % len(urlTab))
         outTab = []
 
         for item in urlTab:
             try:
                 newItem = dict(item)
-                itemUrl = newItem.get('url', '')
-                newItem['url'] = self._applySidecarMetaToUrl(itemUrl, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled, cutsChaptersEnabled)
+                itemUrl = newItem.get("url", "")
+                newItem["url"] = self._applySidecarMetaToUrl(itemUrl, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled, cutsChaptersEnabled, channelName)
                 outTab.append(newItem)
             except Exception:
                 printExc()
                 outTab.append(item)
 
         return outTab
-
-    def _openYouTubeInfo(self, session, cItem):
-        printDBG("Youtube._openYouTubeInfo")
-        try:
-            session.open(YouTubeInfo, self, cItem)
-            return True
-        except Exception:
-            printExc()
-        return False
 
     def listMainMenu(self):
         printDBG("Youtube.listsMainMenu")
@@ -466,9 +539,9 @@ class Youtube(CBaseHostClass):
         if "playlists" == category:
             self.currList = self.ytp.getListPlaylistsItems(url, category, page, cItem)
 
-            for idx in range(len(self.currList)):
-                if self.currList[idx]["category"] in ["channel", "playlist", "movie", "traylist"]:
-                    self.currList[idx]["good_for_fav"] = True
+        for idx in range(len(self.currList)):
+            if self.currList[idx]["category"] in ["channel", "playlist", "movie", "traylist"]:
+                self.currList[idx]["good_for_fav"] = True
 
     def listFeeds(self, cItem):
         printDBG("Youtube.listFeeds cItem[%s]" % cItem)
@@ -485,10 +558,18 @@ class Youtube(CBaseHostClass):
             if pattern != "":
                 tmpList = self.ytp.getSearchResult(urllib_quote_plus(pattern), search_type if search_type else "video", page, "search_next_page", config.plugins.iptvplayer.ytSortBy.value, url)
 
+                currentChannel = cItem.get("channel", "")
+                currentContextTitle = cItem.get("context_title", "")
+
                 for item in tmpList:
                     item.update({"name": "category"})
 
                     if item.get("type", "") == "video":
+                        if currentChannel and not item.get("channel", ""):
+                            item["channel"] = currentChannel
+                        elif currentContextTitle and not item.get("context_title", ""):
+                            item["context_title"] = currentContextTitle
+                        self._injectChannelNameToItem(item)
                         self.addVideo(item)
                     elif item.get("type", "") == "more":
                         item.update(
@@ -500,8 +581,16 @@ class Youtube(CBaseHostClass):
                                 "search_type": search_type if search_type else "video",
                             }
                         )
+                        if currentChannel:
+                            item["channel"] = currentChannel
+                        if currentContextTitle:
+                            item["context_title"] = currentContextTitle
                         self.addMore(item)
                     else:
+                        if currentChannel and not item.get("channel", ""):
+                            item["channel"] = currentChannel
+                        elif currentContextTitle and not item.get("context_title", ""):
+                            item["context_title"] = currentContextTitle
                         if item.get("category", "") in ["channel", "playlist", "movie", "traylist"]:
                             item["good_for_fav"] = True
                         self.addDir(item)
@@ -519,6 +608,7 @@ class Youtube(CBaseHostClass):
                 desc += E2ColoR("yellow") + _("Duration") + E2ColoR("white") + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"lengthText":{"accessibility":{"accessibilityData":{"label":"', '"}},"simpleText":', False)[1] + "\n"
                 desc += E2ColoR("yellow") + _("Views") + E2ColoR("white") + ":" + self.cm.ph.getDataBeetwenMarkers(item, '"viewCountText":{"simpleText":"', '"},"navigationEndpoint":', False)[1]
                 params = {"title": title, "url": url, "icon": icon, "desc": desc, "video_id": self._extractVideoId(url)}
+                self._injectChannelNameToItem(params)
                 self.addVideo(params)
             return
 
@@ -544,6 +634,7 @@ class Youtube(CBaseHostClass):
         category = cItem.get("category", "")
         url = strwithmeta(cItem.get("url", ""))
         page = cItem.get("page", "1")
+        defaultChannel = cItem.get("channel_title", cItem.get("channel", cItem.get("title", "")))
 
         if "channel" == category:
             if "browse" not in url and ("ctoken" not in url):
@@ -554,19 +645,19 @@ class Youtube(CBaseHostClass):
 
                 tmp = self.ytp.getVideosFromChannelList(url, category, page, cItem)
                 if len(tmp) > 0:
-                    self._prefixTitlesWithChannel(tmp, cItem.get("title", ""))
+                    self._injectChannelNameToItems(tmp, defaultChannel)
                     params = {"good_for_fav": False, "category": "sub_items", "title": _("Videos"), "sub_items": tmp}
                     self.addDir(params)
 
                 url = url.replace("videos", "streams")
                 tmp = self.ytp.getVideosFromChannelList(url, category, page, cItem)
                 if len(tmp) > 0:
-                    self._prefixTitlesWithChannel(tmp, cItem.get("title", ""))
+                    self._injectChannelNameToItems(tmp, defaultChannel)
                     params = {"good_for_fav": False, "category": "sub_items", "title": _("Live streams"), "sub_items": tmp}
                     self.addDir(params)
             else:
                 self.currList = self.ytp.getVideosFromChannelList(url, category, page, cItem)
-                self._prefixTitlesWithChannel(self.currList, cItem.get("title", ""))
+                self._injectChannelNameToItems(self.currList, defaultChannel)
         elif "playlist" == category:
             self.currList = self.ytp.getVideosApiPlayList(url, category, page, cItem)
         elif "traylist" == category:
@@ -602,66 +693,176 @@ class Youtube(CBaseHostClass):
         sidecarEnabled = config.plugins.iptvplayer.youtube_sidecar.value
         mkvChaptersEnabled = config.plugins.iptvplayer.youtube_mkv_chapters.value
         cutsChaptersEnabled = config.plugins.iptvplayer.youtube_enigma2_cuts.value
-        sidecarTxt = ''
-        sidecarImg = ''
+        downloadChannelNameEnabled = config.plugins.iptvplayer.youtube_download_channel_name.value
+        sidecarTxt = ""
+        sidecarImg = ""
+        channelName = ""
 
         workItem = dict(cItem)
 
+        try:
+            if workItem.get("is_pagination", False) or workItem.get("type", "") == "more" or workItem.get("image_type", "") == "NEXT":
+                printDBG("Youtube.getLinksForVideo skip pagination item")
+                return []
+        except Exception:
+            printExc()
+
         if sidecarEnabled or mkvChaptersEnabled or cutsChaptersEnabled:
             sidecarTxt, sidecarImg = self._getSidecarData(workItem)
-            try:
-                workItem['url'] = self._applySidecarMetaToUrl(workItem.get('url', ''), sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled, cutsChaptersEnabled)
-            except Exception:
-                printExc("Youtube.getLinksForVideo apply sidecar/meta to source url failed")
+
+        if downloadChannelNameEnabled:
+            printDBG("Youtube.getLinksForVideo channel field before extract[%s]" % workItem.get("channel", ""))
+            channelName = self._extractChannelNameFromItem(workItem)
+            printDBG("Youtube.getLinksForVideo channelName extracted[%s]" % channelName)
+
+            if not channelName:
+                channelName = workItem.get("channel", "") or ""
+                if isinstance(channelName, str):
+                    try:
+                        channelName = channelName.decode("utf-8")
+                    except Exception:
+                        pass
+
+            if channelName in [_("Next page"), "Next page", _("Nächste Seite"), "Nächste Seite"]:
+                channelName = ""
+
+        try:
+            workItem["url"] = self._applySidecarMetaToUrl(workItem.get("url", ""), sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled, cutsChaptersEnabled, channelName)
+        except Exception:
+            printExc("Youtube.getLinksForVideo apply sidecar/meta to source url failed")
 
         urlTab = self.up.getVideoLinkExt(workItem["url"])
-        urlTab = self._addSidecarMetaToUrlTab(urlTab, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled, cutsChaptersEnabled)
+        urlTab = self._addSidecarMetaToUrlTab(urlTab, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled, cutsChaptersEnabled, channelName)
 
         if config.plugins.iptvplayer.ytUseDF.value and 0 < len(urlTab):
             return [urlTab[0]]
         return urlTab
 
+    def _replacePublishedLineInDesc(self, text, absolutePublished):
+        printDBG("Youtube._replacePublishedLineInDesc")
+        try:
+            text = str(text or "")
+            absolutePublished = str(absolutePublished or "").strip()
+
+            if not text or not absolutePublished:
+                return text
+
+            releaseLine = _("Release") + ": " + absolutePublished
+
+            releaseLabels = [
+                _("Release"),
+                _("Published"),
+                _("Streamed"),
+                "Release",
+                "Published",
+                "Streamed",
+                "Veröffentlicht",
+                "Premiere",
+                "Live",
+            ]
+
+            relPattern = re.compile(r"(" r"\b\d+\s+(second|seconds|minute|minutes|hour|hours|day|days|week|weeks|month|months|year|years)\s+ago\b|" r"\bvor\s+\d+\s+(sekunde|sekunden|minute|minuten|stunde|stunden|tag|tage|woche|wochen|monat|monate|jahr|jahre)\b|" r"\b\d+\s+(sekunde|sekunden|minute|minuten|stunde|stunden|tag|tage|woche|wochen|monat|monate|jahr|jahre)\s+zuvor\b" r")", re.IGNORECASE)
+
+            streamedPattern = re.compile(r"\b(gestreamt|streamed|live übertragen|streamed live)\b", re.IGNORECASE)
+
+            lines = text.split("\n")
+            out = []
+            replaced = False
+
+            for line in lines:
+                originalLine = line
+                stripped = originalLine.strip()
+
+                if not stripped or replaced:
+                    out.append(originalLine)
+                    continue
+
+                shouldReplace = False
+
+                for label in releaseLabels:
+                    if not label:
+                        continue
+
+                    pattern = r"^.*?\b%s\b\s*:\s*[^\n\r]*$" % re.escape(label)
+                    if re.search(pattern, originalLine, re.IGNORECASE):
+                        shouldReplace = True
+                        printDBG("Youtube._replacePublishedLineInDesc exact label replaced")
+                        break
+
+                if not shouldReplace and (relPattern.search(originalLine) or streamedPattern.search(originalLine)):
+                    shouldReplace = True
+                    printDBG("Youtube._replacePublishedLineInDesc relative-time line replaced")
+
+                if shouldReplace:
+                    out.append(releaseLine)
+                    replaced = True
+                else:
+                    out.append(originalLine)
+
+            if not replaced:
+                out.insert(0, releaseLine)
+                printDBG("Youtube._replacePublishedLineInDesc release line inserted")
+
+            return "\n".join(out)
+
+        except Exception:
+            printExc()
+
+        return text
+
     def getArticleContent(self, cItem):
-        printDBG("Youtube.getArticleContent >>> START")
+        printDBG("Youtube.getArticleContent START")
         retTab = []
         try:
             title = cItem.get("title", "")
-            text = self._getYouTubeInfoText(cItem)
+            shortText = self._getYouTubeInfoText(cItem)
+            text = shortText
             icon = cItem.get("icon", "")
             videoId = self._getVideoIdFromItem(cItem)
+            absolutePublished = ""
 
             if videoId:
                 try:
-                    fullText = self.ytp._getFullDescriptionFromWatch(videoId)
+                    watchData = self.ytp._getWatchPageData(videoId)
+                    fullText = watchData.get("fullDescription", "")
+                    absolutePublished = watchData.get("absolutePublished", "")
+
+                    if absolutePublished:
+                        printDBG("Youtube.getArticleContent absolutePublished[%s]" % absolutePublished)
+                        shortText = self._replacePublishedLineInDesc(shortText, absolutePublished)
+                        text = shortText
+
                     if fullText:
                         printDBG("Youtube.getArticleContent fullText FOUND len[%s]" % len(fullText))
-                        text = fullText
+                        if shortText:
+                            text = shortText + "\n\n" + fullText
+                        else:
+                            text = fullText
                     else:
                         printDBG("Youtube.getArticleContent fullText EMPTY")
                 except Exception:
-                    printDBG("Youtube.getArticleContent _getFullDescriptionFromWatch EXCEPTION")
+                    printDBG("Youtube.getArticleContent _getWatchPageData EXCEPTION")
                     printExc()
 
             richDescParams = {}
-            if cItem.get("time", ""):
+            if absolutePublished:
+                richDescParams["published"] = absolutePublished
+            elif cItem.get("time", ""):
                 richDescParams["published"] = cItem.get("time", "")
+
             if videoId:
-                richDescParams["video_id"] = videoId
+                richDescParams["videoid"] = videoId
 
             images = []
             if icon:
                 images.append({"title": "", "url": icon})
 
-            retTab.append(ArticleContent(
-                title=title,
-                text=text,
-                images=images,
-                richDescParams=richDescParams
-            ))
-            printDBG("Youtube.getArticleContent >>> END OK")
+            retTab.append(ArticleContent(title=title, text=text, images=images, richDescParams=richDescParams))
+            printDBG("Youtube.getArticleContent END OK")
         except Exception:
-            printDBG("Youtube.getArticleContent >>> END EXCEPTION")
+            printDBG("Youtube.getArticleContent END EXCEPTION")
             printExc()
+
         return retTab
 
     def getFavouriteData(self, cItem):
@@ -725,6 +926,7 @@ class Youtube(CBaseHostClass):
     def getSuggestionsProvider(self, index):
         printDBG("Youtube.getSuggestionsProvider")
         from Plugins.Extensions.IPTVPlayer.suggestions.google import SuggestionsProvider
+
         return SuggestionsProvider(True)
 
 

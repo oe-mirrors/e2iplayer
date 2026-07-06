@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
-#
-#  IPTV download manager API
-#
-#  $Id$
-#
-#
+# IPTV download manager API
+# Last Modified: 06.07.2026 - Unified Py2/Py3 version with sidecar files (.txt + .jpg)
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm, E2PrioFix
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 ###################################################
@@ -23,7 +19,57 @@ from enigma import eConsoleAppContainer
 from time import sleep
 import re
 import datetime
+import os
 ###################################################
+try:
+    text_type = unicode
+    binary_type = str
+    string_types = (basestring,)
+except NameError:
+    text_type = str
+    binary_type = bytes
+    string_types = (str, bytes)
+
+
+def ensureText(data, encoding='utf-8'):
+    if data is None:
+        return u''
+    if isinstance(data, text_type):
+        return data
+
+    if isinstance(data, binary_type):
+        try:
+            return data.decode(encoding)
+        except Exception:
+            try:
+                return data.decode(encoding, 'replace')
+            except Exception:
+                try:
+                    return data.decode('latin-1', 'replace')
+                except Exception:
+                    return u''
+
+    try:
+        return text_type(data)
+    except Exception:
+        try:
+            return text_type(str(data))
+        except Exception:
+            return u''
+
+
+def writeUtf8TextFile(path, data):
+    try:
+        txt = ensureText(data)
+        f = open(path, 'wb')
+        try:
+            f.write(txt.encode('utf-8'))
+        finally:
+            f.close()
+        return True
+    except Exception:
+        printExc()
+    return False
 
 ###################################################
 # One instance of this class can be used only for
@@ -34,12 +80,12 @@ import datetime
 class WgetDownloader(BaseDownloader):
     # wget status
     WGET_STS = enum(NONE='WGET_NONE',
-                     CONNECTING='WGET_CONNECTING',
-                     DOWNLOADING='WGET_DOWNLOADING',
-                     ENDED='WGET_ENDED')
+                    CONNECTING='WGET_CONNECTING',
+                    DOWNLOADING='WGET_DOWNLOADING',
+                    ENDED='WGET_ENDED')
     # wget status
     INFO = enum(FROM_FILE='INFO_FROM_FILE',
-                 FROM_DOTS='INFO_FROM_DOTS')
+                FROM_DOTS='INFO_FROM_DOTS')
 
     def __init__(self):
         printDBG('WgetDownloader.__init__ ')
@@ -48,6 +94,8 @@ class WgetDownloader(BaseDownloader):
         self.wgetStatus = self.WGET_STS.NONE
         # instance of E2 console
         self.console = None
+        self.console_appClosed_conn = None
+        self.console_stderrAvail_conn = None
         self.iptv_sys = None
         self.curContinueRetry = 0
         self.maxContinueRetry = 0
@@ -55,6 +103,17 @@ class WgetDownloader(BaseDownloader):
         self.remoteContentType = None
         self.lastErrorCode = None
         self.lastErrorDesc = ''
+
+        # sidecar console instance
+        self.sidecarConsole = None
+        self.sidecarConsole_appClosed_conn = None
+        self.sidecarConsole_stderrAvail_conn = None
+
+        # sidecar support
+        self.sidecarEnabled = False
+        self.sidecarTxt = ''
+        self.sidecarImg = ''
+        self.waitingForSidecar = False
 
     def __del__(self):
         printDBG("WgetDownloader.__del__ ")
@@ -104,6 +163,98 @@ class WgetDownloader(BaseDownloader):
         self.iptv_sys = None
         callBackFun(sts, reason)
 
+    def _clearSidecarData(self):
+        self.sidecarEnabled = False
+        self.sidecarTxt = ''
+        self.sidecarImg = ''
+        self.waitingForSidecar = False
+
+    def _prepareSidecarData(self, meta):
+        self._clearSidecarData()
+        try:
+            if meta.get('e2i_sidecar_enabled', False):
+                self.sidecarEnabled = True
+                self.sidecarTxt = meta.get('e2i_sidecar_txt', '')
+                self.sidecarImg = meta.get('e2i_sidecar_img', '')
+                printDBG("WgetDownloader sidecar enabled")
+        except Exception:
+            printExc()
+
+    def _writeTxtSidecar(self, filePath):
+        try:
+            if not self.sidecarTxt:
+                printDBG("WgetDownloader sidecar TXT skipped: empty content")
+                return
+
+            basePath = filePath.rsplit('.', 1)[0]
+            txtPath = basePath + '.txt'
+
+            if os.path.isfile(txtPath):
+                printDBG("WgetDownloader sidecar TXT already exists [%s]" % txtPath)
+                return
+
+            if writeUtf8TextFile(txtPath, self.sidecarTxt):
+                printDBG("WgetDownloader sidecar TXT saved [%s]" % txtPath)
+            else:
+                printDBG("WgetDownloader sidecar TXT save failed [%s]" % txtPath)
+        except Exception:
+            printExc("WgetDownloader sidecar TXT save failed")
+
+    def _imgSidecarDataAvail(self, data):
+        return
+
+    def _imgSidecarFinished(self, jpgPath, code):
+        printDBG("WgetDownloader._imgSidecarFinished code[%r]" % code)
+
+        try:
+            # break circular references
+            self.sidecarConsole_appClosed_conn = None
+            self.sidecarConsole_stderrAvail_conn = None
+            self.sidecarConsole = None
+            self.waitingForSidecar = False
+
+            if os.path.isfile(jpgPath):
+                printDBG("WgetDownloader sidecar JPG saved [%s]" % jpgPath)
+            else:
+                printDBG("WgetDownloader sidecar JPG failed [%s]" % jpgPath)
+        except Exception:
+            printExc()
+
+        self._finishDownloadFlow()
+
+    def _startImgSidecarDownload(self, filePath):
+        try:
+            if not self.sidecarImg:
+                printDBG("WgetDownloader sidecar JPG skipped: empty URL")
+                self._finishDownloadFlow()
+                return
+
+            basePath = filePath.rsplit('.', 1)[0]
+            jpgPath = basePath + '.jpg'
+
+            if os.path.isfile(jpgPath):
+                printDBG("WgetDownloader sidecar JPG already exists [%s]" % jpgPath)
+                self._finishDownloadFlow()
+                return
+
+            cmd = 'wget --header "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36" --no-check-certificate "%s" -O "%s" > /dev/null 2>&1' % (ensureText(self.sidecarImg), jpgPath)
+            printDBG("WgetDownloader sidecar JPG cmd[%s]" % cmd)
+
+            self.waitingForSidecar = True
+            self.sidecarConsole = eConsoleAppContainer()
+            self.sidecarConsole_appClosed_conn = eConnectCallback(self.sidecarConsole.appClosed, boundFunction(self._imgSidecarFinished, jpgPath))
+            self.sidecarConsole_stderrAvail_conn = eConnectCallback(self.sidecarConsole.stderrAvail, self._imgSidecarDataAvail)
+            self.sidecarConsole.execute(E2PrioFix(cmd))
+        except Exception:
+            printExc("WgetDownloader sidecar JPG start failed")
+            self._finishDownloadFlow()
+
+    def _finishDownloadFlow(self):
+        try:
+            self.onFinish()
+        except Exception:
+            printExc()
+
     def start(self, url, filePath, params={}, info_from=None, retries=0):
         '''
             Owervrite start from BaseDownloader
@@ -111,13 +262,16 @@ class WgetDownloader(BaseDownloader):
         self.url = url
         self.filePath = filePath
         self.downloaderParams = params
-        self.fileExtension = ''  # should be implemented in future
+        self.fileExtension = '' # should be implemented in future
 
         self.outData = ''
         self.contentType = 'unknown'
         if None is info_from:
             info_from = WgetDownloader.INFO.FROM_FILE
         self.infoFrom = info_from
+
+        meta = strwithmeta(url).meta
+        self._prepareSidecarData(meta)
 
         if self.infoFrom == WgetDownloader.INFO.FROM_DOTS:
             info = "--progress=dot:default"
@@ -150,49 +304,69 @@ class WgetDownloader(BaseDownloader):
         return BaseDownloader.CODE_OK
 
     def _dataAvail(self, data):
-        if None is not data:
-            self.outData += data.decode(encoding='utf-8', errors='strict')
-            if self.infoFrom == WgetDownloader.INFO.FROM_FILE:
-                if 'Saving to:' in self.outData:
-                    self.console_stderrAvail_conn = None
-                    lines = self.outData.replace('\r', '\n').split('\n')
-                    for idx in range(len(lines)):
-                        if 'Length:' in lines[idx]:
-                            match = re.search(" ([0-9]+?) ", lines[idx])
-                            if match:
-                                self.remoteFileSize = int(match.group(1))
-                            match = re.search(r"(\[[^]]+?\])", lines[idx])
-                            if match:
-                                self.remoteContentType = match.group(1)
-                    self.outData = ''
-            elif self.WGET_STS.CONNECTING == self.wgetStatus:
-                self.outData += data
+        if data is None:
+            return
+
+        text = ensureText(data)
+        if not text:
+            return
+
+        self.outData += text
+        if self.infoFrom == WgetDownloader.INFO.FROM_FILE:
+            if 'Saving to:' in self.outData:
+                self.console_stderrAvail_conn = None
                 lines = self.outData.replace('\r', '\n').split('\n')
                 for idx in range(len(lines)):
-                    if lines[idx].startswith('Length:'):
-                        match = re.search(r"Length: ([0-9]+?) \([^)]+?\) (\[[^]]+?\])", lines[idx])
+                    if 'Length:' in lines[idx]:
+                        match = re.search(r" ([0-9]+?) ", lines[idx])
                         if match:
                             self.remoteFileSize = int(match.group(1))
-                            self.remoteContentType = match.group(2)
-                    elif lines[idx].startswith('Saving to:'):
-                        if len(lines) > idx:
-                            self.outData = '\n'.join(lines[idx + 1:])
-                        else:
-                            self.outData = ''
-                        self.wgetStatus = self.WGET_STS.DOWNLOADING
-                        if self.infoFrom != WgetDownloader.INFO.FROM_DOTS:
-                            self.console_stderrAvail_conn = None
-                        break
+                        match = re.search(r"(\[[^]]+?\])", lines[idx])
+                        if match:
+                            self.remoteContentType = match.group(1)
+                self.outData = ''
+        elif self.WGET_STS.CONNECTING == self.wgetStatus:
+            lines = self.outData.replace('\r', '\n').split('\n')
+            for idx in range(len(lines)):
+                if lines[idx].startswith('Length:'):
+                    match = re.search(r"Length: ([0-9]+?) \([^)]+?\) (\[[^]]+?\])", lines[idx])
+                    if match:
+                        self.remoteFileSize = int(match.group(1))
+                        self.remoteContentType = match.group(2)
+                elif lines[idx].startswith('Saving to:'):
+                    if len(lines) > idx:
+                        self.outData = '\n'.join(lines[idx + 1:])
+                    else:
+                        self.outData = ''
+                    self.wgetStatus = self.WGET_STS.DOWNLOADING
+                    if self.infoFrom != WgetDownloader.INFO.FROM_DOTS:
+                        self.console_stderrAvail_conn = None
+                    break
 
     def _terminate(self):
         printDBG("WgetDownloader._terminate")
         if None is not self.iptv_sys:
             self.iptv_sys.kill()
             self.iptv_sys = None
+
+        if self.sidecarConsole is not None:
+            try:
+                if hasattr(self.sidecarConsole, "sendCtrlC"):
+                    self.sidecarConsole.sendCtrlC()
+                elif hasattr(self.sidecarConsole, "kill"):
+                    self.sidecarConsole.kill()
+            except Exception:
+                printExc()
+            self.sidecarConsole = None
+            self.sidecarConsole_appClosed_conn = None
+            self.sidecarConsole_stderrAvail_conn = None
+
         if DMHelper.STS.DOWNLOADING == self.status:
             if self.console:
-                self.console.kill()  # kill # produce zombies
-                # self.console.sendCtrlC()  # kill # produce zombies
+                if hasattr(self.console, "sendCtrlC"):
+                    self.console.sendCtrlC() # kill produce zombies
+                elif hasattr(self.console, "kill"):
+                    self.console.kill() # kill produce zombies
                 self._cmdFinished(-1, True)
                 return BaseDownloader.CODE_OK
 
@@ -234,10 +408,15 @@ class WgetDownloader(BaseDownloader):
             self.status = DMHelper.STS.INTERRUPTED
         else:
             self.status = DMHelper.STS.DOWNLOADED
+            self._writeTxtSidecar(self.filePath)
+
+            if self.sidecarEnabled and self.sidecarImg:
+                self._startImgSidecarDownload(self.filePath)
+                return
 
         printDBG("WgetDownloader._cmdFinished status [%s]" % (self.status))
         if not terminated:
-            self.onFinish()
+            self._finishDownloadFlow()
 
     def updateStatistic(self):
         if self.infoFrom == WgetDownloader.INFO.FROM_FILE:
@@ -251,7 +430,7 @@ class WgetDownloader(BaseDownloader):
                 if idx + 1 < dataLen:
                     # default style - one dot = 1K
                     if '.' == self.outData[idx] and self.outData[idx + 1] in ['.', ' ']:
-                       self.localFileSize += 1024
+                        self.localFileSize += 1024
                 else:
                     self.outData = self.outData[idx:]
                     break
