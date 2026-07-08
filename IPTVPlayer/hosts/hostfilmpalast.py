@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.06.2025
-# Merged: 12.06.2026 - Sidecar-Dateien (.txt + .jpg) nach HLS-Download (Inhaltsinfo + Vorschaubild) - Kamikaze24
+# Last Modified: 03.06.2025 - Mr.X
+# Merged: 08.07.2026 - Sidecar files (.txt + .jpg) extended after HLS download, IMDb rating added as the first line in .txt - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -267,6 +267,7 @@ class FilmPalastTo(CBaseHostClass):
         sidecarTxt = ""
         sidecarImg = ""
         sidecarEnabled = config.plugins.iptvplayer.filmpalast_sidecar.value
+        imdb_rating = cItem.get("imdb_rating", "")
 
         try:
             article = self.getArticleContent(cItem)
@@ -276,6 +277,8 @@ class FilmPalastTo(CBaseHostClass):
                 images = articleItem.get("images", [])
                 if images and images[0].get("url"):
                     sidecarImg = images[0].get("url")
+                if not imdb_rating or imdb_rating == "-":
+                    imdb_rating = articleItem.get("other_info", {}).get("imdb_rating", "")
         except Exception:
             printExc("getArticleContent for sidecar failed")
 
@@ -283,6 +286,14 @@ class FilmPalastTo(CBaseHostClass):
             sidecarTxt = cItem.get("desc", "")
         if not sidecarImg:
             sidecarImg = cItem.get("icon", "")
+
+        if imdb_rating and imdb_rating != "-":
+            imdb_line = u"IMDb: %s" % imdb_rating
+            if sidecarTxt:
+                if not sidecarTxt.startswith("IMDb:"):
+                    sidecarTxt = imdb_line + u"\n" + sidecarTxt
+            else:
+                sidecarTxt = imdb_line
 
         linksTab = self.cacheLinks.get(cItem["url"], [])
         if len(linksTab) > 0:

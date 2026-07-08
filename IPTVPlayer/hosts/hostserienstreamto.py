@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 12.06.2026 - Sidecar-Dateien (.txt + .jpg) nach HLS-Download (Inhaltsinfo + Vorschaubild) - Kamikaze24
+# Last Modified: 12.04.2026 - Mr.X
+# Merged: 08.07.2026 - OMDb/IMDb support added, Jump/Next icons added, JumpToPage updated, HLS sidecar files (.txt + .jpg) extended, IMDb rating added as first line in .txt - Kamikaze24
 import re
 import json
 
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 from Plugins.Extensions.IPTVPlayer.components.asynccall import MainSessionWrapper
-
 from Components.config import ConfigSelection, config, getConfigListEntry, ConfigYesNo, ConfigText
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
@@ -51,6 +51,13 @@ class SerienStreamTo(CBaseHostClass):
             addParams = dict(self.defaultParams)
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
+    def getJumpItem(self, max_page, page, url, name):
+        name = (name or "category").split('-')[0] + "-JUMP"
+        if max_page:
+            return {"good_for_fav": False, "title": "%s %s/%s" % (_("Jump"), page, max_page), "desc": _("Jump to a selected page, max: {}").format(max_page), "category": "jump_to_page", "type": "category", "url": url, "name": name, "icon": "", "max_page": max_page, "current_page": page, "image_type": "JUMP"}
+        else:
+            return {"good_for_fav": False, "title": _("Jump"), "desc": _("Jump to a selected page"), "category": "jump_to_page", "type": "category", "url": url, "name": name, "icon": "", "max_page": max_page, "current_page": page, "image_type": "JUMP"}
+
     def jumpToPage(self, cItem):
         printDBG("SerienStreamTo.jumpToPage begin")
         root_url = cItem["url"]
@@ -63,8 +70,8 @@ class SerienStreamTo(CBaseHostClass):
         current_page = int(cItem.get("current_page", 1))
         if current_page > max_page:
             current_page = max_page
-        title = "→ SPRUNG zu Seite\n(Aktuell: %d, Max: %d)" % (current_page, max_page)
-        ret = self.sessionEx.waitForFinishOpen(GetVirtualKeyboard(), title=title, text="")
+        title = _("Jump to a selected page, max: {}").format(max_page) if max_page else _("Jump to a selected page")
+        ret = self.sessionEx.waitForFinishOpen(GetVirtualKeyboard(), title=title, text=str(current_page))
         if isinstance(ret, tuple) and len(ret):
             ret = ret[0]
         if not ret or not ret.strip():
@@ -81,11 +88,15 @@ class SerienStreamTo(CBaseHostClass):
         jump_url = root_url + sep + "page=%s" % page
         printDBG("JUMP von %d → %d: [%s]" % (current_page, page, jump_url))
         jump_cItem = dict(cItem)
+        jump_cItem.pop("image_type", None)
+        jump_cItem.pop("imageType", None)
         jump_cItem.update({"url": jump_url, "category": "list_items", "page": page, "max_page": max_page, "current_page": page})
         self.currItem["url"] = jump_cItem["url"]
         self.currItem["page"] = jump_cItem["page"]
         self.currItem["max_page"] = jump_cItem["max_page"]
         self.currItem["current_page"] = jump_cItem["current_page"]
+        self.currItem.pop("image_type", None)
+        self.currItem.pop("imageType", None)
         self.listItems(jump_cItem)
 
     def getMaxPageFromPagination(self, html):
@@ -104,6 +115,12 @@ class SerienStreamTo(CBaseHostClass):
             return
         max_page = self.getMaxPageFromPagination(htm)
         page = cItem.get("page", 1)
+        baseItem = dict(cItem)
+        baseItem.pop("image_type", None)
+        baseItem.pop("imageType", None)
+        if (baseItem.get("name", "") or "").endswith("-JUMP"):
+            baseItem["name"] = "category"
+        baseItem.pop("desc", None)
         data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-6', "</div>")
         if not data:
             data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="series-item"', "</li>")
@@ -117,20 +134,18 @@ class SerienStreamTo(CBaseHostClass):
             title1 = self.cm.ph.getSearchGroups(item, 'data-search="([^"]+)"')[0]
             title2 = self.cm.ph.getSearchGroups(item, 'title="([^"]+)"')[0]
             title = title1 or title2
-            params = dict(cItem)
+            params = dict(baseItem)
             params.update({"good_for_fav": True, "category": "list_seasons", "title": self.cleanHtmlStr(title), "url": url, "icon": icon, "desc": ""})
             if "sammlung" in url:
                 params.update({"category": "list_items"})
             self.addDir(params)
         if max_page and max_page > 1:
             self.addDir({"title": "************************", "category": "empty"})
-            jump_params = dict(cItem)
-            jump_params.update({"title": "SPRUNG zu Seite %d/%d" % (page, max_page), "category": "list_items", "url": cItem["url"], "max_page": max_page, "current_page": page})
-            self.addDir(jump_params)
+            self.addDir(self.getJumpItem(max_page, page, cItem["url"], baseItem.get("name", "category")))
             nextPage = self.cm.ph.getSearchGroups(htm, r'class="page-link"\s*href="([^"]+?)"\s*rel="next"')[0]
             if nextPage:
-                next_params = dict(cItem)
-                next_params.update({"page": page + 1, "title": "Next(%d/%d)" % (page + 1, max_page), "max_page": max_page, "current_page": page + 1, "category": "list_items", "url": self.getFullUrl(nextPage)})
+                next_params = dict(baseItem)
+                next_params.update({"page": page + 1, "title": _("Next page"), "max_page": max_page, "current_page": page + 1, "category": "list_items", "url": self.getFullUrl(nextPage)})
                 self.addDir(next_params)
 
     def AZ(self, cItem):
@@ -266,6 +281,7 @@ class SerienStreamTo(CBaseHostClass):
         sidecarTxt = ""
         sidecarImg = ""
         sidecarEnabled = config.plugins.iptvplayer.serienstreamto_sidecar.value
+        imdb_rating = cItem.get("imdb_rating", "")
         try:
             article = self.getArticleContent(cItem)
             if article and isinstance(article, list):
@@ -274,12 +290,21 @@ class SerienStreamTo(CBaseHostClass):
                 images = articleItem.get("images", [])
                 if images and images[0].get("url"):
                     sidecarImg = images[0].get("url")
+                if not imdb_rating or imdb_rating == "-":
+                    imdb_rating = articleItem.get("other_info", {}).get("imdb_rating", "")
         except Exception:
             printExc("getArticleContent for sidecar failed")
         if not sidecarTxt:
             sidecarTxt = cItem.get("desc", "")
         if not sidecarImg:
             sidecarImg = cItem.get("icon", "")
+        if imdb_rating and imdb_rating != "-":
+            imdb_line = u"IMDb: %s/10" % imdb_rating
+            if sidecarTxt:
+                if not sidecarTxt.startswith("IMDb:"):
+                    sidecarTxt = imdb_line + u"\n" + sidecarTxt
+            else:
+                sidecarTxt = imdb_line
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
@@ -418,10 +443,9 @@ class SerienStreamTo(CBaseHostClass):
         category = self.currItem.get("category", "")
         printDBG("handleService start\nhandleService: name[%s], category[%s] " % (name, category))
         self.currList = []
-        if category == "list_items" and self.currItem.get("title", "").startswith("SPRUNG zu Seite"):
+        if category == "jump_to_page" or ((name or "").endswith("-JUMP")):
             self.jumpToPage(self.currItem)
-            return
-        if name is None:
+        elif name is None:
             self.listsTab(self.MENU, {"name": "category"})
             if config.plugins.iptvplayer.serienstreamto_uselogin.value:
                 self.login()
