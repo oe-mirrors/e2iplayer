@@ -535,6 +535,7 @@ class urlparser:
             "vidmoly.me": self.pp.parserVIDMOLYME,
             "vidmoly.net": self.pp.parserVIDMOLYME,
             "vidmoly.to": self.pp.parserVIDMOLYME,
+            "vidneo.cc": self.pp.parserVIDNEO,
             "vidnest.io": self.pp.parserJWPLAYER,
             "vidoza.co": self.pp.parserJWPLAYER,
             "vidoza.net": self.pp.parserJWPLAYER,
@@ -2579,4 +2580,43 @@ class pageParser(CaptchaHelper):
             else:
                 url = urlparser.decorateUrl(js.get("hls"), {"User-Agent": HTTP_HEADER["User-Agent"], "Referer": host, "Origin": host[:-1]})
                 urltab.extend(getDirectM3U8Playlist(url, sortWithMaxBitrate=99999999))
+        return urltab
+
+    def parserVIDNEO(self, baseUrl):  # fix 060726
+        printDBG("parserVIDNEO baseUrl[%s]" % baseUrl)
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER['Referer'] = baseUrl
+        HTTP_HEADER['Origin'] = host[:-1] if host.endswith('/') else host
+
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+
+        urltab = []
+        r = re.search(r'({\\"src.+})]}]', data)
+        if r:
+            try:
+                json_str = r.group(1).replace('\\', '')
+                jd = json_loads(json_str)
+                src = jd.get('src')
+
+                if src:
+                    if src.startswith('/'):
+                        src = "https://%s%s" % (urlparser.getDomain(baseUrl), src)
+
+                    url = urlparser.decorateUrl(src, {
+                        "User-Agent": HTTP_HEADER["User-Agent"],
+                        "Referer": baseUrl,
+                        "Origin": host[:-1] if host.endswith('/') else host
+                    })
+
+                    if '.m3u8' in url.lower():
+                        urltab.extend(getDirectM3U8Playlist(url))
+                    else:
+                        urltab.append({'name': 'VidNeo Direct', 'url': url, 'need_resolve': 0})
+            except Exception:
+                printExc()
+                return []
+
         return urltab
