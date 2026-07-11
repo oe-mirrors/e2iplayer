@@ -527,6 +527,7 @@ class urlparser:
             "vidavaca.net": self.pp.parserSTREAMUP,
             "vidara.so": self.pp.parserSTREAMUP,
             "vidara.to": self.pp.parserSTREAMUP,
+            "vidmatrixa.com": self.pp.parserSTREAMUP,
             "vidora.stream": self.pp.parserJWPLAYER,
             "videzz.net": self.pp.parserJWPLAYER,
             "vidhidehub.com": self.pp.parserJWPLAYER,
