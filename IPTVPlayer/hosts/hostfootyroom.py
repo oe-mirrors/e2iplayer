@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-# Last modified: 13/1/2026
+# Last modified: 14/1/2026
 # footyroom Host (Created By Dr HYTHAM MAHMOUD)
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 import re
 import json
+
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 
 
 def GetConfigList():
@@ -23,67 +24,11 @@ class FootyRoom(CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "footyroom.co", "cookie": "footyroom.co.cookie"})
         self.MAIN_URL = "https://footyroom.co/"
         self.DEFAULT_ICON_URL = "https://cdn.footyroom.co/pics/iphone/1024x1024.png"
-        self.USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari"
         self.HTTP_HEADER = self.cm.getDefaultHeader(browser="chrome")
-        self.HTTP_HEADER.update({"User-Agent": self.USER_AGENT, "Referer": self.MAIN_URL})
+        self.HTTP_HEADER.update({"Referer": self.MAIN_URL})
         self.defaultParams = {"header": self.HTTP_HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self._countriesCache = None
         self._matchesCache = {}  # key: base_url → value: list of all matches
-
-    # ----------------- MENU TRANSLATIONS -----------------
-    _MENU_TR = {
-        # Countries / Sections
-        "England": "إنجلترا",
-        "Spain": "إسبانيا",
-        "Italy": "إيطاليا",
-        "Germany": "ألمانيا",
-        "France": "فرنسا",
-        "Portugal": "البرتغال",
-        "Netherlands": "هولندا",
-        "Turkey": "تركيا",
-        "Saudi Arabia": "السعودية",
-        "USA": "الولايات المتحدة",
-        "United States": "الولايات المتحدة",
-        "Australia": "أستراليا",
-        "Russia": "روسيا",
-        "Europe": "أوروبا",
-        "International": "دولي",
-        # Generic
-        "Competition": "بطولة",
-        # Competitions
-        "Premier League": "الدوري الإنجليزي الممتاز",
-        "La Liga": "الدوري الإسباني",
-        "Serie A": "الدوري الإيطالي",
-        "Bundesliga": "الدوري الألماني",
-        "Ligue 1": "الدوري الفرنسي",
-        "League Cup": "كأس الرابطة",
-        "Community Shield": "درع المجتمع",
-        "FA Cup": "كأس الاتحاد الإنجليزي",
-        "AFC Champions League": "دوري أبطال آسيا",
-        "World Cup": "كأس العالم",
-        "Copa America": "كوبا أمريكا",
-        "Africa Cup of Nations": "كأس أمم أفريقيا",
-        "International Friendlies": "مباريات دولية ودية",
-        "Club Friendlies": "مباريات الأندية الودية",
-        "Club World Cup": "كأس العالم للأندية",
-        "World Cup U-20": "كأس العالم تحت 20",
-        "AFF Suzuki Cup": "كأس اتحاد آسيان (AFF)",
-        "Asian Cup": "كأس آسيا",
-        "CONCACAF Gold Cup": "الكأس الذهبية (كونكاكاف)",
-        "CONCACAF Champions League": "دوري أبطال كونكاكاف",
-    }
-
-    def _trMenuTitle(self, title):
-        """Translate main/sub menu titles only (countries/competitions)."""
-        t = (title or "").strip()
-        if not t:
-            return t
-        # Exact match first
-        if t in self._MENU_TR:
-            return self._MENU_TR[t]
-        # Light normalization
-        t2 = re.sub(r"\s+", " ", t).strip()
-        return self._MENU_TR.get(t2, t)
 
     def _t(self, s):
         """Clean HTML text"""
@@ -130,7 +75,7 @@ class FootyRoom(CBaseHostClass):
             return ""
         if url.startswith("//"):
             return "https:" + url
-        if url.startswith("http://") or url.startswith("https://"):
+        if url.startswith("https://"):
             return url
         return self.getFullUrl(url)
 
@@ -293,6 +238,11 @@ class FootyRoom(CBaseHostClass):
             if new_count == 0:
                 printDBG("FootyRoom: No new matches on page %d, stopping" % page_num)
                 break
+            # إذا جمعنا عدد كافي للـ pagination (مثلاً 100+)، يمكن التوقف
+            # لكن نترك الخيار لجلب كل شيء حتى MAX_PAGES
+            # إذا تريد توقف بدري: uncomment السطر التالي
+            # if len(all_matches) >= 100:
+            #     break
         printDBG("FootyRoom: Total matches collected: %d" % len(all_matches))
         return all_matches
 
@@ -302,7 +252,7 @@ class FootyRoom(CBaseHostClass):
         self.currList = []
         countries = self._getCountries(force=True)
         for idx, item in enumerate(countries):
-            self.addDir({"name": "category", "title": self._trMenuTitle(item.get("title", "")), "category": "list_competitions", "country_idx": str(idx), "icon": self.DEFAULT_ICON_URL})
+            self.addDir({"name": "category", "title": item.get("title", ""), "category": "list_competitions", "country_idx": str(idx), "icon": self.DEFAULT_ICON_URL})
 
     def listCompetitions(self, cItem):
         """عرض البطولات لدولة معينة"""
@@ -317,7 +267,7 @@ class FootyRoom(CBaseHostClass):
             comps = countries[idx].get("comps", []) or []
         printDBG("FootyRoom.listCompetitions: country=%s comps=%d" % (cItem.get("title", ""), len(comps)))
         for comp in comps:
-            title = self._trMenuTitle((comp.get("title") or "").strip() or "Competition")
+            title = (comp.get("title") or "").strip() or "Competition"
             url = (comp.get("url") or "").strip()
             if not url:
                 continue
@@ -350,10 +300,10 @@ class FootyRoom(CBaseHostClass):
         # عرض المباريات
         for match in page_matches:
             self.addVideo({"name": "video", "title": match.get("title", ""), "url": match.get("url", ""), "icon": match.get("icon", self.DEFAULT_ICON_URL)})
-        # عرض الصفحة التالية إذا يوجد مباريات أكثر
+        # عرض Next page إذا يوجد مباريات أكثر
         if end_idx < total_matches:
             params = dict(cItem)
-            params.update({"title": "الصفحة التالية", "category": "list_matches", "page": page + 1})
+            params.update({"title": "Next page", "category": "list_matches", "page": page + 1})
             self.addDir(params)
 
     # ----------------- VIDEO LINKS -----------------

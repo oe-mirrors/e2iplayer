@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 01.07.2026 - Change: configurable YouTube display language, configurable channel name for downloaded files, absolute published date in info view
+# Last Modified: 12.07.2026 - Change: improved configurable YouTube display language, configurable channel name shown in info view and downloaded files, absolute published date shortened to YYYY-MM-DD in info view, normalized escaped text and URLs across parser output
 ###################################################
 # LOCAL import
 ###################################################
@@ -762,7 +762,6 @@ class Youtube(CBaseHostClass):
             ]
 
             relPattern = re.compile(r"(" r"\b\d+\s+(second|seconds|minute|minutes|hour|hours|day|days|week|weeks|month|months|year|years)\s+ago\b|" r"\bvor\s+\d+\s+(sekunde|sekunden|minute|minuten|stunde|stunden|tag|tage|woche|wochen|monat|monate|jahr|jahre)\b|" r"\b\d+\s+(sekunde|sekunden|minute|minuten|stunde|stunden|tag|tage|woche|wochen|monat|monate|jahr|jahre)\s+zuvor\b" r")", re.IGNORECASE)
-
             streamedPattern = re.compile(r"\b(gestreamt|streamed|live übertragen|streamed live)\b", re.IGNORECASE)
 
             lines = text.split("\n")
@@ -810,22 +809,43 @@ class Youtube(CBaseHostClass):
 
         return text
 
+    def _normalizePublishedDate(self, value):
+        try:
+            value = str(value or "").strip()
+            if len(value) >= 10:
+                return value[:10]
+        except Exception:
+            printExc()
+        return str(value or "")
+
     def getArticleContent(self, cItem):
         printDBG("Youtube.getArticleContent START")
         retTab = []
         try:
-            title = cItem.get("title", "")
-            shortText = self._getYouTubeInfoText(cItem)
+            title = str(cItem.get("title", "") or "")
+            shortText = str(self._getYouTubeInfoText(cItem) or "")
             text = shortText
-            icon = cItem.get("icon", "")
+            icon = str(cItem.get("icon", "") or "")
             videoId = self._getVideoIdFromItem(cItem)
             absolutePublished = ""
+            channelName = ""
+
+            if cItem.get("channel", ""):
+                channelName = cItem.get("channel", "")
+            elif cItem.get("channel_title", ""):
+                channelName = cItem.get("channel_title", "")
+            elif cItem.get("context_title", ""):
+                channelName = cItem.get("context_title", "")
 
             if videoId:
                 try:
                     watchData = self.ytp._getWatchPageData(videoId)
-                    fullText = watchData.get("fullDescription", "")
-                    absolutePublished = watchData.get("absolutePublished", "")
+                    fullText = str(watchData.get("fullDescription", "") or "")
+                    absolutePublished = self._normalizePublishedDate(watchData.get("absolutePublished", ""))
+                    parserChannelName = str(watchData.get("channelName", "") or "")
+
+                    if not channelName and parserChannelName:
+                        channelName = parserChannelName
 
                     if absolutePublished:
                         printDBG("Youtube.getArticleContent absolutePublished[%s]" % absolutePublished)
@@ -844,18 +864,25 @@ class Youtube(CBaseHostClass):
                     printDBG("Youtube.getArticleContent _getWatchPageData EXCEPTION")
                     printExc()
 
+            channelName = str(channelName or "")
+            text = str(text or "")
+            if channelName:
+                text = channelName + "\n" + text
+
             richDescParams = {}
             if absolutePublished:
                 richDescParams["published"] = absolutePublished
             elif cItem.get("time", ""):
-                richDescParams["published"] = cItem.get("time", "")
+                richDescParams["published"] = self._normalizePublishedDate(cItem.get("time", ""))
 
             if videoId:
-                richDescParams["videoid"] = videoId
+                richDescParams["videoid"] = str(videoId or "")
+            if channelName:
+                richDescParams["channel_name"] = channelName
 
             images = []
             if icon:
-                images.append({"title": "", "url": icon})
+                images.append({"title": "", "url": strwithmeta(icon)})
 
             retTab.append(ArticleContent(title=title, text=text, images=images, richDescParams=richDescParams))
             printDBG("Youtube.getArticleContent END OK")

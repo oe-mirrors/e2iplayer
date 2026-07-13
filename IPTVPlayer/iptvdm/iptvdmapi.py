@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 12.07.2026 - added preCheckOnly handling to show "Download already exists" instead of FAILED
 #
-#  IPTV download manager API
+# IPTV download manager API
 #
-#  $Id$
-#
+# $Id$
 #
 ###################################################
 # LOCAL import
@@ -357,6 +357,20 @@ class IPTVDMApi():
         self.updateItemSTS(self.queueUD[listUDIdx])
         # dItem - copy only for reading filed
         dItem = self.queueUD[listUDIdx]
+        # preCheckOnly - download already exists, show info instead of FAILED
+        if getattr(dItem.downloader, 'preCheckOnly', False):
+            self.queueUD[listUDIdx].status = DMHelper.STS.DOWNLOADED
+            try:
+                fileName = self.queueUD[listUDIdx].fileName.split('/')[-1]
+                shortName = fileName[:17]
+                if len(fileName) > len(shortName):
+                    shortName += '...'
+                shortName += ' '
+                self.finishNotifyCallback().showNotify(shortName + _('Download already exists'))
+            except Exception:
+                printExc()
+            return
+
         status = _('UNKNOWN')
         if dItem.downloadedProcent > 99:
             self.queueUD[listUDIdx].status = DMHelper.STS.DOWNLOADED
