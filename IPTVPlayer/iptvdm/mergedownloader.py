@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
-# Last Modified: 05.07.2026 - Channel name as download meta for MergeDownloader + absolute published date in info view + unified Py2/Py3 safe text/path handling
+# Last Modified: 13.07.2026 - Channel name as download meta for MergeDownloader + absolute published date in info view + unified Py2/Py3 safe text/path handling + preCheckOnly handling for already existing downloads + temporary file cleanup + MP4 fallback fix
 ###################################################
 # LOCAL import
 ###################################################
@@ -139,6 +139,7 @@ class MergeDownloader(BaseDownloader):
         self.downloadChannelName = ''
         self.downloadUseChannelName = False
         self.originalFilePath = ''
+        self.preCheckOnly = False
 
     def __del__(self):
         printDBG("MergeDownloader.__del__ ----------------------------------")
@@ -158,6 +159,29 @@ class MergeDownloader(BaseDownloader):
             self._safeRm(self.tempMergePath)
         if self.chapterMetaPath:
             self._safeRm(self.chapterMetaPath)
+
+    def _cleanupBeforeStart(self, filePath):
+        try:
+            basePath = self._getBasePath(filePath)
+            for idx in range(0, 10):
+                self._safeRm(filePath + '.iptv.tmp.%d.dash' % idx)
+            self._safeRm(basePath + '.iptv.merge.tmp.mp4')
+            self._safeRm(basePath + '.chapters.ffmeta')
+        except Exception:
+            printExc()
+
+    def _downloadAlreadyPresent(self, filePath):
+        try:
+            filePath = ensureText(filePath)
+            if os.path.isfile(fsPath(filePath)) and DMHelper.getFileSize(fsPath(filePath)) > 0:
+                return True
+            mkvPath = self._getBasePath(filePath) + '.mkv'
+            if os.path.isfile(fsPath(mkvPath)) and DMHelper.getFileSize(fsPath(mkvPath)) > 0:
+                return True
+            return False
+        except Exception:
+            printExc()
+        return False
 
     def getName(self):
         return "MergeDownloader"
@@ -580,6 +604,7 @@ class MergeDownloader(BaseDownloader):
         self.postProcessMode = 'merge'
         self.mergedFileDurationMs = 0
         self.originalFilePath = ensureText(filePath)
+        self.preCheckOnly = False
 
         self.multi = {'urls': [], 'files': [], 'remote_size': [], 'remote_content_type': [], 'local_size': []}
         self.currIdx = 0
@@ -588,6 +613,18 @@ class MergeDownloader(BaseDownloader):
         self._prepareSidecarData(meta)
 
         self.filePath = self._applyDownloadChannelToFilePath(self.originalFilePath)
+
+        if self._downloadAlreadyPresent(self.filePath):
+            printDBG("MergeDownloader download already present [%s]" % self.filePath)
+            self.status = DMHelper.STS.DOWNLOADED
+            self.finalizedPath = self.filePath
+            self.localFileSize = DMHelper.getFileSize(fsPath(self.filePath))
+            self.remoteFileSize = self.localFileSize
+            self.preCheckOnly = True
+            self.onFinish()
+            return BaseDownloader.CODE_OK
+
+        self._cleanupBeforeStart(self.filePath)
         self.tempMergePath = self._getBasePath(self.filePath) + '.iptv.merge.tmp.mp4'
 
         try:
@@ -682,10 +719,17 @@ class MergeDownloader(BaseDownloader):
         self._finishDownloadFlow()
 
     def _finalizeMp4Fallback(self):
-        if self._moveFile(self.tempMergePath, self.filePath):
-            printDBG("MergeDownloader fallback finalized as original target [%s]" % self.filePath)
-            self._finalizeSuccess(self.filePath)
-            return True
+        try:
+            if os.path.isfile(fsPath(self.tempMergePath)):
+                if self._moveFile(self.tempMergePath, self.filePath):
+                    printDBG("MergeDownloader fallback finalized as original target [%s]" % self.filePath)
+                    self._finalizeSuccess(self.filePath)
+                    return True
+            if os.path.isfile(fsPath(self.filePath)):
+                self._finalizeSuccess(self.filePath)
+                return True
+        except Exception:
+            printExc()
         return False
 
     def _dataAvail(self, data):
@@ -735,6 +779,10 @@ class MergeDownloader(BaseDownloader):
 
     def _cmdFinished(self, code, terminated=False):
         printDBG("MergeDownloader._cmdFinished code[%r] terminated[%r] mode[%s]" % (code, terminated, self.postProcessMode))
+        if self.preCheckOnly:
+            printDBG("MergeDownloader._cmdFinished ignored preCheckOnly")
+            return
+
         # break circular references
         if None is not self.console:
             self.console_appClosed_conn = None
