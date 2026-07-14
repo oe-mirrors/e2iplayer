@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-14 10:56+0200\n"
-"PO-Revision-Date: 2026-06-14 20:27+0300\n"
+"PO-Revision-Date: 2026-07-14 22:10+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -353,9 +353,8 @@ msgstr "Ηθοποιοί"
 msgid "Actors:"
 msgstr "Ηθοποιοί:"
 
-#, fuzzy
 msgid "Add channel name to downloaded file"
-msgstr "Προσθήκη στο πρόγραμμα λήψεων"
+msgstr "Προσθήκη ονόματος καναλιού στο ληφθέν αρχείο"
 
 #, python-format
 msgid "Add host %s to group"
@@ -732,16 +731,16 @@ msgid "Country:"
 msgstr "Χώρα:"
 
 msgid "Create Enigma2 .cuts chapter marks"
-msgstr ""
+msgstr "Δημιουργία δεικτών κεφαλαίων .cuts για το Enigma2"
 
 msgid "Create LCD/VFD summary screen"
 msgstr "Δημιουργία οθόνης σύνοψης LCD/VFD"
 
 msgid "Create MKV with chapter marks from description"
-msgstr ""
+msgstr "Δημιουργία αρχείου MKV με δείκτες κεφαλαίων από την περιγραφή"
 
 msgid "Create sidecar files (.txt/.jpg)"
-msgstr ""
+msgstr "Δημιουργία συνοδευτικών αρχείων (.txt/.jpg)"
 
 msgid "Creator:"
 msgstr "Δημιουργός:"
@@ -886,9 +885,8 @@ msgstr "Απενεργοποίηση/ενεργοποίηση ομάδων"
 msgid "Disable/Enable services"
 msgstr "Απενεργοποίηση/ενεργοποίηση υπηρεσιών"
 
-#, fuzzy
 msgid "Display language:"
-msgstr "Επιλογή γλώσσας"
+msgstr "Γλώσσα εμφάνισης:"
 
 msgid "Display thumbnails"
 msgstr "Εμφάνιση μικρογραφιών"
@@ -919,9 +917,8 @@ msgstr "Λήψη %s"
 msgid "Download again"
 msgstr "Λήψη ξανά"
 
-#, fuzzy
 msgid "Download already exists"
-msgstr "Το αρχείο \"%s\" υπάρχει ήδη"
+msgstr "Η λήψη υπάρχει ήδη"
 
 #, python-format
 msgid ""
@@ -991,7 +988,7 @@ msgid "Download suggested"
 msgstr "Λήψη προτεινόμενων"
 
 msgid "Downloaded file is too small or corrupted."
-msgstr ""
+msgstr "Το ληφθέν αρχείο είναι πολύ μικρό ή κατεστραμμένο."
 
 msgid "Downloading"
 msgstr "Λήψη σε εξέλιξη"
@@ -1228,9 +1225,8 @@ msgstr "Σφάλμα ανάγνωσης του αρχείου \"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "Σφάλμα μετονομασίας αρχείου: %s"
 
-#, fuzzy
 msgid "Error while loading watch data"
-msgstr "Σφάλμα κατά τη φόρτωση της περιγραφής"
+msgstr "Σφάλμα κατά τη φόρτωση των δεδομένων προβολής"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1256,7 +1252,7 @@ msgid "External movie player config"
 msgstr "Ρυθμίσεις εξωτερικής αναπαραγωγής ταινιών"
 
 msgid "Extracted subtitle file is empty or missing."
-msgstr ""
+msgstr "Το εξαγόμενο αρχείο υποτίτλων είναι κενό ή δεν υπάρχει."
 
 msgid "FAILED"
 msgstr "ΑΠΕΤΥΧΕ"
@@ -1286,9 +1282,8 @@ msgstr "Αποτυχία μετατροπής του αρχείου \"%s\" σε 
 msgid "Failed to create directory \"%s\"."
 msgstr "Αποτυχία δημιουργίας καταλόγου \"%s\"."
 
-#, fuzzy
 msgid "Failed to create extraction directory."
-msgstr "Αποτυχία δημιουργίας καταλόγου \"%s\"."
+msgstr "Αποτυχία δημιουργίας του καταλόγου εξαγωγής."
 
 msgid "Failed to decode to UTF-8."
 msgstr "Αποτυχία αποκωδικοποίησης σε UTF-8."
@@ -1358,7 +1353,7 @@ msgstr "Δεν είναι δυνατή η λήψη του αρχείου. Το �
 
 #, python-format
 msgid "File might be corrupted (size: %d bytes)."
-msgstr ""
+msgstr "Το αρχείο ενδέχεται να είναι κατεστραμμένο (μέγεθος: %d bytes)."
 
 msgid "File name cannot be empty!"
 msgstr "Το όνομα αρχείου δεν μπορεί να είναι κενό!"
@@ -1853,9 +1848,8 @@ msgstr "Φόρτωση δεδομένων, παρακαλώ περιμένετε
 msgid "Loading data, please wait (%d)"
 msgstr "Φόρτωση δεδομένων, παρακαλώ περιμένετε (%d)"
 
-#, fuzzy
 msgid "Loading watch data..."
-msgstr "Αποτυχία λήψης δεδομένων captcha."
+msgstr "Φόρτωση δεδομένων προβολής..."
 
 msgid "LocalMedia"
 msgstr "Τοπικά μέσα"
@@ -2130,7 +2124,7 @@ msgid "No results found for: %s"
 msgstr "Δεν βρέθηκαν αποτελέσματα για: %s"
 
 msgid "No subtitle file found in the archive."
-msgstr ""
+msgstr "Δεν βρέθηκε αρχείο υποτίτλων στο συμπιεσμένο αρχείο."
 
 msgid "No valid entitlement found for asset."
 msgstr "Δεν βρέθηκε έγκυρη εξουσιοδότηση για το περιεχόμενο."
@@ -2157,9 +2151,8 @@ msgstr "Αριθμός στοιχείων στο ιστορικό αναζήτη
 msgid "OK"
 msgstr "ΕΝΤΑΞΕΙ"
 
-#, fuzzy
 msgid "OMDb API Key"
-msgstr "Κλειδί API"
+msgstr "Κλειδί API OMDb"
 
 msgid "Offline channels"
 msgstr "Κανάλια εκτός σύνδεσης"
@@ -2418,9 +2411,8 @@ msgstr "Προώθηση στοιχείου"
 msgid "Protocol: "
 msgstr "Πρωτόκολλο: "
 
-#, fuzzy
 msgid "Published"
-msgstr "Πολωνικά"
+msgstr "Δημοσιεύθηκε"
 
 msgid "Quality:"
 msgstr "Ποιότητα:"
@@ -2952,7 +2944,7 @@ msgid "Stop playing?"
 msgstr "Να γίνει διακοπή της αναπαραγωγής;"
 
 msgid "Streamed"
-msgstr ""
+msgstr "Μεταδόθηκε"
 
 msgid "Study Plan"
 msgstr "Πρόγραμμα μελέτης"
@@ -3074,9 +3066,8 @@ msgstr "Συγχρονισμός"
 msgid "System"
 msgstr "Σύστημα"
 
-#, fuzzy
 msgid "System language"
-msgstr "Επιλογή γλώσσας"
+msgstr "Γλώσσα συστήματος"
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "Η ΣΕΛΙΔΑ ΠΟΥ ΑΝΑΖΗΤΑΤΕ ΔΕΝ ΒΡΕΘΗΚΕ."
