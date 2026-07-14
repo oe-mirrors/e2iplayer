@@ -268,7 +268,7 @@ class Youtube(CBaseHostClass):
         return text
 
     def _extractChannelNameFromItem(self, item, defaultChannel=""):
-        invalidTitles = [_("Next page"), "Next page", _("Nächste Seite"), "Nächste Seite"]
+        invalidTitles = [_("Next page"), "Next page", "Nächste Seite"]
 
         try:
             if item.get("is_pagination", False):
@@ -360,7 +360,7 @@ class Youtube(CBaseHostClass):
                     pass
             title = title.strip()
 
-            if title in [_("Next page"), "Next page", _("Nächste Seite"), "Nächste Seite"]:
+            if title in [_("Next page"), "Next page", "Nächste Seite"]:
                 return
 
             channel = self._extractChannelNameFromItem(item, defaultChannel)
@@ -723,7 +723,7 @@ class Youtube(CBaseHostClass):
                     except Exception:
                         pass
 
-            if channelName in [_("Next page"), "Next page", _("Nächste Seite"), "Nächste Seite"]:
+            if channelName in [_("Next page"), "Next page", "Nächste Seite"]:
                 channelName = ""
 
         try:

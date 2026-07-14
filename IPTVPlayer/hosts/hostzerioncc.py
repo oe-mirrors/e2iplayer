@@ -184,7 +184,7 @@ class Zerioncc(CBaseHostClass, CaptchaHelper):
 # #            quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'quality-version'), ('</div', '>'), False)[1])
             # year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'rate'), ('</div', '>'), False)[1])
             # if year != '':
-                # desc = _('Year: ') + year + '[/br]' + desc
+                # desc = _('Year:') + " " + year + '[/br]' + desc
             params = {'good_for_fav': True, 'category': 'list_seasons', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
             self.addDir(params)
 

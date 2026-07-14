@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:29+0200\n"
+"POT-Creation-Date: 2026-07-14 10:56+0200\n"
 "PO-Revision-Date: 2025-11-24 07:59+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -357,6 +357,10 @@ msgstr "Színészek:"
 #, fuzzy
 msgid "Actors:"
 msgstr "Színészek:"
+
+#, fuzzy
+msgid "Add channel name to downloaded file"
+msgstr "Hozzáadás a letöltőhöz"
 
 #, python-format
 msgid "Add host %s to group"
@@ -742,8 +746,17 @@ msgstr "Ország"
 msgid "Country:"
 msgstr "Ország"
 
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr ""
+
 msgid "Create LCD/VFD summary screen"
 msgstr "LCD/VFD összefoglaló képernyő létrehozása"
+
+msgid "Create MKV with chapter marks from description"
+msgstr ""
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr ""
 
 msgid "Creator:"
 msgstr ""
@@ -893,6 +906,10 @@ msgstr "Csoportok letiltása/engedélyezése"
 msgid "Disable/Enable services"
 msgstr "Szolgáltatások letiltása/engedélyezése"
 
+#, fuzzy
+msgid "Display language:"
+msgstr "Nyelv kiválasztása"
+
 msgid "Display thumbnails"
 msgstr "Bélyegképek megjelenítése"
 
@@ -921,6 +938,10 @@ msgstr "%s letöltése"
 
 msgid "Download again"
 msgstr "Töltse le újra"
+
+#, fuzzy
+msgid "Download already exists"
+msgstr "A(z) \"%s\" fájl már létezik"
 
 #, python-format
 msgid ""
@@ -988,6 +1009,9 @@ msgstr "A feliratok letöltése sikertelen."
 
 msgid "Download suggested"
 msgstr "Letöltés javasolt"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr ""
 
 msgid "Downloading"
 msgstr "Letöltés"
@@ -1152,6 +1176,7 @@ msgstr "Írja be a régi PIN-kódot"
 msgid "Enter page number"
 msgstr "Adj meg egy értéket"
 
+#, python-brace-format
 msgid "Enter page number (MAX PAGE: {})"
 msgstr ""
 
@@ -1226,7 +1251,7 @@ msgstr "Hiba a(z) \"%s\" fájl olvasásakor.\n"
 msgid "Error renaming file: %s"
 msgstr "Hiba a fájl átnevezésekor: %s"
 
-msgid "Error while loading description"
+msgid "Error while loading watch data"
 msgstr ""
 
 #, python-format
@@ -1251,6 +1276,9 @@ msgstr "Lejárat: %s"
 
 msgid "External movie player config"
 msgstr "Külső filmlejátszó konfigurációja"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr ""
 
 msgid "FAILED"
 msgstr "SIKERTELEN"
@@ -1278,6 +1306,10 @@ msgstr "Nem sikerült a(z) \"%s\" fájlt UTF-8-ra konvertálni."
 
 #, python-format
 msgid "Failed to create directory \"%s\"."
+msgstr "Hiba a \"%s\" könyvtár létrehozásakor."
+
+#, fuzzy
+msgid "Failed to create extraction directory."
 msgstr "Hiba a \"%s\" könyvtár létrehozásakor."
 
 msgid "Failed to decode to UTF-8."
@@ -1346,6 +1378,10 @@ msgstr "A(z) [%s] fájl hozzáadva a letöltési sorhoz."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Letöltés sikertelen. A [%s] protokoll nem támogatott"
 
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr ""
+
 msgid "File name cannot be empty!"
 msgstr "A fájlnév nem lehet üres!"
 
@@ -1360,9 +1396,6 @@ msgstr "Filmstarts javaslatok"
 
 msgid "Filmweb Suggestions"
 msgstr "Filmweb-javaslatok"
-
-msgid "Filters"
-msgstr "Szűrők"
 
 #, fuzzy
 msgid "First Page"
@@ -1711,6 +1744,7 @@ msgstr ""
 msgid "Jump to a selected page"
 msgstr ""
 
+#, python-brace-format
 msgid "Jump to a selected page, max: {}"
 msgstr ""
 
@@ -1853,8 +1887,9 @@ msgstr "Adatok betöltése, kérjük várjon"
 msgid "Loading data, please wait (%d)"
 msgstr "Adatok betöltése folyamatban, kérjük várjon (%d)"
 
-msgid "Loading full description..."
-msgstr ""
+#, fuzzy
+msgid "Loading watch data..."
+msgstr "Nem sikerült lekérni a captcha adatokat."
 
 msgid "LocalMedia"
 msgstr "Helyi média"
@@ -2132,6 +2167,9 @@ msgstr "Nincs semmi várakozó a letöltő várólistában"
 msgid "No results found for: %s"
 msgstr "Nincs találat a következőre: %s"
 
+msgid "No subtitle file found in the archive."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Nem található érvényes jogosultság az eszközhöz."
 
@@ -2157,6 +2195,9 @@ msgstr "A keresési előzményekben szereplő elemek száma: %d"
 
 msgid "OK"
 msgstr "OK"
+
+msgid "OMDb API Key"
+msgstr ""
 
 msgid "Offline channels"
 msgstr "Offline csatornák"
@@ -2414,6 +2455,10 @@ msgstr "Elem promóciója"
 
 msgid "Protocol: "
 msgstr "Protokoll: "
+
+#, fuzzy
+msgid "Published"
+msgstr "Lengyelország"
 
 msgid "Quality:"
 msgstr "Minőség:"
@@ -2951,6 +2996,9 @@ msgstr "Lejátszás leállítása puffermentéssel"
 msgid "Stop playing?"
 msgstr "Abbahagyni a játékot?"
 
+msgid "Streamed"
+msgstr ""
+
 msgid "Study Plan"
 msgstr "Tanulmányi terv"
 
@@ -3066,6 +3114,10 @@ msgstr "Szinkronizálás"
 msgid "System"
 msgstr "Rendszer"
 
+#, fuzzy
+msgid "System language"
+msgstr "Nyelv kiválasztása"
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -3095,9 +3147,6 @@ msgstr ""
 #, fuzzy
 msgid "TMDb Rating:"
 msgstr "Értékelés:"
-
-msgid "TOP 10"
-msgstr "TOP 10"
 
 msgid "TV"
 msgstr "TV"
@@ -3554,9 +3603,6 @@ msgstr "%s. év"
 
 #, fuzzy
 msgid "Year:"
-msgstr "Év: "
-
-msgid "Year: "
 msgstr "Év: "
 
 msgid "Yes"

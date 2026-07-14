@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:29+0200\n"
+"POT-Creation-Date: 2026-07-14 10:56+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -362,6 +362,10 @@ msgstr ""
 #, fuzzy
 msgid "Actors:"
 msgstr "пряме писилання"
+
+#, fuzzy
+msgid "Add channel name to downloaded file"
+msgstr "Зупинка завантаження"
 
 #, fuzzy, python-format
 msgid "Add host %s to group"
@@ -777,7 +781,16 @@ msgstr "Країни"
 msgid "Country:"
 msgstr "Країни"
 
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr ""
+
 msgid "Create LCD/VFD summary screen"
+msgstr ""
+
+msgid "Create MKV with chapter marks from description"
+msgstr ""
+
+msgid "Create sidecar files (.txt/.jpg)"
 msgstr ""
 
 msgid "Creator:"
@@ -937,6 +950,10 @@ msgstr ""
 msgid "Disable/Enable services"
 msgstr "Видалити сервіси які не працюють"
 
+#, fuzzy
+msgid "Display language:"
+msgstr "Виберіть мову"
+
 msgid "Display thumbnails"
 msgstr "Показати мініатюри"
 
@@ -969,6 +986,10 @@ msgstr "Завантажити"
 
 msgid "Download again"
 msgstr "Завантажити ще раз"
+
+#, fuzzy
+msgid "Download already exists"
+msgstr "Файл \"%s\" вже існує!"
 
 #, python-format
 msgid ""
@@ -1039,6 +1060,9 @@ msgstr "Завантажити субтитри %s"
 
 msgid "Download suggested"
 msgstr "Можна завантажувати"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr ""
 
 msgid "Downloading"
 msgstr "Завантаження"
@@ -1207,6 +1231,7 @@ msgstr "Введіть старий PIN-код"
 msgid "Enter page number"
 msgstr "Введіть значення"
 
+#, python-brace-format
 msgid "Enter page number (MAX PAGE: {})"
 msgstr ""
 
@@ -1281,7 +1306,7 @@ msgstr "Помилка читання файлу \"%s\" .\n"
 msgid "Error renaming file: %s"
 msgstr "Помилка читання файлу \"%s\" .\n"
 
-msgid "Error while loading description"
+msgid "Error while loading watch data"
 msgstr ""
 
 #, fuzzy, python-format
@@ -1306,6 +1331,9 @@ msgstr ""
 
 msgid "External movie player config"
 msgstr "Зовнішній плеєр конфігурація"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr ""
 
 msgid "FAILED"
 msgstr ""
@@ -1334,6 +1362,10 @@ msgstr ""
 
 #, fuzzy, python-format
 msgid "Failed to create directory \"%s\"."
+msgstr "Проблема з каталогом [%s]."
+
+#, fuzzy
+msgid "Failed to create extraction directory."
 msgstr "Проблема з каталогом [%s]."
 
 msgid "Failed to decode to UTF-8."
@@ -1406,6 +1438,10 @@ msgstr "Файл [%s] файл додано до завантаження."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Файл не можливо завантажити. Протокол [%s] не підтримується"
 
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr ""
+
 #, fuzzy
 msgid "File name cannot be empty!"
 msgstr "Назва не може бути пуста."
@@ -1421,9 +1457,6 @@ msgid "Filmstarts Suggestions"
 msgstr ""
 
 msgid "Filmweb Suggestions"
-msgstr ""
-
-msgid "Filters"
 msgstr ""
 
 #, fuzzy
@@ -1785,6 +1818,7 @@ msgstr ""
 msgid "Jump to a selected page"
 msgstr ""
 
+#, python-brace-format
 msgid "Jump to a selected page, max: {}"
 msgstr ""
 
@@ -1934,8 +1968,9 @@ msgstr "Йде обробка, будь-ласка, зачекайте."
 msgid "Loading data, please wait (%d)"
 msgstr ""
 
-msgid "Loading full description..."
-msgstr ""
+#, fuzzy
+msgid "Loading watch data..."
+msgstr "Папка даних кеша"
 
 msgid "LocalMedia"
 msgstr "Мої Медіа файли"
@@ -2226,6 +2261,9 @@ msgstr ""
 msgid "No results found for: %s"
 msgstr ""
 
+msgid "No subtitle file found in the archive."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr ""
 
@@ -2251,6 +2289,9 @@ msgid "Number of items in search history: %d"
 msgstr "Кількість елементів в історії пошуку"
 
 msgid "OK"
+msgstr ""
+
+msgid "OMDb API Key"
 msgstr ""
 
 msgid "Offline channels"
@@ -2523,6 +2564,10 @@ msgstr "Переставити на початок списку"
 
 msgid "Protocol: "
 msgstr "Протокол: "
+
+#, fuzzy
+msgid "Published"
+msgstr "Співвідношення сторін"
 
 #, fuzzy
 msgid "Quality:"
@@ -3096,6 +3141,9 @@ msgstr "Вибрати плеєр без режиму буферизації"
 msgid "Stop playing?"
 msgstr "Зупинити відтворення?"
 
+msgid "Streamed"
+msgstr ""
+
 msgid "Study Plan"
 msgstr ""
 
@@ -3212,6 +3260,10 @@ msgstr "Синхронізувати"
 msgid "System"
 msgstr ""
 
+#, fuzzy
+msgid "System language"
+msgstr "Виберіть мову"
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -3241,9 +3293,6 @@ msgstr ""
 #, fuzzy
 msgid "TMDb Rating:"
 msgstr "Рейтинг"
-
-msgid "TOP 10"
-msgstr ""
 
 msgid "TV"
 msgstr ""
@@ -3727,10 +3776,6 @@ msgstr "Рік"
 
 #, fuzzy
 msgid "Year:"
-msgstr "Рік"
-
-#, fuzzy
-msgid "Year: "
 msgstr "Рік"
 
 msgid "Yes"

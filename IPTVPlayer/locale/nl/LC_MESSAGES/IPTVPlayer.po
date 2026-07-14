@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:29+0200\n"
+"POT-Creation-Date: 2026-07-14 10:56+0200\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -356,6 +356,10 @@ msgstr "Acteurs"
 #, fuzzy
 msgid "Actors:"
 msgstr "Acteurs"
+
+#, fuzzy
+msgid "Add channel name to downloaded file"
+msgstr "Aan downloader toevoegen"
 
 #, python-format
 msgid "Add host %s to group"
@@ -737,8 +741,17 @@ msgstr "Land"
 msgid "Country:"
 msgstr "Land"
 
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr ""
+
 msgid "Create LCD/VFD summary screen"
 msgstr "Een samenvatting maken voor LCD/VFD"
+
+msgid "Create MKV with chapter marks from description"
+msgstr ""
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr ""
 
 msgid "Creator:"
 msgstr ""
@@ -886,6 +899,10 @@ msgstr "Groepen uitschakelen/inschakelen"
 msgid "Disable/Enable services"
 msgstr "Zenders uitschakelen/uitschakelen"
 
+#, fuzzy
+msgid "Display language:"
+msgstr "Kies een taal"
+
 msgid "Display thumbnails"
 msgstr "Thumbnails tonen"
 
@@ -914,6 +931,10 @@ msgstr "Download %s"
 
 msgid "Download again"
 msgstr "Download opnieuw"
+
+#, fuzzy
+msgid "Download already exists"
+msgstr "Bestand \"%s\" bestaat al"
 
 #, python-format
 msgid ""
@@ -981,6 +1002,9 @@ msgstr "Download van ondertiteling mislukt."
 
 msgid "Download suggested"
 msgstr "Download voorgesteld"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr ""
 
 msgid "Downloading"
 msgstr "Downloaden"
@@ -1145,6 +1169,7 @@ msgstr "Oude PIN invoeren"
 msgid "Enter page number"
 msgstr "Voer een waarde in"
 
+#, python-brace-format
 msgid "Enter page number (MAX PAGE: {})"
 msgstr ""
 
@@ -1219,7 +1244,7 @@ msgstr "Fout tijdens lezen bestand \"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "Fout tijdens hernoemen bestand %s"
 
-msgid "Error while loading description"
+msgid "Error while loading watch data"
 msgstr ""
 
 #, python-format
@@ -1244,6 +1269,9 @@ msgstr "Vervaldatum: %s"
 
 msgid "External movie player config"
 msgstr "Externe Movie Player configuratie"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr ""
 
 msgid "FAILED"
 msgstr "MISLUKT"
@@ -1271,6 +1299,10 @@ msgstr "Converteren van bestand \"%s\" naar UTF-8 mislukt."
 
 #, python-format
 msgid "Failed to create directory \"%s\"."
+msgstr "Het aanmaken van de map \"%s\" is mislukt."
+
+#, fuzzy
+msgid "Failed to create extraction directory."
 msgstr "Het aanmaken van de map \"%s\" is mislukt."
 
 msgid "Failed to decode to UTF-8."
@@ -1339,6 +1371,10 @@ msgstr "Bestand [%s] is toegevoegd aan de download wachtrij."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Bestand kan niet worden gedownload. Protocol [%s] wordt niet ondersteund"
 
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr ""
+
 msgid "File name cannot be empty!"
 msgstr "Bestandsnaam mag niet leeg zijn!"
 
@@ -1353,9 +1389,6 @@ msgstr "Filmstarts tips"
 
 msgid "Filmweb Suggestions"
 msgstr "Filmweb tips"
-
-msgid "Filters"
-msgstr "Filters"
 
 #, fuzzy
 msgid "First Page"
@@ -1704,6 +1737,7 @@ msgstr ""
 msgid "Jump to a selected page"
 msgstr ""
 
+#, python-brace-format
 msgid "Jump to a selected page, max: {}"
 msgstr ""
 
@@ -1846,8 +1880,9 @@ msgstr "Data laden, even geduld"
 msgid "Loading data, please wait (%d)"
 msgstr "Data laden, a.u.b. wachten (%d)"
 
-msgid "Loading full description..."
-msgstr ""
+#, fuzzy
+msgid "Loading watch data..."
+msgstr "Ophalen van Captcha data mislukt."
 
 msgid "LocalMedia"
 msgstr "Lokale media"
@@ -2124,6 +2159,9 @@ msgstr "Geen downloads in de wachtrij"
 msgid "No results found for: %s"
 msgstr "Geen resultaten gevonden voor: %s"
 
+msgid "No subtitle file found in the archive."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Geen rechten gevonden voor deze waarde."
 
@@ -2149,6 +2187,9 @@ msgstr "Aantal items in de zoekgeschiedenis: %d"
 
 msgid "OK"
 msgstr "Bevestigen"
+
+msgid "OMDb API Key"
+msgstr ""
 
 msgid "Offline channels"
 msgstr "Offline zenders"
@@ -2404,6 +2445,10 @@ msgstr "Promoot item"
 
 msgid "Protocol: "
 msgstr "Protocol: "
+
+#, fuzzy
+msgid "Published"
+msgstr "Pools"
 
 msgid "Quality:"
 msgstr "Kwaliteit:"
@@ -2942,6 +2987,9 @@ msgstr "Afspelen stoppen en buffer opslaan"
 msgid "Stop playing?"
 msgstr "Afspelen stoppen?"
 
+msgid "Streamed"
+msgstr ""
+
 msgid "Study Plan"
 msgstr "Studieplan"
 
@@ -3060,6 +3108,10 @@ msgstr "Synchroniseren"
 msgid "System"
 msgstr "Systeem"
 
+#, fuzzy
+msgid "System language"
+msgstr "Kies een taal"
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -3089,9 +3141,6 @@ msgstr ""
 #, fuzzy
 msgid "TMDb Rating:"
 msgstr "Beoordeling:"
-
-msgid "TOP 10"
-msgstr "TOP 10"
 
 msgid "TV"
 msgstr "TV"
@@ -3547,9 +3596,6 @@ msgstr "Jaar %s"
 
 #, fuzzy
 msgid "Year:"
-msgstr "Jaar: "
-
-msgid "Year: "
 msgstr "Jaar: "
 
 msgid "Yes"

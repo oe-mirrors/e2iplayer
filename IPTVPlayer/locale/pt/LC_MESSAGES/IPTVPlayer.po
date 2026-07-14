@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:29+0200\n"
+"POT-Creation-Date: 2026-07-14 10:56+0200\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -344,6 +344,10 @@ msgstr ""
 
 msgid "Actors:"
 msgstr ""
+
+#, fuzzy
+msgid "Add channel name to downloaded file"
+msgstr "Parar a Descarga"
 
 #, fuzzy, python-format
 msgid "Add host %s to group"
@@ -736,7 +740,16 @@ msgstr ""
 msgid "Country:"
 msgstr "Categorias"
 
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr ""
+
 msgid "Create LCD/VFD summary screen"
+msgstr ""
+
+msgid "Create MKV with chapter marks from description"
+msgstr ""
+
+msgid "Create sidecar files (.txt/.jpg)"
 msgstr ""
 
 msgid "Creator:"
@@ -888,6 +901,10 @@ msgstr "Desativar/Ativar grupos"
 msgid "Disable/Enable services"
 msgstr "Desativar/Ativar serviços"
 
+#, fuzzy
+msgid "Display language:"
+msgstr "Selecionar link"
+
 msgid "Display thumbnails"
 msgstr "Visualizar miniaturas"
 
@@ -917,6 +934,10 @@ msgstr "Descargas"
 
 msgid "Download again"
 msgstr "Descarregar novamente"
+
+#, fuzzy
+msgid "Download already exists"
+msgstr "Grupo \"%s\" já existe."
 
 #, fuzzy, python-format
 msgid ""
@@ -984,6 +1005,9 @@ msgstr "Problema na descarga do ficheiro (%s)."
 #, fuzzy
 msgid "Download suggested"
 msgstr "Descargas"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr ""
 
 msgid "Downloading"
 msgstr "A transferir"
@@ -1146,6 +1170,7 @@ msgstr "Introduza o PIN anterior"
 msgid "Enter page number"
 msgstr "Introduzir nome"
 
+#, python-brace-format
 msgid "Enter page number (MAX PAGE: {})"
 msgstr ""
 
@@ -1219,7 +1244,7 @@ msgstr "Erro ao ler ficheiro \"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "Erro ao ler ficheiro \"%s\".\n"
 
-msgid "Error while loading description"
+msgid "Error while loading watch data"
 msgstr ""
 
 #, python-format
@@ -1244,6 +1269,9 @@ msgstr ""
 
 msgid "External movie player config"
 msgstr "Configuração do Leitor de Filmes externo"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr ""
 
 msgid "FAILED"
 msgstr ""
@@ -1272,6 +1300,10 @@ msgstr ""
 
 #, fuzzy, python-format
 msgid "Failed to create directory \"%s\"."
+msgstr "Problema com a pasta (%s)."
+
+#, fuzzy
+msgid "Failed to create extraction directory."
 msgstr "Problema com a pasta (%s)."
 
 msgid "Failed to decode to UTF-8."
@@ -1343,6 +1375,10 @@ msgstr "Ficheiro (%s) foi adicionado ao spool de descargas."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Ficheiro não pode ser descarregado. Protocolo (%s) não é suportado."
 
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr ""
+
 #, fuzzy
 msgid "File name cannot be empty!"
 msgstr "O nome tem de estar preenchido."
@@ -1357,9 +1393,6 @@ msgid "Filmstarts Suggestions"
 msgstr ""
 
 msgid "Filmweb Suggestions"
-msgstr ""
-
-msgid "Filters"
 msgstr ""
 
 #, fuzzy
@@ -1709,6 +1742,7 @@ msgstr ""
 msgid "Jump to a selected page"
 msgstr ""
 
+#, python-brace-format
 msgid "Jump to a selected page, max: {}"
 msgstr ""
 
@@ -1852,8 +1886,9 @@ msgstr "Durante o processamento, por favor espere."
 msgid "Loading data, please wait (%d)"
 msgstr ""
 
-msgid "Loading full description..."
-msgstr ""
+#, fuzzy
+msgid "Loading watch data..."
+msgstr "Pasta para informação cache"
 
 msgid "LocalMedia"
 msgstr ""
@@ -2135,6 +2170,9 @@ msgstr ""
 msgid "No results found for: %s"
 msgstr ""
 
+msgid "No subtitle file found in the archive."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr ""
 
@@ -2160,6 +2198,9 @@ msgid "Number of items in search history: %d"
 msgstr "O número de itens no histórico de procura"
 
 msgid "OK"
+msgstr ""
+
+msgid "OMDb API Key"
 msgstr ""
 
 #, fuzzy
@@ -2424,6 +2465,9 @@ msgid "Promote item"
 msgstr "Promover item"
 
 msgid "Protocol: "
+msgstr ""
+
+msgid "Published"
 msgstr ""
 
 #, fuzzy
@@ -2996,6 +3040,9 @@ msgstr "Leitor de Filmes sem modo buffering"
 msgid "Stop playing?"
 msgstr "A Reproduzir"
 
+msgid "Streamed"
+msgstr ""
+
 msgid "Study Plan"
 msgstr ""
 
@@ -3112,6 +3159,10 @@ msgstr "Sincronizar"
 msgid "System"
 msgstr ""
 
+#, fuzzy
+msgid "System language"
+msgstr "Selecionar link"
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -3141,9 +3192,6 @@ msgstr ""
 #, fuzzy
 msgid "TMDb Rating:"
 msgstr "Classificação"
-
-msgid "TOP 10"
-msgstr ""
 
 msgid "TV"
 msgstr ""
@@ -3612,9 +3660,6 @@ msgid "Year %s"
 msgstr ""
 
 msgid "Year:"
-msgstr ""
-
-msgid "Year: "
 msgstr ""
 
 msgid "Yes"

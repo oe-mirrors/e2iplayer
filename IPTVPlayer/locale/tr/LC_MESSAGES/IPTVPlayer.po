@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:29+0200\n"
+"POT-Creation-Date: 2026-07-14 10:56+0200\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -353,6 +353,10 @@ msgstr "Oyuncular"
 #, fuzzy
 msgid "Actors:"
 msgstr "Oyuncular"
+
+#, fuzzy
+msgid "Add channel name to downloaded file"
+msgstr "İndiriciye ekle"
 
 #, python-format
 msgid "Add host %s to group"
@@ -739,8 +743,17 @@ msgstr "Ülke"
 msgid "Country:"
 msgstr "Ülke"
 
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr ""
+
 msgid "Create LCD/VFD summary screen"
 msgstr "LCD/VFD özet ekranı oluştur"
+
+msgid "Create MKV with chapter marks from description"
+msgstr ""
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr ""
 
 msgid "Creator:"
 msgstr ""
@@ -895,6 +908,10 @@ msgstr ""
 msgid "Disable/Enable services"
 msgstr "Devre dışı servisleri kaldır"
 
+#, fuzzy
+msgid "Display language:"
+msgstr "Dil seç"
+
 msgid "Display thumbnails"
 msgstr "Küçük resimleri göster"
 
@@ -923,6 +940,10 @@ msgid "Download %s"
 msgstr "İndirilenler"
 
 msgid "Download again"
+msgstr "Tekrar indir"
+
+#, fuzzy
+msgid "Download already exists"
 msgstr "Tekrar indir"
 
 #, python-format
@@ -980,6 +1001,9 @@ msgstr "Günlük dosyasını indir"
 #, fuzzy
 msgid "Download suggested"
 msgstr "İndirilenler"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr ""
 
 msgid "Downloading"
 msgstr "İndiriliyor"
@@ -1128,6 +1152,7 @@ msgstr "Eski pini girin"
 msgid "Enter page number"
 msgstr "Bir değer girin"
 
+#, python-brace-format
 msgid "Enter page number (MAX PAGE: {})"
 msgstr ""
 
@@ -1198,7 +1223,7 @@ msgstr ""
 msgid "Error renaming file: %s"
 msgstr ""
 
-msgid "Error while loading description"
+msgid "Error while loading watch data"
 msgstr ""
 
 #, python-format
@@ -1225,6 +1250,9 @@ msgstr ""
 #, fuzzy
 msgid "External movie player config"
 msgstr "harici eplayer3"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr ""
 
 msgid "FAILED"
 msgstr "BAŞARISIZ"
@@ -1253,6 +1281,10 @@ msgstr "UTF-8'e dönüştürme başarısız oldu."
 
 #, fuzzy, python-format
 msgid "Failed to create directory \"%s\"."
+msgstr "Dizini seç"
+
+#, fuzzy
+msgid "Failed to create extraction directory."
 msgstr "Dizini seç"
 
 msgid "Failed to decode to UTF-8."
@@ -1323,6 +1355,10 @@ msgstr "Altyazı indirilemedi."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr ""
 
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr ""
+
 msgid "File name cannot be empty!"
 msgstr "Dosya adı boş olamaz!"
 
@@ -1339,9 +1375,6 @@ msgstr "Google Önerileri"
 #, fuzzy
 msgid "Filmweb Suggestions"
 msgstr "Google Önerileri"
-
-msgid "Filters"
-msgstr "Filtreler"
 
 #, fuzzy
 msgid "First Page"
@@ -1694,6 +1727,7 @@ msgstr ""
 msgid "Jump to a selected page"
 msgstr ""
 
+#, python-brace-format
 msgid "Jump to a selected page, max: {}"
 msgstr ""
 
@@ -1840,8 +1874,9 @@ msgstr "Veriler yükleniyor, lütfen bekleyin"
 msgid "Loading data, please wait (%d)"
 msgstr "Veriler yükleniyor, lütfen bekleyin"
 
-msgid "Loading full description..."
-msgstr ""
+#, fuzzy
+msgid "Loading watch data..."
+msgstr "Önbellek verileri klasörü"
 
 #, fuzzy
 msgid "LocalMedia"
@@ -2116,6 +2151,9 @@ msgstr ""
 msgid "No results found for: %s"
 msgstr ""
 
+msgid "No subtitle file found in the archive."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr ""
 
@@ -2142,6 +2180,9 @@ msgstr "Arama geçmişini sil"
 
 msgid "OK"
 msgstr "Tamam"
+
+msgid "OMDb API Key"
+msgstr ""
 
 #, fuzzy
 msgid "Offline channels"
@@ -2402,6 +2443,10 @@ msgstr "Öğeyi kaldır"
 
 msgid "Protocol: "
 msgstr ""
+
+#, fuzzy
+msgid "Published"
+msgstr "Lehçe"
 
 msgid "Quality:"
 msgstr "Kalite:"
@@ -2951,6 +2996,9 @@ msgstr "Oynatmayı durdur ve tamponu kaydet"
 msgid "Stop playing?"
 msgstr "Oynatma durdurulsun mu?"
 
+msgid "Streamed"
+msgstr ""
+
 msgid "Study Plan"
 msgstr ""
 
@@ -3067,6 +3115,10 @@ msgstr "Eşitle"
 msgid "System"
 msgstr "Sistem"
 
+#, fuzzy
+msgid "System language"
+msgstr "Dil seç"
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -3096,9 +3148,6 @@ msgstr ""
 #, fuzzy
 msgid "TMDb Rating:"
 msgstr "Puan:"
-
-msgid "TOP 10"
-msgstr ""
 
 msgid "TV"
 msgstr "TV"
@@ -3565,9 +3614,6 @@ msgstr "Yıl: "
 
 #, fuzzy
 msgid "Year:"
-msgstr "Yıl: "
-
-msgid "Year: "
 msgstr "Yıl: "
 
 msgid "Yes"

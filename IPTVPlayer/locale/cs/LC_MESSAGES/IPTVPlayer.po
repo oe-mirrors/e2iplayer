@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:29+0200\n"
+"POT-Creation-Date: 2026-07-14 10:56+0200\n"
 "PO-Revision-Date: 2025-11-24 08:05+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -357,6 +357,10 @@ msgstr "Herci:"
 #, fuzzy
 msgid "Actors:"
 msgstr "Herci:"
+
+#, fuzzy
+msgid "Add channel name to downloaded file"
+msgstr "Přidat do downloaderu"
 
 #, python-format
 msgid "Add host %s to group"
@@ -742,8 +746,17 @@ msgstr "Země"
 msgid "Country:"
 msgstr "Země"
 
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr ""
+
 msgid "Create LCD/VFD summary screen"
 msgstr "Vytvořte souhrnnou obrazovku LCD/VFD"
+
+msgid "Create MKV with chapter marks from description"
+msgstr ""
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr ""
 
 msgid "Creator:"
 msgstr ""
@@ -893,6 +906,10 @@ msgstr "Zakázat/Povolit skupiny"
 msgid "Disable/Enable services"
 msgstr "Zakázat/Povolit služby"
 
+#, fuzzy
+msgid "Display language:"
+msgstr "Zvolte jazyk"
+
 msgid "Display thumbnails"
 msgstr "Zobrazit náhledy"
 
@@ -921,6 +938,10 @@ msgstr "Stáhnout %s"
 
 msgid "Download again"
 msgstr "Stáhnout znovu"
+
+#, fuzzy
+msgid "Download already exists"
+msgstr "Soubor „%s“ již existuje"
 
 #, python-format
 msgid ""
@@ -988,6 +1009,9 @@ msgstr "Stažení titulků se nezdařilo."
 
 msgid "Download suggested"
 msgstr "Navrhované stažení"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr ""
 
 msgid "Downloading"
 msgstr "Stahuji"
@@ -1152,6 +1176,7 @@ msgstr "Zadejte starý PIN"
 msgid "Enter page number"
 msgstr "Zadejte hodnotu"
 
+#, python-brace-format
 msgid "Enter page number (MAX PAGE: {})"
 msgstr ""
 
@@ -1230,7 +1255,7 @@ msgstr ""
 msgid "Error renaming file: %s"
 msgstr "Chyba při přejmenování souboru: %s"
 
-msgid "Error while loading description"
+msgid "Error while loading watch data"
 msgstr ""
 
 #, python-format
@@ -1258,6 +1283,9 @@ msgstr "Platnost do: %s"
 msgid "External movie player config"
 msgstr "Konfigurace externího přehrávače videí"
 
+msgid "Extracted subtitle file is empty or missing."
+msgstr ""
+
 msgid "FAILED"
 msgstr "SELHALO"
 
@@ -1284,6 +1312,10 @@ msgstr "Nepodařilo se převést soubor „%s“ do kódování UTF-8."
 
 #, python-format
 msgid "Failed to create directory \"%s\"."
+msgstr "Nepodařilo se vytvořit adresář „%s“."
+
+#, fuzzy
+msgid "Failed to create extraction directory."
 msgstr "Nepodařilo se vytvořit adresář „%s“."
 
 msgid "Failed to decode to UTF-8."
@@ -1352,6 +1384,10 @@ msgstr "Soubor [%s] byl přidán do fronty stahování."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Soubor nelze stáhnout. Protokol [%s] není podporován"
 
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr ""
+
 msgid "File name cannot be empty!"
 msgstr "Název souboru nemůže být prázdný!"
 
@@ -1366,9 +1402,6 @@ msgstr "Návrhy pro Filmstarts"
 
 msgid "Filmweb Suggestions"
 msgstr "Návrhy Filmwebu"
-
-msgid "Filters"
-msgstr "Filtry"
 
 #, fuzzy
 msgid "First Page"
@@ -1717,6 +1750,7 @@ msgstr ""
 msgid "Jump to a selected page"
 msgstr ""
 
+#, python-brace-format
 msgid "Jump to a selected page, max: {}"
 msgstr ""
 
@@ -1859,8 +1893,9 @@ msgstr "Načítání dat, čekejte prosím"
 msgid "Loading data, please wait (%d)"
 msgstr "Načítání dat, čekejte prosím (%d)"
 
-msgid "Loading full description..."
-msgstr ""
+#, fuzzy
+msgid "Loading watch data..."
+msgstr "Nepodařilo se získat data captcha."
 
 msgid "LocalMedia"
 msgstr "Místní média"
@@ -2136,6 +2171,9 @@ msgstr "Ve frontě pro stahování nečekají žádné materiály"
 msgid "No results found for: %s"
 msgstr "Nebyly nalezeny žádné výsledky pro: %s"
 
+msgid "No subtitle file found in the archive."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Pro aktivum nebyl nalezen žádný platný nárok."
 
@@ -2161,6 +2199,9 @@ msgstr "Počet položek v historii vyhledávání: %d"
 
 msgid "OK"
 msgstr "OK"
+
+msgid "OMDb API Key"
+msgstr ""
 
 msgid "Offline channels"
 msgstr "Offline kanály"
@@ -2417,6 +2458,10 @@ msgstr "Propagovat položku"
 
 msgid "Protocol: "
 msgstr "Protokol: "
+
+#, fuzzy
+msgid "Published"
+msgstr "Polština"
 
 msgid "Quality:"
 msgstr "Kvalita:"
@@ -2958,6 +3003,9 @@ msgstr "Zastavení přehrávání s uložením do vyrovnávací paměti"
 msgid "Stop playing?"
 msgstr "Přestat hrát?"
 
+msgid "Streamed"
+msgstr ""
+
 msgid "Study Plan"
 msgstr "Studijní plán"
 
@@ -3073,6 +3121,10 @@ msgstr "Synchronizovat"
 msgid "System"
 msgstr "Systém"
 
+#, fuzzy
+msgid "System language"
+msgstr "Zvolte jazyk"
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -3102,9 +3154,6 @@ msgstr ""
 #, fuzzy
 msgid "TMDb Rating:"
 msgstr "Hodnocení:"
-
-msgid "TOP 10"
-msgstr "TOP 10"
 
 msgid "TV"
 msgstr "TV"
@@ -3559,9 +3608,6 @@ msgstr "Rok %s"
 
 #, fuzzy
 msgid "Year:"
-msgstr "Rok: "
-
-msgid "Year: "
 msgstr "Rok: "
 
 msgid "Yes"

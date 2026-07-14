@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:29+0200\n"
+"POT-Creation-Date: 2026-07-14 10:56+0200\n"
 "PO-Revision-Date: 2026-03-14 12:34+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -353,6 +353,10 @@ msgstr "الممثلون"
 #, fuzzy
 msgid "Actors:"
 msgstr "الممثلون"
+
+#, fuzzy
+msgid "Add channel name to downloaded file"
+msgstr "إضافة إلى مدير التنزيل"
 
 #, python-format
 msgid "Add host %s to group"
@@ -734,8 +738,17 @@ msgstr "الدولة"
 msgid "Country:"
 msgstr "الدولة"
 
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr ""
+
 msgid "Create LCD/VFD summary screen"
 msgstr "إنشاء شاشة ملخص على شاشة LCD/VFD"
+
+msgid "Create MKV with chapter marks from description"
+msgstr ""
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr ""
 
 msgid "Creator:"
 msgstr ""
@@ -883,6 +896,10 @@ msgstr "تعطيل/تمكين المجموعات"
 msgid "Disable/Enable services"
 msgstr "تعطيل/تمكين الخدمات"
 
+#, fuzzy
+msgid "Display language:"
+msgstr "اختر اللغة"
+
 msgid "Display thumbnails"
 msgstr "عرض الصور المصغرة"
 
@@ -911,6 +928,10 @@ msgstr "تحميل %s"
 
 msgid "Download again"
 msgstr "إعادة التحميل"
+
+#, fuzzy
+msgid "Download already exists"
+msgstr "الملف \"%s\" موجود بالفعل"
 
 #, python-format
 msgid ""
@@ -978,6 +999,9 @@ msgstr "فشل تحميل الترجمة."
 
 msgid "Download suggested"
 msgstr "اقتراح التحميل"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr ""
 
 msgid "Downloading"
 msgstr "جارٍ التحميل"
@@ -1142,6 +1166,7 @@ msgstr "أدخل الرقم السري القديم"
 msgid "Enter page number"
 msgstr "أدخل قيمة"
 
+#, python-brace-format
 msgid "Enter page number (MAX PAGE: {})"
 msgstr ""
 
@@ -1216,7 +1241,7 @@ msgstr "حدث خطأ أثناء قراءة الملف \"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "حدث خطأ أثناء إعادة تسمية الملف: %s"
 
-msgid "Error while loading description"
+msgid "Error while loading watch data"
 msgstr ""
 
 #, python-format
@@ -1241,6 +1266,9 @@ msgstr "تاريخ الانتهاء: %s"
 
 msgid "External movie player config"
 msgstr "إعدادات مشغل الأفلام الخارجي"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr ""
 
 msgid "FAILED"
 msgstr "فشل"
@@ -1268,6 +1296,10 @@ msgstr "فشل في تحويل الملف \"%s\" إلى ترميز UTF-8."
 
 #, python-format
 msgid "Failed to create directory \"%s\"."
+msgstr "فشل في إنشاء المجلد \"%s\"."
+
+#, fuzzy
+msgid "Failed to create extraction directory."
 msgstr "فشل في إنشاء المجلد \"%s\"."
 
 msgid "Failed to decode to UTF-8."
@@ -1336,6 +1368,10 @@ msgstr "تمت إضافة الملف [%s] إلى قائمة التنزيل."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "لا يمكن تحميل الملف. البروتوكول [%s] غير مدعوم"
 
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr ""
+
 msgid "File name cannot be empty!"
 msgstr "لا يمكن ترك اسم الملف فارغًا!"
 
@@ -1350,9 +1386,6 @@ msgstr "اقتراحات Filmstarts"
 
 msgid "Filmweb Suggestions"
 msgstr "اقتراحات Filmweb"
-
-msgid "Filters"
-msgstr "الفلاتر"
 
 #, fuzzy
 msgid "First Page"
@@ -1701,6 +1734,7 @@ msgstr ""
 msgid "Jump to a selected page"
 msgstr ""
 
+#, python-brace-format
 msgid "Jump to a selected page, max: {}"
 msgstr ""
 
@@ -1843,8 +1877,9 @@ msgstr "جاري تحميل البيانات، يرجى الانتظار"
 msgid "Loading data, please wait (%d)"
 msgstr "جاري تحميل البيانات، يرجى الانتظار (%d)"
 
-msgid "Loading full description..."
-msgstr ""
+#, fuzzy
+msgid "Loading watch data..."
+msgstr "فشل في الحصول على بيانات الكابتشا."
 
 msgid "LocalMedia"
 msgstr "الوسائط المحلية"
@@ -2121,6 +2156,9 @@ msgstr "لا يوجد مواد في قائمة الانتظار للتحميل"
 msgid "No results found for: %s"
 msgstr "لم يتم العثور على نتائج لـ: %s"
 
+msgid "No subtitle file found in the archive."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "لم يتم العثور على صلاحية صالحة للمحتوى."
 
@@ -2146,6 +2184,9 @@ msgstr "عدد العناصر في سجل البحث: %d"
 
 msgid "OK"
 msgstr "موافق"
+
+msgid "OMDb API Key"
+msgstr ""
 
 msgid "Offline channels"
 msgstr "قنوات غير متصلة"
@@ -2400,6 +2441,10 @@ msgstr "ترقية العنصر"
 
 msgid "Protocol: "
 msgstr "البروتوكول: "
+
+#, fuzzy
+msgid "Published"
+msgstr "البولندية"
 
 msgid "Quality:"
 msgstr "الجودة:"
@@ -2938,6 +2983,9 @@ msgstr "إيقاف التشغيل مع حفظ التخزين المؤقت"
 msgid "Stop playing?"
 msgstr "هل تريد إيقاف التشغيل؟"
 
+msgid "Streamed"
+msgstr ""
+
 msgid "Study Plan"
 msgstr "خطة الدراسة"
 
@@ -3053,6 +3101,10 @@ msgstr "مزامنة"
 msgid "System"
 msgstr "النظام"
 
+#, fuzzy
+msgid "System language"
+msgstr "اختر اللغة"
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -3082,9 +3134,6 @@ msgstr ""
 #, fuzzy
 msgid "TMDb Rating:"
 msgstr "التقييم:"
-
-msgid "TOP 10"
-msgstr "أفضل 10"
 
 msgid "TV"
 msgstr "تلفزيون"
@@ -3540,9 +3589,6 @@ msgstr "السنة %s"
 
 #, fuzzy
 msgid "Year:"
-msgstr "السنة: "
-
-msgid "Year: "
 msgstr "السنة: "
 
 msgid "Yes"

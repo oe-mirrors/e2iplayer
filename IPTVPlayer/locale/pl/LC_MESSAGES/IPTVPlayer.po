@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:29+0200\n"
+"POT-Creation-Date: 2026-07-14 10:56+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: kosmacz <anteneczka@gmail.com> poprawki sq9\n"
 "Language-Team: IPTVPlayer\n"
@@ -361,6 +361,10 @@ msgstr "Aktorzy:"
 #, fuzzy
 msgid "Actors:"
 msgstr "Aktorzy:"
+
+#, fuzzy
+msgid "Add channel name to downloaded file"
+msgstr "Dodaj do pobrania"
 
 #, python-format
 msgid "Add host %s to group"
@@ -761,8 +765,17 @@ msgstr "Kraje"
 msgid "Country:"
 msgstr "Kraje"
 
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr ""
+
 msgid "Create LCD/VFD summary screen"
 msgstr "Utwórz ekran podsumowania dla LCD/VFD"
+
+msgid "Create MKV with chapter marks from description"
+msgstr ""
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr ""
 
 msgid "Creator:"
 msgstr ""
@@ -916,6 +929,10 @@ msgstr "Włącz/Wyłącz grupy"
 msgid "Disable/Enable services"
 msgstr "Włącz/Wyłacz serwisy"
 
+#, fuzzy
+msgid "Display language:"
+msgstr "Wybierz język"
+
 msgid "Display thumbnails"
 msgstr "Wyświetlać miniatury"
 
@@ -946,6 +963,10 @@ msgstr "Pobierz %s"
 
 msgid "Download again"
 msgstr "Pobierz ponownie"
+
+#, fuzzy
+msgid "Download already exists"
+msgstr "Plik \"%s\" już istnieje"
 
 #, python-format
 msgid ""
@@ -1013,6 +1034,9 @@ msgstr "Pobieranie napisów nie powiodło się."
 
 msgid "Download suggested"
 msgstr "Pobierz sugerowane"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr ""
 
 msgid "Downloading"
 msgstr "Pobieranie"
@@ -1182,6 +1206,7 @@ msgstr "Wprowadź stary kod PIN"
 msgid "Enter page number"
 msgstr "Wpisz wartość"
 
+#, python-brace-format
 msgid "Enter page number (MAX PAGE: {})"
 msgstr ""
 
@@ -1256,7 +1281,7 @@ msgstr "Bład odczytu pliku\"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "Bład odczytu pliku\"%s\".\n"
 
-msgid "Error while loading description"
+msgid "Error while loading watch data"
 msgstr ""
 
 #, python-format
@@ -1281,6 +1306,9 @@ msgstr ""
 
 msgid "External movie player config"
 msgstr "Konfiguracja exteplayer3/gstplayer"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr ""
 
 #, fuzzy
 msgid "FAILED"
@@ -1309,6 +1337,10 @@ msgstr "Nie udało się przekonwertować pliku \"%s\" na UTF-8."
 
 #, python-format
 msgid "Failed to create directory \"%s\"."
+msgstr "Wystąpił problem z utworzeniem katalogu \"%s\"."
+
+#, fuzzy
+msgid "Failed to create extraction directory."
 msgstr "Wystąpił problem z utworzeniem katalogu \"%s\"."
 
 msgid "Failed to decode to UTF-8."
@@ -1379,6 +1411,10 @@ msgstr "Plik: [%s] został dodany do kolejki pobierania."
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Nie można pobrać pliku.Nieobsługiwany protokół [%s]"
 
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr ""
+
 #, fuzzy
 msgid "File name cannot be empty!"
 msgstr "Nazwa nie może być pusta."
@@ -1394,9 +1430,6 @@ msgstr "Sugestie filmu"
 
 msgid "Filmweb Suggestions"
 msgstr "Sugestie filmu"
-
-msgid "Filters"
-msgstr "Filtry"
 
 #, fuzzy
 msgid "First Page"
@@ -1750,6 +1783,7 @@ msgstr ""
 msgid "Jump to a selected page"
 msgstr ""
 
+#, python-brace-format
 msgid "Jump to a selected page, max: {}"
 msgstr ""
 
@@ -1895,8 +1929,9 @@ msgstr "Ładowanie danych, proszę czekać"
 msgid "Loading data, please wait (%d)"
 msgstr "Ładowanie danych, proszę czekać (%d)"
 
-msgid "Loading full description..."
-msgstr ""
+#, fuzzy
+msgid "Loading watch data..."
+msgstr "Problem z pobraniem danych captcha."
 
 msgid "LocalMedia"
 msgstr "LocalMedia (pliki lokalne)"
@@ -2179,6 +2214,9 @@ msgstr "Brak materiałów oczekujących w kolejce pobierania"
 msgid "No results found for: %s"
 msgstr ""
 
+msgid "No subtitle file found in the archive."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Brak uprawnienia dla zasobu."
 
@@ -2204,6 +2242,9 @@ msgstr "Liczba pozycji w historii wyszukiwania"
 
 msgid "OK"
 msgstr "OK"
+
+msgid "OMDb API Key"
+msgstr ""
 
 msgid "Offline channels"
 msgstr "Kanały nie nadawane"
@@ -2461,6 +2502,10 @@ msgstr "Przesuń na szczyt kolejki"
 
 msgid "Protocol: "
 msgstr "Protokół: "
+
+#, fuzzy
+msgid "Published"
+msgstr "Polski"
 
 msgid "Quality:"
 msgstr "Jakość:"
@@ -3015,6 +3060,9 @@ msgstr "Zatrzymaj odtwarzanie zachowując bufor"
 msgid "Stop playing?"
 msgstr "Zakończyć odtwarzanie?"
 
+msgid "Streamed"
+msgstr ""
+
 msgid "Study Plan"
 msgstr "Plan studiów"
 
@@ -3130,6 +3178,10 @@ msgstr "Synchronizacja"
 msgid "System"
 msgstr "System"
 
+#, fuzzy
+msgid "System language"
+msgstr "Wybierz język"
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -3159,9 +3211,6 @@ msgstr ""
 #, fuzzy
 msgid "TMDb Rating:"
 msgstr "Ocena:"
-
-msgid "TOP 10"
-msgstr "TOP 10"
 
 msgid "TV"
 msgstr "TV"
@@ -3631,9 +3680,6 @@ msgstr "Rok %s"
 
 #, fuzzy
 msgid "Year:"
-msgstr "Rok: "
-
-msgid "Year: "
 msgstr "Rok: "
 
 msgid "Yes"

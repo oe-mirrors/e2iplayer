@@ -90,10 +90,10 @@ class GamatoMovies(CBaseHostClass):
             self.cacheFilters['year'] = []
             year = datetime.now().year
             while year >= 1978:
-                self.cacheFilters['year'].append({'title': _('Year: ') + str(year), 'year': year})
+                self.cacheFilters['year'].append({'title': _('Year:') + " " + str(year), 'year': year})
                 year -= 1
             if len(self.cacheFilters['year']):
-                self.cacheFilters['year'].insert(0, {'title': _('Year: ') + _('any')})
+                self.cacheFilters['year'].insert(0, {'title': _('Year:') + " " + _('any')})
 
         # Rating
         tmpData = self.cm.ph.getDataBeetwenMarkers(data, '<select name="minRating"', '</select>')[1]

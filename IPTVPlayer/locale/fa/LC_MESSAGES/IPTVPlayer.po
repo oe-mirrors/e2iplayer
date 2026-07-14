@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:29+0200\n"
+"POT-Creation-Date: 2026-07-14 10:56+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -337,6 +337,9 @@ msgid "Actors"
 msgstr ""
 
 msgid "Actors:"
+msgstr ""
+
+msgid "Add channel name to downloaded file"
 msgstr ""
 
 #, python-format
@@ -706,7 +709,16 @@ msgstr ""
 msgid "Country:"
 msgstr ""
 
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr ""
+
 msgid "Create LCD/VFD summary screen"
+msgstr ""
+
+msgid "Create MKV with chapter marks from description"
+msgstr ""
+
+msgid "Create sidecar files (.txt/.jpg)"
 msgstr ""
 
 msgid "Creator:"
@@ -852,6 +864,9 @@ msgstr ""
 msgid "Disable/Enable services"
 msgstr ""
 
+msgid "Display language:"
+msgstr ""
+
 msgid "Display thumbnails"
 msgstr ""
 
@@ -879,6 +894,9 @@ msgid "Download %s"
 msgstr ""
 
 msgid "Download again"
+msgstr ""
+
+msgid "Download already exists"
 msgstr ""
 
 #, python-format
@@ -932,6 +950,9 @@ msgid "Download subtiles failed."
 msgstr ""
 
 msgid "Download suggested"
+msgstr ""
+
+msgid "Downloaded file is too small or corrupted."
 msgstr ""
 
 msgid "Downloading"
@@ -1075,6 +1096,7 @@ msgstr ""
 msgid "Enter page number"
 msgstr ""
 
+#, python-brace-format
 msgid "Enter page number (MAX PAGE: {})"
 msgstr ""
 
@@ -1144,7 +1166,7 @@ msgstr ""
 msgid "Error renaming file: %s"
 msgstr ""
 
-msgid "Error while loading description"
+msgid "Error while loading watch data"
 msgstr ""
 
 #, python-format
@@ -1168,6 +1190,9 @@ msgid "Expiry: %s"
 msgstr ""
 
 msgid "External movie player config"
+msgstr ""
+
+msgid "Extracted subtitle file is empty or missing."
 msgstr ""
 
 msgid "FAILED"
@@ -1196,6 +1221,9 @@ msgstr ""
 
 #, python-format
 msgid "Failed to create directory \"%s\"."
+msgstr ""
+
+msgid "Failed to create extraction directory."
 msgstr ""
 
 msgid "Failed to decode to UTF-8."
@@ -1264,6 +1292,10 @@ msgstr ""
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr ""
 
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr ""
+
 msgid "File name cannot be empty!"
 msgstr ""
 
@@ -1277,9 +1309,6 @@ msgid "Filmstarts Suggestions"
 msgstr ""
 
 msgid "Filmweb Suggestions"
-msgstr ""
-
-msgid "Filters"
 msgstr ""
 
 msgid "First Page"
@@ -1613,6 +1642,7 @@ msgstr ""
 msgid "Jump to a selected page"
 msgstr ""
 
+#, python-brace-format
 msgid "Jump to a selected page, max: {}"
 msgstr ""
 
@@ -1751,7 +1781,7 @@ msgstr ""
 msgid "Loading data, please wait (%d)"
 msgstr ""
 
-msgid "Loading full description..."
+msgid "Loading watch data..."
 msgstr ""
 
 msgid "LocalMedia"
@@ -2013,6 +2043,9 @@ msgstr ""
 msgid "No results found for: %s"
 msgstr ""
 
+msgid "No subtitle file found in the archive."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr ""
 
@@ -2036,6 +2069,9 @@ msgid "Number of items in search history: %d"
 msgstr ""
 
 msgid "OK"
+msgstr ""
+
+msgid "OMDb API Key"
 msgstr ""
 
 msgid "Offline channels"
@@ -2286,6 +2322,9 @@ msgid "Promote item"
 msgstr ""
 
 msgid "Protocol: "
+msgstr ""
+
+msgid "Published"
 msgstr ""
 
 msgid "Quality:"
@@ -2811,6 +2850,9 @@ msgstr ""
 msgid "Stop playing?"
 msgstr ""
 
+msgid "Streamed"
+msgstr ""
+
 msgid "Study Plan"
 msgstr ""
 
@@ -2925,6 +2967,9 @@ msgstr ""
 msgid "System"
 msgstr ""
 
+msgid "System language"
+msgstr ""
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -2952,9 +2997,6 @@ msgid ""
 msgstr ""
 
 msgid "TMDb Rating:"
-msgstr ""
-
-msgid "TOP 10"
 msgstr ""
 
 msgid "TV"
@@ -3394,9 +3436,6 @@ msgid "Year %s"
 msgstr ""
 
 msgid "Year:"
-msgstr ""
-
-msgid "Year: "
 msgstr ""
 
 msgid "Yes"

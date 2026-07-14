@@ -173,7 +173,7 @@ class Filman(CBaseHostClass):
             quality = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'quality-version'), ('</div', '>'), False)[1])
             year = self.cleanHtmlStr(self.cm.ph.getDataBeetwenNodes(item, ('<div', '>', 'film_year'), ('</div', '>'), False)[1])
             if year != '':
-                desc = _('Year: ') + year + ' - ' + _('Quality:') + ' ' + quality + '[/br]' + desc
+                desc = _('Year:') + " " + year + ' - ' + _('Quality:') + ' ' + quality + '[/br]' + desc
             if 'serial-online' in url:
                 params = {'good_for_fav': True, 'category': 'list_series', 'url': url, 'title': title, 'desc': desc, 'icon': icon}
                 self.addDir(params)

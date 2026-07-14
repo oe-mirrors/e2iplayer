@@ -203,7 +203,7 @@ class LookMovieag(CBaseHostClass):
                     else:
                         params.update({'good_for_fav': True, 'title': self.cleanHtmlStr(title), 'url': videoUrl, 'icon': imageUrl, 'desc': self.cleanHtmlStr(desc)})
                         self.addVideo(params)
-            except:
+            except Exception:
                 printDBG('e2iStream >>>>>>>>>>> failed to parse website data - please report!')
 
         if nextPage != '':

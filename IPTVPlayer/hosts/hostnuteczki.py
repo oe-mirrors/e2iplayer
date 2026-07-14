@@ -197,7 +197,7 @@ class NuteczkiEU(CBaseHostClass):
         main_cat_tab = [
             {
                 'category': 'list_items',
-                'title': _('Najnowsze'),
+                'title': 'Najnowsze',
                 'url': self.getFullUrl('/muzyka/')
             }
         ] + self.searchItems()

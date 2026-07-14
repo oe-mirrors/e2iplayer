@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 19:29+0200\n"
+"POT-Creation-Date: 2026-07-14 10:56+0200\n"
 "PO-Revision-Date: 2026-06-14 20:27+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -352,6 +352,10 @@ msgstr "Ηθοποιοί"
 
 msgid "Actors:"
 msgstr "Ηθοποιοί:"
+
+#, fuzzy
+msgid "Add channel name to downloaded file"
+msgstr "Προσθήκη στο πρόγραμμα λήψεων"
 
 #, python-format
 msgid "Add host %s to group"
@@ -727,8 +731,17 @@ msgstr "Χώρα"
 msgid "Country:"
 msgstr "Χώρα:"
 
+msgid "Create Enigma2 .cuts chapter marks"
+msgstr ""
+
 msgid "Create LCD/VFD summary screen"
 msgstr "Δημιουργία οθόνης σύνοψης LCD/VFD"
+
+msgid "Create MKV with chapter marks from description"
+msgstr ""
+
+msgid "Create sidecar files (.txt/.jpg)"
+msgstr ""
 
 msgid "Creator:"
 msgstr "Δημιουργός:"
@@ -873,6 +886,10 @@ msgstr "Απενεργοποίηση/ενεργοποίηση ομάδων"
 msgid "Disable/Enable services"
 msgstr "Απενεργοποίηση/ενεργοποίηση υπηρεσιών"
 
+#, fuzzy
+msgid "Display language:"
+msgstr "Επιλογή γλώσσας"
+
 msgid "Display thumbnails"
 msgstr "Εμφάνιση μικρογραφιών"
 
@@ -901,6 +918,10 @@ msgstr "Λήψη %s"
 
 msgid "Download again"
 msgstr "Λήψη ξανά"
+
+#, fuzzy
+msgid "Download already exists"
+msgstr "Το αρχείο \"%s\" υπάρχει ήδη"
 
 #, python-format
 msgid ""
@@ -968,6 +989,9 @@ msgstr "Αποτυχία λήψης υποτίτλων."
 
 msgid "Download suggested"
 msgstr "Λήψη προτεινόμενων"
+
+msgid "Downloaded file is too small or corrupted."
+msgstr ""
 
 msgid "Downloading"
 msgstr "Λήψη σε εξέλιξη"
@@ -1130,6 +1154,7 @@ msgstr "Εισαγωγή παλαιού PIN"
 msgid "Enter page number"
 msgstr "Εισαγωγή αριθμού σελίδας"
 
+#, python-brace-format
 msgid "Enter page number (MAX PAGE: {})"
 msgstr "Εισαγωγή αριθμού σελίδας (ΜΕΓΙΣΤΗ ΣΕΛΙΔΑ: {})"
 
@@ -1203,7 +1228,8 @@ msgstr "Σφάλμα ανάγνωσης του αρχείου \"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "Σφάλμα μετονομασίας αρχείου: %s"
 
-msgid "Error while loading description"
+#, fuzzy
+msgid "Error while loading watch data"
 msgstr "Σφάλμα κατά τη φόρτωση της περιγραφής"
 
 #, python-format
@@ -1228,6 +1254,9 @@ msgstr "Λήξη: %s"
 
 msgid "External movie player config"
 msgstr "Ρυθμίσεις εξωτερικής αναπαραγωγής ταινιών"
+
+msgid "Extracted subtitle file is empty or missing."
+msgstr ""
 
 msgid "FAILED"
 msgstr "ΑΠΕΤΥΧΕ"
@@ -1255,6 +1284,10 @@ msgstr "Αποτυχία μετατροπής του αρχείου \"%s\" σε 
 
 #, python-format
 msgid "Failed to create directory \"%s\"."
+msgstr "Αποτυχία δημιουργίας καταλόγου \"%s\"."
+
+#, fuzzy
+msgid "Failed to create extraction directory."
 msgstr "Αποτυχία δημιουργίας καταλόγου \"%s\"."
 
 msgid "Failed to decode to UTF-8."
@@ -1323,6 +1356,10 @@ msgstr "Το αρχείο [%s] προστέθηκε στην ουρά λήψεω
 msgid "File can not be downloaded. Protocol [%s] is unsupported"
 msgstr "Δεν είναι δυνατή η λήψη του αρχείου. Το πρωτόκολλο [%s] δεν υποστηρίζεται"
 
+#, python-format
+msgid "File might be corrupted (size: %d bytes)."
+msgstr ""
+
 msgid "File name cannot be empty!"
 msgstr "Το όνομα αρχείου δεν μπορεί να είναι κενό!"
 
@@ -1337,9 +1374,6 @@ msgstr "Προτάσεις Filmstarts"
 
 msgid "Filmweb Suggestions"
 msgstr "Προτάσεις Filmweb"
-
-msgid "Filters"
-msgstr "Φίλτρα"
 
 msgid "First Page"
 msgstr "Πρώτη σελίδα"
@@ -1678,6 +1712,7 @@ msgstr "Μετάβαση"
 msgid "Jump to a selected page"
 msgstr "Μετάβαση σε επιλεγμένη σελίδα"
 
+#, python-brace-format
 msgid "Jump to a selected page, max: {}"
 msgstr "Μετάβαση σε επιλεγμένη σελίδα, μέγιστο: {}"
 
@@ -1818,8 +1853,9 @@ msgstr "Φόρτωση δεδομένων, παρακαλώ περιμένετε
 msgid "Loading data, please wait (%d)"
 msgstr "Φόρτωση δεδομένων, παρακαλώ περιμένετε (%d)"
 
-msgid "Loading full description..."
-msgstr "Φόρτωση πλήρους περιγραφής..."
+#, fuzzy
+msgid "Loading watch data..."
+msgstr "Αποτυχία λήψης δεδομένων captcha."
 
 msgid "LocalMedia"
 msgstr "Τοπικά μέσα"
@@ -2093,6 +2129,9 @@ msgstr "Δεν υπάρχουν υλικά σε αναμονή στην ουρά
 msgid "No results found for: %s"
 msgstr "Δεν βρέθηκαν αποτελέσματα για: %s"
 
+msgid "No subtitle file found in the archive."
+msgstr ""
+
 msgid "No valid entitlement found for asset."
 msgstr "Δεν βρέθηκε έγκυρη εξουσιοδότηση για το περιεχόμενο."
 
@@ -2117,6 +2156,10 @@ msgstr "Αριθμός στοιχείων στο ιστορικό αναζήτη
 
 msgid "OK"
 msgstr "ΕΝΤΑΞΕΙ"
+
+#, fuzzy
+msgid "OMDb API Key"
+msgstr "Κλειδί API"
 
 msgid "Offline channels"
 msgstr "Κανάλια εκτός σύνδεσης"
@@ -2259,7 +2302,7 @@ msgid ""
 "Please configure your API Key in:\n"
 "Settings → IPTVPlayer → Subtitles → SubDL.com API Key"
 msgstr ""
-"Παρακαλώ ρυθμίστε το κλειδί σας API στο:\r\n"
+"Παρακαλώ ρυθμίστε το κλειδί σας API στο:\n"
 "Ρυθμίσεις → IPTVPlayer → Υπότιτλοι → Κλειδί API SubDL.com"
 
 #, python-format
@@ -2374,6 +2417,10 @@ msgstr "Προώθηση στοιχείου"
 
 msgid "Protocol: "
 msgstr "Πρωτόκολλο: "
+
+#, fuzzy
+msgid "Published"
+msgstr "Πολωνικά"
 
 msgid "Quality:"
 msgstr "Ποιότητα:"
@@ -2904,6 +2951,9 @@ msgstr "Διακοπή αναπαραγωγής με αποθήκευση προ
 msgid "Stop playing?"
 msgstr "Να γίνει διακοπή της αναπαραγωγής;"
 
+msgid "Streamed"
+msgstr ""
+
 msgid "Study Plan"
 msgstr "Πρόγραμμα μελέτης"
 
@@ -2915,11 +2965,11 @@ msgid ""
 "3. Go to: Settings → IPTVPlayer → Subtitles\n"
 "4. Paste the key in \"SubDL.com API Key\" field"
 msgstr ""
-"Ρύθμιση SubDL:\r\n"
-"\r\n"
-"1. Επισκεφθείτε το: subdl.com/panel/api\r\n"
-"2. Αντιγράψτε το κλειδί σας API\r\n"
-"3. Μεταβείτε στις: Ρυθμίσεις → IPTVPlayer → Υπότιτλοι\r\n"
+"Ρύθμιση SubDL:\n"
+"\n"
+"1. Επισκεφθείτε το: subdl.com/panel/api\n"
+"2. Αντιγράψτε το κλειδί σας API\n"
+"3. Μεταβείτε στις: Ρυθμίσεις → IPTVPlayer → Υπότιτλοι\n"
 "4. Επικολλήστε το κλειδί στο πεδίο \"Κλειδί API SubDL.com\""
 
 msgid "SubDL.com API Key"
@@ -3024,6 +3074,10 @@ msgstr "Συγχρονισμός"
 msgid "System"
 msgstr "Σύστημα"
 
+#, fuzzy
+msgid "System language"
+msgstr "Επιλογή γλώσσας"
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "Η ΣΕΛΙΔΑ ΠΟΥ ΑΝΑΖΗΤΑΤΕ ΔΕΝ ΒΡΕΘΗΚΕ."
 
@@ -3060,9 +3114,6 @@ msgstr ""
 
 msgid "TMDb Rating:"
 msgstr "Βαθμολογία TMDb:"
-
-msgid "TOP 10"
-msgstr "ΚΟΡΥΦΑΙΑ 10"
 
 msgid "TV"
 msgstr "TV"
@@ -3513,9 +3564,6 @@ msgstr "Έτος %s"
 
 msgid "Year:"
 msgstr "Έτος:"
-
-msgid "Year: "
-msgstr "Έτος: "
 
 msgid "Yes"
 msgstr "Ναι"

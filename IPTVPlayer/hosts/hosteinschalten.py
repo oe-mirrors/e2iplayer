@@ -48,7 +48,7 @@ class Einschalten(CBaseHostClass):
             for js in data.get("data"):
                 title = self.cleanHtmlStr(js.get("title") or js.get("name", ""))
                 icon = gettytul() + "api/image/poster/" + js.get("posterPath") if js.get("posterPath") else ""
-                desc = _("Year: ") + js.get("releaseDate")[:4] if js.get("releaseDate") else ""
+                desc = _("Year:") + " " + js.get("releaseDate")[:4] if js.get("releaseDate") else ""
                 params = dict(cItem)
                 params.update({"good_for_fav": True, "title": title, "icon": icon, "desc": self.cleanHtmlStr(desc)})
                 if "collections" in str(cItem.get("url")):

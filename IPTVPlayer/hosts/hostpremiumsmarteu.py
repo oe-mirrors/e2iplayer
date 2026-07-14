@@ -25,8 +25,8 @@ class Premiumsmarteu(CBaseHostClass):
         self.DEFAULT_ICON_URL = self.getFullUrl('storage/branding_media/9a5b1890-53ce-4052-9a83-862d97a6b285.png')
         self.itemsPerPage = 50
         self.MENU = [
-            {'category': 'list_sort', 'title': _('Filmy'), 'url': self.API_URL + 'channel/filmy?perPage=%d' % self.itemsPerPage},
-            {'category': 'list_sort', 'title': _('Seriale'), 'url': self.API_URL + 'channel/seriale?perPage=%d' % self.itemsPerPage},
+            {'category': 'list_sort', 'title': 'Filmy', 'url': self.API_URL + 'channel/filmy?perPage=%d' % self.itemsPerPage},
+            {'category': 'list_sort', 'title': 'Seriale', 'url': self.API_URL + 'channel/seriale?perPage=%d' % self.itemsPerPage},
             {'category': 'search', 'title': _('Search'), 'search_item': True},
             {'category': 'search_history', 'title': _('Search history')},
         ]

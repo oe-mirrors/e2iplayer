@@ -280,7 +280,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
             desc_parts = []
             if info["year"]:
-                desc_parts.append(_("Year: ") + info["year"])
+                desc_parts.append(_("Year:") + " " + info["year"])
             if info["rating"]:
                 desc_parts.append(_("Rating: ") + info["rating"])
             if info["quality"]:
@@ -652,13 +652,13 @@ class Filman(CBaseHostClass, CaptchaHelper):
 
         desc_parts = []
         if year:
-            desc_parts.append(_("Year: ") + year)
+            desc_parts.append(_("Year:") + " " + year)
         if duration:
-            desc_parts.append(_("Duration: ") + " " + duration)
+            desc_parts.append(_("Duration:") + " " + duration)
         if views:
-            desc_parts.append(_("Views: ") + " " + views)
+            desc_parts.append(_("Views:") + " " + views)
         if genres_str:
-            desc_parts.append(_("Genre: ") + " " + genres_str)
+            desc_parts.append(_("Genre:") + " " + genres_str)
         if desc:
             desc_parts.append(desc)
 
