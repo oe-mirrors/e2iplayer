@@ -880,7 +880,7 @@ msgstr "Usuń plik dziennika"
 
 #, fuzzy
 msgid "Delete search history"
-msgstr "Historia wyszukiwania"
+msgstr "Usuń historię wyszukiwania"
 
 msgid "Description:"
 msgstr "Opis:"
@@ -1244,8 +1244,7 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Błąd komunikacji z serwerem."
 
-#, python-format
-msgid "Error deleting file \"%s\".\n"
+#, python-formatmsgid "Error deleting file \"%s\".\n"
 msgstr "Bład usunięcia pliku \"%s\".\n"
 
 msgid "Error during deletion of the debug file."
@@ -2700,10 +2699,10 @@ msgstr "Wyszukaj"
 
 #, fuzzy
 msgid "Search History is empty."
-msgstr "Historia wyszukiwania"
+msgstr "Historia wyszukiwania jest pusta."
 
 msgid "Search History successfully deleted."
-msgstr ""
+msgstr "Historia wyszukiwania została pomyślnie usunięta."
 
 msgid "Search Movies and TV Series"
 msgstr "Szukaj filmów i seriali"
@@ -3426,7 +3425,7 @@ msgid "Umount iso file"
 msgstr "Odmontowany plik iso"
 
 msgid "Unable to comply. Search History is empty."
-msgstr ""
+msgstr "Nie można spełnić. Historia wyszukiwania jest pusta."
 
 msgid "Universal"
 msgstr ""
@@ -3673,6 +3672,41 @@ msgstr ""
 
 msgid "Year"
 msgstr "Rok"
+
+# ===== DODANE BRAKUJĄCE TŁUMACZENIA =====
+msgid "Year:"
+msgstr "Rok:"
+
+msgid "Duration:"
+msgstr "Czas trwania:"
+
+msgid "Views:"
+msgstr "Odsłony:"
+
+msgid "Genre:"
+msgstr "Gatunek:"
+
+msgid "Rating: "
+msgstr "Ocena: "
+
+msgid "Quality:"
+msgstr "Jakość:"
+
+msgid "Quality"
+msgstr "Jakość"
+
+msgid "Rating"
+msgstr "Ocena"
+
+msgid "Duration"
+msgstr "Czas trwania"
+
+msgid "Views"
+msgstr "Odsłony"
+
+msgid "Genre"
+msgstr "Gatunek"
+# ===== KONIEC DODANYCH TŁUMACZEŃ =====
 
 #, python-format
 msgid "Year %s"
