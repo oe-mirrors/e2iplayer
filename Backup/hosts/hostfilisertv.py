@@ -113,7 +113,7 @@ class FiliserTv(CBaseHostClass):
         addFilter(tmpData, 'genres', True, '', 'data-gen')
 
         # year
-        self.cacheFilters['year'] = [{'title': _('Year:') + " " _('Any')}]
+        self.cacheFilters['year'] = [{'title': _('Year:') + " " + _('Any')}]
         year = datetime.now().year
         while year >= 1978:
             self.cacheFilters['year'].append({'title': _('Year:') + " " + str(year), 'year': year})
