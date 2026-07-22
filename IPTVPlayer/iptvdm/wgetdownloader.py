@@ -190,6 +190,7 @@ class WgetDownloader(BaseDownloader):
             reason = data
         self.iptv_sys = None
         callBackFun(sts, reason)
+
     def _clearSidecarData(self):
         self.sidecarEnabled = False
         self.sidecarTxt = ''
