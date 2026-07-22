@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.06.2025 - Mr.X
-# Merged: 08.07.2026 - Sidecar files (.txt + .jpg) extended after HLS download, IMDb rating added as the first line in .txt - Kamikaze24
+# Last Modified: 20.07.2026 - HLS sidecar files (.txt + .jpg) extended, IMDb rating, Year and Genre added for descriptions/sidecar files,
+# MKV FFmpeg postprocess meta for HLSDownloader/WgetDownloader,
+# URL meta helper for sidecar and MKV postprocess handling - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -11,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, sidecarFromUrlMeta, decorateUrl, decorateCachedLinkItems, decorateResolvedLinkItems
 
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
@@ -22,10 +24,14 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
 
 config.plugins.iptvplayer.filmpalast_sidecar = ConfigYesNo(default=True)
+config.plugins.iptvplayer.filmpalast_mkv = ConfigYesNo(default=True)
 
 
 def GetConfigList():
-    return [getConfigListEntry(_("Create sidecar files (.txt/.jpg)") + ":", config.plugins.iptvplayer.filmpalast_sidecar)]
+    return [
+        getConfigListEntry(_("Create sidecar files (.txt/.jpg)") + ":", config.plugins.iptvplayer.filmpalast_sidecar),
+        getConfigListEntry(_("Create MKV") + ":", config.plugins.iptvplayer.filmpalast_mkv)
+    ]
 
 
 def gettytul():
@@ -268,6 +274,9 @@ class FilmPalastTo(CBaseHostClass):
         sidecarImg = ""
         sidecarEnabled = config.plugins.iptvplayer.filmpalast_sidecar.value
         imdb_rating = cItem.get("imdb_rating", "")
+        sidecarYear = ""
+        sidecarDuration = ""
+        sidecarGenre = ""
 
         try:
             article = self.getArticleContent(cItem)
@@ -277,8 +286,13 @@ class FilmPalastTo(CBaseHostClass):
                 images = articleItem.get("images", [])
                 if images and images[0].get("url"):
                     sidecarImg = images[0].get("url")
+
+                otherInfo = articleItem.get("other_info", {})
                 if not imdb_rating or imdb_rating == "-":
-                    imdb_rating = articleItem.get("other_info", {}).get("imdb_rating", "")
+                    imdb_rating = otherInfo.get("imdb_rating", "")
+                sidecarYear = otherInfo.get("year", "") or otherInfo.get("released", "")
+                sidecarDuration = otherInfo.get("duration", "")
+                sidecarGenre = otherInfo.get("genre", "")
         except Exception:
             printExc("getArticleContent for sidecar failed")
 
@@ -287,43 +301,35 @@ class FilmPalastTo(CBaseHostClass):
         if not sidecarImg:
             sidecarImg = cItem.get("icon", "")
 
+        sidecarLines = []
+
         if imdb_rating and imdb_rating != "-":
-            imdb_line = u"IMDb: %s" % imdb_rating
+            sidecarLines.append(u"IMDb: %s" % imdb_rating)
+
+        infoLine = []
+        if sidecarYear:
+            infoLine.append(u"Jahr: %s" % sidecarYear)
+        if sidecarDuration:
+            infoLine.append(u"Spielzeit: %s" % sidecarDuration)
+        if infoLine:
+            sidecarLines.append(u" / ".join(infoLine))
+
+        if sidecarGenre:
+            sidecarLines.append(sidecarGenre)
+
+        if sidecarLines:
+            prefix = u"\n".join(sidecarLines)
             if sidecarTxt:
                 if not sidecarTxt.startswith("IMDb:"):
-                    sidecarTxt = imdb_line + u"\n" + sidecarTxt
+                    sidecarTxt = prefix + u"\n\n" + sidecarTxt
             else:
-                sidecarTxt = imdb_line
+                sidecarTxt = prefix
+
+        sidecar = buildSidecar(sidecarEnabled, sidecarTxt, sidecarImg)
 
         linksTab = self.cacheLinks.get(cItem["url"], [])
         if len(linksTab) > 0:
-            outTab = []
-            for item in linksTab:
-                try:
-                    newItem = dict(item)
-                    itemUrl = newItem.get("url", "")
-                    itemMeta = {}
-                    try:
-                        itemMeta = strwithmeta(itemUrl).meta
-                    except Exception:
-                        itemMeta = {}
-                    itemMeta = dict(itemMeta)
-
-                    if sidecarEnabled:
-                        itemMeta["e2i_sidecar_enabled"] = True
-                        itemMeta["e2i_sidecar_txt"] = sidecarTxt
-                        itemMeta["e2i_sidecar_img"] = sidecarImg
-                    else:
-                        itemMeta.pop("e2i_sidecar_enabled", None)
-                        itemMeta.pop("e2i_sidecar_txt", None)
-                        itemMeta.pop("e2i_sidecar_img", None)
-
-                    newItem["url"] = strwithmeta(str(itemUrl), itemMeta)
-                    outTab.append(newItem)
-                except Exception:
-                    printExc()
-                    outTab.append(item)
-            return outTab
+            return decorateCachedLinkItems(linksTab, sidecar)
 
         sts, data = self.getPage(cItem["url"], self.defaultParams)
         if not sts:
@@ -337,11 +343,8 @@ class FilmPalastTo(CBaseHostClass):
             if title == "":
                 title = ph.clean_html(item)
 
-            meta = {"Referer": cItem["url"]}
-            if sidecarEnabled:
-                meta.update({"e2i_sidecar_enabled": True, "e2i_sidecar_txt": sidecarTxt, "e2i_sidecar_img": sidecarImg})
-
-            linksTab.append({"name": title, "url": strwithmeta(url, meta), "need_resolve": 1})
+            url = decorateUrl(url, referer=cItem["url"], sidecar=sidecar)
+            linksTab.append({"name": title, "url": url, "need_resolve": 1})
 
         if len(linksTab):
             self.cacheLinks[cItem["url"]] = linksTab
@@ -355,38 +358,11 @@ class FilmPalastTo(CBaseHostClass):
         videoUrl = strwithmeta(videoUrl)
 
         cfgSidecarEnabled = config.plugins.iptvplayer.filmpalast_sidecar.value
-        sidecarEnabled = cfgSidecarEnabled and bool(videoUrl.meta.get("e2i_sidecar_enabled", False))
-        sidecarTxt = videoUrl.meta.get("e2i_sidecar_txt", "") if sidecarEnabled else ""
-        sidecarImg = videoUrl.meta.get("e2i_sidecar_img", "") if sidecarEnabled else ""
+        cfgMkvEnabled = config.plugins.iptvplayer.filmpalast_mkv.value
+        sidecar = sidecarFromUrlMeta(videoUrl, cfgSidecarEnabled)
 
-        def _addSidecarMeta(videoLinks):
-            outTab = []
-            for item in videoLinks:
-                try:
-                    newItem = dict(item)
-                    itemUrl = newItem.get("url", "")
-                    itemMeta = {}
-                    try:
-                        itemMeta = strwithmeta(itemUrl).meta
-                    except Exception:
-                        itemMeta = {}
-                    itemMeta = dict(itemMeta)
-
-                    if sidecarEnabled:
-                        itemMeta["e2i_sidecar_enabled"] = True
-                        itemMeta["e2i_sidecar_txt"] = sidecarTxt
-                        itemMeta["e2i_sidecar_img"] = sidecarImg
-                    else:
-                        itemMeta.pop("e2i_sidecar_enabled", None)
-                        itemMeta.pop("e2i_sidecar_txt", None)
-                        itemMeta.pop("e2i_sidecar_img", None)
-
-                    newItem["url"] = strwithmeta(str(itemUrl), itemMeta)
-                    outTab.append(newItem)
-                except Exception:
-                    printExc()
-                    outTab.append(item)
-            return outTab
+        def _addFinalMeta(videoLinks):
+            return decorateResolvedLinkItems(videoLinks, sidecar, cfgMkvEnabled)
 
         key = videoUrl.meta.get("links_key", "")
         if key != "":
@@ -414,12 +390,12 @@ class FilmPalastTo(CBaseHostClass):
                 data = json_loads(data)
                 url = data.get("url", "")
                 if self.cm.isValidUrl(url):
-                    return _addSidecarMeta(self.up.getVideoLinkExt(url))
+                    return _addFinalMeta(self.up.getVideoLinkExt(url))
                 SetIPTVPlayerLastHostError(data["msg"])
             except Exception:
                 printExc()
         else:
-            linksTab = _addSidecarMeta(self.up.getVideoLinkExt(videoUrl))
+            linksTab = _addFinalMeta(self.up.getVideoLinkExt(videoUrl))
 
         return linksTab
 

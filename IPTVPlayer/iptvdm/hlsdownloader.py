@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
-# Last Modified: 05.07.2026 - Unified Py2/Py3 version with sidecar files (.txt + .jpg)
+# Last Modified: 19.07.2026 - MKV FFmpeg postprocess + fsPath/shellQuote handling - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, E2PrioFix
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -27,6 +27,7 @@ try:
 except Exception:
     printExc()
 ###################################################
+
 
 try:
     text_type = unicode
@@ -66,10 +67,29 @@ def ensureText(data, encoding='utf-8'):
             return u''
 
 
+def fsPath(path):
+    path = ensureText(path)
+    try:
+        if text_type is not str:
+            return path.encode('utf-8')
+    except Exception:
+        pass
+    return path
+
+
+def shellQuote(value):
+    value = ensureText(value)
+    value = value.replace('\\', '\\\\')
+    value = value.replace('"', '\\"')
+    value = value.replace('`', '\\`')
+    value = value.replace('$', '\\$')
+    return value
+
+
 def writeUtf8TextFile(path, data):
     try:
         txt = ensureText(data)
-        f = open(path, 'wb')
+        f = open(fsPath(path), 'wb')
         try:
             f.write(txt.encode('utf-8'))
         finally:
@@ -113,14 +133,43 @@ class HLSDownloader(BaseDownloader):
         self.sidecarImg = ''
         self.waitingForSidecar = False
 
+        # ffmpeg postprocess support
+        self.ffmpegPostEnabled = False
+        self.ffmpegContainer = 'mkv'
+        self.postProcessMode = ''
+        self.tempRemuxPath = ''
+        self.finalizedPath = ''
+
     def __del__(self):
         printDBG("HLSDownloader.__del__ ----------------------------------")
+
+    def _safeRm(self, path):
+        try:
+            fpath = fsPath(path)
+            if fpath and os.path.exists(fpath):
+                rm(fpath)
+        except Exception:
+            printExc()
+
+    def _cleanUp(self):
+        if self.tempRemuxPath:
+            self._safeRm(self.tempRemuxPath)
+
+    def _removeSourceFile(self):
+        try:
+            if self.filePath and os.path.isfile(fsPath(self.filePath)):
+                rm(fsPath(self.filePath))
+                printDBG("HLSDownloader source file removed [%s]" % self.filePath)
+                return True
+        except Exception:
+            printExc()
+        return False
 
     def getName(self):
         return "hlsdl m3u8"
 
     def isWorkingCorrectly(self, callBackFun):
-        self.iptv_sys = iptv_system(DMHelper.GET_HLSDL_PATH() + " 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
+        self.iptv_sys = iptv_system(DMHelper.GET_FFMPEG_PATH() + ' -version ' + " 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
 
     def _checkWorkingCallBack(self, callBackFun, code, data):
         reason = ''
@@ -129,6 +178,20 @@ class HLSDownloader(BaseDownloader):
             sts = False
             reason = data
             self.iptv_sys = None
+            callBackFun(sts, reason)
+        else:
+            self._isHlsDlWorkingCorrectly(callBackFun)
+
+    def _isHlsDlWorkingCorrectly(self, callBackFun):
+        self.iptv_sys = iptv_system(DMHelper.GET_HLSDL_PATH() + " 2>&1 ", boundFunction(self._checkHlsDlWorkingCallBack, callBackFun))
+
+    def _checkHlsDlWorkingCallBack(self, callBackFun, code, data):
+        reason = ''
+        sts = True
+        if code != 0:
+            sts = False
+            reason = data
+        self.iptv_sys = None
         callBackFun(sts, reason)
 
     def _clearSidecarData(self):
@@ -136,6 +199,13 @@ class HLSDownloader(BaseDownloader):
         self.sidecarTxt = ''
         self.sidecarImg = ''
         self.waitingForSidecar = False
+
+    def _clearPostData(self):
+        self.ffmpegPostEnabled = False
+        self.ffmpegContainer = 'mkv'
+        self.postProcessMode = ''
+        self.tempRemuxPath = ''
+        self.finalizedPath = ''
 
     def _prepareSidecarData(self, meta):
         self._clearSidecarData()
@@ -148,6 +218,38 @@ class HLSDownloader(BaseDownloader):
         except Exception:
             printExc()
 
+    def _preparePostData(self, meta):
+        self._clearPostData()
+        try:
+            if meta.get('e2i_postprocess_ffmpeg', False) or str(meta.get('e2i_postprocess_ffmpeg', '')) == '1':
+                self.ffmpegPostEnabled = True
+                self.ffmpegContainer = ensureText(meta.get('e2i_postprocess_container', 'mkv')).strip().lower()
+                if not self.ffmpegContainer:
+                    self.ffmpegContainer = 'mkv'
+                printDBG("HLSDownloader ffmpeg postprocess enabled container[%s]" % self.ffmpegContainer)
+        except Exception:
+            printExc()
+
+    def _getBasePath(self, filePath):
+        return ensureText(filePath).rsplit('.', 1)[0]
+
+    def _getMkvPath(self):
+        return self._getBasePath(self.filePath) + '.mkv'
+
+    def _moveFile(self, src, dst):
+        try:
+            srcPath = fsPath(src)
+            dstPath = fsPath(dst)
+            if srcPath == dstPath:
+                return True
+            if os.path.isfile(dstPath):
+                rm(dstPath)
+            os.rename(srcPath, dstPath)
+            return os.path.isfile(dstPath)
+        except Exception:
+            printExc()
+        return False
+
     def _writeTxtSidecar(self, filePath):
         try:
             if not self.sidecarTxt:
@@ -157,7 +259,7 @@ class HLSDownloader(BaseDownloader):
             basePath = filePath.rsplit('.', 1)[0]
             txtPath = basePath + '.txt'
 
-            if os.path.isfile(txtPath):
+            if os.path.isfile(fsPath(txtPath)):
                 printDBG("HLSDownloader sidecar TXT already exists [%s]" % txtPath)
                 return
 
@@ -181,7 +283,7 @@ class HLSDownloader(BaseDownloader):
             self.sidecarConsole = None
             self.waitingForSidecar = False
 
-            if os.path.isfile(jpgPath):
+            if os.path.isfile(fsPath(jpgPath)):
                 printDBG("HLSDownloader sidecar JPG saved [%s]" % jpgPath)
             else:
                 printDBG("HLSDownloader sidecar JPG failed [%s]" % jpgPath)
@@ -195,6 +297,7 @@ class HLSDownloader(BaseDownloader):
             self.onFinish()
         except Exception:
             printExc()
+        self._cleanUp()
 
     def _startImgSidecarDownload(self, filePath):
         try:
@@ -206,33 +309,92 @@ class HLSDownloader(BaseDownloader):
             basePath = filePath.rsplit('.', 1)[0]
             jpgPath = basePath + '.jpg'
 
-            if os.path.isfile(jpgPath):
+            if os.path.isfile(fsPath(jpgPath)):
                 printDBG("HLSDownloader sidecar JPG already exists [%s]" % jpgPath)
                 self._finishDownloadFlow()
                 return
 
-            cmd = 'wget --header "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36" --no-check-certificate "%s" -O "%s" > /dev/null 2>&1' % (ensureText(self.sidecarImg), jpgPath)
+            cmd = 'wget --header "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36" --no-check-certificate "%s" -O "%s" > /dev/null 2>&1' % (shellQuote(self.sidecarImg), shellQuote(jpgPath))
             printDBG("HLSDownloader sidecar JPG cmd[%s]" % cmd)
 
             self.waitingForSidecar = True
             self.sidecarConsole = eConsoleAppContainer()
             self.sidecarConsole_appClosed_conn = eConnectCallback(self.sidecarConsole.appClosed, boundFunction(self._imgSidecarFinished, jpgPath))
             self.sidecarConsole_stderrAvail_conn = eConnectCallback(self.sidecarConsole.stderrAvail, self._imgSidecarDataAvail)
-            self.sidecarConsole.execute(E2PrioFix(cmd))
+            if hasattr(self.sidecarConsole, "setNice"):
+                self.sidecarConsole.setNice(GetNice() + 2)
+                self.sidecarConsole.execute(cmd)
+            else:
+                self.sidecarConsole.execute(E2PrioFix(cmd))
         except Exception:
             printExc("HLSDownloader sidecar JPG start failed")
             self._finishDownloadFlow()
+
+    def doStartPostProcess(self):
+        self.postProcessMode = 'remux'
+        self.tempRemuxPath = self._getBasePath(self.filePath) + '.iptv.remux.tmp.mkv'
+
+        cmd = DMHelper.GET_FFMPEG_PATH() + ' '
+        cmd += ' -i "%s" ' % shellQuote(self.filePath)
+        cmd += ' -map 0:v -map 0:a? -vcodec copy -acodec copy "%s" >/dev/null 2>&1 ' % shellQuote(self.tempRemuxPath)
+
+        printDBG("HLSDownloader doStartPostProcess cmd[%s]" % cmd)
+
+        self.console = eConsoleAppContainer()
+        self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
+        if hasattr(self.console, "setNice"):
+            self.console.setNice(GetNice() + 2)
+            self.console.execute(cmd)
+        else:
+            self.console.execute(E2PrioFix(cmd))
+
+    def _finalizeSuccess(self, finalPath):
+        self.filePath = ensureText(finalPath)
+        self.finalizedPath = ensureText(finalPath)
+        self.localFileSize = DMHelper.getFileSize(fsPath(finalPath))
+        if self.localFileSize > 0:
+            self.remoteFileSize = self.localFileSize
+            self.status = DMHelper.STS.DOWNLOADED
+
+            self._writeTxtSidecar(finalPath)
+
+            if self.sidecarEnabled and self.sidecarImg:
+                self._startImgSidecarDownload(finalPath)
+                return
+        else:
+            self.status = DMHelper.STS.INTERRUPTED
+
+        self._finishDownloadFlow()
+
+    def _finalizeMp4Fallback(self):
+        self.localFileSize = DMHelper.getFileSize(fsPath(self.filePath))
+        if self.localFileSize > 0:
+            self.remoteFileSize = self.localFileSize
+            self.status = DMHelper.STS.DOWNLOADED
+
+            self._writeTxtSidecar(self.filePath)
+
+            if self.sidecarEnabled and self.sidecarImg:
+                self._startImgSidecarDownload(self.filePath)
+                return True
+
+            self._finishDownloadFlow()
+            return True
+        return False
 
     def start(self, url, filePath, params={}):
         '''
             Owervrite start from BaseDownloader
         '''
         self.url = url
-        self.filePath = filePath
+        self.filePath = ensureText(filePath)
         self.downloaderParams = params
         self.fileExtension = ''  # should be implemented in future
         self.outData = ''
         self.contentType = 'unknown'
+        self.postProcessMode = ''
+        self.tempRemuxPath = ''
+        self.finalizedPath = ''
 
         # baseWgetCmd = DMHelper.getBaseWgetCmd(self.downloaderParams)
         # TODO: add all HTTP parameters
@@ -242,8 +404,11 @@ class HLSDownloader(BaseDownloader):
         # prepare sidecar meta data
         self._prepareSidecarData(meta)
 
+        # prepare ffmpeg postprocess meta data
+        self._preparePostData(meta)
+
         if 'iptv_m3u8_key_uri_replace_old' in meta and 'iptv_m3u8_key_uri_replace_new' in meta:
-            addParams = ' -k "%s" -n "%s" ' % (meta['iptv_m3u8_key_uri_replace_old'], meta['iptv_m3u8_key_uri_replace_new'])
+            addParams = ' -k "%s" -n "%s" ' % (shellQuote(meta['iptv_m3u8_key_uri_replace_old']), shellQuote(meta['iptv_m3u8_key_uri_replace_new']))
 
         if 'iptv_m3u8_seg_download_retry' in meta:
             addParams += ' -w %s ' % meta['iptv_m3u8_seg_download_retry']
@@ -252,13 +417,13 @@ class HLSDownloader(BaseDownloader):
             try:
                 urlsKeys = self.url.split('merge://', 1)[1].split('|')
                 url = meta[urlsKeys[-1]]
-                addParams += ' -a "%s" ' % meta[urlsKeys[0]]
+                addParams += ' -a "%s" ' % shellQuote(meta[urlsKeys[0]])
             except Exception:
                 printExc()
         else:
             url = self.url
 
-        cmd = DMHelper.getBaseHLSDLCmd(self.downloaderParams) + (' "%s"' % url) + addParams + (' -o "%s"' % self.filePath) + ' > /dev/null'
+        cmd = DMHelper.getBaseHLSDLCmd(self.downloaderParams) + (' "%s"' % shellQuote(url)) + addParams + (' -o "%s"' % shellQuote(self.filePath)) + ' > /dev/null'
 
         printDBG("HLSDownloader::start cmd[%s]" % cmd)
 
@@ -336,7 +501,7 @@ class HLSDownloader(BaseDownloader):
             self.sidecarConsole_appClosed_conn = None
             self.sidecarConsole_stderrAvail_conn = None
 
-        if DMHelper.STS.DOWNLOADING == self.status:
+        if DMHelper.STS.DOWNLOADING == self.status or DMHelper.STS.POSTPROCESSING == self.status:
             if self.console:
                 if hasattr(self.console, "sendCtrlC"):
                     self.console.sendCtrlC()  # kill # produce zombies
@@ -357,11 +522,31 @@ class HLSDownloader(BaseDownloader):
 
         if terminated:
             self.status = DMHelper.STS.INTERRUPTED
+        elif self.status == DMHelper.STS.POSTPROCESSING:
+            mkvPath = self._getMkvPath()
+            mkvSize = DMHelper.getFileSize(fsPath(self.tempRemuxPath))
+            printDBG("POSTPROCESSING remux finished mkvPath[%s] localFileSize[%r] code[%r]" % (self.tempRemuxPath, mkvSize, code))
+
+            if mkvSize > 0 and code == 0:
+                if self._moveFile(self.tempRemuxPath, mkvPath):
+                    self._removeSourceFile()
+                    self._finalizeSuccess(mkvPath)
+                    return
+
+            printDBG("HLSDownloader remux failed -> fallback to original target")
+            if self._finalizeMp4Fallback():
+                return
+            self.status = DMHelper.STS.INTERRUPTED
         elif 0 >= self.localFileSize:
             self.status = DMHelper.STS.ERROR
         elif self.remoteFileSize > 0 and self.remoteFileSize > self.localFileSize:
             self.status = DMHelper.STS.INTERRUPTED
         else:
+            if self.ffmpegPostEnabled:
+                self.status = DMHelper.STS.POSTPROCESSING
+                self.doStartPostProcess()
+                return
+
             self.status = DMHelper.STS.DOWNLOADED
             self._writeTxtSidecar(self.filePath)
 
