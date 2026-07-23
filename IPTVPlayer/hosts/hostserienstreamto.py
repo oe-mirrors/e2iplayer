@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 20.07.2026 - Jump/Next icons added, JumpToPage updated, OMDb/IMDb refactored,
-# IMDb rating, Year and Genre added for descriptions/sidecar files, HLS sidecar files (.txt + .jpg) extended,
-# episode titles normalized to SxxExx format and language suffix separated by " - ",
-# IMDb/OMDb enabled for listNewEpisodes via imdb_lookup_url fallback in article/sidecar flow,
-# Optional MKV output meta added via host config,
-# s.to broken, serienstream.cx added as alternative,
-# URL meta helper for sidecar and MKV postprocess handling - Kamikaze24
+# Last Modified: 23.07.2026 - Kamikaze24 - Optional legacy title format added for old favorites/seen markers compatibility
 import re
 import json
 
@@ -27,6 +21,7 @@ config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed
 config.plugins.iptvplayer.serienstreamto_omdb_apikey = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.serienstreamto_sidecar = ConfigYesNo(default=True)
 config.plugins.iptvplayer.serienstreamto_mkv = ConfigYesNo(default=True)
+config.plugins.iptvplayer.serienstreamto_legacy_titles = ConfigYesNo(default=False)
 
 
 def GetConfigList():
@@ -36,6 +31,7 @@ def GetConfigList():
             getConfigListEntry(_("OMDb API Key") + ":", config.plugins.iptvplayer.serienstreamto_omdb_apikey),
             getConfigListEntry(_("Create sidecar files (.txt/.jpg)") + ":", config.plugins.iptvplayer.serienstreamto_sidecar),
             getConfigListEntry(_("Create MKV") + ":", config.plugins.iptvplayer.serienstreamto_mkv),
+            getConfigListEntry(_("Use legacy title format") + ":", config.plugins.iptvplayer.serienstreamto_legacy_titles),
             getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_hosts)]
 
 
@@ -67,13 +63,16 @@ class SerienStreamTo(CBaseHostClass):
                      {"category": "list_value", "title": _("Persons"), "s": ">Personen</h2>"},
                      {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
 
+    def _useLegacyTitles(self):
+        return config.plugins.iptvplayer.serienstreamto_legacy_titles.value
+
     def getPage(self, baseUrl, addParams=None, post_data=None):
         if addParams is None:
             addParams = dict(self.defaultParams)
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
 
     def getJumpItem(self, max_page, page, url, name):
-        name = (name or "category").split('-')[0] + "-JUMP"
+        name = (name or "category").split("-")[0] + "-JUMP"
         if max_page:
             return {"good_for_fav": False, "title": "%s %s/%s" % (_("Jump"), page, max_page),
                     "desc": _("Jump to a selected page, max: {}").format(max_page),
@@ -183,17 +182,14 @@ class SerienStreamTo(CBaseHostClass):
         sts, htm = self.getPage(cItem["url"])
         if not sts:
             return
-
         max_page = self.getMaxPageFromPagination(htm)
         page = cItem.get("page", 1)
-
         baseItem = dict(cItem)
         baseItem.pop("image_type", None)
         baseItem.pop("imageType", None)
         if (baseItem.get("name", "") or "").endswith("-JUMP"):
             baseItem["name"] = "category"
         baseItem.pop("desc", None)
-
         data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="col-6', "</div>")
         if not data:
             data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="series-item"', "</li>")
@@ -201,19 +197,17 @@ class SerienStreamTo(CBaseHostClass):
             data = self.cm.ph.getAllItemsBeetwenMarkers(htm, 'class="collection-item-cover', "</small>")
         if data is None:
             data = []
-
         for item in data:
             url = self.getFullUrl(self.cm.ph.getSearchGroups(item, 'href="([^"]+)')[0])
             icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+)')[0])
-            title1 = self.cm.ph.getSearchGroups(item, 'data-search="([^"]+)"')[0]
-            title2 = self.cm.ph.getSearchGroups(item, 'title="([^"]+)"')[0]
+            title1 = self.cm.ph.getSearchGroups(item, 'data-search="([^"]+)')[0]
+            title2 = self.cm.ph.getSearchGroups(item, 'title="([^"]+)')[0]
             title = title1 or title2
             params = dict(baseItem)
             params.update({"good_for_fav": True, "category": "list_seasons", "title": self.cleanHtmlStr(title), "url": url, "icon": icon, "desc": ""})
             if "sammlung" in url:
                 params.update({"category": "list_items"})
             self.addDir(params)
-
         if max_page and max_page > 1:
             self.addDir({"title": "************************", "category": "empty"})
             self.addDir(self.getJumpItem(max_page, page, cItem["url"], baseItem.get("name", "category")))
@@ -236,20 +230,16 @@ class SerienStreamTo(CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-
         trailer = self.cm.ph.getSearchGroups(data, 'data-trailer-url="([^"]+)')[0]
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'description-text">([^<]+)')[0])
         icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(data, 'data-src="([^"]+)')[0])
-
         imdb_id = self.extractImdbId(data)
         printDBG("IMDb DEBUG listSeasons id=[%s]" % imdb_id)
         imdb_rating = self.getIMDBRating(imdb_id) if imdb_id else "-"
         printDBG("IMDb DEBUG listSeasons rating=[%s]" % imdb_rating)
-
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="season-nav">', "</nav>")
         if not data:
             return
-
         data = re.compile(r'href="([^"]+).*?data-season-pill="(\d+)', re.DOTALL).findall(data[0])
         for url, se in data:
             imdb_text = (" | IMDb: %s" % imdb_rating) if imdb_rating != "-" else ""
@@ -268,23 +258,27 @@ class SerienStreamTo(CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return
-        season_num = self.cm.ph.getSearchGroups(cItem.get("title", ""), r'Staffel\s+(\d+)')[0]
-        if not season_num:
-            season_num = self.cm.ph.getSearchGroups(cItem.get("url", ""), r'/staffel-(\d+)')[0]
-        season_num = int(season_num) if season_num.isdigit() else 0
-        series_title = cItem.get("title", "").split(" - Staffel")[0].strip()
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="episode-row', "</tr>")
         for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, "location='([^']+)")[0])
+            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, "location='([^']+)'")[0])
             name = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, 'title="([^"]+)">')[0])
             ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'cell">(\d+)')[0])
             if "Releases soon" in name:
                 continue
-            ep_num = int(ep) if ep.isdigit() else 0
-            se_tag = "S%02dE%02d" % (season_num, ep_num) if season_num > 0 and ep_num > 0 else ""
-            lang = language(item)
-            lang_suffix = " - %s" % lang if lang else ""
-            title = "%s - %s - %s%s" % (series_title, se_tag, name, lang_suffix) if se_tag else "%s - %s%s" % (series_title, name, lang_suffix)
+            if self._useLegacyTitles():
+                ep_prefix = "" if ("Episode" in name or "Folge" in name) else "%s %s - " % (_("Episode"), ep)
+                title = "%s - %s%s %s" % (cItem["title"], ep_prefix, name, language(item))
+            else:
+                season_num = self.cm.ph.getSearchGroups(cItem.get("title", ""), r"Staffel\s+(\d+)")[0]
+                if not season_num:
+                    season_num = self.cm.ph.getSearchGroups(cItem.get("url", ""), r"/staffel-(\d+)")[0]
+                season_num = int(season_num) if season_num.isdigit() else 0
+                series_title = cItem.get("title", "").split(" - Staffel")[0].strip()
+                ep_num = int(ep) if ep.isdigit() else 0
+                se_tag = "S%02dE%02d" % (season_num, ep_num) if season_num > 0 and ep_num > 0 else ""
+                lang = language(item)
+                lang_suffix = " - %s" % lang if lang else ""
+                title = "%s - %s - %s%s" % (series_title, se_tag, name, lang_suffix) if se_tag else "%s - %s%s" % (series_title, name, lang_suffix)
             params = dict(cItem)
             params.update({"good_for_fav": True, "title": title, "url": url, "imdb_lookup_url": cItem.get("imdb_lookup_url", "") or cItem.get("url", "")})
             self.addVideo(params)
@@ -302,12 +296,15 @@ class SerienStreamTo(CBaseHostClass):
                 se = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-season">([^<]+)')[0])
                 ep = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, r'ep-episode">([^<]+)')[0])
                 icon = self.getFullIconUrl(self.cm.ph.getSearchGroups(item, 'src="([^"]+)')[0])
-                season_num = self.cm.ph.getSearchGroups(se, r'(\d+)')[0]
-                episode_num = self.cm.ph.getSearchGroups(ep, r'(\d+)')[0]
-                season_ep = "S%sE%s" % (season_num.zfill(2), episode_num.zfill(2)) if season_num and episode_num else "%s %s" % (se, ep)
                 lang = language(item)
-                title = "%s - %s%s" % (name, season_ep, (" - %s" % lang) if lang else "")
-                imdb_lookup_url = re.sub(r'/staffel-\d+/episode-\d+/?$', '/', url)
+                if self._useLegacyTitles():
+                    title = "%s - %s - %s%s" % (name, se, ep, (" %s" % lang if lang else ""))
+                else:
+                    season_num = self.cm.ph.getSearchGroups(se, r"(\d+)")[0]
+                    episode_num = self.cm.ph.getSearchGroups(ep, r"(\d+)")[0]
+                    season_ep = "S%sE%s" % (season_num.zfill(2), episode_num.zfill(2)) if season_num and episode_num else "%s %s" % (se, ep)
+                    title = "%s - %s%s" % (name, season_ep, (" - %s" % lang) if lang else "")
+                imdb_lookup_url = re.sub(r"/staffel-\d+/episode-\d+/?$", "/", url)
                 params = dict(cItem)
                 params.update({"good_for_fav": False, "title": title, "url": url, "icon": icon, "imdb_id": "", "imdb_rating": "-", "imdb_lookup_url": imdb_lookup_url})
                 self.addVideo(params)
@@ -317,11 +314,9 @@ class SerienStreamTo(CBaseHostClass):
         sts, data = self.getPage(self.getFullUrl("suche"))
         if not sts:
             return
-
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, cItem["s"], "</ul>")
         if not data:
             return
-
         data = re.compile('href="([^"]+).*?>([^<]+)', re.DOTALL).findall(data[0])
         dub = set()
         for url, title in data:
@@ -346,7 +341,6 @@ class SerienStreamTo(CBaseHostClass):
         imdb_rating = cItem.get("imdb_rating", "")
         sidecarYear = ""
         sidecarGenre = ""
-
         try:
             article = self.getArticleContent(cItem)
             if article and isinstance(article, list):
@@ -355,22 +349,18 @@ class SerienStreamTo(CBaseHostClass):
                 images = articleItem.get("images", [])
                 if images and images[0].get("url"):
                     sidecarImg = images[0].get("url")
-
                 otherInfo = articleItem.get("other_info", {})
                 if not imdb_rating or imdb_rating == "-":
                     imdb_rating = otherInfo.get("imdb_rating", "")
                 sidecarGenre = otherInfo.get("genres", "") or otherInfo.get("genre", "")
         except Exception:
             printExc("getArticleContent for sidecar failed")
-
         if not sidecarTxt:
             sidecarTxt = cItem.get("desc", "")
         if not sidecarImg:
             sidecarImg = cItem.get("icon", "")
-
         imdb_id = cItem.get("imdb_id", "")
         imdb_lookup_url = cItem.get("imdb_lookup_url", "") or cItem.get("url", "")
-
         try:
             if not imdb_id and imdb_lookup_url:
                 printDBG("||SIDECAR imdb lookup url: [%s]" % imdb_lookup_url)
@@ -378,13 +368,11 @@ class SerienStreamTo(CBaseHostClass):
                 if sts:
                     imdb_id = self.extractImdbId(lookupData)
                     printDBG("||SIDECAR imdb id from lookup url: [%s]" % imdb_id)
-
             if not imdb_id and cItem.get("url", "") != imdb_lookup_url:
                 sts, pageData = self.getPage(cItem["url"])
                 if sts:
                     imdb_id = self.extractImdbId(pageData)
                     printDBG("||SIDECAR imdb id from item url: [%s]" % imdb_id)
-
             if imdb_id:
                 omdb = self.getOMDbData(imdb_id)
                 printDBG("||SIDECAR OMDb: [%s]" % omdb)
@@ -396,55 +384,42 @@ class SerienStreamTo(CBaseHostClass):
                         sidecarGenre = omdb.get("Genre", "")
         except Exception:
             printExc("OMDb sidecar lookup failed")
-
         if sidecarTxt.startswith("IMDb:"):
             sidecarTxt = sidecarTxt.split("\n", 1)[1] if "\n" in sidecarTxt else ""
-
         sidecarLines = []
-
         if imdb_rating and imdb_rating not in ("-", "N/A", ""):
             sidecarLines.append(u"IMDb: %s/10" % imdb_rating)
-
         infoLine = []
         if sidecarYear and sidecarYear not in ("N/A", ""):
             infoLine.append(u"Jahr: %s" % sidecarYear)
         if infoLine:
             sidecarLines.append(u" / ".join(infoLine))
-
         if sidecarGenre and sidecarGenre not in ("N/A", ""):
             sidecarLines.append(sidecarGenre)
-
         if sidecarLines:
             prefix = u"\n".join(sidecarLines)
             if sidecarTxt:
                 sidecarTxt = prefix + u"\n\n" + sidecarTxt
             else:
                 sidecarTxt = prefix
-
         sidecar = buildSidecar(sidecarEnabled, sidecarTxt, sidecarImg)
-
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
-
         data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'id="episode-links"', "</article>")
         if not data:
             return []
-
         data = re.compile(r'data-play-url="([^"]+).*?data-provider-name="([^"]+).*?data-language-label="([^"]+)', re.DOTALL).findall(data[0])
         for url, title, lang in data:
             fullUrl = decorateUrl(self.getFullUrl(url), referer=config.plugins.iptvplayer.serienstreamto_hosts.value, sidecar=sidecar)
             urltab.append({"name": "%s (%s)" % (title, lang), "url": fullUrl, "need_resolve": 1})
-
         if cItem.get("trailer"):
             trailerUrl = decorateUrl(cItem.get("trailer"), sidecar=sidecar)
             urltab.append({"name": "Trailer", "url": trailerUrl, "need_resolve": 1})
-
         return urltab
 
     def getVideoLinks(self, url):
         printDBG("SerienStreamTo.getVideoLinks [%s]" % url)
-
         cfgSidecarEnabled = config.plugins.iptvplayer.serienstreamto_sidecar.value
         cfgMkvEnabled = config.plugins.iptvplayer.serienstreamto_mkv.value
         sidecar = sidecarFromUrlMeta(url, cfgSidecarEnabled)
@@ -454,7 +429,6 @@ class SerienStreamTo(CBaseHostClass):
 
         if "youtube" in url:
             return _addFinalMeta(self.up.getVideoLinkExt(url))
-
         params = dict(self.defaultParams)
         params["no_redirection"] = True
         sts, data = self.cm.getPage(url, params)
@@ -467,8 +441,7 @@ class SerienStreamTo(CBaseHostClass):
             if "frameBridge" in data:
                 SetIPTVPlayerLastHostError("Der Link ist geschützt ein s.to Login ist nötig. \nGeben Sie Login und Passwort in der Host Konfiguration (blau) ein und versuchen Sie es erneut.")
                 return []
-
-            url = self.cm.ph.getSearchGroups(data, 'href="([^"]+)"')[0]
+            url = self.cm.ph.getSearchGroups(data, 'href="([^"]+)')[0]
             if self.cm.isValidUrl(url):
                 return _addFinalMeta(self.up.getVideoLinkExt(url))
         return []
@@ -522,7 +495,6 @@ class SerienStreamTo(CBaseHostClass):
         passw = config.plugins.iptvplayer.serienstreamto_password.value.strip()
         if login == "" and passw == "":
             return
-
         lurl = self.getFullUrl("/login")
         sts, data = self.getPage(lurl)
         if sts:
@@ -542,7 +514,6 @@ class SerienStreamTo(CBaseHostClass):
         category = self.currItem.get("category", "")
         printDBG("handleService start\nhandleService: name[%s], category[%s] " % (name, category))
         self.currList = []
-
         if category == "jump_to_page" or ((name or "").endswith("-JUMP")):
             self.jumpToPage(self.currItem)
         elif name is None:
@@ -571,7 +542,6 @@ class SerienStreamTo(CBaseHostClass):
             pass
         else:
             printExc()
-
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
