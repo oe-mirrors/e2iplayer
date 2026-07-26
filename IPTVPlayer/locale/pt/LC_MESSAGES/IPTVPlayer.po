@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -320,6 +320,9 @@ msgstr ""
 msgid "AZ"
 msgstr ""
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr ""
 
@@ -364,6 +367,10 @@ msgstr "Adicionar novo grupo"
 
 msgid "Add new group of favourites"
 msgstr "Adicionar novo grupo de favoritos"
+
+#, fuzzy
+msgid "Add to User Links"
+msgstr "Links do utilizador"
 
 #, fuzzy
 msgid "Add to downloader"
@@ -729,6 +736,9 @@ msgstr "Continuar a descarga"
 msgid "Copy"
 msgstr ""
 
+msgid "Could not add the user link."
+msgstr ""
+
 #, fuzzy
 msgid "Countries"
 msgstr "Categorias"
@@ -744,6 +754,9 @@ msgid "Create Enigma2 .cuts chapter marks"
 msgstr ""
 
 msgid "Create LCD/VFD summary screen"
+msgstr ""
+
+msgid "Create MKV"
 msgstr ""
 
 msgid "Create MKV with chapter marks from description"
@@ -762,6 +775,9 @@ msgid "Critical Error - cookie can't be saved!"
 msgstr ""
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr ""
+
+msgid "Current item is not a channel."
 msgstr ""
 
 msgid "Cut"
@@ -1105,6 +1121,14 @@ msgid ""
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
 
+#, fuzzy
+msgid "Edit User Links"
+msgstr "Links do utilizador"
+
+#, fuzzy
+msgid "Edit failed."
+msgstr "Editar favoritos"
+
 msgid "Edit favourites"
 msgstr "Editar favoritos"
 
@@ -1366,6 +1390,9 @@ msgstr "Grupo \"%s\" já existe."
 #, fuzzy, python-format
 msgid "File \"%s\" already exists!"
 msgstr "Grupo \"%s\" já existe."
+
+msgid "File Not Found."
+msgstr ""
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
@@ -1887,6 +1914,10 @@ msgid "Loading data, please wait (%d)"
 msgstr ""
 
 #, fuzzy
+msgid "Loading failed."
+msgstr "Problema na descarga do ficheiro (%s)."
+
+#, fuzzy
 msgid "Loading watch data..."
 msgstr "Pasta para informação cache"
 
@@ -2035,6 +2066,13 @@ msgid ""
 "Return code[%s].\n"
 "Return data[%s]."
 msgstr ""
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+msgid "Move failed."
+msgstr "Remover ficheiro"
 
 msgid "Move group"
 msgstr "Mover grupo"
@@ -2198,6 +2236,10 @@ msgid "Number of items in search history: %d"
 msgstr "O número de itens no histórico de procura"
 
 msgid "OK"
+msgstr ""
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
 msgstr ""
 
 msgid "OMDb API Key"
@@ -3225,6 +3267,10 @@ msgstr ""
 msgid "The YouTube video ID is invalid."
 msgstr ""
 
+#, fuzzy
+msgid "The channel already exists in User Links."
+msgstr "O mesmo item já existe neste grupo"
+
 msgid "The color of the current version"
 msgstr ""
 
@@ -3233,6 +3279,10 @@ msgstr ""
 
 msgid "The default aspect ratio for the external player"
 msgstr ""
+
+#, fuzzy
+msgid "The element already exists in User Links."
+msgstr "O mesmo item já existe neste grupo"
 
 #, python-format
 msgid ""
@@ -3258,6 +3308,12 @@ msgstr ""
 
 msgid "The same item already exists in this group."
 msgstr "O mesmo item já existe neste grupo"
+
+msgid "The user link could not be deleted."
+msgstr ""
+
+msgid "The user link could not be updated."
+msgstr ""
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3458,6 +3514,9 @@ msgstr "Usar a qualidade de vídeo padrão:"
 msgid "Use default video quality:"
 msgstr "Usar a qualidade de vídeo padrão:"
 
+msgid "Use legacy title format"
+msgstr ""
+
 #, fuzzy
 msgid "Use links cache"
 msgstr "Links do utilizador"
@@ -3499,11 +3558,27 @@ msgstr "Links do utilizador"
 msgid "User files"
 msgstr "Links do utilizador"
 
+#, fuzzy
+msgid "User link added."
+msgstr "Links do utilizador"
+
+#, fuzzy
+msgid "User link deleted."
+msgstr "Links do utilizador"
+
+#, fuzzy
+msgid "User link updated."
+msgstr "Links do utilizador"
+
 msgid "User links"
 msgstr "Links do utilizador"
 
 msgid "User links stored in the ytlist.txt file."
 msgstr "Links do utilizador guardados no ficheiro ytlist.txt."
+
+#, fuzzy, python-format
+msgid "User-Links: %d"
+msgstr "Links do utilizador"
 
 #, fuzzy
 msgid "Username"
@@ -3708,6 +3783,9 @@ msgid "You need to enter email and password in configuration."
 msgstr ""
 
 msgid "You should never perform block I/O operations in the __init__."
+msgstr ""
+
+msgid "YouTube User Links Editor"
 msgstr ""
 
 msgid "Your search entry"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: 2026-07-14 22:10+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -328,6 +328,9 @@ msgstr "ΠΡΟΣΟΧΗ!"
 msgid "AZ"
 msgstr "AZ"
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr "Αποδοχή"
 
@@ -371,6 +374,10 @@ msgstr "Προσθήκη νέας ομάδας"
 
 msgid "Add new group of favourites"
 msgstr "Προσθήκη νέας ομάδας αγαπημένων"
+
+#, fuzzy
+msgid "Add to User Links"
+msgstr "Σύνδεσμοι χρήστη"
 
 msgid "Add to downloader"
 msgstr "Προσθήκη στο πρόγραμμα λήψεων"
@@ -721,6 +728,9 @@ msgstr "Συνέχιση λήψης"
 msgid "Copy"
 msgstr "Αντιγραφή"
 
+msgid "Could not add the user link."
+msgstr ""
+
 msgid "Countries"
 msgstr "Χώρες"
 
@@ -735,6 +745,9 @@ msgstr "Δημιουργία δεικτών κεφαλαίων .cuts για το
 
 msgid "Create LCD/VFD summary screen"
 msgstr "Δημιουργία οθόνης σύνοψης LCD/VFD"
+
+msgid "Create MKV"
+msgstr ""
 
 msgid "Create MKV with chapter marks from description"
 msgstr "Δημιουργία αρχείου MKV με δείκτες κεφαλαίων από την περιγραφή"
@@ -753,6 +766,9 @@ msgstr "Κρίσιμο σφάλμα - το cookie δεν μπορεί να απ�
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Κρίσιμο σφάλμα – Η κωδικοποίηση περιεχομένου gzip δεν μπορεί να υποστηριχθεί!"
+
+msgid "Current item is not a channel."
+msgstr ""
 
 msgid "Cut"
 msgstr "Αποκοπή"
@@ -1087,6 +1103,14 @@ msgstr ""
 "ΣΦΑΛΜΑ: δεν ήταν δυνατή η δημιουργία pipeline: δεν υπάρχει στοιχείο \"playbin2\" \n"
 "Παρακαλώ ελέγξτε αν τα πρόσθετα gstreamer είναι διαθέσιμα στο σύστημά σας."
 
+#, fuzzy
+msgid "Edit User Links"
+msgstr "Σύνδεσμοι χρήστη"
+
+#, fuzzy
+msgid "Edit failed."
+msgstr "Η σύνδεση απέτυχε."
+
 msgid "Edit favourites"
 msgstr "Επεξεργασία αγαπημένων"
 
@@ -1342,6 +1366,9 @@ msgstr "Το αρχείο \"%s\" υπάρχει ήδη"
 #, python-format
 msgid "File \"%s\" already exists!"
 msgstr "Το αρχείο \"%s\" υπάρχει ήδη!"
+
+msgid "File Not Found."
+msgstr ""
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
@@ -1848,6 +1875,10 @@ msgstr "Φόρτωση δεδομένων, παρακαλώ περιμένετε
 msgid "Loading data, please wait (%d)"
 msgstr "Φόρτωση δεδομένων, παρακαλώ περιμένετε (%d)"
 
+#, fuzzy
+msgid "Loading failed."
+msgstr "Η σύνδεση απέτυχε."
+
 msgid "Loading watch data..."
 msgstr "Φόρτωση δεδομένων προβολής..."
 
@@ -1993,6 +2024,13 @@ msgstr ""
 "Η προσάρτηση του αρχείου ISO [%s] στο [%s] απέτυχε.\n"
 "Κωδικός επιστροφής[%s].\n"
 "Δεδομένα επιστροφής[%s]."
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+msgid "Move failed."
+msgstr "Η σύνδεση απέτυχε."
 
 msgid "Move group"
 msgstr "Μετακίνηση ομάδας"
@@ -2150,6 +2188,10 @@ msgstr "Αριθμός στοιχείων στο ιστορικό αναζήτη
 
 msgid "OK"
 msgstr "ΕΝΤΑΞΕΙ"
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
+msgstr ""
 
 msgid "OMDb API Key"
 msgstr "Κλειδί API OMDb"
@@ -3137,6 +3179,10 @@ msgstr "Το εργαλείο %s είναι απαραίτητο εδώ, αλλ�
 msgid "The YouTube video ID is invalid."
 msgstr "Το αναγνωριστικό βίντεο YouTube δεν είναι έγκυρο."
 
+#, fuzzy
+msgid "The channel already exists in User Links."
+msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτήν την ομάδα."
+
 msgid "The color of the current version"
 msgstr "Το χρώμα της τρέχουσας έκδοσης"
 
@@ -3145,6 +3191,10 @@ msgstr "Το χρώμα του προβαλλόμενου στοιχείου"
 
 msgid "The default aspect ratio for the external player"
 msgstr "Προεπιλεγμένη αναλογία διαστάσεων εξωτερικής αναπαραγωγής"
+
+#, fuzzy
+msgid "The element already exists in User Links."
+msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτήν την ομάδα."
 
 #, python-format
 msgid ""
@@ -3177,6 +3227,13 @@ msgstr ""
 
 msgid "The same item already exists in this group."
 msgstr "Το ίδιο στοιχείο υπάρχει ήδη σε αυτήν την ομάδα."
+
+#, fuzzy
+msgid "The user link could not be deleted."
+msgstr "Αυτό το βίντεο έχει διαγραφεί."
+
+msgid "The user link could not be updated."
+msgstr ""
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3366,6 +3423,9 @@ msgstr "Χρήση προεπιλεγμένης ποιότητας βίντεο"
 msgid "Use default video quality:"
 msgstr "Χρήση προεπιλεγμένης ποιότητας βίντεο:"
 
+msgid "Use legacy title format"
+msgstr ""
+
 msgid "Use links cache"
 msgstr "Χρήση προσωρινής αποθήκευσης συνδέσμων"
 
@@ -3400,11 +3460,27 @@ msgstr "Καθορισμένο από τον χρήστη"
 msgid "User files"
 msgstr "Αρχεία χρήστη"
 
+#, fuzzy
+msgid "User link added."
+msgstr "Χρήση προσωρινής αποθήκευσης συνδέσμων"
+
+#, fuzzy
+msgid "User link deleted."
+msgstr "Σύνδεσμοι χρήστη"
+
+#, fuzzy
+msgid "User link updated."
+msgstr "Χρήση προσωρινής αποθήκευσης συνδέσμων"
+
 msgid "User links"
 msgstr "Σύνδεσμοι χρήστη"
 
 msgid "User links stored in the ytlist.txt file."
 msgstr "Οι σύνδεσμοι χρήστη αποθηκεύτηκαν στο αρχείο ytlist.txt."
+
+#, fuzzy, python-format
+msgid "User-Links: %d"
+msgstr "Σύνδεσμοι χρήστη"
 
 msgid "Username"
 msgstr "Όνομα χρήστη"
@@ -3601,6 +3677,9 @@ msgstr "Πρέπει να εισάγετε email και κωδικό πρόσβ�
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Δεν πρέπει ποτέ να εκτελείτε λειτουργίες block I/O στο __init__."
+
+msgid "YouTube User Links Editor"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Η αναζήτησή σας"

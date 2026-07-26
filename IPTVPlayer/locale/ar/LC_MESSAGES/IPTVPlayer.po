@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: 2026-03-14 12:34+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -328,6 +328,9 @@ msgstr ""
 msgid "AZ"
 msgstr "أبجديًا"
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr "موافقة"
 
@@ -373,6 +376,10 @@ msgstr "إضافة مجموعة جديدة"
 
 msgid "Add new group of favourites"
 msgstr "إضافة مجموعة جديدة من المفضلة"
+
+#, fuzzy
+msgid "Add to User Links"
+msgstr "روابط المستخدم"
 
 msgid "Add to downloader"
 msgstr "إضافة إلى مدير التنزيل"
@@ -728,6 +735,9 @@ msgstr "استمرار التنزيل"
 msgid "Copy"
 msgstr "نسخ"
 
+msgid "Could not add the user link."
+msgstr ""
+
 msgid "Countries"
 msgstr "الدول"
 
@@ -743,6 +753,9 @@ msgstr ""
 
 msgid "Create LCD/VFD summary screen"
 msgstr "إنشاء شاشة ملخص على شاشة LCD/VFD"
+
+msgid "Create MKV"
+msgstr ""
 
 msgid "Create MKV with chapter marks from description"
 msgstr ""
@@ -762,6 +775,9 @@ msgstr "خطأ خطير - لا يمكن حفظ ملف تعريف الارتبا�
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "خطأ خطير – لا يمكن التعامل مع ترميز المحتوى gzip!"
+
+msgid "Current item is not a channel."
+msgstr ""
 
 msgid "Cut"
 msgstr "قص"
@@ -1101,6 +1117,14 @@ msgstr ""
 "خطأ: تعذر إنشاء خط التشغيل: العنصر \"playbin2\" غير موجود\n"
 "يرجى التأكد من توفر إضافات gstreamer في النظام."
 
+#, fuzzy
+msgid "Edit User Links"
+msgstr "روابط المستخدم"
+
+#, fuzzy
+msgid "Edit failed."
+msgstr "فشل تسجيل الدخول."
+
 msgid "Edit favourites"
 msgstr "تعديل المفضلة"
 
@@ -1359,6 +1383,9 @@ msgstr "الملف \"%s\" موجود بالفعل"
 #, python-format
 msgid "File \"%s\" already exists!"
 msgstr "الملف \"%s\" موجود بالفعل!"
+
+msgid "File Not Found."
+msgstr ""
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
@@ -1878,6 +1905,10 @@ msgid "Loading data, please wait (%d)"
 msgstr "جاري تحميل البيانات، يرجى الانتظار (%d)"
 
 #, fuzzy
+msgid "Loading failed."
+msgstr "فشل تسجيل الدخول."
+
+#, fuzzy
 msgid "Loading watch data..."
 msgstr "فشل في الحصول على بيانات الكابتشا."
 
@@ -2027,6 +2058,13 @@ msgstr ""
 "فشل تحميل ملف ISO [%s] على [%s].\n"
 "رمز الإرجاع: [%s].\n"
 "البيانات المرجعة: [%s]."
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+msgid "Move failed."
+msgstr "فشل تسجيل الدخول."
 
 msgid "Move group"
 msgstr "نقل المجموعة"
@@ -2184,6 +2222,10 @@ msgstr "عدد العناصر في سجل البحث: %d"
 
 msgid "OK"
 msgstr "موافق"
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
+msgstr ""
 
 msgid "OMDb API Key"
 msgstr ""
@@ -3166,6 +3208,10 @@ msgstr "الأداة %s مطلوبة هنا ولكن لم يتم العثور ع
 msgid "The YouTube video ID is invalid."
 msgstr "معرّف الفيديو في YouTube غير صالح."
 
+#, fuzzy
+msgid "The channel already exists in User Links."
+msgstr "العنصر موجود بالفعل في هذه المجموعة."
+
 msgid "The color of the current version"
 msgstr "لون النسخة الحالية"
 
@@ -3174,6 +3220,10 @@ msgstr "لون العنصر المُشاهد"
 
 msgid "The default aspect ratio for the external player"
 msgstr "نسبة العرض إلى الارتفاع الافتراضية للمشغل الخارجي"
+
+#, fuzzy
+msgid "The element already exists in User Links."
+msgstr "العنصر موجود بالفعل في هذه المجموعة."
 
 #, python-format
 msgid ""
@@ -3206,6 +3256,13 @@ msgstr ""
 
 msgid "The same item already exists in this group."
 msgstr "العنصر موجود بالفعل في هذه المجموعة."
+
+#, fuzzy
+msgid "The user link could not be deleted."
+msgstr "تم حذف هذا الفيديو."
+
+msgid "The user link could not be updated."
+msgstr ""
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3397,6 +3454,9 @@ msgstr "استخدم جودة الفيديو الافتراضية"
 msgid "Use default video quality:"
 msgstr "استخدم جودة الفيديو الافتراضية:"
 
+msgid "Use legacy title format"
+msgstr ""
+
 msgid "Use links cache"
 msgstr "استخدم ذاكرة التخزين المؤقت للروابط"
 
@@ -3433,11 +3493,27 @@ msgstr "يُحدد بواسطة المستخدم"
 msgid "User files"
 msgstr "ملفات المستخدم"
 
+#, fuzzy
+msgid "User link added."
+msgstr "استخدم ذاكرة التخزين المؤقت للروابط"
+
+#, fuzzy
+msgid "User link deleted."
+msgstr "روابط المستخدم"
+
+#, fuzzy
+msgid "User link updated."
+msgstr "استخدم ذاكرة التخزين المؤقت للروابط"
+
 msgid "User links"
 msgstr "روابط المستخدم"
 
 msgid "User links stored in the ytlist.txt file."
 msgstr "روابط المستخدم محفوظة في ملف ytlist.txt."
+
+#, fuzzy, python-format
+msgid "User-Links: %d"
+msgstr "روابط المستخدم"
 
 msgid "Username"
 msgstr "اسم المستخدم"
@@ -3637,6 +3713,9 @@ msgstr "تحتاج إلى إدخال البريد الإلكتروني وكلم�
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "لا يجب أبدًا تنفيذ عمليات الإدخال/الإخراج في دالة __init__."
+
+msgid "YouTube User Links Editor"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "إدخال البحث الخاص بك"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -314,6 +314,9 @@ msgstr ""
 msgid "AZ"
 msgstr ""
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr ""
 
@@ -356,6 +359,9 @@ msgid "Add new group"
 msgstr ""
 
 msgid "Add new group of favourites"
+msgstr ""
+
+msgid "Add to User Links"
 msgstr ""
 
 msgid "Add to downloader"
@@ -700,6 +706,9 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
+msgid "Could not add the user link."
+msgstr ""
+
 msgid "Countries"
 msgstr ""
 
@@ -713,6 +722,9 @@ msgid "Create Enigma2 .cuts chapter marks"
 msgstr ""
 
 msgid "Create LCD/VFD summary screen"
+msgstr ""
+
+msgid "Create MKV"
 msgstr ""
 
 msgid "Create MKV with chapter marks from description"
@@ -731,6 +743,9 @@ msgid "Critical Error - cookie can't be saved!"
 msgstr ""
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr ""
+
+msgid "Current item is not a channel."
 msgstr ""
 
 msgid "Cut"
@@ -1036,6 +1051,12 @@ msgid ""
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
 
+msgid "Edit User Links"
+msgstr ""
+
+msgid "Edit failed."
+msgstr ""
+
 msgid "Edit favourites"
 msgstr ""
 
@@ -1282,6 +1303,9 @@ msgstr ""
 
 #, python-format
 msgid "File \"%s\" already exists!"
+msgstr ""
+
+msgid "File Not Found."
 msgstr ""
 
 #, python-format
@@ -1781,6 +1805,9 @@ msgstr ""
 msgid "Loading data, please wait (%d)"
 msgstr ""
 
+msgid "Loading failed."
+msgstr ""
+
 msgid "Loading watch data..."
 msgstr ""
 
@@ -1920,6 +1947,12 @@ msgid ""
 "Mount ISO file [%s] on [%s] failed.\n"
 "Return code[%s].\n"
 "Return data[%s]."
+msgstr ""
+
+msgid "Move"
+msgstr ""
+
+msgid "Move failed."
 msgstr ""
 
 msgid "Move group"
@@ -2069,6 +2102,10 @@ msgid "Number of items in search history: %d"
 msgstr ""
 
 msgid "OK"
+msgstr ""
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
 msgstr ""
 
 msgid "OMDb API Key"
@@ -3030,6 +3067,9 @@ msgstr ""
 msgid "The YouTube video ID is invalid."
 msgstr ""
 
+msgid "The channel already exists in User Links."
+msgstr ""
+
 msgid "The color of the current version"
 msgstr ""
 
@@ -3037,6 +3077,9 @@ msgid "The color of the viewed item"
 msgstr ""
 
 msgid "The default aspect ratio for the external player"
+msgstr ""
+
+msgid "The element already exists in User Links."
 msgstr ""
 
 #, python-format
@@ -3062,6 +3105,12 @@ msgid ""
 msgstr ""
 
 msgid "The same item already exists in this group."
+msgstr ""
+
+msgid "The user link could not be deleted."
+msgstr ""
+
+msgid "The user link could not be updated."
 msgstr ""
 
 #, python-format
@@ -3250,6 +3299,9 @@ msgstr ""
 msgid "Use default video quality:"
 msgstr ""
 
+msgid "Use legacy title format"
+msgstr ""
+
 msgid "Use links cache"
 msgstr ""
 
@@ -3284,10 +3336,23 @@ msgstr ""
 msgid "User files"
 msgstr ""
 
+msgid "User link added."
+msgstr ""
+
+msgid "User link deleted."
+msgstr ""
+
+msgid "User link updated."
+msgstr ""
+
 msgid "User links"
 msgstr ""
 
 msgid "User links stored in the ytlist.txt file."
+msgstr ""
+
+#, python-format
+msgid "User-Links: %d"
 msgstr ""
 
 msgid "Username"
@@ -3482,6 +3547,9 @@ msgid "You need to enter email and password in configuration."
 msgstr ""
 
 msgid "You should never perform block I/O operations in the __init__."
+msgstr ""
+
+msgid "YouTube User Links Editor"
 msgstr ""
 
 msgid "Your search entry"

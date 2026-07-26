@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: 2026-07-14 11:51+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -324,6 +324,9 @@ msgstr "ACHTUNG!"
 msgid "AZ"
 msgstr "AZ"
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr "Bestätigen"
 
@@ -367,6 +370,10 @@ msgstr "Neue Gruppe erstellen"
 
 msgid "Add new group of favourites"
 msgstr "Neue Favoriten-Gruppe erstellen"
+
+#, fuzzy
+msgid "Add to User Links"
+msgstr "Benutzer-Links"
 
 msgid "Add to downloader"
 msgstr "Zum Downloader hinzufügen"
@@ -717,6 +724,9 @@ msgstr "Download fortsetzen"
 msgid "Copy"
 msgstr "Kopieren"
 
+msgid "Could not add the user link."
+msgstr ""
+
 msgid "Countries"
 msgstr "Länder"
 
@@ -731,6 +741,9 @@ msgstr "Erstelle Enigma2 .cuts Kapitelmarkierungen"
 
 msgid "Create LCD/VFD summary screen"
 msgstr "Erzeuge Zusammenfassungsbildschirm für LCD/VFD"
+
+msgid "Create MKV"
+msgstr ""
 
 msgid "Create MKV with chapter marks from description"
 msgstr "Erstelle MKV mit Kapitelmarkierungen anhand der Beschreibung"
@@ -749,6 +762,9 @@ msgstr "Kritischer Fehler - Cookie kann nicht gespeichert werden!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Kritischer Fehler - Content-Encoding gzip kann nicht behandelt werden!"
+
+msgid "Current item is not a channel."
+msgstr ""
 
 msgid "Cut"
 msgstr "Schneiden"
@@ -1083,6 +1099,14 @@ msgstr ""
 "FEHLER: Pipeline konnte nicht konstruiert werden: kein Element \"playbin2\" \n"
 "Bitte prüfen Sie, ob gstreamer-Plugins in Ihrem System verfügbar sind."
 
+#, fuzzy
+msgid "Edit User Links"
+msgstr "Benutzer-Links"
+
+#, fuzzy
+msgid "Edit failed."
+msgstr "Login fehlgeschlagen."
+
 msgid "Edit favourites"
 msgstr "Favoriten bearbeiten"
 
@@ -1336,6 +1360,9 @@ msgstr "Datei \"%s\" existiert bereits"
 #, python-format
 msgid "File \"%s\" already exists!"
 msgstr "Datei \"%s\" existiert bereits!"
+
+msgid "File Not Found."
+msgstr ""
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
@@ -1842,6 +1869,10 @@ msgstr "Lade Daten, bitte warten"
 msgid "Loading data, please wait (%d)"
 msgstr "Lade Daten, bitte warten (%d)"
 
+#, fuzzy
+msgid "Loading failed."
+msgstr "Login fehlgeschlagen."
+
 msgid "Loading watch data..."
 msgstr "Lade Watch daten..."
 
@@ -1987,6 +2018,13 @@ msgstr ""
 "Mounten von ISO-Datei [%s] auf [%s] fehlgeschlagen.\n"
 "Rückgabecode[%s].\n"
 "Rückgabedaten[%s]."
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+msgid "Move failed."
+msgstr "Login fehlgeschlagen."
 
 msgid "Move group"
 msgstr "Gruppen sortieren"
@@ -2144,6 +2182,10 @@ msgstr "Anzahl der Einträge im Suchverlauf: %d"
 
 msgid "OK"
 msgstr "OK"
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
+msgstr ""
 
 msgid "OMDb API Key"
 msgstr "OMDb API-Schlüssel"
@@ -3129,6 +3171,10 @@ msgstr "Das Dienstprogramm %s ist hier notwendig, wurde aber nicht erkannt."
 msgid "The YouTube video ID is invalid."
 msgstr "Die Youtube Video-ID ist ungültig."
 
+#, fuzzy
+msgid "The channel already exists in User Links."
+msgstr "Der gleiche Eintrag existiert bereits in dieser Gruppe."
+
 msgid "The color of the current version"
 msgstr "Farbauswahl für derzeitige Version"
 
@@ -3137,6 +3183,10 @@ msgstr "Farbauswahl für gesehene Einträge"
 
 msgid "The default aspect ratio for the external player"
 msgstr "Standard Seitenverhältnis für externen Player"
+
+#, fuzzy
+msgid "The element already exists in User Links."
+msgstr "Der gleiche Eintrag existiert bereits in dieser Gruppe."
 
 #, python-format
 msgid ""
@@ -3169,6 +3219,13 @@ msgstr ""
 
 msgid "The same item already exists in this group."
 msgstr "Der gleiche Eintrag existiert bereits in dieser Gruppe."
+
+#, fuzzy
+msgid "The user link could not be deleted."
+msgstr "Dieses Video wurde gelöscht."
+
+msgid "The user link could not be updated."
+msgstr ""
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3358,6 +3415,9 @@ msgstr "Verwende Standard Video Qualität"
 msgid "Use default video quality:"
 msgstr "Verwende voreingestellte Video Qualität:"
 
+msgid "Use legacy title format"
+msgstr ""
+
 msgid "Use links cache"
 msgstr "Links-Cache verwenden"
 
@@ -3392,11 +3452,27 @@ msgstr "Benutzerdefiniert"
 msgid "User files"
 msgstr "Benutzer-Dateien"
 
+#, fuzzy
+msgid "User link added."
+msgstr "Links-Cache verwenden"
+
+#, fuzzy
+msgid "User link deleted."
+msgstr "Benutzer-Links"
+
+#, fuzzy
+msgid "User link updated."
+msgstr "Links-Cache verwenden"
+
 msgid "User links"
 msgstr "Benutzer-Links"
 
 msgid "User links stored in the ytlist.txt file."
 msgstr "Benutzer-Links enthalten in der Datei ytlist.txt."
+
+#, fuzzy, python-format
+msgid "User-Links: %d"
+msgstr "Benutzer-Links"
 
 msgid "Username"
 msgstr "Benutzername"
@@ -3593,6 +3669,9 @@ msgstr "Sie müssen E-Mail und Passwort in der Konfiguration eingeben."
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Sie sollten niemals Block-I/O-Operationen im __init__ durchführen."
+
+msgid "YouTube User Links Editor"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Ihre Sucheingabe"

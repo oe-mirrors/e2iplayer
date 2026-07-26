@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -328,6 +328,9 @@ msgstr ""
 msgid "AZ"
 msgstr "AZ"
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr "Kabul Et"
 
@@ -373,6 +376,10 @@ msgstr "Yeni grup ekle"
 
 msgid "Add new group of favourites"
 msgstr "Yeni favori grubu ekle"
+
+#, fuzzy
+msgid "Add to User Links"
+msgstr "Bağlantı önbelleğini kullan"
 
 msgid "Add to downloader"
 msgstr "İndiriciye ekle"
@@ -733,6 +740,9 @@ msgstr "İndirmeye devam et"
 msgid "Copy"
 msgstr "Kopyala"
 
+msgid "Could not add the user link."
+msgstr ""
+
 msgid "Countries"
 msgstr "Ülkeler"
 
@@ -748,6 +758,9 @@ msgstr ""
 
 msgid "Create LCD/VFD summary screen"
 msgstr "LCD/VFD özet ekranı oluştur"
+
+msgid "Create MKV"
+msgstr ""
 
 msgid "Create MKV with chapter marks from description"
 msgstr ""
@@ -766,6 +779,9 @@ msgid "Critical Error - cookie can't be saved!"
 msgstr ""
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr ""
+
+msgid "Current item is not a channel."
 msgstr ""
 
 msgid "Cut"
@@ -1087,6 +1103,14 @@ msgid ""
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
 
+#, fuzzy
+msgid "Edit User Links"
+msgstr "Bağlantı önbelleğini kullan"
+
+#, fuzzy
+msgid "Edit failed."
+msgstr "Giriş başarısız."
+
 msgid "Edit favourites"
 msgstr "Favorileri düzenle"
 
@@ -1345,6 +1369,9 @@ msgstr ""
 
 #, python-format
 msgid "File \"%s\" already exists!"
+msgstr ""
+
+msgid "File Not Found."
 msgstr ""
 
 #, fuzzy, python-format
@@ -1875,6 +1902,10 @@ msgid "Loading data, please wait (%d)"
 msgstr "Veriler yükleniyor, lütfen bekleyin"
 
 #, fuzzy
+msgid "Loading failed."
+msgstr "Giriş başarısız."
+
+#, fuzzy
 msgid "Loading watch data..."
 msgstr "Önbellek verileri klasörü"
 
@@ -2022,6 +2053,13 @@ msgid ""
 "Return code[%s].\n"
 "Return data[%s]."
 msgstr ""
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+msgid "Move failed."
+msgstr "Giriş başarısız."
 
 msgid "Move group"
 msgstr "Grubu taşı"
@@ -2180,6 +2218,10 @@ msgstr "Arama geçmişini sil"
 
 msgid "OK"
 msgstr "Tamam"
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
+msgstr ""
 
 msgid "OMDb API Key"
 msgstr ""
@@ -3180,6 +3222,9 @@ msgstr ""
 msgid "The YouTube video ID is invalid."
 msgstr ""
 
+msgid "The channel already exists in User Links."
+msgstr ""
+
 msgid "The color of the current version"
 msgstr ""
 
@@ -3187,6 +3232,9 @@ msgid "The color of the viewed item"
 msgstr ""
 
 msgid "The default aspect ratio for the external player"
+msgstr ""
+
+msgid "The element already exists in User Links."
 msgstr ""
 
 #, python-format
@@ -3213,6 +3261,13 @@ msgid ""
 msgstr ""
 
 msgid "The same item already exists in this group."
+msgstr ""
+
+#, fuzzy
+msgid "The user link could not be deleted."
+msgstr " Bu video özeldir."
+
+msgid "The user link could not be updated."
 msgstr ""
 
 #, python-format
@@ -3416,6 +3471,9 @@ msgstr ""
 msgid "Use default video quality:"
 msgstr ""
 
+msgid "Use legacy title format"
+msgstr ""
+
 msgid "Use links cache"
 msgstr "Bağlantı önbelleğini kullan"
 
@@ -3455,11 +3513,27 @@ msgid "User files"
 msgstr "Kullanıcı tanımlı"
 
 #, fuzzy
+msgid "User link added."
+msgstr "Bağlantı önbelleğini kullan"
+
+#, fuzzy
+msgid "User link deleted."
+msgstr "Bağlantı önbelleğini kullan"
+
+#, fuzzy
+msgid "User link updated."
+msgstr "Bağlantı önbelleğini kullan"
+
+#, fuzzy
 msgid "User links"
 msgstr "Bağlantı önbelleğini kullan"
 
 msgid "User links stored in the ytlist.txt file."
 msgstr ""
+
+#, fuzzy, python-format
+msgid "User-Links: %d"
+msgstr "Bağlantı önbelleğini kullan"
 
 msgid "Username"
 msgstr "Kullanıcı adı"
@@ -3660,6 +3734,9 @@ msgid "You need to enter email and password in configuration."
 msgstr ""
 
 msgid "You should never perform block I/O operations in the __init__."
+msgstr ""
+
+msgid "YouTube User Links Editor"
 msgstr ""
 
 msgid "Your search entry"

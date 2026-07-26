@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: 2025-11-24 07:59+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -331,6 +331,9 @@ msgstr ""
 msgid "AZ"
 msgstr "AZ"
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr "Elfogadás"
 
@@ -377,6 +380,10 @@ msgstr "Új csoport hozzáadása"
 
 msgid "Add new group of favourites"
 msgstr "Új kedvencek csoportjának hozzáadása"
+
+#, fuzzy
+msgid "Add to User Links"
+msgstr "Felhasználói linkek"
 
 msgid "Add to downloader"
 msgstr "Hozzáadás a letöltőhöz"
@@ -736,6 +743,9 @@ msgstr "Letöltés folytatása"
 msgid "Copy"
 msgstr "Másolás"
 
+msgid "Could not add the user link."
+msgstr ""
+
 msgid "Countries"
 msgstr "Országok"
 
@@ -751,6 +761,9 @@ msgstr ""
 
 msgid "Create LCD/VFD summary screen"
 msgstr "LCD/VFD összefoglaló képernyő létrehozása"
+
+msgid "Create MKV"
+msgstr ""
 
 msgid "Create MKV with chapter marks from description"
 msgstr ""
@@ -770,6 +783,9 @@ msgstr "Kritikus hiba - a süti nem menthető!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Kritikus hiba – Content-Encoding gzip nem kezelhető!"
+
+msgid "Current item is not a channel."
+msgstr ""
 
 msgid "Cut"
 msgstr "Kivág"
@@ -1111,6 +1127,14 @@ msgstr ""
 "HIBA:  \"playbin2\" hiányzik. \n"
 "Ellenőrizd a gstreamer plugin meglétét."
 
+#, fuzzy
+msgid "Edit User Links"
+msgstr "Felhasználói linkek"
+
+#, fuzzy
+msgid "Edit failed."
+msgstr "Bejelentkezés sikertelen."
+
 msgid "Edit favourites"
 msgstr "Kedvencek szerkesztése"
 
@@ -1369,6 +1393,9 @@ msgstr "A(z) \"%s\" fájl már létezik"
 #, python-format
 msgid "File \"%s\" already exists!"
 msgstr "\"%s\" fájl már létezik!"
+
+msgid "File Not Found."
+msgstr ""
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
@@ -1888,6 +1915,10 @@ msgid "Loading data, please wait (%d)"
 msgstr "Adatok betöltése folyamatban, kérjük várjon (%d)"
 
 #, fuzzy
+msgid "Loading failed."
+msgstr "Bejelentkezés sikertelen."
+
+#, fuzzy
 msgid "Loading watch data..."
 msgstr "Nem sikerült lekérni a captcha adatokat."
 
@@ -2037,6 +2068,13 @@ msgstr ""
 "A(z) [%s] ISO fájl csatolása a(z) [%s] eszközre sikertelen.\n"
 "Visszatérési kód: [%s].\n"
 "Visszatérési adat: [%s]."
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+msgid "Move failed."
+msgstr "Bejelentkezés sikertelen."
 
 msgid "Move group"
 msgstr "Csoport áthelyezése"
@@ -2195,6 +2233,10 @@ msgstr "A keresési előzményekben szereplő elemek száma: %d"
 
 msgid "OK"
 msgstr "OK"
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
+msgstr ""
 
 msgid "OMDb API Key"
 msgstr ""
@@ -3179,6 +3221,10 @@ msgstr "A %s segédprogram szükséges itt, de a rendszer nem észlelte."
 msgid "The YouTube video ID is invalid."
 msgstr "A YouTube videóazonosító érvénytelen."
 
+#, fuzzy
+msgid "The channel already exists in User Links."
+msgstr "Ugyanez az elem már létezik ebben a csoportban."
+
 msgid "The color of the current version"
 msgstr "A jelenlegi verzió színe"
 
@@ -3187,6 +3233,10 @@ msgstr "A megtekintett elem színe"
 
 msgid "The default aspect ratio for the external player"
 msgstr "A külső lejátszó alapértelmezett képaránya"
+
+#, fuzzy
+msgid "The element already exists in User Links."
+msgstr "Ugyanez az elem már létezik ebben a csoportban."
 
 #, python-format
 msgid ""
@@ -3219,6 +3269,13 @@ msgstr ""
 
 msgid "The same item already exists in this group."
 msgstr "Ugyanez az elem már létezik ebben a csoportban."
+
+#, fuzzy
+msgid "The user link could not be deleted."
+msgstr "Ezt a videót törölték."
+
+msgid "The user link could not be updated."
+msgstr ""
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3411,6 +3468,9 @@ msgstr "Alapértelmezett videóminőség használata"
 msgid "Use default video quality:"
 msgstr "Az alapértelmezett videóminőség használata:"
 
+msgid "Use legacy title format"
+msgstr ""
+
 msgid "Use links cache"
 msgstr "Használja a linkek gyorsítótárát"
 
@@ -3447,11 +3507,27 @@ msgstr "Felhasználó által meghatározott"
 msgid "User files"
 msgstr "Felhasználói fájlok"
 
+#, fuzzy
+msgid "User link added."
+msgstr "Használja a linkek gyorsítótárát"
+
+#, fuzzy
+msgid "User link deleted."
+msgstr "Felhasználói linkek"
+
+#, fuzzy
+msgid "User link updated."
+msgstr "Használja a linkek gyorsítótárát"
+
 msgid "User links"
 msgstr "Felhasználói linkek"
 
 msgid "User links stored in the ytlist.txt file."
 msgstr "A felhasználói linkek az ytlist.txt fájlban tárolódnak."
+
+#, fuzzy, python-format
+msgid "User-Links: %d"
+msgstr "Felhasználói linkek"
 
 msgid "Username"
 msgstr "Felhasználónév"
@@ -3651,6 +3727,9 @@ msgstr "A konfigurációban meg kell adnia az e-mail címét és jelszavát."
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Soha ne hajts végre blokk I/O műveleteket az __init__-ban."
+
+msgid "YouTube User Links Editor"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "A keresési bejegyzésed"

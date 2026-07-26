@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: 2025-11-24 07:51+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -331,6 +331,9 @@ msgstr ""
 msgid "AZ"
 msgstr "АЗ"
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr "Принять"
 
@@ -377,6 +380,10 @@ msgstr "Добавить новую группу"
 
 msgid "Add new group of favourites"
 msgstr "Добавить новую группу избранного"
+
+#, fuzzy
+msgid "Add to User Links"
+msgstr "Пользовательские ссылки"
 
 msgid "Add to downloader"
 msgstr "Добавить в загрузчик"
@@ -736,6 +743,9 @@ msgstr "Продолжить загрузку"
 msgid "Copy"
 msgstr "Копировать"
 
+msgid "Could not add the user link."
+msgstr ""
+
 msgid "Countries"
 msgstr "Страны"
 
@@ -751,6 +761,9 @@ msgstr ""
 
 msgid "Create LCD/VFD summary screen"
 msgstr "Создание LCD/VFD сводного экрана"
+
+msgid "Create MKV"
+msgstr ""
 
 msgid "Create MKV with chapter marks from description"
 msgstr ""
@@ -770,6 +783,9 @@ msgstr "Критическая ошибка — cookie-файл не может 
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Критическая Ошибка – Кодирование-Содержимого gzip не может быть обработано!"
+
+msgid "Current item is not a channel."
+msgstr ""
 
 msgid "Cut"
 msgstr "Вырезать"
@@ -1111,6 +1127,14 @@ msgstr ""
 "СТОП: невозможно проложить маршрут: нет элемента \"playbin2\" \n"
 "Просим узнать, имеются ли в вашей системе плагины gstreamer."
 
+#, fuzzy
+msgid "Edit User Links"
+msgstr "Пользовательские ссылки"
+
+#, fuzzy
+msgid "Edit failed."
+msgstr "Ошибка входа."
+
 msgid "Edit favourites"
 msgstr "Изменить избранное"
 
@@ -1369,6 +1393,9 @@ msgstr "Файл \"%s\" уже существует"
 #, python-format
 msgid "File \"%s\" already exists!"
 msgstr "Файл \"%s\" уже существует!"
+
+msgid "File Not Found."
+msgstr ""
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
@@ -1888,6 +1915,10 @@ msgid "Loading data, please wait (%d)"
 msgstr "Загрузка данных, подождите (%d)"
 
 #, fuzzy
+msgid "Loading failed."
+msgstr "Ошибка входа."
+
+#, fuzzy
 msgid "Loading watch data..."
 msgstr "Не удалось получить данные captcha."
 
@@ -2037,6 +2068,13 @@ msgstr ""
 "Ошибка монтирования ISO-файла [%s] в [%s].\n"
 "Код возврата[%s].\n"
 "Возврат данных[%s]."
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+msgid "Move failed."
+msgstr "Ошибка входа."
 
 msgid "Move group"
 msgstr "Переместить группу"
@@ -2195,6 +2233,10 @@ msgstr "Количество элементов в истории поиска: 
 
 msgid "OK"
 msgstr "OK"
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
+msgstr ""
 
 msgid "OMDb API Key"
 msgstr ""
@@ -3182,6 +3224,10 @@ msgstr "Здесь нужна %s утилита, однако её не обна
 msgid "The YouTube video ID is invalid."
 msgstr "YouTube видео ID недействителен."
 
+#, fuzzy
+msgid "The channel already exists in User Links."
+msgstr "Этот же элемент уже существует в этой группе."
+
 msgid "The color of the current version"
 msgstr "Цвет текущей версии"
 
@@ -3190,6 +3236,10 @@ msgstr "Цвет отображаемого ресурса"
 
 msgid "The default aspect ratio for the external player"
 msgstr "Пропорции по умолчанию для внешнего проигрывателя"
+
+#, fuzzy
+msgid "The element already exists in User Links."
+msgstr "Этот же элемент уже существует в этой группе."
 
 #, python-format
 msgid ""
@@ -3222,6 +3272,13 @@ msgstr ""
 
 msgid "The same item already exists in this group."
 msgstr "Этот же элемент уже существует в этой группе."
+
+#, fuzzy
+msgid "The user link could not be deleted."
+msgstr "Это видео было удалено."
+
+msgid "The user link could not be updated."
+msgstr ""
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3414,6 +3471,9 @@ msgstr "Желаемое качество видео по умолчанию"
 msgid "Use default video quality:"
 msgstr "Желаемое качество видео по умолчанию:"
 
+msgid "Use legacy title format"
+msgstr ""
+
 msgid "Use links cache"
 msgstr "Использовать кэш ссылок"
 
@@ -3450,11 +3510,27 @@ msgstr "Заданные пользователем"
 msgid "User files"
 msgstr "Пользовательские файлы"
 
+#, fuzzy
+msgid "User link added."
+msgstr "Использовать кэш ссылок"
+
+#, fuzzy
+msgid "User link deleted."
+msgstr "Пользовательские ссылки"
+
+#, fuzzy
+msgid "User link updated."
+msgstr "Использовать кэш ссылок"
+
 msgid "User links"
 msgstr "Пользовательские ссылки"
 
 msgid "User links stored in the ytlist.txt file."
 msgstr "Пользовательские ссылки хранятся в ytlist.txt файле."
+
+#, fuzzy, python-format
+msgid "User-Links: %d"
+msgstr "Пользовательские ссылки"
 
 msgid "Username"
 msgstr "Имя пользователя"
@@ -3654,6 +3730,9 @@ msgstr "Вам необходимо ввести адрес электронно
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "Запрещается выполнять операции ввода/вывода блока в __init__."
+
+msgid "YouTube User Links Editor"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Запись поиска"

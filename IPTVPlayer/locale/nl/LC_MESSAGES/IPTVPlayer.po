@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -331,6 +331,9 @@ msgstr ""
 msgid "AZ"
 msgstr "AZ"
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr "Accepteren"
 
@@ -376,6 +379,10 @@ msgstr "Nieuwe groep toevoegen"
 
 msgid "Add new group of favourites"
 msgstr "Nieuwe groep favorieten toevoegen"
+
+#, fuzzy
+msgid "Add to User Links"
+msgstr "Mijn links"
 
 msgid "Add to downloader"
 msgstr "Aan downloader toevoegen"
@@ -731,6 +738,9 @@ msgstr "Downloaden voortzetten"
 msgid "Copy"
 msgstr "Kopieër"
 
+msgid "Could not add the user link."
+msgstr ""
+
 msgid "Countries"
 msgstr "Landen"
 
@@ -746,6 +756,9 @@ msgstr ""
 
 msgid "Create LCD/VFD summary screen"
 msgstr "Een samenvatting maken voor LCD/VFD"
+
+msgid "Create MKV"
+msgstr ""
 
 msgid "Create MKV with chapter marks from description"
 msgstr ""
@@ -765,6 +778,9 @@ msgstr "Fout - Cookie kan niet opgeslagen worden!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Fout - Een gecodeerd gzip bestand kan niet verwerkt worden!"
+
+msgid "Current item is not a channel."
+msgstr ""
 
 msgid "Cut"
 msgstr "Knip"
@@ -1104,6 +1120,14 @@ msgstr ""
 "FOUT: pipeline kon niet worden gemaakt: geen element \"playbin2\" \n"
 "A.u.b. controleren of gstreamer plugins aanwezig zijn op uw systeem."
 
+#, fuzzy
+msgid "Edit User Links"
+msgstr "Mijn links"
+
+#, fuzzy
+msgid "Edit failed."
+msgstr "Aanmelden mislukt."
+
 msgid "Edit favourites"
 msgstr "Favorieten bewerken"
 
@@ -1362,6 +1386,9 @@ msgstr "Bestand \"%s\" bestaat al"
 #, python-format
 msgid "File \"%s\" already exists!"
 msgstr "Bestand \"%s\" bestaat al!"
+
+msgid "File Not Found."
+msgstr ""
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
@@ -1881,6 +1908,10 @@ msgid "Loading data, please wait (%d)"
 msgstr "Data laden, a.u.b. wachten (%d)"
 
 #, fuzzy
+msgid "Loading failed."
+msgstr "Aanmelden mislukt."
+
+#, fuzzy
 msgid "Loading watch data..."
 msgstr "Ophalen van Captcha data mislukt."
 
@@ -2030,6 +2061,13 @@ msgstr ""
 "Mount van ISO-bestand [%s] op [%s] mislukt.\n"
 "Foutcode[%s].\n"
 "Foutmelding [%s]."
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+msgid "Move failed."
+msgstr "Aanmelden mislukt."
 
 msgid "Move group"
 msgstr "Groep verplaatsen"
@@ -2187,6 +2225,10 @@ msgstr "Aantal items in de zoekgeschiedenis: %d"
 
 msgid "OK"
 msgstr "Bevestigen"
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
+msgstr ""
 
 msgid "OMDb API Key"
 msgstr ""
@@ -3173,6 +3215,10 @@ msgstr "Het programma %s is hier noodzakelijk maar is niet geïnstalleerd."
 msgid "The YouTube video ID is invalid."
 msgstr "De YouTube video ID is ongeldig."
 
+#, fuzzy
+msgid "The channel already exists in User Links."
+msgstr "Hetzelfde item bestaat al in deze groep."
+
 msgid "The color of the current version"
 msgstr "De kleur van de huidige versie"
 
@@ -3181,6 +3227,10 @@ msgstr "De kleur van het bekeken item"
 
 msgid "The default aspect ratio for the external player"
 msgstr "De default beeldverhouding van de externe player"
+
+#, fuzzy
+msgid "The element already exists in User Links."
+msgstr "Hetzelfde item bestaat al in deze groep."
 
 #, python-format
 msgid ""
@@ -3213,6 +3263,13 @@ msgstr ""
 
 msgid "The same item already exists in this group."
 msgstr "Hetzelfde item bestaat al in deze groep."
+
+#, fuzzy
+msgid "The user link could not be deleted."
+msgstr "Deze video is verwijderd."
+
+msgid "The user link could not be updated."
+msgstr ""
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3404,6 +3461,9 @@ msgstr "Gebruik default video kwaliteit"
 msgid "Use default video quality:"
 msgstr "Gebruik default video kwaliteit:"
 
+msgid "Use legacy title format"
+msgstr ""
+
 msgid "Use links cache"
 msgstr "Gebruik cache voor links"
 
@@ -3440,11 +3500,27 @@ msgstr "Mijn selectie"
 msgid "User files"
 msgstr "Mijn bestanden"
 
+#, fuzzy
+msgid "User link added."
+msgstr "Gebruik cache voor links"
+
+#, fuzzy
+msgid "User link deleted."
+msgstr "Mijn links"
+
+#, fuzzy
+msgid "User link updated."
+msgstr "Gebruik cache voor links"
+
 msgid "User links"
 msgstr "Mijn links"
 
 msgid "User links stored in the ytlist.txt file."
 msgstr "Links opgeslagen in het Ytlist.txt bestand."
+
+#, fuzzy, python-format
+msgid "User-Links: %d"
+msgstr "Mijn links"
 
 msgid "Username"
 msgstr "Gebruikersnaam"
@@ -3644,6 +3720,9 @@ msgstr "Het invullen van email en wachtwoord in de configuratie is noodzakelijk.
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "A.u.b. geen \"block I/O\" bewerkingen uitvoeren in de __init__."
+
+msgid "YouTube User Links Editor"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Uw zoekopdracht"

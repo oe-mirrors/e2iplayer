@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -337,6 +337,9 @@ msgstr ""
 msgid "AZ"
 msgstr ""
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr ""
 
@@ -382,6 +385,10 @@ msgstr "Добавити нову групу"
 
 msgid "Add new group of favourites"
 msgstr "Добавити нову групу вибраного"
+
+#, fuzzy
+msgid "Add to User Links"
+msgstr "Лінки користувача"
 
 #, fuzzy
 msgid "Add to downloader"
@@ -770,6 +777,9 @@ msgstr "Продовжити завантаження"
 msgid "Copy"
 msgstr "Копіювати"
 
+msgid "Could not add the user link."
+msgstr ""
+
 msgid "Countries"
 msgstr "Країни"
 
@@ -785,6 +795,9 @@ msgid "Create Enigma2 .cuts chapter marks"
 msgstr ""
 
 msgid "Create LCD/VFD summary screen"
+msgstr ""
+
+msgid "Create MKV"
 msgstr ""
 
 msgid "Create MKV with chapter marks from description"
@@ -804,6 +817,9 @@ msgid "Critical Error - cookie can't be saved!"
 msgstr ""
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr ""
+
+msgid "Current item is not a channel."
 msgstr ""
 
 msgid "Cut"
@@ -1165,6 +1181,14 @@ msgstr ""
 "ПОМИЛКА: Не вдалося створити:, відсутність контролю: відсутність елементу \"playbin2 \" \n"
 "Перевірте встанолення GStreamer плагіни в вашій системі."
 
+#, fuzzy
+msgid "Edit User Links"
+msgstr "Лінки користувача"
+
+#, fuzzy
+msgid "Edit failed."
+msgstr "Помилка входу."
+
 msgid "Edit favourites"
 msgstr "Редагувати вибране"
 
@@ -1429,6 +1453,9 @@ msgstr "Файл \"%s\" вже існує!"
 #, python-format
 msgid "File \"%s\" already exists!"
 msgstr "Файл \"%s\" вже існує!"
+
+msgid "File Not Found."
+msgstr ""
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
@@ -1969,6 +1996,10 @@ msgid "Loading data, please wait (%d)"
 msgstr ""
 
 #, fuzzy
+msgid "Loading failed."
+msgstr "Помилка входу."
+
+#, fuzzy
 msgid "Loading watch data..."
 msgstr "Папка даних кеша"
 
@@ -2125,6 +2156,13 @@ msgstr ""
 "Монтувати ISO файл [%s] на [%s] не змогли.\n"
 "Код повернення[%s].\n"
 "Повернення даних[%s]."
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+msgid "Move failed."
+msgstr "Помилка входу."
 
 msgid "Move group"
 msgstr "Пересування групи"
@@ -2289,6 +2327,10 @@ msgid "Number of items in search history: %d"
 msgstr "Кількість елементів в історії пошуку"
 
 msgid "OK"
+msgstr ""
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
 msgstr ""
 
 msgid "OMDb API Key"
@@ -3329,6 +3371,10 @@ msgid "The YouTube video ID is invalid."
 msgstr ""
 
 #, fuzzy
+msgid "The channel already exists in User Links."
+msgstr "Те ж саме елемент вже існує в цій групі."
+
+#, fuzzy
 msgid "The color of the current version"
 msgstr "Виявлення версії OpenSSL."
 
@@ -3337,6 +3383,10 @@ msgstr ""
 
 msgid "The default aspect ratio for the external player"
 msgstr ""
+
+#, fuzzy
+msgid "The element already exists in User Links."
+msgstr "Те ж саме елемент вже існує в цій групі."
 
 #, fuzzy, python-format
 msgid ""
@@ -3366,6 +3416,12 @@ msgstr ""
 
 msgid "The same item already exists in this group."
 msgstr "Те ж саме елемент вже існує в цій групі."
+
+msgid "The user link could not be deleted."
+msgstr ""
+
+msgid "The user link could not be updated."
+msgstr ""
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3573,6 +3629,9 @@ msgstr "Використовувати по замовчуванню якіст�
 msgid "Use default video quality:"
 msgstr "Використовувати по замовчуванню якість відео:"
 
+msgid "Use legacy title format"
+msgstr ""
+
 #, fuzzy
 msgid "Use links cache"
 msgstr "Лінки користувача"
@@ -3613,11 +3672,27 @@ msgstr "Файли користувача"
 msgid "User files"
 msgstr "Файли користувача"
 
+#, fuzzy
+msgid "User link added."
+msgstr "Лінки користувача"
+
+#, fuzzy
+msgid "User link deleted."
+msgstr "Лінки користувача"
+
+#, fuzzy
+msgid "User link updated."
+msgstr "Лінки користувача"
+
 msgid "User links"
 msgstr "Лінки користувача"
 
 msgid "User links stored in the ytlist.txt file."
 msgstr "Лінки користувача, збереженні в файлі ytlist.txt."
+
+#, fuzzy, python-format
+msgid "User-Links: %d"
+msgstr "Лінки користувача"
 
 #, fuzzy
 msgid "Username"
@@ -3824,6 +3899,9 @@ msgid "You need to enter email and password in configuration."
 msgstr "Ви повинні ввести адрес електронної пошти і пароль в конфігурації."
 
 msgid "You should never perform block I/O operations in the __init__."
+msgstr ""
+
+msgid "YouTube User Links Editor"
 msgstr ""
 
 msgid "Your search entry"

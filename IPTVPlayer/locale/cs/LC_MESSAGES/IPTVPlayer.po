@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 10:56+0200\n"
+"POT-Creation-Date: 2026-07-26 13:11+0200\n"
 "PO-Revision-Date: 2025-11-24 08:05+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -331,6 +331,9 @@ msgstr ""
 msgid "AZ"
 msgstr "AZ"
 
+msgid "Aborted"
+msgstr ""
+
 msgid "Accept"
 msgstr "Přijmout"
 
@@ -377,6 +380,10 @@ msgstr "Přidat novou skupinu"
 
 msgid "Add new group of favourites"
 msgstr "Přidání nové skupiny oblíbených položek"
+
+#, fuzzy
+msgid "Add to User Links"
+msgstr "Uživatelské odkazy"
 
 msgid "Add to downloader"
 msgstr "Přidat do downloaderu"
@@ -736,6 +743,9 @@ msgstr "Pokračovat ve stahování"
 msgid "Copy"
 msgstr "Kopírovat"
 
+msgid "Could not add the user link."
+msgstr ""
+
 msgid "Countries"
 msgstr "Země"
 
@@ -751,6 +761,9 @@ msgstr ""
 
 msgid "Create LCD/VFD summary screen"
 msgstr "Vytvořte souhrnnou obrazovku LCD/VFD"
+
+msgid "Create MKV"
+msgstr ""
 
 msgid "Create MKV with chapter marks from description"
 msgstr ""
@@ -770,6 +783,9 @@ msgstr "Kritická chyba - soubor cookie nelze uložit!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Kritická chyba – Soubor gzip s kódováním obsahu nelze zpracovat!"
+
+msgid "Current item is not a channel."
+msgstr ""
 
 msgid "Cut"
 msgstr "Vyjmout"
@@ -1111,6 +1127,14 @@ msgstr ""
 "CHYBA: kanál nemohl být sestaven: žádný prvek \"playbin2\" \n"
 "Zkontrolujte prosím, zda jsou ve vašem systému k dispozici pluginy gstreamer."
 
+#, fuzzy
+msgid "Edit User Links"
+msgstr "Uživatelské odkazy"
+
+#, fuzzy
+msgid "Edit failed."
+msgstr "Přihlášení se nezdařilo."
+
 msgid "Edit favourites"
 msgstr "Upravit oblíbené"
 
@@ -1375,6 +1399,9 @@ msgstr "Soubor „%s“ již existuje"
 #, python-format
 msgid "File \"%s\" already exists!"
 msgstr "Soubor „%s“ již existuje!"
+
+msgid "File Not Found."
+msgstr ""
 
 #, python-format
 msgid "File [%s] was added to downloading queue."
@@ -1894,6 +1921,10 @@ msgid "Loading data, please wait (%d)"
 msgstr "Načítání dat, čekejte prosím (%d)"
 
 #, fuzzy
+msgid "Loading failed."
+msgstr "Přihlášení se nezdařilo."
+
+#, fuzzy
 msgid "Loading watch data..."
 msgstr "Nepodařilo se získat data captcha."
 
@@ -2043,6 +2074,13 @@ msgstr ""
 "Připojení souboru ISO [%s] k [%s] se nezdařilo.\n"
 "Návratový kód [%s].\n"
 "Vrátit data [%s]."
+
+msgid "Move"
+msgstr ""
+
+#, fuzzy
+msgid "Move failed."
+msgstr "Přihlášení se nezdařilo."
 
 msgid "Move group"
 msgstr "Přesunout skupinu"
@@ -2199,6 +2237,10 @@ msgstr "Počet položek v historii vyhledávání: %d"
 
 msgid "OK"
 msgstr "OK"
+
+#, python-format
+msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
+msgstr ""
 
 msgid "OMDb API Key"
 msgstr ""
@@ -3186,6 +3228,10 @@ msgstr "Nástroj %s je zde nezbytný, ale nebyl detekován."
 msgid "The YouTube video ID is invalid."
 msgstr "ID videa YouTube je neplatné."
 
+#, fuzzy
+msgid "The channel already exists in User Links."
+msgstr "Stejná položka již v této skupině existuje."
+
 msgid "The color of the current version"
 msgstr "Barva aktuální verze"
 
@@ -3194,6 +3240,10 @@ msgstr "Barva zobrazené položky"
 
 msgid "The default aspect ratio for the external player"
 msgstr "Výchozí poměr stran pro externí přehrávač"
+
+#, fuzzy
+msgid "The element already exists in User Links."
+msgstr "Stejná položka již v této skupině existuje."
 
 #, python-format
 msgid ""
@@ -3224,6 +3274,13 @@ msgstr ""
 
 msgid "The same item already exists in this group."
 msgstr "Stejná položka již v této skupině existuje."
+
+#, fuzzy
+msgid "The user link could not be deleted."
+msgstr "Toto video bylo smazáno."
+
+msgid "The user link could not be updated."
+msgstr ""
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3416,6 +3473,9 @@ msgstr "Použít výchozí kvalitu videa"
 msgid "Use default video quality:"
 msgstr "Použít výchozí kvalitu videa:"
 
+msgid "Use legacy title format"
+msgstr ""
+
 msgid "Use links cache"
 msgstr "Použít mezipaměť odkazů"
 
@@ -3452,11 +3512,27 @@ msgstr "Vlastní"
 msgid "User files"
 msgstr "Uživatelské soubory"
 
+#, fuzzy
+msgid "User link added."
+msgstr "Použít mezipaměť odkazů"
+
+#, fuzzy
+msgid "User link deleted."
+msgstr "Uživatelské odkazy"
+
+#, fuzzy
+msgid "User link updated."
+msgstr "Použít mezipaměť odkazů"
+
 msgid "User links"
 msgstr "Uživatelské odkazy"
 
 msgid "User links stored in the ytlist.txt file."
 msgstr "Uživatelské odkazy uložené v souboru ytlist.txt."
+
+#, fuzzy, python-format
+msgid "User-Links: %d"
+msgstr "Uživatelské odkazy"
 
 msgid "Username"
 msgstr "Uživatelské jméno"
@@ -3656,6 +3732,9 @@ msgstr "V konfiguraci je nutné zadat e-mail a heslo."
 
 msgid "You should never perform block I/O operations in the __init__."
 msgstr "V __init__ byste nikdy neměli provádět blokové I/O operace."
+
+msgid "YouTube User Links Editor"
+msgstr ""
 
 msgid "Your search entry"
 msgstr "Váš vyhledávací záznam"
