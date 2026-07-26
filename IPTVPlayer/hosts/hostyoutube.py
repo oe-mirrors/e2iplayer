@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 12.07.2026 - Change: improved configurable YouTube display language, configurable channel name shown in info view and downloaded files, absolute published date shortened to YYYY-MM-DD in info view, normalized escaped text and URLs across parser output
+# Last Modified: 25.07.2026  - Change added YouTube user links support for channel search results, including add-to-user-links action,
+# folder selection or new folder creation, and user links editor integration via ytlist.txt; moved to separate youtubeuserlinks.py
+# to keep hostyoutube.py cleaner, URL meta helper for sidecar and MKV postprocess handling - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -10,6 +12,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, buildYoutubeOptions, decorateYoutubeUrl, decorateYoutubeLinkItems
+from Plugins.Extensions.IPTVPlayer.libs.youtubeuserlinks import YouTubeUserLinksManager
 
 ###################################################
 
@@ -35,6 +39,9 @@ from Screens.MessageBox import MessageBox
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
+from Screens.ChoiceBox import ChoiceBox
+from Screens.VirtualKeyBoard import VirtualKeyBoard
+from Components.MenuList import MenuList
 
 ###################################################
 
@@ -54,6 +61,18 @@ config.plugins.iptvplayer.youtube_ui_language = ConfigSelection(
         ("en", _("English")),
     ],
 )
+
+
+try:
+    text_type = unicode
+    binary_type = str
+    string_types = (basestring,)
+    PY2 = True
+except NameError:
+    text_type = str
+    binary_type = bytes
+    string_types = (str, bytes)
+    PY2 = False
 
 
 def GetConfigList():
@@ -212,6 +231,7 @@ class Youtube(CBaseHostClass):
         self.SEARCH_TYPES = [(_("Video"), "video"), (_("Channel"), "channel"), (_("Playlist"), "playlist"), (_("Movie"), "movie"), (_("Live"), "live")]  # (_("Program"), "show"),... # (_("traylist"), "traylist"),
         self.ytp = YouTubeParser()
         self.currFileHost = None
+        self.userLinks = YouTubeUserLinksManager(self._getUserLinksPath, self._getCategory, self._extractChannelNameFromItem)
 
     def _getCategory(self, url):
         # printDBG("Youtube._getCategory")
@@ -380,6 +400,29 @@ class Youtube(CBaseHostClass):
         except Exception:
             printExc()
 
+    def _getUserLinksPath(self):
+        return os.path.join(config.plugins.iptvplayer.Sciezkaurllist.value, self.UTLIST_FILE)
+
+    def readUserLinks(self):
+        return self.userLinks.read()
+
+    def deleteUserLink(self, itemToDelete):
+        return self.userLinks.delete(itemToDelete)
+
+    def selectUserLinkTargetGroup(self, session, item, callback):
+        return self.userLinks.selectTargetGroup(session, item, callback)
+
+    def editUserLinkRaw(self, session, item, callback):
+        return self.userLinks.editRaw(session, item, callback)
+
+    def openAddCurrentItemToUserLinks(self, session, cItem=None, callback=None):
+        if cItem is None:
+            cItem = self.currItem
+        return self.userLinks.openAddCurrentItem(session, cItem, callback)
+
+    def openUserLinksEditor(self, session):
+        return self.userLinks.openEditor(session)
+
     def _getSidecarData(self, cItem):
         printDBG("Youtube._getSidecarData")
         sidecarTxt = ""
@@ -419,55 +462,22 @@ class Youtube(CBaseHostClass):
 
     def _applySidecarMetaToUrl(self, url, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled=False, cutsChaptersEnabled=False, channelName=""):
         try:
-            meta = dict(strwithmeta(url).meta)
+            sidecar = buildSidecar(sidecarEnabled, sidecarTxt, sidecarImg)
+            youtubeOptions = buildYoutubeOptions(mkvChaptersEnabled, cutsChaptersEnabled, channelName)
+            return decorateYoutubeUrl(url, sidecar=sidecar, youtubeOptions=youtubeOptions)
         except Exception:
-            meta = {}
-
-        if sidecarEnabled:
-            meta["e2i_sidecar_enabled"] = True
-            meta["e2i_sidecar_txt"] = sidecarTxt
-            meta["e2i_sidecar_img"] = sidecarImg
-        else:
-            meta.pop("e2i_sidecar_enabled", None)
-            meta.pop("e2i_sidecar_txt", None)
-            meta.pop("e2i_sidecar_img", None)
-
-        if mkvChaptersEnabled:
-            meta["e2i_mkv_chapters"] = True
-            if sidecarTxt:
-                meta["e2i_sidecar_txt"] = sidecarTxt
-        else:
-            meta.pop("e2i_mkv_chapters", None)
-
-        if cutsChaptersEnabled:
-            meta["e2i_cuts_chapters"] = True
-            if sidecarTxt:
-                meta["e2i_sidecar_txt"] = sidecarTxt
-        else:
-            meta.pop("e2i_cuts_chapters", None)
-
-        if channelName:
-            meta["e2i_channel_name"] = channelName
-        else:
-            meta.pop("e2i_channel_name", None)
-
-        return strwithmeta(str(url), meta)
+            printExc()
+            return url
 
     def _addSidecarMetaToUrlTab(self, urlTab, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled=False, cutsChaptersEnabled=False, channelName=""):
         printDBG("Youtube._addSidecarMetaToUrlTab count[%d]" % len(urlTab))
-        outTab = []
-
-        for item in urlTab:
-            try:
-                newItem = dict(item)
-                itemUrl = newItem.get("url", "")
-                newItem["url"] = self._applySidecarMetaToUrl(itemUrl, sidecarTxt, sidecarImg, sidecarEnabled, mkvChaptersEnabled, cutsChaptersEnabled, channelName)
-                outTab.append(newItem)
-            except Exception:
-                printExc()
-                outTab.append(item)
-
-        return outTab
+        try:
+            sidecar = buildSidecar(sidecarEnabled, sidecarTxt, sidecarImg)
+            youtubeOptions = buildYoutubeOptions(mkvChaptersEnabled, cutsChaptersEnabled, channelName)
+            return decorateYoutubeLinkItems(urlTab, sidecar=sidecar, youtubeOptions=youtubeOptions)
+        except Exception:
+            printExc()
+            return urlTab
 
     def listMainMenu(self):
         printDBG("Youtube.listsMainMenu")
@@ -959,11 +969,36 @@ class Youtube(CBaseHostClass):
 
 class IPTVHost(CHostBase):
 
+    def __init__(self):
+        CHostBase.__init__(self, Youtube(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
+
     def getSearchTypes(self):
         return self.host.SEARCH_TYPES
 
-    def __init__(self):
-        CHostBase.__init__(self, Youtube(), True, [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO])
+    def canAddToUserLinks(self, Index=0):
+        try:
+            cItem = self.host.currList[Index]
+            return self.host.userLinks.isChannelItem(cItem)
+        except Exception:
+            printExc()
+        return False
+
+    def addToUserLinks(self, session, Index=0):
+        try:
+            cItem = self.host.currList[Index]
+            self.host.openAddCurrentItemToUserLinks(session, cItem)
+            return True
+        except Exception:
+            printExc()
+        return False
+
+    def editUserLinks(self, session):
+        try:
+            self.host.openUserLinksEditor(session)
+            return True
+        except Exception:
+            printExc()
+        return False
 
     def withArticleContent(self, cItem):
         try:

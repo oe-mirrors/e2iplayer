@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-#
-#  IplaPlayer based on SHOUTcast
+# Last Modified:: 2026-07-25 - Updated blue_pressed() and blue_pressed_next(), added YouTube user links actions in the blue menu; fixed missing key_green label display by correcting the Halidri1080p1 playlist.xml key_green binding and set default green button text to "Download".
+# IplaPlayer based on SHOUTcast
 #
 #  $Id$
 #
@@ -155,7 +155,7 @@ class E2iPlayerWidget(Screen):
             self.session.nav.stopService()
 
         self["key_red"] = StaticText(_("Close"))
-        self["key_green"] = StaticText()
+        self["key_green"] = StaticText(_("Download"))
 
         self["key_yellow"] = StaticText(_("Refresh"))
         self["key_blue"] = StaticText(_("More"))
@@ -562,10 +562,10 @@ class E2iPlayerWidget(Screen):
     def blue_pressed(self):
         # For Keyboard test
         # if False:
-        #    from Plugins.Extensions.IPTVPlayer.components.e2ivksuggestion import AutocompleteSearch
-        #    from Plugins.Extensions.IPTVPlayer.suggestions.google import SuggestionsProvider
-        #    self.session.open(GetVirtualKeyboard(), additionalParams={'autocomplete':AutocompleteSearch(SuggestionsProvider(True))})
-        #    return
+        # from Plugins.Extensions.IPTVPlayer.components.e2ivksuggestion import AutocompleteSearch
+        # from Plugins.Extensions.IPTVPlayer.suggestions.google import SuggestionsProvider
+        # self.session.open(GetVirtualKeyboard(), additionalParams={'autocomplete':AutocompleteSearch(SuggestionsProvider(True))})
+        # return
 
         # For subtitles test
         if False:
@@ -576,12 +576,32 @@ class E2iPlayerWidget(Screen):
         self.stopAutoPlaySequencer()
         options = []
 
+        canAddUserLink = False
+        try:
+            currSelIndex = self.getSelIndex()
+            if currSelIndex > -1 and hasattr(self.host, 'canAddToUserLinks') and self.host.canAddToUserLinks(currSelIndex):
+                canAddUserLink = True
+        except Exception:
+            printExc()
+
+        if canAddUserLink:
+            options.append((_("Add to User Links"), "ADD_USER_LINK"))
+            if hasattr(self.host, 'editUserLinks'):
+                options.append((_("Edit User Links"), "EDIT_USER_LINKS"))
+
         if -1 < self.canByAddedToFavourites()[0]:
             options.append((_("Add item to favourites"), "ADD_FAV"))
             options.append((_("Edit favourites"), "EDIT_FAV"))
         elif 'favourites' == self.hostName:
             options.append((_("Edit favourites"), "EDIT_FAV"))
             options.append((_("Remove from favourites"), "DELETE_FAV"))
+
+        if not canAddUserLink:
+            try:
+                if hasattr(self.host, 'editUserLinks'):
+                    options.append((_("Edit User Links"), "EDIT_USER_LINKS"))
+            except Exception:
+                printExc()
 
         if None is not self.activePlayer.get('player', None):
             title = _('Change active movie player')
@@ -727,6 +747,19 @@ class E2iPlayerWidget(Screen):
                 self.session.openWithCallback(self.editFavouritesCallback, IPTVFavouritesMainWidget)
             elif ret[1] == 'DELETE_FAV':
                 self.session.openWithCallback(self.deletefavouriteItem, MessageBox, _("Definitely remove from favorites?"), type=MessageBox.TYPE_YESNO, timeout=10)
+            elif ret[1] == 'ADD_USER_LINK':
+                try:
+                    currSelIndex = self.getSelIndex()
+                    if currSelIndex > -1 and hasattr(self.host, 'addToUserLinks'):
+                        self.host.addToUserLinks(self.session, currSelIndex)
+                except Exception:
+                    printExc()
+            elif ret[1] == 'EDIT_USER_LINKS':
+                try:
+                    if hasattr(self.host, 'editUserLinks'):
+                        self.host.editUserLinks(self.session)
+                except Exception:
+                    printExc()
             elif ret[1] == 'RandomizePlayableItems':
                 self.randomizePlayableItems()
             elif ret[1] == 'ReversePlayableItems':
