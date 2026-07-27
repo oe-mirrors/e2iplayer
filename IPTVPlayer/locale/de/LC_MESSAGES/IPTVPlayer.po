@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-27 15:40+0200\n"
-"PO-Revision-Date: 2026-07-26 13:36+0200\n"
+"PO-Revision-Date: 2026-07-27 16:03+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -841,9 +841,8 @@ msgstr "Standard Video Qualität:"
 msgid "Defaults"
 msgstr "Standardwerte"
 
-#, fuzzy
 msgid "Definitely remove from favorites?"
-msgstr "Auf jeden Fall aus den Favoriten entfernen?"
+msgstr "Wirklich aus den Favoriten entfernen?"
 
 msgid "Delete"
 msgstr "Löschen"
@@ -1100,7 +1099,7 @@ msgstr ""
 "Bitte prüfen Sie, ob gstreamer-Plugins in Ihrem System verfügbar sind."
 
 msgid "Edit"
-msgstr ""
+msgstr "Bearbeiten"
 
 msgid "Edit User Links"
 msgstr "Benutzerlinks bearbeiten"
@@ -1108,13 +1107,11 @@ msgstr "Benutzerlinks bearbeiten"
 msgid "Edit failed."
 msgstr "Bearbeitung ist fehlgeschlagen."
 
-#, fuzzy
 msgid "Edit favourite group"
-msgstr "Wählen Sie die Favoriten Gruppe"
+msgstr "Favoriten Gruppe bearbeiten"
 
-#, fuzzy
 msgid "Edit favourite item"
-msgstr "Favoriten bearbeiten"
+msgstr "Favoriten Eintrag bearbeiten"
 
 msgid "Edit favourites"
 msgstr "Favoriten bearbeiten"
@@ -1215,9 +1212,8 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Fehler bei der Kommunikation mit dem Server."
 
-#, fuzzy
 msgid "Error deleting favourite item."
-msgstr "Fehler beim Löschen der Datei \"%s\".\n"
+msgstr "Fehler beim Löschen eines Favoriten Eintrags."
 
 #, python-format
 msgid "Error deleting file \"%s\".\n"
@@ -1230,9 +1226,8 @@ msgstr "Fehler beim Löschen der Debug-Datei."
 msgid "Error getting file name: %s"
 msgstr "Fehler beim Abrufen des Dateinamens: %s"
 
-#, fuzzy
 msgid "Error loading favorites."
-msgstr "Favoriten bearbeiten"
+msgstr "Fehler beim Laden der Favoriten."
 
 #, python-format
 msgid ""
@@ -1260,9 +1255,8 @@ msgstr "Fehler beim Lesen der Datei \"%s\".\n"
 msgid "Error renaming file: %s"
 msgstr "Fehler beim Umbenennen der Datei: %s"
 
-#, fuzzy
 msgid "Error saving favorites."
-msgstr "Favoriten bearbeiten"
+msgstr "Fehler beim Speichern der Favoriten."
 
 msgid "Error while loading watch data"
 msgstr "Fehler beim Laden der Watchdaten"
@@ -1365,13 +1359,11 @@ msgstr "Fehlgeschlagen: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr "Schwerer Fehler: consoleWrite fehlgeschlagen!"
 
-#, fuzzy
 msgid "Favorite group not found."
-msgstr "Favoriten-Gruppen"
+msgstr "Favoriten-Gruppe nicht gefunden."
 
-#, fuzzy
 msgid "Favorite item not found."
-msgstr "Gruppe mit ID [%s] wurde nicht gefunden."
+msgstr "Favoriten-Eintrag nicht gefunden."
 
 msgid "Favorites"
 msgstr "Favoriten"
