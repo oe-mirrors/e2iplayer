@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 2026-07-26 - Updated to resolve renamed video files (.mp4 -> .mkv and similar) for play/remove actions, extend archive video detection, ignore non-subtitle sidecar text files,  and delete related sidecar files with immediate list refresh on remove. - Kamikaze24
 #
 #  IPTV download manager UI
 #
@@ -35,6 +36,8 @@ from Tools.LoadPixmap import LoadPixmap
 from datetime import timedelta
 from Screens.MessageBox import MessageBox
 from os import path as os_path, remove as os_remove, rename as os_rename
+from glob import glob
+from re import match as re_match
 ###################################################
 
 #########################################################
@@ -45,6 +48,7 @@ gIPTVDM_listChanged = False
 
 class IPTVDMWidget(Screen):
 
+    VIDEO_FILE_EXTENSIONS = ('.flv', '.mp4', '.mkv', '.avi', '.mov', '.ts', '.m2ts', '.wmv', '.mpeg', '.mpg', '.m4v', '.webm')
     ICONS_FILESNAMES = {DMHelper.STS.WAITING: 'iconwait1.png',
                         DMHelper.STS.DOWNLOADING: 'iconwait2.png',
                         DMHelper.STS.DOWNLOADED: 'icondone.png',
@@ -189,25 +193,169 @@ class IPTVDMWidget(Screen):
                 continue
             if item.startswith('.'):
                 continue  # do not list hidden items
-            if len(params[0]) > 3 and params[0].lower()[-4:] in ['.flv', '.mp4']:
-                fileName = os_path.join(config.plugins.iptvplayer.NaszaSciezka.value, params[0])
-                skip = False
-                for item2 in self.currList:
-                    printDBG("AAA:[%s]\nBBB:[%s]" % (item2.fileName, fileName))
-                    if fileName == item2.fileName.replace('//', '/'):
-                        skip = True
-                        break
-                if skip:
-                    continue
-                listItem = DMItemBase(url=fileName, fileName=fileName)
-                try:
-                    listItem.downloadedSize = os_path.getsize(fileName)
-                except Exception:
-                    listItem.downloadedSize = 0
-                listItem.status = DMHelper.STS.DOWNLOADED
-                listItem.downloadIdx = -1
-                self.tmpList.append(listItem)
 
+            fileName = self._getArchiveFilePath(params[0])
+            if not fileName:
+                continue
+
+            skip = False
+            for item2 in self.currList:
+                item2FileName = self._getExistingFilePath(item2.fileName)
+                printDBG("AAA:[%s]\nBBB:[%s]" % (item2FileName, fileName))
+                if fileName == item2FileName:
+                    skip = True
+                    break
+            if skip:
+                continue
+
+            listItem = DMItemBase(url=fileName, fileName=fileName)
+            try:
+                listItem.downloadedSize = os_path.getsize(fileName)
+            except Exception:
+                listItem.downloadedSize = 0
+            listItem.status = DMHelper.STS.DOWNLOADED
+            listItem.downloadIdx = -1
+            self.tmpList.append(listItem)
+
+    def _getArchiveFilePath(self, fileName):
+        fileName = ensure_str(fileName).strip()
+        if fileName.startswith('.'):
+            return None
+
+        fullPath = os_path.join(config.plugins.iptvplayer.NaszaSciezka.value, fileName)
+        if self._isVideoFile(fullPath):
+            return fullPath
+
+        baseName, ext = os_path.splitext(fullPath)
+        if ext.lower() in self.VIDEO_FILE_EXTENSIONS:
+            return None
+
+        for candidate in self._getPossibleVideoFiles(baseName):
+            if os_path.exists(candidate):
+                printDBG("IPTVDMWidget._getArchiveFilePath substitute [%s] -> [%s]" % (fullPath, candidate))
+                return candidate
+        return None
+
+    def _isVideoFile(self, fileName):
+        return os_path.isfile(fileName) and os_path.splitext(fileName)[1].lower() in self.VIDEO_FILE_EXTENSIONS
+
+    def _getPossibleVideoFiles(self, baseName):
+        candidates = []
+        for ext in self.VIDEO_FILE_EXTENSIONS:
+            candidates.append(baseName + ext)
+        return candidates
+
+    def _isSubtitleFile(self, fileName):
+        return os_path.splitext(fileName)[1].lower() in ['.srt', '.sub', '.txt', '.vtt']
+
+    def _looksLikeSubtitleFile(self, fileName):
+        try:
+            sts, reason = self._detectSubtitleFile(fileName)
+            return sts
+        except Exception:
+            printExc()
+        return False
+
+    def _detectSubtitleFile(self, fileName):
+        if not os_path.isfile(fileName):
+            return False, 'missing file'
+
+        ext = os_path.splitext(fileName)[1].lower()
+        if ext not in ['.srt', '.sub', '.txt', '.vtt']:
+            return False, 'unsupported extension'
+
+        try:
+            with open(fileName, 'rb') as f:
+                data = f.read(8192)
+        except Exception:
+            printExc()
+            return False, 'read error'
+
+        if not data:
+            return False, 'empty file'
+
+        try:
+            text = ensure_str(data)
+        except Exception:
+            try:
+                text = data.decode('utf-8', 'ignore')
+            except Exception:
+                printExc()
+                return False, 'decode error'
+
+        lines = [line.strip() for line in text.replace('\r', '\n').split('\n') if line.strip()]
+        if not lines:
+            return False, 'no text lines'
+
+        score = 0
+        for line in lines[:40]:
+            if '-->' in line:
+                score += 3
+            elif re_match(r'^\d+$', line):
+                score += 1
+            elif re_match(r'^\d{2}:\d{2}:\d{2}[,.]\d{1,3}', line):
+                score += 2
+            elif re_match(r'^\{\d+\}\{\d*\}', line):
+                score += 3
+            elif ext == '.vtt' and line.upper().startswith('WEBVTT'):
+                score += 3
+
+        if score >= 3:
+            return True, 'subtitle markers detected'
+        return False, 'no subtitle markers detected'
+
+    def _removeRelatedFiles(self, fileName):
+        removed = False
+        baseName = os_path.splitext(fileName)[0]
+        candidates = [fileName]
+        for ext in ['.mp4', '.mkv', '.flv', '.avi', '.ts', '.mov', '.wmv', '.txt', '.jpg', '.jpeg']:
+            candidate = baseName + ext
+            if candidate not in candidates:
+                candidates.append(candidate)
+        for candidate in candidates:
+            try:
+                if os_path.exists(candidate):
+                    os_remove(candidate)
+                    removed = True
+                    printDBG('IPTVDMWidget._removeRelatedFiles removed [%s]' % candidate)
+            except Exception:
+                printExc()
+        return removed
+
+    def _getSidecarSubtitles(self, fileName):
+        subtitles = []
+        baseName = os_path.splitext(fileName)[0]
+        for ext in ['.srt', '.sub', '.txt', '.vtt']:
+            candidate = baseName + ext
+            if not os_path.isfile(candidate):
+                continue
+            if self._looksLikeSubtitleFile(candidate):
+                subtitles.append(candidate)
+            else:
+                printDBG('IPTVDMWidget._getSidecarSubtitles skip non subtitle file [%s]' % candidate)
+        return subtitles
+
+    def _getExistingFilePath(self, fileName):
+        fileName = ensure_str(fileName).replace('//', '/')
+        if self._isVideoFile(fileName):
+            return fileName
+
+        baseName, ext = os_path.splitext(fileName)
+        if ext.lower() in self.VIDEO_FILE_EXTENSIONS:
+            for candidate in self._getPossibleVideoFiles(baseName):
+                if os_path.exists(candidate):
+                    printDBG("IPTVDMWidget._getExistingFilePath substitute [%s] -> [%s]" % (fileName, candidate))
+                    return candidate
+
+        try:
+            matches = glob(baseName + '.*')
+            for candidate in matches:
+                if self._isVideoFile(candidate):
+                    printDBG("IPTVDMWidget._getExistingFilePath glob substitute [%s] -> [%s]" % (fileName, candidate))
+                    return candidate
+        except Exception:
+            printExc()
+        return fileName
     def leaveMoviePlayer(self, answer=None, position=None, *args, **kwargs):
         self.DM.setUpdateProgress(True)
         self.session.nav.playService(self.currentService)
@@ -352,9 +500,12 @@ class IPTVDMWidget(Screen):
     def makeActionOnDownloadItem(self, ret):
         item = self.getSelItem()
         if None is not ret and None is not item:
+            playFileName = self._getExistingFilePath(item.fileName)
             printDBG("makeActionOnDownloadItem " + ret[1] + (" for downloadIdx[%d]" % item.downloadIdx))
+            if playFileName != item.fileName:
+                printDBG("makeActionOnDownloadItem substitute fileName [%s] -> [%s]" % (item.fileName, playFileName))
             if ret[1] == "play":
-                title = item.fileName
+                title = playFileName
                 try:
                     title = os_path.basename(title)
                     title = os_path.splitext(title)[0]
@@ -363,22 +514,27 @@ class IPTVDMWidget(Screen):
                 # when we watch we no need update sts
                 self.DM.setUpdateProgress(False)
                 player = ret[2]
+                subtitles = self._getSidecarSubtitles(playFileName)
                 if "mini" == player:
-                    self.session.openWithCallback(self.leaveMoviePlayer, IPTVMiniMoviePlayer, item.fileName, title)
+                    self.session.openWithCallback(self.leaveMoviePlayer, IPTVMiniMoviePlayer, playFileName, title)
                 elif player in ["exteplayer", "extgstplayer"]:
                     additionalParams = {}
-                    if item.fileName.split('.')[-1] in ['mp3', 'm4a', 'ogg', 'wma', 'fla', 'wav', 'flac']:
+                    if playFileName.split('.')[-1] in ['mp3', 'm4a', 'ogg', 'wma', 'fla', 'wav', 'flac']:
                         additionalParams['show_iframe'] = config.plugins.iptvplayer.show_iframe.value
                         additionalParams['iframe_file_start'] = config.plugins.iptvplayer.iframe_file.value
                         additionalParams['iframe_file_end'] = config.plugins.iptvplayer.clear_iframe_file.value
                         additionalParams['iframe_continue'] = False
 
+                    subtitleFile = None
+                    if len(subtitles):
+                        subtitleFile = subtitles[0]
+
                     if "exteplayer" == player:
-                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, item.fileName, title, None, 'eplayer', additionalParams)
+                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, playFileName, title, subtitleFile, 'eplayer', additionalParams)
                     else:
-                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, item.fileName, title, None, 'gstplayer', additionalParams)
+                        self.session.openWithCallback(self.leaveMoviePlayer, IPTVExtMoviePlayer, playFileName, title, subtitleFile, 'gstplayer', additionalParams)
                 else:
-                    self.session.openWithCallback(self.leaveMoviePlayer, IPTVStandardMoviePlayer, item.fileName, title)
+                    self.session.openWithCallback(self.leaveMoviePlayer, IPTVStandardMoviePlayer, playFileName, title)
             elif ret[1] == "rename":  # add lululla 20250911
                 try:
                     path, fileName = os_path.split(item.fileName)
@@ -393,12 +549,12 @@ class IPTVDMWidget(Screen):
             elif self.localMode:
                 if ret[1] == "remove":
                     try:
-                        os_remove(item.fileName)
+                        self._removeRelatedFiles(playFileName)
                         for idx in range(len(self.localFiles)):
-                            if item.fileName == self.localFiles[idx].fileName:
+                            if playFileName == self.localFiles[idx].fileName or item.fileName == self.localFiles[idx].fileName:
                                 del self.localFiles[idx]
-                                self.reloadList(True)
                                 break
+                        self.reloadList(True)
                     except Exception:
                         printExc()
             elif ret[1] == "continue":
@@ -408,6 +564,12 @@ class IPTVDMWidget(Screen):
             elif ret[1] == "stop":
                 self.DM.stopDownloadItem(item.downloadIdx)
             elif ret[1] == "remove":
+                try:
+                    self._removeRelatedFiles(playFileName)
+                    if playFileName != item.fileName:
+                        self._removeRelatedFiles(item.fileName)
+                except Exception:
+                    printExc()
                 self.DM.removeDownloadItem(item.downloadIdx)
             elif ret[1] == "delet":
                 self.DM.deleteDownloadItem(item.downloadIdx)
