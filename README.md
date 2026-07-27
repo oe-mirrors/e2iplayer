@@ -8,7 +8,7 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 ---
 
 <p align="center">
-<img width="1250" height="500" alt="e2ilogo(Background_Git)" src="https://github.com/user-attachments/assets/3597cb56-f41e-4356-8935-94c0f7070e03" />
+<img width="1250" height="500" alt="e2ilogo(Background_Git)" src="https://github.com/oe-mirrors/e2iplayer/blob/python3/Logos/e2ilogo(Background_Git).png"/>
 </p>
 
 ---
@@ -97,7 +97,7 @@ This is free software; you can redistribute it and/or modify it under the terms 
 
 This plugin is released under GPLv3. See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html#license-text) for full details.
 
-<img width="120" height="58" alt="GPLv3_Logo svg" src="https://github.com/user-attachments/assets/67d32b0a-2a44-4fa9-a972-202daf28808e" />
+<img width="127" height="51" alt="gplv3-127x51" src="https://github.com/user-attachments/assets/a4bf8b48-de46-4350-a67b-172ded28a498" />
 
 ---
 
@@ -335,4 +335,4 @@ Thanks! ❤️ 💞 💖 ❤️‍🔥 💗
   Powered 💡 by <a href="https://www.opena.tv">openATV Team</a>
 </p> 
 
-README Last Modified: 2026-05-17
+README Last Modified: 2026-07-27
