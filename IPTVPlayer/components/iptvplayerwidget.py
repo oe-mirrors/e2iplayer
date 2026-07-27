@@ -1163,7 +1163,7 @@ class E2iPlayerWidget(Screen):
                     self.startSearchProcedure(item.possibleTypesOfSearch)
         else:
             self.showWindow()
-    #end ok_pressed(self):
+    # end ok_pressed(self):
 
     def pageup_pressed(self):
         self.stopAutoPlaySequencer()

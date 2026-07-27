@@ -356,6 +356,7 @@ class IPTVDMWidget(Screen):
         except Exception:
             printExc()
         return fileName
+
     def leaveMoviePlayer(self, answer=None, position=None, *args, **kwargs):
         self.DM.setUpdateProgress(True)
         self.session.nav.playService(self.currentService)
