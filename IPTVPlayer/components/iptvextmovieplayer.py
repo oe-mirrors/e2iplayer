@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Last Modified: 2026-07-26 Updated to ignore non-subtitle sidecar text files during automatic subtitle detection
+# and to safely handle PLAYBACK_STOP when the exteplayer3 control socket is already gone. - Kamikaze24
 #
 #  IPTVExtMoviePlayer
 #
@@ -153,15 +155,31 @@ class ExtPlayerCommandsDispatcher():
     def extPlayerSendCommand(self, cmd, arg='', getStatus=True):
         ret = False
         if None is not self.owner:
-            ret = self.owner.extPlayerSendCommand(cmd, arg)
-            if getStatus:
-                self.owner.extPlayerSendCommand("PLAYBACK_INFO", '')
+            try:
+                ret = self.owner.extPlayerSendCommand(cmd, arg)
+            except Exception:
+                printExc()
+                if 'PLAYBACK_STOP' == cmd:
+                    return False
+                if getStatus:
+                    self.owner = None
+                    return False
         else:
             printDBG(">> extPlayerSendCommand owner NONE")
+            return False
+
+        if getStatus and None is not self.owner:
+            try:
+                self.owner.extPlayerSendCommand("PLAYBACK_INFO", '')
+            except Exception:
+                printExc()
+                self.owner = None
         return ret
 
 
 class IPTVExtMoviePlayer(Screen):
+    NON_SUBTITLE_SIDE_EXTENSIONS = ['txt', 'sub', 'srt', 'vtt']
+
     Y_CROPPING_GUARD = 0
     playback = {}
 
@@ -931,6 +949,66 @@ class IPTVExtMoviePlayer(Screen):
                 self.subHandler['embedded_handler'].flushSubtitles()
                 self.enableSubtitles()
 
+    def _looksLikeSubtitleFile(self, filePath):
+        try:
+            sts, reason = self._detectSubtitleFile(filePath)
+            if not sts:
+                printDBG("IPTVExtMoviePlayer._looksLikeSubtitleFile skip file[%s] reason[%s]" % (filePath, reason))
+            return sts
+        except Exception:
+            printExc()
+        return False
+
+    def _detectSubtitleFile(self, filePath):
+        if None is filePath or '' == filePath:
+            return False, 'empty path'
+        if not fileExists(filePath):
+            return False, 'missing file'
+
+        ext = os_path.splitext(filePath)[1].lower().lstrip('.')
+        if ext not in self.NON_SUBTITLE_SIDE_EXTENSIONS:
+            return False, 'unsupported extension'
+
+        try:
+            with open(filePath, 'rb') as f:
+                data = f.read(8192)
+        except Exception:
+            printExc()
+            return False, 'read error'
+
+        if not data:
+            return False, 'empty file'
+
+        try:
+            text = ensure_str(data)
+        except Exception:
+            try:
+                text = data.decode('utf-8', 'ignore')
+            except Exception:
+                printExc()
+                return False, 'decode error'
+
+        lines = [line.strip() for line in text.replace('\r', '\n').split('\n') if line.strip()]
+        if not lines:
+            return False, 'no text lines'
+
+        score = 0
+        for line in lines[:40]:
+            if '-->' in line:
+                score += 3
+            elif re.match(r'^\d+$', line):
+                score += 1
+            elif re.match(r'^\d{2}:\d{2}:\d{2}[,.]\d{1,3}', line):
+                score += 2
+            elif re.match(r'^\{\d+\}\{\d*\}', line):
+                score += 3
+            elif 'vtt' == ext and line.upper().startswith('WEBVTT'):
+                score += 3
+
+        if score >= 3:
+            return True, 'subtitle markers detected'
+        return False, 'no subtitle markers detected'
+
     def openSubtitlesFromFile(self):
         printDBG("openSubtitlesFromFile")
         currDir = GetSubtitlesDir()
@@ -951,6 +1029,9 @@ class IPTVExtMoviePlayer(Screen):
     def openSubtitlesFromFileCallback(self, filePath=None):
         printDBG("openSubtitlesFromFileCallback filePath[%s]" % filePath)
         if None is not filePath:
+            if not self._looksLikeSubtitleFile(filePath):
+                printDBG("openSubtitlesFromFileCallback rejected non subtitle file[%s]" % filePath)
+                return
             self.subHandler['handler'].removeCacheFile(filePath)
             cmd = '/usr/bin/uchardet "%s"' % filePath
             self.workconsole = iptv_system(cmd, boundFunction(self.enableSubtitlesFromFile, filePath))

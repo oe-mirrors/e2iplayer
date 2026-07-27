@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified:: 2026-07-25 - Updated blue_pressed() and blue_pressed_next(), added YouTube user links actions in the blue menu; fixed missing key_green label display by correcting the Halidri1080p1 playlist.xml key_green binding and set default green button text to "Download".
+# Last Modified: 2026-07-26 - Updated blue_pressed() and blue_pressed_next(), added YouTube user links actions in the blue menu, and fixed deleteFavouriteItem(); fixed missing key_green label display by correcting the Halidri1080p1 playlist.xml key_green binding and set default green button text to "Download".
 # IplaPlayer based on SHOUTcast
 #
 #  $Id$
@@ -249,6 +249,7 @@ class E2iPlayerWidget(Screen):
 
         self.currList = []
         self.currItem = CDisplayListItem()
+        self.favouritesCurrentGroupId = ''
 
         self.visible = True
         self.bufferSize = config.plugins.iptvplayer.requestedBuffSize.value * 1024 * 1024
@@ -746,7 +747,7 @@ class E2iPlayerWidget(Screen):
             elif ret[1] == 'EDIT_FAV':
                 self.session.openWithCallback(self.editFavouritesCallback, IPTVFavouritesMainWidget)
             elif ret[1] == 'DELETE_FAV':
-                self.session.openWithCallback(self.deletefavouriteItem, MessageBox, _("Definitely remove from favorites?"), type=MessageBox.TYPE_YESNO, timeout=10)
+                self.session.openWithCallback(self.deleteFavouriteItem, MessageBox, _('Definitely remove from favourites?'), type=MessageBox.TYPE_YESNO, timeout=10)
             elif ret[1] == 'ADD_USER_LINK':
                 try:
                     currSelIndex = self.getSelIndex()
@@ -772,30 +773,131 @@ class E2iPlayerWidget(Screen):
                 except Exception:
                     printExc()
 
-    def deletefavouriteItem(self, confirmed):
-        if confirmed and self.hostName == 'favourites':
-            found = False
-            helper = IPTVFavourites(GetFavouritesDir())
-            sts = helper.load()
-            if not sts:
+    def deleteFavouriteItem(self, confirmed=False):
+        printDBG("E2iPlayerWidget.deleteFavouriteItem")
+        if confirmed is False:
+            return
+
+        if self.visible and not self.isInWorkThread() and 'favourites' == self.hostName:
+            currSelIndex = self.getSelIndex()
+            if currSelIndex < 0:
                 return
-            groups = helper.getGroups()
-            for group in groups:
-                group_id = group['group_id']
-                if self['list'].currentSelection.name.lower() == group_id:
-                    helper.delGroup(group_id)
-                    found = True
-                else:
-                    for idx, item in enumerate(group['items'], start=0):
-                        if self['list'].currentSelection.name == item.name:
-                            helper.delGroupItem(idx, group_id)
-                            found = True
+
+            groupId = self.favouritesCurrentGroupId
+            printDBG("deleteFavouriteItem groupId[%s] currSelIndex[%d]" % (groupId, currSelIndex))
+
+            try:
+                helper = IPTVFavourites(GetFavouritesDir())
+                if not helper.load():
+                    self.session.open(MessageBox, _('Error loading favourites.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                    return
+
+                groups = helper.getGroups()
+
+                def _norm(txt):
+                    try:
+                        txt = str(txt).strip().lower()
+                    except Exception:
+                        return ''
+                    txt = txt.replace('_', ' ')
+                    txt = ' '.join(txt.split())
+                    return txt
+
+                if not groupId:
+                    selItem = self.getSelItem()
+                    selTitle = ''
+                    try:
+                        selTitle = selItem.name
+                    except Exception:
+                        printExc()
+
+                    groupIdx = -1
+                    for idx in range(len(groups)):
+                        group = groups[idx]
+                        if not isinstance(group, dict):
+                            continue
+                        if group.get('title', '') == selTitle or _norm(group.get('title', '')) == _norm(selTitle):
+                            groupId = group.get('group_id', '')
+                            groupIdx = idx
                             break
-                if found:
-                    break
-            if found:
-                helper.save()
-                self.session.openWithCallback(self.loadHost, MessageBox, _("Item %s removed!") % self['list'].currentSelection.name, type=MessageBox.TYPE_INFO, timeout=5)
+
+                    if not groupId or groupIdx < 0:
+                        self.session.open(MessageBox, _('Favourite group not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                        return
+
+                    if not helper.delGroup(groupId):
+                        self.session.open(MessageBox, helper.getLastError(), type=MessageBox.TYPE_ERROR, timeout=5)
+                        return
+
+                    if not helper.save():
+                        self.session.open(MessageBox, _('Error saving favourites.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                        return
+
+                    del self.currList[currSelIndex]
+                    self["list"].setList([(x,) for x in self.currList])
+
+                    if len(self.currList) <= currSelIndex:
+                        currSelIndex = len(self.currList) - 1
+                    if currSelIndex >= 0:
+                        self["list"].moveToIndex(currSelIndex)
+
+                    self.changeBottomPanel()
+                    self.updateDownloadButton()
+                    return
+
+                realGroupId = ''
+                for group in groups:
+                    if not isinstance(group, dict):
+                        continue
+
+                    tmpGroupId = group.get('group_id', '')
+                    tmpTitle = group.get('title', '')
+
+                    if tmpGroupId == groupId:
+                        realGroupId = tmpGroupId
+                        break
+                    if tmpTitle == groupId:
+                        realGroupId = tmpGroupId
+                        break
+                    if _norm(tmpTitle) == _norm(groupId):
+                        realGroupId = tmpGroupId
+                        break
+                    if _norm(tmpGroupId) == _norm(groupId):
+                        realGroupId = tmpGroupId
+                        break
+
+                if not realGroupId:
+                    self.session.open(MessageBox, _('Favourite group not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                    return
+
+                sts, groupItems = helper.getGroupItems(realGroupId)
+                if not sts:
+                    self.session.open(MessageBox, _('Favourite group not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                    return
+
+                if currSelIndex >= len(groupItems):
+                    self.session.open(MessageBox, _('Favourite item not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                    return
+
+                helper.delGroupItem(currSelIndex, realGroupId)
+
+                if not helper.save():
+                    self.session.open(MessageBox, _('Error saving favourites.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                    return
+
+                del self.currList[currSelIndex]
+                self["list"].setList([(x,) for x in self.currList])
+
+                if len(self.currList) <= currSelIndex:
+                    currSelIndex = len(self.currList) - 1
+                if currSelIndex >= 0:
+                    self["list"].moveToIndex(currSelIndex)
+
+                self.changeBottomPanel()
+                self.updateDownloadButton()
+            except Exception:
+                printExc()
+                self.session.open(MessageBox, _('Error deleting favourite item.'), type=MessageBox.TYPE_ERROR, timeout=5)
 
     def editFavouritesCallback(self, ret=False):
         if ret and 'favourites' == self.hostName:  # we must reload host
@@ -913,6 +1015,8 @@ class E2iPlayerWidget(Screen):
             if len(self.prevSelList) > 0:
                 self.nextSelIndex = self.prevSelList.pop()
                 self.categoryList.pop()
+                if 'favourites' == self.hostName and len(self.categoryList) == 0:
+                    self.favouritesCurrentGroupId = ''
                 printDBG("back_pressed prev sel index %s" % self.nextSelIndex)
                 self.requestListFromHost('Previous')
             else:
@@ -1025,8 +1129,23 @@ class E2iPlayerWidget(Screen):
                     printDBG("ok_pressed selected TYPE_CATEGORY")
                     self.stopAutoPlaySequencer()
                     self.currSelIndex = currSelIndex
+                    if 'favourites' == self.hostName and len(self.categoryList) == 0:
+                        try:
+                            self.favouritesCurrentGroupId = ''
+                            try:
+                                groupTitle = item.name
+                            except Exception:
+                                groupTitle = ''
+
+                            if groupTitle:
+                                self.favouritesCurrentGroupId = groupTitle.strip().lower()
+
+                            printDBG("ok_pressed favouritesCurrentGroupId[%s]" % self.favouritesCurrentGroupId)
+                        except Exception:
+                            printExc()
+
                     if item.pinLocked:
-                        from .iptvpin import IPTVPinWidget
+                        from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
                         self.session.openWithCallback(boundFunction(self.checkDirPin, self.requestListFromHost, 'ForItem', currSelIndex, '', item.pinCode), IPTVPinWidget, title=_("Enter pin"))
                     else:
                         self.requestListFromHost('ForItem', currSelIndex, '')
@@ -1044,7 +1163,7 @@ class E2iPlayerWidget(Screen):
                     self.startSearchProcedure(item.possibleTypesOfSearch)
         else:
             self.showWindow()
-    # end ok_pressed(self):
+    #end ok_pressed(self):
 
     def pageup_pressed(self):
         self.stopAutoPlaySequencer()
@@ -2122,6 +2241,7 @@ class E2iPlayerWidget(Screen):
         self.categoryList = []
         self.currList = []
         self.currItem = CDisplayListItem()
+        self.favouritesCurrentGroupId = ''
         self["headertext"].setText(self.getCategoryPath())
         self.requestListFromHost('Initial')
 

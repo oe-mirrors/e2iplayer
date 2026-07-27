@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-#
-
+# Last Modified: 2026-07-26 - Added blue key "Edit" option in favourites manager. - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -160,12 +159,14 @@ class IPTVFavouritesMainWidget(Screen):
     skin = """
         <screen name="IPTVFavouritesMainWidget" position="center,center" title="%s" size="%d,%d">
          <ePixmap position="5,9"   zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
-         <ePixmap position="335,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
-         <ePixmap position="665,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
+         <ePixmap position="255,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
+         <ePixmap position="505,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
+         <ePixmap position="755,9" zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
 
-         <widget name="label_red"     position="45,9"  size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget name="label_green"   position="375,9" size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-         <widget name="label_yellow"  position="705,9" size="300,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+         <widget name="label_red"     position="45,9"  size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+         <widget name="label_green"   position="295,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+         <widget name="label_yellow"  position="545,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+         <widget name="label_blue"    position="795,9" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
 
          <widget name="list"  position="5,80"  zPosition="2" size="%d,%d" scrollbarMode="showOnDemand" transparent="1"  backgroundColor="#00000000" enableWrapAround="1" />
          <widget name="title" position="5,47"  zPosition="1" size="%d,23" font="Regular;20" transparent="1" backgroundColor="#00000000"/>
@@ -176,6 +177,7 @@ class IPTVFavouritesMainWidget(Screen):
         GetIconDir("red.png"),
         GetIconDir("green.png"),
         GetIconDir("yellow.png"),
+        GetIconDir("blue.png"),
         sz_w - 10, sz_h - 105,  # size list
         sz_w - 135,  # size title
     )
@@ -199,6 +201,7 @@ class IPTVFavouritesMainWidget(Screen):
         self["label_red"] = Label(_("Remove group"))
         self["label_yellow"] = Label(self.IDS_ENABLE_REORDERING)
         self["label_green"] = Label(_("Add new group"))
+        self["label_blue"] = Label(_("Edit"))
 
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
@@ -211,6 +214,7 @@ class IPTVFavouritesMainWidget(Screen):
                 "red": self.keyRed,
                 "yellow": self.keyYellow,
                 "green": self.keyGreen,
+                "blue": self.keyBlue,
 
                 "up": self.keyUp,
                 "down": self.keyDown,
@@ -288,6 +292,7 @@ class IPTVFavouritesMainWidget(Screen):
             self["title"].setText(_("Favourites groups"))
             self["label_red"].setText(_("Remove group"))
             self["label_green"].setText(_("Add new group"))
+            self["label_blue"].setText(_("Edit"))
 
             self.menu = ":groups:"
             self.displayList()
@@ -327,6 +332,7 @@ class IPTVFavouritesMainWidget(Screen):
                 printExc()
             self["label_red"].setText(_("Remove item"))
             self["label_green"].setText(_("Add item to group"))
+            self["label_blue"].setText(_("Edit"))
 
             try:
                 self.prevIdx = self["list"].getCurrentIndex()
@@ -384,6 +390,110 @@ class IPTVFavouritesMainWidget(Screen):
                 return
             favItem = items[self["list"].getCurrentIndex()]
             self.session.openWithCallback(self._itemCloned, IPTVFavouritesAddItemWidget, favItem, self.favourites, False, [self.menu])
+
+    def keyBlue(self):
+        if self.duringMoving:
+            return
+        sel = self.getSelectedItem()
+        if None is sel:
+            return
+
+        from copy import deepcopy
+        params = deepcopy(IPTVMultipleInputBox.DEF_PARAMS)
+        params['with_accept_button'] = True
+        params['list'] = []
+
+        if ":groups:" == self.menu:
+            group = self.favourites.getGroup(sel.privateData)
+            if None is group:
+                return
+
+            params['title'] = _("Edit favourite group")
+
+            item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
+            item['validator'] = self._validateGroup
+            item['title'] = _("Name:")
+            item['input']['text'] = group.get('title', '')
+            params['list'].append(item)
+
+            item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
+            item['validator'] = None
+            item['title'] = _("Description:")
+            item['input']['text'] = group.get('desc', '')
+            params['list'].append(item)
+
+            self.session.openWithCallback(self._groupEdited, IPTVMultipleInputBox, params)
+        else:
+            if not self.loadGroupItems(self.menu):
+                return
+            sts, items = self.favourites.getGroupItems(self.menu)
+            if not sts:
+                self.session.open(MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
+                return
+
+            idx = self["list"].getCurrentIndex()
+            if idx < 0 or idx >= len(items):
+                return
+
+            params['title'] = _("Edit favourite item")
+
+            item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
+            item['validator'] = self._validateItem
+            item['title'] = _("Name:")
+            item['input']['text'] = items[idx].name
+            params['list'].append(item)
+
+            self.session.openWithCallback(self._itemEdited, IPTVMultipleInputBox, params)
+
+    def _validateGroup(self, text):
+        if 0 == len(text):
+            return False, _("Name cannot be empty.")
+        elif not IsValidFileName(text):
+            return False, _("Name is not valid.\nPlease remove special characters.")
+        return True, ""
+
+    def _validateItem(self, text):
+        if 0 == len(text):
+            return False, _("Name cannot be empty.")
+        return True, ""
+
+    def _groupEdited(self, retArg):
+        sel = self.getSelectedItem()
+        if None is sel or not retArg or 2 != len(retArg):
+            return
+
+        group = self.favourites.getGroup(sel.privateData)
+        if None is group:
+            return
+
+        group['title'] = retArg[0]
+        group['desc'] = retArg[1]
+        self.modified = True
+        self.displayList()
+
+    def _itemEdited(self, retArg):
+        sel = self.getSelectedItem()
+        if None is sel or not retArg or 1 > len(retArg):
+            return
+        if not self.loadGroupItems(self.menu):
+            return
+
+        sts, items = self.favourites.getGroupItems(self.menu)
+        if not sts:
+            self.session.open(MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
+            return
+
+        idx = self["list"].getCurrentIndex()
+        if idx < 0 or idx >= len(items):
+            return
+
+        items[idx].name = retArg[0]
+        self.modified = True
+        self.displayList()
+        try:
+            self["list"].moveToIndex(idx)
+        except Exception:
+            pass
 
     def _groupAdded(self, group):
         if None is not group:
