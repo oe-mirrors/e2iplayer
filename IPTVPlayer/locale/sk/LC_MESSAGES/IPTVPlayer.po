@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: 2025-11-24 08:18+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -864,6 +864,7 @@ msgstr "Predvolená kvalita videa:"
 msgid "Defaults"
 msgstr "Predvolený"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
 msgstr "Určite odstrániť z obľúbených?"
 
@@ -1127,6 +1128,9 @@ msgstr ""
 "CHYBA: potrubie sa nepodarilo skonštruovať: žiadny prvok \"playbin2\" \n"
 "Skontrolujte, či sú vo vašom systéme k dispozícii doplnky gstreamer."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Odkazy na používateľov"
@@ -1134,6 +1138,14 @@ msgstr "Odkazy na používateľov"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Prihlásenie zlyhalo."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Vyberte obľúbenú skupinu"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Úprava obľúbených položiek"
 
 msgid "Edit favourites"
 msgstr "Úprava obľúbených položiek"
@@ -1238,6 +1250,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Chyba pri komunikácii so serverom."
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Chyba pri odstraňovaní súboru \"%s\".\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Chyba pri odstraňovaní súboru \"%s\".\n"
@@ -1248,6 +1264,10 @@ msgstr "Chyba počas odstraňovania ladiaceho súboru."
 #, python-format
 msgid "Error getting file name: %s"
 msgstr "Chyba pri načítaní názvu súboru: %s"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Úprava obľúbených položiek"
 
 #, python-format
 msgid ""
@@ -1274,6 +1294,10 @@ msgstr "Chyba pri čítaní súboru \"%s\".\n"
 #, python-format
 msgid "Error renaming file: %s"
 msgstr "Chyba pri premenovaní súboru: %s"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Úprava obľúbených položiek"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1377,13 +1401,21 @@ msgstr "Neúspešné: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr "Závažná chyba: konzolaZápis zlyhal!"
 
-msgid "Favourites"
-msgstr "Obľúbené"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Obľúbené skupiny"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Skupina s id[%s] sa nenašla."
+
+msgid "Favorites"
+msgstr "Obľúbené"
+
+msgid "Favorites groups"
+msgstr "Obľúbené skupiny"
+
+msgid "Favorites manager"
 msgstr "Správca obľúbených položiek"
 
 #, python-format
@@ -1732,10 +1764,6 @@ msgstr "Zdá sa, že nástroj na rozbalenie nie je nainštalovaný."
 
 msgid "Italian"
 msgstr "Taliansky"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr "Položka %s bola odstránená!"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -902,8 +902,9 @@ msgstr "Формат відео-по замовчуванню:"
 msgid "Defaults"
 msgstr "по замовчуванню"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
-msgstr ""
+msgstr "Додати до вибраного"
 
 msgid "Delete"
 msgstr ""
@@ -1181,6 +1182,9 @@ msgstr ""
 "ПОМИЛКА: Не вдалося створити:, відсутність контролю: відсутність елементу \"playbin2 \" \n"
 "Перевірте встанолення GStreamer плагіни в вашій системі."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Лінки користувача"
@@ -1188,6 +1192,14 @@ msgstr "Лінки користувача"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Помилка входу."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Виберіть групу вибраного"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Редагувати вибране"
 
 msgid "Edit favourites"
 msgstr "Редагувати вибране"
@@ -1292,6 +1304,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr ""
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Помилка видалення файлів \"%s\" .\n"
+
 #, fuzzy, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Помилка видалення файлів \"%s\" .\n"
@@ -1302,6 +1318,10 @@ msgstr ""
 #, fuzzy, python-format
 msgid "Error getting file name: %s"
 msgstr "Помилка видалення файлів \"%s\" .\n"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Редагувати вибране"
 
 #, python-format
 msgid ""
@@ -1329,6 +1349,10 @@ msgstr "Помилка читання файлу \"%s\" .\n"
 #, fuzzy, python-format
 msgid "Error renaming file: %s"
 msgstr "Помилка читання файлу \"%s\" .\n"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Редагувати вибране"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1437,13 +1461,21 @@ msgid "Fatal error: consoleWrite failed!"
 msgstr ""
 
 #, fuzzy
-msgid "Favourites"
-msgstr "Вибране"
-
-msgid "Favourites groups"
+msgid "Favorite group not found."
 msgstr "Група Вибране"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Група з ідентифікатором[%s] не знайдена."
+
+#, fuzzy
+msgid "Favorites"
+msgstr "Вибране"
+
+msgid "Favorites groups"
+msgstr "Група Вибране"
+
+msgid "Favorites manager"
 msgstr "Менеджер вибраного"
 
 #, fuzzy, python-format
@@ -1806,10 +1838,6 @@ msgstr ""
 
 msgid "Italian"
 msgstr "Італія"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr ""
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1053,10 +1053,19 @@ msgid ""
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
 
+msgid "Edit"
+msgstr ""
+
 msgid "Edit User Links"
 msgstr ""
 
 msgid "Edit failed."
+msgstr ""
+
+msgid "Edit favourite group"
+msgstr ""
+
+msgid "Edit favourite item"
 msgstr ""
 
 msgid "Edit favourites"
@@ -1154,6 +1163,9 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr ""
 
+msgid "Error deleting favourite item."
+msgstr ""
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr ""
@@ -1163,6 +1175,9 @@ msgstr ""
 
 #, python-format
 msgid "Error getting file name: %s"
+msgstr ""
+
+msgid "Error loading favorites."
 msgstr ""
 
 #, python-format
@@ -1187,6 +1202,9 @@ msgstr ""
 
 #, python-format
 msgid "Error renaming file: %s"
+msgstr ""
+
+msgid "Error saving favorites."
 msgstr ""
 
 msgid "Error while loading watch data"
@@ -1290,13 +1308,19 @@ msgstr ""
 msgid "Fatal error: consoleWrite failed!"
 msgstr ""
 
-msgid "Favourites"
+msgid "Favorite group not found."
 msgstr ""
 
-msgid "Favourites groups"
+msgid "Favorite item not found."
 msgstr ""
 
-msgid "Favourites manager"
+msgid "Favorites"
+msgstr ""
+
+msgid "Favorites groups"
+msgstr ""
+
+msgid "Favorites manager"
 msgstr ""
 
 #, python-format
@@ -1630,10 +1654,6 @@ msgid "It seems that unzip utility is not installed."
 msgstr ""
 
 msgid "Italian"
-msgstr ""
-
-#, python-format
-msgid "Item %s removed!"
 msgstr ""
 
 #, python-format

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -1103,6 +1103,9 @@ msgid ""
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Bağlantı önbelleğini kullan"
@@ -1110,6 +1113,14 @@ msgstr "Bağlantı önbelleğini kullan"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Giriş başarısız."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Favori grupları"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Favorileri düzenle"
 
 msgid "Edit favourites"
 msgstr "Favorileri düzenle"
@@ -1212,6 +1223,9 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Sunucu ile iletişim hatası."
 
+msgid "Error deleting favourite item."
+msgstr ""
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr ""
@@ -1222,6 +1236,10 @@ msgstr ""
 #, fuzzy, python-format
 msgid "Error getting file name: %s"
 msgstr "Dosya adı ayarla"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Favorileri düzenle"
 
 #, python-format
 msgid ""
@@ -1246,6 +1264,10 @@ msgstr ""
 #, python-format
 msgid "Error renaming file: %s"
 msgstr ""
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Favorileri düzenle"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1354,13 +1376,21 @@ msgstr "Etkin: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr ""
 
-msgid "Favourites"
-msgstr "Favoriler"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Favori grupları"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Favori grupları"
+
+msgid "Favorites"
+msgstr "Favoriler"
+
+msgid "Favorites groups"
+msgstr "Favori grupları"
+
+msgid "Favorites manager"
 msgstr "Favori yöneticisi"
 
 #, python-format
@@ -1716,10 +1746,6 @@ msgstr ""
 
 msgid "Italian"
 msgstr "İtalyanca"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr ""
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

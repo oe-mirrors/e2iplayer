@@ -747,7 +747,7 @@ class E2iPlayerWidget(Screen):
             elif ret[1] == 'EDIT_FAV':
                 self.session.openWithCallback(self.editFavouritesCallback, IPTVFavouritesMainWidget)
             elif ret[1] == 'DELETE_FAV':
-                self.session.openWithCallback(self.deleteFavouriteItem, MessageBox, _('Definitely remove from favourites?'), type=MessageBox.TYPE_YESNO, timeout=10)
+                self.session.openWithCallback(self.deleteFavouriteItem, MessageBox, _('Definitely remove from favorites?'), type=MessageBox.TYPE_YESNO, timeout=10)
             elif ret[1] == 'ADD_USER_LINK':
                 try:
                     currSelIndex = self.getSelIndex()
@@ -789,7 +789,7 @@ class E2iPlayerWidget(Screen):
             try:
                 helper = IPTVFavourites(GetFavouritesDir())
                 if not helper.load():
-                    self.session.open(MessageBox, _('Error loading favourites.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                    self.session.open(MessageBox, _('Error loading favorites.'), type=MessageBox.TYPE_ERROR, timeout=5)
                     return
 
                 groups = helper.getGroups()
@@ -822,7 +822,7 @@ class E2iPlayerWidget(Screen):
                             break
 
                     if not groupId or groupIdx < 0:
-                        self.session.open(MessageBox, _('Favourite group not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                        self.session.open(MessageBox, _('Favorite group not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
                         return
 
                     if not helper.delGroup(groupId):
@@ -830,7 +830,7 @@ class E2iPlayerWidget(Screen):
                         return
 
                     if not helper.save():
-                        self.session.open(MessageBox, _('Error saving favourites.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                        self.session.open(MessageBox, _('Error saving favorites.'), type=MessageBox.TYPE_ERROR, timeout=5)
                         return
 
                     del self.currList[currSelIndex]
@@ -867,22 +867,22 @@ class E2iPlayerWidget(Screen):
                         break
 
                 if not realGroupId:
-                    self.session.open(MessageBox, _('Favourite group not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                    self.session.open(MessageBox, _('Favorite group not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
                     return
 
                 sts, groupItems = helper.getGroupItems(realGroupId)
                 if not sts:
-                    self.session.open(MessageBox, _('Favourite group not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                    self.session.open(MessageBox, _('Favorite group not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
                     return
 
                 if currSelIndex >= len(groupItems):
-                    self.session.open(MessageBox, _('Favourite item not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                    self.session.open(MessageBox, _('Favorite item not found.'), type=MessageBox.TYPE_ERROR, timeout=5)
                     return
 
                 helper.delGroupItem(currSelIndex, realGroupId)
 
                 if not helper.save():
-                    self.session.open(MessageBox, _('Error saving favourites.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                    self.session.open(MessageBox, _('Error saving favorites.'), type=MessageBox.TYPE_ERROR, timeout=5)
                     return
 
                 del self.currList[currSelIndex]
@@ -1350,7 +1350,7 @@ class E2iPlayerWidget(Screen):
             if hostName == "localmedia":
                 title = _("LocalMedia")
             elif hostName == "favourites":
-                title = _("Favourites")
+                title = _("Favorites")
             else:
                 try:
                     _temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)

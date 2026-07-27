@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer OE-Mirrors Version\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: polinene\n"
 "Language-Team: polinene\n"
@@ -863,6 +863,7 @@ msgstr "Calidad de video por defecto:"
 msgid "Defaults"
 msgstr "Por defecto"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
 msgstr "Eliminar definitivamente de favoritos?"
 
@@ -1126,6 +1127,9 @@ msgstr ""
 "ERROR: No se ha podido construir: ningún elemento \"playbin2\" \n"
 "Por favor compruebe si el plugin gstreamer está disponible en su sistema."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Enlaces del Usuario"
@@ -1133,6 +1137,14 @@ msgstr "Enlaces del Usuario"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Fallo en inicio de sesión."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Seleccione grupo favorito"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Editar favoritos"
 
 msgid "Edit favourites"
 msgstr "Editar favoritos"
@@ -1237,6 +1249,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Error de comunicación con el servidor."
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Error al eliminar archivo \"%s\".\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Error al eliminar archivo \"%s\".\n"
@@ -1247,6 +1263,10 @@ msgstr "Error mientras se eliminaba archivo de registro."
 #, python-format
 msgid "Error getting file name: %s"
 msgstr "Error adquiriendo nombre de archivo: %s"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Editar favoritos"
 
 #, python-format
 msgid ""
@@ -1273,6 +1293,10 @@ msgstr "Error al leer archivo \"%s\".\n"
 #, python-format
 msgid "Error renaming file: %s"
 msgstr "Error renombrando archivo: %s"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Editar favoritos"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1376,13 +1400,21 @@ msgstr "Fallo: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr ""
 
-msgid "Favourites"
-msgstr "Favoritos"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Grupos favoritos"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Grupo con id[%s] no se encuentra."
+
+msgid "Favorites"
+msgstr "Favoritos"
+
+msgid "Favorites groups"
+msgstr "Grupos favoritos"
+
+msgid "Favorites manager"
 msgstr "Administrador de favoritos"
 
 #, python-format
@@ -1733,10 +1765,6 @@ msgstr "Parece que utilidad descompresora no está instalada."
 
 msgid "Italian"
 msgstr "Italiano"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr "Se ha eliminado el item Item %s!"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

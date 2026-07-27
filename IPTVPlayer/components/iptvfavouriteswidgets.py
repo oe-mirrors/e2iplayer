@@ -172,7 +172,7 @@ class IPTVFavouritesMainWidget(Screen):
          <widget name="title" position="5,47"  zPosition="1" size="%d,23" font="Regular;20" transparent="1" backgroundColor="#00000000"/>
         </screen>
     """ % (
-        _("Favourites manager"),
+        _("Favorites manager"),
         sz_w, sz_h,  # size
         GetIconDir("red.png"),
         GetIconDir("green.png"),
@@ -197,7 +197,7 @@ class IPTVFavouritesMainWidget(Screen):
         self.IDS_DISABLE_REORDERING = _('Disable reordering')
         self.reorderingMode = False
 
-        self["title"] = Label(_("Favourites groups"))
+        self["title"] = Label(_("Favorites groups"))
         self["label_red"] = Label(_("Remove group"))
         self["label_yellow"] = Label(self.IDS_ENABLE_REORDERING)
         self["label_green"] = Label(_("Add new group"))
@@ -289,7 +289,7 @@ class IPTVFavouritesMainWidget(Screen):
             else:
                 self.close(False)
         else:
-            self["title"].setText(_("Favourites groups"))
+            self["title"].setText(_("Favorites groups"))
             self["label_red"].setText(_("Remove group"))
             self["label_green"].setText(_("Add new group"))
             self["label_blue"].setText(_("Edit"))

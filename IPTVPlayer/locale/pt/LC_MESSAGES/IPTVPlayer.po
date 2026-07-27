@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -859,8 +859,9 @@ msgstr "Qualidade de vídeo padrão:"
 msgid "Defaults"
 msgstr ""
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
-msgstr ""
+msgstr "Adicionar item aos favorios"
 
 msgid "Delete"
 msgstr ""
@@ -1121,12 +1122,23 @@ msgid ""
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Links do utilizador"
 
 #, fuzzy
 msgid "Edit failed."
+msgstr "Editar favoritos"
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Selecionar o grupo favorito"
+
+#, fuzzy
+msgid "Edit favourite item"
 msgstr "Editar favoritos"
 
 msgid "Edit favourites"
@@ -1232,6 +1244,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr ""
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Erro ao apaga ficheiro \"%s\".\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Erro ao apaga ficheiro \"%s\".\n"
@@ -1243,6 +1259,10 @@ msgstr "Erro ao apaga ficheiro \"%s\".\n"
 #, fuzzy, python-format
 msgid "Error getting file name: %s"
 msgstr "Erro ao apaga ficheiro \"%s\".\n"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Editar favoritos"
 
 #, python-format
 msgid ""
@@ -1267,6 +1287,10 @@ msgstr "Erro ao ler ficheiro \"%s\".\n"
 #, fuzzy, python-format
 msgid "Error renaming file: %s"
 msgstr "Erro ao ler ficheiro \"%s\".\n"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Editar favoritos"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1374,13 +1398,21 @@ msgstr ""
 msgid "Fatal error: consoleWrite failed!"
 msgstr ""
 
-msgid "Favourites"
-msgstr "Favoritos"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Grupos favoritos"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Grupo com id[%s] não encontrado."
+
+msgid "Favorites"
+msgstr "Favoritos"
+
+msgid "Favorites groups"
+msgstr "Grupos favoritos"
+
+msgid "Favorites manager"
 msgstr "Gestor de Favoritos"
 
 #, fuzzy, python-format
@@ -1730,10 +1762,6 @@ msgid "It seems that unzip utility is not installed."
 msgstr ""
 
 msgid "Italian"
-msgstr ""
-
-#, python-format
-msgid "Item %s removed!"
 msgstr ""
 
 #, python-format

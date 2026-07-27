@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: 2025-11-24 07:51+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -864,6 +864,7 @@ msgstr "Качество видео по умолчанию:"
 msgid "Defaults"
 msgstr "По умолчанию"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
 msgstr "Точно удалить из избранного?"
 
@@ -1127,6 +1128,9 @@ msgstr ""
 "СТОП: невозможно проложить маршрут: нет элемента \"playbin2\" \n"
 "Просим узнать, имеются ли в вашей системе плагины gstreamer."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Пользовательские ссылки"
@@ -1134,6 +1138,14 @@ msgstr "Пользовательские ссылки"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Ошибка входа."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Выбрать любимую группу"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Изменить избранное"
 
 msgid "Edit favourites"
 msgstr "Изменить избранное"
@@ -1238,6 +1250,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Ошибка связи с сервером."
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Ошибка удаления файла \"%s\".\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Ошибка удаления файла \"%s\".\n"
@@ -1248,6 +1264,10 @@ msgstr "Ошибка при удалении отладочного файла."
 #, python-format
 msgid "Error getting file name: %s"
 msgstr "Ошибка получения имени файла: %s"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Изменить избранное"
 
 #, python-format
 msgid ""
@@ -1274,6 +1294,10 @@ msgstr "Ошибка чтения файла \"%s\".\n"
 #, python-format
 msgid "Error renaming file: %s"
 msgstr "Ошибка переименования файла: %s"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Изменить избранное"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1377,13 +1401,21 @@ msgstr "Провал: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr "Ужасная ошибка: консольЗапись не прошла!"
 
-msgid "Favourites"
-msgstr "Избранные"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Избранные группы"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Группа с id[%s] не найдена."
+
+msgid "Favorites"
+msgstr "Избранные"
+
+msgid "Favorites groups"
+msgstr "Избранные группы"
+
+msgid "Favorites manager"
 msgstr "Менеджер избранного"
 
 #, python-format
@@ -1732,10 +1764,6 @@ msgstr "Очевидно, что утилита unzip не установлен�
 
 msgid "Italian"
 msgstr "Итальянский"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr "Элемент %s удален!"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

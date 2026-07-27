@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: 2026-03-14 12:34+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -855,6 +855,7 @@ msgstr "جودة الفيديو الافتراضية:"
 msgid "Defaults"
 msgstr "افتراضي"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
 msgstr "هل تريد الحذف من المفضلة بشكل نهائي؟"
 
@@ -1117,6 +1118,9 @@ msgstr ""
 "خطأ: تعذر إنشاء خط التشغيل: العنصر \"playbin2\" غير موجود\n"
 "يرجى التأكد من توفر إضافات gstreamer في النظام."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "روابط المستخدم"
@@ -1124,6 +1128,14 @@ msgstr "روابط المستخدم"
 #, fuzzy
 msgid "Edit failed."
 msgstr "فشل تسجيل الدخول."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "اختر مجموعة المفضلة"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "تعديل المفضلة"
 
 msgid "Edit favourites"
 msgstr "تعديل المفضلة"
@@ -1228,6 +1240,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "حدث خطأ أثناء الاتصال بالخادم."
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "حدث خطأ أثناء حذف الملف \"%s\".\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "حدث خطأ أثناء حذف الملف \"%s\".\n"
@@ -1238,6 +1254,10 @@ msgstr "حدث خطأ أثناء حذف ملف التصحيح."
 #, python-format
 msgid "Error getting file name: %s"
 msgstr "حدث خطأ أثناء الحصول على اسم الملف: %s"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "تعديل المفضلة"
 
 #, python-format
 msgid ""
@@ -1264,6 +1284,10 @@ msgstr "حدث خطأ أثناء قراءة الملف \"%s\".\n"
 #, python-format
 msgid "Error renaming file: %s"
 msgstr "حدث خطأ أثناء إعادة تسمية الملف: %s"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "تعديل المفضلة"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1367,13 +1391,21 @@ msgstr "فشل: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr "خطأ فادح: فشل في الكتابة على وحدة التحكم!"
 
-msgid "Favourites"
-msgstr "المفضلة"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "مجموعات المفضلة"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "لم يتم العثور على مجموعة بالمعرف [%s]."
+
+msgid "Favorites"
+msgstr "المفضلة"
+
+msgid "Favorites groups"
+msgstr "مجموعات المفضلة"
+
+msgid "Favorites manager"
 msgstr "مدير المفضلة"
 
 #, python-format
@@ -1722,10 +1754,6 @@ msgstr "يبدو أن أداة unzip غير مثبتة."
 
 msgid "Italian"
 msgstr "الإيطالية"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr "تمت إزالة العنصر %s!"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

@@ -39,7 +39,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return _('Favourites')
+    return _("Favorites")
 
 
 class Favourites(CBaseHostClass):

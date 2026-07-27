@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Lululla <ekekaz@gmail.com>\n"
 "Language-Team: lululla <ekekaz@gmail.com>\n"
@@ -864,6 +864,7 @@ msgstr "Qualità video predefinita:"
 msgid "Defaults"
 msgstr "Predefinito"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
 msgstr "Vuoi sicuramente rimuoverlo dai preferiti?"
 
@@ -1127,6 +1128,9 @@ msgstr ""
 "ERRORE nella costruzione della pipeline: manca l'elemento \"playbin2\" \n"
 "Controlla se i plugin di gstreamer sono disponibili nel tuo sistema."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Link utenti"
@@ -1134,6 +1138,14 @@ msgstr "Link utenti"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Accesso fallito."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Seleziona gruppo preferiti"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Modifica preferiti"
 
 msgid "Edit favourites"
 msgstr "Modifica preferiti"
@@ -1238,6 +1250,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Errore di comunicazione con il server."
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Errore eliminazione file \"%s\".\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Errore eliminazione file \"%s\".\n"
@@ -1248,6 +1264,10 @@ msgstr "Errore durante l'eliminazione del file di debug."
 #, python-format
 msgid "Error getting file name: %s"
 msgstr "Errore durante il recupero del nome del file: %s"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Modifica preferiti"
 
 #, python-format
 msgid ""
@@ -1274,6 +1294,10 @@ msgstr "Errore lettura file \"%s\".\n"
 #, python-format
 msgid "Error renaming file: %s"
 msgstr "Errore durante la ridenominazione del file: %s"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Modifica preferiti"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1377,13 +1401,21 @@ msgstr "Fallito: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr "Errore grave: Scrittura su console fallita!"
 
-msgid "Favourites"
-msgstr "Preferiti"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Gruppi preferiti"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Gruppo con id [%s] non trovato."
+
+msgid "Favorites"
+msgstr "Preferiti"
+
+msgid "Favorites groups"
+msgstr "Gruppi preferiti"
+
+msgid "Favorites manager"
 msgstr "Gestore preferiti"
 
 #, python-format
@@ -1732,10 +1764,6 @@ msgstr "Sembra che l'utility unzip non sia installato."
 
 msgid "Italian"
 msgstr "Italiano"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr "Elemento %s rimosso!"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

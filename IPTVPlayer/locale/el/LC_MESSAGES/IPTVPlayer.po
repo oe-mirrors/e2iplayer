@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: 2026-07-14 22:10+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -846,6 +846,7 @@ msgstr "Προεπιλεγμένη ποιότητα βίντεο:"
 msgid "Defaults"
 msgstr "Προεπιλογές"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
 msgstr "Σίγουρα θέλετε να αφαιρεθεί από τα αγαπημένα;"
 
@@ -1103,6 +1104,9 @@ msgstr ""
 "ΣΦΑΛΜΑ: δεν ήταν δυνατή η δημιουργία pipeline: δεν υπάρχει στοιχείο \"playbin2\" \n"
 "Παρακαλώ ελέγξτε αν τα πρόσθετα gstreamer είναι διαθέσιμα στο σύστημά σας."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Σύνδεσμοι χρήστη"
@@ -1110,6 +1114,14 @@ msgstr "Σύνδεσμοι χρήστη"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Η σύνδεση απέτυχε."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Επιλογή αγαπημένης ομάδας"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Επεξεργασία αγαπημένων"
 
 msgid "Edit favourites"
 msgstr "Επεξεργασία αγαπημένων"
@@ -1212,6 +1224,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Σφάλμα επικοινωνίας με τον διακομιστή."
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Σφάλμα κατά τη διαγραφή του αρχείου \"%s\".\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Σφάλμα κατά τη διαγραφή του αρχείου \"%s\".\n"
@@ -1222,6 +1238,10 @@ msgstr "Σφάλμα κατά τη διαγραφή του αρχείου εντ
 #, python-format
 msgid "Error getting file name: %s"
 msgstr "Σφάλμα κατά τη λήψη ονόματος αρχείου: %s"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Επεξεργασία αγαπημένων"
 
 #, python-format
 msgid ""
@@ -1248,6 +1268,10 @@ msgstr "Σφάλμα ανάγνωσης του αρχείου \"%s\".\n"
 #, python-format
 msgid "Error renaming file: %s"
 msgstr "Σφάλμα μετονομασίας αρχείου: %s"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Επεξεργασία αγαπημένων"
 
 msgid "Error while loading watch data"
 msgstr "Σφάλμα κατά τη φόρτωση των δεδομένων προβολής"
@@ -1350,13 +1374,21 @@ msgstr "Αποτυχία: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr "Μοιραίο σφάλμα: η εγγραφή στην κονσόλα απέτυχε!"
 
-msgid "Favourites"
-msgstr "Αγαπημένα"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Ομάδες αγαπημένων"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Η ομάδα με το id[%s] δεν βρέθηκε."
+
+msgid "Favorites"
+msgstr "Αγαπημένα"
+
+msgid "Favorites groups"
+msgstr "Ομάδες αγαπημένων"
+
+msgid "Favorites manager"
 msgstr "Διαχείριση αγαπημένων"
 
 #, python-format
@@ -1695,10 +1727,6 @@ msgstr "Φαίνεται ότι η εφαρμογή unzip δεν είναι εγ
 
 msgid "Italian"
 msgstr "Ιταλικά"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr "Το στοιχείο %s διαγράφηκε!"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

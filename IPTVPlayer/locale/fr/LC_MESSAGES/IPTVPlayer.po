@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iptvplayer-for-e 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: 2018-07-28 16:39+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -888,8 +888,9 @@ msgstr "Qualité vidéo par défaut:"
 msgid "Defaults"
 msgstr "Défaut"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
-msgstr ""
+msgstr "Ajouter un élément aux favoris"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -1157,6 +1158,9 @@ msgstr ""
 "ERREUR : le pipeline n'a pas pu être construit : pas d'élément \"playbin2\".\n"
 "Veuillez vérifier si des plugins gstreamer sont disponibles dans votre système."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Liens d’utilisateur"
@@ -1164,6 +1168,14 @@ msgstr "Liens d’utilisateur"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Login a échoué."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Sélectionner un groupe favori"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Modifier les favoris"
 
 msgid "Edit favourites"
 msgstr "Modifier les favoris"
@@ -1270,6 +1282,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Erreur de communication avec le serveur."
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Erreur de suppression du fichier \"%s\".\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Erreur de suppression du fichier \"%s\".\n"
@@ -1280,6 +1296,10 @@ msgstr "Erreur lors de la suppression du fichier de déboggage."
 #, fuzzy, python-format
 msgid "Error getting file name: %s"
 msgstr "Erreur de suppression du fichier \"%s\".\n"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Modifier les favoris"
 
 #, python-format
 msgid ""
@@ -1307,6 +1327,10 @@ msgstr "Erreur de lecture du fichier \"%s\".\n"
 #, fuzzy, python-format
 msgid "Error renaming file: %s"
 msgstr "Erreur de lecture du fichier \"%s\".\n"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Modifier les favoris"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1413,13 +1437,21 @@ msgstr "Date: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr "Erreur fatale : consoleWrite a échoué!"
 
-msgid "Favourites"
-msgstr "Favoris"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Groupes de favoris"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Groupe avec id[%s] non trouvé."
+
+msgid "Favorites"
+msgstr "Favoris"
+
+msgid "Favorites groups"
+msgstr "Groupes de favoris"
+
+msgid "Favorites manager"
 msgstr "Gestionnaire de favoris"
 
 #, python-format
@@ -1774,10 +1806,6 @@ msgstr "Il semble que l'utilitaire unzip n'est pas installé."
 
 msgid "Italian"
 msgstr "Italien"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr ""
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

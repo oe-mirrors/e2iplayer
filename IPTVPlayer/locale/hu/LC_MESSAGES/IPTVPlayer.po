@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: 2025-11-24 07:59+0100\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -864,6 +864,7 @@ msgstr "Alapértelmezett videóminőség:"
 msgid "Defaults"
 msgstr "Alapértelmezett"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
 msgstr "Biztosan eltávolítom a kedvencek közül?"
 
@@ -1127,6 +1128,9 @@ msgstr ""
 "HIBA:  \"playbin2\" hiányzik. \n"
 "Ellenőrizd a gstreamer plugin meglétét."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Felhasználói linkek"
@@ -1134,6 +1138,14 @@ msgstr "Felhasználói linkek"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Bejelentkezés sikertelen."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Kedvenc csoport kiválasztása"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Kedvencek szerkesztése"
 
 msgid "Edit favourites"
 msgstr "Kedvencek szerkesztése"
@@ -1238,6 +1250,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Hiba a szerverrel való kommunikáció során."
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Hiba a(z) \"%s\" fájl törlésekor.\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Hiba a(z) \"%s\" fájl törlésekor.\n"
@@ -1248,6 +1264,10 @@ msgstr "Hiba történt a hibakereső fájl törlése során."
 #, python-format
 msgid "Error getting file name: %s"
 msgstr "Hiba a fájlnév lekérésekor: %s"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Kedvencek szerkesztése"
 
 #, python-format
 msgid ""
@@ -1274,6 +1294,10 @@ msgstr "Hiba a(z) \"%s\" fájl olvasásakor.\n"
 #, python-format
 msgid "Error renaming file: %s"
 msgstr "Hiba a fájl átnevezésekor: %s"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Kedvencek szerkesztése"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1377,13 +1401,21 @@ msgstr "Sikertelen: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr "Végzetes hiba: Konzolba írás sikertelen!"
 
-msgid "Favourites"
-msgstr "Kedvencek"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Kedvenc csoportok"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "A(z)[%s] azonosítójú csoport nem található."
+
+msgid "Favorites"
+msgstr "Kedvencek"
+
+msgid "Favorites groups"
+msgstr "Kedvenc csoportok"
+
+msgid "Favorites manager"
 msgstr "Kedvencek kezelő"
 
 #, python-format
@@ -1732,10 +1764,6 @@ msgstr "Úgy tűnik, hogy az unzip segédprogram nincs telepítve."
 
 msgid "Italian"
 msgstr "Olasz"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr "%s elem eltávolítva!"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
@@ -885,8 +885,9 @@ msgstr "Domyślny format wideo:"
 msgid "Defaults"
 msgstr "Domyślny"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
-msgstr ""
+msgstr "Dodaj do ulubionych"
 
 msgid "Delete"
 msgstr "Usunąć"
@@ -1153,6 +1154,9 @@ msgstr ""
 "BŁĄD: gstreamer nie może rozpocząć przetwarzania danych. Brak elementu \"playbin2\" \n"
 "Sprawdź, czy element \"playbin2\" jest dostępny w systemie."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Linki użytkownika"
@@ -1160,6 +1164,14 @@ msgstr "Linki użytkownika"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Logowanie nieudane."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Wybierz grupę ulubionych"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Edytuj ulubione"
 
 msgid "Edit favourites"
 msgstr "Edytuj ulubione"
@@ -1268,6 +1280,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Błąd komunikacji z serwerem."
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Bład usunięcia pliku \"%s\".\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Bład usunięcia pliku \"%s\".\n"
@@ -1278,6 +1294,10 @@ msgstr "Błąd podczas usuwania pliku debugowania."
 #, fuzzy, python-format
 msgid "Error getting file name: %s"
 msgstr "Bład usunięcia pliku \"%s\".\n"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Edytuj ulubione"
 
 #, python-format
 msgid ""
@@ -1304,6 +1324,10 @@ msgstr "Bład odczytu pliku\"%s\".\n"
 #, fuzzy, python-format
 msgid "Error renaming file: %s"
 msgstr "Bład odczytu pliku\"%s\".\n"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Edytuj ulubione"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1410,13 +1434,21 @@ msgstr "Nie powiodło się: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr "Błąd krytyczny: zapis na konsoli nie powiódł się!"
 
-msgid "Favourites"
-msgstr "Ulubione"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Grupy ulubionych"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Grupa o identyfikatorze [%s] nie została odnaleziona."
+
+msgid "Favorites"
+msgstr "Ulubione"
+
+msgid "Favorites groups"
+msgstr "Grupy ulubionych"
+
+msgid "Favorites manager"
 msgstr "Menadżer ulubionych"
 
 #, python-format
@@ -1769,10 +1801,6 @@ msgstr "Wygląda na to, że narzędzie unzip nie jest zainstalowane."
 
 msgid "Italian"
 msgstr "Włoskie"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr "Obiekt %s usunięty!"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."

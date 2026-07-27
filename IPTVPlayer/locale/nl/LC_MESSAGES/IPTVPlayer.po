@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 13:11+0200\n"
+"POT-Creation-Date: 2026-07-27 15:40+0200\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -858,6 +858,7 @@ msgstr "Default video kwaliteit:"
 msgid "Defaults"
 msgstr "Standaard"
 
+#, fuzzy
 msgid "Definitely remove from favorites?"
 msgstr "Definitief uit de Favorieten verwijderen?"
 
@@ -1120,6 +1121,9 @@ msgstr ""
 "FOUT: pipeline kon niet worden gemaakt: geen element \"playbin2\" \n"
 "A.u.b. controleren of gstreamer plugins aanwezig zijn op uw systeem."
 
+msgid "Edit"
+msgstr ""
+
 #, fuzzy
 msgid "Edit User Links"
 msgstr "Mijn links"
@@ -1127,6 +1131,14 @@ msgstr "Mijn links"
 #, fuzzy
 msgid "Edit failed."
 msgstr "Aanmelden mislukt."
+
+#, fuzzy
+msgid "Edit favourite group"
+msgstr "Kies een favoriete groep"
+
+#, fuzzy
+msgid "Edit favourite item"
+msgstr "Favorieten bewerken"
 
 msgid "Edit favourites"
 msgstr "Favorieten bewerken"
@@ -1231,6 +1243,10 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Verbinden met de server mislukt."
 
+#, fuzzy
+msgid "Error deleting favourite item."
+msgstr "Fout bij verwijderen bestand \"%s\".\n"
+
 #, python-format
 msgid "Error deleting file \"%s\".\n"
 msgstr "Fout bij verwijderen bestand \"%s\".\n"
@@ -1241,6 +1257,10 @@ msgstr "Fout tijdens verwijderen van het debug bestand."
 #, python-format
 msgid "Error getting file name: %s"
 msgstr "Fout bij opvragen van bestandsnaam %s"
+
+#, fuzzy
+msgid "Error loading favorites."
+msgstr "Favorieten bewerken"
 
 #, python-format
 msgid ""
@@ -1267,6 +1287,10 @@ msgstr "Fout tijdens lezen bestand \"%s\".\n"
 #, python-format
 msgid "Error renaming file: %s"
 msgstr "Fout tijdens hernoemen bestand %s"
+
+#, fuzzy
+msgid "Error saving favorites."
+msgstr "Favorieten bewerken"
 
 msgid "Error while loading watch data"
 msgstr ""
@@ -1370,13 +1394,21 @@ msgstr "Mislukt: %s"
 msgid "Fatal error: consoleWrite failed!"
 msgstr "Fout: Console Write mislukt!"
 
-msgid "Favourites"
-msgstr "Favorieten"
-
-msgid "Favourites groups"
+#, fuzzy
+msgid "Favorite group not found."
 msgstr "Favoriet groepen"
 
-msgid "Favourites manager"
+#, fuzzy
+msgid "Favorite item not found."
+msgstr "Groep met id[%s] niet gevonden."
+
+msgid "Favorites"
+msgstr "Favorieten"
+
+msgid "Favorites groups"
+msgstr "Favoriet groepen"
+
+msgid "Favorites manager"
 msgstr "Favorieten manager"
 
 #, python-format
@@ -1725,10 +1757,6 @@ msgstr "Waarschijnlijk is de unzip functie niet geïnstalleerd."
 
 msgid "Italian"
 msgstr "Italiaans"
-
-#, python-format
-msgid "Item %s removed!"
-msgstr "Item %s is verwijderd!"
 
 #, python-format
 msgid "Item idx[%d] not found in group[%s]."
