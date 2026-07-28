@@ -163,14 +163,46 @@ class WkylinewebcamsComApi:
             list.append(params)
         return list
 
-    def listCams(self, cItem):
-        printDBG("WkylinewebcamsCom.listCams url[%s]" % cItem['url'])
-        result = []
-        sts, data = self.cm.getPage(cItem['url'])
-        if not sts:
-            return result
+    def _normalize_url(self, url):
+        """Normalizuj URL"""
+        if not url:
+            return ''
+        if not url.startswith('http'):
+            url = self.getFullUrl(url)
+        return url
 
-        # Szukanie kamer - kilka wzorców
+    def _generate_title_from_url(self, url):
+        """Generuj tytuł z URL"""
+        return url.split('/')[-1].replace('.html', '').replace('-', ' ').title()
+
+    def _extract_cams_from_matches(self, matches):
+        """Wyodrębnij kamery z dopasowań regex"""
+        found = []
+        for match in matches:
+            if len(match) >= 3:
+                url, icon, title = match[0], match[1], match[2]
+                if url and 'webcam' in url:
+                    found.append((url, icon, title))
+        return found
+
+    def _find_cams_original_method(self, data):
+        """Oryginalna metoda wyszukiwania kamer"""
+        found = []
+        data_parts = self.cm.ph.getAllItemsBeetwenMarkers(data, '</h1><hr>', '<div class="footer">')
+        if data_parts:
+            items = self.cm.ph.getAllItemsBeetwenMarkers(data_parts[0], '<a ', '</a>')
+            for item in items:
+                url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
+                icon = self.cm.ph.getSearchGroups(item, r'''"([^"]+?\.(?:jpg|webp))"''', 1, True)[0]
+                if url and 'webcam' in url:
+                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''', 1, True)[0])
+                    if not title:
+                        title = self.cleanHtmlStr(item)
+                    found.append((url, icon, title))
+        return found
+
+    def _find_cams(self, data):
+        """Szukanie kamer przy użyciu różnych wzorców"""
         patterns = [
             r'<div[^>]*class="[^"]*webcam-item[^"]*"[^>]*>.*?<a[^>]*href="([^"]+)"[^>]*>.*?<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"',
             r'<div[^>]*class="[^"]*cam[^"]*"[^>]*>.*?<a[^>]*href="([^"]+)"[^>]*>.*?<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"',
@@ -178,40 +210,22 @@ class WkylinewebcamsComApi:
             r'<a[^>]*href="([^"]*webcam[^"]*\.html)"[^>]*>.*?<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"',
         ]
 
-        found = []
         for pattern in patterns:
             matches = re.findall(pattern, data, re.DOTALL | re.IGNORECASE)
             if matches:
-                for match in matches:
-                    if len(match) >= 3:
-                        url, icon, title = match[0], match[1], match[2]
-                        if url and 'webcam' in url:
-                            found.append((url, icon, title))
+                found = self._extract_cams_from_matches(matches)
                 if found:
-                    break
+                    return found
+        return self._find_cams_original_method(data)
 
-        # Jeśli nie znaleziono, spróbuj oryginalną metodę
-        if not found:
-            data_parts = self.cm.ph.getAllItemsBeetwenMarkers(data, '</h1><hr>', '<div class="footer">')
-            if data_parts:
-                items = self.cm.ph.getAllItemsBeetwenMarkers(data_parts[0], '<a ', '</a>')
-                for item in items:
-                    url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
-                    icon = self.cm.ph.getSearchGroups(item, r'''"([^"]+?\.(?:jpg|webp))"''', 1, True)[0]
-                    if url and 'webcam' in url:
-                        title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''', 1, True)[0])
-                        if not title:
-                            title = self.cleanHtmlStr(item)
-                        found.append((url, icon, title))
-
-        # Dodawanie do listy
+    def _process_found_cams(self, found, cItem):
+        """Przetwarzanie znalezionych kamer i tworzenie listy"""
+        result = []
         for url, icon, title in found:
-            if not url.startswith('http'):
-                url = self.getFullUrl(url)
-            if icon and not icon.startswith('http'):
-                icon = self.getFullUrl(icon)
+            url = self._normalize_url(url)
+            icon = self._normalize_url(icon) if icon else ''
             if not title:
-                title = url.split('/')[-1].replace('.html', '').replace('-', ' ').title()
+                title = self._generate_title_from_url(url)
 
             params = dict(cItem)
             params.update({
@@ -221,7 +235,16 @@ class WkylinewebcamsComApi:
                 'type': 'video'
             })
             result.append(params)
+        return result
 
+    def listCams(self, cItem):
+        printDBG("WkylinewebcamsCom.listCams url[%s]" % cItem['url'])
+        sts, data = self.cm.getPage(cItem['url'])
+        if not sts:
+            return []
+
+        found = self._find_cams(data)
+        result = self._process_found_cams(found, cItem)
         printDBG("Found %d cameras" % len(result))
         return result
 
