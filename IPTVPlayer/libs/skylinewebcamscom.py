@@ -92,7 +92,7 @@ class WkylinewebcamsComApi:
                 titletext = self.cm.ph.getSearchGroups(item, '''html">([^"]+?)$''', 1, True)[0]
                 title = "%s: %s" % (continent.capitalize(), self.cleanHtmlStr(titletext))
                 if url != '' and title != '':
-                   tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})
+                    tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})
 
         tab = sorted(tab, key=lambda x: x['title'], reverse=True)
         for item in tab:
@@ -101,13 +101,13 @@ class WkylinewebcamsComApi:
             list.insert(0, params)
 
         tab = []
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'cat"><div class="container-fluid">', '</li>')[1]
-        catData = data.split('</a>')
+        data_cat = self.cm.ph.getDataBeetwenMarkers(data, 'cat"><div class="container-fluid">', '</li>')[1]
+        catData = data_cat.split('</a>')
         for item in catData:
-           url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
-           title = self.cleanHtmlStr("Category: " + self.cm.ph.getSearchGroups(item, '''class="tcam">([^<]+?)<''', 1, True)[0])
-           if url != '' and title != '':
-               tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})
+            url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
+            title = self.cleanHtmlStr("Category: " + self.cm.ph.getSearchGroups(item, '''class="tcam">([^<]+?)<''', 1, True)[0])
+            if url != '' and title != '':
+                tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})
 
         for item in tab[::-1]:
             params = dict(cItem)
@@ -115,9 +115,9 @@ class WkylinewebcamsComApi:
             list.insert(0, params)
 
         for idx in range(2):
-            if idx >= len(data):
+            if idx >= len(data_cat):
                 continue
-            catData = data[idx]
+            catData = data_cat[idx]
             catData = catData.split('</a>')
             if len(catData) < 2:
                 continue
@@ -138,9 +138,9 @@ class WkylinewebcamsComApi:
                 list.append(params)
 
         for item in STATIC_TAB:
-                params = dict(cItem)
-                params.update(item)
-                list.insert(0, params)
+            params = dict(cItem)
+            params.update(item)
+            list.insert(0, params)
         return list
 
     def listCams2(self, cItem):
@@ -172,13 +172,9 @@ class WkylinewebcamsComApi:
 
         # Szukanie kamer - kilka wzorców
         patterns = [
-            # Wzorzec 1: div z klasą webcam-item
             r'<div[^>]*class="[^"]*webcam-item[^"]*"[^>]*>.*?<a[^>]*href="([^"]+)"[^>]*>.*?<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"',
-            # Wzorzec 2: div z klasą cam
             r'<div[^>]*class="[^"]*cam[^"]*"[^>]*>.*?<a[^>]*href="([^"]+)"[^>]*>.*?<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"',
-            # Wzorzec 3: li z klasą webcam
             r'<li[^>]*class="[^"]*webcam[^"]*"[^>]*>.*?<a[^>]*href="([^"]+)"[^>]*>.*?<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"',
-            # Wzorzec 4: prosty link z webcam
             r'<a[^>]*href="([^"]*webcam[^"]*\.html)"[^>]*>.*?<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"',
         ]
 
