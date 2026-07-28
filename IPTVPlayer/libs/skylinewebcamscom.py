@@ -82,6 +82,7 @@ class WkylinewebcamsComApi:
             return list
 
         tab = []
+        # Pobieranie kontynentów i krajów
         statesPart = self.cm.ph.getDataBeetwenMarkers(data, 'class="dropdown-menu mega-dropdown-menu"', '<div class="collapse navbar')[1]
         stateData = statesPart.split('class="continent')
         for region in stateData:
@@ -92,7 +93,7 @@ class WkylinewebcamsComApi:
                 titletext = self.cm.ph.getSearchGroups(item, '''html">([^"]+?)$''', 1, True)[0]
                 title = "%s: %s" % (continent.capitalize(), self.cleanHtmlStr(titletext))
                 if url != '' and title != '':
-                   tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})  # explore_item
+                   tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})
 
         tab = sorted(tab, key=lambda x: x['title'], reverse=True)
         for item in tab:
@@ -100,27 +101,27 @@ class WkylinewebcamsComApi:
             params.update(item)
             list.insert(0, params)
 
+        # Kategorie
         tab = []
-        data = self.cm.ph.getDataBeetwenMarkers(data, 'cat"><div class="container-fluid">', '</li>')[1]
-        catData = data.split('</a>')
+        data_cat = self.cm.ph.getDataBeetwenMarkers(data, 'cat"><div class="container-fluid">', '</li>')[1]
+        catData = data_cat.split('</a>')
         for item in catData:
            url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
            title = self.cleanHtmlStr("Category: " + self.cm.ph.getSearchGroups(item, '''class="tcam">([^<]+?)<''', 1, True)[0])
            if url != '' and title != '':
-               tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})  # explore_item
+               tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})
 
         for item in tab[::-1]:
             params = dict(cItem)
             params.update(item)
             list.insert(0, params)
 
+        # Kategorie z cache
         for idx in range(2):
-            if idx >= len(data):
+            if idx >= len(data_cat):
                 continue
-            catData = data[idx]
+            catData = data_cat[idx]
             catData = catData.split('</a>')
-            if url != '' and title != '':
-                    tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})  # explore_item
             if len(catData) < 2:
                 continue
             catTitle = self.cleanHtmlStr(catData[0])
@@ -131,7 +132,7 @@ class WkylinewebcamsComApi:
                 url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
                 title = self.cleanHtmlStr(item)
                 if url != '' and title != '':
-                    tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})  # explore_item
+                    tab.append({'url': self.getFullUrl(url), 'title': title, 'cat': 'list_cams'})
             if len(tab):
                 tab.insert(0, {'url': self.getFullUrl(catUrl), 'title': _('All'), 'cat': 'list_cams'})
                 self.mainMenuCache[idx] = tab
@@ -166,26 +167,89 @@ class WkylinewebcamsComApi:
         return list
 
     def listCams(self, cItem):
-        printDBG("WkylinewebcamsCom.listCams")
+        printDBG("WkylinewebcamsCom.listCams url[%s]" % cItem['url'])
         list = []
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return list
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '</h1><hr>', '<div class="footer">')
-        if data:
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data[0], '<a ', '</a>')
-            for item in data:
+
+        # Próba znalezienia kamer różnymi metodami
+        found_items = []
+
+        # Metoda 1: Oryginalna metoda z markerami
+        data_parts = self.cm.ph.getAllItemsBeetwenMarkers(data, '</h1><hr>', '<div class="footer">')
+        if data_parts:
+            items = self.cm.ph.getAllItemsBeetwenMarkers(data_parts[0], '<a ', '</a>')
+            for item in items:
                 url = self.cm.ph.getSearchGroups(item, '''href="([^"]+?)"''', 1, True)[0]
                 icon = self.cm.ph.getSearchGroups(item, r'''"([^"]+?\.(?:jpg|webp))"''', 1, True)[0]
                 if '' == url:
                     continue
                 title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''alt="([^"]+?)"''', 1, True)[0])
                 if '' == title:
-                    continue
+                    title = self.cleanHtmlStr(item)
                 desc = self.cleanHtmlStr(item)
-                params = dict(cItem)
-                params.update({'title': title, 'url': self.getFullUrl(url), 'icon': self.getFullUrl(icon), 'desc': desc, 'type': 'video'})
-                list.append(params)
+                found_items.append((url, icon, title, desc))
+
+        # Metoda 2: Szukanie w strukturze z klasą webcam-item
+        if not found_items:
+            pattern = r'<div[^>]*?class="[^"]*?webcam-item[^"]*?"[^>]*?>.*?<a[^>]*?href="([^"]+?)"[^>]*?>.*?<img[^>]*?src="([^"]+?)"[^>]*?alt="([^"]*?)".*?</a>'
+            matches = re.findall(pattern, data, re.DOTALL | re.IGNORECASE)
+            for url, icon, title in matches:
+                if url:
+                    found_items.append((url, icon, title, ''))
+
+        # Metoda 3: Szukanie w strukturze z klasą cam
+        if not found_items:
+            pattern = r'<div[^>]*?class="[^"]*?cam[^"]*?"[^>]*?>.*?<a[^>]*?href="([^"]+?)"[^>]*?>.*?<img[^>]*?src="([^"]+?)"[^>]*?alt="([^"]*?)"'
+            matches = re.findall(pattern, data, re.DOTALL | re.IGNORECASE)
+            for url, icon, title in matches:
+                if url:
+                    found_items.append((url, icon, title, ''))
+
+        # Metoda 4: Szukanie w liście
+        if not found_items:
+            pattern = r'<li[^>]*?class="[^"]*?webcam[^"]*?"[^>]*?>.*?<a[^>]*?href="([^"]+?)"[^>]*?>.*?<img[^>]*?src="([^"]+?)"[^>]*?alt="([^"]*?)"'
+            matches = re.findall(pattern, data, re.DOTALL | re.IGNORECASE)
+            for url, icon, title in matches:
+                if url:
+                    found_items.append((url, icon, title, ''))
+
+        # Metoda 5: Proste szukanie linków
+        if not found_items:
+            links = re.findall(r'<a[^>]*?href="([^"]*?webcam[^"]*?)"[^>]*?>', data, re.IGNORECASE)
+            for link in links:
+                if link and not link.startswith('#'):
+                    # Szukaj tytułu i ikony w kontekście
+                    context = re.search(r'<a[^>]*?href="%s"[^>]*?>.*?<img[^>]*?src="([^"]+?)"[^>]*?alt="([^"]*?)"' % re.escape(link), data, re.DOTALL | re.IGNORECASE)
+                    if context:
+                        icon, title = context.group(1), context.group(2)
+                    else:
+                        icon, title = '', ''
+                    if not title:
+                        title = link.split('/')[-1].replace('.html', '').replace('-', ' ').title()
+                    found_items.append((link, icon, title, ''))
+
+        # Dodawanie znalezionych kamer do listy
+        for url, icon, title, desc in found_items:
+            if not url.startswith('http'):
+                url = self.getFullUrl(url)
+            if icon and not icon.startswith('http'):
+                icon = self.getFullUrl(icon)
+            if not title:
+                title = url.split('/')[-1].replace('.html', '').replace('-', ' ').title()
+
+            params = dict(cItem)
+            params.update({
+                'title': title,
+                'url': url,
+                'icon': icon,
+                'desc': desc or title,
+                'type': 'video'
+            })
+            list.append(params)
+
+        printDBG("Found %d cameras" % len(list))
         return list
 
     def exploreItem(self, cItem):
@@ -232,26 +296,52 @@ class WkylinewebcamsComApi:
         return list
 
     def getVideoLink(self, cItem):
-        printDBG("WkylinewebcamsCom.getVideoLink")
+        printDBG("WkylinewebcamsCom.getVideoLink url[%s]" % cItem.get('url', ''))
         urlsTab = []
         sts, data = self.cm.getPage(cItem['url'])
         if not sts:
             return urlsTab
-        if not self.cm.ph.getSearchGroups(data, '''(youtube.com/iframe_api)''', 1, True)[0]:
-            url = self.cm.ph.getSearchGroups(data, '''source:['"]([^"^']+?m3u8[^"^']*?)["']''', 1, True)[0]
-            if url.startswith('http'):
-                urlsTab = getDirectM3U8Playlist(url)
-                return urlsTab
-            elif url.startswith('livee.m3u8'):
-                url = 'https://hd-auth.skylinewebcams.com/' + url.replace('livee', 'live')
-                urlsTab = getDirectM3U8Playlist(url)
-                return urlsTab
-        else:
+
+        # Sprawdzenie czy to YouTube
+        if self.cm.ph.getSearchGroups(data, '''(youtube.com/iframe_api)''', 1, True)[0]:
             url = self.cm.ph.getSearchGroups(data, '''videoId:\'([^']+?)\'''', 1, True)[0]
             if url:
                 url = 'https://www.youtube.com/watch?v=%s' % url
                 url = self.up.getVideoLink(url)
-                urlsTab = getDirectM3U8Playlist(url)
-                urlsTab.append({'name': "YouTuBe", 'url': url})
+                if url:
+                    urlsTab.append({'name': "YouTube", 'url': url})
                 return urlsTab
+
+        # Szukanie URL strumienia
+        video_url = ''
+        patterns = [
+            r'''source:\s*['"]([^"']+?m3u8[^"']*?)['"]''',
+            r'''file:\s*['"]([^"']+?m3u8[^"']*?)['"]''',
+            r'''video\s*src\s*=\s*['"]([^"']+?m3u8[^"']*?)['"]''',
+            r'''data-video-url\s*=\s*['"]([^"']+?m3u8[^"']*?)['"]''',
+            r'''<video[^>]*?src="([^"]+\.m3u8[^"]*?)"[^>]*?>''',
+            r'''https?://[^"']+\.m3u8[^"']*''',
+        ]
+
+        for pattern in patterns:
+            matches = re.findall(pattern, data, re.IGNORECASE)
+            if matches:
+                video_url = matches[0]
+                if isinstance(video_url, tuple):
+                    video_url = video_url[0]
+                break
+
+        if video_url:
+            if video_url.startswith('//'):
+                video_url = 'https:' + video_url
+            elif not video_url.startswith('http'):
+                if video_url.startswith('livee.m3u8'):
+                    video_url = 'https://hd-auth.skylinewebcams.com/' + video_url.replace('livee', 'live')
+                else:
+                    video_url = 'https://hd-auth.skylinewebcams.com/' + video_url
+
+            urlsTab = getDirectM3U8Playlist(video_url)
+            if not urlsTab:
+                urlsTab.append({'name': 'skylinewebcams.com', 'url': video_url})
+
         return urlsTab
