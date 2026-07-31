@@ -146,7 +146,7 @@ class E2iVirtualKeyBoard(Screen):
         bg_color = config.plugins.iptvplayer.osk_background_color.value
         bg_color = ' backgroundColor="%s" ' % bg_color if bg_color else ''
 
-        skinTab = ["""<screen position="center,center" size="%d,%d" title="E2iPlayer virtual keyboard" %s >""" % (sz_w, sz_h, bg_color)]
+        skinTab = ["""<screen position="center,center" flags="wfNoBorder" size="%d,%d" title="E2iPlayer virtual keyboard" %s >""" % (sz_w, sz_h, bg_color)]
 
         def _addPixmapWidget(name, x, y, w, h, p):
             skinTab.append('<widget name="%s" zPosition="%d" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />' % (name, p, x, y, w, h))

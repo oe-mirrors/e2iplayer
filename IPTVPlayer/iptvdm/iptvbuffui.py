@@ -79,7 +79,7 @@ class E2iPlayerBufferingWidget(Screen):
 
     printDBG("[E2iPlayerBufferingWidget] desktop size %dx%d" % (sz_w, sz_h))
     skin = """
-        <screen name="E2iPlayerBufferingWidget"  position="center,center" size="%d,%d" title="E2iPlayer buffering...">
+        <screen name="E2iPlayerBufferingWidget"  position="center,center" flags="wfNoBorder" size="%d,%d" title="E2iPlayer buffering...">
          <widget name="percentage" size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" /> #foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"
          <widget name="console"    size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" />
          <widget name="icon"       size="%d,%d"   position="%d,%d"  zPosition="4" transparent="1" alphatest="blend" />
