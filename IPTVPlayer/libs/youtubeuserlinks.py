@@ -2,9 +2,9 @@
 # added: 25.07.2026  - Separate YouTube user links module for ytlist.txt handling, including add-to-user-links action,
 # folder selection or new folder creation, raw editor and user links editor integration, extracted from hostyoutube.py
 # to keep hostyoutube.py cleaner - Kamikaze24
-###################################################
-# 29.07.2026 - HD Skin and FHD Skin added by @stein17
-###################################################
+######################################################
+# 02.08.2026 - HD Skin - WQHD Skin added by @stein17 #
+######################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -50,7 +50,48 @@ except NameError:
 
 class YouTubeUserLinksEditorScreen(Screen):
     screenwidth = getDesktop(0).size().width()
-    if screenwidth and screenwidth == 1920:
+
+    if screenwidth >= 2560:
+        # WQHD 2560x1440 - FHD icons are scaled because no WQHD icon set exists.
+        skin = """
+        <screen name="YouTubeUserLinksEditorScreen" position="center,center" size="2240,1300" title="YouTube User Links Editor" backgroundColor="#34111112" flags="wfNoBorder">
+            <widget source="Title" render="Label" position="360,20" size="1570,80" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;48" valign="center" />
+
+            <widget name="status" position="40,136" size="2160,60" font="Regular;48" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" zPosition="1" transparent="1" />
+
+            <widget name="list" position="40,220" size="2160,936" itemHeight="72" font="Regular;40" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="2" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="2" borderColor="black" transparent="1" />
+
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="280,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/green.png" position="730,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/yellow.png" position="1270,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/blue.png" position="1820,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
+
+            <widget name="key_red" position="330,1222" size="400,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <widget name="key_green" position="780,1222" size="490,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <widget name="key_yellow" position="1320,1222" size="490,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+            <widget name="key_blue" position="1870,1222" size="400,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
+
+            <eLabel name="BG_Title" position="0,0" size="2240,120" backgroundColor="#100d0f16" zPosition="-1" />
+            <eLabel name="BG_Buttons" position="0,1200" size="2240,96" backgroundColor="#100d0f16" zPosition="-1" />
+
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,120" size="2240,4" scale="1" zPosition="2" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,1200" size="2240,4" scale="1" zPosition="2" />
+
+            <ePixmap position="40,1224" size="80,52" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" transparent="1" scale="1" alphatest="blend" />
+            <ePixmap position="148,1224" size="80,52" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/exit.png" transparent="1" scale="1" alphatest="blend" />
+            <ePixmap name="playerlogo" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/youtubelogo.png" zPosition="4" position="40,20" size="240,80" scale="1" alphatest="blend" transparent="1" backgroundColor="black" />
+
+            <widget source="global.CurrentTime" render="Label" position="1920,20" size="300,80" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;48" valign="center" halign="right">
+                <convert type="ClockToText">Format:%H:%M</convert>
+            </widget>
+
+            <widget source="global.CurrentTime" render="Label" position="1440,40" size="600,48" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;32" valign="center" halign="right">
+                <convert type="ClockToText">Date</convert>
+            </widget>
+        </screen>
+        """
+    elif screenwidth >= 1920:
+        # FHD 1920x1080
         skin = """
         <screen name="YouTubeUserLinksEditorScreen" position="center,center" size="1680,975" title="YouTube User Links Editor" backgroundColor="#34111112" flags="wfNoBorder">
             <widget source="Title" render="Label" position="240,15" size="1178,60" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;36" valign="center" />
@@ -59,10 +100,10 @@ class YouTubeUserLinksEditorScreen(Screen):
 
             <widget name="list" position="30,170" size="1620,702" itemHeight="54" font="Regular;30" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="2" borderColor="black" transparent="1" />
 
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="200,923" size="30,30" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/green.png" position="550,923" size="30,30" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/yellow.png" position="950,923" size="30,30" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/blue.png" position="1350,923" size="30,30" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="200,923" size="30,30" scale="1" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/green.png" position="550,923" size="30,30" scale="1" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/yellow.png" position="950,923" size="30,30" scale="1" alphatest="blend" transparent="1" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/blue.png" position="1350,923" size="30,30" scale="1" alphatest="blend" transparent="1" />
 
             <widget name="key_red" position="240,916" size="300,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
             <widget name="key_green" position="590,916" size="350,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
@@ -72,9 +113,9 @@ class YouTubeUserLinksEditorScreen(Screen):
             <eLabel name="BG_Title" position="0,0" size="1680,90" backgroundColor="#100d0f16" zPosition="-1" />
             <eLabel name="BG_Buttons" position="0,900" size="1680,72" backgroundColor="#100d0f16" zPosition="-1" />
 
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,90" size="1680,3" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="30,156" size="1620,3" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,900" size="1680,3" zPosition="2" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,90" size="1680,3" scale="1" zPosition="2" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="30,156" size="1620,3" scale="1" zPosition="2" />
+            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,900" size="1680,3" scale="1"  zPosition="2" />
 
             <ePixmap position="30,918" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" transparent="1" alphatest="blend" />
             <ePixmap position="111,918" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/exit.png" transparent="1" alphatest="blend" />
@@ -91,40 +132,41 @@ class YouTubeUserLinksEditorScreen(Screen):
         </screen>
         """
     else:
+        # HD 1280x720
         skin = """
         <screen name="YouTubeUserLinksEditorScreen" position="center,center" size="1120,650" title="YouTube User Links Editor" backgroundColor="#34111112" flags="wfNoBorder">
             <widget source="Title" render="Label" position="180,10" size="785,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
-
+            
             <widget name="status" position="20,68" size="1080,30" font="Regular;24" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" zPosition="1" transparent="1" />
-
+        
             <widget name="list" position="20,120" size="1080,468" itemHeight="36" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" transparent="1" />
-
+                
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="150,615" size="20,20" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="380,615" size="20,20" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="640,615" size="20,20" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/blue.png" position="900,615" size="20,20" alphatest="blend" transparent="1" />
-
+        
             <widget name="key_red" position="175,611" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
             <widget name="key_green" position="405,611" size="230,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
             <widget name="key_yellow" position="665,611" size="230,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
             <widget name="key_blue" position="925,611" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-
+        
             <eLabel name="BG_Title" position="0,0" size="1120,60" backgroundColor="#100d0f16" zPosition="-1" />
             <eLabel name="BG_Buttons" position="0,600" size="1120,48" backgroundColor="#100d0f16" zPosition="-1" />
-
+        
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="1120,2" zPosition="2" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="20,110" size="1080,2" zPosition="2" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,600" size="1120,2" zPosition="2" />
-
+        
             <ePixmap position="20,612" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
             <ePixmap position="74,612" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
 
-            <ePixmap name="YTlogo" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/youtubelogo.png" zPosition="4" position="20,12" size="120,40" alphatest="blend" transparent="1" backgroundColor="black" />
-
+            <ePixmap name="playerlogo"  pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/youtubelogo.png" zPosition="4" position="20,12" size="120,40" alphatest="blend" transparent="1" backgroundColor="black" />
+        
             <widget source="global.CurrentTime" render="Label" position="960,10" size="150,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" halign="right">
                 <convert type="ClockToText">Format:%H:%M</convert>
             </widget>
-
+        
             <widget source="global.CurrentTime" render="Label" position="720,20" size="300,24" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;16" valign="center" halign="right">
                  <convert type="ClockToText">Date</convert>
             </widget>
