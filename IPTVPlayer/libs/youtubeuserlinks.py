@@ -136,37 +136,37 @@ class YouTubeUserLinksEditorScreen(Screen):
         skin = """
         <screen name="YouTubeUserLinksEditorScreen" position="center,center" size="1120,650" title="YouTube User Links Editor" backgroundColor="#34111112" flags="wfNoBorder">
             <widget source="Title" render="Label" position="180,10" size="785,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
-            
+
             <widget name="status" position="20,68" size="1080,30" font="Regular;24" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" zPosition="1" transparent="1" />
-        
+
             <widget name="list" position="20,120" size="1080,468" itemHeight="36" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" transparent="1" />
-                
+
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="150,615" size="20,20" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="380,615" size="20,20" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="640,615" size="20,20" alphatest="blend" transparent="1" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/blue.png" position="900,615" size="20,20" alphatest="blend" transparent="1" />
-        
+
             <widget name="key_red" position="175,611" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
             <widget name="key_green" position="405,611" size="230,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
             <widget name="key_yellow" position="665,611" size="230,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
             <widget name="key_blue" position="925,611" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-        
+
             <eLabel name="BG_Title" position="0,0" size="1120,60" backgroundColor="#100d0f16" zPosition="-1" />
             <eLabel name="BG_Buttons" position="0,600" size="1120,48" backgroundColor="#100d0f16" zPosition="-1" />
-        
+
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="1120,2" zPosition="2" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="20,110" size="1080,2" zPosition="2" />
             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,600" size="1120,2" zPosition="2" />
-        
+
             <ePixmap position="20,612" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
             <ePixmap position="74,612" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
 
             <ePixmap name="playerlogo"  pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/youtubelogo.png" zPosition="4" position="20,12" size="120,40" alphatest="blend" transparent="1" backgroundColor="black" />
-        
+
             <widget source="global.CurrentTime" render="Label" position="960,10" size="150,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" halign="right">
                 <convert type="ClockToText">Format:%H:%M</convert>
             </widget>
-        
+
             <widget source="global.CurrentTime" render="Label" position="720,20" size="300,24" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;16" valign="center" halign="right">
                  <convert type="ClockToText">Date</convert>
             </widget>
