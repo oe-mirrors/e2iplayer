@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 20.07.2026 - HLS sidecar files (.txt + .jpg) extended, IMDb rating, Year and Genre added for descriptions/sidecar files,
-# MKV FFmpeg postprocess meta for HLSDownloader/WgetDownloader,
-# URL meta helper for sidecar and MKV postprocess handling - Kamikaze24
+# Last Modified: 06.08.2026 - Centralized watched helper integration incl. favourite hash sync, Custom menu action handling (mark/unmark watched) added, sidecar/MKV article request now skipped when both are disabled - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
 from Components.config import config, ConfigYesNo, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
-from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, RetHost
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, sidecarFromUrlMeta, decorateUrl, decorateCachedLinkItems, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhostmixin import WatchedFlagHostMixin
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
@@ -23,15 +24,17 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 ###################################################
 ###################################################
 
-config.plugins.iptvplayer.filmpalast_sidecar = ConfigYesNo(default=True)
 config.plugins.iptvplayer.filmpalast_mkv = ConfigYesNo(default=True)
 
 
 def GetConfigList():
-    return [
-        getConfigListEntry(_("Create sidecar files (.txt/.jpg)") + ":", config.plugins.iptvplayer.filmpalast_sidecar),
-        getConfigListEntry(_("Create MKV") + ":", config.plugins.iptvplayer.filmpalast_mkv)
+    # "Allow watched flag to be set" / "The color of the viewed item" / "Create sidecar
+    # files" now live in the global E2iPlayer settings (components/iptvconfigmenu.py),
+    # not per-host
+    optionList = [
+        getConfigListEntry(_("Create MKV") + ":", config.plugins.iptvplayer.filmpalast_mkv),
     ]
+    return optionList
 
 
 def gettytul():
@@ -54,6 +57,7 @@ class FilmPalastTo(CBaseHostClass):
         self.cacheSeries = {}
         self.cacheSeasons = {}
         self.cacheLinks = {}
+        self.watchedHelper = IPTVWatchedHelper('filmpalastto')
 
     def selectDomain(self):
         self.MAIN_URL = "https://filmpalast.to/"
@@ -87,6 +91,38 @@ class FilmPalastTo(CBaseHostClass):
             return ""
         cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE)
         return strwithmeta(url, {"Cookie": cookieHeader, "User-Agent": self.USER_AGENT})
+
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ""
+            itemType = cItem.get("type", "")
+            category = cItem.get("category", "")
+            if itemType in ["video", "audio"]:
+                url = str(cItem.get("url", "") or "").strip()
+                if url != "":
+                    return "url:%s" % url
+                return ""
+            if category == "explore_item":
+                url = str(cItem.get("url", "") or "").strip()
+                if url != "":
+                    return "url:%s" % url
+                return ""
+            if category == "list_episodes":
+                baseUrl = str(cItem.get("series_url", "") or "").strip() or str(cItem.get("url", "") or "").strip()
+                seasonId = str(cItem.get("season_num", "") or "").strip() or str(cItem.get("f_season", "") or "").strip()
+                if baseUrl != "" and seasonId != "":
+                    return "season:%s|%s" % (baseUrl, seasonId)
+                return ""
+            if category == "list_seasons":
+                url = str(cItem.get("url", "") or "").strip()
+                if url != "":
+                    return "series:%s" % url
+                return ""
+            return ""
+        except Exception:
+            printExc()
+        return ""
 
     def _listLinks(self, cItem, m1, m2):
         sts, data = self.getPage(cItem["url"])
@@ -197,6 +233,7 @@ class FilmPalastTo(CBaseHostClass):
 
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": nextCategory, "title": title, "url": url, "icon": icon, "desc": desc})
+            self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addDir(params)
 
         if nextPage:
@@ -211,38 +248,66 @@ class FilmPalastTo(CBaseHostClass):
         for item in tab:
             params = dict(cItem)
             params.update(item)
+            params.pop("isWatched", None)
+            # cItem is the season item (category="list_episodes") - clear it here so this
+            # episode isn't mistaken for its own season/series container elsewhere
+            params.pop("category", None)
             # params['icon'] = self.getFullIconUrl('/files/movies/450/%s.jpg' % item['url'].split('/')[-1])
+            self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addVideo(params)
+
+    def _buildSeasonItem(self, seasonId):
+        return {"category": "list_episodes", "url": self.currItem.get("url", ""), "f_season": seasonId}
+
+    def _propagateEpisodeWatchedState(self, item):
+        # recomputes season+series state right when an episode's own watched/started
+        # state changes, instead of relying on exploreItem() being re-run later - the
+        # "refresh from cache" shortcut used after playback/marking often skips that
+        try:
+            if not isinstance(item, dict):
+                return
+            seasonId = str(item.get("season_num", "") or item.get("f_season", "") or "").strip()
+            if seasonId == "":
+                return
+            seriesUrl = str(item.get("series_url", "") or item.get("url", "") or self.currItem.get("url", "") or "").strip()
+            seasonParent = {"category": "list_episodes", "url": seriesUrl, "series_url": seriesUrl, "season_num": seasonId}
+            seasonEpisodes = self.cacheSeasons.get(seasonId, [])
+            if seasonEpisodes:
+                self.watchedHelper.updateParentWatchedState(seasonParent, seasonEpisodes, self._getWatchedKeyForItem)
+            if seriesUrl != "":
+                seriesParent = {"category": "list_seasons", "url": seriesUrl}
+                seasonChildren = [{"category": "list_episodes", "url": seriesUrl, "series_url": seriesUrl, "season_num": str(sid)} for sid in list(self.cacheSeasons.keys())]
+                self.watchedHelper.updateParentWatchedState(seriesParent, seasonChildren, self._getWatchedKeyForItem)
+        except Exception:
+            printExc()
 
     def exploreItem(self, cItem, nextCategory):
         printDBG("FilmPalastTo.exploreItem")
-
         url = cItem["url"]
         sts, data = self.getPage(url)
         if not sts:
             return
-
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="staffelNav', "</ul>")[1]
-
         if 'data-id="staffId' not in data:
             params = dict(cItem)
+            params.pop("isWatched", None)
+            self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addVideo(params)
             return
-
         if "" != self.cm.ph.getSearchGroups(cItem["title"] + " ", r"""\s([Ss][0-9]+[Ee][0-9]+)\s""")[0]:
             params = dict(cItem)
+            params.pop("isWatched", None)
+            self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addVideo(params)
-
         self.cacheSeasons = {}
         seasonTitles = {}
-
+        seasonParams = {}
         tmp = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="staffelNav', "</ul>")[1]
         tmp = self.cm.ph.getAllItemsBeetwenMarkers(tmp, "<li", "</li>")
         for item in tmp:
             seasonId = self.cm.ph.getSearchGroups(item, """data-id=['"]([^"^']+?)['"]""")[0]
             title = self.cleanHtmlStr(item)
             seasonTitles[seasonId] = title
-
         sp = '<div class="staffelWrapperLoop'
         tmp = self.cm.ph.getDataBeetwenMarkers(data, sp, '<a name="comments_view">', False)[1]
         tmp = tmp.split(sp)
@@ -257,9 +322,23 @@ class FilmPalastTo(CBaseHostClass):
                 if seasonId not in self.cacheSeasons:
                     self.cacheSeasons[seasonId] = []
                     params = dict(cItem)
+                    params.pop("isWatched", None)
                     params.update({"good_for_fav": False, "category": nextCategory, "title": seasonTitles.get(seasonId, seasonId), "f_season": seasonId})
+                    params["isWatched"] = False
+                    seasonParams[seasonId] = params
                     self.addDir(params)
-                self.cacheSeasons[seasonId].append({"good_for_fav": True, "title": title, "url": url})
+                episodeParams = {"good_for_fav": True, "title": title, "url": url, "type": "video", "series_url": cItem.get("url", ""), "season_num": str(seasonId)}
+                self.cacheSeasons[seasonId].append(episodeParams)
+
+        for seasonId, seasonEpisodes in self.cacheSeasons.items():
+            if seasonId not in seasonParams:
+                continue
+            self.watchedHelper.updateParentWatchedState(seasonParams[seasonId], seasonEpisodes, self._getWatchedKeyForItem)
+
+        seriesItem = {"category": "list_seasons", "url": cItem.get("url", "")}
+        seriesKey = self._getWatchedKeyForItem(seriesItem)
+        if seriesKey != "":
+            self.watchedHelper.updateParentWatchedState(seriesItem, [seasonParams[seasonId] for seasonId in seasonParams], self._getWatchedKeyForItem)
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("FilmPalastTo.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -269,32 +348,37 @@ class FilmPalastTo(CBaseHostClass):
 
     def getLinksForVideo(self, cItem):
         printDBG("FilmPalastTo.getLinksForVideo [%s]" % cItem)
+        # NOTE: marking the item "started" happens later, in iptvplayerwidget.py's
+        # playVideo() - not here. This method resolves links for both actually
+        # streaming AND downloading, and can also fail/return nothing, so marking
+        # here would (and used to) tag failed attempts and downloads as "started" too.
         linksTab = []
         sidecarTxt = ""
         sidecarImg = ""
-        sidecarEnabled = config.plugins.iptvplayer.filmpalast_sidecar.value
+        sidecarEnabled = IsSidecarEnabled()
         imdb_rating = cItem.get("imdb_rating", "")
         sidecarYear = ""
         sidecarDuration = ""
         sidecarGenre = ""
 
-        try:
-            article = self.getArticleContent(cItem)
-            if article and isinstance(article, list):
-                articleItem = article[0]
-                sidecarTxt = articleItem.get("text", "")
-                images = articleItem.get("images", [])
-                if images and images[0].get("url"):
-                    sidecarImg = images[0].get("url")
+        if sidecarEnabled or config.plugins.iptvplayer.filmpalast_mkv.value:
+            try:
+                article = self.getArticleContent(cItem)
+                if article and isinstance(article, list):
+                    articleItem = article[0]
+                    sidecarTxt = articleItem.get("text", "")
+                    images = articleItem.get("images", [])
+                    if images and images[0].get("url"):
+                        sidecarImg = images[0].get("url")
 
-                otherInfo = articleItem.get("other_info", {})
-                if not imdb_rating or imdb_rating == "-":
-                    imdb_rating = otherInfo.get("imdb_rating", "")
-                sidecarYear = otherInfo.get("year", "") or otherInfo.get("released", "")
-                sidecarDuration = otherInfo.get("duration", "")
-                sidecarGenre = otherInfo.get("genre", "")
-        except Exception:
-            printExc("getArticleContent for sidecar failed")
+                    otherInfo = articleItem.get("other_info", {})
+                    if not imdb_rating or imdb_rating == "-":
+                        imdb_rating = otherInfo.get("imdb_rating", "")
+                    sidecarYear = otherInfo.get("year", "") or otherInfo.get("released", "")
+                    sidecarDuration = otherInfo.get("duration", "")
+                    sidecarGenre = otherInfo.get("genre", "")
+            except Exception:
+                printExc("getArticleContent for sidecar failed")
 
         if not sidecarTxt:
             sidecarTxt = cItem.get("desc", "")
@@ -357,7 +441,7 @@ class FilmPalastTo(CBaseHostClass):
 
         videoUrl = strwithmeta(videoUrl)
 
-        cfgSidecarEnabled = config.plugins.iptvplayer.filmpalast_sidecar.value
+        cfgSidecarEnabled = IsSidecarEnabled()
         cfgMkvEnabled = config.plugins.iptvplayer.filmpalast_mkv.value
         sidecar = sidecarFromUrlMeta(videoUrl, cfgSidecarEnabled)
 
@@ -529,10 +613,109 @@ class FilmPalastTo(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(WatchedFlagHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, FilmPalastTo(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('filmpalastto')
+
+    def _setWatchedStateForSeasonItem(self, seasonItem, action):
+        try:
+            seasonId = str(seasonItem.get('season_num', '') or seasonItem.get('f_season', '') or '').strip()
+            seasonKey = self.host._getWatchedKeyForItem(seasonItem)
+            if seasonKey == '':
+                return False
+            changed = False
+            for episodeItem in self.host.cacheSeasons.get(seasonId, []):
+                episodeKey = self.host._getWatchedKeyForItem(episodeItem)
+                if episodeKey == '':
+                    continue
+                if action == 'set_watched_flag':
+                    changed = self.watchedHelper.markItemWatched(episodeItem, episodeKey) or changed
+                else:
+                    changed = self.watchedHelper.unmarkItemWatched(episodeItem, episodeKey) or changed
+            if action == 'set_watched_flag':
+                changed = self.watchedHelper.markItemWatched(seasonItem, seasonKey) or changed
+            else:
+                changed = self.watchedHelper.unmarkItemWatched(seasonItem, seasonKey) or changed
+            return changed
+        except Exception:
+            printExc()
+            return False
+
+    def _setWatchedStateForSeriesItem(self, seriesItem, action):
+        try:
+            seriesUrl = str(seriesItem.get('url', '') or '').strip()
+            if seriesUrl == '':
+                return False
+            changed = False
+            for seasonId in list(self.host.cacheSeasons.keys()):
+                seasonItem = {'category': 'list_episodes', 'url': seriesUrl, 'series_url': seriesUrl, 'season_num': str(seasonId)}
+                changed = self._setWatchedStateForSeasonItem(seasonItem, action) or changed
+            seriesKey = self.host._getWatchedKeyForItem(seriesItem)
+            if seriesKey == '':
+                return changed
+            if action == 'set_watched_flag':
+                changed = self.watchedHelper.markItemWatched(seriesItem, seriesKey) or changed
+            else:
+                changed = self.watchedHelper.unmarkItemWatched(seriesItem, seriesKey) or changed
+            return changed
+        except Exception:
+            printExc()
+            return False
+
+    def _refreshParentStateAfterAction(self, item, action):
+        try:
+            if not isinstance(item, dict):
+                return
+            category = str(item.get('category', '') or '').strip()
+            if category == 'list_episodes':
+                seasonId = str(item.get('season_num', '') or item.get('f_season', '') or '').strip()
+                if seasonId != '':
+                    seasonParent = dict(item)
+                    seasonParent.pop('isWatched', None)
+                    seasonEpisodes = self.host.cacheSeasons.get(seasonId, [])
+                    if seasonEpisodes:
+                        self.watchedHelper.updateParentWatchedState(seasonParent, seasonEpisodes, self.host._getWatchedKeyForItem)
+                    seriesUrl = str(item.get('series_url', '') or self.host.currItem.get('url', '') or '').strip()
+                    if seriesUrl != '':
+                        seriesParent = {'category': 'list_seasons', 'url': seriesUrl}
+                        seasonChildren = [{'category': 'list_episodes', 'url': seriesUrl, 'series_url': seriesUrl, 'season_num': str(sid)} for sid in list(self.host.cacheSeasons.keys())]
+                        self.watchedHelper.updateParentWatchedState(seriesParent, seasonChildren, self.host._getWatchedKeyForItem)
+            elif category == 'list_seasons':
+                seriesUrl = str(item.get('url', '') or '').strip()
+                if seriesUrl != '':
+                    seriesParent = {'category': 'list_seasons', 'url': seriesUrl}
+                    seasonChildren = [{'category': 'list_episodes', 'url': seriesUrl, 'series_url': seriesUrl, 'season_num': str(sid)} for sid in list(self.host.cacheSeasons.keys())]
+                    self.watchedHelper.updateParentWatchedState(seriesParent, seasonChildren, self.host._getWatchedKeyForItem)
+            elif str(item.get('type', '') or '').strip() in ['video', 'audio']:
+                # item is a single episode (category is intentionally empty for these,
+                # see listEpisodes()) - recompute its season+series from current state
+                self.host._propagateEpisodeWatchedState(item)
+        except Exception:
+            printExc()
+
+    def performCustomAction(self, privateData):
+        ret = self.watchedHelper.performCustomAction(privateData)
+        if ret.status == RetHost.OK:
+            self.refreshAfterWatchedFlagChange = True
+            try:
+                action = privateData.get('action', '')
+                if action in ('unset_watched_flag', 'set_watched_flag'):
+                    idx = privateData.get('item_index', -1)
+                    item = self.host.currList[idx] if 0 <= idx < len(self.host.currList) else {}
+                    category = item.get('category', '')
+                    if category == 'list_episodes':
+                        self._setWatchedStateForSeasonItem(item, action)
+                    elif category == 'list_seasons':
+                        self._setWatchedStateForSeriesItem(item, action)
+                    self._refreshParentStateAfterAction(item, action)
+                    self.watchedHelper.recomputeAllGroupsWatched(self.host.cacheSeasons, self.host._getWatchedKeyForItem, self.host._buildSeasonItem)
+            except Exception:
+                printExc()
+        return ret
 
     def withArticleContent(self, cItem):
         if "video" == cItem.get("type", "") or "explore_item" == cItem.get("category", ""):

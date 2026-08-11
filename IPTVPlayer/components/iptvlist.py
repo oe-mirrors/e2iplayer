@@ -18,6 +18,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem
 from Components.GUIComponent import GUIComponent
 from enigma import eListboxPythonMultiContent, eListbox, gFont, RT_HALIGN_LEFT, RT_VALIGN_CENTER, getDesktop
 from Tools.LoadPixmap import LoadPixmap
+from skin import parseColor
 import skin
 ###################################################
 
@@ -131,10 +132,14 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         self.l.setFont(1, gFont(self.font[0], self.font[1]))
         self.l.setItemHeight(self.font[2])
         self.dictPIX = {}
+        self.watchedBadgePIX = None
+        self.startedBadgePIX = None
 
     def _nullPIX(self):
         for key in self.ICONS_FILESNAMES:
             self.dictPIX[key] = None
+        self.watchedBadgePIX = None
+        self.startedBadgePIX = None
 
     def onCreate(self):
         self._nullPIX()
@@ -145,24 +150,61 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
                     self.dictPIX[key] = LoadPixmap(cached=True, path=GetIconDir(pixFile))
             except Exception:
                 printExc()
+        # 32x32 watched/started overlay, centered on top of the item icon; if the
+        # files aren't present LoadPixmap just leaves these None and buildEntry()
+        # below skips them, so the item simply shows no watched/started indicator
+        try:
+            self.watchedBadgePIX = LoadPixmap(cached=True, path=GetIconDir('WatchedBadge.png'))
+        except Exception:
+            self.watchedBadgePIX = None
+        try:
+            self.startedBadgePIX = LoadPixmap(cached=True, path=GetIconDir('StartedBadge.png'))
+        except Exception:
+            self.startedBadgePIX = None
 
     def onDestroy(self):
         self._nullPIX()
+
+    # item icon box (imageType pixmap) and the watched/started overlay drawn on top of
+    # it - the overlay is designed to sit centered directly over the icon, not as a
+    # small corner badge
+    ICON_X, ICON_Y, ICON_W, ICON_H = 3, 1, 40, 40
+    BADGE_W, BADGE_H = 32, 32
+    BADGE_X = ICON_X + (ICON_W - BADGE_W) // 2
+    BADGE_Y = ICON_Y + (ICON_H - BADGE_H) // 2
 
     def buildEntry(self, item):
         width = self.l.getItemSize().width()
         height = self.l.getItemSize().height()
         res = [None]
         res.append((eListboxPythonMultiContent.TYPE_TEXT, 45, 0, width - 45, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.getDisplayTitle(), item.getTextColor()))
-        res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, 1, 40, 40, self.dictPIX.get(item.imageType, None)))
+        res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, self.ICON_X, self.ICON_Y, self.ICON_W, self.ICON_H, self.dictPIX.get(item.imageType, None)))
+        if getattr(item, 'isWatched', False) and self.watchedBadgePIX is not None:
+            res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, self.BADGE_X, self.BADGE_Y, self.BADGE_W, self.BADGE_H, self.watchedBadgePIX))
+        elif getattr(item, 'isStarted', False) and self.startedBadgePIX is not None:
+            res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, self.BADGE_X, self.BADGE_Y, self.BADGE_W, self.BADGE_H, self.startedBadgePIX))
         return res
 
 
 class IPTVRadioButtonList(IPTVMainNavigatorList):
     ICONS_FILESNAMES = {'on': 'radio_button_on.png', 'off': 'radio_button_off.png'}
+    FAILED_TEXT_COLOR = "#FF4040"
+    ERROR_BADGE_W, ERROR_BADGE_H = 32, 32
 
     def __init__(self):
         IPTVMainNavigatorList.__init__(self)
+        self.errorBadgePIX = None
+
+    def onCreate(self):
+        IPTVMainNavigatorList.onCreate(self)
+        try:
+            self.errorBadgePIX = LoadPixmap(cached=True, path=GetIconDir('ErrorBadge.png'))
+        except Exception:
+            self.errorBadgePIX = None
+
+    def onDestroy(self):
+        IPTVMainNavigatorList.onDestroy(self)
+        self.errorBadgePIX = None
 
     def buildEntry(self, item):
         width = self.l.getItemSize().width()
@@ -174,4 +216,45 @@ class IPTVRadioButtonList(IPTVMainNavigatorList):
         else:
             res.append((eListboxPythonMultiContent.TYPE_TEXT, 30, 0, width - 30, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.name))
             res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, pixmap_y, 16, 16, self.dictPIX.get(item.type, None)))
+        return res
+
+
+class IPTVLinkChoiceBoxList(IPTVRadioButtonList):
+    # used for the "Select link" mirror picker: always shows the regular link
+    # icon (same spot/size as the main list's item icon) with the error badge
+    # overlaid centered on top of it when that mirror failed to resolve - same
+    # overlay pattern as the watched/started badge in IPTVMainNavigatorList
+    LINK_ICON_FILENAME = 'GlobItem.png'
+
+    def __init__(self):
+        IPTVRadioButtonList.__init__(self)
+        self.linkIconPIX = None
+
+    def onCreate(self):
+        IPTVRadioButtonList.onCreate(self)
+        try:
+            self.linkIconPIX = LoadPixmap(cached=True, path=GetIconDir(self.LINK_ICON_FILENAME))
+        except Exception:
+            self.linkIconPIX = None
+
+    def onDestroy(self):
+        IPTVRadioButtonList.onDestroy(self)
+        self.linkIconPIX = None
+
+    def buildEntry(self, item):
+        width = self.l.getItemSize().width()
+        height = self.l.getItemSize().height()
+        failed = getattr(item, 'failed', False)
+        textX = self.ICON_X + self.ICON_W + 5
+        textArgs = (eListboxPythonMultiContent.TYPE_TEXT, textX, 0, width - textX, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.name)
+        if failed:
+            try:
+                textArgs = textArgs + (parseColor(self.FAILED_TEXT_COLOR).argb(),)
+            except Exception:
+                pass
+        res = [None, textArgs]
+        if self.linkIconPIX is not None:
+            res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, self.ICON_X, self.ICON_Y, self.ICON_W, self.ICON_H, self.linkIconPIX))
+        if failed and self.errorBadgePIX is not None:
+            res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, self.BADGE_X, self.BADGE_Y, self.BADGE_W, self.BADGE_H, self.errorBadgePIX))
         return res

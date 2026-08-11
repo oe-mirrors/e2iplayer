@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
-# Last Modified: 19.07.2026 - MKV FFmpeg postprocess + fsPath/shellQuote handling + robust wget working check - Kamikaze24
+# Last Modified: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with hlsdownloader.py and mergedownloader.py, instead of duplicating them here - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -8,6 +8,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, ip
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, SidecarMixin
 ###################################################
 
 ###################################################
@@ -21,74 +22,26 @@ import re
 import datetime
 import os
 ###################################################
-try:
-    text_type = unicode
-    binary_type = str
-    string_types = (basestring,)
-except NameError:
-    text_type = str
-    binary_type = bytes
-    string_types = (str, bytes)
 
 
-def ensureText(data, encoding='utf-8'):
-    if data is None:
-        return u''
-    if isinstance(data, text_type):
-        return data
-
-    if isinstance(data, binary_type):
-        try:
-            return data.decode(encoding)
-        except Exception:
-            try:
-                return data.decode(encoding, 'replace')
-            except Exception:
-                try:
-                    return data.decode('latin-1', 'replace')
-                except Exception:
-                    return u''
-
-    try:
-        return text_type(data)
-    except Exception:
-        try:
-            return text_type(str(data))
-        except Exception:
-            return u''
+def normalizeExtension(ext):
+    ext = ensureText(ext).strip().lower()
+    if ext.startswith('.'):
+        ext = ext[1:]
+    return ext
 
 
-def fsPath(path):
+def replaceFileExtension(path, newExt):
     path = ensureText(path)
-    try:
-        if text_type is not str:
-            return path.encode('utf-8')
-    except Exception:
-        pass
-    return path
+    newExt = normalizeExtension(newExt)
+    if path == '':
+        return path
+    if newExt == '':
+        return path
+    if '.' in path:
+        return path.rsplit('.', 1)[0] + '.' + newExt
+    return path + '.' + newExt
 
-
-def shellQuote(value):
-    value = ensureText(value)
-    value = value.replace('\\', '\\\\')
-    value = value.replace('"', '\\"')
-    value = value.replace('`', '\\`')
-    value = value.replace('$', '\\$')
-    return value
-
-
-def writeUtf8TextFile(path, data):
-    try:
-        txt = ensureText(data)
-        f = open(fsPath(path), 'wb')
-        try:
-            f.write(txt.encode('utf-8'))
-        finally:
-            f.close()
-        return True
-    except Exception:
-        printExc()
-    return False
 
 ###################################################
 # One instance of this class can be used only for
@@ -96,12 +49,12 @@ def writeUtf8TextFile(path, data):
 ###################################################
 
 
-class WgetDownloader(BaseDownloader):
+class WgetDownloader(BaseDownloader, SidecarMixin):
     # wget status
     WGET_STS = enum(NONE='WGET_NONE',
-                    CONNECTING='WGET_CONNECTING',
-                    DOWNLOADING='WGET_DOWNLOADING',
-                    ENDED='WGET_ENDED')
+                     CONNECTING='WGET_CONNECTING',
+                     DOWNLOADING='WGET_DOWNLOADING',
+                     ENDED='WGET_ENDED')
     # wget status
     INFO = enum(FROM_FILE='INFO_FROM_FILE',
                 FROM_DOTS='INFO_FROM_DOTS')
@@ -123,16 +76,8 @@ class WgetDownloader(BaseDownloader):
         self.lastErrorCode = None
         self.lastErrorDesc = ''
 
-        # sidecar console instance
-        self.sidecarConsole = None
-        self.sidecarConsole_appClosed_conn = None
-        self.sidecarConsole_stderrAvail_conn = None
-
-        # sidecar support
-        self.sidecarEnabled = False
-        self.sidecarTxt = ''
-        self.sidecarImg = ''
-        self.waitingForSidecar = False
+        # sidecar support (console instance + state), shared via SidecarMixin
+        self._initSidecarState()
 
         # ffmpeg postprocess support
         self.ffmpegPostEnabled = False
@@ -191,29 +136,12 @@ class WgetDownloader(BaseDownloader):
         self.iptv_sys = None
         callBackFun(sts, reason)
 
-    def _clearSidecarData(self):
-        self.sidecarEnabled = False
-        self.sidecarTxt = ''
-        self.sidecarImg = ''
-        self.waitingForSidecar = False
-
     def _clearPostData(self):
         self.ffmpegPostEnabled = False
         self.ffmpegContainer = 'mkv'
         self.postProcessMode = ''
         self.tempRemuxPath = ''
         self.finalizedPath = ''
-
-    def _prepareSidecarData(self, meta):
-        self._clearSidecarData()
-        try:
-            if meta.get('e2i_sidecar_enabled', False):
-                self.sidecarEnabled = True
-                self.sidecarTxt = meta.get('e2i_sidecar_txt', '')
-                self.sidecarImg = meta.get('e2i_sidecar_img', '')
-                printDBG("WgetDownloader sidecar enabled")
-        except Exception:
-            printExc()
 
     def _preparePostData(self, meta):
         self._clearPostData()
@@ -245,17 +173,17 @@ class WgetDownloader(BaseDownloader):
             return os.path.isfile(dstPath)
         except Exception:
             printExc()
-        return False
+            return False
 
     def _removeSourceFile(self):
         try:
             if self.filePath and os.path.isfile(fsPath(self.filePath)):
                 rm(fsPath(self.filePath))
                 printDBG("WgetDownloader source file removed [%s]" % self.filePath)
-                return True
+            return True
         except Exception:
             printExc()
-        return False
+            return False
 
     def _cleanUp(self):
         try:
@@ -263,86 +191,6 @@ class WgetDownloader(BaseDownloader):
                 rm(fsPath(self.tempRemuxPath))
         except Exception:
             printExc()
-
-    def _writeTxtSidecar(self, filePath):
-        try:
-            if not self.sidecarTxt:
-                printDBG("WgetDownloader sidecar TXT skipped: empty content")
-                return
-
-            basePath = ensureText(filePath).rsplit('.', 1)[0]
-            txtPath = basePath + '.txt'
-
-            if os.path.isfile(fsPath(txtPath)):
-                printDBG("WgetDownloader sidecar TXT already exists [%s]" % txtPath)
-                return
-
-            if writeUtf8TextFile(txtPath, self.sidecarTxt):
-                printDBG("WgetDownloader sidecar TXT saved [%s]" % txtPath)
-            else:
-                printDBG("WgetDownloader sidecar TXT save failed [%s]" % txtPath)
-        except Exception:
-            printExc("WgetDownloader sidecar TXT save failed")
-
-    def _imgSidecarDataAvail(self, data):
-        return
-
-    def _imgSidecarFinished(self, jpgPath, code):
-        printDBG("WgetDownloader._imgSidecarFinished code[%r]" % code)
-
-        try:
-            # break circular references
-            self.sidecarConsole_appClosed_conn = None
-            self.sidecarConsole_stderrAvail_conn = None
-            self.sidecarConsole = None
-            self.waitingForSidecar = False
-
-            if os.path.isfile(fsPath(jpgPath)):
-                printDBG("WgetDownloader sidecar JPG saved [%s]" % jpgPath)
-            else:
-                printDBG("WgetDownloader sidecar JPG failed [%s]" % jpgPath)
-        except Exception:
-            printExc()
-
-        self._finishDownloadFlow()
-
-    def _startImgSidecarDownload(self, filePath):
-        try:
-            if not self.sidecarImg:
-                printDBG("WgetDownloader sidecar JPG skipped: empty URL")
-                self._finishDownloadFlow()
-                return
-
-            basePath = ensureText(filePath).rsplit('.', 1)[0]
-            jpgPath = basePath + '.jpg'
-
-            if os.path.isfile(fsPath(jpgPath)):
-                printDBG("WgetDownloader sidecar JPG already exists [%s]" % jpgPath)
-                self._finishDownloadFlow()
-                return
-
-            cmd = 'wget --header "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36" --no-check-certificate "%s" -O "%s" > /dev/null 2>&1' % (shellQuote(self.sidecarImg), shellQuote(jpgPath))
-            printDBG("WgetDownloader sidecar JPG cmd[%s]" % cmd)
-
-            self.waitingForSidecar = True
-            self.sidecarConsole = eConsoleAppContainer()
-            self.sidecarConsole_appClosed_conn = eConnectCallback(self.sidecarConsole.appClosed, boundFunction(self._imgSidecarFinished, jpgPath))
-            self.sidecarConsole_stderrAvail_conn = eConnectCallback(self.sidecarConsole.stderrAvail, self._imgSidecarDataAvail)
-            if hasattr(self.sidecarConsole, "setNice"):
-                self.sidecarConsole.setNice(GetNice() + 2)
-                self.sidecarConsole.execute(cmd)
-            else:
-                self.sidecarConsole.execute(E2PrioFix(cmd))
-        except Exception:
-            printExc("WgetDownloader sidecar JPG start failed")
-            self._finishDownloadFlow()
-
-    def _finishDownloadFlow(self):
-        try:
-            self.onFinish()
-        except Exception:
-            printExc()
-        self._cleanUp()
 
     def doStartPostProcess(self):
         self.postProcessMode = 'remux'
@@ -368,13 +216,13 @@ class WgetDownloader(BaseDownloader):
         self.localFileSize = DMHelper.getFileSize(fsPath(finalPath))
         if self.localFileSize > 0:
             self.remoteFileSize = self.localFileSize
-            self.status = DMHelper.STS.DOWNLOADED
+        self.status = DMHelper.STS.DOWNLOADED
 
-            self._writeTxtSidecar(finalPath)
+        self._writeTxtSidecar(finalPath)
 
-            if self.sidecarEnabled and self.sidecarImg:
-                self._startImgSidecarDownload(finalPath)
-                return
+        if self.sidecarEnabled and self.sidecarImg:
+            self._startImgSidecarDownload(finalPath)
+            return
         else:
             self.status = DMHelper.STS.INTERRUPTED
 
@@ -384,22 +232,21 @@ class WgetDownloader(BaseDownloader):
         self.localFileSize = DMHelper.getFileSize(fsPath(self.filePath))
         if self.localFileSize > 0:
             self.remoteFileSize = self.localFileSize
-            self.status = DMHelper.STS.DOWNLOADED
+        self.status = DMHelper.STS.DOWNLOADED
 
-            self._writeTxtSidecar(self.filePath)
+        self._writeTxtSidecar(self.filePath)
 
-            if self.sidecarEnabled and self.sidecarImg:
-                self._startImgSidecarDownload(self.filePath)
-                return True
-
-            self._finishDownloadFlow()
+        if self.sidecarEnabled and self.sidecarImg:
+            self._startImgSidecarDownload(self.filePath)
             return True
-        return False
+
+        self._finishDownloadFlow()
+        return True
 
     def start(self, url, filePath, params={}, info_from=None, retries=0):
-        '''
-            Owervrite start from BaseDownloader
-        '''
+        """
+        Owervrite start from BaseDownloader
+        """
         self.url = url
         self.filePath = filePath
         self.downloaderParams = params
@@ -418,16 +265,30 @@ class WgetDownloader(BaseDownloader):
         self._prepareSidecarData(meta)
         self._preparePostData(meta)
 
+        forcedExt = normalizeExtension(meta.get('file_ext', ''))
+        if forcedExt != '':
+            oldFilePath = self.filePath
+            self.filePath = replaceFileExtension(self.filePath, forcedExt)
+            printDBG("WgetDownloader forced file extension old[%s] new[%s] ext[%s]" % (oldFilePath, self.filePath, forcedExt))
+
+            if forcedExt in ['srt', 'vtt', 'sub', 'txt']:
+                self.ffmpegPostEnabled = False
+                self.sidecarEnabled = False
+                self.sidecarTxt = ''
+                self.sidecarImg = ''
+
         if self.infoFrom == WgetDownloader.INFO.FROM_DOTS:
             info = "--progress=dot:default"
         else:
             info = ""
 
         # remove file if exists
-        if fileExists(self.filePath):
-            rm(self.filePath)
+        filePathFs = fsPath(self.filePath)
 
-        self.downloadCmd = DMHelper.getBaseWgetCmd(self.downloaderParams) + (' %s -t %d ' % (info, retries)) + '"' + self.url + '" -O "' + self.filePath + '" > /dev/null'
+        if fileExists(filePathFs):
+            rm(filePathFs)
+
+        self.downloadCmd = DMHelper.getBaseWgetCmd(self.downloaderParams) + (' %s -t %d ' % (info, retries)) + '"' + shellQuote(self.url) + '" -O "' + shellQuote(self.filePath) + '" > /dev/null'
         printDBG("Download cmd[%s]" % self.downloadCmd)
 
         if self.downloaderParams.get('iptv_wget_continue', False):
@@ -494,17 +355,7 @@ class WgetDownloader(BaseDownloader):
             self.iptv_sys.kill()
             self.iptv_sys = None
 
-        if self.sidecarConsole is not None:
-            try:
-                if hasattr(self.sidecarConsole, "sendCtrlC"):
-                    self.sidecarConsole.sendCtrlC()
-                elif hasattr(self.sidecarConsole, "kill"):
-                    self.sidecarConsole.kill()
-            except Exception:
-                printExc()
-            self.sidecarConsole = None
-            self.sidecarConsole_appClosed_conn = None
-            self.sidecarConsole_stderrAvail_conn = None
+        self._terminateSidecar()
 
         if DMHelper.STS.DOWNLOADING == self.status or DMHelper.STS.POSTPROCESSING == self.status:
             if self.console:
@@ -512,8 +363,8 @@ class WgetDownloader(BaseDownloader):
                     self.console.sendCtrlC()  # kill produce zombies
                 elif hasattr(self.console, "kill"):
                     self.console.kill()  # kill produce zombies
-                self._cmdFinished(-1, True)
-                return BaseDownloader.CODE_OK
+            self._cmdFinished(-1, True)
+            return BaseDownloader.CODE_OK
 
         return BaseDownloader.CODE_NOT_DOWNLOADING
 
@@ -526,9 +377,9 @@ class WgetDownloader(BaseDownloader):
         printDBG("WgetDownloader._cmdFinished remoteFileSize[%r] localFileSize[%r]" % (self.remoteFileSize, self.localFileSize))
 
         if not terminated and self.status != DMHelper.STS.POSTPROCESSING \
-           and self.remoteFileSize > 0 \
-           and self.remoteFileSize > self.localFileSize \
-           and self.curContinueRetry < self.maxContinueRetry:
+                and self.remoteFileSize > 0 \
+                and self.remoteFileSize > self.localFileSize \
+                and self.curContinueRetry < self.maxContinueRetry:
             self.curContinueRetry += 1
             if hasattr(self.console, "setNice"):
                 self.console.setNice(GetNice() + 2)
@@ -587,17 +438,20 @@ class WgetDownloader(BaseDownloader):
     def updateStatistic(self):
         if self.infoFrom == WgetDownloader.INFO.FROM_FILE:
             BaseDownloader.updateStatistic(self)
+            self.localFileSize = DMHelper.getFileSize(fsPath(self.filePath))
             return
 
         if self.WGET_STS.DOWNLOADING == self.wgetStatus:
             print(self.outData)
             dataLen = len(self.outData)
+
             for idx in range(dataLen):
                 if idx + 1 < dataLen:
                     # default style - one dot = 1K
                     if '.' == self.outData[idx] and self.outData[idx + 1] in ['.', ' ']:
                         self.localFileSize += 1024
-                else:
-                    self.outData = self.outData[idx:]
-                    break
-        BaseDownloader._updateStatistic(self)
+                    else:
+                        self.outData = self.outData[idx:]
+                        break
+
+            BaseDownloader._updateStatistic(self)

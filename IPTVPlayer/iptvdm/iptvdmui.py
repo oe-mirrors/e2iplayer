@@ -322,6 +322,25 @@ class IPTVDMWidget(Screen):
                 printExc()
         return removed
 
+    def _renameRelatedSidecarFiles(self, oldFileName, newFileName):
+        oldBase = os_path.splitext(oldFileName)[0]
+        newBase = os_path.splitext(newFileName)[0]
+        if oldBase == newBase:
+            return
+        for ext in ['.txt', '.jpg', '.jpeg']:
+            oldSidecar = oldBase + ext
+            newSidecar = newBase + ext
+            try:
+                if not os_path.isfile(oldSidecar):
+                    continue
+                if os_path.isfile(newSidecar) or os_path.islink(newSidecar):
+                    printDBG('IPTVDMWidget._renameRelatedSidecarFiles skip, target exists [%s]' % newSidecar)
+                    continue
+                os_rename(oldSidecar, newSidecar)
+                printDBG('IPTVDMWidget._renameRelatedSidecarFiles renamed [%s] -> [%s]' % (oldSidecar, newSidecar))
+            except Exception:
+                printExc()
+
     def _getSidecarSubtitles(self, fileName):
         subtitles = []
         baseName = os_path.splitext(fileName)[0]
@@ -602,6 +621,7 @@ class IPTVDMWidget(Screen):
                 return
 
             os_rename(item.fileName, newPath)
+            self._renameRelatedSidecarFiles(item.fileName, newPath)
 
             if self.localMode:
                 for idx, local_item in enumerate(self.localFiles):

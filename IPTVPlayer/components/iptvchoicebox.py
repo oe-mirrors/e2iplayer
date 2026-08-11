@@ -26,11 +26,13 @@ class IPTVChoiceBoxItem:
     def __init__(self, name="",
                  description="",
                  privateData=None,
-                 type=TYPE_NONE):
+                 type=TYPE_NONE,
+                 failed=False):
         self.name = name
         self.description = description
         self.type = type
         self.privateData = privateData
+        self.failed = failed
 
 
 class IPTVChoiceBoxWidget(Screen):
@@ -61,7 +63,7 @@ class IPTVChoiceBoxWidget(Screen):
         self.onClose.append(self.__onClose)
 
         self["title"] = Label(self.params.get('title', _("Select option")))
-        self["list"] = IPTVRadioButtonList()
+        self["list"] = self.params.get('list_class', IPTVRadioButtonList)()
 
         self["actions"] = ActionMap(["SetupActions"],
             {
