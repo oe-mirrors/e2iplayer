@@ -74,7 +74,7 @@ class SerienStreamTo(CBaseHostClass):
         return config.plugins.iptvplayer.serienstreamto_legacy_titles.value
 
     def _getWatchedKeyForItem(self, cItem):
-        #printDBG("SerienStreamTo._getWatchedKeyForItem")
+        # printDBG("SerienStreamTo._getWatchedKeyForItem")
         try:
             if not isinstance(cItem, dict):
                 return ""
@@ -534,6 +534,7 @@ class SerienStreamTo(CBaseHostClass):
         cfgSidecarEnabled = IsSidecarEnabled()
         cfgMkvEnabled = config.plugins.iptvplayer.serienstreamto_mkv.value
         sidecar = sidecarFromUrlMeta(url, cfgSidecarEnabled)
+
         def _addFinalMeta(videoLinks):
             return decorateResolvedLinkItems(videoLinks, sidecar=sidecar, mkvEnabled=cfgMkvEnabled)
         if "youtube" in url:
@@ -675,7 +676,7 @@ class IPTVHost(WatchedFlagHostMixin, CHostBase):
             data = self.host.cm.ph.getAllItemsBeetwenMarkers(data, 'class="episode-row', "</tr>")
             changed = False
             for item in data:
-                url = self.host.getFullUrl(self.host.cm.ph.getSearchGroups(item, "location='([^']+)'") [0])
+                url = self.host.getFullUrl(self.host.cm.ph.getSearchGroups(item, "location='([^']+)'")[0])
                 name = self.host.cleanHtmlStr(self.host.cm.ph.getSearchGroups(item, 'title="([^"]+)">')[0])
                 ep = self.host.cleanHtmlStr(self.host.cm.ph.getSearchGroups(item, r'cell">(\d+)')[0])
                 if "Releases soon" in name:

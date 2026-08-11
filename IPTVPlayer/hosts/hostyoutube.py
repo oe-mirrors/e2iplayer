@@ -269,7 +269,7 @@ class Youtube(CBaseHostClass):
         return videoId
 
     def _getVideoIdFromItem(self, cItem):
-        #printDBG("Youtube._getVideoIdFromItem")
+        # printDBG("Youtube._getVideoIdFromItem")
         videoId = ""
         try:
             videoId = cItem.get("video_id", "")
@@ -407,7 +407,7 @@ class Youtube(CBaseHostClass):
         return os.path.join(config.plugins.iptvplayer.Sciezkaurllist.value, self.UTLIST_FILE)
 
     def _getWatchedKeyForItem(self, cItem):
-        #printDBG("Youtube._getWatchedKeyForItem")
+        # printDBG("Youtube._getWatchedKeyForItem")
         try:
             if not isinstance(cItem, dict):
                 return ""
