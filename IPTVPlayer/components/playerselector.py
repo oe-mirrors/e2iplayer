@@ -315,7 +315,7 @@ if GRIDSUPPORT:
                 elif ret == "CHANGE_REORDERING_MODE":
                     self.changeReorderingMode()
                 elif ret == "IPTVDM":
-                    self.keyBlue()
+                    self.close((_("Download manager"), "IPTVDM"))
                 elif ret == "reset_group":
                     def keyDefaultsConfirm(result):
                         if result:
