@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-14 16:50+0200\n"
-"PO-Revision-Date: 2026-07-27 16:03+0200\n"
+"PO-Revision-Date: 2026-08-14 19:26+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -223,7 +223,7 @@ msgid "--Other--"
 msgstr "--Andere--"
 
 msgid "0-9 - direct number input"
-msgstr ""
+msgstr "0–9 – direkte Zahleneingabe"
 
 msgid "12 hour format"
 msgstr "12 Stunden-Format"
@@ -369,9 +369,8 @@ msgstr "Erlaube VP9 Codec:"
 msgid "Allow dash format:"
 msgstr "Erlaube Dash Format:"
 
-#, fuzzy
 msgid "Allow host to override suggestions provider"
-msgstr "Standard Suchmaschine"
+msgstr "Dem Host erlauben, den Vorschlagsanbieter zu überschreiben"
 
 msgid "Allow watched flag to be set"
 msgstr "Setzen von Gesehen-Marker erlauben"
@@ -380,7 +379,7 @@ msgid "Alphabetically"
 msgstr "Alphabetisch"
 
 msgid "AltGr"
-msgstr ""
+msgstr "AltGr"
 
 msgid "Alternate Title:"
 msgstr "Alternativer Titel:"
@@ -514,13 +513,13 @@ msgid "Awards:"
 msgstr "Auszeichnungen:"
 
 msgid "BLUE - Shift"
-msgstr ""
+msgstr "BLAU – Shift"
 
 msgid "Background color"
 msgstr "Hintergrundfarbe"
 
 msgid "Backspace"
-msgstr ""
+msgstr "Rücktaste"
 
 msgid "Balkans"
 msgstr "Balkan"
@@ -531,9 +530,8 @@ msgstr "Grundlagenwissenschaft"
 msgid "Best"
 msgstr "Am Besten"
 
-#, fuzzy
 msgid "Bing Suggestions"
-msgstr "Google Vorschläge"
+msgstr "Bing Vorschläge"
 
 #, python-format
 msgid "Bitrate: %s"
@@ -1053,9 +1051,8 @@ msgstr "Downloads"
 msgid "Downloads location"
 msgstr "Download-Verzeichnis"
 
-#, fuzzy
 msgid "DuckDuckGo Suggestions"
-msgstr "Google Vorschläge"
+msgstr "DuckDuckGo Vorschläge"
 
 msgid "Duration"
 msgstr "Dauer"
@@ -1067,9 +1064,8 @@ msgstr "Dauer:"
 msgid "Duration: %s"
 msgstr "Dauer: %s"
 
-#, fuzzy
 msgid "E2iPlayer - keyboard settings"
-msgstr "E2iPlayer - Konfiguration"
+msgstr "E2iPlayer - Tastatur Konfiguration"
 
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - Konfiguration"
@@ -1083,9 +1079,8 @@ msgstr "E2iPlayer Downloader"
 msgid "E2iPlayer enable/disabled groups"
 msgstr "E2iPlayer aktivierte/deaktivierte Gruppen"
 
-#, fuzzy
 msgid "E2iPlayer virtual keyboard"
-msgstr "Virtuelle Tastatur"
+msgstr "E2iPlayer Virtuelle Tastatur"
 
 msgid "ERROR:"
 msgstr "FEHLER:"
@@ -1162,9 +1157,8 @@ msgstr "Englische TV Serien"
 msgid "English movies"
 msgstr "Englische Filme"
 
-#, fuzzy
 msgid "Enter"
-msgstr "zentriert"
+msgstr "Enter"
 
 msgid "Enter a value"
 msgstr "Wert eingeben"
@@ -1297,7 +1291,7 @@ msgid "FAILED"
 msgstr "FEHLGESCHLAGEN"
 
 msgid "FAST FORWARD - insert space"
-msgstr ""
+msgstr "VORSPULEN – Leerzeichen einfügen"
 
 msgid "FREE"
 msgstr "FREI"
@@ -1440,7 +1434,7 @@ msgid "Following host are broken or additional python modules are needed."
 msgstr "Die folgenden Hosts sind defekt oder benötigen weitere Python Module."
 
 msgid "Font size offset"
-msgstr ""
+msgstr "Schriftgrößen Offset"
 
 msgid "Foot & Ankle"
 msgstr "Fuß & Knöchel"
@@ -1476,7 +1470,7 @@ msgid "Full description not available"
 msgstr "Keine vollständige Beschreibung verfügbar"
 
 msgid "GREEN - Enter (confirm and close)"
-msgstr ""
+msgstr "GRÜN – Eingabe (bestätigen und schließen)"
 
 msgid "GSTplayer no IFD workarround"
 msgstr "GSTplayer kein IFD-Workarround"
@@ -1569,7 +1563,7 @@ msgid "Hardware floating point"
 msgstr "Hardware Gleitkommaeinheit"
 
 msgid "Help"
-msgstr ""
+msgstr "Hilfe"
 
 #, python-format
 msgid "Hide \"%s\" group"
@@ -1777,7 +1771,7 @@ msgid "LATEST"
 msgstr "LETZTE"
 
 msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
-msgstr ""
+msgstr "LINKS/RECHTS am Anfang/Ende des Textes – alternative Möglichkeit zum Wechseln zwischen den Fenstern"
 
 msgid "LIVE CHANNELS"
 msgstr "LIVE KANÄLE"
@@ -1837,7 +1831,7 @@ msgid "Latino"
 msgstr "Lateinamerikaner"
 
 msgid "Left"
-msgstr ""
+msgstr "Links"
 
 msgid "Level:"
 msgstr "Level:"
@@ -1966,7 +1960,7 @@ msgid "MENU"
 msgstr "MENÜ"
 
 msgid "MENU - Options (select language, clear search history, settings)"
-msgstr ""
+msgstr "MENÜ – Optionen (Sprache auswählen, Suchverlauf löschen, Einstellungen)"
 
 msgid "MIPS Floating Point Architecture"
 msgstr "MIPS Fließkomma Architektur"
@@ -2232,7 +2226,7 @@ msgid "OK"
 msgstr "OK"
 
 msgid "OK - type selected character / confirm selection"
-msgstr ""
+msgstr "OK – Gewünschtes Zeichen eingeben / Auswahl bestätigen"
 
 #, python-format
 msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
@@ -2268,9 +2262,8 @@ msgstr "Operation abgebrochen!"
 msgid "Optional User-Agent (leave blank for default)"
 msgstr "Optionaler User-Agent (leer lassen für Standard)"
 
-#, fuzzy
 msgid "Options"
-msgstr "Video-Optionen"
+msgstr "Optionen"
 
 msgid "Original Title:"
 msgstr "Originaltitel:"
@@ -2285,7 +2278,7 @@ msgid "Own model"
 msgstr "Eigenes Model"
 
 msgid "PAGE UP/PAGE DOWN - move cursor right/left"
-msgstr ""
+msgstr "SEITE NACH OBEN/SEITE NACH UNTEN – Cursor nach rechts/links bewegen"
 
 msgid "PAY"
 msgstr "PAY"
@@ -2297,7 +2290,7 @@ msgid "PORT"
 msgstr "PORT"
 
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
-msgstr ""
+msgstr "VORHERIGE/NÄCHSTE – Zwischen Tastatur, Vorschlägen und Suchverlauf wechseln"
 
 msgid "Page: "
 msgstr "Seite: "
@@ -2530,13 +2523,13 @@ msgid "RECENT"
 msgstr "AKTUELL"
 
 msgid "RED - Backspace"
-msgstr ""
+msgstr "ROT - Rücktaste"
 
 msgid "REMEMBER: "
 msgstr "ERINNERUNG: "
 
 msgid "REWIND - delete entered text"
-msgstr ""
+msgstr "Zurückspulen – eingegebenen Text löschen"
 
 msgid "Radio"
 msgstr "Radio"
@@ -2608,9 +2601,8 @@ msgstr "Liste neu laden"
 msgid "Remaining:"
 msgstr "Verbleibend:"
 
-#, fuzzy
 msgid "Remember last search entry"
-msgstr "Merke zuletzt gesehene Position"
+msgstr "Letzten Sucheintrag speichern"
 
 msgid "Remember last watched position"
 msgstr "Merke zuletzt gesehene Position"
@@ -2675,7 +2667,7 @@ msgid "Reverse a playlist"
 msgstr "Wiedergabeliste umkehren"
 
 msgid "Right"
-msgstr ""
+msgstr "Rechts"
 
 msgid "Russian"
 msgstr "Russisch"
@@ -2894,7 +2886,7 @@ msgid "Settings"
 msgstr "Konfiguration"
 
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 msgid "Short Movies"
 msgstr "Kurzfilme"
@@ -2926,9 +2918,8 @@ msgstr "Zeige Downloadverwaltung bei Download"
 msgid "Show file size"
 msgstr "Zeige Dateigröße"
 
-#, fuzzy
 msgid "Show flags"
-msgstr "Zeige Dateigröße"
+msgstr "Zeige Flaggen"
 
 msgid "Show global search :"
 msgstr "Globale Suche anzeigen :"
@@ -2948,9 +2939,8 @@ msgstr "Nur Audio in der ausgewählten Sprache anzeigen:"
 msgid "Show only best quality of streams:"
 msgstr "Nur Streams in bester Qualität anzeigen:"
 
-#, fuzzy
 msgid "Show search history"
-msgstr "Suchverlauf"
+msgstr "Suchverlauf anzeigen"
 
 msgid "Show suggestions"
 msgstr "Zeige Suchvorschläge"
@@ -3258,9 +3248,8 @@ msgstr "TV Serien"
 msgid "Techniques"
 msgstr "Techniken"
 
-#, fuzzy
 msgid "Text field alignment"
-msgstr "Dateinamen festlegen"
+msgstr "Ausrichtung von Textfeldern"
 
 msgid "Text files ytlist and urllist are in:"
 msgstr "Verzeichnis von ytlist.txt, urllist.txt:"
@@ -3278,9 +3267,8 @@ msgstr "Der Kanal ist bereits unter „Benutzerlinks“ vorhanden."
 msgid "The color of the current version"
 msgstr "Farbauswahl für derzeitige Version"
 
-#, fuzzy
 msgid "The color of the started item"
-msgstr "Farbauswahl für gesehene Einträge"
+msgstr "Farbauswahl für gestartete Einträge"
 
 msgid "The color of the viewed item"
 msgstr "Farbauswahl für gesehene Einträge"
@@ -3717,7 +3705,7 @@ msgid "Xtream host (e.g. http://server:port)"
 msgstr "Xtream host (z.B. http://server:port)"
 
 msgid "YELLOW - AltGr"
-msgstr ""
+msgstr "Gelb - AltGr"
 
 msgid "YP connected"
 msgstr "YP verbunden"
