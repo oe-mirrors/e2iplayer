@@ -51,47 +51,47 @@ msgstr ""
 "U kunt een eventueel probleem ook hier melden:\n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid "    Audio buffer size [KB]"
-msgstr "    Audio buffer grootte [kB]"
+msgid "Audio buffer size [KB]"
+msgstr "Audio buffer grootte [kB]"
 
-msgid "    Background color"
-msgstr "    Achtergrondkleur"
+msgid "Background color"
+msgstr "Achtergrondkleur"
 
-msgid "    Default suggestions provider"
-msgstr "    Default suggesties provider"
+msgid "Default suggestions provider"
+msgstr "Default suggesties provider"
 
-msgid "    Enable hosts groups"
-msgstr "    Host-groepen inschakelen"
+msgid "Enable hosts groups"
+msgstr "Host-groepen inschakelen"
 
-msgid "    Number of columns"
-msgstr "    Aantal kolommen"
+msgid "Number of columns"
+msgstr "Aantal kolommen"
 
-msgid "    Number of rows"
-msgstr "    Aantal rijen"
+msgid "Number of rows"
+msgstr "Aantal rijen"
 
-msgid "    Remove thumbnails"
-msgstr "    Thumbnails verwijderen"
+msgid "Remove thumbnails"
+msgstr "Thumbnails verwijderen"
 
-msgid "    Service icon size"
-msgstr "    Zender icon grootte"
+msgid "Service icon size"
+msgstr "Zender icon grootte"
 
-msgid "    Show suggestions"
-msgstr "    Toon suggesties"
+msgid "Show suggestions"
+msgstr "Toon suggesties"
 
-msgid "    Video buffer size [MB]"
-msgstr "    Video buffer grootte [MB]"
+msgid "Video buffer size [MB]"
+msgstr "Video buffer grootte [MB]"
 
-msgid " Login Protected."
-msgstr " Beveiligde login."
+msgid "Login Protected."
+msgstr "Beveiligde login."
 
-msgid " Private Show."
-msgstr " Privé uitzending."
+msgid "Private Show."
+msgstr "Privé uitzending."
 
-msgid " This video is a private."
-msgstr " Deze video is privé."
+msgid "This video is a private."
+msgstr "Deze video is privé."
 
-msgid " or "
-msgstr " of "
+msgid "or"
+msgstr "of"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."

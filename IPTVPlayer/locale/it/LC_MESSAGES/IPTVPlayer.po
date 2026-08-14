@@ -53,47 +53,47 @@ msgstr ""
 "Puoi anche segnalare il problema qui:\n"
 "https://gitlab.com/zadmario/e2iplayer/issues"
 
-msgid "    Audio buffer size [KB]"
-msgstr "   Dimensione buffer audio [KB]"
+msgid "Audio buffer size [KB]"
+msgstr "Dimensione buffer audio [KB]"
 
-msgid "    Background color"
-msgstr "    Colore di sfondo"
+msgid "Background color"
+msgstr "Colore di sfondo"
 
-msgid "    Default suggestions provider"
-msgstr "    Provider predefinito suggerimenti"
+msgid "Default suggestions provider"
+msgstr "Provider predefinito suggerimenti"
 
-msgid "    Enable hosts groups"
-msgstr "    Abilita gruppi di host"
+msgid "Enable hosts groups"
+msgstr "Abilita gruppi di host"
 
-msgid "    Number of columns"
-msgstr "    Numero di colonne"
+msgid "Number of columns"
+msgstr "Numero di colonne"
 
-msgid "    Number of rows"
-msgstr "    Numero di righe"
+msgid "Number of rows"
+msgstr "Numero di righe"
 
-msgid "    Remove thumbnails"
-msgstr "    Rimuovere le miniature"
+msgid "Remove thumbnails"
+msgstr "Rimuovere le miniature"
 
-msgid "    Service icon size"
-msgstr "    Dimensione icona servizi"
+msgid "Service icon size"
+msgstr "Dimensione icona servizi"
 
-msgid "    Show suggestions"
-msgstr "    Mostra suggerimenti"
+msgid "Show suggestions"
+msgstr "Mostra suggerimenti"
 
-msgid "    Video buffer size [MB]"
-msgstr "    Dimensione buffer video [MB]"
+msgid "Video buffer size [MB]"
+msgstr "Dimensione buffer video [MB]"
 
-msgid " Login Protected."
-msgstr " Login Protetto."
+msgid "Login Protected."
+msgstr "Login Protetto."
 
-msgid " Private Show."
-msgstr " Spettacolo privato."
+msgid "Private Show."
+msgstr "Spettacolo privato."
 
-msgid " This video is a private."
-msgstr " Questo video è privato."
+msgid "This video is a private."
+msgstr "Questo video è privato."
 
-msgid " or "
-msgstr " oppure "
+msgid "or"
+msgstr "oppure"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."

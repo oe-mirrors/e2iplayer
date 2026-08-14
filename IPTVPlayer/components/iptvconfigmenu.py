@@ -300,9 +300,9 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("----- BASIC CONFIGURATION -----"),))
         list.append(getConfigListEntry(_("Virtual Keyboard type"), config.plugins.iptvplayer.osk_type))
         if config.plugins.iptvplayer.osk_type.value == 'own':
-            list.append(getConfigListEntry(_("    Background color"), config.plugins.iptvplayer.osk_background_color))
-            list.append(getConfigListEntry(_("    Show suggestions"), config.plugins.iptvplayer.osk_allow_suggestions))
-            list.append(getConfigListEntry(_("    Default suggestions provider"), config.plugins.iptvplayer.osk_default_suggestions))
+            list.append(getConfigListEntry("    " + _("Background color"), config.plugins.iptvplayer.osk_background_color))
+            list.append(getConfigListEntry("    " + _("Show suggestions"), config.plugins.iptvplayer.osk_allow_suggestions))
+            list.append(getConfigListEntry("    " + _("Default suggestions provider"), config.plugins.iptvplayer.osk_default_suggestions))
         list.append(getConfigListEntry(_("Initialize web interface"), config.plugins.iptvplayer.IPTVWebIterface))
         list.append(getConfigListEntry(_("Show IPTVPlayer in extension list"), config.plugins.iptvplayer.showinextensions))
         list.append(getConfigListEntry(_("Show IPTVPlayer in main menu"), config.plugins.iptvplayer.showinMainMenu))
@@ -335,15 +335,15 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))
         if config.plugins.iptvplayer.showcover.value:
             # list.append(getConfigListEntry(_("    Allowed formats of thumbnails"), config.plugins.iptvplayer.allowedcoverformats))
-            list.append(getConfigListEntry(_("    Remove thumbnails"), config.plugins.iptvplayer.deleteIcons))
+            list.append(getConfigListEntry("    " + _("Remove thumbnails"), config.plugins.iptvplayer.deleteIcons))
         # list.append(getConfigListEntry("Sort the lists?", config.plugins.iptvplayer.sortuj))
         # list.append(getConfigListEntry(_("Graphic services selector"), config.plugins.iptvplayer.ListaGraficzna))
         # if config.plugins.iptvplayer.ListaGraficzna.value is True:
-        list.append(getConfigListEntry(_("    Enable hosts groups"), config.plugins.iptvplayer.group_hosts))
-        list.append(getConfigListEntry(_("    Service icon size"), config.plugins.iptvplayer.IconsSize))
+        list.append(getConfigListEntry("    " + _("Enable hosts groups"), config.plugins.iptvplayer.group_hosts))
+        list.append(getConfigListEntry("    " + _("Service icon size"), config.plugins.iptvplayer.IconsSize))
         if not GRIDSUPPORT:
-            list.append(getConfigListEntry(_("    Number of rows"), config.plugins.iptvplayer.numOfRow))
-            list.append(getConfigListEntry(_("    Number of columns"), config.plugins.iptvplayer.numOfCol))
+            list.append(getConfigListEntry("    " + _("Number of rows"), config.plugins.iptvplayer.numOfRow))
+            list.append(getConfigListEntry("    " + _("Number of columns"), config.plugins.iptvplayer.numOfCol))
         # list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
         list.append(getConfigListEntry(_("Create LCD/VFD summary screen"), config.plugins.iptvplayer.extplayer_summary))
 
@@ -364,8 +364,8 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("[HLS/M3U8] buffering"), config.plugins.iptvplayer.buforowanie_m3u8))
         list.append(getConfigListEntry(_("[RTMP] buffering (rtmpdump required)"), config.plugins.iptvplayer.buforowanie_rtmp))
         if config.plugins.iptvplayer.buforowanie.value or config.plugins.iptvplayer.buforowanie_m3u8.value or config.plugins.iptvplayer.buforowanie_rtmp.value:
-            list.append(getConfigListEntry(_("    Video buffer size [MB]"), config.plugins.iptvplayer.requestedBuffSize))
-            list.append(getConfigListEntry(_("    Audio buffer size [KB]"), config.plugins.iptvplayer.requestedAudioBuffSize))
+            list.append(getConfigListEntry("    " + _("Video buffer size [MB]"), config.plugins.iptvplayer.requestedBuffSize))
+            list.append(getConfigListEntry("    " + _("Audio buffer size [KB]"), config.plugins.iptvplayer.requestedAudioBuffSize))
             list.append(getConfigListEntry(_("Buffering location"), config.plugins.iptvplayer.bufferingPath))
 
         list.append(getConfigListEntry(_("----- DOWNLOADING CONFIGURATION -----"), ))

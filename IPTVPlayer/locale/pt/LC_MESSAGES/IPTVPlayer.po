@@ -42,47 +42,47 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-msgid "    Audio buffer size [KB]"
-msgstr "    Buffer tamanho [MB]"
+msgid "Audio buffer size [KB]"
+msgstr "Buffer tamanho [MB]"
 
-msgid "    Background color"
+msgid "Background color"
 msgstr ""
 
-msgid "    Default suggestions provider"
+msgid "Default suggestions provider"
 msgstr ""
 
-msgid "    Enable hosts groups"
-msgstr "    Ativar grupos de hosts"
+msgid "Enable hosts groups"
+msgstr "Ativar grupos de hosts"
 
-msgid "    Number of columns"
-msgstr "    Número de colunas"
+msgid "Number of columns"
+msgstr "Número de colunas"
 
-msgid "    Number of rows"
-msgstr "    Número de linhas"
+msgid "Number of rows"
+msgstr "Número de linhas"
 
-msgid "    Remove thumbnails"
-msgstr "    Remover miniaturas"
+msgid "Remove thumbnails"
+msgstr "Remover miniaturas"
 
-msgid "    Service icon size"
-msgstr "    Tamanho dos icons de Serviço"
+msgid "Service icon size"
+msgstr "Tamanho dos icons de Serviço"
 
-msgid "    Show suggestions"
+msgid "Show suggestions"
 msgstr ""
 
 #, fuzzy
-msgid "    Video buffer size [MB]"
-msgstr "    Buffer tamanho [MB]"
+msgid "Video buffer size [MB]"
+msgstr "Buffer tamanho [MB]"
 
-msgid " Login Protected."
+msgid "Login Protected."
 msgstr ""
 
-msgid " Private Show."
+msgid "Private Show."
 msgstr ""
 
-msgid " This video is a private."
+msgid "This video is a private."
 msgstr ""
 
-msgid " or "
+msgid "or"
 msgstr ""
 
 #, python-format

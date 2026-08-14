@@ -40,46 +40,46 @@ msgid ""
 "https://github.com/oe-mirrors/e2iplayer/issues"
 msgstr ""
 
-msgid "    Audio buffer size [KB]"
+msgid "Audio buffer size [KB]"
 msgstr ""
 
-msgid "    Background color"
+msgid "Background color"
 msgstr ""
 
-msgid "    Default suggestions provider"
+msgid "Default suggestions provider"
 msgstr ""
 
-msgid "    Enable hosts groups"
+msgid "Enable hosts groups"
 msgstr ""
 
-msgid "    Number of columns"
+msgid "Number of columns"
 msgstr ""
 
-msgid "    Number of rows"
+msgid "Number of rows"
 msgstr ""
 
-msgid "    Remove thumbnails"
+msgid "Remove thumbnails"
 msgstr ""
 
-msgid "    Service icon size"
+msgid "Service icon size"
 msgstr ""
 
-msgid "    Show suggestions"
+msgid "Show suggestions"
 msgstr ""
 
-msgid "    Video buffer size [MB]"
+msgid "Video buffer size [MB]"
 msgstr ""
 
-msgid " Login Protected."
+msgid "Login Protected."
 msgstr ""
 
-msgid " Private Show."
+msgid "Private Show."
 msgstr ""
 
-msgid " This video is a private."
+msgid "This video is a private."
 msgstr ""
 
-msgid " or "
+msgid "or"
 msgstr ""
 
 #, python-format

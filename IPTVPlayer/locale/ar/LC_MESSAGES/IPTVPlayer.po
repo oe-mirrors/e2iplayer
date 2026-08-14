@@ -51,47 +51,47 @@ msgstr ""
 "يمكنك أيضًا الإبلاغ عن المشكلة هنا: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid "    Audio buffer size [KB]"
-msgstr "    حجم مخزن الصوت المؤقت [KB]"
+msgid "Audio buffer size [KB]"
+msgstr "حجم مخزن الصوت المؤقت [KB]"
 
-msgid "    Background color"
-msgstr "    لون الخلفية"
+msgid "Background color"
+msgstr "لون الخلفية"
 
-msgid "    Default suggestions provider"
-msgstr "    مزود الاقتراحات الافتراضي"
+msgid "Default suggestions provider"
+msgstr "مزود الاقتراحات الافتراضي"
 
-msgid "    Enable hosts groups"
-msgstr "    تفعيل مجموعات المضيفين"
+msgid "Enable hosts groups"
+msgstr "تفعيل مجموعات المضيفين"
 
-msgid "    Number of columns"
-msgstr "    عدد الأعمدة"
+msgid "Number of columns"
+msgstr "عدد الأعمدة"
 
-msgid "    Number of rows"
-msgstr "    عدد الصفوف"
+msgid "Number of rows"
+msgstr "عدد الصفوف"
 
-msgid "    Remove thumbnails"
-msgstr "    إزالة الصور المصغرة"
+msgid "Remove thumbnails"
+msgstr "إزالة الصور المصغرة"
 
-msgid "    Service icon size"
-msgstr "    حجم أيقونة الخدمة"
+msgid "Service icon size"
+msgstr "حجم أيقونة الخدمة"
 
-msgid "    Show suggestions"
-msgstr "    إظهار الإقتراحات"
+msgid "Show suggestions"
+msgstr "إظهار الإقتراحات"
 
-msgid "    Video buffer size [MB]"
-msgstr "    حجم تأخير الفيديو [MB]"
+msgid "Video buffer size [MB]"
+msgstr "حجم تأخير الفيديو [MB]"
 
-msgid " Login Protected."
-msgstr " تسجيل الدخول محمي."
+msgid "Login Protected."
+msgstr "تسجيل الدخول محمي."
 
-msgid " Private Show."
-msgstr " عرض خاص."
+msgid "Private Show."
+msgstr "عرض خاص."
 
-msgid " This video is a private."
-msgstr " هذا الفيديو خاص."
+msgid "This video is a private."
+msgstr "هذا الفيديو خاص."
 
-msgid " or "
-msgstr " أو "
+msgid "or"
+msgstr "أو"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."

@@ -52,47 +52,47 @@ msgstr ""
 "Μπορείτε επίσης να αναφέρετε το πρόβλημα εδώ \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid "    Audio buffer size [KB]"
-msgstr "    Μέγεθος προσωρινής μνήμης ήχου [KB]"
+msgid "Audio buffer size [KB]"
+msgstr "Μέγεθος προσωρινής μνήμης ήχου [KB]"
 
-msgid "    Background color"
-msgstr "    Χρώμα φόντου"
+msgid "Background color"
+msgstr "Χρώμα φόντου"
 
-msgid "    Default suggestions provider"
-msgstr "    Προεπιλεγμένος πάροχος προτάσεων"
+msgid "Default suggestions provider"
+msgstr "Προεπιλεγμένος πάροχος προτάσεων"
 
-msgid "    Enable hosts groups"
-msgstr "    Ενεργοποίηση ομάδων hosts"
+msgid "Enable hosts groups"
+msgstr "Ενεργοποίηση ομάδων hosts"
 
-msgid "    Number of columns"
-msgstr "    Αριθμός στηλών"
+msgid "Number of columns"
+msgstr "Αριθμός στηλών"
 
-msgid "    Number of rows"
-msgstr "    Αριθμός σειρών"
+msgid "Number of rows"
+msgstr "Αριθμός σειρών"
 
-msgid "    Remove thumbnails"
-msgstr "    Αφαίρεση μικρογραφιών"
+msgid "Remove thumbnails"
+msgstr "Αφαίρεση μικρογραφιών"
 
-msgid "    Service icon size"
-msgstr "    Μέγεθος εικονιδίων υπηρεσίας"
+msgid "Service icon size"
+msgstr "Μέγεθος εικονιδίων υπηρεσίας"
 
-msgid "    Show suggestions"
-msgstr "    Εμφάνιση προτάσεων"
+msgid "Show suggestions"
+msgstr "Εμφάνιση προτάσεων"
 
-msgid "    Video buffer size [MB]"
-msgstr "    Μέγεθος προσωρινής μνήμης βίντεο [MB]"
+msgid "Video buffer size [MB]"
+msgstr "Μέγεθος προσωρινής μνήμης βίντεο [MB]"
 
-msgid " Login Protected."
-msgstr " Προστασία με σύνδεση."
+msgid "Login Protected."
+msgstr "Προστασία με σύνδεση."
 
-msgid " Private Show."
-msgstr " Ιδιωτική προβολή."
+msgid "Private Show."
+msgstr "Ιδιωτική προβολή."
 
-msgid " This video is a private."
-msgstr " Αυτό το βίντεο είναι ιδιωτικό."
+msgid "This video is a private."
+msgstr "Αυτό το βίντεο είναι ιδιωτικό."
 
-msgid " or "
-msgstr " ή "
+msgid "or"
+msgstr "ή"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."

@@ -63,6 +63,6 @@ class CaptchaHelper():
                 if not beQuaiet:
                     self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(errorMsgTab), type=MessageBox.TYPE_ERROR, timeout=20)
                 if bypassCaptchaService is not None:
-                    errorMsgTab.append(_(' or '))
+                    errorMsgTab.append(_('or'))
                     errorMsgTab.append(_('You can use \"%s\" or \"%s\" services for automatic solution.') % ("http://2captcha.com/", "https://9kw.eu/", ) + ' ' + _('Go to the host configuration available under blue button.'))
         return token, errorMsgTab

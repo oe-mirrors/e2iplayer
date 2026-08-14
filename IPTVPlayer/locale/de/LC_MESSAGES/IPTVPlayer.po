@@ -48,47 +48,47 @@ msgstr ""
 "Sie können Probleme auch hier melden: \n"
 " https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid "    Audio buffer size [KB]"
-msgstr "    Audiopuffergröße in [KB]"
+msgid "Audio buffer size [KB]"
+msgstr "Audiopuffergröße in [KB]"
 
-msgid "    Background color"
-msgstr "    Hintergrundfarbe"
+msgid "Background color"
+msgstr "Hintergrundfarbe"
 
-msgid "    Default suggestions provider"
-msgstr "    Standard Suchmaschine"
+msgid "Default suggestions provider"
+msgstr "Standard Suchmaschine"
 
-msgid "    Enable hosts groups"
-msgstr "    Zeige Service-Gruppen"
+msgid "Enable hosts groups"
+msgstr "Zeige Service-Gruppen"
 
-msgid "    Number of columns"
-msgstr "    Anzahl der Spalten"
+msgid "Number of columns"
+msgstr "Anzahl der Spalten"
 
-msgid "    Number of rows"
-msgstr "    Anzahl der Zeilen"
+msgid "Number of rows"
+msgstr "Anzahl der Zeilen"
 
-msgid "    Remove thumbnails"
-msgstr "    Lösche Vorschaubilder"
+msgid "Remove thumbnails"
+msgstr "Lösche Vorschaubilder"
 
-msgid "    Service icon size"
-msgstr "    Service Icon Größe"
+msgid "Service icon size"
+msgstr "Service Icon Größe"
 
-msgid "    Show suggestions"
-msgstr "    Zeige Suchvorschläge"
+msgid "Show suggestions"
+msgstr "Zeige Suchvorschläge"
 
-msgid "    Video buffer size [MB]"
-msgstr "    Videopuffergröße in [MB]"
+msgid "Video buffer size [MB]"
+msgstr "Videopuffergröße in [MB]"
 
-msgid " Login Protected."
-msgstr " Login Geschützt."
+msgid "Login Protected."
+msgstr "Login Geschützt."
 
-msgid " Private Show."
-msgstr " Privatshow."
+msgid "Private Show."
+msgstr "Privatshow."
 
-msgid " This video is a private."
-msgstr " Dieses Video ist Privat."
+msgid "This video is a private."
+msgstr "Dieses Video ist Privat."
 
-msgid " or "
-msgstr " oder "
+msgid "or"
+msgstr "oder"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."

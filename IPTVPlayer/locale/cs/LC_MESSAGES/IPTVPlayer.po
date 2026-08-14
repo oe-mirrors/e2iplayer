@@ -51,47 +51,47 @@ msgstr ""
 "Problém můžete nahlásit také zde: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid "    Audio buffer size [KB]"
-msgstr "    Velikost zvukové vyrovnávací paměti [KB]"
+msgid "Audio buffer size [KB]"
+msgstr "Velikost zvukové vyrovnávací paměti [KB]"
 
-msgid "    Background color"
-msgstr "    Barva pozadí"
+msgid "Background color"
+msgstr "Barva pozadí"
 
-msgid "    Default suggestions provider"
-msgstr "    Výchozí poskytovatel návrhů"
+msgid "Default suggestions provider"
+msgstr "Výchozí poskytovatel návrhů"
 
-msgid "    Enable hosts groups"
-msgstr "    Povolení skupin hostitelů"
+msgid "Enable hosts groups"
+msgstr "Povolení skupin hostitelů"
 
-msgid "    Number of columns"
-msgstr "    Počet sloupců"
+msgid "Number of columns"
+msgstr "Počet sloupců"
 
-msgid "    Number of rows"
-msgstr "    Počet řádků"
+msgid "Number of rows"
+msgstr "Počet řádků"
 
-msgid "    Remove thumbnails"
-msgstr "    Odebrání miniatur"
+msgid "Remove thumbnails"
+msgstr "Odebrání miniatur"
 
-msgid "    Service icon size"
-msgstr "    Velikost ikony služby"
+msgid "Service icon size"
+msgstr "Velikost ikony služby"
 
-msgid "    Show suggestions"
-msgstr "    Zobrazit návrhy"
+msgid "Show suggestions"
+msgstr "Zobrazit návrhy"
 
-msgid "    Video buffer size [MB]"
-msgstr "    Velikost vyrovnávací paměti videa [MB]"
+msgid "Video buffer size [MB]"
+msgstr "Velikost vyrovnávací paměti videa [MB]"
 
-msgid " Login Protected."
-msgstr " Přihlášení chráněno."
+msgid "Login Protected."
+msgstr "Přihlášení chráněno."
 
-msgid " Private Show."
-msgstr " Soukromá show."
+msgid "Private Show."
+msgstr "Soukromá show."
 
-msgid " This video is a private."
-msgstr " Toto video je soukromé."
+msgid "This video is a private."
+msgstr "Toto video je soukromé."
 
-msgid " or "
-msgstr " nebo "
+msgid "or"
+msgstr "nebo"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."

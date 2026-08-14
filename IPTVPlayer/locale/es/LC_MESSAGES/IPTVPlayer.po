@@ -54,47 +54,47 @@ msgstr ""
 "https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
 "o aquí: samsamsam@o2.pl"
 
-msgid "    Audio buffer size [KB]"
-msgstr "   Tamaño del búfer de audio [KB]"
+msgid "Audio buffer size [KB]"
+msgstr "Tamaño del búfer de audio [KB]"
 
-msgid "    Background color"
-msgstr "    Color de fondo"
+msgid "Background color"
+msgstr "Color de fondo"
 
-msgid "    Default suggestions provider"
-msgstr "    Proveedor de sugerencias por defecto"
+msgid "Default suggestions provider"
+msgstr "Proveedor de sugerencias por defecto"
 
-msgid "    Enable hosts groups"
-msgstr "    Habilitar grupos de hosts"
+msgid "Enable hosts groups"
+msgstr "Habilitar grupos de hosts"
 
-msgid "    Number of columns"
-msgstr "    Número de columnas"
+msgid "Number of columns"
+msgstr "Número de columnas"
 
-msgid "    Number of rows"
-msgstr "    Número de filas"
+msgid "Number of rows"
+msgstr "Número de filas"
 
-msgid "    Remove thumbnails"
-msgstr "    Eliminar miniaturas"
+msgid "Remove thumbnails"
+msgstr "Eliminar miniaturas"
 
-msgid "    Service icon size"
-msgstr "    Tamaño del icono del servicio"
+msgid "Service icon size"
+msgstr "Tamaño del icono del servicio"
 
-msgid "    Show suggestions"
-msgstr "    Mostrar sugerencias"
+msgid "Show suggestions"
+msgstr "Mostrar sugerencias"
 
-msgid "    Video buffer size [MB]"
-msgstr "    Tamaño buffer de video [MB]"
+msgid "Video buffer size [MB]"
+msgstr "Tamaño buffer de video [MB]"
 
-msgid " Login Protected."
-msgstr " Fallo en inicio de sesión."
+msgid "Login Protected."
+msgstr "Fallo en inicio de sesión."
 
-msgid " Private Show."
-msgstr " Show privado."
+msgid "Private Show."
+msgstr "Show privado."
 
-msgid " This video is a private."
-msgstr " Este video es privado."
+msgid "This video is a private."
+msgstr "Este video es privado."
 
-msgid " or "
-msgstr " o "
+msgid "or"
+msgstr "o"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."

@@ -51,47 +51,47 @@ msgstr ""
 "A problémát itt is bejelentheted: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid "    Audio buffer size [KB]"
-msgstr "    Audió puffer méret [KB]"
+msgid "Audio buffer size [KB]"
+msgstr "Audió puffer méret [KB]"
 
-msgid "    Background color"
-msgstr "      Általános háttérszín"
+msgid "Background color"
+msgstr "Általános háttérszín"
 
-msgid "    Default suggestions provider"
-msgstr "    Alapértelmezett javaslatszolgáltató"
+msgid "Default suggestions provider"
+msgstr "Alapértelmezett javaslatszolgáltató"
 
-msgid "    Enable hosts groups"
-msgstr "    Gazdacsoportok engedélyezése"
+msgid "Enable hosts groups"
+msgstr "Gazdacsoportok engedélyezése"
 
-msgid "    Number of columns"
-msgstr "    Oszlopok száma"
+msgid "Number of columns"
+msgstr "Oszlopok száma"
 
-msgid "    Number of rows"
-msgstr "    Sorok száma"
+msgid "Number of rows"
+msgstr "Sorok száma"
 
-msgid "    Remove thumbnails"
-msgstr "    Indexképek eltávolítása"
+msgid "Remove thumbnails"
+msgstr "Indexképek eltávolítása"
 
-msgid "    Service icon size"
-msgstr "    Szolgáltatás ikon mérete"
+msgid "Service icon size"
+msgstr "Szolgáltatás ikon mérete"
 
-msgid "    Show suggestions"
-msgstr "    Javaslatok megjelenítése"
+msgid "Show suggestions"
+msgstr "Javaslatok megjelenítése"
 
-msgid "    Video buffer size [MB]"
-msgstr "    Videópuffer mérete [MB]"
+msgid "Video buffer size [MB]"
+msgstr "Videópuffer mérete [MB]"
 
-msgid " Login Protected."
-msgstr " Bejelentkezés védett."
+msgid "Login Protected."
+msgstr "Bejelentkezés védett."
 
-msgid " Private Show."
-msgstr " Privát műsor."
+msgid "Private Show."
+msgstr "Privát műsor."
 
-msgid " This video is a private."
-msgstr " Ez a videó privát."
+msgid "This video is a private."
+msgstr "Ez a videó privát."
 
-msgid " or "
-msgstr " vagy "
+msgid "or"
+msgstr "vagy"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."

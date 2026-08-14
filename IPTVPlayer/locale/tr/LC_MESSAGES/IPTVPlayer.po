@@ -45,47 +45,47 @@ msgstr ""
 "Sorunu buradan da bildirebilirsin: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
-msgid "    Audio buffer size [KB]"
-msgstr "    Ses tampon boyutu [KB]"
+msgid "Audio buffer size [KB]"
+msgstr "Ses tampon boyutu [KB]"
 
-msgid "    Background color"
-msgstr "    Arka plan rengi"
+msgid "Background color"
+msgstr "Arka plan rengi"
 
-msgid "    Default suggestions provider"
-msgstr "    Varsayılan öneri sağlayıcısı"
+msgid "Default suggestions provider"
+msgstr "Varsayılan öneri sağlayıcısı"
 
-msgid "    Enable hosts groups"
-msgstr "    Host gruplarını etkinleştir"
+msgid "Enable hosts groups"
+msgstr "Host gruplarını etkinleştir"
 
-msgid "    Number of columns"
-msgstr "    Sütun sayısı"
+msgid "Number of columns"
+msgstr "Sütun sayısı"
 
-msgid "    Number of rows"
-msgstr "    Satır sayısı"
+msgid "Number of rows"
+msgstr "Satır sayısı"
 
-msgid "    Remove thumbnails"
-msgstr "    Küçük resimleri kaldır"
+msgid "Remove thumbnails"
+msgstr "Küçük resimleri kaldır"
 
-msgid "    Service icon size"
-msgstr "    Servis simgesi boyutu"
+msgid "Service icon size"
+msgstr "Servis simgesi boyutu"
 
-msgid "    Show suggestions"
-msgstr "    Önerileri göster"
+msgid "Show suggestions"
+msgstr "Önerileri göster"
 
-msgid "    Video buffer size [MB]"
-msgstr "    Video tampon boyutu [MB]"
+msgid "Video buffer size [MB]"
+msgstr "Video tampon boyutu [MB]"
 
-msgid " Login Protected."
-msgstr " Giriş korumalı."
+msgid "Login Protected."
+msgstr "Giriş korumalı."
 
-msgid " Private Show."
-msgstr " Özel yayın."
+msgid "Private Show."
+msgstr "Özel yayın."
 
-msgid " This video is a private."
-msgstr " Bu video özeldir."
+msgid "This video is a private."
+msgstr "Bu video özeldir."
 
-msgid " or "
-msgstr " veya "
+msgid "or"
+msgstr "veya"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."

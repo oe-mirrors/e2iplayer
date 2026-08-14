@@ -53,48 +53,48 @@ msgstr ""
 "https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
 "ou ici : samsamsam@o2.pl"
 
-msgid "    Audio buffer size [KB]"
-msgstr "    Taille du tampon audio [KB]"
+msgid "Audio buffer size [KB]"
+msgstr "Taille du tampon audio [KB]"
 
-msgid "    Background color"
+msgid "Background color"
 msgstr ""
 
 #, fuzzy
-msgid "    Default suggestions provider"
+msgid "Default suggestions provider"
 msgstr "Sélectionner le fournisseur de sous-titres :"
 
-msgid "    Enable hosts groups"
-msgstr "    Permettre des groupes d’hôtes"
+msgid "Enable hosts groups"
+msgstr "Permettre des groupes d’hôtes"
 
-msgid "    Number of columns"
-msgstr "    Nombre de colonnes"
+msgid "Number of columns"
+msgstr "Nombre de colonnes"
 
-msgid "    Number of rows"
-msgstr "    Nombre de lignes"
+msgid "Number of rows"
+msgstr "Nombre de lignes"
 
-msgid "    Remove thumbnails"
-msgstr "    Supprimer les miniatures"
+msgid "Remove thumbnails"
+msgstr "Supprimer les miniatures"
 
-msgid "    Service icon size"
-msgstr "    Taille des icônes service"
+msgid "Service icon size"
+msgstr "Taille des icônes service"
 
-msgid "    Show suggestions"
+msgid "Show suggestions"
 msgstr ""
 
-msgid "    Video buffer size [MB]"
-msgstr "    Taille du tampon vidéo [MB]"
+msgid "Video buffer size [MB]"
+msgstr "Taille du tampon vidéo [MB]"
 
 #, fuzzy
-msgid " Login Protected."
+msgid "Login Protected."
 msgstr "Login a échoué."
 
-msgid " Private Show."
+msgid "Private Show."
 msgstr ""
 
-msgid " This video is a private."
+msgid "This video is a private."
 msgstr ""
 
-msgid " or "
+msgid "or"
 msgstr ""
 
 #, python-format

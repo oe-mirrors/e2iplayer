@@ -756,7 +756,7 @@ class XXXParser:
 				return ''
 			printDBG('PORNTREX PARSERDATA: ' + str(data))
 			if 'video is a private' in data:
-				SetIPTVPlayerLastHostError(_(' This video is a private.'))
+				SetIPTVPlayerLastHostError(_('This video is a private.'))
 				return []
 			if self.format4k:
 				videoPage = self.cm.ph.getSearchGroups(data, '''video_alt_url5: ['"]([^"^']+?)['"]''')[0]
@@ -1912,7 +1912,7 @@ class XXXParser:
 				return videoUrl
 
 			if 'To watch this video please' in data:
-				SetIPTVPlayerLastHostError(_(' Login Protected.'))
+				SetIPTVPlayerLastHostError(_('Login Protected.'))
 				return []
 			return ''
 
@@ -4947,7 +4947,7 @@ class XXXParser:
 				host = self.cm.ph.getSearchGroups(item, '''data-video-host=['"]([^"^']+?)['"]''')[0]
 				if modelname == self.cm.ph.getSearchGroups(item, '''data-model-seo-name=['"]([^"^']+?)['"]''', 1, True)[0]:
 					if 'multi-user-private' in item:
-						SetIPTVPlayerLastHostError(_(' Private Show.'))
+						SetIPTVPlayerLastHostError(_('Private Show.'))
 						return []
 					break
 			videoUrl = 'https://manifest.vscdns.com/manifest.m3u8?key=nil&provider=highwinds&host=' + host + '&model_id=' + id + '&secure=true&prefix=amlst&youbora-debug=1'
