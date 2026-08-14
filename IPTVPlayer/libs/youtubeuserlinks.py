@@ -9,6 +9,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 
 ###################################################
 
@@ -29,7 +30,6 @@ from Screens.MessageBox import MessageBox
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Screens.ChoiceBox import ChoiceBox
-from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Components.MenuList import MenuList
 from enigma import getDesktop
 
@@ -763,7 +763,7 @@ class YouTubeUserLinksManager(object):
     def askNewGroup(self, session, callback):
         session.openWithCallback(
             lambda text=None: self.onNewGroupEntered(text, callback),
-            VirtualKeyBoard,
+            GetVirtualKeyboard(),
             title=self.guiSafeStr(_("Enter name")),
             text=""
         )
@@ -843,7 +843,7 @@ class YouTubeUserLinksManager(object):
             rawLine = self.getRawLine(item)
             session.openWithCallback(
                 lambda text=None: self.onEditRawEntered(item, text, callback),
-                VirtualKeyBoard,
+                GetVirtualKeyboard(),
                 title=self.guiSafeStr(_("Edit favourites")),
                 text=self.guiSafeStr(rawLine)
             )

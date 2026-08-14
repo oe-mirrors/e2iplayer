@@ -42,5 +42,12 @@
         <key id="KEY_ENTER" mapto="ok_repeat"    flags="r" />
         <key id="KEY_OK"    mapto="ok_repeat"    flags="r" />
         <key id="KEY_RED"   mapto="red_repeat"   flags="r" />
+        <key id="KEY_INFO"  mapto="info"         flags="m" />
+        <key id="KEY_EPG"   mapto="info"         flags="m" />
+        <key id="KEY_HELP"  mapto="info"         flags="m" />
+        <key id="KEY_PREVIOUS"   mapto="vk_prevpanel" flags="m" />
+        <key id="KEY_NEXT"       mapto="vk_nextpanel" flags="m" />
+        <key id="KEY_FASTFORWARD" mapto="vk_space"     flags="m" />
+        <key id="KEY_REWIND"      mapto="vk_cleartext" flags="m" />
     </map>
 </keymap>

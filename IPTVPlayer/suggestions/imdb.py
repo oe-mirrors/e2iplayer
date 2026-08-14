@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-# seems not used  to DELETE import urllib
 import json
 
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
@@ -19,7 +18,9 @@ class SuggestionsProvider:
         return _("IMDb Suggestions")
 
     def getSuggestions(self, text, locale):
-        text = text.decode('ascii', 'ignore').encode('ascii').lower()
+        # Python 2 leftover: str has no .decode() in Python 3. Same effect
+        # (drop non-ASCII chars) via encode+decode instead.
+        text = text.encode('ascii', 'ignore').decode('ascii').lower()
         if len(text) > 2:
             text = text.replace(' ', '_')
             url = 'http://v2.sg.media-imdb.com/suggests/titles/%s/%s.json' % (text[0], text)

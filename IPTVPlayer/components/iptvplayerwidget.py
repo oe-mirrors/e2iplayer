@@ -2069,9 +2069,12 @@ class E2iPlayerWidget(Screen):
     # end requestListFromHost(self, type, currSelIndex = -1, privateData = ''):
 
     def startSearchProcedure(self, searchTypes):
-        sts, prevPattern = CSearchHistoryHelper.loadLastPattern()
-        if sts:
-            self.searchPattern = prevPattern
+        if config.plugins.iptvplayer.osk_remember_last_search.value:
+            sts, prevPattern = CSearchHistoryHelper.loadLastPattern()
+            if sts:
+                self.searchPattern = prevPattern
+        else:
+            self.searchPattern = ''
         if searchTypes:
             self.session.openWithCallback(self.selectSearchTypeCallback, ChoiceBox, title=_("Search type"), list=searchTypes)
         else:
@@ -2085,6 +2088,54 @@ class E2iPlayerWidget(Screen):
         else:
             pass
 
+    def _resolveSuggestionsProvider(self):
+        # !!! NON BLOCKING !!! host suggestions call method directly on the
+        # host, so it must never block. Used both for the keyboard's initial
+        # provider and, via additionalParams['resolve_suggestions_provider'],
+        # to re-resolve live when "Default suggestions provider" / "Allow
+        # host to override suggestions provider" change while the keyboard
+        # is already open (e2ivk.py calls it again from its Settings-closed
+        # callback).
+        suggestionsProvider = None
+        try:
+            if config.plugins.iptvplayer.osk_allow_host_suggestions.value and self.visible and not self.isInWorkThread():
+                currSelIndex = self.getSelItem().itemIdx
+                hRet = self.host.getSuggestionsProvider(currSelIndex)
+                if hRet.status == RetHost.OK and hRet.value and hRet.value[0]:
+                    suggestionsProvider = hRet.value[0] if hRet.value[0] is not None else False
+        except Exception:
+            printExc()
+
+        if suggestionsProvider is None:
+            providerAlias = config.plugins.iptvplayer.osk_default_suggestions.value
+            if not providerAlias:
+                if not self.groupObj:
+                    self.groupObj = IPTVHostsGroups()
+                if self.hostName in self.groupObj.PREDEFINED_HOSTS['moviesandseries']:
+                    if self.hostName in self.groupObj.PREDEFINED_HOSTS['polish']:
+                        providerAlias = 'filmweb'
+                    else:
+                        providerAlias = 'imdb'
+                else:
+                    providerAlias = 'google'
+
+            if providerAlias == 'filmweb':
+                from Plugins.Extensions.IPTVPlayer.suggestions.filmweb import SuggestionsProvider as filmweb_Provider
+                suggestionsProvider = filmweb_Provider()
+            elif providerAlias == 'imdb':
+                from Plugins.Extensions.IPTVPlayer.suggestions.imdb import SuggestionsProvider as imdb_Provider
+                suggestionsProvider = imdb_Provider()
+            elif providerAlias == 'google':
+                from Plugins.Extensions.IPTVPlayer.suggestions.google import SuggestionsProvider as google_Provider
+                suggestionsProvider = google_Provider()
+            elif providerAlias == 'bing':
+                from Plugins.Extensions.IPTVPlayer.suggestions.bing import SuggestionsProvider as bing_Provider
+                suggestionsProvider = bing_Provider()
+            elif providerAlias == 'duckduckgo':
+                from Plugins.Extensions.IPTVPlayer.suggestions.duckduckgo import SuggestionsProvider as duckduckgo_Provider
+                suggestionsProvider = duckduckgo_Provider()
+        return suggestionsProvider
+
     def doSearchWithVirtualKeyboard(self):
         printDBG("doSearchWithVirtualKeyboard")
         caps = {}
@@ -2094,49 +2145,15 @@ class E2iPlayerWidget(Screen):
             try:
                 additionalParams = {}
                 if caps.get('has_suggestions') and config.plugins.iptvplayer.osk_allow_suggestions.value:
-                    # we have to be careful here as we will call method
-                    # directly from host it must be non blocking!!!
-                    suggestionsProvider = None
-                    try:
-                        if self.visible and not self.isInWorkThread():
-                            currSelIndex = self.getSelItem().itemIdx
-                            hRet = self.host.getSuggestionsProvider(currSelIndex)
-                            if hRet.status == RetHost.OK and hRet.value and hRet.value[0]:
-                                suggestionsProvider = hRet.value[0] if hRet.value[0] is not None else False
-                    except Exception:
-                        printExc()
-
-                    if suggestionsProvider is None:
-                        providerAlias = config.plugins.iptvplayer.osk_default_suggestions.value
-                        if not providerAlias:
-                            if not self.groupObj:
-                                self.groupObj = IPTVHostsGroups()
-                            if self.hostName in self.groupObj.PREDEFINED_HOSTS['moviesandseries']:
-                                if self.hostName in self.groupObj.PREDEFINED_HOSTS['polish']:
-                                    providerAlias = 'filmweb'
-                                elif self.hostName in self.groupObj.PREDEFINED_HOSTS['german']:
-                                    providerAlias = 'filmstarts'
-                                else:
-                                    providerAlias = 'imdb'
-                            else:
-                                providerAlias = 'google'
-
-                        if providerAlias == 'filmweb':
-                            from Plugins.Extensions.IPTVPlayer.suggestions.filmweb import SuggestionsProvider as filmweb_Provider
-                            suggestionsProvider = filmweb_Provider()
-                        elif providerAlias == 'imdb':
-                            from Plugins.Extensions.IPTVPlayer.suggestions.imdb import SuggestionsProvider as imdb_Provider
-                            suggestionsProvider = imdb_Provider()
-                        elif providerAlias == 'google':
-                            from Plugins.Extensions.IPTVPlayer.suggestions.google import SuggestionsProvider as google_Provider
-                            suggestionsProvider = google_Provider()
-                        elif providerAlias == 'filmstarts':
-                            from Plugins.Extensions.IPTVPlayer.suggestions.filmstarts import SuggestionsProvider as filmstarts_Provider
-                            suggestionsProvider = filmstarts_Provider()
-
+                    suggestionsProvider = self._resolveSuggestionsProvider()
                     if suggestionsProvider:
                         from Plugins.Extensions.IPTVPlayer.components.e2ivksuggestion import AutocompleteSearch
                         additionalParams['autocomplete'] = AutocompleteSearch(suggestionsProvider)
+                        # only offered when the suggestions panel exists from
+                        # the start - e2ivk.py's skin decides whether to lay
+                        # out right_list/right_header once, at open time,
+                        # based on additionalParams['autocomplete'] being set
+                        additionalParams['resolve_suggestions_provider'] = self._resolveSuggestionsProvider
 
                 self.session.openWithCallback(self.enterPatternCallBack, virtualKeyboard, title=(_("Your search entry")), text=self.searchPattern, additionalParams=additionalParams)
                 return
@@ -2147,7 +2164,8 @@ class E2iPlayerWidget(Screen):
     def enterPatternCallBack(self, callback=None):
         if callback is not None and len(callback):
             self.searchPattern = callback
-            CSearchHistoryHelper.saveLastPattern(self.searchPattern)
+            if config.plugins.iptvplayer.osk_remember_last_search.value:
+                CSearchHistoryHelper.saveLastPattern(self.searchPattern)
             self.requestListFromHost('ForSearch')
 
     def configCallback(self):

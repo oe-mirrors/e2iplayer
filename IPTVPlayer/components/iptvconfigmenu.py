@@ -24,7 +24,7 @@ from .iptvpin import IPTVPinWidget
 from Screens.MessageBox import MessageBox
 
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigDirectory, ConfigYesNo, ConfigOnOff, ConfigInteger, \
-                              ConfigText, getConfigListEntry, configfile
+                              ConfigText, ConfigSelectionNumber, getConfigListEntry, configfile
 from Tools.BoundFunction import boundFunction
 ###################################################
 
@@ -68,8 +68,17 @@ config.plugins.iptvplayer.plugin_autostart_method = ConfigSelection(default="wiz
 config.plugins.iptvplayer.osk_type = ConfigSelection(default="", choices=[("", _("Auto")), ("system", _("System")), ("own", _("Own model"))])
 config.plugins.iptvplayer.osk_layout = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.osk_allow_suggestions = ConfigYesNo(default=True)
-config.plugins.iptvplayer.osk_default_suggestions = ConfigSelection(default="", choices=[("", _("Auto")), ("none", _("None")), ("google", "google.com"), ("filmweb", "filmweb.pl"), ("imdb", "imdb.com"), ("filmstarts", "filmstarts.de")])
+config.plugins.iptvplayer.osk_allow_search_history = ConfigYesNo(default=True)
+config.plugins.iptvplayer.osk_remember_last_search = ConfigYesNo(default=True)
+config.plugins.iptvplayer.osk_default_suggestions = ConfigSelection(default="", choices=[("", _("Auto")), ("none", _("None")), ("google", "google.com"), ("bing", "bing.com"), ("duckduckgo", "duckduckgo.com"), ("filmweb", "filmweb.pl"), ("imdb", "imdb.com")])
+config.plugins.iptvplayer.osk_allow_host_suggestions = ConfigYesNo(default=True)
 config.plugins.iptvplayer.osk_background_color = ConfigSelection(default="", choices=[('', _('Default')), ('transparent', _('Transparent')), ('#000000', _('Black')), ('#80000000', _('Darkgray')), ('#cc000000', _('Lightgray'))])
+# the tightest element (the HD/SD input line: 26pt base in a fixed 36px-tall
+# row) is already close to its limit, so the positive end is kept modest to
+# avoid clipping instead of matching NewVirtualKeyBoard's wider 0-30 range
+config.plugins.iptvplayer.osk_font_size_offset = ConfigSelectionNumber(min=-6, max=6, stepwidth=1, default=0, wraparound=False)
+config.plugins.iptvplayer.osk_searchfield_align = ConfigSelection(default="left", choices=[("left", _("Left")), ("right", _("Right"))])
+config.plugins.iptvplayer.osk_show_flags = ConfigYesNo(default=True)
 
 
 def GetMoviePlayerName(player):
@@ -271,6 +280,74 @@ def GetListOfHostsNames():
 ###################################################
 
 
+def GetOskOwnModelConfigList(indent=True):
+    # the "Own model" keyboard's own options - shared by ConfigMenu's
+    # "Grundkonfiguration" section (indented, nested under "Virtual Keyboard
+    # type") and E2iVKQuickSettings (the keyboard's own MENU -> Settings
+    # screen, shown standalone since that screen only exists while the "own"
+    # model is already active) so both stay in sync
+    #
+    # The indent is purely presentational, so it's applied to the already-
+    # translated result instead of being baked into the msgid - that used to
+    # be the case (msgid "    Show suggestions") and every .po's msgstr had
+    # the same 4 spaces baked in too, so this only works untranslated for
+    # E2iVKQuickSettings (indent=False) before now. Migrated all 12 locales'
+    # existing translations onto the unindented msgid instead of leaving
+    # them stuck on a dead, presentation-specific key.
+    prefix = '    ' if indent else ''
+    list = []
+    list.append(getConfigListEntry(prefix + _("Background color"), config.plugins.iptvplayer.osk_background_color))
+    list.append(getConfigListEntry(prefix + _("Show suggestions"), config.plugins.iptvplayer.osk_allow_suggestions))
+    list.append(getConfigListEntry(prefix + _("Default suggestions provider"), config.plugins.iptvplayer.osk_default_suggestions))
+    list.append(getConfigListEntry(prefix + _("Allow host to override suggestions provider"), config.plugins.iptvplayer.osk_allow_host_suggestions))
+    list.append(getConfigListEntry(prefix + _("Show search history"), config.plugins.iptvplayer.osk_allow_search_history))
+    list.append(getConfigListEntry(prefix + _("Show flags"), config.plugins.iptvplayer.osk_show_flags))
+    list.append(getConfigListEntry(prefix + _("Font size offset"), config.plugins.iptvplayer.osk_font_size_offset))
+    list.append(getConfigListEntry(prefix + _("Text field alignment"), config.plugins.iptvplayer.osk_searchfield_align))
+    return list
+
+
+def GetOskConfigList():
+    list = []
+    list.append(getConfigListEntry(_("Virtual Keyboard type"), config.plugins.iptvplayer.osk_type))
+    list.append(getConfigListEntry(_("Remember last search entry"), config.plugins.iptvplayer.osk_remember_last_search))
+    if config.plugins.iptvplayer.osk_type.value == 'own':
+        list.extend(GetOskOwnModelConfigList(indent=True))
+    return list
+
+
+class E2iVKQuickSettings(ConfigBaseWidget):
+    def __init__(self, session):
+        self.list = []
+        ConfigBaseWidget.__init__(self, session)
+
+    def layoutFinished(self):
+        ConfigBaseWidget.layoutFinished(self)
+        self.setTitle(_("E2iPlayer - keyboard settings"))
+
+    def runSetup(self):
+        self.list = GetOskOwnModelConfigList(indent=False)
+        ConfigBaseWidget.runSetup(self)
+
+    def getSubOptionsList(self):
+        return []
+
+    def keyDefaults(self):
+        # ConfigBaseWidget's own keyDefaults() is a no-op stub; ConfigMenu
+        # overrides it for the full settings list, this does the same but
+        # scoped to just the keyboard options shown here.
+        def keyDefaultsConfirm(result):
+            if result:
+                for item in self.list:
+                    if len(item) > 1:
+                        configItem = item[1]
+                        if not isinstance(configItem, ConfigText):
+                            configItem.value = configItem.default
+                self.close()
+        message = _("Are you sure you want to reset all settings to their default values?")
+        self.session.openWithCallback(keyDefaultsConfirm, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
+
+
 class ConfigMenu(ConfigBaseWidget):
 
     def __init__(self, session):
@@ -298,11 +375,7 @@ class ConfigMenu(ConfigBaseWidget):
     @staticmethod
     def fillConfigList(list,):
         list.append(getConfigListEntry(_("----- BASIC CONFIGURATION -----"),))
-        list.append(getConfigListEntry(_("Virtual Keyboard type"), config.plugins.iptvplayer.osk_type))
-        if config.plugins.iptvplayer.osk_type.value == 'own':
-            list.append(getConfigListEntry("    " + _("Background color"), config.plugins.iptvplayer.osk_background_color))
-            list.append(getConfigListEntry("    " + _("Show suggestions"), config.plugins.iptvplayer.osk_allow_suggestions))
-            list.append(getConfigListEntry("    " + _("Default suggestions provider"), config.plugins.iptvplayer.osk_default_suggestions))
+        list.extend(GetOskConfigList())
         list.append(getConfigListEntry(_("Initialize web interface"), config.plugins.iptvplayer.IPTVWebIterface))
         list.append(getConfigListEntry(_("Show IPTVPlayer in extension list"), config.plugins.iptvplayer.showinextensions))
         list.append(getConfigListEntry(_("Show IPTVPlayer in main menu"), config.plugins.iptvplayer.showinMainMenu))
