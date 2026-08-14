@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-27 15:40+0200\n"
+"POT-Creation-Date: 2026-08-14 16:50+0200\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -44,48 +44,6 @@ msgstr ""
 "\n"
 "Sorunu buradan da bildirebilirsin: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-
-msgid "Audio buffer size [KB]"
-msgstr "Ses tampon boyutu [KB]"
-
-msgid "Background color"
-msgstr "Arka plan rengi"
-
-msgid "Default suggestions provider"
-msgstr "Varsayılan öneri sağlayıcısı"
-
-msgid "Enable hosts groups"
-msgstr "Host gruplarını etkinleştir"
-
-msgid "Number of columns"
-msgstr "Sütun sayısı"
-
-msgid "Number of rows"
-msgstr "Satır sayısı"
-
-msgid "Remove thumbnails"
-msgstr "Küçük resimleri kaldır"
-
-msgid "Service icon size"
-msgstr "Servis simgesi boyutu"
-
-msgid "Show suggestions"
-msgstr "Önerileri göster"
-
-msgid "Video buffer size [MB]"
-msgstr "Video tampon boyutu [MB]"
-
-msgid "Login Protected."
-msgstr "Giriş korumalı."
-
-msgid "Private Show."
-msgstr "Özel yayın."
-
-msgid "This video is a private."
-msgstr "Bu video özeldir."
-
-msgid "or"
-msgstr "veya"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
@@ -268,6 +226,9 @@ msgstr ""
 msgid "--Other--"
 msgstr "Diğer"
 
+msgid "0-9 - direct number input"
+msgstr ""
+
 msgid "12 hour format"
 msgstr "12 saat biçimi"
 
@@ -416,11 +377,18 @@ msgstr "VP9 kodeğine izin ver:"
 msgid "Allow dash format:"
 msgstr "DASH biçimine izin ver:"
 
+#, fuzzy
+msgid "Allow host to override suggestions provider"
+msgstr "Varsayılan öneri sağlayıcısı"
+
 msgid "Allow watched flag to be set"
 msgstr "İzlendi işaretinin ayarlanmasına izin ver"
 
 msgid "Alphabetically"
 msgstr "Alfabetik olarak"
+
+msgid "AltGr"
+msgstr ""
 
 #, fuzzy
 msgid "Alternate Title:"
@@ -530,6 +498,9 @@ msgstr "En-boy oranı"
 msgid "Audio"
 msgstr "Ses"
 
+msgid "Audio buffer size [KB]"
+msgstr "Ses tampon boyutu [KB]"
+
 msgid "Audio tracks"
 msgstr "Ses parçaları"
 
@@ -554,6 +525,15 @@ msgstr "Otomatik oynatma başlama gecikmesi"
 msgid "Awards:"
 msgstr ""
 
+msgid "BLUE - Shift"
+msgstr ""
+
+msgid "Background color"
+msgstr "Arka plan rengi"
+
+msgid "Backspace"
+msgstr ""
+
 msgid "Balkans"
 msgstr ""
 
@@ -563,6 +543,10 @@ msgstr "Bilim"
 
 msgid "Best"
 msgstr ""
+
+#, fuzzy
+msgid "Bing Suggestions"
+msgstr "Google Önerileri"
 
 #, python-format
 msgid "Bitrate: %s"
@@ -842,6 +826,9 @@ msgstr "Varsayılan"
 msgid "Default captcha bypass"
 msgstr ""
 
+msgid "Default suggestions provider"
+msgstr "Varsayılan öneri sağlayıcısı"
+
 msgid "Default video aspect ratio"
 msgstr ""
 
@@ -1072,6 +1059,10 @@ msgstr "İndirilenler"
 msgid "Downloads location"
 msgstr "İndirme konumu"
 
+#, fuzzy
+msgid "DuckDuckGo Suggestions"
+msgstr "Google Önerileri"
+
 msgid "Duration"
 msgstr "Süre"
 
@@ -1082,6 +1073,10 @@ msgstr "Süre:"
 #, fuzzy, python-format
 msgid "Duration: %s"
 msgstr "Süre:"
+
+#, fuzzy
+msgid "E2iPlayer - keyboard settings"
+msgstr "E2iPlayer - ayarlar"
 
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - ayarlar"
@@ -1094,6 +1089,10 @@ msgstr "E2iPlayer indirici"
 
 msgid "E2iPlayer enable/disabled groups"
 msgstr ""
+
+#, fuzzy
+msgid "E2iPlayer virtual keyboard"
+msgstr "Sanal Klavye"
 
 msgid "ERROR:"
 msgstr "HATA:"
@@ -1134,6 +1133,9 @@ msgstr "E-posta"
 msgid "Enable"
 msgstr "Etkinleştir"
 
+msgid "Enable hosts groups"
+msgstr "Host gruplarını etkinleştir"
+
 msgid "Enable reordering"
 msgstr "Yeniden sıralamayı etkinleştir"
 
@@ -1170,6 +1172,10 @@ msgstr "Anime TV dizileri"
 #, fuzzy
 msgid "English movies"
 msgstr "Anime filmleri"
+
+#, fuzzy
+msgid "Enter"
+msgstr "orta"
 
 msgid "Enter a value"
 msgstr "Bir değer girin"
@@ -1303,6 +1309,9 @@ msgstr ""
 msgid "FAILED"
 msgstr "BAŞARISIZ"
 
+msgid "FAST FORWARD - insert space"
+msgstr ""
+
 msgid "FREE"
 msgstr "ÜCRETSİZ"
 
@@ -1426,10 +1435,6 @@ msgid "Film"
 msgstr "Film"
 
 #, fuzzy
-msgid "Filmstarts Suggestions"
-msgstr "Google Önerileri"
-
-#, fuzzy
 msgid "Filmweb Suggestions"
 msgstr "Google Önerileri"
 
@@ -1454,6 +1459,9 @@ msgid "Folder for temporary data"
 msgstr "Geçici veriler klasörü"
 
 msgid "Following host are broken or additional python modules are needed."
+msgstr ""
+
+msgid "Font size offset"
 msgstr ""
 
 msgid "Foot & Ankle"
@@ -1491,6 +1499,9 @@ msgstr "Geçerli bağlantı yok."
 #, fuzzy
 msgid "Full description not available"
 msgstr "Geçerli bağlantı yok."
+
+msgid "GREEN - Enter (confirm and close)"
+msgstr ""
 
 msgid "GSTplayer no IFD workarround"
 msgstr ""
@@ -1587,6 +1598,9 @@ msgid "Hand"
 msgstr "El"
 
 msgid "Hardware floating point"
+msgstr ""
+
+msgid "Help"
 msgstr ""
 
 #, python-format
@@ -1798,6 +1812,9 @@ msgstr "TV dizileri"
 msgid "LATEST"
 msgstr ""
 
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr ""
+
 msgid "LIVE CHANNELS"
 msgstr ""
 
@@ -1856,6 +1873,9 @@ msgstr "Son eklenenler"
 #, fuzzy
 msgid "Latino"
 msgstr "Puan"
+
+msgid "Left"
+msgstr ""
 
 msgid "Level:"
 msgstr ""
@@ -1949,6 +1969,9 @@ msgstr "Yerelleştirme"
 msgid "Login"
 msgstr "Giriş"
 
+msgid "Login Protected."
+msgstr "Giriş korumalı."
+
 msgid "Login failed!"
 msgstr "Giriş başarısız!"
 
@@ -1982,6 +2005,9 @@ msgstr "Düşük"
 
 msgid "MENU"
 msgstr "MENÜ"
+
+msgid "MENU - Options (select language, clear search history, settings)"
+msgstr ""
 
 msgid "MIPS Floating Point Architecture"
 msgstr ""
@@ -2235,6 +2261,9 @@ msgstr "Yok"
 msgid "Nothing has been downloaded yet."
 msgstr "Pin değiştirildi."
 
+msgid "Number of columns"
+msgstr "Sütun sayısı"
+
 msgid "Number of downloaded files simultaneously"
 msgstr ""
 
@@ -2242,8 +2271,14 @@ msgstr ""
 msgid "Number of items in search history: %d"
 msgstr "Arama geçmişini sil"
 
+msgid "Number of rows"
+msgstr "Satır sayısı"
+
 msgid "OK"
 msgstr "Tamam"
+
+msgid "OK - type selected character / confirm selection"
+msgstr ""
 
 #, python-format
 msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
@@ -2280,6 +2315,10 @@ msgstr "İşlem iptal edildi!"
 msgid "Optional User-Agent (leave blank for default)"
 msgstr ""
 
+#, fuzzy
+msgid "Options"
+msgstr "Video seçenekleri"
+
 msgid "Original Title:"
 msgstr ""
 
@@ -2292,6 +2331,9 @@ msgstr "Diğerleri"
 msgid "Own model"
 msgstr ""
 
+msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgstr ""
+
 msgid "PAY"
 msgstr ""
 
@@ -2299,6 +2341,9 @@ msgid "PENDING"
 msgstr ""
 
 msgid "PORT"
+msgstr ""
+
+msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
 msgid "Page: "
@@ -2488,6 +2533,9 @@ msgstr "Önceki liste"
 msgid "Price:"
 msgstr ""
 
+msgid "Private Show."
+msgstr "Özel yayın."
+
 msgid "Production:"
 msgstr ""
 
@@ -2531,7 +2579,13 @@ msgstr ""
 msgid "RECENT"
 msgstr ""
 
+msgid "RED - Backspace"
+msgstr ""
+
 msgid "REMEMBER: "
+msgstr ""
+
+msgid "REWIND - delete entered text"
 msgstr ""
 
 msgid "Radio"
@@ -2610,6 +2664,10 @@ msgstr "Listeyi yenile"
 msgid "Remaining:"
 msgstr "Puan:"
 
+#, fuzzy
+msgid "Remember last search entry"
+msgstr "Son izlenen konumu hatırla"
+
 msgid "Remember last watched position"
 msgstr "Son izlenen konumu hatırla"
 
@@ -2634,6 +2692,9 @@ msgstr "Grubu kaldır"
 
 msgid "Remove item"
 msgstr "Öğeyi kaldır"
+
+msgid "Remove thumbnails"
+msgstr "Küçük resimleri kaldır"
 
 msgid "Rename"
 msgstr "Yeniden adlandır"
@@ -2664,6 +2725,9 @@ msgid "Return to hosts list"
 msgstr "Host listesine dön"
 
 msgid "Reverse a playlist"
+msgstr ""
+
+msgid "Right"
 msgstr ""
 
 msgid "Russian"
@@ -2861,6 +2925,9 @@ msgstr ""
 msgid "Service [%s] has no additional settings."
 msgstr ""
 
+msgid "Service icon size"
+msgstr "Servis simgesi boyutu"
+
 msgid "Services configuration"
 msgstr "Servis yapılandırması"
 
@@ -2884,6 +2951,9 @@ msgstr "İzlendi olarak işaretle"
 
 msgid "Settings"
 msgstr "Ayarlar"
+
+msgid "Shift"
+msgstr ""
 
 #, fuzzy
 msgid "Short Movies"
@@ -2917,6 +2987,10 @@ msgstr "Yeni öğe ekledikten sonra indirme yöneticisini göster"
 msgid "Show file size"
 msgstr "Dosya boyutunu göster"
 
+#, fuzzy
+msgid "Show flags"
+msgstr "Dosya boyutunu göster"
+
 msgid "Show global search :"
 msgstr ""
 
@@ -2935,6 +3009,13 @@ msgstr ""
 
 msgid "Show only best quality of streams:"
 msgstr ""
+
+#, fuzzy
+msgid "Show search history"
+msgstr "Arama geçmişi"
+
+msgid "Show suggestions"
+msgstr "Önerileri göster"
 
 msgid "Shows"
 msgstr "Şovlar"
@@ -3238,6 +3319,10 @@ msgstr "TV dizileri"
 msgid "Techniques"
 msgstr ""
 
+#, fuzzy
+msgid "Text field alignment"
+msgstr "Dosya adı ayarla"
+
 msgid "Text files ytlist and urllist are in:"
 msgstr ""
 
@@ -3252,6 +3337,9 @@ msgid "The channel already exists in User Links."
 msgstr ""
 
 msgid "The color of the current version"
+msgstr ""
+
+msgid "The color of the started item"
 msgstr ""
 
 msgid "The color of the viewed item"
@@ -3333,6 +3421,9 @@ msgstr " Bu video özeldir."
 #, fuzzy
 msgid "This video is a private video."
 msgstr " Bu video özeldir."
+
+msgid "This video is a private."
+msgstr "Bu video özeldir."
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr ""
@@ -3586,6 +3677,9 @@ msgstr "Doğrula"
 msgid "Video"
 msgstr "Video"
 
+msgid "Video buffer size [MB]"
+msgstr "Video tampon boyutu [MB]"
+
 #, fuzzy
 msgid "Video format:"
 msgstr "biçim"
@@ -3700,6 +3794,9 @@ msgid "Xtream Live Stream"
 msgstr "Canlı akışlar"
 
 msgid "Xtream host (e.g. http://server:port)"
+msgstr ""
+
+msgid "YELLOW - AltGr"
 msgstr ""
 
 msgid "YP connected"
@@ -3956,6 +4053,9 @@ msgstr "lacivert"
 
 msgid "olive"
 msgstr "zeytin"
+
+msgid "or"
+msgstr "veya"
 
 msgid "password"
 msgstr "parola"

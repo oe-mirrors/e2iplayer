@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-27 15:40+0200\n"
+"POT-Creation-Date: 2026-08-14 16:50+0200\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -50,48 +50,6 @@ msgstr ""
 "\n"
 "U kunt een eventueel probleem ook hier melden:\n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-
-msgid "Audio buffer size [KB]"
-msgstr "Audio buffer grootte [kB]"
-
-msgid "Background color"
-msgstr "Achtergrondkleur"
-
-msgid "Default suggestions provider"
-msgstr "Default suggesties provider"
-
-msgid "Enable hosts groups"
-msgstr "Host-groepen inschakelen"
-
-msgid "Number of columns"
-msgstr "Aantal kolommen"
-
-msgid "Number of rows"
-msgstr "Aantal rijen"
-
-msgid "Remove thumbnails"
-msgstr "Thumbnails verwijderen"
-
-msgid "Service icon size"
-msgstr "Zender icon grootte"
-
-msgid "Show suggestions"
-msgstr "Toon suggesties"
-
-msgid "Video buffer size [MB]"
-msgstr "Video buffer grootte [MB]"
-
-msgid "Login Protected."
-msgstr "Beveiligde login."
-
-msgid "Private Show."
-msgstr "Privé uitzending."
-
-msgid "This video is a private."
-msgstr "Deze video is privé."
-
-msgid "or"
-msgstr "of"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
@@ -271,6 +229,9 @@ msgstr "--Elke--"
 msgid "--Other--"
 msgstr "--Overig--"
 
+msgid "0-9 - direct number input"
+msgstr ""
+
 msgid "12 hour format"
 msgstr "12-uurs tijdformaat"
 
@@ -419,11 +380,18 @@ msgstr "VP9 codec toestaan:"
 msgid "Allow dash format:"
 msgstr "Dash protocol toestaan:"
 
+#, fuzzy
+msgid "Allow host to override suggestions provider"
+msgstr "Default suggesties provider"
+
 msgid "Allow watched flag to be set"
 msgstr "Bekeken markering toestaan"
 
 msgid "Alphabetically"
 msgstr "Alfabetisch"
+
+msgid "AltGr"
+msgstr ""
 
 #, fuzzy
 msgid "Alternate Title:"
@@ -530,6 +498,9 @@ msgstr "Aspect"
 msgid "Audio"
 msgstr "Audio"
 
+msgid "Audio buffer size [KB]"
+msgstr "Audio buffer grootte [kB]"
+
 msgid "Audio tracks"
 msgstr "Audiosporen"
 
@@ -554,6 +525,15 @@ msgstr "Autoplay start vertraging"
 msgid "Awards:"
 msgstr ""
 
+msgid "BLUE - Shift"
+msgstr ""
+
+msgid "Background color"
+msgstr "Achtergrondkleur"
+
+msgid "Backspace"
+msgstr ""
+
 msgid "Balkans"
 msgstr "Balkan"
 
@@ -562,6 +542,10 @@ msgstr "Fundamentele wetenschap"
 
 msgid "Best"
 msgstr ""
+
+#, fuzzy
+msgid "Bing Suggestions"
+msgstr "Google Suggesties"
 
 #, python-format
 msgid "Bitrate: %s"
@@ -840,6 +824,9 @@ msgstr "Standaard"
 msgid "Default captcha bypass"
 msgstr "Default captcha bypass"
 
+msgid "Default suggestions provider"
+msgstr "Default suggesties provider"
+
 msgid "Default video aspect ratio"
 msgstr "Default video beeldverhouding"
 
@@ -1088,6 +1075,10 @@ msgstr "Downloads"
 msgid "Downloads location"
 msgstr "Downloads locatie"
 
+#, fuzzy
+msgid "DuckDuckGo Suggestions"
+msgstr "Google Suggesties"
+
 msgid "Duration"
 msgstr "Duur"
 
@@ -1098,6 +1089,10 @@ msgstr "Tijdsduur:"
 #, python-format
 msgid "Duration: %s"
 msgstr "Tijdsduur: %s"
+
+#, fuzzy
+msgid "E2iPlayer - keyboard settings"
+msgstr "E2iPlayer - instellingen"
 
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - instellingen"
@@ -1110,6 +1105,10 @@ msgstr "E2iPlayer downloader"
 
 msgid "E2iPlayer enable/disabled groups"
 msgstr "E2iPlayer in- of uitchakelen groepen"
+
+#, fuzzy
+msgid "E2iPlayer virtual keyboard"
+msgstr "Virtueel toetsenbord"
 
 msgid "ERROR:"
 msgstr "FOUT:"
@@ -1152,6 +1151,9 @@ msgstr "Email"
 msgid "Enable"
 msgstr "Inschakelen"
 
+msgid "Enable hosts groups"
+msgstr "Host-groepen inschakelen"
+
 msgid "Enable reordering"
 msgstr "Hersorteren inschakelen"
 
@@ -1188,6 +1190,10 @@ msgstr "Engelse TV series"
 
 msgid "English movies"
 msgstr "Engelse films"
+
+#, fuzzy
+msgid "Enter"
+msgstr "midden"
 
 msgid "Enter a value"
 msgstr "Voer een waarde in"
@@ -1324,6 +1330,9 @@ msgstr ""
 msgid "FAILED"
 msgstr "MISLUKT"
 
+msgid "FAST FORWARD - insert space"
+msgstr ""
+
 msgid "FREE"
 msgstr "VRIJ"
 
@@ -1443,9 +1452,6 @@ msgstr "Hernoemen bestand is gelukt!"
 msgid "Film"
 msgstr "Film"
 
-msgid "Filmstarts Suggestions"
-msgstr "Filmstarts tips"
-
 msgid "Filmweb Suggestions"
 msgstr "Filmweb tips"
 
@@ -1471,6 +1477,9 @@ msgstr "Map voor tijdelijke data"
 
 msgid "Following host are broken or additional python modules are needed."
 msgstr "De volgende host is defect of aanvullende python modules zijn noodzakelijk."
+
+msgid "Font size offset"
+msgstr ""
 
 msgid "Foot & Ankle"
 msgstr "Voet & Enkel"
@@ -1506,6 +1515,9 @@ msgstr "Geen geldige links beschikbaar."
 #, fuzzy
 msgid "Full description not available"
 msgstr "Geen geldige links beschikbaar."
+
+msgid "GREEN - Enter (confirm and close)"
+msgstr ""
 
 msgid "GSTplayer no IFD workarround"
 msgstr "Tijdelijke oplossing voor \"no IFD in GSTplayer\""
@@ -1601,6 +1613,9 @@ msgstr "Hand"
 
 msgid "Hardware floating point"
 msgstr "Hardware floating point"
+
+msgid "Help"
+msgstr ""
 
 #, python-format
 msgid "Hide \"%s\" group"
@@ -1808,6 +1823,9 @@ msgstr "Koreaanse TV series"
 msgid "LATEST"
 msgstr "ACTUEEL"
 
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr ""
+
 msgid "LIVE CHANNELS"
 msgstr "LIVE ZENDERS "
 
@@ -1866,6 +1884,9 @@ msgstr "Laatste update"
 
 msgid "Latino"
 msgstr "Spaans"
+
+msgid "Left"
+msgstr ""
 
 msgid "Level:"
 msgstr "Niveau:"
@@ -1956,6 +1977,9 @@ msgstr "Lokaliseren"
 msgid "Login"
 msgstr "Inloggen"
 
+msgid "Login Protected."
+msgstr "Beveiligde login."
+
 msgid "Login failed!"
 msgstr "Aanmelden mislukt!"
 
@@ -1991,6 +2015,9 @@ msgstr "Laag"
 
 msgid "MENU"
 msgstr "MENU"
+
+msgid "MENU - Options (select language, clear search history, settings)"
+msgstr ""
 
 msgid "MIPS Floating Point Architecture"
 msgstr "MIPS Floating Point Architectuur"
@@ -2244,6 +2271,9 @@ msgstr "Geen"
 msgid "Nothing has been downloaded yet."
 msgstr "Er is nog niets gedownload."
 
+msgid "Number of columns"
+msgstr "Aantal kolommen"
+
 msgid "Number of downloaded files simultaneously"
 msgstr "Aantal gelijktijdig gedownloade bestanden"
 
@@ -2251,8 +2281,14 @@ msgstr "Aantal gelijktijdig gedownloade bestanden"
 msgid "Number of items in search history: %d"
 msgstr "Aantal items in de zoekgeschiedenis: %d"
 
+msgid "Number of rows"
+msgstr "Aantal rijen"
+
 msgid "OK"
 msgstr "Bevestigen"
+
+msgid "OK - type selected character / confirm selection"
+msgstr ""
 
 #, python-format
 msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
@@ -2288,6 +2324,10 @@ msgstr "Geannuleerd!"
 msgid "Optional User-Agent (leave blank for default)"
 msgstr "Optionele User-Agent (leeg laten voor default)"
 
+#, fuzzy
+msgid "Options"
+msgstr "Video opties"
+
 msgid "Original Title:"
 msgstr ""
 
@@ -2300,6 +2340,9 @@ msgstr "Overige"
 msgid "Own model"
 msgstr "Eigen model"
 
+msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgstr ""
+
 msgid "PAY"
 msgstr "BETALEN"
 
@@ -2308,6 +2351,9 @@ msgstr "IN BEHANDELING"
 
 msgid "PORT"
 msgstr "PORT"
+
+msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
+msgstr ""
 
 msgid "Page: "
 msgstr ""
@@ -2495,6 +2541,9 @@ msgstr "Vorig overzicht"
 msgid "Price:"
 msgstr ""
 
+msgid "Private Show."
+msgstr "Privé uitzending."
+
 msgid "Production:"
 msgstr ""
 
@@ -2535,8 +2584,14 @@ msgstr "RAM-buffergrootte [MB] voor netwerk protocollen"
 msgid "RECENT"
 msgstr "RECENT"
 
+msgid "RED - Backspace"
+msgstr ""
+
 msgid "REMEMBER: "
 msgstr "ONTHOUDEN: "
+
+msgid "REWIND - delete entered text"
+msgstr ""
 
 msgid "Radio"
 msgstr "Radio"
@@ -2611,6 +2666,10 @@ msgstr "Actualiseren overzicht"
 msgid "Remaining:"
 msgstr "Beoordeling:"
 
+#, fuzzy
+msgid "Remember last search entry"
+msgstr "Laatst bekeken positie onthouden"
+
 msgid "Remember last watched position"
 msgstr "Laatst bekeken positie onthouden"
 
@@ -2635,6 +2694,9 @@ msgstr "Groep verwijderen"
 
 msgid "Remove item"
 msgstr "Item verwijderen"
+
+msgid "Remove thumbnails"
+msgstr "Thumbnails verwijderen"
 
 msgid "Rename"
 msgstr "Hernoemen"
@@ -2669,6 +2731,9 @@ msgstr "Terug naar hosts overzicht"
 
 msgid "Reverse a playlist"
 msgstr "Keer afspeellijst om"
+
+msgid "Right"
+msgstr ""
 
 msgid "Russian"
 msgstr "Russisch"
@@ -2861,6 +2926,9 @@ msgstr ""
 msgid "Service [%s] has no additional settings."
 msgstr "Zender [%s] heeft geen aanvullende instellingen."
 
+msgid "Service icon size"
+msgstr "Zender icon grootte"
+
 msgid "Services configuration"
 msgstr "Zender configuratie"
 
@@ -2884,6 +2952,9 @@ msgstr "Als bekeken instellen"
 
 msgid "Settings"
 msgstr "Instellingen"
+
+msgid "Shift"
+msgstr ""
 
 msgid "Short Movies"
 msgstr "Korte films"
@@ -2915,6 +2986,10 @@ msgstr "Download Manager tonen na het toevoegen van een nieuw item"
 msgid "Show file size"
 msgstr "Bestandsgrootte tonen"
 
+#, fuzzy
+msgid "Show flags"
+msgstr "Bestandsgrootte tonen"
+
 msgid "Show global search :"
 msgstr "Globaal zoeken :"
 
@@ -2932,6 +3007,13 @@ msgstr "Alleen audio in de gekozen taal tonen:"
 
 msgid "Show only best quality of streams:"
 msgstr "Alleen streams met de beste kwaliteit tonen:"
+
+#, fuzzy
+msgid "Show search history"
+msgstr "Zoek geschiedenis"
+
+msgid "Show suggestions"
+msgstr "Toon suggesties"
 
 msgid "Shows"
 msgstr "Uitzendingen"
@@ -3233,6 +3315,10 @@ msgstr "TV series"
 msgid "Techniques"
 msgstr "Technieken"
 
+#, fuzzy
+msgid "Text field alignment"
+msgstr "Bestandsnaam opgeven"
+
 msgid "Text files ytlist and urllist are in:"
 msgstr "Tekstbestanden ytlist en urllist staan in:"
 
@@ -3249,6 +3335,10 @@ msgstr "Hetzelfde item bestaat al in deze groep."
 
 msgid "The color of the current version"
 msgstr "De kleur van de huidige versie"
+
+#, fuzzy
+msgid "The color of the started item"
+msgstr "De kleur van het bekeken item"
 
 msgid "The color of the viewed item"
 msgstr "De kleur van het bekeken item"
@@ -3334,6 +3424,9 @@ msgstr "Deze video is verwijderd."
 
 msgid "This video is a private video."
 msgstr "Dit is een privé video."
+
+msgid "This video is a private."
+msgstr "Deze video is privé."
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tip! U kunt een USB flash drive aansluiten om dit probleem op te lossen."
@@ -3577,6 +3670,9 @@ msgstr "Verifiëren"
 msgid "Video"
 msgstr "Video"
 
+msgid "Video buffer size [MB]"
+msgstr "Video buffer grootte [MB]"
+
 msgid "Video format:"
 msgstr "Video formaat:"
 
@@ -3687,6 +3783,9 @@ msgstr "Xtream Live Stream"
 
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "Xtream host (bijv. http://server:poort)"
+
+msgid "YELLOW - AltGr"
+msgstr ""
 
 msgid "YP connected"
 msgstr "YP connected"
@@ -3943,6 +4042,9 @@ msgstr "marineblauw"
 
 msgid "olive"
 msgstr "olijf"
+
+msgid "or"
+msgstr "of"
 
 msgid "password"
 msgstr "wachtwoord"

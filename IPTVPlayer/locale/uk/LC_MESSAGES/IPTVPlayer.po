@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-27 15:40+0200\n"
+"POT-Creation-Date: 2026-08-14 16:50+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -50,49 +50,6 @@ msgstr ""
 "Повідомити про проблему ви можете тут: \n"
 "https://gitlab.com/iptvplayer-for-e2/iptvplayer-for-e2/issues\n"
 "або тут: samsamsam@o2.pl"
-
-msgid "Audio buffer size [KB]"
-msgstr "Розмір буфера Аудіо [KB]"
-
-msgid "Background color"
-msgstr ""
-
-msgid "Default suggestions provider"
-msgstr ""
-
-msgid "Enable hosts groups"
-msgstr ""
-
-msgid "Number of columns"
-msgstr "Кількість колонок"
-
-msgid "Number of rows"
-msgstr "Кількість рядків"
-
-msgid "Remove thumbnails"
-msgstr "Видалити ескізи"
-
-msgid "Service icon size"
-msgstr "Розмір іконки сервіса"
-
-msgid "Show suggestions"
-msgstr ""
-
-msgid "Video buffer size [MB]"
-msgstr "Розмір буфера Відео [MB]"
-
-#, fuzzy
-msgid "Login Protected."
-msgstr "Помилка входу."
-
-msgid "Private Show."
-msgstr ""
-
-msgid "This video is a private."
-msgstr ""
-
-msgid "or"
-msgstr ""
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
@@ -272,6 +229,9 @@ msgstr ""
 msgid "--Other--"
 msgstr "--Інший-"
 
+msgid "0-9 - direct number input"
+msgstr ""
+
 msgid "12 hour format"
 msgstr ""
 
@@ -429,11 +389,17 @@ msgstr ""
 msgid "Allow dash format:"
 msgstr "Дозволити формат різних типів:"
 
+msgid "Allow host to override suggestions provider"
+msgstr ""
+
 msgid "Allow watched flag to be set"
 msgstr ""
 
 msgid "Alphabetically"
 msgstr "В алфавітному порядку"
+
+msgid "AltGr"
+msgstr ""
 
 #, fuzzy
 msgid "Alternate Title:"
@@ -559,6 +525,9 @@ msgstr "Аспект"
 msgid "Audio"
 msgstr "Аудіо"
 
+msgid "Audio buffer size [KB]"
+msgstr "Розмір буфера Аудіо [KB]"
+
 #, fuzzy
 msgid "Audio tracks"
 msgstr "Вибір звукової дорожки"
@@ -585,6 +554,15 @@ msgstr "Автозапуск затримки пуску"
 msgid "Awards:"
 msgstr ""
 
+msgid "BLUE - Shift"
+msgstr ""
+
+msgid "Background color"
+msgstr ""
+
+msgid "Backspace"
+msgstr ""
+
 msgid "Balkans"
 msgstr ""
 
@@ -592,6 +570,9 @@ msgid "Basic Science"
 msgstr ""
 
 msgid "Best"
+msgstr ""
+
+msgid "Bing Suggestions"
 msgstr ""
 
 #, fuzzy, python-format
@@ -881,6 +862,9 @@ msgstr "по замовчуванню"
 msgid "Default captcha bypass"
 msgstr ""
 
+msgid "Default suggestions provider"
+msgstr ""
+
 msgid "Default video aspect ratio"
 msgstr "Відео пропорції по замовчуванню"
 
@@ -1145,6 +1129,9 @@ msgstr "Завантажити"
 msgid "Downloads location"
 msgstr "Завантажити ще раз"
 
+msgid "DuckDuckGo Suggestions"
+msgstr ""
+
 #, fuzzy
 msgid "Duration"
 msgstr "Конфігурація"
@@ -1156,6 +1143,10 @@ msgstr "Опис:"
 #, fuzzy, python-format
 msgid "Duration: %s"
 msgstr "Станції"
+
+#, fuzzy
+msgid "E2iPlayer - keyboard settings"
+msgstr "IPTV Плеєр - Налаштування"
 
 #, fuzzy
 msgid "E2iPlayer - settings"
@@ -1170,6 +1161,10 @@ msgstr "Завантажувач простих субтитрів"
 
 msgid "E2iPlayer enable/disabled groups"
 msgstr ""
+
+#, fuzzy
+msgid "E2iPlayer virtual keyboard"
+msgstr "Завантажувач простих субтитрів"
 
 #, fuzzy
 msgid "ERROR:"
@@ -1213,6 +1208,9 @@ msgstr "Ел. адрес"
 msgid "Enable"
 msgstr ""
 
+msgid "Enable hosts groups"
+msgstr ""
+
 #, fuzzy
 msgid "Enable reordering"
 msgstr "Включити режим перепризначення"
@@ -1250,6 +1248,10 @@ msgstr "Телесеріал"
 #, fuzzy
 msgid "English movies"
 msgstr "Англійський"
+
+#, fuzzy
+msgid "Enter"
+msgstr "центр"
 
 msgid "Enter a value"
 msgstr "Введіть значення"
@@ -1386,6 +1388,9 @@ msgstr ""
 msgid "FAILED"
 msgstr ""
 
+msgid "FAST FORWARD - insert space"
+msgstr ""
+
 msgid "FREE"
 msgstr ""
 
@@ -1512,9 +1517,6 @@ msgstr ""
 msgid "Film"
 msgstr "Фільми"
 
-msgid "Filmstarts Suggestions"
-msgstr ""
-
 msgid "Filmweb Suggestions"
 msgstr ""
 
@@ -1540,6 +1542,9 @@ msgstr "Папка для тимчасових даних"
 
 msgid "Following host are broken or additional python modules are needed."
 msgstr "Хост не працює, або немає додаткових модулів Python."
+
+msgid "Font size offset"
+msgstr ""
 
 msgid "Foot & Ankle"
 msgstr ""
@@ -1575,6 +1580,9 @@ msgstr "Немає працюючих посилань."
 #, fuzzy
 msgid "Full description not available"
 msgstr "Немає працюючих посилань."
+
+msgid "GREEN - Enter (confirm and close)"
+msgstr ""
 
 msgid "GSTplayer no IFD workarround"
 msgstr ""
@@ -1673,6 +1681,9 @@ msgid "Hand"
 msgstr ""
 
 msgid "Hardware floating point"
+msgstr ""
+
+msgid "Help"
 msgstr ""
 
 #, python-format
@@ -1891,6 +1902,9 @@ msgstr "Телесеріал"
 msgid "LATEST"
 msgstr "ОСТАННІ ВІДЕО"
 
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr ""
+
 msgid "LIVE CHANNELS"
 msgstr ""
 
@@ -1950,6 +1964,9 @@ msgstr "Останні оновлення"
 #, fuzzy
 msgid "Latino"
 msgstr "Рейтинг"
+
+msgid "Left"
+msgstr ""
 
 msgid "Level:"
 msgstr ""
@@ -2045,6 +2062,10 @@ msgid "Login"
 msgstr "Авторизуватися"
 
 #, fuzzy
+msgid "Login Protected."
+msgstr "Помилка входу."
+
+#, fuzzy
 msgid "Login failed!"
 msgstr "Помилка входу."
 
@@ -2080,6 +2101,9 @@ msgid "Low"
 msgstr "Низький"
 
 msgid "MENU"
+msgstr ""
+
+msgid "MENU - Options (select language, clear search history, settings)"
 msgstr ""
 
 msgid "MIPS Floating Point Architecture"
@@ -2347,6 +2371,9 @@ msgstr "ні"
 msgid "Nothing has been downloaded yet."
 msgstr "PIN-код змінено."
 
+msgid "Number of columns"
+msgstr "Кількість колонок"
+
 msgid "Number of downloaded files simultaneously"
 msgstr "Кількість завантажених файлів одночасно"
 
@@ -2354,7 +2381,13 @@ msgstr "Кількість завантажених файлів одночас�
 msgid "Number of items in search history: %d"
 msgstr "Кількість елементів в історії пошуку"
 
+msgid "Number of rows"
+msgstr "Кількість рядків"
+
 msgid "OK"
+msgstr ""
+
+msgid "OK - type selected character / confirm selection"
 msgstr ""
 
 #, python-format
@@ -2395,6 +2428,10 @@ msgstr "Операція перервана!"
 msgid "Optional User-Agent (leave blank for default)"
 msgstr ""
 
+#, fuzzy
+msgid "Options"
+msgstr "Параметри відео"
+
 msgid "Original Title:"
 msgstr ""
 
@@ -2409,6 +2446,9 @@ msgstr "Інші"
 msgid "Own model"
 msgstr "Режим Одно посилання"
 
+msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgstr ""
+
 msgid "PAY"
 msgstr ""
 
@@ -2416,6 +2456,9 @@ msgid "PENDING"
 msgstr "ОЧІКУВАННЯ"
 
 msgid "PORT"
+msgstr ""
+
+msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
 msgid "Page: "
@@ -2612,6 +2655,9 @@ msgstr "Попередній"
 msgid "Price:"
 msgstr ""
 
+msgid "Private Show."
+msgstr ""
+
 msgid "Production:"
 msgstr ""
 
@@ -2655,7 +2701,13 @@ msgstr ""
 msgid "RECENT"
 msgstr ""
 
+msgid "RED - Backspace"
+msgstr ""
+
 msgid "REMEMBER: "
+msgstr ""
+
+msgid "REWIND - delete entered text"
 msgstr ""
 
 msgid "Radio"
@@ -2739,6 +2791,10 @@ msgstr "Плейлист"
 msgid "Remaining:"
 msgstr "Рейтинг"
 
+#, fuzzy
+msgid "Remember last search entry"
+msgstr "Запамятати минуле місце відтворення"
+
 msgid "Remember last watched position"
 msgstr "Запамятати минуле місце відтворення"
 
@@ -2764,6 +2820,9 @@ msgstr "Видалити групу"
 
 msgid "Remove item"
 msgstr "Видалити елементи"
+
+msgid "Remove thumbnails"
+msgstr "Видалити ескізи"
 
 msgid "Rename"
 msgstr "Перейменувати"
@@ -2798,6 +2857,9 @@ msgstr "Список мультфільмів"
 #, fuzzy
 msgid "Reverse a playlist"
 msgstr "Перемістити плейлист"
+
+msgid "Right"
+msgstr ""
 
 #, fuzzy
 msgid "Russian"
@@ -3000,6 +3062,9 @@ msgstr ""
 msgid "Service [%s] has no additional settings."
 msgstr "Конфігурація [%s] немає додаткових налаштувань."
 
+msgid "Service icon size"
+msgstr "Розмір іконки сервіса"
+
 msgid "Services configuration"
 msgstr "Конфігурація хосту(натисніть ОК)"
 
@@ -3025,6 +3090,9 @@ msgstr "послідні переглянуті"
 #, fuzzy
 msgid "Settings"
 msgstr "Кращий рейтинг"
+
+msgid "Shift"
+msgstr ""
 
 #, fuzzy
 msgid "Short Movies"
@@ -3058,6 +3126,10 @@ msgstr "Показати менеджер завантажеь після доб
 msgid "Show file size"
 msgstr "Показати размір файлу"
 
+#, fuzzy
+msgid "Show flags"
+msgstr "Показати размір файлу"
+
 msgid "Show global search :"
 msgstr ""
 
@@ -3075,6 +3147,13 @@ msgid "Show only audio in selected language:"
 msgstr ""
 
 msgid "Show only best quality of streams:"
+msgstr ""
+
+#, fuzzy
+msgid "Show search history"
+msgstr "Історія пошуку"
+
+msgid "Show suggestions"
 msgstr ""
 
 msgid "Shows"
@@ -3388,6 +3467,10 @@ msgstr "Телесеріал"
 msgid "Techniques"
 msgstr ""
 
+#, fuzzy
+msgid "Text field alignment"
+msgstr "Встановити ім'я файлу"
+
 msgid "Text files ytlist and urllist are in:"
 msgstr "Текстові файли ytlist і urllist знаходяться:"
 
@@ -3404,6 +3487,10 @@ msgstr "Те ж саме елемент вже існує в цій групі."
 
 #, fuzzy
 msgid "The color of the current version"
+msgstr "Виявлення версії OpenSSL."
+
+#, fuzzy
+msgid "The color of the started item"
 msgstr "Виявлення версії OpenSSL."
 
 msgid "The color of the viewed item"
@@ -3488,6 +3575,9 @@ msgid "This video has been deleted."
 msgstr ""
 
 msgid "This video is a private video."
+msgstr ""
+
+msgid "This video is a private."
 msgstr ""
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
@@ -3748,6 +3838,9 @@ msgstr ""
 msgid "Video"
 msgstr "Відео"
 
+msgid "Video buffer size [MB]"
+msgstr "Розмір буфера Відео [MB]"
+
 msgid "Video format:"
 msgstr "Формат відео:"
 
@@ -3865,6 +3958,9 @@ msgid "Xtream Live Stream"
 msgstr "Прямі-потоки"
 
 msgid "Xtream host (e.g. http://server:port)"
+msgstr ""
+
+msgid "YELLOW - AltGr"
 msgstr ""
 
 msgid "YP connected"
@@ -4131,6 +4227,9 @@ msgstr "морські хвилі"
 
 msgid "olive"
 msgstr "оливковий"
+
+msgid "or"
+msgstr ""
 
 msgid "password"
 msgstr "пароль"

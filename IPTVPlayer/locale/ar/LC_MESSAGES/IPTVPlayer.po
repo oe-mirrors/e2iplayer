@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-27 15:40+0200\n"
+"POT-Creation-Date: 2026-08-14 16:50+0200\n"
 "PO-Revision-Date: 2026-03-14 12:34+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -50,48 +50,6 @@ msgstr ""
 "\n"
 "يمكنك أيضًا الإبلاغ عن المشكلة هنا: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-
-msgid "Audio buffer size [KB]"
-msgstr "حجم مخزن الصوت المؤقت [KB]"
-
-msgid "Background color"
-msgstr "لون الخلفية"
-
-msgid "Default suggestions provider"
-msgstr "مزود الاقتراحات الافتراضي"
-
-msgid "Enable hosts groups"
-msgstr "تفعيل مجموعات المضيفين"
-
-msgid "Number of columns"
-msgstr "عدد الأعمدة"
-
-msgid "Number of rows"
-msgstr "عدد الصفوف"
-
-msgid "Remove thumbnails"
-msgstr "إزالة الصور المصغرة"
-
-msgid "Service icon size"
-msgstr "حجم أيقونة الخدمة"
-
-msgid "Show suggestions"
-msgstr "إظهار الإقتراحات"
-
-msgid "Video buffer size [MB]"
-msgstr "حجم تأخير الفيديو [MB]"
-
-msgid "Login Protected."
-msgstr "تسجيل الدخول محمي."
-
-msgid "Private Show."
-msgstr "عرض خاص."
-
-msgid "This video is a private."
-msgstr "هذا الفيديو خاص."
-
-msgid "or"
-msgstr "أو"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
@@ -268,6 +226,9 @@ msgstr "--أي منها--"
 msgid "--Other--"
 msgstr "--أخرى--"
 
+msgid "0-9 - direct number input"
+msgstr ""
+
 msgid "12 hour format"
 msgstr "تنسيق 12 ساعة"
 
@@ -416,11 +377,18 @@ msgstr "السماح بترميز VP9:"
 msgid "Allow dash format:"
 msgstr "السماح بتنسيق DASH:"
 
+#, fuzzy
+msgid "Allow host to override suggestions provider"
+msgstr "مزود الاقتراحات الافتراضي"
+
 msgid "Allow watched flag to be set"
 msgstr "السماح بتحديد المحتوى كمشاهد"
 
 msgid "Alphabetically"
 msgstr "حسب الترتيب الأبجدي"
+
+msgid "AltGr"
+msgstr ""
 
 #, fuzzy
 msgid "Alternate Title:"
@@ -527,6 +495,9 @@ msgstr "النسبة البُعدية"
 msgid "Audio"
 msgstr "الصوت"
 
+msgid "Audio buffer size [KB]"
+msgstr "حجم مخزن الصوت المؤقت [KB]"
+
 msgid "Audio tracks"
 msgstr "المسارات الصوتية"
 
@@ -551,6 +522,15 @@ msgstr "تأخير بدء التشغيل التلقائي"
 msgid "Awards:"
 msgstr ""
 
+msgid "BLUE - Shift"
+msgstr ""
+
+msgid "Background color"
+msgstr "لون الخلفية"
+
+msgid "Backspace"
+msgstr ""
+
 msgid "Balkans"
 msgstr "البلقان"
 
@@ -559,6 +539,10 @@ msgstr "العلوم الأساسية"
 
 msgid "Best"
 msgstr ""
+
+#, fuzzy
+msgid "Bing Suggestions"
+msgstr "اقتراحات Google"
 
 #, python-format
 msgid "Bitrate: %s"
@@ -837,6 +821,9 @@ msgstr "افتراضي"
 msgid "Default captcha bypass"
 msgstr "تخطي الكابتشا الافتراضي"
 
+msgid "Default suggestions provider"
+msgstr "مزود الاقتراحات الافتراضي"
+
 msgid "Default video aspect ratio"
 msgstr "نسبة العرض إلى الارتفاع الافتراضية للفيديو"
 
@@ -1085,6 +1072,10 @@ msgstr "الملفات المحمّلة"
 msgid "Downloads location"
 msgstr "مكان التحميل"
 
+#, fuzzy
+msgid "DuckDuckGo Suggestions"
+msgstr "اقتراحات Google"
+
 msgid "Duration"
 msgstr "المدة"
 
@@ -1095,6 +1086,10 @@ msgstr "المدة:"
 #, python-format
 msgid "Duration: %s"
 msgstr "المدة: %s"
+
+#, fuzzy
+msgid "E2iPlayer - keyboard settings"
+msgstr "إعدادات E2iPlayer"
 
 msgid "E2iPlayer - settings"
 msgstr "إعدادات E2iPlayer"
@@ -1107,6 +1102,10 @@ msgstr "أداة تنزيل E2iPlayer"
 
 msgid "E2iPlayer enable/disabled groups"
 msgstr "تفعيل/تعطيل المجموعات في E2iPlayer"
+
+#, fuzzy
+msgid "E2iPlayer virtual keyboard"
+msgstr "لوحة المفاتيح الافتراضية"
 
 msgid "ERROR:"
 msgstr "خطأ:"
@@ -1149,6 +1148,9 @@ msgstr "البريد الإلكتروني"
 msgid "Enable"
 msgstr "تفعيل"
 
+msgid "Enable hosts groups"
+msgstr "تفعيل مجموعات المضيفين"
+
 msgid "Enable reordering"
 msgstr "تفعيل إعادة الترتيب"
 
@@ -1185,6 +1187,10 @@ msgstr "مسلسلات إنجليزية"
 
 msgid "English movies"
 msgstr "أفلام إنجليزية"
+
+#, fuzzy
+msgid "Enter"
+msgstr "الوسط"
 
 msgid "Enter a value"
 msgstr "أدخل قيمة"
@@ -1321,6 +1327,9 @@ msgstr ""
 msgid "FAILED"
 msgstr "فشل"
 
+msgid "FAST FORWARD - insert space"
+msgstr ""
+
 msgid "FREE"
 msgstr "مجاني"
 
@@ -1440,9 +1449,6 @@ msgstr "تمت إعادة تسمية الملف بنجاح!"
 msgid "Film"
 msgstr "فيلم"
 
-msgid "Filmstarts Suggestions"
-msgstr "اقتراحات Filmstarts"
-
 msgid "Filmweb Suggestions"
 msgstr "اقتراحات Filmweb"
 
@@ -1468,6 +1474,9 @@ msgstr "المجلد المخصص للبيانات المؤقتة"
 
 msgid "Following host are broken or additional python modules are needed."
 msgstr "المضيف التالي لا يعمل أو يتطلب وحدات Python إضافية."
+
+msgid "Font size offset"
+msgstr ""
 
 msgid "Foot & Ankle"
 msgstr "القدم والكاحل"
@@ -1503,6 +1512,9 @@ msgstr "لا توجد روابط صالحة متاحة."
 #, fuzzy
 msgid "Full description not available"
 msgstr "لا توجد روابط صالحة متاحة."
+
+msgid "GREEN - Enter (confirm and close)"
+msgstr ""
 
 msgid "GSTplayer no IFD workarround"
 msgstr "حل مؤقت لمشكلة IFD في GSTplayer"
@@ -1598,6 +1610,9 @@ msgstr "يد"
 
 msgid "Hardware floating point"
 msgstr "الوحدة العائمة في العتاد"
+
+msgid "Help"
+msgstr ""
 
 #, python-format
 msgid "Hide \"%s\" group"
@@ -1805,6 +1820,9 @@ msgstr "مسلسلات كورية"
 msgid "LATEST"
 msgstr "الأحدث"
 
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr ""
+
 msgid "LIVE CHANNELS"
 msgstr "القنوات المباشرة"
 
@@ -1863,6 +1881,9 @@ msgstr "أحدث تحديث"
 
 msgid "Latino"
 msgstr "لاتيني"
+
+msgid "Left"
+msgstr ""
 
 msgid "Level:"
 msgstr "المستوى:"
@@ -1953,6 +1974,9 @@ msgstr "الترجمة المحلية"
 msgid "Login"
 msgstr "تسجيل الدخول"
 
+msgid "Login Protected."
+msgstr "تسجيل الدخول محمي."
+
 msgid "Login failed!"
 msgstr "فشل تسجيل الدخول!"
 
@@ -1988,6 +2012,9 @@ msgstr "منخفض"
 
 msgid "MENU"
 msgstr "القائمة"
+
+msgid "MENU - Options (select language, clear search history, settings)"
+msgstr ""
 
 msgid "MIPS Floating Point Architecture"
 msgstr "معمارية النقطة العائمة MIPS"
@@ -2241,6 +2268,9 @@ msgstr "لا شيء"
 msgid "Nothing has been downloaded yet."
 msgstr "لم يتم تحميل أي شيء حتى الآن."
 
+msgid "Number of columns"
+msgstr "عدد الأعمدة"
+
 msgid "Number of downloaded files simultaneously"
 msgstr "عدد الملفات التي يتم تحميلها في نفس الوقت"
 
@@ -2248,8 +2278,14 @@ msgstr "عدد الملفات التي يتم تحميلها في نفس الو�
 msgid "Number of items in search history: %d"
 msgstr "عدد العناصر في سجل البحث: %d"
 
+msgid "Number of rows"
+msgstr "عدد الصفوف"
+
 msgid "OK"
 msgstr "موافق"
+
+msgid "OK - type selected character / confirm selection"
+msgstr ""
 
 #, python-format
 msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
@@ -2285,6 +2321,10 @@ msgstr "تم إلغاء العملية!"
 msgid "Optional User-Agent (leave blank for default)"
 msgstr "وكيل المستخدم اختياري (اتركه فارغًا للإعداد الافتراضي)"
 
+#, fuzzy
+msgid "Options"
+msgstr "خيارات الفيديو"
+
 msgid "Original Title:"
 msgstr ""
 
@@ -2297,6 +2337,9 @@ msgstr "آخرون"
 msgid "Own model"
 msgstr "نموذج مخصص"
 
+msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgstr ""
+
 msgid "PAY"
 msgstr "دفع"
 
@@ -2305,6 +2348,9 @@ msgstr "قيد الانتظار"
 
 msgid "PORT"
 msgstr "المنفذ"
+
+msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
+msgstr ""
 
 msgid "Page: "
 msgstr ""
@@ -2491,6 +2537,9 @@ msgstr "القائمة السابقة"
 msgid "Price:"
 msgstr ""
 
+msgid "Private Show."
+msgstr "عرض خاص."
+
 msgid "Production:"
 msgstr ""
 
@@ -2531,8 +2580,14 @@ msgstr "حجم ذاكرة التخزين المؤقت [MB] لبروتوكولا�
 msgid "RECENT"
 msgstr "الأحدث"
 
+msgid "RED - Backspace"
+msgstr ""
+
 msgid "REMEMBER: "
 msgstr "تذكير: "
+
+msgid "REWIND - delete entered text"
+msgstr ""
 
 msgid "Radio"
 msgstr "الراديو"
@@ -2607,6 +2662,10 @@ msgstr "إعادة تحميل القائمة"
 msgid "Remaining:"
 msgstr "التقييم:"
 
+#, fuzzy
+msgid "Remember last search entry"
+msgstr "تذكر آخر موضع مشاهدة"
+
 msgid "Remember last watched position"
 msgstr "تذكر آخر موضع مشاهدة"
 
@@ -2631,6 +2690,9 @@ msgstr "إزالة المجموعة"
 
 msgid "Remove item"
 msgstr "إزالة العنصر"
+
+msgid "Remove thumbnails"
+msgstr "إزالة الصور المصغرة"
 
 msgid "Rename"
 msgstr "إعادة التسمية"
@@ -2665,6 +2727,9 @@ msgstr "العودة إلى قائمة المواقع"
 
 msgid "Reverse a playlist"
 msgstr "عكس ترتيب قائمة التشغيل"
+
+msgid "Right"
+msgstr ""
 
 msgid "Russian"
 msgstr "الروسية"
@@ -2857,6 +2922,9 @@ msgstr ""
 msgid "Service [%s] has no additional settings."
 msgstr "الخدمة [%s] لا تحتوي على إعدادات إضافية."
 
+msgid "Service icon size"
+msgstr "حجم أيقونة الخدمة"
+
 msgid "Services configuration"
 msgstr "إعدادات الخدمات"
 
@@ -2880,6 +2948,9 @@ msgstr "تعيين كمشاهد"
 
 msgid "Settings"
 msgstr "الإعدادات"
+
+msgid "Shift"
+msgstr ""
 
 msgid "Short Movies"
 msgstr "أفلام قصيرة"
@@ -2911,6 +2982,10 @@ msgstr "عرض مدير التنزيل بعد إضافة عنصر جديد"
 msgid "Show file size"
 msgstr "عرض حجم الملف"
 
+#, fuzzy
+msgid "Show flags"
+msgstr "عرض حجم الملف"
+
 msgid "Show global search :"
 msgstr "بحث شامل:"
 
@@ -2928,6 +3003,13 @@ msgstr "عرض الصوت فقط باللغة المحددة:"
 
 msgid "Show only best quality of streams:"
 msgstr "عرض أفضل جودة فقط للبث:"
+
+#, fuzzy
+msgid "Show search history"
+msgstr "سجل البحث"
+
+msgid "Show suggestions"
+msgstr "إظهار الإقتراحات"
 
 msgid "Shows"
 msgstr "عروض"
@@ -3226,6 +3308,10 @@ msgstr "مسلسلات"
 msgid "Techniques"
 msgstr "تقنيات"
 
+#, fuzzy
+msgid "Text field alignment"
+msgstr "تعيين اسم الملف"
+
 msgid "Text files ytlist and urllist are in:"
 msgstr "ملفات النص ytlist و urllist موجودة في:"
 
@@ -3242,6 +3328,10 @@ msgstr "العنصر موجود بالفعل في هذه المجموعة."
 
 msgid "The color of the current version"
 msgstr "لون النسخة الحالية"
+
+#, fuzzy
+msgid "The color of the started item"
+msgstr "لون العنصر المُشاهد"
 
 msgid "The color of the viewed item"
 msgstr "لون العنصر المُشاهد"
@@ -3327,6 +3417,9 @@ msgstr "تم حذف هذا الفيديو."
 
 msgid "This video is a private video."
 msgstr "هذا فيديو خاص."
+
+msgid "This video is a private."
+msgstr "هذا الفيديو خاص."
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "نصيحة! يمكنك توصيل وحدة USB لحل هذه المشكلة."
@@ -3570,6 +3663,9 @@ msgstr "تحقق"
 msgid "Video"
 msgstr "فيديو"
 
+msgid "Video buffer size [MB]"
+msgstr "حجم تأخير الفيديو [MB]"
+
 msgid "Video format:"
 msgstr "تنسيق الفيديو:"
 
@@ -3680,6 +3776,9 @@ msgstr "بث مباشر Xtream"
 
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "مضيف Xtream (مثل http://server:port)"
+
+msgid "YELLOW - AltGr"
+msgstr ""
 
 msgid "YP connected"
 msgstr "تم الاتصال بـ YP"
@@ -3936,6 +4035,9 @@ msgstr "كحلي"
 
 msgid "olive"
 msgstr "زيتوني"
+
+msgid "or"
+msgstr "أو"
 
 msgid "password"
 msgstr "كلمة المرور"

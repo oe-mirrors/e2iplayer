@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-27 15:40+0200\n"
+"POT-Creation-Date: 2026-08-14 16:50+0200\n"
 "PO-Revision-Date: 2026-07-27 16:03+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -47,48 +47,6 @@ msgstr ""
 "\n"
 "Sie können Probleme auch hier melden: \n"
 " https://github.com/oe-mirrors/e2iplayer/issues"
-
-msgid "Audio buffer size [KB]"
-msgstr "Audiopuffergröße in [KB]"
-
-msgid "Background color"
-msgstr "Hintergrundfarbe"
-
-msgid "Default suggestions provider"
-msgstr "Standard Suchmaschine"
-
-msgid "Enable hosts groups"
-msgstr "Zeige Service-Gruppen"
-
-msgid "Number of columns"
-msgstr "Anzahl der Spalten"
-
-msgid "Number of rows"
-msgstr "Anzahl der Zeilen"
-
-msgid "Remove thumbnails"
-msgstr "Lösche Vorschaubilder"
-
-msgid "Service icon size"
-msgstr "Service Icon Größe"
-
-msgid "Show suggestions"
-msgstr "Zeige Suchvorschläge"
-
-msgid "Video buffer size [MB]"
-msgstr "Videopuffergröße in [MB]"
-
-msgid "Login Protected."
-msgstr "Login Geschützt."
-
-msgid "Private Show."
-msgstr "Privatshow."
-
-msgid "This video is a private."
-msgstr "Dieses Video ist Privat."
-
-msgid "or"
-msgstr "oder"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
@@ -264,6 +222,9 @@ msgstr "--Beliebige--"
 msgid "--Other--"
 msgstr "--Andere--"
 
+msgid "0-9 - direct number input"
+msgstr ""
+
 msgid "12 hour format"
 msgstr "12 Stunden-Format"
 
@@ -408,11 +369,18 @@ msgstr "Erlaube VP9 Codec:"
 msgid "Allow dash format:"
 msgstr "Erlaube Dash Format:"
 
+#, fuzzy
+msgid "Allow host to override suggestions provider"
+msgstr "Standard Suchmaschine"
+
 msgid "Allow watched flag to be set"
 msgstr "Setzen von Gesehen-Marker erlauben"
 
 msgid "Alphabetically"
 msgstr "Alphabetisch"
+
+msgid "AltGr"
+msgstr ""
 
 msgid "Alternate Title:"
 msgstr "Alternativer Titel:"
@@ -518,6 +486,9 @@ msgstr "Seitenverhältnis"
 msgid "Audio"
 msgstr "Audio"
 
+msgid "Audio buffer size [KB]"
+msgstr "Audiopuffergröße in [KB]"
+
 msgid "Audio tracks"
 msgstr "Tonspur"
 
@@ -542,6 +513,15 @@ msgstr "Autoplay Startverzögerung"
 msgid "Awards:"
 msgstr "Auszeichnungen:"
 
+msgid "BLUE - Shift"
+msgstr ""
+
+msgid "Background color"
+msgstr "Hintergrundfarbe"
+
+msgid "Backspace"
+msgstr ""
+
 msgid "Balkans"
 msgstr "Balkan"
 
@@ -550,6 +530,10 @@ msgstr "Grundlagenwissenschaft"
 
 msgid "Best"
 msgstr "Am Besten"
+
+#, fuzzy
+msgid "Bing Suggestions"
+msgstr "Google Vorschläge"
 
 #, python-format
 msgid "Bitrate: %s"
@@ -823,6 +807,9 @@ msgstr "Standard"
 msgid "Default captcha bypass"
 msgstr "Standard-Captcha-Umgehung"
 
+msgid "Default suggestions provider"
+msgstr "Standard Suchmaschine"
+
 msgid "Default video aspect ratio"
 msgstr "Standard Seitenverhältnis"
 
@@ -1066,6 +1053,10 @@ msgstr "Downloads"
 msgid "Downloads location"
 msgstr "Download-Verzeichnis"
 
+#, fuzzy
+msgid "DuckDuckGo Suggestions"
+msgstr "Google Vorschläge"
+
 msgid "Duration"
 msgstr "Dauer"
 
@@ -1075,6 +1066,10 @@ msgstr "Dauer:"
 #, python-format
 msgid "Duration: %s"
 msgstr "Dauer: %s"
+
+#, fuzzy
+msgid "E2iPlayer - keyboard settings"
+msgstr "E2iPlayer - Konfiguration"
 
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - Konfiguration"
@@ -1087,6 +1082,10 @@ msgstr "E2iPlayer Downloader"
 
 msgid "E2iPlayer enable/disabled groups"
 msgstr "E2iPlayer aktivierte/deaktivierte Gruppen"
+
+#, fuzzy
+msgid "E2iPlayer virtual keyboard"
+msgstr "Virtuelle Tastatur"
 
 msgid "ERROR:"
 msgstr "FEHLER:"
@@ -1125,6 +1124,9 @@ msgstr "E-Mail"
 msgid "Enable"
 msgstr "Aktivieren"
 
+msgid "Enable hosts groups"
+msgstr "Zeige Service-Gruppen"
+
 msgid "Enable reordering"
 msgstr "Aktiviere Sortiermodus"
 
@@ -1159,6 +1161,10 @@ msgstr "Englische TV Serien"
 
 msgid "English movies"
 msgstr "Englische Filme"
+
+#, fuzzy
+msgid "Enter"
+msgstr "zentriert"
 
 msgid "Enter a value"
 msgstr "Wert eingeben"
@@ -1290,6 +1296,9 @@ msgstr "Die extrahierte Untertiteldatei ist leer oder fehlt."
 msgid "FAILED"
 msgstr "FEHLGESCHLAGEN"
 
+msgid "FAST FORWARD - insert space"
+msgstr ""
+
 msgid "FREE"
 msgstr "FREI"
 
@@ -1406,9 +1415,6 @@ msgstr "Datei erfolgreich umbenannt!"
 msgid "Film"
 msgstr "Film"
 
-msgid "Filmstarts Suggestions"
-msgstr "Filmstarts Vorschläge"
-
 msgid "Filmweb Suggestions"
 msgstr "Filmweb Vorschläge"
 
@@ -1432,6 +1438,9 @@ msgstr "Temp-Verzeichnis"
 
 msgid "Following host are broken or additional python modules are needed."
 msgstr "Die folgenden Hosts sind defekt oder benötigen weitere Python Module."
+
+msgid "Font size offset"
+msgstr ""
 
 msgid "Foot & Ankle"
 msgstr "Fuß & Knöchel"
@@ -1465,6 +1474,9 @@ msgstr "Vollständige Beschreibung geladen"
 
 msgid "Full description not available"
 msgstr "Keine vollständige Beschreibung verfügbar"
+
+msgid "GREEN - Enter (confirm and close)"
+msgstr ""
 
 msgid "GSTplayer no IFD workarround"
 msgstr "GSTplayer kein IFD-Workarround"
@@ -1555,6 +1567,9 @@ msgstr "Hand"
 
 msgid "Hardware floating point"
 msgstr "Hardware Gleitkommaeinheit"
+
+msgid "Help"
+msgstr ""
 
 #, python-format
 msgid "Hide \"%s\" group"
@@ -1761,6 +1776,9 @@ msgstr "Koreanische TV Serien"
 msgid "LATEST"
 msgstr "LETZTE"
 
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr ""
+
 msgid "LIVE CHANNELS"
 msgstr "LIVE KANÄLE"
 
@@ -1817,6 +1835,9 @@ msgstr "Letzte Aktualisierung"
 
 msgid "Latino"
 msgstr "Lateinamerikaner"
+
+msgid "Left"
+msgstr ""
 
 msgid "Level:"
 msgstr "Level:"
@@ -1905,6 +1926,9 @@ msgstr "Lokalisation"
 msgid "Login"
 msgstr "Login"
 
+msgid "Login Protected."
+msgstr "Login Geschützt."
+
 msgid "Login failed!"
 msgstr "Login fehlgeschlagen!"
 
@@ -1940,6 +1964,9 @@ msgstr "Niedrig"
 
 msgid "MENU"
 msgstr "MENÜ"
+
+msgid "MENU - Options (select language, clear search history, settings)"
+msgstr ""
 
 msgid "MIPS Floating Point Architecture"
 msgstr "MIPS Fließkomma Architektur"
@@ -2188,6 +2215,9 @@ msgstr "Keine"
 msgid "Nothing has been downloaded yet."
 msgstr "Es wurde noch nichts heruntergeladen."
 
+msgid "Number of columns"
+msgstr "Anzahl der Spalten"
+
 msgid "Number of downloaded files simultaneously"
 msgstr "Anzahl der gleichzeitigen Downloads"
 
@@ -2195,8 +2225,14 @@ msgstr "Anzahl der gleichzeitigen Downloads"
 msgid "Number of items in search history: %d"
 msgstr "Anzahl der Einträge im Suchverlauf: %d"
 
+msgid "Number of rows"
+msgstr "Anzahl der Zeilen"
+
 msgid "OK"
 msgstr "OK"
+
+msgid "OK - type selected character / confirm selection"
+msgstr ""
 
 #, python-format
 msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
@@ -2232,6 +2268,10 @@ msgstr "Operation abgebrochen!"
 msgid "Optional User-Agent (leave blank for default)"
 msgstr "Optionaler User-Agent (leer lassen für Standard)"
 
+#, fuzzy
+msgid "Options"
+msgstr "Video-Optionen"
+
 msgid "Original Title:"
 msgstr "Originaltitel:"
 
@@ -2244,6 +2284,9 @@ msgstr "Andere"
 msgid "Own model"
 msgstr "Eigenes Model"
 
+msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgstr ""
+
 msgid "PAY"
 msgstr "PAY"
 
@@ -2252,6 +2295,9 @@ msgstr "WARTEND"
 
 msgid "PORT"
 msgstr "PORT"
+
+msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
+msgstr ""
 
 msgid "Page: "
 msgstr "Seite: "
@@ -2441,6 +2487,9 @@ msgstr "Vorherige Liste"
 msgid "Price:"
 msgstr "Preis:"
 
+msgid "Private Show."
+msgstr "Privatshow."
+
 msgid "Production:"
 msgstr "Produktion:"
 
@@ -2480,8 +2529,14 @@ msgstr "RAM-Puffer in [MB] für Online-Inhalte"
 msgid "RECENT"
 msgstr "AKTUELL"
 
+msgid "RED - Backspace"
+msgstr ""
+
 msgid "REMEMBER: "
 msgstr "ERINNERUNG: "
+
+msgid "REWIND - delete entered text"
+msgstr ""
 
 msgid "Radio"
 msgstr "Radio"
@@ -2553,6 +2608,10 @@ msgstr "Liste neu laden"
 msgid "Remaining:"
 msgstr "Verbleibend:"
 
+#, fuzzy
+msgid "Remember last search entry"
+msgstr "Merke zuletzt gesehene Position"
+
 msgid "Remember last watched position"
 msgstr "Merke zuletzt gesehene Position"
 
@@ -2577,6 +2636,9 @@ msgstr "Gruppe entfernen"
 
 msgid "Remove item"
 msgstr "Eintrag entfernen"
+
+msgid "Remove thumbnails"
+msgstr "Lösche Vorschaubilder"
 
 msgid "Rename"
 msgstr "Umbenennen"
@@ -2611,6 +2673,9 @@ msgstr "Zurück zur Hosts-Liste"
 
 msgid "Reverse a playlist"
 msgstr "Wiedergabeliste umkehren"
+
+msgid "Right"
+msgstr ""
 
 msgid "Russian"
 msgstr "Russisch"
@@ -2801,6 +2866,9 @@ msgstr ""
 msgid "Service [%s] has no additional settings."
 msgstr "Service [%s] hat keine zusätzliche Einstellungen."
 
+msgid "Service icon size"
+msgstr "Service Icon Größe"
+
 msgid "Services configuration"
 msgstr "Services konfigurieren"
 
@@ -2824,6 +2892,9 @@ msgstr "Als gesehen markieren"
 
 msgid "Settings"
 msgstr "Konfiguration"
+
+msgid "Shift"
+msgstr ""
 
 msgid "Short Movies"
 msgstr "Kurzfilme"
@@ -2855,6 +2926,10 @@ msgstr "Zeige Downloadverwaltung bei Download"
 msgid "Show file size"
 msgstr "Zeige Dateigröße"
 
+#, fuzzy
+msgid "Show flags"
+msgstr "Zeige Dateigröße"
+
 msgid "Show global search :"
 msgstr "Globale Suche anzeigen :"
 
@@ -2872,6 +2947,13 @@ msgstr "Nur Audio in der ausgewählten Sprache anzeigen:"
 
 msgid "Show only best quality of streams:"
 msgstr "Nur Streams in bester Qualität anzeigen:"
+
+#, fuzzy
+msgid "Show search history"
+msgstr "Suchverlauf"
+
+msgid "Show suggestions"
+msgstr "Zeige Suchvorschläge"
 
 msgid "Shows"
 msgstr "Shows"
@@ -3176,6 +3258,10 @@ msgstr "TV Serien"
 msgid "Techniques"
 msgstr "Techniken"
 
+#, fuzzy
+msgid "Text field alignment"
+msgstr "Dateinamen festlegen"
+
 msgid "Text files ytlist and urllist are in:"
 msgstr "Verzeichnis von ytlist.txt, urllist.txt:"
 
@@ -3191,6 +3277,10 @@ msgstr "Der Kanal ist bereits unter „Benutzerlinks“ vorhanden."
 
 msgid "The color of the current version"
 msgstr "Farbauswahl für derzeitige Version"
+
+#, fuzzy
+msgid "The color of the started item"
+msgstr "Farbauswahl für gesehene Einträge"
 
 msgid "The color of the viewed item"
 msgstr "Farbauswahl für gesehene Einträge"
@@ -3274,6 +3364,9 @@ msgstr "Dieses Video wurde gelöscht."
 
 msgid "This video is a private video."
 msgstr "Dieses Video ist ein privates Video."
+
+msgid "This video is a private."
+msgstr "Dieses Video ist Privat."
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Tipp! Sie können ein USB-Stick anschließen, um das Problem zu beheben."
@@ -3510,6 +3603,9 @@ msgstr "Verifizieren"
 msgid "Video"
 msgstr "Video "
 
+msgid "Video buffer size [MB]"
+msgstr "Videopuffergröße in [MB]"
+
 msgid "Video format:"
 msgstr "Video-Format:"
 
@@ -3619,6 +3715,9 @@ msgstr "Xtream Live Stream"
 
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "Xtream host (z.B. http://server:port)"
+
+msgid "YELLOW - AltGr"
+msgstr ""
 
 msgid "YP connected"
 msgstr "YP verbunden"
@@ -3873,6 +3972,9 @@ msgstr "navyblau"
 
 msgid "olive"
 msgstr "olivgrün"
+
+msgid "or"
+msgstr "oder"
 
 msgid "password"
 msgstr "Passwort"

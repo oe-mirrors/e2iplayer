@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-27 15:45+0200\n"
+"POT-Creation-Date: 2026-08-14 16:50+0200\n"
 "PO-Revision-Date: 2026-07-27 19:13+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -51,48 +51,6 @@ msgstr ""
 "\n"
 "Μπορείτε επίσης να αναφέρετε το πρόβλημα εδώ \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
-
-msgid "Audio buffer size [KB]"
-msgstr "Μέγεθος προσωρινής μνήμης ήχου [KB]"
-
-msgid "Background color"
-msgstr "Χρώμα φόντου"
-
-msgid "Default suggestions provider"
-msgstr "Προεπιλεγμένος πάροχος προτάσεων"
-
-msgid "Enable hosts groups"
-msgstr "Ενεργοποίηση ομάδων hosts"
-
-msgid "Number of columns"
-msgstr "Αριθμός στηλών"
-
-msgid "Number of rows"
-msgstr "Αριθμός σειρών"
-
-msgid "Remove thumbnails"
-msgstr "Αφαίρεση μικρογραφιών"
-
-msgid "Service icon size"
-msgstr "Μέγεθος εικονιδίων υπηρεσίας"
-
-msgid "Show suggestions"
-msgstr "Εμφάνιση προτάσεων"
-
-msgid "Video buffer size [MB]"
-msgstr "Μέγεθος προσωρινής μνήμης βίντεο [MB]"
-
-msgid "Login Protected."
-msgstr "Προστασία με σύνδεση."
-
-msgid "Private Show."
-msgstr "Ιδιωτική προβολή."
-
-msgid "This video is a private."
-msgstr "Αυτό το βίντεο είναι ιδιωτικό."
-
-msgid "or"
-msgstr "ή"
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
@@ -268,6 +226,9 @@ msgstr "--Οποιοδήποτε--"
 msgid "--Other--"
 msgstr "--Άλλα-"
 
+msgid "0-9 - direct number input"
+msgstr ""
+
 msgid "12 hour format"
 msgstr "Μορφή 12 ωρών"
 
@@ -412,11 +373,18 @@ msgstr "Επιτρέπεται ο κωδικοποιητής VP9:"
 msgid "Allow dash format:"
 msgstr "Επιτρέπεται η μορφή dash:"
 
+#, fuzzy
+msgid "Allow host to override suggestions provider"
+msgstr "Προεπιλεγμένος πάροχος προτάσεων"
+
 msgid "Allow watched flag to be set"
 msgstr "Επιτρέπεται η ρύθμιση της ένδειξης παρακολούθησης"
 
 msgid "Alphabetically"
 msgstr "Αλφαβητικά"
+
+msgid "AltGr"
+msgstr ""
 
 msgid "Alternate Title:"
 msgstr "Εναλλακτικός τίτλος:"
@@ -522,6 +490,9 @@ msgstr "Αναλογία"
 msgid "Audio"
 msgstr "Ήχος"
 
+msgid "Audio buffer size [KB]"
+msgstr "Μέγεθος προσωρινής μνήμης ήχου [KB]"
+
 msgid "Audio tracks"
 msgstr "Ηχητικά κομμάτια"
 
@@ -546,6 +517,15 @@ msgstr "Καθυστέρηση εκκίνησης αυτόματης αναπα�
 msgid "Awards:"
 msgstr "Βραβεία:"
 
+msgid "BLUE - Shift"
+msgstr ""
+
+msgid "Background color"
+msgstr "Χρώμα φόντου"
+
+msgid "Backspace"
+msgstr ""
+
 msgid "Balkans"
 msgstr "Βαλκάνια"
 
@@ -554,6 +534,10 @@ msgstr "Βασικές επιστήμες"
 
 msgid "Best"
 msgstr "Καλύτερο"
+
+#, fuzzy
+msgid "Bing Suggestions"
+msgstr "Προτάσεις Google"
 
 #, python-format
 msgid "Bitrate: %s"
@@ -827,6 +811,9 @@ msgstr "Προεπιλογή"
 msgid "Default captcha bypass"
 msgstr "Προεπιλεγμένη παράκαμψη captcha"
 
+msgid "Default suggestions provider"
+msgstr "Προεπιλεγμένος πάροχος προτάσεων"
+
 msgid "Default video aspect ratio"
 msgstr "Προεπιλεγμένη αναλογία διαστάσεων βίντεο"
 
@@ -1070,6 +1057,10 @@ msgstr "Λήψεις"
 msgid "Downloads location"
 msgstr "Τοποθεσία λήψεων"
 
+#, fuzzy
+msgid "DuckDuckGo Suggestions"
+msgstr "Προτάσεις Google"
+
 msgid "Duration"
 msgstr "Διάρκεια"
 
@@ -1079,6 +1070,10 @@ msgstr "Διάρκεια:"
 #, python-format
 msgid "Duration: %s"
 msgstr "Διάρκεια: %s"
+
+#, fuzzy
+msgid "E2iPlayer - keyboard settings"
+msgstr "E2iPlayer - Ρυθμίσεις"
 
 msgid "E2iPlayer - settings"
 msgstr "E2iPlayer - Ρυθμίσεις"
@@ -1091,6 +1086,10 @@ msgstr "Πρόγραμμα λήψης E2iPlayer"
 
 msgid "E2iPlayer enable/disabled groups"
 msgstr "Ενεργοποίηση/απενεργοποίηση ομάδων E2iPlayer"
+
+#, fuzzy
+msgid "E2iPlayer virtual keyboard"
+msgstr "Εικονικό πληκτρολόγιο"
 
 msgid "ERROR:"
 msgstr "ΣΦΑΛΜΑ:"
@@ -1129,6 +1128,9 @@ msgstr "Email"
 msgid "Enable"
 msgstr "Ενεργοποίηση"
 
+msgid "Enable hosts groups"
+msgstr "Ενεργοποίηση ομάδων hosts"
+
 msgid "Enable reordering"
 msgstr "Ενεργοποίηση αναδιάταξης"
 
@@ -1165,6 +1167,10 @@ msgstr "Αγγλικές τηλεοπτικές σειρές"
 
 msgid "English movies"
 msgstr "Αγγλικές ταινίες"
+
+#, fuzzy
+msgid "Enter"
+msgstr "κέντρο"
 
 msgid "Enter a value"
 msgstr "Εισάγετε μια τιμή"
@@ -1296,6 +1302,9 @@ msgstr "Το εξαγόμενο αρχείο υποτίτλων είναι κε�
 msgid "FAILED"
 msgstr "ΑΠΕΤΥΧΕ"
 
+msgid "FAST FORWARD - insert space"
+msgstr ""
+
 msgid "FREE"
 msgstr "ΔΩΡΕΑΝ"
 
@@ -1412,9 +1421,6 @@ msgstr "Το αρχείο μετονομάστηκε με επιτυχία!"
 msgid "Film"
 msgstr "Ταινία"
 
-msgid "Filmstarts Suggestions"
-msgstr "Προτάσεις Filmstarts"
-
 msgid "Filmweb Suggestions"
 msgstr "Προτάσεις Filmweb"
 
@@ -1438,6 +1444,9 @@ msgstr "Φάκελος για προσωρινά δεδομένα"
 
 msgid "Following host are broken or additional python modules are needed."
 msgstr "Οι παρακάτω host είναι κατεστραμμένοι ή απαιτούνται επιπλέον μονάδες python."
+
+msgid "Font size offset"
+msgstr ""
 
 msgid "Foot & Ankle"
 msgstr "Πόδι & Αστράγαλος"
@@ -1471,6 +1480,9 @@ msgstr "Η πλήρης περιγραφή φορτώθηκε"
 
 msgid "Full description not available"
 msgstr "Η πλήρης περιγραφή δεν είναι διαθέσιμη"
+
+msgid "GREEN - Enter (confirm and close)"
+msgstr ""
 
 msgid "GSTplayer no IFD workarround"
 msgstr "Παράκαμψη IFD για GSTplayer"
@@ -1561,6 +1573,9 @@ msgstr "Χέρι"
 
 msgid "Hardware floating point"
 msgstr "Υποστηριζόμενη από το υλικό κινητή υποδιαστολή"
+
+msgid "Help"
+msgstr ""
 
 #, python-format
 msgid "Hide \"%s\" group"
@@ -1767,6 +1782,9 @@ msgstr "Κορεατικές τηλεοπτικές σειρές"
 msgid "LATEST"
 msgstr "ΤΕΛΕΥΤΑΙΑ"
 
+msgid "LEFT/RIGHT at start/end of text - alternative way to switch panels"
+msgstr ""
+
 msgid "LIVE CHANNELS"
 msgstr "ΖΩΝΤΑΝΑ ΚΑΝΑΛΙΑ"
 
@@ -1823,6 +1841,9 @@ msgstr "Τελευταία ενημέρωση"
 
 msgid "Latino"
 msgstr "Λατινοαμερικάνικα"
+
+msgid "Left"
+msgstr ""
 
 msgid "Level:"
 msgstr "Επίπεδο:"
@@ -1911,6 +1932,9 @@ msgstr "Μετάφραση"
 msgid "Login"
 msgstr "Σύνδεση"
 
+msgid "Login Protected."
+msgstr "Προστασία με σύνδεση."
+
 msgid "Login failed!"
 msgstr "Η σύνδεση απέτυχε!"
 
@@ -1946,6 +1970,9 @@ msgstr "Χαμηλό"
 
 msgid "MENU"
 msgstr "ΜΕΝΟΥ"
+
+msgid "MENU - Options (select language, clear search history, settings)"
+msgstr ""
 
 msgid "MIPS Floating Point Architecture"
 msgstr "Αρχιτεκτονική κινητής υποδιαστολής MIPS"
@@ -2194,6 +2221,9 @@ msgstr "Κανένα"
 msgid "Nothing has been downloaded yet."
 msgstr "Δεν έχει ληφθεί ακόμη τίποτα."
 
+msgid "Number of columns"
+msgstr "Αριθμός στηλών"
+
 msgid "Number of downloaded files simultaneously"
 msgstr "Αριθμός αρχείων που λαμβάνονται ταυτόχρονα"
 
@@ -2201,8 +2231,14 @@ msgstr "Αριθμός αρχείων που λαμβάνονται ταυτόχ
 msgid "Number of items in search history: %d"
 msgstr "Αριθμός στοιχείων στο ιστορικό αναζήτησης: %d"
 
+msgid "Number of rows"
+msgstr "Αριθμός σειρών"
+
 msgid "OK"
 msgstr "ΕΝΤΑΞΕΙ"
+
+msgid "OK - type selected character / confirm selection"
+msgstr ""
 
 #, python-format
 msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
@@ -2238,6 +2274,10 @@ msgstr "Η λειτουργία ματαιώθηκε!"
 msgid "Optional User-Agent (leave blank for default)"
 msgstr "Προαιρετικό User-Agent (αφήστε κενό προεπιλογή)"
 
+#, fuzzy
+msgid "Options"
+msgstr "Επιλογές βίντεο"
+
 msgid "Original Title:"
 msgstr "Πρωτότυπος τίτλος:"
 
@@ -2250,6 +2290,9 @@ msgstr "Άλλα"
 msgid "Own model"
 msgstr "Δικό σας μοντέλο"
 
+msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgstr ""
+
 msgid "PAY"
 msgstr "ΠΛΗΡΩΜΗ"
 
@@ -2258,6 +2301,9 @@ msgstr "ΕΚΚΡΕΜΕΙ"
 
 msgid "PORT"
 msgstr "ΘΥΡΑ"
+
+msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
+msgstr ""
 
 msgid "Page: "
 msgstr "Σελίδα: "
@@ -2447,6 +2493,9 @@ msgstr "Προηγούμενη λίστα"
 msgid "Price:"
 msgstr "Τιμή:"
 
+msgid "Private Show."
+msgstr "Ιδιωτική προβολή."
+
 msgid "Production:"
 msgstr "Παραγωγή:"
 
@@ -2486,8 +2535,14 @@ msgstr "Μέγεθος προσωρινής μνήμης RAM [MB] για πρω�
 msgid "RECENT"
 msgstr "ΠΡΟΣΦΑΤΑ"
 
+msgid "RED - Backspace"
+msgstr ""
+
 msgid "REMEMBER: "
 msgstr "ΘΥΜΗΘΕΙΤΕ: "
+
+msgid "REWIND - delete entered text"
+msgstr ""
 
 msgid "Radio"
 msgstr "Ραδιόφωνο"
@@ -2559,6 +2614,10 @@ msgstr "Επαναφόρτωση λίστας"
 msgid "Remaining:"
 msgstr "Απομένουν:"
 
+#, fuzzy
+msgid "Remember last search entry"
+msgstr "Απομνημόνευση τελευταίας θέσης προβολής"
+
 msgid "Remember last watched position"
 msgstr "Απομνημόνευση τελευταίας θέσης προβολής"
 
@@ -2583,6 +2642,9 @@ msgstr "Αφαίρεση ομάδας"
 
 msgid "Remove item"
 msgstr "Αφαίρεση στοιχείου"
+
+msgid "Remove thumbnails"
+msgstr "Αφαίρεση μικρογραφιών"
 
 msgid "Rename"
 msgstr "Μετονομασία"
@@ -2617,6 +2679,9 @@ msgstr "Επιστροφή στη λίστα hosts"
 
 msgid "Reverse a playlist"
 msgstr "Αντιστροφή λίστας αναπαραγωγής"
+
+msgid "Right"
+msgstr ""
 
 msgid "Russian"
 msgstr "Ρωσικά"
@@ -2807,6 +2872,9 @@ msgstr ""
 msgid "Service [%s] has no additional settings."
 msgstr "Η υπηρεσία [%s] δεν έχει πρόσθετες ρυθμίσεις."
 
+msgid "Service icon size"
+msgstr "Μέγεθος εικονιδίων υπηρεσίας"
+
 msgid "Services configuration"
 msgstr "Ρυθμίσεις υπηρεσιών"
 
@@ -2830,6 +2898,9 @@ msgstr "Ορισμός ως προβληθέν"
 
 msgid "Settings"
 msgstr "Ρυθμίσεις"
+
+msgid "Shift"
+msgstr ""
 
 msgid "Short Movies"
 msgstr "Ταινίες μικρού μήκους"
@@ -2861,6 +2932,10 @@ msgstr "Εμφάνιση Διαχείρισης λήψεων μετά την π�
 msgid "Show file size"
 msgstr "Εμφάνιση μεγέθους αρχείου"
 
+#, fuzzy
+msgid "Show flags"
+msgstr "Εμφάνιση μεγέθους αρχείου"
+
 msgid "Show global search :"
 msgstr "Εμφάνιση καθολικής αναζήτησης :"
 
@@ -2878,6 +2953,13 @@ msgstr "Εμφάνιση μόνο ήχου στην επιλεγμένη γλώ�
 
 msgid "Show only best quality of streams:"
 msgstr "Εμφάνιση μόνο καλύτερης ποιότητας ροών:"
+
+#, fuzzy
+msgid "Show search history"
+msgstr "Ιστορικό αναζήτησης"
+
+msgid "Show suggestions"
+msgstr "Εμφάνιση προτάσεων"
 
 msgid "Shows"
 msgstr "Εκπομπές"
@@ -3184,6 +3266,10 @@ msgstr "Τηλεοπτικές σειρές"
 msgid "Techniques"
 msgstr "Τεχνικές"
 
+#, fuzzy
+msgid "Text field alignment"
+msgstr "Ορισμός ονόματος αρχείου"
+
 msgid "Text files ytlist and urllist are in:"
 msgstr "Τα αρχεία κειμένου ytlist και urllist βρίσκονται στο:"
 
@@ -3199,6 +3285,10 @@ msgstr "Το κανάλι υπάρχει ήδη στους συνδέσμους 
 
 msgid "The color of the current version"
 msgstr "Το χρώμα της τρέχουσας έκδοσης"
+
+#, fuzzy
+msgid "The color of the started item"
+msgstr "Το χρώμα του προβαλλόμενου στοιχείου"
 
 msgid "The color of the viewed item"
 msgstr "Το χρώμα του προβαλλόμενου στοιχείου"
@@ -3282,6 +3372,9 @@ msgstr "Αυτό το βίντεο έχει διαγραφεί."
 
 msgid "This video is a private video."
 msgstr "Αυτό το βίντεο είναι ιδιωτικό βίντεο."
+
+msgid "This video is a private."
+msgstr "Αυτό το βίντεο είναι ιδιωτικό."
 
 msgid "Tip! You can connect USB flash drive to fix this problem."
 msgstr "Συμβουλή! Μπορείτε να συνδέσετε ένα USB flash drive για να διορθώσετε αυτό το πρόβλημα."
@@ -3518,6 +3611,9 @@ msgstr "Επαλήθευση"
 msgid "Video"
 msgstr "Βίντεο"
 
+msgid "Video buffer size [MB]"
+msgstr "Μέγεθος προσωρινής μνήμης βίντεο [MB]"
+
 msgid "Video format:"
 msgstr "Μορφή βίντεο:"
 
@@ -3627,6 +3723,9 @@ msgstr "Xtream Live Stream"
 
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "Xtream host (e.g. http://server:port)"
+
+msgid "YELLOW - AltGr"
+msgstr ""
 
 msgid "YP connected"
 msgstr "YP συνδεδεμένο"
@@ -3881,6 +3980,9 @@ msgstr "ναυτικό"
 
 msgid "olive"
 msgstr "ελαιόχρωμο"
+
+msgid "or"
+msgstr "ή"
 
 msgid "password"
 msgstr "- Κωδικός πρόσβασης"
