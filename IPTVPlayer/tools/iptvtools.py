@@ -638,18 +638,16 @@ def printDBG(DBGtxt, writeMode='a'):
         else:
             DBGfile = DBG
         try:
-            f = open(DBGfile, writeMode)
-            f.write(str(DBGtxt) + '\n')
-            f.close
+            with open(DBGfile, writeMode) as f:
+                f.write(str(DBGtxt) + '\n')
         except Exception:
             print("======================EXC printDBG======================")
             print("printDBG(I): %s" % traceback.format_exc())
             print("========================================================")
             try:
                 msg = '%s' % traceback.format_exc()
-                f = open(DBGfile, writeMode)
-                f.write(str(DBGtxt) + '\n')
-                f.close
+                with open(DBGfile, writeMode) as f:
+                    f.write(str(DBGtxt) + '\n')
             except Exception:
                 print("======================EXC printDBG======================")
                 print("printDBG(II): %s" % traceback.format_exc())
