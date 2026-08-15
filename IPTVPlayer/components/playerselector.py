@@ -8,10 +8,11 @@
 import os
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap, HelpableActionMap
-from enigma import ePoint, getDesktop
+from enigma import ePoint, getDesktop, eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER, BT_SCALE
 from Tools.LoadPixmap import LoadPixmap
 from Components.Label import Label
 from Components.config import config
+from Components.MultiContent import MultiContentEntryPixmapAlphaBlend
 from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 from Components.Sources.List import List
@@ -19,8 +20,62 @@ from Components.Sources.StaticText import StaticText
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetAvailableIconSize
+from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
+from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonList
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize
 from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
+
+
+def _getSearchResultItemHeight(screenwidth):
+    # taller than IPTVMainNavigatorList's own default item height
+    # (35/40/55), which IPTVHostSearchResultList would otherwise inherit -
+    # gives the logo more room to grow. Shared with _getSearchResultsHeight
+    # below so the popup is always sized to fit these taller rows
+    if screenwidth >= 2560:
+        return 75
+    elif screenwidth == 1920:
+        return 55
+    return 48
+
+
+class IPTVHostSearchResultList(IPTVRadioButtonList):
+    # host logos (icons/logos/<hostkey>logo.png) shown before the name in
+    # search results. Raw eListboxPythonMultiContent tuples don't auto-scale
+    # like the chrome skin's XML does, so the box itself has to be sized per
+    # real resolution tier here
+    def __init__(self):
+        IPTVRadioButtonList.__init__(self)
+        screenwidth = getDesktop(0).size().width()
+        itemHeight = _getSearchResultItemHeight(screenwidth)
+        self.l.setItemHeight(itemHeight)
+        if screenwidth >= 2560:
+            self.logoW, self.logoH = 115, 65
+        elif screenwidth == 1920:
+            self.logoW, self.logoH = 83, 47
+        else:
+            self.logoW, self.logoH = 71, 40
+
+    def buildEntry(self, item):
+        width = self.l.getItemSize().width()
+        height = self.l.getItemSize().height()
+        res = [None]
+        logoX = 5
+        logoY = (height - self.logoH) // 2
+        textX = logoX + self.logoW + 10
+        try:
+            pix = None
+            if item.description:
+                logoPath = GetLogoDir(item.description + 'logo.png')
+                if os.path.isfile(logoPath):
+                    pix = LoadPixmap(cached=True, path=logoPath)
+            if pix is not None:
+                res.append(MultiContentEntryPixmapAlphaBlend(pos=(logoX, logoY), size=(self.logoW, self.logoH), png=pix, flags=BT_SCALE))
+            else:
+                textX = logoX
+            res.append((eListboxPythonMultiContent.TYPE_TEXT, textX, 0, width - textX - 5, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.name))
+        except Exception:
+            printExc()
+        return res
 
 
 if GRIDSUPPORT:
@@ -275,6 +330,7 @@ if GRIDSUPPORT:
                 elif self.reorderingMode:
                     options.append((_("Disable reordering mode"), "CHANGE_REORDERING_MODE"))
                 options.append((_("Sort by name"), "SORT_NAME"))
+                options.append((_("Search"), "SEARCH"))
                 options.append((_("Download manager"), "IPTVDM"))
                 if self.groupName in ['selecthost', 'all']:
                     options.append((_("Disable/Enable services"), "config_hosts"))
@@ -336,6 +392,55 @@ if GRIDSUPPORT:
                     self.showInfo()
                 elif ret == 'SETTINGS':
                     self.keySetup()
+                elif ret == 'SEARCH':
+                    self.openSearch()
+
+        def openSearch(self):
+            from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+            caps = {}
+            virtualKeyboard = GetVirtualKeyboard(caps)
+            if caps.get('has_additional_params'):
+                self.session.openWithCallback(self.searchCallback, virtualKeyboard, title=_("Search"), text='', additionalParams={})
+            else:
+                self.session.openWithCallback(self.searchCallback, virtualKeyboard, title=_("Search"), text='')
+
+        def searchCallback(self, searchText=None):
+            if not searchText:
+                return
+            query = searchText.strip().lower()
+            if not query:
+                return
+            matches = [(item[0], item[1], idx) for idx, item in enumerate(self.currList) if query in item[0].lower() or query in item[1].lower()]
+            if not matches:
+                self.session.open(MessageBox, _("No matching entries found."), type=MessageBox.TYPE_INFO, timeout=5)
+                return
+            # picks straight from self.currList by index, so this only ever
+            # shows/hides matches for this one search - it never touches
+            # currList/pixmapList/outList itself, so reordering and the
+            # group's persisted host list are completely unaffected
+            options = [IPTVChoiceBoxItem("%s (%s)" % (name, hostKey), hostKey, idx) for name, hostKey, idx in matches]
+            height = self._getSearchResultsHeight(len(options))
+            self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 120})
+
+        def searchResultCallback(self, ret=None):
+            if not isinstance(ret, IPTVChoiceBoxItem):
+                return
+            idx = ret.privateData
+            PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
+            self.close(self.currList[idx])
+
+        def _getSearchResultsHeight(self, numItems):
+            # same reference-space-vs-real-pixels reasoning, and the same
+            # footerMargin derivation, as E2iPlayerWidget's own
+            # _getMoviePlayerPickerHeight (iptvplayerwidget.py) - can't
+            # reuse that method directly since this is a different class,
+            # so it's duplicated here instead. itemH comes from
+            # _getSearchResultItemHeight() so this stays in sync with
+            # IPTVHostSearchResultList's actual (enlarged) row height
+            screenwidth = getDesktop(0).size().width()
+            itemH = _getSearchResultItemHeight(screenwidth)
+            scale = 2.0 if screenwidth >= 2560 else (1.5 if screenwidth >= 1920 else 1.0)
+            return int(numItems * itemH / scale) + 130
 
         def showInfo(self):
             TextMSG = _('version') + " :\n" + GetIPTVPlayerVersion() + '\n\n'
@@ -879,6 +984,7 @@ else:
                 options.append((_("Enable reordering mode"), "CHANGE_REORDERING_MODE"))
             elif self.reorderingMode:
                 options.append((_("Disable reordering mode"), "CHANGE_REORDERING_MODE"))
+            options.append((_("Search"), "SEARCH"))
             options.append((_("Download manager"), "IPTVDM"))
             if self.groupName in ['selecthost', 'all']:
                 options.append((_("Disable/Enable services"), "config_hosts"))
@@ -914,6 +1020,50 @@ else:
                         del self.currList[idx]
                         del self.pixmapList[idx]
                         self.reInitDisplayList()
+                elif ret == 'SEARCH':
+                    self.openSearch()
+
+        def openSearch(self):
+            from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+            caps = {}
+            virtualKeyboard = GetVirtualKeyboard(caps)
+            if caps.get('has_additional_params'):
+                self.session.openWithCallback(self.searchCallback, virtualKeyboard, title=_("Search"), text='', additionalParams={})
+            else:
+                self.session.openWithCallback(self.searchCallback, virtualKeyboard, title=_("Search"), text='')
+
+        def searchCallback(self, searchText=None):
+            if not searchText:
+                return
+            query = searchText.strip().lower()
+            if not query:
+                return
+            matches = [(item[0], item[1], idx) for idx, item in enumerate(self.currList) if query in item[0].lower() or query in item[1].lower()]
+            if not matches:
+                self.session.open(MessageBox, _("No matching entries found."), type=MessageBox.TYPE_INFO, timeout=5)
+                return
+            # picks straight from self.currList by index, so this only ever
+            # shows/hides matches for this one search - it never touches
+            # currList/pixmapList/outList itself, so reordering and the
+            # group's persisted host list are completely unaffected
+            options = [IPTVChoiceBoxItem("%s (%s)" % (name, hostKey), hostKey, idx) for name, hostKey, idx in matches]
+            height = self._getSearchResultsHeight(len(options))
+            self.session.openWithCallback(self.searchResultCallback, IPTVChoiceBoxWidget, {'width': 550, 'height': height, 'current_idx': 0, 'title': _("Search results"), 'options': options, 'list_class': IPTVHostSearchResultList, 'chrome': True, 'footerMargin': 120})
+
+        def searchResultCallback(self, ret=None):
+            if not isinstance(ret, IPTVChoiceBoxItem):
+                return
+            idx = ret.privateData
+            PlayerSelectorWidget.LAST_SELECTION[self.groupName] = idx
+            self.close(self.currList[idx])
+
+        def _getSearchResultsHeight(self, numItems):
+            # itemH comes from _getSearchResultItemHeight() so this stays in
+            # sync with IPTVHostSearchResultList's actual (enlarged) row height
+            screenwidth = getDesktop(0).size().width()
+            itemH = _getSearchResultItemHeight(screenwidth)
+            scale = 2.0 if screenwidth >= 2560 else (1.5 if screenwidth >= 1920 else 1.0)
+            return int(numItems * itemH / scale) + 130
 
         def addHostToGroup(self):
             printDBG(">> PlayerSelectorWidget.addHostToGroup")
