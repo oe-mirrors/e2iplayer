@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: 2026-07-27 16:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -1298,6 +1298,9 @@ msgstr "Odejít"
 msgid "Expiry: %s"
 msgstr "Platnost do: %s"
 
+msgid "Extended"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Konfigurace externího přehrávače videí"
 
@@ -2085,6 +2088,10 @@ msgstr "Přesunout skupinu"
 msgid "Movie"
 msgstr "Film"
 
+#, fuzzy
+msgid "Movie player selection list"
+msgstr "Zobrazit IPTVPlayer v seznamu rozšíření"
+
 msgid "Movies"
 msgstr "Filmy"
 
@@ -2198,6 +2205,9 @@ msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
 msgstr "Žádná položka k zobrazení. Stisknutím tlačítka OK obnovíte stránku.\n"
+
+msgid "No matching entries found."
+msgstr ""
 
 msgid "No materials waiting in the downloader queue"
 msgstr "Ve frontě pro stahování nečekají žádné materiály"

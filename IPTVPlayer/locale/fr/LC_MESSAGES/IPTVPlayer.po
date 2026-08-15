@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iptvplayer-for-e 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: 2018-07-28 16:39+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1358,6 +1358,9 @@ msgstr "Sortir"
 msgid "Expiry: %s"
 msgstr ""
 
+msgid "Extended"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Configuration du lecteur vidéo externe"
 
@@ -2187,6 +2190,10 @@ msgstr "Déplacer le groupe"
 msgid "Movie"
 msgstr "Film"
 
+#, fuzzy
+msgid "Movie player selection list"
+msgstr "Afficher IPTVPlayer dans la liste des extensions"
+
 msgid "Movies"
 msgstr "Films"
 
@@ -2304,6 +2311,9 @@ msgid ""
 msgstr ""
 "Aucun élément à afficher.\n"
 "Appuyez sur OK pour rafraîchir.\n"
+
+msgid "No matching entries found."
+msgstr ""
 
 msgid "No materials waiting in the downloader queue"
 msgstr "Aucun matériel en attente dans la file d'attente de téléchargement"

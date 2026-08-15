@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: 2026-07-27 16:55+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -1292,6 +1292,9 @@ msgstr "Выход"
 msgid "Expiry: %s"
 msgstr "Действует до: %s"
 
+msgid "Extended"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Параметры внешнего видеоплеера"
 
@@ -2081,6 +2084,10 @@ msgstr "Переместить группу"
 msgid "Movie"
 msgstr "Видео"
 
+#, fuzzy
+msgid "Movie player selection list"
+msgstr "Показать IPTVPlaye в меню плагинов"
+
 msgid "Movies"
 msgstr "Фильмы"
 
@@ -2196,6 +2203,9 @@ msgid ""
 msgstr ""
 "Нет деталей для показа. \n"
 "Нажав OK можно обновить.\n"
+
+msgid "No matching entries found."
+msgstr ""
 
 msgid "No materials waiting in the downloader queue"
 msgstr "Нет материалов, ожидающих в очереди загрузчика"

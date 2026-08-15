@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: 2026-07-27 19:13+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -1293,6 +1293,9 @@ msgstr "Έξοδος"
 msgid "Expiry: %s"
 msgstr "Λήξη: %s"
 
+msgid "Extended"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Ρυθμίσεις εξωτερικής αναπαραγωγής ταινιών"
 
@@ -2080,6 +2083,10 @@ msgstr "Μετακίνηση ομάδας"
 msgid "Movie"
 msgstr "Ταινία"
 
+#, fuzzy
+msgid "Movie player selection list"
+msgstr "Εμφάνιση IPTVPlayer στη λίστα επεκτάσεων"
+
 msgid "Movies"
 msgstr "Ταινίες"
 
@@ -2195,6 +2202,9 @@ msgid ""
 msgstr ""
 "Κανένα στοιχείο για εμφάνιση.\n"
 "Πατήστε ΟΚ για ανανέωση.\n"
+
+msgid "No matching entries found."
+msgstr ""
 
 msgid "No materials waiting in the downloader queue"
 msgstr "Δεν υπάρχουν υλικά σε αναμονή στην ουρά λήψεων"

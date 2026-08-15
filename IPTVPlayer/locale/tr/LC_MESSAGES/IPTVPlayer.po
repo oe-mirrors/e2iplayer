@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -1299,6 +1299,9 @@ msgstr "Çıkış"
 msgid "Expiry: %s"
 msgstr ""
 
+msgid "Extended"
+msgstr ""
+
 #, fuzzy
 msgid "External movie player config"
 msgstr "harici eplayer3"
@@ -2119,6 +2122,10 @@ msgstr "Grubu taşı"
 msgid "Movie"
 msgstr "Film"
 
+#, fuzzy
+msgid "Movie player selection list"
+msgstr "IPTVPlayer'ı uzantı listesinde göster"
+
 msgid "Movies"
 msgstr "Filmler"
 
@@ -2232,6 +2239,9 @@ msgstr "Biyografi yok"
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
+msgstr ""
+
+msgid "No matching entries found."
 msgstr ""
 
 msgid "No materials waiting in the downloader queue"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -1228,6 +1228,9 @@ msgstr ""
 msgid "Expiry: %s"
 msgstr ""
 
+msgid "Extended"
+msgstr ""
+
 msgid "External movie player config"
 msgstr ""
 
@@ -2002,6 +2005,9 @@ msgstr ""
 msgid "Movie"
 msgstr ""
 
+msgid "Movie player selection list"
+msgstr ""
+
 msgid "Movies"
 msgstr ""
 
@@ -2108,6 +2114,9 @@ msgstr ""
 msgid ""
 "No item to display. \n"
 "Press OK to refresh.\n"
+msgstr ""
+
+msgid "No matching entries found."
 msgstr ""
 
 msgid "No materials waiting in the downloader queue"

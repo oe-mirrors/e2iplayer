@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -1379,6 +1379,9 @@ msgstr "Вихід"
 msgid "Expiry: %s"
 msgstr ""
 
+msgid "Extended"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Зовнішній плеєр конфігурація"
 
@@ -2222,6 +2225,10 @@ msgstr "Пересування групи"
 msgid "Movie"
 msgstr "Фільм"
 
+#, fuzzy
+msgid "Movie player selection list"
+msgstr "Показати IPTV Плеєр в меню плагінів"
+
 msgid "Movies"
 msgstr "Кіно"
 
@@ -2343,6 +2350,9 @@ msgid ""
 msgstr ""
 "Нічого не знайдено.\n"
 "Натисніть ОК, щоб оновити.\n"
+
+msgid "No matching entries found."
+msgstr ""
 
 msgid "No materials waiting in the downloader queue"
 msgstr ""

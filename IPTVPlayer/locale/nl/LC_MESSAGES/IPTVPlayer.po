@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -1321,6 +1321,9 @@ msgstr "Afsluiten"
 msgid "Expiry: %s"
 msgstr "Vervaldatum: %s"
 
+msgid "Extended"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Externe Movie Player configuratie"
 
@@ -2130,6 +2133,10 @@ msgstr "Groep verplaatsen"
 msgid "Movie"
 msgstr "Film"
 
+#, fuzzy
+msgid "Movie player selection list"
+msgstr "IPTVPlayer in Extensiemenu tonen"
+
 msgid "Movies"
 msgstr "Films"
 
@@ -2244,6 +2251,9 @@ msgid ""
 msgstr ""
 "Geen item om te tonen. \n"
 "Druk op OK om te verversen.\n"
+
+msgid "No matching entries found."
+msgstr ""
 
 msgid "No materials waiting in the downloader queue"
 msgstr "Geen downloads in de wachtrij"

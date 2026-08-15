@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: 2026-03-14 12:34+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -1318,6 +1318,9 @@ msgstr "خروج"
 msgid "Expiry: %s"
 msgstr "تاريخ الانتهاء: %s"
 
+msgid "Extended"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "إعدادات مشغل الأفلام الخارجي"
 
@@ -2127,6 +2130,10 @@ msgstr "نقل المجموعة"
 msgid "Movie"
 msgstr "فيلم"
 
+#, fuzzy
+msgid "Movie player selection list"
+msgstr "عرض IPTVPlayer في قائمة الإضافات"
+
 msgid "Movies"
 msgstr "أفلام"
 
@@ -2241,6 +2248,9 @@ msgid ""
 msgstr ""
 "لا يوجد عناصر للعرض.\n"
 "اضغط OK للتحديث.\n"
+
+msgid "No matching entries found."
+msgstr ""
 
 msgid "No materials waiting in the downloader queue"
 msgstr "لا يوجد مواد في قائمة الانتظار للتحميل"

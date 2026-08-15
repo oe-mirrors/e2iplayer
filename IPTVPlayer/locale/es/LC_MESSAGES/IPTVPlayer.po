@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer OE-Mirrors Version\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: polinene\n"
 "Language-Team: polinene\n"
@@ -1327,6 +1327,9 @@ msgstr "Salir"
 msgid "Expiry: %s"
 msgstr ""
 
+msgid "Extended"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Config. del reproductor externo"
 
@@ -2137,6 +2140,10 @@ msgstr "Mover grupo"
 msgid "Movie"
 msgstr "Pelìcula"
 
+#, fuzzy
+msgid "Movie player selection list"
+msgstr "IPTVPlayer Mostrar en la lista de extensiones"
+
 msgid "Movies"
 msgstr "Peliculas"
 
@@ -2254,6 +2261,9 @@ msgid ""
 msgstr ""
 "Ningún elemento para mostrar.\n"
 "Pulse OK para actualizar.\n"
+
+msgid "No matching entries found."
+msgstr ""
 
 msgid "No materials waiting in the downloader queue"
 msgstr "Nada esperando en la cola de descarga"

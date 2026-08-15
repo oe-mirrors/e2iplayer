@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 16:50+0200\n"
+"POT-Creation-Date: 2026-08-15 08:49+0200\n"
 "PO-Revision-Date: 2018-03-25 18:50+100\n"
 "Last-Translator: nunigaia\n"
 "Language-Team: BH team\n"
@@ -1316,6 +1316,9 @@ msgstr "Sair"
 msgid "Expiry: %s"
 msgstr ""
 
+msgid "Extended"
+msgstr ""
+
 msgid "External movie player config"
 msgstr "Configuração do Leitor de Filmes externo"
 
@@ -2131,6 +2134,10 @@ msgid "Movie"
 msgstr "Filme"
 
 #, fuzzy
+msgid "Movie player selection list"
+msgstr "Exibir o IPTVPlayer na lista de extensões"
+
+#, fuzzy
 msgid "Movies"
 msgstr "Filme"
 
@@ -2250,6 +2257,9 @@ msgid ""
 msgstr ""
 "Não existem itens para visualizar. \n"
 "Prima OK para atualizar.\n"
+
+msgid "No matching entries found."
+msgstr ""
 
 msgid "No materials waiting in the downloader queue"
 msgstr ""
