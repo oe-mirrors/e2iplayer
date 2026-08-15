@@ -9,10 +9,20 @@ from hashlib import md5
 import os
 
 try:
-    from PIL import Image
-    hasPIL = True
+    from enigma import getE2Flags
+    webPEnabled = getE2Flags() & 2
 except ImportError:
+    webPEnabled = False
+
+if not webPEnabled:
+    try:
+        from PIL import Image
+        hasPIL = True
+    except ImportError:
+        hasPIL = False
+else:
     hasPIL = False
+
 
 from enigma import eTimer, getDesktop
 from Components.ActionMap import ActionMap
@@ -189,6 +199,8 @@ class IPTVArticleView(Screen):
                             img.close()
                         except:
                             printExc()
+                    elif not webPEnabled:
+                        return
 
                 if self["cover"].decodeCover(self._getDownloadFilePath(), self.decodePictureEnd, ' '):
                     return
