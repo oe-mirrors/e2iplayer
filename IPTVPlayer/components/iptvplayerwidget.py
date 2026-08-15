@@ -2269,21 +2269,6 @@ class E2iPlayerWidget(Screen):
         self.currList = ret.value
         self["list"].setList([(x,) for x in self.currList])
 
-        # iconMenager
-        iconList = []
-        # fill icon List for icon manager
-        # if an user whant to see icons
-#        if config.plugins.iptvplayer.showcover.value and self.iconMenager:
-#            for it in self.currList:
-#                if it.iconimage != '':
-#                    iconList.append(it.iconimage)
-
-        if len(iconList):
-            # List has been changed so clear old Queue
-            self.iconMenager.clearDQueue()
-            # a new list of icons should be downloaded
-            self.iconMenager.addToDQueue(iconList)
-
         self["headertext"].setText(self.getCategoryPath())
         if len(self.currList) <= 0:
             disMessage = _("No item to display. \nPress OK to refresh.\n")
