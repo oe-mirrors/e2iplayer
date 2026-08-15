@@ -865,7 +865,7 @@ class common:
     def convertWebp(self, file_path, png=False):
         printDBG("PCommon.convertWebp %s" % file_path)
 
-        output_path = file_path + ".png" if png else ".jpg"
+        output_path = file_path + (".png" if png else ".jpg")
         if os.path.exists(file_path):
             if os.path.exists(output_path):
                 os.remove(output_path)
