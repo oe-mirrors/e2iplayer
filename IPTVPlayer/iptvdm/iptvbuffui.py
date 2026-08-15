@@ -413,32 +413,32 @@ class E2iPlayerBufferingWidget(Screen):
                 # if it is located at the begining of MP4 file
                 # it should be just after ftyp atom
                 try:
-                    f = open(self.filePath, "rb")
-                    currOffset = 0
-                    while currOffset < localSize:
-                        rawSize = ReadUint32(f.read(4), False)
-                        rawType = f.read(4)
-                        printDBG(">> rawType [%s]" % rawType)
-                        printDBG(">> rawSize [%d]" % rawSize)
-                        if currOffset == 0 and rawType != "ftyp":
-                            # this does not looks like MP4 file
-                            break
-                        else:
-                            if rawType == "moov":
-                                self.moovAtomOffset = currOffset
-                                self.moovAtomSize = rawSize
-                                self.isMOOVAtomAtTheBeginning = True
+                    with open(self.filePath, "rb") as f:
+                        currOffset = 0
+                        while currOffset < localSize:
+                            rawSize = ReadUint32(f.read(4), False)
+                            rawType = f.read(4)
+                            printDBG(">> rawType [%s]" % rawType)
+                            printDBG(">> rawSize [%d]" % rawSize)
+                            if currOffset == 0 and rawType != b"ftyp":
+                                # this does not looks like MP4 file
                                 break
-                            elif rawType == "mdat":
-                                # we are not sure if after mdat will be moov atom but
-                                # if this will be max last 10MB of file then
-                                # we will download it
-                                self.moovAtomOffset = currOffset + rawSize
-                                self.moovAtomSize = remoteSize - self.moovAtomOffset
-                                self.isMOOVAtomAtTheBeginning = False
-                                break
-                            currOffset += rawSize
-                        f.seek(currOffset, 0)
+                            else:
+                                if rawType == b"moov":
+                                    self.moovAtomOffset = currOffset
+                                    self.moovAtomSize = rawSize
+                                    self.isMOOVAtomAtTheBeginning = True
+                                    break
+                                elif rawType == b"mdat":
+                                    # we are not sure if after mdat will be moov atom but
+                                    # if this will be max last 10MB of file then
+                                    # we will download it
+                                    self.moovAtomOffset = currOffset + rawSize
+                                    self.moovAtomSize = remoteSize - self.moovAtomOffset
+                                    self.isMOOVAtomAtTheBeginning = False
+                                    break
+                                currOffset += rawSize
+                            f.seek(currOffset, 0)
                     printDBG(">> moovAtomOffset[%d]" % self.moovAtomOffset)
                     printDBG(">> moovAtomSize[%d]" % self.moovAtomSize)
                 except Exception:
