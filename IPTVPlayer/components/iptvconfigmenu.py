@@ -94,6 +94,11 @@ config.plugins.iptvplayer.defaultMoviePlayer0 = ConfigSelection(default="auto", 
 config.plugins.iptvplayer.alternativeMoviePlayer0 = ConfigSelection(default="auto", choices=[ConfigPlayer("auto"), ConfigPlayer("mini"), ConfigPlayer("standard"), ConfigPlayer('extgstplayer'), ConfigPlayer('exteplayer')])
 config.plugins.iptvplayer.defaultMoviePlayer = ConfigSelection(default="auto", choices=[ConfigPlayer("auto"), ConfigPlayer("mini"), ConfigPlayer("standard"), ConfigPlayer('extgstplayer'), ConfigPlayer('exteplayer')])
 config.plugins.iptvplayer.alternativeMoviePlayer = ConfigSelection(default="auto", choices=[ConfigPlayer("auto"), ConfigPlayer("mini"), ConfigPlayer("standard"), ConfigPlayer('extgstplayer'), ConfigPlayer('exteplayer')])
+# "standard" keeps the blue-key "Select movie player" picker showing just
+# the 4 configured default/alternative slots (+ Auto), like before
+# GetAvailableMoviePlayers() started listing every player directly -
+# "extended" opts into that full list instead
+config.plugins.iptvplayer.moviePlayerPickerMode = ConfigSelection(default="standard", choices=[("standard", _("Standard")), ("extended", _("Extended"))])
 
 config.plugins.iptvplayer.SciezkaCache = ConfigDirectory(default="/hdd/IPTVCache/")  # , fixed_size = False)
 config.plugins.iptvplayer.NaszaTMP = ConfigDirectory(default="/tmp/")  # , fixed_size = False)
@@ -478,6 +483,7 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Autoplay start delay"), config.plugins.iptvplayer.autoplay_start_delay))
         list.append(getConfigListEntry(_("Block wmv files"), config.plugins.iptvplayer.ZablokujWMV))
         players = []
+        list.append(getConfigListEntry(_("Movie player selection list"), config.plugins.iptvplayer.moviePlayerPickerMode))
         list.append(getConfigListEntry(_("First movie player without buffering mode"), config.plugins.iptvplayer.defaultMoviePlayer0))
         players.append(config.plugins.iptvplayer.defaultMoviePlayer0)
         list.append(getConfigListEntry(_("Second movie player without buffering mode"), config.plugins.iptvplayer.alternativeMoviePlayer0))
@@ -640,10 +646,12 @@ class ConfigMenu(ConfigBaseWidget):
         self.session.open(ConfigExtMoviePlayer)
 
 
-def GetMoviePlayer(buffering=False, useAlternativePlayer=False):
-    printDBG("GetMoviePlayer buffering[%r], useAlternativePlayer[%r]" % (buffering, useAlternativePlayer))
-    # select movie player
-
+def GetAvailableMoviePlayers():
+    # 'mini'/'standard' are always available (built in); the external ones
+    # only when their binary is actually present. Shared by GetMoviePlayer()
+    # (default/alternative slot resolution) and the "Select movie player"
+    # blue-key menu (lists every one of these directly, not just the two
+    # configured slots)
     availablePlayers = []
     if IsExecutable("/usr/bin/exteplayer3"):  # config.plugins.iptvplayer.exteplayer3path.value):
         availablePlayers.append('exteplayer')
@@ -651,6 +659,13 @@ def GetMoviePlayer(buffering=False, useAlternativePlayer=False):
         availablePlayers.append('extgstplayer')
     availablePlayers.append('mini')
     availablePlayers.append('standard')
+    return availablePlayers
+
+
+def GetMoviePlayer(buffering=False, useAlternativePlayer=False):
+    printDBG("GetMoviePlayer buffering[%r], useAlternativePlayer[%r]" % (buffering, useAlternativePlayer))
+    # select movie player
+    availablePlayers = GetAvailableMoviePlayers()
 
     player = None
     alternativePlayer = None

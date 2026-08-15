@@ -31,7 +31,7 @@ from enigma import getDesktop, eTimer
 ####################################################
 #                   IPTV components
 ####################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer, GetListOfHostsNames
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer, GetAvailableMoviePlayers, GetMoviePlayerName, GetListOfHostsNames
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostMenu, ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.configgroups import ConfigGroupsMenu
 
@@ -717,15 +717,30 @@ class E2iPlayerWidget(Screen):
             elif ret[1] == "SetActiveMoviePlayer":
                 options = []
                 options.append(IPTVChoiceBoxItem(_("Auto selection based on the settings"), "", {}))
-                player = self.getMoviePlayer(True, False)
-                printDBG("SetActiveMoviePlayer [%r]" % dir(player))
-                options.append(IPTVChoiceBoxItem(_("[%s] with buffering") % player.getText(), "", {'buffering': True, 'player': player}))
-                player = self.getMoviePlayer(True, True)
-                options.append(IPTVChoiceBoxItem(_("[%s] with buffering") % player.getText(), "", {'buffering': True, 'player': player}))
-                player = self.getMoviePlayer(False, False)
-                options.append(IPTVChoiceBoxItem(_("[%s] without buffering") % player.getText(), "", {'buffering': False, 'player': player}))
-                player = self.getMoviePlayer(False, True)
-                options.append(IPTVChoiceBoxItem(_("[%s] without buffering") % player.getText(), "", {'buffering': False, 'player': player}))
+                if config.plugins.iptvplayer.moviePlayerPickerMode.value == 'extended':
+                    # every actually available player directly, not just
+                    # whatever the two configured "default"/"alternative"
+                    # slots resolve to - those often both land on the two
+                    # external players (auto always prefers them when
+                    # present), so mini/standard were never reachable here
+                    # without changing Settings first
+                    for buffering in (True, False):
+                        for playerKey in GetAvailableMoviePlayers():
+                            player = CFakeMoviePlayerOption(playerKey, GetMoviePlayerName(playerKey))
+                            # keep the original combined msgid ("[%s] with/
+                            # without buffering"), not a split "with
+                            # buffering" + "[%s] %s" - 14 locales already
+                            # have real translations for this exact string,
+                            # splitting it would silently orphan every one
+                            label = _("[%s] with buffering") % player.getText() if buffering else _("[%s] without buffering") % player.getText()
+                            options.append(IPTVChoiceBoxItem(label, "", {'buffering': buffering, 'player': player}))
+                else:
+                    # "standard": only the 4 configured default/alternative
+                    # slots, same as before the "extended" mode existed
+                    for buffering, useAlternativePlayer in ((True, False), (True, True), (False, False), (False, True)):
+                        player = self.getMoviePlayer(buffering, useAlternativePlayer)
+                        label = _("[%s] with buffering") % player.getText() if buffering else _("[%s] without buffering") % player.getText()
+                        options.append(IPTVChoiceBoxItem(label, "", {'buffering': buffering, 'player': player}))
 
                 currIdx = -1
                 for idx in range(len(options)):
@@ -739,14 +754,15 @@ class E2iPlayerWidget(Screen):
                     else:
                         options[idx].type = IPTVChoiceBoxItem.TYPE_OFF
 
-                if self.getSkinResolutionType() == 'hd':
-                    width = 900
-                elif self.getSkinResolutionType() == 'hd_ready':
-                    width = 600
-                else:
-                    width = 400
-
-                self.session.openWithCallback(self.setActiveMoviePlayer, IPTVChoiceBoxWidget, {'width': width, 'height': 250, 'current_idx': currIdx, 'title': _("Select movie player"), 'options': options})
+                height = self._getMoviePlayerPickerHeight(len(options))
+                # 120: same derivation as the keyboard's language picker -
+                # the list starts at y=66 in the chrome skin's reference
+                # space, and "e-N" sizes against the full container height,
+                # not reduced by that 66 first, so footerMargin needs to be
+                # >= 66 + 48 (footer height) = 114 just to end flush with
+                # the footer; the chrome default of 150 leaves a visible
+                # ~36px reference-space gap above it
+                self.session.openWithCallback(self.setActiveMoviePlayer, IPTVChoiceBoxWidget, {'width': self.MOVIE_PLAYER_PICKER_WIDTH, 'height': height, 'current_idx': currIdx, 'title': _("Select movie player"), 'options': options, 'chrome': True, 'footerMargin': 120})
             elif ret[1] == 'ADD_FAV':
                 currSelIndex = self.canByAddedToFavourites()[0]
                 self.requestListFromHost('ForFavItem', currSelIndex, '')
@@ -1719,6 +1735,30 @@ class E2iPlayerWidget(Screen):
             options.append(IPTVChoiceBoxItem(link.name, "", link, failed=link.failed))
 
         self.session.openWithCallback(self.selectLinksCallback, IPTVChoiceBoxWidget, {'width': 600, 'height': self._getLinkPickerHeight(), 'current_idx': 0, 'title': _("Select link"), 'options': options, 'list_class': IPTVLinkChoiceBoxList})
+
+    # IPTVChoiceBoxWidget's screen declares resolution="1280,720", so the
+    # skin engine already scales width/size per axis to the real screen
+    # (1x HD, 1.5x FHD, 2x WQHD) - this has to be a single reference-space
+    # constant, not stepped up per tier like the old code did, or it gets
+    # scaled twice (which is exactly why WQHD ended up nearly full-screen)
+    MOVIE_PLAYER_PICKER_WIDTH = 550
+
+    def _getMoviePlayerPickerHeight(self, numItems):
+        # same reference-space-vs-real-pixels reasoning as _getLinkPickerHeight,
+        # but using IPTVRadioButtonList's (IPTVMainNavigatorList's) own real
+        # per-tier item heights (35/40/55) instead of guessed constants.
+        # +130 = the footerMargin passed below (120, itself derived from the
+        # list's fixed y=66 + the 48px footer bar) plus a small 10px
+        # breathing buffer - not the keyboard's own +160, which assumes the
+        # chrome default footerMargin (150) instead of this screen's 120
+        screenwidth = getDesktop(0).size().width()
+        if screenwidth >= 2560:
+            itemH, scale = 55, 2.0
+        elif screenwidth >= 1920:
+            itemH, scale = 40, 1.5
+        else:
+            itemH, scale = 35, 1.0
+        return int(numItems * itemH / scale) + 130
 
     def _getLinkPickerHeight(self):
         # IPTVChoiceBoxWidget's skin is defined in a fixed 1280x720 reference space
