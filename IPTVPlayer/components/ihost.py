@@ -898,7 +898,9 @@ class CBaseHostClass:
         msg = _('Are you sure you want to delete search history?')
         session.openWithCallback(doit, MessageBox, msg, type=MessageBox.TYPE_YESNO, default=True)
 
-    def listsHistory(self, baseItem={'name': 'history', 'category': 'search'}, desc_key='plot', desc_base=(_("Type: "))):
+    def listsHistory(self, baseItem={'name': 'history', 'category': 'search'}, desc_key='plot', desc_base=None):
+        if desc_base is None:
+            desc_base = _("Type: ")
         list = self.history.getHistoryList()
         for histItem in list:
             plot = ''

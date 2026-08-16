@@ -323,7 +323,7 @@ msgstr "Добавить название канала к загруженном
 msgid "Add host %s to group"
 msgstr "Добавить хост %s в группу"
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr "Добавить объект в избранное"
 
 msgid "Add item to group"
@@ -332,7 +332,7 @@ msgstr "Добавить элемент в группу"
 msgid "Add new group"
 msgstr "Добавить новую группу"
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr "Добавить новую группу избранного"
 
 msgid "Add to User Links"
@@ -846,8 +846,8 @@ msgstr "Удалить историю поиска"
 msgid "Description:"
 msgstr "Описание:"
 
-msgid "Developers: "
-msgstr "Разработчики: "
+msgid "Developers:"
+msgstr "Разработчики:"
 
 msgid "Direct"
 msgstr "Прямой"
@@ -1109,13 +1109,13 @@ msgstr "Редактировать ссылки пользователя"
 msgid "Edit failed."
 msgstr "Не удалось отредактировать."
 
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr "Редактировать группу избранного"
 
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr "Редактировать элемент избранного"
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr "Изменить избранное"
 
 msgid "Educational Animation"
@@ -1223,7 +1223,7 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Ошибка связи с сервером."
 
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr "Ошибка при удалении элемента избранного."
 
 #, python-format
@@ -1553,8 +1553,8 @@ msgstr "Группа \"%s\" уже существует."
 msgid "Group %d"
 msgstr "Группа %d"
 
-msgid "Group links into categories: "
-msgstr "Групповые ссылки на категории: "
+msgid "Group links into categories:"
+msgstr "Групповые ссылки на категории:"
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -1994,8 +1994,8 @@ msgstr "Главное меню"
 msgid "Make directory [%s]"
 msgstr "Создать каталог [%s]"
 
-msgid "Manager status: "
-msgstr "Статус менеджера: "
+msgid "Manager status:"
+msgstr "Статус менеджера:"
 
 msgid "Masrahyat"
 msgstr "Масрахят"
@@ -2316,8 +2316,8 @@ msgstr "ПОРТ"
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
-msgstr "Страница: "
+msgid "Page:"
+msgstr "Страница:"
 
 msgid "Password"
 msgstr "Пароль"
@@ -2525,8 +2525,8 @@ msgstr "Программы"
 msgid "Promote item"
 msgstr "Продвижение пункта"
 
-msgid "Protocol: "
-msgstr "Протокол: "
+msgid "Protocol:"
+msgstr "Протокол:"
 
 msgid "Published"
 msgstr "Опубликовано"
@@ -2549,8 +2549,8 @@ msgstr "НЕДАВНИЕ"
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
-msgstr "ПОМНИТЕ: "
+msgid "REMEMBER:"
+msgstr "ПОМНИТЕ:"
 
 msgid "REWIND - delete entered text"
 msgstr ""
@@ -2594,9 +2594,6 @@ msgstr "Рейтинг %s"
 
 msgid "Rating:"
 msgstr "Рейтинг:"
-
-msgid "Rating: "
-msgstr "Рейтинг: "
 
 msgid "Recon"
 msgstr "Recon"
@@ -2645,7 +2642,7 @@ msgstr "Удаление отключенных сервисов"
 msgid "Remove file"
 msgstr "Удалить файл"
 
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr "Удалить из избранного"
 
 msgid "Remove group"
@@ -2746,8 +2743,8 @@ msgstr "Поиск для \"%s\", %s, %s %s"
 msgid "Search history"
 msgstr "История поиска"
 
-msgid "Search in "
-msgstr "Поиск в "
+msgid "Search in"
+msgstr "Поиск в"
 
 msgid "Search in all active hosts"
 msgstr "Поиск во всех активных хостах"
@@ -2779,9 +2776,6 @@ msgstr "Поиск, подождите (%d)"
 msgid "Season"
 msgstr "Сезон"
 
-msgid "Season "
-msgstr "Время года "
-
 #, python-format
 msgid "Season %s"
 msgstr "Сезон %s"
@@ -2811,7 +2805,7 @@ msgstr "Выберите звуковую дорожку"
 msgid "Select directory"
 msgstr "Выбрать каталог"
 
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr "Выбрать любимую группу"
 
 msgid "Select group"
@@ -2990,8 +2984,8 @@ msgstr "Загрузчик одного файла"
 msgid "Skin"
 msgstr "Скин"
 
-msgid "Skinners: "
-msgstr "Скиннеры: "
+msgid "Skinners:"
+msgstr "Скиннеры:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Пропустить видео короче [мин]"
@@ -3192,8 +3186,8 @@ msgstr "Субтитры для: %s"
 msgid "Subtitles:"
 msgstr "Субтитры:"
 
-msgid "Summary: "
-msgstr "Итого: "
+msgid "Summary:"
+msgstr "Итого:"
 
 msgid "Surgical Approaches"
 msgstr "Хирургические Подходы"
@@ -3352,7 +3346,7 @@ msgstr "Не удалось обновить пользовательскую с
 msgid "There are %d more pages in this section"
 msgstr "В этом разделе есть ещё %d страниц(ы)"
 
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr "Иные избранные группы отсутствуют"
 
 #, python-format
@@ -3415,8 +3409,8 @@ msgstr "Топ серии"
 msgid "Top-IMDB"
 msgstr "Топ-IMDB"
 
-msgid "Total size: "
-msgstr "Общий размер: "
+msgid "Total size:"
+msgstr "Общий размер:"
 
 msgid "Trailer"
 msgstr "Трейлер"
@@ -3827,8 +3821,8 @@ msgstr "[HLS/M3U8] буферизация"
 msgid "[HTTP] buffering"
 msgstr "[HTTP] буферизация"
 
-msgid "[Logged-in-only] "
-msgstr "[Только-авторизованный] "
+msgid "[Logged-in-only]"
+msgstr "[Только-авторизованный]"
 
 msgid "[RTMP] buffering (rtmpdump required)"
 msgstr "[RTMP] буферизация (требуется rtmpdump)"
@@ -4076,8 +4070,8 @@ msgstr "подождите %s секунды"
 msgid "white"
 msgstr "белый"
 
-msgid "www: "
-msgstr "www: "
+msgid "www:"
+msgstr "www:"
 
 msgid "yellow"
 msgstr "жёлтый"

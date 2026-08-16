@@ -403,7 +403,7 @@ class HasBahCa(CBaseHostClass):
                         desc = catTitle + ', '
                     else:
                         desc = ''
-                    desc += (_("Protocol: ")) + itemUrl.meta.get('iptv_proto', '')
+                    desc += _("Protocol:") + " " + itemUrl.meta.get('iptv_proto', '')
 
                     if 'headers=' in itemUrl:
                         headers = self.cm.ph.getSearchGroups(itemUrl, r'headers\=(\{[^\}]+?\})')[0]

@@ -333,7 +333,7 @@ msgstr "Ajouter au téléchargeur"
 msgid "Add host %s to group"
 msgstr "Ajouter l’hôte %s au groupe"
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr "Ajouter un élément aux favoris"
 
 msgid "Add item to group"
@@ -342,7 +342,7 @@ msgstr "Ajouter l’élément au groupe"
 msgid "Add new group"
 msgstr "Ajouter un nouveau groupe"
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr "Ajouter le nouveau groupe de favoris"
 
 #, fuzzy
@@ -890,8 +890,8 @@ msgstr "Historique de recherche"
 msgid "Description:"
 msgstr "Description :"
 
-msgid "Developers: "
-msgstr "Développeurs: "
+msgid "Developers:"
+msgstr "Développeurs:"
 
 #, fuzzy
 msgid "Direct"
@@ -1166,14 +1166,14 @@ msgid "Edit failed."
 msgstr "Login a échoué."
 
 #, fuzzy
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr "Sélectionner un groupe favori"
 
 #, fuzzy
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr "Modifier les favoris"
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr "Modifier les favoris"
 
 msgid "Educational Animation"
@@ -1286,7 +1286,7 @@ msgid "Error communicating with the server."
 msgstr "Erreur de communication avec le serveur."
 
 #, fuzzy
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr "Erreur de suppression du fichier \"%s\".\n"
 
 #, python-format
@@ -1633,8 +1633,8 @@ msgstr "Le groupe \"%s\" existe déjà."
 msgid "Group %d"
 msgstr "Groupe %d"
 
-msgid "Group links into categories: "
-msgstr "Grouper les liens en catégories: "
+msgid "Group links into categories:"
+msgstr "Grouper les liens en catégories:"
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -2094,8 +2094,8 @@ msgstr "Menu principal"
 msgid "Make directory [%s]"
 msgstr "Créer un répertoire [%s]."
 
-msgid "Manager status: "
-msgstr "Statut de gestionnaire: "
+msgid "Manager status:"
+msgstr "Statut de gestionnaire:"
 
 msgid "Masrahyat"
 msgstr ""
@@ -2426,7 +2426,7 @@ msgstr "PORT"
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
+msgid "Page:"
 msgstr ""
 
 msgid "Password"
@@ -2638,8 +2638,8 @@ msgstr "Programmes"
 msgid "Promote item"
 msgstr "Promouvoir l'article"
 
-msgid "Protocol: "
-msgstr "Protocole: "
+msgid "Protocol:"
+msgstr "Protocole:"
 
 #, fuzzy
 msgid "Published"
@@ -2663,7 +2663,7 @@ msgstr "RÉCENT"
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
+msgid "REMEMBER:"
 msgstr "RAPPELEZ-VOUS:"
 
 msgid "REWIND - delete entered text"
@@ -2710,10 +2710,6 @@ msgid "Rating %s"
 msgstr "Évaluation : %s"
 
 msgid "Rating:"
-msgstr "Note:"
-
-#, fuzzy
-msgid "Rating: "
 msgstr "Note:"
 
 #, fuzzy
@@ -2767,7 +2763,7 @@ msgid "Remove file"
 msgstr "Supprimer le fichier"
 
 #, fuzzy
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr "Ajouter un élément aux favoris"
 
 msgid "Remove group"
@@ -2871,7 +2867,7 @@ msgstr "Recherche pour \"%s\", %s, %s %s"
 msgid "Search history"
 msgstr "Historique de recherche"
 
-msgid "Search in "
+msgid "Search in"
 msgstr "Recherche dans"
 
 msgid "Search in all active hosts"
@@ -2904,10 +2900,6 @@ msgstr "Recherche, veuillez patienter (%d)"
 msgid "Season"
 msgstr "Saison"
 
-#, fuzzy
-msgid "Season "
-msgstr "Saison"
-
 #, python-format
 msgid "Season %s"
 msgstr "Saison %s"
@@ -2938,7 +2930,7 @@ msgstr "Choisir la piste audio"
 msgid "Select directory"
 msgstr "Sélectionner le répertoire"
 
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr "Sélectionner un groupe favori"
 
 msgid "Select group"
@@ -3125,7 +3117,7 @@ msgid "Skin"
 msgstr "Thème/Skin"
 
 #, fuzzy
-msgid "Skinners: "
+msgid "Skinners:"
 msgstr "Nombre d'auditeurs : %s"
 
 msgid "Skip video shorter than [min]"
@@ -3330,7 +3322,7 @@ msgstr "Sous-titres pour : %s"
 msgid "Subtitles:"
 msgstr "Sous-titres"
 
-msgid "Summary: "
+msgid "Summary:"
 msgstr ""
 
 msgid "Surgical Approaches"
@@ -3485,7 +3477,7 @@ msgstr ""
 msgid "There are %d more pages in this section"
 msgstr ""
 
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr "Il n'y a pas d'autres groupes préférés."
 
 #, fuzzy, python-format
@@ -3550,7 +3542,7 @@ msgstr "Top séries"
 msgid "Top-IMDB"
 msgstr ""
 
-msgid "Total size: "
+msgid "Total size:"
 msgstr "Taille totale :"
 
 msgid "Trailer"
@@ -3989,8 +3981,8 @@ msgstr "[HLS/M3U8] mise en mémoire tampon"
 msgid "[HTTP] buffering"
 msgstr "[HTTP] mise en mémoire tampon"
 
-msgid "[Logged-in-only] "
-msgstr "[Seulement-se-connecter] "
+msgid "[Logged-in-only]"
+msgstr "[Seulement-se-connecter]"
 
 msgid "[RTMP] buffering (rtmpdump required)"
 msgstr "[RTMP] mise en mémoire tampon (rtmpdump requis)"
@@ -4243,7 +4235,7 @@ msgstr "attendre %s secondes"
 msgid "white"
 msgstr "blanc"
 
-msgid "www: "
+msgid "www:"
 msgstr "www:"
 
 msgid "yellow"

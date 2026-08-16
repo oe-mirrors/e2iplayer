@@ -326,7 +326,7 @@ msgstr "İndiriciye ekle"
 msgid "Add host %s to group"
 msgstr "%s hostunu gruba ekle"
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr "Öğeyi favorilere ekle"
 
 msgid "Add item to group"
@@ -335,7 +335,7 @@ msgstr "Öğeyi gruba ekle"
 msgid "Add new group"
 msgstr "Yeni grup ekle"
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr "Yeni favori grubu ekle"
 
 #, fuzzy
@@ -863,7 +863,7 @@ msgstr "Arama geçmişini sil"
 msgid "Description:"
 msgstr "Açıklama:"
 
-msgid "Developers: "
+msgid "Developers:"
 msgstr ""
 
 #, fuzzy
@@ -1114,14 +1114,14 @@ msgid "Edit failed."
 msgstr "Giriş başarısız."
 
 #, fuzzy
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr "Favori grupları"
 
 #, fuzzy
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr "Favorileri düzenle"
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr "Favorileri düzenle"
 
 msgid "Educational Animation"
@@ -1229,7 +1229,7 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Sunucu ile iletişim hatası."
 
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr ""
 
 #, python-format
@@ -1579,7 +1579,7 @@ msgstr ""
 msgid "Group %d"
 msgstr "Gruplar"
 
-msgid "Group links into categories: "
+msgid "Group links into categories:"
 msgstr ""
 
 #, python-format
@@ -2029,8 +2029,8 @@ msgstr "Ana menü"
 msgid "Make directory [%s]"
 msgstr "Dizin seç"
 
-msgid "Manager status: "
-msgstr "Yönetici durumu: "
+msgid "Manager status:"
+msgstr "Yönetici durumu:"
 
 msgid "Masrahyat"
 msgstr ""
@@ -2356,7 +2356,7 @@ msgstr ""
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
+msgid "Page:"
 msgstr ""
 
 msgid "Password"
@@ -2567,7 +2567,7 @@ msgstr "Programlar"
 msgid "Promote item"
 msgstr "Öğeyi kaldır"
 
-msgid "Protocol: "
+msgid "Protocol:"
 msgstr ""
 
 #, fuzzy
@@ -2592,7 +2592,7 @@ msgstr ""
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
+msgid "REMEMBER:"
 msgstr ""
 
 msgid "REWIND - delete entered text"
@@ -2637,10 +2637,6 @@ msgid "Rating %s"
 msgstr "Puan"
 
 msgid "Rating:"
-msgstr "Puan:"
-
-#, fuzzy
-msgid "Rating: "
 msgstr "Puan:"
 
 #, fuzzy
@@ -2694,7 +2690,7 @@ msgstr "Devre dışı servisleri kaldır"
 msgid "Remove file"
 msgstr "Dosyayı kaldır"
 
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr "Favorilerden kaldır"
 
 msgid "Remove group"
@@ -2793,7 +2789,7 @@ msgid "Search history"
 msgstr "Arama geçmişi"
 
 #, fuzzy
-msgid "Search in "
+msgid "Search in"
 msgstr "Ara"
 
 msgid "Search in all active hosts"
@@ -2824,10 +2820,6 @@ msgid "Searching, please wait (%d)"
 msgstr "Veriler yükleniyor, lütfen bekleyin"
 
 msgid "Season"
-msgstr "Sezon"
-
-#, fuzzy
-msgid "Season "
 msgstr "Sezon"
 
 #, fuzzy, python-format
@@ -2861,7 +2853,7 @@ msgid "Select directory"
 msgstr "Dizin seç"
 
 #, fuzzy
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr "Favori grupları"
 
 msgid "Select group"
@@ -3047,7 +3039,7 @@ msgstr "E2iPlayer indirici"
 msgid "Skin"
 msgstr "Arayüz"
 
-msgid "Skinners: "
+msgid "Skinners:"
 msgstr ""
 
 msgid "Skip video shorter than [min]"
@@ -3250,7 +3242,7 @@ msgstr "Altyazı yazı boyutu"
 msgid "Subtitles:"
 msgstr "Altyazılar"
 
-msgid "Summary: "
+msgid "Summary:"
 msgstr ""
 
 msgid "Surgical Approaches"
@@ -3398,7 +3390,7 @@ msgstr ""
 msgid "There are %d more pages in this section"
 msgstr ""
 
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr ""
 
 #, python-format
@@ -3462,7 +3454,7 @@ msgstr "TV dizileri"
 msgid "Top-IMDB"
 msgstr ""
 
-msgid "Total size: "
+msgid "Total size:"
 msgstr ""
 
 msgid "Trailer"
@@ -3899,7 +3891,7 @@ msgstr ""
 msgid "[HTTP] buffering"
 msgstr ""
 
-msgid "[Logged-in-only] "
+msgid "[Logged-in-only]"
 msgstr ""
 
 msgid "[RTMP] buffering (rtmpdump required)"
@@ -4148,8 +4140,8 @@ msgstr "saniye"
 msgid "white"
 msgstr "beyaz"
 
-msgid "www: "
-msgstr "www: "
+msgid "www:"
+msgstr "www:"
 
 msgid "yellow"
 msgstr "sarı"

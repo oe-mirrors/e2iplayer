@@ -315,7 +315,7 @@ msgstr "Parar a Descarga"
 msgid "Add host %s to group"
 msgstr "Adicionar item ao grupo"
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr "Adicionar item aos favorios"
 
 msgid "Add item to group"
@@ -324,7 +324,7 @@ msgstr "Adicionar item ao grupo"
 msgid "Add new group"
 msgstr "Adicionar novo grupo"
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr "Adicionar novo grupo de favoritos"
 
 #, fuzzy
@@ -860,7 +860,7 @@ msgstr "Histórico de pesquisa"
 msgid "Description:"
 msgstr "Descrição:"
 
-msgid "Developers: "
+msgid "Developers:"
 msgstr ""
 
 msgid "Direct"
@@ -1128,14 +1128,14 @@ msgid "Edit failed."
 msgstr "Editar favoritos"
 
 #, fuzzy
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr "Selecionar o grupo favorito"
 
 #, fuzzy
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr "Editar favoritos"
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr "Editar favoritos"
 
 msgid "Educational Animation"
@@ -1246,7 +1246,7 @@ msgid "Error communicating with the server."
 msgstr ""
 
 #, fuzzy
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr "Erro ao apaga ficheiro \"%s\".\n"
 
 #, python-format
@@ -1588,7 +1588,7 @@ msgstr "Grupo \"%s\" já existe."
 msgid "Group %d"
 msgstr "Grupo %d"
 
-msgid "Group links into categories: "
+msgid "Group links into categories:"
 msgstr ""
 
 #, python-format
@@ -2040,8 +2040,8 @@ msgstr ""
 msgid "Make directory [%s]"
 msgstr "Problema com a pasta (%s)."
 
-msgid "Manager status: "
-msgstr "Gestor de estado: "
+msgid "Manager status:"
+msgstr "Gestor de estado:"
 
 msgid "Masrahyat"
 msgstr ""
@@ -2377,7 +2377,7 @@ msgstr ""
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
+msgid "Page:"
 msgstr ""
 
 #, fuzzy
@@ -2588,7 +2588,7 @@ msgstr "Programas A-Z"
 msgid "Promote item"
 msgstr "Promover item"
 
-msgid "Protocol: "
+msgid "Protocol:"
 msgstr ""
 
 msgid "Published"
@@ -2613,7 +2613,7 @@ msgstr ""
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
+msgid "REMEMBER:"
 msgstr ""
 
 msgid "REWIND - delete entered text"
@@ -2661,10 +2661,6 @@ msgstr "Classificação"
 
 #, fuzzy
 msgid "Rating:"
-msgstr "Classificação"
-
-#, fuzzy
-msgid "Rating: "
 msgstr "Classificação"
 
 msgid "Recon"
@@ -2720,7 +2716,7 @@ msgid "Remove file"
 msgstr "Remover ficheiro"
 
 #, fuzzy
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr "Adicionar item aos favorios"
 
 msgid "Remove group"
@@ -2822,7 +2818,7 @@ msgid "Search history"
 msgstr "Histórico de pesquisa"
 
 #, fuzzy
-msgid "Search in "
+msgid "Search in"
 msgstr "Procura"
 
 msgid "Search in all active hosts"
@@ -2853,9 +2849,6 @@ msgid "Searching, please wait (%d)"
 msgstr "Durante o processamento, por favor espere."
 
 msgid "Season"
-msgstr ""
-
-msgid "Season "
 msgstr ""
 
 #, python-format
@@ -2890,7 +2883,7 @@ msgstr "Selecionar o ficheiro de Legenda"
 msgid "Select directory"
 msgstr "Selecionar ação"
 
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr "Selecionar o grupo favorito"
 
 #, fuzzy
@@ -3083,7 +3076,7 @@ msgstr ""
 msgid "Skin"
 msgstr "Definição da Skin"
 
-msgid "Skinners: "
+msgid "Skinners:"
 msgstr ""
 
 msgid "Skip video shorter than [min]"
@@ -3291,7 +3284,7 @@ msgstr "Tamanho da fonte nas Legendas"
 msgid "Subtitles:"
 msgstr "Fonte das Legendas"
 
-msgid "Summary: "
+msgid "Summary:"
 msgstr ""
 
 msgid "Surgical Approaches"
@@ -3441,7 +3434,7 @@ msgid "There are %d more pages in this section"
 msgstr ""
 
 #, fuzzy
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr "Não existem grupos favoritos"
 
 #, fuzzy, python-format
@@ -3504,7 +3497,7 @@ msgstr ""
 msgid "Top-IMDB"
 msgstr ""
 
-msgid "Total size: "
+msgid "Total size:"
 msgstr ""
 
 msgid "Trailer"
@@ -3946,7 +3939,7 @@ msgstr "[HLS/M3U8] buffering"
 msgid "[HTTP] buffering"
 msgstr "[HTTP] buffering"
 
-msgid "[Logged-in-only] "
+msgid "[Logged-in-only]"
 msgstr ""
 
 msgid "[RTMP] buffering (rtmpdump required)"
@@ -4201,7 +4194,7 @@ msgstr ""
 msgid "white"
 msgstr ""
 
-msgid "www: "
+msgid "www:"
 msgstr ""
 
 msgid "yellow"

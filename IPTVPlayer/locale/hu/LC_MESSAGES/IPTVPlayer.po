@@ -323,7 +323,7 @@ msgstr "Csatornanév hozzáadása a letöltött fájlhoz"
 msgid "Add host %s to group"
 msgstr "A(z) \"%s\" host hozzáadása csoporthoz"
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr "Hozzáadás a kedvencekhez"
 
 msgid "Add item to group"
@@ -332,7 +332,7 @@ msgstr "Elem hozzáadása a csoporthoz"
 msgid "Add new group"
 msgstr "Új csoport hozzáadása"
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr "Új kedvencek csoportjának hozzáadása"
 
 msgid "Add to User Links"
@@ -848,8 +848,8 @@ msgstr "Keresési előzmények törlése"
 msgid "Description:"
 msgstr "Leírás:"
 
-msgid "Developers: "
-msgstr "Beküldő: "
+msgid "Developers:"
+msgstr "Beküldő:"
 
 msgid "Direct"
 msgstr "Közvetlen"
@@ -1111,13 +1111,13 @@ msgstr "Felhasználói hivatkozások szerkesztése"
 msgid "Edit failed."
 msgstr "A szerkesztés sikertelen."
 
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr "Kedvenc csoport szerkesztése"
 
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr "Kedvenc elem szerkesztése"
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr "Kedvencek szerkesztése"
 
 msgid "Educational Animation"
@@ -1225,7 +1225,7 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Hiba a szerverrel való kommunikáció során."
 
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr "Hiba a kedvenc elem törlésekor."
 
 #, python-format
@@ -1555,8 +1555,8 @@ msgstr "A(z) „%s” csoport már létezik."
 msgid "Group %d"
 msgstr "%d csoport"
 
-msgid "Group links into categories: "
-msgstr "Csoportok linkje ebbe a kategóriába "
+msgid "Group links into categories:"
+msgstr "Csoportok linkje ebbe a kategóriába"
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -1994,8 +1994,8 @@ msgstr "Főmenü"
 msgid "Make directory [%s]"
 msgstr "[%s] mappa létrehozása"
 
-msgid "Manager status: "
-msgstr "Menedzser státusza: "
+msgid "Manager status:"
+msgstr "Menedzser státusza:"
 
 msgid "Masrahyat"
 msgstr "Masrahyat"
@@ -2315,8 +2315,8 @@ msgstr "PORT"
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
-msgstr "Oldal fel "
+msgid "Page:"
+msgstr "Oldal fel"
 
 msgid "Password"
 msgstr "Jelszó"
@@ -2525,8 +2525,8 @@ msgstr "Programok"
 msgid "Promote item"
 msgstr "Elem promóciója"
 
-msgid "Protocol: "
-msgstr "Protokoll: "
+msgid "Protocol:"
+msgstr "Protokoll:"
 
 msgid "Published"
 msgstr "Közzétett"
@@ -2549,8 +2549,8 @@ msgstr "FRISS"
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
-msgstr "EMLÉKEZIK: "
+msgid "REMEMBER:"
+msgstr "EMLÉKEZIK:"
 
 msgid "REWIND - delete entered text"
 msgstr ""
@@ -2594,9 +2594,6 @@ msgstr "Értékelés %s"
 
 msgid "Rating:"
 msgstr "Értékelés:"
-
-msgid "Rating: "
-msgstr "Értékelés: "
 
 msgid "Recon"
 msgstr "Felderítés"
@@ -2645,7 +2642,7 @@ msgstr "Letiltott szolgáltatások eltávolítása"
 msgid "Remove file"
 msgstr "Eltávolítás"
 
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr "Eltávolítás a kedvencek közül"
 
 msgid "Remove group"
@@ -2742,8 +2739,8 @@ msgstr "Keresés: „%s”, %s, %s %s"
 msgid "Search history"
 msgstr "Keresési előzmények"
 
-msgid "Search in "
-msgstr "Keresés típusa "
+msgid "Search in"
+msgstr "Keresés típusa"
 
 msgid "Search in all active hosts"
 msgstr "Keresés az összes aktív hostok között"
@@ -2775,9 +2772,6 @@ msgstr "Keresés folyamatban, kérjük várjon (%d)"
 msgid "Season"
 msgstr "Évad"
 
-msgid "Season "
-msgstr "Évszak "
-
 #, python-format
 msgid "Season %s"
 msgstr "%s. évad"
@@ -2807,7 +2801,7 @@ msgstr "Hangsáv kiválasztása"
 msgid "Select directory"
 msgstr "Katalógus választás"
 
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr "Kedvenc csoport kiválasztása"
 
 msgid "Select group"
@@ -2986,8 +2980,8 @@ msgstr "Egyszerű fájlletöltő"
 msgid "Skin"
 msgstr "Kinézet"
 
-msgid "Skinners: "
-msgstr "Nyúzók: "
+msgid "Skinners:"
+msgstr "Nyúzók:"
 
 msgid "Skip video shorter than [min]"
 msgstr "[percnél rövidebb videó kihagyása"
@@ -3188,8 +3182,8 @@ msgstr "Feliratok ehhez: %s"
 msgid "Subtitles:"
 msgstr "Feliratok:"
 
-msgid "Summary: "
-msgstr "Összefoglaló: "
+msgid "Summary:"
+msgstr "Összefoglaló:"
 
 msgid "Surgical Approaches"
 msgstr "Sebészeti megközelítések"
@@ -3349,7 +3343,7 @@ msgstr "A felhasználói hivatkozást nem sikerült frissíteni."
 msgid "There are %d more pages in this section"
 msgstr "Ebben a szakaszban még %d oldal van"
 
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr "Nincsenek más kedvenc csoportok"
 
 #, python-format
@@ -3412,8 +3406,8 @@ msgstr "Legjobb sorozatok"
 msgid "Top-IMDB"
 msgstr "Top-IMDB"
 
-msgid "Total size: "
-msgstr "Teljes méret: "
+msgid "Total size:"
+msgstr "Teljes méret:"
 
 msgid "Trailer"
 msgstr "Előzetes"
@@ -3825,8 +3819,8 @@ msgstr "[HLS/M3U8] pufferelés"
 msgid "[HTTP] buffering"
 msgstr "[HTTP] pufferelés"
 
-msgid "[Logged-in-only] "
-msgstr "[Csak bejelentkezve] "
+msgid "[Logged-in-only]"
+msgstr "[Csak bejelentkezve]"
 
 msgid "[RTMP] buffering (rtmpdump required)"
 msgstr "[RTMP] pufferelés (rtmpdump szükséges)"
@@ -4074,8 +4068,8 @@ msgstr "várjon %s másodpercet"
 msgid "white"
 msgstr "fehér"
 
-msgid "www: "
-msgstr "www: "
+msgid "www:"
+msgstr "www:"
 
 msgid "yellow"
 msgstr "sárga"

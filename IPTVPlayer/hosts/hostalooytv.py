@@ -851,7 +851,7 @@ class AlooyTV(CBaseHostClass):
                 params.update({"search_item": False, "name": "category"})
                 self.listSearchResult(params, searchPattern, searchType)
             elif category == "search_history":
-                self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
+                self.listsHistory({"name": "history", "category": "search"}, "desc")
         except Exception:
             printExc()
 

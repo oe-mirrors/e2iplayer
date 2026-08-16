@@ -205,7 +205,7 @@ class Movie2K(CBaseHostClass):
             cItem.update({'search_item': False, 'name': 'category'})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc')
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

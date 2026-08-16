@@ -382,7 +382,7 @@ class IPTVDMWidget(Screen):
         return
 
     def setManagerStatus(self):
-        status = _("Manager status: ")
+        status = _("Manager status:") + " "
         if self.DM.isRunning():
             self["titel"].setText(status + _("STARTED"))
         else:

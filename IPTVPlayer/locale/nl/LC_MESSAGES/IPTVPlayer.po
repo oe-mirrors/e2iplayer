@@ -329,7 +329,7 @@ msgstr "Aan downloader toevoegen"
 msgid "Add host %s to group"
 msgstr "Host %s aan deze groep toevoegen"
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr "Aan Favorieten toevoegen"
 
 msgid "Add item to group"
@@ -338,7 +338,7 @@ msgstr "Aan groep toevoegen"
 msgid "Add new group"
 msgstr "Nieuwe groep toevoegen"
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr "Nieuwe groep favorieten toevoegen"
 
 #, fuzzy
@@ -861,8 +861,8 @@ msgstr "Zoek geschiedenis verwijderen"
 msgid "Description:"
 msgstr "Beschrijving:"
 
-msgid "Developers: "
-msgstr "Developers: "
+msgid "Developers:"
+msgstr "Developers:"
 
 msgid "Direct"
 msgstr "Direct"
@@ -1132,14 +1132,14 @@ msgid "Edit failed."
 msgstr "Aanmelden mislukt."
 
 #, fuzzy
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr "Kies een favoriete groep"
 
 #, fuzzy
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr "Favorieten bewerken"
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr "Favorieten bewerken"
 
 msgid "Educational Animation"
@@ -1250,7 +1250,7 @@ msgid "Error communicating with the server."
 msgstr "Verbinden met de server mislukt."
 
 #, fuzzy
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr "Fout bij verwijderen bestand \"%s\".\n"
 
 #, python-format
@@ -1593,8 +1593,8 @@ msgstr "Groep \"%s\" bestaat al."
 msgid "Group %d"
 msgstr "Groep %d"
 
-msgid "Group links into categories: "
-msgstr "Links naar Groepen verdeeld in categorieën: "
+msgid "Group links into categories:"
+msgstr "Links naar Groepen verdeeld in categorieën:"
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -2039,8 +2039,8 @@ msgstr "Hoofdmenu"
 msgid "Make directory [%s]"
 msgstr "Maak map [%s]"
 
-msgid "Manager status: "
-msgstr "Manager status: "
+msgid "Manager status:"
+msgstr "Manager status:"
 
 msgid "Masrahyat"
 msgstr "Masrahyat"
@@ -2365,7 +2365,7 @@ msgstr "PORT"
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
+msgid "Page:"
 msgstr ""
 
 msgid "Password"
@@ -2572,8 +2572,8 @@ msgstr "Programma's"
 msgid "Promote item"
 msgstr "Promoot item"
 
-msgid "Protocol: "
-msgstr "Protocol: "
+msgid "Protocol:"
+msgstr "Protocol:"
 
 #, fuzzy
 msgid "Published"
@@ -2597,8 +2597,8 @@ msgstr "RECENT"
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
-msgstr "ONTHOUDEN: "
+msgid "REMEMBER:"
+msgstr "ONTHOUDEN:"
 
 msgid "REWIND - delete entered text"
 msgstr ""
@@ -2641,10 +2641,6 @@ msgid "Rating %s"
 msgstr "Beoordeling %s"
 
 msgid "Rating:"
-msgstr "Beoordeling:"
-
-#, fuzzy
-msgid "Rating: "
 msgstr "Beoordeling:"
 
 msgid "Recon"
@@ -2696,7 +2692,7 @@ msgstr "Uitgeschakelde services verwijderen"
 msgid "Remove file"
 msgstr "Verwijder bestand"
 
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr "Verwijder uit favorieten"
 
 msgid "Remove group"
@@ -2797,8 +2793,8 @@ msgstr "Zoeken naar \"%s\", %s, %s %s"
 msgid "Search history"
 msgstr "Zoek geschiedenis"
 
-msgid "Search in "
-msgstr "Zoeken in "
+msgid "Search in"
+msgstr "Zoeken in"
 
 msgid "Search in all active hosts"
 msgstr "Zoeken in alle actieve hosts"
@@ -2828,9 +2824,6 @@ msgid "Searching, please wait (%d)"
 msgstr "Zoeken is bezig, even geduld (%d)"
 
 msgid "Season"
-msgstr "Seizoen"
-
-msgid "Season "
 msgstr "Seizoen"
 
 #, python-format
@@ -2863,7 +2856,7 @@ msgstr "Selecteer een Audio spoor"
 msgid "Select directory"
 msgstr "Kies een map"
 
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr "Kies een favoriete groep"
 
 msgid "Select group"
@@ -3043,8 +3036,8 @@ msgstr "Downloader voor één bestand"
 msgid "Skin"
 msgstr "Skin selectie"
 
-msgid "Skinners: "
-msgstr "Skinners: "
+msgid "Skinners:"
+msgstr "Skinners:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Video korter dan [min] overslaan"
@@ -3246,7 +3239,7 @@ msgstr "Ondertiteling voor: %s"
 msgid "Subtitles:"
 msgstr "Ondertitels"
 
-msgid "Summary: "
+msgid "Summary:"
 msgstr ""
 
 msgid "Surgical Approaches"
@@ -3403,7 +3396,7 @@ msgstr ""
 msgid "There are %d more pages in this section"
 msgstr "Er zijn %d meer pagina's in deze sectie"
 
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr "Er zijn geen andere groepen met favorieten"
 
 #, python-format
@@ -3466,8 +3459,8 @@ msgstr "Top series"
 msgid "Top-IMDB"
 msgstr "Top-IMDB"
 
-msgid "Total size: "
-msgstr "Total grootte: "
+msgid "Total size:"
+msgstr "Total grootte:"
 
 msgid "Trailer"
 msgstr "Trailer"
@@ -3888,8 +3881,8 @@ msgstr "[HLS/M3U8] bufferen"
 msgid "[HTTP] buffering"
 msgstr "[HTTP] bufferen"
 
-msgid "[Logged-in-only] "
-msgstr "[Alleen ingelogd] "
+msgid "[Logged-in-only]"
+msgstr "[Alleen ingelogd]"
 
 msgid "[RTMP] buffering (rtmpdump required)"
 msgstr "[RTMP] bufferen (rtmpdump benodigd)"
@@ -4137,8 +4130,8 @@ msgstr "wacht %s seconden"
 msgid "white"
 msgstr "wit"
 
-msgid "www: "
-msgstr "www: "
+msgid "www:"
+msgstr "www:"
 
 msgid "yellow"
 msgstr "geel"

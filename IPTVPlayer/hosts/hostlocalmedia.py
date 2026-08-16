@@ -437,7 +437,7 @@ class LocalMedia(CBaseHostClass):
                 if category != 'dir':
                     descTab = []
                     if item.get('size', -1) >= 0:
-                        descTab.append(_("Total size: ") + formatBytes(item['size']))
+                        descTab.append(_("Total size:") + " " + formatBytes(item['size']))
 
                     # if len(table):
                     #    params['iso_mount_path']  = self.getMountPoint(fullPath, table)
@@ -455,7 +455,7 @@ class LocalMedia(CBaseHostClass):
                     params['icon'] = fullPath
                 params['need_resolve'] = need_resolve
                 if item.get('size', -1) >= 0:
-                    params['desc'] = _("Total size: ") + formatBytes(item['size'])
+                    params['desc'] = _("Total size:") + " " + formatBytes(item['size'])
                 self.currList.append(params)
 
     def getArticleContent(self, cItem):

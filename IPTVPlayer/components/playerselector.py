@@ -444,8 +444,8 @@ if GRIDSUPPORT:
 
         def showInfo(self):
             TextMSG = _('version') + " :\n" + GetIPTVPlayerVersion() + '\n\n'
-            TextMSG += _("www: ") + "\nhttps://github.com/oe-mirrors/e2iplayer" + '\n\n'
-            TextMSG += _("Developers: ") + "\n"
+            TextMSG += _("www:") + " " + "\nhttps://github.com/oe-mirrors/e2iplayer" + '\n\n'
+            TextMSG += _("Developers:") + " " + "\n"
             developers = [
                 'samsamsam',
                 'zdzislaw22',
@@ -465,7 +465,7 @@ if GRIDSUPPORT:
                 'and others'
             ]
             TextMSG += ", ".join(developers)
-            TextMSG += '\n\n' + _("Skinners: ") + "\n"
+            TextMSG += '\n\n' + _("Skinners:") + " " + "\n"
             TextMSG += ", ".join(('stein17', 'and others'))
             self.session.open(MessageBox, TextMSG, type=MessageBox.TYPE_INFO)
 

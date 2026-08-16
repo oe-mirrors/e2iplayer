@@ -31,7 +31,7 @@ def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry(_('Text files ytlist and urllist are in:'), config.plugins.iptvplayer.Sciezkaurllist))
     optionList.append(getConfigListEntry(_('Sort the list:'), config.plugins.iptvplayer.sortuj))
-    optionList.append(getConfigListEntry(_('Group links into categories: '), config.plugins.iptvplayer.grupujurllist))
+    optionList.append(getConfigListEntry(_('Group links into categories:'), config.plugins.iptvplayer.grupujurllist))
     return optionList
 ###################################################
 

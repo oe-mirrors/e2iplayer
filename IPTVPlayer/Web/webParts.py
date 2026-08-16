@@ -219,7 +219,7 @@ class Body():
 				# tempText += '<td><b><font color="#ccE4C4">%s</font></b></td>' % _('Start')
 			tempText += '<td>' + formSUBMITvalue([('cmd', 'arvchiveDM')], _("Archive"), 'style="background-color:yellow"') + '</td>'
 			tempText += '<td>' + formSUBMITvalue([('cmd', 'downloadsDM')], _("Downloads"), 'style="background-color:#0080FF"') + '</td></tr>\n'
-			tempText += '<tr><td colspan="2">%s</td><td colspan="2">%s</td></tr>' % (_("Manager status: "), DM_status)
+			tempText += '<tr><td colspan="2">%s</td><td colspan="2">%s</td></tr>' % (_("Manager status:") + " ", DM_status)
 			tempText += '</tbody></table>\n'
 
 			# display the list of downloads
@@ -321,7 +321,7 @@ class Body():
 
 	def useHostSubMenu(self, isTop=True, LVL=1):
 		txt = '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
-		txtWarning = '<tr><td colspan="4" align="center"><p><b><font size="2" color="#FE642E">%s</font></b><font size="2">%s</font></p></td></tr>\n' % (_('REMEMBER: '), _('first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!'))
+		txtWarning = '<tr><td colspan="4" align="center"><p><b><font size="2" color="#FE642E">%s</font></b><font size="2">%s</font></p></td></tr>\n' % (_('REMEMBER:') + ' ', _('first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!'))
 		if isTop:
 			txt += txtWarning
 		txt += '<tr><td><br></td>'

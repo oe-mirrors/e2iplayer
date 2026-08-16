@@ -324,7 +324,7 @@ msgstr "Προσθήκη ονόματος καναλιού στο ληφθέν �
 msgid "Add host %s to group"
 msgstr "Προσθήκη host %s στην ομάδα"
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr "Προσθήκη στοιχείου στα αγαπημένα"
 
 msgid "Add item to group"
@@ -333,7 +333,7 @@ msgstr "Προσθήκη στοιχείου στην ομάδα"
 msgid "Add new group"
 msgstr "Προσθήκη νέας ομάδας"
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr "Προσθήκη νέας ομάδας αγαπημένων"
 
 msgid "Add to User Links"
@@ -847,8 +847,8 @@ msgstr "Διαγραφή ιστορικού αναζήτησης"
 msgid "Description:"
 msgstr "Περιγραφή:"
 
-msgid "Developers: "
-msgstr "Προγραμματιστές: "
+msgid "Developers:"
+msgstr "Προγραμματιστές:"
 
 msgid "Direct"
 msgstr "Άμεσο"
@@ -1110,13 +1110,13 @@ msgstr "Επεξεργασία συνδέσμων χρήστη"
 msgid "Edit failed."
 msgstr "Η επεξεργασία απέτυχε."
 
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr "Επεξεργασία ομάδας αγαπημένων"
 
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr "Επεξεργασία στοιχείου αγαπημένων"
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr "Επεξεργασία αγαπημένων"
 
 msgid "Educational Animation"
@@ -1224,7 +1224,7 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Σφάλμα επικοινωνίας με τον διακομιστή."
 
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr "Σφάλμα κατά τη διαγραφή του στοιχείου αγαπημένων."
 
 #, python-format
@@ -1553,8 +1553,8 @@ msgstr "Η ομάδα \"%s\" υπάρχει ήδη."
 msgid "Group %d"
 msgstr "Ομάδα %d"
 
-msgid "Group links into categories: "
-msgstr "Ομαδοποίηση συνδέσμων σε κατηγορίες: "
+msgid "Group links into categories:"
+msgstr "Ομαδοποίηση συνδέσμων σε κατηγορίες:"
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -1994,8 +1994,8 @@ msgstr "Κύριο μενού"
 msgid "Make directory [%s]"
 msgstr "Δημιουργία καταλόγου [%s]"
 
-msgid "Manager status: "
-msgstr "Κατάσταση: "
+msgid "Manager status:"
+msgstr "Κατάσταση:"
 
 msgid "Masrahyat"
 msgstr "Masrahyat"
@@ -2315,8 +2315,8 @@ msgstr "ΘΥΡΑ"
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
-msgstr "Σελίδα: "
+msgid "Page:"
+msgstr "Σελίδα:"
 
 msgid "Password"
 msgstr "Κωδικός πρόσβασης"
@@ -2524,8 +2524,8 @@ msgstr "Προγράμματα"
 msgid "Promote item"
 msgstr "Προώθηση στοιχείου"
 
-msgid "Protocol: "
-msgstr "Πρωτόκολλο: "
+msgid "Protocol:"
+msgstr "Πρωτόκολλο:"
 
 msgid "Published"
 msgstr "Δημοσιεύθηκε"
@@ -2548,8 +2548,8 @@ msgstr "ΠΡΟΣΦΑΤΑ"
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
-msgstr "ΘΥΜΗΘΕΙΤΕ: "
+msgid "REMEMBER:"
+msgstr "ΘΥΜΗΘΕΙΤΕ:"
 
 msgid "REWIND - delete entered text"
 msgstr ""
@@ -2593,9 +2593,6 @@ msgstr "Αξιολόγηση %s"
 
 msgid "Rating:"
 msgstr "Αξιολόγηση:"
-
-msgid "Rating: "
-msgstr "Βαθμολογία: "
 
 msgid "Recon"
 msgstr "Αναγνώριση"
@@ -2644,7 +2641,7 @@ msgstr "Αφαίρεση απενεργοποιημένων υπηρεσιών"
 msgid "Remove file"
 msgstr "Αφαίρεση αρχείου"
 
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr "Αφαίρεση από τα αγαπημένα"
 
 msgid "Remove group"
@@ -2745,8 +2742,8 @@ msgstr "Αναζήτηση για \"%s\", %s, %s %s"
 msgid "Search history"
 msgstr "Ιστορικό αναζήτησης"
 
-msgid "Search in "
-msgstr "Αναζήτηση στο "
+msgid "Search in"
+msgstr "Αναζήτηση στο"
 
 msgid "Search in all active hosts"
 msgstr "Αναζήτηση σε όλους τους ενεργούς hosts"
@@ -2778,9 +2775,6 @@ msgstr "Αναζήτηση, παρακαλώ περιμένετε (%d)"
 msgid "Season"
 msgstr "Σεζόν"
 
-msgid "Season "
-msgstr "Σεζόν "
-
 #, python-format
 msgid "Season %s"
 msgstr "Σεζόν %s"
@@ -2810,7 +2804,7 @@ msgstr "Επιλογή κομματιού ήχου"
 msgid "Select directory"
 msgstr "Επιλογή καταλόγου"
 
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr "Επιλογή αγαπημένης ομάδας"
 
 msgid "Select group"
@@ -2989,8 +2983,8 @@ msgstr "Λήψη μεμονωμένου αρχείου"
 msgid "Skin"
 msgstr "Θέμα"
 
-msgid "Skinners: "
-msgstr "Δημιουργοί θεμάτων: "
+msgid "Skinners:"
+msgstr "Δημιουργοί θεμάτων:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Παράλειψη βίντεο μικρότερου από [λεπτά]"
@@ -3191,8 +3185,8 @@ msgstr "Υπότιτλοι για: %s"
 msgid "Subtitles:"
 msgstr "Υπότιτλοι:"
 
-msgid "Summary: "
-msgstr "Περίληψη: "
+msgid "Summary:"
+msgstr "Περίληψη:"
 
 msgid "Surgical Approaches"
 msgstr "Χειρουργικές προσεγγίσεις"
@@ -3351,7 +3345,7 @@ msgstr "Δεν ήταν δυνατή η ενημέρωση του συνδέσμ
 msgid "There are %d more pages in this section"
 msgstr "Υπάρχουν %d ακόμη σελίδες σε αυτή την ενότητα"
 
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr "Δεν υπάρχουν άλλες αγαπημένες ομάδες"
 
 #, python-format
@@ -3414,8 +3408,8 @@ msgstr "Κορυφαίες σειρές"
 msgid "Top-IMDB"
 msgstr "Κορυφαία IMDB"
 
-msgid "Total size: "
-msgstr "Συνολικό μέγεθος: "
+msgid "Total size:"
+msgstr "Συνολικό μέγεθος:"
 
 msgid "Trailer"
 msgstr "Τρέιλερ"
@@ -3826,8 +3820,8 @@ msgstr "Προσωρινή μνήμη [HLS/M3U8]"
 msgid "[HTTP] buffering"
 msgstr "Προσωρινή μνήμη [HTTP]"
 
-msgid "[Logged-in-only] "
-msgstr "[Μόνο για συνδεδεμένους χρήστες] "
+msgid "[Logged-in-only]"
+msgstr "[Μόνο για συνδεδεμένους χρήστες]"
 
 msgid "[RTMP] buffering (rtmpdump required)"
 msgstr "Προσωρινή μνήμη [RTMP] (απαιτείται rtmpdump)"
@@ -4075,8 +4069,8 @@ msgstr "αναμονή %s δευτερόλεπτα"
 msgid "white"
 msgstr "λευκό"
 
-msgid "www: "
-msgstr "www: "
+msgid "www:"
+msgstr "www:"
 
 msgid "yellow"
 msgstr "κίτρινο"

@@ -719,19 +719,19 @@ class Host(CBaseHostClass, XXXParser):
 		return self.cm.getPage(baseUrl, addParams, post_data)
 
 	def getNextItem(self, nextPage, url, name, nextLink=None):
-		return CDisplayListItem(_("Next page"), _('Page: ') + nextPage, CDisplayListItem.TYPE_CATEGORY, [url], name, '', nextLink, imageType="NEXT")
+		return CDisplayListItem(_("Next page"), _('Page:') + " " + nextPage, CDisplayListItem.TYPE_CATEGORY, [url], name, '', nextLink, imageType="NEXT")
 
 	def getMoreCatsItem(self, morePage, url, name, moreLink=None):
-		return CDisplayListItem(_("More Categories"), _('Page: ') + morePage, CDisplayListItem.TYPE_CATEGORY, [url], name, '', moreLink, imageType="NEXT")
+		return CDisplayListItem(_("More Categories"), _('Page:') + " " + morePage, CDisplayListItem.TYPE_CATEGORY, [url], name, '', moreLink, imageType="NEXT")
 
 	def getMoreItem(self, title, morePage, url, name, moreLink=None):
-		return CDisplayListItem(title, _('Page: ') + morePage, CDisplayListItem.TYPE_CATEGORY, [url], name, '', moreLink, imageType="NEXT")
+		return CDisplayListItem(title, _('Page:') + " " + morePage, CDisplayListItem.TYPE_CATEGORY, [url], name, '', moreLink, imageType="NEXT")
 
 	def getFirstItem(self, firstPage, url, name, firstLink='root'):
-		return CDisplayListItem(_("First Page"), _('Page: ') + firstPage, CDisplayListItem.TYPE_CATEGORY, [url], name, '', firstLink, imageType="FIRST")
+		return CDisplayListItem(_("First Page"), _('Page:') + " " + firstPage, CDisplayListItem.TYPE_CATEGORY, [url], name, '', firstLink, imageType="FIRST")
 
 	def getPreviousItem(self, previousPage, url, name, previousLink='root'):
-		return CDisplayListItem(_("Previous Page"), _('Page: ') + previousPage, CDisplayListItem.TYPE_CATEGORY, [url], name, '', previousLink, imageType="PREVIOUS")
+		return CDisplayListItem(_("Previous Page"), _('Page:') + " " + previousPage, CDisplayListItem.TYPE_CATEGORY, [url], name, '', previousLink, imageType="PREVIOUS")
 
 	def getJumpItem(self, max_page, url, name):
 		name = name.split('-')[0] + "-JUMP"
@@ -741,7 +741,7 @@ class Host(CBaseHostClass, XXXParser):
 			return CDisplayListItem(_("Jump"), _("Jump to a selected page"), CDisplayListItem.TYPE_CATEGORY, [url], name, '', str(max_page) if max_page else None, imageType="JUMP")
 
 	def getLastItem(self, last_number, url, name):
-		return CDisplayListItem(_("Last"), _('Page: ') + str(last_number), CDisplayListItem.TYPE_CATEGORY, [url], name, '', 'last_page', imageType="LAST")
+		return CDisplayListItem(_("Last"), _('Page:') + " " + str(last_number), CDisplayListItem.TYPE_CATEGORY, [url], name, '', 'last_page', imageType="LAST")
 
 	def showNotFoundMessage(self, name):
 		self.sessionEx.waitForFinishOpen(MessageBox, _("THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."), type=MessageBox.TYPE_INFO)

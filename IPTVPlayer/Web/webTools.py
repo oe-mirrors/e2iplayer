@@ -44,7 +44,7 @@ def formMultipleSearchesSUBMITtext(captions, inputName, inputStyle='', inputValu
 	retTxt = '\n<form method="GET">'
 	retTxt += '<input type="text" name="%s" value="%s">' % (inputName, inputValue)
 	for caption in captions:
-		retTxt += '<input type="submit" value="%s" name="%s" %s>' % (_('Search in ') + "'" + caption[0] + "'", caption[1], inputStyle)
+		retTxt += '<input type="submit" value="%s" name="%s" %s>' % (_('Search in') + " " + "'" + caption[0] + "'", caption[1], inputStyle)
 	retTxt += '</form>\n'
 	return retTxt
 ########################################################
