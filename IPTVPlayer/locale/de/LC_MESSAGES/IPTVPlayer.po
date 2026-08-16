@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-15 08:49+0200\n"
-"PO-Revision-Date: 2026-08-14 19:26+0200\n"
+"PO-Revision-Date: 2026-08-16 08:38+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -1282,7 +1282,7 @@ msgid "Expiry: %s"
 msgstr "Ablaufdatum: %s"
 
 msgid "Extended"
-msgstr ""
+msgstr "Erweitert"
 
 msgid "External movie player config"
 msgstr "Externen Movie Player konfigurieren"
@@ -2071,9 +2071,8 @@ msgstr "Gruppen sortieren"
 msgid "Movie"
 msgstr "Film"
 
-#, fuzzy
 msgid "Movie player selection list"
-msgstr "Zeige E2iPlayer in Erweiterungsliste"
+msgstr "Movie Player Auswahlliste"
 
 msgid "Movies"
 msgstr "Filme"
@@ -2192,7 +2191,7 @@ msgstr ""
 "Bitte OK drücken um zu erneuern.\n"
 
 msgid "No matching entries found."
-msgstr ""
+msgstr "Keine passenden Einträge gefunden."
 
 msgid "No materials waiting in the downloader queue"
 msgstr "Keine Materialien, die in der Downloaderwarteschlange warten"
