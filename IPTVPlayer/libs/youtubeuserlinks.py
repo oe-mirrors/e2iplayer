@@ -844,7 +844,7 @@ class YouTubeUserLinksManager(object):
             session.openWithCallback(
                 lambda text=None: self.onEditRawEntered(item, text, callback),
                 GetVirtualKeyboard(),
-                title=self.guiSafeStr(_("Edit favourites")),
+                title=self.guiSafeStr(_("Edit favorites")),
                 text=self.guiSafeStr(rawLine)
             )
         except Exception:

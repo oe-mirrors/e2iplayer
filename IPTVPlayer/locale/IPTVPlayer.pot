@@ -312,7 +312,7 @@ msgstr ""
 msgid "Add host %s to group"
 msgstr ""
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr ""
 
 msgid "Add item to group"
@@ -321,7 +321,7 @@ msgstr ""
 msgid "Add new group"
 msgstr ""
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr ""
 
 msgid "Add to User Links"
@@ -826,7 +826,7 @@ msgstr ""
 msgid "Description:"
 msgstr ""
 
-msgid "Developers: "
+msgid "Developers:"
 msgstr ""
 
 msgid "Direct"
@@ -1056,13 +1056,13 @@ msgstr ""
 msgid "Edit failed."
 msgstr ""
 
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr ""
 
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr ""
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr ""
 
 msgid "Educational Animation"
@@ -1163,7 +1163,7 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr ""
 
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr ""
 
 #, python-format
@@ -1490,7 +1490,7 @@ msgstr ""
 msgid "Group %d"
 msgstr ""
 
-msgid "Group links into categories: "
+msgid "Group links into categories:"
 msgstr ""
 
 #, python-format
@@ -1921,7 +1921,7 @@ msgstr ""
 msgid "Make directory [%s]"
 msgstr ""
 
-msgid "Manager status: "
+msgid "Manager status:"
 msgstr ""
 
 msgid "Masrahyat"
@@ -2229,7 +2229,7 @@ msgstr ""
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
+msgid "Page:"
 msgstr ""
 
 msgid "Password"
@@ -2431,7 +2431,7 @@ msgstr ""
 msgid "Promote item"
 msgstr ""
 
-msgid "Protocol: "
+msgid "Protocol:"
 msgstr ""
 
 msgid "Published"
@@ -2455,7 +2455,7 @@ msgstr ""
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
+msgid "REMEMBER:"
 msgstr ""
 
 msgid "REWIND - delete entered text"
@@ -2499,9 +2499,6 @@ msgid "Rating %s"
 msgstr ""
 
 msgid "Rating:"
-msgstr ""
-
-msgid "Rating: "
 msgstr ""
 
 msgid "Recon"
@@ -2550,7 +2547,7 @@ msgstr ""
 msgid "Remove file"
 msgstr ""
 
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr ""
 
 msgid "Remove group"
@@ -2647,7 +2644,7 @@ msgstr ""
 msgid "Search history"
 msgstr ""
 
-msgid "Search in "
+msgid "Search in"
 msgstr ""
 
 msgid "Search in all active hosts"
@@ -2680,9 +2677,6 @@ msgstr ""
 msgid "Season"
 msgstr ""
 
-msgid "Season "
-msgstr ""
-
 #, python-format
 msgid "Season %s"
 msgstr ""
@@ -2712,7 +2706,7 @@ msgstr ""
 msgid "Select directory"
 msgstr ""
 
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr ""
 
 msgid "Select group"
@@ -2887,7 +2881,7 @@ msgstr ""
 msgid "Skin"
 msgstr ""
 
-msgid "Skinners: "
+msgid "Skinners:"
 msgstr ""
 
 msgid "Skip video shorter than [min]"
@@ -3083,7 +3077,7 @@ msgstr ""
 msgid "Subtitles:"
 msgstr ""
 
-msgid "Summary: "
+msgid "Summary:"
 msgstr ""
 
 msgid "Surgical Approaches"
@@ -3226,7 +3220,7 @@ msgstr ""
 msgid "There are %d more pages in this section"
 msgstr ""
 
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr ""
 
 #, python-format
@@ -3287,7 +3281,7 @@ msgstr ""
 msgid "Top-IMDB"
 msgstr ""
 
-msgid "Total size: "
+msgid "Total size:"
 msgstr ""
 
 msgid "Trailer"
@@ -3697,7 +3691,7 @@ msgstr ""
 msgid "[HTTP] buffering"
 msgstr ""
 
-msgid "[Logged-in-only] "
+msgid "[Logged-in-only]"
 msgstr ""
 
 msgid "[RTMP] buffering (rtmpdump required)"
@@ -3946,7 +3940,7 @@ msgstr ""
 msgid "white"
 msgstr ""
 
-msgid "www: "
+msgid "www:"
 msgstr ""
 
 msgid "yellow"

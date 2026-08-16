@@ -579,7 +579,7 @@ class cda(CBaseHostClass, CaptchaHelper):
             self.listItems(self.currItem, search=True)
         # HISTORIA SEARCH
         elif category == "search_history":
-            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
+            self.listsHistory({"name": "history", "category": "search"}, "desc")
         else:
             printExc()
 

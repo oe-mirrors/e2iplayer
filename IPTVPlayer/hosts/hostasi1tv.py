@@ -572,7 +572,7 @@ class Asi1TV(CBaseHostClass):
             url = self.cm.ph.getSearchGroups(link, r'href="([^"]+)"')[0].strip()
             title = self.cleanHtmlStr(link).strip()
             if url and title:
-                season_items.append({"title": title, "url": self.getFullUrl(url), "icon": cItem.get("icon", self.DEFAULT_ICON_URL), "desc": _("Season ") + title})
+                season_items.append({"title": title, "url": self.getFullUrl(url), "icon": cItem.get("icon", self.DEFAULT_ICON_URL), "desc": _("Season") + " " + title})
         if len(season_items) > 1:
             for s in season_items:
                 self.addDir({"category": "listEpisodesForSeason", "title": Y + s["title"] + W, "url": s["url"], "icon": s["icon"], "desc": s["desc"]})
@@ -686,7 +686,7 @@ class Asi1TV(CBaseHostClass):
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
+            self.listsHistory({"name": "history", "category": "search"}, "desc")
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

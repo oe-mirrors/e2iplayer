@@ -245,7 +245,7 @@ class Pannon(CBaseHostClass):
         elif category == "cont_search":
             self.listSearchResult(self.currItem, self.currItem["searchPattern"], "")
         elif category == "search_history":
-            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
+            self.listsHistory({"name": "history", "category": "search"}, "desc")
         else:
             printExc()
 

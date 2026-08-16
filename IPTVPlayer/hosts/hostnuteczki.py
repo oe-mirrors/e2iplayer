@@ -440,7 +440,7 @@ class NuteczkiEU(CBaseHostClass):
             if url:
                 self.addAudio(params)
             elif 'playerMask' in item:
-                params['title'] = _('[Logged-in-only] ') + params['title']
+                params['title'] = _('[Logged-in-only]') + " " + params['title']
                 self.addArticle(params)
 
         if next_page:
@@ -767,9 +767,7 @@ class NuteczkiEU(CBaseHostClass):
         elif category == "search_history":
             self.listsHistory(
                 {'name': 'history', 'category': 'search'},
-                'desc',
-                _("Type: ")
-            )
+                'desc')
         else:
             printExc()
 

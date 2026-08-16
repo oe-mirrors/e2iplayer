@@ -333,7 +333,7 @@ msgstr "Dodaj do pobrania"
 msgid "Add host %s to group"
 msgstr "Dodaj serwis %s do grupy"
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr "Dodaj do ulubionych"
 
 msgid "Add item to group"
@@ -342,7 +342,7 @@ msgstr "Dodaj element do grupy"
 msgid "Add new group"
 msgstr "Dodaj nową grupę"
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr "Dodaj nową grupę ulubionych"
 
 #, fuzzy
@@ -888,8 +888,8 @@ msgstr "Historia wyszukiwania"
 msgid "Description:"
 msgstr "Opis:"
 
-msgid "Developers: "
-msgstr "Programiści: "
+msgid "Developers:"
+msgstr "Programiści:"
 
 #, fuzzy
 msgid "Direct"
@@ -1164,14 +1164,14 @@ msgid "Edit failed."
 msgstr "Logowanie nieudane."
 
 #, fuzzy
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr "Wybierz grupę ulubionych"
 
 #, fuzzy
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr "Edytuj ulubione"
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr "Edytuj ulubione"
 
 msgid "Educational Animation"
@@ -1286,7 +1286,7 @@ msgid "Error communicating with the server."
 msgstr "Błąd komunikacji z serwerem."
 
 #, fuzzy
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr "Bład usunięcia pliku \"%s\".\n"
 
 #, python-format
@@ -1631,8 +1631,8 @@ msgstr "Grupa \"%s\" już istnieje."
 msgid "Group %d"
 msgstr "Grupa %d"
 
-msgid "Group links into categories: "
-msgstr "Grupuje linki w kategorie: "
+msgid "Group links into categories:"
+msgstr "Grupuje linki w kategorie:"
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -2086,8 +2086,8 @@ msgstr "Menu główne"
 msgid "Make directory [%s]"
 msgstr "Utwórz folder [%s]"
 
-msgid "Manager status: "
-msgstr "Stan Menadżera: "
+msgid "Manager status:"
+msgstr "Stan Menadżera:"
 
 msgid "Masrahyat"
 msgstr ""
@@ -2418,7 +2418,7 @@ msgstr "PORT"
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
+msgid "Page:"
 msgstr ""
 
 msgid "Password"
@@ -2627,8 +2627,8 @@ msgstr "Programy"
 msgid "Promote item"
 msgstr "Przesuń na szczyt kolejki"
 
-msgid "Protocol: "
-msgstr "Protokół: "
+msgid "Protocol:"
+msgstr "Protokół:"
 
 #, fuzzy
 msgid "Published"
@@ -2652,8 +2652,8 @@ msgstr "Najnowszy"
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
-msgstr "ZAPAMIĘTAJ: "
+msgid "REMEMBER:"
+msgstr "ZAPAMIĘTAJ:"
 
 msgid "REWIND - delete entered text"
 msgstr ""
@@ -2698,9 +2698,6 @@ msgstr "Ocena %s"
 
 msgid "Rating:"
 msgstr "Ocena:"
-
-msgid "Rating: "
-msgstr "Ocena: "
 
 msgid "Recon"
 msgstr "Zwiad"
@@ -2752,7 +2749,7 @@ msgid "Remove file"
 msgstr "Usuń plik"
 
 #, fuzzy
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr "Dodaj do ulubionych"
 
 msgid "Remove group"
@@ -2856,8 +2853,8 @@ msgstr "Szukaj \"%s\", %s, %s %s"
 msgid "Search history"
 msgstr "Historia wyszukiwania"
 
-msgid "Search in "
-msgstr "Szukaj w "
+msgid "Search in"
+msgstr "Szukaj w"
 
 msgid "Search in all active hosts"
 msgstr "Szukaj we wszystkich aktywnych hostach"
@@ -2887,10 +2884,6 @@ msgid "Searching, please wait (%d)"
 msgstr "Wyszukiwanie, proszę czekać (%d)"
 
 msgid "Season"
-msgstr "Sezon"
-
-#, fuzzy
-msgid "Season "
 msgstr "Sezon"
 
 #, python-format
@@ -2923,7 +2916,7 @@ msgstr "Wybierz ścieżkę audio"
 msgid "Select directory"
 msgstr "Wybierz katalog"
 
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr "Wybierz grupę ulubionych"
 
 msgid "Select group"
@@ -3107,7 +3100,7 @@ msgid "Skin"
 msgstr "Skóra"
 
 #, fuzzy
-msgid "Skinners: "
+msgid "Skinners:"
 msgstr "Słuchacze: %s"
 
 msgid "Skip video shorter than [min]"
@@ -3312,7 +3305,7 @@ msgstr "Napisy dla: %s"
 msgid "Subtitles:"
 msgstr "Napisy"
 
-msgid "Summary: "
+msgid "Summary:"
 msgstr ""
 
 msgid "Surgical Approaches"
@@ -3470,7 +3463,7 @@ msgstr ""
 msgid "There are %d more pages in this section"
 msgstr ""
 
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr "Nie ma innych ulubionych grup"
 
 #, python-format
@@ -3537,8 +3530,8 @@ msgstr "Najlepsze seriale"
 msgid "Top-IMDB"
 msgstr ""
 
-msgid "Total size: "
-msgstr "Całkowity rozmiar: "
+msgid "Total size:"
+msgstr "Całkowity rozmiar:"
 
 msgid "Trailer"
 msgstr "Zwiastuny"
@@ -3972,8 +3965,8 @@ msgstr "Buforować z linków HLS/M3U8"
 msgid "[HTTP] buffering"
 msgstr "Buforować z linków HTTP"
 
-msgid "[Logged-in-only] "
-msgstr "[Tylko dla zalogowanych] "
+msgid "[Logged-in-only]"
+msgstr "[Tylko dla zalogowanych]"
 
 msgid "[RTMP] buffering (rtmpdump required)"
 msgstr "Buforować z linków RTMP (wymaga rtmpdump)"
@@ -4222,8 +4215,8 @@ msgstr "czekaj %s sekund"
 msgid "white"
 msgstr "biały"
 
-msgid "www: "
-msgstr "www: "
+msgid "www:"
+msgstr "www:"
 
 msgid "yellow"
 msgstr "żółty"

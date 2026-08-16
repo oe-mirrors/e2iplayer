@@ -282,7 +282,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
             if info["year"]:
                 desc_parts.append(_("Year:") + " " + info["year"])
             if info["rating"]:
-                desc_parts.append(_("Rating: ") + info["rating"])
+                desc_parts.append(_("Rating:") + " " + info["rating"])
             if info["quality"]:
                 desc_parts.append(_("Quality:") + " " + info["quality"])
             if info["desc"]:
@@ -767,7 +767,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
             cItem.update({"search_item": False, "name": "category"})
             self.listSearchResult(cItem, searchPattern, searchType)
         elif category == "search_history":
-            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
+            self.listsHistory({"name": "history", "category": "search"}, "desc")
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

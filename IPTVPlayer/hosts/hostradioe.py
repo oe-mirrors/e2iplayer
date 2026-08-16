@@ -418,7 +418,7 @@ class RadioECtWs(CBaseHostClass):
                         if duration:
                             desc_parts.append(Y + _("Duration:") + " " + W + duration)
                         if summary:
-                            desc_parts.append(Y + _("Summary: ") + W + summary)
+                            desc_parts.append(Y + _("Summary:") + " " + W + summary)
                         desc = "\n".join(desc_parts) if desc_parts else W + "حلقة صوتية"
                         params = {"good_for_fav": True, "title": L + ep_title + W, "url": audio_url, "icon": icon, "desc": desc}
                         self.addAudio(params)
@@ -579,7 +579,7 @@ class RadioECtWs(CBaseHostClass):
             self.listSearchResult(cItem, searchPattern, searchType)
         # HISTORY SEARCH
         elif category == "search_history":
-            self.listsHistory({"name": "history", "category": "search"}, "desc", _("Type: "))
+            self.listsHistory({"name": "history", "category": "search"}, "desc")
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

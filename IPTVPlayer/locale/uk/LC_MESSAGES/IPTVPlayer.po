@@ -334,7 +334,7 @@ msgstr "Зупинка завантаження"
 msgid "Add host %s to group"
 msgstr "Добавити в групу"
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr "Додати до вибраного"
 
 msgid "Add item to group"
@@ -343,7 +343,7 @@ msgstr "Добавити в групу"
 msgid "Add new group"
 msgstr "Добавити нову групу"
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr "Добавити нову групу вибраного"
 
 #, fuzzy
@@ -904,8 +904,8 @@ msgstr "Історія пошуку"
 msgid "Description:"
 msgstr "Опис:"
 
-msgid "Developers: "
-msgstr "Розробники: "
+msgid "Developers:"
+msgstr "Розробники:"
 
 #, fuzzy
 msgid "Direct"
@@ -1189,14 +1189,14 @@ msgid "Edit failed."
 msgstr "Помилка входу."
 
 #, fuzzy
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr "Виберіть групу вибраного"
 
 #, fuzzy
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr "Редагувати вибране"
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr "Редагувати вибране"
 
 msgid "Educational Animation"
@@ -1307,7 +1307,7 @@ msgid "Error communicating with the server."
 msgstr ""
 
 #, fuzzy
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr "Помилка видалення файлів \"%s\" .\n"
 
 #, fuzzy, python-format
@@ -1662,8 +1662,8 @@ msgstr "Група \"%s\" вже існує."
 msgid "Group %d"
 msgstr "Група %d"
 
-msgid "Group links into categories: "
-msgstr "Група, посиланя по категоріям: "
+msgid "Group links into categories:"
+msgstr "Група, посиланя по категоріям:"
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -2127,8 +2127,8 @@ msgstr "Головна подія"
 msgid "Make directory [%s]"
 msgstr "Створити каталог [%s]"
 
-msgid "Manager status: "
-msgstr "Статус менеджера: "
+msgid "Manager status:"
+msgstr "Статус менеджера:"
 
 msgid "Masrahyat"
 msgstr ""
@@ -2471,7 +2471,7 @@ msgstr ""
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
+msgid "Page:"
 msgstr ""
 
 #, fuzzy
@@ -2688,8 +2688,8 @@ msgstr "Програми"
 msgid "Promote item"
 msgstr "Переставити на початок списку"
 
-msgid "Protocol: "
-msgstr "Протокол: "
+msgid "Protocol:"
+msgstr "Протокол:"
 
 #, fuzzy
 msgid "Published"
@@ -2714,7 +2714,7 @@ msgstr ""
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
+msgid "REMEMBER:"
 msgstr ""
 
 msgid "REWIND - delete entered text"
@@ -2762,10 +2762,6 @@ msgstr "Рейтинг"
 
 #, fuzzy
 msgid "Rating:"
-msgstr "Рейтинг"
-
-#, fuzzy
-msgid "Rating: "
 msgstr "Рейтинг"
 
 #, fuzzy
@@ -2822,7 +2818,7 @@ msgid "Remove file"
 msgstr "Видалити файл"
 
 #, fuzzy
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr "Додати до вибраного"
 
 msgid "Remove group"
@@ -2927,8 +2923,8 @@ msgid "Search history"
 msgstr "Історія пошуку"
 
 #, fuzzy
-msgid "Search in "
-msgstr "Пошук "
+msgid "Search in"
+msgstr "Пошук"
 
 msgid "Search in all active hosts"
 msgstr ""
@@ -2961,9 +2957,6 @@ msgstr "Йде обробка, будь-ласка, зачекайте."
 msgid "Season"
 msgstr ""
 
-msgid "Season "
-msgstr ""
-
 #, python-format
 msgid "Season %s"
 msgstr ""
@@ -2994,7 +2987,7 @@ msgstr "Вибір звукової дорожки"
 msgid "Select directory"
 msgstr "Виберіть каталог"
 
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr "Виберіть групу вибраного"
 
 #, fuzzy
@@ -3187,7 +3180,7 @@ msgid "Skin"
 msgstr "Вибір cкіна"
 
 #, fuzzy
-msgid "Skinners: "
+msgid "Skinners:"
 msgstr "Кінцева помилка: %s"
 
 msgid "Skip video shorter than [min]"
@@ -3395,7 +3388,7 @@ msgstr "Субтитри для: %s"
 msgid "Subtitles:"
 msgstr "Субтитри"
 
-msgid "Summary: "
+msgid "Summary:"
 msgstr ""
 
 msgid "Surgical Approaches"
@@ -3553,7 +3546,7 @@ msgid "There are %d more pages in this section"
 msgstr ""
 
 #, fuzzy
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr "Там немає групи вибране."
 
 #, fuzzy, python-format
@@ -3620,8 +3613,8 @@ msgstr "Телесеріал"
 msgid "Top-IMDB"
 msgstr ""
 
-msgid "Total size: "
-msgstr "Размір файлу: "
+msgid "Total size:"
+msgstr "Размір файлу:"
 
 msgid "Trailer"
 msgstr ""
@@ -4065,7 +4058,7 @@ msgstr "[HLS / M3U8] Буферизація"
 msgid "[HTTP] buffering"
 msgstr "[HTTP] Буферизація"
 
-msgid "[Logged-in-only] "
+msgid "[Logged-in-only]"
 msgstr ""
 
 msgid "[RTMP] buffering (rtmpdump required)"
@@ -4324,7 +4317,7 @@ msgstr "секунд"
 msgid "white"
 msgstr "білий"
 
-msgid "www: "
+msgid "www:"
 msgstr ""
 
 msgid "yellow"

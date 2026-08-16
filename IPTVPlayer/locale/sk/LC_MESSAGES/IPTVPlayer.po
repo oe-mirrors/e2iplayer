@@ -323,7 +323,7 @@ msgstr "Pridať názov kanála do stiahnutého súboru"
 msgid "Add host %s to group"
 msgstr "Pridanie %s hostiteľa do skupiny"
 
-msgid "Add item to favourites"
+msgid "Add item to favorites"
 msgstr "Pridanie položky do obľúbených"
 
 msgid "Add item to group"
@@ -332,7 +332,7 @@ msgstr "Pridanie položky do skupiny"
 msgid "Add new group"
 msgstr "Pridať novú skupinu"
 
-msgid "Add new group of favourites"
+msgid "Add new group of favorites"
 msgstr "Pridanie novej skupiny obľúbených položiek"
 
 msgid "Add to User Links"
@@ -846,8 +846,8 @@ msgstr "Odstrániť históriu vyhľadávania"
 msgid "Description:"
 msgstr "Popis:"
 
-msgid "Developers: "
-msgstr "Vývojári: "
+msgid "Developers:"
+msgstr "Vývojári:"
 
 msgid "Direct"
 msgstr "Priamy"
@@ -1109,13 +1109,13 @@ msgstr "Upraviť používateľské odkazy"
 msgid "Edit failed."
 msgstr "Úprava zlyhala."
 
-msgid "Edit favourite group"
+msgid "Edit favorite group"
 msgstr "Upraviť skupinu obľúbených"
 
-msgid "Edit favourite item"
+msgid "Edit favorite item"
 msgstr "Upraviť obľúbenú položku"
 
-msgid "Edit favourites"
+msgid "Edit favorites"
 msgstr "Úprava obľúbených položiek"
 
 msgid "Educational Animation"
@@ -1223,7 +1223,7 @@ msgstr ""
 msgid "Error communicating with the server."
 msgstr "Chyba pri komunikácii so serverom."
 
-msgid "Error deleting favourite item."
+msgid "Error deleting favorite item."
 msgstr "Chyba pri odstraňovaní obľúbenej položky."
 
 #, python-format
@@ -1552,8 +1552,8 @@ msgstr "Skupina \"%s\" už existuje."
 msgid "Group %d"
 msgstr "Skupina %d"
 
-msgid "Group links into categories: "
-msgstr "Zoskupenie odkazov do kategórií: "
+msgid "Group links into categories:"
+msgstr "Zoskupenie odkazov do kategórií:"
 
 #, python-format
 msgid "Group with id[%s] not found."
@@ -1994,8 +1994,8 @@ msgstr "Hlavné menu"
 msgid "Make directory [%s]"
 msgstr "Vytvorenie adresára [%s]"
 
-msgid "Manager status: "
-msgstr "Stav manažéra: "
+msgid "Manager status:"
+msgstr "Stav manažéra:"
 
 msgid "Masrahyat"
 msgstr "Masrahjat"
@@ -2317,8 +2317,8 @@ msgstr "PORT"
 msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
 msgstr ""
 
-msgid "Page: "
-msgstr "Strana: "
+msgid "Page:"
+msgstr "Strana:"
 
 msgid "Password"
 msgstr "Heslo"
@@ -2526,8 +2526,8 @@ msgstr "Programov"
 msgid "Promote item"
 msgstr "Zvýšenie úrovne položky"
 
-msgid "Protocol: "
-msgstr "Protokol: "
+msgid "Protocol:"
+msgstr "Protokol:"
 
 msgid "Published"
 msgstr "Zverejnené"
@@ -2550,8 +2550,8 @@ msgstr "NEDÁVNO"
 msgid "RED - Backspace"
 msgstr ""
 
-msgid "REMEMBER: "
-msgstr "PAMÄTAŤ: "
+msgid "REMEMBER:"
+msgstr "PAMÄTAŤ:"
 
 msgid "REWIND - delete entered text"
 msgstr ""
@@ -2595,9 +2595,6 @@ msgstr "Hodnotenie %s"
 
 msgid "Rating:"
 msgstr "Hodnotenie:"
-
-msgid "Rating: "
-msgstr "Hodnotenie: "
 
 msgid "Recon"
 msgstr "Prieskum"
@@ -2646,7 +2643,7 @@ msgstr "Odstránenie zakázaných služieb"
 msgid "Remove file"
 msgstr "Odstrániť súbor"
 
-msgid "Remove from favourites"
+msgid "Remove from favorites"
 msgstr "Vyradiť z oblúbených"
 
 msgid "Remove group"
@@ -2747,8 +2744,8 @@ msgstr "Vyhľadajte výraz \"%s\", %s, %s %s"
 msgid "Search history"
 msgstr "História vyhľadávania"
 
-msgid "Search in "
-msgstr "Vyhľadávanie v "
+msgid "Search in"
+msgstr "Vyhľadávanie v"
 
 msgid "Search in all active hosts"
 msgstr "Vyhľadávanie vo všetkých aktívnych hostiteľoch"
@@ -2780,9 +2777,6 @@ msgstr "Hľadáme, prosím počkajte (%d)"
 msgid "Season"
 msgstr "Sezóna"
 
-msgid "Season "
-msgstr "Sezóna: "
-
 #, python-format
 msgid "Season %s"
 msgstr "Sezóna %s"
@@ -2812,7 +2806,7 @@ msgstr "Vyberte zvukovú stopu"
 msgid "Select directory"
 msgstr "Vyberte adresár"
 
-msgid "Select favourite group"
+msgid "Select favorite group"
 msgstr "Vyberte obľúbenú skupinu"
 
 msgid "Select group"
@@ -2991,8 +2985,8 @@ msgstr "Preberač jedného súboru"
 msgid "Skin"
 msgstr "Vzhľad"
 
-msgid "Skinners: "
-msgstr "Skinners: "
+msgid "Skinners:"
+msgstr "Skinners:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Preskočiť video kratšie ako [min]"
@@ -3193,8 +3187,8 @@ msgstr "Titulky pre: %s"
 msgid "Subtitles:"
 msgstr "Titulky:"
 
-msgid "Summary: "
-msgstr "Súhrn: "
+msgid "Summary:"
+msgstr "Súhrn:"
 
 msgid "Surgical Approaches"
 msgstr "Chirurgické prístupy"
@@ -3353,7 +3347,7 @@ msgstr "Používateľský odkaz sa nepodarilo aktualizovať."
 msgid "There are %d more pages in this section"
 msgstr "V tejto sekcii sú ešte %d ďalšie strany"
 
-msgid "There are no other favourite groups"
+msgid "There are no other favorite groups"
 msgstr "Neexistujú žiadne iné obľúbené skupiny"
 
 #, python-format
@@ -3416,8 +3410,8 @@ msgstr "Top série"
 msgid "Top-IMDB"
 msgstr "Top-IMDB"
 
-msgid "Total size: "
-msgstr "Celková veľkosť: "
+msgid "Total size:"
+msgstr "Celková veľkosť:"
 
 msgid "Trailer"
 msgstr "Príves"
@@ -3828,8 +3822,8 @@ msgstr "[HLS/M3U8] vyrovnávacia pamäť"
 msgid "[HTTP] buffering"
 msgstr "[HTTP] vyrovnávacia pamäť"
 
-msgid "[Logged-in-only] "
-msgstr "[Len prihlásený] "
+msgid "[Logged-in-only]"
+msgstr "[Len prihlásený]"
 
 msgid "[RTMP] buffering (rtmpdump required)"
 msgstr "[RTMP] vyrovnávacia pamäť (vyžaduje sa RTMPDUMP)"
@@ -4077,8 +4071,8 @@ msgstr "počkajte %s sekúnd"
 msgid "white"
 msgstr "biela"
 
-msgid "www: "
-msgstr "www: "
+msgid "www:"
+msgstr "www:"
 
 msgid "yellow"
 msgstr "žltá"

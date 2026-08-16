@@ -597,11 +597,11 @@ class E2iPlayerWidget(Screen):
                 options.append((_("Edit User Links"), "EDIT_USER_LINKS"))
 
         if -1 < self.canByAddedToFavourites()[0]:
-            options.append((_("Add item to favourites"), "ADD_FAV"))
-            options.append((_("Edit favourites"), "EDIT_FAV"))
+            options.append((_("Add item to favorites"), "ADD_FAV"))
+            options.append((_("Edit favorites"), "EDIT_FAV"))
         elif 'favourites' == self.hostName:
-            options.append((_("Edit favourites"), "EDIT_FAV"))
-            options.append((_("Remove from favourites"), "DELETE_FAV"))
+            options.append((_("Edit favorites"), "EDIT_FAV"))
+            options.append((_("Remove from favorites"), "DELETE_FAV"))
 
         if not canAddUserLink:
             try:
@@ -919,7 +919,7 @@ class E2iPlayerWidget(Screen):
                 self.updateDownloadButton()
             except Exception:
                 printExc()
-                self.session.open(MessageBox, _('Error deleting favourite item.'), type=MessageBox.TYPE_ERROR, timeout=5)
+                self.session.open(MessageBox, _('Error deleting favorite item.'), type=MessageBox.TYPE_ERROR, timeout=5)
 
     def editFavouritesCallback(self, ret=False):
         if ret and 'favourites' == self.hostName:  # we must reload host
@@ -2405,9 +2405,9 @@ class E2iPlayerWidget(Screen):
 
                 try:
                     if -1 < self.canByAddedToFavourites()[0]:
-                        options.append(IPTVChoiceBoxItem(_("Add item to favourites"), "", {'e2i_menu_action': 'ADD_FAV'}))
+                        options.append(IPTVChoiceBoxItem(_("Add item to favorites"), "", {'e2i_menu_action': 'ADD_FAV'}))
                     elif 'favourites' == self.hostName:
-                        options.append(IPTVChoiceBoxItem(_("Remove from favourites"), "", {'e2i_menu_action': 'DELETE_FAV'}))
+                        options.append(IPTVChoiceBoxItem(_("Remove from favorites"), "", {'e2i_menu_action': 'DELETE_FAV'}))
                 except Exception:
                     printExc()
             if len(options):

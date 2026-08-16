@@ -571,7 +571,7 @@ class ZDFmediathek(CBaseHostClass):
             self.listSearchResult(cItem, searchPattern, searchType)
     # HISTORIA WYSZUKIWANIA
         elif category == "search_history":
-            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc', _("Type: "))
+            self.listsHistory({'name': 'history', 'category': 'search'}, 'desc')
         else:
             printExc()
         CBaseHostClass.endHandleService(self, index, refresh)

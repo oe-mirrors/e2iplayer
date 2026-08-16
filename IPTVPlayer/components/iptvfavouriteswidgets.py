@@ -39,7 +39,7 @@ class IPTVFavouritesAddNewGroupWidget(Screen):
         self.onShown.remove(self.onStart)
         from copy import deepcopy
         params = deepcopy(IPTVMultipleInputBox.DEF_PARAMS)
-        params['title'] = _("Add new group of favourites")
+        params['title'] = _("Add new group of favorites")
         params['with_accept_button'] = True
         params['list'] = []
 
@@ -112,11 +112,11 @@ class IPTVFavouritesAddItemWidget(Screen):
                 continue
             options.append((item['title'], item['group_id']))
         if self.canAddNewGroup:
-            options.append((_("Add new group of favourites"), None))
+            options.append((_("Add new group of favorites"), None))
         if len(options):
-            self.session.openWithCallback(self.addFavouriteToGroup, ChoiceBox, title=_("Select favourite group"), list=options)
+            self.session.openWithCallback(self.addFavouriteToGroup, ChoiceBox, title=_("Select favorite group"), list=options)
         else:
-            self.session.openWithCallback(self.iptvDoFinish, MessageBox, _("There are no other favourite groups"), type=MessageBox.TYPE_INFO, timeout=10)
+            self.session.openWithCallback(self.iptvDoFinish, MessageBox, _("There are no other favorite groups"), type=MessageBox.TYPE_INFO, timeout=10)
 
     def addFavouriteToGroup(self, retArg):
         if retArg and 2 == len(retArg):
@@ -504,7 +504,7 @@ class IPTVFavouritesMainWidget(Screen):
             if None is group:
                 return
 
-            params['title'] = _("Edit favourite group")
+            params['title'] = _("Edit favorite group")
 
             item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
             item['validator'] = self._validateGroup
@@ -531,7 +531,7 @@ class IPTVFavouritesMainWidget(Screen):
             if idx < 0 or idx >= len(items):
                 return
 
-            params['title'] = _("Edit favourite item")
+            params['title'] = _("Edit favorite item")
 
             item = deepcopy(IPTVMultipleInputBox.DEF_INPUT_PARAMS)
             item['validator'] = self._validateItem
