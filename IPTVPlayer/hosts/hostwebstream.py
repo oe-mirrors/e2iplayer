@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass, RetHost, CUrlItem
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, GetCookieDir, GetHostsOrderList
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetHostsOrderList
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
@@ -1298,9 +1298,6 @@ class IPTVHost(CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, HasBahCa(), withSearchHistrory=False)
-
-    def getLogoPath(self):
-        return RetHost(RetHost.OK, value=[GetLogoDir('webstreamslogo.png')])
 
     def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)
