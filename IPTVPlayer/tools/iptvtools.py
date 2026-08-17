@@ -1278,17 +1278,28 @@ class CSearchHistoryHelper():
         printDBG('CSearchHistoryHelper.addHistoryItem to file = "%s"' % self.PATH_FILE)
         try:
             if config.plugins.iptvplayer.search_history_size.value > 0:
-                file = codecs.open(self.PATH_FILE, 'a', 'utf-8', 'replace')
                 value = itemValue
                 if None is not itemType:
                     value = value + self.TYPE_SEP + itemType
-                # value = value if type('') == type(value) else value.decode('utf-8', 'replace')
-                file.write(value + '\n')
+                # re-adding an already-present entry should just bump it back
+                # to the most recent position instead of piling up duplicate
+                # lines (file is oldest-first, one entry per line, same as
+                # getHistoryList() reads it)
+                lines = []
+                if os.path.isfile(self.PATH_FILE):
+                    file = codecs.open(self.PATH_FILE, 'r', 'utf-8', 'ignore')
+                    for line in file:
+                        existing = line.replace('\n', '').strip()
+                        if len(existing) > 0 and existing != value:
+                            lines.append(existing)
+                    file.close()
+                lines.append(value)
+                file = codecs.open(self.PATH_FILE, 'w', 'utf-8', 'replace')
+                for line in lines:
+                    file.write(line + '\n')
+                file.close()
                 printDBG('Added pattern: "%s"' % itemValue)
-                file.close
-                if self.length is None:
-                    self.length = 0
-                self.length += 1
+                self.length = len(lines)
         except Exception:
             printExc('CSearchHistoryHelper.addHistoryItem EXCEPTION')
 
