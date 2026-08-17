@@ -47,7 +47,7 @@ class UnCaptchaSweetCaptchaWidget(Screen):
         }, -1)
 
         self["statustext"] = Label(params.get('challenge', ''))
-        self.markerPixmap = LoadPixmap(GetIconDir('markerCaptchaV2.png'))
+        self.markerPixmap = LoadPixmap(GetIconDir('PlayerSelector/Marker/markerCaptchaV2.png'))
 
         self.iconList = params.get('icon_list')
 

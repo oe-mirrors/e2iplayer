@@ -15,6 +15,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonLis
 from Screens.Screen import Screen
 from Components.Label import Label
 from Components.ActionMap import ActionMap
+from enigma import getDesktop
 ###################################################
 
 
@@ -72,21 +73,60 @@ class IPTVChoiceBoxWidget(Screen):
             # (the language picker) can pass a footerMargin closer to that
             # 114 floor instead, to avoid a big empty gap above the footer.
             footerMargin = self.params.get('footerMargin', 150)
+            # This skin has a single, unscaled set of coordinates (relying on
+            # resolution="1280,720" to auto-scale position/size for FHD/WQHD)
+            # but the icon PIXMAPS themselves don't get auto-scaled - only
+            # the box they're stretched into does. Using the tiny HD source
+            # everywhere left icons soft at FHD/WQHD, so pick the higher-res
+            # FHD source there instead (matching playerselector.py's own
+            # per-tier icon choice) - the box size stays exactly as declared
+            # below, only the source file changes.
+            screenwidth = getDesktop(0).size().width()
+            iconTier = "FHD" if screenwidth and screenwidth >= 1920 else "HD"
+            iconBase = "/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/%s" % iconTier
+
+            # The blue-key hint is only added when a caller opts in. It's
+            # built as a plain ePixmap+Label pair (like OK/EXIT below)
+            # rather than a source="key_blue"/render="Pixmap" widget with
+            # ConditionalShowHide: that Source/Renderer/Converter combo was
+            # tried first, but on real hardware its Pixmap content scaled
+            # inconsistently across resolutions (measured too big at HD,
+            # roughly right at FHD, too small at WQHD) even though its
+            # position/size auto-scaled correctly - ePixmap+scale="1" is the
+            # same mechanism OK/EXIT already use here and is proven correct
+            # at all three tiers, so visibility is decided in Python instead
+            # (include the block or don't) rather than at runtime in skin.
+            blueBlock = ""
+            if callable(self.params.get('blue_callback')):
+                # OK/EXIT below are 40x26 boxes at y=iconY (not footerY - the
+                # 26-tall box centers 3px lower than a 20-tall box at the
+                # same y would). The label box matches OK/EXIT's own height
+                # (26), so it uses iconY unchanged to land on the same
+                # center; the icon is 20 tall, so it needs +3 to match.
+                blueBlock = """
+                    <ePixmap position="138,%d" size="20,20" scale="1" zPosition="10" pixmap="%s/blue.png" transparent="1" alphatest="blend" />
+                    <widget name="key_blue_label" position="163,%d" size="e-173,26" backgroundColor="#000000" font="Regular;17" foregroundColor="#ffffff" zPosition="10" valign="center" halign="left" transparent="1" />""" % (iconY + 3, iconBase, iconY)
             skin = """
                 <screen name="IPTVChoiceBoxWidget" position="center,center" resolution="1280,720" title="%s" size="%d,%d" backgroundColor="#34111112" flags="wfNoBorder">
                     <eLabel name="BG_Title" position="0,0" size="e,60" backgroundColor="#100d0f16" zPosition="-1" />
                     <eLabel name="BG_Buttons" position="0,%d" size="e,48" backgroundColor="#100d0f16" zPosition="-1" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/iptvlogo.png" position="12,10" size="100,40" scale="1" alphatest="blend" transparent="1" zPosition="1" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="e,2" scale="1" zPosition="2" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,%d" size="e,2" scale="1" zPosition="2" />
-                    <ePixmap position="22,%d" size="40,26" scale="1" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
-                    <ePixmap position="80,%d" size="40,26" scale="1" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
+                    <ePixmap pixmap="%s/iptvlogo.png" position="12,10" size="100,40" scale="1" alphatest="blend" transparent="1" zPosition="1" />
+                    <ePixmap pixmap="%s/smallshadowline.png" position="0,60" size="e,2" scale="1" zPosition="2" />
+                    <ePixmap pixmap="%s/smallshadowline.png" position="0,%d" size="e,2" scale="1" zPosition="2" />
+                    <ePixmap position="22,%d" size="40,26" scale="1" zPosition="10" pixmap="%s/ok.png" transparent="1" alphatest="blend" />
+                    <ePixmap position="80,%d" size="40,26" scale="1" zPosition="10" pixmap="%s/exit.png" transparent="1" alphatest="blend" />%s
                     <widget name="title" position="122,14" size="e-132,30" foregroundColor="#0066ccff" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
-                    <widget name="list"  position="5,66"  zPosition="2" size="e-10,e-%d" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" %s borderWidth="1" borderColor="black"/>
+                    <widget name="list"  position="5,66"  zPosition="2" size="e-10,e-%d" scrollbarMode="showAlways" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" %s borderWidth="1" borderColor="black"/>
                 </screen>""" % (
                 self.params.get('title', _("Select option")),
                 width, height,
-                footerY, footerY, iconY, iconY,
+                footerY,
+                iconBase,
+                iconBase,
+                iconBase, footerY,
+                iconY, iconBase,
+                iconY, iconBase,
+                blueBlock,
                 footerMargin,
                 selColors
             )
@@ -116,11 +156,18 @@ class IPTVChoiceBoxWidget(Screen):
         self["title"] = Label(self.params.get('title', _("Select option")))
         self["list"] = self.params.get('list_class', IPTVRadioButtonList)()
 
-        self["actions"] = ActionMap(["SetupActions"],
-            {
-                "cancel": self.key_cancel,
-                "ok": self.key_ok,
-            }, -2)
+        actions = {
+            "cancel": self.key_cancel,
+            "ok": self.key_ok,
+        }
+        # opt-in: callers that pass a blue_callback (e.g. PlayerSelectorWidget's
+        # search results, offering "Add to group"/"Hide group" without a
+        # visible on-screen hint yet) get the blue key bound too - existing
+        # callers that don't pass one are unaffected
+        if callable(self.params.get('blue_callback')):
+            actions["blue"] = self.key_blue
+            self["key_blue_label"] = Label(self.params.get('blue_label', _("More")))
+        self["actions"] = ActionMap(["SetupActions", "ColorActions"], actions, -2)
 
         self.prevIdx = 0
         self.reorderingMode = False
@@ -149,6 +196,11 @@ class IPTVChoiceBoxWidget(Screen):
     def key_cancel(self):
         printDBG('IPTVChoiceBoxWidget.key_cancel()')
         self.close(None)
+
+    def key_blue(self):
+        callback = self.params.get('blue_callback')
+        if callable(callback):
+            callback(self.getSelectedItem())
 
     def onSelectionChanged(self):
         callback = self.params.get('selection_changed', None)
