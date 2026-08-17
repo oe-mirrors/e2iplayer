@@ -85,7 +85,7 @@ class UnCaptchaReCaptchaWidget(Screen):
             "back": self.keyCancel,
         }, -1)
 
-        self.markerPixmap = LoadPixmap(GetIconDir('markerCaptchaV2.png'))
+        self.markerPixmap = LoadPixmap(GetIconDir('PlayerSelector/Marker/markerCaptchaV2.png'))
         self.selectPixmap = LoadPixmap(GetIconDir('selectCaptchaV2.png'))
 
         self["statustext"] = Label(str(message))
