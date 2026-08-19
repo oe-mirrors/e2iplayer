@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 08:49+0200\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
 "PO-Revision-Date: 2026-07-27 16:28+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -57,6 +57,14 @@ msgstr "Rozloženie virtuálnej klávesnice \"%s\" nie je k dispozícii."
 
 msgid "\"Web\" streams player"
 msgstr "Prehrávač streamov \"Web\""
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr ""
 
 #, python-format
 msgid "%s - service overview"
@@ -328,6 +336,10 @@ msgstr "Pridanie položky do obľúbených"
 
 msgid "Add item to group"
 msgstr "Pridanie položky do skupiny"
+
+#, fuzzy
+msgid "Add new entry"
+msgstr "Pridať novú skupinu"
 
 msgid "Add new group"
 msgstr "Pridať novú skupinu"
@@ -608,6 +620,10 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Služba riešenia problémov Captcha"
 
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr ""
+
 msgid "Cartoons"
 msgstr "Kreslené filmy"
 
@@ -836,6 +852,10 @@ msgstr "Určite odstrániť z obľúbených?"
 
 msgid "Delete"
 msgstr "Odstrániť"
+
+#, fuzzy
+msgid "Delete entry"
+msgstr "Odstrániť históriu vyhľadávania"
 
 msgid "Delete log file"
 msgstr "Odstránenie súboru denníka"
@@ -1118,11 +1138,26 @@ msgstr "Upraviť obľúbenú položku"
 msgid "Edit favorites"
 msgstr "Úprava obľúbených položiek"
 
+#, fuzzy
+msgid "Edit search history"
+msgstr "Odstrániť históriu vyhľadávania"
+
+#, fuzzy
+msgid "Edit title"
+msgstr "Úprava zlyhala."
+
+#, fuzzy
+msgid "Edit, sort and delete search history entries"
+msgstr "Naozaj chcete vymazať históriu vyhľadávania?"
+
 msgid "Educational Animation"
 msgstr "Vzdelávacia animácia"
 
 msgid "Email"
 msgstr "E-mail"
+
+msgid "Empty title is not allowed."
+msgstr ""
 
 msgid "Enable"
 msgstr "Povoliť"
@@ -1199,6 +1234,10 @@ msgstr "Zadajte text"
 msgid "Entitlement parsing error."
 msgstr "Chyba analýzy oprávnení."
 
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr ""
+
 msgid "Episode"
 msgstr "Epizóda"
 
@@ -1270,6 +1309,10 @@ msgid "Error saving favorites."
 msgstr "Chyba pri ukladaní obľúbených položiek."
 
 msgid "Error while loading watch data"
+msgstr "Chyba pri načítavaní údajov o sledovaní"
+
+#, fuzzy
+msgid "Error while saving."
 msgstr "Chyba pri načítavaní údajov o sledovaní"
 
 #, python-format
@@ -1437,6 +1480,9 @@ msgstr "Prvý prehrávač filmov v režime vyrovnávacej pamäte"
 
 msgid "First movie player without buffering mode"
 msgstr "Prvý prehrávač videozáznamov bez režimu vyrovnávacej pamäte"
+
+msgid "Fix jump target"
+msgstr ""
 
 msgid "Folder for cache data"
 msgstr "Priečinok pre údaje vyrovnávacej pamäte"
@@ -1610,6 +1656,10 @@ msgstr "Hosťovanie \"%s\" neznáme."
 msgid "Hosting: %s, %s"
 msgstr "Hosting: %s, %s"
 
+#, fuzzy
+msgid "Hosts list type"
+msgstr "Nastavenia hostov"
+
 msgid "Hosts settings"
 msgstr "Nastavenia hostov"
 
@@ -1766,6 +1816,9 @@ msgstr "Klub denníka"
 msgid "Jump"
 msgstr "Skoč"
 
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr ""
+
 msgid "Jump to a selected page"
 msgstr "Prejsť na vybranú stránku"
 
@@ -1885,6 +1938,10 @@ msgstr "Zoznam podľa dňa"
 msgid "List only channels with subscription"
 msgstr "Zoznam iba kanálov s odberom"
 
+#, fuzzy
+msgid "List view"
+msgstr "Najviac videné"
+
 #, python-format
 msgid "Listeners: %s"
 msgstr "Poslucháči: %s"
@@ -1976,6 +2033,10 @@ msgstr "Menu"
 
 msgid "MENU - Options (select language, clear search history, settings)"
 msgstr ""
+
+#, fuzzy
+msgid "MENU=Options"
+msgstr "Možnosti videa"
 
 msgid "MIPS Floating Point Architecture"
 msgstr "Architektúra MIPS s pohyblivou desatinnou čiarkou"
@@ -2168,6 +2229,10 @@ msgstr "Nový kreslený film"
 msgid "New dir"
 msgstr "Nový adresár"
 
+#, fuzzy
+msgid "New entry"
+msgstr "Nový adresár"
+
 msgid "New icons will not be available."
 msgstr "Nové ikony nebudú k dispozícii."
 
@@ -2289,6 +2354,9 @@ msgstr "Voliteľný používateľský agent (predvolené nastavenie nechajte pr�
 #, fuzzy
 msgid "Options"
 msgstr "Možnosti videa"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Pôvodný názov:"
@@ -2429,6 +2497,9 @@ msgid ""
 msgstr ""
 "Nezabudnite navštíviť http://www.sport365.live/ a pozrieť si niekoľko reklám.\n"
 "Tým sa vyrieši problém, ak sa prehrávanie neustále prerušuje."
+
+msgid "Please select an entry."
+msgstr ""
 
 #, python-format
 msgid "Please set valid %s in the %s configuration."
@@ -2686,8 +2757,14 @@ msgstr ""
 msgid "Return to hosts list"
 msgstr "Návrat do zoznamu hostiteľov"
 
+msgid "Reused entries move back to the top again."
+msgstr ""
+
 msgid "Reverse a playlist"
 msgstr "Obrátenie playlistu"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr ""
 
 msgid "Right"
 msgstr ""
@@ -2743,6 +2820,21 @@ msgstr "Vyhľadajte výraz \"%s\", %s, %s %s"
 
 msgid "Search history"
 msgstr "História vyhľadávania"
+
+#, fuzzy
+msgid "Search history - options"
+msgstr "História vyhľadávania"
+
+msgid "Search history is not available for this host."
+msgstr ""
+
+#, fuzzy
+msgid "Search history saved."
+msgstr "História vyhľadávania"
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr ""
 
 msgid "Search in"
 msgstr "Vyhľadávanie v"
@@ -3003,11 +3095,23 @@ msgstr "Niektoré zmeny sa použijú až po reštartovaní prehrávača videozá
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Niektoré nastavenia sa použijú až po reštarte grafického rozhrania."
 
+#, fuzzy
+msgid "Sort"
+msgstr "Zoradiť podľa:"
+
+#, fuzzy
+msgid "Sort A-Z"
+msgstr "Program A-Z"
+
 msgid "Sort Mode"
 msgstr "Režim triedenia"
 
 msgid "Sort Myfreecams :"
 msgstr "Zoradiť Myfreecams :"
+
+#, fuzzy
+msgid "Sort Z-A"
+msgstr "Zoradiť podľa:"
 
 msgid "Sort alphabetically"
 msgstr "Zoradiť podľa abecedy"
@@ -3350,6 +3454,9 @@ msgstr "V tejto sekcii sú ešte %d ďalšie strany"
 msgid "There are no other favorite groups"
 msgstr "Neexistujú žiadne iné obľúbené skupiny"
 
+msgid "There are unsaved changes. Save now?"
+msgstr ""
+
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr "V priečinku \"%s nie je dostatok voľného miesta\"."
@@ -3428,9 +3535,6 @@ msgstr "Trauma"
 msgid "Treatment Consult"
 msgstr "Konzultácia s liečbou"
 
-msgid "Tree list"
-msgstr "Tree list"
-
 msgid "Trend"
 msgstr "Trend"
 
@@ -3476,6 +3580,9 @@ msgstr "Umount iso file"
 
 msgid "Unable to comply. Search History is empty."
 msgstr "Nedá sa splniť požiadavky. História vyhľadávania je prázdna."
+
+msgid "Unfix jump target"
+msgstr ""
 
 msgid "Universal"
 msgstr "Univerzálne"
@@ -3876,6 +3983,10 @@ msgstr "umiestnenie vyrovnávacej pamäte"
 msgid "center"
 msgstr "na stred"
 
+#, fuzzy
+msgid "changed"
+msgstr "Uložiť zmeny?"
+
 msgid "cobalt"
 msgstr "kobalt"
 
@@ -3899,6 +4010,9 @@ msgstr "externý gstplayer"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
 msgstr "najprv skontrolujte, či hostiteľ funguje správne v grafickom používateľskom <b>rozhraní</b> a na webe PRED nahlásením chyby v ňom !!!"
+
+msgid "fixed"
+msgstr ""
 
 msgid "format"
 msgstr "formát"
@@ -4008,6 +4122,9 @@ msgstr "rootfs"
 msgid "rtmp"
 msgstr "rtmp"
 
+msgid "saved"
+msgstr ""
+
 msgid "second"
 msgstr "sekunda"
 
@@ -4034,6 +4151,9 @@ msgstr "najlepší"
 
 msgid "the worst"
 msgstr "najhoršie"
+
+msgid "to top"
+msgstr ""
 
 msgid "top"
 msgstr "hore"

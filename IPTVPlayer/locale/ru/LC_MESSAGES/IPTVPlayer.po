@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 08:49+0200\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
 "PO-Revision-Date: 2026-07-27 16:55+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -57,6 +57,14 @@ msgstr "\"%s\" Виртуальная Клавиатура недоступна.
 
 msgid "\"Web\" streams player"
 msgstr "\"Сеть\" потоковый плеер"
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr ""
 
 #, python-format
 msgid "%s - service overview"
@@ -328,6 +336,10 @@ msgstr "Добавить объект в избранное"
 
 msgid "Add item to group"
 msgstr "Добавить элемент в группу"
+
+#, fuzzy
+msgid "Add new entry"
+msgstr "Добавить новую группу"
 
 msgid "Add new group"
 msgstr "Добавить новую группу"
@@ -608,6 +620,10 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Услуги по решению капчи"
 
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr ""
+
 msgid "Cartoons"
 msgstr "Мультфильмы"
 
@@ -836,6 +852,10 @@ msgstr "Точно удалить из избранного?"
 
 msgid "Delete"
 msgstr "Удалить"
+
+#, fuzzy
+msgid "Delete entry"
+msgstr "Удалить историю поиска"
 
 msgid "Delete log file"
 msgstr "Удалить лог файл"
@@ -1118,11 +1138,26 @@ msgstr "Редактировать элемент избранного"
 msgid "Edit favorites"
 msgstr "Изменить избранное"
 
+#, fuzzy
+msgid "Edit search history"
+msgstr "Удалить историю поиска"
+
+#, fuzzy
+msgid "Edit title"
+msgstr "Не удалось отредактировать."
+
+#, fuzzy
+msgid "Edit, sort and delete search history entries"
+msgstr "Вы уверены, что хотите удалить историю поиска?"
+
 msgid "Educational Animation"
 msgstr "Воспитание Анимация"
 
 msgid "Email"
 msgstr "Email"
+
+msgid "Empty title is not allowed."
+msgstr ""
 
 msgid "Enable"
 msgstr "Включить"
@@ -1199,6 +1234,10 @@ msgstr "Введите текст цитаты"
 msgid "Entitlement parsing error."
 msgstr "Ошибка синтаксического анализа прав."
 
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr ""
+
 msgid "Episode"
 msgstr "Эпизод"
 
@@ -1270,6 +1309,10 @@ msgid "Error saving favorites."
 msgstr "Ошибка сохранения избранного."
 
 msgid "Error while loading watch data"
+msgstr "Ошибка при загрузке данных просмотра"
+
+#, fuzzy
+msgid "Error while saving."
 msgstr "Ошибка при загрузке данных просмотра"
 
 #, python-format
@@ -1438,6 +1481,9 @@ msgstr "Первый видеоплеер в режиме буферизации
 
 msgid "First movie player without buffering mode"
 msgstr "Первый видеоплеер без режима буферизации"
+
+msgid "Fix jump target"
+msgstr ""
 
 msgid "Folder for cache data"
 msgstr "Папка для данных кэша"
@@ -1611,6 +1657,10 @@ msgstr "Хостинг \"%s\" неизвестен."
 msgid "Hosting: %s, %s"
 msgstr "Хостинг: %s, %s"
 
+#, fuzzy
+msgid "Hosts list type"
+msgstr "Настройки хостов"
+
 msgid "Hosts settings"
 msgstr "Настройки хостов"
 
@@ -1766,6 +1816,9 @@ msgstr "Журнал Клуб"
 msgid "Jump"
 msgstr "Прыжок"
 
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr ""
+
 msgid "Jump to a selected page"
 msgstr "Перейти на выбранную страницу"
 
@@ -1885,6 +1938,10 @@ msgstr "Список по дням"
 msgid "List only channels with subscription"
 msgstr "Перечислять только каналы с подпиской"
 
+#, fuzzy
+msgid "List view"
+msgstr "Наиболее просматриваемые"
+
 #, python-format
 msgid "Listeners: %s"
 msgstr "Слушатели: %s"
@@ -1976,6 +2033,10 @@ msgstr "МЕНЮ"
 
 msgid "MENU - Options (select language, clear search history, settings)"
 msgstr ""
+
+#, fuzzy
+msgid "MENU=Options"
+msgstr "Варианты видео"
 
 msgid "MIPS Floating Point Architecture"
 msgstr "Архитектура MIPS с плавающей точкой"
@@ -2167,6 +2228,10 @@ msgstr "Новый мультфильм"
 msgid "New dir"
 msgstr "Новый реж"
 
+#, fuzzy
+msgid "New entry"
+msgstr "Новый реж"
+
 msgid "New icons will not be available."
 msgstr "Новые иконки не будут доступны."
 
@@ -2288,6 +2353,9 @@ msgstr "Дополнительный User-Agent (оставьте пустым �
 #, fuzzy
 msgid "Options"
 msgstr "Варианты видео"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Оригинальное название:"
@@ -2428,6 +2496,9 @@ msgid ""
 msgstr ""
 "Не забудьте посетить сайт http://www.sport365.live/ и посмотреть несколько рекламных объявлений.\n"
 "Это исправит проблему, если воспроизведение будет постоянно прерываться."
+
+msgid "Please select an entry."
+msgstr ""
 
 #, python-format
 msgid "Please set valid %s in the %s configuration."
@@ -2685,8 +2756,14 @@ msgstr ""
 msgid "Return to hosts list"
 msgstr "Вернуться в список хостов"
 
+msgid "Reused entries move back to the top again."
+msgstr ""
+
 msgid "Reverse a playlist"
 msgstr "Реверс плейлист"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr ""
 
 msgid "Right"
 msgstr ""
@@ -2742,6 +2819,21 @@ msgstr "Поиск для \"%s\", %s, %s %s"
 
 msgid "Search history"
 msgstr "История поиска"
+
+#, fuzzy
+msgid "Search history - options"
+msgstr "История поиска"
+
+msgid "Search history is not available for this host."
+msgstr ""
+
+#, fuzzy
+msgid "Search history saved."
+msgstr "История поиска"
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr ""
 
 msgid "Search in"
 msgstr "Поиск в"
@@ -3002,11 +3094,23 @@ msgstr "Внесение некоторых изменений произойд�
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Некоторые настройки вступят в силу только после перезапуска графического интерфейса."
 
+#, fuzzy
+msgid "Sort"
+msgstr "Режим сортировки:"
+
+#, fuzzy
+msgid "Sort A-Z"
+msgstr "Программа А-Я"
+
 msgid "Sort Mode"
 msgstr "Режим сортировки"
 
 msgid "Sort Myfreecams :"
 msgstr "Сортировать Myfreecams :"
+
+#, fuzzy
+msgid "Sort Z-A"
+msgstr "Режим сортировки:"
 
 msgid "Sort alphabetically"
 msgstr "Сортировать в алфлвитном порядке"
@@ -3349,6 +3453,9 @@ msgstr "В этом разделе есть ещё %d страниц(ы)"
 msgid "There are no other favorite groups"
 msgstr "Иные избранные группы отсутствуют"
 
+msgid "There are unsaved changes. Save now?"
+msgstr ""
+
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr "В папке \"%s\" недостаточно свободного места."
@@ -3427,9 +3534,6 @@ msgstr "Травма"
 msgid "Treatment Consult"
 msgstr "Лечение Консультация"
 
-msgid "Tree list"
-msgstr "Список деревьев"
-
 msgid "Trend"
 msgstr "Тренд"
 
@@ -3475,6 +3579,9 @@ msgstr "Снятие iso файла"
 
 msgid "Unable to comply. Search History is empty."
 msgstr "Невозможно выполнить. История поиска пуста."
+
+msgid "Unfix jump target"
+msgstr ""
 
 msgid "Universal"
 msgstr "Универсальный"
@@ -3875,6 +3982,10 @@ msgstr "буферное место"
 msgid "center"
 msgstr "по центру"
 
+#, fuzzy
+msgid "changed"
+msgstr "Сохранить изменения?"
+
 msgid "cobalt"
 msgstr "кобальт"
 
@@ -3898,6 +4009,9 @@ msgstr "внешний gstplayer"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
 msgstr "сперва проверьте корректность работы хоста в GUI и web <b>ДО</b> сообщения об ошибке в нем !!!"
+
+msgid "fixed"
+msgstr ""
 
 msgid "format"
 msgstr "формат"
@@ -4007,6 +4121,9 @@ msgstr "rootfs"
 msgid "rtmp"
 msgstr "ртмп"
 
+msgid "saved"
+msgstr ""
+
 msgid "second"
 msgstr "секунда"
 
@@ -4033,6 +4150,9 @@ msgstr "лучший"
 
 msgid "the worst"
 msgstr "худшее"
+
+msgid "to top"
+msgstr ""
 
 msgid "top"
 msgstr "вверх"

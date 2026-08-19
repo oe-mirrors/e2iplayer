@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 08:49+0200\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
 "PO-Revision-Date: 2026-07-27 19:13+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -58,6 +58,14 @@ msgstr "Η διάταξη εικονικού πληκτρολογίου \"%s\" �
 
 msgid "\"Web\" streams player"
 msgstr "Αναπαραγωγή ροών \"Web\""
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr ""
 
 #, python-format
 msgid "%s - service overview"
@@ -329,6 +337,10 @@ msgstr "Προσθήκη στοιχείου στα αγαπημένα"
 
 msgid "Add item to group"
 msgstr "Προσθήκη στοιχείου στην ομάδα"
+
+#, fuzzy
+msgid "Add new entry"
+msgstr "Προσθήκη νέας ομάδας"
 
 msgid "Add new group"
 msgstr "Προσθήκη νέας ομάδας"
@@ -609,6 +621,10 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Υπηρεσία επίλυσης Captcha"
 
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr ""
+
 msgid "Cartoons"
 msgstr "Κινούμενα σχέδια"
 
@@ -837,6 +853,10 @@ msgstr "Σίγουρα θέλετε να αφαιρεθεί από τα αγαπ
 
 msgid "Delete"
 msgstr "Διαγραφή"
+
+#, fuzzy
+msgid "Delete entry"
+msgstr "Διαγραφή ιστορικού αναζήτησης"
 
 msgid "Delete log file"
 msgstr "Διαγραφή αρχείου καταγραφής"
@@ -1119,11 +1139,26 @@ msgstr "Επεξεργασία στοιχείου αγαπημένων"
 msgid "Edit favorites"
 msgstr "Επεξεργασία αγαπημένων"
 
+#, fuzzy
+msgid "Edit search history"
+msgstr "Διαγραφή ιστορικού αναζήτησης"
+
+#, fuzzy
+msgid "Edit title"
+msgstr "Η επεξεργασία απέτυχε."
+
+#, fuzzy
+msgid "Edit, sort and delete search history entries"
+msgstr "Είστε βέβαιοι ότι θέλετε να διαγράψετε το ιστορικό αναζητήσεων;"
+
 msgid "Educational Animation"
 msgstr "Εκπαιδευτικό κινούμενο σχέδιο"
 
 msgid "Email"
 msgstr "Email"
+
+msgid "Empty title is not allowed."
+msgstr ""
 
 msgid "Enable"
 msgstr "Ενεργοποίηση"
@@ -1200,6 +1235,10 @@ msgstr "Εισάγετε το κείμενο"
 msgid "Entitlement parsing error."
 msgstr "Σφάλμα ανάλυσης δικαιώματος."
 
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr ""
+
 msgid "Episode"
 msgstr "Επεισόδιο"
 
@@ -1271,6 +1310,10 @@ msgid "Error saving favorites."
 msgstr "Σφάλμα κατά την αποθήκευση των αγαπημένων."
 
 msgid "Error while loading watch data"
+msgstr "Σφάλμα κατά τη φόρτωση των δεδομένων προβολής"
+
+#, fuzzy
+msgid "Error while saving."
 msgstr "Σφάλμα κατά τη φόρτωση των δεδομένων προβολής"
 
 #, python-format
@@ -1438,6 +1481,9 @@ msgstr "Πρώτη αναπαραγωγή ταινιών σε λειτουργί
 
 msgid "First movie player without buffering mode"
 msgstr "Πρώτη αναπαραγωγή ταινιών χωρίς λειτουργία προσωρινής μνήμης"
+
+msgid "Fix jump target"
+msgstr ""
 
 msgid "Folder for cache data"
 msgstr "Φάκελος για δεδομένα προσωρινής αποθήκευσης"
@@ -1611,6 +1657,10 @@ msgstr "Άγνωστο hosting \"%s\"."
 msgid "Hosting: %s, %s"
 msgstr "Hosting: %s, %s"
 
+#, fuzzy
+msgid "Hosts list type"
+msgstr "Ρυθμίσεις hosts"
+
 msgid "Hosts settings"
 msgstr "Ρυθμίσεις hosts"
 
@@ -1766,6 +1816,9 @@ msgstr "Λέσχη περιοδικών"
 msgid "Jump"
 msgstr "Μετάβαση"
 
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr ""
+
 msgid "Jump to a selected page"
 msgstr "Μετάβαση σε επιλεγμένη σελίδα"
 
@@ -1885,6 +1938,10 @@ msgstr "Λίστα κατά ημέρα"
 msgid "List only channels with subscription"
 msgstr "Λίστα μόνο καναλιών με συνδρομή"
 
+#, fuzzy
+msgid "List view"
+msgstr "Περισσότερες προβολές"
+
 #, python-format
 msgid "Listeners: %s"
 msgstr "Ακροατές: %s"
@@ -1976,6 +2033,10 @@ msgstr "ΜΕΝΟΥ"
 
 msgid "MENU - Options (select language, clear search history, settings)"
 msgstr ""
+
+#, fuzzy
+msgid "MENU=Options"
+msgstr "Επιλογές βίντεο"
 
 msgid "MIPS Floating Point Architecture"
 msgstr "Αρχιτεκτονική κινητής υποδιαστολής MIPS"
@@ -2166,6 +2227,10 @@ msgstr "Νέα κινούμενα σχέδια"
 msgid "New dir"
 msgstr "Νέος κατάλογος"
 
+#, fuzzy
+msgid "New entry"
+msgstr "Νέος κατάλογος"
+
 msgid "New icons will not be available."
 msgstr "Δεν θα είναι διαθέσιμα νέα εικονίδια."
 
@@ -2287,6 +2352,9 @@ msgstr "Προαιρετικό User-Agent (αφήστε κενό προεπιλ�
 #, fuzzy
 msgid "Options"
 msgstr "Επιλογές βίντεο"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Πρωτότυπος τίτλος:"
@@ -2427,6 +2495,9 @@ msgid ""
 msgstr ""
 "Παρακαλώ μην ξεχάσετε να επισκεφτείτε το http://www.sport365.live/ και να παρακολουθήσετε μερικές διαφημίσεις.\n"
 "Αυτό θα διορθώσει το πρόβλημα, εάν η αναπαραγωγή σας διακόπτεται συνεχώς."
+
+msgid "Please select an entry."
+msgstr ""
 
 #, python-format
 msgid "Please set valid %s in the %s configuration."
@@ -2684,8 +2755,14 @@ msgstr ""
 msgid "Return to hosts list"
 msgstr "Επιστροφή στη λίστα hosts"
 
+msgid "Reused entries move back to the top again."
+msgstr ""
+
 msgid "Reverse a playlist"
 msgstr "Αντιστροφή λίστας αναπαραγωγής"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr ""
 
 msgid "Right"
 msgstr ""
@@ -2741,6 +2818,21 @@ msgstr "Αναζήτηση για \"%s\", %s, %s %s"
 
 msgid "Search history"
 msgstr "Ιστορικό αναζήτησης"
+
+#, fuzzy
+msgid "Search history - options"
+msgstr "Ιστορικό αναζήτησης"
+
+msgid "Search history is not available for this host."
+msgstr ""
+
+#, fuzzy
+msgid "Search history saved."
+msgstr "Ιστορικό αναζήτησης"
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr ""
 
 msgid "Search in"
 msgstr "Αναζήτηση στο"
@@ -3001,11 +3093,23 @@ msgstr "Ορισμένες αλλαγές θα εφαρμοστούν μόνο �
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Ορισμένες ρυθμίσεις θα εφαρμοστούν μόνο μετά την επανεκκίνηση του GUI."
 
+#, fuzzy
+msgid "Sort"
+msgstr "Ταξινόμηση κατά:"
+
+#, fuzzy
+msgid "Sort A-Z"
+msgstr "Πρόγραμμα A-Z"
+
 msgid "Sort Mode"
 msgstr "Λειτουργία ταξινόμησης"
 
 msgid "Sort Myfreecams :"
 msgstr "Ταξινόμηση Myfreecams:"
+
+#, fuzzy
+msgid "Sort Z-A"
+msgstr "Ταξινόμηση κατά:"
 
 msgid "Sort alphabetically"
 msgstr "Ταξινόμηση αλφαβητικά"
@@ -3348,6 +3452,9 @@ msgstr "Υπάρχουν %d ακόμη σελίδες σε αυτή την εν�
 msgid "There are no other favorite groups"
 msgstr "Δεν υπάρχουν άλλες αγαπημένες ομάδες"
 
+msgid "There are unsaved changes. Save now?"
+msgstr ""
+
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr "Δεν υπάρχει αρκετός ελεύθερος χώρος στον φάκελο \"%s\"."
@@ -3426,9 +3533,6 @@ msgstr "Τραύμα"
 msgid "Treatment Consult"
 msgstr "Συμβουλή θεραπείας"
 
-msgid "Tree list"
-msgstr "Λίστα δέντρου"
-
 msgid "Trend"
 msgstr "Τάση"
 
@@ -3474,6 +3578,9 @@ msgstr "Αποπροσάρτηση αρχείου iso"
 
 msgid "Unable to comply. Search History is empty."
 msgstr "Αδυναμία συμμόρφωσης. Το ιστορικό αναζήτησης είναι κενό."
+
+msgid "Unfix jump target"
+msgstr ""
 
 msgid "Universal"
 msgstr "Καθολική"
@@ -3874,6 +3981,10 @@ msgstr "τοποθεσία προσωρινής μνήμης"
 msgid "center"
 msgstr "κέντρο"
 
+#, fuzzy
+msgid "changed"
+msgstr "Να γίνει αποθήκευση των αλλαγών;"
+
 msgid "cobalt"
 msgstr "κοβαλτί"
 
@@ -3897,6 +4008,9 @@ msgstr "εξωτερικός gstplayer"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
 msgstr "ελέγξτε πρώτα αν ο host λειτουργεί σωστά στο GUI και στον ιστό <b>ΠΡΙΝ</b> αναφέρετε σφάλμα σε αυτόν !!!"
+
+msgid "fixed"
+msgstr ""
 
 msgid "format"
 msgstr "μορφή"
@@ -4006,6 +4120,9 @@ msgstr "rootfs"
 msgid "rtmp"
 msgstr "rtmp"
 
+msgid "saved"
+msgstr ""
+
 msgid "second"
 msgstr "δευτερόλεπτο"
 
@@ -4032,6 +4149,9 @@ msgstr "η καλύτερη"
 
 msgid "the worst"
 msgstr "η χειρότερη"
+
+msgid "to top"
+msgstr ""
 
 msgid "top"
 msgstr "κορυφαίο"

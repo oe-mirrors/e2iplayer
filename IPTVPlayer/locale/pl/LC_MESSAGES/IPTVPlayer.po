@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 08:49+0200\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
@@ -55,6 +55,14 @@ msgstr "Plik konfiguracyjny \"%s\" klawiatury wirtualnej jest niedostępny."
 
 msgid "\"Web\" streams player"
 msgstr "Odtwarzacz strumieni z Internetu"
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr ""
 
 #, python-format
 msgid "%s - service overview"
@@ -338,6 +346,10 @@ msgstr "Dodaj do ulubionych"
 
 msgid "Add item to group"
 msgstr "Dodaj element do grupy"
+
+#, fuzzy
+msgid "Add new entry"
+msgstr "Dodaj nową grupę"
 
 msgid "Add new group"
 msgstr "Dodaj nową grupę"
@@ -638,6 +650,10 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Serwis rozwiązujący Captcha"
 
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr ""
+
 #, fuzzy
 msgid "Cartoons"
 msgstr "Lista kreskówek"
@@ -877,6 +893,10 @@ msgstr "Dodaj do ulubionych"
 
 msgid "Delete"
 msgstr "Usunąć"
+
+#, fuzzy
+msgid "Delete entry"
+msgstr "Historia wyszukiwania"
 
 msgid "Delete log file"
 msgstr "Usuń plik dziennika"
@@ -1174,11 +1194,26 @@ msgstr "Edytuj ulubione"
 msgid "Edit favorites"
 msgstr "Edytuj ulubione"
 
+#, fuzzy
+msgid "Edit search history"
+msgstr "Historia wyszukiwania"
+
+#, fuzzy
+msgid "Edit title"
+msgstr "Logowanie nieudane."
+
+#, fuzzy
+msgid "Edit, sort and delete search history entries"
+msgstr "Czy na pewno chcesz usunąć plik \"%s\"?"
+
 msgid "Educational Animation"
 msgstr "Animacja edukacyjna"
 
 msgid "Email"
 msgstr "Email"
+
+msgid "Empty title is not allowed."
+msgstr ""
 
 msgid "Enable"
 msgstr "Włączyć"
@@ -1260,6 +1295,10 @@ msgstr "Wprowadź tekst"
 msgid "Entitlement parsing error."
 msgstr "Błąd parsowania uprawnień."
 
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr ""
+
 msgid "Episode"
 msgstr "Odcinek"
 
@@ -1336,6 +1375,10 @@ msgstr "Edytuj ulubione"
 
 msgid "Error while loading watch data"
 msgstr ""
+
+#, fuzzy
+msgid "Error while saving."
+msgstr "Edytuj ulubione"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1511,6 +1554,9 @@ msgstr "Pierwszy odtwarzacz z trybem buforowania"
 
 msgid "First movie player without buffering mode"
 msgstr "Pierwszy odtwarzacz bez trybu buforowania"
+
+msgid "Fix jump target"
+msgstr ""
 
 msgid "Folder for cache data"
 msgstr "Folder danych pamięci podręcznej (cache)"
@@ -1689,6 +1735,10 @@ msgstr "Nieznany hosting \"%s\" ."
 msgid "Hosting: %s, %s"
 msgstr "Hosting: %s, %s"
 
+#, fuzzy
+msgid "Hosts list type"
+msgstr "Ustawienia hostów"
+
 msgid "Hosts settings"
 msgstr "Ustawienia hostów"
 
@@ -1850,6 +1900,9 @@ msgstr "Klub dziennikarski"
 msgid "Jump"
 msgstr ""
 
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr ""
+
 msgid "Jump to a selected page"
 msgstr ""
 
@@ -1974,6 +2027,10 @@ msgstr "Lista według dnia"
 msgid "List only channels with subscription"
 msgstr "Wyświetlaj tylko kanały z subskrypcją"
 
+#, fuzzy
+msgid "List view"
+msgstr "Najczęściej oglądane"
+
 #, python-format
 msgid "Listeners: %s"
 msgstr "Słuchacze: %s"
@@ -2068,6 +2125,10 @@ msgstr ""
 
 msgid "MENU - Options (select language, clear search history, settings)"
 msgstr ""
+
+#, fuzzy
+msgid "MENU=Options"
+msgstr "Opcje wideo"
 
 msgid "MIPS Floating Point Architecture"
 msgstr "Architektura zmiennoprzecinkowa MIPS"
@@ -2265,6 +2326,10 @@ msgstr "Nowe kreskówki"
 msgid "New dir"
 msgstr "Nowy folder"
 
+#, fuzzy
+msgid "New entry"
+msgstr "Nowy folder"
+
 msgid "New icons will not be available."
 msgstr "Nowe ikony nie będą dostępne."
 
@@ -2390,6 +2455,9 @@ msgstr ""
 #, fuzzy
 msgid "Options"
 msgstr "Opcje wideo"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr ""
 
 msgid "Original Title:"
 msgstr ""
@@ -2527,6 +2595,9 @@ msgid ""
 msgstr ""
 "Pamiętaj, aby odwiedzić stronę /www.sport365.live i obejrzeć kilka reklam.\n"
 "Rozwiąże to problem przerwania odtwarzania."
+
+msgid "Please select an entry."
+msgstr ""
 
 #, python-format
 msgid "Please set valid %s in the %s configuration."
@@ -2794,8 +2865,14 @@ msgstr ""
 msgid "Return to hosts list"
 msgstr "Wróć do listy hostów"
 
+msgid "Reused entries move back to the top again."
+msgstr ""
+
 msgid "Reverse a playlist"
 msgstr "Odwróć listę odtwarzania"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr ""
 
 msgid "Right"
 msgstr ""
@@ -2852,6 +2929,21 @@ msgstr "Szukaj \"%s\", %s, %s %s"
 
 msgid "Search history"
 msgstr "Historia wyszukiwania"
+
+#, fuzzy
+msgid "Search history - options"
+msgstr "Historia wyszukiwania"
+
+msgid "Search history is not available for this host."
+msgstr ""
+
+#, fuzzy
+msgid "Search history saved."
+msgstr "Historia wyszukiwania"
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr ""
 
 msgid "Search in"
 msgstr "Szukaj w"
@@ -3119,11 +3211,23 @@ msgstr "Niektóre zmiany zostaną zastosowane po ponownym uruchomieniu odtwarzac
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Niektóre zmiany zostaną zastosowane po ponownym uruchomieniu odtwarzacza."
 
+#, fuzzy
+msgid "Sort"
+msgstr "Sortuj według:"
+
+#, fuzzy
+msgid "Sort A-Z"
+msgstr "Programy A-Z"
+
 msgid "Sort Mode"
 msgstr "Tryb sortowania"
 
 msgid "Sort Myfreecams :"
 msgstr ""
+
+#, fuzzy
+msgid "Sort Z-A"
+msgstr "Sortuj według:"
 
 msgid "Sort alphabetically"
 msgstr "Sortuj alfabetycznie"
@@ -3466,6 +3570,9 @@ msgstr ""
 msgid "There are no other favorite groups"
 msgstr "Nie ma innych ulubionych grup"
 
+msgid "There are unsaved changes. Save now?"
+msgstr ""
+
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr "W folderze nie ma wystarczającej ilości wolnego miejsca \"%s\"."
@@ -3550,10 +3657,6 @@ msgid "Treatment Consult"
 msgstr "Konsultacja leczenia"
 
 #, fuzzy
-msgid "Tree list"
-msgstr "Lista seriali"
-
-#, fuzzy
 msgid "Trend"
 msgstr "Trendy"
 
@@ -3604,6 +3707,9 @@ msgstr "Odmontowany plik iso"
 
 msgid "Unable to comply. Search History is empty."
 msgstr "Nie można spełnić. Historia wyszukiwania jest pusta."
+
+msgid "Unfix jump target"
+msgstr ""
 
 msgid "Universal"
 msgstr ""
@@ -4020,6 +4126,10 @@ msgstr "lokalizacja buforowania"
 msgid "center"
 msgstr "wyśrodkuj"
 
+#, fuzzy
+msgid "changed"
+msgstr "Zapisać zmiany?"
+
 msgid "cobalt"
 msgstr "kobaltowy"
 
@@ -4043,6 +4153,9 @@ msgstr "zewnętrzny gstplayer"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
 msgstr "najpierw sprawdź, czy host działa poprawnie,zrestartuj GUI i sprawdz w sieci <b> PRZED </b> zgłoszeniem błędu !!!"
+
+msgid "fixed"
+msgstr ""
 
 msgid "format"
 msgstr "format"
@@ -4152,6 +4265,9 @@ msgstr "root"
 msgid "rtmp"
 msgstr ""
 
+msgid "saved"
+msgstr ""
+
 msgid "second"
 msgstr "sekunda"
 
@@ -4178,6 +4294,9 @@ msgstr "najlepszy"
 
 msgid "the worst"
 msgstr "najgorszy"
+
+msgid "to top"
+msgstr ""
 
 msgid "top"
 msgstr "góra"

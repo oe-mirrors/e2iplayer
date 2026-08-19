@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 08:49+0200\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -51,6 +51,14 @@ msgstr "\"%s\" Sanal Klavye düzeni kullanılamıyor."
 
 msgid "\"Web\" streams player"
 msgstr "\"Web\" akış oynatıcısı"
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr ""
 
 #, python-format
 msgid "%s - service overview"
@@ -331,6 +339,10 @@ msgstr "Öğeyi favorilere ekle"
 
 msgid "Add item to group"
 msgstr "Öğeyi gruba ekle"
+
+#, fuzzy
+msgid "Add new entry"
+msgstr "Yeni grup ekle"
 
 msgid "Add new group"
 msgstr "Yeni grup ekle"
@@ -615,6 +627,10 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Captcha çözme servisi"
 
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr ""
+
 msgid "Cartoons"
 msgstr "Çizgi filmler"
 
@@ -853,6 +869,10 @@ msgstr "Favorilerden kaldır"
 
 msgid "Delete"
 msgstr "Sil"
+
+#, fuzzy
+msgid "Delete entry"
+msgstr "Arama geçmişini sil"
 
 msgid "Delete log file"
 msgstr "Günlük dosyasını sil"
@@ -1124,11 +1144,26 @@ msgstr "Favorileri düzenle"
 msgid "Edit favorites"
 msgstr "Favorileri düzenle"
 
+#, fuzzy
+msgid "Edit search history"
+msgstr "Arama geçmişini sil"
+
+#, fuzzy
+msgid "Edit title"
+msgstr "Giriş başarısız."
+
+#, fuzzy
+msgid "Edit, sort and delete search history entries"
+msgstr "Arama geçmişini silmek istediğinize emin misiniz?"
+
 msgid "Educational Animation"
 msgstr ""
 
 msgid "Email"
 msgstr "E-posta"
+
+msgid "Empty title is not allowed."
+msgstr ""
 
 msgid "Enable"
 msgstr "Etkinleştir"
@@ -1206,6 +1241,10 @@ msgstr "Metni girin"
 msgid "Entitlement parsing error."
 msgstr ""
 
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr ""
+
 msgid "Episode"
 msgstr "Bölüm"
 
@@ -1277,6 +1316,10 @@ msgstr "Favorileri düzenle"
 
 msgid "Error while loading watch data"
 msgstr ""
+
+#, fuzzy
+msgid "Error while saving."
+msgstr "Favorileri düzenle"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1453,6 +1496,9 @@ msgid "First movie player in buffering mode"
 msgstr ""
 
 msgid "First movie player without buffering mode"
+msgstr ""
+
+msgid "Fix jump target"
 msgstr ""
 
 msgid "Folder for cache data"
@@ -1637,6 +1683,10 @@ msgstr ""
 msgid "Hosting: %s, %s"
 msgstr ""
 
+#, fuzzy
+msgid "Hosts list type"
+msgstr "Host ayarları"
+
 msgid "Hosts settings"
 msgstr "Host ayarları"
 
@@ -1794,6 +1844,9 @@ msgstr ""
 msgid "Jump"
 msgstr ""
 
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr ""
+
 msgid "Jump to a selected page"
 msgstr ""
 
@@ -1919,6 +1972,10 @@ msgstr "Güne göre listele"
 msgid "List only channels with subscription"
 msgstr ""
 
+#, fuzzy
+msgid "List view"
+msgstr "En çok görüntülenen"
+
 #, python-format
 msgid "Listeners: %s"
 msgstr ""
@@ -2011,6 +2068,10 @@ msgstr "MENÜ"
 
 msgid "MENU - Options (select language, clear search history, settings)"
 msgstr ""
+
+#, fuzzy
+msgid "MENU=Options"
+msgstr "Video seçenekleri"
 
 msgid "MIPS Floating Point Architecture"
 msgstr ""
@@ -2203,6 +2264,9 @@ msgstr "Çizgi filmler"
 msgid "New dir"
 msgstr ""
 
+msgid "New entry"
+msgstr ""
+
 msgid "New icons will not be available."
 msgstr ""
 
@@ -2328,6 +2392,9 @@ msgstr ""
 #, fuzzy
 msgid "Options"
 msgstr "Video seçenekleri"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr ""
 
 msgid "Original Title:"
 msgstr ""
@@ -2460,6 +2527,9 @@ msgstr ""
 msgid ""
 "Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
+msgstr ""
+
+msgid "Please select an entry."
 msgstr ""
 
 #, fuzzy, python-format
@@ -2730,7 +2800,13 @@ msgstr ""
 msgid "Return to hosts list"
 msgstr "Host listesine dön"
 
+msgid "Reused entries move back to the top again."
+msgstr ""
+
 msgid "Reverse a playlist"
+msgstr ""
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
 msgstr ""
 
 msgid "Right"
@@ -2787,6 +2863,21 @@ msgstr ""
 
 msgid "Search history"
 msgstr "Arama geçmişi"
+
+#, fuzzy
+msgid "Search history - options"
+msgstr "Arama geçmişi"
+
+msgid "Search history is not available for this host."
+msgstr ""
+
+#, fuzzy
+msgid "Search history saved."
+msgstr "Arama geçmişi"
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr ""
 
 #, fuzzy
 msgid "Search in"
@@ -3058,11 +3149,23 @@ msgstr "Bazı ayarlar ancak arayüz yeniden başlatıldıktan sonra uygulanır."
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Bazı ayarlar ancak arayüz yeniden başlatıldıktan sonra uygulanır."
 
+#, fuzzy
+msgid "Sort"
+msgstr "Şuna göre sırala:"
+
+#, fuzzy
+msgid "Sort A-Z"
+msgstr "Program"
+
 msgid "Sort Mode"
 msgstr "Sıralama modu"
 
 msgid "Sort Myfreecams :"
 msgstr ""
+
+#, fuzzy
+msgid "Sort Z-A"
+msgstr "Şuna göre sırala:"
 
 msgid "Sort alphabetically"
 msgstr "Alfabetik sırala"
@@ -3393,6 +3496,9 @@ msgstr ""
 msgid "There are no other favorite groups"
 msgstr ""
 
+msgid "There are unsaved changes. Save now?"
+msgstr ""
+
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr ""
@@ -3474,10 +3580,6 @@ msgid "Treatment Consult"
 msgstr ""
 
 #, fuzzy
-msgid "Tree list"
-msgstr "Ücretsiz IPTV listesi"
-
-#, fuzzy
 msgid "Trend"
 msgstr "Trend olanlar"
 
@@ -3529,6 +3631,9 @@ msgstr ""
 #, fuzzy
 msgid "Unable to comply. Search History is empty."
 msgstr "Arama geçmişi boş."
+
+msgid "Unfix jump target"
+msgstr ""
 
 msgid "Universal"
 msgstr "Evrensel"
@@ -3945,6 +4050,10 @@ msgstr "tampon konumu"
 msgid "center"
 msgstr "orta"
 
+#, fuzzy
+msgid "changed"
+msgstr "Değişiklikler kaydedilsin mi?"
+
 msgid "cobalt"
 msgstr "kobalt"
 
@@ -3967,6 +4076,9 @@ msgid "external gstplayer"
 msgstr "harici gstplayer"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
+msgstr ""
+
+msgid "fixed"
 msgstr ""
 
 msgid "format"
@@ -4077,6 +4189,9 @@ msgstr ""
 msgid "rtmp"
 msgstr "rtmp"
 
+msgid "saved"
+msgstr ""
+
 msgid "second"
 msgstr "saniye"
 
@@ -4103,6 +4218,9 @@ msgstr "en iyi"
 
 msgid "the worst"
 msgstr "en kötü"
+
+msgid "to top"
+msgstr ""
 
 msgid "top"
 msgstr "üst"

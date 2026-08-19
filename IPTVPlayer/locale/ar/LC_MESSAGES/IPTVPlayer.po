@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 08:49+0200\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
 "PO-Revision-Date: 2026-03-14 12:34+0200\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -57,6 +57,14 @@ msgstr "تخطيط لوحة المفاتيح الافتراضية \"%s\" غير 
 
 msgid "\"Web\" streams player"
 msgstr "مشغل البث عبر الويب"
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr ""
 
 #, python-format
 msgid "%s - service overview"
@@ -331,6 +339,10 @@ msgstr "إضافة العنصر إلى المفضلة"
 
 msgid "Add item to group"
 msgstr "إضافة العنصر إلى المجموعة"
+
+#, fuzzy
+msgid "Add new entry"
+msgstr "إضافة مجموعة جديدة"
 
 msgid "Add new group"
 msgstr "إضافة مجموعة جديدة"
@@ -615,6 +627,10 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "خدمة حل الكابتشا"
 
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr ""
+
 msgid "Cartoons"
 msgstr "قائمة الرسوم المتحركة"
 
@@ -848,6 +864,10 @@ msgstr "هل تريد الحذف من المفضلة بشكل نهائي؟"
 
 msgid "Delete"
 msgstr "حذف"
+
+#, fuzzy
+msgid "Delete entry"
+msgstr "حذف سجل البحث"
 
 msgid "Delete log file"
 msgstr "حذف ملف السجل"
@@ -1139,11 +1159,26 @@ msgstr "تعديل المفضلة"
 msgid "Edit favorites"
 msgstr "تعديل المفضلة"
 
+#, fuzzy
+msgid "Edit search history"
+msgstr "حذف سجل البحث"
+
+#, fuzzy
+msgid "Edit title"
+msgstr "فشل تسجيل الدخول."
+
+#, fuzzy
+msgid "Edit, sort and delete search history entries"
+msgstr "هل أنت متأكد أنك تريد حذف سجل البحث؟"
+
 msgid "Educational Animation"
 msgstr "رسوم تعليمية"
 
 msgid "Email"
 msgstr "البريد الإلكتروني"
+
+msgid "Empty title is not allowed."
+msgstr ""
 
 msgid "Enable"
 msgstr "تفعيل"
@@ -1221,6 +1256,10 @@ msgstr "أدخل النص"
 msgid "Entitlement parsing error."
 msgstr "خطأ في تحليل بيانات الصلاحيات."
 
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr ""
+
 msgid "Episode"
 msgstr "حلقة"
 
@@ -1297,6 +1336,10 @@ msgstr "تعديل المفضلة"
 
 msgid "Error while loading watch data"
 msgstr ""
+
+#, fuzzy
+msgid "Error while saving."
+msgstr "تعديل المفضلة"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1468,6 +1511,9 @@ msgstr "مشغل الفيديو الأول في وضع التحميل المؤق
 
 msgid "First movie player without buffering mode"
 msgstr "المشغل الأول بدون وضع التخزين المؤقت"
+
+msgid "Fix jump target"
+msgstr ""
 
 msgid "Folder for cache data"
 msgstr "المجلد المخصص لبيانات التخزين المؤقت"
@@ -1648,6 +1694,10 @@ msgstr "المُضيف \"%s\" غير معروف."
 msgid "Hosting: %s, %s"
 msgstr "المُضيف: %s، %s"
 
+#, fuzzy
+msgid "Hosts list type"
+msgstr "إعدادات المواقع"
+
 msgid "Hosts settings"
 msgstr "إعدادات المواقع"
 
@@ -1804,6 +1854,9 @@ msgstr "نادي المجلة"
 msgid "Jump"
 msgstr ""
 
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr ""
+
 msgid "Jump to a selected page"
 msgstr ""
 
@@ -1925,6 +1978,10 @@ msgstr "قائمة حسب اليوم"
 msgid "List only channels with subscription"
 msgstr "عرض القنوات المشتركة فقط"
 
+#, fuzzy
+msgid "List view"
+msgstr "الأكثر مشاهدة"
+
 #, python-format
 msgid "Listeners: %s"
 msgstr "المستمعون: %s"
@@ -2018,6 +2075,10 @@ msgstr "القائمة"
 
 msgid "MENU - Options (select language, clear search history, settings)"
 msgstr ""
+
+#, fuzzy
+msgid "MENU=Options"
+msgstr "خيارات الفيديو"
 
 msgid "MIPS Floating Point Architecture"
 msgstr "معمارية النقطة العائمة MIPS"
@@ -2211,6 +2272,10 @@ msgstr "رسوم متحركة جديدة"
 msgid "New dir"
 msgstr "مجلد جديد"
 
+#, fuzzy
+msgid "New entry"
+msgstr "مجلد جديد"
+
 msgid "New icons will not be available."
 msgstr "لن تكون الأيقونات الجديدة متاحة."
 
@@ -2334,6 +2399,9 @@ msgstr "وكيل المستخدم اختياري (اتركه فارغًا للإ
 #, fuzzy
 msgid "Options"
 msgstr "خيارات الفيديو"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr ""
 
 msgid "Original Title:"
 msgstr ""
@@ -2471,6 +2539,9 @@ msgid ""
 msgstr ""
 "يرجى تذكّر زيارة http://www.sport365.live/ ومشاهدة بعض الإعلانات.\n"
 "سيساعد ذلك في حل مشكلة الانقطاع المستمر في التشغيل."
+
+msgid "Please select an entry."
+msgstr ""
 
 #, python-format
 msgid "Please set valid %s in the %s configuration."
@@ -2731,8 +2802,14 @@ msgstr ""
 msgid "Return to hosts list"
 msgstr "العودة إلى قائمة المواقع"
 
+msgid "Reused entries move back to the top again."
+msgstr ""
+
 msgid "Reverse a playlist"
 msgstr "عكس ترتيب قائمة التشغيل"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr ""
 
 msgid "Right"
 msgstr ""
@@ -2788,6 +2865,21 @@ msgstr "بحث عن \"%s\"، %s، %s %s"
 
 msgid "Search history"
 msgstr "سجل البحث"
+
+#, fuzzy
+msgid "Search history - options"
+msgstr "سجل البحث"
+
+msgid "Search history is not available for this host."
+msgstr ""
+
+#, fuzzy
+msgid "Search history saved."
+msgstr "سجل البحث"
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr ""
 
 msgid "Search in"
 msgstr "البحث في"
@@ -3050,11 +3142,23 @@ msgstr "بعض التغييرات سيتم تطبيقها فقط بعد إعاد
 msgid "Some settings will be applied only after GUI restart."
 msgstr "بعض الإعدادات سيتم تطبيقها فقط بعد إعادة تشغيل الواجهة الرسومية."
 
+#, fuzzy
+msgid "Sort"
+msgstr "الفرز حسب:"
+
+#, fuzzy
+msgid "Sort A-Z"
+msgstr "البرامج من أ إلى ي"
+
 msgid "Sort Mode"
 msgstr "وضع الفرز"
 
 msgid "Sort Myfreecams :"
 msgstr "فرز Myfreecams :"
+
+#, fuzzy
+msgid "Sort Z-A"
+msgstr "الفرز حسب:"
 
 msgid "Sort alphabetically"
 msgstr "الفرز أبجديًا"
@@ -3392,6 +3496,9 @@ msgstr "يوجد %d صفحات أخرى في هذا القسم"
 msgid "There are no other favorite groups"
 msgstr "لا توجد مجموعات مفضلة أخرى"
 
+msgid "There are unsaved changes. Save now?"
+msgstr ""
+
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr "لا توجد مساحة كافية في المجلد \"%s\"."
@@ -3471,9 +3578,6 @@ msgstr "صدمة"
 msgid "Treatment Consult"
 msgstr "استشارة علاجية"
 
-msgid "Tree list"
-msgstr "قائمة شجرية"
-
 msgid "Trend"
 msgstr "اتجاه"
 
@@ -3520,6 +3624,9 @@ msgstr "إلغاء تحميل ملف ISO"
 
 msgid "Unable to comply. Search History is empty."
 msgstr "غير قادر على التنفيذ. سجل البحث فارغ."
+
+msgid "Unfix jump target"
+msgstr ""
 
 msgid "Universal"
 msgstr "عام"
@@ -3928,6 +4035,10 @@ msgstr "مكان التخزين المؤقت"
 msgid "center"
 msgstr "الوسط"
 
+#, fuzzy
+msgid "changed"
+msgstr "هل تريد حفظ التغييرات؟"
+
 msgid "cobalt"
 msgstr "كوبالت"
 
@@ -3951,6 +4062,9 @@ msgstr "المشغل الخارجي gstplayer"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
 msgstr "تحقق أولاً مما إذا كان المضيف يعمل بشكل صحيح في الواجهة الرسومية وعلى الويب <b>قبل</b> الإبلاغ عن أي خطأ فيه !!!"
+
+msgid "fixed"
+msgstr ""
 
 msgid "format"
 msgstr "الصيغة"
@@ -4060,6 +4174,9 @@ msgstr "rootfs"
 msgid "rtmp"
 msgstr "rtmp"
 
+msgid "saved"
+msgstr ""
+
 msgid "second"
 msgstr "ثانية"
 
@@ -4086,6 +4203,9 @@ msgstr "الأفضل"
 
 msgid "the worst"
 msgstr "الأسوأ"
+
+msgid "to top"
+msgstr ""
 
 msgid "top"
 msgstr "أعلى"

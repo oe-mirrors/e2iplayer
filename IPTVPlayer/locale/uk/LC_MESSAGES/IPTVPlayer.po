@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 08:49+0200\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -57,6 +57,14 @@ msgstr ""
 
 msgid "\"Web\" streams player"
 msgstr "\"Веб\" Потоки плеєра"
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr ""
 
 #, python-format
 msgid "%s - service overview"
@@ -339,6 +347,10 @@ msgstr "Додати до вибраного"
 
 msgid "Add item to group"
 msgstr "Добавити в групу"
+
+#, fuzzy
+msgid "Add new entry"
+msgstr "Добавити нову групу"
 
 msgid "Add new group"
 msgstr "Добавити нову групу"
@@ -647,6 +659,10 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr ""
 
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr ""
+
 #, fuzzy
 msgid "Cartoons"
 msgstr "Список мультфільмів"
@@ -892,6 +908,10 @@ msgstr "Додати до вибраного"
 
 msgid "Delete"
 msgstr ""
+
+#, fuzzy
+msgid "Delete entry"
+msgstr "Історія пошуку"
 
 #, fuzzy
 msgid "Delete log file"
@@ -1199,11 +1219,26 @@ msgstr "Редагувати вибране"
 msgid "Edit favorites"
 msgstr "Редагувати вибране"
 
+#, fuzzy
+msgid "Edit search history"
+msgstr "Історія пошуку"
+
+#, fuzzy
+msgid "Edit title"
+msgstr "Помилка входу."
+
+#, fuzzy
+msgid "Edit, sort and delete search history entries"
+msgstr "Ви впевненні, що бажаєте видалити файл \"%s\"?"
+
 msgid "Educational Animation"
 msgstr ""
 
 msgid "Email"
 msgstr "Ел. адрес"
+
+msgid "Empty title is not allowed."
+msgstr ""
 
 msgid "Enable"
 msgstr ""
@@ -1282,6 +1317,10 @@ msgstr ""
 msgid "Entitlement parsing error."
 msgstr ""
 
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr ""
+
 #, fuzzy
 msgid "Episode"
 msgstr "Епізоди"
@@ -1358,6 +1397,10 @@ msgstr "Редагувати вибране"
 
 msgid "Error while loading watch data"
 msgstr ""
+
+#, fuzzy
+msgid "Error while saving."
+msgstr "Редагувати вибране"
 
 #, fuzzy, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1536,6 +1579,9 @@ msgstr "Вибрати перший крок плеєра в режимі (бу�
 
 msgid "First movie player without buffering mode"
 msgstr "Вибрати перший крок плеєра"
+
+msgid "Fix jump target"
+msgstr ""
 
 msgid "Folder for cache data"
 msgstr "Папка даних кеша"
@@ -1722,6 +1768,10 @@ msgid "Hosting: %s, %s"
 msgstr "Хостинг: %s, %s"
 
 #, fuzzy
+msgid "Hosts list type"
+msgstr "Налаштування E2"
+
+#, fuzzy
 msgid "Hosts settings"
 msgstr "Налаштування E2"
 
@@ -1884,6 +1934,9 @@ msgstr "Журналістика"
 msgid "Jump"
 msgstr ""
 
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr ""
+
 msgid "Jump to a selected page"
 msgstr ""
 
@@ -2010,6 +2063,10 @@ msgstr ""
 msgid "List only channels with subscription"
 msgstr "Список каналів в підписці"
 
+#, fuzzy
+msgid "List view"
+msgstr "--- Найбільше переглянуті ---"
+
 #, fuzzy, python-format
 msgid "Listeners: %s"
 msgstr "Кінцева помилка: %s"
@@ -2108,6 +2165,10 @@ msgstr ""
 
 msgid "MENU - Options (select language, clear search history, settings)"
 msgstr ""
+
+#, fuzzy
+msgid "MENU=Options"
+msgstr "Параметри відео"
 
 msgid "MIPS Floating Point Architecture"
 msgstr ""
@@ -2308,6 +2369,10 @@ msgstr "Новий мультфільм"
 msgid "New dir"
 msgstr "Новий шлях"
 
+#, fuzzy
+msgid "New entry"
+msgstr "Новий шлях"
+
 msgid "New icons will not be available."
 msgstr "Нові іконки не будуть доступні."
 
@@ -2441,6 +2506,9 @@ msgstr ""
 #, fuzzy
 msgid "Options"
 msgstr "Параметри відео"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr ""
 
 msgid "Original Title:"
 msgstr ""
@@ -2581,6 +2649,9 @@ msgstr ""
 msgid ""
 "Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
+msgstr ""
+
+msgid "Please select an entry."
 msgstr ""
 
 #, fuzzy, python-format
@@ -2860,9 +2931,15 @@ msgstr ""
 msgid "Return to hosts list"
 msgstr "Список мультфільмів"
 
+msgid "Reused entries move back to the top again."
+msgstr ""
+
 #, fuzzy
 msgid "Reverse a playlist"
 msgstr "Перемістити плейлист"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr ""
 
 msgid "Right"
 msgstr ""
@@ -2921,6 +2998,21 @@ msgstr "Пошук фільму \"%s\""
 
 msgid "Search history"
 msgstr "Історія пошуку"
+
+#, fuzzy
+msgid "Search history - options"
+msgstr "Історія пошуку"
+
+msgid "Search history is not available for this host."
+msgstr ""
+
+#, fuzzy
+msgid "Search history saved."
+msgstr "Історія пошуку"
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr ""
 
 #, fuzzy
 msgid "Search in"
@@ -3200,11 +3292,23 @@ msgstr "Деякі зміни будуть застосовані тільки �
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Деякі зміни будуть застосовані тільки після перезапуску відеоплеєра."
 
+#, fuzzy
+msgid "Sort"
+msgstr "Сортувати за:"
+
+#, fuzzy
+msgid "Sort A-Z"
+msgstr "Програма A-Z"
+
 msgid "Sort Mode"
 msgstr ""
 
 msgid "Sort Myfreecams :"
 msgstr ""
+
+#, fuzzy
+msgid "Sort Z-A"
+msgstr "Сортувати за:"
 
 #, fuzzy
 msgid "Sort alphabetically"
@@ -3549,6 +3653,9 @@ msgstr ""
 msgid "There are no other favorite groups"
 msgstr "Там немає групи вибране."
 
+msgid "There are unsaved changes. Save now?"
+msgstr ""
+
 #, fuzzy, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr "На диску немає вільного місця [%s]."
@@ -3633,10 +3740,6 @@ msgid "Treatment Consult"
 msgstr ""
 
 #, fuzzy
-msgid "Tree list"
-msgstr "Сортувати список:"
-
-#, fuzzy
 msgid "Trend"
 msgstr "До"
 
@@ -3688,6 +3791,9 @@ msgid "Umount iso file"
 msgstr "Розмонтувати файл iso"
 
 msgid "Unable to comply. Search History is empty."
+msgstr ""
+
+msgid "Unfix jump target"
 msgstr ""
 
 msgid "Universal"
@@ -4116,6 +4222,10 @@ msgid "center"
 msgstr "центр"
 
 #, fuzzy
+msgid "changed"
+msgstr "Зберегти зміни?"
+
+#, fuzzy
 msgid "cobalt"
 msgstr "Загальний"
 
@@ -4140,6 +4250,9 @@ msgid "external gstplayer"
 msgstr "Зовнішній gstplayer"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
+msgstr ""
+
+msgid "fixed"
 msgstr ""
 
 msgid "format"
@@ -4252,6 +4365,9 @@ msgstr "Кореневі файли"
 msgid "rtmp"
 msgstr ""
 
+msgid "saved"
+msgstr ""
+
 msgid "second"
 msgstr "секунда"
 
@@ -4279,6 +4395,9 @@ msgstr "кращий"
 
 msgid "the worst"
 msgstr "гірший"
+
+msgid "to top"
+msgstr ""
 
 msgid "top"
 msgstr "вверх"

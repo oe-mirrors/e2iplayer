@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 08:49+0200\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,6 +47,14 @@ msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr ""
 
 msgid "\"Web\" streams player"
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entry removed."
 msgstr ""
 
 #, python-format
@@ -316,6 +324,9 @@ msgid "Add item to favorites"
 msgstr ""
 
 msgid "Add item to group"
+msgstr ""
+
+msgid "Add new entry"
 msgstr ""
 
 msgid "Add new group"
@@ -588,6 +599,10 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr ""
 
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr ""
+
 msgid "Cartoons"
 msgstr ""
 
@@ -815,6 +830,9 @@ msgid "Definitely remove from favorites?"
 msgstr ""
 
 msgid "Delete"
+msgstr ""
+
+msgid "Delete entry"
 msgstr ""
 
 msgid "Delete log file"
@@ -1065,10 +1083,22 @@ msgstr ""
 msgid "Edit favorites"
 msgstr ""
 
+msgid "Edit search history"
+msgstr ""
+
+msgid "Edit title"
+msgstr ""
+
+msgid "Edit, sort and delete search history entries"
+msgstr ""
+
 msgid "Educational Animation"
 msgstr ""
 
 msgid "Email"
+msgstr ""
+
+msgid "Empty title is not allowed."
 msgstr ""
 
 msgid "Enable"
@@ -1141,6 +1171,10 @@ msgstr ""
 msgid "Entitlement parsing error."
 msgstr ""
 
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr ""
+
 msgid "Episode"
 msgstr ""
 
@@ -1208,6 +1242,9 @@ msgid "Error saving favorites."
 msgstr ""
 
 msgid "Error while loading watch data"
+msgstr ""
+
+msgid "Error while saving."
 msgstr ""
 
 #, python-format
@@ -1374,6 +1411,9 @@ msgid "First movie player in buffering mode"
 msgstr ""
 
 msgid "First movie player without buffering mode"
+msgstr ""
+
+msgid "Fix jump target"
 msgstr ""
 
 msgid "Folder for cache data"
@@ -1548,6 +1588,9 @@ msgstr ""
 msgid "Hosting: %s, %s"
 msgstr ""
 
+msgid "Hosts list type"
+msgstr ""
+
 msgid "Hosts settings"
 msgstr ""
 
@@ -1697,6 +1740,9 @@ msgstr ""
 msgid "Jump"
 msgstr ""
 
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr ""
+
 msgid "Jump to a selected page"
 msgstr ""
 
@@ -1814,6 +1860,9 @@ msgstr ""
 msgid "List only channels with subscription"
 msgstr ""
 
+msgid "List view"
+msgstr ""
+
 #, python-format
 msgid "Listeners: %s"
 msgstr ""
@@ -1902,6 +1951,9 @@ msgid "MENU"
 msgstr ""
 
 msgid "MENU - Options (select language, clear search history, settings)"
+msgstr ""
+
+msgid "MENU=Options"
 msgstr ""
 
 msgid "MIPS Floating Point Architecture"
@@ -2083,6 +2135,9 @@ msgstr ""
 msgid "New dir"
 msgstr ""
 
+msgid "New entry"
+msgstr ""
+
 msgid "New icons will not be available."
 msgstr ""
 
@@ -2200,6 +2255,9 @@ msgid "Optional User-Agent (leave blank for default)"
 msgstr ""
 
 msgid "Options"
+msgstr ""
+
+msgid "Order stays fixed - useful for T9 browsing."
 msgstr ""
 
 msgid "Original Title:"
@@ -2333,6 +2391,9 @@ msgstr ""
 msgid ""
 "Please remember to visit http://www.sport365.live/ and watch a few advertisements.\n"
 "This will fix problem, if your playback is constantly interrupted."
+msgstr ""
+
+msgid "Please select an entry."
 msgstr ""
 
 #, python-format
@@ -2586,7 +2647,13 @@ msgstr ""
 msgid "Return to hosts list"
 msgstr ""
 
+msgid "Reused entries move back to the top again."
+msgstr ""
+
 msgid "Reverse a playlist"
+msgstr ""
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
 msgstr ""
 
 msgid "Right"
@@ -2642,6 +2709,19 @@ msgid "Search for \"%s\", %s, %s %s"
 msgstr ""
 
 msgid "Search history"
+msgstr ""
+
+msgid "Search history - options"
+msgstr ""
+
+msgid "Search history is not available for this host."
+msgstr ""
+
+msgid "Search history saved."
+msgstr ""
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
 msgstr ""
 
 msgid "Search in"
@@ -2899,10 +2979,19 @@ msgstr ""
 msgid "Some settings will be applied only after GUI restart."
 msgstr ""
 
+msgid "Sort"
+msgstr ""
+
+msgid "Sort A-Z"
+msgstr ""
+
 msgid "Sort Mode"
 msgstr ""
 
 msgid "Sort Myfreecams :"
+msgstr ""
+
+msgid "Sort Z-A"
 msgstr ""
 
 msgid "Sort alphabetically"
@@ -3223,6 +3312,9 @@ msgstr ""
 msgid "There are no other favorite groups"
 msgstr ""
 
+msgid "There are unsaved changes. Save now?"
+msgstr ""
+
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr ""
@@ -3299,9 +3391,6 @@ msgstr ""
 msgid "Treatment Consult"
 msgstr ""
 
-msgid "Tree list"
-msgstr ""
-
 msgid "Trend"
 msgstr ""
 
@@ -3346,6 +3435,9 @@ msgid "Umount iso file"
 msgstr ""
 
 msgid "Unable to comply. Search History is empty."
+msgstr ""
+
+msgid "Unfix jump target"
 msgstr ""
 
 msgid "Universal"
@@ -3745,6 +3837,9 @@ msgstr ""
 msgid "center"
 msgstr ""
 
+msgid "changed"
+msgstr ""
+
 msgid "cobalt"
 msgstr ""
 
@@ -3767,6 +3862,9 @@ msgid "external gstplayer"
 msgstr ""
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
+msgstr ""
+
+msgid "fixed"
 msgstr ""
 
 msgid "format"
@@ -3877,6 +3975,9 @@ msgstr ""
 msgid "rtmp"
 msgstr ""
 
+msgid "saved"
+msgstr ""
+
 msgid "second"
 msgstr ""
 
@@ -3902,6 +4003,9 @@ msgid "the best"
 msgstr ""
 
 msgid "the worst"
+msgstr ""
+
+msgid "to top"
 msgstr ""
 
 msgid "top"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 08:49+0200\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
 "PO-Revision-Date: 2026-07-27 16:49+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -57,6 +57,14 @@ msgstr "„%s” Virtuális billentyűzetkiosztás nem érhető el."
 
 msgid "\"Web\" streams player"
 msgstr "„Web” stream lejátszó"
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr ""
 
 #, python-format
 msgid "%s - service overview"
@@ -328,6 +336,10 @@ msgstr "Hozzáadás a kedvencekhez"
 
 msgid "Add item to group"
 msgstr "Elem hozzáadása a csoporthoz"
+
+#, fuzzy
+msgid "Add new entry"
+msgstr "Új csoport hozzáadása"
 
 msgid "Add new group"
 msgstr "Új csoport hozzáadása"
@@ -610,6 +622,10 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Captcha-megoldó szolgáltatás"
 
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr ""
+
 msgid "Cartoons"
 msgstr "Rajzfilmek"
 
@@ -838,6 +854,10 @@ msgstr "Biztosan eltávolítom a kedvencek közül?"
 
 msgid "Delete"
 msgstr "Törlés"
+
+#, fuzzy
+msgid "Delete entry"
+msgstr "Keresési előzmények törlése"
 
 msgid "Delete log file"
 msgstr "Naplófájl törlése"
@@ -1120,11 +1140,26 @@ msgstr "Kedvenc elem szerkesztése"
 msgid "Edit favorites"
 msgstr "Kedvencek szerkesztése"
 
+#, fuzzy
+msgid "Edit search history"
+msgstr "Keresési előzmények törlése"
+
+#, fuzzy
+msgid "Edit title"
+msgstr "A szerkesztés sikertelen."
+
+#, fuzzy
+msgid "Edit, sort and delete search history entries"
+msgstr "Biztosan törölni szeretnéd a keresési előzményeket?"
+
 msgid "Educational Animation"
 msgstr "Oktató animáció"
 
 msgid "Email"
 msgstr "E-mail"
+
+msgid "Empty title is not allowed."
+msgstr ""
 
 msgid "Enable"
 msgstr "Engedélyezés"
@@ -1201,6 +1236,10 @@ msgstr "Írja be a szöveget"
 msgid "Entitlement parsing error."
 msgstr "Jogosultságelemzési hiba."
 
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr ""
+
 msgid "Episode"
 msgstr "Epizód"
 
@@ -1272,6 +1311,10 @@ msgid "Error saving favorites."
 msgstr "Hiba a kedvencek mentésénél."
 
 msgid "Error while loading watch data"
+msgstr "Hiba a megtekintési adatok betöltése közben"
+
+#, fuzzy
+msgid "Error while saving."
 msgstr "Hiba a megtekintési adatok betöltése közben"
 
 #, python-format
@@ -1440,6 +1483,9 @@ msgstr "Első filmlejátszó pufferelési módban"
 
 msgid "First movie player without buffering mode"
 msgstr "Első filmlejátszó pufferelési mód nélkül"
+
+msgid "Fix jump target"
+msgstr ""
 
 msgid "Folder for cache data"
 msgstr "Gyorsítótár-adatok mappája"
@@ -1613,6 +1659,10 @@ msgstr "A(z) \"%s\" host nem ismert."
 msgid "Hosting: %s, %s"
 msgstr "Tárhely: %s, %s"
 
+#, fuzzy
+msgid "Hosts list type"
+msgstr "Hostok beállításai"
+
 msgid "Hosts settings"
 msgstr "Hostok beállításai"
 
@@ -1768,6 +1818,9 @@ msgstr "Naplóklub"
 msgid "Jump"
 msgstr "Ugrás"
 
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr ""
+
 msgid "Jump to a selected page"
 msgstr "Ugrás a kiválasztott oldalra"
 
@@ -1885,6 +1938,10 @@ msgstr "Napi lista"
 msgid "List only channels with subscription"
 msgstr "Csak előfizetéses csatornák listázása"
 
+#, fuzzy
+msgid "List view"
+msgstr "Legnézettebb"
+
 #, python-format
 msgid "Listeners: %s"
 msgstr "Figyelők: %s"
@@ -1976,6 +2033,10 @@ msgstr "MENÜ"
 
 msgid "MENU - Options (select language, clear search history, settings)"
 msgstr ""
+
+#, fuzzy
+msgid "MENU=Options"
+msgstr "Videóbeállítások"
 
 msgid "MIPS Floating Point Architecture"
 msgstr "MIPS lebegőpontos architektúra"
@@ -2166,6 +2227,10 @@ msgstr "Új rajzfilm"
 msgid "New dir"
 msgstr "Új könyvtár"
 
+#, fuzzy
+msgid "New entry"
+msgstr "Új könyvtár"
+
 msgid "New icons will not be available."
 msgstr "Új ikonok nem lesznek elérhetők."
 
@@ -2287,6 +2352,9 @@ msgstr "Opcionális felhasználói ügynök (hagyja üresen az alapértelmezett 
 #, fuzzy
 msgid "Options"
 msgstr "Videóbeállítások"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr ""
 
 msgid "Original Title:"
 msgstr "Eredeti cím:"
@@ -2428,6 +2496,9 @@ msgstr ""
 "Kérjük, ne felejtsd el felkeresni a http://www.sport365.live/ oldalt, és megnézni néhány reklámot.\n"
 "\n"
 "Ez megoldja a problémát, ha a lejátszás folyamatosan megszakad."
+
+msgid "Please select an entry."
+msgstr ""
 
 #, python-format
 msgid "Please set valid %s in the %s configuration."
@@ -2681,8 +2752,14 @@ msgstr "A(z) %s feloldása reCaptcha-val sikertelen!\n"
 msgid "Return to hosts list"
 msgstr "Visszatérés a hostok listájához"
 
+msgid "Reused entries move back to the top again."
+msgstr ""
+
 msgid "Reverse a playlist"
 msgstr "Lejátszási lista megfordítása"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr ""
 
 msgid "Right"
 msgstr ""
@@ -2738,6 +2815,21 @@ msgstr "Keresés: „%s”, %s, %s %s"
 
 msgid "Search history"
 msgstr "Keresési előzmények"
+
+#, fuzzy
+msgid "Search history - options"
+msgstr "Keresési előzmények"
+
+msgid "Search history is not available for this host."
+msgstr ""
+
+#, fuzzy
+msgid "Search history saved."
+msgstr "Keresési előzmények"
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr ""
 
 msgid "Search in"
 msgstr "Keresés típusa"
@@ -2998,11 +3090,23 @@ msgstr "Néhány módosítás csak a filmlejátszó újraindítása után lép �
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Néhány beállítás csak a grafikus felhasználói felület újraindítása után lép életbe."
 
+#, fuzzy
+msgid "Sort"
+msgstr "Rendezés:"
+
+#, fuzzy
+msgid "Sort A-Z"
+msgstr "Program A-tól Z-ig"
+
 msgid "Sort Mode"
 msgstr "Rendezési mód"
 
 msgid "Sort Myfreecams :"
 msgstr "Rendezés: Myfreecams :"
+
+#, fuzzy
+msgid "Sort Z-A"
+msgstr "Rendezés:"
 
 msgid "Sort alphabetically"
 msgstr "Rendezés betűrendben"
@@ -3346,6 +3450,9 @@ msgstr "Ebben a szakaszban még %d oldal van"
 msgid "There are no other favorite groups"
 msgstr "Nincsenek más kedvenc csoportok"
 
+msgid "There are unsaved changes. Save now?"
+msgstr ""
+
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr "Nincs elég szabad hely a(z) \"%s\" mappában."
@@ -3424,9 +3531,6 @@ msgstr "Sérülés"
 msgid "Treatment Consult"
 msgstr "Kezelési konzultáció"
 
-msgid "Tree list"
-msgstr "Fa lista"
-
 msgid "Trend"
 msgstr "Trend"
 
@@ -3472,6 +3576,9 @@ msgstr "Umount iso fájl"
 
 msgid "Unable to comply. Search History is empty."
 msgstr "Nem sikerült teljesíteni. A keresési előzmények üresek."
+
+msgid "Unfix jump target"
+msgstr ""
 
 msgid "Universal"
 msgstr "Általános"
@@ -3873,6 +3980,10 @@ msgstr "pufferelési hely"
 msgid "center"
 msgstr "közép"
 
+#, fuzzy
+msgid "changed"
+msgstr "Változtatások mentése?"
+
 msgid "cobalt"
 msgstr "kobalt"
 
@@ -3896,6 +4007,9 @@ msgstr "külső gstlejátszó"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
 msgstr "először ellenőrizze, hogy a host megfelelően működik-e a GUI-ban és a web-en <b>MIELŐTT</b> jelenti a hibát!!!"
+
+msgid "fixed"
+msgstr ""
 
 msgid "format"
 msgstr "formátum"
@@ -4005,6 +4119,9 @@ msgstr "rootfs"
 msgid "rtmp"
 msgstr "rtmp"
 
+msgid "saved"
+msgstr ""
+
 msgid "second"
 msgstr "másodperc"
 
@@ -4031,6 +4148,9 @@ msgstr "legjobb"
 
 msgid "the worst"
 msgstr "a legrosszabb"
+
+msgid "to top"
+msgstr ""
 
 msgid "top"
 msgstr "felső"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 08:49+0200\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -57,6 +57,14 @@ msgstr "\"%s\" Het Virtuele Keyboard is niet beschikbaar."
 
 msgid "\"Web\" streams player"
 msgstr "Webstreams"
+
+#, python-format
+msgid "%d duplicate entries removed."
+msgstr ""
+
+#, python-format
+msgid "%d duplicate entry removed."
+msgstr ""
 
 #, python-format
 msgid "%s - service overview"
@@ -334,6 +342,10 @@ msgstr "Aan Favorieten toevoegen"
 
 msgid "Add item to group"
 msgstr "Aan groep toevoegen"
+
+#, fuzzy
+msgid "Add new entry"
+msgstr "Nieuwe groep toevoegen"
 
 msgid "Add new group"
 msgstr "Nieuwe groep toevoegen"
@@ -618,6 +630,10 @@ msgstr ""
 msgid "Captcha solving service"
 msgstr "Captcha oplosser service"
 
+#, python-format
+msgid "Carrying: %s | UP/DOWN=Move, OK=Drop"
+msgstr ""
+
 msgid "Cartoons"
 msgstr "Cartoons"
 
@@ -851,6 +867,10 @@ msgstr "Definitief uit de Favorieten verwijderen?"
 
 msgid "Delete"
 msgstr "Verwijderen"
+
+#, fuzzy
+msgid "Delete entry"
+msgstr "Zoek geschiedenis verwijderen"
 
 msgid "Delete log file"
 msgstr "Log-file verwijderen"
@@ -1142,11 +1162,26 @@ msgstr "Favorieten bewerken"
 msgid "Edit favorites"
 msgstr "Favorieten bewerken"
 
+#, fuzzy
+msgid "Edit search history"
+msgstr "Zoek geschiedenis verwijderen"
+
+#, fuzzy
+msgid "Edit title"
+msgstr "Aanmelden mislukt."
+
+#, fuzzy
+msgid "Edit, sort and delete search history entries"
+msgstr "Weet u zeker dat u de zoekgeschiedenis wilt verwijderen?"
+
 msgid "Educational Animation"
 msgstr "Educatieve Animatie"
 
 msgid "Email"
 msgstr "Email"
+
+msgid "Empty title is not allowed."
+msgstr ""
 
 msgid "Enable"
 msgstr "Inschakelen"
@@ -1224,6 +1259,10 @@ msgstr "Voer de tekst in"
 msgid "Entitlement parsing error."
 msgstr "Fout bij het parsen van rechten."
 
+#, python-format
+msgid "Entries: %d | Sort: %s | Status: %s | Jump target: %s"
+msgstr ""
+
 msgid "Episode"
 msgstr "Aflevering"
 
@@ -1300,6 +1339,10 @@ msgstr "Favorieten bewerken"
 
 msgid "Error while loading watch data"
 msgstr ""
+
+#, fuzzy
+msgid "Error while saving."
+msgstr "Favorieten bewerken"
 
 #, python-format
 msgid "Error writing file \"%s\".\n"
@@ -1471,6 +1514,9 @@ msgstr "Eerste Movie Player in buffering modus"
 
 msgid "First movie player without buffering mode"
 msgstr "Eerste Movie Player zonder buffering modus"
+
+msgid "Fix jump target"
+msgstr ""
 
 msgid "Folder for cache data"
 msgstr "Map voor cache data"
@@ -1651,6 +1697,10 @@ msgstr "Hosten van \"%s\" onbekend."
 msgid "Hosting: %s, %s"
 msgstr "Hosten: %s, %s"
 
+#, fuzzy
+msgid "Hosts list type"
+msgstr "Hosts instellingen"
+
 msgid "Hosts settings"
 msgstr "Hosts instellingen"
 
@@ -1807,6 +1857,9 @@ msgstr "Journal Club"
 msgid "Jump"
 msgstr ""
 
+msgid "Jump target was fixed so the sort order is preserved."
+msgstr ""
+
 msgid "Jump to a selected page"
 msgstr ""
 
@@ -1928,6 +1981,10 @@ msgstr "Overzicht per dag"
 msgid "List only channels with subscription"
 msgstr "Overzicht van kanalen met een subscriptie"
 
+#, fuzzy
+msgid "List view"
+msgstr "Meest bekeken"
+
 #, python-format
 msgid "Listeners: %s"
 msgstr "Luisteraars: %s"
@@ -2021,6 +2078,10 @@ msgstr "MENU"
 
 msgid "MENU - Options (select language, clear search history, settings)"
 msgstr ""
+
+#, fuzzy
+msgid "MENU=Options"
+msgstr "Video opties"
 
 msgid "MIPS Floating Point Architecture"
 msgstr "MIPS Floating Point Architectuur"
@@ -2214,6 +2275,10 @@ msgstr "Nieuwe cartoons"
 msgid "New dir"
 msgstr "Nieuwe map"
 
+#, fuzzy
+msgid "New entry"
+msgstr "Nieuwe map"
+
 msgid "New icons will not be available."
 msgstr "Nieuwe icons niet beschikbaar."
 
@@ -2337,6 +2402,9 @@ msgstr "Optionele User-Agent (leeg laten voor default)"
 #, fuzzy
 msgid "Options"
 msgstr "Video opties"
+
+msgid "Order stays fixed - useful for T9 browsing."
+msgstr ""
 
 msgid "Original Title:"
 msgstr ""
@@ -2475,6 +2543,9 @@ msgid ""
 msgstr ""
 "A.u.b. niet vergeten om naar http://www.sport365.live/ te gaan en enkele reclames te bekijken.\n"
 "Dit lost de vele onderbrekingen op tijdens het afspelen."
+
+msgid "Please select an entry."
+msgstr ""
 
 #, python-format
 msgid "Please set valid %s in the %s configuration."
@@ -2735,8 +2806,14 @@ msgstr ""
 msgid "Return to hosts list"
 msgstr "Terug naar hosts overzicht"
 
+msgid "Reused entries move back to the top again."
+msgstr ""
+
 msgid "Reverse a playlist"
 msgstr "Keer afspeellijst om"
+
+msgid "Reverting to unsorted order will discard unsaved changes. Continue?"
+msgstr ""
 
 msgid "Right"
 msgstr ""
@@ -2792,6 +2869,21 @@ msgstr "Zoeken naar \"%s\", %s, %s %s"
 
 msgid "Search history"
 msgstr "Zoek geschiedenis"
+
+#, fuzzy
+msgid "Search history - options"
+msgstr "Zoek geschiedenis"
+
+msgid "Search history is not available for this host."
+msgstr ""
+
+#, fuzzy
+msgid "Search history saved."
+msgstr "Zoek geschiedenis"
+
+#, python-format
+msgid "Search history saved. %d duplicate entries removed."
+msgstr ""
 
 msgid "Search in"
 msgstr "Zoeken in"
@@ -3054,11 +3146,23 @@ msgstr "Sommige wijzigingen worden alleen actief na het herstarten van de movie 
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Sommige wijzigingen worden alleen actief na het herstarten van de GUI."
 
+#, fuzzy
+msgid "Sort"
+msgstr "Sorteer op:"
+
+#, fuzzy
+msgid "Sort A-Z"
+msgstr "Programma A-Z"
+
 msgid "Sort Mode"
 msgstr "Sorteer methode"
 
 msgid "Sort Myfreecams :"
 msgstr "Myfreecams sorteren :"
+
+#, fuzzy
+msgid "Sort Z-A"
+msgstr "Sorteer op:"
 
 msgid "Sort alphabetically"
 msgstr "Alfabetisch sorteren"
@@ -3399,6 +3503,9 @@ msgstr "Er zijn %d meer pagina's in deze sectie"
 msgid "There are no other favorite groups"
 msgstr "Er zijn geen andere groepen met favorieten"
 
+msgid "There are unsaved changes. Save now?"
+msgstr ""
+
 #, python-format
 msgid "There is no enough free space in the folder \"%s\"."
 msgstr "Er is niet genoeg ruimte in de map \"%s\"."
@@ -3478,9 +3585,6 @@ msgstr "Trauma"
 msgid "Treatment Consult"
 msgstr "Behandelingsconsult"
 
-msgid "Tree list"
-msgstr "Boomstructuur"
-
 msgid "Trend"
 msgstr "Trending"
 
@@ -3527,6 +3631,9 @@ msgstr "Umount iso bestand"
 
 msgid "Unable to comply. Search History is empty."
 msgstr "Dit is niet mogelijk. De zoekgeschiedenis is leeg."
+
+msgid "Unfix jump target"
+msgstr ""
 
 msgid "Universal"
 msgstr "Universeel"
@@ -3935,6 +4042,10 @@ msgstr "buffer locatie"
 msgid "center"
 msgstr "midden"
 
+#, fuzzy
+msgid "changed"
+msgstr "Wijzigingen opslaan?"
+
 msgid "cobalt"
 msgstr "kobalt"
 
@@ -3958,6 +4069,9 @@ msgstr "externe gstplayer"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
 msgstr "eerst controleren of de host goed functioneert in de GUI en het web <b>VOORDAT</b> u de fout bij ons meld !!!"
+
+msgid "fixed"
+msgstr ""
 
 msgid "format"
 msgstr "formaat"
@@ -4067,6 +4181,9 @@ msgstr "rootfs"
 msgid "rtmp"
 msgstr "rtmp"
 
+msgid "saved"
+msgstr ""
+
 msgid "second"
 msgstr "seconde"
 
@@ -4093,6 +4210,9 @@ msgstr "de beste"
 
 msgid "the worst"
 msgstr "de slechtste"
+
+msgid "to top"
+msgstr ""
 
 msgid "top"
 msgstr "boven"
