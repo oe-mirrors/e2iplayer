@@ -138,7 +138,6 @@ def writeHistoryFile(path, entries, reverseForWrite=False):
         return False
 
 
-
 class SearchHistoryEditor(Screen):
 
     skin = """
