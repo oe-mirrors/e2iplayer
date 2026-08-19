@@ -1179,6 +1179,56 @@ def remove_html_markup(s, replacement=''):
     return re.sub(r'&\w+;', ' ', out)
 
 
+# per-host toggle for whether reusing a history entry bumps it back to the
+# top. Stored as a tiny ".mru" sidecar next to the history file itself, not
+# through the Components.config tree, so it stays host-scoped without a
+# static per-host config entry. Shared by CSearchHistoryHelper (which knows
+# its own PATH_FILE) and SearchHistoryEditor (which only ever gets a plain
+# historyFile path) so both sides read/write the exact same file/format.
+def getReorderOnReuseEnabled(path):
+    try:
+        flagFile = path + '.mru'
+        if os.path.isfile(flagFile):
+            with codecs.open(flagFile, 'r', 'utf-8', 'ignore') as f:
+                return f.read().strip() != '0'
+    except Exception:
+        printExc('getReorderOnReuseEnabled EXCEPTION')
+    return True
+
+
+def setReorderOnReuseEnabled(path, enabled):
+    try:
+        flagFile = path + '.mru'
+        with codecs.open(flagFile, 'w', 'utf-8', 'replace') as f:
+            f.write(u'1' if enabled else u'0')
+        return True
+    except Exception:
+        printExc('setReorderOnReuseEnabled EXCEPTION')
+        return False
+
+
+# T9 numeric-keypad "jump to entry starting with this letter" search, used
+# by both the search-history list (iptvplayerwidget.py) and the search
+# history editor (searchhistoryeditor.py) to jump within their own list of
+# entries. Wraps around the list starting just after currentIdx. getTitle(idx)
+# returns the raw title for entry idx; returns -1 if nothing matches.
+def findT9JumpIndex(total, currentIdx, letter, getTitle):
+    if total <= 0:
+        return -1
+    if currentIdx is None or currentIdx < 0:
+        currentIdx = -1
+    letter = letter.lower()
+    for offset in range(1, total + 1):
+        title = getTitle((currentIdx + offset) % total)
+        try:
+            title = title.lower()
+        except Exception:
+            title = str(title).lower()
+        if title.startswith(letter):
+            return (currentIdx + offset) % total
+    return -1
+
+
 class CSearchHistoryHelper():
     TYPE_SEP = '|--TYPE--|'
 
@@ -1302,6 +1352,16 @@ class CSearchHistoryHelper():
                 self.length = len(lines)
         except Exception:
             printExc('CSearchHistoryHelper.addHistoryItem EXCEPTION')
+
+    # per-host toggle: reusing an entry from the history list normally bumps
+    # it back to the top (see addHistoryItem above). Some hosts benefit more
+    # from a stable, alphabetically-jumpable list (T9 jump in the search
+    # history), so this can be switched off per host from SearchHistoryEditor.
+    # Stored as a tiny sidecar next to the history file itself, not through
+    # the Components.config tree, so it stays host-scoped without needing a
+    # static per-host config entry declared anywhere.
+    def isReorderOnReuseEnabled(self):
+        return getReorderOnReuseEnabled(self.PATH_FILE)
 
     def _saveHistoryList(self, list):
         printDBG('CSearchHistoryHelper._saveHistoryList to file = "%s"' % self.PATH_FILE)

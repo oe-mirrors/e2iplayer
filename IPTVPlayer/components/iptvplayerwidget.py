@@ -26,6 +26,7 @@ from Components.Sources.StaticText import StaticText
 from Tools.BoundFunction import boundFunction
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import fileExists
+from Tools.NumericalTextInput import NumericalTextInput
 from enigma import getDesktop, eTimer
 
 ####################################################
@@ -49,7 +50,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools
                                                           CMoviePlayerPerHost, GetFavouritesDir, CFakeMoviePlayerOption, GetAvailableIconSize, \
                                                           GetE2VideoMode, SetE2VideoMode, TestTmpCookieDir, TestTmpJSCacheDir, \
                                                           ClearTmpCookieDir, ClearTmpJSCacheDir, SetTmpCookieDir, SetTmpJSCacheDir, \
-                                                          GetEnabledHostsList, SaveHostsOrderList, formatBytes, getExcMSG
+                                                          GetEnabledHostsList, SaveHostsOrderList, formatBytes, getExcMSG, \
+                                                          findT9JumpIndex
 from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvbuffui import E2iPlayerBufferingWidget
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi, DMItem
@@ -62,6 +64,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvpictureplayer import IPTVPictu
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList, IPTVLinkChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.components.iptvarticleview import IPTVArticleView
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, ArticleContent, CFavItem
+from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchHistoryEditor
 from Plugins.Extensions.IPTVPlayer.components.iconmenager import IconMenager
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
@@ -173,12 +176,16 @@ class E2iPlayerWidget(Screen):
             "ok": self.ok_pressed,
             "back": self.back_pressed,
             "info": self.info_pressed,
-            "8": self.startAutoPlaySequencer,
             "0": self.ok_pressed0,
-            "1": self.ok_pressed1,
-            "2": self.ok_pressed2,
-            "3": self.ok_pressed3,
-            "4": self.ok_pressed4,
+            "1": self.keyT9_1,
+            "2": self.keyT9_2,
+            "3": self.keyT9_3,
+            "4": self.keyT9_4,
+            "5": self.keyT9_5,
+            "6": self.keyT9_6,
+            "7": self.keyT9_7,
+            "8": self.keyT9_8,
+            "9": self.keyT9_9,
             "play": self.startAutoPlaySequencer,
             "menu": self.menu_pressed,
             "tools": self.blue_pressed,
@@ -311,6 +318,10 @@ class E2iPlayerWidget(Screen):
         self.canRandomizeList = False
 
         self.prevVideoMode = None
+        # no handleTimeout: we act on every press immediately (list jump,
+        # not text composition), so the commit-after-timeout callback and
+        # its eTimer aren't needed - only the digit-cycling in getKey() is
+        self.t9HistoryInput = NumericalTextInput(handleTimeout=False)
 
         # test if path for js and cookies temporary files
         # is writable, without this plugin can not works
@@ -631,6 +642,8 @@ class E2iPlayerWidget(Screen):
                     options.append((action[0], f"HostAction:{i}"))
         except Exception:
             printExc()
+        if hasattr(self.host.host, 'history'):
+            options.append((_("Edit search history"), "EditSearchHistory"))
         options.append((_("Download manager"), "IPTVDM"))
         options.append((_("Exit"), "CLOSE"))
         self.session.openWithCallback(self.blue_pressed_next, ChoiceBox, title=_("Select option"), list=options)
@@ -787,6 +800,16 @@ class E2iPlayerWidget(Screen):
                 self.randomizePlayableItems()
             elif ret[1] == 'ReversePlayableItems':
                 self.reversePlayableItems()
+            elif ret[1] == 'EditSearchHistory':
+                try:
+                    historyFile = self.host.host.history.PATH_FILE
+                except Exception:
+                    printExc()
+                    historyFile = ''
+                if historyFile:
+                    self.session.open(SearchHistoryEditor, historyFile=historyFile, reverseForDisplay=True, reverseForWrite=True)
+                else:
+                    self.session.open(MessageBox, _('Search history is not available for this host.'), type=MessageBox.TYPE_ERROR, timeout=5)
             elif ret[1].startswith("HostAction:"):
                 try:
                     idx = int(ret[1].split(":")[1])
@@ -1066,6 +1089,82 @@ class E2iPlayerWidget(Screen):
                 self.requestListFromHost('ForArticleContent', currSelIndex)
     # end info_pressed(self):
 
+    def isSearchHistoryList(self):
+        """True only for the actual list of past search entries, not the
+        Search category menu (which also contains one TYPE_SEARCH_HISTORY
+        item - the link that navigates into that list)."""
+        try:
+            if not self.currList:
+                return False
+
+            hasHistoryEntry = False
+            for item in self.currList:
+                itemType = getattr(item, 'type', None)
+                if itemType == CDisplayListItem.TYPE_SEARCH:
+                    # the Search category menu always has exactly one such
+                    # item; the actual history-entries list never does
+                    return False
+                if itemType == CDisplayListItem.TYPE_SEARCH_HISTORY:
+                    hasHistoryEntry = True
+            return hasHistoryEntry
+        except Exception:
+            printExc()
+
+        return False
+
+    def keyT9Jump(self, digit):
+        if not self.isSearchHistoryList():
+            return False
+
+        letter = self.t9HistoryInput.getKey(int(digit))
+        if not letter:
+            return True
+
+        try:
+            currentIdx = self['list'].getCurrentIndex()
+            idx = findT9JumpIndex(len(self.currList), currentIdx, letter, lambda i: getattr(self.currList[i], 'name', ''))
+            if idx >= 0:
+                self['list'].moveToIndex(idx)
+                printDBG('T9 history jump key[%s] letter[%s] index[%d]' % (digit, letter, idx))
+            else:
+                printDBG('T9 history jump key[%s] letter[%s] no match' % (digit, letter))
+        except Exception:
+            printExc()
+
+        return True
+
+    def keyT9_1(self):
+        if not self.keyT9Jump('1'):
+            self.ok_pressed1()
+
+    def keyT9_2(self):
+        if not self.keyT9Jump('2'):
+            self.ok_pressed2()
+
+    def keyT9_3(self):
+        if not self.keyT9Jump('3'):
+            self.ok_pressed3()
+
+    def keyT9_4(self):
+        if not self.keyT9Jump('4'):
+            self.ok_pressed4()
+
+    def keyT9_5(self):
+        self.keyT9Jump('5')
+
+    def keyT9_6(self):
+        self.keyT9Jump('6')
+
+    def keyT9_7(self):
+        self.keyT9Jump('7')
+
+    def keyT9_8(self):
+        if not self.keyT9Jump('8'):
+            self.startAutoPlaySequencer()
+
+    def keyT9_9(self):
+        self.keyT9Jump('9')
+
     def ok_pressed0(self):
         self.activePlayer.set({})
         self.ok_pressed(useAlternativePlayer=False)
@@ -1147,7 +1246,7 @@ class E2iPlayerWidget(Screen):
                 elif item.type == CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE:
                     printDBG("ok_pressed selected TYPE_SEARCH_HISTORY_DELETE")
                     self.host.host.delHistory(self.session)
-                elif item.type in [CDisplayListItem.TYPE_CATEGORY, CDisplayListItem.TYPE_SEARCH_HISTORY, CDisplayListItem.TYPE_NEXT, CDisplayListItem.TYPE_JUMP, CDisplayListItem.TYPE_FIRST, CDisplayListItem.TYPE_PREVIOUS, CDisplayListItem.TYPE_LAST]:
+                elif item.type in [CDisplayListItem.TYPE_CATEGORY, CDisplayListItem.TYPE_SEARCH_HISTORY, CDisplayListItem.TYPE_SEARCH_HISTORY_EDITOR, CDisplayListItem.TYPE_NEXT, CDisplayListItem.TYPE_JUMP, CDisplayListItem.TYPE_FIRST, CDisplayListItem.TYPE_PREVIOUS, CDisplayListItem.TYPE_LAST]:
                     printDBG("ok_pressed selected TYPE_CATEGORY")
                     self.stopAutoPlaySequencer()
                     self.currSelIndex = currSelIndex
@@ -2047,7 +2146,7 @@ class E2iPlayerWidget(Screen):
                 self["cover"].hide()
                 self["console"].setText('')
 
-            if type == 'ForItem' or type == 'ForSearch':
+            if (type == 'ForItem' or type == 'ForSearch') and getattr(self.currItem, 'type', None) not in CDisplayListItem.NON_NAVIGATING_TYPES:
                 self.prevSelList.append(self.currSelIndex)
                 if type == 'ForSearch':
                     self.categoryList.append(_("Search results"))

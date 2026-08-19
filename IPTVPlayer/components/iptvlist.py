@@ -103,6 +103,7 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         CDisplayListItem.TYPE_PICTURE: 'PictureItem.png',
         CDisplayListItem.TYPE_DATA: 'DataItem.png',
         CDisplayListItem.TYPE_SEARCH_HISTORY: 'SearchHistoryItem.png',
+        CDisplayListItem.TYPE_SEARCH_HISTORY_EDITOR: 'SearchHistoryEditorItem.png',
         CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE: 'SearchHistoryDeleteItem.png',
         CDisplayListItem.TYPE_NEXT: 'NextItem.png',
         CDisplayListItem.TYPE_DOWNLOAD: 'DownloadFolder.png',

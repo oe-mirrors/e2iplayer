@@ -1,4 +1,8 @@
 # @file  ihost.py
+# Last Modified: 2026-08-18 - CBaseHostClass.searchItems() now adds "search_history_editor" between "search_history" and "delete_history".
+# CHostBase.getListForItem() catches this category and opens SearchHistoryEditor before any host handleService() runs.
+# CHostBase.setSearchPattern() no longer calls addHistoryItem() when a history entry is re-selected, only getSearchResults() writes new entries
+# Applies automatically to all hosts using CBaseHostClass - Kamikaze24
 #
 
 ###################################################
@@ -16,6 +20,7 @@ from skin import parseColor
 
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Screens.MessageBox import MessageBox
+from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchHistoryEditor
 
 
 class CUrlItem:
@@ -53,6 +58,7 @@ class CDisplayListItem:
     TYPE_MORE = "MORE"
     TYPE_MARKER = "MARKER"
     TYPE_SEARCH_HISTORY = "SEARCH_HISTORY"
+    TYPE_SEARCH_HISTORY_EDITOR = "SEARCH_HISTORY_EDITOR"
     TYPE_SEARCH_HISTORY_DELETE = "SEARCH_HISTORY_DELETE"
     TYPE_NEXT = "NEXT"
     TYPE_DOWNLOAD = "DOWNLOAD"
@@ -66,6 +72,11 @@ class CDisplayListItem:
     TYPE_SUBTITLE = "SUBTITLE"
     TYPE_SUB_PROVIDER = "SUB_PROVIDER"
     TYPE_UNKNOWN = "UNKNOWN"
+
+    # item types that open a modal/perform an in-place action instead of
+    # navigating to a different list - selecting one must not push a
+    # nav-stack entry, since there would be nothing meaningful to go back to
+    NON_NAVIGATING_TYPES = frozenset([TYPE_SEARCH_HISTORY_EDITOR])
 
     def __init__(self, name="",
                 description="",
@@ -526,6 +537,46 @@ class CHostBase(IHost):
         return RetHost(RetHost.OK, value=convList)
 
     def getListForItem(self, Index=0, refresh=0, selItem=None):
+        # selItem is the already-resolved CDisplayListItem the widget's own
+        # currList had at Index (see requestListFromHost() in
+        # iptvplayerwidget.py) - use it directly instead of re-deriving the
+        # selection from self.host.getCurrList()[Index], which is a
+        # differently-indexed raw list and isn't guaranteed to line up.
+        if getattr(selItem, 'type', None) == CDisplayListItem.TYPE_SEARCH_HISTORY_EDITOR:
+            try:
+                historyFile = self.host.history.PATH_FILE
+            except Exception:
+                printExc()
+                historyFile = ''
+
+            try:
+                if historyFile:
+                    self.host.sessionEx.waitForFinishOpen(
+                        SearchHistoryEditor,
+                        historyFile=historyFile,
+                        reverseForDisplay=True,
+                        reverseForWrite=True
+                    )
+                else:
+                    self.host.sessionEx.waitForFinishOpen(
+                        MessageBox,
+                        _('Search history is not available for this host.'),
+                        type=MessageBox.TYPE_ERROR,
+                        timeout=5
+                    )
+            except Exception:
+                printExc()
+
+            # search_history_editor is a NON_NAVIGATING_TYPES entry - it opens
+            # a modal editor in place rather than navigating to a new list, so
+            # (unlike the general case below) it must not push onto the nav
+            # stack; the widget-side prevSelList already skips it for the
+            # same reason, and pushing here would leave the two stacks
+            # permanently out of sync. Nothing about the host's own state
+            # changed, so just redisplay the exact same list.
+            convList = self.convertList(self.host.getCurrList())
+            return RetHost(RetHost.OK, value=convList)
+
         self.listOfprevList.append(self.host.getCurrList())
         self.listOfprevItems.append(self.host.getCurrItem())
 
@@ -590,10 +641,15 @@ class CHostBase(IHost):
             list = self.host.getCurrList()
             if 'history' == list[self.currIndex]['name']:
                 pattern = list[self.currIndex]['title']
-                search_type = list[self.currIndex]['search_type']
-                self.host.history.addHistoryItem(pattern, search_type)
+                searchtype = list[self.currIndex]['search_type']
+                try:
+                    reorderOnReuse = self.host.history.isReorderOnReuseEnabled()
+                except Exception:
+                    reorderOnReuse = True
+                if reorderOnReuse:
+                    self.host.history.addHistoryItem(pattern, searchtype)
                 self.searchPattern = pattern
-                self.searchType = search_type
+                self.searchType = searchtype
         except Exception:
             printDBG('setSearchPattern EXCEPTION')
             self.searchPattern = ''
@@ -636,6 +692,8 @@ class CHostBase(IHost):
                 possibleTypesOfSearch = self.getSearchTypes()
             elif cItem.get('category', '') == 'search_history':
                 type = CDisplayListItem.TYPE_SEARCH_HISTORY
+            elif cItem.get('category', '') == 'search_history_editor':
+                type = CDisplayListItem.TYPE_SEARCH_HISTORY_EDITOR
             elif cItem.get('category', '') == 'delete_history':
                 type = CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE
             elif cItem.get('name', '') == 'history':
@@ -885,6 +943,7 @@ class CBaseHostClass:
             return [
                 {'category': 'search', 'title': _('Search'), 'search_item': True, },
                 {'category': 'search_history', 'title': _("Search history"), 'desc': _("History of searched phrases.")},
+                {'category': 'search_history_editor', 'title': _('Edit search history'), 'desc': _('Edit, sort and delete search history entries')},
                 {'category': 'delete_history', 'title': _('Delete search history'), 'desc': self._historyLenTextFunction}
             ]
         else:

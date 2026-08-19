@@ -5,7 +5,7 @@
 ########################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsValidFileName, GetFavouritesDir, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsValidFileName, GetFavouritesDir, GetIconDir, findT9JumpIndex
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem
@@ -22,6 +22,7 @@ from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 from Components.Label import Label
 from Components.ActionMap import ActionMap
+from Tools.NumericalTextInput import NumericalTextInput
 ###################################################
 
 
@@ -292,6 +293,7 @@ class IPTVFavouritesMainWidget(Screen):
         self.IDS_ENABLE_REORDERING = _('Enable reordering')
         self.IDS_DISABLE_REORDERING = _('Disable reordering')
         self.reorderingMode = False
+        self.t9Input = NumericalTextInput(handleTimeout=False)
 
         self["title"] = Label(_("Favorites groups"))
         self["label_red"] = Label(_("Remove group"))
@@ -302,29 +304,33 @@ class IPTVFavouritesMainWidget(Screen):
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
 
-        self["actions"] = ActionMap(["ColorActions", "WizardActions", "ListboxActions"],
-            {
-                "back": self.keyExit,
-                "cancel": self.keyExit,
-                "ok": self.keyOK,
-                "red": self.keyRed,
-                "yellow": self.keyYellow,
-                "green": self.keyGreen,
-                "blue": self.keyBlue,
+        actions = {
+            "back": self.keyExit,
+            "cancel": self.keyExit,
+            "ok": self.keyOK,
+            "red": self.keyRed,
+            "yellow": self.keyYellow,
+            "green": self.keyGreen,
+            "blue": self.keyBlue,
 
-                "up": self.keyUp,
-                "down": self.keyDown,
-                "left": self.keyLeft,
-                "right": self.keyRight,
-                "moveUp": self.keyDrop,
-                "moveDown": self.keyDrop,
-                "moveTop": self.keyDrop,
-                "moveEnd": self.keyDrop,
-                "home": self.keyDrop,
-                "end": self.keyDrop,
-                "pageUp": self.keyDrop,
-                "pageDown": self.keyDrop
-            }, -2)
+            "up": self.keyUp,
+            "down": self.keyDown,
+            "left": self.keyLeft,
+            "right": self.keyRight,
+            "moveUp": self.keyDrop,
+            "moveDown": self.keyDrop,
+            "moveTop": self.keyDrop,
+            "moveEnd": self.keyDrop,
+            "home": self.keyDrop,
+            "end": self.keyDrop,
+            "pageUp": self.keyDrop,
+            "pageDown": self.keyDrop
+        }
+        for digit in '123456789':
+            actions[digit] = self.makeNumberJump(digit)
+
+        self["actions"] = ActionMap(["ColorActions", "WizardActions", "ListboxActions", "NumberActions"],
+            actions, -2)
 
         self.prevIdx = 0
         self.duringMoving = False
@@ -655,3 +661,35 @@ class IPTVFavouritesMainWidget(Screen):
         except Exception:
             pass
         return sel
+
+    def makeNumberJump(self, digit):
+        return lambda: self.keyNumberJump(digit)
+
+    def keyNumberJump(self, digit):
+        if self.reorderingMode:
+            return
+
+        letter = self.t9Input.getKey(int(digit))
+        if not letter:
+            return
+
+        try:
+            currentIdx = self["list"].getCurrentIndex()
+            if ":groups:" == self.menu:
+                groups = self.favourites.getGroups()
+                total = len(groups)
+                getTitle = lambda i: groups[i].get('title', '')
+            else:
+                if not self.loadGroupItems(self.menu):
+                    return
+                sts, items = self.favourites.getGroupItems(self.menu)
+                if not sts:
+                    return
+                total = len(items)
+                getTitle = lambda i: getattr(items[i], 'name', '')
+
+            idx = findT9JumpIndex(total, currentIdx, letter, getTitle)
+            if idx >= 0:
+                self["list"].moveToIndex(idx)
+        except Exception:
+            printExc()
