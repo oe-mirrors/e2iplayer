@@ -418,7 +418,7 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                 continue
             seen_langs.add(lang_code)
             display_name = lang_name if lang_name else lang_code.capitalize()
-            title = "%s \c00FFFF00[ %s ]\c00FFFFFF" % (display_name, str(rows_count))
+            title = r"%s \c00FFFF00[ %s ]\c00FFFFFF" % (display_name, str(rows_count))
             params_dir = dict(cItem)
             params_dir.update(
                 {
@@ -453,7 +453,7 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                 if lang:
                     langs[lang] = langs.get(lang, 0) + 1
             for lang_code, count in langs.items():
-                title = "%s \c00FFFF00[ %d ]\c00FFFFFF" % (
+                title = r"%s \c00FFFF00[ %d ]\c00FFFFFF" % (
                     lang_code.capitalize(),
                     count,
                 )
@@ -747,7 +747,7 @@ class SubDLAPIProvider(CBaseSubProviderClass):
             match_count = 0
             for item in outList:
                 if is_episode_match(item):
-                    item["title"] = "\c0030FF30✅ \c00FFFFFF" + item["title"]
+                    item["title"] = r"\c0030FF30✅ \c00FFFFFF" + item["title"]
                     match_count += 1
             printDBG("  Found %d matching subtitles for %s" % (match_count, wanted_ep))
         else:
