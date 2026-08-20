@@ -878,6 +878,16 @@ class E2iPlayerWidget(Screen):
                         self.session.open(MessageBox, _('Error saving favorites.'), type=MessageBox.TYPE_ERROR, timeout=5)
                         return
 
+                    # the active host object (Favourites in hostfavourites.py) keeps its own
+                    # helper instance loaded once at entry - reload it too, otherwise it still
+                    # shows the old state after leaving/re-entering the screen (getPrevList()
+                    # only pops a cached list, it never re-reads from disk)
+                    try:
+                        if hasattr(self.host, 'host') and hasattr(self.host.host, 'helper'):
+                            self.host.host.helper.load()
+                    except Exception:
+                        printExc()
+
                     del self.currList[currSelIndex]
                     self["list"].setList([(x,) for x in self.currList])
 
@@ -929,6 +939,13 @@ class E2iPlayerWidget(Screen):
                 if not helper.save():
                     self.session.open(MessageBox, _('Error saving favorites.'), type=MessageBox.TYPE_ERROR, timeout=5)
                     return
+
+                # see comment above - keep the host's helper state in sync with the file
+                try:
+                    if hasattr(self.host, 'host') and hasattr(self.host.host, 'helper'):
+                        self.host.host.helper.load()
+                except Exception:
+                    printExc()
 
                 del self.currList[currSelIndex]
                 self["list"].setList([(x,) for x in self.currList])
