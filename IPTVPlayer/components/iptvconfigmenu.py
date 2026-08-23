@@ -181,6 +181,8 @@ config.plugins.iptvplayer.fakExtMoviePlayerList = ConfigSelection(default="fake"
 config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio = ConfigSelection(default="-1", choices=[("-1", _("default")), ("0", _("4:3 Letterbox")), ("1", _("4:3 PanScan")), ("2", _("16:9")), ("3", _("16:9 always")), ("4", _("16:10 Letterbox")), ("5", _("16:10 PanScan")), ("6", _("16:9 Letterbox"))])
 
 config.plugins.iptvplayer.search_history_size = ConfigInteger(50, (0, 1000000))
+config.plugins.iptvplayer.enableT9MainList = ConfigYesNo(default=True)
+config.plugins.iptvplayer.rememberHistorySelection = ConfigYesNo(default=True)
 config.plugins.iptvplayer.autoplay_start_delay = ConfigInteger(3, (0, 9))
 
 config.plugins.iptvplayer.favourites_use_watched_flag = ConfigYesNo(default=True)
@@ -503,6 +505,8 @@ class ConfigMenu(ConfigBaseWidget):
 
         list.append(getConfigListEntry(_("----- OTHER SETTINGS -----"), ))
         list.append(getConfigListEntry(_("The number of items in the search history"), config.plugins.iptvplayer.search_history_size))
+        list.append(getConfigListEntry(_("Remember last search history selection"), config.plugins.iptvplayer.rememberHistorySelection))
+        list.append(getConfigListEntry(_("T9 letter jump in lists"), config.plugins.iptvplayer.enableT9MainList))
         list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
         list.append(getConfigListEntry(_("MIPS Floating Point Architecture"), config.plugins.iptvplayer.plarformfpuabi))
         list.append(getConfigListEntry(_("Prefer hlsld for playlist with alt. media"), config.plugins.iptvplayer.prefer_hlsdl_for_pls_with_alt_media))

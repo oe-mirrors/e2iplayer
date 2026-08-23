@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 06.08.2026 - Centralized watched helper integration incl. favourite hash sync, Custom menu action handling (mark/unmark watched) added, sidecar/MKV article request now skipped when both are disabled - Kamikaze24
+# Last Modified: 23.08.2026 - getSuggestionsProvider() added (forces Google search suggestions) - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -716,6 +716,10 @@ class IPTVHost(WatchedFlagHostMixin, CHostBase):
             except Exception:
                 printExc()
         return ret
+
+    def getSuggestionsProvider(self, index=-1):
+        from Plugins.Extensions.IPTVPlayer.suggestions.google import SuggestionsProvider as google_Provider
+        return RetHost(status=RetHost.OK, value=[google_Provider()])
 
     def withArticleContent(self, cItem):
         if "video" == cItem.get("type", "") or "explore_item" == cItem.get("category", ""):
