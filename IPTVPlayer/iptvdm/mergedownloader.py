@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 # IPTV download manager API
-# Last Modified: 07.08.2026 - Extracted shared helpers (ensureText/fsPath/shellQuote/writeUtf8TextFile) and sidecar logic into downloaderhelpers.SidecarMixin, shared with wgetdownloader.py and hlsdownloader.py, instead of duplicating them here. Added 'clen'/'dur' URL-metadata fallback for merge:// downloads (YouTube audio/video streams): remote_size no longer relies solely on wget's "Length:" stderr line, and the ffmpeg chapter-duration probe falls back to the stream's 'dur' value when ffmpeg reports "Duration: N/A" on raw DASH-muxed files - Kamikaze24
+# Last Modified: 19.08.2026 - Fixed ffmpeg merge/chapter-mux steps reporting exit code 1 despite writing a
+# complete, correct output file. Root causes handled: (1) added '-y' to all ffmpeg post-process invocations
+# so ffmpeg never blocks on stdin waiting for an "Overwrite? [y/N]" prompt on a stale leftover output file;
+# (2) stopped discarding ffmpeg's merge/mux stderr into /dev/null - it's now captured via stderrAvail like the
+# duration probe already does, and logged on failure; (3) eConsoleAppContainer can report a spurious non-zero
+# exit code for the short second ffmpeg pass (remux with -map_metadata from the tiny .ffmeta file) even though
+# ffmpeg's own stderr shows a completely clean finish (the "Lsize=...muxing overhead:" summary only appears
+# after a successful write) - this is now treated as authoritative success, overriding the bogus exit code,
+# for both the merge and chapters post-process steps - Kamikaze24
 ###################################################
 # LOCAL import
 ###################################################
@@ -31,7 +39,6 @@ try:
 except Exception:
     printExc()
 ###################################################
-
 
 ###################################################
 # One instance of this class can be used only for
@@ -67,6 +74,7 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
         self.postProcessMode = 'merge'
         self.mergedFileDurationMs = 0
         self.probeOutData = ''
+        self.ffmpegErrData = ''
         self._pendingChapters = []
 
         self.channelName = ''
@@ -101,6 +109,9 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
                 self._safeRm(filePath + '.iptv.tmp.%d.dash' % idx)
             self._safeRm(basePath + '.iptv.merge.tmp.mp4')
             self._safeRm(basePath + '.chapters.ffmeta')
+            # also remove a stale MKV target from a previous aborted run so ffmpeg never
+            # has to prompt "Overwrite? [y/N]" on a leftover file (hangs/exits 1 without -y)
+            self._safeRm(basePath + '.mkv')
         except Exception:
             printExc()
 
@@ -269,7 +280,7 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
             return os.path.isfile(dstPath)
         except Exception:
             printExc()
-            return False
+        return False
 
     def _normalizeChapterTitle(self, title):
         title = ensureText(title).strip()
@@ -384,11 +395,45 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
             return
         self.probeOutData += ensureText(data)
 
+    def _ffmpegErrDataAvail(self, data):
+        # captures ffmpeg's stderr for the merge/chapter-mux steps instead of throwing it away,
+        # so a failing 'code[1]' can actually be diagnosed from the log instead of guessed at
+        if data is None:
+            return
+        self.ffmpegErrData += ensureText(data)
+        if len(self.ffmpegErrData) > 8000:
+            self.ffmpegErrData = self.ffmpegErrData[-8000:]
+
+    def _ffmpegReportedCleanFinish(self):
+        # eConsoleAppContainer can report a spurious non-zero exit code for a short-lived second
+        # ffmpeg pass (e.g. remuxing with -map_metadata from a tiny .ffmeta file) even though
+        # ffmpeg itself completed normally. ffmpeg only prints the final "Lsize=...muxing overhead:"
+        # summary line after a clean successful write, so treat its presence as authoritative
+        # success, overriding a bogus non-zero exit code from the console container.
+        try:
+            tail = ensureText(self.ffmpegErrData)
+            return bool(re.search(r'Lsize=\s*\S+.*muxing overhead', tail, re.DOTALL))
+        except Exception:
+            printExc()
+        return False
+
+    def _logFfmpegFailure(self, stepName):
+        try:
+            tail = self.ffmpegErrData.strip()
+            if tail:
+                lines = tail.replace('\r', '\n').split('\n')
+                tailLines = [l for l in lines if l.strip()][-15:]
+                printDBG("MergeDownloader %s ffmpeg stderr tail:\n%s" % (stepName, '\n'.join(tailLines)))
+            else:
+                printDBG("MergeDownloader %s ffmpeg produced no stderr output" % stepName)
+        except Exception:
+            printExc()
+
     def _startDurationProbe(self, filePath):
         self.postProcessMode = 'probe_duration'
         self.probeOutData = ''
         inPath = shellQuote(filePath)
-        cmd = DMHelper.GET_FFMPEG_PATH() + ' -i "{0}"'.format(inPath)
+        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y -i "{0}"'.format(inPath)
         printDBG("MergeDownloader _startDurationProbe cmd[%s]" % cmd)
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
@@ -491,7 +536,7 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
             return os.path.isfile(fsPath(cutsPath)) and os.path.getsize(fsPath(cutsPath)) > 0
         except Exception:
             printExc("MergeDownloader _writeCutsFile failed")
-            return False
+        return False
 
     def start(self, url, filePath, params={}):
         self.downloaderParams = params
@@ -502,6 +547,7 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
         self.postProcessMode = 'merge'
         self.mergedFileDurationMs = 0
         self.probeOutData = ''
+        self.ffmpegErrData = ''
         self._pendingChapters = []
         self.knownDurationMs = -1
         self.originalFilePath = ensureText(filePath)
@@ -576,13 +622,15 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
 
     def doStartPostProcess(self):
         self.postProcessMode = 'merge'
-        cmd = DMHelper.GET_FFMPEG_PATH() + ' '
+        self.ffmpegErrData = ''
+        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y '
         for item in self.multi['files']:
             cmd += ' -i "{0}" '.format(shellQuote(item))
-        cmd += ' -map 0:0 -map 1:0 -vcodec copy -acodec copy "{0}" >/dev/null 2>&1 '.format(shellQuote(self.tempMergePath))
+        cmd += ' -map 0:0 -map 1:0 -vcodec copy -acodec copy "{0}" '.format(shellQuote(self.tempMergePath))
         printDBG("doStartPostProcess cmd[%s]" % cmd)
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
+        self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._ffmpegErrDataAvail)
         if hasattr(self.console, "setNice"):
             self.console.setNice(GetNice() + 2)
             self.console.execute(cmd)
@@ -591,11 +639,13 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
 
     def _startMkvChapterMux(self):
         self.postProcessMode = 'chapters'
+        self.ffmpegErrData = ''
         mkvPath = self._getMkvPath()
-        cmd = DMHelper.GET_FFMPEG_PATH() + ' -i "{0}" -i "{1}" -map 0 -c copy -map_metadata 1 "{2}" >/dev/null 2>&1 '.format(shellQuote(self.tempMergePath), shellQuote(self.chapterMetaPath), shellQuote(mkvPath))
+        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y -i "{0}" -i "{1}" -map 0 -c copy -map_metadata 1 "{2}" '.format(shellQuote(self.tempMergePath), shellQuote(self.chapterMetaPath), shellQuote(mkvPath))
         printDBG("MergeDownloader _startMkvChapterMux cmd[%s]" % cmd)
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
+        self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._ffmpegErrDataAvail)
         if hasattr(self.console, "setNice"):
             self.console.setNice(GetNice() + 2)
             self.console.execute(cmd)
@@ -641,6 +691,10 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
         if None is data:
             return
         self.outData += ensureText(data)
+        # only parse+reset once the full header block has arrived - wget's
+        # stderr can split a 'Length:' line across two callbacks, and
+        # resetting outData on every call would drop the first half before
+        # the second one arrives
         if 'Saving to:' in self.outData:
             self.console_stderrAvail_conn = None
             lines = self.outData.replace('\r', '\n').split('\n')
@@ -696,7 +750,9 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
                 mergedSize = DMHelper.getFileSize(fsPath(self.tempMergePath))
                 printDBG("POSTPROCESSING merge finished tempMergePath[%s] localFileSize[%r] code[%r]" % (self.tempMergePath, mergedSize, code))
 
-                if mergedSize > 0 and code == 0:
+                if mergedSize > 0 and (code == 0 or self._ffmpegReportedCleanFinish()):
+                    if code != 0:
+                        printDBG("MergeDownloader merge step reported code[%r] but ffmpeg stderr shows a clean finish -> treating as success" % code)
                     if self.makeMkvChapters and self._startChapterMetadataFlow():
                         return
 
@@ -704,6 +760,7 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
                         return
                     self.status = DMHelper.STS.INTERRUPTED
                 else:
+                    self._logFfmpegFailure("merge")
                     self.status = DMHelper.STS.INTERRUPTED
 
             elif self.postProcessMode == 'probe_duration':
@@ -726,10 +783,13 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
                 mkvSize = DMHelper.getFileSize(fsPath(mkvPath))
                 printDBG("POSTPROCESSING chapters finished mkvPath[%s] localFileSize[%r] code[%r]" % (mkvPath, mkvSize, code))
 
-                if mkvSize > 0 and code == 0:
+                if mkvSize > 0 and (code == 0 or self._ffmpegReportedCleanFinish()):
+                    if code != 0:
+                        printDBG("MergeDownloader chapters step reported code[%r] but ffmpeg stderr shows a clean finish -> treating as success" % code)
                     self._finalizeSuccess(mkvPath)
                     return
 
+                self._logFfmpegFailure("chapters")
                 printDBG("MergeDownloader chapter mux failed -> fallback to original target name")
                 if self._finalizeMp4Fallback():
                     return
@@ -776,7 +836,7 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
                 num += 1
             if num == len(self.multi['remote_size']):
                 return remoteFileSize
-            return -1
+        return -1
 
     def updateStatistic(self):
         prevUpdateTime = self.lastUpadateTime

@@ -13,6 +13,7 @@ from enigma import gRGB
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
+from Components.config import config
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.MenuList import MenuList
@@ -396,6 +397,8 @@ class SearchHistoryEditor(Screen):
         if self.manualReorderMode:
             return
         if not self.entries:
+            return
+        if not config.plugins.iptvplayer.enableT9MainList.value:
             return
 
         letter = self.numberInput.getKey(int(digit))

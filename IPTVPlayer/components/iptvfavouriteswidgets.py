@@ -20,6 +20,7 @@ from enigma import getDesktop, gRGB
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
+from Components.config import config
 from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Tools.NumericalTextInput import NumericalTextInput
@@ -668,6 +669,8 @@ class IPTVFavouritesMainWidget(Screen):
     def keyNumberJump(self, digit):
         if self.reorderingMode:
             return
+        if not config.plugins.iptvplayer.enableT9MainList.value:
+            return
 
         letter = self.t9Input.getKey(int(digit))
         if not letter:
@@ -678,7 +681,9 @@ class IPTVFavouritesMainWidget(Screen):
             if ":groups:" == self.menu:
                 groups = self.favourites.getGroups()
                 total = len(groups)
-                getTitle = lambda i: groups[i].get('title', '')
+
+                def getTitle(i):
+                    return groups[i].get('title', '')
             else:
                 if not self.loadGroupItems(self.menu):
                     return
@@ -686,7 +691,9 @@ class IPTVFavouritesMainWidget(Screen):
                 if not sts:
                     return
                 total = len(items)
-                getTitle = lambda i: getattr(items[i], 'name', '')
+
+                def getTitle(i):
+                    return getattr(items[i], 'name', '')
 
             idx = findT9JumpIndex(total, currentIdx, letter, getTitle)
             if idx >= 0:
