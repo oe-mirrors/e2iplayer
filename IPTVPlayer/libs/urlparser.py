@@ -289,6 +289,7 @@ class urlparser:
             "doply.net": self.pp.parserDOOD,
             "dpstream.fyi": self.pp.parserJWPLAYER,
             "dr0pstream.com": self.pp.parserJWPLAYER,
+            "dropload.co": self.pp.parserJWPLAYER,
             "dropload.io": self.pp.parserJWPLAYER,
             "dropload.pro": self.pp.parserJWPLAYER,
             "dropload.tv": self.pp.parserJWPLAYER,
@@ -2280,6 +2281,7 @@ class pageParser(CaptchaHelper):
         if "streamwish.to" in baseUrl:
             baseUrl = baseUrl.replace("streamwish.to", "hglamioz.com")
         if "dropload." in baseUrl:
+            baseUrl = re.sub(r"dropload\.co/embed-([^./]+)\.html", r"dr0pstream.com/e/\1", baseUrl)
             baseUrl = baseUrl.replace("dropload.tv", "dr0pstream.com").replace("dropload.io", "dr0pstream.com")
         sts, data = self.cm.getPage(baseUrl, urlParams)
         if not sts:
