@@ -622,7 +622,7 @@ class YoutubeIE(object):
                     if sts:
                         player_response = self._extract_yt_initial_variable(video_webpage, self._YT_INITIAL_PLAYER_RESPONSE_RE, video_id, "initial player response")
                 printDBG("_real_extract tries %s" % tries)
-                if player_response["playabilityStatus"]["status"] == "OK":
+                if player_response and player_response.get("streamingData"):
                     break
 
         if not sts:

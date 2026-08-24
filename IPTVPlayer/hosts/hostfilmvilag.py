@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 20.05.2025 - Blindspot
+# Last Modified: 24.08.2026 - Added PHP iframe HLS link extraction, fixed crash on video open - Blindspot
 ###################################################
-HOST_VERSION = "1.6"
+HOST_VERSION = "1.7"
 ###################################################
 # LOCAL import
 ###################################################
@@ -23,9 +23,9 @@ import re
 import datetime
 
 try:
-    from HTMLParser import HTMLParser  # Python 2
+    from html import unescape
 except ImportError:
-    from html.parser import HTMLParser  # Python 3
+    from cgi import unescapeHTML as unescape
 ###################################################
 
 
@@ -60,10 +60,18 @@ class FilmVilag(CBaseHostClass):
             url = re.findall('iframe.+src=["]([^>]+?)["].+/iframe', data, re.S)
             if url:
                url = url[-1]
-            url = HTMLParser().unescape(url)
+            url = unescape(url)
             if "https:" not in url:
                 url = "https:" + url
             printDBG('LEKÉRT LINK: ' + url)
+            if "php" in url:
+                sts, data2 = self.getPage(url)
+                if not sts:
+                    return
+                printDBG('PHP ADATOK: ' + data2)
+                url = self.cm.ph.getSearchGroups(data2, 'hls":"([^"]+?)"')[0]
+                url = url.replace("\\/", "/").replace("&amp;", "&")
+                printDBG('LEKÉRT LINK PHP KÓDBÓL: ' + url)
         else:
            url = cItem['url']
            if "https:" not in url:

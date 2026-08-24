@@ -571,6 +571,7 @@ class urlparser:
             "vinovo.to": self.pp.parserVINOVO,
             "vk.com": self.pp.parserVK,
             "vkvideo.ru": self.pp.parserVK,
+            "vkvd298.okcdn.ru": self.pp.parserVK,
             "voe.sx": self.pp.parserVOESX,
             "vrra.top": self.pp.parserVRRATOP,
             "vrrstream.ru": self.pp.parserVRRATOP,
