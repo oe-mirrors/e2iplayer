@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 #  2025 Team Jogi  #
-# Last Modified: 11.03.2026
+# Last Modified: 24.08.2026 - Adapted to the new meinecloud.click player backend, restored season/episode navigation, added watched/started flag support, switched to the current hdfilme.win domain
 
 import re
 
-from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
+from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhostmixin import WatchedFlagHostMixin
 
 
 def GetConfigList():
@@ -16,7 +19,7 @@ def GetConfigList():
 
 
 def gettytul():
-    return "https://hdfilme.party/"
+    return "https://hdfilme.win/"
 
 
 class HDFilme(CBaseHostClass):
@@ -27,6 +30,8 @@ class HDFilme(CBaseHostClass):
         self.defaultParams = {"header": self.HEADER, "use_cookie": True, "load_cookie": True, "save_cookie": True, "cookiefile": self.COOKIE_FILE}
         self.DEFAULT_ICON_URL = gettytul() + "templates/hdfilme/images/apple-touch-icon.png"
         self.MAIN_URL = gettytul()
+        self.cacheSeasons = {}
+        self.watchedHelper = IPTVWatchedHelper("hdfilme")
         self.MENU = [
             {"category": "list_items", "title": _("New"), "url": self.getFullUrl("filme1/")},
             {"category": "list_items", "title": _("Cinema movies"), "url": self.getFullUrl("kinofilme/")},
@@ -39,6 +44,58 @@ class HDFilme(CBaseHostClass):
         if addParams is None:
             addParams = dict(self.defaultParams)
         return self.cm.getPageCFProtection(baseUrl, addParams, post_data)
+
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict):
+                return ""
+            itemType = cItem.get("type", "")
+            category = cItem.get("category", "")
+            if itemType in ["video", "audio"]:
+                url = str(cItem.get("url", "") or "").strip()
+                streamUrl = str(cItem.get("stream_url", "") or "").strip()
+                if url != "" and streamUrl != "":
+                    return "url:%s|%s" % (url, streamUrl)
+                if url != "":
+                    return "url:%s" % url
+                return ""
+            if category == "list_episodes":
+                url = str(cItem.get("url", "") or "").strip()
+                seasonId = str(cItem.get("season_id", "") or "").strip()
+                if url != "" and seasonId != "":
+                    return "season:%s|%s" % (url, seasonId)
+                return ""
+            if category == "list_seasons":
+                url = str(cItem.get("url", "") or "").strip()
+                if url != "":
+                    return "url:%s" % url
+                return ""
+            return ""
+        except Exception:
+            printExc()
+        return ""
+
+    def _buildSeasonItem(self, seasonId):
+        return {"category": "list_episodes", "url": self.currItem.get("url", ""), "season_id": seasonId}
+
+    def _propagateEpisodeWatchedState(self, item):
+        try:
+            if not isinstance(item, dict):
+                return
+            seasonId = str(item.get("season_id", "") or "").strip()
+            url = str(item.get("url", "") or self.currItem.get("url", "") or "").strip()
+            if seasonId == "" or url == "":
+                return
+            seasonParent = self._buildSeasonItem(seasonId)
+            seasonEpisodes = self.cacheSeasons.get(seasonId, [])
+            if seasonEpisodes:
+                self.watchedHelper.updateParentWatchedState(seasonParent, seasonEpisodes, self._getWatchedKeyForItem)
+            seasonChildren = [self._buildSeasonItem(sid) for sid in self.cacheSeasons.keys()]
+            if seasonChildren:
+                seriesParent = {"category": "list_seasons", "url": url}
+                self.watchedHelper.updateParentWatchedState(seriesParent, seasonChildren, self._getWatchedKeyForItem)
+        except Exception:
+            printExc()
 
     def listItems(self, cItem):
         printDBG("HDFilme.listItems |%s|" % cItem)
@@ -67,11 +124,33 @@ class HDFilme(CBaseHostClass):
             title = title.split(" &#8211;")[0]
             params = dict(cItem)
             params.update({"good_for_fav": True, "category": "list_seasons", "title": self.cleanHtmlStr(title), "url": url, "icon": icon, "desc": desc})
+            self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addDir(params)
         if nextPage:
             params = dict(cItem)
             params.update({"good_for_fav": False, "title": _("Next page"), "url": self.getFullUrl(nextPage[0])})
             self.addDir(params)
+
+    def _resolveMeineCloud(self, data):
+        movieUrl = self.cm.ph.getSearchGroups(data, r'<iframe[^>]+src="(https://meinecloud\.click/movie/[^"]+)"')[0]
+        if movieUrl:
+            return "movie", movieUrl
+        imdb = self.cm.ph.getSearchGroups(data, r"var imdb = '([^']+)'")[0]
+        if not imdb:
+            return None, None
+        sts, jdata = self.getPage("https://meinecloud.click/serials.php?task=check&id_imdb=%s" % imdb)
+        if not sts:
+            return None, None
+        try:
+            info = json_loads(jdata)
+        except Exception:
+            return None, None
+        if info.get("exists") and info.get("player_url"):
+            return "series", info["player_url"]
+        fallbackUrl = self.cm.ph.getSearchGroups(data, r"iframe\.src = '([^']+)';")[0]
+        if fallbackUrl:
+            return "direct", fallbackUrl
+        return None, None
 
     def listSeasons(self, cItem):
         printDBG("HDFilme.listSeasons |%s|" % cItem)
@@ -81,33 +160,55 @@ class HDFilme(CBaseHostClass):
         if not sts:
             return
         desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
-        data = re.findall(r"#se-ac-(\d+)", data, re.DOTALL)
-        if not data:
+        kind, target = self._resolveMeineCloud(data)
+        if kind != "series":
             params = dict(cItem)
-            params.update({"good_for_fav": True, "category": "video", "title": cItem["title"], "url": self.getFullUrl(url), "icon": icon, "desc": desc})
+            params.pop("isWatched", None)
+            params.pop("isStarted", None)
+            params.update({"good_for_fav": True, "category": "video", "title": cItem["title"], "url": self.getFullUrl(url), "icon": icon, "desc": desc, "stream_url": target, "stream_type": kind or ""})
+            self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addVideo(params)
-        else:
-            for seasons in data:
-                title = cItem["title"] + " - Staffel " + seasons
-                params = dict(cItem)
-                params.update({"good_for_fav": True, "category": "list_episodes", "title": title, "url": url, "icon": icon, "desc": desc, "seasons": seasons})
-                self.addDir(params)
+            return
+        sts, data = self.getPage(target)
+        if not sts:
+            return
+        tabs = self.cm.ph.getDataBeetwenMarkers(data, 'class="_stabs"', 'class="_now"', False)[1]
+        seasons = re.findall(r'data-season="(\d+)">\s*(\S+)', tabs)
+        seasonBlocks = data.split('class="_season-eps')
+        del seasonBlocks[0]
+        blocksById = {}
+        for block in seasonBlocks:
+            blockId = self.cm.ph.getSearchGroups(block, r'data-season="(\d+)"')[0]
+            if blockId != "":
+                blocksById[blockId] = block
+        self.cacheSeasons = {}
+        seasonParams = {}
+        for seasonId, seasonLabel in seasons:
+            episodes = []
+            for link, label in re.findall(r'data-link="([^"]+)"\s*data-label="([^"]+)"', blocksById.get(seasonId, "")):
+                episodes.append({"type": "video", "url": url, "title": self.cleanHtmlStr(label), "icon": icon, "desc": desc, "stream_url": link, "stream_type": "direct", "season_id": seasonId})
+            self.cacheSeasons[seasonId] = episodes
+            title = cItem["title"] + " - " + seasonLabel
+            params = dict(cItem)
+            params.pop("isWatched", None)
+            params.pop("isStarted", None)
+            params.update({"good_for_fav": True, "category": "list_episodes", "title": title, "url": url, "icon": icon, "desc": desc, "season_id": seasonId})
+            if episodes:
+                self.watchedHelper.updateParentWatchedState(params, episodes, self._getWatchedKeyForItem)
+            else:
+                self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
+            seasonParams[seasonId] = params
+            self.addDir(params)
+        if seasonParams:
+            seriesItem = {"category": "list_seasons", "url": url}
+            self.watchedHelper.updateParentWatchedState(seriesItem, list(seasonParams.values()), self._getWatchedKeyForItem)
 
     def listEpisodes(self, cItem):
         printDBG("HDFilme.listEpisodes |%s|" % cItem)
-        url = cItem["url"]
-        seasons = cItem["seasons"]
-        icon = cItem["icon"]
-        sts, data = self.getPage(url)
-        if not sts:
-            return
-        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'og:description" content="([^"]+)')[0])
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data.replace("\n", ""), "#se-ac-%s" % seasons, "</div></div>")[0]
-        data = re.findall(r"Episode\s(\d+)", data, re.DOTALL)
-        for episode in data:
-            title = cItem["title"] + " - Episode " + episode
-            params = dict(cItem)
-            params.update({"good_for_fav": True, "title": title, "url": url, "icon": icon, "desc": desc, "seasons": seasons, "episode": episode})
+        seasonId = cItem.get("season_id", "")
+        for item in self.cacheSeasons.get(seasonId, []):
+            params = dict(item)
+            self.watchedHelper.updateHostItemFlag(self, params, self._getWatchedKeyForItem)
             self.addVideo(params)
 
     def listValue(self, cItem, v):
@@ -133,19 +234,16 @@ class HDFilme(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("HDFilme.getLinksForVideo [%s]" % cItem)
         linksTab = []
-        sts, data = self.getPage(cItem["url"], self.defaultParams)
-        if not sts:
-            return []
-        if cItem.get("seasons") and cItem.get("episode"):
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data.replace("\n", ""), "#se-ac-%s" % cItem.get("seasons"), "</div></div>")[0]
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, "x%s Episode" % cItem.get("episode"), "<br")[0]
-            data = re.findall('href="([^"]+)', data, re.DOTALL)
-        else:
-            data = re.findall(r'<iframe\sw.*?src="([^"]+)', data, re.DOTALL)
-            sts, data = self.getPage(data[0], self.defaultParams)
+        streamUrl = cItem.get("stream_url", "")
+        if not streamUrl:
+            return linksTab
+        if cItem.get("stream_type") == "movie":
+            sts, data = self.getPage(streamUrl, self.defaultParams)
             if not sts:
-                return []
+                return linksTab
             data = re.findall('data-link="([^"]+)', data, re.DOTALL)
+        else:
+            data = [streamUrl]
         for url in data:
             if "meinecloud" in url or "player.php" in url:
                 continue
@@ -214,10 +312,107 @@ class HDFilme(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(WatchedFlagHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, HDFilme(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper("hdfilme")
+
+    def _setWatchedStateForSeasonItem(self, seasonItem, action):
+        try:
+            seasonId = str(seasonItem.get("season_id", "") or "").strip()
+            seasonKey = self.host._getWatchedKeyForItem(seasonItem)
+            if seasonKey == "":
+                return False
+            changed = False
+            for episodeItem in self.host.cacheSeasons.get(seasonId, []):
+                episodeKey = self.host._getWatchedKeyForItem(episodeItem)
+                if episodeKey == "":
+                    continue
+                if action == "set_watched_flag":
+                    changed = self.watchedHelper.markItemWatched(episodeItem, episodeKey) or changed
+                else:
+                    changed = self.watchedHelper.unmarkItemWatched(episodeItem, episodeKey) or changed
+            if action == "set_watched_flag":
+                changed = self.watchedHelper.markItemWatched(seasonItem, seasonKey) or changed
+            else:
+                changed = self.watchedHelper.unmarkItemWatched(seasonItem, seasonKey) or changed
+            return changed
+        except Exception:
+            printExc()
+            return False
+
+    def _setWatchedStateForSeriesItem(self, seriesItem, action):
+        try:
+            url = str(seriesItem.get("url", "") or "").strip()
+            if url == "":
+                return False
+            changed = False
+            if str(self.host.currItem.get("url", "") or "").strip() == url:
+                for seasonId in list(self.host.cacheSeasons.keys()):
+                    seasonItem = self.host._buildSeasonItem(seasonId)
+                    changed = self._setWatchedStateForSeasonItem(seasonItem, action) or changed
+            seriesKey = self.host._getWatchedKeyForItem(seriesItem)
+            if seriesKey == "":
+                return changed
+            if action == "set_watched_flag":
+                changed = self.watchedHelper.markItemWatched(seriesItem, seriesKey) or changed
+            else:
+                changed = self.watchedHelper.unmarkItemWatched(seriesItem, seriesKey) or changed
+            return changed
+        except Exception:
+            printExc()
+            return False
+
+    def _refreshParentStateAfterAction(self, item, action):
+        try:
+            if not isinstance(item, dict):
+                return
+            category = str(item.get("category", "") or "").strip()
+            if category == "list_episodes":
+                seasonId = str(item.get("season_id", "") or "").strip()
+                url = str(item.get("url", "") or "").strip()
+                if seasonId != "" and url != "":
+                    seasonParent = dict(item)
+                    seasonParent.pop("isWatched", None)
+                    seasonEpisodes = self.host.cacheSeasons.get(seasonId, [])
+                    if seasonEpisodes:
+                        self.watchedHelper.updateParentWatchedState(seasonParent, seasonEpisodes, self.host._getWatchedKeyForItem)
+                    seriesParent = {"category": "list_seasons", "url": url}
+                    seasonChildren = [self.host._buildSeasonItem(sid) for sid in list(self.host.cacheSeasons.keys())]
+                    self.watchedHelper.updateParentWatchedState(seriesParent, seasonChildren, self.host._getWatchedKeyForItem)
+            elif category == "list_seasons":
+                url = str(item.get("url", "") or "").strip()
+                if url != "" and str(self.host.currItem.get("url", "") or "").strip() == url:
+                    seriesParent = {"category": "list_seasons", "url": url}
+                    seasonChildren = [self.host._buildSeasonItem(sid) for sid in list(self.host.cacheSeasons.keys())]
+                    self.watchedHelper.updateParentWatchedState(seriesParent, seasonChildren, self.host._getWatchedKeyForItem)
+            elif str(item.get("type", "") or "").strip() in ["video", "audio"]:
+                self.host._propagateEpisodeWatchedState(item)
+        except Exception:
+            printExc()
+
+    def performCustomAction(self, privateData):
+        ret = self.watchedHelper.performCustomAction(privateData)
+        if ret.status == RetHost.OK:
+            self.refreshAfterWatchedFlagChange = True
+            try:
+                action = privateData.get("action", "")
+                if action in ("unset_watched_flag", "set_watched_flag"):
+                    idx = privateData.get("item_index", -1)
+                    item = self.host.currList[idx] if 0 <= idx < len(self.host.currList) else {}
+                    category = item.get("category", "")
+                    if category == "list_episodes":
+                        self._setWatchedStateForSeasonItem(item, action)
+                    elif category == "list_seasons":
+                        self._setWatchedStateForSeriesItem(item, action)
+                    self._refreshParentStateAfterAction(item, action)
+                    self.watchedHelper.recomputeAllGroupsWatched(self.host.cacheSeasons, self.host._getWatchedKeyForItem, self.host._buildSeasonItem)
+            except Exception:
+                printExc()
+        return ret
 
     def withArticleContent(self, cItem):
         return cItem["category"] in ["video", "list_seasons", "list_episodes"]
