@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ###################################################
-# 2026-01-24 by Blindspot
+# 2026-08-24 by WhiteWolf
 ###################################################
-HOST_VERSION = "1.3"
+HOST_VERSION = "1.5"
 ###################################################
 # LOCAL import
 ###################################################
@@ -19,7 +19,7 @@ from Plugins.Extensions.IPTVPlayer.libs import ph
 ###################################################
 # FOREIGN import
 ###################################################
-from Components.config import config, ConfigText, ConfigYesNo, ConfigDirectory, getConfigListEntry
+from Components.config import config, ConfigYesNo, ConfigDirectory, getConfigListEntry
 from os.path import normpath
 import os
 import re
@@ -38,7 +38,7 @@ try:
     FOUND_SUB = True
 except Exception:
     FOUND_SUB = False
-from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS
+from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from Screens.MessageBox import MessageBox
 
 ###################################################
@@ -47,8 +47,6 @@ from Screens.MessageBox import MessageBox
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.videa_id = ConfigYesNo(default=False)
-config.plugins.iptvplayer.boxtipus = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.boxrendszer = ConfigText(default="", fixed_size=False)
 
 
 def GetConfigList():
@@ -72,13 +70,7 @@ class videa(CBaseHostClass):
         self.HEADER = self.cm.getDefaultHeader()
         self.DEFAULT_ICON_URL = "https://www.figyelmeztetes.hu/videa_logo.jpg"
         self.MAIN_URL = "https://videa.hu"
-        self.vmk = self.MAIN_URL + zlib.decompress(base64.b64decode("eJzTz04sSU3PL8pMzAYAGM8EUg==")).decode("utf-8")
-        self.vmcs = self.MAIN_URL + zlib.decompress(base64.b64decode("eJzTTy5OLMkvykvMBgAUvAP2")).decode("utf-8")
-        self.vmkrs = self.MAIN_URL + zlib.decompress(base64.b64decode("eJzTL8tMSc2Pz04tSi1OLQYAKFYFmA==")).decode("utf-8")
-        self.porv = self.gits()
-        self.pbtp = "-"
-        self.btps = config.plugins.iptvplayer.boxtipus.value
-        self.brdr = config.plugins.iptvplayer.boxrendszer.value
+        self.vmkrs = self.MAIN_URL + "/kereses"
         self.aid = config.plugins.iptvplayer.videa_id.value
         self.aid_ki = ""
         self.vszkzrs = []
@@ -109,17 +101,11 @@ class videa(CBaseHostClass):
         try:
             if not self.ebbtit():
                 return
-            if self.btps != "" and self.brdr != "":
-                self.pbtp = self.btps.strip() + " - " + self.brdr.strip()
             tab_kat = "videa_kategoriak"
             desc_kat = self.getdvdsz(tab_kat, "Videa kategóriáinak megjelenítése...")
             tab_csat = "videa_csatornak"
             desc_csat = self.getdvdsz(tab_csat, "Videa csatornáinak megjelenítése...")
-            tab_search = "videa_kereses"
-            desc_search = self.getdvdsz(tab_search, "Keresés...")
-            tab_search_hist = "videa_kereses_elozmeny"
-            desc_search_hist = self.getdvdsz(tab_search_hist, "Keresés az előzmények között...")
-            MAIN_CAT_TAB = [{"category": "list_main", "title": "Kategóriák", "tab_id": tab_kat, "desc": desc_kat}, {"category": "list_main", "title": "Csatornák", "tab_id": tab_csat, "desc": desc_csat}, {"category": "search", "title": _("Search"), "search_item": True, "tab_id": tab_search, "desc": desc_search}, {"category": "search_history", "title": _("Search history"), "tab_id": tab_search_hist, "desc": desc_search_hist}]
+            MAIN_CAT_TAB = [{"category": "list_main", "title": "Kategóriák", "tab_id": tab_kat, "desc": desc_kat}, {"category": "list_main", "title": "Csatornák", "tab_id": tab_csat, "desc": desc_csat}] + self.searchItems()
             self.listsTab(MAIN_CAT_TAB, {"name": "category"})
             vtb = self.malvadnav(cItem, "7", "12", "0", "14")
             if len(vtb) > 0:
@@ -139,8 +125,6 @@ class videa(CBaseHostClass):
                 self.Vdcstrnk(cItem, tabID)
             elif tabID == "videa_ajanlott":
                 self.Vdajnzttt(cItem, tabID)
-            elif tabID == "videa_keresett_tartalom":
-                self.Vdakstmk({"name": "history", "category": "search", "tab_id": ""}, "desc", _("Type: "), tabID)
             else:
                 return
         except Exception:
@@ -149,17 +133,15 @@ class videa(CBaseHostClass):
     def Vdktgrk(self, cItem, tabID):
         mlt = []
         try:
-            self.susn("2", "12", tabID)
             url_ere = self.MAIN_URL
             sts, data = self.getPage(url_ere)
             if not sts:
                 return
             if len(data) == 0:
                 return
-            data = self.cm.ph.getDataBeetwenMarkers(data, 'id="menu-categories"', "</ul>")[1]
-            if len(data) == 0:
-                return
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<li", "</li>")
+            data = data.split('class="category-item">')
+            if len(data) > 0:
+                del data[0]
             if len(data) == 0:
                 return
             for item in data:
@@ -168,8 +150,8 @@ class videa(CBaseHostClass):
                     url = url_ere + url
                 if not self.cm.isValidUrl(url):
                     continue
-                title = self.cleanHtmlStr(item).capitalize()
-                desc = self.getdvdsz(url, '"' + title + '"  kategória videóinak megjelenítése...')
+                title = self.cm.ph.getSearchGroups(item, "text\"[>]([^\"^']+?)[<]")[0].capitalize()
+                desc = self.getdvdsz(url, '"' + title + '" kategória videóinak megjelenítése...')
                 icon = ""
                 params = MergeDicts(cItem, {"good_for_fav": False, "category": "list_second", "title": title, "url": url, "icon": icon, "desc": desc, "tab_id": tabID})
                 mlt.append(params)
@@ -183,17 +165,18 @@ class videa(CBaseHostClass):
     def Vdcstrnk(self, cItem, tabID):
         mlt = []
         try:
-            self.susn("2", "12", tabID)
             url_ere = self.MAIN_URL
             sts, data = self.getPage(url_ere)
             if not sts:
                 return
             if len(data) == 0:
                 return
-            data = self.cm.ph.getDataBeetwenMarkers(data, 'id="menu-channels"', "</ul>")[1]
+            data = self.cm.ph.getDataBeetwenMarkers(data, 'title list-opener">', "</ul>")[1]
             if len(data) == 0:
                 return
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<li", "</li>")
+            data = data.split("<li>")
+            if len(data) > 0:
+                del data[0]
             if len(data) == 0:
                 return
             for item in data:
@@ -202,7 +185,7 @@ class videa(CBaseHostClass):
                     url = url_ere + url
                 if not self.cm.isValidUrl(url):
                     continue
-                title = self.cleanHtmlStr(item).capitalize()
+                title = self.cm.ph.getSearchGroups(item, "text\"[>]([^\"^']+?)[<]")[0].capitalize()
                 desc = self.getdvdsz(url, '"' + title + '"  csatorna videóinak megjelenítése...')
                 icon = ""
                 params = MergeDicts(cItem, {"good_for_fav": False, "category": "list_second", "title": title, "url": url, "icon": icon, "desc": desc, "tab_id": tabID})
@@ -216,7 +199,6 @@ class videa(CBaseHostClass):
 
     def Vdajnzttt(self, cItem, tabID):
         try:
-            self.susn("2", "12", tabID)
             tab_ams = "videa_ajnlt_musor"
             desc_ams = self.getdvdsz(tab_ams, "Ajánlott, nézett tartalmak megjelenítése műsorok szerint...")
             tab_adt = "videa_ajnlt_datum"
@@ -233,13 +215,11 @@ class videa(CBaseHostClass):
             tabID = cItem.get("tab_id", "")
             if tabID == "videa_kategoriak":
                 url = cItem["url"]
-                self.susn("2", "12", url)
-                VK_CAT_TAB = [{"category": "list_items", "title": "Feltöltés ideje szerint", "url": url + "?sort=0&interval=0&category=0&usergroup=0&page=1", "desc": ""}, {"category": "list_items", "title": "Nézettség szerint", "url": url + "?sort=1&interval=0&category=0&usergroup=0&page=1", "desc": ""}, {"category": "list_items", "title": "Név szerint", "url": url + "?sort=3&interval=0&category=0&usergroup=0&page=1", "desc": ""}]
+                VK_CAT_TAB = [{"category": "list_items", "title": "Feltöltés ideje szerint", "url": url + "?page=1", "desc": ""}, {"category": "list_items", "title": "Nézettség szerint", "url": url + "?popular&page=1", "desc": ""}, {"category": "list_items", "title": "Legrégebbi elöl", "url": url + "?oldest&page=1", "desc": ""}]
                 self.listsTab(VK_CAT_TAB, cItem)
             elif tabID == "videa_csatornak":
                 url = cItem["url"]
-                self.susn("2", "12", url)
-                VCS_CAT_TAB = [{"category": "list_items", "title": "Feltöltés ideje szerint", "url": url + "?sort=0&interval=0&category=0&usergroup=0&page=1", "desc": ""}, {"category": "list_items", "title": "Nézettség szerint", "url": url + "?sort=1&interval=0&category=0&usergroup=0&page=1", "desc": ""}, {"category": "list_items", "title": "Név szerint", "url": url + "?sort=3&interval=0&category=0&usergroup=0&page=1", "desc": ""}]
+                VCS_CAT_TAB = [{"category": "list_items", "title": "Feltöltés ideje szerint", "url": url + "?page=1", "desc": ""}, {"category": "list_items", "title": "Nézettség szerint", "url": url + "?popular&page=1", "desc": ""}, {"category": "list_items", "title": "Legrégebbi elöl", "url": url + "?oldest&page=1", "desc": ""}]
                 self.listsTab(VCS_CAT_TAB, cItem)
             else:
                 return
@@ -262,7 +242,6 @@ class videa(CBaseHostClass):
 
     def Vajnltmsr(self, cItem):
         try:
-            self.susn("2", "12", "videa_ajnlt_musor")
             vtb = self.malvadnav(cItem, "3", "12", "0")
             if len(vtb) > 0:
                 for item in vtb:
@@ -273,7 +252,6 @@ class videa(CBaseHostClass):
     def Vajnltdtm(self, cItem):
         vtb = []
         try:
-            self.susn("2", "12", "videa_ajnlt_datum")
             vtb = self.malvadnav(cItem, "4", "12", "0")
             if len(vtb) > 0:
                 for item in vtb:
@@ -283,7 +261,6 @@ class videa(CBaseHostClass):
 
     def Vajnltnztsg(self, cItem):
         try:
-            self.susn("2", "12", "videa_ajnlt_nezettseg")
             vtb = self.malvadnav(cItem, "5", "12", "0")
             if len(vtb) > 0:
                 for item in vtb:
@@ -295,67 +272,82 @@ class videa(CBaseHostClass):
         try:
             url_ere = cItem["url"]
             page = cItem.get("page", 1)
-            if page > 0 and "page=" in url_ere:
-                idx1 = url_ere.rfind("page=")
-                if -1 < idx1:
-                    url_ere = url_ere[:idx1].strip()
-                    url_ere = url_ere + "page=" + str(page)
+            searchMode = cItem.get("search_mode", False)
+            if not searchMode:
+                if page > 0 and "page=" in url_ere:
+                    idx1 = url_ere.rfind("page=")
+                    if -1 < idx1:
+                        url_ere = url_ere[:idx1].strip()
+                        url_ere = url_ere + "page=" + str(page)
             sts, data = self.getPage(url_ere)
             if not sts:
                 return
             if len(data) == 0:
                 return
-            nextPage = self.cm.ph.getDataBeetwenMarkers(data, '<i class="vicon-kisnyil-bal">', '<i class="vicon-kisnyil-jobb">')[1]
-            if "" != self.cm.ph.getSearchGroups(nextPage, "page=(%s)[^0-9]" % (page + 1))[0]:
-                nextPage = True
-            else:
-                nextPage = False
-            # data = self.cm.ph.getDataBeetwenMarkers(data, '<div class="list-menu-row-order-links">', '<div class="main-menu">')[1]
-            # if len(data) == 0: return
-            # data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="col-xxs-12 col-xs-6 col-sm-4 col-lg-2 col-video"', '<i class="vicon-szem video-stat-footer">')
-            data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="col-xxs-12 col-xs-6 col-sm-4 col-lg-2 col-video"', "</span></div>")
-            if len(data) == 0:
-                return
+            nextPage = False
+            if not searchMode:
+                nextPage = self.cm.ph.getSearchGroups(data, "next\"\\shref=['\"]([^\"^']+?)['\"]")[0]
+                if nextPage:
+                    nextPage = True
+            data = data.split('class="col video-item">')
+            if len(data) > 0:
+                del data[0]
+            lastItemId = ""
             for item in data:
-                temp_url = self.cm.ph.getDataBeetwenMarkers(item, '<div class="panel-video-title">', "</div>", False)[1]
-                url = self.cm.ph.getSearchGroups(temp_url, "href=['\"]([^\"^']+?)['\"]")[0]
+                itemId = self.cm.ph.getSearchGroups(item, """data-item-id=['"]([^"']+?)['"]""")[0]
+                if itemId != "":
+                    lastItemId = itemId
+                url = self.cm.ph.getSearchGroups(item, "<a\\shref=['\"]([^\"^']+?)['\"]\\sa")[0]
                 if not self.cm.isValidUrl(url):
                     continue
-                temp_icon = self.cm.ph.getDataBeetwenMarkers(item, ' <a class="video-link', "</a>")[1]
-                icon = self.cm.ph.getSearchGroups(temp_icon, """src=['"]([^"^']+?)['"]""")[0]
+                icon = self.cm.ph.getSearchGroups(item, """data-image=['"]([^"^']+?)['"]""")[0]
                 if icon == "":
                     icon = self.DEFAULT_ICON_URL
                 else:
                     if icon.startswith("/"):
                         icon = self.MAIN_URL + icon
-                vszrz = self.cm.ph.getDataBeetwenMarkers(item, '<div class="panel-video-text"', "</a>")[1]
+                vszrz = self.cm.ph.getSearchGroups(item, """aria-label=['"]([^"^']+?)['"].+\n.+href""")[0]
+                if not vszrz:
+                    vszrz = self.cm.ph.getSearchGroups(item, """uploader.{,50}[>]([^"^']+?)[<]/a""")[0]
+                if not vszrz:
+                    vszrz = self.cm.ph.getSearchGroups(item, """tagok[/]([^"^']+?)[-"]""")[0]
                 if len(self.vszkzrs) > 0:
                     if self.check_string(vszrz, self.vszkzrs):
                         continue
-                vhz = self.cm.ph.getDataBeetwenMarkers(item, '<span class="label label-black video-length">', "</span>", False)[1]
-                vmsg = self.cm.ph.getDataBeetwenMarkers(item, '<span class="video-hd">', "</span>", False)[1]
+                vhz = self.cm.ph.getSearchGroups(item, """length"[>]([0-9:]+?)[<]""")[0]
+                vmsg = self.cm.ph.getDataBeetwenMarkers(item, 'div class="hd">', "</div>", False)[1]
                 if vmsg != "":
                     vmsg = "  |  " + vmsg
-                title = self.cleanHtmlStr(temp_url).strip()
+                title = self.cm.ph.getSearchGroups(item, """aria-label=['"]([^"^']+?)['"].+\n.+div""")[0]
                 if title == "":
                     continue
-                ftlv = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<i class="vicon-ora"></i>', "</span>", False)[1]).strip()
-                desc = "Feltöltve: " + ftlv + "  |  Időtartam: " + vhz + vmsg + "\n\nCím: " + title
+                ftlv = self.cm.ph.getSearchGroups(item, """uploaded-at"[>]([^"^']+?)[<]""")[0]
+                desc = title + "\n" + "Időtartam: " + vhz + vmsg + "\nSzerző: " + vszrz + "\nFeltöltve: " + ftlv
                 params = MergeDicts(cItem, {"good_for_fav": False, "title": title, "url": url, "icon": icon, "desc": desc, "tps": "0"})
                 self.addVideo(params)
-            if nextPage:
+            if searchMode:
+                if lastItemId != "":
+                    searchPattern = cItem.get("search_pattern", "")
+                    lazyUrl = self.MAIN_URL + "/lazy/kereses/" + urllib.parse.quote_plus(searchPattern) + "?cacheId=" + urllib.parse.quote_plus(searchPattern) + "&lastItemId=" + urllib.parse.quote_plus(lastItemId) + "&itemCount=432&sort=0"
+                    params = dict(cItem)
+                    params.update({"title": _("Next page"), "url": lazyUrl, "category": "list_items", "search_mode": True, "desc": "Nyugi...\nVan még további tartalom, lapozz tovább!"})
+                    self.addDir(params)
+            elif nextPage:
                 params = dict(cItem)
-                params.update({"title": _("Next page"), "page": page + 1, "desc": "Nyugi...\nVan még további tartalom, lapozz tovább!!!"})
+                params.update({"title": _("Next page"), "page": page + 1, "desc": "Nyugi...\nVan még további tartalom, lapozz tovább!"})
                 self.addDir(params)
         except Exception:
             return
 
     def getLinksForVideo(self, cItem):
         videoUrls = []
-        url = cItem["url"]
-        baseUrl = strwithmeta(url)
-        sts, data = self.cm.getPage(baseUrl)
+        baseUrl = strwithmeta(cItem["url"])
+        sts, data = self.getPage(baseUrl)
+        if not sts:
+            return videoUrls
         url = self.cm.ph.getDataBeetwenMarkers(data, '"embedURL": "', '"', False)[1]
+        if not url:
+            return videoUrls
         url = url.replace("/v/", "?v=").replace("?autoplay=1", "&autoplay=0")
         uri = urlparser.decorateParamsFromUrl(url)
         protocol = uri.meta.get("iptv_proto", "")
@@ -508,60 +500,6 @@ class videa(CBaseHostClass):
         except Exception:
             return []
 
-    def susmrgts(self, i_md="", i_hgk="", i_mptip="", i_mpu="", i_mpt="", i_mpi="", i_mpdl="", i_mpnzs=""):
-        uhe = zlib.decompress(base64.b64decode("eJzLKCkpsNLXLy8v10vLTK9MzclNrSpJLUkt1sso1c9IzanUzy0tSQQTxYklKUl6BRkFABGoFBk=")).decode("utf-8")
-        try:
-            if i_hgk != "":
-                i_hgk = base64.b64encode(i_hgk).replace("\n", "").strip()
-            if i_mptip != "":
-                i_mptip = base64.b64encode(i_mptip).replace("\n", "").strip()
-            if i_mpu != "":
-                i_mpu = base64.b64encode(i_mpu).replace("\n", "").strip()
-            if i_mpt != "":
-                i_mpt = base64.b64encode(i_mpt).replace("\n", "").strip()
-            if i_mpi == "":
-                i_mpi = base64.b64encode("-")
-            else:
-                i_mpi = base64.b64encode(i_mpi).replace("\n", "").strip()
-            if i_mpdl == "":
-                i_mpdl = base64.b64encode("-")
-            else:
-                i_mpdl = base64.b64encode(i_mpdl).replace("\n", "").strip()
-            if i_mpnzs != "":
-                i_mpnzs = base64.b64encode(i_mpnzs).replace("\n", "").strip()
-            pstd = {"md": i_md, "hgk": i_hgk, "mptip": i_mptip, "mpu": i_mpu, "mpt": i_mpt, "mpi": i_mpi, "mpdl": i_mpdl, "mpnzs": i_mpnzs}
-            if i_md != "" and i_hgk != "" and i_mptip != "" and i_mpu != "":
-                sts, data = self.cm.getPage(uhe, self.defaultParams, pstd)
-            return
-        except Exception:
-            return
-
-    def suskrbt(self, i_md="", i_hgk="", i_mpsz=""):
-        uhe = zlib.decompress(base64.b64decode("eJzLKCkpsNLXLy8v10vLTK9MzclNrSpJLUkt1sso1c9IzanUzwbywERxYklKkl5BRgEAD/4T/Q==")).decode("utf-8")
-        try:
-            if i_mpsz != "" and len(i_mpsz) > 1:
-                if len(i_mpsz) > 80:
-                    i_mpsz = i_mpsz[:78]
-                i_mpsz = base64.b64encode(i_mpsz).replace("\n", "").strip()
-                if i_hgk != "":
-                    i_hgk = base64.b64encode(i_hgk).replace("\n", "").strip()
-                    pstd = {"md": i_md, "hgk": i_hgk, "mpsz": i_mpsz}
-                    if i_md != "" and i_hgk != "" and i_mpsz != "":
-                        sts, data = self.cm.getPage(uhe, self.defaultParams, pstd)
-            return
-        except Exception:
-            return
-
-    def susn(self, i_md="", i_hgk="", i_mpu=""):
-        uhe = zlib.decompress(base64.b64decode("eJzLKCkpsNLXLy8v10vLTK9MzclNrSpJLUkt1sso1c9IzanUL04sSdQvS8wD0ilJegUZBQD8FROZ")).decode("utf-8")
-        pstd = {"md": i_md, "hgk": i_hgk, "mpu": i_mpu, "orv": self.porv, "bts": self.pbtp}
-        try:
-            if i_md != "" and i_hgk != "" and i_mpu != "":
-                sts, data = self.cm.getPage(uhe, self.defaultParams, pstd)
-            return
-        except Exception:
-            return
-
     def malvadkiszrz(self):
         bv = []
         ukszrz = zlib.decompress(base64.b64decode("eJzLKCkpsNLXLy8v10vLTK9MzclNrSpJLUkt1sso1c9IzanUzy0tSQQTxYklKUnZmXoFGQUAO30U7Q==")).decode("utf-8")
@@ -580,93 +518,16 @@ class videa(CBaseHostClass):
         except Exception:
             return []
 
-    def malvadkrttmk(self, i_md="", i_hgk=""):
-        bv = []
-        ukszrz = zlib.decompress(base64.b64decode("eJzLKCkpsNLXLy8v10vLTK9MzclNrSpJLUkt1sso1c9IzanUzwbywERxYklKkl5BRgEAD/4T/Q==")).decode("utf-8")
-        try:
-            if i_md != "" and i_hgk != "":
-                i_hgk = base64.b64encode(i_hgk).replace("\n", "").strip()
-                pstd = {"md": i_md, "hgk": i_hgk}
-                sts, data = self.cm.getPage(ukszrz, self.defaultParams, pstd)
-                if not sts:
-                    return []
-                if len(data) == 0:
-                    return []
-                data = self.cm.ph.getAllItemsBeetwenMarkers(data, "<div>", "</div>", False)
-                if len(data) == 0:
-                    return []
-                for item in data:
-                    if item != "":
-                        bv.append(base64.b64decode(item))
-            return bv
-        except Exception:
-            return []
-
-    def gits(self):
-        bv = "-"
-        tt = []
-        try:
-            if fileExists(zlib.decompress(base64.b64decode("eJzTTy1J1s8sLi5NBQATXQPE")).decode("utf-8")):
-                fr = open(zlib.decompress(base64.b64decode("eJzTTy1J1s8sLi5NBQATXQPE")).decode("utf-8"), "r")
-                for ln in fr:
-                    ln = ln.rstrip("\n")
-                    if ln != "":
-                        tt.append(ln)
-                fr.close()
-                if len(tt) == 1:
-                    bv = tt[0].strip()[:-6].capitalize()
-                if len(tt) == 2:
-                    bv = tt[1].strip()[:-6].capitalize()
-            return bv
-        except:
-            return "-"
-
     def ebbtit(self):
         return True
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         try:
-            self.suskrbt("2", "12", searchPattern)
             cItem = dict(cItem)
-            cItem["url"] = self.vmkrs + "/" + urllib.parse.quote_plus(searchPattern) + "?sort=0&interval=0&category=0&usergroup=0&page=1"
+            cItem["url"] = self.vmkrs + "/" + urllib.parse.quote_plus(searchPattern) + "?page=1"
+            cItem["search_pattern"] = searchPattern
+            cItem["search_mode"] = True
             self.listItems(cItem)
-        except Exception:
-            return
-
-    def Vdakstmk(self, baseItem={"name": "history", "category": "search"}, desc_key="plot", desc_base=(_("Type: ")), tabID=""):
-        if tabID != "":
-            self.susn("2", "12", tabID)
-
-        def _vdakstmk(data, lnp=50):
-            ln = 0
-            for histItem in data:
-                plot = ""
-                try:
-                    ln += 1
-                    if type(histItem) is type({}):
-                        pattern = histItem.get("pattern", "")
-                        search_type = histItem.get("type", "")
-                        if "" != search_type:
-                            plot = desc_base + _(search_type)
-                    else:
-                        pattern = histItem
-                        search_type = None
-                    params = dict(baseItem)
-                    params.update({"title": pattern, "search_type": search_type, desc_key: plot})
-                    self.addDir(params)
-                    if ln >= lnp:
-                        break
-                except Exception:
-                    return
-
-        try:
-            list = self.malvadkrttmk("1", "12")
-            if len(list) > 0:
-                _vdakstmk(list, 2)
-            if len(list) > 0:
-                list = list[2:]
-                random.shuffle(list)
-                _vdakstmk(list, 48)
         except Exception:
             return
 
@@ -687,14 +548,10 @@ class videa(CBaseHostClass):
             elif category == "list_items":
                 self.listItems(self.currItem)
             elif category in ["search", "search_next_page"]:
-                if self.currItem["tab_id"] == "videa_kereses":
-                    self.susn("2", "12", "videa_kereses")
                 cItem = dict(self.currItem)
                 cItem.update({"search_item": False, "name": "category"})
                 self.listSearchResult(cItem, searchPattern, searchType)
             elif category == "search_history":
-                if self.currItem["tab_id"] == "videa_kereses_elozmeny":
-                    self.susn("2", "12", "videa_kereses_elozmeny")
                 self.listsHistory({"name": "history", "category": "search", "tab_id": ""}, "desc", _("Type: "))
             else:
                 return
