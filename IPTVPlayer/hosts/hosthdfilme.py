@@ -90,7 +90,7 @@ class HDFilme(CBaseHostClass):
             seasonEpisodes = self.cacheSeasons.get(seasonId, [])
             if seasonEpisodes:
                 self.watchedHelper.updateParentWatchedState(seasonParent, seasonEpisodes, self._getWatchedKeyForItem)
-            seasonChildren = [self._buildSeasonItem(sid) for sid in self.cacheSeasons.keys()]
+            seasonChildren = [self._buildSeasonItem(sid) for sid in self.cacheSeasons]
             if seasonChildren:
                 seriesParent = {"category": "list_seasons", "url": url}
                 self.watchedHelper.updateParentWatchedState(seriesParent, seasonChildren, self._getWatchedKeyForItem)
@@ -145,7 +145,7 @@ class HDFilme(CBaseHostClass):
             info = json_loads(jdata)
         except Exception:
             return None, None
-        if info.get("exists") and info.get("player_url"):
+        if isinstance(info, dict) and info.get("exists") and info.get("player_url"):
             return "series", info["player_url"]
         fallbackUrl = self.cm.ph.getSearchGroups(data, r"iframe\.src = '([^']+)';")[0]
         if fallbackUrl:
@@ -351,7 +351,7 @@ class IPTVHost(WatchedFlagHostMixin, CHostBase):
                 return False
             changed = False
             if str(self.host.currItem.get("url", "") or "").strip() == url:
-                for seasonId in list(self.host.cacheSeasons.keys()):
+                for seasonId in list(self.host.cacheSeasons):
                     seasonItem = self.host._buildSeasonItem(seasonId)
                     changed = self._setWatchedStateForSeasonItem(seasonItem, action) or changed
             seriesKey = self.host._getWatchedKeyForItem(seriesItem)
@@ -381,13 +381,13 @@ class IPTVHost(WatchedFlagHostMixin, CHostBase):
                     if seasonEpisodes:
                         self.watchedHelper.updateParentWatchedState(seasonParent, seasonEpisodes, self.host._getWatchedKeyForItem)
                     seriesParent = {"category": "list_seasons", "url": url}
-                    seasonChildren = [self.host._buildSeasonItem(sid) for sid in list(self.host.cacheSeasons.keys())]
+                    seasonChildren = [self.host._buildSeasonItem(sid) for sid in self.host.cacheSeasons]
                     self.watchedHelper.updateParentWatchedState(seriesParent, seasonChildren, self.host._getWatchedKeyForItem)
             elif category == "list_seasons":
                 url = str(item.get("url", "") or "").strip()
                 if url != "" and str(self.host.currItem.get("url", "") or "").strip() == url:
                     seriesParent = {"category": "list_seasons", "url": url}
-                    seasonChildren = [self.host._buildSeasonItem(sid) for sid in list(self.host.cacheSeasons.keys())]
+                    seasonChildren = [self.host._buildSeasonItem(sid) for sid in self.host.cacheSeasons]
                     self.watchedHelper.updateParentWatchedState(seriesParent, seasonChildren, self.host._getWatchedKeyForItem)
             elif str(item.get("type", "") or "").strip() in ["video", "audio"]:
                 self.host._propagateEpisodeWatchedState(item)
@@ -409,10 +409,12 @@ class IPTVHost(WatchedFlagHostMixin, CHostBase):
                     elif category == "list_seasons":
                         self._setWatchedStateForSeriesItem(item, action)
                     self._refreshParentStateAfterAction(item, action)
-                    self.watchedHelper.recomputeAllGroupsWatched(self.host.cacheSeasons, self.host._getWatchedKeyForItem, self.host._buildSeasonItem)
+                    seriesUrl = str(item.get("url", "") or "").strip()
+                    if seriesUrl != "" and str(self.host.currItem.get("url", "") or "").strip() == seriesUrl:
+                        self.watchedHelper.recomputeAllGroupsWatched(self.host.cacheSeasons, self.host._getWatchedKeyForItem, self.host._buildSeasonItem)
             except Exception:
                 printExc()
         return ret
 
     def withArticleContent(self, cItem):
-        return cItem["category"] in ["video", "list_seasons", "list_episodes"]
+        return cItem.get("category", "") in ["video", "list_seasons", "list_episodes"]
