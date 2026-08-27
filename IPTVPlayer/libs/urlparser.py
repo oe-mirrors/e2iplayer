@@ -2102,13 +2102,29 @@ class pageParser(CaptchaHelper):
             key = result[16:] + _s + self.cm.meta.get("x-videa-xs", "")
             videaXml = rc4(videaXml, key)
         urltab = []
-        source = re.findall(r'video_source\s*name="([^"]+).*?exp="([^"]+)">([^<]+)', videaXml)
-        if source:
-            for label, exp, url in source:
+        for block in re.findall(r"<video_source\b[^>]*>[^<]*</video_source>", videaXml):
+            label = self.cm.ph.getSearchGroups(block, r'name="([^"]+)"')[0]
+            exp = self.cm.ph.getSearchGroups(block, r'exp="([^"]*)"')[0]
+            url = self.cm.ph.getDataBeetwenMarkers(block, ">", "</video_source>", False)[1].replace("&amp;", "&")
+            if not url:
+                continue
+            url = "https:" + url if url.startswith("//") else url
+            if "md5=" not in url:
+                hsh = re.search(r"<hash_value_%s>([^<]+)<" % re.escape(label), videaXml)
+                if not hsh:
+                    continue
+                if not exp:
+                    exp = self.cm.ph.getSearchGroups(url, r"expires=([0-9]+)")[0]
+                url = "%s?md5=%s&expires=%s" % (url, hsh.group(1), exp)
+            urltab.append({"name": label, "url": url})
+        urltab.reverse()
+        if not urltab:
+            for block in re.findall(r"<audio_source\b[^>]*>[^<]*</audio_source>", videaXml):
+                url = self.cm.ph.getDataBeetwenMarkers(block, ">", "</audio_source>", False)[1].replace("&amp;", "&")
+                if not url:
+                    continue
                 url = "https:" + url if url.startswith("//") else url
-                url = "%s?md5=%s&expires=%s" % (url, re.search(r"<hash_value_%s>([^<]+)<" % label, videaXml).group(1), exp)
-                urltab.append({"name": label, "url": url})
-            urltab.reverse()
+                urltab.append({"name": "Audio", "url": url})
         return urltab
 
     def parserSTREAMUP(self, baseUrl):  # fix 300426
