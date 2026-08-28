@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ###################################################
-# 2026-08-27 - some fixes and cleanup - by WhiteWolf
+# 2026-08-28 - add automatic videa-quality - by Blindspot
 ###################################################
-HOST_VERSION = "1.6"
+HOST_VERSION = "1.7"
 ###################################################
 # LOCAL import
 ###################################################
@@ -27,11 +27,13 @@ import urllib.parse
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.videa_id = ConfigYesNo(default=False)
+config.plugins.iptvplayer.videa_quality = ConfigYesNo(default=False)
 
 
 def GetConfigList():
     optionList = []
     optionList.append(getConfigListEntry("id:", config.plugins.iptvplayer.videa_id))
+    optionList.append(getConfigListEntry(_("Select best available quality"), config.plugins.iptvplayer.videa_quality))
     return optionList
 
 
@@ -80,7 +82,7 @@ class videa(CBaseHostClass):
             desc_kat = self.getdvdsz(tab_kat, "Videa kategóriáinak megjelenítése...")
             tab_csat = "videa_csatornak"
             desc_csat = self.getdvdsz(tab_csat, "Videa csatornáinak megjelenítése...")
-            MAIN_CAT_TAB = [{"category": "list_main", "title": "Kategóriák", "tab_id": tab_kat, "desc": desc_kat}, {"category": "list_main", "title": "Csatornák", "tab_id": tab_csat, "desc": desc_csat}] + self.searchItems()
+            MAIN_CAT_TAB = [{"category": "list_main", "title": _("Categories"), "tab_id": tab_kat, "desc": desc_kat}, {"category": "list_main", "title": _("Channels"), "tab_id": tab_csat, "desc": desc_csat}] + self.searchItems()
             self.listsTab(MAIN_CAT_TAB, {"name": "category"})
         except Exception:
             return
@@ -196,7 +198,7 @@ class videa(CBaseHostClass):
                 if title == "":
                     continue
                 ftlv = self.cm.ph.getSearchGroups(item, """uploaded-at"[>]([^"']+?)[<]""")[0]
-                desc = title + "\nIdőtartam: " + vhz + vmsg + "\nSzerző: " + vszrz + "\nFeltöltve: " + ftlv
+                desc = title + "\n" + _("Duration:") + " " + vhz + vmsg + "\nSzerző: " + vszrz + "\nFeltöltve: " + ftlv
                 params = MergeDicts(cItem, {"good_for_fav": False, "title": title, "url": url, "icon": icon, "desc": desc, "tps": "0"})
                 self.addVideo(params)
             if searchMode:
@@ -265,7 +267,7 @@ class videa(CBaseHostClass):
         return header + psz
 
     def malvadst(self, i_md="", i_hgk="", i_mpu=""):
-        uhe = "http://www.figyelmeztetes.hu/hely/sata/vansatdb.php"
+        uhe = "https://www.figyelmeztetes.hu/hely/sata/vansatdb.php"
         try:
             if i_md == "" or i_hgk == "" or i_mpu == "":
                 return ""
@@ -283,7 +285,7 @@ class videa(CBaseHostClass):
             return ""
 
     def malvadkiszrz(self):
-        ukszrz = "http://www.figyelmeztetes.hu/hely/muta/mutasatdbki.php"
+        ukszrz = "https://www.figyelmeztetes.hu/hely/muta/mutasatdbki.php"
         try:
             sts, data = self.cm.getPage(ukszrz)
             if not sts or len(data) == 0:
