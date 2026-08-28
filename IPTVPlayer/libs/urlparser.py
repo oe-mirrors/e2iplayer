@@ -2080,27 +2080,65 @@ class pageParser(CaptchaHelper):
         printDBG("parserVIDEA baseUrl[%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         STATIC_SECRET = "xHb0ZvME5q8CBcoQi6AngerDu3FGO9fkUlwPmLVY_RTzj2hJIS4NasXWKy1td7p"
-        sts, data = self.cm.getPage(baseUrl, HTTP_HEADER)
-        if not sts:
+        pageParams = {"header": HTTP_HEADER, "collect_all_headers": True}
+
+        def grabSlCookie(prev):
+            m = re.search(r"\bsl=([^;\s]+)", self.cm.meta.get("set-cookie", ""))
+            if m and m.group(1) != "deleted":
+                return "sl=" + m.group(1)
+            return prev
+
+        videaXml = ""
+        slCookie = ""
+        for _retry in range(3):
+            sts, data = self.cm.getPage(baseUrl, dict(pageParams))
+            if not sts:
+                return []
+            slCookie = grabSlCookie(slCookie)
+            url = baseUrl if "/player" in baseUrl else urljoin(baseUrl, re.search(r'<iframe.*?src="(/player\?[^"]+)"', data).group(1))
+            sts, nonce = self.cm.getPage(url, dict(pageParams))
+            if not sts:
+                return []
+            slCookie = grabSlCookie(slCookie)
+            nonce = re.search(r'_xt\s*=\s*"([^"]+)"', nonce).group(1)
+            l, s = nonce[:32], nonce[32:]
+            result = "".join(s[i - (STATIC_SECRET.index(l[i]) - 31)] for i in range(32))
+            query = parse_qs(urlparse(url).query)
+            _s = random_seed(8)
+            _t = result[:16]
+            _param = "f=%s" % query["f"][0] if "f" in query else "v=%s" % query["v"][0]
+            hurl = "https://%s/player/xml?platform=desktop&%s&_s=%s&_t=%s" % (urlparser.getDomain(baseUrl), _param, _s, _t)
+            sts, videaXml = self.cm.getPage(hurl, dict(pageParams))
+            if not sts:
+                return []
+            slCookie = grabSlCookie(slCookie)
+            if not videaXml.startswith("<?xml"):
+                key = result[16:] + _s + self.cm.meta.get("x-videa-xs", "")
+                videaXml = rc4(videaXml, key)
+            noembed = re.search(r'<error.*?"noembed".*?>\s*(.*?)\s*</error>', videaXml)
+            if not noembed:
+                break
+            newUrl = noembed.group(1).strip().replace("&amp;", "&")
+            if newUrl.startswith("//"):
+                newUrl = "https:" + newUrl
+            elif newUrl.startswith("/"):
+                newUrl = urljoin(baseUrl, newUrl)
+            if not newUrl.lower().startswith("http"):
+                break
+            printDBG("parserVIDEA noembed redirect -> [%s]" % newUrl)
+            baseUrl = newUrl
+        else:
             return []
-        url = baseUrl if "/player" in baseUrl else urljoin(baseUrl, re.search(r'<iframe.*?src="(/player\?[^"]+)"', data).group(1))
-        sts, nonce = self.cm.getPage(url, HTTP_HEADER)
-        if not sts:
-            return []
-        nonce = re.search(r'_xt\s*=\s*"([^"]+)"', nonce).group(1)
-        l, s = nonce[:32], nonce[32:]
-        result = "".join(s[i - (STATIC_SECRET.index(l[i]) - 31)] for i in range(32))
-        query = parse_qs(urlparse(url).query)
-        _s = random_seed(8)
-        _t = result[:16]
-        _param = "f=%s" % query["f"][0] if "f" in query else "v=%s" % query["v"][0]
-        hurl = "https://%s/player/xml?platform=desktop&%s&_s=%s&_t=%s" % (urlparser.getDomain(baseUrl), _param, _s, _t)
-        sts, videaXml = self.cm.getPage(hurl, {"header": HTTP_HEADER, "collect_all_headers": True})
-        if not sts:
-            return []
-        if not videaXml.startswith("<?xml"):
-            key = result[16:] + _s + self.cm.meta.get("x-videa-xs", "")
-            videaXml = rc4(videaXml, key)
+
+        subTracks = []
+        for block in re.findall(r"<subtitle\b[^>]*>", videaXml):
+            src = self.cm.ph.getSearchGroups(block, r'src="([^"]+)"')[0].replace("&amp;", "&")
+            lang = self.cm.ph.getSearchGroups(block, r'(?:title|lang|language)="([^"]+)"')[0]
+            if not src:
+                continue
+            src = "https:" + src if src.startswith("//") else src
+            subTracks.append({"title": lang, "url": src, "lang": lang or "und"})
+
         urltab = []
         for block in re.findall(r"<video_source\b[^>]*>[^<]*</video_source>", videaXml):
             label = self.cm.ph.getSearchGroups(block, r'name="([^"]+)"')[0]
@@ -2119,12 +2157,41 @@ class pageParser(CaptchaHelper):
             urltab.append({"name": label, "url": url})
         urltab.reverse()
         if not urltab:
+            mhls = re.search(r"<master_playlist_url>([^<]+)", videaXml)
+            if mhls:
+                hlsUrl = mhls.group(1).strip().replace("&amp;", "&")
+                hlsUrl = "https:" + hlsUrl if hlsUrl.startswith("//") else hlsUrl
+                urltab.append({"name": "HLS", "url": strwithmeta(hlsUrl, {"iptv_proto": "m3u8"})})
+        if not urltab:
             for block in re.findall(r"<audio_source\b[^>]*>[^<]*</audio_source>", videaXml):
                 url = self.cm.ph.getDataBeetwenMarkers(block, ">", "</audio_source>", False)[1].replace("&amp;", "&")
                 if not url:
                     continue
                 url = "https:" + url if url.startswith("//") else url
                 urltab.append({"name": "Audio", "url": url})
+        try:
+            autoQuality = config.plugins.iptvplayer.videa_quality.value
+        except Exception:
+            autoQuality = False
+        if autoQuality and urltab:
+            best_source = None
+            best_quality = 0
+            for source in urltab:
+                match = re.search(r"(\d{3,4})\s*[pP]", source.get("name", ""))
+                if match and int(match.group(1)) > best_quality:
+                    best_quality = int(match.group(1))
+                    best_source = source
+            if best_source:
+                printDBG("Videa: Auto quality selected [%s] - %sp" % (best_source.get("name", ""), best_quality))
+                urltab = [best_source]
+        extraMeta = {}
+        if slCookie:
+            extraMeta["Cookie"] = slCookie
+        if subTracks:
+            extraMeta["external_sub_tracks"] = subTracks
+        if extraMeta:
+            for item in urltab:
+                item["url"] = strwithmeta(item["url"], extraMeta)
         return urltab
 
     def parserSTREAMUP(self, baseUrl):  # fix 300426
