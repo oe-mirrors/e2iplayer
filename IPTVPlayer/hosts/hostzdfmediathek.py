@@ -18,7 +18,6 @@ from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 ###################################################
 from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry
 from datetime import datetime, timedelta
-import re
 import time
 if not isPY2():
     from functools import cmp_to_key
@@ -62,8 +61,6 @@ class ZDFmediathek(CBaseHostClass):
     ZDF_API_URL = 'https://api.zdf.de/'
     DOCUMENT_API_URL = MAIN_API_URL + 'mediathekV2/document/%s'
     BROADSCAST_MISSED_API_URL = MAIN_API_URL + 'mediathekV2/broadcast-missed/%s'
-    LIVE_TV_API_URL = MAIN_API_URL + 'mediathekV2/live-tv/%s"'
-    BRANDS_ALPHABETICAL_API_URL = MAIN_API_URL + 'mediathekV2/brands-alphabetical'
     TYPEAHEAD_API_URL = MAIN_API_URL + 'mediathekV2/search/typeahead?q=%s&context=%s'
     SEARCH_API_URL = MAIN_API_URL + 'mediathekV2/search?q=%s&contentTypes=%s'
     START_PAGE_API_URL = MAIN_API_URL + 'mediathekV2/start-page'
@@ -84,8 +81,9 @@ class ZDFmediathek(CBaseHostClass):
     AKAMAI_TOKEN_API_URL = 'https://tg2cl15.zdf.de/generate'
 
     MAIN_CAT_TAB = [{'category': 'list_start', 'title': _('Home page'), 'url': START_PAGE_API_URL},
+                    {'category': 'list_live', 'title': _('Live')},
                     {'category': 'missed_date', 'title': _('Missed the show?')},
-                    {'category': 'list_cluster', 'title': _('Program A-Z'), 'simplify': False, 'url': BRANDS_ALPHABETICAL_API_URL},
+                    {'category': 'list_brands_az', 'title': _('Program A-Z')},
                     {'category': 'list_cluster', 'title': _('Categories'), 'url': CATEGORIES_PAGE_API_URL},
                     # {'category':'themen',         'title':_('Topics'), 'url': NEWS_API_URL},
                     {'category': 'kinder', 'title': _('Children')}]
@@ -97,11 +95,11 @@ class ZDFmediathek(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'ZDFmediathek.tv', 'cookie': 'zdfde.cookie'})
         self.DEFAULT_ICON_URL = 'https://brandguide.zdf.de/pictures/447/2f865620700065672dbce9582f77ad83569beb7f/ZDF_DE_Logo_02.png'
 
-        self.KINDER_TAB = [{'category': 'explore_item', 'title': _('Home page'), 'url': self.getFullUrl('/kinder'), 'icon': self.getIconUrl('/assets/zdftivi-home-100~384x216')},
-                           {'category': 'kinder_list_abc', 'title': _('Program A-Z'), 'url': self.getFullUrl('/kinder/sendungen-a-z'), 'icon': self.getIconUrl('/assets/a-z-teaser-100~384x216')},
-                           {'category': 'explore_item', 'title': _('Missed the show?'), 'url': self.getFullUrl('/kinder/sendung-verpasst'), 'icon': self.getIconUrl('/assets/buehne-tivi-sendung-verpasst-100~384x216')}]
 
-        self.MAIN_CAT_TAB += self.searchItems()
+        # NOTE: MAIN_CAT_TAB is a class attribute - build a fresh instance list,
+        # otherwise "+=" mutates the shared class list on every re-instantiation
+        # and the search block piles up (4x etc.)
+        self.MAIN_CAT_TAB = list(ZDFmediathek.MAIN_CAT_TAB) + self.searchItems()
 
     def getPage(self, url, params={}, post_data=None):
         HTTP_HEADER = dict(self.HEADER)
@@ -174,116 +172,6 @@ class ZDFmediathek(CBaseHostClass):
             return iconsTab[int(idx)]['url']
         return ''
 
-    def kinderListABC(self, cItem, nextCategory):
-        printDBG('kinderListABC')
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-
-        data = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="letter-list"', '</ul>')[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
-        for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            if not self.cm.isValidUrl(url):
-                continue
-            title = self.cleanHtmlStr(item)
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'category': nextCategory, 'url': url, 'title': title})
-            self.addDir(params)
-
-    def exploreItem(self, cItem, nextCategory):
-        printDBG('exploreItem')
-
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
-            return
-
-        data = self.cm.ph.rgetDataBeetwenNodes(data, ('<article class="b-cluster', '>', 'x-web-only'), ('<main', '>', 'id="skip-main"'), False)[1]
-        # split data per sections
-        sections = re.split('''<section[^>]+?class=['"]b-content-teaser-list['"][^>]*?>|<article[^>]+?itemtype=['"]http://schema.org/ItemList['"][^>]*?>|<article[^>]+?class=['"]b-content-module['"][^>]*?>''', data)
-        for section in sections:
-            sectionTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(section, '<h2', '</h2>')[1])
-
-            items = []
-            data = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('<span', '>', 'circle icon'), ('<picture', '>', '"artdirect"'))  # ('<article', '>'))
-            tmp = self.cm.ph.rgetAllItemsBeetwenNodes(section, ('<span', '>', 'circle icon'), ('<', '>', '"artdirect"'))
-            if len(tmp) > len(data):
-                data = tmp
-            for subData in data:
-                subData = re.split('<span[^>]+?circle icon[^>]+?>', subData)
-                for item in subData:
-                    tmp = self.cm.ph.getSearchGroups(item, r'''(<a[^>]+?\stitle=[^>]*?>)''')[0]
-                    if tmp == '':
-                        continue
-
-                    title = self.cleanHtmlStr(self.cm.ph.getSearchGroups(tmp, '''title=['"]([^'^"]+?)['"]''')[0])
-
-                    if title.startswith('Folge'):
-                        seriesTitle = self.cleanHtmlStr(self.cm.ph.getDataBeetwenReMarkers(item, re.compile(r'<span[^>]+?teaser\-cat\-brand[^>]+?>'), re.compile('</span>'), False)[1])
-                        title = '%s, %s' % (seriesTitle, title)
-
-                    url = self.getFullUrl(self.cm.ph.getSearchGroups(tmp, '''href=['"]([^'^"]+?)['"]''')[0])
-
-                    icon = self.getIconUrl(self.cm.ph.getSearchGroups(item, '''data-srcset=['"]([^'^"~]+?)['"~]''')[0])
-
-                    if icon == '':
-                        icon = self.getIconUrl(self.cm.ph.getSearchGroups(item, '''<meta[^>]+?itemprop=['"]image['"][^>]+?content=['"]([^'^"~]+?)['"~]''')[0])
-                    if icon == '':
-                        tmp = self.cleanHtmlStr(self.cm.ph.getSearchGroups(item, '''teaser-image=['"]([^'^"]+?)['"]''')[0])
-                        try:
-                            tmp = json_loads(tmp)['original']
-                            if tmp != '':
-                                icon = self.getIconUrl(tmp.split('~', 1)[0])
-                        except Exception:
-                            printExc()
-                    if icon != '':
-                        icon += '~314x314'
-
-                    desc = [self.cleanHtmlStr(item.split('<span class="visuallyhidden">', 1)[0])]
-                    tmp = self.cm.ph.getDataBeetwenReMarkers(item, re.compile('<[^>]+?desc[^>]+?>'), re.compile('</p>'))[1]
-                    desc.append(self.cleanHtmlStr(tmp))
-                    desc.append(self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<dl', '</dl>')[1].replace('</dd>', ' | ')))
-                    desc = '[/br]'.join(desc)
-
-                    if 'assets/a-z-teaser' in icon:
-                        continue
-
-                    params = {'url': url, 'title': title, 'icon': icon, 'desc': desc}
-                    if '_play' in item:
-                        params.update({'type': 'video', 'good_for_fav': False})
-                        items.append(params)
-                    elif 'class="media-content"' not in item and ' min<' not in item:
-                        params.update({'type': 'category', 'good_for_fav': False})
-                        items.append(params)
-            if sectionTitle != '' and len(items) > 1:
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'category': nextCategory, 'title': sectionTitle, 'icon': items[0]['icon'], 'sub_items': items})
-                self.addDir(params)
-            else:
-                for it in items:
-                    params = dict(cItem)
-                    params.update(it)
-                    self.currList.append(params)
-
-        if len(self.currList) == 1 and 'sub_items' in self.currList[0]:
-            cItem = self.currList[0]
-            self.currList = []
-            self.listSubItems(cItem, 'explore_item')
-        return
-
-    def listSubItems(self, cItem, nextCategory):
-        printDBG('listSubItems')
-
-        cItem = dict(cItem)
-        items = cItem.pop('sub_items', '')
-
-        for item in items:
-            params = dict(cItem)
-            params.update(item)
-            if item['type'] == 'category':
-                params.update({'category': nextCategory})
-            self.currList.append(params)
-
     def listStart(self, cItem):
         printDBG('listStart')
         sts, data = self.getPage(cItem['url'])
@@ -347,25 +235,28 @@ class ZDFmediathek(CBaseHostClass):
     def _addItem(self, cItem, item):
         printDBG('_addItem')
         try:
+            if not isinstance(item, dict) or not item.get('titel'):
+                return
             icon = self._getIcon(item.get("teaserBild", {}))
             if icon == '':
-                icon = cItem['icon']
+                icon = cItem.get('icon', '')
             title = self.cleanHtmlStr(item["titel"])
-            if item['type'] in ['brand', 'category']:
-                descTab = []
-                descTab.append(self.cleanHtmlStr(item['headline']))
-                descTab.append(self.cleanHtmlStr(item['channel']))
-                descTab.append(self.cleanHtmlStr(item['beschreibung']))
-                params = {'name': 'category', 'category': 'list_cluster', 'title': title, 'url': self.getFullUrl(item['url']), 'desc': ' | '.join(descTab), 'icon': self.getIconUrl(icon), 'id': item['id'], 'sharing_url': item['sharingUrl'], 'good_for_fav': True}
+            descTab = [self.cleanHtmlStr(item.get(k, '')) for k in ('headline', 'channel', 'beschreibung')]
+            descTab = [x for x in descTab if x]
+            if item['type'] in ['brand', 'category', 'topic']:
+                params = {'name': 'category', 'category': 'list_cluster', 'title': title, 'url': self.getFullUrl(item.get('url', '')), 'desc': ' | '.join(descTab), 'icon': self.getIconUrl(icon), 'id': item.get('id', ''), 'sharing_url': item.get('sharingUrl', ''), 'good_for_fav': True}
+                if not params['url']:
+                    return
                 self.addDir(params)
             elif item['type'] in ["video", "livevideo"]:
-                descTab = []
-                descTab.append(self.cleanHtmlStr(item['headline']))
-                descTab.append(self.cleanHtmlStr(item['channel']))
-                if 'length' in item:
-                    descTab.append(str(timedelta(seconds=int(item["length"]))))
-                descTab.append(self.cleanHtmlStr(item['beschreibung']))
-                params = {'title': title, 'url': self.getFullUrl(item['url']), 'desc': '| '.join(descTab), 'icon': self.getIconUrl(icon), 'id': item['id'], 'sharing_url': item['sharingUrl'], 'good_for_fav': True}
+                if 'length' in item and item.get('length'):
+                    try:
+                        descTab.insert(1, str(timedelta(seconds=int(item["length"]))))
+                    except Exception:
+                        pass
+                params = {'title': title, 'url': self.getFullUrl(item.get('url', '')), 'desc': ' | '.join(descTab), 'icon': self.getIconUrl(icon), 'id': item.get('id', ''), 'sharing_url': item.get('sharingUrl', ''), 'good_for_fav': True}
+                if not params['url'] and not params['id']:
+                    return
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -379,6 +270,59 @@ class ZDFmediathek(CBaseHostClass):
             params = dict(cItem)
             params.update({'category': 'list_missed', 'title': date, 'url': self.BROADSCAST_MISSED_API_URL % date})
             self.addDir(params)
+
+    def listLive(self, cItem):
+        printDBG('listLive')
+        sts, data = self.getPage(self.START_PAGE_API_URL)
+        if not sts:
+            return
+        cItem = dict(cItem)
+        cItem.setdefault('icon', self.DEFAULT_ICON_URL)
+        try:
+            data = json_loads(data)
+            for cluster in data.get('cluster', []):
+                if cluster.get('type') == 'teaserLivevideo':
+                    for item in self._getList(cluster, 'teaser'):
+                        self._addItem(cItem, item)
+        except Exception:
+            printExc()
+
+    def listBrandsAZ(self, cItem):
+        printDBG('listBrandsAZ')
+        for letter in list('ABCDEFGHIJKLMNOPQRSTUVWXYZ') + ['0-9']:
+            params = dict(cItem)
+            params.pop('page', None)
+            params.pop('url', None)
+            params.update({'category': 'list_brands', 'title': letter, 'letter': letter, 'icon': self.DEFAULT_ICON_URL})
+            self.addDir(params)
+
+    def listBrands(self, cItem):
+        printDBG('listBrands')
+        page = cItem.get('page', 0)
+        if page == 0:
+            letter = cItem.get('letter', 'A')
+            query = '0' if letter == '0-9' else letter
+            url = self.SEARCH_API_URL % (urllib_quote(query), 'brand')
+        else:
+            url = cItem['url']
+        kids = bool(cItem.get('f_kids'))
+        sts, data = self.getPage(url)
+        if not sts:
+            return
+        try:
+            data = json_loads(data)
+            for item in data.get('results', []):
+                if item.get('type') not in ('brand', 'topic'):
+                    continue
+                if kids and item.get('channel') != 'KI.KA' and '/kinder/' not in (item.get('sharingUrl') or ''):
+                    continue
+                self._addItem(cItem, item)
+            if data.get('nextPage'):
+                params = dict(cItem)
+                params.update({'title': _('Next page'), 'url': self.getFullUrl(data['nextPageUrl']), 'page': page + 1})
+                self.addDir(params)
+        except Exception:
+            printExc()
 
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("ZDFmediathek.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
@@ -437,6 +381,7 @@ class ZDFmediathek(CBaseHostClass):
                 printExc()
 
             live = data['type']
+            isLive = 'live' in str(live).lower()
             try:
                 data = data['formitaeten']
                 for item in data:
@@ -454,8 +399,14 @@ class ZDFmediathek(CBaseHostClass):
                             qualityPref = abs(qualityVal - preferedQuality)
                             formatPref = formatMap.get(type['name'], 10)
                             tmpUrlTab.append({'url': url, 'quality_name': quality, 'quality': qualityVal, 'quality_pref': qualityPref, 'format_name': type['name'], 'format_pref': formatPref})
+                        elif type['name'] == 'm3u8' and isLive:
+                            # live master playlists have separate audio rendition groups -
+                            # hand the master straight to the player, don't pre-resolve
+                            # (otherwise a video-only variant is picked -> picture but no sound)
+                            tmpUrlTab.append({'url': url, 'quality_name': 'auto', 'quality': 10, 'quality_pref': 0,
+                                              'format_name': 'm3u8', 'format_pref': formatMap.get('m3u8', 10)})
                         elif type['name'] == 'm3u8':
-                            tmpList = getDirectM3U8Playlist(url, checkExt=False)
+                            tmpList = getDirectM3U8Playlist(strwithmeta(url, {'iptv_proto': 'm3u8'}), checkExt=False)
                             for tmpItem in tmpList:
                                 res = tmpItem['with']
                                 if res == 0:
@@ -522,11 +473,10 @@ class ZDFmediathek(CBaseHostClass):
                 url = item['url']
                 name = item['quality_name'] + ' ' + item['format_name']
                 if '' != url:
-                    if 'live' in str(live):
-                        live = True
-                    else:
-                        live = False
-                    urlTab.append({'need_resolve': 0, 'name': name, 'url': self.up.decorateUrl(url, {'iptv_livestream': live, 'external_sub_tracks': subTracks})})
+                    decorateParams = {'iptv_livestream': isLive, 'external_sub_tracks': subTracks}
+                    if item['format_name'] == 'm3u8':
+                        decorateParams['iptv_proto'] = 'm3u8'
+                    urlTab.append({'need_resolve': 0, 'name': name, 'url': self.up.decorateUrl(url, decorateParams)})
                     if onelinkmode:
                         break
             printDBG(tmpUrlTab)
@@ -547,21 +497,21 @@ class ZDFmediathek(CBaseHostClass):
         if None is name:
             self.listsTab(self.MAIN_CAT_TAB, {'name': 'category'})
         elif 'kinder' == category:
-            self.listsTab(self.KINDER_TAB, self.currItem)
-        elif 'kinder_list_abc' == category:
-            self.kinderListABC(self.currItem, 'explore_item')
-        elif 'explore_item' == category:
-            self.exploreItem(self.currItem, 'list_sub_items')
-        elif 'list_sub_items' == category:
-            self.listSubItems(self.currItem, 'explore_item')
+            self.listBrandsAZ(dict(self.currItem, f_kids=True))
         elif 'list_start' == category:
             self.listStart(self.currItem)
+        elif 'list_live' == category:
+            self.listLive(self.currItem)
         elif 'missed_date' == category:
             self.listMissedDate(self.currItem)
         elif 'list_missed' == category:
             self.listSendungverpasst(self.currItem)
         elif 'list_cluster' == category:
             self.listCluster(self.currItem)
+        elif 'list_brands_az' == category:
+            self.listBrandsAZ(self.currItem)
+        elif 'list_brands' == category:
+            self.listBrands(self.currItem)
         elif 'list_content' == category:
             self.listContent(self.currItem)
     # WYSZUKAJ

@@ -1,687 +1,418 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 07.08.2025
+# SRG SSR (SRF / RTS / RSI / RTR)
+# Rewritten for the il.srgssr.ch integrationlayer 2.0 JSON API
+# Last Modified: 28.08.2026
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, PrevDay
-from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
-from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
-###################################################
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
+import re
 ###################################################
 # FOREIGN import
 ###################################################
-try:
-    import json
-except Exception:
-    import simplejson as json
-from datetime import datetime
 from Components.config import config, ConfigYesNo, getConfigListEntry
 ###################################################
 
-###################################################
-# Config options for HOST
-###################################################
-config.plugins.iptvplayer.tv3player_use_web_proxy = ConfigYesNo(default=False)
+config.plugins.iptvplayer.playrtsiw_hls = ConfigYesNo(default=True)
 
 
 def GetConfigList():
-    optionList = []
-    optionList.append(getConfigListEntry(_("Use web-proxy for VODs (it may be illegal):"), config.plugins.iptvplayer.tv3player_use_web_proxy))
-    return optionList
-###################################################
+    return [getConfigListEntry(_("Use HLS streams (adaptive):"), config.plugins.iptvplayer.playrtsiw_hls)]
 
 
 def gettytul():
-    return 'https://srgssr.ch/'
+    return 'https://www.srgssr.ch/'
 
 
 class PlayRTSIW(CBaseHostClass):
 
+    IL = 'https://il.srgssr.ch/integrationlayer/2.0/'
+    TOKEN_URL = 'https://tp.srgssr.ch/akahd/token?acl='
+
+    BU = [
+        ('srf', 'SRF', 'https://www.srf.ch/play/static/img/srg/srf/playsrf_logo.png'),
+        ('rts', 'RTS', 'https://www.rts.ch/play/static/img/srg/rts/playrts_logo.png'),
+        ('rsi', 'RSI', 'https://www.rsi.ch/play/static/img/srg/rsi/playrsi_logo.png'),
+        ('rtr', 'RTR', 'https://www.rtr.ch/play/static/img/srg/rtr/playrtr_logo.png'),
+    ]
+
     def __init__(self):
-        CBaseHostClass.__init__(self, {'history': 'PlayRTSIW.tv', 'cookie': 'rte.ie.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
-        self.HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html'}
-        self.AJAX_HEADER = dict(self.HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest'})
+        CBaseHostClass.__init__(self, {'history': 'PlayRTSIW', 'cookie': 'srgssr.cookie'})
+        self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/SRG_SSR_2011_logo.svg/1200px-SRG_SSR_2011_logo.svg.png'
+        self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36', 'Accept': 'application/json'}
 
-        self.defaultParams = {'header': self.HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
-        self.ITEMS_TYPE_MAP = {'tv': 'videos', 'radio': 'audios'}
-        self.PLAYER_MAP = ['rtr', 'srf', 'rsi', 'swi', 'rts']
-        self.URL_MAP = {'rtr': 'https://www.rtr.ch/',
-                        'srf': 'https://www.srf.ch/',
-                        'rsi': 'https://www.rsi.ch/',
-                        'swi': 'https://play.swissinfo.ch/',
-                        'rts': 'https://www.rts.ch/'}
+    ###################################################
+    def getPage(self, url, params=None, post_data=None):
+        if params is None:
+            params = {}
+        params['header'] = dict(self.HTTP_HEADER)
+        return self.cm.getPage(url, params, post_data)
 
-        self.PORTALS_MAP = {}
-        for item in self.PLAYER_MAP:
-            self.URL_MAP['%s_icon' % item] = self.URL_MAP[item] + 'play/static/img/srg/%s/play%s_logo.png' % (item, item)
-            self.PORTALS_MAP[item] = {'title': item.upper(), 'url': self.URL_MAP[item] + 'play/tv', 'icon': self.URL_MAP['%s_icon' % item]}
-        self.SEARCH_ICON_URL = 'https://www.srgssr.ch/fileadmin/dam/images/quicklinks/srgssr-auf-einen-blick.png'
-        self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/SRG_SSR_2011_logo.svg/2000px-SRG_SSR_2011_logo.svg.png'
-        self.MAIN_URL = None
-        self.cacheLinks = {}
-        self.cacheShowsMap = []
-        self.cacheShowsAZ = []
+    def _json(self, url):
+        sts, data = self.getPage(url)
+        if not sts or not data:
+            return None
+        try:
+            return json_loads(data)
+        except Exception:
+            printExc()
+            return None
 
-    def setMainUrl(self, url):
-        if self.cm.isValidUrl(url):
-            self.MAIN_URL = self.cm.getBaseUrl(url)
-
-    def getFullIconUrl(self, url):
-        url = self.getFullUrl(url)
-        lurl = url.lower()
-        if url != '' and '/scale/' not in url and \
-           not lurl.endswith('.png') and \
-           not lurl.endswith('.jpg') and \
-           not lurl.endswith('.jpeg'):
-            url += '/scale/width/344'
+    def _icon(self, url):
+        url = url or ''
+        if url and '/scale/' not in url and url.lower().rsplit('.', 1)[-1] not in ('png', 'jpg', 'jpeg', 'webp'):
+            url += '/scale/width/480'
         return url
 
-    def listMainMenu(self, cItem, nextCategory1, nextCategory2):
-        printDBG("PlayRTSIW.listMainMenu")
-        for portal in ['rtr', 'rsi', 'srf', 'rts', 'swi']:
+    def _fmtDur(self, ms):
+        try:
+            s = int(ms) // 1000
+            h, s = divmod(s, 3600)
+            m, s = divmod(s, 60)
+            return '%d:%02d:%02d' % (h, m, s) if h else '%d:%02d' % (m, s)
+        except Exception:
+            return ''
+
+    ###################################################
+    def _addMedia(self, cItem, media):
+        try:
+            if not isinstance(media, dict):
+                return
+            urn = media.get('urn') or ''
+            if not urn:
+                return
+            title = self.cleanHtmlStr(media.get('title') or '')
+            show = self.cleanHtmlStr((media.get('show') or {}).get('title') or '')
+            if show and show.lower() not in title.lower():
+                title = '%s - %s' % (show, title)
+            descTab = []
+            dur = self._fmtDur(media.get('duration'))
+            date = (media.get('date') or '')[:10]
+            meta = ', '.join([x for x in (dur, date) if x])
+            if meta:
+                descTab.append(meta)
+            for key in ('lead', 'description'):
+                if media.get(key):
+                    descTab.append(self.cleanHtmlStr(media[key]))
+                    break
+            block = str(media.get('blockReason') or '').upper()
+            if block:
+                title = '%s [%s]' % (title, 'GEO' if 'GEOBLOCK' in block else block)
+                descTab.insert(0, _('This content is not available in your region.') if 'GEOBLOCK' in block else block)
             params = dict(cItem)
-            params.update(self.PORTALS_MAP[portal])
-            params.update({'portal': portal, 'desc': params['url']})
-            if portal == 'swi':
-                params.update({'f_type': 'tv', 'category': nextCategory2})
-            else:
-                params.update({'category': nextCategory1})
-            self.addDir(params)
-
-        MAIN_CAT_TAB = self.searchItems()
-        self.listsTab(MAIN_CAT_TAB, cItem)
-
-    def listType(self, cItem):
-        printDBG("PlayRTSIW.listType")
-        self.setMainUrl(cItem['url'])
-        self.DEFAULT_ICON_URL = cItem['icon']
-
-        for item in [('tv', _('TV')), ('radio', _('Radio'))]:
-            params = dict(cItem)
-            params.update({'f_type': item[0], 'title': item[1], 'desc': self.getFullUrl('/play/' + item[0])})
-            if item[0] == 'tv':
-                params.update({'category': 'portal'})
-            else:
-                params.update({'category': 'radio_channels'})
-            self.addDir(params)
-
-    def listRadioChannels(self, cItem, nextCategory):
-        printDBG("PlayRTSIW.listPortalMain")
-
-        url = self.getFullUrl('/play/radio/page/channel/navigation')
-        sts, data = self.cm.getPage(url)
-        if not sts:
-            return
-
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a', '</a>')
-        for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''href=['"]([^'^"]+?)['"]''')[0])
-            title = self.cleanHtmlStr(item)
-            if title == '':
-                title = self.cm.ph.getSearchGroups(item, '''channelNavigationLogo__([^'^"]+?)['"]''')[0].upper()
-            params = dict(cItem)
-            params.update({'title': title, 'url': url})
-            if 'station=' in url:
-                channelId = self.cm.ph.getSearchGroups(item, '''station=([^'^"]+?)['"]''')[0]
-                params.update({'category': nextCategory, 'f_channel_id': channelId})
-                self.addDir(params)
-            else:
-                params.update({'good_for_fav': True, 'desc': url})
+            params.pop('page', None)
+            params.update({'good_for_fav': True, 'title': title or urn, 'urn': urn,
+                           'icon': self._icon(media.get('imageUrl')), 'desc': '[/br]'.join(descTab)})
+            if str(media.get('type') or '').upper() in ('LIVESTREAM', 'SCHEDULED_LIVESTREAM'):
+                params['live'] = True
+            if str(media.get('mediaType') or '').upper() == 'AUDIO':
                 self.addAudio(params)
-
-    def listPortalMain(self, cItem):
-        printDBG("PlayRTSIW.listPortalMain")
-        self.cacheShowsMap = []
-        self.cacheShowsAZ = []
-
-        self.setMainUrl(cItem['url'])
-        self.DEFAULT_ICON_URL = cItem['icon']
-
-        portal = cItem['portal']
-        type = cItem['f_type']
-
-        if type == 'tv':
-            params = dict(cItem)
-            params.update({'category': 'list_live', 'title': _('Live'), 'url': self.getFullUrl('/play/v2/tv/live/overview'), 'desc': self.getFullUrl('/play/tv/live')})
-            self.addDir(params)
-
-        if type == 'tv':
-            url = '/play/tv/videos/latest?numberOfVideos=100&moduleContext=homepage'
-        else:
-            url = '/play/radio/latest/audios?numberOfAudios=100&moduleContext=homepage&channelId=' + cItem['f_channel_id']
-        params = dict(cItem)
-        params.update({'category': 'list_teaser_items', 'title': _('Latest'), 'url': self.getFullUrl(url)})
-        self.addDir(params)
-
-        if type == 'tv':
-            url = '/play/tv/videos/trending?numberOfVideos=23&onlyEpisodes=true&includeEditorialPicks=true'
-        else:
-            url = '/play/radio/mostclicked/audios?numberOfAudios=23&moduleContext=homepage&channelId=' + cItem['f_channel_id']
-        params = dict(cItem)
-        params.update({'category': 'list_teaser_items', 'title': _('Most popular'), 'url': self.getFullUrl(url)})
-        self.addDir(params)
-
-        if portal != 'swi':
-            params = dict(cItem)
-            params.update({'category': 'list_days', 'title': _('List by day'), 'icon': 'https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/calendar-icon.png'})
-            self.addDir(params)
-
-        # chek if categories are available
-        url = self.getFullUrl('/play/v2/%s/topicList?numberOfMostClicked=1&numberOfLatest=1&moduleContext=topicpaget' % type)
-        sts, data = self.cm.getPage(url)
-        if not sts:
-            return
-        try:
-            if len(json.loads(data)):
-                params = dict(cItem)
-                params.update({'category': 'list_cats', 'title': _('Categories')})
-                self.addDir(params)
-        except Exception:
-            printExc()
-
-        # check AZ
-        if portal != 'swi':
-            if type == 'tv':
-                url = self.getFullUrl('/play/v2/tv/shows/atoz/index')
             else:
-                url = self.getFullUrl('/play/v2/radio/channel/%s/shows/atoz/index' % cItem['f_channel_id'])
-            sts, data = self.cm.getPage(url)
-            if not sts:
-                return
-            try:
-                self.cacheShowsAZ = byteify(json.loads(data))
-            except Exception:
-                printExc()
-            if len(self.cacheShowsAZ):
-                params = dict(cItem)
-                params.update({'category': 'list_az', 'title': _('AZ')})
-                self.addDir(params)
-
-    def listSubItems(self, cItem):
-        printDBG("PlayRTSIW.listSubItems")
-        self.currList = cItem['sub_items']
-
-    def listCats(self, cItem, nextCategory1, nextCategory2):
-        printDBG("PlayRTSIW.listCats")
-        type = cItem['f_type']
-        url = self.getFullUrl('/play/v2/%s/topicList?numberOfMostClicked=100&numberOfLatest=100&moduleContext=topicpaget' % type)
-
-        sts, data = self.cm.getPage(url)
-        if not sts:
-            return
-        try:
-            data = byteify(json.loads(data))
-            for item in data:
-                sTitle = self.cleanHtmlStr(item['title'])
-                sUrl = self.getFullUrl(item['url'])
-
-                latestSubItems = []
-                mostSubItems = []
-
-                for it in item.get('subTopics', []):
-                    title = self.cleanHtmlStr(it['title'])
-                    url = self.getFullUrl(it['url'])
-
-                    if 'latestModuleUrl' in it:
-                        params = dict(cItem)
-                        params.update({'category': nextCategory2, 'url': self.getFullUrl(it['latestModuleUrl']), 'title': title})
-                        latestSubItems.append(params)
-
-                    if 'mostClickedModuleUrl' in it:
-                        params = dict(cItem)
-                        params.update({'category': nextCategory2, 'url': self.getFullUrl(it['mostClickedModuleUrl']), 'title': title})
-                        mostSubItems.append(params)
-
-                subItems = []
-
-                if len(latestSubItems):
-                    if 'latestModuleUrl' in item:
-                        params = dict(cItem)
-                        params.update({'category': nextCategory2, 'url': self.getFullUrl(item['latestModuleUrl']), 'title': _('--All--')})
-                        latestSubItems.insert(0, params)
-                    params = dict(cItem)
-                    params.update({'category': nextCategory1, 'title': _('Most recent'), 'sub_items': latestSubItems})
-                    subItems.append(params)
-                else:
-                    if 'latestModuleUrl' in item:
-                        params = dict(cItem)
-                        params.update({'category': nextCategory2, 'url': self.getFullUrl(item['latestModuleUrl']), 'title': _('Most recent')})
-                        subItems.append(params)
-
-                if len(mostSubItems):
-                    if 'mostClickedModuleUrl' in item:
-                        params = dict(cItem)
-                        params.update({'category': nextCategory2, 'url': self.getFullUrl(item['mostClickedModuleUrl']), 'title': _('--All--')})
-                        mostSubItems.insert(0, params)
-                    params = dict(cItem)
-                    params.update({'category': nextCategory1, 'title': _('Most recent'), 'sub_items': mostSubItems})
-                    subItems.append(params)
-                else:
-                    if 'mostClickedModuleUrl' in item:
-                        params = dict(cItem)
-                        params.update({'category': nextCategory2, 'url': self.getFullUrl(item['mostClickedModuleUrl']), 'title': _('Most recent')})
-                        subItems.append(params)
-
-                params = dict(cItem)
-                if len(subItems) > 1:
-                    params.update({'category': nextCategory1, 'url': sUrl, 'title': sTitle, 'sub_items': subItems})
-                    self.addDir(params)
-                elif len(subItems) == 1 and 'sub_items' not in subItems[0]:
-                    params.update({'category': nextCategory2, 'url': subItems[0]['url'], 'title': sTitle})
-                    self.addDir(params)
-        except Exception:
-            printExc()
-
-    def listDays(self, cItem, nextCategory):
-        printDBG("PlayRTSIW.listDays [%s]" % cItem)
-        type = cItem['f_type']
-        channelId = cItem.get('f_channel_id', '')
-        if 'f_date' not in cItem:
-            dt = datetime.now()
-        else:
-            dt = datetime.strptime(cItem['f_date'], '%d-%m-%Y').date()
-        baseUrl = self.getFullUrl('/play/v2/{0}/programDay/%s/{1}'.format(type, channelId))
-        for item in range(31):
-            title = dt.strftime('%d-%m-%Y')
-            url = baseUrl % title
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url})
-            self.addDir(params)
-            dt = PrevDay(dt)
-
-        params = dict(cItem)
-        params.update({'good_for_fav': False, 'title': _('Older'), 'f_date': dt.strftime('%d-%m-%Y')})
-        self.addDir(params)
-
-    def _listItems(self, cItem, data):
-        printDBG("PlayRTSIW._listItems")
-        type = cItem['f_type']
-        try:
-            for item in data:
-                title = item['title']
-                url = item['absoluteDetailUrl']
-                icon = self.getFullIconUrl(item['imageUrl'])
-                desc = [item['duration'], item['date']]
-                if item['isGeoblocked']:
-                    desc.append(_('geoblocked'))
-                descTab = []
-                descTab.append(item['showTitle'])
-                descTab.append(', '.join(desc))
-                descTab.append(item.get('description', ''))
-
-                params = dict(cItem)
-                params.update({'good_for_fav': True, 'title': title, 'url': url, 'item_id': item['id'], 'popup_url': self.getFullUrl(item['popupUrl']), 'detail_url': self.getFullUrl(item['detailUrl']), 'icon': icon, 'desc': '[/br]'.join(descTab)})
-                if 'downloadHdUrl' in item:
-                    params['download_hd_url'] = item['downloadHdUrl']
-                if 'downloadSdUrl' in item:
-                    params['download_sd_url'] = item['downloadSdUrl']
-                if type == 'tv':
-                    self.addVideo(params)
-                else:
-                    self.addAudio(params)
-        except Exception:
-            printExc()
-
-    def _listShows(self, cItem, data):
-        printDBG("PlayRTSIW._listShows")
-        type = cItem['f_type']
-        for item in data:
-            title = self.cleanHtmlStr(item['title'])
-            icon = self.getFullIconUrl(item['imageUrl'])
-            url = item['absoluteOverviewUrl']
-            desc = []
-            if 'episodeCount' in item and item['episodeCount']['isDefined']:
-                desc.append(_('%s episodes') % item['episodeCount']['formatted'])
-            desc.append(self.cleanHtmlStr(item.get('description', '')))
-            sUrl = self.getFullUrl('/play/%s/show/%s/latestEpisodes' % (type, item['id']))
-
-            params = dict(cItem)
-            params.update({'good_for_fav': True, 'title': title, 'url': url, 'f_show_url': sUrl, 'icon': icon, 'desc': '[/br]'.join(desc)})
-            self.addDir(params)
-
-    def listTeaserItems(self, cItem):
-        printDBG("PlayRTSIW.listTeaserItems")
-        sts, data = self.cm.getPage(cItem['url'])
-        if not sts:
-            return
-
-        tmp = self.cm.ph.getAllItemsBeetwenMarkers(data, 'data-teaser="', '"', False)
-        for data in tmp:
-            data = clean_html(data)
-            try:
-                data = byteify(json.loads(data))
-                self._listItems(cItem, data)
-            except Exception:
-                printExc()
-
-    def listAZ(self, cItem, nextCategory):
-        printDBG("PlayRTSIW.listAZ cItem[%s]" % (cItem))
-
-        try:
-            allLetters = []
-            for item in self.cacheShowsAZ:
-                if not item['hasShows']:
-                    continue
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'title': item['id'], 'category': nextCategory, 'f_letters': [item['id']]})
-                self.addDir(params)
-                allLetters.append(item['id'])
-        except Exception:
-            printExc()
-
-        if len(allLetters):
-            params = dict(cItem)
-            params.update({'good_for_fav': False, 'title': _('All'), 'category': nextCategory, 'f_letters': allLetters})
-            self.currList.insert(0, params)
-
-    def listAZItems(self, cItem, nextCategory):
-        printDBG("PlayRTSIW.listAZItems cItem[%s]" % (cItem))
-        type = cItem['f_type']
-        if self.cacheShowsMap == []:
-            if type == 'tv':
-                url = self.getFullUrl('/play/v2/%s/shows' % type)
-            else:
-                url = self.getFullUrl('/play/radio/shows/alphabetical-sections?channelId=' + cItem['f_channel_id'])
-            sts, data = self.cm.getPage(url)
-            if not sts:
-                return
-
-            data = clean_html(self.cm.ph.getDataBeetwenMarkers(data, 'data-alphabetical-sections="', '"', False)[1])
-            try:
-                self.cacheShowsMap = byteify(json.loads(data))
-            except Exception:
-                printExc()
-
-        letters = cItem.get('f_letters', '')
-        try:
-            for section in self.cacheShowsMap:
-                if section['id'] not in letters:
-                    continue
-                params = dict(cItem)
-                params['category'] = nextCategory
-                self._listShows(params, section['showTeaserList'])
-        except Exception:
-            printExc()
-
-    def listEpisodes(self, cItem):
-        printDBG("PlayRTSIW.listEpisodes cItem[%s]" % (cItem))
-
-        sts, data = self.cm.getPage(cItem['f_show_url'])
-        if not sts:
-            return
-        try:
-            data = byteify(json.loads(data))
-            self._listItems(cItem, data['episodes'])
-
-            nextPage = self.getFullUrl(data['nextPageUrl'])
-            if nextPage != '':
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'title': _('Next page'), 'f_show_url': nextPage})
-                self.addDir(params)
-        except Exception:
-            printExc()
-
-    def listLiveChannels(self, cItem):
-        printDBG("PlayRTSIW.listLiveChannels")
-
-        sts, data = self.cm.getPage(cItem['url'])
-        if not sts:
-            return
-        try:
-            data = byteify(json.loads(data))
-            for item in data['teaser']:
-                title = item['channelName']
-                url = self.getFullUrl(item['urlToLivePage'])
-                urlToPlayer = self.getFullUrl(item['urlToPlayer'])
-                icon = self.getFullIconUrl(item['logo'])
-                descTab = []
-
-                params = dict(cItem)
-                params.update({'good_for_fav': True, 'title': title, 'url': url, 'item_id': item['id'], 'popup_url': url, 'url_to_player': urlToPlayer, 'icon': icon, 'desc': '[/br]'.join(descTab)})
                 self.addVideo(params)
         except Exception:
             printExc()
 
-    def listSearchResult(self, cItem, searchPattern, searchType):
-        printDBG("PlayRTSIW.listSearchResult cItem[%s], searchPattern[%s] searchType[%s]" % (cItem, searchPattern, searchType))
-
-        self.setMainUrl(self.URL_MAP[searchType.lower()])
-        self.DEFAULT_ICON_URL = self.SEARCH_ICON_URL
-        pattern = urllib_quote(searchPattern)
-
-        baseUrl = 'search?searchQuery={0}&numberOf'.format(pattern)
-        for type in ['tv', 'radio']:
-            baseItem = {'name': 'category', 'type': 'category', 'f_type': type}
-            subItems = []
-
-            countDesc = []
-            # SHOWS
-            cUrl = self.getFullUrl('/play/v2/' + type + '/shows/' + baseUrl) + 'Shows='
-            sts, data = self.cm.getPage(cUrl + '1')
-            if not sts:
-                return
-            try:
-                data = json.loads(data)
-                if data['numberOfAvailableShows'] > 0:
-                    params = dict(baseItem)
-                    params.update({'category': 'search_shows', 'title': _('SHOWS'), 'url': cUrl + '100', 'desc': _('Search for "%s", %s, %s %s') % (searchPattern, _(type), data['numberOfAvailableShows'], _('shows'))})
-                    subItems.append(params)
-                countDesc.append(_('%s shows') % data['numberOfAvailableShows'])
-            except Exception:
-                printExc()
-                continue
-
-            # VIDEOS/AUDIOS
-            cUrl = self.getFullUrl('/play/v2/' + type + '/' + self.ITEMS_TYPE_MAP[type] + '/' + baseUrl) + self.ITEMS_TYPE_MAP[type].title() + '='
-            sts, data = self.cm.getPage(cUrl + '1')
-            if not sts:
-                return
-            try:
-                data = json.loads(data)
-                countKey = 'numberOfAvailable' + self.ITEMS_TYPE_MAP[type].title()
-                if data[countKey] > 0:
-                    params = dict(baseItem)
-                    params.update({'category': 'search_items', 'title': _(self.ITEMS_TYPE_MAP[type].upper()), 'url': cUrl + '100', 'desc': _('Search for "%s", %s, %s %s') % (searchPattern, _(type), data[countKey], _(self.ITEMS_TYPE_MAP[type]))})
-                    subItems.append(params)
-                # countDesc.append(_('%s ' + self.ITEMS_TYPE_MAP[type]) % (data[countKey]))
-                countDesc.append('%s %s' % (data[countKey], self.ITEMS_TYPE_MAP[type]))
-            except Exception:
-                printExc()
-                continue
-
-            if len(subItems):
-                params = dict(baseItem)
-                params.update({'category': 'sub_items', 'title': _(type.upper()), 'desc': ', '.join(countDesc), 'sub_items': subItems})
-                self.addDir(params)
-
-    def listSearchItems(self, cItem):
-        printDBG("PlayRTSIW.listSearchItems cItem[%s]" % (cItem))
-        type = self.ITEMS_TYPE_MAP[cItem.get('f_type', 'tv')]
-        sts, data = self.cm.getPage(cItem['url'])
-        if not sts:
+    def _mediaList(self, cItem, key='mediaList'):
+        data = self._json(cItem['url'])
+        if not data:
             return
-        try:
-            data = byteify(json.loads(data))
-            self._listItems(cItem, data[type])
-
-            nextPage = self.getFullUrl(data['nextPageUrl'])
-            if nextPage != '':
-                params = dict(cItem)
-                params.update({'good_for_fav': False, 'title': _('Next page'), 'url': nextPage})
-                self.addDir(params)
-        except Exception:
-            printExc()
-
-    def listSearchShows(self, cItem, nextCategory):
-        printDBG("PlayRTSIW.listSearchShows cItem[%s]" % (cItem))
-        sts, data = self.cm.getPage(cItem['url'])
-        if not sts:
-            return
-        try:
-            data = byteify(json.loads(data))
+        for m in (data.get(key) or data.get('mediaList') or []):
+            self._addMedia(cItem, m)
+        nextUrl = data.get('next') or ''
+        if nextUrl:
             params = dict(cItem)
-            params['category'] = nextCategory
-            self._listShows(params, data['shows'])
+            params.update({'title': _('Next page'), 'url': nextUrl, 'good_for_fav': False})
+            self.addDir(params)
+
+    ###################################################
+    def listPortals(self, cItem):
+        for bu, title, icon in self.BU:
+            params = dict(cItem)
+            params.update({'category': 'list_portal', 'title': title, 'bu': bu, 'icon': icon, 'desc': title})
+            self.addDir(params)
+        self.listsTab(self.searchItems(), cItem)
+
+    def listPortal(self, cItem):
+        bu = cItem['bu']
+        entries = [
+            ('list_media', _('Live'), self.IL + '%s/mediaList/video/livestreams' % bu),
+            ('list_media', _('Latest'), self.IL + '%s/mediaList/video/latestEpisodes?pageSize=40' % bu),
+            ('list_media', _('Most popular'), self.IL + '%s/mediaList/video/trending?pageSize=40&onlyEpisodes=true' % bu),
+            ('list_topics', _('Categories'), self.IL + '%s/topicList/tv' % bu),
+            ('list_az', _('Shows A-Z'), self.IL + '%s/showList/tv/alphabetical?pageSize=100' % bu),
+            ('list_radio', _('Radio'), ''),
+        ]
+        for cat, title, url in entries:
+            params = dict(cItem)
+            params.update({'category': cat, 'title': title, 'url': url})
+            self.addDir(params)
+
+    def listRadio(self, cItem):
+        bu = cItem['bu']
+        entries = [
+            ('list_media', _('Live'), self.IL + '%s/mediaList/audio/livestreams' % bu),
+            ('list_media', _('Most popular'), self.IL + '%s/mediaList/audio/trending?pageSize=40' % bu),
+            ('list_radio_channels', _('Channels'), self.IL + '%s/channelList/radio' % bu),
+            ('list_az', _('Shows A-Z'), self.IL + '%s/showList/radio/alphabetical?pageSize=100' % bu),
+        ]
+        for cat, title, url in entries:
+            params = dict(cItem)
+            params.update({'category': cat, 'title': title, 'url': url, 'radio': True})
+            self.addDir(params)
+
+    def listRadioChannels(self, cItem):
+        data = self._json(cItem['url'])
+        if not data:
+            return
+        bu = cItem['bu']
+        for ch in (data.get('channelList') or []):
+            cid = ch.get('id') or ''
+            if not cid:
+                continue
+            params = dict(cItem)
+            params.pop('page', None)
+            params.update({'category': 'list_media', 'title': self.cleanHtmlStr(ch.get('title') or ''),
+                           'icon': self._icon(ch.get('imageUrl')),
+                           'url': self.IL + '%s/mediaList/audio/latestByChannel/%s?pageSize=40' % (bu, cid)})
+            self.addDir(params)
+
+    def listPodcast(self, cItem):
+        sts, data = self.getPage(cItem['url'])
+        if not sts or not data:
+            return
+        for item in re.findall(r'<item>(.*?)</item>', data, re.S):
+            enclosure = re.search(r'<enclosure\b[^>]*>', item)
+            m = re.search(r'\b(?:url|href)="([^"]+)"', enclosure.group(0)) if enclosure else None
+            if not m:
+                continue
+            url = m.group(1).replace('&amp;', '&')
+            title = re.search(r'<title>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</title>', item, re.S)
+            dur = re.search(r'<itunes:duration>([^<]+)</itunes:duration>', item)
+            pub = re.search(r'<pubDate>([^<]+)</pubDate>', item)
+            desc = re.search(r'<description>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</description>', item, re.S)
+            params = dict(cItem)
+            params.pop('page', None)
+            params.update({'good_for_fav': True, 'title': self.cleanHtmlStr(title.group(1)) if title else cItem.get('title', ''),
+                           'direct_url': url, 'urn': '',
+                           'desc': '[/br]'.join([x for x in (
+                               ', '.join([y for y in ((dur.group(1) if dur else ''), (pub.group(1)[:16] if pub else '')) if y]),
+                               self.cleanHtmlStr(desc.group(1)) if desc else '') if x])})
+            self.addAudio(params)
+
+    def listTopics(self, cItem):
+        data = self._json(cItem['url'])
+        if not data:
+            return
+        bu = cItem['bu']
+        for t in (data.get('topicList') or []):
+            tid = t.get('id') or ''
+            if not tid:
+                continue
+            params = dict(cItem)
+            params.pop('page', None)
+            params.update({'category': 'list_media', 'title': self.cleanHtmlStr(t.get('title') or ''),
+                           'icon': self._icon(t.get('imageUrl')), 'desc': self.cleanHtmlStr(t.get('lead') or ''),
+                           'url': self.IL + '%s/mediaList/video/latestByTopic/%s?pageSize=40' % (bu, tid)})
+            self.addDir(params)
+
+    def listAZ(self, cItem):
+        data = self._json(cItem['url'])
+        if not data:
+            return
+        bu = cItem['bu']
+        radio = bool(cItem.get('radio'))
+        for show in (data.get('showList') or []):
+            sid = show.get('id') or ''
+            if not sid:
+                continue
+            desc = []
+            if show.get('numberOfEpisodes'):
+                desc.append(_('%s episodes') % show['numberOfEpisodes'])
+            if show.get('lead') or show.get('description'):
+                desc.append(self.cleanHtmlStr(show.get('lead') or show.get('description')))
+            params = dict(cItem)
+            params.pop('page', None)
+            params.update({'title': self.cleanHtmlStr(show.get('title') or ''),
+                           'icon': self._icon(show.get('imageUrl')), 'desc': '[/br]'.join(desc)})
+            if radio:
+                feed = show.get('podcastFeedHdUrl') or show.get('podcastFeedSdUrl') or ''
+                if not feed:
+                    continue
+                params.update({'category': 'list_podcast', 'url': feed})
+            else:
+                params.update({'category': 'list_media', 'url': self.IL + '%s/mediaList/video/latest/byShow/%s?pageSize=40' % (bu, sid)})
+            self.addDir(params)
+        nextUrl = data.get('next') or ''
+        if nextUrl:
+            params = dict(cItem)
+            params.update({'title': _('Next page'), 'url': nextUrl, 'good_for_fav': False})
+            self.addDir(params)
+
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        bu = (searchType or 'srf').lower()
+        q = urllib_quote(searchPattern)
+        page = cItem.get('page', 0)
+        if page == 0:
+            data = self._json(self.IL + '%s/searchResultShowList?q=%s' % (bu, q))
+            if data:
+                for show in (data.get('searchResultShowList') or data.get('showList') or []):
+                    sid = show.get('id') or ''
+                    if not sid:
+                        continue
+                    params = dict(cItem)
+                    params.update({'category': 'list_media', 'bu': bu, 'title': '[%s] %s' % (_('Show'), self.cleanHtmlStr(show.get('title') or '')),
+                                   'icon': self._icon(show.get('imageUrl')), 'desc': self.cleanHtmlStr(show.get('lead') or ''),
+                                   'url': self.IL + '%s/mediaList/video/latest/byShow/%s?pageSize=40' % (bu, sid)})
+                    self.addDir(params)
+            url = self.IL + '%s/searchResultMediaList?q=%s&pageSize=40' % (bu, q)
+        else:
+            url = cItem['url']
+        data = self._json(url)
+        if not data:
+            return
+        for m in (data.get('searchResultMediaList') or data.get('mediaList') or []):
+            self._addMedia(dict(cItem, bu=bu), m)
+        nextUrl = data.get('next') or ''
+        if nextUrl:
+            params = dict(cItem)
+            params.update({'title': _('Next page'), 'url': nextUrl, 'page': page + 1})
+            self.addDir(params)
+
+    ###################################################
+    def _akamaiToken(self, url):
+        try:
+            # ACL = first two path segments + /* (matches the proven old-host scheme)
+            segs = url.split('://', 1)[-1].split('?', 1)[0].split('/')
+            acl = '/%s/%s/*' % (segs[1], segs[2]) if len(segs) > 3 else '/*'
+            data = self._json(self.TOKEN_URL + urllib_quote(acl, ''))
+            authparams = ((data or {}).get('token') or {}).get('authparams') or ''
+            if authparams:
+                return url + ('&' if '?' in url else '?') + authparams
         except Exception:
             printExc()
+        return url
 
     def getLinksForVideo(self, cItem):
-        printDBG("PlayRTSIW.getLinksForVideo [%s]" % cItem)
-        linksTab = []
-
-        if 'popup_url' not in cItem:
-            sts, data = self.cm.getPage(cItem['url'])
-            if not sts:
-                return []
-            url = self.cm.ph.getSearchGroups(data, r'''ATR\.stream\s*?=\s*?\{[^\}]*?['"](https?://[^'^"]+?)['"]''')[0]
-            if url != '':
-                linksTab.append({'name': 'stream', 'url': url, 'need_resolve': 0})
-            return linksTab
-
-        if 'download_sd_url' in cItem:
-            linksTab.append({'url': cItem['download_sd_url'], 'name': _('Download %s') % 'SD', 'need_resolve': 0})
-        if 'download_hd_url' in cItem:
-            linksTab.append({'url': cItem['download_hd_url'], 'name': _('Download %s') % 'HD', 'need_resolve': 0})
-
-        if '/tv/' in cItem['popup_url']:
-            if 'url_to_player' in cItem:
-                url = cItem['url_to_player']
-            else:
-                url = cItem['popup_url'].replace('/tv/popupvideoplayer?', '/v2/tv/popupvideoplayer/content?')
-            mediaType = 'VIDEO'
-            progressType = 'mp4'
-        else:
-            url = cItem['popup_url'].replace('/radio/popupaudioplayer?', '/v2/radio/popupaudioplayer/content?')
-            mediaType = 'AUDIO'
-            progressType = 'mp3'
-
-        if '/tp.' not in url:
-            sts, data = self.cm.getPage(url)
-            if not sts:
-                return []
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(data, '''<iframe[^>]+?src=['"]([^"^']+?)['"]''', 1, True)[0]).replace('&amp;', '&')
-
-        baseUrl = self.cm.getBaseUrl(url)
-        urn = self.cleanHtmlStr(self.cm.ph.getSearchGroups(url + '&', '''urn=([^&]+?)&''')[0])
-        url = baseUrl.replace('/tp.', '/il.') + 'integrationlayer/2.0/mediaComposition/byUrn/{0}.json?onlyChapters=true&vector=portalplay'.format(urn)
-        tokenUrl = baseUrl + 'akahd/token?acl='
-        sts, data = self.cm.getPage(url)
+        printDBG("PlayRTSIW.getLinksForVideo [%s]" % cItem.get('urn', ''))
+        if cItem.get('direct_url'):
+            return [{'need_resolve': 0, 'name': _('Audio'), 'url': cItem['direct_url']}]
+        urn = cItem.get('urn', '')
+        if not urn:
+            return []
+        data = self._json(self.IL + 'mediaComposition/byUrn/%s.json?onlyChapters=true&vector=portalplay' % urn)
+        if not data:
+            return []
         try:
-            data = byteify(json.loads(data))
-            for item in data['chapterList']:
-                printDBG("> mediaType[%s] [%s]" % (item['mediaType'], mediaType))
-                if item['mediaType'] == mediaType:
-                    data = item['resourceList']
+            chapter = None
+            for ch in (data.get('chapterList') or []):
+                if ch.get('urn') == data.get('chapterUrn'):
+                    chapter = ch
                     break
-            printDBG(">")
-            printDBG(data)
-            printDBG("<")
-            for item in data:
-                mimeType = item['mimeType'].split('/', 1)[-1].lower()
-                if mimeType == 'x-mpegurl':
-                    mimeType = 'HLS'
-                elif mimeType == progressType:
-                    mimeType = mimeType.upper()
-                elif 'rtmp' in item['protocol'].lower():
-                    mimeType = mimeType.upper()
-                elif mimeType == 'mpeg':
-                    mimeType = mimeType.upper()
+            if chapter is None and data.get('chapterList'):
+                chapter = data['chapterList'][0]
+            if not chapter:
+                return []
+        except Exception:
+            printExc()
+            return []
+
+        blockReason = str(chapter.get('blockReason') or '')
+        resources = chapter.get('resourceList') or []
+        if not resources:
+            if blockReason:
+                printDBG("PlayRTSIW: blocked [%s]" % blockReason)
+                if 'GEOBLOCK' in blockReason.upper():
+                    SetIPTVPlayerLastHostError(_('This content is only available in Switzerland.'))
                 else:
+                    SetIPTVPlayerLastHostError(_('Content not available') + ' [%s]' % blockReason)
+            return []
+
+        subTracks = []
+        for sub in (chapter.get('subtitleList') or []):
+            surl = sub.get('url') or ''
+            if surl:
+                subTracks.append({'title': sub.get('locale') or sub.get('language') or '', 'url': surl,
+                                  'lang': sub.get('locale') or 'de', 'format': (sub.get('format') or '').lower() or 'vtt'})
+
+        isAudio = ':audio:' in urn
+        preferHls = config.plugins.iptvplayer.playrtsiw_hls.value
+        live = bool(cItem.get('live'))
+        hd, sd = [], []
+        for res in resources:
+            rurl = res.get('url') or ''
+            if not rurl:
+                continue
+            proto = (res.get('protocol') or '').upper()
+            isHls = 'HLS' in proto or '.m3u8' in rurl.lower()
+            # for radio keep every protocol (MP3 + HLS); for video honour the config
+            if not isAudio:
+                if preferHls and not isHls:
                     continue
-                n = item['url'].split('/')
-                url = strwithmeta(item['url'], {'priv_token_url': tokenUrl + '%2F{0}%2F{1}%2F*'.format(n[3], n[4]), 'priv_type': mimeType.lower()})
-                name = '[%s/%s] %s' % (mimeType, url.split('://', 1)[0].upper(), item['quality'])
-                params = {'name': name, 'url': url, 'need_resolve': 1}
-                if item['quality'].upper() == 'HD':
-                    linksTab.append(params)
-                else:
-                    linksTab.insert(0, params)
-        except Exception:
-            printExc()
-
-        return linksTab[::-1]
-
-    def getVideoLinks(self, videoUrl):
-        printDBG("PlayRTSIW.getVideoLinks [%s]" % videoUrl)
-        meta = strwithmeta(videoUrl).meta
-        tokenUrl = meta['priv_token_url']
-        type = meta['priv_type']
-
-        sts, data = self.cm.getPage(tokenUrl)
-        try:
-            data = byteify(json.loads(data))['token']['authparams']
-            if '?' not in videoUrl:
-                videoUrl += '?' + data
+                if not preferHls and isHls:
+                    continue
+            if (res.get('tokenType') or 'NONE').upper() == 'AKAMAI':
+                rurl = self._akamaiToken(rurl)
+            name = ('%s %s' % (proto, res.get('quality') or '')).strip()
+            meta = {'iptv_livestream': live}
+            if subTracks:
+                meta['external_sub_tracks'] = subTracks
+            if isHls:
+                meta['iptv_proto'] = 'm3u8'
+            entry = {'need_resolve': 0, 'name': name, 'url': self.up.decorateUrl(rurl, meta)}
+            # radio: plain HTTPS/MP3 first (most reliable), then HLS
+            if isAudio and not isHls:
+                hd.append(entry)
+            elif str(res.get('quality') or '').upper() == 'HD':
+                hd.append(entry)
             else:
-                videoUrl += '&' + data
-        except Exception:
-            printExc()
+                sd.append(entry)
 
-        urlTab = []
-        if type == 'hls':
-            urlTab = getDirectM3U8Playlist(videoUrl, checkContent=True, sortWithMaxBitrate=999999999)
-        else:
-            urlTab.append({'name': 'direct', 'url': videoUrl})
+        urlTab = hd + sd
+        if not urlTab:
+            for res in resources:
+                if res.get('url'):
+                    urlTab.append({'need_resolve': 0, 'name': ('%s %s' % (res.get('protocol') or '', res.get('quality') or '')).strip(),
+                                   'url': self.up.decorateUrl(res['url'], {'iptv_livestream': live})})
         return urlTab
 
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
-        printDBG('handleService start')
-
+        printDBG('PlayRTSIW.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-
-        name = self.currItem.get("name", '')
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        mode = self.currItem.get("mode", '')
-
-        printDBG("handleService: || name[%s], category[%s] " % (name, category))
+        printDBG("PlayRTSIW.handleService: name[%s] category[%s]" % (name, category))
+        searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
 
-    # MAIN MENU
         if name is None:
-            self.listMainMenu({'name': 'category'}, 'type', 'portal')
-        elif category == 'type':
-            self.listType(self.currItem)
-        elif category == 'radio_channels':
-            self.listRadioChannels(self.currItem, 'portal')
-        elif category == 'portal':
-            self.listPortalMain(self.currItem)
-        elif category == 'list_cats':
-            self.listCats(self.currItem, 'sub_items', 'list_teaser_items')
-        elif category == 'sub_items':
-            self.listSubItems(self.currItem)
-        elif category == 'list_teaser_items':
-            self.listTeaserItems(self.currItem)
-        elif category == 'list_days':
-            self.listDays(self.currItem, 'list_teaser_items')
+            self.listPortals({'name': 'category'})
+        elif category == 'list_portal':
+            self.listPortal(self.currItem)
+        elif category == 'list_media':
+            self._mediaList(self.currItem)
+        elif category == 'list_topics':
+            self.listTopics(self.currItem)
         elif category == 'list_az':
-            self.listAZ(self.currItem, 'list_az_items')
-        elif category == 'list_az_items':
-            self.listAZItems(self.currItem, 'list_episodes')
-        elif category == 'list_episodes':
-            self.listEpisodes(self.currItem)
-        elif category == 'search_items':
-            self.listSearchItems(self.currItem)
-        elif category == 'search_shows':
-            self.listSearchShows(self.currItem, 'list_episodes')
-        elif category == 'list_live':
-            self.listLiveChannels(self.currItem)
-    # SEARCH
-        elif category in ["search", "search_next_page"]:
+            self.listAZ(self.currItem)
+        elif category == 'list_radio':
+            self.listRadio(self.currItem)
+        elif category == 'list_radio_channels':
+            self.listRadioChannels(self.currItem)
+        elif category == 'list_podcast':
+            self.listPodcast(self.currItem)
+        elif category in ("search", "search_next_page"):
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'})
+            cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'})
             self.listSearchResult(cItem, searchPattern, searchType)
-    # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc')
         else:
             printExc()
-
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
@@ -691,7 +422,4 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, PlayRTSIW(), True, [])
 
     def getSearchTypes(self):
-        searchTypesOptions = []
-        for item in self.host.PLAYER_MAP:
-            searchTypesOptions.append((item.upper(), item.upper()))
-        return searchTypesOptions
+        return [('SRF', 'srf'), ('RTS', 'rts'), ('RSI', 'rsi'), ('RTR', 'rtr')]

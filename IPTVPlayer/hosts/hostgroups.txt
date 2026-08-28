@@ -121,7 +121,9 @@
  "german": [
   "youtube",
   "webstream",
+  "ardmediathek",
   "zdfmediathek",
+  "orfon",
   "artetv",
   "aniworld",
   "serienstreamto",
