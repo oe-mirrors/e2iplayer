@@ -1,32 +1,35 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 09.06.2025
+# ARTE
+# Rewritten for the api-cdn.arte.tv "emac v4" JSON API + player v2 config
+# Last Modified: 28.08.2026
 ###################################################
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
-###################################################
-
+from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 ###################################################
 # FOREIGN import
 ###################################################
-import re
-import time
-from datetime import datetime, timedelta
+from Components.config import config, ConfigYesNo, ConfigSelection, getConfigListEntry
+from datetime import timedelta
+###################################################
+
 ###################################################
 # Config options for HOST
 ###################################################
-from Components.config import config, ConfigYesNo, getConfigListEntry
-
+config.plugins.iptvplayer.artetv_lang = ConfigSelection(default="de", choices=[("de", "Deutsch"), ("fr", u"Français"), ("en", "English"), ("es", u"Español"), ("pl", "Polski"), ("it", "Italiano")])
 config.plugins.iptvplayer.artetv_quality = ConfigYesNo(default=True)
 config.plugins.iptvplayer.artetv_audio = ConfigYesNo(default=False)
 
 
 def GetConfigList():
     optionList = []
+    optionList.append(getConfigListEntry(_("Language") + ":", config.plugins.iptvplayer.artetv_lang))
     optionList.append(getConfigListEntry(_("Show only best quality of streams:"), config.plugins.iptvplayer.artetv_quality))
     optionList.append(getConfigListEntry(_("Show only audio in selected language:"), config.plugins.iptvplayer.artetv_audio))
     return optionList
@@ -40,366 +43,379 @@ def gettytul():
 
 class ArteTV(CBaseHostClass):
 
+    IMG_SIZE = '400x225'
+
+    MENU = [
+        ('ACT', _('News') + ' & ' + _('Society')),
+        ('DOR', _('Documentaries')),
+        ('CIN', _('Movies')),
+        ('SER', _('Series')),
+        ('ARTE_CONCERT', 'ARTE Concert'),
+        ('SCI', _('Science')),
+        ('HIS', _('History')),
+        ('DEC', _('Discovery')),
+        ('CPO', _('Culture and pop')),
+        ('JUN', _('Children')),
+        ('EMI', _('Shows')),
+    ]
+
     def __init__(self):
+        printDBG("ArteTV.__init__")
         CBaseHostClass.__init__(self, {'history': 'arte.tv', 'cookie': 'arte.tv.cookie'})
-        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
         self.MAIN_URL = 'https://www.arte.tv/'
-        self.DEFAULT_ICON_URL = 'https://www.arte.tv/sites/corporate/files/arte-logo_1920x1080-6-470x270.jpg'
-        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
-        self.AJAX_HEADER = dict(self.HTTP_HEADER)
-        self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})
+        self.DEFAULT_ICON_URL = 'https://www.arte.tv/static/livewebapp/images/apple-touch-icon.png'
+        self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
+        self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'application/json'}
 
-        # from hbbtv
-        self.API_URL = 'https://www.arte.tv/hbbtvv2/services/web/index.php'
-        self.API_ENDPOINTS = {
-            'categories': '/EMAC/teasers/{type}/v2/{lang}',
-            'category': '/EMAC/teasers/category/v2/{category_code}/{lang}',
-            'subcategory': '/OPA/v3/videos/subcategory/{sub_category_code}/page/1/limit/100/{lang}',
-            'magazines': '/OPA/v3/magazines/{lang}',
-            'collection': '/OPA/v3/videos/collection/SHOW/{collection_id}/{lang}',
-            # program details
-            'video': '/OPA/v3/videos/{program_id}/{lang}',
-            # program streams
-            'streams': '/OPA/v3/streams/{program_id}/{kind}/{lang}',
-            'daily': '/OPA/v3/programs/{date}/{lang}'
-        }
+    ###################################################
+    def _lang(self):
+        return config.plugins.iptvplayer.artetv_lang.value or 'de'
 
-        self.defaultParams = {'header': self.HTTP_HEADER, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True, 'cookiefile': self.COOKIE_FILE}
+    def _api(self, path):
+        return 'https://api-cdn.arte.tv/api/emac/v4/%s/web/%s' % (self._lang(), path)
 
-    def parseDate(self, datestr):
-        # remove weekday & timezone
-        datestr = ' '.join(datestr.split(None)[1:5])
+    def getPage(self, url, params=None, post_data=None):
+        if params is None:
+            params = {}
+        params['header'] = dict(self.HTTP_HEADER)
+        return self.cm.getPage(url, params, post_data)
 
-        # replace months with numbers - there will be problems with localization
-        months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-        for i in range(12):
-            datestr = datestr.replace(months[i], str(i + 1))
-
-        date = None
-        try:
-            date = datetime.strptime(datestr, '%d %m %Y %H:%M:%S')
-        except:
-            printExc()
-
-        return date
-
-    def getPage(self, baseUrl, addParams={}, post_data=None):
-        if addParams == {}:
-            addParams = dict(self.defaultParams)
-
-        return self.cm.getPage(baseUrl, addParams, post_data)
-
-    def mapVideo(self, item):
-
-        label = item.get('title')
-        subtitle = item.get('subtitle')
-        if subtitle:
-            label += " - " + subtitle
-
-        desc = []
-
-        duration = int(item.get('duration') or 0) * 60 or item.get('durationSeconds')
-
-        desc1 = ""
-        if duration > 0:
-            desc1 = _('Duration') + ": %s" % str(timedelta(seconds=duration))
-        try:
-            airdate = item.get('broadcastBegin')
-            if airdate is not None:
-                desc1 = desc1 + " " + (_("Broadcast begins at %s") % datetime.strftime(self.parseDate(airdate), '%d %B %Y %H:%M:%S'))
-        except:
-            printExc()
-
-        if desc1:
-            desc.append(desc1)
-
-        if item.get('fullDescription', ''):
-            desc.append(item.get('fullDescription', ''))
-        elif item.get('shortDescription', ''):
-            desc.append(item.get('shortDescription', ''))
-
-        if item.get('genrePresse'):
-            desc.append(item.get('genrePresse'))
-
-        desc = '\n'.join(desc)
-
-        return {
-            'kind': item.get('kind'),
-            'programId': item.get('programId'),
-            'title': label,
-            'icon': item.get('imageUrl'),
-            'desc': desc,
-        }
-
-    def mapPlaylist(self, item):
-        programId = item.get('programId')
-        kind = item.get('kind')
-        label = item.get('title')
-        subtitle = item.get('subtitle')
-        if subtitle:
-            label += " - " + subtitle
-
-        desc = item.get('teaserText', '')
-
-        return {
-            'title': label,
-            'icon': item.get('imageUrl'),
-            'desc': desc
-        }
-
-    def listMainMenu(self, cItem, nextCategory):
-        printDBG("ArteTV.listMainMenu")
-
-        lang = GetDefaultLang()
-        url = self.getMainUrl()
-        if lang in ['en', 'it', 'fr', 'de', 'es', 'pl']:
-            url += lang
-
+    def _json(self, url):
         sts, data = self.getPage(url)
-        if not sts:
-            return
+        if not sts or not data:
+            return None
+        try:
+            return json_loads(data)
+        except Exception:
+            printExc()
+            return None
 
-        data = self.cm.ph.getAllItemsBeetwenNodes(data, ('<a', '>', ' lang='), ('</a', '>'))
-        for item in data:
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, r'''\shref=['"]([^'^"]+?)['"]''')[0])
-            title = self.cleanHtmlStr(item)
-            lang = url.split('/')[3]
+    def _img(self, item):
+        try:
+            src = ((item.get('mainImage') or {}).get('url')) or ''
+            if not src:
+                return ''
+            return src.replace('__SIZE__', self.IMG_SIZE)
+        except Exception:
+            return ''
 
+    def _title(self, item):
+        title = self.cleanHtmlStr(item.get('title') or '')
+        sub = self.cleanHtmlStr(item.get('subtitle') or '')
+        if sub and sub.lower() not in title.lower():
+            title = '%s - %s' % (title, sub) if title else sub
+        return title
+
+    def _desc(self, item):
+        parts = []
+        dl = item.get('durationLabel') or ''
+        if not dl:
+            dur = item.get('duration') or 0
+            try:
+                dur = int(dur)
+                if dur:
+                    dl = str(timedelta(seconds=dur))
+            except Exception:
+                dl = ''
+        if dl:
+            parts.append('%s: %s' % (_('Duration'), dl))
+        ei = item.get('episodeInfo')
+        if isinstance(ei, str) and ei.strip():
+            parts.append(self.cleanHtmlStr(ei))
+        for key in ('teaserText', 'shortDescription'):
+            val = item.get(key)
+            if isinstance(val, str) and val.strip():
+                parts.append(self.cleanHtmlStr(val))
+                break
+        avail = (item.get('availability') or {}).get('label') or ''
+        if avail:
+            parts.append(self.cleanHtmlStr(avail))
+        return '[/br]'.join(parts)
+
+    ###################################################
+    def _zoneData(self, zoneOrContent):
+        if not isinstance(zoneOrContent, dict):
+            return [], {}
+        content = zoneOrContent.get('content') if 'content' in zoneOrContent else zoneOrContent
+        content = content or {}
+        data = content.get('data')
+        return (data if isinstance(data, list) else []), (content.get('pagination') or {})
+
+    def _addItem(self, cItem, item):
+        try:
+            if not isinstance(item, dict):
+                return
+            kind = item.get('kind') or {}
+            code = (kind.get('code') or '').upper()
+            pid = item.get('programId') or ''
+            title = self._title(item)
+            if not title:
+                return
+            if code in ('EXTERNAL', 'PAGE') or not pid:
+                return
             params = dict(cItem)
-            params.update({'good_for_fav': False, 'category': nextCategory, 'title': title, 'url': url, 'f_lang': lang})
-            printDBG(str(params))
+            params.pop('page', None)
+            params.pop('zone_url', None)
+            params.update({'title': title, 'icon': self._img(item), 'desc': self._desc(item), 'good_for_fav': True})
+            if kind.get('isCollection') or code in ('TV_SERIES', 'TOPIC', 'COLLECTION') or str(pid).startswith('RC-'):
+                params.update({'category': 'list_collection', 'col_id': pid, 'url': self._api('collections/%s' % pid)})
+                self.addDir(params)
+            else:
+                params.update({'program_id': pid, 'f_url': item.get('url', '')})
+                if code in ('LIVESTREAM',) or item.get('livestreamRights'):
+                    params['live'] = True
+                self.addVideo(params)
+        except Exception:
+            printExc()
+
+    ###################################################
+    def listLive(self, cItem):
+        # ARTE linear livestream
+        cfg = self._json('https://api.arte.tv/api/player/v2/config/%s/LIVE' % self._lang())
+        attrs = (cfg or {}).get('data', {}).get('attributes') or {}
+        meta = attrs.get('metadata') or {}
+        prog = self.cleanHtmlStr(meta.get('title') or '')
+        sub = self.cleanHtmlStr(meta.get('subtitle') or '')
+        params = dict(cItem)
+        params.update({'title': 'ARTE Live' + (' - %s' % prog if prog else ''), 'program_id': 'LIVE', 'live': True,
+                       'desc': '[/br]'.join([x for x in (prog, sub) if x]), 'good_for_fav': True, 'icon': ''})
+        self.addVideo(params)
+        # today's schedule + live concert zones
+        data = self._json(self._api('pages/LIVE'))
+        for z in ((data or {}).get('zones') or []):
+            items, _pag = self._zoneData(z)
+            if not items:
+                continue
+            code = (z.get('code') or '').lower()
+            ztitle = self.cleanHtmlStr(z.get('title') or '')
+            if ztitle == z.get('code') or '_' in ztitle:
+                ztitle = ''
+            if code.startswith('program_content'):
+                title = ztitle or _('Now')
+            elif 'guide' in code:
+                title = ztitle or _('Today')
+            elif code.endswith('_live') or 'concert' in code:
+                title = ztitle or _('Concert')
+            else:
+                continue
+            params = dict(cItem)
+            params.update({'category': 'list_zone_inline', 'title': title, 'zone_items': items, 'good_for_fav': False, 'icon': ''})
             self.addDir(params)
 
-        MAIN_CAT_TAB = self.searchItems()
+    def listMenu(self, cItem):
+        for code, title in self.MENU:
+            params = dict(cItem)
+            params.update({'category': 'list_page', 'title': title, 'url': self._api('pages/%s' % code), 'good_for_fav': True, 'icon': ''})
+            self.addDir(params)
 
-        self.listsTab(MAIN_CAT_TAB, cItem)
+    def listPage(self, cItem):
+        printDBG('ArteTV.listPage [%s]' % cItem['url'])
+        data = self._json(cItem['url'])
+        if not data:
+            return
+        zones = data.get('zones')
+        if not isinstance(zones, list):
+            return
+        contentZones = []
+        for z in zones:
+            if not isinstance(z, dict):
+                continue
+            items, _pag = self._zoneData(z)
+            if not items:
+                continue
+            if all((it.get('kind') or {}).get('code', '').upper() in ('EXTERNAL', 'PAGE') for it in items):
+                continue
+            contentZones.append(z)
 
-    def listLang(self, cItem, nextCategory):
-        printDBG("ArteTV.listLang [%s]" % cItem)
-
-        # home categories
-        lang = cItem.get("f_lang", "en")
-        home_url = self.API_URL + self.API_ENDPOINTS['categories'].format(type='home', lang=lang)
-
-        LANG_CAT_TAB = [
-                {'category': 'home_cat', 'key': 'mostRecent', 'title': _('Most recent'), 'f_lang': lang, 'url': home_url},
-                {'category': 'home_cat', 'key': 'mostViewed', 'title': _('Most viewed'), 'f_lang': lang, 'url': home_url},
-                {'category': 'home_cat', 'key': 'lastChance', 'title': _('Last chance'), 'f_lang': lang, 'url': home_url},
-                       ]
-        self.listsTab(LANG_CAT_TAB, cItem)
-
-        # categories
-        url = self.API_URL + self.API_ENDPOINTS['categories'].format(type='categories', lang=lang)
-
-        sts, data = self.getPage(url)
-
-        if not sts:
+        if len(contentZones) == 1:
+            self._listZoneItems(cItem, contentZones[0])
             return
 
-        try:
-            response = json_loads(data)
-            printDBG(str(response))
+        for z in contentZones:
+            title = self.cleanHtmlStr(z.get('title') or '') or _('Section')
+            items, pag = self._zoneData(z)
+            params = dict(cItem)
+            params.pop('page', None)
+            params.update({'title': title, 'good_for_fav': False, 'icon': self._img(items[0]) if items else ''})
+            links = pag.get('links') or {}
+            link = links.get('first') or links.get('self') or ''
+            if link:
+                params.update({'category': 'list_zone', 'url': link})
+            else:
+                params.update({'category': 'list_zone_inline', 'zone_items': items, 'zone_next': links.get('next') or ''})
+            self.addDir(params)
 
-            for c in response.get("categories", []):
-                title = c.get("title", "")
-                code = c.get("code", "")
+    def listZone(self, cItem):
+        printDBG('ArteTV.listZone [%s]' % cItem['url'])
+        data = self._json(cItem['url'])
+        if not data:
+            return
+        self._listZoneItems(cItem, data)
 
-                if title and code:
+    def _listZoneItems(self, cItem, zoneOrContent):
+        items, pag = self._zoneData(zoneOrContent)
+        for it in items:
+            self._addItem(cItem, it)
+        nextUrl = (pag.get('links') or {}).get('next') or ''
+        if nextUrl:
+            params = dict(cItem)
+            params.update({'category': 'list_zone', 'title': _('Next page'), 'url': nextUrl, 'good_for_fav': False})
+            self.addDir(params)
 
-                    cat_url = self.API_URL + self.API_ENDPOINTS['category'].format(category_code=code, lang=lang)
+    def listZoneInline(self, cItem):
+        for it in cItem.get('zone_items', []):
+            self._addItem(cItem, it)
+        nextUrl = cItem.get('zone_next') or ''
+        if nextUrl:
+            params = dict(cItem)
+            params.pop('zone_items', None)
+            params.pop('zone_next', None)
+            params.update({'category': 'list_zone', 'title': _('Next page'), 'url': nextUrl, 'good_for_fav': False})
+            self.addDir(params)
 
-                    params = dict(cItem)
-                    params.update({'category': 'category', 'title': title, 'code': code, 'url': cat_url})
-                    printDBG(str(params))
-                    self.addDir(params)
-        except:
-            printExc()
+    def listCollection(self, cItem):
+        printDBG('ArteTV.listCollection [%s]' % cItem['url'])
+        data = self._json(cItem['url'])
+        if not data:
+            return
+        zones = [z for z in (data.get('zones') or []) if isinstance(z, dict) and self._zoneData(z)[0]]
+        seasons = [z for z in zones if 'subcollection' in (z.get('code') or '')]
+        videos = [z for z in zones if 'subcollection' not in (z.get('code') or '')]
 
-    def listItems(self, cItem, nextCategory):
-        printDBG("ArteTV.listItems [%s]" % cItem)
-
-        url = cItem.get('url', '')
-        lang = cItem.get("f_lang", "en")
-        category = cItem.get("category", "category")
-        key = cItem.get("key", "")
-
-        sts, data = self.getPage(url)
-
-        if not sts:
+        if len(seasons) > 1:
+            for z in seasons:
+                items = self._zoneData(z)[0]
+                params = dict(cItem)
+                params.pop('page', None)
+                params.update({'category': 'list_zone_inline', 'title': self.cleanHtmlStr(z.get('title') or _('Season')), 'zone_items': items, 'good_for_fav': False, 'icon': self._img(items[0]) if items else ''})
+                self.addDir(params)
             return
 
-        try:
-            response = json_loads(data)
+        for z in (seasons + videos):
+            for it in self._zoneData(z)[0]:
+                self._addItem(cItem, it)
 
-            if category == "home_cat":
-                teasers = response.get("teasers", {})
-                # read key
-                if key:
-                    for v in teasers.get(key, []):
-                        videoInfo = self.mapVideo(v)
-                        params = dict(cItem)
-                        params.update(videoInfo)
-                        printDBG(str(params))
-                        self.addVideo(params)
-            elif category == "collection":
-                for v in response.get("videos", []):
-                    videoInfo = self.mapVideo(v)
-                    params = dict(cItem)
-                    params.update(videoInfo)
-                    printDBG(str(params))
-                    self.addVideo(params)
-
-            elif category == "list":
-                for c in cItem.get("subitems", []):
-                    kind = c.get("kind", "")
-                    programId = c.get("programId", "")
-
-                    if kind == "SHOW":
-                        params = dict(cItem)
-                        params.update(c)
-                        printDBG(str(params))
-                        self.addVideo(params)
-
-                    if kind in ["TOPIC", "TV_SERIES", "MAGAZINE"]:
-                        playlistInfo = self.mapPlaylist(c)
-                        params = dict(cItem)
-                        params.update(playlistInfo)
-                        params.update({'category': 'collection', 'url': self.API_URL + self.API_ENDPOINTS["collection"].format(collection_id=programId, lang=lang)})
-                        printDBG(str(params))
-                        self.addDir(params)
-
-                    else:
-                        printDBG("unhandled kind: %s " % kind)
-
-            elif category == "category":
-                # read key category
-                for c in response["category"]:
-                    title = c.get("title", "")
-                    code = c.get("code", "")
-                    category_type = c.get("type", "")
-
-                    if title:
-
-                        params = dict(cItem)
-
-                        if category_type == "category":
-                            cat_url = self.API_URL + self.API_ENDPOINTS['category'].format(category_code=code, lang=lang)
-                            params.update({'category': category_type, 'title': title, 'code': code, 'url': cat_url})
-                            printDBG(str(params))
-                            self.addDir(params)
-
-                        elif category_type in ["highlight", "collection", "listing"]:
-                            # read sub items
-                            subItems = []
-
-                            for cc in c.get("teasers", []):
-                                 videoInfo = self.mapVideo(cc)
-                                 subItems.append(videoInfo)
-
-                            params.update({'category': "list", 'title': title, 'subitems': subItems})
-                            printDBG(str(params))
-                            self.addDir(params)
-
-                        # elif category_code == "magazine":
-
-        except:
-            printExc()
-
-    def getLinksForVideo(self, cItem):
-        printDBG("ArteTV.getLinksForVideo [%s]" % cItem)
-
-        linksTab = []
-
-        programId = cItem.get("programId", "")
-        kind = cItem.get("kind", "")
-        lang = cItem.get("f_lang", "")
-
-        if kind == "SHOW":
-            url = self.API_URL + self.API_ENDPOINTS["streams"].format(program_id=programId, kind=kind, lang=lang)
-            sts, data = self.getPage(url)
-
-            if not sts:
-                return
-
-            try:
-                response = json_loads(data)
-                printDBG(str(response))
-
-                videostreams = response.get("videoStreams", [])
-
-                for v in videostreams:
-                    videoUrl = v.get('url', '')
-                    if videoUrl:
-                        slot = v.get('audioSlot', 0)
-                        quality = v.get('quality', '')
-                        height = int(v.get('height', 0))
-                        width = int(v.get('width', 0))
-                        label = v.get('audioLabel', 'audio')
-
-                        if config.plugins.iptvplayer.artetv_quality.value and (height < 700):
-                            continue
-                        if config.plugins.iptvplayer.artetv_audio.value and (slot > 1):
-                            continue
-
-                        linksTab.append({'name': label + " %dx%d" % (width, height), 'slot': slot, 'url': videoUrl})
-
-            except:
-                printExc()
-
-            linksTab = sorted(linksTab, key=lambda k: k['slot'])
-
+    def listSearchResult(self, cItem, searchPattern, searchType):
+        printDBG("ArteTV.listSearchResult [%s]" % searchPattern)
+        page = cItem.get('page', 1)
+        if page > 1 and cItem.get('url'):
+            data = self._json(cItem['url'])
+            zone = data
         else:
-            printDBG("Unhandled kind: %s " % kind)
+            data = self._json(self._api('pages/SEARCH?query=%s' % urllib_quote(searchPattern)))
+            zone = None
+            for z in ((data or {}).get('zones') or []):
+                if 'SEARCH' in (z.get('code') or '').upper() and self._zoneData(z)[0]:
+                    zone = z
+                    break
+        if not zone:
+            return
+        items, pag = self._zoneData(zone)
+        for it in items:
+            self._addItem(cItem, it)
+        nextUrl = (pag.get('links') or {}).get('next') or ''
+        if nextUrl:
+            params = dict(cItem)
+            params.update({'title': _('Next page'), 'url': nextUrl, 'page': page + 1})
+            self.addDir(params)
 
-        return linksTab
+    ###################################################
+    def getLinksForVideo(self, cItem):
+        printDBG("ArteTV.getLinksForVideo [%s]" % cItem.get('program_id', ''))
+        pid = cItem.get('program_id', '')
+        if not pid:
+            return []
+        data = self._json('https://api.arte.tv/api/player/v2/config/%s/%s' % (self._lang(), pid))
+        if not data:
+            return []
+        attrs = (data.get('data') or {}).get('attributes') or data.get('attributes') or {}
+        streams = attrs.get('streams') or []
+        if not streams:
+            return []
+        live = bool(attrs.get('live'))
+        onlyLang = config.plugins.iptvplayer.artetv_audio.value
+        bestOnly = config.plugins.iptvplayer.artetv_quality.value
+        langName = dict(config.plugins.iptvplayer.artetv_lang.choices).get(self._lang(), '')
 
+        urlTab = []
+        for stream in streams:
+            surl = stream.get('url') or ''
+            if not surl:
+                continue
+            versions = stream.get('versions') or [{}]
+            label = self.cleanHtmlStr(versions[0].get('label') or versions[0].get('shortLabel') or stream.get('versionLabel') or '')
+            if onlyLang and langName and label and langName.lower() not in label.lower() and 'omu' not in label.lower():
+                continue
+            if '.m3u8' in surl.lower() or 'manifest' in surl.lower():
+                if live:
+                    # live masters carry separate audio rendition groups - give the
+                    # master straight to the player (a resolved variant = video only)
+                    urlTab.append({'need_resolve': 0, 'name': label or 'HLS',
+                                   'url': self.up.decorateUrl(surl, {'iptv_proto': 'm3u8', 'iptv_livestream': True})})
+                    continue
+                hls = getDirectM3U8Playlist(strwithmeta(surl, {'iptv_proto': 'm3u8'}), checkExt=False, checkContent=True)
+                for it in hls:
+                    it['name'] = ('%s %s' % (label, it.get('name', ''))).strip()
+                    it['url'] = self.up.decorateUrl(it['url'], {'iptv_livestream': live})
+                    it['need_resolve'] = 0
+                    urlTab.append(it)
+                if not hls:
+                    urlTab.append({'need_resolve': 0, 'name': label or 'HLS', 'url': self.up.decorateUrl(surl, {'iptv_proto': 'm3u8', 'iptv_livestream': live})})
+            else:
+                urlTab.append({'need_resolve': 0, 'name': label or 'stream', 'url': self.up.decorateUrl(surl, {'iptv_livestream': live})})
+
+        if bestOnly and urlTab:
+            def _res(u):
+                try:
+                    return int(u.get('with', 0) or 0)
+                except Exception:
+                    return 0
+            mx = max(_res(u) for u in urlTab)
+            if mx > 0:
+                urlTab = [u for u in urlTab if _res(u) == mx] or urlTab
+        return urlTab
+
+    ###################################################
     def handleService(self, index, refresh=0, searchPattern='', searchType=''):
-        printDBG('handleService start')
-
+        printDBG('ArteTV.handleService start')
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)
-
-        name = self.currItem.get("name", '')
+        name = self.currItem.get("name", None)
         category = self.currItem.get("category", '')
-        mode = self.currItem.get("mode", '')
-
-        printDBG("handleService: |||| name[%s], category[%s] " % (name, category))
-        self.cacheLinks = {}
+        printDBG("ArteTV.handleService: name[%s] category[%s]" % (name, category))
+        searchPattern = self.currItem.get("search_pattern", searchPattern)
         self.currList = []
 
-        # MAIN MENU
         if name is None:
-            self.listMainMenu({'name': 'category'}, 'list_lang')
-        elif category == 'list_lang':
-            self.listLang(self.currItem, 'category')
-        elif category in ['home_cat', 'category', 'list', 'collection']:
-            self.listItems(self.currItem, 'list_items')
-        # SEARCH
-        elif category in ["search", "search_next_page"]:
+            tab = [
+                {'category': 'list_page', 'title': _('Home page'), 'url': self._api('pages/HOME')},
+                {'category': 'list_menu', 'title': _('Categories')},
+                {'category': 'list_live', 'title': _('Live')},
+            ] + self.searchItems()
+            self.listsTab(tab, {'name': 'category'})
+        elif category == 'list_menu':
+            self.listMenu(self.currItem)
+        elif category == 'list_live':
+            self.listLive(self.currItem)
+        elif category == 'list_page':
+            self.listPage(self.currItem)
+        elif category == 'list_zone':
+            self.listZone(self.currItem)
+        elif category == 'list_zone_inline':
+            self.listZoneInline(self.currItem)
+        elif category == 'list_collection':
+            self.listCollection(self.currItem)
+        elif category in ("search", "search_next_page"):
             cItem = dict(self.currItem)
-            cItem.update({'search_item': False, 'name': 'category'})
+            cItem.update({'search_item': False, 'name': 'category', 'category': 'search_next_page'})
             self.listSearchResult(cItem, searchPattern, searchType)
-        # HISTORIA SEARCH
         elif category == "search_history":
             self.listsHistory({'name': 'history', 'category': 'search'}, 'desc')
         else:
             printExc()
-
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
 class IPTVHost(CHostBase):
 
     def __init__(self):
-        CHostBase.__init__(self, ArteTV(), True, [])
-
-    def getSearchTypes(self):
-        searchTypesOptions = []
-        searchTypesOptions.append(('English  ( EN )', "en"))
-        searchTypesOptions.append(('Français ( FR )', "fr"))
-        searchTypesOptions.append(('Deutsch  ( DE )', "de"))
-        searchTypesOptions.append(('Español  ( ES )', "es"))
-        searchTypesOptions.append(('Polski   ( PL )', "pl"))
-        lang = GetDefaultLang()
-        searchTypesOptions.sort(key=lambda x: -2 if x[1] == lang else 0)
-        return searchTypesOptions
+        CHostBase.__init__(self, ArteTV(), True)
