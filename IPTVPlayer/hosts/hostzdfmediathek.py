@@ -95,7 +95,6 @@ class ZDFmediathek(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'ZDFmediathek.tv', 'cookie': 'zdfde.cookie'})
         self.DEFAULT_ICON_URL = 'https://brandguide.zdf.de/pictures/447/2f865620700065672dbce9582f77ad83569beb7f/ZDF_DE_Logo_02.png'
 
-
         # NOTE: MAIN_CAT_TAB is a class attribute - build a fresh instance list,
         # otherwise "+=" mutates the shared class list on every re-instantiation
         # and the search block piles up (4x etc.)
