@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-19 18:09+0200\n"
+"POT-Creation-Date: 2026-08-28 21:21+0200\n"
 "PO-Revision-Date: 2026-07-27 16:28+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -121,10 +121,6 @@ msgstr "%s povedal: Táto stránka momentálne nie je k dispozícii vo vašom re
 #, python-format
 msgid "%s services configuration"
 msgstr "Konfigurácia služieb %s"
-
-#, python-format
-msgid "%s shows"
-msgstr "%s relácií"
 
 #, python-format
 msgid "%s subtitles download - how to"
@@ -293,9 +289,6 @@ msgstr "UMELCOV"
 msgid "ATTENTION!"
 msgstr "POZOR!"
 
-msgid "AZ"
-msgstr "AZ"
-
 msgid "Aborted"
 msgstr "Prerušená"
 
@@ -307,6 +300,10 @@ msgstr "Prístup zakázaný"
 
 msgid "Access denied. Please check password."
 msgstr "Prístup bol odmietnutý. Skontrolujte heslo."
+
+#, fuzzy
+msgid "Accessible"
+msgstr "Prístup zakázaný"
 
 msgid "Active host"
 msgstr "Aktívny hostiteľ"
@@ -369,11 +366,23 @@ msgstr "Všetko"
 msgid "All Sports"
 msgstr "Všetky športy"
 
+#, fuzzy
+msgid "All categories"
+msgstr "Kategórie"
+
 msgid "All in one"
 msgstr "Všetko v jednom"
 
 msgid "All materials"
 msgstr "Všetky materiály"
+
+#, fuzzy
+msgid "All results"
+msgstr "Viac výsledkov"
+
+#, fuzzy
+msgid "All shows"
+msgstr "zobraziť"
 
 msgid "All streams"
 msgstr "Všetky streamy"
@@ -504,6 +513,10 @@ msgstr "Audio"
 msgid "Audio buffer size [KB]"
 msgstr "Veľkosť vyrovnávacej pamäte zvuku [KB]"
 
+#, fuzzy
+msgid "Audio track"
+msgstr "Zvukové stopy"
+
 msgid "Audio tracks"
 msgstr "Zvukové stopy"
 
@@ -565,10 +578,6 @@ msgstr "Blokovanie súborov wmv"
 
 msgid "Board Review"
 msgstr "Preskúmanie predstavenstva"
-
-#, python-format
-msgid "Broadcast begins at %s"
-msgstr "Vysielanie začína o %s"
 
 msgid "Broadcast:"
 msgstr "Vysielanie:"
@@ -658,6 +667,10 @@ msgstr "KANÁLY"
 msgid "Children"
 msgstr "Deti"
 
+#, fuzzy
+msgid "Children & Family"
+msgstr "Deti"
+
 msgid "Cinema History"
 msgstr "Dejiny kinematografie"
 
@@ -691,6 +704,9 @@ msgstr "Kolumbia"
 msgid "Commits"
 msgstr "Zaväzuje"
 
+msgid "Concert"
+msgstr ""
+
 msgid "Configuration"
 msgstr "Konfigurácia"
 
@@ -719,6 +735,10 @@ msgstr "Chyba potvrdenia."
 
 msgid "Connection to server failed!"
 msgstr "Pripojenie k serveru zlyhalo!"
+
+#, fuzzy
+msgid "Content not available"
+msgstr "Úplný popis nie je k dispozícii"
 
 msgid "Continue downloading"
 msgstr "Pokračovať v sťahovaní"
@@ -764,6 +784,12 @@ msgstr "Kritická chyba - súbor cookie nie je možné uložiť!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Kritická chyba - gzip kódovania obsahu nie je možné spracovať!"
+
+msgid "Culture"
+msgstr ""
+
+msgid "Culture and pop"
+msgstr ""
 
 msgid "Current item is not a channel."
 msgstr "Aktuálna položka nie je kanál."
@@ -906,6 +932,9 @@ msgstr "Zakázať/povoliť skupiny"
 msgid "Disable/Enable services"
 msgstr "Zakázať/povoliť služby"
 
+msgid "Discovery"
+msgstr ""
+
 msgid "Display language:"
 msgstr "Jazyk zobrazenia:"
 
@@ -930,10 +959,6 @@ msgstr "Stiahnuť"
 #, python-format
 msgid "Download \"%s\" in to \"%s\" failed!"
 msgstr "Stiahnutie súboru „%s“ do „%s“ zlyhalo!"
-
-#, python-format
-msgid "Download %s"
-msgstr "Stiahnuť %s"
 
 msgid "Download again"
 msgstr "Stiahnuť znova"
@@ -1466,6 +1491,10 @@ msgstr "Súbor bol úspešne premenovaný!"
 msgid "Film"
 msgstr "Film"
 
+#, fuzzy
+msgid "Films"
+msgstr "Film"
+
 msgid "Filmweb Suggestions"
 msgstr "Návrhy spoločnosti Filmweb"
 
@@ -1494,6 +1523,9 @@ msgid "Following host are broken or additional python modules are needed."
 msgstr "Nasledujúci hostiteľ je poškodený alebo sú potrebné ďalšie moduly jazyka Python."
 
 msgid "Font size offset"
+msgstr ""
+
+msgid "Food"
 msgstr ""
 
 msgid "Foot & Ankle"
@@ -1622,6 +1654,9 @@ msgstr "Ruka"
 msgid "Hardware floating point"
 msgstr "Hardvérová pohyblivá rádová čiarka"
 
+msgid "Health"
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
@@ -1634,6 +1669,13 @@ msgstr "Skryť/Aktívna skupina"
 
 msgid "High (or HD)"
 msgstr "Vysoká (alebo HD)"
+
+msgid "Highlights"
+msgstr ""
+
+#, fuzzy
+msgid "History"
+msgstr "Dejiny kinematografie"
 
 msgid "History of searched phrases."
 msgstr "História hľadaných fráz."
@@ -1680,6 +1722,10 @@ msgstr "PRERUŠENÉ"
 
 msgid "Icon type"
 msgstr "Typ ikony"
+
+#, fuzzy
+msgid "Icons quality"
+msgstr "kvalita"
 
 msgid "Icons size"
 msgstr "Veľkosť ikon"
@@ -1832,6 +1878,10 @@ msgstr "Koleno a šport"
 msgid "Knowledge"
 msgstr "Vedomosti"
 
+#, fuzzy
+msgid "Knowledge & Nature"
+msgstr "Vedomosti"
+
 msgid "Korean TV series"
 msgstr "Kórejský televízny seriál"
 
@@ -1867,9 +1917,6 @@ msgstr "Posledná chyba výnimky: '%s'"
 
 msgid "Last air date:"
 msgstr "Dátum posledného vysielania:"
-
-msgid "Last chance"
-msgstr "Posledná šanca"
 
 #, python-format
 msgid ""
@@ -2242,6 +2289,9 @@ msgstr "Najnovšie epizódy"
 msgid "News"
 msgstr "Aktuality"
 
+msgid "News (tagesschau)"
+msgstr ""
+
 msgid "News Feed"
 msgstr "Novinky"
 
@@ -2298,6 +2348,10 @@ msgstr "Žiadne"
 msgid "Nothing has been downloaded yet."
 msgstr "Zatiaľ nebolo nič stiahnuté."
 
+#, fuzzy
+msgid "Now"
+msgstr "Nie"
+
 msgid "Number of columns"
 msgstr "Počet stĺpcov"
 
@@ -2326,9 +2380,6 @@ msgstr "Kľúč API OMDb"
 
 msgid "Offline channels"
 msgstr "Offline kanály"
-
-msgid "Older"
-msgstr "Predchádzajúce"
 
 msgid "On Air"
 msgstr "Na živo"
@@ -2698,6 +2749,10 @@ msgstr "Ostáva:"
 msgid "Remember last search entry"
 msgstr "Zapamätať si naposledy sledovanú pozíciu"
 
+#, fuzzy
+msgid "Remember last search history selection"
+msgstr "Zapamätať si naposledy sledovanú pozíciu"
+
 msgid "Remember last watched position"
 msgstr "Zapamätať si naposledy sledovanú pozíciu"
 
@@ -2775,9 +2830,6 @@ msgstr "Ruština"
 msgid "Russian proxy server url"
 msgstr "URL adresa ruského proxy servera"
 
-msgid "SHOWS"
-msgstr "Relácie"
-
 msgid "SOME.PORN sorting by :"
 msgstr "Triedenie SOME.PORN podľa:"
 
@@ -2813,10 +2865,6 @@ msgstr "História vyhľadávania bola úspešne odstránená."
 
 msgid "Search Movies and TV Series"
 msgstr "Vyhľadávanie filmov a televíznych seriálov"
-
-#, python-format
-msgid "Search for \"%s\", %s, %s %s"
-msgstr "Vyhľadajte výraz \"%s\", %s, %s %s"
 
 msgid "Search history"
 msgstr "História vyhľadávania"
@@ -2882,6 +2930,10 @@ msgstr "Druhý prehrávač videozáznamov v režime vyrovnávacej pamäte"
 msgid "Second movie player without buffering mode"
 msgstr "Druhý prehrávač videozáznamov bez režimu vyrovnávacej pamäte"
 
+#, fuzzy
+msgid "Section"
+msgstr "Výber"
+
 msgid "Select"
 msgstr "Vybrať"
 
@@ -2894,6 +2946,10 @@ msgstr "Vybrať akciu"
 
 msgid "Select audio track"
 msgstr "Vyberte zvukovú stopu"
+
+#, fuzzy
+msgid "Select best available quality"
+msgstr "Predvolená kvalita videa"
 
 msgid "Select directory"
 msgstr "Vyberte adresár"
@@ -3009,6 +3065,13 @@ msgstr "Šortky"
 msgid "Shoulder & Elbow"
 msgstr "Rameno a lakeť"
 
+#, fuzzy
+msgid "Show"
+msgstr "Relácie"
+
+msgid "Show & Comedy"
+msgstr ""
+
 msgid "Show IPTVPlayer in extension list"
 msgstr "Zobraziť IPTVPlayer v zozname rozšírení"
 
@@ -3062,6 +3125,10 @@ msgstr "Zobraziť návrhy"
 msgid "Shows"
 msgstr "Relácie"
 
+#, fuzzy
+msgid "Shows A-Z"
+msgstr "Relácie"
+
 msgid "Simple list"
 msgstr "Jednoduchý zoznam"
 
@@ -3082,6 +3149,9 @@ msgstr "Skinners:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Preskočiť video kratšie ako [min]"
+
+msgid "Society"
+msgstr ""
 
 msgid "Software decoding as"
 msgstr "Dekódovanie softvéru ako"
@@ -3318,6 +3388,9 @@ msgstr "Systém"
 msgid "System language"
 msgstr "Jazyk systému"
 
+msgid "T9 letter jump in lists"
+msgstr ""
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "STRÁNKA, KTORÚ HĽADÁTE, SA NENAŠLA."
 
@@ -3447,6 +3520,9 @@ msgstr "Používateľský odkaz sa nepodarilo odstrániť."
 msgid "The user link could not be updated."
 msgstr "Používateľský odkaz sa nepodarilo aktualizovať."
 
+msgid "The website returned a server error for this request."
+msgstr ""
+
 #, python-format
 msgid "There are %d more pages in this section"
 msgstr "V tejto sekcii sú ešte %d ďalšie strany"
@@ -3467,6 +3543,13 @@ msgstr "Na jednotke nie je žiadne voľné miesto [%s]."
 
 msgid "There is no hosts in this group."
 msgstr "V tejto skupine nie sú žiadni hostitelia."
+
+#, fuzzy
+msgid "This content is not available in your region."
+msgstr "%s povedal: Táto stránka momentálne nie je k dispozícii vo vašom regióne"
+
+msgid "This content is only available in Switzerland."
+msgstr ""
 
 msgid "This host has been added already to this group."
 msgstr "Tento hostiteľ už bol pridaný do tejto skupiny."
@@ -3531,6 +3614,9 @@ msgstr "Priehľadná"
 
 msgid "Trauma"
 msgstr "Trauma"
+
+msgid "Travel"
+msgstr ""
 
 msgid "Treatment Consult"
 msgstr "Konzultácia s liečbou"
@@ -3629,6 +3715,9 @@ msgstr "Dátum nahrania"
 msgid "Urllists player"
 msgstr "Prehrávač URL adries"
 
+msgid "Use HLS streams (adaptive):"
+msgstr ""
+
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Použitie poľského servera proxy na http://prognoza.pogody.tv/"
 
@@ -3668,9 +3757,6 @@ msgstr "Použite PyCurl pre požiadavky HTTP(S)"
 
 msgid "Use the best quality :"
 msgstr "Použiť najlepšiu kvalitu :"
-
-msgid "Use web-proxy for VODs (it may be illegal):"
-msgstr "Použite webový server proxy pre videá na vyžiadanie (môže to byť nezákonné):"
 
 msgid "User defined"
 msgstr "Definované užívateľom"
@@ -3956,11 +4042,19 @@ msgstr "po dni"
 msgid "after three days"
 msgstr "po troch dňoch"
 
+#, fuzzy
+msgid "all"
+msgstr "malé"
+
 msgid "aqua"
 msgstr "aqua"
 
 msgid "auto"
 msgstr "automaticky"
+
+#, python-format
+msgid "available until %s"
+msgstr ""
 
 msgid "average"
 msgstr "priemer"
@@ -4022,9 +4116,6 @@ msgstr "z nastavení plánu E2"
 
 msgid "fuchsia"
 msgstr "fuchsia"
-
-msgid "geoblocked"
-msgstr "geograficky blokované"
 
 msgid "gray"
 msgstr "sivá"
@@ -4130,9 +4221,6 @@ msgstr "sekunda"
 
 msgid "seconds"
 msgstr "sekunda"
-
-msgid "shows"
-msgstr "zobraziť"
 
 msgid "silver"
 msgstr "strieborný"

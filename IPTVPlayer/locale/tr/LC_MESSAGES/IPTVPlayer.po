@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-19 18:09+0200\n"
+"POT-Creation-Date: 2026-08-28 21:21+0200\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -115,10 +115,6 @@ msgstr "%s dedi ki: Bu sayfa şu anda bölgenizde kullanılamıyor"
 #, python-format
 msgid "%s services configuration"
 msgstr "%s servis yapılandırması"
-
-#, python-format
-msgid "%s shows"
-msgstr "%s gösteri"
 
 #, python-format
 msgid "%s subtitles download - how to"
@@ -294,9 +290,6 @@ msgstr "SANATÇILAR"
 msgid "ATTENTION!"
 msgstr ""
 
-msgid "AZ"
-msgstr "AZ"
-
 msgid "Aborted"
 msgstr ""
 
@@ -308,6 +301,10 @@ msgstr "Erişim Yasak"
 
 msgid "Access denied. Please check password."
 msgstr "Erişim reddedildi. Lütfen parolayı kontrol edin."
+
+#, fuzzy
+msgid "Accessible"
+msgstr "Erişim Yasak"
 
 msgid "Active host"
 msgstr "Etkin host"
@@ -374,11 +371,23 @@ msgstr "Tümü"
 msgid "All Sports"
 msgstr "Tüm Sporlar"
 
+#, fuzzy
+msgid "All categories"
+msgstr "Kategoriler"
+
 msgid "All in one"
 msgstr "Hepsi bir arada"
 
 msgid "All materials"
 msgstr "Tüm içerikler"
+
+#, fuzzy
+msgid "All results"
+msgstr "Daha fazla sonuç"
+
+#, fuzzy
+msgid "All shows"
+msgstr "şovlar"
 
 msgid "All streams"
 msgstr "Tüm akışlar"
@@ -513,6 +522,10 @@ msgstr "Ses"
 msgid "Audio buffer size [KB]"
 msgstr "Ses tampon boyutu [KB]"
 
+#, fuzzy
+msgid "Audio track"
+msgstr "Ses parçaları"
+
 msgid "Audio tracks"
 msgstr "Ses parçaları"
 
@@ -576,10 +589,6 @@ msgstr ""
 #, fuzzy
 msgid "Board Review"
 msgstr "Önizleme"
-
-#, python-format
-msgid "Broadcast begins at %s"
-msgstr ""
 
 #, fuzzy
 msgid "Broadcast:"
@@ -669,6 +678,10 @@ msgid "Children"
 msgstr "Çocuk"
 
 #, fuzzy
+msgid "Children & Family"
+msgstr "Çocuk"
+
+#, fuzzy
 msgid "Cinema History"
 msgstr "Arama geçmişi"
 
@@ -704,6 +717,9 @@ msgstr ""
 msgid "Commits"
 msgstr ""
 
+msgid "Concert"
+msgstr ""
+
 msgid "Configuration"
 msgstr "Yapılandırma"
 
@@ -733,6 +749,10 @@ msgstr "Yapılandırma"
 
 msgid "Connection to server failed!"
 msgstr "Sunucu bağlantısı başarısız oldu!"
+
+#, fuzzy
+msgid "Content not available"
+msgstr "Geçerli bağlantı yok."
 
 msgid "Continue downloading"
 msgstr "İndirmeye devam et"
@@ -779,6 +799,12 @@ msgid "Critical Error - cookie can't be saved!"
 msgstr ""
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
+msgstr ""
+
+msgid "Culture"
+msgstr ""
+
+msgid "Culture and pop"
 msgstr ""
 
 msgid "Current item is not a channel."
@@ -931,6 +957,9 @@ msgstr ""
 msgid "Disable/Enable services"
 msgstr "Devre dışı servisleri kaldır"
 
+msgid "Discovery"
+msgstr ""
+
 #, fuzzy
 msgid "Display language:"
 msgstr "Dil seç"
@@ -957,10 +986,6 @@ msgstr "İndir"
 #, fuzzy, python-format
 msgid "Download \"%s\" in to \"%s\" failed!"
 msgstr "Günlük dosyasını indir"
-
-#, fuzzy, python-format
-msgid "Download %s"
-msgstr "İndirilenler"
 
 msgid "Download again"
 msgstr "Tekrar indir"
@@ -1481,6 +1506,10 @@ msgid "Film"
 msgstr "Film"
 
 #, fuzzy
+msgid "Films"
+msgstr "Film"
+
+#, fuzzy
 msgid "Filmweb Suggestions"
 msgstr "Google Önerileri"
 
@@ -1511,6 +1540,9 @@ msgid "Following host are broken or additional python modules are needed."
 msgstr ""
 
 msgid "Font size offset"
+msgstr ""
+
+msgid "Food"
 msgstr ""
 
 msgid "Foot & Ankle"
@@ -1649,6 +1681,9 @@ msgstr "El"
 msgid "Hardware floating point"
 msgstr ""
 
+msgid "Health"
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
@@ -1661,6 +1696,13 @@ msgstr ""
 
 msgid "High (or HD)"
 msgstr ""
+
+msgid "Highlights"
+msgstr ""
+
+#, fuzzy
+msgid "History"
+msgstr "Arama geçmişi"
 
 msgid "History of searched phrases."
 msgstr "Aranan ifadelerin geçmişi."
@@ -1709,6 +1751,10 @@ msgstr "KESİLDİ"
 
 msgid "Icon type"
 msgstr "Simge türü"
+
+#, fuzzy
+msgid "Icons quality"
+msgstr "kalite"
 
 msgid "Icons size"
 msgstr "Simge boyutu"
@@ -1861,6 +1907,9 @@ msgstr "Tüm Sporlar"
 msgid "Knowledge"
 msgstr ""
 
+msgid "Knowledge & Nature"
+msgstr ""
+
 #, fuzzy
 msgid "Korean TV series"
 msgstr "TV dizileri"
@@ -1898,9 +1947,6 @@ msgstr ""
 #, fuzzy
 msgid "Last air date:"
 msgstr "Son eklenenler"
-
-msgid "Last chance"
-msgstr ""
 
 #, python-format
 msgid ""
@@ -2277,6 +2323,9 @@ msgstr "Bölümler"
 msgid "News"
 msgstr "Haberler"
 
+msgid "News (tagesschau)"
+msgstr ""
+
 #, fuzzy
 msgid "News Feed"
 msgstr "Haberler"
@@ -2335,6 +2384,10 @@ msgstr "Yok"
 msgid "Nothing has been downloaded yet."
 msgstr "Pin değiştirildi."
 
+#, fuzzy
+msgid "Now"
+msgstr "Hayır"
+
 msgid "Number of columns"
 msgstr "Sütun sayısı"
 
@@ -2364,9 +2417,6 @@ msgstr ""
 #, fuzzy
 msgid "Offline channels"
 msgstr "TV kanalları"
-
-msgid "Older"
-msgstr "Daha eski"
 
 msgid "On Air"
 msgstr "Yayında"
@@ -2744,6 +2794,10 @@ msgstr "Puan:"
 msgid "Remember last search entry"
 msgstr "Son izlenen konumu hatırla"
 
+#, fuzzy
+msgid "Remember last search history selection"
+msgstr "Son izlenen konumu hatırla"
+
 msgid "Remember last watched position"
 msgstr "Son izlenen konumu hatırla"
 
@@ -2818,9 +2872,6 @@ msgstr "Rusça"
 msgid "Russian proxy server url"
 msgstr ""
 
-msgid "SHOWS"
-msgstr "ŞOVLAR"
-
 msgid "SOME.PORN sorting by :"
 msgstr ""
 
@@ -2855,10 +2906,6 @@ msgid "Search History successfully deleted."
 msgstr "Arama geçmişi başarıyla silindi."
 
 msgid "Search Movies and TV Series"
-msgstr ""
-
-#, python-format
-msgid "Search for \"%s\", %s, %s %s"
 msgstr ""
 
 msgid "Search history"
@@ -2927,6 +2974,10 @@ msgstr ""
 msgid "Second movie player without buffering mode"
 msgstr ""
 
+#, fuzzy
+msgid "Section"
+msgstr "İşlem seç"
+
 msgid "Select"
 msgstr "Seç"
 
@@ -2939,6 +2990,9 @@ msgstr "İşlem seç"
 
 msgid "Select audio track"
 msgstr "Ses parçası seç"
+
+msgid "Select best available quality"
+msgstr ""
 
 msgid "Select directory"
 msgstr "Dizin seç"
@@ -3059,6 +3113,13 @@ msgstr "Tüm Sporlar"
 msgid "Shoulder & Elbow"
 msgstr ""
 
+#, fuzzy
+msgid "Show"
+msgstr "Şovlar"
+
+msgid "Show & Comedy"
+msgstr ""
+
 msgid "Show IPTVPlayer in extension list"
 msgstr "IPTVPlayer'ı uzantı listesinde göster"
 
@@ -3113,6 +3174,10 @@ msgstr "Önerileri göster"
 msgid "Shows"
 msgstr "Şovlar"
 
+#, fuzzy
+msgid "Shows A-Z"
+msgstr "Şovlar"
+
 msgid "Simple list"
 msgstr "Basit liste"
 
@@ -3135,6 +3200,9 @@ msgstr ""
 
 msgid "Skip video shorter than [min]"
 msgstr "[dk] değerinden kısa videoları atla"
+
+msgid "Society"
+msgstr ""
 
 msgid "Software decoding as"
 msgstr ""
@@ -3373,6 +3441,9 @@ msgstr "Sistem"
 msgid "System language"
 msgstr "Dil seç"
 
+msgid "T9 letter jump in lists"
+msgstr ""
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -3489,6 +3560,9 @@ msgstr " Bu video özeldir."
 msgid "The user link could not be updated."
 msgstr ""
 
+msgid "The website returned a server error for this request."
+msgstr ""
+
 #, python-format
 msgid "There are %d more pages in this section"
 msgstr ""
@@ -3508,6 +3582,13 @@ msgid "There is no free space on the drive [%s]."
 msgstr ""
 
 msgid "There is no hosts in this group."
+msgstr ""
+
+#, fuzzy
+msgid "This content is not available in your region."
+msgstr "%s dedi ki: Bu sayfa şu anda bölgenizde kullanılamıyor"
+
+msgid "This content is only available in Switzerland."
 msgstr ""
 
 msgid "This host has been added already to this group."
@@ -3574,6 +3655,9 @@ msgid "Transparent"
 msgstr "Şeffaf"
 
 msgid "Trauma"
+msgstr ""
+
+msgid "Travel"
 msgstr ""
 
 msgid "Treatment Consult"
@@ -3683,6 +3767,9 @@ msgstr "Yükleme tarihi"
 msgid "Urllists player"
 msgstr "harici gstplayer"
 
+msgid "Use HLS streams (adaptive):"
+msgstr ""
+
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr ""
 
@@ -3724,9 +3811,6 @@ msgid "Use the PyCurl for HTTP(S) requests"
 msgstr ""
 
 msgid "Use the best quality :"
-msgstr ""
-
-msgid "Use web-proxy for VODs (it may be illegal):"
 msgstr ""
 
 msgid "User defined"
@@ -4023,11 +4107,19 @@ msgstr "bir gün sonra"
 msgid "after three days"
 msgstr "üç gün sonra"
 
+#, fuzzy
+msgid "all"
+msgstr "küçük"
+
 msgid "aqua"
 msgstr "akuamarin"
 
 msgid "auto"
 msgstr "otomatik"
+
+#, python-format
+msgid "available until %s"
+msgstr ""
 
 msgid "average"
 msgstr "ortalama"
@@ -4089,9 +4181,6 @@ msgstr "E2 ayarlarından"
 
 msgid "fuchsia"
 msgstr "fuşya"
-
-msgid "geoblocked"
-msgstr "coğrafi engelli"
 
 msgid "gray"
 msgstr "gri"
@@ -4197,9 +4286,6 @@ msgstr "saniye"
 
 msgid "seconds"
 msgstr "saniye"
-
-msgid "shows"
-msgstr "şovlar"
 
 msgid "silver"
 msgstr "gümüş"

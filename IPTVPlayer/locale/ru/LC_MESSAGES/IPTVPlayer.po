@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-19 18:09+0200\n"
+"POT-Creation-Date: 2026-08-28 21:21+0200\n"
 "PO-Revision-Date: 2026-07-27 16:55+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -121,10 +121,6 @@ msgstr "%s заявил: Сейчас эта страница недоступн
 #, python-format
 msgid "%s services configuration"
 msgstr "%s конфигурация сервисов"
-
-#, python-format
-msgid "%s shows"
-msgstr "%s показов"
 
 #, python-format
 msgid "%s subtitles download - how to"
@@ -293,9 +289,6 @@ msgstr "АРТИСТЫ"
 msgid "ATTENTION!"
 msgstr "ВНИМАНИЕ !"
 
-msgid "AZ"
-msgstr "АЗ"
-
 msgid "Aborted"
 msgstr "Отменено"
 
@@ -307,6 +300,10 @@ msgstr "Доступ запрещен"
 
 msgid "Access denied. Please check password."
 msgstr "Доступ запрещен. Просим проверить пароль."
+
+#, fuzzy
+msgid "Accessible"
+msgstr "Доступ запрещен"
 
 msgid "Active host"
 msgstr "Активный хост"
@@ -369,11 +366,23 @@ msgstr "Все"
 msgid "All Sports"
 msgstr "Все Спортивные"
 
+#, fuzzy
+msgid "All categories"
+msgstr "Категории"
+
 msgid "All in one"
 msgstr "Все в одном"
 
 msgid "All materials"
 msgstr "Все материалы"
+
+#, fuzzy
+msgid "All results"
+msgstr "Дополнительные результаты"
+
+#, fuzzy
+msgid "All shows"
+msgstr "шоу"
 
 msgid "All streams"
 msgstr "Все потоки"
@@ -504,6 +513,10 @@ msgstr "Аудио"
 msgid "Audio buffer size [KB]"
 msgstr "Размер аудио буфера [KB]"
 
+#, fuzzy
+msgid "Audio track"
+msgstr "Аудио дорожки"
+
 msgid "Audio tracks"
 msgstr "Аудио дорожки"
 
@@ -565,10 +578,6 @@ msgstr "Блок wmv файлов"
 
 msgid "Board Review"
 msgstr "Обзор совета директоров"
-
-#, python-format
-msgid "Broadcast begins at %s"
-msgstr "Трансляция начинается в %s"
 
 msgid "Broadcast:"
 msgstr "Трансляция:"
@@ -658,6 +667,10 @@ msgstr "Каналы"
 msgid "Children"
 msgstr "Дети"
 
+#, fuzzy
+msgid "Children & Family"
+msgstr "Дети"
+
 msgid "Cinema History"
 msgstr "История кино"
 
@@ -691,6 +704,9 @@ msgstr "Колумбия"
 msgid "Commits"
 msgstr "Фиксации"
 
+msgid "Concert"
+msgstr ""
+
 msgid "Configuration"
 msgstr "Конфигурация"
 
@@ -719,6 +735,10 @@ msgstr "Ошибка подтверждения."
 
 msgid "Connection to server failed!"
 msgstr "Подключение к серверу не прошло!"
+
+#, fuzzy
+msgid "Content not available"
+msgstr "Полное описание недоступно"
 
 msgid "Continue downloading"
 msgstr "Продолжить загрузку"
@@ -764,6 +784,12 @@ msgstr "Критическая ошибка — cookie-файл не может 
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Критическая Ошибка – Кодирование-Содержимого gzip не может быть обработано!"
+
+msgid "Culture"
+msgstr ""
+
+msgid "Culture and pop"
+msgstr ""
 
 msgid "Current item is not a channel."
 msgstr "Текущий элемент не является каналом."
@@ -906,6 +932,9 @@ msgstr "Отключить/Включить группы"
 msgid "Disable/Enable services"
 msgstr "Отключить/Включить сервисы"
 
+msgid "Discovery"
+msgstr ""
+
 msgid "Display language:"
 msgstr "Язык интерфейса:"
 
@@ -930,10 +959,6 @@ msgstr "Скачать"
 #, python-format
 msgid "Download \"%s\" in to \"%s\" failed!"
 msgstr "Загрузить \"%s\" в \"%s\" не удалось!"
-
-#, python-format
-msgid "Download %s"
-msgstr "Скачать %s"
 
 msgid "Download again"
 msgstr "Загрузить снова"
@@ -1467,6 +1492,10 @@ msgstr "Файл успешно переименован!"
 msgid "Film"
 msgstr "Фильм"
 
+#, fuzzy
+msgid "Films"
+msgstr "Фильм"
+
 msgid "Filmweb Suggestions"
 msgstr "Filmweb Предложения"
 
@@ -1495,6 +1524,9 @@ msgid "Following host are broken or additional python modules are needed."
 msgstr "Следующие хосты сломаны или нужны дополнительные модули python."
 
 msgid "Font size offset"
+msgstr ""
+
+msgid "Food"
 msgstr ""
 
 msgid "Foot & Ankle"
@@ -1623,6 +1655,9 @@ msgstr "Рука"
 msgid "Hardware floating point"
 msgstr "Аппаратная плавающая точка"
 
+msgid "Health"
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
@@ -1635,6 +1670,13 @@ msgstr "Скрыть/Активная группа"
 
 msgid "High (or HD)"
 msgstr "Высокий (или HD)"
+
+msgid "Highlights"
+msgstr ""
+
+#, fuzzy
+msgid "History"
+msgstr "История кино"
 
 msgid "History of searched phrases."
 msgstr "История поисковых фраз."
@@ -1681,6 +1723,10 @@ msgstr "ПРЕРВАН"
 
 msgid "Icon type"
 msgstr "Тип иконки"
+
+#, fuzzy
+msgid "Icons quality"
+msgstr "качество"
 
 msgid "Icons size"
 msgstr "Размер иконки"
@@ -1832,6 +1878,10 @@ msgstr "Колени & Спорт"
 msgid "Knowledge"
 msgstr "Знание"
 
+#, fuzzy
+msgid "Knowledge & Nature"
+msgstr "Знание"
+
 msgid "Korean TV series"
 msgstr "Корейский сериал"
 
@@ -1867,9 +1917,6 @@ msgstr "Последняя ошибка исключения: '%s'"
 
 msgid "Last air date:"
 msgstr "Дата последнего выхода в эфир:"
-
-msgid "Last chance"
-msgstr "Последний шанс"
 
 #, python-format
 msgid ""
@@ -2241,6 +2288,9 @@ msgstr "Новейшие Эпизоды"
 msgid "News"
 msgstr "Новости"
 
+msgid "News (tagesschau)"
+msgstr ""
+
 msgid "News Feed"
 msgstr "Лента новостей"
 
@@ -2297,6 +2347,10 @@ msgstr "Нет"
 msgid "Nothing has been downloaded yet."
 msgstr "Ещё ничего не загружено."
 
+#, fuzzy
+msgid "Now"
+msgstr "Нет"
+
 msgid "Number of columns"
 msgstr "Количество колонок"
 
@@ -2325,9 +2379,6 @@ msgstr "Ключ API OMDb"
 
 msgid "Offline channels"
 msgstr "Автономные каналы"
-
-msgid "Older"
-msgstr "Старее"
 
 msgid "On Air"
 msgstr "В Эфире"
@@ -2697,6 +2748,10 @@ msgstr "Оставшийся:"
 msgid "Remember last search entry"
 msgstr "Запомнить последнюю просмотренную позицию"
 
+#, fuzzy
+msgid "Remember last search history selection"
+msgstr "Запомнить последнюю просмотренную позицию"
+
 msgid "Remember last watched position"
 msgstr "Запомнить последнюю просмотренную позицию"
 
@@ -2774,9 +2829,6 @@ msgstr "Русский"
 msgid "Russian proxy server url"
 msgstr "Российский прокси-сервер url"
 
-msgid "SHOWS"
-msgstr "ШОУ"
-
 msgid "SOME.PORN sorting by :"
 msgstr "Сортировка SOME.PORN по:"
 
@@ -2812,10 +2864,6 @@ msgstr "История поиска успешно удалена."
 
 msgid "Search Movies and TV Series"
 msgstr "Поиск Фильмов и Сериалов"
-
-#, python-format
-msgid "Search for \"%s\", %s, %s %s"
-msgstr "Поиск для \"%s\", %s, %s %s"
 
 msgid "Search history"
 msgstr "История поиска"
@@ -2881,6 +2929,10 @@ msgstr "Второй видеоплеер в режиме буферизации
 msgid "Second movie player without buffering mode"
 msgstr "Второй видеоплеер без режима буферизации"
 
+#, fuzzy
+msgid "Section"
+msgstr "Выбор"
+
 msgid "Select"
 msgstr "Выбрать"
 
@@ -2893,6 +2945,10 @@ msgstr "Выбрать действие"
 
 msgid "Select audio track"
 msgstr "Выберите звуковую дорожку"
+
+#, fuzzy
+msgid "Select best available quality"
+msgstr "Качество видео по умолчанию"
 
 msgid "Select directory"
 msgstr "Выбрать каталог"
@@ -3008,6 +3064,13 @@ msgstr "Шорты"
 msgid "Shoulder & Elbow"
 msgstr "Плечо и локоть"
 
+#, fuzzy
+msgid "Show"
+msgstr "Шоу"
+
+msgid "Show & Comedy"
+msgstr ""
+
 msgid "Show IPTVPlayer in extension list"
 msgstr "Показать IPTVPlaye в меню плагинов"
 
@@ -3061,6 +3124,10 @@ msgstr "Показать идеи"
 msgid "Shows"
 msgstr "Шоу"
 
+#, fuzzy
+msgid "Shows A-Z"
+msgstr "Шоу"
+
 msgid "Simple list"
 msgstr "Простой список"
 
@@ -3081,6 +3148,9 @@ msgstr "Скиннеры:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Пропустить видео короче [мин]"
+
+msgid "Society"
+msgstr ""
 
 msgid "Software decoding as"
 msgstr "Программное декодирование как"
@@ -3317,6 +3387,9 @@ msgstr "Система"
 msgid "System language"
 msgstr "Linguaggio di Sistema"
 
+msgid "T9 letter jump in lists"
+msgstr ""
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "СТРАНИЦА, КОТОРУЮ ВЫ ИЩЕТЕ, НЕ НАЙДЕНА."
 
@@ -3446,6 +3519,9 @@ msgstr "Не удалось удалить пользовательскую сс
 msgid "The user link could not be updated."
 msgstr "Не удалось обновить пользовательскую ссылку."
 
+msgid "The website returned a server error for this request."
+msgstr ""
+
 #, python-format
 msgid "There are %d more pages in this section"
 msgstr "В этом разделе есть ещё %d страниц(ы)"
@@ -3466,6 +3542,13 @@ msgstr "На диске [%s] нет свободного места."
 
 msgid "There is no hosts in this group."
 msgstr "В этой группе нет хостов."
+
+#, fuzzy
+msgid "This content is not available in your region."
+msgstr "%s заявил: Сейчас эта страница недоступна в вашем регионе"
+
+msgid "This content is only available in Switzerland."
+msgstr ""
 
 msgid "This host has been added already to this group."
 msgstr "Этот хост уже добавлен в эту группу."
@@ -3530,6 +3613,9 @@ msgstr "Прозрачный"
 
 msgid "Trauma"
 msgstr "Травма"
+
+msgid "Travel"
+msgstr ""
 
 msgid "Treatment Consult"
 msgstr "Лечение Консультация"
@@ -3628,6 +3714,9 @@ msgstr "Дата загрузки"
 msgid "Urllists player"
 msgstr "СписокUrl плеера"
 
+msgid "Use HLS streams (adaptive):"
+msgstr ""
+
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Использовать Польский прокси для http://prognoza.pogody.tv/"
 
@@ -3667,9 +3756,6 @@ msgstr "Применить PyCurl для HTTP(S)-запросов"
 
 msgid "Use the best quality :"
 msgstr "Использовать наилучшее качество :"
-
-msgid "Use web-proxy for VODs (it may be illegal):"
-msgstr "Применить веб-прокси для VODs (это может быть незаконным):"
 
 msgid "User defined"
 msgstr "Заданные пользователем"
@@ -3955,11 +4041,19 @@ msgstr "спустя сутки"
 msgid "after three days"
 msgstr "спустя три дня"
 
+#, fuzzy
+msgid "all"
+msgstr "маленький"
+
 msgid "aqua"
 msgstr "аква"
 
 msgid "auto"
 msgstr "авто"
+
+#, python-format
+msgid "available until %s"
+msgstr ""
 
 msgid "average"
 msgstr "средний"
@@ -4021,9 +4115,6 @@ msgstr "из E2 параметров"
 
 msgid "fuchsia"
 msgstr "фуксия"
-
-msgid "geoblocked"
-msgstr "геоблокировано"
 
 msgid "gray"
 msgstr "серый"
@@ -4129,9 +4220,6 @@ msgstr "секунда"
 
 msgid "seconds"
 msgstr "секунд"
-
-msgid "shows"
-msgstr "шоу"
 
 msgid "silver"
 msgstr "cеребристый"

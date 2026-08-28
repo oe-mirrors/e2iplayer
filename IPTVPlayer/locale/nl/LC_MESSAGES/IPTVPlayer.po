@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-19 18:09+0200\n"
+"POT-Creation-Date: 2026-08-28 21:21+0200\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -121,10 +121,6 @@ msgstr "%s said: Deze pagina is op dit moment niet beschikbaar in uw regio"
 #, python-format
 msgid "%s services configuration"
 msgstr "%s zender configuratie"
-
-#, python-format
-msgid "%s shows"
-msgstr "%s uitzendingen"
 
 #, python-format
 msgid "%s subtitles download - how to"
@@ -297,9 +293,6 @@ msgstr "ARTIESTEN"
 msgid "ATTENTION!"
 msgstr ""
 
-msgid "AZ"
-msgstr "AZ"
-
 msgid "Aborted"
 msgstr ""
 
@@ -311,6 +304,10 @@ msgstr "Verboden toegang"
 
 msgid "Access denied. Please check password."
 msgstr "Toegang geweigerd. A.u.b. het wachtwoord controleren."
+
+#, fuzzy
+msgid "Accessible"
+msgstr "Verboden toegang"
 
 msgid "Active host"
 msgstr "Actieve host"
@@ -377,11 +374,23 @@ msgstr "Alles"
 msgid "All Sports"
 msgstr "Alle sporten"
 
+#, fuzzy
+msgid "All categories"
+msgstr "Categorieën"
+
 msgid "All in one"
 msgstr "Alles in één"
 
 msgid "All materials"
 msgstr "Alle materialen"
+
+#, fuzzy
+msgid "All results"
+msgstr "Meer resultaten"
+
+#, fuzzy
+msgid "All shows"
+msgstr "uitzendingen"
 
 msgid "All streams"
 msgstr "Alle streams"
@@ -513,6 +522,10 @@ msgstr "Audio"
 msgid "Audio buffer size [KB]"
 msgstr "Audio buffer grootte [kB]"
 
+#, fuzzy
+msgid "Audio track"
+msgstr "Audiosporen"
+
 msgid "Audio tracks"
 msgstr "Audiosporen"
 
@@ -574,10 +587,6 @@ msgstr "Blokkeer wmv bestanden"
 
 msgid "Board Review"
 msgstr "Forum beoordeling"
-
-#, python-format
-msgid "Broadcast begins at %s"
-msgstr "De uitzending begint om %s"
 
 #, fuzzy
 msgid "Broadcast:"
@@ -670,6 +679,10 @@ msgstr "Zenders"
 msgid "Children"
 msgstr "Kinderen"
 
+#, fuzzy
+msgid "Children & Family"
+msgstr "Kinderen"
+
 msgid "Cinema History"
 msgstr "Bioscoop geschiedenis"
 
@@ -703,6 +716,9 @@ msgstr "Colombia"
 msgid "Commits"
 msgstr "Commits"
 
+msgid "Concert"
+msgstr ""
+
 msgid "Configuration"
 msgstr "Configuratie"
 
@@ -731,6 +747,10 @@ msgstr "Fout bij het bevestigen."
 
 msgid "Connection to server failed!"
 msgstr "Verbinden met de server mislukt!"
+
+#, fuzzy
+msgid "Content not available"
+msgstr "Geen geldige links beschikbaar."
 
 msgid "Continue downloading"
 msgstr "Downloaden voortzetten"
@@ -778,6 +798,12 @@ msgstr "Fout - Cookie kan niet opgeslagen worden!"
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Fout - Een gecodeerd gzip bestand kan niet verwerkt worden!"
+
+msgid "Culture"
+msgstr ""
+
+msgid "Culture and pop"
+msgstr ""
 
 msgid "Current item is not a channel."
 msgstr ""
@@ -923,6 +949,9 @@ msgstr "Groepen uitschakelen/inschakelen"
 msgid "Disable/Enable services"
 msgstr "Zenders uitschakelen/uitschakelen"
 
+msgid "Discovery"
+msgstr ""
+
 #, fuzzy
 msgid "Display language:"
 msgstr "Kies een taal"
@@ -948,10 +977,6 @@ msgstr "Download"
 #, python-format
 msgid "Download \"%s\" in to \"%s\" failed!"
 msgstr "Download \"%s\" naar \"%s\" mislukt!"
-
-#, python-format
-msgid "Download %s"
-msgstr "Download %s"
 
 msgid "Download again"
 msgstr "Download opnieuw"
@@ -1498,6 +1523,10 @@ msgstr "Hernoemen bestand is gelukt!"
 msgid "Film"
 msgstr "Film"
 
+#, fuzzy
+msgid "Films"
+msgstr "Film"
+
 msgid "Filmweb Suggestions"
 msgstr "Filmweb tips"
 
@@ -1528,6 +1557,9 @@ msgid "Following host are broken or additional python modules are needed."
 msgstr "De volgende host is defect of aanvullende python modules zijn noodzakelijk."
 
 msgid "Font size offset"
+msgstr ""
+
+msgid "Food"
 msgstr ""
 
 msgid "Foot & Ankle"
@@ -1663,6 +1695,9 @@ msgstr "Hand"
 msgid "Hardware floating point"
 msgstr "Hardware floating point"
 
+msgid "Health"
+msgstr ""
+
 msgid "Help"
 msgstr ""
 
@@ -1675,6 +1710,13 @@ msgstr "Groepen Aan/Uit"
 
 msgid "High (or HD)"
 msgstr "Hoog (of HD)"
+
+msgid "Highlights"
+msgstr ""
+
+#, fuzzy
+msgid "History"
+msgstr "Bioscoop geschiedenis"
 
 msgid "History of searched phrases."
 msgstr "Zoekgeschiedenis."
@@ -1722,6 +1764,10 @@ msgstr "ONDERBROKEN"
 
 msgid "Icon type"
 msgstr "Icon type"
+
+#, fuzzy
+msgid "Icons quality"
+msgstr "kwaliteit"
 
 msgid "Icons size"
 msgstr "Icons grootte"
@@ -1873,6 +1919,10 @@ msgstr "Knie & Sporten"
 msgid "Knowledge"
 msgstr "Kennis"
 
+#, fuzzy
+msgid "Knowledge & Nature"
+msgstr "Kennis"
+
 msgid "Korean TV series"
 msgstr "Koreaanse TV series"
 
@@ -1910,9 +1960,6 @@ msgstr "Laatste Exception error: '%s'"
 #, fuzzy
 msgid "Last air date:"
 msgstr "Laatste update"
-
-msgid "Last chance"
-msgstr "Laatste kans"
 
 #, python-format
 msgid ""
@@ -2288,6 +2335,9 @@ msgstr "Nieuwste Afleveringen"
 msgid "News"
 msgstr "Nieuws"
 
+msgid "News (tagesschau)"
+msgstr ""
+
 msgid "News Feed"
 msgstr "Nieuws Feed"
 
@@ -2346,6 +2396,10 @@ msgstr "Geen"
 msgid "Nothing has been downloaded yet."
 msgstr "Er is nog niets gedownload."
 
+#, fuzzy
+msgid "Now"
+msgstr "Nee"
+
 msgid "Number of columns"
 msgstr "Aantal kolommen"
 
@@ -2374,9 +2428,6 @@ msgstr ""
 
 msgid "Offline channels"
 msgstr "Offline zenders"
-
-msgid "Older"
-msgstr "Ouder"
 
 msgid "On Air"
 msgstr "On Air"
@@ -2747,6 +2798,10 @@ msgstr "Beoordeling:"
 msgid "Remember last search entry"
 msgstr "Laatst bekeken positie onthouden"
 
+#, fuzzy
+msgid "Remember last search history selection"
+msgstr "Laatst bekeken positie onthouden"
+
 msgid "Remember last watched position"
 msgstr "Laatst bekeken positie onthouden"
 
@@ -2824,9 +2879,6 @@ msgstr "Russisch"
 msgid "Russian proxy server url"
 msgstr "Russische proxy server url"
 
-msgid "SHOWS"
-msgstr "UITZENDINGEN"
-
 msgid "SOME.PORN sorting by :"
 msgstr ""
 
@@ -2862,10 +2914,6 @@ msgstr "Zoek geschiedenis verwijderen is gelukt."
 
 msgid "Search Movies and TV Series"
 msgstr "Films & TV-series zoeken"
-
-#, python-format
-msgid "Search for \"%s\", %s, %s %s"
-msgstr "Zoeken naar \"%s\", %s, %s %s"
 
 msgid "Search history"
 msgstr "Zoek geschiedenis"
@@ -2932,6 +2980,10 @@ msgstr "Tweede Movie Player in buffering modus"
 msgid "Second movie player without buffering mode"
 msgstr "Tweede Movie Player zonder buffering modus"
 
+#, fuzzy
+msgid "Section"
+msgstr "Selecteer actie"
+
 msgid "Select"
 msgstr "Selecteer"
 
@@ -2944,6 +2996,10 @@ msgstr "Selecteer actie"
 
 msgid "Select audio track"
 msgstr "Selecteer een Audio spoor"
+
+#, fuzzy
+msgid "Select best available quality"
+msgstr "Default video kwaliteit"
 
 msgid "Select directory"
 msgstr "Kies een map"
@@ -3060,6 +3116,13 @@ msgstr "Shorts"
 msgid "Shoulder & Elbow"
 msgstr "Schouders & Elleboog"
 
+#, fuzzy
+msgid "Show"
+msgstr "Uitzendingen"
+
+msgid "Show & Comedy"
+msgstr ""
+
 msgid "Show IPTVPlayer in extension list"
 msgstr "IPTVPlayer in Extensiemenu tonen"
 
@@ -3113,6 +3176,10 @@ msgstr "Toon suggesties"
 msgid "Shows"
 msgstr "Uitzendingen"
 
+#, fuzzy
+msgid "Shows A-Z"
+msgstr "Uitzendingen"
+
 msgid "Simple list"
 msgstr "Eenvoudig overzicht"
 
@@ -3133,6 +3200,9 @@ msgstr "Skinners:"
 
 msgid "Skip video shorter than [min]"
 msgstr "Video korter dan [min] overslaan"
+
+msgid "Society"
+msgstr ""
 
 msgid "Software decoding as"
 msgstr "Software decoding als"
@@ -3371,6 +3441,9 @@ msgstr "Systeem"
 msgid "System language"
 msgstr "Kies een taal"
 
+msgid "T9 letter jump in lists"
+msgstr ""
+
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr ""
 
@@ -3496,6 +3569,9 @@ msgstr "Deze video is verwijderd."
 msgid "The user link could not be updated."
 msgstr ""
 
+msgid "The website returned a server error for this request."
+msgstr ""
+
 #, python-format
 msgid "There are %d more pages in this section"
 msgstr "Er zijn %d meer pagina's in deze sectie"
@@ -3516,6 +3592,13 @@ msgstr "Er is niet genoeg ruimte op de schijf [%s]."
 
 msgid "There is no hosts in this group."
 msgstr "Er zijn geen hosts in deze groep."
+
+#, fuzzy
+msgid "This content is not available in your region."
+msgstr "%s said: Deze pagina is op dit moment niet beschikbaar in uw regio"
+
+msgid "This content is only available in Switzerland."
+msgstr ""
 
 msgid "This host has been added already to this group."
 msgstr "De host is al toegevoegd aan deze groep."
@@ -3581,6 +3664,9 @@ msgstr "Transparant"
 
 msgid "Trauma"
 msgstr "Trauma"
+
+msgid "Travel"
+msgstr ""
 
 msgid "Treatment Consult"
 msgstr "Behandelingsconsult"
@@ -3680,6 +3766,9 @@ msgstr "Upload datum"
 msgid "Urllists player"
 msgstr "Url overzicht player"
 
+msgid "Use HLS streams (adaptive):"
+msgstr ""
+
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Gebruik Poolse proxy voor http://prognoza.pogody.tv/"
 
@@ -3721,9 +3810,6 @@ msgstr "Gebruik de PyCurl voor https requests"
 #, fuzzy
 msgid "Use the best quality :"
 msgstr "Gebruik default kwaliteit:"
-
-msgid "Use web-proxy for VODs (it may be illegal):"
-msgstr "Gebruik de web-proxy voor VOD's (dit is mogelijk illegaal):"
 
 msgid "User defined"
 msgstr "Mijn selectie"
@@ -4015,11 +4101,19 @@ msgstr "na een dag"
 msgid "after three days"
 msgstr "na drie dagen"
 
+#, fuzzy
+msgid "all"
+msgstr "klein"
+
 msgid "aqua"
 msgstr "aqua"
 
 msgid "auto"
 msgstr "automatisch"
+
+#, python-format
+msgid "available until %s"
+msgstr ""
 
 msgid "average"
 msgstr "gemiddeld"
@@ -4081,9 +4175,6 @@ msgstr "van E2 instellingen"
 
 msgid "fuchsia"
 msgstr "fuchsia"
-
-msgid "geoblocked"
-msgstr "geogeblokkeerd"
 
 msgid "gray"
 msgstr "grijs"
@@ -4189,9 +4280,6 @@ msgstr "seconde"
 
 msgid "seconds"
 msgstr "seconden"
-
-msgid "shows"
-msgstr "uitzendingen"
 
 msgid "silver"
 msgstr "zilver"

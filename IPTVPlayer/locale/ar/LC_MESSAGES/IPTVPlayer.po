@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-19 18:09+0200\n"
+"POT-Creation-Date: 2026-08-28 21:21+0200\n"
 "PO-Revision-Date: 2026-08-24 14:04+0300\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -121,10 +121,6 @@ msgstr "%s قال: هذه الصفحة غير متوفرة حاليًا في م�
 #, python-format
 msgid "%s services configuration"
 msgstr "إعدادات خدمات %s"
-
-#, python-format
-msgid "%s shows"
-msgstr "عروض %s"
 
 #, python-format
 msgid "%s subtitles download - how to"
@@ -293,9 +289,6 @@ msgstr "الفنانون"
 msgid "ATTENTION!"
 msgstr "تنبيه!"
 
-msgid "AZ"
-msgstr "أبجديًا"
-
 msgid "Aborted"
 msgstr "متوقف"
 
@@ -307,6 +300,10 @@ msgstr "الدخول محظور"
 
 msgid "Access denied. Please check password."
 msgstr "تم رفض الوصول. يرجى التحقق من كلمة المرور."
+
+#, fuzzy
+msgid "Accessible"
+msgstr "الدخول محظور"
 
 msgid "Active host"
 msgstr "المضيف النشط"
@@ -368,11 +365,23 @@ msgstr "الكل"
 msgid "All Sports"
 msgstr "جميع الرياضات"
 
+#, fuzzy
+msgid "All categories"
+msgstr "الفئات"
+
 msgid "All in one"
 msgstr "الكل في واحد"
 
 msgid "All materials"
 msgstr "جميع المواد"
+
+#, fuzzy
+msgid "All results"
+msgstr "المزيد من النتائج"
+
+#, fuzzy
+msgid "All shows"
+msgstr "عروض"
 
 msgid "All streams"
 msgstr "جميع روابط البث"
@@ -502,6 +511,10 @@ msgstr "الصوت"
 msgid "Audio buffer size [KB]"
 msgstr "حجم مخزن الصوت المؤقت [KB]"
 
+#, fuzzy
+msgid "Audio track"
+msgstr "المسارات الصوتية"
+
 msgid "Audio tracks"
 msgstr "المسارات الصوتية"
 
@@ -562,10 +575,6 @@ msgstr "حظر ملفات WMV"
 
 msgid "Board Review"
 msgstr "مراجعة المجلس"
-
-#, python-format
-msgid "Broadcast begins at %s"
-msgstr "البث يبدأ في %s"
 
 msgid "Broadcast:"
 msgstr "البودكاست:"
@@ -655,6 +664,10 @@ msgstr "القنوات"
 msgid "Children"
 msgstr "أطفال"
 
+#, fuzzy
+msgid "Children & Family"
+msgstr "أطفال"
+
 msgid "Cinema History"
 msgstr "أفلام سينمائية"
 
@@ -688,6 +701,9 @@ msgstr "شركة كولومبيا"
 msgid "Commits"
 msgstr "الالتزامات البرمجية"
 
+msgid "Concert"
+msgstr ""
+
 msgid "Configuration"
 msgstr "الإعدادات"
 
@@ -716,6 +732,10 @@ msgstr "خطأ في التأكيد."
 
 msgid "Connection to server failed!"
 msgstr "فشل الاتصال بالخادم!"
+
+#, fuzzy
+msgid "Content not available"
+msgstr "الوصف الكامل غير متاح"
 
 msgid "Continue downloading"
 msgstr "استمرار التنزيل"
@@ -761,6 +781,12 @@ msgstr "خطأ خطير - لا يمكن حفظ ملف تعريف الارتبا�
 
 msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "خطأ خطير – لا يمكن التعامل مع ترميز المحتوى gzip!"
+
+msgid "Culture"
+msgstr ""
+
+msgid "Culture and pop"
+msgstr ""
 
 msgid "Current item is not a channel."
 msgstr "العنصر الحالي ليس قناة."
@@ -902,6 +928,9 @@ msgstr "تعطيل/تمكين المجموعات"
 msgid "Disable/Enable services"
 msgstr "تعطيل/تمكين الخدمات"
 
+msgid "Discovery"
+msgstr ""
+
 msgid "Display language:"
 msgstr "لغة العرض:"
 
@@ -926,10 +955,6 @@ msgstr "تحميل"
 #, python-format
 msgid "Download \"%s\" in to \"%s\" failed!"
 msgstr "فشل تحميل \"%s\" إلى \"%s\"!"
-
-#, python-format
-msgid "Download %s"
-msgstr "تحميل %s"
 
 msgid "Download again"
 msgstr "إعادة التحميل"
@@ -1454,6 +1479,10 @@ msgstr "تمت إعادة تسمية الملف بنجاح!"
 msgid "Film"
 msgstr "فيلم"
 
+#, fuzzy
+msgid "Films"
+msgstr "فيلم"
+
 msgid "Filmweb Suggestions"
 msgstr "اقتراحات Filmweb"
 
@@ -1483,6 +1512,9 @@ msgstr "المضيف التالي لا يعمل أو يتطلب وحدات Pytho
 
 msgid "Font size offset"
 msgstr "إزاحة حجم الخط"
+
+msgid "Food"
+msgstr ""
 
 msgid "Foot & Ankle"
 msgstr "القدم والكاحل"
@@ -1610,6 +1642,9 @@ msgstr "يد"
 msgid "Hardware floating point"
 msgstr "الوحدة العائمة في العتاد"
 
+msgid "Health"
+msgstr ""
+
 msgid "Help"
 msgstr "مساعدة"
 
@@ -1622,6 +1657,13 @@ msgstr "إخفاء / تفعيل المجموعة"
 
 msgid "High (or HD)"
 msgstr "عالية (أو HD)"
+
+msgid "Highlights"
+msgstr ""
+
+#, fuzzy
+msgid "History"
+msgstr "أفلام سينمائية"
 
 msgid "History of searched phrases."
 msgstr "سجل العبارات التي تم البحث عنها."
@@ -1667,6 +1709,10 @@ msgstr "تم الإيقاف"
 
 msgid "Icon type"
 msgstr "نوع الأيقونة"
+
+#, fuzzy
+msgid "Icons quality"
+msgstr "الجودة"
 
 msgid "Icons size"
 msgstr "حجم الأيقونات"
@@ -1818,6 +1864,10 @@ msgstr "الركبة والرياضة"
 msgid "Knowledge"
 msgstr "المعرفة"
 
+#, fuzzy
+msgid "Knowledge & Nature"
+msgstr "المعرفة"
+
 msgid "Korean TV series"
 msgstr "مسلسلات كورية"
 
@@ -1853,9 +1903,6 @@ msgstr "آخر خطأ استثناء: '%s'"
 
 msgid "Last air date:"
 msgstr "تاريخ آخر عرض:"
-
-msgid "Last chance"
-msgstr "الفرصة الأخيرة"
 
 #, python-format
 msgid ""
@@ -2222,6 +2269,9 @@ msgstr "أحدث الحلقات"
 msgid "News"
 msgstr "أخبار"
 
+msgid "News (tagesschau)"
+msgstr ""
+
 msgid "News Feed"
 msgstr "تغذية الأخبار"
 
@@ -2278,6 +2328,10 @@ msgstr "لا شيء"
 msgid "Nothing has been downloaded yet."
 msgstr "لم يتم تحميل أي شيء حتى الآن."
 
+#, fuzzy
+msgid "Now"
+msgstr "لا"
+
 msgid "Number of columns"
 msgstr "عدد الأعمدة"
 
@@ -2306,9 +2360,6 @@ msgstr "مفتاح OMDb API"
 
 msgid "Offline channels"
 msgstr "قنوات غير متصلة"
-
-msgid "Older"
-msgstr "أقدم"
 
 msgid "On Air"
 msgstr "يُعرض الآن"
@@ -2676,6 +2727,10 @@ msgstr "التقييم:"
 msgid "Remember last search entry"
 msgstr "تذكر آخر موضع مشاهدة"
 
+#, fuzzy
+msgid "Remember last search history selection"
+msgstr "تذكر آخر موضع مشاهدة"
+
 msgid "Remember last watched position"
 msgstr "تذكر آخر موضع مشاهدة"
 
@@ -2753,9 +2808,6 @@ msgstr "الروسية"
 msgid "Russian proxy server url"
 msgstr "رابط خادم البروكسي الروسي"
 
-msgid "SHOWS"
-msgstr "البرامج"
-
 msgid "SOME.PORN sorting by :"
 msgstr "ترتيب SOME.PORN حسب:"
 
@@ -2791,10 +2843,6 @@ msgstr "تم حذف سجل البحث بنجاح."
 
 msgid "Search Movies and TV Series"
 msgstr "ابحث عن الأفلام والمسلسلات التلفزيونية"
-
-#, python-format
-msgid "Search for \"%s\", %s, %s %s"
-msgstr "بحث عن \"%s\"، %s، %s %s"
 
 msgid "Search history"
 msgstr "سجل البحث"
@@ -2858,6 +2906,10 @@ msgstr "مشغل الفيديو الثاني في وضع التحميل المؤ
 msgid "Second movie player without buffering mode"
 msgstr "مشغل الفيديو الثاني بدون وضع التحميل المؤقت"
 
+#, fuzzy
+msgid "Section"
+msgstr "اختر الإجراء"
+
 msgid "Select"
 msgstr "اختر"
 
@@ -2870,6 +2922,10 @@ msgstr "اختر الإجراء"
 
 msgid "Select audio track"
 msgstr "اختر مسار الصوت"
+
+#, fuzzy
+msgid "Select best available quality"
+msgstr "جودة الفيديو الافتراضية"
 
 msgid "Select directory"
 msgstr "اختر المجلد"
@@ -2985,6 +3041,13 @@ msgstr "مقاطع قصيرة"
 msgid "Shoulder & Elbow"
 msgstr "الكتف والكوع"
 
+#, fuzzy
+msgid "Show"
+msgstr "عروض"
+
+msgid "Show & Comedy"
+msgstr ""
+
 msgid "Show IPTVPlayer in extension list"
 msgstr "عرض IPTVPlayer في قائمة الإضافات"
 
@@ -3036,6 +3099,10 @@ msgstr "إظهار الإقتراحات"
 msgid "Shows"
 msgstr "عروض"
 
+#, fuzzy
+msgid "Shows A-Z"
+msgstr "عروض"
+
 msgid "Simple list"
 msgstr "قائمة بسيطة"
 
@@ -3057,6 +3124,9 @@ msgstr "المصمّمون:"
 msgid "Skip video shorter than [min]"
 msgstr "تخطي الفيديو الأقصر من [دقيقة]"
 
+msgid "Society"
+msgstr ""
+
 msgid "Software decoding as"
 msgstr "فك التشفير البرمجي كـ"
 
@@ -3068,6 +3138,10 @@ msgstr "بعض التغييرات سيتم تطبيقها فقط بعد إعاد
 
 msgid "Some settings will be applied only after GUI restart."
 msgstr "بعض الإعدادات سيتم تطبيقها فقط بعد إعادة تشغيل الواجهة الرسومية."
+
+#, fuzzy
+msgid "Sort"
+msgstr "البرامج من أ إلى ي"
 
 msgid "Sort A-Z"
 msgstr "البرامج من أ إلى ي"
@@ -3181,6 +3255,13 @@ msgstr ""
 "3. انتقل إلى: الإعدادات → IPTVPlayer → الترجمات\n"
 "4. الصق المفتاح في حقل \"مفتاح API لـ SubDL.com\""
 
+#, fuzzy
+msgid "SubDL.com API Key"
+msgstr "مفتاح OMDb API"
+
+msgid "SubDL: API Key Required"
+msgstr ""
+
 msgid "Subspecialities"
 msgstr "تخصصات فرعية"
 
@@ -3279,6 +3360,9 @@ msgstr "النظام"
 
 msgid "System language"
 msgstr "اختر اللغة"
+
+msgid "T9 letter jump in lists"
+msgstr ""
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "الصفحة التي تبحث عنها غير موجودة."
@@ -3407,6 +3491,9 @@ msgstr "تم حذف هذا الفيديو."
 msgid "The user link could not be updated."
 msgstr "تعذر تحديث رابط المستخدم."
 
+msgid "The website returned a server error for this request."
+msgstr ""
+
 #, python-format
 msgid "There are %d more pages in this section"
 msgstr "يوجد %d صفحات أخرى في هذا القسم"
@@ -3427,6 +3514,13 @@ msgstr "لا توجد مساحة حرة على القرص [%s]."
 
 msgid "There is no hosts in this group."
 msgstr "لا توجد مُضيفات في هذه المجموعة."
+
+#, fuzzy
+msgid "This content is not available in your region."
+msgstr "%s قال: هذه الصفحة غير متوفرة حاليًا في منطقتك"
+
+msgid "This content is only available in Switzerland."
+msgstr ""
 
 msgid "This host has been added already to this group."
 msgstr "تمت إضافة هذا المُضيف مسبقًا إلى هذه المجموعة."
@@ -3491,6 +3585,9 @@ msgstr "شفاف"
 
 msgid "Trauma"
 msgstr "صدمة"
+
+msgid "Travel"
+msgstr ""
 
 msgid "Treatment Consult"
 msgstr "استشارة علاجية"
@@ -3589,6 +3686,9 @@ msgstr "تاريخ الرفع"
 msgid "Urllists player"
 msgstr "مشغل قوائم الروابط"
 
+msgid "Use HLS streams (adaptive):"
+msgstr ""
+
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "استخدم بروكسي بولندي لموقع http://prognoza.pogody.tv/"
 
@@ -3628,9 +3728,6 @@ msgstr "استخدم PyCurl لطلبات HTTP(S)"
 
 msgid "Use the best quality :"
 msgstr "استخدم الجودة الافتراضية:"
-
-msgid "Use web-proxy for VODs (it may be illegal):"
-msgstr "استخدم بروكسي ويب لفيديوهات حسب الطلب (قد يكون غير قانوني):"
 
 msgid "User defined"
 msgstr "يُحدد بواسطة المستخدم"
@@ -3916,11 +4013,19 @@ msgstr "بعد يوم"
 msgid "after three days"
 msgstr "بعد ثلاثة أيام"
 
+#, fuzzy
+msgid "all"
+msgstr "صغير"
+
 msgid "aqua"
 msgstr "أكوا"
 
 msgid "auto"
 msgstr "تلقائي"
+
+#, python-format
+msgid "available until %s"
+msgstr ""
 
 msgid "average"
 msgstr "متوسط"
@@ -3981,9 +4086,6 @@ msgstr "من إعدادات E2"
 
 msgid "fuchsia"
 msgstr "فوشيا"
-
-msgid "geoblocked"
-msgstr "محظور جغرافيًا"
 
 msgid "gray"
 msgstr "رمادي"
@@ -4089,9 +4191,6 @@ msgstr "ثانية"
 
 msgid "seconds"
 msgstr "ثوانٍ"
-
-msgid "shows"
-msgstr "عروض"
 
 msgid "silver"
 msgstr "فضي"
