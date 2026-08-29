@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 21:21+0200\n"
-"PO-Revision-Date: 2026-08-19 21:53+0200\n"
+"PO-Revision-Date: 2026-08-29 10:31+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -298,9 +298,8 @@ msgstr "Zugriff verboten"
 msgid "Access denied. Please check password."
 msgstr "Zugriff verweigert. Bitte überprüfen Sie das Passwort."
 
-#, fuzzy
 msgid "Accessible"
-msgstr "Zugriff verboten"
+msgstr "Barrierefrei"
 
 msgid "Active host"
 msgstr "Aktiver Host"
@@ -362,9 +361,8 @@ msgstr "Alle"
 msgid "All Sports"
 msgstr "Alle Sportarten"
 
-#, fuzzy
 msgid "All categories"
-msgstr "Rubriken"
+msgstr "Alle Kategorien"
 
 msgid "All in one"
 msgstr "Alle zusammen"
@@ -372,13 +370,11 @@ msgstr "Alle zusammen"
 msgid "All materials"
 msgstr "Alle Materialien"
 
-#, fuzzy
 msgid "All results"
-msgstr "Mehr Ergebnisse"
+msgstr "Alle Ergebnisse"
 
-#, fuzzy
 msgid "All shows"
-msgstr "Shows"
+msgstr "Alle Shows"
 
 msgid "All streams"
 msgstr "Alle Streams"
@@ -508,7 +504,6 @@ msgstr "Audio"
 msgid "Audio buffer size [KB]"
 msgstr "Audiopuffergröße in [KB]"
 
-#, fuzzy
 msgid "Audio track"
 msgstr "Tonspur"
 
@@ -661,9 +656,8 @@ msgstr "Kanäle"
 msgid "Children"
 msgstr "Kinder"
 
-#, fuzzy
 msgid "Children & Family"
-msgstr "Kinder"
+msgstr "Kinder & Familie"
 
 msgid "Cinema History"
 msgstr "Kinogeschichte"
@@ -699,7 +693,7 @@ msgid "Commits"
 msgstr "Commits"
 
 msgid "Concert"
-msgstr ""
+msgstr "Konzert"
 
 msgid "Configuration"
 msgstr "Konfiguration"
@@ -730,9 +724,8 @@ msgstr "Fehler bei Bestätigung."
 msgid "Connection to server failed!"
 msgstr "Verbindung zum Server fehlgeschlagen!"
 
-#, fuzzy
 msgid "Content not available"
-msgstr "Keine vollständige Beschreibung verfügbar"
+msgstr "Inhalt nicht verfügbar"
 
 msgid "Continue downloading"
 msgstr "Download fortsetzen"
@@ -780,10 +773,10 @@ msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Kritischer Fehler - Content-Encoding gzip kann nicht behandelt werden!"
 
 msgid "Culture"
-msgstr ""
+msgstr "Kultur"
 
 msgid "Culture and pop"
-msgstr ""
+msgstr "Kultur und Pop"
 
 msgid "Current item is not a channel."
 msgstr "Der aktuelle Eintrag ist kein Kanal."
@@ -926,7 +919,7 @@ msgid "Disable/Enable services"
 msgstr "Deaktivieren/Aktivieren von Services"
 
 msgid "Discovery"
-msgstr ""
+msgstr "Entdeckung"
 
 msgid "Display language:"
 msgstr "Anzeigesprache:"
@@ -1474,9 +1467,8 @@ msgstr "Datei erfolgreich umbenannt!"
 msgid "Film"
 msgstr "Film"
 
-#, fuzzy
 msgid "Films"
-msgstr "Film"
+msgstr "Filme"
 
 msgid "Filmweb Suggestions"
 msgstr "Filmweb Vorschläge"
@@ -1509,7 +1501,7 @@ msgid "Font size offset"
 msgstr "Schriftgrößen Offset"
 
 msgid "Food"
-msgstr ""
+msgstr "Essen"
 
 msgid "Foot & Ankle"
 msgstr "Fuß & Knöchel"
@@ -1638,7 +1630,7 @@ msgid "Hardware floating point"
 msgstr "Hardware Gleitkommaeinheit"
 
 msgid "Health"
-msgstr ""
+msgstr "Gesundheit"
 
 msgid "Help"
 msgstr "Hilfe"
@@ -1654,11 +1646,10 @@ msgid "High (or HD)"
 msgstr "Hoch (oder HD)"
 
 msgid "Highlights"
-msgstr ""
+msgstr "Highlights"
 
-#, fuzzy
 msgid "History"
-msgstr "Kinogeschichte"
+msgstr "Geschichte"
 
 msgid "History of searched phrases."
 msgstr "Suchverlauf."
@@ -1705,9 +1696,8 @@ msgstr "UNTERBROCHEN"
 msgid "Icon type"
 msgstr "Icon Typ"
 
-#, fuzzy
 msgid "Icons quality"
-msgstr "Qualität"
+msgstr "Icons Qualität"
 
 msgid "Icons size"
 msgstr "Icons  Größe"
@@ -1859,9 +1849,8 @@ msgstr "Knie & Sport"
 msgid "Knowledge"
 msgstr "Wissen"
 
-#, fuzzy
 msgid "Knowledge & Nature"
-msgstr "Wissen"
+msgstr "Wissen & Natur"
 
 msgid "Korean TV series"
 msgstr "Koreanische TV Serien"
@@ -2265,7 +2254,7 @@ msgid "News"
 msgstr "Neuigkeiten"
 
 msgid "News (tagesschau)"
-msgstr ""
+msgstr "Nachrichten (Tagesschau)"
 
 msgid "News Feed"
 msgstr "News Feed"
@@ -2323,9 +2312,8 @@ msgstr "Keine"
 msgid "Nothing has been downloaded yet."
 msgstr "Es wurde noch nichts heruntergeladen."
 
-#, fuzzy
 msgid "Now"
-msgstr "Nein"
+msgstr "Jetzt"
 
 msgid "Number of columns"
 msgstr "Anzahl der Spalten"
@@ -2722,9 +2710,8 @@ msgstr "Verbleibend:"
 msgid "Remember last search entry"
 msgstr "Letzten Sucheintrag speichern"
 
-#, fuzzy
 msgid "Remember last search history selection"
-msgstr "Letzten Sucheintrag speichern"
+msgstr "Auswahl aus dem letzten Suchverlauf speichern"
 
 msgid "Remember last watched position"
 msgstr "Merke zuletzt gesehene Position"
@@ -2901,9 +2888,8 @@ msgstr "Alternativer Player im Puffermodus"
 msgid "Second movie player without buffering mode"
 msgstr "Alternativer Player ohne Puffermodus"
 
-#, fuzzy
 msgid "Section"
-msgstr "Auswahl"
+msgstr "Abschnitt"
 
 msgid "Select"
 msgstr "Auswählen"
@@ -2918,9 +2904,8 @@ msgstr "Operation auswählen"
 msgid "Select audio track"
 msgstr "Wähle Tonspur"
 
-#, fuzzy
 msgid "Select best available quality"
-msgstr "Standard Video Qualität"
+msgstr "Beste verfügbare Qualität auswählen"
 
 msgid "Select directory"
 msgstr "Wähle Verzeichnis"
@@ -3036,12 +3021,11 @@ msgstr "Shorts"
 msgid "Shoulder & Elbow"
 msgstr "Schulter & Ellenbogen"
 
-#, fuzzy
 msgid "Show"
-msgstr "Shows"
+msgstr "Show"
 
 msgid "Show & Comedy"
-msgstr ""
+msgstr "Show & Comedy"
 
 msgid "Show IPTVPlayer in extension list"
 msgstr "Zeige E2iPlayer in Erweiterungsliste"
@@ -3094,9 +3078,8 @@ msgstr "Zeige Suchvorschläge"
 msgid "Shows"
 msgstr "Shows"
 
-#, fuzzy
 msgid "Shows A-Z"
-msgstr "Shows"
+msgstr "Shows A-Z"
 
 msgid "Simple list"
 msgstr "Einfache Liste"
@@ -3120,7 +3103,7 @@ msgid "Skip video shorter than [min]"
 msgstr "Video kürzer als [min] überspringen"
 
 msgid "Society"
-msgstr ""
+msgstr "Gesellschaft"
 
 msgid "Software decoding as"
 msgstr "Softwaredekodierung als"
@@ -3355,7 +3338,7 @@ msgid "System language"
 msgstr "Systemsprache"
 
 msgid "T9 letter jump in lists"
-msgstr ""
+msgstr "T9-Buchstaben springen in Listen"
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "DIE GESUCHTE SEITE WURDE NICHT GEFUNDEN."
@@ -3483,7 +3466,7 @@ msgid "The user link could not be updated."
 msgstr "Der Benutzerlink konnte nicht aktualisiert werden."
 
 msgid "The website returned a server error for this request."
-msgstr ""
+msgstr "Die Website hat bei dieser Anfrage einen Serverfehler zurückgegeben."
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3506,12 +3489,11 @@ msgstr "Nicht genug Speicher auf Laufwerk [%s]."
 msgid "There is no hosts in this group."
 msgstr "Kein Service in dieser Gruppe vorhanden."
 
-#, fuzzy
 msgid "This content is not available in your region."
-msgstr "%s meldet: Diese Seite ist zur Zeit nicht in ihrer Region verfügbar"
+msgstr "Dieser Inhalt ist in Ihrer Region nicht verfügbar."
 
 msgid "This content is only available in Switzerland."
-msgstr ""
+msgstr "Dieser Inhalt ist nur in der Schweiz verfügbar."
 
 msgid "This host has been added already to this group."
 msgstr "Dieser Service wurde bereits zu dieser Gruppe hinzugefügt."
@@ -3578,7 +3560,7 @@ msgid "Trauma"
 msgstr "Trauma"
 
 msgid "Travel"
-msgstr ""
+msgstr "Reisen"
 
 msgid "Treatment Consult"
 msgstr "Behandlungsberatung"
@@ -3678,7 +3660,7 @@ msgid "Urllists player"
 msgstr "Urllists Player"
 
 msgid "Use HLS streams (adaptive):"
-msgstr ""
+msgstr "HLS-Streams verwenden (adaptiv):"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Polnischer Proxy für http://prognoza.pogody.tv/"
@@ -4004,9 +3986,8 @@ msgstr "Nach einem Tag"
 msgid "after three days"
 msgstr "Nach drei Tagen"
 
-#, fuzzy
 msgid "all"
-msgstr "klein"
+msgstr "alle"
 
 msgid "aqua"
 msgstr "aqua"
@@ -4016,7 +3997,7 @@ msgstr "auto"
 
 #, python-format
 msgid "available until %s"
-msgstr ""
+msgstr "verfügbar bis %s"
 
 msgid "average"
 msgstr "mittel"
