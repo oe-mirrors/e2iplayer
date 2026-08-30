@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 21:21+0200\n"
-"PO-Revision-Date: 2026-08-24 14:04+0300\n"
+"POT-Creation-Date: 2026-08-19 18:09+0200\n"
+"PO-Revision-Date: 2026-08-30 08:38+0300\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -301,9 +301,8 @@ msgstr "الدخول محظور"
 msgid "Access denied. Please check password."
 msgstr "تم رفض الوصول. يرجى التحقق من كلمة المرور."
 
-#, fuzzy
 msgid "Accessible"
-msgstr "الدخول محظور"
+msgstr "متاح"
 
 msgid "Active host"
 msgstr "المضيف النشط"
@@ -365,9 +364,8 @@ msgstr "الكل"
 msgid "All Sports"
 msgstr "جميع الرياضات"
 
-#, fuzzy
 msgid "All categories"
-msgstr "الفئات"
+msgstr "جميع الفئات"
 
 msgid "All in one"
 msgstr "الكل في واحد"
@@ -375,13 +373,11 @@ msgstr "الكل في واحد"
 msgid "All materials"
 msgstr "جميع المواد"
 
-#, fuzzy
 msgid "All results"
-msgstr "المزيد من النتائج"
+msgstr "جميع النتائج"
 
-#, fuzzy
 msgid "All shows"
-msgstr "عروض"
+msgstr "جميع العروض"
 
 msgid "All streams"
 msgstr "جميع روابط البث"
@@ -511,9 +507,8 @@ msgstr "الصوت"
 msgid "Audio buffer size [KB]"
 msgstr "حجم مخزن الصوت المؤقت [KB]"
 
-#, fuzzy
 msgid "Audio track"
-msgstr "المسارات الصوتية"
+msgstr "المسار الصوتي"
 
 msgid "Audio tracks"
 msgstr "المسارات الصوتية"
@@ -664,9 +659,8 @@ msgstr "القنوات"
 msgid "Children"
 msgstr "أطفال"
 
-#, fuzzy
 msgid "Children & Family"
-msgstr "أطفال"
+msgstr "الأطفال والعائلة"
 
 msgid "Cinema History"
 msgstr "أفلام سينمائية"
@@ -702,7 +696,7 @@ msgid "Commits"
 msgstr "الالتزامات البرمجية"
 
 msgid "Concert"
-msgstr ""
+msgstr "الحفلات الموسيقية"
 
 msgid "Configuration"
 msgstr "الإعدادات"
@@ -733,9 +727,8 @@ msgstr "خطأ في التأكيد."
 msgid "Connection to server failed!"
 msgstr "فشل الاتصال بالخادم!"
 
-#, fuzzy
 msgid "Content not available"
-msgstr "الوصف الكامل غير متاح"
+msgstr "المحتوى غير متاح"
 
 msgid "Continue downloading"
 msgstr "استمرار التنزيل"
@@ -783,10 +776,10 @@ msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "خطأ خطير – لا يمكن التعامل مع ترميز المحتوى gzip!"
 
 msgid "Culture"
-msgstr ""
+msgstr "الثقافة"
 
 msgid "Culture and pop"
-msgstr ""
+msgstr "الثقافة والموسيقى الشعبية"
 
 msgid "Current item is not a channel."
 msgstr "العنصر الحالي ليس قناة."
@@ -929,7 +922,7 @@ msgid "Disable/Enable services"
 msgstr "تعطيل/تمكين الخدمات"
 
 msgid "Discovery"
-msgstr ""
+msgstr "استكشاف"
 
 msgid "Display language:"
 msgstr "لغة العرض:"
@@ -1479,9 +1472,8 @@ msgstr "تمت إعادة تسمية الملف بنجاح!"
 msgid "Film"
 msgstr "فيلم"
 
-#, fuzzy
 msgid "Films"
-msgstr "فيلم"
+msgstr "الأفلام"
 
 msgid "Filmweb Suggestions"
 msgstr "اقتراحات Filmweb"
@@ -1514,7 +1506,7 @@ msgid "Font size offset"
 msgstr "إزاحة حجم الخط"
 
 msgid "Food"
-msgstr ""
+msgstr "الطعام"
 
 msgid "Foot & Ankle"
 msgstr "القدم والكاحل"
@@ -1643,7 +1635,7 @@ msgid "Hardware floating point"
 msgstr "الوحدة العائمة في العتاد"
 
 msgid "Health"
-msgstr ""
+msgstr "الصحة"
 
 msgid "Help"
 msgstr "مساعدة"
@@ -1659,11 +1651,10 @@ msgid "High (or HD)"
 msgstr "عالية (أو HD)"
 
 msgid "Highlights"
-msgstr ""
+msgstr "أبرز المحتويات"
 
-#, fuzzy
 msgid "History"
-msgstr "أفلام سينمائية"
+msgstr "التاريخ"
 
 msgid "History of searched phrases."
 msgstr "سجل العبارات التي تم البحث عنها."
@@ -1710,9 +1701,8 @@ msgstr "تم الإيقاف"
 msgid "Icon type"
 msgstr "نوع الأيقونة"
 
-#, fuzzy
 msgid "Icons quality"
-msgstr "الجودة"
+msgstr "جودة الأيقونات"
 
 msgid "Icons size"
 msgstr "حجم الأيقونات"
@@ -1864,9 +1854,8 @@ msgstr "الركبة والرياضة"
 msgid "Knowledge"
 msgstr "المعرفة"
 
-#, fuzzy
 msgid "Knowledge & Nature"
-msgstr "المعرفة"
+msgstr "المعرفة والطبيعة"
 
 msgid "Korean TV series"
 msgstr "مسلسلات كورية"
@@ -2270,7 +2259,7 @@ msgid "News"
 msgstr "أخبار"
 
 msgid "News (tagesschau)"
-msgstr ""
+msgstr "الأخبار (تاجيسشاو)"
 
 msgid "News Feed"
 msgstr "تغذية الأخبار"
@@ -2328,9 +2317,8 @@ msgstr "لا شيء"
 msgid "Nothing has been downloaded yet."
 msgstr "لم يتم تحميل أي شيء حتى الآن."
 
-#, fuzzy
 msgid "Now"
-msgstr "لا"
+msgstr "الآن"
 
 msgid "Number of columns"
 msgstr "عدد الأعمدة"
@@ -2727,9 +2715,8 @@ msgstr "التقييم:"
 msgid "Remember last search entry"
 msgstr "تذكر آخر موضع مشاهدة"
 
-#, fuzzy
 msgid "Remember last search history selection"
-msgstr "تذكر آخر موضع مشاهدة"
+msgstr "تذكر آخر اختيار من سجل البحث"
 
 msgid "Remember last watched position"
 msgstr "تذكر آخر موضع مشاهدة"
@@ -2906,9 +2893,8 @@ msgstr "مشغل الفيديو الثاني في وضع التحميل المؤ
 msgid "Second movie player without buffering mode"
 msgstr "مشغل الفيديو الثاني بدون وضع التحميل المؤقت"
 
-#, fuzzy
 msgid "Section"
-msgstr "اختر الإجراء"
+msgstr "القسم"
 
 msgid "Select"
 msgstr "اختر"
@@ -2923,9 +2909,8 @@ msgstr "اختر الإجراء"
 msgid "Select audio track"
 msgstr "اختر مسار الصوت"
 
-#, fuzzy
 msgid "Select best available quality"
-msgstr "جودة الفيديو الافتراضية"
+msgstr "اختيار أفضل جودة متاحة"
 
 msgid "Select directory"
 msgstr "اختر المجلد"
@@ -3041,12 +3026,11 @@ msgstr "مقاطع قصيرة"
 msgid "Shoulder & Elbow"
 msgstr "الكتف والكوع"
 
-#, fuzzy
 msgid "Show"
-msgstr "عروض"
+msgstr "عرض"
 
 msgid "Show & Comedy"
-msgstr ""
+msgstr "العروض والكوميديا"
 
 msgid "Show IPTVPlayer in extension list"
 msgstr "عرض IPTVPlayer في قائمة الإضافات"
@@ -3099,9 +3083,8 @@ msgstr "إظهار الإقتراحات"
 msgid "Shows"
 msgstr "عروض"
 
-#, fuzzy
 msgid "Shows A-Z"
-msgstr "عروض"
+msgstr "العروض من أ إلى ي"
 
 msgid "Simple list"
 msgstr "قائمة بسيطة"
@@ -3125,7 +3108,7 @@ msgid "Skip video shorter than [min]"
 msgstr "تخطي الفيديو الأقصر من [دقيقة]"
 
 msgid "Society"
-msgstr ""
+msgstr "المجتمع"
 
 msgid "Software decoding as"
 msgstr "فك التشفير البرمجي كـ"
@@ -3139,9 +3122,8 @@ msgstr "بعض التغييرات سيتم تطبيقها فقط بعد إعاد
 msgid "Some settings will be applied only after GUI restart."
 msgstr "بعض الإعدادات سيتم تطبيقها فقط بعد إعادة تشغيل الواجهة الرسومية."
 
-#, fuzzy
 msgid "Sort"
-msgstr "البرامج من أ إلى ي"
+msgstr "ترتيب"
 
 msgid "Sort A-Z"
 msgstr "البرامج من أ إلى ي"
@@ -3255,12 +3237,11 @@ msgstr ""
 "3. انتقل إلى: الإعدادات → IPTVPlayer → الترجمات\n"
 "4. الصق المفتاح في حقل \"مفتاح API لـ SubDL.com\""
 
-#, fuzzy
 msgid "SubDL.com API Key"
-msgstr "مفتاح OMDb API"
+msgstr "مفتاح API لـ SubDL.com"
 
 msgid "SubDL: API Key Required"
-msgstr ""
+msgstr "SubDL: مفتاح API مطلوب"
 
 msgid "Subspecialities"
 msgstr "تخصصات فرعية"
@@ -3362,7 +3343,7 @@ msgid "System language"
 msgstr "اختر اللغة"
 
 msgid "T9 letter jump in lists"
-msgstr ""
+msgstr "الانتقال بالحروف باستخدام T9 في القوائم"
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "الصفحة التي تبحث عنها غير موجودة."
@@ -3492,7 +3473,7 @@ msgid "The user link could not be updated."
 msgstr "تعذر تحديث رابط المستخدم."
 
 msgid "The website returned a server error for this request."
-msgstr ""
+msgstr "أعاد الموقع خطأً من الخادم لهذا الطلب."
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3515,12 +3496,11 @@ msgstr "لا توجد مساحة حرة على القرص [%s]."
 msgid "There is no hosts in this group."
 msgstr "لا توجد مُضيفات في هذه المجموعة."
 
-#, fuzzy
 msgid "This content is not available in your region."
-msgstr "%s قال: هذه الصفحة غير متوفرة حاليًا في منطقتك"
+msgstr "هذا المحتوى غير متاح في منطقتك."
 
 msgid "This content is only available in Switzerland."
-msgstr ""
+msgstr "هذا المحتوى متاح فقط في سويسرا."
 
 msgid "This host has been added already to this group."
 msgstr "تمت إضافة هذا المُضيف مسبقًا إلى هذه المجموعة."
@@ -3587,7 +3567,7 @@ msgid "Trauma"
 msgstr "صدمة"
 
 msgid "Travel"
-msgstr ""
+msgstr "السفر"
 
 msgid "Treatment Consult"
 msgstr "استشارة علاجية"
@@ -3687,7 +3667,7 @@ msgid "Urllists player"
 msgstr "مشغل قوائم الروابط"
 
 msgid "Use HLS streams (adaptive):"
-msgstr ""
+msgstr "استخدام بث HLS (متكيف):"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "استخدم بروكسي بولندي لموقع http://prognoza.pogody.tv/"
@@ -4013,9 +3993,8 @@ msgstr "بعد يوم"
 msgid "after three days"
 msgstr "بعد ثلاثة أيام"
 
-#, fuzzy
 msgid "all"
-msgstr "صغير"
+msgstr "الكل"
 
 msgid "aqua"
 msgstr "أكوا"
@@ -4025,7 +4004,7 @@ msgstr "تلقائي"
 
 #, python-format
 msgid "available until %s"
-msgstr ""
+msgstr "متاح حتى %s"
 
 msgid "average"
 msgstr "متوسط"
