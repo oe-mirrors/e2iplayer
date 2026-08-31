@@ -356,7 +356,14 @@ class ArteTV(CBaseHostClass):
                 hls = getDirectM3U8Playlist(strwithmeta(surl, {'iptv_proto': 'm3u8'}), checkExt=False, checkContent=True)
                 for it in hls:
                     it['name'] = ('%s %s' % (label, it.get('name', ''))).strip()
-                    it['url'] = self.up.decorateUrl(it['url'], {'iptv_livestream': live})
+                    extraMeta = {'iptv_livestream': live}
+                    # ARTE now serves CMAF/fMP4 with separate audio+video renditions.
+                    # The generic hlsdl alt-audio merge just concatenates the fragments
+                    # and yields an unplayable file, so mux those split streams with
+                    # ffmpeg instead (both for buffered playback and for downloads).
+                    if strwithmeta(it['url']).meta.get('audio_url'):
+                        extraMeta['iptv_use_ffmpeg'] = True
+                    it['url'] = self.up.decorateUrl(it['url'], extraMeta)
                     it['need_resolve'] = 0
                     urlTab.append(it)
                 if not hls:
