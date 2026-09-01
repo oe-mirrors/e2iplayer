@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # ARTE
 # Rewritten for the api-cdn.arte.tv "emac v4" JSON API + player v2 config
-# Last Modified: 28.08.2026
+# Last Modified: 31.08.2026 - split audio/video HLS renditions (merge://) are muxed
+# with ffmpeg (iptv_use_ffmpeg, matroska container) instead of hlsdl, which only
+# re-packages segments and produced unplayable files.
 ###################################################
 # LOCAL import
 ###################################################
@@ -363,6 +365,7 @@ class ArteTV(CBaseHostClass):
                     # ffmpeg instead (both for buffered playback and for downloads).
                     if strwithmeta(it['url']).meta.get('audio_url'):
                         extraMeta['iptv_use_ffmpeg'] = True
+                        extraMeta['ff_out_container'] = 'matroska'
                     it['url'] = self.up.decorateUrl(it['url'], extraMeta)
                     it['need_resolve'] = 0
                     urlTab.append(it)

@@ -302,6 +302,12 @@ class IPTVDMApi():
 
         url, downloaderParams = DMHelper.getDownloaderParamFromUrl(item.url)
         self.queueUD[listUDIdx].downloader = DownloaderCreator(url)
+        # this is a real download (not buffered playback) -> the downloader may
+        # rename the finished file to its true container extension
+        try:
+            self.queueUD[listUDIdx].downloader.allowFinalRename = True
+        except Exception:
+            printExc()
         self.queueUD[listUDIdx].callback = boundFunction(self.cmdFinished, item.downloadIdx)
         self.queueUD[listUDIdx].downloader.subscribeFor_Finish(self.queueUD[listUDIdx].callback)
         self.queueUD[listUDIdx].downloader.start(url, item.fileName, downloaderParams)
@@ -314,6 +320,20 @@ class IPTVDMApi():
         # listUDIdx must be > -1
         if -1 >= listUDIdx:
             return
+
+        # a downloader may have renamed the finished file (e.g. FFMPEGDownloader
+        # fixing .mp4 -> .mkv to match the real container); pick up the real path
+        # so notify / archive / delete all use it. No-op for downloaders that
+        # never change it.
+        try:
+            dl = self.queueUD[listUDIdx].downloader
+            if dl is not None:
+                realPath = dl.getFullFileName()
+                if realPath and realPath != self.queueUD[listUDIdx].fileName:
+                    printDBG("cmdFinished: downloader renamed file -> %s" % realPath)
+                    self.queueUD[listUDIdx].fileName = realPath
+        except Exception:
+            printExc()
 
         self.updateDownloadedItemStatus(listUDIdx)
         self.queueUD[listUDIdx].processed = True
@@ -412,7 +432,11 @@ class IPTVDMApi():
         if downloadItem.fileSize > 0 and downloadItem.downloadedSize > 0:
             downloadItem.downloadedProcent = int((100 * downloadItem.downloadedSize) / downloadItem.fileSize)
         elif downloadItem.totalFileDuration > 0 and downloadItem.downloadedFileDuration > 0:
-            downloadItem.downloadedProcent = int((100 * downloadItem.downloadedFileDuration) / downloadItem.totalFileDuration)
+            # round, don't truncate: ffmpeg's decoded end time often lands a hair
+            # below the summed playlist duration on a complete file, and int()
+            # would leave it at 99 -> the DM would flag a finished download as
+            # INTERRUPTED
+            downloadItem.downloadedProcent = int(round((100.0 * downloadItem.downloadedFileDuration) / downloadItem.totalFileDuration))
         return True
 
     def updateDownloadItemsStatus(self):
