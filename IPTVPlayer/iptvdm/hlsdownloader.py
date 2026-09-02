@@ -54,6 +54,7 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         self.totalDuration = 0
         self.downloadDuration = 0
         self.liveStream = False
+        self.lastErrorCode = 0  # last non-zero "error_code" reported by hlsdl (e.g. expired/blocked CDN token)
 
         # ffmpeg postprocess support
         self.ffmpegPostEnabled = False
@@ -301,6 +302,9 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
 
                     if "d_t" in obj and obj['d_t'] == 'live':
                         self.liveStream = True
+                    if obj.get("error_code"):
+                        self.lastErrorCode = obj["error_code"]
+                        printDBG("HLSDownloader hlsdl error_code[%r] error_msg[%r]" % (obj.get("error_code"), obj.get("error_msg")))
                     if updateStatistic:
                         BaseDownloader._updateStatistic(self)
                 except Exception:
@@ -353,6 +357,11 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
             self.status = DMHelper.STS.INTERRUPTED
         elif 0 >= self.localFileSize:
             self.status = DMHelper.STS.ERROR
+        elif self._isIncompleteDownload(code):
+            # hlsdl can exit 0 even after aborting mid-stream on an HTTP error
+            # (expired / IP-locked CDN token); don't remux/finalize a truncated file
+            printDBG("HLSDownloader incomplete (code[%r] errCode[%r] dur[%s/%s]) -> INTERRUPTED" % (code, self.lastErrorCode, self.downloadDuration, self.totalDuration))
+            self.status = DMHelper.STS.INTERRUPTED
         elif self.remoteFileSize > 0 and self.remoteFileSize > self.localFileSize:
             self.status = DMHelper.STS.INTERRUPTED
         else:
@@ -370,6 +379,17 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
 
         if not terminated:
             self._finishDownloadFlow()
+
+    def _isIncompleteDownload(self, code):
+        if self.liveStream:
+            return False
+        if code != 0 or self.lastErrorCode:
+            return True
+        # hlsdl exited 0 but the downloaded duration is far short of the playlist
+        # duration -> it stopped early (rejected segment, throttled CDN, ...)
+        if self.totalDuration > 0 and self.downloadDuration < self.totalDuration * 0.90:
+            return True
+        return False
 
     def isLiveStream(self):
         return self.liveStream
