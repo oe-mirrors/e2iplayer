@@ -8,6 +8,11 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -49,7 +54,7 @@ def gettytul():
     return 'ARDmediathek'
 
 
-class ARDmediathek(CBaseHostClass):
+class ARDmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     API = 'https://api.ardmediathek.de/page-gateway/'
     CLIENT = 'ard'
@@ -97,6 +102,41 @@ class ARDmediathek(CBaseHostClass):
             {'category': 'audio_menu', 'title': _('Radio') + ' (ARD Audiothek)'},
         ]
         self.MAIN_CAT_TAB += self.searchItems()
+
+        self.watchedHelper = IPTVWatchedHelper('ardmediathek')
+        self.wfInitFolderCache()
+
+    ###################################################
+    # watched flag
+    ###################################################
+    # nav rows that are not real content containers - keep them out of the folder tree
+    # list_widget_inline / list_page(home) carry no own url - dict(cItem) leaves the
+    # enclosing page's url on them, which would collide with the page's own key
+    WF_SKIP_CATEGORIES = ('list_az', 'list_live', 'list_rubriken', 'list_widget_inline',
+                          'audio_menu', 'audio_categories', 'audio_live', 'audio_live_variants',
+                          'search', 'search_next_page', 'search_history')
+
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict) or cItem.get('live'):
+                return ''
+            itemType = cItem.get('type', '')
+            if itemType == 'video':
+                url = self.wfNormalizeUrlKey(cItem.get('url', ''))
+                return 'video:%s' % url if url else ''
+            if itemType in ('audio', 'more', 'marker'):
+                return ''
+            if cItem.get('search_item') or cItem.get('name') == 'history':
+                return ''
+            if cItem.get('category', '') in self.WF_SKIP_CATEGORIES:
+                return ''
+            url = self.wfNormalizeUrlKey(cItem.get('url', ''))
+            if not url or url.rstrip('/').endswith('/home'):
+                return ''
+            return 'folder:%s' % url
+        except Exception:
+            printExc()
+        return ''
 
     ###################################################
     # helpers
@@ -236,6 +276,12 @@ class ARDmediathek(CBaseHostClass):
                 if 'LIVESTREAM' in cat:
                     params['live'] = True
                     params['title'] = '[L] ' + title
+                else:
+                    show = self.cleanHtmlStr((t.get('show') or {}).get('title', '') or '')
+                    params['title'] = normalizeMediathekTitle(
+                        title, date=t.get('broadcastedOn') or '',
+                        sxeHint='%s %s' % (t.get('mediumTitle') or '', t.get('longTitle') or ''),
+                        isMovie=(not show) and cat not in ('EPISODE', 'CLIP'))
                 self.addVideo(params)
             else:
                 params['category'] = 'list_page'
@@ -445,10 +491,13 @@ class ARDmediathek(CBaseHostClass):
             return []
 
         embedded = None
+        synopsis = ''
         live = bool(cItem.get('live'))
         for w in data.get('widgets', []):
             if not isinstance(w, dict):
                 continue
+            if not synopsis and w.get('synopsis'):
+                synopsis = self.cleanHtmlStr(w.get('synopsis'))
             mc = w.get('mediaCollection')
             if not mc:
                 continue
@@ -576,6 +625,8 @@ class ARDmediathek(CBaseHostClass):
             urlTab.append({'need_resolve': 0, 'name': '%s %s' % (item['quality_name'], item['format_name']), 'url': self.up.decorateUrl(item['url'], decorateParams)})
             if onelinkmode:
                 break
+        if not live:
+            urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
         return urlTab
 
     ###################################################
@@ -836,10 +887,13 @@ class ARDmediathek(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, ARDmediathek(), True)
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('ardmediathek')
 
     def withArticleContent(self, cItem):
         return cItem.get('type') == 'video'

@@ -189,12 +189,22 @@ config.plugins.iptvplayer.favourites_use_watched_flag = ConfigYesNo(default=True
 config.plugins.iptvplayer.watched_item_color = ConfigSelection(default="#808080", choices=COLORS_DEFINITONS)
 config.plugins.iptvplayer.started_item_color = ConfigSelection(default="#FFFF00", choices=COLORS_DEFINITONS)
 config.plugins.iptvplayer.sidecar_enabled = ConfigYesNo(default=True)
+config.plugins.iptvplayer.normalize_media_names = ConfigYesNo(default=True)
 
 
 def IsSidecarEnabled():
     # single central place hosts ask whether to create sidecar .txt/.jpg files,
     # instead of each host keeping its own copy of this config option
     return config.plugins.iptvplayer.sidecar_enabled.value
+
+
+def IsMediaNamingNormalized():
+    # shared toggle for every host that produces media-server friendly item
+    # titles ("Show - SxxExx - Title" / "Title (Year)" / "Show - Title
+    # (YYYY-MM-DD)") instead of the site's raw label - currently the mediathek
+    # hosts (ARD/ZDF/ARTE/ORF/SRG), serienstream.to and hdfilme. The download
+    # filename is derived from the item title, so this normalises that too.
+    return config.plugins.iptvplayer.normalize_media_names.value
 
 
 config.plugins.iptvplayer.usepycurl = ConfigYesNo(default=False)
@@ -402,6 +412,7 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry("    " + _("The color of the viewed item"), config.plugins.iptvplayer.watched_item_color))
             list.append(getConfigListEntry("    " + _("The color of the started item"), config.plugins.iptvplayer.started_item_color))
         list.append(getConfigListEntry(_("Create sidecar files (.txt/.jpg)"), config.plugins.iptvplayer.sidecar_enabled))
+        list.append(getConfigListEntry(_("Normalize item / file names (Show - SxxExx - Title)"), config.plugins.iptvplayer.normalize_media_names))
         list.append(getConfigListEntry(_("----- SECURITY CONFIGURATION -----"),))
         list.append(getConfigListEntry(_("Pin protection for plugin"), config.plugins.iptvplayer.pluginProtectedByPin))
         list.append(getConfigListEntry(_("Pin protection for configuration"), config.plugins.iptvplayer.configProtectedByPin))

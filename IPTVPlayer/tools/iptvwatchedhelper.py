@@ -620,3 +620,60 @@ class IPTVWatchedHelper(object):
         except Exception:
             printExc()
         self.dumpDebugCalls()
+
+    ###################################################
+    # generic folder-tree propagation (by key, no item dicts / no data model)
+    #
+    # Used by the recursive folder-style hosts (ARD/ZDF/ARTE/ORF/SRG mediatheken)
+    # that have no explicit series/season/episode structure: a plain episode gets
+    # marked as usual and its enclosing folders' dot/checkmark is then recomputed
+    # by walking a breadcrumb chain of folder keys the host accumulates while the
+    # user browses (in-memory, per session - see iptvwatchedfoldermixin.py).
+    ###################################################
+    def recomputeKeyState(self, parentKey, childKeys):
+        # set parentKey's marker purely from its children's current marker state:
+        # every child watched -> watched, some progress -> started, nothing -> cleared
+        self._dbgCall('recomputeKeyState')
+        try:
+            if not self.isMarkingAllowed():
+                return False
+            parentKey = self._normalizeKey(parentKey)
+            normChildKeys = []
+            for childKey in childKeys or []:
+                childKey = self._normalizeKey(childKey)
+                if childKey != '':
+                    normChildKeys.append(childKey)
+            if parentKey == '' or len(normChildKeys) == 0:
+                return False
+            states = [self.getWatchedState(childKey) for childKey in normChildKeys]
+            scratch = {}
+            if all(state == 'watched' for state in states):
+                return self.markItemWatched(scratch, parentKey)
+            if any(state != 'none' for state in states):
+                return self._writeStartedMarker(scratch, parentKey)
+            return self.unmarkItemWatched(scratch, parentKey)
+        except Exception:
+            printExc()
+        return False
+
+    def propagateFolderChain(self, startKey, folderChildren, folderParent, maxDepth=16):
+        # walk a chain of folder keys upwards (child -> parent -> ...), recomputing
+        # each level from its known children; both maps are usually partial (only
+        # what has been browsed this session) - a missing link just stops the walk
+        self._dbgCall('propagateFolderChain')
+        try:
+            if not self.isMarkingAllowed():
+                return
+            key = self._normalizeKey(startKey)
+            seen = set()
+            depth = 0
+            while key != '' and key not in seen and depth < maxDepth:
+                seen.add(key)
+                depth += 1
+                childKeys = folderChildren.get(key)
+                if childKeys:
+                    self.recomputeKeyState(key, list(childKeys))
+                key = self._normalizeKey(folderParent.get(key, ''))
+        except Exception:
+            printExc()
+        self.dumpDebugCalls()

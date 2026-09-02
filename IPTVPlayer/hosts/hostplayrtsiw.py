@@ -8,6 +8,11 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote
 import re
@@ -28,7 +33,7 @@ def gettytul():
     return 'https://www.srgssr.ch/'
 
 
-class PlayRTSIW(CBaseHostClass):
+class PlayRTSIW(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     IL = 'https://il.srgssr.ch/integrationlayer/2.0/'
     TOKEN_URL = 'https://tp.srgssr.ch/akahd/token?acl='
@@ -44,6 +49,33 @@ class PlayRTSIW(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'PlayRTSIW', 'cookie': 'srgssr.cookie'})
         self.DEFAULT_ICON_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/SRG_SSR_2011_logo.svg/1200px-SRG_SSR_2011_logo.svg.png'
         self.HTTP_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36', 'Accept': 'application/json'}
+
+        self.watchedHelper = IPTVWatchedHelper('srgssr')
+        self.wfInitFolderCache()
+
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict) or cItem.get('live'):
+                return ''
+            itemType = cItem.get('type', '')
+            if itemType in ('video', 'audio'):
+                urn = str(cItem.get('urn', '') or '').strip()
+                return 'media:%s' % urn if urn else ''
+            if itemType in ('more', 'marker'):
+                return ''
+            if cItem.get('search_item') or cItem.get('name') == 'history':
+                return ''
+            if cItem.get('category', '') in ('list_portal', 'list_radio', 'list_portals',
+                                             'search', 'search_next_page', 'search_history'):
+                return ''
+            url = self.wfNormalizeUrlKey(cItem.get('url', ''))
+            return 'folder:%s' % url if url else ''
+        except Exception:
+            printExc()
+        return ''
 
     ###################################################
     def getPage(self, url, params=None, post_data=None):
@@ -109,6 +141,8 @@ class PlayRTSIW(CBaseHostClass):
                            'icon': self._icon(media.get('imageUrl')), 'desc': '[/br]'.join(descTab)})
             if str(media.get('type') or '').upper() in ('LIVESTREAM', 'SCHEDULED_LIVESTREAM'):
                 params['live'] = True
+            else:
+                params['title'] = normalizeMediathekTitle(params['title'], date=media.get('date') or '', sxeHint=title)
             if str(media.get('mediaType') or '').upper() == 'AUDIO':
                 self.addAudio(params)
             else:
@@ -299,7 +333,7 @@ class PlayRTSIW(CBaseHostClass):
     def getLinksForVideo(self, cItem):
         printDBG("PlayRTSIW.getLinksForVideo [%s]" % cItem.get('urn', ''))
         if cItem.get('direct_url'):
-            return [{'need_resolve': 0, 'name': _('Audio'), 'url': cItem['direct_url']}]
+            return applySidecarToLinks([{'need_resolve': 0, 'name': _('Audio'), 'url': cItem['direct_url']}], buildSidecarFromItem(cItem, IsSidecarEnabled()))
         urn = cItem.get('urn', '')
         if not urn:
             return []
@@ -321,6 +355,7 @@ class PlayRTSIW(CBaseHostClass):
             return []
 
         blockReason = str(chapter.get('blockReason') or '')
+        synopsis = self.cleanHtmlStr(chapter.get('description') or chapter.get('lead') or '')
         resources = chapter.get('resourceList') or []
         if not resources:
             if blockReason:
@@ -377,6 +412,8 @@ class PlayRTSIW(CBaseHostClass):
                 if res.get('url'):
                     urlTab.append({'need_resolve': 0, 'name': ('%s %s' % (res.get('protocol') or '', res.get('quality') or '')).strip(),
                                    'url': self.up.decorateUrl(res['url'], {'iptv_livestream': live})})
+        if not live:
+            urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
         return urlTab
 
     ###################################################
@@ -416,10 +453,13 @@ class PlayRTSIW(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, PlayRTSIW(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('srgssr')
 
     def getSearchTypes(self):
         return [('SRF', 'srf'), ('RTS', 'rts'), ('RSI', 'rsi'), ('RTR', 'rtr')]
