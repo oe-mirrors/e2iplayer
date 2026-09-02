@@ -25,9 +25,9 @@ import re
 ###################################################
 config.plugins.iptvplayer.api_key_9kweu = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.api_key_2captcha = ConfigText(default="", fixed_size=False)
-config.plugins.iptvplayer.cineto_bypassrecaptcha = ConfigSelection(default="", choices=[("", _("None")),
-                                                                                          ("9kw.eu", "https://9kw.eu/"),
-                                                                                          ("2captcha.com", "https://2captcha.com/")])
+config.plugins.iptvplayer.cineto_bypassrecaptcha = ConfigSelection(default="mye2i", choices=[("mye2i", "MyE2i (solve on your phone/PC)"),
+                                                                                            ("9kw.eu", "https://9kw.eu/"),
+                                                                                            ("2captcha.com", "https://2captcha.com/")])
 
 
 def GetConfigList():
@@ -263,7 +263,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
             descTab = []
             tmp = data.get('year', '')
             if tmp != '':
-                descTab.append(tmp)
+                descTab.append(str(tmp))
 
             tmp = data.get('duration', '')
             if tmp != '':
@@ -296,7 +296,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 lang = langsDict.get(langId, langId)
                 langName = lang
                 trailerUrl = data.get('trailer_%s' % lang, '')
-                desc = ' | '.join(descTab) + '[/br]' + data.get('plot_%s' % lang, '')
+                desc = ' | '.join(str(x) for x in descTab) + '[/br]' + str(data.get('plot_%s' % lang, ''))
                 baseTitle = data['title']
 
                 if trailerUrl != '':
@@ -350,7 +350,7 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 quality = qualityMap.get(quality, quality)
                 for idx in range(1, len(links), 1):
                     name = '[%s] %s' % (quality, hosting)
-                    url = self.getFullUrl('/out/' + links[idx])
+                    url = self.getFullUrl('/out/' + str(links[idx]))
                     retTab.append({'name': name, 'url': url, 'need_resolve': 1})
         except Exception:
             printExc()
@@ -386,7 +386,9 @@ class CineTO(CBaseHostClass, CaptchaHelper):
                 else:
                     sitekey = self.cm.ph.getSearchGroups(data, r'''gcaptchaSetup\s*?\(\s*?['"]([^'^"]+?)['"]''')[0]
                     if sitekey != '':
-                        token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], bypassCaptchaService=config.plugins.iptvplayer.cineto_bypassrecaptcha.value)
+                        # cine.to's reCAPTCHA v2 can't be solved by CaptchaHelper's
+                        # internal fallback, so a bypass service is mandatory -> MyE2i
+                        token, errorMsgTab = self.processCaptcha(sitekey, self.cm.meta['url'], bypassCaptchaService=config.plugins.iptvplayer.cineto_bypassrecaptcha.value or 'mye2i')
 
                         if token != '':
                             params = MergeDicts(self.defaultParams, {'max_data_size': 0})
