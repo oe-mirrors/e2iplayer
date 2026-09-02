@@ -11,6 +11,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhostmixin import WatchedFlagHostMixin
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks, sidecarFromUrlMeta, decorateResolvedLinkItems
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import extractNum, formatSxxExx, stripLeadingSxxExx
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 
 
 def GetConfigList():
@@ -21,35 +24,12 @@ def gettytul():
     return "https://hdfilme.win/"
 
 
-def _extractNum(rawValue, default=0):
-    """First run of digits in the value as int, else default. Anchored to the first digit
-    group so a trailing '(2019)' or similar in a label cannot leak into the number."""
-    m = re.search(r"\d+", str(rawValue))
-    return int(m.group(0)) if m else default
-
-
-def _formatSxxExx(seasonNum, episodeNum=None):
-    """Build a zero-padded SxxExx tag from already-resolved season/episode numbers (not internal DB ids)."""
-    sNum = _extractNum(seasonNum, 0)
-    if episodeNum is None:
-        return "S%02d" % sNum
-    eNum = _extractNum(episodeNum, 0)
-    return "S%02dE%02d" % (sNum, eNum)
-
-
 def _parseLeadingSxEx(label):
     """Detect a leading 'S1 E1' / 'S01E01' style tag inside a raw episode label; returns (seasonNum, episodeNum) or (None, None)."""
     m = re.match(r"\s*S\s*(\d+)\s*E\s*(\d+)", label, re.IGNORECASE)
     if m:
         return int(m.group(1)), int(m.group(2))
     return None, None
-
-
-def _stripLeadingSeasonEpisodeNumbers(label):
-    """Remove only the leading 'S<digits> E<digits>' numbers from a raw episode label. Whatever
-    separator character the site itself put right after (dash, em-dash, colon, nothing) is left
-    untouched, so we never fight with the site's own formatting."""
-    return re.sub(r"^\s*S\s*\d+\s*E\s*\d+\s*", "", label, flags=re.IGNORECASE)
 
 
 def _trimTrailingDashPart(title):
@@ -198,11 +178,16 @@ class HDFilme(CBaseHostClass):
         episodeMatches = re.findall(r'data-link="([^"]+)"[^>]*?data-label="([^"]+)"', blocksById.get(seasonId, ""))
         for episodeIndex, (link, label) in enumerate(episodeMatches, start=1):
             cleanLabelRaw = self.cleanHtmlStr(label)
+            if not IsMediaNamingNormalized():
+                # normalisation off: keep the site's raw episode label
+                episodeTitle = "%s - %s" % (seriesName, cleanLabelRaw) if seriesName else cleanLabelRaw
+                episodes.append({"type": "video", "url": url, "title": episodeTitle, "icon": icon, "desc": desc, "stream_url": link, "stream_type": "direct", "season_id": seasonId})
+                continue
             embeddedSeason, embeddedEpisode = _parseLeadingSxEx(cleanLabelRaw)
             seasonNumForTag = embeddedSeason if embeddedSeason is not None else seasonNum
             episodeNum = embeddedEpisode if embeddedEpisode is not None else episodeIndex
-            epTag = _formatSxxExx(seasonNumForTag, episodeNum)
-            rest = _stripLeadingSeasonEpisodeNumbers(cleanLabelRaw).strip()
+            epTag = formatSxxExx(seasonNumForTag, episodeNum)
+            rest = stripLeadingSxxExx(cleanLabelRaw).strip()
             if seriesName:
                 episodeTitle = "%s - %s %s" % (seriesName, epTag, rest) if rest else "%s - %s" % (seriesName, epTag)
             else:
@@ -228,7 +213,7 @@ class HDFilme(CBaseHostClass):
             if blockId != "":
                 blocksById[blockId] = block
         for seasonIndex, (seasonId, seasonLabelRaw) in enumerate(seasons, start=1):
-            seasonNumFromLabel = _extractNum(self.cleanHtmlStr(seasonLabelRaw), 0)
+            seasonNumFromLabel = extractNum(self.cleanHtmlStr(seasonLabelRaw), 0)
             seasonNum = seasonNumFromLabel if seasonNumFromLabel > 0 else seasonIndex
             seasonNumsById[seasonId] = seasonNum
             self.cacheSeasons[seasonId] = self._buildEpisodesForSeason(seasonId, seasonNum, seriesName, seriesUrl, icon, desc, blocksById)
@@ -262,7 +247,7 @@ class HDFilme(CBaseHostClass):
         for seasonId, _seasonLabelRaw in seasons:
             seasonNum = seasonNumsById.get(seasonId, 0)
             episodes = self.cacheSeasons.get(seasonId, [])
-            seasonTag = _formatSxxExx(seasonNum)
+            seasonTag = formatSxxExx(seasonNum) if IsMediaNamingNormalized() else (_("Season") + " %d" % extractNum(seasonNum, 0))
             title = "%s - %s" % (seriesName, seasonTag) if seriesName else seasonTag
             params = dict(cItem)
             params.pop("isWatched", None)
@@ -342,6 +327,23 @@ class HDFilme(CBaseHostClass):
         streamUrl = cItem.get("stream_url", "")
         if not streamUrl:
             return linksTab
+
+        sidecarEnabled = IsSidecarEnabled()
+        extraText = ""
+        if sidecarEnabled:
+            try:
+                article = self.getArticleContent(cItem)
+                if article and isinstance(article, list):
+                    articleItem = article[0]
+                    extraText = articleItem.get("text", "") or ""
+                    otherInfo = articleItem.get("other_info", {}) or {}
+                    head = [str(otherInfo[k]) for k in ("released", "duration", "actors") if otherInfo.get(k)]
+                    if head:
+                        extraText = " / ".join(head) + (("\n\n" + extraText) if extraText else "")
+            except Exception:
+                printExc("HDFilme getArticleContent for sidecar failed")
+        sidecar = buildSidecarFromItem(cItem, sidecarEnabled, extraText)
+
         if cItem.get("stream_type") == "movie":
             sts, data = self.getPage(streamUrl, self.defaultParams)
             if not sts:
@@ -354,12 +356,13 @@ class HDFilme(CBaseHostClass):
                 continue
             url = "https:" + url if url.startswith("//") else url
             linksTab.append({"name": self.up.getHostName(url).capitalize(), "url": strwithmeta(url, {"Referer": gettytul()}), "need_resolve": 1})
-        return linksTab
+        return applySidecarToLinks(linksTab, sidecar)
 
     def getVideoLinks(self, videoUrl):
         printDBG("HDFilme.getVideoLinks [%s]" % videoUrl)
         if self.cm.isValidUrl(videoUrl):
-            return self.up.getVideoLinkExt(videoUrl)
+            sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
+            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
         return []
 
     def getArticleContent(self, cItem):

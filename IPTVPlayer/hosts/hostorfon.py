@@ -8,6 +8,11 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -30,7 +35,7 @@ def gettytul():
     return 'https://on.orf.at/'
 
 
-class ORFON(CBaseHostClass):
+class ORFON(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     API = 'https://api-tvthek.orf.at/api/v4.3'
     API_AUTH = 'Basic b3JmX29uX3Y0MzpqRlJzYk5QRmlQU3h1d25MYllEZkNMVU41WU5aMjhtdA=='
@@ -48,6 +53,36 @@ class ORFON(CBaseHostClass):
             'Authorization': self.API_AUTH,
             'Accept': 'application/json',
         }
+
+        self.watchedHelper = IPTVWatchedHelper('orfon')
+        self.wfInitFolderCache()
+
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict) or cItem.get('live'):
+                return ''
+            itemType = cItem.get('type', '')
+            if itemType == 'video':
+                eid = str(cItem.get('ep_id', '') or '').strip()
+                if eid:
+                    return 'video:%s' % eid
+                url = self.wfNormalizeUrlKey(cItem.get('ep_url', '') or cItem.get('url', ''))
+                return 'video:%s' % url if url else ''
+            if itemType in ('audio', 'more', 'marker'):
+                return ''
+            if cItem.get('search_item') or cItem.get('name') == 'history':
+                return ''
+            if cItem.get('category', '') in ('list_start', 'list_az', 'list_dates', 'list_live',
+                                             'search', 'search_next_page', 'search_history'):
+                return ''
+            url = self.wfNormalizeUrlKey(cItem.get('url', ''))
+            return 'folder:%s' % url if url else ''
+        except Exception:
+            printExc()
+        return ''
 
     ###################################################
     def getPage(self, url, params=None, post_data=None):
@@ -170,6 +205,10 @@ class ORFON(CBaseHostClass):
             if self._isVideo(item):
                 eid = item.get('id') or ''
                 params.update({'category': 'play', 'ep_id': eid, 'ep_url': self._abs(selfHref) if selfHref else ''})
+                if not params.get('live'):
+                    profile = self.cleanHtmlStr(((item.get('_embedded') or {}).get('profile') or {}).get('title') or '')
+                    base = '%s - %s' % (profile, title) if profile and profile.lower() not in title.lower() else title
+                    params['title'] = normalizeMediathekTitle(base, date=item.get('date') or item.get('episode_date') or '', sxeHint=title)
                 self.addVideo(params)
             elif episodesHref:
                 params.update({'category': 'list_url', 'url': self._abs(episodesHref)})
@@ -349,6 +388,7 @@ class ORFON(CBaseHostClass):
 
         subTracks = self._subtitle(node) or self._subtitle(data)
         live = bool(cItem.get('live')) or data.get('video_type') == 'live'
+        synopsis = self.cleanHtmlStr(data.get('description') or node.get('description') or data.get('teaser_text') or '')
         bestOnly = config.plugins.iptvplayer.orfon_bestonly.value
 
         hlsList = [s for s in (src.get('hls') or []) if not s.get('is_drm_protected')]
@@ -386,6 +426,8 @@ class ORFON(CBaseHostClass):
             mx = max(res(u) for u in urlTab)
             if mx > 0:
                 urlTab = [u for u in urlTab if res(u) == mx] or urlTab[:1]
+        if not live:
+            urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
         return urlTab
 
     ###################################################
@@ -428,7 +470,10 @@ class ORFON(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, ORFON(), True, [])
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('orfon')

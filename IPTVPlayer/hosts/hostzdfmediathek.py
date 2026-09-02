@@ -6,6 +6,11 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 ###################################################
@@ -50,7 +55,7 @@ def gettytul():
     return 'ZDFmediathek'
 
 
-class ZDFmediathek(CBaseHostClass):
+class ZDFmediathek(GenericFolderWatchedScraperMixin, CBaseHostClass):
     HOST = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.18) Gecko/20110621 Mandriva Linux/1.9.2.18-0.1mdv2010.2 (2010.2) Firefox/3.6.18'
     HEADER = {'User-Agent': HOST, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
     AJAX_HEADER = dict(HEADER)
@@ -99,6 +104,40 @@ class ZDFmediathek(CBaseHostClass):
         # otherwise "+=" mutates the shared class list on every re-instantiation
         # and the search block piles up (4x etc.)
         self.MAIN_CAT_TAB = list(ZDFmediathek.MAIN_CAT_TAB) + self.searchItems()
+
+        self.watchedHelper = IPTVWatchedHelper('zdfmediathek')
+        self.wfInitFolderCache()
+
+    ###################################################
+    # watched flag
+    ###################################################
+    # list_content carries inline 'content', no own url - dict(cItem) leaves the
+    # enclosing cluster's url on it, which would collide with that cluster's key
+    WF_SKIP_CATEGORIES = ('list_start', 'list_live', 'list_content', 'missed_date',
+                          'list_brands_az', 'kinder', 'search', 'search_next_page', 'search_history')
+
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict) or cItem.get('live'):
+                return ''
+            itemType = cItem.get('type', '')
+            if itemType == 'video':
+                vid = str(cItem.get('id', '') or '').strip()
+                if vid:
+                    return 'video:id:%s' % vid
+                url = self.wfNormalizeUrlKey(cItem.get('url', ''))
+                return 'video:%s' % url if url else ''
+            if itemType in ('audio', 'more', 'marker'):
+                return ''
+            if cItem.get('search_item') or cItem.get('name') == 'history':
+                return ''
+            if cItem.get('category', '') in self.WF_SKIP_CATEGORIES:
+                return ''
+            url = self.wfNormalizeUrlKey(cItem.get('url', ''))
+            return 'folder:%s' % url if url else ''
+        except Exception:
+            printExc()
+        return ''
 
     def getPage(self, url, params={}, post_data=None):
         HTTP_HEADER = dict(self.HEADER)
@@ -256,6 +295,12 @@ class ZDFmediathek(CBaseHostClass):
                 params = {'title': title, 'url': self.getFullUrl(item.get('url', '')), 'desc': ' | '.join(descTab), 'icon': self.getIconUrl(icon), 'id': item.get('id', ''), 'sharing_url': item.get('sharingUrl', ''), 'good_for_fav': True}
                 if not params['url'] and not params['id']:
                     return
+                if item['type'] == 'livevideo':
+                    params['live'] = True
+                else:
+                    params['title'] = normalizeMediathekTitle(
+                        title, date=item.get('editorialDate') or item.get('airtimeBegin') or item.get('onlineDate') or '',
+                        sxeHint='%s %s' % (self.cleanHtmlStr(item.get('headline', '') or ''), title))
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -372,6 +417,7 @@ class ZDFmediathek(CBaseHostClass):
             urlTab = []
             tmpUrlTab = []
             data = json_loads(data)['document']
+            synopsis = self.cleanHtmlStr(data.get('beschreibung') or data.get('leadParagraph') or '')
             try:
                 for item in data['captions']:
                     if 'vtt' in item['format'] and self.cm.isValidUrl(item['uri']):
@@ -478,6 +524,8 @@ class ZDFmediathek(CBaseHostClass):
                     urlTab.append({'need_resolve': 0, 'name': name, 'url': self.up.decorateUrl(url, decorateParams)})
                     if onelinkmode:
                         break
+            if not isLive:
+                urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
             printDBG(tmpUrlTab)
         except Exception:
             printExc()
@@ -526,7 +574,10 @@ class ZDFmediathek(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, ZDFmediathek(), True)
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('zdfmediathek')

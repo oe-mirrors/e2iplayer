@@ -14,7 +14,8 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, sidecarFromUrlMeta, decorateUrl, decorateResolvedLinkItems
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhostmixin import WatchedFlagHostMixin
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import formatSxxExx
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 
 
 config.plugins.iptvplayer.serienstreamto_hosts = ConfigSelection(default="http://186.2.175.5/", choices=[("http://186.2.175.5/", "186.2.175.5"), ("https://serienstream.to/", "serienstream.to"), ("https://serienstream.cx/", "serienstream.cx")])  # NOSONAR
@@ -23,7 +24,6 @@ config.plugins.iptvplayer.serienstreamto_login = ConfigText(default="", fixed_si
 config.plugins.iptvplayer.serienstreamto_password = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.serienstreamto_omdb_apikey = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.serienstreamto_mkv = ConfigYesNo(default=True)
-config.plugins.iptvplayer.serienstreamto_legacy_titles = ConfigYesNo(default=False)
 
 
 def GetConfigList():
@@ -34,8 +34,7 @@ def GetConfigList():
                   getConfigListEntry(_("e-mail") + ":", config.plugins.iptvplayer.serienstreamto_login),
                   getConfigListEntry(_("password") + ":", config.plugins.iptvplayer.serienstreamto_password),
                   getConfigListEntry(_("OMDb API Key") + ":", config.plugins.iptvplayer.serienstreamto_omdb_apikey),
-                  getConfigListEntry(_("Create MKV") + ":", config.plugins.iptvplayer.serienstreamto_mkv),
-                  getConfigListEntry(_("Use legacy title format") + ":", config.plugins.iptvplayer.serienstreamto_legacy_titles)]
+                  getConfigListEntry(_("Create MKV") + ":", config.plugins.iptvplayer.serienstreamto_mkv)]
     optionList.append(getConfigListEntry(_("host") + ":", config.plugins.iptvplayer.serienstreamto_hosts))
     return optionList
 
@@ -71,7 +70,10 @@ class SerienStreamTo(CBaseHostClass):
                      {"category": "list_items", "title": _("All"), "url": self.getFullUrl("serien")}] + self.searchItems()
 
     def _useLegacyTitles(self):
-        return config.plugins.iptvplayer.serienstreamto_legacy_titles.value
+        # the site's raw "Series - Episode N - name" form; the normalised
+        # "Series - SxxExx - name - lang" form is the default. Governed by the
+        # one global switch shared with the mediathek hosts and hdfilme.
+        return not IsMediaNamingNormalized()
 
     def _getWatchedKeyForItem(self, cItem):
         # printDBG("SerienStreamTo._getWatchedKeyForItem")
@@ -356,7 +358,7 @@ class SerienStreamTo(CBaseHostClass):
                 season_num = int(season_num) if str(season_num).isdigit() else 0
                 series_title = cItem.get("title", "").split(" - Staffel")[0].strip()
                 ep_num = int(ep) if ep.isdigit() else 0
-                se_tag = "S%02dE%02d" % (season_num, ep_num) if season_num > 0 and ep_num > 0 else ""
+                se_tag = formatSxxExx(season_num, ep_num) if season_num > 0 and ep_num > 0 else ""
                 lang = language(item)
                 lang_suffix = " - %s" % lang if lang else ""
                 title = "%s - %s - %s%s" % (series_title, se_tag, name, lang_suffix) if se_tag else "%s - %s%s" % (series_title, name, lang_suffix)
@@ -395,7 +397,7 @@ class SerienStreamTo(CBaseHostClass):
                 else:
                     season_num = self.cm.ph.getSearchGroups(se, r'(\d+)')[0]
                     episode_num = self.cm.ph.getSearchGroups(ep, r'(\d+)')[0]
-                    season_ep = "S%sE%s" % (season_num.zfill(2), episode_num.zfill(2)) if season_num and episode_num else "%s %s" % (se, ep)
+                    season_ep = formatSxxExx(season_num, episode_num) if season_num and episode_num else "%s %s" % (se, ep)
                     title = "%s - %s%s" % (name, season_ep, (" - %s" % lang) if lang else "")
                 imdb_lookup_url = re.sub(r'/staffel-\d+/episode-\d+/?$', '/', url)
                 params = dict(cItem)
@@ -693,7 +695,7 @@ class IPTVHost(WatchedFlagHostMixin, CHostBase):
                     season_num = int(season_num) if str(season_num).isdigit() else 0
                     series_title = (seasonItem.get('title', '') or self.host.currItem.get('title', '')).split(" - Staffel")[0].strip()
                     ep_num = int(ep) if ep.isdigit() else 0
-                    se_tag = "S%02dE%02d" % (season_num, ep_num) if season_num > 0 and ep_num > 0 else ""
+                    se_tag = formatSxxExx(season_num, ep_num) if season_num > 0 and ep_num > 0 else ""
                     lang = language(item)
                     lang_suffix = " - %s" % lang if lang else ""
                     title = "%s - %s - %s%s" % (series_title, se_tag, name, lang_suffix) if se_tag else "%s - %s%s" % (series_title, name, lang_suffix)

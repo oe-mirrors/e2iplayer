@@ -6,6 +6,8 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
+import re
+
 ###################################################
 # FOREIGN import
 ###################################################
@@ -128,6 +130,50 @@ def sidecarFromUrlMeta(url, cfgEnabled=True):
 
 def sidecarFromMeta(url, cfgEnabled=True):
     return sidecarFromUrlMeta(url, cfgEnabled)
+
+
+def _normSidecarText(value):
+    try:
+        value = str(value or "").replace("\r", "\n")
+        return re.sub(r"\n{3,}", "\n\n", value).strip()
+    except Exception:
+        printExc()
+        return ""
+
+
+def buildSidecarFromItem(cItem, enabled=True, extraText=""):
+    # convenience for hosts: assemble a sidecar straight from a list item's own
+    # metadata - an optional richer text first (e.g. a real synopsis the host
+    # already fetched), then the item's [/br]-joined desc, plus its icon as the
+    # poster. Whether it is actually written is still governed by `enabled`.
+    try:
+        cItem = cItem or {}
+        head = _normSidecarText(extraText)
+        body = _normSidecarText(str(cItem.get("txt", "") or cItem.get("desc", "") or "").replace("[/br]", "\n"))
+        if body and body not in head:
+            txt = (head + "\n\n" + body).strip() if head else body
+        else:
+            txt = head
+        return buildSidecar(enabled, txt, str(cItem.get("icon", "") or ""))
+    except Exception:
+        printExc()
+        return buildSidecar(False, "", "")
+
+
+def applySidecarToLinks(links, sidecar):
+    # decorate every link's url meta with the sidecar in place; safe no-op when
+    # the sidecar is missing / disabled or there are no links
+    try:
+        if not links or not isinstance(sidecar, dict) or not sidecar.get("enabled"):
+            return links
+        for item in links:
+            try:
+                item["url"] = decorateUrl(item["url"], sidecar=sidecar)
+            except Exception:
+                printExc()
+    except Exception:
+        printExc()
+    return links
 
 
 def decorateUrl(url, referer=None, sidecar=None, mkvEnabled=False, extraMeta=None):

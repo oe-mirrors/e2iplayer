@@ -10,6 +10,11 @@
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedfoldermixin import GenericFolderWatchedScraperMixin, GenericFolderWatchedHostMixin
+from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import normalizeMediathekTitle
+from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromItem, applySidecarToLinks
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -43,7 +48,7 @@ def gettytul():
     return 'https://www.arte.tv/'
 
 
-class ArteTV(CBaseHostClass):
+class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
 
     IMG_SIZE = '400x225'
 
@@ -68,6 +73,44 @@ class ArteTV(CBaseHostClass):
         self.DEFAULT_ICON_URL = 'https://www.arte.tv/static/livewebapp/images/apple-touch-icon.png'
         self.USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'Accept': 'application/json'}
+
+        self.watchedHelper = IPTVWatchedHelper('artetv')
+        self.wfInitFolderCache()
+
+    ###################################################
+    # watched flag
+    ###################################################
+    def _getWatchedKeyForItem(self, cItem):
+        try:
+            if not isinstance(cItem, dict) or cItem.get('live'):
+                return ''
+            itemType = cItem.get('type', '')
+            if itemType == 'video':
+                pid = str(cItem.get('program_id', '') or '').strip()
+                return 'video:%s' % pid if pid else ''
+            if itemType in ('audio', 'more', 'marker'):
+                return ''
+            if cItem.get('search_item') or cItem.get('name') == 'history':
+                return ''
+            category = cItem.get('category', '')
+            if category in ('list_menu', 'list_live', 'search', 'search_next_page', 'search_history'):
+                return ''
+            colId = str(cItem.get('col_id', '') or '').strip()
+            seasonCode = str(cItem.get('season_code', '') or '').strip()
+            if seasonCode:
+                return 'folder:arte-season:%s#%s' % (colId, seasonCode)
+            if category == 'list_collection' and colId:
+                return 'folder:arte-col:%s' % colId
+            url = self.wfNormalizeUrlKey(cItem.get('url', ''))
+            # an inline zone (no own endpoint) carries the enclosing page's url via
+            # dict(cItem); "/web/pages/..." are only the HOME / SEARCH / genre nav
+            # pages anyway - never a real content container
+            if not url or '/web/pages/' in url:
+                return ''
+            return 'folder:%s' % url
+        except Exception:
+            printExc()
+        return ''
 
     ###################################################
     def _lang(self):
@@ -158,6 +201,7 @@ class ArteTV(CBaseHostClass):
             params = dict(cItem)
             params.pop('page', None)
             params.pop('zone_url', None)
+            params.pop('season_code', None)
             params.update({'title': title, 'icon': self._img(item), 'desc': self._desc(item), 'good_for_fav': True})
             if kind.get('isCollection') or code in ('TV_SERIES', 'TOPIC', 'COLLECTION') or str(pid).startswith('RC-'):
                 params.update({'category': 'list_collection', 'col_id': pid, 'url': self._api('collections/%s' % pid)})
@@ -166,6 +210,12 @@ class ArteTV(CBaseHostClass):
                 params.update({'program_id': pid, 'f_url': item.get('url', '')})
                 if code in ('LIVESTREAM',) or item.get('livestreamRights'):
                     params['live'] = True
+                else:
+                    epInfo = item.get('episodeInfo') or ''
+                    params['title'] = normalizeMediathekTitle(
+                        title, sxeHint=epInfo if isinstance(epInfo, str) else '',
+                        date=item.get('firstBroadcastDate') or item.get('availableFrom') or '',
+                        isMovie=not epInfo)
                 self.addVideo(params)
         except Exception:
             printExc()
@@ -289,7 +339,8 @@ class ArteTV(CBaseHostClass):
                 items = self._zoneData(z)[0]
                 params = dict(cItem)
                 params.pop('page', None)
-                params.update({'category': 'list_zone_inline', 'title': self.cleanHtmlStr(z.get('title') or _('Season')), 'zone_items': items, 'good_for_fav': False, 'icon': self._img(items[0]) if items else ''})
+                params.update({'category': 'list_zone_inline', 'title': self.cleanHtmlStr(z.get('title') or _('Season')), 'zone_items': items, 'good_for_fav': False, 'icon': self._img(items[0]) if items else '',
+                               'col_id': cItem.get('col_id', ''), 'season_code': z.get('code') or self.cleanHtmlStr(z.get('title') or '')})
                 self.addDir(params)
             return
 
@@ -335,6 +386,11 @@ class ArteTV(CBaseHostClass):
         if not streams:
             return []
         live = bool(attrs.get('live'))
+        _md = attrs.get('metadata') or {}
+        _mdDesc = _md.get('description')
+        if isinstance(_mdDesc, dict):
+            _mdDesc = _mdDesc.get('text') or ''
+        synopsis = self.cleanHtmlStr(_mdDesc or _md.get('subtitle') or '')
         onlyLang = config.plugins.iptvplayer.artetv_audio.value
         bestOnly = config.plugins.iptvplayer.artetv_quality.value
         langName = dict(config.plugins.iptvplayer.artetv_lang.choices).get(self._lang(), '')
@@ -383,6 +439,8 @@ class ArteTV(CBaseHostClass):
             mx = max(_res(u) for u in urlTab)
             if mx > 0:
                 urlTab = [u for u in urlTab if _res(u) == mx] or urlTab
+        if not live:
+            urlTab = applySidecarToLinks(urlTab, buildSidecarFromItem(cItem, IsSidecarEnabled(), synopsis))
         return urlTab
 
     ###################################################
@@ -425,7 +483,10 @@ class ArteTV(CBaseHostClass):
         CBaseHostClass.endHandleService(self, index, refresh)
 
 
-class IPTVHost(CHostBase):
+class IPTVHost(GenericFolderWatchedHostMixin, CHostBase):
 
     def __init__(self):
         CHostBase.__init__(self, ArteTV(), True)
+        self.cachedRet = None
+        self.refreshAfterWatchedFlagChange = False
+        self.watchedHelper = IPTVWatchedHelper('artetv')
