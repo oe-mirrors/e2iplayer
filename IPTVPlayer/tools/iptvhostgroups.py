@@ -207,10 +207,26 @@ class IPTVHostsGroups:
         if self.CACHE_GROUPS is not None:
             return self.CACHE_GROUPS
         self._loadGroups()
-        groups = list(self.LOADED_GROUPS)
+        # "config" (both GRIDSUPPORT and Legacy) and "all" (Legacy only -
+        # GRIDSUPPORT treats "all" as one of its own real PREDEFINED_GROUPS
+        # instead) are reserved keys iptvplayerwidget.py's selectGroup()/
+        # selectHostFromSingleList() append separately, unconditionally,
+        # every single time a list is built - they must never ALSO come
+        # from here, or they show up duplicated. The save logic in
+        # selectGroupCallback()/selectHostCallback() guards against
+        # persisting these two reserved keys as real group names when
+        # they end up anywhere but the tail of the list (e.g. after "Sort
+        # by name" in the BLUE menu - see those methods' own comments).
+        # Filtering them out HERE as well self-heals any install whose
+        # saved file already has this corruption, without needing to
+        # hand-edit the JSON on the box.
+        reservedKeys = {'config'} if GRIDSUPPORT else {'config', 'all'}
+        loadedGroups = [g for g in self.LOADED_GROUPS if g not in reservedKeys]
+        loadedDisabledGroups = [g for g in self.LOADED_DISABLED_GROUPS if g not in reservedKeys]
+        groups = list(loadedGroups)
 
         for group in self.PREDEFINED_GROUPS:
-            if group not in self.LOADED_GROUPS and group not in self.LOADED_DISABLED_GROUPS:
+            if group not in loadedGroups and group not in loadedDisabledGroups:
                 groups.append(group)
 
         groupList = []

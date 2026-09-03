@@ -17,7 +17,6 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 ###################################################
 from enigma import gRGB
 from Screens.MessageBox import MessageBox
-from Screens.ChoiceBox import ChoiceBox
 from Components.config import config, getConfigListEntry, NumericalTextInput
 from Tools.BoundFunction import boundFunction
 ###################################################
@@ -57,6 +56,12 @@ class ConfigHostMenu(ConfigBaseWidget):
 
 
 class ConfigHostsMenu(ConfigBaseWidget):
+    # BLUE is a direct "Enable/Disable reordering mode" toggle rather
+    # than a MENU+ChoiceBox popup with just that one option, so MENU
+    # falls through to ConfigBaseWidget's own inherited keyMenu() (a
+    # per-item ConfigSelection value popup) instead of being overridden
+    # here.
+    HAS_BLUE_KEY = True
 
     def __init__(self, session, listOfHostsNames):
         printDBG("ConfigHostsMenu.__init__ ")
@@ -71,6 +76,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
 
         self.reorderingEnabled = False
         self.reorderingMode = False
+        self._updateBlueLabel()
 
     def __del__(self):
         printDBG("ConfigHostsMenu.__del__ ")
@@ -107,8 +113,13 @@ class ConfigHostsMenu(ConfigBaseWidget):
         return False
 
     def setOKLabel(self):
+        # ConfigBaseWidget's own OK/footnote hint writes to "footnote",
+        # not "key_ok" - that widget name doesn't exist. Plain "OK" (no
+        # "<  OK  >" brackets) here since this override's whole point is
+        # to suppress the base class's "value is left/right-adjustable"
+        # formatting while reordering is enabled.
         if self.reorderingEnabled:
-            self["key_ok"].setText(_("OK"))
+            self["footnote"].setText(_("OK"))
         else:
             ConfigBaseWidget.setOKLabel(self)
 
@@ -147,25 +158,20 @@ class ConfigHostsMenu(ConfigBaseWidget):
         else:
             ConfigBaseWidget.keyOK(self)
 
-    def keyMenu(self):
-        options = []
-        if not self.reorderingEnabled:
-            options.append((_("Enable reordering mode"), "REORDERING_ENABLED"))
-        else:
-            options.append((_("Disable reordering mode"), "REORDERING_DISABLED"))
-        self.session.openWithCallback(self._changeMode, ChoiceBox, title=_("Select option"), list=options)
+    def _updateBlueLabel(self):
+        self["key_blue"].setText(_("Disable reordering mode") if self.reorderingEnabled else _("Enable reordering mode"))
 
-    def _changeMode(self, ret):
-        if ret:
-            if ret[1] == "REORDERING_ENABLED":
-                self.reorderingEnabled = True
-            elif ret[1] == "REORDERING_DISABLED":
-                self.reorderingEnabled = False
-            if not self.reorderingEnabled:
-                self.reorderingMode = False
-                self["config"].instance.setForegroundColorSelected(gRGB(0xFFFFFF))
-                self.runSetup()
-            self.setOKLabel()
+    def keyBlue(self):
+        # a direct BLUE toggle is simpler for a plain on/off switch than
+        # a MENU+ChoiceBox popup, and frees MENU back up for
+        # ConfigBaseWidget's own inherited per-item value popup.
+        self.reorderingEnabled = not self.reorderingEnabled
+        if not self.reorderingEnabled:
+            self.reorderingMode = False
+            self["config"].instance.setForegroundColorSelected(gRGB(0xFFFFFF))
+            self.runSetup()
+        self._updateBlueLabel()
+        self.setOKLabel()
 
     def _moveItem(self, curIndex):
         assert (len(self.list) == len(self.hostsConfigsAvailableList) == len(self.listOfHostsNames))

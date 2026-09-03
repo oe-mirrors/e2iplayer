@@ -174,8 +174,15 @@ class KinoGer(CBaseHostClass):
         sts, data = self.getPage(cItem["url"])
         if not sts:
             return []
-        desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'description" content="([^"]+)')[0])
-        desc = desc if desc else cItem.get("desc", "")
+        # prefer the list item's own desc (already complete, straight from
+        # the listing page) over the detail page's <meta name="description">
+        # tag - that meta tag is truncated mid-sentence on this site, so
+        # treating it as the primary source and cItem['desc'] as only the
+        # "meta tag was empty" fallback would mean the truncated text
+        # always wins since it's non-empty
+        desc = cItem.get("desc", "")
+        if not desc:
+            desc = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, 'description" content="([^"]+)')[0])
         actors = self.cleanHtmlStr(self.cm.ph.getSearchGroups(data, ">Schauspieler:([^<]+)")[0])
         if actors:
             otherInfo["actors"] = actors

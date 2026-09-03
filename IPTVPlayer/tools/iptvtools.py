@@ -285,7 +285,7 @@ def GetAvailableIconSize(checkAll=True):
     confirmedIconSize = 0
     for size in iconSizes:
         try:
-            file = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/Marker/marker{0}.png').format(int(size) + 45)
+            file = resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/PlayerSelector/marker/marker{0}.png').format(int(size) + 45)
             if fileExists(file):
                 confirmedIconSize = int(size)
                 break

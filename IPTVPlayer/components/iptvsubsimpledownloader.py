@@ -4,11 +4,11 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, GetTmpDir, GetSubtitlesDir, GetIconDir, RemoveDisallowedFilenameChars, iptv_system, MapUcharEncoding
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, GetTmpDir, GetSubtitlesDir, RemoveDisallowedFilenameChars, iptv_system, MapUcharEncoding
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
-from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
@@ -17,13 +17,10 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
-from enigma import getDesktop
 from Screens.Screen import Screen
 from Components.Label import Label
+from Components.Sources.StaticText import StaticText
 from Components.ActionMap import ActionMap
-from Tools.LoadPixmap import LoadPixmap
-from Tools.BoundFunction import boundFunction
-from Components.config import config
 
 import codecs
 ###################################################
@@ -32,49 +29,50 @@ import codecs
 class IPTVSubSimpleDownloaderWidget(Screen):
     _TMP_FILE_NAME = ".externaltmpsub"
 
-    sz_w = getDesktop(0).size().width() - 190
-    sz_h = getDesktop(0).size().height() - 195
-    if sz_h < 500:
-        sz_h += 4
-
-    """ Lululla added dynamic footer_y buttons """
-    # Calcolo posizione Y per i bottoni in basso
-    footer_y = sz_h - 39  # 30 altezza icona + margine
-
-    skin = """
-        <screen name="IPTVSubSimpleDownloaderWidget" position="center,center" title="%s" size="%d,%d">
-         <widget name="icon_red"    position="5,%d"   zPosition="4" size="30,30" transparent="1" alphatest="on" />
-         <widget name="icon_green"  position="355,%d" zPosition="4" size="30,30" transparent="1" alphatest="on" />
-
-         <widget name="label_red"     position="45,%d"  size="175,27" zPosition="5" valign="center" halign="left"
-            backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white"
-            shadowColor="black" shadowOffset="-1,-1" />
-         <widget name="label_green"   position="395,%d" size="175,27" zPosition="5" valign="center" halign="left"
-            backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white"
-            shadowColor="black" shadowOffset="-1,-1" />
-
-         <widget name="list"  position="5,80"  zPosition="2" size="%d,%d" scrollbarMode="showOnDemand"
-            transparent="1" backgroundColor="#00000000" enableWrapAround="1" />
-         <widget name="title" position="5,47"  zPosition="1" size="%d,23" font="Regular;20"
-            transparent="1" backgroundColor="#00000000" />
-
-         <widget name="console" position="10,%d" zPosition="2" size="%d,160" valign="center" halign="center"
-            font="Regular;24" transparent="0" foregroundColor="white" backgroundColor="black" />
-        </screen>""" % (
-        _("Simple subtitles downloader"),
-        sz_w, sz_h,       # screen size
-        footer_y,         # icon_red Y
-        footer_y,         # icon_green Y
-        footer_y,         # label_red Y
-        footer_y,         # label_green Y
-        sz_w - 10, sz_h - 105,  # list size
-        sz_w - 135,       # title width
-        (sz_h - 160) / 2, sz_w - 20  # console position and size
-    )
+    # Uses the same `resolution="1280,720"` auto-scale `build_header_auto()`/
+    # `build_footer_auto()` shape as `SearchHistoryEditor`/
+    # `YouTubeUserLinksEditorScreen` (plain list, no fixed-pixel grid/
+    # marker content fighting auto-scale).
+    #
+    # RED/GREEN now `key_red`/`key_green` StaticText sources (matching
+    # `build_footer()`'s own `source="key_X"`/`ConditionalShowHide`
+    # convention) instead of separate Cover3 icon + Label pairs toggled via
+    # raw `.hide()`/`.show()` - icon pixmaps are baked into the footer's
+    # skin XML now, no more Python-side `LoadPixmap(GetIconDir(...))`.
+    # `hideButtons()`/`showButtons()` below just blank/restore the
+    # StaticText itself, `ConditionalShowHide` does the rest.
+    #
+    # The old dual-purpose "title" widget (window title bar AND, in list
+    # mode, an in-body "Select subtitles to download" caption) is split:
+    # the window title is now `build_header_auto()`'s own `source="Title"`
+    # (driven by `self.setTitle()`), the in-body caption gets its own
+    # `status` widget - same split every other migrated list screen here
+    # already uses.
+    def __prepareSkin(self):
+        iconBase = skinchrome.getIconBase()
+        HEIGHT = 520
+        contentH = HEIGHT - 108 - 64 - 10
+        return """
+        <screen name="IPTVSubSimpleDownloaderWidget" position="center,center" size="1080,%d" resolution="1280,720" title="%s" backgroundColor="#34111112" flags="wfNoBorder">
+            %s
+            <widget name="status" position="20,68" size="1040,30" font="Regular;24" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" zPosition="1" transparent="1" />
+            <widget name="list" position="20,108" size="1040,%d" itemHeight="36" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" transparent="1" />
+            <widget name="console" position="20,108" size="1040,%d" font="Regular;24" halign="center" valign="center" transparent="0" foregroundColor="white" backgroundColor="black" />
+            %s
+        </screen>
+        """ % (
+            HEIGHT,
+            _("Simple subtitles downloader"),
+            skinchrome.build_header_auto(iconBase=iconBase),
+            contentH,
+            contentH,
+            skinchrome.build_footer_auto(HEIGHT, iconBase=iconBase, keys=('red', 'green')),
+        )
 
     def __init__(self, session, params={}):
         # params: movie_title, sub_list: [{'title':'', 'lang':'', 'url':''}]
         self.session = session
+        self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
 
         self.params = params
@@ -82,15 +80,12 @@ class IPTVSubSimpleDownloaderWidget(Screen):
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
 
-        self["title"] = Label(" ")
+        self["status"] = Label(" ")
         self["console"] = Label(" ")
 
-        self["label_red"] = Label(_("Cancel"))
-        self["label_yellow"] = Label(_("Move group"))
-        self["label_green"] = Label(_("Apply"))
-
-        self["icon_red"] = Cover3()
-        self["icon_green"] = Cover3()
+        self._keyLabels = {'red': _("Cancel"), 'green': _("Apply")}
+        self["key_red"] = StaticText(self._keyLabels['red'])
+        self["key_green"] = StaticText("")
 
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
@@ -102,10 +97,6 @@ class IPTVSubSimpleDownloaderWidget(Screen):
                 "red": self.keyRed,
                 "green": self.keyGreen,
             }, -2)
-
-        self.iconPixmap = {}
-        for icon in ['red', 'green']:
-            self.iconPixmap[icon] = LoadPixmap(GetIconDir(icon + '.png'))
 
         self.movieTitle = ''
         self.stackList = []
@@ -193,33 +184,23 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             printExc()
             self["console"].setText(_('Subtitles conversion to UTF-8 failed.'))
 
-    def loadIcons(self):
+    def hideButtons(self, buttons=('red', 'green')):
         try:
-            for icon in self.iconPixmap:
-                self['icon_' + icon].setPixmap(self.iconPixmap[icon])
+            for button in buttons:
+                self['key_' + button].setText("")
         except Exception:
             printExc()
 
-    def hideButtons(self, buttons=['red', 'green']):
+    def showButtons(self, buttons=('red', 'green')):
         try:
             for button in buttons:
-                self['icon_' + button].hide()
-                self['label_' + button].hide()
-        except Exception:
-            printExc()
-
-    def showButtons(self, buttons=['red', 'green']):
-        try:
-            for button in buttons:
-                self['icon_' + button].show()
-                self['label_' + button].show()
+                self['key_' + button].setText(self._keyLabels[button])
         except Exception:
             printExc()
 
     def onStart(self):
         self.onShown.remove(self.onStart)
         self.setTitle(_("Subtitles for: %s") % self.params.get('movie_title', ''))
-        self.loadIcons()
         tmpList = self.params.get('sub_list', [])
         if len(tmpList) > 1:
             self.displayList()
@@ -229,13 +210,13 @@ class IPTVSubSimpleDownloaderWidget(Screen):
     def setListMode(self, sts=False):
         if False is sts:
             self['list'].hide()
-            self["title"].hide()
-            self.hideButtons()
-            self.showButtons(['red'])
+            self["status"].hide()
+            self.hideButtons(('green',))
+            self.showButtons(('red',))
             self["console"].show()
             self["console"].setText(" ")
         else:
-            self.hideButtons(['green'])
+            self.hideButtons(('green',))
             self["console"].hide()
             self["console"].setText(" ")
 
@@ -243,8 +224,8 @@ class IPTVSubSimpleDownloaderWidget(Screen):
 
     def displayList(self):
         list = []
-        self["title"].setText(_("Select subtitles to download"))
-        self["title"].show()
+        self["status"].setText(_("Select subtitles to download"))
+        self["status"].show()
 
         tmpList = self.params.get('sub_list', [])
         try:
@@ -290,7 +271,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
 
     def acceptSub(self):
         try:
-            if self["icon_green"].visible:
+            if self["key_green"].text:
                 track = {'title': self.currItem.get('lang', _('default')), 'lang': self.currItem.get('lang', _('default')), 'path': self.downloadedSubFilePath}
                 track['id'] = self.currItem.get('url', '')
                 self.close(track)

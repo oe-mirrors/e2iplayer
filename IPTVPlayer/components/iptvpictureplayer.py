@@ -10,6 +10,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.cover import SimpleAnimatedCover, Cover
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, GetNice, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
@@ -111,10 +112,6 @@ class IPTVPicturePlayerWidget(Screen):
     #######################
     #       SIZES
     #######################
-    # screen size
-    # we do not want borders, so make the screen lager than a desktop
-    sz_w = getDesktop(0).size().width()
-    sz_h = getDesktop(0).size().height()
     # percentage
     s_w = 120
     s_h = 120
@@ -122,45 +119,72 @@ class IPTVPicturePlayerWidget(Screen):
     i_w = 128
     i_h = 128
     # console
-    c_w = sz_w
     c_h = 80
-    # picture
-    p_w = sz_w - 20
-    p_h = sz_h - 20
-    # POSITIONS
-    start_y = (sz_h - (i_h + c_h)) / 2
-    # percentage
-    s_x = (sz_w - s_w) / 2
-    s_y = start_y + (i_h - s_h) / 2
-    # icon
-    i_x = (sz_w - i_w) / 2
-    i_y = start_y
-    # console
-    c_x = 0
-    c_y = i_y + i_h
-    # picture
-    p_x = 10
-    p_y = 10
 
-    printDBG("[IPTVPicturePlayerWidget] desktop size %dx%d" % (sz_w, sz_h))
-    skin = """
-        <screen name="IPTVPicturePlayerWidget" position="center,center" size="%d,%d" title="IPTV Picture Player...">
-            <widget name="status" size="%d,%d" position="%d,%d" zPosition="5" valign="center" halign="center" font="Regular;21" backgroundColor="black" transparent="1" /> <!-- foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" -->
+    def __prepareSkin(self):
+        # per-instance, not class-level - a class-level getDesktop(0).size()
+        # would only ever be evaluated once, at module import time, and
+        # could go stale if the real GUI resolution changes later without
+        # a plugin restart.
+        #
+        # Fullscreen picture viewer, not a dialog - the window itself
+        # always fills the entire real screen (not resized to the photo's
+        # own dimensions); Cover's own ePicLoad aspect-preserving
+        # scale-to-fit is what makes the actual photo appear as large as
+        # possible within its box, letterboxed as needed.
+        sz_w = getDesktop(0).size().width()
+        sz_h = getDesktop(0).size().height()
+        scale = skinchrome.getScale(sz_w)
+        iconBase = skinchrome.getIconBase(sz_w)
+        headerH = skinchrome.header_height(scale)
+        footerH = skinchrome.footer_height(scale)
+        # content area is the full screen minus the chrome header/footer -
+        # every position below is the same relative layout the old
+        # full-screen version used (icon+console stacked and centered,
+        # picture filling the rest with a 10px margin), just confined to
+        # that area instead of the whole screen
+        contentY0 = headerH
+        contentH = sz_h - headerH - footerH
+        s_w, s_h, i_w, i_h, c_h = self.s_w, self.s_h, self.i_w, self.i_h, self.c_h
+        c_w = sz_w
+        p_w = sz_w - 20
+        p_h = contentH - 20
+        start_y = contentY0 + (contentH - (i_h + c_h)) // 2
+        s_x = (sz_w - s_w) // 2
+        s_y = start_y + (i_h - s_h) // 2
+        i_x = (sz_w - i_w) // 2
+        i_y = start_y
+        c_x = 0
+        c_y = i_y + i_h
+        p_x = 10
+        p_y = contentY0 + 10
+        printDBG("[IPTVPicturePlayerWidget] desktop size %dx%d" % (sz_w, sz_h))
+        return """
+        <screen name="IPTVPicturePlayerWidget" position="center,center" size="%d,%d" backgroundColor="#34111112" flags="wfNoBorder">
+            %s
+            <widget name="status" size="%d,%d" position="%d,%d" zPosition="5" valign="center" halign="center" font="Regular;21" backgroundColor="black" transparent="1" />
             <widget name="console" size="%d,%d" position="%d,%d" zPosition="5" valign="center" halign="center" font="Regular;21" backgroundColor="black" transparent="1" />
-            <widget name="icon" size="%d,%d" position="%d,%d" zPosition="4" transparent="1" alphatest="on" />
-            <widget name="picture" size="%d,%d" position="%d,%d" zPosition="6" transparent="1" alphatest="on" />
+            <widget name="icon" size="%d,%d" position="%d,%d" zPosition="4" transparent="1" alphatest="blend" />
+            <widget name="picture" size="%d,%d" position="%d,%d" zPosition="6" transparent="1" alphatest="blend" />
+            %s
         </screen>
-    """ % (
-        sz_w, sz_h,          # screen size
-        s_w, s_h, s_x, s_y,  # status widget
-        c_w, c_h, c_x, c_y,  # console widget
-        i_w, i_h, i_x, i_y,  # icon widget
-        p_w, p_h, p_x, p_y   # picture widget
-    )
+        """ % (
+            sz_w, sz_h,                                              # screen size
+            skinchrome.build_header(scale=scale, iconBase=iconBase),  # header
+            s_w, s_h, s_x, s_y,                                       # status widget
+            c_w, c_h, c_x, c_y,                                       # console widget
+            i_w, i_h, i_x, i_y,                                       # icon widget
+            p_w, p_h, p_x, p_y,                                       # picture widget
+            skinchrome.build_footer(sz_h, scale=scale, iconBase=iconBase, keys=(), showMenu=False, showNav=False, showOk=True, showExit=True),  # footer
+        )
 
     def __init__(self, session, url, pathForRecordings, pictureTitle, addParams={}):
         self.session = session
+
+        self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
+        self.skinName = skinchrome.forceInternalSkinName(["IPTVPicturePlayerWidget"])
+        self.setTitle(pictureTitle)
         self.onStartCalled = False
 
         self.recordingPath = pathForRecordings

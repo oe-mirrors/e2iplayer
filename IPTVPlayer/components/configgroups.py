@@ -21,6 +21,12 @@ from Components.config import getConfigListEntry, ConfigYesNo
 
 
 class ConfigGroupsMenu(ConfigBaseWidget):
+    # BLUE is a bulk "Enable all groups"/"Disable all groups" toggle,
+    # same HAS_BLUE_KEY opt-in ConfigHostsMenu (confighost.py) uses for
+    # its own reordering-mode toggle. Saves clicking every single
+    # ConfigYesNo entry by hand when the user wants either extreme (all on
+    # to reset, all off to start from a clean slate).
+    HAS_BLUE_KEY = True
 
     def __init__(self, session):
         printDBG("ConfigGroupsMenu.__init__ -------------------------------")
@@ -31,6 +37,7 @@ class ConfigGroupsMenu(ConfigBaseWidget):
         ConfigBaseWidget.__init__(self, session)
         self.setup_title = _("E2iPlayer enable/disabled groups")
         self.__preparLists()
+        self._updateBlueLabel()
 
     def __del__(self):
         printDBG("ConfigGroupsMenu.__del__ -------------------------------")
@@ -45,6 +52,31 @@ class ConfigGroupsMenu(ConfigBaseWidget):
 
     def runSetup(self):
         ConfigBaseWidget.runSetup(self)
+
+    def _allGroupsEnabled(self):
+        return all(entry[1].value for entry in self.list)
+
+    def _updateBlueLabel(self):
+        self["key_blue"].setText(_("Disable all groups") if self._allGroupsEnabled() else _("Enable all groups"))
+
+    def keyBlue(self):
+        # toggles every entry to the opposite of the current overall state
+        # (all currently enabled -> disable all, otherwise -> enable all -
+        # same "target is the complement of fully-on" convention a plain
+        # on/off switch would use, so a half-enabled list always goes to
+        # "all enabled" first on press, matching what the label about to
+        # be shown promises)
+        target = not self._allGroupsEnabled()
+        for entry in self.list:
+            entry[1].value = target
+        self.runSetup()
+        self._updateBlueLabel()
+
+    def changedEntry(self):
+        # keep the BLUE label in sync when the user toggles an individual
+        # entry by hand too, not just via keyBlue() itself
+        ConfigBaseWidget.changedEntry(self)
+        self._updateBlueLabel()
 
     def saveOrCancel(self, operation="save"):
         if "save" == operation:

@@ -5,10 +5,10 @@
 	<widget source="global.CurrentTime" render="Label" position="720,110" size="281,50" font="Regular; 34" backgroundColor="background" foregroundColor="#FFFFFF" transparent="1" zPosition="1" halign="right">
 		<convert type="ClockToText">Format:%a %d.%m.%Y</convert>
 	</widget>
-	<ePixmap position="170,1040" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/red.png" transparent="1" alphatest="on"/>
-	<ePixmap position="620,1040" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/green.png" transparent="1" alphatest="on"/>
-	<ePixmap position="1120,1040" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/yellow.png" transparent="1" alphatest="on"/>
-	<ePixmap position="1620,1040" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/blue.png" transparent="1" alphatest="on"/>
+	<ePixmap position="170,1040" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Dragon_1080p/icons/red.png" transparent="1" alphatest="on"/>
+	<ePixmap position="620,1040" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Dragon_1080p/icons/green.png" transparent="1" alphatest="on"/>
+	<ePixmap position="1120,1040" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Dragon_1080p/icons/yellow.png" transparent="1" alphatest="on"/>
+	<ePixmap position="1620,1040" zPosition="4" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Dragon_1080p/icons/blue.png" transparent="1" alphatest="on"/>
 	<widget render="Label" source="key_red" position="205,1040" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="background" font="Regular;21" transparent="1" foregroundColor="white"/>
 	<widget name="key_green" position="655,1040" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="background" font="Regular;21" transparent="1" foregroundColor="white"/>
 	<widget render="Label" source="key_yellow" position="1155,1040" size="210,27" zPosition="5" valign="center" halign="left" backgroundColor="background" font="Regular;21" transparent="1" foregroundColor="white"/>

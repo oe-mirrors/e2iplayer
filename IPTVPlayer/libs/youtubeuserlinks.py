@@ -8,8 +8,11 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+from Plugins.Extensions.IPTVPlayer.components.cover import Cover
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
+from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
 
 ###################################################
 
@@ -29,9 +32,9 @@ from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.ActionMap import ActionMap
 from Components.Label import Label
-from Screens.ChoiceBox import ChoiceBox
+from Components.Sources.StaticText import StaticText
+from Components.config import config
 from Components.MenuList import MenuList
-from enigma import getDesktop
 
 ###################################################
 
@@ -49,151 +52,75 @@ except NameError:
 
 
 class YouTubeUserLinksEditorScreen(Screen):
-    screenwidth = getDesktop(0).size().width()
-
-    if screenwidth >= 2560:
-        # WQHD 2560x1440 - FHD icons are scaled because no WQHD icon set exists.
-        skin = """
-        <screen name="YouTubeUserLinksEditorScreen" position="center,center" size="2240,1300" title="YouTube User Links Editor" backgroundColor="#34111112" flags="wfNoBorder">
-            <widget source="Title" render="Label" position="360,20" size="1570,80" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;48" valign="center" />
-
-            <widget name="status" position="40,136" size="2160,60" font="Regular;48" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" zPosition="1" transparent="1" />
-
-            <widget name="list" position="40,220" size="2160,936" itemHeight="72" font="Regular;40" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="2" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="2" borderColor="black" transparent="1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="280,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/green.png" position="730,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/yellow.png" position="1270,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/blue.png" position="1820,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
-
-            <widget name="key_red" position="330,1222" size="400,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="key_green" position="780,1222" size="490,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="key_yellow" position="1320,1222" size="490,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="key_blue" position="1870,1222" size="400,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-
-            <eLabel name="BG_Title" position="0,0" size="2240,120" backgroundColor="#100d0f16" zPosition="-1" />
-            <eLabel name="BG_Buttons" position="0,1200" size="2240,96" backgroundColor="#100d0f16" zPosition="-1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,120" size="2240,4" scale="1" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,1200" size="2240,4" scale="1" zPosition="2" />
-
-            <ePixmap position="40,1224" size="80,52" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" transparent="1" scale="1" alphatest="blend" />
-            <ePixmap position="148,1224" size="80,52" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/exit.png" transparent="1" scale="1" alphatest="blend" />
-            <ePixmap name="playerlogo" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/youtubelogo.png" zPosition="4" position="40,20" size="240,80" scale="1" alphatest="blend" transparent="1" backgroundColor="black" />
-
-            <widget source="global.CurrentTime" render="Label" position="1920,20" size="300,80" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;48" valign="center" halign="right">
+    # Uses one `resolution="1280,720"` auto-scaled skin block, same as
+    # every other single-list screen in this branch
+    # (IPTVFavouritesMainWidget, IPTVChoiceBoxWidget's chrome=True
+    # branch) - this screen has no fixed-pixel grid/marker content of its
+    # own (`MenuList` reads its own itemHeight from the skin, same as
+    # IPTVFavouritesMainWidget's list) fighting that, so it's exactly the
+    # shape `build_header_auto()`/`build_footer_auto()` are for.
+    #
+    # Logo: the header's own `logoWidgetName="playerlogo"` slot +
+    # `Cover()` (`ePicLoad`-backed, decodes+resizes to whatever box the
+    # header actually gives it), same "one image, any resolution" pattern
+    # `iptvfavouriteswidgets.py` uses for its own `favouriteslogo.png`.
+    #
+    # Header clock: the same `config.plugins.iptvplayer.show_header_clock`
+    # opt-out `iptvplayerwidget.py`/`playerselector.py`/
+    # `iptvfavouriteswidgets.py` use.
+    #
+    # Footer: only RED (Delete) and YELLOW (Move) are ever bound to an
+    # action - GREEN/BLUE have permanently empty labels, doing nothing.
+    # `build_footer_auto(keys=('red', 'yellow'))` only reserves the two
+    # slots actually used. There's no separate hint text widget - the
+    # chrome footer's own OK/RED/YELLOW/EXIT icons+labels already say the
+    # same thing visually.
+    #
+    # "list" uses explicit `font="Regular;20"`, scaled correctly per tier
+    # by the resolution="1280,720" auto-scale.
+    def __prepareSkin(self):
+        iconBase = skinchrome.getIconBase()
+        HEIGHT = 666
+        clockPart = """<widget source="global.CurrentTime" render="Label" position="960,10" size="150,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="2" font="Regular;24" valign="center" halign="right">
                 <convert type="ClockToText">Format:%H:%M</convert>
             </widget>
-
-            <widget source="global.CurrentTime" render="Label" position="1440,40" size="600,48" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;32" valign="center" halign="right">
+            <widget source="global.CurrentTime" render="Label" position="720,20" size="300,24" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="2" font="Regular;16" valign="center" halign="right">
                 <convert type="ClockToText">Date</convert>
-            </widget>
-        </screen>
-        """
-    elif screenwidth >= 1920:
-        # FHD 1920x1080
-        skin = """
-        <screen name="YouTubeUserLinksEditorScreen" position="center,center" size="1680,975" title="YouTube User Links Editor" backgroundColor="#34111112" flags="wfNoBorder">
-            <widget source="Title" render="Label" position="240,15" size="1178,60" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;36" valign="center" />
-
-            <widget name="status" position="30,102" size="1620,45" font="Regular;36" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" zPosition="1" transparent="1" />
-
-            <widget name="list" position="30,170" size="1620,702" itemHeight="54" font="Regular;30" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="2" borderColor="black" transparent="1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="200,923" size="30,30" scale="1" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/green.png" position="550,923" size="30,30" scale="1" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/yellow.png" position="950,923" size="30,30" scale="1" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/blue.png" position="1350,923" size="30,30" scale="1" alphatest="blend" transparent="1" />
-
-            <widget name="key_red" position="240,916" size="300,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="key_green" position="590,916" size="350,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="key_yellow" position="990,916" size="350,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="key_blue" position="1390,916" size="300,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-
-            <eLabel name="BG_Title" position="0,0" size="1680,90" backgroundColor="#100d0f16" zPosition="-1" />
-            <eLabel name="BG_Buttons" position="0,900" size="1680,72" backgroundColor="#100d0f16" zPosition="-1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,90" size="1680,3" scale="1" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="30,156" size="1620,3" scale="1" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,900" size="1680,3" scale="1"  zPosition="2" />
-
-            <ePixmap position="30,918" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" transparent="1" alphatest="blend" />
-            <ePixmap position="111,918" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/exit.png" transparent="1" alphatest="blend" />
-
-            <ePixmap name="playerlogo" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/youtubelogo.png" zPosition="4" position="30,15" size="180,60" scale="1" alphatest="blend" transparent="1" backgroundColor="black" />
-
-            <widget source="global.CurrentTime" render="Label" position="1440,15" size="225,60" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;36" valign="center" halign="right">
-                 <convert type="ClockToText">Format:%H:%M</convert>
-            </widget>
-
-            <widget source="global.CurrentTime" render="Label" position="1080,30" size="450,36" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" halign="right">
-                <convert type="ClockToText">Date</convert>
-            </widget>
-        </screen>
-        """
-    else:
-        # HD 1280x720
-        skin = """
-        <screen name="YouTubeUserLinksEditorScreen" position="center,center" size="1120,650" title="YouTube User Links Editor" backgroundColor="#34111112" flags="wfNoBorder">
-            <widget source="Title" render="Label" position="180,10" size="785,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
-
+            </widget>""" if config.plugins.iptvplayer.show_header_clock.value else ""
+        return """
+        <screen name="YouTubeUserLinksEditorScreen" position="center,center" size="1120,%d" resolution="1280,720" title="YouTube User Links Editor" backgroundColor="#34111112" flags="wfNoBorder">
+            %s
             <widget name="status" position="20,68" size="1080,30" font="Regular;24" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" zPosition="1" transparent="1" />
-
-            <widget name="list" position="20,120" size="1080,468" itemHeight="36" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" transparent="1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="150,615" size="20,20" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="380,615" size="20,20" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="640,615" size="20,20" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/blue.png" position="900,615" size="20,20" alphatest="blend" transparent="1" />
-
-            <widget name="key_red" position="175,611" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="key_green" position="405,611" size="230,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="key_yellow" position="665,611" size="230,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="key_blue" position="925,611" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-
-            <eLabel name="BG_Title" position="0,0" size="1120,60" backgroundColor="#100d0f16" zPosition="-1" />
-            <eLabel name="BG_Buttons" position="0,600" size="1120,48" backgroundColor="#100d0f16" zPosition="-1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="1120,2" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="20,110" size="1080,2" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,600" size="1120,2" zPosition="2" />
-
-            <ePixmap position="20,612" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
-            <ePixmap position="74,612" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
-
-            <ePixmap name="playerlogo"  pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/youtubelogo.png" zPosition="4" position="20,12" size="120,40" alphatest="blend" transparent="1" backgroundColor="black" />
-
-            <widget source="global.CurrentTime" render="Label" position="960,10" size="150,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" halign="right">
-                <convert type="ClockToText">Format:%H:%M</convert>
-            </widget>
-
-            <widget source="global.CurrentTime" render="Label" position="720,20" size="300,24" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;16" valign="center" halign="right">
-                 <convert type="ClockToText">Date</convert>
-            </widget>
+            <widget name="list" position="20,120" size="1080,468" itemHeight="36" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" transparent="1" />
+            %s
+            %s
         </screen>
-        """
+        """ % (
+            HEIGHT,
+            skinchrome.build_header_auto(iconBase=iconBase, logoWidgetName="playerlogo"),
+            clockPart,
+            skinchrome.build_footer_auto(HEIGHT, iconBase=iconBase, keys=('red', 'yellow')),
+        )
 
     def __init__(self, session, manager):
+        self.session = session
+        self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
+        # explicit name so an external skin can target this screen
+        self.skinName = skinchrome.forceInternalSkinName(["YouTubeUserLinksEditorScreen"])
         self.manager = manager
         self.entries = []
 
         self["status"] = Label("")
-        self["hint"] = Label("")
-        self["key_red"] = Label("")
-        self["key_green"] = Label("")
-        self["key_yellow"] = Label("")
-        self["key_blue"] = Label("")
+        self["key_red"] = StaticText(self.forceUiText(_("Delete")))
+        self["key_yellow"] = StaticText(self.forceUiText(_("Move")))
         self["list"] = MenuList([])
+        self["playerlogo"] = Cover()
+        self["playerlogo"].hide()
 
         self.setTitle(self.forceUiText(_("YouTube User Links Editor")))
 
         self.safeSetText(self["status"], "")
-        self.safeSetText(self["hint"], _("OK=Edit RED=%s YELLOW=%s EXIT=Exit") % (_("Delete"), _("Move")))
-        self.safeSetText(self["key_red"], _("Delete"))
-        self.safeSetText(self["key_green"], "")
-        self.safeSetText(self["key_yellow"], _("Move"))
-        self.safeSetText(self["key_blue"], "")
 
         self["actions"] = ActionMap(
             ["WizardActions", "DirectionActions", "ColorActions"],
@@ -255,7 +182,19 @@ class YouTubeUserLinksEditorScreen(Screen):
         )
 
     def onStart(self):
+        logoPath = GetIconDir('logos/youtubelogo.png')
+        if self["playerlogo"].checkDecodeNeeded(logoPath):
+            self["playerlogo"].decodeCover(logoPath, self.updateLogoCover, "playerlogo")
+        else:
+            self["playerlogo"].show()
         self.reloadList()
+
+    def updateLogoCover(self, retDict):
+        # single static asset, always the same file - same reasoning as
+        # IPTVFavouritesMainWidget's own updateLogoCover()
+        if retDict and retDict["Pixmap"] is not None:
+            self["playerlogo"].updatePixmap(retDict["Pixmap"], retDict["FileName"])
+            self["playerlogo"].show()
 
     def reloadList(self):
         try:
@@ -775,21 +714,38 @@ class YouTubeUserLinksManager(object):
             return
         callback(group, True)
 
+    def _getGroupPickerHeight(self, numItems):
+        # same tier-aware height+cap formula as iptvfavouriteswidgets.py's
+        # own _getGroupPickerHeight()/configbase.py's
+        # _getSelectionListHeight() - this is the same kind of popup (a
+        # user-editable group list, "Add new"/"--All--" plus however many
+        # named groups exist), so it needs the same "few groups today,
+        # could be many tomorrow" scrolling behavior instead of one more
+        # fixed height guess.
+        itemH, scale = skinchrome.tierRowHeight(35, 40, 55)
+        height = int(numItems * itemH / scale) + 176
+        return min(height, 660)
+
     def selectTargetGroupAction(self, session, groups, callback):
+        # chrome-skinned IPTVChoiceBoxWidget, same pattern as
+        # iptvfavouriteswidgets.py's own "Select favorite group" popup, so
+        # this gets the app's header/footer instead of looking like a
+        # bare OpenATV system dialog. "new"/"" sentinel values are
+        # IPTVChoiceBoxItem's `privateData`.
         options = [
-            (self.guiSafeStr(_("Add new group")), "new"),
-            (self.guiSafeStr(_("--All--")), ""),
+            IPTVChoiceBoxItem(name=self.guiSafeStr(_("Add new group")), privateData="new"),
+            IPTVChoiceBoxItem(name=self.guiSafeStr(_("--All--")), privateData=""),
         ]
 
         for group in groups:
             if group:
-                options.append((self.guiSafeStr(group), self.guiSafeStr(group)))
+                options.append(IPTVChoiceBoxItem(name=self.guiSafeStr(group), privateData=self.guiSafeStr(group)))
 
-        session.openWithCallback(
-            lambda ret=None: self.onTargetGroupActionSelected(session, ret, callback),
-            ChoiceBox,
-            title=self.guiSafeStr(_("Select group")),
-            list=options
+        height = self._getGroupPickerHeight(len(options))
+        openChoiceBox(
+            session,
+            {'width': 600, 'height': height, 'current_idx': 0, 'title': self.guiSafeStr(_("Select group")), 'options': options, 'chrome': True},
+            lambda ret=None: self.onTargetGroupActionSelected(session, ret, callback)
         )
 
     def onTargetGroupActionSelected(self, session, ret, callback):
@@ -797,7 +753,7 @@ class YouTubeUserLinksManager(object):
             callback("", False)
             return
 
-        value = ret[1]
+        value = ret.privateData
         if value == "new":
             self.askNewGroup(session, callback)
         else:

@@ -20,9 +20,10 @@ import skin
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetDefaultLang, GetIconDir, GetE2iPlayerVKLayoutDir, CSearchHistoryHelper
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVListComponentBase
+from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVListComponentBase, fitPixmapInBox
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
 from Plugins.Extensions.IPTVPlayer.components.e2ivksuggestion import AutocompleteSearch
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 
 # Global, keyboard-wide search history shown inside the OSK itself (left/right
 # arrow from the text field), independent of each host's own "Search history"
@@ -46,6 +47,48 @@ def GetVKOptionItem(text, value, icon=None):
     return item
 
 
+def _keyHelpLabels():
+    # button-name labels shared by every "key help" screen (this
+    # module's own keyHelp() and E2iPlayerWidget's, iptvplayerwidget.py) -
+    # several buttons (OK/RED/GREEN/YELLOW/BLUE/MENU/0-9/PAGE UP/PAGE
+    # DOWN) appear on more than one of these screens with a different
+    # description each time, so splitting the label out into one short,
+    # shared translatable string keeps the description strings shorter
+    # and avoids translating "OK - " over and over per description. A
+    # plain literal _(...) call per entry (not a
+    # dict comprehension or an indirection through this dict's own keys)
+    # so translation-extraction tooling still finds each one. Built
+    # fresh on every call (by GetKeyHelpItem() below, itself called
+    # fresh each time a keyHelp() screen opens) rather than cached at
+    # module-import time, so a language switch without restarting the
+    # plugin is picked up immediately, same as every other _() call here.
+    return {
+        'ok': _("OK"),
+        'exit': _("EXIT"),
+        'red': _("RED"),
+        'green': _("GREEN"),
+        'yellow': _("YELLOW"),
+        'blue': _("BLUE"),
+        'menu': _("MENU"),
+        'info': _("INFO"),
+        'play': _("PLAY"),
+        'num': _("0-9"),
+        'updown': _("PAGE UP/PAGE DOWN"),
+        'prevnext': _("PREVIOUS/NEXT"),
+        'fastforward': _("FAST FORWARD"),
+        'rewind': _("REWIND"),
+    }
+
+
+def GetKeyHelpItem(labelKey, description, icon=None):
+    # combines a shared _keyHelpLabels() entry with a screen-specific
+    # description into the same "LABEL - description" text every
+    # keyHelp() screen has always shown - description is its own
+    # separate translatable string, normally kept short since it no
+    # longer needs to repeat the label text itself
+    return GetVKOptionItem("%s - %s" % (_keyHelpLabels()[labelKey], _(description)), None, icon)
+
+
 class E2iInput(Input):
     def __init__(self, *args, **kwargs):
         self.e2iTimeoutCallback = None
@@ -66,24 +109,34 @@ class E2iInput(Input):
 
 
 class E2iVKSelectionList(IPTVListComponentBase):
-    ICONS_FILESNAMES = {'on': 'radio_button_on.png', 'off': 'radio_button_off.png'}
+    # WQHD copy used as the single source (32x32, highest res of the 3
+    # per-tier variants) - buildEntry() scales it down cleanly via
+    # fitPixmapInBox()/BT_SCALE for HD/FHD, so no separate flat-root copy
+    # is needed alongside the per-tier ones the plain-widget users need
+    ICONS_FILESNAMES = {'on': 'WQHD/radio_button_on.png', 'off': 'WQHD/radio_button_off.png'}
 
     def __init__(self, withRatioButton=True, applyFontOffset=True):
         IPTVListComponentBase.__init__(self)
         screenwidth = getDesktop(0).size().width()
-        # no dedicated WQHD flag set exists - reuse the FHD-tier flags,
-        # stretched to the bigger WQHD flagSize by buildEntry()'s BT_SCALE
         if screenwidth >= 2560:
             fontSize = 32
-            self.flagsDir = 'e2ivk_hd'
+            # "/flags" subfolder per tier keeps flag images separate from
+            # the on-screen keyboard's own button/key-art icons (see
+            # keyArtDir below), which live directly in the tier folder -
+            # "icons/<TIER>/<feature>", the same convention every other
+            # icon set in this branch follows.
+            self.flagsDir = 'WQHD/e2ivk/flags'
+            # native pixel size of e2ivk/flags/*.png (WQHD tier) - kept
+            # exact (no BT_SCALE softening), see itemHeight below
             self.flagSize = (80, 53)
         elif screenwidth == 1920:
             fontSize = 24
-            self.flagsDir = 'e2ivk_hd'
+            self.flagsDir = 'FHD/e2ivk/flags'
+            # native pixel size of e2ivk/flags/*.png (FHD tier) - kept exact, see above
             self.flagSize = (60, 40)
         else:
             fontSize = 16
-            self.flagsDir = 'e2ivk'
+            self.flagsDir = 'HD/e2ivk/flags'
             self.flagSize = (40, 27)
         # osk_font_size_offset is meant to size the on-screen keyboard itself;
         # applyFontOffset=False for uses outside it (the language picker
@@ -91,8 +144,14 @@ class E2iVKSelectionList(IPTVListComponentBase):
         if applyFontOffset:
             fontSize = GetVKFontSize(fontSize)
         # 14px of padding above the font size matches the original fixed
-        # values (24->38, 16->30) and keeps rows from clipping as it scales
-        itemHeight = fontSize + 14
+        # values (24->38, 16->30) and keeps rows from clipping as it
+        # scales. At FHD/WQHD the flag icon (flagSize[1], see above) can
+        # be taller than this font-only height (FHD 40 > 38, WQHD 53 >
+        # 46), which would bleed into the next row - takes whichever of
+        # the two needs is larger instead of shrinking the flag to fit
+        # (which would soften it via BT_SCALE away from its native pixel
+        # size), with the same 3px margin HD's own 27-vs-30 already had.
+        itemHeight = max(fontSize + 14, self.flagSize[1] + 3)
 
         try:
             self.font = skin.fonts["e2ivklistitem"]
@@ -102,6 +161,11 @@ class E2iVKSelectionList(IPTVListComponentBase):
         self.l.setFont(0, gFont("Regular", 60))
         self.l.setFont(1, gFont(self.font[0], self.font[1]))
         self.l.setItemHeight(self.font[2])
+        # on/off radio dot box - derived from self.font[2] (itemHeight,
+        # HD=30) to reproduce the original 16px at HD while scaling
+        # proportionally at FHD/WQHD, same approach as
+        # IPTVMainNavigatorList's own ICON_W/H.
+        self.dotSize = max(int(round(self.font[2] * 16.0 / 30.0)), 12)
         self.dictPIX = {}
         # flag pixmaps are keyed by locale (e.g. 'de_DE'), lazily loaded on
         # first use since only ~1/3 of the ~100 layout locales have one
@@ -153,18 +217,30 @@ class E2iVKSelectionList(IPTVListComponentBase):
                     sel_key = 'on'
                 else:
                     sel_key = 'off'
-                y = (height - 16) // 2
+                dotX = 3
+                dotY = (height - self.dotSize) // 2
                 flagW, flagH = self.flagSize
-                flagX = 24
-                flagY = (height - flagH) // 2
+                # derived from dotX+dotSize so the flag never overlaps
+                # the dot - reproduces the original 24 exactly at HD
+                # (dotSize=16)
+                flagX = dotX + self.dotSize + 5
                 textX = flagX + flagW + 8
                 res.append((eListboxPythonMultiContent.TYPE_TEXT, textX, 0, width - textX, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item['val'][0]))  # , item.get('color')
-                res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, 3, y, 16, 16, self.dictPIX.get(sel_key, None)))
+                dotIcon = self.dictPIX.get(sel_key, None)
+                if dotIcon is not None:
+                    dx, dy, dw, dh = fitPixmapInBox(dotIcon, dotX, dotY, self.dotSize, self.dotSize)
+                    res.append(MultiContentEntryPixmapAlphaBlend(pos=(dx, dy), size=(dw, dh), png=dotIcon, flags=BT_SCALE))
                 flagPix = self._getFlagPixmap(item['val'][1])
                 if flagPix is not None:
-                    # BT_SCALE stretches the FHD-tier flag asset to flagW/flagH
-                    # instead of requiring a pre-rendered WQHD-sized flag set
-                    res.append(MultiContentEntryPixmapAlphaBlend(pos=(flagX, flagY), size=(flagW, flagH), png=flagPix, flags=BT_SCALE))
+                    # self.flagsDir above already picks a real, separate,
+                    # correctly-sized flag folder per tier (HD/e2ivk/flags,
+                    # FHD/e2ivk/flags, WQHD/e2ivk/flags), and flagW/flagH
+                    # match each folder's native pixel size exactly, so
+                    # fitPixmapInBox() below is normally a no-op - real
+                    # protection only kicks in for a mismatched locale
+                    # flag file
+                    x, y2, w, h = fitPixmapInBox(flagPix, flagX, 0, flagW, height)
+                    res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y2), size=(w, h), png=flagPix, flags=BT_SCALE))
             else:
                 res.append((eListboxPythonMultiContent.TYPE_TEXT, 4, 0, width - 4, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item))
         except Exception:
@@ -187,12 +263,19 @@ class E2iVKOptionsList(IPTVListComponentBase):
     # established look instead of a bespoke skin.
     #
     # The icons used here aren't uniformly sized (the red/green/yellow/blue
-    # dots are square, menu.png/key_prevnext.png/etc. are wide rectangles),
-    # and only HD/FHD assets exist. buildEntry() renders them via
-    # MultiContentEntryPixmapAlphaBlend(flags=BT_SCALE), so every icon is
-    # stretched to (iconW, iconH) regardless of its native size - the same
-    # mechanism the download manager list uses, just called directly from
-    # Python instead of a TemplatedMultiContent skin convert.
+    # dots and the Options menu's own icons are square, menu.png/
+    # key_prevnext.png/etc. are wide rectangles), and only HD/FHD assets
+    # exist. buildEntry() renders them via
+    # MultiContentEntryPixmapAlphaBlend(flags=BT_SCALE) into a fit-within-
+    # (iconW, iconH) box computed from each icon's own native size via
+    # iptvlist.py's fitPixmapInBox() (stretching every icon to fill
+    # iconW/iconH exactly, regardless of aspect ratio, visibly squishes
+    # the square ones; the same fit-then-center math is also
+    # what IPTVMainNavigatorList's own icon box in iptvlist.py needed for
+    # the same reason, so it's shared from there instead of duplicated
+    # here), same underlying blit mechanism the download manager list
+    # uses, just called directly from Python instead of a
+    # TemplatedMultiContent skin convert.
     def __init__(self):
         IPTVListComponentBase.__init__(self)
         # osk_font_size_offset intentionally does NOT apply here - it's meant
@@ -227,11 +310,22 @@ class E2iVKOptionsList(IPTVListComponentBase):
         textX = self.iconW + 20 if icon is not None else 10
         res.append((eListboxPythonMultiContent.TYPE_TEXT, textX, 0, width - textX - 10, height, 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.name))
         if icon is not None:
-            iconY = (height - self.iconH) // 2
-            # BT_SCALE stretches the source pixmap to (iconW, iconH) instead of
-            # requiring a pre-rendered asset at that exact native size - lets a
-            # single HD/FHD icon set cover every resolution tier, including WQHD.
-            res.append(MultiContentEntryPixmapAlphaBlend(pos=(8, iconY), size=(self.iconW, self.iconH), png=icon, flags=BT_SCALE))
+            # fitPixmapInBox() (iptvlist.py): wide icons whose native size
+            # already matches the box (menu.png/ok.png/etc., 40x26 at HD)
+            # are unaffected (scale factor 1.0, same pixels a plain
+            # BT_SCALE stretch would produce), square ones
+            # (SettingsItem.png/SearchHistoryDeleteItem.png/the language
+            # globe) render as a true, unstretched square instead of
+            # getting squished. Box height for the FIT/SCALE computation
+            # must be self.iconH (the icon's own box), not the full row
+            # height, or a square icon renders oversized instead of the
+            # true unstretched square described above. boxY is offset by
+            # half the leftover row space so fitPixmapInBox()'s own
+            # centering still lands the icon in the middle of the full
+            # row (not pinned to its top) - same y a wide, already-box-
+            # shaped icon gets too.
+            iconX, iconY, fitW, fitH = fitPixmapInBox(icon, 8, (height - self.iconH) // 2, self.iconW, self.iconH)
+            res.append(MultiContentEntryPixmapAlphaBlend(pos=(iconX, iconY), size=(fitW, fitH), png=icon, flags=BT_SCALE))
         return res
 
 
@@ -306,21 +400,35 @@ class E2iVirtualKeyBoard(Screen):
         # the player's shared screen design - see iptvplayerwidget.py). Sized
         # independently of bw/bh since the button grid itself has no WQHD
         # tier yet (out of scope here).
-        if self.isWQHD:
-            chromeH, logoW, logoH, dotSize, chromeFontSize = 95, 200, 80, 40, GetVKFontSize(40)
-        elif self.fullHD:
-            chromeH, logoW, logoH, dotSize, chromeFontSize = 70, 150, 60, 30, GetVKFontSize(30)
-        else:
-            chromeH, logoW, logoH, dotSize, chromeFontSize = 50, 100, 40, 20, GetVKFontSize(22)
+        #
+        # Top bar is `skinchrome.build_header()` (see further down),
+        # bottom bar is skinchrome's leftIconGeometry()/colorKeyGeometry()
+        # building blocks (see further down still).
+        # header_height()/footer_height() are genuinely different
+        # constants (60/90/120 vs 64/96/128 at HD/FHD/WQHD - the footer grew
+        # 4px to fit a possible 2-line color-key label, see footer_height()'s
+        # own comment), so only footerH is needed here at all now - the top
+        # bar's own height is entirely build_header()'s internal concern,
+        # never fed in from this function. Logo sizing, the footer's
+        # color-key icon size and label font are likewise entirely
+        # build_header()/colorKeyGeometry()'s own concern now, no longer
+        # hand-tuned/computed here (dotSize, chromeFontSize removed).
+        scale = skinchrome.getScale()
+        iconBase = skinchrome.getIconBase()
+        footerH = skinchrome.footer_height(scale)
 
         x = (sz_w - 15 * bw) / 2
-        # Shifted up by chromeH on top of the original "- 7 * bh" (not "- 6",
-        # even though MENU/INFO no longer use the 7th row slot below the
-        # grid - trying to reclaim that space made the grid math too fragile
-        # to verify without a live device, so it's left as an unused gap
-        # instead). This guarantees grid bottom (y + 7*bh) lines up exactly
-        # with the bottom bar's top (sz_h - chromeH), with no overlap.
-        y = sz_h - 7 * bh - chromeH
+        # Grid top Y. Previously "sz_h - 7*bh - chromeH" - reserving a full
+        # extra bh above the footer even though only "6*bh+10" of that budget
+        # was ever drawn into (1 input-field row + 5 keyboard rows, +10 gap
+        # between them), leaving an implicit bh-10 gap (40/60/85px) between
+        # the last button row and the footer. Replaces that implicit
+        # leftover with an explicit `gap` variable, shrunk to ~1/3 of its
+        # old value (13/20/28px) - everything above the grid (search box, left/
+        # right history lists) simply gets a bit more room instead, since `y`
+        # itself just moves down by the reclaimed space.
+        gap = (bh - 10) // 3
+        y = sz_h - 6 * bh - 10 - gap - footerH
         self._gridX, self._gridY = x, y
 
         bg_color = config.plugins.iptvplayer.osk_background_color.value
@@ -359,16 +467,20 @@ class E2iVirtualKeyBoard(Screen):
                 align = 'center'
             skinTab.append('<widget name="_%s" zPosition="%d" position="%d,%d" size="%d,%d" transparent="1" noWrap="1" font="Regular;%s" valign="center" halign="%s" foregroundColor="#ffffff" backgroundColor="%s" />' % (name, p + 2, x, y, w, h, font, align, color))
 
-        # Top bar: logo + title, matching the player's shared screen design.
+        # Top bar uses the shared chrome header rather than a hand-rolled
+        # BG_Title eLabel + logo ePixmap + Label + divider. Produces the
+        # standard BG_Title band, logo, `source="Title"` label (driven by
+        # self.setTitle()
+        # in __init__ now, see there) and smallshadowline divider in one
+        # call - its own height (60/90/120) is entirely internal to
+        # build_header(), unrelated to footerH/gap/y above.
+        skinTab.append(skinchrome.build_header(scale=scale, iconBase=iconBase, showLogo=True))
         # smallshadowline is a static divider image, so it's a plain ePixmap
         # (like the rest of the player uses it) rather than a Python-bound
-        # widget - only content that actually varies needs the latter.
-        chromeResDir = 'FHD' if (self.fullHD or self.isWQHD) else 'HD'
-        shadowline = '/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/%s/smallshadowline.png' % chromeResDir
-        skinTab.append('<eLabel name="vk_BG_Title" position="0,0" size="%d,%d" backgroundColor="#100d0f16" zPosition="-1" />' % (sz_w, chromeH))
-        _addPixmapWidget('vk_logo', 12, (chromeH - logoH) // 2, logoW, logoH, 1)
-        skinTab.append('<widget name="vk_title" zPosition="1" position="%d,%d" size="%d,%d" transparent="1" noWrap="1" font="Regular;%s" valign="center" halign="left" foregroundColor="#ffffff" backgroundColor="#000000" />' % (logoW + 24, 0, sz_w - logoW - 44, chromeH, chromeFontSize))
-        skinTab.append('<ePixmap pixmap="%s" position="0,%d" size="%d,2" scale="1" zPosition="2" />' % (shadowline, chromeH, sz_w))
+        # widget - only content that actually varies needs the latter. Still
+        # needed standalone for the BOTTOM bar's own divider further down
+        # (build_header() only draws the top one).
+        shadowline = iconBase + '/smallshadowline.png'
 
         # NVK shows a titled box above the search field, search history and
         # suggestions panel alike, each sitting with a small visible gap
@@ -432,32 +544,46 @@ class E2iVirtualKeyBoard(Screen):
         _addMarker('m_5', x + bw * 13 + 10, y + 10 + bh * 3 + (bh - 10), bw * 2 - 20, 3, 2, '#22b14c')
 
         # Bottom bar: MENU/INFO hints on the left, then this keyboard's own
-        # RED/GREEN/YELLOW/BLUE bindings (Backspace/Enter/AltGr/Shift) - all
-        # in the one bar, matching how the rest of the player groups its
-        # generic key hints and color buttons together (see
-        # iptvplayerwidget.py, iptvdmui.py) instead of a separate row.
-        if self.isWQHD:
-            hintIconW, hintIconH = (80, 51)
-        elif self.fullHD:
-            hintIconW, hintIconH = (60, 38)
-        else:
-            hintIconW, hintIconH = (40, 26)
-        barY = sz_h - chromeH
-        skinTab.append('<eLabel name="vk_BG_Buttons" position="0,%d" size="%d,%d" backgroundColor="#100d0f16" zPosition="-1" />' % (barY, sz_w, chromeH))
+        # RED/GREEN/YELLOW/BLUE bindings (Backspace/Enter/AltGr/Shift).
+        #
+        # Built from skinchrome's own leftIconGeometry()/colorKeyGeometry()
+        # building blocks, same standard icon size/label box/font every
+        # other migrated footer uses. Not build_footer() itself though -
+        # that only ever supports ONE gray left-hand icon ahead of the
+        # color keys (showMenu/showNav/showNum/showOk/showExit), no "info"
+        # slot at all; this screen needs several (MENU + NAV + INFO + OK +
+        # EXIT), the exact same situation iptvplayerwidget.py already
+        # solved (see its own geomNav/geomNum/... calls there) by calling
+        # these two geometry helpers directly instead. NAV/OK/EXIT are all
+        # live here too (arrow keys move the grid cursor, OK picks the
+        # highlighted key, BACK closes the keyboard) - added as slots
+        # 1/3/4 (same order as iptvplayerwidget.py's own
+        # menu/nav/.../ok/exit sequence), so numLeftIcons=5 passed to
+        # colorKeyGeometry() puts red/green/yellow/blue after all five
+        # instead of overlapping them. Labels keep this
+        # screen's own OSK-specific text (Backspace/Enter/AltGr/Shift, bound
+        # in __init__) rather than build_footer()'s generic key_red et al
+        # ConditionalShowHide/StaticText sources - all four are always
+        # visible here, nothing to conditionally hide.
+        barY = sz_h - footerH
+        skinTab.append('<eLabel name="vk_BG_Buttons" position="0,%d" size="%d,%d" backgroundColor="#100d0f16" zPosition="-1" />' % (barY, sz_w, footerH))
         skinTab.append('<ePixmap pixmap="%s" position="0,%d" size="%d,2" scale="1" zPosition="2" />' % (shadowline, barY, sz_w))
 
-        hintIconY = barY + (chromeH - hintIconH) // 2
-        infoIconX = 20 + hintIconW + 20
-        _addPixmapWidget('menu_icon', 20, hintIconY, hintIconW, hintIconH, 3)
-        _addPixmapWidget('info_icon', infoIconX, hintIconY, hintIconW, hintIconH, 3)
+        geomMenu = skinchrome.leftIconGeometry(sz_h, 0, scale)
+        geomNav = skinchrome.leftIconGeometry(sz_h, 1, scale)
+        geomInfo = skinchrome.leftIconGeometry(sz_h, 2, scale)
+        geomOk = skinchrome.leftIconGeometry(sz_h, 3, scale)
+        geomExit = skinchrome.leftIconGeometry(sz_h, 4, scale)
+        _addPixmapWidget('menu_icon', geomMenu['x'], geomMenu['y'], geomMenu['w'], geomMenu['h'], 3)
+        _addPixmapWidget('nav_icon', geomNav['x'], geomNav['y'], geomNav['w'], geomNav['h'], 3)
+        _addPixmapWidget('info_icon', geomInfo['x'], geomInfo['y'], geomInfo['w'], geomInfo['h'], 3)
+        _addPixmapWidget('ok_icon', geomOk['x'], geomOk['y'], geomOk['w'], geomOk['h'], 3)
+        _addPixmapWidget('exit_icon', geomExit['x'], geomExit['y'], geomExit['w'], geomExit['h'], 3)
 
-        colorStartX = infoIconX + hintIconW + 40
-        segW = (sz_w - colorStartX) // 4
-        dotY = barY + (chromeH - dotSize) // 2
         for i, color in enumerate(('red', 'green', 'yellow', 'blue')):
-            segX = colorStartX + i * segW
-            _addPixmapWidget('vk_key_%s_icon' % color, segX, dotY, dotSize, dotSize, 3)
-            skinTab.append('<widget name="vk_key_%s" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" noWrap="1" font="Regular;%s" valign="center" halign="left" foregroundColor="#ffffff" backgroundColor="#000000" />' % (color, segX + dotSize + 10, barY, segW - dotSize - 30, chromeH, chromeFontSize))
+            geom = skinchrome.colorKeyGeometry(sz_h, 5, i, scale)
+            _addPixmapWidget('vk_key_%s_icon' % color, geom['iconX'], geom['iconY'], geom['iconSize'], geom['iconSize'], 3)
+            skinTab.append('<widget name="vk_key_%s" zPosition="3" position="%d,%d" size="%d,%d" transparent="1" font="Regular;%d" valign="center" halign="left" foregroundColor="#ffffff" backgroundColor="#000000" />' % (color, geom['labelX'], geom['labelY'], geom['labelW'], geom['labelH'], geom['font']))
 
         # Left list
         skinTab.append('<widget name="left_header" zPosition="2" position="%d,%d" size="%d,%d"  transparent="0" noWrap="1" font="Regular;%d" valign="center" halign="center" foregroundColor="#000000" backgroundColor="#ffffff" />' % (x - bw * 5 - 5, y - (bh - 7 * 2), bw * 5, headerBoxH, headerFontSize))
@@ -493,6 +619,18 @@ class E2iVirtualKeyBoard(Screen):
         self.skin = self.prepareSkin()
 
         Screen.__init__(self, session)
+        # drives the header's own source="Title" widget
+        # (skinchrome.build_header(), see prepareSkin()) instead of the
+        # separate vk_title Label this used to bind - matches what
+        # vk_title always showed. onWindowShow() used to call
+        # self.setTitle(_('Virtual Keyboard')) (a different, shorter
+        # string) straight after this, which only mattered for the
+        # window-manager/task-switcher title before since vk_title's own
+        # Label was the only thing actually visible on screen - now that
+        # setTitle() drives the visible header too, that second call has
+        # been removed (see onWindowShow()) so this text is what actually
+        # shows, same as before.
+        self.setTitle(_("E2iPlayer virtual keyboard"))
         self.onLayoutFinish.append(self.setGraphics)
         self.onShown.append(self.onWindowShow)
         self.onClose.append(self.__onClose)
@@ -545,22 +683,29 @@ class E2iVirtualKeyBoard(Screen):
         self.isSuggestionVisible = None
 
         self.graphics = {}
-        # no dedicated WQHD button art exists - WQHD reuses the e2ivk_hd
-        # (FHD-tier) set too, stretched to the bigger WQHD button boxes by
-        # scale="1" on the pixmap widgets that display them
-        keyArtDir = 'e2ivk_hd' if (self.fullHD or self.isWQHD) else 'e2ivk'
+        # "icons/<TIER>/e2ivk" follows the same "icons/<TIER>/<feature>"
+        # convention every other icon set in this branch uses (e.g.
+        # icons/HD/buffering/).
+        keyArtDir = 'WQHD/e2ivk' if self.isWQHD else ('FHD/e2ivk' if self.fullHD else 'HD/e2ivk')
         for key in ['pb', 'pr', 'pg', 'py', 'l', 'b', 'e', 'e_m', 'k', 'k_m', 'k_s', 'k2_m', 'k2_s', 'k3', 'k3_m', 'vkey_left', 'vkey_right', 'vkey_delete']:
             self.graphics[key] = LoadPixmap(GetIconDir('%s/%s.png' % (keyArtDir, key)))
-        # footer hints (MENU/INFO): shared icon set, not part of the e2ivk[_hd] set above
-        # no dedicated WQHD assets exist - WQHD reuses FHD icons, stretched to
-        # the target box by scale="1" (skin widgets) / BT_SCALE (option lists)
-        resDir = 'FHD' if (self.fullHD or self.isWQHD) else 'HD'
-        self.graphics['menu'] = LoadPixmap(GetIconDir('%s/menu.png' % resDir))
-        self.graphics['info'] = LoadPixmap(GetIconDir('%s/info.png' % resDir))
-        # top/bottom chrome bar: logo + color key hints, same icon set/resDir
-        self.graphics['vk_logo'] = LoadPixmap(GetIconDir('%s/iptvlogo.png' % resDir))
+        # footer hints (MENU/INFO) + bottom-bar color keys: shared chrome
+        # icon set (skinchrome.getIconBase(), real per-tier assets), not
+        # part of the e2ivk keyArtDir set above. vk_logo no longer loaded
+        # here at all - the top bar's logo is
+        # entirely skinchrome.build_header()'s own static ePixmap now
+        # (see prepareSkin()), not a Python-bound pixmap.
+        iconBase = skinchrome.getIconBase()
+        self.graphics['menu'] = LoadPixmap(iconBase + '/menu.png')
+        self.graphics['info'] = LoadPixmap(iconBase + '/info.png')
+        # NAV/OK/EXIT hints (see prepareSkin()'s
+        # footer comment): key_steuerkreuz/ok/exit.png are the same shared
+        # chrome assets iptvplayerwidget.py already uses for the same hints.
+        self.graphics['nav'] = LoadPixmap(iconBase + '/key_steuerkreuz.png')
+        self.graphics['ok'] = LoadPixmap(iconBase + '/ok.png')
+        self.graphics['exit'] = LoadPixmap(iconBase + '/exit.png')
         for color in ('red', 'green', 'yellow', 'blue'):
-            self.graphics['vk_%s' % color] = LoadPixmap(GetIconDir('%s/%s.png' % (resDir, color)))
+            self.graphics['vk_%s' % color] = LoadPixmap(iconBase + '/%s.png' % color)
 
         for i in range(0, 63):
             self[str(i)] = Cover3()
@@ -568,14 +713,20 @@ class E2iVirtualKeyBoard(Screen):
         for key in ['l', 'b', 'e_m', 'k_m', 'k2_m', 'k3_m', 'vkey_left', 'vkey_right', 'vkey_delete']:
             self[key] = Cover3()
 
-        # footer hints, showing that MENU/INFO can be used in this screen
+        # footer hints, showing that MENU/NAV/INFO/OK/EXIT can be used in
+        # this screen (see prepareSkin())
         self['menu_icon'] = Cover3()
+        self['nav_icon'] = Cover3()
         self['info_icon'] = Cover3()
+        self['ok_icon'] = Cover3()
+        self['exit_icon'] = Cover3()
 
         # top/bottom chrome bar, matching the player's shared screen design
-        # (logo/title bar + color key hint footer - see iptvplayerwidget.py)
-        self['vk_logo'] = Cover3()
-        self['vk_title'] = Label(_("E2iPlayer virtual keyboard"))
+        # (logo/title bar + color key hint footer - see iptvplayerwidget.py).
+        # vk_logo/vk_title are not bound here - the header's
+        # logo+title come entirely from skinchrome.build_header()'s own
+        # static ePixmap + source="Title" widget (see self.setTitle() below
+        # and prepareSkin()), same as every other migrated chrome screen.
         self['vk_key_red_icon'] = Cover3()
         self['vk_key_green_icon'] = Cover3()
         self['vk_key_yellow_icon'] = Cover3()
@@ -652,7 +803,6 @@ class E2iVirtualKeyBoard(Screen):
 
     def onWindowShow(self):
         self.onShown.remove(self.onWindowShow)
-        self.setTitle(_('Virtual Keyboard'))
         # a couple of leading spaces, not a position change - keeps this
         # box's edges flush with the input field/left_header below it,
         # just nudges the text off the box's left edge a bit
@@ -723,8 +873,10 @@ class E2iVirtualKeyBoard(Screen):
         self['vkey_right'].setPixmap(self.graphics['vkey_right'])
         self['vkey_delete'].setPixmap(self.graphics['vkey_delete'])
         self['menu_icon'].setPixmap(self.graphics['menu'])
+        self['nav_icon'].setPixmap(self.graphics['nav'])
         self['info_icon'].setPixmap(self.graphics['info'])
-        self['vk_logo'].setPixmap(self.graphics['vk_logo'])
+        self['ok_icon'].setPixmap(self.graphics['ok'])
+        self['exit_icon'].setPixmap(self.graphics['exit'])
         for color in ('red', 'green', 'yellow', 'blue'):
             self['vk_key_%s_icon' % color].setPixmap(self.graphics['vk_%s' % color])
 
@@ -1123,7 +1275,7 @@ class E2iVirtualKeyBoard(Screen):
             listValue.append({'sel': sel, 'val': x})
 
         self.session.openWithCallback(self.languageSelectionClosed, IPTVChoiceBoxWidget,
-            {'width': 900, 'height': 620, 'current_idx': selIdx, 'title': _('Select language'), 'options': listValue, 'list_class': E2iVKLanguagePickerList, 'chrome': True, 'footerMargin': 120})
+            {'width': 900, 'height': 620, 'current_idx': selIdx, 'title': _('Select language'), 'options': listValue, 'list_class': E2iVKLanguagePickerList, 'chrome': True, 'footerMargin': 136})
 
     def languageSelectionClosed(self, ret=None):
         if not ret:
@@ -1233,20 +1385,22 @@ class E2iVirtualKeyBoard(Screen):
         # reverse-engineered from iptvplayerwidget.py's own tuned constants
         # for this same widget. Both our callers now use chrome=True, whose
         # logo/title bar and OK/EXIT footer bar need more room than that
-        # margin ever did, so +160 (matching the widget's own e-150 list
-        # bottom margin in chrome mode) so all rows fit without scrolling.
-        if getDesktop(0).size().width() >= 2560:
-            itemH, scale = 83, 2.0
-        elif self.fullHD:
-            itemH, scale = 62, 1.5
-        else:
-            itemH, scale = 44, 1.0
-        return int(numItems * itemH / scale) + 160
+        # margin ever did, so +176 (matching the widget's own e-166 list
+        # bottom margin in chrome mode, see skinchrome.py's build_footer()
+        # 2-line-wrap comment) so all rows fit without scrolling.
+        itemH, scale = skinchrome.tierRowHeight(44, 62, 83)
+        return int(numItems * itemH / scale) + 176
 
     def keyMenu(self):
         if self.focus != self.FOCUS_KEYBOARD:
             return 0
-        options = [GetVKOptionItem(_("Select language"), "LANGUAGE", self.graphics.get('l'))]
+        # GlobItem.png - not self.graphics['l'],
+        # which is a different, similar-looking globe icon used for the live
+        # on-screen-keyboard's own current-language indicator elsewhere
+        # (_getCurrentLanguageIcon()); this Options-menu row is unrelated to
+        # that and now uses the same icon IPTVLinkChoiceBoxList/
+        # CDisplayListItem.TYPE_WWW already use elsewhere in the plugin
+        options = [GetVKOptionItem(_("Select language"), "LANGUAGE", LoadPixmap(GetIconDir('GlobItem.png')))]
         if config.plugins.iptvplayer.osk_allow_search_history.value:
             options.append(GetVKOptionItem(_("Delete search history"), "CLEAR_HISTORY", LoadPixmap(GetIconDir('SearchHistoryDeleteItem.png'))))
         options.append(GetVKOptionItem(_("Settings"), "SETTINGS", LoadPixmap(GetIconDir('SettingsItem.png'))))
@@ -1303,27 +1457,33 @@ class E2iVirtualKeyBoard(Screen):
         self.session.open(MessageBox, msg, type=MessageBox.TYPE_ERROR if err else MessageBox.TYPE_INFO, timeout=5)
 
     def keyHelp(self):
-        resDir = 'FHD' if (self.fullHD or self.isWQHD) else 'HD'
+        iconBase = skinchrome.getIconBase()
 
         def icon(name):
-            return LoadPixmap(GetIconDir('%s/%s.png' % (resDir, name)))
+            return LoadPixmap(iconBase + '/%s.png' % name)
 
         options = [
-            GetVKOptionItem(_("OK - type selected character / confirm selection"), None, icon('ok')),
-            GetVKOptionItem(_("GREEN - Enter (confirm and close)"), None, icon('green')),
-            GetVKOptionItem(_("RED - Backspace"), None, icon('red')),
-            GetVKOptionItem(_("YELLOW - AltGr"), None, icon('yellow')),
-            GetVKOptionItem(_("BLUE - Shift"), None, icon('blue')),
-            GetVKOptionItem(_("MENU - Options (select language, clear search history, settings)"), None, icon('menu')),
-            GetVKOptionItem(_("PREVIOUS/NEXT - switch between keyboard, suggestions and search history"), None, icon('key_prevnext')),
-            GetVKOptionItem(_("LEFT/RIGHT at start/end of text - alternative way to switch panels"), None),
-            GetVKOptionItem(_("PAGE UP/PAGE DOWN - move cursor right/left"), None, icon('key_updown')),
-            GetVKOptionItem(_("FAST FORWARD - insert space"), None),
-            GetVKOptionItem(_("REWIND - delete entered text"), None),
-            GetVKOptionItem(_("0-9 - direct number input"), None),
+            GetKeyHelpItem('ok', "type selected character / confirm selection", icon('ok')),
+            GetKeyHelpItem('green', "Enter (confirm and close)", icon('green')),
+            GetKeyHelpItem('red', "Backspace", icon('red')),
+            GetKeyHelpItem('yellow', "AltGr", icon('yellow')),
+            GetKeyHelpItem('blue', "Shift", icon('blue')),
+            GetKeyHelpItem('menu', "Options (select language, clear search history, settings)", icon('menu')),
+            GetKeyHelpItem('prevnext', "switch between keyboard, suggestions and search history", icon('key_prevnext')),
+            # doesn't fit the shared LABEL - description pattern (the
+            # "at start/end of text" qualifier belongs to the label, not
+            # the description) - kept as its own full string
+            GetVKOptionItem(_("LEFT/RIGHT at start/end of text - alternative way to switch panels"), None, icon('key_left_right_filled')),
+            GetKeyHelpItem('updown', "move cursor right/left", icon('key_updown')),
+            GetKeyHelpItem('fastforward', "insert space", icon('fast_forward')),
+            GetKeyHelpItem('rewind', "delete entered text", icon('rewind')),
+            GetKeyHelpItem('num', "direct number input", icon('key_0-9')),
         ]
         height = self._getOptionsPickerHeight(len(options))
-        self.session.open(IPTVChoiceBoxWidget, {'width': 700, 'height': height, 'current_idx': 0, 'title': _("Help"), 'options': options, 'list_class': E2iVKOptionsList, 'selectable': False, 'chrome': True})
+        # 900 matches the language picker's own width - needed to fit
+        # the longer lines in full, e.g. "MENU - Options (select language,
+        # clear search history, settings)"
+        self.session.open(IPTVChoiceBoxWidget, {'width': 900, 'height': height, 'current_idx': 0, 'title': _("Help"), 'options': options, 'list_class': E2iVKOptionsList, 'selectable': False, 'chrome': True})
 
     def keyOK(self):
         if self.focus in (self.FOCUS_SUGGESTIONS, self.FOCUS_SEARCH_HISTORY):

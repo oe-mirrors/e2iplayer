@@ -17,13 +17,13 @@
 	<widget name="cover" zPosition="2" position="757,83" size="252,398" alphatest="blend"/>
 	<widget name="playerlogo" zPosition="4" position="22,10" size="120,40" alphatest="blend"/>
 	<widget name="sequencer" position="22,61" zPosition="6" size="524,436" font="Regular; 160" halign="center" valign="center" transparent="1" backgroundColor="#191919"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/red.png" position="32,692" size="35,27" alphatest="blend" transparent="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/PiratesOfTheCaribbean_720p/icons/red.png" position="32,692" size="35,27" alphatest="blend" transparent="1"/>
 	<widget source="key_red" render="Label" position="72,690" size="94,27" zPosition="1" font="Regular; 22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/green.png" position="168,691" size="35,27" alphatest="blend"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/PiratesOfTheCaribbean_720p/icons/green.png" position="168,691" size="35,27" alphatest="blend"/>
 	<widget source="key_green" render="Label" position="208,690" size="130,27" zPosition="1" font="Regular; 22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/yellow.png" position="343,692" size="35,27" alphatest="blend" zPosition="1" transparent="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/PiratesOfTheCaribbean_720p/icons/yellow.png" position="343,692" size="35,27" alphatest="blend" zPosition="1" transparent="1"/>
 	<widget source="key_yellow" render="Label" position="381,690" size="133,27" zPosition="1" font="Regular; 22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/blue.png" position="518,690" size="35,27" alphatest="blend" transparent="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/PiratesOfTheCaribbean_720p/icons/blue.png" position="518,690" size="35,27" alphatest="blend" transparent="1"/>
 	<widget source="key_blue" render="Label" position="558,690" size="117,27" zPosition="1" font="Regular; 22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/PiratesOfTheCaribbean_720p/icons/back-iptv4.png" position="center,center" size="1277,723" alphatest="on" transparent="1" zPosition="-4"/>
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/PiratesOfTheCaribbean_720p/icons/cover.png" position="746,52" size="276,449" alphatest="blend" transparent="1" zPosition="4"/>

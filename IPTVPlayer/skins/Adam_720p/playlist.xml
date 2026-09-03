@@ -17,13 +17,13 @@
 	<widget name="cover" zPosition="2" position="1,70" size="400,520" alphatest="blend"/>
 	<widget name="playerlogo" zPosition="4" position="10,10" size="120,40" alphatest="blend"/>
 	<widget name="sequencer" position="415,73" zPosition="6" size="786,420" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#191919"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/red.png" position="2,601" size="35,27" alphatest="blend" transparent="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Adam_720p/icons/red.png" position="2,601" size="35,27" alphatest="blend" transparent="1"/>
 	<widget source="key_red" render="Label" position="39,603" size="155,27" zPosition="1" font="Regular;22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/green.png" position="207,601" size="35,27" alphatest="blend"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Adam_720p/icons/green.png" position="207,601" size="35,27" alphatest="blend"/>
 	<widget name="key_green" position="245,603" size="150,27" zPosition="1" font="Regular;22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/yellow.png" position="2,636" size="35,27" alphatest="blend" zPosition="1" transparent="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Adam_720p/icons/yellow.png" position="2,636" size="35,27" alphatest="blend" zPosition="1" transparent="1"/>
 	<widget source="key_yellow" render="Label" position="39,638" size="155,27" zPosition="1" font="Regular;22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/blue.png" position="207,636" size="35,27" alphatest="blend" transparent="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/Adam_720p/icons/blue.png" position="207,636" size="35,27" alphatest="blend" transparent="1"/>
 	<widget source="key_blue" render="Label" position="245,638" size="150,27" zPosition="1" font="Regular;22" halign="left" backgroundColor="#191919" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"/>
 	<eLabel position="407,66" size="2,604" transparent="0" zPosition="5" backgroundColor="#666666"/>
 	<eLabel position="2,63" size="1199,2" transparent="0" zPosition="5" backgroundColor="#666666"/>

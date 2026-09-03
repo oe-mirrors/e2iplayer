@@ -18,14 +18,16 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper, DMItemBase
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
+from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
+from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVDMActionChoiceBoxList
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 ###################################################
 # FOREIGN import
 ###################################################
 from Screens.Screen import Screen
-from Screens.ChoiceBox import ChoiceBox
-from enigma import eTimer, eConsoleAppContainer, getDesktop
+from enigma import eTimer, eConsoleAppContainer
 from Components.config import config
 from Components.ActionMap import ActionMap
 from Components.Label import Label
@@ -56,26 +58,21 @@ class IPTVDMWidget(Screen):
                         DMHelper.STS.ERROR: 'iconwarning.png',
                         }
 
-    fullHD = getDesktop(0).size().width() == 1920
-
-    skin = """
-        <screen name="IPTVDMWidget" position="center,center" title="%s" size="1180,680" resolution="1280,720" flags="wfNoBorder">
-            <widget source="Title" render="Label" position="160,10" size="600,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/iptvlogo.png" position="12,10" size="100,40" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="240,648" size="20,20" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="470,648" size="20,20" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="700,648" size="20,20" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/blue.png" position="930,648" size="20,20" alphatest="blend" transparent="1" />
-            <widget source="key_red" render="Label" position="274,644" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget source="key_green" render="Label" position="504,644" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget source="key_yellow" render="Label" position="734,644" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget source="key_blue" render="Label" position="964,644" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <eLabel name="BG_Title" position="0,0" size="1180,60" backgroundColor="#100d0f16" zPosition="-1" />
-            <eLabel name="BG_Buttons" position="0,632" size="1180,48" backgroundColor="#100d0f16" zPosition="-1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="1180,2" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,630" size="1180,2" zPosition="2" />
-            <ePixmap position="22,644" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
-            <ePixmap position="80,644" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
+    # Header/footer use skinchrome.build_header_auto()/build_footer_auto() -
+    # this screen already declares `resolution="1280,720"` and uses plain
+    # HD-reference pixel values throughout, exactly the shape those are
+    # for (no fixed-pixel grid content fighting the auto-scale, unlike
+    # PlayerSelectorWidget). "titel" (the "Manager status: STARTED/STOPPED"
+    # label) sits in the header's top-right corner with zPosition="2" so
+    # it paints above the header's own much-wider Title label background -
+    # same convention as iptvplayerwidget.py/iptvfavouriteswidgets.py/
+    # playerselector.py's own headers.
+    def __prepareSkin(self):
+        iconBase = skinchrome.getIconBase()
+        return """
+        <screen name="IPTVDMWidget" position="center,center" title="%s" size="1180,696" resolution="1280,720" flags="wfNoBorder">
+            %s
+            <widget name="titel" position="800,10" size="370,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="2" font="Regular;24" valign="center" />
             <widget source="downloadlist" render="Listbox" position="10,66" zPosition="2" size="1160,560" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" shadowColor="black" shadowOffset="-2,-2" enableWrapAround="1">
                 <convert type="TemplatedMultiContent">
                 {"template": [
@@ -89,24 +86,32 @@ class IPTVDMWidget(Screen):
                 }
                 </convert>
              </widget>
-           <widget name="titel" position="800,10" size="370,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
-        </screen>""" % (_("%s download manager") % "E2iPlayer")
-
-    if fullHD:
-        skin = skin.replace("/HD/", "/FHD/")
+            %s
+        </screen>""" % (
+            _("%s download manager") % "E2iPlayer",
+            skinchrome.build_header_auto(iconBase=iconBase),
+            # RED (Stop) + GREEN (Start) merged into one alternating
+            # GREEN toggle, YELLOW (Archive) + BLUE (Downloads) merged
+            # into one alternating YELLOW toggle - see
+            # green_pressed()/yellow_pressed() below. RED/BLUE are free.
+            skinchrome.build_footer_auto(696, iconBase=iconBase, keys=('green', 'yellow'), showNav=False),
+        )
 
     def __init__(self, session, downloadmanager):
         self.session = session
+        self.skin = self.__prepareSkin()
         Screen.__init__(self, session, mandatoryWidgets=["downloadlist"])
-        self.skinName = ["IPTVDMScreen", "IPTVDMWidget"]
+        self.skinName = skinchrome.forceInternalSkinName(["IPTVDMScreen", "IPTVDMWidget"])
 
         self.currentService = self.session.nav.getCurrentlyPlayingServiceReference()
         self.session.nav.event.append(self.__event)
 
-        self["key_red"] = StaticText(_("Stop"))
+        # key_green's real initial text comes from setManagerStatus() below
+        # (reads self.DM.isRunning()); key_yellow starts as "Archive" -
+        # self.localMode always starts False, matching _updateYellowLabel()'s
+        # own condition, see green_pressed()/yellow_pressed() for the toggle.
         self["key_green"] = StaticText(_("Start"))
         self["key_yellow"] = StaticText(_("Archive"))
-        self["key_blue"] = StaticText(_("Downloads"))
 
         self["downloadlist"] = List()
         # self["list"] = IPTVDownloadManagerList()
@@ -115,10 +120,8 @@ class IPTVDMWidget(Screen):
         {
             "ok": self.ok_pressed,
             "back": self.back_pressed,
-            "red": self.red_pressed,
             "green": self.green_pressed,
             "yellow": self.yellow_pressed,
-            "blue": self.blue_pressed,
 
         }, -1)
 
@@ -383,10 +386,16 @@ class IPTVDMWidget(Screen):
 
     def setManagerStatus(self):
         status = _("Manager status:") + " "
+        # key_green's label mirrors the same isRunning() check this
+        # already makes for the title - describes the action pressing it
+        # performs, same "what will happen" convention as e.g.
+        # ConfigHostsMenu's reordering toggle.
         if self.DM.isRunning():
             self["titel"].setText(status + _("STARTED"))
+            self["key_green"].setText(_("Stop"))
         else:
             self["titel"].setText(status + _("STOPPED"))
+            self["key_green"].setText(_("Start"))
 
     def onListChanged(self):
         global gIPTVDM_listChanged
@@ -424,39 +433,43 @@ class IPTVDMWidget(Screen):
         except Exception:
             printExc()
 
-    def red_pressed(self):
-        self.DM.stopWorkThread()
+    def green_pressed(self):
+        # RED (Stop) + GREEN (Start) merged into one alternating toggle
+        # on GREEN, RED freed up entirely.
+        if self.DM.isRunning():
+            self.DM.stopWorkThread()
+        else:
+            self.DM.runWorkThread()
         self.setManagerStatus()
         return
 
-    def green_pressed(self):
-        self.DM.runWorkThread()
-        self.setManagerStatus()
-        return
+    def _updateYellowLabel(self):
+        self["key_yellow"].setText(_("Downloads") if self.localMode else _("Archive"))
 
     def yellow_pressed(self):
+        # YELLOW (Archive, switch into local/archive browsing) + BLUE
+        # (Downloads, switch back) merged into one alternating toggle on
+        # YELLOW, BLUE freed up entirely. Label shows exactly the target
+        # view's name, picked at runtime instead of being two separate
+        # fixed labels.
         if self.iptvclosing:
             return
-        if not self.underRefreshing:
-            self.underRefreshing = True
-            self.tmpList = []
-            self.tmpData = ''
-            cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", config.plugins.iptvplayer.NaszaSciezka.value)
-            printDBG("cmd[%s]" % cmd)
-            if hasattr(self.console, "setNice"):
-                self.console.setNice(GetNice() + 2)
-                self.console.execute(cmd)
-            else:
-                self.console.execute(E2PrioFix(cmd))
-
-        self.localMode = True
-        self.reloadList(True)
-        return
-
-    def blue_pressed(self):
-        if self.iptvclosing:
-            return
-        self.localMode = False
+        if not self.localMode:
+            if not self.underRefreshing:
+                self.underRefreshing = True
+                self.tmpList = []
+                self.tmpData = ''
+                cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", config.plugins.iptvplayer.NaszaSciezka.value)
+                printDBG("cmd[%s]" % cmd)
+                if hasattr(self.console, "setNice"):
+                    self.console.setNice(GetNice() + 2)
+                    self.console.execute(cmd)
+                else:
+                    self.console.execute(E2PrioFix(cmd))
+            self.localMode = True
+        else:
+            self.localMode = False
+        self._updateYellowLabel()
         self.reloadList(True)
         return
 
@@ -513,11 +526,39 @@ class IPTVDMWidget(Screen):
                 options.extend(retry)
                 options.extend(remove)
 
-            self.session.openWithCallback(self.makeActionOnDownloadItem, ChoiceBox, title=_("Select action"), list=options)
+            # chrome-skinned IPTVChoiceBoxWidget. The tuple-building above
+            # is untouched; only converted right before opening, into
+            # IPTVChoiceBoxItem(privateData=(action, player)) - `player`
+            # is None for every option except the 2 "play" ones, same
+            # optional-3rd-tuple-element shape as before, just addressed
+            # as privateData[0]/[1] now instead of ret[1]/ret[2].
+            choiceItems = [IPTVChoiceBoxItem(name=opt[0], privateData=(opt[1], opt[2] if len(opt) > 2 else None)) for opt in options]
+            height = self._getActionListHeight(len(choiceItems))
+            # list_class=IPTVDMActionChoiceBoxList shows the matching
+            # icon per row instead of plain text, same pattern as the
+            # "Select action" popup in iptvplayerwidget.py already uses.
+            openChoiceBox(self.session, {'width': 600, 'height': height, 'current_idx': 0, 'title': _("Select action"), 'options': choiceItems, 'list_class': IPTVDMActionChoiceBoxList, 'chrome': True}, self.makeActionOnDownloadItem)
 
         return
 
+    def _getActionListHeight(self, numItems):
+        # same tier-aware height+cap formula as every other IPTVChoiceBoxWidget
+        # caller in this codebase (e.g. configbase.py's _getSelectionListHeight()) -
+        # floored at 2 since numItems=1 renders an unusably small list at
+        # FHD/WQHD, smaller than a single real row.
+        numItems = max(numItems, 2)
+        itemH, scale = skinchrome.tierRowHeight(35, 40, 55)
+        height = int(numItems * itemH / scale) + 176
+        return min(height, 660)
+
     def makeActionOnDownloadItem(self, ret):
+        # ret is an IPTVChoiceBoxItem - adapted back into the plain
+        # (label, action, player) tuple shape the rest of this method
+        # expects, instead of touching every ret[1]/ret[2] reference below
+        # (this method doesn't read ret[0]/the label at all, so a
+        # placeholder there is fine).
+        if ret is not None:
+            ret = (None, ret.privateData[0], ret.privateData[1])
         item = self.getSelItem()
         if None is not ret and None is not item:
             playFileName = self._getExistingFilePath(item.fileName)
@@ -775,43 +816,131 @@ class IPTVDMWidget(Screen):
 
 
 class IPTVDMNotificationWidget(Screen):
+    # flags="wfNoBorder", same as every other chrome screen in this
+    # branch, plus a chrome header via skinchrome.build_header_auto().
+    #
+    # Width is computed fresh per call (__prepareSkin(text), driven by
+    # IPTVDMNotification.showNotify() below rebuilding this dialog from
+    # scratch every time instead of reusing one persistent instance) so
+    # the window tracks how long the download text actually is, instead
+    # of a fixed width. True per-pixel font measurement
+    # (Tools.TextBoundary.getTextBoundarySize) needs an already-existing
+    # widget instance to measure against, which doesn't exist yet at the
+    # point a brand new dialog's skin has to be built - so this uses a
+    # simple chars-times-average-glyph-width estimate instead (generous
+    # padding, capped at 1200), same class of heuristic
+    # IPTVMultipleInputBox's own maxWidth already uses elsewhere in this
+    # file's neighborhood, not exact font metrics.
+    #
+    # status ("FERTIG"/"ABGEBROCHEN"/...) gets its own line below the
+    # filename text rather than being appended to it on one line - both
+    # lines colored per outcome (statusColor, chosen by the caller -
+    # iptvdmapi.py's updateDownloadedItemStatus()), filename line
+    # centered and Regular weight, status line Bold, so the whole
+    # notification reads as one colored unit per outcome.
+    # neither label below sets noWrap, so Enigma2's default Label behavior
+    # wraps text that doesn't fit its box onto a second line - fine
+    # normally, but these boxes are a fixed single-line height, so a
+    # wrapped line would just overflow into (or past) the line below it.
+    # Truncating to whatever the capped MAX_WIDTH can show on one line
+    # guarantees it never has to wrap, independent of whatever the caller
+    # already truncated to (iptvdmapi.py caps at 100 chars, close to but
+    # not guaranteed under this limit once combined with a long status
+    # word). Used by both __prepareSkin() (sizing) and __init__() (the
+    # actual Label text) so the two can never disagree on what fits.
+    MAX_WIDTH = 1200
+    MAX_CHARS = (MAX_WIDTH - 40) // 11
 
-    skin = """<screen name="IPTVDMNotificationWidget" position="e-350,60" resolution="1280,720" zPosition="10" size="350,60" title="E2iPlayer downloader" backgroundColor="#34111112" >
-            <widget name="message_label" font="Regular;20" position="0,0" zPosition="2" valign="center" halign="center" size="350,60" foregroundColor="green" backgroundColor="#34111112" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" transparent="1" />
-        </screen>"""
+    @staticmethod
+    def __fitOneLine(s):
+        if len(s) > IPTVDMNotificationWidget.MAX_CHARS:
+            return s[:IPTVDMNotificationWidget.MAX_CHARS - 3] + '...'
+        return s
 
-    def __init__(self, session):
+    def __prepareSkin(self, text, status, statusColor):
+        iconBase = skinchrome.getIconBase()
+        headerMinWidth = 420  # same minimum build_header() needs for logo+title, see its own comment
+        longer = max(len(text), len(status))
+        textWidth = int(longer * 11) + 40  # ~11px/glyph at Regular;20, plus 20px padding each side
+        width = max(headerMinWidth, min(textWidth, self.MAX_WIDTH))
+        return """<screen name="IPTVDMNotificationWidget" position="e-%d,60" resolution="1280,720" zPosition="10" size="%d,140" title="%s" backgroundColor="#34111112" flags="wfNoBorder">
+            %s
+            <widget name="message_label" font="Regular;20" position="20,68" zPosition="2" valign="center" halign="center" size="%d,32" foregroundColor="%s" backgroundColor="#34111112" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" transparent="1" />
+            <widget name="status_label" font="Bold;18" position="20,102" zPosition="2" valign="center" halign="center" size="%d,28" foregroundColor="%s" backgroundColor="#34111112" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" transparent="1" />
+        </screen>""" % (
+            width + 20, width, _("E2iPlayer downloader"),
+            skinchrome.build_header_auto(iconBase=iconBase),
+            width - 40, statusColor,
+            width - 40, statusColor,
+        )
+
+    def __init__(self, session, text="", status="", statusColor="white"):
+        text = self.__fitOneLine(text)
+        status = self.__fitOneLine(status)
+        self.skin = self.__prepareSkin(text, status, statusColor)
         Screen.__init__(self, session)
         self.setTitle(_("E2iPlayer downloader"))
-        self.skin = IPTVDMNotificationWidget.skin
-        self.skinName = ["IPTVDMNotificationScreen", "IPTVDMNotificationWidget"]
-        self['message_label'] = Label()
+        self.skinName = skinchrome.forceInternalSkinName(["IPTVDMNotificationScreen", "IPTVDMNotificationWidget"])
+        self['message_label'] = Label(text)
+        self['status_label'] = Label(status)
 
-    def setText(self, text):
-        self['message_label'].setText(text)
+    def setText(self, text, status=""):
+        self['message_label'].setText(self.__fitOneLine(text))
+        self['status_label'].setText(self.__fitOneLine(status))
 
 
 class IPTVDMNotification():
+    # Does NOT keep one persistent dialog instance reused across every
+    # showNotify() call - the window needs a different width per call
+    # (see IPTVDMNotificationWidget's own comment above), and Enigma2
+    # skins are only ever parsed once at construction (the header's own
+    # "e"-relative sizes wouldn't follow a live resize of an already-built
+    # dialog). Each notification instead closes whatever notification is
+    # still open (deleteDialog(), same counterpart instantiateDialog()
+    # itself expects) and builds a brand new one sized for the new text.
+    #
+    # Notifications are queued rather than immediately replacing whatever
+    # is currently showing - several downloads finishing close together
+    # would otherwise stomp each other's notification before anyone saw
+    # it. A new showNotify() while one is already showing just appends;
+    # the timer's own completion advances to the next queued text instead
+    # of closing for good, so every completion gets its own full time on
+    # screen.
     def __init__(self):
+        self.session = None
         self.dialog = None
+        self.queue = []
         self.mainTimer = eTimer()
-        self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self.notifyHide)
+        self.mainTimer_conn = eConnectCallback(self.mainTimer.timeout, self._advance)
 
     def dialogInit(self, session):
         printDBG("> IPTVDMNotification.dialogInit")
-        self.dialog = session.instantiateDialog(IPTVDMNotificationWidget)
+        self.session = session
 
     def notifyHide(self):
-        if self.dialog:
-            self.dialog.setText("")
-            self.dialog.hide()
+        self.queue = []
+        self._advance()
 
-    def showNotify(self, text):
+    def _advance(self):
         if self.dialog:
-            printDBG("> IPTVDMNotification.showNotify[%s]" % text)
-            self.dialog.setText(text)
-            self.dialog.show()
-            self.mainTimer.start(5000, 1)
+            self.session.deleteDialog(self.dialog)
+            self.dialog = None
+        if not self.queue:
+            return
+        text, status, statusColor = self.queue.pop(0)
+        printDBG("> IPTVDMNotification._advance[%s][%s]" % (text, status))
+        self.dialog = self.session.instantiateDialog(IPTVDMNotificationWidget, text, status, statusColor)
+        self.dialog.show()
+        duration = int(config.plugins.iptvplayer.IPTVDMNotificationDuration.value) * 1000
+        self.mainTimer.start(duration, 1)
+
+    def showNotify(self, text, status="", statusColor="white"):
+        if self.session is None or not config.plugins.iptvplayer.IPTVDMShowNotification.value:
+            return
+        printDBG("> IPTVDMNotification.showNotify[%s][%s]" % (text, status))
+        self.queue.append((text, status, statusColor))
+        if self.dialog is None:
+            self._advance()
 
 
 gIPTVDMNotification = IPTVDMNotification()

@@ -12,14 +12,15 @@ from enigma import gRGB
 
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
-from Screens.ChoiceBox import ChoiceBox
 from Components.config import config
 from Components.ActionMap import ActionMap
 from Components.Label import Label
-from Components.MenuList import MenuList
+from Components.Sources.StaticText import StaticText
 
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Tools.NumericalTextInput import NumericalTextInput
+from Tools.LoadPixmap import LoadPixmap
 
 try:
     text_type = unicode
@@ -140,30 +141,72 @@ def writeHistoryFile(path, entries, reverseForWrite=False):
 
 
 class SearchHistoryEditor(Screen):
-
-    skin = """
-    <screen name="SearchHistoryEditor" position="center,center" size="1200,700" title="Search History">
-        <widget name="status" position="20,18" size="1160,30" font="Regular;24" halign="left" valign="center" transparent="1" />
-        <widget name="list" position="20,58" size="1160,587" font="Regular;32" itemHeight="44" scrollbarMode="showOnDemand" transparent="1" />
-
-        <eLabel position="20,662" size="18,18" backgroundColor="#00f23d21" />
-        <widget name="key_red" position="45,655" size="210,30" font="Regular;24" halign="left" valign="center" transparent="1" />
-
-        <eLabel position="252,662" size="18,18" backgroundColor="#0031a500" />
-        <widget name="key_green" position="277,655" size="210,30" font="Regular;24" halign="left" valign="center" transparent="1" />
-
-        <eLabel position="484,662" size="18,18" backgroundColor="#00e5b243" />
-        <widget name="key_yellow" position="509,655" size="210,30" font="Regular;24" halign="left" valign="center" transparent="1" />
-
-        <eLabel position="716,662" size="18,18" backgroundColor="#000064c7" />
-        <widget name="key_blue" position="741,655" size="210,30" font="Regular;24" halign="left" valign="center" transparent="1" />
-
-        <widget name="key_menu" position="948,655" size="235,30" font="Regular;24" halign="left" valign="center" transparent="1" />
-    </screen>
-    """
+    # Uses `skinchrome`'s `resolution="1280,720"` auto-scale
+    # `build_header_auto()`/`build_footer_auto()`-shaped approach, same as
+    # `IPTVFavouritesMainWidget`/`YouTubeUserLinksEditorScreen` (plain
+    # `MenuList`, no fixed-pixel grid/marker content fighting auto-scale).
+    #
+    # Footer uses `build_footer()` directly (not `build_footer_auto()`)
+    # with `showMenu=True` - the auto variant hardcodes `showMenu=False`
+    # since none of ITS callers ever bind a live MENU action, but this
+    # screen does (`keyMenu()`'s options popup) - same reasoning
+    # `iptvplayerwidget.py` already documents for its own identical
+    # choice. MENU only ever shows an icon in this chrome (the word is
+    # baked into `menu.png` itself), no adjacent text label the way color
+    # keys get one - `self.IDS_MENU_OPTIONS`/`self.IDS_DISABLE_REORDERING`
+    # still get pushed into `key_menu`'s source (keeps `key_menu`
+    # non-empty so `ConditionalShowHide` keeps the icon visible in both
+    # states), their actual text just no longer renders anywhere.
+    #
+    # OK now shows an icon too (`build_footer()`'s own default) - this
+    # was never hinted on screen before despite already being live and
+    # doing the exact same thing as BLUE (`'ok': self.keyRename` and
+    # `'blue': self.keyRename` were already the same handler), so this
+    # is a correctness fix, not just chrome parity.
+    #
+    # `self['list']` uses `IPTVMainNavigatorList` (`iptvlist.py`, not a
+    # plain `Components.MenuList.MenuList`) - the same icon+text list
+    # component `IPTVFavouritesMainWidget`/the sub-downloader/the main
+    # navigator itself all share, so this picks up both the icon (via
+    # `CDisplayListItem(type=TYPE_SEARCH_HISTORY)`, its own existing
+    # `ICONS_FILESNAMES` mapping) and that component's smaller, tier-
+    # aware font/row height for free, instead of hand-tuning either. The
+    # skin's own `itemHeight`/`font` on the `list` widget are superseded
+    # by this component's Python-side `self.l.setItemHeight()`/
+    # `setFont()` (same as `IPTVFavouritesMainWidget`'s own skin, which
+    # keeps a close-but-inexact approximation there too) - left set to a
+    # reasonable value rather than removed, for a reader glancing at the
+    # skin string alone.
+    def __prepareSkin(self):
+        iconBase = skinchrome.getIconBase()
+        HEIGHT = 700
+        clockPart = """<widget source="global.CurrentTime" render="Label" position="960,10" size="150,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="2" font="Regular;24" valign="center" halign="right">
+                <convert type="ClockToText">Format:%H:%M</convert>
+            </widget>
+            <widget source="global.CurrentTime" render="Label" position="720,20" size="300,24" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="2" font="Regular;16" valign="center" halign="right">
+                <convert type="ClockToText">Date</convert>
+            </widget>""" if config.plugins.iptvplayer.show_header_clock.value else ""
+        return """
+        <screen name="SearchHistoryEditor" position="center,center" size="1200,%d" resolution="1280,720" title="Search History" backgroundColor="#34111112" flags="wfNoBorder">
+            %s
+            <widget name="status" position="20,68" size="1160,30" font="Regular;24" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" zPosition="1" transparent="1" />
+            <widget name="list" position="20,108" size="1160,518" itemHeight="36" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" transparent="1" />
+            %s
+            %s
+        </screen>
+        """ % (
+            HEIGHT,
+            skinchrome.build_header_auto(iconBase=iconBase),
+            clockPart,
+            skinchrome.build_footer(HEIGHT, scale=1.0, iconBase=iconBase, keys=('red', 'green', 'yellow', 'blue'), showMenu=True, showNav=False),
+        )
 
     def __init__(self, session, historyFile, reverseForDisplay=True, reverseForWrite=True):
+        self.session = session
+        self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
+        # explicit name so an external skin can target this screen
+        self.skinName = skinchrome.forceInternalSkinName(["SearchHistoryEditor"])
 
         self.historyFile = toUnicode(historyFile)
         self.reverseForDisplay = bool(reverseForDisplay)
@@ -186,16 +229,31 @@ class SearchHistoryEditor(Screen):
         printDBG('SearchHistoryEditor init file=%s' % self.historyFile)
 
         self['status'] = Label('')
-        self['key_red'] = Label('')
-        self['key_green'] = Label('')
-        self['key_yellow'] = Label('')
-        self['key_blue'] = Label('')
-        self['key_menu'] = Label('')
-        self['list'] = MenuList([], enableWrapAround=True)
+        self['key_red'] = StaticText('')
+        self['key_green'] = StaticText('')
+        self['key_yellow'] = StaticText('')
+        self['key_blue'] = StaticText('')
+        self['key_menu'] = StaticText('')
+        # shared icon+text list component every other main-navigation-
+        # style list uses (favourites, sub-downloader, ...), so each row
+        # shows the same "SearchHistoryItem.png" icon E2iPlayerWidget's
+        # own search-history category list already uses, and picks up
+        # that component's smaller, tier-aware font/row height for free
+        # (import kept local - IPTVMainNavigatorList lives in iptvlist.py,
+        # which imports ihost.py, which imports THIS module at load time;
+        # a module-level import here would be the exact same circular
+        # import iptvchoicebox.py's own local-import fix in keyMenu()
+        # already had to work around).
+        from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
+        self['list'] = IPTVMainNavigatorList()
 
         self.setTitle(guiSafeStr(_(u'Edit search history')))
         self.safeSetText(self['key_red'], _(u'Delete'))
-        self.safeSetText(self['key_green'], _(u'Sort'))
+        # GREEN toggles manual reordering directly; A-Z/Z-A/reset live in
+        # the MENU popup instead. Its label follows the same enable/
+        # disable pair MENU's own reordering entry uses - kept in sync by
+        # keyStartManualSort()/keyStopManualSort() below
+        self.safeSetText(self['key_green'], self.IDS_ENABLE_REORDERING)
         self.safeSetText(self['key_yellow'], _(u'Save'))
         self.safeSetText(self['key_blue'], _(u'Rename'))
         self.safeSetText(self['key_menu'], self.IDS_MENU_OPTIONS)
@@ -205,7 +263,7 @@ class SearchHistoryEditor(Screen):
             'back': self.keyExit,
             'cancel': self.keyExit,
             'red': self.keyDelete,
-            'green': self.keyToggleSort,
+            'green': self.keyToggleManualSort,
             'yellow': self.keySave,
             'blue': self.keyRename,
             'up': self.keyUp,
@@ -223,21 +281,32 @@ class SearchHistoryEditor(Screen):
             'end': self.keyIgnoreListboxNav,
             'pageUp': self.keyIgnoreListboxNav,
             'pageDown': self.keyIgnoreListboxNav,
-            'menu': self.keyMenu,
+            # 'menu' moved to its own ActionMap below (see the comment
+            # there) - not bound here anymore
         }
         for digit in '123456789':
             actionsDict[digit] = self.makeNumberJump(digit)
 
-        # priority 0, not -1: the underlying E2iPlayerWidget also binds
-        # 'menu' in the 'IPTVPlayerListActions' context at priority -1 (see
-        # iptvplayerwidget.py) - matching that priority here would make it
-        # ambiguous which of the two receives the key while this screen is
-        # open on top of it
+        # Mirrors IPTVFavouritesMainWidget's own ActionMap context list
+        # and priority exactly: ["ColorActions", "WizardActions",
+        # "ListboxActions", "NumberActions"] at priority -2 - WizardActions
+        # alone already covers up/down/ok/back, so 'DirectionActions' is
+        # pure duplication and left out. 'IPTVPlayerListActions' (needed
+        # only for MENU) is deliberately NOT bundled into this same
+        # ActionMap - see the separate 'menuActions' ActionMap below for
+        # why.
         self['actions'] = ActionMap(
-            ['OkCancelActions', 'WizardActions', 'DirectionActions', 'ColorActions', 'NumberActions', 'IPTVPlayerListActions', 'ListboxActions'],
+            ['OkCancelActions', 'WizardActions', 'ColorActions', 'NumberActions', 'ListboxActions'],
             actionsDict,
-            0
+            -2
         )
+        # 'info' -> keyHelp() bound here too, not in the main actionsDict
+        # above - 'IPTVPlayerListActions' (this plugin's own keymap.xml)
+        # is where KEY_INFO/KEY_EPG/KEY_HELP actually map to 'info' for
+        # this whole app, and keeping it isolated to this already-
+        # separate MENU ActionMap avoids reintroducing that context into
+        # the main navigation ActionMap above.
+        self['menuActions'] = ActionMap(['IPTVPlayerListActions'], {'menu': self.keyMenu, 'info': self.keyHelp}, 0)
         self.onLayoutFinish.append(self.onStart)
 
     def makeNumberJump(self, digit):
@@ -250,7 +319,13 @@ class SearchHistoryEditor(Screen):
             printExc()
 
     def buildDisplayList(self):
-        return [guiSafeStr(entry.displayText()) for entry in self.entries]
+        # local import - see the matching comment on self['list'] in
+        # __init__ for why (circular import via ihost.py)
+        from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem
+        return [
+            (CDisplayListItem(name=guiSafeStr(entry.displayText()), type=CDisplayListItem.TYPE_SEARCH_HISTORY),)
+            for entry in self.entries
+        ]
 
     def setEntriesList(self, displayList, selectedIndex=None):
         self['list'].setList(displayList)
@@ -303,7 +378,10 @@ class SearchHistoryEditor(Screen):
             self.safeSetText(self['status'], _(u'Loading failed.'))
 
     def updateStatus(self):
-        modes = {0: u'unsorted', 1: u'A-Z', 2: u'Z-A', 3: u'manual'}
+        # every user-facing string in this file goes through _() for
+        # consistency, "A-Z"/"Z-A" included even though they're closer to
+        # notation than words that need translating.
+        modes = {0: _(u'unsorted'), 1: _(u'A-Z'), 2: _(u'Z-A'), 3: _(u'manual')}
         state = _(u'changed') if self.dirty else _(u'saved')
         reuseMode = _(u'to top') if self.reorderOnReuse else _(u'fixed')
         text = _(u'Entries: %d | Sort: %s | Status: %s | Jump target: %s') % (
@@ -313,7 +391,9 @@ class SearchHistoryEditor(Screen):
 
     def getCurrentIndex(self):
         try:
-            idx = self['list'].getSelectedIndex()
+            # IPTVMainNavigatorList (IPTVListComponentBase) exposes
+            # getCurrentIndex(), not MenuList's getSelectedIndex()
+            idx = self['list'].getCurrentIndex()
             if idx is None:
                 return None
             idx = int(idx)
@@ -350,26 +430,39 @@ class SearchHistoryEditor(Screen):
             printExc()
 
     def moveCursor(self, key):
-        # matches iptvfavouriteswidgets.py's moveItem(): always drive
-        # navigation through the native eListbox moveSelection() (not
-        # MenuList.up()/down()) - proven working for manual reordering on
-        # oATV8. Outside of carrying an item this just moves the cursor;
-        # while carrying, entries are swapped based on where the native
-        # cursor actually ends up (handles wraparound correctly).
+        # Outside of carrying an item this just moves the cursor via the
+        # native eListbox moveSelection().
+        #
+        # While carrying, this deliberately does NOT round-trip through
+        # the native cursor (unlike iptvfavouriteswidgets.py's moveItem(),
+        # which lets moveSelection() move the cursor and reads the new
+        # position back via getCurrentIndex()) - the target index is
+        # computed directly from the index already known (idx-1/idx+1,
+        # wrapped - matches enableWrapAround=True), entries are swapped,
+        # the list is rebuilt, and the cursor is force-set to that
+        # computed index.
         instance = self['list'].instance
         if instance is None:
             return
 
         if self.manualReorderMode and self.manualReorderItemPicked:
             idx = self.getCurrentIndex()
-            instance.moveSelection(key)
-            newIdx = self.getCurrentIndex()
-            printDBG('SearchHistoryEditor.moveCursor carrying idx=%s newIdx=%s' % (idx, newIdx))
-            if idx is None or newIdx is None or idx == newIdx:
+            if idx is None:
+                return
+            count = len(self.entries)
+            if key == instance.moveUp:
+                newIdx = idx - 1 if idx > 0 else count - 1
+            elif key == instance.moveDown:
+                newIdx = idx + 1 if idx < count - 1 else 0
+            else:
+                instance.moveSelection(key)
+                return
+            if newIdx == idx:
                 return
             self.entries[idx], self.entries[newIdx] = self.entries[newIdx], self.entries[idx]
             self.dirty = True
             self['list'].setList(self.buildDisplayList())
+            self['list'].moveToIndex(newIdx)
             self.showCarryingStatus(newIdx)
         else:
             instance.moveSelection(key)
@@ -379,6 +472,7 @@ class SearchHistoryEditor(Screen):
             instance = self['list'].instance
             if instance is None:
                 return
+            idx = self.getCurrentIndex()
             instance.setForegroundColorSelected(gRGB(0xFF0505) if active else gRGB(0xFFFFFF))
             # setForegroundColorSelected() alone doesn't force a repaint - the
             # new color only becomes visible on the next content rebuild, so
@@ -386,6 +480,12 @@ class SearchHistoryEditor(Screen):
             # rebuild (matches iptvfavouriteswidgets.py's _changeMode(),
             # which always calls displayList() right after the color change)
             self['list'].setList(self.buildDisplayList())
+            # same moveToIndex()-after-setList() pin as moveCursor() above -
+            # without it, picking an item up (keyManualPickOrDrop() calls
+            # this first) could itself reset the cursor away from the row
+            # just picked, before the first UP/DOWN carry-move even happens
+            if idx is not None:
+                self['list'].moveToIndex(idx)
         except Exception:
             printExc()
 
@@ -414,24 +514,37 @@ class SearchHistoryEditor(Screen):
         except Exception:
             printExc()
 
-    def keyToggleSort(self):
+    def keyResetSort(self):
+        # "reset to saved order" (mode 0 - reloads self.entries from
+        # disk, discarding any in-memory sort/reorder) - reachable from
+        # the MENU popup as its own explicit entry, alongside A-Z/Z-A;
+        # GREEN is a separate, dedicated manual-reordering toggle (see
+        # keyToggleManualSort()).
         if self.manualReorderMode:
             return
-        nextMode = {0: 1, 1: 2, 2: 0, 3: 1}.get(self.sortMode, 1)
-        if nextMode == 0 and self.dirty:
+        if self.dirty:
             self.session.openWithCallback(
-                self.keyToggleSortConfirmed,
+                self.keyResetSortConfirmed,
                 MessageBox,
                 guiSafeStr(_(u'Reverting to unsorted order will discard unsaved changes. Continue?')),
                 type=MessageBox.TYPE_YESNO,
                 default=False
             )
             return
-        self.applySortMode(nextMode)
+        self.applySortMode(0)
 
-    def keyToggleSortConfirmed(self, confirmed):
+    def keyResetSortConfirmed(self, confirmed):
         if confirmed:
             self.applySortMode(0)
+
+    def keyToggleManualSort(self):
+        # GREEN is a direct toggle for manual reordering - a faster
+        # shortcut for the same MENU -> "Enable/Disable reordering" entry
+        # (still there too, unchanged).
+        if self.manualReorderMode:
+            self.keyStopManualSort()
+        else:
+            self.keyStartManualSort()
 
     def applySortMode(self, mode):
         try:
@@ -490,6 +603,7 @@ class SearchHistoryEditor(Screen):
             self.sortMode = 3
             self.setEntriesList(self.buildDisplayList(), self.getCurrentIndex())
             self.safeSetText(self['key_menu'], self.IDS_DISABLE_REORDERING)
+            self.safeSetText(self['key_green'], self.IDS_DISABLE_REORDERING)
             self.updateStatus()
 
             self.notifyAfterSort(removed, fixedJumpTarget)
@@ -503,6 +617,7 @@ class SearchHistoryEditor(Screen):
         self.manualReorderItemPicked = False
         self.setCarryColor(False)
         self.safeSetText(self['key_menu'], self.IDS_MENU_OPTIONS)
+        self.safeSetText(self['key_green'], self.IDS_ENABLE_REORDERING)
         self.updateStatus()
 
     def keyManualPickOrDrop(self):
@@ -519,7 +634,101 @@ class SearchHistoryEditor(Screen):
             self.updateStatus()
         printDBG('SearchHistoryEditor.keyManualPickOrDrop pickedAfter=%s' % self.manualReorderItemPicked)
 
+    def _getMenuOptionsHeight(self, numItems):
+        # same tier-aware height+cap formula iptvfavouriteswidgets.py's own
+        # _getGroupPickerHeight()/configbase.py's _getSelectionListHeight()
+        # use - this popup's item count is fixed (4 or 5, depending on
+        # reorderOnReuse), but the per-tier row height still needs scaling
+        itemH, scale = skinchrome.tierRowHeight(35, 40, 55)
+        height = int(numItems * itemH / scale) + 176
+        return min(height, 660)
+
+    def _getHelpHeight(self, numItems):
+        # same formula iptvplayerwidget.py's own _getOptionsPickerHeight()
+        # uses for its keyHelp() (itemH 44/62/83 - E2iVKOptionsList's real
+        # per-tier row height, not _getMenuOptionsHeight()'s plain
+        # IPTVChoiceBoxItem row height above) - capped at 660 like every
+        # other picker height in this file, since this list has enough
+        # rows (button hints + menu explanations) to otherwise overflow
+        # a 720-tall HD screen; the list scrolls on its own past that.
+        itemH, scale = skinchrome.tierRowHeight(44, 62, 83)
+        height = int(numItems * itemH / scale) + 176
+        return min(height, 660)
+
+    def keyHelp(self):
+        # same read-only icon+explanation list pattern as e2ivk.py's/
+        # iptvplayerwidget.py's own keyHelp(), reusing their shared
+        # GetKeyHelpItem()/_keyHelpLabels() (via GetKeyHelpItem, which
+        # calls it internally) so button names aren't retranslated here.
+        # Imports kept local - e2ivk.py imports iptvlist.py at module
+        # level, which imports ihost.py, which imports THIS module - the
+        # same circular import every other local import in this file
+        # already works around.
+        #
+        # The MENU's own functions get explained in detail too, not just
+        # what each physical button does - especially the jump-target
+        # fix/unfix toggle, which isn't self-explanatory from its short
+        # menu label alone. Those get their own rows below the button
+        # hints, sharing the MENU icon instead of a per-button one, so
+        # they read as a visually distinct group.
+        from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget
+        from Plugins.Extensions.IPTVPlayer.components.e2ivk import E2iVKOptionsList, GetKeyHelpItem, GetVKOptionItem
+        iconBase = skinchrome.getIconBase()
+
+        def icon(name):
+            return LoadPixmap(iconBase + '/%s.png' % name)
+
+        menuIcon = icon('menu')
+        # E2iVKOptionsList.buildEntry() (e2ivk.py) renders each row as a
+        # single TYPE_TEXT entry with no wrap flag at all, fixed one-line
+        # itemHeight - true for every keyHelp() screen in the app, so
+        # every description below is kept short enough to comfortably fit
+        # one line at the popup's width. The jump-target explanation is
+        # split across 4 short rows instead of one long paragraph for the
+        # same reason - still covers what/unfixed/fixed/auto-fix in full,
+        # just as separate sentences rather than a wall of text in a
+        # widget that can't wrap it.
+        options = [
+            GetKeyHelpItem('ok', "edit the selected entry (same as BLUE) - or drop it while manually reordering", icon('ok')),
+            GetKeyHelpItem('exit', "close the editor - or stop manual reordering if it's active", icon('exit')),
+            GetKeyHelpItem('red', "delete the selected entry", icon('red')),
+            GetKeyHelpItem('green', "enable / disable manual reordering", icon('green')),
+            GetKeyHelpItem('yellow', "save all changes to disk", icon('yellow')),
+            GetKeyHelpItem('blue', "edit the selected entry (same as OK)", icon('blue')),
+            GetKeyHelpItem('menu', "open the options menu - see below", icon('menu')),
+            GetKeyHelpItem('info', "show this help", icon('info')),
+            GetKeyHelpItem('num', "jump to entries starting with that letter (if enabled in the settings)", icon('key_0-9')),
+            GetKeyHelpItem('updown', "move the selection - or move it while manually reordering", icon('key_updown')),
+            GetVKOptionItem(_(u"MENU → Add new entry: type a new search term to add to the history."), None, menuIcon),
+            GetVKOptionItem(_(u"MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."), None, menuIcon),
+            GetVKOptionItem(_(u"MENU → Reset to saved order: undo unsaved changes, reload from disk."), None, menuIcon),
+            GetVKOptionItem(_(u"MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."), None, menuIcon),
+            GetVKOptionItem(_(u"MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."), None, menuIcon),
+            GetVKOptionItem(_(u"  • Unfixed (default): the entry jumps back to the top of the list."), None, menuIcon),
+            GetVKOptionItem(_(u"  • Fixed: order never changes - useful for browsing by letter jump (0-9)."), None, menuIcon),
+            GetVKOptionItem(_(u"  • Sorting or reordering fixes this automatically, so your order stays."), None, menuIcon),
+        ]
+        height = self._getHelpHeight(len(options))
+        self.session.open(IPTVChoiceBoxWidget, {'width': 1200, 'height': height, 'current_idx': 0, 'title': _(u'Help'), 'options': options, 'list_class': E2iVKOptionsList, 'selectable': False, 'chrome': True})
+
     def keyMenu(self):
+        # chrome-skinned IPTVChoiceBoxWidget popup, same
+        # IPTVChoiceBoxItem(name=, privateData=)/retArg.privateData shape
+        # as iptvfavouriteswidgets.py's "Select favorite group" popup.
+        #
+        # Import kept local: a module-level import here would create a
+        # real circular import - ihost.py imports SearchHistoryEditor at
+        # module level (its "TYPE_SEARCH_HISTORY_EDITOR" menu action), and
+        # ihost.py is itself imported by iptvlist.py before iptvlist.py
+        # finishes defining IPTVRadioButtonList - so a module-level `from
+        # iptvchoicebox import ...` here (iptvchoicebox.py itself imports
+        # IPTVRadioButtonList from iptvlist.py) would try to read that
+        # name off iptvlist while it's still mid-import.
+        # iptvfavouriteswidgets.py imports iptvchoicebox at module level
+        # fine since nothing in THAT early chain ever imports
+        # iptvfavouriteswidgets.py - this file's own case is different
+        # because ihost.py imports it directly.
+        from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
         printDBG('SearchHistoryEditor.keyMenu manualReorderMode=%s' % self.manualReorderMode)
         try:
             if self.manualReorderMode:
@@ -527,31 +736,39 @@ class SearchHistoryEditor(Screen):
                 return
 
             options = [
-                (guiSafeStr(_(u'Add new entry')), 'ADD_NEW'),
-                (guiSafeStr(_(u'Sort A-Z')), 'SORT_AZ'),
-                (guiSafeStr(_(u'Sort Z-A')), 'SORT_ZA'),
-                (guiSafeStr(self.IDS_ENABLE_REORDERING), 'SORT_MANUAL'),
+                IPTVChoiceBoxItem(name=_(u'Add new entry'), privateData='ADD_NEW'),
+                IPTVChoiceBoxItem(name=_(u'Sort A-Z'), privateData='SORT_AZ'),
+                IPTVChoiceBoxItem(name=_(u'Sort Z-A'), privateData='SORT_ZA'),
+                IPTVChoiceBoxItem(name=_(u'Reset to saved order'), privateData='RESET_SORT'),
+                IPTVChoiceBoxItem(name=self.IDS_ENABLE_REORDERING, privateData='SORT_MANUAL'),
             ]
             if self.reorderOnReuse:
-                options.append((guiSafeStr(_(u'Fix jump target')), 'TOGGLE_REORDER'))
+                options.append(IPTVChoiceBoxItem(name=_(u'Fix jump target'), privateData='TOGGLE_REORDER'))
             else:
-                options.append((guiSafeStr(_(u'Unfix jump target')), 'TOGGLE_REORDER'))
+                options.append(IPTVChoiceBoxItem(name=_(u'Unfix jump target'), privateData='TOGGLE_REORDER'))
 
-            self.session.openWithCallback(self.menuCallback, ChoiceBox, title=guiSafeStr(_(u'Search history - options')), list=options)
+            height = self._getMenuOptionsHeight(len(options))
+            openChoiceBox(
+                self.session,
+                {'width': 600, 'height': height, 'current_idx': 0, 'title': _(u'Search history - options'), 'options': options, 'chrome': True},
+                self.menuCallback
+            )
         except Exception:
             printExc()
 
-    def menuCallback(self, ret):
-        printDBG('SearchHistoryEditor.menuCallback ret=%r' % (ret,))
-        if not ret:
+    def menuCallback(self, retArg):
+        printDBG('SearchHistoryEditor.menuCallback retArg=%r' % (retArg,))
+        if retArg is None:
             return
-        action = ret[1]
+        action = retArg.privateData
         if action == 'ADD_NEW':
             self.keyAddNew()
         elif action == 'SORT_AZ':
             self.applySortMode(1)
         elif action == 'SORT_ZA':
             self.applySortMode(2)
+        elif action == 'RESET_SORT':
+            self.keyResetSort()
         elif action == 'SORT_MANUAL':
             self.keyStartManualSort()
         elif action == 'TOGGLE_REORDER':

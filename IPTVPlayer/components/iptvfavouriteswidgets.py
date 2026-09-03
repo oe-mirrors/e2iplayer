@@ -11,18 +11,21 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem
 from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMultipleInputBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
+from Plugins.Extensions.IPTVPlayer.components.cover import Cover
+from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
 ###################################################
 
 ###################################################
 # FOREIGN import
 ###################################################
-from enigma import getDesktop, gRGB
+from enigma import gRGB
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
-from Screens.ChoiceBox import ChoiceBox
 from Components.config import config
 from Components.Label import Label
 from Components.ActionMap import ActionMap
+from Components.Sources.StaticText import StaticText
 from Tools.NumericalTextInput import NumericalTextInput
 ###################################################
 
@@ -112,22 +115,42 @@ class IPTVFavouritesAddItemWidget(Screen):
         for item in groups:
             if item['group_id'] in self.ignoredGroups:
                 continue
-            options.append((item['title'], item['group_id']))
+            options.append(IPTVChoiceBoxItem(name=item['title'], privateData=item['group_id']))
         if self.canAddNewGroup:
-            options.append((_("Add new group of favorites"), None))
+            options.append(IPTVChoiceBoxItem(name=_("Add new group of favorites"), privateData=None))
         if len(options):
-            self.session.openWithCallback(self.addFavouriteToGroup, ChoiceBox, title=_("Select favorite group"), list=options)
+            height = self._getGroupPickerHeight(len(options))
+            openChoiceBox(self.session, {'width': 600, 'height': height, 'current_idx': 0, 'title': _("Select favorite group"), 'options': options, 'chrome': True}, self.addFavouriteToGroup)
         else:
             self.session.openWithCallback(self.iptvDoFinish, MessageBox, _("There are no other favorite groups"), type=MessageBox.TYPE_INFO, timeout=10)
 
+    def _getGroupPickerHeight(self, numItems):
+        # same tier-aware height+cap formula ConfigBaseWidget's own
+        # _getSelectionListHeight() (configbase.py) uses - a "pick a
+        # favorites group" list is anywhere from 1 to a dozen+ groups, no
+        # single fixed height fits both; capped at 660 (chrome's own
+        # 720-tall reference canvas convention) so it scrolls
+        # (scrollbarMode="showAlways" already on the list) instead of
+        # growing the popup past the screen edge
+        #
+        # Floored at 2 - same "empty window" issue ConfigBaseWidget's own
+        # _getSelectionListHeight() guards against: with numItems=1
+        # (exactly one other group, canAddNewGroup False) the computed
+        # list area is smaller than one real item row at FHD/WQHD, so the
+        # single row can't render at all.
+        numItems = max(numItems, 2)
+        itemH, scale = skinchrome.tierRowHeight(35, 40, 55)
+        height = int(numItems * itemH / scale) + 176
+        return min(height, 660)
+
     def addFavouriteToGroup(self, retArg):
-        if retArg and 2 == len(retArg):
-            if None is not retArg[1]:
-                sts = self.favourites.loadGroupItems(retArg[1], force=False)
+        if retArg is not None:
+            if None is not retArg.privateData:
+                sts = self.favourites.loadGroupItems(retArg.privateData, force=False)
                 if sts:
-                    sts = self.favourites.addGroupItem(self.favItem, retArg[1])
+                    sts = self.favourites.addGroupItem(self.favItem, retArg.privateData)
                 if sts:
-                    sts = self.favourites.saveGroupItems(retArg[1])
+                    sts = self.favourites.saveGroupItems(retArg.privateData)
                 if sts:
                     self.result = True
                     self.iptvDoFinish()
@@ -145,7 +168,13 @@ class IPTVFavouritesAddItemWidget(Screen):
             if self.saveLoad:
                 sts = self.favourites.save(True)
             if sts:
-                self.addFavouriteToGroup((group['title'], group['group_id']))
+                # addFavouriteToGroup() expects an IPTVChoiceBoxItem-like
+                # object (.privateData) since the group picker uses
+                # IPTVChoiceBoxWidget, not the native ChoiceBox's plain
+                # tuples - this call site (a brand-new group just created
+                # via the "Add new group of favorites" option, not a
+                # ChoiceBox selection) needs the same wrapping.
+                self.addFavouriteToGroup(IPTVChoiceBoxItem(name=group['title'], privateData=group['group_id']))
             else:
                 self.session.openWithCallback(self.iptvDoFinish, MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
         else:
@@ -156,133 +185,78 @@ class IPTVFavouritesAddItemWidget(Screen):
 
 
 class IPTVFavouritesMainWidget(Screen):
-    screenwidth = getDesktop(0).size().width()
-
-    if screenwidth >= 2560:
-        # WQHD 2560x1440 - FHD icons are scaled because no WQHD icon set exists.
-        skin = """
-        <screen name="IPTVFavouritesMainWidget" position="center,center" size="2240,1300" title="Favorites manager" backgroundColor="#34111112" flags="wfNoBorder">
-            <widget source="Title" render="Label" position="360,20" size="1570,80" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;48" valign="center" />
-
-            <widget name="title" position="40,136" size="2160,60" font="Regular;48" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" zPosition="1" transparent="1" />
-
-            <widget name="list" position="40,220" size="2160,936" itemHeight="72" font="Regular;40" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="2" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="2" borderColor="black" transparent="1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="280,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/green.png" position="730,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/yellow.png" position="1270,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/blue.png" position="1820,1230" size="40,40" alphatest="blend" scale="1" transparent="1" />
-
-            <widget name="label_red" position="330,1222" size="400,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="label_green" position="780,1222" size="490,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="label_yellow" position="1320,1222" size="490,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="label_blue" position="1870,1222" size="400,56" zPosition="1" font="Regular;40" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-
-            <eLabel name="BG_Title" position="0,0" size="2240,120" backgroundColor="#100d0f16" zPosition="-1" />
-            <eLabel name="BG_Buttons" position="0,1200" size="2240,96" backgroundColor="#100d0f16" zPosition="-1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,120" size="2240,4" scale="1" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,1200" size="2240,4" scale="1" zPosition="2" />
-
-            <ePixmap position="40,1224" size="80,52" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" transparent="1" scale="1" alphatest="blend" />
-            <ePixmap position="148,1224" size="80,52" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/exit.png" transparent="1" scale="1" alphatest="blend" />
-            <ePixmap name="playerlogo" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/favouriteslogo.png" zPosition="4" position="40,20" size="240,80" scale="1" alphatest="blend" transparent="1" backgroundColor="black" />
-
-            <widget source="global.CurrentTime" render="Label" position="1920,20" size="300,80" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;48" valign="center" halign="right">
+    # was 3 hand-duplicated per-tier skin blocks (**Dupliziert** in the
+    # TODO), built off a class-level `screenwidth = getDesktop(0)...`
+    # (same stale-at-import-time bug already fixed everywhere else in
+    # this branch) - every declared size in all 3 already scaled in
+    # exact 1x/1.5x/2x lockstep (e.g. itemHeight 36/54/72, font 20/30/40),
+    # so there was never a real need for 3 separate blocks: one
+    # `resolution="1280,720"`-auto-scaled skin does the same job, same
+    # pattern as e.g. `iptvarticleview.py`/`iptvchoicebox.py`.
+    #
+    # "title" (secondary heading row: "Favorites groups"/"Items in group
+    # X") sits directly below the header, full width - same convention
+    # `iptvdirbrowser.py`'s "curr_dir" row now uses too. Footer (OK/EXIT
+    # + all 4 color keys) now comes from `skinchrome.build_footer_auto()`
+    # instead of the old hand-placed icons/labels - footer grows from
+    # 48px to 64px like every other screen this branch touches (2-line
+    # color-key label wrap), so window height grows by the same +14
+    # (650->664) while every widget above the footer keeps its exact old
+    # position/size.
+    #
+    # "playerlogo" (this screen's own `favouriteslogo.png`, distinct from
+    # the app's default `iptvlogo.png`) sits in the header's own logo
+    # slot (`build_header_auto(logoWidgetName="playerlogo")`, same trick
+    # `iptvarticleview.py`/`iptvplayerwidget.py` already use) instead of
+    # its own separate ePixmap. Rather than baking separate HD/FHD/WQHD
+    # copies of the source PNG, this reuses `iptvplayerwidget.py`'s own
+    # `Cover()` (`ePicLoad`-backed, decodes+resizes to
+    # `self.instance.size()` at runtime, same mechanism used for cover
+    # art) via the same `decodeCover()`/`updateLogoCover()` pattern - one
+    # image fits whatever box the widget actually has at any resolution,
+    # so the file itself stays a single, un-tiered PNG under
+    # `icons/logos/`.
+    #
+    # `global.CurrentTime` clock/date widgets keep their old position
+    # (already right-aligned, so their declared boxes overlapping the
+    # header's own much-wider Title box was already true before too) -
+    # `zPosition="2"` added so they paint above the Title label's
+    # background, same fix already shipped for `iptvplayerwidget.py`'s
+    # own header.
+    def __prepareSkin(self):
+        iconBase = skinchrome.getIconBase()
+        # header clock/date is an opt-out via
+        # config.plugins.iptvplayer.show_header_clock (Skin configuration
+        # section).
+        clockPart = """<widget source="global.CurrentTime" render="Label" position="960,10" size="150,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="2" font="Regular;24" valign="center" halign="right">
                 <convert type="ClockToText">Format:%H:%M</convert>
             </widget>
-
-            <widget source="global.CurrentTime" render="Label" position="1440,40" size="600,48" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;32" valign="center" halign="right">
+            <widget source="global.CurrentTime" render="Label" position="720,20" size="300,24" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="2" font="Regular;16" valign="center" halign="right">
                 <convert type="ClockToText">Date</convert>
-            </widget>
-        </screen>
-        """
-
-    elif screenwidth >= 1920:
-        # FHD 1920x1080
-        skin = """
-        <screen name="IPTVFavouritesMainWidget" position="center,center" size="1680,975" title="Favorites manager" backgroundColor="#34111112" flags="wfNoBorder">
-            <widget source="Title" render="Label" position="240,15" size="1178,60" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;36" valign="center" />
-
-            <widget name="title" position="30,102" size="1620,45" font="Regular;36" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" zPosition="1" transparent="1" />
-
-            <widget name="list" position="30,165" size="1620,702" itemHeight="54" font="Regular;30" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="2" borderColor="black" transparent="1" />
-
-             <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="200,923" size="30,30" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/green.png" position="550,923" size="30,30" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/yellow.png" position="950,923" size="30,30" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/blue.png" position="1350,923" size="30,30" alphatest="blend" transparent="1" />
-
-            <widget name="label_red" position="240,917" size="300,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="label_green" position="590,917" size="350,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="label_yellow" position="990,917" size="350,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="label_blue" position="1390,917" size="300,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-
-            <eLabel name="BG_Title" position="0,0" size="1680,90" backgroundColor="#100d0f16" zPosition="-1" />
-            <eLabel name="BG_Buttons" position="0,900" size="1680,72" backgroundColor="#100d0f16" zPosition="-1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,90" size="1680,3" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,900" size="1680,3" zPosition="2" />
-
-            <ePixmap position="30,918" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" transparent="1" alphatest="blend" />
-            <ePixmap position="111,918" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/exit.png" transparent="1" alphatest="blend" />
-            <ePixmap name="playerlogo" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/favouriteslogo.png" zPosition="4" position="30,15" size="180,60" scale="1" alphatest="blend" transparent="1" backgroundColor="black" />
-
-            <widget source="global.CurrentTime" render="Label" position="1440,15" size="225,60" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;36" valign="center" halign="right">
-                <convert type="ClockToText">Format:%H:%M</convert>
-            </widget>
-
-            <widget source="global.CurrentTime" render="Label" position="1080,30" size="450,36" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" halign="right">
-                <convert type="ClockToText">Date</convert>
-            </widget>
-        </screen>
-        """
-
-    else:
-        # HD 1280x720
-        skin = """
-        <screen name="IPTVFavouritesMainWidget" position="center,center" size="1120,650" title="Favorites manager" backgroundColor="#34111112" flags="wfNoBorder">
-            <widget source="Title" render="Label" position="180,9" size="785,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
-
+            </widget>""" if config.plugins.iptvplayer.show_header_clock.value else ""
+        return """
+        <screen name="IPTVFavouritesMainWidget" position="center,center" size="1120,664" resolution="1280,720" title="Favorites manager" backgroundColor="#34111112" flags="wfNoBorder">
+            %s
             <widget name="title" position="20,68" size="1080,30" font="Regular;24" halign="left" valign="center" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" zPosition="1" transparent="1" />
-
             <widget name="list" position="20,110" size="1080,468" itemHeight="36" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" transparent="1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="140,615" size="20,20" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="370,615" size="20,20" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="640,615" size="20,20" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/blue.png" position="910,615" size="20,20" alphatest="blend" transparent="1" />
-
-            <widget name="label_red" position="170,611" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="label_green" position="395,611" size="240,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="label_yellow" position="665,611" size="240,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="label_blue" position="935,611" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-
-            <eLabel name="BG_Title" position="0,0" size="1120,60" backgroundColor="#100d0f16" zPosition="-1" />
-            <eLabel name="BG_Buttons" position="0,600" size="1120,48" backgroundColor="#100d0f16" zPosition="-1" />
-
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="1120,2" zPosition="2" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,600" size="1120,2" zPosition="2" />
-
-            <ePixmap position="20,612" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
-            <ePixmap position="74,612" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
-            <ePixmap name="playerlogo" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/logos/favouriteslogo.png" zPosition="4" position="20,10" size="120,40" alphatest="blend" transparent="1" backgroundColor="black" />
-
-
-            <widget source="global.CurrentTime" render="Label" position="960,10" size="150,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" halign="right">
-                <convert type="ClockToText">Format:%H:%M</convert>
-            </widget>
-
-            <widget source="global.CurrentTime" render="Label" position="720,20" size="300,24" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;16" valign="center" halign="right">
-                <convert type="ClockToText">Date</convert>
-            </widget>
+            %s
+            %s
         </screen>
-        """
+        """ % (
+            skinchrome.build_header_auto(iconBase=iconBase, logoWidgetName="playerlogo"),
+            clockPart,
+            skinchrome.build_footer_auto(664, iconBase=iconBase, keys=('red', 'green', 'yellow', 'blue'), showNav=False),
+        )
 
     def __init__(self, session):
         self.session = session
+        self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
+        self.skinName = skinchrome.forceInternalSkinName(["IPTVFavouritesMainWidget"])
         self.setTitle(_("Favorites manager"))
+
+        self["playerlogo"] = Cover()
+        self["playerlogo"].hide()
 
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
@@ -297,10 +271,10 @@ class IPTVFavouritesMainWidget(Screen):
         self.t9Input = NumericalTextInput(handleTimeout=False)
 
         self["title"] = Label(_("Favorites groups"))
-        self["label_red"] = Label(_("Remove group"))
-        self["label_yellow"] = Label(self.IDS_ENABLE_REORDERING)
-        self["label_green"] = Label(_("Add new group"))
-        self["label_blue"] = Label(_("Edit"))
+        self["key_red"] = StaticText(_("Remove group"))
+        self["key_yellow"] = StaticText(self.IDS_ENABLE_REORDERING)
+        self["key_green"] = StaticText(_("Add new group"))
+        self["key_blue"] = StaticText(_("Edit"))
 
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
@@ -341,12 +315,26 @@ class IPTVFavouritesMainWidget(Screen):
 
     def onStart(self):
         self.onShown.remove(self.onStart)
+        logoPath = GetIconDir('logos/favouriteslogo.png')
+        if self["playerlogo"].checkDecodeNeeded(logoPath):
+            self["playerlogo"].decodeCover(logoPath, self.updateLogoCover, "playerlogo")
+        else:
+            self["playerlogo"].show()
         self.favourites = IPTVFavourites(GetFavouritesDir())
         sts = self.favourites.load(groupsOnly=True)
         if not sts:
             self.session.openWithCallback(self.iptvDoFinish, MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
             return
         self.displayList()
+
+    def updateLogoCover(self, retDict):
+        # single static asset, always the same file - unlike
+        # iptvplayerwidget.py's own updateCover() this never needs to
+        # check "is this still the right icon for the current selection",
+        # it's the only thing ever decoded into "playerlogo" here
+        if retDict and retDict["Pixmap"] is not None:
+            self["playerlogo"].updatePixmap(retDict["Pixmap"], retDict["FileName"])
+            self["playerlogo"].show()
 
     def iptvDoFinish(self, ret=None):
         self.close()
@@ -393,9 +381,9 @@ class IPTVFavouritesMainWidget(Screen):
                 self.close(False)
         else:
             self["title"].setText(_("Favorites groups"))
-            self["label_red"].setText(_("Remove group"))
-            self["label_green"].setText(_("Add new group"))
-            self["label_blue"].setText(_("Edit"))
+            self["key_red"].setText(_("Remove group"))
+            self["key_green"].setText(_("Add new group"))
+            self["key_blue"].setText(_("Edit"))
 
             self.menu = ":groups:"
             self.displayList()
@@ -433,9 +421,9 @@ class IPTVFavouritesMainWidget(Screen):
                 self["title"].setText(_("Items in group \"%s\"") % self.favourites.getGroup(self.menu)['title'])
             except Exception:
                 printExc()
-            self["label_red"].setText(_("Remove item"))
-            self["label_green"].setText(_("Add item to group"))
-            self["label_blue"].setText(_("Edit"))
+            self["key_red"].setText(_("Remove item"))
+            self["key_green"].setText(_("Add item to group"))
+            self["key_blue"].setText(_("Edit"))
 
             try:
                 self.prevIdx = self["list"].getCurrentIndex()
@@ -468,10 +456,10 @@ class IPTVFavouritesMainWidget(Screen):
         if None is not self.getSelectedItem():
             if self.reorderingMode:
                 self.reorderingMode = False
-                self["label_yellow"].setText(self.IDS_ENABLE_REORDERING)
+                self["key_yellow"].setText(self.IDS_ENABLE_REORDERING)
             else:
                 self.reorderingMode = True
-                self["label_yellow"].setText(self.IDS_DISABLE_REORDERING)
+                self["key_yellow"].setText(self.IDS_DISABLE_REORDERING)
 
             if self.duringMoving and not self.reorderingMode:
                 self._changeMode()
@@ -626,6 +614,7 @@ class IPTVFavouritesMainWidget(Screen):
                 curIndex = self["list"].getCurrentIndex()
                 self["list"].instance.moveSelection(key)
                 newIndex = self["list"].getCurrentIndex()
+                printDBG('IPTVFavouritesMainWidget.moveItem carrying curIndex=%s newIndex=%s' % (curIndex, newIndex))
                 if ":groups:" == self.menu:
                     sts = self.favourites.moveGroup(curIndex, newIndex)
                 else:
@@ -634,13 +623,16 @@ class IPTVFavouritesMainWidget(Screen):
                     self.modified = True
                     self.displayList()
             else:
+                printDBG('IPTVFavouritesMainWidget.moveItem plain move (not carrying)')
                 self["list"].instance.moveSelection(key)
 
     def keyUp(self):
+        printDBG('IPTVFavouritesMainWidget.keyUp reorderingMode=%s duringMoving=%s' % (self.reorderingMode, self.duringMoving))
         if self["list"].instance is not None:
             self.moveItem(self["list"].instance.moveUp)
 
     def keyDown(self):
+        printDBG('IPTVFavouritesMainWidget.keyDown reorderingMode=%s duringMoving=%s' % (self.reorderingMode, self.duringMoving))
         if self["list"].instance is not None:
             self.moveItem(self["list"].instance.moveDown)
 

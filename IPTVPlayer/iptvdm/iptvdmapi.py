@@ -382,34 +382,43 @@ class IPTVDMApi():
             self.queueUD[listUDIdx].status = DMHelper.STS.DOWNLOADED
             try:
                 fileName = self.queueUD[listUDIdx].fileName.split('/')[-1]
-                shortName = fileName[:17]
+                # the notification box sizes itself to the text, so this
+                # cap is just a generous guard against pathological
+                # filenames
+                shortName = fileName[:100]
                 if len(fileName) > len(shortName):
                     shortName += '...'
-                shortName += ' '
-                self.finishNotifyCallback().showNotify(shortName + _('Download already exists'))
+                # status gets its own line below the filename, colored
+                # per outcome
+                self.finishNotifyCallback().showNotify(shortName, _('Download already exists'), 'green')
             except Exception:
                 printExc()
             return
 
         status = _('UNKNOWN')
+        statusColor = 'white'
         if dItem.downloadedProcent > 99:
             self.queueUD[listUDIdx].status = DMHelper.STS.DOWNLOADED
             status = _('DOWNLOADED')
+            statusColor = 'green'
         else:
             if dItem.downloadedSize > 0:
                 self.queueUD[listUDIdx].status = DMHelper.STS.INTERRUPTED
                 status = _('INTERRUPTED')
+                statusColor = 'orange'
             else:
                 self.queueUD[listUDIdx].status = DMHelper.STS.ERROR
                 status = _('FAILED')
+                statusColor = 'red'
 
         try:
             fileName = self.queueUD[listUDIdx].fileName.split('/')[-1]
-            shortName = fileName[:17]
+            # the notification box sizes itself to the text, so this cap
+            # is just a generous guard against pathological filenames
+            shortName = fileName[:100]
             if len(fileName) > len(shortName):
                 shortName += '...'
-            shortName += ' '
-            self.finishNotifyCallback().showNotify(shortName + status)
+            self.finishNotifyCallback().showNotify(shortName, status, statusColor)
         except Exception:
             printExc()
 

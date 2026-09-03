@@ -27,6 +27,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvsubsimpledownloader import IPT
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVFileSelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.configextmovieplayer import ConfigExtMoviePlayerBase, ConfigExtMoviePlayer
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
@@ -182,8 +183,34 @@ class IPTVExtMoviePlayer(Screen):
 
     Y_CROPPING_GUARD = 0
     playback = {}
+    # every playerskins/*/playerskin.xml (bar "sd") is authored for this
+    # canvas - see resolution="1280,720" on their <screen> tags
+    REF_W = 1280
+    REF_H = 720
 
     def __prepareSkin(self):
+        # REF_W/REF_H: every playerskins/*/playerskin.xml (and the inline
+        # fallback below) declares its widgets for a fixed 1280x720
+        # canvas; resolution="1280,720" on every non-"sd" theme's
+        # <screen> tag makes Enigma2 scale all of that automatically for
+        # FHD/WQHD - initGuiComponentsPos()'s own runtime centering (reads
+        # back the already-scaled widget sizes) and subSynchroIcon's
+        # centering already cooperate with this correctly since they read
+        # real instance sizes at runtime.
+        #
+        # The subLabel widgets declared below are only ever visible for
+        # the brief instant before the first real subtitle line arrives -
+        # setSubtitlesText() (see its own comment) immediately re-resizes/
+        # re-positions them itself using real desktop pixels
+        # directly via .instance.move()/.resize(), which never goes
+        # through Enigma2's skin-level resolution= scaling at all (that
+        # only applies to attributes declared in the skin XML/string, not
+        # later plain Python calls) - so this initial declaration doesn't
+        # need to be pixel-perfect, just reasonable, and is kept in
+        # 1280x720-reference terms like everything else here for
+        # consistency.
+        REF_W, REF_H = self.REF_W, self.REF_H
+        dw = getDesktop(0).size().width()
 
         if self.subConfig['wrapping_enabled']:
             self.subLinesNum = 1
@@ -205,14 +232,21 @@ class IPTVExtMoviePlayer(Screen):
         if self.subLinesNum > 1:
             subSkinPart += ' noWrap="1" '
 
-        subSkinPart = '<widget name="subLabel{0}" position="10,%d" size="%d,%d" zPosition="1" halign="center" %s/>' % (getDesktop(0).size().height() - sub['pos'] - sub['box_height'], getDesktop(0).size().width() - 20, sub['box_height'], subSkinPart)
+        # placeholder-only geometry (see class comment above) - kept in
+        # reference-space terms for consistency, actual position/size on
+        # screen comes from setSubtitlesText() instead
+        subX = 10
+        subY = REF_H - sub['pos'] - sub['box_height']
+        subW = REF_W - 20
+        subBoxH = sub['box_height']
+        subSkinPart = '<widget name="subLabel{0}" position="%d,%d" size="%d,%d" zPosition="1" halign="center" %s/>' % (subX, subY, subW, subBoxH, subSkinPart)
         subSkin = ''
         for idx in range(self.subLinesNum):
             subSkin += subSkinPart.format(idx + 1)
 
         self.playbackBannerFile = "playback_banner.png"
 
-        if getDesktop(0).size().width() < 800:
+        if dw < 800:
             # skin for SD
             self.playerSkinFolder = GetPlayerSkinDir('sd')
         else:
@@ -238,7 +272,7 @@ class IPTVExtMoviePlayer(Screen):
         if len(skin) == 0:
             # use default skin in code
             skin = """
-            <screen name="IPTVExtMoviePlayer"    position="center,center" size="%d,%d" flags="wfNoBorder" backgroundColor="#FFFFFFFF" >
+            <screen name="IPTVExtMoviePlayer"    position="center,center" size="%d,%d" resolution="1280,720" flags="wfNoBorder" backgroundColor="#FFFFFFFF" >
                     <widget name="pleaseWait"         noWrap="1" position="30,30"        size="500,30"    zPosition="3" transparent="1" foregroundColor="#999999"   backgroundColor="transparent" font="Regular;24" halign="left"  valign="top"/>
 
                     <widget name="logoIcon"           position="140,30"        size="160,40"    zPosition="4"             transparent="1" alphatest="blend" />
@@ -247,7 +281,7 @@ class IPTVExtMoviePlayer(Screen):
                     <widget name="bufferingCBar"      position="220,86"        size="840,7"     zPosition="4" pixmap="%s" transparent="1" borderWidth="1" borderColor="#888888" />
                     <widget name="bufferingBar"       position="220,86"        size="840,7"     zPosition="3" pixmap="%s" borderWidth="1" borderColor="#888888" />
                     <widget name="statusIcon"         position="150,70"        size="40,40"     zPosition="4"             transparent="1" alphatest="blend" />
-                    <widget name="loopIcon"           position="150,110"       size="40,40"     zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="loopIcon"           position="150,110"       size="40,21"     zPosition="4"             transparent="1" alphatest="blend" />
 
                     <widget name="goToSeekPointer"    position="94,30"          size="150,60"  zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
                     <widget name="goToSeekLabel"      noWrap="1" position="94,30"         size="150,40"   zPosition="9" transparent="1" foregroundColor="white"     backgroundColor="#251f1f1f" font="Regular;24" halign="center" valign="center"/>
@@ -266,12 +300,19 @@ class IPTVExtMoviePlayer(Screen):
             </screen>"""
 
         if self.clockFormat:
-            if getDesktop(0).size().width() >= 1920:
-                clockFontSize = self.skinSettings.get("clockFontSize_FHD", 24)
-            elif getDesktop(0).size().width() < 1920 and getDesktop(0).size().width() >= 800:
-                clockFontSize = self.skinSettings.get("clockFontSize_HD", 30)
-            else:
+            if dw < 800:
                 clockFontSize = self.skinSettings.get("clockFontSize_SD", 30)
+            else:
+                # clockFontSize_HD is the true 1280x720-reference value,
+                # already correct as-is now that resolution="1280,720"
+                # (see REF_W/REF_H comment above) makes Enigma2 scale it up
+                # proportionally for real FHD/WQHD screens.
+                # clockFontSize_FHD existed only as a manual, real-pixel
+                # workaround for the missing resolution= scaling
+                # (settings.json never even got a WQHD value either) - now
+                # redundant, and would double-scale on top of Enigma2's own
+                # scaling if still applied.
+                clockFontSize = self.skinSettings.get("clockFontSize_HD", 30)
 
             self.playerClockPath = self.playerSkinFolder + "/playerclock.xml"
 
@@ -307,6 +348,58 @@ class IPTVExtMoviePlayer(Screen):
 
         sub = None
         return skin
+
+    def _setScaledIconPixmap(self, widgetName, pixmap):
+        # logoIcon/statusIcon/loopIcon/subSynchroIcon are Cover3 widgets
+        # (cover.py) - Cover3.setPixmap() is a thin
+        # self.instance.setPixmap(ptr) with no scale flag, so the loaded
+        # PNG always rendered at its native pixel size, anchored to the
+        # widget's top-left corner, regardless of the widget's own
+        # (correctly resolution="1280,720"-scaled) box size - looks fine
+        # at HD (native size == box size, scale 1:1) but would be
+        # undersized/misplaced at FHD/WQHD once the surrounding boxes
+        # scale up while the icon graphics themselves don't.
+        # setScale(1) tells the instance to stretch its pixmap to
+        # fill the widget's current (already-scaled) size instead - same
+        # API IPTVPlayerLCDScreen.LCD_showPic() already uses for the same
+        # reason. Kept local to this file/these 4 widgets rather than
+        # changed on Cover3 itself, which 14 other files also use and
+        # already rely on its current native-size behavior.
+        widget = self[widgetName]
+        try:
+            widget.instance.setScale(1)
+        except Exception:
+            printExc()
+        widget.setPixmap(pixmap)
+
+    def _subtitleScale(self):
+        # setSubtitlesText()/runConfigMoviePlayerCallback()'s subtitle
+        # resize block/setSubOffsetFromInfoBar() all position subtitles
+        # via direct eLabel.instance.move()/.resize()/.setFont() calls
+        # computed from real getDesktop(0) pixels - unlike the rest of
+        # this screen, these never go through Enigma2's skin-level
+        # resolution="1280,720" scaling at all, since they're plain
+        # Python calls acting on an already-built instance, not
+        # skin-declared attributes Enigma2 itself scales. Without their
+        # own scale factor, subtitles would stay a constant absolute size
+        # while the rest of the OSD grows with resolution - shrinking
+        # relative to the screen at FHD/WQHD. Same 1280-wide reference as
+        # everything else here.
+        return getDesktop(0).size().width() / float(self.REF_W)
+
+    def _effectiveSubLineHeight(self, scale):
+        # user-configured line_height can end up no taller than font_size
+        # itself - real fonts need noticeably more vertical room than
+        # their point size for descenders (e.g. "g") to not get clipped,
+        # independent of the scale factor (this floor is computed
+        # consistently in real, already-scaled pixels wherever a line
+        # height is needed). 1.3x is a common, conservative
+        # line-height-to-font-size ratio - only ever makes the line taller
+        # than the user's own setting, never shrinks a deliberately
+        # generous one.
+        lineHeight = int(self.subConfig['line_height'] * scale)
+        minHeight = int(self.subConfig['font_size'] * scale * 1.3)
+        return max(lineHeight, minHeight)
 
     def getSkinSettings(self):
         printDBG("iptvextmovieplayer.getSkinSetting")
@@ -344,7 +437,7 @@ class IPTVExtMoviePlayer(Screen):
         self.skinSettings = self.getSkinSettings()
         self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
-        self.skinName = "IPTVExtMoviePlayer"
+        self.skinName = skinchrome.forceInternalSkinName("IPTVExtMoviePlayer")
 
         self.player = player
         if 'gstplayer' == self.player:
@@ -593,6 +686,18 @@ class IPTVExtMoviePlayer(Screen):
         self.setMoviePlayerConfig = True
         self.clipLength = None
 
+    def _getChoiceBoxHeight(self, numItems):
+        # shared by every plain IPTVChoiceBoxWidget popup in this class
+        # (Menu/Video-Option/Video-Option-Wert/Video-Modus/Audiospur/
+        # Untertitelspur, all chrome=True) - same formula/reasoning as
+        # iptvplayerwidget.py's own
+        # _getMoviePlayerPickerHeight()/_getLinkPickerHeight(): IPTVRadioButtonList's
+        # (IPTVMainNavigatorList's) real per-tier item heights (35/40/55),
+        # +146 = the footerMargin passed below (136, list's fixed y=66 +
+        # 64px footer bar + 10px breathing buffer)
+        itemH, scale = skinchrome.tierRowHeight(35, 40, 55)
+        return int(numItems * itemH / scale) + 146
+
     def showMenuOptions(self):
         printDBG("showMenuOptions")
         options = []
@@ -605,7 +710,7 @@ class IPTVExtMoviePlayer(Screen):
         if self.isDownladManagerAvailable and self.downloader:
             options.append(IPTVChoiceBoxItem(_("Stop playback with buffer save"), "", "close_with_buffer_save"))
 
-        self.openChild(boundFunction(self.childClosed, self.showMenuOptionsCallback), IPTVChoiceBoxWidget, {'width': 500, 'height': 340, 'current_idx': 0, 'title': _("Menu"), 'options': options})
+        self.openChild(boundFunction(self.childClosed, self.showMenuOptionsCallback), IPTVChoiceBoxWidget, {'width': 500, 'height': self._getChoiceBoxHeight(len(options)), 'current_idx': 0, 'title': _("Menu"), 'options': options, 'chrome': True, 'footerMargin': 136})
 
     def showMenuOptionsCallback(self, ret=None):
         printDBG("showMenuOptionsCallback ret[%r]" % [ret])
@@ -637,9 +742,10 @@ class IPTVExtMoviePlayer(Screen):
         self.subConfig = self.configObj.getSubtitleFontSettings()
         sub = self.subConfig
 
+        scale = self._subtitleScale()
         for idx in range(self.subLinesNum):
             subLabel = "subLabel%d" % (idx + 1)
-            self[subLabel].instance.setFont(gFont(sub['font'], sub['font_size']))
+            self[subLabel].instance.setFont(gFont(sub['font'], int(sub['font_size'] * scale)))
             self[subLabel].instance.setForegroundColor(parseColor(sub['font_color']))
             self[subLabel].instance.setBackgroundColor(parseColor(sub['background']))
 
@@ -668,10 +774,11 @@ class IPTVExtMoviePlayer(Screen):
                     valignMap = {'bottom': 2, 'center': 1, 'top': 0}
                     self[subLabel].instance.setVAlign(valignMap.get(sub['box_valign'], 2))
 
-                    self[subLabel].instance.resize(eSize(getDesktop(0).size().width() - 20, sub['box_height']))
-                    self[subLabel].resize(eSize(getDesktop(0).size().width() - 20, sub['box_height']))
-                    self[subLabel].move(ePoint(10, getDesktop(0).size().height() - sub['pos'] - sub['box_height']))
-                    self[subLabel].instance.move(ePoint(10, getDesktop(0).size().height() - sub['pos'] - sub['box_height']))
+                    scaledBoxH = max(int(sub['box_height'] * scale), int(sub['font_size'] * scale * 1.3))
+                    self[subLabel].instance.resize(eSize(getDesktop(0).size().width() - 20, scaledBoxH))
+                    self[subLabel].resize(eSize(getDesktop(0).size().width() - 20, scaledBoxH))
+                    self[subLabel].move(ePoint(10, getDesktop(0).size().height() - int(sub['pos'] * scale) - scaledBoxH))
+                    self[subLabel].instance.move(ePoint(10, getDesktop(0).size().height() - int(sub['pos'] * scale) - scaledBoxH))
                 except Exception:
                     printExc()
             self.setSubtitlesText(" ", False)
@@ -758,7 +865,7 @@ class IPTVExtMoviePlayer(Screen):
             options.append(IPTVChoiceBoxItem(option['title'], "", option["name"]))
 
         if len(options):
-            self.openChild(boundFunction(self.childClosed, self.selectVideoOptionsCallback), IPTVChoiceBoxWidget, {'width': 500, 'current_idx': currIdx, 'title': _("Select video option"), 'options': options})
+            self.openChild(boundFunction(self.childClosed, self.selectVideoOptionsCallback), IPTVChoiceBoxWidget, {'width': 500, 'height': self._getChoiceBoxHeight(len(options)), 'current_idx': currIdx, 'title': _("Select video option"), 'options': options, 'chrome': True, 'footerMargin': 136})
 
     def selectVideoOptionsCallback(self, ret=None):
         printDBG("selectVideoOptionsCallback ret[%r]" % [ret])
@@ -777,10 +884,14 @@ class IPTVExtMoviePlayer(Screen):
 
         if option != 'videomode':
             for item in choices:
+                choiceItem = IPTVChoiceBoxItem(_(item), "", item)
                 if item == currValue:
                     currIdx = len(options)
-                options.append(IPTVChoiceBoxItem(_(item), "", item))
-            self.openChild(boundFunction(self.childClosed, self.selectVideoOptionCallback), IPTVChoiceBoxWidget, {'selection_changed': self.videoOptionSelectionChanged, 'width': 500, 'current_idx': currIdx, 'title': _("Select %s") % ret.name, 'options': options})
+                    choiceItem.type = IPTVChoiceBoxItem.TYPE_ON
+                else:
+                    choiceItem.type = IPTVChoiceBoxItem.TYPE_OFF
+                options.append(choiceItem)
+            self.openChild(boundFunction(self.childClosed, self.selectVideoOptionCallback), IPTVChoiceBoxWidget, {'selection_changed': self.videoOptionSelectionChanged, 'width': 500, 'height': self._getChoiceBoxHeight(len(options)), 'current_idx': currIdx, 'title': _("Select %s") % ret.name, 'options': options, 'chrome': True, 'footerMargin': 136})
         else:
             printDBG('choices %s' % (choices))
             filteredChoices = []
@@ -796,7 +907,7 @@ class IPTVExtMoviePlayer(Screen):
                 else:
                     item.type = IPTVChoiceBoxItem.TYPE_OFF
                 options.append(item)
-            self.openChild(boundFunction(self.childClosed, self.selectVideoModeCallback), IPTVChoiceBoxWidget, {'width': 500, 'current_idx': currIdx, 'title': _("Select %s") % ret.name, 'options': options})
+            self.openChild(boundFunction(self.childClosed, self.selectVideoModeCallback), IPTVChoiceBoxWidget, {'width': 500, 'height': self._getChoiceBoxHeight(len(options)), 'current_idx': currIdx, 'title': _("Select %s") % ret.name, 'options': options, 'chrome': True, 'footerMargin': 136})
 
     def selectVideoModeCallback(self, ret=None):
         printDBG("selectVideoModeCallback ret[%r]" % [ret])
@@ -854,7 +965,7 @@ class IPTVExtMoviePlayer(Screen):
                 else:
                     item.type = IPTVChoiceBoxItem.TYPE_OFF
                 options.append(item)
-            self.openChild(boundFunction(self.childClosed, self.selectAudioTrackCallback), IPTVChoiceBoxWidget, {'width': 500, 'height': 240, 'current_idx': currIdx, 'title': _("Select audio track"), 'options': options})
+            self.openChild(boundFunction(self.childClosed, self.selectAudioTrackCallback), IPTVChoiceBoxWidget, {'width': 500, 'height': self._getChoiceBoxHeight(len(options)), 'current_idx': currIdx, 'title': _("Select audio track"), 'options': options, 'chrome': True, 'footerMargin': 136})
         else:
             self.showMessage(_("Information about audio tracks not available."), MessageBox.TYPE_INFO, None)
 
@@ -914,7 +1025,7 @@ class IPTVExtMoviePlayer(Screen):
         options.append(IPTVChoiceBoxItem(_('Load'), "", {'other': 'load'}))
         options.append(IPTVChoiceBoxItem(_('Download'), "", {'other': 'download'}))
         printDBG("IPTVExtMoviePlayer.selectSubtitle options = %s" % str(options))
-        self.openChild(boundFunction(self.childClosed, self.selectSubtitleCallback), IPTVChoiceBoxWidget, {'width': 600, 'current_idx': currIdx, 'title': _("Select subtitles track"), 'options': options})
+        self.openChild(boundFunction(self.childClosed, self.selectSubtitleCallback), IPTVChoiceBoxWidget, {'width': 600, 'height': self._getChoiceBoxHeight(len(options)), 'current_idx': currIdx, 'title': _("Select subtitles track"), 'options': options, 'chrome': True, 'footerMargin': 136})
 
     def selectSubtitleCallback(self, ret):
         printDBG("selectSubtitleCallback ret[%r]" % [ret])
@@ -1197,9 +1308,18 @@ class IPTVExtMoviePlayer(Screen):
         # back = True
         desktopW = getDesktop(0).size().width()
         desktopH = getDesktop(0).size().height()
+        # this method positions every subtitle line via direct
+        # .instance.move()/.resize() calls computed from real desktop
+        # pixels - see _subtitleScale()'s own comment for why that needs
+        # its own scale factor, separate from the resolution="1280,720"
+        # skin-level scaling. _effectiveSubLineHeight() additionally
+        # floors the configured line_height against font_size so
+        # descenders (e.g. "g") don't get clipped when the two are set
+        # too close together.
+        scale = self._subtitleScale()
 
         dW = desktopW - 20
-        dH = self.subConfig['box_height']
+        dH = int(self.subConfig['box_height'] * scale)
 
         if stripLine:
             text = text.strip()
@@ -1215,14 +1335,14 @@ class IPTVExtMoviePlayer(Screen):
                 subOnTopHack = False
 
             if self.subLinesNum == 1:
-                lineHeight = self.subConfig['line_height'] * text.count('\n')
+                lineHeight = self._effectiveSubLineHeight(scale) * text.count('\n')
                 text = [text]
             else:
                 text = text.split('\n')
                 if not subOnTopHack:
                     text.reverse()
-                lineHeight = self.subConfig['line_height']
-            y = self.subConfig['pos']
+                lineHeight = self._effectiveSubLineHeight(scale)
+            y = int(self.subConfig['pos'] * scale)
             if not subOnTopHack:
                 y += self.subHandler['pos_y_offset']
             for lnIdx in range(self.subLinesNum):
@@ -1252,14 +1372,14 @@ class IPTVExtMoviePlayer(Screen):
                         self.setSubtitlesText(lnText, False, False)
                         return
 
-                    lW = textSize[0] + self.subConfig['font_size'] / 2
+                    lW = textSize[0] + int(self.subConfig['font_size'] * scale) / 2
                     lH = lineHeight  # textSize[1] + self.subConfig['font_size'] / 2
                     self[subLabel].instance.resize(eSize(int(lW), int(lH)))
                     if not subOnTopHack:
                         self[subLabel].instance.move(ePoint(int((desktopW - lW) / 2), int(desktopH - y - lH)))
                     else:
                         self[subLabel].instance.move(ePoint(int((desktopW - lW) / 2), int(y)))
-                    y += lH + self.subConfig['line_spacing']
+                    y += lH + int(self.subConfig['line_spacing'] * scale)
                     self[subLabel].show()
                 except Exception:
                     printExc()
@@ -1396,14 +1516,14 @@ class IPTVExtMoviePlayer(Screen):
                         elif val[0] in ['Pause', 'FastForward', 'SlowMotion']:
                             self.showPlaybackInfoBar(blocked=True)
                         self.playback['Status'] = val[0]
-                        self['statusIcon'].setPixmap(self.playback['statusIcons'].get(val[0], None))
+                        self._setScaledIconPixmap('statusIcon', self.playback['statusIcons'].get(val[0], None))
                 elif 'IsLoop' == key:
                     if self.playback['IsLoop'] != val:
                         self.playback['IsLoop'] = val
                         icon = 'Off'
                         if val:
                             icon = 'On'
-                        self['loopIcon'].setPixmap(self.playback['loopIcons'].get(icon, None))
+                        self._setScaledIconPixmap('loopIcon', self.playback['loopIcons'].get(icon, None))
                         self.showPlaybackInfoBar()
 
                 elif 'VideoTrack' == key:
@@ -2280,10 +2400,10 @@ class IPTVExtMoviePlayer(Screen):
             self.console.execute(cmd)
         else:
             self.console.execute(E2PrioFix(cmd, 1))
-        self['statusIcon'].setPixmap(self.playback['statusIcons']['Play'])  # sulge for test
-        self['loopIcon'].setPixmap(self.playback['loopIcons']['Off'])
-        self['logoIcon'].setPixmap(self.playback['logoIcon'])
-        self['subSynchroIcon'].setPixmap(self.subHandler['synchro']['icon'])
+        self._setScaledIconPixmap('statusIcon', self.playback['statusIcons']['Play'])  # sulge for test
+        self._setScaledIconPixmap('loopIcon', self.playback['loopIcons']['Off'])
+        self._setScaledIconPixmap('logoIcon', self.playback['logoIcon'])
+        self._setScaledIconPixmap('subSynchroIcon', self.subHandler['synchro']['icon'])
 
         # SET Video option
         videoOptions = ['aspect', 'policy', 'policy2']
@@ -2319,6 +2439,27 @@ class IPTVExtMoviePlayer(Screen):
         self.enableSubtitles()
 
     def initGuiComponentsPos(self):
+        # playbackInfoBaner/goToSeekPointer - unlike
+        # logoIcon/statusIcon/loopIcon/subSynchroIcon (_setScaledIconPixmap
+        # above), these two Cover3 widgets never get a setPixmap() call
+        # from this file at all - their pixmap comes
+        # straight from the skin's own pixmap="%s" attribute
+        # (playback_banner.png/playback_pointer.png), applied by Enigma2's
+        # own skin engine before this method ever runs. That path doesn't
+        # set a scale flag either, so the same native-pixel-size problem
+        # applied to them too, just unnoticed until now since a banner-
+        # sized image still roughly covers a scaled-up box. setScale(1)
+        # here (after the skin has definitely been applied, unlike right
+        # after self['...'] = Cover3() in __init__, where .instance
+        # doesn't exist yet) retroactively stretches whatever pixmap
+        # Enigma2 already loaded to the widget's current (already
+        # resolution="1280,720"-scaled) box size.
+        for elem in ('playbackInfoBaner', 'goToSeekPointer'):
+            try:
+                self[elem].instance.setScale(1)
+            except Exception:
+                printExc()
+
         # info bar gui elements
         # calculate offset
         offset_x = (getDesktop(0).size().width() - self['playbackInfoBaner'].instance.size().width()) / 2
@@ -2408,9 +2549,16 @@ class IPTVExtMoviePlayer(Screen):
         if self.playbackInfoBar['visible']:
             desktopH = getDesktop(0).size().height()
             if self.subLinesNum > 1:
-                # calc sub pos
-                subY = desktopH - self.subConfig['pos'] - self.subConfig['line_height']
-                subH = self.subConfig['line_height']
+                # calc sub pos - scale/_effectiveSubLineHeight here
+                # must match setSubtitlesText()'s own real-pixel math
+                # exactly, or this overlap check against
+                # self.infoBanerOffsetY (already real, correctly-scaled
+                # pixels from initGuiComponentsPos()) would compare
+                # mismatched units at FHD/WQHD
+                scale = self._subtitleScale()
+                lineHeight = self._effectiveSubLineHeight(scale)
+                subY = desktopH - int(self.subConfig['pos'] * scale) - lineHeight
+                subH = lineHeight
 
                 yOffset = subY + subH - self.infoBanerOffsetY
                 if yOffset > 0:

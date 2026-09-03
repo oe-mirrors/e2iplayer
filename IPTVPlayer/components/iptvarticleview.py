@@ -24,9 +24,8 @@ else:
     hasPIL = False
 
 
-from enigma import eTimer, getDesktop
+from enigma import eTimer
 from Components.ActionMap import ActionMap
-from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
@@ -40,38 +39,68 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, Ge
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3, Cover2, Cover
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
 
 
 class IPTVArticleView(Screen):
-
-    skin = """
-        <screen name="IPTVArticleView" position="center,center" size="1200,580" resolution="1280,720" title="Info..." backgroundColor="#34111112" flags="wfNoBorder">
-            <widget name="title" position="340,20" size="840,40" foregroundColor="#0066ccff" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
+    # chrome=True-style header/footer. resolution="1280,720" auto-scales
+    # the whole layout for FHD/WQHD, same mechanism the chrome ChoiceBox
+    # screens use - no fixed-pixel grid content here to fight that
+    # scaling, unlike PlayerSelectorWidget.
+    #
+    # The screen's own chrome header shows the article's title (via
+    # setTitle() in __init__, matching every other migrated screen)
+    # instead of a separate content-area "title" widget. "playerlogo"
+    # (the host site's own logo, e.g. "serienstream.to" - unrelated to
+    # the app's own logo the chrome header normally shows) sits IN the
+    # header's own logo slot (build_header_auto(logoWidgetName=
+    # "playerlogo")), replacing the app logo there instead of getting its
+    # own separate row - onStart() below falls back to the app's own
+    # iptvlogo.png in that same slot for hosts that don't provide one, so
+    # the header logo is never just empty. "spinner" (loading indicator
+    # while the cover image downloads) kept its original "sits just
+    # above the cover" design intent, moved down by the header's own
+    # offset. showOk=False - key_ok() turned out to just start the
+    # spinner animation with nothing to ever stop it again, no real
+    # effect, and was removed entirely; showNav stays default True since
+    # up/down (key_up()/key_down()) do something real - they page the
+    # description text.
+    def __prepareSkin(self):
+        # iconBase is computed fresh per instance here, not cached at
+        # class/module level, so it always reflects the real resolution
+        # at the time the screen is opened. Every other chrome screen in
+        # this plugin (IPTVChoiceBoxWidget etc.) already computes iconBase
+        # fresh per instance inside its own
+        # __prepareSkin() - this now matches that same, already-proven
+        # pattern instead of being the one exception.
+        iconBase = skinchrome.getIconBase()
+        return """
+        <screen name="IPTVArticleView" position="center,center" size="1200,620" resolution="1280,720" title="Info..." backgroundColor="#34111112" flags="wfNoBorder">
+            %s
+            <widget name="spinner" zPosition="2" position="128,64" size="16,16" transparent="1" alphatest="blend" />
+            <widget name="spinner_1" zPosition="1" position="128,64" size="16,16" transparent="1" alphatest="blend" />
+            <widget name="spinner_2" zPosition="1" position="144,64" size="16,16" transparent="1" alphatest="blend" />
+            <widget name="spinner_3" zPosition="1" position="160,64" size="16,16" transparent="1" alphatest="blend" />
+            <widget name="spinner_4" zPosition="1" position="176,64" size="16,16" transparent="1" alphatest="blend" />
             <widget name="cover" position="20,80" size="296,470" zPosition="3" alphatest="blend" />
-            <widget name="spinner" zPosition="2" position="252,34" size="16,16" transparent="1" alphatest="blend" />
-            <widget name="spinner_1" zPosition="1" position="252,34" size="16,16" transparent="1" alphatest="blend" />
-            <widget name="spinner_2" zPosition="1" position="268,34" size="16,16" transparent="1" alphatest="blend" />
-            <widget name="spinner_3" zPosition="1" position="284,34" size="16,16" transparent="1" alphatest="blend" />
-            <widget name="spinner_4" zPosition="1" position="300,34" size="16,16" transparent="1" alphatest="blend" />
-            <widget name="text" position="340,80" size="840,470" font="Regular;20" splitPosition="200" transparent="1" backgroundColor="black" foregroundColor="white" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2"/>
-            <widget name="playerlogo" zPosition="4" position="110,20" size="120,40" alphatest="blend" transparent="1" backgroundColor="black" />
+            <widget name="text" position="340,80" size="840,470" font="Regular;20" splitPosition="330" transparent="1" backgroundColor="black" foregroundColor="white" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2"/>
+            %s
         </screen>
-        """
-
-    fullHD = getDesktop(0).size().width() == 1920
-    if fullHD:
-        skin = skin.replace("/HD/", "/FHD/")
+        """ % (skinchrome.build_header_auto(iconBase=iconBase, logoWidgetName="playerlogo"), skinchrome.build_footer_auto(620, iconBase=iconBase, showOk=False))
 
     def __init__(self, session, artItem, addParams):
         self.session = session
         self.artItem = artItem
         #############################################
 
+        self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
-        self.skinName = ["IPTVArticleView"]
+        self.skinName = skinchrome.forceInternalSkinName(["IPTVArticleView"])
+        # chrome header's own source="Title" widget now shows this,
+        # replacing the old separate content-area "title" widget
+        self.setTitle(self.artItem.title)
 
-        self["title"] = Label("")
         self["text"] = ScrollLabel(" ")
         #############################################
         # COVER
@@ -99,7 +128,14 @@ class IPTVArticleView(Screen):
         except Exception:
             printExc()
         self.spinner = {}
-        self.spinner["pixmap"] = [LoadPixmap(GetIconDir('radio_button_on.png')), LoadPixmap(GetIconDir('radio_button_off.png'))]
+        # per-tier assets (icons/HD|FHD|WQHD), not the flat icons/ root -
+        # this spinner widget's declared "16,16" box gets auto-scaled to
+        # 16/24/32 by this screen's own resolution="1280,720", but plain
+        # Pixmap widgets never scale their pixmap CONTENT to that box, so
+        # the source file itself has to already be the right size (same
+        # bug/fix as the legacy grid's page markers, see playerselector.py)
+        _spinnerIconBase = skinchrome.getIconBase()
+        self.spinner["pixmap"] = [LoadPixmap(_spinnerIconBase + '/radio_button_on.png'), LoadPixmap(_spinnerIconBase + '/radio_button_off.png')]
         # spinner timer
         self.spinner["timer"] = eTimer()
         self.spinner["timer_conn"] = eConnectCallback(self.spinner["timer"].timeout, self.updateSpinner)
@@ -114,7 +150,6 @@ class IPTVArticleView(Screen):
 
         self["actions"] = ActionMap(['OkCancelActions', 'DirectionActions'],
         {
-            "ok": self.key_ok,
             "cancel": self.key_back,
             "up": self.key_up,
             "down": self.key_down,
@@ -139,12 +174,29 @@ class IPTVArticleView(Screen):
     def onStart(self):
         self.onLayoutFinish.remove(self.onStart)
         self.loadSpinner()
-        self["title"].setText(self.artItem.title)
         self.setText()
+        # splitPosition (x where the "label | value" pairs' value column
+        # starts) is NOT scaled by resolution="1280,720", so at FHD/WQHD the
+        # doubled font ran the longest label into its value - set it here
+        # scaled by the tier factor (the skin's own 330 is the fallback).
+        # Only for our own embedded skin: an external skin (e.g. MetrixHD,
+        # already scaled globally by openATV) declares its own splitPosition
+        # and must not have this HD-reference number forced onto it too.
+        if not skinchrome.isExternalSkin(self.skinName):
+            try:
+                self["text"].instance.setSplitPosition(skinchrome.scalePixels(330, skinchrome.getScale()))
+            except Exception:
+                printExc()
         self.hideSpinner()
         self.loadCover()
+        # header logo: the host's own logo if it has one, otherwise fall
+        # back to the app's own logo so the header slot is never just
+        # empty
         if self.hostLogoPath and os.path.exists(self.hostLogoPath):
             self["playerlogo"].updateIcon(self.hostLogoPath)
+        else:
+            self["playerlogo"].updateIcon(skinchrome.getIconBase() + "/iptvlogo.png")
+        self["playerlogo"].show()
 
     #############################################
     # COVER
@@ -307,10 +359,6 @@ class IPTVArticleView(Screen):
         self["text"].setText(text)
 
     #######################################################################
-
-    def key_ok(self):
-        self.showSpinner()
-        pass
 
     def key_back(self):
         self.close()

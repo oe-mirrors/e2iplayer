@@ -1,4 +1,4 @@
-<screen name="IPTVExtMoviePlayer"    position="center,center" size="%d,%d" flags="wfNoBorder" backgroundColor="#FFFFFFFF" >
+<screen name="IPTVExtMoviePlayer"    position="center,center" size="%d,%d" resolution="1280,720" flags="wfNoBorder" backgroundColor="#FFFFFFFF" >
                     <widget name="pleaseWait"         noWrap="1" position="center,30"        size="500,40"    zPosition="3" transparent="1" foregroundColor="#999999"   backgroundColor="transparent" font="Regular;25" halign="center"  valign="center"/>
                     
                     <widget name="logoIcon"           position="1176,110"        size="160,40"    zPosition="4"             transparent="1" alphatest="blend" />
@@ -7,7 +7,7 @@
                     <widget name="bufferingCBar"      position="220,86"        size="840,7"     zPosition="4" pixmap="%s" transparent="1" borderWidth="1" borderColor="#888888" />
                     <widget name="bufferingBar"       position="220,86"        size="840,7"     zPosition="3" pixmap="%s" borderWidth="1" borderColor="#888888" />
                     <widget name="statusIcon"         position="135,55"        size="72,72"     zPosition="4"             transparent="1" alphatest="blend" />
-                    <widget name="loopIcon"           position="60,80"       size="40,40"     zPosition="4"             transparent="1" alphatest="blend" />
+                    <widget name="loopIcon"           position="60,80"       size="40,21"     zPosition="4"             transparent="1" alphatest="blend" />
                     
                     <widget name="goToSeekPointer"    position="94,30"          size="150,60"  zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
                     <widget name="goToSeekLabel"      noWrap="1" position="94,30"         size="150,40"   zPosition="9" transparent="1" foregroundColor="white"     backgroundColor="#251f1f1f" font="Regular;27" halign="center" valign="center"/>
