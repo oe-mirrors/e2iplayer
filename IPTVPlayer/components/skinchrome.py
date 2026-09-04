@@ -80,6 +80,7 @@ def _keyStartX(numLeftIcons):
         return LEFT_ICON_SLOTS[0]
     return LEFT_ICON_SLOTS[numLeftIcons - 1] + LEFT_ICON_W + LEFT_TO_KEY_GAP
 
+
 # the one set of numbers that doesn't reduce to a clean x1.5/x2 of the
 # HD value (17 -> 26 -> 35, not 17/25.5/34) - explicit per the comment
 # above, falls back to a plain scaled-and-rounded value for any other
