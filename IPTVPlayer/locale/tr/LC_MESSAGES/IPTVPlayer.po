@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 21:21+0200\n"
+"POT-Creation-Date: 2026-09-04 17:31+0200\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -45,6 +45,15 @@ msgstr ""
 "Sorunu buradan da bildirebilirsin: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr ""
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr ""
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr ""
+
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr "\"%s\" Sanal Klavye düzeni kullanılamıyor."
@@ -71,6 +80,10 @@ msgstr "%s - altyazı sağlayıcısı"
 #, python-format
 msgid "%s API KEY"
 msgstr "%s API ANAHTARI"
+
+#, python-format
+msgid "%s buffering..."
+msgstr ""
 
 #, python-format
 msgid "%s device name"
@@ -230,7 +243,7 @@ msgstr ""
 msgid "--Other--"
 msgstr "Diğer"
 
-msgid "0-9 - direct number input"
+msgid "0-9"
 msgstr ""
 
 msgid "12 hour format"
@@ -550,7 +563,7 @@ msgstr "Otomatik oynatma başlama gecikmesi"
 msgid "Awards:"
 msgstr ""
 
-msgid "BLUE - Shift"
+msgid "BLUE"
 msgstr ""
 
 msgid "Background color"
@@ -935,6 +948,10 @@ msgstr ""
 msgid "Disable"
 msgstr "Devre dışı bırak"
 
+#, fuzzy
+msgid "Disable all groups"
+msgstr "Host gruplarını etkinleştir"
+
 msgid "Disable live at plugin start"
 msgstr ""
 
@@ -1004,26 +1021,7 @@ msgstr ""
 msgid ""
 "Download can not be started.\n"
 "Downloader %s not working correctly.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Downloader %s not working correctly.\n"
 "Status[%s]"
-msgstr ""
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Incorrect address \"%r\"."
-msgstr ""
-
-#, python-format
-msgid ""
-"Download failed.\n"
-"Last error \"%s (%s)\"."
 msgstr ""
 
 #, python-format
@@ -1041,6 +1039,10 @@ msgstr "İndirme yöneticisi"
 #, fuzzy
 msgid "Download manager is not initialized"
 msgstr "İndirme yöneticisi"
+
+#, fuzzy
+msgid "Download notification duration"
+msgstr "İndirme konumu"
 
 #, fuzzy
 msgid "Download subtiles failed."
@@ -1085,12 +1087,6 @@ msgstr ""
 #, python-format
 msgid "Downloading file [%s] problem."
 msgstr ""
-
-#, fuzzy, python-format
-msgid ""
-"Downloading file:\n"
-"%r."
-msgstr "Günlük dosyasını indir"
 
 #, python-format
 msgid ""
@@ -1147,6 +1143,9 @@ msgid ""
 "Please check if gstreamer plugins are available in your system."
 msgstr ""
 
+msgid "EXIT"
+msgstr ""
+
 msgid "Edit"
 msgstr ""
 
@@ -1192,6 +1191,10 @@ msgstr ""
 
 msgid "Enable"
 msgstr "Etkinleştir"
+
+#, fuzzy
+msgid "Enable all groups"
+msgstr "Host gruplarını etkinleştir"
 
 msgid "Enable hosts groups"
 msgstr "Host gruplarını etkinleştir"
@@ -1380,7 +1383,7 @@ msgstr ""
 msgid "FAILED"
 msgstr "BAŞARISIZ"
 
-msgid "FAST FORWARD - insert space"
+msgid "FAST FORWARD"
 msgstr ""
 
 msgid "FREE"
@@ -1551,7 +1554,10 @@ msgstr ""
 msgid "For continuous playing, please press 8!"
 msgstr ""
 
-msgid "Force internal Skin"
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr ""
+
+msgid "Force internal skin: main screen only"
 msgstr ""
 
 #, fuzzy
@@ -1581,7 +1587,7 @@ msgstr "Geçerli bağlantı yok."
 msgid "Full description not available"
 msgstr "Geçerli bağlantı yok."
 
-msgid "GREEN - Enter (confirm and close)"
+msgid "GREEN"
 msgstr ""
 
 msgid "GSTplayer no IFD workarround"
@@ -1746,6 +1752,9 @@ msgstr "Puan:"
 msgid "IMDb Suggestions"
 msgstr "IMDb Önerileri"
 
+msgid "INFO"
+msgstr ""
+
 msgid "INTERRUPTED"
 msgstr "KESİLDİ"
 
@@ -1776,9 +1785,6 @@ msgstr ""
 
 msgid "Info"
 msgstr "Bilgi"
-
-msgid "Info bar clock format"
-msgstr "Bilgi çubuğu saat biçimi"
 
 msgid "Info bar timeout"
 msgstr "Bilgi çubuğu zaman aşımı"
@@ -2112,7 +2118,19 @@ msgstr "Düşük"
 msgid "MENU"
 msgstr "MENÜ"
 
-msgid "MENU - Options (select language, clear search history, settings)"
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr ""
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr ""
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr ""
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr ""
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
 msgstr ""
 
 #, fuzzy
@@ -2222,9 +2240,6 @@ msgstr ""
 #, fuzzy
 msgid "Move failed."
 msgstr "Giriş başarısız."
-
-msgid "Move group"
-msgstr "Grubu taşı"
 
 msgid "Movie"
 msgstr "Film"
@@ -2380,6 +2395,9 @@ msgstr "Geçerli bağlantı yok."
 msgid "None"
 msgstr "Yok"
 
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr ""
+
 #, fuzzy
 msgid "Nothing has been downloaded yet."
 msgstr "Pin değiştirildi."
@@ -2403,13 +2421,6 @@ msgstr "Satır sayısı"
 
 msgid "OK"
 msgstr "Tamam"
-
-msgid "OK - type selected character / confirm selection"
-msgstr ""
-
-#, python-format
-msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
-msgstr ""
 
 msgid "OMDb API Key"
 msgstr ""
@@ -2458,7 +2469,7 @@ msgstr "Diğerleri"
 msgid "Own model"
 msgstr ""
 
-msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgid "PAGE UP/PAGE DOWN"
 msgstr ""
 
 msgid "PAY"
@@ -2467,10 +2478,13 @@ msgstr ""
 msgid "PENDING"
 msgstr ""
 
+msgid "PLAY"
+msgstr ""
+
 msgid "PORT"
 msgstr ""
 
-msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
+msgid "PREVIOUS/NEXT"
 msgstr ""
 
 msgid "Page:"
@@ -2709,13 +2723,14 @@ msgstr ""
 msgid "RECENT"
 msgstr ""
 
-msgid "RED - Backspace"
-msgstr ""
+#, fuzzy
+msgid "RED"
+msgstr "İPTAL EDİLDİ"
 
 msgid "REMEMBER:"
 msgstr ""
 
-msgid "REWIND - delete entered text"
+msgid "REWIND"
 msgstr ""
 
 msgid "Radio"
@@ -2839,6 +2854,9 @@ msgstr ""
 msgid "Reset group"
 msgstr "Grup seç"
 
+msgid "Reset to saved order"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2895,6 +2913,15 @@ msgstr "Takvim"
 
 msgid "Science"
 msgstr "Bilim"
+
+#, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+
+msgid "Script finished."
+msgstr ""
 
 msgid "Search"
 msgstr "Ara"
@@ -3135,8 +3162,15 @@ msgstr ""
 msgid "Show all channels"
 msgstr "Tüm kanalları göster"
 
+msgid "Show clock in header"
+msgstr ""
+
 msgid "Show download manager after adding new item"
 msgstr "Yeni öğe ekledikten sonra indirme yöneticisini göster"
+
+#, fuzzy
+msgid "Show download notification"
+msgstr "indirme konumu"
 
 msgid "Show file size"
 msgstr "Dosya boyutunu göster"
@@ -3188,10 +3222,6 @@ msgstr "İndirilecek altyazıyı seç"
 msgid "Simplify the title and try again."
 msgstr ""
 
-#, fuzzy
-msgid "Single file downloader"
-msgstr "E2iPlayer indirici"
-
 msgid "Skin"
 msgstr "Arayüz"
 
@@ -3218,15 +3248,8 @@ msgid "Some settings will be applied only after GUI restart."
 msgstr "Bazı ayarlar ancak arayüz yeniden başlatıldıktan sonra uygulanır."
 
 #, fuzzy
-msgid "Sort"
-msgstr "Şuna göre sırala:"
-
-#, fuzzy
 msgid "Sort A-Z"
 msgstr "Program"
-
-msgid "Sort Mode"
-msgstr "Sıralama modu"
 
 msgid "Sort Myfreecams :"
 msgstr ""
@@ -3782,9 +3805,6 @@ msgstr ""
 msgid "Use default video quality:"
 msgstr ""
 
-msgid "Use legacy title format"
-msgstr ""
-
 msgid "Use links cache"
 msgstr "Bağlantı önbelleğini kullan"
 
@@ -3880,6 +3900,10 @@ msgstr "Video modu"
 
 msgid "Video options"
 msgstr "Video seçenekleri"
+
+#, fuzzy
+msgid "Video player OSD clock format"
+msgstr "Bilgi çubuğu saat biçimi"
 
 #, fuzzy
 msgid "Video policy"
@@ -3987,7 +4011,7 @@ msgstr "Canlı akışlar"
 msgid "Xtream host (e.g. http://server:port)"
 msgstr ""
 
-msgid "YELLOW - AltGr"
+msgid "YELLOW"
 msgstr ""
 
 msgid "YP connected"
@@ -4060,6 +4084,9 @@ msgid "Youtube Suggestions"
 msgstr "Youtube Önerileri"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
+msgstr ""
+
+msgid "Z-A"
 msgstr ""
 
 #, fuzzy, python-format
@@ -4245,6 +4272,9 @@ msgstr "düşük"
 msgid "main"
 msgstr "ana"
 
+msgid "manual"
+msgstr ""
+
 msgid "maroon"
 msgstr ""
 
@@ -4313,6 +4343,9 @@ msgstr "üst"
 
 msgid "unknown"
 msgstr "bilinmiyor"
+
+msgid "unsorted"
+msgstr ""
 
 msgid "version"
 msgstr "sürüm"

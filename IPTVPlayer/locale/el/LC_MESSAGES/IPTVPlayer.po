@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 21:21+0200\n"
+"POT-Creation-Date: 2026-09-04 17:31+0200\n"
 "PO-Revision-Date: 2026-08-20 08:50+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
@@ -52,6 +52,15 @@ msgstr ""
 "Μπορείτε επίσης να αναφέρετε το πρόβλημα εδώ \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr ""
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr ""
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr ""
+
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr "Η διάταξη εικονικού πληκτρολογίου \"%s\" δεν είναι διαθέσιμη."
@@ -78,6 +87,10 @@ msgstr "%s - πάροχος υποτίτλων"
 #, python-format
 msgid "%s API KEY"
 msgstr "%s - Κλειδί API"
+
+#, fuzzy, python-format
+msgid "%s buffering..."
+msgstr "[%s] με προσωρινή μνήμη"
 
 #, python-format
 msgid "%s device name"
@@ -230,8 +243,8 @@ msgstr "--Οποιοδήποτε--"
 msgid "--Other--"
 msgstr "--Άλλα-"
 
-msgid "0-9 - direct number input"
-msgstr "0-9 - άμεση εισαγωγή αριθμού"
+msgid "0-9"
+msgstr ""
 
 msgid "12 hour format"
 msgstr "Μορφή 12 ωρών"
@@ -540,8 +553,8 @@ msgstr "Καθυστέρηση εκκίνησης αυτόματης αναπα�
 msgid "Awards:"
 msgstr "Βραβεία:"
 
-msgid "BLUE - Shift"
-msgstr "BLUE - Shift"
+msgid "BLUE"
+msgstr ""
 
 msgid "Background color"
 msgstr "Χρώμα φόντου"
@@ -911,6 +924,10 @@ msgstr "Ο κατάλογος \"%s\" δεν υπάρχει."
 msgid "Disable"
 msgstr "Απενεργοποίηση"
 
+#, fuzzy
+msgid "Disable all groups"
+msgstr "Απενεργοποίηση/ενεργοποίηση ομάδων"
+
 msgid "Disable live at plugin start"
 msgstr "Απενεργοποίηση ζωντανής μετάδοσης κατά την εκκίνηση του πρόσθετου"
 
@@ -975,37 +992,11 @@ msgstr ""
 msgid ""
 "Download can not be started.\n"
 "Downloader %s not working correctly.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"Δεν είναι δυνατή η έναρξη λήψης.\n"
-"Το πρόγραμμα λήψεων %s δεν λειτουργεί σωστά.\n"
-"Τελευταίο σφάλμα: \"%s (%s)\"."
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
 "Δεν είναι δυνατή η έναρξη λήψης.\n"
 "Το πρόγραμμα λήψεων %s δεν λειτουργεί σωστά.\n"
 "Κατάσταση[%s]"
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Incorrect address \"%r\"."
-msgstr ""
-"Δεν είναι δυνατή η έναρξη λήψης.\n"
-"Εσφαλμένη διεύθυνση \"%r\"."
-
-#, python-format
-msgid ""
-"Download failed.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"Η λήψη απέτυχε.\n"
-"Τελευταίο σφάλμα: \"%s (%s)\"."
 
 #, python-format
 msgid ""
@@ -1023,6 +1014,10 @@ msgstr "Διαχείριση λήψεων"
 
 msgid "Download manager is not initialized"
 msgstr "Η Διαχείριση λήψεων δεν έχει αρχικοποιηθεί"
+
+#, fuzzy
+msgid "Download notification duration"
+msgstr "Τοποθεσία λήψεων"
 
 msgid "Download subtiles failed."
 msgstr "Αποτυχία λήψης υποτίτλων."
@@ -1075,14 +1070,6 @@ msgstr ""
 #, python-format
 msgid "Downloading file [%s] problem."
 msgstr "Πρόβλημα λήψης αρχείου [%s]."
-
-#, python-format
-msgid ""
-"Downloading file:\n"
-"%r."
-msgstr ""
-"Λήψη αρχείου:\n"
-"%r."
 
 #, python-format
 msgid ""
@@ -1139,6 +1126,9 @@ msgstr ""
 "ΣΦΑΛΜΑ: δεν ήταν δυνατή η δημιουργία pipeline: δεν υπάρχει στοιχείο \"playbin2\" \n"
 "Παρακαλώ ελέγξτε αν τα πρόσθετα gstreamer είναι διαθέσιμα στο σύστημά σας."
 
+msgid "EXIT"
+msgstr ""
+
 msgid "Edit"
 msgstr "Επεξεργασία"
 
@@ -1177,6 +1167,10 @@ msgstr "Δεν επιτρέπεται κενός τίτλος."
 
 msgid "Enable"
 msgstr "Ενεργοποίηση"
+
+#, fuzzy
+msgid "Enable all groups"
+msgstr "Ενεργοποίηση ομάδων host"
 
 msgid "Enable hosts groups"
 msgstr "Ενεργοποίηση ομάδων host"
@@ -1361,7 +1355,8 @@ msgstr "Το εξαγόμενο αρχείο υποτίτλων είναι κε�
 msgid "FAILED"
 msgstr "ΑΠΕΤΥΧΕ"
 
-msgid "FAST FORWARD - insert space"
+#, fuzzy
+msgid "FAST FORWARD"
 msgstr "FAST FORWARD - εισαγωγή κενού"
 
 msgid "FREE"
@@ -1523,7 +1518,11 @@ msgstr "Πόδι & Αστράγαλος"
 msgid "For continuous playing, please press 8!"
 msgstr "Για συνεχή αναπαραγωγή, πατήστε το 8!"
 
-msgid "Force internal Skin"
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr ""
+
+#, fuzzy
+msgid "Force internal skin: main screen only"
 msgstr "Επιβολή εσωτερικού θέματος"
 
 msgid "Format 'wmv' blocked in configuration."
@@ -1550,8 +1549,8 @@ msgstr "Η πλήρης περιγραφή φορτώθηκε"
 msgid "Full description not available"
 msgstr "Η πλήρης περιγραφή δεν είναι διαθέσιμη"
 
-msgid "GREEN - Enter (confirm and close)"
-msgstr "GREEN - Είσοδος (επιβεβαίωση και κλείσιμο)"
+msgid "GREEN"
+msgstr ""
 
 msgid "GSTplayer no IFD workarround"
 msgstr "Παράκαμψη IFD για GSTplayer"
@@ -1705,6 +1704,9 @@ msgstr "Βαθμολογία IMDb:"
 msgid "IMDb Suggestions"
 msgstr "Προτάσεις IMDb"
 
+msgid "INFO"
+msgstr ""
+
 msgid "INTERRUPTED"
 msgstr "ΔΙΑΚΟΠΗΚΕ"
 
@@ -1732,9 +1734,6 @@ msgstr "Βιομηχανία"
 
 msgid "Info"
 msgstr "Πληροφορίες"
-
-msgid "Info bar clock format"
-msgstr "Μορφή ρολογιού γραμμής πληροφοριών"
 
 msgid "Info bar timeout"
 msgstr "Χρονικό όριο γραμμής πληροφοριών"
@@ -2064,8 +2063,20 @@ msgstr "Χαμηλό"
 msgid "MENU"
 msgstr "ΜΕΝΟΥ"
 
-msgid "MENU - Options (select language, clear search history, settings)"
-msgstr "MENU - Επιλογές (επιλογή γλώσσας, εκκαθάριση ιστορικού αναζήτησης, ρυθμίσεις)"
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr ""
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr ""
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr ""
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr ""
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
+msgstr ""
 
 msgid "MENU=Options"
 msgstr "MENU=Επιλογές"
@@ -2169,9 +2180,6 @@ msgstr "Μετακίνηση"
 
 msgid "Move failed."
 msgstr "Η μετακίνηση απέτυχε."
-
-msgid "Move group"
-msgstr "Μετακίνηση ομάδας"
 
 msgid "Movie"
 msgstr "Ταινία"
@@ -2326,6 +2334,9 @@ msgstr "Δεν υπάρχει διαθέσιμο ID βίντεο"
 msgid "None"
 msgstr "Κανένα"
 
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr ""
+
 msgid "Nothing has been downloaded yet."
 msgstr "Δεν έχει ληφθεί ακόμη τίποτα."
 
@@ -2348,13 +2359,6 @@ msgstr "Αριθμός σειρών"
 
 msgid "OK"
 msgstr "ΕΝΤΑΞΕΙ"
-
-msgid "OK - type selected character / confirm selection"
-msgstr "OK - πληκτρολόγηση επιλεγμένου χαρακτήρα / επιβεβαίωση επιλογής"
-
-#, python-format
-msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
-msgstr "OK=Επεξεργασία ΚΟΚΚΙΝΟ=%s ΚΙΤΡΙΝΟ=%s EXIT=Έξοδος"
 
 msgid "OMDb API Key"
 msgstr "Κλειδί API OMDb"
@@ -2401,8 +2405,8 @@ msgstr "Άλλα"
 msgid "Own model"
 msgstr "Δικό σας μοντέλο"
 
-msgid "PAGE UP/PAGE DOWN - move cursor right/left"
-msgstr "PAGE UP/PAGE DOWN - μετακίνηση του δρομέα δεξιά/αριστερά"
+msgid "PAGE UP/PAGE DOWN"
+msgstr ""
 
 msgid "PAY"
 msgstr "ΠΛΗΡΩΜΗ"
@@ -2410,11 +2414,14 @@ msgstr "ΠΛΗΡΩΜΗ"
 msgid "PENDING"
 msgstr "ΕΚΚΡΕΜΕΙ"
 
+msgid "PLAY"
+msgstr ""
+
 msgid "PORT"
 msgstr "ΘΥΡΑ"
 
-msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
-msgstr "PREVIOUS/NEXT - εναλλαγή μεταξύ πληκτρολογίου, προτάσεων και ιστορικού αναζήτησης"
+msgid "PREVIOUS/NEXT"
+msgstr ""
 
 msgid "Page:"
 msgstr "Σελίδα:"
@@ -2649,14 +2656,15 @@ msgstr "Μέγεθος προσωρινής μνήμης RAM [MB] για πρω�
 msgid "RECENT"
 msgstr "ΠΡΟΣΦΑΤΑ"
 
-msgid "RED - Backspace"
-msgstr "RED - Backspace"
+#, fuzzy
+msgid "RED"
+msgstr "ΑΚΥΡΩΘΗΚΕ"
 
 msgid "REMEMBER:"
 msgstr "ΘΥΜΗΘΕΙΤΕ:"
 
-msgid "REWIND - delete entered text"
-msgstr "REWIND - διαγραφή εισαγμένου κειμένου"
+msgid "REWIND"
+msgstr ""
 
 msgid "Radio"
 msgstr "Ραδιόφωνο"
@@ -2772,6 +2780,9 @@ msgstr "Επαναφορά κατάστασης"
 msgid "Reset group"
 msgstr "Επαναφορά ομάδας"
 
+msgid "Reset to saved order"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2832,6 +2843,18 @@ msgstr "Πρόγραμμα"
 
 msgid "Science"
 msgstr "Επιστήμη"
+
+#, fuzzy, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Η εκτέλεση του script MyE2i απέτυχε.\n"
+"Κωδικός σφάλματος: %s\n"
+
+#, fuzzy
+msgid "Script finished."
+msgstr "Το script MyE2i ολοκληρώθηκε."
 
 msgid "Search"
 msgstr "Αναζήτηση"
@@ -3064,8 +3087,15 @@ msgstr "Εμφάνιση προειδοποιήσεων κλειδιού Api You
 msgid "Show all channels"
 msgstr "Εμφάνιση όλων των καναλιών"
 
+msgid "Show clock in header"
+msgstr ""
+
 msgid "Show download manager after adding new item"
 msgstr "Εμφάνιση Διαχείρισης λήψεων μετά την προσθήκη νέου στοιχείου"
+
+#, fuzzy
+msgid "Show download notification"
+msgstr "τοποθεσία λήψεων"
 
 msgid "Show file size"
 msgstr "Εμφάνιση μεγέθους αρχείου"
@@ -3113,9 +3143,6 @@ msgstr "Απλό πρόγραμμα λήψης υποτίτλων"
 msgid "Simplify the title and try again."
 msgstr "Απλοποιήστε τον τίτλο και δοκιμάστε ξανά."
 
-msgid "Single file downloader"
-msgstr "Λήψη μεμονωμένου αρχείου"
-
 msgid "Skin"
 msgstr "Θέμα"
 
@@ -3140,14 +3167,8 @@ msgstr "Ορισμένες αλλαγές θα εφαρμοστούν μόνο �
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Ορισμένες ρυθμίσεις θα εφαρμοστούν μόνο μετά την επανεκκίνηση του GUI."
 
-msgid "Sort"
-msgstr "Ταξινόμηση"
-
 msgid "Sort A-Z"
 msgstr "Ταξινόμηση A-Z"
-
-msgid "Sort Mode"
-msgstr "Λειτουργία ταξινόμησης"
 
 msgid "Sort Myfreecams :"
 msgstr "Ταξινόμηση Myfreecams:"
@@ -3700,9 +3721,6 @@ msgstr "Χρήση προεπιλεγμένης ποιότητας βίντεο"
 msgid "Use default video quality:"
 msgstr "Χρήση προεπιλεγμένης ποιότητας βίντεο:"
 
-msgid "Use legacy title format"
-msgstr "Χρήση παλαιάς μορφής τίτλου"
-
 msgid "Use links cache"
 msgstr "Χρήση προσωρινής αποθήκευσης συνδέσμων"
 
@@ -3791,6 +3809,10 @@ msgstr "Λειτουργία βίντεο"
 
 msgid "Video options"
 msgstr "Επιλογές βίντεο"
+
+#, fuzzy
+msgid "Video player OSD clock format"
+msgstr "Μορφή ρολογιού γραμμής πληροφοριών"
 
 msgid "Video policy"
 msgstr "Πολιτική βίντεο"
@@ -3893,7 +3915,8 @@ msgstr "Xtream Live Stream"
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "Xtream host (e.g. http://server:port)"
 
-msgid "YELLOW - AltGr"
+#, fuzzy
+msgid "YELLOW"
 msgstr "YELLOW - AltGr"
 
 msgid "YP connected"
@@ -3966,6 +3989,9 @@ msgstr "Προτάσεις Youtube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Οι αναζητήσεις στο Youtube είναι πιο γρήγορες αν συμπληρώσετε το κλειδί API στο μενού ρυθμίσεων"
+
+msgid "Z-A"
+msgstr ""
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4149,6 +4175,9 @@ msgstr "χαμηλή"
 msgid "main"
 msgstr "κύριο"
 
+msgid "manual"
+msgstr ""
+
 msgid "maroon"
 msgstr "καφέ-μπορντώ"
 
@@ -4217,6 +4246,10 @@ msgstr "κορυφαίο"
 
 msgid "unknown"
 msgstr "άγνωστο"
+
+#, fuzzy
+msgid "unsorted"
+msgstr "Ακυρώθηκε"
 
 msgid "version"
 msgstr "έκδοση"

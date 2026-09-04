@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-19 18:09+0200\n"
+"POT-Creation-Date: 2026-09-04 17:31+0200\n"
 "PO-Revision-Date: 2026-08-30 08:38+0300\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -51,6 +51,15 @@ msgstr ""
 "يمكنك أيضًا الإبلاغ عن المشكلة هنا: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr ""
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr ""
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr ""
+
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr "تخطيط لوحة المفاتيح الافتراضية \"%s\" غير متاح."
@@ -77,6 +86,10 @@ msgstr "%s - مزود الترجمة"
 #, python-format
 msgid "%s API KEY"
 msgstr "مفتاح API لـ %s"
+
+#, fuzzy, python-format
+msgid "%s buffering..."
+msgstr "[%s] مع التخزين المؤقت"
 
 #, python-format
 msgid "%s device name"
@@ -229,8 +242,8 @@ msgstr "--أي منها--"
 msgid "--Other--"
 msgstr "--أخرى--"
 
-msgid "0-9 - direct number input"
-msgstr "0-9 - إدخال الرقم مباشرة"
+msgid "0-9"
+msgstr ""
 
 msgid "12 hour format"
 msgstr "تنسيق 12 ساعة"
@@ -534,8 +547,8 @@ msgstr "تأخير بدء التشغيل التلقائي"
 msgid "Awards:"
 msgstr "الجوائز:"
 
-msgid "BLUE - Shift"
-msgstr "الأزرق - Shift"
+msgid "BLUE"
+msgstr ""
 
 msgid "Background color"
 msgstr "لون الخلفية"
@@ -903,6 +916,10 @@ msgstr "الدليل \"%s\" غير موجود."
 msgid "Disable"
 msgstr "تعطيل"
 
+#, fuzzy
+msgid "Disable all groups"
+msgstr "تعطيل/تمكين المجموعات"
+
 msgid "Disable live at plugin start"
 msgstr "تعطيل البث المباشر عند بدء الإضافة"
 
@@ -967,37 +984,11 @@ msgstr ""
 msgid ""
 "Download can not be started.\n"
 "Downloader %s not working correctly.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"لا يمكن بدء التحميل.\n"
-"المحمل %s لا يعمل بشكل صحيح.\n"
-"آخر خطأ: \"%s (%s)\"."
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
 "لا يمكن بدء التحميل.\n"
 "المحمل %s لا يعمل بشكل صحيح.\n"
 "الحالة [%s]"
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Incorrect address \"%r\"."
-msgstr ""
-"لا يمكن بدء التحميل.\n"
-"العنوان غير صحيح \"%r\"."
-
-#, python-format
-msgid ""
-"Download failed.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"فشل التحميل.\n"
-"آخر خطأ: \"%s (%s)\"."
 
 #, python-format
 msgid ""
@@ -1015,6 +1006,10 @@ msgstr "مدير التحميل"
 
 msgid "Download manager is not initialized"
 msgstr "لم يتم تهيئة مدير التحميل"
+
+#, fuzzy
+msgid "Download notification duration"
+msgstr "مكان التحميل"
 
 msgid "Download subtiles failed."
 msgstr "فشل تحميل الترجمة."
@@ -1067,14 +1062,6 @@ msgstr ""
 #, python-format
 msgid "Downloading file [%s] problem."
 msgstr "مشكلة في تحميل الملف [%s]."
-
-#, python-format
-msgid ""
-"Downloading file:\n"
-"%r."
-msgstr ""
-"جاري تحميل الملف:\n"
-"%r."
 
 #, python-format
 msgid ""
@@ -1131,6 +1118,9 @@ msgstr ""
 "خطأ: تعذر إنشاء خط التشغيل: العنصر \"playbin2\" غير موجود\n"
 "يرجى التأكد من توفر إضافات gstreamer في النظام."
 
+msgid "EXIT"
+msgstr ""
+
 msgid "Edit"
 msgstr "تحرير"
 
@@ -1169,6 +1159,10 @@ msgstr "لا يُسمح بعنوان فارغ."
 
 msgid "Enable"
 msgstr "تفعيل"
+
+#, fuzzy
+msgid "Enable all groups"
+msgstr "تفعيل مجموعات المضيفين"
 
 msgid "Enable hosts groups"
 msgstr "تفعيل مجموعات المضيفين"
@@ -1353,7 +1347,8 @@ msgstr "ملف الترجمة المستخرج فارغ أو مفقود."
 msgid "FAILED"
 msgstr "فشل"
 
-msgid "FAST FORWARD - insert space"
+#, fuzzy
+msgid "FAST FORWARD"
 msgstr "تقديم سريع - إدخال مسافة"
 
 msgid "FREE"
@@ -1514,7 +1509,11 @@ msgstr "القدم والكاحل"
 msgid "For continuous playing, please press 8!"
 msgstr "للتشغيل المستمر، يرجى الضغط على 8!"
 
-msgid "Force internal Skin"
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr ""
+
+#, fuzzy
+msgid "Force internal skin: main screen only"
 msgstr "فرض استخدام السكين الداخلي"
 
 msgid "Format 'wmv' blocked in configuration."
@@ -1541,8 +1540,8 @@ msgstr "تم تحميل الوصف الكامل"
 msgid "Full description not available"
 msgstr "الوصف الكامل غير متاح"
 
-msgid "GREEN - Enter (confirm and close)"
-msgstr "الأخضر - Enter (تأكيد وإغلاق)"
+msgid "GREEN"
+msgstr ""
 
 msgid "GSTplayer no IFD workarround"
 msgstr "حل مؤقت لمشكلة IFD في GSTplayer"
@@ -1695,6 +1694,9 @@ msgstr "التقييم:"
 msgid "IMDb Suggestions"
 msgstr "اقتراحات IMDb"
 
+msgid "INFO"
+msgstr ""
+
 msgid "INTERRUPTED"
 msgstr "تم الإيقاف"
 
@@ -1721,9 +1723,6 @@ msgstr "الصناعة"
 
 msgid "Info"
 msgstr "معلومات"
-
-msgid "Info bar clock format"
-msgstr "تنسيق ساعة شريط المعلومات"
 
 msgid "Info bar timeout"
 msgstr "مدة عرض شريط المعلومات"
@@ -2052,8 +2051,20 @@ msgstr "منخفض"
 msgid "MENU"
 msgstr "القائمة"
 
-msgid "MENU - Options (select language, clear search history, settings)"
-msgstr "MENU - الخيارات (اختيار اللغة، مسح سجل البحث، الإعدادات)"
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr ""
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr ""
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr ""
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr ""
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
+msgstr ""
 
 msgid "MENU=Options"
 msgstr "خيارات الفيديو"
@@ -2157,9 +2168,6 @@ msgstr "نقل"
 
 msgid "Move failed."
 msgstr "فشل تسجيل الدخول."
-
-msgid "Move group"
-msgstr "نقل المجموعة"
 
 msgid "Movie"
 msgstr "فيلم"
@@ -2314,6 +2322,9 @@ msgstr "معرّف الفيديو غير متاح"
 msgid "None"
 msgstr "لا شيء"
 
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr ""
+
 msgid "Nothing has been downloaded yet."
 msgstr "لم يتم تحميل أي شيء حتى الآن."
 
@@ -2335,13 +2346,6 @@ msgstr "عدد الصفوف"
 
 msgid "OK"
 msgstr "موافق"
-
-msgid "OK - type selected character / confirm selection"
-msgstr "OK - كتابة الحرف المحدد / تأكيد الاختيار"
-
-#, python-format
-msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
-msgstr "OK=تحرير RED=%s YELLOW=%s EXIT=خروج"
 
 msgid "OMDb API Key"
 msgstr "مفتاح OMDb API"
@@ -2388,8 +2392,8 @@ msgstr "آخرون"
 msgid "Own model"
 msgstr "نموذج مخصص"
 
-msgid "PAGE UP/PAGE DOWN - move cursor right/left"
-msgstr "PAGE UP/PAGE DOWN - تحريك المؤشر يمينًا/يسارًا"
+msgid "PAGE UP/PAGE DOWN"
+msgstr ""
 
 msgid "PAY"
 msgstr "دفع"
@@ -2397,11 +2401,14 @@ msgstr "دفع"
 msgid "PENDING"
 msgstr "قيد الانتظار"
 
+msgid "PLAY"
+msgstr ""
+
 msgid "PORT"
 msgstr "المنفذ"
 
-msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
-msgstr "السابق/التالي - التنقل بين لوحة المفاتيح والاقتراحات وسجل البحث"
+msgid "PREVIOUS/NEXT"
+msgstr ""
 
 msgid "Page:"
 msgstr "الصفحة:"
@@ -2636,14 +2643,15 @@ msgstr "حجم ذاكرة التخزين المؤقت [MB] لبروتوكولا�
 msgid "RECENT"
 msgstr "الأحدث"
 
-msgid "RED - Backspace"
-msgstr "الأحمر - مسح"
+#, fuzzy
+msgid "RED"
+msgstr "تم الإلغاء"
 
 msgid "REMEMBER:"
 msgstr "تذكير:"
 
-msgid "REWIND - delete entered text"
-msgstr "ترجيع - حذف النص المُدخل"
+msgid "REWIND"
+msgstr ""
 
 msgid "Radio"
 msgstr "الراديو"
@@ -2758,6 +2766,9 @@ msgstr "إعادة التهيئة"
 msgid "Reset group"
 msgstr "اختر المجموعة"
 
+msgid "Reset to saved order"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2818,6 +2829,18 @@ msgstr "الجدول الزمني"
 
 msgid "Science"
 msgstr "العِلم"
+
+#, fuzzy, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"فشل تنفيذ سكربت MyE2i.\n"
+"رمز الخطأ: %s\n"
+
+#, fuzzy
+msgid "Script finished."
+msgstr "انتهى تنفيذ سكربت MyE2i."
 
 msgid "Search"
 msgstr "بحث"
@@ -3047,8 +3070,15 @@ msgstr "عرض تحذيرات مفتاح YouTube API"
 msgid "Show all channels"
 msgstr "عرض جميع القنوات"
 
+msgid "Show clock in header"
+msgstr ""
+
 msgid "Show download manager after adding new item"
 msgstr "عرض مدير التنزيل بعد إضافة عنصر جديد"
+
+#, fuzzy
+msgid "Show download notification"
+msgstr "مكان التحميل"
 
 msgid "Show file size"
 msgstr "عرض حجم الملف"
@@ -3095,9 +3125,6 @@ msgstr "أداة تحميل ترجمات بسيطة"
 msgid "Simplify the title and try again."
 msgstr "بسط العنوان وحاول مرة أخرى."
 
-msgid "Single file downloader"
-msgstr "أداة تحميل ملف واحد"
-
 msgid "Skin"
 msgstr "المظهر"
 
@@ -3122,14 +3149,8 @@ msgstr "بعض التغييرات سيتم تطبيقها فقط بعد إعاد
 msgid "Some settings will be applied only after GUI restart."
 msgstr "بعض الإعدادات سيتم تطبيقها فقط بعد إعادة تشغيل الواجهة الرسومية."
 
-msgid "Sort"
-msgstr "ترتيب"
-
 msgid "Sort A-Z"
 msgstr "البرامج من أ إلى ي"
-
-msgid "Sort Mode"
-msgstr "وضع الفرز"
 
 msgid "Sort Myfreecams :"
 msgstr "فرز Myfreecams :"
@@ -3681,9 +3702,6 @@ msgstr "استخدم جودة الفيديو الافتراضية"
 msgid "Use default video quality:"
 msgstr "استخدم جودة الفيديو الافتراضية:"
 
-msgid "Use legacy title format"
-msgstr "استخدام تنسيق العنوان القديم"
-
 msgid "Use links cache"
 msgstr "استخدم ذاكرة التخزين المؤقت للروابط"
 
@@ -3772,6 +3790,10 @@ msgstr "وضع الفيديو"
 
 msgid "Video options"
 msgstr "خيارات الفيديو"
+
+#, fuzzy
+msgid "Video player OSD clock format"
+msgstr "تنسيق ساعة شريط المعلومات"
 
 msgid "Video policy"
 msgstr "سياسة الفيديو"
@@ -3874,7 +3896,8 @@ msgstr "بث مباشر Xtream"
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "مضيف Xtream (مثل http://server:port)"
 
-msgid "YELLOW - AltGr"
+#, fuzzy
+msgid "YELLOW"
 msgstr "الأصفر - AltGr"
 
 msgid "YP connected"
@@ -3947,6 +3970,9 @@ msgstr "اقتراحات يوتيوب"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "عمليات البحث في يوتيوب أسرع إذا قمت بإدخال مفتاح API في قائمة الإعدادات"
+
+msgid "Z-A"
+msgstr ""
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4129,6 +4155,9 @@ msgstr "منخفض"
 msgid "main"
 msgstr "رئيسي"
 
+msgid "manual"
+msgstr ""
+
 msgid "maroon"
 msgstr "خمري"
 
@@ -4197,6 +4226,10 @@ msgstr "أعلى"
 
 msgid "unknown"
 msgstr "غير معروف"
+
+#, fuzzy
+msgid "unsorted"
+msgstr "متوقف"
 
 msgid "version"
 msgstr "الإصدار"

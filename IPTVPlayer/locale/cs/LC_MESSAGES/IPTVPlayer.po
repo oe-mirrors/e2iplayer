@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 21:21+0200\n"
+"POT-Creation-Date: 2026-09-04 17:31+0200\n"
 "PO-Revision-Date: 2026-07-27 16:39+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -51,6 +51,15 @@ msgstr ""
 "Problém můžete nahlásit také zde: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr ""
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr ""
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr ""
+
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr "Rozložení virtuální klávesnice \"%s\" není k dispozici."
@@ -77,6 +86,10 @@ msgstr "%s - poskytovatel titulků"
 #, python-format
 msgid "%s API KEY"
 msgstr "%s KLÍČ API"
+
+#, fuzzy, python-format
+msgid "%s buffering..."
+msgstr "[%s] s ukládáním do vyrovnávací paměti"
 
 #, python-format
 msgid "%s device name"
@@ -229,7 +242,7 @@ msgstr "--Jakýkoliv--"
 msgid "--Other--"
 msgstr "--Jiné __________--"
 
-msgid "0-9 - direct number input"
+msgid "0-9"
 msgstr ""
 
 msgid "12 hour format"
@@ -541,7 +554,7 @@ msgstr "Zpoždění spuštění automatického přehrávání"
 msgid "Awards:"
 msgstr "Ocenění:"
 
-msgid "BLUE - Shift"
+msgid "BLUE"
 msgstr ""
 
 msgid "Background color"
@@ -914,6 +927,10 @@ msgstr "Adresář „%s“ neexistuje."
 msgid "Disable"
 msgstr "Zakázat"
 
+#, fuzzy
+msgid "Disable all groups"
+msgstr "Zakázat/Povolit skupiny"
+
 msgid "Disable live at plugin start"
 msgstr "Zakázat živé vysílání při spuštění pluginu"
 
@@ -978,37 +995,11 @@ msgstr ""
 msgid ""
 "Download can not be started.\n"
 "Downloader %s not working correctly.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"Stahování nelze spustit.\n"
-"Downloader %s nefunguje správně.\n"
-"Poslední chyba „%s (%s)“."
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
 "Stahování nelze spustit.\n"
 "Stahovací program %s nefunguje správně.\n"
 "Stav[%s]"
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Incorrect address \"%r\"."
-msgstr ""
-"Stahování nelze spustit.\n"
-"Nesprávná adresa „%r“."
-
-#, python-format
-msgid ""
-"Download failed.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"Stahování se nezdařilo.\n"
-"Poslední chyba „%s (%s)“."
 
 #, python-format
 msgid ""
@@ -1026,6 +1017,10 @@ msgstr "Správce stahování"
 
 msgid "Download manager is not initialized"
 msgstr "Správce stahování není inicializován"
+
+#, fuzzy
+msgid "Download notification duration"
+msgstr "Umístění ke stažení"
 
 msgid "Download subtiles failed."
 msgstr "Stažení titulků se nezdařilo."
@@ -1078,14 +1073,6 @@ msgstr ""
 #, python-format
 msgid "Downloading file [%s] problem."
 msgstr "Problém se stahováním souboru [%s]."
-
-#, python-format
-msgid ""
-"Downloading file:\n"
-"%r."
-msgstr ""
-"Stahování souboru:\n"
-"%r."
 
 #, python-format
 msgid ""
@@ -1145,6 +1132,9 @@ msgstr ""
 "CHYBA: kanál nemohl být sestaven: žádný prvek \"playbin2\" \n"
 "Zkontrolujte prosím, zda jsou ve vašem systému k dispozici pluginy gstreamer."
 
+msgid "EXIT"
+msgstr ""
+
 msgid "Edit"
 msgstr "Upravit"
 
@@ -1186,6 +1176,10 @@ msgstr ""
 
 msgid "Enable"
 msgstr "Povolit"
+
+#, fuzzy
+msgid "Enable all groups"
+msgstr "Povolení skupin hostitelů"
 
 msgid "Enable hosts groups"
 msgstr "Povolení skupin hostitelů"
@@ -1378,7 +1372,7 @@ msgstr "Extrahovaný soubor s titulky je prázdný nebo chybí."
 msgid "FAILED"
 msgstr "SELHALO"
 
-msgid "FAST FORWARD - insert space"
+msgid "FAST FORWARD"
 msgstr ""
 
 msgid "FREE"
@@ -1540,7 +1534,11 @@ msgstr "Chodidlo a kotník"
 msgid "For continuous playing, please press 8!"
 msgstr "Pro nepřetržité přehrávání stiskněte 8!"
 
-msgid "Force internal Skin"
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr ""
+
+#, fuzzy
+msgid "Force internal skin: main screen only"
 msgstr "Vnitřní slupka síly"
 
 msgid "Format 'wmv' blocked in configuration."
@@ -1567,7 +1565,7 @@ msgstr "Úplný popis načten"
 msgid "Full description not available"
 msgstr "Úplný popis není k dispozici"
 
-msgid "GREEN - Enter (confirm and close)"
+msgid "GREEN"
 msgstr ""
 
 msgid "GSTplayer no IFD workarround"
@@ -1723,6 +1721,9 @@ msgstr "Hodnocení IMDb:"
 msgid "IMDb Suggestions"
 msgstr "Návrhy IMDb"
 
+msgid "INFO"
+msgstr ""
+
 msgid "INTERRUPTED"
 msgstr "PŘERUŠENO"
 
@@ -1750,9 +1751,6 @@ msgstr "Průmysl"
 
 msgid "Info"
 msgstr "Informace"
-
-msgid "Info bar clock format"
-msgstr "Formát hodin informačního panelu"
 
 msgid "Info bar timeout"
 msgstr "Časový limit informační lišty vypršel"
@@ -2083,7 +2081,19 @@ msgstr "Nízká"
 msgid "MENU"
 msgstr "MENU"
 
-msgid "MENU - Options (select language, clear search history, settings)"
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr ""
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr ""
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr ""
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr ""
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
 msgstr ""
 
 #, fuzzy
@@ -2189,9 +2199,6 @@ msgstr "Přesunout"
 
 msgid "Move failed."
 msgstr "Přesun se nezdařil."
-
-msgid "Move group"
-msgstr "Přesunout skupinu"
 
 msgid "Movie"
 msgstr "Film"
@@ -2346,6 +2353,9 @@ msgstr "Není k dispozici žádné ID videa"
 msgid "None"
 msgstr "Žádný"
 
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr ""
+
 msgid "Nothing has been downloaded yet."
 msgstr "Zatím nic nebylo staženo."
 
@@ -2368,13 +2378,6 @@ msgstr "Počet řádků"
 
 msgid "OK"
 msgstr "OK"
-
-msgid "OK - type selected character / confirm selection"
-msgstr ""
-
-#, python-format
-msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
-msgstr "OK=Upravit ČERVENÉ=%s ŽLUTÉ=%s EXIT=Konec"
 
 msgid "OMDb API Key"
 msgstr "Klíč OMDb API"
@@ -2422,7 +2425,7 @@ msgstr "Ostatní"
 msgid "Own model"
 msgstr "Vlastní model"
 
-msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgid "PAGE UP/PAGE DOWN"
 msgstr ""
 
 msgid "PAY"
@@ -2431,10 +2434,13 @@ msgstr "ZAPLATIT"
 msgid "PENDING"
 msgstr "ĆEKAJÍCÍ"
 
+msgid "PLAY"
+msgstr ""
+
 msgid "PORT"
 msgstr "PŘÍSTAV"
 
-msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
+msgid "PREVIOUS/NEXT"
 msgstr ""
 
 msgid "Page:"
@@ -2670,13 +2676,14 @@ msgstr "Velikost vyrovnávací paměti RAM [MB] pro síťové protokoly"
 msgid "RECENT"
 msgstr "NEDÁVNÉ"
 
-msgid "RED - Backspace"
-msgstr ""
+#, fuzzy
+msgid "RED"
+msgstr "PŘERUŠENA"
 
 msgid "REMEMBER:"
 msgstr "PAMATUJTE:"
 
-msgid "REWIND - delete entered text"
+msgid "REWIND"
 msgstr ""
 
 msgid "Radio"
@@ -2794,6 +2801,9 @@ msgstr "Obnovit stav"
 msgid "Reset group"
 msgstr "Resetovat skupinu"
 
+msgid "Reset to saved order"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2854,6 +2864,18 @@ msgstr "Plán"
 
 msgid "Science"
 msgstr "Věda"
+
+#, fuzzy, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Spuštění skriptu MyE2i se nezdařilo.\n"
+"Kód chyby: %s\n"
+
+#, fuzzy
+msgid "Script finished."
+msgstr "Skript MyE2i dokončen."
 
 msgid "Search"
 msgstr "Hledat"
@@ -3088,8 +3110,15 @@ msgstr "Zobrazit varování klíče API YouTube"
 msgid "Show all channels"
 msgstr "Zobrazit všechny kanály"
 
+msgid "Show clock in header"
+msgstr ""
+
 msgid "Show download manager after adding new item"
 msgstr "Zobrazit správce stahování po přidání nové položky"
+
+#, fuzzy
+msgid "Show download notification"
+msgstr "umístění ke stažení"
 
 msgid "Show file size"
 msgstr "Zobrazit velikost souboru"
@@ -3139,9 +3168,6 @@ msgstr "Jednoduchý program pro stahování titulků"
 msgid "Simplify the title and try again."
 msgstr "Zjednodušte název a zkuste to znovu."
 
-msgid "Single file downloader"
-msgstr "Stahovač jednoho souboru"
-
 msgid "Skin"
 msgstr "Vzhled"
 
@@ -3167,15 +3193,8 @@ msgid "Some settings will be applied only after GUI restart."
 msgstr "Některá nastavení se projeví až po restartu grafického rozhraní."
 
 #, fuzzy
-msgid "Sort"
-msgstr "Seřadit podle:"
-
-#, fuzzy
 msgid "Sort A-Z"
 msgstr "Program A-Z"
-
-msgid "Sort Mode"
-msgstr "Režim řazení"
 
 msgid "Sort Myfreecams :"
 msgstr "Řadit Myfreecams :"
@@ -3729,9 +3748,6 @@ msgstr "Použít výchozí kvalitu videa"
 msgid "Use default video quality:"
 msgstr "Použít výchozí kvalitu videa:"
 
-msgid "Use legacy title format"
-msgstr "Použít starší formát názvu"
-
 msgid "Use links cache"
 msgstr "Použít mezipaměť odkazů"
 
@@ -3820,6 +3836,10 @@ msgstr "Režim videa"
 
 msgid "Video options"
 msgstr "Možnosti videa"
+
+#, fuzzy
+msgid "Video player OSD clock format"
+msgstr "Formát hodin informačního panelu"
 
 msgid "Video policy"
 msgstr "Zásady pro videa"
@@ -3922,7 +3942,7 @@ msgstr "Živý přenos Xtream"
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "Hostitel Xtream (např. http://server:port)"
 
-msgid "YELLOW - AltGr"
+msgid "YELLOW"
 msgstr ""
 
 msgid "YP connected"
@@ -3995,6 +4015,9 @@ msgstr "Návrhy na YouTube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Vyhledávání na YouTube je rychlejší, pokud v nastavení vyplníte klíč API"
+
+msgid "Z-A"
+msgstr ""
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4179,6 +4202,9 @@ msgstr "nízké"
 msgid "main"
 msgstr "hlavní"
 
+msgid "manual"
+msgstr ""
+
 msgid "maroon"
 msgstr "kaštanově hnědá"
 
@@ -4247,6 +4273,10 @@ msgstr "nahoře"
 
 msgid "unknown"
 msgstr "neznámý"
+
+#, fuzzy
+msgid "unsorted"
+msgstr "Přerušena"
 
 msgid "version"
 msgstr "verze"

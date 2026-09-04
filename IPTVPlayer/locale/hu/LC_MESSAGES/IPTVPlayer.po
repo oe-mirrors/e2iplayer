@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 21:21+0200\n"
+"POT-Creation-Date: 2026-09-04 17:31+0200\n"
 "PO-Revision-Date: 2026-07-27 16:49+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -51,6 +51,15 @@ msgstr ""
 "A problémát itt is bejelentheted: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr ""
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr ""
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr ""
+
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr "„%s” Virtuális billentyűzetkiosztás nem érhető el."
@@ -77,6 +86,10 @@ msgstr "%s - feliratszolgáltató"
 #, python-format
 msgid "%s API KEY"
 msgstr "%s API-kulcs"
+
+#, fuzzy, python-format
+msgid "%s buffering..."
+msgstr "[%s] puffereléssel"
 
 #, python-format
 msgid "%s device name"
@@ -229,7 +242,7 @@ msgstr "--Bármilyen--"
 msgid "--Other--"
 msgstr "--Más--"
 
-msgid "0-9 - direct number input"
+msgid "0-9"
 msgstr ""
 
 msgid "12 hour format"
@@ -541,7 +554,7 @@ msgstr "Automatikus lejátszás indításának késleltetése"
 msgid "Awards:"
 msgstr "Díjak:"
 
-msgid "BLUE - Shift"
+msgid "BLUE"
 msgstr ""
 
 msgid "Background color"
@@ -916,6 +929,10 @@ msgstr "A(z) \"%s\" könyvtár nem létezik."
 msgid "Disable"
 msgstr "Letiltás"
 
+#, fuzzy
+msgid "Disable all groups"
+msgstr "Csoportok letiltása/engedélyezése"
+
 msgid "Disable live at plugin start"
 msgstr "Élő megjelenítés letiltása a bővítmény indításakor"
 
@@ -980,37 +997,11 @@ msgstr ""
 msgid ""
 "Download can not be started.\n"
 "Downloader %s not working correctly.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"A letöltés nem indítható el.\n"
-"A(z) %s letöltő nem működik megfelelően.\n"
-"Utolsó hiba: \"%s (%s)\"."
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
 "A letöltés nem indítható el.\n"
 "A letöltő (%s) nem működik megfelelően.\n"
 "Állapot[%s]"
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Incorrect address \"%r\"."
-msgstr ""
-"A letöltés nem indítható el.\n"
-"Hibás cím: \"%r\"."
-
-#, python-format
-msgid ""
-"Download failed.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"A letöltés sikertelen.\n"
-"Utolsó hiba: \"%s (%s)\"."
 
 #, python-format
 msgid ""
@@ -1028,6 +1019,10 @@ msgstr "Letöltéskezelő"
 
 msgid "Download manager is not initialized"
 msgstr "A letöltéskezelő nincs inicializálva"
+
+#, fuzzy
+msgid "Download notification duration"
+msgstr "Letöltések helye"
 
 msgid "Download subtiles failed."
 msgstr "A feliratok letöltése sikertelen."
@@ -1080,14 +1075,6 @@ msgstr ""
 #, python-format
 msgid "Downloading file [%s] problem."
 msgstr "[%s] fájl letöltési problémája."
-
-#, python-format
-msgid ""
-"Downloading file:\n"
-"%r."
-msgstr ""
-"Fájl letöltése:\n"
-"%r."
 
 #, python-format
 msgid ""
@@ -1147,6 +1134,9 @@ msgstr ""
 "HIBA:  \"playbin2\" hiányzik. \n"
 "Ellenőrizd a gstreamer plugin meglétét."
 
+msgid "EXIT"
+msgstr ""
+
 msgid "Edit"
 msgstr "Szerkesztés"
 
@@ -1188,6 +1178,10 @@ msgstr ""
 
 msgid "Enable"
 msgstr "Engedélyezés"
+
+#, fuzzy
+msgid "Enable all groups"
+msgstr "Gazdacsoportok engedélyezése"
 
 msgid "Enable hosts groups"
 msgstr "Gazdacsoportok engedélyezése"
@@ -1374,7 +1368,7 @@ msgstr "A kinyert feliratfájl üres vagy hiányzik."
 msgid "FAILED"
 msgstr "SIKERTELEN"
 
-msgid "FAST FORWARD - insert space"
+msgid "FAST FORWARD"
 msgstr ""
 
 msgid "FREE"
@@ -1537,7 +1531,11 @@ msgstr "Láb és boka"
 msgid "For continuous playing, please press 8!"
 msgstr "Folyamatos lejátszáshoz nyomja meg a 8-at!"
 
-msgid "Force internal Skin"
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr ""
+
+#, fuzzy
+msgid "Force internal skin: main screen only"
 msgstr "Belső bőr erőltetése"
 
 msgid "Format 'wmv' blocked in configuration."
@@ -1564,7 +1562,7 @@ msgstr "Teljes leírás betöltve"
 msgid "Full description not available"
 msgstr "A teljes leírás nem érhető el"
 
-msgid "GREEN - Enter (confirm and close)"
+msgid "GREEN"
 msgstr ""
 
 msgid "GSTplayer no IFD workarround"
@@ -1720,6 +1718,9 @@ msgstr "IMDb értékelés:"
 msgid "IMDb Suggestions"
 msgstr "IMDb javaslatok"
 
+msgid "INFO"
+msgstr ""
+
 msgid "INTERRUPTED"
 msgstr "MEGSZAKÍTOTT"
 
@@ -1747,9 +1748,6 @@ msgstr "Iparág"
 
 msgid "Info"
 msgstr "Információ"
-
-msgid "Info bar clock format"
-msgstr "Információs sáv órajel formátuma"
 
 msgid "Info bar timeout"
 msgstr "Információs sáv időtúllépése"
@@ -2078,7 +2076,19 @@ msgstr "Alacsony"
 msgid "MENU"
 msgstr "MENÜ"
 
-msgid "MENU - Options (select language, clear search history, settings)"
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr ""
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr ""
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr ""
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr ""
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
 msgstr ""
 
 #, fuzzy
@@ -2184,9 +2194,6 @@ msgstr "Mozgatás"
 
 msgid "Move failed."
 msgstr "Az áthelyezés sikertelen."
-
-msgid "Move group"
-msgstr "Csoport áthelyezése"
 
 msgid "Movie"
 msgstr "Film"
@@ -2343,6 +2350,9 @@ msgstr "Nincs elérhető videóazonosító"
 msgid "None"
 msgstr "Nincs"
 
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr ""
+
 msgid "Nothing has been downloaded yet."
 msgstr "Még senki sem töltött le."
 
@@ -2365,13 +2375,6 @@ msgstr "Sorok száma"
 
 msgid "OK"
 msgstr "OK"
-
-msgid "OK - type selected character / confirm selection"
-msgstr ""
-
-#, python-format
-msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
-msgstr "OK=Szerkesztés PIROS=%s SÁRGA=%s EXIT=Kilépés"
 
 msgid "OMDb API Key"
 msgstr "OMDb API-kulcs"
@@ -2419,7 +2422,7 @@ msgstr "Egyéb"
 msgid "Own model"
 msgstr "Saját modell"
 
-msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgid "PAGE UP/PAGE DOWN"
 msgstr ""
 
 msgid "PAY"
@@ -2428,10 +2431,13 @@ msgstr "FIZETÉS"
 msgid "PENDING"
 msgstr "Függőben"
 
+msgid "PLAY"
+msgstr ""
+
 msgid "PORT"
 msgstr "PORT"
 
-msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
+msgid "PREVIOUS/NEXT"
 msgstr ""
 
 msgid "Page:"
@@ -2668,13 +2674,14 @@ msgstr "RAM puffer mérete [MB] hálózati protokollokhoz"
 msgid "RECENT"
 msgstr "FRISS"
 
-msgid "RED - Backspace"
-msgstr ""
+#, fuzzy
+msgid "RED"
+msgstr "MEGSZAKÍTVA"
 
 msgid "REMEMBER:"
 msgstr "EMLÉKEZIK:"
 
-msgid "REWIND - delete entered text"
+msgid "REWIND"
 msgstr ""
 
 msgid "Radio"
@@ -2792,6 +2799,9 @@ msgstr "Állapot visszaállítása"
 msgid "Reset group"
 msgstr "Csoport visszaállítása"
 
+msgid "Reset to saved order"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2848,6 +2858,18 @@ msgstr "Időzítés"
 
 msgid "Science"
 msgstr "Tudomány"
+
+#, fuzzy, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"A MyE2i szkript végrehajtása sikertelen.\n"
+"Hibakód: %s\n"
+
+#, fuzzy
+msgid "Script finished."
+msgstr "A MyE2i szkript elkészült."
 
 msgid "Search"
 msgstr "Keresés"
@@ -3082,8 +3104,15 @@ msgstr "Youtube API-kulcs figyelmeztetések megjelenítése"
 msgid "Show all channels"
 msgstr "Összes csatorna megjelenítése"
 
+msgid "Show clock in header"
+msgstr ""
+
 msgid "Show download manager after adding new item"
 msgstr "Letöltéskezelő megjelenítése új elem hozzáadása után"
+
+#, fuzzy
+msgid "Show download notification"
+msgstr "letöltések helye"
 
 msgid "Show file size"
 msgstr "Fájlméret megjelenítése"
@@ -3133,9 +3162,6 @@ msgstr "Egyszerű felirat letöltő"
 msgid "Simplify the title and try again."
 msgstr "Egyszerűsítsd a címet, és próbáld újra."
 
-msgid "Single file downloader"
-msgstr "Egyszerű fájlletöltő"
-
 msgid "Skin"
 msgstr "Kinézet"
 
@@ -3161,15 +3187,8 @@ msgid "Some settings will be applied only after GUI restart."
 msgstr "Néhány beállítás csak a grafikus felhasználói felület újraindítása után lép életbe."
 
 #, fuzzy
-msgid "Sort"
-msgstr "Rendezés:"
-
-#, fuzzy
 msgid "Sort A-Z"
 msgstr "Program A-tól Z-ig"
-
-msgid "Sort Mode"
-msgstr "Rendezési mód"
 
 msgid "Sort Myfreecams :"
 msgstr "Rendezés: Myfreecams :"
@@ -3726,9 +3745,6 @@ msgstr "Alapértelmezett videóminőség használata"
 msgid "Use default video quality:"
 msgstr "Az alapértelmezett videóminőség használata:"
 
-msgid "Use legacy title format"
-msgstr "Régi címformátum használata"
-
 msgid "Use links cache"
 msgstr "Használja a linkek gyorsítótárát"
 
@@ -3817,6 +3833,10 @@ msgstr "Videó mód"
 
 msgid "Video options"
 msgstr "Videóbeállítások"
+
+#, fuzzy
+msgid "Video player OSD clock format"
+msgstr "Információs sáv órajel formátuma"
 
 msgid "Video policy"
 msgstr "Videókra vonatkozó irányelvek"
@@ -3920,7 +3940,7 @@ msgstr "Xtream Élő közvetítés"
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "Xtream host (pl. http://server:port)"
 
-msgid "YELLOW - AltGr"
+msgid "YELLOW"
 msgstr ""
 
 msgid "YP connected"
@@ -3993,6 +4013,9 @@ msgstr "Youtube-javaslatok"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "A YouTube-keresések gyorsabbak, ha kitöltöd az API-kulcsot a beállítások menüben"
+
+msgid "Z-A"
+msgstr ""
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4177,6 +4200,9 @@ msgstr "alacsony"
 msgid "main"
 msgstr "fő"
 
+msgid "manual"
+msgstr ""
+
 msgid "maroon"
 msgstr "gesztenyebarna"
 
@@ -4245,6 +4271,10 @@ msgstr "felső"
 
 msgid "unknown"
 msgstr "ismeretlen"
+
+#, fuzzy
+msgid "unsorted"
+msgstr "MEGSZAKÍTVA"
 
 msgid "version"
 msgstr "verzió"

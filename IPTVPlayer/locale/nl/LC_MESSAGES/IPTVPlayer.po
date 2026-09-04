@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 21:21+0200\n"
+"POT-Creation-Date: 2026-09-04 17:31+0200\n"
 "PO-Revision-Date: 2026-02-02 21:43+0100\n"
 "Last-Translator: Snoete\n"
 "Language-Team: \n"
@@ -51,6 +51,15 @@ msgstr ""
 "U kunt een eventueel probleem ook hier melden:\n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr ""
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr ""
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr ""
+
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr "\"%s\" Het Virtuele Keyboard is niet beschikbaar."
@@ -77,6 +86,10 @@ msgstr "%s - ondertitel provider"
 #, python-format
 msgid "%s API KEY"
 msgstr "%s API KEY"
+
+#, fuzzy, python-format
+msgid "%s buffering..."
+msgstr "[%s] met bufferen"
 
 #, python-format
 msgid "%s device name"
@@ -233,7 +246,7 @@ msgstr "--Elke--"
 msgid "--Other--"
 msgstr "--Overig--"
 
-msgid "0-9 - direct number input"
+msgid "0-9"
 msgstr ""
 
 msgid "12 hour format"
@@ -550,7 +563,7 @@ msgstr "Autoplay start vertraging"
 msgid "Awards:"
 msgstr ""
 
-msgid "BLUE - Shift"
+msgid "BLUE"
 msgstr ""
 
 msgid "Background color"
@@ -931,6 +944,10 @@ msgstr "Map \"%s\" bestaat niet."
 msgid "Disable"
 msgstr "Uitschakelen"
 
+#, fuzzy
+msgid "Disable all groups"
+msgstr "Groepen uitschakelen/inschakelen"
+
 msgid "Disable live at plugin start"
 msgstr "Live-TV signaal bij Plugin start uitschakelen"
 
@@ -997,37 +1014,11 @@ msgstr ""
 msgid ""
 "Download can not be started.\n"
 "Downloader %s not working correctly.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"Download kan niet starten.\n"
-"Downloader %s functioneert niet goed.\n"
-"Laatste fout \"%s (%s)\"."
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
 "Download kan niet starten.\n"
 "Downloader %s functioneert niet goed.\n"
 "Status[%s]"
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Incorrect address \"%r\"."
-msgstr ""
-"Download kan niet starten.\n"
-"Verkeerd adres \"%r\"."
-
-#, python-format
-msgid ""
-"Download failed.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"Download mislukt.\n"
-"Laatste fout \"%s (%s)\"."
 
 #, python-format
 msgid ""
@@ -1045,6 +1036,10 @@ msgstr "Download manager"
 
 msgid "Download manager is not initialized"
 msgstr "De Download manager is niet gereed"
+
+#, fuzzy
+msgid "Download notification duration"
+msgstr "Downloads locatie"
 
 msgid "Download subtiles failed."
 msgstr "Download van ondertiteling mislukt."
@@ -1097,14 +1092,6 @@ msgstr ""
 #, python-format
 msgid "Downloading file [%s] problem."
 msgstr "Downloaden bestand [%s] probleem."
-
-#, python-format
-msgid ""
-"Downloading file:\n"
-"%r."
-msgstr ""
-"Downloaden bestand:\n"
-"%r."
 
 #, python-format
 msgid ""
@@ -1165,6 +1152,9 @@ msgstr ""
 "FOUT: pipeline kon niet worden gemaakt: geen element \"playbin2\" \n"
 "A.u.b. controleren of gstreamer plugins aanwezig zijn op uw systeem."
 
+msgid "EXIT"
+msgstr ""
+
 msgid "Edit"
 msgstr ""
 
@@ -1210,6 +1200,10 @@ msgstr ""
 
 msgid "Enable"
 msgstr "Inschakelen"
+
+#, fuzzy
+msgid "Enable all groups"
+msgstr "Host-groepen inschakelen"
 
 msgid "Enable hosts groups"
 msgstr "Host-groepen inschakelen"
@@ -1401,7 +1395,7 @@ msgstr ""
 msgid "FAILED"
 msgstr "MISLUKT"
 
-msgid "FAST FORWARD - insert space"
+msgid "FAST FORWARD"
 msgstr ""
 
 msgid "FREE"
@@ -1568,7 +1562,11 @@ msgstr "Voet & Enkel"
 msgid "For continuous playing, please press 8!"
 msgstr ""
 
-msgid "Force internal Skin"
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr ""
+
+#, fuzzy
+msgid "Force internal skin: main screen only"
 msgstr "Interne Skin forceren"
 
 msgid "Format 'wmv' blocked in configuration."
@@ -1597,7 +1595,7 @@ msgstr "Geen geldige links beschikbaar."
 msgid "Full description not available"
 msgstr "Geen geldige links beschikbaar."
 
-msgid "GREEN - Enter (confirm and close)"
+msgid "GREEN"
 msgstr ""
 
 msgid "GSTplayer no IFD workarround"
@@ -1759,6 +1757,9 @@ msgstr "Beoordeling:"
 msgid "IMDb Suggestions"
 msgstr "IMDb Suggesties"
 
+msgid "INFO"
+msgstr ""
+
 msgid "INTERRUPTED"
 msgstr "ONDERBROKEN"
 
@@ -1786,9 +1787,6 @@ msgstr "Industrie"
 
 msgid "Info"
 msgstr "Informatie"
-
-msgid "Info bar clock format"
-msgstr "Infobalk klok"
 
 msgid "Info bar timeout"
 msgstr "Infobalk timeout"
@@ -2123,7 +2121,19 @@ msgstr "Laag"
 msgid "MENU"
 msgstr "MENU"
 
-msgid "MENU - Options (select language, clear search history, settings)"
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr ""
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr ""
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr ""
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr ""
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
 msgstr ""
 
 #, fuzzy
@@ -2234,9 +2244,6 @@ msgstr ""
 #, fuzzy
 msgid "Move failed."
 msgstr "Aanmelden mislukt."
-
-msgid "Move group"
-msgstr "Groep verplaatsen"
 
 msgid "Movie"
 msgstr "Film"
@@ -2393,6 +2400,9 @@ msgstr "Geen geldige links beschikbaar."
 msgid "None"
 msgstr "Geen"
 
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr ""
+
 msgid "Nothing has been downloaded yet."
 msgstr "Er is nog niets gedownload."
 
@@ -2415,13 +2425,6 @@ msgstr "Aantal rijen"
 
 msgid "OK"
 msgstr "Bevestigen"
-
-msgid "OK - type selected character / confirm selection"
-msgstr ""
-
-#, python-format
-msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
-msgstr ""
 
 msgid "OMDb API Key"
 msgstr ""
@@ -2469,7 +2472,7 @@ msgstr "Overige"
 msgid "Own model"
 msgstr "Eigen model"
 
-msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgid "PAGE UP/PAGE DOWN"
 msgstr ""
 
 msgid "PAY"
@@ -2478,10 +2481,13 @@ msgstr "BETALEN"
 msgid "PENDING"
 msgstr "IN BEHANDELING"
 
+msgid "PLAY"
+msgstr ""
+
 msgid "PORT"
 msgstr "PORT"
 
-msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
+msgid "PREVIOUS/NEXT"
 msgstr ""
 
 msgid "Page:"
@@ -2716,13 +2722,14 @@ msgstr "RAM-buffergrootte [MB] voor netwerk protocollen"
 msgid "RECENT"
 msgstr "RECENT"
 
-msgid "RED - Backspace"
-msgstr ""
+#, fuzzy
+msgid "RED"
+msgstr "GEANNULEERD"
 
 msgid "REMEMBER:"
 msgstr "ONTHOUDEN:"
 
-msgid "REWIND - delete entered text"
+msgid "REWIND"
 msgstr ""
 
 msgid "Radio"
@@ -2842,6 +2849,9 @@ msgstr "Reset status"
 msgid "Reset group"
 msgstr "Groep resetten"
 
+msgid "Reset to saved order"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2902,6 +2912,18 @@ msgstr "Schema"
 
 msgid "Science"
 msgstr "Wetenschap"
+
+#, fuzzy, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Uitvoering van het MyE2i script mislukt.\n"
+"Foutcode: %s\n"
+
+#, fuzzy
+msgid "Script finished."
+msgstr "MyE2i script gereed."
 
 msgid "Search"
 msgstr "Zoeken"
@@ -3138,8 +3160,15 @@ msgstr "Youtube Api Key waarschuwingen tonen"
 msgid "Show all channels"
 msgstr "Alle zenders tonen"
 
+msgid "Show clock in header"
+msgstr ""
+
 msgid "Show download manager after adding new item"
 msgstr "Download Manager tonen na het toevoegen van een nieuw item"
+
+#, fuzzy
+msgid "Show download notification"
+msgstr "download locatie"
 
 msgid "Show file size"
 msgstr "Bestandsgrootte tonen"
@@ -3189,9 +3218,6 @@ msgstr "Eenvoudige ondertitels downloader"
 msgid "Simplify the title and try again."
 msgstr "Vereenvoudig de titel en probeer op nieuw."
 
-msgid "Single file downloader"
-msgstr "Downloader voor één bestand"
-
 msgid "Skin"
 msgstr "Skin selectie"
 
@@ -3217,15 +3243,8 @@ msgid "Some settings will be applied only after GUI restart."
 msgstr "Sommige wijzigingen worden alleen actief na het herstarten van de GUI."
 
 #, fuzzy
-msgid "Sort"
-msgstr "Sorteer op:"
-
-#, fuzzy
 msgid "Sort A-Z"
 msgstr "Programma A-Z"
-
-msgid "Sort Mode"
-msgstr "Sorteer methode"
 
 msgid "Sort Myfreecams :"
 msgstr "Myfreecams sorteren :"
@@ -3781,9 +3800,6 @@ msgstr "Gebruik default video kwaliteit"
 msgid "Use default video quality:"
 msgstr "Gebruik default video kwaliteit:"
 
-msgid "Use legacy title format"
-msgstr ""
-
 msgid "Use links cache"
 msgstr "Gebruik cache voor links"
 
@@ -3877,6 +3893,10 @@ msgstr "Video modus"
 
 msgid "Video options"
 msgstr "Video opties"
+
+#, fuzzy
+msgid "Video player OSD clock format"
+msgstr "Infobalk klok"
 
 msgid "Video policy"
 msgstr "Videobeleid"
@@ -3980,7 +4000,7 @@ msgstr "Xtream Live Stream"
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "Xtream host (bijv. http://server:poort)"
 
-msgid "YELLOW - AltGr"
+msgid "YELLOW"
 msgstr ""
 
 msgid "YP connected"
@@ -4055,6 +4075,9 @@ msgstr "Youtube Suggesties"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Youtube zoekopdrachten gaan sneller, wanneer u een API sleutel invult in het configuratiemenu"
+
+msgid "Z-A"
+msgstr ""
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4239,6 +4262,9 @@ msgstr "laag"
 msgid "main"
 msgstr "voornaamst"
 
+msgid "manual"
+msgstr ""
+
 msgid "maroon"
 msgstr "kastanjebruin"
 
@@ -4307,6 +4333,9 @@ msgstr "boven"
 
 msgid "unknown"
 msgstr "onbekend"
+
+msgid "unsorted"
+msgstr ""
 
 msgid "version"
 msgstr "versie"

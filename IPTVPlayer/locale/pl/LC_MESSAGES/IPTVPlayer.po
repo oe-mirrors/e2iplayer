@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 21:21+0200\n"
+"POT-Creation-Date: 2026-09-04 17:31+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Masta2002\n"
 "Language-Team: IPTVPlayer\n"
@@ -49,6 +49,15 @@ msgstr ""
 "Możesz również zgłosić problem tutaj: \n"
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
+msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
+msgstr ""
+
+msgid "  • Sorting or reordering fixes this automatically, so your order stays."
+msgstr ""
+
+msgid "  • Unfixed (default): the entry jumps back to the top of the list."
+msgstr ""
+
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
 msgstr "Plik konfiguracyjny \"%s\" klawiatury wirtualnej jest niedostępny."
@@ -75,6 +84,10 @@ msgstr "%s - dostawca napisów"
 #, python-format
 msgid "%s API KEY"
 msgstr "%s klucz API"
+
+#, fuzzy, python-format
+msgid "%s buffering..."
+msgstr "[%s] z buforowaniem"
 
 #, python-format
 msgid "%s device name"
@@ -231,7 +244,7 @@ msgstr "--Dowolny--"
 msgid "--Other--"
 msgstr "--Pozostałe--"
 
-msgid "0-9 - direct number input"
+msgid "0-9"
 msgstr ""
 
 msgid "12 hour format"
@@ -568,7 +581,7 @@ msgstr "Opóźnienie autoodtwarzania"
 msgid "Awards:"
 msgstr ""
 
-msgid "BLUE - Shift"
+msgid "BLUE"
 msgstr ""
 
 msgid "Background color"
@@ -959,6 +972,10 @@ msgstr "Katalog \"%s\" nie istnieje."
 msgid "Disable"
 msgstr "Wyłączyć"
 
+#, fuzzy
+msgid "Disable all groups"
+msgstr "Włącz/Wyłącz grupy"
+
 msgid "Disable live at plugin start"
 msgstr "Wyłączyć sygnał TV przy starcie wtyczki"
 
@@ -1027,37 +1044,11 @@ msgstr ""
 msgid ""
 "Download can not be started.\n"
 "Downloader %s not working correctly.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"Pobieranie nie może zostać rozpoczęte.\n"
-"Program %s nie działa poprawnie.\n"
-"Ostatni błąd \"%s (%s)\"."
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Downloader %s not working correctly.\n"
 "Status[%s]"
 msgstr ""
 "Pobieranie nie może zostać uruchomione.\n"
 "Pobieranie %s nie działa poprawnie.\n"
 "Status[%s]"
-
-#, python-format
-msgid ""
-"Download can not be started.\n"
-"Incorrect address \"%r\"."
-msgstr ""
-"Pobieranie nie może zostać rozpoczęte.\n"
-"Adres \"%r\" jest niepoprawny."
-
-#, python-format
-msgid ""
-"Download failed.\n"
-"Last error \"%s (%s)\"."
-msgstr ""
-"Pobieranie nie powiodło się.\n"
-"Ostatni błąd \"%s (%s)\"."
 
 #, python-format
 msgid ""
@@ -1075,6 +1066,10 @@ msgstr "Menadżer pobierania"
 
 msgid "Download manager is not initialized"
 msgstr "Menedżer pobierania nie został zainicjowany"
+
+#, fuzzy
+msgid "Download notification duration"
+msgstr "Lokalizacja pobranych plików"
 
 msgid "Download subtiles failed."
 msgstr "Pobieranie napisów nie powiodło się."
@@ -1127,14 +1122,6 @@ msgstr ""
 #, python-format
 msgid "Downloading file [%s] problem."
 msgstr "Problem przy pobieraniu pliku [%s]."
-
-#, python-format
-msgid ""
-"Downloading file:\n"
-"%r."
-msgstr ""
-"Pobieranie pliku:\n"
-"%r."
 
 #, python-format
 msgid ""
@@ -1196,6 +1183,9 @@ msgstr ""
 "BŁĄD: gstreamer nie może rozpocząć przetwarzania danych. Brak elementu \"playbin2\" \n"
 "Sprawdź, czy element \"playbin2\" jest dostępny w systemie."
 
+msgid "EXIT"
+msgstr ""
+
 msgid "Edit"
 msgstr ""
 
@@ -1241,6 +1231,10 @@ msgstr ""
 
 msgid "Enable"
 msgstr "Włączyć"
+
+#, fuzzy
+msgid "Enable all groups"
+msgstr "Grupuj hosty"
 
 msgid "Enable hosts groups"
 msgstr "Grupuj hosty"
@@ -1437,7 +1431,7 @@ msgstr ""
 msgid "FAILED"
 msgstr "ZWIASTUN"
 
-msgid "FAST FORWARD - insert space"
+msgid "FAST FORWARD"
 msgstr ""
 
 msgid "FREE"
@@ -1606,7 +1600,11 @@ msgstr "Stopa i kostka"
 msgid "For continuous playing, please press 8!"
 msgstr ""
 
-msgid "Force internal Skin"
+msgid "Force internal skin: all E2iPlayer screens"
+msgstr ""
+
+#, fuzzy
+msgid "Force internal skin: main screen only"
 msgstr "Wymuś wewnętrzną Skórę"
 
 msgid "Format 'wmv' blocked in configuration."
@@ -1635,7 +1633,7 @@ msgstr "Brak poprawnych linków."
 msgid "Full description not available"
 msgstr "Brak poprawnych linków."
 
-msgid "GREEN - Enter (confirm and close)"
+msgid "GREEN"
 msgstr ""
 
 msgid "GSTplayer no IFD workarround"
@@ -1796,6 +1794,9 @@ msgstr "Ocena:"
 msgid "IMDb Suggestions"
 msgstr "Sugestie IMDb"
 
+msgid "INFO"
+msgstr ""
+
 msgid "INTERRUPTED"
 msgstr ""
 
@@ -1826,9 +1827,6 @@ msgstr "Przemysłowy"
 
 msgid "Info"
 msgstr "Informacje"
-
-msgid "Info bar clock format"
-msgstr "Format czasu na pasek info"
 
 msgid "Info bar timeout"
 msgstr "Czas wyświetlania paska info"
@@ -2167,7 +2165,19 @@ msgstr "Niska"
 msgid "MENU"
 msgstr ""
 
-msgid "MENU - Options (select language, clear search history, settings)"
+msgid "MENU → Add new entry: type a new search term to add to the history."
+msgstr ""
+
+msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
+msgstr ""
+
+msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
+msgstr ""
+
+msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
+msgstr ""
+
+msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
 msgstr ""
 
 #, fuzzy
@@ -2279,9 +2289,6 @@ msgstr ""
 #, fuzzy
 msgid "Move failed."
 msgstr "Logowanie nieudane."
-
-msgid "Move group"
-msgstr "Przenieś grupę"
 
 msgid "Movie"
 msgstr "Film"
@@ -2443,6 +2450,9 @@ msgstr "Brak poprawnych linków."
 msgid "None"
 msgstr "Brak"
 
+msgid "Normalize item / file names (Show - SxxExx - Title)"
+msgstr ""
+
 msgid "Nothing has been downloaded yet."
 msgstr "Nic nie zostało jeszcze pobrane."
 
@@ -2465,13 +2475,6 @@ msgstr "Liczba wierszy"
 
 msgid "OK"
 msgstr "OK"
-
-msgid "OK - type selected character / confirm selection"
-msgstr ""
-
-#, python-format
-msgid "OK=Edit RED=%s YELLOW=%s EXIT=Exit"
-msgstr ""
 
 msgid "OMDb API Key"
 msgstr ""
@@ -2519,7 +2522,7 @@ msgstr "Pozostałe"
 msgid "Own model"
 msgstr "Własny model"
 
-msgid "PAGE UP/PAGE DOWN - move cursor right/left"
+msgid "PAGE UP/PAGE DOWN"
 msgstr ""
 
 msgid "PAY"
@@ -2528,10 +2531,13 @@ msgstr "PŁATNE"
 msgid "PENDING"
 msgstr "OCZEKUJĄCY"
 
+msgid "PLAY"
+msgstr ""
+
 msgid "PORT"
 msgstr "PORT"
 
-msgid "PREVIOUS/NEXT - switch between keyboard, suggestions and search history"
+msgid "PREVIOUS/NEXT"
 msgstr ""
 
 msgid "Page:"
@@ -2768,13 +2774,14 @@ msgstr "Rozmiar bufora w RAM dla plików online"
 msgid "RECENT"
 msgstr "Najnowszy"
 
-msgid "RED - Backspace"
-msgstr ""
+#, fuzzy
+msgid "RED"
+msgstr "PRZERWANY"
 
 msgid "REMEMBER:"
 msgstr "ZAPAMIĘTAJ:"
 
-msgid "REWIND - delete entered text"
+msgid "REWIND"
 msgstr ""
 
 msgid "Radio"
@@ -2898,6 +2905,9 @@ msgstr "Zresetować stan"
 msgid "Reset group"
 msgstr "Wybór grupy"
 
+msgid "Reset to saved order"
+msgstr ""
+
 #, python-format
 msgid ""
 "Resolving hCaptcha with %s failed!\n"
@@ -2959,6 +2969,18 @@ msgstr "Harmonogram"
 #, fuzzy
 msgid "Science"
 msgstr "Nauka podstawowa"
+
+#, fuzzy, python-format
+msgid ""
+"Script execution failed.\n"
+"Error code: %s\n"
+msgstr ""
+"Wykonanie skryptu JDownloader nie powiodło się.\n"
+"Kod błędu: %s\n"
+
+#, fuzzy
+msgid "Script finished."
+msgstr "Skrypt JDownloader zakończony."
 
 msgid "Search"
 msgstr "Wyszukaj"
@@ -3197,8 +3219,15 @@ msgstr "Pokaż ostrzeżenia klucza API YouTube"
 msgid "Show all channels"
 msgstr "Pokazać wszystkie kanały"
 
+msgid "Show clock in header"
+msgstr ""
+
 msgid "Show download manager after adding new item"
 msgstr "Pokazać menadżera pobierania po dodaniu pliku"
+
+#, fuzzy
+msgid "Show download notification"
+msgstr "lokalizacja pobierania"
 
 msgid "Show file size"
 msgstr "Pokazać rozmiar pliku"
@@ -3249,9 +3278,6 @@ msgstr "Pobieranie prostych napisów"
 msgid "Simplify the title and try again."
 msgstr "Uprość tytuł i spróbuj ponownie."
 
-msgid "Single file downloader"
-msgstr "Pobieranie pojedynczego pliku"
-
 msgid "Skin"
 msgstr "Skóra"
 
@@ -3279,15 +3305,8 @@ msgid "Some settings will be applied only after GUI restart."
 msgstr "Niektóre zmiany zostaną zastosowane po ponownym uruchomieniu odtwarzacza."
 
 #, fuzzy
-msgid "Sort"
-msgstr "Sortuj według:"
-
-#, fuzzy
 msgid "Sort A-Z"
 msgstr "Programy A-Z"
-
-msgid "Sort Mode"
-msgstr "Tryb sortowania"
 
 msgid "Sort Myfreecams :"
 msgstr ""
@@ -3854,9 +3873,6 @@ msgstr "Użyj domyślnej jakości wideo"
 msgid "Use default video quality:"
 msgstr "Użyć domyślnego formatu wideo:"
 
-msgid "Use legacy title format"
-msgstr ""
-
 msgid "Use links cache"
 msgstr "Użyj pamięci podręcznej linków"
 
@@ -3952,6 +3968,10 @@ msgstr "Tryb Obrazu"
 
 msgid "Video options"
 msgstr "Opcje wideo"
+
+#, fuzzy
+msgid "Video player OSD clock format"
+msgstr "Format czasu na pasek info"
 
 msgid "Video policy"
 msgstr "Sposób konwersji wideo"
@@ -4056,7 +4076,7 @@ msgstr "Na żywo"
 msgid "Xtream host (e.g. http://server:port)"
 msgstr ""
 
-msgid "YELLOW - AltGr"
+msgid "YELLOW"
 msgstr ""
 
 msgid "YP connected"
@@ -4135,6 +4155,9 @@ msgstr "Sugestie YouTube"
 
 msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Wyszukiwania YouTube dzialają szybciej jeżeli wpiszesz klucz API w menu ustawień"
+
+msgid "Z-A"
+msgstr ""
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4320,6 +4343,9 @@ msgstr "niska"
 msgid "main"
 msgstr "główna"
 
+msgid "manual"
+msgstr ""
+
 msgid "maroon"
 msgstr "kasztanowy"
 
@@ -4388,6 +4414,9 @@ msgstr "góra"
 
 msgid "unknown"
 msgstr "nieznana"
+
+msgid "unsorted"
+msgstr ""
 
 msgid "version"
 msgstr "wersja"
