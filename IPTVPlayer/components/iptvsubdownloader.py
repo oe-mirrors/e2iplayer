@@ -6,7 +6,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
     printDBG,
     printExc,
     GetDefaultLang,
-    GetIconDir,
     GetSkinsDir,
     GetIPTVPlayerVersion,
     eConnectCallback,
@@ -18,6 +17,7 @@ from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, Ret
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import ISubProvider
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
@@ -38,7 +38,7 @@ from Tools.LoadPixmap import LoadPixmap
 from Components.config import config
 from Components.Sources.StaticText import StaticText
 from Tools.BoundFunction import boundFunction
-from enigma import getDesktop, eTimer
+from enigma import eTimer
 
 ###################################################
 
@@ -62,57 +62,78 @@ class IPTVSubDownloaderWidget(Screen):
     """Widget for downloading subtitles from various providers."""
 
     IPTV_VERSION = GetIPTVPlayerVersion()
-    screenwidth = getDesktop(0).size().width()
-    if screenwidth and screenwidth == 1920:
-        skin = """
-                <screen name="IPTVSubDownloaderWidget" position="center,center" size="1530,990" title="IPTV Sub Title Downloader" backgroundColor="#34111112" flags="wfNoBorder">
-                    <widget source="Title" render="Label" position="210,15" size="1305,60" foregroundColor="white" backgroundColor="black" borderWidth="2" borderColor="black" transparent="1" zPosition="1" font="Regular;36" valign="center" />
-                    <widget name="list" position="15,105" size="1500,480" itemHeight="48" font="Regular;30" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="2" borderColor="black" />
-                    <widget name="statustext" position="15,795" zPosition="1" size="1500,105" font="Regular;30" halign="left" valign="center" transparent="1" backgroundColor="black" foregroundColor="green" />
-                    <widget name="console" position="15,675" size="1500,105" font="Regular;30" transparent="1" zPosition="1" backgroundColor="black" foregroundColor="white" borderWidth="2" borderColor="black" shadowColor="black" shadowOffset="-2,-2" />
-                    <ePixmap position="33,941" size="60,39" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/ok.png" transparent="1" alphatest="blend" />
-                    <ePixmap position="120,941" size="60,39" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/exit.png" transparent="1" alphatest="blend" />
-                    <widget name="headertext" position="15,615" size="1500,45" font="Regular;30" foregroundColor="#0066ccff" backgroundColor="black" borderWidth="2" borderColor="black" halign="left" valign="center" transparent="1" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/iptvlogo.png" position="18,15" size="150,60" alphatest="blend" transparent="1" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/red.png" position="360,945" size="30,30" alphatest="blend" transparent="1" />
-                    <widget source="key_red" render="Label" position="411,939" size="300,42" zPosition="1" font="Regular;30" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-                    <eLabel name="BG_Title" position="0,0" size="1530,90" backgroundColor="#100d0f16" zPosition="-1" />
-                    <eLabel name="BG_Buttons" position="0,918" size="1530,72" backgroundColor="#100d0f16" zPosition="-1" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,90" size="1530,3" zPosition="2" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,590" size="1530,3" zPosition="2" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/smallshadowline.png" position="0,915" size="1530,3" zPosition="2" />
-                    <widget name="spinner" zPosition="2" position="762,360" size="24,24" transparent="1" alphatest="blend" />
-                    <widget name="spinner_1" zPosition="1" position="762,360" size="24,24" transparent="1" alphatest="blend" />
-                    <widget name="spinner_2" zPosition="1" position="786,360" size="24,24" transparent="1" alphatest="blend" />
-                    <widget name="spinner_3" zPosition="1" position="810,360" size="24,24" transparent="1" alphatest="blend" />
-                    <widget name="spinner_4" zPosition="1" position="834,360" size="24,24" transparent="1" alphatest="blend" />
-                </screen>
-                """
-    else:
-        skin = """
-                <screen name="IPTVSubDownloaderWidget" position="center,center" size="1020,660" title="IPTV Sub Title Downloader" backgroundColor="#34111112" flags="wfNoBorder">
-                    <widget source="Title" render="Label" position="140,10" size="870,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
-                    <widget name="list" position="10,70" size="1000,320" itemHeight="32" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black"/>
-                    <widget name="statustext" position="10,530" zPosition="1" size="1000,70" font="Regular;20" halign="left" valign="center" transparent="1" backgroundColor="black" foregroundColor="green" />
-                    <widget name="console" position="10,450" size="1000,70" font="Regular;20" transparent="1" zPosition="1" backgroundColor="black" foregroundColor="white" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" />
-                    <ePixmap position="22,627" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
-                    <ePixmap position="80,627" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
-                    <widget name="headertext" position="10,410" size="1000,30" font="Regular;20" foregroundColor="#0066ccff" backgroundColor="black" borderWidth="1" borderColor="black" halign="left" valign="center" transparent="1" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/iptvlogo.png" position="12,10" size="100,40" alphatest="blend" transparent="1" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="240,630" size="20,20" alphatest="blend" transparent="1" />
-                    <widget source="key_red" render="Label" position="274,626" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-                    <eLabel name="BG_Title" position="0,0" size="1020,60" backgroundColor="#100d0f16" zPosition="-1" />
-                    <eLabel name="BG_Buttons" position="0,612" size="1020,48" backgroundColor="#100d0f16" zPosition="-1" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="1020,2" zPosition="2" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,400" size="1020,2" zPosition="2" />
-                    <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,610" size="1020,2" zPosition="2" />
-                    <widget name="spinner" zPosition="2" position="508,240" size="16,16" transparent="1" alphatest="blend" />
-                    <widget name="spinner_1" zPosition="1" position="508,240" size="16,16" transparent="1" alphatest="blend" />
-                    <widget name="spinner_2" zPosition="1" position="524,240" size="16,16" transparent="1" alphatest="blend" />
-                    <widget name="spinner_3" zPosition="1" position="540,240" size="16,16" transparent="1" alphatest="blend" />
-                    <widget name="spinner_4" zPosition="1" position="556,240" size="16,16" transparent="1" alphatest="blend" />
-                </screen>
-                """
+
+    # was a class-level `screenwidth = getDesktop(0).size().width()` +
+    # `if screenwidth == 1920: skin = "..." else: skin = "..."` - same
+    # stale-at-import-time bug fixed everywhere else in this branch, plus
+    # only 2 hand-duplicated tiers (WQHD fell through to the HD block,
+    # same "== 1920 only distinguishes FHD" bug variant already fixed on
+    # other screens). Both blocks were otherwise a clean x1.5 scale of
+    # each other (every number in the FHD block is exactly 1.5x its HD
+    # counterpart) - confirms this screen's own layout was always meant
+    # to scale uniformly, exactly what `skinchrome`'s tiered `scale=`
+    # helpers already do. Not `resolution="1280,720"` auto-scale though -
+    # the spinner dots are real per-tier pixel assets
+    # (`radio_button_on/off.png`, loaded via plain `LoadPixmap` with no
+    # `BT_SCALE`, so the source file itself has to already be the tier's
+    # real size), same reasoning as E2iVirtualKeyBoard/
+    # E2iPlayerBufferingWidget.
+    #
+    # Header/footer: hand-rolled BG_Title/logo/Title-widget/shadowlines +
+    # BG_Buttons/red-icon+key_red-label/ok+exit-icons replaced with
+    # `build_header()`/`build_footer()`. Footer grows 48->64 (skinchrome's
+    # 2-line color-key wrap, same delta as everywhere else in this branch)
+    # - window height grown by that same delta (660->676 at HD) rather
+    # than compressing the existing list/headertext/console/statustext
+    # layout, which otherwise carries over completely unchanged (still
+    # comfortably clears the taller footer with room to spare). Middle
+    # divider (between the list and headertext, `y=400` at HD) has no
+    # equivalent in `build_header()`/`build_footer()` - kept as its own
+    # plain `<ePixmap>`, matching every other genuinely custom mid-screen
+    # divider in this branch.
+    #
+    # Footer keys: `showMenu=False` (no "menu" action bound at all),
+    # `showNav=True`/`showOk=True`/`showExit=True` (up/down aren't bound
+    # explicitly, but the list navigates itself natively - same proven
+    # pattern as `IPTVMainNavigatorList`/`IPTVChoiceBoxWidget` elsewhere;
+    # `ok`/`back` are genuinely live). `keys=('red',)` only - `red_pressed`
+    # (`self.close(None)`) is real; `green_pressed`/`yellow_pressed`/
+    # `blue_pressed` are all permanent no-op stubs (`pass`), so they get
+    # no color-key hint, matching this branch's policy of never hinting a
+    # dead action. `hideButtons()` (referenced `self["icon_green"]` etc.,
+    # which never existed even in the old skin) was already dead code -
+    # never called anywhere - dropped rather than migrated.
+    #
+    # Custom-skin-file override (`config.plugins.iptvplayer.skin` ->
+    # `subplaylist.xml`) is untouched and still works exactly as before -
+    # no widget was renamed, so an existing custom skin file keeps
+    # matching the same names this built-in one now produces differently.
+    def __prepareSkin(self):
+        scale = skinchrome.getScale()
+        iconBase = skinchrome.getIconBase()
+        shadowline = iconBase + '/smallshadowline.png'
+
+        def _s(value):
+            return skinchrome.scalePixels(value, scale)
+
+        WIDTH = _s(1020)
+        HEIGHT = _s(676)
+        spinnerSize = _s(16)
+        spinnerX = _s(508)
+        spinnerY = _s(240)
+        skin = ["""<screen name="IPTVSubDownloaderWidget" position="center,center" size="%d,%d" title="IPTV Sub Title Downloader" backgroundColor="#34111112" flags="wfNoBorder">""" % (WIDTH, HEIGHT)]
+        skin.append(skinchrome.build_header(scale=scale, iconBase=iconBase, showLogo=True))
+        skin.append(skinchrome.build_footer(HEIGHT, scale=scale, iconBase=iconBase, keys=('red',), showMenu=False, showNav=True, showNum=False, showOk=True, showExit=True))
+        skin.append('<widget name="list" position="%d,%d" size="%d,%d" itemHeight="%d" font="Regular;%d" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" />' % (_s(10), _s(70), _s(1000), _s(320), _s(32), _s(20)))
+        skin.append('<ePixmap pixmap="%s" position="0,%d" size="%d,%d" zPosition="2" />' % (shadowline, _s(400), WIDTH, _s(2)))
+        skin.append('<widget name="headertext" position="%d,%d" size="%d,%d" font="Regular;%d" foregroundColor="#0066ccff" backgroundColor="black" borderWidth="1" borderColor="black" halign="left" valign="center" transparent="1" />' % (_s(10), _s(410), _s(1000), _s(30), _s(20)))
+        skin.append('<widget name="console" position="%d,%d" size="%d,%d" font="Regular;%d" transparent="1" zPosition="1" backgroundColor="black" foregroundColor="white" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" />' % (_s(10), _s(450), _s(1000), _s(70), _s(20)))
+        skin.append('<widget name="statustext" position="%d,%d" size="%d,%d" font="Regular;%d" halign="left" valign="center" transparent="1" backgroundColor="black" foregroundColor="green" />' % (_s(10), _s(530), _s(1000), _s(70), _s(20)))
+        skin.append('<widget name="spinner" zPosition="2" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />' % (spinnerX, spinnerY, spinnerSize, spinnerSize))
+        for i in range(1, 5):
+            skin.append('<widget name="spinner_%d" zPosition="1" position="%d,%d" size="%d,%d" transparent="1" alphatest="blend" />' % (i, spinnerX + (i - 1) * spinnerSize, spinnerY, spinnerSize, spinnerSize))
+        skin.append('</screen>')
+        return '\n'.join(skin)
 
     def __init__(self, session, params={}):
         """
@@ -127,6 +148,7 @@ class IPTVSubDownloaderWidget(Screen):
             % (IPTVSubDownloaderWidget.IPTV_VERSION)
         )
         self.session = session
+        self.skin = self.__prepareSkin()
         skinName = config.plugins.iptvplayer.skin.value
         if skinName:
             path = GetSkinsDir(skinName) + "/subplaylist.xml"
@@ -139,7 +161,7 @@ class IPTVSubDownloaderWidget(Screen):
                     printExc("Skin read error: " + path)
 
         Screen.__init__(self, session)
-        self.skinName = ["IPTVSubDownloaderScreen", "IPTVSubDownloaderWidget"]
+        self.skinName = skinchrome.forceInternalSkinName(["IPTVSubDownloaderScreen", "IPTVSubDownloaderWidget"])
 
         self["key_red"] = StaticText(_("Cancel"))
 
@@ -171,9 +193,18 @@ class IPTVSubDownloaderWidget(Screen):
         except Exception:
             printExc()
 
+        # per-tier assets (icons/HD, FHD or WQHD, matching __prepareSkin()'s
+        # own scaled spinner box) - plain Pixmap widgets never scale their
+        # pixmap content to the declared box, so the source file itself
+        # has to already be the right size (same bug/fix as the legacy
+        # grid's page markers in playerselector.py). Real 3-tier
+        # `skinchrome.getIconBase()` now, not the old 2-tier FHD/HD-only
+        # `_spinnerIconDir` (WQHD used to silently fall back to HD-sized
+        # dots, same bug already fixed on the header/footer icons above).
+        iconBase = skinchrome.getIconBase()
         self.spinnerPixmap = [
-            LoadPixmap(GetIconDir("radio_button_on.png")),
-            LoadPixmap(GetIconDir("radio_button_off.png")),
+            LoadPixmap(iconBase + "/radio_button_on.png"),
+            LoadPixmap(iconBase + "/radio_button_off.png"),
         ]
         self.showHostsErrorMessage = True
 
@@ -283,15 +314,6 @@ class IPTVSubDownloaderWidget(Screen):
             self.listSubtitlesProviders()
         else:
             self.close()
-
-    def hideButtons(self, buttons=["green", "yellow", "blue"]):
-        """Hide specified action buttons."""
-        try:
-            for button in buttons:
-                self["icon_" + button].hide()
-                self["label_" + button].hide()
-        except Exception:
-            printExc()
 
     def red_pressed(self):
         """Red button - cancel and close."""

@@ -4,19 +4,17 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback, byteify, GetPyScriptCmd, getDebugMode, GetPluginDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, GetPyScriptCmd, getDebugMode, GetPluginDir, eConnectCallback
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components.captchascriptwidget import CaptchaScriptWidgetBase
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str, ensure_binary
 ###################################################
-from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+
 ###################################################
 # FOREIGN import
 ###################################################
-from enigma import eConsoleAppContainer, eTimer
-from Screens.Screen import Screen
-from Components.Label import Label
-from Components.ActionMap import ActionMap
+from enigma import eConsoleAppContainer
 from Components.config import config
-
 
 try:
     import json
@@ -26,125 +24,24 @@ import base64
 ###################################################
 
 
-class UnCaptchaReCaptchaMyJDWidget(Screen):
+class UnCaptchaReCaptchaMyJDWidget(CaptchaScriptWidgetBase):
+    # the chrome/skin building, eConsoleAppContainer wiring, and
+    # stdout/stderr scaffolding are shared with the near-identical
+    # `UnCaptchaReCaptchaMyE2iWidget` via `CaptchaScriptWidgetBase`. Only
+    # the genuinely MyJD-specific bits remain here:
+    # the MyJD login/password/jdname config lookup, the exact "fakejd"
+    # command, and the plain `byteify(json.loads())` parse (unlike
+    # MyE2i's regex-extracted JSON substring).
+    ACTION_CONTEXTS = ["ColorActions", "SetupActions"]
 
-    def __init__(self, session, title, sitekey, referer):
-        self.session = session
-        Screen.__init__(self, session)
-        self.sitekey = sitekey
-        self.referer = referer
+    def _scriptFinishedMsg(self):
+        return _('JDownloader script finished.')
 
-        sz_w = 504  # getDesktop(0).size().width() - 190
-        sz_h = 300  # getDesktop(0).size().height() - 195
-        if sz_h < 500:
-            sz_h += 4
-        self.skin = """
-            <screen position="center,center" title="%s" size="%d,%d">
-             <ePixmap position="5,9"   zPosition="4" size="30,30" pixmap="%s" transparent="1" alphatest="on" />
+    def _scriptFailedMsg(self, code):
+        return _("JDownloader script execution failed.\nError code: %s\n") % (code)
 
-             <widget name="label_red"    position="45,9"  zPosition="5" size="175,27" valign="center" halign="left" backgroundColor="black" font="Regular;21" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
-             <widget name="title"        position="5,47"  zPosition="1" size="%d,23" font="Regular;20"            transparent="1"  backgroundColor="#00000000"/>
-             <widget name="console"      position="10,%d" zPosition="2" size="%d,160" valign="center" halign="center"   font="Regular;24" transparent="0" foregroundColor="white" backgroundColor="black"/>
-            </screen>""" % (
-            title,
-            sz_w, sz_h,                # size
-            GetIconDir('red' + '.png'),
-            sz_w - 135,                # size title
-            (sz_h - 160) / 2, sz_w - 20,  # console
-        )
-
-        self.onShown.append(self.onStart)
-        self.onClose.append(self.__onClose)
-
-        self["title"] = Label(" ")
-        self["console"] = Label(" ")
-
-        self["label_red"] = Label(_("Cancel"))
-
-        self["actions"] = ActionMap(["ColorActions", "SetupActions"],
-            {
-                "cancel": self.keyExit,
-                # "ok"    : self.keyOK,
-                "red": self.keyRed,
-            }, -2)
-
-        self.workconsole = {'console': None, 'close_conn': None, 'stderr_conn': None, 'stdout_conn': None, 'stderr': '', 'stdout': ''}
-        self.result = ''
-
-        self.timer = {'timer': eTimer(), 'is_started': False}
-        self.timer['callback_conn'] = eConnectCallback(self.timer['timer'].timeout, self._timoutCallback)
-        self.errorCodeSet = False
-
-    def _timoutCallback(self):
-        self.timer['is_started'] = False
-        self.close(self.result)
-
-    def __onClose(self):
-        self.workconsole['close_conn'] = None
-        self.workconsole['stderr_conn'] = None
-        self.workconsole['stdout_conn'] = None
-        if self.workconsole['console']:
-            self.workconsole['console'].sendCtrlC()
-        self.workconsole['console'] = None
-
-        if self.timer['is_started']:
-            self.timer['timer'].stop()
-        self.timer['callback_conn'] = None
-        self.timer = None
-
-    def _scriptClosed(self, code=0):
-        if code == 0:
-            self["console"].setText(_('JDownloader script finished.'))
-            self.close(self.result)
-        elif not self.errorCodeSet:
-            self["console"].setText(_("JDownloader script execution failed.\nError code: %s\n") % (code))
-
-    def _scriptStderrAvail(self, data):
-        self.workconsole['stderr'] += ensure_str(data)
-        self.workconsole['stderr'] = self.workconsole['stderr'].split('\n')
-        if data.endswith('\n'):
-            data = ''
-        else:
-            data = self.workconsole['stderr'].pop(-1)
-        for line in self.workconsole['stderr']:
-            line = line.strip()
-            if line == '':
-                continue
-            try:
-                line = byteify(json.loads(line))
-                if line['type'] == 'captcha_result':
-                    self.result = line['data']
-                    # timeout timer
-                    if self.timer['is_started']:
-                        self.timer['timer'].stop()
-                    # start timeout timer 3s
-                    self.timer['timer'].start(3000, True)
-                    self.timer['is_started'] = True
-                    self["console"].setText(_('Captcha solved.\nWaiting for notification.'))
-                elif line['type'] == 'status':
-                    self["console"].setText(_(str(line['data'])))
-                elif line['type'] == 'error':
-                    if line['code'] == 500:
-                        self["console"].setText(_('Invalid email.'))
-                    elif line['code'] == 403:
-                        self["console"].setText(_('Access denied. Please check password.'))
-                    else:
-                        self["console"].setText(_("Error code: %s\nError message: %s") % (line['code'], line['data']))
-                    self.errorCodeSet = True
-            except Exception:
-                printExc()
-        self.workconsole['stderr'] = data
-
-    def _scriptStdoutAvail(self, data):
-        self.workconsole['stdout'] += data
-        self.workconsole['stdout'] = self.workconsole['stdout'].split('\n')
-        if data.endswith('\n'):
-            data = ''
-        else:
-            data = self.workconsole['stdout'].pop(-1)
-        for line in self.workconsole['stdout']:
-            printDBG(line)
-        self.workconsole['stdout'] = data
+    def _parseJsonLine(self, line):
+        return byteify(json.loads(line))
 
     def startExecution(self):
         login = config.plugins.iptvplayer.myjd_login.value
@@ -153,7 +50,13 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
 
         captcha = {'siteKey': self.sitekey, 'sameOrigin': True, 'siteUrl': self.referer, 'contextUrl': '/'.join(self.referer.split('/')[:3]), 'boundToDomain': True, 'stoken': None}
         try:
-            captcha = base64.b64encode(json.dumps(captcha))
+            # ensure_binary()/ensure_str(): json.dumps() returns str under
+            # Python 3, but b64encode() needs bytes - without this it
+            # would raise TypeError, silently swallowed by the except
+            # below, leaving `captcha` as the raw dict instead of a
+            # base64 blob. Same fix in the near-identical
+            # recaptcha_mye2i_widget.py.
+            captcha = ensure_str(base64.b64encode(ensure_binary(json.dumps(captcha))))
         except Exception:
             printExc()
         if getDebugMode() == '':
@@ -171,13 +74,3 @@ class UnCaptchaReCaptchaMyJDWidget(Screen):
         self.workconsole['stdout_conn'] = eConnectCallback(self.workconsole['console'].stdoutAvail, self._scriptStdoutAvail)
         self.workconsole["console"].execute(cmd)
         printDBG(">>> EXEC CMD [%s]" % cmd)
-
-    def onStart(self):
-        self.onShown.remove(self.onStart)
-        self.startExecution()
-
-    def keyExit(self):
-        self.close(self.result)
-
-    def keyRed(self):
-        self.close(self.result)

@@ -10,13 +10,14 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.cover import SimpleAnimatedCover
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta, enum
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, formatBytes, touch, eConnectCallback, ReadUint32, GetIPTVDMImgDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, formatBytes, touch, eConnectCallback, ReadUint32
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 ###################################################
 
 ###################################################
@@ -30,7 +31,8 @@ from Components.config import config
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 # from Components.Sources.StaticText import StaticText
-from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
+from Tools.LoadPixmap import LoadPixmap
+from Tools.Directories import fileExists
 from os import remove as os_remove
 from datetime import timedelta
 ###################################################
@@ -38,70 +40,120 @@ from datetime import timedelta
 
 class E2iPlayerBufferingWidget(Screen):
     NUM_OF_ICON_FRAMES = 8
-    #######################
-    #       SIZES
-    #######################
-    # screen size
-    # we do not want borders, so make the screen lager than a desktop
-    sz_w = getDesktop(0).size().width()
-    sz_h = getDesktop(0).size().height()
-    # icon
-    i_w = 128
-    i_h = 128
-    # percentage
-    p_w = 120
-    p_h = 120
-    # console
-    c_w = sz_w
-    c_h = 80
-    # addinfo
-    a_w = sz_w - 10
-    a_h = 80
-    #######################
-    #     POSITIONS
-    #######################
-    start_y = (sz_h - (i_h + c_h)) / 2
-    # icon
-    i_x = (sz_w - i_w) / 2
-    i_y = start_y
-    # percentage
-    p_x = (sz_w - p_w) / 2
-    p_y = start_y + (i_h - p_h) / 2
-    # console
-    c_x = 0
-    c_y = i_y + i_h
-    # addinfo
-    a_x = 10
-    a_y = sz_h - 160
-    # button
-    b_x = sz_w - 10 - 35 * 3
-    b_y = sz_h - 10 - 25
 
-    printDBG("[E2iPlayerBufferingWidget] desktop size %dx%d" % (sz_w, sz_h))
-    skin = """
-        <screen name="E2iPlayerBufferingWidget"  position="center,center" flags="wfNoBorder" size="%d,%d" title="E2iPlayer buffering...">
-         <widget name="percentage" size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" /> #foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"
-         <widget name="console"    size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" />
+    # `__prepareSkin()` is per-instance, using the screen's own real
+    # desktop size directly (`getDesktop()` pixels, not an HD-reference +
+    # `resolution=` auto-scale), since it deliberately draws itself larger
+    # than the desktop with no border.
+    #
+    # Header band (no logo - this is a transient full-screen playback
+    # overlay, not a navigable app screen) via
+    # `skinchrome.build_header(showLogo=False)`, using this screen's own
+    # tier `scale` (same explicit-scale variant PlayerSelectorWidget's
+    # grid mode uses, since this screen isn't `resolution=`-auto-scaled
+    # either). The content block centers within the space BELOW the
+    # header instead of the full screen height.
+    #
+    # The buffering icon/percentage/console/addinfo box sizes AND fonts
+    # both scale together via `skinchrome.scalePixels()`, using real
+    # per-tier buffering frames (`icons/HD|FHD|WQHD/buffering/
+    # buffering_N.png`, upscaled from the original 128x128 HD set via
+    # Lanczos resampling to the same 1.0/1.5/2.0 scale every other chrome
+    # asset uses) - scaling box and font from the same `scale` keeps them
+    # in sync at every tier.
+    #
+    # OK/REC/EXIT sit in the standard left-icon-cluster slots (same
+    # 40x26/60x38/80x51 `leftIconGeometry()` math every other chrome
+    # footer's menu/nav/ok/exit cluster uses) rather than a hand-picked
+    # bottom-right offset, on top of skinchrome's own footer background
+    # band + shadow divider. OK/REC/EXIT still toggle their own
+    # visibility at runtime (updateOKButton()/updateRecButton()), so
+    # build_footer() itself only supplies the background band + divider
+    # line here (showOk/showExit/showMenu/showNav/showNum all False, no
+    # color keys) - the actual button pixmaps stay separate named widgets
+    # like before. `rec.png` (real 40x26/60x38/80x51 tiered files
+    # matching ok.png/exit.png's own convention exactly) lives in
+    # `icons/HD|FHD|WQHD/` alongside them - all 3 buttons load the same
+    # way (Cover3 + LoadPixmap(iconBase + ...) in __init__ below).
+    def __prepareSkin(self):
+        scale = skinchrome.getScale()
+        iconBase = skinchrome.getIconBase()
+        sz_w = getDesktop(0).size().width()
+        sz_h = getDesktop(0).size().height()
+        headerH = skinchrome.header_height(scale)
+        footerH = skinchrome.footer_height(scale)
+        # icon - real per-tier frame size (128/192/256), matching the
+        # actual buffering_N.png assets for this tier
+        i_w = skinchrome.scalePixels(128, scale)
+        i_h = i_w
+        # percentage
+        p_w = skinchrome.scalePixels(120, scale)
+        p_h = p_w
+        # console
+        c_w = sz_w
+        c_h = skinchrome.scalePixels(80, scale)
+        # addinfo
+        a_w = sz_w - 10
+        a_h = skinchrome.scalePixels(80, scale)
+        fontSize = skinchrome.scalePixels(21, scale)
+
+        availableH = sz_h - headerH - footerH
+        start_y = headerH + (availableH - (i_h + c_h)) / 2
+        # icon
+        i_x = (sz_w - i_w) / 2
+        i_y = start_y
+        # percentage
+        p_x = (sz_w - p_w) / 2
+        p_y = start_y + (i_h - p_h) / 2
+        # console
+        c_x = 0
+        c_y = i_y + i_h
+        # addinfo - sits just above the footer band now
+        a_x = 10
+        a_y = sz_h - footerH - a_h - 10
+
+        # footer - background band + shadow divider only, no left icons/
+        # color keys of its own (OK/REC/EXIT stay separate, runtime-
+        # toggleable widgets - see comment above)
+        footerPart = skinchrome.build_footer(sz_h, scale=scale, iconBase=iconBase, keys=(),
+                                              showMenu=False, showNav=False, showNum=False,
+                                              showOk=False, showExit=False)
+        okGeom = skinchrome.leftIconGeometry(sz_h, 0, scale)
+        recGeom = skinchrome.leftIconGeometry(sz_h, 1, scale)
+        exitGeom = skinchrome.leftIconGeometry(sz_h, 2, scale)
+
+        printDBG("[E2iPlayerBufferingWidget] desktop size %dx%d" % (sz_w, sz_h))
+        return """
+        <screen name="E2iPlayerBufferingWidget"  position="center,center" flags="wfNoBorder" size="%d,%d" title="%s">
+         %s
+         <widget name="percentage" size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;%d" backgroundColor="black" transparent="1" /> #foregroundColor="white" shadowColor="black" shadowOffset="-1,-1"
+         <widget name="console"    size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;%d" backgroundColor="black" transparent="1" />
          <widget name="icon"       size="%d,%d"   position="%d,%d"  zPosition="4" transparent="1" alphatest="blend" />
-         <widget name="addinfo"    size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;21" backgroundColor="black" transparent="1" />
-
-         <widget name="ok_button"        position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
-         <widget name="rec_button"       position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
-         <widget name="exit_button"      position="%d,%d"                     size="35,25"   zPosition="8" pixmap="%s" transparent="1" alphatest="blend" />
-        </screen>""" % (sz_w, sz_h,         # screen
-                        p_w, p_h, p_x, p_y,  # percentage
-                        c_w, c_h, c_x, c_y,  # console
+         <widget name="addinfo"    size="%d,%d"   position="%d,%d"  zPosition="5" valign="center" halign="center"  font="Regular;%d" backgroundColor="black" transparent="1" />
+         %s
+         <widget name="ok_button"        position="%d,%d"                     size="%d,%d"   zPosition="8" transparent="1" alphatest="blend" />
+         <widget name="rec_button"       position="%d,%d"                     size="%d,%d"   zPosition="8" transparent="1" alphatest="blend" />
+         <widget name="exit_button"      position="%d,%d"                     size="%d,%d"   zPosition="8" transparent="1" alphatest="blend" />
+        </screen>""" % (sz_w, sz_h, _("%s buffering...") % "E2iPlayer",  # screen
+                        skinchrome.build_header(scale=scale, iconBase=iconBase, showLogo=False),  # header
+                        p_w, p_h, p_x, p_y, fontSize,  # percentage
+                        c_w, c_h, c_x, c_y, fontSize,  # console
                         i_w, i_h, i_x, i_y,  # icon
-                        a_w, a_h, a_x, a_y,  # addinfo
+                        a_w, a_h, a_x, a_y, fontSize,  # addinfo
+                        footerPart,  # footer band
 
-                        b_x, b_y, GetIPTVDMImgDir("key_ok.png"),        # OK
-                        b_x + 35, b_y, GetIPTVDMImgDir("key_rec.png"),  # REC
-                        b_x + 70, b_y, GetIPTVDMImgDir("key_exit.png"),  # EXIT
+                        okGeom['x'], okGeom['y'], okGeom['w'], okGeom['h'],      # OK
+                        recGeom['x'], recGeom['y'], recGeom['w'], recGeom['h'],  # REC
+                        exitGeom['x'], exitGeom['y'], exitGeom['w'], exitGeom['h'],  # EXIT
                       )
 
     def __init__(self, session, url, pathForBuffering, pathForDownloading, movieTitle, activMoviePlayer, requestedBuffSize, playerAdditionalParams={}, downloadManager=None, fileExtension=''):
         self.session = session
+        self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
+        # explicit name so an external skin can target the buffering overlay
+        self.skinName = skinchrome.forceInternalSkinName(["E2iPlayerBufferingWidget"])
+        self.setTitle(_("%s buffering...") % "E2iPlayer")
         self.onStartCalled = False
 
         self.downloadingPath = pathForDownloading
@@ -116,7 +168,7 @@ class E2iPlayerBufferingWidget(Screen):
         self.activMoviePlayer = activMoviePlayer
 
         self.onClose.append(self.__onClose)
-        # self.onLayoutFinish.append(self.doStart)
+        self.onLayoutFinish.append(self.__loadButtonIcons)
         self.onShow.append(self.onWindowShow)
         # self.onHide.append(self.onWindowHide)
 
@@ -134,12 +186,25 @@ class E2iPlayerBufferingWidget(Screen):
         self['ok_button'] = Cover3()
         self['rec_button'] = Cover3()
         self['exit_button'] = Cover3()
+        # none of the 3 carry a static pixmap= in the skin - loaded from
+        # this branch's own tiered chrome icons instead (rec.png ships
+        # real 40x26/60x38/80x51 files matching ok.png/exit.png's own
+        # convention). setPixmap() can't be called here in __init__ -
+        # these Cover3 widgets' .instance is only created once Enigma2
+        # actually applies the skin to the screen, which happens AFTER
+        # __init__ returns, not during it. Loading happens in
+        # onLayoutFinish instead, the standard hook for touching widget
+        # instances post-skin-apply.
 
         self["icon"] = SimpleAnimatedCover()
-        # prepare icon frames path
+        # prepare icon frames path - tiered per-resolution frames
+        # (icons/HD|FHD|WQHD/buffering/buffering_N.png), same iconBase as
+        # every other chrome asset, instead of one un-tiered 128x128 set
+        # shared by every resolution
+        _iconBase = skinchrome.getIconBase()
         frames = []
         for idx in range(1, self.NUM_OF_ICON_FRAMES + 1):
-            frames.append(resolveFilename(SCOPE_PLUGINS, 'Extensions/IPTVPlayer/icons/buffering/buffering_%d.png' % idx))
+            frames.append(_iconBase + '/buffering/buffering_%d.png' % idx)
         self["icon"].loadFrames(frames)
 
         self.inMoviePlayer = False
@@ -568,7 +633,12 @@ class E2iPlayerBufferingWidget(Screen):
             else:
                 percentage = (100 * localSize) / remoteSize
 
-        self["percentage"].setText(str(percentage))
+        # every branch above computes percentage via "/" (true division
+        # under Python 3) - int() before str() avoids showing something
+        # like "45.3125" instead of "45", which would be wide enough to
+        # wrap inside the small percentage box and visually collide with
+        # the icon behind it.
+        self["percentage"].setText(str(int(percentage)))
         self["icon"].nextFrame()
 
         # check if we start movie player
@@ -597,6 +667,12 @@ class E2iPlayerBufferingWidget(Screen):
     def __del__(self):
         printDBG('E2iPlayerBufferingWidget.__del__ --------------------------------------')
 
+    def __loadButtonIcons(self):
+        _iconBase = skinchrome.getIconBase()
+        self['ok_button'].setPixmap(LoadPixmap(_iconBase + '/ok.png'))
+        self['rec_button'].setPixmap(LoadPixmap(_iconBase + '/rec.png'))
+        self['exit_button'].setPixmap(LoadPixmap(_iconBase + '/exit.png'))
+
     def __onClose(self):
         printDBG('E2iPlayerBufferingWidget.__onClose ------------------------------------')
         self.onEnd()
@@ -608,7 +684,7 @@ class E2iPlayerBufferingWidget(Screen):
             printExc()
 
         self.onClose.remove(self.__onClose)
-        # self.onLayoutFinish.remove(self.doStart)
+        self.onLayoutFinish.remove(self.__loadButtonIcons)
         self.onShow.remove(self.onWindowShow)
         # self.onHide.remove(self.onWindowHide)
         self.downloadManager = None

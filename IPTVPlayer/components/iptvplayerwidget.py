@@ -17,7 +17,6 @@ import traceback
 from skin import parseColor
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
-from Screens.ChoiceBox import ChoiceBox
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.Pixmap import Pixmap
@@ -27,7 +26,7 @@ from Tools.BoundFunction import boundFunction
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import fileExists
 from Tools.NumericalTextInput import NumericalTextInput
-from enigma import getDesktop, eTimer
+from enigma import getDesktop, eTimer, ePoint
 
 ####################################################
 #                   IPTV components
@@ -61,16 +60,18 @@ from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT
 from Plugins.Extensions.IPTVPlayer.components.iptvplayer import IPTVStandardMoviePlayer, IPTVMiniMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvextmovieplayer import IPTVExtMoviePlayer
 from Plugins.Extensions.IPTVPlayer.components.iptvpictureplayer import IPTVPicturePlayerWidget
-from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList, IPTVLinkChoiceBoxList
+from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList, IPTVLinkChoiceBoxList, IPTVMoviePlayerChoiceBoxList, IPTVActionChoiceBoxList, IPTVPlayerSelectOptionChoiceBoxList
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.components.iptvarticleview import IPTVArticleView
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, ArticleContent, CFavItem
 from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchHistoryEditor
 from Plugins.Extensions.IPTVPlayer.components.iconmenager import IconMenager
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover, Cover3
-from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem
+from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
 import Plugins.Extensions.IPTVPlayer.components.asynccall as asynccall
 from Plugins.Extensions.IPTVPlayer.components.playerselector import PlayerSelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+from Plugins.Extensions.IPTVPlayer.components.e2ivk import E2iVKOptionsList, GetKeyHelpItem
 from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT
 ######################################################
 gDownloadManager = None
@@ -78,62 +79,198 @@ gDownloadManager = None
 
 class E2iPlayerWidget(Screen):
     IPTV_VERSION = GetIPTVPlayerVersion()
-    skin = """
-        <screen position="center,center" size="1280,720" resolution="1280,720" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
-                <ePixmap position="22,687" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/info.png" transparent="1" alphatest="blend" />
-                <ePixmap position="80,687" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
-                <ePixmap position="138,687" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/key_prevnext.png" transparent="1" alphatest="blend" />
-                <ePixmap position="196,687" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/key_updown.png" transparent="1" alphatest="blend" />
-                <ePixmap position="254,687" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/exit.png" transparent="1" alphatest="blend" />
-                <widget source="Title" render="Label" position="160,10" size="785,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
+    # Stays 720, not grown to match the footer's own height - unlike
+    # skinchrome.footer_height()'s own comment describes for its OTHER
+    # callers (popups that derive their own window height from this),
+    # E2iPlayerWidget is a true fullscreen screen: 720 tiles exactly into
+    # every tier's real display height (720x1.0=720, x1.5=1080, x2.0=1440
+    # - HD/FHD/WQHD). A fullscreen screen can't just get taller than the
+    # physical display - at WQHD a taller declared size scales past the
+    # real 1440px-tall screen, and position="center,center" centers with
+    # a NEGATIVE offset when oversized, silently clipping pixels off both
+    # the top AND the bottom since nothing clamps a Screen to stay within
+    # the display. "console" below is sized to end flush with footerY
+    # instead of overlapping it.
+    HEIGHT = 720
+    # item types that are structurally never real host content (pure
+    # pagination/action controls, no underlying item to describe) - used
+    # by updateDownloadButton()'s INFO visibility check. Deliberately an
+    # EXCLUDE list, not an include list of "types that have info" -
+    # info_pressed() itself never restricted by type, and which content
+    # types actually return article data is host-specific and unknowable
+    # without the (real, network) getArticleContent() call itself.
+    INFO_NEVER_TYPES = (
+        CDisplayListItem.TYPE_MARKER,
+        CDisplayListItem.TYPE_MORE,
+        CDisplayListItem.TYPE_FIRST,
+        CDisplayListItem.TYPE_PREVIOUS,
+        CDisplayListItem.TYPE_LAST,
+        CDisplayListItem.TYPE_NEXT,
+        CDisplayListItem.TYPE_JUMP,
+        CDisplayListItem.TYPE_SEARCH_HISTORY_EDITOR,
+        CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE,
+        CDisplayListItem.TYPE_MMC,
+        CDisplayListItem.TYPE_USB,
+    )
+
+    @staticmethod
+    def _footerSlots(hasMenu, hasPrevNext, hasPlay, hasInfo, downloadable):
+        # Single source of truth for the footer's slot-assignment math -
+        # shared by __prepareSkin() (build-time initial position) and
+        # _repositionFooterKeys() (runtime, on every selection/list
+        # change) so the two can never drift into disagreement.
+        # Sequence: menu?, nav, num, prevnext?, play?, info?, ok, exit,
+        # then red, green?, yellow, blue.
+        navSlot = 1 if hasMenu else 0
+        numSlot = navSlot + 1
+        prevNextSlot = numSlot + 1
+        playSlot = prevNextSlot + (1 if hasPrevNext else 0)
+        infoSlot = playSlot + (1 if hasPlay else 0)
+        okSlot = infoSlot + (1 if hasInfo else 0)
+        exitSlot = okSlot + 1
+        yellowSlot = 1 + (1 if downloadable else 0)
+        return {
+            'nav': navSlot, 'num': numSlot, 'prevNext': prevNextSlot, 'play': playSlot,
+            'info': infoSlot, 'ok': okSlot, 'exit': exitSlot, 'leftIconCount': exitSlot + 1,
+            'yellow': yellowSlot, 'blue': yellowSlot + 1,
+        }
+
+    def __prepareSkin(self):
+        # computed fresh per instance, not at class/module level - a
+        # cached "is this FHD" flag would go stale across sessions on
+        # different hardware
+        iconBase = skinchrome.getIconBase()
+        # ALL FOUR color keys are plain name= widgets now (not through
+        # build_footer()'s keys=, which only supports a fixed skin-build-
+        # time position) - the whole row's start shifts left whenever
+        # menu/info are hidden (see _repositionFooterKeys()), on top of
+        # yellow/blue's own existing shift when green is hidden.
+        # nav/num/prevnext/play/info/ok/exit are plain name= widgets for
+        # the same reason - build_footer() below only ever handles MENU
+        # itself (showMenu=True, everything else False); every icon after
+        # it potentially shifts left depending on which OTHER optional
+        # ones (prevnext/play/info) are currently hidden - see
+        # _repositionFooterKeys().
+        #
+        # Built via _footerSlots(False, False, False, False, False) -
+        # the screen's TRUE just-constructed state (menu/prevnext/play/
+        # info/green all start hidden, see __init__ below), not
+        # "everything visible" - so this initial layout already matches
+        # what _repositionFooterKeys() would compute for that same state,
+        # and nothing looks broken/gapped before the first real
+        # updateDownloadButton() call corrects it. Slots for the
+        # still-hidden icons (prevnext/play/info/green) are placeholders
+        # - any value is fine since updateDownloadButton() always
+        # repositions an icon in the same call that first shows it,
+        # before the next frame is drawn.
+        slots = self._footerSlots(False, False, False, False, False)
+        geomRed = skinchrome.colorKeyGeometry(self.HEIGHT, slots['leftIconCount'], 0, 1.0)
+        geomGreen = skinchrome.colorKeyGeometry(self.HEIGHT, slots['leftIconCount'], 1, 1.0)
+        geomYellow = skinchrome.colorKeyGeometry(self.HEIGHT, slots['leftIconCount'], slots['yellow'], 1.0)
+        geomBlue = skinchrome.colorKeyGeometry(self.HEIGHT, slots['leftIconCount'], slots['blue'], 1.0)
+        geomNav = skinchrome.leftIconGeometry(self.HEIGHT, slots['nav'], 1.0)
+        geomNum = skinchrome.leftIconGeometry(self.HEIGHT, slots['num'], 1.0)
+        geomPrevNext = skinchrome.leftIconGeometry(self.HEIGHT, slots['prevNext'], 1.0)
+        geomPlay = skinchrome.leftIconGeometry(self.HEIGHT, slots['prevNext'], 1.0)
+        geomInfo = skinchrome.leftIconGeometry(self.HEIGHT, slots['prevNext'], 1.0)
+        geomOk = skinchrome.leftIconGeometry(self.HEIGHT, slots['ok'], 1.0)
+        geomExit = skinchrome.leftIconGeometry(self.HEIGHT, slots['exit'], 1.0)
+        # header clock/date is an opt-out via
+        # config.plugins.iptvplayer.show_header_clock (Skin configuration
+        # section) instead of always-on - same toggle covers this screen,
+        # PlayerSelectorWidget and IPTVFavouritesMainWidget's own header
+        # clocks.
+        clockPart = """<widget source="global.CurrentTime" render="Label" position="1100,10" size="150,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="2" font="Regular;24" valign="center" halign="right">
+                    <convert type="ClockToText">Format:%H:%M</convert>
+                </widget>
+                <widget source="global.CurrentTime" render="Label" position="860,20" size="300,24" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="2" font="Regular;16" valign="center" halign="right">
+                    <convert type="ClockToText">Date</convert>
+                </widget>""" if config.plugins.iptvplayer.show_header_clock.value else ""
+        return """
+        <screen position="center,center" size="1280,%d" resolution="1280,720" backgroundColor="#34111112" flags="wfNoBorder">
+                %s
                 <widget name="headertext" position="320,70" zPosition="1" size="940,40" font="Regular; 20" transparent="1" halign="left" valign="center" backgroundColor="black" foregroundColor="#178ef5" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" />
                 <widget name="statustext" position="410,230" zPosition="1" size="685,90" font="Regular;30" halign="left" valign="top" transparent="1" backgroundColor="black" foregroundColor="white" />
                 <widget name="list" position="320,110" zPosition="2" size="940,384" itemHeight="32" font="Regular;20" scrollbarMode="showOnDemand" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" foregroundColorSelected="white" backgroundColorSelected="#1b5a91" borderWidth="1" borderColor="black" />
-                <widget name="console" position="20,500" zPosition="1" size="1240,170" font="Regular;18" transparent="1" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" halign="left" valign="center" />
-                <widget name="sequencer" position="0,0" zPosition="6" size="1280,720" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
+                <widget name="console" position="20,500" zPosition="1" size="1240,154" font="Regular;20" transparent="1" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" shadowColor="black" shadowOffset="-2,-2" halign="left" valign="center" />
+                <widget name="sequencer" position="0,0" zPosition="6" size="1280,%d" font="Regular;160" halign="center" valign="center" transparent="1" backgroundColor="#00000000" />
                 <widget name="cover" position="20,70" size="288,420" zPosition="3" alphatest="blend" />
-                <widget name="playerlogo"  zPosition="4" position="20,10" size="120,40" alphatest="blend" transparent="1" backgroundColor="black" />
                 <widget name="spinner"   zPosition="2" position="463,200" size="16,16" transparent="1" alphatest="blend" />
                 <widget name="spinner_1" zPosition="1" position="463,200" size="16,16" transparent="1" alphatest="blend" />
                 <widget name="spinner_2" zPosition="1" position="479,200" size="16,16" transparent="1" alphatest="blend" />
                 <widget name="spinner_3" zPosition="1" position="495,200" size="16,16" transparent="1" alphatest="blend" />
                 <widget name="spinner_4" zPosition="1" position="511,200" size="16,16" transparent="1" alphatest="blend" />
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="340,690" size="20,20" alphatest="blend" transparent="1" />
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="570,690" size="20,20" alphatest="blend" transparent="1" />
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/yellow.png" position="800,690" size="20,20" alphatest="blend" transparent="1" />
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/blue.png" position="1030,690" size="20,20" alphatest="blend" transparent="1" />
-                <widget source="key_red" render="Label" position="374,686" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-                <widget source="key_green" render="Label" position="604,686" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-                <widget source="key_yellow" render="Label" position="834,686" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-                <widget source="key_blue" render="Label" position="1064,686" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-                <eLabel name="BG_Title" position="0,0" size="1280,60" backgroundColor="#100d0f16" zPosition="-1" />
-                <eLabel name="BG_Buttons" position="0,675" size="1280,48" backgroundColor="#100d0f16" zPosition="-1" />
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,60" size="1280,2" zPosition="2" />
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="20,494" size="1240,2" zPosition="2" />
-                <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,675" size="1280,2" zPosition="2" />
-                <widget source="global.CurrentTime" render="Label" position="1100,10" size="150,40" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" halign="right">
-                    <convert type="ClockToText">Format:%H:%M</convert>
-                </widget>
-                <widget source="global.CurrentTime" render="Label" position="860,20" size="300,24" foregroundColor="white" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;16" valign="center" halign="right">
-                    <convert type="ClockToText">Date</convert>
-                </widget>
+                <ePixmap pixmap="%s/smallshadowline.png" position="20,494" size="1240,2" zPosition="2" />
+                <!-- zPosition 2, above the header's own Title label (1) -
+                     that label's black background now spans much wider
+                     than the old hand-written title box did, and would
+                     otherwise sit on top of these clocks -->
+                %s
+                <widget name="key_red_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_red" position="%d,%d" size="%d,%d" backgroundColor="#000000" font="Regular;%d" foregroundColor="#ffffff" zPosition="2" valign="center" halign="left" transparent="1" />
+                <widget name="key_green_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_green" position="%d,%d" size="%d,%d" backgroundColor="#000000" font="Regular;%d" foregroundColor="#ffffff" zPosition="2" valign="center" halign="left" transparent="1" />
+                <widget name="key_yellow_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_yellow" position="%d,%d" size="%d,%d" backgroundColor="#000000" font="Regular;%d" foregroundColor="#ffffff" zPosition="2" valign="center" halign="left" transparent="1" />
+                <widget name="key_blue_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_blue" position="%d,%d" size="%d,%d" backgroundColor="#000000" font="Regular;%d" foregroundColor="#ffffff" zPosition="2" valign="center" halign="left" transparent="1" />
+                <widget name="key_nav_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_num_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_prevnext_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_play_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_info_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_ok_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                <widget name="key_exit_icon" position="%d,%d" size="%d,%d" zPosition="1" transparent="1" alphatest="blend" />
+                %s
         </screen>
-    """
-    fullHD = getDesktop(0).size().width() == 1920
-    if fullHD:
-        skin = skin.replace("/HD/", "/FHD/")
+        """ % (
+            self.HEIGHT,
+            skinchrome.build_header_auto(iconBase=iconBase, logoWidgetName="playerlogo"),
+            self.HEIGHT,
+            iconBase,
+            clockPart,
+            geomRed['iconX'], geomRed['iconY'], geomRed['iconSize'], geomRed['iconSize'],
+            geomRed['labelX'], geomRed['labelY'], geomRed['labelW'], geomRed['labelH'], geomRed['font'],
+            geomGreen['iconX'], geomGreen['iconY'], geomGreen['iconSize'], geomGreen['iconSize'],
+            geomGreen['labelX'], geomGreen['labelY'], geomGreen['labelW'], geomGreen['labelH'], geomGreen['font'],
+            geomYellow['iconX'], geomYellow['iconY'], geomYellow['iconSize'], geomYellow['iconSize'],
+            geomYellow['labelX'], geomYellow['labelY'], geomYellow['labelW'], geomYellow['labelH'], geomYellow['font'],
+            geomBlue['iconX'], geomBlue['iconY'], geomBlue['iconSize'], geomBlue['iconSize'],
+            geomBlue['labelX'], geomBlue['labelY'], geomBlue['labelW'], geomBlue['labelH'], geomBlue['font'],
+            geomNav['x'], geomNav['y'], geomNav['w'], geomNav['h'],
+            geomNum['x'], geomNum['y'], geomNum['w'], geomNum['h'],
+            geomPrevNext['x'], geomPrevNext['y'], geomPrevNext['w'], geomPrevNext['h'],
+            geomPlay['x'], geomPlay['y'], geomPlay['w'], geomPlay['h'],
+            geomInfo['x'], geomInfo['y'], geomInfo['w'], geomInfo['h'],
+            geomOk['x'], geomOk['y'], geomOk['w'], geomOk['h'],
+            geomExit['x'], geomExit['y'], geomExit['w'], geomExit['h'],
+            # build_footer() directly, not build_footer_auto() - the auto
+            # variant hardcodes showMenu=False (none of its other callers
+            # bind a menu key), but this screen's own "menu" action is
+            # always live and needs its own icon. keys=() - all 4 color
+            # keys are the plain name= widgets declared above instead
+            # now, so the whole row can slide. Only showMenu left True
+            # here - nav/num/prevnext/play/info/ok/exit are all plain
+            # name= widgets declared above instead, repositioned (and,
+            # for prevnext/play/info, shown/hidden) by
+            # _repositionFooterKeys() (num=T9 jump hint, always shown;
+            # prevnext=page up/down hint, shown only when either would
+            # actually do something; play=auto-play sequencer hint,
+            # shown only if a playable item follows in the list).
+            skinchrome.build_footer(self.HEIGHT, scale=1.0, iconBase=iconBase, keys=(), showMenu=True, showNav=False, showOk=False, showExit=False),
+        )
 
     def __init__(self, session):
         printDBG("E2iPlayerWidget.__init__ desktop IPTV_VERSION[%s]\n" % (E2iPlayerWidget.IPTV_VERSION))
         self.session = session
-        self.skinResolutionType = 'sd'
-        screenwidth = getDesktop(0).size().width()
-        if screenwidth:
-            if screenwidth > 1900:
-                self.skinResolutionType = 'hd'
-            elif screenwidth > 1200:
-                self.skinResolutionType = 'hd_ready'
 
+        self.skin = self.__prepareSkin()
+        # tracks whether our own built-in skin above is actually what
+        # gets used, or a custom skin folder overwrote it below - the new
+        # plain-widget key_yellow/key_blue (see below) only work with our
+        # own skin; every shipped custom playlist.xml still expects the
+        # older source="key_yellow"/"key_blue" + StaticText binding
+        self._usingBuiltinSkin = True
         selSkin = config.plugins.iptvplayer.skin.value
         if selSkin:
             path = GetSkinsDir(selSkin) + "/playlist.xml"
@@ -142,13 +279,21 @@ class E2iPlayerWidget(Screen):
                 try:
                     with open(path, "r") as f:
                         self.skin = f.read()
+                    self._usingBuiltinSkin = False
                 except Exception:
                     printExc("Skin read error: " + path)
 
         Screen.__init__(self, session)
-        self.skinName = ["E2iPlayerWidgetScreen", "E2iPlayerWidget"]
+        self.skinName = skinchrome.forceInternalSkinName(["E2iPlayerWidgetScreen", "E2iPlayerWidget"])
         if config.plugins.iptvplayer.skinforceinternal.value:
             self.skinName = "_E2iPlayerWidgetScreen"
+        # an active Enigma2 skin shipping its own E2iPlayerWidgetScreen needs
+        # the StaticText / no-runtime-.move() footer path (it draws the color
+        # keys itself, no key_*_icon widgets for _repositionFooterKeys()).
+        # After the force-internal rewrites above so a "_"-prefixed name
+        # (which no external skin defines) is correctly seen as internal.
+        if self._usingBuiltinSkin and skinchrome.isExternalSkin(self.skinName):
+            self._usingBuiltinSkin = False
 
         self.recorderMode = False  # j00zek
         self.hostLogoPath = None
@@ -157,11 +302,69 @@ class E2iPlayerWidget(Screen):
         if config.plugins.iptvplayer.disable_live.value:
             self.session.nav.stopService()
 
-        self["key_red"] = StaticText(_("Close"))
-        self["key_green"] = StaticText(_("Download"))
-
-        self["key_yellow"] = StaticText(_("Refresh"))
-        self["key_blue"] = StaticText(_("More"))
+        if self._usingBuiltinSkin:
+            # plain name= widgets, not source="key_red"/"key_green"/
+            # "key_yellow"/"key_blue" + ConditionalShowHide - the whole
+            # row needs to actually MOVE at runtime (see
+            # _repositionFooterKeys()): yellow/blue when green appears/
+            # disappears, and the whole row's start when menu/info do
+            # too. A Source-bound Renderer isn't addressable by name for
+            # .instance.move() the way a plain Label/Cover3 is. Icon
+            # pixmaps are set once in onStart() - they're static, never
+            # conditionally hidden themselves. Only for our own skin
+            # above - every shipped custom playlist.xml still declares
+            # source="key_red"/etc, which needs the original StaticText
+            # binding below instead.
+            self["key_red_icon"] = Cover3()
+            self["key_red"] = Label(_("Close"))
+            self["key_green_icon"] = Cover3()
+            self["key_green"] = Label(_("Download"))
+            # starts hidden - self.downloadable starts False (set further
+            # below, before any selection exists), updateDownloadButton()
+            # shows it once the current item is actually downloadable,
+            # consistent with prevnext/play/info below
+            self["key_green_icon"].hide()
+            self["key_green"].hide()
+            self["key_yellow_icon"] = Cover3()
+            self["key_yellow"] = Label(_("Refresh"))
+            self["key_blue_icon"] = Cover3()
+            self["key_blue"] = Label(_("More"))
+            # nav/info/ok/exit - same plain name=/Cover3 treatment, so
+            # _repositionFooterKeys() can slide them when menu/info are
+            # hidden. info starts hidden (.hide()) - updateDownloadButton()
+            # shows it once there's a real selection to judge; unlike the
+            # others it's not always visible.
+            self["key_nav_icon"] = Cover3()
+            # T9 jump hint - always shown, same reasoning as nav (browsing
+            # a list always makes jump-to-letter potentially useful)
+            self["key_num_icon"] = Cover3()
+            # page up/down hint - conditional like info, shown only when
+            # either key would actually do something
+            self["key_prevnext_icon"] = Cover3()
+            self["key_prevnext_icon"].hide()
+            # auto-play sequencer hint - conditional, shown only if a
+            # playable item follows in the list
+            self["key_play_icon"] = Cover3()
+            self["key_play_icon"].hide()
+            self["key_info_icon"] = Cover3()
+            self["key_info_icon"].hide()
+            self["key_ok_icon"] = Cover3()
+            self["key_exit_icon"] = Cover3()
+        else:
+            self["key_red"] = StaticText(_("Close"))
+            self["key_green"] = StaticText(_("Download"))
+            self["key_yellow"] = StaticText(_("Refresh"))
+            self["key_blue"] = StaticText(_("More"))
+        # menu_pressed() is always bound in self["actions"] below and does
+        # something real (per-item context menu) distinct from "Mehr"/blue
+        # - needs its own StaticText for the footer's ConditionalShowHide.
+        # Starts blank, same as key_green - updateDownloadButton() (called
+        # once the list actually has a selection) fills in the real
+        # state; not meaningful before that. INFO's own visibility is
+        # handled via key_info_icon's .show()/.hide() above instead (it's
+        # a plain widget, not a ConditionalShowHide Source, since its
+        # position - unlike menu's - also depends on menu's visibility).
+        self["key_menu"] = StaticText("")
 
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
@@ -215,7 +418,14 @@ class E2iPlayerWidget(Screen):
         self.lastPluginVersion = ''
         self.checkUpdateConsole = None
 
-        self.spinnerPixmap = [LoadPixmap(GetIconDir('radio_button_on.png')), LoadPixmap(GetIconDir('radio_button_off.png'))]
+        # per-tier assets (icons/HD|FHD|WQHD), not the flat icons/ root -
+        # this spinner's declared "16,16" box gets auto-scaled to
+        # 16/24/32 by this screen's own resolution="1280,720", but plain
+        # Pixmap widgets never scale their pixmap CONTENT to that box, so
+        # the source file itself has to already be the right size (same
+        # bug/fix as the legacy grid's page markers in playerselector.py)
+        _spinnerIconBase = skinchrome.getIconBase()
+        self.spinnerPixmap = [LoadPixmap(_spinnerIconBase + '/radio_button_on.png'), LoadPixmap(_spinnerIconBase + '/radio_button_off.png')]
         self.useAlternativePlayer = False
 
         self.showMessageNoFreeSpaceForIcon = False
@@ -287,6 +497,25 @@ class E2iPlayerWidget(Screen):
         self.decodeCoverTimer = eTimer()
         self.decodeCoverTimer_conn = eConnectCallback(self.decodeCoverTimer.timeout, self.doStartCoverDecode)
         self.decodeCoverTimer_interval = 100
+
+        # delayed footer-keys timer - same debounce idea as decodeCoverTimer
+        # above: onSelectionChanged()
+        # calls updateDownloadButton() on every single up/down keypress,
+        # which calls _getMenuOptions() -> host.getCustomActions() (a
+        # real host method call, documented "NON BLOCKING" but not "free")
+        # for every intermediate row scrolled past, not just the one the
+        # user actually stops on - noticeable lag on a host whose
+        # getCustomActions() does real work. Restarting a single-shot
+        # timer on every selection change (same pattern as
+        # decodeCoverTimer) coalesces a fast scroll into one real
+        # updateDownloadButton() call once the selection settles, instead
+        # of once per row passed over.
+        self.footerKeysTimer = eTimer()
+        self.footerKeysTimer_conn = eConnectCallback(self.footerKeysTimer.timeout, self.updateDownloadButton)
+        self.footerKeysTimer_interval = 100
+        # _repositionFooterKeys() memoization guard - see that method's
+        # own comment
+        self._lastFooterKeyFlags = None
 
         # spinner timer
         self.spinnerTimer = eTimer()
@@ -361,7 +590,12 @@ class E2iPlayerWidget(Screen):
     # end def __init__(self, session):
 
     def updateDownloadButton(self):
+        # despite the name, this now keeps every footer key that depends
+        # on the currently selected item in sync - green/info/menu are
+        # only ever meaningful for some items, same idea, called from the
+        # same set of "selection or list content changed" call sites
         self.downloadable = False
+        item = None
         try:
             if self["list"].visible:
                 item = self.getSelItem()
@@ -371,10 +605,158 @@ class E2iPlayerWidget(Screen):
         except Exception:
             printExc()
 
-        self["key_green"].setText(_("Download") if self.downloadable else "")
+        if self._usingBuiltinSkin:
+            if self.downloadable:
+                self["key_green_icon"].show()
+                self["key_green"].show()
+            else:
+                self["key_green_icon"].hide()
+                self["key_green"].hide()
+        else:
+            self["key_green"].setText(_("Download") if self.downloadable else "")
 
-    def getSkinResolutionType(self):
-        return self.skinResolutionType
+        # INFO: cheap, local item-type check only, no network request -
+        # getArticleContent() (what INFO actually triggers) does one, so
+        # it can't be test-called here the way MENU's getCustomActions()
+        # can (that one's explicitly documented "NON BLOCKING" in
+        # ihost.py). info_pressed() itself never restricted by type
+        # either - a category folder CAN return real article content on
+        # some hosts, so this only excludes
+        # types that are structurally never real content at all (pure
+        # pagination/action controls, no underlying host item) rather
+        # than guessing which content types have article support.
+        hasInfo = item is not None and item.type not in self.INFO_NEVER_TYPES
+        if self._usingBuiltinSkin:
+            # plain widget, not a ConditionalShowHide Source - its own
+            # position depends on MENU too, so it's shown/hidden and
+            # positioned together in _repositionFooterKeys() below
+            if hasInfo:
+                self["key_info_icon"].show()
+            else:
+                self["key_info_icon"].hide()
+
+        # PAGE UP/DOWN: same exact conditions pageup_pressed()/
+        # pagedown_pressed() themselves check - cheap, local, no network.
+        # Both real handlers also require self.visible; pagedown_pressed()
+        # further no-ops while the list itself is hidden - without that
+        # check here the icon could stay shown while the key would
+        # silently do nothing, e.g. mid-spinner.
+        hasPrevNext = self.visible and (
+            bool(self.prevSelList and self.prevSelList[-1])
+            or bool(self.currList and self.currList[-1].type == CDisplayListItem.TYPE_NEXT and self["list"].getVisible())
+        )
+        if self._usingBuiltinSkin:
+            if hasPrevNext:
+                self["key_prevnext_icon"].show()
+            else:
+                self["key_prevnext_icon"].hide()
+
+        # PLAY: same scan autoPlaySequencerNext(False) itself does when
+        # startAutoPlaySequencer() calls it (from the current selection
+        # forward, inclusive, for the first playable type) - cheap,
+        # local, no network
+        hasPlay = False
+        idx = self.getSelIndex()
+        if -1 != idx:
+            for i in range(idx, len(self.currList)):
+                if self.currList[i].type in (CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO, CDisplayListItem.TYPE_PICTURE, CDisplayListItem.TYPE_MORE):
+                    hasPlay = True
+                    break
+        if self._usingBuiltinSkin:
+            if hasPlay:
+                self["key_play_icon"].show()
+            else:
+                self["key_play_icon"].hide()
+
+        # MENU: safe to actually build the real option list here (see
+        # _getMenuOptions()'s own comment) - guarantees this can never
+        # show/hide differently than what pressing the key would do
+        hasMenu = len(self._getMenuOptions()) > 0
+        self["key_menu"].setText(_("Menu") if hasMenu else "")
+
+        self._repositionFooterKeys(hasMenu, hasPrevNext, hasPlay, hasInfo)
+
+    def _repositionFooterKeys(self, hasMenu, hasPrevNext, hasPlay, hasInfo):
+        # ConditionalShowHide only hides a widget in place, it never
+        # reflows the others - covers both clusters that can shrink here:
+        # gray menu/nav/num/prevnext/play/info/ok/exit and the red/green/
+        # yellow/blue color keys, which start right after the gray
+        # cluster ends and ALSO shift on their own when green is hidden.
+        # Only MENU can stay a fixed-slot
+        # ConditionalShowHide widget (build_footer()'s showMenu=True) -
+        # nothing ever appears before it, so it never needs to move; NUM
+        # is always shown too, but its own slot still depends on MENU, so
+        # it still needs repositioning like everything after it. Real
+        # (already-scaled) height/scale needed here,
+        # unlike __prepareSkin()'s HD-reference numbers - resolution=
+        # auto-scaling only ever applies to declared skin XML, never to a
+        # later .move() call. Only applies to our own skin - a custom
+        # skin folder's key_* widgets are the original StaticText/
+        # ConditionalShowHide ones, with no key_*_icon at all.
+        if not self._usingBuiltinSkin:
+            return
+        if None is self["key_nav_icon"].instance:
+            # not laid out yet - updateDownloadButton() can run before
+            # onLayoutFinish via the initial list population; the skin's
+            # own declared position already matches the "everything
+            # visible" default, so there's nothing to correct yet
+            return
+        # memoization guard: self.downloadable affects this layout too
+        # (green key slot/color-key start offset below), not just the 4
+        # parameters - cache all 5 together and
+        # skip the geometry recompute + ~10 .move() calls entirely when
+        # none of them actually changed since the last call. Scrolling
+        # through a run of same-type items (e.g. one folder) otherwise
+        # redid this on every row for no visible effect.
+        flags = (hasMenu, hasPrevNext, hasPlay, hasInfo, self.downloadable)
+        if flags == self._lastFooterKeyFlags:
+            return
+        self._lastFooterKeyFlags = flags
+        scale = skinchrome.getScale()
+        height = skinchrome.scalePixels(self.HEIGHT, scale)
+
+        # gray cluster: menu(fixed) / nav / num(always) / prevnext
+        # (optional) / play(optional) / info(optional) / ok / exit -
+        # slot math shared with __prepareSkin() via _footerSlots(), see
+        # its own comment
+        slots = self._footerSlots(hasMenu, hasPrevNext, hasPlay, hasInfo, self.downloadable)
+        geomNav = skinchrome.leftIconGeometry(height, slots['nav'], scale)
+        geomNum = skinchrome.leftIconGeometry(height, slots['num'], scale)
+        geomOk = skinchrome.leftIconGeometry(height, slots['ok'], scale)
+        geomExit = skinchrome.leftIconGeometry(height, slots['exit'], scale)
+        self["key_nav_icon"].instance.move(ePoint(geomNav['x'], geomNav['y']))
+        self["key_num_icon"].instance.move(ePoint(geomNum['x'], geomNum['y']))
+        self["key_ok_icon"].instance.move(ePoint(geomOk['x'], geomOk['y']))
+        self["key_exit_icon"].instance.move(ePoint(geomExit['x'], geomExit['y']))
+        if hasPrevNext:
+            geomPrevNext = skinchrome.leftIconGeometry(height, slots['prevNext'], scale)
+            self["key_prevnext_icon"].instance.move(ePoint(geomPrevNext['x'], geomPrevNext['y']))
+        if hasPlay:
+            geomPlay = skinchrome.leftIconGeometry(height, slots['play'], scale)
+            self["key_play_icon"].instance.move(ePoint(geomPlay['x'], geomPlay['y']))
+        if hasInfo:
+            geomInfo = skinchrome.leftIconGeometry(height, slots['info'], scale)
+            self["key_info_icon"].instance.move(ePoint(geomInfo['x'], geomInfo['y']))
+
+        # color keys: how many gray icons actually precede them (4 fixed
+        # - nav/num/ok/exit - plus menu/prevnext/play/info if currently
+        # shown) decides where the whole row starts; red/yellow/blue
+        # always show, green only if downloadable - same "slide into the
+        # gap" idea as the gray cluster above, one level further right
+        leftIconCount = slots['leftIconCount']
+        geomRed = skinchrome.colorKeyGeometry(height, leftIconCount, 0, scale)
+        geomYellow = skinchrome.colorKeyGeometry(height, leftIconCount, slots['yellow'], scale)
+        geomBlue = skinchrome.colorKeyGeometry(height, leftIconCount, slots['blue'], scale)
+        self["key_red_icon"].instance.move(ePoint(geomRed['iconX'], geomRed['iconY']))
+        self["key_red"].instance.move(ePoint(geomRed['labelX'], geomRed['labelY']))
+        self["key_yellow_icon"].instance.move(ePoint(geomYellow['iconX'], geomYellow['iconY']))
+        self["key_yellow"].instance.move(ePoint(geomYellow['labelX'], geomYellow['labelY']))
+        self["key_blue_icon"].instance.move(ePoint(geomBlue['iconX'], geomBlue['iconY']))
+        self["key_blue"].instance.move(ePoint(geomBlue['labelX'], geomBlue['labelY']))
+        if self.downloadable:
+            geomGreen = skinchrome.colorKeyGeometry(height, leftIconCount, 1, scale)
+            self["key_green_icon"].instance.move(ePoint(geomGreen['iconX'], geomGreen['iconY']))
+            self["key_green"].instance.move(ePoint(geomGreen['labelX'], geomGreen['labelY']))
 
     def setStatusTex(self, msg):
         self.statusTextValue = msg
@@ -398,6 +780,8 @@ class E2iPlayerWidget(Screen):
         self.decodeCoverTimer = None
         self.spinnerTimer_conn = None
         self.spinnerTimer = None
+        self.footerKeysTimer_conn = None
+        self.footerKeysTimer = None
 
         try:
             self.stopAutoPlaySequencer()
@@ -657,8 +1041,21 @@ class E2iPlayerWidget(Screen):
         if hasattr(self.host.host, 'history'):
             options.append((_("Edit search history"), "EditSearchHistory"))
         options.append((_("Download manager"), "IPTVDM"))
+        # only reachable through here - INFO (what keyHelp() binds
+        # directly to on e2ivk.py's on-screen keyboard) already opens the
+        # article view on this screen, so Help has no other entry point
+        options.append((_("Help"), "HELP"))
         options.append((_("Exit"), "CLOSE"))
-        self.session.openWithCallback(self.blue_pressed_next, ChoiceBox, title=_("Select option"), list=options)
+        # Reuses _getMoviePlayerPickerHeight()/footerMargin=136, the exact
+        # same pair this class's own sibling popups
+        # (SetActiveMoviePlayer/"Select link"/"Select action") already use
+        # for a plain, un-iconed options list of varying length.
+        # list_class=IPTVPlayerSelectOptionChoiceBoxList - see that
+        # class's own comment - most rows now get an icon instead of
+        # plain text.
+        choiceItems = [IPTVChoiceBoxItem(name=opt[0], privateData=opt[1]) for opt in options]
+        height = self._getMoviePlayerPickerHeight(len(choiceItems))
+        openChoiceBox(self.session, {'width': 600, 'height': height, 'current_idx': 0, 'title': _("Select option"), 'options': choiceItems, 'list_class': IPTVPlayerSelectOptionChoiceBoxList, 'chrome': True, 'footerMargin': 136}, self.blue_pressed_next)
 
     def pause_pressed(self):
         printDBG('pause_pressed')
@@ -732,9 +1129,16 @@ class E2iPlayerWidget(Screen):
         return False
 
     def blue_pressed_next(self, ret):
+        # ret is an IPTVChoiceBoxItem (not a plain (label, id) tuple) -
+        # adapted back into the same (label, id) shape right here instead
+        # of touching every ret[1] reference below (this method never
+        # reads ret[0]/the label).
         if ret:
+            ret = (None, ret.privateData)
             if ret[1] == "IPTVDM":
                 self.runIPTVDM()
+            elif ret[1] == "HELP":
+                self.keyHelp()
             elif ret[1] == "CLOSE":
                 self.close()
             elif ret[1] == "HostConfig":
@@ -780,14 +1184,15 @@ class E2iPlayerWidget(Screen):
                         options[idx].type = IPTVChoiceBoxItem.TYPE_OFF
 
                 height = self._getMoviePlayerPickerHeight(len(options))
-                # 120: same derivation as the keyboard's language picker -
+                # 136: same derivation as the keyboard's language picker -
                 # the list starts at y=66 in the chrome skin's reference
                 # space, and "e-N" sizes against the full container height,
                 # not reduced by that 66 first, so footerMargin needs to be
-                # >= 66 + 48 (footer height) = 114 just to end flush with
-                # the footer; the chrome default of 150 leaves a visible
-                # ~36px reference-space gap above it
-                self.session.openWithCallback(self.setActiveMoviePlayer, IPTVChoiceBoxWidget, {'width': self.MOVIE_PLAYER_PICKER_WIDTH, 'height': height, 'current_idx': currIdx, 'title': _("Select movie player"), 'options': options, 'chrome': True, 'footerMargin': 120})
+                # >= 66 + 64 (footer height, see skinchrome.py's
+                # build_footer() 2-line-wrap comment) = 130
+                # just to end flush with the footer; the chrome default of
+                # 166 leaves a visible ~36px reference-space gap above it
+                openChoiceBox(self.session, {'width': self.MOVIE_PLAYER_PICKER_WIDTH, 'height': height, 'current_idx': currIdx, 'title': _("Select movie player"), 'options': options, 'list_class': IPTVMoviePlayerChoiceBoxList, 'chrome': True, 'footerMargin': 136}, self.setActiveMoviePlayer)
             elif ret[1] == 'ADD_FAV':
                 currSelIndex = self.canByAddedToFavourites()[0]
                 self.requestListFromHost('ForFavItem', currSelIndex, '')
@@ -829,6 +1234,32 @@ class E2iPlayerWidget(Screen):
                         self._hostActions[idx][1](self.session)
                 except Exception:
                     printExc()
+
+    def keyHelp(self):
+        # same read-only icon+explanation list pattern as e2ivk.py's own
+        # keyHelp() - only reachable via Mehr/BLUE here, not bound directly
+        # to INFO like e2ivk.py does, since INFO already opens the
+        # article view on this screen.
+        iconBase = skinchrome.getIconBase()
+
+        def icon(name):
+            return LoadPixmap(iconBase + '/%s.png' % name)
+
+        options = [
+            GetKeyHelpItem('ok', "open / play the selected item", icon('ok')),
+            GetKeyHelpItem('exit', "go back / close", icon('exit')),
+            GetKeyHelpItem('red', "back to host/group selection", icon('red')),
+            GetKeyHelpItem('green', "download the selected item", icon('green')),
+            GetKeyHelpItem('yellow', "refresh the current list", icon('yellow')),
+            GetKeyHelpItem('blue', "more options (this menu)", icon('blue')),
+            GetKeyHelpItem('menu', "item actions (favorites, host-specific actions)", icon('menu')),
+            GetKeyHelpItem('info', "show more details about the selected item", icon('info')),
+            GetKeyHelpItem('num', "jump to items starting with that letter, or launch a specific player directly", icon('key_0-9')),
+            GetKeyHelpItem('updown', "back to the previous category / jump to the next page", icon('key_updown')),
+            GetKeyHelpItem('play', "start auto-play (plays through the list automatically)", icon('play')),
+        ]
+        height = self._getOptionsPickerHeight(len(options))
+        self.session.open(IPTVChoiceBoxWidget, {'width': 900, 'height': height, 'current_idx': 0, 'title': _("Help"), 'options': options, 'list_class': E2iVKOptionsList, 'selectable': False, 'chrome': True})
 
     def deleteFavouriteItem(self, confirmed=False):
         printDBG("E2iPlayerWidget.deleteFavouriteItem")
@@ -1071,7 +1502,10 @@ class E2iPlayerWidget(Screen):
             self["console"].setText('')
 
     def onSelectionChanged(self):
-        self.updateDownloadButton()
+        # debounced - see footerKeysTimer's own comment in __init__.
+        # changeBottomPanel()/_rememberHistorySelection()
+        # stay immediate - both are cheap, local, no host call
+        self.footerKeysTimer.start(self.footerKeysTimer_interval, True)
         self.changeBottomPanel()
         self._rememberHistorySelection()
 
@@ -1521,6 +1955,25 @@ class E2iPlayerWidget(Screen):
         self.setTitle('E2iPlayer ' + GetIPTVPlayerVersion())
         self.loadSpinner()
         self.hideSpinner()
+        if self._usingBuiltinSkin:
+            # static icons, set once - the icon pixmaps never change,
+            # unlike these widgets' positions (see
+            # _repositionFooterKeys())
+            _footerIconBase = skinchrome.getIconBase()
+            self["key_red_icon"].setPixmap(LoadPixmap(_footerIconBase + '/red.png'))
+            self["key_green_icon"].setPixmap(LoadPixmap(_footerIconBase + '/green.png'))
+            self["key_yellow_icon"].setPixmap(LoadPixmap(_footerIconBase + '/yellow.png'))
+            self["key_blue_icon"].setPixmap(LoadPixmap(_footerIconBase + '/blue.png'))
+            self["key_nav_icon"].setPixmap(LoadPixmap(_footerIconBase + '/key_steuerkreuz.png'))
+            self["key_num_icon"].setPixmap(LoadPixmap(_footerIconBase + '/key_0-9.png'))
+            # key_updown.png (up/down arrows), NOT key_prevnext.png (left/
+            # right arrows, already covered by key_steuerkreuz.png's own
+            # d-pad) - this hints PAGE UP/PAGE DOWN specifically
+            self["key_prevnext_icon"].setPixmap(LoadPixmap(_footerIconBase + '/key_updown.png'))
+            self["key_play_icon"].setPixmap(LoadPixmap(_footerIconBase + '/play.png'))
+            self["key_info_icon"].setPixmap(LoadPixmap(_footerIconBase + '/info.png'))
+            self["key_ok_icon"].setPixmap(LoadPixmap(_footerIconBase + '/ok.png'))
+            self["key_exit_icon"].setPixmap(LoadPixmap(_footerIconBase + '/exit.png'))
         self.selectHost()
 
     def selectHost(self, arg1=None):
@@ -1559,10 +2012,19 @@ class E2iPlayerWidget(Screen):
         printDBG(">> selectGroupCallback")
         # save groups order if user change it at player selection
         if self.newDisplayGroupsList != self.displayGroupsList:
-            numOfSpecialItems = self.getNumOfSpecialItems(self.newDisplayGroupsList)
-            groupList = []
-            for idx in range(len(self.newDisplayGroupsList) - numOfSpecialItems):
-                groupList.append(self.newDisplayGroupsList[idx][1])
+            # filters by key rather than assuming "everything except the
+            # last N items are real groups" (positional) - "all"/"config"
+            # can end up anywhere but the very end of the list (e.g.
+            # after "Sort by name" in PlayerSelectorWidget's own BLUE
+            # menu, which has no guard keeping these two reserved keys
+            # pinned in place), and a positional cut would then persist
+            # them into iptvplayerhostsgroups.json as if they were real
+            # group names. "all"/"config" are always reserved (same
+            # filter list getNumOfSpecialItems() itself uses) and never
+            # belong in the saved group list. IPTVHostsGroups.getGroupsList()
+            # also filters these two out on load, to self-heal any
+            # install whose file already has this corruption.
+            groupList = [item[1] for item in self.newDisplayGroupsList if item[1] not in ('config', 'all')]
             self.groupObj.setGroupList(groupList)
 
         self.selectItemCallback(ret, 'selectgroup')
@@ -1692,12 +2154,7 @@ class E2iPlayerWidget(Screen):
         return
 
     def displayListOfHosts(self, arg=None):
-        """
-        if config.plugins.iptvplayer.ListaGraficzna.value is False or 0 == GetAvailableIconSize():
-            self.newDisplayHostsList = None
-            self.session.openWithCallback(self.selectHostCallback, ChoiceBox, title=_("Select service"), list=self.displayHostsList)
-        else:
-        """
+        # always falls through to the PlayerSelectorWidget call below
         self.newDisplayHostsList = []
         self.session.openWithCallback(self.selectHostCallback, PlayerSelectorWidget, inList=self.displayHostsList, outList=self.newDisplayHostsList, numOfLockedItems=self.getNumOfSpecialItems(self.displayHostsList), groupName='selecthost')
 
@@ -1714,10 +2171,14 @@ class E2iPlayerWidget(Screen):
         printDBG(">> selectHostCallback")
         # save hosts order if user change it at player selection
         if self.newDisplayHostsList is not None and self.newDisplayHostsList != self.displayHostsList:
-            numOfSpecialItems = self.getNumOfSpecialItems(self.newDisplayHostsList)
-            hostsList = []
-            for idx in range(len(self.newDisplayHostsList) - numOfSpecialItems):
-                hostsList.append(self.newDisplayHostsList[idx][1])
+            # same positional-slicing bug as selectGroupCallback()'s own
+            # groupList build (see its own comment) - "config" is the only
+            # reserved key ever appended to the host list, but the same
+            # "everything except the last item" assumption broke the same
+            # way once it could end up anywhere but the tail (e.g. via
+            # "Sort by name"). Filtered by key instead, regardless of
+            # position.
+            hostsList = [item[1] for item in self.newDisplayHostsList if item[1] != 'config']
             SaveHostsOrderList(hostsList)
 
         self.selectHostCallback2(ret)
@@ -1932,7 +2393,7 @@ class E2iPlayerWidget(Screen):
             printDBG("selectLinkForCurrVideo: |%s| |%s|" % (link.name, link.url))
             options.append(IPTVChoiceBoxItem(link.name, "", link, failed=link.failed))
 
-        self.session.openWithCallback(self.selectLinksCallback, IPTVChoiceBoxWidget, {'width': 600, 'height': self._getLinkPickerHeight(), 'current_idx': 0, 'title': _("Select link"), 'options': options, 'list_class': IPTVLinkChoiceBoxList})
+        openChoiceBox(self.session, {'width': 600, 'height': self._getLinkPickerHeight(len(options)), 'current_idx': 0, 'title': _("Select link"), 'options': options, 'list_class': IPTVLinkChoiceBoxList, 'chrome': True, 'footerMargin': 136}, self.selectLinksCallback)
 
     # IPTVChoiceBoxWidget's screen declares resolution="1280,720", so the
     # skin engine already scales width/size per axis to the real screen
@@ -1945,33 +2406,36 @@ class E2iPlayerWidget(Screen):
         # same reference-space-vs-real-pixels reasoning as _getLinkPickerHeight,
         # but using IPTVRadioButtonList's (IPTVMainNavigatorList's) own real
         # per-tier item heights (35/40/55) instead of guessed constants.
-        # +130 = the footerMargin passed below (120, itself derived from the
-        # list's fixed y=66 + the 48px footer bar) plus a small 10px
-        # breathing buffer - not the keyboard's own +160, which assumes the
-        # chrome default footerMargin (150) instead of this screen's 120
-        screenwidth = getDesktop(0).size().width()
-        if screenwidth >= 2560:
-            itemH, scale = 55, 2.0
-        elif screenwidth >= 1920:
-            itemH, scale = 40, 1.5
-        else:
-            itemH, scale = 35, 1.0
-        return int(numItems * itemH / scale) + 130
+        # +146 = the footerMargin passed below (136, itself derived from the
+        # list's fixed y=66 + the 64px footer bar, see skinchrome.py's
+        # build_footer() 2-line-wrap comment) plus a small 10px breathing
+        # buffer - not the keyboard's
+        # own +176, which assumes the chrome default footerMargin (166)
+        # instead of this screen's 136
+        itemH, scale = skinchrome.tierRowHeight(35, 40, 55)
+        return int(numItems * itemH / scale) + 146
 
-    def _getLinkPickerHeight(self):
-        # IPTVChoiceBoxWidget's skin is defined in a fixed 1280x720 reference space
-        # and scaled per-axis to the real screen resolution by the skin engine, so
-        # these are reference-space pixel heights, not real ones. Tuned so HD and
-        # FullHD both show 12 rows before the list starts scrolling (up from ~6/~9
-        # at the previous default of 300), and SD gets a few more rows too.
-        resType = self.getSkinResolutionType()
-        if resType == 'sd':
-            return 370
-        elif resType == 'hd':
-            return 380
-        elif resType == 'hd_ready':
-            return 480
-        return 300
+    def _getOptionsPickerHeight(self, numItems):
+        # same reference-space-vs-real-pixels reasoning as
+        # _getMoviePlayerPickerHeight(), but for keyHelp()'s
+        # E2iVKOptionsList rows instead of IPTVMainNavigatorList ones -
+        # mirrors e2ivk.py's own _getOptionsPickerHeight() formula exactly
+        # (itemH 44/62/83, +176 assuming the chrome default footerMargin
+        # of 166) since keyHelp() below never overrides footerMargin.
+        itemH, scale = skinchrome.tierRowHeight(44, 62, 83)
+        return int(numItems * itemH / scale) + 176
+
+    def _getLinkPickerHeight(self, numItems):
+        # unlike self.getSkinResolutionType()'s coarser 'sd'/'hd_ready'/'hd'
+        # split (tuned for the pre-chrome skin's fixed 50px footer margin,
+        # not the chrome footer's 136+, and lumping FHD/WQHD together
+        # under 'hd' with the same fixed height), this uses the same
+        # formula as _getMoviePlayerPickerHeight(): IPTVLinkChoiceBoxList
+        # inherits IPTVMainNavigatorList's real per-tier item heights
+        # (35/40/55), +146 = the footerMargin passed below (136) + a small
+        # 10px breathing buffer
+        itemH, scale = skinchrome.tierRowHeight(35, 40, 55)
+        return int(numItems * itemH / scale) + 146
 
     def selectLinksCallback(self, retArg):
         if retArg is None:
@@ -2314,14 +2778,25 @@ class E2iPlayerWidget(Screen):
         else:
             self.searchPattern = ''
         if searchTypes:
-            self.session.openWithCallback(self.selectSearchTypeCallback, ChoiceBox, title=_("Search type"), list=searchTypes)
+            # dormant in practice: every real host that ever sets
+            # `possibleTypesOfSearch` (hosturllist.py/hostipla.py/
+            # hosttvjworg.py) initializes its own options list to an
+            # always-empty `[]` - hosturllist.py even still has its
+            # intended real entries ("Filmy"/"Seriale") commented out -
+            # so this branch never actually fires today, but it's real,
+            # reachable code a host could turn back on, unlike
+            # displayListOfHosts()'s dead "Select service" ChoiceBox
+            # above (removed, that one was unreachable text, not code).
+            choiceItems = [IPTVChoiceBoxItem(name=opt[0], privateData=opt[1]) for opt in searchTypes]
+            height = self._getMoviePlayerPickerHeight(len(choiceItems))
+            openChoiceBox(self.session, {'width': 600, 'height': height, 'current_idx': 0, 'title': _("Search type"), 'options': choiceItems, 'chrome': True, 'footerMargin': 136}, self.selectSearchTypeCallback)
         else:
             self.searchType = None
             self.doSearchWithVirtualKeyboard()
 
     def selectSearchTypeCallback(self, ret=None):
         if ret:
-            self.searchType = ret[1]
+            self.searchType = ret.privateData
             self.doSearchWithVirtualKeyboard()
         else:
             pass
@@ -2584,38 +3059,59 @@ class E2iPlayerWidget(Screen):
         else:
             self.session.open(MessageBox, _("No valid links available."), type=MessageBox.TYPE_INFO, timeout=10)
 
-    def menu_pressed(self):
-        printDBG("E2iPlayerWidget.menu_pressed")
-        # we have to be careful here as we will call method
-        # directly from host
+    def _getMenuOptions(self):
+        # shared by menu_pressed() and the footer's key_menu visibility
+        # check (updateContextualFooterKeys()) so the two can never drift
+        # apart - whatever this says is available is exactly what
+        # pressing MENU will show
         options = []
-        try:
-            if self.visible and not self.isInWorkThread():
-                try:
-                    item = self.getSelItem()
-                except Exception:
-                    printExc()
-                    item = None
-                if None is not item:
-                    currSelIndex = item.itemIdx  # self["list"].getCurrentIndex()
-                else:
-                    currSelIndex = -1
+        if self.visible and not self.isInWorkThread():
+            try:
+                item = self.getSelItem()
+            except Exception:
+                printExc()
+                item = None
+            if None is not item:
+                currSelIndex = item.itemIdx  # self["list"].getCurrentIndex()
+            else:
+                currSelIndex = -1
+            try:
                 hRet = self.host.getCustomActions(currSelIndex)
                 if hRet.status == RetHost.OK and len(hRet.value):
                     for item in hRet.value:
                         if isinstance(item, IPTVChoiceBoxItem):
                             options.append(item)
+            except Exception:
+                # getCustomActions() is documented "!!! NON BLOCKING !!!"
+                # in ihost.py but not "never raises" - this now also runs
+                # on every list-selection change (updateDownloadButton(),
+                # not just an actual MENU press), so a host whose
+                # implementation raises here must not abort the whole
+                # selection-change callback.
+                printExc()
 
-                try:
-                    if -1 < self.canByAddedToFavourites()[0]:
-                        options.append(IPTVChoiceBoxItem(_("Add item to favorites"), "", {'e2i_menu_action': 'ADD_FAV'}))
-                    elif 'favourites' == self.hostName:
-                        options.append(IPTVChoiceBoxItem(_("Remove from favorites"), "", {'e2i_menu_action': 'DELETE_FAV'}))
-                except Exception:
-                    printExc()
+            try:
+                if -1 < self.canByAddedToFavourites()[0]:
+                    options.append(IPTVChoiceBoxItem(_("Add item to favorites"), "", {'e2i_menu_action': 'ADD_FAV'}))
+                elif 'favourites' == self.hostName:
+                    options.append(IPTVChoiceBoxItem(_("Remove from favorites"), "", {'e2i_menu_action': 'DELETE_FAV'}))
+            except Exception:
+                printExc()
+        return options
+
+    def menu_pressed(self):
+        printDBG("E2iPlayerWidget.menu_pressed")
+        # we have to be careful here as we will call method
+        # directly from host
+        try:
+            options = self._getMenuOptions()
             if len(options):
                 self.stopAutoPlaySequencer()
-                self.session.openWithCallback(self.requestCustomActionFromHost, IPTVChoiceBoxWidget, {'width': 600, 'current_idx': 0, 'title': _("Select action"), 'options': options})
+                # _getMoviePlayerPickerHeight() (below) is just the generic
+                # IPTVRadioButtonList item-height formula despite its name -
+                # reused as-is instead of a third near-identical copy in
+                # this same class
+                self.session.openWithCallback(self.requestCustomActionFromHost, IPTVChoiceBoxWidget, {'width': 600, 'height': self._getMoviePlayerPickerHeight(len(options)), 'current_idx': 0, 'title': _("Select action"), 'options': options, 'list_class': IPTVActionChoiceBoxList, 'chrome': True, 'footerMargin': 136})
         except Exception:
             printExc()
 

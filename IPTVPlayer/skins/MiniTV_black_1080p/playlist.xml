@@ -19,10 +19,10 @@
 	<ePixmap position="186,1032" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/key_prevnext.png" transparent="1" alphatest="blend"/>
 	<ePixmap position="267,1032" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD//key_updown.png" transparent="1" alphatest="blend"/>
 	<ePixmap position="348,1032" size="60,38" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/FHD/exit.png" transparent="1" alphatest="blend"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/red.png" position="507,1038" size="30,30" alphatest="blend" transparent="1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/green.png" position="800,1038" size="30,30" alphatest="blend" transparent="1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/yellow.png" position="1093,1038" size="30,30" alphatest="blend" transparent="1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/blue.png" position="1386,1038" size="30,30" alphatest="blend" transparent="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/MiniTV_black_1080p/icons/red.png" position="507,1038" size="30,30" alphatest="blend" transparent="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/MiniTV_black_1080p/icons/green.png" position="800,1038" size="30,30" alphatest="blend" transparent="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/MiniTV_black_1080p/icons/yellow.png" position="1093,1038" size="30,30" alphatest="blend" transparent="1"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/skins/MiniTV_black_1080p/icons/blue.png" position="1386,1038" size="30,30" alphatest="blend" transparent="1"/>
 	<widget source="key_red" render="Label" position="547,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1"/>
 	<widget source="key_green" render="Label" position="840,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1"/>
 	<widget source="key_yellow" render="Label" position="1133,1030" size="255,39" zPosition="1" font="Regular;27" halign="left" transparent="1" valign="center" noWrap="1"/>

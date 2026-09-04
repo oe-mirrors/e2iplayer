@@ -9,11 +9,12 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3, Cover2
-from Plugins.Extensions.IPTVPlayer.components.VirtualKeyBoard import IPTVVirtualKeyBoardWithCaptcha
+from Plugins.Extensions.IPTVPlayer.components.virtualkeyboard import IPTVVirtualKeyBoardWithCaptcha
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 
 ###################################################
 
@@ -25,6 +26,7 @@ from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.ActionMap import NumberActionMap
 from Components.Label import Label
+from Components.Sources.StaticText import StaticText
 from Components.Input import Input
 from Tools.LoadPixmap import LoadPixmap
 from skin import parseColor
@@ -32,15 +34,30 @@ from skin import parseColor
 
 
 class IPTVMultipleInputBox(Screen):
-    DEF_INPUT_PARAMS = {'validator': None, 'title': '', 'useable_chars': None, 'label_font': 'Regular;23', 'label_size': (550, 25), 'input_font': 'Regular;20', 'input_size': (550, 25), 'input': dict(text="", maxSize=False, visible_width=False, type=Input.TEXT)}
+    # label_size height is 30, not 25, for a 23pt font - the "text_%d"
+    # widget has no valign set, so it renders top-anchored and the box
+    # itself has to be tall enough for the full font metrics (descenders
+    # like the "g" in "Beschreibung:" included), not just the cap height.
+    # HD-reference-then-auto-scaled like everywhere else here, so this
+    # extra height scales proportionally at FHD/WQHD too - only affects
+    # fields that don't override label_size themselves (every current
+    # caller uses the shared default unmodified).
+    DEF_INPUT_PARAMS = {'validator': None, 'title': '', 'useable_chars': None, 'label_font': 'Regular;23', 'label_size': (550, 30), 'input_font': 'Regular;20', 'input_size': (550, 25), 'input': dict(text="", maxSize=False, visible_width=False, type=Input.TEXT)}
     DEF_PARAMS = {'title': _("Input"), 'with_accept_button': False, 'accep_label': _("Save"), 'list': []}
 
     def __init__(self, session, params={}):
+        iconBase = skinchrome.getIconBase()
 
-        # Skin generator
+        # Skin generator - HD-reference pixel math throughout;
+        # `resolution="1280,720"` below lets Enigma2 auto-scale the whole
+        # dynamically-built layout for FHD/WQHD, same approach as e.g.
+        # this screen's own sibling IPTVFavouritesMainWidget. Content
+        # starts at pY=76 to clear the chrome header; screen height grows
+        # by skinchrome.footer_height() at the end to fit the chrome
+        # footer.
         maxWidth = 0
         pX = 40
-        pY = 60
+        pY = 76
         dY = 10
         skinItems = ''
         self.icons = []
@@ -56,6 +73,10 @@ class IPTVMultipleInputBox(Screen):
             if item['input_size'][0] > maxWidth:
                 maxWidth = item['input_size'][0]
         maxWidth += pX * 2
+        # same minimum width build_header()'s own logo+title box needs to
+        # avoid the title wrapping - this screen's actual content is
+        # often much narrower (e.g. a single 300px captcha field)
+        maxWidth = max(maxWidth, 420)
 
         if len(self.statusText):
             skinItems = '<widget name="statustext"   position="10,%d"  zPosition="2" size="%d,%d"  valign="center" halign="center" font="Regular;22" transparent="1" />' % (pY + dY, maxWidth - 20, statusTextHight)
@@ -89,25 +110,32 @@ class IPTVMultipleInputBox(Screen):
             pY += dY * 2 + item['input_size'][1]
 
         if self.withAcceptButton:
-            skinItems += '<widget name="accept_button"  position="10,%d"  zPosition="2" size="%d,50"  valign="center" halign="center" font="Regular;22" foregroundColor="#00FFFFFF" backgroundColor="#320F0F0F" />' % (pY, maxWidth - 20)
+            # backgroundColor matches the runtime setBackgroundColor()
+            # call below - keeps the initial paint consistent with every
+            # later update instead of flashing a different color first.
+            skinItems += '<widget name="accept_button"  position="10,%d"  zPosition="2" size="%d,50"  valign="center" halign="center" font="Regular;22" foregroundColor="#00FFFFFF" backgroundColor="#3A3A3A" />' % (pY, maxWidth - 20)
             pY += dY * 2 + 50
+        # OK (edit focused field / save when the accept button has focus),
+        # red (Cancel) and green (Save) now come from the shared chrome
+        # footer instead of the old hand-drawn top strip - no EXIT icon
+        # (Cancel/red already covers that, matches this screen's original
+        # key bindings: "back" maps to keyCancel same as "red")
+        screenHeight = pY + skinchrome.footer_height(1.0)
         self.skin = """
-        <screen name="IPTVMultipleInputBox" position="center,center" size="%d,%d" title="%s" backgroundColor="#34111112" flags="wfNoBorder">
-            <widget name="key_ok" position="516,10" zPosition="2" size="200,28" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <ePixmap position="470,12" size="40,26" zPosition="10" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/ok.png" transparent="1" alphatest="blend" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/red.png" position="10,14" size="20,20" alphatest="blend" transparent="1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/green.png" position="240,14" size="20,20" alphatest="blend" transparent="1" />
-            <widget name="key_red" position="36,10" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <widget name="key_green" position="266,10" size="200,28" zPosition="1" font="Regular;20" backgroundColor="black" foregroundColor="white" halign="left" transparent="1" valign="center" noWrap="1" />
-            <eLabel name="BG_Title" position="0,0" size="1020,48" backgroundColor="#100d0f16" zPosition="-1" />
-            <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/HD/smallshadowline.png" position="0,48" size="1020,2" zPosition="2" />
+        <screen name="IPTVMultipleInputBox" position="center,center" size="%d,%d" resolution="1280,720" title="%s" backgroundColor="#34111112" flags="wfNoBorder">
+            %s
+            %s
             %s
         </screen>
-        """ % (maxWidth, pY, params.get('title', _("Input")), skinItems)
+        """ % (
+            maxWidth, screenHeight, params.get('title', _("Input")),
+            skinchrome.build_header_auto(iconBase=iconBase),
+            skinItems,
+            skinchrome.build_footer_auto(screenHeight, iconBase=iconBase, keys=('red', 'green'), showNav=False, showOk=True, showExit=False),
+        )
 
-        self["key_green"] = Label(params.get('accep_label', _("Save")))
-        self["key_ok"] = Label(_("OK"))
-        self["key_red"] = Label(_("Cancel"))
+        self["key_green"] = StaticText(params.get('accep_label', _("Save")))
+        self["key_red"] = StaticText(_("Cancel"))
         if len(self.statusText):
             self["statustext"] = Label(str(self.statusText))
         if self.withAcceptButton:
@@ -116,6 +144,10 @@ class IPTVMultipleInputBox(Screen):
         self.params = params
 
         Screen.__init__(self, session)
+        # explicit name so an external skin can target the multi-field input
+        # dialog (also "Add favourites group" / "Add to favourites")
+        self.skinName = skinchrome.forceInternalSkinName(["IPTVMultipleInputBox"])
+        self.setTitle(params.get('title', _("Input")))
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
 
@@ -150,7 +182,17 @@ class IPTVMultipleInputBox(Screen):
 
         self.idx = 0
         self.activeInput = "input_0"
-        self.markerPixmap = [LoadPixmap(GetIconDir('radio_button_on.png')), LoadPixmap(GetIconDir('radio_button_off.png'))]
+        # marker widgets are a fixed 16x16 box (HD-reference) - now that
+        # resolution="1280,720" auto-scales that box to 24x24/32x32 on
+        # FHD/WQHD, the loaded pixmap content has to already be the
+        # matching tier's own real-size asset too (plain Pixmap widgets
+        # never stretch their pixmap content to an auto-scaled box, same
+        # bug/fix as the legacy grid's page markers in playerselector.py) -
+        # radio_button_on/off.png exist as real 16/24/32px files per tier,
+        # loaded fresh per instance via skinchrome.getIconBase() instead
+        # of the previous hardcoded 'HD/' (which stayed blurry-small on
+        # FHD/WQHD regardless of real screen size)
+        self.markerPixmap = [LoadPixmap(iconBase + '/radio_button_on.png'), LoadPixmap(iconBase + '/radio_button_off.png')]
 
         self.started = False
 
@@ -228,7 +270,11 @@ class IPTVMultipleInputBox(Screen):
                 self['accept_button'].instance.setBackgroundColor(parseColor("#32CD32"))
             else:
                 self['accept_button'].instance.setForegroundColor(parseColor("#FFFFFF"))
-                self['accept_button'].instance.setBackgroundColor(parseColor("#320F0F0F"))
+                # opaque mid-gray, not a translucent near-black - the
+                # same accept-button pattern in captchapuzzlegridwidget.py
+                # uses this color since a translucent one is nearly
+                # invisible over dark video.
+                self['accept_button'].instance.setBackgroundColor(parseColor("#3A3A3A"))
 
         if "marker" in self:
             if self.idx < len(self.list):

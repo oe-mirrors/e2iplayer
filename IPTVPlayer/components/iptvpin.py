@@ -8,10 +8,10 @@
 
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap
-from Components.Label import Label
 from Tools.LoadPixmap import LoadPixmap
 
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetIconDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from .cover import Cover3
 
 
@@ -21,19 +21,50 @@ from .cover import Cover3
 
 class IPTVPinWidget(Screen):
     PIN_LEN = 4
-    skin = """
-        <screen name="IPTVPinWidget" position="center,center" title="E2iPlayer" size="300,260">
-         <widget name="titel" position="5,5" zPosition="1" size="290,40" font="Regular;24" transparent="1" halign="center" valign="center" backgroundColor="black"/>
-         <widget name="cover_0" zPosition="4" position="5,80" size="60,60" transparent="1" alphatest="on" />
-         <widget name="cover_1" zPosition="4" position="75,80" size="60,60" transparent="1" alphatest="on" />
-         <widget name="cover_2" zPosition="4" position="145,80" size="60,60" transparent="1" alphatest="on" />
-         <widget name="cover_3" zPosition="4" position="215,80" size="60,60" transparent="1" alphatest="on" />
-         <ePixmap position="100,150" zPosition="4" size="100,100" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/Pin/lock.png" transparent="1" alphatest="on" />
-        </screen>"""
+    WIDTH = 450
+    HEIGHT = 340
+
+    def _getPinIconBase(self):
+        # dot/lock icon geometry auto-scales with resolution="1280,720"
+        # (16/24/32-style tiers), but - like every other plain Pixmap/
+        # ePixmap widget in this plugin - never scales the pixmap CONTENT
+        # to match, so the source files themselves have to already be the
+        # right size per tier; PinF*S*.png/lock.png ship as real 60/90/120
+        # and 100/150/200 files per tier instead of one flat 60x60/100x100
+        # set. NOT the plain chrome iconBase (icons/HD etc.) that
+        # ok.png/exit.png/iptvlogo.png live in - Pin's own marker set
+        # lives in its own "pin" subfolder (icons/HD|FHD|WQHD/pin), for
+        # consistency with every other per-tier-then-feature icon set in
+        # this branch (icons/HD/buffering/, icons/HD/e2ivk/, ...).
+        return skinchrome.getIconBase() + "/pin"
+
+    def __prepareSkin(self):
+        # per-instance, not class-level - matches every other chrome
+        # screen's own __prepareSkin() pattern; a class-level iconBase
+        # would only ever be evaluated once at module import time and
+        # could go stale for later instances at a different real
+        # resolution.
+        iconBase = skinchrome.getIconBase()
+        pinIconBase = self._getPinIconBase()
+        return """
+        <screen name="IPTVPinWidget" position="center,center" size="%d,%d" resolution="1280,720" title="E2iPlayer" backgroundColor="#34111112" flags="wfNoBorder">
+            %s
+            <widget name="cover_0" zPosition="4" position="82,76" size="60,60" transparent="1" alphatest="blend" />
+            <widget name="cover_1" zPosition="4" position="157,76" size="60,60" transparent="1" alphatest="blend" />
+            <widget name="cover_2" zPosition="4" position="232,76" size="60,60" transparent="1" alphatest="blend" />
+            <widget name="cover_3" zPosition="4" position="307,76" size="60,60" transparent="1" alphatest="blend" />
+            <ePixmap position="175,156" zPosition="4" size="100,100" pixmap="%s/lock.png" transparent="1" alphatest="blend" />
+            %s
+        </screen>
+        """ % (self.WIDTH, self.HEIGHT, skinchrome.build_header_auto(iconBase=iconBase), pinIconBase, skinchrome.build_footer_auto(self.HEIGHT, iconBase=iconBase, showNav=True, showNum=True, showOk=True, showExit=True))
 
     def __init__(self, session, title=""):
         self.session = session
+
+        self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
+        self.skinName = skinchrome.forceInternalSkinName(["IPTVPinWidget"])
+        self.setTitle(title)
 
         self["actions"] = ActionMap(["WizardActions", "DirectionActions", "NumberActions"],
         {
@@ -52,9 +83,6 @@ class IPTVPinWidget(Screen):
             "9": self.keyNum9,
             "0": self.keyNum0
         }, -1)
-
-        self["titel"] = Label()
-        self["titel"].setText(title)
 
         # set icons
         self.icoDict = {}
@@ -128,9 +156,10 @@ class IPTVPinWidget(Screen):
         return
 
     def readIcons(self):
+        pinIconBase = self._getPinIconBase()
         for itF in ['n', 'y']:
             for itS in ['n', 'y']:
-                self.icoDict['F' + itF + 'S' + itS] = LoadPixmap(GetIconDir('Pin/PinF%sS%s.png' % (itF, itS)))
+                self.icoDict['F' + itF + 'S' + itS] = LoadPixmap(pinIconBase + '/PinF%sS%s.png' % (itF, itS))
 
     def keyNum1(self):
         self.keyNumPressed(1)

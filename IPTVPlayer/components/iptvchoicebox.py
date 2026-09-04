@@ -7,6 +7,7 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonList
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 ###################################################
 
 ###################################################
@@ -15,7 +16,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonLis
 from Screens.Screen import Screen
 from Components.Label import Label
 from Components.ActionMap import ActionMap
-from enigma import getDesktop
+from Components.Sources.StaticText import StaticText
 ###################################################
 
 
@@ -60,75 +61,55 @@ class IPTVChoiceBoxWidget(Screen):
             # instead of this widget's own plain title-only look. Existing
             # callers (movie player / mirror pickers) don't pass this, so
             # they keep today's appearance unless they ask for it too.
-            footerY = height - 48
-            iconY = height - 37
+            #
             # "e" in a size="...,e-N" is the container's full height, NOT
             # reduced by the widget's own y position first - so a list at
-            # position="5,66" needs N >= 66 (its own top offset) + 48 (footer
-            # height) = 114 just to end exactly where the footer begins, not
-            # 48 like a naive "container height minus footer" reading would
-            # suggest. 150 (36 more than that minimum) is MENU/INFO's default:
+            # position="5,66" needs N >= 66 (its own top offset) + 64
+            # (footer height - see build_footer()'s 2-line-wrap comment in
+            # skinchrome.py) = 130 just to end exactly where the footer
+            # begins, not 64 like a naive "container height minus footer"
+            # reading would suggest.
+            # 166 (36 more than that minimum, same margin the old 150
+            # default kept above the old 114 floor) is MENU/INFO's default:
             # extra-safe since their height is calculated to fit their
             # content exactly. Content that's always scrollable regardless
             # (the language picker) can pass a footerMargin closer to that
-            # 114 floor instead, to avoid a big empty gap above the footer.
-            footerMargin = self.params.get('footerMargin', 150)
-            # This skin has a single, unscaled set of coordinates (relying on
-            # resolution="1280,720" to auto-scale position/size for FHD/WQHD)
-            # but the icon PIXMAPS themselves don't get auto-scaled - only
-            # the box they're stretched into does. Using the tiny HD source
-            # everywhere left icons soft at FHD/WQHD, so pick the higher-res
-            # FHD source there instead (matching playerselector.py's own
-            # per-tier icon choice) - the box size stays exactly as declared
-            # below, only the source file changes.
-            screenwidth = getDesktop(0).size().width()
-            iconTier = "FHD" if screenwidth and screenwidth >= 1920 else "HD"
-            iconBase = "/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/icons/%s" % iconTier
-
-            # The blue-key hint is only added when a caller opts in. It's
-            # built as a plain ePixmap+Label pair (like OK/EXIT below)
-            # rather than a source="key_blue"/render="Pixmap" widget with
-            # ConditionalShowHide: that Source/Renderer/Converter combo was
-            # tried first, but on real hardware its Pixmap content scaled
-            # inconsistently across resolutions (measured too big at HD,
-            # roughly right at FHD, too small at WQHD) even though its
-            # position/size auto-scaled correctly - ePixmap+scale="1" is the
-            # same mechanism OK/EXIT already use here and is proven correct
-            # at all three tiers, so visibility is decided in Python instead
-            # (include the block or don't) rather than at runtime in skin.
-            blueBlock = ""
-            if callable(self.params.get('blue_callback')):
-                # OK/EXIT below are 40x26 boxes at y=iconY (not footerY - the
-                # 26-tall box centers 3px lower than a 20-tall box at the
-                # same y would). The label box matches OK/EXIT's own height
-                # (26), so it uses iconY unchanged to land on the same
-                # center; the icon is 20 tall, so it needs +3 to match.
-                blueBlock = """
-                    <ePixmap position="138,%d" size="20,20" scale="1" zPosition="10" pixmap="%s/blue.png" transparent="1" alphatest="blend" />
-                    <widget name="key_blue_label" position="163,%d" size="e-173,26" backgroundColor="#000000" font="Regular;17" foregroundColor="#ffffff" zPosition="10" valign="center" halign="left" transparent="1" />""" % (iconY + 3, iconBase, iconY)
+            # 130 floor instead, to avoid a big empty gap above the footer.
+            footerMargin = self.params.get('footerMargin', 166)
+            # header/footer come from skinchrome's auto-scale variant
+            # (build_header_auto()/build_footer_auto()), thin wrappers
+            # around the same build_header()/build_footer() every other
+            # migrated screen uses at scale=1.0 - so this screen gets the
+            # same narrower title, OK/EXIT/nav icon cluster (sliding left
+            # when one is missing) and 2-line color-key wrap as
+            # PlayerSelectorWidget's chrome. Title goes through
+            # self.setTitle() (build_header() emits a source="Title"
+            # widget, not name="title") and the blue hint through
+            # self["key_blue"] (a StaticText, matching build_footer()'s
+            # source="key_blue" widget) - see __init__(). getIconBase()
+            # picks true WQHD-tier icon sources too.
+            iconBase = skinchrome.getIconBase()
+            keys = ('blue',) if callable(self.params.get('blue_callback')) else ()
+            # selectable=False screens (currently only the OSK's Help popup)
+            # are pure info dialogs: key_ok() still closes the screen, but
+            # nothing reads back the "selected" item (opened via session.
+            # open(), not openWithCallback()), and there's no per-row action
+            # to move to in the first place - so the OK and nav (d-pad) icons
+            # don't represent anything real there; only EXIT shows for
+            # that case.
+            showOkNav = self.params.get('selectable', True)
             skin = """
                 <screen name="IPTVChoiceBoxWidget" position="center,center" resolution="1280,720" title="%s" size="%d,%d" backgroundColor="#34111112" flags="wfNoBorder">
-                    <eLabel name="BG_Title" position="0,0" size="e,60" backgroundColor="#100d0f16" zPosition="-1" />
-                    <eLabel name="BG_Buttons" position="0,%d" size="e,48" backgroundColor="#100d0f16" zPosition="-1" />
-                    <ePixmap pixmap="%s/iptvlogo.png" position="12,10" size="100,40" scale="1" alphatest="blend" transparent="1" zPosition="1" />
-                    <ePixmap pixmap="%s/smallshadowline.png" position="0,60" size="e,2" scale="1" zPosition="2" />
-                    <ePixmap pixmap="%s/smallshadowline.png" position="0,%d" size="e,2" scale="1" zPosition="2" />
-                    <ePixmap position="22,%d" size="40,26" scale="1" zPosition="10" pixmap="%s/ok.png" transparent="1" alphatest="blend" />
-                    <ePixmap position="80,%d" size="40,26" scale="1" zPosition="10" pixmap="%s/exit.png" transparent="1" alphatest="blend" />%s
-                    <widget name="title" position="122,14" size="e-132,30" foregroundColor="#0066ccff" backgroundColor="black" borderWidth="1" borderColor="black" transparent="1" zPosition="1" font="Regular;24" valign="center" />
+                    %s
                     <widget name="list"  position="5,66"  zPosition="2" size="e-10,e-%d" scrollbarMode="showAlways" scrollbarSliderBorderWidth="1" scrollbarForegroundColor="#1b5a91" scrollbarBorderColor="#00b6b6b6" enableWrapAround="1" transparent="1" foregroundColor="white" backgroundColor="black" %s borderWidth="1" borderColor="black"/>
+                    %s
                 </screen>""" % (
                 self.params.get('title', _("Select option")),
                 width, height,
-                footerY,
-                iconBase,
-                iconBase,
-                iconBase, footerY,
-                iconY, iconBase,
-                iconY, iconBase,
-                blueBlock,
+                skinchrome.build_header_auto(iconBase=iconBase),
                 footerMargin,
-                selColors
+                selColors,
+                skinchrome.build_footer_auto(height, iconBase=iconBase, keys=keys, showNav=showOkNav, showOk=showOkNav),
             )
         else:
             skin = """
@@ -148,12 +129,19 @@ class IPTVChoiceBoxWidget(Screen):
         self.params = params
         self.skin = self.__prepareSkin()
         Screen.__init__(self, session)
-        self.skinName = ["IPTVChoiceBoxScreen", "IPTVChoiceBoxWidget"]
+        self.skinName = skinchrome.forceInternalSkinName(["IPTVChoiceBoxScreen", "IPTVChoiceBoxWidget"])
 
         self.onShown.append(self.onStart)
         self.onClose.append(self.__onClose)
 
-        self["title"] = Label(self.params.get('title', _("Select option")))
+        # chrome=True's skin gets its title from build_header()'s own
+        # source="Title" widget (via setTitle()), same mechanism every
+        # other migrated screen uses - the plain skin still declares its
+        # own name="title" widget, so it keeps the direct Label() instead.
+        if self.params.get('chrome', False):
+            self.setTitle(self.params.get('title', _("Select option")))
+        else:
+            self["title"] = Label(self.params.get('title', _("Select option")))
         self["list"] = self.params.get('list_class', IPTVRadioButtonList)()
 
         actions = {
@@ -166,7 +154,14 @@ class IPTVChoiceBoxWidget(Screen):
         # callers that don't pass one are unaffected
         if callable(self.params.get('blue_callback')):
             actions["blue"] = self.key_blue
-            self["key_blue_label"] = Label(self.params.get('blue_label', _("More")))
+            blueLabel = self.params.get('blue_label', _("More"))
+            if self.params.get('chrome', False):
+                # matches build_footer()'s source="key_blue" widget (same
+                # StaticText-driven icon+label pair every other migrated
+                # screen's blue color key uses)
+                self["key_blue"] = StaticText(blueLabel)
+            else:
+                self["key_blue_label"] = Label(blueLabel)
         self["actions"] = ActionMap(["SetupActions", "ColorActions"], actions, -2)
 
         self.prevIdx = 0
@@ -214,3 +209,43 @@ class IPTVChoiceBoxWidget(Screen):
         except Exception:
             pass
         return sel
+
+
+def openChoiceBox(session, params, callback=None):
+    # With config.plugins.iptvplayer.skinforceallinternal ON, use E2iPlayer's
+    # own IPTVChoiceBoxWidget (per-row icons, blue "More" menu, ...). With it
+    # OFF (default), use the native Enigma2 ChoiceBox, which the active skin
+    # styles itself, at the cost of those extras. Only for popups whose
+    # options are IPTVChoiceBoxItem and whose callback wants that item back -
+    # both key_ok() and native ChoiceBox hand back the same object here.
+    try:
+        from Components.config import config
+        useNative = not config.plugins.iptvplayer.skinforceallinternal.value
+    except Exception:
+        useNative = False
+
+    if not useNative:
+        if callback is not None:
+            session.openWithCallback(callback, IPTVChoiceBoxWidget, params)
+        else:
+            session.open(IPTVChoiceBoxWidget, params)
+        return
+
+    from Screens.ChoiceBox import ChoiceBox
+    nativeList = []
+    for opt in params.get('options', []):
+        text = getattr(opt, 'name', None)
+        if text is None:
+            text = opt[0] if isinstance(opt, (list, tuple)) and len(opt) else str(opt)
+        nativeList.append((text, opt))
+
+    def _nativeCb(ret):
+        if callback is not None:
+            callback(ret[1] if ret else None)
+
+    try:
+        selection = int(params.get('current_idx', 0) or 0)
+    except Exception:
+        selection = 0
+    session.openWithCallback(_nativeCb, ChoiceBox, title=params.get('title', '') or '',
+                             list=nativeList, selection=selection)
