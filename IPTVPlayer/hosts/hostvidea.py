@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 ###################################################
 # 2026-08-28 - add automatic videa-quality - by Blindspot
+# 2026-09-05 - add VideaKid + VideaTon - by Blindspot
 ###################################################
-HOST_VERSION = "1.7"
+HOST_VERSION = "1.8"
 ###################################################
 # LOCAL import
 ###################################################
@@ -82,7 +83,12 @@ class videa(CBaseHostClass):
             desc_kat = self.getdvdsz(tab_kat, "Videa kategóriáinak megjelenítése...")
             tab_csat = "videa_csatornak"
             desc_csat = self.getdvdsz(tab_csat, "Videa csatornáinak megjelenítése...")
-            MAIN_CAT_TAB = [{"category": "list_main", "title": _("Categories"), "tab_id": tab_kat, "desc": desc_kat}, {"category": "list_main", "title": _("Channels"), "tab_id": tab_csat, "desc": desc_csat}] + self.searchItems()
+            MAIN_CAT_TAB = [
+                {"category": "list_main", "title": _("Categories"), "tab_id": tab_kat, "desc": desc_kat},
+                {"category": "list_main", "title": _("Channels"), "tab_id": tab_csat, "desc": desc_csat},
+                {"category": "list_items", "title": "Videa Kid", "url": "https://videakid.hu/", "icon": "https://videakid.hu/static/uis/redesign/images/product-logos/videakid-logo.png", "desc": "Videa Kid videóinak megjelenítése"},
+                {"category": "list_items", "title": "Videaton", "url": self.MAIN_URL + "/videaton", "icon": "https://videa.hu/static/uis/redesign/images/product-logos/videaton-logo.png", "videaton_mode": True, "desc": "Videaton videóinak megjelenítése"},
+            ] + self.searchItems()
             self.listsTab(MAIN_CAT_TAB, {"name": "category"})
         except Exception:
             return
@@ -153,18 +159,22 @@ class videa(CBaseHostClass):
             page = cItem.get("page", 1)
             searchMode = cItem.get("search_mode", False)
             channelMode = cItem.get("channel_mode", False)
+            # videaton: audio uploads, whole catalogue (~1000 items) on one page.
+            # ?page=N is ignored server-side and /lazy/videaton/ has nothing past
+            # the last item, so no pagination - just list what the page returns.
+            videatonMode = cItem.get("videaton_mode", False)
             if not searchMode and not channelMode and "/csatornak/" in url_ere:
                 channelMode = True
             if channelMode:
                 url_ere = re.sub(r"[?&]page=\d+", "", url_ere)
-            elif not searchMode and page > 0 and "page=" in url_ere:
+            elif not searchMode and not videatonMode and page > 0 and "page=" in url_ere:
                 idx1 = url_ere.rfind("page=")
                 url_ere = url_ere[:idx1].strip() + "page=" + str(page)
             sts, data = self.getPage(url_ere)
             if not sts or len(data) == 0:
                 return
             nextPage = False
-            if not searchMode and not channelMode:
+            if not searchMode and not channelMode and not videatonMode:
                 nextPage = bool(self.cm.ph.getSearchGroups(data, "next\"\\shref=['\"]([^\"']+?)['\"]")[0])
             data = data.split('class="col video-item">')
             del data[0]
@@ -195,12 +205,16 @@ class videa(CBaseHostClass):
                 if vmsg != "":
                     vmsg = "  |  " + vmsg
                 title = self.cm.ph.getSearchGroups(item, """aria-label=['"]([^"']+?)['"].+\n.+div""")[0]
+                title = title.replace("<unknown> - ", "")
                 if title == "":
                     continue
                 ftlv = self.cm.ph.getSearchGroups(item, """uploaded-at"[>]([^"']+?)[<]""")[0]
                 desc = title + "\n" + _("Duration:") + " " + vhz + vmsg + "\nSzerző: " + vszrz + "\nFeltöltve: " + ftlv
                 params = MergeDicts(cItem, {"good_for_fav": False, "title": title, "url": url, "icon": icon, "desc": desc, "tps": "0"})
-                self.addVideo(params)
+                if videatonMode:
+                    self.addAudio(params)
+                else:
+                    self.addVideo(params)
             if searchMode:
                 if lastItemId != "":
                     searchPattern = cItem.get("search_pattern", "")
