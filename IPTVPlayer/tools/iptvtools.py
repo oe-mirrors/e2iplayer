@@ -1589,25 +1589,6 @@ def GetVersionNum(ver):
         return 0
 
 
-def IsFPUAvailable():
-    try:
-        if None is IsFPUAvailable.available:
-            with open('/proc/cpuinfo', 'r') as f:
-                data = f.read().strip().upper()
-            if ' FPU ' in data:
-                IsFPUAvailable.available = True
-            else:
-                IsFPUAvailable.available = False
-        if IsFPUAvailable.available is False and config.plugins.iptvplayer.plarformfpuabi.value == 'hard_float':
-            return True
-    except Exception:
-        printExc()
-    return IsFPUAvailable.available
-
-
-IsFPUAvailable.available = None
-
-
 def IsSubtitlesParserExtensionCanBeUsed():
     try:
         if config.plugins.iptvplayer.useSubtitlesParserExtension.value:
