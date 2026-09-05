@@ -3,7 +3,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, CSelOneLink
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
@@ -48,50 +48,50 @@ class DjingComApi(CBaseHostClass):
         self.loggedIn = False
         self.accountInfo = ''
 
-    def getList(self, cItem):
-        printDBG("DjingComApi.getChannelsList")
+    # the old 24/7 "venue music channels" (server-rendered <ul bgImages> with
+    # <source> HLS) are gone - djing.com is a DJ-booking SPA now. The one
+    # browsable public feed left is api/v14/public-dj-sets.php: the latest
+    # public DJ radio shows, almost all direct .mp3 podcast episodes.
+    API_URL = 'https://djing.com/api/v14/public-dj-sets.php'
 
+    def getList(self, cItem):
+        printDBG("DjingComApi.getList")
         channelsTab = []
 
-        sts, data = self.cm.getPage(self.getMainUrl(), self.defaultParams)
+        sts, data = self.cm.getPage(self.API_URL, {'header': dict(self.HTTP_HEADER, Referer=self.MAIN_URL)})
         if not sts:
             return channelsTab
+        try:
+            rows = json.loads(data).get('data', [])
+        except Exception:
+            printExc()
+            return channelsTab
 
-        data = self.cm.ph.getDataBeetwenNodes(data, ('<ul', '>', 'bgImages'), ('</ul', '>'))[1]
-        data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
-        for item in data:
-            icon = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<img[^>]+?src=['"]([^"^']+?)['"]''')[0])
-            url = self.getFullUrl(self.cm.ph.getSearchGroups(item, '''<source[^>]+?src=['"]([^"^']+?)['"]''')[0])
+        for row in rows:
+            url = row.get('external_url', '')
             if not self.cm.isValidUrl(url):
                 continue
-
-            title = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<h3', '</h3>')[1])
-            desc = self.cleanHtmlStr(self.cm.ph.getDataBeetwenMarkers(item, '<p', '</p>')[1])
-            params = {'name': cItem['name'], 'type': 'video', 'title': title, 'url': self.getMainUrl(), 'iptv_hls_url': url, 'icon': icon, 'desc': desc}
-            channelsTab.append(params)
-
+            title = self.cleanHtmlStr(row.get('title', '')) or self.cleanHtmlStr(row.get('stage_name', ''))
+            stage = self.cleanHtmlStr(row.get('stage_name', ''))
+            if stage and stage.lower() not in title.lower():
+                title = '%s - %s' % (stage, title)
+            channelsTab.append({'name': cItem['name'], 'type': 'audio', 'title': title,
+                                'url': strwithmeta(url, {'User-Agent': self.HTTP_HEADER['User-Agent'], 'Referer': self.MAIN_URL}),
+                                'icon': row.get('picture', '') or self.DEFAULT_ICON_URL,
+                                'desc': ' | '.join(x for x in (row.get('platform', ''), row.get('created_at', '')) if x)})
         return channelsTab
 
     def getVideoLink(self, cItem):
         printDBG("DjingComApi.getVideoLink")
-        urlsTab = []
-        hlsUrl = cItem.get('iptv_hls_url', '')
-        printDBG("hlsUrl||||||||||||||||| " + hlsUrl)
-        if hlsUrl != '':
-            hlsUrl = strwithmeta(hlsUrl, {'User-Agent': self.defaultParams['header']['User-Agent'], 'Referer': cItem['url']})
+        url = cItem.get('url', '')
+        if not url:
+            return []
+        if '.m3u8' in url:
             try:
-                urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True)
-            except:
-                printExc()
-
-            if not urlsTab:
-                hlsUrl = "https://www" + hlsUrl[hlsUrl.find(".djing"):]
-                urlsTab = getDirectM3U8Playlist(hlsUrl, checkContent=True)
-
-        def __getLinkQuality(itemLink):
-            try:
-                return int(itemLink['bitrate'])
+                return getDirectM3U8Playlist(url, checkContent=True)
             except Exception:
-                return 0
-
-        return CSelOneLink(urlsTab, __getLinkQuality, 99999999).getSortedLinks()
+                printExc()
+                return []
+        if self.up.checkHostSupport(url):
+            return self.up.getVideoLinkExt(url)
+        return [{'name': 'djing.com', 'url': url}]

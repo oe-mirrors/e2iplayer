@@ -139,6 +139,23 @@ class WeebTvApi:
                 printExc()
         return channelsList
 
+    # setPlayer status codes returned in field "0" of the response
+    STATUS_MESSAGES = {
+        -1: _("This channel does not exist."),
+        -2: _("This channel is currently offline."),
+        -3: _("This channel requires a premium account, or the free connection limit has been reached. Enter your weeb.tv login data in the host configuration."),
+        -4: _("This channel is not available in your country (geo-blocking)."),
+        -5: _("Wrong weeb.tv username or password."),
+        -6: _("The connection limit for your weeb.tv account has been reached."),
+        -7: _("This channel is temporarily unavailable. Please try again later."),
+    }
+
+    def _showMessage(self, message):
+        try:
+            MainSessionWrapper().waitForFinishOpen(MessageBox, message, type=MessageBox.TYPE_INFO, timeout=10)
+        except Exception:
+            printExc()
+
     def getVideoLink(self, url):
         printDBG("WeebTvApi.getVideoLink")
         rtmp = ''
@@ -157,30 +174,31 @@ class WeebTvApi:
             postdata['platform'] = WeebTvApi.HOST
 
             sts, data = self.cm.getPage(WeebTvApi.PLAYERURL, WeebTvApi.DEFPARAMS, postdata)
-            if sts:
-                printDBG("||||||||||||||||||||||||||||| " + data)
-                parser = UrlParser()
-                params = parser.getParams(data)
-                status = parser.getParam(params, '0')
-                premium = parser.getIntParam(params, '5')
-                imgLink = parser.getParam(params, '8')
-                rtmpLink = parser.getParam(params, '10')
-                playPath = parser.getParam(params, '11')
-                bitrate = parser.getIntParam(params, '20')
-                token = parser.getParam(params, '73')
-                title = parser.getParam(params, '6')
+            if not sts:
+                self._showMessage(_("Connection to the weeb.tv server failed."))
+                return ''
 
-                if title == '':
-                    title = parser.getParam(params, '7')
+            printDBG("||||||||||||||||||||||||||||| " + data)
+            parser = UrlParser()
+            params = parser.getParams(data)
+            status = parser.getIntParam(params, '0')
+            if status is not None and status < 0:
+                self._showMessage(WeebTvApi.STATUS_MESSAGES.get(status, _("weeb.tv did not return a valid stream (error %s).") % status))
+                return ''
+            premium = parser.getIntParam(params, '5')
+            rtmpLink = parser.getParam(params, '10')
+            playPath = parser.getParam(params, '11')
+            bitrate = parser.getIntParam(params, '20')
+            token = parser.getParam(params, '73')
 
-                video_quality = config.plugins.iptvplayer.weebtv_videoquality.value
-                if video_quality == '2' and bitrate == 1:
-                    playPath = playPath + 'HI'
-                elif video_quality == '0' and bitrate == 2:
-                    playPath = playPath + 'LOW'
+            video_quality = config.plugins.iptvplayer.weebtv_videoquality.value
+            if video_quality == '2' and bitrate == 1:
+                playPath = playPath + 'HI'
+            elif video_quality == '0' and bitrate == 2:
+                playPath = playPath + 'LOW'
 
-                rtmp = str(rtmpLink) + '/' + str(playPath) + ' live=1 token=fake pageUrl=token swfUrl=' + str(token)
-                printDBG("||||||||||||||||||||||||||||| " + rtmp)
+            rtmp = str(rtmpLink) + '/' + str(playPath) + ' live=1 token=fake pageUrl=token swfUrl=' + str(token)
+            printDBG("||||||||||||||||||||||||||||| " + rtmp)
         except Exception:
             printExc()
 
@@ -189,6 +207,7 @@ class WeebTvApi:
                 MainSessionWrapper().waitForFinishOpen(MessageBox, _("You do not have a premium account. Starting a sponsored broadcast."), type=MessageBox.TYPE_INFO, timeout=5)
             return rtmp
         else:
+            self._showMessage(_("weeb.tv did not return a valid stream for this channel."))
             return ''
 
 
