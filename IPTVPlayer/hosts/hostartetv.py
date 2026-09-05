@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # ARTE
 # Rewritten for the api-cdn.arte.tv "emac v4" JSON API + player v2 config
-# Last Modified: 31.08.2026 - split audio/video HLS renditions (merge://) are muxed
+# Last Modified: 05.09.2026 - stamp iptv_format='mkv' alongside iptv_use_ffmpeg/
+# ff_out_container on split audio/video HLS renditions, so the download manager
+# shows .mkv immediately instead of .mp4 needing a rename.
+# 31.08.2026 - split audio/video HLS renditions (merge://) are muxed
 # with ffmpeg (iptv_use_ffmpeg, matroska container) instead of hlsdl, which only
 # re-packages segments and produced unplayable files.
 ###################################################
@@ -422,6 +425,7 @@ class ArteTV(GenericFolderWatchedScraperMixin, CBaseHostClass):
                     if strwithmeta(it['url']).meta.get('audio_url'):
                         extraMeta['iptv_use_ffmpeg'] = True
                         extraMeta['ff_out_container'] = 'matroska'
+                        extraMeta['iptv_format'] = 'mkv'
                     it['url'] = self.up.decorateUrl(it['url'], extraMeta)
                     it['need_resolve'] = 0
                     urlTab.append(it)

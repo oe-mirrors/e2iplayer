@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 12.07.2026 - added preCheckOnly handling to show "Download already exists" instead of FAILED
+# Last Modified: 05.09.2026 - cmdFinished() now runs the downloader's reported
+# fileName through downloaderhelpers.ensureText() (the same helper HLSDownloader/
+# WgetDownloader/MergeDownloader already use internally) and falls back to
+# DMItem.originalFileName if the downloader ever hands back an empty/invalid
+# path, instead of trusting getFullFileName() as-is.
+# 12.07.2026 - added preCheckOnly handling to show "Download already exists" instead of FAILED
 #
 # IPTV download manager API
 #
@@ -11,6 +16,7 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper, DMItemBase
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ###################################################
 
@@ -31,6 +37,9 @@ class DMItem(DMItemBase):
 
         self.processed = False
         self.downloadIdx = -1
+        # keep the originally requested path so we can fall back to it
+        # if a downloader ever returns a bogus/empty renamed path
+        self.originalFileName = fileName
 
 
 class IPTVDMApi():
@@ -299,6 +308,10 @@ class IPTVDMApi():
         listUDIdx = self.findIdxInQueueUD(item.downloadIdx)
         self.queueUD[listUDIdx].status = DMHelper.STS.DOWNLOADING
         self.queueUD[listUDIdx].fileName = item.fileName
+        # remember the path we actually asked for, so cmdFinished() has a
+        # safe value to fall back to if the downloader ever reports an
+        # empty/invalid renamed path
+        self.queueUD[listUDIdx].originalFileName = item.fileName
 
         url, downloaderParams = DMHelper.getDownloaderParamFromUrl(item.url)
         self.queueUD[listUDIdx].downloader = DownloaderCreator(url)
@@ -325,15 +338,33 @@ class IPTVDMApi():
         # fixing .mp4 -> .mkv to match the real container); pick up the real path
         # so notify / archive / delete all use it. No-op for downloaders that
         # never change it.
+        #
+        # getFullFileName() can come back wrapped in a str SUBCLASS (e.g.
+        # e2iPlayer's own "strwithmeta") after a rename; ensureText() - the
+        # same helper HLSDownloader/WgetDownloader/MergeDownloader already use
+        # for their own path handling - normalizes that before we store it,
+        # and we fall back to the originally requested path if the downloader
+        # ever hands back an empty/invalid one instead of trusting it blindly.
         try:
             dl = self.queueUD[listUDIdx].downloader
             if dl is not None:
-                realPath = dl.getFullFileName()
+                realPath = ensureText(dl.getFullFileName()).strip()
+
                 if realPath and realPath != self.queueUD[listUDIdx].fileName:
                     printDBG("cmdFinished: downloader renamed file -> %s" % realPath)
                     self.queueUD[listUDIdx].fileName = realPath
+                elif not realPath:
+                    printDBG("cmdFinished: downloader returned empty/invalid path, keeping previous fileName[%s]" %
+                        self.queueUD[listUDIdx].fileName)
         except Exception:
             printExc()
+
+        self.queueUD[listUDIdx].fileName = ensureText(self.queueUD[listUDIdx].fileName)
+        if not self.queueUD[listUDIdx].fileName:
+            fallback = ensureText(getattr(self.queueUD[listUDIdx], 'originalFileName', u''))
+            if fallback:
+                printDBG("cmdFinished: invalid fileName, falling back to originalFileName[%s]" % fallback)
+                self.queueUD[listUDIdx].fileName = fallback
 
         self.updateDownloadedItemStatus(listUDIdx)
         self.queueUD[listUDIdx].processed = True

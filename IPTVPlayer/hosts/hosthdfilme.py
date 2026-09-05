@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 25.08.2026 - strip the leading "S<n> E<n>" NUMBERS from the site's raw episode label and keep whatever separator character the site itself already uses (dash or em-dash) untouched, instead of re-building a custom separator; removed the unnecessary EM_DASH/EN_DASH constants and literal-unicode-escape decoding machinery from the previous iteration.
+# Last Modified: 05.09.2026 - added "Create MKV" option (config.plugins.iptvplayer.hdfilme_mkv),
+# mirroring hostfilmpalast.py's MKV toggle: GetConfigList() now exposes it and getVideoLinks()
+# passes it straight through to decorateResolvedLinkItems(), which already wires the correct
+# postprocess meta for WgetDownloader to remux to mkv after the download finishes - same as
+# filmpalast, no extra downloader-forcing needed.
+# 25.08.2026 - strip the leading "S<n> E<n>" NUMBERS from the site's raw episode label and keep whatever separator character the site itself already uses (dash or em-dash) untouched, instead of re-building a custom separator; removed the unnecessary EM_DASH/EN_DASH constants and literal-unicode-escape decoding machinery from the previous iteration.
 
 import re
 
+from Components.config import config, ConfigYesNo, getConfigListEntry
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase, RetHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -15,9 +21,13 @@ from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecarFromIte
 from Plugins.Extensions.IPTVPlayer.tools.iptvnaming import extractNum, formatSxxExx, stripLeadingSxxExx
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled, IsMediaNamingNormalized
 
+config.plugins.iptvplayer.hdfilme_mkv = ConfigYesNo(default=True)
+
 
 def GetConfigList():
-    return []
+    optionList = []
+    optionList.append(getConfigListEntry(_("Create MKV"), config.plugins.iptvplayer.hdfilme_mkv))
+    return optionList
 
 
 def gettytul():
@@ -362,7 +372,8 @@ class HDFilme(CBaseHostClass):
         printDBG("HDFilme.getVideoLinks [%s]" % videoUrl)
         if self.cm.isValidUrl(videoUrl):
             sidecar = sidecarFromUrlMeta(videoUrl, IsSidecarEnabled())
-            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar)
+            cfgMkvEnabled = config.plugins.iptvplayer.hdfilme_mkv.value
+            return decorateResolvedLinkItems(self.up.getVideoLinkExt(videoUrl), sidecar, cfgMkvEnabled)
         return []
 
     def getArticleContent(self, cItem):
