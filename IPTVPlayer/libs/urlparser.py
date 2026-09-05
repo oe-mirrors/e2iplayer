@@ -558,6 +558,7 @@ class urlparser:
             "vidoza.co": self.pp.parserJWPLAYER,
             "vidoza.net": self.pp.parserJWPLAYER,
             "vidoza.org": self.pp.parserJWPLAYER,
+            "vids.st": self.pp.parserVIDSST,
             "vidsonic.net": self.pp.parserVIDSONIC,
             "vidsrc.bz": self.pp.parserVIDSRC,
             "vidsrc.cc": self.pp.parserMEGAFILES,
@@ -3138,4 +3139,37 @@ class pageParser(CaptchaHelper):
                 printExc()
                 return []
 
+        return urltab
+
+    def parserVIDSST(self, baseUrl):  # add 050926 - vids.st (premiumsmart.eu "VidsST" mirror), bespoke ArtPlayer host
+        printDBG("parserVIDSST baseUrl[%s]" % baseUrl)
+        urltab = []
+        host = urlparser.getDomain(baseUrl, False)
+        HTTP_HEADER = self.cm.getDefaultHeader()
+        HTTP_HEADER["Referer"] = baseUrl
+        sts, data = self.cm.getPage(baseUrl, {"header": HTTP_HEADER})
+        if not sts:
+            return []
+        # the /e/<id> embed page carries the master playlist url in a plain JS const
+        m = re.search(r'''const\s+url\s*=\s*["'](https?:[^"']+\.m3u8[^"']*)["']''', data)
+        if not m:
+            m = re.search(r'''["'](https?:(?:\\?/){2}[^"']+?/master\.m3u8[^"']*)["']''', data)
+        if not m:
+            return []
+        url = m.group(1).replace("\\/", "/")
+        subTracks = []
+        sm = re.search(r'"subtitleUrl"\s*:\s*"([^"]+)"', data)
+        if sm and sm.group(1):
+            lm = re.search(r'"subtitleLabel"\s*:\s*"([^"]*)"', data)
+            label = lm.group(1) if lm else ""
+            subTracks.append({"title": label, "url": sm.group(1).replace("\\/", "/"), "lang": label})
+        url = urlparser.decorateUrl(url, {
+            "User-Agent": HTTP_HEADER["User-Agent"],
+            "Referer": baseUrl,
+            "Origin": host[:-1] if host.endswith("/") else host,
+            "external_sub_tracks": subTracks,
+        })
+        urltab.extend(getDirectM3U8Playlist(url, checkExt=False, checkContent=True))
+        if not urltab:
+            urltab.append({"name": "vids.st", "url": url, "need_resolve": 0})
         return urltab
