@@ -34,7 +34,6 @@ from Tools.BoundFunction import boundFunction
 ###################################################
 config.plugins.iptvplayer = ConfigSubsection()
 
-config.plugins.iptvplayer.plarformfpuabi = ConfigSelection(default="", choices=[("", ""), ("hard_float", _("Hardware floating point")), ("soft_float", _("Software floating point"))])
 config.plugins.iptvplayer.exteplayer3path = ConfigText(default="", fixed_size=False)
 config.plugins.iptvplayer.set_curr_title = ConfigYesNo(default=False)
 config.plugins.iptvplayer.curr_title_file = ConfigText(default="", fixed_size=False)
@@ -225,8 +224,6 @@ def IsMediaNamingNormalized():
 
 
 config.plugins.iptvplayer.usepycurl = ConfigYesNo(default=False)
-
-config.plugins.iptvplayer.prefer_hlsdl_for_pls_with_alt_media = ConfigYesNo(default=True)
 
 ###################################################
 
@@ -542,8 +539,6 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Remember last search history selection"), config.plugins.iptvplayer.rememberHistorySelection))
         list.append(getConfigListEntry(_("T9 letter jump in lists"), config.plugins.iptvplayer.enableT9MainList))
         list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
-        list.append(getConfigListEntry(_("MIPS Floating Point Architecture"), config.plugins.iptvplayer.plarformfpuabi))
-        list.append(getConfigListEntry(_("Prefer hlsld for playlist with alt. media"), config.plugins.iptvplayer.prefer_hlsdl_for_pls_with_alt_media))
         list.append(getConfigListEntry(_("Debug logs"), config.plugins.iptvplayer.debugprint))
 
     def runSetup(self):
