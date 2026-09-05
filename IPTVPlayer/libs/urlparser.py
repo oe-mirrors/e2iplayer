@@ -2487,7 +2487,13 @@ class pageParser(CaptchaHelper):
 
         embed = ""
         detailsUrl = "%sapi/videos/%s/details" % (ref, mid)
-        sts, data = self.cm.getPage(detailsUrl, {"header": dict(HTTP_HEADER)})
+        # with_metadata=True is required for statusCode() below to see the
+        # real HTTP status: getPageWithPyCurl() treats a 404 as sts=True by
+        # default (ignore_http_code_ranges), and only attaches .meta when
+        # asked to - without it, statusCode() always fell through to its
+        # sts-based 200/0 guess and this 404 retry never actually fired,
+        # even though the site returns a valid JSON body on 404s.
+        sts, data = self.cm.getPage(detailsUrl, {"header": dict(HTTP_HEADER), "with_metadata": True})
         details = tryJson(data) if sts else None
         if details is None or statusCode(data, sts) == 404:
             embed = "embed/"
