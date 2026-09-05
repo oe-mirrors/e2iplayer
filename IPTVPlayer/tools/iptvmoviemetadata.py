@@ -76,6 +76,9 @@ class IPTVMovieMetaDataHandler():
                 if data != {}:
                     sts = True
                     self.data.update(data)
+            except IOError:
+                # no metadata file yet - normal on the first open of a title
+                pass
             except Exception:
                 printExc()
         except Exception:

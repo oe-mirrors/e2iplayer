@@ -874,6 +874,11 @@ class common:
                     img = Image.open(file_path)
                     # img.thumbnail((400, 300), Image.LANCZOS)
                     # printDBG("PCommon.convertWebp save %s" % output_path)
+                    if not png and img.mode not in ('RGB', 'L'):
+                        # JPEG can't hold an alpha channel - a webp with
+                        # transparency (RGBA/LA/P) would raise "cannot write
+                        # mode RGBA as JPEG"
+                        img = img.convert('RGB')
                     img.save(output_path, format="png" if png else "jpeg", quality=80)
                     img.close()
                     os.remove(file_path)
