@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:31+0200\n"
-"PO-Revision-Date: 2026-08-29 10:31+0200\n"
+"PO-Revision-Date: 2026-09-05 11:00+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -49,13 +49,13 @@ msgstr ""
 " https://github.com/oe-mirrors/e2iplayer/issues"
 
 msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
-msgstr ""
+msgstr "  • Fixiert: Die Reihenfolge ändert sich nie – nützlich beim Blättern per Buchstabensprung (0–9)."
 
 msgid "  • Sorting or reordering fixes this automatically, so your order stays."
-msgstr ""
+msgstr "  • Durch Sortieren oder Neuanordnen wird dies automatisch fixiert, sodass Ihre Reihenfolge erhalten bleibt."
 
 msgid "  • Unfixed (default): the entry jumps back to the top of the list."
-msgstr ""
+msgstr "  • Nicht fixiert (Standard): Der Eintrag springt zurück an den Anfang der Liste."
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
@@ -84,9 +84,9 @@ msgstr "%s - Untertitel Anbieter"
 msgid "%s API KEY"
 msgstr "%s API KEY"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s buffering..."
-msgstr "[%s] mit Pufferung"
+msgstr "[%s] Pufferung..."
 
 #, python-format
 msgid "%s device name"
@@ -240,7 +240,7 @@ msgid "--Other--"
 msgstr "--Andere--"
 
 msgid "0-9"
-msgstr ""
+msgstr "0-9"
 
 msgid "12 hour format"
 msgstr "12 Stunden-Format"
@@ -545,7 +545,7 @@ msgid "Awards:"
 msgstr "Auszeichnungen:"
 
 msgid "BLUE"
-msgstr ""
+msgstr "BLAU"
 
 msgid "Background color"
 msgstr "Hintergrundfarbe"
@@ -913,9 +913,8 @@ msgstr "Verzeichnis \"%s\" existiert nicht."
 msgid "Disable"
 msgstr "Deaktivieren"
 
-#, fuzzy
 msgid "Disable all groups"
-msgstr "Deaktivieren/Aktivieren von Gruppen"
+msgstr "Deaktiviere alle Gruppen"
 
 msgid "Disable live at plugin start"
 msgstr "Live-Fernsehsignal beim Plugin Start deaktivieren"
@@ -1004,9 +1003,8 @@ msgstr "Downloadverwaltung"
 msgid "Download manager is not initialized"
 msgstr "Downloadverwaltung ist nicht initialisiert"
 
-#, fuzzy
 msgid "Download notification duration"
-msgstr "Download-Verzeichnis"
+msgstr "Dauer der Download-Benachrichtigung"
 
 msgid "Download subtiles failed."
 msgstr "Herunterladen von Untertiteln fehlgeschlagen."
@@ -1116,7 +1114,7 @@ msgstr ""
 "Bitte prüfen Sie, ob gstreamer-Plugins in Ihrem System verfügbar sind."
 
 msgid "EXIT"
-msgstr ""
+msgstr "EXIT"
 
 msgid "Edit"
 msgstr "Bearbeiten"
@@ -1157,9 +1155,8 @@ msgstr "Ein leerer Titel ist nicht zulässig."
 msgid "Enable"
 msgstr "Aktivieren"
 
-#, fuzzy
 msgid "Enable all groups"
-msgstr "Zeige Service-Gruppen"
+msgstr "Aktiviere alle Gruppen"
 
 msgid "Enable hosts groups"
 msgstr "Zeige Service-Gruppen"
@@ -1342,9 +1339,8 @@ msgstr "Die extrahierte Untertiteldatei ist leer oder fehlt."
 msgid "FAILED"
 msgstr "FEHLGESCHLAGEN"
 
-#, fuzzy
 msgid "FAST FORWARD"
-msgstr "VORSPULEN – Leerzeichen einfügen"
+msgstr "VORSPULEN"
 
 msgid "FREE"
 msgstr "FREI"
@@ -1505,11 +1501,10 @@ msgid "For continuous playing, please press 8!"
 msgstr "Für die fortlaufende Wiedergabe drücke bitte die 8!"
 
 msgid "Force internal skin: all E2iPlayer screens"
-msgstr ""
+msgstr "Erzwinge internen Skin: Alle E2iPlayer screens"
 
-#, fuzzy
 msgid "Force internal skin: main screen only"
-msgstr "Forci̱e̱re internen Skin"
+msgstr "Erzwinge internen Skin: Nur Hauptscreen"
 
 msgid "Format 'wmv' blocked in configuration."
 msgstr "Format 'WMV' in Konfiguration ausgeschaltet."
@@ -1536,7 +1531,7 @@ msgid "Full description not available"
 msgstr "Keine vollständige Beschreibung verfügbar"
 
 msgid "GREEN"
-msgstr ""
+msgstr "GRÜN"
 
 msgid "GSTplayer no IFD workarround"
 msgstr "GSTplayer kein IFD-Workarround"
@@ -1690,7 +1685,7 @@ msgid "IMDb Suggestions"
 msgstr "IMDb Vorschläge"
 
 msgid "INFO"
-msgstr ""
+msgstr "INFO"
 
 msgid "INTERRUPTED"
 msgstr "UNTERBROCHEN"
@@ -2047,19 +2042,19 @@ msgid "MENU"
 msgstr "MENÜ"
 
 msgid "MENU → Add new entry: type a new search term to add to the history."
-msgstr ""
+msgstr "MENÜ → Neuen Eintrag hinzufügen: Geben Sie einen neuen Suchbegriff ein, der dem Verlauf hinzugefügt werden soll."
 
 msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
-msgstr ""
+msgstr "MENÜ → Neuanordnung aktivieren/deaktivieren: wie bei GRÜN (Aufnehmen/Verschieben/Ablegen mit OK, AUF/AB)."
 
 msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
-msgstr ""
+msgstr "MENÜ → Sprungziel festlegen/aufheben: Legt fest, was geschieht, wenn ein Eintrag an anderer Stelle wiederverwendet wird."
 
 msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
-msgstr ""
+msgstr "MENÜ → Auf gespeicherten Stand zurücksetzen: Nicht gespeicherte Änderungen rückgängig machen, von Datenträger neu laden."
 
 msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
-msgstr ""
+msgstr "MENÜ → A-Z sortieren / Z-A sortieren: Alle Einträge alphabetisch sortieren."
 
 msgid "MENU=Options"
 msgstr "Menü=Optionen"
@@ -2318,7 +2313,7 @@ msgid "None"
 msgstr "Keine"
 
 msgid "Normalize item / file names (Show - SxxExx - Title)"
-msgstr ""
+msgstr "Element-/Dateinamen normalisieren (Anzeigen – SxxExx – Titel)"
 
 msgid "Nothing has been downloaded yet."
 msgstr "Es wurde noch nichts heruntergeladen."
@@ -2388,7 +2383,7 @@ msgid "Own model"
 msgstr "Eigenes Model"
 
 msgid "PAGE UP/PAGE DOWN"
-msgstr ""
+msgstr "Seite nach oben/Seite nach unten"
 
 msgid "PAY"
 msgstr "PAY"
@@ -2397,13 +2392,13 @@ msgid "PENDING"
 msgstr "WARTEND"
 
 msgid "PLAY"
-msgstr ""
+msgstr "PLAY"
 
 msgid "PORT"
 msgstr "PORT"
 
 msgid "PREVIOUS/NEXT"
-msgstr ""
+msgstr "VORHERIGE/NÄCHSTE"
 
 msgid "Page:"
 msgstr "Seite:"
@@ -2638,15 +2633,14 @@ msgstr "RAM-Puffer in [MB] für Online-Inhalte"
 msgid "RECENT"
 msgstr "AKTUELL"
 
-#, fuzzy
 msgid "RED"
-msgstr "ABGEBROCHEN"
+msgstr "ROT"
 
 msgid "REMEMBER:"
 msgstr "ERINNERUNG:"
 
 msgid "REWIND"
-msgstr ""
+msgstr "ZURÜCKSPULEN"
 
 msgid "Radio"
 msgstr "Radio"
@@ -2762,7 +2756,7 @@ msgid "Reset group"
 msgstr "Gruppe zurücksetzen"
 
 msgid "Reset to saved order"
-msgstr ""
+msgstr "Auf gespeicherte Reihenfolge zurücksetzen"
 
 #, python-format
 msgid ""
@@ -2825,17 +2819,16 @@ msgstr "Zeitplan"
 msgid "Science"
 msgstr "Wissenschaft"
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
-"MyE2i Script Ausführung fehlgeschlagen.\n"
+"Die Skriptausführung ist fehlgeschlagen.\n"
 "Fehlercode: %s\n"
 
-#, fuzzy
 msgid "Script finished."
-msgstr "MyE2i Script beendet."
+msgstr "Skript beendet."
 
 msgid "Search"
 msgstr "Suche"
@@ -3066,14 +3059,13 @@ msgid "Show all channels"
 msgstr "Zeige alle Kanäle"
 
 msgid "Show clock in header"
-msgstr ""
+msgstr "Uhr in der Kopfzeile anzeigen"
 
 msgid "Show download manager after adding new item"
 msgstr "Zeige Downloadverwaltung bei Download"
 
-#, fuzzy
 msgid "Show download notification"
-msgstr "Download-Verzeichnis"
+msgstr "Download-Benachrichtigung anzeigen"
 
 msgid "Show file size"
 msgstr "Zeige Dateigröße"
@@ -3784,9 +3776,8 @@ msgstr "Video-Modus"
 msgid "Video options"
 msgstr "Video-Optionen"
 
-#, fuzzy
 msgid "Video player OSD clock format"
-msgstr "Infobar Uhr-Anzeige"
+msgstr "Video Player OSD Uhr Format"
 
 msgid "Video policy"
 msgstr "Video-Verfahren"
@@ -3889,9 +3880,8 @@ msgstr "Xtream Live Stream"
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "Xtream host (z.B. http://server:port)"
 
-#, fuzzy
 msgid "YELLOW"
-msgstr "Gelb - AltGr"
+msgstr "GELB"
 
 msgid "YP connected"
 msgstr "YP verbunden"
@@ -3965,7 +3955,7 @@ msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "YouTube-Suchen sind schneller, wenn du den API-Schlüssel im Einstellungsmenü eingibst"
 
 msgid "Z-A"
-msgstr ""
+msgstr "Z-A"
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4149,7 +4139,7 @@ msgid "main"
 msgstr "main"
 
 msgid "manual"
-msgstr ""
+msgstr "manuell"
 
 msgid "maroon"
 msgstr "kastanienbraun"
@@ -4220,9 +4210,8 @@ msgstr "top"
 msgid "unknown"
 msgstr "unbekannt"
 
-#, fuzzy
 msgid "unsorted"
-msgstr "Abgebrochen"
+msgstr "unsortiert"
 
 msgid "version"
 msgstr "Version"
