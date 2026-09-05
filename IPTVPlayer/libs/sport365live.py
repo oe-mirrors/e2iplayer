@@ -63,13 +63,7 @@ class Sport365LiveApi:
         self.needRefreshAdvert = True
 
     def getPage(self, url, params={}, post_data=None):
-        sts, data = self.cm.getPage(url, params, post_data)
-        if sts:
-            # printDBG("---")
-            # printDBG("url: %s" % url)
-            # printDBG(data)
-            # printDBG("---")
-            return sts, data
+        return self.cm.getPage(url, params, post_data)
 
     def getFullUrl(self, url):
         if url.startswith('http'):
