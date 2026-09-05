@@ -60,7 +60,8 @@
   "streamliveto",
   "youtube",
   "dailymotion",
-  "eurosportplayer"
+  "eurosportplayer",
+  "ritsatv"
  ],
  "documentary": [
   "dokumentalnenet",
@@ -159,7 +160,8 @@
  ],
  "russian": [
   "youtube",
-  "dailymotion"
+  "dailymotion",
+  "ritsatv"
  ],
  "hungarian": [
   "youtube",
