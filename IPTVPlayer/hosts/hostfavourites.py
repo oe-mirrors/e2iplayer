@@ -486,7 +486,8 @@ class IPTVHost(CHostBase):
         retlist = []
         if self.useWatchedFlag:
             ret = self.cachedRet
-            if ret.value[Index].isWatched is not True and ret.value[Index].type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]:
+            if ret is not None and hasattr(ret, 'value') and 0 <= Index < len(ret.value) \
+               and ret.value[Index].isWatched is not True and ret.value[Index].type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]:
                 hashData = self.getItemHashData(Index, ret.value[Index])
                 if self._createViewedFile(hashData):
                     self.cachedRet.value[Index].isWatched = True
@@ -528,7 +529,8 @@ class IPTVHost(CHostBase):
                                     retCode = RetHost.OK
             if retCode != RetHost.OK:
                 ret = self.cachedRet
-                if ret.value[Index].type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]:
+                if ret is not None and hasattr(ret, 'value') and 0 <= Index < len(ret.value) \
+                   and ret.value[Index].type in [CDisplayListItem.TYPE_VIDEO, CDisplayListItem.TYPE_AUDIO]:
                     tmp = self.getItemHashData(Index, ret.value[Index])
                     if tmp != '':
                         isWatched = bool(self.cachedRet.value[Index].isWatched)
