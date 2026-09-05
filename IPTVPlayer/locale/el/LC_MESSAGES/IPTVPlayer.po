@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:31+0200\n"
-"PO-Revision-Date: 2026-08-20 08:50+0300\n"
+"PO-Revision-Date: 2026-09-04 22:58+0300\n"
 "Last-Translator: \n"
 "Language-Team: giorbak\n"
 "Language: el\n"
@@ -53,13 +53,13 @@ msgstr ""
 "https://github.com/oe-mirrors/e2iplayer/issues"
 
 msgid "  • Fixed: order never changes - useful for browsing by letter jump (0-9)."
-msgstr ""
+msgstr "  • Διορθωμένο: η σειρά δεν αλλάζει ποτέ - χρήσιμο για περιήγηση με μετάβαση σε γράμμα (0-9)."
 
 msgid "  • Sorting or reordering fixes this automatically, so your order stays."
-msgstr ""
+msgstr "  • Η ταξινόμηση ή η αναδιάταξη το διορθώνει αυτόματα, ώστε η σειρά σας να παραμένει."
 
 msgid "  • Unfixed (default): the entry jumps back to the top of the list."
-msgstr ""
+msgstr "  • Μη διορθωμένο (προεπιλογή): η καταχώρηση επιστρέφει στην κορυφή της λίστας."
 
 #, python-format
 msgid "\"%s\" Virtual Keyboard layout not available."
@@ -88,9 +88,9 @@ msgstr "%s - πάροχος υποτίτλων"
 msgid "%s API KEY"
 msgstr "%s - Κλειδί API"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s buffering..."
-msgstr "[%s] με προσωρινή μνήμη"
+msgstr "%s σε προσωρινή μνήμη..."
 
 #, python-format
 msgid "%s device name"
@@ -244,7 +244,7 @@ msgid "--Other--"
 msgstr "--Άλλα-"
 
 msgid "0-9"
-msgstr ""
+msgstr "0-9"
 
 msgid "12 hour format"
 msgstr "Μορφή 12 ωρών"
@@ -315,9 +315,8 @@ msgstr "Απαγορευμένη πρόσβαση"
 msgid "Access denied. Please check password."
 msgstr "Η πρόσβαση απορρίφθηκε. Παρακαλώ ελέγξτε τον κωδικό πρόσβασης."
 
-#, fuzzy
 msgid "Accessible"
-msgstr "Απαγορευμένη πρόσβαση"
+msgstr "Προσβάσιμο"
 
 msgid "Active host"
 msgstr "Ενεργός host"
@@ -379,9 +378,8 @@ msgstr "Όλα"
 msgid "All Sports"
 msgstr "Όλα τα αθλήματα"
 
-#, fuzzy
 msgid "All categories"
-msgstr "Κατηγορίες"
+msgstr "Όλες οι κατηγορίες"
 
 msgid "All in one"
 msgstr "Όλα σε ένα"
@@ -389,13 +387,11 @@ msgstr "Όλα σε ένα"
 msgid "All materials"
 msgstr "Όλα τα υλικά"
 
-#, fuzzy
 msgid "All results"
-msgstr "Περισσότερα αποτελέσματα"
+msgstr "Όλα τα αποτελέσματα"
 
-#, fuzzy
 msgid "All shows"
-msgstr "εκπομπές"
+msgstr "Όλες οι εκπομπές"
 
 msgid "All streams"
 msgstr "Όλες οι ροές"
@@ -525,9 +521,8 @@ msgstr "Ήχος"
 msgid "Audio buffer size [KB]"
 msgstr "Μέγεθος προσωρινής μνήμης ήχου [KB]"
 
-#, fuzzy
 msgid "Audio track"
-msgstr "Ηχητικά κομμάτια"
+msgstr "Κομμάτι ήχου"
 
 msgid "Audio tracks"
 msgstr "Ηχητικά κομμάτια"
@@ -539,7 +534,7 @@ msgid "Auto selection based on the settings"
 msgstr "Αυτόματη επιλογή βάσει των ρυθμίσεων"
 
 msgid "Auto start method"
-msgstr "Αυτόματη μέθοδος εκκίνησης"
+msgstr "Μέθοδος αυτόματης εκκίνησης"
 
 msgid "Auto-translate"
 msgstr "Αυτόματη μετάφραση"
@@ -554,7 +549,7 @@ msgid "Awards:"
 msgstr "Βραβεία:"
 
 msgid "BLUE"
-msgstr ""
+msgstr "BLUE"
 
 msgid "Background color"
 msgstr "Χρώμα φόντου"
@@ -678,9 +673,8 @@ msgstr "Κανάλια"
 msgid "Children"
 msgstr "Παιδικά"
 
-#, fuzzy
 msgid "Children & Family"
-msgstr "Παιδικά"
+msgstr "Παιδιά και Οικογένεια"
 
 msgid "Cinema History"
 msgstr "Ιστορία κινηματογράφου"
@@ -716,7 +710,7 @@ msgid "Commits"
 msgstr "Δεσμεύσεις"
 
 msgid "Concert"
-msgstr ""
+msgstr "Συναυλία"
 
 msgid "Configuration"
 msgstr "Ρύθμιση"
@@ -733,7 +727,7 @@ msgid "Configure host"
 msgstr "Ρύθμιση host"
 
 msgid "Configuring an external movie player"
-msgstr "Ρυθμίσεις εξωτερικής αναπαραγωγής ταινιών"
+msgstr "Ρυθμίσεις εξωτερικού προγράμματος αναπαραγωγής ταινιών"
 
 msgid "Confirm new pin"
 msgstr "Επιβεβαίωση νέου PIN"
@@ -747,9 +741,8 @@ msgstr "Σφάλμα επιβεβαίωσης."
 msgid "Connection to server failed!"
 msgstr "Αποτυχία σύνδεσης με τον διακομιστή!"
 
-#, fuzzy
 msgid "Content not available"
-msgstr "Η πλήρης περιγραφή δεν είναι διαθέσιμη"
+msgstr "Το περιεχόμενο δεν είναι διαθέσιμο"
 
 msgid "Continue downloading"
 msgstr "Συνέχιση λήψης"
@@ -797,10 +790,10 @@ msgid "Critical Error – Content-Encoding gzip cannot be handled!"
 msgstr "Κρίσιμο σφάλμα – Η κωδικοποίηση περιεχομένου gzip δεν μπορεί να υποστηριχθεί!"
 
 msgid "Culture"
-msgstr ""
+msgstr "Πολιτισμός"
 
 msgid "Culture and pop"
-msgstr ""
+msgstr "Πολιτισμός και ποπ"
 
 msgid "Current item is not a channel."
 msgstr "Το τρέχον στοιχείο δεν είναι κανάλι."
@@ -924,9 +917,8 @@ msgstr "Ο κατάλογος \"%s\" δεν υπάρχει."
 msgid "Disable"
 msgstr "Απενεργοποίηση"
 
-#, fuzzy
 msgid "Disable all groups"
-msgstr "Απενεργοποίηση/ενεργοποίηση ομάδων"
+msgstr "Απενεργοποίηση όλων των ομάδων"
 
 msgid "Disable live at plugin start"
 msgstr "Απενεργοποίηση ζωντανής μετάδοσης κατά την εκκίνηση του πρόσθετου"
@@ -938,16 +930,16 @@ msgid "Disable reordering"
 msgstr "Απενεργοποίηση αναδιάταξης"
 
 msgid "Disable reordering mode"
-msgstr "Απενεργοποίηση λειτουργίας αναδιάταξης"
+msgstr "Απενεργ/ση αναδιάταξης"
 
 msgid "Disable/Enable groups"
-msgstr "Απενεργοποίηση/ενεργοποίηση ομάδων"
+msgstr "Απενεργοποίηση/Ενεργοποίηση ομάδων"
 
 msgid "Disable/Enable services"
-msgstr "Απενεργοποίηση/ενεργοποίηση υπηρεσιών"
+msgstr "Απενεργοποίηση/Ενεργοποίηση υπηρεσιών"
 
 msgid "Discovery"
-msgstr ""
+msgstr "Ανακάλυψη"
 
 msgid "Display language:"
 msgstr "Γλώσσα εμφάνισης:"
@@ -1015,9 +1007,8 @@ msgstr "Διαχείριση λήψεων"
 msgid "Download manager is not initialized"
 msgstr "Η Διαχείριση λήψεων δεν έχει αρχικοποιηθεί"
 
-#, fuzzy
 msgid "Download notification duration"
-msgstr "Τοποθεσία λήψεων"
+msgstr "Διάρκεια ειδοποίησης λήψης"
 
 msgid "Download subtiles failed."
 msgstr "Αποτυχία λήψης υποτίτλων."
@@ -1111,7 +1102,7 @@ msgid "E2iPlayer downloader"
 msgstr "Πρόγραμμα λήψης E2iPlayer"
 
 msgid "E2iPlayer enable/disabled groups"
-msgstr "Ενεργοποίηση/απενεργοποίηση ομάδων E2iPlayer"
+msgstr "Ενεργοποίηση/Απενεργοποίηση ομάδων E2iPlayer"
 
 msgid "E2iPlayer virtual keyboard"
 msgstr "Εικονικό πληκτρολόγιο E2iPlayer"
@@ -1127,7 +1118,7 @@ msgstr ""
 "Παρακαλώ ελέγξτε αν τα πρόσθετα gstreamer είναι διαθέσιμα στο σύστημά σας."
 
 msgid "EXIT"
-msgstr ""
+msgstr "EXIT"
 
 msgid "Edit"
 msgstr "Επεξεργασία"
@@ -1168,9 +1159,8 @@ msgstr "Δεν επιτρέπεται κενός τίτλος."
 msgid "Enable"
 msgstr "Ενεργοποίηση"
 
-#, fuzzy
 msgid "Enable all groups"
-msgstr "Ενεργοποίηση ομάδων host"
+msgstr "Ενεργοποίηση όλων των ομάδων"
 
 msgid "Enable hosts groups"
 msgstr "Ενεργοποίηση ομάδων host"
@@ -1179,7 +1169,7 @@ msgid "Enable reordering"
 msgstr "Ενεργοποίηση αναδιάταξης"
 
 msgid "Enable reordering mode"
-msgstr "Ενεργοποίηση λειτουργίας αναδιάταξης"
+msgstr "Ενεργοποίηση αναδιάταξης"
 
 #, python-format
 msgid ""
@@ -1347,7 +1337,7 @@ msgid "Extended"
 msgstr "Εκτεταμένο"
 
 msgid "External movie player config"
-msgstr "Ρυθμίσεις εξωτερικής αναπαραγωγής ταινιών"
+msgstr "Ρυθμίσεις εξωτερικού προγράμματος αναπαραγωγής ταινιών"
 
 msgid "Extracted subtitle file is empty or missing."
 msgstr "Το εξαγόμενο αρχείο υποτίτλων είναι κενό ή δεν υπάρχει."
@@ -1355,9 +1345,8 @@ msgstr "Το εξαγόμενο αρχείο υποτίτλων είναι κε�
 msgid "FAILED"
 msgstr "ΑΠΕΤΥΧΕ"
 
-#, fuzzy
 msgid "FAST FORWARD"
-msgstr "FAST FORWARD - εισαγωγή κενού"
+msgstr "FAST FORWARD"
 
 msgid "FREE"
 msgstr "ΔΩΡΕΑΝ"
@@ -1475,9 +1464,8 @@ msgstr "Το αρχείο μετονομάστηκε με επιτυχία!"
 msgid "Film"
 msgstr "Ταινία"
 
-#, fuzzy
 msgid "Films"
-msgstr "Ταινία"
+msgstr "Ταινίες"
 
 msgid "Filmweb Suggestions"
 msgstr "Προτάσεις Filmweb"
@@ -1489,10 +1477,10 @@ msgid "First air date:"
 msgstr "Πρώτη ημερομηνία προβολής:"
 
 msgid "First movie player in buffering mode"
-msgstr "Πρώτη αναπαραγωγή ταινιών σε λειτουργία προσωρινής μνήμης"
+msgstr "Πρώτο πρόγρ. αναπαραγωγής ταινιών σε λειτουργία προσ. μνήμης"
 
 msgid "First movie player without buffering mode"
-msgstr "Πρώτη αναπαραγωγή ταινιών χωρίς λειτουργία προσωρινής μνήμης"
+msgstr "Πρώτο πρόγρ. αναπαραγωγής ταινιών χωρίς λειτουργία προσ. μνήμης"
 
 msgid "Fix jump target"
 msgstr "Διόρθωση προορισμού μετάβασης"
@@ -1510,7 +1498,7 @@ msgid "Font size offset"
 msgstr "Μετατόπιση μεγέθους γραμματοσειράς"
 
 msgid "Food"
-msgstr ""
+msgstr "Τρόφιμα"
 
 msgid "Foot & Ankle"
 msgstr "Πόδι & Αστράγαλος"
@@ -1519,11 +1507,10 @@ msgid "For continuous playing, please press 8!"
 msgstr "Για συνεχή αναπαραγωγή, πατήστε το 8!"
 
 msgid "Force internal skin: all E2iPlayer screens"
-msgstr ""
+msgstr "Επιβολή εσωτερικού θέματος: όλες οι οθόνες του E2iPlayer"
 
-#, fuzzy
 msgid "Force internal skin: main screen only"
-msgstr "Επιβολή εσωτερικού θέματος"
+msgstr "Επιβολή εσωτερικού θέματος: μόνο η κύρια οθόνη"
 
 msgid "Format 'wmv' blocked in configuration."
 msgstr "Η μορφή 'wmv' έχει αποκλειστεί στις ρυθμίσεις."
@@ -1550,7 +1537,7 @@ msgid "Full description not available"
 msgstr "Η πλήρης περιγραφή δεν είναι διαθέσιμη"
 
 msgid "GREEN"
-msgstr ""
+msgstr "GREEN"
 
 msgid "GSTplayer no IFD workarround"
 msgstr "Παράκαμψη IFD για GSTplayer"
@@ -1643,7 +1630,7 @@ msgid "Hardware floating point"
 msgstr "Υποστηριζόμενη από το υλικό κινητή υποδιαστολή"
 
 msgid "Health"
-msgstr ""
+msgstr "Υγεία"
 
 msgid "Help"
 msgstr "Help"
@@ -1653,17 +1640,16 @@ msgid "Hide \"%s\" group"
 msgstr "Απόκρυψη ομάδας \"%s\""
 
 msgid "Hide/Active Group"
-msgstr "Απόκρ./εμφάνιση ομάδων"
+msgstr "Απόκρυψη/Εμφάνιση ομάδων"
 
 msgid "High (or HD)"
 msgstr "Υψηλή (ή HD)"
 
 msgid "Highlights"
-msgstr ""
+msgstr "Κύρια σημεία"
 
-#, fuzzy
 msgid "History"
-msgstr "Ιστορία κινηματογράφου"
+msgstr "Ιστορικό"
 
 msgid "History of searched phrases."
 msgstr "Ιστορικό όρων αναζήτησης."
@@ -1705,7 +1691,7 @@ msgid "IMDb Suggestions"
 msgstr "Προτάσεις IMDb"
 
 msgid "INFO"
-msgstr ""
+msgstr "INFO"
 
 msgid "INTERRUPTED"
 msgstr "ΔΙΑΚΟΠΗΚΕ"
@@ -1713,9 +1699,8 @@ msgstr "ΔΙΑΚΟΠΗΚΕ"
 msgid "Icon type"
 msgstr "Τύπος εικονιδίου"
 
-#, fuzzy
 msgid "Icons quality"
-msgstr "ποιότητα"
+msgstr "Ποιότητα εικονιδίων"
 
 msgid "Icons size"
 msgstr "Μέγεθος εικονιδίων"
@@ -1803,7 +1788,7 @@ msgid ""
 "STS: %s\n"
 "ERROR CODE: %r"
 msgstr ""
-"Φαίνεται ότι η αναπαραγωγή βίντεο \"%s\" δεν λειτουργεί σωστά.\n"
+"Φαίνεται ότι το πρόγραμμα αναπαραγωγής βίντεο \"%s\" δεν λειτουργεί σωστά.\n"
 "\n"
 "STS: %s\n"
 "ΚΩΔΙΚΟΣ ΣΦΑΛΜΑΤΟΣ: %r"
@@ -1864,9 +1849,8 @@ msgstr "Γόνατο & Αθλήματα"
 msgid "Knowledge"
 msgstr "Γνώση"
 
-#, fuzzy
 msgid "Knowledge & Nature"
-msgstr "Γνώση"
+msgstr "Γνώση και Φύση"
 
 msgid "Korean TV series"
 msgstr "Κορεατικές τηλεοπτικές σειρές"
@@ -2064,19 +2048,19 @@ msgid "MENU"
 msgstr "ΜΕΝΟΥ"
 
 msgid "MENU → Add new entry: type a new search term to add to the history."
-msgstr ""
+msgstr "MENU → Προσθήκη νέας καταχώρησης: πληκτρολογήστε έναν νέο όρο αναζήτησης για να τον προσθέσετε στο ιστορικό."
 
 msgid "MENU → Enable/Disable reordering: same as GREEN (pick up/move/drop with OK, UP/DOWN)."
-msgstr ""
+msgstr "MENU → Ενεργοποίηση/Απενεργοποίηση αναδιάταξης: ίδιο με το ΠΡΑΣΙΝΟ (επιλογή/μετακίνηση/απόθεση με OK, ΠΑΝΩ/ΚΑΤΩ)."
 
 msgid "MENU → Fix/Unfix jump target: sets what happens when an entry is reused elsewhere."
-msgstr ""
+msgstr "MENU → Διόρθωση/Αναίρεση διόρθωσης προορισμού μετάβασης: καθορίζει τι συμβαίνει όταν μια καταχώρηση χρησιμοποιείται ξανά αλλού."
 
 msgid "MENU → Reset to saved order: undo unsaved changes, reload from disk."
-msgstr ""
+msgstr "MENU → Επαναφορά αποθηκευμένης σειράς: αναίρεση μη αποθηκευμένων αλλαγών, επαναφόρτωση από τον δίσκο."
 
 msgid "MENU → Sort A-Z / Sort Z-A: sort all entries alphabetically."
-msgstr ""
+msgstr "MENU → Ταξινόμηση A-Z / Ταξινόμηση Z-A: ταξινόμηση όλων των καταχωρήσεων αλφαβητικά."
 
 msgid "MENU=Options"
 msgstr "MENU=Επιλογές"
@@ -2185,7 +2169,7 @@ msgid "Movie"
 msgstr "Ταινία"
 
 msgid "Movie player selection list"
-msgstr "Λίστα επιλογής αναπαραγωγής ταινιών"
+msgstr "Λίστα επιλογής προγράμματος αναπαραγωγής ταινιών"
 
 msgid "Movies"
 msgstr "Ταινίες"
@@ -2279,7 +2263,7 @@ msgid "News"
 msgstr "Ειδήσεις"
 
 msgid "News (tagesschau)"
-msgstr ""
+msgstr "Ειδήσεις (tagesschau)"
 
 msgid "News Feed"
 msgstr "Ροή ειδήσεων"
@@ -2332,17 +2316,16 @@ msgid "No video ID available"
 msgstr "Δεν υπάρχει διαθέσιμο ID βίντεο"
 
 msgid "None"
-msgstr "Κανένα"
+msgstr "Καμία"
 
 msgid "Normalize item / file names (Show - SxxExx - Title)"
-msgstr ""
+msgstr "Κανονικοποίηση ονομάτων στοιχείων / αρχείων (Εκπομπή - SxxExx - Τίτλος)"
 
 msgid "Nothing has been downloaded yet."
 msgstr "Δεν έχει ληφθεί ακόμη τίποτα."
 
-#, fuzzy
 msgid "Now"
-msgstr "Όχι"
+msgstr "Τώρα"
 
 msgid "Number of columns"
 msgstr "Αριθμός στηλών"
@@ -2406,7 +2389,7 @@ msgid "Own model"
 msgstr "Δικό σας μοντέλο"
 
 msgid "PAGE UP/PAGE DOWN"
-msgstr ""
+msgstr "PAGE UP/PAGE DOWN"
 
 msgid "PAY"
 msgstr "ΠΛΗΡΩΜΗ"
@@ -2415,13 +2398,13 @@ msgid "PENDING"
 msgstr "ΕΚΚΡΕΜΕΙ"
 
 msgid "PLAY"
-msgstr ""
+msgstr "PLAY"
 
 msgid "PORT"
 msgstr "ΘΥΡΑ"
 
 msgid "PREVIOUS/NEXT"
-msgstr ""
+msgstr "PREVIOUS/NEXT"
 
 msgid "Page:"
 msgstr "Σελίδα:"
@@ -2656,15 +2639,14 @@ msgstr "Μέγεθος προσωρινής μνήμης RAM [MB] για πρω�
 msgid "RECENT"
 msgstr "ΠΡΟΣΦΑΤΑ"
 
-#, fuzzy
 msgid "RED"
-msgstr "ΑΚΥΡΩΘΗΚΕ"
+msgstr "RED"
 
 msgid "REMEMBER:"
 msgstr "ΘΥΜΗΘΕΙΤΕ:"
 
 msgid "REWIND"
-msgstr ""
+msgstr "REWIND"
 
 msgid "Radio"
 msgstr "Ραδιόφωνο"
@@ -2736,9 +2718,8 @@ msgstr "Απομένουν:"
 msgid "Remember last search entry"
 msgstr "Απομνημόνευση τελευταίας καταχώρησης αναζήτησης"
 
-#, fuzzy
 msgid "Remember last search history selection"
-msgstr "Απομνημόνευση τελευταίας καταχώρησης αναζήτησης"
+msgstr "Απομνημόνευση τελευταίας επιλογής ιστορικού αναζητήσεων"
 
 msgid "Remember last watched position"
 msgstr "Απομνημόνευση τελευταίας θέσης προβολής"
@@ -2781,7 +2762,7 @@ msgid "Reset group"
 msgstr "Επαναφορά ομάδας"
 
 msgid "Reset to saved order"
-msgstr ""
+msgstr "Επαναφορά αποθηκευμένης σειράς"
 
 #, python-format
 msgid ""
@@ -2844,17 +2825,16 @@ msgstr "Πρόγραμμα"
 msgid "Science"
 msgstr "Επιστήμη"
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Script execution failed.\n"
 "Error code: %s\n"
 msgstr ""
-"Η εκτέλεση του script MyE2i απέτυχε.\n"
+"Η εκτέλεση του script απέτυχε.\n"
 "Κωδικός σφάλματος: %s\n"
 
-#, fuzzy
 msgid "Script finished."
-msgstr "Το script MyE2i ολοκληρώθηκε."
+msgstr "Το script ολοκληρώθηκε."
 
 msgid "Search"
 msgstr "Αναζήτηση"
@@ -2925,14 +2905,13 @@ msgid "Seasons:"
 msgstr "Σεζόν:"
 
 msgid "Second movie player in buffering mode"
-msgstr "Δεύτερη αναπαραγωγή ταινιών σε λειτουργία προσωρινής μνήμης"
+msgstr "Δεύτερο πρόγρ. αναπαραγωγής ταινιών σε λειτουργία προσ. μνήμης"
 
 msgid "Second movie player without buffering mode"
-msgstr "Δεύτερη αναπαραγωγή ταινιών χωρίς λειτουργία προσωρινής μνήμης"
+msgstr "Δεύτερο πρόγρ. αναπαραγωγής ταινιών χωρίς λειτουργία προσ. μνήμης"
 
-#, fuzzy
 msgid "Section"
-msgstr "Επιλογή"
+msgstr "Ενότητα"
 
 msgid "Select"
 msgstr "Επιλογή"
@@ -2947,9 +2926,8 @@ msgstr "Επιλογή ενέργειας"
 msgid "Select audio track"
 msgstr "Επιλογή κομματιού ήχου"
 
-#, fuzzy
 msgid "Select best available quality"
-msgstr "Προεπιλεγμένη ποιότητα βίντεο"
+msgstr "Επιλογή της καλύτερης διαθέσιμης ποιότητας"
 
 msgid "Select directory"
 msgstr "Επιλογή καταλόγου"
@@ -3036,7 +3014,7 @@ msgid "Services management"
 msgstr "Διαχείριση υπηρεσιών"
 
 msgid "Set active movie player"
-msgstr "Ορισμός ενεργής αναπαραγωγής ταινιών"
+msgstr "Ορισμός ενεργού προγράμματος αναπαραγωγής ταινιών"
 
 msgid "Set file name"
 msgstr "Ορισμός ονόματος αρχείου"
@@ -3065,12 +3043,11 @@ msgstr "Σύντομα βίντεο"
 msgid "Shoulder & Elbow"
 msgstr "Ώμος & αγκώνας"
 
-#, fuzzy
 msgid "Show"
-msgstr "Εκπομπές"
+msgstr "Εκπομπή"
 
 msgid "Show & Comedy"
-msgstr ""
+msgstr "Εκπομπές και Κωμωδία"
 
 msgid "Show IPTVPlayer in extension list"
 msgstr "Εμφάνιση IPTVPlayer στη λίστα επεκτάσεων"
@@ -3088,14 +3065,13 @@ msgid "Show all channels"
 msgstr "Εμφάνιση όλων των καναλιών"
 
 msgid "Show clock in header"
-msgstr ""
+msgstr "Εμφάνιση ρολογιού στην κεφαλίδα"
 
 msgid "Show download manager after adding new item"
 msgstr "Εμφάνιση Διαχείρισης λήψεων μετά την προσθήκη νέου στοιχείου"
 
-#, fuzzy
 msgid "Show download notification"
-msgstr "τοποθεσία λήψεων"
+msgstr "Εμφάνιση ειδοποίησης λήψης"
 
 msgid "Show file size"
 msgstr "Εμφάνιση μεγέθους αρχείου"
@@ -3130,9 +3106,8 @@ msgstr "Εμφάνιση προτάσεων"
 msgid "Shows"
 msgstr "Εκπομπές"
 
-#, fuzzy
 msgid "Shows A-Z"
-msgstr "Εκπομπές"
+msgstr "Εκπομπές A-Z"
 
 msgid "Simple list"
 msgstr "Απλή λίστα"
@@ -3153,7 +3128,7 @@ msgid "Skip video shorter than [min]"
 msgstr "Παράλειψη βίντεο μικρότερου από [λεπτά]"
 
 msgid "Society"
-msgstr ""
+msgstr "Κοινωνία"
 
 msgid "Software decoding as"
 msgstr "Αποκωδικοποίηση λογισμικού ως"
@@ -3162,7 +3137,7 @@ msgid "Software floating point"
 msgstr "Λογισμική κινητή υποδιαστολή"
 
 msgid "Some changes will be applied only after movie player restart."
-msgstr "Ορισμένες αλλαγές θα εφαρμοστούν μόνο μετά την επανεκκίνηση της αναπαραγωγής ταινιών."
+msgstr "Ορισμένες αλλαγές θα εφαρμοστούν μόνο μετά την επανεκκίνηση του προγράμματος αναπαραγωγής ταινιών."
 
 msgid "Some settings will be applied only after GUI restart."
 msgstr "Ορισμένες ρυθμίσεις θα εφαρμοστούν μόνο μετά την επανεκκίνηση του GUI."
@@ -3382,7 +3357,7 @@ msgid "System language"
 msgstr "Γλώσσα συστήματος"
 
 msgid "T9 letter jump in lists"
-msgstr ""
+msgstr "Μετάβαση σε γράμμα T9 στις λίστες"
 
 msgid "THE PAGE YOU ARE LOOKING FOR IS NOT FOUND."
 msgstr "Η ΣΕΛΙΔΑ ΠΟΥ ΑΝΑΖΗΤΑΤΕ ΔΕΝ ΒΡΕΘΗΚΕ."
@@ -3459,16 +3434,16 @@ msgid "The channel already exists in User Links."
 msgstr "Το κανάλι υπάρχει ήδη στους συνδέσμους χρήστη."
 
 msgid "The color of the current version"
-msgstr "Το χρώμα της τρέχουσας έκδοσης"
+msgstr "Χρώμα της τρέχουσας έκδοσης"
 
 msgid "The color of the started item"
-msgstr "Το χρώμα του εκκινημένου στοιχείου"
+msgstr "Χρώμα του εκκινημένου στοιχείου"
 
 msgid "The color of the viewed item"
-msgstr "Το χρώμα του προβαλλόμενου στοιχείου"
+msgstr "Χρώμα του προβαλλόμενου στοιχείου"
 
 msgid "The default aspect ratio for the external player"
-msgstr "Προεπιλεγμένη αναλογία διαστάσεων εξωτερικής αναπαραγωγής"
+msgstr "Προεπιλεγμένος λόγος διαστάσεων εξωτερικού προγρ. αναπαραγωγής"
 
 msgid "The element already exists in User Links."
 msgstr "Το στοιχείο υπάρχει ήδη στους συνδέσμους χρήστη."
@@ -3512,7 +3487,7 @@ msgid "The user link could not be updated."
 msgstr "Δεν ήταν δυνατή η ενημέρωση του συνδέσμου χρήστη."
 
 msgid "The website returned a server error for this request."
-msgstr ""
+msgstr "Ο ιστότοπος επέστρεψε σφάλμα διακομιστή για αυτό το αίτημα."
 
 #, python-format
 msgid "There are %d more pages in this section"
@@ -3535,12 +3510,11 @@ msgstr "Δεν υπάρχει ελεύθερος χώρος στο δίσκο [%
 msgid "There is no hosts in this group."
 msgstr "Δεν υπάρχουν hosts σε αυτήν την ομάδα."
 
-#, fuzzy
 msgid "This content is not available in your region."
-msgstr "Το %s είπε: Αυτή η σελίδα δεν είναι προς το παρόν διαθέσιμη στην περιοχή σας"
+msgstr "Αυτό το περιεχόμενο δεν είναι διαθέσιμο στην περιοχή σας."
 
 msgid "This content is only available in Switzerland."
-msgstr ""
+msgstr "Αυτό το περιεχόμενο είναι διαθέσιμο μόνο στην Ελβετία."
 
 msgid "This host has been added already to this group."
 msgstr "Αυτός ο host έχει ήδη προστεθεί σε αυτή την ομάδα."
@@ -3607,7 +3581,7 @@ msgid "Trauma"
 msgstr "Τραύμα"
 
 msgid "Travel"
-msgstr ""
+msgstr "Ταξίδια"
 
 msgid "Treatment Consult"
 msgstr "Συμβουλή θεραπείας"
@@ -3704,10 +3678,10 @@ msgid "Upload date"
 msgstr "Ημερομηνία μεταφόρτωσης"
 
 msgid "Urllists player"
-msgstr "Αναπαραγωγή λιστών urllists"
+msgstr "Πρόγραμμα αναπαραγωγής urllists"
 
 msgid "Use HLS streams (adaptive):"
-msgstr ""
+msgstr "Χρήση ροών HLS (προσαρμοστικές):"
 
 msgid "Use Polish proxy for http://prognoza.pogody.tv/"
 msgstr "Χρήση διακομιστή μεσολάβησης Πολωνίας για το http://prognoza.pogody.tv/"
@@ -3810,9 +3784,8 @@ msgstr "Λειτουργία βίντεο"
 msgid "Video options"
 msgstr "Επιλογές βίντεο"
 
-#, fuzzy
 msgid "Video player OSD clock format"
-msgstr "Μορφή ρολογιού γραμμής πληροφοριών"
+msgstr "Μορφή ρολογιού OSD προγράμματος αναπαραγωγής βίντεο"
 
 msgid "Video policy"
 msgstr "Πολιτική βίντεο"
@@ -3915,9 +3888,8 @@ msgstr "Xtream Live Stream"
 msgid "Xtream host (e.g. http://server:port)"
 msgstr "Xtream host (e.g. http://server:port)"
 
-#, fuzzy
 msgid "YELLOW"
-msgstr "YELLOW - AltGr"
+msgstr "YELLOW"
 
 msgid "YP connected"
 msgstr "YP συνδεδεμένο"
@@ -3991,7 +3963,7 @@ msgid "Youtube searches are quicker, if you fill API key in setting menu"
 msgstr "Οι αναζητήσεις στο Youtube είναι πιο γρήγορες αν συμπληρώσετε το κλειδί API στο μενού ρυθμίσεων"
 
 msgid "Z-A"
-msgstr ""
+msgstr "Z-A"
 
 #, python-format
 msgid "[%s] - configuration"
@@ -4038,9 +4010,8 @@ msgstr "μετά από μία ημέρα"
 msgid "after three days"
 msgstr "μετά από τρεις μέρες"
 
-#, fuzzy
 msgid "all"
-msgstr "μικρή"
+msgstr "όλα"
 
 msgid "aqua"
 msgstr "γαλάζιο"
@@ -4050,7 +4021,7 @@ msgstr "αυτόματο"
 
 #, python-format
 msgid "available until %s"
-msgstr ""
+msgstr "διαθέσιμο έως %s"
 
 msgid "average"
 msgstr "μέσος όρος"
@@ -4092,10 +4063,10 @@ msgid "e-mail"
 msgstr "- E-mail"
 
 msgid "external eplayer3"
-msgstr "εξωτερικός eplayer3"
+msgstr "εξωτερικό eplayer3"
 
 msgid "external gstplayer"
-msgstr "εξωτερικός gstplayer"
+msgstr "εξωτερικό gstplayer"
 
 msgid "first check if host works properly in GUI and web <b>BEFORE</b> reporting error in it !!!"
 msgstr "ελέγξτε πρώτα αν ο host λειτουργεί σωστά στο GUI και στον ιστό <b>ΠΡΙΝ</b> αναφέρετε σφάλμα σε αυτόν !!!"
@@ -4158,7 +4129,7 @@ msgid "large"
 msgstr "μεγάλο"
 
 msgid "leave movie player..."
-msgstr "έξοδος από την αναπαραγωγή ταινιών..."
+msgstr "έξοδος από το πρόγραμμα αναπαραγωγής ταινιών..."
 
 msgid "lime"
 msgstr "λαχανί"
@@ -4176,7 +4147,7 @@ msgid "main"
 msgstr "κύριο"
 
 msgid "manual"
-msgstr ""
+msgstr "χειροκίνητα"
 
 msgid "maroon"
 msgstr "καφέ-μπορντώ"
@@ -4247,9 +4218,8 @@ msgstr "κορυφαίο"
 msgid "unknown"
 msgstr "άγνωστο"
 
-#, fuzzy
 msgid "unsorted"
-msgstr "Ακυρώθηκε"
+msgstr "χωρίς ταξινόμηση"
 
 msgid "version"
 msgstr "έκδοση"
