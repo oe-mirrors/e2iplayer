@@ -40,7 +40,8 @@
   "movie2kcx",
   "einschalten",
   "megakino",
-  "moflixstream"
+  "moflixstream",
+  "appletrailers"
  ],
  "cartoonsandanime": [
   "aniworld",
@@ -52,6 +53,7 @@
   "webstream",
   "footyroom",
   "goals",
+  "hoofootcom",
   "basketballvideocom",
   "eurosportplayer"
  ],
@@ -116,6 +118,7 @@
   "dailymotion",
   "rteieplayer",
   "playrtsiw",
+  "appletrailers",
   "orthobulletscom",
   "vumedicom"
  ],
