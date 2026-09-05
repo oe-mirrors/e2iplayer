@@ -135,12 +135,22 @@ class EkinoTv(CBaseHostClass):
     def getVideoLinks(self, url):
         printDBG("EkinoTv.getVideoLinks [%s]" % url)
         urlTab = []
+        pageUrl = url
         sts, data = self.getPage(url)
         if not sts:
             return []
         url = self.cm.ph.getSearchGroups(data, 'href="([^"]+)" target')[0]
         if 'play.ekino.link' in url:
-            sts, data = self.cm._getPageWithPyCurl(url, self.HEADER)
+            # self.HEADER was being passed as `params` itself, not wrapped
+            # as {"header": self.HEADER} - _getPageWithPyCurl() then found
+            # no 'header' key in it, fell through to pCommon's own generic
+            # HOST-string fallback (no Referer at all), and the CDN 403'd
+            # the request. Also add a Referer, since play.ekino.link is
+            # reached via a redirect page and CDNs like this commonly
+            # require one.
+            header = dict(self.HEADER)
+            header["Referer"] = pageUrl
+            sts, data = self.cm._getPageWithPyCurl(url, {"header": header})
             url = self.cm.ph.getSearchGroups(data, 'iframe src="([^"]+)')[0]
         if self.cm.isValidUrl(url):
             return self.up.getVideoLinkExt(url)
