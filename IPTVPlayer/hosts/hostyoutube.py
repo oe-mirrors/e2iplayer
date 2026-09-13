@@ -330,7 +330,7 @@ class Youtube(CBaseHostClass):
         CBaseHostClass.__init__(self, {"history": "ytlist", "cookie": "youtube.cookie"})
         self.UTLIST_FILE = "ytlist.txt"
         self.DEFAULT_ICON_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/YouTube_2024.svg/960px-YouTube_2024.svg.png"
-        self.MAIN_GROUPED_TAB = [{"category": "from_file", "title": _("User links"), "desc": _("User links stored in the ytlist.txt file.")}, {"category": "feeds", "title": _("Trending"), "desc": _("Browse youtube trending feeds")}] + self.searchItems()
+        self.MAIN_GROUPED_TAB = [{"category": "from_file", "title": _("User links"), "desc": _("User links stored in the ytlist.txt file.")}, {"category": "feeds", "title": _("Trending"), "desc": _("Browse youtube trending feeds")}]
 
         self.SEARCH_TYPES = [(_("Video"), "video"), (_("Channel"), "channel"), (_("Playlist"), "playlist"), (_("Movie"), "movie"), (_("Live"), "live")]  # (_("Program"), "show"),... # (_("traylist"), "traylist"),
         self.ytp = YouTubeParser()
@@ -619,6 +619,7 @@ class Youtube(CBaseHostClass):
                 {"category": "auth_feed", "feed": "liked", "title": _("Liked videos"), "desc": _("Videos you have liked.")},
                 {"category": "auth_feed", "feed": "history", "title": _("Watch history"), "desc": _("Videos you have recently watched.")},
             ]
+        tab += self.searchItems()
         for item in tab:
             params = {"name": "category"}
             params.update(item)
