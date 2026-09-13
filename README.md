@@ -1,6 +1,5 @@
 # <p align="center">E2iPlayer Plugin for Enigma2 (E²)</p>
-# <p align="center">![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg) ![Profil views](https://komarev.com/ghpvc/?username=oe-mirrors)</p>
-
+# <p align="center">![GitHub repo size](https://img.shields.io/github/repo-size/oe-mirrors/e2iplayer.svg) ![Profil views](https://komarev.com/ghpvc/?username=oe-mirrors) [![Visitors](https://api.visitorbadge.io/api/daily?path=https://github.com/oe-mirrors/e2iplayer&label=Visitors%20Today&countColor=blue&style=flat)](https://visitorbadge.io/status?path=https://github.com/oe-mirrors/e2iplayer)</p>
 Python3 Version from <a href="https://www.opena.tv">openATV Team</a>.
 
 This plugin was developed with a lot of 💞 for the Enigma2 community. You are free to use and modify it for personal use.
