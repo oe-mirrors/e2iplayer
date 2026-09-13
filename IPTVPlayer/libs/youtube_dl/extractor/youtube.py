@@ -324,6 +324,7 @@ class YoutubeIE(object):
         "248": "webm",
         "271": "webmv",
         "313": "webmv",
+        "315": "webmv",
         "mpd": "mpd",
     }
     _video_dimensions = {
@@ -379,6 +380,7 @@ class YoutubeIE(object):
         "299": "1080p60",
         "271": "1440p",
         "313": "2160p",
+        "315": "2160p60"
     }
 
     IE_NAME = "youtube"
@@ -795,7 +797,7 @@ class YoutubeIE(object):
     def _get_video_url_list(self, url_map, allowVP9=False):
         format_list = list(self._available_formats_prefer_free)  # available_formats
         if allowVP9:
-            format_list.extend(["313", "271"])
+            format_list.extend(["313", "315", "271"])
         existing_formats = [x for x in format_list if x in url_map]
 
         return [(f, url_map[f]) for f in existing_formats]  # All formats
