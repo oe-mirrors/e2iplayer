@@ -31,7 +31,7 @@ from enigma import getDesktop, eTimer, ePoint
 ####################################################
 #                   IPTV components
 ####################################################
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer, GetAvailableMoviePlayers, GetMoviePlayerName, GetListOfHostsNames
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer, GetAvailableMoviePlayers, GetMoviePlayerName, GetListOfHostsNames, GetConfigExpectedPin
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostMenu, ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.configgroups import ConfigGroupsMenu
 
@@ -1850,7 +1850,8 @@ class E2iPlayerWidget(Screen):
 
                     if item.pinLocked:
                         from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
-                        self.session.openWithCallback(boundFunction(self.checkDirPin, self.requestListFromHost, 'ForItem', currSelIndex, '', item.pinCode), IPTVPinWidget, title=_("Enter pin"))
+                        pinTitle = _("Enter pin") + (" - " + item.name if getattr(item, 'name', '') else '')
+                        self.session.openWithCallback(boundFunction(self.checkDirPin, self.requestListFromHost, 'ForItem', currSelIndex, '', item.pinCode), IPTVPinWidget, title=pinTitle)
                     else:
                         self.requestListFromHost('ForItem', currSelIndex, '')
                 elif item.type == CDisplayListItem.TYPE_MORE:
@@ -2304,7 +2305,7 @@ class E2iPlayerWidget(Screen):
         if nextFunction and prevFunction:
             if True is protectedByPin:
                 from .iptvpin import IPTVPinWidget
-                self.session.openWithCallback(boundFunction(self.checkPin, nextFunction, prevFunction), IPTVPinWidget, title=_("Enter pin"))
+                self.session.openWithCallback(boundFunction(self.checkPin, nextFunction, prevFunction, expectedPin=GetConfigExpectedPin()), IPTVPinWidget, title=_("Enter pin") + " - " + _("Configuration"))
             else:
                 nextFunction()
 
@@ -2327,7 +2328,7 @@ class E2iPlayerWidget(Screen):
     def runConfigHostIfAllowed(self):
         if config.plugins.iptvplayer.configProtectedByPin.value:
             from .iptvpin import IPTVPinWidget
-            self.session.openWithCallback(boundFunction(self.checkPin, self.runConfigHost, None), IPTVPinWidget, title=_("Enter pin"))
+            self.session.openWithCallback(boundFunction(self.checkPin, self.runConfigHost, None, expectedPin=GetConfigExpectedPin()), IPTVPinWidget, title=_("Enter pin") + " - " + _("Configuration"))
         else:
             self.runConfigHost()
 
@@ -2338,9 +2339,17 @@ class E2iPlayerWidget(Screen):
         if confgiChanged:
             self.loadHost()
 
-    def checkPin(self, callbackFun, failCallBackFun, pin=None):
+    def checkPin(self, callbackFun, failCallBackFun, pin=None, expectedPin=''):
+        # expectedPin lets a host (loadHost() below) check against its own
+        # PIN instead of the global player one - same fallback as
+        # checkDirPin()'s custom pinCode: an invalid (non-4-digit) value
+        # means "use the global player PIN", which is also what every
+        # other caller of checkPin() gets by leaving expectedPin at its
+        # default ''.
         if pin is not None:
-            if pin == config.plugins.iptvplayer.pin.value:
+            if 4 != len(expectedPin):
+                expectedPin = config.plugins.iptvplayer.pin.value
+            if pin == expectedPin:
                 callbackFun()
             else:
                 self.session.openWithCallback(self.close, MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5)
@@ -2373,7 +2382,15 @@ class E2iPlayerWidget(Screen):
 
         if protectedByPin:
             from .iptvpin import IPTVPinWidget
-            self.session.openWithCallback(boundFunction(self.checkPin, self.loadHostData, self.selectHost), IPTVPinWidget, title=_("Enter pin"))
+            try:
+                hostPinCode = self.host.getPinCode()
+            except Exception:
+                hostPinCode = ''
+
+            def _checkHostPin(pin=None):
+                self.checkPin(self.loadHostData, self.selectHost, pin, expectedPin=hostPinCode)
+
+            self.session.openWithCallback(_checkHostPin, IPTVPinWidget, title=_("Enter pin") + " - " + (self.hostTitle or self.hostName))
         else:
             self.loadHostData()
 
