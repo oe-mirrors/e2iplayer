@@ -171,6 +171,13 @@ config.plugins.iptvplayer.pin = ConfigText(default="0000", fixed_size=False)
 config.plugins.iptvplayer.disable_live = ConfigYesNo(default=False)
 config.plugins.iptvplayer.configProtectedByPin = ConfigYesNo(default=False)
 config.plugins.iptvplayer.pluginProtectedByPin = ConfigYesNo(default=False)
+# Own, separate pin for the configuration screens instead of sharing the
+# plugin-start pin above - same "own pin instead of the shared one" pattern
+# already used by hostxxx's own PIN (config.plugins.iptvplayer.xxxownpin/
+# xxxpincode in hosts/hostxxx.py).
+config.plugins.iptvplayer.configOwnPin = ConfigYesNo(default=False)
+config.plugins.iptvplayer.fakeConfigPin = ConfigSelection(default="fake", choices=[("fake", "****")])
+config.plugins.iptvplayer.configPincode = ConfigText(default="0000", fixed_size=False)
 
 config.plugins.iptvplayer.httpssslcertvalidation = ConfigYesNo(default=False)
 
@@ -237,6 +244,16 @@ def IsSidecarEnabled():
     # single central place hosts ask whether to create sidecar .txt/.jpg files,
     # instead of each host keeping its own copy of this config option
     return config.plugins.iptvplayer.sidecar_enabled.value
+
+
+def GetConfigExpectedPin():
+    # '' means "no own pin configured" - checkPin() in iptvplayerwidget.py
+    # (and pinCallback() in plugin.py) already fall back to the shared
+    # config.plugins.iptvplayer.pin in that case, same convention hostxxx's
+    # own getPinCode() uses for its own PIN.
+    if config.plugins.iptvplayer.configOwnPin.value and 4 == len(config.plugins.iptvplayer.configPincode.value):
+        return config.plugins.iptvplayer.configPincode.value
+    return ''
 
 
 def IsMediaNamingNormalized():
@@ -468,8 +485,12 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("----- SECURITY CONFIGURATION -----"),))
         list.append(getConfigListEntry(_("Pin protection for plugin"), config.plugins.iptvplayer.pluginProtectedByPin))
         list.append(getConfigListEntry(_("Pin protection for configuration"), config.plugins.iptvplayer.configProtectedByPin))
-        if config.plugins.iptvplayer.pluginProtectedByPin.value or config.plugins.iptvplayer.configProtectedByPin.value:
+        if config.plugins.iptvplayer.configProtectedByPin.value:
+            list.append(getConfigListEntry("    " + _("Use own pin for configuration"), config.plugins.iptvplayer.configOwnPin))
+        if config.plugins.iptvplayer.pluginProtectedByPin.value or (config.plugins.iptvplayer.configProtectedByPin.value and not config.plugins.iptvplayer.configOwnPin.value):
             list.append(getConfigListEntry(_("Set pin code"), config.plugins.iptvplayer.fakePin))
+        if config.plugins.iptvplayer.configProtectedByPin.value and config.plugins.iptvplayer.configOwnPin.value:
+            list.append(getConfigListEntry("    " + _("Set own configuration pin code"), config.plugins.iptvplayer.fakeConfigPin))
 
         list.append(getConfigListEntry(_("----- SKIN CONFIGURATION -----"),))
         list.append(getConfigListEntry(_("Skin"), config.plugins.iptvplayer.skin))
@@ -600,7 +621,7 @@ class ConfigMenu(ConfigBaseWidget):
 
     def onSelectionChanged(self):
         currItem = self["config"].getCurrent()[1]
-        if currItem in [config.plugins.iptvplayer.fakePin, config.plugins.iptvplayer.fakeHostsList, config.plugins.iptvplayer.fakExtMoviePlayerList]:
+        if currItem in [config.plugins.iptvplayer.fakePin, config.plugins.iptvplayer.fakeConfigPin, config.plugins.iptvplayer.fakeHostsList, config.plugins.iptvplayer.fakExtMoviePlayerList]:
             self.isOkEnabled = True
             self.isSelectable = False
             self.setOKLabel()
@@ -675,6 +696,8 @@ class ConfigMenu(ConfigBaseWidget):
             self.session.openWithCallback(boundFunction(SetDirPathCallBack, curIndex), IPTVDirectorySelectorWidget, currDir=currItem.value, title=_("Select directory"))
         elif config.plugins.iptvplayer.fakePin == currItem:
             self.changePin(start=True)
+        elif config.plugins.iptvplayer.fakeConfigPin == currItem:
+            self.changeConfigPin(start=True)
         elif config.plugins.iptvplayer.fakeHostsList == currItem:
             self.hostsList()
         elif config.plugins.iptvplayer.fakExtMoviePlayerList == currItem:
@@ -749,6 +772,7 @@ class ConfigMenu(ConfigBaseWidget):
             # config.plugins.iptvplayer.ListaGraficzna,
             config.plugins.iptvplayer.pluginProtectedByPin,
             config.plugins.iptvplayer.configProtectedByPin,
+            config.plugins.iptvplayer.configOwnPin,
             config.plugins.iptvplayer.osk_type,
             config.plugins.iptvplayer.plugin_autostart,
             config.plugins.iptvplayer.favourites_use_watched_flag,
@@ -791,6 +815,48 @@ class ConfigMenu(ConfigBaseWidget):
                 if self.newPin == pin:
                     config.plugins.iptvplayer.pin.value = pin
                     config.plugins.iptvplayer.pin.save()
+                    configfile.save()
+                    self.session.open(MessageBox, _("Pin has been changed."), type=MessageBox.TYPE_INFO, timeout=5)
+                else:
+                    self.session.open(MessageBox, _("Confirmation error."), type=MessageBox.TYPE_INFO, timeout=5)
+
+    def changeConfigPin(self, pin=None, start=False):
+        # Mirrors changePin() above but manages the separate
+        # config.plugins.iptvplayer.configPincode instead of the shared
+        # plugin pin - see GetConfigExpectedPin() for how the two coexist
+        # at check time. Unlike changePin(), the very first own-pin set
+        # skips the old-pin step (there is nothing to confirm against yet),
+        # same convention hostxxx's own PIN uses (_xxxOwnPinConfigured() in
+        # hosts/hostxxx.py).
+        alreadySet = 4 == len(config.plugins.iptvplayer.configPincode.value) and config.plugins.iptvplayer.configOwnPin.value
+        if True is start:
+            if alreadySet:
+                self.changingConfigPinState = 'PUT_OLD_PIN'
+                self.session.openWithCallback(self.changeConfigPin, IPTVPinWidget, title=_("Enter old pin") + " - " + _("Configuration"))
+            else:
+                self.changingConfigPinState = 'PUT_NEW_PIN'
+                self.session.openWithCallback(self.changeConfigPin, IPTVPinWidget, title=_("Enter new pin") + " - " + _("Configuration"))
+        else:
+            if pin is None:
+                return
+            if 'PUT_OLD_PIN' == self.changingConfigPinState:
+                if pin == config.plugins.iptvplayer.configPincode.value:
+                    self.changingConfigPinState = 'PUT_NEW_PIN'
+                    self.session.openWithCallback(self.changeConfigPin, IPTVPinWidget, title=_("Enter new pin") + " - " + _("Configuration"))
+                else:
+                    self.session.open(MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5)
+            elif 'PUT_NEW_PIN' == self.changingConfigPinState:
+                self.newConfigPin = pin
+                self.changingConfigPinState = 'CONFIRM_NEW_PIN'
+                self.session.openWithCallback(self.changeConfigPin, IPTVPinWidget, title=_("Confirm new pin") + " - " + _("Configuration"))
+            elif 'CONFIRM_NEW_PIN' == self.changingConfigPinState:
+                if self.newConfigPin == pin:
+                    # configOwnPin is already True here - this row (like
+                    # the "Use own pin" toggle it depends on) is only
+                    # reachable once it's switched on, same gating as
+                    # hostxxx's "Set own pin" row.
+                    config.plugins.iptvplayer.configPincode.value = pin
+                    config.plugins.iptvplayer.configPincode.save()
                     configfile.save()
                     self.session.open(MessageBox, _("Pin has been changed."), type=MessageBox.TYPE_INFO, timeout=5)
                 else:

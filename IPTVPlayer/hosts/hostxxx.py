@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Play
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.libs.xxxparser import XXXParser, decodeHtml, decodeUrl
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
+from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchHistoryEditor
 
 from itertools import chain
 import re
@@ -28,7 +29,7 @@ try:
 except ImportError:
 	from urllib import urlencode, urlopen, unquote
 	from urlparse import urlparse, parse_qs
-from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry, ConfigDirectory
+from Components.config import config, ConfigSelection, ConfigYesNo, getConfigListEntry, ConfigDirectory, ConfigText, configfile
 from Screens.MessageBox import MessageBox
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from time import time as time_time, sleep
@@ -50,6 +51,12 @@ yellow, cyan, magenta = r'\c00????00', r'\c0000????', r'\c00??00??'
 config.plugins.iptvplayer.cam4 = ConfigSelection(default="0", choices=[("0", _("https")), ("1", _("rtmp"))])
 config.plugins.iptvplayer.xxx4k = ConfigYesNo(default=True)
 config.plugins.iptvplayer.xxxwymagajpin = ConfigYesNo(default=True)
+config.plugins.iptvplayer.xxxownpin = ConfigYesNo(default=False)
+config.plugins.iptvplayer.xxxpincode = ConfigText(default="0000", fixed_size=False)
+# OK-only "action row" for the config screen (see HandleConfigAction below);
+# the single choice is never really selected, the value carries no meaning -
+# same pattern as hostyoutube.py's account sign-in/out row.
+config.plugins.iptvplayer.xxx_pin_action = ConfigSelection(default="fake", choices=[("fake", "  ")])
 config.plugins.iptvplayer.xxxlist = ConfigDirectory(default="/hdd/")
 config.plugins.iptvplayer.xxxsortuj = ConfigYesNo(default=True)
 config.plugins.iptvplayer.xxxsearch = ConfigYesNo(default=True)
@@ -369,10 +376,74 @@ for key, (url, name, search) in chain(SITEDATA.items(), SITEDATA_CAMS.items()):
 	setattr(config.plugins.iptvplayer, cfg, cfgItem)
 
 
+def _xxxOwnPinConfigured():
+	return config.plugins.iptvplayer.xxxownpin.value and 4 == len(config.plugins.iptvplayer.xxxpincode.value)
+
+
+def HandleConfigAction(session, action, callback=None):
+	# Called by components/confighost.py when the OK-only "Set/change own
+	# PIN" row in GetConfigList() is selected. Mirrors changePin() in
+	# components/iptvconfigmenu.py (old pin -> new pin -> confirm), just
+	# built from nested closures instead of Screen instance state, since
+	# this is a module-level function without a persistent self.
+	def _finish():
+		if callable(callback):
+			try:
+				callback()
+			except Exception:
+				printExc()
+
+	if action != "xxx_set_own_pin":
+		return
+
+	from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
+
+	state = {'newPin': None}
+
+	def askNew(ret=None):
+		session.openWithCallback(confirmNew, IPTVPinWidget, title=_("Enter new pin") + " - HostXXX")
+
+	def confirmNew(pin=None):
+		if pin is None:
+			_finish()
+			return
+		state['newPin'] = pin
+		session.openWithCallback(saveNew, IPTVPinWidget, title=_("Confirm new pin") + " - HostXXX")
+
+	def saveNew(pin=None):
+		if pin is not None and pin == state['newPin']:
+			config.plugins.iptvplayer.xxxpincode.value = pin
+			config.plugins.iptvplayer.xxxpincode.save()
+			config.plugins.iptvplayer.xxxownpin.value = True
+			config.plugins.iptvplayer.xxxownpin.save()
+			configfile.save()
+			session.open(MessageBox, _("Pin has been changed."), type=MessageBox.TYPE_INFO, timeout=5)
+		else:
+			session.open(MessageBox, _("Confirmation error."), type=MessageBox.TYPE_INFO, timeout=5)
+		_finish()
+
+	def checkOld(pin=None):
+		if pin is not None and pin == config.plugins.iptvplayer.xxxpincode.value:
+			askNew()
+		else:
+			session.open(MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5)
+			_finish()
+
+	if _xxxOwnPinConfigured():
+		session.openWithCallback(checkOld, IPTVPinWidget, title=_("Enter old pin") + " - HostXXX")
+	else:
+		askNew()
+
+
 def GetConfigList():
 	optionList = []
 	optionList.append(getConfigListEntry(_("----- Global HostXXX Configuration -----"),))
 	optionList.append(getConfigListEntry(_("Pin protection for plugin") + " :", config.plugins.iptvplayer.xxxwymagajpin))
+	optionList.append(getConfigListEntry(_("Use own pin instead of the player pin") + " :", config.plugins.iptvplayer.xxxownpin))
+	if config.plugins.iptvplayer.xxxownpin.value:
+		pinActionEntry = getConfigListEntry(_("Change own pin") if _xxxOwnPinConfigured() else _("Set own pin"), config.plugins.iptvplayer.xxx_pin_action)
+		pinActionEntry[1].iptv_host_action = "xxx_set_own_pin"
+		optionList.append(pinActionEntry)
 	optionList.append(getConfigListEntry(_("Show global search :"), config.plugins.iptvplayer.xxxsearch))
 	optionList.append(getConfigListEntry(_("Global Search mode :"), config.plugins.iptvplayer.xxxsearchmode))
 	# optionList.append(getConfigListEntry(_("Sort Pornsites Alphabetical :"), config.plugins.iptvplayer.xxxsortall))
@@ -491,6 +562,11 @@ class IPTVHost(IHost):
 	def isProtectedByPinCode(self):
 		return config.plugins.iptvplayer.xxxwymagajpin.value
 
+	def getPinCode(self):
+		if config.plugins.iptvplayer.xxxownpin.value and 4 == len(config.plugins.iptvplayer.xxxpincode.value):
+			return config.plugins.iptvplayer.xxxpincode.value
+		return ''
+
 	def getLogoPath(self):
 		return RetHost(RetHost.OK, value=[self.PATH_TO_LOGO])
 
@@ -505,6 +581,20 @@ class IPTVHost(IHost):
 
 	def getListForItem(self, Index=0, refresh=0, selItem=None):
 		printDBG("getListForItem begin")
+		if getattr(selItem, 'type', None) == CDisplayListItem.TYPE_SEARCH_HISTORY_EDITOR:
+			# Opens a modal editor in place rather than navigating to a new
+			# list (same NON_NAVIGATING_TYPES handling CHostBase.getListForItem()
+			# already does for hosts built on it - hostxxx.py isn't one of
+			# those, so it needs its own copy here). Must not push onto
+			# prevIndex/prevList: nothing about our own state changed, and
+			# the widget's own nav stacks already skip this type too, so
+			# pushing here would leave the two out of sync.
+			try:
+				self.host.sessionEx.waitForFinishOpen(SearchHistoryEditor, historyFile=self.host.history.PATH_FILE, reverseForDisplay=True, reverseForWrite=True)
+			except Exception:
+				printExc()
+			printDBG("getListForItem end (search history editor)")
+			return RetHost(RetHost.OK, value=self.currList)
 		self.prevIndex.append(Index)
 		self.prevList.append(self.currList)
 		self.currList = self.host.getListForItem(Index, refresh, selItem)
@@ -747,6 +837,7 @@ class Host(CBaseHostClass, XXXParser):
 				self.SEARCH_proc = name + "-search"
 			self.oldName = name
 			valtab.insert(0, CDisplayListItem(_('Delete search history'), _('Delete search history'), CDisplayListItem.TYPE_SEARCH_HISTORY_DELETE, [''], 'HISTORYDELETE', '', None))
+			valtab.insert(0, CDisplayListItem(_('Edit search history'), _('Edit search history'), CDisplayListItem.TYPE_SEARCH_HISTORY_EDITOR, [''], 'HISTORYEDIT', hostImage() + 'searchhistory.png', None))
 			valtab.insert(0, CDisplayListItem(_('Search history'), _('Search history'), CDisplayListItem.TYPE_SEARCH_HISTORY, [''], 'HISTORY', hostImage() + 'searchhistory.png', None))
 			valtab.insert(0, CDisplayListItem(_('Search'), _('Search'), CDisplayListItem.TYPE_SEARCH, [''], '', hostImage() + 'searchimage.png', None))
 			return valtab
@@ -865,7 +956,13 @@ class Host(CBaseHostClass, XXXParser):
 			return []
 		if 'HISTORY' == name:
 			for histItem in self.history.getHistoryList():
-				valTab.append(CDisplayListItem(histItem['pattern'], 'Search ', CDisplayListItem.TYPE_CATEGORY, [histItem['pattern'], histItem['type']], 'SEARCH', '', None))
+				# TYPE_SEARCH_HISTORY (not TYPE_CATEGORY): lets
+				# iptvplayerwidget.py's isSearchHistoryList() recognize this
+				# as the actual history-entries list, which is what enables
+				# the T9 multi-press jump (8=t, 2x8=u, 3x8=v) here. Click
+				# handling is unaffected - the widget treats this type
+				# identically to TYPE_CATEGORY for navigation.
+				valTab.append(CDisplayListItem(histItem['pattern'], 'Search ', CDisplayListItem.TYPE_SEARCH_HISTORY, [histItem['pattern'], histItem['type']], 'SEARCH', '', None))
 			return valTab
 		if 'SEARCH' == name:
 			pattern = url

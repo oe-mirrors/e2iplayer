@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import E2iPlayerWidget
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetConfigExpectedPin
 from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
@@ -76,7 +76,7 @@ def startIPTVfromMenu(menuid, **kwargs):
 
 def mainSetup(session, **kwargs):
     if config.plugins.iptvplayer.configProtectedByPin.value:
-        session.openWithCallback(boundFunction(pinCallback, session, runSetup), IPTVPinWidget, title=_("Enter pin"))
+        session.openWithCallback(boundFunction(pinCallback, session, runSetup, GetConfigExpectedPin()), IPTVPinWidget, title=_("Enter pin") + " - " + _("Configuration"))
     else:
         runSetup(session)
 
@@ -87,7 +87,7 @@ def runSetup(session):
 
 def main(session, **kwargs):
     if config.plugins.iptvplayer.pluginProtectedByPin.value:
-        session.openWithCallback(boundFunction(pinCallback, session, runMain), IPTVPinWidget, title=_("Enter pin"))
+        session.openWithCallback(boundFunction(pinCallback, session, runMain, ''), IPTVPinWidget, title=_("Enter pin") + " - " + _("E2iPlayer"))
     else:
         runMain(session)
 
@@ -133,10 +133,16 @@ def runMain(session, nextFunction=doRunMain):
     nextFunction(session)
 
 
-def pinCallback(session, callbackFun, pin=None):
+def pinCallback(session, callbackFun, expectedPin, pin=None):
+    # expectedPin lets the Configuration gate check against its own,
+    # separately-configured pin (GetConfigExpectedPin()) instead of the
+    # shared plugin one - same '' == "use the shared pin" convention as
+    # checkPin() in iptvplayerwidget.py.
     if None is pin:
         return
-    if pin != config.plugins.iptvplayer.pin.value:
+    if 4 != len(expectedPin):
+        expectedPin = config.plugins.iptvplayer.pin.value
+    if pin != expectedPin:
         session.open(MessageBox, _("Pin incorrect!"), type=MessageBox.TYPE_INFO, timeout=5)
         return
     callbackFun(session)

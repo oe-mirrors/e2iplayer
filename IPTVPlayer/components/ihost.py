@@ -308,6 +308,13 @@ class IHost:
     def isProtectedByPinCode(self):
         return False
 
+    # optional per-host PIN code, checked instead of the global player
+    # PIN when isProtectedByPinCode() is True. Return '' (default) to
+    # keep using the global player PIN - only a host that overrides
+    # this to return its own 4-digit code opts out of that default.
+    def getPinCode(self):
+        return ''
+
     # return list of types which can be added as favourite
     def getSupportedFavoritesTypes(self):
         return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
