@@ -5547,23 +5547,30 @@ class Host(CBaseHostClass, XXXParser):
 					phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"].id''', 1, True)[0]
 					phImage = self.cm.ph.getSearchGroups(item, '''<img[^>]+src=['"]([^"^']+?)['"]''', 1, True)[0]
 					phTitle = self.cm.ph.getSearchGroups(item, '''title".title=['"]([^"^']+?)['"]>''', 1, True)[0]
-					if phUrl: items.append((phUrl, phTitle, phImage))
+					if phUrl:
+						items.append((phUrl, phTitle, phImage))
 			if not items:
 				for m in re.finditer(r'''<a[^>]+href=['"]([^'"]+)['"][^>]*>(.*?)</a>''', data, re.S | re.I):
 					phUrl, inner = m.group(1), m.group(2)
 					fullUrl = urljoin(url, phUrl)
-					if 'freeomovie.to' not in fullUrl or '/category/' in fullUrl or '/tag/' in fullUrl or '/page/' in fullUrl: continue
+					if 'freeomovie.to' not in fullUrl or '/category/' in fullUrl or '/tag/' in fullUrl or '/page/' in fullUrl:
+						continue
 					phTitle = self.cm.ph.getSearchGroups(inner, r'''(?:title|alt)=['"]([^'"]+)['"]''', 1, True)[0]
-					if not phTitle: phTitle = re.sub('<[^>]+>', ' ', inner)
+					if not phTitle:
+						phTitle = re.sub('<[^>]+>', ' ', inner)
 					phTitle = decodeHtml(re.sub(r'\s+', ' ', phTitle).strip())
-					if len(phTitle) >= 3: items.append((fullUrl, phTitle, ''))
+					if len(phTitle) >= 3:
+						items.append((fullUrl, phTitle, ''))
 			seen = set()
 			for phUrl, phTitle, phImage in items:
 				phUrl = urljoin(url, phUrl)
-				if phUrl in seen or not phTitle: continue
+				if phUrl in seen or not phTitle:
+					continue
 				seen.add(phUrl)
-				if phImage.startswith('/'): phImage = urljoin(url, phImage)
-				if phImage: phImage = urlparser.decorateUrl(phImage, {'Referer': url})
+				if phImage.startswith('/'):
+					phImage = urljoin(url, phImage)
+				if phImage:
+					phImage = urlparser.decorateUrl(phImage, {'Referer': url})
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle), CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
 			if next_page:
 				next_page = urljoin(url, next_page)
@@ -9373,9 +9380,11 @@ class Host(CBaseHostClass, XXXParser):
 			if not matches:
 				for m in re.finditer(r'href=["\']([^"\']*/video/[^"\']+)["\']', data, re.I):
 					cs = m.start() - 3500
-					if cs < 0: cs = 0
+					if cs < 0:
+						cs = 0
 					ce = m.end() + 3500
-					if ce > len(data): ce = len(data)
+					if ce > len(data):
+						ce = len(data)
 					matches.append((m.group(1), data[cs:ce]))
 
 			printDBG('FETISHPAPA raw video candidates=%d' % len(matches))
@@ -14725,6 +14734,7 @@ class Host(CBaseHostClass, XXXParser):
 				return valTab
 
 			seen = set()
+
 			def add_video(phUrl, phTitle, phImage='', phTime=''):
 				phUrl = phUrl.replace('&amp;', '&').replace('\\/', '/')
 				if phUrl.startswith('/'):
@@ -16828,9 +16838,11 @@ class Host(CBaseHostClass, XXXParser):
 			COOKIEFILE = join(GetCookieDir(), 'freeones.cookie')
 			self.defaultParams = {'use_cookie': True, 'load_cookie': False, 'save_cookie': True, 'cookiefile': COOKIEFILE}
 			sts, data = self.getPage(url, 'freeones.cookie', 'freeones.com', self.defaultParams)
-			if not sts: return valTab
+			if not sts:
+				return valTab
 			next = self.cm.ph.getSearchGroups(data, r'''href=['"]([^"^']+?)['"][^>]*>\s*(?:<[^>]+>)*Next''', 1, True)[0].replace('&amp;', '&')
-			if next: next = urljoin(self.MAIN_URL, next)
+			if next:
+				next = urljoin(self.MAIN_URL, next)
 			items = []
 			parts = data.split('<div data-test="teaser-video"')
 			if len(parts) > 1:
@@ -16839,24 +16851,28 @@ class Host(CBaseHostClass, XXXParser):
 					phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''', 1, True)[0]
 					phImage = self.cm.ph.getSearchGroups(item, '''(?:src|data-src)=['"]([^"^']+?)['"]''', 1, True)[0]
 					phTime = self.cm.ph.getSearchGroups(item, '''title="duration([^>]+?)"''', 1, True)[0]
-					if phUrl: items.append((phUrl, phTitle, phImage, phTime))
+					if phUrl:
+						items.append((phUrl, phTitle, phImage, phTime))
 			if not items:
 				for m in re.finditer(r'''<a[^>]+href=['"]([^'"]*/video/[^'"]+)['"][^>]*>(.*?)</a>''', data, re.S | re.I):
 					phUrl, inner = m.group(1), m.group(2)
 					phTitle = self.cm.ph.getSearchGroups(inner, r'''(?:alt|title)=['"]([^'"]+)['"]''', 1, True)[0]
-					if not phTitle: phTitle = re.sub('<[^>]+>', ' ', inner)
+					if not phTitle:
+						phTitle = re.sub('<[^>]+>', ' ', inner)
 					phTitle = decodeHtml(re.sub(r'\s+', ' ', phTitle).strip())
 					items.append((phUrl, phTitle, '', ''))
-			seen=set()
+			seen = set()
 			for phUrl, phTitle, phImage, phTime in items:
-				phUrl=urljoin(self.MAIN_URL, phUrl)
-				if phUrl in seen or not phTitle: continue
+				phUrl = urljoin(self.MAIN_URL, phUrl)
+				if phUrl in seen or not phTitle:
+					continue
 				seen.add(phUrl)
-				phImage=checkhttp(phImage)
-				phImage=urljoin(self.MAIN_URL, phImage) if phImage.startswith('/') else phImage
-				label=('['+phTime+'] ' if phTime else '')+decodeHtml(phTitle)
+				phImage = checkhttp(phImage)
+				phImage = urljoin(self.MAIN_URL, phImage) if phImage.startswith('/') else phImage
+				label = ('[' + phTime + '] ' if phTime else '') + decodeHtml(phTitle)
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), label, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], 0, phImage, None))
-			if next: valTab.append(self.getNextItem('', next, name, 'Next'))
+			if next:
+				valTab.append(self.getNextItem('', next, name, 'Next'))
 			return valTab
 		if 'freeones-channels' == name:
 			COOKIEFILE = join(GetCookieDir(), 'freeones.cookie')
@@ -22020,7 +22036,7 @@ class Host(CBaseHostClass, XXXParser):
 				phImage = ''
 				idx = actorData.find(phUrl)
 				if idx >= 0:
-					chunk = actorData[idx-1200 if idx > 1200 else 0:idx+1800]
+					chunk = actorData[idx - 1200 if idx > 1200 else 0:idx + 1800]
 					# The theme lazy-loads images: plain src="..." is always the same
 					# generic placeholder.png, the real per-video thumbnail lives in
 					# data-src. Both were tried in one alternation, but a search finds
@@ -22054,7 +22070,6 @@ class Host(CBaseHostClass, XXXParser):
 			root_url = re.sub(r'/page/\d+/?$', '/', root_url)
 			full_ret = '%spage/%d' % (root_url.rstrip('/') + '/', page)
 			return self.listsItems(-1, full_ret, 'EROTICMV-clips')
-
 
 		if 'PORN4DAYS' == name:
 			printDBG('Host listsItems begin name=' + name)

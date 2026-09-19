@@ -4062,7 +4062,7 @@ class XXXParser:
 				r'(?:videoUrl|video_url|contentUrl|file)["\'\s:]+["\'](https?://[^"\']+)',
 			]
 			for pattern in patterns:
-				m = re.search(pattern, data, re.I|re.S)
+				m = re.search(pattern, data, re.I | re.S)
 				if m and m.group(1).strip():
 					videoUrl = m.group(1).strip()
 					printDBG('FAPNFUCK VIDEOURL: ' + videoUrl)
@@ -6978,6 +6978,7 @@ class XXXParser:
 					except Exception:
 						self.sessionEx.open(MessageBox, _("This model is offline."), type=MessageBox.TYPE_INFO, timeout=10)
 						return ''
+
 					def _bitrateKey(item):
 						try:
 							return int(item.get('bitrate', '0'))
@@ -7390,8 +7391,6 @@ class XXXParser:
 							return itemUrl
 			printDBG('FREEOMOVIE: no playable URL found in tabs')
 			return ''
-
-
 
 		return ''
 
