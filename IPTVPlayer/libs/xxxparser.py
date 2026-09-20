@@ -29,7 +29,8 @@ try:
 	from urllib.parse import unquote, urlencode
 	from urllib.request import urlopen
 except ImportError:
-	from urllib import urlopen, unquote, urlencode
+	from urllib import unquote, urlencode
+	from urllib2 import urlopen  # Python 2: urllib.urlopen() has no timeout argument
 from datetime import datetime
 from os.path import join
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
@@ -797,18 +798,28 @@ class XXXParser:
 
 		if parser == 'mjpg_stream':
 			try:
-				stream = urlopen(url)
-				_bytes = ''
+				stream = urlopen(url, timeout=15)
+				# raw bytes: b'' literals are plain str on Python 2, bytes on Python 3
+				_bytes = b''
 				while True:
-					_bytes += stream.read(1024)
-					a = _bytes.find('\xff\xd8')
-					b = _bytes.find('\xff\xd9')
-					if a != -1 and b != -1:
-						jpg = _bytes[a:b + 2]
-						_bytes = _bytes[b + 2:]
-						with open('/tmp/obraz.jpg', 'w') as titleFile:
-							titleFile.write(jpg)
-							return 'file:///tmp/obraz.jpg'
+					chunk = stream.read(1024)
+					if not chunk:
+						break # stream ended without a complete frame
+					_bytes += chunk
+					a = _bytes.find(b'\xff\xd8') # JPEG start marker
+					if a == -1:
+						_bytes = _bytes[-1:] # keep one byte, the marker may be split across two reads
+						continue
+					b = _bytes.find(b'\xff\xd9', a + 2) # end marker of *this* frame
+					if b == -1:
+						_bytes = _bytes[a:] # drop what precedes the frame start
+						if len(_bytes) > 2 * 1024 * 1024:
+							break # no end marker in sight, give up
+						continue
+					jpg = _bytes[a:b + 2]
+					with open('/tmp/obraz.jpg', 'wb') as titleFile:
+						titleFile.write(jpg)
+						return 'file:///tmp/obraz.jpg'
 			except Exception:
 				pass
 			return ''
