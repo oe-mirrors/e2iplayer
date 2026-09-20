@@ -129,6 +129,7 @@ def _parse_version_tuple(version):
 # the real browser, wait until it is fully rendered and POST the result back
 # here. Bodies are far too big for a GET query string, hence do_POST below.
 DEBUG_DUMP_MAX_BYTES = 30 * 1024 * 1024
+RELAY_PAGE_PATH = '/e2it.html'
 DEBUG_DUMP_LOG_MAX_CHARS = 500000
 DEBUG_DUMP_LOG_LINE_CHARS = 4000
 DEBUG_DUMP_DIR = os.path.join(tempfile.gettempdir(), 'mye2i_debug')
@@ -337,7 +338,7 @@ def redirect_handler_factory(url, token='', pin=''):
                     error = T('pin_locked')
                 elif hmac.compare_digest(given.encode('utf-8'), pin.encode('utf-8')):
                     trusted_clients.add(self.client_address[0])
-                    self._redirect('/e2it.html')
+                    self._redirect(RELAY_PAGE_PATH)
                     return False
                 else:
                     pin_failures[0] += 1
@@ -374,21 +375,21 @@ def redirect_handler_factory(url, token='', pin=''):
             # /response handler, which then crashes on the missing token
             # param. Query values must never influence routing.
             route = urlsplit(self.path).path
-            if route in ('/', '/index.html', '/e2it.html'):
+            if route in ('/', '/index.html', RELAY_PAGE_PATH):
                 # the page carries the session token: only for trusted clients
                 if not self._entry():
                     return
             if route == '/':
-                self._redirect('/e2it.html')
+                self._redirect(RELAY_PAGE_PATH)
                 return
-            if route == '/e2it.html':
+            if route == RELAY_PAGE_PATH:
                 self._reply(relay_page, 'text/html; charset=utf-8')
                 return
             if route == '/response':
                 if not self._authorized():
                     return
-                # (plain text: the reply repeats the request, it must never be rendered as a page)
-                self._reply(self.path)
+                # (a plain "OK": the reply must never repeat the request, that would reflect the token/query back)
+                self._reply('OK')
                 token = self._query().get('token', [None])[0]
                 if token is not None:
                     updateStatus('captcha_result', token)

@@ -29,12 +29,13 @@
     function looksLikeChallengePage() {
         try {
             if (document.getElementById('challenge-form')) return true;
-            if (document.title && document.title.indexOf('Just a moment') !== -1) return true;
-            var scripts = document.getElementsByTagName('script');
-            for (var i = 0; i < scripts.length; i++) {
-                if (scripts[i].text && scripts[i].text.indexOf('window._cf_chl_opt') !== -1) return true;
+            if (document.title?.includes('Just a moment')) return true;
+            for (const script of document.getElementsByTagName('script')) {
+                if (script.text?.includes('window._cf_chl_opt')) return true;
             }
-        } catch (e) {}
+        } catch (e) {
+            // a page that cannot be read is not treated as a challenge
+        }
         return false;
     }
 
@@ -55,13 +56,13 @@
 
     function getNetLog() {
         return new Promise(function (resolve) {
-            var id = Math.random().toString(36).slice(2);
+            var id = Math.random().toString(36).slice(2); // NOSONAR - only pairs a reply with its request, not a secret
             var timer = setTimeout(function () {
                 window.removeEventListener('message', onMsg);
                 resolve(null);
             }, 2000);
             function onMsg(event) {
-                if (event.source !== window || !event.data || event.data.__E2IDBG !== 'NETLOG' || event.data.id !== id) {
+                if (event.source !== window || event.origin !== window.location.origin || event.data?.__E2IDBG !== 'NETLOG' || event.data.id !== id) {
                     return;
                 }
                 clearTimeout(timer);
@@ -69,7 +70,7 @@
                 resolve(event.data.log);
             }
             window.addEventListener('message', onMsg);
-            window.postMessage({__E2IDBG: 'GET_NETLOG', id: id}, '*');
+            window.postMessage({__E2IDBG: 'GET_NETLOG', id: id}, '/');
         });
     }
 
@@ -79,7 +80,7 @@
                 chrome.runtime.sendMessage({
                     action: 'GET_COOKIE',
                     data: {idx: 0, type: 'url', url: document.location.href, partition_key: {}, with_partition_key: false}
-                }, function (resp) { resolve(resp && resp.cookies ? resp.cookies : []); });
+                }, function (resp) { resolve(resp?.cookies || []); });
             } catch (e) {
                 resolve([]);
             }
@@ -87,8 +88,6 @@
     }
 
     function snapshot() {
-        var pieces = [];
-
         var meta = {
             href: document.location.href,
             title: document.title,
@@ -99,40 +98,40 @@
             waitedMs: Date.now() - START,
             time: new Date().toISOString()
         };
-        pieces.push(send('meta', JSON.stringify(meta, null, 2)));
-
-        pieces.push(send('dom', '<!-- rendered DOM of ' + document.location.href + ' -->\n' + document.documentElement.outerHTML));
-
         var resources = [];
         try {
             performance.getEntriesByType('resource').forEach(function (r) {
                 resources.push(r.initiatorType + '\t' + Math.round(r.duration) + 'ms\t' + r.name);
             });
-        } catch (e) {}
-        pieces.push(send('resources', resources.join('\n')));
+        } catch (e) {
+            // no resource timing: the section is simply empty
+        }
 
-        pieces.push(getNetLog().then(function (netlog) {
-            if (netlog === null) {
-                return send('netlog', '(no fetch/XHR log - the page-world hook did not answer)');
-            }
-            var lines = netlog.map(function (e) {
-                return JSON.stringify(e);
-            });
-            return send('netlog', lines.join('\n'));
-        }));
-
-        pieces.push(getCookies().then(function (cookies) {
-            // values are cut short on purpose: names/flags are what matters
-            // when working out how a site tracks a session, and the log gets
-            // shared around.
-            var lines = cookies.map(function (c) {
-                return [c.name, c.domain, c.path, 'httpOnly=' + c.httpOnly, 'secure=' + c.secure,
-                    'sameSite=' + c.sameSite, 'value=' + String(c.value).slice(0, 40)].join('\t');
-            });
-            return send('cookies', lines.join('\n'));
-        }));
-
-        return Promise.all(pieces);
+        // sections go out in this order
+        return Promise.all([
+            send('meta', JSON.stringify(meta, null, 2)),
+            send('dom', '<!-- rendered DOM of ' + document.location.href + ' -->\n' + document.documentElement.outerHTML),
+            send('resources', resources.join('\n')),
+            getNetLog().then(function (netlog) {
+                if (netlog === null) {
+                    return send('netlog', '(no fetch/XHR log - the page-world hook did not answer)');
+                }
+                var lines = netlog.map(function (e) {
+                    return JSON.stringify(e);
+                });
+                return send('netlog', lines.join('\n'));
+            }),
+            getCookies().then(function (cookies) {
+                // values are cut short on purpose: names/flags are what matters
+                // when working out how a site tracks a session, and the log gets
+                // shared around.
+                var lines = cookies.map(function (c) {
+                    return [c.name, c.domain, c.path, 'httpOnly=' + c.httpOnly, 'secure=' + c.secure,
+                        'sameSite=' + c.sameSite, 'value=' + String(c.value).slice(0, 40)].join('\t');
+                });
+                return send('cookies', lines.join('\n'));
+            })
+        ]);
     }
 
     function finish() {

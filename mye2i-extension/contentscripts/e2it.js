@@ -12,18 +12,19 @@ function e2ilog(txt) {
 function e2iToken() {
     try {
         var meta = document.querySelector('meta[name="mye2i-token"]');
-        if (meta && meta.content) {
+        if (meta?.content) {
             return meta.content;
         }
         return new URLSearchParams(window.location.search).get('t') || '';
     } catch (e) {
+        // no readable address/meta tag: no token
         return '';
     }
 }
 
-function e2iUrl(path, query) {
+function e2iUrl(path, query = '') {
     var u = window.location;
-    var q = query || '';
+    var q = query;
     var token = e2iToken();
     if (token) {
         q += (q ? '&' : '') + 't=' + encodeURIComponent(token);
@@ -42,7 +43,9 @@ function e2iText(key, english, arg) {
         if (typeof texts[key] === 'string' && texts[key]) {
             text = texts[key];
         }
-    } catch (e) {}
+    } catch (e) {
+        // no texts of the box: the English ones given by the caller stay
+    }
     return arg === undefined ? text : text.replace('%s', arg);
 }
 
@@ -53,7 +56,9 @@ function e2iStatus(text) {
         if (elem) {
             elem.textContent = text;
         }
-    } catch (e) {}
+    } catch (e) {
+        // the status line is optional
+    }
 }
 
 // Reports the own version to mye2iserver.py right away, so its version check
@@ -62,9 +67,11 @@ function e2iStatus(text) {
     try {
         var v = chrome.runtime.getManifest().version;
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", e2iUrl("/version", "v=" + encodeURIComponent(v)));
+        xhr.open("GET", e2iUrl("/version", "v=" + encodeURIComponent(v))); // NOSONAR - the address is built from this relay page's own origin (the box)
         xhr.send();
-    } catch (e) {}
+    } catch (e) {
+        // an old server without /version simply never learns the version
+    }
 })();
 
 chrome.runtime.onMessage.addListener(
@@ -95,7 +102,7 @@ chrome.runtime.onMessage.addListener(
                 return true;
             }
 
-            if (request.action === "SEND_RESPONSE" && request.data && request.data.token && request.data.captchaId) {
+            if (request.action === "SEND_RESPONSE" && request.data?.token && request.data.captchaId) {
                 var xhr = new XMLHttpRequest();
                 var responseUrl = e2iUrl("/response", "c=" + encodeURIComponent(request.data.captchaId) + "&token=" + encodeURIComponent(request.data.token));
                 xhr.open("GET", responseUrl);
@@ -180,7 +187,9 @@ function e2i_showExtensionVersion() {
         badge.style.cssText = 'position:fixed;top:8px;right:8px;background:#222;color:#fff;padding:6px 12px;border-radius:8px;font-family:sans-serif;font-size:14px;z-index:2147483647;box-shadow:0 2px 6px rgba(0,0,0,0.4);';
         badge.textContent = 'MyE2i Extension v' + chrome.runtime.getManifest().version;
         document.body.appendChild(badge);
-    } catch (e) {}
+    } catch (e) {
+        // the badge is only a hint
+    }
 }
 
 document.addEventListener('readystatechange', function () {

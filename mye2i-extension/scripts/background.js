@@ -4,14 +4,20 @@ function e2ilog(...args) {
     console.log("[MyE2i-DEBUG bg]", ...args);
 }
 
+// Match pattern of the local relay page (e2it.html) that mye2iserver.py serves on the box, in the
+// LAN over plain http - it is not a link to any website.
+const E2IT_TAB_URL = "http://*/e2it.html*"; // NOSONAR
+
 // Failures worth seeing on the box (not just in the extension's own console):
 // forwarded to the open e2it.html tab, which posts them to mye2iserver.py.
 function e2iBoxLog(msg) {
     e2ilog(msg);
-    chrome.tabs.query({url: ["http://*/e2it.html*"]}, function (tabs) {
+    chrome.tabs.query({url: [E2IT_TAB_URL]}, function (tabs) {
         if (tabs !== undefined && tabs.length > 0) {
             chrome.tabs.sendMessage(tabs[0].id, {action: "DEBUG_LOG", msg: '[bg] ' + msg}, function () {
-                void chrome.runtime.lastError;
+                if (chrome.runtime.lastError) {
+                    // reading it is what keeps Chrome from logging "Unchecked runtime.lastError"
+                }
             });
         }
     });
@@ -51,16 +57,16 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 // fire there - the Firefox build (build_release.py --firefox) leaves them
 // out and this listener injects the same files as soon as a top-level
 // navigation with an "#e2it" fragment commits.
-const IS_FIREFOX = typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Firefox') !== -1;
+const IS_FIREFOX = typeof navigator !== 'undefined' && navigator.userAgent.includes('Firefox');
 
 if (IS_FIREFOX) {
     chrome.webNavigation.onCommitted.addListener(async (details) => {
-        if (details.frameId !== 0 || details.url.indexOf('#e2it') === -1) {
+        if (details.frameId !== 0 || !details.url.includes('#e2it')) {
             return;
         }
         const target = {tabId: details.tabId};
         try {
-            if (details.url.indexOf('#e2itdbg') !== -1) {
+            if (details.url.includes('#e2itdbg')) {
                 await chrome.scripting.executeScript({
                     target,
                     files: ['contentscripts/dbgHook.js'],
@@ -206,7 +212,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         }).then(sendResponse);
     }
 
-    if (msg.action === "CLOSE_ME" && sender.tab && sender.tab.id) {
+    if (msg.action === "CLOSE_ME" && sender.tab?.id) {
         chrome.tabs.remove(sender.tab.id);
         sendResponse('OK');
     }
@@ -269,11 +275,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         // Debug lines from the challenge tab go to the local e2it.html tab (same relay
         // pattern as SEND_RESPONSE), which passes them on to mye2iserver.py.
         chrome.tabs.query({
-            url: ["http://*/e2it.html*"]
+            url: [E2IT_TAB_URL]
         }, function (tabs) {
             if (tabs !== undefined && tabs.length > 0) {
-                for (var i = 0; i < tabs.length; i++) {
-                    chrome.tabs.sendMessage(tabs[i].id, {
+                for (const tab of tabs) {
+                    chrome.tabs.sendMessage(tab.id, {
                         action: "DEBUG_LOG",
                         msg: msg.msg
                     });
@@ -292,7 +298,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             // do) - inject right away in that case. The probe guards itself
             // against running twice.
             chrome.tabs.get(tabId, (tab) => {
-                if (tab && tab.status === 'complete') {
+                if (tab?.status === 'complete') {
                     dbgInjectProbe(tabId);
                 }
             });
@@ -309,7 +315,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         // one section of the debug snapshot: hand it to the still-open local
         // e2it.html tab, which POSTs it to mye2iserver.py (/debugdump).
         chrome.tabs.query({
-            url: ["http://*/e2it.html*"]
+            url: [E2IT_TAB_URL]
         }, function (tabs) {
             if (tabs === undefined || tabs.length === 0) {
                 sendResponse('NO_E2IT_TAB');
@@ -332,7 +338,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         let callbackUrl = "" + response.callbackUrl + "";
         if (callbackUrl.includes("://") && callbackUrl.endsWith('/')) {
             callbackUrl += "response?" + "c=" + response.captchaId + "&token=" + response.token;
-            var xhr = new XMLHttpRequest();
+            const xhr = new XMLHttpRequest();
             xhr.onload = function () {
                 e2ilog(Date.now() + " | response send OK");
                 sendResponse('OK');
@@ -346,13 +352,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             xhr.send();
         } else {
             chrome.tabs.query({
-                url: [
-                    "http://*/e2it.html*"
-                ]
+                url: [E2IT_TAB_URL]
             }, function (tabs) {
                 if (tabs !== undefined && tabs.length > 0) {
-                    for (var i = 0; i < tabs.length; i++) {
-                        chrome.tabs.sendMessage(tabs[i].id, {
+                    for (const tab of tabs) {
+                        chrome.tabs.sendMessage(tab.id, {
                             action: "SEND_RESPONSE",
                             data: {captchaId: response.captchaId, token: response.token}
                         });

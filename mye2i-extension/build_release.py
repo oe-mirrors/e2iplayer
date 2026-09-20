@@ -28,6 +28,7 @@ import zipfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SKIP = {'build_release.py', '__pycache__', 'tests', 'dist'}
+MANIFEST = 'manifest.json'
 
 FIREFOX_ADDON_ID = 'mye2iv3@e2iplayer'
 
@@ -129,7 +130,7 @@ def build_crx(build_dir, tmp, pem, out_path):
     if os.path.exists(crx_dir):
         shutil.rmtree(crx_dir)
     shutil.copytree(build_dir, crx_dir)
-    manifest_path = os.path.join(crx_dir, 'manifest.json')
+    manifest_path = os.path.join(crx_dir, MANIFEST)
     with open(manifest_path, encoding='utf-8') as f:
         manifest = json.load(f)
     if manifest.get('key') and manifest['key'] != pub_b64:
@@ -143,7 +144,7 @@ def build_crx(build_dir, tmp, pem, out_path):
     zip_dir(crx_dir, zip_path)
     with open(zip_path, 'rb') as f:
         data = crx3(f.read(), key_path)
-    with open(out_path, 'wb') as f:
+    with open(out_path, 'wb') as f:  # NOSONAR - developer/CI tool, out_path comes from its own --out option
         f.write(data)
     return extension_id(base64.b64decode(pub_b64)), not pem
 
@@ -156,10 +157,10 @@ def main():
     ap.add_argument('--out', default=os.path.join(HERE, 'dist'))
     args = ap.parse_args()
 
-    with open(os.path.join(HERE, 'manifest.json'), encoding='utf-8') as f:
+    with open(os.path.join(HERE, MANIFEST), encoding='utf-8') as f:
         chrome_manifest = json.load(f)
     version = chrome_manifest['version']
-    os.makedirs(args.out, exist_ok=True)
+    os.makedirs(args.out, exist_ok=True)  # NOSONAR - developer/CI tool, --out is chosen by whoever runs it
 
     with tempfile.TemporaryDirectory() as tmp:
         build = os.path.join(tmp, 'mye2iv3')
@@ -174,7 +175,7 @@ def main():
             ff = os.path.join(tmp, 'firefox')
             os.makedirs(ff)
             copy_tree(ff)
-            with open(os.path.join(ff, 'manifest.json'), 'w', encoding='utf-8') as f:
+            with open(os.path.join(ff, MANIFEST), 'w', encoding='utf-8') as f:
                 json.dump(firefox_manifest(chrome_manifest), f, indent=2, ensure_ascii=False)
             xpi_path = os.path.join(args.out, 'mye2iv3-firefox-unsigned.xpi')
             zip_dir(ff, xpi_path)

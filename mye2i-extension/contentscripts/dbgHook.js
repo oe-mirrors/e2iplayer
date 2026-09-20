@@ -16,9 +16,13 @@
     var LOG = [];
 
     function cut(value) {
-        var s;
+        var s = '';
         try {
-            s = (typeof value === 'string') ? value : (value == null ? '' : String(value));
+            if (typeof value === 'string') {
+                s = value;
+            } else if (value != null) {
+                s = String(value);
+            }
         } catch (e) {
             s = '';
         }
@@ -43,7 +47,9 @@
                 });
                 return cut(parts.join('&'));
             }
-        } catch (e) {}
+        } catch (e) {
+            // an unreadable body is only shown by its type below
+        }
         return '[' + Object.prototype.toString.call(body) + ']';
     }
 
@@ -64,9 +70,9 @@
             var entry = push({
                 t: Date.now(),
                 kind: 'fetch',
-                method: ((init && init.method) || (input && input.method) || 'GET').toUpperCase(),
-                url: cut(typeof input === 'string' ? input : (input && input.url) || input),
-                reqBody: bodyToText(init && init.body)
+                method: (init?.method || input?.method || 'GET').toUpperCase(),
+                url: cut(typeof input === 'string' ? input : input?.url || input),
+                reqBody: bodyToText(init?.body)
             });
             var promise = origFetch.apply(this, arguments);
             promise.then(function (resp) {
@@ -87,7 +93,7 @@
     }
 
     var XHR = window.XMLHttpRequest;
-    if (XHR && XHR.prototype) {
+    if (XHR?.prototype) {
         var origOpen = XHR.prototype.open;
         var origSend = XHR.prototype.send;
         XHR.prototype.open = function (method, url) {
@@ -120,10 +126,11 @@
 
     // The isolated-world probe (dbgProbe.js) cannot read this world's
     // variables, so it asks for the log through window.postMessage.
+    // (same window only: checked by source and origin, answered to that origin, never '*')
     window.addEventListener('message', function (event) {
-        if (event.source !== window || !event.data || event.data.__E2IDBG !== 'GET_NETLOG') {
+        if (event.source !== window || event.origin !== window.location.origin || event.data?.__E2IDBG !== 'GET_NETLOG') {
             return;
         }
-        window.postMessage({__E2IDBG: 'NETLOG', id: event.data.id, log: LOG}, '*');
+        window.postMessage({__E2IDBG: 'NETLOG', id: event.data.id, log: LOG}, '/');
     });
 })();

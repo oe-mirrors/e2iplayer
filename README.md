@@ -20,13 +20,17 @@ This plugin was developed with a lot of 💞 for the Enigma2 community. You are 
 [![TESTS](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tests.yml)
 [![AUTOTAG](https://github.com//oe-mirrors/e2iplayer/actions/workflows/tag_release.yml/badge.svg)](https://github.com/oe-mirrors/e2iplayer/actions/workflows/tag_release.yml)
 
-[![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
+[![Plugin Version](https://img.shields.io/github/v/tag/oe-mirrors/e2iplayer?filter=v*&label=Latest%20Version&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/tags)
 [![Latest Release](https://img.shields.io/github/release-date/oe-mirrors/e2iplayer?label=From&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/latest)
 [![GitHub all releases](https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/total.svg?label=Downloads)](https://github.com/oe-mirrors/e2iplayer/releases)
 [![Github last commit](https://img.shields.io/github/last-commit/oe-mirrors/e2iplayer)](https://github.com/oe-mirrors/e2iplayer)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/y/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/m/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/w/oe-mirrors/e2iplayer.svg?label=commits)](https://github.com/oe-mirrors/e2iplayer/commits)
+
+[![MyE2i Extension Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Foe-mirrors%2Fe2iplayer%2Fpython3%2Fmye2i-extension%2Fmanifest.json&query=%24.version&prefix=v&label=MyE2i%20Extension&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/tag/mye2i-extension)
+[![MyE2i Extension From](https://img.shields.io/github/last-commit/oe-mirrors/e2iplayer/python3?path=mye2i-extension&label=From&color=darkviolet)](https://github.com/oe-mirrors/e2iplayer/releases/tag/mye2i-extension)
+[![MyE2i Extension Downloads](https://img.shields.io/github/downloads/oe-mirrors/e2iplayer/mye2i-extension/total?label=Downloads)](https://github.com/oe-mirrors/e2iplayer/releases/tag/mye2i-extension)
 
 [![GitHub stars](https://img.shields.io/github/stars/oe-mirrors/e2iplayer?style=flat)](https://github.com/oe-mirrors/e2iplayer/stargazers)
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/oe-mirrors/e2iplayer/pulls)

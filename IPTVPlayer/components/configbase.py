@@ -385,9 +385,14 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self["config"].list = self.list
         self["config"].setList(self.list)
 
+    def _getAllConfigItems(self):
+        # every entry that isChanged()/save/cancel act on - the list on screen, unless a subclass shows
+        # only part of its settings at a time
+        return self["config"].list
+
     def isChanged(self):
         bChanged = False
-        for item in self["config"].list:
+        for item in self._getAllConfigItems():
             if len(item) > 1 and item[1].isChanged():
                 bChanged = True
                 break
@@ -418,7 +423,7 @@ class ConfigBaseWidget(Screen, ConfigListScreen):
         self.saveAndClose()
 
     def saveOrCancel(self, operation="save"):
-        for item in self["config"].list:
+        for item in self._getAllConfigItems():
             if len(item) > 1:
                 if "save" == operation:
                     item[1].save()
