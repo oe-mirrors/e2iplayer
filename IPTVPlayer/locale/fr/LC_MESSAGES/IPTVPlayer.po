@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: iptvplayer-for-e 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 19:05+0000\n"
+"POT-Creation-Date: 2026-09-20 22:20+0000\n"
 "PO-Revision-Date: 2018-07-28 16:39+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -147,6 +147,13 @@ msgid ""
 " Host country: %s, your country: %s"
 msgstr "%s utilise des mesures de « géoblocage » pour vous empêcher d’accéder à des services d’en dehors du territoire de %s."
 
+#, python-format
+msgid "(%d YouTube channel(s) could not be read)"
+msgstr ""
+
+msgid "(no videos found)"
+msgstr ""
+
 msgid "(nothing here yet)"
 msgstr ""
 
@@ -209,6 +216,10 @@ msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr ""
 
 #, fuzzy
+msgid "----- Show or hide Anime / Hentai -----"
+msgstr "—————Autre—————"
+
+#, fuzzy
 msgid "----- Show or hide Live Cams -----"
 msgstr "—————Autre—————"
 
@@ -217,6 +228,10 @@ msgstr ""
 
 msgid "----- XXXList Configuration -----"
 msgstr ""
+
+#, fuzzy
+msgid "----------  Anime / Hentai  ----------"
+msgstr "—————Autre—————"
 
 #, fuzzy
 msgid "----------  Live Cams  ----------"
@@ -252,6 +267,9 @@ msgstr "—Autre—"
 msgid "0-9"
 msgstr ""
 
+msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
+msgstr ""
+
 msgid "12 hour format"
 msgstr ""
 
@@ -270,7 +288,13 @@ msgstr "16:9 Letterbox"
 msgid "16:9 always"
 msgstr "16:9 toujours"
 
+msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
+msgstr ""
+
 msgid "24 hour format"
+msgstr ""
+
+msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
 msgstr ""
 
 msgid "4:3 Letterbox"
@@ -322,6 +346,9 @@ msgid "Accept"
 msgstr "Accepter"
 
 msgid "Access Forbidden"
+msgstr ""
+
+msgid "Access denied - open the page with the QR code or the code shown on the receiver screen."
 msgstr ""
 
 #, fuzzy
@@ -669,6 +696,13 @@ msgstr "Contourner le géoblocage pour VODs (il peut être illégal) :"
 msgid "CME SAE"
 msgstr ""
 
+msgid "Cache"
+msgstr ""
+
+#, python-format
+msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
+msgstr ""
+
 #, python-format
 msgid ""
 "Can not get mount points - cmd mount failed.\n"
@@ -683,6 +717,10 @@ msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Captcha"
+msgstr "Captcha"
+
+#, fuzzy
+msgid "Captcha error:"
 msgstr "Captcha"
 
 msgid ""
@@ -720,6 +758,9 @@ msgstr "Catégories"
 
 msgid "Change active movie player"
 msgstr "Changer le lecteur de film actif"
+
+msgid "Change own pin"
+msgstr ""
 
 msgid "Channel"
 msgstr "Chaîne"
@@ -773,6 +814,9 @@ msgstr ""
 msgid "Closing. Please wait..."
 msgstr "Fermeture. S'il vous plaît, attendez..."
 
+msgid "Code"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr ""
 
@@ -798,6 +842,10 @@ msgstr ""
 #, fuzzy
 msgid "Config"
 msgstr "Configurer l’hôte"
+
+#, python-format
+msgid "Config folder \"%s\" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved."
+msgstr ""
 
 msgid "Configuration"
 msgstr "Configuration"
@@ -835,6 +883,9 @@ msgstr "La connexion au serveur a échoué!"
 #, fuzzy
 msgid "Content not available"
 msgstr "Aucun lien valide n'est disponible."
+
+msgid "Continue"
+msgstr ""
 
 msgid "Continue downloading"
 msgstr "Continuer le téléchargement"
@@ -954,6 +1005,21 @@ msgstr "Option de déboggage défini vers la console - rien à afficher"
 msgid "Debug option set to debugfile, but file does not exist - nothing to display"
 msgstr "Option de déboggage définie sur debugfile, mais le fichier n’existe pas - rien à afficher"
 
+#, fuzzy
+msgid "Debug snapshot"
+msgstr "Journaux de débogage"
+
+msgid "Debug snapshot (for site development)"
+msgstr ""
+
+#, python-format
+msgid "Debug snapshot: \"%s\" received by the box"
+msgstr ""
+
+#, python-format
+msgid "Debug snapshot: sending \"%s\" failed"
+msgstr ""
+
 #, python-format
 msgid "Decode file [%s] problem."
 msgstr "Problème de décodage du fichier [%s]."
@@ -999,19 +1065,77 @@ msgstr "Ajouter un élément aux favoris"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid "Delete JS cache after (days, 0 = never)"
+msgstr ""
+
+#, fuzzy
+msgid "Delete JS cache now"
+msgstr "Historique de recherche"
+
+#, fuzzy
+msgid "Delete all cache files now"
+msgstr "Effacer le fichier de log"
+
+#, fuzzy
+msgid "Delete all config files now"
+msgstr "Effacer le fichier de log"
+
+msgid "Delete cookies cache after (days, 0 = never)"
+msgstr ""
+
+msgid "Delete cookies cache now"
+msgstr ""
+
 #, fuzzy
 msgid "Delete entry"
 msgstr "Historique de recherche"
 
+msgid "Delete favourites and watched status now"
+msgstr ""
+
+msgid "Delete host order and groups now"
+msgstr ""
+
 msgid "Delete log file"
 msgstr "Effacer le fichier de log"
+
+msgid "Delete movie metadata cache after (days, 0 = never)"
+msgstr ""
+
+msgid "Delete movie metadata cache now"
+msgstr ""
+
+#, fuzzy
+msgid "Delete movie player preferences now"
+msgstr "Sélectionner le lecteur de film"
+
+#, fuzzy
+msgid "Delete now"
+msgstr "Supprimer"
 
 #, fuzzy
 msgid "Delete search history"
 msgstr "Historique de recherche"
 
+#, fuzzy
+msgid "Delete search history now"
+msgstr "Historique de recherche"
+
+msgid "Delete subtitles cache after (days, 0 = never)"
+msgstr ""
+
+#, fuzzy
+msgid "Delete subtitles cache now"
+msgstr "Sélectionner la piste de sous-titres"
+
+msgid "Delete thumbnails cache now"
+msgstr ""
+
 msgid "Description:"
 msgstr "Description :"
+
+msgid "Detail/expert mode"
+msgstr ""
 
 msgid "Developers:"
 msgstr "Développeurs:"
@@ -1071,6 +1195,23 @@ msgstr "Voir toutes les langues"
 msgid "Display thumbnails"
 msgstr "Afficher les miniatures"
 
+msgid "Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."
+msgstr ""
+
+msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
+msgstr ""
+
+msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
+msgstr ""
+
+#, fuzzy, python-format
+msgid "Do you really want to delete the %s now?"
+msgstr "Êtes-vous sûr de vouloir effacer le fichier « %s »?"
+
+#, fuzzy
+msgid "Do you really want to delete the thumbnails cache now?"
+msgstr "Êtes-vous sûr de vouloir effacer le fichier « %s »?"
+
 msgid "Do you want to finish?"
 msgstr "Voulez-vous terminer?"
 
@@ -1084,6 +1225,9 @@ msgstr "Documentaires"
 #, fuzzy
 msgid "Documentary Movies"
 msgstr "Documentaires"
+
+msgid "Done - the result was sent to the box, you can close this page."
+msgstr ""
 
 msgid "Download"
 msgstr "Télécharger"
@@ -1133,6 +1277,10 @@ msgstr "Gestionnaire de Téléchargement"
 
 msgid "Download manager is not initialized"
 msgstr "Le gestionnaire de téléchargement n'est pas initialisé"
+
+#, fuzzy
+msgid "Download new version"
+msgstr "Gestionnaire de Téléchargement"
 
 #, fuzzy
 msgid "Download notification duration"
@@ -1221,6 +1369,10 @@ msgstr "Durée"
 #, python-format
 msgid "Duration: %s"
 msgstr "Durée : %s"
+
+#, fuzzy
+msgid "E2iPlayer"
+msgstr "Lecteur %s"
 
 #, fuzzy
 msgid "E2iPlayer - keyboard settings"
@@ -1374,6 +1526,9 @@ msgstr ""
 msgid "Enter pin"
 msgstr "Entrer le code PIN"
 
+msgid "Enter the code shown in the title of the window on your receiver's screen (or scan the QR code shown there - no code needed then):"
+msgstr ""
+
 msgid "Enter the text"
 msgstr ""
 
@@ -1393,6 +1548,9 @@ msgstr "Épisodes"
 #, fuzzy
 msgid "Episodes:"
 msgstr "Épisodes"
+
+msgid "Error"
+msgstr ""
 
 #, fuzzy, python-format
 msgid "Error code: %s\n"
@@ -1448,6 +1606,10 @@ msgstr "Une exception s'est produite"
 
 msgid "Error occurs during download."
 msgstr "Une erreur se produit pendant le téléchargement."
+
+#, fuzzy
+msgid "Error occurs:"
+msgstr "Une exception s'est produite"
 
 #, python-format
 msgid "Error reading file \"%s\".\n"
@@ -1648,6 +1810,9 @@ msgstr ""
 msgid "Find item"
 msgstr ""
 
+msgid "Find out more."
+msgstr ""
+
 #, fuzzy
 msgid "First Page"
 msgstr "Page suivante"
@@ -1666,6 +1831,10 @@ msgid "Fix jump target"
 msgstr ""
 
 msgid "Folder for cache data"
+msgstr "Dossier pour les données du cache"
+
+#, fuzzy
+msgid "Folder for config data"
 msgstr "Dossier pour les données du cache"
 
 msgid "Folder for temporary data"
@@ -1755,8 +1924,17 @@ msgstr "Allemand"
 msgid "German proxy server url"
 msgstr "URL du serveur proxy allemand"
 
+msgid "Get Cloudflare job"
+msgstr ""
+
 msgid "Get EPG"
 msgstr "Obtenir EPG"
+
+msgid "Get captcha job"
+msgstr ""
+
+msgid "Get cookies job"
+msgstr ""
 
 msgid "Get languages failed!"
 msgstr "Obtenir les langues a échoué!"
@@ -1845,6 +2023,9 @@ msgstr "Page d'accueil"
 msgid "Horror"
 msgstr ""
 
+msgid "Host"
+msgstr ""
+
 #, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr ""
@@ -1864,10 +2045,16 @@ msgstr "Paramètres des hôtes"
 msgid "Hosts settings"
 msgstr "Paramètres des hôtes"
 
+msgid "How to solve a captcha:"
+msgstr ""
+
 msgid "Humanitarian"
 msgstr ""
 
 msgid "Hungarian"
+msgstr ""
+
+msgid "I am no robot"
 msgstr ""
 
 #, fuzzy
@@ -2021,6 +2208,9 @@ msgstr ""
 msgid "JDownloader script finished."
 msgstr "Échec du téléchargement des sous-titres."
 
+msgid "JS cache"
+msgstr ""
+
 msgid "Jobs & Positions"
 msgstr ""
 
@@ -2121,6 +2311,10 @@ msgstr ""
 
 msgid "Latest update"
 msgstr "Dernière mise à jour"
+
+#, fuzzy
+msgid "Latest video"
+msgstr "Derniers ajoutés"
 
 msgid "Latest videos from the channels you are subscribed to."
 msgstr ""
@@ -2267,6 +2461,10 @@ msgstr ""
 
 msgid "Logs"
 msgstr "Journaux"
+
+#, fuzzy
+msgid "Long list"
+msgstr "Le plus long"
 
 msgid "Longest"
 msgstr "Le plus long"
@@ -2453,7 +2651,22 @@ msgstr "Liste des films"
 msgid "My subscriptions"
 msgstr "Description :"
 
+msgid "MyE2i - how to solve a captcha"
+msgstr ""
+
 msgid "MyE2i Cloudflare solution"
+msgstr ""
+
+msgid "MyE2i browser check solution"
+msgstr ""
+
+msgid "MyE2i debug snapshot received - see the debug log."
+msgstr ""
+
+msgid "MyE2i extension is outdated - please update it."
+msgstr ""
+
+msgid "MyE2i extension: increase security"
 msgstr ""
 
 msgid "MyE2i reCAPTCHA solution"
@@ -2486,6 +2699,9 @@ msgstr ""
 msgid "Name:"
 msgstr "Nom :"
 
+msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
+msgstr ""
+
 msgid "Netflix"
 msgstr ""
 
@@ -2511,6 +2727,12 @@ msgstr "Les nouvelles icônes ne seront pas disponibles."
 
 msgid "Newest Episodes"
 msgstr "Nouveaux épisodes"
+
+msgid "Newest videos (all YouTube channels)"
+msgstr ""
+
+msgid "Newest videos of a YouTube channel in a group"
+msgstr ""
 
 msgid "News"
 msgstr "Actualités"
@@ -2558,6 +2780,12 @@ msgstr "Aucun matériel en attente dans la file d'attente de téléchargement"
 
 #, python-format
 msgid "No results found for: %s"
+msgstr ""
+
+msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
+msgstr ""
+
+msgid "No storage found for the downloads location. Where would you like to save your downloads?"
 msgstr ""
 
 msgid "No subtitle file found in the archive."
@@ -2669,6 +2897,9 @@ msgid "PLAY"
 msgstr ""
 
 msgid "PREVIOUS/NEXT"
+msgstr ""
+
+msgid "Page not found - please check the address."
 msgstr ""
 
 msgid "Page:"
@@ -2788,6 +3019,9 @@ msgstr ""
 msgid "Please set valid %s in the %s configuration."
 msgstr "Configuration des services IPTVPlayer"
 
+msgid "Please solve to continue downloads with:"
+msgstr ""
+
 #, python-format
 msgid "Please visit \"%s\" and confirm that you are human."
 msgstr "Visitez \"%s\" et confirmez que vous êtes humain."
@@ -2801,6 +3035,10 @@ msgstr "Veuillez patienter - téléchargement des données d'initialisation."
 
 msgid "Please wait for initialization data."
 msgstr "Veuillez attendre les données d'initialisation."
+
+#, fuzzy
+msgid "Please wait..."
+msgstr "Fermeture. S'il vous plaît, attendez..."
 
 #, fuzzy
 msgid "Podcasts"
@@ -2967,6 +3205,10 @@ msgstr "Rafraîchir"
 
 msgid "Refreshing"
 msgstr "Rafraîchissement"
+
+#, python-format
+msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
+msgstr ""
 
 msgid "Release"
 msgstr "Sortie"
@@ -3291,6 +3533,9 @@ msgstr "Envoyer"
 msgid "Send data to enc-dec.app on every link resolve?"
 msgstr ""
 
+msgid "Sending the result to the box failed."
+msgstr ""
+
 msgid "Series"
 msgstr "Séries"
 
@@ -3330,6 +3575,14 @@ msgstr "Définir le nom du fichier"
 msgid "Set host, username, password in host config"
 msgstr ""
 
+#, fuzzy
+msgid "Set own configuration pin code"
+msgstr "Configuration des services"
+
+#, fuzzy
+msgid "Set own pin"
+msgstr "Définir le code PIN"
+
 msgid "Set pin code"
 msgstr "Définir le code PIN"
 
@@ -3338,6 +3591,9 @@ msgstr "Définir regardé"
 
 msgid "Settings"
 msgstr "Réglages"
+
+msgid "Settings screen layout"
+msgstr ""
 
 msgid "Shift"
 msgstr ""
@@ -3767,6 +4023,12 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
 msgstr ""
 
+msgid "The QR code leads to the wiki page with pictures and the extension download."
+msgstr ""
+
+msgid "The YouTube channels of this group have no videos."
+msgstr ""
+
 msgid "The YouTube video ID is invalid."
 msgstr "L'ID vidéo YouTube n'est pas valide."
 
@@ -3785,6 +4047,9 @@ msgid "The color of the viewed item"
 msgstr "La couleur de l'article visualisé"
 
 msgid "The connection limit for your weeb.tv account has been reached."
+msgstr ""
+
+msgid "The data is too large."
 msgstr ""
 
 #, python-format
@@ -3809,6 +4074,9 @@ msgstr ""
 msgid "The element already exists in User Links."
 msgstr "Le même élément existe déjà dans ce groupe."
 
+msgid "The feed of these channels could not be read - press OK to try again."
+msgstr ""
+
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
@@ -3825,6 +4093,9 @@ msgstr ""
 "L'hôte %s nécessite une inscription.\n"
 "Veuillez remplir votre login et votre mot de passe dans la configuration de l'hôte. Disponible sous le bouton bleu."
 
+msgid "The latest uploads of all YouTube channels in this group, newest first."
+msgstr ""
+
 msgid "The number of items in the search history"
 msgstr "Le nombre d'éléments dans l'historique de recherche."
 
@@ -3833,6 +4104,9 @@ msgid ""
 "The playback buffer has been moved to the download manager.\n"
 "It will be saved in the file:\n"
 "\"%s\""
+msgstr ""
+
+msgid "The request has no valid length."
 msgstr ""
 
 msgid "The same item already exists in this group."
@@ -3902,7 +4176,16 @@ msgstr "Cet hôte a déjà été ajouté à ce groupe."
 msgid "This model is offline."
 msgstr ""
 
+msgid "This page has no video (blog article)."
+msgstr ""
+
+msgid "This room is currently offline or unavailable."
+msgstr ""
+
 msgid "This room is offline. Try again later!"
+msgstr ""
+
+msgid "This session has no code - scan the QR code on the receiver screen."
 msgstr ""
 
 msgid "This show is private. Try again later!"
@@ -3910,6 +4193,10 @@ msgstr ""
 
 #, fuzzy
 msgid "This video has been deleted."
+msgstr "Le fichier de débogage a été supprimé"
+
+#, fuzzy
+msgid "This video is Premium-only content."
 msgstr "Le fichier de débogage a été supprimé"
 
 msgid "This video is a private video."
@@ -3951,6 +4238,9 @@ msgstr ""
 
 msgid "Today"
 msgstr "Aujourd'hui"
+
+msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
+msgstr ""
 
 msgid "Top"
 msgstr "Top"
@@ -4112,6 +4402,13 @@ msgstr "Utiliser le cache des liens"
 msgid "Use login"
 msgstr "login"
 
+#, fuzzy
+msgid "Use own pin for configuration"
+msgstr "Protection de la configuration par code PIN"
+
+msgid "Use own pin instead of the player pin"
+msgstr ""
+
 msgid "Use proxy server:"
 msgstr "Utiliser le serveur proxy :"
 
@@ -4239,6 +4536,9 @@ msgstr "Clavier virtuel"
 msgid "Virtual Keyboard type"
 msgstr "Clavier virtuel"
 
+msgid "Waiting for the result ..."
+msgstr ""
+
 #, python-format
 msgid "Waiting search thread to stop, please wait (%d)"
 msgstr "En attente de la fin du thread de recherche, merci de patienter (%d)"
@@ -4272,6 +4572,9 @@ msgstr "Le composant Web a été réinitialisé, les threads suivants fonctionne
 msgid "Web interface version"
 msgstr "Version de l'interface Web"
 
+msgid "What's happening?"
+msgstr ""
+
 msgid "When the maximum is reached"
 msgstr ""
 
@@ -4302,6 +4605,10 @@ msgstr ""
 
 msgid "Wrong answer."
 msgstr "Mauvaise réponse."
+
+#, fuzzy
+msgid "Wrong code."
+msgstr "Mauvais index."
 
 msgid "Wrong format of rar archive."
 msgstr "Mauvais format d'archive rar."
@@ -4397,7 +4704,17 @@ msgstr "Vous ne devez jamais effectuer d'opérations d'E/S de bloc dans le __ini
 msgid "YouTube User Links Editor"
 msgstr ""
 
+msgid "YouTube channels: original order"
+msgstr ""
+
+msgid "YouTube channels: sort by newest upload"
+msgstr ""
+
 msgid "Your 'Watch later' playlist."
+msgstr ""
+
+#, python-format
+msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr ""
 
 msgid "Your search entry"
@@ -4497,7 +4814,13 @@ msgstr "Enregistrer les modifications ?"
 msgid "cobalt"
 msgstr ""
 
+msgid "cookies cache"
+msgstr ""
+
 msgid "could not run the probe"
+msgstr ""
+
+msgid "debug"
 msgstr ""
 
 msgid "default"
@@ -4570,6 +4893,9 @@ msgstr "horizontale"
 msgid "host"
 msgstr "hôte :"
 
+msgid "host order and groups"
+msgstr ""
+
 msgid "host:"
 msgstr "hôte :"
 
@@ -4628,8 +4954,18 @@ msgstr "marron"
 msgid "medium"
 msgstr "moyen"
 
+msgid "movie metadata cache"
+msgstr ""
+
+#, fuzzy
+msgid "movie player preferences"
+msgstr "Afficher IPTVPlayer dans la liste des extensions"
+
 msgid "navy"
 msgstr "Bleu marine"
+
+msgid "never"
+msgstr ""
 
 msgid "not found"
 msgstr ""
@@ -4688,6 +5024,10 @@ msgstr ""
 msgid "saved next to the downloaded video file"
 msgstr "Ajouter au téléchargeur"
 
+#, fuzzy
+msgid "search history"
+msgstr "Historique de recherche"
+
 msgid "second"
 msgstr "seconde"
 
@@ -4716,6 +5056,10 @@ msgstr "standard"
 #, fuzzy
 msgid "status"
 msgstr "Bitrate : %s"
+
+#, fuzzy
+msgid "subtitles cache"
+msgstr "Sous-titres"
 
 msgid "teal"
 msgstr "turquoise"
@@ -4774,6 +5118,9 @@ msgstr "attendre %s seconde"
 #, python-format
 msgid "wait %s seconds"
 msgstr "attendre %s secondes"
+
+msgid "wants you to solve a captcha. Only after solving this captcha, you are allowed to continue with your downloads. E2iPlayer is not able to auto-solve these captchas, so we need to pass the captcha to you."
+msgstr ""
 
 #, python-format
 msgid "weeb.tv did not return a valid stream (error %s)."
