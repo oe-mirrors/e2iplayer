@@ -31,7 +31,7 @@ LAST_HTTP_ERROR_DATA = ''
 
 def updateStatus(type, data, code=None):
     obj = {'type': type, 'data': data, 'code': code}
-    sys.stderr.write('\n%s\n' % json.dumps(obj).encode('utf-8'))
+    sys.stderr.write('\n%s\n' % json.dumps(obj))
 
 
 DEBUGE = False
@@ -369,7 +369,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
                 # sys.exit(-1)
         elif data['url'] == '/captcha/list':
             if jd.captcha_result is None:
-                return_data = [{'hoster': 'iptvplayer.gitlab.io', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}]
+                return_data = [{'hoster': 'oe-mirrors/e2iplayer', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}]
             else:
                 return_data = []
         elif data['url'] == '/events/subscribe':
@@ -400,7 +400,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
 
         elif data['url'] == '/captcha/getCaptchaJob':
             if jd.captcha_result is None:
-                return_data = {'hoster': 'iptvplayer.gitlab.io', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}
+                return_data = {'hoster': 'oe-mirrors/e2iplayer', 'created': jd.captcha_data['id'], 'explain': None, 'id': jd.captcha_data['id'], 'captchaCategory': 'recaptchav2', 'link': 1535005786381, 'timeout': 600000, 'type': 'RecaptchaV2Challenge', 'remaining': 593028}
             else:
                 return_data = None
         elif data['url'] == '/captcha/get':

@@ -14,9 +14,15 @@ import struct
 import zlib
 ###################################################
 
-_SIZE = 29
-_DATA_CODEWORDS = 55
-_ECC_CODEWORDS = 15
+# Byte mode, error correction L, mask 0, one data block. The smallest of these
+# versions that holds the text is used: (size, data codewords, ECC codewords,
+# alignment pattern centres) - v3 holds 53 bytes, v4 78, v5 106.
+_VERSIONS = (
+    (29, 55, 15, (6, 22)),
+    (33, 80, 20, (6, 26)),
+    (37, 108, 26, (6, 30)),
+)
+_MAX_BYTES = _VERSIONS[-1][1] - 2
 _MASK = 0
 
 
@@ -45,11 +51,8 @@ def _rs_generator(degree):
     return gen
 
 
-_RS_GENERATOR = _rs_generator(_ECC_CODEWORDS)  # only ever used at this one fixed degree
-
-
 def _rs_remainder(data, degree):
-    gen = _RS_GENERATOR
+    gen = _rs_generator(degree)
     rem = [0] * degree
     for value in data:
         factor = value ^ rem[0]
@@ -64,17 +67,20 @@ def _append_bits(bits, value, length):
         bits.append((value >> i) & 1)
 
 
-def _codewords(text):
-    raw = ensure_binary(text)
-    if len(raw) > 53:
-        raise ValueError("text too long for QR v3-L (max 53 bytes, got %d)" % len(raw))
+def _pick_version(raw):
+    for version in _VERSIONS:
+        if len(raw) <= version[1] - 2:  # 4 bit mode + 8 bit length = 12 bits of header
+            return version
+    raise ValueError("text too long for a QR code (max %d bytes, got %d)" % (_MAX_BYTES, len(raw)))
 
+
+def _codewords(raw, dataCodewords, eccCodewords):
     bits = []
     _append_bits(bits, 0x4, 4)  # byte mode
     _append_bits(bits, len(raw), 8)
     for value in bytearray(raw):
         _append_bits(bits, value, 8)
-    capacity = _DATA_CODEWORDS * 8
+    capacity = dataCodewords * 8
     bits.extend([0] * min(4, capacity - len(bits)))
     while len(bits) % 8:
         bits.append(0)
@@ -86,10 +92,10 @@ def _codewords(text):
         data.append(value)
     pads = (0xEC, 0x11)
     n = 0
-    while len(data) < _DATA_CODEWORDS:
+    while len(data) < dataCodewords:
         data.append(pads[n & 1])
         n += 1
-    return data + _rs_remainder(data, _ECC_CODEWORDS)
+    return data + _rs_remainder(data, eccCodewords)
 
 
 def _bch_digit(value):
@@ -115,16 +121,18 @@ _FORMAT_BITS = _format_bits()  # ECC level and mask are both fixed, so this neve
 
 
 def _matrix(text):
-    modules = [[None] * _SIZE for _ in range(_SIZE)]
+    raw = ensure_binary(text)
+    size, dataCodewords, eccCodewords, centres = _pick_version(raw)
+    modules = [[None] * size for _ in range(size)]
 
     def finder(row, col):
         for rr in range(-1, 8):
             y = row + rr
-            if y <= -1 or y >= _SIZE:
+            if y <= -1 or y >= size:
                 continue
             for cc in range(-1, 8):
                 x = col + cc
-                if x <= -1 or x >= _SIZE:
+                if x <= -1 or x >= size:
                     continue
                 dark = ((0 <= rr <= 6 and cc in (0, 6)) or
                         (0 <= cc <= 6 and rr in (0, 6)) or
@@ -132,12 +140,12 @@ def _matrix(text):
                 modules[y][x] = dark
 
     finder(0, 0)
-    finder(_SIZE - 7, 0)
-    finder(0, _SIZE - 7)
+    finder(size - 7, 0)
+    finder(0, size - 7)
 
-    # Version 3 alignment centres are 6 and 22. Overlapping finder positions skip.
-    for row in (6, 22):
-        for col in (6, 22):
+    # Overlapping finder positions skip.
+    for row in centres:
+        for col in centres:
             if modules[row][col] is not None:
                 continue
             for rr in range(-2, 3):
@@ -146,10 +154,10 @@ def _matrix(text):
                         rr in (-2, 2) or cc in (-2, 2) or (rr == 0 and cc == 0)
                     )
 
-    for row in range(8, _SIZE - 8):
+    for row in range(8, size - 8):
         if modules[row][6] is None:
             modules[row][6] = (row % 2 == 0)
-    for col in range(8, _SIZE - 8):
+    for col in range(8, size - 8):
         if modules[6][col] is None:
             modules[6][col] = (col % 2 == 0)
 
@@ -161,23 +169,23 @@ def _matrix(text):
         elif i < 8:
             modules[i + 1][8] = dark
         else:
-            modules[_SIZE - 15 + i][8] = dark
+            modules[size - 15 + i][8] = dark
     for i in range(15):
         dark = ((bits >> i) & 1) == 1
         if i < 8:
-            modules[8][_SIZE - i - 1] = dark
+            modules[8][size - i - 1] = dark
         elif i < 9:
             modules[8][15 - i] = dark
         else:
             modules[8][14 - i] = dark
-    modules[_SIZE - 8][8] = True
+    modules[size - 8][8] = True
 
-    data = _codewords(text)
+    data = _codewords(raw, dataCodewords, eccCodewords)
     inc = -1
-    row = _SIZE - 1
+    row = size - 1
     bit_index = 7
     byte_index = 0
-    for original_col in range(_SIZE - 1, 0, -2):
+    for original_col in range(size - 1, 0, -2):
         col = original_col
         if col <= 6:
             col -= 1
@@ -195,7 +203,7 @@ def _matrix(text):
                         byte_index += 1
                         bit_index = 7
             row += inc
-            if row < 0 or row >= _SIZE:
+            if row < 0 or row >= size:
                 row -= inc
                 inc = -inc
                 break
@@ -208,12 +216,13 @@ def _png_chunk(name, payload):
 
 def make_qr_png(text, path, scale=9, border=4):
     matrix = _matrix(text)
-    width = (_SIZE + border * 2) * scale
+    size = len(matrix)
+    width = (size + border * 2) * scale
     rows = []
-    for y in range(-border, _SIZE + border):
+    for y in range(-border, size + border):
         line = bytearray()
-        for x in range(-border, _SIZE + border):
-            dark = 0 <= y < _SIZE and 0 <= x < _SIZE and bool(matrix[y][x])
+        for x in range(-border, size + border):
+            dark = 0 <= y < size and 0 <= x < size and bool(matrix[y][x])
             value = 0 if dark else 255
             line.extend([value] * scale)
         raw = bytes(line)

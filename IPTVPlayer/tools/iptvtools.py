@@ -40,9 +40,6 @@ import threading
 from functools import cmp_to_key
 import socket
 
-# SERVER_DOMAINS = {'vline': 'http://iptvplayer.vline.pl/', 'gitlab': 'http://zadmario.gitlab.io/', 'private': 'http://www.e2iplayer.gitlab.io/'}
-# SERVER_UPDATE_PATH = {'vline': 'download/update2/', 'gitlab': 'update2/', 'private': 'update2/'}
-
 
 def UsePyCurl():
     return config.plugins.iptvplayer.usepycurl.value
