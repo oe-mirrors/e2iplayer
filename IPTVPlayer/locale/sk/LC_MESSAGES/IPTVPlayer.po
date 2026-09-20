@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 19:05+0000\n"
+"POT-Creation-Date: 2026-09-20 22:20+0000\n"
 "PO-Revision-Date: 2026-07-27 16:28+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -147,6 +147,13 @@ msgstr ""
 "%s používa opatrenia \"geografického blokovania\", aby vám zabránil v prístupe k službám zo zahraničia.\n"
 " Hostiteľská krajina: %s, vaša krajina: %s"
 
+#, python-format
+msgid "(%d YouTube channel(s) could not be read)"
+msgstr ""
+
+msgid "(no videos found)"
+msgstr ""
+
 msgid "(nothing here yet)"
 msgstr ""
 
@@ -209,6 +216,10 @@ msgstr "----- KONFIGURÁCIA ÚLOŽISKA -----"
 msgid "----- SUBTITLES CONFIGURATION -----"
 msgstr "----- KONFIGURÁCIA TITULKOV -----"
 
+#, fuzzy
+msgid "----- Show or hide Anime / Hentai -----"
+msgstr "----- Zobraziť alebo skryť živé kamery -----"
+
 msgid "----- Show or hide Live Cams -----"
 msgstr "----- Zobraziť alebo skryť živé kamery -----"
 
@@ -217,6 +228,10 @@ msgstr "----- Zobraziť alebo skryť porno stránky -----"
 
 msgid "----- XXXList Configuration -----"
 msgstr "----- Konfigurácia XXXList -----"
+
+#, fuzzy
+msgid "----------  Anime / Hentai  ----------"
+msgstr "----------  Živé kamery  ----------"
 
 msgid "----------  Live Cams  ----------"
 msgstr "----------  Živé kamery  ----------"
@@ -249,6 +264,9 @@ msgstr "--Iný--"
 msgid "0-9"
 msgstr ""
 
+msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
+msgstr ""
+
 msgid "12 hour format"
 msgstr "12-hodinový formát"
 
@@ -267,8 +285,14 @@ msgstr "16:9 Letterbox"
 msgid "16:9 always"
 msgstr "16:9 vždy"
 
+msgid "2. Click the big green button on that page. A new tab opens with the captcha or the website's browser check."
+msgstr ""
+
 msgid "24 hour format"
 msgstr "24-hodinový formát"
+
+msgid "3. Solve it. The result goes back to the receiver by itself and the captcha window closes."
+msgstr ""
 
 msgid "4:3 Letterbox"
 msgstr "4:3 Letterbox"
@@ -317,6 +341,9 @@ msgstr "Súhlasím"
 
 msgid "Access Forbidden"
 msgstr "Prístup zakázaný"
+
+msgid "Access denied - open the page with the QR code or the code shown on the receiver screen."
+msgstr ""
 
 msgid "Access denied. Please check password."
 msgstr "Prístup bol odmietnutý. Skontrolujte heslo."
@@ -640,6 +667,13 @@ msgstr "Obídenie geografického blokovania videí na vyžiadanie (môže byť n
 msgid "CME SAE"
 msgstr "CME SAE"
 
+msgid "Cache"
+msgstr ""
+
+#, python-format
+msgid "Cache folder \"%s\" could not be created. Some data (cookies, subtitles, ...) may not be saved."
+msgstr ""
+
 #, python-format
 msgid ""
 "Can not get mount points - cmd mount failed.\n"
@@ -654,6 +688,10 @@ msgid "Cancel"
 msgstr "Zrušiť"
 
 msgid "Captcha"
+msgstr "Captcha"
+
+#, fuzzy
+msgid "Captcha error:"
 msgstr "Captcha"
 
 msgid ""
@@ -690,6 +728,9 @@ msgstr "Kategória:"
 
 msgid "Change active movie player"
 msgstr "Zmena aktívneho prehrávača filmov"
+
+msgid "Change own pin"
+msgstr ""
 
 msgid "Channel"
 msgstr "Kanál"
@@ -743,6 +784,9 @@ msgstr "Zatvoriť"
 msgid "Closing. Please wait..."
 msgstr "Uzatvárací. Prosím počkajte..."
 
+msgid "Code"
+msgstr ""
+
 msgid "Collected streams only"
 msgstr "Iba zozbierané streamy"
 
@@ -768,6 +812,10 @@ msgstr ""
 #, fuzzy
 msgid "Config"
 msgstr "Konfigurácia %s"
+
+#, python-format
+msgid "Config folder \"%s\" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved."
+msgstr ""
 
 msgid "Configuration"
 msgstr "Konfigurácia"
@@ -805,6 +853,9 @@ msgstr "Pripojenie k serveru zlyhalo!"
 #, fuzzy
 msgid "Content not available"
 msgstr "Úplný popis nie je k dispozícii"
+
+msgid "Continue"
+msgstr ""
 
 msgid "Continue downloading"
 msgstr "Pokračovať v sťahovaní"
@@ -921,6 +972,21 @@ msgstr "Možnosť ladenia nastavená na konzolu - nič na zobrazenie"
 msgid "Debug option set to debugfile, but file does not exist - nothing to display"
 msgstr "Možnosť ladenia nastavená na ladeniesúbor, ale súbor neexistuje - nič na zobrazenie"
 
+#, fuzzy
+msgid "Debug snapshot"
+msgstr "Denníky ladenia"
+
+msgid "Debug snapshot (for site development)"
+msgstr ""
+
+#, python-format
+msgid "Debug snapshot: \"%s\" received by the box"
+msgstr ""
+
+#, python-format
+msgid "Debug snapshot: sending \"%s\" failed"
+msgstr ""
+
 #, python-format
 msgid "Decode file [%s] problem."
 msgstr "Problém s dekódovaním súboru [%s]."
@@ -961,18 +1027,76 @@ msgstr "Určite odstrániť z obľúbených?"
 msgid "Delete"
 msgstr "Odstrániť"
 
+msgid "Delete JS cache after (days, 0 = never)"
+msgstr ""
+
+#, fuzzy
+msgid "Delete JS cache now"
+msgstr "Odstrániť históriu vyhľadávania"
+
+#, fuzzy
+msgid "Delete all cache files now"
+msgstr "Odstránenie súboru denníka"
+
+#, fuzzy
+msgid "Delete all config files now"
+msgstr "Odstránenie súboru denníka"
+
+msgid "Delete cookies cache after (days, 0 = never)"
+msgstr ""
+
+msgid "Delete cookies cache now"
+msgstr ""
+
 #, fuzzy
 msgid "Delete entry"
 msgstr "Odstrániť históriu vyhľadávania"
 
+msgid "Delete favourites and watched status now"
+msgstr ""
+
+msgid "Delete host order and groups now"
+msgstr ""
+
 msgid "Delete log file"
 msgstr "Odstránenie súboru denníka"
+
+msgid "Delete movie metadata cache after (days, 0 = never)"
+msgstr ""
+
+msgid "Delete movie metadata cache now"
+msgstr ""
+
+#, fuzzy
+msgid "Delete movie player preferences now"
+msgstr "Vyberte prehrávač videozáznamov"
+
+#, fuzzy
+msgid "Delete now"
+msgstr "Odstrániť"
 
 msgid "Delete search history"
 msgstr "Odstrániť históriu vyhľadávania"
 
+#, fuzzy
+msgid "Delete search history now"
+msgstr "Odstrániť históriu vyhľadávania"
+
+msgid "Delete subtitles cache after (days, 0 = never)"
+msgstr ""
+
+#, fuzzy
+msgid "Delete subtitles cache now"
+msgstr "Výber stopy titulkov"
+
+msgid "Delete thumbnails cache now"
+msgstr ""
+
 msgid "Description:"
 msgstr "Popis:"
+
+msgid "Detail/expert mode"
+msgstr ""
 
 msgid "Developers:"
 msgstr "Vývojári:"
@@ -1027,6 +1151,23 @@ msgstr "Jazyk zobrazenia:"
 msgid "Display thumbnails"
 msgstr "Zobraziť miniatúry"
 
+msgid "Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."
+msgstr ""
+
+msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
+msgstr ""
+
+msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
+msgstr ""
+
+#, fuzzy, python-format
+msgid "Do you really want to delete the %s now?"
+msgstr "Naozaj chcete vymazať históriu vyhľadávania?"
+
+#, fuzzy
+msgid "Do you really want to delete the thumbnails cache now?"
+msgstr "Naozaj chcete vymazať históriu vyhľadávania?"
+
 msgid "Do you want to finish?"
 msgstr "Chcete dokončiť?"
 
@@ -1038,6 +1179,9 @@ msgstr "Dokumentárny film"
 
 msgid "Documentary Movies"
 msgstr "Dokumentárne filmy"
+
+msgid "Done - the result was sent to the box, you can close this page."
+msgstr ""
 
 msgid "Download"
 msgstr "Stiahnuť"
@@ -1086,6 +1230,10 @@ msgstr "Správca na preberanie"
 
 msgid "Download manager is not initialized"
 msgstr "Správca sťahovania nie je inicializovaný"
+
+#, fuzzy
+msgid "Download new version"
+msgstr "Správca na preberanie"
 
 #, fuzzy
 msgid "Download notification duration"
@@ -1173,6 +1321,10 @@ msgstr "Trvanie:"
 #, python-format
 msgid "Duration: %s"
 msgstr "Doba trvania: %s"
+
+#, fuzzy
+msgid "E2iPlayer"
+msgstr "Hráč %s"
 
 #, fuzzy
 msgid "E2iPlayer - keyboard settings"
@@ -1318,6 +1470,9 @@ msgstr "Zadajte číslo stránky (MAX. STRANA: {})"
 msgid "Enter pin"
 msgstr "Zadajte PIN kód"
 
+msgid "Enter the code shown in the title of the window on your receiver's screen (or scan the QR code shown there - no code needed then):"
+msgstr ""
+
 msgid "Enter the text"
 msgstr "Zadajte text"
 
@@ -1336,6 +1491,9 @@ msgstr "Epizódy"
 
 msgid "Episodes:"
 msgstr "Epizódy:"
+
+msgid "Error"
+msgstr ""
 
 #, python-format
 msgid "Error code: %s\n"
@@ -1386,6 +1544,10 @@ msgstr "Vyskytne sa chyba"
 
 msgid "Error occurs during download."
 msgstr "Počas preberania sa vyskytne chyba."
+
+#, fuzzy
+msgid "Error occurs:"
+msgstr "Vyskytne sa chyba"
 
 #, python-format
 msgid "Error reading file \"%s\".\n"
@@ -1577,6 +1739,9 @@ msgstr "Návrhy spoločnosti Filmweb"
 msgid "Find item"
 msgstr ""
 
+msgid "Find out more."
+msgstr ""
+
 msgid "First Page"
 msgstr "Prvá strana"
 
@@ -1593,6 +1758,10 @@ msgid "Fix jump target"
 msgstr ""
 
 msgid "Folder for cache data"
+msgstr "Priečinok pre údaje vyrovnávacej pamäte"
+
+#, fuzzy
+msgid "Folder for config data"
 msgstr "Priečinok pre údaje vyrovnávacej pamäte"
 
 msgid "Folder for temporary data"
@@ -1678,8 +1847,19 @@ msgstr "Nemčina"
 msgid "German proxy server url"
 msgstr "Adresa URL nemeckého proxy servera"
 
+#, fuzzy
+msgid "Get Cloudflare job"
+msgstr "Riešenie MyE2i Cloudflare"
+
 msgid "Get EPG"
 msgstr "Získať EPG"
+
+#, fuzzy
+msgid "Get captcha job"
+msgstr "Predvolený obtok captcha"
+
+msgid "Get cookies job"
+msgstr ""
 
 msgid "Get languages failed!"
 msgstr "Zlyhanie jazykov!"
@@ -1768,6 +1948,9 @@ msgstr "Domovská stránka"
 msgid "Horror"
 msgstr ""
 
+msgid "Host"
+msgstr ""
+
 #, python-format
 msgid "Hosting \"%s\" not supported."
 msgstr "Hosting \"%s\" nie je podporovaný."
@@ -1787,11 +1970,17 @@ msgstr "Nastavenia hostov"
 msgid "Hosts settings"
 msgstr "Nastavenia hostov"
 
+msgid "How to solve a captcha:"
+msgstr ""
+
 msgid "Humanitarian"
 msgstr "Humanitárne"
 
 msgid "Hungarian"
 msgstr "Maďarčina"
+
+msgid "I am no robot"
+msgstr ""
 
 msgid "IMDb Rating:"
 msgstr "Hodnotenie IMDb:"
@@ -1937,6 +2126,9 @@ msgstr ""
 msgid "JDownloader script finished."
 msgstr "Skript JDownloader bol dokončený."
 
+msgid "JS cache"
+msgstr ""
+
 msgid "Jobs & Positions"
 msgstr "Pracovné miesta a pozície"
 
@@ -2034,6 +2226,10 @@ msgstr ""
 
 msgid "Latest update"
 msgstr "Najnovšia aktualizácia"
+
+#, fuzzy
+msgid "Latest video"
+msgstr "Najnovšie pridané"
 
 msgid "Latest videos from the channels you are subscribed to."
 msgstr ""
@@ -2172,6 +2368,10 @@ msgstr ""
 
 msgid "Logs"
 msgstr "Logy"
+
+#, fuzzy
+msgid "Long list"
+msgstr "Najdlhšia"
 
 msgid "Longest"
 msgstr "Najdlhšia"
@@ -2351,8 +2551,24 @@ msgstr "Môj zoznam"
 msgid "My subscriptions"
 msgstr "Popis:"
 
+msgid "MyE2i - how to solve a captcha"
+msgstr ""
+
 msgid "MyE2i Cloudflare solution"
 msgstr "Riešenie MyE2i Cloudflare"
+
+#, fuzzy
+msgid "MyE2i browser check solution"
+msgstr "Riešenie MyE2i Cloudflare"
+
+msgid "MyE2i debug snapshot received - see the debug log."
+msgstr ""
+
+msgid "MyE2i extension is outdated - please update it."
+msgstr ""
+
+msgid "MyE2i extension: increase security"
+msgstr ""
 
 msgid "MyE2i reCAPTCHA solution"
 msgstr "Riešenie MyE2i reCAPTCHA"
@@ -2388,6 +2604,9 @@ msgstr ""
 msgid "Name:"
 msgstr "Meno:"
 
+msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
+msgstr ""
+
 msgid "Netflix"
 msgstr "Netflix"
 
@@ -2413,6 +2632,12 @@ msgstr "Nové ikony nebudú k dispozícii."
 
 msgid "Newest Episodes"
 msgstr "Najnovšie epizódy"
+
+msgid "Newest videos (all YouTube channels)"
+msgstr ""
+
+msgid "Newest videos of a YouTube channel in a group"
+msgstr ""
 
 msgid "News"
 msgstr "Aktuality"
@@ -2457,6 +2682,12 @@ msgstr "Žiadne materiály čakajúce vo fronte sťahovania"
 #, python-format
 msgid "No results found for: %s"
 msgstr "Nenašli sa žiadne výsledky pre: %s"
+
+msgid "No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."
+msgstr ""
+
+msgid "No storage found for the downloads location. Where would you like to save your downloads?"
+msgstr ""
 
 msgid "No subtitle file found in the archive."
 msgstr "V archíve sa nenašiel žiadny súbor s titulkami."
@@ -2565,6 +2796,9 @@ msgid "PLAY"
 msgstr ""
 
 msgid "PREVIOUS/NEXT"
+msgstr ""
+
+msgid "Page not found - please check the address."
 msgstr ""
 
 msgid "Page:"
@@ -2687,6 +2921,9 @@ msgstr ""
 msgid "Please set valid %s in the %s configuration."
 msgstr "V %s konfigurácii nastavte platné %s."
 
+msgid "Please solve to continue downloads with:"
+msgstr ""
+
 #, python-format
 msgid "Please visit \"%s\" and confirm that you are human."
 msgstr "Navštívte stránku \"%s\" a potvrďte, že ste človek."
@@ -2700,6 +2937,10 @@ msgstr "Počkajte prosím - stiahnutie inicializačných údajov."
 
 msgid "Please wait for initialization data."
 msgstr "Počkajte na inicializačné údaje."
+
+#, fuzzy
+msgid "Please wait..."
+msgstr "Uzatvárací. Prosím počkajte..."
 
 msgid "Podcasts"
 msgstr "Podcasty"
@@ -2855,6 +3096,10 @@ msgstr "Aktualizovať"
 
 msgid "Refreshing"
 msgstr "Obnovenie"
+
+#, python-format
+msgid "Refusing to empty \"%s\" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration."
+msgstr ""
 
 msgid "Release"
 msgstr "Uvoľniť"
@@ -3173,6 +3418,9 @@ msgstr "Odoslať"
 msgid "Send data to enc-dec.app on every link resolve?"
 msgstr ""
 
+msgid "Sending the result to the box failed."
+msgstr ""
+
 msgid "Series"
 msgstr "Séria"
 
@@ -3212,6 +3460,14 @@ msgstr "Nastavenie názvu súboru"
 msgid "Set host, username, password in host config"
 msgstr "Nastavenie hostiteľa, používateľského mena a hesla v konfigurácii hostiteľa"
 
+#, fuzzy
+msgid "Set own configuration pin code"
+msgstr "Konfigurácia služieb %s"
+
+#, fuzzy
+msgid "Set own pin"
+msgstr "Nastavenie PIN kódu"
+
 msgid "Set pin code"
 msgstr "Nastavenie PIN kódu"
 
@@ -3220,6 +3476,9 @@ msgstr "Sada sledovaných"
 
 msgid "Settings"
 msgstr "Nastavenia"
+
+msgid "Settings screen layout"
+msgstr ""
 
 msgid "Shift"
 msgstr ""
@@ -3646,6 +3905,12 @@ msgid ""
 "Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
 msgstr ""
 
+msgid "The QR code leads to the wiki page with pictures and the extension download."
+msgstr ""
+
+msgid "The YouTube channels of this group have no videos."
+msgstr ""
+
 msgid "The YouTube video ID is invalid."
 msgstr "Identifikátor videa YouTube je neplatný."
 
@@ -3663,6 +3928,9 @@ msgid "The color of the viewed item"
 msgstr "Farba zobrazenej položky"
 
 msgid "The connection limit for your weeb.tv account has been reached."
+msgstr ""
+
+msgid "The data is too large."
 msgstr ""
 
 #, python-format
@@ -3686,6 +3954,9 @@ msgstr "Predvolený pomer strán pre externý prehrávač"
 msgid "The element already exists in User Links."
 msgstr "Prvok už existuje v Používateľských odkazoch."
 
+msgid "The feed of these channels could not be read - press OK to try again."
+msgstr ""
+
 #, python-format
 msgid ""
 "The host %s requires registration. \n"
@@ -3702,6 +3973,9 @@ msgstr ""
 "Hostiteľský %s vyžaduje predplatné.\n"
 "Vyplňte svoje prihlasovacie meno a heslo v konfigurácii hostiteľa - k dispozícii pod modrým tlačidlom."
 
+msgid "The latest uploads of all YouTube channels in this group, newest first."
+msgstr ""
+
 msgid "The number of items in the search history"
 msgstr "Počet položiek v histórii vyhľadávania"
 
@@ -3714,6 +3988,9 @@ msgstr ""
 "Vyrovnávacia pamäť prehrávania bola presunutá do správcu preberania.\n"
 "Uloží sa do súboru:\n"
 "\"%s\""
+
+msgid "The request has no valid length."
+msgstr ""
 
 msgid "The same item already exists in this group."
 msgstr "V tejto skupine už existuje rovnaká položka."
@@ -3783,14 +4060,28 @@ msgstr "Tento hostiteľ už bol pridaný do tejto skupiny."
 msgid "This model is offline."
 msgstr "Tento model je offline."
 
+msgid "This page has no video (blog article)."
+msgstr ""
+
+#, fuzzy
+msgid "This room is currently offline or unavailable."
+msgstr "Táto miestnosť je offline. Skúste to znova neskôr!"
+
 msgid "This room is offline. Try again later!"
 msgstr "Táto miestnosť je offline. Skúste to znova neskôr!"
+
+msgid "This session has no code - scan the QR code on the receiver screen."
+msgstr ""
 
 msgid "This show is private. Try again later!"
 msgstr "Táto relácia je súkromná. Skúste to znova neskôr!"
 
 msgid "This video has been deleted."
 msgstr "Toto video bolo odstránené."
+
+#, fuzzy
+msgid "This video is Premium-only content."
+msgstr "Toto video je súkromné."
 
 msgid "This video is a private video."
 msgstr "Toto video je súkromné video."
@@ -3830,6 +4121,9 @@ msgstr ""
 
 msgid "Today"
 msgstr "Dnes"
+
+msgid "Too many wrong codes - scan the QR code on the receiver screen instead."
+msgstr ""
 
 msgid "Top"
 msgstr "Hore"
@@ -3984,6 +4278,13 @@ msgstr "Používanie vyrovnávacej pamäte odkazov"
 msgid "Use login"
 msgstr "Použiť prihlásenie"
 
+#, fuzzy
+msgid "Use own pin for configuration"
+msgstr "Ochrana Pinov pre konfiguráciu"
+
+msgid "Use own pin instead of the player pin"
+msgstr ""
+
 msgid "Use proxy server:"
 msgstr "Použiť proxy server:"
 
@@ -4102,6 +4403,9 @@ msgstr "Virtuálna kľúčová tabuľa"
 msgid "Virtual Keyboard type"
 msgstr "Typ virtuálnej klávesnice"
 
+msgid "Waiting for the result ..."
+msgstr ""
+
 #, python-format
 msgid "Waiting search thread to stop, please wait (%d)"
 msgstr "Čakanie na zastavenie vyhľadávacieho vlákna, počkajte (%d)"
@@ -4135,6 +4439,9 @@ msgstr "Webový komponent bol resetovaný, nasledujúce vlákna stále fungujú:
 msgid "Web interface version"
 msgstr "Verzia webového rozhrania"
 
+msgid "What's happening?"
+msgstr ""
+
 msgid "When the maximum is reached"
 msgstr ""
 
@@ -4164,6 +4471,10 @@ msgstr "Nesprávna dĺžka kľúča rozhrania API služby YouTube"
 
 msgid "Wrong answer."
 msgstr "Nesprávna odpoveď."
+
+#, fuzzy
+msgid "Wrong code."
+msgstr "Nesprávne indexy."
 
 msgid "Wrong format of rar archive."
 msgstr "Nesprávny formát archívu rar."
@@ -4251,7 +4562,17 @@ msgstr "Nikdy by ste nemali vykonávať blokové vstupno-výstupné operácie v 
 msgid "YouTube User Links Editor"
 msgstr "Editor používateľských odkazov YouTube"
 
+msgid "YouTube channels: original order"
+msgstr ""
+
+msgid "YouTube channels: sort by newest upload"
+msgstr ""
+
 msgid "Your 'Watch later' playlist."
+msgstr ""
+
+#, python-format
+msgid "Your MyE2i extension is outdated or unknown (v%s or newer needed). Please update:"
 msgstr ""
 
 msgid "Your search entry"
@@ -4350,7 +4671,13 @@ msgstr "Uložiť zmeny?"
 msgid "cobalt"
 msgstr "kobalt"
 
+msgid "cookies cache"
+msgstr ""
+
 msgid "could not run the probe"
+msgstr ""
+
+msgid "debug"
 msgstr ""
 
 msgid "default"
@@ -4419,6 +4746,9 @@ msgstr "horizontálna"
 msgid "host"
 msgstr "hostiteľ"
 
+msgid "host order and groups"
+msgstr ""
+
 msgid "host:"
 msgstr "hostiteľ:"
 
@@ -4477,8 +4807,18 @@ msgstr "gaštanovo hnedá"
 msgid "medium"
 msgstr "stredný"
 
+msgid "movie metadata cache"
+msgstr ""
+
+#, fuzzy
+msgid "movie player preferences"
+msgstr "Zobraziť IPTVPlayer v zozname rozšírení"
+
 msgid "navy"
 msgstr "námorníctvo"
+
+msgid "never"
+msgstr ""
 
 msgid "not found"
 msgstr ""
@@ -4537,6 +4877,10 @@ msgstr ""
 msgid "saved next to the downloaded video file"
 msgstr "Pridať názov kanála do stiahnutého súboru"
 
+#, fuzzy
+msgid "search history"
+msgstr "História vyhľadávania"
+
 msgid "second"
 msgstr "sekunda"
 
@@ -4565,6 +4909,10 @@ msgstr "štandard"
 #, fuzzy
 msgid "status"
 msgstr "Stav:"
+
+#, fuzzy
+msgid "subtitles cache"
+msgstr "Titulky"
 
 msgid "teal"
 msgstr "ryrkysová"
@@ -4624,6 +4972,9 @@ msgstr "počkajte %s sekundu"
 #, python-format
 msgid "wait %s seconds"
 msgstr "počkajte %s sekúnd"
+
+msgid "wants you to solve a captcha. Only after solving this captcha, you are allowed to continue with your downloads. E2iPlayer is not able to auto-solve these captchas, so we need to pass the captcha to you."
+msgstr ""
 
 #, python-format
 msgid "weeb.tv did not return a valid stream (error %s)."
