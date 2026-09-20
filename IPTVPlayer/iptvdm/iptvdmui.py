@@ -277,7 +277,7 @@ class IPTVDMWidget(Screen):
         if fileName.startswith('.'):
             return None
 
-        fullPath = os_path.join(config.plugins.iptvplayer.NaszaSciezka.value, fileName)
+        fullPath = os_path.join(config.plugins.iptvplayer.DownloadsDir.value, fileName)
         if self._isVideoFile(fullPath):
             return fullPath
 
@@ -722,7 +722,7 @@ class IPTVDMWidget(Screen):
                 self.underRefreshing = True
                 self.tmpList = []
                 self.tmpData = ''
-                cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", config.plugins.iptvplayer.NaszaSciezka.value)
+                cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", config.plugins.iptvplayer.DownloadsDir.value)
                 printDBG("cmd[%s]" % cmd)
                 if hasattr(self.console, "setNice"):
                     self.console.setNice(GetNice() + 2)

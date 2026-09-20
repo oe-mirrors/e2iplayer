@@ -8,8 +8,10 @@
 # LOCAL import
 ###################################################
 
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSkinsList, GetHostsList, GetEnabledHostsList, \
-                                                          IsExecutable, CFakeMoviePlayerOption
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSkinsList, GetHostsList, \
+                                                          IsExecutable, CFakeMoviePlayerOption, GetCookieDir, GetJSCacheDir, \
+                                                          GetSubtitlesDir, GetMovieMetaDataDir, RemoveDirContents, RemoveAllDirsIconsFromPath, \
+                                                          GetSearchHistoryDir, GetFavouritesDir, GetWatchedDir, GetMoviePlayerPerHostDir, GetHostOrderDir, IsPathSafeToWipe
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget, ConfigIPTVFileSelection, COLORS_DEFINITONS
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget
@@ -39,7 +41,8 @@ config.plugins.iptvplayer.set_curr_title = ConfigYesNo(default=False)
 config.plugins.iptvplayer.curr_title_file = ConfigText(default="", fixed_size=False)
 
 config.plugins.iptvplayer.showcover = ConfigYesNo(default=True)
-config.plugins.iptvplayer.deleteIcons = ConfigSelection(default="3", choices=[("0", _("after closing")), ("1", _("after day")), ("3", _("after three days")), ("7", _("after a week"))])
+# negative = never (RemoveOldDirsIcons only deletes for values >= 0)
+config.plugins.iptvplayer.deleteIcons = ConfigSelection(default="3", choices=[("0", _("after closing")), ("1", _("after day")), ("3", _("after three days")), ("7", _("after a week")), ("-1", _("never"))])
 # config.plugins.iptvplayer.allowedcoverformats = ConfigSelection(default="jpeg,png", choices=[("jpeg,png,gif", _("jpeg,png,gif")), ("jpeg,png", _("jpeg,png")), ("jpeg", _("jpeg")), ("all", _("all"))])
 config.plugins.iptvplayer.showinextensions = ConfigYesNo(default=True)
 # "T" (tree list) is intentionally not offered here - never implemented,
@@ -48,8 +51,10 @@ config.plugins.iptvplayer.hostsListType = ConfigSelection(default="G", choices=[
 config.plugins.iptvplayer.showinMainMenu = ConfigYesNo(default=False)
 # config.plugins.iptvplayer.ListaGraficzna = ConfigYesNo(default=True)
 config.plugins.iptvplayer.group_hosts = ConfigYesNo(default=True)
+# legacy attributes are kept only to seed the renamed options (the settings-file key is the attribute name)
 config.plugins.iptvplayer.NaszaSciezka = ConfigDirectory(default="/hdd/movie/")  # , fixed_size = False)
-config.plugins.iptvplayer.bufferingPath = ConfigDirectory(default=config.plugins.iptvplayer.NaszaSciezka.value)  # , fixed_size = False)
+config.plugins.iptvplayer.DownloadsDir = ConfigDirectory(default=config.plugins.iptvplayer.NaszaSciezka.value)  # , fixed_size = False)
+config.plugins.iptvplayer.bufferingPath = ConfigDirectory(default=config.plugins.iptvplayer.DownloadsDir.value)  # , fixed_size = False)
 config.plugins.iptvplayer.buforowanie = ConfigYesNo(default=False)
 config.plugins.iptvplayer.buforowanie_m3u8 = ConfigYesNo(default=True)
 config.plugins.iptvplayer.buforowanie_rtmp = ConfigYesNo(default=False)
@@ -111,7 +116,30 @@ config.plugins.iptvplayer.alternativeMoviePlayer = ConfigSelection(default="auto
 config.plugins.iptvplayer.moviePlayerPickerMode = ConfigSelection(default="standard", choices=[("standard", _("Standard")), ("extended", _("Extended"))])
 
 config.plugins.iptvplayer.SciezkaCache = ConfigDirectory(default="/hdd/IPTVCache/")  # , fixed_size = False)
+config.plugins.iptvplayer.CacheDir = ConfigDirectory(default=config.plugins.iptvplayer.SciezkaCache.value)  # , fixed_size = False)
 config.plugins.iptvplayer.NaszaTMP = ConfigDirectory(default="/tmp/")  # , fixed_size = False)
+config.plugins.iptvplayer.TmpDir = ConfigDirectory(default=config.plugins.iptvplayer.NaszaTMP.value)  # , fixed_size = False)
+# real user data (favourites, history, host order, ...), kept apart from the disposable CacheDir
+config.plugins.iptvplayer.ConfigDir = ConfigDirectory(default="/etc/enigma2/IPTVPlayer/")  # , fixed_size = False)
+config.plugins.iptvplayer.storageExpertMode = ConfigYesNo(default=False)
+
+# 0 = never; the fake*Delete entries are action triggers handled in keyOK()
+config.plugins.iptvplayer.cookiesCacheDeleteAfterDays = ConfigSelectionNumber(min=0, max=365, stepwidth=1, default=0, wraparound=False)
+config.plugins.iptvplayer.fakeCookiesCacheDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+config.plugins.iptvplayer.jsCacheDeleteAfterDays = ConfigSelectionNumber(min=0, max=365, stepwidth=1, default=0, wraparound=False)
+config.plugins.iptvplayer.fakeJSCacheDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+config.plugins.iptvplayer.subtitlesCacheDeleteAfterDays = ConfigSelectionNumber(min=0, max=365, stepwidth=1, default=0, wraparound=False)
+config.plugins.iptvplayer.fakeSubtitlesCacheDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+config.plugins.iptvplayer.movieMetaDataCacheDeleteAfterDays = ConfigSelectionNumber(min=0, max=365, stepwidth=1, default=0, wraparound=False)
+config.plugins.iptvplayer.fakeMovieMetaDataCacheDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+config.plugins.iptvplayer.fakeMoviePlayerDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+config.plugins.iptvplayer.fakeHostOrderDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+config.plugins.iptvplayer.fakeIconsCacheDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+config.plugins.iptvplayer.fakeSearchHistoryDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+config.plugins.iptvplayer.fakeFavouritesDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+config.plugins.iptvplayer.fakeAllCacheDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+config.plugins.iptvplayer.fakeAllConfigDelete = ConfigSelection(default="fake", choices=[("fake", _("Delete now"))])
+
 config.plugins.iptvplayer.ZablokujWMV = ConfigYesNo(default=True)
 
 config.plugins.iptvplayer.vkcom_login = ConfigText(default="", fixed_size=False)
@@ -434,11 +462,6 @@ class ConfigMenu(ConfigBaseWidget):
             self["key_blue"].setText(_("Info"))
         except Exception:
             printExc()
-        # remember old
-        self.showcoverOld = config.plugins.iptvplayer.showcover.value
-        self.SciezkaCacheOld = config.plugins.iptvplayer.SciezkaCache.value
-        self.remove_diabled_hostsOld = config.plugins.iptvplayer.remove_diabled_hosts.value
-        self.enabledHostsListOld = GetEnabledHostsList()
         self.runtimeOptionsValues = self.getRuntimeOptionsValues()
 
     def __del__(self):
@@ -502,9 +525,6 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Video player OSD clock format"), config.plugins.iptvplayer.extplayer_infobanner_clockformat))
         list.append(getConfigListEntry(_("Player Skin"), config.plugins.iptvplayer.extplayer_skin))
         list.append(getConfigListEntry(_("Display thumbnails"), config.plugins.iptvplayer.showcover))
-        if config.plugins.iptvplayer.showcover.value:
-            # list.append(getConfigListEntry(_("    Allowed formats of thumbnails"), config.plugins.iptvplayer.allowedcoverformats))
-            list.append(getConfigListEntry("    " + _("Remove thumbnails"), config.plugins.iptvplayer.deleteIcons))
         # list.append(getConfigListEntry("Sort the lists?", config.plugins.iptvplayer.sortuj))
         # list.append(getConfigListEntry(_("Graphic services selector"), config.plugins.iptvplayer.ListaGraficzna))
         # if config.plugins.iptvplayer.ListaGraficzna.value is True:
@@ -527,8 +547,31 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Ukrainian proxy server url"), config.plugins.iptvplayer.ukrainian_proxyurl))
 
         list.append(getConfigListEntry(_("----- STORAGE CONFIGURATION -----"),))
-        list.append(getConfigListEntry(_("Folder for cache data"), config.plugins.iptvplayer.SciezkaCache))
-        list.append(getConfigListEntry(_("Folder for temporary data"), config.plugins.iptvplayer.NaszaTMP))
+        list.append(getConfigListEntry(_("Folder for cache data"), config.plugins.iptvplayer.CacheDir))
+        list.append(getConfigListEntry(_("Folder for temporary data"), config.plugins.iptvplayer.TmpDir))
+        list.append(getConfigListEntry(_("Folder for config data"), config.plugins.iptvplayer.ConfigDir))
+        list.append(getConfigListEntry(_("Detail/expert mode"), config.plugins.iptvplayer.storageExpertMode))
+        if config.plugins.iptvplayer.storageExpertMode.value:
+            # a one-element row cannot be coloured: indent + "=====" framing + upper case mark a sub-heading
+            list.append(getConfigListEntry("    ===== " + _("Cache").upper() + " =====",))
+            list.append(getConfigListEntry("    " + _("Delete cookies cache after (days, 0 = never)"), config.plugins.iptvplayer.cookiesCacheDeleteAfterDays))
+            list.append(getConfigListEntry("    " + _("Delete cookies cache now"), config.plugins.iptvplayer.fakeCookiesCacheDelete))
+            list.append(getConfigListEntry("    " + _("Delete JS cache after (days, 0 = never)"), config.plugins.iptvplayer.jsCacheDeleteAfterDays))
+            list.append(getConfigListEntry("    " + _("Delete JS cache now"), config.plugins.iptvplayer.fakeJSCacheDelete))
+            list.append(getConfigListEntry("    " + _("Delete subtitles cache after (days, 0 = never)"), config.plugins.iptvplayer.subtitlesCacheDeleteAfterDays))
+            list.append(getConfigListEntry("    " + _("Delete subtitles cache now"), config.plugins.iptvplayer.fakeSubtitlesCacheDelete))
+            list.append(getConfigListEntry("    " + _("Delete movie metadata cache after (days, 0 = never)"), config.plugins.iptvplayer.movieMetaDataCacheDeleteAfterDays))
+            list.append(getConfigListEntry("    " + _("Delete movie metadata cache now"), config.plugins.iptvplayer.fakeMovieMetaDataCacheDelete))
+            list.append(getConfigListEntry("    " + _("Remove thumbnails"), config.plugins.iptvplayer.deleteIcons))
+            list.append(getConfigListEntry("    " + _("Delete thumbnails cache now"), config.plugins.iptvplayer.fakeIconsCacheDelete))
+            list.append(getConfigListEntry("    " + _("Delete all cache files now"), config.plugins.iptvplayer.fakeAllCacheDelete))
+            list.append(getConfigListEntry("    ===== " + _("Config").upper() + " =====",))
+            list.append(getConfigListEntry("    " + _("Delete movie player preferences now"), config.plugins.iptvplayer.fakeMoviePlayerDelete))
+            list.append(getConfigListEntry("    " + _("Delete host order and groups now"), config.plugins.iptvplayer.fakeHostOrderDelete))
+            list.append(getConfigListEntry("    " + _("The number of items in the search history"), config.plugins.iptvplayer.search_history_size))
+            list.append(getConfigListEntry("    " + _("Delete search history now"), config.plugins.iptvplayer.fakeSearchHistoryDelete))
+            list.append(getConfigListEntry("    " + _("Delete favourites and watched status now"), config.plugins.iptvplayer.fakeFavouritesDelete))
+            list.append(getConfigListEntry("    " + _("Delete all config files now"), config.plugins.iptvplayer.fakeAllConfigDelete))
 
         list.append(getConfigListEntry(_("----- BUFFERING CONFIGURATION -----"), ))
         list.append(getConfigListEntry(_("[HTTP] buffering"), config.plugins.iptvplayer.buforowanie))
@@ -540,7 +583,7 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry(_("Buffering location"), config.plugins.iptvplayer.bufferingPath))
 
         list.append(getConfigListEntry(_("----- DOWNLOADING CONFIGURATION -----"), ))
-        list.append(getConfigListEntry(_("Downloads location"), config.plugins.iptvplayer.NaszaSciezka))
+        list.append(getConfigListEntry(_("Downloads location"), config.plugins.iptvplayer.DownloadsDir))
         list.append(getConfigListEntry(_("Start download manager per default"), config.plugins.iptvplayer.IPTVDMRunAtStart))
         list.append(getConfigListEntry(_("Show download manager after adding new item"), config.plugins.iptvplayer.IPTVDMShowAfterAdd))
         list.append(getConfigListEntry(_("Number of downloaded files simultaneously"), config.plugins.iptvplayer.IPTVDMMaxDownloadItem))
@@ -594,7 +637,6 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("The default aspect ratio for the external player"), config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio))
 
         list.append(getConfigListEntry(_("----- OTHER SETTINGS -----"), ))
-        list.append(getConfigListEntry(_("The number of items in the search history"), config.plugins.iptvplayer.search_history_size))
         list.append(getConfigListEntry(_("Remember last search history selection"), config.plugins.iptvplayer.rememberHistorySelection))
         list.append(getConfigListEntry(_("T9 letter jump in lists"), config.plugins.iptvplayer.enableT9MainList))
         list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
@@ -621,7 +663,10 @@ class ConfigMenu(ConfigBaseWidget):
 
     def onSelectionChanged(self):
         currItem = self["config"].getCurrent()[1]
-        if currItem in [config.plugins.iptvplayer.fakePin, config.plugins.iptvplayer.fakeConfigPin, config.plugins.iptvplayer.fakeHostsList, config.plugins.iptvplayer.fakExtMoviePlayerList]:
+        okOnlyItems = [config.plugins.iptvplayer.fakePin, config.plugins.iptvplayer.fakeConfigPin, config.plugins.iptvplayer.fakeHostsList,
+                       config.plugins.iptvplayer.fakExtMoviePlayerList]
+        okOnlyItems += [fakeItem for fakeItem, action in self._getDeleteNowActions()]
+        if currItem in okOnlyItems:
             self.isOkEnabled = True
             self.isSelectable = False
             self.setOKLabel()
@@ -643,15 +688,6 @@ class ConfigMenu(ConfigBaseWidget):
             self._repositionFooterKeys(False, self.isSelectable)
         else:
             ConfigBaseWidget.onSelectionChanged(self)
-
-    """
-    def saveAndClose(self):
-        ConfigBaseWidget.saveAndClose(self)
-        if self.showcoverOld != config.plugins.iptvplayer.showcover.value or \
-            self.SciezkaCacheOld != config.plugins.iptvplayer.SciezkaCache.value:
-            pass
-            # plugin must be restarted if we wont to this options take effect
-    """
 
     def getRuntimeOptionsValues(self):
         valTab = []
@@ -703,7 +739,54 @@ class ConfigMenu(ConfigBaseWidget):
         elif config.plugins.iptvplayer.fakExtMoviePlayerList == currItem:
             self.extMoviePlayerList()
         else:
-            ConfigBaseWidget.keyOK(self)
+            for fakeItem, action in self._getDeleteNowActions():
+                if fakeItem == currItem:
+                    action()
+                    break
+            else:
+                ConfigBaseWidget.keyOK(self)
+
+    def _getDeleteNowActions(self):
+        # every "Delete ... now" row and what OK does on it; built per call so the texts follow the UI language
+        cp = config.plugins.iptvplayer
+        return (
+            (cp.fakeCookiesCacheDelete, lambda: self.confirmDeleteCacheNow(_("cookies cache"), GetCookieDir())),
+            (cp.fakeJSCacheDelete, lambda: self.confirmDeleteCacheNow(_("JS cache"), GetJSCacheDir())),
+            (cp.fakeSubtitlesCacheDelete, lambda: self.confirmDeleteCacheNow(_("subtitles cache"), GetSubtitlesDir())),
+            (cp.fakeMovieMetaDataCacheDelete, lambda: self.confirmDeleteCacheNow(_("movie metadata cache"), GetMovieMetaDataDir())),
+            (cp.fakeMoviePlayerDelete, lambda: self.confirmDeleteCacheNow(_("movie player preferences"), GetMoviePlayerPerHostDir())),
+            (cp.fakeHostOrderDelete, lambda: self.confirmDeleteCacheNow(_("host order and groups"), GetHostOrderDir())),
+            (cp.fakeSearchHistoryDelete, lambda: self.confirmDeleteCacheNow(_("search history"), GetSearchHistoryDir())),
+            (cp.fakeIconsCacheDelete, lambda: self._askYesNo(self.deleteIconsCacheNowCallback, _("Do you really want to delete the thumbnails cache now?"))),
+            (cp.fakeFavouritesDelete, lambda: self._askYesNo(self.deleteFavouritesNowCallback, _("Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."))),
+            (cp.fakeAllCacheDelete, lambda: self._askYesNo(boundFunction(self.deleteCacheNowCallback, cp.CacheDir.value), _("Do you really want to delete ALL cache data now? This includes cookies, subtitles, movie metadata and thumbnails, and cannot be undone."))),
+            (cp.fakeAllConfigDelete, lambda: self._askYesNo(boundFunction(self.deleteCacheNowCallback, cp.ConfigDir.value), _("Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."))),
+        )
+
+    def _askYesNo(self, callback, text):
+        self.session.openWithCallback(callback, MessageBox, text, type=MessageBox.TYPE_YESNO, default=False)
+
+    def confirmDeleteCacheNow(self, label, path):
+        self._askYesNo(boundFunction(self.deleteCacheNowCallback, path), _("Do you really want to delete the %s now?") % label)
+
+    def deleteCacheNowCallback(self, path, ret=False):
+        if ret:
+            if not IsPathSafeToWipe(path):
+                printDBG('Storage: REFUSED to empty [%s] (not a dedicated cache/config folder)' % path)
+                self.session.open(MessageBox, _('Refusing to empty "%s" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration.') % path, type=MessageBox.TYPE_ERROR, timeout=8)
+                return
+            printDBG('Storage: emptying [%s]' % path)
+            RemoveDirContents(path)
+
+    def deleteFavouritesNowCallback(self, ret=False):
+        if ret:
+            for path in (GetFavouritesDir(), GetWatchedDir()):
+                self.deleteCacheNowCallback(path, True)
+
+    def deleteIconsCacheNowCallback(self, ret=False):
+        # icon batch dirs sit directly under CacheDir, RemoveDirContents() would also wipe cookies etc.
+        if ret:
+            RemoveAllDirsIconsFromPath(config.plugins.iptvplayer.CacheDir.value)
 
     def keyDefaults(self):
         def keyDefaultsConfirm(result):
@@ -776,6 +859,7 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.osk_type,
             config.plugins.iptvplayer.plugin_autostart,
             config.plugins.iptvplayer.favourites_use_watched_flag,
+            config.plugins.iptvplayer.storageExpertMode,
             config.plugins.iptvplayer.hostsListType,
             config.plugins.iptvplayer.skinforceallinternal,
             config.plugins.iptvplayer.IPTVDMShowNotification,

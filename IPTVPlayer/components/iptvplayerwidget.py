@@ -20,7 +20,7 @@ from Screens.MessageBox import MessageBox
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.Pixmap import Pixmap
-from Components.config import config
+from Components.config import config, configfile
 from Components.Sources.StaticText import StaticText
 from Tools.BoundFunction import boundFunction
 from Tools.LoadPixmap import LoadPixmap
@@ -33,6 +33,7 @@ from enigma import getDesktop, eTimer, ePoint
 ####################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetMoviePlayer, GetAvailableMoviePlayers, GetMoviePlayerName, GetListOfHostsNames, GetConfigExpectedPin
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostMenu, ConfigHostsMenu
+from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget
 from Plugins.Extensions.IPTVPlayer.components.configgroups import ConfigGroupsMenu
 
 from Plugins.Extensions.IPTVPlayer.components.iptvfavouriteswidgets import IPTVFavouritesAddItemWidget, IPTVFavouritesMainWidget
@@ -42,11 +43,15 @@ from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools_FreeSpace, \
-                                                          mkdirs as iptvtools_mkdirs, GetIPTVPlayerVersion, GetShortSystemInfo, \
+                                                          mkdirs as iptvtools_mkdirs, IsRealStoragePresent as iptvtools_IsRealStoragePresent, \
+                                                          IsPathWritable as iptvtools_IsPathWritable, \
+                                                          IsSameDir as iptvtools_IsSameDir, \
+                                                          CleanOldFilesInDir as iptvtools_CleanOldFilesInDir, GetIPTVPlayerVersion, GetShortSystemInfo, \
                                                           printDBG, printExc, iptv_system, GetHostsList, IsHostEnabled, \
                                                           eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, \
                                                           SortHostsList, GetHostsOrderList, CSearchHistoryHelper, \
                                                           CMoviePlayerPerHost, GetFavouritesDir, CFakeMoviePlayerOption, GetAvailableIconSize, \
+                                                          GetCookieDir, GetJSCacheDir, GetSubtitlesDir, GetMovieMetaDataDir, \
                                                           GetE2VideoMode, SetE2VideoMode, TestTmpCookieDir, TestTmpJSCacheDir, \
                                                           ClearTmpCookieDir, ClearTmpJSCacheDir, SetTmpCookieDir, SetTmpJSCacheDir, \
                                                           GetEnabledHostsList, SaveHostsOrderList, formatBytes, getExcMSG, \
@@ -428,13 +433,80 @@ class E2iPlayerWidget(Screen):
         self.spinnerPixmap = [LoadPixmap(_spinnerIconBase + '/radio_button_on.png'), LoadPixmap(_spinnerIconBase + '/radio_button_off.png')]
         self.useAlternativePlayer = False
 
+        # CacheDir on missing storage -> the plugin's own cache/ (with a notice); skipped once already there.
+        # Enigma2 refuses session.open() inside __init__: the dialogs are queued and shown from onStart().
+        self.startupStorageSteps = []
+        storagePathsRerouted = False
+        pluginCacheDir = GetPluginDir('cache/')
+        if not iptvtools_IsSameDir(config.plugins.iptvplayer.CacheDir.value, pluginCacheDir) and not iptvtools_IsRealStoragePresent(config.plugins.iptvplayer.CacheDir.value):
+            self.startupStorageSteps.append(lambda nextStep: self.session.openWithCallback(nextStep, MessageBox, _("No storage found for the cache folder. The cache folder will be switched to the plugin's own cache directory."), type=MessageBox.TYPE_INFO, timeout=10))
+            if not os_path.exists(pluginCacheDir):
+                iptvtools_mkdirs(pluginCacheDir)
+            printDBG('Storage: CacheDir [%s] has no real storage -> rerouted to plugin cache [%s]' % (config.plugins.iptvplayer.CacheDir.value, pluginCacheDir))
+            config.plugins.iptvplayer.CacheDir.value = pluginCacheDir
+            config.plugins.iptvplayer.CacheDir.save()
+            storagePathsRerouted = True
+
+        # bufferingPath is scratch space: silently fall back to TmpDir
+        if not iptvtools_IsSameDir(config.plugins.iptvplayer.bufferingPath.value, config.plugins.iptvplayer.TmpDir.value) and not iptvtools_IsRealStoragePresent(config.plugins.iptvplayer.bufferingPath.value):
+            printDBG('Storage: bufferingPath [%s] has no real storage -> rerouted to TmpDir [%s]' % (config.plugins.iptvplayer.bufferingPath.value, config.plugins.iptvplayer.TmpDir.value))
+            config.plugins.iptvplayer.bufferingPath.value = config.plugins.iptvplayer.TmpDir.value
+            config.plugins.iptvplayer.bufferingPath.save()
+            storagePathsRerouted = True
+
+        if storagePathsRerouted:
+            configfile.save()
+
+        # DownloadsDir holds real downloads: never guess a new place, ask. Once the user has chosen one, only require it to be writable
+        downloadsDir = config.plugins.iptvplayer.DownloadsDir.value
+        if downloadsDir == config.plugins.iptvplayer.NaszaSciezka.value:
+            downloadsDirOk = iptvtools_IsRealStoragePresent(downloadsDir)
+        else:
+            downloadsDirOk = iptvtools_IsPathWritable(downloadsDir)
+        printDBG('Storage: DownloadsDir [%s] usable=%s' % (downloadsDir, downloadsDirOk))
+        if not downloadsDirOk:
+            def _askDownloadsDir(nextStep):
+                def _setDownloadsDir(newPath):
+                    printDBG('Storage: downloads directory picker returned [%s]' % newPath)
+                    if newPath is not None:
+                        config.plugins.iptvplayer.DownloadsDir.value = newPath
+                        config.plugins.iptvplayer.DownloadsDir.save()
+                        configfile.save()
+                    nextStep()
+
+                def _openPicker(ret=None):
+                    # no real storage left at the configured place: start where the mounted disks are
+                    startDir = config.plugins.iptvplayer.DownloadsDir.value
+                    if not iptvtools_IsRealStoragePresent(startDir):
+                        startDir = '/media/' if os_path.isdir('/media/') else '/'
+                    self.session.openWithCallback(_setDownloadsDir, IPTVDirectorySelectorWidget, currDir=startDir, title=_("Select directory"))
+
+                self.session.openWithCallback(_openPicker, MessageBox, _("No storage found for the downloads location. Where would you like to save your downloads?"), type=MessageBox.TYPE_INFO)
+
+            self.startupStorageSteps.append(_askDownloadsDir)
+
+        printDBG('Storage: effective folders CacheDir[%s] ConfigDir[%s] TmpDir[%s] DownloadsDir[%s] bufferingPath[%s]' % (
+            config.plugins.iptvplayer.CacheDir.value, config.plugins.iptvplayer.ConfigDir.value, config.plugins.iptvplayer.TmpDir.value,
+            config.plugins.iptvplayer.DownloadsDir.value, config.plugins.iptvplayer.bufferingPath.value))
+
+        for cacheDirFunc, deleteAfterDays in (
+            (GetCookieDir, config.plugins.iptvplayer.cookiesCacheDeleteAfterDays.value),
+            (GetJSCacheDir, config.plugins.iptvplayer.jsCacheDeleteAfterDays.value),
+            (GetSubtitlesDir, config.plugins.iptvplayer.subtitlesCacheDeleteAfterDays.value),
+            (GetMovieMetaDataDir, config.plugins.iptvplayer.movieMetaDataCacheDeleteAfterDays.value),
+        ):
+            if deleteAfterDays > 0:
+                cleanDir = cacheDirFunc()
+                printDBG('Storage: auto-cleanup of [%s] files older than %s day(s)' % (cleanDir, deleteAfterDays))
+                asynccall.AsyncMethod(iptvtools_CleanOldFilesInDir)(cleanDir, deleteAfterDays)
+
         self.showMessageNoFreeSpaceForIcon = False
         self.iconMenager = None
         if config.plugins.iptvplayer.showcover.value:
-            if not os_path.exists(config.plugins.iptvplayer.SciezkaCache.value):
-                iptvtools_mkdirs(config.plugins.iptvplayer.SciezkaCache.value)
+            if not os_path.exists(config.plugins.iptvplayer.CacheDir.value):
+                iptvtools_mkdirs(config.plugins.iptvplayer.CacheDir.value)
 
-            if iptvtools_FreeSpace(config.plugins.iptvplayer.SciezkaCache.value, 10):
+            if iptvtools_FreeSpace(config.plugins.iptvplayer.CacheDir.value, 10):
                 self.iconMenager = IconMenager(True)
             else:
                 self.showMessageNoFreeSpaceForIcon = True
@@ -2025,7 +2097,15 @@ class E2iPlayerWidget(Screen):
             self["key_info_icon"].setPixmap(LoadPixmap(_footerIconBase + '/info.png'))
             self["key_ok_icon"].setPixmap(LoadPixmap(_footerIconBase + '/ok.png'))
             self["key_exit_icon"].setPixmap(LoadPixmap(_footerIconBase + '/exit.png'))
-        self.selectHost()
+        self._runStartupStorageSteps()
+
+    def _runStartupStorageSteps(self, ret=None):
+        if self.startupStorageSteps:
+            step = self.startupStorageSteps.pop(0)
+            printDBG('Storage: showing startup dialog, %d more queued' % len(self.startupStorageSteps))
+            step(self._runStartupStorageSteps)
+        else:
+            self.selectHost()
 
     def selectHost(self, arg1=None):
         printDBG(">> selectHost")
@@ -2294,7 +2374,7 @@ class E2iPlayerWidget(Screen):
 
             if self.showMessageNoFreeSpaceForIcon and hasIcon:
                 self.showMessageNoFreeSpaceForIcon = False
-                self.session.open(MessageBox, (_("There is no free space on the drive [%s].") % config.plugins.iptvplayer.SciezkaCache.value) + "\n" + _("New icons will not be available."), type=MessageBox.TYPE_INFO, timeout=10)
+                self.session.open(MessageBox, (_("There is no free space on the drive [%s].") % config.plugins.iptvplayer.CacheDir.value) + "\n" + _("New icons will not be available."), type=MessageBox.TYPE_INFO, timeout=10)
         elif type in ['selecthost', 'selectgroup']:
             self.close()
             return
@@ -2654,7 +2734,7 @@ class E2iPlayerWidget(Screen):
 
             isBufferingMode = False if url.startswith('file://') else self.activePlayer.get('buffering', self.checkBuffering(url))
             bufferingPath = config.plugins.iptvplayer.bufferingPath.value
-            downloadingPath = config.plugins.iptvplayer.NaszaSciezka.value
+            downloadingPath = config.plugins.iptvplayer.DownloadsDir.value
             destinationPath = downloadingPath if recorderMode else bufferingPath
 
             if recorderMode or isBufferingMode:

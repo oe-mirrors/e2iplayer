@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, CSearchHistoryHelper
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, E2ColoR, CSearchHistoryHelper, GetMovieMetaDataDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Components.config import config, ConfigText
 
@@ -758,10 +758,7 @@ class BtolatCom(CBaseHostClass):
         # 5) Auto-create empty metadata file to prevent FileNotFoundError
         # ===============================
         title_safe = cItem.get("title", "video").replace("/", "_")
-        metadata_dir = "/hdd/IPTVCache/MovieMetaData"
-        if not os.path.exists(metadata_dir):
-            os.makedirs(metadata_dir)
-        metadata_file = os.path.join(metadata_dir, "botolat_%s.iptv" % title_safe)
+        metadata_file = GetMovieMetaDataDir("botolat_%s.iptv" % title_safe)
         if not os.path.exists(metadata_file):
             try:
                 with codecs.open(metadata_file, "w", "utf-8", "replace") as fp:
@@ -780,12 +777,7 @@ class BtolatCom(CBaseHostClass):
         first_link = videoLinks[0]["url"]
         # File path
         safe_title = title.replace("/", "_").replace("\\", "_")
-        file_path = os.path.join("/hdd/IPTVCache/MovieMetaData", "botolat_%s.iptv" % safe_title)
-        try:
-            if not os.path.exists(os.path.dirname(file_path)):
-                os.makedirs(os.path.dirname(file_path))
-        except Exception:
-            pass
+        file_path = GetMovieMetaDataDir("botolat_%s.iptv" % safe_title)
         meta = {"host": "botolat", "title": title, "file_path": first_link}
         try:
             with codecs.open(file_path, "w", "utf-8") as fp:

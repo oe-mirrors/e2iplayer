@@ -298,7 +298,7 @@ class doUseHostAction(threading.Thread):
 			url = settings.retObj.value[myID].url
 			if url != '' and IsUrlDownloadable(url):
 				titleOfMovie = settings.currItem['itemTitle'].replace('/', '-').replace(':', '-').replace('*', '-').replace('?', '-').replace('"', '-').replace('<', '-').replace('>', '-').replace('|', '-')
-				fullFilePath = config.plugins.iptvplayer.NaszaSciezka.value + '/' + titleOfMovie + '.mp4'
+				fullFilePath = config.plugins.iptvplayer.DownloadsDir.value + '/' + titleOfMovie + '.mp4'
 				if None is Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
 					printDBG('============webThreads.py Initialize Download Manager============')
 					Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager = IPTVDMApi(2, int(config.plugins.iptvplayer.IPTVDMMaxDownloadItem.value))

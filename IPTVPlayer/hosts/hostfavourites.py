@@ -5,7 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CHostBase, CBaseHostClass, CDisplayListItem, RetHost, CUrlItem, CFavItem
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, GetFavouritesDir, mkdirs, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetLogoDir, GetFavouritesDir, GetWatchedDir, mkdirs, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem
@@ -374,7 +374,7 @@ class IPTVHost(CHostBase):
         # None = no file at all, '' or any other text = watched, STARTED_MARKER = started
         if hashData is None:
             return None
-        flagFilePath = GetFavouritesDir('IPTVWatched/%s/.%s.iptvhash' % hashData)
+        flagFilePath = GetWatchedDir('%s/.%s.iptvhash' % hashData)
         if not fileExists(flagFilePath):
             return None
         try:
@@ -418,8 +418,8 @@ class IPTVHost(CHostBase):
         return ret
 
     def _createViewedFile(self, hashData):
-        if hashData is not None and mkdirs(GetFavouritesDir('IPTVWatched') + ('/%s/' % hashData[0])):
-            flagFilePath = GetFavouritesDir('IPTVWatched/%s/.%s.iptvhash' % hashData)
+        if hashData is not None and mkdirs(GetWatchedDir('%s/' % hashData[0])):
+            flagFilePath = GetWatchedDir('%s/.%s.iptvhash' % hashData)
             try:
                 # write (not touch): must overwrite a possible "started" marker
                 f = open(flagFilePath, 'w')
@@ -580,7 +580,7 @@ class IPTVHost(CHostBase):
                 hashData = privateData['hash_data']
                 Index = privateData['item_index']
                 if privateData['action'] == 'unset_watched_flag':
-                    flagFilePath = GetFavouritesDir('IPTVWatched/%s/.%s.iptvhash' % hashData)
+                    flagFilePath = GetWatchedDir('%s/.%s.iptvhash' % hashData)
                     if rm(flagFilePath):
                         self.cachedRet.value[Index].isWatched = False
                         self.cachedRet.value[Index].isStarted = False

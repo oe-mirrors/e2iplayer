@@ -472,15 +472,15 @@ class downloaderPage(resource.Resource):
                 os.remove(arg3)
             elif arg2 == 'watchMovie' and os.path.exists(arg3):
                 return util.redirectTo(b"/file?action=download&file=%s" % urllib.parse.quote(arg3.decode('utf8', 'ignore').encode('utf-8')), req)
-            if os.path.exists(config.plugins.iptvplayer.NaszaSciezka.value) and None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
-                files = os.listdir(config.plugins.iptvplayer.NaszaSciezka.value)
+            if os.path.exists(config.plugins.iptvplayer.DownloadsDir.value) and None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
+                files = os.listdir(config.plugins.iptvplayer.DownloadsDir.value)
                 files.sort(key=lambda x: x.lower())
                 for item in files:
                     if item.startswith('.'):
                         continue  # do not list hidden items
                     if item[-4:].lower() not in ['.flv', '.mp4']:
                         continue
-                    fileName = os.path.join(config.plugins.iptvplayer.NaszaSciezka.value, item)
+                    fileName = os.path.join(config.plugins.iptvplayer.DownloadsDir.value, item)
                     skip = False
                     for item2 in Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList():
                         if fileName == item2.fileName.replace('//', '/'):

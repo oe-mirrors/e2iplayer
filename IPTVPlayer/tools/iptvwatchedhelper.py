@@ -3,7 +3,7 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetFavouritesDir, mkdirs, rm
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetWatchedDir, mkdirs, rm
 from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import RetHost, CDisplayListItem
@@ -31,7 +31,6 @@ class IPTVWatchedHelper(object):
 
     def __init__(self, hostName=''):
         self.hostName = str(hostName or '')
-        self._favouritesBaseDir = None
         self._watchedBaseDir = None
         self._ensuredDirs = {}
         self._debugCalls = {}
@@ -146,22 +145,10 @@ class IPTVWatchedHelper(object):
     ###################################################
     # path helpers
     ###################################################
-    def _getFavouritesBaseDir(self):
-        try:
-            if self._favouritesBaseDir is None:
-                self._favouritesBaseDir = GetFavouritesDir('').rstrip('/')
-            return self._favouritesBaseDir
-        except Exception:
-            printExc()
-        return ''
-
     def _getWatchedBaseDir(self):
         try:
             if self._watchedBaseDir is None:
-                baseDir = self._getFavouritesBaseDir()
-                if baseDir == '':
-                    return ''
-                self._watchedBaseDir = os.path.join(baseDir, 'IPTVWatched')
+                self._watchedBaseDir = GetWatchedDir('').rstrip('/')
             return self._watchedBaseDir
         except Exception:
             printExc()

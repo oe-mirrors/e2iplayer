@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVRadioButtonList, fitPixmapInBox, IPTVPlayerSelectorContextMenuChoiceBoxList
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetConfigDir
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIPTVPlayerVersion, GetIconDir, GetLogoDir, GetAvailableIconSize, GetHostOrderDir
 from Plugins.Extensions.IPTVPlayer.__init__ import _, GRIDSUPPORT
 
 
@@ -642,12 +642,13 @@ class _PlayerSelectorListMode:
             return True
         try:
             gn = self.groupName or ''
+            # non-migrating on purpose: the screen that opens this menu has already migrated
             if gn == 'selectgroup':
-                return os.path.isfile(GetConfigDir('iptvplayerhostsgroups.json'))
+                return os.path.isfile(GetHostOrderDir('iptvplayerhostsgroups.json'))
             if gn in ('selecthost', 'all'):
-                return os.path.isfile(GetConfigDir('iptvplayerhostsorder'))
+                return os.path.isfile(GetHostOrderDir('iptvplayerhostsorder'))
             if gn:
-                return os.path.isfile(GetConfigDir('iptvplayer%sgroup.json' % gn))
+                return os.path.isfile(GetHostOrderDir('iptvplayer%sgroup.json' % gn))
         except Exception:
             printExc()
         return False
