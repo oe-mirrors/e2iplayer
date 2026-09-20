@@ -804,17 +804,17 @@ class XXXParser:
 				while True:
 					chunk = stream.read(1024)
 					if not chunk:
-						break # stream ended without a complete frame
+						break  # stream ended without a complete frame
 					_bytes += chunk
-					a = _bytes.find(b'\xff\xd8') # JPEG start marker
+					a = _bytes.find(b'\xff\xd8')  # JPEG start marker
 					if a == -1:
-						_bytes = _bytes[-1:] # keep one byte, the marker may be split across two reads
+						_bytes = _bytes[-1:]  # keep one byte, the marker may be split across two reads
 						continue
-					b = _bytes.find(b'\xff\xd9', a + 2) # end marker of *this* frame
+					b = _bytes.find(b'\xff\xd9', a + 2)  # end marker of *this* frame
 					if b == -1:
-						_bytes = _bytes[a:] # drop what precedes the frame start
+						_bytes = _bytes[a:]  # drop what precedes the frame start
 						if len(_bytes) > 2 * 1024 * 1024:
-							break # no end marker in sight, give up
+							break  # no end marker in sight, give up
 						continue
 					jpg = _bytes[a:b + 2]
 					with open('/tmp/obraz.jpg', 'wb') as titleFile:
