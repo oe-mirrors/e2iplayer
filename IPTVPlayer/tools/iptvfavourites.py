@@ -14,13 +14,17 @@ from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dump
 # FOREIGN import
 ###################################################
 import codecs
-from os import path as os_path, remove as os_remove
+from os import listdir as os_listdir, path as os_path, remove as os_remove, stat as os_stat
 ###################################################
 
 
 class IPTVFavourites:
     FILE_NAME_MACRO = 'iptv_%s.fav'
     GROUPS_FILE_NAME = FILE_NAME_MACRO % 'groups'
+    # fields of a host's item dict that differ between two listings of the same item, or between the
+    # folder of a movie and the movie inside it (the host copies the folder's dict, only "type" is
+    # then video instead of category) - the film in a favourite folder counts as the favourite too
+    VOLATILE_ITEM_FIELDS = ('isWatched', 'isStarted', 'desc', 'icon', 'time', 'type', 'good_for_fav')
 
     def __init__(self, favDir):
         self.lastError = ''
@@ -164,6 +168,35 @@ class IPTVFavourites:
                 self.lastError = _("The same item already exists in this group.")
         return False
 
+    @classmethod
+    def _getItemIdentity(cls, hostName, resolver, data):
+        # what makes two favourites "the same item": host, resolver and the host's own item dict
+        # without the fields above (a plain string, e.g. a direct link, is compared as it is)
+        try:
+            itemData = json_loads(data)
+        except Exception:
+            itemData = None
+        if isinstance(itemData, dict):
+            itemData = {key: value for key, value in itemData.items() if key not in cls.VOLATILE_ITEM_FIELDS}
+        else:
+            itemData = data
+        return (hostName, resolver, itemData)
+
+    @classmethod
+    def getItemIdentityKey(cls, hostName, resolver, data):
+        # _getItemIdentity() as a string, for set lookups
+        return json_dumps(cls._getItemIdentity(hostName, resolver, data), sort_keys=True)
+
+    def findItems(self, hostName, resolver, data):
+        # -> [(group_id, group title, item index)] of the stored favourites equal to the given item
+        target = self._getItemIdentity(hostName, resolver, data)
+        found = []
+        for group in self.groups:
+            for idx, item in enumerate(group.get('items', [])):
+                if self._getItemIdentity(item.hostName, item.resolver, item.data) == target:
+                    found.append((group['group_id'], group.get('title', ''), idx))
+        return found
+
     def delGroupItem(self, itemIdx, group_id):
         idx = self._getGroupIdx(group_id)
         if -1 != idx:
@@ -284,3 +317,33 @@ class IPTVFavourites:
     def _loadFromFile(self, filePath, encoding='utf-8'):
         with codecs.open(filePath, 'r', encoding, 'replace') as fp:
             return fp.read()
+
+
+_indexCache = {'signature': None, 'keys': frozenset()}
+
+
+def getFavouritesIdentityKeys(favDir):
+    # identity keys (IPTVFavourites.getItemIdentityKey) of everything stored in the favourites; read again
+    # only when one of the favourites files changed, so it is cheap to ask for every list that is shown
+    if not os_path.isdir(favDir):
+        return frozenset()  # no favourites stored yet
+    try:
+        signature = []
+        for fileName in sorted(os_listdir(favDir)):
+            if fileName.startswith('iptv_') and fileName.endswith('.fav'):
+                fileStat = os_stat(os_path.join(favDir, fileName))
+                signature.append((fileName, fileStat.st_mtime, fileStat.st_size))
+        if signature != _indexCache['signature']:
+            helper = IPTVFavourites(favDir)
+            keys = set()
+            if helper.load():
+                for group in helper.getGroups():
+                    for item in group.get('items', []):
+                        keys.add(IPTVFavourites.getItemIdentityKey(item.hostName, item.resolver, item.data))
+            _indexCache['signature'] = signature
+            _indexCache['keys'] = frozenset(keys)
+    except Exception:
+        printExc()
+        _indexCache['signature'] = None
+        return frozenset()
+    return _indexCache['keys']

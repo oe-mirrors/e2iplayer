@@ -549,6 +549,7 @@ class urlparser:
             "vidaraa.cc": self.pp.parserSTREAMUP,
             "vidarax.cc": self.pp.parserSTREAMUP,
             "vidavaca.net": self.pp.parserSTREAMUP,
+            "vidvara.biz": self.pp.parserSTREAMUP,
             "vidara.so": self.pp.parserSTREAMUP,
             "vidara.to": self.pp.parserSTREAMUP,
             "vidavra.cc": self.pp.parserSTREAMUP,
