@@ -14,6 +14,10 @@
 		<key id="KEY_CHANNELUP" mapto="pageUp" flags="m" />
 		<key id="KEY_CHANNELDOWN" mapto="pageDown" flags="m" />
     </map>
+    <map context="IPTVPlayerConfigActions">
+        <key id="KEY_PREVIOUS" mapto="prevSection" flags="m" />
+        <key id="KEY_NEXT"     mapto="nextSection" flags="m" />
+    </map>
     <map context="IPTVAlternateVideoPlayer">
         <key id="KEY_LEFT"     mapto="left_press"   flags="m" />
         <key id="KEY_LEFT"     mapto="left_repeat"  flags="r" />

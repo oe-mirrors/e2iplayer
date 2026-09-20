@@ -8,21 +8,30 @@ function e2ilog(...args) {
             return (typeof a === 'string') ? a : JSON.stringify(a);
         }).join(' ');
         chrome.runtime.sendMessage({action: "DEBUG_LOG", msg: msg});
-    } catch (e) {}
+    } catch (e) {
+        // logging must never break the caller (no relay tab / extension context gone)
+    }
+}
+
+// The page script and the extension's proxy script talk through window.postMessage of the very
+// same window. A message only counts when this window sent it (e.source) and it carries the
+// page's own origin; messages are posted to that origin ("/") only, never to '*'.
+function E2iIsOwnMessage(e) {
+    return e.source === window && e.origin === window.location.origin;
 }
 
 function _E2iSendMsgToPage(from, payload, cb) {
-    const id = Math.random().toString(36).slice(2);
+    const id = Math.random().toString(36).slice(2); // NOSONAR - only pairs a reply with its request, not a secret
     if (cb !== undefined)
     {
         function onResp(e) {
-            if (e.source !== window)
+            if (!E2iIsOwnMessage(e))
                 return;
             const m = e.data;
-            if (!m || m.__MYE2I !== true || m.to !== 'TO_' + from  + '_RESPONSE' || m.id !== id)
+            if (m?.__MYE2I !== true || m.to !== 'TO_' + from  + '_RESPONSE' || m.id !== id)
                 return;
             window.removeEventListener('message', onResp);
-            cb && cb(m.response);
+            cb?.(m.response);
         }
 
         window.addEventListener('message', onResp);
@@ -34,7 +43,7 @@ function _E2iSendMsgToPage(from, payload, cb) {
         from: 'FROM_' + from,
         id,
         payload
-    }, '*');
+    }, '/');
 }
 
 
@@ -110,10 +119,10 @@ function E2iHandleMessage(msg, cb)
 
 function E2iSetupEventListener() {
     window.addEventListener('message', (e) => {
-        if (e.source !== window)
+        if (!E2iIsOwnMessage(e))
             return;
         const msg = e.data;
-        if (!msg || msg.__MYE2I !== true)
+        if (msg?.__MYE2I !== true)
             return;
 
         if (msg.to === 'TO_BACKGROUND' && msg.from === 'FROM_PAGE' ) {
@@ -125,7 +134,7 @@ function E2iSetupEventListener() {
                     to: 'TO_PAGE_RESPONSE',
                     id: msg.id,
                     response: resp
-                }, '*');
+                }, '/');
             });
         }
 
@@ -137,7 +146,7 @@ function E2iSetupEventListener() {
                     to: 'TO_PAGE_RESPONSE',
                     id: msg.id,
                     response: resp
-                }, '*');
+                }, '/');
             });
         }
 
@@ -186,23 +195,23 @@ var insertRc2ScriptIntoDOM = function (job) {
         captchaClass = "cf-turnstile";
     }
 
-    captchaContainer.innerHTML = "<div id=\"recaptcha_container\"><form action=\"\" method=\"post\"> <div class=\"placeholder\"> <div id=\"recaptcha_widget\"> \
-            <form action=\"?\" method=\"POST\"> \
-            <div class=\"" + captchaClass + "\" data-callback=\"onResponse\" data-error-callback=\"onCaptchaError\"></div> \
-            </form></div>";
+    captchaContainer.innerHTML = `<div id="recaptcha_container"><form action="" method="post"> <div class="placeholder"> <div id="recaptcha_widget">
+            <form action="?" method="POST">
+            <div class="${captchaClass}" data-callback="onResponse" data-error-callback="onCaptchaError"></div>
+            </form></div>`;
 
-    captchaContainer.querySelector("." + captchaClass).setAttribute("data-sitekey", job.siteKey);
+    captchaContainer.querySelector("." + captchaClass).dataset.sitekey = job.siteKey;
     if (job.siteKeyType === "cf_re") {
         // Turnstile: optional action name and customer data (a=... / d=... in the address)
         if (job.siteKeyAction !== undefined && job.siteKeyAction !== "undefined") {
-            captchaContainer.querySelector("." + captchaClass).setAttribute("data-action", job.siteKeyAction);
+            captchaContainer.querySelector("." + captchaClass).dataset.action = job.siteKeyAction;
         }
         if (job.cdata !== undefined && job.cdata !== "undefined") {
-            captchaContainer.querySelector("." + captchaClass).setAttribute("data-cdata", job.cdata);
+            captchaContainer.querySelector("." + captchaClass).dataset.cdata = job.cdata;
         }
     }
     if (job.siteKeyType === "INVISIBLE") {
-        captchaContainer.querySelector("." + captchaClass).setAttribute("data-size", "invisible");
+        captchaContainer.querySelector("." + captchaClass).dataset.size = "invisible";
         captchaContainer.innerHTML += "<button class='invisible-captcha-button' id='submit' onclick='grecaptcha.execute();'>" + e2iText('button_i_am_no_robot', 'I am no robot')
             + "</button>";
     }
@@ -210,7 +219,7 @@ var insertRc2ScriptIntoDOM = function (job) {
     if (job.siteKeyType === "h1_invisible") {
         // hCaptcha invisible: no checkbox, the challenge (if any) starts when
         // hcaptcha.execute() runs - same button pattern as reCAPTCHA invisible
-        captchaContainer.querySelector("." + captchaClass).setAttribute("data-size", "invisible");
+        captchaContainer.querySelector("." + captchaClass).dataset.size = "invisible";
         captchaContainer.innerHTML += "<button class='invisible-captcha-button' id='submit' onclick='hcaptcha.execute();'>" + e2iText('button_i_am_no_robot', 'I am no robot')
             + "</button>";
     }
@@ -261,13 +270,13 @@ var insertRc2ScriptIntoDOM = function (job) {
 
         insertJSSrc("https://www.google.com/recaptcha/api.js?onload=onloadCallback");
 
-    } else if (job.siteKeyAction !== undefined && job.siteKeyAction !== "undefined" && ["h1", "h1_invisible", "cf_re"].indexOf(job.siteKeyType) === -1) {
+    } else if (job.siteKeyAction !== undefined && job.siteKeyAction !== "undefined" && !["h1", "h1_invisible", "cf_re"].includes(job.siteKeyType)) {
         // score based reCAPTCHA (v3 / Enterprise score key): no widget, the
         // token comes from execute(siteKey, {action}). Enterprise uses its own
         // script and the grecaptcha.enterprise namespace.
         var grc = job.siteKeyType === "ENTERPRISE" ? "grecaptcha.enterprise" : "grecaptcha";
         var grcScript = job.siteKeyType === "ENTERPRISE" ? "https://www.google.com/recaptcha/enterprise.js" : "https://www.google.com/recaptcha/api.js";
-        captchaContainer.querySelector("." + captchaClass).setAttribute("data-size", "invisible");
+        captchaContainer.querySelector("." + captchaClass).dataset.size = "invisible";
         captchaContainer.innerHTML += "<button class='invisible-captcha-button'>" + e2iText('button_please_wait', 'Please wait...')
             + "</button>";
 
@@ -313,15 +322,13 @@ var insertRc2ScriptIntoDOM = function (job) {
 
 var insertHosterName = function (hosterName) {
     if (hosterName != null && hosterName != "" && hosterName != "undefined") {
-        log.push(Date.now() + " | inserting hostername into DOM for job " + JSON.stringify(hosterName));
-        var hosterNameContainer = document.getElementsByClassName("hosterName");
-        for (var i = 0; i < hosterNameContainer.length; i++) {
-            hosterNameContainer[i].textContent = hosterName.replace(/^(https?):\/\//, "");
+        e2ilog(Date.now() + " | inserting hostername into DOM for job " + JSON.stringify(hosterName));
+        for (const container of document.getElementsByClassName("hosterName")) {
+            container.textContent = hosterName.replace(/^(https?):\/\//, "");
         }
     } else {
-        var shouldHideContainer = document.getElementsByClassName("hideIfNoHoster");
-        for (var i = 0; i < shouldHideContainer.length; i++) {
-            shouldHideContainer[i].style.visibility = "hidden";
+        for (const container of document.getElementsByClassName("hideIfNoHoster")) {
+            container.style.visibility = "hidden";
         }
     }
 };
@@ -332,16 +339,16 @@ var insertHosterName = function (hosterName) {
 // emptied directly and a fresh <head>/<body> is put back (that is what
 // document.open() leaves behind too).
 function e2iWipeDocument() {
-    if (navigator.userAgent.indexOf('Firefox') !== -1) {
+    if (navigator.userAgent.includes('Firefox')) {
         var root = document.documentElement;
         while (root.firstChild) {
-            root.removeChild(root.firstChild);
+            root.firstChild.remove();
         }
         root.appendChild(document.createElement('head'));
         root.appendChild(document.createElement('body'));
     } else {
         document.open();
-        document.write("");
+        document.write(""); // NOSONAR - deliberate: this classic document.open()/write()/close() is what empties the page in Chrome
         document.close();
     }
 }
@@ -463,7 +470,7 @@ function main_e2i(template){
     var siteKey = decodeURIComponent(params.get("k"));
     var siteKeyType = decodeURIComponent(params.get("st"));
     var siteKeyAction = decodeURIComponent(params.get("a"));
-    callbackUrl = decodeURIComponent(params.get("u"));
+    var callbackUrl = decodeURIComponent(params.get("u"));
     var captchaId = decodeURIComponent(params.get("c"));
     var hoster = decodeURIComponent(params.get("h"));
     var cdata = decodeURIComponent(params.get("d"));
@@ -489,17 +496,6 @@ function e2i_checkCookiesPre(resParams) {
         }
         else
         {
-            function isEqual(a, b) {
-              return JSON.stringify(a) === JSON.stringify(b);
-            }
-
-            /*
-            window.e2i_all_cookies.push(
-              ...resParams.cookies.filter(c =>
-                !window.e2i_all_cookies.some(e => isEqual(e, c))
-              )
-            );
-            */
             function isEqual(a, b) {
               return JSON.stringify(a) === JSON.stringify(b);
             }
@@ -616,12 +612,14 @@ function e2iLooksLikeAnyChallenge() {
             return false;
         }
         html = (document.title + ' ' + html).toLowerCase();
-        for (var i = 0; i < E2I_CHALLENGE_MARKERS.length; i++) {
-            if (html.indexOf(E2I_CHALLENGE_MARKERS[i]) !== -1) {
+        for (const marker of E2I_CHALLENGE_MARKERS) {
+            if (html.includes(marker)) {
                 return true;
             }
         }
-    } catch (e) {}
+    } catch (e) {
+        // a page that cannot be read is not treated as a check page
+    }
     return false;
 }
 
@@ -691,21 +689,25 @@ function main_e2itcf(){
             if (document.getElementById("challenge-form")) return true;
         } catch (e) {}
         try {
-            var links = document.getElementsByTagName("link");
-            for (var i = 0; i < links.length; i++) {
-                var href = links[i].getAttribute("href");
-                if (href && href.includes('/challenges')) return true;
+            for (const link of document.getElementsByTagName("link")) {
+                const href = link.getAttribute("href");
+                if (href?.includes('/challenges')) return true;
             }
-        } catch (e) {}
+        } catch (e) {
+            // not readable: this check finds nothing
+        }
         try {
-            var scripts = document.getElementsByTagName('script');
-            for (var j = 0; j < scripts.length; j++) {
-                if (scripts[j].text && scripts[j].text.includes("window._cf_chl_opt")) return true;
+            for (const script of document.getElementsByTagName('script')) {
+                if (script.text?.includes("window._cf_chl_opt")) return true;
             }
-        } catch (e) {}
+        } catch (e) {
+            // not readable: this check finds nothing
+        }
         try {
-            if (document.title && document.title.indexOf("Just a moment") !== -1) return true;
-        } catch (e) {}
+            if (document.title?.includes("Just a moment")) return true;
+        } catch (e) {
+            // not readable: this check finds nothing
+        }
         return false;
     }
 
@@ -780,4 +782,4 @@ function main_e2itco()
 
 // Firefox hands the script's completion value back to scripting.executeScript()
 // and fails if it is not structured-cloneable - end with a plain undefined.
-undefined;
+undefined; // NOSONAR - deliberate, see above

@@ -25,7 +25,9 @@ def widget_texts():
     assert isinstance(result, ast.Dict)
     texts = {}
     for key, value in zip(result.keys, result.values):
-        assert isinstance(value, ast.Call) and value.func.id == "_" and isinstance(value.args[0], ast.Constant), ast.dump(value)[:80]
+        assert isinstance(value, ast.Call), ast.dump(value)[:80]
+        assert value.func.id == "_", ast.dump(value)[:80]
+        assert isinstance(value.args[0], ast.Constant), ast.dump(value)[:80]
         texts[key.value] = value.args[0].value
     return texts
 

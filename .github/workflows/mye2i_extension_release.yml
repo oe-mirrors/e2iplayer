@@ -52,6 +52,19 @@ jobs:
           VERSION=$(python -c "import json;print(json.load(open('mye2i-extension/manifest.json'))['version'])")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
+      # The release tags must not sit on a commit that python3 itself contains. The OpenATV feed builds the
+      # package version from `git describe --tags` and, when the merge commit carries both this tag and the
+      # plugin's own v<version> tag, describe picks this one - the box then listed the plugin as
+      # "e2iplayer (mye2i-extension+...)". So the tags go on a marker commit with the same tree whose
+      # parent is the merge commit: nothing on python3 descends from it, describe never sees it.
+      - name: Marker commit for the release tags
+        id: marker
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          MARKER=$(git commit-tree "${GITHUB_SHA}^{tree}" -p "${GITHUB_SHA}" -m "MyE2i browser extension release marker (same tree as ${GITHUB_SHA::7})")
+          echo "sha=$MARKER" >> "$GITHUB_OUTPUT"
+
       - name: Build
         run: python mye2i-extension/build_release.py --firefox --crx --out dist
 
@@ -67,6 +80,7 @@ jobs:
       - name: Permanent release for this version
         env:
           VERSION: ${{ steps.ver.outputs.version }}
+          MARKER: ${{ steps.marker.outputs.sha }}
         run: |
           TAG="mye2i-extension-v${VERSION}"
           if gh release view "$TAG" >/dev/null 2>&1; then
@@ -91,18 +105,20 @@ jobs:
             echo "## Changes"
             echo "$CHANGES"
           } > release_notes.md
+          git push origin "${MARKER}:refs/tags/${TAG}"
           gh release create "$TAG" \
             "dist/mye2iv3-${VERSION}.zip" \
             "dist/mye2iv3-${VERSION}.crx" \
             "dist/mye2iv3-firefox-unsigned-${VERSION}.xpi" \
             --title "MyE2i browser extension v${VERSION}" \
             --notes-file release_notes.md \
-            --target "$GITHUB_SHA" \
+            --verify-tag \
             --latest=false
 
       - name: Rolling release (fixed download links)
         env:
           VERSION: ${{ steps.ver.outputs.version }}
+          MARKER: ${{ steps.marker.outputs.sha }}
         run: |
           {
             echo "Current MyE2i browser extension for E2iPlayer: **v${VERSION}** (commit ${GITHUB_SHA::7})."
@@ -116,10 +132,11 @@ jobs:
             echo "Install notes: https://github.com/${GITHUB_REPOSITORY}/wiki/Solve-Cloudflare-hCaptcha-reCAPTCHA-with-MyE2i"
           } > rolling_notes.md
           if ! gh release view mye2i-extension >/dev/null 2>&1; then
+            git push origin "${MARKER}:refs/tags/mye2i-extension"
             gh release create mye2i-extension \
               --title "MyE2i browser extension (current version, fixed download links)" \
               --notes-file rolling_notes.md \
-              --target "$GITHUB_SHA" \
+              --verify-tag \
               --latest=false
           fi
           gh release edit mye2i-extension --notes-file rolling_notes.md --latest=false

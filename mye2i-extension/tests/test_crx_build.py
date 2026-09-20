@@ -86,10 +86,13 @@ def test_crx_with_throwaway_key_is_valid_and_has_no_manifest_key(tmp_path):
     ext_id, throwaway = br.build_crx(str(src), str(tmp_path), None, str(out))
     info = parse(str(out))
     assert throwaway is True
-    assert info["version"] == 3 and info["top_fields"] == [2, 10000]
+    assert info["version"] == 3
+    assert info["top_fields"] == [2, 10000]
     assert signature_ok(info, tmp_path)
     assert fields(info["signed"])[0][1] == hashlib.sha256(info["pub"]).digest()[:16]
-    assert ext_id == br.extension_id(info["pub"]) and len(ext_id) == 32 and set(ext_id) <= set("abcdefghijklmnop")
+    assert ext_id == br.extension_id(info["pub"])
+    assert len(ext_id) == 32
+    assert set(ext_id) <= set("abcdefghijklmnop")
     packed = json.loads(zipfile.ZipFile(io.BytesIO(info["zip"])).read("manifest.json"))
     assert "key" not in packed
 

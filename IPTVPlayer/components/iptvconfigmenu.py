@@ -25,6 +25,7 @@ from .iptvpin import IPTVPinWidget
 ###################################################
 from Screens.MessageBox import MessageBox
 
+from Components.ActionMap import ActionMap
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigDirectory, ConfigYesNo, ConfigOnOff, ConfigInteger, \
                               ConfigText, ConfigSelectionNumber, getConfigListEntry, configfile
 from Tools.BoundFunction import boundFunction
@@ -51,6 +52,9 @@ config.plugins.iptvplayer.hostsListType = ConfigSelection(default="G", choices=[
 config.plugins.iptvplayer.showinMainMenu = ConfigYesNo(default=False)
 # config.plugins.iptvplayer.ListaGraficzna = ConfigYesNo(default=True)
 config.plugins.iptvplayer.group_hosts = ConfigYesNo(default=True)
+# layout of the settings screen itself: one long list (default, as it always was) or a list of
+# categories that each open their own rows (see ConfigMenu)
+config.plugins.iptvplayer.configMenuView = ConfigSelection(default="list", choices=[("list", _("Long list")), ("categories", _("Categories"))])
 # legacy attributes are kept only to seed the renamed options (the settings-file key is the attribute name)
 config.plugins.iptvplayer.NaszaSciezka = ConfigDirectory(default="/hdd/movie/")  # , fixed_size = False)
 config.plugins.iptvplayer.DownloadsDir = ConfigDirectory(default=config.plugins.iptvplayer.NaszaSciezka.value)  # , fixed_size = False)
@@ -462,7 +466,20 @@ class ConfigMenu(ConfigBaseWidget):
     def __init__(self, session):
         printDBG("ConfigMenu.__init__ -------------------------------")
         self.list = []
+        # category view: the screen starts on the list of categories (_section None) and OK opens one
+        # of them (_section = its index in getSections()), EXIT goes back. The view is remembered per
+        # build so runSetup() can keep the cursor where it is when it only rebuilds the same view.
+        self._categoryView = config.plugins.iptvplayer.configMenuView.value == "categories"
+        self._section = None
+        self._builtView = None
         ConfigBaseWidget.__init__(self, session)
+        # "<" / ">" (KEY_PREVIOUS / KEY_NEXT) page through the categories, LEFT/RIGHT stay reserved
+        # for changing the value of the selected row
+        self["sectionActions"] = ActionMap(["IPTVPlayerConfigActions"],
+            {
+                "prevSection": self.keyPrevSection,
+                "nextSection": self.keyNextSection,
+            }, -2)
         try:
             self["key_blue"].setText(_("Info"))
         except Exception:
@@ -478,7 +495,22 @@ class ConfigMenu(ConfigBaseWidget):
 
     def layoutFinished(self):
         ConfigBaseWidget.layoutFinished(self)
-        self.setTitle(_("E2iPlayer - settings"))
+        self._updateTitle()
+
+    def _updateTitle(self):
+        if self._section is None:
+            self.setTitle(_("E2iPlayer - settings"))
+        else:
+            sections = ConfigMenu.getSections()
+            self.setTitle("E2iPlayer - < %s > (%d/%d)" % (ConfigMenu.getSectionLabel(sections[self._section][1]), self._section + 1, len(sections)))
+
+    @staticmethod
+    def getSectionLabel(header):
+        # "----- BASIC CONFIGURATION -----" -> "Basic Configuration"
+        return header.strip("- ").title()
+
+    def _inOverview(self):
+        return self._categoryView and self._section is None
 
     def keyBlue(self):
         try:
@@ -488,8 +520,8 @@ class ConfigMenu(ConfigBaseWidget):
             printExc()
 
     @staticmethod
-    def fillConfigList(list,):
-        list.append(getConfigListEntry(_("----- BASIC CONFIGURATION -----"),))
+    def _fillBasic(list):
+        list.append(getConfigListEntry(_("Settings screen layout"), config.plugins.iptvplayer.configMenuView))
         list.extend(GetOskConfigList())
         list.append(getConfigListEntry(_("Initialize web interface"), config.plugins.iptvplayer.IPTVWebIterface))
         list.append(getConfigListEntry(_("Show IPTVPlayer in extension list"), config.plugins.iptvplayer.showinextensions))
@@ -501,7 +533,9 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Use the PyCurl for HTTP(S) requests"), config.plugins.iptvplayer.usepycurl))
         list.append(getConfigListEntry(_("https - validate SSL certificates"), config.plugins.iptvplayer.httpssslcertvalidation))
         list.append(getConfigListEntry(_("Allow external link-decryption service (enc-dec.app)"), config.plugins.iptvplayer.allow_external_resolve))
-        list.append(getConfigListEntry(_("----- SERVICE CONFIGURATION -----"),))
+
+    @staticmethod
+    def _fillService(list):
         list.append(getConfigListEntry(_("Services configuration"), config.plugins.iptvplayer.fakeHostsList))
         list.append(getConfigListEntry(_("Remove disabled services"), config.plugins.iptvplayer.remove_diabled_hosts))
         list.append(getConfigListEntry(_("Allow watched flag to be set"), config.plugins.iptvplayer.favourites_use_watched_flag))
@@ -510,7 +544,9 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry("    " + _("The color of the started item"), config.plugins.iptvplayer.started_item_color))
         list.append(getConfigListEntry(_("Create sidecar files (.txt/.jpg)"), config.plugins.iptvplayer.sidecar_enabled))
         list.append(getConfigListEntry(_("Normalize item / file names (Show - SxxExx - Title)"), config.plugins.iptvplayer.normalize_media_names))
-        list.append(getConfigListEntry(_("----- SECURITY CONFIGURATION -----"),))
+
+    @staticmethod
+    def _fillSecurity(list):
         list.append(getConfigListEntry(_("Pin protection for plugin"), config.plugins.iptvplayer.pluginProtectedByPin))
         list.append(getConfigListEntry(_("Pin protection for configuration"), config.plugins.iptvplayer.configProtectedByPin))
         if config.plugins.iptvplayer.configProtectedByPin.value:
@@ -520,7 +556,8 @@ class ConfigMenu(ConfigBaseWidget):
         if config.plugins.iptvplayer.configProtectedByPin.value and config.plugins.iptvplayer.configOwnPin.value:
             list.append(getConfigListEntry("    " + _("Set own configuration pin code"), config.plugins.iptvplayer.fakeConfigPin))
 
-        list.append(getConfigListEntry(_("----- SKIN CONFIGURATION -----"),))
+    @staticmethod
+    def _fillSkin(list):
         list.append(getConfigListEntry(_("Skin"), config.plugins.iptvplayer.skin))
         list.append(getConfigListEntry(_("Force internal skin: all E2iPlayer screens"), config.plugins.iptvplayer.skinforceallinternal))
         if not config.plugins.iptvplayer.skinforceallinternal.value:
@@ -543,7 +580,8 @@ class ConfigMenu(ConfigBaseWidget):
         # list.append(getConfigListEntry(_("VFD set current title:"), config.plugins.iptvplayer.set_curr_title))
         list.append(getConfigListEntry(_("Create LCD/VFD summary screen"), config.plugins.iptvplayer.extplayer_summary))
 
-        list.append(getConfigListEntry(_("----- PROXIES CONFIGURATION -----"),))
+    @staticmethod
+    def _fillProxies(list):
         list.append(getConfigListEntry(_("Alternative proxy server (1)"), config.plugins.iptvplayer.alternative_proxy1))
         list.append(getConfigListEntry(_("Alternative proxy server (2)"), config.plugins.iptvplayer.alternative_proxy2))
         list.append(getConfigListEntry(_("Polish proxy server url"), config.plugins.iptvplayer.proxyurl))
@@ -551,7 +589,8 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Russian proxy server url"), config.plugins.iptvplayer.russian_proxyurl))
         list.append(getConfigListEntry(_("Ukrainian proxy server url"), config.plugins.iptvplayer.ukrainian_proxyurl))
 
-        list.append(getConfigListEntry(_("----- STORAGE CONFIGURATION -----"),))
+    @staticmethod
+    def _fillStorage(list):
         list.append(getConfigListEntry(_("Folder for cache data"), config.plugins.iptvplayer.CacheDir))
         list.append(getConfigListEntry(_("Folder for temporary data"), config.plugins.iptvplayer.TmpDir))
         list.append(getConfigListEntry(_("Folder for config data"), config.plugins.iptvplayer.ConfigDir))
@@ -578,7 +617,8 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry("    " + _("Delete favourites and watched status now"), config.plugins.iptvplayer.fakeFavouritesDelete))
             list.append(getConfigListEntry("    " + _("Delete all config files now"), config.plugins.iptvplayer.fakeAllConfigDelete))
 
-        list.append(getConfigListEntry(_("----- BUFFERING CONFIGURATION -----"), ))
+    @staticmethod
+    def _fillBuffering(list):
         list.append(getConfigListEntry(_("[HTTP] buffering"), config.plugins.iptvplayer.buforowanie))
         list.append(getConfigListEntry(_("[HLS/M3U8] buffering"), config.plugins.iptvplayer.buforowanie_m3u8))
         list.append(getConfigListEntry(_("[RTMP] buffering (rtmpdump required)"), config.plugins.iptvplayer.buforowanie_rtmp))
@@ -587,7 +627,8 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry("    " + _("Audio buffer size [KB]"), config.plugins.iptvplayer.requestedAudioBuffSize))
             list.append(getConfigListEntry(_("Buffering location"), config.plugins.iptvplayer.bufferingPath))
 
-        list.append(getConfigListEntry(_("----- DOWNLOADING CONFIGURATION -----"), ))
+    @staticmethod
+    def _fillDownloading(list):
         list.append(getConfigListEntry(_("Downloads location"), config.plugins.iptvplayer.DownloadsDir))
         list.append(getConfigListEntry(_("Start download manager per default"), config.plugins.iptvplayer.IPTVDMRunAtStart))
         list.append(getConfigListEntry(_("Show download manager after adding new item"), config.plugins.iptvplayer.IPTVDMShowAfterAdd))
@@ -600,7 +641,8 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("%s device name") % ('My JDownloader'), config.plugins.iptvplayer.myjd_jdname))
         list.append(getConfigListEntry(_("%s API KEY") % 'https://youtube.com/', config.plugins.iptvplayer.api_key_youtube))
 
-        list.append(getConfigListEntry(_("----- CAPTCHA CONFIGURATION -----"), ))
+    @staticmethod
+    def _fillCaptcha(list):
         list.append(getConfigListEntry(_("Default captcha bypass"), config.plugins.iptvplayer.captcha_bypass))
         list.append(getConfigListEntry(_("MyE2i extension: increase security"), config.plugins.iptvplayer.mye2i_security))
         # list.append(getConfigListEntry(_("Captcha solver order"), config.plugins.iptvplayer.captcha_bypass_order))
@@ -611,7 +653,8 @@ class ConfigMenu(ConfigBaseWidget):
         # if config.plugins.iptvplayer.captcha_bypass_pay.value == "2captcha.com":
         list.append(getConfigListEntry(_("%s API KEY") % 'https://2captcha.com/', config.plugins.iptvplayer.api_key_2captcha))
 
-        list.append(getConfigListEntry(_("----- SUBTITLES CONFIGURATION -----"), ))
+    @staticmethod
+    def _fillSubtitles(list):
         list.append(getConfigListEntry(_("Use subtitles parser extension if available"), config.plugins.iptvplayer.useSubtitlesParserExtension))
         list.append(getConfigListEntry("https://subsource.net/ " + _("API_KEY"), config.plugins.iptvplayer.subsourceapi))
         list.append(getConfigListEntry("https://subdl.com/ " + _("API Key"), config.plugins.iptvplayer.subdlapi))
@@ -624,7 +667,8 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry("https://1fichier.com/ " + _("e-mail"), config.plugins.iptvplayer.fichiercom_login))
         list.append(getConfigListEntry("http://1fichier.com/ " + _("password"), config.plugins.iptvplayer.fichiercom_password))
 
-        list.append(getConfigListEntry(_("----- PLAYERS & PLAYBACK CONFIGURATION -----"), ))
+    @staticmethod
+    def _fillPlayers(list):
         list.append(getConfigListEntry(_("Autoplay start delay"), config.plugins.iptvplayer.autoplay_start_delay))
         list.append(getConfigListEntry(_("Block wmv files"), config.plugins.iptvplayer.ZablokujWMV))
         players = []
@@ -642,12 +686,14 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry(_("External movie player config"), config.plugins.iptvplayer.fakExtMoviePlayerList))
         list.append(getConfigListEntry(_("The default aspect ratio for the external player"), config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio))
 
-        list.append(getConfigListEntry(_("----- OTHER SETTINGS -----"), ))
+    @staticmethod
+    def _fillOther(list):
         list.append(getConfigListEntry(_("Remember last search history selection"), config.plugins.iptvplayer.rememberHistorySelection))
         list.append(getConfigListEntry(_("T9 letter jump in lists"), config.plugins.iptvplayer.enableT9MainList))
         list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
 
-        list.append(getConfigListEntry(_("----- DEBUG CONFIGURATION -----"), ))
+    @staticmethod
+    def _fillDebug(list):
         list.append(getConfigListEntry(_("Debug logs"), config.plugins.iptvplayer.debugprint))
         if config.plugins.iptvplayer.debugprint.value != "":
             list.append(getConfigListEntry("    " + _("Keep FFmpeg command files (.iptv.cmd)"), config.plugins.iptvplayer.debug_keep_ffmpeg_cmd))
@@ -662,17 +708,132 @@ class ConfigMenu(ConfigBaseWidget):
                 if config.plugins.iptvplayer.debug_on_limit.value == "rotate":
                     list.append(getConfigListEntry("        " + _("Number of rotated files to keep"), config.plugins.iptvplayer.debug_rotate_keep))
 
+    # (id, header, filler) in display order. The header is what the long list shows and, without
+    # the dashes, what the category view names the category - so the existing translations of the
+    # headers are reused as they are
+    @staticmethod
+    def getSections():
+        return (
+            ("basic", _("----- BASIC CONFIGURATION -----"), ConfigMenu._fillBasic),
+            ("service", _("----- SERVICE CONFIGURATION -----"), ConfigMenu._fillService),
+            ("security", _("----- SECURITY CONFIGURATION -----"), ConfigMenu._fillSecurity),
+            ("skin", _("----- SKIN CONFIGURATION -----"), ConfigMenu._fillSkin),
+            ("proxies", _("----- PROXIES CONFIGURATION -----"), ConfigMenu._fillProxies),
+            ("storage", _("----- STORAGE CONFIGURATION -----"), ConfigMenu._fillStorage),
+            ("buffering", _("----- BUFFERING CONFIGURATION -----"), ConfigMenu._fillBuffering),
+            ("downloading", _("----- DOWNLOADING CONFIGURATION -----"), ConfigMenu._fillDownloading),
+            ("captcha", _("----- CAPTCHA CONFIGURATION -----"), ConfigMenu._fillCaptcha),
+            ("subtitles", _("----- SUBTITLES CONFIGURATION -----"), ConfigMenu._fillSubtitles),
+            ("players", _("----- PLAYERS & PLAYBACK CONFIGURATION -----"), ConfigMenu._fillPlayers),
+            ("other", _("----- OTHER SETTINGS -----"), ConfigMenu._fillOther),
+            ("debug", _("----- DEBUG CONFIGURATION -----"), ConfigMenu._fillDebug),
+        )
+
+    @staticmethod
+    def fillConfigList(list, sectionId=None):
+        # sectionId None = every section, each below its header (the long list, also used by the web
+        # interface); otherwise just the rows of that one section (the category view)
+        for currId, header, fill in ConfigMenu.getSections():
+            if sectionId is None:
+                list.append(getConfigListEntry(header,))
+            if sectionId is None or sectionId == currId:
+                fill(list)
+
     def runSetup(self):
+        view = (self._categoryView, self._section)
+        try:
+            keepIndex = self["config"].getCurrentIndex() if view == self._builtView else None
+        except Exception:
+            printExc()
+            keepIndex = None
         self.list = []
-        ConfigMenu.fillConfigList(self.list)
+        if self._inOverview():
+            self._fillOverview(self.list)
+        elif self._categoryView:
+            ConfigMenu.fillConfigList(self.list, ConfigMenu.getSections()[self._section][0])
+        else:
+            ConfigMenu.fillConfigList(self.list)
         ConfigBaseWidget.runSetup(self)
+        self._builtView = view
+        # rebuilding the list (a parent option was toggled, changes were cancelled, ...) puts the cursor
+        # back on top - leave it where it was when it is still the same view
+        if keepIndex:
+            self._moveCursorTo(keepIndex)
+        self._updateTitle()
+
+    def _moveCursorTo(self, index):
+        try:
+            if 0 <= index < len(self.list):
+                self["config"].setCurrentIndex(index)
+        except Exception:
+            printExc()
+
+    def _fillOverview(self, list):
+        # one OK-only row per category (same kind of placeholder row as "Services configuration")
+        for sectionId, header, fill in ConfigMenu.getSections():
+            list.append(getConfigListEntry(ConfigMenu.getSectionLabel(header), ConfigSelection(default="open", choices=[("open", ">")])))
+
+    def _getAllConfigItems(self):
+        # the category view only shows one category's rows (or just the category list), but saving,
+        # cancelling and the "changes made?" question have to cover all of them
+        if self._categoryView:
+            allItems = []
+            ConfigMenu.fillConfigList(allItems)
+            return allItems
+        return ConfigBaseWidget._getAllConfigItems(self)
+
+    def _openSection(self, index):
+        sections = ConfigMenu.getSections()
+        self._section = index % len(sections)
+        self.runSetup()
+
+    def _backToOverview(self):
+        index = self._section
+        self._section = None
+        self.runSetup()
+        self._moveCursorTo(index)
+
+    def keyPrevSection(self):
+        if self._categoryView and self._section is not None:
+            self._openSection(self._section - 1)
+
+    def keyNextSection(self):
+        if self._categoryView and self._section is not None:
+            self._openSection(self._section + 1)
+
+    def keyExit(self):
+        if self._categoryView and self._section is not None:
+            self._backToOverview()
+        else:
+            ConfigBaseWidget.keyExit(self)
+
+    def changeSubOptions(self):
+        current = self["config"].getCurrent()
+        if current and len(current) > 1 and current[1] is config.plugins.iptvplayer.configMenuView:
+            self._applyViewMode()
+        else:
+            ConfigBaseWidget.changeSubOptions(self)
+
+    def _applyViewMode(self):
+        # the layout option was just switched: take effect right away, staying on that option's row
+        categoryView = config.plugins.iptvplayer.configMenuView.value == "categories"
+        if categoryView == self._categoryView:
+            return
+        self._categoryView = categoryView
+        # the option lives in the first category
+        self._section = 0 if categoryView else None
+        self.runSetup()
+        for index, item in enumerate(self.list):
+            if len(item) > 1 and item[1] is config.plugins.iptvplayer.configMenuView:
+                self._moveCursorTo(index)
+                break
 
     def onSelectionChanged(self):
         currItem = self["config"].getCurrent()[1]
         okOnlyItems = [config.plugins.iptvplayer.fakePin, config.plugins.iptvplayer.fakeConfigPin, config.plugins.iptvplayer.fakeHostsList,
                        config.plugins.iptvplayer.fakExtMoviePlayerList]
         okOnlyItems += [fakeItem for fakeItem, action in self._getDeleteNowActions()]
-        if currItem in okOnlyItems:
+        if currItem in okOnlyItems or self._inOverview():
             self.isOkEnabled = True
             self.isSelectable = False
             self.setOKLabel()
@@ -730,6 +891,9 @@ class ConfigMenu(ConfigBaseWidget):
 
     def keyOK(self):
         curIndex = self["config"].getCurrentIndex()
+        if self._inOverview():
+            self._openSection(curIndex)
+            return
         currItem = self["config"].list[curIndex][1]
         if isinstance(currItem, ConfigDirectory):
             def SetDirPathCallBack(curIndex, newPath):
@@ -797,7 +961,7 @@ class ConfigMenu(ConfigBaseWidget):
     def keyDefaults(self):
         def keyDefaultsConfirm(result):
             if result:
-                for item in self.list:
+                for item in self._getAllConfigItems():
                     if len(item) > 1:
                         configItem = item[1]
                         if not isinstance(configItem, ConfigText):
