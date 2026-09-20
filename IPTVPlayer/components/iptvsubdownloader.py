@@ -9,8 +9,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
     GetSkinsDir,
     GetIPTVPlayerVersion,
     eConnectCallback,
-    GetPluginDir,
-    iptv_system,
     IsSubtitlesParserExtensionCanBeUsed,
 )
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
@@ -28,7 +26,6 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 # FOREIGN import
 ###################################################
 from os import path as os_path
-from urllib.parse import quote as urllib_quote
 
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -509,28 +506,9 @@ class IPTVSubDownloaderWidget(Screen):
             printExc()
 
     def reportHostCrash(self, ret):
-        """Report crashed subtitle provider if user agrees."""
+        """Leave the crashed subtitle provider. Nothing is sent anywhere: the
+        old report server is gone, the dialog above points to the issue tracker."""
         try:
-            if ret:
-                try:
-                    exceptStack = self.workThread.getExceptStack()
-                    reporter = GetPluginDir("iptvdm/reporthostcrash.py")
-                    msg = urllib_quote(
-                        "%s|%s|%s|%s"
-                        % (
-                            "HOST_CRASH",
-                            IPTVSubDownloaderWidget.IPTV_VERSION,
-                            self.hostName,
-                            self.getCategoryPath(),
-                        )
-                    )
-                    self.crashConsole = iptv_system(
-                        'python "%s" "http://iptvplayer.vline.pl/reporthostcrash.php?msg=%s" "%s" 2&>1 > /dev/null'
-                        % (reporter, msg, exceptStack)
-                    )
-                    printDBG(msg)
-                except Exception:
-                    printExc()
             self.workThread = None
             self.prevSelList = []
             self.back_pressed()

@@ -5,3 +5,6 @@
 *.pot.bak
 *.pot.old
 *.pot.new
+
+# output of mye2i-extension/build_release.py
+mye2i-extension/dist/

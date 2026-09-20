@@ -1,0 +1,128 @@
+name: Release MyE2i browser extension
+
+# After a merge to python3 that changes the extension (or by hand), build the
+# Chrome zip + crx and the Firefox xpi and publish them twice:
+#   - "mye2i-extension-v<version>": permanent release, created once per version
+#     (the history of the extension),
+#   - "mye2i-extension": rolling release whose files are replaced every time; its
+#     download links never change (plugin update hint, README and wiki use them).
+# Neither is marked "latest" - that stays with the plugin's own release
+# (see tag_release.yml).
+#
+# The .crx is signed with a throw-away key created for each build, so it gets a
+# new extension ID every time (Chrome installs it only via policy / developer
+# mode anyway). The .xpi is unsigned: Firefox keeps it permanently only after
+# Mozilla signed it.
+
+on:
+  push:
+    branches: [ python3 ]
+    paths:
+      - 'mye2i-extension/**'
+      - '!mye2i-extension/tests/**'
+      - '.github/workflows/mye2i_extension_release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mye2i-extension-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+
+      - name: Read version
+        id: ver
+        run: |
+          VERSION=$(python -c "import json;print(json.load(open('mye2i-extension/manifest.json'))['version'])")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: python mye2i-extension/build_release.py --firefox --crx --out dist
+
+      - name: Versioned file names
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          cp dist/mye2iv3-latest.zip "dist/mye2iv3-${VERSION}.zip"
+          cp dist/mye2iv3-latest.crx "dist/mye2iv3-${VERSION}.crx"
+          cp dist/mye2iv3-firefox-unsigned.xpi "dist/mye2iv3-firefox-unsigned-${VERSION}.xpi"
+          ls -l dist
+
+      - name: Permanent release for this version
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          TAG="mye2i-extension-v${VERSION}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists - keeping it."
+            exit 0
+          fi
+          PREV=$(git tag --list 'mye2i-extension-v*' --sort=-v:refname | head -n 1)
+          if [ -n "$PREV" ]; then
+            CHANGES=$(git log "$PREV..HEAD" --no-merges --pretty=format:'- %s (%h)' -- mye2i-extension | head -n 20)
+          else
+            CHANGES=$(git log --no-merges --pretty=format:'- %s (%h)' -n 15 -- mye2i-extension)
+          fi
+          {
+            echo "MyE2i browser extension **v${VERSION}** (commit ${GITHUB_SHA::7})."
+            echo
+            echo "- \`mye2iv3-${VERSION}.zip\`: unpack and load via chrome://extensions -> Developer mode -> Load unpacked."
+            echo "- \`mye2iv3-firefox-unsigned-${VERSION}.xpi\`: Firefox 128+, unsigned (temporary add-on via about:debugging)."
+            echo "- \`mye2iv3-${VERSION}.crx\`: signed with a throw-away key, so its extension ID differs from every other build; Chrome installs it only via policy / developer mode."
+            echo
+            echo "Install notes: https://github.com/${GITHUB_REPOSITORY}/wiki/Solve-Cloudflare-hCaptcha-reCAPTCHA-with-MyE2i"
+            echo
+            echo "## Changes"
+            echo "$CHANGES"
+          } > release_notes.md
+          gh release create "$TAG" \
+            "dist/mye2iv3-${VERSION}.zip" \
+            "dist/mye2iv3-${VERSION}.crx" \
+            "dist/mye2iv3-firefox-unsigned-${VERSION}.xpi" \
+            --title "MyE2i browser extension v${VERSION}" \
+            --notes-file release_notes.md \
+            --target "$GITHUB_SHA" \
+            --latest=false
+
+      - name: Rolling release (fixed download links)
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          {
+            echo "Current MyE2i browser extension for E2iPlayer: **v${VERSION}** (commit ${GITHUB_SHA::7})."
+            echo
+            echo "The files in this release are replaced with every new extension version, so these download links never change. Older versions: releases named \`mye2i-extension-v<version>\`."
+            echo
+            echo "- \`mye2iv3-latest.zip\`: unpack and load via chrome://extensions -> Developer mode -> Load unpacked (this is the link the plugin's update hint points to)."
+            echo "- \`mye2iv3-firefox-unsigned.xpi\`: Firefox 128+, unsigned (temporary add-on via about:debugging)."
+            echo "- \`mye2iv3-latest.crx\`: signed with a throw-away key (new extension ID every build), for policy-based installs only."
+            echo
+            echo "Install notes: https://github.com/${GITHUB_REPOSITORY}/wiki/Solve-Cloudflare-hCaptcha-reCAPTCHA-with-MyE2i"
+          } > rolling_notes.md
+          if ! gh release view mye2i-extension >/dev/null 2>&1; then
+            gh release create mye2i-extension \
+              --title "MyE2i browser extension (current version, fixed download links)" \
+              --notes-file rolling_notes.md \
+              --target "$GITHUB_SHA" \
+              --latest=false
+          fi
+          gh release edit mye2i-extension --notes-file rolling_notes.md --latest=false
+          gh release upload mye2i-extension \
+            dist/mye2iv3-latest.zip dist/mye2iv3-latest.crx dist/mye2iv3-firefox-unsigned.xpi \
+            --clobber

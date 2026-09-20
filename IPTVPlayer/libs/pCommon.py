@@ -1004,7 +1004,21 @@ class common:
                 status = False
                 response = e
                 if e.code == 403:
-                    return (status, _('Access Forbidden'))
+                    # keep what identifies the protection system that answered
+                    # (see libs/botprotection.py); the returned text is unchanged
+                    meta403 = {'status_code': 403}
+                    try:
+                        meta403['url'] = e.fp.geturl()
+                        self.fillHeaderItems(meta403, e.fp.info(), True, collectAllHeaders=True)
+                        head = self._readHttpResponse(e.fp, 65536)
+                        if e.fp.info().get('Content-Encoding', '') == 'gzip':
+                            head = DecodeGzipped(head)
+                        if isinstance(head, bytes):
+                            head = head.decode('utf-8', 'ignore')
+                        meta403['body_head'] = head
+                    except Exception:
+                        printExc()
+                    return (status, strwithmeta(_('Access Forbidden'), meta403))
                 if addParams.get('return_data', False):
                     self.meta = {}
                     metadata = self.meta
@@ -1051,19 +1065,44 @@ class common:
 
         return (status, response)
 
-    def getPageCFProtection(self, baseUrl, params={}, post_data=None):
+    def getPageCFProtection(self, baseUrl, params=None, post_data=None):
+        if params is None:
+            params = {}  # a fresh dict per call: a shared default would keep header/cookies of an earlier site
         cf_user = params.get('header', {}).get('User-Agent', '')
+        # the User-Agent that solved an earlier browser check for this cookie jar (see botprotection.py)
+        from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent, remember_user_agent
+        solvedUserAgent = remembered_user_agent(params.get('cookiefile', ''))
+        if solvedUserAgent:
+            cf_user = solvedUserAgent
         header = {'Referer': baseUrl, 'User-Agent': cf_user, 'Accept-Encoding': 'text'}
         header.update(params.get('header', {}))
+        if solvedUserAgent:
+            header['User-Agent'] = solvedUserAgent
         params.update({'with_metadata': True, 'use_cookie': True, 'save_cookie': True, 'load_cookie': True, 'cookiefile': params.get('cookiefile', ''), 'header': header})
         params.update({'CFProtection': True})
         start_time = time.time()
         sts, data = self.getPage(baseUrl, params, post_data)
 
         if not sts and data is not None:
+            solveMode = 'CF'
+            try:
+                from Plugins.Extensions.IPTVPlayer.libs.botprotection import detect as detectProtection, KIND_BLOCK, KIND_CAPTCHA, KIND_COOKIE_GATE
+                failMeta = getattr(data, 'meta', None) or {}
+                found = detectProtection(failMeta.get('status_code', 0), failMeta, failMeta.get('body_head') or (data if isinstance(data, str) else ''), failMeta.get('url', baseUrl))
+                if found:
+                    printDBG('PROTECTION: %s' % found.describe())
+                    if found.kind == KIND_BLOCK:
+                        printDBG('PROTECTION: hard block - a browser check would not help, MyE2i not started')
+                        blockMeta = dict(failMeta)
+                        blockMeta['cf_user'] = cf_user
+                        return sts, strwithmeta(data, blockMeta)
+                    if found.kind in (KIND_COOKIE_GATE, KIND_CAPTCHA):
+                        solveMode = 'COOKIES'
+            except Exception:
+                printExc()
             from Plugins.Extensions.IPTVPlayer.libs.recaptcha_mye2i import UnCaptchaReCaptcha
             recaptcha = UnCaptchaReCaptcha(lang=GetDefaultLang())
-            token = recaptcha.processCaptcha(start_time, baseUrl, captchaType='CF')
+            token = recaptcha.processCaptcha(start_time, baseUrl, captchaType=solveMode)
             if token != '':
                 r = json_loads(base64.b64decode(token))
                 printDBG('>>>>>>>>>>>>>>>>>>>>> CF token >>>>>>>>>>>>>>>>>>>>>>')
@@ -1076,9 +1115,14 @@ class common:
                     config.plugins.iptvplayer.cloudflare_user.save()
                     configfile.save()
                 params['header']['User-Agent'] = cf_user
+                if cf_user and r.get('cookie'):
+                    remember_user_agent(params.get('cookiefile', ''), cf_user)
 
                 cookies = r.get('cookie', [])
-                if len(cookies) > 0:
+                if solveMode == 'COOKIES':
+                    # generic mode: the browser sends every cookie it holds for the site
+                    params['cookie_items'] = {c['name']: c['value'] for c in cookies if isinstance(c, dict) and c.get('name')}
+                elif len(cookies) > 0:
                     try:
                         params['cookie_items'] = {'cf_clearance': cookies[0]['value']}
                     except Exception:

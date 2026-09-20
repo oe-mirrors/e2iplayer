@@ -16,7 +16,7 @@ from Components.config import config
 
 class CaptchaHelper():
 
-    def processCaptcha(self, sitekey, refUrl, bypassCaptchaService=None, userAgent=None, baseErrMsgTab=None, beQuaiet=False, captchaType=''):
+    def processCaptcha(self, sitekey, refUrl, bypassCaptchaService=None, userAgent=None, baseErrMsgTab=None, beQuaiet=False, captchaType='', captchaAction='', captchaData=''):
         if isinstance(baseErrMsgTab, list):
             errorMsgTab = list(baseErrMsgTab)
         else:
@@ -57,9 +57,13 @@ class CaptchaHelper():
                 recaptcha = UnCaptchaReCaptcha_myjd()
 
             if recaptcha is not None:
-                token = recaptcha.processCaptcha(sitekey, refUrl, captchaType)
+                if isinstance(recaptcha, UnCaptchaReCaptcha_mye2i):
+                    # only MyE2i can run score based reCAPTCHA (v3 / Enterprise, needs the action) and Turnstile with action/cdata
+                    token = recaptcha.processCaptcha(sitekey, refUrl, captchaType, captchaAction, captchaData)
+                else:
+                    token = recaptcha.processCaptcha(sitekey, refUrl, captchaType)
             else:
-                errorMsgTab.append(_('Please visit %s to learn how to redirect this task to the external device.') % 'https://github.com/oe-mirrors/e2iplayer/wiki/Solve-Google-reCAPTCHA-v2')
+                errorMsgTab.append(_('Please visit %s to learn how to redirect this task to the external device.') % 'https://github.com/oe-mirrors/e2iplayer/wiki/Solve-Cloudflare-hCaptcha-reCAPTCHA-with-MyE2i')
                 if not beQuaiet:
                     self.sessionEx.waitForFinishOpen(MessageBox, '\n'.join(errorMsgTab), type=MessageBox.TYPE_ERROR, timeout=20)
                 if bypassCaptchaService is not None:

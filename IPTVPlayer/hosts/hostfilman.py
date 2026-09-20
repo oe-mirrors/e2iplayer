@@ -715,7 +715,7 @@ class Filman(CBaseHostClass, CaptchaHelper):
             if not token:
                 ent_sitekey = "6LdjECEpAAAAAII12AekMIVTsLnFA6A1Qeu7YRnU"
                 printDBG("Trying enterprise sitekey: %s" % ent_sitekey)
-                token, _ = self.processCaptcha(ent_sitekey, self.getFullUrl("/logowanie"))
+                token, _ = self.processCaptcha(ent_sitekey, self.getFullUrl("/logowanie"), captchaType="ENTERPRISE")
 
             if token:
                 post_data["g-recaptcha-response"] = token

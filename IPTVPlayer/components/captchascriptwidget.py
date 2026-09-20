@@ -26,6 +26,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 # FOREIGN import
 ###################################################
 from enigma import eTimer
+from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Components.Label import Label
 from Components.Sources.StaticText import StaticText
@@ -45,7 +46,7 @@ class CaptchaScriptWidgetBase(Screen):
     # QR code) - it calls this itself (before `Screen.__init__`, see `__init__`
     # below) with a wider screen and its own skin snippet, instead of the base
     # forcing the plain 500px-wide chrome on every subclass.
-    def _prepareSkin(self, extraWidth=0, extraBody=""):
+    def _prepareSkin(self, extraWidth=0, extraBody="", keys=('red',)):
         iconBase = skinchrome.getIconBase()
         HEIGHT = 320
         return """
@@ -61,7 +62,7 @@ class CaptchaScriptWidgetBase(Screen):
             skinchrome.build_header_auto(iconBase=iconBase),
             HEIGHT - 142,
             extraBody,
-            skinchrome.build_footer_auto(HEIGHT, iconBase=iconBase, keys=('red',), showNav=False, showNum=False, showOk=False, showExit=True),
+            skinchrome.build_footer_auto(HEIGHT, iconBase=iconBase, keys=keys, showNav=False, showNum=False, showOk=False, showExit=True),
         )
 
     def __init__(self, session, title, sitekey, referer, captchaType=None):
@@ -165,6 +166,9 @@ class CaptchaScriptWidgetBase(Screen):
                     self["console"].setText(_('Captcha solved.\nWaiting for notification.'))
                 elif line['type'] == 'status':
                     self["console"].setText(_(str(line['data'])))
+                elif line['type'] == 'popup':
+                    # a note that must not be missed but does not replace the console text
+                    self.session.open(MessageBox, _(str(line['data'])), type=MessageBox.TYPE_INFO, timeout=10)
                 elif line['type'] == 'error':
                     if line['code'] == 500:
                         self["console"].setText(_('Invalid email.'))

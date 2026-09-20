@@ -7,7 +7,6 @@
 #
 
 from os import path as os_path
-from urllib.parse import quote as urllib_quote
 from random import shuffle as random_shuffle
 import traceback
 
@@ -47,7 +46,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import FreeSpace as iptvtools
                                                           IsPathWritable as iptvtools_IsPathWritable, \
                                                           IsSameDir as iptvtools_IsSameDir, \
                                                           CleanOldFilesInDir as iptvtools_CleanOldFilesInDir, GetIPTVPlayerVersion, GetShortSystemInfo, \
-                                                          printDBG, printExc, iptv_system, GetHostsList, IsHostEnabled, \
+                                                          printDBG, printExc, GetHostsList, IsHostEnabled, \
                                                           eConnectCallback, GetSkinsDir, GetIconDir, GetPluginDir, \
                                                           SortHostsList, GetHostsOrderList, CSearchHistoryHelper, \
                                                           CMoviePlayerPerHost, GetFavouritesDir, CFakeMoviePlayerOption, GetAvailableIconSize, \
@@ -953,16 +952,9 @@ class E2iPlayerWidget(Screen):
             printExc()
 
     def reportHostCrash(self, ret):
+        # nothing is sent anywhere: the old report server is gone, the dialog
+        # (see above) points to the issue tracker
         try:
-            if False:
-                try:
-                    exceptStack = self.workThread.getExceptStack()
-                    reporter = GetPluginDir('iptvdm/reporthostcrash.py')
-                    msg = urllib_quote('%s|%s|%s|%s' % ('HOST_CRASH', E2iPlayerWidget.IPTV_VERSION, self.hostName, self.getCategoryPath()))
-                    self.crashConsole = iptv_system('python "%s" "http://iptvplayer.vline.pl/reporthostcrash.php?msg=%s" "%s" 2&>1 > /dev/null' % (reporter, msg, exceptStack))
-                    printDBG(msg)
-                except Exception:
-                    printExc()
             self.workThread = None
             self.prevSelList = []
             self.back_pressed()
