@@ -5178,7 +5178,7 @@ class Host(CBaseHostClass, XXXParser):
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''', 1, True)[0]
 				if not phTitle:
 					phTitle = self.cm.ph.getSearchGroups(item, '''">([^"^']+?)</a><''', 1, True)[0]
-				phUrl = self.cm.ph.getSearchGroups(item, '''\s<a\shref=['"]([^"^']+?)['"]''', 1, True)[0]
+				phUrl = self.cm.ph.getSearchGroups(item, r'''\s<a\shref=['"]([^"^']+?)['"]''', 1, True)[0]
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
 				phImage = self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''', 1, True)[0]
@@ -5611,10 +5611,10 @@ class Host(CBaseHostClass, XXXParser):
 			data = self.cm.ph.getAllItemsBeetwenMarkers(data, 'class="thumb"', '</div>')
 			for item in data:
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
-				phImage = self.cm.ph.getSearchGroups(item, '''img\ssrc=['"]([^"^']+?)['"]''', 1, True)[0]
+				phImage = self.cm.ph.getSearchGroups(item, r'''img\ssrc=['"]([^"^']+?)['"]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"]+?)["]''', 1, True)[0]
 				phTime = self.cm.ph.getSearchGroups(item, '''length">([0-9:]+?)[<]''', 1, True)[0]
-				Views = self.cm.ph.getSearchGroups(item, '''views"[>]([0-9.KHM]+?)[\s]''', 1, True)[0]
+				Views = self.cm.ph.getSearchGroups(item, r'''views"[>]([0-9.KHM]+?)[\s]''', 1, True)[0]
 				Added = self.cm.ph.getSearchGroups(item, '''date"[>]([^"^']+?ago)[<]''', 1, True)[0]
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
@@ -7154,8 +7154,8 @@ class Host(CBaseHostClass, XXXParser):
 				del data[0]
 			for item in data:
 				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
-				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]\stitle''', 1, True)[0]
-				phTitle = self.cm.ph.getSearchGroups(item, '''title=["]([^"^']+?)["]\s>''', 1, True)[0]
+				phUrl = self.cm.ph.getSearchGroups(item, r'''href=['"]([^"^']+?)['"]\stitle''', 1, True)[0]
+				phTitle = self.cm.ph.getSearchGroups(item, r'''title=["]([^"^']+?)["]\s>''', 1, True)[0]
 				if not phTitle:
 					phTitle = self.cm.ph.getSearchGroups(item, '''title="([^"^']+?)["]''', 1, True)[0].replace("&#039;", "'")
 				if not phTitle:
@@ -8068,10 +8068,10 @@ class Host(CBaseHostClass, XXXParser):
 			current = self.cm.ph.getSearchGroups(data, 'page-current"><span[>]([0-9]+?)[<]', 1, True)[0]
 			if not current:
 				current = 1
-			next = self.cm.ph.getSearchGroups(data, 'href=["]([^"]+?)["]\s>Next', 1, True)[0]
+			next = self.cm.ph.getSearchGroups(data, r'href=["]([^"]+?)["]\s>Next', 1, True)[0]
 			if next:
 				next_number = next.split('/')[-2]
-			max = self.cm.ph.getSearchGroups(data, 'last"><a\shref=["]([^"]+?)["]', 1, True)[0]
+			max = self.cm.ph.getSearchGroups(data, r'last"><a\shref=["]([^"]+?)["]', 1, True)[0]
 			if max:
 				max_number = max.split('/')[-2]
 			if not next_number and int(current) > 2:
@@ -11972,7 +11972,7 @@ class Host(CBaseHostClass, XXXParser):
 			root = re.sub(r'/\d+/?$', '/', url)
 			next_number = None
 			max_number = None
-			current = self.cm.ph.getSearchGroups(data, 'active"><a href=""\stitle=["]([0-9]+?)["]', 1, True)[0]
+			current = self.cm.ph.getSearchGroups(data, r'active"><a href=""\stitle=["]([0-9]+?)["]', 1, True)[0]
 			if not current:
 				current = 1
 			next = self.cm.ph.getSearchGroups(data, r'href=["]([^"]+?)["]\stitle="Siguiente', 1, True)[0]
@@ -12357,14 +12357,14 @@ class Host(CBaseHostClass, XXXParser):
 			if len(data):
 				del data[0]
 			for item in data:
-				phTitle = self.cm.ph.getSearchGroups(item, '''title=['"]([^"]+?)['"]>\s''', 1, True)[0].upper()
+				phTitle = self.cm.ph.getSearchGroups(item, r'''title=['"]([^"]+?)['"]>\s''', 1, True)[0].upper()
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
-				phImage = self.cm.ph.getSearchGroups(item, '''img\ssrc=['"]([^"]+?)['"]''', 1, True)[0]
+				phImage = self.cm.ph.getSearchGroups(item, r'''img\ssrc=['"]([^"]+?)['"]''', 1, True)[0]
 				if not phImage:
 					phImage = siteLogo
-				Videos = self.cm.ph.getSearchGroups(item, '''camera"></i>[\s]([0-9]+?)[<]/''', 1, True)[0]
-				Views = self.cm.ph.getSearchGroups(item, '''eye"></i>[\s]([0-9.KHM]+?)[<]/''', 1, True)[0]
-				Rate = self.cm.ph.getSearchGroups(item, '''heart"></i>[\s]([0-9%]+?)[<]/''', 1, True)[0]
+				Videos = self.cm.ph.getSearchGroups(item, r'''camera"></i>[\s]([0-9]+?)[<]/''', 1, True)[0]
+				Views = self.cm.ph.getSearchGroups(item, r'''eye"></i>[\s]([0-9.KHM]+?)[<]/''', 1, True)[0]
+				Rate = self.cm.ph.getSearchGroups(item, r'''heart"></i>[\s]([0-9%]+?)[<]/''', 1, True)[0]
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), decodeHtml(phTitle) + '\n' + Videos + ' videos\nViews: ' + Views + '\nRating Positive: ' + Rate, CDisplayListItem.TYPE_CATEGORY, [phUrl], 'CHERRYGASP-clips', phImage, None))
 			if next_number:
 				valTab.append(self.getNextItem(next_number, '%s%s/' % (root, next_number), name))
@@ -12694,7 +12694,7 @@ class Host(CBaseHostClass, XXXParser):
 				Time = self.cm.ph.getSearchGroups(item, 'tion"[>]([0-9:]+?)[<]', 1, True)[0]
 				Views = self.cm.ph.getSearchGroups(item, 'views"[>]([0-9KHM.]+?)[<]', 1, True)[0]
 				Rate = self.cm.ph.getSearchGroups(item, r'[\s]([0-9%]+?)[\s]', 1, True)[0]
-				Added = self.cm.ph.getSearchGroups(item, 'em[>]([0-9\sa-z]+?)[<]', 1, True)[0]
+				Added = self.cm.ph.getSearchGroups(item, r'em[>]([0-9\sa-z]+?)[<]', 1, True)[0]
 				valTab.append(CDisplayListItem(decodeHtml(phTitle), '[' + Time + '] ' + decodeHtml(phTitle) + '\n' + Views + ' views\nRating Positive: ' + Rate + '\nAdded: ' + Added, CDisplayListItem.TYPE_VIDEO, [CUrlItem('', phUrl, 1)], '', phImage, None))
 			if next_number:
 				if 'search' in url:
@@ -13321,7 +13321,7 @@ class Host(CBaseHostClass, XXXParser):
 			if len(data):
 				del data[0]
 			for item in data:
-				phUrl = self.cm.ph.getSearchGroups(item, 'href=["]([^"]+?)["]\sc', 1, True)[0]
+				phUrl = self.cm.ph.getSearchGroups(item, r'href=["]([^"]+?)["]\sc', 1, True)[0]
 				phUrl = phUrl.replace('.html', '-1.html')
 				phTitle = self.cm.ph.getSearchGroups(item, 'title=["]([^,/"]+?)["]', 1, True)[0].upper()
 				phImage = self.cm.ph.getSearchGroups(item, 'src=["]([^"]+?jpg)["]', 1, True)[0]
@@ -15569,11 +15569,11 @@ class Host(CBaseHostClass, XXXParser):
 			next = self.cm.ph.getDataBeetwenMarkers(data, 'VideoListPageNav', 'marL', False)[1]
 			data = data.split('"grid-tile-video"')
 			for item in data:
-				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]\sclass="p''', 1, True)[0]
+				phUrl = self.cm.ph.getSearchGroups(item, r'''href=['"]([^"^']+?)['"]\sclass="p''', 1, True)[0]
 				phImage = self.cm.ph.getSearchGroups(item, '''data-src=['"]([^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&')
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''', 1, True)[0]
 				time = self.cm.ph.getSearchGroups(item, '''tion">([^>]+?)<''', 1, True)[0]
-				added = self.cm.ph.getSearchGroups(item, '''line"[>]([^>]+?)[\s]<''', 1, True)[0]
+				added = self.cm.ph.getSearchGroups(item, r'''line"[>]([^>]+?)[\s]<''', 1, True)[0]
 				phUrl = checkhttp(phUrl)
 				if phUrl.startswith('/'):
 					phUrl = self.MAIN_URL + phUrl
@@ -16352,7 +16352,7 @@ class Host(CBaseHostClass, XXXParser):
 			if len(data):
 				del data[0]
 			for item in data:
-				phUrl = self.cm.ph.getSearchGroups(item, '''=['"](https[^"^']+?)['"]\sc''', 1, True)[0]
+				phUrl = self.cm.ph.getSearchGroups(item, r'''=['"](https[^"^']+?)['"]\sc''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''', 1, True)[0].upper()
 				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
 				Videos = self.cm.ph.getSearchGroups(item, '''count"[>]([^"^']+?)[<]''', 1, True)[0]
@@ -16386,9 +16386,9 @@ class Host(CBaseHostClass, XXXParser):
 			if len(data):
 				del data[0]
 			for item in data:
-				phUrl = self.cm.ph.getSearchGroups(item, '''=['"]([^"^']+?)['"]\sc''', 1, True)[0]
+				phUrl = self.cm.ph.getSearchGroups(item, r'''=['"]([^"^']+?)['"]\sc''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''alt=['"]([^"^']+?)['"]''', 1, True)[0]
-				phImage = self.cm.ph.getSearchGroups(item, '''img\ssrc=['"]([^"^']+?)['"]''', 1, True)[0]
+				phImage = self.cm.ph.getSearchGroups(item, r'''img\ssrc=['"]([^"^']+?)['"]''', 1, True)[0]
 				phTime = self.cm.ph.getSearchGroups(item, '''tion"[>]([0-9:]+?)[<]''', 1, True)[0]
 				if phImage.startswith('//'):
 					phImage = 'https:' + phImage
@@ -17733,7 +17733,7 @@ class Host(CBaseHostClass, XXXParser):
 			sts, data = self.cm.getPage(url, self.defaultParams)
 			if not sts:
 				return valTab
-			next = self.cm.ph.getSearchGroups(data, '''href=["]([^"^']+?)["][^>]*>\s*Next''', 1, True)[0]
+			next = self.cm.ph.getSearchGroups(data, r'''href=["]([^"^']+?)["][^>]*>\s*Next''', 1, True)[0]
 			data = data.split('class=thumba')
 			if len(data):
 				del data[0]
@@ -19207,7 +19207,7 @@ class Host(CBaseHostClass, XXXParser):
 				]
 				for title, slug in cats:
 					valTab.append(CDisplayListItem(title, title, CDisplayListItem.TYPE_CATEGORY,
-												   [self.MAIN_URL + '/s/' + slug + '/'], 'SPANKBANG-clips', '', None))
+												[self.MAIN_URL + '/s/' + slug + '/'], 'SPANKBANG-clips', '', None))
 			valTab.sort(key=lambda poz: poz.name)
 			valTab.insert(0, CDisplayListItem('New Videos', 'New Videos', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/new_videos/'], 'SPANKBANG-clips', '', None))
 			valTab.insert(0, CDisplayListItem('Most Popular', 'Most Popular', CDisplayListItem.TYPE_CATEGORY, [self.MAIN_URL + '/most_popular/'], 'SPANKBANG-clips', '', None))
@@ -19250,7 +19250,7 @@ class Host(CBaseHostClass, XXXParser):
 					pass
 				if phTitle:
 					valTab.append(CDisplayListItem(phTitle, phTitle, CDisplayListItem.TYPE_VIDEO,
-												   [CUrlItem('', phUrl, 1)], 0, phImage, None))
+												[CUrlItem('', phUrl, 1)], 0, phImage, None))
 			next = self.cm.ph.getSearchGroups(data, r"""class=["']next["']><a\s*href=["']([^"']+)["']""", 1, True)[0]
 			if next:
 				next = urljoin(self.MAIN_URL + '/', decodeHtml(next).replace('&amp;', '&'))
