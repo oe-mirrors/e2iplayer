@@ -35,7 +35,9 @@ class Lodynet(CBaseHostClass):
         }
         CBaseHostClass.__init__(self, params)
         self.MAIN_URL = "https://lodynet.watch"
-        self.DEFAULT_ICON_URL = "https://lodynet.watch/wp-content/themes/Lodynet2020/Img/Logo.webp"
+        self.DEFAULT_ICON_URL = (
+            "https://lodynet.watch/wp-content/themes/Lodynet2020/Img/Logo.webp"
+        )
         self.USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
 
     # ==========================================================================================
@@ -84,7 +86,9 @@ class Lodynet(CBaseHostClass):
             url = self.MAIN_URL + url
         elif not url.startswith("http"):
             url = self.MAIN_URL + "/" + url
-        if any(ext in url.lower() for ext in [".jpg", ".jpeg", ".png", ".webp", ".gif"]):
+        if any(
+            ext in url.lower() for ext in [".jpg", ".jpeg", ".png", ".webp", ".gif"]
+        ):
             if not url.startswith("http"):
                 return self.DEFAULT_ICON_URL
         url = self.encodeUrl(url)
@@ -427,7 +431,9 @@ class Lodynet(CBaseHostClass):
         sts, data = self.getPage(url)
         if not sts:
             return
-        items = re.findall(r'<div class="ItemNewly">(.*?)</div>\s*</a>\s*</div>', data, re.S)
+        items = re.findall(
+            r'<div class="ItemNewly">(.*?)</div>\s*</a>\s*</div>', data, re.S
+        )
         for item in items:
             title = re.search(r'title="([^"]+)"', item)
             link = re.search(r'href="([^"]+)"', item)
@@ -436,7 +442,11 @@ class Lodynet(CBaseHostClass):
                 continue
             title = title.group(1).strip()
             item_url = self.getFullUrl(link.group(1))
-            icon = self.getFullUrl(img.group(1)) if img and img.group(1) else self.DEFAULT_ICON_URL
+            icon = (
+                self.getFullUrl(img.group(1))
+                if img and img.group(1)
+                else self.DEFAULT_ICON_URL
+            )
             desc = self.extractDescFromNewly(item)
             if self.determineContentType(title, item_url) == "series":
                 self.addDir(
@@ -459,7 +469,6 @@ class Lodynet(CBaseHostClass):
                         "good_for_fav": True,
                     }
                 )
-        # ===== الصفحات التالية للمضاف حديثاً =====
         if cItem.get("sub_mode") == "newly" and items:
             next_page = page + 1
             next_url = self.MAIN_URL + "/page/%d/" % next_page
@@ -475,8 +484,9 @@ class Lodynet(CBaseHostClass):
                 }
             )
             return
-        # === دعم زر عرض المزيد (GetExpansion) ===
-        more = re.search(r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data)
+        more = re.search(
+            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
+        )
         if more:
             indicator = more.group(1)
             exp_type = more.group(2)
@@ -492,7 +502,10 @@ class Lodynet(CBaseHostClass):
                     "url": url,
                 }
             )
-            printDBG("Expansion button added: indicator=%s type=%s id=%s" % (indicator, exp_type, exp_id))
+            printDBG(
+                "Expansion button added: indicator=%s type=%s id=%s"
+                % (indicator, exp_type, exp_id)
+            )
 
     # ==========================================================================================
     def listEpisodes(self, cItem):
@@ -502,14 +515,20 @@ class Lodynet(CBaseHostClass):
         if not sts:
             return
         items_added = 0
-        blocks = re.findall(r'(<div class="ItemNewly">.*?</div>\s*</a>\s*</div>)', data, re.S)
+        blocks = re.findall(
+            r'(<div class="ItemNewly">.*?</div>\s*</a>\s*</div>)', data, re.S
+        )
         for block in blocks:
             title = re.search(r'title="([^"]+)"', block)
             link = re.search(r'href="([^"]+)"', block)
             img = re.search(r'data-src="([^"]*)"', block)
             if not title or not link:
                 continue
-            icon = self.getFullUrl(img.group(1)) if img and img.group(1) else self.DEFAULT_ICON_URL
+            icon = (
+                self.getFullUrl(img.group(1))
+                if img and img.group(1)
+                else self.DEFAULT_ICON_URL
+            )
             self.addVideo(
                 {
                     "title": title.group(1).strip(),
@@ -520,8 +539,9 @@ class Lodynet(CBaseHostClass):
                 }
             )
             items_added += 1
-        # === دعم GetExpansion (عرض المزيد) - للأقسام التي تستخدمه ===
-        more = re.search(r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data)
+        more = re.search(
+            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
+        )
         if more and items_added >= 10:
             indicator = more.group(1)
             exp_type = more.group(2)
@@ -539,15 +559,20 @@ class Lodynet(CBaseHostClass):
                     "icon": self.DEFAULT_ICON_URL,
                 }
             )
-            printDBG("Expansion button added for episodes: indicator=%s type=%s id=%s" % (indicator, exp_type, exp_id))
+            printDBG(
+                "Expansion button added for episodes: indicator=%s type=%s id=%s"
+                % (indicator, exp_type, exp_id)
+            )
             return
 
     # ==========================================================================================
     def loadMore(self, cItem):
         printDBG("Lodynet.loadMore [%s]" % cItem)
-        # === معالجة GetExpansion (عرض المزيد) ===
         if cItem.get("is_expansion"):
-            API_URL = self.MAIN_URL + "/wp-content/themes/Lodynet2020/Api/RequestExpansion.php"
+            API_URL = (
+                self.MAIN_URL
+                + "/wp-content/themes/Lodynet2020/Api/RequestExpansion.php"
+            )
             post_data = {
                 "indicator": cItem.get("indicator", ""),
                 "type": cItem.get("exp_type", ""),
@@ -575,16 +600,31 @@ class Lodynet(CBaseHostClass):
                             if url_path.startswith("http"):
                                 full_url = url_path
                             else:
-                                full_url = self.MAIN_URL + (url_path if url_path.startswith("/") else "/" + url_path)
+                                full_url = self.MAIN_URL + (
+                                    url_path
+                                    if url_path.startswith("/")
+                                    else "/" + url_path
+                                )
                             icon = item.get("cover", "")
-                            icon = self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
+                            icon = (
+                                self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
+                            )
                             desc_parts = []
                             if item.get("ribbon"):
-                                desc_parts.append("\\c00????00 النوع: \\c00????FF" + item.get("ribbon"))
+                                desc_parts.append(
+                                    "\\c00????00 النوع: \\c00????FF"
+                                    + item.get("ribbon")
+                                )
                             if item.get("Date"):
-                                desc_parts.append("\\c00????00 وقت النشر: \\c00????FF" + self.getTimeAgo(item.get("Date")))
+                                desc_parts.append(
+                                    "\\c00????00 وقت النشر: \\c00????FF"
+                                    + self.getTimeAgo(item.get("Date"))
+                                )
                             if item.get("episode"):
-                                desc_parts.append("\\c00????00 الحلقة: \\c00????FF" + str(item.get("episode")))
+                                desc_parts.append(
+                                    "\\c00????00 الحلقة: \\c00????FF"
+                                    + str(item.get("episode"))
+                                )
                             full_desc = "\\n".join(desc_parts) if desc_parts else ""
                             self.addDir(
                                 {
@@ -605,16 +645,31 @@ class Lodynet(CBaseHostClass):
                             if url_path.startswith("http"):
                                 full_url = url_path
                             else:
-                                full_url = self.MAIN_URL + (url_path if url_path.startswith("/") else "/" + url_path)
+                                full_url = self.MAIN_URL + (
+                                    url_path
+                                    if url_path.startswith("/")
+                                    else "/" + url_path
+                                )
                             icon = item.get("cover", "")
-                            icon = self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
+                            icon = (
+                                self.getFullUrl(icon) if icon else self.DEFAULT_ICON_URL
+                            )
                             desc_parts = []
                             if item.get("ribbon"):
-                                desc_parts.append("\\c00????00 النوع: \\c00????FF" + item.get("ribbon"))
+                                desc_parts.append(
+                                    "\\c00????00 النوع: \\c00????FF"
+                                    + item.get("ribbon")
+                                )
                             if item.get("Date"):
-                                desc_parts.append("\\c00????00 وقت النشر: \\c00????FF" + self.getTimeAgo(item.get("Date")))
+                                desc_parts.append(
+                                    "\\c00????00 وقت النشر: \\c00????FF"
+                                    + self.getTimeAgo(item.get("Date"))
+                                )
                             if item.get("episode"):
-                                desc_parts.append("\\c00????00 الحلقة: \\c00????FF" + str(item.get("episode")))
+                                desc_parts.append(
+                                    "\\c00????00 الحلقة: \\c00????FF"
+                                    + str(item.get("episode"))
+                                )
                             full_desc = "\\n".join(desc_parts) if desc_parts else ""
                             params = {
                                 "title": title,
@@ -626,7 +681,10 @@ class Lodynet(CBaseHostClass):
                             if cItem.get("is_episodes"):
                                 self.addVideo(params)
                             else:
-                                if self.determineContentType(title, full_url) == "series":
+                                if (
+                                    self.determineContentType(title, full_url)
+                                    == "series"
+                                ):
                                     params["category"] = "list_episodes"
                                     self.addDir(params)
                                 else:
@@ -661,13 +719,14 @@ class Lodynet(CBaseHostClass):
         printDBG(f"URL: {url}")
         printDBG(f"Title Lower: {title_lower}")
         printDBG(f"URL Lower: {url_lower}")
-        # === ✅ فحص الممثلين أولاً ===
         if "/actor/" in url_lower:
             result = "actor"
             printDBG(f"Actor URL pattern detected: {result}")
             return result
         if any(x in title_lower for x in ["ممثل", "نجم", "ممثلة", "فنان", "فنانة"]):
-            if "/actor/" in url_lower or any(x in url_lower for x in ["/actors/", "/celebrity/"]):
+            if "/actor/" in url_lower or any(
+                x in url_lower for x in ["/actors/", "/celebrity/"]
+            ):
                 result = "actor"
                 printDBG(f"Actor title + URL detected: {result}")
                 return result
@@ -759,11 +818,17 @@ class Lodynet(CBaseHostClass):
             result = "series"
             printDBG(f"Season pattern detected: {result}")
             return result
-        if any(keyword in url_lower for keyword in ["/series/", "/مسلسلات/", "/مسلسل/", "/seasons/"]):
+        if any(
+            keyword in url_lower
+            for keyword in ["/series/", "/مسلسلات/", "/مسلسل/", "/seasons/"]
+        ):
             result = "series"
             printDBG(f"Series URL pattern detected: {result}")
             return result
-        if any(keyword in url_lower for keyword in ["/movies/", "/أفلام/", "/فيلم/", "/film/"]):
+        if any(
+            keyword in url_lower
+            for keyword in ["/movies/", "/أفلام/", "/فيلم/", "/film/"]
+        ):
             result = "movie"
             printDBG(f"Movie URL pattern detected: {result}")
             return result
@@ -775,7 +840,10 @@ class Lodynet(CBaseHostClass):
                 "/series-",
                 "/مسلسل-",
             ]
-        ) and not any(keyword in url_lower for keyword in ["/افلام/", "/movies/", "/أغاني/", "/music/"]):
+        ) and not any(
+            keyword in url_lower
+            for keyword in ["/افلام/", "/movies/", "/أغاني/", "/music/"]
+        ):
             result = "series"
             printDBG(f"Foreign series section detected: {result}")
             return result
@@ -822,79 +890,129 @@ class Lodynet(CBaseHostClass):
         desc_parts = []
         type_match = re.search(r'NewlyRibbon">([^<]+)</div>', html_block)
         if type_match:
-            desc_parts.append("\\c00????00 النوع: \\c00????FF" + type_match.group(1).strip())
+            desc_parts.append(
+                "\\c00????00 النوع: \\c00????FF" + type_match.group(1).strip()
+            )
         time_match = re.search(r'NewlyTimeAgo[^>]*data-date="([^"]+)"', html_block)
         if time_match:
             ago = self.getTimeAgo(time_match.group(1).strip())
             desc_parts.append("\\c00????00 وقت النشر: \\c00????FF" + ago)
         episode_match = re.search(r"NewlyEpNumber[^>]*>.*?(\d+)</div>", html_block)
         if episode_match:
-            desc_parts.append("\\c00????00 الحلقة: \\c00????FF" + episode_match.group(1).strip())
-        summary_match = re.search(r'class="NewlySummary"[^>]*>([^<]+)</div>', html_block)
+            desc_parts.append(
+                "\\c00????00 الحلقة: \\c00????FF" + episode_match.group(1).strip()
+            )
+        summary_match = re.search(
+            r'class="NewlySummary"[^>]*>([^<]+)</div>', html_block
+        )
         if summary_match:
-            desc_parts.append("\\c00????00 الملخص: \\c00FFFFFF" + summary_match.group(1).strip())
+            desc_parts.append(
+                "\\c00????00 الملخص: \\c00FFFFFF" + summary_match.group(1).strip()
+            )
         return "\n".join(desc_parts) if desc_parts else "\\c00????00 محتوى مضاف حديثاً"
 
     # ==========================================================================================
     def getLinksForVideo(self, cItem):
         printDBG("### ENTER getLinksForVideo ###")
-        printDBG("Lodynet.getLinksForVideo [%s]" % cItem)
         url = cItem.get("url", "")
-        printDBG("Loading page: %s" % url)
         sts, data = self.getPage(url)
         if not sts:
-            printDBG("Failed to load page")
             return []
         if isinstance(data, bytes):
             data = data.decode("utf-8", "ignore")
-        printDBG("Page loaded successfully, size: %d bytes" % len(data))
         links = []
         referer = url
-        # ===== PostID =====
-        post_id = None
-        for m in re.findall(r"SwitchServer\(this,\s*\d+,\s*(\d+)\)", data):
-            post_id = m
-            break
-        printDBG("PostID = %s" % post_id)
-        # ===== Servers =====
-        servers = re.findall(r'<button[^>]+id="ServerWatch(\d+)"[^>]*>([^<]+)</button>', data)
-        printDBG("Found %d server buttons" % len(servers))
-        if not post_id or not servers:
-            printDBG("No servers or no post_id")
-            return []
-        api_url = self.MAIN_URL + "/wp-content/themes/Lodynet2020/Api/RequestServerEmbed.php"
-        green_servers = [
-            "ViD LO",
-            "Vinovo",
-            "ok.ru",
-            "Doodws",
-            "VidHide",
-            "Strmtap",
-            "Ninjastm",
-            "Fembed",
-            "Uqload",
-            "Vidoza",
-            "playtube",
-        ]
-        for server_id, server_name in servers:
-            server_name = server_name.strip()
-            display_name = server_name
-            if any(g in server_name for g in green_servers):
-                display_name = "\\c0000FF00" + server_name
-            links.append(
-                {
-                    "name": " " + display_name,
-                    "url": strwithmeta(
-                        api_url,
+        is_unavailable = "IframeFailingTitle" in data or "غير متوفرة حالياً" in data
+        tokens = {}
+        token_match = re.search(r"window\.PageData\s*=\s*(\{.*?\});", data, re.DOTALL)
+        if token_match:
+            page_data = token_match.group(1)
+            plus_token = re.search(r'"TokenPlus1"\s*:\s*"([^"]+)"', page_data)
+            vidlo_token = re.search(r'"TokenVidlo"\s*:\s*"([^"]+)"', page_data)
+            if plus_token:
+                tokens["plus1"] = plus_token.group(1)
+            if vidlo_token:
+                tokens["vidlo"] = vidlo_token.group(1)
+        servers_matches = re.findall(
+            r'\{\s*"Name"\s*:\s*"([^"]+)"\s*,\s*"Embed"\s*:\s*"([^"]*)"\s*,\s*"Id"\s*:\s*(\d+)\s*,\s*"Encrypted"\s*:\s*(true|false)\s*\}',
+            data,
+        )
+        available_count = 0
+        if servers_matches:
+            import base64
+
+            for name, embed, server_id, encrypted in servers_matches:
+                if embed and encrypted == "false":
+                    try:
+                        decoded_url = base64.b64decode(embed).decode("utf-8")
+                        if decoded_url.startswith("http"):
+                            if server_id == "73" and tokens.get("plus1"):
+                                decoded_url += tokens["plus1"]
+                            elif server_id == "116413" and tokens.get("vidlo"):
+                                decoded_url += tokens["vidlo"]
+                            display_name = (
+                                "\\c0000FF00" + name.strip()
+                                if any(
+                                    g.lower() in name.lower()
+                                    for g in ["vid lo", "vinovo", "ok.ru"]
+                                )
+                                else name.strip()
+                            )
+                            links.append(
+                                {
+                                    "name": " " + display_name,
+                                    "url": strwithmeta(
+                                        decoded_url, {"Referer": referer}
+                                    ),
+                                    "need_resolve": 1,
+                                }
+                            )
+                            available_count += 1
+                    except Exception as e:
+                        printDBG("Base64 Error: %s" % str(e))
+                elif encrypted == "true" and not embed:
+                    links.append(
                         {
-                            "post_data": {"PostID": post_id, "ServerID": server_id},
-                            "Referer": referer,
-                        },
-                    ),
-                    "need_resolve": 1,
-                }
+                            "name": "\\c00FFFF00🔒 " + name.strip(),
+                            "url": "",
+                            "desc": "\\c00FF0000هذا السيرفر يتطلب اشتراكاً في الموقع",
+                            "icon": self.DEFAULT_ICON_URL,
+                            "is_locked": True,
+                        }
+                    )
+        if not links:
+            servers_old = re.findall(
+                r'<button[^>]+id="ServerWatch(\d+)"[^>]*>([^<]+)</button>', data
             )
-        printDBG("Final result: %d links" % len(links))
+            post_id = re.search(r"SwitchServer\(this,\s*\d+,\s*(\d+)\)", data)
+            if servers_old and post_id:
+                api_url = (
+                    self.MAIN_URL
+                    + "/wp-content/themes/Lodynet2020/Api/RequestServerEmbed.php"
+                )
+                for server_id, server_name in servers_old:
+                    links.append(
+                        {
+                            "name": " " + server_name.strip(),
+                            "url": strwithmeta(
+                                api_url,
+                                {
+                                    "post_data": {
+                                        "PostID": post_id.group(1),
+                                        "ServerID": server_id,
+                                    },
+                                    "Referer": referer,
+                                },
+                            ),
+                            "need_resolve": 1,
+                        }
+                    )
+        if is_unavailable and available_count == 0:
+            printDBG("No free links available for this episode")
+        printDBG(
+            "Final result: %d links (%d free, %d locked)"
+            % (len(links), available_count, len(links) - available_count)
+        )
         return links
 
     # ==========================================================================================
@@ -902,7 +1020,9 @@ class Lodynet(CBaseHostClass):
         printDBG("Lodynet.getVideoLinks [%s]" % videoUrl)
         videoUrlStr = str(videoUrl)
         if "ok.ru" in videoUrlStr:
-            printDBG("Direct OK.ru URL detected in getVideoLinks, using custom resolver")
+            printDBG(
+                "Direct OK.ru URL detected in getVideoLinks, using custom resolver"
+            )
             return self.getOkRuLinks(videoUrlStr)
         if hasattr(videoUrl, "meta"):
             post_data = videoUrl.meta.get("post_data")
@@ -913,7 +1033,10 @@ class Lodynet(CBaseHostClass):
                     post_data,
                     videoUrl.meta.get("Referer", self.MAIN_URL),
                 )
-        if any(x in videoUrlStr for x in ["vidlo.us", "viidshar.com", "govad.xyz", "vadbam.net"]):
+        if any(
+            x in videoUrlStr
+            for x in ["vidlo.us", "viidshar.com", "govad.xyz", "vadbam.net"]
+        ):
             return self.getVidloDirectLinks(videoUrlStr)
         if videoUrlStr.endswith(".mp4"):
             return [{"name": "Direct MP4", "url": videoUrlStr}]
@@ -955,7 +1078,11 @@ class Lodynet(CBaseHostClass):
             data_options = json.loads(data_options_str)
             flashvars = data_options.get("flashvars", {})
             metadata_str = flashvars.get("metadata", "")
-            metadata_str = metadata_str.replace('\\"', '"').replace("\\\\", "\\").replace("\\u0026", "&")
+            metadata_str = (
+                metadata_str.replace('\\"', '"')
+                .replace("\\\\", "\\")
+                .replace("\\u0026", "&")
+            )
             metadata = json.loads(metadata_str)
         except Exception as e:
             printDBG("========= Failed to parse metadata JSON: %s" % e)
@@ -978,8 +1105,8 @@ class Lodynet(CBaseHostClass):
                     "full": "1080p",
                     "4k": "2160p",
                 }
-                q_str = quality_map.get(q, q)  # e.g., "720p"
-                quality_val = re.sub(r"\D", "", q_str)  # extract number only, e.g., 720
+                q_str = quality_map.get(q, q)
+                quality_val = re.sub(r"\D", "", q_str)
                 display_quality = {
                     "2160": "4K [2160p]",
                     "1080": "FULL HD [1080p]",
@@ -992,7 +1119,9 @@ class Lodynet(CBaseHostClass):
                 bitrate = video.get("bitrate") or "unknown"
                 res = video.get("res") or video.get("resolution") or "unknown"
                 codecs = video.get("codecs") or "avc1,mp4a"
-                display = f"{display_quality} - MP4 - bitrate: {bitrate} res: {res} {codecs}"
+                display = (
+                    f"{display_quality} - MP4 - bitrate: {bitrate} res: {res} {codecs}"
+                )
                 all_links.append(
                     {
                         "name": display,
@@ -1077,7 +1206,11 @@ class Lodynet(CBaseHostClass):
         # ===================== Standardize MP4 name and infer resolution/bitrate =====================
         for item in all_links:
             if not item.get("is_hls", False) and not item.get("is_dash", False):
-                qv = int(item["quality_val"]) if str(item["quality_val"]).isdigit() else 0
+                qv = (
+                    int(item["quality_val"])
+                    if str(item["quality_val"]).isdigit()
+                    else 0
+                )
                 # Infer resolution from quality_val
                 if "res" not in item["name"] or "unknown" in item["name"]:
                     if qv == 2160:
@@ -1119,15 +1252,17 @@ class Lodynet(CBaseHostClass):
                 else:
                     bitrate = "unknown"
                 # Rebuild display name
-                item["name"] = f"{item['name'].split(' - ')[0]} - MP4 - bitrate: {bitrate} res: {res} avc1,mp4a"
+                item["name"] = (
+                    f"{item['name'].split(' - ')[0]} - MP4 - bitrate: {bitrate} res: {res} avc1,mp4a"
+                )
 
         # ===================== Sort links by quality descending =====================
         def sort_key(item):
-            qv = str(item.get("quality_val", "0"))  # always convert to string
+            qv = str(item.get("quality_val", "0"))
             q = int(qv) if qv.isdigit() else 0
             return q
 
-        all_links.sort(key=sort_key, reverse=True)  # Sort from highest to lowest
+        all_links.sort(key=sort_key, reverse=True)
         urlsTab = [{"name": x["name"], "url": x["url"]} for x in all_links]
         printDBG("========= parserOKRU extracted %d links" % len(urlsTab))
         for u in urlsTab:
@@ -1149,7 +1284,9 @@ class Lodynet(CBaseHostClass):
         }
         try:
             printDBG("Sending POST request to API...")
-            response = requests.post(api_url, data=post_data, headers=headers, timeout=30)
+            response = requests.post(
+                api_url, data=post_data, headers=headers, timeout=30
+            )
             response_text = response.text.strip()
             printDBG("API Response: %s" % response_text)
             printDBG("Response length: %d chars" % len(response_text))
@@ -1224,7 +1361,11 @@ class Lodynet(CBaseHostClass):
             re.S,
         )
         for title, item_url, img in items:
-            if any(x in str(value) for value in [title, item_url, img] for x in ["+ CategoryItem.", "CategoryItem."]):
+            if any(
+                x in str(value)
+                for value in [title, item_url, img]
+                for x in ["+ CategoryItem.", "CategoryItem."]
+            ):
                 continue
             full_url = self.getFullUrl(item_url)
             icon = self.getFullUrl(img) if img else self.DEFAULT_ICON_URL
@@ -1237,7 +1378,9 @@ class Lodynet(CBaseHostClass):
                     "good_for_fav": True,
                 }
             )
-        more = re.search(r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data)
+        more = re.search(
+            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
+        )
         if more:
             indicator = more.group(1)
             exp_type = more.group(2)
@@ -1265,14 +1408,20 @@ class Lodynet(CBaseHostClass):
         if not sts:
             return
         items_added = 0
-        blocks = re.findall(r'(<div class="ItemNewly">.*?</div>\s*</a>\s*</div>)', data, re.S)
+        blocks = re.findall(
+            r'(<div class="ItemNewly">.*?</div>\s*</a>\s*</div>)', data, re.S
+        )
         for block in blocks:
             title = re.search(r'title="([^"]+)"', block)
             link = re.search(r'href="([^"]+)"', block)
             img = re.search(r'data-src="([^"]*)"', block)
             if not title or not link:
                 continue
-            icon = self.getFullUrl(img.group(1)) if img and img.group(1) else self.DEFAULT_ICON_URL
+            icon = (
+                self.getFullUrl(img.group(1))
+                if img and img.group(1)
+                else self.DEFAULT_ICON_URL
+            )
             full_url = self.getFullUrl(link.group(1))
             self.addVideo(
                 {
@@ -1284,7 +1433,9 @@ class Lodynet(CBaseHostClass):
                 }
             )
             items_added += 1
-        more = re.search(r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data)
+        more = re.search(
+            r"GetExpansion\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*\)", data
+        )
         if more and items_added >= 10:
             indicator = more.group(1)
             exp_type = more.group(2)
@@ -1302,14 +1453,20 @@ class Lodynet(CBaseHostClass):
                     "icon": self.DEFAULT_ICON_URL,
                 }
             )
-            printDBG("Expansion button added for actor movies: indicator=%s" % indicator)
+            printDBG(
+                "Expansion button added for actor movies: indicator=%s" % indicator
+            )
 
     # ==========================================================================================
     def listSearchResult(self, cItem, searchPattern, searchType):
         printDBG("Lodynet.listSearchResult [%s]" % searchPattern)
         if not searchPattern:
             return
-        search_url = self.MAIN_URL + "/wp-content/themes/Lodynet2020/Api/RequestSearch.php?value=" + quote_plus(searchPattern)
+        search_url = (
+            self.MAIN_URL
+            + "/wp-content/themes/Lodynet2020/Api/RequestSearch.php?value="
+            + quote_plus(searchPattern)
+        )
         printDBG("Search URL: %s" % search_url)
         headers = {
             "User-Agent": self.USER_AGENT,
@@ -1321,7 +1478,6 @@ class Lodynet(CBaseHostClass):
             response = requests.get(search_url, headers=headers, timeout=30)
             response_text = response.text
             printDBG("Search API Response: %s" % response_text)
-
             if response_text and response_text.strip():
                 try:
                     data = json.loads(response_text)
@@ -1329,21 +1485,20 @@ class Lodynet(CBaseHostClass):
                         search_results = data[1]
                         if isinstance(search_results, list) and search_results:
                             printDBG("تم العثور على %d نتيجة بحث" % len(search_results))
-
                             for item in search_results:
                                 if not isinstance(item, dict):
                                     continue
-
                                 title = item.get("Title", "")
                                 item_url = item.get("Url", "")
                                 category = item.get("Category", "")
                                 cover = item.get("Cover", "")
-
                                 if not title or not item_url:
                                     continue
                                 try:
                                     if "\\u" in title:
-                                        title = title.encode("utf-8").decode("unicode_escape")
+                                        title = title.encode("utf-8").decode(
+                                            "unicode_escape"
+                                        )
                                     elif "&#x" in title:
                                         title = html.unescape(title)
                                 except Exception:
@@ -1359,8 +1514,6 @@ class Lodynet(CBaseHostClass):
                                             full_url = self.MAIN_URL + "/" + decoded_url
                                     except Exception:
                                         full_url = self.MAIN_URL + "/" + item_url
-
-                                # الصورة
                                 icon = self.DEFAULT_ICON_URL
                                 if cover:
                                     try:
@@ -1369,12 +1522,14 @@ class Lodynet(CBaseHostClass):
                                         icon = self.getFullUrl(cover)
                                     except Exception:
                                         icon = self.DEFAULT_ICON_URL
-
-                                # الوصف
                                 desc_parts = []
                                 if category:
-                                    desc_parts.append("\\c00????00القسم: \\c00????FF" + category)
-                                desc = "\n".join(desc_parts) if desc_parts else "نتيجة بحث"
+                                    desc_parts.append(
+                                        "\\c00????00القسم: \\c00????FF" + category
+                                    )
+                                desc = (
+                                    "\n".join(desc_parts) if desc_parts else "نتيجة بحث"
+                                )
                                 is_actor = False
                                 if "/actor/" in full_url.lower():
                                     is_actor = True
@@ -1390,7 +1545,10 @@ class Lodynet(CBaseHostClass):
                                     ]
                                 ):
                                     is_actor = True
-                                if any(x in title.lower() for x in ["خان", "كابور", "باتشان", "شاه", "راي"]):
+                                if any(
+                                    x in title.lower()
+                                    for x in ["خان", "كابور", "باتشان", "شاه", "راي"]
+                                ):
                                     if "/actor/" in full_url.lower():
                                         is_actor = True
                                 if is_actor:
@@ -1406,7 +1564,9 @@ class Lodynet(CBaseHostClass):
                                     )
                                     printDBG("Added actor as folder: %s" % title)
                                 else:
-                                    content_type = self.determineContentType(title, full_url)
+                                    content_type = self.determineContentType(
+                                        title, full_url
+                                    )
                                     if content_type == "series":
                                         self.addDir(
                                             {
@@ -1434,7 +1594,8 @@ class Lodynet(CBaseHostClass):
                                     "category": "search",
                                     "title": "\\c00FF0000لم يتم العثور على نتائج",
                                     "url": "",
-                                    "desc": "لم يتم العثور على أي نتائج للبحث: " + searchPattern,
+                                    "desc": "لم يتم العثور على أي نتائج للبحث: "
+                                    + searchPattern,
                                 }
                             )
                     else:
@@ -1466,7 +1627,6 @@ class Lodynet(CBaseHostClass):
                         "desc": "لم يستجب خادم البحث للطلب",
                     }
                 )
-
         except Exception as e:
             printDBG("Error in search: %s" % str(e))
             self.addDir(
@@ -1489,18 +1649,27 @@ class Lodynet(CBaseHostClass):
         title = cItem.get("title", "")
         icon = cItem.get("icon", self.DEFAULT_ICON_URL)
         summary = ""
-        content_block = self.cm.ph.getDataBeetwenMarkers(data, '<div id="ContentDetails"', "</div>", False)[1]
+        content_block = self.cm.ph.getDataBeetwenMarkers(
+            data, '<div id="ContentDetails"', "</div>", False
+        )[1]
         if content_block:
             if "ملخص أحداث الحلقة" in content_block:
                 summary = content_block.split("ملخص أحداث الحلقة")[-1]
             elif "تبدأ الحلقة" in content_block:
                 summary = "تبدأ الحلقة" + content_block.split("تبدأ الحلقة")[-1]
             else:
-                summary = self.cm.ph.getDataBeetwenMarkers(content_block, "<p>", "</p>", False)[1]
+                summary = self.cm.ph.getDataBeetwenMarkers(
+                    content_block, "<p>", "</p>", False
+                )[1]
         if summary:
             summary = summary.split("قراءة المزيد")[0]
             summary = re.sub(r"<[^>]+>", "", summary)
-            summary = summary.replace("&#8211;", "-").replace("&#8220;", '"').replace("&#8221;", '"').replace("&nbsp;", " ")
+            summary = (
+                summary.replace("&#8211;", "-")
+                .replace("&#8220;", '"')
+                .replace("&#8221;", '"')
+                .replace("&nbsp;", " ")
+            )
             summary = summary.strip()
         old_desc = cItem.get("desc", "")
         final_text = ""
@@ -1526,20 +1695,26 @@ class Lodynet(CBaseHostClass):
         printDBG("getVidloDirectLinks [%s]" % baseUrl)
         PRIMARY_PATH = "/media/hdd/IPTVCache/cookies"
         FALLBACK_PATH = "/tmp/IPTV_Cookies"
-        if os.path.isdir(PRIMARY_PATH) and os.access(PRIMARY_PATH, os.W_OK):
-            COOKIE_PATH = PRIMARY_PATH
-        else:
-            COOKIE_PATH = FALLBACK_PATH
+        COOKIE_PATH = (
+            PRIMARY_PATH
+            if os.path.isdir(PRIMARY_PATH) and os.access(PRIMARY_PATH, os.W_OK)
+            else FALLBACK_PATH
+        )
         if not os.path.exists(COOKIE_PATH):
             try:
                 os.makedirs(COOKIE_PATH)
-            except Exception as e:
-                printDBG("Cookie dir error: %s" % e)
+            except OSError:
                 COOKIE_PATH = "/tmp"
         COOKIE_FILE = os.path.join(COOKIE_PATH, "vidlo.cookie")
         HTTP_HEADER = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
-            "Referer": baseUrl,
+            "User-Agent": self.USER_AGENT,
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9,ar;q=0.8",
+            "Referer": "https://www.vidlo.us/",
+            "Origin": "https://www.vidlo.us",
+            "Sec-Fetch-Dest": "document",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Site": "same-origin",
         }
         params = {
             "header": HTTP_HEADER,
@@ -1552,126 +1727,48 @@ class Lodynet(CBaseHostClass):
         }
         sts, data = self.cm.getPage(baseUrl, params)
         if not sts:
-            printDBG("فشل تحميل الصفحة")
+            printDBG("Failed to load Vidlo page")
             return []
-        final_url = self.cm.meta.get("url", baseUrl)
-        printDBG("الرابط النهائي: %s" % final_url)
         video_urls = []
-        sources_match = re.search(r"sources\s*:\s*\[([^\]]+)\]", data)
+        sources_match = re.search(r"sources\s*:\s*\[(.*?)\]", data, re.DOTALL)
         if sources_match:
             sources_content = sources_match.group(1)
-            printDBG("تم العثور على مصادر الفيديو")
-            video_objects = re.findall(r"\{[^{}]*\}", sources_content)
-            for obj in video_objects:
-                url_match = re.search(r'file["\']?\s*:\s*["\'](https?://[^"\']+)["\']', obj)
-                label_match = re.search(r'label["\']?\s*:\s*["\']([^"\']+)["\']', obj)
-                if url_match:
-                    video_url = url_match.group(1)
-                    if label_match:
-                        label = label_match.group(1)
-                        if "720" in label or "hd" in label.lower():
-                            label = "HD [720p]"
-                        elif "480" in label or "sd" in label.lower():
-                            label = "SD [480p]"
-                        elif "360" in label or "low" in label.lower():
-                            label = "LOW [360p]"
-                        elif "576" in label:
-                            label = "576p"
-                        elif "384" in label:
-                            label = "384p"
+            files = re.findall(
+                r'file\s*:\s*"([^"]+)"(?:\s*,\s*label\s*:\s*"([^"]+)")?',
+                sources_content,
+            )
+            for file_url, label in files:
+                if not file_url.startswith("http"):
+                    continue
+                if label:
+                    quality = label.replace("p", "").strip()
+                    if "720" in quality or "hd" in quality.lower():
+                        display_q = "HD [720p]"
+                    elif "576" in quality:
+                        display_q = "SD [576p]"
+                    elif "384" in quality:
+                        display_q = "LOW [384p]"
+                    elif "m3u8" in file_url:
+                        display_q = "HLS Master"
                     else:
-                        if ".m3u8" in video_url.lower():
-                            label = "HLS Stream"
-                        elif "720p" in video_url.lower() or "/hd/" in video_url.lower():
-                            label = "HD [720p]"
-                        elif "1080p" in video_url.lower() or "/fullhd/" in video_url.lower():
-                            label = "FULL HD [1080p]"
-                        elif "480p" in video_url.lower() or "/sd/" in video_url.lower():
-                            label = "SD [480p]"
-                        elif "360p" in video_url.lower() or "/low/" in video_url.lower():
-                            label = "LOW [360p]"
-                        elif "576p" in video_url.lower():
-                            label = "576p"
-                        elif "384p" in video_url.lower():
-                            label = "384p"
-                        else:
-                            label = "MP4"
-                    if video_url not in [v["url"] for v in video_urls]:
-                        video_urls.append({"url": video_url, "label": label})
-                        printDBG("تم استخراج: %s [%s]" % (video_url, label))
-        if not video_urls:
-            printDBG("البحث عن روابط MP4 مباشرة")
-            quality_patterns = [
-                (r'https?://[^\s"\']+?720p[^\s"\']*\.mp4', "HD [720p]"),
-                (r'https?://[^\s"\']+?1080p[^\s"\']*\.mp4', "FULL HD [1080p]"),
-                (r'https?://[^\s"\']+?480p[^\s"\']*\.mp4', "SD [480p]"),
-                (r'https?://[^\s"\']+?576p[^\s"\']*\.mp4', "576p"),
-                (r'https?://[^\s"\']+?384p[^\s"\']*\.mp4', "384p"),
-                (r'https?://[^\s"\']+?360p[^\s"\']*\.mp4', "LOW [360p]"),
-                (r'https?://[^\s"\']+?\.mp4[^\s"\']*', "MP4"),
-            ]
-            for pattern, quality in quality_patterns:
-                matches = re.findall(pattern, data)
-                for url in matches:
-                    if url not in [v["url"] for v in video_urls]:
-                        video_urls.append({"url": url, "label": quality})
-                        printDBG("تم العثور على MP4: %s [%s]" % (url, quality))
-        hls_patterns = [
-            r'https?://[^\s"\']+?\.m3u8[^\s"\']*',
-            r'file["\']?\s*:\s*["\'](https?://[^"\']+?\.m3u8[^"\']*)["\']',
-        ]
-        for pattern in hls_patterns:
-            matches = re.findall(pattern, data)
-            for hls_url in matches:
-                if "master.m3u8" in hls_url:
-                    label = "HLS Master"
-                elif "playlist.m3u8" in hls_url:
-                    label = "HLS Playlist"
+                        display_q = label
                 else:
-                    label = "HLS Stream"
-                if hls_url not in [v["url"] for v in video_urls]:
-                    video_urls.append({"url": hls_url, "label": label})
-                    printDBG("تم العثور على HLS: %s [%s]" % (hls_url, label))
-        if video_urls:
-            quality_priority = {
-                "FULL HD [1080p]": 0,
-                "HD [720p]": 1,
-                "SD [480p]": 2,
-                "576p": 3,
-                "384p": 4,
-                "LOW [360p]": 5,
-                "MP4": 6,
-                "HLS Master": 7,
-                "HLS Playlist": 8,
-                "HLS Stream": 9,
-                "direct": 10,
-            }
-
-            def get_quality_priority(item):
-                label = item["label"]
-                return quality_priority.get(label, 999)
-
-            video_urls.sort(key=get_quality_priority)
-            result = []
-            for item in video_urls:
-                result.append(
-                    {
-                        "name": item["label"],
-                        "url": strwithmeta(
-                            item["url"],
-                            {
-                                "Referer": final_url,
-                                "User-Agent": HTTP_HEADER["User-Agent"],
-                            },
-                        ),
-                    }
+                    display_q = "MP4" if ".mp4" in file_url else "HLS"
+                meta = {
+                    "Referer": "https://www.vidlo.us/",
+                    "Origin": "https://www.vidlo.us",
+                    "User-Agent": HTTP_HEADER["User-Agent"],
+                    "Accept": "*/*",
+                }
+                if ".m3u8" in file_url:
+                    meta["iptv_proto"] = "m3u8"
+                video_urls.append(
+                    {"name": display_q, "url": strwithmeta(file_url, meta)}
                 )
-            printDBG("تم العثور على %d رابط" % len(result))
-            for item in result:
-                printDBG("   - %s: %s" % (item["name"], item["url"]))
-            return result
-        printDBG("لم يتم العثور على أي رابط فيديو")
-        return []
+        priority = {"HD [720p]": 1, "SD [576p]": 2, "LOW [384p]": 3, "HLS Master": 4}
+        video_urls.sort(key=lambda x: priority.get(x["name"], 99))
+        printDBG("Vidlo Extracted %d links" % len(video_urls))
+        return video_urls
 
     # ==========================================================================================
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
@@ -1722,7 +1819,9 @@ class Lodynet(CBaseHostClass):
                     pattern = histItem
                     search_type = None
                 params = dict(baseItem)
-                params.update({"title": pattern, "search_type": search_type, desc_key: plot})
+                params.update(
+                    {"title": pattern, "search_type": search_type, desc_key: plot}
+                )
                 self.addDir(params)
             except Exception:
                 printExc()
@@ -1737,6 +1836,8 @@ class IPTVHost(CHostBase):
         CHostBase.__init__(self, Lodynet(), True, [])
 
     def withArticleContent(self, cItem):
-        if "video" == cItem.get("type", "") or "list_episodes" == cItem.get("category", ""):
+        if "video" == cItem.get("type", "") or "list_episodes" == cItem.get(
+            "category", ""
+        ):
             return True
         return False
