@@ -726,7 +726,7 @@ class Brstej(CBaseHostClass):
 
     def _getFilm77Links(self, embed_url):
         urlTab = []
-        main_cookie = self.defaultParams.get("cookiefile", "/tmp/brstej.cookie")
+        main_cookie = self.defaultParams.get("cookiefile", self.COOKIE_FILE)
         try:
             user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
             referer = "https://rty1.film77.xyz/"

@@ -123,7 +123,7 @@ class LocalMedia(CBaseHostClass):
     def listsMainMenu(self, cItem):
         printDBG("LocalMedia.listsMainMenu [%s]" % cItem)
         # list mount points
-        predefined = [{'title': _('Downloads'), 'path': config.plugins.iptvplayer.NaszaSciezka.value}, {'title': _('rootfs'), 'path': '/'}]
+        predefined = [{'title': _('Downloads'), 'path': config.plugins.iptvplayer.DownloadsDir.value}, {'title': _('rootfs'), 'path': '/'}]
         for item in predefined:
             params = dict(cItem)
             params.update(item)

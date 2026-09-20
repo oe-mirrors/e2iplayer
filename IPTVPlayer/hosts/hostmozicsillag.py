@@ -36,9 +36,6 @@ def gettytul():
 
 def parseFilemoonVideoLink(data):
     printDBG('*** parseFilemoonVideoLink called ***')
-    with open('/media/hdd/filemoon_dump.txt', 'w') as f:
-       f.write(data)
-    import re
     match = re.search(r'<iframe[^>]+src=["\']([^"\']+)["\']', data)
     if match:
        return match.group(1)

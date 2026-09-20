@@ -2,7 +2,7 @@
 # Last modified: 09/05/2026
 # Lodynet Host By Mohamed Elsafty (angel_heart)
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist
@@ -10,7 +10,6 @@ from datetime import datetime
 import urllib
 import re
 import time
-import os
 import requests
 import json
 import html
@@ -1693,19 +1692,7 @@ class Lodynet(CBaseHostClass):
     # ==========================================================================================
     def getVidloDirectLinks(self, baseUrl):
         printDBG("getVidloDirectLinks [%s]" % baseUrl)
-        PRIMARY_PATH = "/media/hdd/IPTVCache/cookies"
-        FALLBACK_PATH = "/tmp/IPTV_Cookies"
-        COOKIE_PATH = (
-            PRIMARY_PATH
-            if os.path.isdir(PRIMARY_PATH) and os.access(PRIMARY_PATH, os.W_OK)
-            else FALLBACK_PATH
-        )
-        if not os.path.exists(COOKIE_PATH):
-            try:
-                os.makedirs(COOKIE_PATH)
-            except OSError:
-                COOKIE_PATH = "/tmp"
-        COOKIE_FILE = os.path.join(COOKIE_PATH, "vidlo.cookie")
+        COOKIE_FILE = GetCookieDir("vidlo.cookie")
         HTTP_HEADER = {
             "User-Agent": self.USER_AGENT,
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",

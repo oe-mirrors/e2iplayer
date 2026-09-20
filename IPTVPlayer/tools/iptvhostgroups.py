@@ -5,7 +5,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetConfigDir, GetHostsList, IsHostEnabled, getHostsPath
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetMigratedHostOrderFile, GetHostsList, IsHostEnabled, getHostsPath
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostsGroupItem
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads, dumps as json_dumps
 from Plugins.Extensions.IPTVPlayer.__init__ import GRIDSUPPORT
@@ -24,7 +24,7 @@ class IPTVHostsGroups:
     def __init__(self):
         printDBG("IPTVHostsGroups.__init__")
         self.lastError = ''
-        self.GROUPS_FILE = GetConfigDir('iptvplayerhostsgroups.json')
+        self.GROUPS_FILE = GetMigratedHostOrderFile('iptvplayerhostsgroups.json')
 
         # groups
         self.PREDEFINED_GROUPS = ["userdefined", "moviesandseries", "cartoonsandanime", "music", "sport", "live", "documentary", "science",
@@ -75,7 +75,7 @@ class IPTVHostsGroups:
 
     def _getGroupFile(self, groupName):
         printDBG("IPTVHostsGroups._getGroupFile")
-        return GetConfigDir("iptvplayer%sgroup.json" % groupName)
+        return GetMigratedHostOrderFile("iptvplayer%sgroup.json" % groupName)
 
     def getLastError(self):
         return self.lastError
@@ -176,7 +176,7 @@ class IPTVHostsGroups:
         # drop the top-level hosts-order file (what "Sort by name" / manual
         # reordering of the main list and the "all" group persist)
         printDBG("IPTVHostsGroups.resetHostsOrder")
-        orderFile = GetConfigDir('iptvplayerhostsorder')
+        orderFile = GetMigratedHostOrderFile('iptvplayerhostsorder')
         if isfile(orderFile):
             unlink(orderFile)
 

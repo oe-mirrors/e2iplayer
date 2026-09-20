@@ -2,7 +2,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, byteify
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetTmpDir, byteify
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
@@ -817,9 +817,10 @@ class XXXParser:
 							break  # no end marker in sight, give up
 						continue
 					jpg = _bytes[a:b + 2]
-					with open('/tmp/obraz.jpg', 'wb') as titleFile:
+					snapshotFile = GetTmpDir('obraz.jpg')
+					with open(snapshotFile, 'wb') as titleFile:
 						titleFile.write(jpg)
-						return 'file:///tmp/obraz.jpg'
+						return 'file://' + snapshotFile
 			except Exception:
 				pass
 			return ''

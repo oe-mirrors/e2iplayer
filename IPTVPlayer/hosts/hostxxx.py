@@ -3,7 +3,7 @@
 from Plugins.Extensions.IPTVPlayer.components.ihost import IHost, CDisplayListItem, RetHost, CUrlItem, CBaseHostClass
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, byteify
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir, GetConfigSubDir, byteify
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, GetIPTVNotify, SetIPTVPlayerLastHostError
@@ -980,8 +980,9 @@ class Host(CBaseHostClass, XXXParser):
 
 		if 'TEST' == name:
 			data = {}
+			testFile = GetConfigSubDir('hostxxx', 'xxxtest.json')
 			try:
-				with open("/etc/enigma2/xxxtest.json", "r") as f:
+				with open(testFile, "r") as f:
 					data = json.load(f)
 			except Exception as e:
 				pass
@@ -1009,7 +1010,7 @@ class Host(CBaseHostClass, XXXParser):
 					else:
 						valTab.append(CDisplayListItem('FAIL - ' + key, '', CDisplayListItem.TYPE_ARTICLE, [''], '', '', None))
 				data[key] = r
-			with open("/etc/enigma2/xxxtest.json", "w") as f:
+			with open(testFile, "w") as f:
 				json.dump(data, f)
 			return valTab
 

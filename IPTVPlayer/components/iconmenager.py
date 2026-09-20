@@ -10,7 +10,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import mkdirs, \
                       FreeSpace as iptvtools_FreeSpace, \
                       printDBG, printExc, RemoveOldDirsIcons, RemoveAllFilesIconsFromPath, \
                       RemoveAllDirsIconsFromPath, GetIconsFilesFromDir, GetNewIconsDirName, \
-                      GetIconsDirs, RemoveIconsDirByPath, MergeDicts
+                      GetIconsDirs, RemoveIconsDirByPath, MergeDicts, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
@@ -30,7 +30,7 @@ from Components.config import config
 
 
 # config.plugins.iptvplayer.showcover (true|false)
-# config.plugins.iptvplayer.SciezkaCache = ConfigText(default = "/hdd/IPTVCache")
+# config.plugins.iptvplayer.CacheDir = ConfigText(default = "/hdd/IPTVCache")
 
 class IconMenager:
     HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
@@ -38,7 +38,7 @@ class IconMenager:
 
     def __init__(self, updateFun=None, downloadNew=True):
         printDBG("IconMenager.__init__")
-        self.DOWNLOADED_IMAGE_PATH_BASE = config.plugins.iptvplayer.SciezkaCache.value
+        self.DOWNLOADED_IMAGE_PATH_BASE = config.plugins.iptvplayer.CacheDir.value
         self.cm = common()
 
         # download queue
@@ -75,7 +75,7 @@ class IconMenager:
         self.clearDQueue()
         self.clearAAueue()
 
-        if config.plugins.iptvplayer.SciezkaCache.value == self.DOWNLOADED_IMAGE_PATH_BASE and config.plugins.iptvplayer.showcover.value:
+        if config.plugins.iptvplayer.CacheDir.value == self.DOWNLOADED_IMAGE_PATH_BASE and config.plugins.iptvplayer.showcover.value:
             AsyncMethod(RemoveOldDirsIcons)(self.DOWNLOADED_IMAGE_PATH_BASE, config.plugins.iptvplayer.deleteIcons.value)
         else:
             # remove all icons as they are not more needed due to config changes
@@ -255,7 +255,7 @@ class IconMenager:
             params_cfad = {'with_metadata': True, 'use_cookie': True, 'load_cookie': True, 'save_cookie': True}
             domain = urlparser.getDomain(img_url, onlyDomain=True)
 
-            params_cfad['cookiefile'] = '/hdd/IPTVCache//cookies/{0}.cookie'.format(domain)
+            params_cfad['cookiefile'] = GetCookieDir('{0}.cookie'.format(domain))
 
         else:
             params_cfad = {}

@@ -20,15 +20,23 @@ from Components.config import config
 from Tools.Directories import resolveFilename, fileExists, SCOPE_PLUGINS, SCOPE_CONFIG
 from enigma import eConsoleAppContainer
 from Components.Language import language
+# Tools.Notifications (there is no Screens.Notifications); optional, a missing module must not stop the plugin from loading
+try:
+    from Tools.Notifications import AddPopup
+except Exception:
+    AddPopup = None
+from Screens.MessageBox import MessageBox
 from time import time
 from urllib.request import urlopen
 import traceback
 import re
 import sys
 import os
+import shutil
 import stat
 import codecs
 import datetime
+import threading
 from functools import cmp_to_key
 import socket
 
@@ -352,14 +360,52 @@ def TestTmpCookieDir():
         f.write("test")
 
 
+# paths already warned about (Get*Dir() runs on every request)
+gWarnedUnwritableDirs = set()
+
+
+def _warnIfDirNotCreatable(path, message):
+    if os.path.isdir(path) or path in gWarnedUnwritableDirs:
+        return
+    gWarnedUnwritableDirs.add(path)
+    try:
+        # lazy import: asynccall imports this module (circular)
+        import Plugins.Extensions.IPTVPlayer.components.asynccall as asynccall
+
+        # first argument is the session DelegateToMainThread passes in (unused)
+        def showPopup(session=None):
+            if AddPopup is None:
+                printDBG('Storage: no popup available, warning only logged: ' + (message % path))
+                return
+            AddPopup(message % path, type=MessageBox.TYPE_ERROR, timeout=10)
+
+        if asynccall.IsMainThread():
+            showPopup()
+        elif asynccall.gMainFunctionsQueueTab[0] is not None:
+            # may run on a worker thread: GUI calls must go through the main thread
+            asynccall.DelegateToMainThread(showPopup)()
+        # no GUI session (headless web interface): nothing to do
+    except Exception:
+        printExc()
+
+
+def _warnIfCacheDirNotCreatable(path):
+    _warnIfDirNotCreatable(path, _('Cache folder "%s" could not be created. Some data (cookies, subtitles, ...) may not be saved.'))
+
+
+def _warnIfConfigDirNotCreatable(path):
+    _warnIfDirNotCreatable(path, _('Config folder "%s" could not be created. Some data (host order, search history, favourites, movie player preferences, ...) may not be saved.'))
+
+
 def GetCookieDir(file='', forceFromConfig=False):
     if gE2iPlayerTempCookieDir is None or forceFromConfig:
-        cookieDir = os.path.join(config.plugins.iptvplayer.SciezkaCache.value, 'cookies/')
+        cookieDir = os.path.join(config.plugins.iptvplayer.CacheDir.value, 'cookies/')
     else:
         cookieDir = gE2iPlayerTempCookieDir
     try:
         if not os.path.isdir(cookieDir):
             mkdirs(cookieDir)
+            _warnIfCacheDirNotCreatable(cookieDir)
     except Exception:
         printExc()
     return cookieDir + file
@@ -396,12 +442,13 @@ def TestTmpJSCacheDir():
 
 def GetJSCacheDir(fileName='', forceFromConfig=False):
     if gE2iPlayerTempJSCache is None or forceFromConfig:
-        cookieDir = os.path.join(config.plugins.iptvplayer.SciezkaCache.value, 'JSCache/')
+        cookieDir = os.path.join(config.plugins.iptvplayer.CacheDir.value, 'JSCache/')
     else:
         cookieDir = gE2iPlayerTempJSCache
     try:
         if not os.path.isdir(cookieDir):
             mkdirs(cookieDir)
+            _warnIfCacheDirNotCreatable(cookieDir)
     except Exception:
         printExc()
     return os.path.join(cookieDir, fileName)
@@ -409,7 +456,7 @@ def GetJSCacheDir(fileName='', forceFromConfig=False):
 
 
 def GetTmpDir(fileName=''):
-    path = config.plugins.iptvplayer.NaszaTMP.value
+    path = config.plugins.iptvplayer.TmpDir.value
     path = path.replace('//', '/')
     mkdirs(path)
     return os.path.join(path, fileName)
@@ -436,17 +483,83 @@ def CreateTmpFile(filename, data=''):
 
 
 def GetCacheSubDir(dirName, fileName=''):
-    path = os.path.join(config.plugins.iptvplayer.SciezkaCache.value, dirName)
-    mkdirs(path)
+    path = os.path.join(config.plugins.iptvplayer.CacheDir.value, dirName)
+    if not os.path.isdir(path):
+        mkdirs(path)
+        _warnIfCacheDirNotCreatable(path)
     return os.path.join(path, fileName)
 
 
+# Guards the one-time migrations (CacheDir -> ConfigDir, /etc/enigma2 -> ConfigDir/hostorder); every critical section re-checks under it.
+# No popup while it is held: from a worker thread the popup waits for the main thread, which may be waiting for this lock.
+_storageMigrationLock = threading.Lock()
+
+# destinations whose migration failed this session: retried on the next start, not on every call
+gFailedStorageMigrations = set()
+
+
+def _copyDirAtomically(src, dst):
+    # copy to a temp sibling, rename atomically, then drop the source: a half-done copy never becomes the destination
+    tmpPath = dst + '.migrating'
+    rmtree(tmpPath, ignore_errors=True)
+    try:
+        shutil.copytree(src, tmpPath)
+        os.rename(tmpPath, dst)
+    except Exception:
+        rmtree(tmpPath, ignore_errors=True)
+        raise
+    rmtree(src, ignore_errors=True)
+
+
+def _getMigratedDir(path, oldPath, moveDir, label):
+    # path, or oldPath while moving it there failed (an empty destination would hide the data; retried on the next start)
+    if os.path.isdir(path):
+        return path
+    useOldPath = False
+    with _storageMigrationLock:
+        if not os.path.isdir(path):
+            if os.path.isdir(oldPath) and os.path.realpath(oldPath) != os.path.realpath(path):
+                if path not in gFailedStorageMigrations:
+                    try:
+                        mkdirs(config.plugins.iptvplayer.ConfigDir.value)
+                        moveDir(oldPath, path)
+                        printDBG('%s: migrated [%s] -> [%s]' % (label, oldPath, path))
+                    except Exception:
+                        printExc()
+                        gFailedStorageMigrations.add(path)
+                        printDBG('%s: migration FAILED [%s] -> [%s], data stays in the old folder until the next start' % (label, oldPath, path))
+                useOldPath = path in gFailedStorageMigrations
+            if not useOldPath and not os.path.isdir(path):
+                mkdirs(path)
+    if not os.path.isdir(path):
+        _warnIfConfigDirNotCreatable(path)
+    return oldPath if useOldPath else path
+
+
+def GetConfigSubDir(dirName, fileName=''):
+    # used to live under CacheDir: move once, so "Delete all cache files" cannot wipe it
+    path = os.path.join(config.plugins.iptvplayer.ConfigDir.value, dirName)
+    oldPath = os.path.join(config.plugins.iptvplayer.CacheDir.value, dirName)
+    return os.path.join(_getMigratedDir(path, oldPath, _copyDirAtomically, 'GetConfigSubDir'), fileName)
+
+
 def GetSearchHistoryDir(fileName=''):
-    return GetCacheSubDir('SearchHistory', fileName)
+    return GetConfigSubDir('SearchHistory', fileName)
 
 
 def GetFavouritesDir(fileName=''):
-    return GetCacheSubDir('IPTVFavourites', fileName)
+    return GetConfigSubDir('IPTVFavourites', fileName)
+
+
+def GetWatchedDir(fileName=''):
+    # watched/started markers (<host>/.<hash>.iptvhash) live next to IPTVFavourites; carried over from
+    # <CacheDir>/IPTVFavourites/IPTVWatched and <ConfigDir>/IPTVFavourites/IPTVWatched (a plain rename)
+    path = os.path.join(config.plugins.iptvplayer.ConfigDir.value, 'IPTVWatched')
+    if not os.path.isdir(path):
+        # outside the lock: takes and releases it itself (a plain Lock is not reentrant)
+        oldPath = os.path.join(GetFavouritesDir(''), 'IPTVWatched')
+        path = _getMigratedDir(path, oldPath, os.rename, 'GetWatchedDir')
+    return os.path.join(path, fileName)
 
 
 def GetSubtitlesDir(fileName=''):
@@ -455,6 +568,46 @@ def GetSubtitlesDir(fileName=''):
 
 def GetMovieMetaDataDir(fileName=''):
     return GetCacheSubDir('MovieMetaData', fileName)
+
+
+def GetMoviePlayerPerHostDir(fileName=''):
+    return GetConfigSubDir('MoviePlayer', fileName)
+
+
+def GetHostOrderDir(fileName=''):
+    return GetConfigSubDir('hostorder', fileName)
+
+
+def GetMigratedHostOrderFile(fileName):
+    # host group/order files used to sit directly in /etc/enigma2/. Moved once via temp file + rename;
+    # on failure the old file keeps being used (the new path would show an empty list).
+    # GetHostOrderDir() takes the lock itself and has released it by now.
+    newPath = GetHostOrderDir(fileName)
+    if not os.path.exists(newPath):
+        oldPath = GetConfigDir(fileName)
+        if os.path.exists(oldPath) and os.path.realpath(oldPath) != os.path.realpath(newPath):
+            with _storageMigrationLock:
+                if not os.path.exists(newPath) and newPath not in gFailedStorageMigrations:
+                    tmpPath = newPath + '.tmp'
+                    try:
+                        with open(oldPath, 'rb') as src:
+                            data = src.read()
+                        with open(tmpPath, 'wb') as dst:
+                            dst.write(data)
+                        os.rename(tmpPath, newPath)
+                        os.remove(oldPath)
+                        printDBG('GetMigratedHostOrderFile: migrated [%s] -> [%s]' % (oldPath, newPath))
+                    except Exception:
+                        printExc()
+                        gFailedStorageMigrations.add(newPath)
+                        printDBG('GetMigratedHostOrderFile: migration FAILED [%s] -> [%s], keeping the old file in use' % (oldPath, newPath))
+                        try:
+                            os.remove(tmpPath)
+                        except Exception:
+                            pass
+                if not os.path.exists(newPath) and os.path.exists(oldPath):
+                    return oldPath
+    return newPath
 
 
 def GetIPTVDMImgDir(fileName=''):
@@ -873,7 +1026,7 @@ def SortHostsList(hostsList):
 
 def SaveHostsOrderList(list, fileName="iptvplayerhostsorder"):
     printDBG('SaveHostsOrderList begin')
-    fname = GetConfigDir(fileName)
+    fname = GetMigratedHostOrderFile(fileName)
     try:
         f = open(fname, 'w')
         for item in list:
@@ -885,7 +1038,7 @@ def SaveHostsOrderList(list, fileName="iptvplayerhostsorder"):
 
 def GetHostsOrderList(fileName="iptvplayerhostsorder"):
     printDBG('GetHostsOrderList begin')
-    fname = GetConfigDir(fileName)
+    fname = GetMigratedHostOrderFile(fileName)
     list = []
     try:
         if fileExists(fname):
@@ -1020,6 +1173,63 @@ def mkdirs(newdir, raiseException=False):
     return False
 
 
+def IsSameDir(pathA, pathB):
+    # "/x/cache" vs "/x/cache/" or a symlinked spelling must compare equal
+    try:
+        return os.path.realpath(pathA) == os.path.realpath(pathB)
+    except Exception:
+        return pathA == pathB
+
+
+_RAM_FS_TYPES = ('tmpfs', 'ramfs', 'devtmpfs')
+
+
+def _GetFsTypeFromMounts(resolvedPath, mountsText):
+    # fs type of the longest matching mount point; for equal mount points the later entry wins
+    bestMountPoint = ''
+    fsType = ''
+    for line in mountsText.splitlines():
+        parts = line.split()
+        if len(parts) < 3:
+            continue
+        mountPoint = parts[1].replace('\\040', ' ')  # /proc/mounts escapes blanks
+        if resolvedPath == mountPoint or resolvedPath.startswith(mountPoint.rstrip('/') + '/'):
+            if len(mountPoint) >= len(bestMountPoint):
+                bestMountPoint = mountPoint
+                fsType = parts[2]
+    return fsType
+
+
+def IsRealStoragePresent(path):
+    # nearest existing ancestor on another device than "/" (an empty mount-point folder on flash is not storage)
+    check = path.rstrip('/') or '/'
+    while not os.path.isdir(check):
+        parent = os.path.dirname(check)
+        if parent == check:
+            break
+        check = parent
+    try:
+        if os.stat(check).st_dev == os.stat('/').st_dev:
+            return False
+    except Exception:
+        return False
+    # another device is not enough: some images mount a tiny tmpfs on /media (RAM, gone after reboot)
+    try:
+        with open('/proc/mounts') as f:
+            fsType = _GetFsTypeFromMounts(os.path.realpath(check), f.read())
+    except Exception:
+        fsType = ''  # cannot tell -> keep the device-number verdict
+    return fsType not in _RAM_FS_TYPES
+
+
+def IsPathWritable(path):
+    # used once the user has chosen a path: no "separate storage" requirement
+    try:
+        return os.path.isdir(path) and os.access(path, os.W_OK)
+    except Exception:
+        return False
+
+
 def rm(fullname):
     try:
         if os.path.exists(fullname):
@@ -1077,6 +1287,62 @@ def rmtree(path, ignore_errors=False, onerror=None):
         onerror(os.rmdir, path)
 
 
+def CleanOldFilesInDir(path, days):
+    # days <= 0 = never; empty subdirectories are left
+    try:
+        days = int(days)
+    except Exception:
+        days = 0
+    if days <= 0:
+        return
+    cutoff = time() - days * 86400
+    try:
+        for root, dirs, files in os.walk(path):
+            for fileName in files:
+                filePath = os.path.join(root, fileName)
+                try:
+                    if os.path.getmtime(filePath) < cutoff:
+                        os.remove(filePath)
+                except Exception:
+                    printExc()
+    except Exception:
+        printExc()
+
+
+def IsPathSafeToWipe(path):
+    # backstop for the "delete everything" actions: refuse "/", mount points, system and home dirs.
+    # Checked as typed AND resolved: on OE images /tmp is a symlink to /var/volatile/tmp.
+    try:
+        spellings = (os.path.normpath(path).rstrip('/'), os.path.realpath(path).rstrip('/'))
+    except Exception:
+        return False
+    for spelling in spellings:
+        if not spelling:                       # "/"
+            return False
+        if spelling.count('/') < 2:            # any top-level folder (/tmp, /media, /usr, ...)
+            return False
+        if spelling in ('/etc/enigma2', '/usr/lib', '/usr/bin', '/usr/share', '/var/tmp', '/var/volatile', '/var/volatile/tmp', '/home/root'):
+            return False
+        try:
+            if os.path.ismount(spelling):
+                return False
+        except Exception:
+            return False
+    return True
+
+
+def RemoveDirContents(path):
+    try:
+        for name in os.listdir(path):
+            fullname = os.path.join(path, name)
+            if os.path.isdir(fullname) and not os.path.islink(fullname):
+                rmtree(fullname, ignore_errors=True)
+            else:
+                rm(fullname)
+    except Exception:
+        printExc()
+
+
 def GetFileSize(filepath):
     try:
         return os.stat(filepath).st_size
@@ -1119,7 +1385,20 @@ def GetLastDirNameFromPath(path):
 
 
 def GetIconDirBaseName():
+    # no leading dot: dot folders are hidden in file managers and Samba shares
+    return 'iptvplayer_icons_'
+
+
+def GetLegacyIconDirBaseName():
     return '.iptvplayer_icons_'
+
+
+def GetIconsDirPrefix(dirName):
+    # folders with the old ".iptvplayer_icons_" prefix are handled like new ones
+    for prefix in (GetIconDirBaseName(), GetLegacyIconDirBaseName()):
+        if dirName.startswith(prefix):
+            return prefix
+    return None
 
 
 def CheckIconName(name):
@@ -1139,8 +1418,8 @@ def GetNewIconsDirName():
 
 def CheckIconsDirName(path):
     dirName = GetLastDirNameFromPath(path)
-    baseName = GetIconDirBaseName()
-    if dirName.startswith(baseName):
+    baseName = GetIconsDirPrefix(dirName)
+    if baseName is not None:
         try:
             test = float(dirName[len(baseName):])
             return True
@@ -1180,7 +1459,7 @@ def GetIconsFilesFromDir(basePath):
 def GetCreationIconsDirTime(fullPath):
     try:
         dirName = GetLastDirNameFromPath(fullPath)
-        baseName = GetIconDirBaseName()
+        baseName = GetIconsDirPrefix(dirName)
         return float(dirName[len(baseName):])
     except Exception:
         return None
@@ -1534,7 +1813,7 @@ class CFakeMoviePlayerOption():
 
 class CMoviePlayerPerHost():
     def __init__(self, hostName):
-        self.filePath = GetCacheSubDir('MoviePlayer', hostName + '.json')
+        self.filePath = GetMoviePlayerPerHostDir(hostName + '.json')
         self.activePlayer = {}  # {buffering:True/False, 'player':''}
         self.load()
 
