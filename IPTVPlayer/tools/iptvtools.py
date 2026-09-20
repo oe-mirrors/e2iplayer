@@ -559,6 +559,11 @@ def GetWatchedDir(fileName=''):
     return os.path.join(path, fileName)
 
 
+def GetDownloadedDir(fileName=''):
+    # "downloaded" markers (<host>/.<hash>.iptvdl) of the items downloaded from a host list - user data, so in the config folder
+    return os.path.join(config.plugins.iptvplayer.ConfigDir.value, 'IPTVDownloaded', fileName)
+
+
 def GetSubtitlesDir(fileName=''):
     return GetCacheSubDir('Subtitles', fileName)
 

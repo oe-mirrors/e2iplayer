@@ -5665,7 +5665,7 @@ class Host(CBaseHostClass, XXXParser):
 					next_page = 'https://mini.zbiornik.com' + next_page[-1]
 			data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="search-profile-box">', '</h5>')
 			for item in data:
-				phImage = self.cm.ph.getSearchGroups(item, r'''url\(['"]([^"^']+?)['"]''', 1, True)[0]
+				phImage = self.cm.ph.getSearchGroups(item, r'''url\(['"]([^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&')
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?filmy)['"]''', 1, True)[0]
 				phTitle = self._cleanHtmlStr(item)
 				if phUrl.startswith('/'):
@@ -5688,7 +5688,7 @@ class Host(CBaseHostClass, XXXParser):
 					next_page = 'https://mini.zbiornik.com' + next_page[-1]
 			data = self.cm.ph.getAllItemsBeetwenMarkers(data, '<div class="panel-body">', '</h3>')
 			for item in data:
-				phImage = self.cm.ph.getSearchGroups(item, r'''url\(['"]([^"^']+?)['"]''', 1, True)[0]
+				phImage = self.cm.ph.getSearchGroups(item, r'''url\(['"]([^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&')
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
 				phTitle = self._cleanHtmlStr(item)
 				if phUrl.startswith('/'):
@@ -5713,7 +5713,7 @@ class Host(CBaseHostClass, XXXParser):
 			if not data2:
 				data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a href="/film/', '</a>')
 			for item in data2:
-				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
+				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&')
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)\n''', 1, True)[0]
 				exTitle = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)Widoczne''', 1, True)[0]
@@ -5749,7 +5749,7 @@ class Host(CBaseHostClass, XXXParser):
 			if not data2:
 				data2 = self.cm.ph.getAllItemsBeetwenMarkers(data, '<a href="/film/', '</a>')
 			for item in data2:
-				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0]
+				phImage = self.cm.ph.getSearchGroups(item, '''src=['"]([^"^']+?)['"]''', 1, True)[0].replace('&amp;', '&')
 				phUrl = self.cm.ph.getSearchGroups(item, '''href=['"]([^"^']+?)['"]''', 1, True)[0]
 				phTitle = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)\n''', 1, True)[0]
 				exTitle = self.cm.ph.getSearchGroups(item, '''title=['"]([^"^']+?)Widoczne''', 1, True)[0]

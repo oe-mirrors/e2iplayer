@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 22.06.2025
+# Last Modified: 20.09.2026 - YouTube channels in a group: sort by newest upload + merged "newest videos" list,
+# folder watched/started marking, markers under the host's own watched folder name, origin host line
 ###################################################
 # LOCAL import
 ###################################################
@@ -10,6 +11,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvfavourites import IPTVFavourites
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem
 from Plugins.Extensions.IPTVPlayer.libs.crypto.hash.md5Hash import MD5
+from Plugins.Extensions.IPTVPlayer.libs import ytchannelfeed
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
 ###################################################
@@ -21,14 +23,22 @@ try:
 except Exception:
     import json
 from binascii import hexlify
-from Components.config import config
+import re
+import time
+from Components.config import config, ConfigInteger, getConfigListEntry
 ###################################################
 
 
+# how many of the newest videos of every channel go into "Newest videos" of a favourites group (the feed has 15 per channel)
+config.plugins.iptvplayer.favourites_yt_newest_per_channel = ConfigInteger(3, (1, 15))
+
+
 def GetConfigList():
-    # "Allow watched flag to be set" / "The color of the viewed item" now live in the
-    # global E2iPlayer settings (components/iptvconfigmenu.py), not per-host
-    return []
+    # "Allow watched flag to be set" / "The color of the viewed item" live in the global
+    # E2iPlayer settings (components/iptvconfigmenu.py), only the YouTube list is set here
+    optionList = []
+    optionList.append(getConfigListEntry(_("Newest videos of a YouTube channel in a group") + ":", config.plugins.iptvplayer.favourites_yt_newest_per_channel))
+    return optionList
 ###################################################
 
 
@@ -37,6 +47,7 @@ def gettytul():
 
 
 class Favourites(CBaseHostClass):
+    YT_NEWEST_MAX = 100
 
     def __init__(self):
         printDBG("Favourites.__init__")
@@ -47,6 +58,8 @@ class Favourites(CBaseHostClass):
         self.guestMode = False  # main or guest
         self.DEFAULT_ICON_URL = "https://raw.githubusercontent.com/oe-mirrors/e2iplayer/refs/heads/gh-pages/icons/favourites.png"
         self._guestParentWatchedHelper = IPTVWatchedHelper('favourites')
+        self.ytSortedGroups = set()  # group ids shown sorted by the newest YouTube upload (this visit only)
+        self.hostTitles = {}  # host module name -> title to show, see _getHostTitle()
 
     def _setHost(self, hostName):
         if hostName == self.hostName:
@@ -92,28 +105,201 @@ class Favourites(CBaseHostClass):
                     CDisplayListItem.TYPE_ARTICLE: self.addArticle,
                     CDisplayListItem.TYPE_CATEGORY: self.addDir}
 
+        rows = []
         for idx in range(len(data)):
             item = data[idx]
             addFun = typesMap.get(item.type, None)
-            favUrl = ''
-            favItem = None
-            try:
-                if item.resolver in (CFavItem.RESOLVER_DIRECT_LINK, CFavItem.RESOLVER_URLLPARSER):
-                    favUrl = str(item.data or '')
-                else:
-                    favItemData = json.loads(item.data)
-                    if isinstance(favItemData, dict):
-                        favItem = favItemData
-                        favUrl = str(favItemData.get('url', '') or '')
-            except Exception:
-                favUrl = ''
+            favUrl, favItem = self._parseFavItem(item)
             params = {'name': 'item', 'title': item.name, 'host': item.hostName, 'icon': item.iconimage, 'desc': item.description, 'group_id': cItem['group_id'], 'item_idx': idx, 'fav_url': favUrl, 'fav_item': favItem}
             if None is not addFun:
-                addFun(params)
+                rows.append((params, addFun))
+
+        ytChannels = [params for params, addFun in rows if self._isYtChannelParams(params)]
+        if len(ytChannels) > 1:
+            self.addDir({'name': 'category', 'category': 'yt_newest', 'group_id': cItem['group_id'], 'title': _("Newest videos (all YouTube channels)"), 'desc': _("The latest uploads of all YouTube channels in this group, newest first."), 'icon': self.DEFAULT_ICON_URL})
+        if ytChannels and self.isYtSorted(cItem['group_id']):
+            try:
+                self._annotateYtChannels(rows)
+            except Exception:
+                printExc()
+        for params, addFun in rows:
+            params['desc'] = self._addHostLine(params['host'], params['desc'])
+            addFun(params)
+
+    def _addHostLine(self, hostName, desc):
+        # the host a favourite comes from, first line of its description
+        title = self._getHostTitle(hostName)
+        if title == '':
+            return desc
+        return _("Host") + ": " + title + ("\n" + desc if desc else '')
+
+    def _getHostTitle(self, hostName):
+        if hostName not in self.hostTitles:
+            title = ''
+            try:
+                module = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['gettytul'], 0)
+                title = re.sub(r'^https?://(www\.)?', '', str(module.gettytul()).strip()).rstrip('/')
+            except Exception:
+                printExc()
+            self.hostTitles[hostName] = title or str(hostName)
+        return self.hostTitles[hostName]
+
+    def _parseFavItem(self, item):
+        # -> (favUrl, favItem) of a stored favourite; favItem is the host's own item dict (or None)
+        favUrl = ''
+        favItem = None
+        try:
+            if item.resolver in (CFavItem.RESOLVER_DIRECT_LINK, CFavItem.RESOLVER_URLLPARSER):
+                favUrl = str(item.data or '')
+            else:
+                favItemData = json.loads(item.data)
+                if isinstance(favItemData, dict):
+                    favItem = favItemData
+                    favUrl = str(favItemData.get('url', '') or '')
+        except Exception:
+            favUrl = ''
+        return favUrl, favItem
+
+    @staticmethod
+    def _isYtChannel(hostName, favItem):
+        return hostName == 'youtube' and isinstance(favItem, dict) and favItem.get('category', '') == 'channel' and bool(favItem.get('url', ''))
+
+    def _isYtChannelParams(self, params):
+        return self._isYtChannel(params.get('host', ''), params.get('fav_item'))
+
+    def hasYtChannels(self):
+        # the group list currently shown holds YouTube channels (cheap, no I/O - asked on every MENU check)
+        if self.guestMode:
+            return False
+        return any('item_idx' in params and self._isYtChannelParams(params) for params in self.currList)
+
+    def isYtSorted(self, groupId):
+        return groupId in self.ytSortedGroups
+
+    def setYtSorted(self, groupId, enabled):
+        if enabled:
+            self.ytSortedGroups.add(groupId)
+        else:
+            self.ytSortedGroups.discard(groupId)
+
+    def getCurrentGroupId(self):
+        for params in self.currList:
+            if 'item_idx' in params and 'group_id' in params:
+                return params['group_id']
+        return ''
+
+    def getGroupItemIdx(self, index):
+        # position of the favourite in its group's file for the row at list position index;
+        # -1 for anything that is not a plain stored favourite (guest lists, the virtual
+        # "newest videos" row and its videos) - the list can be sorted, so the row position
+        # is not the storage position
+        if self.guestMode or not (0 <= index < len(self.currList)):
+            return -1
+        params = self.currList[index]
+        if params.get('yt_video') or 'group_id' not in params:
+            return -1
+        return params.get('item_idx', -1)
+
+    def onGroupItemDeleted(self, index, storageIdx):
+        # keep the raw list in step with a favourite removed from the group (see getGroupItemIdx)
+        try:
+            del self.currList[index]
+            for params in self.currList:
+                if params.get('item_idx', -1) > storageIdx:
+                    params['item_idx'] -= 1
+        except Exception:
+            printExc()
+
+    def _annotateYtChannels(self, rows):
+        # rows: [(params, addFun)] of one group; adds the latest upload of every YouTube channel
+        # to its description and moves the channels with the newest upload to the top
+        channels = [params for params, addFun in rows if self._isYtChannelParams(params)]
+        feeds = ytchannelfeed.getFeeds([params['fav_item']['url'] for params in channels])
+        now = time.time()
+        for params in channels:
+            latest = ytchannelfeed.latestUpload(feeds.get(params['fav_item']['url']))
+            if latest:
+                params['yt_latest'] = latest['published']
+                line = _("Latest video") + ": " + ytchannelfeed.describeDate(latest['published'], now) + "\n" + latest['title']
+            else:
+                line = _("Latest video") + ": ?"
+            params['desc'] = line + ("\n" + params['desc'] if params.get('desc') else '')
+        # stable: rows without a known upload keep their order behind the dated ones
+        rows.sort(key=lambda row: -row[0].get('yt_latest', 0))
+
+    @staticmethod
+    def _getNewestPerChannel():
+        try:
+            return max(1, int(config.plugins.iptvplayer.favourites_yt_newest_per_channel.value))
+        except Exception:
+            printExc()
+        return 3
+
+    def listYtNewest(self, cItem):
+        printDBG("Favourites.listYtNewest")
+        sts, data = self.helper.getGroupItems(cItem['group_id'])
+        if not sts:
+            return
+        urls = []
+        for item in data:
+            favItem = self._parseFavItem(item)[1]
+            if self._isYtChannel(item.hostName, favItem):
+                urls.append(favItem['url'])
+        ytchannelfeed.clearFailed()  # opening the list (or OK on its "could not be read" row) tries those channels again
+        feeds = ytchannelfeed.getFeeds(urls)
+        # a channel whose feed is missing in the result counts too (not finished in time)
+        failed = len([url for url in set(urls) if feeds.get(url) is None])
+        now = time.time()
+        newest = self._getNewestEntries(feeds)
+        for entry in newest:
+            self._addNewestVideo(entry, now)
+        if failed or not newest:
+            self._addNewestNotice(cItem['group_id'], failed)
+
+    def _getNewestEntries(self, feeds):
+        # the newest videos of all channels, newest first; a busy channel must not push the others out
+        perChannel = self._getNewestPerChannel()
+        videos = {}
+        for info in feeds.values():
+            for entry in (info or {}).get('entries', [])[:perChannel]:
+                videos[entry['video_id']] = entry
+        return sorted(videos.values(), key=lambda entry: -entry['published'])[:self.YT_NEWEST_MAX]
+
+    def _addNewestVideo(self, entry, now):
+        video = {'type': 'video', 'category': 'video', 'title': entry['title'], 'url': 'https://www.youtube.com/watch?v=' + entry['video_id'],
+                 'icon': entry['icon'], 'video_id': entry['video_id'], 'channel': entry['channel']}
+        desc = entry['channel'] + "\n" + ytchannelfeed.describeDate(entry['published'], now)
+        extra = []
+        if entry['short']:
+            extra.append('Short')
+        if entry['views']:
+            extra.append(entry['views'] + ' ' + _("views"))
+        if extra:
+            desc += "\n" + ' | '.join(extra)
+        # the age first: the list is sorted by it, not by channel
+        title = '[' + ytchannelfeed.formatAge(entry['published'], now) + '] ' + entry['channel'] + ': ' + entry['title']
+        self.addVideo({'name': 'item', 'title': title, 'host': 'youtube', 'icon': entry['icon'], 'desc': desc,
+                       'yt_video': True, 'yt_item': video, 'fav_item': video, 'fav_url': video['url']})
+
+    def _addNewestNotice(self, groupId, failed):
+        # a row that says so, not a silently shorter list; pressing OK on it asks the feeds again
+        if failed:
+            title = _("(%d YouTube channel(s) could not be read)") % failed
+            desc = _("The feed of these channels could not be read - press OK to try again.")
+        else:
+            title = _("(no videos found)")
+            desc = _("The YouTube channels of this group have no videos.")
+        self.addDir({'name': 'category', 'category': 'yt_newest', 'group_id': groupId, 'title': title, 'desc': desc})
 
     def getLinksForVideo(self, cItem):
         printDBG("Favourites.getLinksForVideo idx[%r]" % cItem)
         ret = RetHost(RetHost.ERROR, value=[])
+        if cItem.get('yt_video'):
+            # video of the merged "newest videos" list - not a stored favourite, resolved by the YouTube host
+            if self._setHost('youtube'):
+                urlList = self.host.host.getLinksForVideo(dict(cItem['yt_item']))
+                ret = RetHost(RetHost.OK, value=[CUrlItem(self.cleanHtmlStr(urlItem['name']), urlItem['url'], urlItem.get('need_resolve', 0)) for urlItem in urlList])
+            return ret
         sts, data = self.helper.getGroupItems(cItem['group_id'])
         if not sts:
             return ret
@@ -157,12 +343,16 @@ class Favourites(CBaseHostClass):
         self.currList = []
 
         self.guestMode = False
+        if 1 == refresh and category in ('list_favourites', 'yt_newest'):
+            ytchannelfeed.clearCache()  # a refresh should look for new uploads again
         if None is name:
             self.host = None
             self.hostName = None
             self.listGroups('list_favourites')
         elif 'list_favourites' == category:
             self.listFavourites(self.currItem)
+        elif 'yt_newest' == category:
+            self.listYtNewest(self.currItem)
         elif 'host' in self.currItem:
             sts, data = self.helper.getGroupItems(self.currItem['group_id'])
             if sts:
@@ -352,23 +542,64 @@ class IPTVHost(CHostBase):
             hashData = hashData.decode()
         return (hostName, hashData)
 
-    def getItemHashData(self, index, displayItem):
+    def _getWatchedDirName(self, hostName):
+        # markers live under the name the host's own IPTVWatchedHelper uses - that is not always the
+        # module name (hostfilmpalast -> "filmpalastto", hostplayrtsiw -> "srgssr"); using the
+        # module name here made the favourites and the host mark into two different folders
+        try:
+            if self.host.isQuestMode():
+                rawHost = self._getRawGuestHost(self.host.getCurrentGuestHost())
+            else:
+                rawHost = self._getRawHostForName(hostName)
+            name = str(getattr(getattr(rawHost, 'watchedHelper', None), 'hostName', '') or '')
+            if name != '':
+                return name
+        except Exception:
+            printExc()
+        return hostName
+
+    def _getItemHashParts(self, index, displayItem):
+        # -> (module name of the host, md5 of the item's stable id) or None
         if self.host.isQuestMode():
             hostName = str(self.host.getCurrentGuestHostName())
         else:
             hostName = str(self.host.getHostNameFromItem(index))
+        if hostName in [None, '']:
+            return None
+        hashSrc = self._getStableItemHashSource(index)
+        if hashSrc == '':
+            hashSrc = '%s_%s' % (str(displayItem.name), str(displayItem.type))
+        hashAlg = MD5()
+        hashData = hexlify(hashAlg(hashSrc))
+        if not isPY2():
+            hashData = hashData.decode()
+        return (hostName, hashData)
 
-        ret = None
-        if hostName not in [None, '']:
-            hashSrc = self._getStableItemHashSource(index)
-            if hashSrc == '':
-                hashSrc = '%s_%s' % (str(displayItem.name), str(displayItem.type))
-            hashAlg = MD5()
-            hashData = hexlify(hashAlg(hashSrc))
-            if not isPY2():
-                hashData = hashData.decode()
-            return (hostName, hashData)
-        return ret
+    def getItemHashData(self, index, displayItem):
+        parts = self._getItemHashParts(index, displayItem)
+        if parts is None:
+            return None
+        return (self._getWatchedDirName(parts[0]), parts[1])
+
+    def _readItemMarker(self, index, displayItem):
+        # marker content of the item (None = none), also picking up - and moving to the host's own
+        # folder - a marker an older build wrote under the module name of the host
+        parts = self._getItemHashParts(index, displayItem)
+        if parts is None:
+            return None
+        hashData = (self._getWatchedDirName(parts[0]), parts[1])
+        content = self._readMarkerContent(hashData)
+        if parts[0] == hashData[0]:
+            return content
+        oldData = parts
+        oldContent = self._readMarkerContent(oldData)
+        if oldContent is None:
+            return content
+        if content is None or (content == IPTVWatchedHelper.STARTED_MARKER and oldContent != IPTVWatchedHelper.STARTED_MARKER):
+            content = oldContent
+            self._createViewedFile(hashData, oldContent)
+        rm(GetWatchedDir('%s/.%s.iptvhash' % oldData))
+        return content
 
     def _readMarkerContent(self, hashData):
         # None = no file at all, '' or any other text = watched, STARTED_MARKER = started
@@ -389,7 +620,7 @@ class IPTVHost(CHostBase):
 
     def isItemWatched(self, index, displayItem):
         ret = self.getItemHashData(index, displayItem)
-        content = self._readMarkerContent(ret)
+        content = self._readItemMarker(index, displayItem)
         if content is not None:
             return content != IPTVWatchedHelper.STARTED_MARKER
         # backward compatibility: favourites marked watched before the stable-id hash existed
@@ -401,8 +632,7 @@ class IPTVHost(CHostBase):
         return False
 
     def isItemStarted(self, index, displayItem):
-        ret = self.getItemHashData(index, displayItem)
-        return self._readMarkerContent(ret) == IPTVWatchedHelper.STARTED_MARKER
+        return self._readItemMarker(index, displayItem) == IPTVWatchedHelper.STARTED_MARKER
 
     def fixWatchedFlag(self, ret):
         if self.useWatchedFlag:
@@ -414,17 +644,29 @@ class IPTVHost(CHostBase):
                         ret.value[idx].isStarted = False
                     elif self.isItemStarted(idx, ret.value[idx]):
                         ret.value[idx].isStarted = True
+                elif ret.value[idx].type == CDisplayListItem.TYPE_CATEGORY:
+                    self._fixFolderWatchedFlag(idx, ret.value[idx])
             self.cachedRet = ret
         return ret
 
-    def _createViewedFile(self, hashData):
+    def _fixFolderWatchedFlag(self, idx, displayItem):
+        # A favourite that is a folder of the host (a movie with its streams, a season, a series)
+        # shows the state the host keeps for that folder - the same green/yellow marking the host's
+        # own list has. Only for the rows of a group: inside a guest host the host flags its own rows.
+        if self.host.isQuestMode() or self._getStableItemHashSource(idx) == '':
+            return
+        content = self._readItemMarker(idx, displayItem)
+        displayItem.isWatched = content is not None and content != IPTVWatchedHelper.STARTED_MARKER
+        displayItem.isStarted = content == IPTVWatchedHelper.STARTED_MARKER
+
+    def _createViewedFile(self, hashData, content=''):
         if hashData is not None and mkdirs(GetWatchedDir('%s/' % hashData[0])):
             flagFilePath = GetWatchedDir('%s/.%s.iptvhash' % hashData)
             try:
                 # write (not touch): must overwrite a possible "started" marker
                 f = open(flagFilePath, 'w')
                 try:
-                    f.write('')
+                    f.write(content)
                 finally:
                     f.close()
                 return True
@@ -539,11 +781,28 @@ class IPTVHost(CHostBase):
                         if isWatched or isStarted:
                             retlist.append(IPTVChoiceBoxItem(_('Unset watched'), "", {'action': 'unset_watched_flag', 'item_index': Index, 'hash_data': tmp}))
                     retCode = RetHost.OK
+        retlist.extend(self._getYtGroupActions())
+        if retlist:
+            retCode = RetHost.OK
         return RetHost(retCode, value=retlist)
+
+    def _getYtGroupActions(self):
+        # sort switch for a favourites group that holds YouTube channels (not tied to the watched flag)
+        favourites = self.host
+        if not favourites.hasYtChannels():
+            return []
+        groupId = favourites.getCurrentGroupId()
+        if favourites.isYtSorted(groupId):
+            return [IPTVChoiceBoxItem(_("YouTube channels: original order"), "", {'action': 'yt_sort_reset', 'group_id': groupId})]
+        return [IPTVChoiceBoxItem(_("YouTube channels: sort by newest upload"), "", {'action': 'yt_sort_newest', 'group_id': groupId})]
 
     def performCustomAction(self, privateData):
         retCode = RetHost.ERROR
         retlist = []
+        if isinstance(privateData, dict) and privateData.get('action', '') in ('yt_sort_newest', 'yt_sort_reset'):
+            self.host.setYtSorted(privateData.get('group_id', ''), privateData['action'] == 'yt_sort_newest')
+            self.refreshAfterWatchedFlagChange = False  # re-list the group instead of reusing the cached rows
+            return RetHost(RetHost.OK, value=['refresh'])
         if self.useWatchedFlag:
             if privateData.get('guest_parent_category') in ['list_episodes', 'list_seasons']:
                 guestHost = self.host.getCurrentGuestHost()

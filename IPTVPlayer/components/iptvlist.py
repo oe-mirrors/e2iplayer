@@ -10,6 +10,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetIconDir, eConnectCallback
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem
+from Plugins.Extensions.IPTVPlayer.tools.iptvdownloaded import STATE_ACTIVE, STATE_DONE
 ###################################################
 
 ###################################################
@@ -168,6 +169,9 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         self.dictPIX = {}
         self.watchedBadgePIX = None
         self.startedBadgePIX = None
+        self.favouriteMarkerPIX = None
+        self.downloadedMarkerPIX = None
+        self.downloadingMarkerPIX = None
 
         # item icon box (imageType pixmap) and the watched/started overlay
         # drawn on top of it, sized to the row's own itemHeight instead of
@@ -200,12 +204,19 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
         self.BADGE_W = self.BADGE_H = max(int(round(self.ICON_W * 1.1)), 12)
         self.BADGE_X = self.ICON_X + (self.ICON_W - self.BADGE_W) // 2
         self.BADGE_Y = self.ICON_Y + (self.ICON_H - self.BADGE_H) // 2
+        # markers at the end of the row (in the favourites / downloaded): a bit smaller than the item icon
+        self.MARKER_W = self.MARKER_H = max(itemHeight - 10, 14)
+        self.MARKER_GAP = 4
+        self.MARKER_MARGIN = 6
 
     def _nullPIX(self):
         for key in self.ICONS_FILESNAMES:
             self.dictPIX[key] = None
         self.watchedBadgePIX = None
         self.startedBadgePIX = None
+        self.favouriteMarkerPIX = None
+        self.downloadedMarkerPIX = None
+        self.downloadingMarkerPIX = None
 
     def onCreate(self):
         self._nullPIX()
@@ -227,16 +238,48 @@ class IPTVMainNavigatorList(IPTVListComponentBase):
             self.startedBadgePIX = LoadPixmap(cached=True, path=GetIconDir('StartedBadge.png'))
         except Exception:
             self.startedBadgePIX = None
+        # markers at the end of the row; a missing file just means no marker of that kind
+        self.favouriteMarkerPIX = self._loadIcon('FavouriteItem.png')
+        self.downloadedMarkerPIX = self._loadIcon('DownloadedItem.png')
+        self.downloadingMarkerPIX = self._loadIcon('DownloadingItem.png')
 
     def onDestroy(self):
         self._nullPIX()
+
+    @staticmethod
+    def _loadIcon(fileName):
+        try:
+            return LoadPixmap(cached=True, path=GetIconDir(fileName))
+        except Exception:
+            return None
+
+    def _getRowMarkers(self, item):
+        # pixmaps for the end of the row, left to right: in the favourites, download state
+        markers = []
+        if getattr(item, 'isFavourite', False) and self.favouriteMarkerPIX is not None:
+            markers.append(self.favouriteMarkerPIX)
+        downloadState = getattr(item, 'downloadState', '')
+        if downloadState == STATE_DONE and self.downloadedMarkerPIX is not None:
+            markers.append(self.downloadedMarkerPIX)
+        elif downloadState == STATE_ACTIVE and self.downloadingMarkerPIX is not None:
+            markers.append(self.downloadingMarkerPIX)
+        return markers
 
     def buildEntry(self, item):
         width = self.l.getItemSize().width()
         height = self.l.getItemSize().height()
         textX = self.ICON_X + self.ICON_W + 5
+        markers = self._getRowMarkers(item)
+        # the title stops in front of the markers so a long one does not run underneath them
+        markersW = len(markers) * (self.MARKER_W + self.MARKER_GAP) + self.MARKER_MARGIN if markers else 0
         res = [None]
-        res.append((eListboxPythonMultiContent.TYPE_TEXT, textX, 0, width - textX, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.getDisplayTitle(), item.getTextColor()))
+        res.append((eListboxPythonMultiContent.TYPE_TEXT, textX, 0, width - textX - markersW, height, 1, RT_HALIGN_LEFT | RT_VALIGN_CENTER, item.getDisplayTitle(), item.getTextColor()))
+        markerX = width - markersW + self.MARKER_GAP
+        markerY = (height - self.MARKER_H) // 2
+        for marker in markers:
+            x, y, w, h = fitPixmapInBox(marker, markerX, markerY, self.MARKER_W, self.MARKER_H)
+            res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y), size=(w, h), png=marker, flags=BT_SCALE))
+            markerX += self.MARKER_W + self.MARKER_GAP
         icon = self.dictPIX.get(item.imageType, None)
         if icon is not None:
             x, y, w, h = fitPixmapInBox(icon, self.ICON_X, self.ICON_Y, self.ICON_W, self.ICON_H)
@@ -409,7 +452,7 @@ class IPTVActionChoiceBoxList(IPTVMainNavigatorList):
     # used for the "Select action" popup (iptvplayerwidget.py's
     # menu_pressed()/requestCustomActionFromHost()): options come from two
     # sources - the core itself adds "Add/Remove favorites"
-    # (item.privateData == {'e2i_menu_action': 'ADD_FAV'/'DELETE_FAV'}),
+    # (item.privateData == {'e2i_menu_action': 'ADD_FAV'/'DELETE_FAV'/'REMOVE_FAV_HOST'}),
     # the rest comes from whatever the currently active host's own
     # getCustomActions() returns, which is genuinely host-specific and has
     # no single fixed set. Only one cross-host convention actually exists
@@ -417,16 +460,20 @@ class IPTVActionChoiceBoxList(IPTVMainNavigatorList):
     # (used by hostyoutube.py/hostfilmpalast.py/hostserienstreamto.py) and
     # hostfavourites.py's own near-identical logic both always use
     # privateData == {'action': 'set_watched_flag'/'unset_watched_flag',
-    # ...}. Anything else (e.g. hostlocalmedia.py's own {'action':
+    # ...}; the favourites host adds its YouTube sort switch
+    # ({'action': 'yt_sort_newest'/'yt_sort_reset'}). Anything else (e.g. hostlocalmedia.py's own {'action':
     # 'paste_file', ...}) isn't a known pattern, so it falls back to no
     # icon - same plain look this screen had before this class existed.
     ICON_MAP = {
         'ADD_FAV': 'BookmarkPlusItem.png',
         'DELETE_FAV': 'BookmarkMinusItem.png',
+        'REMOVE_FAV_HOST': 'BookmarkMinusItem.png',
     }
     ACTION_ICON_MAP = {
         'set_watched_flag': 'MovieWatchedItem.png',
         'unset_watched_flag': 'MovieUnwatchedItem.png',
+        'yt_sort_newest': 'SortByNameItem.png',
+        'yt_sort_reset': 'ResetGroupItem.png',
     }
 
     def __init__(self):

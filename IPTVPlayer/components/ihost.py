@@ -1,5 +1,6 @@
 # @file  ihost.py
-# Last Modified: 2026-08-18 - CBaseHostClass.searchItems() now adds "search_history_editor" between "search_history" and "delete_history".
+# Last Modified: 2026-09-20 - CDisplayListItem.isFavourite/downloadState (row markers), CHostBase.getRowUrl()/getFavouriteDataOfRow()
+# 2026-08-18 - CBaseHostClass.searchItems() now adds "search_history_editor" between "search_history" and "delete_history".
 # CHostBase.getListForItem() catches this category and opens SearchHistoryEditor before any host handleService() runs.
 # CHostBase.setSearchPattern() no longer calls addHistoryItem() when a history entry is re-selected, only getSearchResults() writes new entries
 # Applies automatically to all hosts using CBaseHostClass - Kamikaze24
@@ -140,6 +141,11 @@ class CDisplayListItem:
             self.isStarted = False
 
         self.textColor = str(textColor)
+
+        # markers drawn at the end of the row (components/iptvlist.py), set by the list widget:
+        # already in the favourites / download state ('' | 'active' | 'done', tools/iptvdownloaded.py)
+        self.isFavourite = False
+        self.downloadState = ''
 
         # used only for TYPE_VIDEO item
         self.urlItems = urlItems  # url to VIDEO
@@ -508,6 +514,34 @@ class CHostBase(IHost):
 
         return RetHost(retCode, value=retlist)
     # end getFavouriteItem
+
+    def _getRawRow(self, Index):
+        # the host's own item dict of a row of the current list, None if there is no such row
+        if 0 <= Index < len(self.host.currList):
+            return self.host.currList[Index]
+        return None
+
+    def getRowUrl(self, Index):
+        # the item's own url as the host listed it - the list widget replaces the url items of a
+        # display item by the resolved links as soon as those were requested, this stays as it was
+        try:
+            cItem = self._getRawRow(Index)
+            if cItem is not None:
+                return str(cItem.get('url', '') or '')
+        except Exception:
+            printExc()
+        return ''
+
+    def getFavouriteDataOfRow(self, Index):
+        # the data getFavouriteItem() would store for the row, without building the whole CFavItem;
+        # None when the row can not be a favourite
+        try:
+            cItem = self._getRawRow(Index)
+            if cItem is not None:
+                return self.host.getFavouriteData(cItem) or None
+        except Exception:
+            printExc()
+        return None
 
     def getLinksForFavourite(self, favItem):
         retlist = []

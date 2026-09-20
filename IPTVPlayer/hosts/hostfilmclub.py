@@ -126,9 +126,9 @@ class FilmClub(CBaseHostClass):
         if not data:
             data = re.findall(r'iframe src="([^"]+)', htm, re.DOTALL)
         for url in data:
-            if "filmclub.sbs" in url:
+            if "filmclub.store" in url:
                 url = self.get_redirected_url(url)
-            if "filmclub.sbs" in url:
+            if "filmclub.store" in url:
                 url = self.get_redirected_url(url)
             if "?c1_file" in url:
                 sub = re.findall(r'file=([^&]+).*?label=([^&]+)', url, re.DOTALL)
