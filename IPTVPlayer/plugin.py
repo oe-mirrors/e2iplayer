@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget import E2iPlayerWidget
-from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetConfigExpectedPin
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu, GetConfigExpectedPin, IsPluginBrowserEntryShown
 from Plugins.Extensions.IPTVPlayer.components.iptvpin import IPTVPinWidget
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 
@@ -23,7 +23,8 @@ def Plugins(**kwargs):
         elif config.plugins.iptvplayer.plugin_autostart_method.value == 'infobar':
             list.append(PluginDescriptor(where=[PluginDescriptor.WHERE_SESSIONSTART, PluginDescriptor.WHERE_AUTOSTART], fnc=pluginAutostartSetup))
 
-    list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=[PluginDescriptor.WHERE_PLUGINMENU], icon=iconFile, fnc=main))  # always show in plugin menu
+    if IsPluginBrowserEntryShown():  # on unless another way to start the player is on and this one was switched off
+        list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=[PluginDescriptor.WHERE_PLUGINMENU], icon=iconFile, fnc=main))
     list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=PluginDescriptor.WHERE_MENU, fnc=startIPTVfromMenu))
     if config.plugins.iptvplayer.showinextensions.value:
         list.append(PluginDescriptor(name=(("E2iPlayer")), description=desc, where=[PluginDescriptor.WHERE_EXTENSIONSMENU], fnc=main))
@@ -67,7 +68,9 @@ def doPluginAutostart():
 
 def startIPTVfromMenu(menuid, **kwargs):
     if menuid == "system":
-        return [(_("Configure %s") % 'E2iPlayer', mainSetup, "iptv_config", None)]
+        if config.plugins.iptvplayer.showinSystemMenu.value is True:
+            return [(_("Configure %s") % 'E2iPlayer', mainSetup, "iptv_config", None)]
+        return []
     elif menuid == "mainmenu" and config.plugins.iptvplayer.showinMainMenu.value is True:
         return [("E2iPlayer", main, "iptv_main", None)]
     else:

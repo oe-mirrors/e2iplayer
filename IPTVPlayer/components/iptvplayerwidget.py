@@ -3356,10 +3356,12 @@ class E2iPlayerWidget(Screen):
     def _updateRowMarkers(self):
         # sets the markers at the end of the rows of the current list: item is already in the
         # favourites, download state. Cheap: the favourites are read again only when they changed.
+        # "Mark favourite items" / "Mark downloaded items" off: no marker and no colour of that kind.
         try:
             favKeys = frozenset()
-            if 'favourites' != self.hostName and config.plugins.iptvplayer.hostfavourites.value:
+            if 'favourites' != self.hostName and config.plugins.iptvplayer.hostfavourites.value and config.plugins.iptvplayer.mark_favourite_items.value:
                 favKeys = getFavouritesIdentityKeys(GetFavouritesDir())
+            markDownloads = config.plugins.iptvplayer.mark_downloaded_items.value
             activeKeys = gDownloadManager.getActiveItemKeys() if None is not gDownloadManager else set()
             for idx in range(len(self.currList)):
                 item = self.currList[idx]
@@ -3371,7 +3373,7 @@ class E2iPlayerWidget(Screen):
                     data = self.host.getFavouriteDataOfRow(idx)
                     if data is not None:
                         item.isFavourite = IPTVFavourites.getItemIdentityKey(self.hostName, self.hostName, data) in favKeys
-                if self.isDownloadableType(item.type):
+                if markDownloads and self.isDownloadableType(item.type):
                     hostName, url = self._getRowSource(idx, item)
                     item.downloadState = iptvdownloaded.getState(iptvdownloaded.getItemKey(hostName, url, item.name), activeKeys)
         except Exception:

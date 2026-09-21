@@ -169,6 +169,11 @@ class CDisplayListItem:
                 return parseColor(config.plugins.iptvplayer.watched_item_color.value).argb()
             if self.isStarted:
                 return parseColor(config.plugins.iptvplayer.started_item_color.value).argb()
+            # 'done' = tools/iptvdownloaded.STATE_DONE; both states are only set while their "Mark ... items" option is on
+            if self.downloadState == 'done':
+                return parseColor(config.plugins.iptvplayer.downloaded_item_color.value).argb()
+            if self.isFavourite:
+                return parseColor(config.plugins.iptvplayer.favourite_item_color.value).argb()
         except Exception:
             printExc()
         return None
