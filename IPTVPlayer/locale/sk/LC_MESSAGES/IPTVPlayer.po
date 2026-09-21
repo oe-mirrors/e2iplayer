@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 22:20+0000\n"
+"POT-Creation-Date: 2026-09-21 19:23+0000\n"
 "PO-Revision-Date: 2026-07-27 16:28+0200\n"
 "Last-Translator: Warder <ciksa@seznam.cz>\n"
 "Language-Team: \n"
@@ -189,9 +189,6 @@ msgstr "----- STIAHNUTIE KONFIGURÁCIE -----"
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Globálna konfigurácia HostXXX -----"
 
-msgid "----- OTHER SETTINGS -----"
-msgstr "----- ĎALŠIE NASTAVENIA -----"
-
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- KONFIGURÁCIA PREHRÁVAČOV A PREHRÁVANIA -----"
 
@@ -225,6 +222,10 @@ msgstr "----- Zobraziť alebo skryť živé kamery -----"
 
 msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Zobraziť alebo skryť porno stránky -----"
+
+#, fuzzy
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
+msgstr "----- ZÁKLADNÁ KONFIGURÁCIA -----"
 
 msgid "----- XXXList Configuration -----"
 msgstr "----- Konfigurácia XXXList -----"
@@ -351,6 +352,9 @@ msgstr "Prístup bol odmietnutý. Skontrolujte heslo."
 #, fuzzy
 msgid "Accessible"
 msgstr "Prístup zakázaný"
+
+msgid "Accounts & API keys"
+msgstr ""
 
 msgid "Action & Thriller"
 msgstr ""
@@ -553,6 +557,9 @@ msgstr "Ázijské filmy"
 
 msgid "Aspect"
 msgstr "Oblasť"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr ""
 
 msgid "Audio"
 msgstr "Audio"
@@ -792,6 +799,9 @@ msgstr "Iba zozbierané streamy"
 
 msgid "Collections"
 msgstr "Zbierky"
+
+msgid "Colored text in titles and descriptions"
+msgstr ""
 
 msgid "Columbia"
 msgstr "Kolumbia"
@@ -1726,6 +1736,9 @@ msgstr "Názov súboru nemôže byť prázdny!"
 msgid "File renamed successfully!"
 msgstr "Súbor bol úspešne premenovaný!"
 
+msgid "Files"
+msgstr ""
+
 msgid "Film"
 msgstr "Film"
 
@@ -2420,6 +2433,13 @@ msgstr "Vytvorenie adresára [%s]"
 
 msgid "Manager status:"
 msgstr "Stav manažéra:"
+
+msgid "Mark downloaded items"
+msgstr ""
+
+#, fuzzy
+msgid "Mark favourite items"
+msgstr "Upraviť obľúbenú položku"
 
 msgid "Masrahyat"
 msgstr "Masrahjat"
@@ -3499,10 +3519,19 @@ msgstr "Relácie"
 msgid "Show & Comedy"
 msgstr ""
 
-msgid "Show IPTVPlayer in extension list"
+#, fuzzy
+msgid "Show E2iPlayer settings in system menu"
+msgstr "Zobraziť IPTVPlayer v hlavnom menu"
+
+#, fuzzy
+msgid "Show IPTVPlayer in extension list (blue button)"
 msgstr "Zobraziť IPTVPlayer v zozname rozšírení"
 
 msgid "Show IPTVPlayer in main menu"
+msgstr "Zobraziť IPTVPlayer v hlavnom menu"
+
+#, fuzzy
+msgid "Show IPTVPlayer in plugin browser"
 msgstr "Zobraziť IPTVPlayer v hlavnom menu"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
@@ -3595,6 +3624,10 @@ msgstr ""
 
 msgid "Software decoding as"
 msgstr "Dekódovanie softvéru ako"
+
+#, fuzzy
+msgid "Solver"
+msgstr "strieborný"
 
 msgid "Some changes will be applied only after movie player restart."
 msgstr "Niektoré zmeny sa použijú až po reštartovaní prehrávača videozáznamov."
@@ -3919,6 +3952,14 @@ msgstr "Kanál už existuje v Používateľských odkazoch."
 
 msgid "The color of the current version"
 msgstr "Farba aktuálnej verzie"
+
+#, fuzzy
+msgid "The color of the downloaded item"
+msgstr "Farba zobrazenej položky"
+
+#, fuzzy
+msgid "The color of the favourite item"
+msgstr "Farba zobrazenej položky"
 
 #, fuzzy
 msgid "The color of the started item"
@@ -4262,9 +4303,6 @@ msgstr "Prehrávač URL adries"
 
 msgid "Use HLS streams (adaptive):"
 msgstr ""
-
-msgid "Use colors"
-msgstr "Použite farby"
 
 msgid "Use default video quality"
 msgstr "Použitie predvolenej kvality videa"
@@ -4758,10 +4796,6 @@ msgstr "https"
 msgid "https - validate SSL certificates"
 msgstr "https - overenie SSL certifikátov"
 
-#, fuzzy
-msgid "import failed"
-msgstr "Úprava zlyhala."
-
 msgid "installed"
 msgstr ""
 
@@ -4818,6 +4852,9 @@ msgid "navy"
 msgstr "námorníctvo"
 
 msgid "never"
+msgstr ""
+
+msgid "not available (the Python parser is used)"
 msgstr ""
 
 msgid "not found"

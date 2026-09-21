@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 22:20+0000\n"
+"POT-Creation-Date: 2026-09-21 19:23+0000\n"
 "PO-Revision-Date: 2026-03-13 15:06+0300\n"
 "Last-Translator: audi06_19 <audi06_19@hotmail.com>\n"
 "Language-Team: Turkish\n"
@@ -183,9 +183,6 @@ msgstr "----- İNDİRME YAPILANDIRMASI -----"
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Genel HostXXX Yapılandırması -----"
 
-msgid "----- OTHER SETTINGS -----"
-msgstr "----- DİĞER AYARLAR -----"
-
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- OYNATICI VE OYNATIM YAPILANDIRMASI -----"
 
@@ -221,6 +218,10 @@ msgstr "----------  Canlı Kameralar  ----------"
 
 msgid "----- Show or hide Porn Sites -----"
 msgstr ""
+
+#, fuzzy
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
+msgstr "----- TEMEL YAPILANDIRMA -----"
 
 #, fuzzy
 msgid "----- XXXList Configuration -----"
@@ -351,6 +352,9 @@ msgstr "Erişim reddedildi. Lütfen parolayı kontrol edin."
 #, fuzzy
 msgid "Accessible"
 msgstr "Erişim Yasak"
+
+msgid "Accounts & API keys"
+msgstr ""
 
 msgid "Action & Thriller"
 msgstr ""
@@ -560,6 +564,9 @@ msgstr "Anime filmleri"
 
 msgid "Aspect"
 msgstr "En-boy oranı"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr ""
 
 msgid "Audio"
 msgstr "Ses"
@@ -802,6 +809,9 @@ msgstr "Tüm akışlar"
 
 msgid "Collections"
 msgstr "Koleksiyonlar"
+
+msgid "Colored text in titles and descriptions"
+msgstr ""
 
 msgid "Columbia"
 msgstr ""
@@ -1741,6 +1751,9 @@ msgstr "Dosya adı boş olamaz!"
 msgid "File renamed successfully!"
 msgstr "Dosya adı başarıyla değiştirildi!"
 
+msgid "Files"
+msgstr ""
+
 msgid "Film"
 msgstr "Film"
 
@@ -2452,6 +2465,13 @@ msgstr "Dizin seç"
 
 msgid "Manager status:"
 msgstr "Yönetici durumu:"
+
+msgid "Mark downloaded items"
+msgstr ""
+
+#, fuzzy
+msgid "Mark favourite items"
+msgstr "Favorileri düzenle"
 
 msgid "Masrahyat"
 msgstr ""
@@ -3538,10 +3558,19 @@ msgstr "Şovlar"
 msgid "Show & Comedy"
 msgstr ""
 
-msgid "Show IPTVPlayer in extension list"
+#, fuzzy
+msgid "Show E2iPlayer settings in system menu"
+msgstr "IPTVPlayer'ı ana menüde göster"
+
+#, fuzzy
+msgid "Show IPTVPlayer in extension list (blue button)"
 msgstr "IPTVPlayer'ı uzantı listesinde göster"
 
 msgid "Show IPTVPlayer in main menu"
+msgstr "IPTVPlayer'ı ana menüde göster"
+
+#, fuzzy
+msgid "Show IPTVPlayer in plugin browser"
 msgstr "IPTVPlayer'ı ana menüde göster"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
@@ -3636,6 +3665,10 @@ msgstr ""
 
 msgid "Software decoding as"
 msgstr ""
+
+#, fuzzy
+msgid "Solver"
+msgstr "gümüş"
 
 #, fuzzy
 msgid "Some changes will be applied only after movie player restart."
@@ -3955,6 +3988,14 @@ msgstr ""
 
 msgid "The color of the current version"
 msgstr ""
+
+#, fuzzy
+msgid "The color of the downloaded item"
+msgstr "İndiriciye ekle"
+
+#, fuzzy
+msgid "The color of the favourite item"
+msgstr "Favorileri düzenle"
 
 msgid "The color of the started item"
 msgstr ""
@@ -4300,9 +4341,6 @@ msgstr "harici gstplayer"
 
 msgid "Use HLS streams (adaptive):"
 msgstr ""
-
-msgid "Use colors"
-msgstr "Renkleri kullan"
 
 msgid "Use default video quality"
 msgstr ""
@@ -4806,10 +4844,6 @@ msgstr "https"
 msgid "https - validate SSL certificates"
 msgstr "https - SSL sertifikalarını doğrula"
 
-#, fuzzy
-msgid "import failed"
-msgstr "Giriş başarısız."
-
 msgid "installed"
 msgstr ""
 
@@ -4866,6 +4900,9 @@ msgid "navy"
 msgstr "lacivert"
 
 msgid "never"
+msgstr ""
+
+msgid "not available (the Python parser is used)"
 msgstr ""
 
 msgid "not found"
