@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 22:20+0000\n"
+"POT-Creation-Date: 2026-09-21 19:23+0000\n"
 "PO-Revision-Date: 2026-08-30 08:38+0300\n"
 "Last-Translator: Mohamed Elsafty [angel_heart150@yahoo.com]\n"
 "Language-Team: \n"
@@ -189,9 +189,6 @@ msgstr "----- إعدادات التنزيل -----"
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- إعدادات HostXXX العامة -----"
 
-msgid "----- OTHER SETTINGS -----"
-msgstr "----- إعدادات أخرى -----"
-
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- إعدادات المشغلات والتشغيل -----"
 
@@ -225,6 +222,10 @@ msgstr "----- إظهار أو إخفاء مواقع البالغين -----"
 
 msgid "----- Show or hide Porn Sites -----"
 msgstr "----- إظهار أو إخفاء مواقع البالغين -----"
+
+#, fuzzy
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
+msgstr "----- الإعدادات الأساسية -----"
 
 msgid "----- XXXList Configuration -----"
 msgstr "----- إعدادات قائمة XXX -----"
@@ -350,6 +351,9 @@ msgstr "تم رفض الوصول. يرجى التحقق من كلمة المرو
 
 msgid "Accessible"
 msgstr "متاح"
+
+msgid "Accounts & API keys"
+msgstr ""
 
 msgid "Action & Thriller"
 msgstr ""
@@ -547,6 +551,9 @@ msgstr "أفلام آسيوية"
 
 msgid "Aspect"
 msgstr "النسبة البُعدية"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr ""
 
 msgid "Audio"
 msgstr "الصوت"
@@ -783,6 +790,9 @@ msgstr "البثوث المجمعة فقط"
 
 msgid "Collections"
 msgstr "مجموعات"
+
+msgid "Colored text in titles and descriptions"
+msgstr ""
 
 msgid "Columbia"
 msgstr "شركة كولومبيا"
@@ -1709,6 +1719,9 @@ msgstr "لا يمكن ترك اسم الملف فارغًا!"
 msgid "File renamed successfully!"
 msgstr "تمت إعادة تسمية الملف بنجاح!"
 
+msgid "Files"
+msgstr ""
+
 msgid "Film"
 msgstr "فيلم"
 
@@ -2396,6 +2409,13 @@ msgstr "إنشاء مجلد [%s]"
 
 msgid "Manager status:"
 msgstr "حالة المدير:"
+
+msgid "Mark downloaded items"
+msgstr ""
+
+#, fuzzy
+msgid "Mark favourite items"
+msgstr "تعديل المفضلة"
 
 msgid "Masrahyat"
 msgstr "مسرحيات"
@@ -3462,10 +3482,19 @@ msgstr "عرض"
 msgid "Show & Comedy"
 msgstr "العروض والكوميديا"
 
-msgid "Show IPTVPlayer in extension list"
+#, fuzzy
+msgid "Show E2iPlayer settings in system menu"
+msgstr "عرض IPTVPlayer في القائمة الرئيسية"
+
+#, fuzzy
+msgid "Show IPTVPlayer in extension list (blue button)"
 msgstr "عرض IPTVPlayer في قائمة الإضافات"
 
 msgid "Show IPTVPlayer in main menu"
+msgstr "عرض IPTVPlayer في القائمة الرئيسية"
+
+#, fuzzy
+msgid "Show IPTVPlayer in plugin browser"
 msgstr "عرض IPTVPlayer في القائمة الرئيسية"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
@@ -3555,6 +3584,10 @@ msgstr "المجتمع"
 
 msgid "Software decoding as"
 msgstr "فك التشفير البرمجي كـ"
+
+#, fuzzy
+msgid "Solver"
+msgstr "فضي"
 
 msgid "Some changes will be applied only after movie player restart."
 msgstr "بعض التغييرات سيتم تطبيقها فقط بعد إعادة تشغيل مشغل الفيديو."
@@ -3876,6 +3909,14 @@ msgstr "العنصر موجود بالفعل في هذه المجموعة."
 
 msgid "The color of the current version"
 msgstr "لون النسخة الحالية"
+
+#, fuzzy
+msgid "The color of the downloaded item"
+msgstr "لون العنصر المُشاهد"
+
+#, fuzzy
+msgid "The color of the favourite item"
+msgstr "لون العنصر المُشاهد"
 
 msgid "The color of the started item"
 msgstr "لون العنصر المُشاهد"
@@ -4217,9 +4258,6 @@ msgstr "مشغل قوائم الروابط"
 
 msgid "Use HLS streams (adaptive):"
 msgstr "استخدام بث HLS (متكيف):"
-
-msgid "Use colors"
-msgstr "استخدم الألوان"
 
 msgid "Use default video quality"
 msgstr "استخدم جودة الفيديو الافتراضية"
@@ -4712,10 +4750,6 @@ msgstr "https"
 msgid "https - validate SSL certificates"
 msgstr "https - تحقق من شهادات SSL"
 
-#, fuzzy
-msgid "import failed"
-msgstr "فشل تسجيل الدخول."
-
 msgid "installed"
 msgstr ""
 
@@ -4772,6 +4806,9 @@ msgid "navy"
 msgstr "كحلي"
 
 msgid "never"
+msgstr ""
+
+msgid "not available (the Python parser is used)"
 msgstr ""
 
 msgid "not found"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 22:20+0000\n"
+"POT-Creation-Date: 2026-09-21 19:23+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: vovan43 <yuozyo@ukr.net>\n"
 "Language-Team: IPTVPlayer\n"
@@ -187,9 +187,6 @@ msgstr ""
 msgid "----- Global HostXXX Configuration -----"
 msgstr ""
 
-msgid "----- OTHER SETTINGS -----"
-msgstr ""
-
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr ""
 
@@ -223,6 +220,9 @@ msgid "----- Show or hide Live Cams -----"
 msgstr "----------Інше----------"
 
 msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr ""
 
 msgid "----- XXXList Configuration -----"
@@ -357,6 +357,9 @@ msgid "Access denied. Please check password."
 msgstr ""
 
 msgid "Accessible"
+msgstr ""
+
+msgid "Accounts & API keys"
 msgstr ""
 
 msgid "Action & Thriller"
@@ -586,6 +589,9 @@ msgstr "Всі фільми"
 
 msgid "Aspect"
 msgstr "Аспект"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr ""
 
 msgid "Audio"
 msgstr "Аудіо"
@@ -835,6 +841,9 @@ msgstr "Програвач Веб-потоків"
 #, fuzzy
 msgid "Collections"
 msgstr "Колекція"
+
+msgid "Colored text in titles and descriptions"
+msgstr ""
 
 msgid "Columbia"
 msgstr ""
@@ -1818,6 +1827,9 @@ msgstr "Назва не може бути пуста."
 msgid "File renamed successfully!"
 msgstr ""
 
+msgid "Files"
+msgstr ""
+
 #, fuzzy
 msgid "Film"
 msgstr "Фільми"
@@ -2544,6 +2556,13 @@ msgstr "Створити каталог [%s]"
 
 msgid "Manager status:"
 msgstr "Статус менеджера:"
+
+msgid "Mark downloaded items"
+msgstr ""
+
+#, fuzzy
+msgid "Mark favourite items"
+msgstr "Редагувати вибране"
 
 msgid "Masrahyat"
 msgstr ""
@@ -3673,10 +3692,19 @@ msgstr "Шоу"
 msgid "Show & Comedy"
 msgstr ""
 
-msgid "Show IPTVPlayer in extension list"
+#, fuzzy
+msgid "Show E2iPlayer settings in system menu"
+msgstr "Показати IPTV Плеєр в головному меню"
+
+#, fuzzy
+msgid "Show IPTVPlayer in extension list (blue button)"
 msgstr "Показати IPTV Плеєр в меню плагінів"
 
 msgid "Show IPTVPlayer in main menu"
+msgstr "Показати IPTV Плеєр в головному меню"
+
+#, fuzzy
+msgid "Show IPTVPlayer in plugin browser"
 msgstr "Показати IPTV Плеєр в головному меню"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
@@ -3772,6 +3800,10 @@ msgstr ""
 
 msgid "Software decoding as"
 msgstr "Декодувати"
+
+#, fuzzy
+msgid "Solver"
+msgstr "срібло"
 
 msgid "Some changes will be applied only after movie player restart."
 msgstr "Деякі зміни будуть застосовані тільки після перезапуску відеоплеєра."
@@ -4098,6 +4130,14 @@ msgstr "Те ж саме елемент вже існує в цій групі."
 
 #, fuzzy
 msgid "The color of the current version"
+msgstr "Виявлення версії OpenSSL."
+
+#, fuzzy
+msgid "The color of the downloaded item"
+msgstr "Виявлення версії OpenSSL."
+
+#, fuzzy
+msgid "The color of the favourite item"
 msgstr "Виявлення версії OpenSSL."
 
 #, fuzzy
@@ -4449,9 +4489,6 @@ msgid "Urllists player"
 msgstr "Гіперлінки Плеєра"
 
 msgid "Use HLS streams (adaptive):"
-msgstr ""
-
-msgid "Use colors"
 msgstr ""
 
 #, fuzzy
@@ -4971,10 +5008,6 @@ msgstr ""
 msgid "https - validate SSL certificates"
 msgstr "https - перевірка сертифікатів SSL"
 
-#, fuzzy
-msgid "import failed"
-msgstr "Помилка входу."
-
 msgid "installed"
 msgstr ""
 
@@ -5032,6 +5065,9 @@ msgid "navy"
 msgstr "морські хвилі"
 
 msgid "never"
+msgstr ""
+
+msgid "not available (the Python parser is used)"
 msgstr ""
 
 msgid "not found"

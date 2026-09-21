@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: E2iPlayer OE-Mirrors Version\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 22:20+0000\n"
+"POT-Creation-Date: 2026-09-21 19:23+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: polinene\n"
 "Language-Team: polinene\n"
@@ -192,9 +192,6 @@ msgstr "----- CONFIGURACION DE LAS DESCARGAS -----"
 msgid "----- Global HostXXX Configuration -----"
 msgstr ""
 
-msgid "----- OTHER SETTINGS -----"
-msgstr "----- OTROS AJUSTES -----"
-
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- REPRODUCTORES Y SU CONFIGURACION -----"
 
@@ -229,6 +226,10 @@ msgstr "----------Otros----------"
 
 msgid "----- Show or hide Porn Sites -----"
 msgstr ""
+
+#, fuzzy
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
+msgstr "----- CONFIGURACION BASICA -----"
 
 msgid "----- XXXList Configuration -----"
 msgstr ""
@@ -358,6 +359,9 @@ msgstr "Acceso denegado. Compruebe su contraseña."
 #, fuzzy
 msgid "Accessible"
 msgstr "Acceso prohibido"
+
+msgid "Accounts & API keys"
+msgstr ""
 
 msgid "Action & Thriller"
 msgstr ""
@@ -566,6 +570,9 @@ msgstr "Peliculas asiáticas"
 
 msgid "Aspect"
 msgstr "Aspecto"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr ""
 
 msgid "Audio"
 msgstr "Audio"
@@ -809,6 +816,9 @@ msgstr "Solo streams"
 
 msgid "Collections"
 msgstr "Colecciones"
+
+msgid "Colored text in titles and descriptions"
+msgstr ""
 
 msgid "Columbia"
 msgstr ""
@@ -1763,6 +1773,9 @@ msgstr "El nombre no puede estar vacío!"
 msgid "File renamed successfully!"
 msgstr ""
 
+msgid "Files"
+msgstr ""
+
 msgid "Film"
 msgstr "Película"
 
@@ -2470,6 +2483,13 @@ msgstr "Hacer directorio [%s]"
 
 msgid "Manager status:"
 msgstr "Estado del gestor:"
+
+msgid "Mark downloaded items"
+msgstr ""
+
+#, fuzzy
+msgid "Mark favourite items"
+msgstr "Editar favoritos"
 
 msgid "Masrahyat"
 msgstr ""
@@ -3551,10 +3571,19 @@ msgstr "Espectáculos"
 msgid "Show & Comedy"
 msgstr ""
 
-msgid "Show IPTVPlayer in extension list"
+#, fuzzy
+msgid "Show E2iPlayer settings in system menu"
+msgstr "IPTVPlayer Mostrar en el menú principal"
+
+#, fuzzy
+msgid "Show IPTVPlayer in extension list (blue button)"
 msgstr "IPTVPlayer Mostrar en la lista de extensiones"
 
 msgid "Show IPTVPlayer in main menu"
+msgstr "IPTVPlayer Mostrar en el menú principal"
+
+#, fuzzy
+msgid "Show IPTVPlayer in plugin browser"
 msgstr "IPTVPlayer Mostrar en el menú principal"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
@@ -3647,6 +3676,10 @@ msgstr ""
 
 msgid "Software decoding as"
 msgstr "Decodificación Software como"
+
+#, fuzzy
+msgid "Solver"
+msgstr "plata"
 
 msgid "Some changes will be applied only after movie player restart."
 msgstr "Algunos cambios se aplicarán sólo después dereiniciar reproductor de películas."
@@ -3964,6 +3997,14 @@ msgstr "El mismo elemento ya existe en este grupo."
 
 msgid "The color of the current version"
 msgstr "Color de la versión actual"
+
+#, fuzzy
+msgid "The color of the downloaded item"
+msgstr "Color del elemento visto"
+
+#, fuzzy
+msgid "The color of the favourite item"
+msgstr "Color del elemento visto"
 
 #, fuzzy
 msgid "The color of the started item"
@@ -4312,9 +4353,6 @@ msgstr "Listas URL Player"
 
 msgid "Use HLS streams (adaptive):"
 msgstr ""
-
-msgid "Use colors"
-msgstr "Utilice colores"
 
 msgid "Use default video quality"
 msgstr "Utilizar una calidad de vídeo por defecto"
@@ -4816,10 +4854,6 @@ msgstr "https"
 msgid "https - validate SSL certificates"
 msgstr "https - validar certificados SSL"
 
-#, fuzzy
-msgid "import failed"
-msgstr "Fallo en inicio de sesión."
-
 msgid "installed"
 msgstr ""
 
@@ -4876,6 +4910,9 @@ msgid "navy"
 msgstr "azul marino"
 
 msgid "never"
+msgstr ""
+
+msgid "not available (the Python parser is used)"
 msgstr ""
 
 msgid "not found"

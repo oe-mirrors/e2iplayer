@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 22:20+0000\n"
+"POT-Creation-Date: 2026-09-21 19:23+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Persian Prince <persianpros@gmail.com>\n"
 "Language-Team: IPTVPlayer\n"
@@ -174,9 +174,6 @@ msgstr ""
 msgid "----- Global HostXXX Configuration -----"
 msgstr ""
 
-msgid "----- OTHER SETTINGS -----"
-msgstr ""
-
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr ""
 
@@ -208,6 +205,9 @@ msgid "----- Show or hide Live Cams -----"
 msgstr ""
 
 msgid "----- Show or hide Porn Sites -----"
+msgstr ""
+
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
 msgstr ""
 
 msgid "----- XXXList Configuration -----"
@@ -332,6 +332,9 @@ msgid "Access denied. Please check password."
 msgstr ""
 
 msgid "Accessible"
+msgstr ""
+
+msgid "Accounts & API keys"
 msgstr ""
 
 msgid "Action & Thriller"
@@ -527,6 +530,9 @@ msgid "Asian movies"
 msgstr ""
 
 msgid "Aspect"
+msgstr ""
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
 msgstr ""
 
 msgid "Audio"
@@ -754,6 +760,9 @@ msgid "Collected streams only"
 msgstr ""
 
 msgid "Collections"
+msgstr ""
+
+msgid "Colored text in titles and descriptions"
 msgstr ""
 
 msgid "Columbia"
@@ -1627,6 +1636,9 @@ msgstr ""
 msgid "File renamed successfully!"
 msgstr ""
 
+msgid "Files"
+msgstr ""
+
 msgid "Film"
 msgstr ""
 
@@ -2294,6 +2306,12 @@ msgid "Make directory [%s]"
 msgstr ""
 
 msgid "Manager status:"
+msgstr ""
+
+msgid "Mark downloaded items"
+msgstr ""
+
+msgid "Mark favourite items"
 msgstr ""
 
 msgid "Masrahyat"
@@ -3322,10 +3340,16 @@ msgstr ""
 msgid "Show & Comedy"
 msgstr ""
 
-msgid "Show IPTVPlayer in extension list"
+msgid "Show E2iPlayer settings in system menu"
+msgstr ""
+
+msgid "Show IPTVPlayer in extension list (blue button)"
 msgstr ""
 
 msgid "Show IPTVPlayer in main menu"
+msgstr ""
+
+msgid "Show IPTVPlayer in plugin browser"
 msgstr ""
 
 msgid "Show Profiles in ZBIORNIK MINI :"
@@ -3413,6 +3437,9 @@ msgid "Society"
 msgstr ""
 
 msgid "Software decoding as"
+msgstr ""
+
+msgid "Solver"
 msgstr ""
 
 msgid "Some changes will be applied only after movie player restart."
@@ -3719,6 +3746,12 @@ msgid "The channel already exists in User Links."
 msgstr ""
 
 msgid "The color of the current version"
+msgstr ""
+
+msgid "The color of the downloaded item"
+msgstr ""
+
+msgid "The color of the favourite item"
 msgstr ""
 
 msgid "The color of the started item"
@@ -4043,9 +4076,6 @@ msgid "Urllists player"
 msgstr ""
 
 msgid "Use HLS streams (adaptive):"
-msgstr ""
-
-msgid "Use colors"
 msgstr ""
 
 msgid "Use default video quality"
@@ -4532,9 +4562,6 @@ msgstr ""
 msgid "https - validate SSL certificates"
 msgstr ""
 
-msgid "import failed"
-msgstr ""
-
 msgid "installed"
 msgstr ""
 
@@ -4590,6 +4617,9 @@ msgid "navy"
 msgstr ""
 
 msgid "never"
+msgstr ""
+
+msgid "not available (the Python parser is used)"
 msgstr ""
 
 msgid "not found"

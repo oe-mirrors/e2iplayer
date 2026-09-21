@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 22:20+0000\n"
+"POT-Creation-Date: 2026-09-21 19:23+0000\n"
 "PO-Revision-Date: 2026-09-21 00:34+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
@@ -184,9 +184,6 @@ msgstr "----- DOWNLOAD KONFIGURATION -----"
 msgid "----- Global HostXXX Configuration -----"
 msgstr "----- Globale HostXXX Konfiguration -----"
 
-msgid "----- OTHER SETTINGS -----"
-msgstr "----- ANDERE EINSTELLUNGEN -----"
-
 msgid "----- PLAYERS & PLAYBACK CONFIGURATION -----"
 msgstr "----- PLAYER & ABSPIEL KONFIGURATION -----"
 
@@ -219,6 +216,10 @@ msgstr "----- Livecams anzeigen oder ausblenden -----"
 
 msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Pornoseiten anzeigen oder ausblenden -----"
+
+#, fuzzy
+msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
+msgstr "----- GRUNDKONFIGURATION -----"
 
 msgid "----- XXXList Configuration -----"
 msgstr "----- XXXList-Konfiguration -----"
@@ -258,9 +259,7 @@ msgid "0-9"
 msgstr "0-9"
 
 msgid "1. On a phone or PC in the same network, open the address shown in the captcha window (or scan its QR code) in a browser with the MyE2i extension installed. If it asks for a code, you find it in the title of the captcha window."
-msgstr ""
-"1. Öffnen Sie auf einem Handy oder PC im selben Netzwerk die im Captcha-Fenster angezeigte Adresse (oder scannen Sie den QR-Code) in einem Browser mit installierter MyE2i-Erweiterung. Wird ein Code verlangt, steht er im Titel des Captcha-"
-"Fensters."
+msgstr "1. Öffnen Sie auf einem Handy oder PC im selben Netzwerk die im Captcha-Fenster angezeigte Adresse (oder scannen Sie den QR-Code) in einem Browser mit installierter MyE2i-Erweiterung. Wird ein Code verlangt, steht er im Titel des Captcha-Fensters."
 
 msgid "12 hour format"
 msgstr "12 Stunden-Format"
@@ -345,6 +344,9 @@ msgstr "Zugriff verweigert. Bitte überprüfen Sie das Passwort."
 
 msgid "Accessible"
 msgstr "Barrierefrei"
+
+msgid "Accounts & API keys"
+msgstr ""
 
 msgid "Action & Thriller"
 msgstr "Action & Thriller"
@@ -542,6 +544,9 @@ msgstr "Asiatische Filme"
 
 msgid "Aspect"
 msgstr "Seitenverhältnis"
+
+msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
+msgstr ""
 
 msgid "Audio"
 msgstr "Audio"
@@ -776,6 +781,9 @@ msgstr "Nur gesammelte Streams"
 
 msgid "Collections"
 msgstr "Kollektionen"
+
+msgid "Colored text in titles and descriptions"
+msgstr ""
 
 msgid "Columbia"
 msgstr "Columbia"
@@ -1121,9 +1129,7 @@ msgid "Do you really want to delete ALL cache data now? This includes cookies, s
 msgstr "Möchten Sie jetzt wirklich ALLE Cache-Daten löschen? Das umfasst Cookies, Untertitel, Film-Metadaten und Vorschaubilder und kann nicht rückgängig gemacht werden."
 
 msgid "Do you really want to delete ALL config data now? This is real user data, not just cache - it includes favourites, watched status, search history, movie player preferences and host order/groups, and cannot be undone."
-msgstr ""
-"Möchten Sie jetzt wirklich ALLE Konfigurationsdaten löschen? Das sind echte Benutzerdaten, nicht nur Cache - dazu gehören Favoriten, Gesehen-Status, Suchverlauf, Movie-Player-Einstellungen sowie Host-Reihenfolge und Gruppen. Das kann nicht "
-"rückgängig gemacht werden."
+msgstr "Möchten Sie jetzt wirklich ALLE Konfigurationsdaten löschen? Das sind echte Benutzerdaten, nicht nur Cache - dazu gehören Favoriten, Gesehen-Status, Suchverlauf, Movie-Player-Einstellungen sowie Host-Reihenfolge und Gruppen. Das kann nicht rückgängig gemacht werden."
 
 msgid "Do you really want to delete ALL favourites and watched status now? This is real user data, not just cache, and cannot be undone."
 msgstr "Möchten Sie jetzt wirklich ALLE Favoriten und den Gesehen-Status löschen? Das sind echte Benutzerdaten, nicht nur Cache, und es kann nicht rückgängig gemacht werden."
@@ -1676,6 +1682,9 @@ msgstr "Der Dateiname darf nicht leer sein!"
 
 msgid "File renamed successfully!"
 msgstr "Datei erfolgreich umbenannt!"
+
+msgid "Files"
+msgstr ""
 
 msgid "Film"
 msgstr "Film"
@@ -2356,6 +2365,13 @@ msgstr "Erstelle Verzeichnis [%s]"
 msgid "Manager status:"
 msgstr "Verwaltungs-Status:"
 
+msgid "Mark downloaded items"
+msgstr ""
+
+#, fuzzy
+msgid "Mark favourite items"
+msgstr "Favoriten Eintrag bearbeiten"
+
 msgid "Masrahyat"
 msgstr "Theaterstück"
 
@@ -2533,9 +2549,7 @@ msgid "Name:"
 msgstr "Name:"
 
 msgid "Needs extension v1.18+. Opens the page in this browser, waits until it is fully rendered (Cloudflare challenge included, solve it if it shows up) and sends the rendered HTML, the fetch/XHR calls and the cookie names to the box debug log."
-msgstr ""
-"Benötigt die Erweiterung ab v1.18. Öffnet die Seite in diesem Browser, wartet, bis sie vollständig dargestellt ist (inklusive Cloudflare-Prüfung - lösen Sie diese, falls sie erscheint) und sendet das gerenderte HTML, die fetch/XHR-Aufrufe und "
-"die Cookie-Namen an das Debug-Log der Box."
+msgstr "Benötigt die Erweiterung ab v1.18. Öffnet die Seite in diesem Browser, wartet, bis sie vollständig dargestellt ist (inklusive Cloudflare-Prüfung - lösen Sie diese, falls sie erscheint) und sendet das gerenderte HTML, die fetch/XHR-Aufrufe und die Cookie-Namen an das Debug-Log der Box."
 
 msgid "Netflix"
 msgstr "Netflix"
@@ -3412,10 +3426,19 @@ msgstr "Show"
 msgid "Show & Comedy"
 msgstr "Show & Comedy"
 
-msgid "Show IPTVPlayer in extension list"
+#, fuzzy
+msgid "Show E2iPlayer settings in system menu"
+msgstr "Zeige E2iPlayer im Hauptmenü"
+
+#, fuzzy
+msgid "Show IPTVPlayer in extension list (blue button)"
 msgstr "Zeige E2iPlayer in Erweiterungsliste"
 
 msgid "Show IPTVPlayer in main menu"
+msgstr "Zeige E2iPlayer im Hauptmenü"
+
+#, fuzzy
+msgid "Show IPTVPlayer in plugin browser"
 msgstr "Zeige E2iPlayer im Hauptmenü"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
@@ -3504,6 +3527,10 @@ msgstr "Gesellschaft"
 
 msgid "Software decoding as"
 msgstr "Softwaredekodierung als"
+
+#, fuzzy
+msgid "Solver"
+msgstr "silber"
 
 msgid "Some changes will be applied only after movie player restart."
 msgstr "Manche Änderungen werden erst nach Movie Player Neustart angewendet."
@@ -3803,15 +3830,13 @@ msgstr "Das Dienstprogramm %s ist hier notwendig, wurde aber nicht erkannt."
 msgid ""
 "The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
 "\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private "
-"individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
 msgstr ""
 "Die 7reels-/cineb-Resolver 'VidEasy', 'VidCore/VidFast', 'VidLink' und 'Peachify' können ihre Links auf dem Receiver nicht entschlüsseln.\n"
 "\n"
-"Wenn diese Option AN ist, sendet E2iPlayer jedes Mal, wenn Sie einen davon öffnen, das verschlüsselte Stream-Token der Seite - das die TMDb-ID des geöffneten Films oder der Episode enthält - an den Drittanbieter-Webdienst enc-dec.app "
-"(betrieben von einer Privatperson). Dieser Server sieht dann bei jeder Wiedergabe die ID und Ihre IP-Adresse. Es wird nichts anderes übertragen, und dies wird nur für diese vier Resolver verwendet.\n"
+"Wenn diese Option AN ist, sendet E2iPlayer jedes Mal, wenn Sie einen davon öffnen, das verschlüsselte Stream-Token der Seite - das die TMDb-ID des geöffneten Films oder der Episode enthält - an den Drittanbieter-Webdienst enc-dec.app (betrieben von einer Privatperson). Dieser Server sieht dann bei jeder Wiedergabe die ID und Ihre IP-Adresse. Es wird nichts anderes übertragen, und dies wird nur für diese vier Resolver verwendet.\n"
 "\n"
 "Lassen Sie diese Option AUS, wenn Sie das nicht möchten. Die anderen Resolver (AdRock/vidrock, VidNest, ...) sind davon nicht betroffen."
 
@@ -3829,6 +3854,14 @@ msgstr "Der Kanal ist bereits unter „Benutzerlinks“ vorhanden."
 
 msgid "The color of the current version"
 msgstr "Farbauswahl für derzeitige Version"
+
+#, fuzzy
+msgid "The color of the downloaded item"
+msgstr "Farbauswahl für gesehene Einträge"
+
+#, fuzzy
+msgid "The color of the favourite item"
+msgstr "Farbauswahl für gestartete Einträge"
 
 msgid "The color of the started item"
 msgstr "Farbauswahl für gestartete Einträge"
@@ -4177,9 +4210,6 @@ msgstr "Urllists Player"
 
 msgid "Use HLS streams (adaptive):"
 msgstr "HLS-Streams verwenden (adaptiv):"
-
-msgid "Use colors"
-msgstr "Farben verwenden"
 
 msgid "Use default video quality"
 msgstr "Verwende Standard Video Qualität"
@@ -4666,9 +4696,6 @@ msgstr "https"
 msgid "https - validate SSL certificates"
 msgstr "https - validiere SSL Zertifikate"
 
-msgid "import failed"
-msgstr "Import fehlgeschlagen"
-
 msgid "installed"
 msgstr "installiert"
 
@@ -4725,6 +4752,9 @@ msgstr "navyblau"
 
 msgid "never"
 msgstr "nie"
+
+msgid "not available (the Python parser is used)"
+msgstr ""
 
 msgid "not found"
 msgstr "nicht gefunden"
