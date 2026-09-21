@@ -234,7 +234,10 @@ class _SystemInfo(object):
         try:
             from Plugins.Extensions.IPTVPlayer.libs.iptvsubparser import _subparser
         except Exception as e:
-            return "%s (%s)" % (_("import failed"), str(e)[:60])
+            # the interpreter's own message is English and gets cut off by the two-column layout: the page
+            # only says what it means for the user, the full text goes to the debug log
+            printDBG("System info: the subtitles parser extension (_subparser) cannot be imported: %s" % e)
+            return _("not available (the Python parser is used)")
         try:
             return str(_subparser.version())
         except Exception:

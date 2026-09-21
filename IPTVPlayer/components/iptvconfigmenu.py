@@ -46,10 +46,14 @@ config.plugins.iptvplayer.showcover = ConfigYesNo(default=True)
 config.plugins.iptvplayer.deleteIcons = ConfigSelection(default="3", choices=[("0", _("after closing")), ("1", _("after day")), ("3", _("after three days")), ("7", _("after a week")), ("-1", _("never"))])
 # config.plugins.iptvplayer.allowedcoverformats = ConfigSelection(default="jpeg,png", choices=[("jpeg,png,gif", _("jpeg,png,gif")), ("jpeg,png", _("jpeg,png")), ("jpeg", _("jpeg")), ("all", _("all"))])
 config.plugins.iptvplayer.showinextensions = ConfigYesNo(default=True)
+# the entry in Enigma2's plugin browser (default on = as it always was)
+config.plugins.iptvplayer.showinPluginBrowser = ConfigYesNo(default=True)
 # "T" (tree list) is intentionally not offered here - never implemented,
 # would silently behave like "G" if selected
 config.plugins.iptvplayer.hostsListType = ConfigSelection(default="G", choices=[("G", _("Graphic services selector")), ("S", _("List view")), ("P", _("Simple list"))])
 config.plugins.iptvplayer.showinMainMenu = ConfigYesNo(default=False)
+# the "Configure E2iPlayer" entry in Enigma2's system menu (default on = as it always was)
+config.plugins.iptvplayer.showinSystemMenu = ConfigYesNo(default=True)
 # config.plugins.iptvplayer.ListaGraficzna = ConfigYesNo(default=True)
 config.plugins.iptvplayer.group_hosts = ConfigYesNo(default=True)
 # layout of the settings screen itself: one long list (default, as it always was) or a list of
@@ -260,6 +264,12 @@ config.plugins.iptvplayer.autoplay_start_delay = ConfigInteger(3, (0, 9))
 config.plugins.iptvplayer.favourites_use_watched_flag = ConfigYesNo(default=True)
 config.plugins.iptvplayer.watched_item_color = ConfigSelection(default="#808080", choices=COLORS_DEFINITONS)
 config.plugins.iptvplayer.started_item_color = ConfigSelection(default="#FFFF00", choices=COLORS_DEFINITONS)
+# downloaded / favourite items of a host list: colour of the title and the small marker at the end of the
+# row; switched off = neither colour nor marker (same idea as the watched flag)
+config.plugins.iptvplayer.mark_downloaded_items = ConfigYesNo(default=True)
+config.plugins.iptvplayer.downloaded_item_color = ConfigSelection(default="#00FF00", choices=COLORS_DEFINITONS)
+config.plugins.iptvplayer.mark_favourite_items = ConfigYesNo(default=True)
+config.plugins.iptvplayer.favourite_item_color = ConfigSelection(default="#00FFFF", choices=COLORS_DEFINITONS)
 config.plugins.iptvplayer.sidecar_enabled = ConfigYesNo(default=True)
 config.plugins.iptvplayer.normalize_media_names = ConfigYesNo(default=True)
 # OFF by default. The 7reels/cineb community-host resolvers VidEasy,
@@ -269,6 +279,15 @@ config.plugins.iptvplayer.normalize_media_names = ConfigYesNo(default=True)
 # enc-dec.app. The settings screen makes the user confirm twice before
 # this can be turned on (see ConfigMenu._confirmExternalResolve).
 config.plugins.iptvplayer.allow_external_resolve = ConfigYesNo(default=False)
+
+
+def IsPluginBrowserEntryShown():
+    # The plugin browser, the extension list (blue button) and the main menu are the three places the
+    # player itself can be started from. The browser entry stays on whenever it would otherwise be the
+    # last way in (also if the settings file was edited by hand), so switching everything off can never
+    # lock the player out.
+    cp = config.plugins.iptvplayer
+    return cp.showinPluginBrowser.value or not (cp.showinextensions.value or cp.showinMainMenu.value)
 
 
 def IsExternalResolveAllowed():
@@ -421,7 +440,6 @@ def GetOskOwnModelConfigList(indent=True):
 def GetOskConfigList():
     list = []
     list.append(getConfigListEntry(_("Virtual Keyboard type"), config.plugins.iptvplayer.osk_type))
-    list.append(getConfigListEntry(_("Remember last search entry"), config.plugins.iptvplayer.osk_remember_last_search))
     if config.plugins.iptvplayer.osk_type.value == 'own':
         list.extend(GetOskOwnModelConfigList(indent=True))
     return list
@@ -522,17 +540,25 @@ class ConfigMenu(ConfigBaseWidget):
     @staticmethod
     def _fillBasic(list):
         list.append(getConfigListEntry(_("Settings screen layout"), config.plugins.iptvplayer.configMenuView))
-        list.extend(GetOskConfigList())
         list.append(getConfigListEntry(_("Initialize web interface"), config.plugins.iptvplayer.IPTVWebIterface))
-        list.append(getConfigListEntry(_("Show IPTVPlayer in extension list"), config.plugins.iptvplayer.showinextensions))
+        list.append(getConfigListEntry(_("Show IPTVPlayer in plugin browser"), config.plugins.iptvplayer.showinPluginBrowser))
+        list.append(getConfigListEntry(_("Show IPTVPlayer in extension list (blue button)"), config.plugins.iptvplayer.showinextensions))
         list.append(getConfigListEntry(_("Show IPTVPlayer in main menu"), config.plugins.iptvplayer.showinMainMenu))
+        list.append(getConfigListEntry(_("Show E2iPlayer settings in system menu"), config.plugins.iptvplayer.showinSystemMenu))
         list.append(getConfigListEntry(_("E2iPlayer auto start at Enigma2 start"), config.plugins.iptvplayer.plugin_autostart))
         if config.plugins.iptvplayer.plugin_autostart.value:
             list.append(getConfigListEntry(_("Auto start method"), config.plugins.iptvplayer.plugin_autostart_method))
         list.append(getConfigListEntry(_("Disable live at plugin start"), config.plugins.iptvplayer.disable_live))
         list.append(getConfigListEntry(_("Use the PyCurl for HTTP(S) requests"), config.plugins.iptvplayer.usepycurl))
-        list.append(getConfigListEntry(_("https - validate SSL certificates"), config.plugins.iptvplayer.httpssslcertvalidation))
-        list.append(getConfigListEntry(_("Allow external link-decryption service (enc-dec.app)"), config.plugins.iptvplayer.allow_external_resolve))
+
+    @staticmethod
+    def _fillKeyboard(list):
+        list.extend(GetOskConfigList())
+        list.append(getConfigListEntry(_("T9 letter jump in lists"), config.plugins.iptvplayer.enableT9MainList))
+        list.append(getConfigListEntry("    ===== " + _("Search").upper() + " =====",))
+        list.append(getConfigListEntry("    " + _("Remember last search entry"), config.plugins.iptvplayer.osk_remember_last_search))
+        list.append(getConfigListEntry("    " + _("Remember last search history selection"), config.plugins.iptvplayer.rememberHistorySelection))
+        list.append(getConfigListEntry("    " + _("The number of items in the search history"), config.plugins.iptvplayer.search_history_size))
 
     @staticmethod
     def _fillService(list):
@@ -542,8 +568,17 @@ class ConfigMenu(ConfigBaseWidget):
         if config.plugins.iptvplayer.favourites_use_watched_flag.value:
             list.append(getConfigListEntry("    " + _("The color of the viewed item"), config.plugins.iptvplayer.watched_item_color))
             list.append(getConfigListEntry("    " + _("The color of the started item"), config.plugins.iptvplayer.started_item_color))
-        list.append(getConfigListEntry(_("Create sidecar files (.txt/.jpg)"), config.plugins.iptvplayer.sidecar_enabled))
-        list.append(getConfigListEntry(_("Normalize item / file names (Show - SxxExx - Title)"), config.plugins.iptvplayer.normalize_media_names))
+        list.append(getConfigListEntry(_("Mark downloaded items"), config.plugins.iptvplayer.mark_downloaded_items))
+        if config.plugins.iptvplayer.mark_downloaded_items.value:
+            list.append(getConfigListEntry("    " + _("The color of the downloaded item"), config.plugins.iptvplayer.downloaded_item_color))
+        list.append(getConfigListEntry(_("Mark favourite items"), config.plugins.iptvplayer.mark_favourite_items))
+        if config.plugins.iptvplayer.mark_favourite_items.value:
+            list.append(getConfigListEntry("    " + _("The color of the favourite item"), config.plugins.iptvplayer.favourite_item_color))
+        list.append(getConfigListEntry(_("Colored text in titles and descriptions"), config.plugins.iptvplayer.use_colors))
+        list.append(getConfigListEntry("https://vk.com/ " + _("login"), config.plugins.iptvplayer.vkcom_login))
+        list.append(getConfigListEntry("https://vk.com/ " + _("password"), config.plugins.iptvplayer.vkcom_password))
+        list.append(getConfigListEntry("https://1fichier.com/ " + _("e-mail"), config.plugins.iptvplayer.fichiercom_login))
+        list.append(getConfigListEntry("http://1fichier.com/ " + _("password"), config.plugins.iptvplayer.fichiercom_password))
 
     @staticmethod
     def _fillSecurity(list):
@@ -555,6 +590,8 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry(_("Set pin code"), config.plugins.iptvplayer.fakePin))
         if config.plugins.iptvplayer.configProtectedByPin.value and config.plugins.iptvplayer.configOwnPin.value:
             list.append(getConfigListEntry("    " + _("Set own configuration pin code"), config.plugins.iptvplayer.fakeConfigPin))
+        list.append(getConfigListEntry(_("https - validate SSL certificates"), config.plugins.iptvplayer.httpssslcertvalidation))
+        list.append(getConfigListEntry(_("Allow external link-decryption service (enc-dec.app)"), config.plugins.iptvplayer.allow_external_resolve))
 
     @staticmethod
     def _fillSkin(list):
@@ -562,7 +599,6 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry(_("Force internal skin: all E2iPlayer screens"), config.plugins.iptvplayer.skinforceallinternal))
         if not config.plugins.iptvplayer.skinforceallinternal.value:
             list.append(getConfigListEntry(_("Force internal skin: main screen only"), config.plugins.iptvplayer.skinforceinternal))
-        list.append(getConfigListEntry(_("Use colors"), config.plugins.iptvplayer.use_colors))
         list.append(getConfigListEntry(_("Show clock in header"), config.plugins.iptvplayer.show_header_clock))
         list.append(getConfigListEntry(_("Video player OSD clock format"), config.plugins.iptvplayer.extplayer_infobanner_clockformat))
         list.append(getConfigListEntry(_("Player Skin"), config.plugins.iptvplayer.extplayer_skin))
@@ -612,7 +648,6 @@ class ConfigMenu(ConfigBaseWidget):
             list.append(getConfigListEntry("    ===== " + _("Config").upper() + " =====",))
             list.append(getConfigListEntry("    " + _("Delete movie player preferences now"), config.plugins.iptvplayer.fakeMoviePlayerDelete))
             list.append(getConfigListEntry("    " + _("Delete host order and groups now"), config.plugins.iptvplayer.fakeHostOrderDelete))
-            list.append(getConfigListEntry("    " + _("The number of items in the search history"), config.plugins.iptvplayer.search_history_size))
             list.append(getConfigListEntry("    " + _("Delete search history now"), config.plugins.iptvplayer.fakeSearchHistoryDelete))
             list.append(getConfigListEntry("    " + _("Delete favourites and watched status now"), config.plugins.iptvplayer.fakeFavouritesDelete))
             list.append(getConfigListEntry("    " + _("Delete all config files now"), config.plugins.iptvplayer.fakeAllConfigDelete))
@@ -629,29 +664,34 @@ class ConfigMenu(ConfigBaseWidget):
 
     @staticmethod
     def _fillDownloading(list):
-        list.append(getConfigListEntry(_("Downloads location"), config.plugins.iptvplayer.DownloadsDir))
-        list.append(getConfigListEntry(_("Start download manager per default"), config.plugins.iptvplayer.IPTVDMRunAtStart))
-        list.append(getConfigListEntry(_("Show download manager after adding new item"), config.plugins.iptvplayer.IPTVDMShowAfterAdd))
-        list.append(getConfigListEntry(_("Number of downloaded files simultaneously"), config.plugins.iptvplayer.IPTVDMMaxDownloadItem))
-        list.append(getConfigListEntry(_("Show download notification"), config.plugins.iptvplayer.IPTVDMShowNotification))
+        list.append(getConfigListEntry("    ===== " + _("Download manager").upper() + " =====",))
+        list.append(getConfigListEntry("    " + _("Downloads location"), config.plugins.iptvplayer.DownloadsDir))
+        list.append(getConfigListEntry("    " + _("Start download manager per default"), config.plugins.iptvplayer.IPTVDMRunAtStart))
+        list.append(getConfigListEntry("    " + _("Show download manager after adding new item"), config.plugins.iptvplayer.IPTVDMShowAfterAdd))
+        list.append(getConfigListEntry("    " + _("Number of downloaded files simultaneously"), config.plugins.iptvplayer.IPTVDMMaxDownloadItem))
+        list.append(getConfigListEntry("    " + _("Show download notification"), config.plugins.iptvplayer.IPTVDMShowNotification))
         if config.plugins.iptvplayer.IPTVDMShowNotification.value:
-            list.append(getConfigListEntry("    " + _("Download notification duration"), config.plugins.iptvplayer.IPTVDMNotificationDuration))
-        list.append(getConfigListEntry(_("%s e-mail") % ('My JDownloader'), config.plugins.iptvplayer.myjd_login))
-        list.append(getConfigListEntry(_("%s password") % ('My JDownloader'), config.plugins.iptvplayer.myjd_password))
-        list.append(getConfigListEntry(_("%s device name") % ('My JDownloader'), config.plugins.iptvplayer.myjd_jdname))
-        list.append(getConfigListEntry(_("%s API KEY") % 'https://youtube.com/', config.plugins.iptvplayer.api_key_youtube))
+            list.append(getConfigListEntry("        " + _("Download notification duration"), config.plugins.iptvplayer.IPTVDMNotificationDuration))
+        list.append(getConfigListEntry("    ===== " + _("Files").upper() + " =====",))
+        list.append(getConfigListEntry("    " + _("Create sidecar files (.txt/.jpg)"), config.plugins.iptvplayer.sidecar_enabled))
+        list.append(getConfigListEntry("    " + _("Normalize item / file names (Show - SxxExx - Title)"), config.plugins.iptvplayer.normalize_media_names))
 
     @staticmethod
     def _fillCaptcha(list):
-        list.append(getConfigListEntry(_("Default captcha bypass"), config.plugins.iptvplayer.captcha_bypass))
-        list.append(getConfigListEntry(_("MyE2i extension: increase security"), config.plugins.iptvplayer.mye2i_security))
+        list.append(getConfigListEntry("    ===== " + _("Solver").upper() + " =====",))
+        list.append(getConfigListEntry("    " + _("Default captcha bypass"), config.plugins.iptvplayer.captcha_bypass))
+        list.append(getConfigListEntry("    " + _("MyE2i extension: increase security"), config.plugins.iptvplayer.mye2i_security))
+        list.append(getConfigListEntry("    ===== " + _("Accounts & API keys").upper() + " =====",))
         # list.append(getConfigListEntry(_("Captcha solver order"), config.plugins.iptvplayer.captcha_bypass_order))
         # list.append(getConfigListEntry(_("Captcha bypass free service"), config.plugins.iptvplayer.captcha_bypass_free))
         # list.append(getConfigListEntry(_("Captcha bypass paid service"), config.plugins.iptvplayer.captcha_bypass_pay))
         # if config.plugins.iptvplayer.captcha_bypass_pay.value == "9kw.eu":
-        list.append(getConfigListEntry(_("%s API KEY") % 'https://9kw.eu/', config.plugins.iptvplayer.api_key_9kweu))
+        list.append(getConfigListEntry("    " + _("%s API KEY") % 'https://9kw.eu/', config.plugins.iptvplayer.api_key_9kweu))
         # if config.plugins.iptvplayer.captcha_bypass_pay.value == "2captcha.com":
-        list.append(getConfigListEntry(_("%s API KEY") % 'https://2captcha.com/', config.plugins.iptvplayer.api_key_2captcha))
+        list.append(getConfigListEntry("    " + _("%s API KEY") % 'https://2captcha.com/', config.plugins.iptvplayer.api_key_2captcha))
+        list.append(getConfigListEntry("    " + _("%s e-mail") % ('My JDownloader'), config.plugins.iptvplayer.myjd_login))
+        list.append(getConfigListEntry("    " + _("%s password") % ('My JDownloader'), config.plugins.iptvplayer.myjd_password))
+        list.append(getConfigListEntry("    " + _("%s device name") % ('My JDownloader'), config.plugins.iptvplayer.myjd_jdname))
 
     @staticmethod
     def _fillSubtitles(list):
@@ -662,10 +702,6 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry("https://opensubtitles.org/ " + _("password"), config.plugins.iptvplayer.opensuborg_password))
         list.append(getConfigListEntry("https://napisy24.pl/ " + _("login"), config.plugins.iptvplayer.napisy24pl_login))
         list.append(getConfigListEntry("https://napisy24.pl/ " + _("password"), config.plugins.iptvplayer.napisy24pl_password))
-        list.append(getConfigListEntry("https://vk.com/ " + _("login"), config.plugins.iptvplayer.vkcom_login))
-        list.append(getConfigListEntry("https://vk.com/ " + _("password"), config.plugins.iptvplayer.vkcom_password))
-        list.append(getConfigListEntry("https://1fichier.com/ " + _("e-mail"), config.plugins.iptvplayer.fichiercom_login))
-        list.append(getConfigListEntry("http://1fichier.com/ " + _("password"), config.plugins.iptvplayer.fichiercom_password))
 
     @staticmethod
     def _fillPlayers(list):
@@ -685,11 +721,6 @@ class ConfigMenu(ConfigBaseWidget):
         if 'exteplayer' in playersValues or 'extgstplayer' in playersValues or 'auto' in playersValues:
             list.append(getConfigListEntry(_("External movie player config"), config.plugins.iptvplayer.fakExtMoviePlayerList))
         list.append(getConfigListEntry(_("The default aspect ratio for the external player"), config.plugins.iptvplayer.hidden_ext_player_def_aspect_ratio))
-
-    @staticmethod
-    def _fillOther(list):
-        list.append(getConfigListEntry(_("Remember last search history selection"), config.plugins.iptvplayer.rememberHistorySelection))
-        list.append(getConfigListEntry(_("T9 letter jump in lists"), config.plugins.iptvplayer.enableT9MainList))
         list.append(getConfigListEntry(_("Write current title to file:"), config.plugins.iptvplayer.curr_title_file))
 
     @staticmethod
@@ -715,6 +746,7 @@ class ConfigMenu(ConfigBaseWidget):
     def getSections():
         return (
             ("basic", _("----- BASIC CONFIGURATION -----"), ConfigMenu._fillBasic),
+            ("keyboard", _("----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"), ConfigMenu._fillKeyboard),
             ("service", _("----- SERVICE CONFIGURATION -----"), ConfigMenu._fillService),
             ("security", _("----- SECURITY CONFIGURATION -----"), ConfigMenu._fillSecurity),
             ("skin", _("----- SKIN CONFIGURATION -----"), ConfigMenu._fillSkin),
@@ -725,7 +757,6 @@ class ConfigMenu(ConfigBaseWidget):
             ("captcha", _("----- CAPTCHA CONFIGURATION -----"), ConfigMenu._fillCaptcha),
             ("subtitles", _("----- SUBTITLES CONFIGURATION -----"), ConfigMenu._fillSubtitles),
             ("players", _("----- PLAYERS & PLAYBACK CONFIGURATION -----"), ConfigMenu._fillPlayers),
-            ("other", _("----- OTHER SETTINGS -----"), ConfigMenu._fillOther),
             ("debug", _("----- DEBUG CONFIGURATION -----"), ConfigMenu._fillDebug),
         )
 
@@ -812,7 +843,21 @@ class ConfigMenu(ConfigBaseWidget):
         if current and len(current) > 1 and current[1] is config.plugins.iptvplayer.configMenuView:
             self._applyViewMode()
         else:
+            self._keepOneStartEntry(current)
             ConfigBaseWidget.changeSubOptions(self)
+
+    def _keepOneStartEntry(self, current):
+        # the player must stay startable: when the last of plugin browser / extension list / main menu
+        # is switched off, that switch goes back on and the user is told why
+        cp = config.plugins.iptvplayer
+        entries = (cp.showinPluginBrowser, cp.showinextensions, cp.showinMainMenu)
+        if not current or len(current) < 2 or not any(current[1] is entry for entry in entries):
+            return
+        if any(entry.value for entry in entries):
+            return
+        current[1].value = True
+        self["config"].invalidateCurrent()
+        self.session.open(MessageBox, _("At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."), type=MessageBox.TYPE_INFO, timeout=8)
 
     def _applyViewMode(self):
         # the layout option was just switched: take effect right away, staying on that option's row
@@ -859,8 +904,10 @@ class ConfigMenu(ConfigBaseWidget):
     def getRuntimeOptionsValues(self):
         valTab = []
         valTab.append(config.plugins.iptvplayer.IPTVWebIterface.value)
+        valTab.append(config.plugins.iptvplayer.showinPluginBrowser.value)
         valTab.append(config.plugins.iptvplayer.showinextensions.value)
         valTab.append(config.plugins.iptvplayer.showinMainMenu.value)
+        valTab.append(config.plugins.iptvplayer.showinSystemMenu.value)
         valTab.append(config.plugins.iptvplayer.plugin_autostart.value)
         valTab.append(config.plugins.iptvplayer.plugin_autostart_method.value)
         valTab.append(config.plugins.iptvplayer.disable_live.value)
@@ -1029,6 +1076,8 @@ class ConfigMenu(ConfigBaseWidget):
             config.plugins.iptvplayer.osk_type,
             config.plugins.iptvplayer.plugin_autostart,
             config.plugins.iptvplayer.favourites_use_watched_flag,
+            config.plugins.iptvplayer.mark_downloaded_items,
+            config.plugins.iptvplayer.mark_favourite_items,
             config.plugins.iptvplayer.storageExpertMode,
             config.plugins.iptvplayer.hostsListType,
             config.plugins.iptvplayer.skinforceallinternal,

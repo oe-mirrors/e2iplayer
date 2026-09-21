@@ -195,7 +195,9 @@ class IPTVExtMoviePlayer(Screen):
         # FHD/WQHD - initGuiComponentsPos()'s own runtime centering (reads
         # back the already-scaled widget sizes) and subSynchroIcon's
         # centering already cooperate with this correctly since they read
-        # real instance sizes at runtime.
+        # real instance sizes at runtime. The <screen> tag's own size= is
+        # such a reference-canvas value too (REF_W x REF_H, not the desktop
+        # size) - see the skin % (...) call below.
         #
         # The subLabel widgets declared below are only ever visible for
         # the brief instant before the first real subtitle line arrives -
@@ -333,9 +335,22 @@ class IPTVExtMoviePlayer(Screen):
         else:
             clockWidget = ''
 
+        # the screen's own size= is read by Enigma2 in the same units as
+        # everything else on a resolution="1280,720" screen, i.e. it gets
+        # scaled with the widgets. Handing it real desktop pixels there
+        # (as the "sd" theme, which has no resolution=, still needs) made
+        # the window 1.5x (FHD) / 2x (WQHD) bigger than the desktop: OpenATV
+        # clamps a negative "center" offset to 0 and hides it, but skin
+        # engines that don't (OpenViX/OpenBH) centre it at a negative
+        # offset - infobar in the middle of the screen, left side cut off.
+        if 'resolution="' in skin:
+            screenW, screenH = REF_W, REF_H
+        else:
+            screenW, screenH = dw, getDesktop(0).size().height()
+
         skin = skin % (
-            getDesktop(0).size().width(),
-            getDesktop(0).size().height(),
+            screenW,
+            screenH,
             self.playerSkinFolder + "/playback_banner.png",
             self.playerSkinFolder + "/playback_progress.png",
             self.playerSkinFolder + "/playback_cbuff_progress.png",
