@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: IPTVPlayer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-21 19:23+0000\n"
-"PO-Revision-Date: 2026-09-21 00:34+0200\n"
+"PO-Revision-Date: 2026-09-21 21:31+0200\n"
 "Last-Translator: Masta2002\n"
 "Language-Team: oATV Team\n"
 "Language: de_DE\n"
@@ -217,9 +217,8 @@ msgstr "----- Livecams anzeigen oder ausblenden -----"
 msgid "----- Show or hide Porn Sites -----"
 msgstr "----- Pornoseiten anzeigen oder ausblenden -----"
 
-#, fuzzy
 msgid "----- VIRTUAL KEYBOARD & SEARCH CONFIGURATION -----"
-msgstr "----- GRUNDKONFIGURATION -----"
+msgstr "----- VIRTUELLE TASTATUR & SUCHE KONFIGURATION -----"
 
 msgid "----- XXXList Configuration -----"
 msgstr "----- XXXList-Konfiguration -----"
@@ -346,7 +345,7 @@ msgid "Accessible"
 msgstr "Barrierefrei"
 
 msgid "Accounts & API keys"
-msgstr ""
+msgstr "Zugänge & API-Schlüssel"
 
 msgid "Action & Thriller"
 msgstr "Action & Thriller"
@@ -546,7 +545,7 @@ msgid "Aspect"
 msgstr "Seitenverhältnis"
 
 msgid "At least one of plugin browser, extension list and main menu has to stay on, otherwise E2iPlayer could no longer be started."
-msgstr ""
+msgstr "Mindestens einer der Einträge Plugin-Browser, Erweiterungsliste und Hauptmenü muss eingeschaltet bleiben, sonst könnte E2iPlayer nicht mehr gestartet werden."
 
 msgid "Audio"
 msgstr "Audio"
@@ -783,7 +782,7 @@ msgid "Collections"
 msgstr "Kollektionen"
 
 msgid "Colored text in titles and descriptions"
-msgstr ""
+msgstr "Farbiger Text in Titeln und Beschreibungen"
 
 msgid "Columbia"
 msgstr "Columbia"
@@ -1684,7 +1683,7 @@ msgid "File renamed successfully!"
 msgstr "Datei erfolgreich umbenannt!"
 
 msgid "Files"
-msgstr ""
+msgstr "Dateien"
 
 msgid "Film"
 msgstr "Film"
@@ -2366,11 +2365,10 @@ msgid "Manager status:"
 msgstr "Verwaltungs-Status:"
 
 msgid "Mark downloaded items"
-msgstr ""
+msgstr "Heruntergeladene Einträge markieren"
 
-#, fuzzy
 msgid "Mark favourite items"
-msgstr "Favoriten Eintrag bearbeiten"
+msgstr "Favoriten-Einträge markieren"
 
 msgid "Masrahyat"
 msgstr "Theaterstück"
@@ -3426,20 +3424,17 @@ msgstr "Show"
 msgid "Show & Comedy"
 msgstr "Show & Comedy"
 
-#, fuzzy
 msgid "Show E2iPlayer settings in system menu"
-msgstr "Zeige E2iPlayer im Hauptmenü"
+msgstr "Zeige E2iPlayer-Einstellungen im System-Menü"
 
-#, fuzzy
 msgid "Show IPTVPlayer in extension list (blue button)"
-msgstr "Zeige E2iPlayer in Erweiterungsliste"
+msgstr "Zeige E2iPlayer in Erweiterungsliste (blaue Taste)"
 
 msgid "Show IPTVPlayer in main menu"
 msgstr "Zeige E2iPlayer im Hauptmenü"
 
-#, fuzzy
 msgid "Show IPTVPlayer in plugin browser"
-msgstr "Zeige E2iPlayer im Hauptmenü"
+msgstr "Zeige E2iPlayer im Plugin-Browser"
 
 msgid "Show Profiles in ZBIORNIK MINI :"
 msgstr "Profile in ZBIORNIK MINI anzeigen:"
@@ -3528,9 +3523,8 @@ msgstr "Gesellschaft"
 msgid "Software decoding as"
 msgstr "Softwaredekodierung als"
 
-#, fuzzy
 msgid "Solver"
-msgstr "silber"
+msgstr "Löser"
 
 msgid "Some changes will be applied only after movie player restart."
 msgstr "Manche Änderungen werden erst nach Movie Player Neustart angewendet."
@@ -3830,13 +3824,15 @@ msgstr "Das Dienstprogramm %s ist hier notwendig, wurde aber nicht erkannt."
 msgid ""
 "The 7reels / cineb resolvers 'VidEasy', 'VidCore/VidFast', 'VidLink' and 'Peachify' cannot decrypt their links on the receiver.\n"
 "\n"
-"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
+"With this option ON, every time you open one of them E2iPlayer sends the site's encrypted stream token - which contains the TMDb id of the movie or episode you are opening - to the third-party web service enc-dec.app (operated by a private individual). That server then sees the id and your "
+"IP address on each play. Nothing else is transmitted, and it is only used for these four resolvers.\n"
 "\n"
 "Leave this OFF if you do not want that. The other resolvers (AdRock/vidrock, VidNest, ...) are not affected."
 msgstr ""
 "Die 7reels-/cineb-Resolver 'VidEasy', 'VidCore/VidFast', 'VidLink' und 'Peachify' können ihre Links auf dem Receiver nicht entschlüsseln.\n"
 "\n"
-"Wenn diese Option AN ist, sendet E2iPlayer jedes Mal, wenn Sie einen davon öffnen, das verschlüsselte Stream-Token der Seite - das die TMDb-ID des geöffneten Films oder der Episode enthält - an den Drittanbieter-Webdienst enc-dec.app (betrieben von einer Privatperson). Dieser Server sieht dann bei jeder Wiedergabe die ID und Ihre IP-Adresse. Es wird nichts anderes übertragen, und dies wird nur für diese vier Resolver verwendet.\n"
+"Wenn diese Option AN ist, sendet E2iPlayer jedes Mal, wenn Sie einen davon öffnen, das verschlüsselte Stream-Token der Seite - das die TMDb-ID des geöffneten Films oder der Episode enthält - an den Drittanbieter-Webdienst enc-dec.app (betrieben von einer Privatperson). Dieser Server sieht "
+"dann bei jeder Wiedergabe die ID und Ihre IP-Adresse. Es wird nichts anderes übertragen, und dies wird nur für diese vier Resolver verwendet.\n"
 "\n"
 "Lassen Sie diese Option AUS, wenn Sie das nicht möchten. Die anderen Resolver (AdRock/vidrock, VidNest, ...) sind davon nicht betroffen."
 
@@ -3855,13 +3851,11 @@ msgstr "Der Kanal ist bereits unter „Benutzerlinks“ vorhanden."
 msgid "The color of the current version"
 msgstr "Farbauswahl für derzeitige Version"
 
-#, fuzzy
 msgid "The color of the downloaded item"
-msgstr "Farbauswahl für gesehene Einträge"
+msgstr "Farbauswahl für heruntergeladene Einträge"
 
-#, fuzzy
 msgid "The color of the favourite item"
-msgstr "Farbauswahl für gestartete Einträge"
+msgstr "Farbauswahl für Favoriten-Einträge"
 
 msgid "The color of the started item"
 msgstr "Farbauswahl für gestartete Einträge"
@@ -4754,7 +4748,7 @@ msgid "never"
 msgstr "nie"
 
 msgid "not available (the Python parser is used)"
-msgstr ""
+msgstr "nicht verfügbar (der Python-Parser wird verwendet)"
 
 msgid "not found"
 msgstr "nicht gefunden"
