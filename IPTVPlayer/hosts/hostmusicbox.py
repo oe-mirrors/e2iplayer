@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 10.08.2025
+# Last Modified: 24.09.2026
 # Based on techdealer-xbmc.googlecode.com/svn/trunk/plugin.audio.musicbox/
 
 ###################################################
@@ -61,7 +61,7 @@ class MusicBox(CBaseHostClass):
         self.lastfm_username = config.plugins.iptvplayer.MusicBox_login.value
         self.usePremiumAccount = config.plugins.iptvplayer.MusicBox_premium.value
 
-        self.DEFAULT_ICON_URL = 'http://www.darmowe-na-telefon.pl/uploads/tapeta_240x320_muzyka_23.jpg'
+        self.DEFAULT_ICON_URL = ''  # old default image host is gone
         self.BILLBOARD_URL = 'https://www.billboard.com/charts/'
         self.SERVICE_MENU_TABLE = [{'category': 'itunes', 'title': "Itunes - Top songs by country", 'item': 'song', 'url': 'https://www.geonames.org/flags/x/'},
                                    {'category': 'itunes', 'title': "Itunes - Top albums by country", 'item': 'album', 'url': 'https://www.geonames.org/flags/x/'},

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Last Modified: 03.06.2025
+# Last Modified: 24.09.2026
 ###################################################
 # LOCAL import
 ###################################################
@@ -37,7 +37,7 @@ class MusicMp3Ru(CBaseHostClass):
         CBaseHostClass.__init__(self, {'history': 'musicmp3.ru', 'cookie': 'musicmp3.ru.cookie'})
         self.USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
         self.MAIN_URL = 'https://musicmp3.ru/'
-        self.DEFAULT_ICON_URL = 'http://www.darmowe-na-telefon.pl/uploads/tapeta_240x320_muzyka_23.jpg'
+        self.DEFAULT_ICON_URL = 'https://musicmp3.ru/i/logo.png'
         self.HTTP_HEADER = {'User-Agent': self.USER_AGENT, 'DNT': '1', 'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate', 'Referer': self.getMainUrl(), 'Origin': self.getMainUrl()}
         self.AJAX_HEADER = dict(self.HTTP_HEADER)
         self.AJAX_HEADER.update({'X-Requested-With': 'XMLHttpRequest', 'Accept-Encoding': 'gzip, deflate', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01'})

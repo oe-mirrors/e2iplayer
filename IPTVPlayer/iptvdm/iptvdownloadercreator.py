@@ -8,8 +8,9 @@
 ###################################################
 # LOCAL import
 ###################################################
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, IsExecutable
 from Plugins.Extensions.IPTVPlayer.iptvdm.wgetdownloader import WgetDownloader
+from Plugins.Extensions.IPTVPlayer.iptvdm.curldownloader import CurlDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.hlsdownloader import HLSDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.ehlsdownloader import EHLSDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.rtmpdownloader import RtmpDownloader
@@ -49,6 +50,27 @@ def IsHlsLikeUrl(url):
             return True
 
     return False
+
+
+def HttpDownloaderCreator(urlMeta, forDownload=False):
+    # plain HTTP(S)/FTP file: wget by default, curl for real Download Manager
+    # downloads when the host asks for it (iptv_downloader meta) or the user
+    # picked it in the settings. Buffered playback, covers, subtitles etc.
+    # always stay on wget. No curl binary on the box -> wget.
+    wanted = ''
+    try:
+        wanted = str(urlMeta.get('iptv_downloader', '')).lower()
+        if not wanted:
+            wanted = config.plugins.iptvplayer.http_downloader.value
+    except Exception:
+        printExc()
+    if forDownload and wanted == 'curl':
+        if IsExecutable(DMHelper.GET_CURL_PATH()):
+            printDBG("DownloaderCreator: HTTP/HTTPS/FTP -> CurlDownloader")
+            return CurlDownloader()
+        printDBG("DownloaderCreator: curl wanted but %s not found -> WgetDownloader" % DMHelper.GET_CURL_PATH())
+    printDBG("DownloaderCreator: HTTP/HTTPS/FTP -> WgetDownloader")
+    return WgetDownloader()
 
 
 def DownloaderCreator(url, forDownload=False):
@@ -209,8 +231,7 @@ def DownloaderCreator(url, forDownload=False):
                 printDBG("DownloaderCreator: HTTP/HTTPS but HLS-like URL -> FFMPEGDownloader")
                 downloader = FFMPEGDownloader()
             else:
-                printDBG("DownloaderCreator: HTTP/HTTPS/FTP -> WgetDownloader")
-                downloader = WgetDownloader()
+                downloader = HttpDownloaderCreator(urlMeta, forDownload)
 
         elif proto == 'em3u8':
             downloader = EHLSDownloader()
@@ -239,8 +260,8 @@ def DownloaderCreator(url, forDownload=False):
                 printDBG("DownloaderCreator: fallback HLS-like URL -> FFMPEGDownloader")
                 downloader = FFMPEGDownloader()
             else:
-                printDBG("DownloaderCreator: fallback default -> WgetDownloader")
-                downloader = WgetDownloader()
+                printDBG("DownloaderCreator: fallback default -> HTTP downloader")
+                downloader = HttpDownloaderCreator(urlMeta, forDownload)
 
     except Exception:
         printExc()

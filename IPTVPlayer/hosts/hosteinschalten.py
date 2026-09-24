@@ -4,6 +4,7 @@ import json
 
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass, CHostBase
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
+from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 
@@ -104,14 +105,16 @@ class Einschalten(CBaseHostClass):
         sts, htm = self.getPage(gettytul() + "api/movies/%s" % cItem.get("id", "0"))
         if sts and htm and htm.startswith("{"):
             data = json.loads(htm)
-            desc = data.get("overview", "")
+            desc = ensure_str(data.get("overview") or "")
             if data.get("runtime"):
                 otherInfo["duration"] = "%s Min" % data.get("runtime")
             if data.get("voteAverage"):
                 otherInfo["rating"] = str(data.get("voteAverage"))
             if data.get("releaseDate"):
                 otherInfo["released"] = str(data.get("releaseDate")[:4])
-        return [{"title": cItem["title"], "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": cItem["icon"]}], "other_info": otherInfo}]
+        # send the cover request like the site does (browser UA + Referer)
+        icon = strwithmeta(ensure_str(cItem.get("icon", "")), {"User-Agent": self.HEADER.get("User-Agent", ""), "Referer": gettytul()})
+        return [{"title": cItem.get("title", ""), "text": self.cleanHtmlStr(desc), "images": [{"title": "", "url": icon}], "other_info": otherInfo}]
 
     def handleService(self, index, refresh=0, searchPattern="", searchType=""):
         CBaseHostClass.handleService(self, index, refresh, searchPattern, searchType)

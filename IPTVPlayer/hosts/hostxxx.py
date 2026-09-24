@@ -13,6 +13,7 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlParse import urljoin
 from Plugins.Extensions.IPTVPlayer.libs.xxxparser import XXXParser, decodeHtml, decodeUrl
 from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKeyboard
 from Plugins.Extensions.IPTVPlayer.components.searchhistoryeditor import SearchHistoryEditor
+from Plugins.Extensions.IPTVPlayer.libs.linklisteditor import openLinkListFileEditor
 
 from itertools import chain
 import re
@@ -605,6 +606,10 @@ class IPTVHost(IHost):
 
 	def getLogoPath(self):
 		return RetHost(RetHost.OK, value=[self.PATH_TO_LOGO])
+
+	def editUserLinks(self, session):
+		openLinkListFileEditor(session, join(config.plugins.iptvplayer.xxxlist.value, 'xxxlist.txt'), self.LOGO_NAME)
+		return True
 
 	def getInitList(self):
 		printDBG("getInitList begin")

@@ -13,7 +13,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvmultipleinputbox import IPTVMu
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVMainNavigatorList
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover
-from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox
+from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxWidget, IPTVChoiceBoxItem, openChoiceBox, openSortChoiceBox, sortOrderTitle
 ###################################################
 
 ###################################################
@@ -28,6 +28,9 @@ from Components.ActionMap import ActionMap
 from Components.Sources.StaticText import StaticText
 from Tools.NumericalTextInput import NumericalTextInput
 ###################################################
+
+
+GROUPS_VIEW = ":groups:"
 
 
 class IPTVFavouritesAddNewGroupWidget(Screen):
@@ -119,29 +122,10 @@ class IPTVFavouritesAddItemWidget(Screen):
         if self.canAddNewGroup:
             options.append(IPTVChoiceBoxItem(name=_("Add new group of favorites"), privateData=None))
         if len(options):
-            height = self._getGroupPickerHeight(len(options))
+            height = skinchrome.choiceBoxHeight(len(options))
             openChoiceBox(self.session, {'width': 600, 'height': height, 'current_idx': 0, 'title': _("Select favorite group"), 'options': options, 'chrome': True}, self.addFavouriteToGroup)
         else:
             self.session.openWithCallback(self.iptvDoFinish, MessageBox, _("There are no other favorite groups"), type=MessageBox.TYPE_INFO, timeout=10)
-
-    def _getGroupPickerHeight(self, numItems):
-        # same tier-aware height+cap formula ConfigBaseWidget's own
-        # _getSelectionListHeight() (configbase.py) uses - a "pick a
-        # favorites group" list is anywhere from 1 to a dozen+ groups, no
-        # single fixed height fits both; capped at 660 (chrome's own
-        # 720-tall reference canvas convention) so it scrolls
-        # (scrollbarMode="showAlways" already on the list) instead of
-        # growing the popup past the screen edge
-        #
-        # Floored at 2 - same "empty window" issue ConfigBaseWidget's own
-        # _getSelectionListHeight() guards against: with numItems=1
-        # (exactly one other group, canAddNewGroup False) the computed
-        # list area is smaller than one real item row at FHD/WQHD, so the
-        # single row can't render at all.
-        numItems = max(numItems, 2)
-        itemH, scale = skinchrome.tierRowHeight(35, 40, 55)
-        height = int(numItems * itemH / scale) + 176
-        return min(height, 660)
 
     def addFavouriteToGroup(self, retArg):
         if retArg is not None:
@@ -245,7 +229,7 @@ class IPTVFavouritesMainWidget(Screen):
         """ % (
             skinchrome.build_header_auto(iconBase=iconBase, logoWidgetName="playerlogo"),
             clockPart,
-            skinchrome.build_footer_auto(664, iconBase=iconBase, keys=('red', 'green', 'yellow', 'blue'), showNav=False),
+            skinchrome.build_footer_auto(664, iconBase=iconBase, keys=('red', 'green', 'yellow', 'blue'), showMenu=True, showNav=False),
         )
 
     def __init__(self, session):
@@ -262,7 +246,7 @@ class IPTVFavouritesMainWidget(Screen):
         self.onClose.append(self.__onClose)
         self.favourites = None
         self.started = False
-        self.menu = ":groups:"  # "items"
+        self.menu = GROUPS_VIEW  # "items"
         self.modified = False
 
         self.IDS_ENABLE_REORDERING = _('Enable reordering')
@@ -275,6 +259,8 @@ class IPTVFavouritesMainWidget(Screen):
         self["key_yellow"] = StaticText(self.IDS_ENABLE_REORDERING)
         self["key_green"] = StaticText(_("Add new group"))
         self["key_blue"] = StaticText(_("Edit"))
+        # MENU only shows its icon; the text just keeps the conditional icon visible
+        self["key_menu"] = StaticText(sortOrderTitle())
 
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
@@ -306,6 +292,9 @@ class IPTVFavouritesMainWidget(Screen):
 
         self["actions"] = ActionMap(["ColorActions", "WizardActions", "ListboxActions", "NumberActions"],
             actions, -2)
+        # MENU lives in IPTVPlayerListActions, kept in its own ActionMap like
+        # SearchHistoryEditor's 'menuActions'
+        self["menuActions"] = ActionMap(["IPTVPlayerListActions"], {"menu": self.keyMenu}, 0)
 
         self.prevIdx = 0
         self.duringMoving = False
@@ -341,7 +330,7 @@ class IPTVFavouritesMainWidget(Screen):
 
     def displayList(self):
         list = []
-        if ":groups:" == self.menu:
+        if GROUPS_VIEW == self.menu:
             groups = self.favourites.getGroups()
             for item in groups:
                 dItem = CDisplayListItem(name=item['title'], type=CDisplayListItem.TYPE_CATEGORY)
@@ -372,7 +361,7 @@ class IPTVFavouritesMainWidget(Screen):
         pass
 
     def keyExit(self):
-        if ":groups:" == self.menu:
+        if GROUPS_VIEW == self.menu:
             if self.duringMoving:
                 self._changeMode()
             if self.modified:
@@ -385,7 +374,7 @@ class IPTVFavouritesMainWidget(Screen):
             self["key_green"].setText(_("Add new group"))
             self["key_blue"].setText(_("Edit"))
 
-            self.menu = ":groups:"
+            self.menu = GROUPS_VIEW
             self.displayList()
             try:
                 self["list"].moveToIndex(self.prevIdx)
@@ -411,7 +400,7 @@ class IPTVFavouritesMainWidget(Screen):
             if None is not self.getSelectedItem():
                 self._changeMode()
             return
-        if ":groups:" == self.menu:
+        if GROUPS_VIEW == self.menu:
             sel = self.getSelectedItem()
             if None is sel:
                 return
@@ -442,7 +431,7 @@ class IPTVFavouritesMainWidget(Screen):
         if None is sel:
             return
         sts = True
-        if ":groups:" == self.menu:
+        if GROUPS_VIEW == self.menu:
             sts = self.favourites.delGroup(sel.privateData)
         else:
             sts = self.favourites.delGroupItem(sel.privateData, self.menu)
@@ -461,14 +450,12 @@ class IPTVFavouritesMainWidget(Screen):
                 self.reorderingMode = True
                 self["key_yellow"].setText(self.IDS_DISABLE_REORDERING)
 
-            if self.duringMoving and not self.reorderingMode:
-                self._changeMode()
-            elif not self.duringMoving and self.reorderingMode:
+            if self.duringMoving != self.reorderingMode:
                 self._changeMode()
 
     def keyGreen(self):
         printDBG(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> keyGreen 1")
-        if ":groups:" == self.menu:
+        if GROUPS_VIEW == self.menu:
             self.session.openWithCallback(self._groupAdded, IPTVFavouritesAddNewGroupWidget, self.favourites)
         else:
             if None is self.getSelectedItem():
@@ -494,7 +481,7 @@ class IPTVFavouritesMainWidget(Screen):
         params['with_accept_button'] = True
         params['list'] = []
 
-        if ":groups:" == self.menu:
+        if GROUPS_VIEW == self.menu:
             group = self.favourites.getGroup(sel.privateData)
             if None is group:
                 return
@@ -615,7 +602,7 @@ class IPTVFavouritesMainWidget(Screen):
                 self["list"].instance.moveSelection(key)
                 newIndex = self["list"].getCurrentIndex()
                 printDBG('IPTVFavouritesMainWidget.moveItem carrying curIndex=%s newIndex=%s' % (curIndex, newIndex))
-                if ":groups:" == self.menu:
+                if GROUPS_VIEW == self.menu:
                     sts = self.favourites.moveGroup(curIndex, newIndex)
                 else:
                     sts = self.favourites.moveGroupItem(curIndex, newIndex, self.menu)
@@ -647,6 +634,33 @@ class IPTVFavouritesMainWidget(Screen):
     def keyDrop(self):
         pass
 
+    def keyMenu(self):
+        # sorts the list currently shown: the groups, or the items of the
+        # opened group
+        if self.reorderingMode or self.duringMoving:
+            return
+        if None is self.getSelectedItem():
+            return
+        openSortChoiceBox(self.session, self.sortSelected)
+
+    def sortSelected(self, reverse):
+        if reverse is None:
+            return
+        if GROUPS_VIEW == self.menu:
+            self.favourites.getGroups().sort(key=lambda group: (group.get('title', '') or '').lower(), reverse=reverse)
+        else:
+            sts, items = self.favourites.getGroupItems(self.menu)
+            if not sts:
+                self.session.open(MessageBox, self.favourites.getLastError(), type=MessageBox.TYPE_ERROR, timeout=10)
+                return
+            items.sort(key=lambda item: (item.name or '').lower(), reverse=reverse)
+        self.modified = True
+        self.displayList()
+        try:
+            self["list"].moveToIndex(0)
+        except Exception:
+            pass
+
     def getSelectedItem(self):
         sel = None
         try:
@@ -670,7 +684,7 @@ class IPTVFavouritesMainWidget(Screen):
 
         try:
             currentIdx = self["list"].getCurrentIndex()
-            if ":groups:" == self.menu:
+            if GROUPS_VIEW == self.menu:
                 groups = self.favourites.getGroups()
                 total = len(groups)
 

@@ -10,6 +10,9 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvfilehost import IPTVFileHost
 from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import getDirectM3U8Playlist, getF4MLinksWithMeta, getMPDLinksWithMeta
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.libs import ph
+from Plugins.Extensions.IPTVPlayer.libs.linklisteditor import openLinkListFileEditor
+from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBoxItem, openChoiceBox
+from Plugins.Extensions.IPTVPlayer.components import skinchrome
 ###################################################
 
 ###################################################
@@ -173,6 +176,21 @@ class IPTVHost(CHostBase):
 
     def getLogoPath(self):
         return RetHost(RetHost.OK, value=[GetLogoDir('urllistlogo.png')])
+
+    def editUserLinks(self, session):
+        # the host reads three files, so pick the one to edit first
+        path = config.plugins.iptvplayer.Sciezkaurllist.value + '/'
+        options = [IPTVChoiceBoxItem(name=_("Videos"), privateData=normpath(path + Urllist.URLLIST_FILE)),
+                   IPTVChoiceBoxItem(name=_("Live streams"), privateData=normpath(path + Urllist.URRLIST_STREAMS)),
+                   IPTVChoiceBoxItem(name=_("User files"), privateData=normpath(path + Urllist.URRLIST_USER))]
+        openChoiceBox(session,
+                      {'width': 600, 'height': skinchrome.choiceBoxHeight(len(options)), 'current_idx': 0, 'title': _("Edit User Links"), 'options': options, 'chrome': True},
+                      lambda ret=None: self._fileSelected(session, ret))
+        return True
+
+    def _fileSelected(self, session, ret):
+        if ret is not None:
+            openLinkListFileEditor(session, ret.privateData, 'urllistlogo.png')
 
     def getLinksForVideo(self, Index=0, selItem=None):
         listLen = len(self.host.currList)

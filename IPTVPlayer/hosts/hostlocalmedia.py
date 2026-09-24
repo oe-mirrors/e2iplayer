@@ -362,6 +362,11 @@ class LocalMedia(CBaseHostClass):
             audTab = []
             picTab = []
             for item in data:
+                # only "name//type//..." rows are entries; the mount point line,
+                # the trailing empty line and older lsdir builds' wildcard echo
+                # must not count against the page size
+                if '//' not in item:
+                    continue
                 start += 1
                 if start > end:
                     break

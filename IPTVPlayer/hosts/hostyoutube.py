@@ -12,7 +12,7 @@ from Plugins.Extensions.IPTVPlayer.libs.youtubeparser import YouTubeParser
 from Plugins.Extensions.IPTVPlayer.libs.youtube_oauth import YouTubeOAuth
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 from Plugins.Extensions.IPTVPlayer.libs.urlmetahelper import buildSidecar, buildYoutubeOptions, decorateYoutubeUrl, decorateYoutubeLinkItems
-from Plugins.Extensions.IPTVPlayer.libs.youtubeuserlinks import YouTubeUserLinksManager
+from Plugins.Extensions.IPTVPlayer.libs.linklisteditor import YouTubeUserLinksManager
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhelper import IPTVWatchedHelper
 from Plugins.Extensions.IPTVPlayer.tools.iptvwatchedhostmixin import WatchedFlagHostMixin
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import IsSidecarEnabled
@@ -51,6 +51,7 @@ from Components.MenuList import MenuList
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.Sciezkaurllist = ConfigDirectory(default="/hdd/")
+config.plugins.iptvplayer.youtube_userlinks_order = ConfigSelection(default="alpha", choices=[("alpha", _("alphabetical")), ("file", _("as in ytlist.txt"))])
 config.plugins.iptvplayer.youtube_mkv_chapters = ConfigYesNo(default=True)
 config.plugins.iptvplayer.youtube_enigma2_cuts = ConfigYesNo(default=True)
 config.plugins.iptvplayer.youtube_download_channel_name = ConfigYesNo(default=True)
@@ -183,6 +184,7 @@ def GetConfigList():
     optionList.append(getConfigListEntry(_("Search results region:"), config.plugins.iptvplayer.youtube_search_region))
     optionList.append(getConfigListEntry(_("Safe search (restricted mode):"), config.plugins.iptvplayer.youtube_safe_search))
     optionList.append(getConfigListEntry(_("Path to ytlist.txt, urllist.txt"), config.plugins.iptvplayer.Sciezkaurllist))
+    optionList.append(getConfigListEntry(_("Order of user links:"), config.plugins.iptvplayer.youtube_userlinks_order))
     optionList.append(getConfigListEntry(_("Default video quality:"), config.plugins.iptvplayer.ytDefaultformat))
     optionList.append(getConfigListEntry(_("Use default video quality:"), config.plugins.iptvplayer.ytUseDF))
     optionList.append(getConfigListEntry(_("Display language:"), config.plugins.iptvplayer.youtube_ui_language))
@@ -657,7 +659,7 @@ class Youtube(CBaseHostClass):
     def listCategory(self, cItem, searchMode=False):
         printDBG("Youtube.listCategory cItem[%s]" % cItem)
 
-        sortList = True
+        sortList = "file" != config.plugins.iptvplayer.youtube_userlinks_order.value
         filespath = config.plugins.iptvplayer.Sciezkaurllist.value
         groupList = True
         if "sub_file_category" not in cItem:

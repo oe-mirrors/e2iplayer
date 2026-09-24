@@ -75,6 +75,8 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
         self.remoteContentType = None
         self.lastErrorCode = None
         self.lastErrorDesc = ''
+        # set by the Download Manager for "Continue downloading": keep the partial file
+        self.resumeExisting = False
 
         # sidecar support (console instance + state), shared via SidecarMixin
         self._initSidecarState()
@@ -216,14 +218,16 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
         self.localFileSize = DMHelper.getFileSize(fsPath(finalPath))
         if self.localFileSize > 0:
             self.remoteFileSize = self.localFileSize
-        self.status = DMHelper.STS.DOWNLOADED
+            self.status = DMHelper.STS.DOWNLOADED
 
-        self._writeTxtSidecar(finalPath)
+            self._writeTxtSidecar(finalPath)
 
-        if self.sidecarEnabled and self.sidecarImg:
-            self._startImgSidecarDownload(finalPath)
-            return
+            if self.sidecarEnabled and self.sidecarImg:
+                self._startImgSidecarDownload(finalPath)
+                return
         else:
+            # remuxed/finalized file is empty -> treat as interrupted, and
+            # don't write a TXT/image sidecar for a video that isn't there
             self.status = DMHelper.STS.INTERRUPTED
 
         self._finishDownloadFlow()
@@ -282,13 +286,17 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
         else:
             info = ""
 
-        # remove file if exists
         filePathFs = fsPath(self.filePath)
+        if self.resumeExisting and fileExists(filePathFs):
+            # -c / -C - picks up where the interrupted run stopped
+            self.downloaderParams = dict(self.downloaderParams, iptv_wget_continue=True)
+            printDBG("WgetDownloader resume existing file[%s]" % self.filePath)
+        else:
+            self.resumeExisting = False
+            if fileExists(filePathFs):
+                rm(filePathFs)
 
-        if fileExists(filePathFs):
-            rm(filePathFs)
-
-        self.downloadCmd = DMHelper.getBaseWgetCmd(self.downloaderParams) + (' %s -t %d ' % (info, retries)) + '"' + shellQuote(self.url) + '" -O "' + shellQuote(self.filePath) + '" > /dev/null'
+        self.downloadCmd = self._buildDownloadCmd(info, retries)
         printDBG("Download cmd[%s]" % self.downloadCmd)
 
         if self.downloaderParams.get('iptv_wget_continue', False):
@@ -308,6 +316,10 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
 
         self.onStart()
         return BaseDownloader.CODE_OK
+
+    def _buildDownloadCmd(self, info, retries):
+        # overridden by CurlDownloader
+        return DMHelper.getBaseWgetCmd(self.downloaderParams) + (' %s -t %d ' % (info, retries)) + '"' + shellQuote(self.url) + '" -O "' + shellQuote(self.filePath) + '" > /dev/null'
 
     def _dataAvail(self, data):
         if data is None:
@@ -417,6 +429,10 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
         elif 0 >= self.localFileSize:
             self.status = DMHelper.STS.ERROR
         elif self.remoteFileSize > 0 and self.remoteFileSize > self.localFileSize:
+            self.status = DMHelper.STS.INTERRUPTED
+        elif self.resumeExisting and code != 0:
+            # the partial file is already on disk - a failed resume (expired link,
+            # no range support) must not count as a finished download
             self.status = DMHelper.STS.INTERRUPTED
         else:
             if self.ffmpegPostEnabled:
