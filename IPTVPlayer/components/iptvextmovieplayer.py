@@ -1575,6 +1575,9 @@ class IPTVExtMoviePlayer(Screen):
         self.playback['GoToSeekTimer'].stop()
         if not self.playback['LengthFromPlayerReceived']:
             return
+        if self.playback['Length'] <= 0:
+            # live streams report a zero length, no seek bar to move
+            return
         if not self.playback['GoToSeeking']:
             self.playback['GoToSeeking'] = True
             self.playback['GoToSeekTime'] = self.playback['StartGoToSeekTime']

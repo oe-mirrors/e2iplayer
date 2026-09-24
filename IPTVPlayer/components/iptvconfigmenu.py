@@ -73,6 +73,9 @@ config.plugins.iptvplayer.IPTVDMRunAtStart = ConfigYesNo(default=False)
 config.plugins.iptvplayer.IPTVDMShowAfterAdd = ConfigYesNo(default=True)
 config.plugins.iptvplayer.IPTVDMMaxDownloadItem = ConfigSelection(default="1", choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5"), ("10", "10"), ("20", "20"), ("30", "30"), ("40", "40"), ("50", "50")])
 config.plugins.iptvplayer.IPTVDMShowNotification = ConfigYesNo(default=True)
+# program for plain file downloads in the download manager; curl falls back
+# to wget when the box has no curl binary
+config.plugins.iptvplayer.http_downloader = ConfigSelection(default="wget", choices=[("wget", "wget"), ("curl", "curl")])
 # same seconds-choices pattern as extplayer_infobar_timeout above - 5s
 # matches the fixed duration IPTVDMNotification.showNotify() used before
 # this was configurable
@@ -669,6 +672,7 @@ class ConfigMenu(ConfigBaseWidget):
         list.append(getConfigListEntry("    " + _("Start download manager per default"), config.plugins.iptvplayer.IPTVDMRunAtStart))
         list.append(getConfigListEntry("    " + _("Show download manager after adding new item"), config.plugins.iptvplayer.IPTVDMShowAfterAdd))
         list.append(getConfigListEntry("    " + _("Number of downloaded files simultaneously"), config.plugins.iptvplayer.IPTVDMMaxDownloadItem))
+        list.append(getConfigListEntry("    " + _("Program for file downloads (HTTP/FTP)"), config.plugins.iptvplayer.http_downloader))
         list.append(getConfigListEntry("    " + _("Show download notification"), config.plugins.iptvplayer.IPTVDMShowNotification))
         if config.plugins.iptvplayer.IPTVDMShowNotification.value:
             list.append(getConfigListEntry("        " + _("Download notification duration"), config.plugins.iptvplayer.IPTVDMNotificationDuration))

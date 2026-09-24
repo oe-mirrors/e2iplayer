@@ -61,7 +61,8 @@ _TEXT_COLOR = 0x00ffffff
 # stdin from /dev/null (exteplayer3/gstplayer read commands from stdin
 # and would otherwise block); `timeout` guards the rest if it exists.
 # duktape's `duk` has no --version flag, so run a one-line script that
-# prints Duktape.version (e.g. 20700 -> shown as 2.7.0).
+# prints Duktape.version (e.g. 20700 -> shown as 2.7.0). quickjs' `qjs
+# --version` prints the bare version (e.g. 0.16.2).
 _PROBE_SCRIPT_PATH = "/tmp/.e2i_sysprobe.sh"
 
 _P = '</dev/null 2>&1'
@@ -74,15 +75,17 @@ _PROBE_SCRIPT = (
     'echo "@@f4mdump";     ($T f4mdump %s          || true) | head -n 1; '
     'echo "@@ffmpeg";      ($T ffmpeg -version %s   || true) | head -n 1; '
     'echo "@@wget";        ($T wget --version %s    || true) | head -n 1; '
+    'echo "@@curl";        ($T curl --version %s    || true) | head -n 1; '
     'echo "@@rtmpdump";    ($T rtmpdump --help %s   || true) | grep -i rtmpdump | head -n 1; '
     'echo "@@exteplayer3"; ($T exteplayer3 %s       || true) | head -n 2; '
     'echo "@@gstplayer";   ($T gstplayer %s         || true) | head -n 2; '
     'echo "@@duktape";     D=/tmp/.e2i_dukver.js; '
     '  printf "%%s" \'try{var v=Duktape.version;print(Math.floor(v/10000)+"."+(Math.floor(v/100)%%100)+"."+(v%%100))}catch(e){print("?")}\' > $D; '
     '  ($T duk $D %s || true) | head -n 1; rm -f $D; '
+    'echo "@@quickjs";     ($T qjs --version %s     || true) | head -n 1; '
     'echo "@@deps";        (opkg list-installed 2>/dev/null | grep -i e2iplayer-deps || true); '
     'echo "@@end"\n'
-) % ((_P,) * 10)
+) % ((_P,) * 12)
 
 _PROBE_CACHE = None       # parsed binary block, reused for the whole session
 _PROBE_KEEPALIVE = None   # holds the iptv_system object until its callback fires
@@ -303,8 +306,10 @@ class _SystemInfo(object):
         out.append("--- " + _("other binaries") + " ---")
         out.append(row("ffmpeg", first("ffmpeg")))
         out.append(row("wget", first("wget")))
+        out.append(row("curl", first("curl")))
         out.append(row("rtmpdump", first("rtmpdump")))
         out.append(row("duktape", first("duktape")))
+        out.append(row("quickjs", first("quickjs")))
         out.append(row("exteplayer3", ver_line("exteplayer3")))
         out.append(row("gstplayer", ver_line("gstplayer")))
 

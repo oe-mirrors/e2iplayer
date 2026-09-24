@@ -33,8 +33,7 @@ from Components.config import config
 # config.plugins.iptvplayer.CacheDir = ConfigText(default = "/hdd/IPTVCache")
 
 class IconMenager:
-    HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
-    # HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'}
+    HEADER = {'User-Agent': common.HOST, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate'}
 
     def __init__(self, updateFun=None, downloadNew=True):
         printDBG("IconMenager.__init__")

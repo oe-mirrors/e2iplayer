@@ -1643,7 +1643,7 @@ class CSearchHistoryHelper():
             self.length = 0
             if os.path.isfile(self.PATH_FILE):
                 try:
-                    with codecs.open(GetSearchHistoryDir("ytlist.txt"), 'r', 'utf-8', 'ignore') as file:
+                    with codecs.open(self.PATH_FILE, 'r', 'utf-8', 'ignore') as file:
                         self.length = sum(1 for _line in file)
                 except Exception:
                     pass

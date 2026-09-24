@@ -1935,27 +1935,36 @@ class pageParser(CaptchaHelper):
                             urltab.append({"name": "MP4", "url": urlparser.decorateUrl(url, {"external_sub_tracks": sub_tracks})})
         return urltab
 
-    def parserDOOD(self, baseUrl):  # update 240925
+    def parserDOOD(self, baseUrl):  # update 240926
         urlsTab = []
         sub_tracks = []
         printDBG("parserDOOD baseUrl [%s]" % baseUrl)
         HTTP_HEADER = self.cm.getDefaultHeader()
         urlParams = {"header": HTTP_HEADER}
         urls = ["all3do.com", "d0000d.com", "d000d.com", "d0o0d.com", "d-s.io", "do0od.com", "dooodster.com", "doodstream.com", "doply.net", "dooood.com", "do7go.com", "ds2play.com", "ds2video.com", "dood.cx", "dood.la", "dood.li", "dood.pm", "dood.re", "dood.sh", "dood.so", "dood.stream", "dood.to", "dood.watch", "dood.work", "dood.wf", "dood.ws", "dood.yt", "doods.pro", "doodcdn.io", "vide0.net", "vidply.com", "vvide0.com", "playmogo.com"]
+        baseUrl = baseUrl.replace("/w/", "/e/")  # watch page -> embed page
+        # the embed domain redirects to the current mirror (vide0.net -> playmogo.com);
+        # dsvplay.com is only the fallback, some providers block it (connection reset)
+        candidates = [baseUrl]
         for url in urls:
             if url in baseUrl:
-                baseUrl = baseUrl.replace(url, "dsvplay.com")
-        baseUrl = baseUrl.replace("/w/", "/e/")  # watch page -> embed page
+                candidates.append(baseUrl.replace(url, "dsvplay.com"))
+                break
+        sts, data = False, ""
+        for baseUrl in candidates:
+            sts, data = self.cm.getPage(baseUrl, urlParams)
+            if sts:
+                baseUrl = self.cm.meta.get("url", "") or baseUrl
+                break
+        if not sts:
+            return []
         host = "https://%s" % urlparser.getDomain(baseUrl, True)
         if "/d/" in baseUrl:
+            url = self.cm.ph.getSearchGroups(data, 'iframe src="([^"]+)')[0]
+            baseUrl = host + url
             sts, data = self.cm.getPage(baseUrl, urlParams)
             if not sts:
                 return []
-            url = self.cm.ph.getSearchGroups(data, 'iframe src="([^"]+)')[0]
-            baseUrl = host + url
-        sts, data = self.cm.getPage(baseUrl, urlParams)
-        if not sts:
-            return []
         sub = re.findall(r"""dsplayer\.addRemoteTextTrack\({src:'([^']+)',\s*label:'([^']*)',kind:'captions'""", data)
         if sub:
             sub_tracks = [{"title": "", "url": "https:" + src if src.startswith("//") else src, "lang": label} for src, label in sub if len(label) > 1]

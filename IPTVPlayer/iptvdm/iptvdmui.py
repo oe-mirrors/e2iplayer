@@ -785,7 +785,9 @@ class IPTVDMWidget(Screen):
                 options.extend(retry)
             elif DMHelper.STS.INTERRUPTED == item.status:
                 options.extend(play)
-                # options.extend(cont)
+                # only wget/curl can resume a partial file, the other downloaders start over
+                if item.downloaderName in ('wget', 'curl'):
+                    options.extend(cont)
                 options.extend(retry)
                 options.extend(remove)
             elif DMHelper.STS.DOWNLOADING == item.status:

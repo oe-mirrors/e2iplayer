@@ -260,3 +260,18 @@ def openChoiceBox(session, params, callback=None):
         selection = 0
     session.openWithCallback(_nativeCb, ChoiceBox, title=params.get('title', '') or '',
                              list=nativeList, selection=selection)
+
+
+def sortOrderTitle():
+    # "A-Z / Z-A": title of the sort picker and label of the key that opens it
+    return _(u"A-Z") + u" / " + _(u"Z-A")
+
+
+def openSortChoiceBox(session, callback):
+    # A-Z / Z-A picker shared by the favourites manager and the link list
+    # editor; callback gets reverse (False = A-Z, True = Z-A) or None on EXIT
+    options = [IPTVChoiceBoxItem(name=_(u"Sort A-Z"), privateData=False),
+               IPTVChoiceBoxItem(name=_(u"Sort Z-A"), privateData=True)]
+    openChoiceBox(session,
+                  {'width': 600, 'height': skinchrome.choiceBoxHeight(len(options)), 'current_idx': 0, 'title': sortOrderTitle(), 'options': options, 'chrome': True},
+                  lambda ret=None: callback(None if ret is None else bool(ret.privateData)))

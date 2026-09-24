@@ -163,7 +163,7 @@ def forceInternalSkinName(names):
 def tierRowHeight(hd, fhd, wqhd, screenwidth=None):
     # centralizes the (itemH, scale) pairing that popup-height helpers
     # all over the codebase (ConfigBaseWidget._getSelectionListHeight(),
-    # playerselector.py, iptvfavouriteswidgets.py, youtubeuserlinks.py,
+    # playerselector.py, iptvfavouriteswidgets.py, linklisteditor.py,
     # searchhistoryeditor.py, iptvextmovieplayer.py, iptvplayerwidget.py,
     # iptvdm/iptvdmui.py, e2ivk.py, ...) would otherwise each hand-copy
     # as the exact same if/elif/else tier-threshold block -
@@ -179,6 +179,17 @@ def tierRowHeight(hd, fhd, wqhd, screenwidth=None):
     elif scale >= 1.5:
         return fhd, scale
     return hd, scale
+
+
+def choiceBoxHeight(numItems):
+    # height for a chrome IPTVChoiceBoxWidget picker (group / sort / file
+    # selection): same formula as ConfigBaseWidget._getSelectionListHeight()
+    # (configbase.py), capped at 660 so a long list scrolls instead of
+    # growing past the screen edge. Floored at 2 rows: with one row the list
+    # area is smaller than a real row at FHD/WQHD and the row can't render.
+    numItems = max(numItems, 2)
+    itemH, scale = tierRowHeight(35, 40, 55)
+    return min(int(numItems * itemH / scale) + 176, 660)
 
 
 def header_height(scale=1.0):

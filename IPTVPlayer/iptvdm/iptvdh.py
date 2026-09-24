@@ -95,6 +95,10 @@ class DMHelper:
         return '/usr/bin/wget'
 
     @staticmethod
+    def GET_CURL_PATH():
+        return '/usr/bin/curl'
+
+    @staticmethod
     def GET_F4M_PATH():
         return '/usr/bin/f4mdump'
 
@@ -245,8 +249,8 @@ class DMHelper:
         headerOptions = ''
         proxyOptions = ''
 
-        # defaultHeader = ' --header "User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0" '
-        defaultHeader = ' --header "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36" '
+        # same default UA as pCommon's page requests, so it stays current
+        defaultHeader = ' --header "User-Agent: %s" ' % common.HOST
         for key, value in list(downloaderParams.items()):
             if value != '':
                 if key in DMHelper.HANDLED_HTTP_HEADER_PARAMS:
@@ -279,13 +283,50 @@ class DMHelper:
         return cmd
 
     @staticmethod
+    def getBaseCurlCmd(downloaderParams={}, retries=0):
+        # counterpart of getBaseWgetCmd for CurlDownloader, takes the same iptv_wget_* params
+        from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
+        printDBG("getBaseCurlCmd downloaderParams[%r]" % downloaderParams)
+        headerOptions = ''
+        proxyOptions = ''
+        userAgent = ' -A "%s" ' % common.HOST
+        for key, value in list(downloaderParams.items()):
+            if value != '':
+                if key in DMHelper.HANDLED_HTTP_HEADER_PARAMS:
+                    headerOptions += ' -H "%s: %s" ' % (key, shellQuote(value))
+                    if key == 'User-Agent':
+                        userAgent = ''
+                elif key == 'http_proxy':
+                    proxyOptions += ' -x "%s" ' % shellQuote(value)
+
+        # -sS: no progress meter, errors only / -f: HTTP 4xx/5xx -> exit 22 instead of saving the error page
+        # -g: no globbing of [] {} in the url / -k: like wget --no-check-certificate
+        timeout = downloaderParams.get('iptv_wget_timeout', '') or 30
+        options = ' -sS -f -L -k -g --connect-timeout %s --speed-limit 1 --speed-time %s ' % (timeout, max(int(timeout), 60))
+        try:
+            tries = int(downloaderParams.get('iptv_wget_tries', retries) or 0)
+        except Exception:
+            tries = 0
+        # wget -t 0 means "retry forever", curl has no such mode - keep a few retries
+        options += ' --retry %d ' % (tries - 1 if tries > 0 else 5)
+        if 'iptv_wget_waitretry' in downloaderParams:
+            options += ' --retry-delay %s ' % downloaderParams['iptv_wget_waitretry']
+        if 'start_pos' in downloaderParams:
+            options += ' -C %s ' % downloaderParams['start_pos']
+        elif downloaderParams.get('iptv_wget_continue', False):
+            options += ' -C - '
+
+        cmd = DMHelper.GET_CURL_PATH() + options + userAgent + headerOptions + proxyOptions
+        printDBG("getBaseCurlCmd return cmd[%s]" % cmd)
+        return cmd
+
+    @staticmethod
     def getBaseHLSDLCmd(downloaderParams={}):
         printDBG("getBaseWgetCmd downloaderParams[%r]" % downloaderParams)
         headerOptions = ''
         proxyOptions = ''
 
-        # userAgent = ' -u "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:21.0) Gecko/20100101 Firefox/21.0" '
-        userAgent = ' -u "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36" '
+        userAgent = ' -u "%s" ' % common.HOST
         for key, value in list(downloaderParams.items()):
             if value != '':
                 if key in DMHelper.HANDLED_HTTP_HEADER_PARAMS:

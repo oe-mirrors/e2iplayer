@@ -368,6 +368,8 @@ class IPTVDMApi():
         # rename the finished file to its true container extension
         try:
             self.queueUD[listUDIdx].downloader.allowFinalRename = True
+            if DMHelper.DOWNLOAD_TYPE.CONTINUE == item.tries:
+                self.queueUD[listUDIdx].downloader.resumeExisting = True
             self.queueUD[listUDIdx].downloaderName = self.queueUD[listUDIdx].downloader.getName()
         except Exception:
             printExc()

@@ -5,6 +5,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, eConnectCallback, GetNice, E2PrioFix
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 ###################################################
 # FOREIGN import
 ###################################################
@@ -242,7 +243,7 @@ class SidecarMixin(object):
             tmpPath = jpgPath + '.new'
             self.sidecarImgTmpPath = tmpPath
 
-            cmd = 'wget --header "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36" --no-check-certificate "%s" -O "%s" > /dev/null 2>&1' % (shellQuote(self.sidecarImg), shellQuote(tmpPath))
+            cmd = 'wget --header "User-Agent: %s" --no-check-certificate "%s" -O "%s" > /dev/null 2>&1' % (common.HOST, shellQuote(self.sidecarImg), shellQuote(tmpPath))
             printDBG("%s sidecar JPG cmd[%s]" % (self.__class__.__name__, cmd))
 
             self.waitingForSidecar = True

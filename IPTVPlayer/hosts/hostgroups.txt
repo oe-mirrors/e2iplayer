@@ -55,7 +55,6 @@
   "webstream",
   "footyroom",
   "goals",
-  "hoofootcom",
   "basketballvideocom",
   "eurosportplayer"
  ],
@@ -64,6 +63,7 @@
   "streamliveto",
   "youtube",
   "dailymotion",
+  "twitchtv",
   "eurosportplayer",
   "ritsatv"
  ],
@@ -107,6 +107,7 @@
  ],
  "english": [
   "youtube",
+  "twitchtv",
   "webstream",
   "itvcom",
   "uktvplay",
@@ -128,6 +129,7 @@
  ],
  "german": [
   "youtube",
+  "twitchtv",
   "webstream",
   "ardmediathek",
   "zdfmediathek",
