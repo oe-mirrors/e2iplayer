@@ -34,10 +34,16 @@ G = E2ColoR("green")
 R = E2ColoR("red")
 
 ###############################################################
+
+
 def GetConfigList():
     return []
+
+
 def gettytul():
     return "https://movizhome.click/"
+
+
 class MovizHome(CBaseHostClass):
     def __init__(self):
         CBaseHostClass.__init__(
