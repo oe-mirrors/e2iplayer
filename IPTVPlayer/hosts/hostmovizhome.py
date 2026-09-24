@@ -383,8 +383,7 @@ class MovizHome(CBaseHostClass):
                     name = "Server Link"
             link = self.getFullUrl(link)
             printDBG("SERVER FOUND: %s -> %s" % (name, link))
-            if name:
-                urlTab.append({"name": name, "url": link, "need_resolve": 1})
+            urlTab.append({"name": name, "url": link, "need_resolve": 1})
         return urlTab
 
     def getVideoLinks(self, videoUrl):

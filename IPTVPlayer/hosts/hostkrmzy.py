@@ -26,7 +26,6 @@ from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus
 # FOREIGN import
 ###################################################
 import re
-import time
 from base64 import b64decode
 
 Y, W, L, C, OR = (
@@ -68,7 +67,7 @@ class Krmzy(CBaseHostClass):
         - Handles Unicode / Arabic URLs safely
         - Preserves cookies between requests
         - Integrates Cloudflare protection
-        - Retries automatically up to 3 times
+        - Retries once on failure
         """
         # --- Normalize URL safely (for Arabic / UTF-8 URLs)
         try:
@@ -95,8 +94,8 @@ class Krmzy(CBaseHostClass):
         addParams["save_cookie"] = True
         addParams["load_cookie"] = True
         addParams["cookiefile"] = self.COOKIE_FILE
-        # --- Retry logic
-        max_retries = 3
+        # --- Retry logic (no sleep, it would block the GUI)
+        max_retries = 2
         for attempt in range(1, max_retries + 1):
             try:
                 sts, data = self.cm.getPageCFProtection(baseUrl, addParams, post_data)
@@ -104,7 +103,6 @@ class Krmzy(CBaseHostClass):
                     return sts, data
             except Exception as e:
                 printDBG("[Krmzy] getPage attempt %d failed: %s" % (attempt, str(e)))
-            time.sleep(1.5)
         printDBG("[Krmzy] getPage failed after %d retries: %s" % (max_retries, baseUrl))
         return False, ""
 
@@ -127,10 +125,6 @@ class Krmzy(CBaseHostClass):
         ] + self.searchItems()
         self.listsTab(MAIN_CAT_TAB, cItem)
 
-    def listSeriesCategories(self, cItem):
-        printDBG("Krmzy.listMoviesCategories")
-        self.listsTab(self.SERIES_CAT_TAB, cItem)
-
     def listContentUnits(self, cItem):
         printDBG("Krmzy.listContentUnits >>> %s" % cItem)
         sts, data = self.getPage(cItem["url"])
@@ -141,6 +135,7 @@ class Krmzy(CBaseHostClass):
             r"<article[^>]*>(.*?)</article>", data, re.DOTALL | re.IGNORECASE
         )
         printDBG("listContentUnits: Found %d items" % len(items))
+        is_search = cItem.get("is_search", False)
         is_movies = "movies" in cItem["url"]
         for item in items:
             # --- URL ---
@@ -148,9 +143,12 @@ class Krmzy(CBaseHostClass):
             if not url:
                 continue
             url = self.getFullUrl(url)
-            if is_movies and "/movies/" not in url:
+            if is_search:
+                if "/movies/" not in url and "/series/" not in url:
+                    continue
+            elif is_movies and "/movies/" not in url:
                 continue
-            if not is_movies and "/series/" not in url:
+            elif not is_movies and "/series/" not in url:
                 continue
             # --- TITLE ---
             title = self.cleanHtmlStr(
@@ -194,7 +192,6 @@ class Krmzy(CBaseHostClass):
                 elif not icon.startswith("http"):
                     icon = self.getFullUrl(icon)
             printDBG("Title: %s | Icon: [%s]" % (title[:30], icon))
-            printDBG("Title: %s | Icon: [%s]" % (title[:30], icon))
             params = dict(cItem)
             params.update(
                 {
@@ -233,7 +230,7 @@ class Krmzy(CBaseHostClass):
                 r"href=['\"]([^'\"]+)['\"][^>]*>(\d+)</a>", pagination
             )
             nextPage = ""
-            if current_page and all_pages:
+            if current_page.isdigit() and all_pages:
                 for href, num in all_pages:
                     if num.isdigit() and int(num) == int(current_page) + 1:
                         nextPage = href
@@ -241,7 +238,9 @@ class Krmzy(CBaseHostClass):
             if nextPage:
                 nextPage = self.getFullUrl(nextPage)
                 params = dict(cItem)
-                params.update({"title": "Next Page >>", "url": nextPage})
+                # search pages must not go back through listSearchResult,
+                # it would rebuild the page 1 search URL
+                params.update({"title": "Next Page >>", "url": nextPage, "category": "list_items"})
                 self.addDir(params)
 
     def listSeriesEpisodes(self, cItem):
@@ -633,9 +632,7 @@ class Krmzy(CBaseHostClass):
         self.currList = []
         if name is None:
             self.listMainMenu({"name": "category"})
-        elif category == "list_series":
-            self.listContentUnits(self.currItem)
-        elif category == "list_movies":
+        elif category in ["list_series", "list_movies", "list_items"]:
             self.listContentUnits(self.currItem)
         elif category == "series_details":
             self.listSeriesEpisodes(self.currItem)
