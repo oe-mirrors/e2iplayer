@@ -416,6 +416,11 @@ class IHost:
     def markItemAsViewed(self, Index=0):
         return RetHost(RetHost.NOT_IMPLEMENTED, value=[])
 
+    # url of a row for the list markers (download state) - CHostBase implements it; hosts
+    # built directly on IHost (hostxxx) have none, so the widget printed a traceback per row
+    def getRowUrl(self, Index):
+        return ''
+
 
 '''
 CHostBase implements some typical methods
@@ -676,11 +681,12 @@ class CHostBase(IHost):
         try:
             list = self.host.getCurrList()
             for i in range(len(list)):
-                if list[i]['category'] == 'search':
+                if list[i].get('category', '') == 'search':
                     return i
         except Exception:
             printDBG('getSearchItemInx EXCEPTION')
-            return -1
+        # no search entry in the current list (None here broke "searchItemIdx > -1" on Python 3)
+        return -1
 
     def setSearchPattern(self):
         try:
@@ -768,7 +774,7 @@ class CHostBase(IHost):
                     CDisplayListItem.TYPE_DATA]:
             url = cItem.get('url', '')
             if '' != url:
-                hostLinks.append(CUrlItem("Link", url, needUrlResolve))
+                hostLinks.append(CUrlItem(_("Link"), url, needUrlResolve))
 
         title = cItem.get('title', '')
         description = cItem.get('desc', '')

@@ -71,6 +71,11 @@ def shellQuote(value):
     return value
 
 
+def shellSingleQuote(value):
+    # the whole value as one '...' shell word - nothing inside is interpreted by the shell
+    return "'" + ensureText(value).replace("'", "'\\''") + "'"
+
+
 def writeUtf8TextFile(path, data):
     try:
         txt = ensureText(data)

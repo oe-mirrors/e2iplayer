@@ -31,6 +31,7 @@ from Components.config import config, ConfigSelection, ConfigInteger, ConfigYesN
 # E2 GUI COMMPONENTS
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
 from Screens.MessageBox import MessageBox
 from Tools.Directories import fileExists
 ###################################################
@@ -115,7 +116,7 @@ class LocalMedia(CBaseHostClass):
                 insensitiveExt += '[%s%s]' % (l.upper(), l.lower())
             wilcard += '.' + insensitiveExt
             fWildcards.append(wilcard)
-        cmd = '%s "%s" rdl rd %d %d "%s" "%s"' % ("/usr/bin/lsdir", path, start, end, '|'.join(fWildcards), dWildcards)
+        cmd = '%s "%s" rdl rd %d %d "%s" "%s"' % ("/usr/bin/lsdir", shellQuote(path), start, end, shellQuote('|'.join(fWildcards)), shellQuote(dWildcards))
         if config.plugins.iptvplayer.local_showfilesize.value:
             cmd += " 1 "
         return cmd

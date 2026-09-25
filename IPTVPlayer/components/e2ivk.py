@@ -85,8 +85,9 @@ def GetKeyHelpItem(labelKey, description, icon=None):
     # description into the same "LABEL - description" text every
     # keyHelp() screen has always shown - description is its own
     # separate translatable string, normally kept short since it no
-    # longer needs to repeat the label text itself
-    return GetVKOptionItem("%s - %s" % (_keyHelpLabels()[labelKey], _(description)), None, icon)
+    # longer needs to repeat the label text itself - callers pass it
+    # already translated (_("...") at the call site, so xgettext finds it)
+    return GetVKOptionItem("%s - %s" % (_keyHelpLabels()[labelKey], description), None, icon)
 
 
 class E2iInput(Input):
@@ -1463,21 +1464,21 @@ class E2iVirtualKeyBoard(Screen):
             return LoadPixmap(iconBase + '/%s.png' % name)
 
         options = [
-            GetKeyHelpItem('ok', "type selected character / confirm selection", icon('ok')),
-            GetKeyHelpItem('green', "Enter (confirm and close)", icon('green')),
-            GetKeyHelpItem('red', "Backspace", icon('red')),
-            GetKeyHelpItem('yellow', "AltGr", icon('yellow')),
-            GetKeyHelpItem('blue', "Shift", icon('blue')),
-            GetKeyHelpItem('menu', "Options (select language, clear search history, settings)", icon('menu')),
-            GetKeyHelpItem('prevnext', "switch between keyboard, suggestions and search history", icon('key_prevnext')),
+            GetKeyHelpItem('ok', _("type selected character / confirm selection"), icon('ok')),
+            GetKeyHelpItem('green', _("Enter (confirm and close)"), icon('green')),
+            GetKeyHelpItem('red', _("Backspace"), icon('red')),
+            GetKeyHelpItem('yellow', _("AltGr"), icon('yellow')),
+            GetKeyHelpItem('blue', _("Shift"), icon('blue')),
+            GetKeyHelpItem('menu', _("Options (select language, clear search history, settings)"), icon('menu')),
+            GetKeyHelpItem('prevnext', _("switch between keyboard, suggestions and search history"), icon('key_prevnext')),
             # doesn't fit the shared LABEL - description pattern (the
             # "at start/end of text" qualifier belongs to the label, not
             # the description) - kept as its own full string
             GetVKOptionItem(_("LEFT/RIGHT at start/end of text - alternative way to switch panels"), None, icon('key_left_right_filled')),
-            GetKeyHelpItem('updown', "move cursor right/left", icon('key_updown')),
-            GetKeyHelpItem('fastforward', "insert space", icon('fast_forward')),
-            GetKeyHelpItem('rewind', "delete entered text", icon('rewind')),
-            GetKeyHelpItem('num', "direct number input", icon('key_0-9')),
+            GetKeyHelpItem('updown', _("move cursor right/left"), icon('key_updown')),
+            GetKeyHelpItem('fastforward', _("insert space"), icon('fast_forward')),
+            GetKeyHelpItem('rewind', _("delete entered text"), icon('rewind')),
+            GetKeyHelpItem('num', _("direct number input"), icon('key_0-9')),
         ]
         height = self._getOptionsPickerHeight(len(options))
         # 900 matches the language picker's own width - needed to fit

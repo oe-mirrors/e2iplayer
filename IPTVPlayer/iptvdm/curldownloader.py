@@ -9,6 +9,7 @@
 ###################################################
 # LOCAL import
 ###################################################
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, GetTmpDir, rm
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.wgetdownloader import WgetDownloader
@@ -27,28 +28,33 @@ import os
 
 class CurlDownloader(WgetDownloader):
     # https://curl.se/libcurl/c/libcurl-errors.html
-    CURL_ERRORS = {0: "No problems occurred.",
-                   1: "Unsupported protocol.",
-                   2: "Failed to initialize (unknown option or old curl version?).",
-                   3: "URL malformed.",
-                   5: "Could not resolve proxy.",
-                   6: "Could not resolve host.",
-                   7: "Failed to connect to host.",
-                   16: "HTTP/2 framing layer error.",
-                   18: "Partial file - transfer ended early.",
-                   22: "Server issued an error response (HTTP 4xx/5xx).",
-                   23: "File I/O error (write).",
-                   26: "Read error.",
-                   27: "Out of memory.",
-                   28: "Operation timed out.",
-                   33: "Range request not supported (resume failed).",
-                   35: "SSL connect error.",
-                   47: "Too many redirects.",
-                   52: "Server returned nothing.",
-                   55: "Network failure (send).",
-                   56: "Network failure (receive).",
-                   60: "SSL verification failure.",
-                   92: "HTTP/2 stream error."}
+    @staticmethod
+    def _curlErrorText(code):
+        texts = {
+            0: _("No problems occurred."),
+            1: _("Unsupported protocol."),
+            2: _("Failed to initialize (unknown option or old curl version?)."),
+            3: _("URL malformed."),
+            5: _("Could not resolve proxy."),
+            6: _("Could not resolve host."),
+            7: _("Failed to connect to host."),
+            16: _("HTTP/2 framing layer error."),
+            18: _("Partial file - transfer ended early."),
+            22: _("Server issued an error response (HTTP 4xx/5xx)."),
+            23: _("File I/O error (write)."),
+            26: _("Read error."),
+            27: _("Out of memory."),
+            28: _("Operation timed out."),
+            33: _("Range request not supported (resume failed)."),
+            35: _("SSL connect error."),
+            47: _("Too many redirects."),
+            52: _("Server returned nothing."),
+            55: _("Network failure (send)."),
+            56: _("Network failure (receive)."),
+            60: _("SSL verification failure."),
+            92: _("HTTP/2 stream error."),
+        }
+        return texts.get(code, _("Unknown error code."))
 
     def __init__(self):
         printDBG('CurlDownloader.__init__ ')
@@ -65,7 +71,7 @@ class CurlDownloader(WgetDownloader):
 
     def _setLastError(self, code):
         self.lastErrorCode = code
-        self.lastErrorDesc = self.CURL_ERRORS.get(code, 'Unknown error code.')
+        self.lastErrorDesc = self._curlErrorText(code)
 
     def isWorkingCorrectly(self, callBackFun):
         self.iptv_sys = iptv_system(DMHelper.GET_CURL_PATH() + " --version 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))

@@ -24,7 +24,7 @@ from Plugins.Extensions.IPTVPlayer.libs.ecdsa import NIST256p as ECDSA_NIST256p,
 from Plugins.Extensions.IPTVPlayer.libs.jsunpack import get_packed_data
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.recaptcha_v2 import UnCaptchaReCaptcha
-from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import captchaParser, decorateUrl, getDirectM3U8Playlist, getMPDLinksWithMeta, TEAMCASTPL_decryptPlayerParams, unicode_escape, unpackJSPlayerParams, VIDUPME_decryptPlayerParams
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import captchaParser, decorateUrl, getDirectM3U8Playlist, getMPDLinksWithMeta, TEAMCASTPL_decryptPlayerParams, unicode_escape, unpackJSPlayerParams, VIDUPME_decryptPlayerParams, safeEvalExpression
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import clean_html
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary, ensure_str
 from Plugins.Extensions.IPTVPlayer.p2p3.pVer import isPY2
@@ -731,7 +731,7 @@ class urlparser:
         #  1 - supported
         host = self.getHostName(url)
         # quick fix
-        if host == "facebook.com" and "likebox.php" in url or "like.php" in url or "/groups/" in url:
+        if host == "facebook.com" and ("likebox.php" in url or "like.php" in url or "/groups/" in url):
             return 0
         ret = 0
         parser = self.getParser(url, host)
@@ -755,9 +755,9 @@ class urlparser:
             elif isinstance(ret, (list, tuple)):
                 urltab = ret
             for idx in range(len(urltab)):
+                url = strwithmeta(urltab[idx]["url"])
                 if not self.cm.isValidUrl(url):
                     continue
-                url = strwithmeta(urltab[idx]["url"])
                 if "User-Agent" not in url.meta:
                     url.meta["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0"
                     urltab[idx]["url"] = url
@@ -1206,7 +1206,7 @@ class pageParser(CaptchaHelper):
                 return False
             elif not _doLogin(login, password):
                 sessionEx = MainSessionWrapper()
-                sessionEx.waitForFinishOpen(MessageBox, _('Login user "%s" to https://vk.com/ failed!\nPlease check your login data in the IPTVPlayer configuration.' % login), type=MessageBox.TYPE_INFO, timeout=10)
+                sessionEx.waitForFinishOpen(MessageBox, _('Login user "%s" to https://vk.com/ failed!\nPlease check your login data in the IPTVPlayer configuration.') % login, type=MessageBox.TYPE_INFO, timeout=10)
                 return False
             else:
                 sts, data = self.cm.getPage(baseUrl, params)
@@ -1761,7 +1761,7 @@ class pageParser(CaptchaHelper):
         uniqueUrls = set()
         retTab = []
         for asset_type in ("SD", "HD"):
-            for f in "MPEG4":
+            for f in ("MPEG4",):
                 url = "https://link.theplatform.%s/s/%s?mbr=true&formats=%s&assetTypes=%s" % ("eu", tp_path, f, asset_type)
                 sts, data = self.cm.getPage(url, post_data={"format": "SMIL"})
                 if not sts:
@@ -1975,7 +1975,7 @@ class pageParser(CaptchaHelper):
             if not sts:
                 return []
             url = data.strip() if "cloudflarestorage." in data else random_seed(10, data) + token + str(int(time.time() * 1000))
-            url = urlparser.decorateUrl(url, {"external_sub_tracks": sub_tracks, "User-Agent": urlParams["header"]["User-Agent"], "Referer": baseUrl})
+            url = urlparser.decorateUrl(url, {"external_sub_tracks": sub_tracks, "User-Agent": urlParams["header"]["User-Agent"], "Referer": baseUrl, "iptv_format": "mp4"})
             urlsTab.append({"name": "mp4", "url": url})
         return urlsTab
 
@@ -2010,7 +2010,8 @@ class pageParser(CaptchaHelper):
             printDBG("parserSTREAMTAPE t[%s]" % t)
             t = t.replace(".substring(", "[", 1).replace(").substring(", ":][").replace(");", ":]") + "[1:]"
             try:
-                t = eval(t)
+                # parsed, not executed - the expression comes from the page
+                t = safeEvalExpression(t)
             except Exception:
                 printExc()
                 return urltabs
@@ -2020,6 +2021,7 @@ class pageParser(CaptchaHelper):
                 cookieHeader = self.cm.getCookieHeader(COOKIE_FILE, [], False)
                 params = {"Cookie": cookieHeader, "Referer": httpParams["header"]["Referer"], "User-Agent": httpParams["header"]["User-Agent"]}
                 params["external_sub_tracks"] = subTracks
+                params["iptv_format"] = "mp4"  # /get_video?id=... redirects to the mp4
                 t = urlparser.decorateUrl(t, params)
                 params = {"name": "link", "url": t}
                 urltabs.append(params)
@@ -2105,7 +2107,7 @@ class pageParser(CaptchaHelper):
             if resp_json.get("status") == "ok":
                 HTTP_HEADER.pop("X-Requested-With")
                 vid_src = "{0}/stream/{1}".format(video_data.group(1), resp_json.get("token"))
-                return [{"name": "MP4", "url": urlparser.decorateUrl(vid_src, HTTP_HEADER)}]
+                return [{"name": "MP4", "url": urlparser.decorateUrl(vid_src, dict(HTTP_HEADER, iptv_format="mp4"))}]
         return []
 
     def parserSTREAMEMBED(self, baseUrl):  # fix 191025
@@ -2124,7 +2126,7 @@ class pageParser(CaptchaHelper):
             headers["Referer"] = host
             headers["Origin"] = host[:-1]
             headers["Accept"] = "*/*"
-            urltab = getDirectM3U8Playlist(url, checkExt=False, checkContent=True, cookieParams={"header": headers, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True})
+            urltab = getDirectM3U8Playlist(url, checkExt=False, variantCheck=False, checkContent=True, cookieParams={"header": headers, "cookiefile": COOKIE_FILE, "use_cookie": True, "save_cookie": True})
         return urltab
 
     def parserHEXLOAD(self, baseUrl):  # add 160625
@@ -2219,7 +2221,9 @@ class pageParser(CaptchaHelper):
                 if not exp:
                     exp = self.cm.ph.getSearchGroups(url, r"expires=([0-9]+)")[0]
                 url = "%s?md5=%s&expires=%s" % (url, hsh.group(1), exp)
-            urltab.append({"name": label, "url": url})
+            # the CDN paths carry no file extension (.../1.29.12.3456789.1)
+            fmt = self.cm.ph.getSearchGroups(block, r'mimetype="video/([a-z0-9]+)"')[0] or "mp4"
+            urltab.append({"name": label, "url": strwithmeta(url, {"iptv_format": fmt})})
         urltab.reverse()
         if not urltab:
             mhls = re.search(r"<master_playlist_url>([^<]+)", videaXml)

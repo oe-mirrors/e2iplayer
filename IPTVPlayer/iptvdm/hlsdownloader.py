@@ -160,7 +160,8 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
         self.postProcessMode = 'remux'
         self.tempRemuxPath = self._getBasePath(self.filePath) + '.iptv.remux.tmp.mkv'
 
-        cmd = DMHelper.GET_FFMPEG_PATH() + ' '
+        # -y: a leftover temp file from an aborted run must not make ffmpeg wait for an overwrite answer
+        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y '
         cmd += ' -i "%s" ' % shellQuote(self.filePath)
         cmd += ' -map 0:v -map 0:a? -vcodec copy -acodec copy "%s" >/dev/null 2>&1 ' % shellQuote(self.tempRemuxPath)
 
@@ -342,6 +343,8 @@ class HLSDownloader(BaseDownloader, SidecarMixin):
 
         if terminated:
             self.status = DMHelper.STS.INTERRUPTED
+            # an aborted remux leaves its half written temp file behind otherwise
+            self._cleanUp()
         elif self.status == DMHelper.STS.POSTPROCESSING:
             mkvPath = self._getMkvPath()
             mkvSize = DMHelper.getFileSize(fsPath(self.tempRemuxPath))

@@ -4,6 +4,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import CParsingHelper, common
 from Plugins.Extensions.IPTVPlayer.libs import m3u8
 from binascii import hexlify
+import ast
 import re
 import time
 import string
@@ -210,32 +211,112 @@ def getParamsTouple(code, type=1, r1=False, r2=False):
     return code[idx1:idx2]
 
 
+def _astConstant(node):
+    # constant node -> (True, value); Python 3.8+ uses ast.Constant, older versions Str/Num/NameConstant
+    for name, attr in (('Constant', 'value'), ('Str', 's'), ('Num', 'n'), ('NameConstant', 'value')):
+        cls = getattr(ast, name, None)
+        if cls is not None and isinstance(node, cls):
+            value = getattr(node, attr)
+            if value is None or isinstance(value, (str, int, float, bool)):
+                return True, value
+    return False, None
+
+
+def safeEvalExpression(expr, functions=None, maxLen=1048576):
+    """Value of a small expression taken from a web page, WITHOUT running it as code.
+    Allowed: string/number constants, tuples/lists/dicts of them, + - * / on numbers,
+    + on strings, [index] and [a:b] slices, 'text'.split(sep) and the plain functions
+    passed in `functions` (name -> callable). Anything else raises ValueError."""
+    functions = functions or {}
+
+    def ev(node):
+        isConst, value = _astConstant(node)
+        if isConst:
+            return value
+        if isinstance(node, ast.Expression):
+            return ev(node.body)
+        if isinstance(node, (ast.Tuple, ast.List)):
+            values = [ev(item) for item in node.elts]
+            return tuple(values) if isinstance(node, ast.Tuple) else values
+        if isinstance(node, ast.Dict):
+            if None in node.keys:
+                raise ValueError('dict unpacking not allowed')
+            return dict((ev(k), ev(v)) for k, v in zip(node.keys, node.values))
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.USub, ast.UAdd)):
+            value = ev(node.operand)
+            if not isinstance(value, (int, float)):
+                raise ValueError('unary operator on non-number')
+            return -value if isinstance(node.op, ast.USub) else value
+        if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.Add, ast.Sub, ast.Mult, ast.Div)):
+            left, right = ev(node.left), ev(node.right)
+            numbers = isinstance(left, (int, float)) and isinstance(right, (int, float))
+            if isinstance(node.op, ast.Add) and isinstance(left, str) and isinstance(right, str):
+                if len(left) + len(right) > maxLen:
+                    raise ValueError('string too long')
+                return left + right
+            if not numbers:
+                raise ValueError('operator only allowed on numbers')
+            if isinstance(node.op, ast.Add):
+                return left + right
+            if isinstance(node.op, ast.Sub):
+                return left - right
+            if isinstance(node.op, ast.Mult):
+                return left * right
+            return left / right
+        if isinstance(node, ast.Subscript):
+            value = ev(node.value)
+            if not isinstance(value, (str, list, tuple)):
+                raise ValueError('subscript only on strings/lists')
+            sliceNode = node.slice
+            if hasattr(ast, 'Index') and isinstance(sliceNode, getattr(ast, 'Index')):  # Python < 3.9
+                sliceNode = sliceNode.value
+            if isinstance(sliceNode, ast.Slice):
+                parts = [None if item is None else ev(item) for item in (sliceNode.lower, sliceNode.upper, sliceNode.step)]
+                for item in parts:
+                    if item is not None and not isinstance(item, int):
+                        raise ValueError('slice bounds must be integers')
+                return value[parts[0]:parts[1]:parts[2]]
+            index = ev(sliceNode)
+            if not isinstance(index, int):
+                raise ValueError('index must be an integer')
+            return value[index]
+        if isinstance(node, ast.Call) and not node.keywords and not getattr(node, 'starargs', None) and not getattr(node, 'kwargs', None):
+            args = [ev(item) for item in node.args]
+            if isinstance(node.func, ast.Attribute) and node.func.attr == 'split':
+                target = ev(node.func.value)
+                if isinstance(target, str) and len(args) <= 1 and all(isinstance(item, str) for item in args):
+                    return target.split(*args)
+            elif isinstance(node.func, ast.Name) and node.func.id in functions:
+                return functions[node.func.id](*args)
+        raise ValueError('unsupported expression element: %s' % type(node).__name__)
+
+    return ev(ast.parse(expr.strip(), mode='eval'))
+
+
 def unpackJSPlayerParams(code, decryptionFun, type=1, r1=False, r2=False):
     printDBG('unpackJSPlayerParams')
     code = getParamsTouple(code, type, r1, r2)
     data = unpackJS(code, decryptionFun)
-    if data == '' and data.endswith('))'):
+    if data == '' and code.endswith('))'):
         data = unpackJS(code[:-1], decryptionFun)
     return data
 
 
 def unpackJS(data, decryptionFun, addCode=''):
-    paramsCode = addCode
-    paramsCode += 'paramsTouple = (' + data + ')'
-    try:
-        paramsAlgoObj = compile(paramsCode, '', 'exec')
-    except Exception:
-        printExc('unpackJS compile algo code EXCEPTION')
-        return ''
-    vGlobals = {"__builtins__": None, 'string': string, 'decodeURIComponent': unquote, 'unescape': unquote}
-    vLocals = {'paramsTouple': None}
-    try:
-        exec(paramsAlgoObj, vGlobals, vLocals)
-    except Exception:
-        printExc('unpackJS exec code EXCEPTION')
+    # the parameter list of a packed player script ('p',36,12,'k|e|y'.split('|'),0,{}) - parsed,
+    # never executed: it comes straight from the web page
+    if addCode:
+        printDBG('unpackJS: addCode is not supported')
         return ''
     try:
-        return decryptionFun(*vLocals['paramsTouple'])
+        paramsTouple = safeEvalExpression('(' + data + ')', {'decodeURIComponent': unquote, 'unescape': unquote})
+        if not isinstance(paramsTouple, tuple):
+            paramsTouple = (paramsTouple,)
+    except Exception:
+        printExc('unpackJS parse EXCEPTION')
+        return ''
+    try:
+        return decryptionFun(*paramsTouple)
     except Exception:
         printExc('decryptPlayerParams EXCEPTION')
     return ''
@@ -437,7 +518,7 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
                 meta['external_sub_tracks'] = list(meta.get('external_sub_tracks', [])) + hlsSubTracks
             for playlist in m3u8Obj.playlists:
                 item = {}
-                if not variantCheck or playlist.absolute_uri.split('?')[-1].endswith('.m3u8'):
+                if not variantCheck or playlist.absolute_uri.split('?', 1)[0].endswith('.m3u8'):
                     meta.update({'iptv_proto': 'm3u8', 'iptv_bitrate': playlist.stream_info.bandwidth})
                     item['url'] = strwithmeta(playlist.absolute_uri, meta)
                 else:
@@ -497,6 +578,11 @@ def getDirectM3U8Playlist(M3U8Url, checkExt=True, variantCheck=True, cookieParam
         else:
             if checkContent and 0 == len(m3u8Obj.segments):
                 return []
+            # a media playlist that really has segments is HLS even when
+            # its URL doesn't end in .m3u8 (e.g. .../master.txt, .../playlist?token=)
+            # - without iptv_proto it would be buffered with wget as a plain file
+            if len(m3u8Obj.segments) and meta.get('iptv_proto') not in ('m3u8', 'em3u8'):
+                M3U8Url = strwithmeta(M3U8Url, dict(meta, iptv_proto='m3u8'))
             item = {'name': 'm3u8', 'url': M3U8Url, 'codec': 'unknown', 'with': 0, 'heigth': 0, 'width': 0, 'height': 0, 'bitrate': 'unknown'}
             retPlaylists.append(item)
     except Exception:

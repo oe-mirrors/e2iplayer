@@ -15,6 +15,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvsubtitles import IPTVSubtitlesHandl
 from Plugins.Extensions.IPTVPlayer.components.ihost import CDisplayListItem, RetHost
 from Plugins.Extensions.IPTVPlayer.libs.youtube_dl.utils import unescapeHTML
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_binary
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, shellSingleQuote
 
 import re
 import urllib.parse
@@ -516,7 +517,7 @@ class CBaseSubProviderClass:
     def unpackZipArchive(self, tmpFile, tmpDIR):
         errorCode = 0
         # check if archive is not evil
-        cmd = "unzip -l '{0}' 2>&1 ".format(tmpFile)
+        cmd = "unzip -l {0} 2>&1 ".format(shellSingleQuote(tmpFile))
         ret = self.iptv_execute(cmd)
         if not ret['sts'] or 0 != ret['code']:
             errorCode = ret['code']
@@ -527,7 +528,7 @@ class CBaseSubProviderClass:
 
         # if archive is valid then upack it
         if errorCode == 0:
-            cmd = "unzip -o '{0}' -d '{1}' 2>/dev/null".format(tmpFile, tmpDIR)
+            cmd = "unzip -o {0} -d {1} 2>/dev/null".format(shellSingleQuote(tmpFile), shellSingleQuote(tmpDIR))
             ret = self.iptv_execute(cmd)
             if not ret['sts'] or 0 != ret['code']:
                 errorCode = ret['code']
@@ -554,7 +555,7 @@ class CBaseSubProviderClass:
         if tmpFile.endswith('.zip'):
             return self.unpackZipArchive(tmpFile, tmpDIR)
         elif tmpFile.endswith('.rar'):
-            cmd = "unrar e -o+ -y '{0}' '{1}' 2>/dev/null".format(tmpFile, tmpDIR)
+            cmd = "unrar e -o+ -y {0} {1} 2>/dev/null".format(shellSingleQuote(tmpFile), shellSingleQuote(tmpDIR))
             printDBG("cmd[%s]" % cmd)
             ret = self.iptv_execute(cmd)
             if not ret['sts'] or 0 != ret['code']:
@@ -596,7 +597,7 @@ class CBaseSubProviderClass:
         printDBG('CBaseSubProviderClass.converFileToUtf8 inFile[%s] outFile[%s]' % (inFile, outFile))
         # detect encoding
         encoding = ''
-        cmd = '/usr/bin/uchardet "%s"' % inFile
+        cmd = '/usr/bin/uchardet "%s"' % shellQuote(inFile)
         ret = self.iptv_execute(cmd)
         if ret['sts'] and 0 == ret['code']:
             encoding = MapUcharEncoding(ret['data'])
@@ -609,8 +610,8 @@ class CBaseSubProviderClass:
             lang = GetDefaultLang()
 
         if lang == 'pl' and encoding == 'iso-8859-2':
-            tmpFile = GetTmpDir(self.TMP_FILE_NAME)
-            encoding = GetPolishSubEncoding(tmpFile)
+            # the file that is converted - not the provider's temp download
+            encoding = GetPolishSubEncoding(inFile)
         elif '' == encoding:
             encoding = 'utf-8'
 

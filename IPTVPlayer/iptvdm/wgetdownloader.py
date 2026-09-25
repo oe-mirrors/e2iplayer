@@ -4,6 +4,7 @@
 ###################################################
 # LOCAL import
 ###################################################
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm, E2PrioFix
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
@@ -101,25 +102,25 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
         # map Exit Status to message - https://www.gnu.org/software/wget/manual/html_node/Exit-Status.html
         self.lastErrorCode = code
         if code == 0:
-            self.lastErrorDesc = "No problems occurred."
+            self.lastErrorDesc = _("No problems occurred.")
         elif code == 1:
-            self.lastErrorDesc = "Generic error code."
+            self.lastErrorDesc = _("Generic error code.")
         elif code == 2:
-            self.lastErrorDesc = "Parse error."
+            self.lastErrorDesc = _("Parse error.")
         elif code == 3:
-            self.lastErrorDesc = "File I/O error."
+            self.lastErrorDesc = _("File I/O error.")
         elif code == 4:
-            self.lastErrorDesc = "Network failure."
+            self.lastErrorDesc = _("Network failure.")
         elif code == 5:
-            self.lastErrorDesc = "SSL verification failure."
+            self.lastErrorDesc = _("SSL verification failure.")
         elif code == 6:
-            self.lastErrorDesc = "Username/password authentication failure."
+            self.lastErrorDesc = _("Username/password authentication failure.")
         elif code == 7:
-            self.lastErrorDesc = "Protocol errors."
+            self.lastErrorDesc = _("Protocol errors.")
         elif code == 8:
-            self.lastErrorDesc = "Server issued an error response."
+            self.lastErrorDesc = _("Server issued an error response.")
         else:
-            self.lastErrorDesc = 'Unknown error code.'
+            self.lastErrorDesc = _("Unknown error code.")
 
     def isWorkingCorrectly(self, callBackFun):
         self.iptv_sys = iptv_system(DMHelper.GET_WGET_PATH() + " --help 2>&1 ", boundFunction(self._checkWorkingCallBack, callBackFun))
@@ -198,7 +199,8 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
         self.postProcessMode = 'remux'
         self.tempRemuxPath = self._getBasePath(self.filePath) + '.iptv.remux.tmp.mkv'
 
-        cmd = DMHelper.GET_FFMPEG_PATH() + ' '
+        # -y: a leftover temp file from an aborted run must not make ffmpeg wait for an overwrite answer
+        cmd = DMHelper.GET_FFMPEG_PATH() + ' -y '
         cmd += ' -i "%s" ' % shellQuote(self.filePath)
         cmd += ' -map 0:v -map 0:a? -vcodec copy -acodec copy "%s" >/dev/null 2>&1 ' % shellQuote(self.tempRemuxPath)
 
@@ -411,6 +413,8 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
 
         if terminated:
             self.status = DMHelper.STS.INTERRUPTED
+            # an aborted remux leaves its half written temp file behind otherwise
+            self._cleanUp()
         elif self.status == DMHelper.STS.POSTPROCESSING:
             mkvPath = self._getMkvPath()
             mkvSize = DMHelper.getFileSize(fsPath(self.tempRemuxPath))

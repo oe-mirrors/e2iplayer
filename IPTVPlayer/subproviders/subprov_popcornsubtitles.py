@@ -4,6 +4,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError
 from Plugins.Extensions.IPTVPlayer.components.isubprovider import CSubProviderBase, CBaseSubProviderClass
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
     printDBG,
     printExc,
@@ -128,7 +129,7 @@ class YoutubeComProvider(CBaseSubProviderClass):
             rm(tmpFile)
 
         # detect encoding
-        cmd = '/usr/bin/uchardet "%s"' % tmpFile
+        cmd = '/usr/bin/uchardet "%s"' % shellQuote(tmpFile)
         ret = self.iptv_execute(cmd)
         if ret['sts'] and 0 == ret['code']:
             encoding = MapUcharEncoding(ret['data'])

@@ -486,7 +486,10 @@ class IPTVDMApi():
 
         status = _('UNKNOWN')
         statusColor = 'white'
-        if dItem.downloadedProcent > 99:
+        # a download without a known size (no Content-Length, chunked) has no percentage at all -
+        # there the downloader's own verdict counts
+        finishedWithoutSize = dItem.downloadedProcent < 0 and dItem.downloadedSize > 0 and dItem.downloader.getStatus() == DMHelper.STS.DOWNLOADED
+        if dItem.downloadedProcent > 99 or finishedWithoutSize:
             self.queueUD[listUDIdx].status = DMHelper.STS.DOWNLOADED
             status = _('DOWNLOADED')
             statusColor = 'green'

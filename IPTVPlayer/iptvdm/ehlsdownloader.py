@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, ip
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText
 from Plugins.Extensions.IPTVPlayer.iptvdm.hlsdownloader import HLSDownloader
 ###################################################
 
@@ -75,7 +76,8 @@ class EHLSDownloader(HLSDownloader):
 
     def _updateEM3U8DataAvail(self, data):
         if None is not data and 0 < len(data):
-            self.EM3U8ListData += data
+            # the console delivers bytes on Python 3
+            self.EM3U8ListData += ensureText(data)
             if self.EM3U8ListData.endswith('\n'):
                 printDBG(self.EM3U8ListData)
                 data = self.EM3U8ListData.split('\n')

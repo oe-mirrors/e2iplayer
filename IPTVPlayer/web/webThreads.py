@@ -7,7 +7,7 @@ import inspect
 import ctypes
 import time
 
-from .webTools import getHostLogo, isActiveHostInitiated, initActiveHost, formGET, formSUBMITvalue
+from .webTools import getHostLogo, isActiveHostInitiated, initActiveHost, formGET, formSUBMITvalue, htmlEscape, isHostUsableFromWeb
 
 from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 import Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget
@@ -117,7 +117,7 @@ class buildtempLogsHTML(threading.Thread):
 			for L in last_bit:
 				if L.find('E2iPlayerWidget.__init__') > 0:
 					LogText = ''  # FIXME
-				settings.tempLogsHTML += L + '<br>\n'
+				settings.tempLogsHTML += htmlEscape(L) + '<br>\n'
 ########################################################
 
 
@@ -190,11 +190,11 @@ class buildConfigsHTML(threading.Thread):
 									checked = 'checked="checked" '
 								else:
 									checked = ''
-								res += '<input type="radio" name="' + id + '" ' + checked + 'value="' + v + '">' + descr + "</input></br>\n"
+								res += '<input type="radio" name="' + htmlEscape(id) + '" ' + checked + 'value="' + htmlEscape(v) + '">' + htmlEscape(descr) + "</input></br>\n"
 							return res
 						CFGElements = getHTML(confKey[1], 'CFG:' + ConfName)
 					elif CFGtype in ["ConfigText", "ConfigDirectory"]:
-						CFGElements = '<input type="text" name="CFG:' + ConfName + '" value="' + confKey[1].value + '" /><br>\n'
+						CFGElements = '<input type="text" name="CFG:' + htmlEscape(ConfName) + '" value="' + htmlEscape(confKey[1].value) + '" /><br>\n'
 					else:
 						try:
 							CFGElements = confKey[1].getHTML('CFG:' + ConfName)
@@ -325,7 +325,10 @@ class doUseHostAction(threading.Thread):
 		elif self.key == 'ListForItem' and self.arg.isdigit():
 			myID = int(self.arg)
 			settings.activeHost['selectedItemType'] = settings.retObj.value[myID].type
-			if settings.activeHost['selectedItemType'] in ['CATEGORY']:
+			if settings.activeHost['selectedItemType'] in ['CATEGORY'] and getattr(settings.retObj.value[myID], 'pinLocked', False):
+				# the GUI asks for the PIN here - the web interface cannot, so the folder stays closed
+				print('doUseHostAction: PIN protected folder not opened from the web interface')
+			elif settings.activeHost['selectedItemType'] in ['CATEGORY']:
 				settings.activeHost['Status'] += '>' + settings.retObj.value[myID].name
 				settings.currItem = {}
 				settings.retObj = settings.activeHost['Obj'].getListForItem(myID, 0, settings.retObj.value[myID])
@@ -355,12 +358,13 @@ class doUseHostAction(threading.Thread):
 						iindex += 1
 					settings.retObj = RetHost(RetHost.OK, value=tempUrls)
 				elif settings.retObj.status == RetHost.NOT_IMPLEMENTED:
-					settings.retObj = RetHost(RetHost.NOT_IMPLEMENTED, value=[(CUrlItem("No valid urls", "fakeUrl", 0))])
+					settings.retObj = RetHost(RetHost.NOT_IMPLEMENTED, value=[(CUrlItem(_("No valid urls"), "fakeUrl", 0))])
 		elif self.key == 'ForSearch' and None is not self.arg and self.arg != '':
 			settings.retObj = settings.activeHost['Obj'].getSearchResults(self.arg, self.searchType)
 		elif self.key == 'activeHostSearchHistory' and self.arg != '':
 			initActiveHost(self.arg)
-			settings.retObj = settings.activeHost['Obj'].getSearchResults(settings.GlobalSearchQuery, '')
+			if isActiveHostInitiated():
+				settings.retObj = settings.activeHost['Obj'].getSearchResults(settings.GlobalSearchQuery, '')
 ########################################################
 
 
@@ -398,7 +402,7 @@ class doGlobalSearch(threading.Thread):
 				continue
 			elif hostName in ['seriesonline']:  # those hosts have issues wth global search, need more investigation
 				continue
-			elif not IsHostEnabled(hostName):
+			elif not isHostUsableFromWeb(hostName):
 				continue
 			# print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ---------------- %s ---------------- !!!!!!!!!!!!!!!!!!!!!!!!!" % hostName
 			try:
@@ -415,6 +419,8 @@ class doGlobalSearch(threading.Thread):
 			settings.searchingInHost = hostName
 			time.sleep(0.2)
 			try:
+				if self.host.isProtectedByPinCode():
+					continue  # PIN protected hosts are GUI only
 				self.host.getSupportedFavoritesTypes()
 				ret = self.host.getInitList()
 				searchTypes = self.host.getSearchTypes()
@@ -422,15 +428,17 @@ class doGlobalSearch(threading.Thread):
 				print("doGlobalSearch: Exception in getInitList for %s: %s" % (hostName, str(e)))
 				settings.hostsWithNoSearchOption.append(hostName)
 				continue
-			if len(searchTypes) == 0:
-				ret = self.host.getSearchResults(settings.GlobalSearchQuery, '')
+			# one entry per host: the results of every search type of the host together
+			results = []
+			for searchType in (searchTypes if len(searchTypes) else [('', '')]):
+				try:
+					ret = self.host.getSearchResults(settings.GlobalSearchQuery, searchType[1])
+					if ret.value:
+						results.extend(ret.value)
+				except Exception as e:
+					print("doGlobalSearch: Exception in getSearchResults for %s: %s" % (hostName, str(e)))
 				self.stopIfRequested()
-				if len(ret.value) > 0:
-					settings.GlobalSearchResults[hostName] = (None, ret.value)
-			else:
-				for SearchType in searchTypes:
-					ret = self.host.getSearchResults(settings.GlobalSearchQuery, SearchType[1])
-					self.stopIfRequested()
-					print(SearchType[1], ' searched ', ret.value)
+			if results:
+				settings.GlobalSearchResults[hostName] = (None, results)
 
 		settings.searchingInHost = None

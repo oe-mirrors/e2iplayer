@@ -246,6 +246,7 @@ class DMHelper:
     @staticmethod
     def getBaseWgetCmd(downloaderParams={}):
         printDBG("getBaseWgetCmd downloaderParams[%r]" % downloaderParams)
+        from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
         headerOptions = ''
         proxyOptions = ''
 
@@ -256,27 +257,28 @@ class DMHelper:
                 if key in DMHelper.HANDLED_HTTP_HEADER_PARAMS:
                     if 'Cookie' == key:
                         headerOptions += ' --cookies=off '
-                    headerOptions += ' --header "%s: %s" ' % (key, value)
+                    # values (cookies, referer, ...) partly come from web servers - always escaped
+                    headerOptions += ' --header "%s: %s" ' % (key, shellQuote(value))
                     if key == 'User-Agent':
                         defaultHeader = ''
                 elif key == 'http_proxy':
-                    proxyOptions += ' -e use_proxy=yes -e http_proxy="%s" -e https_proxy="%s" ' % (value, value)
+                    proxyOptions += ' -e use_proxy=yes -e http_proxy="%s" -e https_proxy="%s" ' % (shellQuote(value), shellQuote(value))
 
         wgetContinue = ''
         if downloaderParams.get('iptv_wget_continue', False):
-            wgetContinue = ' -c --timeout=%s --waitretry=%s ' % (downloaderParams.get('iptv_wget_timeout', 30), downloaderParams.get('iptv_wget_waitretry', 1))
+            wgetContinue = ' -c --timeout="%s" --waitretry="%s" ' % (shellQuote(downloaderParams.get('iptv_wget_timeout', 30)), shellQuote(downloaderParams.get('iptv_wget_waitretry', 1)))
         else:
             if 'iptv_wget_timeout' in downloaderParams:
-               wgetContinue += ' --timeout=%s ' % downloaderParams['iptv_wget_timeout']
+               wgetContinue += ' --timeout="%s" ' % shellQuote(downloaderParams['iptv_wget_timeout'])
             if 'iptv_wget_waitretry' in downloaderParams:
-               wgetContinue += ' --waitretry=%s ' % downloaderParams['iptv_wget_waitretry']
+               wgetContinue += ' --waitretry="%s" ' % shellQuote(downloaderParams['iptv_wget_waitretry'])
             if 'iptv_wget_retry_on_http_error' in downloaderParams:
-               wgetContinue += ' --retry-on-http-error=%s ' % downloaderParams['iptv_wget_retry_on_http_error']
+               wgetContinue += ' --retry-on-http-error="%s" ' % shellQuote(downloaderParams['iptv_wget_retry_on_http_error'])
             if 'iptv_wget_tries' in downloaderParams:
-               wgetContinue += ' --tries=%s ' % downloaderParams['iptv_wget_tries']
+               wgetContinue += ' --tries="%s" ' % shellQuote(downloaderParams['iptv_wget_tries'])
 
         if 'start_pos' in downloaderParams:
-            wgetContinue = ' --start-pos=%s ' % downloaderParams['start_pos']
+            wgetContinue = ' --start-pos="%s" ' % shellQuote(downloaderParams['start_pos'])
 
         cmd = DMHelper.GET_WGET_PATH() + wgetContinue + defaultHeader + ' --no-check-certificate ' + headerOptions + proxyOptions
         printDBG("getBaseWgetCmd return cmd[%s]" % cmd)
@@ -310,9 +312,9 @@ class DMHelper:
         # wget -t 0 means "retry forever", curl has no such mode - keep a few retries
         options += ' --retry %d ' % (tries - 1 if tries > 0 else 5)
         if 'iptv_wget_waitretry' in downloaderParams:
-            options += ' --retry-delay %s ' % downloaderParams['iptv_wget_waitretry']
+            options += ' --retry-delay "%s" ' % shellQuote(downloaderParams['iptv_wget_waitretry'])
         if 'start_pos' in downloaderParams:
-            options += ' -C %s ' % downloaderParams['start_pos']
+            options += ' -C "%s" ' % shellQuote(downloaderParams['start_pos'])
         elif downloaderParams.get('iptv_wget_continue', False):
             options += ' -C - '
 
@@ -322,7 +324,8 @@ class DMHelper:
 
     @staticmethod
     def getBaseHLSDLCmd(downloaderParams={}):
-        printDBG("getBaseWgetCmd downloaderParams[%r]" % downloaderParams)
+        from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
+        printDBG("getBaseHLSDLCmd downloaderParams[%r]" % downloaderParams)
         headerOptions = ''
         proxyOptions = ''
 
@@ -331,11 +334,11 @@ class DMHelper:
             if value != '':
                 if key in DMHelper.HANDLED_HTTP_HEADER_PARAMS:
                     if key == 'User-Agent':
-                        userAgent = ' -u "%s" ' % value
+                        userAgent = ' -u "%s" ' % shellQuote(value)
                     else:
-                        headerOptions += ' -h "%s: %s" ' % (key, value)
+                        headerOptions += ' -h "%s: %s" ' % (key, shellQuote(value))
                 elif key == 'http_proxy':
-                    proxyOptions += ' -e use_proxy=yes -e http_proxy="%s" -e https_proxy="%s" ' % (value, value)
+                    proxyOptions += ' -e use_proxy=yes -e http_proxy="%s" -e https_proxy="%s" ' % (shellQuote(value), shellQuote(value))
 
         cmd = DMHelper.GET_HLSDL_PATH() + ' -q -f -b ' + userAgent + headerOptions + proxyOptions
         printDBG("getBaseHLSDLCmd return cmd[%s]" % cmd)

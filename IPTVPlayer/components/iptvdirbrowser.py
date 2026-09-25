@@ -15,6 +15,7 @@ from Plugins.Extensions.IPTVPlayer.components.e2ivkselector import GetVirtualKey
 from Plugins.Extensions.IPTVPlayer.components import skinchrome
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
 ###################################################
 # FOREIGN import
 ###################################################
@@ -91,7 +92,7 @@ class IPTVDirectorySelectorWidget(Screen):
     def __prepareSkin(self):
         return _buildBrowserSkin("IPTVDirectorySelectorWidget", ('red', 'green', 'blue'))
 
-    def __init__(self, session, currDir, title="Directory browser"):
+    def __init__(self, session, currDir, title=None):
         printDBG("IPTVDirectorySelectorWidget.__init__ -------------------------------")
         # only for this exact class - IPTVFileSelectorWidget (subclass,
         # own smaller footer: just "red") sets self.skin itself before
@@ -120,7 +121,7 @@ class IPTVDirectorySelectorWidget(Screen):
                     "cancel": self.requestBack
                 })
 
-        self.title = title
+        self.title = title or _("Directory browser")
         self.onLayoutFinish.append(self.layoutFinished)
         self.onClose.append(self.__onClose)
 
@@ -174,7 +175,7 @@ class IPTVDirectorySelectorWidget(Screen):
         return self.currList[currSelIndex]
 
     def prepareCmd(self):
-        cmd = '%s "%s" dl d' % ("/usr/bin/lsdir", self.currDir)
+        cmd = '%s "%s" dl d' % ("/usr/bin/lsdir", shellQuote(self.currDir))
         return cmd
 
     def doAction(self, action):
@@ -186,7 +187,7 @@ class IPTVDirectorySelectorWidget(Screen):
 
     def layoutFinished(self):
         printDBG("IPTVDirectorySelectorWidget.layoutFinished -------------------------------")
-        self.setTitle(_(self.title))
+        self.setTitle(self.title)
         self.currDirChanged()
 
     def currDirChanged(self):
@@ -332,10 +333,10 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
     def __prepareSkin(self):
         return _buildBrowserSkin("IPTVFileSelectorWidget", ('red',))
 
-    def __init__(self, session, currDir, title="File browser", fileMatch=None):
+    def __init__(self, session, currDir, title=None, fileMatch=None):
         printDBG("IPTVFileSelectorWidget.__init__ -------------------------------")
         self.skin = self.__prepareSkin()
-        IPTVDirectorySelectorWidget.__init__(self, session, currDir, title)
+        IPTVDirectorySelectorWidget.__init__(self, session, currDir, title or _("File browser"))
 
         if type(self) is IPTVFileSelectorWidget:
             self["key_red"] = StaticText(_("Cancel"))
@@ -351,7 +352,7 @@ class IPTVFileSelectorWidget(IPTVDirectorySelectorWidget):
         self.fileMatch = fileMatch
 
     def prepareCmd(self):
-        cmd = '%s "%s" drl dr' % ("/usr/bin/lsdir", self.currDir)
+        cmd = '%s "%s" drl dr' % ("/usr/bin/lsdir", shellQuote(self.currDir))
         return cmd
 
     def doRefreshNewData(self, newItems):

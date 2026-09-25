@@ -895,7 +895,10 @@ class common:
                     return
 
             if IsExecutable('ffmpeg'):
-                command = "ffmpeg -i %s %s && test -e %s && rm %s && mv %s %s " % (file_path, output_path, output_path, file_path, output_path, file_path)
+                # local import: downloaderhelpers itself imports this module
+                from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellSingleQuote
+                fp, op = shellSingleQuote(file_path), shellSingleQuote(output_path)
+                command = "ffmpeg -y -i %s %s && test -e %s && rm %s && mv %s %s " % (fp, op, op, fp, op, fp)
 
                 printDBG("Send command %s" % command)
                 self.cmd = iptv_system(command)
@@ -1066,8 +1069,9 @@ class common:
         return (status, response)
 
     def getPageCFProtection(self, baseUrl, params=None, post_data=None):
-        if params is None:
-            params = {}  # a fresh dict per call: a shared default would keep header/cookies of an earlier site
+        # own copy: callers pass their self.defaultParams, and the header (with this page's Referer),
+        # CFProtection and cookie_items written below must not stick to it for their next request
+        params = dict(params) if params else {}
         cf_user = params.get('header', {}).get('User-Agent', '')
         # the User-Agent that solved an earlier browser check for this cookie jar (see botprotection.py)
         from Plugins.Extensions.IPTVPlayer.libs.botprotection import remembered_user_agent, remember_user_agent
@@ -1251,7 +1255,7 @@ class common:
 
     def getUrllibSSLProtocolVersion(self, protocolName):
         if not isinstance(protocolName, str):
-            GetIPTVNotify().push('getUrllibSSLProtocolVersion error. Please report this problem to iptvplayere2@gmail.com', 'error', 40)
+            printDBG('getUrllibSSLProtocolVersion invalid ssl_protocol [%r]' % (protocolName,))
             return protocolName
         if protocolName == 'TLSv1_2':
             return ssl.PROTOCOL_TLSv1_2
@@ -1261,7 +1265,7 @@ class common:
 
     def getPyCurlSSLProtocolVersion(self, protocolName):
         if not isinstance(protocolName, str):
-            GetIPTVNotify().push('getPyCurlSSLProtocolVersion error. Please report this problem to iptvplayere2@gmail.com', 'error', 40)
+            printDBG('getPyCurlSSLProtocolVersion invalid ssl_protocol [%r]' % (protocolName,))
             return protocolName
         if protocolName == 'TLSv1_2':
             return pycurl.SSLVERSION_TLSv1_2
@@ -1480,7 +1484,7 @@ class common:
                 printExc()
                 if params.get('max_data_size', -1) == -1:
                     msg1 = _("Critical Error – Content-Encoding gzip cannot be handled!")
-                    msg2 = _("Last error:\n%s" % str(e))
+                    msg2 = _("Last error:\n%s") % str(e)
                     GetIPTVNotify().push('%s\n\n%s' % (msg1, msg2), 'error', 20)
                 out_data = data
 

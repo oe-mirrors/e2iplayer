@@ -4,7 +4,7 @@
 
 from . import settings
 
-from .webTools import formSUBMITvalue, formSUBMITtext, formSUBMITtextWithOptions, formMultipleSearchesSUBMITtext, tableHorizontalRedLine, removeSpecialChars, isThreadRunning, isActiveHostInitiated, setNewHostListShown, isCurrentItemSelected, isNewHostListShown
+from .webTools import formSUBMITvalue, formSUBMITtext, formSUBMITtextWithOptions, formMultipleSearchesSUBMITtext, tableHorizontalRedLine, removeSpecialChars, htmlEscape, displayText, isThreadRunning, isActiveHostInitiated, setNewHostListShown, isCurrentItemSelected, isNewHostListShown
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.version import IPTV_VERSION
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, SortHostsList, GetHostsOrderList, getDebugMode, formatBytes
@@ -309,8 +309,8 @@ class Body():
 					info = ''
 					buttons = ''
 				tempText += tableHorizontalRedLine(colspan=3)
-				tempText += '<tr><td rowspan="4" align="center">%s</td><td colspan="2"><b>%s</b></td></tr>\n' % (icon, fileName)
-				tempText += '<tr><td><div style="text-indent: 20px">%s</div></td></tr>\n' % item.url
+				tempText += '<tr><td rowspan="4" align="center">%s</td><td colspan="2"><b>%s</b></td></tr>\n' % (icon, htmlEscape(fileName))
+				tempText += '<tr><td><div style="text-indent: 20px">%s</div></td></tr>\n' % htmlEscape(item.url)
 				tempText += '<tr><td>%s</td><td align="right">%s</td></tr>\n' % (info, status)
 				tempText += '<tr><td colspan="3" align="right">%s</td></tr>\n' % (buttons)
 			tempText += tableHorizontalRedLine(colspan=3)
@@ -344,7 +344,7 @@ class Body():
 	def buildItemsListTable(self, item, index, allowedCategories=[], destinationURL=None):
 		iIndex = index
 		iName = removeSpecialChars(item.name)
-		iDescr = removeSpecialChars(item.description)
+		iDescr = displayText(item.description)
 		iType = item.type
 		if len(allowedCategories) > 0 and iType not in allowedCategories:
 			return ''
@@ -362,7 +362,7 @@ class Body():
 		else:
 			iconSrc = iType
 		txt = tableHorizontalRedLine(colspan=2)
-		txt += '<tr><td rowspan="2" style="width:64px"><img border="0" src="%s" width="64" height="64"></td>' % iconSrc
+		txt += '<tr><td rowspan="2" style="width:64px"><img border="0" src="%s" width="64" height="64"></td>' % htmlEscape(iconSrc)
 
 		if iType == "SEARCH":
 			if len(settings.activeHost['SearchTypes']) == 0:
@@ -370,7 +370,7 @@ class Body():
 			else:
 				txt += '<td>%s</td></tr>\n' % formMultipleSearchesSUBMITtext(settings.activeHost['SearchTypes'], ListType, 'style="color: #DBA901;background: none;border: none;text-decoration: underline"')
 		elif destinationURL is not None:
-			txt += '<td><a href="%s" class = "lnkbtn">%s</a></td></tr>' % (destinationURL, _(iName))
+			txt += '<td><a href="%s" class = "lnkbtn">%s</a></td></tr>' % (htmlEscape(destinationURL), htmlEscape(_(iName)))
 		else:
 			txt += '<td>%s</td></tr>' % formSUBMITvalue([(ListType, iIndex)], _(iName), 'style="color: #DBA901;background: none;border: none;text-decoration: underline"')
 		txt += '<tr><td style="text-indent: 40px">%s</td></tr>\n' % iDescr
@@ -378,7 +378,7 @@ class Body():
 	########################################################
 
 	def buildUrlsTable(self, item, index):
-		iName = removeSpecialChars(item.name)
+		iName = htmlEscape(removeSpecialChars(item.name))
 		iUrl = item.url  # .replace("ext://url/","") #to chyba sss zrobil do wymuszenia extplayera przyklad pierwszatv
 		# iurlNeedsResolve = int(item.urlNeedsResolve)
 		txt = tableHorizontalRedLine(colspan=3)
@@ -390,7 +390,7 @@ class Body():
 			else:
 				# txt += '<td>%s</td><td>%s</td>' % ( iName , formSUBMITvalue( [('DownloadURL' , index)], _('Download')) )
 				txt += '<td>%s</td><td><a href="/iptvplayer/usehost?DownloadURL=%d" class = "lnkbtn">%s</a></td>' % (iName, index, _('Add to downloader'))
-				txt += '<td> <a href="%s" target="_blank" class = "lnkbtn">%s</a></td></tr>' % (iUrl, _('Watch'))
+				txt += '<td> <a href="%s" target="_blank" class = "lnkbtn">%s</a></td></tr>' % (htmlEscape(iUrl), _('Watch'))
 		return txt
 	########################################################
 
@@ -402,19 +402,19 @@ class Body():
 		if not isNewHostListShown() and not isThreadRunning('doUseHostAction') and 'Name' in list(settings.activeHost.keys()):
 			tempText += '<table border="0" cellspacing="5px"><tbody>\n'
 			tempText += '<tr>'
-			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('host:'), settings.activeHost['Name'])
-			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Title:'), settings.activeHost['Title'])
+			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('host:'), htmlEscape(settings.activeHost['Name']))
+			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Title:'), htmlEscape(settings.activeHost['Title']))
 			# tempText += '</tr>\n'
 			# tempText += '<tr>'
 			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Level:'), settings.activeHost['PathLevel'])
-			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Path:'), settings.activeHost['Status'])
+			tempText += '<td align="right"><font color="#f0f0f0">%s</font></td><td><b><font color="#FFE4C4">%s</font></b></td>' % (_('Path:'), htmlEscape(settings.activeHost['Status']))
 			tempText += '</tr>\n'
 			tempText += '</tbody></table>\n'
 			tempText += self.useHostSubMenu()  # Submenu table
 			# main list
 			if isCurrentItemSelected():
 				tempText += '<table border="0" cellspacing="15px"><tbody>\n'
-				tempText += '<tr><td colspan = "3" style="border: 1px solid blue;">%s "<b>%s</b>"</td></tr>\n' % (_('Links for'), settings.currItem['itemTitle'])
+				tempText += '<tr><td colspan = "3" style="border: 1px solid blue;">%s "<b>%s</b>"</td></tr>\n' % (_('Links for'), htmlEscape(settings.currItem['itemTitle']))
 			else:
 				tempText += '<table border="0" width="800px" cellspacing="5px"><tbody>\n'
 			# if type(settings.retObj.value) is list:
