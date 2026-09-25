@@ -9,6 +9,7 @@ from Plugins.Extensions.IPTVPlayer.components.isubprovider import (
     CSubProviderBase,
     CBaseSubProviderClass,
 )
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
     printDBG,
     printExc,
@@ -881,7 +882,8 @@ class SubDLAPIProvider(CBaseSubProviderClass):
                 rar_extract_dir = os.path.join(subtitles_dir, "rar_extract_tmp")
                 if not os.path.exists(rar_extract_dir):
                     os.mkdir(rar_extract_dir)
-                cmd = 'unrar e -o+ "%s" "%s/"' % (filePath, rar_extract_dir)
+                # the file name contains the release title from the subdl API - escaped for the shell
+                cmd = 'unrar e -o+ "%s" "%s/"' % (shellQuote(filePath), shellQuote(rar_extract_dir))
                 printDBG("Running: %s" % cmd)
                 os.system(cmd)
                 archive_list = []

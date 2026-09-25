@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, ip
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, shellSingleQuote
 ###################################################
 
 ###################################################
@@ -98,7 +99,7 @@ class F4mDownloader(BaseDownloader):
 
         baseWgetCmd = DMHelper.getBaseWgetCmd(self.downloaderParams)
 
-        cmd = DMHelper.GET_F4M_PATH() + (" '%s'" % baseWgetCmd) + (' "%s"' % self.url) + (' "%s"' % self.filePath) + (' %s' % self.streamSelector) + ' > /dev/null'
+        cmd = DMHelper.GET_F4M_PATH() + ' ' + shellSingleQuote(baseWgetCmd) + (' "%s"' % shellQuote(self.url)) + (' "%s"' % shellQuote(self.filePath)) + (' "%s"' % shellQuote(self.streamSelector)) + ' > /dev/null'
 
         printDBG("F4mDownloader::start cmd[%s]" % cmd)
 

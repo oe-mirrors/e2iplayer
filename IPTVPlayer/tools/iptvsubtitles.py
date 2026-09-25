@@ -49,16 +49,6 @@ class IPTVSubtitlesHandler:
         # <u></u> : underline
         # <font color=”#rrggbb”></font>
 
-    def _srtTc2ms2(self, tc):
-        sign = 1
-        if tc[0] in "+-":
-            sign = -1 if tc[0] == "-" else 1
-            tc = tc[1:]
-
-        match = self.TIMECODE_RE.match(tc)
-        hh, mm, ss, ms = [0 if x is None else int(x) for x in match.groups()]
-        return ((hh * 3600 + mm * 60 + ss) * 1000 + ms) * sign
-
     def _srtTc2ms(self, time):
         try:
             time = time.strip()
@@ -253,11 +243,6 @@ class IPTVSubtitlesHandler:
                 elif idx not in self.pailsOfAtoms[tmp]:
                     self.pailsOfAtoms[tmp].append(idx)
         self.pailsOfAtoms = dict(sorted(self.pailsOfAtoms.items()))
-        if 1:  # for tests
-            with codecs.open('/tmp/pailsOfAtoms.json', 'w', 'utf-8') as fp:
-                fp.write(json.dumps(self.pailsOfAtoms))
-            with codecs.open('/tmp/subAtoms.json', 'w', 'utf-8') as fp:
-                fp.write(json.dumps(self.subAtoms))
 
     def loadSubtitles(self, filePath, encoding='utf-8', fps=0):
         printDBG("OpenSubOrg.loadSubtitles filePath[%s]" % filePath)

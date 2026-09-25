@@ -164,7 +164,7 @@ class IPTVSubDownloaderWidget(Screen):
 
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
-        self["statustext"] = Label("Loading...")
+        self["statustext"] = Label(_("Loading..."))
         self["actions"] = ActionMap(
             ["IPTVPlayerListActions", "ColorActions"],
             {
@@ -484,7 +484,7 @@ class IPTVSubDownloaderWidget(Screen):
                 elif not self.workThread.isFinished():
                     message = (
                         _(
-                            'It seems that the subtitle\'s provider "%s" has crashed. Do you want to report this problem?'
+                            'It seems that the subtitle\'s provider "%s" has crashed.'
                         )
                         % self.hostName
                     )
@@ -496,18 +496,18 @@ class IPTVSubDownloaderWidget(Screen):
                         "\nYou can also report problem here: \nhttps://github.com/oe-mirrors/e2iplayer/issues"
                     )
                     self.session.openWithCallback(
-                        self.reportHostCrash,
+                        self.leaveCrashedHost,
                         MessageBox,
                         text=message,
-                        type=MessageBox.TYPE_YESNO,
+                        type=MessageBox.TYPE_ERROR,
                     )
             self.hideSpinner()
         except Exception:
             printExc()
 
-    def reportHostCrash(self, ret):
-        """Leave the crashed subtitle provider. Nothing is sent anywhere: the
-        old report server is gone, the dialog above points to the issue tracker."""
+    def leaveCrashedHost(self, ret=None):
+        """Leave the crashed subtitle provider. The old report server is gone,
+        the dialog above only points to the issue tracker."""
         try:
             self.workThread = None
             self.prevSelList = []

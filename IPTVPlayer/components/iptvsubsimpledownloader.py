@@ -14,6 +14,7 @@ from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import DownloaderCreator
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
 ###################################################
 # FOREIGN import
 ###################################################
@@ -151,7 +152,7 @@ class IPTVSubSimpleDownloaderWidget(Screen):
             self["console"].setText(_("Download failed.\nStatus[%s]") % status)
         else:
             self["console"].setText(_('Subtitles downloaded successfully. [%s], conversion to UTF-8.') % self.downloader.getFullFileName())
-            cmd = '/usr/bin/uchardet "%s"' % self.downloader.getFullFileName()
+            cmd = '/usr/bin/uchardet "%s"' % shellQuote(self.downloader.getFullFileName())
             printDBG("cmd[%s]" % cmd)
             self.workconsole = iptv_system(cmd, self.convertSubtitles)
 

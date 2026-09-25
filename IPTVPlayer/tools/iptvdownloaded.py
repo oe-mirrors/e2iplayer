@@ -73,7 +73,12 @@ def getState(key, activeKeys=()):
             filePath = ensure_str(f.read()).strip()
         if filePath != '' and os.path.isfile(filePath):
             return STATE_DONE
-        rm(markerPath)  # the file was moved or deleted - not downloaded (any more)
+        # the file was moved or deleted - not downloaded (any more). Only when its folder is there and
+        # not empty: a download disk that is just not mounted right now (an empty mount point folder)
+        # must not cost the markers; either way the item is shown as not downloaded
+        folder = os.path.dirname(filePath)
+        if filePath != '' and os.path.isdir(folder) and os.listdir(folder):
+            rm(markerPath)
     except Exception:
         printExc()
     return STATE_NONE

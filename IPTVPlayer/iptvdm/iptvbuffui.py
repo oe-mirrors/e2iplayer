@@ -448,7 +448,7 @@ class E2iPlayerBufferingWidget(Screen):
         if self.canRunMoviePlayer and self.checkMOOVAtom is False and (self.isMOOVAtomAtTheBeginning is None or self.moovAtomStatus == self.MOOV_STS.DOWNLOADED):
             self['ok_button'].show()
         else:
-            self['rec_button'].hide()
+            self['ok_button'].hide()
 
     def updateDisplay(self):
         printDBG("updateDisplay")
@@ -661,7 +661,7 @@ class E2iPlayerBufferingWidget(Screen):
             messageTab = [_("Error occurs during download.")]
             errorCode, errorDesc = self.downloader.getLastError()
             if errorCode is not None:
-                messageTab.append(_('%s returned %s: %s') % (self.downloader.getName(), errorCode, _(errorDesc)))
+                messageTab.append(_('%s returned %s: %s') % (self.downloader.getName(), errorCode, errorDesc))
             self.session.openWithCallback(self.iptvDoClose, MessageBox, '\n'.join(messageTab), type=MessageBox.TYPE_ERROR, timeout=10)
             self.canRunMoviePlayer = False
             # stop timer before message

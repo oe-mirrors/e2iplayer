@@ -11,7 +11,8 @@
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSkinsList, GetHostsList, \
                                                           IsExecutable, CFakeMoviePlayerOption, GetCookieDir, GetJSCacheDir, \
                                                           GetSubtitlesDir, GetMovieMetaDataDir, RemoveDirContents, RemoveAllDirsIconsFromPath, \
-                                                          GetSearchHistoryDir, GetFavouritesDir, GetWatchedDir, GetMoviePlayerPerHostDir, GetHostOrderDir, IsPathSafeToWipe
+                                                          GetSearchHistoryDir, GetFavouritesDir, GetWatchedDir, GetMoviePlayerPerHostDir, GetHostOrderDir, IsPathSafeToWipe, \
+                                                          IsSameDir, IsSameOrSubDir
 from Plugins.Extensions.IPTVPlayer.components.configbase import ConfigBaseWidget, ConfigIPTVFileSelection, COLORS_DEFINITONS
 from Plugins.Extensions.IPTVPlayer.components.confighost import ConfigHostsMenu
 from Plugins.Extensions.IPTVPlayer.components.iptvdirbrowser import IPTVDirectorySelectorWidget
@@ -996,8 +997,32 @@ class ConfigMenu(ConfigBaseWidget):
                 printDBG('Storage: REFUSED to empty [%s] (not a dedicated cache/config folder)' % path)
                 self.session.open(MessageBox, _('Refusing to empty "%s" - this does not look like a dedicated cache/config folder. Check the folder paths in the storage configuration.') % path, type=MessageBox.TYPE_ERROR, timeout=8)
                 return
+            conflict = self._getWipeConflict(path)
+            if conflict:
+                printDBG('Storage: REFUSED to empty [%s] (holds [%s])' % (path, conflict))
+                self.session.open(MessageBox, _('Refusing to empty "%s" - it also holds "%s" (downloads, buffering, cache or config folder). Check the folder paths in the storage configuration.') % (path, conflict), type=MessageBox.TYPE_ERROR, timeout=8)
+                return
             printDBG('Storage: emptying [%s]' % path)
             RemoveDirContents(path)
+
+    @staticmethod
+    def _getWipeConflict(path):
+        # another E2iPlayer folder that emptying path would take with it ('' = none): the downloads and
+        # buffering folders always, the config folder when the cache is emptied and the other way round
+        cp = config.plugins.iptvplayer
+        isCache = IsSameDir(path, cp.CacheDir.value)
+        isConfig = IsSameDir(path, cp.ConfigDir.value)
+        if isCache and isConfig:
+            return cp.ConfigDir.value
+        others = [cp.DownloadsDir.value, cp.bufferingPath.value]
+        if not isConfig:
+            others.append(cp.ConfigDir.value)
+        if not isCache:
+            others.append(cp.CacheDir.value)
+        for other in others:
+            if other and IsSameOrSubDir(other, path):
+                return other
+        return ''
 
     def deleteFavouritesNowCallback(self, ret=False):
         if ret:

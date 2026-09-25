@@ -5,25 +5,35 @@ import os
 from . import settings
 import time
 import threading
+from html import escape as _html_escape
 
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetLogoDir
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 ########################################################
 
 
+def htmlEscape(value):
+	# text from hosts, web pages, file names and logs must never be taken as HTML by the browser
+	try:
+		return _html_escape(value if isinstance(value, str) else str(value), quote=True)
+	except Exception:
+		return ''
+########################################################
+
+
 def formSUBMITvalue(inputHiddenObjects, caption, input_style='', input_text=''):
 	retTxt = '\n<form method="GET">%s' % input_text
 	for inputObj in inputHiddenObjects:
-		retTxt += '<input type="hidden" name="%s" value="%s">' % (inputObj[0], inputObj[1])
-	retTxt += '<input type="submit" value="%s" %s></form>\n' % (caption, input_style)
+		retTxt += '<input type="hidden" name="%s" value="%s">' % (htmlEscape(inputObj[0]), htmlEscape(inputObj[1]))
+	retTxt += '<input type="submit" value="%s" %s></form>\n' % (htmlEscape(caption), input_style)
 	return retTxt
 ########################################################
 
 
 def formSUBMITtext(caption, inputName, inputStyle='', inputValue=''):
 	retTxt = '\n<form method="GET">'
-	retTxt += '<input type="text" name="%s" value="%s">' % (inputName, inputValue)
-	retTxt += '<input type="submit" value="%s" %s>' % (caption, inputStyle)
+	retTxt += '<input type="text" name="%s" value="%s">' % (htmlEscape(inputName), htmlEscape(inputValue))
+	retTxt += '<input type="submit" value="%s" %s>' % (htmlEscape(caption), inputStyle)
 	retTxt += '</form>\n'
 	return retTxt
 ########################################################
@@ -31,10 +41,10 @@ def formSUBMITtext(caption, inputName, inputStyle='', inputValue=''):
 
 def formSUBMITtextWithOptions(caption, inputName, inputStyle='', inputValue='', options=[]):
 	retTxt = '\n<form method="GET">'
-	retTxt += '<input type="text" name="%s" value="%s">' % (inputName, inputValue)
-	retTxt += '<input type="submit" value="%s" %s>' % (caption, inputStyle)
+	retTxt += '<input type="text" name="%s" value="%s">' % (htmlEscape(inputName), htmlEscape(inputValue))
+	retTxt += '<input type="submit" value="%s" %s>' % (htmlEscape(caption), inputStyle)
 	for option in options:
-		retTxt += '<input type="radio" name="type" value="%s" %s>%s' % (option[0], option[1], option[2])
+		retTxt += '<input type="radio" name="type" value="%s" %s>%s' % (htmlEscape(option[0]), option[1], htmlEscape(option[2]))
 	retTxt += '</form>\n'
 	return retTxt
 ########################################################
@@ -42,9 +52,9 @@ def formSUBMITtextWithOptions(caption, inputName, inputStyle='', inputValue='', 
 
 def formMultipleSearchesSUBMITtext(captions, inputName, inputStyle='', inputValue=''):
 	retTxt = '\n<form method="GET">'
-	retTxt += '<input type="text" name="%s" value="%s">' % (inputName, inputValue)
+	retTxt += '<input type="text" name="%s" value="%s">' % (htmlEscape(inputName), htmlEscape(inputValue))
 	for caption in captions:
-		retTxt += '<input type="submit" value="%s" name="%s" %s>' % (_('Search in') + " " + "'" + caption[0] + "'", caption[1], inputStyle)
+		retTxt += '<input type="submit" value="%s" name="%s" %s>' % (htmlEscape(_('Search in') + " " + "'" + caption[0] + "'"), htmlEscape(caption[1]), inputStyle)
 	retTxt += '</form>\n'
 	return retTxt
 ########################################################
@@ -79,6 +89,12 @@ def removeSpecialChars(text):
 ########################################################
 
 
+def displayText(text):
+	# removeSpecialChars() for display: everything escaped, only its own <br> line breaks stay HTML
+	return '<br>'.join(htmlEscape(part) for part in removeSpecialChars(text).split('<br>'))
+########################################################
+
+
 def getHostLogo(hostName):
 	try:
 		_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0)
@@ -104,12 +120,18 @@ def initActiveHost(hostName):
 
 	if hostName is None:
 		pass
+	elif not isHostUsableFromWeb(hostName):
+		print('[E2iPlayer web] host "%s" refused: not enabled, unknown or PIN protected' % hostName)
 	else:
-
-		settings.activeHost['Name'] = hostName
 		_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['IPTVHost'], 0)
+		hostObj = _temp.IPTVHost()
+		if hostObj.isProtectedByPinCode():
+			# the web interface has no way to ask for the PIN - such hosts stay GUI only
+			print('[E2iPlayer web] host "%s" refused: PIN protected' % hostName)
+			return
+		settings.activeHost['Name'] = hostName
 		settings.activeHost['Title'] = _temp.gettytul()
-		settings.activeHost['Obj'] = _temp.IPTVHost()
+		settings.activeHost['Obj'] = hostObj
 		settings.activeHost['PIC'] = settings.activeHost['Obj'].getLogoPath().value[0]
 		settings.activeHost['SupportedTypes'] = settings.activeHost['Obj'].getSupportedFavoritesTypes().value
 		settings.activeHost['PathLevel'] = 1
@@ -118,6 +140,58 @@ def initActiveHost(hostName):
 		settings.activeHost['ListType'] = 'ListForItem'
 		settings.activeHost['SearchTypes'] = settings.activeHost['Obj'].getSearchTypes()
 	return
+########################################################
+
+
+# PIN settings are never changed from the web interface
+_WEB_LOCKED_CONFIG_NAMES = ('pin', 'fakePin', 'pluginProtectedByPin', 'configProtectedByPin', 'configOwnPin', 'configPincode',
+                            'fakeConfigPin', 'xxxownpin', 'xxxpincode', 'xxxwymagajpin', 'xxx_pin_action')
+
+
+def getEditableConfigNames():
+	# names (config.plugins.iptvplayer.<name>) of the options the settings page shows: the host on/off
+	# switches, the global settings and the hosts' own options
+	from Components.config import config
+	from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
+	from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList
+	namesById = dict((id(value), name) for name, value in config.plugins.iptvplayer.dict().items())
+	names = set()
+	entries = []
+	ConfigMenu.fillConfigList(entries)
+	for hostName in GetHostsList():
+		names.add('host' + hostName)
+		try:
+			_temp = __import__('Plugins.Extensions.IPTVPlayer.hosts.host' + hostName, globals(), locals(), ['GetConfigList'], 0)
+			entries.extend(_temp.GetConfigList())
+		except Exception:
+			pass
+	for item in entries:
+		if len(item) > 1 and id(item[1]) in namesById:
+			names.add(namesById[id(item[1])])
+	return names - set(settings.excludedCFGs) - set(_WEB_LOCKED_CONFIG_NAMES)
+
+
+def isEditableConfigName(name):
+	try:
+		return name in getEditableConfigNames()
+	except Exception as e:
+		print('EXCEPTION in webTools:isEditableConfigName - ', str(e))
+	return False
+########################################################
+
+
+def isHostUsableFromWeb(hostName):
+	# only enabled hosts of the host list, same as the host overview shows; the whole player
+	# behind a PIN means no host browsing from the web interface at all
+	try:
+		from Components.config import config
+		from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetHostsList, IsHostEnabled
+		if config.plugins.iptvplayer.pluginProtectedByPin.value:
+			return False
+		return hostName in GetHostsList() and IsHostEnabled(hostName)
+	except Exception as e:
+		print('EXCEPTION in webTools:isHostUsableFromWeb - ', str(e))
+	return False
 ########################################################
 
 

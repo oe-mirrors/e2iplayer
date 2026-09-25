@@ -373,7 +373,7 @@ class E2iPlayerWidget(Screen):
 
         self["list"] = IPTVMainNavigatorList()
         self["list"].connectSelChanged(self.onSelectionChanged)
-        self["statustext"] = Label("Loading...")
+        self["statustext"] = Label(_("Loading..."))
 
         self["actions"] = ActionMap(["IPTVPlayerListActions", "ColorActions", "NumberActions"],
         {
@@ -943,18 +943,17 @@ class E2iPlayerWidget(Screen):
                         message += _('\nThis host is not integral part of the E2iPlayer plugin.\nIt is not supported by E2iPlayer team.')
                         self.session.open(MessageBox, message, type=MessageBox.TYPE_ERROR)
                     else:
-                        message = _('It seems that the host "%s" has crashed. Do you want to report this problem?') % self.hostName
+                        message = _('It seems that the host "%s" has crashed.') % self.hostName
                         message += "\n"
                         message += _('\nMake sure you are using the latest version of the plugin.')
                         message += _('\nYou can also report problem here: \nhttps://github.com/oe-mirrors/e2iplayer/issues')
-                        self.session.openWithCallback(self.reportHostCrash, MessageBox, text=message, type=MessageBox.TYPE_YESNO)
+                        self.session.openWithCallback(self.leaveCrashedHost, MessageBox, text=message, type=MessageBox.TYPE_ERROR)
             self.hideSpinner()
         except Exception:
             printExc()
 
-    def reportHostCrash(self, ret):
-        # nothing is sent anywhere: the old report server is gone, the dialog
-        # (see above) points to the issue tracker
+    def leaveCrashedHost(self, ret=None):
+        # the old report server is gone - the dialog only points to the issue tracker
         try:
             self.workThread = None
             self.prevSelList = []
@@ -986,8 +985,14 @@ class E2iPlayerWidget(Screen):
             if funName is not None and notifyObj is not None and not notifyObj.isEmpty() and funName in ['showArticleContent', 'selectMainVideoLinks', 'selectResolvedVideoLinks', 'reloadList']:
                 self.processIPTVNotify()
             else:
-                asynccall.gMainFunctionsQueueTab[0].processQueue()
-                self.mainTimer.start(self.mainTimer_interval, True)
+                try:
+                    asynccall.gMainFunctionsQueueTab[0].processQueue()
+                except Exception:
+                    printExc()
+                finally:
+                    # without the restart no further host list would ever arrive
+                    if None is not self.mainTimer:
+                        self.mainTimer.start(self.mainTimer_interval, True)
         return
 
     def doProcessProxyQueueItem(self, item):
@@ -1361,17 +1366,17 @@ class E2iPlayerWidget(Screen):
             return LoadPixmap(iconBase + '/%s.png' % name)
 
         options = [
-            GetKeyHelpItem('ok', "open / play the selected item", icon('ok')),
-            GetKeyHelpItem('exit', "go back / close", icon('exit')),
-            GetKeyHelpItem('red', "back to host/group selection", icon('red')),
-            GetKeyHelpItem('green', "download the selected item", icon('green')),
-            GetKeyHelpItem('yellow', "refresh the current list", icon('yellow')),
-            GetKeyHelpItem('blue', "more options (this menu)", icon('blue')),
-            GetKeyHelpItem('menu', "item actions (favorites, host-specific actions)", icon('menu')),
-            GetKeyHelpItem('info', "show more details about the selected item", icon('info')),
-            GetKeyHelpItem('num', "jump to items starting with that letter, or launch a specific player directly", icon('key_0-9')),
-            GetKeyHelpItem('updown', "back to the previous category / jump to the next page", icon('key_updown')),
-            GetKeyHelpItem('play', "start auto-play (plays through the list automatically)", icon('play')),
+            GetKeyHelpItem('ok', _("open / play the selected item"), icon('ok')),
+            GetKeyHelpItem('exit', _("go back / close"), icon('exit')),
+            GetKeyHelpItem('red', _("back to host/group selection"), icon('red')),
+            GetKeyHelpItem('green', _("download the selected item"), icon('green')),
+            GetKeyHelpItem('yellow', _("refresh the current list"), icon('yellow')),
+            GetKeyHelpItem('blue', _("more options (this menu)"), icon('blue')),
+            GetKeyHelpItem('menu', _("item actions (favorites, host-specific actions)"), icon('menu')),
+            GetKeyHelpItem('info', _("show more details about the selected item"), icon('info')),
+            GetKeyHelpItem('num', _("jump to items starting with that letter, or launch a specific player directly"), icon('key_0-9')),
+            GetKeyHelpItem('updown', _("back to the previous category / jump to the next page"), icon('key_updown')),
+            GetKeyHelpItem('play', _("start auto-play (plays through the list automatically)"), icon('play')),
         ]
         height = self._getOptionsPickerHeight(len(options))
         self.session.open(IPTVChoiceBoxWidget, {'width': 900, 'height': height, 'current_idx': 0, 'title': _("Help"), 'options': options, 'list_class': E2iVKOptionsList, 'selectable': False, 'chrome': True})

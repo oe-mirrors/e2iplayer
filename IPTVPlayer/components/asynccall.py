@@ -499,7 +499,14 @@ class CFunctionProxyQueue:
             if isinstance(item, CPQItemCallBack) and None is not self.procFun:
                 self.procFun(item)
             elif isinstance(item, CPQItemDelegate) and callable(item.callFnc) and callable(item.retFnc):
-                item.retFnc(item.callFnc(self.session, *item.args, **item.kwargs))
+                # the worker thread waits for retFnc - it must be called even when callFnc fails,
+                # and a failing call must not stop the queue for everything after it
+                try:
+                    ret = item.callFnc(self.session, *item.args, **item.kwargs)
+                except Exception:
+                    printExc('processQueue delegated call failed')
+                    ret = None
+                item.retFnc(ret)
             else:
                 printDBG("processQueue WRONG TYPE of proxy queue item")
 

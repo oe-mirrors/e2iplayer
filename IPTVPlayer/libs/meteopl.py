@@ -3,6 +3,7 @@
 ###################################################
 # LOCAL import
 ###################################################
+from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.components.ihost import CBaseHostClass
 ###################################################
@@ -26,7 +27,7 @@ config.plugins.iptvplayer.meteopl_locality = ConfigText(default="", fixed_size=F
 
 def GetConfigList():
     optionList = []
-    optionList.append(getConfigListEntry("Miejscowość:", config.plugins.iptvplayer.meteopl_locality))
+    optionList.append(getConfigListEntry(_("Locality:"), config.plugins.iptvplayer.meteopl_locality))
     return optionList
 
 ###################################################

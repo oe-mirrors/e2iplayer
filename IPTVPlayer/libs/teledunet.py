@@ -4,6 +4,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, GetCookieDir
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
+from Plugins.Extensions.IPTVPlayer.libs.urlparserhelper import safeEvalExpression
 ###################################################
 
 ###################################################
@@ -44,7 +45,8 @@ class TeledunetParser:
             printDBG("__get_channel_time_player getPage problem")
 
         m = re.search('time_player=(.*);', data, re.M | re.I)
-        time_player_str = eval(m.group(1))
+        # a number (or simple arithmetic) from the page - parsed, not executed
+        time_player_str = safeEvalExpression(m.group(1))
 
         m = re.search('curent_media=\'(.*)\';', data, re.M | re.I)
         rtmp_url = m.group(1)

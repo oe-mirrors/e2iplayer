@@ -12,6 +12,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, ip
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, shellSingleQuote
 ###################################################
 
 ###################################################
@@ -85,13 +86,13 @@ class RtmpDownloader(BaseDownloader):
                 if None is not parameter:
                     cmd += ' --' + parameter.strip()
                     if '' != value:
-                        cmd += "='%s'" % value.strip()
+                        # values come from the stream url - one quoted shell word each
+                        cmd += "=%s" % shellSingleQuote(value.strip())
                         value = ''
                 elif '' != value:
+                    # not reachable in practice: the command always starts with the "rtmp" parameter
                     printDBG('_getCMD.RtmpDownloader no parameters for value[%s]' % value.strip())
-                    if 0 < len(cmd):
-                        cmd = cmd[:-1] + ' %s"' % value.strip().replce('\\', '\\\\')
-                        value = ''
+                    value = ''
                 parameter = item
             else:
                 if '' != value:
@@ -155,7 +156,7 @@ class RtmpDownloader(BaseDownloader):
                     prevflashVer = item
                     continue
                 rtmpdump_url += ' --' + item
-        cmd = DMHelper.GET_RTMPDUMP_PATH() + " " + rtmpdump_url + ' --realtime -o "' + self.filePath + '" > /dev/null 2>&1'
+        cmd = DMHelper.GET_RTMPDUMP_PATH() + " " + rtmpdump_url + ' --realtime -o "' + shellQuote(self.filePath) + '" > /dev/null 2>&1'
         printDBG("rtmpdump cmd[%s]" % cmd)
 
         self.console = eConsoleAppContainer()

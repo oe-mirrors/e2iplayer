@@ -12,6 +12,7 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.components.cover import Cover3
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetSubtitlesDir, eConnectCallback, \
@@ -33,7 +34,7 @@ from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
 
 # FOREIGN import
-from enigma import eConsoleAppContainer, getDesktop, eTimer, eLabel, gFont, ePoint, eSize, gRGB
+from enigma import eConsoleAppContainer, getDesktop, eTimer, eLabel, gFont, ePoint, eSize, gRGB, BT_SCALE
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap
 from Components.config import config
@@ -186,6 +187,24 @@ class IPTVExtMoviePlayer(Screen):
     # canvas - see resolution="1280,720" on their <screen> tags
     REF_W = 1280
     REF_H = 720
+
+    # theme -> (progress, cbuff, buff) bar image in playerskins/_scaled/,
+    # shipped as <name>_1920.png/<name>_2560.png - see
+    # _progressBarPixmapPath(). The themes share only 7 different bar
+    # images, so the scaled copies live in one folder. A new theme needs
+    # an entry here (or falls back to its own unscaled images).
+    SCALED_BAR_IMAGES = {
+        'default': ('blue', 'dark_green', 'dark_blue'),
+        'black': ('wide_red', 'wide_light_blue', 'wide_red'),
+        'red': ('wide_red', 'wide_light_blue', 'wide_red'),
+        'blue': ('wide_light_blue', 'wide_red', 'wide_red'),
+        'green': ('dark_green', 'gradient_green_red', 'gradient_red_green'),
+        'black-white': ('gradient_green_red', 'dark_green', 'gradient_red_green'),
+        'cobalt': ('blue', 'dark_green', 'gradient_red_green'),
+        'jersey': ('gradient_green_red', 'dark_green', 'gradient_red_green'),
+        'navy': ('blue', 'dark_green', 'gradient_red_green'),
+        'line': ('gradient_green_red', 'dark_green', 'gradient_red_green'),
+    }
 
     def __prepareSkin(self):
         # REF_W/REF_H: every playerskins/*/playerskin.xml (and the inline
@@ -345,16 +364,18 @@ class IPTVExtMoviePlayer(Screen):
         # offset - infobar in the middle of the screen, left side cut off.
         if 'resolution="' in skin:
             screenW, screenH = REF_W, REF_H
+            scaledBars = self.SCALED_BAR_IMAGES.get(os_path.basename(os_path.normpath(self.playerSkinFolder)))
         else:
             screenW, screenH = dw, getDesktop(0).size().height()
+            scaledBars = None
 
         skin = skin % (
             screenW,
             screenH,
             self.playerSkinFolder + "/playback_banner.png",
-            self.playerSkinFolder + "/playback_progress.png",
-            self.playerSkinFolder + "/playback_cbuff_progress.png",
-            self.playerSkinFolder + "/playback_buff_progress.png",
+            self._progressBarPixmapPath("playback_progress", scaledBars, 0, dw),
+            self._progressBarPixmapPath("playback_cbuff_progress", scaledBars, 1, dw),
+            self._progressBarPixmapPath("playback_buff_progress", scaledBars, 2, dw),
             self.playerSkinFolder + "/playback_pointer.png",
             clockWidget,
             subSkin
@@ -362,6 +383,87 @@ class IPTVExtMoviePlayer(Screen):
 
         sub = None
         return skin
+
+    STREAM_PROTO_LABELS = {'m3u8': 'HLS', 'em3u8': 'HLS', 'mpd': 'DASH', 'f4m': 'HDS', 'uds': 'HDS',
+                           'rtmp': 'RTMP', 'rtsp': 'RTSP', 'mms': 'MMS', 'mmsh': 'MMS'}
+    STREAM_CONTAINERS = ('mp4', 'm4v', 'mkv', 'webm', 'flv', 'ts', 'm2ts', 'avi', 'mov', 'wmv', 'mpg', 'mpeg', 'vob', 'divx', '3gp', 'ogv')
+
+    def _getStreamTypeLabel(self, url=None):
+        # short delivery type for the info bar ("HLS", "DASH", "MP4", ...)
+        # - in buffering mode fileSRC is the local buffer file, so the
+        # downloader's source URL is the one that tells how it's streamed
+        try:
+            if url is None:
+                if self.downloader is not None:
+                    url = self.downloader.getUrl()
+                else:
+                    url = self.fileSRC
+            url = strwithmeta(url)
+            proto = url.meta.get('iptv_proto', '')
+            urlLower = url.lower()
+            if proto == 'merge' or urlLower.startswith('merge://'):
+                # separate audio/video streams: DASH renditions unless the
+                # video part is itself an HLS playlist (a DASH rendition's
+                # own mime=video/mp4 must not turn this into "MP4")
+                videoUrl = url.meta.get('video_url', '')
+                if videoUrl and self._getStreamTypeLabel(videoUrl) == 'HLS':
+                    return 'HLS'
+                return 'DASH'
+            # rstrip: KVS sites (most of hostxxx) serve .../get_file/.../123.mp4/?rnd=...
+            path = urlLower.split('?', 1)[0].split('#', 1)[0].split('|', 1)[0].rstrip('/')
+            if proto in self.STREAM_PROTO_LABELS:
+                return self.STREAM_PROTO_LABELS[proto]
+            if path.endswith('.m3u8') or 'protocol=hls' in urlLower:
+                return 'HLS'
+            if path.endswith('.mpd'):
+                return 'DASH'
+            for scheme in ('rtmp', 'rtsp', 'mms'):
+                if urlLower.startswith(scheme):
+                    return self.STREAM_PROTO_LABELS.get(scheme, scheme.upper())
+            ext = url.meta.get('iptv_format', '') or path.rsplit('.', 1)[-1]
+            if ext in self.STREAM_CONTAINERS:
+                return ext.upper()
+            # playlist named only further on, e.g. proxied
+            # .../m3u8-proxy?url=https://cdn/x/index.m3u8&headers=...
+            if re.search(r'\.m3u8(?=$|[?&#/|;,])', urlLower):
+                return 'HLS'
+            if re.search(r'\.mpd(?=$|[?&#/|;,])', urlLower):
+                return 'DASH'
+            # no file extension (e.g. googlevideo .../videoplayback?...) -
+            # the container may still be named by a mime= query parameter
+            mime = re.search(r'[?&]mime=video(?:/|%2f)([a-z0-9.+-]+)', urlLower)
+            if mime:
+                ext = {'x-flv': 'flv', 'mp2t': 'ts', '3gpp': '3gp'}.get(mime.group(1), mime.group(1))
+                if ext in self.STREAM_CONTAINERS:
+                    return ext.upper()
+            # ... or by a file= query parameter (KVS remote storage redirect:
+            # .../remote_control.php?time=..&file=%2Fvideos%2F..%2F123_720p.mp4&cv3=..)
+            fileParam = re.search(r'[?&](?:file|filename)=([^&#|]+)', urlLower)
+            if fileParam:
+                ext = fileParam.group(1).replace('%2e', '.').replace('%2f', '/').replace('%3f', '?')
+                ext = ext.split('?', 1)[0].rstrip('/').rsplit('.', 1)[-1]
+                if ext in self.STREAM_CONTAINERS:
+                    return ext.upper()
+        except Exception:
+            printExc(WarnOnly=True)
+        return ''
+
+    def _progressBarPixmapPath(self, name, scaledBars, idx, dw):
+        # progressBar/bufferingCBar/bufferingBar are eSlider widgets: the
+        # filled part is computed from the widget's (resolution="1280,720"-
+        # scaled) size, but the pixmap is blitted at its native size and
+        # only clipped to it. With the 840px-wide 1280x720 images the fill
+        # therefore stopped at 840/1260 = 2/3 of the bar on FHD (1/3 on
+        # WQHD). SCALED_BAR_IMAGES points every non-"sd" theme at
+        # pre-scaled _1920/_2560 copies (full-width gradients must match
+        # the bar width, not just cover it); anything else falls back to
+        # the theme's own image, which OpenATV's setPixmapScale
+        # (initGuiComponentsPos) still stretches.
+        if scaledBars:
+            path = GetPlayerSkinDir("_scaled/%s_%d.png" % (scaledBars[idx], dw))
+            if os_path.exists(path):
+                return path
+        return "%s/%s.png" % (self.playerSkinFolder, name)
 
     def _setScaledIconPixmap(self, widgetName, pixmap):
         # logoIcon/statusIcon/loopIcon/subSynchroIcon are Cover3 widgets
@@ -1091,7 +1193,8 @@ class IPTVExtMoviePlayer(Screen):
             return False, 'missing file'
 
         ext = os_path.splitext(filePath)[1].lower().lstrip('.')
-        if ext not in self.NON_SUBTITLE_SIDE_EXTENSIONS:
+        # every format the file picker offers (mpl always, ssa/smi/ttml/... with the parser extension)
+        if ext not in self.NON_SUBTITLE_SIDE_EXTENSIONS and ext not in IPTVSubtitlesHandler.getSupportedFormats():
             return False, 'unsupported extension'
 
         try:
@@ -1129,6 +1232,14 @@ class IPTVExtMoviePlayer(Screen):
                 score += 3
             elif 'vtt' == ext and line.upper().startswith('WEBVTT'):
                 score += 3
+            elif re.match(r'^\[\d+\]\[\d+\]', line):  # MPL2
+                score += 3
+            elif re.match(r'^(dialogue:|\[script info\]|\[events\])', line.lower()):  # SSA/ASS
+                score += 3
+            elif re.search(r'<(sync|sami|tt[\s>]|time\s+begin)|\sbegin="', line.lower()):  # SAMI, TTML, RealText
+                score += 3
+            elif re.match(r'^(\{\d+:\d{2}:\d{2}\}|\[\d{2}:\d{2}:\d{2}\])', line):  # PSB, DKS
+                score += 3
 
         if score >= 3:
             return True, 'subtitle markers detected'
@@ -1158,7 +1269,7 @@ class IPTVExtMoviePlayer(Screen):
                 printDBG("openSubtitlesFromFileCallback rejected non subtitle file[%s]" % filePath)
                 return
             self.subHandler['handler'].removeCacheFile(filePath)
-            cmd = '/usr/bin/uchardet "%s"' % filePath
+            cmd = '/usr/bin/uchardet "%s"' % shellQuote(filePath)
             self.workconsole = iptv_system(cmd, boundFunction(self.enableSubtitlesFromFile, filePath))
 
     def enableSubtitlesFromFile(self, filePath, code=127, encoding=""):
@@ -1553,6 +1664,9 @@ class IPTVExtMoviePlayer(Screen):
                         fps = int(fps)
                     text += ', %sfps' % fps
                     text += ', %s' % val['aspect_ratio'].replace('_', ':')
+                    streamType = self._getStreamTypeLabel()
+                    if streamType:
+                        text += ', %s' % streamType
                     self['videoInfo'].setText(text)
                 else:
                     self.playback[key] = val
@@ -2141,7 +2255,7 @@ class IPTVExtMoviePlayer(Screen):
 
         if blankIframeFilePath != '' and IsExecutable('showiframe') and fileExists(blankIframeFilePath):
             if not self.iframeParams['iframe_continue']:
-                self.iframeParams['console'] = iptv_system('showiframe "{0}"'.format(blankIframeFilePath), boundFunction(self.iptvDoClose, sts, currentTime))
+                self.iframeParams['console'] = iptv_system('showiframe "{0}"'.format(shellQuote(blankIframeFilePath)), boundFunction(self.iptvDoClose, sts, currentTime))
                 return
         self.iptvDoClose(sts, currentTime)
 
@@ -2197,9 +2311,9 @@ class IPTVExtMoviePlayer(Screen):
         if self.iframeParams['show_iframe'] and IsExecutable('showiframe')\
            and fileExists(self.iframeParams['iframe_file_start']):
             if self.iframeParams['iframe_continue']:
-                self.iframeParams['console'] = iptv_system('showiframe "{0}"'.format(self.iframeParams['iframe_file_start']))
+                self.iframeParams['console'] = iptv_system('showiframe "{0}"'.format(shellQuote(self.iframeParams['iframe_file_start'])))
             else:
-                self.iframeParams['console'] = iptv_system('showiframe "{0}"'.format(self.iframeParams['iframe_file_start']), self.iptvGetUrlStart)
+                self.iframeParams['console'] = iptv_system('showiframe "{0}"'.format(shellQuote(self.iframeParams['iframe_file_start'])), self.iptvGetUrlStart)
                 return
         self.iptvGetUrlStart()
 
@@ -2225,7 +2339,8 @@ class IPTVExtMoviePlayer(Screen):
         if self.isClosing:
             return
         if None is not data and 0 < len(data):
-            self.extLinkProv['data'] += data
+            # the console delivers bytes on Python 3
+            self.extLinkProv['data'] += ensure_str(data)
             if self.extLinkProv['data'].endswith('\n'):
                 data = self.extLinkProv['data'].split('\n')
                 url = ''
@@ -2272,7 +2387,7 @@ class IPTVExtMoviePlayer(Screen):
 
             gstplayerPath = '/usr/bin/gstplayer'
             # 'export GST_DEBUG="*:6" &&' +
-            cmd = gstplayerPath + ' "%s"' % self.fileSRC
+            cmd = gstplayerPath + ' "%s"' % shellQuote(self.fileSRC)
 
             # active audio track
             audioTrackIdx = self.metaHandler.getAudioTrackIdx()
@@ -2293,20 +2408,20 @@ class IPTVExtMoviePlayer(Screen):
                 cmd += ' {0} '.format(0)
 
             if "://" in self.fileSRC:
-                cmd += ' "%s" "%s"  "%s"  "%s" ' % (self.gstAdditionalParams['download-buffer-path'], self.gstAdditionalParams['ring-buffer-max-size'], self.gstAdditionalParams['buffer-duration'], self.gstAdditionalParams['buffer-size'])
+                cmd += ' "%s" "%s"  "%s"  "%s" ' % (shellQuote(self.gstAdditionalParams['download-buffer-path']), shellQuote(self.gstAdditionalParams['ring-buffer-max-size']), shellQuote(self.gstAdditionalParams['buffer-duration']), shellQuote(self.gstAdditionalParams['buffer-size']))
                 tmp = strwithmeta(self.fileSRC)
                 url, httpParams = DMHelper.getDownloaderParamFromUrlWithMeta(tmp, True)
                 for key in httpParams:
-                    cmd += (' "%s=%s" ' % (key, httpParams[key]))
+                    cmd += (' "%s=%s" ' % (key, shellQuote(httpParams[key])))
                 if 'http_proxy' in tmp.meta:
                     tmp = tmp.meta['http_proxy']
                     if '://' in tmp:
                         if '@' in tmp:
                             tmp = re.search('([^:]+?://)([^:]+?):([^@]+?)@(.+?)$', tmp)
                             if tmp:
-                                cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (tmp.group(1) + tmp.group(4), tmp.group(2), tmp.group(3)))
+                                cmd += (' "proxy=%s" "proxy-id=%s" "proxy-pw=%s" ' % (shellQuote(tmp.group(1) + tmp.group(4)), shellQuote(tmp.group(2)), shellQuote(tmp.group(3))))
                         else:
-                            cmd += (' "proxy=%s" ' % tmp)
+                            cmd += (' "proxy=%s" ' % shellQuote(tmp))
             cmd += " > /dev/null"
         else:
             exteplayer3path = "/usr/bin/exteplayer3"  # config.plugins.iptvplayer.exteplayer3path.value
@@ -2334,18 +2449,18 @@ class IPTVExtMoviePlayer(Screen):
                     if key == 'Range':  # Range is always used by ffmpeg
                         continue
                     elif key == 'User-Agent':
-                        cmd += ' -u "%s"' % httpParams[key]
+                        cmd += ' -u "%s"' % shellQuote(httpParams[key])
                     else:
                         headers += ('%s: %s\r\n' % (key, httpParams[key]))
                 if len(headers):
-                    cmd += ' -h "%s"' % headers
+                    cmd += ' -h "%s"' % shellQuote(headers)
                 if url.startswith('http'):
                     url = urlparser.decorateParamsFromUrl(url)
                     if '1' == url.meta.get('MPEGTS-Live', '0'):
                         cmd += ' -v '
                 programId = url.meta.get('PROGRAM-ID', '')
                 if programId != '':
-                    cmd += ' -P "%s" ' % programId
+                    cmd += ' -P "%s" ' % shellQuote(programId)
             else:
                 ramBufferSizeMB = config.plugins.iptvplayer.rambuffer_sizemb_files.value
 
@@ -2387,24 +2502,24 @@ class IPTVExtMoviePlayer(Screen):
                 cmd += ' -9 %d ' % subtitleTrackIdx
 
             if audioUri != '':
-                cmd += ' -x "%s" ' % audioUri
+                cmd += ' -x "%s" ' % shellQuote(audioUri)
 
             if 'iptv_video_rep_idx' in tmpUri.meta:
-                cmd += ' -0 %s ' % tmpUri.meta['iptv_video_rep_idx']
+                cmd += ' -0 "%s" ' % shellQuote(tmpUri.meta['iptv_video_rep_idx'])
 
             if 'iptv_audio_rep_idx' in tmpUri.meta:
-                cmd += ' -1 %s ' % tmpUri.meta['iptv_audio_rep_idx']
+                cmd += ' -1 "%s" ' % shellQuote(tmpUri.meta['iptv_audio_rep_idx'])
 
             if 'iptv_m3u8_live_start_index' in tmpUri.meta:
-                cmd += ' -f "live_start_index=%s" ' % tmpUri.meta['iptv_m3u8_live_start_index']
+                cmd += ' -f "live_start_index=%s" ' % shellQuote(tmpUri.meta['iptv_m3u8_live_start_index'])
 
             if 'iptv_m3u8_key_uri_replace_old' in tmpUri.meta and 'iptv_m3u8_key_uri_replace_new' in tmpUri.meta:
-                cmd += ' -f "key_uri_old=%s" -f "key_uri_new=%s" ' % (tmpUri.meta['iptv_m3u8_key_uri_replace_old'], tmpUri.meta['iptv_m3u8_key_uri_replace_new'])
+                cmd += ' -f "key_uri_old=%s" -f "key_uri_new=%s" ' % (shellQuote(tmpUri.meta['iptv_m3u8_key_uri_replace_old']), shellQuote(tmpUri.meta['iptv_m3u8_key_uri_replace_new']))
 
             if self.extAdditionalParams.get('moov_atom_file', '') != '':
-                cmd += ' -F "%s" -S %s -O %s' % (self.extAdditionalParams['moov_atom_file'], self.extAdditionalParams['moov_atom_offset'] + self.extAdditionalParams['moov_atom_size'], self.extAdditionalParams['moov_atom_offset'])
+                cmd += ' -F "%s" -S %s -O %s' % (shellQuote(self.extAdditionalParams['moov_atom_file']), self.extAdditionalParams['moov_atom_offset'] + self.extAdditionalParams['moov_atom_size'], self.extAdditionalParams['moov_atom_offset'])
 
-            cmd += (' "%s"' % videoUri) + " > /dev/null"
+            cmd += (' "%s"' % shellQuote(videoUri)) + " > /dev/null"
 
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self.eplayer3Finished)
@@ -2476,6 +2591,14 @@ class IPTVExtMoviePlayer(Screen):
                 self[elem].instance.setScale(1)
             except Exception:
                 printExc()
+
+        # eSlider.setPixmapScale only exists on OpenATV - elsewhere the
+        # pre-scaled bar images picked by _progressBarPixmapPath() apply
+        for elem in ('progressBar', 'bufferingCBar', 'bufferingBar'):
+            try:
+                self[elem].instance.setPixmapScale(BT_SCALE)
+            except Exception:
+                pass
 
         # info bar gui elements
         # calculate offset

@@ -7,9 +7,9 @@ from . import webParts
 from . import webThreads
 import Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget
 
-from .webTools import isThreadRunning, stopRunningThread, isActiveHostInitiated, initActiveHost, iSactiveHostsHTMLempty, isConfigsHTMLempty, setNewHostListShown, isNewHostListShown
+from .webTools import isThreadRunning, stopRunningThread, isActiveHostInitiated, initActiveHost, iSactiveHostsHTMLempty, isConfigsHTMLempty, setNewHostListShown, isNewHostListShown, isEditableConfigName
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper, DMItemBase
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir, printDBG, getDebugMode
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import GetPluginDir, printDBG, getDebugMode, IsSameOrSubDir
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import IPTVDMApi
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 # e2 imports
@@ -42,6 +42,20 @@ def reloadScripts():
                 importlib.reload(webThreads)
         else:
             importlib.reload(webThreads)
+########################################################
+
+
+def isDownloadsFile(path):
+    # a file inside the downloads folder - paths in requests are never trusted beyond that
+    try:
+        return bool(path) and os.path.isfile(path) and IsSameOrSubDir(path, config.plugins.iptvplayer.DownloadsDir.value)
+    except Exception:
+        return False
+
+
+def fileDownloadLocation(path):
+    # OpenWebif's own file download handler
+    return ("/file?action=download&file=%s" % urllib.parse.quote(path)).encode('utf-8')
 ########################################################
 
 
@@ -137,17 +151,17 @@ class searchPage(resource.Resource):
         req.setHeader('charset', 'UTF-8')
 
         if len(list(req.args.keys())) > 0:
-            key = list(req.args.keys())[0]
+            # the search text (or command) first, the radio button "type" (ALL/VIDEO/AUDIO) next to it
+            otherKeys = [k for k in req.args.keys() if k != b'type']
+            key = otherKeys[0] if otherKeys else list(req.args.keys())[0]
             arg = req.args.get(key, None)[0]
-            if len(list(req.args.keys())) > 1:
-                if list(req.args.keys())[1] == b'type':
-                    if req.args.get(list(req.args.keys())[1], 'ALL')[0] == b'':
-                        settings.GlobalSearchTypes = ["VIDEO", "AUDIO"]
-                    elif req.args.get(list(req.args.keys())[1], 'ALL')[0] == b'':
-                        settings.GlobalSearchTypes = ["AUDIO"]
-                    else:
-                        settings.GlobalSearchTypes = ["VIDEO"]
-                arg = req.args.get(key, None)[0]
+            searchType = req.args.get(b'type', [b''])[0]
+            if searchType == b'ALL':
+                settings.GlobalSearchTypes = ["VIDEO", "AUDIO"]
+            elif searchType == b'AUDIO':
+                settings.GlobalSearchTypes = ["AUDIO"]
+            elif searchType == b'VIDEO':
+                settings.GlobalSearchTypes = ["VIDEO"]
             # print 'searchPage received: ', key, '=' , arg
         else:
             key = None
@@ -338,38 +352,44 @@ class settingsPage(resource.Resource):
             print('Received: ', key, '=', arg)
 
             try:
+                # only the options this page itself offers may be changed from here (no PIN settings)
                 if key is None or arg is None:
                     pass
-                elif key == 'cmd' and arg[:3] == 'ON:':
-                    print('config.plugins.iptvplayer.%s.setValue(False)\nconfig.plugins.iptvplayer.%s.save()' % (arg[3:], arg[3:]))
+                elif key == 'cmd' and arg[:3] == 'ON:' and isEditableConfigName(arg[3:]):
+                    print('config.plugins.iptvplayer.%s.setValue(True)' % arg[3:])
                     setting = getattr(config.plugins.iptvplayer, arg[3:])
                     setting.value = True
                     setting.save()
+                    configfile.save()
                     settings.configsHTML = {}
                     settings.activeHostsHTML = {}
                     return util.redirectTo(b"/iptvplayer/settings", req)
-                elif key == 'cmd' and arg[:4] == 'OFF:':
-                    print('config.plugins.iptvplayer.%s.setValue(False)\nconfig.plugins.iptvplayer.%s.save()' % (arg[4:], arg[4:]))
+                elif key == 'cmd' and arg[:4] == 'OFF:' and isEditableConfigName(arg[4:]):
+                    print('config.plugins.iptvplayer.%s.setValue(False)' % arg[4:])
                     setting = getattr(config.plugins.iptvplayer, arg[4:])
                     setting.value = False
                     setting.save()
+                    configfile.save()
                     settings.activeHostsHTML.pop(arg[4:], None)
                     settings.activeHostsHTML.pop(arg[8:], None)
                     settings.configsHTML = {}
                     return util.redirectTo(b"/iptvplayer/settings", req)
-                elif key[:4] == "CFG:":
+                elif key[:4] == "CFG:" and isEditableConfigName(key[4:]):
                     setting = getattr(config.plugins.iptvplayer, key[4:])
                     setting.value = arg
                     setting.save()
+                    configfile.save()
                     settings.configsHTML = {}
                     return util.redirectTo(b"/iptvplayer/settings", req)
-                elif key[:4] == "INT:":
+                elif key[:4] == "INT:" and isEditableConfigName(key[4:]):
                     setting = getattr(config.plugins.iptvplayer, key[4:])
                     setting.value = int(arg)
                     setting.save()
+                    configfile.save()
                     settings.configsHTML = {}
                     return util.redirectTo(b"/iptvplayer/settings", req)
-                configfile.save()
+                else:
+                    printDBG("[webSite.py:settingsPage] refused to change '%s'" % key)
             except Exception:
                 printDBG("[webSite.py:settingsPage] EXCEPTION for updating value '%s' for key '%s'" % (arg, key))
 
@@ -452,8 +472,8 @@ class downloaderPage(resource.Resource):
         elif key == 'cmd' and arg == 'downloadsDM':
             if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
-        elif key == 'watchMovie' and os.path.exists(arg):
-            return util.redirectTo(b"/file?action=download&file=%s" % urllib.parse.quote(arg.decode('utf8', 'ignore').encode('utf-8')), req)
+        elif key == 'watchMovie' and isDownloadsFile(arg):
+            return util.redirectTo(fileDownloadLocation(arg), req)
         elif key == 'stopDownload' and arg.isdigit():
             if None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.stopDownloadItem(int(arg))
@@ -468,10 +488,11 @@ class downloaderPage(resource.Resource):
                 DMlist = Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager.getList()
 
         elif key == 'cmd' and arg == 'arvchiveDM':
-            if arg2 == 'deleteMovie' and os.path.exists(arg3):
+            # only files inside the downloads folder - the path comes from the request
+            if arg2 == 'deleteMovie' and isDownloadsFile(arg3):
                 os.remove(arg3)
-            elif arg2 == 'watchMovie' and os.path.exists(arg3):
-                return util.redirectTo(b"/file?action=download&file=%s" % urllib.parse.quote(arg3.decode('utf8', 'ignore').encode('utf-8')), req)
+            elif arg2 == 'watchMovie' and isDownloadsFile(arg3):
+                return util.redirectTo(fileDownloadLocation(arg3), req)
             if os.path.exists(config.plugins.iptvplayer.DownloadsDir.value) and None is not Plugins.Extensions.IPTVPlayer.components.iptvplayerwidget.gDownloadManager:
                 files = os.listdir(config.plugins.iptvplayer.DownloadsDir.value)
                 files.sort(key=lambda x: x.lower())

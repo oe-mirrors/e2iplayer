@@ -835,7 +835,8 @@ class MergeDownloader(BaseDownloader, SidecarMixin):
             for item in self.multi['remote_size']:
                 if item > 0:
                     remoteFileSize += item
-                num += 1
+                    num += 1
+            # only when the size of every part is known - otherwise the percentage would run past 100
             if num == len(self.multi['remote_size']):
                 return remoteFileSize
         return -1

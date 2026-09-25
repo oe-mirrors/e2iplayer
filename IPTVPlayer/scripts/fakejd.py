@@ -54,6 +54,8 @@ def printExc(msg=''):
 def getPage(url, headers={}, post_data=None):
     printDBG('url [%s]' % url)
     customOpeners = []
+    if isinstance(post_data, str):
+        post_data = post_data.encode('utf-8')
 
     try:
         ctx = ssl._create_unverified_context()
@@ -64,7 +66,7 @@ def getPage(url, headers={}, post_data=None):
     sts = 0
     data = ''
     try:
-        req = Request(url)
+        req = Request(url, data=post_data)
         for key in headers:
             req.add_header(key, headers[key])
 
@@ -111,25 +113,30 @@ class Jddevice:
         return "/t_" + self.myjd.get_session_token() + "_" + self.device_id
 
 
+def _aesCbc(secret_token, data, doEncrypt):
+    # MyJDownloader: AES-128-CBC, first half of the token is the IV, second half the key, PKCS7 padding
+    import pyaes
+    iv = bytes(secret_token[:len(secret_token) // 2])
+    key = bytes(secret_token[len(secret_token) // 2:])
+    mode = pyaes.AESModeOfOperationCBC(key, iv=iv)
+    if doEncrypt:
+        padLen = 16 - len(data) % 16
+        data += bytes([padLen]) * padLen
+        return b''.join(mode.encrypt(data[i:i + 16]) for i in range(0, len(data), 16))
+    out = b''.join(mode.decrypt(data[i:i + 16]) for i in range(0, len(data), 16))
+    if out and 0 < out[-1] <= 16:
+        out = out[:-out[-1]]
+    return out
+
+
 def decrypt(secret_token, data):
-    iv = secret_token[:len(secret_token) // 2]
-    key = secret_token[len(secret_token) // 2:]
-
-    cipher = AES_CBC(key=key, keySize=16)
-    decrypted_data = cipher.decrypt(base64.b64decode(data), iv).strip()
-
-    return decrypted_data
+    return _aesCbc(secret_token, base64.b64decode(data), False).strip()
 
 
 def encrypt(secret_token, data):
-    data = data.encode('utf-8')
-    iv = secret_token[:len(secret_token) // 2]
-    key = secret_token[len(secret_token) // 2:]
-
-    cipher = AES_CBC(key=key, keySize=16)
-    encrypted_data = base64.b64encode(cipher.encrypt(data, iv))
-
-    return encrypted_data
+    if isinstance(data, str):
+        data = data.encode('utf-8')
+    return base64.b64encode(_aesCbc(secret_token, data, True))
 
 
 class Myjdapi:
@@ -265,7 +272,7 @@ class Myjdapi:
                 request_url = self._api_url + action + path
             else:
                 request_url = self._api_url + path
-            encrypted_response_status_code, encrypted_response_text = getPage(request_url, headers={"Content-Type": "application/aesjson-jd; charset=utf-8"}, data=encrypted_data)
+            encrypted_response_status_code, encrypted_response_text = getPage(request_url, headers={"Content-Type": "application/aesjson-jd; charset=utf-8"}, post_data=encrypted_data)
         if encrypted_response_status_code != 200:
             error_msg = json.loads(encrypted_response_text)
             msg = "\n\tSOURCE: " + error_msg["src"] + "\n\tTYPE: " + \
@@ -304,10 +311,10 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
     def parse_request(self):
         idx = -1
         for i in range(len(self.raw_requestline)):
-            if self.raw_requestline[i:i + 4] == 'POST':
+            if self.raw_requestline[i:i + 4] == b'POST':
                 idx = i
                 break
-            elif self.raw_requestline[i:i + 3] == 'GET':
+            elif self.raw_requestline[i:i + 3] == b'GET':
                 idx = i
                 break
         if idx > 0:
@@ -414,7 +421,7 @@ class MyjdRequestHandler(BaseHTTPRequestHandler):
         elif data['url'] == '/captcha/solve':
             updateStatus('status', "Captcha solved")
             return_data = True
-            jd.captcha_result = json.loads(data['params'][1]).encode('utf-8')
+            jd.captcha_result = json.loads(data['params'][1])
             updateStatus('captcha_result', jd.captcha_result)
         elif data['url'] == '/captcha/skip':
             updateStatus('status', "Captcha skipped")
@@ -457,7 +464,7 @@ def PoolConnection(*args, **kwargs):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect(('api.jdownloader.org', 80))
-            s.send("DEVICE%s" % parameters.session_token)
+            s.send(("DEVICE%s" % parameters.session_token).encode('utf-8'))
 
             tmp = MyjdRequestHandler(s, (None, None), parameters)
             s.close()
@@ -478,9 +485,6 @@ if __name__ == "__main__":
 
     libsPath = sys.argv[1]
     sys.path.insert(1, libsPath)
-    if sys.version_info[0] >= 3:  # PY3
-        sys.path.append('/usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/libs/crypto/cipher')
-    from crypto.cipher.aes_cbc import AES_CBC
 
     APP_KEY = "JD_api_39100"
     LOGIN = sys.argv[2]
@@ -493,8 +497,8 @@ if __name__ == "__main__":
     CAPTCHA_DATA['id'] = int(time.time() * 1000)
 
     hash = hashlib.sha256()
-    hash.update(LOGIN + JDNAME)
-    DEVICEID = hexlify(hash.digest()[:16])
+    hash.update((LOGIN + JDNAME).encode('utf-8'))
+    DEVICEID = hexlify(hash.digest()[:16]).decode('ascii')
     SUBSCRIPTION_ID = int(time.time() * 1000)
     DEBUGE = int(sys.argv[6])
     returnCode = 0

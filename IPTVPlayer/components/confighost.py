@@ -267,7 +267,7 @@ class ConfigHostsMenu(ConfigBaseWidget):
         sortedList = list(listOfHostsNames)
         for hostName in sortedList:
             try:
-                optionEntry = eval('config.plugins.iptvplayer.host' + hostName)
+                optionEntry = getattr(config.plugins.iptvplayer, 'host' + hostName)
                 self.list.append(getConfigListEntry(hostName, optionEntry))
                 if hostName in ['ipla']:
                     self.privacePoliceWorningList.append(optionEntry)

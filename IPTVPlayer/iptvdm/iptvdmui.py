@@ -23,6 +23,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvchoicebox import IPTVChoiceBox
 from Plugins.Extensions.IPTVPlayer.components.iptvlist import IPTVDMActionChoiceBoxList, IPTVPlayerSelectOptionChoiceBoxList
 ###################################################
 from Plugins.Extensions.IPTVPlayer.p2p3.manipulateStrings import ensure_str
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote
 ###################################################
 # FOREIGN import
 ###################################################
@@ -722,7 +723,7 @@ class IPTVDMWidget(Screen):
                 self.underRefreshing = True
                 self.tmpList = []
                 self.tmpData = ''
-                cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", config.plugins.iptvplayer.DownloadsDir.value)
+                cmd = '%s "%s" rl r' % ("/usr/bin/lsdir", shellQuote(config.plugins.iptvplayer.DownloadsDir.value))
                 printDBG("cmd[%s]" % cmd)
                 if hasattr(self.console, "setNice"):
                     self.console.setNice(GetNice() + 2)

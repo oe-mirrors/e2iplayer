@@ -22,7 +22,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc
 from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_urlencode
-from Components.config import config, ConfigText
+from Components.config import config, ConfigText, configfile
 
 config.plugins.iptvplayer.youtube_oauth_refresh_token = ConfigText(default="", fixed_size=False)
 
@@ -49,7 +49,9 @@ def _loadKeyFile():
     if not isfile(_KEY_FILE):
         return
     try:
-        for line in open(_KEY_FILE).read().splitlines():
+        with open(_KEY_FILE) as keyFile:
+            lines = keyFile.read().splitlines()
+        for line in lines:
             line = line.strip()
             if not line or line.startswith("#") or "=" not in line:
                 continue
@@ -102,8 +104,18 @@ class YouTubeOAuth(object):
     @staticmethod
     def logout():
         YouTubeOAuth._accessToken = ("", 0)
-        config.plugins.iptvplayer.youtube_oauth_refresh_token.value = ""
+        YouTubeOAuth._storeRefreshToken("")
+
+    @staticmethod
+    def _storeRefreshToken(value):
+        # written to the settings file right away - with .save() alone it would only reach the
+        # disk when Enigma2 shuts down cleanly, a power cut would lose the sign-in (or the sign-out)
+        config.plugins.iptvplayer.youtube_oauth_refresh_token.value = value
         config.plugins.iptvplayer.youtube_oauth_refresh_token.save()
+        try:
+            configfile.save()
+        except Exception:
+            printExc()
 
     # ---------------------------------------------------------------- device flow
     def requestDeviceCode(self):
@@ -139,8 +151,7 @@ class YouTubeOAuth(object):
                 wait += 5
                 continue
             if res.get("refresh_token"):
-                config.plugins.iptvplayer.youtube_oauth_refresh_token.value = res["refresh_token"]
-                config.plugins.iptvplayer.youtube_oauth_refresh_token.save()
+                YouTubeOAuth._storeRefreshToken(res["refresh_token"])
                 if res.get("access_token"):
                     YouTubeOAuth._accessToken = (res["access_token"], time.time() + int(res.get("expires_in", 3600)) - 60)
                 return True

@@ -19,6 +19,7 @@ from Plugins.Extensions.IPTVPlayer.tools.iptvtools import (
 )
 
 from Plugins.Extensions.IPTVPlayer.p2p3.UrlLib import urllib_quote_plus, urllib_unquote_plus
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellQuote, shellSingleQuote
 ###################################################
 # FOREIGN import
 ###################################################
@@ -351,7 +352,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             rm(tmpFile)
             rm(tmpFileZip)
 
-        cmd = "unzip -po '{0}' > '{1}' 2>/dev/null".format(tmpFileZip, tmpFile)
+        cmd = "unzip -po {0} > {1} 2>/dev/null".format(shellSingleQuote(tmpFileZip), shellSingleQuote(tmpFile))
         ret = self.iptv_execute(cmd)
 
         if not ret['sts'] or 0 != ret['code']:
@@ -364,7 +365,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
                 SetIPTVPlayerLastHostError(_('Failed to create extraction directory.'))
                 return retData
 
-            cmd = "unzip -o '{0}' -d '{1}' 2>&1".format(tmpFileZip, extractDir)
+            cmd = "unzip -o {0} -d {1} 2>&1".format(shellSingleQuote(tmpFileZip), shellSingleQuote(extractDir))
             ret = self.iptv_execute(cmd)
             printDBG("ZIP extract result: sts[%s] code[%s] data[%s]" % (ret['sts'], ret['code'], ret['data']))
 
@@ -411,7 +412,7 @@ class Napisy24plProvider(CBaseSubProviderClass):
             SetIPTVPlayerLastHostError(_('Extracted subtitle file is empty or missing.'))
             return retData
 
-        cmd = '/usr/bin/uchardet "%s"' % tmpFile
+        cmd = '/usr/bin/uchardet "%s"' % shellQuote(tmpFile)
         ret = self.iptv_execute(cmd)
         if ret['sts'] and 0 == ret['code']:
             encoding = MapUcharEncoding(ret['data'])
