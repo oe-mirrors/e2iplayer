@@ -10,13 +10,14 @@ import re
 from shutil import move
 import time
 import unicodedata
+import zlib
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote_plus, unquote, urlencode, urljoin, urlparse, urlunparse
 from urllib.request import addinfourl, BaseHandler, build_opener, HTTPCookieProcessor, HTTPHandler, HTTPRedirectHandler, HTTPSHandler, ProxyHandler, Request, urlopen
 
 from Components.config import config, configfile, ConfigText
 
-from Plugins.Extensions.IPTVPlayer.components.asynccall import IsMainThread, IsThreadTerminated, SetThreadKillable
+from Plugins.Extensions.IPTVPlayer.components.asynccall import iptv_execute, IsMainThread, IsThreadTerminated, SetThreadKillable
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import GetIPTVNotify, TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.libs import ph
 from Plugins.Extensions.IPTVPlayer.libs.e2ijson import loads as json_loads
@@ -42,6 +43,48 @@ try:
     hasPIL = True
 except ImportError:
     hasPIL = False
+try:
+    # Pillow >= 11.2 reads AVIF when it was built against libavif
+    import warnings
+
+    from PIL import features as PIL_features
+
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')  # older Pillow warns "Unknown feature 'avif'"
+        hasPILAvif = bool(PIL_features.check('avif'))
+except Exception:
+    hasPILAvif = False
+
+# AVIF images are ISO-BMFF files: a 4-byte box size, then "ftyp" + brand
+FTYP_IMAGE_BRANDS = (b'ftypavif', b'ftypavis')
+
+
+def ConvertibleImageFirstBytes():
+    # AVIF only when convertWebp can turn it into JPEG on this box (Pillow with libavif, or ffmpeg with
+    # an AV1 decoder) - without a converter the picture loader can't show it, so don't download it at all
+    return list(FTYP_IMAGE_BRANDS) if hasPILAvif or IsExecutable('ffmpeg') else []
+
+
+def MatchFirstBytes(data, prefixes):
+    # first-bytes check of a download: a plain prefix, or an ftyp brand at offset 4
+    for item in prefixes:
+        item = ensure_binary(item)
+        if item in FTYP_IMAGE_BRANDS:
+            if data[4:12] == item:
+                return True
+        elif data.startswith(item):
+            return True
+    return False
+
+
+def IsConvertibleImage(file_path):
+    # WebP / AVIF content, whatever the file name says - the Enigma2 picture loader shows neither
+    try:
+        with open(file_path, 'rb') as f:
+            head = f.read(12)
+    except Exception:
+        return False
+    return (head[:4] == b'RIFF' and head[8:12] == b'WEBP') or head[4:12] in FTYP_IMAGE_BRANDS
 
 
 def DecodeGzipped(data):
@@ -607,7 +650,15 @@ class common:
                 valid = False
                 value = ensure_binary(CurrBuffer.getvalue())
                 for toCheck in checkFromFirstBytes:
-                    if len(toCheck) <= len(value):
+                    if toCheck in FTYP_IMAGE_BRANDS:
+                        if len(value) < 12:
+                            # it could be valid - we need to wait for more data
+                            valid = True
+                        elif value[4:12] == toCheck:
+                            valid = True
+                            del checkFromFirstBytes[:]
+                            break
+                    elif len(toCheck) <= len(value):
                         if value.startswith(toCheck):
                             valid = True
                             # valid no need to check anymore
@@ -850,6 +901,9 @@ class common:
                     self.convertWebp(new_name)
                 except Exception:
                     pass
+            elif metadata.get('status_code') == 200 and 'check_first_bytes' in params and IsConvertibleImage(params['save_to_file']):
+                # an image download (icons) that got WebP/AVIF under another content type or file name
+                self.convertWebp(params['save_to_file'])
 
         except pycurl.error as e:
             try:
@@ -869,6 +923,7 @@ class common:
         return sts, out_data
 
     def convertWebp(self, file_path, png=False):
+        # WebP (or AVIF) -> JPEG/PNG in place: Pillow when it can read the file, else ffmpeg
         printDBG("PCommon.convertWebp %s" % file_path)
 
         output_path = file_path + (".png" if png else ".jpg")
@@ -892,17 +947,21 @@ class common:
                     # printDBG("PCommon.convertWebp rename %s %s" % (output_path, file_path))
                     return
                 except Exception:
-                    printExc()
-                    return
+                    # e.g. AVIF with a Pillow built without libavif - ffmpeg (libdav1d) may still read it
+                    printDBG("PCommon.convertWebp Pillow can't read %s, trying ffmpeg" % file_path)
 
             if IsExecutable('ffmpeg'):
                 # local import: downloaderhelpers itself imports this module
                 from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import shellSingleQuote
                 fp, op = shellSingleQuote(file_path), shellSingleQuote(output_path)
-                command = "ffmpeg -y -i %s %s && test -e %s && rm %s && mv %s %s " % (fp, op, op, fp, op, fp)
+                command = "ffmpeg -y -i %s -frames:v 1 -update 1 %s && test -e %s && rm %s && mv %s %s " % (fp, op, op, fp, op, fp)
 
                 printDBG("Send command %s" % command)
-                self.cmd = iptv_system(command)
+                if IsMainThread():
+                    self.cmd = iptv_system(command)
+                else:
+                    # download thread (icons): wait, so the picture is converted before it is shown
+                    iptv_execute()(command)
         else:
             printDBG("PCommon.convertWebp file not exists %s" % file_path)
 
@@ -1212,19 +1271,29 @@ class common:
             if OK or len(checkFromFirstBytes):
                 blockSize = addParams.get('block_size', 8192)
                 fileHandler = None
+                gunzip = None
+                try:
+                    if downHandler.info().get('Content-Encoding', '').lower() == 'gzip':
+                        # urllib does not undo a Content-Encoding - some image CDNs gzip even unasked
+                        gunzip = zlib.decompressobj(16 + zlib.MAX_WBITS)
+                        contentLength = None
+                except Exception:
+                    printExc()
                 while True:
                     CurrBuffer = downHandler.read(blockSize)
+                    if gunzip is not None:
+                        if CurrBuffer:
+                            CurrBuffer = gunzip.decompress(CurrBuffer)
+                            if not CurrBuffer:
+                                continue
+                        else:
+                            CurrBuffer = gunzip.flush()
+                            gunzip = None
 
                     if len(checkFromFirstBytes):
-                        OK = False
-                        for item in checkFromFirstBytes:
-                            if CurrBuffer.startswith(ensure_binary(item)):
-                                OK = True
-                                break
-                        if not OK:
+                        if not MatchFirstBytes(CurrBuffer, checkFromFirstBytes):
                             break
-                        else:
-                            checkFromFirstBytes = []
+                        checkFromFirstBytes = []
 
                     if not CurrBuffer:
                         break
@@ -1242,8 +1311,8 @@ class common:
                 elif downDataSize > 0:
                     bRet = True
 
-                # decode webp to jpeg
-                if url.endswith(".webp"):
+                # decode webp to jpeg (image downloads: also WebP/AVIF content under another name)
+                if url.endswith(".webp") or (bRet and 'check_first_bytes' in addParams and IsConvertibleImage(file_path)):
                     if addParams.get('webp_convert_to_png', False):
                         self.convertWebp(file_path, png=True)
                     else:
