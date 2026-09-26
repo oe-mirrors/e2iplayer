@@ -155,6 +155,8 @@ ul.plain li { margin: 3px 0; }
 .item.marker .name { color: var(--accent); }
 .item .type { font-size: 11px; }
 .item .actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.item .favbtn { flex: none; align-self: center; font-size: 16px; line-height: 1; padding: 5px 9px; }
+.recent { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex-basis: 100%; }
 .article { display: flex; gap: 16px; flex-wrap: wrap; }
 .article img { max-width: 260px; border-radius: 6px; }
 .article .text { flex: 1; min-width: 260px; white-space: pre-wrap; }

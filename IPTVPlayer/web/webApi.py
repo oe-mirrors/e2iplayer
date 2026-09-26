@@ -121,7 +121,21 @@ def apiLog(req, params):
 	elif len(data) < LOG_MAX_BYTES:
 		data = b''
 	state.update({'pos': start + len(data), 'text': data.decode('utf-8', 'replace'), 'reset': reset})
+	if reset:
+		state['rotated'] = rotatedLogs(state['path'])
 	return state
+
+
+def rotatedLogs(path):
+	# the older files of the debug log rotation (tools/iptvtools.py: <base>-<date><ext>), newest first
+	from Plugins.Extensions.IPTVPlayer.tools.iptvtools import _rotatedGlob
+	files = []
+	try:
+		for idx, name in enumerate(reversed(_rotatedGlob(path))):
+			files.append({'n': idx + 1, 'name': os.path.basename(name), 'size': os.path.getsize(name)})
+	except Exception:
+		printExc()
+	return files
 
 
 def apiLogDelete(req, params):
@@ -180,6 +194,10 @@ def _elementText(element):
 			return ''
 
 
+RESTART_OPTIONS = ('IPTVWebIterface', 'showinPluginBrowser', 'showinextensions', 'showinMainMenu', 'showinSystemMenu', 'plugin_autostart',
+				'plugin_autostart_method', 'disable_live', 'pluginProtectedByPin', 'skin', 'skinforceinternal', 'skinforceallinternal')
+
+
 def _rows(entries, editable, readOnly):
 	rows = []
 	for entry in entries:
@@ -194,7 +212,7 @@ def _rows(entries, editable, readOnly):
 		if name is None:
 			continue
 		kind = _elementKind(element)
-		row = {'name': name, 'label': label, 'indent': indent, 'kind': kind}
+		row = {'name': name, 'label': label, 'indent': indent, 'kind': kind, 'restart': name in RESTART_OPTIONS}
 		if readOnly or name not in editable:
 			row['kind'] = 'readonly'
 			row['note'] = _('only on the receiver') if isLockedConfigName(name) or kind == 'readonly' else ''
@@ -221,7 +239,7 @@ def _rows(entries, editable, readOnly):
 def apiSettingsSections(req, params):
 	from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import ConfigMenu
 	_editableCache['names'] = None  # the page is (re)opened: hosts may have been added or removed
-	return {'locked': isConfigPinProtected(),
+	return {'locked': isConfigPinProtected(), 'restartPending': settings.restartPending,
 			'sections': [{'id': sectionId, 'label': ConfigMenu.getSectionLabel(header)} for sectionId, header, fill in ConfigMenu.getSections()]}
 
 
@@ -314,17 +332,57 @@ def apiSettingsSet(req, params):
 	except Exception as e:
 		printExc()
 		return {'ok': False, 'error': str(e)}
+	if name in RESTART_OPTIONS:
+		settings.restartPending = True
+	return {'ok': True, 'restart': name in RESTART_OPTIONS}
+
+
+def apiRestart(req, params):
+	# restart of the enigma2 GUI (like Standby -> Restart GUI); answered first, then started
+	if settings.session is None:
+		return {'ok': False, 'error': _('Not possible (no enigma2 session).')}
+	from twisted.internet import reactor
+
+	def _restart():
+		from Screens.Standby import TryQuitMainloop
+		settings.session.open(TryQuitMainloop, 3)
+	printDBG('[E2iPlayer web] GUI restart requested')
+	reactor.callLater(1, _restart)
 	return {'ok': True}
 
 ########################################################
 # hosts
 
 
+def _hostGroups():
+	from Plugins.Extensions.IPTVPlayer.tools.iptvhostgroups import IPTVHostsGroups
+	groupsObj = IPTVHostsGroups()
+	groups = [{'name': 'all', 'title': _('All')}]
+	try:
+		groups += [{'name': item.name, 'title': cleanText(item.title)} for item in groupsObj.getGroupsList() if item.name != 'all']
+	except Exception:
+		printExc()
+	return groupsObj, groups
+
+
 def apiHosts(req, params):
 	if isPluginPinProtected():
-		return {'pinBlocked': True, 'hosts': []}
+		return {'pinBlocked': True, 'hosts': [], 'groups': []}
+	groupsObj, groups = _hostGroups()
+	group = params.get('group', 'all')
+	if group not in [g['name'] for g in groups]:
+		group = 'all'
+	if group == 'all':
+		hostNames = SortHostsList(GetHostsList(fromList=False, fromHostFolder=True))
+	else:
+		# the group's own order, as the GUI shows it
+		try:
+			hostNames = groupsObj.getHostsList(group)
+		except Exception:
+			printExc()
+			hostNames = []
 	hosts = []
-	for hostName in SortHostsList(GetHostsList()):
+	for hostName in hostNames:
 		if hostName in ['localmedia', 'urllist']:  # local hosts, nothing to do via web interface
 			continue
 		if not IsHostEnabled(hostName):
@@ -334,7 +392,7 @@ def apiHosts(req, params):
 			continue  # broken host
 		site = title if title.startswith('http') else ''
 		hosts.append({'name': hostName, 'title': hostDisplayTitle(title), 'site': site, 'logo': hostLogoUrl(hostName)})
-	return {'pinBlocked': False, 'hosts': hosts}
+	return {'pinBlocked': False, 'hosts': hosts, 'groups': groups, 'group': group}
 
 
 def apiHostState(req, params):
@@ -420,11 +478,37 @@ def apiDMArchive(req, params):
 	return {'folder': folder, 'files': files}
 
 
+def _dmAddUrl(url, name):
+	from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
+	from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdmapi import DMItem
+	from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdownloadercreator import IsUrlDownloadable
+	if not url.startswith(('http://', 'https://', 'rtmp', 'mms', 'rtsp')):
+		return {'ok': False, 'error': _('Please enter a valid link (http:// or https://).')}
+	url = urlparser.decorateUrl(url)
+	if not IsUrlDownloadable(url):
+		return {'ok': False, 'error': _("File can not be downloaded. Protocol [%s] is unsupported") % url.meta.get('iptv_proto', '')}
+	if not name:
+		name = os.path.basename(url.split('?', 1)[0].rstrip('/')) or 'download'
+	for char in '/\\:*?"<>|':
+		name = name.replace(char, '-')
+	base, ext = os.path.splitext(name)
+	if ext.lower() not in MEDIA_EXTENSIONS:
+		name += webHost.getFileExt(url, 'VIDEO')
+	fullFilePath = config.plugins.iptvplayer.DownloadsDir.value + '/' + name
+	dm = webHost.getDownloadManager(True)
+	if not dm.addToDQueue(DMItem(url, fullFilePath)):
+		return {'ok': False, 'error': _("File [%s] is already in the downloading queue.") % name}
+	printDBG('[E2iPlayer web] download of a pasted link [%s] -> [%s]' % (url, fullFilePath))
+	return {'ok': True, 'file': name, 'running': dm.isRunning()}
+
+
 def apiDMCommand(req, params):
 	cmd = params.get('cmd', '')
 	if cmd == 'init':
 		webHost.getDownloadManager(True)
 		return {'ok': True}
+	if cmd == 'addUrl':
+		return _dmAddUrl(str(params.get('url', '')).strip(), str(params.get('name', '')).strip())
 	if cmd == 'deleteFile':
 		path = str(params.get('path', ''))
 		if not isDownloadsFile(path):
@@ -454,7 +538,7 @@ GET_ROUTES = {'binaries': apiBinaries, 'log': apiLog, 'settings/sections': apiSe
 			'settings/hosts': apiSettingsHosts, 'settings/host': apiSettingsHost, 'hosts': apiHosts, 'host/state': apiHostState,
 			'search/state': apiSearchState, 'dm': apiDM, 'dm/archive': apiDMArchive}
 POST_ROUTES = {'reset': apiReset, 'log/delete': apiLogDelete, 'settings/set': apiSettingsSet, 'host/action': apiHostAction,
-			'search/start': apiSearchStart, 'search/stop': apiSearchStop, 'dm': apiDMCommand}
+			'search/start': apiSearchStart, 'search/stop': apiSearchStop, 'dm': apiDMCommand, 'restart': apiRestart}
 
 
 class ApiResource(resource.Resource):
@@ -476,11 +560,32 @@ class ApiResource(resource.Resource):
 			ret = {'ok': False, 'error': str(e)}
 		return json.dumps(ret).encode('utf-8')
 
+	@staticmethod
+	def _refusedPost(req):
+		contentType = (req.getHeader(b'content-type') or b'').decode('latin-1').split(';', 1)[0].strip().lower()
+		if contentType != 'application/json':
+			return 'content type %s' % contentType
+		origin = (req.getHeader(b'origin') or b'').decode('latin-1')
+		if origin:
+			host = (req.getHeader(b'host') or b'').decode('latin-1').lower()
+			originHost = origin.split('://', 1)[-1].split('/', 1)[0].lower()
+			if originHost != host:
+				return 'origin %s' % origin
+		return ''
+
 	def render_GET(self, req):
 		params = dict((k.decode('utf-8', 'ignore'), v[0].decode('utf-8', 'ignore')) for k, v in req.args.items() if v)
 		return self._answer(req, GET_ROUTES, params)
 
 	def render_POST(self, req):
+		# a form of another web site can send a POST to the box, but only as form or text content and
+		# with its own Origin - the pages of the web interface send JSON from the box's own address
+		refused = self._refusedPost(req)
+		if refused:
+			printDBG('[E2iPlayer web] refused POST: %s' % refused)
+			req.setResponseCode(403)
+			req.setHeader(b'Content-Type', b'application/json; charset=utf-8')
+			return json.dumps({'ok': False, 'error': refused}).encode('utf-8')
 		try:
 			params = json.loads(req.content.read().decode('utf-8') or '{}')
 			if not isinstance(params, dict):

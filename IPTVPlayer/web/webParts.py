@@ -35,6 +35,11 @@ JS_TEXTS = [
 	'Stop download', 'Resume download', 'Download again', 'Delete', 'Remove from queue', 'Move to top', 'Delete the file %s?',
 	'Up to date', '%d commits behind %s', 'Installed version %s has no release tag (local build?)', 'Update check not possible',
 	'New since the installed version', 'Checking for updates',
+	'Play on TV', 'Add to favourites', 'Add "%s" to the favourites', 'Favourites group', 'New group', 'Name of the new group',
+	'Recent searches', 'Groups', 'Add link', 'Link (http:// or https://)', 'File name (optional)', 'has been added to the downloading queue.',
+	'The download manager is stopped, start it on the download page.', 'Older log files', 'Support package',
+	'needs a GUI restart', 'Some settings will be applied only after GUI restart.', 'Restart GUI now', 'Restart GUI',
+	'Restart the enigma2 GUI now? Running recordings, playbacks and downloads are stopped.', 'The GUI is restarting ...',
 	'Web interface has been reset.', 'Still running:', 'Reading...',
 ]
 
@@ -171,6 +176,9 @@ def infoPage():
 		<p class="muted">%(resetText)s</p>
 		<button class="btn" id="resetBtn">%(reset)s</button>
 		<div id="resetResult" class="muted" style="margin-top:8px"></div>
+		<p class="muted">%(supportText)s</p>
+		<div class="toolbar"><a class="btn" href="/iptvplayer/logs?cmd=support">%(support)s</a>
+			<button class="btn danger" id="restartBtn">%(restart)s</button></div>
 	</div>
 </div>
 """ % {'title': htmlEscape(_('Information')), 'about': '\n'.join(about),
@@ -180,6 +188,10 @@ def infoPage():
 		'help': htmlEscape(_('Help')), 'wiki': wiki, 'issues': htmlEscape(_('Report a problem (GitHub issues)')),
 		'forum': htmlEscape(_('Support forum (opena.tv)')),
 		'trouble': htmlEscape(_('Troubleshooting')), 'reset': htmlEscape(_('Reset web interface')),
+		'support': htmlEscape(_('Support package')), 'restart': htmlEscape(_('Restart GUI')),
+		'supportText': htmlEscape(_('The support package holds the versions, the system information, the enabled hosts and the end of the '
+									'debug log in one text file for a problem report. Look through it before posting it - the log can '
+									'contain addresses of the sites you opened.')),
 		'resetText': htmlEscape(_('Closes the host opened in the web interface, clears the search results and stops what the web interface '
 								'still runs in the background. Use it when a page keeps loading. Settings, downloads and the E2iPlayer '
 								'on the TV are not touched.'))}
@@ -191,6 +203,7 @@ def hostsPage():
 <div class="toolbar"><h1 style="margin:0">%s</h1><span class="spacer"></span>
 	<input type="search" id="hostFilter" placeholder="%s"></div>
 <div id="hostsMsg"></div>
+<div class="toolbar" id="hostGroups"></div>
 <div id="hosts" class="hostgrid"><div class="empty"><span class="spinner"></span></div></div>
 """ % (htmlEscape(_('Hosts')), htmlEscape(_('Filter')))
 
@@ -218,6 +231,7 @@ def downloaderPage():
 	return """
 <div class="toolbar"><h1 style="margin:0">%s</h1><span class="spacer"></span><span id="dmStatus"></span></div>
 <div class="toolbar" id="dmToolbar"></div>
+<form class="searchform card" id="dmAdd"></form>
 <div id="dmList"><div class="empty"><span class="spinner"></span></div></div>
 """ % htmlEscape(_('Download manager'))
 
@@ -241,4 +255,5 @@ def logsPage():
 <div class="toolbar" id="logToolbar"></div>
 <div id="logMsg"></div>
 <div id="log" class="logbox"></div>
+<div class="toolbar" id="logFiles" style="margin-top:12px"></div>
 """ % htmlEscape(_('Logs'))

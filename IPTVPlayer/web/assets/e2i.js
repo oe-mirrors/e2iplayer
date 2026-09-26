@@ -116,12 +116,20 @@
 
 		checkUpdates();
 
+		$('restartBtn').addEventListener('click', restartGui);
 		$('resetBtn').addEventListener('click', function () {
 			api('reset', {}).then(function (r) {
 				var msg = t('Web interface has been reset.');
 				if (r.stillRunning && r.stillRunning.length) { msg += ' ' + t('Still running:') + ' ' + r.stillRunning.join(', '); }
 				$('resetResult').textContent = msg;
 			});
+		});
+	}
+
+	function restartGui() {
+		if (!window.confirm(t('Restart the enigma2 GUI now? Running recordings, playbacks and downloads are stopped.'))) { return; }
+		api('restart', {}).then(function (r) {
+			if (r.ok) { toast(t('The GUI is restarting ...')); } else { toast(r.error, true); }
 		});
 	}
 
@@ -178,25 +186,37 @@
 	function pageHosts() {
 		var filter = $('hostFilter');
 		filter.value = store('hostFilter') || '';
-		api('hosts').then(function (r) {
-			var box = clear($('hosts'));
-			if (r.pinBlocked) {
-				$('hostsMsg').appendChild(notice(t('The whole plugin is protected by a PIN - hosts can only be used on the receiver.'), 'warn'));
-				return;
-			}
-			if (!r.hosts || !r.hosts.length) {
-				box.appendChild(el('div', {cls: 'empty', text: t('No hosts are enabled.')}));
-				return;
-			}
-			r.hosts.forEach(function (h) {
-				var card = el('a', {cls: 'hostcard', href: '/iptvplayer/usehost', 'data-filter': (h.title + ' ' + h.name + ' ' + h.site).toLowerCase(),
-					onclick: function (ev) { ev.preventDefault(); openHost(h.name); }},
-					el('div', {cls: 'logo'}, h.logo ? el('img', {src: h.logo, alt: '', loading: 'lazy'}) : null),
-					el('div', {cls: 'title', text: h.title}));
-				box.appendChild(card);
+		loadHosts(store('hostGroup') || 'all');
+		function loadHosts(group) {
+			api('hosts?group=' + encodeURIComponent(group)).then(function (r) {
+				var box = clear($('hosts'));
+				var bar = clear($('hostGroups'));
+				if ((r.groups || []).length > 1) {
+					r.groups.forEach(function (g) {
+						bar.appendChild(el('button', {cls: 'btn small' + (g.name === r.group ? ' on' : ''), text: g.title, onclick: function () {
+							store('hostGroup', g.name);
+							loadHosts(g.name);
+						}}));
+					});
+				}
+				if (r.pinBlocked) {
+					$('hostsMsg').appendChild(notice(t('The whole plugin is protected by a PIN - hosts can only be used on the receiver.'), 'warn'));
+					return;
+				}
+				if (!r.hosts || !r.hosts.length) {
+					box.appendChild(el('div', {cls: 'empty', text: t('No hosts are enabled.')}));
+					return;
+				}
+				r.hosts.forEach(function (h) {
+					var card = el('a', {cls: 'hostcard', href: '/iptvplayer/usehost', 'data-filter': (h.title + ' ' + h.name + ' ' + h.site).toLowerCase(),
+						onclick: function (ev) { ev.preventDefault(); openHost(h.name); }},
+						el('div', {cls: 'logo'}, h.logo ? el('img', {src: h.logo, alt: '', loading: 'lazy'}) : null),
+						el('div', {cls: 'title', text: h.title}));
+					box.appendChild(card);
+				});
+				applyFilter();
 			});
-			applyFilter();
-		});
+		}
 		function applyFilter() {
 			var q = filter.value.trim().toLowerCase();
 			store('hostFilter', filter.value);
@@ -272,6 +292,7 @@
 		if (s.error) { box.appendChild(notice(s.error, 'err', dismiss)); }
 		(s.notices || []).forEach(function (n) { box.appendChild(notice(n, 'warn', dismiss)); });
 		if (!s.host) { return; }
+		if (s.favPending) { box.appendChild(favouritePicker(s.favPending)); }
 
 		if (s.hasSearch && s.view === 'list') { box.appendChild(hostSearchForm(s)); }
 
@@ -283,9 +304,30 @@
 		if (key !== lastListKey && !busy) { window.scrollTo(0, 0); lastListKey = key; }
 	}
 
+	function favouritePicker(fav) {
+		var select = el('select', null, fav.groups.map(function (g) { return el('option', {value: g[0], text: g[1]}); }),
+			el('option', {value: '', text: '+ ' + t('New group')}));
+		var name = el('input', {type: 'text', placeholder: t('Name of the new group'), cls: fav.groups.length ? 'hidden' : null});
+		var sync = function () { name.classList.toggle('hidden', select.value !== ''); };
+		select.addEventListener('change', sync);
+		if (!fav.groups.length) { select.value = ''; }
+		var form = el('form', {cls: 'searchform card'}, el('strong', {text: t('Add "%s" to the favourites', fav.title)}),
+			el('label', {cls: 'muted'}, t('Favourites group') + ' '), select, name,
+			el('button', {cls: 'btn primary', type: 'submit', text: t('Add to favourites')}),
+			el('button', {cls: 'btn', type: 'button', text: t('Cancel'), onclick: function () { hostAction({action: 'favouriteCancel'}); }}));
+		form.addEventListener('submit', function (ev) {
+			ev.preventDefault();
+			hostAction({action: 'favouriteAdd', group: select.value, newGroup: select.value ? '' : name.value});
+		});
+		return form;
+	}
+
 	function hostSearchForm(s) {
-		var input = el('input', {type: 'search', id: 'hostSearchText', placeholder: t('Search text'), value: store('hostSearch') || ''});
-		var form = el('form', {cls: 'searchform card'}, input);
+		var input = el('input', {type: 'search', id: 'hostSearchText', placeholder: t('Search text'), value: store('hostSearch') || '',
+			list: 'hostSearchHistory', autocomplete: 'off'});
+		var history = s.history || [];
+		var form = el('form', {cls: 'searchform card'}, input,
+			el('datalist', {id: 'hostSearchHistory'}, history.map(function (h) { return el('option', {value: h.pattern}); })));
 		var types = s.searchTypes || [];
 		if (types.length) {
 			types.forEach(function (st) {
@@ -300,6 +342,19 @@
 			store('hostSearch', input.value);
 			hostAction({action: 'search', pattern: input.value, searchType: btn.getAttribute('data-type') || ''});
 		});
+		if (history.length) {
+			var recent = el('div', {cls: 'recent'}, el('span', {cls: 'muted', text: t('Recent searches') + ':'}));
+			history.slice(0, 8).forEach(function (h) {
+				var typeName = '';
+				(s.searchTypes || []).forEach(function (st) { if (st[1] === h.type) { typeName = st[0]; } });
+				recent.appendChild(el('button', {cls: 'btn small', type: 'button', text: h.pattern + (typeName ? ' (' + typeName + ')' : ''), onclick: function () {
+					input.value = h.pattern;
+					store('hostSearch', h.pattern);
+					hostAction({action: 'search', pattern: h.pattern, searchType: h.type || ''});
+				}}));
+			});
+			form.appendChild(recent);
+		}
 		return form;
 	}
 
@@ -322,6 +377,12 @@
 				el('div', {cls: 'body'},
 					el('div', {cls: 'name'}, item.name + ' ', item.pin ? el('span', {cls: 'badge warn', text: t('Protected by PIN')}) : null),
 					item.desc ? el('div', {cls: 'desc', text: item.desc}) : null));
+			if ((s.favTypes || []).indexOf(item.type) >= 0) {
+				row.appendChild(el('button', {cls: 'btn small favbtn', title: t('Add to favourites'), text: '☆', onclick: function (ev) {
+					ev.stopPropagation();
+					hostAction({action: 'favourite', index: item.i});
+				}}));
+			}
 			if (clickable) {
 				row.addEventListener('click', function () { hostAction({action: 'item', index: item.i}); });
 			} else {
@@ -340,6 +401,7 @@
 			if (link.resolve) {
 				actions.appendChild(el('button', {cls: 'btn small primary', text: t('Select'), onclick: function () { hostAction({action: 'resolve', index: link.i}); }}));
 			} else {
+				if (link.play) { actions.appendChild(el('button', {cls: 'btn small primary', text: '▶ ' + t('Play on TV'), onclick: function () { hostAction({action: 'play', index: link.i}); }})); }
 				if (link.watch) { actions.appendChild(el('a', {cls: 'btn small', href: link.url, target: '_blank', rel: 'noopener noreferrer', text: t('Watch')})); }
 				actions.appendChild(el('button', {cls: 'btn small', text: t('Add to downloader'), onclick: function () { hostAction({action: 'download', index: link.i}); }}));
 				actions.appendChild(el('button', {cls: 'btn small', text: t('Copy link'), onclick: function () { copyText(link.url); }}));
@@ -468,7 +530,26 @@
 	var DM_STATUS = {waiting: ['PENDING', ''], downloading: ['DOWNLOADING', 'info'], downloaded: ['DOWNLOADED', 'ok'],
 		interrupted: ['ABORTED', 'warn'], error: ['DOWNLOAD ERROR', 'err'], postprocessing: ['POSTPROCESSING', 'info']};
 
-	function pageDownloader() { loadDM(); }
+	function pageDownloader() {
+		var form = $('dmAdd');
+		var url = el('input', {type: 'search', placeholder: t('Link (http:// or https://)'), autocomplete: 'off'});
+		var name = el('input', {type: 'text', placeholder: t('File name (optional)'), style: 'max-width:260px'});
+		form.appendChild(url);
+		form.appendChild(name);
+		form.appendChild(el('button', {cls: 'btn primary', type: 'submit', text: t('Add link')}));
+		form.addEventListener('submit', function (ev) {
+			ev.preventDefault();
+			api('dm', {cmd: 'addUrl', url: url.value, name: name.value}).then(function (r) {
+				if (!r.ok) { toast(r.error, true); return; }
+				toast(r.file + ' ' + t('has been added to the downloading queue.') + (r.running ? '' : ' ' + t('The download manager is stopped, start it on the download page.')));
+				url.value = '';
+				name.value = '';
+				dmTab = 'downloads';
+				loadDM();
+			});
+		});
+		loadDM();
+	}
 
 	function dmCmd(params, confirmText) {
 		if (confirmText && !window.confirm(confirmText)) { return; }
@@ -558,6 +639,7 @@
 		api('settings/sections').then(function (r) {
 			settingsLocked = r.locked;
 			if (r.locked) { $('settingsMsg').appendChild(notice(t('The settings are protected by a PIN on the receiver - here they can only be viewed.'), 'warn')); }
+			if (r.restartPending) { showRestartHint(); }
 			var box = clear($('settings'));
 			var opened = store('openSections') || [];
 			r.sections.forEach(function (sec) { box.appendChild(settingsSection(sec.id, sec.label, opened.indexOf(sec.id) >= 0)); });
@@ -596,10 +678,17 @@
 		});
 	}
 
+	function showRestartHint() {
+		if ($('restartHint')) { return; }
+		$('settingsMsg').appendChild(el('div', {cls: 'notice warn', id: 'restartHint'}, t('Some settings will be applied only after GUI restart.') + '  ',
+			el('button', {cls: 'btn small', text: t('Restart GUI now'), onclick: restartGui})));
+	}
+
 	function saveSetting(name, value, rowNode, reload) {
 		api('settings/set', {name: name, value: value}).then(function (r) {
 			if (!r.ok) { toast(r.error || t('Error'), true); }
 			else {
+				if (r.restart) { showRestartHint(); }
 				toast(t('Saved'));
 				if (rowNode) { rowNode.classList.add('saved'); setTimeout(function () { rowNode.classList.remove('saved'); }, 800); }
 			}
@@ -608,7 +697,8 @@
 	}
 
 	function settingRow(row, reload) {
-		var label = el('div', {cls: 'label', style: row.indent ? 'padding-left:' + (row.indent * 18) + 'px' : null, text: row.label});
+		var label = el('div', {cls: 'label', style: row.indent ? 'padding-left:' + (row.indent * 18) + 'px' : null}, row.label + ' ',
+			row.restart ? el('span', {cls: 'badge warn', text: t('needs a GUI restart')}) : null);
 		var control = el('div', {cls: 'control'});
 		var node = el('div', {cls: 'row', 'data-filter': (row.label + ' ' + row.name).toLowerCase()}, label, control);
 		var save = function (value) { saveSetting(row.name, value, node, reload); };
@@ -730,6 +820,7 @@
 		bar.appendChild(el('span', {cls: 'spacer'}));
 		bar.appendChild(el('button', {cls: 'btn', text: t('Clear view'), onclick: function () { clear($('log')); log.lines = 0; updateLogInfo(); }}));
 		bar.appendChild(el('a', {cls: 'btn', href: '/iptvplayer/logs?cmd=downloadLog', text: t('Download log file')}));
+		bar.appendChild(el('a', {cls: 'btn', href: '/iptvplayer/logs?cmd=support', text: t('Support package')}));
 		bar.appendChild(el('button', {cls: 'btn danger', text: t('Delete log file'), onclick: function () {
 			if (!window.confirm(t('Delete the debug log file?'))) { return; }
 			api('log/delete', {}).then(function (r) {
@@ -771,6 +862,15 @@
 		info.textContent = (info.dataset.path || '') + '  ·  ' + log.lines + ' ' + t('lines');
 	}
 
+	function renderLogFiles(files) {
+		var box = clear($('logFiles'));
+		if (!files.length) { return; }
+		box.appendChild(el('span', {cls: 'muted', text: t('Older log files') + ':'}));
+		files.forEach(function (f) {
+			box.appendChild(el('a', {cls: 'btn small', href: '/iptvplayer/logs?cmd=downloadLog&n=' + f.n, text: f.name + ' (' + fmtBytes(f.size) + ')'}));
+		});
+	}
+
 	function pollLog() {
 		clearTimeout(log.timer);
 		if (log.paused) { return; }
@@ -802,6 +902,7 @@
 					scrollLog();
 				}
 				updateLogInfo(r);
+				if (r.rotated) { renderLogFiles(r.rotated); }
 			}
 			log.timer = setTimeout(pollLog, 1500);
 		}).catch(function () { log.timer = setTimeout(pollLog, 4000); });
