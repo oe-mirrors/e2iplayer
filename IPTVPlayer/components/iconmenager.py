@@ -4,7 +4,7 @@
 # LOCAL import
 ###################################################
 from .asynccall import AsyncMethod
-from Plugins.Extensions.IPTVPlayer.libs.pCommon import common
+from Plugins.Extensions.IPTVPlayer.libs.pCommon import common, ConvertibleImageFirstBytes
 from Plugins.Extensions.IPTVPlayer.libs.urlparser import urlparser
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import mkdirs, \
                       FreeSpace as iptvtools_FreeSpace, \
@@ -247,7 +247,8 @@ class IconMenager:
         params = {}  # {'maintype': 'image'}
 
         # NOTE: RI is not 100% reliable for webp, it is used for some images, but not all
-        params['check_first_bytes'] = [b'\xFF\xD8', b'\xFF\xD9', b'\x89\x50\x4E\x47', b'GIF87a', b'GIF89a', b'RI']
+        # + AVIF (ftyp brand at offset 4) when this box can convert it to JPEG after the download, like WebP
+        params['check_first_bytes'] = [b'\xFF\xD8', b'\xFF\xD9', b'\x89\x50\x4E\x47', b'GIF87a', b'GIF89a', b'RI'] + ConvertibleImageFirstBytes()
 
         if img_url.endswith('|cf'):
             img_url = img_url[:-3]
