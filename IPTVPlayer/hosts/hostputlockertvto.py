@@ -5,6 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, byteify, rm, GetPluginDir
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 from Plugins.Extensions.IPTVPlayer.tools.e2ijs import js_execute
@@ -29,9 +30,7 @@ from Components.config import config, ConfigSelection, ConfigText, getConfigList
 ###################################################
 # Config options for HOST
 ###################################################
-config.plugins.iptvplayer.putlockertv_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
-                                                                                           ("proxy_1", _("Alternative proxy server (1)")),
-                                                                                           ("proxy_2", _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.putlockertv_proxy = ConfigSelection(default="None", choices=GetAlternativeProxyChoices())
 config.plugins.iptvplayer.putlockertv_alt_domain = ConfigText(default="", fixed_size=False)
 
 
@@ -89,12 +88,8 @@ class PutlockerTvTo(CBaseHostClass):
         if addParams == {}:
             addParams = dict(self.defaultParams)
 
-        proxy = config.plugins.iptvplayer.putlockertv_proxy.value
-        if proxy != 'None':
-            if proxy == 'proxy_1':
-                proxy = config.plugins.iptvplayer.alternative_proxy1.value
-            else:
-                proxy = config.plugins.iptvplayer.alternative_proxy2.value
+        proxy = GetAlternativeProxyUrl(config.plugins.iptvplayer.putlockertv_proxy.value)
+        if proxy:
             addParams = dict(addParams)
             addParams.update({'http_proxy': proxy})
 
@@ -104,12 +99,8 @@ class PutlockerTvTo(CBaseHostClass):
     def getFullIconUrl(self, url):
         url = url.split('url=')[-1]
         url = self.getFullUrl(url)
-        proxy = config.plugins.iptvplayer.putlockertv_proxy.value
-        if proxy != 'None':
-            if proxy == 'proxy_1':
-                proxy = config.plugins.iptvplayer.alternative_proxy1.value
-            else:
-                proxy = config.plugins.iptvplayer.alternative_proxy2.value
+        proxy = GetAlternativeProxyUrl(config.plugins.iptvplayer.putlockertv_proxy.value)
+        if proxy:
             url = strwithmeta(url, {'iptv_http_proxy': proxy})
         if url != '':
             cookieHeader = self.cm.getCookieHeader(self.COOKIE_FILE, ['PHPSESSID', 'cf_clearance'])

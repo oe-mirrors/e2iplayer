@@ -5,6 +5,7 @@
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _, SetIPTVPlayerLastHostError, GetIPTVNotify
 from Plugins.Extensions.IPTVPlayer.components.ihost import CHostBase, CBaseHostClass
+from Plugins.Extensions.IPTVPlayer.components.iptvconfigmenu import GetAlternativeProxyChoices, GetAlternativeProxyUrl
 from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, GetTmpDir, CSelOneLink, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import strwithmeta
 ###################################################
@@ -29,9 +30,7 @@ from Plugins.Extensions.IPTVPlayer.components.iptvimageselector import IPTVMulti
 # Config options for HOST
 ###################################################
 config.plugins.iptvplayer.kissanime_defaultformat = ConfigSelection(default="999999", choices=[("0", _("the worst")), ("360", "360p"), ("480", "480p"), ("720", "720p"), ("1080", "1080p"), ("999999", "the best")])
-config.plugins.iptvplayer.kissanime_proxy = ConfigSelection(default="None", choices=[("None", _("None")),
-                                                                                         ("proxy_1", _("Alternative proxy server (1)")),
-                                                                                         ("proxy_2", _("Alternative proxy server (2)"))])
+config.plugins.iptvplayer.kissanime_proxy = ConfigSelection(default="None", choices=GetAlternativeProxyChoices())
 
 
 def GetConfigList():
@@ -77,13 +76,8 @@ class KissAnimeTo(CBaseHostClass):
             addParams = dict(self.defaultParams)
 
         baseUrl = self.cm.iriToUri(baseUrl)
-        proxy = config.plugins.iptvplayer.kissanime_proxy.value
-        printDBG(">> " + proxy)
-        if proxy != 'None':
-            if proxy == 'proxy_1':
-                proxy = config.plugins.iptvplayer.alternative_proxy1.value
-            else:
-                proxy = config.plugins.iptvplayer.alternative_proxy2.value
+        proxy = GetAlternativeProxyUrl(config.plugins.iptvplayer.kissanime_proxy.value)
+        if proxy:
             addParams = dict(addParams)
             addParams.update({'http_proxy': proxy})
 

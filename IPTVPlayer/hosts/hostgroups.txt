@@ -3,7 +3,7 @@
   "favourites",
   "localmedia",
   "urllist",
-  "iptvplayerinfo"
+  "e2iplayerinfo"
  ],
  "moviesandseries": [
   "ekinotv",
@@ -266,7 +266,7 @@
   "nuteczki"
  ],
  "others": [
-  "iptvplayerinfo",
+  "e2iplayerinfo",
   "localmedia",
   "urllist",
   "youtube",
