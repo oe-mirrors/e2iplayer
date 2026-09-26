@@ -5,11 +5,11 @@
 # LOCAL import
 ###################################################
 from Plugins.Extensions.IPTVPlayer.components.iptvplayerinit import TranslateTXT as _
-from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, GetNice, rm, E2PrioFix
+from Plugins.Extensions.IPTVPlayer.tools.iptvtools import printDBG, printExc, iptv_system, eConnectCallback, rm
 from Plugins.Extensions.IPTVPlayer.tools.iptvtypes import enum, strwithmeta
 from Plugins.Extensions.IPTVPlayer.iptvdm.basedownloader import BaseDownloader
 from Plugins.Extensions.IPTVPlayer.iptvdm.iptvdh import DMHelper
-from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, SidecarMixin
+from Plugins.Extensions.IPTVPlayer.iptvdm.downloaderhelpers import ensureText, fsPath, shellQuote, executeConsoleCmd, terminateToolsOfFile, SidecarMixin
 ###################################################
 
 ###################################################
@@ -208,11 +208,7 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
 
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
-        if hasattr(self.console, "setNice"):
-            self.console.setNice(GetNice() + 2)
-            self.console.execute(cmd)
-        else:
-            self.console.execute(E2PrioFix(cmd))
+        executeConsoleCmd(self.console, cmd)
 
     def _finalizeSuccess(self, finalPath):
         self.filePath = ensureText(finalPath)
@@ -307,11 +303,7 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
         self.console = eConsoleAppContainer()
         self.console_appClosed_conn = eConnectCallback(self.console.appClosed, self._cmdFinished)
         self.console_stderrAvail_conn = eConnectCallback(self.console.stderrAvail, self._dataAvail)
-        if hasattr(self.console, "setNice"):
-            self.console.setNice(GetNice() + 2)
-            self.console.execute(self.downloadCmd)
-        else:
-            self.console.execute(E2PrioFix(self.downloadCmd))
+        executeConsoleCmd(self.console, self.downloadCmd)
 
         self.wgetStatus = self.WGET_STS.CONNECTING
         self.status = DMHelper.STS.DOWNLOADING
@@ -377,6 +369,8 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
                     self.console.sendCtrlC()  # kill produce zombies
                 elif hasattr(self.console, "kill"):
                     self.console.kill()  # kill produce zombies
+            # the signal above only reaches the shell around wget / curl / ffmpeg
+            terminateToolsOfFile(self.filePath)
             self._cmdFinished(-1, True)
             return BaseDownloader.CODE_OK
 
@@ -395,11 +389,7 @@ class WgetDownloader(BaseDownloader, SidecarMixin):
                 and self.remoteFileSize > self.localFileSize \
                 and self.curContinueRetry < self.maxContinueRetry:
             self.curContinueRetry += 1
-            if hasattr(self.console, "setNice"):
-                self.console.setNice(GetNice() + 2)
-                self.console.execute(self.downloadCmd)
-            else:
-                self.console.execute(E2PrioFix(self.downloadCmd))
+            executeConsoleCmd(self.console, self.downloadCmd)
             return
 
         self._setLastError(code)

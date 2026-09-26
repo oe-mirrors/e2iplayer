@@ -525,9 +525,10 @@ class IPTVDMActionChoiceBoxList(IPTVMainNavigatorList):
     # a plain `(action, player)` tuple, not a dict - `action` is what
     # picks the icon here, `player` (only meaningful for the 2 "play"
     # rows) is irrelevant to it. One icon per real action id actually
-    # used in ok_pressed()'s option lists ('continue' has no icon - that
-    # option is permanently commented out there, so it never actually
-    # appears).
+    # used in ok_pressed()'s option lists. 'continue' ("Continue
+    # downloading", offered for wget/curl and for hlsdl with its resume
+    # sidecar) gets the blue fast-forward disc - distinct from the green
+    # "play" and the amber "retry" (start over) that sit next to it.
     # 'remove' ("Remove file"/"Datei löschen") deletes a real file
     # already on disk - the trash can (DeleteItem.png) fits that
     # permanence. 'delet' ("Remove item"/"Eintrag entfernen") only drops
@@ -536,6 +537,7 @@ class IPTVDMActionChoiceBoxList(IPTVMainNavigatorList):
     # the list" action better.
     ACTION_ICON_MAP = {
         'play': 'PlayItem.png',
+        'continue': 'ContinueItem.png',
         'retry': 'RetryItem.png',
         'stop': 'StopItem.png',
         'remove': 'DeleteItem.png',

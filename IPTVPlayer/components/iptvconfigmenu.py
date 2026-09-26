@@ -67,6 +67,8 @@ config.plugins.iptvplayer.bufferingPath = ConfigDirectory(default=config.plugins
 config.plugins.iptvplayer.buforowanie = ConfigYesNo(default=False)
 config.plugins.iptvplayer.buforowanie_m3u8 = ConfigYesNo(default=True)
 config.plugins.iptvplayer.buforowanie_rtmp = ConfigYesNo(default=False)
+# how far behind the live edge a buffered HLS live stream starts (hlsdl -s); "default" keeps hlsdl's own 2 minutes
+config.plugins.iptvplayer.hlsdlLiveStartOffset = ConfigSelection(default="default", choices=[("default", _("Default (2 minutes)")), ("60", _("1 minute")), ("30", _("30 seconds")), ("15", _("15 seconds")), ("5", _("5 seconds")), ("0", _("At the live edge"))])
 config.plugins.iptvplayer.requestedBuffSize = ConfigInteger(2, (1, 120))
 config.plugins.iptvplayer.requestedAudioBuffSize = ConfigInteger(256, (1, 10240))
 
@@ -677,6 +679,8 @@ class ConfigMenu(ConfigBaseWidget):
     def _fillBuffering(list):
         list.append(getConfigListEntry(_("[HTTP] buffering"), config.plugins.iptvplayer.buforowanie))
         list.append(getConfigListEntry(_("[HLS/M3U8] buffering"), config.plugins.iptvplayer.buforowanie_m3u8))
+        if config.plugins.iptvplayer.buforowanie_m3u8.value:
+            list.append(getConfigListEntry("    " + _("[HLS/M3U8] live stream starts behind live"), config.plugins.iptvplayer.hlsdlLiveStartOffset))
         list.append(getConfigListEntry(_("[RTMP] buffering (rtmpdump required)"), config.plugins.iptvplayer.buforowanie_rtmp))
         if config.plugins.iptvplayer.buforowanie.value or config.plugins.iptvplayer.buforowanie_m3u8.value or config.plugins.iptvplayer.buforowanie_rtmp.value:
             list.append(getConfigListEntry("    " + _("Video buffer size [MB]"), config.plugins.iptvplayer.requestedBuffSize))

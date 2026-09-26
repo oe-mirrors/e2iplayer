@@ -713,8 +713,9 @@ class IPTVDMWidget(Screen):
                 options.extend(retry)
             elif DMHelper.STS.INTERRUPTED == item.status:
                 options.extend(play)
-                # only wget/curl can resume a partial file, the other downloaders start over
-                if item.downloaderName in ('wget', 'curl'):
+                # wget/curl can resume a partial file; hlsdl only when the interrupted run left its
+                # resume sidecar and the installed hlsdl knows -R. The other downloaders start over.
+                if item.downloaderName in ('wget', 'curl') or self._canContinueHlsdl(item):
                     options.extend(cont)
                 options.extend(retry)
                 options.extend(remove)
@@ -742,6 +743,15 @@ class IPTVDMWidget(Screen):
             openChoiceBox(self.session, {'width': 600, 'height': height, 'current_idx': 0, 'title': _("Select action"), 'options': choiceItems, 'list_class': IPTVDMActionChoiceBoxList, 'chrome': True}, self.makeActionOnDownloadItem)
 
         return
+
+    def _canContinueHlsdl(self, item):
+        # an interrupted hlsdl download can be continued when its run left the resume sidecar and
+        # the installed hlsdl still supports -R (otherwise "Download again" is the only way)
+        try:
+            return item.downloaderName == 'hlsdl m3u8' and DMHelper.hlsdlSupportsResume() and DMHelper.hasHlsdlResumeFile(item.fileName)
+        except Exception:
+            printExc()
+            return False
 
     def _getActionListHeight(self, numItems):
         # same tier-aware height+cap formula as every other IPTVChoiceBoxWidget

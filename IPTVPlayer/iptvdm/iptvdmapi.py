@@ -155,6 +155,8 @@ class IPTVDMApi():
                 os.remove(item.fileName)
             except Exception:
                 printDBG("deleteDownloadItem removing file[%s] error" % item.fileName)
+            # hlsdl's resume sidecar belongs to the file (no-op for the other downloaders)
+            DMHelper.removeHlsdlResumeFiles(item.fileName)
 
             # remove item from self.queueDQ
             del self.queueDQ[listUDIdx]
@@ -176,6 +178,8 @@ class IPTVDMApi():
                 os.remove(item.fileName)
             except Exception:
                 printDBG("removeDownloadItem removing file[%s] error" % item.fileName)
+            # hlsdl's resume sidecar belongs to the file (no-op for the other downloaders)
+            DMHelper.removeHlsdlResumeFiles(item.fileName)
 
             # remove item from self.queueAA
             del self.queueAA[listUDIdx]
